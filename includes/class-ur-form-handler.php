@@ -128,6 +128,10 @@ class UR_Form_Handler {
 						if ( 'disabled' !== $disabled ) {
 							if ( isset( $_POST[ $key ] ) ) {
 								update_user_meta( $user_id, $update_key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+							} else {
+								if ( 'checkbox' === $field['field_key'] ) {
+									update_user_meta( $user_id, $update_key, '' );
+								}
 							}
 						}
 					}

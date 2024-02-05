@@ -21,7 +21,9 @@ class UR_Email_Approval {
 	 */
 	public function __construct() {
 		add_action( 'user_registration_after_register_user_action', array( $this, 'set_approval_status' ), 5, 3 );
+		add_action( 'user_registration_after_register_user_action', array( $this, 'set_denial_status' ), 5, 3 );
 		add_action( 'admin_init', array( __CLASS__, 'approve_user_after_verification' ) );
+		add_action( 'admin_init', array( __CLASS__, 'deny_user_after_verification' ) );
 	}
 
 	/**
@@ -56,6 +58,7 @@ class UR_Email_Approval {
 						$user_manager->save_status( UR_Admin_User_Manager::APPROVED, true );
 
 						delete_user_meta( $user_id, 'ur_confirm_approval_token' );
+						delete_user_meta( $user_id, 'ur_confirm_denial_token' );
 
 						add_action( 'admin_notices', array( __CLASS__, 'approved_success' ) );
 
@@ -76,10 +79,69 @@ class UR_Email_Approval {
 	}
 
 	/**
+	 * Verify the token and deny the user if the token matches
+	 */
+	public static function deny_user_after_verification() {
+		if ( ! isset( $_GET['ur_denial_token'] ) || empty( $_GET['ur_denial_token'] ) ) {
+			return;
+		} else {
+			if ( current_user_can( 'edit_users' ) ) {
+
+				$ur_denial_token_raw = sanitize_text_field( wp_unslash( $_GET['ur_denial_token'] ) );
+				$ur_denial_token     = str_split( $ur_denial_token_raw, 50 );
+				$token_string = $ur_denial_token[1];
+
+				if ( 2 < count( $ur_denial_token ) ) {
+					unset( $ur_denial_token[0] );
+					$token_string = join( '', $ur_denial_token );
+				}
+				$output     = crypt_the_string( $token_string, 'd' );
+				$output     = explode( '_', $output );
+				$user_id    = absint( $output[0] );
+				$form_id    = ur_get_form_id_by_userid( $user_id );
+
+				$email_approval_enabled = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval', get_option( 'user_registration_login_option_enable_email_approval', false ) );
+
+				if ( $email_approval_enabled ) {
+					$saved_token = get_user_meta( $user_id, 'ur_confirm_denial_token', true );
+
+					if ( $ur_denial_token_raw === $saved_token ) {
+						$user_manager = new UR_Admin_User_Manager( $user_id );
+						$user_manager->save_status( UR_Admin_User_Manager::DENIED, true );
+
+						delete_user_meta( $user_id, 'ur_confirm_denial_token' );
+						delete_user_meta( $user_id, 'ur_confirm_approval_token' );
+
+						add_action( 'admin_notices', array( __CLASS__, 'denied_success' ) );
+
+						$redirect_url = admin_url() . 'users.php';
+						wp_redirect( $redirect_url );
+						exit;
+
+					} else {
+						add_action( 'admin_notices', array( __CLASS__, 'invalid_approval_token_message' ) );
+					}
+				} else {
+					add_action( 'admin_notices', array( __CLASS__, 'email_denial_disabled_message' ) );
+				}
+			} else {
+				return;
+			}
+		}
+	}
+
+	/**
 	 * Message to show when user approved successfully
 	 */
 	public static function approved_success() {
 		echo '<div class="notice notice-success"><p>' . esc_html__( 'User approved successfully.', 'user-registration' );
+	}
+
+	/**
+	 * Message to show when user denied successfully
+	 */
+	public static function denied_success() {
+		echo '<div class="notice notice-success"><p>' . esc_html__( 'User denied successfully.', 'user-registration' );
 	}
 
 	/**
@@ -94,6 +156,13 @@ class UR_Email_Approval {
 	 */
 	public static function email_approval_disabled_message() {
 		echo '<div class="notice notice-warning"><p>' . esc_html__( 'Failed to approve user. Email Approval Option is Disabled.', 'user-registration' ) . '</p></div>';
+	}
+
+	/**
+	 * Email denial Disabled Message
+	 */
+	public static function email_denial_disabled_message() {
+		echo '<div class="notice notice-warning"><p>' . esc_html__( 'Failed to deny user. Email Approval Option is Disabled.', 'user-registration' ) . '</p></div>';
 	}
 
 	/**
@@ -138,6 +207,27 @@ class UR_Email_Approval {
 		if ( ( 'admin_approval' == $login_option || 'admin_approval_after_email_confirmation' == $login_option ) && ( $email_approval_enabled ) ) {
 			$token = $this->get_token( $user_id );
 			update_user_meta( $user_id, 'ur_confirm_approval_token', $token );
+		} else {
+			return;
+		}
+	}
+
+	/**
+	 * Set the denial token of the user and update it to usermeta table in database.
+	 *
+	 * @param array $valid_form_data Form filled data.
+	 * @param int   $form_id         Form ID.
+	 * @param int   $user_id         User ID.
+	 */
+	public function set_denial_status( $valid_form_data, $form_id, $user_id ) {
+		$form_id = isset( $form_id ) ? $form_id : get_user_meta( $this->user->ID, 'ur_form_id', true );
+		$login_option = ur_get_user_login_option( $user_id );
+
+		$email_approval_enabled = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval', get_option( 'user_registration_login_option_enable_email_approval', false ) );
+
+		if ( ( 'admin_approval' == $login_option || 'admin_approval_after_email_confirmation' == $login_option ) && ( $email_approval_enabled ) ) {
+			$token = $this->get_token( $user_id );
+			update_user_meta( $user_id, 'ur_confirm_denial_token', $token );
 		} else {
 			return;
 		}

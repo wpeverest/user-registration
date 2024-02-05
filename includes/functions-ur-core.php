@@ -978,7 +978,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'tip'               => __( 'Login method that should be used by the users registered through this form.', 'user-registration' ),
 			),
 			array(
-				'label'       => __( 'Send User Approval Link in Email', 'user-registration' ),
+				'label'       => __( 'Send User Approval and Denial Link in Email', 'user-registration' ),
 				'description' => '',
 				'id'          => 'user_registration_form_setting_enable_email_approval',
 				'type'        => 'toggle',
@@ -1129,6 +1129,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 						'no-redirection' => __( 'No Redirection', 'user-registration' ),
 						'internal-page'  => __( 'Internal Page', 'user-registration' ),
 						'external-url'   => __( 'External URL', 'user-registration' ),
+						'previous-page'  => __( 'Previous Page', 'user-registration' ),
 					)
 				),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', 'no-redirection' ),
