@@ -59,6 +59,7 @@ class UR_Logger implements UR_Logger_Interface {
 				} else {
 					ur_doing_it_wrong(
 						__METHOD__,
+						/* translators: %s - Log Handle Class */
 						sprintf(
 							__( 'The provided handler <code>%s</code> does not implement UR_Log_Handler_Interface.', 'user-registration' ),
 							esc_html( is_object( $handler ) ? get_class( $handler ) : $handler )
@@ -84,7 +85,7 @@ class UR_Logger implements UR_Logger_Interface {
 	/**
 	 * Determine whether to handle or ignore log.
 	 *
-	 * @param string $level emergency|alert|critical|error|warning|notice|info|debug
+	 * @param string $level emergency|alert|critical|error|warning|notice|info|debug.
 	 *
 	 * @return bool True if the log should be handled.
 	 */
@@ -102,9 +103,9 @@ class UR_Logger implements UR_Logger_Interface {
 	 * This is not the preferred method for adding log messages. Please use log() or any one of
 	 * the level methods (debug(), info(), etc.). This method may be deprecated in the future.
 	 *
-	 * @param string $handle
-	 * @param string $message
-	 * @param string $level
+	 * @param string $handle Handler.
+	 * @param string $message Message.
+	 * @param string $level Log Level.
 	 *
 	 * @return bool
 	 */
@@ -145,6 +146,7 @@ class UR_Logger implements UR_Logger_Interface {
 	 */
 	public function log( $level, $message, $context = array() ) {
 		if ( ! UR_Log_Levels::is_valid_level( $level ) ) {
+			/* translators: %s - Log Level */
 			ur_doing_it_wrong( __METHOD__, sprintf( __( 'UR_Logger::log was called with an invalid level "%s".', 'user-registration' ), $level ), '3.0' );
 		}
 
@@ -180,8 +182,8 @@ class UR_Logger implements UR_Logger_Interface {
 	 *
 	 * @see UR_Logger::log
 	 *
-	 * @param string $message
-	 * @param array  $context
+	 * @param string $message Message.
+	 * @param array  $context Context.
 	 */
 	public function emergency( $message, $context = array() ) {
 		$this->log( UR_Log_Levels::EMERGENCY, $message, $context );
@@ -195,8 +197,8 @@ class UR_Logger implements UR_Logger_Interface {
 	 *
 	 * @see UR_Logger::log
 	 *
-	 * @param string $message
-	 * @param array  $context
+	 * @param string $message Message.
+	 * @param array  $context Context.
 	 */
 	public function alert( $message, $context = array() ) {
 		$this->log( UR_Log_Levels::ALERT, $message, $context );
@@ -210,8 +212,8 @@ class UR_Logger implements UR_Logger_Interface {
 	 *
 	 * @see UR_Logger::log
 	 *
-	 * @param string $message
-	 * @param array  $context
+	 * @param string $message Message.
+	 * @param array  $context Context.
 	 */
 	public function critical( $message, $context = array() ) {
 		$this->log( UR_Log_Levels::CRITICAL, $message, $context );
@@ -225,8 +227,8 @@ class UR_Logger implements UR_Logger_Interface {
 	 *
 	 * @see UR_Logger::log
 	 *
-	 * @param string $message
-	 * @param array  $context
+	 * @param string $message Message.
+	 * @param array  $context Context.
 	 */
 	public function error( $message, $context = array() ) {
 		$this->log( UR_Log_Levels::ERROR, $message, $context );
@@ -242,8 +244,8 @@ class UR_Logger implements UR_Logger_Interface {
 	 *
 	 * @see UR_Logger::log
 	 *
-	 * @param string $message
-	 * @param array  $context
+	 * @param string $message Message.
+	 * @param array  $context Context.
 	 */
 	public function warning( $message, $context = array() ) {
 		$this->log( UR_Log_Levels::WARNING, $message, $context );
@@ -256,8 +258,8 @@ class UR_Logger implements UR_Logger_Interface {
 	 *
 	 * @see UR_Logger::log
 	 *
-	 * @param string $message
-	 * @param array  $context
+	 * @param string $message Message.
+	 * @param array  $context Context.
 	 */
 	public function notice( $message, $context = array() ) {
 		$this->log( UR_Log_Levels::NOTICE, $message, $context );
@@ -271,8 +273,8 @@ class UR_Logger implements UR_Logger_Interface {
 	 *
 	 * @see UR_Logger::log
 	 *
-	 * @param string $message
-	 * @param array  $context
+	 * @param string $message Message.
+	 * @param array  $context Context.
 	 */
 	public function info( $message, $context = array() ) {
 		$this->log( UR_Log_Levels::INFO, $message, $context );
@@ -285,8 +287,8 @@ class UR_Logger implements UR_Logger_Interface {
 	 *
 	 * @see UR_Logger::log
 	 *
-	 * @param string $message
-	 * @param array  $context
+	 * @param string $message Message.
+	 * @param array  $context Context.
 	 */
 	public function debug( $message, $context = array() ) {
 		$this->log( UR_Log_Levels::DEBUG, $message, $context );
@@ -295,7 +297,7 @@ class UR_Logger implements UR_Logger_Interface {
 	/**
 	 * Clear entries from chosen file.
 	 *
-	 * @param string $handle
+	 * @param string $handle Handle.
 	 *
 	 * @return bool
 	 */
