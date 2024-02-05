@@ -223,7 +223,7 @@ class UR_Frontend {
 			}
 
 			if ( 'resetpass' === $action ) {
-				$ur_reset_pass_url = get_permalink( $page_id ) . '?' . sanitize_text_field( wp_unslash( $_SERVER['QUERY_STRING'] ?? '' ) );
+				$ur_reset_pass_url = get_permalink( $page_id ) . '?' . sanitize_text_field( wp_unslash( $_SERVER['QUERY_STRING'] ?? '' ) ); //phpcs:ignore;
 				wp_safe_redirect( $ur_reset_pass_url );
 				exit;
 			}

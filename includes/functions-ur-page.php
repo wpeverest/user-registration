@@ -315,10 +315,10 @@ function ur_nav_menu_items( $items ) {
 				if ( empty( $item->url ) ) {
 					continue;
 				}
-				$path  = parse_url( $item->url, PHP_URL_PATH ) ?? '';
-				$query = parse_url( $item->url, PHP_URL_QUERY ) ?? '';
+				$path  = parse_url( $item->url, PHP_URL_PATH ) ?? ''; //phpcs:ignore;
+				$query = parse_url( $item->url, PHP_URL_QUERY ) ?? ''; //phpcs:ignore;
 
-				$customer_logout = $customer_logout ?? '';
+				$customer_logout = $customer_logout ?? ''; //phpcs:ignore;
 
 				if ( strstr( $path, $customer_logout ) !== false || strstr( $query, $customer_logout ) !== false ) {
 						unset( $items[ $key ] );

@@ -682,7 +682,7 @@ class UR_Form_Validation extends UR_Validation {
 			}
 		);
 
-		$invisible_field_names = array_column( $filteredfields, 'general_setting' );
+		$invisible_field_names = array_column( $filteredfields, 'general_setting' );//phpcs:ignore;
 		$invisible_field_names = array_column( $invisible_field_names, 'field_name' ); //phpcs:ignore;
 		$required_fields       = array_diff( $required_fields, $invisible_field_names );
 

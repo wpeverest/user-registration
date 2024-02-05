@@ -116,7 +116,7 @@ class UR_Shortcode_My_Account {
 						)
 					);
 				} else {
-					echo $login_form; // phpcs:ignore
+					echo $login_form; // phpcs:ignore;
 				}
 			} else {
 				/**

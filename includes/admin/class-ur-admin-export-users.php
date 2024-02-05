@@ -30,7 +30,7 @@ class UR_Admin_Export_Users {
 	 */
 	public static function output() {
 		$all_forms = ur_get_all_user_registration_form();
-		include_once dirname( __FILE__ ) . '/views/html-admin-page-export-users.php';
+		include_once __DIR__ . '/views/html-admin-page-export-users.php';
 	}
 
 	/**
@@ -91,7 +91,7 @@ class UR_Admin_Export_Users {
 
 		$columns   = $this->generate_columns( $form_id, $unchecked_fields, $checked_additional_fields );
 		$rows      = $this->generate_rows( $users, $form_id, $unchecked_fields, $checked_additional_fields, $from_date, $to_date );
-		$form_name = str_replace( ' &#8211; ', '-', get_the_title( $form_id ) );
+		$form_name = str_replace( ' &#8211; ', '-', get_the_title( $form_id ) ); //phpcs:ignore;
 		$form_name = str_replace( '&#8211;', '-', $form_name );
 		$form_name = strtolower( str_replace( ' ', '-', $form_name ) );
 

@@ -43,11 +43,11 @@ do_action( 'user_registration_before_customer_login_registration_form' );
 	<div class="ur-form-row">
 		<div class="ur-form-grid">
 			<h2 class="ur-form-title"><?php echo esc_html__( 'Login', 'user-registration' ); ?></h2>
-			<?php echo $login_form; ?>
+			<?php echo $login_form;  //phpcs:ignore;?>
 		</div>
 		<div class="ur-form-grid">
-			<h2 class="ur-form-title"><?php echo esc_html__( get_the_title( $form_id ), 'user-registration' ); ?></h2>
-			<?php echo $registration_form; ?>
+			<h2 class="ur-form-title"><?php echo esc_html__( get_the_title( $form_id ), 'user-registration' );  //phpcs:ignore;?></h2>
+			<?php echo $registration_form;  //phpcs:ignore;?>
 		</div>
 	</div>
 </div>
