@@ -4,13 +4,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Handle data for the current customers session
+ * Handle data for the current customers session.
  *
  * @class    UR_Session
  * @version  1.0.0
  * @package  UserRegistration/Abstracts
- * @category Abstract Class
- * @author   WPEverest
  */
 abstract class UR_Session {
 

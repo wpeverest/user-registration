@@ -9,8 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @class           UR_Log_Handler_File
  * @since           1.0.5
  * @package         UserRegistration/Classes/Log_Handlers
- * @category        Class
- * @author          WPEverest
  */
 class UR_Log_Handler_File extends UR_Log_Handler {
 

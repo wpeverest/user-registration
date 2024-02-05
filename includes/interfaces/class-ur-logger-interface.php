@@ -9,8 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Functions that must be defined to correctly fulfill logger API.
  *
  * @since          1.0.5
- * @category       Interface
- * @author         WPEverest
  */
 interface UR_Logger_Interface {
 

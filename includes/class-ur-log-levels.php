@@ -10,8 +10,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @class          UR_Log_Levels
  * @version        1.0.0
  * @package        UserRegistration/Classes
- * @category       Class
- * @author         WPEverest
  */
 abstract class UR_Log_Levels {
 

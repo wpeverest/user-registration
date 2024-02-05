@@ -8,8 +8,6 @@
  * @class    UR_Background_Updater
  * @version  1.0.0
  * @package  UserRegistration/Classes
- * @category Admin
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
