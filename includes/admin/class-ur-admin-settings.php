@@ -1074,11 +1074,11 @@ class UR_Admin_Settings {
 	 * Search GLobal Settings.
 	 */
 	public static function search_settings() {
-		$search_string = isset( $_POST['search_string'] ) ? sanitize_text_field( wp_unslash( $_POST['search_string'] ) ) : '';
+		$search_string = isset( $_POST['search_string'] ) ? sanitize_text_field( wp_unslash( $_POST['search_string'] ) ) : ''; //phpcs:ignore;
 		$search_url    = '';
 		$found         = false;
 
-		// Create an array of results to return as JSON
+		// Create an array of results to return as JSON.
 		$autocomplete_results = array();
 		$index                = 0;
 
@@ -1126,8 +1126,8 @@ class UR_Admin_Settings {
 						}
 
 						if ( is_array( $subsection_array ) && ! empty( $subsection_array ) ) {
-							$flattenedArray = self::flattenArray( $subsection_array );
-							$result         = self::search_string_in_array( $search_string, $flattenedArray );
+							$flattened_array = self::flattenArray( $subsection_array );
+							$result          = self::search_string_in_array( $search_string, $flattened_array );
 							if ( ! empty( $result ) ) {
 								foreach ( $result as $key => $value ) {
 									$match = array_search( $value['title'], array_column( $autocomplete_results, 'label' ), true );

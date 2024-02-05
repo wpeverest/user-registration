@@ -5,8 +5,9 @@
  * @since           1.0.5
  * @package         UserRegistration/Abstracts
  */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
 /**

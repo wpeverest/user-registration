@@ -385,10 +385,10 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 				$profile = user_registration_form_data( $user_id, $form_id );
 
 				/**
-				 * Action to perform after Admin save profile validation
+				 * Action to perform after Admin save profile validation.
 				 *
-		 		 * @param int $user_id User ID of the user being saved.
-				 * @param array $profile Form Data
+				 * @param int $user_id User ID of the user being saved.
+				 * @param array $profile Form Data.
 				 */
 				do_action( 'user_registration_after_admin_save_profile_validation', $user_id, $profile );
 
@@ -639,7 +639,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									break;
 							}
 						}// End switch().
-						$filter_data         = array(
+						$filter_data = array(
 							'fields'     => $fields,
 							'field'      => $field,
 							'field_name' => $field_name,
