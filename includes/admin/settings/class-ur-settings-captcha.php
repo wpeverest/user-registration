@@ -166,6 +166,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 								),
 								array(
 									'title'    => __( 'Site Key (hCaptcha)', 'user-registration' ),
+									/* translators: %1$s - hCaptcha docs url */
 									'desc'     => sprintf( __( 'Get site key from %1$s hCaptcha %2$s.', 'user-registration' ), '<a href="https://www.hcaptcha.com/" target="_blank">', '</a>' ), //phpcs:ignore
 									'id'       => 'user_registration_captcha_setting_recaptcha_site_key_hcaptcha',
 									'default'  => '',
@@ -177,6 +178,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 								),
 								array(
 									'title'    => __( 'Secret Key (hCaptcha)', 'user-registration' ),
+									/* translators: %1$s - hCaptcha docs url */
 									'desc'     => sprintf( __( 'Get secret key from %1$s hCaptcha %2$s.', 'user-registration' ), '<a href="https://www.hcaptcha.com/" target="_blank">', '</a>' ), 	//phpcs:ignore
 									'id'       => 'user_registration_captcha_setting_recaptcha_site_secret_hcaptcha',
 									'default'  => '',
@@ -202,6 +204,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 								),
 								array(
 									'title'    => __( 'Site Key (Cloudflare Turnstile)', 'user-registration' ),
+									/* translators: %1$s - Cloudflare Turnstile docs url */
 									'desc'     => sprintf( __( 'Get site key from %1$s Cloudflare Turnstile %2$s.', 'user-registration' ), '<a href="https://www.cloudflare.com/products/turnstile/" target="_blank">', '</a>' ), //phpcs:ignore
 									'id'       => 'user_registration_captcha_setting_recaptcha_site_key_cloudflare',
 									'default'  => '',
@@ -213,6 +216,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 								),
 								array(
 									'title'    => __( 'Secret Key (Cloudflare Turnstile)', 'user-registration' ),
+									/* translators: %1$s - Cloudflare Turnstile docs url */
 									'desc'     => sprintf( __( 'Get secret key from %1$s Cloudflare Turnstile %2$s.', 'user-registration' ), '<a href="https://www.cloudflare.com/products/turnstile/" target="_blank">', '</a>' ), 	//phpcs:ignore
 									'id'       => 'user_registration_captcha_setting_recaptcha_site_secret_cloudflare',
 									'default'  => '',
@@ -223,6 +227,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 								),
 								array(
 									'title'    => __( 'Theme', 'user-registration' ),
+									/* translators: %1$s - Cloudflare Turnstile docs url */
 									'desc'     => sprintf( esc_html__( 'Please select theme mode for your Cloudflare Turnstile. <a href="%1$s" target="_blank">Learn More</a>', 'user-registration' ), esc_url( 'https://www.cloudflare.com/products/turnstile/' ) ),
 									'id'       => 'user_registration_captcha_setting_recaptcha_cloudflare_theme',
 									'options'  => array(
@@ -255,7 +260,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 		}
 
 		/**
-		 * Save settings
+		 * Save settings.
 		 */
 		public function save() {
 			$settings = $this->get_settings();
@@ -290,7 +295,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 						</div>
 					</div>
 				</div>
-			HTML;
+			HTML;  //phpcs:ignore;
 
 			$captcha_node = ur_get_recaptcha_node( 'login', true );
 

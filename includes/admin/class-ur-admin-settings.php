@@ -1126,12 +1126,12 @@ class UR_Admin_Settings {
 						}
 
 						if ( is_array( $subsection_array ) && ! empty( $subsection_array ) ) {
-							$flattened_array = self::flattenArray( $subsection_array );
+							$flattened_array = self::flatten_Array( $subsection_array );
 							$result          = self::search_string_in_array( $search_string, $flattened_array );
 							if ( ! empty( $result ) ) {
 								foreach ( $result as $key => $value ) {
-									$match = array_search( $value['title'], array_column( $autocomplete_results, 'label' ), true );
-									if ( $match === false ) {
+									$match = array_search( $value['title'], array_column( $autocomplete_results, 'label' ), true ); //phpcs:ignore;
+									if ( false === $match ) {
 										$autocomplete_results[ $index ]['label'] = $value['title'];
 										$autocomplete_results[ $index ]['desc']  = $value['desc'];
 										if ( ! empty( $subsection ) ) {
@@ -1212,11 +1212,11 @@ class UR_Admin_Settings {
 	 *
 	 * @return array
 	 */
-	public static function flattenArray( $nested_array ) {
+	public static function flatten_Array( $nested_array ) {
 
-		$settings_array = array();  // create an empty array to store the list of settings
+		$settings_array = array();  // create an empty array to store the list of settings.
 		if ( isset( $nested_array['sections'] ) ) {
-			// loop through each section in the array
+			// loop through each section in the array.
 			foreach ( $nested_array['sections'] as $section ) {
 
 				if ( isset( $section['settings'] ) ) {
@@ -1225,12 +1225,12 @@ class UR_Admin_Settings {
 						continue;
 					}
 
-					// loop through each setting in the section and add it to the $settings_array
+					// loop through each setting in the section and add it to the $settings_array.
 					foreach ( $section['settings'] as $setting ) {
 						$settings_array[] = $setting;
 					}
 				} else {
-					$inner_settings = self::flattenArray( $section );
+					$inner_settings = self::flatten_Array( $section );
 					if ( ! empty( $inner_settings ) ) {
 						$settings_array[] = $inner_settings;
 					}

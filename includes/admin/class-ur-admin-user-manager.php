@@ -165,8 +165,8 @@ class UR_Admin_User_Manager {
 			return $this->user_status;
 		}
 
-		$user_status       = get_user_meta( $this->user->ID, 'ur_user_status', true );
-		$user_email_status = get_user_meta( $this->user->ID, 'ur_confirm_email', true );
+		$user_status                                    = get_user_meta( $this->user->ID, 'ur_user_status', true );
+		$user_email_status                              = get_user_meta( $this->user->ID, 'ur_confirm_email', true );
 		$admin_approval_after_email_confirmation_status = get_user_meta( $this->user->ID, 'ur_admin_approval_after_email_confirmation', true );
 
 		$result = '';
@@ -414,7 +414,6 @@ class UR_Admin_User_Manager {
 		$user_changer = new self( $user );
 
 		return $user_changer->can_change_status_of( $this->user->ID );
-
 	}
 
 	/**
@@ -430,7 +429,6 @@ class UR_Admin_User_Manager {
 		$user_manager = new static( $user_id );
 
 		return $user_manager->is_allowed_to_change_users_status();
-
 	}
 
 	/**
@@ -470,8 +468,8 @@ class UR_Admin_User_Manager {
 
 		$status_map = array(
 			'approved' => 1,
-			'pending' => 0,
-			'denied' => -1
+			'pending'  => 0,
+			'denied'   => -1,
 		);
 
 		if ( isset( $status_map[ $status_label ] ) ) {
