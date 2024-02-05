@@ -122,7 +122,7 @@ class UR_Form_Validation extends UR_Validation {
 		/**
 		 * Filter the form field data.
 		 *
-		 * @param array $form_field_data The form data..
+		 * @param array $form_field_data The form data.
 		 * @param int $form_id The form ID.
 		 */
 		$form_field_data     = apply_filters( 'user_registration_add_form_field_data', $form_field_data, $form_id );

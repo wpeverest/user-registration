@@ -62,7 +62,7 @@ $is_passwordless_enabled = ! ur_is_passwordless_login_enabled() || ! isset( $_GE
 /**
  * Filter to modify the notice content before rendering of user registration login form.
  *
- * @param function.
+ * @param function Print notice function.
  * @return function.
  */
 apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() );

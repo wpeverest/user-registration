@@ -27,7 +27,7 @@ $form_id = ur_get_form_id_by_userid( $user_id );
  *
  * @deprecated 3.1.3 Use 'user_registration_before_edit_profile_form_data' instead.
  *
- * @param array.
+ * @param array array value.
  * @param string deprecated_version.
  * @param string hook_name to be used instead.
  */
@@ -489,7 +489,7 @@ do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id
 					/**
 					 * Filter to modify the form update button class.
 					 *
-					 * @param array.
+					 * @param array array value.
 					 * @return array form update button classes.
 					 */
 					apply_filters( 'user_registration_form_update_btn_class', array() );

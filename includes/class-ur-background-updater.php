@@ -87,7 +87,7 @@ class UR_Background_Updater extends WP_Background_Process {
 	 * in the next pass through. Or, return false to remove the
 	 * item from the queue.
 	 *
-	 * @param  string $callback Update callback function
+	 * @param  string $callback Update callback function.
 	 *
 	 * @return mixed
 	 */

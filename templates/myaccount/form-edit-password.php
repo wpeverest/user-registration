@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @deprecated 1.4.2 Use 'user_registration_before_change_password_form' instead.
  *
- * @param array.
+ * @param array array value.
  * @param string deprecated_version.
  * @param string hook_name to be used instead.
  */
@@ -47,7 +47,7 @@ do_action( 'user_registration_before_change_password_form' );
 					 *
 					 * @deprecated 1.4.2 Use 'user_registration_change_password_form_start' instead.
 					 *
-					 * @param array.
+					 * @param array array value.
 					 * @param string derprected_version.
 					 * @param string hook_name to be used instead.
 					 */
@@ -117,7 +117,7 @@ do_action( 'user_registration_before_change_password_form' );
 					 *
 					 * @deprecated 1.4.2 Use 'user_registration_change_password_form' instead.
 					 *
-					 * @param array.
+					 * @param array array value.
 					 * @param string derprected_version.
 					 * @param string hook_name to be used instead.
 					 */
@@ -146,7 +146,7 @@ do_action( 'user_registration_before_change_password_form' );
 					 *
 					 * @deprecated 1.4.2 Use 'user_registration_change_password_form_end' instead.
 					 *
-					 * @param array.
+					 * @param array array value.
 					 * @param string derprected_version.
 					 * @param string hook_name to be used instead.
 					 */
@@ -171,7 +171,7 @@ do_action( 'user_registration_before_change_password_form' );
  *
  * @deprecated 1.4.2 Use 'user_registration_after_change_password_form' instead.
  *
- * @param array.
+ * @param array array value.
  * @param string derprected_version.
  * @param string hook_name to be used instead.
  */
