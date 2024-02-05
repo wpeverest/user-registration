@@ -3,8 +3,6 @@
  * UR_Setting_Radio Class.
  *
  * @package  UserRegistration/Form/Settings
- * @category Abstract Class
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
