@@ -142,10 +142,12 @@ class UR_Log_Handler_File extends UR_Log_Handler {
 		if ( $file ) {
 			if ( ! file_exists( $file ) ) {
 				$temphandle = @fopen( $file, 'w+' );
-				@fclose( $temphandle );
+				if ($temphandle !== false) {
+					@fclose( $temphandle );
 
-				if ( defined( 'FS_CHMOD_FILE' ) ) {
-					@chmod( $file, FS_CHMOD_FILE );
+					if ( defined( 'FS_CHMOD_FILE' ) ) {
+						@chmod( $file, FS_CHMOD_FILE );
+					}
 				}
 			}
 
