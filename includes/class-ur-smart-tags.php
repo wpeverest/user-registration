@@ -279,7 +279,7 @@ class UR_Smart_Tags {
 						break;
 
 					case 'form_name':
-						$current_form_id = $values['form_id'];
+						$current_form_id = isset( $values['form_id'] );
 						$form_name       = ucfirst( get_the_title( $current_form_id ) );
 						$content         = str_replace( '{{' . $other_tag . '}}', $form_name, $content );
 						break;
