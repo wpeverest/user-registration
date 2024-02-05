@@ -1126,7 +1126,7 @@ class UR_Admin_Settings {
 						}
 
 						if ( is_array( $subsection_array ) && ! empty( $subsection_array ) ) {
-							$flattened_array = self::flatten_Array( $subsection_array );
+							$flattened_array = self::flatten_array( $subsection_array );
 							$result          = self::search_string_in_array( $search_string, $flattened_array );
 							if ( ! empty( $result ) ) {
 								foreach ( $result as $key => $value ) {
@@ -1212,7 +1212,7 @@ class UR_Admin_Settings {
 	 *
 	 * @return array
 	 */
-	public static function flatten_Array( $nested_array ) {
+	public static function flatten_array( $nested_array ) {
 
 		$settings_array = array();  // create an empty array to store the list of settings.
 		if ( isset( $nested_array['sections'] ) ) {
@@ -1230,7 +1230,7 @@ class UR_Admin_Settings {
 						$settings_array[] = $setting;
 					}
 				} else {
-					$inner_settings = self::flatten_Array( $section );
+					$inner_settings = self::flatten_array( $section );
 					if ( ! empty( $inner_settings ) ) {
 						$settings_array[] = $inner_settings;
 					}

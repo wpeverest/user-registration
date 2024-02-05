@@ -32,11 +32,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php if ( $sections ) : ?>
 		<ul class="subsubsub">
 			<?php foreach ( $sections as $section_id => $section ) : ?>
-				<li><a class="<?php echo $current_section === $section_id ? 'current' : ''; ?>" href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-addons&section=' . esc_attr( $section_id ) ) ); ?>"><?php echo esc_html( $section->title ); ?></a><?php echo ( end( $section_keys ) !== $section_id ) ? : ''; ?></li>
+				<li><a class="<?php echo $current_section === $section_id ? 'current' : ''; ?>" href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-addons&section=' . esc_attr( $section_id ) ) ); ?>"><?php echo esc_html( $section->title ); ?></a></li>
 			<?php endforeach; ?>
 		</ul>
 		<br class="clear" />
-		<?php if ( $addons = UR_Admin_Addons::get_section_data( $current_section ) ) : ?>
+		<?php
+		$addons = UR_Admin_Addons::get_section_data( $current_section );
+		if ( $addons ) : ?>
 			<div class="wp-list-table widefat extension-install">
 					<h2 class="screen-reader-text"><?php esc_html_e( 'Extensions list', 'user-registration' ); ?></h2>
 
@@ -67,7 +69,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 												 *
 												 * @param mixed $addon Name of the current addon.
 												 */
-													echo do_action( 'user_registration_after_addons_description', $addon );
+												do_action( 'user_registration_after_addons_description', $addon );
 												?>
 											<?php } else { ?>
 												<div class="action-buttons upgrade-plan">

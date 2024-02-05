@@ -270,7 +270,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 		/**
 		 * Add html for Test Captcha button and captcha node.
 		 *
-		 * @param [string] $settings Captcha settings html
+		 * @param [string] $settings Captcha settings html.
 		 * @param [string] $value Value.
 		 * @return string
 		 */

@@ -115,6 +115,7 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 					),
 				);
 
+				/* translators: %1$s - WPeverest My Account url */
 				$settings['sections']['license_options_settings']['desc'] = sprintf( __( 'Your license has been activated. Enjoy using <strong>User Registration</strong>. Please go to %1$sMy Account Page%2$s for more details ', 'user-registration' ), '<a href="https://wpeverest.com/login/" target="_blank">', '</a>' );
 
 				// Hide save changes button from settings when license is activated.

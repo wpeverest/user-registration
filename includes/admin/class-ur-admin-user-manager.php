@@ -468,7 +468,7 @@ class UR_Admin_User_Manager {
 
 		$status_map = array(
 			'approved' => 1,
-      'pending' => 0,
+      		'pending' => 0,
 			'denied' => -1,
 		);
 
