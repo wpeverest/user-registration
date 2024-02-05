@@ -3,8 +3,6 @@
  * UR_Setting_User_login Class
  *
  * @package  UserRegistration/Form/Settings
- * @category Abstract Class
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

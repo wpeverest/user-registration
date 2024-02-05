@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Setting_Country Class
+ * UR_Setting_Country Class.
  *
  * @package  UserRegistration/Form/Settings
  */

@@ -1,15 +1,18 @@
 <?php
+/**
+ * UR_Setting_Last_name Class.
+ *
+ * @package  UserRegistration/Form/Settings
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * UR_Setting_Last_name Class
+ * UR_Setting_Last_name Class.
  *
  * @package  UserRegistration/Form/Settings
- * @category Abstract Class
- * @author   WPEverest
  */
 class UR_Setting_Last_name extends UR_Field_Settings {
 
@@ -20,7 +23,8 @@ class UR_Setting_Last_name extends UR_Field_Settings {
 		$this->field_id = 'last_name_advance_setting';
 	}
 
-	/** Output
+	/**
+	 * Output.
 	 *
 	 * @param array $field_data field data.
 	 * @return string $field_html Field HTML.

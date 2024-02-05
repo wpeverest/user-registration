@@ -1,15 +1,17 @@
 <?php
+/**
+ * UR_Setting_Description Class.
+ *
+ * @package  UserRegistration/Form/Settings
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * UR_Setting_Description Class
+ * UR_Setting_Description class.
  *
- * @package  UserRegistration/Form/Settings
- * @category Abstract Class
- * @author   WPEverest
  */
 class UR_Setting_Description extends UR_Field_Settings {
 
@@ -21,7 +23,7 @@ class UR_Setting_Description extends UR_Field_Settings {
 	}
 
 	/**
-	 * Output field data
+	 * Output field data.
 	 *
 	 * @param  array $field_data Field Data.
 	 * @return string $field_html.
@@ -36,7 +38,7 @@ class UR_Setting_Description extends UR_Field_Settings {
 	}
 
 	/**
-	 * Register Fields
+	 * Register Fields.
 	 */
 	public function register_fields() {
 		$fields = array(

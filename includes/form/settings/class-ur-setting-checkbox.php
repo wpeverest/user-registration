@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Setting_Checkbox Class
+ * UR_Setting_Checkbox Class.
  *
  * @package  UserRegistration/Form/Settings
  */

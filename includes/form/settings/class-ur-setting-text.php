@@ -1,6 +1,6 @@
 <?php
 /**
- * UR_Setting_Text Class
+ * UR_Setting_Text Class.
  *
  * @class    UR_Setting_Text
  * @package  UserRegistration/Form/Settings

@@ -1,6 +1,6 @@
 <?php
 /**
- * Form View: Input Type Checkbox
+ * Form View: Input Type Checkbox.
  *
  * @package  UserRegistration/Form/Views/Admin/Checkbox
  */

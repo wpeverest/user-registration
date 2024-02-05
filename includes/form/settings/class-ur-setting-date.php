@@ -1,6 +1,6 @@
 <?php
 /**
- * UR_Setting_Date Class
+ * UR_Setting_Date Class.
  *
  * @package  UserRegistration/Form/Settings
  */
@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Setting_Date Class
+ * UR_Setting_Date Class.
  */
 class UR_Setting_Date extends UR_Field_Settings {
 

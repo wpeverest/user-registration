@@ -1,15 +1,18 @@
 <?php
+/**
+ * UR_Setting_User_url Class.
+ *
+ * @package  UserRegistration/Form/Settings
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * UR_Setting_User_url Class
+ * UR_Setting_User_url Class.
  *
  * @package  UserRegistration/Form/Settings
- * @category Abstract Class
- * @author   WPEverest
  */
 class UR_Setting_User_url extends UR_Field_Settings {
 

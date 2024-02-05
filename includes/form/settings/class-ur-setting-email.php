@@ -5,11 +5,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Setting_Email Class
+ * UR_Setting_Email Class.
  *
  * @package  UserRegistration/Form/Settings
- * @category Abstract Class
- * @author   WPEverest
  */
 class UR_Setting_Email extends UR_Field_Settings {
 
@@ -20,7 +18,8 @@ class UR_Setting_Email extends UR_Field_Settings {
 		$this->field_id = 'email_advance_setting';
 	}
 
-	/** Output
+	/**
+	 * Output.
 	 *
 	 * @param array $field_data field data.
 	 * @return string $field_html Field HTML.

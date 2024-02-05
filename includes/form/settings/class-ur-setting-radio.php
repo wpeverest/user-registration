@@ -1,15 +1,20 @@
 <?php
+/**
+ * UR_Setting_Radio Class.
+ *
+ * @package  UserRegistration/Form/Settings
+ * @category Abstract Class
+ * @author   WPEverest
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * UR_Setting_Radio Class
+ * UR_Setting_Radio Class.
  *
  * @package  UserRegistration/Form/Settings
- * @category Abstract Class
- * @author   WPEverest
  */
 class UR_Setting_Radio extends UR_Field_Settings {
 
@@ -20,7 +25,8 @@ class UR_Setting_Radio extends UR_Field_Settings {
 		$this->field_id = 'radio_advance_setting';
 	}
 
-	/** Output
+	/**
+	 * Output.
 	 *
 	 * @param array $field_data field data.
 	 * @return string $field_html Field HTML.

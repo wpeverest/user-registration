@@ -5,11 +5,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Setting_Display_name Class
+ * UR_Setting_Display_name Class.
  *
  * @package  UserRegistration/Form/Settings
- * @category Abstract Class
- * @author   WPEverest
  */
 class UR_Setting_Display_name extends UR_Field_Settings {
 
