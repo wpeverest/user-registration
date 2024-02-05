@@ -210,8 +210,8 @@ class UR_Preview {
 			return;
 		}
 
-		$option_name    = isset( $_GET['ur_email_preview'] ) ? sanitize_text_field( $_GET['ur_email_preview'] ) : '';
-		$email_template = isset( $_GET['ur_email_template'] ) ? sanitize_text_field( $_GET['ur_email_template'] ) : '';
+		$option_name    = isset( $_GET['ur_email_preview'] ) ? sanitize_text_field( wp_unslash( $_GET['ur_email_preview'] ) ) : '';
+		$email_template = isset( $_GET['ur_email_template'] ) ? sanitize_text_field( wp_unslash( $_GET['ur_email_template'] ) ) : '';
 
 		$class_name = 'UR_Settings_' . str_replace( ' ', '_', ucwords( str_replace( '_', ' ', $option_name ) ) );
 		/**

@@ -57,9 +57,9 @@ class UR_Logger implements UR_Logger_Interface {
 				if ( is_object( $handler ) && is_array( $implements ) && in_array( 'UR_Log_Handler_Interface', $implements ) ) {
 					$register_handlers[] = $handler;
 				} else {
+					/* translators: %s - Log Handle Class */
 					ur_doing_it_wrong(
 						__METHOD__,
-						/* translators: %s - Log Handle Class */
 						sprintf(
 							__( 'The provided handler <code>%s</code> does not implement UR_Log_Handler_Interface.', 'user-registration' ),
 							esc_html( is_object( $handler ) ? get_class( $handler ) : $handler )
