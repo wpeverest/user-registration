@@ -119,6 +119,7 @@ class UR_Shortcode_My_Account {
 					echo $login_form; // phpcs:ignore
 				}
 			} else {
+				// Action to handles custom rendering logic for User Registration my Account page.
 				do_action( 'user_registration_my_account_custom_render' );
 			}
 		} else {
@@ -129,6 +130,11 @@ class UR_Shortcode_My_Account {
 
 			if ( ! empty( $form_id ) ) {
 
+				/**
+				* Action to handles for enqueuing scripts for User Registration my Account page.
+				*
+				* @param int $form_id Form ID.
+				*/
 				do_action( 'user_registration_my_account_enqueue_scripts', array(), $form_id );
 				$has_flatpickr = ur_has_flatpickr_field( $form_id );
 
@@ -146,6 +152,7 @@ class UR_Shortcode_My_Account {
 				ur_add_notice( sprintf( __( 'Are you sure you want to log out?&nbsp;<a href="%s">Confirm and log out</a>', 'user-registration' ), ur_logout_url() ) );
 			}
 
+			// Action to handel before rendering User Registration my account page shortcode.
 			do_action( 'before-user-registration-my-account-shortcode' );
 
 			// Collect notices before output.
@@ -341,6 +348,7 @@ class UR_Shortcode_My_Account {
 			}
 		}
 
+		// Filters to enable or disable caption in lost password page.
 		$recaptcha_enabled = ur_string_to_bool( apply_filters( 'user_registration_lost_password_options_enable_recaptcha', false ) );
 
 		if ( $recaptcha_enabled ) {
@@ -392,6 +400,8 @@ class UR_Shortcode_My_Account {
 			ur_add_notice( $errors->get_error_message(), 'error' );
 			return false;
 		}
+
+		// Filter to modify invalid username or email error message.
 		$error_message = apply_filters( 'user_registration_invalid_username_or_email_error_message', __( 'Invalid username or email.', 'user-registration' ) );
 
 		if ( ! $user_data || ( is_multisite() && ! is_user_member_of_blog( $user_data->ID, get_current_blog_id() ) ) ) {
