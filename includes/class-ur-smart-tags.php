@@ -364,11 +364,28 @@ class UR_Smart_Tags {
 							}
 						}
 						break;
+
+					case 'confirm_link':
+						// Generate a confirmation key for the email change.
+						$confirm_key = wp_generate_password( 20, false );
+
+						$user = get_current_user_id();
+
+						// Save the confirmation key.
+						update_user_meta( $user->ID, 'user_registration_email_confirm_key', $confirm_key );
+
+						// Send an email to the new address with confirmation link.
+						$confirm_link = add_query_arg( 'confirm_email', $user->ID, add_query_arg( 'confirm_key', $confirm_key, ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' ) ) );
+
+						$content        = str_replace( '{{' . $tag . '}}', $confirm_link, $content );
+						break;
+
 					case 'display_name':
 						$user_id   = ! empty( $values['user_id'] ) ? $values['user_id'] : get_current_user_id();
 						$user_data = get_userdata( $user_id );
 						$content   = str_replace( '{{' . $tag . '}}', esc_html( $user_data->display_name ), $content );
 						break;
+
 					case 'profile_pic_box':
 						$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
 						$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );

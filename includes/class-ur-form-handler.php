@@ -296,7 +296,7 @@ class UR_Form_Handler {
 			esc_html( get_bloginfo( 'name' ) )
 		);
 		$message     = $settings->ur_get_confirm_email_address_change_email();
-		$message     = get_option( 'user_registration_confirm_email_address_change_email', $default_message );
+		$message     = get_option( 'user_registration_confirm_email_address_change_email', $message );
 		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
 		$message     = apply_filters( 'user_registration_email_change_email_content', $message );
 		// $message     = user_registration_process_email_content( $message, $template_id );
