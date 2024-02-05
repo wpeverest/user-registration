@@ -17,19 +17,39 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class UR_Session_Handler extends UR_Session {
 
-	/** @var string cookie name */
+	/**
+	 * Cookie Name.
+	 *
+	 * @var string cookie name.
+	 */
 	private $_cookie;
 
-	/** @var string session due to expire timestamp */
+	/**
+	 * Session expiring flag.
+	 *
+	 * @var string session due to expire timestamp.
+	 */
 	private $_session_expiring;
 
-	/** @var string session expiration timestamp */
+	/**
+	 * Session expiration timestamp.
+	 *
+	 * @var string session expiration timestamp
+	 */
 	private $_session_expiration;
 
-	/** $var bool Bool based on whether a cookie exists **/
+	/**
+	 * Bool based on whether a cookie exists.
+	 *
+	 * @var bool Bool based on whether a cookie exists
+	 */
 	private $_has_cookie = false;
 
-	/** @var string Custom session table name */
+	/**
+	 * Custom session table name.
+	 *
+	 * @var string Custom session table name.
+	 */
 	private $_table;
 
 	/**
@@ -49,13 +69,15 @@ class UR_Session_Handler extends UR_Session {
 		$this->_cookie = apply_filters( 'user_registrtaion_cookie', 'wp_user_registration_session_' . COOKIEHASH );
 		$this->_table  = $wpdb->prefix . 'user_registration_sessions';
 
-		if ( $cookie = $this->get_session_cookie() ) {
+		$cookie = $this->get_session_cookie();
+
+		if ( $cookie ) {
 			$this->_customer_id        = $cookie[0];
 			$this->_session_expiration = $cookie[1];
 			$this->_session_expiring   = $cookie[2];
 			$this->_has_cookie         = true;
 
-			// Update session if its close to expiring
+			// Update session if its close to expiring.
 			if ( time() > $this->_session_expiring ) {
 				$this->set_session_expiration();
 				$this->update_session_timestamp( $this->_customer_id, $this->_session_expiration );
@@ -67,7 +89,7 @@ class UR_Session_Handler extends UR_Session {
 
 		$this->_data = $this->get_session_data();
 
-		// Actions
+		// Actions.
 		add_action( 'shutdown', array( $this, 'save_data' ), 20 );
 		add_action( 'wp_logout', array( $this, 'destroy_session' ) );
 		if ( ! is_user_logged_in() ) {
@@ -86,13 +108,13 @@ class UR_Session_Handler extends UR_Session {
 	 */
 	public function set_customer_session_cookie( $set ) {
 		if ( $set ) {
-			// Set/renew our cookie
+			// Set/renew our cookie.
 			$to_hash           = $this->_customer_id . '|' . $this->_session_expiration;
 			$cookie_hash       = hash_hmac( 'md5', $to_hash, wp_hash( $to_hash ) );
 			$cookie_value      = $this->_customer_id . '||' . $this->_session_expiration . '||' . $this->_session_expiring . '||' . $cookie_hash;
 			$this->_has_cookie = true;
 
-			// Set the cookie
+			// Set the cookie.
 			/**
 			 * Applies a filter to determine whether to use a secure session cookie.
 			 *

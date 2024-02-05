@@ -58,12 +58,13 @@ class UR_Logger implements UR_Logger_Interface {
 					$register_handlers[] = $handler;
 				} else {
 					/* translators: %s - Log Handle Class */
+					$message = sprintf(
+						__( 'The provided handler <code>%s</code> does not implement UR_Log_Handler_Interface.', 'user-registration' ),
+						esc_html( is_object( $handler ) ? get_class( $handler ) : $handler )
+					);
 					ur_doing_it_wrong(
 						__METHOD__,
-						sprintf(
-							__( 'The provided handler <code>%s</code> does not implement UR_Log_Handler_Interface.', 'user-registration' ),
-							esc_html( is_object( $handler ) ? get_class( $handler ) : $handler )
-						),
+						$message,
 						'1.0.5'
 					);
 				}
