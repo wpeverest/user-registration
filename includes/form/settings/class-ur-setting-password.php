@@ -13,10 +13,18 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class UR_Setting_Password extends UR_Field_Settings {
 
+	/**
+	 * UR_Setting_Password Class Constructor.
+	 */
 	public function __construct() {
 		$this->field_id = 'password_advance_setting';
 	}
 
+	/** Output
+	 *
+	 * @param array $field_data field data.
+	 * @return string $field_html Field HTML.
+	 */
 	public function output( $field_data = array() ) {
 		$this->field_data = $field_data;
 		$this->register_fields();
@@ -25,6 +33,9 @@ class UR_Setting_Password extends UR_Field_Settings {
 		return $field_html;
 	}
 
+	/**
+	 * Register Fields.
+	 */
 	public function register_fields() {
 		$fields = array(
 			'size' => array(
@@ -40,6 +51,15 @@ class UR_Setting_Password extends UR_Field_Settings {
 			),
 		);
 
+		/**
+		 * Filter to modify the password custom advance settings.
+		 *
+		 * @param string $fields Advance Settings Fields.
+		 * @param int field_id Field ID.
+		 * @param class default_class Default Class.
+		 *
+		 * @return string $fields.
+		 */
 		$fields = apply_filters( 'password_custom_advance_settings', $fields, $this->field_id, $this->default_class );
 		$this->render_html( $fields );
 	}

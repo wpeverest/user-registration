@@ -13,11 +13,19 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class UR_Setting_User_url extends UR_Field_Settings {
 
-
+	/**
+	 * UR_Setting_User_url Class Constructor.
+	 */
 	public function __construct() {
 		$this->field_id = 'user_url_advance_setting';
 	}
 
+	/**
+	 * Outputs settings html.
+	 *
+	 * @param array $field_data Field data array.
+	 * @return string $fields_html.
+	 */
 	public function output( $field_data = array() ) {
 
 		$this->field_data = $field_data;
@@ -27,6 +35,9 @@ class UR_Setting_User_url extends UR_Field_Settings {
 		return $field_html;
 	}
 
+	/**
+	 * Register new settings field.
+	 */
 	public function register_fields() {
 		$fields = array(
 
@@ -43,6 +54,15 @@ class UR_Setting_User_url extends UR_Field_Settings {
 			),
 		);
 
+		/**
+		 * Filter to modify the user url custom advance settings.
+		 *
+		 * @param string $fields Advance Settings Fields.
+		 * @param int field_id Field ID.
+		 * @param class default_class Default Class.
+		 *
+		 * @return string $fields.
+		 */
 		$fields = apply_filters( 'user_url_custom_advance_settings', $fields, $this->field_id, $this->default_class );
 		$this->render_html( $fields );
 	}
