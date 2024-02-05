@@ -143,7 +143,7 @@ class UR_Smart_Tags {
 				$other_tag = explode( ' ', $tag )[0];
 
 				switch ( $other_tag ) {
-					case 'new_email':
+					case 'updated_new_user_email':
 						if ( ! empty( $values['email'] ) ) {
 							$new_email = $values['email'];
 						} elseif ( is_user_logged_in() && empty( $values['email'] ) ) {
@@ -365,7 +365,7 @@ class UR_Smart_Tags {
 						}
 						break;
 
-					case 'change_email_confirm_link':
+					case 'email_change_confirmation_link':
 						// Generate a confirmation key for the email change.
 						$confirm_key = wp_generate_password( 20, false );
 
