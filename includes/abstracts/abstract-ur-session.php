@@ -1,8 +1,4 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
-}
-
 /**
  * Handle data for the current customers session.
  *
@@ -10,15 +6,35 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @version  1.0.0
  * @package  UserRegistration/Abstracts
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
+/**
+ * UR_Session class.
+ */
 abstract class UR_Session {
 
-	/** @var int $_customer_id */
+	/**
+	 * Customer ID.
+	 *
+	 * @var int customer id.
+	 */
 	protected $_customer_id;
 
-	/** @var array $_data  */
+	/**
+	 * Session Data.
+	 *
+	 * @var array Session Data.
+	 */
 	protected $_data = array();
 
-	/** @var bool $_dirty When something changes */
+	/**
+	 * When something changes.
+	 *
+	 * @var bool $_dirty When something changes.
+	 */
 	protected $_dirty = false;
 
 	/**
@@ -90,9 +106,8 @@ abstract class UR_Session {
 	}
 
 	/**
-	 * get_customer_id function.
+	 * Get customer id function.
 	 *
-	 * @access public
 	 * @return int
 	 */
 	public function get_customer_id() {
