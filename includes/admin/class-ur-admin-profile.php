@@ -38,6 +38,11 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 			ur_deprecated_function( 'UR_Admin_Profile::get_customer_meta_fields', '1.4.1', 'UR_Admin_Profile::get_user_meta_by_form_fields' );
 		}
 
+		/**
+		 * Excludes the fields for Admin Profile.
+		 *
+		 * @return array.
+		 */
 		public function get_exclude_fields_for_admin_profile() {
 			return apply_filters( 'user_registration_exclude_fields_for_admin_profile', array() );
 		}
@@ -310,7 +315,28 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										$extra_params     = json_decode( get_user_meta( $user->ID, $extra_params_key, true ) );
 
 										if ( empty( $extra_params ) ) {
-											?>
+											if ( 'user_registration_learndash_course' === $key ) {
+												$enrolled_courses   = array();
+												$enrolled_course_id = $this->get_user_meta( $user->ID, $key );
+												if ( 'string' === gettype( $enrolled_course_id ) ) {
+													$courses_enrolled = get_post( $enrolled_course_id )->post_title;
+												} else {
+													foreach ( $enrolled_course_id as $enrolled_course ) {
+														$enrolled_course_title = get_post( $enrolled_course )->post_title;
+														array_push( $enrolled_courses, $enrolled_course_title );
+													}
+													$courses_enrolled = implode( ', ', $enrolled_courses );
+												}
+												?>
+												<input type="text" name="<?php echo esc_attr( $key ); ?>"
+													id="<?php echo esc_attr( $key ); ?>"
+													value="<?php echo esc_attr( $courses_enrolled ); ?>"
+													class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
+												<?php echo esc_attr( $attribute_string ); ?>
+											/>
+												<?php
+											} else {
+												?>
 											<input type="text" name="<?php echo esc_attr( $key ); ?>"
 													id="<?php echo esc_attr( $key ); ?>"
 													value="<?php echo esc_attr( $this->get_user_meta( $user->ID, $key ) ); ?>"
@@ -318,7 +344,8 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 												<?php echo esc_attr( $attribute_string ); ?>
 											/>
 
-											<?php
+												<?php
+											}
 										} endif;
 									?>
 								<br/>
