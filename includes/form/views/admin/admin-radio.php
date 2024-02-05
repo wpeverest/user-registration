@@ -1,6 +1,6 @@
 <?php
 /**
- * Form View: Radio
+ * Form View: Radio.
  *
  * @package UserRegistration/Form/Views/Admin/Radio
  */

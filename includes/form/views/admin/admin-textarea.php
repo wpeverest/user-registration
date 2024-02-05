@@ -1,6 +1,6 @@
 <?php
 /**
- * Form View: Textarea
+ * Form View: Textarea.
  *
  * @package UserRegistration/Form/Views/Admin/TextArea
  */

@@ -11,7 +11,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * UR_Setting_Description class.
- *
  */
 class UR_Setting_Description extends UR_Field_Settings {
 

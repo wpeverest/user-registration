@@ -1,6 +1,6 @@
 <?php
 /**
- * Form View: Input Type User Pass
+ * Form View: Input Type User Pass.
  *
  * @package UserRegistration/Form/Views/Admin/UserPass
  */

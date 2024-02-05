@@ -1,4 +1,9 @@
 <?php
+/**
+ * UR_Setting_Display_name Class.
+ *
+ * @package  UserRegistration/Form/Settings
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -21,7 +26,7 @@ class UR_Setting_Display_name extends UR_Field_Settings {
 	/**
 	 * Output Field Data.
 	 *
-	 * @param  array $field_data.
+	 * @param  array $field_data Field Data.
 	 * @return string $field_html.
 	 */
 	public function output( $field_data = array() ) {

@@ -1,4 +1,9 @@
 <?php
+/**
+ * UR_Setting_Email Class.
+ *
+ * @package  UserRegistration/Form/Settings
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.\
