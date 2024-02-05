@@ -348,6 +348,21 @@ class UR_Smart_Tags {
 							}
 						}
 						break;
+					case 'denial_link':
+						if ( isset( $values['email'] ) && '' !== $values['email'] ) {
+							$user    = get_user_by( 'email', $values['email'] );
+							$user_id = $user->ID;
+
+							$login_option = ur_get_user_login_option( $user_id );
+
+							// If enabled approval via email setting.
+							if ( ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
+								$denial_token = get_user_meta( $user_id, 'ur_confirm_denial_token', true );
+								$denial_link  = '<a href="' . admin_url( '/' ) . '?ur_denial_token=' . $denial_token . '">' . esc_html__( 'Deny Now', 'user-registration' ) . '</a><br />';
+								$content        = str_replace( '{{' . $tag . '}}', $denial_link, $content );
+							}
+						}
+						break;
 					case 'display_name':
 						$user_id   = ! empty( $values['user_id'] ) ? $values['user_id'] : get_current_user_id();
 						$user_data = get_userdata( $user_id );

@@ -978,7 +978,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'tip'               => __( 'Login method that should be used by the users registered through this form.', 'user-registration' ),
 			),
 			array(
-				'label'       => __( 'Send User Approval Link in Email', 'user-registration' ),
+				'label'       => __( 'Send User Approval and Denial Link in Email', 'user-registration' ),
 				'description' => '',
 				'id'          => 'user_registration_form_setting_enable_email_approval',
 				'type'        => 'toggle',
