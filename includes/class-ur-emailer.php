@@ -49,6 +49,16 @@ class UR_Emailer {
 			8,
 			2
 		);
+
+		// to check the current page name.
+		global $pagenow;
+
+		// adds the hook if it is for reset password.
+		if ( ( is_admin() && 'users.php' === $pagenow ) || ( is_admin() && 'resetpassword' === isset( $_GET['action'] ) ) ) {
+			add_filter( 'retrieve_password_message', array( __CLASS__, 'ur_retrieve_password_message' ), 20, 4 );
+			add_filter( 'retrieve_password_title', array( __CLASS__, 'ur_retrieve_password_title' ), 20, 3 );
+			add_filter( 'wp_mail_content_type', array( __CLASS__, 'ur_get_content_type' ) );
+		}
 	}
 
 	/**
@@ -67,6 +77,15 @@ class UR_Emailer {
 	public static function ur_send_email_after() {
 		remove_filter( 'wp_mail_from', array( __CLASS__, 'ur_sender_email' ) );
 		remove_filter( 'wp_mail_from_name', array( __CLASS__, 'ur_sender_name' ) );
+	}
+
+	/**
+	 * Sender's Email Content Type
+	 *
+	 * @return string sender's content type.
+	 */
+	public static function ur_get_content_type() {
+		return 'text/html';
 	}
 
 
@@ -619,6 +638,87 @@ class UR_Emailer {
 
 		return false;
 	}
+
+	/**
+	 * Admin Area Reset Password Email Trigger
+	 *
+	 * @param  string $message Email message.
+	 * @param  string $key The activation key.
+	 * @param  string $user_login The username for the user.
+	 * @param string $user_data WP_User object.
+	 * @return string
+	 */
+	public static function ur_retrieve_password_message( $message, $key, $user_login, $user_data ) {
+		$user     = get_user_by( 'login', $user_login );
+		$email    = isset( $user->data->user_email ) ? sanitize_email( $user->data->user_email ) : '';
+		$username = isset( $user->data->user_login ) ? sanitize_text_field( $user->data->user_login ) : '';
+		$user_id  = isset( $user->ID ) ? sanitize_text_field( $user->ID ) : '';
+		$form_id  = ur_get_form_id_by_userid( $user_id );
+
+		if ( empty( $email ) || empty( $username ) ) {
+			return false;
+		}
+
+		$settings = new UR_Settings_Reset_Password_Email();
+		$message  = $settings->ur_get_reset_password_email();
+		$message  = get_option( 'user_registration_reset_password_email', $message );
+
+		$values = array(
+			'username' => $username,
+			'email'    => $email,
+			'key'      => $key,
+			'form_id'  => $form_id,
+		);
+
+		$message = self::parse_smart_tags( $message, $values );
+
+		if ( ur_option_checked( 'user_registration_enable_reset_password_email', true ) ) {
+			// Get selected email template id for specific form.
+			$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
+			$message     = user_registration_process_email_content( $message, $template_id );
+			return $message;
+		}
+
+		return $message;
+	}
+
+	/**
+	 * Admin Area Reset Password Subject or Title Trigger
+	 *
+	 * @param  string $title Email subject.
+	 * @param string $user_login The username for the user.
+	 * @param  string $user_data WP_User object.
+	 * @return string
+	 */
+	public static function ur_retrieve_password_title( $title, $user_login, $user_data ) {
+
+		$user     = get_user_by( 'login', $user_login );
+		$email    = isset( $user->data->user_email ) ? sanitize_email( $user->data->user_email ) : '';
+		$username = isset( $user->data->user_login ) ? sanitize_text_field( $user->data->user_login ) : '';
+		$user_id  = isset( $user->ID ) ? sanitize_text_field( $user->ID ) : '';
+		$form_id  = ur_get_form_id_by_userid( $user_id );
+
+		$key = '';
+
+		if ( empty( $email ) || empty( $username ) ) {
+			return false;
+		}
+
+		$subject  = get_option( 'user_registration_reset_password_email_subject', __( 'Password Reset Email: {{blog_info}}', 'user-registration' ) );
+		$settings = new UR_Settings_Reset_Password_Email();
+
+		$values = array(
+			'username' => $username,
+			'email'    => $email,
+			'key'      => $key,
+			'form_id'  => $form_id,
+		);
+
+		$subject = self::parse_smart_tags( $subject, $values );
+
+		return $subject;
+	}
+
 
 	/**
 	 * Trigger the admin email after profile details changed by user.
