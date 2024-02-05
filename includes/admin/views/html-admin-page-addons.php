@@ -15,7 +15,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="wrap ur_addons_wrap">
 	<h1 class="wp-heading-inline"><?php esc_html_e( 'User Registration Extensions', 'user-registration' ); ?></h1>
 
-	<?php if ( apply_filters( 'user_registration_refresh_addons', true ) ) : ?>
+	<?php
+	/**
+	 * Filter to refresh the addons.
+	 *
+	 * @param bool Status of the addons.
+	 */
+	if ( apply_filters( 'user_registration_refresh_addons', true ) ) :
+		?>
 		<a href="<?php echo esc_url( $refresh_url ); ?>" class="page-title-action"><?php esc_html_e( 'Refresh Extensions', 'user-registration' ); ?></a>
 	<?php endif; ?>
 
@@ -54,7 +61,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 									</div>
 									<div class="plugin-card-buttons">
 										<?php if ( get_option( 'user-registration_license_key' ) ) { ?>
-												<?php echo do_action( 'user_registration_after_addons_description', $addon ); ?>
+												<?php
+												/**
+												 * Action to display description after addon installation.
+												 *
+												 * @param mixed $addon Name of the current addon.
+												 */
+													echo do_action( 'user_registration_after_addons_description', $addon );
+												?>
 											<?php } else { ?>
 												<div class="action-buttons upgrade-plan">
 													<a class="button upgrade-now" href="https://wpuserregistration.com/pricing/?utm_source=addons-page&utm_medium=upgrade-button&utm_campaign=ur-upgrade-to-pro" target="_blank"><?php esc_html_e( 'Upgrade Plan', 'user-registration' ); ?></a>

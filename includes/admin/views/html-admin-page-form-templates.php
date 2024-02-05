@@ -31,7 +31,14 @@ $license_plan = ! empty( $license_data->item_plan ) ? $license_data->item_plan :
 				<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/logo.svg' ); ?>" alt="">
 			</div>
 			<h4><?php esc_html_e( 'Add New Form', 'user-registration' ); ?></h4>
-			<?php if ( apply_filters( 'user_registration_refresh_templates', true ) ) : ?>
+			<?php
+			/**
+			 * Filter to refresh the template.
+			 *
+			 * @param bool Status of the template.
+			 */
+			if ( apply_filters( 'user_registration_refresh_templates', true ) ) :
+				?>
 				<a href="<?php echo esc_url( $refresh_url ); ?>" class="user-registration-btn page-title-action"><?php esc_html_e( 'Refresh Templates', 'user-registration' ); ?></a>
 			<?php endif; ?>
 			<nav class="user-registration-tab">

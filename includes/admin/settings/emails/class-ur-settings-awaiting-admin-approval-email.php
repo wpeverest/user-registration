@@ -32,7 +32,11 @@ if ( ! class_exists( 'UR_Settings_Awaiting_Admin_Approval_Email', false ) ) :
 		 * @return array
 		 */
 		public function get_settings() {
-
+			/**
+			 * Filter to add the options on settings.
+			 *
+			 * @param array Options to be enlisted.
+			 */
 			$settings = apply_filters(
 				'user_registration_awaiting_admin_approval',
 				array(
@@ -80,14 +84,26 @@ if ( ! class_exists( 'UR_Settings_Awaiting_Admin_Approval_Email', false ) ) :
 				)
 			);
 
+			/**
+			 * Filter to get the settings.
+			 *
+			 * @param array $settings Setting options to be enlisted.
+			 */
 			return apply_filters( 'user_registration_get_settings_' . $this->id, $settings );
 		}
 
 		/**
 		 * Email Format.
+		 *
+		 * @return string $message Message content for admin approval email.
 		 */
 		public function ur_get_awaiting_admin_approval_email() {
 
+			/**
+			 * Filter to overwrite the admin approval email.
+			 *
+			 * @param string Message content to overwrite the existing email content.
+			 */
 			$message = apply_filters(
 				'user_registration_get_awaiting_admin_approval_email',
 				sprintf(

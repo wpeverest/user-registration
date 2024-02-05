@@ -47,7 +47,13 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 		public function get_settings() {
 			$recaptcha_type = get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' );
 			$invisible      = get_option( 'user_registration_captcha_setting_invisible_recaptcha_v2', 'no' );
-			$settings       = apply_filters(
+
+			/**
+			 * Filter to add the options on settings.
+			 *
+			 * @param array Options to be enlisted.
+			 */
+			$settings = apply_filters(
 				'user_registration_captcha_settings',
 				array(
 					'title'    => '',
@@ -240,6 +246,11 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 				)
 			);
 
+			/**
+			 * Filter to get the settings.
+			 *
+			 * @param array $settings Captcha Setting options to be enlisted.
+			 */
 			return apply_filters( 'user_registration_get_captcha_settings_' . $this->id, $settings );
 		}
 
@@ -344,7 +355,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 							'type'       => 'v2',
 							'site_key'   => $site_key,
 							'secret_key' => $secret_key,
-							'threshold'  => $threshold
+							'threshold'  => $threshold,
 						);
 					}
 					break;
@@ -375,8 +386,12 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 					}
 					break;
 
-
-			return apply_filters( 'user_registration_active_recaptcha', false );
+					/**
+					 * Filter to change the status of recaptcha.
+					 *
+					 * @param bool false Status for the recaptcha.
+					 */
+				return apply_filters( 'user_registration_active_recaptcha', false );
 			}
 		}
 	}

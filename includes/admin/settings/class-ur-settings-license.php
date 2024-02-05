@@ -47,6 +47,11 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 				'' => __( 'License', 'user-registration' ),
 			);
 
+			/**
+			 * Filter to get the sections.
+			 *
+			 * @param array $sections Sections to be enlisted.
+			 */
 			return apply_filters( 'user_registration_get_sections_' . $this->id, $sections );
 		}
 
@@ -56,7 +61,11 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 		 * @return array
 		 */
 		public function get_settings() {
-
+			/**
+			 * Filter to add the license setting.
+			 *
+			 * @param array License sections to be enlisted.
+			 */
 			$settings = apply_filters(
 				'user_registration_license_settings',
 				array(
@@ -113,6 +122,11 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 
 			}
 
+			/**
+			 * Filter to get the settings.
+			 *
+			 * @param array $settings Setting options to be enlisted.
+			 */
 			return apply_filters( 'user_registration_get_settings_' . $this->id, $settings );
 		}
 
@@ -181,7 +195,6 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 			$settings .= '</div></div>';
 			return $settings;
 		}
-
 	}
 
 endif;

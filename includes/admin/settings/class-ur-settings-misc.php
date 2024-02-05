@@ -49,6 +49,11 @@ if ( ! class_exists( 'UR_Settings_Misc' ) ) :
 				'' => __( 'Advanced', 'user-registration' ),
 			);
 
+			/**
+			 * Filter to add the sections.
+			 *
+			 * @param array $sections Sections to be added on Settings.
+			 */
 			return apply_filters( 'user_registration_get_sections_' . $this->id, $sections );
 		}
 
@@ -58,6 +63,11 @@ if ( ! class_exists( 'UR_Settings_Misc' ) ) :
 		 * @return array
 		 */
 		public function get_settings() {
+			/**
+			 * Filter to add the advanced settings.
+			 *
+			 * @param array $settings Settings to be added on advanced settings.
+			 */
 			$settings = apply_filters(
 				'user_registration_advanced_settings',
 				array(
@@ -91,6 +101,11 @@ if ( ! class_exists( 'UR_Settings_Misc' ) ) :
 				)
 			);
 
+			/**
+			 * Filter to enlist the advanced settings option.
+			 *
+			 * @param array $settings Advanced Settings to be enlisted.
+			 */
 			return apply_filters( 'user_registration_get_advanced_settings_' . $this->id, $settings );
 		}
 

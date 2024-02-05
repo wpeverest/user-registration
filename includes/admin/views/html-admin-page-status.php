@@ -13,7 +13,13 @@ $current_tab = ! empty( $_REQUEST['tab'] ) ? sanitize_title( wp_unslash( $_REQUE
 $page_tabs   = array(
 	'logs' => __( 'Logs', 'user-registration' ),
 );
-$page_tabs   = apply_filters( 'user_registration_admin_status_tabs', $page_tabs );
+
+/**
+ * Filter to add admin status tabs.
+ *
+ * @param array $page_tabs Tabs to be added.
+ */
+$page_tabs = apply_filters( 'user_registration_admin_status_tabs', $page_tabs );
 ?>
 <div class="wrap user-registration">
 	<nav class="nav-tab-wrapper woo-nav-tab-wrapper">
