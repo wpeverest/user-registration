@@ -116,7 +116,8 @@ if ( ! class_exists( 'UR_Settings_Approval_Link_Email', false ) ) :
 
 					Please review the user role and details at \'<b>Users</b>\' menu in your WP dashboard. <br/><br />
 
-					Click on this link to approve this user directly :  {{approval_link}} <br /><br />
+					Click on this link to approve this user directly :  {{approval_link}} <br />
+					Click on this link to deny this user directly :  {{denial_link}} <br /><br />
 					Thank You!',
 					'user-registration'
 				)

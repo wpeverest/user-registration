@@ -111,7 +111,7 @@ class UR_Admin_User_Manager {
 			case self::DENIED:
 				$action_label = 'denied';
 				if ( 'admin_approval_after_email_confirmation' === $login_option ) {
-					update_user_meta( $this->user->ID, 'ur_admin_approval_after_email_confirmation', 'false' );
+					update_user_meta( $this->user->ID, 'ur_admin_approval_after_email_confirmation', 'denied' );
 				} elseif ( 'email_confirmation' === $login_option ) {
 					update_user_meta( $this->user->ID, 'ur_confirm_email', $status );
 				}
@@ -468,8 +468,8 @@ class UR_Admin_User_Manager {
 
 		$status_map = array(
 			'approved' => 1,
-			'pending'  => 0,
-			'denied'   => -1,
+      'pending' => 0,
+			'denied' => -1,
 		);
 
 		if ( isset( $status_map[ $status_label ] ) ) {
