@@ -41,6 +41,11 @@ class UR_Updater_Key_API {
 			array(
 				'timeout'   => 15,
 				'body'      => $api_params,
+				/**
+				 * Filter to verify HTTPS Local SSL.
+				 *
+				 * @param boolean Verify or not.
+				 */
 				'sslverify' => apply_filters( 'https_local_ssl_verify', false ),
 			)
 		);
@@ -71,6 +76,11 @@ class UR_Updater_Key_API {
 			array(
 				'timeout'   => 15,
 				'body'      => $api_params,
+				/**
+				 * Filter to verify HTTPS Local SSL.
+				 *
+				 * @param boolean Verify or not.
+				 */
 				'sslverify' => apply_filters( 'https_local_ssl_verify', false ),
 			)
 		);
@@ -102,6 +112,11 @@ class UR_Updater_Key_API {
 			array(
 				'timeout'   => 15,
 				'body'      => $api_params,
+				/**
+				 * Filter to verify HTTPS Local SSL.
+				 *
+				 * @param boolean Verify or not.
+				 */
 				'sslverify' => apply_filters( 'https_local_ssl_verify', false ),
 			)
 		);
@@ -150,6 +165,11 @@ class UR_Updater_Key_API {
 			array(
 				'timeout'   => 15,
 				'body'      => $api_params,
+				/**
+				 * Filter to verify HTTPS Local SSL.
+				 *
+				 * @param boolean Verify or not.
+				 */
 				'sslverify' => apply_filters( 'https_local_ssl_verify', false ),
 			)
 		);

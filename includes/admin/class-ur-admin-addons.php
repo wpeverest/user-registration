@@ -47,6 +47,11 @@ class UR_Admin_Addons {
 			}
 		}
 
+		/**
+		 * Filter the addons section
+		 *
+		 * @param array $addon_sections Section of Addons
+		 */
 		return apply_filters( 'user_registration_addons_sections', $addon_sections );
 	}
 
@@ -92,6 +97,12 @@ class UR_Admin_Addons {
 			}
 		}
 
+		/**
+		 * Filter the addons section data
+		 *
+		 * @param array $section_data->products Products from Section Data
+		 * @param int $section_id Section Id
+		 */
 		return apply_filters( 'user_registration_addons_section_data', $section_data->products, $section_id );
 	}
 

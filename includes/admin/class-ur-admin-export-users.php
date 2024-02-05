@@ -179,6 +179,11 @@ class UR_Admin_Export_Users {
 			)
 		);
 
+		/**
+		 * Filter the columns to exclude for csv export
+		 *
+		 * @param array $exclude_columns Columns to Exclude
+		 */
 		$exclude_columns = apply_filters(
 			'user_registration_csv_export_exclude_columns',
 			$exclude_columns
@@ -190,6 +195,12 @@ class UR_Admin_Export_Users {
 
 		$columns = array_merge( $user_id_column, $columns );
 		$columns = array_merge( $columns, $checked_additional_field_columns );
+
+		/**
+		 * Filter the columns for csv export
+		 *
+		 * @param array $columns Columns to Export
+		 */
 		return apply_filters( 'user_registration_csv_export_columns', $columns );
 	}
 
@@ -314,6 +325,12 @@ class UR_Admin_Export_Users {
 			}
 		}
 
+		/**
+		 * Filter the rows for csv export
+		 *
+		 * @param array $rows Rows to Export
+		 * @param array $users Users to Export
+		 */
 		return apply_filters( 'user_registration_csv_export_rows', $rows, $users );
 	}
 
@@ -326,6 +343,12 @@ class UR_Admin_Export_Users {
 	 * @return array
 	 */
 	public static function exclude_field_key( $key_label, $form_id, $post_content_array ) {
+
+		/**
+		 * Filter the field keys to exclude for export
+		 *
+		 * @param array
+		 */
 		$exclude_field_keys = apply_filters( 'user_registration_export_user_exclude_field_keys', array( 'html', 'section_title' ) );
 
 		foreach ( $post_content_array as $post_content_row ) {
