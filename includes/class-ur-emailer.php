@@ -827,6 +827,50 @@ class UR_Emailer {
 	}
 
 	/**
+	 * Trigger the email to confirm email address changed by user.
+	 *
+	 * @param  string $user_email Email of the user.
+	 * @param  string $username   Username of the user.
+	 * @param  int    $user_id       User id.
+	 * @param  string $data_html  String replaced with {{all_fields}} smart tag.
+	 * @param  array  $name_value Array to replace with extra fields smart tag.
+	 * @param  array  $attachments Email Attachement.
+	 * @return void
+	 * @since 3.1.3
+	 */
+	public static function confirm_email_address_change_by_admin( $user_email, $username, $user_id, $data_html, $name_value, $attachments ) {
+
+		$header = array(
+			'Reply-To:' . $user_email,
+			'Content-Type: text/html; charset=UTF-8',
+		);
+
+		$attachment = isset( $attachments['user'] ) ? $attachments['user'] : '';
+		$subject    = get_option( 'user_registration_confirm_email_address_change_subject', esc_html__( 'Confirm Email Address Change Email: {{blog_info}}', 'user-registration' ) );
+		$settings   = new UR_Settings_Confirm_Email_Address_Change_Email();
+		$message    = $settings->ur_get_confirm_email_address_change_email();
+		$message    = get_option( 'user_registration_confirm_email_address_change_email', $message );
+		$form_id    = ur_get_form_id_by_userid( $user_id );
+
+		$values = array(
+			'username'   => $username,
+			'email'      => $user_email,
+			'all_fields' => $data_html,
+			'form_id'    => $form_id,
+		);
+
+		list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
+		$message                   = self::parse_smart_tags( $message, $values, $name_value );
+		$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
+
+		if ( ur_option_checked( 'user_registration_enable_confirm_email_address_change_email', true ) ) {
+			$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
+			self::user_registration_process_and_send_email( $user_email, $subject, $message, $header, $attachment, $template_id );
+		}
+	}
+
+
+	/**
 	 * Process smart tags for status change emails.
 	 *
 	 * @param  string $email User Email.
