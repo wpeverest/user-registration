@@ -1,7 +1,14 @@
 <?php
+/**
+ * Standard log levels
+ *
+ * @class          UR_Log_Levels
+ * @version        1.0.0
+ * @package        UserRegistration/Classes
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -114,5 +121,4 @@ abstract class UR_Log_Levels {
 			return false;
 		}
 	}
-
 }

@@ -28,7 +28,8 @@ if ( ! class_exists( 'WP_Background_Process', false ) ) {
 class UR_Background_Updater extends WP_Background_Process {
 
 	/**
-	 * @var string
+	 * Action name.
+	 * @var string ur_updater in default.
 	 */
 	protected $action = 'ur_updater';
 
