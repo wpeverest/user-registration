@@ -310,27 +310,69 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$default_value     = isset( $args['default_value'] ) ? $args['default_value'] : '';    // Backward compatibility. Modified since 1.5.7.
 				$default           = ! empty( $value ) ? $value : $default_value;
 				$select_all        = isset( $args['select_all'] ) ? ur_string_to_bool( $args['select_all'] ) : false;
-				$options           = isset( $args['options'] ) ? $args['options'] : ( $args['choices'] ? $args['choices'] : array() ); // $args['choices'] for backward compatibility. Modified since 1.5.7.
+				$options           = isset( $args['options'] ) ? $args['options'] : array();
+				$image_options     = isset( $args['image_options'] ) ? $args['image_options'] : array();
 				$choice_limit      = isset( $args['choice_limit'] ) ? $args['choice_limit'] : '';
 				$choice_limit_attr = '';
 				if ( '' !== $choice_limit ) {
 					$choice_limit_attr = 'data-choice-limit="' . $choice_limit . '"';
 				}
+				if ( isset( $args['image_choice'] ) && ur_string_to_bool( $args['image_choice'] ) && isset( $image_options ) && array_filter( $image_options ) ) {
+					if ( ! empty( $default ) ) {
+						$default = ( is_serialized( $default ) ) ? unserialize( $default, array( 'allowed_classes' => false ) ) : $default; //phpcs:ignore allowed_classes doesnot support below php v7.1.
+					}
+						$choices = isset( $image_options ) ? $image_options : array();
 
-				if ( isset( $options ) && array_filter( $options ) ) {
+						$field  = '<label class="ur-label" ' . implode( ' ', $custom_attributes ) . '>';
+						$field .= $args['label'] . $required . $tooltip_html . '</label>';
+
+						$checkbox_start = 0;
+
+						$field .= '<ul ' . $choice_limit_attr . 'class="user-registration-image-options">';
+
+					if ( $select_all ) {
+						$field .= '<li class="ur-checkbox-list"><input type="checkbox" id="checkall" class="ur-input-checkbox"  data-check="' . esc_attr( $key ) . '"/>';
+						$field .= '<label class="ur-checkbox-label">  ' . esc_html__( 'Select All', 'user-registration' ) . '</label></li>';
+					}
+					foreach ( $choices as $choice_index => $choice ) {
+						$choice_label = is_array( $choice ) ? $choice['label'] : $choice->label;
+						$choice_image = is_array( $choice ) ? $choice['image'] : $choice->image;
+						$value        = '';
+						if ( '' !== $default ) {
+
+							if ( is_array( $default ) && in_array( ur_sanitize_tooltip( trim( $choice_index ) ), $default ) ) {
+								$value = 'checked="checked"';
+							} elseif ( $default === $choice_index ) {
+								$value = 'checked="checked"';
+							}
+						}
+						$field       .= '<li class="ur-checkbox-list">';
+						$choice_index = ur_sanitize_tooltip( $choice_index );
+						$field       .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . esc_attr( $choice_index ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '" value="' . esc_attr( $choice_index ) . '" ' . esc_attr( $value ) . '/>';
+						$field       .= '<label class="ur-checkbox-label" for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '">';
+						if ( ! empty( $choice_image ) ) {
+							$field .= '<span class="user-registration-image-choice">';
+							$field .= '<img src="' . esc_url( $choice_image ) . '" alt="' . esc_attr( trim( $choice_label ) ) . '" width="200px">';
+							$field .= '</span>';
+						}
+						$field .= trim( $choice_label ) . '</label> </li>';
+						++$checkbox_start;
+					}
+						$field .= '</ul>';
+				} elseif ( isset( $options ) && array_filter( $options ) ) {
 
 					if ( ! empty( $default ) ) {
 						$default = ( is_serialized( $default ) ) ? unserialize( $default, array( 'allowed_classes' => false ) ) : $default; //phpcs:ignore allowed_classes doesnot support below php v7.1.
 					}
 
-					$choices = isset( $options ) ? $options : array();
+						$choices = isset( $options ) ? $options : array();
 
-					$field  = '<label class="ur-label" ' . implode( ' ', $custom_attributes ) . '>';
-					$field .= $args['label'] . $required . $tooltip_html . '</label>';
+						$field  = '<label class="ur-label" ' . implode( ' ', $custom_attributes ) . '>';
+						$field .= $args['label'] . $required . $tooltip_html . '</label>';
 
-					$checkbox_start = 0;
+						$checkbox_start = 0;
 
-					$field .= '<ul ' . $choice_limit_attr . '>';
+						$field .= '<ul ' . $choice_limit_attr . '>';
 
 					if ( $select_all ) {
 						$field .= '<li class="ur-checkbox-list"><input type="checkbox" id="checkall" class="ur-input-checkbox"  data-check="' . esc_attr( $key ) . '"/>';
@@ -353,7 +395,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						$field       .= '<label class="ur-checkbox-label" for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '">' . trim( $choice ) . '</label> </li>';
 						++$checkbox_start;
 					}
-					$field .= '</ul>';
+						$field .= '</ul>';
 				} else {
 					$field = '<label class="ur-label checkbox" ' . implode( ' ', $custom_attributes ) . '>
 							<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . $value . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( $value, 1, false ) . ' /> '
@@ -640,11 +682,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				if ( ! empty( $args['options'] ) ) {
 					// If we have a blank option, select2 needs a placeholder.
 					if ( '' === $value && ! empty( $args['placeholder'] ) ) {
-						$disalbed = '';
-						if ( 'country' !== $args['field_key'] ) {
-							$disalbed = 'disabled';
-						}
-						$options .= '<option value="" selected ' . esc_attr( $disalbed ) . '>' . esc_html( $args['placeholder'] ) . '</option>';
+						$options .= '<option value="" selected disabled>' . esc_html( $args['placeholder'] ) . '</option>';
 					}
 
 					if ( isset( $args['field_key'] ) && 'country' === $args['field_key'] && empty( $args['placeholder'] ) && empty( $value ) ) {
@@ -704,8 +742,45 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : ''; // Backward compatibility. Modified since 1.5.7.
 				$value         = ! empty( $value ) ? $value : $default_value;
 				$label_id      = current( array_keys( $args['options'] ) );
-				if ( ! empty( $args['options'] ) ) {
 
+				if ( empty( $args['options'] ) ) {
+					return;
+				}
+
+				if ( isset( $args['image_choice'] ) && ur_string_to_bool( $args['image_choice'] ) ) {
+					$field .= '<ul class="user-registration-image-options">';
+					foreach ( $args['image_options'] as $option_index => $option_text ) {
+						$option_label = is_array( $option_text ) ? $option_text['label'] : $option_text->label;
+						$option_image = is_array( $option_text ) ? $option_text['image'] : $option_text->image;
+
+						$field  .= '<li class="ur-radio-list">';
+						$checked = '';
+						if ( ! empty( $value ) ) {
+							$checked = checked( $value, trim( $option_index ), false );
+						}
+
+						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( trim( $option_index ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_label ) . '" ' . implode( ' ', $custom_attributes ) . ' / ' . $checked . ' /> ';
+						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_label ) . '" class="radio">';
+
+						if ( ! empty( $option_image ) ) {
+							$field .= '<span class="user-registration-image-choice">';
+							$field .= '<img src="' . esc_url( $option_image ) . '" alt="' . esc_attr( trim( $option_label ) ) . '" width="200px">';
+							$field .= '</span>';
+						}
+
+						$field .= wp_kses(
+							trim( $option_label ),
+							array(
+								'a'    => array(
+									'href'  => array(),
+									'title' => array(),
+								),
+								'span' => array(),
+							)
+						) . '</label></li>';
+					}
+					$field .= '</ul>';
+				} else {
 					$field .= '<ul>';
 					foreach ( $args['options'] as $option_index => $option_text ) {
 
@@ -826,6 +901,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 					$enable_validate_unique = isset( $field->advance_setting->validate_unique ) ? $field->advance_setting->validate_unique : false;
 					$validate_message       = isset( $field->advance_setting->validation_message ) ? $field->advance_setting->validation_message : esc_html__( 'This field value needs to be unique.', 'user-registration' );
 					$enable_payment_slider  = isset( $field->advance_setting->enable_payment_slider ) ? $field->advance_setting->enable_payment_slider : false;
+					$enable_image_choice    = isset( $field->general_setting->image_choice ) ? $field->general_setting->image_choice : false;
 
 					if ( empty( $field_label ) ) {
 						$field_label_array = explode( '_', $field_name );
@@ -844,7 +920,8 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 								$extra_params['options'] = ! empty( $options ) ? $options : $advanced_options;
 								$extra_params['options'] = array_map( 'trim', $extra_params['options'] );
 
-								$extra_params['options'] = array_combine( $extra_params['options'], $extra_params['options'] );
+								$extra_params['options']      = array_combine( $extra_params['options'], $extra_params['options'] );
+								$extra_params['image_choice'] = $enable_image_choice;
 
 								break;
 
@@ -854,7 +931,8 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 								$extra_params['options'] = ! empty( $options ) ? $options : $advanced_options;
 								$extra_params['options'] = array_map( 'trim', $extra_params['options'] );
 
-								$extra_params['options'] = array_combine( $extra_params['options'], $extra_params['options'] );
+								$extra_params['options']      = array_combine( $extra_params['options'], $extra_params['options'] );
+								$extra_params['image_choice'] = $enable_image_choice;
 
 								break;
 
