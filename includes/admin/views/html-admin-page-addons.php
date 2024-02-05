@@ -38,7 +38,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<br class="clear" />
 		<?php
 		$addons = UR_Admin_Addons::get_section_data( $current_section );
-		if ( $addons ) : ?>
+		if ( $addons ) :
+			?>
 			<div class="wp-list-table widefat extension-install">
 					<h2 class="screen-reader-text"><?php esc_html_e( 'Extensions list', 'user-registration' ); ?></h2>
 

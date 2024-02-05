@@ -1,17 +1,18 @@
 <?php
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
-}
-
 /**
  * Provides logging capabilities for debugging purposes.
  *
  * @class           UR_Logger
  * @since           1.0.5
  * @package         UserRegistration/Classes
- * @category        Class
- * @author          WPEverest
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
+/**
+ * UR_Logger Class.
  */
 class UR_Logger implements UR_Logger_Interface {
 

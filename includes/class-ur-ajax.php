@@ -272,9 +272,14 @@ class UR_AJAX {
 					array(
 						/**
 						 * Filter to modify register pre form message.
-						 * translators: %s - Link to logout.
 						 */
-						'message' => apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . sprintf( __( 'You are currently logged in as %1$1s. %2$2s', 'user-registration' ), '<a href="#" title="' . $display_name . '">' . $display_name . '</a>', '<a href="' . wp_logout_url( $current_url ) . '" title="' . __( 'Log out of this account.', 'user-registration' ) . '">' . __( 'Logout', 'user-registration' ) . '  &raquo;</a>' ) . '</p>', $user_ID ),
+						'message' => apply_filters(
+							'ur_register_pre_form_message',
+							'<p class="alert" id="ur_register_pre_form_message">' .
+							/* translators: %1$1s - Link to logout. */
+							sprintf( __( 'You are currently logged in as %1$1s. %2$2s', 'user-registration' ), '<a href="#" title="' . $display_name . '">' . $display_name . '</a>', '<a href="' . wp_logout_url( $current_url ) . '" title="' . __( 'Log out of this account.', 'user-registration' ) . '">' . __( 'Logout', 'user-registration' ) . '  &raquo;</a>' ) . '</p>',
+							$user_ID
+						),
 					)
 				);
 			}
