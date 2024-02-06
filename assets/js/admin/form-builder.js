@@ -699,6 +699,9 @@
 						var multiple_choice = $(".ur-input-grids").find(
 							'.ur-field[data-field-key="multiple_choice"]'
 						).length;
+						var subscription_plan = $(".ur-input-grids").find(
+							'.ur-field[data-field-key="subscription_plan"]'
+						).length;
 						var single_item = $(".ur-input-grids").find(
 							'.ur-field[data-field-key="single_item"]'
 						).length;
@@ -707,6 +710,7 @@
 						).length;
 
 						if (
+							subscription_plan < 1 &&
 							multiple_choice < 1 &&
 							single_item < 1 &&
 							payment_slider < 1
@@ -1186,7 +1190,73 @@
 							var filteredArray = option_values.filter(Boolean);
 							general_setting_data["options"] = filteredArray;
 
-						  } else if (
+						} else if (
+							"subscription_plan" ===
+							$(this).attr("data-field-name")
+						) {
+							var li_elements = $(this).closest("ul").find("li");
+							var array_value = [];
+
+							li_elements.each(function (index, element) {
+								var label = $(element)
+									.find("input.ur-type-radio-label")
+									.val();
+
+								var value = $(element)
+									.find("input.ur-type-radio-money-input")
+									.val();
+								var sell_value = $(element)
+									.find(
+										"input.ur-radio-selling-price-input"
+									)
+									.val();
+								var interval_count = $(element)
+									.find(
+										"input.ur-radio-interval-count-input"
+									)
+									.val();
+								var recurring_period = $(element)
+									.find(
+										".ur-radio-recurring-period"
+									)
+									.val();
+								var trail_interval_count = $(element)
+									.find(
+										"input.ur-radio-trail-interval-count-input"
+									)
+									.val();
+								var trail_recurring_period = $(element)
+									.find(
+										".ur-radio-trail-recurring-period"
+									)
+									.val();
+
+									var trail_period_enable = $single_item
+										.find(".ur-general-setting-block")
+										.find(
+											'input[data-field="trail_period"]'
+										).val();
+
+								if (
+									array_value.every(function (each_value) {
+										return each_value.label !== label;
+									})
+								) {
+									general_setting_data["options"] =
+										array_value.push({
+											label: label,
+											value: value,
+											sell_value: sell_value,
+											interval_count: interval_count,
+											recurring_period: recurring_period,
+											trail_period_enable: trail_period_enable,
+											trail_interval_count: trail_interval_count,
+											trail_recurring_period: trail_recurring_period,
+										});
+								}
+								general_setting_data["options"] = array_value;
+							});
+						} else if (
 							"captcha" === $(this).attr("data-field-name")
 						) {
 							var li_elements = $(this).closest("ul").find("li");
@@ -1876,11 +1946,13 @@
 								container,
 								form_field_id
 							) {
+								var form_id = $('#ur_form_id').val();
 								var data = {
 									action: "user_registration_user_input_dropped",
 									security:
 										user_registration_form_builder_data.user_input_dropped,
 									form_field_id: form_field_id,
+									form_id: form_id
 								};
 
 								var template_text =
@@ -2802,6 +2874,11 @@
 					.find(".ur-field")
 					.data("field-key");
 
+					$(document).trigger(
+						"user_registration_handle_selected_item",
+						[selected_item]
+					);
+
 				if (
 					"country" === field_key ||
 					"billing_country" === field_key ||
@@ -3072,6 +3149,18 @@
 										URFormBuilder.render_multiple_choice(
 											$(this)
 										);
+									} else if (
+										$this_obj
+											.closest(
+												".ur-general-setting-block"
+											)
+											.hasClass(
+												"ur-general-setting-subscription_plan"
+											)
+									) {
+										URFormBuilder.render_subscription_plan(
+											$(this)
+										);
 									}
 								}
 							});
@@ -3129,12 +3218,37 @@
 									URFormBuilder.render_multiple_choice(
 										$(this)
 									);
+								} else if (
+									$this_obj
+										.closest(".ur-general-setting-block")
+										.hasClass(
+											"ur-general-setting-subscription_plan"
+										)
+								) {
+									URFormBuilder.render_subscription_plan(
+										$(this)
+									);
 								}
 
 								URFormBuilder.trigger_general_setting_options(
 									$(this)
 								);
 							});
+
+							$this_obj.on("change", function () {
+								if (
+								$this_obj
+									.closest(".ur-general-setting-block")
+									.hasClass(
+										"ur-general-setting-subscription_plan"
+									)
+								) {
+									URFormBuilder.render_subscription_plan(
+										$(this)
+									);
+								}
+							});
+
 							break;
 						case "selling_price":
 							if (!$this_obj.is(":checked")) {
@@ -3161,6 +3275,31 @@
 								);
 							});
 							break;
+							case "trail_period":
+								if (!$this_obj.is(":checked")) {
+									$(this)
+										.closest(".ur-general-setting-block")
+										.find(".ur-subscription-trail-period-option")
+										.hide();
+								}
+
+								$this_obj.on("change", function () {
+									$(this)
+										.closest(".ur-general-setting-block")
+										.find(".ur-subscription-trail-period-option")
+										.toggle();
+
+									$(".ur-selected-item.ur-item-active")
+										.find(".ur-general-setting-block")
+										.find(".ur-subscription-trail-period-option")
+										.toggle();
+								});
+								$this_obj.on("change", function () {
+									URFormBuilder.trigger_general_setting_trail_period(
+										$(this)
+									);
+								});
+								break;
 						case "placeholder":
 							$this_obj.on("keyup", function () {
 								URFormBuilder.trigger_general_setting_placeholder(
@@ -3882,6 +4021,9 @@
 					case "multiple_choice":
 						URFormBuilder.render_multiple_choice(value);
 						break;
+					case "subscription_plan":
+						URFormBuilder.render_subscription_plan(value);
+						break;
 				}
 				$(document.body).trigger(
 					"ur_sync_textarea_field_settings_in_selected_field_of_form_builder",
@@ -4283,6 +4425,128 @@
 				}
 			},
 			/**
+			 * Reflects changes in multiple choice field of field settings into selected field in form builder area.
+			 *
+			 * @param object this_node  multiple choice  field from field settings.
+			 *
+			 * @since 2.0.3
+			 */
+			render_subscription_plan: function (this_node) {
+				var array_value = [];
+				var wrapper = $(".ur-selected-item.ur-item-active");
+				var li_elements = this_node.closest("ul").find("li");
+				var checked_index = this_node.closest("li").index();
+				li_elements.each(function (index, element) {
+					var label = $(element)
+						.find("input.ur-type-radio-label")
+						.val();
+					var value = $(element)
+						.find("input.ur-type-radio-money-input")
+						.val();
+					var sell_value = $(element)
+						.find("input.ur-radio-selling-price-input")
+						.val();
+					var interval_count = $(element)
+						.find(
+							"input.ur-radio-interval-count-input"
+						)
+						.val();
+					var recurring_period = $(element)
+						.find(
+							".ur-radio-recurring-period"
+						)
+						.val();
+
+					var trail_interval_count = $(element)
+						.find(
+							"input.ur-radio-trail-interval-count-input"
+						)
+						.val();
+					var trail_recurring_period = $(element)
+						.find(
+							".ur-radio-trail-recurring-period"
+						)
+						.val();
+
+						wrapper.find(
+							".ur-general-setting-options li:nth(" + index + ") .ur-radio-recurring-period").val(recurring_period);
+						wrapper.find(
+							".ur-general-setting-options li:nth(" + index + ") .ur-radio-trail-recurring-period").val(trail_recurring_period);
+
+
+					var currency = $(element)
+						.find("input.ur-type-radio-money-input")
+						.attr("data-currency");
+
+					label = label.trim();
+					value = value.trim();
+					sell_value = sell_value.trim();
+					currency = currency.trim();
+					checkbox = $(element)
+						.find("input.ur-type-radio-value")
+						.is(":checked");
+
+					if (
+						array_value.every(function (each_value) {
+							return each_value.label !== label;
+						})
+					) {
+						array_value.push({
+							label: label,
+							value: value,
+							sell_value: sell_value,
+							interval_count: interval_count,
+							recurring_period: recurring_period,
+							trail_interval_count: trail_interval_count,
+							trail_recurring_period: trail_recurring_period,
+							currency: currency,
+							checkbox: checkbox,
+						});
+					}
+				});
+
+				var checkbox = wrapper.find(".ur-field");
+				checkbox.html("");
+
+				for (var i = 0; i < array_value.length; i++) {
+					if (array_value[i] !== "") {
+						checkbox.append(
+							'<label><input value="' +
+								array_value[i].label.trim() +
+								'" type="radio" ' +
+								(array_value[i].checkbox ? "checked" : "") +
+								" disabled>" +
+								array_value[i].label.trim() +
+								" - " +
+								array_value[i].currency.trim() +
+								" " +
+								array_value[i].value.trim() +
+								"</label>"
+						);
+					}
+				}
+
+				if ("radio" === this_node.attr("type")) {
+					if (this_node.is(":checked")) {
+						wrapper
+							.find(
+								".ur-general-setting-options li:nth(" +
+									checked_index +
+									') input[data-field="default_value"]'
+							)
+							.prop("checked", true);
+					} else {
+						wrapper
+							.find(
+								".ur-general-setting-options li:nth(" +
+									checked_index +
+									') input[data-field="default_value"]'
+							)
+							.prop("checked", false);
+					}
+				}
+			},
+			/**
 			 * Reflects changes in options of choice fields of field settings into selected field in form builder area.
 			 *
 			 * @param object $label Options of choice fields from field settings.
@@ -4290,9 +4554,9 @@
 			trigger_general_setting_options: function ($label) {
 				var wrapper = $(".ur-selected-item.ur-item-active");
 				var index = $label.closest("li").index();
-				var multiple_choice = $label.attr("data-field-name");
+				var field_name = $label.attr("data-field-name");
 
-				if ("multiple_choice" === multiple_choice) {
+				if ("multiple_choice" === field_name || "subscription_plan" === field_name ) {
 					wrapper
 						.find(
 							".ur-general-setting-block li:nth(" +
@@ -4342,6 +4606,21 @@
 			 * @param object $label enable selling price field of fields from field settings.
 			 */
 			trigger_general_setting_selling_price: function ($label) {
+				var wrapper = $(".ur-selected-item.ur-item-active");
+
+				wrapper
+					.find(".ur-general-setting-block")
+					.find(
+						'input[data-field="' + $label.attr("data-field") + '"]'
+					)
+					.prop("checked", $label.is(":checked"));
+			},
+			/**
+			 * Reflects changes in enable selling price field of field settings into selected field in form builder area.
+			 *
+			 * @param object $label enable selling price field of fields from field settings.
+			 */
+			trigger_general_setting_trail_period: function ($label) {
 				var wrapper = $(".ur-selected-item.ur-item-active");
 
 				wrapper
@@ -4568,6 +4847,12 @@
 						.hasClass("ur-general-setting-multiple_choice")
 				) {
 					URFormBuilder.render_multiple_choice($this_obj);
+				} else if (
+					$this_obj
+						.closest(".ur-general-setting-block")
+						.hasClass("ur-general-setting-subscription_plan")
+				) {
+					URFormBuilder.render_subscription_plan($this_obj);
 				}
 			},
 			/**
@@ -4633,8 +4918,7 @@
 				}
 
 				$(document.body).trigger("ur_field_option_changed", [
-					{ action: "add", wrapper: $wrapper },
-				]);
+					{ action: "add", wrapper: $wrapper },  URFormBuilder, $this ]);
 			},
 			/**
 			 * Remove an option in choice field when called.
@@ -4648,7 +4932,7 @@
 					this_index = $this.closest("li").index();
 
 				if ($parent_ul.find("li").length > 1) {
-					$this.closest("li").remove();
+                       					$this.closest("li").remove();
 					$wrapper
 						.find(
 							".ur-general-setting-options .ur-options-list > li:nth( " +
@@ -4679,7 +4963,7 @@
 				}
 
 				$(document.body).trigger("ur_field_option_changed", [
-					{ action: "remove", wrapper: $wrapper },
+					{ action: "remove", wrapper: $wrapper }, URFormBuilder, $this
 				]);
 			},
 		};

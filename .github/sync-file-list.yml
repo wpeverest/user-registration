@@ -4,7 +4,6 @@ wpeverest/user-registration-pro@master:
       - src
       - templates
       - .babelrc
-      - .distignore
       - .editorconfig
       - .gitattributes
       - .gitignore

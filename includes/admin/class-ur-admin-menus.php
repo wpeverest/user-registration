@@ -396,6 +396,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 							'icon'  => 'ur-icon ur-icon-multichoice',
 						),
 						array(
+							'id'    => 'user_registration_subscription_plan',
+							'label' => 'Subscription Plan',
+							'icon'  => 'ur-icon ur-icon-subscription-plan',
+						),
+						array(
 							'id'    => 'user_registration_total',
 							'label' => 'Total',
 							'icon'  => 'ur-icon ur-icon-total',
