@@ -28,6 +28,12 @@ class UR_Smart_Tags {
 	 */
 	public static function smart_tags_list() {
 		$smart_tags = array_merge( self::ur_unauthenticated_parsable_smart_tags_list(), self::ur_authenticated_parsable_smart_tags_list() );
+		/**
+		 * The 'user_registration_smart_tags' filter allows developers to modify the list
+		 * of smart tags available in User Registration for customization.
+		 *
+		 * @param array  $smart_tags List of smart tags before applying the filter.
+		 */
 		return apply_filters( 'user_registration_smart_tags', $smart_tags );
 	}
 
@@ -49,6 +55,12 @@ class UR_Smart_Tags {
 			'{{last_name}}'    => esc_html__( 'Last Name', 'user-registration' ),
 			'{{display_name}}' => esc_html__( 'User Display Name', 'user-registration' ),
 		);
+		/**
+		 * The 'user_registration_authenticated_smart_tags' filter allows developers to modify
+		 * the list of smart tags available for authenticated users in User Registration.
+		 *
+		 * @param array $smart_tags Default list of authenticated smart tags.
+		 */
 		return apply_filters( 'user_registration_authenticated_smart_tags', $smart_tags );
 	}
 
@@ -81,6 +93,14 @@ class UR_Smart_Tags {
 			'{{author_name}}'      => esc_html__( 'Author Name', 'user-registration' ),
 			'{{unique_id}}'        => esc_html__( 'Unique ID', 'user-registration' ),
 		);
+		/**
+		 * Applies a filter to modify the list of unauthenticated smart tags.
+		 *
+		 * The 'user_registration_unauthenticated_smart_tags' filter allows developers to customize
+		 * the list of smart tags available for unauthenticated users in User Registration.
+		 *
+		 * @param array $smart_tags Default list of unauthenticated smart tags.
+		 */
 		return apply_filters( 'user_registration_unauthenticated_smart_tags', $smart_tags );
 	}
 
@@ -95,6 +115,15 @@ class UR_Smart_Tags {
 		if ( ! empty( $values['email'] ) ) {
 			$process_type   = isset( $values['process_type'] ) && 'ur_parse_after_meta_update' === $values['process_type'] ? true : false;
 			$default_values = array();
+			/**
+			 * Applies a filter to add or modify smart tags for User Registration.
+			 *
+			 * The 'user_registration_add_smart_tags' filter allows developers to customize
+			 * the default values by adding or modifying smart tags based on the provided email.
+			 *
+			 * @param array  $default_values Default values before adding or modifying smart tags.
+			 * @param string $email          Email address associated with the values.
+			 */
 			$default_values = apply_filters( 'user_registration_add_smart_tags', $default_values, $values['email'] );
 
 			$values    = wp_parse_args( $values, $default_values );
@@ -121,7 +150,14 @@ class UR_Smart_Tags {
 				}
 			);
 			$smart_tags = $user_smart_tags;
-
+			/**
+			 * Applies a filter to modify smart tag values.
+			 *
+			 * The 'user_registration_smart_tag_values' filter allows developers to customize
+			 * the values associated with smart tags before processing them in User Registration.
+			 *
+			 * @param array $values Default smart tag values.
+			 */
 			$values = apply_filters( 'user_registration_smart_tag_values', $values );
 
 			foreach ( $values as $key => $value ) {
@@ -179,6 +215,11 @@ class UR_Smart_Tags {
 						break;
 
 					case 'auto_pass':
+						/**
+						 * Applies a filter to customize the auto-generated password.
+						 *
+						 * @param string $default_password Default auto-generated password.
+						 */
 						$user_pass = apply_filters( 'user_registration_auto_generated_password', 'user_pass' );
 						$content   = str_replace( '{{' . $other_tag . '}}', $user_pass, $content );
 						break;
@@ -344,10 +385,26 @@ class UR_Smart_Tags {
 						$content = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $author ), $content );
 						break;
 					case 'unique_id':
+						/**
+						 * Applies a filter to determine whether more entropy should be added to the unique ID.
+						 *
+						 * The 'ur_unique_id_more_entropy' filter allows developers to customize
+						 * whether additional entropy is included in the unique ID.
+						 *
+						 * @param bool $default_entropy Default value indicating whether more entropy is added.
+						 */
 						$uni_entropy = apply_filters( 'ur_unique_id_more_entropy', true );
-						$prefix      = apply_filters( 'ur_unique_id_prefix', 'ur' );
-						$unique_id   = uniqid( $prefix, $uni_entropy );
-						$content     = str_replace( '{{' . $tag . '}}', $unique_id, $content );
+						/**
+						 * Applies a filter to customize the prefix for the unique ID.
+						 *
+						 * The 'ur_unique_id_prefix' filter allows developers to modify the default prefix used
+						 * for the unique ID.
+						 *
+						 * @param string $default_prefix Default prefix for the unique ID.
+						 */
+						$prefix    = apply_filters( 'ur_unique_id_prefix', 'ur' );
+						$unique_id = uniqid( $prefix, $uni_entropy );
+						$content   = str_replace( '{{' . $tag . '}}', $unique_id, $content );
 						break;
 					case 'approval_link':
 						if ( isset( $values['email'] ) && '' !== $values['email'] ) {
@@ -439,6 +496,15 @@ class UR_Smart_Tags {
 				}
 			}
 		}
+		/**
+		 * Applies a filter to customize the content with smart tags.
+		 *
+		 * The 'user_registration_smart_tag_content' filter allows developers to modify
+		 * the content that includes smart tags based on the provided values.
+		 *
+		 * @param string $content Default content with smart tags.
+		 * @param array  $values  Values associated with the smart tags.
+		 */
 		$content = apply_filters( 'user_registration_smart_tag_content', $content, $values );
 
 		return $content;
@@ -467,6 +533,14 @@ class UR_Smart_Tags {
 	 * @return array array of pattern lists.
 	 */
 	public static function ur_pattern_validation_lists() {
+		/**
+		 * Applies a filter to customize the pattern validation lists.
+		 *
+		 * The 'user_registration_pattern_validation_lists' filter allows developers to modify
+		 * the pattern validation lists used for field validation in User Registration.
+		 *
+		 * @param array $pattern_lists Default pattern validation lists.
+		 */
 		$pattern_lists = apply_filters(
 			'user_registration_pattern_validation_lists',
 			array(

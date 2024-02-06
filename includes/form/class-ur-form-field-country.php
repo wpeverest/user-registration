@@ -37,7 +37,12 @@ class UR_Form_Field_Country extends UR_Form_Field {
 	 * Get Country List.
 	 */
 	public function get_country() {
-
+		/**
+		 * Filter to modify countries list.
+		 *
+		 * @param array Country Names.
+		 * @return array Country Names.
+		 */
 		return apply_filters(
 			'user_registration_countries_list',
 			array(

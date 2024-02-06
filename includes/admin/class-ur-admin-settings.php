@@ -67,6 +67,11 @@ class UR_Admin_Settings {
 				$settings[] = include 'settings/class-ur-settings-license.php';
 			}
 
+			/**
+			 * Filter to retrieve settings pages
+			 *
+			 * @param array $settings Settings.
+			 */
 			self::$settings = apply_filters( 'user_registration_get_settings_pages', $settings );
 		}
 
@@ -83,11 +88,24 @@ class UR_Admin_Settings {
 			die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 		}
 
-		// Trigger actions.
+		/**
+		 * Action to save current tab settings
+		 */
 		do_action( 'user_registration_settings_save_' . $current_tab );
+		/**
+		 * Action to save current tab options
+		 */
 		do_action( 'user_registration_update_options_' . $current_tab );
+		/**
+		 * Action to save options
+		 */
 		do_action( 'user_registration_update_options' );
 
+		/**
+		 * Filter to modify display of setting message
+		 *
+		 * @param boolean Show/Hide.
+		 */
 		$flag = apply_filters( 'show_user_registration_setting_message', true );
 
 		if ( $flag ) {
@@ -97,6 +115,9 @@ class UR_Admin_Settings {
 		// Flush rules.
 		wp_schedule_single_event( time(), 'user_registration_flush_rewrite_rules' );
 
+		/**
+		 * Action to save settings
+		 */
 		do_action( 'user_registration_settings_saved' );
 	}
 
@@ -145,6 +166,9 @@ class UR_Admin_Settings {
 
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
+		/**
+		 * Action to output start settings
+		 */
 		do_action( 'user_registration_settings_start' );
 
 		wp_enqueue_script( 'user-registration-settings', UR()->plugin_url() . '/assets/js/admin/settings' . $suffix . '.js', array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-sortable', 'iris', 'tooltipster' ), UR_VERSION, true );
@@ -171,6 +195,11 @@ class UR_Admin_Settings {
 		$current_tab     = empty( $_GET['tab'] ) ? 'general' : sanitize_title( wp_unslash( $_GET['tab'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 		$current_section = empty( $_REQUEST['section'] ) ? '' : sanitize_title( wp_unslash( $_REQUEST['section'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 
+		/**
+		 * Filter to save settings actions
+		 *
+		 * @param boolean Save Settings or Not.
+		 */
 		$flag = apply_filters( 'user_registration_settings_save_action', true );
 
 		if ( $flag ) {
@@ -189,7 +218,11 @@ class UR_Admin_Settings {
 			self::add_message( wp_unslash( $_GET['ur_error'] ) ); // phpcs:ignore
 		}
 
-		// Get tabs for the settings page.
+		/**
+		 * Filter to get tabs for settings page
+		 *
+		 * @param array Array of settings page
+		 */
 		$tabs = apply_filters( 'user_registration_settings_tabs_array', array() );
 
 		if ( 'import_export' === $current_tab ) {
@@ -310,6 +343,9 @@ class UR_Admin_Settings {
 						$settings .= '<div class="user-registration-card__body pt-0 pb-0">';
 
 						if ( ! empty( $id ) ) {
+							/**
+							 * Action to output settings
+							 */
 							do_action( 'user_registration_settings_' . sanitize_title( $id ) );
 						}
 					}
@@ -335,7 +371,9 @@ class UR_Admin_Settings {
 						$settings .= '<div class="user-registration-card__body ur-p-3 integration-body-info">';
 
 						if ( ! empty( $id ) ) {
-
+							/**
+							 * Action to output settings
+							 */
 							do_action( 'user_registration_settings_' . sanitize_title( $id ) );
 						}
 					}
@@ -795,6 +833,12 @@ class UR_Admin_Settings {
 									break;
 								// Default: run an action.
 								default:
+									/**
+									 * Filter to retrieve default admin field for output
+									 *
+									 * @param string $settings Settings.
+									 * @param mixed $settings Field value.
+									 */
 									$settings = apply_filters( 'user_registration_admin_field_' . $value['type'], $settings, $value );
 									break;
 							}// End switch case.
@@ -806,6 +850,9 @@ class UR_Admin_Settings {
 					$settings .= ' </div > ';
 
 					if ( ! empty( $section['id'] ) ) {
+						/**
+						 * Action after output settings
+						 */
 						do_action( 'user_registration_settings_' . sanitize_title( $section['id'] ) . '_after' );
 					}
 				}// End foreach.
@@ -941,12 +988,20 @@ class UR_Admin_Settings {
 				}
 
 				/**
-				 * Sanitize the value of an option.
+				 * Filter to Sanitize the value of an option.
+				 *
+				 * @param boolean $value String converted to Boolean
+				 * @param mixed $option Option to save
+				 * @param string $raw_value Option value to save
 				 */
 				$value = apply_filters( 'user_registration_admin_settings_sanitize_option', $value, $option, $raw_value );
 
 				/**
-				 * Sanitize the value of an option by option name.
+				 * Filter to Sanitize the value of an option by option name.
+				 *
+				 * @param boolean $value String converted to Boolean
+				 * @param mixed $option Option value to save
+				 * @param string $raw_value Option value to save
 				 */
 				$value = apply_filters( "user_registration_admin_settings_sanitize_option_$option_name", $value, $option, $raw_value );
 
@@ -1019,11 +1074,11 @@ class UR_Admin_Settings {
 	 * Search GLobal Settings.
 	 */
 	public static function search_settings() {
-		$search_string = isset( $_POST['search_string'] ) ? sanitize_text_field( wp_unslash( $_POST['search_string'] ) ) : '';
+		$search_string = isset( $_POST['search_string'] ) ? sanitize_text_field( wp_unslash( $_POST['search_string'] ) ) : ''; //phpcs:ignore;
 		$search_url    = '';
 		$found         = false;
 
-		// Create an array of results to return as JSON
+		// Create an array of results to return as JSON.
 		$autocomplete_results = array();
 		$index                = 0;
 
@@ -1071,12 +1126,12 @@ class UR_Admin_Settings {
 						}
 
 						if ( is_array( $subsection_array ) && ! empty( $subsection_array ) ) {
-							$flattenedArray = self::flattenArray( $subsection_array );
-							$result         = self::search_string_in_array( $search_string, $flattenedArray );
+							$flattened_array = self::flatten_array( $subsection_array );
+							$result          = self::search_string_in_array( $search_string, $flattened_array );
 							if ( ! empty( $result ) ) {
 								foreach ( $result as $key => $value ) {
-									$match = array_search( $value['title'], array_column( $autocomplete_results, 'label' ), true );
-									if ( $match === false ) {
+									$match = array_search( $value['title'], array_column( $autocomplete_results, 'label' ), true ); //phpcs:ignore;
+									if ( false === $match ) {
 										$autocomplete_results[ $index ]['label'] = $value['title'];
 										$autocomplete_results[ $index ]['desc']  = $value['desc'];
 										if ( ! empty( $subsection ) ) {
@@ -1157,11 +1212,11 @@ class UR_Admin_Settings {
 	 *
 	 * @return array
 	 */
-	public static function flattenArray( $nested_array ) {
+	public static function flatten_array( $nested_array ) {
 
-		$settings_array = array();  // create an empty array to store the list of settings
+		$settings_array = array();  // create an empty array to store the list of settings.
 		if ( isset( $nested_array['sections'] ) ) {
-			// loop through each section in the array
+			// loop through each section in the array.
 			foreach ( $nested_array['sections'] as $section ) {
 
 				if ( isset( $section['settings'] ) ) {
@@ -1170,12 +1225,12 @@ class UR_Admin_Settings {
 						continue;
 					}
 
-					// loop through each setting in the section and add it to the $settings_array
+					// loop through each setting in the section and add it to the $settings_array.
 					foreach ( $section['settings'] as $setting ) {
 						$settings_array[] = $setting;
 					}
 				} else {
-					$inner_settings = self::flattenArray( $section );
+					$inner_settings = self::flatten_array( $section );
 					if ( ! empty( $inner_settings ) ) {
 						$settings_array[] = $inner_settings;
 					}

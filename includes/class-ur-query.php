@@ -81,7 +81,12 @@ class UR_Query {
 				$title = '';
 				break;
 		}
-
+		/**
+		 * Applies filter to modify the endpoint title.
+		 *
+		 * @param string $title The endpoint title.
+		 * @param string $endpoint The endpoint.
+		 */
 		return apply_filters( 'user_registration_endpoint_' . $endpoint . '_title', $title, $endpoint );
 	}
 
@@ -136,6 +141,11 @@ class UR_Query {
 	 * @return array
 	 */
 	public function get_query_vars() {
+		/**
+		 * Applies filter to modify the query vars.
+		 *
+		 * @param array $this->query_vars List of query vars.
+		 */
 		return apply_filters( 'user_registration_get_query_vars', $this->query_vars );
 	}
 

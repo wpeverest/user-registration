@@ -1,6 +1,6 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -9,8 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Functions that must be defined to correctly fulfill logger API.
  *
  * @since          1.0.5
- * @category       Interface
- * @author         WPEverest
  */
 interface UR_Logger_Interface {
 
@@ -20,9 +18,9 @@ interface UR_Logger_Interface {
 	 * This is not the preferred method for adding log messages. Please use log() or any one of
 	 * the level methods (debug(), info(), etc.). This method may be deprecated in the future.
 	 *
-	 * @param string $handle
-	 * @param string $message
-	 * @param string $level
+	 * @param string $handle Handle.
+	 * @param string $message Message.
+	 * @param string $level Level.
 	 *
 	 * @return bool True if log was added, otherwise false.
 	 */

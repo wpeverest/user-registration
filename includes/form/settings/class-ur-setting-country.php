@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Setting_Country Class
+ * UR_Setting_Country Class.
  *
  * @package  UserRegistration/Form/Settings
  */
@@ -80,6 +80,14 @@ class UR_Setting_Country extends UR_Field_Settings {
 			),
 		);
 
+		/**
+		 * Filter to modify the country custom advance settings.
+		 *
+		 * @param string $fields Custom country fields.
+		 * @param int field_id Custom field id.
+		 * @param class default_class Default class for fields.
+		 * @return string $fields.
+		 */
 		$fields = apply_filters( 'country_custom_advance_settings', $fields, $this->field_id, $this->default_class );
 		$this->render_html( $fields );
 	}

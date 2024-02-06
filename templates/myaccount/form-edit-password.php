@@ -18,8 +18,23 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
+/**
+ * Deprecated in version 1.4.2. Use 'user_registration_before_change_password_form' instead.
+ *
+ * @deprecated 1.4.2 Use 'user_registration_before_change_password_form' instead.
+ *
+ * @param array array value.
+ * @param string deprecated_version.
+ * @param string hook_name to be used instead.
+ */
 ur_do_deprecated_action( 'user_registration_before_edit_account_form', array(), '1.4.2', 'user_registration_before_change_password_form' );
+
+/**
+ * Fires before rendering the user registration password form.
+ *
+ * The 'user_registration_before_change_password_form' action allows developers to hook into the process
+ * and execute custom code or modifications before the change password form is displayed.
+ */
 do_action( 'user_registration_before_change_password_form' );
 ?>
 <div class="ur-frontend-form login" id="ur-frontend-form">
@@ -27,22 +42,47 @@ do_action( 'user_registration_before_change_password_form' );
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
 				<?php
+					/**
+					 * Deprecated in version 1.4.2. Use 'user_registration_change_password_form_start' instead.
+					 *
+					 * @deprecated 1.4.2 Use 'user_registration_change_password_form_start' instead.
+					 *
+					 * @param array array value.
+					 * @param string derprected_version.
+					 * @param string hook_name to be used instead.
+					 */
 					ur_do_deprecated_action( 'user_registration_edit_account_form_start', array(), '1.4.2', 'user_registration_change_password_form_start' );
+
+					/**
+					 * Fires at the starting of user registration change password form.
+					 *
+					 * The 'user_registration_change_password_form_start' action allows developers to hook into the process
+					 * and execute custom code or modifications on the start of the change password form.
+					 */
 					do_action( 'user_registration_change_password_form_start' );
 				?>
 				<fieldset>
 					<legend><?php esc_html_e( 'Change Password', 'user-registration' ); ?></legend>
 
-					<?php if ( apply_filters( 'user_registration_change_password_current_password_display', true ) ) { ?>
+					<?php
+					if (
+						/**
+						 *  Filters the display of the current password input field in the change password form.
+						 *
+						 *  @param bool Whether to display the current password input field. Default is true.
+						 *  @return bool.
+						 */
+						apply_filters( 'user_registration_change_password_current_password_display', true ) ) {
+						?>
 					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide hide_show_password">
 						<label for="password_current"><?php esc_html_e( 'Current password', 'user-registration' ); ?></label>
 						<span class="password-input-group">
 						<input type="password" class="user-registration-Input user-registration-Input--password input-text" name="password_current" id="password_current" />
-						<?php
-						if ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) {
-							echo '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="' . esc_attr__( 'Show Password', 'user-registration' ) . '"></a>';
-						}
-						?>
+								<?php
+								if ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) {
+									echo '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="' . esc_attr__( 'Show Password', 'user-registration' ) . '"></a>';
+								}
+								?>
 						</span>
 					</p>
 					<?php } ?>
@@ -72,7 +112,25 @@ do_action( 'user_registration_before_change_password_form' );
 				<div class="clear"></div>
 
 				<?php
+					/**
+					 * Deprecated in version 1.4.2. Use 'user_registration_change_password_form' instead.
+					 *
+					 * @deprecated 1.4.2 Use 'user_registration_change_password_form' instead.
+					 *
+					 * @param array array value.
+					 * @param string derprected_version.
+					 * @param string hook_name to be used instead.
+					 */
 					ur_do_deprecated_action( 'user_registration_edit_account_form', array(), '1.4.2', 'user_registration_change_password_form' );
+
+					/**
+					 * Fires after rendering the change password form.
+					 *
+					 * The 'user_registration_change_password_form' action allows developers to hook into the process
+					 * and execute custom code or modifications after the change password form is displayed.
+					 * Developers can use this action to add additional elements, perform actions, or make
+					 * adjustments to the form as needed.
+					 */
 					do_action( 'user_registration_change_password_form' );
 				?>
 
@@ -83,7 +141,23 @@ do_action( 'user_registration_before_change_password_form' );
 				</p>
 
 				<?php
+					/**
+					 * Deprecated in version 1.4.2. Use 'user_registration_change_password_form_end' instead.
+					 *
+					 * @deprecated 1.4.2 Use 'user_registration_change_password_form_end' instead.
+					 *
+					 * @param array array value.
+					 * @param string derprected_version.
+					 * @param string hook_name to be used instead.
+					 */
 					ur_do_deprecated_action( 'user_registration_edit_account_form_end', array(), '1.4.2', 'user_registration_change_password_form_end' );
+
+					/**
+					 * Fires at the end of rendering the change password form.
+					 *
+					 * The 'user_registration_change_password_form_end' action allows developers to hook into the process
+					 * and execute custom code or modifications at the end of change password form.
+					 */
 					do_action( 'user_registration_change_password_form_end' );
 				?>
 			</div>
@@ -92,6 +166,22 @@ do_action( 'user_registration_before_change_password_form' );
 </div>
 
 <?php
+/**
+ * Deprecated in version 1.4.2. Use 'user_registration_after_change_password_form' instead.
+ *
+ * @deprecated 1.4.2 Use 'user_registration_after_change_password_form' instead.
+ *
+ * @param array array value.
+ * @param string derprected_version.
+ * @param string hook_name to be used instead.
+ */
 	ur_do_deprecated_action( 'user_registration_after_edit_account_form', array(), '1.4.1', 'user_registration_after_change_password_form' );
+
+	/**
+	 * Fires after rendering the edit account form.
+	 *
+	 * The 'user_registration_after_edit_account_form' action allows developers to hook into the process
+	 * and execute custom code or modifications after edit account form is displayed.
+	 */
 	do_action( 'user_registration_after_edit_account_form' );
 ?>

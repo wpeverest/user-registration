@@ -1,6 +1,6 @@
 <?php
 /**
- * Form View: User Description
+ * Form View: User Description.
  *
  * @package UserRegistration/Form/Views/Admin/Description
  */

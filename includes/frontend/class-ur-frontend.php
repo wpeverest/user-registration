@@ -12,9 +12,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Frontend Class
+ * Handles frontend functionality and hooks.
+ *
+ * @class UR_Frontend
+ * @version 1.0.0
+ * @package UserRegistration/Frontend
  */
 class UR_Frontend {
+
 
 	/**
 	 * Instance of the class.
@@ -62,16 +67,14 @@ class UR_Frontend {
 					$valid_form_data['profile_pic_url']->value = $value;
 				}
 			}
-		} else {
-			if ( isset( $_POST['form_data'] ) ) {
+		} elseif ( isset( $_POST['form_data'] ) ) {
 				$form_data = json_decode( wp_unslash( $_POST['form_data'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
-				foreach ( $form_data as $data ) {
-					if ( 'user_registration_profile_pic_url' === $data->field_name ) {
-						if ( ! is_array( $data->value ) && ! ur_is_valid_url( $data->value ) ) {
-							$valid_form_data['profile_pic_url']        = new stdClass();
-							$valid_form_data['profile_pic_url']->value = isset( $data->value ) ? $data->value : '';
-						}
+			foreach ( $form_data as $data ) {
+				if ( 'user_registration_profile_pic_url' === $data->field_name ) {
+					if ( ! is_array( $data->value ) && ! ur_is_valid_url( $data->value ) ) {
+						$valid_form_data['profile_pic_url']        = new stdClass();
+						$valid_form_data['profile_pic_url']->value = isset( $data->value ) ? $data->value : '';
 					}
 				}
 			}
@@ -100,9 +103,9 @@ class UR_Frontend {
 		// phpcs:enable WordPress.Security.NonceVerification
 	}
 
-		/**
-		 * Prevent any user who cannot 'edit_posts' from accessing admin.
-		 */
+	/**
+	 * Prevent any user who cannot 'edit_posts' from accessing admin.
+	 */
 	public function prevent_admin_access() {
 		$user_id = get_current_user_id();
 
@@ -194,19 +197,19 @@ class UR_Frontend {
 		$login_page     = get_post( get_option( 'user_registration_login_options_login_redirect_url', 'unset' ) );
 		$myaccount_page = get_post( get_option( 'user_registration_myaccount_page_id' ) );
 		$matched        = 0;
-		$page_id = 0;
+		$page_id        = 0;
 
 		if ( ( isset( $_POST['learndash-login-form'] ) || isset( $_POST['learndash-registration-form'] ) ) ) { //phpcs:ignore
 			return;
 		}
 
 		if ( ! empty( $login_page ) ) {
-			$matched    = ur_find_my_account_in_page( $login_page->ID );
+			$matched = ur_find_my_account_in_page( $login_page->ID );
 			if ( $matched > 0 ) {
 				$page_id = $login_page->ID;
 			}
 		} elseif ( ! empty( $myaccount_page ) && 0 !== $page_id ) {
-			$matched    = ur_find_my_account_in_page( $myaccount_page->ID );
+			$matched = ur_find_my_account_in_page( $myaccount_page->ID );
 			if ( $matched > 0 ) {
 				$page_id = $myaccount_page->ID;
 			}
@@ -220,7 +223,7 @@ class UR_Frontend {
 			}
 
 			if ( 'resetpass' === $action ) {
-				$ur_reset_pass_url = get_permalink( $page_id ) . '?' . sanitize_text_field( wp_unslash( $_SERVER['QUERY_STRING']  ?? '' ) );
+				$ur_reset_pass_url = get_permalink( $page_id ) . '?' . sanitize_text_field( wp_unslash( $_SERVER['QUERY_STRING'] ?? '' ) ); //phpcs:ignore;
 				wp_safe_redirect( $ur_reset_pass_url );
 				exit;
 			}

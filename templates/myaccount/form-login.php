@@ -54,13 +54,26 @@ $enable_field_icon = ur_option_checked( 'user_registration_pro_general_setting_l
 
 $login_title = ur_option_checked( 'user_registration_login_title', false );
 
-$is_passwordless_enabled = ! ur_is_passwordless_login_enabled() || ! isset( $_GET['pl'] ) || ! ur_string_to_bool( $_GET['pl'] ); // phpcs:ignore WordPress.Security.NonceVerification
+$is_passwordless_enabled = ! ur_is_passwordless_login_enabled() || ! isset( $_GET['pl'] ) || ! ur_string_to_bool( $_GET['pl'] ); // phpcs:ignore;
 
 ?>
 
-<?php apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() ); ?>
+<?php
+/**
+ * Filter to modify the notice content before rendering of user registration login form.
+ *
+ * @param function Print notice function.
+ * @return function.
+ */
+apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() );
+?>
 
-<?php do_action( 'user_registration_before_customer_login_form' ); ?>
+<?php
+/**
+ * Action to fire before the rendering of customer login form.
+ */
+do_action( 'user_registration_before_customer_login_form' );
+?>
 
 <div class="ur-frontend-form login <?php echo esc_attr( $template_class ); ?>" id="ur-frontend-form">
 
@@ -69,12 +82,24 @@ $is_passwordless_enabled = ! ur_is_passwordless_login_enabled() || ! isset( $_GE
 			<div class="ur-form-grid">
 				<?php
 				if ( $login_title ) {
-					$login_title_label = apply_filters( 'ur_login_title', $labels['login'] );
+					$login_title_label =
+					/**
+					 * Filter to modify the login title.
+					 *
+					 * @param array $labels['login].
+					 * @return array.
+					 */
+					apply_filters( 'ur_login_title', $labels['login'] );
 					/* translators: %s - Login Title. */
 					echo wp_kses_post( sprintf( __( '<span class="user-registration-login-title"> %s </span>', 'user-registration' ), $login_title_label ) );
 				}
 				?>
-					<?php do_action( 'user_registration_login_form_start' ); ?>
+					<?php
+					/**
+					 * Action to fire at the start of rendering the login form.
+					 */
+					do_action( 'user_registration_login_form_start' );
+					?>
 					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide">
 						<?php
 						if ( ! $hide_labels ) {
@@ -119,12 +144,22 @@ $is_passwordless_enabled = ! ur_is_passwordless_login_enabled() || ! isset( $_GE
 					}
 					?>
 
-					<?php do_action( 'user_registration_login_form' ); ?>
+					<?php
+					/**
+					 * Action to fire after rendering of user registration login form.
+					 */
+					do_action( 'user_registration_login_form' );
+					?>
 
 					<p class="form-row">
 						<?php wp_nonce_field( 'user-registration-login', 'user-registration-login-nonce' ); ?>
 						<div>
-						<?php do_action( 'user_registration_login_form_before_submit_button' ); ?>
+						<?php
+						/**
+						 * Action to fire before rendering of submit button for user registration login form.
+						 */
+						do_action( 'user_registration_login_form_before_submit_button' );
+						?>
 							<?php if ( $enable_ajax ) { ?>
 							<input type="submit" class="user-registration-Button button ur-submit-button" id="user_registration_ajax_login_submit" name="login" value="<?php echo esc_html( $labels['login'] ); ?>" />
 							<span></span>
@@ -184,11 +219,20 @@ $is_passwordless_enabled = ! ur_is_passwordless_login_enabled() || ! isset( $_GE
 						}
 					}
 					?>
-					<?php do_action( 'user_registration_login_form_end' ); ?>
+					<?php
+					/**
+					 * Action to fire at the end of rendering the user registration form.
+					 */
+					do_action( 'user_registration_login_form_end' );
+					?>
 			</div>
 		</div>
 	</form>
 
 </div>
 
-<?php do_action( 'user_registration_after_login_form' ); ?>
+<?php
+/**
+ * Action to fire after the rendering of user registration login form.
+ */
+do_action( 'user_registration_after_login_form' ); ?>

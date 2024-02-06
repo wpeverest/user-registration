@@ -25,6 +25,11 @@ function ur_template_redirect() {
 	if ( isset( $wp->query_vars['user-logout'] ) && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'user-logout' ) ) { //PHPCS:ignore;
 		// Logout.
 		$redirect_url = str_replace( '/user-logout', '', $wp->request );
+		/**
+		 * Filter the redirect after logout url.
+		 *
+		 * @param string $redirect_url The redirect url.
+		 */
 		$redirect_url = apply_filters( 'user_registration_redirect_after_logout', $redirect_url );
 
 		// Check if external url is present in URL.
@@ -37,7 +42,11 @@ function ur_template_redirect() {
 		wp_safe_redirect( str_replace( '&amp;', '&', wp_logout_url( $redirect_url ) ) );
 		exit;
 	} elseif ( isset( $wp->query_vars['user-logout'] ) && 'true' === $wp->query_vars['user-logout'] ) {
-
+		/**
+		 * Filter the redirect after logout url.
+		 *
+		 * @param string $redirect_url The redirect url.
+		 */
 		$redirect_url = apply_filters( 'user_registration_redirect_after_logout', esc_url_raw( ur_get_page_permalink( 'user-logout' ) ) );
 		// Redirect to the correct logout endpoint.
 		wp_safe_redirect( $redirect_url );
@@ -98,6 +107,11 @@ if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
 				}
 
 				if ( empty( $redirect_url ) && 'auto_login' === $login_option ) {
+					/**
+					 * Filter to modify the auto login redirection.
+					 *
+					 * @param string $my_account_page_url The my account page url.
+					 */
 					$redirect_url = apply_filters( 'user_registration_auto_login_redirection', ur_get_my_account_url() );
 				}
 			}
@@ -106,7 +120,13 @@ if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
 				$redirect_url = ur_string_translation( $form_id, 'user_registration_form_setting_redirect_options', $redirect_url );
 			}
 		}
-
+		/**
+		 * Filter the form redirect url.
+		 * It depends on the form.
+		 *
+		 * @param string $redirect_url The redirect url.
+		 * @param int $form_id The form ID.
+		 */
 		return apply_filters( 'user_registration_form_redirect_url', $redirect_url, $form_id );
 	}
 }
@@ -191,6 +211,18 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		);
 
 		$args = wp_parse_args( $args, $defaults );
+		/**
+		 * Filters the arguments for a user registration form field.
+		 *
+		 * The 'user_registration_form_field_args' filter allows developers to modify
+		 * the arguments (args) for a specific form field during the user registration
+		 * process. It provides an opportunity to customize the field arguments based on
+		 * the original args, field key, and field value.
+		 *
+		 * @param array  $args  The original arguments for the form field.
+		 * @param string $key   The key identifying the form field.
+		 * @param mixed  $value The value of the form field.
+		 */
 		$args = apply_filters( 'user_registration_form_field_args', $args, $key, $value );
 
 		if ( true === ur_string_to_bool( $args['required'] ) ) {
@@ -291,7 +323,17 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		$class           = '';
 		if ( ! is_admin() ) {
 			$form_id = isset( $args['form_id'] ) ? $args['form_id'] : '';
-
+			/**
+			 * Filters the enabled class for the icon associated with a user registration form field.
+			 *
+			 * The 'user_registration_field_icon_enabled_class' filter allows developers to modify
+			 * the class name representing the enabled state of the icon associated with a form field.
+			 * It provides an opportunity to customize the enabled class based on the original class
+			 * and the form ID.
+			 *
+			 * @param string $class   The original class representing the enabled state of the icon.
+			 * @param int    $form_id The ID of the user registration form.
+			 */
 			$class = apply_filters( 'user_registration_field_icon_enabled_class', $class, $form_id );
 		}
 
@@ -476,6 +518,18 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text  ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
 				}
 				if ( ! is_admin() ) {
+					/**
+					 * Filters the icon markup for a user registration form field.
+					 *
+					 * The 'user_registration_field_icon' filter allows developers to modify
+					 * the icon markup associated with a specific form field during the user
+					 * registration process. It provides an opportunity to customize the icon
+					 * based on the original icon markup, form ID, and field arguments.
+					 *
+					 * @param string $field   The original icon markup associated with the form field.
+					 * @param int    $form_id The ID of the user registration form.
+					 * @param array  $args    The arguments for the form field.
+					 */
 					$field  = apply_filters( 'user_registration_field_icon', $field, $form_id, $args );
 					$field .= ' </span> ';
 				}
@@ -619,6 +673,18 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				}
 
 				if ( ! is_admin() ) {
+					/**
+					 * Filters the icon markup for a user registration form field.
+					 *
+					 * The 'user_registration_field_icon' filter allows developers to modify
+					 * the icon markup associated with a specific form field during the user
+					 * registration process. It provides an opportunity to customize the icon
+					 * based on the original icon markup, form ID, and field arguments.
+					 *
+					 * @param string $field   The original icon markup associated with the form field.
+					 * @param int    $form_id The ID of the user registration form.
+					 * @param array  $args    The arguments for the form field.
+					 */
 					$field  = apply_filters( 'user_registration_field_icon', $field, $form_id, $args );
 					$field .= ' </span> ';
 				}
@@ -665,6 +731,18 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				}
 
 				if ( ! is_admin() ) {
+					/**
+					 * Filters the icon markup for a user registration form field.
+					 *
+					 * The 'user_registration_field_icon' filter allows developers to modify
+					 * the icon markup associated with a specific form field during the user
+					 * registration process. It provides an opportunity to customize the icon
+					 * based on the original icon markup, form ID, and field arguments.
+					 *
+					 * @param string $field   The original icon markup associated with the form field.
+					 * @param int    $form_id The ID of the user registration form.
+					 * @param array  $args    The arguments for the form field.
+					 */
 					$field = apply_filters( 'user_registration_field_icon', $field, $form_id, $args );
 				}
 				$field .= '</span> ';
@@ -847,7 +925,19 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			$container_id    = esc_attr( $args['id'] ) . '_field';
 			$field           = sprintf( $field_container, $container_class, $container_id, $field_html );
 		}
-
+		/**
+		 * Filters the form field based on its type.
+		 *
+		 * The dynamic 'user_registration_form_field_{type}' filter allows developers to modify
+		 * the form field for a specific type during the user registration process. The {type}
+		 * placeholder is replaced with the actual field type, providing a flexible way to customize
+		 * the form field based on its type, field key, arguments, and value.
+		 *
+		 * @param string $field The original form field markup for the specific type.
+		 * @param string $key   The key identifying the form field.
+		 * @param array  $args  The arguments for the form field.
+		 * @param mixed  $value The value of the form field.
+		 */
 		$field = apply_filters( 'user_registration_form_field_' . $args['type'], $field, $key, $args, $value );
 
 		if ( $args['return'] ) {
@@ -880,7 +970,17 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 		if ( gettype( $all_meta_value ) === 'array' ) {
 			$all_meta_value_keys = array_keys( $all_meta_value );
 		}
-
+		/**
+		 * Filters all fields in the user registration profile account during rendering.
+		 *
+		 * The 'user_registration_profile_account_filter_all_fields' filter allows developers
+		 * to modify all fields in the user registration profile account when rendering. It provides
+		 * an opportunity to customize the post content array and form ID associated with the
+		 * profile account.
+		 *
+		 * @param array $post_content_array The original post content array for the profile account.
+		 * @param int   $form_id            The ID of the user registration form associated with the account.
+		 */
 		$post_content_array = apply_filters( 'user_registration_profile_account_filter_all_fields', $post_content_array, $form_id );
 
 		foreach ( $post_content_array as $post_content_row ) {
@@ -1019,7 +1119,17 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 							'field'      => $field,
 							'field_name' => $field_name,
 						);
-
+						/**
+						 * Filters a specific field in the user registration profile account during rendering.
+						 *
+						 * The dynamic 'user_registration_profile_account_filter_{field_key}' filter allows developers
+						 * to modify a specific field in the user registration profile account when rendering. The {field_key}
+						 * placeholder is replaced with the actual field key, providing a flexible way to customize the
+						 * field's filter data and the form ID associated with the account.
+						 *
+						 * @param array $filter_data The original filter data for the specific field.
+						 * @param int   $form_id     The ID of the user registration form associated with the account.
+						 */
 						$filtered_data_array = apply_filters( 'user_registration_profile_account_filter_' . $field_key, $filter_data, $form_id );
 						if ( isset( $filtered_data_array['fields'] ) ) {
 							$fields = $filtered_data_array['fields'];
@@ -1048,6 +1158,13 @@ if ( ! function_exists( 'user_registration_account_content' ) ) {
 				}
 
 				if ( has_action( 'user_registration_account_' . $key . '_endpoint' ) ) {
+					/**
+					 * Action to add the my account content.
+					 *
+					 * Dynamic portion of hook, $key
+					 *
+					 * @param array $value The key values.
+					 */
 					do_action( 'user_registration_account_' . $key . '_endpoint', $value );
 					return;
 				}
@@ -1168,6 +1285,15 @@ function ur_logout_url( $redirect = '' ) {
 			}
 		}
 	}
+	/**
+	 * Filters the redirect URL after user logout.
+	 *
+	 * The 'user_registration_redirect_after_logout' filter allows developers to modify
+	 * the redirect URL after a user logs out. It provides an opportunity to customize
+	 * the redirection based on the original redirect URL.
+	 *
+	 * @param string $redirect The original redirect URL after user logout.
+	 */
 	$redirect = apply_filters( 'user_registration_redirect_after_logout', $redirect );
 
 	if ( $logout_endpoint && ! is_front_page() ) {

@@ -51,6 +51,11 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 				'frontend-messages' => __( 'Frontend Messages', 'user-registration' ),
 			);
 
+			/**
+			 * Filter to get the setings.
+			 *
+			 * @param array $settings Setting options to be enlisted.
+			 */
 			return apply_filters( 'user_registration_get_sections_' . $this->id, $sections );
 		}
 
@@ -67,6 +72,11 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 
 			unset( $all_roles_except_admin['administrator'] );
 
+			/**
+			 * Filter to add the options settings.
+			 *
+			 * @param array Options to be enlisted.
+			 */
 			$settings = apply_filters(
 				'user_registration_general_settings',
 				array(
@@ -203,6 +213,11 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 				)
 			);
 
+			/**
+			 * Filter to get the settings.
+			 *
+			 * @param array $settings Setting options to be enlisted.
+			 */
 			return apply_filters( 'user_registration_get_settings_' . $this->id, $settings );
 		}
 
@@ -212,7 +227,11 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		 * @return array
 		 */
 		public function get_frontend_messages_settings() {
-
+			/**
+			 * Filter to add the frontend messages options settings.
+			 *
+			 * @param array Options to be enlisted.
+			 */
 			$settings = apply_filters(
 				'user_registration_frontend_messages_settings',
 				array(
@@ -352,6 +371,11 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 				)
 			);
 
+			/**
+			 * Filter to get the settings.
+			 *
+			 * @param array $settings Frontend Message Setting options to be enlisted.
+			 */
 			return apply_filters( 'user_registration_get_frontend_messages_settings_' . $this->id, $settings );
 		}
 
@@ -361,6 +385,11 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		 * @return array
 		 */
 		public function get_login_options_settings() {
+			/**
+			 * Filter to add the login options settings.
+			 *
+			 * @param array Options to be enlisted.
+			 */
 			$settings = apply_filters(
 				'user_registration_login_options_settings',
 				array(
@@ -654,6 +683,11 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 				)
 			);
 
+			/**
+			 * Filter to get the login options settings.
+			 *
+			 * @param array $settings Login Options Settings to be enlisted.
+			 */
 			return apply_filters( 'user_registration_get_login_options_settings_' . $this->id, $settings );
 		}
 

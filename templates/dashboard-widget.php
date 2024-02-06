@@ -11,7 +11,6 @@
  * the readme will list any important changes.
  *
  * @see     https://docs.wpuserregistration.com/docs/how-to-edit-user-registration-template-files-such-as-login-form/
- * @author  WPEverest
  * @package UserRegistration/Templates
  * @since   1.5.8
  */

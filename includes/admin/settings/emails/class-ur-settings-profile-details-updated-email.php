@@ -33,6 +33,11 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Updated_Email', false ) ) :
 		 */
 		public function get_settings() {
 
+			/**
+			 * Filter to add the options on settings.
+			 *
+			 * @param array Options to be enlisted.
+			 */
 			$settings = apply_filters(
 				'user_registration_profile_details_updated_email',
 				array(
@@ -80,6 +85,11 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Updated_Email', false ) ) :
 				)
 			);
 
+			/**
+			 * Filter to get the settings.
+			 *
+			 * @param array $settings Setting options to be enlisted.
+			 */
 			return apply_filters( 'user_registration_get_settings_' . $this->id, $settings );
 		}
 
@@ -90,6 +100,11 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Updated_Email', false ) ) :
 		 */
 		public function ur_get_profile_details_updated_email() {
 
+			/**
+			 * Filter to modify the message content for profile details updated.
+			 *
+			 * @return string $message Message content for profile details updated email to be overridden.
+			 */
 			$message = apply_filters(
 				'user_registration_profile_details_updated_email_message',
 				sprintf(
