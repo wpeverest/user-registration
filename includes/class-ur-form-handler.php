@@ -128,10 +128,8 @@ class UR_Form_Handler {
 						if ( 'disabled' !== $disabled ) {
 							if ( isset( $_POST[ $key ] ) ) {
 								update_user_meta( $user_id, $update_key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-							} else {
-								if ( 'checkbox' === $field['field_key'] ) {
+							} elseif ( 'checkbox' === $field['field_key'] ) {
 									update_user_meta( $user_id, $update_key, '' );
-								}
 							}
 						}
 					}
@@ -265,10 +263,12 @@ class UR_Form_Handler {
 		$form_id   = ur_get_form_id_by_userid( $user_id );
 
 		$values = array(
-			'username'   => $username,
-			'email'      => $new_email,
-			'all_fields' => $data_html,
-			'form_id'    => $form_id,
+			'username'           => $username,
+			'user_email'         => $user->user_email,
+			'all_fields'         => $data_html,
+			'form_id'            => $form_id,
+			'user_id'            => $user_id,
+			'user_pending_email' => $new_email,
 		);
 
 		$name_value = array();
@@ -277,8 +277,8 @@ class UR_Form_Handler {
 		$message     = get_option( 'user_registration_confirm_email_address_change_email', $message );
 		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
 		$message     = apply_filters( 'user_registration_email_change_email_content', $message );
-		$message = UR_Emailer::parse_smart_tags( $message, $values, $name_value );
-		$subject = UR_Emailer::parse_smart_tags( $subject, $values, $name_value );
+		$message     = UR_Emailer::parse_smart_tags( $message, $values, $name_value );
+		$subject     = UR_Emailer::parse_smart_tags( $subject, $values, $name_value );
 
 		$headers = array(
 			'From:' . $from_name . ' <' . $sender_email . '>',
@@ -290,8 +290,6 @@ class UR_Form_Handler {
 		update_user_meta( $user->ID, 'user_registration_pending_email', $new_email );
 		update_user_meta( $user->ID, 'user_registration_pending_email_expiration', time() + DAY_IN_SECONDS );
 		if ( ur_option_checked( 'uret_override_confirm_email_address_change_email', true ) ) {
-			$values                    = array();
-			$name_value                = array();
 			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
 			$message                   = UR_Emailer::parse_smart_tags( $message, $values, $name_value );
 			$subject                   = UR_Emailer::parse_smart_tags( $subject, $values, $name_value );
