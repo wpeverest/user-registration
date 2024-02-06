@@ -189,8 +189,7 @@ do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id
 											}
 
 											// Unset multiple choice and single item.
-											// Unset multiple choice and single item.
-											if ( 'multiple_choice' === $single_item->field_key || 'single_item' === $single_item->field_key || 'captcha' === $single_item->field_key ) {
+											if ( 'subscription_plan' === $single_item->field_key || 'multiple_choice' === $single_item->field_key || 'single_item' === $single_item->field_key || 'captcha' === $single_item->field_key || 'stripe_gateway' === $single_item->field_key ) {
 												continue;
 											}
 

@@ -163,7 +163,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							$field_label      = isset( $extra_params->label ) ? $extra_params->label : $field_label;
 						}
 						?>
-						<?php if ( 'multiple_choice' === $field_type || 'single_item' === $field_type || 'total_field' === $field_type ) { ?>
+						<?php if ( 'subscription_plan' === $field_type || 'multiple_choice' === $field_type || 'single_item' === $field_type || 'total_field' === $field_type ) { ?>
 						<?php } else { ?>
 						<tr>
 							<th>
@@ -698,6 +698,10 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 								case 'multiple_choice':
 									$fields[ $field_index ]['type'] = 'multiple_choice';
+									break;
+
+								case 'subscription_plan':
+									$fields[ $field_index ]['type'] = 'subscription_plan';
 									break;
 
 								case 'single_item':
