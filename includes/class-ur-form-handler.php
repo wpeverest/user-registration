@@ -151,10 +151,8 @@ class UR_Form_Handler {
 						if ( 'disabled' !== $disabled ) {
 							if ( isset( $_POST[ $key ] ) ) {
 								update_user_meta( $user_id, $update_key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-							} else {
-								if ( 'checkbox' === $field['field_key'] ) {
+							} elseif ( 'checkbox' === $field['field_key'] ) {
 									update_user_meta( $user_id, $update_key, '' );
-								}
 							}
 						}
 					}
@@ -281,55 +279,60 @@ class UR_Form_Handler {
 	 * @return void
 	 */
 	public static function send_confirmation_email( $user, $new_email, $form_id ) {
-		// Generate a confirmation key for the email change.
-		$confirm_key = wp_generate_password( 20, false );
 
-		// Save the confirmation key.
-		update_user_meta( $user->ID, 'user_registration_email_confirm_key', $confirm_key );
-
-		// Send an email to the new address with confirmation link.
-		$confirm_link = add_query_arg( 'confirm_email', $user->ID, add_query_arg( 'confirm_key', $confirm_key, ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' ) ) );
+		$from_name    = apply_filters( 'wp_mail_from_name', get_option( 'user_registration_email_from_name', esc_attr( get_bloginfo( 'name', 'display' ) ) ) );
+		$sender_email = apply_filters( 'wp_mail_from', get_option( 'user_registration_email_from_address', get_option( 'admin_email' ) ) );
 		$to           = $new_email;
-		/**
-		 * Filter to modify the change email subject.
-		 */
-		$subject = apply_filters( 'user_registration_email_change_email_subject', __( 'Confirm Your Email Address Change', 'user-registration' ) );
-		$message = sprintf(
-			/* translators: %1$s is the display name of the user, %2$s is the new email, %3$s is the confirmation link, %4$s is the blog name. */
-			esc_html__(
-				'Dear %1$s,
-				You recently requested to change your email address associated with your account to %2$s.
-				To confirm this change, please click on the following link:
-				%3$s
-				This link will only be active for 24 hours. If you did not request this change, please ignore this email or contact us for assistance.
-				Best regards,
-				%4$s',
-				'user-registration'
-			),
-			esc_html( $user->display_name ),
-			esc_html( $new_email ),
-			'<a href="' . esc_url( $confirm_link ) . '">Click here</a>',
-			esc_html( get_bloginfo( 'name' ) )
+		$template_id  = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
+		$settings     = new UR_Settings_Confirm_Email_Address_Change_Email();
+		$subject      = get_option( 'user_registration_confirm_email_address_change_email_subject', __( 'Confirm Your Email Address Change', 'user-registration' ) );
+
+		$username  = isset( $user->data->user_login ) ? sanitize_text_field( $user->data->user_login ) : '';
+		$data_html = '<table class="user-registration-email__entries" cellpadding="0" cellspacing="0"><tbody>';
+		$user_id   = isset( $user->ID ) ? sanitize_text_field( $user->ID ) : '';
+		$form_id   = ur_get_form_id_by_userid( $user_id );
+
+		$values = array(
+			'username'           => $username,
+			'user_email'         => $user->user_email,
+			'all_fields'         => $data_html,
+			'form_id'            => $form_id,
+			'user_id'            => $user_id,
+			'user_pending_email' => $new_email,
 		);
+
+		$name_value = array();
+
+		$message     = $settings->ur_get_confirm_email_address_change_email();
+		$message     = get_option( 'user_registration_confirm_email_address_change_email', $message );
 		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
 		/**
 		 * Filter to modify the change email content.
 		 *
 		 * @param string $message The message.
 		 */
-		$message = apply_filters( 'user_registration_email_change_email_content', $message );
-		$message = user_registration_process_email_content( $message, $template_id );
+		$message     = apply_filters( 'user_registration_email_change_email_content', $message );
+		$message     = UR_Emailer::parse_smart_tags( $message, $values, $name_value );
+		$subject     = UR_Emailer::parse_smart_tags( $subject, $values, $name_value );
 
 		$headers = array(
-			'From' => get_bloginfo( 'name' ) . ' <' . get_option( 'admin_email' ) . '>',
+			'From:' . $from_name . ' <' . $sender_email . '>',
 			'Content-Type:text/html; charset=UTF-8',
 		);
 
-		wp_mail( $to, $subject, $message, $headers, $template_id );
+		$attachment = '';
 
-		update_user_meta( $user->ID, 'user_registration_email_confirm_key', $confirm_key );
 		update_user_meta( $user->ID, 'user_registration_pending_email', $new_email );
 		update_user_meta( $user->ID, 'user_registration_pending_email_expiration', time() + DAY_IN_SECONDS );
+		if ( ur_option_checked( 'uret_override_confirm_email_address_change_email', true ) ) {
+			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
+			$message                   = UR_Emailer::parse_smart_tags( $message, $values, $name_value );
+			$subject                   = UR_Emailer::parse_smart_tags( $subject, $values, $name_value );
+
+			UR_Emailer::user_registration_process_and_send_email( $to, $subject, $message, $headers, $attachment, $template_id );
+		} else {
+			UR_Emailer::user_registration_process_and_send_email( $to, $subject, $message, $headers, $attachment, $template_id );
+		}
 	}
 
 	/**

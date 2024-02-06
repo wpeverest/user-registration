@@ -173,7 +173,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							$field_label      = isset( $extra_params->label ) ? $extra_params->label : $field_label;
 						}
 						?>
-						<?php if ( 'multiple_choice' === $field_type || 'single_item' === $field_type || 'total_field' === $field_type ) { ?>
+						<?php if ( 'subscription_plan' === $field_type || 'multiple_choice' === $field_type || 'single_item' === $field_type || 'total_field' === $field_type ) { ?>
 						<?php } else { ?>
 						<tr>
 							<th>
@@ -214,16 +214,40 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 								<?php elseif ( ! empty( $field['type'] ) && 'radio' === $field['type'] ) : ?>
 									<?php
 									$db_value = get_user_meta( $user->ID, $key, true );
-									if ( is_array( $field['options'] ) ) {
+									if ( isset( $field['image_choice'] ) && ur_string_to_bool( $field['image_choice'] ) ) {
+										if ( is_array( $field['image_options'] ) ) {
+											foreach ( $field['image_options'] as $option_key => $option_value ) {
+												$label_option = is_array( $option_value ) ? $option_value['label'] : $option_value->label;
+												$image_option = is_array( $option_value ) ? $option_value['image'] : $option_value->image;
+												?>
+												<div class="user-registration-user-profile-info">
+												<input type="radio"
+																name="<?php echo esc_attr( $key ); ?>"
+																id="<?php echo esc_attr( $key ) . '_' . esc_attr( $label_option ); ?>"
+																value="<?php echo esc_attr( trim( $label_option ) ); ?>"
+																class="<?php echo esc_attr( $field['class'] ); ?>" <?php esc_attr( checked( $db_value, trim( $label_option ), true ) ); ?>  >
+																<label class="user-registration-image-options" for="<?php echo esc_attr( $key ) . '_' . esc_attr( $label_option ); ?>">
+												<?php if ( ! empty( $image_option ) ) { ?>
+													<span class="user-registration-image-choice"><img src="<?php echo esc_url( $image_option ); ?>" alt="<?php esc_attr( $label_option ); ?>" width="200px" height="200px"></span>
+													<?php
+												}
+												?>
+												<?php echo esc_html( trim( $label_option ) ); ?>
+												</label><br/>
+												</div>
+												<?php
+											}
+										}
+									} elseif ( is_array( $field['options'] ) ) {
 										foreach ( $field['options'] as $option_key => $option_value ) {
 											?>
-											<label><input type="radio"
-															name="<?php echo esc_attr( $key ); ?>"
-															id="<?php echo esc_attr( $key ); ?>"
-															value="<?php echo esc_attr( trim( $option_key ) ); ?>"
-															class="<?php echo esc_attr( $field['class'] ); ?>" <?php esc_attr( checked( $db_value, trim( $option_value ), true ) ); ?>  ><?php echo esc_html( trim( $option_value ) ); ?>
-											</label><br/>
-											<?php
+												<label><input type="radio"
+																name="<?php echo esc_attr( $key ); ?>"
+																id="<?php echo esc_attr( $key ); ?>"
+																value="<?php echo esc_attr( trim( $option_key ) ); ?>"
+																class="<?php echo esc_attr( $field['class'] ); ?>" <?php esc_attr( checked( $db_value, trim( $option_value ), true ) ); ?>  ><?php echo esc_html( trim( $option_value ) ); ?>
+												</label><br/>
+												<?php
 										}
 									}
 									?>
@@ -233,15 +257,44 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 									$value = get_user_meta( $user->ID, $key, true );
 
-									if ( is_array( $field['choices'] ) && array_filter( $field['choices'] ) ) {
+									if ( isset( $field['image_choice'] ) && ur_string_to_bool( $field['image_choice'] ) && is_array( $field['image_options'] ) && array_filter( $field['image_options'] ) ) {
+										foreach ( $field['image_options'] as $choice_key => $choice_value ) {
+											$label_choice = is_array( $choice_value ) ? ur_sanitize_tooltip( trim( $choice_value['label'] ) ) : ur_sanitize_tooltip( trim( $choice_value->label ) );
+											$image_choice = is_array( $choice_value ) ? $choice_value['image'] : $choice_value->image;
+											?>
+											<div class="user-registration-user-profile-info">
+											<input type="checkbox"
+																name="<?php echo esc_attr( $key ); ?>[]"
+																id="<?php echo esc_attr( $key ) . '_' . esc_attr( $label_choice ); ?>"
+																value="<?php echo esc_attr( $label_choice ); ?>"
+																class="<?php echo esc_attr( $field['class'] ); ?>"
+																				<?php
+																				if ( is_array( $value ) && in_array( $label_choice, $value ) ) {
+																					echo 'checked="checked"';
+																				} elseif ( $value == $label_choice ) {
+																					echo 'checked="checked"';
+																				}
+																				?>
+												>
+												<label class="user-registration-image-options" for="<?php echo esc_attr( $key ) . '_' . esc_attr( $label_choice ); ?>">
+												<?php if ( ! empty( $image_choice ) ) { ?>
+													<span class="user-registration-image-choice"><img src="<?php echo esc_url( $image_choice ); ?>" alt="<?php esc_attr( $label_choice ); ?>" width="200px" height="200px"></span>
+													<?php
+												}
+												?>
+											<?php echo wp_kses_post( trim( $label_choice ) ); ?></label><br/>
+											</div>
+												<?php
+										}
+									} elseif ( is_array( $field['choices'] ) && array_filter( $field['choices'] ) ) {
 										foreach ( $field['choices'] as $choice ) {
 											$option = ur_sanitize_tooltip( trim( $choice ) );
 											?>
-											<label><input type="checkbox"
-															name="<?php echo esc_attr( $key ); ?>[]"
-															id="<?php echo esc_attr( $key ); ?>"
-															value="<?php echo esc_attr( $option ); ?>"
-															class="<?php echo esc_attr( $field['class'] ); ?>"
+												<label><input type="checkbox"
+																name="<?php echo esc_attr( $key ); ?>[]"
+																id="<?php echo esc_attr( $key ); ?>"
+																value="<?php echo esc_attr( $option ); ?>"
+																class="<?php echo esc_attr( $field['class'] ); ?>"
 																				<?php
 																				if ( is_array( $value ) && in_array( $option, $value ) ) {
 																					echo 'checked="checked"';
@@ -249,8 +302,8 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 																					echo 'checked="checked"';
 																				}
 																				?>
-											><?php echo wp_kses_post( trim( $choice ) ); ?></label><br/>
-											<?php
+												><?php echo wp_kses_post( trim( $choice ) ); ?></label><br/>
+												<?php
 										}
 									} else {
 										?>
@@ -550,19 +603,45 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									break;
 
 								case 'radio':
-									// Backward compatibility. Modified since 1.5.7.
-									$options     = isset( $field->advance_setting->options ) ? explode( ',', $field->advance_setting->options ) : array();
-									$option_data = isset( $field->general_setting->options ) ? $field->general_setting->options : $options;
-									$option_data = array_map( 'trim', $option_data );
-
-									if ( is_array( $option_data ) && '' != $field_index ) {
-										foreach ( $option_data as $index_data => $option ) {
-											$fields[ $field_index ]['options'][ $option ] = $option;
+									if ( isset( $field->general_setting->image_choice ) && ur_string_to_bool( $field->general_setting->image_choice ) ) {
+										$option_data = isset( $field->general_setting->image_options ) ? $field->general_setting->image_options : array();
+										$option_data = array_map(
+											function ( $option ) {
+												if ( is_array( $option ) ) {
+													$option['label'] = trim( $option['label'] );
+												} elseif ( is_object( $option ) ) {
+													$option->label = isset( $option->label ) ? trim( $option->label ) : $option->label;
+												}
+												return $option;
+											},
+											$option_data
+										);
+										if ( is_array( $option_data ) && '' != $field_index ) {
+											foreach ( $option_data as $index_data => $option ) {
+												$label_option = is_array( $option ) ? $option['label'] : $option->label;
+												$image_option = is_array( $option ) ? $option['image'] : $option->image;
+												$fields[ $field_index ]['image_options'][ $label_option ] = array(
+													'label' => $label_option,
+													'image' => $image_option,
+												);
+											}
+											$fields[ $field_index ]['type']         = 'radio';
+											$fields[ $field_index ]['class']        = '';
+											$fields[ $field_index ]['image_choice'] = isset( $field->general_setting->image_choice ) ? $field->general_setting->image_choice : false;
 										}
-										$fields[ $field_index ]['type']  = 'radio';
-										$fields[ $field_index ]['class'] = '';
+										break;
+									} else {
+										$option_data = isset( $field->general_setting->options ) ? $field->general_setting->options : array();
+										$option_data = array_map( 'trim', $option_data );
+										if ( is_array( $option_data ) && '' != $field_index ) {
+											foreach ( $option_data as $index_data => $option ) {
+												$fields[ $field_index ]['options'][ $option ] = $option;
+											}
+											$fields[ $field_index ]['type']  = 'radio';
+											$fields[ $field_index ]['class'] = '';
+										}
+										break;
 									}
-									break;
 
 								case 'country':
 									$country                           = ur_load_form_field_class( $field_key );
@@ -579,14 +658,32 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 								case 'mailchimp':
 								case 'mailerlite':
 								case 'checkbox':
-									// Backward compatibility. Modified since 1.5.7.
-									$options      = isset( $field->advance_setting->choices ) ? explode( ',', $field->advance_setting->choices ) : array();
-									$choices_data = isset( $field->general_setting->options ) ? $field->general_setting->options : $options;
-									$choices_data = array_map( 'trim', $choices_data );
+									if ( isset( $field->general_setting->image_choice ) && ur_string_to_bool( $field->general_setting->image_choice ) ) {
+										$choices_data = isset( $field->general_setting->image_options ) ? $field->general_setting->image_options : array();
+										$choices_data = array_map(
+											function ( $choice ) {
+												if ( is_array( $choice ) ) {
+													$choice['label'] = trim( $choice['label'] );
+												} elseif ( is_object( $choice ) ) {
+													$choice->label = isset( $choice->label ) ? trim( $choice->label ) : $choice->label;
+												}
+												return $choice;
+											},
+											$choices_data
+										);
 
-									$fields[ $field_index ]['choices'] = $choices_data;
-									$fields[ $field_index ]['type']    = 'checkbox';
-									$fields[ $field_index ]['class']   = '';
+										$fields[ $field_index ]['image_options'] = $choices_data;
+										$fields[ $field_index ]['type']          = 'checkbox';
+										$fields[ $field_index ]['class']         = '';
+										$fields[ $field_index ]['image_choice']  = isset( $field->general_setting->image_choice ) ? $field->general_setting->image_choice : false;
+									} else {
+										$choices_data = isset( $field->general_setting->options ) ? $field->general_setting->options : array();
+										$choices_data = array_map( 'trim', $choices_data );
+
+										$fields[ $field_index ]['choices'] = $choices_data;
+										$fields[ $field_index ]['type']    = 'checkbox';
+										$fields[ $field_index ]['class']   = '';
+									}
 									break;
 
 								case 'date':
@@ -628,6 +725,10 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 								case 'multiple_choice':
 									$fields[ $field_index ]['type'] = 'multiple_choice';
+									break;
+
+								case 'subscription_plan':
+									$fields[ $field_index ]['type'] = 'subscription_plan';
 									break;
 
 								case 'single_item':

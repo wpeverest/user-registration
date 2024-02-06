@@ -88,6 +88,7 @@ class UR_Smart_Tags {
 			'{{user_ip_address}}'  => esc_html__( 'User IP Address', 'user-registration' ),
 			'{{referrer_url}}'     => esc_html__( 'Referrer URL', 'user-registration' ),
 			'{{form_id}}'          => esc_html__( 'Form ID', 'user-registration' ),
+			'{{form_name}}'        => esc_html__( 'Form Name', 'user-registration' ),
 			'{{author_email}}'     => esc_html__( 'Author Email', 'user-registration' ),
 			'{{author_name}}'      => esc_html__( 'Author Name', 'user-registration' ),
 			'{{unique_id}}'        => esc_html__( 'Unique ID', 'user-registration' ),
@@ -176,7 +177,15 @@ class UR_Smart_Tags {
 		if ( ! empty( $other_tags[1] ) ) {
 			foreach ( $other_tags[1] as $key => $tag ) {
 				$other_tag = explode( ' ', $tag )[0];
+
 				switch ( $other_tag ) {
+					case 'updated_new_user_email':
+						if ( ! empty( $values['user_pending_email'] ) ) {
+							$new_email = $values['user_pending_email'];
+							$content   = str_replace( '{{' . $other_tag . '}}', $new_email, $content );
+						}
+						break;
+
 					case 'user_id':
 						$user_id = ! empty( $values['user_id'] ) ? $values['user_id'] : get_current_user_id();
 						$content = str_replace( '{{' . $other_tag . '}}', $user_id, $content );
@@ -274,6 +283,7 @@ class UR_Smart_Tags {
 						} else {
 							$all_fields = '';
 						}
+
 						$content = str_replace( '{{' . $other_tag . '}}', $all_fields, $content );
 						break;
 
@@ -316,6 +326,12 @@ class UR_Smart_Tags {
 						}
 
 						$content = str_replace( '{{' . $other_tag . '}}', $form_id, $content );
+						break;
+
+					case 'form_name':
+						$current_form_id = isset( $values['form_id'] );
+						$form_name       = ucfirst( get_the_title( $current_form_id ) );
+						$content         = str_replace( '{{' . $other_tag . '}}', $form_name, $content );
 						break;
 
 					case 'user_ip_address':
@@ -405,6 +421,23 @@ class UR_Smart_Tags {
 							}
 						}
 						break;
+
+					case 'email_change_confirmation_link':
+						// Generate a confirmation key for the email change.
+						$confirm_key = wp_generate_password( 20, false );
+
+						$user = get_current_user_id();
+
+						// Save the confirmation key.
+						update_user_meta( $user, 'user_registration_email_confirm_key', $confirm_key );
+
+						// Send an email to the new address with confirmation link.
+						$confirm_link = add_query_arg( 'confirm_email', $user, add_query_arg( 'confirm_key', $confirm_key, ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' ) ) );
+						$confirm_link = sprintf( '<a href="%s" target="_blank">%s</a>', $confirm_link, esc_html__( 'confirm link', 'user-registration' ) );
+
+						$content = str_replace( '{{' . $tag . '}}', $confirm_link, $content );
+						break;
+
 					case 'denial_link':
 						if ( isset( $values['email'] ) && '' !== $values['email'] ) {
 							$user    = get_user_by( 'email', $values['email'] );
@@ -416,7 +449,7 @@ class UR_Smart_Tags {
 							if ( ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
 								$denial_token = get_user_meta( $user_id, 'ur_confirm_denial_token', true );
 								$denial_link  = '<a href="' . admin_url( '/' ) . '?ur_denial_token=' . $denial_token . '">' . esc_html__( 'Deny Now', 'user-registration' ) . '</a><br />';
-								$content        = str_replace( '{{' . $tag . '}}', $denial_link, $content );
+								$content      = str_replace( '{{' . $tag . '}}', $denial_link, $content );
 							}
 						}
 						break;
@@ -425,6 +458,7 @@ class UR_Smart_Tags {
 						$user_data = get_userdata( $user_id );
 						$content   = str_replace( '{{' . $tag . '}}', esc_html( $user_data->display_name ), $content );
 						break;
+
 					case 'profile_pic_box':
 						$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
 						$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );

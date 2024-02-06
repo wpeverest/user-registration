@@ -214,6 +214,7 @@ input.ur-input-border-red, textarea.ur-input-border-red{
 			.ur-field-item {
 				margin-bottom: 20px;
 				&.field-multiple_choice,
+				&.field-subscription_plan,
 				&.field-checkbox,
 				&.field-radio {
 					ul {

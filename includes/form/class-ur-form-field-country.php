@@ -371,6 +371,7 @@ class UR_Form_Field_Country extends UR_Form_Field {
 		$this->field_defaults = array(
 			'default_label'      => __( 'Country', 'user-registration' ),
 			'default_field_name' => 'country_' . ur_get_random_number(),
+			'default_placeholder' => __( 'Select a country', 'user-registration' ),
 		);
 	}
 

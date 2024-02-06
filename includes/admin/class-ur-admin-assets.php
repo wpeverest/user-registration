@@ -353,6 +353,7 @@ class UR_Admin_Assets {
 					),
 					home_url()
 				),
+				'ur_placeholder'                         => UR()->plugin_url() . '/assets/images/UR-placeholder.png',
 				'ur_user_list_table'             => admin_url( 'users.php?ur_specific_form_user=' . $form_id . '&ur_user_filter_action=Filter' ), //phpcs:ignore;
 				'user_registration_very_weak_password_info' => esc_html__( 'Minimum one letter', 'user-registration' ),
 				'user_registration_weak_password_info'   => esc_html__( 'Minimum one uppercase letter and must be 4 characters and no repetitive words or common words', 'user-registration' ),

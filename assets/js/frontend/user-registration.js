@@ -170,7 +170,49 @@
 										}
 									}
 								} else if (field_type == "radio") {
-									var field_value_json = field_value[0];
+									if (
+										"" !==
+										user_registration_params.is_payment_compatible
+									) {
+										if (
+											field.eq(0).attr("data-field") ==
+											"subscription_plan"
+										) {
+											$(document).trigger(
+												"user_registration_frontend_subscription_plan_data_filter",
+												[field_value, field]
+											);
+											selectedSubscriptionPlan = field
+												.closest(
+													".field-subscription_plan"
+												)
+												.find(
+													'input[name="subscription_plan[]"]:checked'
+												);
+
+											if (
+												selectedSubscriptionPlan.length >
+												0
+											) {
+												// Get the data attribute value
+												var dataValue =
+													selectedSubscriptionPlan.data(
+														"value"
+													);
+												var field_value_json =
+													JSON.stringify(
+														dataValue +
+															":" +
+															selectedSubscriptionPlan.val()
+													);
+											}
+										} else {
+											var field_value_json =
+												field_value[0];
+										}
+									} else {
+										var field_value_json = field_value[0];
+									}
 								} else {
 									var field_value_json = field.val();
 								}

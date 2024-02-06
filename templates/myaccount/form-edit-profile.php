@@ -243,8 +243,7 @@ do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id
 											}
 
 											// Unset multiple choice and single item.
-											// Unset multiple choice and single item.
-											if ( 'multiple_choice' === $single_item->field_key || 'single_item' === $single_item->field_key || 'captcha' === $single_item->field_key ) {
+											if ( 'subscription_plan' === $single_item->field_key || 'multiple_choice' === $single_item->field_key || 'single_item' === $single_item->field_key || 'captcha' === $single_item->field_key || 'stripe_gateway' === $single_item->field_key ) {
 												continue;
 											}
 
@@ -344,15 +343,28 @@ do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id
 												}
 
 												if ( 'radio' === $single_item->field_key ) {
-													$option_data         = isset( $advance_data['advance_setting']->options ) ? explode( ',', $advance_data['advance_setting']->options ) : array();
-													$option_advance_data = isset( $advance_data['general_setting']->options ) ? $advance_data['general_setting']->options : $option_data;
-													$options             = array();
-
-													if ( is_array( $option_advance_data ) ) {
-														foreach ( $option_advance_data as $index_data => $option ) {
-															$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
+													if ( isset( $advance_data['general_setting']->image_choice ) && ur_string_to_bool( $advance_data['general_setting']->image_choice ) ) {
+														$option_advance_data = isset( $advance_data['general_setting']->image_options ) ? $advance_data['general_setting']->image_options : array();
+														$options             = array();
+														if ( is_array( $option_advance_data ) ) {
+															foreach ( $option_advance_data as $index_data => $option ) {
+																$options[ $option->label ] = array(
+																	'label' => ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option->label ),
+																	'image' => $option->image,
+																);
+															}
+															$field['image_options'] = $options;
 														}
-														$field['options'] = $options;
+													} else {
+														$option_advance_data = isset( $advance_data['general_setting']->options ) ? $advance_data['general_setting']->options : array();
+														$options             = array();
+
+														if ( is_array( $option_advance_data ) ) {
+															foreach ( $option_advance_data as $index_data => $option ) {
+																$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
+															}
+															$field['options'] = $options;
+														}
 													}
 												}
 
@@ -400,16 +412,30 @@ do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id
 
 												// Add choice_limit setting valur in order to limit choice fields.
 												if ( 'checkbox' === $single_item->field_key || 'multi_select2' === $single_item->field_key ) {
-													$choices     = isset( $advance_data['advance_setting']->choices ) ? explode( ',', $advance_data['advance_setting']->choices ) : array();
-													$option_data = isset( $advance_data['general_setting']->options ) ? $advance_data['general_setting']->options : $choices;
-													$options     = array();
+													if ( isset( $advance_data['general_setting']->image_choice ) && ur_string_to_bool( $advance_data['general_setting']->image_choice ) ) {
+														$option_data = isset( $advance_data['general_setting']->image_options ) ? $advance_data['general_setting']->image_options : array();
+														$options     = array();
 
-													if ( is_array( $option_data ) ) {
-														foreach ( $option_data as $index_data => $option ) {
-															$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
+														if ( is_array( $option_data ) ) {
+															foreach ( $option_data as $index_data => $option ) {
+																$options[ $option->label ] = array(
+																	'label' => ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option->label ),
+																	'image' => $option->image,
+																);
+															}
+															$field['image_options'] = $options;
 														}
+													} else {
+														$option_data = isset( $advance_data['general_setting']->options ) ? $advance_data['general_setting']->options : array();
+														$options     = array();
 
-														$field['options'] = $options;
+														if ( is_array( $option_data ) ) {
+															foreach ( $option_data as $index_data => $option ) {
+																$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
+															}
+
+															$field['options'] = $options;
+														}
 													}
 
 													if ( isset( $advance_data['advance_setting']->choice_limit ) ) {
