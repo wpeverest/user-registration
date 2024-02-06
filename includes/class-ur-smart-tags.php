@@ -442,6 +442,10 @@ class UR_Smart_Tags {
 						$sign_out_link = '<a href="' . esc_url( ur_logout_url( ur_get_page_permalink( 'myaccount' ) ) ) . '">' . esc_html__( 'Sign out', 'user-registration' ) . '</a>';
 						$content       = str_replace( '{{' . $tag . '}}', wp_kses_post( $sign_out_link ), $content );
 						break;
+					case 'passwordless_login_link':
+						$passwordless_login_link = '<a href="' . esc_url( $values['passwordless_login_link'] ) . '"></a>';
+						$content       = str_replace( '{{' . $tag . '}}', wp_kses_post( $passwordless_login_link ), $content );
+						break;
 
 				}
 			}
