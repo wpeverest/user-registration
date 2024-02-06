@@ -48,7 +48,11 @@ class UR_User_Approval {
 			3
 		);
 		add_action( 'ur_user_user_denied', array( $this, 'disconnect_user_session' ) );
-
+		/**
+		 * Executes an action when constructing a user.
+		 *
+		 * The 'ur_user_construct' action is triggered during the construction of a user.
+		 */
 		do_action( 'ur_user_construct' );
 	}
 
@@ -184,7 +188,15 @@ class UR_User_Approval {
 		$status = $user_manager->get_user_status();
 
 		if ( ( 'admin_approval' === $login_option || 'admin_approval' === $status['login_option'] ) ) {
-
+			/**
+			 * Executes an action before checking the user status on user login.
+			 *
+			 * The 'ur_user_before_check_status_on_login' action allows developers to perform
+			 * actions before the user status is checked during user login.
+			 *
+			 * @param string $user_status Default user status.
+			 * @param WP_User $user The user object.
+			 */
 			do_action( 'ur_user_before_check_status_on_login', $status['user_status'], $user );
 
 			switch ( $status['user_status'] ) {
@@ -203,7 +215,15 @@ class UR_User_Approval {
 					break;
 			}
 		} elseif ( ( 'admin_approval_after_email_confirmation' === $login_option || 'admin_approval_after_email_confirmation' === $status['login_option'] ) ) {
-
+			/**
+			 * Executes an action before checking the user status on user login.
+			 *
+			 * The 'ur_user_before_check_status_on_login' action allows developers to perform
+			 * actions before the user status is checked during user login.
+			 *
+			 * @param string $user_status Default user status.
+			 * @param WP_User $user The user object.
+			 */
 			do_action( 'ur_user_before_check_status_on_login', $status['user_status'], $user );
 
 			switch ( $status['user_status'] ) {
@@ -237,6 +257,15 @@ class UR_User_Approval {
 					break;
 			}
 		} elseif ( 'email_confirmation' === $login_option || 'email_confirmation' === $status['login_option'] ) {
+			/**
+			 * Executes an action before checking the email status on user login.
+			 *
+			 * The 'ur_user_before_check_email_status_on_login' action allows developers to perform
+			 * actions before the user status is checked during user login.
+			 *
+			 * @param string $user_status Default user status.
+			 * @param WP_User $user The user object.
+			 */
 			do_action( 'ur_user_before_check_email_status_on_login', $status['user_status'], $user );
 
 			$url      = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $_SERVER['SERVER_NAME'] : 'http://' . $_SERVER['SERVER_NAME']; //phpcs:ignore
@@ -258,8 +287,19 @@ class UR_User_Approval {
 			return $user;
 		} elseif ( 'payment' === $login_option ) {
 			$payment_status = get_user_meta( $user->ID, 'ur_payment_status', true );
-
+			/**
+			 * Executes an action before checking the payment status on user login.
+			 *
+			 * @param string $payment_status Default payment status.
+			 * @param WP_User $user The user object.
+			 */
 			do_action( 'ur_user_before_check_payment_status_on_login', $payment_status, $user );
+			/**
+			 * Applies a filter before checking the payment status on user login.
+			 *
+			 * @param string $payment_status Default payment status.
+			 * @param WP_User $user The user object.
+			 */
 			$message = apply_filters( 'ur_user_before_check_payment_status_on_login', $payment_status, $user );
 
 			if ( ! empty( $payment_status ) && 'completed' !== $payment_status ) {
@@ -304,7 +344,15 @@ class UR_User_Approval {
 			if ( ! $user_manager->can_status_be_changed_by( get_current_user_id() ) ) {
 				return;
 			}
-
+			/**
+			 * Executes an action before checking the user status on a page.
+			 *
+			 * The 'ur_user_before_check_status_on_page' action allows developers to perform
+			 * actions before the user status is checked on a page.
+			 *
+			 * @param array $status User status information.
+			 * @param UR_User_Manager $user_manager The User Manager instance.
+			 */
 			do_action( 'ur_user_before_check_status_on_page', $status, $user_manager );
 
 			if ( UR_Admin_User_Manager::APPROVED === $status ) {
@@ -390,7 +438,15 @@ class UR_User_Approval {
 				'value' => UR_Admin_User_Manager::APPROVED,
 			),
 		);
-
+		/**
+		 * Applies a filter to modify the meta query for hiding not approved users in the frontend.
+		 *
+		 * The 'ur_user_hide_not_approved_users_in_frontend' filter allows developers to modify
+		 * the meta query used for hiding not approved users in the frontend.
+		 *
+		 * @param array $meta_query Default meta query.
+		 * @param WP_Query $query The WP_Query object.
+		 */
 		$meta_query = apply_filters( 'ur_user_hide_not_approved_users_in_frontend', $meta_query, $query );
 
 		if ( ! empty( $meta_query ) ) {

@@ -49,6 +49,16 @@ class UR_Emailer {
 			8,
 			2
 		);
+
+		// to check the current page name.
+		global $pagenow;
+
+		// adds the hook if it is for reset password.
+		if ( ( is_admin() && 'users.php' === $pagenow ) || ( is_admin() && 'resetpassword' === isset( $_GET['action'] ) ) ) {
+			add_filter( 'retrieve_password_message', array( __CLASS__, 'ur_retrieve_password_message' ), 20, 4 );
+			add_filter( 'retrieve_password_title', array( __CLASS__, 'ur_retrieve_password_title' ), 20, 3 );
+			add_filter( 'wp_mail_content_type', array( __CLASS__, 'ur_get_content_type' ) );
+		}
 	}
 
 	/**
@@ -67,6 +77,15 @@ class UR_Emailer {
 	public static function ur_send_email_after() {
 		remove_filter( 'wp_mail_from', array( __CLASS__, 'ur_sender_email' ) );
 		remove_filter( 'wp_mail_from_name', array( __CLASS__, 'ur_sender_name' ) );
+	}
+
+	/**
+	 * Sender's Email Content Type
+	 *
+	 * @return string sender's content type.
+	 */
+	public static function ur_get_content_type() {
+		return 'text/html';
 	}
 
 
@@ -133,7 +152,15 @@ class UR_Emailer {
 		if ( ( 'email_confirmation' !== $login_option || 'admin_approval_after_email_confirmation' !== $login_option ) && ur_option_checked( 'user_registration_email_setting_disable_email' ) ) {
 			return;
 		}
-
+		/**
+		 * Hook to modify user email attachment.
+		 *
+		 * @param array $valid_form_data The valid form data.
+		 * @param int $form_id The form ID.
+		 * @param int $user_id The user ID.
+		 *
+		 * @return array $attachments
+		 */
 		$attachments     = apply_filters( 'user_registration_email_attachment', array(), $valid_form_data, $form_id, $user_id );
 		$valid_form_data = isset( $valid_form_data ) ? $valid_form_data : array();
 
@@ -145,7 +172,9 @@ class UR_Emailer {
 		$username          = isset( $user_login_object->value ) && ! empty( $user_login_object->value ) ? $user_login_object->value : '';
 
 		if ( ! empty( $email ) && ! empty( $user_id ) ) {
-
+			/**
+			 * Action to do before the email send.
+			 */
 			do_action( 'user_registration_email_send_before' );
 
 			// Get selected email template id for specific form.
@@ -161,6 +190,9 @@ class UR_Emailer {
 				self::send_mail_to_admin( $email, $username, $user_id, $data_html, $name_value, $attachments, $template_id );
 			}
 
+			/**
+			 * Action to do after the email send.
+			 */
 			do_action( 'user_registration_email_send_after' );
 		}
 	}
@@ -230,6 +262,10 @@ class UR_Emailer {
 					$value = esc_html__( 'Accepted', 'user-registration' );
 				}
 
+				if ('password' === $form_data['type']){
+					$value = esc_html__('Chosen Password', 'user-registration');
+				}
+
 				if ( 'country' === $form_data['field_key'] && '' !== $value ) {
 					$country_class = ur_load_form_field_class( $form_data['field_key'] );
 					$countries     = $country_class::get_instance()->get_country();
@@ -245,6 +281,7 @@ class UR_Emailer {
 				if ( 'user_email' === $field_name ) {
 					$email = $value;
 				}
+
 				$tmp_data['value']        = $value;
 				$tmp_data['field_type']   = $form_data['type'];
 				$tmp_data['label']        = $form_data['label'];
@@ -260,16 +297,39 @@ class UR_Emailer {
 		$data_html .= '</tbody></table>';
 
 		// Smart tag process for extra fields.
+		/**
+		 * Hook to modify user email attachment.
+		 *
+		 * @param array $valid_form_data The valid form data.
+		 * @param int $form_id The form ID.
+		 * @param int $user_id The user ID.
+		 *
+		 * @return array $attachments
+		 */
 		$attachments = apply_filters( 'user_registration_email_attachment', array(), $smart_data, $form_id, $user_id );
-		$name_value  = apply_filters( 'user_registration_process_smart_tag', $name_value, $smart_data, $form_id, $user_id );
+		/**
+		 * Hook to process the smart tag.
+		 *
+		 * @param array $name_value The name values.
+		 * @param int $smart_data The smart data.
+		 * @param int $form_id The form ID.
+		 * @param int $user_id The user ID.
+		 *
+		 * @return array $name_values
+		 */
+		$name_value = apply_filters( 'user_registration_process_smart_tag', $name_value, $smart_data, $form_id, $user_id );
 
 		if ( ! empty( $email ) && ! empty( $user_id ) ) {
-
+			/**
+			 * Action to do before email send.
+			 */
 			do_action( 'user_registration_email_send_before' );
 
 			self::send_profile_changed_email_to_admin( $email, $username, $user_id, $data_html, $name_value, $attachments );
 			self::send_profile_changed_email_to_user( $email, $username, $user_id, $data_html, $name_value, $attachments );
-
+			/**
+			 * Action to do after email send.
+			 */
 			do_action( 'user_registration_email_send_after' );
 		}
 	}
@@ -419,7 +479,9 @@ class UR_Emailer {
 		// If enabled approval via email setting.
 		if ( ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
 			$values['approval_token'] = get_user_meta( $user_id, 'ur_confirm_approval_token', true );
+			$values['denial_token'] = get_user_meta( $user_id, 'ur_confirm_denial_token', true );
 			$values['approval_link']  = '<a href="' . admin_url( '/' ) . '?ur_approval_token=' . $values['approval_token'] . '">' . esc_html__( 'Approve Now', 'user-registration' ) . '</a><br />';
+			$values['denial_link']  = '<a href="' . admin_url( '/' ) . '?ur_denial_token=' . $values['denial_token'] . '">' . esc_html__( 'Deny Now', 'user-registration' ) . '</a><br />';
 		}
 
 		list( $message, $subject ) = user_registration_email_content_overrider( ur_get_form_id_by_userid( $user_id ), $settings, $message, $subject );
@@ -489,7 +551,9 @@ class UR_Emailer {
 		// If enabled approval via email setting.
 		if ( ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) && ( 1 === absint( $email_approval_enabled ) ) ) {
 			$values['approval_token'] = get_user_meta( $user_id, 'ur_confirm_approval_token', true );
+			$values['denial_token'] = get_user_meta( $user_id, 'ur_confirm_denial_token', true );
 			$values['approval_link']  = '<a href="' . admin_url( '/' ) . '?ur_approval_token=' . $values['approval_token'] . '">' . esc_html__( 'Approve Now', 'user-registration' ) . '</a><br />';
+			$values['denial_link']  = '<a href="' . admin_url( '/' ) . '?ur_denial_token=' . $values['denial_token'] . '">' . esc_html__( 'Deny Now', 'user-registration' ) . '</a><br />';
 		}
 
 		list( $message, $subject ) = user_registration_email_content_overrider( ur_get_form_id_by_userid( $user_id ), $settings, $message, $subject );
@@ -617,6 +681,87 @@ class UR_Emailer {
 	}
 
 	/**
+	 * Admin Area Reset Password Email Trigger
+	 *
+	 * @param  string $message Email message.
+	 * @param  string $key The activation key.
+	 * @param  string $user_login The username for the user.
+	 * @param string $user_data WP_User object.
+	 * @return string
+	 */
+	public static function ur_retrieve_password_message( $message, $key, $user_login, $user_data ) {
+		$user     = get_user_by( 'login', $user_login );
+		$email    = isset( $user->data->user_email ) ? sanitize_email( $user->data->user_email ) : '';
+		$username = isset( $user->data->user_login ) ? sanitize_text_field( $user->data->user_login ) : '';
+		$user_id  = isset( $user->ID ) ? sanitize_text_field( $user->ID ) : '';
+		$form_id  = ur_get_form_id_by_userid( $user_id );
+
+		if ( empty( $email ) || empty( $username ) ) {
+			return false;
+		}
+
+		$settings = new UR_Settings_Reset_Password_Email();
+		$message  = $settings->ur_get_reset_password_email();
+		$message  = get_option( 'user_registration_reset_password_email', $message );
+
+		$values = array(
+			'username' => $username,
+			'email'    => $email,
+			'key'      => $key,
+			'form_id'  => $form_id,
+		);
+
+		$message = self::parse_smart_tags( $message, $values );
+
+		if ( ur_option_checked( 'user_registration_enable_reset_password_email', true ) ) {
+			// Get selected email template id for specific form.
+			$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
+			$message     = user_registration_process_email_content( $message, $template_id );
+			return $message;
+		}
+
+		return $message;
+	}
+
+	/**
+	 * Admin Area Reset Password Subject or Title Trigger
+	 *
+	 * @param  string $title Email subject.
+	 * @param string $user_login The username for the user.
+	 * @param  string $user_data WP_User object.
+	 * @return string
+	 */
+	public static function ur_retrieve_password_title( $title, $user_login, $user_data ) {
+
+		$user     = get_user_by( 'login', $user_login );
+		$email    = isset( $user->data->user_email ) ? sanitize_email( $user->data->user_email ) : '';
+		$username = isset( $user->data->user_login ) ? sanitize_text_field( $user->data->user_login ) : '';
+		$user_id  = isset( $user->ID ) ? sanitize_text_field( $user->ID ) : '';
+		$form_id  = ur_get_form_id_by_userid( $user_id );
+
+		$key = '';
+
+		if ( empty( $email ) || empty( $username ) ) {
+			return false;
+		}
+
+		$subject  = get_option( 'user_registration_reset_password_email_subject', __( 'Password Reset Email: {{blog_info}}', 'user-registration' ) );
+		$settings = new UR_Settings_Reset_Password_Email();
+
+		$values = array(
+			'username' => $username,
+			'email'    => $email,
+			'key'      => $key,
+			'form_id'  => $form_id,
+		);
+
+		$subject = self::parse_smart_tags( $subject, $values );
+
+		return $subject;
+	}
+
+
+	/**
 	 * Trigger the admin email after profile details changed by user.
 	 *
 	 * @param  string $user_email Email of the user.
@@ -718,6 +863,50 @@ class UR_Emailer {
 	}
 
 	/**
+	 * Trigger the email to confirm email address changed by user.
+	 *
+	 * @param  string $user_email Email of the user.
+	 * @param  string $username   Username of the user.
+	 * @param  int    $user_id       User id.
+	 * @param  string $data_html  String replaced with {{all_fields}} smart tag.
+	 * @param  array  $name_value Array to replace with extra fields smart tag.
+	 * @param  array  $attachments Email Attachement.
+	 * @return void
+	 * @since 3.1.3
+	 */
+	public static function confirm_email_address_change_by_admin( $user_email, $username, $user_id, $data_html, $name_value, $attachments ) {
+
+		$header = array(
+			'Reply-To:' . $user_email,
+			'Content-Type: text/html; charset=UTF-8',
+		);
+
+		$attachment = isset( $attachments['user'] ) ? $attachments['user'] : '';
+		$subject    = get_option( 'user_registration_confirm_email_address_change_subject', esc_html__( 'Confirm Email Address Change Email: {{blog_info}}', 'user-registration' ) );
+		$settings   = new UR_Settings_Confirm_Email_Address_Change_Email();
+		$message    = $settings->ur_get_confirm_email_address_change_email();
+		$message    = get_option( 'user_registration_confirm_email_address_change_email', $message );
+		$form_id    = ur_get_form_id_by_userid( $user_id );
+
+		$values = array(
+			'username'   => $username,
+			'email'      => $user_email,
+			'all_fields' => $data_html,
+			'form_id'    => $form_id,
+		);
+
+		list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
+		$message                   = self::parse_smart_tags( $message, $values, $name_value );
+		$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
+
+		if ( ur_option_checked( 'user_registration_enable_confirm_email_address_change_email', true ) ) {
+			$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
+			self::user_registration_process_and_send_email( $user_email, $subject, $message, $header, $attachment, $template_id );
+		}
+	}
+
+
+	/**
 	 * Process smart tags for status change emails.
 	 *
 	 * @param  string $email User Email.
@@ -744,7 +933,12 @@ class UR_Emailer {
 
 		$user_extra_fields = ur_get_user_extra_fields( $user_id );
 		$name_value        = array_merge( $name_value, $user_extra_fields );
-
+		/**
+		 * Hook to process the smart tag for status change emails.
+		 *
+		 * @param array $name_value The name values.
+		 * @param string $email The email.
+		 */
 		return apply_filters( 'user_registration_process_smart_tag_for_status_change_emails', $name_value, $email );
 	}
 	/**
@@ -755,6 +949,15 @@ class UR_Emailer {
 	 * @param array  $name_value  Extra values.
 	 */
 	public static function parse_smart_tags( $content = '', $values = array(), $name_value = array() ) {
+		/**
+		 * Hook to process the smart tags.
+		 *
+		 * @param string $content The message content.
+		 * @param int $values The values.
+		 * @param int $name_values The name values.
+		 *
+		 * @return string $content
+		 */
 		$content = apply_filters( 'user_registration_process_smart_tags', $content, $values, $name_value );
 		return $content;
 	}

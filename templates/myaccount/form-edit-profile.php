@@ -22,7 +22,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 $user_id = get_current_user_id();
 $form_id = ur_get_form_id_by_userid( $user_id );
 
+/**
+ * Deprecated in version 3.1.3. Use 'user_registration_before_edit_profile_form_data' instead.
+ *
+ * @deprecated 3.1.3 Use 'user_registration_before_edit_profile_form_data' instead.
+ *
+ * @param array array value.
+ * @param string deprecated_version.
+ * @param string hook_name to be used instead.
+ */
 do_action_deprecated( 'user_registration_before_edit_profile_form', array(), '3.1.3', 'user_registration_before_edit_profile_form_data' );
+
+/**
+ * Fires before rendering the edit profile form with additional data.
+ *
+ * @param int $user_id User id of the current profile being edited.
+ * @param int $form_id Form id through which user registered.
+ */
 do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id );
 ?>
 
@@ -31,8 +47,22 @@ do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
 				<div class="user-registration-profile-fields">
-					<?php do_action( 'user_registration_before_profile_detail_title' ); ?>
-					<h2><?php esc_html_e( apply_filters( 'user_registation_profile_detail_title', __( 'Profile Detail', 'user-registration' ) ) ); //PHPCS:ignore ?></h2>
+					<?php
+					/**
+					 * Fires before rendering of profile detail title.
+					 */
+					do_action( 'user_registration_before_profile_detail_title' );
+					?>
+					<h2>
+					<?php
+					esc_html_e(
+						/**
+						 * Filter to modify the profile detail title.
+						 *
+						 * @param string Profile detail title content.
+						 * @return string modified profile detail title.
+						 */
+						apply_filters( 'user_registation_profile_detail_title', __( 'Profile Detail', 'user-registration' ) ) ); //PHPCS:ignore ?></h2>
 					<?php
 					if ( ! ur_option_checked( 'user_registration_disable_profile_picture', false ) ) {
 						?>
@@ -73,7 +103,19 @@ do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id
 									<p class="user-registration-tips"><?php echo esc_html__( 'Max size: ', 'user-registration' ) . esc_attr( size_format( $max_upload_size * 1024 ) ); ?></p>
 								</div>
 								<header>
-									<p><strong><?php echo esc_html( apply_filters( 'user_registration_upload_new_profile_image_message', esc_html__( 'Upload your new profile image.', 'user-registration' ) ) ); ?></strong></p>
+									<p><strong>
+									<?php
+									echo esc_html(
+										/**
+										 * Filter to modify the upload new profile image message.
+										 *
+										 * @param string Message content to be modified.
+										 * @return string modified message.
+										 */
+										apply_filters( 'user_registration_upload_new_profile_image_message', esc_html__( 'Upload your new profile image.', 'user-registration' ) )
+									);
+									?>
+										</strong></p>
 									<div class="button-group">
 										<?php
 
@@ -85,7 +127,14 @@ do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id
 													<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" size="<?php echo esc_attr( $max_upload_size ); ?>" accept="<?php echo esc_attr( $edit_profile_valid_file_type ); ?>" style="<?php echo esc_attr( ( $gravatar_image !== $image ) ? 'display:none;' : '' ); ?>" data-crop-picture="<?php echo esc_attr( $crop_picture ); ?>"/>
 													<?php echo '<input type="text" class="uraf-profile-picture-input input-text ur-frontend-field" name="profile_pic_url" id="profile_pic_url" value="' . get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true ) . '" />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 													</span>
-													<?php do_action( 'uraf_profile_picture_buttons', $profile_pic_args ); ?>
+													<?php
+													/**
+													 * Fires to display buttons for user profile picture.
+													 *
+													 * @param array $profile_pic_args Array of buttons to be added.
+													 */
+													do_action( 'uraf_profile_picture_buttons', $profile_pic_args );
+													?>
 												</p>
 												<div style="clear:both; margin-bottom: 20px"></div>
 											</div>
@@ -112,7 +161,12 @@ do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id
 								</header>
 							</div>
 					<?php } ?>
-					<?php do_action( 'user_registration_edit_profile_form_start' ); ?>
+					<?php
+					/**
+					 * Fires at the start of rendering user registration edit profile form.
+					 */
+					do_action( 'user_registration_edit_profile_form_start' );
+					?>
 					<div class="user-registration-profile-fields__field-wrapper">
 
 						<?php foreach ( $form_data_array as $data ) { ?>
@@ -189,8 +243,7 @@ do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id
 											}
 
 											// Unset multiple choice and single item.
-											// Unset multiple choice and single item.
-											if ( 'multiple_choice' === $single_item->field_key || 'single_item' === $single_item->field_key || 'captcha' === $single_item->field_key ) {
+											if ( 'subscription_plan' === $single_item->field_key || 'multiple_choice' === $single_item->field_key || 'single_item' === $single_item->field_key || 'captcha' === $single_item->field_key || 'stripe_gateway' === $single_item->field_key ) {
 												continue;
 											}
 
@@ -290,15 +343,28 @@ do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id
 												}
 
 												if ( 'radio' === $single_item->field_key ) {
-													$option_data         = isset( $advance_data['advance_setting']->options ) ? explode( ',', $advance_data['advance_setting']->options ) : array();
-													$option_advance_data = isset( $advance_data['general_setting']->options ) ? $advance_data['general_setting']->options : $option_data;
-													$options             = array();
-
-													if ( is_array( $option_advance_data ) ) {
-														foreach ( $option_advance_data as $index_data => $option ) {
-															$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
+													if ( isset( $advance_data['general_setting']->image_choice ) && ur_string_to_bool( $advance_data['general_setting']->image_choice ) ) {
+														$option_advance_data = isset( $advance_data['general_setting']->image_options ) ? $advance_data['general_setting']->image_options : array();
+														$options             = array();
+														if ( is_array( $option_advance_data ) ) {
+															foreach ( $option_advance_data as $index_data => $option ) {
+																$options[ $option->label ] = array(
+																	'label' => ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option->label ),
+																	'image' => $option->image,
+																);
+															}
+															$field['image_options'] = $options;
 														}
-														$field['options'] = $options;
+													} else {
+														$option_advance_data = isset( $advance_data['general_setting']->options ) ? $advance_data['general_setting']->options : array();
+														$options             = array();
+
+														if ( is_array( $option_advance_data ) ) {
+															foreach ( $option_advance_data as $index_data => $option ) {
+																$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
+															}
+															$field['options'] = $options;
+														}
 													}
 												}
 
@@ -346,16 +412,30 @@ do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id
 
 												// Add choice_limit setting valur in order to limit choice fields.
 												if ( 'checkbox' === $single_item->field_key || 'multi_select2' === $single_item->field_key ) {
-													$choices     = isset( $advance_data['advance_setting']->choices ) ? explode( ',', $advance_data['advance_setting']->choices ) : array();
-													$option_data = isset( $advance_data['general_setting']->options ) ? $advance_data['general_setting']->options : $choices;
-													$options     = array();
+													if ( isset( $advance_data['general_setting']->image_choice ) && ur_string_to_bool( $advance_data['general_setting']->image_choice ) ) {
+														$option_data = isset( $advance_data['general_setting']->image_options ) ? $advance_data['general_setting']->image_options : array();
+														$options     = array();
 
-													if ( is_array( $option_data ) ) {
-														foreach ( $option_data as $index_data => $option ) {
-															$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
+														if ( is_array( $option_data ) ) {
+															foreach ( $option_data as $index_data => $option ) {
+																$options[ $option->label ] = array(
+																	'label' => ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option->label ),
+																	'image' => $option->image,
+																);
+															}
+															$field['image_options'] = $options;
 														}
+													} else {
+														$option_data = isset( $advance_data['general_setting']->options ) ? $advance_data['general_setting']->options : array();
+														$options     = array();
 
-														$field['options'] = $options;
+														if ( is_array( $option_data ) ) {
+															foreach ( $option_data as $index_data => $option ) {
+																$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
+															}
+
+															$field['options'] = $options;
+														}
 													}
 
 													if ( isset( $advance_data['advance_setting']->choice_limit ) ) {
@@ -431,18 +511,43 @@ do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id
 					</div>
 					<?php
 					do_action( 'user_registration_edit_profile_form' );
-					$submit_btn_class = apply_filters( 'user_registration_form_update_btn_class', array() );
+					$submit_btn_class =
+					/**
+					 * Filter to modify the form update button class.
+					 *
+					 * @param array array value.
+					 * @return array form update button classes.
+					 */
+					apply_filters( 'user_registration_form_update_btn_class', array() );
 					?>
 					<p>
 						<?php
 						if ( ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
 							?>
-							<button type="submit" class="user-registration-submit-Button btn button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" ><span></span><?php esc_html_e( apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) ) ); //PHPCS:ignore?></button>
+							<button type="submit" class="user-registration-submit-Button btn button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" ><span></span>
+								<?php
+								esc_html_e(
+								/**
+								 * Filter to modify the profile update button text.
+								 *
+								 * @param string Text content to be modified.
+								 * @return string button text.
+								 */
+								apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) ) ); //PHPCS:ignore?></button>
 							<?php
 						} else {
 							wp_nonce_field( 'save_profile_details' );
 							?>
-							<input type="submit" class="user-registration-Button button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" value="<?php esc_attr_e( apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) ) );//PHPCS:ignore ?>" />
+							<input type="submit" class="user-registration-Button button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" value="
+								<?php
+								esc_attr_e(
+								/**
+								 * Filter to modify the profile update button text.
+								 *
+								 * @param string text content for button.
+								 * @return string button text.
+								 */
+								apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) ) );//PHPCS:ignore ?>" />
 							<input type="hidden" name="action" value="save_profile_details" />
 							<?php
 						}
@@ -455,4 +560,8 @@ do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id
 	</form>
 </div>
 
-<?php do_action( 'user_registration_after_edit_profile_form' ); ?>
+<?php
+/**
+ * Fires after rendering the user registration edit profile form.
+ */
+do_action( 'user_registration_after_edit_profile_form' ); ?>

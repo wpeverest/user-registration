@@ -1928,7 +1928,7 @@
 				margin-right: $spacing_8px;
 			}
 
-			.ur-multiple-choice {
+			.ur-multiple-choice .ur-subscription-plan {
 				.ur-regular-price,.ur-selling-price {
 					display: grid;
 					grid-template-columns: 1fr 1fr;
@@ -1940,7 +1940,7 @@
 				}
 			}
 
-			&.ur-multiple-choice {
+			&.ur-multiple-choice, &.ur-subscription-plan {
 				gap: $spacing_8px;
 
 				input {
@@ -3961,7 +3961,54 @@ body {
 	}
 }
 
+// Subscription Plan Field > Field Options Design Fix
+.ur-registered-from {
+	.nav-tab-wrapper {
+		.ur-tab-contents {
+			.ur-tab-content {
+				.ur-general-setting {
+					&-options {
+						.ur-options-list {
+							.ur-subscription-plan {
+								flex-direction: column;
+								align-items: unset;
+								margin-bottom: $spacing_16px;
+								padding: $spacing_10px;
+								border: $border_width solid #E4E4E4;
+								background: #FBFBFB;
 
+								&:last-child {
+									margin-bottom: 0;
+								}
+
+								&-details {
+									display: flex;
+									align-items: center;
+									gap: $spacing_8px;
+								}
+
+								&-sub-details {
+									> p {
+										display: flex;
+										align-items: center;
+										gap: $spacing_8px;
+										margin-bottom: $spacing_4px;
+
+										select {
+											height: 38px;
+											padding-left: $spacing_12px;
+											padding-right: $spacing_12px;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
 
 
 

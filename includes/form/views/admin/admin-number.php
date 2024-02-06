@@ -1,6 +1,6 @@
 <?php
 /**
- * Form View: Input Type Number
+ * Form View: Input Type Number.
  *
  * @package UserRegistration/Form/Views/Admin/Number
  */

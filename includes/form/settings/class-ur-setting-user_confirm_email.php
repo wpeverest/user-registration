@@ -1,24 +1,36 @@
 <?php
+/**
+ * UR_Setting_User_confirm_email Class.
+ *
+ * @package  UserRegistration/Form/Settings
+ * @since 1.6.0
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * UR_Setting_User_confirm_email Class
+ * UR_Setting_User_confirm_email Class.
  *
  * @package  UserRegistration/Form/Settings
- * @category Abstract Class
- * @author   WPEverest
  * @since 1.6.0
  */
 class UR_Setting_User_confirm_email extends UR_Field_Settings {
 
-
+	/**
+	 * UR_Setting_User_confirm_email Class Constructor.
+	 */
 	public function __construct() {
 		$this->field_id = 'user_confirm_email_advance_setting';
 	}
 
+	/**
+	 * Outputs settings html.
+	 *
+	 * @param array $field_data Field data array.
+	 * @return string $fields_html.
+	 */
 	public function output( $field_data = array() ) {
 
 		$this->field_data = $field_data;
@@ -28,6 +40,9 @@ class UR_Setting_User_confirm_email extends UR_Field_Settings {
 		return $field_html;
 	}
 
+	/**
+	 * Register new settings field.
+	 */
 	public function register_fields() {
 		$fields = array(
 
@@ -44,6 +59,15 @@ class UR_Setting_User_confirm_email extends UR_Field_Settings {
 			),
 		);
 
+		/**
+		 * Filter to modify the user confirm email custom advance settings.
+		 *
+		 * @param string $fields Advance Settings Fields.
+		 * @param int field_id Field ID.
+		 * @param class default_class Default Class.
+		 *
+		 * @return string $fields.
+		 */
 		$fields = apply_filters( 'user_confirm_email_custom_advance_settings', $fields, $this->field_id, $this->default_class );
 		$this->render_html( $fields );
 	}

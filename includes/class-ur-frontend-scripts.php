@@ -52,7 +52,20 @@ class UR_Frontend_Scripts {
 	 * @return array
 	 */
 	public static function get_styles() {
-
+		/**
+		 * Applies filters to enqueue styles for the User Registration plugin.
+		 *
+		 * @param string $filter_name The name of the filter hook, 'user_registration_enqueue_styles'.
+		 * @param array  $styles      An array containing style information for different components.
+		 *                            Each component is identified by a unique key, and its details include:
+		 *                            - 'src'     (string) The source URL of the stylesheet.
+		 *                            - 'deps'    (string|array) Dependencies for the stylesheet.
+		 *                            - 'version' (string) The version of the stylesheet.
+		 *                            - 'media'   (string) The media attribute for the stylesheet.
+		 *                            - 'has_rtl' (bool) Whether the stylesheet has a right-to-left (RTL) version.
+		 *
+		 * @return array The filtered array of styles for enqueuing.
+		 */
 		return apply_filters(
 			'user_registration_enqueue_styles',
 			array(
@@ -69,6 +82,14 @@ class UR_Frontend_Scripts {
 					'media'   => 'all',
 					'has_rtl' => true,
 				),
+				/**
+				 * Applies a filter to retrieve the breakpoint for small-screen styles.
+				 *
+				 * @param string $filter_name The name of the filter hook, 'user_registration_style_smallscreen_breakpoint'.
+				 * @param string $breakpoint  The default breakpoint value for small screens, in pixels.
+				 *
+				 * @return string The filtered breakpoint value for small-screen styles.
+				 */
 				'user-registration-smallscreen'       => array(
 					'src'     => self::get_asset_url( 'assets/css/user-registration-smallscreen.css' ),
 					'deps'    => '',
@@ -94,6 +115,15 @@ class UR_Frontend_Scripts {
 	 * @return string
 	 */
 	private static function get_asset_url( $path ) {
+		/**
+		 * Applies a filter to retrieve the URL of an asset (e.g., stylesheet or script).
+		 *
+		 * @param string $filter_name The name of the filter hook, 'user_registration_get_asset_url'.
+		 * @param string $url         The default URL of the asset, generated using plugins_url and the provided path.
+		 * @param string $path        The relative path to the asset within the plugin.
+		 *
+		 * @return string The filtered URL of the asset.
+		 */
 		return apply_filters( 'user_registration_get_asset_url', plugins_url( $path, UR_PLUGIN_FILE ), $path );
 	}
 
@@ -347,6 +377,17 @@ class UR_Frontend_Scripts {
 		if ( ! in_array( $handle, self::$wp_localize_scripts ) && wp_script_is( $handle ) && ( $data = self::get_script_data( $handle ) ) ) { //phpcs:ignore
 			$name                        = str_replace( '-', '_', $handle ) . '_params';
 			self::$wp_localize_scripts[] = $handle;
+			/**
+			 * Applies a filter to customize the localized data before it is passed to a script.
+			 *
+			 * This filter allows developers to modify the localized data associated with a specific script handle
+			 * before it is passed to the corresponding script using wp_localize_script.
+			 *
+			 * @param string $filter_name The name of the filter hook, dynamically generated based on the script handle.
+			 * @param array  $data        The default localized data obtained using self::get_script_data.
+			 *
+			 * @return array The filtered localized data to be passed to the script.
+			 */
 			wp_localize_script( $handle, $name, apply_filters( $name, $data ) );
 		}
 	}
@@ -361,16 +402,16 @@ class UR_Frontend_Scripts {
 	private static function get_script_data( $handle ) {
 		$is_compatibile = true;
 
-			if ( is_plugin_active( 'user-registration-payments/user-registration-payments.php' ) ) {
-				if ( version_compare( URP_VERSION, '1.5.3', '<' ) ) {
-					$is_compatibile = false;
-				}
+		if ( is_plugin_active( 'user-registration-payments/user-registration-payments.php' ) ) {
+			if ( version_compare( URP_VERSION, '1.5.3', '<' ) ) {
+				$is_compatibile = false;
 			}
-			if ( is_plugin_active( 'user-registration-stripe/user-registration-stripe.php' ) ) {
-				if ( version_compare( URS_VERSION, '1.3.2', '<' ) ) {
-					$is_compatibile = false;
-				}
+		}
+		if ( is_plugin_active( 'user-registration-stripe/user-registration-stripe.php' ) ) {
+			if ( version_compare( URS_VERSION, '1.3.2', '<' ) ) {
+				$is_compatibile = false;
 			}
+		}
 		switch ( $handle ) {
 			case 'user-registration':
 				return array(
@@ -406,7 +447,7 @@ class UR_Frontend_Scripts {
 						'show_password_title'     => esc_html__( 'Show Password', 'user-registration' ),
 						'password_strength_error' => esc_html__( 'Password strength is not strong enough', 'user-registration' ),
 					),
-					'is_payment_compatible' => $is_compatibile
+					'is_payment_compatible'             => $is_compatibile,
 				);
 			break;
 
@@ -422,6 +463,14 @@ class UR_Frontend_Scripts {
 						'mismatch' => esc_html__( 'Password with confirm password not matched.', 'user-registration' ),
 
 					),
+					/**
+					 * Applies a filter to customize the message displayed for strong password requirements.
+					 *
+					 * This filter allows developers to modify the default strong password message provided for user guidance.
+					 *
+					 * @param string $filter_name The name of the filter hook, 'user_registration_strong_password_message'.
+					 * @param string $default_message The default message for strong password requirements, obtained using esc_html__().
+					 */
 					'i18n_password_hint'   => apply_filters( 'user_registration_strong_password_message', esc_html__( 'Hint: To make password stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ & ).', 'user-registration' ) ),
 					'i18n_password_hint_1' => esc_html__( 'Hint: Minimum one uppercase letter and must be 4 characters and no repetitive words or common words', 'user-registration' ),
 					'i18n_password_hint_2' => esc_html__( 'Hint: Minimum one uppercase letter, a number, must be 7 characters and no repetitive words or common words', 'user-registration' ),

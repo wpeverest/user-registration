@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 5.2
 Requires PHP: 7.2
-Tested up to: 6.4.2
-Stable tag: 3.1.3
+Tested up to: 6.4.3
+Stable tag: 3.1.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -357,6 +357,23 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 3.1.4    - 08/02/2024
+* Feature  - Deny Smart Tag in Admin Approval.
+* Tweak    - From address going wrong in some emails.
+* Tweak    - Docs comments for developer documentation.
+* Tweak    - Introduce form name smart tag in user registration.
+* Tweak    - Redirection back to previous page after registration.
+* Tweak    - Send user registration email template while sending reset password email from admin area.
+* Dev      - Compatibility for image choice feature.
+* Dev      - Compatibility for subscription plan feature.
+* Dev      - Compatibility for the payment invoice feature.
+* Dev      - Compatibility for trail period in subscription feature.
+* Fix      - Remove extra password field value in mail.
+* Fix      - Country Field default value none Frontend Issue.
+* Fix      - Checkbox not updating properly on profile update when all unchecked.
+* Fix      - Validation error while profile update if field visibility is applied on fields.
+* Fix      - Fields select 2 and multi select option not changing instantly in builder setting area.
 
 = 3.1.3    - 02/01/2024
 * Enhance  - Smart tags parseable endpoint content.

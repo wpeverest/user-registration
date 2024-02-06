@@ -82,7 +82,16 @@ class UR_Form_Validation extends UR_Validation {
 		$enable_auto_password_generation = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_pro_auto_password_activate' ) );
 
 		if ( $enable_auto_password_generation ) {
+			/**
+			 * Action auto generate password.
+			 *
+			 * @param array $form_id The form id.
+			 */
 			do_action( 'user_registration_auto_generate_password', $form_id );
+			/**
+			 * Filter auto generated password.
+			 * Default value is 'user_pass'.
+			 */
 			$user_pass = apply_filters( 'user_registration_auto_generated_password', 'user_pass' );
 			$this->validate_form_data( $form_id, $form_field_data, $form_data );
 		} else {
@@ -109,7 +118,13 @@ class UR_Form_Validation extends UR_Validation {
 	 * @param  array $form_data  Form data to validate.
 	 */
 	public function validate_form_data( $form_id, $form_field_data = array(), $form_data = array() ) {
-		$form_data_field     = wp_list_pluck( $form_data, 'field_name' );
+		$form_data_field = wp_list_pluck( $form_data, 'field_name' );
+		/**
+		 * Filter the form field data.
+		 *
+		 * @param array $form_field_data The form data.
+		 * @param int $form_id The form ID.
+		 */
 		$form_field_data     = apply_filters( 'user_registration_add_form_field_data', $form_field_data, $form_id );
 		$form_key_list       = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
 		$duplicate_field_key = array_diff_key( $form_data_field, array_unique( $form_data_field ) );
@@ -182,7 +197,15 @@ class UR_Form_Validation extends UR_Validation {
 				 * Hook to update form field data.
 				 */
 				$field_hook_name = 'user_registration_form_field_' . $single_form_field->field_key . '_params';
-				$data            = apply_filters( $field_hook_name, $data, $single_form_field );
+				/**
+				 * Filter the single field params.
+				 *
+				 * The dynamic portion of the hook name, $field_hook_name.
+				 *
+				 * @param array $data The form data.
+				 * @param array $single_form_field The single form field.
+				 */
+				$data = apply_filters( $field_hook_name, $data, $single_form_field );
 
 				$this->valid_form_data[ $data->field_name ] = self::get_sanitize_value( $data );
 
@@ -193,10 +216,26 @@ class UR_Form_Validation extends UR_Validation {
 				$filter_hook = $hook . '_message';
 
 				if ( isset( $data->field_type ) && 'email' === $data->field_type ) {
+					/**
+					 * Action validate email whitelist.
+					 *
+					 * @param array $data->value The data value.
+					 * @param string $filter_hook The dynamic Filter hook.
+					 * @param array $single_form_field The single form field.
+					 * @param int $form_id The form ID.
+					 */
 					do_action( 'user_registration_validate_email_whitelist', $data->value, $filter_hook, $single_form_field, $form_id );
 				}
 
 				if ( 'honeypot' === $single_form_field->field_key ) {
+					/**
+					 * Action validate honeypot container.
+					 *
+					 * @param array $data The data.
+					 * @param string $filter_hook The dynamic Filter hook.
+					 * @param int $form_id The form ID.
+					 * @param array $form_data The form data.
+					 */
 					do_action( 'user_registration_validate_honeypot_container', $data, $filter_hook, $form_id, $form_data );
 				}
 
@@ -206,6 +245,14 @@ class UR_Form_Validation extends UR_Validation {
 				 * @since 4.1.0
 				 */
 				if ( 'date' === $single_form_field->field_key || 'timepicker' === $single_form_field->field_key ) {
+					/**
+					 * Action validate slot booking.
+					 *
+					 * @param array $form_data The form data.
+					 * @param string $filter_hook The dynamic Filter hook.
+					 * @param array $single_form_field The form field.
+					 * @param int $form_id The form ID.
+					 */
 					do_action( 'user_registration_validate_slot_booking', $form_data, $filter_hook, $single_form_field, $form_id );
 				}
 
@@ -214,8 +261,23 @@ class UR_Form_Validation extends UR_Validation {
 				) {
 					$single_form_field->advance_setting->enable_conditional_logic = ur_string_to_bool( $single_form_field->advance_setting->enable_conditional_logic );
 				}
-
+				/**
+				 * Action validate single field.
+				 *
+				 * The dynamic portion of the hook name, $hook.
+				 *
+				 * @param array $single_form_field The form field.
+				 * @param array $data The form data.
+				 * @param string $filter_hook The dynamic filter hook.
+				 * @param int $this->form_id The form ID.
+				 */
 				do_action( $hook, $single_form_field, $data, $filter_hook, $this->form_id );
+				/**
+				 * Filter the validate message.
+				 *
+				 * The dynamic portion of the hook name, $filter_hook.
+				 * Default value is blank string.
+				 */
 				$response = apply_filters( $filter_hook, '' );
 				if ( ! empty( $response ) ) {
 					array_push( $this->response_array, $response );
@@ -306,6 +368,12 @@ class UR_Form_Validation extends UR_Validation {
 					$form_data->value = isset( $form_data->value ) ? wp_kses_post( $form_data->value ) : '';
 			}
 		}
+		/**
+		 * Filter the sanitize field.
+		 *
+		 * @param array $form_data The form data.
+		 * @param string $field_key The form key.
+		 */
 		return apply_filters( 'user_registration_sanitize_field', $form_data, $field_key );
 	}
 
@@ -472,7 +540,11 @@ class UR_Form_Validation extends UR_Validation {
 			'privacy_policy' => array( 'is_boolean' ),
 			'number'         => array( 'is_numeric' ),
 		);
-
+		/**
+		 * Filter the field validations.
+		 *
+		 * @param array $validations The validation list.
+		 */
 		$this->field_validations = apply_filters( 'user_registration_field_validations', $validations );
 	}
 
@@ -566,7 +638,13 @@ class UR_Form_Validation extends UR_Validation {
 				$is_required = true;
 			}
 		}
-
+		/**
+		 * Filter the is field required.
+		 *
+		 * @param boolean $is_required The file name.
+		 * @param array $field The field setting.
+		 * @param array $form_data The form data.
+		 */
 		return apply_filters( 'user_registration_is_field_required', $is_required, $field, $form_data );
 	}
 
@@ -596,6 +674,17 @@ class UR_Form_Validation extends UR_Validation {
 		$form_key_list = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
 
 		$required_fields = array_diff( $form_key_list, $skippable_fields );
+
+		$filteredfields = array_filter(
+			$form_field_data,
+			function ( $fields ) {
+				return property_exists( $fields, 'advance_setting' ) && property_exists( $fields->advance_setting, 'field_visibility' ) && 'reg_form' === $fields->advance_setting->field_visibility;
+			}
+		);
+
+		$invisible_field_names = array_column( $filteredfields, 'general_setting' );//phpcs:ignore;
+		$invisible_field_names = array_column( $invisible_field_names, 'field_name' ); //phpcs:ignore;
+		$required_fields       = array_diff( $required_fields, $invisible_field_names );
 
 		if ( array_diff( $required_fields, $request_form_keys ) ) {
 			ur_add_notice( 'Some fields are missing in the submitted form. Please reload the page.', 'error' );
@@ -657,10 +746,23 @@ class UR_Form_Validation extends UR_Validation {
 					}
 				}
 
-				// Hook to allow modification of value.
+				/**
+				 * Filter to allow modification of value.
+				 *
+				 * The dynamic portion of the hook name, $single_field_name.
+				 *
+				 * @param array $single_field_value The single field value.
+				 */
 				$single_field_value = apply_filters( 'user_registration_process_myaccount_field_' . $single_field_name, wp_unslash( $single_field_value ) );
 
 				if ( 'email' === $field_setting['type'] ) {
+					/**
+					 * Action validate email whitelist.
+					 *
+					 * @param array $single_field_value The data value.
+					 * @param array $single_form_field The single form field.
+					 * @param int $form_id The form ID.
+					 */
 					do_action( 'user_registration_validate_email_whitelist', sanitize_text_field( $single_field_value ), '', $single_form_field, $form_id );
 				}
 				/**
@@ -669,6 +771,13 @@ class UR_Form_Validation extends UR_Validation {
 				 * @since 4.1.0
 				 */
 				if ( 'date' === $field_setting['field_key'] || 'timepicker' === $field_setting['field_key'] ) {
+					/**
+					 * Action validate slot booking.
+					 *
+					 * @param array $form_data The form data.
+					 * @param array $field_setting The field setting.
+					 * @param int $form_id The form ID.
+					 */
 					do_action( 'user_registration_validate_slot_booking', $form_data, '', $field_setting, $form_id );
 				}
 
@@ -684,7 +793,13 @@ class UR_Form_Validation extends UR_Validation {
 
 				$this->run_field_validations( $single_field_key, $single_form_field, $data, $form_id );
 
-				// Action to add extra validation to edit profile fields.
+				/** Action to add extra validation to edit profile fields.
+				 *
+				 * The dynamic portion of the hook name, $single_field_key.
+				 *
+				 * @param array $single_field_value The single field value.
+				 * @param array $single_form_field The form field.
+				 */
 				do_action( 'user_registration_validate_field_' . $single_field_key, wp_unslash( $single_field_value ), $single_form_field ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			}
 		}
@@ -790,8 +905,23 @@ class UR_Form_Validation extends UR_Validation {
 		// Validate custom field validations of field class.
 		$hook        = "user_registration_validate_{$single_field_key}";
 		$filter_hook = $hook . '_message';
+		/**
+		 * Action validate single field.
+		 *
+		 * The dynamic portion of the hook name, $hook.
+		 *
+		 * @param array $single_form_field The form field.
+		 * @param array $data The form data.
+		 * @param string $filter_hook The dynamic filter hook.
+		 * @param int $this->form_id The form ID.
+		 */
 		do_action( $hook, $single_form_field, $data, $filter_hook, $this->form_id );
-
+		/**
+		 * Filter the validate message.
+		 *
+		 * The dynamic portion of the hook name, $filter_hook.
+		 * Default value is blank string.
+		 */
 		$response = apply_filters( $filter_hook, '' );
 		if ( ! empty( $response ) ) {
 			ur_add_notice( $response, 'error' );

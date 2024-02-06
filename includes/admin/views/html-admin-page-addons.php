@@ -15,7 +15,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="wrap ur_addons_wrap">
 	<h1 class="wp-heading-inline"><?php esc_html_e( 'User Registration Extensions', 'user-registration' ); ?></h1>
 
-	<?php if ( apply_filters( 'user_registration_refresh_addons', true ) ) : ?>
+	<?php
+	/**
+	 * Filter to refresh the addons.
+	 *
+	 * @param bool Status of the addons.
+	 */
+	if ( apply_filters( 'user_registration_refresh_addons', true ) ) :
+		?>
 		<a href="<?php echo esc_url( $refresh_url ); ?>" class="page-title-action"><?php esc_html_e( 'Refresh Extensions', 'user-registration' ); ?></a>
 	<?php endif; ?>
 
@@ -25,11 +32,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php if ( $sections ) : ?>
 		<ul class="subsubsub">
 			<?php foreach ( $sections as $section_id => $section ) : ?>
-				<li><a class="<?php echo $current_section === $section_id ? 'current' : ''; ?>" href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-addons&section=' . esc_attr( $section_id ) ) ); ?>"><?php echo esc_html( $section->title ); ?></a><?php echo ( end( $section_keys ) !== $section_id ) ? : ''; ?></li>
+				<li><a class="<?php echo $current_section === $section_id ? 'current' : ''; ?>" href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-addons&section=' . esc_attr( $section_id ) ) ); ?>"><?php echo esc_html( $section->title ); ?></a></li>
 			<?php endforeach; ?>
 		</ul>
 		<br class="clear" />
-		<?php if ( $addons = UR_Admin_Addons::get_section_data( $current_section ) ) : ?>
+		<?php
+		$addons = UR_Admin_Addons::get_section_data( $current_section );
+		if ( $addons ) :
+			?>
 			<div class="wp-list-table widefat extension-install">
 					<h2 class="screen-reader-text"><?php esc_html_e( 'Extensions list', 'user-registration' ); ?></h2>
 
@@ -54,7 +64,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 									</div>
 									<div class="plugin-card-buttons">
 										<?php if ( get_option( 'user-registration_license_key' ) ) { ?>
-												<?php echo do_action( 'user_registration_after_addons_description', $addon ); ?>
+												<?php
+												/**
+												 * Action to display description after addon installation.
+												 *
+												 * @param mixed $addon Name of the current addon.
+												 */
+												do_action( 'user_registration_after_addons_description', $addon );
+												?>
 											<?php } else { ?>
 												<div class="action-buttons upgrade-plan">
 													<a class="button upgrade-now" href="https://wpuserregistration.com/pricing/?utm_source=addons-page&utm_medium=upgrade-button&utm_campaign=ur-upgrade-to-pro" target="_blank"><?php esc_html_e( 'Upgrade Plan', 'user-registration' ); ?></a>

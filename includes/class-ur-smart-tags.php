@@ -28,6 +28,12 @@ class UR_Smart_Tags {
 	 */
 	public static function smart_tags_list() {
 		$smart_tags = array_merge( self::ur_unauthenticated_parsable_smart_tags_list(), self::ur_authenticated_parsable_smart_tags_list() );
+		/**
+		 * The 'user_registration_smart_tags' filter allows developers to modify the list
+		 * of smart tags available in User Registration for customization.
+		 *
+		 * @param array  $smart_tags List of smart tags before applying the filter.
+		 */
 		return apply_filters( 'user_registration_smart_tags', $smart_tags );
 	}
 
@@ -49,6 +55,12 @@ class UR_Smart_Tags {
 			'{{last_name}}'    => esc_html__( 'Last Name', 'user-registration' ),
 			'{{display_name}}' => esc_html__( 'User Display Name', 'user-registration' ),
 		);
+		/**
+		 * The 'user_registration_authenticated_smart_tags' filter allows developers to modify
+		 * the list of smart tags available for authenticated users in User Registration.
+		 *
+		 * @param array $smart_tags Default list of authenticated smart tags.
+		 */
 		return apply_filters( 'user_registration_authenticated_smart_tags', $smart_tags );
 	}
 
@@ -76,10 +88,19 @@ class UR_Smart_Tags {
 			'{{user_ip_address}}'  => esc_html__( 'User IP Address', 'user-registration' ),
 			'{{referrer_url}}'     => esc_html__( 'Referrer URL', 'user-registration' ),
 			'{{form_id}}'          => esc_html__( 'Form ID', 'user-registration' ),
+			'{{form_name}}'        => esc_html__( 'Form Name', 'user-registration' ),
 			'{{author_email}}'     => esc_html__( 'Author Email', 'user-registration' ),
 			'{{author_name}}'      => esc_html__( 'Author Name', 'user-registration' ),
 			'{{unique_id}}'        => esc_html__( 'Unique ID', 'user-registration' ),
 		);
+		/**
+		 * Applies a filter to modify the list of unauthenticated smart tags.
+		 *
+		 * The 'user_registration_unauthenticated_smart_tags' filter allows developers to customize
+		 * the list of smart tags available for unauthenticated users in User Registration.
+		 *
+		 * @param array $smart_tags Default list of unauthenticated smart tags.
+		 */
 		return apply_filters( 'user_registration_unauthenticated_smart_tags', $smart_tags );
 	}
 
@@ -94,6 +115,15 @@ class UR_Smart_Tags {
 		if ( ! empty( $values['email'] ) ) {
 			$process_type   = isset( $values['process_type'] ) && 'ur_parse_after_meta_update' === $values['process_type'] ? true : false;
 			$default_values = array();
+			/**
+			 * Applies a filter to add or modify smart tags for User Registration.
+			 *
+			 * The 'user_registration_add_smart_tags' filter allows developers to customize
+			 * the default values by adding or modifying smart tags based on the provided email.
+			 *
+			 * @param array  $default_values Default values before adding or modifying smart tags.
+			 * @param string $email          Email address associated with the values.
+			 */
 			$default_values = apply_filters( 'user_registration_add_smart_tags', $default_values, $values['email'] );
 
 			$values    = wp_parse_args( $values, $default_values );
@@ -120,7 +150,14 @@ class UR_Smart_Tags {
 				}
 			);
 			$smart_tags = $user_smart_tags;
-
+			/**
+			 * Applies a filter to modify smart tag values.
+			 *
+			 * The 'user_registration_smart_tag_values' filter allows developers to customize
+			 * the values associated with smart tags before processing them in User Registration.
+			 *
+			 * @param array $values Default smart tag values.
+			 */
 			$values = apply_filters( 'user_registration_smart_tag_values', $values );
 
 			foreach ( $values as $key => $value ) {
@@ -140,7 +177,15 @@ class UR_Smart_Tags {
 		if ( ! empty( $other_tags[1] ) ) {
 			foreach ( $other_tags[1] as $key => $tag ) {
 				$other_tag = explode( ' ', $tag )[0];
+
 				switch ( $other_tag ) {
+					case 'updated_new_user_email':
+						if ( ! empty( $values['user_pending_email'] ) ) {
+							$new_email = $values['user_pending_email'];
+							$content   = str_replace( '{{' . $other_tag . '}}', $new_email, $content );
+						}
+						break;
+
 					case 'user_id':
 						$user_id = ! empty( $values['user_id'] ) ? $values['user_id'] : get_current_user_id();
 						$content = str_replace( '{{' . $other_tag . '}}', $user_id, $content );
@@ -170,6 +215,11 @@ class UR_Smart_Tags {
 						break;
 
 					case 'auto_pass':
+						/**
+						 * Applies a filter to customize the auto-generated password.
+						 *
+						 * @param string $default_password Default auto-generated password.
+						 */
 						$user_pass = apply_filters( 'user_registration_auto_generated_password', 'user_pass' );
 						$content   = str_replace( '{{' . $other_tag . '}}', $user_pass, $content );
 						break;
@@ -233,6 +283,7 @@ class UR_Smart_Tags {
 						} else {
 							$all_fields = '';
 						}
+
 						$content = str_replace( '{{' . $other_tag . '}}', $all_fields, $content );
 						break;
 
@@ -275,6 +326,12 @@ class UR_Smart_Tags {
 						}
 
 						$content = str_replace( '{{' . $other_tag . '}}', $form_id, $content );
+						break;
+
+					case 'form_name':
+						$current_form_id = isset( $values['form_id'] );
+						$form_name       = ucfirst( get_the_title( $current_form_id ) );
+						$content         = str_replace( '{{' . $other_tag . '}}', $form_name, $content );
 						break;
 
 					case 'user_ip_address':
@@ -328,10 +385,26 @@ class UR_Smart_Tags {
 						$content = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $author ), $content );
 						break;
 					case 'unique_id':
+						/**
+						 * Applies a filter to determine whether more entropy should be added to the unique ID.
+						 *
+						 * The 'ur_unique_id_more_entropy' filter allows developers to customize
+						 * whether additional entropy is included in the unique ID.
+						 *
+						 * @param bool $default_entropy Default value indicating whether more entropy is added.
+						 */
 						$uni_entropy = apply_filters( 'ur_unique_id_more_entropy', true );
-						$prefix      = apply_filters( 'ur_unique_id_prefix', 'ur' );
-						$unique_id   = uniqid( $prefix, $uni_entropy );
-						$content     = str_replace( '{{' . $tag . '}}', $unique_id, $content );
+						/**
+						 * Applies a filter to customize the prefix for the unique ID.
+						 *
+						 * The 'ur_unique_id_prefix' filter allows developers to modify the default prefix used
+						 * for the unique ID.
+						 *
+						 * @param string $default_prefix Default prefix for the unique ID.
+						 */
+						$prefix    = apply_filters( 'ur_unique_id_prefix', 'ur' );
+						$unique_id = uniqid( $prefix, $uni_entropy );
+						$content   = str_replace( '{{' . $tag . '}}', $unique_id, $content );
 						break;
 					case 'approval_link':
 						if ( isset( $values['email'] ) && '' !== $values['email'] ) {
@@ -348,11 +421,44 @@ class UR_Smart_Tags {
 							}
 						}
 						break;
+
+					case 'email_change_confirmation_link':
+						// Generate a confirmation key for the email change.
+						$confirm_key = wp_generate_password( 20, false );
+
+						$user = get_current_user_id();
+
+						// Save the confirmation key.
+						update_user_meta( $user, 'user_registration_email_confirm_key', $confirm_key );
+
+						// Send an email to the new address with confirmation link.
+						$confirm_link = add_query_arg( 'confirm_email', $user, add_query_arg( 'confirm_key', $confirm_key, ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' ) ) );
+						$confirm_link = sprintf( '<a href="%s" target="_blank">%s</a>', $confirm_link, esc_html__( 'confirm link', 'user-registration' ) );
+
+						$content = str_replace( '{{' . $tag . '}}', $confirm_link, $content );
+						break;
+
+					case 'denial_link':
+						if ( isset( $values['email'] ) && '' !== $values['email'] ) {
+							$user    = get_user_by( 'email', $values['email'] );
+							$user_id = $user->ID;
+
+							$login_option = ur_get_user_login_option( $user_id );
+
+							// If enabled approval via email setting.
+							if ( ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
+								$denial_token = get_user_meta( $user_id, 'ur_confirm_denial_token', true );
+								$denial_link  = '<a href="' . admin_url( '/' ) . '?ur_denial_token=' . $denial_token . '">' . esc_html__( 'Deny Now', 'user-registration' ) . '</a><br />';
+								$content      = str_replace( '{{' . $tag . '}}', $denial_link, $content );
+							}
+						}
+						break;
 					case 'display_name':
 						$user_id   = ! empty( $values['user_id'] ) ? $values['user_id'] : get_current_user_id();
 						$user_data = get_userdata( $user_id );
 						$content   = str_replace( '{{' . $tag . '}}', esc_html( $user_data->display_name ), $content );
 						break;
+
 					case 'profile_pic_box':
 						$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
 						$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
@@ -390,6 +496,15 @@ class UR_Smart_Tags {
 				}
 			}
 		}
+		/**
+		 * Applies a filter to customize the content with smart tags.
+		 *
+		 * The 'user_registration_smart_tag_content' filter allows developers to modify
+		 * the content that includes smart tags based on the provided values.
+		 *
+		 * @param string $content Default content with smart tags.
+		 * @param array  $values  Values associated with the smart tags.
+		 */
 		$content = apply_filters( 'user_registration_smart_tag_content', $content, $values );
 
 		return $content;
@@ -418,6 +533,14 @@ class UR_Smart_Tags {
 	 * @return array array of pattern lists.
 	 */
 	public static function ur_pattern_validation_lists() {
+		/**
+		 * Applies a filter to customize the pattern validation lists.
+		 *
+		 * The 'user_registration_pattern_validation_lists' filter allows developers to modify
+		 * the pattern validation lists used for field validation in User Registration.
+		 *
+		 * @param array $pattern_lists Default pattern validation lists.
+		 */
 		$pattern_lists = apply_filters(
 			'user_registration_pattern_validation_lists',
 			array(

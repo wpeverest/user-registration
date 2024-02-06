@@ -89,6 +89,9 @@ class UR_Install {
 	public static function check_version() {
 		if ( ! defined( 'IFRAME_REQUEST' ) && version_compare( get_option( 'user_registration_version' ), UR()->version, '<' ) ) {
 			self::install();
+			/**
+			 * Fires an action hook after updating the User Registration plugin to a new version.
+			 */
 			do_action( 'user_registration_updated' );
 		}
 	}
@@ -104,6 +107,11 @@ class UR_Install {
 			UR_Admin_Notices::add_notice( 'update' );
 		}
 		if ( ! empty( $_GET['force_update_user_registration'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification
+			/**
+			 * Fires an action hook to initiate a forced update for User Registration via admin area.
+			 *
+			 * This action hook, 'wp_{blog_id}_ur_updater_cron', is triggered when the 'force_update_user_registration'
+			 */
 			do_action( 'wp_' . get_current_blog_id() . '_ur_updater_cron' );
 			wp_safe_redirect( admin_url( 'admin.php?page=user-registration-settings' ) );
 			exit;
@@ -146,8 +154,19 @@ class UR_Install {
 		}
 
 		delete_transient( 'ur_installing' );
-
+		/**
+		 * Fires an action hook to flush rewrite rules after User Registration plugin activation or settings update.
+		 *
+		 * The 'user_registration_flush_rewrite_rules' action is triggered to ensure that any changes
+		 * tasks or actions when rewrite rules need to be flushed.
+		 */
 		do_action( 'user_registration_flush_rewrite_rules' );
+		/**
+		 * Fires an action hook after the User Registration plugin has been successfully installed or updated.
+		 *
+		 * The 'user_registration_installed' action allows developers to execute custom code or tasks
+		 * after the installation or update of the User Registration plugin is completed.
+		 */
 		do_action( 'user_registration_installed' );
 		set_transient( '_ur_activation_redirect', 1, 30 );
 	}
@@ -200,6 +219,14 @@ class UR_Install {
 	 * See if we need the wizard or not.
 	 */
 	private static function maybe_enable_setup_wizard() {
+		/**
+		 * Applies a filter to determine whether to enable the setup wizard for User Registration.
+		 *
+		 * The 'user_registration_enable_setup_wizard' filter allows developers to control
+		 * whether the setup wizard should be enabled based on certain conditions.
+		 *
+		 * @param bool $default_value The default value indicating whether it's a new installation, obtained using self::is_new_install().
+		 */
 		if ( apply_filters( 'user_registration_enable_setup_wizard', self::is_new_install() ) ) {
 			UR_Admin_Notices::add_notice( 'install' );
 		}
@@ -212,6 +239,9 @@ class UR_Install {
 	 */
 	private static function maybe_update_db_version() {
 		if ( self::needs_db_update() ) {
+			/**
+			 * Checks if database updates are needed during installation and takes appropriate actions.
+			 */
 			if ( apply_filters( 'user_registration_enable_auto_update_db', false ) ) {
 				self::init_background_updater();
 				self::update();
@@ -360,7 +390,16 @@ class UR_Install {
 	 */
 	public static function create_pages() {
 		include_once __DIR__ . '/admin/functions-ur-admin.php';
-
+		/**
+		 * Creates and configures pages related with customizable content.
+		 *
+		 * The 'user_registration_create_pages' filter allows developers to customize the pages
+		 * created during the setup process. By default, it includes a 'My Account' page with the
+		 * 'user_registration_my_account' shortcode, and if a default registration form page is set,
+		 * it includes a 'Registration' page with the 'user_registration_form' shortcode.
+		 *
+		 * Developers can customize the page structure and content using this filter.
+		 */
 		$pages = apply_filters(
 			'user_registration_create_pages',
 			array(
@@ -378,6 +417,15 @@ class UR_Install {
 			$pages['registration'] = array(
 				'name'    => _x( 'registration', 'Page slug', 'user-registration' ),
 				'title'   => _x( 'Registration', 'Page title', 'user-registration' ),
+				/**
+				 * Applies a filter to customize the shortcode tag used for the User Registration form.
+				 *
+				 * The 'user_registration_form_shortcode_tag' filter allows developers to modify
+				 * the default shortcode tag ('user_registration_form') used to render the registration form.
+				 * Developers can use this filter to change the tag or add additional attributes to the form shortcode.
+				 *
+				 * @param string $default_shortcode_tag The default shortcode tag for the User Registration form.
+				 */
 				'content' => '[' . apply_filters( 'user_registration_form_shortcode_tag', 'user_registration_form' ) . ' id="' . esc_attr( $default_form_page_id ) . '"]',
 			);
 		}

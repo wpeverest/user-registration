@@ -64,21 +64,27 @@ class UR_Email_Confirmation {
 				$form_id = ur_get_form_id_by_userid( $user_id );
 
 				$this->set_email_status( array(), $form_id, $user_id );
-
+				/**
+				 * Filter hook to modify the email attachment resending token.
+				 * Default value is empty array.
+				 */
 				$attachments = apply_filters( 'user_registration_email_attachment_resending_token', array() );
 				$name_value  = ur_get_user_extra_fields( $user_id );
-					// Get selected email template id for specific form.
+				// Get selected email template id for specific form.
 				$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
 
 				UR_Emailer::send_mail_to_user( $user->user_email, $user->user_login, $user_id, '', $name_value, $attachments, $template_id );
 				$redirect = add_query_arg( array( 'resend_verification_sent' => 1 ), $redirect );
 
 			}
-
+			/**
+			 * Filter to modify the admin action redirect.
+			 *
+			 * @param array $redirect The admin redirect.
+			 */
 			wp_safe_redirect( esc_url_raw( apply_filters( 'user_registration_admin_action_redirect', $redirect ) ) );
 			exit;
 		}
-
 	}
 
 	/**
@@ -181,7 +187,7 @@ class UR_Email_Confirmation {
 		add_action( 'login_enqueue_scripts', array( $this, 'ur_enqueue_script' ), 1 );
 
 		// Condition for resending token.
-		if ( isset( $_GET['ur_resend_id'] ) && isset( $_GET['ur_resend_token'] ) && ur_string_to_bool( $_GET['ur_resend_token'] ) ) {
+		if ( isset( $_GET['ur_resend_id'] ) && isset( $_GET['ur_resend_token'] ) && ur_string_to_bool( $_GET['ur_resend_token'] ) ) { //phpcs:ignore;
 			if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( wp_unslash( sanitize_key( $_REQUEST['_wpnonce'] ) ), 'ur_resend_token' ) ) {
 				die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 			}
@@ -198,6 +204,10 @@ class UR_Email_Confirmation {
 			if ( $user && ( 'email_confirmation' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
 				$this->set_email_status( array(), '', $user_id );
 
+				/**
+				 * Filter hook to modify the email attachment resending token.
+				 * Default value is empty array.
+				 */
 				$attachments = apply_filters( 'user_registration_email_attachment_resending_token', array() );
 				$name_value  = ur_get_user_extra_fields( $user_id );
 					// Get selected email template id for specific form.
@@ -249,7 +259,11 @@ class UR_Email_Confirmation {
 					update_user_meta( $user_id, 'ur_confirm_email', 1 );
 					delete_user_meta( $user_id, 'ur_confirm_email_token' );
 
-					$user        = get_user_by( 'id', $user_id );
+					$user = get_user_by( 'id', $user_id );
+					/**
+					 * Filter hook to modify the email attachment resending token.
+					 * Default value is empty array.
+					 */
 					$attachments = apply_filters( 'user_registration_email_attachment_resending_token', array() );
 					$name_value  = ur_get_user_extra_fields( $user_id );
 						// Get selected email template id for specific form.
@@ -269,10 +283,14 @@ class UR_Email_Confirmation {
 				add_filter( 'login_message', array( $this, 'custom_registration_error_message' ) );
 				add_filter( 'user_registration_login_form_before_notice', array( $this, 'custom_registration_error_message' ) );
 			}
-
+			/**
+			 * Action hook to check the token complete.
+			 *
+			 * @param array $user_id The user ID.
+			 * @param bool $user_reg_successful The user registration successful.
+			 */
 			do_action( 'user_registration_check_token_complete', $user_id, $user_reg_successful );
 		}
-
 	}
 
 	/**
@@ -304,8 +322,11 @@ class UR_Email_Confirmation {
 				'user_email' => get_user_meta( $user_id, 'user_registration_pending_email', true ),
 			)
 		);
-
-		// Trigger an action hook after the email address is updated.
+			/**
+			 * Trigger an action hook after the email address is updated.
+			 *
+			 * @param int $user_id The user ID.
+			 */
 		do_action( 'user_registration_email_change_success', $user_id );
 
 		// Remove the confirmation key, pending email and expiry date.
@@ -390,7 +411,12 @@ class UR_Email_Confirmation {
 
 		if ( 'email_confirmation' === ur_get_user_login_option( $user->ID ) ) {
 			$email_status = get_user_meta( $user->ID, 'ur_confirm_email', true );
-
+			/**
+			 * Action before check email status on login
+			 *
+			 * @param bool $email_status The email status.
+			 * @param array $user The user data.
+			 */
 			do_action( 'ur_user_before_check_email_status_on_login', $email_status, $user );
 
 			$website = isset( $_SERVER['SERVER_NAME'] ) && isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] : '';   //phpcs:ignore WordPress.Security.ValidatedSanitizedInput

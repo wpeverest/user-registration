@@ -21,21 +21,39 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 ?>
 
-<?php apply_filters( 'user_registration_login_registration_form_before_notice', ur_print_notices() ); ?>
+<?php
+/**
+ * Filter to modify the notice before login registration form.
+ *
+ * @param string content for login registration form notice.
+ *
+ * @return string content for login registration form notice.
+ */
+apply_filters( 'user_registration_login_registration_form_before_notice', ur_print_notices() );
+?>
 
-<?php do_action( 'user_registration_before_customer_login_registration_form' ); ?>
+<?php
+/**
+ * Action to fire before the rendering of customer login registration form.
+ */
+do_action( 'user_registration_before_customer_login_registration_form' );
+?>
 
 <div class="ur-frontend-form login-registration">
 	<div class="ur-form-row">
 		<div class="ur-form-grid">
 			<h2 class="ur-form-title"><?php echo esc_html__( 'Login', 'user-registration' ); ?></h2>
-			<?php echo $login_form; ?>
+			<?php echo $login_form;  //phpcs:ignore;?>
 		</div>
 		<div class="ur-form-grid">
-			<h2 class="ur-form-title"><?php echo esc_html__( get_the_title( $form_id ), 'user-registration' ); ?></h2>
-			<?php echo $registration_form; ?>
+			<h2 class="ur-form-title"><?php echo esc_html__( get_the_title( $form_id ), 'user-registration' );  //phpcs:ignore;?></h2>
+			<?php echo $registration_form;  //phpcs:ignore;?>
 		</div>
 	</div>
 </div>
 
-<?php do_action( 'user_registration_after_login_registration_form' ); ?>
+<?php
+/**
+ * Action to fire after the rendering of login registration form.
+ */
+do_action( 'user_registration_after_login_registration_form' ); ?>

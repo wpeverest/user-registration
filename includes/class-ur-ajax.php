@@ -124,7 +124,10 @@ class UR_AJAX {
 	 * @return void
 	 */
 	public static function user_form_submit() {
-
+		/**
+		 * Filter to modify user capability.
+		 * Default value is 'create_users'.
+		 */
 		$current_user_capability = apply_filters( 'ur_registration_user_capability', 'create_users' );
 
 		if ( is_user_logged_in() && ! current_user_can( 'administrator' ) && ! current_user_can( $current_user_capability ) ) { //phpcs:ignore
@@ -172,7 +175,10 @@ class UR_AJAX {
 				if ( 'hCaptcha' === $recaptcha_type ) {
 					$data = wp_safe_remote_get( 'https://hcaptcha.com/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
 					$data = json_decode( wp_remote_retrieve_body( $data ) );
-
+					/**
+					 * Filter to modify hcaptcha threshold.
+					 * Default value is 0.5
+					 */
 					if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_hcaptcha_threshold', 0.5 ) ) ) {
 						wp_send_json_error(
 							array(
@@ -201,7 +207,10 @@ class UR_AJAX {
 				} else {
 					$data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
 					$data = json_decode( wp_remote_retrieve_body( $data ) );
-
+					/**
+					 * Filter to modify V3 recaptcha threshold.
+					 * Default value is 0.5
+					 */
 					if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_recaptcha_v3_threshold', 0.5 ) ) ) {
 						wp_send_json_error(
 							array(
@@ -226,18 +235,29 @@ class UR_AJAX {
 				)
 			);
 		}
-
+		/**
+		 * Filter to override the register settings.
+		 * Default value is the get_option('users_can_register')
+		 */
 		$users_can_register = apply_filters( 'ur_register_setting_override', get_option( 'users_can_register' ) );
 
 		if ( ! is_user_logged_in() ) {
 			if ( ! $users_can_register ) {
 				wp_send_json_error(
 					array(
+						/**
+						 * Filter to modify register pre form message.
+						 * Default value is the 'Only administrators can add new users'.
+						 */
 						'message' => apply_filters( 'ur_register_pre_form_message', __( 'Only administrators can add new users.', 'user-registration' ) ),
 					)
 				);
 			}
 		} else {
+			/**
+			 * Filter to modify user capability.
+			 * Default value is 'create_users'.
+			 */
 			$current_user_capability = apply_filters( 'ur_registration_user_capability', 'create_users' );
 
 			if ( ! current_user_can( $current_user_capability ) ) {
@@ -250,8 +270,16 @@ class UR_AJAX {
 
 				wp_send_json_error(
 					array(
-						/* translators: %s - Link to logout. */
-						'message' => apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . sprintf( __( 'You are currently logged in as %1$1s. %2$2s', 'user-registration' ), '<a href="#" title="' . $display_name . '">' . $display_name . '</a>', '<a href="' . wp_logout_url( $current_url ) . '" title="' . __( 'Log out of this account.', 'user-registration' ) . '">' . __( 'Logout', 'user-registration' ) . '  &raquo;</a>' ) . '</p>', $user_ID ),
+						/**
+						 * Filter to modify register pre form message.
+						 */
+						'message' => apply_filters(
+							'ur_register_pre_form_message',
+							'<p class="alert" id="ur_register_pre_form_message">' .
+							/* translators: %1$1s - Link to logout. */
+							sprintf( __( 'You are currently logged in as %1$1s. %2$2s', 'user-registration' ), '<a href="#" title="' . $display_name . '">' . $display_name . '</a>', '<a href="' . wp_logout_url( $current_url ) . '" title="' . __( 'Log out of this account.', 'user-registration' ) . '">' . __( 'Logout', 'user-registration' ) . '  &raquo;</a>' ) . '</p>',
+							$user_ID
+						),
 					)
 				);
 			}
@@ -344,19 +372,39 @@ class UR_AJAX {
 		}
 
 		/**
-		 * Hook to perform validation of edit profile form.
+		 * Action hook to perform validation of edit profile form.
+		 *
+		 * @param array $profile User profile data.
+		 * @param array $form_data The form data.
+		 * @param int $form_id The form ID.
 		 */
 		do_action( 'user_registration_validate_profile_update', $profile, $form_data, $form_id );
 
+		/**
+		 * Action after the save profile validation.
+		 *
+		 * @param int The user ID.
+		 * @param array The profile data.
+		 */
 		do_action( 'user_registration_after_save_profile_validation', $user_id, $profile );
 
 		if ( 0 === ur_notice_count( 'error' ) ) {
-			$user_data                    = array();
+			$user_data = array();
+			/**
+			 * Filter to modify the email change confirmation.
+			 * Default vallue is 'true'.
+			 */
 			$is_email_change_confirmation = (bool) apply_filters( 'user_registration_email_change_confirmation', true );
 			$email_updated                = false;
 			$pending_email                = '';
 			$user                         = wp_get_current_user();
-
+			/**
+			 * Filter to modify the field settings.
+			 *
+			 * The dynamic portion of the hook name, $value->field_key.
+			 *
+			 * @param array $value The field value.
+			 */
 			$profile = apply_filters( 'user_registration_before_save_profile_details', $profile, $user_id, $form_id );
 
 			foreach ( $profile as $key => $field ) {
@@ -396,8 +444,16 @@ class UR_AJAX {
 				$user_data['ID'] = get_current_user_id();
 				wp_update_user( $user_data );
 			}
-
+			/**
+			 * Filter to modify the profile update success message.
+			*/
 			$message = apply_filters( 'user_registration_profile_update_success_message', __( 'User profile updated successfully.', 'user-registration' ) );
+			/**
+			 * Action to modify the save profile details.
+			 *
+			 * @param int $user_id The user ID.
+			 * @param int $form_id The form ID.
+			 */
 			do_action( 'user_registration_save_profile_details', $user_id, $form_id );
 
 			$profile_pic_id = get_user_meta( $user_id, 'user_registration_profile_pic_url' );
@@ -434,7 +490,11 @@ class UR_AJAX {
 					)
 				);
 			}
-
+			/**
+			 * Filter to modify profile update response.
+			 *
+			 * @param array $response The profile update response.
+			 */
 			$response = apply_filters( 'user_registration_profile_update_response', $response );
 
 			wp_send_json_success(
@@ -617,7 +677,15 @@ class UR_AJAX {
 			wp_send_json_error( array( 'message' => __( 'You do not have permission to send test email.', 'user-registration' ) ) );
 			wp_die( -1 );
 		}
-		$from_name    = apply_filters( 'wp_mail_from_name', get_option( 'user_registration_email_from_name', esc_attr( get_bloginfo( 'name', 'display' ) ) ) );
+		/**
+		 * Filter to test mail from name.
+		 * Default value is get_option('user_registration_email_from_name').
+		 */
+		$from_name = apply_filters( 'wp_mail_from_name', get_option( 'user_registration_email_from_name', esc_attr( get_bloginfo( 'name', 'display' ) ) ) );
+		/**
+		 * Filter to test mail from address.
+		 * Default value is get_option('user_registration_email_from_address').
+		 */
 		$sender_email = apply_filters( 'wp_mail_from', get_option( 'user_registration_email_from_address', get_option( 'admin_email' ) ) );
 		$email        = sanitize_email( isset( $_POST['email'] ) ? wp_unslash( $_POST['email'] ) : '' ); // phpcs:ignore WordPress.Security.NonceVerification
 		/* translators: %s - WP mail from name */
@@ -650,11 +718,11 @@ class UR_AJAX {
 		global $wpdb;
 		try {
 			check_ajax_referer( 'process-locate-ajax-nonce', 'security' );
-			$id                     = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : '';
+			$id                          = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : '';
 			$user_registration_shortcode = '%[user_registration_form id="' . $id . '"%';
-			$form_id_shortcode      = '%{"formId":"' . $id . '"%';
-			$pages                  = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}posts WHERE post_content LIKE %s OR post_content LIKE %s", $user_registration_shortcode, $form_id_shortcode ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$page_list              = array();
+			$form_id_shortcode           = '%{"formId":"' . $id . '"%';
+			$pages                       = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}posts WHERE post_content LIKE %s OR post_content LIKE %s", $user_registration_shortcode, $form_id_shortcode ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$page_list                   = array();
 			foreach ( $pages as $page ) {
 				if ( '0' === $page->post_parent ) {
 					$page_title               = $page->post_title;
@@ -746,10 +814,7 @@ class UR_AJAX {
 				throw new Exception( __( 'post data not set', 'user-registration' ) );
 			}
 
-         $post_data = json_decode( wp_unslash( $_POST['data']['form_data'] ) ); //phpcs:ignore
-
-			$post_data = self::ur_add_to_advanced_settings( $post_data ); // Backward compatibility method. Since @1.5.7.
-
+			$post_data = json_decode( wp_unslash( $_POST['data']['form_data'] ) ); //phpcs:ignore
 			self::sweep_array( $post_data );
 
 			if ( isset( self::$failed_key_value['value'] ) && '' != self::$failed_key_value['value'] ) {
@@ -787,6 +852,11 @@ class UR_AJAX {
 				}
 			}
 
+			/**
+			 * Perform validation before form save from form builder.
+			 */
+			do_action("user_registration_admin_backend_validation_before_form_save");
+			
 			$form_name    = sanitize_text_field( $_POST['data']['form_name'] ); //phpcs:ignore
 			$form_row_ids = sanitize_text_field( $_POST['data']['form_row_ids'] ); //phpcs:ignore
 			$form_id      = sanitize_text_field( $_POST['data']['form_id'] ); //phpcs:ignore
@@ -817,7 +887,10 @@ class UR_AJAX {
 				// Form row_id save.
 				update_post_meta( $form_id, 'user_registration_form_row_ids', $form_row_ids );
 			}
-
+			/**
+			 * Action after form setting save.
+			 * Default is the $_POST['data'].
+			 */
          do_action( 'user_registration_after_form_settings_save', wp_unslash( $_POST['data'] ) ); //phpcs:ignore
 
 			wp_send_json_success(
@@ -926,6 +999,13 @@ class UR_AJAX {
 				}
 			} elseif ( is_array( $value ) || gettype( $value ) === 'object' ) {
 				if ( isset( $value->field_key ) ) {
+					/**
+					 * Filter to modify the field settings.
+					 *
+					 * The dynamic portion of the hook name, $value->field_key.
+					 *
+					 * @param array $value The field value.
+					 */
 					$value = apply_filters( 'user_registration_field_setting_' . $value->field_key, $value );
 				}
 				self::sweep_array( $value );
@@ -1002,43 +1082,6 @@ class UR_AJAX {
 		}
 		update_option( 'user_registration_admin_footer_text_rated', 1 );
 		wp_die();
-	}
-
-	/**
-	 * Migrate the choices/options from the general settings to advanced settings.
-	 *
-	 * Backward compatibility code. Modified @since 1.5.7.
-	 *
-	 * @param  array $post_data All fields data.
-	 * @return array    Modified fields data.
-	 */
-	private static function ur_add_to_advanced_settings( $post_data ) {
-
-		$modifiying_keys = array( 'radio', 'select', 'checkbox' );
-
-		foreach ( $post_data as $post_content_row ) {
-			foreach ( $post_content_row as $post_content_grid ) {
-				foreach ( $post_content_grid as $field ) {
-					if ( isset( $field->field_key ) ) {
-						if ( ! in_array( $field->field_key, $modifiying_keys ) ) {
-							continue;
-						}
-
-						if ( isset( $field->general_setting->options ) ) {
-							$options = implode( ',', $field->general_setting->options );
-
-							if ( 'checkbox' === $field->field_key ) {
-								$field->advance_setting->choices = $options;
-							} else {
-								$field->advance_setting->options = $options;
-							}
-						}
-					}
-				}
-			}
-		}
-
-		return $post_data;
 	}
 
 	/**
@@ -1473,6 +1516,11 @@ class UR_AJAX {
 		}
 
 		ob_start();
+		/**
+		 * Action after addon description.
+		 *
+		 * @param array $addon The addon's details.
+		 */
 		do_action( 'user_registration_after_addons_description', $addon );
 		$button = ob_get_clean();
 		wp_send_json_success( array( 'action_button' => $button ) );

@@ -81,16 +81,39 @@ class UR_Form_Handler {
 
 		$profile   = user_registration_form_data( $user_id, $form_id );
 		$form_data = self::get_form_data_from_post( $form_id );
-
+		/**
+		 * Action validate profile on update.
+		 *
+		 * @param array $profile The user profile data.
+		 * @param array $form_data The form data.
+		 * @param int $form_id The form ID.
+		 */
 		do_action( 'user_registration_validate_profile_update', $profile, $form_data, $form_id );
-
+		/**
+		 * Action validate profile on update.
+		 *
+		 * @param array $profile The user profile data.
+		 * @param array $form_data The form data.
+		 * @param int $form_id The form ID.
+		 */
 		do_action( 'user_registration_after_save_profile_validation', $user_id, $profile );
 
 		if ( 0 === ur_notice_count( 'error' ) ) {
 			$user_data = array();
-
+			/**
+			 * Hook to modify profile details before save.
+			 *
+			 * @param array $profile The profile data.
+			 * @param int $user_id The user ID.
+			 * @param int $form_id The form ID.
+			 *
+			 * @return array $profile
+			 */
 			$profile = apply_filters( 'user_registration_before_save_profile_details', $profile, $user_id, $form_id );
-
+			/**
+			 * Hook to modify confirmation email.
+			 * Default value is true.
+			 */
 			$is_email_change_confirmation = (bool) apply_filters( 'user_registration_email_change_confirmation', true );
 			$email_updated                = false;
 			$pending_email                = '';
@@ -128,6 +151,8 @@ class UR_Form_Handler {
 						if ( 'disabled' !== $disabled ) {
 							if ( isset( $_POST[ $key ] ) ) {
 								update_user_meta( $user_id, $update_key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+							} elseif ( 'checkbox' === $field['field_key'] ) {
+									update_user_meta( $user_id, $update_key, '' );
 							}
 						}
 					}
@@ -138,7 +163,9 @@ class UR_Form_Handler {
 				$user_data['ID'] = get_current_user_id();
 				wp_update_user( $user_data );
 			}
-
+			/**
+			 * Filter to modify the profile update success message.
+			 */
 			$message = apply_filters( 'user_registration_profile_update_success_message', __( 'User profile updated successfully.', 'user-registration' ) );
 
 			if ( $email_updated ) {
@@ -149,7 +176,12 @@ class UR_Form_Handler {
 			}
 
 			ur_add_notice( $message );
-
+			/**
+			 * Action save profile details.
+			 *
+			 * @param int $user_id The user ID.
+			 * @param int $form_id The form ID.
+			 */
 			do_action( 'user_registration_save_profile_details', $user_id, $form_id );
 
 			wp_safe_redirect( ur_get_account_endpoint_url( $profile_endpoint ) );
@@ -247,47 +279,60 @@ class UR_Form_Handler {
 	 * @return void
 	 */
 	public static function send_confirmation_email( $user, $new_email, $form_id ) {
-		// Generate a confirmation key for the email change.
-		$confirm_key = wp_generate_password( 20, false );
 
-		// Save the confirmation key.
-		update_user_meta( $user->ID, 'user_registration_email_confirm_key', $confirm_key );
-
-		// Send an email to the new address with confirmation link.
-		$confirm_link = add_query_arg( 'confirm_email', $user->ID, add_query_arg( 'confirm_key', $confirm_key, ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' ) ) );
+		$from_name    = apply_filters( 'wp_mail_from_name', get_option( 'user_registration_email_from_name', esc_attr( get_bloginfo( 'name', 'display' ) ) ) );
+		$sender_email = apply_filters( 'wp_mail_from', get_option( 'user_registration_email_from_address', get_option( 'admin_email' ) ) );
 		$to           = $new_email;
-		$subject      = apply_filters( 'user_registration_email_change_email_subject', __( 'Confirm Your Email Address Change', 'user-registration' ) );
-		$message      = sprintf(
-			/* translators: %1$s is the display name of the user, %2$s is the new email, %3$s is the confirmation link, %4$s is the blog name. */
-			esc_html__(
-				'Dear %1$s,
-				You recently requested to change your email address associated with your account to %2$s.
-				To confirm this change, please click on the following link:
-				%3$s
-				This link will only be active for 24 hours. If you did not request this change, please ignore this email or contact us for assistance.
-				Best regards,
-				%4$s',
-				'user-registration'
-			),
-			esc_html( $user->display_name ),
-			esc_html( $new_email ),
-			'<a href="' . esc_url( $confirm_link ) . '">Click here</a>',
-			esc_html( get_bloginfo( 'name' ) )
+		$template_id  = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
+		$settings     = new UR_Settings_Confirm_Email_Address_Change_Email();
+		$subject      = get_option( 'user_registration_confirm_email_address_change_email_subject', __( 'Confirm Your Email Address Change', 'user-registration' ) );
+
+		$username  = isset( $user->data->user_login ) ? sanitize_text_field( $user->data->user_login ) : '';
+		$data_html = '<table class="user-registration-email__entries" cellpadding="0" cellspacing="0"><tbody>';
+		$user_id   = isset( $user->ID ) ? sanitize_text_field( $user->ID ) : '';
+		$form_id   = ur_get_form_id_by_userid( $user_id );
+
+		$values = array(
+			'username'           => $username,
+			'user_email'         => $user->user_email,
+			'all_fields'         => $data_html,
+			'form_id'            => $form_id,
+			'user_id'            => $user_id,
+			'user_pending_email' => $new_email,
 		);
+
+		$name_value = array();
+
+		$message     = $settings->ur_get_confirm_email_address_change_email();
+		$message     = get_option( 'user_registration_confirm_email_address_change_email', $message );
 		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
+		/**
+		 * Filter to modify the change email content.
+		 *
+		 * @param string $message The message.
+		 */
 		$message     = apply_filters( 'user_registration_email_change_email_content', $message );
-		$message     = user_registration_process_email_content( $message, $template_id );
+		$message     = UR_Emailer::parse_smart_tags( $message, $values, $name_value );
+		$subject     = UR_Emailer::parse_smart_tags( $subject, $values, $name_value );
 
 		$headers = array(
-			'From' => get_bloginfo( 'name' ) . ' <' . get_option( 'admin_email' ) . '>',
+			'From:' . $from_name . ' <' . $sender_email . '>',
 			'Content-Type:text/html; charset=UTF-8',
 		);
 
-		wp_mail( $to, $subject, $message, $headers, $template_id );
+		$attachment = '';
 
-		update_user_meta( $user->ID, 'user_registration_email_confirm_key', $confirm_key );
 		update_user_meta( $user->ID, 'user_registration_pending_email', $new_email );
 		update_user_meta( $user->ID, 'user_registration_pending_email_expiration', time() + DAY_IN_SECONDS );
+		if ( ur_option_checked( 'uret_override_confirm_email_address_change_email', true ) ) {
+			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
+			$message                   = UR_Emailer::parse_smart_tags( $message, $values, $name_value );
+			$subject                   = UR_Emailer::parse_smart_tags( $subject, $values, $name_value );
+
+			UR_Emailer::user_registration_process_and_send_email( $to, $subject, $message, $headers, $attachment, $template_id );
+		} else {
+			UR_Emailer::user_registration_process_and_send_email( $to, $subject, $message, $headers, $attachment, $template_id );
+		}
 	}
 
 	/**
@@ -340,7 +385,11 @@ class UR_Form_Handler {
 		$pass_cur                = ! empty( $_POST['password_current'] ) ? wp_unslash( $_POST['password_current'] ) : '';//phpcs:ignore;
 		$pass1                   = ! empty( $_POST['password_1'] ) ? wp_unslash( $_POST['password_1'] ) : '';//phpcs:ignore;
 		$pass2                   = ! empty( $_POST['password_2'] ) ? wp_unslash( $_POST['password_2'] ) : '';//phpcs:ignore;
-		$save_pass               = true;
+		$save_pass = true;
+		/**
+		 * Filter hook to modify the save account bypass currect passoword.
+		 * Default value is false.
+		 */
 		$bypass_current_password = apply_filters( 'user_registration_save_account_bypass_current_password', false );
 
 		if ( empty( $pass_cur ) && empty( $pass1 ) && empty( $pass2 ) ) {
@@ -370,7 +419,14 @@ class UR_Form_Handler {
 			$user->user_pass = $pass1;
 		}
 
-		// Allow plugins to return their own errors.
+		/**
+		 * Fires an action hook to handle errors during the saving of user registration account details.
+		 *
+		 * @param string $hook_name The name of the action hook, 'user_registration_save_account_details_errors'.
+		 * @param array  $args      An array containing references to the errors and user data to be passed to hooked functions.
+		 *                          - &$errors (array) An array of errors encountered during account details saving.
+		 *                          - &$user   (object) Reference to the user data being processed during account details saving.
+		 */
 		do_action_ref_array( 'user_registration_save_account_details_errors', array( &$errors, &$user ) );
 
 		if ( $errors->get_error_messages() ) {
@@ -384,7 +440,12 @@ class UR_Form_Handler {
 			wp_update_user( $user );
 
 			ur_add_notice( __( 'Password changed successfully.', 'user-registration' ) );
-
+			/**
+			 * Fires an action hook after successfully saving user registration account details.
+			 *
+			 * @param string $hook_name The name of the action hook, 'user_registration_save_account_details'.
+			 * @param int    $user_id   The ID of the user whose account details have been successfully saved.
+			 */
 			do_action( 'user_registration_save_account_details', $user->ID );
 
 			wp_safe_redirect( ur_get_page_permalink( 'myaccount' ) );
@@ -412,7 +473,11 @@ class UR_Form_Handler {
 	public static function process_lost_password() {
 		if ( isset( $_POST['ur_reset_password'] ) && isset( $_POST['user_login'] ) && isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'lost_password' ) ) {
 
-			$recaptcha_value     = isset( $_POST['g-recaptcha-response'] ) ? ur_clean( sanitize_text_field( wp_unslash( $_POST['g-recaptcha-response'] ) ) ) : '';
+			$recaptcha_value = isset( $_POST['g-recaptcha-response'] ) ? ur_clean( sanitize_text_field( wp_unslash( $_POST['g-recaptcha-response'] ) ) ) : '';
+			/**
+			 * Filter to modify the lost password options enable recaptcha.
+			 * Default value is false.
+			 */
 			$recaptcha_enabled   = ur_string_to_bool( apply_filters( 'user_registration_lost_password_options_enable_recaptcha', false ) );
 			$recaptcha_type      = get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' );
 			$invisible_recaptcha = ur_option_checked( 'user_registration_captcha_setting_invisible_recaptcha_v2', false );
@@ -441,7 +506,10 @@ class UR_Form_Handler {
 					if ( 'hCaptcha' === $recaptcha_type ) {
 						$data = wp_remote_get( 'https://hcaptcha.com/siteverify?secret=' . $secret_key . '&response=' . $recaptcha_value );
 						$data = json_decode( wp_remote_retrieve_body( $data ) );
-
+						/**
+						 * Filter to modify the hcaptch threshold value.
+						 * Default value is 0.5
+						 */
 						if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_hcaptcha_threshold', 0.5 ) ) ) {
 							ur_add_notice( __( 'Error on hCaptcha. Contact your site administrator.', 'user-registration' ), 'error' );
 							return false;
@@ -463,9 +531,17 @@ class UR_Form_Handler {
 							return false;
 						}
 					} else {
+						/**
+						 * Filter to modify the recaptcha domain.
+						 * Default value is https://www.google.com/recaptcha
+						 */
 						$url  = apply_filters( 'user_registration_recaptcha_domain', 'https://www.google.com/recaptcha' );
 						$data = wp_remote_get( $url . 'api/siteverify?secret=' . $secret_key . '&response=' . $recaptcha_value );
 						$data = json_decode( wp_remote_retrieve_body( $data ) );
+						/**
+						 * Filter to modify the recaptcha v3 threshold score.
+						 * Default value is 0.5
+						 */
 						if ( empty( $data->success ) || ( isset( $data->score ) && $data->score <= get_option( 'user_registration_captcha_setting_recaptcha_threshold_score_v3', apply_filters( 'user_registration_recaptcha_v3_threshold', 0.5 ) ) ) ) {
 							ur_add_notice( __( 'Error on google reCaptcha. Contact your site administrator.', 'user-registration' ), 'error' );
 							return false;
@@ -538,14 +614,25 @@ class UR_Form_Handler {
 				ur_add_notice( esc_html__( 'New password must not be same as old password.', 'user-registration' ), 'error' );
 			}
 			$errors = new WP_Error();
-
+			/**
+			 * Fires an action hook to validate a password reset attempt.
+			 *
+			 * @param string $hook_name The name of the action hook, 'validate_password_reset'.
+			 * @param array  $errors    An array of errors encountered during the password reset validation.
+			 * @param object $user      The user object for the password reset attempt.
+			 */
 			do_action( 'validate_password_reset', $errors, $user );
 
 			ur_add_wp_error_notices( $errors );
 
 			if ( 0 === ur_notice_count( 'error' ) ) {
 				UR_Shortcode_My_Account::reset_password( $user, $posted_fields['password_1'] );
-
+				/**
+				 * Fires an action hook after resetting the password for a user in the user registration process.
+				 *
+				 * @param string $hook_name The name of the action hook, 'user_registration_reset_password'.
+				 * @param object $user      The user object for whom the password has been reset.
+				 */
 				do_action( 'user_registration_reset_password', $user );
 
 				$ur_account_page_exists   = ur_get_page_id( 'myaccount' ) > 0;
@@ -585,6 +672,12 @@ class UR_Form_Handler {
 				ur_print_notices();
 				return;
 			}
+			/**
+			 * Fires an action hook after confirming a user request action.
+			 *
+			 * @param string $hook_name The name of the action hook, 'user_request_action_confirmed'.
+			 * @param int    $request_id The ID of the user request that has been confirmed.
+			 */
 
 			do_action( 'user_request_action_confirmed', $request_id );
 
@@ -592,8 +685,14 @@ class UR_Form_Handler {
 
 			if ( $request && in_array( $request->action_name, _wp_privacy_action_request_types(), true ) ) {
 				if ( 'export_personal_data' === $request->action_name ) {
+					/**
+					 * Filter to modify export personal data confirmation message.
+					 */
 					$message = apply_filters( 'user_registration_export_personal_data_confirmation_message', __( 'Thanks for confirming your export request.', 'user-registration' ) );
 				} elseif ( 'remove_personal_data' === $request->action_name ) {
+					/**
+					 * Filter to modify remove personal data confirmation message.
+					 */
 					$message = apply_filters( 'user_registration_remove_personal_data_confirmation_message', __( 'Thanks for confirming your erasure request.', 'user-registration' ) );
 				}
 				ur_add_notice( $message, 'success' );
@@ -612,7 +711,12 @@ class UR_Form_Handler {
 	 */
 	public function get_form( $id = '', $args = array() ) {
 		$forms = array();
-		$args  = apply_filters( 'user_registration_get_form_args', $args );
+		/**
+		 * Filter to modify the form args.
+		 *
+		 * @param array $args The form args.
+		 */
+		$args = apply_filters( 'user_registration_get_form_args', $args );
 
 		if ( is_numeric( $id ) ) {
 			$the_post = get_post( absint( $id ) );
@@ -705,7 +809,12 @@ class UR_Form_Handler {
 		if ( empty( $title ) ) {
 			return false;
 		}
-
+		/**
+		 * Filter to modify the form create args.
+		 *
+		 * @param array $args The form args.
+		 * @param array $data The Additional data.
+		 */
 		$args = apply_filters( 'user_registration_create_form_args', $args, $data );
 
 		// Prevent content filters from corrupting JSON in post_content.
@@ -794,7 +903,13 @@ class UR_Form_Handler {
 		if ( $has_targeted_link_rel_filters ) {
 			wp_init_targeted_link_rel_filters();
 		}
-
+		/**
+		 * Action create form.
+		 *
+		 * @param int $form_id The form id.
+		 * @param array $form_data The form data.
+		 * @param array $data The additional data.
+		 */
 		do_action( 'user_registration_create_form', $form_id, $form_data, $data );
 
 		return $form_id;

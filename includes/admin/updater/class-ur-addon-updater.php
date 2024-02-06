@@ -320,6 +320,14 @@ class UR_AddOn_Updater {
 				);
 			}
 
+			/**
+			 * Fires PLugin Update Message based on File.
+			 *
+			 * @since 2.2.0
+			 *
+			 * @param array $plugin Array of Plugin data.
+			 * @param array $version_info Version info of Plugin.
+			 */
 			do_action( "in_plugin_update_message_{$file}", $plugin, $version_info );
 
 			echo '</div></td></tr>';
@@ -684,6 +692,12 @@ class UR_AddOn_Updater {
 	 * @return bool
 	 */
 	private function verify_ssl() {
+		/**
+		 * Filter to verify SSL of EED_SL_API_REQUEST.
+		 *
+		 * @param class Addon Updater Class.
+		 * @param boolean Verify or not.
+		 */
 		return (bool) apply_filters( 'edd_sl_api_request_verify_ssl', true, $this );
 	}
 }

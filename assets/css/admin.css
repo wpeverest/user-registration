@@ -837,6 +837,9 @@
 .ur-icon-multichoice::before {
   content: ""; }
 
+.ur-icon-subscription-plan::before {
+  content: ""; }
+
 .ur-icon-total::before {
   content: ""; }
 
@@ -6528,24 +6531,26 @@
         fill: #676d8a; }
     .ur-registered-from .ur-options-list li input {
       margin-right: 8px; }
-    .ur-registered-from .ur-options-list li .ur-multiple-choice .ur-regular-price, .ur-registered-from .ur-options-list li .ur-multiple-choice .ur-selling-price {
+    .ur-registered-from .ur-options-list li .ur-multiple-choice .ur-subscription-plan .ur-regular-price, .ur-registered-from .ur-options-list li .ur-multiple-choice .ur-subscription-plan .ur-selling-price {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
       padding: 4px; }
-      .ur-registered-from .ur-options-list li .ur-multiple-choice .ur-regular-price input, .ur-registered-from .ur-options-list li .ur-multiple-choice .ur-selling-price input {
+      .ur-registered-from .ur-options-list li .ur-multiple-choice .ur-subscription-plan .ur-regular-price input, .ur-registered-from .ur-options-list li .ur-multiple-choice .ur-subscription-plan .ur-selling-price input {
         width: 100%; }
-    .ur-registered-from .ur-options-list li.ur-multiple-choice {
+    .ur-registered-from .ur-options-list li.ur-multiple-choice, .ur-registered-from .ur-options-list li.ur-subscription-plan {
       gap: 8px; }
-      .ur-registered-from .ur-options-list li.ur-multiple-choice input {
+      .ur-registered-from .ur-options-list li.ur-multiple-choice input, .ur-registered-from .ur-options-list li.ur-subscription-plan input {
         margin-right: 0; }
-      .ur-registered-from .ur-options-list li.ur-multiple-choice > input[type="text"] {
+      .ur-registered-from .ur-options-list li.ur-multiple-choice > input[type="text"], .ur-registered-from .ur-options-list li.ur-subscription-plan > input[type="text"] {
         width: 80%; }
       .ur-registered-from .ur-options-list li.ur-multiple-choice .ur-regular-price,
-      .ur-registered-from .ur-options-list li.ur-multiple-choice .ur-selling-price {
+      .ur-registered-from .ur-options-list li.ur-multiple-choice .ur-selling-price, .ur-registered-from .ur-options-list li.ur-subscription-plan .ur-regular-price,
+      .ur-registered-from .ur-options-list li.ur-subscription-plan .ur-selling-price {
         position: relative; }
         .ur-registered-from .ur-options-list li.ur-multiple-choice .ur-regular-price span,
-        .ur-registered-from .ur-options-list li.ur-multiple-choice .ur-selling-price span {
+        .ur-registered-from .ur-options-list li.ur-multiple-choice .ur-selling-price span, .ur-registered-from .ur-options-list li.ur-subscription-plan .ur-regular-price span,
+        .ur-registered-from .ur-options-list li.ur-subscription-plan .ur-selling-price span {
           position: absolute;
           top: 0;
           background: #e7e7e7;
@@ -6558,7 +6563,8 @@
           visibility: hidden;
           transition: all .3s ease-in-out; }
           .ur-registered-from .ur-options-list li.ur-multiple-choice .ur-regular-price span::after,
-          .ur-registered-from .ur-options-list li.ur-multiple-choice .ur-selling-price span::after {
+          .ur-registered-from .ur-options-list li.ur-multiple-choice .ur-selling-price span::after, .ur-registered-from .ur-options-list li.ur-subscription-plan .ur-regular-price span::after,
+          .ur-registered-from .ur-options-list li.ur-subscription-plan .ur-selling-price span::after {
             content: "";
             border: 8px solid transparent;
             border-top-color: #e7e7e7;
@@ -6569,10 +6575,11 @@
             top: 100%;
             width: 0; }
         .ur-registered-from .ur-options-list li.ur-multiple-choice .ur-regular-price:hover span,
-        .ur-registered-from .ur-options-list li.ur-multiple-choice .ur-selling-price:hover span {
+        .ur-registered-from .ur-options-list li.ur-multiple-choice .ur-selling-price:hover span, .ur-registered-from .ur-options-list li.ur-subscription-plan .ur-regular-price:hover span,
+        .ur-registered-from .ur-options-list li.ur-subscription-plan .ur-selling-price:hover span {
           visibility: visible;
           opacity: 1; }
-      .ur-registered-from .ur-options-list li.ur-multiple-choice .add {
+      .ur-registered-from .ur-options-list li.ur-multiple-choice .add, .ur-registered-from .ur-options-list li.ur-subscription-plan .add {
         margin-right: 0; }
   .ur-registered-from .ur-options-list .ui-sortable-handle {
     padding: 5px;
@@ -7821,3 +7828,26 @@ a.button.ur-smart-tags-list-button {
     left: 36px !important; }
   .ur-registered-from .ur-registered-inputs .ur-tab-contents button#ur-collapse {
     left: 448px; } }
+
+.ur-registered-from .nav-tab-wrapper .ur-tab-contents .ur-tab-content .ur-general-setting-options .ur-options-list .ur-subscription-plan {
+  flex-direction: column;
+  align-items: unset;
+  margin-bottom: 16px;
+  padding: 10px;
+  border: 1px solid #E4E4E4;
+  background: #FBFBFB; }
+  .ur-registered-from .nav-tab-wrapper .ur-tab-contents .ur-tab-content .ur-general-setting-options .ur-options-list .ur-subscription-plan:last-child {
+    margin-bottom: 0; }
+  .ur-registered-from .nav-tab-wrapper .ur-tab-contents .ur-tab-content .ur-general-setting-options .ur-options-list .ur-subscription-plan-details {
+    display: flex;
+    align-items: center;
+    gap: 8px; }
+  .ur-registered-from .nav-tab-wrapper .ur-tab-contents .ur-tab-content .ur-general-setting-options .ur-options-list .ur-subscription-plan-sub-details > p {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px; }
+    .ur-registered-from .nav-tab-wrapper .ur-tab-contents .ur-tab-content .ur-general-setting-options .ur-options-list .ur-subscription-plan-sub-details > p select {
+      height: 38px;
+      padding-left: 12px;
+      padding-right: 12px; }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Form View: Input Display Name
+ * Form View: Input Display Name.
  *
  * @package UserRegistration/Form/Views/Admin/DisplayName
  */

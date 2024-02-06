@@ -226,6 +226,12 @@ class UR_Admin_Assets {
 				'i18n_install_activate'        => esc_html__( 'Install & Activate', 'user-registration' ),
 				'i18n_installing'              => esc_html__( 'Installing', 'user-registration' ),
 				'i18n_ok'                      => esc_html__( 'OK', 'user-registration' ),
+
+				/**
+				 * Filters the Upgrade URL
+				 *
+				 * @param string URL
+				 */
 				'upgrade_url'                  => apply_filters( 'user_registration_upgrade_url', 'https://wpuserregistration.com/pricing/?utm_source=form-template&utm_medium=button&utm_campaign=ur-upgrade-to-pro' ),
 				'upgrade_button'               => esc_html__( 'Upgrade Plan', 'user-registration' ),
 				'upgrade_message'              => esc_html__( 'This template requires premium addons. Please upgrade to the Premium plan to unlock all these awesome Templates.', 'user-registration' ),
@@ -347,6 +353,7 @@ class UR_Admin_Assets {
 					),
 					home_url()
 				),
+				'ur_placeholder'                         => UR()->plugin_url() . '/assets/images/UR-placeholder.png',
 				'ur_user_list_table'             => admin_url( 'users.php?ur_specific_form_user=' . $form_id . '&ur_user_filter_action=Filter' ), //phpcs:ignore;
 				'user_registration_very_weak_password_info' => esc_html__( 'Minimum one letter', 'user-registration' ),
 				'user_registration_weak_password_info'   => esc_html__( 'Minimum one uppercase letter and must be 4 characters and no repetitive words or common words', 'user-registration' ),

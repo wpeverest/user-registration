@@ -25,6 +25,11 @@ function ur_template_redirect() {
 	if ( isset( $wp->query_vars['user-logout'] ) && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'user-logout' ) ) { //PHPCS:ignore;
 		// Logout.
 		$redirect_url = str_replace( '/user-logout', '', $wp->request );
+		/**
+		 * Filter the redirect after logout url.
+		 *
+		 * @param string $redirect_url The redirect url.
+		 */
 		$redirect_url = apply_filters( 'user_registration_redirect_after_logout', $redirect_url );
 
 		// Check if external url is present in URL.
@@ -37,7 +42,11 @@ function ur_template_redirect() {
 		wp_safe_redirect( str_replace( '&amp;', '&', wp_logout_url( $redirect_url ) ) );
 		exit;
 	} elseif ( isset( $wp->query_vars['user-logout'] ) && 'true' === $wp->query_vars['user-logout'] ) {
-
+		/**
+		 * Filter the redirect after logout url.
+		 *
+		 * @param string $redirect_url The redirect url.
+		 */
 		$redirect_url = apply_filters( 'user_registration_redirect_after_logout', esc_url_raw( ur_get_page_permalink( 'user-logout' ) ) );
 		// Redirect to the correct logout endpoint.
 		wp_safe_redirect( $redirect_url );
@@ -90,11 +99,19 @@ if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
 						$redirect_url = $external_url;
 
 						break;
+					case 'previous-page':
+						$redirect_url = apply_filters( 'user_registration_redirection_back_to_previous_page_url', isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : $redirect_url, $form_id );
+						break;
 
 					default:
 				}
 
 				if ( empty( $redirect_url ) && 'auto_login' === $login_option ) {
+					/**
+					 * Filter to modify the auto login redirection.
+					 *
+					 * @param string $my_account_page_url The my account page url.
+					 */
 					$redirect_url = apply_filters( 'user_registration_auto_login_redirection', ur_get_my_account_url() );
 				}
 			}
@@ -103,7 +120,13 @@ if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
 				$redirect_url = ur_string_translation( $form_id, 'user_registration_form_setting_redirect_options', $redirect_url );
 			}
 		}
-
+		/**
+		 * Filter the form redirect url.
+		 * It depends on the form.
+		 *
+		 * @param string $redirect_url The redirect url.
+		 * @param int $form_id The form ID.
+		 */
 		return apply_filters( 'user_registration_form_redirect_url', $redirect_url, $form_id );
 	}
 }
@@ -188,6 +211,18 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		);
 
 		$args = wp_parse_args( $args, $defaults );
+		/**
+		 * Filters the arguments for a user registration form field.
+		 *
+		 * The 'user_registration_form_field_args' filter allows developers to modify
+		 * the arguments (args) for a specific form field during the user registration
+		 * process. It provides an opportunity to customize the field arguments based on
+		 * the original args, field key, and field value.
+		 *
+		 * @param array  $args  The original arguments for the form field.
+		 * @param string $key   The key identifying the form field.
+		 * @param mixed  $value The value of the form field.
+		 */
 		$args = apply_filters( 'user_registration_form_field_args', $args, $key, $value );
 
 		if ( true === ur_string_to_bool( $args['required'] ) ) {
@@ -288,7 +323,17 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		$class           = '';
 		if ( ! is_admin() ) {
 			$form_id = isset( $args['form_id'] ) ? $args['form_id'] : '';
-
+			/**
+			 * Filters the enabled class for the icon associated with a user registration form field.
+			 *
+			 * The 'user_registration_field_icon_enabled_class' filter allows developers to modify
+			 * the class name representing the enabled state of the icon associated with a form field.
+			 * It provides an opportunity to customize the enabled class based on the original class
+			 * and the form ID.
+			 *
+			 * @param string $class   The original class representing the enabled state of the icon.
+			 * @param int    $form_id The ID of the user registration form.
+			 */
 			$class = apply_filters( 'user_registration_field_icon_enabled_class', $class, $form_id );
 		}
 
@@ -307,27 +352,69 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$default_value     = isset( $args['default_value'] ) ? $args['default_value'] : '';    // Backward compatibility. Modified since 1.5.7.
 				$default           = ! empty( $value ) ? $value : $default_value;
 				$select_all        = isset( $args['select_all'] ) ? ur_string_to_bool( $args['select_all'] ) : false;
-				$options           = isset( $args['options'] ) ? $args['options'] : ( $args['choices'] ? $args['choices'] : array() ); // $args['choices'] for backward compatibility. Modified since 1.5.7.
+				$options           = isset( $args['options'] ) ? $args['options'] : array();
+				$image_options     = isset( $args['image_options'] ) ? $args['image_options'] : array();
 				$choice_limit      = isset( $args['choice_limit'] ) ? $args['choice_limit'] : '';
 				$choice_limit_attr = '';
 				if ( '' !== $choice_limit ) {
 					$choice_limit_attr = 'data-choice-limit="' . $choice_limit . '"';
 				}
+				if ( isset( $args['image_choice'] ) && ur_string_to_bool( $args['image_choice'] ) && isset( $image_options ) && array_filter( $image_options ) ) {
+					if ( ! empty( $default ) ) {
+						$default = ( is_serialized( $default ) ) ? unserialize( $default, array( 'allowed_classes' => false ) ) : $default; //phpcs:ignore allowed_classes doesnot support below php v7.1.
+					}
+						$choices = isset( $image_options ) ? $image_options : array();
 
-				if ( isset( $options ) && array_filter( $options ) ) {
+						$field  = '<label class="ur-label" ' . implode( ' ', $custom_attributes ) . '>';
+						$field .= $args['label'] . $required . $tooltip_html . '</label>';
+
+						$checkbox_start = 0;
+
+						$field .= '<ul ' . $choice_limit_attr . 'class="user-registration-image-options">';
+
+					if ( $select_all ) {
+						$field .= '<li class="ur-checkbox-list"><input type="checkbox" id="checkall" class="ur-input-checkbox"  data-check="' . esc_attr( $key ) . '"/>';
+						$field .= '<label class="ur-checkbox-label">  ' . esc_html__( 'Select All', 'user-registration' ) . '</label></li>';
+					}
+					foreach ( $choices as $choice_index => $choice ) {
+						$choice_label = is_array( $choice ) ? $choice['label'] : $choice->label;
+						$choice_image = is_array( $choice ) ? $choice['image'] : $choice->image;
+						$value        = '';
+						if ( '' !== $default ) {
+
+							if ( is_array( $default ) && in_array( ur_sanitize_tooltip( trim( $choice_index ) ), $default ) ) {
+								$value = 'checked="checked"';
+							} elseif ( $default === $choice_index ) {
+								$value = 'checked="checked"';
+							}
+						}
+						$field       .= '<li class="ur-checkbox-list">';
+						$choice_index = ur_sanitize_tooltip( $choice_index );
+						$field       .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . esc_attr( $choice_index ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '" value="' . esc_attr( $choice_index ) . '" ' . esc_attr( $value ) . '/>';
+						$field       .= '<label class="ur-checkbox-label" for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '">';
+						if ( ! empty( $choice_image ) ) {
+							$field .= '<span class="user-registration-image-choice">';
+							$field .= '<img src="' . esc_url( $choice_image ) . '" alt="' . esc_attr( trim( $choice_label ) ) . '" width="200px">';
+							$field .= '</span>';
+						}
+						$field .= trim( $choice_label ) . '</label> </li>';
+						++$checkbox_start;
+					}
+						$field .= '</ul>';
+				} elseif ( isset( $options ) && array_filter( $options ) ) {
 
 					if ( ! empty( $default ) ) {
 						$default = ( is_serialized( $default ) ) ? unserialize( $default, array( 'allowed_classes' => false ) ) : $default; //phpcs:ignore allowed_classes doesnot support below php v7.1.
 					}
 
-					$choices = isset( $options ) ? $options : array();
+						$choices = isset( $options ) ? $options : array();
 
-					$field  = '<label class="ur-label" ' . implode( ' ', $custom_attributes ) . '>';
-					$field .= $args['label'] . $required . $tooltip_html . '</label>';
+						$field  = '<label class="ur-label" ' . implode( ' ', $custom_attributes ) . '>';
+						$field .= $args['label'] . $required . $tooltip_html . '</label>';
 
-					$checkbox_start = 0;
+						$checkbox_start = 0;
 
-					$field .= '<ul ' . $choice_limit_attr . '>';
+						$field .= '<ul ' . $choice_limit_attr . '>';
 
 					if ( $select_all ) {
 						$field .= '<li class="ur-checkbox-list"><input type="checkbox" id="checkall" class="ur-input-checkbox"  data-check="' . esc_attr( $key ) . '"/>';
@@ -350,7 +437,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						$field       .= '<label class="ur-checkbox-label" for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '">' . trim( $choice ) . '</label> </li>';
 						++$checkbox_start;
 					}
-					$field .= '</ul>';
+						$field .= '</ul>';
 				} else {
 					$field = '<label class="ur-label checkbox" ' . implode( ' ', $custom_attributes ) . '>
 							<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . $value . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( $value, 1, false ) . ' /> '
@@ -431,6 +518,18 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text  ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
 				}
 				if ( ! is_admin() ) {
+					/**
+					 * Filters the icon markup for a user registration form field.
+					 *
+					 * The 'user_registration_field_icon' filter allows developers to modify
+					 * the icon markup associated with a specific form field during the user
+					 * registration process. It provides an opportunity to customize the icon
+					 * based on the original icon markup, form ID, and field arguments.
+					 *
+					 * @param string $field   The original icon markup associated with the form field.
+					 * @param int    $form_id The ID of the user registration form.
+					 * @param array  $args    The arguments for the form field.
+					 */
 					$field  = apply_filters( 'user_registration_field_icon', $field, $form_id, $args );
 					$field .= ' </span> ';
 				}
@@ -574,6 +673,18 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				}
 
 				if ( ! is_admin() ) {
+					/**
+					 * Filters the icon markup for a user registration form field.
+					 *
+					 * The 'user_registration_field_icon' filter allows developers to modify
+					 * the icon markup associated with a specific form field during the user
+					 * registration process. It provides an opportunity to customize the icon
+					 * based on the original icon markup, form ID, and field arguments.
+					 *
+					 * @param string $field   The original icon markup associated with the form field.
+					 * @param int    $form_id The ID of the user registration form.
+					 * @param array  $args    The arguments for the form field.
+					 */
 					$field  = apply_filters( 'user_registration_field_icon', $field, $form_id, $args );
 					$field .= ' </span> ';
 				}
@@ -620,6 +731,18 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				}
 
 				if ( ! is_admin() ) {
+					/**
+					 * Filters the icon markup for a user registration form field.
+					 *
+					 * The 'user_registration_field_icon' filter allows developers to modify
+					 * the icon markup associated with a specific form field during the user
+					 * registration process. It provides an opportunity to customize the icon
+					 * based on the original icon markup, form ID, and field arguments.
+					 *
+					 * @param string $field   The original icon markup associated with the form field.
+					 * @param int    $form_id The ID of the user registration form.
+					 * @param array  $args    The arguments for the form field.
+					 */
 					$field = apply_filters( 'user_registration_field_icon', $field, $form_id, $args );
 				}
 				$field .= '</span> ';
@@ -637,11 +760,11 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				if ( ! empty( $args['options'] ) ) {
 					// If we have a blank option, select2 needs a placeholder.
 					if ( '' === $value && ! empty( $args['placeholder'] ) ) {
-						$disalbed = '';
-						if ( 'country' !== $args['field_key'] ) {
-							$disalbed = 'disabled';
-						}
-						$options .= '<option value="" selected ' . esc_attr( $disalbed ) . '>' . esc_html( $args['placeholder'] ) . '</option>';
+						$options .= '<option value="" selected disabled>' . esc_html( $args['placeholder'] ) . '</option>';
+					}
+
+					if ( isset( $args['field_key'] ) && 'country' === $args['field_key'] && empty( $args['placeholder'] ) && empty( $value ) ) {
+						$options .= '<option value="" selected >' . esc_html__( 'Select a country', 'user-registration' ) . '</option>';
 					}
 
 					$custom_attributes[] = 'data-allow_clear="true"';
@@ -697,8 +820,45 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : ''; // Backward compatibility. Modified since 1.5.7.
 				$value         = ! empty( $value ) ? $value : $default_value;
 				$label_id      = current( array_keys( $args['options'] ) );
-				if ( ! empty( $args['options'] ) ) {
 
+				if ( empty( $args['options'] ) ) {
+					return;
+				}
+
+				if ( isset( $args['image_choice'] ) && ur_string_to_bool( $args['image_choice'] ) ) {
+					$field .= '<ul class="user-registration-image-options">';
+					foreach ( $args['image_options'] as $option_index => $option_text ) {
+						$option_label = is_array( $option_text ) ? $option_text['label'] : $option_text->label;
+						$option_image = is_array( $option_text ) ? $option_text['image'] : $option_text->image;
+
+						$field  .= '<li class="ur-radio-list">';
+						$checked = '';
+						if ( ! empty( $value ) ) {
+							$checked = checked( $value, trim( $option_index ), false );
+						}
+
+						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( trim( $option_index ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_label ) . '" ' . implode( ' ', $custom_attributes ) . ' / ' . $checked . ' /> ';
+						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_label ) . '" class="radio">';
+
+						if ( ! empty( $option_image ) ) {
+							$field .= '<span class="user-registration-image-choice">';
+							$field .= '<img src="' . esc_url( $option_image ) . '" alt="' . esc_attr( trim( $option_label ) ) . '" width="200px">';
+							$field .= '</span>';
+						}
+
+						$field .= wp_kses(
+							trim( $option_label ),
+							array(
+								'a'    => array(
+									'href'  => array(),
+									'title' => array(),
+								),
+								'span' => array(),
+							)
+						) . '</label></li>';
+					}
+					$field .= '</ul>';
+				} else {
 					$field .= '<ul>';
 					foreach ( $args['options'] as $option_index => $option_text ) {
 
@@ -765,7 +925,19 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			$container_id    = esc_attr( $args['id'] ) . '_field';
 			$field           = sprintf( $field_container, $container_class, $container_id, $field_html );
 		}
-
+		/**
+		 * Filters the form field based on its type.
+		 *
+		 * The dynamic 'user_registration_form_field_{type}' filter allows developers to modify
+		 * the form field for a specific type during the user registration process. The {type}
+		 * placeholder is replaced with the actual field type, providing a flexible way to customize
+		 * the form field based on its type, field key, arguments, and value.
+		 *
+		 * @param string $field The original form field markup for the specific type.
+		 * @param string $key   The key identifying the form field.
+		 * @param array  $args  The arguments for the form field.
+		 * @param mixed  $value The value of the form field.
+		 */
 		$field = apply_filters( 'user_registration_form_field_' . $args['type'], $field, $key, $args, $value );
 
 		if ( $args['return'] ) {
@@ -798,7 +970,17 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 		if ( gettype( $all_meta_value ) === 'array' ) {
 			$all_meta_value_keys = array_keys( $all_meta_value );
 		}
-
+		/**
+		 * Filters all fields in the user registration profile account during rendering.
+		 *
+		 * The 'user_registration_profile_account_filter_all_fields' filter allows developers
+		 * to modify all fields in the user registration profile account when rendering. It provides
+		 * an opportunity to customize the post content array and form ID associated with the
+		 * profile account.
+		 *
+		 * @param array $post_content_array The original post content array for the profile account.
+		 * @param int   $form_id            The ID of the user registration form associated with the account.
+		 */
 		$post_content_array = apply_filters( 'user_registration_profile_account_filter_all_fields', $post_content_array, $form_id );
 
 		foreach ( $post_content_array as $post_content_row ) {
@@ -819,6 +1001,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 					$enable_validate_unique = isset( $field->advance_setting->validate_unique ) ? $field->advance_setting->validate_unique : false;
 					$validate_message       = isset( $field->advance_setting->validation_message ) ? $field->advance_setting->validation_message : esc_html__( 'This field value needs to be unique.', 'user-registration' );
 					$enable_payment_slider  = isset( $field->advance_setting->enable_payment_slider ) ? $field->advance_setting->enable_payment_slider : false;
+					$enable_image_choice    = isset( $field->general_setting->image_choice ) ? $field->general_setting->image_choice : false;
 
 					if ( empty( $field_label ) ) {
 						$field_label_array = explode( '_', $field_name );
@@ -837,7 +1020,8 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 								$extra_params['options'] = ! empty( $options ) ? $options : $advanced_options;
 								$extra_params['options'] = array_map( 'trim', $extra_params['options'] );
 
-								$extra_params['options'] = array_combine( $extra_params['options'], $extra_params['options'] );
+								$extra_params['options']      = array_combine( $extra_params['options'], $extra_params['options'] );
+								$extra_params['image_choice'] = $enable_image_choice;
 
 								break;
 
@@ -847,7 +1031,8 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 								$extra_params['options'] = ! empty( $options ) ? $options : $advanced_options;
 								$extra_params['options'] = array_map( 'trim', $extra_params['options'] );
 
-								$extra_params['options'] = array_combine( $extra_params['options'], $extra_params['options'] );
+								$extra_params['options']      = array_combine( $extra_params['options'], $extra_params['options'] );
+								$extra_params['image_choice'] = $enable_image_choice;
 
 								break;
 
@@ -934,7 +1119,17 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 							'field'      => $field,
 							'field_name' => $field_name,
 						);
-
+						/**
+						 * Filters a specific field in the user registration profile account during rendering.
+						 *
+						 * The dynamic 'user_registration_profile_account_filter_{field_key}' filter allows developers
+						 * to modify a specific field in the user registration profile account when rendering. The {field_key}
+						 * placeholder is replaced with the actual field key, providing a flexible way to customize the
+						 * field's filter data and the form ID associated with the account.
+						 *
+						 * @param array $filter_data The original filter data for the specific field.
+						 * @param int   $form_id     The ID of the user registration form associated with the account.
+						 */
 						$filtered_data_array = apply_filters( 'user_registration_profile_account_filter_' . $field_key, $filter_data, $form_id );
 						if ( isset( $filtered_data_array['fields'] ) ) {
 							$fields = $filtered_data_array['fields'];
@@ -963,6 +1158,13 @@ if ( ! function_exists( 'user_registration_account_content' ) ) {
 				}
 
 				if ( has_action( 'user_registration_account_' . $key . '_endpoint' ) ) {
+					/**
+					 * Action to add the my account content.
+					 *
+					 * Dynamic portion of hook, $key
+					 *
+					 * @param array $value The key values.
+					 */
 					do_action( 'user_registration_account_' . $key . '_endpoint', $value );
 					return;
 				}
@@ -1075,7 +1277,7 @@ function ur_logout_url( $redirect = '' ) {
 			$redirect = '' != $redirect ? ur_check_external_url( $redirect ) : ur_get_page_permalink( 'myaccount' );
 		}
 	} else {
-		$blocks = parse_blocks( $post->post_content );
+		$blocks = parse_blocks( $post_content );
 
 		foreach ( $blocks as $block ) {
 			if ( 'user-registration/form-selector' === $block['blockName'] && isset( $block['attrs']['logoutUrl'] ) ) {
@@ -1083,6 +1285,15 @@ function ur_logout_url( $redirect = '' ) {
 			}
 		}
 	}
+	/**
+	 * Filters the redirect URL after user logout.
+	 *
+	 * The 'user_registration_redirect_after_logout' filter allows developers to modify
+	 * the redirect URL after a user logs out. It provides an opportunity to customize
+	 * the redirection based on the original redirect URL.
+	 *
+	 * @param string $redirect The original redirect URL after user logout.
+	 */
 	$redirect = apply_filters( 'user_registration_redirect_after_logout', $redirect );
 
 	if ( $logout_endpoint && ! is_front_page() ) {

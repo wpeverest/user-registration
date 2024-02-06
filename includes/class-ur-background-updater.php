@@ -8,8 +8,6 @@
  * @class    UR_Background_Updater
  * @version  1.0.0
  * @package  UserRegistration/Classes
- * @category Admin
- * @author   WPEverest
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -30,7 +28,8 @@ if ( ! class_exists( 'WP_Background_Process', false ) ) {
 class UR_Background_Updater extends WP_Background_Process {
 
 	/**
-	 * @var string
+	 * Action name.
+	 * @var string ur_updater in default.
 	 */
 	protected $action = 'ur_updater';
 
@@ -89,7 +88,7 @@ class UR_Background_Updater extends WP_Background_Process {
 	 * in the next pass through. Or, return false to remove the
 	 * item from the queue.
 	 *
-	 * @param  string $callback Update callback function
+	 * @param  string $callback Update callback function.
 	 *
 	 * @return mixed
 	 */

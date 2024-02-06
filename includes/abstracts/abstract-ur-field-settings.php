@@ -62,8 +62,6 @@ abstract class UR_Field_Settings {
 	 * Abstract function for output.
 	 *
 	 * @param array $field_data field Data.
-	 *
-	 * @param array $field_data field data.
 	 */
 	abstract public function output( $field_data = array() );
 
@@ -88,12 +86,22 @@ abstract class UR_Field_Settings {
 			$tooltip_html = ! empty( $field['tip'] ) ? ur_help_tip( $field['tip'], false, 'ur-portal-tooltip' ) : '';
 			$smart_tags   = '';
 			if ( 'default_value' === $field_key ) {
+				/**
+				 * Filter the smart tags list for general.
+				 *
+				 * @param array $smart_tags The smart tags list.
+				 */
 				$smart_tags = apply_filters( 'ur_smart_tags_list_in_general', $smart_tags );
 			}
 
-			$pattern_validationList = '';
+			$pattern_validation_list = '';
 			if ( 'pattern_value' === $field_key ) {
-				$pattern_validationList = apply_filters( 'ur_pattern_validation_list_in_advanced_settings', $pattern_validationList );
+				/**
+				 * Filter Pattern validation list in advanced settings.
+				 *
+				 * @param array $pattern_validation_list The pattern validation list.
+				 */
+				$pattern_validation_list = apply_filters( 'ur_pattern_validation_list_in_advanced_settings', $pattern_validation_list );
 			}
 
 			$this->fields_html .= '<div class="ur-advance-setting ur-advance-' . esc_attr( $field_key ) . '">';
@@ -101,18 +109,14 @@ abstract class UR_Field_Settings {
 			if ( 'toggle' !== $field['type'] ) {
 				$this->fields_html .= '<label for="' . esc_attr( $field['class'] ) . '">' . ( isset( $field['label'] ) ? esc_attr( $field['label'] ) : '' ) . $tooltip_html . '</label>';
 				$value              = $this->get_advance_setting_data( $field_key ) == '' && isset( $field['default'] ) ? $field['default'] : $this->get_advance_setting_data( $field_key );
-			} else {
-				if ( isset( $this->field_data->advance_setting->$field_key ) ) {
-					if ( empty( $this->field_data->advance_setting->$field_key ) ) {
-						$value = false;
-					} else {
-						$value = ur_string_to_bool( $this->field_data->advance_setting->$field_key );
-					}
+			} elseif ( isset( $this->field_data->advance_setting->$field_key ) ) {
+				if ( empty( $this->field_data->advance_setting->$field_key ) ) {
+					$value = false;
 				} else {
-					if ( isset( $field['default'] ) ) {
-						$value = ur_string_to_bool( $field['default'] );
-					}
+					$value = ur_string_to_bool( $this->field_data->advance_setting->$field_key );
 				}
+			} elseif ( isset( $field['default'] ) ) {
+					$value = ur_string_to_bool( $field['default'] );
 			}
 
 			switch ( $field['type'] ) {
@@ -126,7 +130,7 @@ abstract class UR_Field_Settings {
 
 					$this->fields_html .= ' />';
 					$this->fields_html .= $smart_tags;
-					$this->fields_html .= $pattern_validationList;
+					$this->fields_html .= $pattern_validation_list;
 					break;
 
 				case 'select':

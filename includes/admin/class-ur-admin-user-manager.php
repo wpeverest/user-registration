@@ -76,6 +76,13 @@ class UR_Admin_User_Manager {
 	 */
 	public function save_status( $status, $alert_user = true ) {
 
+		/**
+		 * Action to update User Status
+		 *
+		 * @param string $status User status
+		 * @param int $this->user->ID User ID
+		 * @param int|true $alert_user Flag whether to alert user or not
+		 */
 		do_action( 'ur_user_status_updated', $status, $this->user->ID, $alert_user );
 
 		$action_label = '';
@@ -104,7 +111,7 @@ class UR_Admin_User_Manager {
 			case self::DENIED:
 				$action_label = 'denied';
 				if ( 'admin_approval_after_email_confirmation' === $login_option ) {
-					update_user_meta( $this->user->ID, 'ur_admin_approval_after_email_confirmation', 'false' );
+					update_user_meta( $this->user->ID, 'ur_admin_approval_after_email_confirmation', 'denied' );
 				} elseif ( 'email_confirmation' === $login_option ) {
 					update_user_meta( $this->user->ID, 'ur_confirm_email', $status );
 				}
@@ -112,6 +119,11 @@ class UR_Admin_User_Manager {
 		}
 
 		if ( ! empty( $action_label ) ) {
+			/**
+			 * Action to update User Meta according to Status
+			 *
+			 * @param int $this->user->ID User ID
+			 */
 			do_action( 'ur_user_' . $action_label, $this->user->ID );
 		}
 		$this->user_status = $status;
@@ -153,8 +165,8 @@ class UR_Admin_User_Manager {
 			return $this->user_status;
 		}
 
-		$user_status       = get_user_meta( $this->user->ID, 'ur_user_status', true );
-		$user_email_status = get_user_meta( $this->user->ID, 'ur_confirm_email', true );
+		$user_status                                    = get_user_meta( $this->user->ID, 'ur_user_status', true );
+		$user_email_status                              = get_user_meta( $this->user->ID, 'ur_confirm_email', true );
 		$admin_approval_after_email_confirmation_status = get_user_meta( $this->user->ID, 'ur_admin_approval_after_email_confirmation', true );
 
 		$result = '';
@@ -304,7 +316,11 @@ class UR_Admin_User_Manager {
 	public function reset_password() {
 		$password = '';
 
-		// If the password reset has been programmatically removed, don't reset.
+		/**
+		 * Filter to Avoid Password Reset
+		 *
+		 * @param boolean Aviod Reset or not
+		 */
 		$avoid_password_reset = apply_filters( 'ur_avoid_password_reset', false );
 		if ( $avoid_password_reset ) {
 			return $password;
@@ -350,6 +366,11 @@ class UR_Admin_User_Manager {
 
 		$user_can = user_can( $this->user, 'edit_users' );
 
+		/**
+		 * Filter to Allow user to change status
+		 *
+		 * @param boolean $user_can User can change or not
+		 */
 		return apply_filters( 'ur_is_user_allowed_to_change_status', $user_can, $this->user->ID );
 	}
 
@@ -393,7 +414,6 @@ class UR_Admin_User_Manager {
 		$user_changer = new self( $user );
 
 		return $user_changer->can_change_status_of( $this->user->ID );
-
 	}
 
 	/**
@@ -409,7 +429,6 @@ class UR_Admin_User_Manager {
 		$user_manager = new static( $user_id );
 
 		return $user_manager->is_allowed_to_change_users_status();
-
 	}
 
 	/**
@@ -449,8 +468,8 @@ class UR_Admin_User_Manager {
 
 		$status_map = array(
 			'approved' => 1,
-			'pending' => 0,
-			'denied' => -1
+			'pending'  => 0,
+			'denied'   => -1,
 		);
 
 		if ( isset( $status_map[ $status_label ] ) ) {
