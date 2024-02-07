@@ -232,7 +232,11 @@ class UR_Preview {
 				$default_content = 'user_registration_get_' . $option_name;
 			}
 
-			$email_content = get_option( 'user_registration_' . $option_name, $class_instance->$default_content() );
+			if ( 'passwordless_login_email' === $option_name ) {
+				$email_content = get_option( 'user_registration_' . $option_name . '_content', $class_instance->$default_content() );
+			} else {
+				$email_content = get_option( 'user_registration_' . $option_name, $class_instance->$default_content() );
+			}
 			$email_content = apply_filters( 'user_registration_process_smart_tags', $email_content );
 
 			ur_get_template(
