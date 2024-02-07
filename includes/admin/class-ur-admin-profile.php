@@ -39,9 +39,14 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 		}
 
 		/**
-		 * Exclude fields from admin profile.
+		 * Get Fields to be excluded for Admin Profile
 		 */
 		public function get_exclude_fields_for_admin_profile() {
+			/**
+			 * Filter to retrieve the fields to exclude from admin profile.
+			 *
+			 * @param array Array of fields to exclude
+			 */
 			return apply_filters( 'user_registration_exclude_fields_for_admin_profile', array() );
 		}
 
@@ -60,6 +65,11 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 			if ( ! empty( $form_fields ) ) {
 				unset( $form_fields['user_registration_profile_pic_url'] );
+				/**
+				 * Filter to retrieve the profile meta fields
+				 *
+				 * @param array Array of Profile Meta Fields
+				 */
 				$show_fields = apply_filters(
 					'user_registration_profile_meta_fields',
 					array(
@@ -163,7 +173,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 							$field_label      = isset( $extra_params->label ) ? $extra_params->label : $field_label;
 						}
 						?>
-						<?php if ( 'multiple_choice' === $field_type || 'single_item' === $field_type || 'total_field' === $field_type ) { ?>
+						<?php if ( 'subscription_plan' === $field_type || 'multiple_choice' === $field_type || 'single_item' === $field_type || 'total_field' === $field_type ) { ?>
 						<?php } else { ?>
 						<tr>
 							<th>
@@ -360,6 +370,11 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 											'field' => $field,
 
 										);
+										/**
+										 * Action to display user extra field
+										 *
+										 * @param array $data Field Data
+										 */
 										do_action( 'user_registration_profile_field_' . $field['type'], $data );
 									else :
 										$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
@@ -388,6 +403,11 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 				<?php
 			endforeach;
 
+			/**
+			 * Action to perform after showing user field
+			 *
+			 * @param WPUser $user User
+			 */
 			do_action( 'user_registration_after_user_extra_information', $user );
 		}
 
@@ -416,6 +436,13 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 				$form_id = ur_get_form_id_by_userid( $user_id );
 
 				$profile = user_registration_form_data( $user_id, $form_id );
+
+				/**
+				 * Action to perform after Admin save profile validation.
+				 *
+				 * @param int $user_id User ID of the user being saved.
+				 * @param array $profile Form Data.
+				 */
 				do_action( 'user_registration_after_admin_save_profile_validation', $user_id, $profile );
 
 				foreach ( $save_fields as $fieldset ) {
@@ -700,6 +727,10 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									$fields[ $field_index ]['type'] = 'multiple_choice';
 									break;
 
+								case 'subscription_plan':
+									$fields[ $field_index ]['type'] = 'subscription_plan';
+									break;
+
 								case 'single_item':
 									$fields[ $field_index ]['type'] = 'single_item';
 									break;
@@ -709,11 +740,16 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 									break;
 							}
 						}// End switch().
-						$filter_data         = array(
+						$filter_data = array(
 							'fields'     => $fields,
 							'field'      => $field,
 							'field_name' => $field_name,
 						);
+						/**
+						 * Filter to retrieve the filtered field data.
+						 *
+						 * @param array $filter_data Field data.
+						 */
 						$filtered_data_array = apply_filters( 'user_registration_profile_field_filter_' . $field_key, $filter_data );
 						if ( isset( $filtered_data_array['fields'] ) ) {
 							$fields = $filtered_data_array['fields'];

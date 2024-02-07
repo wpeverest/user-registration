@@ -1,6 +1,6 @@
 <?php
 /**
- * Form View: Input Type Email
+ * Form View: Input Type Email.
  *
  * @package UserRegistration/Form/Views/Admin/Email
  */

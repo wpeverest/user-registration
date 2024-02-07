@@ -19,6 +19,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+/**
+ * Action to fire before the rendering of user registration account navigation.
+ */
 do_action( 'user_registration_before_account_navigation' );
 ?>
 
@@ -34,4 +37,8 @@ do_action( 'user_registration_before_account_navigation' );
 	</ul>
 </nav>
 
-<?php do_action( 'user_registration_after_account_navigation' ); ?>
+<?php
+/**
+ * Action to fire after the rendering of user registration account navigation.
+ */
+do_action( 'user_registration_after_account_navigation' ); ?>

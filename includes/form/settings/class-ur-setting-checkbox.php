@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Setting_Checkbox Class
+ * UR_Setting_Checkbox Class.
  *
  * @package  UserRegistration/Form/Settings
  */
@@ -73,6 +73,14 @@ class UR_Setting_Checkbox extends UR_Field_Settings {
 			),
 		);
 
+		/**
+		 * Filter to modify the checkbox custom advance settings.
+		 *
+		 * @param string $fields Fields to be modified.
+		 * @param int field_id Field ID.
+		 * @param class default_class.
+		 * @return string $fields.
+		 */
 		$fields = apply_filters( 'checkbox_custom_advance_settings', $fields, $this->field_id, $this->default_class );
 		$this->render_html( $fields );
 	}

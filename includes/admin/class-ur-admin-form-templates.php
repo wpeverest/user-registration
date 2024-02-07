@@ -74,6 +74,11 @@ class UR_Admin_Form_Templates {
 			}
 		}
 
+		/**
+		 * Filter the Template section data
+		 *
+		 * @param array $template_data->templates templates data
+		 */
 		return isset( $template_data->templates ) ? apply_filters( 'user_registration_template_section_data', $template_data->templates ) : self::get_default_template();
 	}
 

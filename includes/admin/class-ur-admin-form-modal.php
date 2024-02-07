@@ -36,12 +36,24 @@ if ( ! class_exists( 'UR_Admin_Form_Modal', false ) ) :
 		 */
 		public function media_button( $editor_id ) {
 
+			/**
+			 * Filter the Display Media button
+			 *
+			 * @param boolean
+			 * @param int $editor_id Editor ID
+			 */
 			if ( ! apply_filters( 'ur_display_media_button', is_admin(), $editor_id ) ) {
 				return;
 			}
 
 			// Remove Add User Registration Form button from wp-editor in customize my account settings page.
 			if ( isset( $_GET['tab'] ) && 'user-registration-customize-my-account' === $_GET['tab'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+				/**
+				 * Action to display Smart Tags List
+				 *
+				 * @param int $editor_id Editor ID
+				 */
 				do_action( 'ur_smart_tags_list', $editor_id );
 				return;
 			}
@@ -57,6 +69,12 @@ if ( ! class_exists( 'UR_Admin_Form_Modal', false ) ) :
 				wp_kses_post( $icon ),
 				esc_html__( 'Add Registration Form', 'user-registration' )
 			);
+
+			/**
+			 * Action Hook for Smart Tags List
+			 *
+			 * @param int $editor_id Editor ID
+			 */
 			do_action( 'ur_smart_tags_list', $editor_id );
 			add_action( 'admin_footer', array( $this, 'shortcode_modal' ) );
 		}

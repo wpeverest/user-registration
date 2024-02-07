@@ -33,6 +33,11 @@ if ( ! class_exists( 'UR_Settings_Registration_Denied_Email', false ) ) :
 		 */
 		public function get_settings() {
 
+			/**
+			 * Filter to add the options on settings.
+			 *
+			 * @param array Options to be enlisted.
+			 */
 			$settings = apply_filters(
 				'user_registration_registration_denied_email',
 				array(
@@ -80,14 +85,26 @@ if ( ! class_exists( 'UR_Settings_Registration_Denied_Email', false ) ) :
 				)
 			);
 
+			/**
+			 * Filter to get the settings.
+			 *
+			 * @param array $settings Setting options to be enlisted.
+			 */
 			return apply_filters( 'user_registration_get_settings_' . $this->id, $settings );
 		}
 
 		/**
 		 * Email Format.
+		 *
+		 * @return string $message Message content for registration denied email.
 		 */
 		public function ur_get_registration_denied_email() {
 
+			/**
+			 * Filter to modify the message content for registration denied email.
+			 *
+			 * @param string Message content for registration denied email to be overridden.
+			 */
 			$message = apply_filters(
 				'user_registration_get_registration_denied_email',
 				sprintf(

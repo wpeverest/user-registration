@@ -102,7 +102,14 @@ abstract class UR_Form_Field {
 		$this->admin_data = $admin_data;
 
 		ob_start();
-		$template_path       = str_replace( '_', '-', str_replace( 'user_registration_', 'admin-', $this->id ) );
+		$template_path = str_replace( '_', '-', str_replace( 'user_registration_', 'admin-', $this->id ) );
+		/**
+		 * Filter the admin template path for a specific form element.
+		 *
+		 * The dynamic portion of the hook name, $this->id
+		 *
+		 * @param string $admin_template_path The default admin template path for the form element.
+		 */
 		$admin_template_path = apply_filters( $this->id . '_admin_template', UR_FORM_PATH . 'views' . UR_DS . 'admin' . UR_DS . $template_path . '.php' );
 
 		if ( file_exists( $admin_template_path ) ) {
@@ -364,6 +371,24 @@ abstract class UR_Form_Field {
 			$form_data['selling_price']                    = isset( $data['advance_setting']->selling_price ) ? $data['advance_setting']->selling_price : '';
 		}
 
+		if ( 'subscription_plan' === $field_key ) {
+			$form_data['select_all'] = isset( $data['advance_setting']->select_all ) ? ur_string_to_bool( $data['advance_setting']->select_all ) : false;
+			$choices                 = isset( $data['advance_setting']->choices ) ? explode( ',', $data['advance_setting']->choices ) : array(); // Backward compatibility. Modified since 1.5.7.
+			$option_data             = isset( $data['general_setting']->options ) ? $data['general_setting']->options : $choices;
+			$options                 = array();
+
+			if ( is_array( $option_data ) ) {
+				foreach ( $option_data as $index_data => $option ) {
+					$options[ $option->label ] = array(
+						'label'      => $option->label,
+						'value'      => $option->value,
+						'sell_value' => $option->sell_value,
+					);
+				}
+
+				$form_data['options'] = $options;
+			}
+		}
 		if ( 'multiple_choice' === $field_key ) {
 			$form_data['select_all'] = isset( $data['advance_setting']->select_all ) ? ur_string_to_bool( $data['advance_setting']->select_all ) : false;
 			$option_data             = isset( $data['general_setting']->options ) ? $data['general_setting']->options : array();
@@ -467,7 +492,13 @@ abstract class UR_Form_Field {
 			'form_data' => $form_data,
 			'data'      => $data,
 		);
-
+		/**
+		 * Filter the field key based frontend form data .
+		 *
+		 * The dynamic portion of the hook name, $field_key.
+		 *
+		 * @param string $filter_data The filtered field data.
+		 */
 		$form_data_array = apply_filters( 'user_registration_' . $field_key . '_frontend_form_data', $filter_data );
 
 		$form_data = isset( $form_data_array['form_data'] ) ? $form_data_array['form_data'] : $form_data;
@@ -487,6 +518,14 @@ abstract class UR_Form_Field {
 		$class_name = 'UR_Setting_' . ucwords( $file_name );
 
 		if ( ! class_exists( $class_name ) ) {
+			/**
+			 * Filter the file name and path of advance class.
+			 *
+			 * The dynamic portion of the hook name, $file_name.
+			 *
+			 * @param string $file_name The file name.
+			 * @param string $file_path The file path.
+			 */
 			$file_path_array = apply_filters(
 				'user_registration_' . strtolower( $file_name ) . '_advance_class',
 				array(
@@ -535,6 +574,11 @@ abstract class UR_Form_Field {
 
 			$smart_tags = '';
 			if ( 'hidden_value' === $setting_key ) {
+				/**
+				 * Filter the smart tags list for general.
+				 *
+				 * @param array $smart_tags The smart tags list.
+				 */
 				$smart_tags = apply_filters( 'ur_smart_tags_list_in_general', $smart_tags );
 			}
 
@@ -574,7 +618,9 @@ abstract class UR_Form_Field {
 					} else {
 						$default_options = isset( $this->field_defaults['default_options'] ) ? $this->field_defaults['default_options'] : array();
 						$options         = isset( $this->admin_data->general_setting->options ) ? $this->admin_data->general_setting->options : $default_options;
-						$options         = array_map( 'trim', $options );
+						if ( 'radio' === $strip_prefix ) {
+							$options = array_map( 'trim', $options );
+						}
 					}
 
 					$default_value = $this->get_general_setting_data( 'default_value' );
@@ -613,31 +659,60 @@ abstract class UR_Form_Field {
 							$general_setting_wrapper .= '</li>';
 
 						}
-					} else {
-						foreach ( $options as  $option ) {
-							$general_setting_wrapper .= '<li>';
-							$general_setting_wrapper .= '<div class="ur-options-value-wrapper"><div class="editor-block-mover__control-drag-handle editor-block-mover__control">
+					} if ( 'subscription_plan' === $strip_prefix ) {
+
+						foreach ( $options as $key => $option ) {
+							$label                = is_array( $option ) ? $option['label'] : $option->label;
+							$value                = is_array( $option ) ? $option['value'] : $option->value;
+							$sell_value           = ( is_array( $option ) && isset( $option['sell_value'] ) ) ? $option['sell_value'] : ( ( is_object( $option ) && isset( $option->sell_value ) ) ? $option->sell_value : null );
+							$currency             = get_option( 'user_registration_payment_currency', 'USD' );
+							$currencies           = ur_payment_integration_get_currencies();
+							$currency             = $currency . ' ' . $currencies[ $currency ]['symbol'];
+							$radio_field_options  = '<li class="ur-subscription-plan">';
+							$radio_field_options .= '<div class="editor-block-mover__control-drag-handle editor-block-mover__control">
 							<svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" role="img" aria-hidden="true" focusable="false"><path d="M13,8c0.6,0,1-0.4,1-1s-0.4-1-1-1s-1,0.4-1,1S12.4,8,13,8z M5,6C4.4,6,4,6.4,4,7s0.4,1,1,1s1-0.4,1-1S5.6,6,5,6z M5,10 c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S5.6,10,5,10z M13,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S13.6,10,13,10z M9,6 C8.4,6,8,6.4,8,7s0.4,1,1,1s1-0.4,1-1S9.6,6,9,6z M9,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S9.6,10,9,10z"></path></svg>
 							</div>';
-							$general_setting_wrapper .= '<input value="' . esc_attr( $option ) . '" data-field="default_value" class="ur-general-setting-field ur-type-' . esc_attr( $setting_value['type'] ) . '-value" type="radio" name="' . esc_attr( $unique ) . '_value" ';
+							$radio_field_options .= '<input value="' . esc_attr( $label ) . '" data-field="default_value" class="ur-general-setting-field ur-type-' . esc_attr( $setting_value['type'] ) . '-value" type="checkbox" name="' . esc_attr( $unique ) . '_value" ';
+							if ( true == $setting_value['required'] ) {
+								$radio_field_options .= ' required ';
+							}
+
+							$radio_field_options     .= '' . checked( $label, $default_value, false ) . ' />';
+							$radio_field_options     .= '<input value="' . esc_attr( $label ) . '" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" class="ur-general-setting-field  ur-type-' . esc_attr( $setting_value['type'] ) . '-label" type="text" name="' . esc_attr( $setting_value['name'] ) . '_label" >';
+							$radio_field_options     .= '<div class="ur-regular-price"><span>Regular Price</span><input value="' . esc_attr( $value ) . '" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" class="ur-general-setting-field  ur-type-' . esc_attr( $setting_value['type'] ) . '-money-input" type="text" name="' . esc_attr( $setting_value['name'] ) . '_value" data-currency=" ' . esc_attr( $currency ) . ' " ></div>';
+							$radio_field_options     .= '<div class="ur-selling-price"><span>Selling Price</span><input value="' . esc_attr( $sell_value ) . '" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" class="ur-general-setting-field ur-' . esc_attr( $setting_value['type'] ) . '-selling-price-input" type="text" name="' . esc_attr( $setting_value['name'] ) . '_selling_value" data-currency=" ' . esc_attr( $currency ) . ' " placeholder="0.00"></div>';
+							$radio_field_options     .= '<a class="add" href="#"><i class="dashicons dashicons-plus"></i></a>';
+							$radio_field_options     .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a>';
+							$radio_field_options     .= '</li>';
+							$general_setting_wrapper .= apply_filters( 'user_registration_radio_field_options', $radio_field_options, $option, $setting_key, $setting_value, $strip_prefix, $unique, $default_value );
+						}
+					} else {
+						foreach ( $options as  $option ) {
+							$radio_field_options .= '<li>';
+							$radio_field_options .= '<div class="ur-options-value-wrapper"><div class="editor-block-mover__control-drag-handle editor-block-mover__control">
+							<svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" role="img" aria-hidden="true" focusable="false"><path d="M13,8c0.6,0,1-0.4,1-1s-0.4-1-1-1s-1,0.4-1,1S12.4,8,13,8z M5,6C4.4,6,4,6.4,4,7s0.4,1,1,1s1-0.4,1-1S5.6,6,5,6z M5,10 c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S5.6,10,5,10z M13,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S13.6,10,13,10z M9,6 C8.4,6,8,6.4,8,7s0.4,1,1,1s1-0.4,1-1S9.6,6,9,6z M9,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S9.6,10,9,10z"></path></svg>
+							</div>';
+							$radio_field_options .= '<input value="' . esc_attr( $option ) . '" data-field="default_value" class="ur-general-setting-field ur-type-' . esc_attr( $setting_value['type'] ) . '-value" type="radio" name="' . esc_attr( $unique ) . '_value" ';
 
 							if ( true == $setting_value['required'] ) {
-								$general_setting_wrapper .= ' required ';
+								$radio_field_options .= ' required ';
 							}
 
-							$general_setting_wrapper .= '' . checked( $option, $default_value, false ) . ' />';
-							$general_setting_wrapper .= '<input value="' . esc_attr( $option ) . '" data-field="' . esc_attr( $setting_key ) . '" data-field-name="image-choice" class="ur-general-setting-field ur-type-' . esc_attr( $setting_value['type'] ) . '-label" type="text" name="' . esc_attr( $setting_value['name'] ) . '_label" >';
+							$radio_field_options .= '' . checked( $option, $default_value, false ) . ' />';
+							$radio_field_options .= '<input value="' . esc_attr( $option ) . '" data-field="' . esc_attr( $setting_key ) . '" data-field-name="image-choice" class="ur-general-setting-field ur-type-' . esc_attr( $setting_value['type'] ) . '-label" type="text" name="' . esc_attr( $setting_value['name'] ) . '_label" >';
 
-							$general_setting_wrapper .= '<a class="add" href="#"><i class="dashicons dashicons-plus"></i></a>';
-							$general_setting_wrapper .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a></div>';
+							$radio_field_options .= '<a class="add" href="#"><i class="dashicons dashicons-plus"></i></a>';
+							$radio_field_options .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a></div>';
 							if ( 'radio' === $strip_prefix ) {
-								$general_setting_wrapper .= '<div class="ur-image-choice-wrapper">';
-								$general_setting_wrapper .= '<input type="hidden" class="ur-general-setting-field ur-type-image-choice" data-field="' . esc_attr( $setting_key ) . '" data-field-name="image-choice" name="' . esc_attr( $unique ) . '_image" value="">';
-								$general_setting_wrapper .= '<button type="button" class="upload-button ur-media-btn">Upload Image</button>';
-								$general_setting_wrapper .= '<div class="ur-thumbnail-image" style="max-width:100px;max-height:100px;overflow:hidden;"><img src="" style="max-width:100%;"></div>';
-								$general_setting_wrapper .= '<div class="ur-actions"><button type="button" class="button ur-remove-btn" style="display:none">Remove</button></div></div>';
+								$radio_field_options .= '<div class="ur-image-choice-wrapper">';
+								$radio_field_options .= '<input type="hidden" class="ur-general-setting-field ur-type-image-choice" data-field="' . esc_attr( $setting_key ) . '" data-field-name="image-choice" name="' . esc_attr( $unique ) . '_image" value="">';
+								$radio_field_options .= '<button type="button" class="upload-button ur-media-btn">Upload Image</button>';
+								$radio_field_options .= '<div class="ur-thumbnail-image" style="max-width:100px;max-height:100px;overflow:hidden;"><img src="" style="max-width:100%;"></div>';
+								$radio_field_options .= '<div class="ur-actions"><button type="button" class="button ur-remove-btn" style="display:none">Remove</button></div></div>';
 							}
-							$general_setting_wrapper .= '</li>';
+							$radio_field_options .= '</li>';
+
+							$general_setting_wrapper .= apply_filters( 'user_registration_radio_field_options', $radio_field_options, $option, $setting_key, $setting_value, $strip_prefix, $unique, $default_value );
 
 						}
 					}
@@ -873,7 +948,15 @@ abstract class UR_Form_Field {
 					break;
 
 				default:
-						$general_setting_wrapper .= apply_filters( 'user_registration_form_field_general_setting_' . $setting_value['type'], $this );
+					/**
+					 * Filter the field general settings.
+					 *
+					 * The dynamic portion of the hook name, $setting_value['type'].
+					 *
+					 * @param string $this The current object.
+					 */
+					$general_setting_wrapper .= apply_filters( 'user_registration_form_field_general_setting_' . $setting_value['type'], $this );
+
 			}// End switch().
 
 				$general_setting_wrapper .= $smart_tags;
@@ -915,9 +998,23 @@ abstract class UR_Form_Field {
 
 		// Redundent code start.
 		ob_start();
+		/**
+		 * Action to add settings after advance settings.
+		 *
+		 * @param array $settings The settings array.
+		 * @param array $this->id The field id.
+		 * @param array $this->admin_data The admin data.
+		 */
 		do_action( 'user_registration_after_advance_settings', $this->id, $this->admin_data );
 		$settings .= ob_get_clean();
 		// Redundent code end.
+		/**
+		 * Filter to modify or add settings after advance settings.
+		 *
+		 * @param array $settings The settings array.
+		 * @param array $this->id The field id.
+		 * @param array $this->admin_data The admin data.
+		 */
 		$settings = apply_filters( 'user_registration_after_advance_settings_filter', $settings, $this->id, $this->admin_data );
 		return $settings;
 	}

@@ -1,6 +1,6 @@
 <?php
 /**
- * Form View: Input Type User Confirm_Password
+ * Form View: Input Type User Confirm_Password.
  *
  * @package UserRegistration/Form/Views/Admin/ConfirmPassword
  */

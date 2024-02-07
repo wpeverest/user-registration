@@ -152,7 +152,15 @@ class UR_Emailer {
 		if ( ( 'email_confirmation' !== $login_option || 'admin_approval_after_email_confirmation' !== $login_option ) && ur_option_checked( 'user_registration_email_setting_disable_email' ) ) {
 			return;
 		}
-
+		/**
+		 * Hook to modify user email attachment.
+		 *
+		 * @param array $valid_form_data The valid form data.
+		 * @param int $form_id The form ID.
+		 * @param int $user_id The user ID.
+		 *
+		 * @return array $attachments
+		 */
 		$attachments     = apply_filters( 'user_registration_email_attachment', array(), $valid_form_data, $form_id, $user_id );
 		$valid_form_data = isset( $valid_form_data ) ? $valid_form_data : array();
 
@@ -164,7 +172,9 @@ class UR_Emailer {
 		$username          = isset( $user_login_object->value ) && ! empty( $user_login_object->value ) ? $user_login_object->value : '';
 
 		if ( ! empty( $email ) && ! empty( $user_id ) ) {
-
+			/**
+			 * Action to do before the email send.
+			 */
 			do_action( 'user_registration_email_send_before' );
 
 			// Get selected email template id for specific form.
@@ -180,6 +190,9 @@ class UR_Emailer {
 				self::send_mail_to_admin( $email, $username, $user_id, $data_html, $name_value, $attachments, $template_id );
 			}
 
+			/**
+			 * Action to do after the email send.
+			 */
 			do_action( 'user_registration_email_send_after' );
 		}
 	}
@@ -284,16 +297,39 @@ class UR_Emailer {
 		$data_html .= '</tbody></table>';
 
 		// Smart tag process for extra fields.
+		/**
+		 * Hook to modify user email attachment.
+		 *
+		 * @param array $valid_form_data The valid form data.
+		 * @param int $form_id The form ID.
+		 * @param int $user_id The user ID.
+		 *
+		 * @return array $attachments
+		 */
 		$attachments = apply_filters( 'user_registration_email_attachment', array(), $smart_data, $form_id, $user_id );
-		$name_value  = apply_filters( 'user_registration_process_smart_tag', $name_value, $smart_data, $form_id, $user_id );
+		/**
+		 * Hook to process the smart tag.
+		 *
+		 * @param array $name_value The name values.
+		 * @param int $smart_data The smart data.
+		 * @param int $form_id The form ID.
+		 * @param int $user_id The user ID.
+		 *
+		 * @return array $name_values
+		 */
+		$name_value = apply_filters( 'user_registration_process_smart_tag', $name_value, $smart_data, $form_id, $user_id );
 
 		if ( ! empty( $email ) && ! empty( $user_id ) ) {
-
+			/**
+			 * Action to do before email send.
+			 */
 			do_action( 'user_registration_email_send_before' );
 
 			self::send_profile_changed_email_to_admin( $email, $username, $user_id, $data_html, $name_value, $attachments );
 			self::send_profile_changed_email_to_user( $email, $username, $user_id, $data_html, $name_value, $attachments );
-
+			/**
+			 * Action to do after email send.
+			 */
 			do_action( 'user_registration_email_send_after' );
 		}
 	}
@@ -897,7 +933,12 @@ class UR_Emailer {
 
 		$user_extra_fields = ur_get_user_extra_fields( $user_id );
 		$name_value        = array_merge( $name_value, $user_extra_fields );
-
+		/**
+		 * Hook to process the smart tag for status change emails.
+		 *
+		 * @param array $name_value The name values.
+		 * @param string $email The email.
+		 */
 		return apply_filters( 'user_registration_process_smart_tag_for_status_change_emails', $name_value, $email );
 	}
 	/**
@@ -908,6 +949,15 @@ class UR_Emailer {
 	 * @param array  $name_value  Extra values.
 	 */
 	public static function parse_smart_tags( $content = '', $values = array(), $name_value = array() ) {
+		/**
+		 * Hook to process the smart tags.
+		 *
+		 * @param string $content The message content.
+		 * @param int $values The values.
+		 * @param int $name_values The name values.
+		 *
+		 * @return string $content
+		 */
 		$content = apply_filters( 'user_registration_process_smart_tags', $content, $values, $name_value );
 		return $content;
 	}

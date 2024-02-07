@@ -131,6 +131,9 @@ class UR_Admin_Notices {
 				delete_option( 'user_registration_onboarding_skipped' );
 			}
 
+			/**
+			 * Action to hide notice
+			 */
 			do_action( 'user_registration_hide_' . $hide_notice . '_notice' );
 		}
 	}
@@ -148,6 +151,12 @@ class UR_Admin_Notices {
 			wp_style_add_data( 'user-registration-activation', 'rtl', 'replace' );
 
 			foreach ( $notices as $notice ) {
+				/**
+				 * Filter to modify the display of admin notice
+				 *
+				 * @param boolean
+				 * @param $notice Notice
+				 */
 				if ( ! empty( self::$core_notices[ $notice ] ) && apply_filters( 'user_registration_show_admin_notice', true, $notice ) ) {
 					add_action( 'admin_notices', array( __CLASS__, self::$core_notices[ $notice ] ) );
 				} else {
@@ -173,6 +182,12 @@ class UR_Admin_Notices {
 			'user-registration-mailchimp',
 		);
 
+		/**
+		 * Filter to modify the Pages to exclude notice from
+		 *
+		 * @param boolean
+		 * @param string $pages_to_exclude Pages to Exclude
+		*/
 		$pages_to_exclude = apply_filters( 'user_registration_notice_excluded_pages', $pages_to_exclude );
 
 		// Return on other than user registraion builder page.
@@ -268,6 +283,11 @@ class UR_Admin_Notices {
 	 * If we have just installed, and allow registration option not enable
 	 */
 	public static function register_notice() {
+		/**
+		 * Filter to override the Register Setting
+		 *
+		 * @param boolean
+		*/
 		$users_can_register = apply_filters( 'ur_register_setting_override', get_option( 'users_can_register' ) );
 
 		if ( ! $users_can_register && is_admin() && ! defined( 'DOING_AJAX' ) ) {

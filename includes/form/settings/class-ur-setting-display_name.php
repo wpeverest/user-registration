@@ -1,23 +1,34 @@
 <?php
+/**
+ * UR_Setting_Display_name Class.
+ *
+ * @package  UserRegistration/Form/Settings
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * UR_Setting_Display_name Class
+ * UR_Setting_Display_name Class.
  *
  * @package  UserRegistration/Form/Settings
- * @category Abstract Class
- * @author   WPEverest
  */
 class UR_Setting_Display_name extends UR_Field_Settings {
 
-
+	/**
+	 * UR_Setting_Display_name Class Constructor.
+	 */
 	public function __construct() {
 		$this->field_id = 'display_name_advance_setting';
 	}
 
+	/**
+	 * Output Field Data.
+	 *
+	 * @param  array $field_data Field Data.
+	 * @return string $field_html.
+	 */
 	public function output( $field_data = array() ) {
 
 		$this->field_data = $field_data;
@@ -27,6 +38,9 @@ class UR_Setting_Display_name extends UR_Field_Settings {
 		return $field_html;
 	}
 
+	/**
+	 * Register fields.
+	 */
 	public function register_fields() {
 		$fields = array(
 
@@ -43,6 +57,14 @@ class UR_Setting_Display_name extends UR_Field_Settings {
 			),
 		);
 
+		/**
+		 * Filter to modify display name custom advance settings.
+		 *
+		 * @param string $fields Custom date fields.
+		 * @param int field_id Field ID.
+		 * @param class default_class Default class for field.
+		 * @return string $fields.
+		 */
 		$fields = apply_filters( 'display_name_custom_advance_settings', $fields, $this->field_id, $this->default_class );
 		$this->render_html( $fields );
 	}

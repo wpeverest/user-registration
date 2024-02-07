@@ -30,7 +30,7 @@ class UR_Admin_Export_Users {
 	 */
 	public static function output() {
 		$all_forms = ur_get_all_user_registration_form();
-		include_once dirname( __FILE__ ) . '/views/html-admin-page-export-users.php';
+		include_once __DIR__ . '/views/html-admin-page-export-users.php';
 	}
 
 	/**
@@ -50,7 +50,7 @@ class UR_Admin_Export_Users {
 		if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'user-registration-settings' ) ) {
 			die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 		}
-		$form_id = isset( $_POST['export_users'] ) ? wp_unslash( $_POST['export_users'] ) : 0; //phpcs:ignore
+		$form_id = isset( $_POST['export_users'] ) ? wp_unslash( $_POST['export_users'] ) : 0; //phpcs:ignore.
 
 		// Return if form id is not set and current user doesnot have export capability.
 		if ( ! isset( $form_id ) || ! current_user_can( 'export' ) ) {
@@ -62,8 +62,8 @@ class UR_Admin_Export_Users {
 			$all_fields                = (array) json_decode( $all_fields );
 			$all_fields                = array_keys( $all_fields );
 			$all_add_fields            = array( 'user_id', 'user_role', 'ur_user_status', 'date_created', 'date_created_gmt' );
-			$checked_fields 		   = isset( $_POST['csv-export-custom-fields'] ) ? ur_clean( $_POST['csv-export-custom-fields'] ) : array(); //phpcs:ignore
-			$checked_additional_fields = isset( $_POST['all_selected_fields_dict'] ) ? ur_clean( $_POST['all_selected_fields_dict'] ) :	array(); //phpcs:ignore
+			$checked_fields 		   = isset( $_POST['csv-export-custom-fields'] ) ? ur_clean( $_POST['csv-export-custom-fields'] ) : array(); //phpcs:ignore.
+			$checked_additional_fields = isset( $_POST['all_selected_fields_dict'] ) ? ur_clean( $_POST['all_selected_fields_dict'] ) :	array(); //phpcs:ignore.
 			if ( empty( $checked_fields ) && empty( $checked_additional_fields ) ) {
 				$checked_fields            = $all_fields;
 				$checked_additional_fields = $all_add_fields;
@@ -91,7 +91,7 @@ class UR_Admin_Export_Users {
 
 		$columns   = $this->generate_columns( $form_id, $unchecked_fields, $checked_additional_fields );
 		$rows      = $this->generate_rows( $users, $form_id, $unchecked_fields, $checked_additional_fields, $from_date, $to_date );
-		$form_name = str_replace( ' &#8211; ', '-', get_the_title( $form_id ) );
+		$form_name = str_replace( ' &#8211; ', '-', get_the_title( $form_id ) ); //phpcs:ignore;
 		$form_name = str_replace( '&#8211;', '-', $form_name );
 		$form_name = strtolower( str_replace( ' ', '-', $form_name ) );
 
@@ -179,6 +179,11 @@ class UR_Admin_Export_Users {
 			)
 		);
 
+		/**
+		 * Filter the columns to exclude for csv export.
+		 *
+		 * @param array $exclude_columns Columns to Exclude.
+		 */
 		$exclude_columns = apply_filters(
 			'user_registration_csv_export_exclude_columns',
 			$exclude_columns
@@ -190,6 +195,12 @@ class UR_Admin_Export_Users {
 
 		$columns = array_merge( $user_id_column, $columns );
 		$columns = array_merge( $columns, $checked_additional_field_columns );
+
+		/**
+		 * Filter the columns for csv export.
+		 *
+		 * @param array $columns Columns to Export.
+		 */
 		return apply_filters( 'user_registration_csv_export_columns', $columns );
 	}
 
@@ -314,6 +325,12 @@ class UR_Admin_Export_Users {
 			}
 		}
 
+		/**
+		 * Filter the rows for csv export.
+		 *
+		 * @param array $rows Rows to Export.
+		 * @param array $users Users to Export.
+		 */
 		return apply_filters( 'user_registration_csv_export_rows', $rows, $users );
 	}
 
@@ -326,6 +343,12 @@ class UR_Admin_Export_Users {
 	 * @return array
 	 */
 	public static function exclude_field_key( $key_label, $form_id, $post_content_array ) {
+
+		/**
+		 * Filter the field keys to exclude for export.
+		 *
+		 * @param array Array of fields.
+		 */
 		$exclude_field_keys = apply_filters( 'user_registration_export_user_exclude_field_keys', array( 'html', 'section_title' ) );
 
 		foreach ( $post_content_array as $post_content_row ) {

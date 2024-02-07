@@ -89,6 +89,14 @@ function ur_get_page_id( $page ) {
  */
 function ur_get_wpml_page_language( $page_id ) {
 	global $wpdb;
+	/**
+	 * Filters the current language for WPML (WordPress Multilingual).
+	 *
+	 * The 'wpml_current_language' filter allows developers to modify the current language
+	 * used by the WPML plugin. In this instance, it sets the current language to English ('en').
+	 *
+	 * @param string $current_language The original current language.
+	 */
 	$current_language = apply_filters( 'wpml_current_language', 'en' );
 
 	$element_prepared = $wpdb->prepare(
@@ -131,7 +139,16 @@ function ur_get_page_permalink( $page ) {
 	}
 
 	$permalink = 0 < $page ? get_permalink( $page ) : ( 0 < $page_id ? get_permalink( $page_id ) : get_home_url() );
-
+	/**
+	 * Filters the permalink for a specific page.
+	 *
+	 * The dynamic 'user_registration_get_{page}_page_permalink' filter allows developers
+	 * to modify the permalink for a specific page. The {page}
+	 * placeholder is replaced with the actual page identifier, providing a flexible way to
+	 * customize the permalink based on the original permalink.
+	 *
+	 * @param string $permalink The original permalink for the specific page.
+	 */
 	return apply_filters( 'user_registration_get_' . $page . '_page_permalink', $permalink );
 }
 
@@ -216,6 +233,15 @@ if ( ! function_exists( 'ur_get_current_language' ) ) {
 		if ( function_exists( 'pll_current_language' ) ) {
 			$current_language = pll_current_language();
 		} elseif ( class_exists( 'SitePress', false ) ) {
+			/**
+			 * Filters the current language for WPML (WordPress Multilingual).
+			 *
+			 * The 'wpml_current_language' filter allows developers to modify the current language
+			 * used by the WPML plugin. It provides an opportunity to customize the current language
+			 * based on the original value of $current_language.
+			 *
+			 * @param string $current_language The original current language.
+			 */
 			$current_language = apply_filters( 'wpml_current_language', $current_language );
 		}
 		return $current_language;
@@ -258,7 +284,18 @@ function ur_get_endpoint_url( $endpoint, $value = '', $permalink = '' ) {
 		ur_option_checked( 'user_registration_disable_logout_confirmation', false ) ) {
 		$url = wp_nonce_url( $url, 'user-logout' );
 	}
-
+	/**
+	 * Filters the endpoint URL in User Registration.
+	 *
+	 * The 'user_registration_get_endpoint_url' filter allows developers to modify
+	 * the endpoint URL in the User Registration plugin. It provides an opportunity
+	 * to customize the URL based on the original URL, endpoint, value, and permalink.
+	 *
+	 * @param string $url       The original endpoint URL.
+	 * @param string $endpoint  The endpoint identifier.
+	 * @param mixed  $value     The value associated with the endpoint.
+	 * @param bool   $permalink Whether to use permalinks.
+	 */
 	return apply_filters( 'user_registration_get_endpoint_url', $url, $endpoint, $value, $permalink );
 }
 
@@ -278,10 +315,10 @@ function ur_nav_menu_items( $items ) {
 				if ( empty( $item->url ) ) {
 					continue;
 				}
-				$path  = parse_url( $item->url, PHP_URL_PATH ) ?? '';
-				$query = parse_url( $item->url, PHP_URL_QUERY ) ?? '';
+				$path  = parse_url( $item->url, PHP_URL_PATH ) ?? ''; //phpcs:ignore;
+				$query = parse_url( $item->url, PHP_URL_QUERY ) ?? ''; //phpcs:ignore;
 
-				$customer_logout = $customer_logout ?? '';
+				$customer_logout = $customer_logout ?? ''; //phpcs:ignore;
 
 				if ( strstr( $path, $customer_logout ) !== false || strstr( $query, $customer_logout ) !== false ) {
 						unset( $items[ $key ] );

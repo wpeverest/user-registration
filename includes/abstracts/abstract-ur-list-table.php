@@ -372,7 +372,12 @@ abstract class UR_List_Table extends WP_List_Table {
 					}
 				}
 			}
-
+			/**
+			 * Action to add content after form duplication.
+			 *
+			 * @param array $post_id The post id.
+			 * @param array $new_post_id The new post id.
+			 */
 			do_action( 'user_registration_after_form_duplication', $post_id, $new_post_id );
 
 			/*
@@ -713,5 +718,4 @@ abstract class UR_List_Table extends WP_List_Table {
 	protected function get_hidden_columns() {
 		return get_hidden_columns( $this->screen );
 	}
-
 }

@@ -1,32 +1,46 @@
 <?php
+/**
+ * Handle data for the current customers session.
+ *
+ * @class    UR_Session
+ * @version  1.0.0
+ * @package  UserRegistration/Abstracts
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Handle data for the current customers session
- *
- * @class    UR_Session
- * @version  1.0.0
- * @package  UserRegistration/Abstracts
- * @category Abstract Class
- * @author   WPEverest
+ * UR_Session class.
  */
 abstract class UR_Session {
 
-	/** @var int $_customer_id */
+	/**
+	 * Customer ID.
+	 *
+	 * @var int customer id.
+	 */
 	protected $_customer_id;
 
-	/** @var array $_data  */
+	/**
+	 * Session Data.
+	 *
+	 * @var array Session Data.
+	 */
 	protected $_data = array();
 
-	/** @var bool $_dirty When something changes */
+	/**
+	 * When something changes.
+	 *
+	 * @var bool $_dirty When something changes.
+	 */
 	protected $_dirty = false;
 
 	/**
 	 * __get function.
 	 *
-	 * @param mixed $key
+	 * @param mixed $key Key.
 	 * @return mixed
 	 */
 	public function __get( $key ) {
@@ -36,8 +50,8 @@ abstract class UR_Session {
 	/**
 	 * __set function.
 	 *
-	 * @param mixed $key
-	 * @param mixed $value
+	 * @param mixed $key Key.
+	 * @param mixed $value Value.
 	 */
 	public function __set( $key, $value ) {
 		$this->set( $key, $value );
@@ -46,7 +60,7 @@ abstract class UR_Session {
 	 /**
 	  * __isset function.
 	  *
-	  * @param mixed $key
+	  * @param mixed $key Key.
 	  * @return bool
 	  */
 	public function __isset( $key ) {
@@ -56,7 +70,7 @@ abstract class UR_Session {
 	/**
 	 * __unset function.
 	 *
-	 * @param mixed $key
+	 * @param mixed $key Key.
 	 */
 	public function __unset( $key ) {
 		if ( isset( $this->_data[ $key ] ) ) {
@@ -68,8 +82,8 @@ abstract class UR_Session {
 	/**
 	 * Get a session variable.
 	 *
-	 * @param string $key
-	 * @param  mixed  $default used if the session variable isn't set
+	 * @param string $key Key.
+	 * @param  mixed  $default used if the session variable isn't set.
 	 * @return array|string value of session variable
 	 */
 	public function get( $key, $default = null ) {
@@ -81,8 +95,8 @@ abstract class UR_Session {
 	/**
 	 * Set a session variable.
 	 *
-	 * @param string $key
-	 * @param mixed  $value
+	 * @param string $key Key.
+	 * @param mixed  $value Value.
 	 */
 	public function set( $key, $value ) {
 		if ( $value !== $this->get( $key ) ) {
@@ -92,9 +106,8 @@ abstract class UR_Session {
 	}
 
 	/**
-	 * get_customer_id function.
+	 * Get customer id function.
 	 *
-	 * @access public
 	 * @return int
 	 */
 	public function get_customer_id() {

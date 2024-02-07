@@ -77,6 +77,11 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 		 * @return array
 		 */
 		public function get_settings() {
+			/**
+			 * Filter to retrieve the settings
+			 *
+			 * @param array Array of settings to be retrieved.
+			 */
 			return apply_filters( 'user_registration_get_settings_' . $this->id, array() );
 		}
 
@@ -86,6 +91,11 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 		 * @return array
 		 */
 		public function get_sections() {
+			/**
+			 * Filter to retrieve the sections.
+			 *
+			 * @param array Array of sections to retrieve.
+			 */
 			return apply_filters( 'user_registration_get_sections_' . $this->id, array() );
 		}
 
@@ -131,6 +141,11 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 			UR_Admin_Settings::save_fields( $settings );
 
 			if ( $current_section ) {
+				/**
+				 * Action to update the options.
+				 *
+				 * @param mixed $current_section Section to be updated.
+				 */
 				do_action( 'user_registration_update_options_' . $this->id . '_' . $current_section );
 			}
 		}

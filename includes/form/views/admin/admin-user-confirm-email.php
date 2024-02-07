@@ -1,6 +1,6 @@
 <?php
 /**
- * Form View: Input Type User Confirm_Email
+ * Form View: Input Type User Confirm_Email.
  *
  * @package UserRegistration/Form/Views/Admin/ConfirmEmail
  */
