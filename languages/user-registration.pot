@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-02-06T08:15:15+00:00\n"
+"POT-Creation-Date: 2024-02-07T09:50:48+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: user-registration\n"
@@ -1443,7 +1443,7 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-email.php:222
 #: includes/admin/settings/class-ur-settings-general.php:310
 #: includes/class-ur-smart-tags.php:49
-#: includes/class-ur-smart-tags.php:559
+#: includes/class-ur-smart-tags.php:563
 #: includes/functions-ur-core.php:1381
 msgid "Email"
 msgstr ""
@@ -2825,20 +2825,20 @@ msgstr ""
 msgid "Logs"
 msgstr ""
 
-#: includes/admin/views/html-admin-settings.php:35
+#: includes/admin/views/html-admin-settings.php:31
 msgid "Search Settings..."
 msgstr ""
 
-#: includes/admin/views/html-admin-settings.php:41
+#: includes/admin/views/html-admin-settings.php:37
 msgid "Hide Premium Features"
 msgstr ""
 
-#: includes/admin/views/html-admin-settings.php:77
+#: includes/admin/views/html-admin-settings.php:73
 msgid "Collapse Menu"
 msgstr ""
 
-#: includes/admin/views/html-admin-settings.php:109
-#: includes/admin/views/html-admin-settings.php:154
+#: includes/admin/views/html-admin-settings.php:103
+#: includes/admin/views/html-admin-settings.php:147
 msgid "Save Changes"
 msgstr ""
 
@@ -3910,123 +3910,123 @@ msgstr ""
 msgid "Sign out"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:547
+#: includes/class-ur-smart-tags.php:551
 msgid "Alpha"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:548
+#: includes/class-ur-smart-tags.php:552
 msgid "Alphanumeric"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:549
+#: includes/class-ur-smart-tags.php:553
 msgid "Color"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:550
+#: includes/class-ur-smart-tags.php:554
 msgid "Country Code (2 Character)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:551
+#: includes/class-ur-smart-tags.php:555
 msgid "Country Code (3 Character)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:552
+#: includes/class-ur-smart-tags.php:556
 msgid "Date (mm/dd)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:553
+#: includes/class-ur-smart-tags.php:557
 msgid "Date (dd/mm)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:554
+#: includes/class-ur-smart-tags.php:558
 msgid "Date (mm.dd.yyyy)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:555
+#: includes/class-ur-smart-tags.php:559
 msgid "Date (dd.mm.yyyy)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:556
+#: includes/class-ur-smart-tags.php:560
 msgid "Date (yyyy-mm-dd)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:557
+#: includes/class-ur-smart-tags.php:561
 msgid "Date (mm/dd/yyyy)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:558
+#: includes/class-ur-smart-tags.php:562
 msgid "Date (dd/mm/yyyy)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:560
+#: includes/class-ur-smart-tags.php:564
 msgid "IP (Version 4)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:561
+#: includes/class-ur-smart-tags.php:565
 msgid "IP (Version 6)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:562
+#: includes/class-ur-smart-tags.php:566
 msgid "ISBN"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:563
+#: includes/class-ur-smart-tags.php:567
 msgid "Latitude or Longitude"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:564
+#: includes/class-ur-smart-tags.php:568
 msgid "Numeric"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:565
+#: includes/class-ur-smart-tags.php:569
 msgid "Password (Numeric, lower, upper)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:566
+#: includes/class-ur-smart-tags.php:570
 msgid "Password (Numeric, lower, upper, min 8)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:567
+#: includes/class-ur-smart-tags.php:571
 msgid "Phone - General"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:568
+#: includes/class-ur-smart-tags.php:572
 msgid "Phone - UK"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:569
+#: includes/class-ur-smart-tags.php:573
 msgid "Phone - US: 123-456-7890"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:570
+#: includes/class-ur-smart-tags.php:574
 msgid "Phone - US: (123)456-7890"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:571
+#: includes/class-ur-smart-tags.php:575
 msgid "Phone - US: Flexible"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:572
+#: includes/class-ur-smart-tags.php:576
 msgid "Postal Code (UK)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:573
+#: includes/class-ur-smart-tags.php:577
 msgid "Price (1.23)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:574
+#: includes/class-ur-smart-tags.php:578
 msgid "Slug"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:575
+#: includes/class-ur-smart-tags.php:579
 msgid "Time (hh:mm:ss)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:576
+#: includes/class-ur-smart-tags.php:580
 msgid "URL"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:577
+#: includes/class-ur-smart-tags.php:581
 msgid "Zip Code"
 msgstr ""
 
