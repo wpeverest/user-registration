@@ -245,6 +245,9 @@
 .ur-icon-multichoice::before {
   content: ""; }
 
+.ur-icon-subscription-plan::before {
+  content: ""; }
+
 .ur-icon-total::before {
   content: ""; }
 
@@ -784,23 +787,24 @@ input.ur-input-border-red, textarea.ur-input-border-red {
         border-right: 0 none; }
       .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item {
         margin-bottom: 20px; }
-        .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-multiple_choice ul, .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-checkbox ul, .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-radio ul {
+        .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-multiple_choice ul, .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-subscription_plan ul, .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-checkbox ul, .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-radio ul {
           margin: 0;
           list-style: none; }
-          .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-multiple_choice ul li, .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-checkbox ul li, .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-radio ul li {
+          .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-multiple_choice ul li, .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-subscription_plan ul li, .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-checkbox ul li, .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-radio ul li {
             margin-right: 0;
             line-height: 1.3;
             vertical-align: middle;
             margin-bottom: 10px; }
             .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-multiple_choice ul li input,
-            .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-multiple_choice ul li label, .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-checkbox ul li input,
+            .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-multiple_choice ul li label, .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-subscription_plan ul li input,
+            .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-subscription_plan ul li label, .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-checkbox ul li input,
             .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-checkbox ul li label, .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-radio ul li input,
             .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-radio ul li label {
               display: inline-block;
               vertical-align: inherit; }
-            .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-multiple_choice ul li input[type="checkbox"], .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-multiple_choice ul li input[type="radio"], .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-checkbox ul li input[type="checkbox"], .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-checkbox ul li input[type="radio"], .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-radio ul li input[type="checkbox"], .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-radio ul li input[type="radio"] {
+            .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-multiple_choice ul li input[type="checkbox"], .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-multiple_choice ul li input[type="radio"], .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-subscription_plan ul li input[type="checkbox"], .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-subscription_plan ul li input[type="radio"], .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-checkbox ul li input[type="checkbox"], .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-checkbox ul li input[type="radio"], .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-radio ul li input[type="checkbox"], .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-radio ul li input[type="radio"] {
               margin-top: 2px; }
-            .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-multiple_choice ul li label, .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-checkbox ul li label, .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-radio ul li label {
+            .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-multiple_choice ul li label, .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-subscription_plan ul li label, .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-checkbox ul li label, .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-radio ul li label {
               display: inline; }
         .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item:last-child {
           margin-bottom: 0; }

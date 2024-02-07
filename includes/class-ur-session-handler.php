@@ -303,7 +303,7 @@ class UR_Session_Handler extends UR_Session {
 		if ( ! defined( 'WP_SETUP_CONFIG' ) && ! defined( 'WP_INSTALLING' ) ) {
 
 			// Delete expired sessions.
-			$wpdb->query( $wpdb->prepare( 'DELETE FROM %s WHERE session_expiry < %d', $this->_table, time() ) );
+			$wpdb->query( $wpdb->prepare( "DELETE FROM `{$this->_table}` WHERE session_expiry < %d", time() ) );
 
 			// Invalidate cache.
 			$this->incr_cache_prefix();
@@ -328,7 +328,7 @@ class UR_Session_Handler extends UR_Session {
 		$value = wp_cache_get( $this->get_cache_prefix() . $customer_id, UR_SESSION_CACHE_GROUP );
 
 		if ( false === $value ) {
-			$value = $wpdb->get_var( $wpdb->prepare( 'SELECT session_value FROM %s WHERE session_key = %s', $this->_table, $customer_id ) );
+			$value = $wpdb->get_var( $wpdb->prepare( "SELECT session_value FROM `{$this->_table}` WHERE session_key = %s", $customer_id ) );
 
 			if ( is_null( $value ) ) {
 				$value = $default;
