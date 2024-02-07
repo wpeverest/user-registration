@@ -234,7 +234,11 @@ class UR_Preview {
 				$default_content = 'user_registration_get_' . $option_name;
 			}
 
-			$email_content = get_option( 'user_registration_' . $option_name, $class_instance->$default_content() );
+			if ( 'passwordless_login_email' === $option_name ) {
+				$email_content = get_option( 'user_registration_' . $option_name . '_content', $class_instance->$default_content() );
+			} else {
+				$email_content = get_option( 'user_registration_' . $option_name, $class_instance->$default_content() );
+			}
 			/**
 			 * Filter to process the smart tags.
 			 *
