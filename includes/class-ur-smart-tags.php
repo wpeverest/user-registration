@@ -443,8 +443,10 @@ class UR_Smart_Tags {
 						$content       = str_replace( '{{' . $tag . '}}', wp_kses_post( $sign_out_link ), $content );
 						break;
 					case 'passwordless_login_link':
-						$passwordless_login_link = '<a href="' . esc_url( $values['passwordless_login_link'] ) . '"></a>';
-						$content       = str_replace( '{{' . $tag . '}}', wp_kses_post( $passwordless_login_link ), $content );
+						if ( isset( $values['passwordless_login_link'] ) ) {
+							$passwordless_login_link = '<a href="' . esc_url( $values['passwordless_login_link'] ) . '"></a>';
+							$content       = str_replace( '{{' . $tag . '}}', wp_kses_post( $passwordless_login_link ), $content );
+						}
 						break;
 
 				}
