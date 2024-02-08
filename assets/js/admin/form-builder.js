@@ -4982,7 +4982,14 @@
 							.hasClass("ur-general-setting-multiple_choice")
 					) {
 						URFormBuilder.render_multiple_choice($any_siblings);
+					} else if (
+						$any_siblings
+							.closest(".ur-general-setting-block")
+							.hasClass("ur-general-setting-subscription_plan")
+					) {
+						URFormBuilder.render_subscription_plan($any_siblings);
 					}
+
 				}
 
 				$(document.body).trigger("ur_field_option_changed", [
