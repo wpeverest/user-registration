@@ -329,9 +329,10 @@ class UR_Smart_Tags {
 						break;
 
 					case 'form_name':
-						$current_form_id = isset( $values['form_id'] );
-						$form_name       = ucfirst( get_the_title( $current_form_id ) );
-						$content         = str_replace( '{{' . $other_tag . '}}', $form_name, $content );
+						if ( isset( $values['form_id'] ) ) {
+							$form_name = ucfirst( get_the_title( $values['form_id'] ) );
+							$content   = str_replace( '{{' . $other_tag . '}}', $form_name, $content );
+						}
 						break;
 
 					case 'user_ip_address':
