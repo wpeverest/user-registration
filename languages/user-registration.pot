@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-02-07T09:50:48+00:00\n"
+"POT-Creation-Date: 2024-02-08T08:34:58+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: user-registration\n"
@@ -36,12 +36,12 @@ msgstr ""
 msgid "https://wpeverest.com"
 msgstr ""
 
-#: includes/abstracts/abstract-ur-form-field.php:982
+#: includes/abstracts/abstract-ur-form-field.php:985
 #: src/components/App.js:61
 msgid "General Settings"
 msgstr ""
 
-#: includes/abstracts/abstract-ur-form-field.php:992
+#: includes/abstracts/abstract-ur-form-field.php:995
 msgid "Advanced Settings"
 msgstr ""
 
@@ -1443,7 +1443,7 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-email.php:222
 #: includes/admin/settings/class-ur-settings-general.php:310
 #: includes/class-ur-smart-tags.php:49
-#: includes/class-ur-smart-tags.php:563
+#: includes/class-ur-smart-tags.php:564
 #: includes/functions-ur-core.php:1381
 msgid "Email"
 msgstr ""
@@ -2337,11 +2337,11 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-confirm-email-address-change-email.php:95
 msgid ""
-"Dear {{display_name}},\r\n"
-"\t\t\t\t\t\t\t<p>You recently requested to change your email address associated with your account to {{updated_new_user_email}} . </p>\r\n"
-"\t\t\t\t\t\t\t<p>To confirm this change, please click on the following link:\r\n"
-"\t\t\t\t\t\t<a href=\"{{email_change_confirmation_link}}\">Click here </a> This link will only be active for 24 hours.If you did not request this change, please ignore this email or contact us for assistance.</p>\r\n"
-"\t\t\t\t<p>Best regards,<br/>\r\n"
+"Dear {{display_name}},\n"
+"\t\t\t\t\t\t\t<p>You recently requested to change your email address associated with your account to {{updated_new_user_email}} . </p>\n"
+"\t\t\t\t\t\t\t<p>To confirm this change, please click on the following link: {{email_change_confirmation_link}}\n"
+"\t\t\t\t\t\t\tThis link will only be active for 24 hours.If you did not request this change, please ignore this email or contact us for assistance.</p>\n"
+"\t\t\t\t<p>Best regards,<br/>\n"
 "\t\t\t\t {{blog_info}}</p>"
 msgstr ""
 
@@ -3236,13 +3236,13 @@ msgstr ""
 
 #: includes/class-ur-emailer.php:483
 #: includes/class-ur-emailer.php:555
-#: includes/class-ur-smart-tags.php:419
+#: includes/class-ur-smart-tags.php:420
 msgid "Approve Now"
 msgstr ""
 
 #: includes/class-ur-emailer.php:484
 #: includes/class-ur-emailer.php:556
-#: includes/class-ur-smart-tags.php:451
+#: includes/class-ur-smart-tags.php:452
 msgid "Deny Now"
 msgstr ""
 
@@ -3894,139 +3894,139 @@ msgstr ""
 msgid "Unique ID"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:436
+#: includes/class-ur-smart-tags.php:437
 msgid "confirm link"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:484
+#: includes/class-ur-smart-tags.php:485
 msgid "profile details"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:488
+#: includes/class-ur-smart-tags.php:489
 msgid "edit your password"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:492
+#: includes/class-ur-smart-tags.php:493
 msgid "Sign out"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:551
+#: includes/class-ur-smart-tags.php:552
 msgid "Alpha"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:552
+#: includes/class-ur-smart-tags.php:553
 msgid "Alphanumeric"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:553
+#: includes/class-ur-smart-tags.php:554
 msgid "Color"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:554
+#: includes/class-ur-smart-tags.php:555
 msgid "Country Code (2 Character)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:555
+#: includes/class-ur-smart-tags.php:556
 msgid "Country Code (3 Character)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:556
+#: includes/class-ur-smart-tags.php:557
 msgid "Date (mm/dd)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:557
+#: includes/class-ur-smart-tags.php:558
 msgid "Date (dd/mm)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:558
+#: includes/class-ur-smart-tags.php:559
 msgid "Date (mm.dd.yyyy)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:559
+#: includes/class-ur-smart-tags.php:560
 msgid "Date (dd.mm.yyyy)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:560
+#: includes/class-ur-smart-tags.php:561
 msgid "Date (yyyy-mm-dd)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:561
+#: includes/class-ur-smart-tags.php:562
 msgid "Date (mm/dd/yyyy)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:562
+#: includes/class-ur-smart-tags.php:563
 msgid "Date (dd/mm/yyyy)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:564
+#: includes/class-ur-smart-tags.php:565
 msgid "IP (Version 4)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:565
+#: includes/class-ur-smart-tags.php:566
 msgid "IP (Version 6)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:566
+#: includes/class-ur-smart-tags.php:567
 msgid "ISBN"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:567
+#: includes/class-ur-smart-tags.php:568
 msgid "Latitude or Longitude"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:568
+#: includes/class-ur-smart-tags.php:569
 msgid "Numeric"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:569
+#: includes/class-ur-smart-tags.php:570
 msgid "Password (Numeric, lower, upper)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:570
+#: includes/class-ur-smart-tags.php:571
 msgid "Password (Numeric, lower, upper, min 8)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:571
+#: includes/class-ur-smart-tags.php:572
 msgid "Phone - General"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:572
+#: includes/class-ur-smart-tags.php:573
 msgid "Phone - UK"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:573
+#: includes/class-ur-smart-tags.php:574
 msgid "Phone - US: 123-456-7890"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:574
+#: includes/class-ur-smart-tags.php:575
 msgid "Phone - US: (123)456-7890"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:575
+#: includes/class-ur-smart-tags.php:576
 msgid "Phone - US: Flexible"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:576
+#: includes/class-ur-smart-tags.php:577
 msgid "Postal Code (UK)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:577
+#: includes/class-ur-smart-tags.php:578
 msgid "Price (1.23)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:578
+#: includes/class-ur-smart-tags.php:579
 msgid "Slug"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:579
+#: includes/class-ur-smart-tags.php:580
 msgid "Time (hh:mm:ss)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:580
+#: includes/class-ur-smart-tags.php:581
 msgid "URL"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:581
+#: includes/class-ur-smart-tags.php:582
 msgid "Zip Code"
 msgstr ""
 
