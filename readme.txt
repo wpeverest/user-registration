@@ -358,7 +358,7 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 
 == Changelog ==
 
-= 3.1.4    - 08/02/2024
+= 3.1.4    - 12/02/2024
 * Feature  - Deny Smart Tag in Admin Approval.
 * Tweak    - From address going wrong in some emails.
 * Tweak    - Docs comments for developer documentation.
