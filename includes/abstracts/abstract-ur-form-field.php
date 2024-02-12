@@ -396,12 +396,20 @@ abstract class UR_Form_Field {
 
 			if ( is_array( $option_data ) ) {
 				foreach ( $option_data as $index_data => $option ) {
-					$options[ $option->label ] = array(
-						'label'      => $option->label,
-						'value'      => $option->value,
-						'sell_value' => $option->sell_value,
-						'image'      => $option->image,
-					);
+					if ( isset( $data['general_setting']->image_choice ) && ur_string_to_bool( $data['general_setting']->image_choice ) ) {
+						$options[ $option->label ] = array(
+							'label'      => $option->label,
+							'value'      => $option->value,
+							'sell_value' => $option->sell_value,
+							'image'      => $option->image,
+						);
+					} else {
+						$options[ $option->label ] = array(
+							'label'      => $option->label,
+							'value'      => $option->value,
+							'sell_value' => $option->sell_value,
+						);
+					}
 				}
 
 				$form_data['options'] = $options;
