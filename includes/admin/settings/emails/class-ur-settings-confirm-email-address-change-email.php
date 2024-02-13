@@ -95,8 +95,8 @@ if ( ! class_exists( 'UR_Settings_Confirm_Email_Address_Change_Email', false ) )
 						__(
 							'Dear {{display_name}},
 							<p>You recently requested to change your email address associated with your account to {{updated_new_user_email}} . </p>
-							<p>To confirm this change, please click on the following link:
-						<a href="{{email_change_confirmation_link}}">Click here </a> This link will only be active for 24 hours.If you did not request this change, please ignore this email or contact us for assistance.</p>
+							<p>To confirm this change, please click on the following link: {{email_change_confirmation_link}}
+							This link will only be active for 24 hours.If you did not request this change, please ignore this email or contact us for assistance.</p>
 				<p>Best regards,<br/>
 				 {{blog_info}}</p>',
 							'user-registration'

@@ -396,12 +396,20 @@ abstract class UR_Form_Field {
 
 			if ( is_array( $option_data ) ) {
 				foreach ( $option_data as $index_data => $option ) {
-					$options[ $option->label ] = array(
-						'label'      => $option->label,
-						'value'      => $option->value,
-						'sell_value' => $option->sell_value,
-						'image'      => $option->image,
-					);
+					if ( isset( $data['general_setting']->image_choice ) && ur_string_to_bool( $data['general_setting']->image_choice ) ) {
+						$options[ $option->label ] = array(
+							'label'      => $option->label,
+							'value'      => $option->value,
+							'sell_value' => $option->sell_value,
+							'image'      => $option->image,
+						);
+					} else {
+						$options[ $option->label ] = array(
+							'label'      => $option->label,
+							'value'      => $option->value,
+							'sell_value' => $option->sell_value,
+						);
+					}
 				}
 
 				$form_data['options'] = $options;
@@ -593,7 +601,7 @@ abstract class UR_Form_Field {
 					}
 					$disabled = '';
 					// To make invite code field name non editable.
-					if ( 'learndash_course' === $value || 'invite_code' === $value || 'profile_pic_url' === $value ) {
+					if ( 'learndash_course' === $value || 'invite_code' === $value || 'profile_pic_url' === $value || 'subscription_plan' === $value ) {
 						$disabled = 'disabled';
 					}
 					$general_setting_wrapper .= $extra_attribute . ' ' . $disabled . '/>';
@@ -634,6 +642,7 @@ abstract class UR_Form_Field {
 							$label                    = is_array( $option ) ? $option['label'] : $option->label;
 							$image                    = is_array( $option ) ? $option['image'] : $option->image;
 							$style                    = ( empty( $image ) ) ? 'style="display: none;"' : '';
+							$media_style              = ( ! empty( $image ) ) ? 'style="display: none;"' : '';
 							$general_setting_wrapper .= '<li>';
 							$general_setting_wrapper .= '<div class="ur-options-value-wrapper"><div class="editor-block-mover__control-drag-handle editor-block-mover__control">
 							<svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" role="img" aria-hidden="true" focusable="false"><path d="M13,8c0.6,0,1-0.4,1-1s-0.4-1-1-1s-1,0.4-1,1S12.4,8,13,8z M5,6C4.4,6,4,6.4,4,7s0.4,1,1,1s1-0.4,1-1S5.6,6,5,6z M5,10 c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S5.6,10,5,10z M13,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S13.6,10,13,10z M9,6 C8.4,6,8,6.4,8,7s0.4,1,1,1s1-0.4,1-1S9.6,6,9,6z M9,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S9.6,10,9,10z"></path></svg>
@@ -652,14 +661,14 @@ abstract class UR_Form_Field {
 							if ( 'radio' === $strip_prefix ) {
 								$general_setting_wrapper .= '<div class="ur-image-choice-wrapper">';
 								$general_setting_wrapper .= '<input type="hidden" class="ur-general-setting-field ur-type-image-choice" data-field="' . esc_attr( $setting_key ) . '" data-field-name="image-choice" name="' . esc_attr( $unique ) . '_image" value="' . esc_url( $image ) . '">';
-								$general_setting_wrapper .= '<button type="button" class="upload-button ur-media-btn">Upload Image</button>';
+								$general_setting_wrapper .= '<button type="button" class="upload-button ur-media-btn" ' . $media_style . '>Upload Image</button>';
 								$general_setting_wrapper .= '<div class="ur-thumbnail-image" style="max-width:100px;max-height:100px;overflow:hidden;"><img src="' . esc_url( $image ) . '" style="max-width:100%;"></div>';
 								$general_setting_wrapper .= '<div class="ur-actions"><button type="button" class="button ur-remove-btn" ' . $style . '>Remove</button></div></div>';
 							}
 							$general_setting_wrapper .= '</li>';
 
 						}
-					} if ( 'subscription_plan' === $strip_prefix ) {
+					} elseif ( 'subscription_plan' === $strip_prefix ) {
 
 						foreach ( $options as $key => $option ) {
 							$label                = is_array( $option ) ? $option['label'] : $option->label;
@@ -688,7 +697,7 @@ abstract class UR_Form_Field {
 						}
 					} else {
 						foreach ( $options as  $option ) {
-							$radio_field_options .= '<li>';
+							$radio_field_options  = '<li>';
 							$radio_field_options .= '<div class="ur-options-value-wrapper"><div class="editor-block-mover__control-drag-handle editor-block-mover__control">
 							<svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" role="img" aria-hidden="true" focusable="false"><path d="M13,8c0.6,0,1-0.4,1-1s-0.4-1-1-1s-1,0.4-1,1S12.4,8,13,8z M5,6C4.4,6,4,6.4,4,7s0.4,1,1,1s1-0.4,1-1S5.6,6,5,6z M5,10 c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S5.6,10,5,10z M13,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S13.6,10,13,10z M9,6 C8.4,6,8,6.4,8,7s0.4,1,1,1s1-0.4,1-1S9.6,6,9,6z M9,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S9.6,10,9,10z"></path></svg>
 							</div>';
@@ -704,7 +713,7 @@ abstract class UR_Form_Field {
 							$radio_field_options .= '<a class="add" href="#"><i class="dashicons dashicons-plus"></i></a>';
 							$radio_field_options .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a></div>';
 							if ( 'radio' === $strip_prefix ) {
-								$radio_field_options .= '<div class="ur-image-choice-wrapper">';
+								$radio_field_options .= '<div class="ur-image-choice-wrapper" style="display:none;">';
 								$radio_field_options .= '<input type="hidden" class="ur-general-setting-field ur-type-image-choice" data-field="' . esc_attr( $setting_key ) . '" data-field-name="image-choice" name="' . esc_attr( $unique ) . '_image" value="">';
 								$radio_field_options .= '<button type="button" class="upload-button ur-media-btn">Upload Image</button>';
 								$radio_field_options .= '<div class="ur-thumbnail-image" style="max-width:100px;max-height:100px;overflow:hidden;"><img src="" style="max-width:100%;"></div>';
@@ -758,6 +767,7 @@ abstract class UR_Form_Field {
 							$sell_value               = ( is_array( $option ) && isset( $option['sell_value'] ) ) ? $option['sell_value'] : ( ( is_object( $option ) && isset( $option->sell_value ) ) ? $option->sell_value : null );
 							$image                    = ( is_array( $option ) && isset( $option['image'] ) ) ? $option['image'] : ( ( is_object( $option ) && isset( $option->image ) ) ? $option->image : null );
 							$style                    = ( empty( $image ) ) ? 'style="display: none;"' : '';
+							$media_style              = ( ! empty( $image ) ) ? 'style="display: none;"' : '';
 							$currency                 = get_option( 'user_registration_payment_currency', 'USD' );
 							$currencies               = ur_payment_integration_get_currencies();
 							$currency                 = $currency . ' ' . $currencies[ $currency ]['symbol'];
@@ -781,8 +791,8 @@ abstract class UR_Form_Field {
 							$general_setting_wrapper .= '<a class="add" href="#"><i class="dashicons dashicons-plus"></i></a>';
 							$general_setting_wrapper .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a></div>';
 							$general_setting_wrapper .= '<div class="ur-image-choice-wrapper">';
-							$general_setting_wrapper .= '<input type="hidden" class="ur-general-setting-field ur-type-image-choice" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" name="' . esc_attr( $unique ) . '_image" value="'. esc_url( $image ) . '">';
-							$general_setting_wrapper .= '<button type="button" class="upload-button ur-media-btn">Upload Image</button>';
+							$general_setting_wrapper .= '<input type="hidden" class="ur-general-setting-field ur-type-image-choice" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" name="' . esc_attr( $unique ) . '_image" value="' . esc_url( $image ) . '">';
+							$general_setting_wrapper .= '<button type="button" class="upload-button ur-media-btn" ' . $media_style . '>Upload Image</button>';
 							$general_setting_wrapper .= '<div class="ur-thumbnail-image" style="max-width:100px;max-height:100px;overflow:hidden;"><img src="' . esc_url( $image ) . '" style="max-width:100%;"></div>';
 							$general_setting_wrapper .= '<div class="ur-actions"><button type="button" class="button ur-remove-btn" ' . $style . '>Remove</button></div></div>';
 							$general_setting_wrapper .= '</li>';
@@ -792,6 +802,7 @@ abstract class UR_Form_Field {
 							$label                    = is_array( $option ) ? $option['label'] : $option->label;
 							$image                    = is_array( $option ) ? $option['image'] : $option->image;
 							$style                    = ( empty( $image ) ) ? 'style="display: none;"' : '';
+							$media_style              = ( ! empty( $image ) ) ? 'style="display: none;"' : '';
 							$general_setting_wrapper .= '<li>';
 							$general_setting_wrapper .= '<div class="ur-options-value-wrapper"><div class="editor-block-mover__control-drag-handle editor-block-mover__control">
 							<svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" role="img" aria-hidden="true" focusable="false"><path d="M13,8c0.6,0,1-0.4,1-1s-0.4-1-1-1s-1,0.4-1,1S12.4,8,13,8z M5,6C4.4,6,4,6.4,4,7s0.4,1,1,1s1-0.4,1-1S5.6,6,5,6z M5,10 c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S5.6,10,5,10z M13,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S13.6,10,13,10z M9,6 C8.4,6,8,6.4,8,7s0.4,1,1,1s1-0.4,1-1S9.6,6,9,6z M9,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S9.6,10,9,10z"></path></svg>
@@ -813,8 +824,8 @@ abstract class UR_Form_Field {
 							$general_setting_wrapper .= '<a class="add" href="#"><i class="dashicons dashicons-plus"></i></a>';
 							$general_setting_wrapper .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a></div>';
 							$general_setting_wrapper .= '<div class="ur-image-choice-wrapper">';
-							$general_setting_wrapper .= '<input type="hidden" class="ur-general-setting-field ur-type-image-choice" data-field="' . esc_attr( $setting_key ) . '" data-field-name="image-choice" name="' . esc_attr( $unique ) . '_image" value="'. esc_url( $image ) . '">';
-							$general_setting_wrapper .= '<button type="button" class="upload-button ur-media-btn">Upload Image</button>';
+							$general_setting_wrapper .= '<input type="hidden" class="ur-general-setting-field ur-type-image-choice" data-field="' . esc_attr( $setting_key ) . '" data-field-name="image-choice" name="' . esc_attr( $unique ) . '_image" value="' . esc_url( $image ) . '">';
+							$general_setting_wrapper .= '<button type="button" class="upload-button ur-media-btn" ' . $media_style . '>Upload Image</button>';
 							$general_setting_wrapper .= '<div class="ur-thumbnail-image" style="max-width:100px;max-height:100px;overflow:hidden;"><img src="' . esc_url( $image ) . '" style="max-width:100%;"></div>';
 							$general_setting_wrapper .= '<div class="ur-actions"><button type="button" class="button ur-remove-btn" ' . $style . '>Remove</button></div></div>';
 							$general_setting_wrapper .= '</li>';
@@ -843,7 +854,7 @@ abstract class UR_Form_Field {
 
 							$general_setting_wrapper .= '<a class="add" href="#"><i class="dashicons dashicons-plus"></i></a>';
 							$general_setting_wrapper .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a></div>';
-							$general_setting_wrapper .= '<div class="ur-image-choice-wrapper">';
+							$general_setting_wrapper .= '<div class="ur-image-choice-wrapper" style="display:none;">';
 							$general_setting_wrapper .= '<input type="hidden" class="ur-general-setting-field ur-type-image-choice" data-field="' . esc_attr( $setting_key ) . '" data-field-name="image-choice" name="' . esc_attr( $unique ) . '_image" value="">';
 							$general_setting_wrapper .= '<button type="button" class="upload-button ur-media-btn">Upload Image</button>';
 							$general_setting_wrapper .= '<div class="ur-thumbnail-image" style="max-width:100px;max-height:100px;overflow:hidden;"><img src="" style="max-width:100%;"></div>';

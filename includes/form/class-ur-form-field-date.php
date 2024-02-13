@@ -210,7 +210,7 @@ class UR_Form_Field_Date extends UR_Form_Field {
 	 * @return void
 	 */
 	private function validate_max_date( $date, $max_date, $filter_hook, $field_label ) {
-		$date_timestamp     = strtotime( $date );
+		$date_timestamp     = strtotime( str_replace( '/', '-', $date ) );
 		$max_date_timestamp = strtotime( $max_date );
 
 		if ( $date_timestamp > $max_date_timestamp ) {

@@ -358,7 +358,7 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 
 == Changelog ==
 
-= 3.1.4    - 08/02/2024
+= 3.1.4    - 12/02/2024
 * Feature  - Deny Smart Tag in Admin Approval.
 * Tweak    - From address going wrong in some emails.
 * Tweak    - Docs comments for developer documentation.
@@ -369,6 +369,11 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 * Dev      - Compatibility for subscription plan feature.
 * Dev      - Compatibility for the payment invoice feature.
 * Dev      - Compatibility for trail period in subscription feature.
+* Dev      - Compatibility for passwordless login email content modification.
+* Fix      - Date format for date field.
+* Fix      - Undefined index post_content.
+* Fix      - Fatal error in log handler file.
+* Fix      - Live user registered notice js error.
 * Fix      - Remove extra password field value in mail.
 * Fix      - Country Field default value none Frontend Issue.
 * Fix      - Checkbox not updating properly on profile update when all unchecked.

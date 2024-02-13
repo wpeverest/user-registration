@@ -1631,6 +1631,7 @@
 								this.single_row();
 								this.manage_required_fields();
 								this.manage_label_hidden_fields();
+								this.manage_image_choice_class();
 							},
 							single_row: function () {
 								if (
@@ -1792,6 +1793,28 @@
 												.find(".ur-label")
 												.find("label")
 												.show();
+										}
+									}
+								);
+							},
+							/**
+							 * toggleclass if image choice option is enabled.
+							 */
+							manage_image_choice_class: function () {
+								$('input[data-field="image_choice"]').each(
+									function () {
+										if ($(this).is(":checked")) {
+											$(this)
+												.closest(".ur-selected-item")
+												.find(".ur-admin-template")
+												.find(".ur-field")
+												.addClass("user-registration-image-options");
+										} else {
+											$(this)
+												.closest(".ur-selected-item")
+												.find(".ur-admin-template")
+												.find(".ur-field")
+												.removeClass("user-registration-image-options");
 										}
 									}
 								);
@@ -4959,7 +4982,14 @@
 							.hasClass("ur-general-setting-multiple_choice")
 					) {
 						URFormBuilder.render_multiple_choice($any_siblings);
+					} else if (
+						$any_siblings
+							.closest(".ur-general-setting-block")
+							.hasClass("ur-general-setting-subscription_plan")
+					) {
+						URFormBuilder.render_subscription_plan($any_siblings);
 					}
+
 				}
 
 				$(document.body).trigger("ur_field_option_changed", [
