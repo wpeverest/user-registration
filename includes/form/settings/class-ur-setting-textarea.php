@@ -52,7 +52,7 @@ class UR_Setting_Textarea extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => 'false',
 				'placeholder' => '',
-				'tip'         => __( 'Allowed maximum number of characters / words.', 'user-registration' ),
+				'tip'         => __( 'Allow Limiting of Length.', 'user-registration' ),
 			),
 			'limit_length_limit_count'   => array(
 				'label'       => __( 'Limit Count', 'user-registration' ),
@@ -78,7 +78,7 @@ class UR_Setting_Textarea extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => 'characters',
 				'placeholder' => '',
-				'tip'         => __( 'Allowed maximum number of characters / words.', 'user-registration' ),
+				'tip'         => __( 'Maximum limit by characters / words.', 'user-registration' ),
 			),
 			'minimum_length'             => array(
 				'label'       => __( 'Minimum Length', 'user-registration' ),
@@ -89,7 +89,7 @@ class UR_Setting_Textarea extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => 'false',
 				'placeholder' => '',
-				'tip'         => __( 'Allowed maximum number of characters / words.', 'user-registration' ),
+				'tip'         => __( 'Allow Minimizing of Length.', 'user-registration' ),
 			),
 			'minimum_length_limit_count' => array(
 				'label'       => __( 'Limit Count', 'user-registration' ),
@@ -100,7 +100,7 @@ class UR_Setting_Textarea extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => 100,
 				'placeholder' => '',
-				'tip'         => __( 'Allowed maximum number of characters / words.', 'user-registration' ),
+				'tip'         => __( 'Allowed minimum number of characters / words.', 'user-registration' ),
 			),
 			'minimum_length_limit_mode'  => array(
 				'label'       => __( 'Limit Mode', 'user-registration' ),
@@ -115,7 +115,7 @@ class UR_Setting_Textarea extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => 'characters',
 				'placeholder' => '',
-				'tip'         => __( 'Allowed maximum number of characters / words.', 'user-registration' ),
+				'tip'         => __( 'Minimum limit by characters / words.', 'user-registration' ),
 			),
 			'default_value'              => array(
 				'label'       => __( 'Default Value', 'user-registration' ),
