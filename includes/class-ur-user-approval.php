@@ -1,4 +1,5 @@
 <?php
+
 /**
  * User Registration User Approval.
  *
@@ -7,35 +8,37 @@
  * @package  UserRegistration/Classes
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
+if (!defined('ABSPATH')) {
 	exit;
 }
 
 /**
  * Class UR_User_Approval
  */
-class UR_User_Approval {
+class UR_User_Approval
+{
 
 	/**
 	 * UR_User_Approval constructor.
 	 */
-	public function __construct() {
+	public function __construct()
+	{
 
 		// -------------------- ACTIONS & FILTERS --------------------
 		// Additional checks
-		add_action( 'after_setup_theme', array( $this, 'check_status_on_page' ) );
+		add_action('after_setup_theme', array($this, 'check_status_on_page'));
 
 		// Handle user Sign in.
-		add_action( 'user_registration_after_register_user_action', array( $this, 'set_user_status' ), 10, 3 );
-		add_action( 'user_register', array( $this, 'send_request_notification_to_admin' ), 10, 1 );
-		add_filter( 'wp_login_errors', array( $this, 'registration_completed_message' ) );
+		add_action('user_registration_after_register_user_action', array($this, 'set_user_status'), 10, 3);
+		add_action('user_register', array($this, 'send_request_notification_to_admin'), 10, 1);
+		add_filter('wp_login_errors', array($this, 'registration_completed_message'));
 
 		// Handle user Sign on.
-		add_action( 'wp_login', array( $this, 'track_first_login' ), 10, 2 );
-		add_filter( 'wp_authenticate_user', array( $this, 'check_status_on_login' ), 10, 2 );
+		add_action('wp_login', array($this, 'track_first_login'), 10, 2);
+		add_filter('wp_authenticate_user', array($this, 'check_status_on_login'), 10, 2);
 
 		// Handle Lost Password Page.
-		add_filter( 'allow_password_reset', array( $this, 'allow_password_reset' ), 10, 2 );
+		add_filter('allow_password_reset', array($this, 'allow_password_reset'), 10, 2);
 
 		// When the approval status of an user change.
 		add_action(
@@ -47,13 +50,13 @@ class UR_User_Approval {
 			10,
 			3
 		);
-		add_action( 'ur_user_user_denied', array( $this, 'disconnect_user_session' ) );
+		add_action('ur_user_user_denied', array($this, 'disconnect_user_session'));
 		/**
 		 * Executes an action when constructing a user.
 		 *
 		 * The 'ur_user_construct' action is triggered during the construction of a user.
 		 */
-		do_action( 'ur_user_construct' );
+		do_action('ur_user_construct');
 	}
 
 	/**
@@ -62,9 +65,10 @@ class UR_User_Approval {
 	 * @param array $errors Errors.
 	 * @return mixed
 	 */
-	public function registration_completed_message( $errors ) {
+	public function registration_completed_message($errors)
+	{
 
-		if ( ! ( isset( $_GET['checkemail'] ) && 'registered' === $_GET['checkemail'] ) ) {
+		if (!(isset($_GET['checkemail']) && 'registered' === $_GET['checkemail'])) {
 			return $errors;
 		}
 
@@ -77,12 +81,13 @@ class UR_User_Approval {
 	 * @param  mixed $user_login Username.
 	 * @param  mixed $user Users Object.
 	 */
-	public function track_first_login( $user_login, $user ) {
+	public function track_first_login($user_login, $user)
+	{
 
-		$form_id = ur_get_form_id_by_userid( $user->ID );
+		$form_id = ur_get_form_id_by_userid($user->ID);
 
-		if ( 'admin_approval' === ur_get_user_login_option( $user->ID ) ) {
-			$user_manager = new UR_Admin_User_Manager( $user );
+		if ('admin_approval' === ur_get_user_login_option($user->ID)) {
+			$user_manager = new UR_Admin_User_Manager($user);
 			$user_manager->save_first_access_flag();
 		}
 	}
@@ -95,29 +100,30 @@ class UR_User_Approval {
 	 * @param int   $user_id User ID.
 	 * @param mixed $alert_user Alert User.
 	 */
-	public function send_notification_to_user_about_status_changing( $status, $user_id, $alert_user ) {
+	public function send_notification_to_user_about_status_changing($status, $user_id, $alert_user)
+	{
 
-		$form_id = ur_get_form_id_by_userid( $user_id );
+		$form_id = ur_get_form_id_by_userid($user_id);
 
-		if ( ! $alert_user && 'admin_approval' !== ur_get_user_login_option( $user_id ) ) {
+		if (!$alert_user && 'admin_approval' !== ur_get_user_login_option($user_id)) {
 			return;
 		}
 
-		$user_manager = new UR_Admin_User_Manager( $user_id );
+		$user_manager = new UR_Admin_User_Manager($user_id);
 
 		$user_status = $user_manager->get_user_status();
 
 		// Avoid to send multiple times the same email.
-		if ( $status === $user_status['user_status'] ) {
+		if ($status === $user_status['user_status']) {
 			return;
 		}
 
-		$user      = get_userdata( $user_id );
-		$user_data = isset( $user->data ) ? $user->data : array();
-		$username  = isset( $user_data->user_login ) ? $user_data->user_login : '';
-		$email     = isset( $user_data->user_email ) ? $user_data->user_email : '';
+		$user      = get_userdata($user_id);
+		$user_data = isset($user->data) ? $user->data : array();
+		$username  = isset($user_data->user_login) ? $user_data->user_login : '';
+		$email     = isset($user_data->user_email) ? $user_data->user_email : '';
 
-		UR_Emailer::status_change_email( $email, $username, $status, $form_id );
+		UR_Emailer::status_change_email($email, $username, $status, $form_id);
 	}
 
 	/**
@@ -125,10 +131,11 @@ class UR_User_Approval {
 	 *
 	 * @param int $user_id User ID.
 	 */
-	public function send_request_notification_to_admin( $user_id ) {
+	public function send_request_notification_to_admin($user_id)
+	{
 
 		// If the user is created by admin or if the admin alert is disabled, doesn't send the email to the admin.
-		if ( $this->is_admin_creation_process() ) {
+		if ($this->is_admin_creation_process()) {
 			return;
 		}
 	}
@@ -140,28 +147,29 @@ class UR_User_Approval {
 	 * @param int   $form_id Form ID.
 	 * @param int   $user_id User ID.
 	 */
-	public function set_user_status( $form_data, $form_id, $user_id ) {
+	public function set_user_status($form_data, $form_id, $user_id)
+	{
 
-		if ( 'admin_approval' === ur_get_user_login_option( $user_id ) ) {
+		if ('admin_approval' === ur_get_user_login_option($user_id)) {
 
 			$status = UR_Admin_User_Manager::PENDING;
 			// If the user is created by admin in the backend, than automatically approve him.
-			if ( $this->is_admin_creation_process() ) {
+			if ($this->is_admin_creation_process()) {
 				$status = UR_Admin_User_Manager::APPROVED;
 			}
 			// update user status when login using social connect.
-			$is_social_login_option_enabled = ur_option_checked( 'user_registration_social_setting_enable_login_options', false );
+			$is_social_login_option_enabled = ur_option_checked('user_registration_social_setting_enable_login_options', false);
 
-			if ( ! $is_social_login_option_enabled && get_user_meta( $user_id, 'user_registration_social_connect_bypass_current_password', false ) ) {
+			if (!$is_social_login_option_enabled && get_user_meta($user_id, 'user_registration_social_connect_bypass_current_password', false)) {
 				$status = UR_Admin_User_Manager::APPROVED;
 			}
 
-			$user_manager = new UR_Admin_User_Manager( $user_id );
+			$user_manager = new UR_Admin_User_Manager($user_id);
 
 			// The user have to be not alerted on status creation, it will be always pending or approved.
 			$alert_user = false;
 
-			$user_manager->save_status( $status, $alert_user );
+			$user_manager->save_status($status, $alert_user);
 		}
 	}
 
@@ -173,21 +181,22 @@ class UR_User_Approval {
 	 *
 	 * @return \WP_Error
 	 */
-	public function check_status_on_login( $user, $password ) {
+	public function check_status_on_login($user, $password)
+	{
 
-		if ( ! $user instanceof WP_User ) {
+		if (!$user instanceof WP_User) {
 			return $user;
 		}
 
-		$form_id = ur_get_form_id_by_userid( $user->ID );
+		$form_id = ur_get_form_id_by_userid($user->ID);
 
-		$login_option = ur_get_user_login_option( $user->ID );
+		$login_option = ur_get_user_login_option($user->ID);
 
-		$user_manager = new UR_Admin_User_Manager( $user );
+		$user_manager = new UR_Admin_User_Manager($user);
 
 		$status = $user_manager->get_user_status();
 
-		if ( ( 'admin_approval' === $login_option || 'admin_approval' === $status['login_option'] ) ) {
+		if (('admin_approval' === $login_option || 'admin_approval' === $status['login_option'])) {
 			/**
 			 * Executes an action before checking the user status on user login.
 			 *
@@ -197,24 +206,24 @@ class UR_User_Approval {
 			 * @param string $user_status Default user status.
 			 * @param WP_User $user The user object.
 			 */
-			do_action( 'ur_user_before_check_status_on_login', $status['user_status'], $user );
+			do_action('ur_user_before_check_status_on_login', $status['user_status'], $user);
 
-			switch ( $status['user_status'] ) {
+			switch ($status['user_status']) {
 				case UR_Admin_User_Manager::APPROVED:
 					return $user;
 					break;
 				case UR_Admin_User_Manager::PENDING:
-					$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account is still pending approval.', 'user-registration' );
+					$message = '<strong>' . __('ERROR:', 'user-registration') . '</strong> ' . __('Your account is still pending approval.', 'user-registration');
 
-					return new WP_Error( 'pending_approval', $message );
+					return new WP_Error('pending_approval', $message);
 					break;
 				case UR_Admin_User_Manager::DENIED:
-					$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account has been denied.', 'user-registration' );
+					$message = '<strong>' . __('ERROR:', 'user-registration') . '</strong> ' . __('Your account has been denied.', 'user-registration');
 
-					return new WP_Error( 'denied_access', $message );
+					return new WP_Error('denied_access', $message);
 					break;
 			}
-		} elseif ( ( 'admin_approval_after_email_confirmation' === $login_option || 'admin_approval_after_email_confirmation' === $status['login_option'] ) ) {
+		} elseif (('admin_approval_after_email_confirmation' === $login_option || 'admin_approval_after_email_confirmation' === $status['login_option'])) {
 			/**
 			 * Executes an action before checking the user status on user login.
 			 *
@@ -224,39 +233,39 @@ class UR_User_Approval {
 			 * @param string $user_status Default user status.
 			 * @param WP_User $user The user object.
 			 */
-			do_action( 'ur_user_before_check_status_on_login', $status['user_status'], $user );
+			do_action('ur_user_before_check_status_on_login', $status['user_status'], $user);
 
-			switch ( $status['user_status'] ) {
+			switch ($status['user_status']) {
 				case UR_Admin_User_Manager::APPROVED:
 					return $user;
 					break;
 				case UR_Admin_User_Manager::PENDING:
-					$user_email_status = get_user_meta( $user->ID, 'ur_confirm_email', true );
-					if ( ur_string_to_bool( $user_email_status ) ) {
-						$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account is still pending approval.', 'user-registration' );
-						return new WP_Error( 'pending_approval', $message );
+					$user_email_status = get_user_meta($user->ID, 'ur_confirm_email', true);
+					if (ur_string_to_bool($user_email_status)) {
+						$message = '<strong>' . __('ERROR:', 'user-registration') . '</strong> ' . __('Your account is still pending approval.', 'user-registration');
+						return new WP_Error('pending_approval', $message);
 					} else {
-						$url      = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $_SERVER['SERVER_NAME'] : 'http://' . $_SERVER['SERVER_NAME']; //phpcs:ignore
+						$url      = (!empty($_SERVER['HTTPS'])) ? 'https://' . $_SERVER['SERVER_NAME'] : 'http://' . $_SERVER['SERVER_NAME']; //phpcs:ignore
 
-						if ( get_option( 'ur_login_ajax_submission' ) ) {
+						if (get_option('ur_login_ajax_submission')) {
 							$url .= $_SERVER['HTTP_REFERER']; //phpcs:ignore
 						} else {
 							$url .= $_SERVER['REQUEST_URI']; //phpcs:ignore
 						}
-						$url = substr( $url, 0, strpos( $url, '?' ) );
-						$url = wp_nonce_url( $url . '?ur_resend_id=' . crypt_the_string( $user->ID . '_' . time(), 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
+						$url = substr($url, 0, strpos($url, '?'));
+						$url = wp_nonce_url($url . '?ur_resend_id=' . crypt_the_string($user->ID . '_' . time(), 'e') . '&ur_resend_token=true', 'ur_resend_token');
 						/* translators: %s - Resend Verification Link. */
-						$message = '<strong>' . esc_html__( 'ERROR:', 'user-registration' ) . '</strong> ' . sprintf( __( 'Your account is still pending approval. Verify your email by clicking on the link sent to your email. %s', 'user-registration' ), '<a id="resend-email" href="' . esc_url( $url ) . '">' . __( 'Resend Verification Link', 'user-registration' ) . '</a>' );
-						return new WP_Error( 'user_email_not_verified', $message );
+						$message = '<strong>' . esc_html__('ERROR:', 'user-registration') . '</strong> ' . sprintf(__('Your account is still pending approval. Verify your email by clicking on the link sent to your email. %s', 'user-registration'), '<a id="resend-email" href="' . esc_url($url) . '">' . __('Resend Verification Link', 'user-registration') . '</a>');
+						return new WP_Error('user_email_not_verified', $message);
 					}
 					break;
 				case UR_Admin_User_Manager::DENIED:
-					$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account has been denied.', 'user-registration' );
+					$message = '<strong>' . __('ERROR:', 'user-registration') . '</strong> ' . __('Your account has been denied.', 'user-registration');
 
-					return new WP_Error( 'denied_access', $message );
+					return new WP_Error('denied_access', $message);
 					break;
 			}
-		} elseif ( 'email_confirmation' === $login_option || 'email_confirmation' === $status['login_option'] ) {
+		} elseif ('email_confirmation' === $login_option || 'email_confirmation' === $status['login_option']) {
 			/**
 			 * Executes an action before checking the email status on user login.
 			 *
@@ -266,51 +275,51 @@ class UR_User_Approval {
 			 * @param string $user_status Default user status.
 			 * @param WP_User $user The user object.
 			 */
-			do_action( 'ur_user_before_check_email_status_on_login', $status['user_status'], $user );
+			do_action('ur_user_before_check_email_status_on_login', $status['user_status'], $user);
 
-			$url      = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $_SERVER['SERVER_NAME'] : 'http://' . $_SERVER['SERVER_NAME']; //phpcs:ignore
+			$url      = (!empty($_SERVER['HTTPS'])) ? 'https://' . $_SERVER['SERVER_NAME'] : 'http://' . $_SERVER['SERVER_NAME']; //phpcs:ignore
 
-			if ( get_option( 'ur_login_ajax_submission' ) ) {
+			if (get_option('ur_login_ajax_submission')) {
 				$url .= $_SERVER['HTTP_REFERER']; //phpcs:ignore
 			} else {
 				$url .= $_SERVER['REQUEST_URI']; //phpcs:ignore
 			}
 
-			$url = substr( $url, 0, strpos( $url, '?' ) );
-			$url = wp_nonce_url( $url . '?ur_resend_id=' . crypt_the_string( $user->ID . '_' . time(), 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
+			$url = substr($url, 0, strpos($url, '?'));
+			$url = wp_nonce_url($url . '?ur_resend_id=' . crypt_the_string($user->ID . '_' . time(), 'e') . '&ur_resend_token=true', 'ur_resend_token');
 
-			if ( '0' === $status['user_status'] ) {
+			if ('0' === $status['user_status']) {
 				/* translators: %s - Resend Verification Link. */
-				$message = '<strong>' . esc_html__( 'ERROR:', 'user-registration' ) . '</strong> ' . sprintf( __( 'Your account is still pending approval. Verify your email by clicking on the link sent to your email. %s', 'user-registration' ), '<a id="resend-email" href="' . esc_url( $url ) . '">' . __( 'Resend Verification Link', 'user-registration' ) . '</a>' );
-				return new WP_Error( 'user_email_not_verified', $message );
+				$message = '<strong>' . esc_html__('ERROR:', 'user-registration') . '</strong> ' . sprintf(__('Your account is still pending approval. Verify your email by clicking on the link sent to your email. %s', 'user-registration'), '<a id="resend-email" href="' . esc_url($url) . '">' . __('Resend Verification Link', 'user-registration') . '</a>');
+				return new WP_Error('user_email_not_verified', $message);
 			}
 			return $user;
-		} elseif ( 'payment' === $login_option ) {
-			$payment_status = get_user_meta( $user->ID, 'ur_payment_status', true );
+		} elseif ('payment' === $login_option) {
+			$payment_status = get_user_meta($user->ID, 'ur_payment_status', true);
 			/**
 			 * Executes an action before checking the payment status on user login.
 			 *
 			 * @param string $payment_status Default payment status.
 			 * @param WP_User $user The user object.
 			 */
-			do_action( 'ur_user_before_check_payment_status_on_login', $payment_status, $user );
+			do_action('ur_user_before_check_payment_status_on_login', $payment_status, $user);
 			/**
 			 * Applies a filter before checking the payment status on user login.
 			 *
 			 * @param string $payment_status Default payment status.
 			 * @param WP_User $user The user object.
 			 */
-			$message = apply_filters( 'ur_user_before_check_payment_status_on_login', $payment_status, $user );
+			$message = apply_filters('ur_user_before_check_payment_status_on_login', $payment_status, $user);
 
-			if ( ! empty( $payment_status ) && 'completed' !== $payment_status ) {
+			if (!empty($payment_status) && 'completed' !== $payment_status) {
 
 				$user_id      = $user->ID;
 				$instance     = new User_Registration_Payments_Process();
-				$redirect_url = $instance->generate_redirect_url( $user_id );
+				$redirect_url = $instance->generate_redirect_url($user_id);
 				/* translators: %s - Redirect URL. */
-				$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . sprintf( get_option( 'user_registration_pro_pending_payment_error_message', __( 'Your account is still pending payment. Process the payment by clicking on this: <a id="payment-link" href="%s">link</a>', 'user-registration' ) ), esc_url( $redirect_url ) );
+				$message = '<strong>' . __('ERROR:', 'user-registration') . '</strong> ' . sprintf(get_option('user_registration_pro_pending_payment_error_message', __('Your account is still pending payment. Process the payment by clicking on this: <a id="payment-link" href="%s">link</a>', 'user-registration')), esc_url($redirect_url));
 
-				return new WP_Error( 'user_payment_pending', $message );
+				return new WP_Error('user_payment_pending', $message);
 			}
 
 			return $user;
@@ -322,26 +331,27 @@ class UR_User_Approval {
 	 * Check on every page if the current user is actual approved, otherwise logout him
 	 * This is an additional protection against that themes or plugins that login users automatically after sign up
 	 */
-	public function check_status_on_page() {
+	public function check_status_on_page()
+	{
 
-		if ( ! is_user_logged_in() ) {
+		if (!is_user_logged_in()) {
 			return;
 		}
 
-		if ( 'admin_approval' === ur_get_user_login_option( get_current_user_id() ) ) {
+		if ('admin_approval' === ur_get_user_login_option(get_current_user_id())) {
 
 			// Try to hide the not approved users from any theme or plugin request in frontend.
-			$disable_pre_get = apply_filters( 'user_registration_disable_pre_get_users', 'no' );
+			$disable_pre_get = apply_filters('user_registration_disable_pre_get_users', 'no');
 
-			if ( 'no' === $disable_pre_get ) {
-				add_action( 'pre_get_users', array( $this, 'hide_not_approved_users_in_frontend' ) );
+			if ('no' === $disable_pre_get) {
+				add_action('pre_get_users', array($this, 'hide_not_approved_users_in_frontend'));
 			}
 
-			$status = ur_get_user_approval_status( get_current_user_id() );
+			$status = ur_get_user_approval_status(get_current_user_id());
 
 			$user_manager = new UR_Admin_User_Manager();
 
-			if ( ! $user_manager->can_status_be_changed_by( get_current_user_id() ) ) {
+			if (!$user_manager->can_status_be_changed_by(get_current_user_id())) {
 				return;
 			}
 			/**
@@ -353,9 +363,9 @@ class UR_User_Approval {
 			 * @param array $status User status information.
 			 * @param UR_User_Manager $user_manager The User Manager instance.
 			 */
-			do_action( 'ur_user_before_check_status_on_page', $status, $user_manager );
+			do_action('ur_user_before_check_status_on_page', $status, $user_manager);
 
-			if ( UR_Admin_User_Manager::APPROVED === $status ) {
+			if (UR_Admin_User_Manager::APPROVED === $status) {
 				return;
 			}
 
@@ -368,8 +378,9 @@ class UR_User_Approval {
 	 *
 	 * @return bool
 	 */
-	protected function is_admin_creation_process() {
-		return ( isset( $_REQUEST['action'] ) && 'createuser' == $_REQUEST['action'] );
+	protected function is_admin_creation_process()
+	{
+		return (isset($_REQUEST['action']) && 'createuser' == $_REQUEST['action']);
 	}
 
 	/**
@@ -377,11 +388,12 @@ class UR_User_Approval {
 	 *
 	 * @param int $user_id User Id.
 	 */
-	public function disconnect_user_session( $user_id ) {
+	public function disconnect_user_session($user_id)
+	{
 
-		if ( 'admin_approval' === ur_get_user_login_option( $user_id ) ) {
+		if ('admin_approval' === ur_get_user_login_option($user_id)) {
 			// get all sessions for user with ID $user_id.
-			$sessions = WP_Session_Tokens::get_instance( $user_id );
+			$sessions = WP_Session_Tokens::get_instance($user_id);
 
 			// we have got the sessions, destroy them all!
 			$sessions->destroy_all();
@@ -396,13 +408,14 @@ class UR_User_Approval {
 	 *
 	 * @return \WP_Error
 	 */
-	public function allow_password_reset( $result, $user_id ) {
+	public function allow_password_reset($result, $user_id)
+	{
 
-		$user_manager = new UR_Admin_User_Manager( $user_id );
+		$user_manager = new UR_Admin_User_Manager($user_id);
 
-		if ( ! $user_manager->is_approved() ) {
-			$error_message = __( 'Your account is still pending approval. Reset Password is not allowed.', 'user-registration' );
-			$result        = new WP_Error( 'user_not_approved', $error_message );
+		if (!$user_manager->is_approved()) {
+			$error_message = __('Your account is still pending approval. Reset Password is not allowed.', 'user-registration');
+			$result        = new WP_Error('user_not_approved', $error_message);
 		}
 		return $result;
 	}
@@ -414,14 +427,15 @@ class UR_User_Approval {
 	 *
 	 * @param \WP_Query $query Query.
 	 */
-	public function hide_not_approved_users_in_frontend( $query ) {
+	public function hide_not_approved_users_in_frontend($query)
+	{
 
 		// If this is not a frontend page, then do nothing.
-		if ( is_admin() ) {
+		if (is_admin()) {
 			return;
 		}
 
-		if ( isset( $query->query_vars['ur_user_ignore_users_hiding'] ) && $query->query_vars['ur_user_ignore_users_hiding'] ) {
+		if (isset($query->query_vars['ur_user_ignore_users_hiding']) && $query->query_vars['ur_user_ignore_users_hiding']) {
 			return;
 		}
 
@@ -447,10 +461,10 @@ class UR_User_Approval {
 		 * @param array $meta_query Default meta query.
 		 * @param WP_Query $query The WP_Query object.
 		 */
-		$meta_query = apply_filters( 'ur_user_hide_not_approved_users_in_frontend', $meta_query, $query );
+		$meta_query = apply_filters('ur_user_hide_not_approved_users_in_frontend', $meta_query, $query);
 
-		if ( ! empty( $meta_query ) ) {
-			$query->set( 'meta_query', $meta_query );
+		if (!empty($meta_query)) {
+			$query->set('meta_query', $meta_query);
 		}
 	}
 }
