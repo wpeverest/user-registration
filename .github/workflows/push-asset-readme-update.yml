@@ -2,7 +2,7 @@ name: Plugin asset/readme update
 on:
   push:
     branches:
-      - master
+      - update/push-to-trunk
 jobs:
   master:
     name: Push to trunk
