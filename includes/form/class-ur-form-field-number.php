@@ -78,7 +78,7 @@ class UR_Form_Field_Number extends UR_Form_Field {
 			if ( floatval( $value ) > floatval( $max_value ) ) {
 				$message = array(
 					/* translators: %s - validation message */
-					$label       => sprintf( __( 'Please enter a value less than %d for %s', 'user-registration' ), $max_value, $label ),
+					$label       => sprintf( __( 'Please enter a value less than %1$d for %2$s', 'user-registration' ), $max_value, $label ),
 					'individual' => true,
 				);
 				add_filter(
@@ -103,7 +103,7 @@ class UR_Form_Field_Number extends UR_Form_Field {
 			if ( floatval( $value ) < floatval( $min_value ) ) {
 				$message = array(
 					/* translators: %s - validation message */
-					$label       => sprintf( __( 'Please enter a value greater than %d for %s', 'user-registration' ), $min_value, $label ),
+					$label       => sprintf( __( 'Please enter a value greater than %1$d for %2$s', 'user-registration' ), $min_value, $label ),
 					'individual' => true,
 				);
 				add_filter(

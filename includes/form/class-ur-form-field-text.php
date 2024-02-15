@@ -83,7 +83,7 @@ class UR_Form_Field_Text extends UR_Form_Field {
 					if ( is_wp_error( UR_Validation::validate_length( $value, $max_size ) ) ) {
 						$message = array(
 							/* translators: %s - validation message */
-							$label       => sprintf( __( 'Please enter a value of length less than %d for %s.', 'user-registration' ), $max_size, $label ),
+							$label       => sprintf( __( 'Please enter a value of length less than %1$d for %2$s.', 'user-registration' ), $max_size, $label ),
 							'individual' => true,
 						);
 						add_filter(
@@ -105,7 +105,7 @@ class UR_Form_Field_Text extends UR_Form_Field {
 					if ( is_wp_error( UR_Validation::validate_max_words_length( $value, $max_size ) ) ) {
 						$message = array(
 							/* translators: %d - validation message */
-							$label       => sprintf( esc_html__( 'Please enter number of words less than %d for %s.', 'user-registration' ), $max_size, $label ),
+							$label       => sprintf( esc_html__( 'Please enter number of words less than %1$d for %2$s.', 'user-registration' ), $max_size, $label ),
 							'individual' => true,
 						);
 						add_filter(
@@ -137,7 +137,7 @@ class UR_Form_Field_Text extends UR_Form_Field {
 					if ( is_wp_error( UR_Validation::validate_min_length( $value, $min_size ) ) ) {
 						$message = array(
 							/* translators: %d - validation message */
-							$label       => sprintf( esc_html__( 'Please enter a value of length at least %d for %s.', 'user-registration' ), $min_size, $label ),
+							$label       => sprintf( esc_html__( 'Please enter a value of length at least %1$d for %2$s.', 'user-registration' ), $min_size, $label ),
 							'individual' => true,
 						);
 						add_filter(
@@ -159,7 +159,7 @@ class UR_Form_Field_Text extends UR_Form_Field {
 					if ( is_wp_error( UR_Validation::validate_min_words_length( $value, $min_size ) ) ) {
 						$message = array(
 							/* translators: %d - validation message */
-							$label       => sprintf( esc_html__( 'Please enter number of words at least %d for %s.', 'user-registration' ), $min_size, $label ),
+							$label       => sprintf( esc_html__( 'Please enter number of words at least %1$d for %2$s.', 'user-registration' ), $min_size, $label ),
 							'individual' => true,
 						);
 						add_filter(

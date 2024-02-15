@@ -180,7 +180,7 @@ class UR_Form_Field_Date extends UR_Form_Field {
 		if ( $date_timestamp < $min_date_timestamp ) {
 			$message = array(
 				/* translators: %s - validation message */
-				$field_label => sprintf( __( 'Please select a date after %s for %s.', 'user-registration' ), $min_date, $field_label ),
+				$field_label => sprintf( __( 'Please select a date after %1$s for %2$s.', 'user-registration' ), $min_date, $field_label ),
 				'individual' => true,
 			);
 			add_filter(
@@ -216,7 +216,7 @@ class UR_Form_Field_Date extends UR_Form_Field {
 		if ( $date_timestamp > $max_date_timestamp ) {
 			$message = array(
 				/* translators: %s - validation message */
-				$field_label => sprintf( __( 'Please select a date before %s for %s', 'user-registration' ), $max_date, $field_label ),
+				$field_label => sprintf( __( 'Please select a date before %1$s for %2$s', 'user-registration' ), $max_date, $field_label ),
 				'individual' => true,
 			);
 			add_filter(
