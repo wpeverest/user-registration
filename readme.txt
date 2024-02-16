@@ -1,4 +1,4 @@
-=== User Registration - Custom Registration Form, Login Form And User Profile For WordPress ===
+=== User Registration - Custom Registration Form, Login Form, and User Profile WordPress Plugin ===
 Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 5.2
@@ -20,11 +20,11 @@ Moreover, this free, lightweight, and 100% responsive plugin comes with a beauti
 
 The best thing is that there are unlimited customization options for each field and form. To add more extendibility to this, you get premium addons to include extra functionalities in your registration forms. So, you’ve got yourself a fantastic WordPress user registration and login plugin.
 
-[youtube https://www.youtube.com/watch?v=BdZNmZecPoQ]
+[youtube https://youtu.be/ZOXVbfBTNPQ]
 
-[All features](https://wpuserregistration.com/) | [Demo](https://userregistration.demoswp.net/) | [Documentation](https://docs.wpuserregistration.com/)
+[All Features](https://wpuserregistration.com/) | [Documentation](https://docs.wpuserregistration.com/)
 
-[Try User Registration Premium ](https://userregistration.demoswp.net/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)
+[Test User Registration Premium for Free ](https://userregistration.demoswp.net/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)
 
 ### Key Features of User Registration
 * **Easy Drag and Drop Builder:** Simply drag and drop the form fields into a blank slate and create a registration form in no time. No code, no fuss.
@@ -73,7 +73,7 @@ The best thing is that there are unlimited customization options for each field 
 
 * **[Premium] [Connect Registration Forms with 1000+ Services via Zapier:](https://wpuserregistration.com/features/zapier/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Zapier passes information to all the applications your registration forms are connected with. This helps you save time by automating tasks like collecting form responses, sending texts and reminders.
 
-* **[Premium] Integrations with Email Marketing Services:** Promote your business with the correct email marketing tools like [MailChimp](https://wpuserregistration.com/features/mailchimp/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) , [MailerLite](https://wpuserregistration.com/features/mailerlite/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) and [Active Campaign](https://wpuserregistration.com/features/activecampaign/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro). Integrating them with User Registration adds all your registered users to subscriber lists directly.
+* **[Premium] Integrations with Email Marketing Services:** Promote your business with the correct email marketing tools like [Mailchimp](https://wpuserregistration.com/features/mailchimp/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) , [MailerLite](https://wpuserregistration.com/features/mailerlite/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro), [ActiveCampaign](https://wpuserregistration.com/features/activecampaign/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) and [Klaviyo](https://wpuserregistration.com/features/klaviyo/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro). Integrating them with User Registration adds all your registered users to subscriber lists directly.
 
 * **[Premium] [Drag and Drop Multi File Upload:](https://wpuserregistration.com/features/file-uploads/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** The multiple file upload feature is perfect for when you need to collect more than one document or image file. You only have to set the maximum file upload limit from the field options.
 
@@ -91,13 +91,13 @@ The best thing is that there are unlimited customization options for each field 
 
 * **[Premium] [Prevent Concurrent Login:](https://docs.wpuserregistration.com/docs/how-to-map-the-user-registration-form-fields-value-to-external-plugin-field-metas/)** Enhances security by allowing site owners to setup number of times a user can login into different browsers or devices at the same time.
 
-* **[Premium] [Redirect to Previous Page:]** Smoothens user experience by redirecting users back to their previous page after login.
+* **[Premium] Redirect to Previous Page:** Smoothens user experience by redirecting users back to their previous page after login.
 
 * **[Premium] [Role-Based Redirection:](https://wpuserregistration.com/pricing/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Smoothens user experience by redirecting users back to their previous page after login.
 
 * **[Premium] [External URL Data Transfer:](https://docs.wpuserregistration.com/docs/user-registration-pro/#post-submission-send-data-to-custom-url)** Facilitates connection with third-party services by sending form data to an external URL post-submission.
 
-* **[Premium] [Elementor Support:]** Utilize the User Registration widget in your Elementor editor to quickly add registration forms to any page and customize their design.
+* **[Premium] Elementor Support:** Utilize the User Registration widget in your Elementor editor to quickly add registration forms to any page and customize their design.
 
 * **[Premium] [Keyboard-Friendly Forms:](https://docs.wpuserregistration.com/docs/keyboard-shortcut-in-form-builder/#1-toc-title)** Instantly direct a user to the registration form on a page without any distractions and let them fill the form using their keyboard only.
 
@@ -109,7 +109,15 @@ The best thing is that there are unlimited customization options for each field 
 
 * **[Premium] [Save and Continue:](https://wpuserregistration.com/features/save-and-continue/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Users can save their progress on a registration form and come back to it later to submit the form.
 
-* **[Premium] [Klaviyo:](https://wpuserregistration.com/features/klaviyo/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Sync your user registration forms with Klaviyo to automatically collect user data for personalized marketing campaigns.
+* **[Premium] [Personalized Communication with Private Notes:](https://wpuserregistration.com/features/private-notes/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Share important updates, personalized messages, etc., with users. Plus, users can respond to these notes with their queries and receive answers.
+
+* **[Premium] [Enable Form Restrictions:](https://wpuserregistration.com/features/form-restriction/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Restrict access to your WordPress registration forms with custom conditions.
+
+* **[Premium] [Frontend User Listing:](https://wpuserregistration.com/features/frontend-listing/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** List registered users in the front end to help visitors and users view the profile of all the listed members.
+
+* **[Premium] Track User Journey:** Get detailed information about the pages a user visited on your website and the time they spent on the pages.
+
+* **[Premium] Login and Registration Popups:** Turn simple inline registration and login forms into popups for better user engagement and conversion.
 
 
 ### User Registration Has Every Form Field You’ll Ever Need:
@@ -217,7 +225,7 @@ Here’s a brief look at the features that make User Registration one of the bes
     * Registration Denied Email
     * Reset Password Email, and more
 * Assign user roles on registration
-* acilitates WordPress user management
+* Facilitates WordPress user management
 * Prevent dashboard access to specific user roles
 * Enable strong passwords
 * In-built login form
@@ -258,7 +266,7 @@ Here’s a brief look at the features that make User Registration one of the bes
     * Delete or replace file uploads
     * Set valid file types
     * Set maximum file size
-* Email marketing with MailChimp and MailerLite
+* Email marketing with Mailchimp, MailerLite, ActiveCampaign and Klaviyo
 * Export form data as a PDF
 * Collect geolocation information of users
 * Accept payments with Stripe and PayPal
@@ -267,6 +275,10 @@ Here’s a brief look at the features that make User Registration one of the bes
 * Conditional logic for interactive forms
 * LearnDash integration
 * WooCommerce integration
+* Set custom form restriction rules
+* Send private notes to users
+* Track and analyze user journey
+* Add registration and login popup forms
 
 
 ### Know your way around User Registration with our tutorials
