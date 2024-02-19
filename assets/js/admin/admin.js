@@ -422,6 +422,7 @@ jQuery(function ($) {
 			$(".ur-builder-wrapper-footer").show();
 			// Hide the form settings in fields panel.
 			$(".ur-selected-inputs").find("form#ur-field-settings").hide();
+			$("#user_registration_form_setting_redirect_after_field").hide();
 		}
 	);
 
@@ -541,10 +542,18 @@ jQuery(function ($) {
 		if (selected_redirection_option.length) {
 			switch (selected_redirection_option.val()) {
 				case "internal-page":
+					$("#user_registration_form_setting_redirect_after_field").show();
 					custom_redirection_page.slideDown(800);
 					break;
 				case "external-url":
+					$("#user_registration_form_setting_redirect_after_field").show();
 					redirect_url.slideDown(800);
+					break;
+				case "no-redirection":
+					$("#user_registration_form_setting_redirect_after_field").hide();
+					break;
+				case "previous-page":
+					$("#user_registration_form_setting_redirect_after_field").show();
 					break;
 				default:
 					break;
