@@ -4466,5 +4466,4 @@ if ( ! function_exists( 'ur_automatic_user_login' ) ) {
 
 		wp_redirect( ur_get_my_account_url() );
 	}
-
 }

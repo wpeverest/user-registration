@@ -484,7 +484,7 @@ class UR_Shortcode_My_Account {
 		 * @param bool The result to allow automatic user login. Default is false.
 		 */
 		$allow_automatic_user_login = apply_filters( 'user_registration_allow_automatic_user_login_reset_password', false );
-		if( $allow_automatic_user_login ) {
+		if ( $allow_automatic_user_login ) {
 			ur_automatic_user_login( $user );
 		}
 	}
