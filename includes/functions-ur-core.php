@@ -4450,3 +4450,21 @@ if ( ! function_exists( 'ur_array_clone' ) ) {
 		);
 	}
 }
+
+if ( ! function_exists( 'ur_automatic_user_login' ) ) {
+	/**
+	 * Automatically login users.
+	 *
+	 * @since 3.1.5
+	 *
+	 * @param object $user The user.
+	 */
+	function ur_automatic_user_login( $user ) {
+		wp_clear_auth_cookie();
+		$remember = apply_filters( 'user_registration_autologin_remember_user', false );
+		wp_set_auth_cookie( $user->id, $remember );
+
+		wp_redirect( ur_get_my_account_url() );
+	}
+
+}
