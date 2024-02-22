@@ -1,5 +1,14 @@
 /* global  user_registration_params */
 (function ($) {
+
+	$('textarea').on('input', function(){
+		var textarea_text = $(this).val().trim();
+		var charCount = textarea_text.length;
+		var wordCount = textarea_text === '' ? 0 : textarea_text.split(' ').length;
+
+		$('.count_characters').text(charCount);
+		$('.count_words').text(wordCount);
+	});
 	var user_registration_form_init = function () {
 		var ursL10n = user_registration_params.ursL10n;
 

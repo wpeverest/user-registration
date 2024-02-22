@@ -345,6 +345,9 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 			case 'textarea':
 				$field .= '<textarea data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" ' . ( empty( $args['custom_attributes']['rows'] ) ? ' rows="2"' : '' ) . ( empty( $args['custom_attributes']['cols'] ) ? ' cols="5"' : '' ) . implode( ' ', $custom_attributes ) . '>' . esc_textarea( $value ) . '</textarea>';
+				$field .= '<div style="text-align: right; font-size:16px; color:#737373; margin-top:0px;">' . ( isset( $args['max-words'] ) ? '<div class="count_words" style="display: inline-block; margin-right: 1px;">0</div>/' : '<div class="count_characters" style="display: inline-block; margin-right: 1px;">0</div>/' );
+				$field .= '<div style="display: inline-block;">' . ( isset( $args['max-words'] ) ? $args['max-words'] . ' words' : ( isset( $args['max-characters'] ) ? $args['max-characters'] . ' characters' : '500 characters' ) );
+				$field .= '</div></div>';
 				break;
 
 			case 'checkbox':

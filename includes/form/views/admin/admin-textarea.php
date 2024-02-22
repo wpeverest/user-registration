@@ -14,6 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<label><?php echo esc_html( $this->get_general_setting_data( 'label' ) ); ?></label>
 	</div>
 	<div class="ur-field" data-field-key="textarea">
-		<textarea id="ur-input-type-<?php echo esc_attr( $this->get_general_setting_data( 'field_name' ) ); ?>" disabled></textarea>
+		<textarea id="ur-input-type-<?php echo esc_attr( $this->get_general_setting_data( 'field_name' ) ); ?>"
+			disabled></textarea>
+		<p style="text-align:right; color:#737373; margin-top:0px;">0/500 characters</p>;
 	</div>
 </div>
