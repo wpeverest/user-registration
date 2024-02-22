@@ -11,8 +11,8 @@ import {
 	Button,
 } from "@chakra-ui/react";
 
-import { useStateValue } from "../../context/StateProvider";
-import { actionTypes } from "../../context/gettingStartedContext";
+import { useStateValue } from "../../../context/StateProvider";
+import { actionTypes } from "../../../context/gettingStartedContext";
 
 const ConsentModal = (openPopup) => {
 	const [{ settings, isPro }, dispatch] = useStateValue();

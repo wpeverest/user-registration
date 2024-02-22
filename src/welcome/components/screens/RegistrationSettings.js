@@ -8,7 +8,7 @@ import { Stack } from "@chakra-ui/react";
  * Internal Dependencies
  */
 import InputHandler from "../common/InputHandler";
-import { useStateValue } from "../../context/StateProvider";
+import { useStateValue } from "../../../context/StateProvider";
 
 const RegistrationSettings = ({
 	sectionSettings,

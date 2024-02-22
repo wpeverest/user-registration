@@ -12,6 +12,8 @@ export const initialState = {
 	},
 	defaultFormId: "",
 	isPro: false,
+	pluginsStatus: "",
+	themesStatus: "",
 };
 
 export const actionTypes = {
@@ -19,6 +21,8 @@ export const actionTypes = {
 	GET_INSTALL_PAGE: "GET_INSTALL_PAGE",
 	GET_DEFAULT_FORM: "GET_DEFAULT_FORM",
 	GET_IS_PRO: "GET_IS_PRO",
+	GET_PLUGINS_STATUS: "GET_PLUGINS_STATUS",
+	GET_THEMES_STATUS: "GET_THEMES_STATUS",
 };
 
 const reducer = (state, action) => {
@@ -42,6 +46,16 @@ const reducer = (state, action) => {
 			return {
 				...state,
 				isPro: action.isPro,
+			};
+		case actionTypes.GET_PLUGINS_STATUS:
+			return {
+				...state,
+				pluginsStatus: action.pluginsStatus,
+			};
+		case actionTypes.GET_THEMES_STATUS:
+			return {
+				...state,
+				themesStatus: action.themesStatus,
 			};
 		default:
 			return state;

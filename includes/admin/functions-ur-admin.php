@@ -105,6 +105,7 @@ function ur_get_screen_ids() {
 		$ur_screen_id . '_page_user-registration-settings',
 		$ur_screen_id . '_page_user-registration-mailchimp',
 		$ur_screen_id . '_page_user-registration-status',
+		$ur_screen_id . '_page_user-registration-about',
 		$ur_screen_id . '_page_user-registration-addons',
 		$ur_screen_id . '_page_user-registration-export-users',
 		$ur_screen_id . '_page_user-registration-email-templates',
@@ -624,7 +625,7 @@ function promotional_notice_links( $notice_type, $notice_target_link = '#' ) {
 			<li><a class="button button-primary" href="<?php echo esc_url( $notice_target_link ); ?>" target="_blank"><span class="dashicons dashicons-external"></span><?php esc_html_e( 'Sure, I\'d love to!', 'user-registration' ); ?></a></li>
 			<li><a href="#" class="button button-secondary notice-dismiss notice-dismiss-permanently"><span  class="dashicons dashicons-smiley"></span><?php esc_html_e( 'I already did!', 'user-registration' ); ?></a></li>
 			<li><a href="#" class="button button-secondary notice-dismiss notice-dismiss-temporarily"><span class="dashicons dashicons-dismiss"></span><?php esc_html_e( 'Maybe later', 'user-registration' ); ?></a></li>
-			<li><a href="https://wpeverest.com/support-ticket/" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial"></span><?php esc_html_e( 'I have a query', 'user-registration' ); ?></a></li>
+			<li><a href="https://wpuserregistration.com/support" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial"></span><?php esc_html_e( 'I have a query', 'user-registration' ); ?></a></li>
 		</ul>
 		<a href="#" class="notice-dismiss notice-dismiss-permanently"><?php esc_html_e( 'Never show again', 'user-registration' ); ?></a>
 		<?php

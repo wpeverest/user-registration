@@ -24,8 +24,8 @@ import RegistrationSettings from "./screens/RegistrationSettings";
 import GeneralSettings from "./screens/GeneralSettings";
 import MyAccountSettings from "./screens/MyAccountSettings";
 import LastPage from "./screens/LastPage";
-import { useStateValue } from "../context/StateProvider";
-import { actionTypes } from "../context/gettingStartedContext";
+import { useStateValue } from "../../context/StateProvider";
+import { actionTypes } from "../../context/gettingStartedContext";
 
 function App() {
 	const [{ settings, installPage }, dispatch] = useStateValue();

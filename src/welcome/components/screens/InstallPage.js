@@ -16,7 +16,7 @@ import { __ } from "@wordpress/i18n";
  * Internal Dependencies
  */
 import ConsentModal from "../common/ConsentModal";
-import { useStateValue } from "../../context/StateProvider";
+import { useStateValue } from "../../../context/StateProvider";
 
 const InstallPage = () => {
 	const [{ installPage, defaultFormId }] = useStateValue();

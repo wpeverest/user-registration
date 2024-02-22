@@ -14,8 +14,8 @@ import {
 } from "@chakra-ui/react";
 import { Select } from "chakra-react-select";
 
-import { useStateValue } from "../../context/StateProvider";
-import { actionTypes } from "../../context/gettingStartedContext";
+import { useStateValue } from "../../../context/StateProvider";
+import { actionTypes } from "../../../context/gettingStartedContext";
 
 function InputHandler({ setting, onBoardIconsURL }) {
 	const [{ settings }, dispatch] = useStateValue();
