@@ -26,8 +26,11 @@ export const PLUGINS = [
 	},
 	{
 		label: "BlockArt Blocks",
-		slug: "blockart-blocks/blockart-blocks.php",
-		description: __("BlockArt.", "user-registration"),
+		slug: "blockart-blocks/blockart.php",
+		description: __(
+			"Explore your creativity! Design any type of WordPress page and post with Gutenberg Blocks. Whether you’re a beginner or a skilled designer, we’ve got you covered. ",
+			"user-registration"
+		),
 		type: "plugin",
 		image: blockart,
 		website: "https://wpblockart.com/",

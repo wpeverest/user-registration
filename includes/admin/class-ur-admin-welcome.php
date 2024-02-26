@@ -28,7 +28,6 @@ class UR_Admin_Welcome {
 
 		add_action( 'admin_menu', array( __CLASS__, 'add_menu' ) );
 		add_action( 'admin_init', array( __CLASS__, 'welcome_page' ), 30 );
-
 	}
 
 	/**
@@ -92,7 +91,6 @@ class UR_Admin_Welcome {
 			self::setup_wizard_footer();
 			exit;
 		}
-
 	}
 
 	/**

@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
 	AlertDialog,
 	AlertDialogBody,
@@ -18,37 +18,25 @@ import {
 	useDisclosure,
 } from "@chakra-ui/react";
 import { sprintf, __ } from "@wordpress/i18n";
-import { PLUGINS } from "../../../constants/products";
-// import usePluginInstallActivate from "../../../hooks/usePluginInstallActivate";
-
-// const [{ pluginsStatus, themesStatus }, dispatch] = useStateValue();
-// type Props = Prettify<
-//   Omit<typeof PLUGINS[number], 'demo' | 'logo' | 'shortDescription'> & {
-//     demo?: string;
-//     logo?: React.ReactNode | React.ElementType;
-//     shortDescription?: string;
-//     pluginsStatus: pluginsStatus ;
-//     themesStatus: themesStatus;
-//   }
-// >;
+import { useStateValue } from "../../../../context/StateProvider";
+import UsePluginInstallActivate from "../../../components/common/UsePluginInstallActivate";
 
 const ProductCard = (props) => {
-	const {
-		label,
-		description,
-		image,
-		website,
-		pluginsStatus,
-		slug,
-		type,
-		themesStatus,
-	} = props;
+	/* global _UR_ */
+	const { adminURL } = typeof _UR_ !== "undefined" && _UR_;
+
+	const [{ pluginsStatus, themesStatus }, dispatch] = useStateValue();
+	const { label, description, image, website, slug, type } = props;
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const { installPlugin, activatePlugin, performPluginAction } = {};
+	const [status, setStatus] = useState("inactive");
+	const [isPluginStatusLoading, setIsPluginStatusLoading] = useState(false);
 
-	const cancelRef = useRef;
-
-	const status = type === "theme" ? themesStatus[slug] : pluginsStatus[slug];
+	useEffect(() => {
+		const status =
+			type === "theme" ? themesStatus[slug] : pluginsStatus[slug];
+		setStatus(status);
+	}, [pluginsStatus[slug], themesStatus[slug]]);
+	const cancelRef = useRef();
 
 	return (
 		<>
@@ -94,7 +82,7 @@ const ProductCard = (props) => {
 							textDecoration="underline"
 							isExternal
 						>
-							{__("Learn More", "blockart")}
+							{__("Learn More", "user-registration")}
 						</Link>
 						<Text as="span" lineHeight="1" color="gray.500">
 							|
@@ -106,7 +94,7 @@ const ProductCard = (props) => {
 							textDecoration="underline"
 							isExternal
 						>
-							{__("Live Demo", "blockart")}
+							{__("Live Demo", "user-registration")}
 						</Link>
 					</HStack>
 					<Button
@@ -125,26 +113,25 @@ const ProductCard = (props) => {
 						}}
 						isDisabled={"active" === status}
 						as={"theme" === type ? Link : undefined}
-						// href={
-						// 	"theme" === type
-						// 		? "inactive" === status
-						// 			? `${localized.adminUrl}themes.php?search=${slug}`
-						// 			: `${localized.adminUrl}/theme-install.php?search=${slug}`
-						// 		: undefined
-						// }
+						href={
+							"theme" === type
+								? "inactive" === status
+									? `${adminURL}themes.php?search=${slug}`
+									: `${adminURL}/theme-install.php?search=${slug}`
+								: undefined
+						}
 						onClick={"plugin" === type ? onOpen : undefined}
-						// isLoading={
-						// 	"plugin" === type
-						// 		? activatePlugin.isLoading ||
-						// 		  installPlugin.isLoading
-						// 		: undefined
-						// }
+						isLoading={
+							"plugin" === type
+								? isPluginStatusLoading
+								: undefined
+						}
 					>
 						{"active" === status
-							? __("Active", "blockart")
+							? __("Active", "user-registration")
 							: "inactive" === status
-							? __("Activate", "blockart")
-							: __("Install", "blockart")}
+							? __("Activate", "user-registration")
+							: __("Install", "user-registration")}
 					</Button>
 				</Box>
 			</Box>
@@ -155,7 +142,48 @@ const ProductCard = (props) => {
 					onClose={onClose}
 					isCentered
 				>
-					{/* ... rest of the code for AlertDialog */}
+					<AlertDialogOverlay>
+						<AlertDialogContent>
+							<AlertDialogHeader
+								fontSize="lg"
+								fontWeight="semibold"
+							>
+								{"inactive" === pluginsStatus[slug]
+									? __("Activate Plugin", "user-registration")
+									: __("Install Plugin", "user-registration")}
+							</AlertDialogHeader>
+							<AlertDialogBody>
+								{"inactive" === pluginsStatus[slug]
+									? sprintf(
+											__(
+												"Are you sure? You want to activate %s plugin.",
+												"user-registration"
+											),
+											label
+									  )
+									: sprintf(
+											__(
+												"Are you sure? You want to install and activate %s plugin.",
+												"user-registration"
+											),
+											label
+									  )}
+							</AlertDialogBody>
+							<AlertDialogFooter>
+								<UsePluginInstallActivate
+									cancelRef={cancelRef}
+									onClose={onClose}
+									slug={slug}
+									isPluginStatusLoading={
+										isPluginStatusLoading
+									}
+									setIsPluginStatusLoading={
+										setIsPluginStatusLoading
+									}
+								/>
+							</AlertDialogFooter>
+						</AlertDialogContent>
+					</AlertDialogOverlay>
 				</AlertDialog>
 			)}
 		</>

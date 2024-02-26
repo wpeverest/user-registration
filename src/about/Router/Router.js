@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-import { Dashboard, Help, Products } from "../screens";
+import { Dashboard, Help, Products, Settings } from "../screens";
 
 const Router = () => {
 	const { pathname } = useLocation();
@@ -20,6 +20,12 @@ const Router = () => {
 		<Routes>
 			<Route path="/" element={<Dashboard />} />
 			<Route path="/help" element={<Help />} />
+			<Route
+				path="/settings"
+				element={
+					<Settings to="http://wpeverest.local/wp-admin/admin.php?page=user-registration-settings" />
+				}
+			/>
 			<Route path="/products" element={<Products />} />
 			<Route path="*" element={<Dashboard />} />
 		</Routes>

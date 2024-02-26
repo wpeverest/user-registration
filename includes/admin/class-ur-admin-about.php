@@ -23,6 +23,23 @@ class UR_Admin_About {
 		wp_enqueue_script( 'ur-about-script', UR()->plugin_url() . '/chunks/main.js', array( 'wp-element', 'wp-blocks', 'wp-editor' ), UR()->version, true );
 		wp_enqueue_style( 'ur-about-style', UR()->plugin_url() . '/assets/css/user-registration-about.css', array(), UR()->version );
 
+		if ( ! function_exists( 'get_plugins' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+		if ( ! function_exists( 'wp_get_themes' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/theme.php';
+		}
+		$installed_plugin_slugs = array_keys( get_plugins() );
+		$allowed_plugin_slugs   = array(
+			'everest-forms/everest-forms.php',
+			'blockart-blocks/blockart.php',
+			'learning-management-system/lms.php',
+			'magazine-blocks/magazine-blocks.php',
+		);
+
+		$installed_theme_slugs = array_keys( wp_get_themes() );
+		$current_theme         = get_stylesheet();
+
 		wp_localize_script(
 			'ur-about-script',
 			'_UR_',
@@ -31,6 +48,32 @@ class UR_Admin_About {
 				'siteURL'        => esc_url( home_url( '/' ) ),
 				'urRestApiNonce' => wp_create_nonce( 'wp_rest' ),
 				'restURL'        => rest_url(),
+				'version'        => UR()->version,
+				'plugins'        => array_reduce(
+					$allowed_plugin_slugs,
+					function ( $acc, $curr ) use ( $installed_plugin_slugs ) {
+						if ( in_array( $curr, $installed_plugin_slugs, true ) ) {
+
+							if ( is_plugin_active( $curr ) ) {
+								$acc[ $curr ] = 'active';
+							} else {
+								$acc[ $curr ] = 'inactive';
+							}
+						} else {
+							$acc[ $curr ] = 'not-installed';
+						}
+						return $acc;
+					},
+					array()
+				),
+				'themes'         => array(
+					'zakra'    => strpos( $current_theme, 'zakra' ) !== false ? 'active' : (
+						in_array( 'zakra', $installed_theme_slugs, true ) ? 'inactive' : 'not-installed'
+					),
+					'colormag' => strpos( $current_theme, 'colormag' ) !== false || strpos( $current_theme, 'colormag-pro' ) !== false ? 'active' : (
+						in_array( 'colormag', $installed_theme_slugs, true ) || in_array( 'colormag-pro', $installed_theme_slugs, true ) ? 'inactive' : 'not-installed'
+					),
+				),
 			)
 		);
 

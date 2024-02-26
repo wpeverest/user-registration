@@ -14,6 +14,8 @@ import {
 	Tag,
 	Text,
 	useDisclosure,
+	Divider,
+	Center,
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 import React, { useRef } from "react";
@@ -22,11 +24,16 @@ import { ROUTES } from "../../Constants";
 import announcement from "../../images/announcement.gif";
 import { Logo } from "../Icon/Icon";
 import IntersectObserver from "../IntersectionObserver/IntersectionObserver";
+import { useStateValue } from "../../../context/StateProvider";
 // import Changelog from "./Changelog";
 
 const Header = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
+	const [{ isPro }, dispatch] = useStateValue();
 	const ref = useRef;
+
+	/* global _UR_ */
+	const { version } = typeof _UR_ !== "undefined" && _UR_;
 
 	React.useEffect(() => {
 		if (isOpen) {
@@ -94,14 +101,29 @@ const Header = () => {
 							</IntersectObserver>
 						</Stack>
 						<Stack direction="row" align="center" spacing="12px">
-							<Text
-								as="span"
-								color="gray.200"
-								fontSize="large"
-								height="24px"
-								w="1px"
-								bgColor="gray.200"
-							></Text>
+							<Tag
+								variant="outline"
+								colorScheme="primary"
+								borderRadius="xl"
+								bgColor="#F8FAFF"
+								fontSize="xs"
+							>
+								{version}
+							</Tag>
+							<Center height="18px">
+								<Divider orientation="vertical" />
+							</Center>
+							{!isPro && (
+								<Text
+									as="span"
+									color="#2563EB"
+									fontSize="12px"
+									height="18px"
+									w="85px"
+								>
+									{"Upgrade To Pro"}
+								</Text>
+							)}
 							<Button
 								onClick={onOpen}
 								variant="unstyled"

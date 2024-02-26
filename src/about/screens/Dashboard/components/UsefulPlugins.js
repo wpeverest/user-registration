@@ -14,20 +14,25 @@ import {
 	useDisclosure,
 } from "@chakra-ui/react";
 import { sprintf, __ } from "@wordpress/i18n";
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { PLUGINS } from "../../../constants/products";
-// import usePluginInstallActivate from "../../../hooks/usePluginInstallActivate";
+import { useStateValue } from "../../../../context/StateProvider";
+import UsePluginInstallActivate from "../../../components/common/UsePluginInstallActivate";
 
-const Plugin = ({ plugin, index, pluginsStatus }) => {
+const Plugin = ({ plugin, index }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	// const { installPlugin, activatePlugin, performPluginAction } =
-	// 	usePluginInstallActivate({
-	// 		successCallback: onClose,
-	// 		errorCallback: onClose,
-	// 		pluginsStatus,
-	// 	});
-	const { installPlugin, activatePlugin, performPluginAction } = {};
-	const cancelRef = useRef;
+	const cancelRef = useRef();
+	const [isPluginStatusLoading, setIsPluginStatusLoading] = useState(false);
+	const [status, setStatus] = useState("inactive");
+	const [{ pluginsStatus, themesStatus }, dispatch] = useStateValue();
+
+	useEffect(() => {
+		const status =
+			plugin.type === "theme"
+				? themesStatus[plugin.slug]
+				: pluginsStatus[plugin.slug];
+		setStatus(status);
+	}, [pluginsStatus[plugin.slug], themesStatus[plugin.slug]]);
 
 	return (
 		<HStack
@@ -56,15 +61,15 @@ const Plugin = ({ plugin, index, pluginsStatus }) => {
 				fontSize="14px"
 				fontWeight="normal"
 				textDecor="underline"
-				// isLoading={activatePlugin.isLoading || installPlugin.isLoading}
-				isDisabled={"active" === pluginsStatus[plugin.slug]}
+				isLoading={isPluginStatusLoading}
+				isDisabled={"active" === status}
 				onClick={onOpen}
 			>
-				{pluginsStatus[plugin.slug] === "active"
-					? __("Active", "blockart")
-					: pluginsStatus[plugin.slug] === "inactive"
-					? __("Activate", "blockart")
-					: __("Install", "blockart")}
+				{status === "active"
+					? __("Active", "user-registration")
+					: status === "inactive"
+					? __("Activate", "user-registration")
+					: __("Install", "user-registration")}
 			</Button>
 			<AlertDialog
 				isOpen={isOpen}
@@ -75,59 +80,37 @@ const Plugin = ({ plugin, index, pluginsStatus }) => {
 				<AlertDialogOverlay>
 					<AlertDialogContent>
 						<AlertDialogHeader fontSize="lg" fontWeight="semibold">
-							{"inactive" === pluginsStatus[plugin.slug]
-								? __("Activate Plugin", "blockart")
-								: __("Install Plugin", "blockart")}
+							{"inactive" === status
+								? __("Activate Plugin", "user-registration")
+								: __("Install Plugin", "user-registration")}
 						</AlertDialogHeader>
 						<AlertDialogBody>
-							{"inactive" === pluginsStatus[plugin.slug]
+							{"inactive" === status
 								? sprintf(
 										__(
 											"Are you sure? You want to activate %s plugin.",
-											"blockart"
+											"user-registration"
 										),
 										plugin.label
 								  )
 								: sprintf(
 										__(
 											"Are you sure? You want to install and activate %s plugin.",
-											"blockart"
+											"user-registration"
 										),
 										plugin.label
 								  )}
 						</AlertDialogBody>
 						<AlertDialogFooter>
-							<Button
-								size="sm"
-								fontSize="xs"
-								fontWeight="normal"
-								variant="outline"
-								colorScheme="primary"
-								// isDisabled={
-								// 	activatePlugin.isLoading ||
-								// 	installPlugin.isLoading
-								// }
-								ref={cancelRef}
-								onClick={onClose}
-							>
-								{__("Cancel", "blockart")}
-							</Button>
-							<Button
-								size="sm"
-								fontSize="xs"
-								fontWeight="normal"
-								colorScheme="primary"
-								onClick={() => performPluginAction(plugin.slug)}
-								ml={3}
-								// isLoading={
-								// 	activatePlugin.isLoading ||
-								// 	installPlugin.isLoading
-								// }
-							>
-								{"inactive" === pluginsStatus[plugin.slug]
-									? __("Activate", "blockart")
-									: __("Install", "blockart")}
-							</Button>
+							<UsePluginInstallActivate
+								cancelRef={cancelRef}
+								onClose={onClose}
+								slug={plugin.slug}
+								isPluginStatusLoading={isPluginStatusLoading}
+								setIsPluginStatusLoading={
+									setIsPluginStatusLoading
+								}
+							/>
 						</AlertDialogFooter>
 					</AlertDialogContent>
 				</AlertDialogOverlay>
@@ -136,8 +119,7 @@ const Plugin = ({ plugin, index, pluginsStatus }) => {
 	);
 };
 
-export const UsefulPlugins = () => {
-	const pluginsStatus = {};
+const UsefulPlugins = () => {
 	return (
 		<Grid
 			gridTemplateColumns="1fr 1fr"
@@ -153,12 +135,7 @@ export const UsefulPlugins = () => {
 			}}
 		>
 			{PLUGINS.map((plugin, i) => (
-				<Plugin
-					key={plugin.slug}
-					pluginsStatus={pluginsStatus}
-					plugin={plugin}
-					index={i}
-				/>
+				<Plugin key={plugin.slug} plugin={plugin} index={i} />
 			))}
 		</Grid>
 	);
