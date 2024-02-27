@@ -3447,7 +3447,30 @@
 								$this_node.attr("step", $this_node.val());
 							});
 							break;
+						case "limit_length_limit_count":
+							$this_node.on("keyup", function() {
+								trigger_advance_setting_limit_count($this_node);
+							});
+							break;
+						case "limit_length_limit_mode":
+							$this_node.on("change", function() {
+								trigger_advance_setting_limit_mode($this_node);
+							});
+							break;
 						case "limit_length":
+								$this_node.on("click", function () {
+									var wrapper = $(".ur-selected-item.ur-item-active");
+									var limitCount = wrapper.find(".ur_limit_count_mode p.ur_limit_count");
+									var limitMode = wrapper.find(".ur_limit_count_mode p.ur_limit_mode");
+									if ($this_node.is(":checked")) {
+										limitCount.text(wrapper.find("[data-advance-field='limit_length_limit_count']").val());
+										limitMode.text(wrapper.find("[data-advance-field='limit_length_limit_mode']").val());
+									} else {
+										limitCount.text("500");
+										limitMode.text("characters");
+									}
+								});
+								break;
 						case "minimum_length":
 							$this_node.on("change", function () {
 								URFormBuilder.handle_min_max_length($this_node);
@@ -3878,6 +3901,14 @@
 								}
 							});
 							break;
+					}
+					function trigger_advance_setting_limit_count($this_node) {
+						var wrapper = $(".ur-selected-item.ur-item-active");
+						wrapper.find(".ur_limit_count_mode p.ur_limit_count").text($this_node.val());
+					}
+					function trigger_advance_setting_limit_mode($this_node) {
+						var wrapper = $(".ur-selected-item.ur-item-active");
+						wrapper.find(".ur_limit_count_mode p.ur_limit_mode").text($this_node.val());
 					}
 					var node_type = $this_node.get(0).tagName.toLowerCase();
 
