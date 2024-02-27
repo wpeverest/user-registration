@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			0/<p class="ur_limit_count" style="display:inline-block;">
 				<?php
 				if ( empty( $this->admin_data->advance_setting->limit_length ) ) {
-					echo '500';
+					esc_html_e( '500', 'user-registration' );
 				} else {
 					echo esc_html( $this->admin_data->advance_setting->limit_length_limit_count );
 				}
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<p class="ur_limit_mode" style="display:inline-block;">
 				<?php
 				if ( empty( $this->admin_data->advance_setting->limit_length ) ) {
-					echo 'characters';
+					esc_html_e( 'characters', 'user-registration' );
 				} else {
 					echo esc_html( $this->admin_data->advance_setting->limit_length_limit_mode );
 				}
