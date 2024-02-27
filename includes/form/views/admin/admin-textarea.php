@@ -5,9 +5,6 @@
  * @package UserRegistration/Form/Views/Admin/TextArea
  */
 
-error_log( print_r( $this->admin_data->advance_setting->limit_length, true ) );
-error_log( print_r( $this->admin_data->advance_setting->limit_length_limit_count, true ) );
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
