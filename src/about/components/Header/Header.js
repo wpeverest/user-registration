@@ -25,7 +25,7 @@ import announcement from "../../images/announcement.gif";
 import { Logo } from "../Icon/Icon";
 import IntersectObserver from "../IntersectionObserver/IntersectionObserver";
 import { useStateValue } from "../../../context/StateProvider";
-// import Changelog from "./Changelog";
+import Changelog from "../Changelog/Changelog";
 
 const Header = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -164,7 +164,9 @@ const Header = () => {
 					<DrawerHeader>
 						{__("Latest Updates", "user-registration")}
 					</DrawerHeader>
-					<DrawerBody>{/* <Changelog /> */}</DrawerBody>
+					<DrawerBody>
+						<Changelog />{" "}
+					</DrawerBody>
 				</DrawerContent>
 			</Drawer>
 		</>
