@@ -14,6 +14,7 @@ export const initialState = {
 	isPro: false,
 	pluginsStatus: "",
 	themesStatus: "",
+	allAddons: [],
 };
 
 export const actionTypes = {
@@ -23,6 +24,7 @@ export const actionTypes = {
 	GET_IS_PRO: "GET_IS_PRO",
 	GET_PLUGINS_STATUS: "GET_PLUGINS_STATUS",
 	GET_THEMES_STATUS: "GET_THEMES_STATUS",
+	GET_ALL_ADDONS: "GET_ALL_ADDONS",
 };
 
 const reducer = (state, action) => {
@@ -56,6 +58,11 @@ const reducer = (state, action) => {
 			return {
 				...state,
 				themesStatus: action.themesStatus,
+			};
+		case actionTypes.GET_ALL_ADDONS:
+			return {
+				...state,
+				allAddons: action.allAddons,
 			};
 		default:
 			return state;

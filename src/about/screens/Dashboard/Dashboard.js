@@ -67,7 +67,7 @@ const Dashboard = () => {
 							px="6"
 							// href={`${localized.adminUrl}post-new.php?post_type=page`}
 						>
-							{__("Create Your First Form", "blockart")}
+							{__("Create Your First Form", "user-registration")}
 						</Button>
 						<Button
 							as={Link}
@@ -110,7 +110,7 @@ const Dashboard = () => {
 					<HStack gap="2">
 						<Icon.DocsLines w="5" h="5" fill="primary.500" />
 						<Heading as="h3" size="sm" fontWeight="semibold">
-							{__("Getting Started", "blockart")}
+							{__("Getting Started", "user-registration")}
 						</Heading>
 					</HStack>
 					<Text fontSize="13px" color="gray.700">

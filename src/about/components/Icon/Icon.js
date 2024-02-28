@@ -26,13 +26,22 @@ export const Search = React.forwardRef((props, ref) => (
 		{...props}
 	>
 		<path
+			fill="white"
 			fillRule="evenodd"
-			d="M8.25 3.25a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm-7 5a7 7 0 1 1 14 0 7 7 0 0 1-14 0Z"
+			d="M7.33333 12.6667C10.2789 12.6667 12.6667 10.2789 12.6667 7.33333C12.6667 4.38781 10.2789 2 7.33333 2C4.38781 2 2 4.38781 2 7.33333C2 10.2789 4.38781 12.6667 7.33333 12.6667Z"
+			stroke="#909090"
+			strokeWidth="1.33333"
+			strokeLinecap="round"
+			strokeLinejoin="round"
 			clipRule="evenodd"
 		/>
 		<path
 			fillRule="evenodd"
-			d="M11.78 11.78a1 1 0 0 1 1.415 0l3.262 3.263a1 1 0 0 1-1.414 1.414l-3.263-3.262a1 1 0 0 1 0-1.415Z"
+			d="M13.9995 14.0005L11.1328 11.1338"
+			stroke="#909090"
+			strokeWidth="1.33333"
+			strokeLinecap="round"
+			strokeLinejoin="round"
 			clipRule="evenodd"
 		/>
 	</chakra.svg>

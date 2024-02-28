@@ -121,7 +121,7 @@ const Header = () => {
 									height="18px"
 									w="85px"
 								>
-									{"Upgrade To Pro"}
+									{__("Upgrade To Pro", "user-registration")}
 								</Text>
 							)}
 							<Button

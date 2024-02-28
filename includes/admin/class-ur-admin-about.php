@@ -46,6 +46,7 @@ class UR_Admin_About {
 			array(
 				'adminURL'       => esc_url( admin_url() ),
 				'siteURL'        => esc_url( home_url( '/' ) ),
+				'assetsURL'      => esc_url( UR()->plugin_url() . '/assets/' ),
 				'urRestApiNonce' => wp_create_nonce( 'wp_rest' ),
 				'restURL'        => rest_url(),
 				'version'        => UR()->version,
