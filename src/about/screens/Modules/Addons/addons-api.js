@@ -11,6 +11,8 @@ const urls = {
 	deactivateAddon: base + "addons/deactivate",
 	bulkActivateAddons: base + "addons/bulk-activate",
 	bulkDeactivateAddons: base + "addons/bulk-deactivate",
+	installAddon: base + "addons/install",
+	bulkInstallAddon: base + "addons/bulk-install",
 };
 
 export const getAllAddons = () => {
@@ -81,6 +83,33 @@ export const bulkDeactivateAddons = (slugs) => {
 		},
 		data: {
 			slugs: slugs,
+		},
+	}).then((res) => res);
+};
+
+export const installAddon = (slug, name) => {
+	return apiFetch({
+		path: urls.installAddon,
+		method: "POST",
+		headers: {
+			"X-WP-Nonce": urRestApiNonce,
+		},
+		data: {
+			slug: slug,
+			name: name,
+		},
+	}).then((res) => res);
+};
+
+export const bulkInstallAddon = (addonData) => {
+	return apiFetch({
+		path: urls.bulkInstallAddon,
+		method: "POST",
+		headers: {
+			"X-WP-Nonce": urRestApiNonce,
+		},
+		data: {
+			addonData: addonData,
 		},
 	}).then((res) => res);
 };

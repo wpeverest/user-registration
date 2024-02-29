@@ -19,7 +19,7 @@ import {
 import { __ } from "@wordpress/i18n";
 import React, { useState, useEffect } from "react";
 import { isEmpty } from "../../../../../utils/utils";
-import { activateAddon, deactivateAddon } from "../addons-api";
+import { activateAddon, deactivateAddon, installAddon } from "../addons-api";
 
 const AddonItem = (props) => {
 	/* global _UR_ */
@@ -32,14 +32,23 @@ const AddonItem = (props) => {
 		selectedSlugs,
 	} = props;
 	const toast = useToast();
-	const { title, excerpt, slug, image, plan, link, status, required_plan } =
-		data;
+	const {
+		title,
+		name,
+		excerpt,
+		slug,
+		image,
+		plan,
+		link,
+		status,
+		required_plan,
+	} = data;
 	const [addonStatus, setAddonStatus] = useState(status);
 	const [isPerformingAction, setIsPerformingAction] = useState(false);
 
 	const handleAddonAction = () => {
 		setIsPerformingAction(true);
-		if (status === "inactive") {
+		if (addonStatus === "inactive") {
 			activateAddon(slug)
 				.then((data) => {
 					if (data.status === "active") {
@@ -69,7 +78,7 @@ const AddonItem = (props) => {
 				.finally(() => {
 					setIsPerformingAction(false);
 				});
-		} else if (status === "active") {
+		} else if (addonStatus === "active") {
 			deactivateAddon(slug)
 				.then((data) => {
 					if (data.success) {
@@ -88,6 +97,37 @@ const AddonItem = (props) => {
 						});
 						setAddonStatus("active");
 					}
+				})
+				.finally(() => {
+					setIsPerformingAction(false);
+				});
+		} else {
+			installAddon(slug, name)
+				.then((data) => {
+					if (data.success) {
+						toast({
+							title: data.message,
+							status: "success",
+							duration: 3000,
+						});
+						// window.location.reload();
+						setAddonStatus("inactive");
+					} else {
+						toast({
+							title: data.message,
+							status: "error",
+							duration: 3000,
+						});
+						setAddonStatus("not-installed");
+					}
+				})
+				.catch((e) => {
+					toast({
+						title: e.message,
+						status: "error",
+						duration: 3000,
+					});
+					setAddonStatus("not-installed");
 				})
 				.finally(() => {
 					setIsPerformingAction(false);

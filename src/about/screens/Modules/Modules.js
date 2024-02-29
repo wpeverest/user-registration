@@ -20,7 +20,11 @@ import { __ } from "@wordpress/i18n";
 import { Search } from "../../components/Icon/Icon";
 import Features from "./Features/Features";
 import Addons from "./Addons/Addons";
-import { bulkActivateAddons, bulkDeactivateAddons } from "./Addons/addons-api";
+import {
+	bulkActivateAddons,
+	bulkDeactivateAddons,
+	bulkInstallAddon,
+} from "./Addons/addons-api";
 import { isEmpty } from "../../../utils/utils";
 import { getAllAddons } from "./Addons/addons-api";
 import { useOnType } from "use-ontype";
@@ -31,6 +35,7 @@ import { actionTypes } from "../../../context/gettingStartedContext";
 const Modules = () => {
 	const [tabIndex, setTabIndex] = useState(0);
 	const [selectedSlugs, setSelectedSlugs] = useState([]);
+	const [selectedAddonsNames, setSelectedAddonsNames] = useState([]);
 	const [bulkAction, setBulkAction] = useState("");
 	const [isPerformingBulkAction, setIsPerformingBulkAction] = useState(false);
 	const toast = useToast();
@@ -92,6 +97,41 @@ const Modules = () => {
 				});
 		} else if (bulkAction === "deactivate") {
 			bulkDeactivateAddons(selectedSlugs)
+				.then((data) => {
+					if (data.success) {
+						toast({
+							title: data.message,
+							status: "success",
+							duration: 3000,
+						});
+						// window.location.reload();
+						// setAddonStatus("active");
+					} else {
+						toast({
+							title: data.message,
+							status: "error",
+							duration: 3000,
+						});
+						// setAddonStatus("inactive");
+					}
+				})
+				.catch((e) => {
+					toast({
+						title: e.message,
+						status: "error",
+						duration: 3000,
+					});
+					// setAddonStatus("inactive");
+				})
+				.finally(() => {
+					setIsPerformingBulkAction(false);
+				});
+		} else if (bulkAction === "install") {
+			const addonData = selectedSlugs.map((slug, index) => ({
+				slug: slug,
+				name: selectedAddonsNames[index],
+			}));
+			bulkInstallAddon(addonData)
 				.then((data) => {
 					if (data.success) {
 						toast({
@@ -221,6 +261,9 @@ const Modules = () => {
 							<option value="deactivate">
 								{__("Deactivate", "user-registration")}
 							</option>
+							<option value="install">
+								{__("Install", "user-registration")}
+							</option>
 						</Select>
 
 						<Button
@@ -276,6 +319,12 @@ const Modules = () => {
 										filteredAddons={filteredAddons}
 										selectedSlugs={selectedSlugs}
 										setSelectedSlugs={setSelectedSlugs}
+										selectedAddonsNames={
+											selectedAddonsNames
+										}
+										setSelectedAddonsNames={
+											setSelectedAddonsNames
+										}
 									/>
 								</TabPanel>
 							</TabPanels>

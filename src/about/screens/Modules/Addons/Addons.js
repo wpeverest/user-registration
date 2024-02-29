@@ -12,20 +12,20 @@ const Addons = ({
 	filteredAddons,
 	selectedSlugs,
 	setSelectedSlugs,
+	selectedAddonsNames,
+	setSelectedAddonsNames,
 }) => {
-	const handleCheckedChange = (slug, checked) => {
+	const handleCheckedChange = (slug, checked, name) => {
 		if (checked) {
 			setSelectedSlugs((prev) => [...prev, slug + "/" + slug + ".php"]);
+			setSelectedAddonsNames((prev) => [...prev, name]);
 		} else {
 			setSelectedSlugs((prev) =>
 				prev.filter((s) => s !== slug + "/" + slug + ".php")
 			);
+			setSelectedAddonsNames((prev) => prev.filter((s) => s !== name));
 		}
 	};
-
-	// useEffect(() => {
-	// 	console.log(filteredAddons);
-	// }, [filteredAddons]);
 
 	return (
 		<>
@@ -52,8 +52,12 @@ const Addons = ({
 													data.slug +
 													".php"
 											)}
-											onCheckedChange={
-												handleCheckedChange
+											onCheckedChange={(slug, checked) =>
+												handleCheckedChange(
+													slug,
+													checked,
+													data.name
+												)
 											}
 											isPerformingBulkAction={
 												isPerformingBulkAction

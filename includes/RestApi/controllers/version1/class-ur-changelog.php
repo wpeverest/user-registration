@@ -3,8 +3,9 @@
  * Changelog Controller.
  *
  * @since 3.1.6
+ *
+ * @package  UserRegistration/Classes
  */
-
 
 defined( 'ABSPATH' ) || exit;
 

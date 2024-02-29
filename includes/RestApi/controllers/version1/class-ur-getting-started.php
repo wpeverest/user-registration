@@ -3,6 +3,8 @@
  * Getting started controller class.
  *
  * @since 2.1.4
+ *
+ * @package  UserRegistration/Classes
  */
 
 defined( 'ABSPATH' ) || exit;
