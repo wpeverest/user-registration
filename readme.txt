@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 5.2
 Requires PHP: 7.2
 Tested up to: 6.4.3
-Stable tag: 3.1.4
+Stable tag: 3.1.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -369,6 +369,11 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 3.1.5    - 04/03/2024
+* Fix      - Checkbox sync issue with WooCommerce checkout page.
+* Fix      - Critical Error while login payment before login option.
+* Fix      - Missing Escaping for display name.
 
 = 3.1.4    - 12/02/2024
 * Feature  - Deny Smart Tag in Admin Approval.

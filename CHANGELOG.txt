@@ -1,3 +1,8 @@
+= 3.1.5    - 04/03/2024
+* Fix      - Checkbox sync issue with WooCommerce checkout page.
+* Fix      - Critical Error while login payment before login option.
+* Fix      - Missing Escaping for display name.
+
 = 3.1.4    - 12/02/2024
 * Feature  - Deny Smart Tag in Admin Approval.
 * Tweak    - From address going wrong in some emails.
