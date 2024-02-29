@@ -16,6 +16,8 @@ import * as Icon from "../../components/Icon/Icon";
 import UsefulPlugins from "./components/UsefulPlugins";
 
 const Dashboard = () => {
+	/* global _UR_ */
+	const { newFormURL } = typeof _UR_ !== "undefined" && _UR_;
 	return (
 		<Grid
 			my="8"
@@ -65,9 +67,9 @@ const Dashboard = () => {
 							textDecor="none !important"
 							py="3"
 							px="6"
-							// href={`${localized.adminUrl}post-new.php?post_type=page`}
+							href={newFormURL}
 						>
-							{__("Create Your First Form", "user-registration")}
+							{__("Create a Form", "user-registration")}
 						</Button>
 						<Button
 							as={Link}

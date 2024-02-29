@@ -24,16 +24,14 @@ import { ROUTES } from "../../Constants";
 import announcement from "../../images/announcement.gif";
 import { Logo } from "../Icon/Icon";
 import IntersectObserver from "../IntersectionObserver/IntersectionObserver";
-import { useStateValue } from "../../../context/StateProvider";
 import Changelog from "../Changelog/Changelog";
 
 const Header = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const [{ isPro }, dispatch] = useStateValue();
 	const ref = useRef;
 
 	/* global _UR_ */
-	const { version } = typeof _UR_ !== "undefined" && _UR_;
+	const { version, isPro, upgradeURL } = typeof _UR_ !== "undefined" && _UR_;
 
 	React.useEffect(() => {
 		if (isOpen) {
@@ -114,15 +112,16 @@ const Header = () => {
 								<Divider orientation="vertical" />
 							</Center>
 							{!isPro && (
-								<Text
-									as="span"
+								<Link
 									color="#2563EB"
 									fontSize="12px"
 									height="18px"
 									w="85px"
+									href={upgradeURL}
+									isExternal
 								>
 									{__("Upgrade To Pro", "user-registration")}
-								</Text>
+								</Link>
 							)}
 							<Button
 								onClick={onOpen}

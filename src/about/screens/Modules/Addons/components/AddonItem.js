@@ -1,15 +1,11 @@
 import {
-	Alert,
-	AlertIcon,
 	Badge,
 	Box,
 	Checkbox,
 	Heading,
 	Image,
 	Stack,
-	Switch,
 	Text,
-	useBoolean,
 	useToast,
 	Link,
 	Button,
@@ -18,12 +14,15 @@ import {
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 import React, { useState, useEffect } from "react";
-import { isEmpty } from "../../../../../utils/utils";
 import { activateAddon, deactivateAddon, installAddon } from "../addons-api";
+import { useStateValue } from "../../../../../context/StateProvider";
+import { actionTypes } from "../../../../../context/gettingStartedContext";
 
 const AddonItem = (props) => {
 	/* global _UR_ */
-	const { assetsURL } = typeof _UR_ !== "undefined" && _UR_;
+	const { assetsURL, isPro } = typeof _UR_ !== "undefined" && _UR_;
+	const [{ upgradeModal }, dispatch] = useStateValue();
+
 	const {
 		data,
 		isChecked,
@@ -48,96 +47,117 @@ const AddonItem = (props) => {
 
 	const handleAddonAction = () => {
 		setIsPerformingAction(true);
-		if (addonStatus === "inactive") {
-			activateAddon(slug)
-				.then((data) => {
-					if (data.status === "active") {
-						toast({
-							title: __(
-								"Addon activated successfully.",
-								"user-registration"
-							),
-							status: "success",
-							duration: 3000,
-						});
+		if (isPro) {
+			if (addonStatus === "inactive") {
+				activateAddon(slug)
+					.then((data) => {
+						if (data.status === "active") {
+							toast({
+								title: __(
+									"Addon activated successfully.",
+									"user-registration"
+								),
+								status: "success",
+								duration: 3000,
+							});
 
-						// window.location.reload();
-						setAddonStatus("active");
-					} else {
+							// window.location.reload();
+							setAddonStatus("active");
+						} else {
+							toast({
+								title: __(
+									"Addon cannot be activated. Please try again later.",
+									"user-registration"
+								),
+								status: "error",
+								duration: 3000,
+							});
+							setAddonStatus("inactive");
+						}
+					})
+					.finally(() => {
+						setIsPerformingAction(false);
+					});
+			} else if (addonStatus === "active") {
+				deactivateAddon(slug)
+					.then((data) => {
+						if (data.success) {
+							toast({
+								title: data.message,
+								status: "success",
+								duration: 3000,
+							});
+							// window.location.reload();
+							setAddonStatus("inactive");
+						} else {
+							toast({
+								title: data.message,
+								status: "error",
+								duration: 3000,
+							});
+							setAddonStatus("active");
+						}
+					})
+					.finally(() => {
+						setIsPerformingAction(false);
+					});
+			} else {
+				installAddon(slug, name)
+					.then((data) => {
+						if (data.success) {
+							toast({
+								title: data.message,
+								status: "success",
+								duration: 3000,
+							});
+							// window.location.reload();
+							setAddonStatus("inactive");
+						} else {
+							toast({
+								title: data.message,
+								status: "error",
+								duration: 3000,
+							});
+							setAddonStatus("not-installed");
+						}
+					})
+					.catch((e) => {
 						toast({
-							title: __(
-								"Addon cannot be activated. Please try again later.",
-								"user-registration"
-							),
-							status: "error",
-							duration: 3000,
-						});
-						setAddonStatus("inactive");
-					}
-				})
-				.finally(() => {
-					setIsPerformingAction(false);
-				});
-		} else if (addonStatus === "active") {
-			deactivateAddon(slug)
-				.then((data) => {
-					if (data.success) {
-						toast({
-							title: data.message,
-							status: "success",
-							duration: 3000,
-						});
-						// window.location.reload();
-						setAddonStatus("inactive");
-					} else {
-						toast({
-							title: data.message,
-							status: "error",
-							duration: 3000,
-						});
-						setAddonStatus("active");
-					}
-				})
-				.finally(() => {
-					setIsPerformingAction(false);
-				});
-		} else {
-			installAddon(slug, name)
-				.then((data) => {
-					if (data.success) {
-						toast({
-							title: data.message,
-							status: "success",
-							duration: 3000,
-						});
-						// window.location.reload();
-						setAddonStatus("inactive");
-					} else {
-						toast({
-							title: data.message,
+							title: e.message,
 							status: "error",
 							duration: 3000,
 						});
 						setAddonStatus("not-installed");
-					}
-				})
-				.catch((e) => {
-					toast({
-						title: e.message,
-						status: "error",
-						duration: 3000,
+					})
+					.finally(() => {
+						setIsPerformingAction(false);
 					});
-					setAddonStatus("not-installed");
-				})
-				.finally(() => {
-					setIsPerformingAction(false);
-				});
+			}
+		} else {
+			// Handle Pro Upgrade notice
+			dispatch({
+				type: actionTypes.GET_UPGRADE_MODAL,
+				upgradeModal: true,
+			});
 		}
 	};
 
 	useEffect(() => {
 		setAddonStatus(data.status);
-	}, [data]);
+
+		if (!upgradeModal) {
+			setIsPerformingAction(false);
+		}
+	}, [data, upgradeModal]);
+
+	const handleBoxClick = () => {
+		if (!isPro) {
+			dispatch({
+				type: actionTypes.GET_UPGRADE_MODAL,
+				upgradeModal: true,
+			});
+		}
+	};
 
 	return (
 		<Box
@@ -185,9 +205,14 @@ const AddonItem = (props) => {
 						>
 							<Checkbox
 								isChecked={isChecked}
-								onChange={(e) =>
-									onCheckedChange?.(slug, e.target.checked)
-								}
+								onChange={(e) => {
+									isPro
+										? onCheckedChange(
+												slug,
+												e.target.checked
+										  )
+										: handleBoxClick();
+								}}
 							>
 								{title}
 							</Checkbox>
@@ -230,10 +255,12 @@ const AddonItem = (props) => {
 				</HStack>
 				<Button
 					colorScheme={
-						"active" === addonStatus
-							? "red"
-							: "inactive" === addonStatus
-							? "green"
+						isPro
+							? "active" === addonStatus
+								? "red"
+								: "inactive" === addonStatus
+								? "green"
+								: "primary"
 							: "primary"
 					}
 					size="sm"
@@ -255,11 +282,13 @@ const AddonItem = (props) => {
 							isPerformingBulkAction)
 					}
 				>
-					{"active" === addonStatus
-						? __("Deactivate", "user-registration")
-						: "inactive" === addonStatus
-						? __("Activate", "user-registration")
-						: __("Install", "user-registration")}
+					{isPro
+						? "active" === addonStatus
+							? __("Deactivate", "user-registration")
+							: "inactive" === addonStatus
+							? __("Activate", "user-registration")
+							: __("Install", "user-registration")
+						: __("Upgrade Plan", "user-registration")}
 				</Button>
 			</Box>
 		</Box>

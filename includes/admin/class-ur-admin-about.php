@@ -48,8 +48,12 @@ class UR_Admin_About {
 				'siteURL'        => esc_url( home_url( '/' ) ),
 				'assetsURL'      => esc_url( UR()->plugin_url() . '/assets/' ),
 				'urRestApiNonce' => wp_create_nonce( 'wp_rest' ),
+				'newFormURL'     => esc_url( admin_url( '/admin.php?page=add-new-registration' ) ),
 				'restURL'        => rest_url(),
 				'version'        => UR()->version,
+				'isPro'          => is_plugin_active( 'user-registration-pro/user-registration.php' ),
+				'licensePlan'    => ur_get_license_plan(),
+				'upgradeURL'     => esc_url_raw( 'https://wpuserregistration.com/pricing/?utm_source=addons-page&utm_medium=upgrade-button&utm_campaign=ur-upgrade-to-pro' ),
 				'plugins'        => array_reduce(
 					$allowed_plugin_slugs,
 					function ( $acc, $curr ) use ( $installed_plugin_slugs ) {
