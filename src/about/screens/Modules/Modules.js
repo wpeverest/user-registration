@@ -189,6 +189,68 @@ const Modules = () => {
 		},
 		800
 	);
+
+	const parseDate = (dateString) => {
+		const [day, month, year] = dateString.split("/").map(Number);
+		return new Date(year, month - 1, day);
+	};
+
+	const handleSorterChange = (e) => {
+		const sortType = e.target.value;
+
+		switch (sortType) {
+			case "newest":
+				setFilteredAddons(
+					[...filteredAddons].sort(
+						(firstAddonInContext, secondAddonInContext) =>
+							parseDate(secondAddonInContext.released_date) -
+							parseDate(firstAddonInContext.released_date)
+					)
+				);
+				break;
+			case "oldest":
+				setFilteredAddons(
+					[...filteredAddons].sort(
+						(firstAddonInContext, secondAddonInContext) =>
+							parseDate(firstAddonInContext.released_date) -
+							parseDate(secondAddonInContext.released_date)
+					)
+				);
+				break;
+			case "asc":
+				setFilteredAddons(
+					[...filteredAddons].sort(
+						(firstAddonInContext, secondAddonInContext) =>
+							firstAddonInContext.title.localeCompare(
+								secondAddonInContext.title
+							)
+					)
+				);
+				break;
+			case "desc":
+				setFilteredAddons(
+					[...filteredAddons].sort(
+						(firstAddonInContext, secondAddonInContext) =>
+							secondAddonInContext.title.localeCompare(
+								firstAddonInContext.title
+							)
+					)
+				);
+				break;
+			default:
+				getAllAddons().then((data) => {
+					if (data.success) {
+						dispatch({
+							type: actionTypes.GET_ALL_ADDONS,
+							allAddons: data.addons_lists,
+						});
+
+						setFilteredAddons(data.addons_lists);
+						setAddonsLoaded(true);
+					}
+				});
+		}
+	};
 	return (
 		<Box top="var(--wp-admin--admin-bar--height, 0)" zIndex={1}>
 			<Container maxW="container.xl">
@@ -204,12 +266,22 @@ const Modules = () => {
 							alignItems="center"
 							size="md"
 							bg="#DFDFE0"
+							onChange={handleSorterChange}
 						>
+							<option value="default">
+								{__("Most Downloaded", "user-registration")}
+							</option>
 							<option value="newest">
 								{__("Newest", "user-registration")}
 							</option>
 							<option value="oldest">
 								{__("Oldest", "user-registration")}
+							</option>
+							<option value="asc">
+								{__("Ascending", "user-registration")}
+							</option>
+							<option value="desc">
+								{__("Descending", "user-registration")}
 							</option>
 						</Select>
 
@@ -319,9 +391,6 @@ const Modules = () => {
 										filteredAddons={filteredAddons}
 										selectedSlugs={selectedSlugs}
 										setSelectedSlugs={setSelectedSlugs}
-										selectedAddonsNames={
-											selectedAddonsNames
-										}
 										setSelectedAddonsNames={
 											setSelectedAddonsNames
 										}

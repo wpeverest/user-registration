@@ -1,18 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import AddonSkeleton from "../../../skeleton/AddonsSkeleton/AddonsSkeleton";
 import { Tabs, Container } from "@chakra-ui/react";
 import AddonItem from "./components/AddonItem";
 import { isArray, isEmpty } from "../../../../utils/utils";
 import { Col, Row } from "react-grid-system";
-import { useStateValue } from "../../../../context/StateProvider";
-import { actionTypes } from "../../../../context/gettingStartedContext";
 
 const Addons = ({
 	isPerformingBulkAction,
 	filteredAddons,
 	selectedSlugs,
 	setSelectedSlugs,
-	selectedAddonsNames,
 	setSelectedAddonsNames,
 }) => {
 	const handleCheckedChange = (slug, checked, name) => {
