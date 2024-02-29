@@ -181,6 +181,23 @@ export const ArrowRightFill = React.forwardRef((props, ref) => (
 		></path>
 	</chakra.svg>
 ));
+export const ArrowLeftFill = React.forwardRef((props, ref) => (
+	<chakra.svg
+		viewBox="0 0 24 24"
+		xmlns="https://www.w3.org/2000/svg"
+		fill="none"
+		{...props}
+		ref={ref}
+	>
+		<path
+			fillRule="evenodd"
+			xmlns="http://www.w3.org/2000/svg"
+			d="M12.2493 6.41645H3.15518L7.41352 2.16395C7.4679 2.10956 7.51105 2.04499 7.54048 1.97393C7.56992 1.90287 7.58507 1.8267 7.58507 1.74978C7.58507 1.67286 7.56992 1.5967 7.54048 1.52564C7.51105 1.45457 7.4679 1.39001 7.41352 1.33562C7.35913 1.28123 7.29456 1.23808 7.22349 1.20865C7.15243 1.17921 7.07627 1.16406 6.99935 1.16406C6.84401 1.16406 6.69503 1.22577 6.58518 1.33562L1.33518 6.58562C1.28116 6.64037 1.23941 6.70599 1.21268 6.77812C1.18279 6.84825 1.16694 6.92355 1.16602 6.99978C1.16747 7.07784 1.18329 7.15496 1.21268 7.22728C1.24246 7.29435 1.28394 7.35558 1.33518 7.40812L6.58518 12.6581C6.63941 12.7128 6.70393 12.7562 6.77501 12.7858C6.8461 12.8154 6.92234 12.8307 6.99935 12.8307C7.07636 12.8307 7.1526 12.8154 7.22369 12.7858C7.29477 12.7562 7.35929 12.7128 7.41352 12.6581C7.46819 12.6039 7.51159 12.5394 7.5412 12.4683C7.57082 12.3972 7.58606 12.321 7.58606 12.2439C7.58606 12.1669 7.57082 12.0907 7.5412 12.0196C7.51159 11.9485 7.46819 11.884 7.41352 11.8298L3.15518 7.58312H12.2493C12.4041 7.58312 12.5524 7.52166 12.6618 7.41226C12.7712 7.30287 12.8327 7.15449 12.8327 6.99978C12.8327 6.84507 12.7712 6.6967 12.6618 6.5873C12.5524 6.47791 12.4041 6.41645 12.2493 6.41645Z"
+			fill="#6B6B6B"
+			clipRule="evenodd"
+		/>
+	</chakra.svg>
+));
 
 export const QuestionCircleFill = React.forwardRef((props, ref) => (
 	<chakra.svg
@@ -939,6 +956,7 @@ ArrowsRepeat.displayName = "ArrowsRepeat";
 ArrowsUpDown.displayName = "ArrowsUpDown";
 Links.displayName = "Links";
 ArrowRightFill.displayName = "ArrowRightFill";
+ArrowLeftFill.displayName = "ArrowLeftFill";
 QuestionCircleFill.displayName = "QuestionCircleFill";
 Buttons.displayName = "Buttons";
 Countdown.displayName = "Countdown";

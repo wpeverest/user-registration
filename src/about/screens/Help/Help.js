@@ -9,13 +9,19 @@ import {
 	Text,
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import * as Icon from "../../components/Icon/Icon";
 import facebook from "../../images/facebook.webp";
 import x from "../../images/x.webp";
 import youtube from "../../images/youtube.webp";
+import ShortcodesLists from "./Lists/ShortcodesLists/ShortcodesLists";
 
 const Help = () => {
+	const [isListViewerOpen, setIsListViewerOpen] = useState(false);
+	const [listViewerType, setListViewerType] = useState("");
+
+	useEffect(() => {}, [isListViewerOpen]);
+
 	return (
 		<Grid
 			my="8"
@@ -27,155 +33,163 @@ const Help = () => {
 			}}
 		>
 			<Stack gap="5">
-				<Grid
-					gridTemplateColumns={{
-						sm: "1fr",
-						md: "1fr 1fr",
-					}}
-					gridGap="5"
-				>
-					<Stack
-						px="6"
-						py="8"
-						align="center"
-						gap="3"
-						bgColor="white"
-						borderRadius="base"
-						border="1px"
-						borderColor="gray.100"
-						textAlign="center"
+				{isListViewerOpen && listViewerType === "shortcodes" ? (
+					<ShortcodesLists
+						setIsListViewerOpen={setIsListViewerOpen}
+					/>
+				) : (
+					<Grid
+						gridTemplateColumns={{
+							sm: "1fr",
+							md: "1fr 1fr",
+						}}
+						gridGap="5"
 					>
-						<Icon.Chat w="8" h="8" fill="primary.500" />
-						<Heading as="h3" size="sm" fontWeight="semibold">
-							{__("Shortcodes", "user-registration")}
-						</Heading>
-						<Text fontSize="13px" color="gray.700">
-							{__(
-								"You can find all the lists of shortcodes with their usage and details",
-								"user-registration"
-							)}
-						</Text>
-						<Button
-							mt="10"
-							as={Link}
-							variant="outline"
-							colorScheme="primary"
+						<Stack
+							px="6"
+							py="8"
+							align="center"
+							gap="3"
+							bgColor="white"
 							borderRadius="base"
-							fontSize="14px"
-							fontWeight="normal"
-							href="https://docs.wpuserregistration.com/docs/how-to-add-gutenberg-blocks-to-show-login-registration-forms/"
-							isExternal
+							border="1px"
+							borderColor="gray.100"
+							textAlign="center"
 						>
-							{__("View all Shortcodes", "user-registration")}
-						</Button>
-					</Stack>
-					<Stack
-						px="6"
-						py="8"
-						align="center"
-						gap="3"
-						bgColor="white"
-						borderRadius="base"
-						border="1px"
-						borderColor="gray.100"
-						textAlign="center"
-					>
-						<Icon.Chat w="8" h="8" fill="primary.500" />
-						<Heading as="h3" size="sm" fontWeight="semibold">
-							{__("Smart Tags", "user-registration")}
-						</Heading>
-						<Text fontSize="13px" color="gray.700">
-							{__(
-								"You can find all the lists of smart tags with their usage and details",
-								"user-registration"
-							)}
-						</Text>
-						<Button
-							mt="10"
-							as={Link}
-							variant="outline"
-							colorScheme="primary"
+							<Icon.Chat w="8" h="8" fill="primary.500" />
+							<Heading as="h3" size="sm" fontWeight="semibold">
+								{__("Shortcodes", "user-registration")}
+							</Heading>
+							<Text fontSize="13px" color="gray.700">
+								{__(
+									"You can find all the lists of shortcodes with their usage and details",
+									"user-registration"
+								)}
+							</Text>
+							<Button
+								mt="10"
+								variant="outline"
+								colorScheme="primary"
+								borderRadius="base"
+								fontSize="14px"
+								fontWeight="normal"
+								onClick={() => {
+									setIsListViewerOpen(true);
+									setListViewerType("shortcodes");
+								}}
+							>
+								{__("View all Shortcodes", "user-registration")}
+							</Button>
+						</Stack>
+						<Stack
+							px="6"
+							py="8"
+							align="center"
+							gap="3"
+							bgColor="white"
 							borderRadius="base"
-							fontSize="14px"
-							fontWeight="normal"
-							href="https://wpuserregistration.com/support"
-							isExternal
+							border="1px"
+							borderColor="gray.100"
+							textAlign="center"
 						>
-							{__("View Tags", "user-registration")}
-						</Button>
-					</Stack>
-					<Stack
-						px="6"
-						py="8"
-						align="center"
-						gap="3"
-						bgColor="white"
-						borderRadius="base"
-						border="1px"
-						borderColor="gray.100"
-						textAlign="center"
-					>
-						<Icon.Chat w="8" h="8" fill="primary.500" />
-						<Heading as="h3" size="sm" fontWeight="semibold">
-							{__("Support", "user-registration")}
-						</Heading>
-						<Text fontSize="13px" color="gray.700">
-							{__(
-								"We would be happy to guide any of your issues and queries 24/7",
-								"user-registration"
-							)}
-						</Text>
-						<Button
-							mt="10"
-							as={Link}
-							variant="outline"
-							colorScheme="primary"
+							<Icon.Chat w="8" h="8" fill="primary.500" />
+							<Heading as="h3" size="sm" fontWeight="semibold">
+								{__("Smart Tags", "user-registration")}
+							</Heading>
+							<Text fontSize="13px" color="gray.700">
+								{__(
+									"You can find all the lists of smart tags with their usage and details",
+									"user-registration"
+								)}
+							</Text>
+							<Button
+								mt="10"
+								variant="outline"
+								colorScheme="primary"
+								borderRadius="base"
+								fontSize="14px"
+								fontWeight="normal"
+								onClick={() => {
+									setIsListViewerOpen(true);
+									setListViewerType("smartTags");
+								}}
+							>
+								{__("View Tags", "user-registration")}
+							</Button>
+						</Stack>
+						<Stack
+							px="6"
+							py="8"
+							align="center"
+							gap="3"
+							bgColor="white"
 							borderRadius="base"
-							fontSize="14px"
-							fontWeight="normal"
-							href="https://wpuserregistration.com/support"
-							isExternal
+							border="1px"
+							borderColor="gray.100"
+							textAlign="center"
 						>
-							{__("Contact Support", "user-registration")}
-						</Button>
-					</Stack>
-					<Stack
-						px="6"
-						py="8"
-						align="center"
-						gap="3"
-						bgColor="white"
-						borderRadius="base"
-						border="1px"
-						borderColor="gray.100"
-						textAlign="center"
-					>
-						<Icon.DocsLines w="8" h="8" fill="primary.500" />
-						<Heading as="h3" size="sm" fontWeight="semibold">
-							{__("Need Some Help?", "user-registration")}
-						</Heading>
-						<Text fontSize="13px" color="gray.700">
-							{__(
-								"Please check out basic documentation for detailed information on how to use User Registration.",
-								"user-registration"
-							)}
-						</Text>
-						<Button
-							mt="10"
-							as={Link}
-							colorScheme="primary"
-							variant="link"
+							<Icon.Chat w="8" h="8" fill="primary.500" />
+							<Heading as="h3" size="sm" fontWeight="semibold">
+								{__("Support", "user-registration")}
+							</Heading>
+							<Text fontSize="13px" color="gray.700">
+								{__(
+									"We would be happy to guide any of your issues and queries 24/7",
+									"user-registration"
+								)}
+							</Text>
+							<Button
+								mt="10"
+								as={Link}
+								variant="outline"
+								colorScheme="primary"
+								borderRadius="base"
+								fontSize="14px"
+								fontWeight="normal"
+								href="https://wpuserregistration.com/support"
+								isExternal
+							>
+								{__("Contact Support", "user-registration")}
+							</Button>
+						</Stack>
+						<Stack
+							px="6"
+							py="8"
+							align="center"
+							gap="3"
+							bgColor="white"
 							borderRadius="base"
-							fontSize="14px"
-							fontWeight="normal"
-							textDecor="underline"
-							href="https://docs.wpuserregistration.com/"
-							isExternal
+							border="1px"
+							borderColor="gray.100"
+							textAlign="center"
 						>
-							{__("View Now", "user-registration")}
-						</Button>
-					</Stack>
-				</Grid>
+							<Icon.DocsLines w="8" h="8" fill="primary.500" />
+							<Heading as="h3" size="sm" fontWeight="semibold">
+								{__("Need Some Help?", "user-registration")}
+							</Heading>
+							<Text fontSize="13px" color="gray.700">
+								{__(
+									"Please check out basic documentation for detailed information on how to use User Registration.",
+									"user-registration"
+								)}
+							</Text>
+							<Button
+								mt="10"
+								as={Link}
+								colorScheme="primary"
+								variant="link"
+								borderRadius="base"
+								fontSize="14px"
+								fontWeight="normal"
+								textDecor="underline"
+								href="https://docs.wpuserregistration.com/"
+								isExternal
+							>
+								{__("View Now", "user-registration")}
+							</Button>
+						</Stack>
+					</Grid>
+				)}
 				<Stack>
 					<Heading as="h3" fontSize="lg" fontWeight="semibold">
 						{__("Join Our Community", "user-registration")}
