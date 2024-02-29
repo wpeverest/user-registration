@@ -239,7 +239,7 @@ class UR_Frontend_Form_Handler {
 				}
 
 				if ( isset( $data->extra_params['field_key'] ) && ( 'checkbox' === $data->extra_params['field_key'] || 'learndash_course' === $data->extra_params['field_key'] ) ) {
-					$data->value = ( json_decode( $data->value ) !== null ) ? json_decode( $data->value ) : $data->value;
+					$data->value = isset( $data->value ) && ! is_array( $data->value ) ? json_decode( $data->value ) : $data->value;
 				} elseif ( isset( $data->extra_params['field_key'] ) && ( 'wysiwyg' === $data->extra_params['field_key'] ) ) {
 					$data->value = sanitize_text_field( htmlentities( $data->value ) );
 				}
