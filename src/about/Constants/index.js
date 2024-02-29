@@ -38,17 +38,17 @@ export const CHANGELOG_TAG_COLORS = {
 		bgColor: "green.50",
 		scheme: "green",
 	},
-	enhancement: {
+	enhance: {
 		color: "teal.500",
 		bgColor: "teal.50",
 		scheme: "teal",
 	},
-	added: {
+	refactor: {
 		color: "pink.500",
 		bgColor: "pink.50",
 		scheme: "pink",
 	},
-	update: {
+	dev: {
 		color: "orange.500",
 		bgColor: "orange.50",
 		scheme: "orange",

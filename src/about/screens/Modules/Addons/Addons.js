@@ -11,10 +11,10 @@ import {
 	Button,
 	Text,
 	Link,
+	SimpleGrid,
 } from "@chakra-ui/react";
 import AddonItem from "./components/AddonItem";
 import { isArray, isEmpty } from "../../../../utils/utils";
-import { Col, Row } from "react-grid-system";
 import { actionTypes } from "../../../../context/gettingStartedContext";
 import { useStateValue } from "../../../../context/StateProvider";
 import { Megaphone } from "../../../components/Icon/Icon";
@@ -111,39 +111,31 @@ const Addons = ({
 					{isEmpty(filteredAddons) ? (
 						<AddonSkeleton />
 					) : (
-						<Row>
+						<SimpleGrid columns={3} spacing="5">
 							{isArray(filteredAddons) &&
 								filteredAddons?.map((data) => (
-									<Col
-										style={{ marginBottom: 30 }}
-										md={4}
+									<AddonItem
 										key={data.slug}
-									>
-										<AddonItem
-											data={data}
-											isChecked={Object.values(
-												selectedSlugs
-											)?.includes(
-												data.slug +
-													"/" +
-													data.slug +
-													".php"
-											)}
-											onCheckedChange={(slug, checked) =>
-												handleCheckedChange(
-													slug,
-													checked,
-													data.name
-												)
-											}
-											isPerformingBulkAction={
-												isPerformingBulkAction
-											}
-											selectedSlugs={selectedSlugs}
-										/>
-									</Col>
+										data={data}
+										isChecked={Object.values(
+											selectedSlugs
+										)?.includes(
+											data.slug + "/" + data.slug + ".php"
+										)}
+										onCheckedChange={(slug, checked) =>
+											handleCheckedChange(
+												slug,
+												checked,
+												data.name
+											)
+										}
+										isPerformingBulkAction={
+											isPerformingBulkAction
+										}
+										selectedSlugs={selectedSlugs}
+									/>
 								))}
-						</Row>
+						</SimpleGrid>
 					)}
 				</Container>
 			</Tabs>

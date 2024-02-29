@@ -10,9 +10,7 @@ const index = () => {
 				.map((_, i) => (
 					<Col
 						style={{ marginBottom: 30 }}
-						md={6}
-						lg={4}
-						xl={3}
+						md={4}
 						key={Date.now() + Math.random()}
 					>
 						<Box

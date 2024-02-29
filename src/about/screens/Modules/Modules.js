@@ -11,7 +11,7 @@ import {
 	TabPanel,
 	Button,
 	InputGroup,
-	InputLeftElement,
+	InputRightElement,
 	Input,
 	FormControl,
 	useToast,
@@ -267,6 +267,8 @@ const Modules = () => {
 							size="md"
 							bg="#DFDFE0"
 							onChange={handleSorterChange}
+							icon=""
+							width="fit-content"
 						>
 							<option value="default">
 								{__("Most Downloaded", "user-registration")}
@@ -326,6 +328,8 @@ const Modules = () => {
 								"user-registration"
 							)}
 							onChange={(e) => setBulkAction(e.target.value)}
+							icon=""
+							width="fit-content"
 						>
 							<option value="activate">
 								{__("Activate", "user-registration")}
@@ -357,6 +361,9 @@ const Modules = () => {
 					<Stack direction="row" align="center" gap="7">
 						<FormControl>
 							<InputGroup>
+								<InputRightElement pointerEvents="none">
+									<Search h="5" w="5" color="gray.300" />
+								</InputRightElement>
 								<Input
 									type="text"
 									placeholder={__(
@@ -365,9 +372,6 @@ const Modules = () => {
 									)}
 									{...onSearchInput}
 								/>
-								<InputLeftElement pointerEvents="none">
-									<Search h="5" w="5" color="gray.300" />
-								</InputLeftElement>
 							</InputGroup>
 						</FormControl>
 					</Stack>

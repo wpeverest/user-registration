@@ -161,67 +161,68 @@ const AddonItem = (props) => {
 
 	return (
 		<Box
+			overflow="hidden"
+			boxShadow="none"
+			border="1px"
+			borderRadius="base"
 			borderColor="gray.100"
-			rounded="sm"
-			bg="white"
-			shadow="sm"
-			h="full"
-			minH="sm"
-			pos="relative"
+			display="flex"
+			flexDir="column"
 		>
-			<Image
-				src={assetsURL + image}
-				objectFit="cover"
-				borderTopRightRadius="sm"
-				borderTopLeftRadius="sm"
-				w="100%"
-				h="40%"
-			/>
-			<Badge
-				backgroundColor="black"
-				color="white"
-				position="absolute"
-				top="0"
-				right="0"
-				textTransform="none"
-				fontSize="12px"
-				fontWeight="500"
-				p="5px"
-				m="5px"
-			>
-				{required_plan}
-			</Badge>
-			<Box p="6">
-				<Stack direction="column" spacing="4">
-					<Stack
-						direction="row"
-						align="center"
-						justify="space-between"
-					>
-						<Heading
-							fontSize="sm"
-							fontWeight="semibold"
-							color="gray.700"
+			<Box p="0" flex="1 1 0%">
+				<Image
+					src={assetsURL + image}
+					borderTopRightRadius="sm"
+					borderTopLeftRadius="sm"
+					w="full"
+				/>
+				<Badge
+					backgroundColor="black"
+					color="white"
+					position="absolute"
+					top="0"
+					right="0"
+					textTransform="none"
+					fontSize="12px"
+					fontWeight="500"
+					p="5px"
+					m="5px"
+				>
+					{required_plan}
+				</Badge>
+				<Box p="6">
+					<Stack direction="column" spacing="4">
+						<Stack
+							direction="row"
+							align="center"
+							justify="space-between"
 						>
-							<Checkbox
-								isChecked={isChecked}
-								onChange={(e) => {
-									isPro
-										? onCheckedChange(
-												slug,
-												e.target.checked
-										  )
-										: handleBoxClick();
-								}}
+							<Heading
+								fontSize="sm"
+								fontWeight="semibold"
+								color="gray.700"
 							>
-								{title}
-							</Checkbox>
-						</Heading>
-					</Stack>
+								<Checkbox
+									isChecked={isChecked}
+									onChange={(e) => {
+										isPro
+											? onCheckedChange(
+													slug,
+													e.target.checked
+											  )
+											: handleBoxClick();
+									}}
+								>
+									{title}
+								</Checkbox>
+							</Heading>
+						</Stack>
 
-					<Text color="gray.500">{excerpt}</Text>
-				</Stack>
+						<Text color="gray.500">{excerpt}</Text>
+					</Stack>
+				</Box>
 			</Box>
+
 			<Divider color="gray.300" />
 			<Box
 				px="4"
