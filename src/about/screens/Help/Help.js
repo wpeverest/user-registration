@@ -15,6 +15,7 @@ import facebook from "../../images/facebook.webp";
 import x from "../../images/x.webp";
 import youtube from "../../images/youtube.webp";
 import ShortcodesLists from "./Lists/ShortcodesLists/ShortcodesLists";
+import SmartTagsLists from "./Lists/SmartTagsLists/SmartTagsLists";
 
 const Help = () => {
 	const [isListViewerOpen, setIsListViewerOpen] = useState(false);
@@ -33,10 +34,16 @@ const Help = () => {
 			}}
 		>
 			<Stack gap="5">
-				{isListViewerOpen && listViewerType === "shortcodes" ? (
-					<ShortcodesLists
-						setIsListViewerOpen={setIsListViewerOpen}
-					/>
+				{isListViewerOpen ? (
+					listViewerType === "shortcodes" ? (
+						<ShortcodesLists
+							setIsListViewerOpen={setIsListViewerOpen}
+						/>
+					) : (
+						<SmartTagsLists
+							setIsListViewerOpen={setIsListViewerOpen}
+						/>
+					)
 				) : (
 					<Grid
 						gridTemplateColumns={{
