@@ -432,11 +432,11 @@ abstract class UR_List_Table extends WP_List_Table {
 	 * @param array $post_list Post List.
 	 */
 	private function bulk_delete( $post_list = array() ) {
+		$qty = is_array( $post_list ) ? count( $post_list ) : 0;
 		foreach ( $post_list as $post_id ) {
 			wp_delete_post( $post_id, true );
 		}
 
-		$qty    = count( $post_list );
 		$status = isset( $_GET['status'] ) ? '&status=' . sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '';
 
 		wp_redirect( admin_url( 'admin.php?page=' . $this->page . '' . $status . '&deleted=' . $qty ) );

@@ -371,9 +371,11 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 == Changelog ==
 
 = 3.1.5    - 04/03/2024
+* Fix      - Missing Escaping for display name.
+* Fix      - Deprecated dynamic properties in php v8.2.
+* Fix      - Critical Error thrown while deleting bulk forms.
 * Fix      - Checkbox sync issue with WooCommerce checkout page.
 * Fix      - Critical Error while login payment before login option.
-* Fix      - Missing Escaping for display name.
 
 = 3.1.4    - 12/02/2024
 * Feature  - Deny Smart Tag in Admin Approval.
