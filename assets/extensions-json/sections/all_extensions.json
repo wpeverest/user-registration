@@ -45,21 +45,6 @@
       "released_date": "09/04/2020"
     },
     {
-      "title": "Content Restriction",
-      "slug" : "user-registration-content-restriction",
-      "name" : "User Registration - Content Restriction",
-      "image": "extensions-json/sections/images/content-restriction.png",
-      "excerpt": "Content Restriction addon allows you to restrict full or partial content from page, post to only logged in users or logged in users with specific roles.",
-      "link": "https://wpuserregistration.com/features/content-restriction/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=content-restriction",
-	    "plan" : [
-        "personal",
-        "plus",
-        "professional",
-        "themegrill agency"
-      ],
-      "released_date": "22/09/2017"
-    },
-    {
       "title": "File Upload",
       "slug" : "user-registration-file-upload",
       "name" : "User Registration - File Upload",
@@ -261,20 +246,6 @@
       "released_date": "20/09/2018"
     },
     {
-      "title": "PayPal Payment",
-      "slug" : "user-registration-payments",
-      "name" : "User Registration Payments",
-      "image": "extensions-json/sections/images/payment-paypal.png",
-      "excerpt": "Integrates PayPal into your forms for registration fee payments, donations, and more. set either predefined, user defined or hidden amount on the form as per the requirement.",
-      "link": "https://wpuserregistration.com/features/paypal/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=paypal-payment",
-      "plan" : [
-        "plus",
-        "professional",
-        "themegrill agency"
-      ],
-      "released_date": "14/08/2018"
-    },
-    {
       "title": "Stripe",
       "slug" : "user-registration-stripe",
       "name" : "User Registration Stripe",
@@ -302,20 +273,6 @@
         "themegrill agency"
       ],
       "released_date": "10/11/2022"
-	  },
-	  {
-      "title": "Frontend Listing",
-      "slug" : "user-registration-frontend-listing",
-      "name" : "User Registration Frontend Listing",
-      "image": "extensions-json/sections/images/frontend-listing.png",
-      "excerpt": "The Frontend Listing addon for User Registration allows you to list your users in frontend. Users and guests can view and check profile of all the members listed on the site.",
-      "link": "https://wpuserregistration.com/features/frontend-listing/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=frontend-listing",
-      "plan" : [
-        "plus",
-        "professional",
-        "themegrill agency"
-      ],
-      "released_date": "06/04/2021"
 	  },
     {
       "title": "Zapier",

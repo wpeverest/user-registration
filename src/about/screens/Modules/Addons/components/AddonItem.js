@@ -28,7 +28,7 @@ const AddonItem = (props) => {
 		isChecked,
 		onCheckedChange,
 		isPerformingBulkAction,
-		selectedSlugs,
+		selectedAddonsSlugs,
 	} = props;
 	const toast = useToast();
 	const {
@@ -169,7 +169,7 @@ const AddonItem = (props) => {
 			display="flex"
 			flexDir="column"
 		>
-			<Box p="0" flex="1 1 0%">
+			<Box p="0" flex="1 1 0%" position="relative" overflow="visible">
 				<Image
 					src={assetsURL + image}
 					borderTopRightRadius="sm"
@@ -279,7 +279,9 @@ const AddonItem = (props) => {
 					onClick={handleAddonAction}
 					isLoading={
 						isPerformingAction ||
-						(selectedSlugs.includes(slug + "/" + slug + ".php") &&
+						(selectedAddonsSlugs.includes(
+							slug + "/" + slug + ".php"
+						) &&
 							isPerformingBulkAction)
 					}
 				>

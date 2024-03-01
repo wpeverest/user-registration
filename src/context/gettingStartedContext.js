@@ -16,6 +16,7 @@ export const initialState = {
 	themesStatus: "",
 	allAddons: [],
 	upgradeModal: false,
+	allFeatures: [],
 };
 
 export const actionTypes = {
@@ -27,6 +28,7 @@ export const actionTypes = {
 	GET_THEMES_STATUS: "GET_THEMES_STATUS",
 	GET_ALL_ADDONS: "GET_ALL_ADDONS",
 	GET_UPGRADE_MODAL: "GET_UPGRADE_MODAL",
+	GET_ALL_FEATURES: "GET_ALL_FEATURES",
 };
 
 const reducer = (state, action) => {
@@ -70,6 +72,11 @@ const reducer = (state, action) => {
 			return {
 				...state,
 				upgradeModal: action.upgradeModal,
+			};
+		case actionTypes.GET_ALL_Features:
+			return {
+				...state,
+				allFeatures: action.allFeatures,
 			};
 		default:
 			return state;

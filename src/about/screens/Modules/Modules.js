@@ -20,13 +20,18 @@ import { __ } from "@wordpress/i18n";
 import { Search } from "../../components/Icon/Icon";
 import Features from "./Features/Features";
 import Addons from "./Addons/Addons";
+import { isEmpty } from "../../../utils/utils";
 import {
+	getAllAddons,
 	bulkActivateAddons,
 	bulkDeactivateAddons,
 	bulkInstallAddon,
 } from "./Addons/addons-api";
-import { isEmpty } from "../../../utils/utils";
-import { getAllAddons } from "./Addons/addons-api";
+import {
+	bulkEnableFeatures,
+	bulkDisableFeatures,
+	getAllFeatures,
+} from "./Features/features-api";
 import { useOnType } from "use-ontype";
 import AddonSkeleton from "../../skeleton/AddonsSkeleton/AddonsSkeleton";
 import { useStateValue } from "../../../context/StateProvider";
@@ -34,17 +39,33 @@ import { actionTypes } from "../../../context/gettingStartedContext";
 
 const Modules = () => {
 	const [tabIndex, setTabIndex] = useState(0);
-	const [selectedSlugs, setSelectedSlugs] = useState([]);
+	const [selectedAddonsSlugs, setSelectedAddonsSlugs] = useState([]);
 	const [selectedAddonsNames, setSelectedAddonsNames] = useState([]);
+	const [selectedFeaturesSlugs, setSelectedFeaturesSlugs] = useState([]);
+	const [selectedFeaturesNames, setSelectedFeaturesNames] = useState([]);
 	const [bulkAction, setBulkAction] = useState("");
 	const [isPerformingBulkAction, setIsPerformingBulkAction] = useState(false);
 	const toast = useToast();
 	const [addonsLoaded, setAddonsLoaded] = useState(false);
+	const [featuresLoaded, setFeaturesLoaded] = useState(false);
 	const [isSearching, setIsSearching] = useState(false);
-	const [{ allAddons }, dispatch] = useStateValue();
+	const [{ allAddons, allFeatures }, dispatch] = useStateValue();
 	const [filteredAddons, setFilteredAddons] = useState([]);
+	const [filteredFeatures, setFilteredFeatures] = useState([]);
 
-	useEffect(() => {}, [selectedSlugs]);
+	const bulkOptions = [
+		{
+			enable: `${__("Enable", "user-registration")}`,
+			disable: `${__("Disable", "user-registration")}`,
+		},
+		{
+			activate: `${__("Activate", "user-registration")}`,
+			deactivate: `${__("Deactivate", "user-registration")}`,
+			install: `${__("Install", "user-registration")}`,
+		},
+	];
+
+	useEffect(() => {}, [selectedAddonsSlugs]);
 	useEffect(() => {
 		if (!addonsLoaded) {
 			getAllAddons().then((data) => {
@@ -59,110 +80,174 @@ const Modules = () => {
 				}
 			});
 		}
-	}, [addonsLoaded, filteredAddons]);
+		if (!featuresLoaded) {
+			getAllFeatures().then((data) => {
+				if (data.success) {
+					dispatch({
+						type: actionTypes.GET_ALL_Features,
+						allFeatures: data.features_lists,
+					});
+
+					setFilteredFeatures(data.features_lists);
+					setFeaturesLoaded(true);
+				}
+			});
+		}
+	}, [addonsLoaded, filteredAddons, featuresLoaded, filteredFeatures]);
 
 	const handleBulkActions = () => {
 		setIsPerformingBulkAction(true);
 
-		if (bulkAction === "activate") {
-			bulkActivateAddons(selectedSlugs)
-				.then((data) => {
-					if (data.success) {
+		if (tabIndex === 0) {
+			if (bulkAction === "enable") {
+				bulkEnableFeatures(selectedFeaturesSlugs)
+					.then((data) => {
+						if (data.success) {
+							toast({
+								title: data.message,
+								status: "success",
+								duration: 3000,
+							});
+						} else {
+							toast({
+								title: data.message,
+								status: "error",
+								duration: 3000,
+							});
+						}
+					})
+					.catch((e) => {
 						toast({
-							title: data.message,
-							status: "success",
+							title: e.message,
+							status: "error",
 							duration: 3000,
 						});
-						// window.location.reload();
-						// setAddonStatus("active");
-					} else {
+					})
+					.finally(() => {
+						setIsPerformingBulkAction(false);
+					});
+			} else {
+				bulkDisableFeatures(selectedFeaturesSlugs)
+					.then((data) => {
+						if (data.success) {
+							toast({
+								title: data.message,
+								status: "success",
+								duration: 3000,
+							});
+						} else {
+							toast({
+								title: data.message,
+								status: "error",
+								duration: 3000,
+							});
+						}
+					})
+					.catch((e) => {
 						toast({
-							title: data.message,
+							title: e.message,
+							status: "error",
+							duration: 3000,
+						});
+					})
+					.finally(() => {
+						setIsPerformingBulkAction(false);
+					});
+			}
+			setFeaturesLoaded(false);
+		} else {
+			if (bulkAction === "activate") {
+				bulkActivateAddons(selectedAddonsSlugs)
+					.then((data) => {
+						if (data.success) {
+							toast({
+								title: data.message,
+								status: "success",
+								duration: 3000,
+							});
+						} else {
+							toast({
+								title: data.message,
+								status: "error",
+								duration: 3000,
+							});
+						}
+					})
+					.catch((e) => {
+						toast({
+							title: e.message,
+							status: "error",
+							duration: 3000,
+						});
+					})
+					.finally(() => {
+						setIsPerformingBulkAction(false);
+					});
+			} else if (bulkAction === "deactivate") {
+				bulkDeactivateAddons(selectedAddonsSlugs)
+					.then((data) => {
+						if (data.success) {
+							toast({
+								title: data.message,
+								status: "success",
+								duration: 3000,
+							});
+						} else {
+							toast({
+								title: data.message,
+								status: "error",
+								duration: 3000,
+							});
+						}
+					})
+					.catch((e) => {
+						toast({
+							title: e.message,
+							status: "error",
+							duration: 3000,
+						});
+					})
+					.finally(() => {
+						setIsPerformingBulkAction(false);
+					});
+			} else if (bulkAction === "install") {
+				const addonData = selectedAddonsSlugs.map((slug, index) => ({
+					slug: slug,
+					name: selectedAddonsNames[index],
+				}));
+				bulkInstallAddon(addonData)
+					.then((data) => {
+						if (data.success) {
+							toast({
+								title: data.message,
+								status: "success",
+								duration: 3000,
+							});
+							// window.location.reload();
+							// setAddonStatus("active");
+						} else {
+							toast({
+								title: data.message,
+								status: "error",
+								duration: 3000,
+							});
+							// setAddonStatus("inactive");
+						}
+					})
+					.catch((e) => {
+						toast({
+							title: e.message,
 							status: "error",
 							duration: 3000,
 						});
 						// setAddonStatus("inactive");
-					}
-				})
-				.catch((e) => {
-					toast({
-						title: e.message,
-						status: "error",
-						duration: 3000,
+					})
+					.finally(() => {
+						setIsPerformingBulkAction(false);
 					});
-					// setAddonStatus("inactive");
-				})
-				.finally(() => {
-					setIsPerformingBulkAction(false);
-				});
-		} else if (bulkAction === "deactivate") {
-			bulkDeactivateAddons(selectedSlugs)
-				.then((data) => {
-					if (data.success) {
-						toast({
-							title: data.message,
-							status: "success",
-							duration: 3000,
-						});
-						// window.location.reload();
-						// setAddonStatus("active");
-					} else {
-						toast({
-							title: data.message,
-							status: "error",
-							duration: 3000,
-						});
-						// setAddonStatus("inactive");
-					}
-				})
-				.catch((e) => {
-					toast({
-						title: e.message,
-						status: "error",
-						duration: 3000,
-					});
-					// setAddonStatus("inactive");
-				})
-				.finally(() => {
-					setIsPerformingBulkAction(false);
-				});
-		} else if (bulkAction === "install") {
-			const addonData = selectedSlugs.map((slug, index) => ({
-				slug: slug,
-				name: selectedAddonsNames[index],
-			}));
-			bulkInstallAddon(addonData)
-				.then((data) => {
-					if (data.success) {
-						toast({
-							title: data.message,
-							status: "success",
-							duration: 3000,
-						});
-						// window.location.reload();
-						// setAddonStatus("active");
-					} else {
-						toast({
-							title: data.message,
-							status: "error",
-							duration: 3000,
-						});
-						// setAddonStatus("inactive");
-					}
-				})
-				.catch((e) => {
-					toast({
-						title: e.message,
-						status: "error",
-						duration: 3000,
-					});
-					// setAddonStatus("inactive");
-				})
-				.finally(() => {
-					setIsPerformingBulkAction(false);
-				});
+			}
+			setAddonsLoaded(false);
 		}
-		setAddonsLoaded(false);
 	};
 
 	const onSearchInput = useOnType(
@@ -171,19 +256,40 @@ const Modules = () => {
 				setIsSearching(true);
 			},
 			onTypeFinish: (val) => {
-				if (isEmpty(val)) {
-					setAddonsLoaded(false);
-				} else {
-					const searchedData = allAddons?.filter((addon) =>
-						addon.title.toLowerCase().includes(val.toLowerCase())
-					);
-					if (!isEmpty(searchedData)) {
-						setFilteredAddons(searchedData);
-						setAddonsLoaded(true);
+				if (0 === tabIndex) {
+					if (isEmpty(val)) {
+						setFeaturesLoaded(false);
 					} else {
+						const searchedData = allFeatures?.filter((feature) =>
+							feature.title
+								.toLowerCase()
+								.includes(val.toLowerCase())
+						);
+						if (!isEmpty(searchedData)) {
+							setFilteredFeatures(searchedData);
+							setFeaturesLoaded(true);
+						} else {
+							setFeaturesLoaded(false);
+						}
+					}
+				} else {
+					if (isEmpty(val)) {
 						setAddonsLoaded(false);
+					} else {
+						const searchedData = allAddons?.filter((addon) =>
+							addon.title
+								.toLowerCase()
+								.includes(val.toLowerCase())
+						);
+						if (!isEmpty(searchedData)) {
+							setFilteredAddons(searchedData);
+							setAddonsLoaded(true);
+						} else {
+							setAddonsLoaded(false);
+						}
 					}
 				}
+
 				setIsSearching(false);
 			},
 		},
@@ -195,13 +301,12 @@ const Modules = () => {
 		return new Date(year, month - 1, day);
 	};
 
-	const handleSorterChange = (e) => {
-		const sortType = e.target.value;
-
+	const handleSorterChange = (sortType, data, setData) => {
+		console.log(data);
 		switch (sortType) {
 			case "newest":
-				setFilteredAddons(
-					[...filteredAddons].sort(
+				setData(
+					[...data].sort(
 						(firstAddonInContext, secondAddonInContext) =>
 							parseDate(secondAddonInContext.released_date) -
 							parseDate(firstAddonInContext.released_date)
@@ -209,8 +314,8 @@ const Modules = () => {
 				);
 				break;
 			case "oldest":
-				setFilteredAddons(
-					[...filteredAddons].sort(
+				setData(
+					[...data].sort(
 						(firstAddonInContext, secondAddonInContext) =>
 							parseDate(firstAddonInContext.released_date) -
 							parseDate(secondAddonInContext.released_date)
@@ -218,8 +323,8 @@ const Modules = () => {
 				);
 				break;
 			case "asc":
-				setFilteredAddons(
-					[...filteredAddons].sort(
+				setData(
+					[...data].sort(
 						(firstAddonInContext, secondAddonInContext) =>
 							firstAddonInContext.title.localeCompare(
 								secondAddonInContext.title
@@ -228,8 +333,8 @@ const Modules = () => {
 				);
 				break;
 			case "desc":
-				setFilteredAddons(
-					[...filteredAddons].sort(
+				setData(
+					[...data].sort(
 						(firstAddonInContext, secondAddonInContext) =>
 							secondAddonInContext.title.localeCompare(
 								firstAddonInContext.title
@@ -238,17 +343,32 @@ const Modules = () => {
 				);
 				break;
 			default:
-				getAllAddons().then((data) => {
-					if (data.success) {
-						dispatch({
-							type: actionTypes.GET_ALL_ADDONS,
-							allAddons: data.addons_lists,
-						});
+				console.log(tabIndex);
+				if (0 === tabIndex) {
+					getAllFeatures().then((data) => {
+						if (data.success) {
+							dispatch({
+								type: actionTypes.GET_ALL_Features,
+								allFeatures: data.features_lists,
+							});
 
-						setFilteredAddons(data.addons_lists);
-						setAddonsLoaded(true);
-					}
-				});
+							setFilteredFeatures(data.features_lists);
+							setFeaturesLoaded(true);
+						}
+					});
+				} else {
+					getAllAddons().then((data) => {
+						if (data.success) {
+							dispatch({
+								type: actionTypes.GET_ALL_ADDONS,
+								allAddons: data.addons_lists,
+							});
+
+							setFilteredAddons(data.addons_lists);
+							setAddonsLoaded(true);
+						}
+					});
+				}
 		}
 	};
 	return (
@@ -266,7 +386,21 @@ const Modules = () => {
 							alignItems="center"
 							size="md"
 							bg="#DFDFE0"
-							onChange={handleSorterChange}
+							onChange={(e) => {
+								if (tabIndex === 0) {
+									handleSorterChange(
+										e.target.value,
+										filteredFeatures,
+										setFilteredFeatures
+									);
+								} else {
+									handleSorterChange(
+										e.target.value,
+										filteredAddons,
+										setFilteredAddons
+									);
+								}
+							}}
 							icon=""
 							width="fit-content"
 						>
@@ -295,7 +429,7 @@ const Modules = () => {
 							}}
 						>
 							<TabList>
-								{/* <Tab
+								<Tab
 									fontSize="14px"
 									borderRadius="4px 0 0 4px"
 									_selected={{
@@ -304,7 +438,7 @@ const Modules = () => {
 									}}
 								>
 									{__("Features", "user-registration")}
-								</Tab> */}
+								</Tab>
 								<Tab
 									fontSize="14px"
 									borderRadius="0 4px 4px 0"
@@ -331,15 +465,13 @@ const Modules = () => {
 							icon=""
 							width="fit-content"
 						>
-							<option value="activate">
-								{__("Activate", "user-registration")}
-							</option>
-							<option value="deactivate">
-								{__("Deactivate", "user-registration")}
-							</option>
-							<option value="install">
-								{__("Install", "user-registration")}
-							</option>
+							{Object.entries(bulkOptions[tabIndex]).map(
+								([option_key, option_value], k) => (
+									<option key={k} value={option_key}>
+										{option_value}
+									</option>
+								)
+							)}
 						</Select>
 
 						<Button
@@ -384,17 +516,32 @@ const Modules = () => {
 					<Box>
 						<Tabs index={tabIndex}>
 							<TabPanels>
-								{/* <TabPanel>
-								<Features />
-							</TabPanel> */}
+								<TabPanel>
+									<Features
+										isPerformingBulkAction={
+											isPerformingBulkAction
+										}
+										filteredFeatures={filteredFeatures}
+										selectedFeaturesSlugs={
+											selectedFeaturesSlugs
+										}
+										setSelectedFeaturesSlugs={
+											setSelectedFeaturesSlugs
+										}
+									/>
+								</TabPanel>
 								<TabPanel>
 									<Addons
 										isPerformingBulkAction={
 											isPerformingBulkAction
 										}
 										filteredAddons={filteredAddons}
-										selectedSlugs={selectedSlugs}
-										setSelectedSlugs={setSelectedSlugs}
+										selectedAddonsSlugs={
+											selectedAddonsSlugs
+										}
+										setSelectedAddonsSlugs={
+											setSelectedAddonsSlugs
+										}
 										setSelectedAddonsNames={
 											setSelectedAddonsNames
 										}

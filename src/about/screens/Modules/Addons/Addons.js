@@ -23,8 +23,8 @@ import { sprintf, __ } from "@wordpress/i18n";
 const Addons = ({
 	isPerformingBulkAction,
 	filteredAddons,
-	selectedSlugs,
-	setSelectedSlugs,
+	selectedAddonsSlugs,
+	setSelectedAddonsSlugs,
 	setSelectedAddonsNames,
 }) => {
 	/* global _UR_ */
@@ -32,10 +32,13 @@ const Addons = ({
 	const [{ upgradeModal }, dispatch] = useStateValue();
 	const handleCheckedChange = (slug, checked, name) => {
 		if (checked) {
-			setSelectedSlugs((prev) => [...prev, slug + "/" + slug + ".php"]);
+			setSelectedAddonsSlugs((prev) => [
+				...prev,
+				slug + "/" + slug + ".php",
+			]);
 			setSelectedAddonsNames((prev) => [...prev, name]);
 		} else {
-			setSelectedSlugs((prev) =>
+			setSelectedAddonsSlugs((prev) =>
 				prev.filter((s) => s !== slug + "/" + slug + ".php")
 			);
 			setSelectedAddonsNames((prev) => prev.filter((s) => s !== name));
@@ -118,7 +121,7 @@ const Addons = ({
 										key={data.slug}
 										data={data}
 										isChecked={Object.values(
-											selectedSlugs
+											selectedAddonsSlugs
 										)?.includes(
 											data.slug + "/" + data.slug + ".php"
 										)}
@@ -132,7 +135,9 @@ const Addons = ({
 										isPerformingBulkAction={
 											isPerformingBulkAction
 										}
-										selectedSlugs={selectedSlugs}
+										selectedAddonsSlugs={
+											selectedAddonsSlugs
+										}
 									/>
 								))}
 						</SimpleGrid>
