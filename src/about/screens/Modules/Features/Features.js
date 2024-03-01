@@ -42,7 +42,7 @@ const Features = ({
 	return (
 		<>
 			<Tabs>
-				{/* {upgradeModal && (
+				{upgradeModal && (
 					<Modal
 						isOpen={true}
 						onClose={() => {
@@ -101,7 +101,7 @@ const Features = ({
 							</ModalFooter>
 						</ModalContent>
 					</Modal>
-				)} */}
+				)}
 				<Container maxW="container.xl">
 					{isEmpty(filteredFeatures) ? (
 						<AddonSkeleton />
