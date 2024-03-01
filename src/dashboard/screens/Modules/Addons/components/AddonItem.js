@@ -20,7 +20,8 @@ import { actionTypes } from "../../../../../context/gettingStartedContext";
 
 const AddonItem = (props) => {
 	/* global _UR_ */
-	const { assetsURL, isPro } = typeof _UR_ !== "undefined" && _UR_;
+	const { assetsURL, liveDemoURL, isPro } =
+		typeof _UR_ !== "undefined" && _UR_;
 	const [{ upgradeModal }, dispatch] = useStateValue();
 
 	const {
@@ -218,7 +219,14 @@ const AddonItem = (props) => {
 							</Heading>
 						</Stack>
 
-						<Text color="gray.500">{excerpt}</Text>
+						<Text
+							fontWeight="400"
+							fontSize="14px"
+							color="gray.500"
+							textAlign="left"
+						>
+							{excerpt}
+						</Text>
 					</Stack>
 				</Box>
 			</Box>
@@ -245,7 +253,7 @@ const AddonItem = (props) => {
 						|
 					</Text>
 					<Link
-						href={link}
+						href={liveDemoURL}
 						fontSize="xs"
 						color="gray.500"
 						textDecoration="underline"

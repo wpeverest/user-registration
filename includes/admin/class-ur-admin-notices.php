@@ -180,7 +180,7 @@ class UR_Admin_Notices {
 			'user-registration-settings',
 			'user-registration-email-templates',
 			'user-registration-mailchimp',
-			'user-registration-about',
+			'user-registration-dashboard',
 		);
 
 		/**
@@ -203,7 +203,7 @@ class UR_Admin_Notices {
 				foreach ( $wp_filter[ $wp_notice ]->callbacks as $priority => $hooks ) {
 					foreach ( $hooks as $name => $arr ) {
 						// Remove all notices if the page is form builder page.
-						if ( 'add-new-registration' === $_REQUEST['page'] || 'user-registration-about' === $_REQUEST['page'] ) {
+						if ( 'add-new-registration' === $_REQUEST['page'] || 'user-registration-dashboard' === $_REQUEST['page'] ) {
 							unset( $wp_filter[ $wp_notice ]->callbacks[ $priority ][ $name ] );
 						} else {
 							// Remove all notices except user registration plugins notices.

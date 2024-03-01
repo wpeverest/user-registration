@@ -26,7 +26,8 @@ const ProductCard = (props) => {
 	const { adminURL } = typeof _UR_ !== "undefined" && _UR_;
 
 	const [{ pluginsStatus, themesStatus }, dispatch] = useStateValue();
-	const { label, description, image, website, slug, type } = props;
+	const { label, description, image, website, slug, type, liveDemoURL } =
+		props;
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [status, setStatus] = useState("inactive");
 	const [isPluginStatusLoading, setIsPluginStatusLoading] = useState(false);
@@ -88,7 +89,7 @@ const ProductCard = (props) => {
 							|
 						</Text>
 						<Link
-							href={website}
+							href={liveDemoURL}
 							fontSize="xs"
 							color="gray.500"
 							textDecoration="underline"

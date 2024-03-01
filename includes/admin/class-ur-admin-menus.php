@@ -27,7 +27,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			add_action( 'admin_menu', array( $this, 'admin_menu' ), 9 );
 			add_action( 'admin_menu', array( $this, 'settings_menu' ), 60 );
 			add_action( 'admin_menu', array( $this, 'status_menu' ), 61 );
-			add_action( 'admin_menu', array( $this, 'about_menu' ), 69 );
+			add_action( 'admin_menu', array( $this, 'dashboard_menu' ), 14 );
 			add_action( 'admin_menu', array( $this, 'add_registration_menu' ), 50 );
 
 			/**
@@ -578,18 +578,18 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		}
 
 		/**
-		 * Add about sub menu.
+		 * Add dashboard sub menu.
 		 */
-		public function about_menu() {
+		public function dashboard_menu() {
 			add_submenu_page(
 				'user-registration',
-				__( 'User Registration About', 'user-registration' ),
-				__( 'About', 'user-registration' ),
+				__( 'User Registration Dashboard', 'user-registration' ),
+				__( 'Dashboard', 'user-registration' ),
 				'manage_user_registration',
-				'user-registration-about',
+				'user-registration-dashboard',
 				array(
 					$this,
-					'about_page',
+					'dashboard_page',
 				)
 			);
 		}
@@ -757,10 +757,10 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		}
 
 			/**
-			 * Init the status page.
+			 * Init the dashboard page.
 			 */
-		public function about_page() {
-			UR_Admin_About::output();
+		public function dashboard_page() {
+			UR_Admin_Dashboard::output();
 		}
 
 			/**

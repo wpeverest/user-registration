@@ -1,8 +1,8 @@
 <?php
 /**
- * About us Class
+ * Dashboard us Class
  *
- * Takes new users to About us Page.
+ * Takes new users to Dashboard us Page.
  *
  * @package UserRegistration/Admin
  * @version 2.1.3
@@ -11,17 +11,16 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * About class.
+ * Dashboard class.
  */
-class UR_Admin_About {
+class UR_Admin_Dashboard {
 
 	/**
-	 * Show the about page.
+	 * Show the Dashboard Page.
 	 */
 	public static function output() {
 
-		wp_enqueue_script( 'ur-about-script', UR()->plugin_url() . '/chunks/main.js', array( 'wp-element', 'wp-blocks', 'wp-editor' ), UR()->version, true );
-		wp_enqueue_style( 'ur-about-style', UR()->plugin_url() . '/assets/css/user-registration-about.css', array(), UR()->version );
+		wp_enqueue_script( 'ur-dashboard-script', UR()->plugin_url() . '/chunks/main.js', array( 'wp-element', 'wp-blocks', 'wp-editor' ), UR()->version, true );
 
 		if ( ! function_exists( 'get_plugins' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
@@ -41,11 +40,12 @@ class UR_Admin_About {
 		$current_theme         = get_stylesheet();
 
 		wp_localize_script(
-			'ur-about-script',
+			'ur-dashboard-script',
 			'_UR_',
 			array(
 				'adminURL'       => esc_url( admin_url() ),
 				'siteURL'        => esc_url( home_url( '/' ) ),
+				'liveDemoURL'    => esc_url_raw( 'https://userregistration.demoswp.net/' ),
 				'assetsURL'      => esc_url( UR()->plugin_url() . '/assets/' ),
 				'urRestApiNonce' => wp_create_nonce( 'wp_rest' ),
 				'newFormURL'     => esc_url( admin_url( '/admin.php?page=add-new-registration' ) ),
@@ -82,39 +82,39 @@ class UR_Admin_About {
 			)
 		);
 
-		if ( ! empty( $_GET['page'] ) && 'user-registration-about' === $_GET['page'] ) { //phpcs:ignore WordPress.Security.NonceVerification
+		if ( ! empty( $_GET['page'] ) && 'user-registration-dashboard' === $_GET['page'] ) { //phpcs:ignore WordPress.Security.NonceVerification
 
 			ob_start();
-			self::about_us_body();
-			self::about_us_footer();
+			self::dashboard_page_body();
+			self::dashboard_page_footer();
 			exit;
 		}
 	}
 
 	/**
-	 * About Page body content.
+	 * Dashboard Page body content.
 	 *
 	 * @since 1.0.0
 	 */
-	public static function about_us_body() {
+	public static function dashboard_page_body() {
 		?>
-			<body class="user-registration-about notranslate" translate="no">
-				<div id="user-registration-about"></div>
+			<body class="user-registration-dashboard notranslate" translate="no">
+				<div id="user-registration-dashboard"></div>
 			</body>
 		<?php
 	}
 
 	/**
-	 * About Page footer content.
+	 * Dashboard Page footer content.
 	 *
 	 * @since 1.0.0
 	 */
-	public static function about_us_footer() {
+	public static function dashboard_page_footer() {
 		if ( function_exists( 'wp_print_media_templates' ) ) {
 			wp_print_media_templates();
 		}
 		wp_print_footer_scripts();
-		wp_print_scripts( 'ur-about-script' );
+		wp_print_scripts( 'ur-dashboard-script' );
 		?>
 		</html>
 		<?php

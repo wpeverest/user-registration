@@ -6,7 +6,7 @@ module.exports = (env, argv) => {
 	return {
 		entry: [
 			"/src/welcome/index.js",
-			"/src/about/index.js",
+			"/src/dashboard/index.js",
 			"./assets/js/admin/gutenberg/form-block.js",
 		],
 		output: {

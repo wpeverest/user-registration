@@ -7,7 +7,7 @@ const Router = () => {
 
 	React.useLayoutEffect(() => {
 		const submenu = document.querySelector(
-			`.wp-submenu a[href="admin.php?page=user-registration-about#${pathname}"]`
+			`.wp-submenu a[href="admin.php?page=user-registration-dashboard#${pathname}"]`
 		);
 		if (!submenu) return;
 		submenu.parentElement?.classList.add("current");

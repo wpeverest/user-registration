@@ -101,11 +101,11 @@ function ur_get_screen_ids() {
 	$screen_ids   = array(
 		'toplevel_page_' . $ur_screen_id,
 		$ur_screen_id . '_page_user-registration-dashboard',
+		$ur_screen_id . '_page_user-registration-analytics',
 		$ur_screen_id . '_page_add-new-registration',
 		$ur_screen_id . '_page_user-registration-settings',
 		$ur_screen_id . '_page_user-registration-mailchimp',
 		$ur_screen_id . '_page_user-registration-status',
-		$ur_screen_id . '_page_user-registration-about',
 		$ur_screen_id . '_page_user-registration-addons',
 		$ur_screen_id . '_page_user-registration-export-users',
 		$ur_screen_id . '_page_user-registration-email-templates',

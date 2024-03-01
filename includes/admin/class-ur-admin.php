@@ -75,8 +75,8 @@ class UR_Admin {
 				case 'user-registration-welcome':
 					include_once __DIR__ . '/class-ur-admin-welcome.php';
 					break;
-				case 'user-registration-about':
-					include_once __DIR__ . '/class-ur-admin-about.php';
+				case 'user-registration-dashboard':
+					include_once __DIR__ . '/class-ur-admin-dashboard.php';
 					break;
 			}
 		}

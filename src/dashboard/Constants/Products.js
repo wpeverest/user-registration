@@ -23,6 +23,7 @@ export const PLUGINS = [
 			"user-registration"
 		),
 		logo: Icon.Masteriyo,
+		liveDemoURL: "https://masteriyo.demoswp.net/",
 	},
 	{
 		label: "BlockArt Blocks",
@@ -33,9 +34,10 @@ export const PLUGINS = [
 		),
 		type: "plugin",
 		image: blockart,
-		website: "https://wpblockart.com/",
+		website: "https://wpblockart.com/blockart-blocks/",
 		shortDescription: __("Gutenberg blocks", "user-registration"),
 		logo: Icon.Blockart,
+		liveDemoURL: "https://tastewp.com/template/blockartblocks",
 	},
 	{
 		label: "Everest Forms",
@@ -52,6 +54,7 @@ export const PLUGINS = [
 			"user-registration"
 		),
 		logo: Icon.EVF,
+		liveDemoURL: "https://everestforms.demoswp.net/",
 	},
 	{
 		label: "Magazine Blocks",
@@ -62,12 +65,13 @@ export const PLUGINS = [
 		),
 		type: "plugin",
 		image: magazineBlocks,
-		website: "https://wpuser-registration.com/magazine-blocks/",
+		website: "https://wpblockart.com/magazine-blocks/",
 		shortDescription: __(
 			"Dynamic Gutenberg Blocks for Magazine/Blog.",
 			"user-registration"
 		),
 		logo: Icon.MagazineBlocks,
+		liveDemoURL: "https://tastewp.com/template/magazineblocks",
 	},
 ];
 
@@ -82,6 +86,7 @@ export const THEMES = [
 		type: "theme",
 		image: zakra,
 		website: "https://zakratheme.com/",
+		liveDemoURL: "https://zakratheme.com/",
 	},
 	{
 		label: "ColorMag",
@@ -93,5 +98,6 @@ export const THEMES = [
 		type: "theme",
 		image: colormag,
 		website: "https://themegrill.com/themes/colormag/",
+		liveDemoURL: "https://themegrilldemos.com/colormag-demos/#/",
 	},
 ];
