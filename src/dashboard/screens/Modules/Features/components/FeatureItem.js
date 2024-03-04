@@ -16,7 +16,7 @@ import { __ } from "@wordpress/i18n";
 import React, { useState, useEffect } from "react";
 import { enableFeature, disableFeature } from "../features-api";
 import { useStateValue } from "../../../../../context/StateProvider";
-import { actionTypes } from "../../../../../context/gettingStartedContext";
+import { actionTypes } from "../../../../../context/dashboardContext";
 
 const FeatureItem = (props) => {
 	/* global _UR_ */
@@ -100,18 +100,27 @@ const FeatureItem = (props) => {
 	useEffect(() => {
 		setFeatureStatus(data.status);
 
-		if (!upgradeModal) {
+		if (!upgradeModal.enable) {
 			setIsPerformingAction(false);
 		}
 	}, [data, upgradeModal]);
 
 	const handleBoxClick = () => {
+		const upgradeModalRef = { ...upgradeModal };
+
 		if (!isPro) {
-			dispatch({
-				type: actionTypes.GET_UPGRADE_MODAL,
-				upgradeModal: true,
-			});
+			upgradeModalRef.type = "pro";
+			upgradeModalRef.moduleType = "feature";
+			upgradeModalRef.enable = true;
+			upgradeModalRef.moduleName = data.name;
+		} else {
+			upgradeModalRef.enable = false;
 		}
+
+		dispatch({
+			type: actionTypes.GET_UPGRADE_MODAL,
+			upgradeModal: upgradeModalRef,
+		});
 	};
 
 	return (

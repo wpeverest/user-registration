@@ -35,7 +35,7 @@ import {
 import { useOnType } from "use-ontype";
 import AddonSkeleton from "../../skeleton/AddonsSkeleton/AddonsSkeleton";
 import { useStateValue } from "../../../context/StateProvider";
-import { actionTypes } from "../../../context/gettingStartedContext";
+import { actionTypes } from "../../../context/dashboardContext";
 
 const Modules = () => {
 	const [tabIndex, setTabIndex] = useState(0);
@@ -67,33 +67,42 @@ const Modules = () => {
 
 	useEffect(() => {}, [selectedAddonsSlugs]);
 	useEffect(() => {
-		if (!addonsLoaded) {
-			getAllAddons().then((data) => {
-				if (data.success) {
-					dispatch({
-						type: actionTypes.GET_ALL_ADDONS,
-						allAddons: data.addons_lists,
-					});
+		if (tabIndex === 0) {
+			if (!featuresLoaded) {
+				getAllFeatures().then((data) => {
+					if (data.success) {
+						dispatch({
+							type: actionTypes.GET_ALL_Features,
+							allFeatures: data.features_lists,
+						});
 
-					setFilteredAddons(data.addons_lists);
-					setAddonsLoaded(true);
-				}
-			});
-		}
-		if (!featuresLoaded) {
-			getAllFeatures().then((data) => {
-				if (data.success) {
-					dispatch({
-						type: actionTypes.GET_ALL_Features,
-						allFeatures: data.features_lists,
-					});
+						setFilteredFeatures(data.features_lists);
+						setFeaturesLoaded(true);
+					}
+				});
+			}
+		} else {
+			if (!addonsLoaded) {
+				getAllAddons().then((data) => {
+					if (data.success) {
+						dispatch({
+							type: actionTypes.GET_ALL_ADDONS,
+							allAddons: data.addons_lists,
+						});
 
-					setFilteredFeatures(data.features_lists);
-					setFeaturesLoaded(true);
-				}
-			});
+						setFilteredAddons(data.addons_lists);
+						setAddonsLoaded(true);
+					}
+				});
+			}
 		}
-	}, [addonsLoaded, filteredAddons, featuresLoaded, filteredFeatures]);
+	}, [
+		tabIndex,
+		addonsLoaded,
+		filteredAddons,
+		featuresLoaded,
+		filteredFeatures,
+	]);
 
 	const handleBulkActions = () => {
 		setIsPerformingBulkAction(true);
@@ -302,7 +311,6 @@ const Modules = () => {
 	};
 
 	const handleSorterChange = (sortType, data, setData) => {
-		console.log(data);
 		switch (sortType) {
 			case "newest":
 				setData(
@@ -343,7 +351,6 @@ const Modules = () => {
 				);
 				break;
 			default:
-				console.log(tabIndex);
 				if (0 === tabIndex) {
 					getAllFeatures().then((data) => {
 						if (data.success) {

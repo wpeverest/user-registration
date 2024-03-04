@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 
 import App from "./components/App";
 import { StateProvider } from "../context/StateProvider";
-import reducer, { initialState } from "../context/gettingStartedContext";
+import reducer, { initialState } from "../context/dashboardContext";
 
 const appRoot = document.getElementById("user-registration-dashboard");
 

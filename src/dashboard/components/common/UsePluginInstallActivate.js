@@ -3,7 +3,7 @@ import { useToast, Button } from "@chakra-ui/react";
 import apiFetch from "@wordpress/api-fetch";
 import { sprintf, __ } from "@wordpress/i18n";
 import { useStateValue } from "../../../context/StateProvider";
-import { actionTypes } from "../../../context/gettingStartedContext";
+import { actionTypes } from "../../../context/dashboardContext";
 
 const UsePluginInstallActivate = ({
 	cancelRef,

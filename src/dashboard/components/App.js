@@ -5,7 +5,7 @@ import Header from "./Header/Header";
 import Router from "../Router/Router";
 import Theme from "./Theme/Theme";
 import { useStateValue } from "../../context/StateProvider";
-import { actionTypes } from "../../context/gettingStartedContext";
+import { actionTypes } from "../../context/dashboardContext";
 
 const App = () => {
 	/* global _UR_ */

@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import FeatureItem from "./components/FeatureItem";
 import { isArray, isEmpty } from "../../../../utils/utils";
-import { actionTypes } from "../../../../context/gettingStartedContext";
+import { actionTypes } from "../../../../context/dashboardContext";
 import { useStateValue } from "../../../../context/StateProvider";
 import { Megaphone } from "../../../components/Icon/Icon";
 import { sprintf, __ } from "@wordpress/i18n";
@@ -39,20 +39,20 @@ const Features = ({
 
 	useEffect(() => {}, [upgradeModal]);
 
+	const updateUpgradeModal = () => {
+		const upgradeModalRef = { ...upgradeModal };
+		upgradeModalRef.enable = false;
+		dispatch({
+			type: actionTypes.GET_UPGRADE_MODAL,
+			upgradeModal: upgradeModalRef,
+		});
+	};
+
 	return (
 		<>
 			<Tabs>
-				{upgradeModal && (
-					<Modal
-						isOpen={true}
-						onClose={() => {
-							dispatch({
-								type: actionTypes.GET_UPGRADE_MODAL,
-								upgradeModal: false,
-							});
-						}}
-						size="lg"
-					>
+				{upgradeModal.enable && (
+					<Modal isOpen={true} onClose={updateUpgradeModal} size="lg">
 						<ModalOverlay />
 						<ModalContent
 							alignItems={"center"}
@@ -89,12 +89,7 @@ const Features = ({
 									color="white !important"
 									textDecor="none !important"
 									isExternal
-									onClick={() => {
-										dispatch({
-											type: actionTypes.GET_UPGRADE_MODAL,
-											upgradeModal: false,
-										});
-									}}
+									onClick={updateUpgradeModal}
 								>
 									{__("Upgrade to Pro", "user-registration")}
 								</Button>

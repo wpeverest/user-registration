@@ -16,13 +16,16 @@ import { __ } from "@wordpress/i18n";
 import React, { useState, useEffect } from "react";
 import { activateAddon, deactivateAddon, installAddon } from "../addons-api";
 import { useStateValue } from "../../../../../context/StateProvider";
-import { actionTypes } from "../../../../../context/gettingStartedContext";
+import { actionTypes } from "../../../../../context/dashboardContext";
 
 const AddonItem = (props) => {
 	/* global _UR_ */
-	const { assetsURL, liveDemoURL, isPro } =
+	const { assetsURL, liveDemoURL, isPro, licensePlan } =
 		typeof _UR_ !== "undefined" && _UR_;
 	const [{ upgradeModal }, dispatch] = useStateValue();
+	const [requirementFulfilled, setRequirementFulfilled] = useState(false);
+	const [licenseActivated, setLicenseActivated] = useState(false);
+	const [addonEnabled, setAddonEnabled] = useState(false);
 
 	const {
 		data,
@@ -48,7 +51,7 @@ const AddonItem = (props) => {
 
 	const handleAddonAction = () => {
 		setIsPerformingAction(true);
-		if (isPro) {
+		if (addonEnabled) {
 			if (addonStatus === "inactive") {
 				activateAddon(slug)
 					.then((data) => {
@@ -135,10 +138,12 @@ const AddonItem = (props) => {
 					});
 			}
 		} else {
+			const upgradeModalRef = { ...upgradeModal };
+			upgradeModalRef.enable = true;
 			// Handle Pro Upgrade notice
 			dispatch({
 				type: actionTypes.GET_UPGRADE_MODAL,
-				upgradeModal: true,
+				upgradeModal: upgradeModalRef,
 			});
 		}
 	};
@@ -146,18 +151,55 @@ const AddonItem = (props) => {
 	useEffect(() => {
 		setAddonStatus(data.status);
 
-		if (!upgradeModal) {
+		if (!upgradeModal.enable) {
 			setIsPerformingAction(false);
+		}
+
+		if (isPro) {
+			setAddonEnabled(true);
+			if (licensePlan) {
+				const requiredPlan = licensePlan.item_plan.replace(
+					" lifetime",
+					""
+				);
+
+				if (data.plan.includes(requiredPlan)) {
+					setRequirementFulfilled(true);
+				} else {
+					setAddonEnabled(false);
+				}
+				setLicenseActivated(true);
+			} else {
+				setLicenseActivated(false);
+				setAddonEnabled(false);
+			}
+		} else {
+			setAddonEnabled(false);
 		}
 	}, [data, upgradeModal]);
 
 	const handleBoxClick = () => {
+		const upgradeModalRef = { ...upgradeModal };
+		upgradeModalRef.moduleType = "addon";
+		upgradeModalRef.moduleName = data.name;
+
 		if (!isPro) {
-			dispatch({
-				type: actionTypes.GET_UPGRADE_MODAL,
-				upgradeModal: true,
-			});
+			upgradeModalRef.type = "pro";
+			upgradeModalRef.enable = true;
+		} else if (isPro && !licenseActivated) {
+			upgradeModalRef.type = "license";
+			upgradeModalRef.enable = true;
+		} else if (isPro && licenseActivated && !requirementFulfilled) {
+			upgradeModalRef.type = "requirement";
+			upgradeModalRef.enable = true;
+		} else {
+			upgradeModalRef.enable = false;
 		}
+
+		dispatch({
+			type: actionTypes.GET_UPGRADE_MODAL,
+			upgradeModal: upgradeModalRef,
+		});
 	};
 
 	return (
@@ -206,7 +248,7 @@ const AddonItem = (props) => {
 								<Checkbox
 									isChecked={isChecked}
 									onChange={(e) => {
-										isPro
+										addonEnabled
 											? onCheckedChange(
 													slug,
 													e.target.checked
@@ -264,7 +306,7 @@ const AddonItem = (props) => {
 				</HStack>
 				<Button
 					colorScheme={
-						isPro
+						addonEnabled
 							? "active" === addonStatus
 								? "red"
 								: "inactive" === addonStatus
@@ -293,7 +335,7 @@ const AddonItem = (props) => {
 							isPerformingBulkAction)
 					}
 				>
-					{isPro
+					{addonEnabled
 						? "active" === addonStatus
 							? __("Deactivate", "user-registration")
 							: "inactive" === addonStatus

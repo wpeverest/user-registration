@@ -12,11 +12,6 @@ export const initialState = {
 	},
 	defaultFormId: "",
 	isPro: false,
-	pluginsStatus: "",
-	themesStatus: "",
-	allAddons: [],
-	upgradeModal: false,
-	allFeatures: [],
 };
 
 export const actionTypes = {
@@ -24,11 +19,6 @@ export const actionTypes = {
 	GET_INSTALL_PAGE: "GET_INSTALL_PAGE",
 	GET_DEFAULT_FORM: "GET_DEFAULT_FORM",
 	GET_IS_PRO: "GET_IS_PRO",
-	GET_PLUGINS_STATUS: "GET_PLUGINS_STATUS",
-	GET_THEMES_STATUS: "GET_THEMES_STATUS",
-	GET_ALL_ADDONS: "GET_ALL_ADDONS",
-	GET_UPGRADE_MODAL: "GET_UPGRADE_MODAL",
-	GET_ALL_FEATURES: "GET_ALL_FEATURES",
 };
 
 const reducer = (state, action) => {
@@ -52,31 +42,6 @@ const reducer = (state, action) => {
 			return {
 				...state,
 				isPro: action.isPro,
-			};
-		case actionTypes.GET_PLUGINS_STATUS:
-			return {
-				...state,
-				pluginsStatus: action.pluginsStatus,
-			};
-		case actionTypes.GET_THEMES_STATUS:
-			return {
-				...state,
-				themesStatus: action.themesStatus,
-			};
-		case actionTypes.GET_ALL_ADDONS:
-			return {
-				...state,
-				allAddons: action.allAddons,
-			};
-		case actionTypes.GET_UPGRADE_MODAL:
-			return {
-				...state,
-				upgradeModal: action.upgradeModal,
-			};
-		case actionTypes.GET_ALL_Features:
-			return {
-				...state,
-				allFeatures: action.allFeatures,
 			};
 		default:
 			return state;
