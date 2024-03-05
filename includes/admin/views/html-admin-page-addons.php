@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<hr class="wp-header-end">
 	<div style="float:right;">
-		<input type="text" id="addon_search" placeholder="Search for Extensions...">
+		<input type="search" id="addon_search" placeholder="Search for Extensions...">
 	</div>
 	<h2 class=" screen-reader-text"><?php esc_html_e( 'Filter extensions list', 'user-registration' ); ?></h2>
 	<?php if ( $sections ) : ?>
