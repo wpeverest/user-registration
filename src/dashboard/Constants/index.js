@@ -17,10 +17,10 @@ export const ROUTES = [
 		route: "/settings",
 		label: __("Settings", "user-registration"),
 	},
-	// {
-	// 	route: '/free-vs-pro',
-	// 	label: __('Free vs Pro', 'user-registration'),
-	// },
+	{
+		route: "/free-vs-pro",
+		label: __("Free vs Pro", "user-registration"),
+	},
 	{
 		route: "/help",
 		label: __("Help", "user-registration"),

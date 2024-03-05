@@ -156,7 +156,7 @@ const Addons = ({
 									color="white !important"
 									textDecor="none !important"
 									isExternal
-									onClick={upgradeContent.upgradeURL}
+									onClick={updateUpgradeModal}
 								>
 									{upgradeContent.buttonText}
 								</Button>
