@@ -54,6 +54,12 @@ class UR_AddOn_Updater {
 	 * @var bool
 	 */
 	private $wp_override = false;
+	/**
+	 * Beta.
+	 *
+	 * @var bool
+	 */
+	private $beta = false;
 
 	/**
 	 * Cache Key.
