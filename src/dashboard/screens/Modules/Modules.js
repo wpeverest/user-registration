@@ -11,7 +11,7 @@ import {
 	TabPanel,
 	Button,
 	InputGroup,
-	InputRightElement,
+	InputLeftElement,
 	Input,
 	FormControl,
 	useToast,
@@ -42,7 +42,6 @@ const Modules = () => {
 	const [selectedAddonsSlugs, setSelectedAddonsSlugs] = useState([]);
 	const [selectedAddonsNames, setSelectedAddonsNames] = useState([]);
 	const [selectedFeaturesSlugs, setSelectedFeaturesSlugs] = useState([]);
-	const [selectedFeaturesNames, setSelectedFeaturesNames] = useState([]);
 	const [bulkAction, setBulkAction] = useState("");
 	const [isPerformingBulkAction, setIsPerformingBulkAction] = useState(false);
 	const toast = useToast();
@@ -408,6 +407,8 @@ const Modules = () => {
 									);
 								}
 							}}
+							border="1px solid #DFDFE0 !important"
+							borderRadius="4px !important"
 							icon=""
 							width="fit-content"
 						>
@@ -430,18 +431,22 @@ const Modules = () => {
 
 						<Tabs
 							index={tabIndex}
-							border="1px solid #DFDFE0"
 							onChange={(index) => {
 								setTabIndex(index);
 							}}
 						>
-							<TabList>
+							<TabList
+								borderBottom="0px"
+								border="1px solid #DFDFE0"
+								borderRadius="4px"
+							>
 								<Tab
 									fontSize="14px"
 									borderRadius="4px 0 0 4px"
 									_selected={{
 										color: "white",
 										bg: "#2563EB",
+										marginBottom: "0px",
 									}}
 								>
 									{__("Features", "user-registration")}
@@ -452,63 +457,69 @@ const Modules = () => {
 									_selected={{
 										color: "white",
 										bg: "#2563EB",
+										marginBottom: "0px",
 									}}
+									marginLeft="0px !important"
 								>
 									{__("Addons", "user-registration")}
 								</Tab>
 							</TabList>
 						</Tabs>
 
-						<Select
-							display="inline-flex"
-							alignItems="center"
-							size="md"
-							bg="#DFDFE0"
-							placeholder={__(
-								"Bulk Actions",
-								"user-registration"
-							)}
-							onChange={(e) => setBulkAction(e.target.value)}
-							icon=""
-							width="fit-content"
-						>
-							{Object.entries(bulkOptions[tabIndex]).map(
-								([option_key, option_value], k) => (
-									<option key={k} value={option_key}>
-										{option_value}
-									</option>
-								)
-							)}
-						</Select>
+						<Box display="flex" gap="8px">
+							<Select
+								display="inline-flex"
+								alignItems="center"
+								size="md"
+								bg="#DFDFE0"
+								placeholder={__(
+									"Bulk Actions",
+									"user-registration"
+								)}
+								onChange={(e) => setBulkAction(e.target.value)}
+								icon=""
+								width="fit-content"
+								border="1px solid #DFDFE0 !important"
+								borderRadius="4px !important"
+							>
+								{Object.entries(bulkOptions[tabIndex]).map(
+									([option_key, option_value], k) => (
+										<option key={k} value={option_key}>
+											{option_value}
+										</option>
+									)
+								)}
+							</Select>
 
-						<Button
-							fontSize="14px"
-							variant="outline"
-							fontWeight="normal"
-							color="gray.600"
-							borderRadius="base"
-							borderColor="gray.300"
-							textDecor="none !important"
-							py="3"
-							px="6"
-							onClick={handleBulkActions}
-							isLoading={isPerformingBulkAction}
-						>
-							{__("Apply", "user-registration")}
-						</Button>
+							<Button
+								fontSize="14px"
+								variant="outline"
+								fontWeight="normal"
+								color="gray.600"
+								borderRadius="base"
+								border="1px solid #DFDFE0 !important"
+								textDecor="none !important"
+								padding="6px 12px"
+								onClick={handleBulkActions}
+								isLoading={isPerformingBulkAction}
+							>
+								{__("Apply", "user-registration")}
+							</Button>
+						</Box>
 					</Stack>
 					<Stack direction="row" align="center" gap="7">
 						<FormControl>
 							<InputGroup>
-								<InputRightElement pointerEvents="none">
+								<InputLeftElement pointerEvents="none">
 									<Search h="5" w="5" color="gray.300" />
-								</InputRightElement>
+								</InputLeftElement>
 								<Input
 									type="text"
 									placeholder={__(
 										"Search...",
 										"user-registration"
 									)}
+									paddingLeft="32px !important"
 									{...onSearchInput}
 								/>
 							</InputGroup>

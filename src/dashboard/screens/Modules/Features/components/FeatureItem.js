@@ -47,53 +47,63 @@ const FeatureItem = (props) => {
 	const [isPerformingAction, setIsPerformingAction] = useState(false);
 
 	const onToggle = () => {
-		//Toggle Handler
-		if (featureStatus === "disabled") {
-			enableFeature(slug)
-				.then((data) => {
-					if (data.success) {
-						toast({
-							title: data.message,
-							status: "success",
-							duration: 3000,
-						});
+		if (isPro) {
+			//Toggle Handler
+			if (featureStatus === "disabled") {
+				enableFeature(slug)
+					.then((data) => {
+						if (data.success) {
+							toast({
+								title: data.message,
+								status: "success",
+								duration: 3000,
+							});
 
-						setFeatureStatus("enabled");
-					} else {
-						toast({
-							title: data.message,
-							status: "error",
-							duration: 3000,
-						});
-						setFeatureStatus("disabled");
-					}
-				})
-				.finally(() => {
-					setIsPerformingAction(false);
-				});
+							setFeatureStatus("enabled");
+						} else {
+							toast({
+								title: data.message,
+								status: "error",
+								duration: 3000,
+							});
+							setFeatureStatus("disabled");
+						}
+					})
+					.finally(() => {
+						setIsPerformingAction(false);
+					});
+			} else {
+				disableFeature(slug)
+					.then((data) => {
+						if (data.success) {
+							toast({
+								title: data.message,
+								status: "success",
+								duration: 3000,
+							});
+							// window.location.reload();
+							setFeatureStatus("disabled");
+						} else {
+							toast({
+								title: data.message,
+								status: "error",
+								duration: 3000,
+							});
+							setFeatureStatus("enabled");
+						}
+					})
+					.finally(() => {
+						setIsPerformingAction(false);
+					});
+			}
 		} else {
-			disableFeature(slug)
-				.then((data) => {
-					if (data.success) {
-						toast({
-							title: data.message,
-							status: "success",
-							duration: 3000,
-						});
-						// window.location.reload();
-						setFeatureStatus("disabled");
-					} else {
-						toast({
-							title: data.message,
-							status: "error",
-							duration: 3000,
-						});
-						setFeatureStatus("enabled");
-					}
-				})
-				.finally(() => {
-					setIsPerformingAction(false);
-				});
+			const upgradeModalRef = { ...upgradeModal };
+			upgradeModalRef.enable = true;
+			// Handle Pro Upgrade notice
+			dispatch({
+				type: actionTypes.GET_UPGRADE_MODAL,
+				upgradeModal: upgradeModalRef,
+			});
 		}
 	};
 
@@ -132,8 +142,18 @@ const FeatureItem = (props) => {
 			borderColor="gray.100"
 			display="flex"
 			flexDir="column"
+			bg="white"
 		>
-			<Box p="0" flex="1 1 0%" position="relative" overflow="visible">
+			<Box
+				p="0"
+				flex="1 1 0%"
+				position="relative"
+				overflow="visible"
+				opacity={isPro ? 1 : 0.7}
+				onClick={() => {
+					!isPro && handleBoxClick();
+				}}
+			>
 				<Image
 					src={assetsURL + image}
 					borderTopRightRadius="sm"
@@ -192,7 +212,8 @@ const FeatureItem = (props) => {
 								isDisabled={
 									isPerformingAction ||
 									(selectedFeaturesSlugs.includes(slug) &&
-										isPerformingBulkAction)
+										isPerformingBulkAction) ||
+									isPro
 								}
 							/>
 						</Stack>

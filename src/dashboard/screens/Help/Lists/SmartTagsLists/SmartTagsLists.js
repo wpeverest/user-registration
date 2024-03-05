@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
 	Box,
 	Accordion,
@@ -15,7 +15,7 @@ import {
 	Tr,
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
-import { ArrowLeftFill } from "../../../../components/Icon/Icon";
+import { ArrowLeftFill, Add, Minus } from "../../../../components/Icon/Icon";
 
 const SmartTagsLists = ({ setIsListViewerOpen }) => {
 	const SmartTagsList = [
@@ -230,6 +230,23 @@ const SmartTagsLists = ({ setIsListViewerOpen }) => {
 		},
 	];
 
+	const [isAccordionOpen, setIsAccordionOpen] = useState({});
+
+	useEffect(() => {
+		const accordionOpener = { ...isAccordionOpen };
+		SmartTagsList.map((smartTag) => {
+			accordionOpener[smartTag.id] = false;
+		});
+		setIsAccordionOpen(accordionOpener);
+	}, []);
+
+	const handleAccordionToggle = (smarttag_id) => {
+		setIsAccordionOpen({
+			...isAccordionOpen,
+			[smarttag_id]: !isAccordionOpen[smarttag_id],
+		});
+	};
+
 	return (
 		<Stack
 			px="6"
@@ -253,12 +270,15 @@ const SmartTagsLists = ({ setIsListViewerOpen }) => {
 					{__("All Smart Tags", "user-registration")}
 				</Button>
 			</Stack>
-			<Accordion defaultIndex={[0]} allowToggle>
+			<Accordion allowMultiple>
 				{SmartTagsList.map((smartTags) => (
 					<AccordionItem key={smartTags.id} p="16px">
 						<AccordionButton
 							justifyContent="space-between"
 							_expanded={{ bg: "#F8F8FE" }}
+							onClick={() => {
+								handleAccordionToggle(smartTags.id);
+							}}
 						>
 							<Box
 								flex="1"
@@ -272,7 +292,11 @@ const SmartTagsLists = ({ setIsListViewerOpen }) => {
 							>
 								{smartTags.id}
 							</Box>
-							<AccordionIcon />
+							{isAccordionOpen[smartTags.id] ? (
+								<Minus h="5" w="5" />
+							) : (
+								<Add h="5" w="5" />
+							)}
 						</AccordionButton>
 						<AccordionPanel pb={4} bgColor="#FBF8FE">
 							<Text fontSize="14px">{smartTags.description}</Text>
@@ -282,7 +306,10 @@ const SmartTagsLists = ({ setIsListViewerOpen }) => {
 										{smartTags.smartTag.map(
 											({ id, description }, key) => (
 												<Tr key={key}>
-													<Td px="0px">
+													<Td
+														px="0px"
+														borderBottom="0px"
+													>
 														<Box
 															flex="1"
 															textAlign="left"
@@ -295,7 +322,9 @@ const SmartTagsLists = ({ setIsListViewerOpen }) => {
 															{id}
 														</Box>
 													</Td>
-													<Td>{description}</Td>
+													<Td borderBottom="0px">
+														{description}
+													</Td>
 												</Tr>
 											)
 										)}

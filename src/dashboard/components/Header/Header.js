@@ -28,7 +28,7 @@ import Changelog from "../Changelog/Changelog";
 
 const Header = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const ref = useRef;
+	const ref = useRef();
 
 	/* global _UR_ */
 	const { version, isPro, upgradeURL } = typeof _UR_ !== "undefined" && _UR_;
@@ -154,7 +154,10 @@ const Header = () => {
 				onClose={onClose}
 				finalFocusRef={ref}
 			>
-				<DrawerOverlay bgColor="rgba(0,0,0,0.05)" />
+				<DrawerOverlay
+					bgColor="rgb(0,0,0,0.05)"
+					sx={{ backdropFilter: "blur(1px)" }}
+				/>
 				<DrawerContent
 					className="user-registration-announcement"
 					top="var(--wp-admin--admin-bar--height, 0) !important"
@@ -164,7 +167,7 @@ const Header = () => {
 						{__("Latest Updates", "user-registration")}
 					</DrawerHeader>
 					<DrawerBody>
-						<Changelog />{" "}
+						<Changelog />
 					</DrawerBody>
 				</DrawerContent>
 			</Drawer>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
 	Box,
 	Accordion,
@@ -15,7 +15,7 @@ import {
 	Tr,
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
-import { ArrowLeftFill } from "../../../../components/Icon/Icon";
+import { ArrowLeftFill, Add, Minus } from "../../../../components/Icon/Icon";
 
 const ShortcodesLists = ({ setIsListViewerOpen }) => {
 	const ShortcodeList = [
@@ -185,6 +185,22 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 			),
 		},
 	];
+	const [isAccordionOpen, setIsAccordionOpen] = useState({});
+
+	useEffect(() => {
+		const accordionOpener = { ...isAccordionOpen };
+		ShortcodeList.map((shortcode) => {
+			accordionOpener[shortcode.id] = false;
+		});
+		setIsAccordionOpen(accordionOpener);
+	}, []);
+
+	const handleAccordionToggle = (shortcode_id) => {
+		setIsAccordionOpen({
+			...isAccordionOpen,
+			[shortcode_id]: !isAccordionOpen[shortcode_id],
+		});
+	};
 
 	return (
 		<Stack
@@ -209,12 +225,15 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 					{__("All Shortcodes", "user-registration")}
 				</Button>
 			</Stack>
-			<Accordion defaultIndex={[0]} allowToggle>
+			<Accordion allowMultiple>
 				{ShortcodeList.map((shortcode) => (
 					<AccordionItem key={shortcode.id} p="16px">
 						<AccordionButton
 							justifyContent="space-between"
 							_expanded={{ bg: "#F8F8FE" }}
+							onClick={() => {
+								handleAccordionToggle(shortcode.id);
+							}}
 						>
 							<Box
 								flex="1"
@@ -228,7 +247,11 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 							>
 								{shortcode.id}
 							</Box>
-							<AccordionIcon />
+							{isAccordionOpen[shortcode.id] ? (
+								<Minus h="5" w="5" />
+							) : (
+								<Add h="5" w="5" />
+							)}
 						</AccordionButton>
 						<AccordionPanel pb={4} bgColor="#F8F8FE">
 							<Text fontSize="14px">{shortcode.description}</Text>
@@ -244,7 +267,10 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 												key
 											) => (
 												<Tr key={key}>
-													<Td px="0px">
+													<Td
+														px="0px"
+														borderBottom="0px"
+													>
 														<Box
 															flex="1"
 															textAlign="left"
@@ -257,7 +283,9 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 															{param_name}
 														</Box>
 													</Td>
-													<Td>{param_description}</Td>
+													<Td borderBottom="0px">
+														{param_description}
+													</Td>
 												</Tr>
 											)
 										)}

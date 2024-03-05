@@ -211,8 +211,18 @@ const AddonItem = (props) => {
 			borderColor="gray.100"
 			display="flex"
 			flexDir="column"
+			bg="white"
 		>
-			<Box p="0" flex="1 1 0%" position="relative" overflow="visible">
+			<Box
+				p="0"
+				flex="1 1 0%"
+				position="relative"
+				overflow="visible"
+				opacity={addonEnabled ? 1 : 0.7}
+				onClick={() => {
+					!addonEnabled && handleBoxClick();
+				}}
+			>
 				<Image
 					src={assetsURL + image}
 					borderTopRightRadius="sm"

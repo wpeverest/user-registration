@@ -17,7 +17,7 @@ import FeatureItem from "./components/FeatureItem";
 import { isArray, isEmpty } from "../../../../utils/utils";
 import { actionTypes } from "../../../../context/dashboardContext";
 import { useStateValue } from "../../../../context/StateProvider";
-import { Megaphone } from "../../../components/Icon/Icon";
+import { Lock } from "../../../components/Icon/Icon";
 import { sprintf, __ } from "@wordpress/i18n";
 
 const Features = ({
@@ -52,13 +52,18 @@ const Features = ({
 		<>
 			<Tabs>
 				{upgradeModal.enable && (
-					<Modal isOpen={true} onClose={updateUpgradeModal} size="lg">
+					<Modal
+						isOpen={true}
+						onClose={updateUpgradeModal}
+						size="lg"
+						isCentered
+					>
 						<ModalOverlay />
 						<ModalContent
 							alignItems={"center"}
 							p="50px 11px 55px 11px"
 						>
-							<Megaphone h={"131px"} w={"150px"} />
+							<Lock h={"131px"} w={"150px"} />
 							<Text
 								fontSize="24px"
 								lineHeight="44px"

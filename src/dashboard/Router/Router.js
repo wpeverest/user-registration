@@ -3,19 +3,6 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import { Dashboard, Help, Products, Settings, Modules } from "../screens";
 
 const Router = () => {
-	const { pathname } = useLocation();
-
-	React.useLayoutEffect(() => {
-		const submenu = document.querySelector(
-			`.wp-submenu a[href="admin.php?page=user-registration-dashboard#${pathname}"]`
-		);
-		if (!submenu) return;
-		submenu.parentElement?.classList.add("current");
-		return () => {
-			submenu.parentElement?.classList?.remove("current");
-		};
-	}, [pathname]);
-
 	return (
 		<Routes>
 			<Route path="/" element={<Dashboard />} />

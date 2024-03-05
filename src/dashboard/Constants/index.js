@@ -2,7 +2,7 @@ import { __ } from "@wordpress/i18n";
 
 export const ROUTES = [
 	{
-		route: "/dashboard",
+		route: "/",
 		label: __("Dashboard", "user-registration"),
 	},
 	{

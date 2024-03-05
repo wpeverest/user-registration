@@ -51,7 +51,11 @@ const Dashboard = () => {
 						<iframe
 							src="https://www.youtube.com/embed/ZOXVbfBTNPQ?si=82Q2iOOE2iUF7M02&autoplay=1&mute=1"
 							title="YouTube video player"
-							frameBorder="0"
+							style={{
+								borderRadius: "11px",
+								border: "none",
+								overflow: "hidden",
+							}}
 							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 							allowFullScreen
 						></iframe>
