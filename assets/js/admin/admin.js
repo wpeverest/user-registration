@@ -3,6 +3,22 @@
  * global i18n_admin
  */
 jQuery(function ($) {
+	//action for searching extension.
+	$("#addon_search").on("input", function () {
+        var searchAddon = $(this).val().toLowerCase();
+
+        $(".plugin-card").each(function () {
+            var addonTitle = $(this).find(".plugin-name").text().toLowerCase();
+			if (addonTitle.includes(searchAddon)) {
+				$(this).show();
+				$(this).css("clear", "none");
+            } else {
+				$(this).hide();
+				$(this).css("clear", "none");
+            }
+        });
+	 });
+
 	// Bind UI Action handlers for searching fields.
 	$(document.body).on("input", "#ur-search-fields", function () {
 		var search_string = $(this).val().toLowerCase();
