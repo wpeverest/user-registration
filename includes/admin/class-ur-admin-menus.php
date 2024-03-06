@@ -30,14 +30,6 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			add_action( 'admin_menu', array( $this, 'dashboard_menu' ), 10 );
 			add_action( 'admin_menu', array( $this, 'add_registration_menu' ), 50 );
 
-			/**
-			 * Filter to show the Addons Page
-			 *
-			 * @param boolean
-			 */
-			if ( apply_filters( 'user_registration_show_addons_page', true ) ) {
-				add_action( 'admin_menu', array( $this, 'addons_menu' ), 70 );
-			}
 			if ( ! ur_get_license_plan() ) {
 				add_action( 'admin_menu', array( $this, 'user_registration_upgrade_to_pro_menu' ), 80 );
 			}
@@ -620,28 +612,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				'user-registration',
 				esc_html__( 'Upgrade to Pro', 'user-registration' ),
 				sprintf(
-					'<span style="color:#FF8C39; font-weight: 600;"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: bottom;" ><rect x="0.5" y="0.5" width="19" height="19" rx="2.5" fill="#FF8C39" stroke="#FF8C39"/><path d="M10 5L13 13H7L10 5Z" fill="#EFEFEF"/><path fill="white" fill-rule="evenodd" d="M5 7L5.71429 13H14.2857L15 7L10 11.125L5 7ZM14.2857 13.5714H5.71427V15H14.2857V13.5714Z" clip-rule="evenodd"/></svg><span style="margin-left:5px;">%s</span></span>',
+					'<span style="color:#FF8C39; font-weight: 600; display: flex;"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: bottom;" ><rect x="0.5" y="0.5" width="19" height="19" rx="2.5" fill="#FF8C39" stroke="#FF8C39"/><path d="M10 5L13 13H7L10 5Z" fill="#EFEFEF"/><path fill="white" fill-rule="evenodd" d="M5 7L5.71429 13H14.2857L15 7L10 11.125L5 7ZM14.2857 13.5714H5.71427V15H14.2857V13.5714Z" clip-rule="evenodd"/></svg><span style="margin-left:5px;">%s</span></span>',
 					esc_html__( 'Upgrade to Pro', 'user-registration' )
 				),
 				'manage_options',
 				esc_url_raw( 'https://wpuserregistration.com/pricing/?utm_source=addons-page&utm_medium=upgrade-button&utm_campaign=ur-upgrade-to-pro' )
-			);
-		}
-
-			/**
-			 * Addons menu item.
-			 */
-		public function addons_menu() {
-			add_submenu_page(
-				'user-registration',
-				__( 'User Registration extensions', 'user-registration' ),
-				sprintf( '<span style="color: rgb(158, 240, 26);"><svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 2 30 30" style="fill: rgb(158, 240, 26);transform: ;msFilter:;vertical-align:middle;"><path d="M11.8,15.24l1.71-1,.57-.33a2.14,2.14,0,0,0,1-1.85V6.76a2,2,0,0,0-.28-1,2.08,2.08,0,0,0-.76-.77l-.56-.33-1.73-1L9.56,2.29a2,2,0,0,0-1-.29,2,2,0,0,0-1,.29L5.26,3.59,3.42,4.68,3,4.94a2.08,2.08,0,0,0-.76.77,2.13,2.13,0,0,0-.27,1v5.3a2,2,0,0,0,.27,1.06,2.13,2.13,0,0,0,.76.79l.45.26,1.84,1.07,2.23,1.3a2,2,0,0,0,1,.28,2.22,2.22,0,0,0,1-.26Z"/><path d="M29.78,5.71A2.16,2.16,0,0,0,29,4.94l-.56-.33-1.74-1L24.5,2.29a2,2,0,0,0-1-.29,2,2,0,0,0-1,.29l-2.23,1.3L18.37,4.68l-.45.26a2.08,2.08,0,0,0-.76.77,2.13,2.13,0,0,0-.27,1v5.3a1.89,1.89,0,0,0,.27,1.06,2.13,2.13,0,0,0,.76.79l.45.26,1.84,1.07,2.23,1.3a2,2,0,0,0,1,.28,2.16,2.16,0,0,0,1-.26l2.25-1.32,1.71-1,.57-.33a2.3,2.3,0,0,0,.76-.79,2.2,2.2,0,0,0,.27-1.06V6.76A2,2,0,0,0,29.78,5.71Z"/><path d="M21.64,18.12l-.56-.33-1.74-1-2.22-1.3a2,2,0,0,0-1-.29,2,2,0,0,0-1,.29l-2.23,1.3L11,17.85l-.45.27a2.08,2.08,0,0,0-.76.77,2.14,2.14,0,0,0-.28,1.05v5.3a1.93,1.93,0,0,0,.28,1.05,2.06,2.06,0,0,0,.76.79l.45.27,1.84,1.07,2.23,1.29a2,2,0,0,0,1,.29,2.28,2.28,0,0,0,1-.26l2.25-1.32,1.71-1,.57-.34a2.21,2.21,0,0,0,.76-.79,2.13,2.13,0,0,0,.27-1.05v-5.3a2,2,0,0,0-.28-1.05A2.16,2.16,0,0,0,21.64,18.12Z"/></svg><span style="margin-left:5px;">%s</span></span>', esc_html__( 'Extensions', 'user-registration' ) ),
-				'manage_user_registration',
-				'user-registration-addons',
-				array(
-					$this,
-					'addons_page',
-				)
 			);
 		}
 
@@ -764,12 +739,6 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			UR_Admin_Dashboard::output();
 		}
 
-			/**
-			 * Init the addons page.
-			 */
-		public function addons_page() {
-			UR_Admin_Addons::output();
-		}
 
 			/**
 			 * Add custom nav meta box.
