@@ -220,7 +220,7 @@ const FeatureItem = (props) => {
 									isPerformingAction ||
 									(selectedFeaturesSlugs.includes(slug) &&
 										isPerformingBulkAction) ||
-									isPro
+									!isPro
 								}
 							/>
 						</Stack>

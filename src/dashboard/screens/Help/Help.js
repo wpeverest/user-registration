@@ -76,7 +76,7 @@ const Help = () => {
 							</Heading>
 							<Text fontSize="13px" color="gray.700">
 								{__(
-									"You can find all the lists of shortcodes with their usage and details",
+									"Find the complete list of shortcodes with their usage information and parameter details.",
 									"user-registration"
 								)}
 							</Text>
@@ -112,7 +112,7 @@ const Help = () => {
 							</Heading>
 							<Text fontSize="13px" color="gray.700">
 								{__(
-									"You can find all the lists of smart tags with their usage and details",
+									"Find the complete list of smart tags with their usage information and parameter details.",
 									"user-registration"
 								)}
 							</Text>
@@ -148,7 +148,7 @@ const Help = () => {
 							</Heading>
 							<Text fontSize="13px" color="gray.700">
 								{__(
-									"We would be happy to guide any of your issues and queries 24/7",
+									"If you have any issues or questions, our team is on standby to help you instantly.",
 									"user-registration"
 								)}
 							</Text>
@@ -183,7 +183,7 @@ const Help = () => {
 							</Heading>
 							<Text fontSize="13px" color="gray.700">
 								{__(
-									"Please check out basic documentation for detailed information on how to use User Registration.",
+									"Check our documentation for detailed information on User Registration features and how to use them.",
 									"user-registration"
 								)}
 							</Text>
@@ -230,7 +230,7 @@ const Help = () => {
 						</Heading>
 						<Text fontSize="13px" color="gray.700">
 							{__(
-								"Join our Facebook community, where the latest news and updates eagerly await your arrival.",
+								"Join our exclusive group and connect with fellow User Registration members. Ask questions, contribute to discussions, and share feedback!",
 								"user-registration"
 							)}
 						</Text>
@@ -267,11 +267,11 @@ const Help = () => {
 							fontWeight="normal"
 							color="gray.700"
 						>
-							{__("Twitter Community", "user-registration")}
+							{__("X ( Twitter )", "user-registration")}
 						</Heading>
 						<Text fontSize="13px" color="gray.700">
 							{__(
-								"Join our Twitter community, where the latest news and updates eagerly await your arrival.",
+								"Follow us on X to get the latest news and updates about User Registration and the team behind it.",
 								"user-registration"
 							)}
 						</Text>
@@ -287,7 +287,7 @@ const Help = () => {
 							isExternal
 							href="https://twitter.com/user_register"
 						>
-							{__("Join Group", "user-registration")}
+							{__("Join X", "user-registration")}
 						</Button>
 					</Stack>
 				</Grid>
@@ -308,11 +308,11 @@ const Help = () => {
 							fontWeight="normal"
 							color="gray.700"
 						>
-							{__("YouTube Community", "user-registration")}
+							{__("YouTube", "user-registration")}
 						</Heading>
 						<Text fontSize="13px" color="gray.700">
 							{__(
-								"Subscribe to our YouTube channel, where the latest news and updates eagerly await your arrival.",
+								"Subscribe to our YouTube channel, where we guide you on using User Registration’s features and add-ons.",
 								"user-registration"
 							)}
 						</Text>
@@ -350,7 +350,7 @@ const Help = () => {
 					</HStack>
 					<Text fontSize="13px" color="gray.700">
 						{__(
-							"Have a look at video tutorials to walk you through getting started.",
+							"Watch our step-by-step video tutorials that’ll help you get the best out of User Registration’s features.",
 							"user-registration"
 						)}
 					</Text>
@@ -379,7 +379,7 @@ const Help = () => {
 					</HStack>
 					<Text fontSize="13px" color="gray.700">
 						{__(
-							"Please take a moment to suggest any features that could enhance our product.",
+							"Don’t find a feature you’re looking for? Suggest any features you think would enhance our product.",
 							"user-registration"
 						)}
 					</Text>
@@ -403,12 +403,12 @@ const Help = () => {
 					<HStack gap="2">
 						<Icon.Star w="5" h="5" fill="primary.500" />
 						<Heading as="h3" size="sm" fontWeight="semibold">
-							{__("Submit us a Review", "user-registration")}
+							{__("Submit a Review", "user-registration")}
 						</Heading>
 					</HStack>
 					<Text fontSize="13px" color="gray.700">
 						{__(
-							"Sharing your review is a valuable way to help us enhance your experience.",
+							"Please take a moment to give us a review. We appreciate honest feedback that’ll help us improve our plugin.",
 							"user-registration"
 						)}
 					</Text>

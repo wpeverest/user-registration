@@ -146,7 +146,7 @@ const Addons = ({
 							>
 								{upgradeContent.title}
 							</Text>
-							<ModalCloseButton />
+							<ModalCloseButton boxShadow="none !important" />
 							<Text
 								fontSize="16px"
 								lineHeight="26px"
@@ -155,7 +155,7 @@ const Addons = ({
 							>
 								{upgradeContent.body}
 							</Text>
-							<ModalFooter>
+							<ModalFooter paddingBottom="0px" w="400px">
 								<Button
 									as={Link}
 									colorScheme="primary"
@@ -164,6 +164,7 @@ const Addons = ({
 									textDecor="none !important"
 									isExternal
 									onClick={updateUpgradeModal}
+									w="100%"
 								>
 									{upgradeContent.buttonText}
 								</Button>

@@ -332,13 +332,15 @@ const FreeVsPro = () => {
 						fontSize="14px"
 						key={tableContent.type}
 					>
-						<Thead bgColor="#F8FAFF">
+						<Thead bgColor="#2563EB">
 							<Tr border="1px solid #F4F4F4" alignItems="center">
-								<Th w="50%">{tableContent.title}</Th>
-								<Th w="25%">
+								<Th w="50%" color="white">
+									{tableContent.title}
+								</Th>
+								<Th w="25%" color="white">
 									{__("Free", "user-registration")}
 								</Th>
-								<Th w="25%">
+								<Th w="25%" color="white">
 									{__("Pro", "user-registration")}
 								</Th>
 							</Tr>
@@ -394,6 +396,8 @@ const FreeVsPro = () => {
 				bgColor="#F1F5FE"
 				padding="32px 0px"
 				borderRadius="4px"
+				my="8"
+				mx="6"
 			>
 				<Lock h={"70px"} w={"80px"} />
 				<Text fontSize="18px" lineHeight="24px" fontWeight="700">

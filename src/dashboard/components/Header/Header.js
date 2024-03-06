@@ -19,6 +19,7 @@ import {
 	useDisclosure,
 	Divider,
 	Center,
+	Tooltip,
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 import React, { useEffect, useRef } from "react";
@@ -62,6 +63,7 @@ const Header = () => {
 				bg={"white"}
 				zIndex={1}
 				borderBottom="1px solid #E9E9E9"
+				width="100%"
 			>
 				<Container maxW="container.xl">
 					<Stack
@@ -142,16 +144,23 @@ const Header = () => {
 								h="40px"
 								position="relative"
 							>
-								<Image
-									src={announcement}
-									alt="announcement"
-									h="35px"
-									w="35px"
-									position="absolute"
-									top="50%"
-									left="50%"
-									transform="translate(-40%, -50%)"
-								/>
+								<Tooltip
+									label={__(
+										"Latest Updates",
+										"user-registration"
+									)}
+								>
+									<Image
+										src={announcement}
+										alt="announcement"
+										h="35px"
+										w="35px"
+										position="absolute"
+										top="50%"
+										left="50%"
+										transform="translate(-40%, -50%)"
+									/>
+								</Tooltip>
 							</Button>
 						</Stack>
 					</Stack>

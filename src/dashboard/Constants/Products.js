@@ -19,14 +19,14 @@ export const PLUGINS = [
 		label: "Masteriyo",
 		slug: "learning-management-system/lms.php",
 		description: __(
-			"WordPress LMS & e-Learning plugin to create and sell online courses. Easy quiz creation with inbuilt quiz builder.",
+			"Revolutionize e-learning effortlessly with Masteriyo, a WordPress LMS plugin. Sell courses with quizzes, assignments, etc., for a dynamic learning experience.",
 			"user-registration"
 		),
 		type: "plugin",
 		image: masteriyo,
 		website: "https://masteriyo.com/",
 		shortDescription: __(
-			"WordPress e-Learning Plugin with Quiz Builder.",
+			"WordPress LMS plugin with Quiz Builder",
 			"user-registration"
 		),
 		logo: Icon.Masteriyo,
@@ -36,13 +36,16 @@ export const PLUGINS = [
 		label: "BlockArt Blocks",
 		slug: "blockart-blocks/blockart.php",
 		description: __(
-			"Explore your creativity! Design any type of WordPress page and post with Gutenberg Blocks. Whether you’re a beginner or a skilled designer, we’ve got you covered. ",
+			"Fuel your digital creativity with BlockArt Blocks, a dynamic collection of custom Gutenberg blocks for designing captivating WordPress sites.",
 			"user-registration"
 		),
 		type: "plugin",
 		image: blockart,
 		website: "https://wpblockart.com/blockart-blocks/",
-		shortDescription: __("Gutenberg blocks", "user-registration"),
+		shortDescription: __(
+			"Custom Gutenberg Blocks Plugin",
+			"user-registration"
+		),
 		logo: Icon.Blockart,
 		liveDemoURL: "https://tastewp.com/template/blockartblocks",
 	},
@@ -50,14 +53,14 @@ export const PLUGINS = [
 		label: "Everest Forms",
 		slug: "everest-forms/everest-forms.php",
 		description: __(
-			"Fast, Lightweight & Secure Contact Form plugin. Beautiful & Responsive Pre-Built Templates.",
+			"Manage online communication with Everest Forms, a lightning-fast and secure contact form plugin offering beautiful templates for professional forms.",
 			"user-registration"
 		),
 		type: "plugin",
 		image: evf,
 		website: "https://everestforms.net/",
 		shortDescription: __(
-			"Quick, Secure Contact Form with Templates.",
+			"User-friendly Contact Form Plugin for WordPress",
 			"user-registration"
 		),
 		logo: Icon.EVF,
@@ -67,14 +70,14 @@ export const PLUGINS = [
 		label: "Magazine Blocks",
 		slug: "magazine-blocks/magazine-blocks.php",
 		description: __(
-			"Collection of Posts Blocks to build magazine and blog websites. Comes with various dynamic, beautiful, and advanced Gutenberg blocks.",
+			"Experience advanced Gutenberg blocks with Magazine Blocks, designed for crafting stunning magazine and news websites.",
 			"user-registration"
 		),
 		type: "plugin",
 		image: magazineBlocks,
 		website: "https://wpblockart.com/magazine-blocks/",
 		shortDescription: __(
-			"Dynamic Gutenberg Blocks for Magazine/Blog.",
+			"Gutenberg Blocks for Magazine-style Websites",
 			"user-registration"
 		),
 		logo: Icon.MagazineBlocks,
@@ -87,19 +90,19 @@ export const THEMES = [
 		label: "Zakra",
 		slug: "zakra",
 		description: __(
-			"A powerful and versatile multipurpose theme that makes it easy to create beautiful and professional websites. With over free 40 pre-designed starter demo sites to choose from, you can quickly build a unique and functional site that fits your specific needs.",
+			"Unlock boundless website possibilities with Zakra, a versatile multipurpose theme offering over 40 free starter sites for a tailored web experience.",
 			"user-registration"
 		),
 		type: "theme",
 		image: zakra,
 		website: "https://zakratheme.com/",
-		liveDemoURL: "https://zakratheme.com/",
+		liveDemoURL: "https://zakratheme.com/demos/#/",
 	},
 	{
 		label: "ColorMag",
 		slug: "colormag",
 		description: __(
-			"ColorMag is always the best choice when it comes to magazine, news, and blog WordPress themes. You can create elegant and modern websites for news portals, online magazines, and publishing sites.",
+			"Elevate your website's style with Colormag, the go-to choice for news, blogs, and magazines. Embark on a digital spectacle of website-building excellence! ",
 			"user-registration"
 		),
 		type: "theme",

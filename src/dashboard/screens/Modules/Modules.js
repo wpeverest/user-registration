@@ -75,31 +75,47 @@ const Modules = () => {
 	useEffect(() => {
 		if (tabIndex === 0) {
 			if (!featuresLoaded) {
-				getAllFeatures().then((data) => {
-					if (data.success) {
-						dispatch({
-							type: actionTypes.GET_ALL_Features,
-							allFeatures: data.features_lists,
-						});
+				getAllFeatures()
+					.then((data) => {
+						if (data.success) {
+							dispatch({
+								type: actionTypes.GET_ALL_Features,
+								allFeatures: data.features_lists,
+							});
 
-						setFilteredFeatures(data.features_lists);
-						setFeaturesLoaded(true);
-					}
-				});
+							setFilteredFeatures(data.features_lists);
+							setFeaturesLoaded(true);
+						}
+					})
+					.catch((e) => {
+						toast({
+							title: e.message,
+							status: "error",
+							duration: 3000,
+						});
+					});
 			}
 		} else {
 			if (!addonsLoaded) {
-				getAllAddons().then((data) => {
-					if (data.success) {
-						dispatch({
-							type: actionTypes.GET_ALL_ADDONS,
-							allAddons: data.addons_lists,
-						});
+				getAllAddons()
+					.then((data) => {
+						if (data.success) {
+							dispatch({
+								type: actionTypes.GET_ALL_ADDONS,
+								allAddons: data.addons_lists,
+							});
 
-						setFilteredAddons(data.addons_lists);
-						setAddonsLoaded(true);
-					}
-				});
+							setFilteredAddons(data.addons_lists);
+							setAddonsLoaded(true);
+						}
+					})
+					.catch((e) => {
+						toast({
+							title: e.message,
+							status: "error",
+							duration: 3000,
+						});
+					});
 			}
 		}
 	}, [
@@ -358,29 +374,45 @@ const Modules = () => {
 				break;
 			default:
 				if (0 === tabIndex) {
-					getAllFeatures().then((data) => {
-						if (data.success) {
-							dispatch({
-								type: actionTypes.GET_ALL_Features,
-								allFeatures: data.features_lists,
-							});
+					getAllFeatures()
+						.then((data) => {
+							if (data.success) {
+								dispatch({
+									type: actionTypes.GET_ALL_Features,
+									allFeatures: data.features_lists,
+								});
 
-							setFilteredFeatures(data.features_lists);
-							setFeaturesLoaded(true);
-						}
-					});
+								setFilteredFeatures(data.features_lists);
+								setFeaturesLoaded(true);
+							}
+						})
+						.catch((e) => {
+							toast({
+								title: e.message,
+								status: "error",
+								duration: 3000,
+							});
+						});
 				} else {
-					getAllAddons().then((data) => {
-						if (data.success) {
-							dispatch({
-								type: actionTypes.GET_ALL_ADDONS,
-								allAddons: data.addons_lists,
-							});
+					getAllAddons()
+						.then((data) => {
+							if (data.success) {
+								dispatch({
+									type: actionTypes.GET_ALL_ADDONS,
+									allAddons: data.addons_lists,
+								});
 
-							setFilteredAddons(data.addons_lists);
-							setAddonsLoaded(true);
-						}
-					});
+								setFilteredAddons(data.addons_lists);
+								setAddonsLoaded(true);
+							}
+						})
+						.catch((e) => {
+							toast({
+								title: e.message,
+								status: "error",
+								duration: 3000,
+							});
+						});
 				}
 		}
 	};
@@ -393,7 +425,7 @@ const Modules = () => {
 					justify="space-between"
 					px="6"
 				>
-					<Stack direction="row" align="center" gap="7">
+					<Stack direction="row" align="center" gap="5">
 						<Select
 							display="inline-flex"
 							alignItems="center"
@@ -455,6 +487,7 @@ const Modules = () => {
 										bg: "#2563EB",
 										marginBottom: "0px",
 									}}
+									boxShadow="none !important"
 								>
 									{__("Features", "user-registration")}
 								</Tab>
@@ -467,6 +500,7 @@ const Modules = () => {
 										marginBottom: "0px",
 									}}
 									marginLeft="0px !important"
+									boxShadow="none !important"
 								>
 									{__("Addons", "user-registration")}
 								</Tab>
@@ -517,7 +551,10 @@ const Modules = () => {
 					<Stack direction="row" align="center" gap="7">
 						<FormControl>
 							<InputGroup>
-								<InputLeftElement pointerEvents="none">
+								<InputLeftElement
+									pointerEvents="none"
+									top="2px"
+								>
 									<Search h="5" w="5" color="gray.300" />
 								</InputLeftElement>
 								<Input

@@ -82,7 +82,7 @@ const Features = ({
 									"user-registration"
 								)}
 							</Text>
-							<ModalCloseButton />
+							<ModalCloseButton boxShadow="none !important" />
 							<Text
 								fontSize="16px"
 								lineHeight="26px"
@@ -94,7 +94,7 @@ const Features = ({
 									"user-registration"
 								)}
 							</Text>
-							<ModalFooter>
+							<ModalFooter paddingBottom="0px">
 								<Button
 									as={Link}
 									colorScheme="primary"
@@ -103,6 +103,7 @@ const Features = ({
 									textDecor="none !important"
 									isExternal
 									onClick={updateUpgradeModal}
+									w="100%"
 								>
 									{__("Upgrade to Pro", "user-registration")}
 								</Button>

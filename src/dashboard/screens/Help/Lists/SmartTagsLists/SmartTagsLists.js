@@ -29,7 +29,7 @@ const SmartTagsLists = ({ setIsListViewerOpen }) => {
 		{
 			id: __("Smart Tags to parse some data before registration"),
 			description: __(
-				"The below listed smart tags can be used to parse some user datas that donot required user to be registered in the email content.",
+				"The Smart Tags listed below can be used to parse user data that doesn’t require user to be registered in the email content.",
 				"user-registration"
 			),
 			smartTag: [
@@ -80,7 +80,7 @@ const SmartTagsLists = ({ setIsListViewerOpen }) => {
 				},
 				{
 					id: "{{current_date}}",
-					description: __("Current Date.", "user-registration"),
+					description: __("Current date.", "user-registration"),
 				},
 				{
 					id: "{{current_time}}",
@@ -109,11 +109,14 @@ const SmartTagsLists = ({ setIsListViewerOpen }) => {
 				},
 				{
 					id: "{{referrer_url}}",
-					description: __("Referral URL.", "user-registration"),
+					description: __(
+						"URL of the referrer page from where users landed on the form.",
+						"user-registration"
+					),
 				},
 				{
 					id: "{{form_id}}",
-					description: __("Current form id.", "user-registration"),
+					description: __("Current form ID.", "user-registration"),
 				},
 				{
 					id: "{{form_name}}",
@@ -122,14 +125,14 @@ const SmartTagsLists = ({ setIsListViewerOpen }) => {
 				{
 					id: "{{author_name}}",
 					description: __(
-						"Current Page or Posts author name.",
+						"Current page or post's author name.",
 						"user-registration"
 					),
 				},
 				{
 					id: "{{author_email}}",
 					description: __(
-						"Current Page or Posts author email.",
+						"Current page or post's author email.",
 						"user-registration"
 					),
 				},
@@ -145,14 +148,14 @@ const SmartTagsLists = ({ setIsListViewerOpen }) => {
 		{
 			id: __("Smart Tags to parse registered users data"),
 			description: __(
-				"The below listed smart tags can be used to parse registered users submitted field value or some other user datas in the email content.",
+				"The Smart Tags listed below can be used to parse a registered user’s submitted field value and other data in the email content.",
 				"user-registration"
 			),
 			smartTag: [
 				{
 					id: "{{user_id}}",
 					description: __(
-						"Id of the registered user.",
+						"ID of the registered user.",
 						"user-registration"
 					),
 				},
@@ -173,7 +176,7 @@ const SmartTagsLists = ({ setIsListViewerOpen }) => {
 				{
 					id: "{{first_name}}",
 					description: __(
-						"First Name of the registered user.",
+						"First name of the registered user.",
 						"user-registration"
 					),
 				},
@@ -201,7 +204,7 @@ const SmartTagsLists = ({ setIsListViewerOpen }) => {
 				{
 					id: "{{display_name}}",
 					description: __(
-						"Display the name of the registered user.",
+						"Display name of the registered user.",
 						"user-registration"
 					),
 				},
@@ -215,21 +218,21 @@ const SmartTagsLists = ({ setIsListViewerOpen }) => {
 				{
 					id: "{{all_fields}}",
 					description: __(
-						"All form fields filled by the user.",
+						"All form field values filled and submitted by the user.",
 						"user-registration"
 					),
 				},
 				{
 					id: "{{user_roles}}",
 					description: __(
-						"Gives the user’s role.",
+						"The user’s assigned role.",
 						"user-registration"
 					),
 				},
 				{
 					id: "{{auto_pass}}",
 					description: __(
-						"Auto generated password for the user. Works only if Auto generated password feature is enabled in User Registration Pro",
+						"Auto generated password for the user. It works only if auto-generated password feature is enabled in User Registration Pro",
 						"user-registration"
 					),
 				},
@@ -266,7 +269,14 @@ const SmartTagsLists = ({ setIsListViewerOpen }) => {
 		>
 			<Stack direction="row">
 				<Button
-					leftIcon={<ArrowLeftFill w="6" h="6" />}
+					leftIcon={
+						<ArrowLeftFill
+							w="30"
+							h="30"
+							position="relative"
+							top="2px"
+						/>
+					}
 					variant="outline"
 					border="none"
 					size="md"
@@ -286,6 +296,7 @@ const SmartTagsLists = ({ setIsListViewerOpen }) => {
 							onClick={() => {
 								handleAccordionToggle(smartTags.id);
 							}}
+							boxShadow="none !important"
 						>
 							<Box
 								flex="1"
@@ -305,17 +316,41 @@ const SmartTagsLists = ({ setIsListViewerOpen }) => {
 								<Add h="5" w="5" />
 							)}
 						</AccordionButton>
-						<AccordionPanel pb={4} bgColor="#FBF8FE">
+						<AccordionPanel
+							pb={4}
+							bgColor="#FBF8FE"
+							sx={{
+								display: "flex",
+								flexDirection: "column",
+								gap: "20px",
+							}}
+						>
 							<Text fontSize="14px">{smartTags.description}</Text>
 							{smartTags.smartTag && (
-								<Table variant="simple" fontSize="14px">
-									<Tbody>
+								<Table
+									variant="simple"
+									fontSize="14px"
+									size="sm"
+									sx={{
+										display: "flex",
+										flexDirection: "column",
+										gap: "16px",
+									}}
+								>
+									<Tbody
+										sx={{
+											display: "flex",
+											flexDirection: "column",
+											gap: "12px",
+										}}
+									>
 										{smartTags.smartTag.map(
 											({ id, description }, key) => (
 												<Tr key={key}>
 													<Td
 														px="0px"
 														borderBottom="0px"
+														width="200px"
 													>
 														<Box
 															flex="1"

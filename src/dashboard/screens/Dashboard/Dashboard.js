@@ -51,7 +51,7 @@ const Dashboard = () => {
 						fontWeight="semibold"
 					>
 						{__(
-							"Welcome to User Registration",
+							"Welcome to User Registration!",
 							"user-registration"
 						)}
 					</Heading>
@@ -107,7 +107,7 @@ const Dashboard = () => {
 					p="4"
 				>
 					<Heading as="h3" mb="4" fontSize="lg" fontWeight="semibold">
-						{__("Useful Plugins", "user-registration")}
+						{__("Try More Plugins", "user-registration")}
 					</Heading>
 					<UsefulPlugins />
 				</Box>
@@ -129,7 +129,7 @@ const Dashboard = () => {
 					</HStack>
 					<Text fontSize="13px" color="gray.700">
 						{__(
-							"Please check out basic documentation for detailed information on how to use User Registration.",
+							"Check our documentation for detailed information on User Registration features and how to use them.",
 							"user-registration"
 						)}
 					</Text>
@@ -158,7 +158,7 @@ const Dashboard = () => {
 					</HStack>
 					<Text fontSize="13px" color="gray.700">
 						{__(
-							"Please take a moment to suggest any features that could enhance our product.",
+							"Don’t find a feature you’re looking for? Suggest any features you think would enhance our product.",
 							"user-registration"
 						)}
 					</Text>
@@ -182,12 +182,12 @@ const Dashboard = () => {
 					<HStack gap="2">
 						<Icon.Star w="5" h="5" fill="primary.500" />
 						<Heading as="h3" size="sm" fontWeight="semibold">
-							{__("Submit us a Review", "user-registration")}
+							{__("Submit a Review", "user-registration")}
 						</Heading>
 					</HStack>
 					<Text fontSize="13px" color="gray.700">
 						{__(
-							"Sharing your review is a valuable way to help us enhance your experience.",
+							"Please take a moment to give us a review. We appreciate honest feedback that’ll help us improve our plugin.",
 							"user-registration"
 						)}
 					</Text>
@@ -216,7 +216,7 @@ const Dashboard = () => {
 					</HStack>
 					<Text fontSize="13px" color="gray.700">
 						{__(
-							"Have a look at video tutorials to walk you through getting started.",
+							"Watch our step-by-step video tutorials that’ll help you get the best out of User Registration’s features.",
 							"user-registration"
 						)}
 					</Text>
@@ -245,7 +245,7 @@ const Dashboard = () => {
 					</HStack>
 					<Text fontSize="13px" color="gray.700">
 						{__(
-							"Get in touch with our support team. You can always submit a support ticket for help.",
+							"Submit a ticket for encountered issues and get help from our support team instantly.",
 							"user-registration"
 						)}
 					</Text>

@@ -96,7 +96,7 @@ class UR_Features {
 			return new \WP_REST_Response(
 				array(
 					'success' => false,
-					'message' => esc_html__( 'Cannot access Features. Please try again some time later.', 'user-registration' ),
+					'message' => $raw_section->get_error_message(),
 				),
 				400
 			);
