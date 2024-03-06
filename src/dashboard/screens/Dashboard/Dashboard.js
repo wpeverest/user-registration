@@ -1,3 +1,6 @@
+/**
+ *  External Dependencies
+ */
 import {
 	AspectRatio,
 	Box,
@@ -12,12 +15,17 @@ import {
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 import React from "react";
+
+/**
+ *  Internal Dependencies
+ */
 import * as Icon from "../../components/Icon/Icon";
 import UsefulPlugins from "./components/UsefulPlugins";
 
 const Dashboard = () => {
-	/* global _UR_ */
-	const { newFormURL } = typeof _UR_ !== "undefined" && _UR_;
+	/* global _UR_DASHBOARD_ */
+	const { newFormURL } =
+		typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 	return (
 		<Grid
 			my="8"

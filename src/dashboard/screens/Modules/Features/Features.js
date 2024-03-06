@@ -1,3 +1,6 @@
+/**
+ *  External Dependencies
+ */
 import React, { useEffect } from "react";
 import AddonSkeleton from "../../../skeleton/AddonsSkeleton/AddonsSkeleton";
 import {
@@ -13,12 +16,16 @@ import {
 	Link,
 	SimpleGrid,
 } from "@chakra-ui/react";
+import { sprintf, __ } from "@wordpress/i18n";
+
+/**
+ *  Internal Dependencies
+ */
 import FeatureItem from "./components/FeatureItem";
 import { isArray, isEmpty } from "../../../../utils/utils";
 import { actionTypes } from "../../../../context/dashboardContext";
 import { useStateValue } from "../../../../context/StateProvider";
 import { Lock } from "../../../components/Icon/Icon";
-import { sprintf, __ } from "@wordpress/i18n";
 
 const Features = ({
 	isPerformingBulkAction,
@@ -26,8 +33,9 @@ const Features = ({
 	selectedFeaturesSlugs,
 	setSelectedFeaturesSlugs,
 }) => {
-	/* global _UR_ */
-	const { upgradeURL } = typeof _UR_ !== "undefined" && _UR_;
+	/* global _UR_DASHBOARD_ */
+	const { upgradeURL } =
+		typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 	const [{ upgradeModal }, dispatch] = useStateValue();
 	const handleCheckedChange = (slug, checked) => {
 		if (checked) {

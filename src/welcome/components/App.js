@@ -32,7 +32,7 @@ function App() {
 	const [initiateInstall, setInitiateInstall] = useState(false);
 	const [disabledLink, setDisabledLink] = useState(false);
 
-	/* global _UR_ */
+	/* global _UR_WIZARD_ */
 	const {
 		adminURL,
 		siteURL,
@@ -41,7 +41,7 @@ function App() {
 		urRestApiNonce,
 		onBoardIconsURL,
 		restURL,
-	} = typeof _UR_ !== "undefined" && _UR_;
+	} = typeof _UR_WIZARD_ !== "undefined" && _UR_WIZARD_;
 
 	const [steps, setSteps] = useState([
 		{

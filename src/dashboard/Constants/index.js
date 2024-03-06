@@ -1,6 +1,8 @@
 import { __ } from "@wordpress/i18n";
 
-export const ROUTES = [
+const { isPro } = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
+
+let ROUTES = [
 	{
 		route: "/",
 		label: __("Dashboard", "user-registration"),
@@ -17,15 +19,24 @@ export const ROUTES = [
 		route: "/settings",
 		label: __("Settings", "user-registration"),
 	},
-	{
-		route: "/free-vs-pro",
-		label: __("Free vs Pro", "user-registration"),
-	},
+
 	{
 		route: "/help",
 		label: __("Help", "user-registration"),
 	},
 ];
+
+if (!isPro) {
+	ROUTES = [
+		...ROUTES.slice(0, 4),
+		{
+			route: "/free-vs-pro",
+			label: __("Free vs Pro", "user-registration"),
+		},
+		...ROUTES.slice(4),
+	];
+}
+export default ROUTES;
 
 export const CHANGELOG_TAG_COLORS = {
 	fix: {

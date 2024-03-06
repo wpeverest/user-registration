@@ -81,6 +81,11 @@ class UR_Changelog {
 		return $raw_changelog;
 	}
 
+	/**
+	 * Parse Changelog contents.
+	 *
+	 * @param string $raw_changelog Raw changelog that needs to be parsed properly.
+	 */
 	protected function parse_changelog( $raw_changelog ) {
 		if ( is_wp_error( $raw_changelog ) ) {
 			return $raw_changelog;
@@ -96,19 +101,19 @@ class UR_Changelog {
 			$version = null;
 
 			if ( preg_match( '/^= (\d+\.\d+\.\d+) *- (\d+\/\d+\/\d+)/', $entry, $matches ) ) {
-				$version = $matches[1] ?? null;
-				$date    = $matches[2] ?? null;
+				$version = $matches[1] ?? null; // phpcs:ignore
+				$date    = $matches[2] ?? null; // phpcs:ignore
 			}
 
 			$changes_arr = array();
 
 			if ( preg_match_all( '/^\* (\w+(\s*-\s*.+)?)$/m', $entry, $matches ) ) {
-				$changes = $matches[1] ?? null;
+				$changes = $matches[1] ?? null; // phpcs:ignore
 
 				if ( is_array( $changes ) ) {
 					foreach ( $changes as $change ) {
 						$parts = explode( ' - ', $change );
-						$tag   = trim( $parts[0] ?? '' );
+						$tag   = trim( $parts[0] ?? '' ); // phpcs:ignore
 						$data  = isset( $parts[1] ) ? trim( $parts[1] ) : '';
 
 						if ( isset( $changes_arr[ $tag ] ) ) {
@@ -130,42 +135,6 @@ class UR_Changelog {
 		}
 
 		return $parsed_changelog;
-	}
-
-	/**
-	 * Prepare item for response.
-	 *
-	 * @param array            $item Item.
-	 * @param \WP_Rest_Request $request Full detail about the request.
-	 * @return \WP_Rest_Response
-	 */
-	public function prepare_item_for_response( $item, $request ) {
-		$data     = $this->add_additional_fields_to_object( $item, $request );
-		$response = new \WP_REST_Response( $data );
-		$response->add_links( $this->prepare_links( $item ) );
-
-		return apply_filters( 'user_registration_prepare_changelog', $response, $item, $request );
-	}
-
-	/**
-	 * Prepare links for the request.
-	 *
-	 * @param array $item
-	 * @return array
-	 */
-	protected function prepare_links( $item ) {
-		return array(
-			'self' => array(
-				'href' => rest_url(
-					sprintf(
-						'%s/%s/%s',
-						$this->namespace,
-						$this->rest_base,
-						$item['version']
-					)
-				),
-			),
-		);
 	}
 
 	/**

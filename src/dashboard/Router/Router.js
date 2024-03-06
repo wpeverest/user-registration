@@ -1,5 +1,12 @@
+/**
+ *  External Dependencies
+ */
 import React from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
+
+/**
+ *  Internal Dependencies
+ */
 import {
 	Dashboard,
 	Help,
@@ -10,6 +17,9 @@ import {
 } from "../screens";
 
 const Router = () => {
+	/* global _UR_DASHBOARD_ */
+	const { isPro } = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
+
 	return (
 		<Routes>
 			<Route path="/" element={<Dashboard />} />
@@ -21,7 +31,7 @@ const Router = () => {
 			/>
 			<Route path="/features" element={<Modules />} />
 			<Route path="/products" element={<Products />} />
-			<Route path="/free-vs-pro" element={<FreeVsPro />} />
+			{!isPro && <Route path="/free-vs-pro" element={<FreeVsPro />} />}
 			<Route path="/help" element={<Help />} />
 			<Route path="*" element={<Dashboard />} />
 		</Routes>

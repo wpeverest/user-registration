@@ -1,3 +1,6 @@
+/**
+ *  External Dependencies
+ */
 import React, { useState, useEffect } from "react";
 import {
 	TableContainer,
@@ -15,6 +18,10 @@ import {
 	Link,
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
+
+/**
+ *  Internal Dependencies
+ */
 import check from "./images/check.webp";
 import close from "./images/close.webp";
 import { getAllAddons } from "../Modules/Addons/addons-api";
@@ -23,8 +30,9 @@ import { Lock } from "../../components/Icon/Icon";
 
 const FreeVsPro = () => {
 	const [contentsLoaded, setContentsLoaded] = useState(false);
-	/* global _UR_ */
-	const { upgradeURL } = typeof _UR_ !== "undefined" && _UR_;
+	/* global _UR_DASHBOARD_ */
+	const { upgradeURL } =
+		typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 	const [tableContents, setTableContents] = useState([
 		{
 			type: "features",

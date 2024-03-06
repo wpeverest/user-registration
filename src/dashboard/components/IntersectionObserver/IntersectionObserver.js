@@ -1,3 +1,6 @@
+/**
+ *  External Dependencies
+ */
 import React, { useEffect, useRef, useState } from "react";
 import {
 	HStack,
@@ -8,8 +11,12 @@ import {
 	MenuList,
 } from "@chakra-ui/react";
 import { NavLink, useLocation } from "react-router-dom";
-import { DotsHorizontal } from "../Icon/Icon";
 import PropTypes from "prop-types";
+
+/**
+ *  Internal Dependencies
+ */
+import { DotsHorizontal } from "../Icon/Icon";
 
 const IntersectionStyles = {
 	visible: {

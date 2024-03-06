@@ -1,3 +1,6 @@
+/**
+ *  External Dependencies
+ */
 import { Box, Flex, Skeleton, SkeletonText, VStack } from "@chakra-ui/react";
 import React from "react";
 import { Col, Row } from "react-grid-system";

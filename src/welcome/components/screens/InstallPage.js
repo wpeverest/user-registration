@@ -1,5 +1,5 @@
 /**
- *  Internal Dependencies
+ *  External Dependencies
  */
 import React, { useState, useEffect, Fragment } from "react";
 import {

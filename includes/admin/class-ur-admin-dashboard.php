@@ -41,7 +41,7 @@ class UR_Admin_Dashboard {
 
 		wp_localize_script(
 			'ur-dashboard-script',
-			'_UR_',
+			'_UR_DASHBOARD_',
 			array(
 				'adminURL'             => esc_url( admin_url() ),
 				'siteURL'              => esc_url( home_url( '/' ) ),

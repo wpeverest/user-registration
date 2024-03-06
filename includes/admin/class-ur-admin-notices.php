@@ -205,7 +205,7 @@ class UR_Admin_Notices {
 						// Remove all notices if the page is form builder page.
 						if ( 'add-new-registration' === $_REQUEST['page'] || 'user-registration-dashboard' === $_REQUEST['page'] ) {
 							unset( $wp_filter[ $wp_notice ]->callbacks[ $priority ][ $name ] );
-						} else {
+						} else { // phpcs:ignore
 							// Remove all notices except user registration plugins notices.
 							if ( null !== $name ) {
 								if ( strstr( $name, 'user_registration_error_notices' ) ) {

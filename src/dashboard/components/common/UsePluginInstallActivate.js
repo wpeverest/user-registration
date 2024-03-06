@@ -1,7 +1,14 @@
-import React, { useEffect, useState } from "react";
+/**
+ *  External Dependencies
+ */
+import React from "react";
 import { useToast, Button } from "@chakra-ui/react";
 import apiFetch from "@wordpress/api-fetch";
 import { sprintf, __ } from "@wordpress/i18n";
+
+/**
+ *  Internal Dependencies
+ */
 import { useStateValue } from "../../../context/StateProvider";
 import { actionTypes } from "../../../context/dashboardContext";
 
@@ -15,8 +22,9 @@ const UsePluginInstallActivate = ({
 	const toast = useToast();
 	const [{ pluginsStatus }, dispatch] = useStateValue();
 
-	/* global _UR_ */
-	const { urRestApiNonce, restURL } = typeof _UR_ !== "undefined" && _UR_;
+	/* global _UR_DASHBOARD_ */
+	const { urRestApiNonce, restURL } =
+		typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 
 	const successCallback = (closeFunction) => {
 		if (typeof closeFunction === "function") {

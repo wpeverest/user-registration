@@ -1,3 +1,6 @@
+/**
+ *  External Dependencies
+ */
 import React, { useRef, useState, useEffect } from "react";
 import {
 	AlertDialog,
@@ -18,12 +21,17 @@ import {
 	useDisclosure,
 } from "@chakra-ui/react";
 import { sprintf, __ } from "@wordpress/i18n";
+
+/**
+ *  Internal Dependencies
+ */
 import { useStateValue } from "../../../../context/StateProvider";
 import UsePluginInstallActivate from "../../../components/common/UsePluginInstallActivate";
 
 const ProductCard = (props) => {
-	/* global _UR_ */
-	const { adminURL } = typeof _UR_ !== "undefined" && _UR_;
+	/* global _UR_DASHBOARD_ */
+	const { adminURL } =
+		typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 
 	const [{ pluginsStatus, themesStatus }, dispatch] = useStateValue();
 	const { label, description, image, website, slug, type, liveDemoURL } =

@@ -1,8 +1,9 @@
 import { select } from "@wordpress/data";
 import apiFetch from "@wordpress/api-fetch";
 
-/* global _UR_ */
-const { urRestApiNonce, restURL } = typeof _UR_ !== "undefined" && _UR_;
+/* global _UR_DASHBOARD_ */
+const { urRestApiNonce, restURL } =
+	typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 
 const base = restURL + "user-registration/v1/";
 const urls = {

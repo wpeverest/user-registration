@@ -1,3 +1,6 @@
+/**
+ *  External Dependencies
+ */
 import {
 	AlertDialog,
 	AlertDialogBody,
@@ -15,6 +18,10 @@ import {
 } from "@chakra-ui/react";
 import { sprintf, __ } from "@wordpress/i18n";
 import React, { useRef, useState, useEffect } from "react";
+
+/**
+ *  Internal Dependencies
+ */
 import { PLUGINS } from "../../../constants/products";
 import { useStateValue } from "../../../../context/StateProvider";
 import UsePluginInstallActivate from "../../../components/common/UsePluginInstallActivate";

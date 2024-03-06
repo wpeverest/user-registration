@@ -1,3 +1,6 @@
+/**
+ *  External Dependencies
+ */
 import {
 	Badge,
 	Box,
@@ -14,14 +17,18 @@ import {
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 import React, { useState, useEffect } from "react";
+
+/**
+ *  Internal Dependencies
+ */
 import { enableFeature, disableFeature } from "../features-api";
 import { useStateValue } from "../../../../../context/StateProvider";
 import { actionTypes } from "../../../../../context/dashboardContext";
 
 const FeatureItem = (props) => {
-	/* global _UR_ */
+	/* global _UR_DASHBOARD_ */
 	const { assetsURL, liveDemoURL, isPro } =
-		typeof _UR_ !== "undefined" && _UR_;
+		typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 	const [{ upgradeModal }, dispatch] = useStateValue();
 
 	const {

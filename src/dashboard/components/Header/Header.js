@@ -1,3 +1,6 @@
+/**
+ *  External Dependencies
+ */
 import {
 	Box,
 	Button,
@@ -18,9 +21,13 @@ import {
 	Center,
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { NavLink } from "react-router-dom";
-import { ROUTES } from "../../Constants";
+
+/**
+ *  Internal Dependencies
+ */
+import ROUTES from "../../Constants";
 import announcement from "../../images/announcement.gif";
 import { Logo } from "../Icon/Icon";
 import IntersectObserver from "../IntersectionObserver/IntersectionObserver";
@@ -30,10 +37,11 @@ const Header = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const ref = useRef();
 
-	/* global _UR_ */
-	const { version, isPro, upgradeURL } = typeof _UR_ !== "undefined" && _UR_;
+	/* global _UR_DASHBOARD_ */
+	const { version, isPro, upgradeURL } =
+		typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 
-	React.useEffect(() => {
+	useEffect(() => {
 		if (isOpen) {
 			document.body.classList.add("ur-modal-open");
 		} else {
@@ -43,6 +51,7 @@ const Header = () => {
 			document.body.classList.remove("ur-modal-open");
 		};
 	}, [isOpen]);
+
 	return (
 		<>
 			<Box

@@ -1,6 +1,13 @@
+/**
+ *  External Dependencies
+ */
 import { Box, Heading, SimpleGrid, Stack } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 import React from "react";
+
+/**
+ *  Internal Dependencies
+ */
 import { PLUGINS, THEMES } from "../../Constants/Products";
 import ProductCard from "./components/ProductCard";
 import { useStateValue } from "../../../context/StateProvider";

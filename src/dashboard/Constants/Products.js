@@ -1,4 +1,11 @@
+/**
+ *  External Dependencies
+ */
 import { __ } from "@wordpress/i18n";
+
+/**
+ *  Internal Dependencies
+ */
 import * as Icon from "../components/Icon/Icon";
 import colormag from "../images/colormag.webp";
 import evf from "../images/evf.webp";

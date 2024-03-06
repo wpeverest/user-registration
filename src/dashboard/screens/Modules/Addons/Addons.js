@@ -1,3 +1,6 @@
+/**
+ *  External Dependencies
+ */
 import React, { useState, useEffect } from "react";
 import AddonSkeleton from "../../../skeleton/AddonsSkeleton/AddonsSkeleton";
 import {
@@ -13,12 +16,16 @@ import {
 	Link,
 	SimpleGrid,
 } from "@chakra-ui/react";
+import { sprintf, __ } from "@wordpress/i18n";
+
+/**
+ *  Internal Dependencies
+ */
 import AddonItem from "./components/AddonItem";
 import { isArray, isEmpty } from "../../../../utils/utils";
 import { actionTypes } from "../../../../context/dashboardContext";
 import { useStateValue } from "../../../../context/StateProvider";
 import { Lock } from "../../../components/Icon/Icon";
-import { sprintf, __ } from "@wordpress/i18n";
 
 const Addons = ({
 	isPerformingBulkAction,
@@ -27,9 +34,9 @@ const Addons = ({
 	setSelectedAddonsSlugs,
 	setSelectedAddonsNames,
 }) => {
-	/* global _UR_ */
+	/* global _UR_DASHBOARD_ */
 	const { upgradeURL, licenseActivationURL } =
-		typeof _UR_ !== "undefined" && _UR_;
+		typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 	const [{ upgradeModal }, dispatch] = useStateValue();
 	const [upgradeContent, setUpgradeContent] = useState({
 		title: "",

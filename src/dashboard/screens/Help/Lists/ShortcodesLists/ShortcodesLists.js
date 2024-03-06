@@ -1,3 +1,6 @@
+/**
+ *  External Dependencies
+ */
 import React, { useState, useEffect } from "react";
 import {
 	Box,
@@ -15,6 +18,10 @@ import {
 	Tr,
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
+
+/**
+ *  Internal Dependencies
+ */
 import { ArrowLeftFill, Add, Minus } from "../../../../components/Icon/Icon";
 
 const ShortcodesLists = ({ setIsListViewerOpen }) => {

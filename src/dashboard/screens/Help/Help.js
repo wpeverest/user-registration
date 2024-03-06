@@ -1,3 +1,6 @@
+/**
+ *  External Dependencies
+ */
 import {
 	Button,
 	Grid,
@@ -10,6 +13,10 @@ import {
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 import React, { useState, useEffect } from "react";
+
+/**
+ *  Internal Dependencies
+ */
 import * as Icon from "../../components/Icon/Icon";
 import facebook from "../../images/facebook.webp";
 import x from "../../images/x.webp";

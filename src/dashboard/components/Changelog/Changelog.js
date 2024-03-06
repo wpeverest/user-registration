@@ -1,17 +1,28 @@
+/**
+ *  External Dependencies
+ */
 import { Box, Heading, HStack, Tag, Text } from "@chakra-ui/react";
 import apiFetch from "@wordpress/api-fetch";
 import { sprintf, __ } from "@wordpress/i18n";
 import React, { useState, useEffect } from "react";
+
+/**
+ *  Internal Dependencies
+ */
 import ChangelogSkeleton from "../../skeleton/ChangelogSkeleton/ChangelogSkeleton";
 import { CHANGELOG_TAG_COLORS } from "../../Constants";
 
 const Changelog = () => {
-	/* global _UR_ */
-	const { urRestApiNonce, restURL } = typeof _UR_ !== "undefined" && _UR_;
+	/* global _UR_DASHBOARD_ */
+	const { urRestApiNonce, restURL } =
+		typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 
 	const [changelogParsed, setChangelogParsed] = useState(false);
 	const [changelogs, setChangelogs] = useState({});
 
+	/**
+	 *  Fetrch changelogs on component load.
+	 */
 	useEffect(() => {
 		if (!changelogParsed) {
 			const data = apiFetch({

@@ -1,3 +1,6 @@
+/**
+ *  External Dependencies
+ */
 import React, { useState, useEffect } from "react";
 import {
 	Box,
@@ -17,6 +20,11 @@ import {
 	useToast,
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
+import { useOnType } from "use-ontype";
+
+/**
+ *  Internal Dependencies
+ */
 import { Search } from "../../components/Icon/Icon";
 import Features from "./Features/Features";
 import Addons from "./Addons/Addons";
@@ -32,7 +40,6 @@ import {
 	bulkDisableFeatures,
 	getAllFeatures,
 } from "./Features/features-api";
-import { useOnType } from "use-ontype";
 import AddonSkeleton from "../../skeleton/AddonsSkeleton/AddonsSkeleton";
 import { useStateValue } from "../../../context/StateProvider";
 import { actionTypes } from "../../../context/dashboardContext";
