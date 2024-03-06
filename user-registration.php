@@ -229,6 +229,12 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			include_once UR_ABSPATH . 'includes/class-ur-privacy.php';
 			include_once UR_ABSPATH . 'includes/class-ur-form-block.php';
 			include_once UR_ABSPATH . 'includes/class-ur-cache-helper.php';
+			/**
+			 * Block classes.
+			 */
+			include_once UR_ABSPATH . 'includes/blocks/class-ur-blocks.php';
+			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-abstract.php';
+			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-registration-form.php';
 
 			// Validation classes.
 			include_once UR_ABSPATH . 'includes/validation/class-ur-validation.php';
