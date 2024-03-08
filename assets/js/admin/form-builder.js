@@ -4711,12 +4711,22 @@
 					.find("span:contains(*)")
 					.remove();
 
+
 				if ($label.is(":checked")) {
-					wrapper
-						.find(".ur-label")
-						.find("label")
-						.append('<span style="color:red">*</span>');
-				}
+					var label_element = wrapper
+					.find(".ur-label")
+					.find("label");
+					var tooltip_icon = label_element.find(".ur-portal-tooltip");
+
+					if ( tooltip_icon.length === 0 ) {
+						label_element
+							.append( '<span style="color:red">*</span>' );
+					}else{
+						label_element
+						tooltip_icon.before('<span style="color:red">*</span>');
+						}
+					}
+
 			},
 			/**
 			 * Reflects changes in required field of field settings into selected field in form builder area.
