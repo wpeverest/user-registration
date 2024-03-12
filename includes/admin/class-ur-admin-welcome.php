@@ -52,7 +52,7 @@ class UR_Admin_Welcome {
 			update_option( 'user_registration_first_time_activation_flag', false );
 		}
 
-		wp_register_script( 'ur-setup-wizard-script', UR()->plugin_url() . '/chunks/main.js', array( 'wp-element', 'wp-blocks', 'wp-editor' ), UR()->version, true );
+		wp_register_script( 'ur-setup-wizard-script', UR()->plugin_url() . '/chunks/welcome.js', array( 'wp-element', 'wp-blocks', 'wp-editor' ), UR()->version, true );
 		wp_enqueue_style( 'ur-setup-wizard-style', UR()->plugin_url() . '/assets/css/user-registration-setup-wizard.css', array(), UR()->version );
 		wp_enqueue_script( 'ur-setup-wizard-script' );
 

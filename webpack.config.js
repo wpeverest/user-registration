@@ -5,12 +5,12 @@ module.exports = (env, argv) => {
 	let production = argv.mode === "production";
 
 	return {
-		entry: [
-			"/src/welcome/index.js",
-			"/src/dashboard/index.js",
-			"./assets/js/admin/gutenberg/form-block.js",
-			"./src/blocks/index.js",
-		],
+		entry: {
+			welcome: "/src/welcome/index.js",
+			dashboard: "/src/dashboard/index.js",
+			formblock: "./assets/js/admin/gutenberg/form-block.js",
+			blocks: "./src/blocks/index.js",
+		},
 		output: {
 			path: path.resolve(__dirname + "/chunks"),
 			publicPath: "/",
@@ -71,6 +71,8 @@ module.exports = (env, argv) => {
 		],
 		externals: {
 			"@wordpress/blocks": ["wp", "blocks"],
+			"@wordpress/components": ["wp", "components"],
+			"@wordpress/components": ["wp", "components"],
 		},
 	};
 };
