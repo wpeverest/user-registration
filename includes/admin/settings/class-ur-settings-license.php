@@ -47,6 +47,11 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 				'' => __( 'License', 'user-registration' ),
 			);
 
+			/**
+			 * Filter to get the sections.
+			 *
+			 * @param array $sections Sections to be enlisted.
+			 */
 			return apply_filters( 'user_registration_get_sections_' . $this->id, $sections );
 		}
 
@@ -56,7 +61,11 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 		 * @return array
 		 */
 		public function get_settings() {
-
+			/**
+			 * Filter to add the license setting.
+			 *
+			 * @param array License sections to be enlisted.
+			 */
 			$settings = apply_filters(
 				'user_registration_license_settings',
 				array(
@@ -106,6 +115,7 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 					),
 				);
 
+				/* translators: %1$s - WPeverest My Account url */
 				$settings['sections']['license_options_settings']['desc'] = sprintf( __( 'Your license has been activated. Enjoy using <strong>User Registration</strong>. Please go to %1$sMy Account Page%2$s for more details ', 'user-registration' ), '<a href="https://wpeverest.com/login/" target="_blank">', '</a>' );
 
 				// Hide save changes button from settings when license is activated.
@@ -113,6 +123,11 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 
 			}
 
+			/**
+			 * Filter to get the settings.
+			 *
+			 * @param array $settings Setting options to be enlisted.
+			 */
 			return apply_filters( 'user_registration_get_settings_' . $this->id, $settings );
 		}
 
@@ -181,7 +196,6 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 			$settings .= '</div></div>';
 			return $settings;
 		}
-
 	}
 
 endif;

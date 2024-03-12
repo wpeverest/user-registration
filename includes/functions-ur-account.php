@@ -138,7 +138,14 @@ function ur_get_account_menu_items() {
 			unset( $items[ $endpoint_id ] );
 		}
 	}
-
+	/**
+	 * Applies a filter to modify the account menu items.
+	 *
+	 * The 'user_registration_account_menu_items' filter allows developers to modify
+	 * the account menu items in User Registration.
+	 *
+	 * @param array $items Default array of account menu items.
+	 */
 	return apply_filters( 'user_registration_account_menu_items', $items );
 }
 
@@ -166,7 +173,15 @@ function ur_get_account_menu_item_classes( $endpoint ) {
 	if ( $current ) {
 		$classes[] = 'is-active';
 	}
-
+	/**
+	 * Applies a filter to modify the classes for an account menu item.
+	 *
+	 * The 'user_registration_account_menu_item_classes' filter allows developers to modify
+	 * the classes for an account menu item.
+	 *
+	 * @param array $classes Default array of classes for the account menu item.
+	 * @param string $endpoint The endpoint for the account menu item.
+	 */
 	$classes = apply_filters( 'user_registration_account_menu_item_classes', $classes, $endpoint );
 
 	return implode( ' ', array_map( 'sanitize_html_class', $classes ) );

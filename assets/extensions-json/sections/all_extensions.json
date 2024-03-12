@@ -56,19 +56,6 @@
       ]
     },
     {
-      "title": "Style Customizer",
-      "slug" : "user-registration-style-customizer",
-      "name" : "User Registration Style Customizer",
-      "image": "extensions-json/sections/images/style-customizer.png",
-      "excerpt": "Gone are the days when registration forms used to look dull and boring. Easily style your registration forms according to your needs by changing various design components such as Font size, Font color, background color, background image, Border, padding, margin, alignment and more.",
-      "link": "https://wpuserregistration.com/features/style-customizer/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=style-customizer",
-      "plan" : [
-        "plus",
-        "professional",
-        "themegrill agency"
-      ]
-    },
-    {
       "title": "File Upload",
       "slug" : "user-registration-file-upload",
       "name" : "User Registration - File Upload",
@@ -83,12 +70,38 @@
       ]
     },
     {
+      "title": "Style Customizer",
+      "slug" : "user-registration-style-customizer",
+      "name" : "User Registration Style Customizer",
+      "image": "extensions-json/sections/images/style-customizer.png",
+      "excerpt": "Gone are the days when registration forms used to look dull and boring. Easily style your registration forms according to your needs by changing various design components such as Font size, Font color, background color, background image, Border, padding, margin, alignment and more.",
+      "link": "https://wpuserregistration.com/features/style-customizer/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=style-customizer",
+      "plan" : [
+        "plus",
+        "professional",
+        "themegrill agency"
+      ]
+    },
+    {
       "title": "Conditional Logic",
       "slug" : "user-registration-conditional-logic",
       "name" : "User Registration Conditional Logic",
       "image": "extensions-json/sections/images/conditional-logic.png",
       "excerpt": "Conditional Logic allows you to create more dynamic forms based on user input. You can now show or hide specific fields based on the users other input in the form. A field hide or show based on on multiple conditions fulfilled.",
       "link": "https://wpuserregistration.com/features/conditional-logic/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=conditional-logic",
+      "plan" : [
+        "plus",
+        "professional",
+        "themegrill agency"
+      ]
+    },
+    {
+      "title": "Multi Step Forms",
+      "slug" : "user-registration-multi-part",
+      "name" : "User Registration Multi Part",
+      "image": "extensions-json/sections/images/multi-part.png",
+      "excerpt": "Lengthy forms are time-consuming and boring. Form fillers easily get distracted and quit halfway through these types of forms. But, there’s no need to worry! Our User Registration Multi-Part Add-on allows you to divide your registration forms into multiple parts according to your requirements without any hassle.",
+      "link": "https://wpuserregistration.com/features/multi-step/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=multi-part",
       "plan" : [
         "plus",
         "professional",
@@ -109,31 +122,18 @@
       ]
     },
     {
-      "title": "Multi Step Forms",
-      "slug" : "user-registration-multi-part",
-      "name" : "User Registration Multi Part",
-      "image": "extensions-json/sections/images/multi-part.png",
-      "excerpt": "Lengthy forms are time-consuming and boring. Form fillers easily get distracted and quit halfway through these types of forms. But, there’s no need to worry! Our User Registration Multi-Part Add-on allows you to divide your registration forms into multiple parts according to your requirements without any hassle.",
-      "link": "https://wpuserregistration.com/features/multi-step/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=multi-part",
+      "title": "Email Templates",
+      "slug" : "user-registration-email-templates",
+      "name" : "User Registration Email Templates",
+      "image": "extensions-json/sections/images/email-templates.png",
+      "excerpt": "Allows you to choose an email template or create a custom email template. It offers an easy-to-use customizer for you to change the look and feel of your User Registration emails.",
+      "link": "https://wpuserregistration.com/features/email-templates/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=email-templates",
       "plan" : [
         "plus",
         "professional",
         "themegrill agency"
       ]
-    },
-    {
-      "title": "Profile Connect",
-      "slug" : "user-registration-profile-connect",
-      "name" : "User Registration Profile Connect",
-      "image": "extensions-json/sections/images/profile-connect.png",
-      "excerpt": "Connect your old users i.e users created via some other plugins, default WordPress registration form to user registration forms. Allows both individual as well as bulk connection of users to any particular form.",
-      "link": "https://wpuserregistration.com/features/profile-connect/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=profile-connect",
-      "plan" : [
-        "plus",
-        "professional",
-        "themegrill agency"
-      ]
-    },
+	  },
     {
       "title": "Social Connect",
       "slug" : "user-registration-social-connect",
@@ -162,19 +162,20 @@
         "themegrill agency"
       ]
     },
-	  {
-      "title": "Email Templates",
-      "slug" : "user-registration-email-templates",
-      "name" : "User Registration Email Templates",
-      "image": "extensions-json/sections/images/email-templates.png",
-      "excerpt": "Allows you to choose an email template or create a custom email template. It offers an easy-to-use customizer for you to change the look and feel of your User Registration emails.",
-      "link": "https://wpuserregistration.com/features/email-templates/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=email-templates",
+    {
+      "title": "Profile Connect",
+      "slug" : "user-registration-profile-connect",
+      "name" : "User Registration Profile Connect",
+      "image": "extensions-json/sections/images/profile-connect.png",
+      "excerpt": "Connect your old users i.e users created via some other plugins, default WordPress registration form to user registration forms. Allows both individual as well as bulk connection of users to any particular form.",
+      "link": "https://wpuserregistration.com/features/profile-connect/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=profile-connect",
       "plan" : [
+        "personal",
         "plus",
         "professional",
         "themegrill agency"
       ]
-	  },
+    },
     {
       "title": "Invite Codes",
       "slug" : "user-registration-invite-codes",
@@ -183,19 +184,6 @@
       "excerpt": " Allows you to restrict the registration on your site to users with invite Codes only. You can create a single or multiple invitation code, set expiry date, usage limit per invitation code and more.",
       "link": "https://wpuserregistration.com/features/invite-codes/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=invite-codes",
       "plan" : [
-        "plus",
-        "professional",
-        "themegrill agency"
-      ]
-    },
-    {
-      "title": "Geolocation",
-	    "slug" : "user-registration-geolocation",
-	    "name" : "User Registration Geolocation",
-      "image": "extensions-json/sections/images/geolocation.png",
-      "excerpt": "Allows you to collect geo location data from users who registered on your site. Information like Country, City, Zip Code, Latitude/Longitude and location map for the user will accessible.",
-      "link": "https://wpuserregistration.com/features/geolocation/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=geolocation",
-	    "plan" : [
         "plus",
         "professional",
         "themegrill agency"
@@ -216,6 +204,19 @@
       ]
     },
     {
+      "title": "LearnDash",
+      "slug" : "user-registration-learndash",
+      "name" : "User Registration LearnDash",
+      "image": "extensions-json/sections/images/learndash.png",
+      "excerpt": "Allows you to view user’s registered learndash courses, automatically enroll users to specified learndash courses and more.",
+      "link": "https://wpuserregistration.com/features/learndash/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=learndash",
+      "plan" : [
+        "plus",
+        "professional",
+        "themegrill agency"
+      ]
+    },
+    {
       "title": "Import Users",
       "slug" : "user-registration-import-users",
       "name" : "User Registration Import Users",
@@ -228,19 +229,19 @@
         "themegrill agency"
       ]
     },
-	  {
-      "title": "Frontend Listing",
-      "slug" : "user-registration-frontend-listing",
-      "name" : "User Registration Frontend Listing",
-      "image": "extensions-json/sections/images/frontend-listing.png",
-      "excerpt": "The Frontend Listing addon for User Registration allows you to list your users in frontend. Users and guests can view and check profile of all the members listed on the site.",
-      "link": "https://wpuserregistration.com/features/frontend-listing/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=frontend-listing",
-      "plan" : [
+    {
+      "title": "Geolocation",
+	    "slug" : "user-registration-geolocation",
+	    "name" : "User Registration Geolocation",
+      "image": "extensions-json/sections/images/geolocation.png",
+      "excerpt": "Allows you to collect geo location data from users who registered on your site. Information like Country, City, Zip Code, Latitude/Longitude and location map for the user will accessible.",
+      "link": "https://wpuserregistration.com/features/geolocation/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=geolocation",
+	    "plan" : [
         "plus",
         "professional",
         "themegrill agency"
       ]
-	  },
+    },
     {
       "title": "PayPal Payment",
       "slug" : "user-registration-payments",
@@ -255,18 +256,18 @@
       ]
     },
     {
-      "title": "Zapier",
-      "slug" : "user-registration-zapier",
-      "name" : "User Registration Zapier",
-      "image": "extensions-json/sections/images/zapier.png",
-      "excerpt": "Connect your user registration forms with Zapier with over 1500 web applications and pass information. So, you can save your time by easily automating your work.",
-      "link": "https://wpuserregistration.com/features/zapier/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=zapier",
-      "plan" : [
+      "title": "Stripe",
+      "slug" : "user-registration-stripe",
+      "name" : "User Registration Stripe",
+      "image": "extensions-json/sections/images/stripe.png",
+      "excerpt": "Stripe Addon allows you to accept payments on your forms for donation, product sale, and other services. Stripe is one of the most popular ways to accept credit card payments right on your site without much hassle. Also, support subscription payments.",
+      "link": "https://wpuserregistration.com/features/stripe/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=stripe",
+	    "plan" : [
         "plus",
         "professional",
         "themegrill agency"
       ]
-	  },
+    },
     {
       "title": "Two Factor Authentication",
       "slug" : "user-registration-two-factor-authentication",
@@ -281,65 +282,13 @@
         "themegrill agency"
       ]
 	  },
-    {
-      "title": "Stripe",
-      "slug" : "user-registration-stripe",
-      "name" : "User Registration Stripe",
-      "image": "extensions-json/sections/images/stripe.png",
-      "excerpt": "Stripe Addon allows you to accept payments on your forms for donation, product sale, and other services. Stripe is one of the most popular ways to accept credit card payments right on your site without much hassle. Also, support subscription payments.",
-      "link": "https://wpuserregistration.com/features/stripe/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=stripe",
-	    "plan" : [
-        "plus",
-        "professional",
-        "themegrill agency"
-      ]
-    },
-    {
-      "title": "MailerLite",
-      "slug" : "user-registration-mailerlite",
-      "name" : "User Registration MailerLite",
-      "image": "extensions-json/sections/images/mailerlite.png",
-      "excerpt": "Connect your MailerLite account with User Registration Form. Users filling up registration form can directly be added to your MailerLite subscriber list. You can then use those collected data for Email Marketing.",
-      "link": "https://wpuserregistration.com/features/mailerlite/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=mailerlite",
-      "plan" : [
-        "plus",
-        "professional",
-        "themegrill agency"
-      ]
-	  },
-    {
-      "title": "LearnDash",
-      "slug" : "user-registration-learndash",
-      "name" : "User Registration LearnDash",
-      "image": "extensions-json/sections/images/learndash.png",
-      "excerpt": "Allows you to view user’s registered learndash courses, automatically enroll users to specified learndash courses and more.",
-      "link": "https://wpuserregistration.com/features/learndash/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=learndash",
-      "plan" : [
-        "plus",
-        "professional",
-        "themegrill agency"
-      ]
-    },
 	  {
-      "title": "ActiveCampaign",
-      "slug" : "user-registration-activecampaign",
-      "name" : "User Registration ActiveCampaign",
-      "image": "extensions-json/sections/images/activecampaign.jpg",
-      "excerpt": "You can connect your ActiveCampaign account to your User Registration Forms using the ActiveCampaign add-on. Users who complete the User Registration form will be added to your ActiveCampaign subscriber list.",
-      "link": "https://wpuserregistration.com/features/activecampaign/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=activecampaign",
-      "plan" : [
-        "plus",
-        "professional",
-        "themegrill agency"
-      ]
-	  },
-	  {
-      "title": "Private Notes",
-      "slug" : "user-registration-private-notes",
-      "name" : "User Registration Private Notes",
-      "image": "extensions-json/sections/images/private-notes.png",
-      "excerpt": "Private Note add-on allows admins to easily share important updates, personalized messages, and other relevant information with their users, while also providing a platform for users to ask questions and provide feedback.",
-      "link": "https://wpuserregistration.com/features/private-notes/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=private-notes",
+      "title": "Frontend Listing",
+      "slug" : "user-registration-frontend-listing",
+      "name" : "User Registration Frontend Listing",
+      "image": "extensions-json/sections/images/frontend-listing.png",
+      "excerpt": "The Frontend Listing addon for User Registration allows you to list your users in frontend. Users and guests can view and check profile of all the members listed on the site.",
+      "link": "https://wpuserregistration.com/features/frontend-listing/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=frontend-listing",
       "plan" : [
         "plus",
         "professional",
@@ -347,12 +296,12 @@
       ]
 	  },
     {
-      "title": "Save and Continue",
-      "slug" : "user-registration-save-and-continue",
-      "name" : "User Registration Save and Continue",
-      "image": "extensions-json/sections/images/save-and-continue.png",
-      "excerpt": "With the Save and Continue add-on for User Registration, users can save their incomplete form progress and complete it later. It’s convenient, user-friendly, and reduces form abandonment.",
-      "link": "https://wpuserregistration.com/features/save-and-continue/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=save-and-continue",
+      "title": "Zapier",
+      "slug" : "user-registration-zapier",
+      "name" : "User Registration Zapier",
+      "image": "extensions-json/sections/images/zapier.png",
+      "excerpt": "Connect your user registration forms with Zapier with over 1500 web applications and pass information. So, you can save your time by easily automating your work.",
+      "link": "https://wpuserregistration.com/features/zapier/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=zapier",
       "plan" : [
         "plus",
         "professional",
@@ -374,12 +323,51 @@
       ]
 	  },
 	  {
-      "title": "Klaviyo",
-      "slug" : "user-registration-klaviyo",
-      "name" : "User Registration Klaviyo",
-      "image": "extensions-json/sections/images/klaviyo.png",
-      "excerpt": "Integrate your WordPress registration forms with Klaviyo. It auto-syncs registered user data to Klaviyo and lets you launch targeted email campaigns for enhanced customer engagement.",
-      "link": "https://wpuserregistration.com/features/klaviyo/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=klaviyo",
+      "title": "Private Notes",
+      "slug" : "user-registration-private-notes",
+      "name" : "User Registration Private Notes",
+      "image": "extensions-json/sections/images/private-notes.png",
+      "excerpt": "Private Note add-on allows admins to easily share important updates, personalized messages, and other relevant information with their users, while also providing a platform for users to ask questions and provide feedback.",
+      "link": "https://wpuserregistration.com/features/private-notes/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=private-notes",
+      "plan" : [
+        "plus",
+        "professional",
+        "themegrill agency"
+      ]
+	  },
+	  {
+      "title": "ActiveCampaign",
+      "slug" : "user-registration-activecampaign",
+      "name" : "User Registration ActiveCampaign",
+      "image": "extensions-json/sections/images/activecampaign.jpg",
+      "excerpt": "You can connect your ActiveCampaign account to your User Registration Forms using the ActiveCampaign add-on. Users who complete the User Registration form will be added to your ActiveCampaign subscriber list.",
+      "link": "https://wpuserregistration.com/features/activecampaign/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=activecampaign",
+      "plan" : [
+        "plus",
+        "professional",
+        "themegrill agency"
+      ]
+	  },
+    {
+      "title": "MailerLite",
+      "slug" : "user-registration-mailerlite",
+      "name" : "User Registration MailerLite",
+      "image": "extensions-json/sections/images/mailerlite.png",
+      "excerpt": "Connect your MailerLite account with User Registration Form. Users filling up registration form can directly be added to your MailerLite subscriber list. You can then use those collected data for Email Marketing.",
+      "link": "https://wpuserregistration.com/features/mailerlite/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=mailerlite",
+      "plan" : [
+        "plus",
+        "professional",
+        "themegrill agency"
+      ]
+	  },
+    {
+      "title": "Save and Continue",
+      "slug" : "user-registration-save-and-continue",
+      "name" : "User Registration Save and Continue",
+      "image": "extensions-json/sections/images/save-and-continue.png",
+      "excerpt": "With the Save and Continue add-on for User Registration, users can save their incomplete form progress and complete it later. It’s convenient, user-friendly, and reduces form abandonment.",
+      "link": "https://wpuserregistration.com/features/save-and-continue/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=save-and-continue",
       "plan" : [
         "plus",
         "professional",
@@ -393,6 +381,19 @@
       "image": "extensions-json/sections/images/post-submission.png",
       "excerpt": "Allow users to submit post content during registration. It streamlines the user-generated content submission process by eliminating the need for separate sign-up.",
       "link": "https://wpuserregistration.com/features/post-submission/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=post-submission",
+      "plan" : [
+        "plus",
+        "professional",
+        "themegrill agency"
+      ]
+	  },
+	  {
+      "title": "Klaviyo",
+      "slug" : "user-registration-klaviyo",
+      "name" : "User Registration Klaviyo",
+      "image": "extensions-json/sections/images/klaviyo.png",
+      "excerpt": "Integrate your WordPress registration forms with Klaviyo. It auto-syncs registered user data to Klaviyo and lets you launch targeted email campaigns for enhanced customer engagement.",
+      "link": "https://wpuserregistration.com/features/klaviyo/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=klaviyo",
       "plan" : [
         "plus",
         "professional",

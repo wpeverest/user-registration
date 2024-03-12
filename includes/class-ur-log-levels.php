@@ -1,7 +1,14 @@
 <?php
+/**
+ * Standard log levels
+ *
+ * @class          UR_Log_Levels
+ * @version        1.0.0
+ * @package        UserRegistration/Classes
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -10,8 +17,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @class          UR_Log_Levels
  * @version        1.0.0
  * @package        UserRegistration/Classes
- * @category       Class
- * @author         WPEverest
  */
 abstract class UR_Log_Levels {
 
@@ -77,7 +82,7 @@ abstract class UR_Log_Levels {
 	/**
 	 * Validate a level string.
 	 *
-	 * @param string $level
+	 * @param string $level Level.
 	 *
 	 * @return bool True if $level is a valid level.
 	 */
@@ -88,7 +93,7 @@ abstract class UR_Log_Levels {
 	/**
 	 * Translate level string to integer.
 	 *
-	 * @param string $level emergency|alert|critical|error|warning|notice|info|debug
+	 * @param string $level emergency|alert|critical|error|warning|notice|info|debug.
 	 *
 	 * @return int 100 (debug) - 800 (emergency) or 0 if not recognized
 	 */
@@ -105,7 +110,7 @@ abstract class UR_Log_Levels {
 	/**
 	 * Translate severity integer to level string.
 	 *
-	 * @param int $severity
+	 * @param int $severity Severity.
 	 *
 	 * @return bool|string False if not recognized. Otherwise string representation of level.
 	 */
@@ -116,5 +121,4 @@ abstract class UR_Log_Levels {
 			return false;
 		}
 	}
-
 }

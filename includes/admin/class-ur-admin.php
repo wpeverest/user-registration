@@ -118,6 +118,9 @@ class UR_Admin {
 			if ( ! in_array( 'administrator', $user_roles, true ) ) {
 				$result = array_intersect( $user_roles, $option_roles );
 
+				/**
+				 * Filter to Prevent admin access
+				 */
 				if ( count( $result ) > 0 && apply_filters( 'user_registration_prevent_admin_access', true ) ) {
 					wp_safe_redirect( esc_url_raw( ur_get_page_permalink( 'myaccount' ) ) );
 					exit;
@@ -145,6 +148,11 @@ class UR_Admin {
 		// Set only UR pages.
 		$ur_pages = array_diff( $ur_pages, array( 'profile', 'user-edit' ) );
 
+		/**
+		 * Filter to display admin footer text
+		 *
+		 * @param boolean Whether current screen is a UR page
+		 */
 		// Check to make sure we're on a User Registration admin page.
 		if ( isset( $current_screen->id ) && apply_filters( 'user_registration_display_admin_footer_text', in_array( $current_screen->id, $ur_pages, true ) ) ) {
 			// Change the footer text.

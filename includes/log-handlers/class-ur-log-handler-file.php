@@ -1,6 +1,6 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -9,8 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @class           UR_Log_Handler_File
  * @since           1.0.5
  * @package         UserRegistration/Classes/Log_Handlers
- * @category        Class
- * @author          WPEverest
  */
 class UR_Log_Handler_File extends UR_Log_Handler {
 
@@ -142,10 +140,12 @@ class UR_Log_Handler_File extends UR_Log_Handler {
 		if ( $file ) {
 			if ( ! file_exists( $file ) ) {
 				$temphandle = @fopen( $file, 'w+' );
-				@fclose( $temphandle );
+				if ($temphandle !== false) {
+					@fclose( $temphandle );
 
-				if ( defined( 'FS_CHMOD_FILE' ) ) {
-					@chmod( $file, FS_CHMOD_FILE );
+					if ( defined( 'FS_CHMOD_FILE' ) ) {
+						@chmod( $file, FS_CHMOD_FILE );
+					}
 				}
 			}
 
@@ -173,7 +173,7 @@ class UR_Log_Handler_File extends UR_Log_Handler {
 	/**
 	 * Close a handle.
 	 *
-	 * @param string $handle
+	 * @param string $handle Handle.
 	 *
 	 * @return bool success
 	 */
@@ -191,8 +191,8 @@ class UR_Log_Handler_File extends UR_Log_Handler {
 	/**
 	 * Add a log entry to chosen file.
 	 *
-	 * @param string $entry  Log entry text
-	 * @param string $handle Log entry handle
+	 * @param string $entry  Log entry text.
+	 * @param string $handle Log entry handle.
 	 *
 	 * @return bool True if write was successful.
 	 */
@@ -215,7 +215,7 @@ class UR_Log_Handler_File extends UR_Log_Handler {
 	/**
 	 * Clear entries from chosen file.
 	 *
-	 * @param string $handle
+	 * @param string $handle Handle.
 	 *
 	 * @return bool
 	 */
@@ -241,7 +241,7 @@ class UR_Log_Handler_File extends UR_Log_Handler {
 	/**
 	 * Remove/delete the chosen file.
 	 *
-	 * @param string $handle
+	 * @param string $handle Handle.
 	 *
 	 * @return bool
 	 */
@@ -310,7 +310,7 @@ class UR_Log_Handler_File extends UR_Log_Handler {
 	 *
 	 * Compares the size of the log file to determine whether it is over the size limit.
 	 *
-	 * @param string $handle Log handle
+	 * @param string $handle Log handle.
 	 *
 	 * @return bool True if if should be rotated.
 	 */
@@ -343,7 +343,7 @@ class UR_Log_Handler_File extends UR_Log_Handler {
 	 *     base.0.log -> base.1.log
 	 *     base.log   -> base.0.log
 	 *
-	 * @param string $handle Log handle
+	 * @param string $handle Log handle.
 	 */
 	protected function log_rotate( $handle ) {
 		for ( $i = 8; $i >= 0; $i-- ) {
@@ -355,7 +355,7 @@ class UR_Log_Handler_File extends UR_Log_Handler {
 	/**
 	 * Increment a log file suffix.
 	 *
-	 * @param string   $handle Log handle
+	 * @param string   $handle Log handle.
 	 * @param null|int $number Optional. Default null. Log suffix number to be incremented.
 	 *
 	 * @return bool True if increment was successful, otherwise false.
@@ -403,8 +403,8 @@ class UR_Log_Handler_File extends UR_Log_Handler {
 	/**
 	 * Cache log to write later.
 	 *
-	 * @param string $entry  Log entry text
-	 * @param string $handle Log entry handle
+	 * @param string $entry  Log entry text.
+	 * @param string $handle Log entry handle.
 	 */
 	protected function cache_log( $entry, $handle ) {
 		$this->cached_logs[] = array(

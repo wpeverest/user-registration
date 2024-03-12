@@ -65,6 +65,13 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 
 			$this->emails['UR_Settings_Profile_Details_Updated_Email'] = include 'emails/class-ur-settings-profile-details-updated-email.php';
 
+			$this->emails['UR_Settings_Confirm_Email_Address_Change_Email'] = include 'emails/class-ur-settings-confirm-email-address-change-email.php';
+
+			/**
+			 * Filter to modify the email classes accordingly.
+			 *
+			 * @param class Email classes to be included.
+			 */
 			$this->emails = apply_filters( 'user_registration_email_classes', $this->emails );
 		}
 
@@ -74,6 +81,12 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 		 * @return array
 		 */
 		public function get_settings() {
+
+			/**
+			 * Filter to add the options on settings.
+			 *
+			 * @param array Options to be enlisted.
+			 */
 			$settings = apply_filters(
 				'user_registration_email_settings',
 				array(
@@ -168,11 +181,18 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 				)
 			);
 
+			/**
+			 * Filter to get the settings.
+			 *
+			 * @param array $settings Email Setting options to be enlisted.
+			 */
 			return apply_filters( 'user_registration_get_email_settings_' . $this->id, $settings );
 		}
 
 		/**
 		 * Retrive Email Data.
+		 *
+		 * @return class Emails.
 		 */
 		public function get_emails() {
 			return $this->emails;
@@ -191,6 +211,11 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			$settings .= '<thead>';
 			$settings .= '<tr>';
 
+			/**
+			 * Filter to modify the user registration email setting columns.
+			 *
+			 * @param array Settings to be included on column.
+			 */
 			$columns = apply_filters(
 				'user_registration_email_setting_columns',
 				array(
@@ -218,7 +243,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 				$settings .= ur_help_tip( $email->description );
 				$settings .= '</td>';
 				$settings .= '<td class="ur-email-settings-table">';
-				$label     = 'email_confirmation' === $email->id ? esc_html__( 'Always Active', 'user-registration' ) : '<div class="ur-toggle-section"><span class="user-registration-toggle-form user-registration-email-status-toggle" ><input type="checkbox" name="email_status" id="' . esc_attr( $email->id ) . '"' . ( $status ? "checked='checked'" : '' ) . '"/><span class="slider round"></span></span></div>';
+				$label     = ( ( 'email_confirmation' === $email->id ) || ( 'passwordless_login_email' === $email->id ) ) ? esc_html__( 'Always Active', 'user-registration' ) : '<div class="ur-toggle-section"><span class="user-registration-toggle-form user-registration-email-status-toggle" ><input type="checkbox" name="email_status" id="' . esc_attr( $email->id ) . '"' . ( $status ? "checked='checked'" : '' ) . '"/><span class="slider round"></span></span></div>';
 				$settings .= '<label style="' . ( $status ? 'color:green;font-weight:500;' : 'color:red;font-weight:500;' ) . '">';
 				$settings .= $label;
 				$settings .= '</label>';

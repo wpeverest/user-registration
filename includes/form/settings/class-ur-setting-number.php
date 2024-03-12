@@ -1,22 +1,35 @@
 <?php
+/**
+ * UR_Setting_Number Class.
+ *
+ * @package  UserRegistration/Form/Settings
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * UR_Setting_Number Class
+ * UR_Setting_Number Class.
  *
  * @package  UserRegistration/Form/Settings
- * @category Abstract Class
- * @author   WPEverest
  */
 class UR_Setting_Number extends UR_Field_Settings {
 
+
+	/**
+	 * UR_Setting_Number Class Constructor.
+	 */
 	public function __construct() {
 		$this->field_id = 'number_advance_setting';
 	}
 
+	/**
+	 * Output.
+	 *
+	 * @param array $field_data field data.
+	 * @return string $field_html Field HTML.
+	 */
 	public function output( $field_data = array() ) {
 		$this->field_data = $field_data;
 		$this->register_fields();
@@ -25,6 +38,9 @@ class UR_Setting_Number extends UR_Field_Settings {
 		return $field_html;
 	}
 
+	/**
+	 * Register Fields.
+	 */
 	public function register_fields() {
 		$fields = array(
 			'min'          => array(
@@ -73,6 +89,15 @@ class UR_Setting_Number extends UR_Field_Settings {
 			),
 		);
 
+		/**
+		 * Filter to modify the number custom advance settings.
+		 *
+		 * @param string $fields Advance Settings Fields.
+		 * @param int field_id Field ID.
+		 * @param class default_class Default Class.
+		 *
+		 * @return string $fields.
+		 */
 		$fields = apply_filters( 'number_custom_advance_settings', $fields, $this->field_id, $this->default_class );
 		$this->render_html( $fields );
 	}

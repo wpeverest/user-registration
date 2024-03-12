@@ -12,7 +12,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Frontend_Form_Handler Class
+ * Handles frontend user registration forms.
+ *
+ * @class UR_Frontend_Form_Handler
+ * @version 1.0.0
+ * @package UserRegistration/Frontend
  */
 class UR_Frontend_Form_Handler {
 
@@ -38,10 +42,10 @@ class UR_Frontend_Form_Handler {
 	private static $valid_form_data = array();
 
 	/**
-	 * Handle frontend form POST data
+	 * Handle frontend form POST data.
 	 *
 	 * @param  array $form_data Submitted form data.
-	 * @param  int   $form_id ID of the form.
+	 * @param  int   $form_id   ID of the form.
 	 * @return void
 	 */
 	public static function handle_form( $form_data, $form_id ) {
@@ -58,8 +62,10 @@ class UR_Frontend_Form_Handler {
 		$user_pass = '';
 
 		/**
-		 * Perform validation of user submitted field values.
-		 * Here, variables are passed by reference that will be modified by validation functions.
+		 * Get form field data by post_content array passed.
+		 *
+		 * @param array $post_content_array Post Content Array.
+		 * @return array
 		 */
 		apply_filters_ref_array(
 			'user_registration_validate_form_data',
@@ -189,7 +195,7 @@ class UR_Frontend_Form_Handler {
 	}
 
 	/**
-	 * Get form field data by post_content array passed
+	 * Get form field data by post_content array passed.
 	 *
 	 * @param array $post_content_array Post Content Array.
 	 * @return array
@@ -211,9 +217,9 @@ class UR_Frontend_Form_Handler {
 	/**
 	 * Update form data to usermeta table.
 	 *
-	 * @param  int   $user_id User ID.
+	 * @param  int   $user_id         User ID.
 	 * @param  array $valid_form_data All valid form data.
-	 * @param  int   $form_id Form ID.
+	 * @param  int   $form_id         Form ID.
 	 * @return void
 	 */
 	public static function ur_update_user_meta( $user_id, $valid_form_data, $form_id ) {
@@ -229,7 +235,7 @@ class UR_Frontend_Form_Handler {
 				}
 
 				if ( isset( $data->extra_params['field_key'] ) && ( 'checkbox' === $data->extra_params['field_key'] || 'learndash_course' === $data->extra_params['field_key'] ) ) {
-					$data->value = ( json_decode( $data->value ) !== null ) ? json_decode( $data->value ) : $data->value;
+					$data->value = isset( $data->value ) && ! is_array( $data->value ) ? json_decode( $data->value ) : $data->value;
 				} elseif ( isset( $data->extra_params['field_key'] ) && ( 'wysiwyg' === $data->extra_params['field_key'] ) ) {
 					$data->value = sanitize_text_field( htmlentities( $data->value ) );
 				}

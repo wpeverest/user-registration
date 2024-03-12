@@ -1,6 +1,6 @@
 <?php
 /**
- * Form View: Country
+ * Form View: Country.
  *
  * @package UserRegistration/Form/Views/Admin/Country
  */

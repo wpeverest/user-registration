@@ -1,6 +1,6 @@
 <?php
 /**
- * UR_Setting_Text Class
+ * UR_Setting_Text Class.
  *
  * @class    UR_Setting_Text
  * @package  UserRegistration/Form/Settings
@@ -139,6 +139,15 @@ class UR_Setting_Text extends UR_Field_Settings {
 			),
 		);
 
+		/**
+		 * Filter to modify the text custom advance settings.
+		 *
+		 * @param string $fields Advance Settings Fields.
+		 * @param int field_id Field ID.
+		 * @param class default_class Default Class.
+		 *
+		 * @return string $fields.
+		 */
 		$fields = apply_filters( 'text_custom_advance_settings', $fields, $this->field_id, $this->default_class );
 		$this->render_html( $fields );
 	}

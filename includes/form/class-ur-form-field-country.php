@@ -37,7 +37,12 @@ class UR_Form_Field_Country extends UR_Form_Field {
 	 * Get Country List.
 	 */
 	public function get_country() {
-
+		/**
+		 * Filter to modify countries list.
+		 *
+		 * @param array Country Names.
+		 * @return array Country Names.
+		 */
 		return apply_filters(
 			'user_registration_countries_list',
 			array(
@@ -366,6 +371,7 @@ class UR_Form_Field_Country extends UR_Form_Field {
 		$this->field_defaults = array(
 			'default_label'      => __( 'Country', 'user-registration' ),
 			'default_field_name' => 'country_' . ur_get_random_number(),
+			'default_placeholder' => __( 'Select a country', 'user-registration' ),
 		);
 	}
 
@@ -391,6 +397,10 @@ class UR_Form_Field_Country extends UR_Form_Field {
 		$field_label     = $single_form_field->general_setting->field_name;
 		$value           = isset( $form_data->value ) ? $form_data->value : '';
 		$valid_countries = $single_form_field->advance_setting->selected_countries;
+		$required        = $single_form_field->general_setting->required;
+		if ( ! ur_string_to_bool( $required ) ) {
+			return;
+		}
 
 		if ( ! in_array( $value, $valid_countries, true ) ) {
 			$message = array(

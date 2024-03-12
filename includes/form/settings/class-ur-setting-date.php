@@ -1,6 +1,6 @@
 <?php
 /**
- * UR_Setting_Date Class
+ * UR_Setting_Date Class.
  *
  * @package  UserRegistration/Form/Settings
  */
@@ -10,21 +10,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_Setting_Date Class
+ * UR_Setting_Date Class.
  */
 class UR_Setting_Date extends UR_Field_Settings {
 
 	/**
-	 * Contructor.
+	 * UR_Setting_Date Class Contructor.
 	 */
 	public function __construct() {
 		$this->field_id = 'date_advance_setting';
 	}
 
 	/**
-	 * Settings Feild Output.
+	 * Output Fields.
 	 *
 	 * @param array $field_data Render field data in html.
+	 * @return string $field_data Field Data.
 	 */
 	public function output( $field_data = array() ) {
 		$this->field_data = $field_data;
@@ -193,7 +194,14 @@ class UR_Setting_Date extends UR_Field_Settings {
 				),
 			),
 		);
-
+			/**
+			 * Filter to modify the date custom advance settings.
+			 *
+			 * @param $fields Custom fields for date advance settings.
+			 * @param int field_id Id of the fields to be added.
+			 * @param string default_class Default class for the field.
+			 * @return string $fields Custom fields for the advance settings.
+			 */
 			$fields = apply_filters( 'date_custom_advance_settings', $fields, $this->field_id, $this->default_class );
 			$this->render_html( $fields );
 	}

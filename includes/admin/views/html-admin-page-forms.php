@@ -44,7 +44,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 										<path fill-rule="evenodd" d="M2 13h4v1H2v-1zm5-6H2v1h5V7zm2 3V8l-3 3 3 3v-2h5v-2H9zM4.5 9H2v1h2.5V9zM2 12h2.5v-1H2v1zm9 1h1v2c-.02.28-.11.52-.3.7-.19.18-.42.28-.7.3H1c-.55 0-1-.45-1-1V4c0-.55.45-1 1-1h3c0-1.11.89-2 2-2 1.11 0 2 .89 2 2h3c.55 0 1 .45 1 1v5h-1V6H1v9h10v-2zM2 5h8c0-.55-.45-1-1-1H8c-.55 0-1-.45-1-1s-.45-1-1-1-1 .45-1 1-.45 1-1 1H3c-.55 0-1 .45-1 1z"/>
 									</svg> -->
 									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-										  <path fill="#383838" fill-rule="evenodd" d="M3.116 3.116A1.25 1.25 0 0 1 4 2.75h9A1.25 1.25 0 0 1 14.25 4v1a.75.75 0 0 0 1.5 0V4A2.75 2.75 0 0 0 13 1.25H4A2.75 2.75 0 0 0 1.25 4v9A2.75 2.75 0 0 0 4 15.75h1a.75.75 0 0 0 0-1.5H4A1.25 1.25 0 0 1 2.75 13V4c0-.332.132-.65.366-.884ZM9.75 11c0-.69.56-1.25 1.25-1.25h9c.69 0 1.25.56 1.25 1.25v9c0 .69-.56 1.25-1.25 1.25h-9c-.69 0-1.25-.56-1.25-1.25v-9ZM11 8.25A2.75 2.75 0 0 0 8.25 11v9A2.75 2.75 0 0 0 11 22.75h9A2.75 2.75 0 0 0 22.75 20v-9A2.75 2.75 0 0 0 20 8.25h-9Z" clip-rule="evenodd"/>
+											<path fill="#383838" fill-rule="evenodd" d="M3.116 3.116A1.25 1.25 0 0 1 4 2.75h9A1.25 1.25 0 0 1 14.25 4v1a.75.75 0 0 0 1.5 0V4A2.75 2.75 0 0 0 13 1.25H4A2.75 2.75 0 0 0 1.25 4v9A2.75 2.75 0 0 0 4 15.75h1a.75.75 0 0 0 0-1.5H4A1.25 1.25 0 0 1 2.75 13V4c0-.332.132-.65.366-.884ZM9.75 11c0-.69.56-1.25 1.25-1.25h9c.69 0 1.25.56 1.25 1.25v9c0 .69-.56 1.25-1.25 1.25h-9c-.69 0-1.25-.56-1.25-1.25v-9ZM11 8.25A2.75 2.75 0 0 0 8.25 11v9A2.75 2.75 0 0 0 11 22.75h9A2.75 2.75 0 0 0 22.75 20v-9A2.75 2.75 0 0 0 20 8.25h-9Z" clip-rule="evenodd"/>
 									</svg>
 								</button>
 								<?php
@@ -70,6 +70,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 									</li>
 
 									<?php
+									/**
+									 * Filter to add form builder tabs.
+									 */
 									do_action( 'user_registration_form_bulder_tabs' ); // TODO:: Needs refactor. Move after field-settings and sort.
 									?>
 
@@ -105,11 +108,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 										<form method="post" id="ur-field-settings" onsubmit="return false;" style='display:none'>
 											<div id="ur-field-all-settings">
 												<?php ur_admin_form_settings( $form_id ); ?>
-												<?php do_action( 'user_registration_after_form_settings', $form_id ); ?>
+												<?php
+												/**
+												 * Action to add settings after form.
+												 *
+												 * @param int $form_id Form if to add the settings.
+												 */
+												do_action( 'user_registration_after_form_settings', $form_id );
+												?>
 											</div>
 										</form>
 									</div>
-									<?php do_action( 'user_registration_form_bulder_content', $form_id ); ?>
+									<?php
+									/**
+									 * Action to add form builder content.
+									 *
+									 * @param int $form_id Form id to add form builder content.
+									 */
+									do_action( 'user_registration_form_bulder_content', $form_id );
+									?>
 								</div>
 							</nav>
 							<button id="ur-collapse" class="close">
@@ -119,6 +136,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 							</button>
 						</div>
 						<?php
+						/**
+						 * Filter to add the builder class.
+						 *
+						 * @param array.
+						 */
 						$builder_class = apply_filters( 'user_registration_builder_class', array() );
 						$builder_class = implode( ' ', $builder_class );
 						?>
@@ -148,7 +170,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 									<li><a href="https://docs.wpuserregistration.com/docs/how-to-show-login-form/" target='_blank'><?php echo esc_html__( 'Create Login Form', 'user-registration' ); ?></a></li>
 									<li><a href="https://docs.wpuserregistration.com/" target='_blank'><?php echo esc_html__( 'Documentation', 'user-registration' ); ?></a></li>
 								</ul>
-								<?php do_action( 'user_registration_form_builder_wrapper_footer' ); ?>
+								<?php
+								/**
+								 * Filter to add form builder wrapper for footer.
+								 */
+								do_action( 'user_registration_form_builder_wrapper_footer' );
+								?>
 							</div>
 						</div>
 					</div>

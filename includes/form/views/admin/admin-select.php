@@ -1,6 +1,6 @@
 <?php
 /**
- * Form View: Select
+ * Form View: Select.
  *
  * @package UserRegistration/Form/Views/Admin/Select
  */

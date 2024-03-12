@@ -477,6 +477,55 @@
 				}
 			}
 		}
+
+		// Payment Invoice Table Design Fix
+		.ur-payments-container {
+			.ur-payment-invoices {
+				padding-left: 20px;
+				padding-right: 20px;
+				overflow: hidden;
+				overflow-x: auto;
+				margin-top: 15px;
+
+				table {
+					border-collapse: collapse;
+					border: $border_width solid #f1f1f1;
+
+					tbody {
+						tr {
+							th {
+								background: #F1F5F9;
+								font-weight: $semi_bold;
+							}
+
+							td {
+								&:last-child {
+									color: #59B259;
+									text-transform: capitalize;
+								}
+
+								a {
+									background: $primary_color;
+									color: $grey-0;
+									padding: $spacing_8px $spacing_12px;
+									border-radius: $border_radius_3;
+
+									&:hover {
+										background: #38488e;
+									}
+								}
+							}
+
+							&:nth-child(odd) {
+								td {
+									background: #fafafa;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }
 

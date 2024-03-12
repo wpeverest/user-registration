@@ -1,6 +1,6 @@
 <?php
 /**
- * Form View: Input Type Date
+ * Form View: Input Type Date.
  *
  * @package UserRegistration/Form/Views/Admin/Date
  */

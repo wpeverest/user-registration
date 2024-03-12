@@ -32,6 +32,12 @@ class UR_Shortcodes {
 		add_filter( 'pre_do_shortcode_tag', array( UR_Shortcode_My_Account::class, 'pre_do_shortcode_tag' ), 10, 4 ); // phpcs:ignore
 
 		foreach ( $shortcodes as $shortcode => $function ) {
+			/**
+			 * Applies filters to customize User Registration shortcode tags.
+			 *
+			 * The "{$shortcode}_shortcode_tag" filters allow developers to modify default shortcode tags
+			 * for User Registration shortcodes like 'user_registration_form', 'user_registration_my_account', etc.
+			 */
 			add_shortcode( apply_filters( "{$shortcode}_shortcode_tag", $shortcode ), $function );
 		}
 	}
@@ -75,12 +81,27 @@ class UR_Shortcodes {
 	 * @return string
 	 */
 	public static function my_account( $atts ) {
+		/**
+		 * Enqueues scripts and applies filters for User Registration 'my_account' shortcode.
+		 *
+		 * The 'user_registration_my_account_enqueue_scripts' action allows developers to enqueue scripts
+		 * before rendering the 'my_account' shortcode. The 'user_registration_my_account_shortcode' filter
+		 * lets developers customize shortcode attributes like class, before, and after.
+		 */
 		do_action( 'user_registration_my_account_enqueue_scripts', array(), 0 );
 		wp_enqueue_script( 'ur-login' );
 
 		return self::shortcode_wrapper(
 			array( 'UR_Shortcode_My_Account', 'output' ),
 			$atts,
+			/**
+			 * Applies a filter to customize attributes for the User Registration 'my_account' shortcode.
+			 *
+			 * The 'user_registration_my_account_shortcode' filter allows developers to modify
+			 * shortcode attributes like class, before, and after before rendering the 'my_account' shortcode.
+			 *
+			 * @param array $default_attributes Default attributes for the 'my_account' shortcode.
+			 */
 			apply_filters(
 				'user_registration_my_account_shortcode',
 				array(
@@ -100,12 +121,27 @@ class UR_Shortcodes {
 	 * @return string
 	 */
 	public static function login( $atts ) {
+		/**
+		 * Enqueues scripts and applies filters for User Registration 'login' shortcode.
+		 *
+		 * The 'user_registration_my_account_enqueue_scripts' action allows developers to enqueue scripts
+		 * before rendering the 'login' shortcode. The 'user_registration_login_shortcode' filter
+		 * lets developers customize shortcode attributes like class, before, and after.
+		 */
 		do_action( 'user_registration_my_account_enqueue_scripts', array(), 0 );
 		wp_enqueue_script( 'ur-login' );
 
 		return self::shortcode_wrapper(
 			array( 'UR_Shortcode_Login', 'output' ),
 			$atts,
+			/**
+			 * Applies a filter to customize attributes for the User Registration 'login' shortcode.
+			 *
+			 * The 'user_registration_login_shortcode' filter allows developers to modify
+			 * shortcode attributes like class, before, and after before rendering the 'login' shortcode.
+			 *
+			 * @param array $default_attributes Default attributes for the 'login' shortcode.
+			 */
 			apply_filters(
 				'user_registration_login_shortcode',
 				array(
@@ -138,6 +174,7 @@ class UR_Shortcodes {
 			include_once 'shortcodes/class-ur-shortcode-my-account.php';
 			UR_Shortcode_My_Account::edit_password();
 		} else {
+			// If the user is not logged in, it triggers the 'user_registration_edit_password_shortcode' action.
 			do_action( 'user_registration_edit_password_shortcode' );
 
 			/* translators: %s - Link to login form. */
@@ -160,6 +197,15 @@ class UR_Shortcodes {
 	private static function render_edit_profile() {
 			$user_id = get_current_user_id();
 			$form_id = get_user_meta( $user_id, 'ur_form_id', true );
+			/**
+			 * Enqueues scripts for customizing 'my_account' shortcode rendering.
+			 *
+			 * The 'user_registration_my_account_enqueue_scripts' action allows developers
+			 * to enqueue custom scripts before rendering the 'my_account' shortcode.
+			 *
+			 * @param array $empty_array Empty array passed for customization.
+			 * @param int   $form_id      ID of the associated registration form.
+			 */
 			do_action( 'user_registration_my_account_enqueue_scripts', array(), $form_id );
 			$has_flatpickr = ur_has_flatpickr_field( $form_id );
 
@@ -199,15 +245,31 @@ class UR_Shortcodes {
 		if ( empty( $atts ) || ! isset( $atts['id'] ) ) {
 			return '';
 		}
-
+		/**
+		 * Applies a filter to override the 'users_can_register' setting.
+		 *
+		 * The 'ur_register_setting_override' filter allows developers to customize
+		 * the 'users_can_register' setting by providing an alternative value.
+		 *
+		 * @param bool $default_value Default value retrieved from the 'users_can_register' setting.
+		 */
 		$users_can_register = apply_filters( 'ur_register_setting_override', get_option( 'users_can_register' ) );
 
 		if ( ! is_user_logged_in() ) {
 			if ( ! $users_can_register ) {
+				/**
+				 * Applies a filter to customize the pre-form message for user registration.
+				 *
+				 * @param string $default_message Default pre-form message.
+				 */
 				return apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . __( 'Only administrators can add new users.', 'user-registration' ) . '</p>' );
 			}
 		} else {
-
+			/**
+			 * Applies a filter to customize the capability required for user registration.
+			 *
+			 * @param string $default_capability Default user capability.
+			 */
 			$current_user_capability = apply_filters( 'ur_registration_user_capability', 'create_users' );
 
 			if ( ! current_user_can( $current_user_capability ) ) {
@@ -217,9 +279,13 @@ class UR_Shortcodes {
 				$user         = get_user_by( 'ID', $user_ID );
 				$current_url  = home_url( add_query_arg( array(), $wp->request ) );
 				$display_name = ! empty( $user->data->display_name ) ? $user->data->display_name : $user->data->user_email;
-
+				/**
+				 * Applies a filter to customize the pre-form message for user registration.
+				 *
+				 * @param string $default_message Default pre-form message.
+				 */
 				/* translators: 1: Link and username of user 2: Logout url */
-				return apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . sprintf( __( 'You are currently logged in as %1$1s. %2$2s', 'user-registration' ), '<a href="#" title="' . $display_name . '">' . $display_name . '</a>', '<a href="' . wp_logout_url( $current_url ) . '" title="' . __( 'Log out of this account.', 'user-registration' ) . '">' . __( 'Logout', 'user-registration' ) . '  &raquo;</a>' ) . '</p>', $user_ID );
+				return apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . sprintf( __( 'You are currently logged in as %1$1s. %2$2s', 'user-registration' ), '<a href="#" title="' . esc_attr( $display_name ) . '">' . esc_html( $display_name ) . '</a>', '<a href="' . wp_logout_url( $current_url ) . '" title="' . __( 'Log out of this account.', 'user-registration' ) . '">' . __( 'Logout', 'user-registration' ) . '  &raquo;</a>' ) . '</p>', $user_ID );
 
 			}
 		}
@@ -231,7 +297,14 @@ class UR_Shortcodes {
 			$atts,
 			'user_registration_form'
 		);
-
+		/**
+		 * Fires when rendering scripts for the 'user_registration_form' shortcode.
+		 *
+		 * The 'user_registration_form_shortcode_scripts' action allows developers
+		 * to enqueue custom scripts or perform actions related to the 'user_registration_form' shortcode.
+		 *
+		 * @param array $atts Shortcode attributes passed for customization.
+		 */
 		do_action( 'user_registration_form_shortcode_scripts', $atts );
 
 		ob_start();
@@ -253,7 +326,13 @@ class UR_Shortcodes {
 		$values = array(
 			'form_id' => $form_id,
 		);
-
+		/**
+		 * Applies a filter to process smart tags in the User Registration content.
+		 *
+		 * @param string $default_content Default content before processing smart tags.
+		 * @param mixed  $form_json_data   Form JSON data.
+		 * @param array  $values           User input values.
+		 */
 		$content         = apply_filters( 'user_registration_process_smart_tags', $form_json_data, $values, array() );
 		$form_data_array = json_decode( $content );
 		$form_row_ids    = '';
@@ -275,7 +354,16 @@ class UR_Shortcodes {
 		wp_enqueue_script( 'user-registration' );
 		wp_enqueue_script( 'ur-form-validator' );
 		wp_enqueue_script( 'ur-common' );
-
+		/**
+		 * Fires when enqueueing scripts for the User Registration plugin.
+		 *
+		 * The 'user_registration_enqueue_scripts' action allows developers to enqueue
+		 * custom scripts or perform actions related to User Registration, specifically
+		 * for a given registration form identified by $form_id.
+		 *
+		 * @param array $form_data_array Data array for the specific registration form.
+		 * @param int   $form_id          ID of the associated registration form.
+		 */
 		do_action( 'user_registration_enqueue_scripts', $form_data_array, $form_id );
 
 		$has_flatpickr = ur_has_flatpickr_field( $form_id );
@@ -291,17 +379,38 @@ class UR_Shortcodes {
 
 		$recaptcha_enabled = ur_string_to_bool( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support', false ) );
 		$recaptcha_node    = ur_get_recaptcha_node( 'register', $recaptcha_enabled );
-		$form_data_array   = apply_filters( 'user_registration_before_registration_form_template', $form_data_array, $form_id );
+		/**
+		 * Applies a filter before rendering the User Registration registration form template.
+		 *
+		 * @param array $default_form_data_array Default form data array.
+		 * @param int   $form_id                ID of the registration form.
+		 */
+		$form_data_array = apply_filters( 'user_registration_before_registration_form_template', $form_data_array, $form_id );
 
 		/** Allow filter to return early if some condition is not meet.
 		 *
 		 * @since 4.1.0
 		 */
 		if ( ! apply_filters( 'user_registration_frontend_before_load', true, $form_data_array, $form_id ) ) {
+			/**
+			 * Fires when User Registration frontend form are not loaded.
+			 *
+			 * @param array $form_data_array Data array for the specific registration form.
+			 * @param int   $form_id          ID of the associated registration form.
+			 */
 			do_action( 'user_registration_frontend_not_loaded', $form_data_array, $form_id );
 			return;
 		}
-
+		/**
+		 * Applies a filter to customize User Registration parts data.
+		 *
+		 * The 'user_registration_parts_data' filter allows developers to modify
+		 * the parts data before processing it in the User Registration class.
+		 *
+		 * @param array $default_parts_data Default parts data.
+		 * @param int   $form_id            ID of the registration form.
+		 * @param array $form_data_array    Form data array.
+		 */
 		self::$parts = apply_filters( 'user_registration_parts_data', self::$parts, $form_id, $form_data_array );
 
 		include_once UR_ABSPATH . 'includes/frontend/class-ur-frontend.php';

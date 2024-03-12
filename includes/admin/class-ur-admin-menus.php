@@ -28,6 +28,12 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			add_action( 'admin_menu', array( $this, 'settings_menu' ), 60 );
 			add_action( 'admin_menu', array( $this, 'status_menu' ), 61 );
 			add_action( 'admin_menu', array( $this, 'add_registration_menu' ), 50 );
+
+			/**
+			 * Filter to show the Addons Page
+			 *
+			 * @param boolean
+			 */
 			if ( apply_filters( 'user_registration_show_addons_page', true ) ) {
 				add_action( 'admin_menu', array( $this, 'addons_menu' ), 70 );
 			}
@@ -396,6 +402,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 							'icon'  => 'ur-icon ur-icon-multichoice',
 						),
 						array(
+							'id'    => 'user_registration_subscription_plan',
+							'label' => 'Subscription Plan',
+							'icon'  => 'ur-icon ur-icon-subscription-plan',
+						),
+						array(
 							'id'    => 'user_registration_total',
 							'label' => 'Total',
 							'icon'  => 'ur-icon ur-icon-total',
@@ -681,6 +692,12 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'i18n_install_activate'        => esc_html__( 'Install & Activate', 'user-registration' ),
 					'i18n_installing'              => esc_html__( 'Installing', 'user-registration' ),
 					'i18n_ok'                      => esc_html__( 'OK', 'user-registration' ),
+
+					/**
+					 * Filter the Upgrade URL
+					 *
+					 * @param string Upgrade URL
+					 */
 					'upgrade_url'                  => apply_filters( 'user_registration_upgrade_url', 'https://wpuserregistration.com/pricing/?utm_source=form-template&utm_medium=button&utm_campaign=ur-upgrade-to-pro' ),
 					'upgrade_button'               => esc_html__( 'Upgrade Plan', 'user-registration' ),
 					'upgrade_message'              => esc_html__( 'This template requires premium addons. Please upgrade to the Premium plan to unlock all these awesome Templates.', 'user-registration' ),
@@ -762,6 +779,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			// Include missing lost password.
 			$endpoints['ur-lost-password'] = __( 'Lost password', 'user-registration' );
 
+			/**
+			 * Filter to get the custom Navigation Menu Endpoints
+			 *
+			 * @param array $endpoints Endpoints
+			 */
 			$endpoints = apply_filters( 'user_registration_custom_nav_menu_items', $endpoints );
 
 			?>
@@ -863,7 +885,16 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					<span id="ur-form-name-edit-button" class="user-registration-editable-title__icon ur-edit-form-name dashicons dashicons-edit"></span>
 				</div>
 				<div class="ur-builder-header-right">
-				<?php do_action( 'user_registration_builder_header_extra', $form_data->ID, $form_data_array ); ?>
+				<?php
+
+					/**
+					 * Action for Extra Information of Builder Header
+					 *
+					 * @param int $form_data->ID Form ID
+					 * @param mixed $form_data_array Form Data
+					 */
+					do_action( 'user_registration_builder_header_extra', $form_data->ID, $form_data_array );
+				?>
 				</div>
 			</div>
 				<?php
@@ -947,7 +978,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						foreach ( $grid_lists as $single_field ) {
 
 							if ( isset( $single_field->field_key ) ) {
-								// Hook for fields backward compatibility.
+								/**
+								 * Filter to get the Backward Compatibility for Fields
+								 *
+								 * @param array $single_field Field
+								 */
 								apply_filters( 'user_registration_form_builder_field_before', $single_field );
 
 								$admin_field = $this->get_admin_field( $single_field );
@@ -1034,6 +1069,9 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$this->ur_get_list( $field );
 			}
 
+			/**
+			 * Action to perform after printing other form field
+			 */
 			do_action( 'ur_after_other_form_fields_printed' );
 			echo ' </ul > ';
 		}

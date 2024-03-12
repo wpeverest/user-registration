@@ -331,6 +331,30 @@
             #user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row.ur-privacy-button input[type="submit"]:hover {
               background: #004C7D;
               border-color: #004C7D; }
+  #user-registration .user-registration-MyAccount-content .ur-payments-container .ur-payment-invoices {
+    padding-left: 20px;
+    padding-right: 20px;
+    overflow: hidden;
+    overflow-x: auto;
+    margin-top: 15px; }
+    #user-registration .user-registration-MyAccount-content .ur-payments-container .ur-payment-invoices table {
+      border-collapse: collapse;
+      border: 1px solid #f1f1f1; }
+      #user-registration .user-registration-MyAccount-content .ur-payments-container .ur-payment-invoices table tbody tr th {
+        background: #F1F5F9;
+        font-weight: 600; }
+      #user-registration .user-registration-MyAccount-content .ur-payments-container .ur-payment-invoices table tbody tr td:last-child {
+        color: #59B259;
+        text-transform: capitalize; }
+      #user-registration .user-registration-MyAccount-content .ur-payments-container .ur-payment-invoices table tbody tr td a {
+        background: #475bb2;
+        color: #ffffff;
+        padding: 8px 12px;
+        border-radius: 3px; }
+        #user-registration .user-registration-MyAccount-content .ur-payments-container .ur-payment-invoices table tbody tr td a:hover {
+          background: #38488e; }
+      #user-registration .user-registration-MyAccount-content .ur-payments-container .ur-payment-invoices table tbody tr:nth-child(odd) td {
+        background: #fafafa; }
 
 .ur-toggle-section .user-registration-toggle-form {
   position: relative;

@@ -77,7 +77,15 @@ class UR_Setting_Validation {
 			if ( ! is_array( $validations ) ) {
 				$validations = $this->get_setting_validations( $setting_type );
 			}
-
+			/**
+			 * Filter the validate field settings.
+			 *
+			 * The dynamic portion of the hook name, $setting_type.
+			 *
+			 * @param $validations The validation settings.
+			 * @param string $option The option name.
+			 * @param mixed $value The setting value.
+			 */
 			$validations = apply_filters( 'user_registration_validate_setting_' . $setting_type, $validations, $option, $value );
 
 			foreach ( $validations as $validation ) {
@@ -102,6 +110,10 @@ class UR_Setting_Validation {
 	 * @return void
 	 */
 	private function set_validations() {
+		/**
+		 * Filter the validation settings.
+		 * Default value is number function list.
+		 */
 		$this->validations = apply_filters(
 			'user_registration_validation_settings',
 			array(
@@ -121,7 +133,11 @@ class UR_Setting_Validation {
 		$setting_validations = $this->validations;
 
 		$validations = isset( $setting_validations[ $type ] ) ? $setting_validations[ $type ] : array();
-
+		/**
+		 * Filter validation settings.
+		 *
+		 * @param array $validations The validation settings.
+		 */
 		return apply_filters( 'user_registration_validation_settings', $validations );
 	}
 
@@ -132,6 +148,10 @@ class UR_Setting_Validation {
 	 * @return void
 	 */
 	public function set_custom_validations() {
+		/**
+		 * Filter the custom validations settings.
+		 * Default value is the array of recaptcha_threshold_core_v3, url_options, email_from_address, email_send_to.
+		 */
 		$this->custom_validations = apply_filters(
 			'user_registration_custom_validations_settings',
 			array(
@@ -167,6 +187,10 @@ class UR_Setting_Validation {
 	 * @return void
 	 */
 	private function set_error_messages() {
+		/**
+		 * Filter the custom validations message.
+		 * Default value is the array validation messages.
+		 */
 		$this->error_messages = apply_filters(
 			'user_registration_setting_validation_messages',
 			array(
@@ -224,7 +248,6 @@ class UR_Setting_Validation {
 
 		return $value;
 	}
-
 }
 
 new UR_Setting_Validation();

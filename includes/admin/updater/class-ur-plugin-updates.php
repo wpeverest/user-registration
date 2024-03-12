@@ -45,6 +45,13 @@ class UR_Plugin_Updates {
 			}
 		}
 
+		/**
+		 * Filter to modify plugins information with header.
+		 *
+		 * @param array $matches Array of information.
+		 * @param string $header Header information.
+		 * @param array $plugins Array of plugins.
+		 */
 		return apply_filters( 'user_registration_get_plugins_with_header', $matches, $header, $plugins );
 	}
 }

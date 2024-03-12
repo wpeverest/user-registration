@@ -1,8 +1,4 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 /**
  * Handle data for the current customers session.
  * Implements the UR_Session abstract class.
@@ -10,24 +6,50 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @class    UR_Session_Handler
  * @version  1.0.0
  * @package  UserRegistration/Classes
- * @category Class
- * @author   WPEverest
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * UR_Session_Handler class
  */
 class UR_Session_Handler extends UR_Session {
 
-	/** @var string cookie name */
+	/**
+	 * Cookie Name.
+	 *
+	 * @var string cookie name.
+	 */
 	private $_cookie;
 
-	/** @var string session due to expire timestamp */
+	/**
+	 * Session expiring flag.
+	 *
+	 * @var string session due to expire timestamp.
+	 */
 	private $_session_expiring;
 
-	/** @var string session expiration timestamp */
+	/**
+	 * Session expiration timestamp.
+	 *
+	 * @var string session expiration timestamp
+	 */
 	private $_session_expiration;
 
-	/** $var bool Bool based on whether a cookie exists **/
+	/**
+	 * Bool based on whether a cookie exists.
+	 *
+	 * @var bool Bool based on whether a cookie exists
+	 */
 	private $_has_cookie = false;
 
-	/** @var string Custom session table name */
+	/**
+	 * Custom session table name.
+	 *
+	 * @var string Custom session table name.
+	 */
 	private $_table;
 
 	/**
@@ -35,17 +57,27 @@ class UR_Session_Handler extends UR_Session {
 	 */
 	public function __construct() {
 		global $wpdb;
-
+		/**
+		 * Applies a filter to customize the session cookie name for User Registration.
+		 *
+		 * The 'user_registration_cookie' filter allows developers to modify the default session cookie name
+		 * used by the User Registration class. By default, it appends 'wp_user_registration_session_' with COOKIEHASH.
+		 * Developers can use this filter to change the cookie name based on their specific requirements.
+		 *
+		 * @param string $default_cookie_name The default session cookie name.
+		 */
 		$this->_cookie = apply_filters( 'user_registrtaion_cookie', 'wp_user_registration_session_' . COOKIEHASH );
 		$this->_table  = $wpdb->prefix . 'user_registration_sessions';
 
-		if ( $cookie = $this->get_session_cookie() ) {
+		$cookie = $this->get_session_cookie();
+
+		if ( $cookie ) {
 			$this->_customer_id        = $cookie[0];
 			$this->_session_expiration = $cookie[1];
 			$this->_session_expiring   = $cookie[2];
 			$this->_has_cookie         = true;
 
-			// Update session if its close to expiring
+			// Update session if its close to expiring.
 			if ( time() > $this->_session_expiring ) {
 				$this->set_session_expiration();
 				$this->update_session_timestamp( $this->_customer_id, $this->_session_expiration );
@@ -57,7 +89,7 @@ class UR_Session_Handler extends UR_Session {
 
 		$this->_data = $this->get_session_data();
 
-		// Actions
+		// Actions.
 		add_action( 'shutdown', array( $this, 'save_data' ), 20 );
 		add_action( 'wp_logout', array( $this, 'destroy_session' ) );
 		if ( ! is_user_logged_in() ) {
@@ -72,17 +104,27 @@ class UR_Session_Handler extends UR_Session {
 	 *
 	 * Warning: Cookies will only be set if this is called before the headers are sent.
 	 *
-	 * @param bool $set
+	 * @param bool $set Cookie flag.
 	 */
 	public function set_customer_session_cookie( $set ) {
 		if ( $set ) {
-			// Set/renew our cookie
+			// Set/renew our cookie.
 			$to_hash           = $this->_customer_id . '|' . $this->_session_expiration;
 			$cookie_hash       = hash_hmac( 'md5', $to_hash, wp_hash( $to_hash ) );
 			$cookie_value      = $this->_customer_id . '||' . $this->_session_expiration . '||' . $this->_session_expiring . '||' . $cookie_hash;
 			$this->_has_cookie = true;
 
-			// Set the cookie
+			// Set the cookie.
+			/**
+			 * Applies a filter to determine whether to use a secure session cookie.
+			 *
+			 * The 'ur_session_use_secure_cookie' filter allows developers to customize the decision
+			 * on whether to use a secure cookie when setting/renewing the customer session cookie.
+			 * By default, it sets the cookie without using a secure connection. Developers can use
+			 * this filter to modify the behavior based on their security requirements or environment.
+			 *
+			 * @param bool $default_use_secure_cookie The default decision to use a secure cookie, initially set to false.
+			 */
 			ur_setcookie( $this->_cookie, $cookie_value, $this->_session_expiration, apply_filters( 'ur_session_use_secure_cookie', false ) );
 		}
 	}
@@ -100,7 +142,17 @@ class UR_Session_Handler extends UR_Session {
 	 * Set session expiration.
 	 */
 	public function set_session_expiration() {
-		$this->_session_expiring   = time() + intval( apply_filters( 'ur_session_expiring', 60 * 60 * 47 ) ); // 47 Hours.
+		/**
+		 * Applies a filter to customize the duration before User Registration session expiration.
+		 *
+		 * @param int $default_duration The default duration before session expiration in seconds.
+		 */
+		$this->_session_expiring = time() + intval( apply_filters( 'ur_session_expiring', 60 * 60 * 47 ) ); // 47 Hours.
+		/**
+		 * Applies a filter to customize the duration User Registration session expiration.
+		 *
+		 * @param int $default_duration The default duration session expiration in seconds.
+		 */
 		$this->_session_expiration = time() + intval( apply_filters( 'ur_session_expiration', 60 * 60 * 48 ) ); // 48 Hours.
 	}
 
@@ -132,9 +184,9 @@ class UR_Session_Handler extends UR_Session {
 			return false;
 		}
 
-		list( $customer_id, $session_expiration, $session_expiring, $cookie_hash ) = explode( '||', $_COOKIE[ $this->_cookie ] );
+		list( $customer_id, $session_expiration, $session_expiring, $cookie_hash ) = explode( '||', $_COOKIE[ $this->_cookie ] ); //phpcs:ignore;
 
-		// Validate hash
+		// Validate hash.
 		$to_hash = $customer_id . '|' . $session_expiration;
 		$hash    = hash_hmac( 'md5', $to_hash, wp_hash( $to_hash ) );
 
@@ -157,11 +209,11 @@ class UR_Session_Handler extends UR_Session {
 	/**
 	 * Get prefix for use with wp_cache_set. Allows all cache in a group to be invalidated at once.
 	 *
-	 * @param  string $group
+	 * @param  string $group Group.
 	 * @return string
 	 */
 	private function get_cache_prefix( $group = UR_SESSION_CACHE_GROUP ) {
-		// Get cache key
+		// Get cache key.
 		$prefix = wp_cache_get( 'ur_' . $group . '_cache_prefix', $group );
 
 		if ( false === $prefix ) {
@@ -175,7 +227,7 @@ class UR_Session_Handler extends UR_Session {
 	/**
 	 * Increment group cache prefix (invalidates cache).
 	 *
-	 * @param string $group
+	 * @param string $group Group.
 	 */
 	public function incr_cache_prefix( $group = UR_SESSION_CACHE_GROUP ) {
 		wp_cache_incr( 'ur_' . $group . '_cache_prefix', 1, $group );
@@ -185,7 +237,7 @@ class UR_Session_Handler extends UR_Session {
 	 * Save data.
 	 */
 	public function save_data() {
-		// Dirty if something changed - prevents saving nothing new
+		// Dirty if something changed - prevents saving nothing new.
 		if ( $this->_dirty && $this->has_session() ) {
 			global $wpdb;
 
@@ -203,10 +255,10 @@ class UR_Session_Handler extends UR_Session {
 				)
 			);
 
-			// Set cache
+			// Set cache.
 			wp_cache_set( $this->get_cache_prefix() . $this->_customer_id, $this->_data, UR_SESSION_CACHE_GROUP, $this->_session_expiration - time() );
 
-			// Mark session clean after saving
+			// Mark session clean after saving.
 			$this->_dirty = false;
 		}
 	}
@@ -215,12 +267,17 @@ class UR_Session_Handler extends UR_Session {
 	 * Destroy all session data.
 	 */
 	public function destroy_session() {
-		// Clear cookie
+		// Clear cookie.
+		/**
+		 * Applies a filter to determine whether to use a secure session cookie during User Registration session destruction.
+		 *
+		 * @param bool $default_use_secure_cookie The default decision to use a secure cookie, initially set to false.
+		 */
 		ur_setcookie( $this->_cookie, '', time() - YEAR_IN_SECONDS, apply_filters( 'ur_session_use_secure_cookie', false ) );
 
 		$this->delete_session( $this->_customer_id );
 
-		// Clear data
+		// Clear data.
 		$this->_data        = array();
 		$this->_dirty       = false;
 		$this->_customer_id = $this->generate_customer_id();
@@ -229,7 +286,7 @@ class UR_Session_Handler extends UR_Session {
 	/**
 	 * When a user is logged out, ensure they have a unique nonce by using the customer/session ID.
 	 *
-	 * @param int $uid
+	 * @param int $uid Uid.
 	 *
 	 * @return string
 	 */
@@ -245,10 +302,10 @@ class UR_Session_Handler extends UR_Session {
 
 		if ( ! defined( 'WP_SETUP_CONFIG' ) && ! defined( 'WP_INSTALLING' ) ) {
 
-			// Delete expired sessions
-			$wpdb->query( $wpdb->prepare( "DELETE FROM $this->_table WHERE session_expiry < %d", time() ) );
+			// Delete expired sessions.
+			$wpdb->query( $wpdb->prepare( "DELETE FROM `{$this->_table}` WHERE session_expiry < %d", time() ) );
 
-			// Invalidate cache
+			// Invalidate cache.
 			$this->incr_cache_prefix();
 		}
 	}
@@ -256,8 +313,8 @@ class UR_Session_Handler extends UR_Session {
 	/**
 	 * Returns the session.
 	 *
-	 * @param string $customer_id
-	 * @param mixed  $default
+	 * @param string $customer_id Customer Id.
+	 * @param mixed  $default Default false.
 	 * @return string|array
 	 */
 	public function get_session( $customer_id, $default = false ) {
@@ -267,11 +324,11 @@ class UR_Session_Handler extends UR_Session {
 			return false;
 		}
 
-		// Try get it from the cache, it will return false if not present or if object cache not in use
+		// Try get it from the cache, it will return false if not present or if object cache not in use.
 		$value = wp_cache_get( $this->get_cache_prefix() . $customer_id, UR_SESSION_CACHE_GROUP );
 
 		if ( false === $value ) {
-			$value = $wpdb->get_var( $wpdb->prepare( "SELECT session_value FROM $this->_table WHERE session_key = %s", $customer_id ) );
+			$value = $wpdb->get_var( $wpdb->prepare( "SELECT session_value FROM `{$this->_table}` WHERE session_key = %s", $customer_id ) );
 
 			if ( is_null( $value ) ) {
 				$value = $default;
@@ -286,7 +343,7 @@ class UR_Session_Handler extends UR_Session {
 	/**
 	 * Delete the session from the cache and database.
 	 *
-	 * @param int $customer_id
+	 * @param int $customer_id Customer Id.
 	 */
 	public function delete_session( $customer_id ) {
 		global $wpdb;
@@ -304,8 +361,8 @@ class UR_Session_Handler extends UR_Session {
 	/**
 	 * Update the session expiry timestamp.
 	 *
-	 * @param string $customer_id
-	 * @param int    $timestamp
+	 * @param string $customer_id Customer ID.
+	 * @param int    $timestamp Timestamp.
 	 */
 	public function update_session_timestamp( $customer_id, $timestamp ) {
 		global $wpdb;

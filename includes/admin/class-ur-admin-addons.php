@@ -22,7 +22,9 @@ class UR_Admin_Addons {
 	 */
 	public static function get_sections() {
 
-		if ( false === ( $sections = get_transient( 'ur_addons_sections' ) ) ) {
+		$sections = get_transient( 'ur_addons_sections' );
+
+		if ( false === $sections ) {
 			$raw_sections = wp_safe_remote_get( UR()->plugin_url() . '/assets/extensions-json/addon-section.json', array( 'user-agent' => 'UserRegistration Addons Page' ) );
 
 			if ( ! is_wp_error( $raw_sections ) ) {
@@ -47,6 +49,11 @@ class UR_Admin_Addons {
 			}
 		}
 
+		/**
+		 * Filter the addons section
+		 *
+		 * @param array $addon_sections Section of Addons
+		 */
 		return apply_filters( 'user_registration_addons_sections', $addon_sections );
 	}
 
@@ -78,8 +85,9 @@ class UR_Admin_Addons {
 		$section_data = '';
 
 		if ( ! empty( $section->endpoint ) ) {
+			$section_data = get_transient( 'ur_addons_section_' . $section_id );
 
-			if ( false === ( $section_data = get_transient( 'ur_addons_section_' . $section_id ) ) ) {
+			if ( false === $section_data ) {
 				$raw_section = wp_safe_remote_get( UR()->plugin_url() . '/assets/' . $section->endpoint, array( 'user-agent' => 'UserRegistration Addons Page' ) );
 
 				if ( ! is_wp_error( $raw_section ) ) {
@@ -92,6 +100,12 @@ class UR_Admin_Addons {
 			}
 		}
 
+		/**
+		 * Filter the addons section data
+		 *
+		 * @param array $section_data->products Products from Section Data
+		 * @param int $section_id Section Id
+		 */
 		return apply_filters( 'user_registration_addons_section_data', $section_data->products, $section_id );
 	}
 
@@ -104,10 +118,10 @@ class UR_Admin_Addons {
 		$section_keys    = array_keys( $sections );
 		$current_section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : current( $section_keys );
 
-		$refresh_url     = add_query_arg(
+		$refresh_url = add_query_arg(
 			array(
-				'page'             => 'user-registration-addons',
-				'action'           => 'user-registration-addons-refresh',
+				'page'                           => 'user-registration-addons',
+				'action'                         => 'user-registration-addons-refresh',
 				'user-registration-addons-nonce' => wp_create_nonce( 'refresh' ),
 			),
 			admin_url( 'admin.php' )
@@ -128,6 +142,6 @@ class UR_Admin_Addons {
 			update_option( 'user_registration_addons_refresh_transient_reset', true );
 		}
 
-		include_once dirname( __FILE__ ) . '/views/html-admin-page-addons.php';
+		include_once __DIR__ . '/views/html-admin-page-addons.php';
 	}
 }
