@@ -1,4 +1,5 @@
 <?php
+
 /**
  * UserRegistration Admin Settings Class
  *
@@ -28,7 +29,7 @@ class UR_Admin_User_Manager {
 	/**
 	 * The deny value in the db
 	 */
-	const DENIED = - 1;
+	const DENIED = -1;
 
 	/**
 	 * WP user object
@@ -187,7 +188,6 @@ class UR_Admin_User_Manager {
 				'login_option' => 'default',
 				'user_status'  => $user_status,
 			);
-
 		} elseif ( '' !== $user_status && '' === $user_email_status ) {
 			/**
 			 * Case: Admin Approval.
@@ -198,7 +198,6 @@ class UR_Admin_User_Manager {
 				'login_option' => 'admin_approval',
 				'user_status'  => $user_status,
 			);
-
 		} elseif ( '' !== $admin_approval_after_email_confirmation_status && '' !== $user_email_status ) {
 			/**
 			 * Case: Admin Approval after Email Confirmation.
