@@ -84,7 +84,7 @@ class UR_Form_Field_Number extends UR_Form_Field {
 				add_filter(
 					$filter_hook,
 					function ( $msg ) use ( $label, $message ) {
-						if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
+						if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX && ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
 							return sprintf( $message[ $label ] );
 						} else {
 							wp_send_json_error(
@@ -109,7 +109,7 @@ class UR_Form_Field_Number extends UR_Form_Field {
 				add_filter(
 					$filter_hook,
 					function ( $msg ) use ( $label, $message ) {
-						if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
+						if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX && ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
 							return sprintf( $message[ $label ] );
 						} else {
 							wp_send_json_error(
@@ -134,9 +134,11 @@ class UR_Form_Field_Number extends UR_Form_Field {
 				add_filter(
 					$filter_hook,
 					function ( $msg ) use ( $label, $message ) {
-						if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
+
+						if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX && ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
 							return sprintf( $message[ $label ] );
 						} else {
+
 							wp_send_json_error(
 								array(
 									'message' => $message,
