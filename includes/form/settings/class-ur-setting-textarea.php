@@ -52,7 +52,7 @@ class UR_Setting_Textarea extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => 'false',
 				'placeholder' => '',
-				'tip'         => __( 'Allow Maximizing of Length.', 'user-registration' ),
+				'tip'         => __( 'Allow Limitation for Maximum Length.', 'user-registration' ),
 			),
 			'limit_length_limit_count'   => array(
 				'label'       => __( 'Maximum Count', 'user-registration' ),
@@ -89,7 +89,7 @@ class UR_Setting_Textarea extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => 'false',
 				'placeholder' => '',
-				'tip'         => __( 'Allow Minimizing of Length.', 'user-registration' ),
+				'tip'         => __( 'Allow Limitation for Minimum Length.', 'user-registration' ),
 			),
 			'minimum_length_limit_count' => array(
 				'label'       => __( 'Limit Count', 'user-registration' ),
