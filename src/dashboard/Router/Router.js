@@ -18,22 +18,18 @@ import {
 
 const Router = () => {
 	/* global _UR_DASHBOARD_ */
-	const { isPro } = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
+	const { isPro, settingsURL } =
+		typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 
 	return (
 		<Routes>
 			<Route path="/" element={<Dashboard />} />
-			<Route
-				path="/settings"
-				element={
-					<Settings to="http://wpeverest.local/wp-admin/admin.php?page=user-registration-settings" />
-				}
-			/>
+			<Route path="/settings" element={<Settings to={settingsURL} />} />
 			<Route path="/features" element={<Modules />} />
-			<Route path="/products" element={<Products />} />
 			{!isPro && <Route path="/free-vs-pro" element={<FreeVsPro />} />}
 			<Route path="/help" element={<Help />} />
 			<Route path="*" element={<Dashboard />} />
+			<Route path="/products" element={<Products />} />
 		</Routes>
 	);
 };

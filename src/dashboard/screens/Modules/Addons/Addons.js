@@ -53,7 +53,7 @@ const Addons = ({
 			setSelectedAddonsNames((prev) => [...prev, name]);
 		} else {
 			setSelectedAddonsSlugs((prev) =>
-				prev.filter((s) => s !== slug + "/" + slug + ".php")
+				prev.filter((s) => s !== slug + "/" + slug + ".php"),
 			);
 			setSelectedAddonsNames((prev) => prev.filter((s) => s !== name));
 		}
@@ -66,47 +66,47 @@ const Addons = ({
 			if (upgradeModal.type === "pro") {
 				upgradeContentRef.title = __(
 					"User Registration Pro Required",
-					"user-registration"
+					"user-registration",
 				);
 				upgradeContentRef.body = sprintf(
 					__(
 						"%s requires User Registration Pro to be activated. Please upgrade to a premium plan and unlock this addon",
-						"user-registration"
+						"user-registration",
 					),
-					upgradeModal.moduleName
+					upgradeModal.moduleName,
 				);
 			} else if (upgradeModal.type === "license") {
 				upgradeContentRef.title = __(
 					"License Activation Required",
-					"user-registration"
+					"user-registration",
 				);
 				upgradeContentRef.body = sprintf(
 					__(
 						"Please activate license of User Registration Pro plugin in order to use %s",
-						"user-registration"
+						"user-registration",
 					),
-					upgradeModal.moduleName
+					upgradeModal.moduleName,
 				);
 				upgradeContentRef.buttonText = sprintf(
 					__("Activate License", "user-registration"),
-					upgradeModal.moduleName
+					upgradeModal.moduleName,
 				);
 				upgradeContentRef.buttonText = licenseActivationURL;
 			} else {
 				upgradeContentRef.title = __(
 					"License Upgrade Required",
-					"user-registration"
+					"user-registration",
 				);
 				upgradeContentRef.body = sprintf(
 					__(
 						"%s is only available in the plus plan and above. Please upgrade to a plus plan and above to unlock this addon",
-						"user-registration"
+						"user-registration",
 					),
-					upgradeModal.moduleName
+					upgradeModal.moduleName,
 				);
 				upgradeContentRef.buttonText = sprintf(
 					__("Upgrade Plan", "user-registration"),
-					upgradeModal.moduleName
+					upgradeModal.moduleName,
 				);
 			}
 
@@ -183,15 +183,18 @@ const Addons = ({
 										key={data.slug}
 										data={data}
 										isChecked={Object.values(
-											selectedAddonsSlugs
+											selectedAddonsSlugs,
 										)?.includes(
-											data.slug + "/" + data.slug + ".php"
+											data.slug +
+												"/" +
+												data.slug +
+												".php",
 										)}
 										onCheckedChange={(slug, checked) =>
 											handleCheckedChange(
 												slug,
 												checked,
-												data.name
+												data.name,
 											)
 										}
 										isPerformingBulkAction={

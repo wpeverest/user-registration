@@ -79,7 +79,7 @@ const Features = ({
 							>
 								{__(
 									"Unlock all Addons of User Registration",
-									"user-registration"
+									"user-registration",
 								)}
 							</Text>
 							<ModalCloseButton boxShadow="none !important" />
@@ -91,7 +91,7 @@ const Features = ({
 							>
 								{__(
 									"This Addon is only available in the pro version. Please upgrade to a pro plan and unlock all addons",
-									"user-registration"
+									"user-registration",
 								)}
 							</Text>
 							<ModalFooter paddingBottom="0px">
@@ -122,7 +122,7 @@ const Features = ({
 										key={data.slug}
 										data={data}
 										isChecked={Object.values(
-											selectedFeaturesSlugs
+											selectedFeaturesSlugs,
 										)?.includes(data.slug)}
 										onCheckedChange={(slug, checked) =>
 											handleCheckedChange(slug, checked)

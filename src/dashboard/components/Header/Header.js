@@ -21,7 +21,7 @@ import {
 	Center,
 	Tooltip,
 } from "@chakra-ui/react";
-import { __ } from "@wordpress/i18n";
+import { sprintf, __ } from "@wordpress/i18n";
 import React, { useEffect, useRef } from "react";
 import { NavLink } from "react-router-dom";
 
@@ -110,15 +110,25 @@ const Header = () => {
 							</IntersectObserver>
 						</Stack>
 						<Stack direction="row" align="center" spacing="12px">
-							<Tag
-								variant="outline"
-								colorScheme="primary"
-								borderRadius="xl"
-								bgColor="#F8FAFF"
-								fontSize="xs"
+							<Tooltip
+								label={sprintf(
+									__(
+										"You are currently using User Registration %s",
+										"user-registration",
+									),
+									isPro && "Pro " + "v" + version,
+								)}
 							>
-								{version}
-							</Tag>
+								<Tag
+									variant="outline"
+									colorScheme="primary"
+									borderRadius="xl"
+									bgColor="#F8FAFF"
+									fontSize="xs"
+								>
+									{"v" + version}
+								</Tag>
+							</Tooltip>
 							<Center height="18px">
 								<Divider orientation="vertical" />
 							</Center>
@@ -147,7 +157,7 @@ const Header = () => {
 								<Tooltip
 									label={__(
 										"Latest Updates",
-										"user-registration"
+										"user-registration",
 									)}
 								>
 									<Image

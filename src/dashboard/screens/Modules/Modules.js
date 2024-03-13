@@ -294,7 +294,7 @@ const Modules = () => {
 						const searchedData = allFeatures?.filter((feature) =>
 							feature.title
 								.toLowerCase()
-								.includes(val.toLowerCase())
+								.includes(val.toLowerCase()),
 						);
 						if (!isEmpty(searchedData)) {
 							setFilteredFeatures(searchedData);
@@ -310,7 +310,7 @@ const Modules = () => {
 						const searchedData = allAddons?.filter((addon) =>
 							addon.title
 								.toLowerCase()
-								.includes(val.toLowerCase())
+								.includes(val.toLowerCase()),
 						);
 						if (!isEmpty(searchedData)) {
 							setFilteredAddons(searchedData);
@@ -324,7 +324,7 @@ const Modules = () => {
 				setIsSearching(false);
 			},
 		},
-		800
+		800,
 	);
 
 	const parseDate = (dateString) => {
@@ -339,8 +339,8 @@ const Modules = () => {
 					[...data].sort(
 						(firstAddonInContext, secondAddonInContext) =>
 							parseDate(secondAddonInContext.released_date) -
-							parseDate(firstAddonInContext.released_date)
-					)
+							parseDate(firstAddonInContext.released_date),
+					),
 				);
 				break;
 			case "oldest":
@@ -348,8 +348,8 @@ const Modules = () => {
 					[...data].sort(
 						(firstAddonInContext, secondAddonInContext) =>
 							parseDate(firstAddonInContext.released_date) -
-							parseDate(secondAddonInContext.released_date)
-					)
+							parseDate(secondAddonInContext.released_date),
+					),
 				);
 				break;
 			case "asc":
@@ -357,9 +357,9 @@ const Modules = () => {
 					[...data].sort(
 						(firstAddonInContext, secondAddonInContext) =>
 							firstAddonInContext.title.localeCompare(
-								secondAddonInContext.title
-							)
-					)
+								secondAddonInContext.title,
+							),
+					),
 				);
 				break;
 			case "desc":
@@ -367,9 +367,9 @@ const Modules = () => {
 					[...data].sort(
 						(firstAddonInContext, secondAddonInContext) =>
 							secondAddonInContext.title.localeCompare(
-								firstAddonInContext.title
-							)
-					)
+								firstAddonInContext.title,
+							),
+					),
 				);
 				break;
 			default:
@@ -436,13 +436,13 @@ const Modules = () => {
 									handleSorterChange(
 										e.target.value,
 										filteredFeatures,
-										setFilteredFeatures
+										setFilteredFeatures,
 									);
 								} else {
 									handleSorterChange(
 										e.target.value,
 										filteredAddons,
-										setFilteredAddons
+										setFilteredAddons,
 									);
 								}
 							}}
@@ -452,7 +452,7 @@ const Modules = () => {
 							width="fit-content"
 						>
 							<option value="default">
-								{__("Most Downloaded", "user-registration")}
+								{__("Popular", "user-registration")}
 							</option>
 							<option value="newest">
 								{__("Newest", "user-registration")}
@@ -515,7 +515,7 @@ const Modules = () => {
 								bg="#DFDFE0"
 								placeholder={__(
 									"Bulk Actions",
-									"user-registration"
+									"user-registration",
 								)}
 								onChange={(e) => setBulkAction(e.target.value)}
 								icon=""
@@ -528,7 +528,7 @@ const Modules = () => {
 										<option key={k} value={option_key}>
 											{option_value}
 										</option>
-									)
+									),
 								)}
 							</Select>
 
@@ -561,7 +561,7 @@ const Modules = () => {
 									type="text"
 									placeholder={__(
 										"Search...",
-										"user-registration"
+										"user-registration",
 									)}
 									paddingLeft="32px !important"
 									{...onSearchInput}
