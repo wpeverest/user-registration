@@ -3726,7 +3726,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				'denied_access'    => get_option( 'user_registration_message_denied_account', null ),
 			);
 
-			$post = $_POST; // phpcs:ignore WordPress.Security.NonceVerification.
+			$post = $_POST; //phpcs:ignore;
 
 			$recaptcha_value     = isset( $post['g-recaptcha-response'] ) ? ur_clean( wp_unslash( $post['g-recaptcha-response'] ) ) : '';
 			$captcha_response    = isset( $post['CaptchaResponse'] ) ? $post['CaptchaResponse'] : ''; //phpcs:ignore;
