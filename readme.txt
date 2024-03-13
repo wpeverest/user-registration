@@ -370,7 +370,7 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 
 == Changelog ==
 
-= 3.1.5    - 04/03/2024
+= 3.1.5    - 05/03/2024
 * Fix      - Missing Escaping for display name.
 * Fix      - Deprecated dynamic properties in php v8.2.
 * Fix      - Critical Error thrown while deleting bulk forms.
