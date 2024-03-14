@@ -116,12 +116,12 @@ abstract class UR_Block_Abstract {
 		$this->attributes = $attributes;
 		$this->block      = $block;
 		$this->content    = $content;
-
-		$content = apply_filters(
+		$content          = apply_filters(
 			"user_registration_{$this->block_name}_content",
 			$this->build_html( $this->content ),
 			$this
 		);
+		error_log( print_r( $content, true ) );
 		return $content;
 	}
 

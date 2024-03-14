@@ -9,12 +9,10 @@ import {
 	Card,
 	CardBody,
 	Text,
-	Divider,
 	Stack,
 } from "@chakra-ui/react";
-import { Icon } from "./components/Icon";
 
-import { SelectControl, Placeholder, PanelBody } from "@wordpress/components";
+import { SelectControl, PanelBody } from "@wordpress/components";
 
 import { InspectorControls, useBlockProps } from "@wordpress/block-editor";
 import { ChakraProvider } from "@chakra-ui/react";
