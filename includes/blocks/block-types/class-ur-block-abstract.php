@@ -76,8 +76,7 @@ abstract class UR_Block_Abstract {
 			);
 			return;
 		}
-
-		$value = register_block_type_from_metadata(
+		register_block_type_from_metadata(
 			$metadata,
 			array(
 				'render_callback' => array( $this, 'render' ),

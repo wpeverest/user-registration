@@ -62,7 +62,7 @@ module.exports = (env, argv) => {
 								__dirname,
 								"chunks",
 								path.basename(path.dirname(absoluteFilename)),
-								"block.json"
+								"block.json",
 							);
 						},
 					},
@@ -72,7 +72,8 @@ module.exports = (env, argv) => {
 		externals: {
 			"@wordpress/blocks": ["wp", "blocks"],
 			"@wordpress/components": ["wp", "components"],
-			"@wordpress/components": ["wp", "components"],
+			"@wordpress/block-editor": ["wp", "blockEditor"],
+			"react": ["React"],
 		},
 	};
 };

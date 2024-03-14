@@ -4,7 +4,7 @@
   "name": "user-registration/registrationform",
   "version": "1.0.0",
   "title": "User Registration Form",
-  "category": "widgets",
+  "category": "user-registration",
   "description": "The block lets the user choose the required user registration directly.",
   "keywords": ["user registration form", "registration form"],
   "textdomain": "user-registration",
@@ -19,11 +19,8 @@
   "attributes": {
     "formId": {
       "type": "string"
-    },
-    "redirectUrl": {
-      "type": "string"
     }
   },
-  "editorScript": "user-registration-blocks-editor",
-  "editorStyle": "user-registration-blocks-editorr"
+  "editorScript": "user-registration-blocks-editor.js",
+  "editorStyle": "user-registration-blocks-editor.css"
 }

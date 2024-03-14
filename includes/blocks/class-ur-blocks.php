@@ -36,7 +36,6 @@ class UR_Blocks {
 	public function enqueue_block_editor_assets() {
 		global $pagenow;
 		$enqueue_script = array( 'wp-blocks', 'wp-element', 'wp-i18n', 'wp-editor', 'wp-components', 'react', 'react-dom' );
-		// error_log( print_r( $pagenow, true ) );
 		wp_register_style(
 			'user-registration-blocks-editor',
 			UR()->plugin_url() . '/assets/css/user-registration.css',
@@ -44,29 +43,21 @@ class UR_Blocks {
 			UR_VERSION
 		);
 
-		// if ( 'widgets.php' === $pagenow ) {
-		// 	unset( $enqueue_script[ array_search( 'wp-editor', $enqueue_script ) ] );
-		// }
 		wp_register_script(
 			'user-registration-blocks-editor',
 			UR()->plugin_url() . '/chunks/blocks.js',
 			$enqueue_script,
 			UR_VERSION
 		);
-
-		// $form_block_data = array(
-		// 'forms'    => ur_get_all_user_registration_form(),
-		// 'logo_url' => UR()->plugin_url() . '/assets/images/logo.png',
-		// 'i18n'     => array(
-		// 'title'         => esc_html( 'User Registration' ),
-		// 'description'   => esc_html__( 'Select &#38; display one of your form.', 'user-registration' ),
-		// 'form_select'   => esc_html__( 'Select a Form', 'user-registration' ),
-		// 'form_settings' => esc_html__( 'Form Settings', 'user-registration' ),
-		// 'form_selected' => esc_html__( 'Form', 'user-registration' ),
-		// ),
-		// );
-
-		// wp_localize_script( 'user-registration-block-editor', 'ur_form_block_data', $form_block_data );
+		wp_localize_script(
+			'user-registration-blocks-editor',
+			'_UR_BLOCKS_',
+			array(
+				'logoUrl'        => UR()->plugin_url() . '/assets/images/logo.png',
+				'urRestApiNonce' => wp_create_nonce( 'wp_rest' ),
+				'restURL'        => rest_url(),
+			),
+		);
 
 		wp_enqueue_script( 'user-registration-blocks-editor' );
 	}
