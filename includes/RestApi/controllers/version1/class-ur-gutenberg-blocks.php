@@ -35,7 +35,6 @@ class UR_Gutenberg_Blocks {
 	 * @return void
 	 */
 	public function register_routes() {
-		error_log( 'routes' );
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/form-list',

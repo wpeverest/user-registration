@@ -21,6 +21,6 @@
       "type": "string"
     }
   },
-  "editorScript": "user-registration-blocks-editor.js",
-  "editorStyle": "user-registration-blocks-editor.css"
+  "editorScript": "user-registration-blocks-editor",
+  "editorStyle": "user-registration-blocks-editor"
 }
