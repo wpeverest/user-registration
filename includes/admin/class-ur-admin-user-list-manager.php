@@ -431,7 +431,7 @@ class UR_Admin_User_List_Manager {
 
 		?>
 	</select>
-	<?php
+		<?php
 		submit_button( esc_html__( 'Filter', 'user-registration' ), 'button', 'ur_user_filter_action', false );
 	}
 
@@ -445,7 +445,7 @@ class UR_Admin_User_List_Manager {
 		$ur_user_filter_action = ( isset( $_REQUEST['ur_user_filter_action'] ) && ! empty( $_REQUEST['ur_user_filter_action'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['ur_user_filter_action'] ) ) : false;
 
 		// Get the selected value of All UR Form from top or bottom All UR For filter.
-		$all_ur_user = ( isset( $_REQUEST['ur_specific_form_user'] ) && ! empty( $_REQUEST['ur_specific_form_user'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['ur_specific_form_user'] ) ) : false;
+		$all_ur_user  = ( isset( $_REQUEST['ur_specific_form_user'] ) && ! empty( $_REQUEST['ur_specific_form_user'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['ur_specific_form_user'] ) ) : false;
 		$all_ur_user2 = ( isset( $_REQUEST['ur_specific_form_user2'] ) && ! empty( $_REQUEST['ur_specific_form_user2'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['ur_specific_form_user2'] ) ) : false;
 
 		// Get the selected value of user approval status from top or bottom user approval filter.
@@ -453,7 +453,7 @@ class UR_Admin_User_List_Manager {
 		$ur_user_approval_status2 = ( isset( $_REQUEST['ur_user_approval_status2'] ) && ! empty( $_REQUEST['ur_user_approval_status2'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['ur_user_approval_status2'] ) ) : false;
 
 		// Get the selected id of specific form from top or bottom user form filter.
-		$ur_specific_form_user = ( isset( $_REQUEST['ur_specific_form_user'] ) && ! empty( $_REQUEST['ur_specific_form_user'] ) ) ? absint( wp_unslash( $_REQUEST['ur_specific_form_user'] ) ) : false;
+		$ur_specific_form_user  = ( isset( $_REQUEST['ur_specific_form_user'] ) && ! empty( $_REQUEST['ur_specific_form_user'] ) ) ? absint( wp_unslash( $_REQUEST['ur_specific_form_user'] ) ) : false;
 		$ur_specific_form_user2 = ( isset( $_REQUEST['ur_specific_form_user2'] ) && ! empty( $_REQUEST['ur_specific_form_user2'] ) ) ? absint( wp_unslash( $_REQUEST['ur_specific_form_user2'] ) ) : false;
 
 		if ( ! $ur_user_filter_action ) {
@@ -550,7 +550,7 @@ class UR_Admin_User_List_Manager {
 			"select[name='action2']");
 	});
 	</script>
-	<?php
+		<?php
 	}
 
 
@@ -635,7 +635,7 @@ class UR_Admin_User_List_Manager {
 					<option value="<?php echo esc_attr( $status ); ?>"
 						<?php esc_attr( selected( $status, $user_status['user_status'] ) ); ?>>
 						<?php echo esc_html( UR_Admin_User_Manager::get_status_label( $status ) ); ?></option>
-					<?php
+						<?php
 							endforeach;
 					?>
 				</select>
@@ -644,7 +644,7 @@ class UR_Admin_User_List_Manager {
 			</td>
 		</tr>
 	</table>
-	<?php
+		<?php
 	}
 
 	/**
