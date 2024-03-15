@@ -1,12 +1,12 @@
 {
   "$schema": "https://schemas.wp.org/block-json/1.1",
   "apiVersion": 3,
-  "name": "user-registration/registrationform",
+  "name": "user-registration/loginform",
   "version": "1.0.0",
-  "title": "Registration Form",
+  "title": "Login Form",
   "category": "user-registration",
-  "description": "The block lets the user choose the required user registration directly.",
-  "keywords": ["user registration form", "registration form"],
+  "description": "The block give the login form for registered users.",
+  "keywords": ["user registration login form", "login form"],
   "textdomain": "user-registration",
   "example": {
     "attributes": {}
@@ -17,9 +17,11 @@
     "reusable": false
   },
   "attributes": {
-    "formId": {
-      "type": "string",
-      "default": ""
+    "redirectUrl": {
+      "type": "string"
+    },
+    "logOutUrl": {
+      "type": "string"
     }
   },
   "editorScript": "user-registration-blocks-editor",

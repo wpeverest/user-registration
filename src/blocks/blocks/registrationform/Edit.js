@@ -24,7 +24,7 @@ const { urRestApiNonce, restURL, logoUrl } =
 const Edit = (props) => {
 	const useProps = useBlockProps();
 	const {
-		attributes: { formId = "" },
+		attributes: { formId },
 		setAttributes,
 	} = props;
 

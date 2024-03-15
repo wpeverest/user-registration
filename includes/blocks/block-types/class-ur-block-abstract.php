@@ -121,7 +121,6 @@ abstract class UR_Block_Abstract {
 			$this->build_html( $this->content ),
 			$this
 		);
-		error_log( print_r( $content, true ) );
 		return $content;
 	}
 

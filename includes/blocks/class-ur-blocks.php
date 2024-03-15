@@ -102,6 +102,7 @@ class UR_Blocks {
 			'user_registration_block_types',
 			array(
 				UR_Block_Regstration_Form::class,
+				UR_Block_Login_Form::class,
 			)
 		);
 	}
