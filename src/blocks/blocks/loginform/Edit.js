@@ -29,7 +29,7 @@ const Edit = (props) => {
 		<>
 			<InspectorControls key="ur-gutenberg-login-form-inspector-controls">
 				<PanelBody
-					title={__("User Registration Forms", "user-registration")}
+					title={__("Login Form Settings", "user-registration")}
 				>
 					<TextControl
 						key="ur-gutenberg-login-form-redirect-url"

@@ -4,8 +4,16 @@ import { applyFilters } from "@wordpress/hooks";
 import * as registrationform from "./registrationform";
 import * as loginform from "./loginform";
 import * as myaccount from "./myaccount";
+import * as editprofile from "./editprofile";
+import * as editpassword from "./editpassword";
 
-let blocks = [registrationform, loginform, myaccount];
+let blocks = [
+	registrationform,
+	loginform,
+	myaccount,
+	editprofile,
+	editpassword,
+];
 blocks = applyFilters("user-registration.blocks", blocks);
 /**
  * The function "registerBlocks" iterates over an array of blocks and calls the

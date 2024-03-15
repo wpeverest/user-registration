@@ -1,5 +1,5 @@
 const Save = (props) => {
-	return <div>Login Form</div>;
+	return <div>Edit Password</div>;
 };
 
 export default Save;

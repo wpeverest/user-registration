@@ -30,7 +30,10 @@ const Edit = (props) => {
 		<>
 			<InspectorControls key="ur-gutenberg-myaccount-inspector-controls">
 				<PanelBody
-					title={__("User Registration Myaccount", "user-registration")}
+					title={__(
+						"Myaccount Settings",
+						"user-registration",
+					)}
 				>
 					<TextControl
 						key="ur-gutenberg-myaccount-redirect-url"

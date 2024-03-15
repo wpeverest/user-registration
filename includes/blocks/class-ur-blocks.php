@@ -104,6 +104,8 @@ class UR_Blocks {
 				UR_Block_Regstration_Form::class,
 				UR_Block_Login_Form::class,
 				UR_Block_Myaccount::class,
+				UR_Block_Edit_Profile::class,
+				UR_Block_Edit_Password::class,
 			)
 		);
 	}
