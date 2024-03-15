@@ -3458,18 +3458,24 @@
 							});
 							break;
 						case "limit_length":
-								$this_node.on("click", function () {
+							$this_node.on("change", function () {
+									URFormBuilder.handle_min_max_length($this_node);
 									var wrapper = $(".ur-selected-item.ur-item-active");
+									var startCount = wrapper.find(".ur_limit_count_mode p.ur_start_count");
 									var limitCount = wrapper.find(".ur_limit_count_mode p.ur_limit_count");
 									var limitMode = wrapper.find(".ur_limit_count_mode p.ur_limit_mode");
 									if ($this_node.is(":checked")) {
+										startCount.text("0 /");
 										limitCount.text(wrapper.find("[data-advance-field='limit_length_limit_count']").val());
 										limitMode.text(wrapper.find("[data-advance-field='limit_length_limit_mode']").val());
 									} else {
-										limitCount.text("500");
-										limitMode.text("characters");
+										limitCount.text("");
+										limitMode.text("");
+										startCount.text("");
+
 									}
 								});
+								URFormBuilder.handle_min_max_length($this_node);
 								break;
 						case "minimum_length":
 							$this_node.on("change", function () {
