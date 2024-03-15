@@ -20,7 +20,7 @@
     "redirectUrl": {
       "type": "string"
     },
-    "logOutUrl": {
+    "logoutUrl": {
       "type": "string"
     }
   },

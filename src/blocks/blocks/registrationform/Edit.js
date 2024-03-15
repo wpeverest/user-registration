@@ -67,7 +67,7 @@ const Edit = (props) => {
 	return (
 		<ChakraProvider>
 			<Box {...useProps} maxW="sm" borderWidth="1px" borderRadius="lg">
-				<InspectorControls key="ur-gutenberg-form-selector-inspector-controls">
+				<InspectorControls key="ur-gutenberg-registration-form-inspector-controls">
 					<PanelBody
 						title={__(
 							"User Registration Forms",
@@ -75,7 +75,7 @@ const Edit = (props) => {
 						)}
 					>
 						<SelectControl
-							key="ur-gutenberg-form-selector-registration-form"
+							key="ur-gutenberg-registration-form-registration-form"
 							value={formId}
 							options={[
 								{
@@ -117,7 +117,7 @@ const Edit = (props) => {
 						<Center>
 							<Box w="sm" m="4">
 								<SelectControl
-									key="ur-gutenberg-form-selector-select-control"
+									key="ur-gutenberg-registration-form-select-control"
 									value={formId}
 									options={[
 										{

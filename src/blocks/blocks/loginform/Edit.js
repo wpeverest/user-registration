@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { __ } from "@wordpress/i18n";
 import { Box } from "@chakra-ui/react";
 
@@ -11,40 +11,40 @@ const ServerSideRender = wp.serverSideRender
 const Edit = (props) => {
 	const useProps = useBlockProps();
 	const {
-		attributes: { redirectUrl, logOutUrl },
+		attributes: { redirectUrl, logoutUrl },
 		setAttributes,
 	} = props;
 
 	const setRedirectUrl = (url) => {
 		setAttributes({ redirectUrl: url });
 	};
-	const setLogOutUrl = (url) => {
-		setAttributes({ logOutUrl: url });
+	const setLogoutUrl = (url) => {
+		setAttributes({ logoutUrl: url });
 	};
 
 	return (
 		<>
-			<InspectorControls key="ur-gutenberg-form-selector-inspector-controls">
+			<InspectorControls key="ur-gutenberg-login-form-inspector-controls">
 				<PanelBody
 					title={__("User Registration Forms", "user-registration")}
 				>
 					<TextControl
-						key="ur-gutenberg-form-selector-redirect-url"
+						key="ur-gutenberg-login-form-redirect-url"
 						label={__("Redirect URL", "user-registration")}
 						value={redirectUrl}
 						onChange={setRedirectUrl}
 					/>
 					<TextControl
-						key="ur-gutenberg-form-selector-redirect-url"
+						key="ur-gutenberg-login-form-logout-url"
 						label={__("Logout URL", "user-registration")}
-						value={logOutUrl}
-						onChange={setLogOutUrl}
+						value={logoutUrl}
+						onChange={setLogoutUrl}
 					/>
 				</PanelBody>
 			</InspectorControls>
 			<Box {...useProps}>
 				<ServerSideRender
-					key="ur-gutenberg-form-selector-server-side-renderer"
+					key="ur-gutenberg-login-form-server-side-renderer"
 					block="user-registration/loginform"
 					attributes={props.attributes}
 				/>
