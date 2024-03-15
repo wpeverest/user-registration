@@ -1,6 +1,6 @@
 import { useBlockProps } from "@wordpress/block-editor";
 const Save = (props) => {
-	return <div>Login Forn </div>;
+	return <div>myaccount</div>;
 };
 
 export default Save;

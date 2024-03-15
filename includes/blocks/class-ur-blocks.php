@@ -103,6 +103,7 @@ class UR_Blocks {
 			array(
 				UR_Block_Regstration_Form::class,
 				UR_Block_Login_Form::class,
+				UR_Block_Myaccount::class,
 			)
 		);
 	}
