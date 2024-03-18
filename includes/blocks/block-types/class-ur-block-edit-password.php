@@ -16,7 +16,7 @@ class UR_Block_Edit_Password extends UR_Block_Abstract {
 	 *
 	 * @var string Block name.
 	 */
-	protected $block_name = 'editpassword';
+	protected $block_name = 'edit-password';
 
 	/**
 	 * Build html.

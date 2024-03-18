@@ -1,18 +1,18 @@
 import { registerBlockType } from "@wordpress/blocks";
 import { applyFilters } from "@wordpress/hooks";
 
-import * as registrationform from "./registrationform";
-import * as loginform from "./loginform";
+import * as registrationForm from "./registration-form";
+import * as loginForm from "./login-form";
 import * as myaccount from "./myaccount";
-import * as editprofile from "./editprofile";
-import * as editpassword from "./editpassword";
+import * as editProfile from "./edit-profile";
+import * as editPassword from "./edit-password";
 
 let blocks = [
-	registrationform,
-	loginform,
+	registrationForm,
+	loginForm,
 	myaccount,
-	editprofile,
-	editpassword,
+	editProfile,
+	editPassword,
 ];
 blocks = applyFilters("user-registration.blocks", blocks);
 /**

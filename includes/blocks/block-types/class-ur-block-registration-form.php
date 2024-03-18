@@ -16,7 +16,7 @@ class UR_Block_Regstration_Form extends UR_Block_Abstract {
 	 *
 	 * @var string Block name.
 	 */
-	protected $block_name = 'registrationform';
+	protected $block_name = 'registration-form';
 
 	/**
 	 * Build html.

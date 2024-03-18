@@ -16,7 +16,7 @@ class UR_Block_Login_Form extends UR_Block_Abstract {
 	 *
 	 * @var string Block name.
 	 */
-	protected $block_name = 'loginform';
+	protected $block_name = 'login-form';
 
 	/**
 	 * Build html.

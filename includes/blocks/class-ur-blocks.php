@@ -56,6 +56,7 @@ class UR_Blocks {
 				'logoUrl'        => UR()->plugin_url() . '/assets/images/logo.png',
 				'urRestApiNonce' => wp_create_nonce( 'wp_rest' ),
 				'restURL'        => rest_url(),
+				'isPro'          => is_plugin_active( 'user-registration-pro/user-registration.php' ),
 			),
 		);
 

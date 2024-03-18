@@ -1,7 +1,7 @@
 {
   "$schema": "https://schemas.wp.org/block-json/1.1",
   "apiVersion": 3,
-  "name": "user-registration/editpassword",
+  "name": "user-registration/edit-password",
   "version": "1.0.0",
   "title": "Edit Password",
   "category": "user-registration",

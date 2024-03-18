@@ -16,7 +16,7 @@ class UR_Block_Edit_Profile extends UR_Block_Abstract {
 	 *
 	 * @var string Block name.
 	 */
-	protected $block_name = 'editprofile';
+	protected $block_name = 'edit-profile';
 
 	/**
 	 * Build html.
