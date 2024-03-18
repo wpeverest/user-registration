@@ -106,7 +106,7 @@ class UR_Form_Field_Checkbox extends UR_Form_Field {
 				add_filter(
 					$filter_hook,
 					function ( $msg ) use ( $field_label, $message ) {
-						if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
+						if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX && ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
 							return sprintf( $message[ $field_label ] );
 						} else {
 							wp_send_json_error(
