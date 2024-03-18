@@ -856,7 +856,7 @@ class UR_AJAX {
 			 * Perform validation before form save from form builder.
 			 */
 			do_action("user_registration_admin_backend_validation_before_form_save");
-			
+
 			$form_name    = sanitize_text_field( $_POST['data']['form_name'] ); //phpcs:ignore
 			$form_row_ids = sanitize_text_field( $_POST['data']['form_row_ids'] ); //phpcs:ignore
 			$form_id      = sanitize_text_field( $_POST['data']['form_id'] ); //phpcs:ignore
@@ -1474,6 +1474,7 @@ class UR_AJAX {
 		$plan         = isset( $_POST['plan'] ) ? sanitize_text_field( wp_unslash( $_POST['plan'] ) ) : null;
 		$slug         = isset( $_POST['slug'] ) ? sanitize_text_field( wp_unslash( $_POST['slug'] ) ) : null;
 		$name         = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : null;
+		$video_id     = isset( $_POST['video_id'] ) ? sanitize_text_field( wp_unslash( $_POST['video_id'] ) ) : null;
 		$license_data = ur_get_license_plan();
 		$button       = '';
 
