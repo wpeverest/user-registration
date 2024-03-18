@@ -4275,10 +4275,22 @@ if ( ! function_exists( 'user_registration_process_email_content' ) ) {
 			 */
 			$email_content = apply_filters( 'user_registration_email_template_message', $email_content, $template );
 		} else {
+			$default_width = '50%';
+
+			/**
+			 * Filters to change the email body width.
+			 *
+			 * The 'user_registration_email_body_width' filter allows developers to modify
+			 * the width of the email body used during the user registration process. It provides
+			 * an opportunity to customize the width of the email body based as per user requirements.
+			 *
+			 * @param string $default_width The default width.
+			 */
+			$email_body_width = apply_filters( 'user_registration_email_body_width', $default_width );
 			ob_start();
 			?>
 			<div class="user-registration-email-body" style="padding: 100px 0; background-color: #ebebeb;">
-				<table class="user-registration-email" border="0" cellpadding="0" cellspacing="0" style="width: 40%; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
+				<table class="user-registration-email" border="0" cellpadding="0" cellspacing="0" style="width: <?php echo esc_attr( $email_body_width ); ?>; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
 					<tbody>
 						<tr>
 							<td colspan="2" style="text-align: left;">
