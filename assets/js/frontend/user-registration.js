@@ -274,8 +274,31 @@
 						formwise_data.value = "";
 						switch (node_type) {
 							case "input":
+								var checked_value = new Array();
 								switch (field_type) {
 									case "checkbox":
+										if (
+											!field.closest(
+												".field-privacy_policy"
+											).length > 0
+										) {
+											if (field.prop("checked")) {
+												checked_value.push(field.val());
+												formwise_data.value =
+													JSON.stringify(
+														checked_value
+													);
+											} else {
+												formwise_data.value = "";
+											}
+										} else {
+											formwise_data.value = field.prop(
+												"checked"
+											)
+												? field.val()
+												: "";
+										}
+										break;
 									case "radio":
 										formwise_data.value = field.prop(
 											"checked"
@@ -1820,7 +1843,6 @@
 				});
 			}
 		});
-
 	};
 
 	/**
@@ -1872,7 +1894,6 @@
 	$(window).on("load", function () {
 		user_registration_form_init();
 	});
-
 })(jQuery);
 
 function ur_includes(arr, item) {
