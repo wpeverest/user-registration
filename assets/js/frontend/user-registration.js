@@ -11,6 +11,12 @@
 	});
 	var user_registration_form_init = function () {
 		var ursL10n = user_registration_params.ursL10n;
+		var textarea_text = $('.ur-field-item.field-textarea').find('textarea').val().trim();
+		var charCount = textarea_text.length;
+		var wordCount = textarea_text === '' ? 0 : textarea_text.split(' ').length;
+
+		$('.count_characters').text(charCount);
+		$('.count_words').text(wordCount);
 
 		$.fn.ur_form_submission = function () {
 			// traverse all nodes
