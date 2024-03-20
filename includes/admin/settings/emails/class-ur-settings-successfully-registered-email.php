@@ -16,6 +16,27 @@ if ( ! class_exists( 'UR_Settings_Successfully_Registered_Email', false ) ) :
 	 * UR_Settings_Successfully_Registered_Email Class.
 	 */
 	class UR_Settings_Successfully_Registered_Email {
+		/**
+		 * UR_Settings_Successfully_Registered_Email Id.
+		 *
+		 * @var string
+		 */
+		public $id;
+
+		/**
+		 * UR_Settings_Successfully_Registered_Email Title.
+		 *
+		 * @var string
+		 */
+		public $title;
+
+		/**
+		 * UR_Settings_Successfully_Registered_Email Description.
+		 *
+		 * @var string
+		 */
+		public $description;
+
 
 		/**
 		 * Constructor.

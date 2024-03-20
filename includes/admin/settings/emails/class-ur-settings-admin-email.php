@@ -17,6 +17,27 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 	 */
 	class UR_Settings_Admin_Email {
 		/**
+		 * UR_Settings_Admin_Email Id.
+		 *
+		 * @var string
+		 */
+		public $id;
+
+		/**
+		 * UR_Settings_Admin_Email Title.
+		 *
+		 * @var string
+		 */
+		public $title;
+
+		/**
+		 * UR_Settings_Admin_Email Description.
+		 *
+		 * @var string
+		 */
+		public $description;
+
+		/**
 		 * Constructor.
 		 */
 		public function __construct() {

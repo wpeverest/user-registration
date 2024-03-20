@@ -17,6 +17,26 @@ if ( ! class_exists( 'UR_Settings_Email_Confirmation', false ) ) :
 	 */
 	class UR_Settings_Email_Confirmation {
 		/**
+		 * UR_Settings_Email_Confirmation Id.
+		 *
+		 * @var string
+		 */
+		public $id;
+
+		/**
+		 * UR_Settings_Email_Confirmation Title.
+		 *
+		 * @var string
+		 */
+		public $title;
+
+		/**
+		 * UR_Settings_Email_Confirmation Description.
+		 *
+		 * @var string
+		 */
+		public $description;
+		/**
 		 * Constructor.
 		 */
 		public function __construct() {
