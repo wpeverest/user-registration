@@ -101,7 +101,7 @@ const Dashboard = () => {
 						</Button>
 					</ButtonGroup>
 				</Box>
-				<Box
+				{/* <Box
 					bgColor="white"
 					border="1px"
 					borderColor="gray.100"
@@ -112,7 +112,7 @@ const Dashboard = () => {
 						{__("Try More Plugins", "user-registration")}
 					</Heading>
 					<UsefulPlugins />
-				</Box>
+				</Box> */}
 			</Stack>
 			<Stack gap="5">
 				<Stack

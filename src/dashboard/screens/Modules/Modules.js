@@ -122,6 +122,7 @@ const Modules = () => {
 				})
 				.finally(() => {
 					setIsPerformingBulkAction(false);
+					setSelectedModuleData({});
 				});
 		} else if (bulkAction === "deactivate") {
 			bulkDeactivateModules(selectedModuleData)
@@ -149,6 +150,7 @@ const Modules = () => {
 				})
 				.finally(() => {
 					setIsPerformingBulkAction(false);
+					setSelectedModuleData({});
 				});
 		}
 		setModulesLoaded(false);
@@ -171,7 +173,7 @@ const Modules = () => {
 								module.type === "feature" &&
 								module.title
 									.toLowerCase()
-									.includes(val.toLowerCase())
+									.includes(val.toLowerCase()),
 						);
 					} else if (tabIndex === 2) {
 						searchedData = allModules?.filter(
@@ -179,13 +181,13 @@ const Modules = () => {
 								module.type === "addon" &&
 								module.title
 									.toLowerCase()
-									.includes(val.toLowerCase())
+									.includes(val.toLowerCase()),
 						);
 					} else {
 						searchedData = allModules?.filter((module) =>
 							module.title
 								.toLowerCase()
-								.includes(val.toLowerCase())
+								.includes(val.toLowerCase()),
 						);
 					}
 					console.log(searchedData);
@@ -199,7 +201,7 @@ const Modules = () => {
 				setIsSearching(false);
 			},
 		},
-		800
+		800,
 	);
 
 	const parseDate = (dateString) => {
@@ -214,8 +216,8 @@ const Modules = () => {
 					[...data].sort(
 						(firstAddonInContext, secondAddonInContext) =>
 							parseDate(secondAddonInContext.released_date) -
-							parseDate(firstAddonInContext.released_date)
-					)
+							parseDate(firstAddonInContext.released_date),
+					),
 				);
 				break;
 			case "oldest":
@@ -223,8 +225,8 @@ const Modules = () => {
 					[...data].sort(
 						(firstAddonInContext, secondAddonInContext) =>
 							parseDate(firstAddonInContext.released_date) -
-							parseDate(secondAddonInContext.released_date)
-					)
+							parseDate(secondAddonInContext.released_date),
+					),
 				);
 				break;
 			case "asc":
@@ -232,9 +234,9 @@ const Modules = () => {
 					[...data].sort(
 						(firstAddonInContext, secondAddonInContext) =>
 							firstAddonInContext.title.localeCompare(
-								secondAddonInContext.title
-							)
-					)
+								secondAddonInContext.title,
+							),
+					),
 				);
 				break;
 			case "desc":
@@ -242,9 +244,9 @@ const Modules = () => {
 					[...data].sort(
 						(firstAddonInContext, secondAddonInContext) =>
 							secondAddonInContext.title.localeCompare(
-								firstAddonInContext.title
-							)
-					)
+								firstAddonInContext.title,
+							),
+					),
 				);
 				break;
 			default:
@@ -270,7 +272,7 @@ const Modules = () => {
 								handleSorterChange(
 									e.target.value,
 									modules,
-									setModules
+									setModules,
 								);
 							}}
 							border="1px solid #DFDFE0 !important"
@@ -363,7 +365,7 @@ const Modules = () => {
 								bg="#DFDFE0"
 								placeholder={__(
 									"Bulk Actions",
-									"user-registration"
+									"user-registration",
 								)}
 								onChange={(e) => setBulkAction(e.target.value)}
 								icon=""
@@ -408,7 +410,7 @@ const Modules = () => {
 									type="text"
 									placeholder={__(
 										"Search...",
-										"user-registration"
+										"user-registration",
 									)}
 									paddingLeft="32px !important"
 									{...onSearchInput}
