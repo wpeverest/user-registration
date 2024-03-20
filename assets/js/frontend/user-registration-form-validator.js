@@ -2,7 +2,9 @@
 (function ($) {
 	var user_registration_form_selector;
 
-	user_registration_form_selector = $(".ur-frontend-form form, form.cart");
+	user_registration_form_selector = $(
+		".ur-frontend-form form, form.cart, form.checkout"
+	);
 
 	var field_selector = "";
 
@@ -42,8 +44,8 @@
 				var keyCode = event.keyCode || event.which;
 				var currentValue = $(this).val();
 				if (
-					( keyCode !== 46 || currentValue.indexOf('.') !== -1) &&
-					( keyCode < 48 || keyCode > 57)
+					(keyCode !== 46 || currentValue.indexOf(".") !== -1) &&
+					(keyCode < 48 || keyCode > 57)
 				) {
 					event.preventDefault();
 				}
