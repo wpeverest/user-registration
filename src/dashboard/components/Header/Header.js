@@ -30,7 +30,7 @@ import { NavLink } from "react-router-dom";
  */
 import ROUTES from "../../Constants";
 import announcement from "../../images/announcement.gif";
-import { Logo } from "../Icon/Icon";
+import { ExternalLink, Logo } from "../Icon/Icon";
 import IntersectObserver from "../IntersectionObserver/IntersectionObserver";
 import Changelog from "../Changelog/Changelog";
 
@@ -86,7 +86,7 @@ const Header = () => {
 										fontSize="sm"
 										fontWeight="semibold"
 										lineHeight="150%"
-										color="#383838"
+										color="#64748B"
 										_hover={{
 											color: "primary.500",
 										}}
@@ -105,6 +105,14 @@ const Header = () => {
 										h="full"
 									>
 										{label}
+										{route === "/settings" && (
+											<ExternalLink
+												h="4"
+												w="4"
+												marginLeft="4px"
+												marginBottom="3px"
+											/>
+										)}
 									</Link>
 								))}
 							</IntersectObserver>
@@ -116,7 +124,7 @@ const Header = () => {
 										"You are currently using User Registration %s",
 										"user-registration",
 									),
-									isPro && "Pro " + "v" + version,
+									(isPro && "Pro ") + "v" + version,
 								)}
 							>
 								<Tag
@@ -138,7 +146,10 @@ const Header = () => {
 									fontSize="12px"
 									height="18px"
 									w="85px"
-									href={upgradeURL}
+									href={
+										upgradeURL +
+										"&utm_source=dashboard-header&utm_medium=top-menu-link"
+									}
 									isExternal
 								>
 									{__("Upgrade To Pro", "user-registration")}

@@ -25,11 +25,24 @@ import ShortcodesLists from "./Lists/ShortcodesLists/ShortcodesLists";
 import SmartTagsLists from "./Lists/SmartTagsLists/SmartTagsLists";
 
 const Help = () => {
+	/* global _UR_DASHBOARD_ */
+	const { utmCampaign } =
+		typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
+
 	const [isListViewerOpen, setIsListViewerOpen] = useState(false);
 	const [listViewerType, setListViewerType] = useState("");
 
 	useEffect(() => {}, [isListViewerOpen]);
 
+	const supportURL =
+			"https://wpuserregistration.com/support/?utm_source=dashboard-help&utm_medium=help-button&utm_campaign=" +
+			utmCampaign,
+		helpURL =
+			"https://docs.wpuserregistration.com/?utm_source=dashboard-help&utm_medium=help-button&utm_campaign=" +
+			utmCampaign,
+		featureRequestURL =
+			"https://wpuserregistration.com/feature-requests/?utm_source=dashboard-help&utm_medium=sidebar-link&utm_campaign=" +
+			utmCampaign;
 	return (
 		<Grid
 			my="8"
@@ -160,7 +173,7 @@ const Help = () => {
 								borderRadius="base"
 								fontSize="14px"
 								fontWeight="normal"
-								href="https://wpuserregistration.com/support"
+								href={supportURL}
 								isExternal
 								textDecor="none !important"
 							>
@@ -196,7 +209,7 @@ const Help = () => {
 								fontSize="14px"
 								fontWeight="normal"
 								textDecor="none !important"
-								href="https://docs.wpuserregistration.com/"
+								href={helpURL}
 								isExternal
 								variant="outline"
 							>
@@ -388,7 +401,7 @@ const Help = () => {
 						)}
 					</Text>
 					<Link
-						href="https://user-registration.feedbear.com/"
+						href={featureRequestURL}
 						color="var(--chakra-colors-primary-500) !important"
 						textDecor="underline"
 						isExternal

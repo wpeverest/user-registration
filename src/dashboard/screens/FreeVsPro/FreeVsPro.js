@@ -283,14 +283,31 @@ const FreeVsPro = () => {
 						tableContentsRef.map((tableContent, key) => {
 							if (tableContent.type === "features") {
 								data.modules_lists.map((module) => {
-									tableContent.contents = [
-										...tableContent.contents,
-										{
-											title: module.title,
-											free: false,
-											pro: true,
-										},
-									];
+									if (module.type == "feature") {
+										tableContent.contents = [
+											...tableContent.contents,
+											{
+												title: module.title,
+												free: false,
+												pro: true,
+											},
+										];
+									}
+								});
+								tableContentsRef[key] = tableContent;
+							}
+							if (tableContent.type === "addons") {
+								data.modules_lists.map((module) => {
+									if (module.type == "addon") {
+										tableContent.contents = [
+											...tableContent.contents,
+											{
+												title: module.title,
+												free: false,
+												pro: true,
+											},
+										];
+									}
 								});
 								tableContentsRef[key] = tableContent;
 							}
@@ -404,7 +421,10 @@ const FreeVsPro = () => {
 				<Button
 					as={Link}
 					colorScheme="primary"
-					href={upgradeURL}
+					href={
+						upgradeURL +
+						"&utm_source=dashboard-free-vs-pro&utm_medium=upgrade-button"
+					}
 					color="white !important"
 					textDecor="none !important"
 					isExternal

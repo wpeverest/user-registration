@@ -318,39 +318,63 @@ const Modules = () => {
 								<Tab
 									fontSize="14px"
 									borderRadius="4px 0 0 4px"
+									style={{
+										boxSizing: "border-box",
+									}}
+									_focus={{
+										boxShadow: "none",
+									}}
 									_selected={{
 										color: "white",
 										bg: "#2563EB",
 										marginBottom: "0px",
+										boxShadow: "none",
 									}}
 									boxShadow="none !important"
+									transition="none !important"
 								>
 									{__("All", "user-registration")}
 								</Tab>
 								<Tab
 									fontSize="14px"
+									style={{
+										boxSizing: "border-box",
+									}}
+									_focus={{
+										boxShadow: "none",
+									}}
 									_selected={{
 										color: "white",
 										bg: "#2563EB",
 										marginBottom: "0px",
+										boxShadow: "none",
 									}}
 									boxShadow="none !important"
 									borderRight="1px solid #E9E9E9"
 									borderLeft="1px solid #E9E9E9"
 									marginLeft="0px !important"
+									transition="none !important"
 								>
 									{__("Features", "user-registration")}
 								</Tab>
 								<Tab
 									fontSize="14px"
+									style={{
+										boxSizing: "border-box",
+									}}
 									borderRadius="0 4px 4px 0"
+									_focus={{
+										boxShadow: "none",
+									}}
 									_selected={{
 										color: "white",
 										bg: "#2563EB",
 										marginBottom: "0px",
+										boxShadow: "none",
 									}}
 									marginLeft="0px !important"
 									boxShadow="none !important"
+									transition="none !important"
 								>
 									{__("Addons", "user-registration")}
 								</Tab>

@@ -509,11 +509,13 @@ export const ExternalLink = React.forwardRef((props, ref) => (
 		ref={ref}
 	>
 		<path
+			fill="#64748B"
 			fillRule="evenodd"
 			d="M2.5 4a.5.5 0 0 0-.5.5V10a.5.5 0 0 0 .5.5H8a.5.5 0 0 0 .5-.5V7a.5.5 0 0 1 1 0v3A1.5 1.5 0 0 1 8 11.5H2.5A1.5 1.5 0 0 1 1 10V4.5A1.5 1.5 0 0 1 2.5 3h3a.5.5 0 0 1 0 1h-3ZM7 2a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0V2.5H7.5A.5.5 0 0 1 7 2Z"
 			clipRule="evenodd"
 		/>
 		<path
+			fill="#64748B"
 			fillRule="evenodd"
 			d="M10.854 1.646a.5.5 0 0 1 0 .708l-5.5 5.5a.5.5 0 1 1-.708-.708l5.5-5.5a.5.5 0 0 1 .708 0Z"
 			clipRule="evenodd"

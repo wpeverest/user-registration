@@ -125,6 +125,7 @@ class UR_Modules {
 			} else {
 				$feature->status = 'inactive';
 			}
+			$feature->link          = $feature->link . '&utm_campaign=' . UR()->utm_campaign;
 			$feature->type          = 'feature';
 			$features_lists[ $key ] = $feature;
 		}
@@ -157,6 +158,7 @@ class UR_Modules {
 			} else {
 				$addon->required_plan = __( 'Professional', 'user-registration' );
 			}
+			$addon->link          = $addon->link . '&utm_campaign=' . UR()->utm_campaign;
 			$addon->type          = 'addon';
 			$addons_lists[ $key ] = $addon;
 		}

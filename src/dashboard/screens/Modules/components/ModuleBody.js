@@ -41,7 +41,9 @@ const ModuleBody = ({
 		title: "",
 		body: "",
 		buttonText: __("Upgrade to Pro", "user-registration"),
-		upgradeURL: upgradeURL,
+		upgradeURL:
+			upgradeURL +
+			"&utm_source=dashboard-all-features&utm_medium=upgrade-popup",
 	});
 	const handleCheckedChange = (slug, checked, name, type) => {
 		var selectedModules = { ...selectedModuleData };
@@ -67,52 +69,52 @@ const ModuleBody = ({
 			if (upgradeModal.type === "pro") {
 				upgradeContentRef.title = __(
 					"User Registration Pro Required",
-					"user-registration"
+					"user-registration",
 				);
 				upgradeContentRef.body = sprintf(
 					__(
 						"%s requires User Registration Pro to be activated. Please upgrade to a premium plan and unlock this addon",
-						"user-registration"
+						"user-registration",
 					),
-					upgradeModal.moduleName
+					upgradeModal.moduleName,
 				);
 			} else if (upgradeModal.type === "license") {
 				upgradeContentRef.title = __(
 					"License Activation Required",
-					"user-registration"
+					"user-registration",
 				);
 				upgradeContentRef.body = sprintf(
 					__(
 						"Please activate license of User Registration Pro plugin in order to use %s",
-						"user-registration"
+						"user-registration",
 					),
-					upgradeModal.moduleName
+					upgradeModal.moduleName,
 				);
 				upgradeContentRef.buttonText = sprintf(
 					__("Activate License", "user-registration"),
-					upgradeModal.moduleName
+					upgradeModal.moduleName,
 				);
 				upgradeContentRef.buttonText = upgradeContentRef.buttonText =
 					sprintf(
 						__("Activate License", "user-registration"),
-						upgradeModal.moduleName
+						upgradeModal.moduleName,
 					);
 				upgradeContentRef.upgradeURL = licenseActivationURL;
 			} else {
 				upgradeContentRef.title = __(
 					"License Upgrade Required",
-					"user-registration"
+					"user-registration",
 				);
 				upgradeContentRef.body = sprintf(
 					__(
 						"%s is only available in the plus plan and above. Please upgrade to a plus plan and above to unlock this addon",
-						"user-registration"
+						"user-registration",
 					),
-					upgradeModal.moduleName
+					upgradeModal.moduleName,
 				);
 				upgradeContentRef.buttonText = sprintf(
 					__("Upgrade Plan", "user-registration"),
-					upgradeModal.moduleName
+					upgradeModal.moduleName,
 				);
 			}
 
@@ -189,14 +191,14 @@ const ModuleBody = ({
 										key={data.slug}
 										data={data}
 										isChecked={selectedModuleData.hasOwnProperty(
-											data.slug
+											data.slug,
 										)}
 										onCheckedChange={(slug, checked) => {
 											handleCheckedChange(
 												slug,
 												checked,
 												data.name,
-												data.type
+												data.type,
 											);
 										}}
 										isPerformingBulkAction={

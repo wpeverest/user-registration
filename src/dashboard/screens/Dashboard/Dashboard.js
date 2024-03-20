@@ -24,8 +24,15 @@ import UsefulPlugins from "./components/UsefulPlugins";
 
 const Dashboard = () => {
 	/* global _UR_DASHBOARD_ */
-	const { newFormURL, allFormsURL } =
+	const { newFormURL, allFormsURL, utmCampaign } =
 		typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
+
+	const helpURL =
+			"https://docs.wpuserregistration.com/?utm_source=dashboard-dashboard&utm_medium=sidebar-link&utm_campaign=" +
+			utmCampaign,
+		featureRequestURL =
+			"https://wpuserregistration.com/feature-requests/?utm_source=dashboard-dashboard&utm_medium=sidebar-link&utm_campaign=" +
+			utmCampaign;
 	return (
 		<Grid
 			my="8"
@@ -170,7 +177,7 @@ const Dashboard = () => {
 					<Link
 						color="var(--chakra-colors-primary-500) !important"
 						textDecor="underline"
-						href="https://docs.wpuserregistration.com/"
+						href={helpURL}
 						isExternal
 					>
 						{__("View Documentation", "user-registration")}
@@ -228,7 +235,7 @@ const Dashboard = () => {
 					<Link
 						color="var(--chakra-colors-primary-500) !important"
 						textDecor="underline"
-						href="https://user-registration.feedbear.com/"
+						href={featureRequestURL}
 						isExternal
 					>
 						{__("Request a Feature", "user-registration")}
