@@ -21,25 +21,25 @@ import React, { useState, useEffect } from "react";
 /**
  *  Internal Dependencies
  */
-import { activateAddon, deactivateAddon, installAddon } from "../addons-api";
-import { useStateValue } from "../../../../../context/StateProvider";
-import { actionTypes } from "../../../../../context/dashboardContext";
+import { activateModule, deactivateModule } from "./modules-api";
+import { useStateValue } from "../../../../context/StateProvider";
+import { actionTypes } from "../../../../context/dashboardContext";
 
-const AddonItem = (props) => {
+const ModuleItem = (props) => {
 	/* global _UR_DASHBOARD_ */
 	const { assetsURL, liveDemoURL, isPro, licensePlan } =
 		typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 	const [{ upgradeModal }, dispatch] = useStateValue();
 	const [requirementFulfilled, setRequirementFulfilled] = useState(false);
 	const [licenseActivated, setLicenseActivated] = useState(false);
-	const [addonEnabled, setAddonEnabled] = useState(false);
+	const [moduleEnabled, setModuleEnabled] = useState(false);
 
 	const {
 		data,
 		isChecked,
 		onCheckedChange,
 		isPerformingBulkAction,
-		selectedAddonsSlugs,
+		selectedModuleData,
 	} = props;
 	const toast = useToast();
 	const {
@@ -52,46 +52,23 @@ const AddonItem = (props) => {
 		link,
 		status,
 		required_plan,
+		type,
 	} = data;
-	const [addonStatus, setAddonStatus] = useState(status);
+	const [moduleStatus, setModuleStatus] = useState(status);
 	const [isPerformingAction, setIsPerformingAction] = useState(false);
 
-	const handleAddonAction = () => {
+	// console.log(data);
+	const handleModuleAction = () => {
 		setIsPerformingAction(true);
-		if (addonEnabled) {
-			if (addonStatus === "inactive") {
-				activateAddon(slug)
-					.then((data) => {
-						if (data.status === "active") {
-							toast({
-								title: __(
-									"Addon activated successfully.",
-									"user-registration"
-								),
-								status: "success",
-								duration: 3000,
-							});
 
-							// window.location.reload();
-							setAddonStatus("active");
-						} else {
-							toast({
-								title: __(
-									"Addon cannot be activated. Please try again later.",
-									"user-registration"
-								),
-								status: "error",
-								duration: 3000,
-							});
-							setAddonStatus("inactive");
-						}
-					})
-					.finally(() => {
-						setIsPerformingAction(false);
-					});
-			} else if (addonStatus === "active") {
-				deactivateAddon(slug)
+		if (moduleEnabled) {
+			if (
+				moduleStatus === "inactive" ||
+				moduleStatus === "not-installed"
+			) {
+				activateModule(slug, name, type)
 					.then((data) => {
+						console.log(data);
 						if (data.success) {
 							toast({
 								title: data.message,
@@ -99,37 +76,14 @@ const AddonItem = (props) => {
 								duration: 3000,
 							});
 							// window.location.reload();
-							setAddonStatus("inactive");
+							setModuleStatus("active");
 						} else {
 							toast({
 								title: data.message,
 								status: "error",
 								duration: 3000,
 							});
-							setAddonStatus("active");
-						}
-					})
-					.finally(() => {
-						setIsPerformingAction(false);
-					});
-			} else {
-				installAddon(slug, name)
-					.then((data) => {
-						if (data.success) {
-							toast({
-								title: data.message,
-								status: "success",
-								duration: 3000,
-							});
-							// window.location.reload();
-							setAddonStatus("inactive");
-						} else {
-							toast({
-								title: data.message,
-								status: "error",
-								duration: 3000,
-							});
-							setAddonStatus("not-installed");
+							setModuleStatus("not-installed");
 						}
 					})
 					.catch((e) => {
@@ -138,7 +92,30 @@ const AddonItem = (props) => {
 							status: "error",
 							duration: 3000,
 						});
-						setAddonStatus("not-installed");
+						setModuleStatus("not-installed");
+					})
+					.finally(() => {
+						setIsPerformingAction(false);
+					});
+			} else {
+				deactivateModule(slug, type)
+					.then((data) => {
+						if (data.success) {
+							toast({
+								title: data.message,
+								status: "success",
+								duration: 3000,
+							});
+							// window.location.reload();
+							setModuleStatus("inactive");
+						} else {
+							toast({
+								title: data.message,
+								status: "error",
+								duration: 3000,
+							});
+							setModuleStatus("active");
+						}
 					})
 					.finally(() => {
 						setIsPerformingAction(false);
@@ -156,38 +133,38 @@ const AddonItem = (props) => {
 	};
 
 	useEffect(() => {
-		setAddonStatus(data.status);
+		setModuleStatus(data.status);
 
 		if (!upgradeModal.enable) {
 			setIsPerformingAction(false);
 		}
 
 		if (isPro) {
-			setAddonEnabled(true);
+			setModuleEnabled(true);
 			if (licensePlan) {
 				const requiredPlan = licensePlan.item_plan.replace(
 					" lifetime",
 					""
 				);
 
-				if (data.plan.includes(requiredPlan)) {
+				if (data.plan && data.plan.includes(requiredPlan.trim())) {
 					setRequirementFulfilled(true);
 				} else {
-					setAddonEnabled(false);
+					setModuleEnabled(false);
 				}
 				setLicenseActivated(true);
 			} else {
 				setLicenseActivated(false);
-				setAddonEnabled(false);
+				setModuleEnabled(false);
 			}
 		} else {
-			setAddonEnabled(false);
+			setModuleEnabled(false);
 		}
 	}, [data, upgradeModal]);
 
 	const handleBoxClick = () => {
 		const upgradeModalRef = { ...upgradeModal };
-		upgradeModalRef.moduleType = "addon";
+		upgradeModalRef.moduleType = "module";
 		upgradeModalRef.moduleName = data.name;
 
 		if (!isPro) {
@@ -225,9 +202,9 @@ const AddonItem = (props) => {
 				flex="1 1 0%"
 				position="relative"
 				overflow="visible"
-				opacity={addonEnabled ? 1 : 0.7}
+				opacity={moduleEnabled ? 1 : 0.7}
 				onClick={() => {
-					!addonEnabled && handleBoxClick();
+					!moduleEnabled && handleBoxClick();
 				}}
 			>
 				<Image
@@ -248,7 +225,7 @@ const AddonItem = (props) => {
 					p="5px"
 					m="5px"
 				>
-					{required_plan}
+					{data.required_plan ? data.required_plan : "Pro"}
 				</Badge>
 				<Box p="6">
 					<Stack direction="column" spacing="4">
@@ -265,7 +242,7 @@ const AddonItem = (props) => {
 								<Checkbox
 									isChecked={isChecked}
 									onChange={(e) => {
-										addonEnabled
+										moduleEnabled
 											? onCheckedChange(
 													slug,
 													e.target.checked
@@ -323,12 +300,10 @@ const AddonItem = (props) => {
 				</HStack>
 				<Button
 					colorScheme={
-						addonEnabled
-							? "active" === addonStatus
+						moduleEnabled
+							? "active" === moduleStatus
 								? "red"
-								: "inactive" === addonStatus
-								? "green"
-								: "primary"
+								: "green"
 							: "primary"
 					}
 					size="sm"
@@ -343,21 +318,17 @@ const AddonItem = (props) => {
 						color: "white",
 						textDecoration: "none",
 					}}
-					onClick={handleAddonAction}
+					onClick={handleModuleAction}
 					isLoading={
 						isPerformingAction ||
-						(selectedAddonsSlugs.includes(
-							slug + "/" + slug + ".php"
-						) &&
+						(selectedModuleData.hasOwnProperty(slug) &&
 							isPerformingBulkAction)
 					}
 				>
-					{addonEnabled
-						? "active" === addonStatus
+					{moduleEnabled
+						? "active" === moduleStatus
 							? __("Deactivate", "user-registration")
-							: "inactive" === addonStatus
-							? __("Activate", "user-registration")
-							: __("Install", "user-registration")
+							: __("Activate", "user-registration")
 						: __("Upgrade Plan", "user-registration")}
 				</Button>
 			</Box>
@@ -365,4 +336,4 @@ const AddonItem = (props) => {
 	);
 };
 
-export default AddonItem;
+export default ModuleItem;

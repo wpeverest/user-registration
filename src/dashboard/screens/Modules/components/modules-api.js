@@ -7,16 +7,16 @@ const { urRestApiNonce, restURL } =
 
 const base = restURL + "user-registration/v1/";
 const urls = {
-	features: base + "features",
-	enableFeature: base + "features/enable",
-	disableFeature: base + "features/disable",
-	bulkEnableFeatures: base + "features/bulk-enable",
-	bulkDisableFeatures: base + "features/bulk-disable",
+	modules: base + "modules",
+	activateModule: base + "modules/activate",
+	deactivateModule: base + "modules/deactivate",
+	bulkActivateModules: base + "modules/bulk-activate",
+	bulkDeactivateModules: base + "modules/bulk-deactivate",
 };
 
-export const getAllFeatures = () => {
+export const getAllModules = () => {
 	return apiFetch({
-		path: `${urls.features}`,
+		path: `${urls.modules}`,
 		method: "get",
 		headers: {
 			"X-WP-Nonce": urRestApiNonce,
@@ -24,63 +24,57 @@ export const getAllFeatures = () => {
 	}).then((res) => res);
 };
 
-export const getFeature = (slug) => {
-	return apiFetch(
-		{
-			path: `${urls.features}/${slug}`,
-			method: "get",
-		}.then((res) => res)
-	);
-};
-
-export const enableFeature = (slug) => {
+export const activateModule = (slug, name, type) => {
 	return apiFetch({
-		path: `${urls.enableFeature}`,
+		path: urls.activateModule,
 		method: "POST",
 		headers: {
 			"X-WP-Nonce": urRestApiNonce,
 		},
 		data: {
 			slug: slug,
+			name: name,
+			type: type,
 		},
 	}).then((res) => res);
 };
 
-export const disableFeature = (slug) => {
+export const deactivateModule = (slug, type) => {
 	return apiFetch({
-		path: `${urls.disableFeature}`,
+		path: `${urls.deactivateModule}`,
 		method: "POST",
 		headers: {
 			"X-WP-Nonce": urRestApiNonce,
 		},
 		data: {
 			slug: slug,
+			type: type,
 		},
 	}).then((res) => res);
 };
 
-export const bulkEnableFeatures = (slugs) => {
+export const bulkActivateModules = (moduleData) => {
 	return apiFetch({
-		path: urls.bulkEnableFeatures,
+		path: urls.bulkActivateModules,
 		method: "POST",
 		headers: {
 			"X-WP-Nonce": urRestApiNonce,
 		},
 		data: {
-			slugs: slugs,
+			moduleData: moduleData,
 		},
 	}).then((res) => res);
 };
 
-export const bulkDisableFeatures = (slugs) => {
+export const bulkDeactivateModules = (moduleData) => {
 	return apiFetch({
-		path: urls.bulkDisableFeatures,
+		path: urls.bulkDeactivateModules,
 		method: "POST",
 		headers: {
 			"X-WP-Nonce": urRestApiNonce,
 		},
 		data: {
-			slugs: slugs,
+			moduleData: moduleData,
 		},
 	}).then((res) => res);
 };

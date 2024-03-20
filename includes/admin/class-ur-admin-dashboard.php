@@ -61,7 +61,7 @@ class UR_Admin_Dashboard {
 				'version'              => UR()->version,
 				'isPro'                => is_plugin_active( 'user-registration-pro/user-registration.php' ),
 				'licensePlan'          => ur_get_license_plan(),
-				'licenseActivationURL' => esc_url_raw( admin_url() . '?page=user-registration-settings&tab=license' ),
+				'licenseActivationURL' => esc_url_raw( admin_url( '/admin.php?page=user-registration-settings&tab=license' ) ),
 				'upgradeURL'           => esc_url_raw( 'https://wpuserregistration.com/pricing/?utm_source=addons-page&utm_medium=upgrade-button&utm_campaign=ur-upgrade-to-pro' ),
 				'plugins'              => array_reduce(
 					$allowed_plugin_slugs,

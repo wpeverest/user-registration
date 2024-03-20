@@ -34,8 +34,7 @@ class UR_REST_API {
 	 */
 	public static function init() {
 		include __DIR__ . '/controllers/version1/class-ur-getting-started.php';
-		include __DIR__ . '/controllers/version1/class-ur-addons.php';
-		include __DIR__ . '/controllers/version1/class-ur-features.php';
+		include __DIR__ . '/controllers/version1/class-ur-modules.php';
 		include __DIR__ . '/controllers/version1/class-ur-changelog.php';
 		add_action( 'rest_api_init', array( __CLASS__, 'register_rest_routes' ) );
 	}
@@ -88,8 +87,7 @@ class UR_REST_API {
 	protected static function get_v1_rest_classes() {
 		return array(
 			'getting-started' => 'UR_Getting_Started',
-			'addons'          => 'UR_Addons',
-			'features'        => 'UR_Features',
+			'modules'         => 'UR_Modules',
 			'changelog'       => 'UR_Changelog',
 		);
 	}

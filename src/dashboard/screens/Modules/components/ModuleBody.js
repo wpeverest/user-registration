@@ -2,7 +2,6 @@
  *  External Dependencies
  */
 import React, { useState, useEffect } from "react";
-import AddonSkeleton from "../../../skeleton/AddonsSkeleton/AddonsSkeleton";
 import {
 	Tabs,
 	Container,
@@ -21,18 +20,18 @@ import { sprintf, __ } from "@wordpress/i18n";
 /**
  *  Internal Dependencies
  */
-import AddonItem from "./components/AddonItem";
 import { isArray, isEmpty } from "../../../../utils/utils";
 import { actionTypes } from "../../../../context/dashboardContext";
 import { useStateValue } from "../../../../context/StateProvider";
 import { Lock } from "../../../components/Icon/Icon";
+import ModuleItem from "./ModuleItem";
+import AddonSkeleton from "../../../skeleton/AddonsSkeleton/AddonsSkeleton";
 
-const Addons = ({
+const ModuleBody = ({
 	isPerformingBulkAction,
 	filteredAddons,
-	selectedAddonsSlugs,
-	setSelectedAddonsSlugs,
-	setSelectedAddonsNames,
+	setSelectedModuleData,
+	selectedModuleData,
 }) => {
 	/* global _UR_DASHBOARD_ */
 	const { upgradeURL, licenseActivationURL } =
@@ -44,19 +43,21 @@ const Addons = ({
 		buttonText: __("Upgrade to Pro", "user-registration"),
 		upgradeURL: upgradeURL,
 	});
-	const handleCheckedChange = (slug, checked, name) => {
+	const handleCheckedChange = (slug, checked, name, type) => {
+		var selectedModules = { ...selectedModuleData };
+
 		if (checked) {
-			setSelectedAddonsSlugs((prev) => [
-				...prev,
-				slug + "/" + slug + ".php",
-			]);
-			setSelectedAddonsNames((prev) => [...prev, name]);
+			selectedModules[slug] = {
+				slug: slug + "/" + slug + ".php",
+				name,
+				type,
+			};
 		} else {
-			setSelectedAddonsSlugs((prev) =>
-				prev.filter((s) => s !== slug + "/" + slug + ".php"),
-			);
-			setSelectedAddonsNames((prev) => prev.filter((s) => s !== name));
+			if (selectedModules.hasOwnProperty(slug)) {
+				delete selectedModules[slug];
+			}
 		}
+		setSelectedModuleData(selectedModules);
 	};
 
 	useEffect(() => {
@@ -66,47 +67,52 @@ const Addons = ({
 			if (upgradeModal.type === "pro") {
 				upgradeContentRef.title = __(
 					"User Registration Pro Required",
-					"user-registration",
+					"user-registration"
 				);
 				upgradeContentRef.body = sprintf(
 					__(
 						"%s requires User Registration Pro to be activated. Please upgrade to a premium plan and unlock this addon",
-						"user-registration",
+						"user-registration"
 					),
-					upgradeModal.moduleName,
+					upgradeModal.moduleName
 				);
 			} else if (upgradeModal.type === "license") {
 				upgradeContentRef.title = __(
 					"License Activation Required",
-					"user-registration",
+					"user-registration"
 				);
 				upgradeContentRef.body = sprintf(
 					__(
 						"Please activate license of User Registration Pro plugin in order to use %s",
-						"user-registration",
+						"user-registration"
 					),
-					upgradeModal.moduleName,
+					upgradeModal.moduleName
 				);
 				upgradeContentRef.buttonText = sprintf(
 					__("Activate License", "user-registration"),
-					upgradeModal.moduleName,
+					upgradeModal.moduleName
 				);
-				upgradeContentRef.buttonText = licenseActivationURL;
+				upgradeContentRef.buttonText = upgradeContentRef.buttonText =
+					sprintf(
+						__("Activate License", "user-registration"),
+						upgradeModal.moduleName
+					);
+				upgradeContentRef.upgradeURL = licenseActivationURL;
 			} else {
 				upgradeContentRef.title = __(
 					"License Upgrade Required",
-					"user-registration",
+					"user-registration"
 				);
 				upgradeContentRef.body = sprintf(
 					__(
 						"%s is only available in the plus plan and above. Please upgrade to a plus plan and above to unlock this addon",
-						"user-registration",
+						"user-registration"
 					),
-					upgradeModal.moduleName,
+					upgradeModal.moduleName
 				);
 				upgradeContentRef.buttonText = sprintf(
 					__("Upgrade Plan", "user-registration"),
-					upgradeModal.moduleName,
+					upgradeModal.moduleName
 				);
 			}
 
@@ -159,7 +165,7 @@ const Addons = ({
 								<Button
 									as={Link}
 									colorScheme="primary"
-									href={upgradeURL}
+									href={upgradeContent.upgradeURL}
 									color="white !important"
 									textDecor="none !important"
 									isExternal
@@ -179,30 +185,24 @@ const Addons = ({
 						<SimpleGrid columns={3} spacing="5">
 							{isArray(filteredAddons) &&
 								filteredAddons?.map((data) => (
-									<AddonItem
+									<ModuleItem
 										key={data.slug}
 										data={data}
-										isChecked={Object.values(
-											selectedAddonsSlugs,
-										)?.includes(
-											data.slug +
-												"/" +
-												data.slug +
-												".php",
+										isChecked={selectedModuleData.hasOwnProperty(
+											data.slug
 										)}
-										onCheckedChange={(slug, checked) =>
+										onCheckedChange={(slug, checked) => {
 											handleCheckedChange(
 												slug,
 												checked,
 												data.name,
-											)
-										}
+												data.type
+											);
+										}}
 										isPerformingBulkAction={
 											isPerformingBulkAction
 										}
-										selectedAddonsSlugs={
-											selectedAddonsSlugs
-										}
+										selectedModuleData={selectedModuleData}
 									/>
 								))}
 						</SimpleGrid>
@@ -213,4 +213,4 @@ const Addons = ({
 	);
 };
 
-export default Addons;
+export default ModuleBody;
