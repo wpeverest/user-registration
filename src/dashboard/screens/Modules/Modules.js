@@ -191,7 +191,7 @@ const Modules = () => {
 								.includes(val.toLowerCase()),
 						);
 					}
-					console.log(searchedData);
+
 					if (!isEmpty(searchedData)) {
 						setModules(searchedData);
 						setModulesLoaded(true);

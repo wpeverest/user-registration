@@ -67,14 +67,12 @@ const ModuleItem = (props) => {
 			) {
 				activateModule(slug, name, type)
 					.then((data) => {
-						console.log(data);
 						if (data.success) {
 							toast({
 								title: data.message,
 								status: "success",
 								duration: 3000,
 							});
-							// window.location.reload();
 							setModuleStatus("active");
 						} else {
 							toast({
@@ -105,7 +103,6 @@ const ModuleItem = (props) => {
 								status: "success",
 								duration: 3000,
 							});
-							// window.location.reload();
 							setModuleStatus("inactive");
 						} else {
 							toast({
