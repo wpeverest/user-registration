@@ -57,7 +57,6 @@ const ModuleItem = (props) => {
 	const [moduleStatus, setModuleStatus] = useState(status);
 	const [isPerformingAction, setIsPerformingAction] = useState(false);
 
-	// console.log(data);
 	const handleModuleAction = () => {
 		setIsPerformingAction(true);
 
@@ -144,7 +143,7 @@ const ModuleItem = (props) => {
 			if (licensePlan) {
 				const requiredPlan = licensePlan.item_plan.replace(
 					" lifetime",
-					""
+					"",
 				);
 
 				if (data.plan && data.plan.includes(requiredPlan.trim())) {
@@ -245,7 +244,7 @@ const ModuleItem = (props) => {
 										moduleEnabled
 											? onCheckedChange(
 													slug,
-													e.target.checked
+													e.target.checked,
 											  )
 											: handleBoxClick();
 									}}

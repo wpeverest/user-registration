@@ -412,7 +412,7 @@ class UR_Modules {
 					array(
 						'success' => false,
 						/* translators: 1: Failed Addon Names */
-						'message' => sprintf( __( '%1$s installation failed. Please try again sometime later.', 'user-registration' ), implode( ', ', $failed_modules ) ),
+						'message' => sprintf( __( '%1$s activation failed. Please try again sometime later.', 'user-registration' ), implode( ', ', $failed_modules ) ),
 					),
 					400
 				);

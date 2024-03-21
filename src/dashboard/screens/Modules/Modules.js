@@ -121,6 +121,7 @@ const Modules = () => {
 					});
 				})
 				.finally(() => {
+					setModulesLoaded(false);
 					setIsPerformingBulkAction(false);
 					setSelectedModuleData({});
 				});
@@ -149,11 +150,11 @@ const Modules = () => {
 					});
 				})
 				.finally(() => {
+					setModulesLoaded(false);
 					setIsPerformingBulkAction(false);
 					setSelectedModuleData({});
 				});
 		}
-		setModulesLoaded(false);
 	};
 
 	const onSearchInput = useOnType(
