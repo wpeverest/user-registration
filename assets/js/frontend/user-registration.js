@@ -1,23 +1,32 @@
 /* global  user_registration_params */
 (function ($) {
 
-	$('textarea').on('input', function(){
-		var textarea_text = $(this).val().trim();
-		var charCount = textarea_text.length;
-		var wordCount = textarea_text === '' ? 0 : textarea_text.split(' ').length;
+    $('textarea').on('input', textareaCount);
 
-		$('.count_characters').text(charCount);
-		$('.count_words').text(wordCount);
-	});
+	function textareaCount() {
+        $('textarea').each(function() {
+            var $textarea = $(this);
+            var $current_textarea = $textarea.closest('.ur-field-item');
+            var textarea_text = $textarea.val().trim();
+            var charCount = textarea_text.length;
+            var wordCount = textarea_text === '' ? 0 : textarea_text.split(/\s+/).length;
+
+            $current_textarea.find('.count_characters').text(charCount);
+            $current_textarea.find('.count_words').text(wordCount);
+        });
+    }
 	var user_registration_form_init = function () {
+		$('textarea').each(function() {
+            var $textarea = $(this);
+            var $current_textarea = $textarea.closest('.ur-field-item');
+            var textarea_text = $textarea.val().trim();
+            var charCount = textarea_text.length;
+            var wordCount = textarea_text === '' ? 0 : textarea_text.split(/\s+/).length;
+
+            $current_textarea.find('.count_characters').text(charCount);
+            $current_textarea.find('.count_words').text(wordCount);
+        });
 		var ursL10n = user_registration_params.ursL10n;
-		var textarea_text = $('.ur-field-item.field-textarea').find('textarea').val().trim();
-		var charCount = textarea_text.length;
-		var wordCount = textarea_text === '' ? 0 : textarea_text.split(' ').length;
-
-		$('.count_characters').text(charCount);
-		$('.count_words').text(wordCount);
-
 		$.fn.ur_form_submission = function () {
 			// traverse all nodes
 			return this.each(function () {
@@ -26,7 +35,6 @@
 				var available_field = [];
 				var required_fields =
 					user_registration_params.form_required_fields;
-
 				var form = {
 					init: function () {},
 					get_form_data: function (form_id) {
@@ -829,6 +837,8 @@
 										type: "POST",
 										async: true,
 										complete: function (ajax_response) {
+											$('.count_characters').text('0');
+											$('.count_words').text('0');
 											var ajaxFlag = [];
 											ajaxFlag["status"] = true;
 											$(document).trigger(
