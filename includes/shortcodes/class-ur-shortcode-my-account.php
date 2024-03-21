@@ -477,6 +477,16 @@ class UR_Shortcode_My_Account {
 		wp_set_password( $new_pass, $user->ID );
 		self::set_reset_password_cookie();
 		wp_password_change_notification( $user );
+
+		/**
+		 * Filter hook to modify the automatic user login on reset password.
+		 *
+		 * @param bool The result to allow automatic user login. Default is false.
+		 */
+		$allow_automatic_user_login = apply_filters( 'user_registration_allow_automatic_user_login_reset_password', false );
+		if ( $allow_automatic_user_login ) {
+			ur_automatic_user_login( $user );
+		}
 	}
 
 	/**
