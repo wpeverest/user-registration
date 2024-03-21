@@ -8,7 +8,7 @@ Stable tag: 3.1.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-The best Drag and drop user registration form and login form builder with a user profile page, email notification, user roles assignment, and more.
+The best drag and drop user registration form and login form builder with a user profile page, email notification, user roles assignment, and more.
 
 == Description ==
 
