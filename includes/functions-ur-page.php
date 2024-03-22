@@ -204,6 +204,9 @@ if ( ! function_exists( 'ur_get_my_account_url' ) ) {
 		$permalink = 0 < $my_account_page_id ? get_permalink( $my_account_page_id ) : '';
 
 		if ( $permalink ) {
+			if ( '/' !== substr( $permalink, -1 ) ) {
+				$permalink = $permalink . '/';
+			}
 			return $permalink;
 		}
 
@@ -213,7 +216,11 @@ if ( ! function_exists( 'ur_get_my_account_url' ) ) {
 			$login_redirect_page_id = get_option( 'user_registration_login_options_login_redirect_url', 'unset' );
 
 			if ( 0 < $login_redirect_page_id ) {
-				return get_permalink( $login_redirect_page_id );
+				$permalink = get_permalink( $login_redirect_page_id );
+				if ( '/' !== substr( $permalink, -1 ) ) {
+					$permalink = $permalink . '/';
+				}
+				return $permalink;
 			}
 		}
 
