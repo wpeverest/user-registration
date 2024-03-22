@@ -42,7 +42,7 @@ class UR_Setting_Text extends UR_Field_Settings {
 	public function register_fields() {
 		$fields = array(
 			'limit_length' => array(
-				'label'       => __( 'Limit Length', 'user-registration' ),
+				'label'       => __( 'Maximum Length', 'user-registration' ),
 				'data-id'     => $this->field_id . '_limit_length',
 				'name'        => $this->field_id . '[limit_length]',
 				'class'       => $this->default_class . ' ur-settings-limit-length',
@@ -50,10 +50,10 @@ class UR_Setting_Text extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => 'false',
 				'placeholder' => '',
-				'tip'         => __( 'Allowed maximum number of characters / words.', 'user-registration' ),
+				'tip'         => __( 'Allow Limitation for Maximum Length.', 'user-registration' ),
 			),
 			'limit_length_limit_count' => array(
-				'label'       => __( 'Limit Count', 'user-registration' ),
+				'label'       => __( 'Maximum Count', 'user-registration' ),
 				'data-id'     => $this->field_id . '_limit_length_limit_count',
 				'name'        => $this->field_id . '[limit_length_limit_count]',
 				'class'       => $this->default_class . ' ur-settings-limit-length-limit-count',
@@ -76,7 +76,7 @@ class UR_Setting_Text extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => 'characters',
 				'placeholder' => '',
-				'tip'         => __( 'Allowed maximum number of characters / words.', 'user-registration' ),
+				'tip'         => __( 'Maximize by characters / words.', 'user-registration' ),
 			),
 			'minimum_length' => array(
 				'label'       => __( 'Minimum Length', 'user-registration' ),
@@ -87,7 +87,7 @@ class UR_Setting_Text extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => 'false',
 				'placeholder' => '',
-				'tip'         => __( 'Allowed maximum number of characters / words.', 'user-registration' ),
+				'tip'         => __( 'Allow Limitation for Minimum Length.', 'user-registration' ),
 			),
 			'minimum_length_limit_count' => array(
 				'label'       => __( 'Minimum Count', 'user-registration' ),
@@ -98,7 +98,7 @@ class UR_Setting_Text extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => 10,
 				'placeholder' => '',
-				'tip'         => __( 'Allowed maximum number of characters / words.', 'user-registration' ),
+				'tip'         => __( 'Allowed minimum number of characters / words.', 'user-registration' ),
 			),
 			'minimum_length_limit_mode' => array(
 				'label'       => __( 'Limit Mode', 'user-registration' ),
@@ -113,7 +113,7 @@ class UR_Setting_Text extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => 'characters',
 				'placeholder' => '',
-				'tip'         => __( 'Allowed maximum number of characters / words.', 'user-registration' ),
+				'tip'         => __( 'Minimize by characters / words.', 'user-registration' ),
 			),
 			'default_value' => array(
 				'label'       => __( 'Default Value', 'user-registration' ),
