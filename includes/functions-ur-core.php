@@ -4628,4 +4628,59 @@ if ( ! function_exists( 'ur_array_clone' ) ) {
 			$array
 		);
 	}
+	if ( ! function_exists( 'ur_unlink_user_profile_pictures' ) ) {
+		/**
+		 * Remove user uploaded profile pictures and related thumbnail
+		 *
+		 * @param int $id
+		 */
+		function ur_unlink_user_profile_pictures( $id ) {
+			$profile_pic_url = get_user_meta( $id, 'user_registration_profile_pic_url', true );
+			if ( ! empty( $profile_pic_url ) ) {
+
+				$profile_id = get_post_meta( $profile_pic_url, '_wp_attachment_metadata' );
+
+				// Unlink profile picture before removing users.
+				if ( is_array( $profile_id ) && ! empty( $profile_id ) ) {
+					foreach ( $profile_id as $profile ) {
+						if ( is_array( $profile ) && isset( $profile['file'] ) ) {
+							$base_dir  = wp_upload_dir()['basedir'];
+							$file      = $profile['file'];
+							$full_path = trailingslashit( $base_dir ) . $file;
+
+							if ( file_exists( $full_path ) ) {
+								unlink( $full_path );
+							}
+
+							// unlink different size thumbnails of profile picture.
+							if ( isset( $profile['sizes'] ) && is_array( $profile['sizes'] ) ) {
+								foreach ( $profile['sizes'] as $size ) {
+									if ( is_array( $size ) && isset( $size['file'] ) ) {
+										$size_file      = $size['file'];
+										$full_size_path = UR_UPLOAD_PATH . 'profile-pictures/' . $size_file;
+
+										if ( file_exists( $full_size_path ) ) {
+											unlink( $full_size_path );
+										}
+									}
+								}
+							}
+
+							// Unlink original uploaded image
+							if ( isset( $profile['original_image'] ) ) {
+								$original_file = UR_UPLOAD_PATH . 'profile-pictures/' . $profile['original_image'];
+								if ( file_exists( $original_file ) ) {
+									unlink( $original_file );
+								}
+							}
+						}
+					}
+				}
+				// Remove profile pictures related metadata from DB.
+				delete_post_meta( $profile_pic_url, '_wp_attachment_metadata' );
+				delete_post_meta( $profile_pic_url, '_wp_attached_file' );
+			}
+		}
+	}
+	add_action( 'remove_profile_pictures_and_metadata', 'ur_unlink_user_profile_pictures' );
 }
