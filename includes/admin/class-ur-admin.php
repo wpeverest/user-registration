@@ -29,6 +29,7 @@ class UR_Admin {
 		add_action( 'admin_notices', array( $this, 'survey_notice' ) );
 		add_action( 'admin_notices', array( $this, 'allow_usage_notice' ) );
 		add_action( 'admin_notices', array( $this, 'php_deprecation_notice' ) );
+		add_action( 'delete_user', 'ur_unlink_user_profile_pictures' );
 		add_action( 'admin_footer', 'ur_print_js', 25 );
 		add_filter( 'heartbeat_received', array( $this, 'new_user_live_notice' ), 10, 2 );
 		add_filter( 'admin_body_class', array( $this, 'user_registration_add_body_classes' ) );
