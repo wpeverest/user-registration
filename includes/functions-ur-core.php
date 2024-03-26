@@ -4694,5 +4694,5 @@ if ( ! function_exists( 'ur_array_clone' ) ) {
 			}
 		}
 	}
-	add_action( 'remove_profile_pictures_and_metadata', 'ur_unlink_user_profile_pictures' );
+	add_action( 'ur_remove_profile_pictures_and_metadata', 'ur_unlink_user_profile_pictures' );
 }
