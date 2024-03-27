@@ -1,31 +1,7 @@
 /* global  user_registration_params */
 (function ($) {
 
-    $('textarea').on('input', textareaCount);
-
-	function textareaCount() {
-        $('textarea').each(function() {
-            var $textarea = $(this);
-            var $current_textarea = $textarea.closest('.ur-field-item');
-            var textarea_text = $textarea.val().trim();
-            var charCount = textarea_text.length;
-            var wordCount = textarea_text === '' ? 0 : textarea_text.split(/\s+/).length;
-
-            $current_textarea.find('.count_characters').text(charCount);
-            $current_textarea.find('.count_words').text(wordCount);
-        });
-    }
 	var user_registration_form_init = function () {
-		$('textarea').each(function() {
-            var $textarea = $(this);
-            var $current_textarea = $textarea.closest('.ur-field-item');
-            var textarea_text = $textarea.val().trim();
-            var charCount = textarea_text.length;
-            var wordCount = textarea_text === '' ? 0 : textarea_text.split(/\s+/).length;
-
-            $current_textarea.find('.count_characters').text(charCount);
-            $current_textarea.find('.count_words').text(wordCount);
-        });
 		var ursL10n = user_registration_params.ursL10n;
 		$.fn.ur_form_submission = function () {
 			// traverse all nodes
@@ -837,8 +813,6 @@
 										type: "POST",
 										async: true,
 										complete: function (ajax_response) {
-											$('.count_characters').text('0');
-											$('.count_words').text('0');
 											var ajaxFlag = [];
 											ajaxFlag["status"] = true;
 											$(document).trigger(
@@ -862,7 +836,8 @@
 												var message =
 													$('<ul class=""/>');
 												var type = "error";
-
+												$('.ur-characters').text('0');
+												$('.ur-words').text('0');
 												try {
 													var response = JSON.parse(
 														ajax_response.responseText
@@ -1806,7 +1781,20 @@
 				);
 			});
 		});
+		/**
+		 * Set the value of count in already exist details of field textarea.
+		 */
+		$(function () {
+			$('textarea').each(function() {
+				var $selected_area_field = $(this).closest('.ur-field-item');
+				var selected_area_text = $(this).val().trim();
+				var characters_length = selected_area_text.length;
+				var words_length = selected_area_text === '' ? 0 : selected_area_text.split(/\s+/).length;
 
+				$selected_area_field.find('.ur-characters').text(characters_length);
+				$selected_area_field.find('.ur-words').text(words_length);
+			});
+        });
 		/**
 		 * Append a country option and Remove it on click, if the country is not allowed.
 		 */
@@ -1847,6 +1835,22 @@
 		});
 
 	};
+	/**
+		 * show the character and word count in textarea field.
+		 */
+	$('textarea').on('input', user_registration_count);
+
+	function user_registration_count() {
+        $('textarea').each(function() {
+			var $selected_area_field = $(this).closest('.ur-field-item');
+			var selected_area_text = $(this).val().trim();
+			var characters_length = selected_area_text.length;
+			var words_length = selected_area_text === '' ? 0 : selected_area_text.split(/\s+/).length;
+
+			$selected_area_field.find('.ur-characters').text(characters_length);
+			$selected_area_field.find('.ur-words').text(words_length);
+		});
+    }
 
 	/**
 	 * @since 2.0.0
