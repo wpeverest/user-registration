@@ -18,6 +18,14 @@
 		}
 	}
 
+	&.is-dismissible {
+		.notice-dismiss {
+			&::before {
+				display: block;
+			}
+		}
+	}
+
 	.user-registration-notice-thumbnail {
 		float: left;
 		text-align: center;
