@@ -9,7 +9,7 @@ const { InspectorControls } = wp.blockEditor ? wp.blockEditor : wp.editor;
 const ServerSideRender = wp.serverSideRender
 	? wp.serverSideRender
 	: wp.components.ServerSideRender;
-const { TextControl, SelectControl, PanelBody, Placeholder, RadioControl } =
+const { TextControl, SelectControl, PanelBody, Placeholder, RadioControl, Notice } =
 	wp.components;
 const UserRegistrationIcon = createElement(
 	"svg",
@@ -21,7 +21,7 @@ const UserRegistrationIcon = createElement(
 );
 const { i18n, forms, logo_url } =
 	typeof ur_form_block_data !== "undefined" && ur_form_block_data;
-const { title, form_select, form_settings } =
+const { title, form_select, form_settings, deprecated_notice } =
 	typeof i18n !== "undefined" && i18n;
 
 registerBlockType("user-registration/form-selector", {
@@ -44,6 +44,9 @@ registerBlockType("user-registration/form-selector", {
 		logoutUrl: {
 			type: "string",
 		},
+	},
+	supports:{
+		"inserter": false
 	},
 	edit(props) {
 		const {
@@ -137,6 +140,11 @@ registerBlockType("user-registration/form-selector", {
 				</PanelBody>
 			</InspectorControls>,
 		];
+		jsx.push(
+		<Notice status="warning" isDismissible={false}>
+			<p>{i18n.deprecated_notice}</p>
+    	</Notice>
+		)
 		if (formId || shortcode !== "") {
 			jsx.push(
 				<ServerSideRender
