@@ -115,7 +115,6 @@ class UR_AddOn_Updater {
 
 		// Set up hooks.
 		$this->init();
-
 	}
 
 	/**
@@ -132,7 +131,6 @@ class UR_AddOn_Updater {
 		remove_action( 'after_plugin_row_' . $this->name, 'wp_plugin_update_row', 10 );
 		add_action( 'after_plugin_row_' . $this->name, array( $this, 'show_update_notification' ), 10, 2 );
 		add_action( 'admin_init', array( $this, 'show_changelog' ) );
-
 	}
 
 	/**
@@ -460,7 +458,6 @@ class UR_AddOn_Updater {
 			$args['sslverify'] = $verify_ssl;
 		}
 		return $args;
-
 	}
 
 	/**
@@ -492,11 +489,11 @@ class UR_AddOn_Updater {
 			if ( empty( $host ) ) {
 				$edd_plugin_url_available[ $store_hash ] = false;
 			} else {
-				$test_url = $scheme . '://' . $host . $port;
-				$response = wp_remote_get(
+				$test_url                                = $scheme . '://' . $host . $port;
+				$response                                = wp_remote_get(
 					$test_url,
 					array(
-						'timeout' => $this->health_check_timeout,
+						'timeout'   => $this->health_check_timeout,
 						'sslverify' => $verify_ssl,
 					)
 				);
@@ -530,12 +527,12 @@ class UR_AddOn_Updater {
 			'beta'       => ! empty( $data['beta'] ),
 		);
 
-		$request    = wp_remote_post(
+		$request = wp_remote_post(
 			$this->api_url,
 			array(
-				'timeout' => 15,
+				'timeout'   => 15,
 				'sslverify' => $verify_ssl,
-				'body' => $api_params,
+				'body'      => $api_params,
 			)
 		);
 
@@ -667,7 +664,6 @@ class UR_AddOn_Updater {
 		}
 
 		return $cache['value'];
-
 	}
 
 	/**
@@ -688,7 +684,6 @@ class UR_AddOn_Updater {
 		);
 
 		update_option( $cache_key, $data, 'no' );
-
 	}
 
 	/**

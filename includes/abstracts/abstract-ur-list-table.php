@@ -139,7 +139,10 @@ abstract class UR_List_Table extends WP_List_Table {
 
 		foreach ( $this->bulk_actions as $action => $label ) {
 			if ( ! is_callable( array( $this, 'bulk_' . $action ) ) ) {
-				throw new RuntimeException( "The bulk action $action does not have a callback method" );
+				throw new RuntimeException(
+					/* translators: %s: Error message */
+					sprintf( esc_html__( 'The bulk action %s does not have a callback method', 'user-registration' ), esc_html( $action ) )
+				);
 			}
 
 			$actions[ $action ] = $label;

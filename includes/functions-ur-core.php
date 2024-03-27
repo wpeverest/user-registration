@@ -251,7 +251,7 @@ function ur_bool_to_string( $bool ) {
  */
 function ur_get_template( $template_name, $args = array(), $template_path = '', $default_path = '' ) {
 	if ( ! empty( $args ) && is_array( $args ) ) {
-		extract( $args ); // phpcs:ignore;
+		extract( $args ); // phpcs:ignore.
 	}
 
 	$located = ur_locate_template( $template_name, $template_path, $default_path );
@@ -300,7 +300,7 @@ function ur_get_template( $template_name, $args = array(), $template_path = '', 
 	 * @param string $template_content The template content.
 	 */
 	$template_content = apply_filters( 'user_registration_process_smart_tags', $template_content, array(), array() );
-	echo $template_content;  // phpcs:ignore;
+	echo $template_content;  // phpcs:ignore.
 }
 
 /**
@@ -438,7 +438,7 @@ function ur_setcookie( $name, $value, $expire = 0, $secure = false ) {
 		setcookie( $name, $value, $expire, COOKIEPATH ? COOKIEPATH : '/', COOKIE_DOMAIN, $secure );
 	} elseif ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 		headers_sent( $file, $line );
-		trigger_error( "{$name} cookie cannot be set - headers already sent by {$file} on line {$line}", E_USER_NOTICE ); //phpcs:ignore;
+		trigger_error( "{$name} cookie cannot be set - headers already sent by {$file} on line {$line}", E_USER_NOTICE ); //phpcs:ignore.
 	}
 }
 
@@ -1851,14 +1851,14 @@ function ur_get_user_extra_fields( $user_id ) {
 
 	$admin_profile = new UR_Admin_Profile();
 	$extra_data    = $admin_profile->get_user_meta_by_form_fields( $user_id );
-	$form_fields   = isset( array_column( $extra_data, 'fields' )[0] ) ? array_column( $extra_data, 'fields' )[0] : array(); //phpcs:ignore;
+	$form_fields   = isset( array_column( $extra_data, 'fields' )[0] ) ? array_column( $extra_data, 'fields' )[0] : array(); //phpcs:ignore.
 	if ( ! empty( $form_fields ) ) {
 		foreach ( $form_fields as $field_key => $field_data ) {
 			$value     = get_user_meta( $user_id, $field_key, true );
 			$field_key = str_replace( 'user_registration_', '', $field_key );
 
 			if ( is_serialized( $value ) ) {
-				$value = unserialize( $value, array( 'allowed_classes' => false ) ); //phpcs:ignore;
+				$value = unserialize( $value, array( 'allowed_classes' => false ) ); //phpcs:ignore.
 				$value = implode( ',', $value );
 			}
 
@@ -2995,7 +2995,7 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 
 		$user_id = isset( $_GET['user'] ) ? sanitize_text_field( wp_unslash( $_GET['user'] ) ) : get_current_user_id();
 		$user_id = isset( $_GET['user_id'] ) ? sanitize_text_field( wp_unslash( $_GET['user_id'] ) ) : $user_id;
-		$form_id = isset( $_POST['form_id'] ) ? sanitize_text_field( wp_unslash( $_POST['form_id'] ) ) : ur_get_form_id_by_userid( $user_id ); //phpcs:ignore;
+		$form_id = isset( $_POST['form_id'] ) ? sanitize_text_field( wp_unslash( $_POST['form_id'] ) ) : ur_get_form_id_by_userid( $user_id ); //phpcs:ignore.
 
 		$field_name = ur_get_field_data_by_field_name( $form_id, $field_meta_key );
 		$field_key  = isset( $field_name['field_key'] ) ? $field_name['field_key'] : '';
@@ -3071,8 +3071,8 @@ if ( ! function_exists( 'user_registration_install_pages_notice' ) ) {
 			UR_Admin_Notices::add_notice( 'install' );
 		}
 
-		if ( isset( $_POST['user_registration_myaccount_page_id'] ) ) { //phpcs:ignore;
-			$my_account_page = $_POST['user_registration_myaccount_page_id']; //phpcs:ignore;
+		if ( isset( $_POST['user_registration_myaccount_page_id'] ) ) { //phpcs:ignore.
+			$my_account_page = $_POST['user_registration_myaccount_page_id']; //phpcs:ignore.
 		} else {
 			$my_account_page = get_option( 'user_registration_myaccount_page_id', 0 );
 		}
@@ -3118,12 +3118,12 @@ if ( ! function_exists( 'ur_find_my_account_in_page' ) ) {
 		$post_meta_table = $wpdb->prefix . 'postmeta';
 
 		$matched = $wpdb->get_var(
-			$wpdb->prepare( "SELECT COUNT(*) FROM {$post_table} WHERE ID = '{$login_page_id}' AND ( post_content LIKE '%[user_registration_login%' OR post_content LIKE '%[user_registration_my_account%' OR post_content LIKE '%[woocommerce_my_account%' )" ) //phpcs:ignore;
+			$wpdb->prepare( "SELECT COUNT(*) FROM {$post_table} WHERE ID = '{$login_page_id}' AND ( post_content LIKE '%[user_registration_login%' OR post_content LIKE '%[user_registration_my_account%' OR post_content LIKE '%[woocommerce_my_account%' )" ) //phpcs:ignore.
 		);
 
 		if ( $matched <= 0 ) {
 			$matched = $wpdb->get_var(
-				$wpdb->prepare( "SELECT COUNT(*) FROM {$post_meta_table} WHERE post_id = '{$login_page_id}' AND ( meta_value LIKE '%[user_registration_login%' OR meta_value LIKE '%[user_registration_my_account%' OR meta_value LIKE '%[woocommerce_my_account%' )" ) //phpcs:ignore;
+				$wpdb->prepare( "SELECT COUNT(*) FROM {$post_meta_table} WHERE post_id = '{$login_page_id}' AND ( meta_value LIKE '%[user_registration_login%' OR meta_value LIKE '%[user_registration_my_account%' OR meta_value LIKE '%[woocommerce_my_account%' )" ) //phpcs:ignore.
 			);
 		}
 		/**
@@ -3283,8 +3283,7 @@ if ( ! function_exists( 'crypt_the_string' ) ) {
 
 		return $output;
 	}
-} //phpcs:ignore
-
+} //phpcs:ignore.
 if ( ! function_exists( 'ur_generate_random_key' ) ) {
 	/**
 	 * Function to generate the random key.
@@ -3329,7 +3328,7 @@ if ( ! function_exists( 'ur_clean_tmp_files' ) ) {
 			}
 
 			if ( ( time() - $modified ) >= $lifespan ) {
-				@unlink( $file ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+				@unlink( $file ); // phpcs:ignore.WordPress.PHP.NoSilencedErrors.Discouraged
 			}
 		}
 	}
@@ -3351,7 +3350,7 @@ if ( ! function_exists( 'ur_get_tmp_dir' ) ) {
 		$index = trailingslashit( $tmp_root ) . 'index.html';
 
 		if ( ! file_exists( $index ) ) {
-			file_put_contents( $index, '' ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+			file_put_contents( $index, '' ); // phpcs:ignore.WordPress.WP.AlternativeFunctions
 		}
 
 		return $tmp_root;
@@ -3690,7 +3689,7 @@ if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
 			}
 		}
 
-		echo $tab_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $tab_html; // phpcs:ignore.WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 }
 
@@ -3726,16 +3725,16 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				'denied_access'    => get_option( 'user_registration_message_denied_account', null ),
 			);
 
-			$post = $_POST; // phpcs:ignore WordPress.Security.NonceVerification.
+			$post = $_POST; // phpcs:ignore.
 
 			$recaptcha_value     = isset( $post['g-recaptcha-response'] ) ? ur_clean( wp_unslash( $post['g-recaptcha-response'] ) ) : '';
-			$captcha_response    = isset( $post['CaptchaResponse'] ) ? $post['CaptchaResponse'] : ''; //phpcs:ignore;
+			$captcha_response    = isset( $post['CaptchaResponse'] ) ? $post['CaptchaResponse'] : ''; //phpcs:ignore.
 			$recaptcha_enabled   = ur_option_checked( 'user_registration_login_options_enable_recaptcha', false );
 			$recaptcha_type      = get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' );
 			$invisible_recaptcha = ur_option_checked( 'user_registration_captcha_setting_invisible_recaptcha_v2', false );
 
 			$login_data = array(
-				'user_password' => isset( $post['password'] ) ? wp_unslash( $post['password'] ) : '', //phpcs:ignore;
+				'user_password' => isset( $post['password'] ) ? wp_unslash( $post['password'] ) : '', //phpcs:ignore.
 				'remember'      => isset( $post['rememberme'] ),
 			);
 
@@ -4392,9 +4391,9 @@ if ( ! function_exists( 'ur_maybe_unserialize' ) ) {
 		if ( is_serialized( $data ) ) {
 			if ( version_compare( PHP_VERSION, '7.1.0', '>=' ) ) {
 				$options = wp_parse_args( $options, array( 'allowed_classes' => false ) );
-				return @unserialize( trim( $data ), $options ); //phpcs:ignore;
+				return @unserialize( trim( $data ), $options ); //phpcs:ignore.
 			}
-			return @unserialize( trim( $data ) ); //phpcs:ignore;
+			return @unserialize( trim( $data ) ); //phpcs:ignore.
 		}
 
 		return $data;
@@ -4418,7 +4417,7 @@ if ( ! function_exists( 'user_registration_conditional_user_meta_filter' ) ) {
 		}
 
 		$field_name   = '';
-		$hidden_field = isset( $_POST['urcl_hide_fields'] ) ? ur_clean( $_POST['urcl_hide_fields'] ) : array(); //phpcs:ignore;
+		$hidden_field = isset( $_POST['urcl_hide_fields'] ) ? ur_clean( $_POST['urcl_hide_fields'] ) : array(); //phpcs:ignore.
 
 		if ( empty( $hidden_field ) ) {
 			return $valid_form_data;
@@ -4426,7 +4425,7 @@ if ( ! function_exists( 'user_registration_conditional_user_meta_filter' ) ) {
 
 		$hidden_array_field = json_decode( stripslashes( $hidden_field ) );
 
-		if ( isset( $_POST['action'] ) && 'user_registration_user_form_submit' ===  $_POST['action'] ) { //phpcs:ignore;
+		if ( isset( $_POST['action'] ) && 'user_registration_user_form_submit' ===  $_POST['action'] ) { //phpcs:ignore.
 			foreach ( $hidden_array_field as $field ) {
 				$field_name = $field;
 				if ( in_array( $field_name, array_keys( $valid_form_data ) ) ) {
