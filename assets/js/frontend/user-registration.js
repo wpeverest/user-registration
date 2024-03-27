@@ -248,7 +248,7 @@
 								: "null";
 						var phone_id = [];
 
-						$(".field-phone",'.field-billing_phone').each(function () {
+						$(".field-phone, .field-billing_phone").each(function () {
 							var phone_field_id = $(this)
 								.find(".form-row")
 								.attr("id");
