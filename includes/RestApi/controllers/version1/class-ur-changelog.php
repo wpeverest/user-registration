@@ -58,6 +58,7 @@ class UR_Changelog {
 	public function get_item( $request ) {
 		$changelog = $this->read_changelog();
 		$changelog = $this->parse_changelog( $changelog );
+
 		return new \WP_REST_Response(
 			array(
 				'success'   => true,
@@ -92,7 +93,6 @@ class UR_Changelog {
 		}
 
 		$entries = preg_split( '/(?=\=\s\d+\.\d+\.\d+|\Z)/', $raw_changelog, -1, PREG_SPLIT_NO_EMPTY );
-		array_shift( $entries );
 
 		$parsed_changelog = array();
 
@@ -100,7 +100,7 @@ class UR_Changelog {
 			$date    = null;
 			$version = null;
 
-			if ( preg_match( '/^= (\d+\.\d+\.\d+) *- (\d+\/\d+\/\d+)/', $entry, $matches ) ) {
+			if ( preg_match( '/^= (\d+\.\d+\.\d+(?:\.\d+)?) *- (\d+\/\d+\/\d+)/', $entry, $matches ) ) {
 				$version = $matches[1] ?? null; // phpcs:ignore
 				$date    = $matches[2] ?? null; // phpcs:ignore
 			}
