@@ -139,7 +139,10 @@ abstract class UR_List_Table extends WP_List_Table {
 
 		foreach ( $this->bulk_actions as $action => $label ) {
 			if ( ! is_callable( array( $this, 'bulk_' . $action ) ) ) {
-				throw new RuntimeException( "The bulk action $action does not have a callback method" );
+				throw new RuntimeException(
+					/* translators: %s: Error message */
+					sprintf( esc_html__( 'The bulk action %s does not have a callback method', 'user-registration' ), esc_html( $action ) )
+				);
 			}
 
 			$actions[ $action ] = $label;
@@ -206,11 +209,6 @@ abstract class UR_List_Table extends WP_List_Table {
 			'ignore_sticky_posts' => true,
 			'paged'               => $current_page,
 		);
-		// End setup wizard when skipped to list table.
-		if ( ! empty( $_REQUEST['end-setup-wizard'] ) && sanitize_text_field( wp_unslash( $_REQUEST['end-setup-wizard'] ) ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Missing
-			update_option( 'user_registration_first_time_activation_flag', false );
-			update_option( 'user_registration_onboarding_skipped', true );
-		}
 
 		// Handle the status query.
 		if ( ! empty( $_REQUEST['status'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Missing

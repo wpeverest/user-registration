@@ -62,6 +62,13 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		public $form = null;
 
 		/**
+		 * UTM Campaign.
+		 *
+		 * @var string
+		 */
+		public $utm_campaign = 'lite-version';
+
+		/**
 		 * Return an instance of this class.
 		 *
 		 * @return object A single instance of this class.

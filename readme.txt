@@ -290,7 +290,7 @@ Here’s a brief look at the features that make User Registration one of the bes
 
 == Get in Touch with us  ==
 
-👉 [Facebook Group](https://www.facebook.com/wpuserregistration)
+👉 [Facebook Group](https://www.facebook.com/groups/userregistration)
 
 👉 [Twitter](https://twitter.com/user_register)
 

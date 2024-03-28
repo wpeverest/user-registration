@@ -232,7 +232,7 @@ class UR_Admin_Assets {
 				 *
 				 * @param string URL
 				 */
-				'upgrade_url'                  => apply_filters( 'user_registration_upgrade_url', 'https://wpuserregistration.com/pricing/?utm_source=form-template&utm_medium=button&utm_campaign=ur-upgrade-to-pro' ),
+				'upgrade_url'                  => apply_filters( 'user_registration_upgrade_url', 'https://wpuserregistration.com/pricing/?utm_source=form-template&utm_medium=button&utm_campaign=' . UR()->utm_campaign ),
 				'upgrade_button'               => esc_html__( 'Upgrade Plan', 'user-registration' ),
 				'upgrade_message'              => esc_html__( 'This template requires premium addons. Please upgrade to the Premium plan to unlock all these awesome Templates.', 'user-registration' ),
 				'upgrade_title'                => esc_html__( 'is a Premium Template', 'user-registration' ),
@@ -565,7 +565,6 @@ class UR_Admin_Assets {
 		);
 
 		return $i18n;
-
 	}
 }
 
