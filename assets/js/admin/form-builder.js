@@ -1231,10 +1231,9 @@
 									)
 									.val();
 
-									var trail_period_enable = $single_item
-										.find(".ur-general-setting-block")
+									var trail_period_enable = $(element)
 										.find(
-											'input[data-field="trail_period"]'
+											".ur-radio-enable-trail-period"
 										).val();
 
 								if (
@@ -3272,6 +3271,23 @@
 								}
 							});
 
+							$(".ur-radio-enable-trail-period").each(function() {
+								if ( $(this).is(":checked") ) {
+									$(this).closest(".ur-subscription-plan").find(".ur-subscription-trail-period-option").show();
+								}
+								else{
+									$(this).closest(".ur-subscription-plan").find(".ur-subscription-trail-period-option").hide();
+
+								}
+								$(this).on("change", function() {
+									if ($(this).is(":checked") ) {
+										$(this).closest(".ur-subscription-plan").find(".ur-subscription-trail-period-option").show();
+									} else {
+										$(this).closest(".ur-subscription-plan").find(".ur-subscription-trail-period-option").hide();
+									}
+								});
+							});
+
 							break;
 						case "selling_price":
 							if (!$this_obj.is(":checked")) {
@@ -3298,31 +3314,7 @@
 								);
 							});
 							break;
-							case "trail_period":
-								if (!$this_obj.is(":checked")) {
-									$(this)
-										.closest(".ur-general-setting-block")
-										.find(".ur-subscription-trail-period-option")
-										.hide();
-								}
-
-								$this_obj.on("change", function () {
-									$(this)
-										.closest(".ur-general-setting-block")
-										.find(".ur-subscription-trail-period-option")
-										.toggle();
-
-									$(".ur-selected-item.ur-item-active")
-										.find(".ur-general-setting-block")
-										.find(".ur-subscription-trail-period-option")
-										.toggle();
-								});
-								$this_obj.on("change", function () {
-									URFormBuilder.trigger_general_setting_trail_period(
-										$(this)
-									);
-								});
-								break;
+						case "trail_period":
 						case "placeholder":
 							$this_obj.on("keyup", function () {
 								URFormBuilder.trigger_general_setting_placeholder(
@@ -4490,6 +4482,9 @@
 							".ur-radio-trail-recurring-period"
 						)
 						.val();
+						var trail_period_enable_val= $(element).find(".ur-radio-enable-trail-period").prop("checked") ? "on" : "false";
+
+						wrapper.find(".ur-general-setting-options li:nth(" + index + ") .ur-radio-enable-trail-period").val(trail_period_enable_val);
 
 						wrapper.find(
 							".ur-general-setting-options li:nth(" + index + ") .ur-radio-recurring-period").val(recurring_period);
@@ -4522,6 +4517,7 @@
 							recurring_period: recurring_period,
 							trail_interval_count: trail_interval_count,
 							trail_recurring_period: trail_recurring_period,
+							trail_period_enable_val: trail_period_enable_val,
 							currency: currency,
 							checkbox: checkbox,
 						});
@@ -4629,21 +4625,6 @@
 			 * @param object $label enable selling price field of fields from field settings.
 			 */
 			trigger_general_setting_selling_price: function ($label) {
-				var wrapper = $(".ur-selected-item.ur-item-active");
-
-				wrapper
-					.find(".ur-general-setting-block")
-					.find(
-						'input[data-field="' + $label.attr("data-field") + '"]'
-					)
-					.prop("checked", $label.is(":checked"));
-			},
-			/**
-			 * Reflects changes in enable selling price field of field settings into selected field in form builder area.
-			 *
-			 * @param object $label enable selling price field of fields from field settings.
-			 */
-			trigger_general_setting_trail_period: function ($label) {
 				var wrapper = $(".ur-selected-item.ur-item-active");
 
 				wrapper
