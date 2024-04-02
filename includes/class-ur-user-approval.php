@@ -278,7 +278,7 @@ class UR_User_Approval {
 
 			$url = substr( $url, 0, strpos( $url, '?' ) );
 			$url = wp_nonce_url( $url . '?ur_resend_id=' . crypt_the_string( $user->ID . '_' . time(), 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
-			// if login option is email_confirmation but admin denies user
+			// if login option is email_confirmation but admin denies user.
 
 			if( UR_Admin_User_Manager::DENIED === ( int ) $status['user_status'] ) {
 				$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account has been denied.', 'user-registration' );
