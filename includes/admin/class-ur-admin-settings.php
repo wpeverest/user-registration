@@ -177,10 +177,12 @@ class UR_Admin_Settings {
 			'user-registration-settings',
 			'user_registration_settings_params',
 			array(
-				'ajax_url'         => admin_url( 'admin-ajax.php' ),
+				'ajax_url'                               => admin_url( 'admin-ajax.php' ),
 				'user_registration_search_global_settings_nonce' => wp_create_nonce( 'user_registration_search_global_settings' ),
-				'i18n_nav_warning' => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
-				'i18n'             => array(
+				'i18n_nav_warning'                       => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
+				'smart_tags_dropdown_title'              => esc_html__( 'Smart Tags', 'user-registration' ),
+				'smart_tags_dropdown_search_placeholder' => esc_html__( 'Search Tags...', 'user-registration' ),
+				'i18n'                                   => array(
 					'captcha_success' => esc_html__( 'Captcha Test Successful !', 'user-registration' ),
 					'captcha_failed'  => esc_html__( 'Some error occured. Please verify that the keys you entered are valid.', 'user-registration' ),
 					'unsaved_changes' => esc_html__( 'You have some unsaved changes. Please save and try again.', 'user-registration' ),

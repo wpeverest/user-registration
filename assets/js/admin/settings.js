@@ -909,4 +909,55 @@
 				$(this).find("input").prop("checked", true);
 			});
 		});
+
+	// Smart Tags picker
+	$("#ur-smart-tags-selector")
+		.closest(".wp-media-buttons")
+		.css({ width: "100%", position: "relative" });
+
+	$("#ur-smart-tags-selector").on("click", function () {
+		$(this).siblings("#select-smart-tags").select2({
+			dropdownCssClass: "ur-select2-dropdown",
+		});
+		$(this).siblings(".select2-container").addClass("ur-hide-select2");
+
+		$(this).siblings("#select-smart-tags").select2("open");
+		$(this)
+			.siblings(".select2-container")
+			.find(".select2-selection__rendered")
+			.show();
+		$(this)
+			.siblings(".select2-container")
+			.find(".select2-selection--open")
+			.show();
+
+		var buttonOffset = $(this).offset(),
+			buttonOffsetTop = Math.round(
+				buttonOffset.top + $(this).innerHeight()
+			),
+			buttonOffsetRight = Math.round(buttonOffset.left);
+
+		var select2_container = $(
+			".select2-container--open:not(.ur-hide-select2)"
+		);
+		select2_container.css({
+			top: buttonOffsetTop,
+			left: buttonOffsetRight - $(this).innerHeight(),
+		});
+
+		var newDiv =
+			'<span class="ur-select2-title"><p>' +
+			user_registration_settings_params.smart_tags_dropdown_title +
+			"</p></span>";
+		$(newDiv).insertBefore(select2_container.find(".select2-search"));
+
+		var searchField = select2_container.find(".select2-search__field");
+		searchField.attr(
+			"placeholder",
+			user_registration_settings_params.smart_tags_dropdown_search_placeholder
+		);
+		searchField.before(
+			'<span class="search-icon"><svg xmlns="http://www.w3.org/2000/svg" height="16px" width="16px" viewBox="0 0 24 24" fill="#a1a4b9"><path d="M21.71,20.29,18,16.61A9,9,0,1,0,16.61,18l3.68,3.68a1,1,0,0,0,1.42,0A1,1,0,0,0,21.71,20.29ZM11,18a7,7,0,1,1,7-7A7,7,0,0,1,11,18Z"></path></svg></span>'
+		);
+	});
 })(jQuery);
