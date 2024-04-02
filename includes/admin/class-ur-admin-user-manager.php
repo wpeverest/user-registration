@@ -229,7 +229,7 @@ class UR_Admin_User_Manager {
 
 			$result = array(
 				'login_option'    => 'email_confirmation',
-				'user_status'     => $user_status,
+				'user_status'     => '' == $user_status ? $user_email_status : $user_status,
 				'email_status'    => $user_email_status,
 				'approval_status' => $user_status,
 			);
