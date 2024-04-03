@@ -348,7 +348,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						array(
 							'id'       => 'user_registration_separate_shipping',
 							'label'    => 'Separate Shipping',
-							'video_id' => '',
+							'video_id' => '4ZA6byVHm30',
 							'icon'     => 'ur-icon ur-icon-bill',
 						),
 					),
