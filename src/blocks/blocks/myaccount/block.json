@@ -6,7 +6,10 @@
   "title": "Myaccount",
   "category": "user-registration",
   "description": "The block give the myaccount form for registered users.",
-  "keywords": ["user registration login form", "login form"],
+  "keywords": [
+    "user registration myaccount",
+    "myaccount"
+  ],
   "textdomain": "user-registration",
   "example": {
     "attributes": {}
