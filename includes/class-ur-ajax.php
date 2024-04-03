@@ -855,7 +855,7 @@ class UR_AJAX {
 			/**
 			 * Perform validation before form save from form builder.
 			 */
-			do_action("user_registration_admin_backend_validation_before_form_save");
+			do_action( 'user_registration_admin_backend_validation_before_form_save' );
 
 			$form_name    = sanitize_text_field( $_POST['data']['form_name'] ); //phpcs:ignore
 			$form_row_ids = sanitize_text_field( $_POST['data']['form_row_ids'] ); //phpcs:ignore
