@@ -124,9 +124,9 @@ jQuery(function ($) {
 						user_registration_locked_form_fields_notice_params.user_registration_locked_form_fields_notice_nonce,
 				},
 				success: function (response) {
-					// if(video_id !== ''){
+					if(video_id !== ''){
 						var video = '<div style="width: 535px; height: 300px;"><iframe width="100%" height="100%" frameborder="0" src="https://www.youtube.com/embed/'+video_id+'" rel="1" allowfullscreen></iframe></div><br>';
-					// }
+					}
 					var action_button = $(response.data.action_button).find(
 						"a"
 					);
@@ -176,7 +176,6 @@ jQuery(function ($) {
 					title += "</span>";
 					message =
 						video + message + "<br><br>" + response.data.action_button;
-						console.log(response.data.action_button);
 					Swal.fire({
 						title: title,
 						html: message,
