@@ -70,7 +70,7 @@ class UR_Form_Field_Number extends UR_Form_Field {
 	 * @param [int]    $form_id Form id.
 	 */
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
-		$label = $single_form_field->general_setting->label;
+		$label = $single_form_field->general_setting->field_name;
 		$value = isset( $form_data->value ) ? $form_data->value : '';
 
 		if ( isset( $single_form_field->advance_setting->max ) && '' !== $single_form_field->advance_setting->max ) {
@@ -78,7 +78,7 @@ class UR_Form_Field_Number extends UR_Form_Field {
 			if ( floatval( $value ) > floatval( $max_value ) ) {
 				$message = array(
 					/* translators: %s - validation message */
-					$label       => sprintf( __( 'Please enter a value less than %1$d for %2$s', 'user-registration' ), $max_value, $label ),
+					$label       => sprintf( __( 'Please enter a value less than %d', 'user-registration' ), $max_value ),
 					'individual' => true,
 				);
 				add_filter(
@@ -103,7 +103,7 @@ class UR_Form_Field_Number extends UR_Form_Field {
 			if ( floatval( $value ) < floatval( $min_value ) ) {
 				$message = array(
 					/* translators: %s - validation message */
-					$label       => sprintf( __( 'Please enter a value greater than %1$d for %2$s', 'user-registration' ), $min_value, $label ),
+					$label       => sprintf( __( 'Please enter a value greater than %d', 'user-registration' ), $min_value ),
 					'individual' => true,
 				);
 				add_filter(

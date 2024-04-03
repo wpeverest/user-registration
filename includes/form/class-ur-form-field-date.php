@@ -71,7 +71,7 @@ class UR_Form_Field_Date extends UR_Form_Field {
 	 */
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
 		$value       = $form_data->value;
-		$field_label = $single_form_field->general_setting->label;
+		$field_label = $single_form_field->general_setting->field_name;
 
 		if ( empty( $value ) ) {
 			return;
@@ -93,7 +93,7 @@ class UR_Form_Field_Date extends UR_Form_Field {
 				if ( is_wp_error( $result ) ) {
 					$message = array(
 						/* translators: %s - validation message */
-						$field_label => sprintf( __( 'Please select a valid date range for %s.', 'user-registration' ), $field_label ),
+						$field_label => sprintf( __( 'Please select a valid date range.', 'user-registration' ) ),
 						'individual' => true,
 					);
 					add_filter(
@@ -131,7 +131,7 @@ class UR_Form_Field_Date extends UR_Form_Field {
 		if ( is_wp_error( $result ) ) {
 			$message = array(
 				/* translators: %s - validation message */
-				$field_label => sprintf( __( 'Please select a valid date for %s.', 'user-registration' ), $field_label ),
+				$field_label => sprintf( __( 'Please select a valid date.', 'user-registration' ) ),
 				'individual' => true,
 			);
 			add_filter(
@@ -180,7 +180,7 @@ class UR_Form_Field_Date extends UR_Form_Field {
 		if ( $date_timestamp < $min_date_timestamp ) {
 			$message = array(
 				/* translators: %s - validation message */
-				$field_label => sprintf( __( 'Please select a date after %1$s for %2$s.', 'user-registration' ), $min_date, $field_label ),
+				$field_label => sprintf( __( 'Please select a date after %s.', 'user-registration' ), $min_date ),
 				'individual' => true,
 			);
 			add_filter(
@@ -216,7 +216,7 @@ class UR_Form_Field_Date extends UR_Form_Field {
 		if ( $date_timestamp > $max_date_timestamp ) {
 			$message = array(
 				/* translators: %s - validation message */
-				$field_label => sprintf( __( 'Please select a date before %1$s for %2$s', 'user-registration' ), $max_date, $field_label ),
+				$field_label => sprintf( __( 'Please select a date before %s', 'user-registration' ), $max_date ),
 				'individual' => true,
 			);
 			add_filter(
