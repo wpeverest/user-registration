@@ -857,7 +857,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				<input type="hidden" class="menu-item-classes"
 					name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-classes]" />
 			</li>
-			<?php
+				<?php
 						--$i;
 						endforeach;
 			?>
@@ -878,7 +878,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		</span>
 	</p>
 </div>
-<?php
+			<?php
 		}
 
 			/**
@@ -924,7 +924,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			?>
 <div class="ur-builder-header">
 	<div class="user-registration-editable-title ur-form-name-wrapper ur-my-4">
-		<?php
+			<?php
 			$form_title = isset( $form_data->post_title ) ? trim( $form_data->post_title ) : __( 'Untitled', 'user-registration' );
 			?>
 		<input name="ur-form-name" id="ur-form-name" type="text"
@@ -934,7 +934,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			class="user-registration-editable-title__icon ur-edit-form-name dashicons dashicons-edit"></span>
 	</div>
 	<div class="ur-builder-header-right">
-		<?php
+			<?php
 
 					/**
 					 * Action for Extra Information of Builder Header
@@ -946,7 +946,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			?>
 	</div>
 </div>
-<?php
+			<?php
 				echo '<div class="ur-input-grids">';
 
 				$row_id  = 0;
@@ -985,7 +985,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 
 <div class="ur-grids">
 	<button type="button" class="ur-edit-grid">
-		<?php
+				<?php
 				if ( 1 === $grid_count ) {
 					echo wp_kses( $grid_one, $svg_args );
 				} elseif ( 2 === $grid_count ) {
@@ -999,21 +999,21 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 	<div class="ur-toggle-grid-content" style="display:none">
 		<small>Select the grid column.</small>
 		<div class="ur-grid-selector" data-grid="1">
-			<?php
+				<?php
 
 						echo wp_kses( $grid_one, $svg_args );
 				?>
 		</div>
 		<div class="ur-grid-selector" data-grid="2">
-			<?php echo wp_kses( $grid_two, $svg_args ); ?>
+				<?php echo wp_kses( $grid_two, $svg_args ); ?>
 		</div>
 		<div class="ur-grid-selector" data-grid="3">
-			<?php echo wp_kses( $grid_three, $svg_args ); ?>
+				<?php echo wp_kses( $grid_three, $svg_args ); ?>
 		</div>
 	</div>
 </div>
 
-<?php
+				<?php
 				echo '<div class="ur-grid-lists">';
 
 				$grid_id = 0;
