@@ -2,7 +2,7 @@ import registerBlocks from "./blocks";
 import "./editor.scss";
 import "./style.scss";
 
-const { isPro } = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
+const { isPro } = typeof _UR_PRO_BLOCKS_ !== "undefined" && _UR_PRO_BLOCKS_;
 
 //Register the blocks.
 registerBlocks();
