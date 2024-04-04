@@ -2,7 +2,6 @@
 (function ($) {
 	var user_registration_form_init = function () {
 		var ursL10n = user_registration_params.ursL10n;
-
 		$.fn.ur_form_submission = function () {
 			// traverse all nodes
 			return this.each(function () {
@@ -11,7 +10,6 @@
 				var available_field = [];
 				var required_fields =
 					user_registration_params.form_required_fields;
-
 				var form = {
 					init: function () {},
 					get_form_data: function (form_id) {
@@ -248,22 +246,24 @@
 								: "null";
 						var phone_id = [];
 
-						$(".field-phone").each(function () {
-							var phone_field_id = $(this)
-								.find(".form-row")
-								.attr("id");
-							// Check if smart phone field is enabled.
-							if (
-								$(this)
+						$(".field-phone, .field-billing_phone").each(
+							function () {
+								var phone_field_id = $(this)
 									.find(".form-row")
-									.find("#" + phone_field_id)
-									.hasClass("ur-smart-phone-field")
-							) {
-								phone_id.push(
-									$(this).find(".form-row").attr("id")
-								);
+									.attr("id");
+								// Check if smart phone field is enabled.
+								if (
+									$(this)
+										.find(".form-row")
+										.find("#" + phone_field_id)
+										.hasClass("ur-smart-phone-field")
+								) {
+									phone_id.push(
+										$(this).find(".form-row").attr("id")
+									);
+								}
 							}
-						});
+						);
 						var field_type =
 							"undefined" !== field.attr("type")
 								? field.attr("type")
@@ -274,8 +274,31 @@
 						formwise_data.value = "";
 						switch (node_type) {
 							case "input":
+								var checked_value = new Array();
 								switch (field_type) {
 									case "checkbox":
+										if (
+											!field.closest(
+												".field-privacy_policy"
+											).length > 0
+										) {
+											if (field.prop("checked")) {
+												checked_value.push(field.val());
+												formwise_data.value =
+													JSON.stringify(
+														checked_value
+													);
+											} else {
+												formwise_data.value = "";
+											}
+										} else {
+											formwise_data.value = field.prop(
+												"checked"
+											)
+												? field.val()
+												: "";
+										}
+										break;
 									case "radio":
 										formwise_data.value = field.prop(
 											"checked"
@@ -837,12 +860,10 @@
 												var message =
 													$('<ul class=""/>');
 												var type = "error";
-
 												try {
 													var response = JSON.parse(
 														ajax_response.responseText
 													);
-
 													var timeout = response.data
 														.redirect_timeout
 														? response.data
@@ -951,7 +972,9 @@
 																	"</li>"
 															);
 														}
-
+														$(
+															".ur-input-count"
+														).text("0");
 														$this[0].reset();
 														if (
 															$this.find(
@@ -1113,6 +1136,7 @@
 														}
 													);
 													var field_name = "";
+
 													$.each(
 														response.data.message,
 														function (
@@ -1148,6 +1172,14 @@
 																				index +
 																				"']"
 																		);
+																wrapper
+																	.closest(
+																		".ur-field-item"
+																	)
+																	.find(
+																		".user-registration-error"
+																	)
+																	.remove();
 																wrapper
 																	.closest(
 																		".form-row"
@@ -1781,7 +1813,31 @@
 				);
 			});
 		});
-
+		/**
+		 * Set the value of count in already exist details of field textarea.
+		 */
+		$(function () {
+			$("textarea").each(function () {
+				var input_count;
+				var selected_area_field = $(this).closest(".ur-field-item");
+				if (selected_area_field.find(".ur-input-count").length > 0) {
+					var selected_area_text = $(this).val().trim();
+					if (
+						selected_area_field
+							.find(".ur-input-count")
+							.data("count-type") === "characters"
+					) {
+						input_count = selected_area_text.length;
+					} else {
+						input_count =
+							selected_area_text === ""
+								? 0
+								: selected_area_text.split(/\s+/).length;
+					}
+				}
+				selected_area_field.find(".ur-input-count").text(input_count);
+			});
+		});
 		/**
 		 * Append a country option and Remove it on click, if the country is not allowed.
 		 */
@@ -1820,8 +1876,34 @@
 				});
 			}
 		});
-
 	};
+	/**
+	 * show the character and word count in textarea field.
+	 */
+	$("textarea").on("input", user_registration_count);
+
+	function user_registration_count() {
+		$("textarea").each(function () {
+			var input_count;
+			var selected_area_field = $(this).closest(".ur-field-item");
+			if (selected_area_field.find(".ur-input-count").length > 0) {
+				var selected_area_text = $(this).val().trim();
+				if (
+					selected_area_field
+						.find(".ur-input-count")
+						.data("count-type") === "characters"
+				) {
+					input_count = selected_area_text.length;
+				} else {
+					input_count =
+						selected_area_text === ""
+							? 0
+							: selected_area_text.split(/\s+/).length;
+				}
+			}
+			selected_area_field.find(".ur-input-count").text(input_count);
+		});
+	}
 
 	/**
 	 * @since 2.0.0
@@ -1872,7 +1954,6 @@
 	$(window).on("load", function () {
 		user_registration_form_init();
 	});
-
 })(jQuery);
 
 function ur_includes(arr, item) {

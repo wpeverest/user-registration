@@ -1415,8 +1415,10 @@ function ur_get_single_post_meta( $post_id, $meta_key, $default = null ) {
 	$post_meta = get_post_meta( $post_id, $meta_key );
 
 	if ( isset( $post_meta[0] ) ) {
-		if ( 'user_registration_form_setting_enable_recaptcha_support' === $meta_key || 'user_registration_form_setting_enable_strong_password' === $meta_key
-		|| 'user_registration_pdf_submission_to_admin' === $meta_key || 'user_registration_pdf_submission_to_user' === $meta_key || 'user_registration_form_setting_enable_assign_user_role_conditionally' === $meta_key ) {
+		if (
+			'user_registration_form_setting_enable_recaptcha_support' === $meta_key || 'user_registration_form_setting_enable_strong_password' === $meta_key
+			|| 'user_registration_pdf_submission_to_admin' === $meta_key || 'user_registration_pdf_submission_to_user' === $meta_key || 'user_registration_form_setting_enable_assign_user_role_conditionally' === $meta_key
+		) {
 			$post_meta[0] = ur_string_to_bool( $post_meta[0] );
 		}
 		return $post_meta[0];
@@ -1645,7 +1647,7 @@ function check_username( $username ) {
 
 		if ( isset( $matches[0][0] ) ) {
 			$last_char       = $matches[0][0];
-			$strip_last_char = substr( $username, 0, -( strlen( (string) $last_char ) ) );
+			$strip_last_char = substr( $username, 0, - ( strlen( (string) $last_char ) ) );
 			++$last_char;
 			$username = $strip_last_char . $last_char;
 			$username = check_username( $username );
@@ -1736,9 +1738,9 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false ) {
 
 			if ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
 				?>
-				<script id="<?php echo esc_attr( $enqueue_script ); ?>">
-					const ur_recaptcha_code = <?php echo wp_json_encode( $ur_google_recaptcha_code ); ?>
-				</script>
+<script id="<?php echo esc_attr( $enqueue_script ); ?>">
+const ur_recaptcha_code = <?php echo wp_json_encode( $ur_google_recaptcha_code ); ?>
+</script>
 				<?php
 			} else {
 				wp_localize_script( $enqueue_script, 'ur_recaptcha_code', $ur_google_recaptcha_code );
@@ -1760,7 +1762,6 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false ) {
 
 			if ( 'login' === $context ) {
 				$recaptcha_node = '<div id="node_recaptcha_login" class="g-recaptcha-hcaptcha"></div>';
-
 			} elseif ( 'register' === $context ) {
 				$recaptcha_node = '<div id="node_recaptcha_register" class="g-recaptcha-hcaptcha"></div>';
 			} elseif ( 'lost_password' === $context ) {
@@ -1772,7 +1773,6 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false ) {
 
 			if ( 'login' === $context ) {
 				$recaptcha_node = '<div id="node_recaptcha_login" class="cf-turnstile"></div>';
-
 			} elseif ( 'register' === $context ) {
 				$recaptcha_node = '<div id="node_recaptcha_register" class="cf-turnstile"></div>';
 			} elseif ( 'lost_password' === $context ) {
@@ -1791,8 +1791,7 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false ) {
 				$recaptcha_node = '';
 			}
 		} elseif ( 'login' === $context ) {
-				$recaptcha_node = '<div id="node_recaptcha_login" class="g-recaptcha"></div>';
-
+			$recaptcha_node = '<div id="node_recaptcha_login" class="g-recaptcha"></div>';
 		} elseif ( 'register' === $context ) {
 			$recaptcha_node = '<div id="node_recaptcha_register" class="g-recaptcha"></div>';
 		} elseif ( 'lost_password' === $context ) {
@@ -1863,7 +1862,6 @@ function ur_get_user_extra_fields( $user_id ) {
 			}
 
 			$name_value[ $field_key ] = $value;
-
 		}
 	}
 	/**
@@ -1888,7 +1886,7 @@ function ur_get_user_status( $user_status, $user_email_status ) {
 	} elseif ( '-1' === $user_status || '-1' === $user_email_status ) {
 		array_push( $status, 'Denied' );
 	} elseif ( $user_email_status ) {
-			array_push( $status, 'Verified' );
+		array_push( $status, 'Verified' );
 	} else {
 		array_push( $status, 'Approved' );
 	}
@@ -2229,7 +2227,6 @@ function ur_get_post_content( $form_id ) {
 	if ( isset( $post_data[0]->post_content ) ) {
 
 		return json_decode( $post_data[0]->post_content );
-
 	} else {
 
 		return array();
@@ -2328,7 +2325,7 @@ function ur_get_valid_form_data_format( $new_string, $post_key, $profile, $value
 					$value = ! empty( $attachment_ids ) ? $attachment_ids : $value;
 				} elseif ( wp_http_validate_url( $value ) ) {
 
-						$value = attachment_url_to_postid( $value );
+					$value = attachment_url_to_postid( $value );
 				}
 				break;
 		}
@@ -2484,12 +2481,12 @@ if ( ! function_exists( 'user_registration_pro_get_conditional_fields_by_form_id
 	 * @param string $selected_field_key Field Key.
 	 */
 	function user_registration_pro_get_conditional_fields_by_form_id( $form_id, $selected_field_key ) {
-		$args          = array(
+		$args      = array(
 			'post_type'   => 'user_registration',
 			'post_status' => 'publish',
 			'post__in'    => array( $form_id ),
 		);
-			$post_data = get_posts( $args );
+		$post_data = get_posts( $args );
 		// wrap all fields in array.
 		$fields = array();
 		if ( isset( $post_data[0]->post_content ) ) {
@@ -2499,8 +2496,10 @@ if ( ! function_exists( 'user_registration_pro_get_conditional_fields_by_form_id
 				foreach ( $post_content_array as $data ) {
 					foreach ( $data as $single_data ) {
 						foreach ( $single_data as $field_data ) {
-							if ( isset( $field_data->general_setting->field_name )
-								&& isset( $field_data->general_setting->label ) ) {
+							if (
+								isset( $field_data->general_setting->field_name )
+								&& isset( $field_data->general_setting->label )
+							) {
 
 								$strip_fields = array(
 									'section_title',
@@ -2629,8 +2628,8 @@ if ( ! function_exists( 'user_registration_pro_get_checkbox_choices' ) ) {
 
 		$form_data = (object) user_registration_pro_get_field_data( $form_id, $field_name );
 		/* Backward Compatibility. Modified since 1.5.7. To be removed later. */
-			$advance_setting_choices = isset( $form_data->advance_setting->choices ) ? $form_data->advance_setting->choices : '';
-			$advance_setting_options = isset( $form_data->advance_setting->options ) ? $form_data->advance_setting->options : '';
+		$advance_setting_choices = isset( $form_data->advance_setting->choices ) ? $form_data->advance_setting->choices : '';
+		$advance_setting_options = isset( $form_data->advance_setting->options ) ? $form_data->advance_setting->options : '';
 		/* Bacward Compatibility end.*/
 
 		$choices = isset( $form_data->general_setting->options ) ? $form_data->general_setting->options : '';
@@ -2641,7 +2640,6 @@ if ( ! function_exists( 'user_registration_pro_get_checkbox_choices' ) ) {
 		} elseif ( ! empty( $advance_setting_options ) ) {
 			$choices = explode( ',', $advance_setting_options );
 			/* Backward Compatibility end. */
-
 		} elseif ( 'country' === $form_data->field_key ) {
 			$country = new UR_Form_Field_Country();
 			$country->get_country();
@@ -2676,7 +2674,7 @@ if ( ! function_exists( 'user_registration_pro_get_field_data' ) ) {
 					foreach ( $single_data as $field_data ) {
 						isset( $field_data->general_setting->field_name ) ? $field_data->general_setting->field_name : '';
 						if ( $field_data->general_setting->field_name === $field_name ) {
-								return $field_data;
+							return $field_data;
 						}
 					}
 				}
@@ -2799,28 +2797,28 @@ if ( ! function_exists( 'ur_install_extensions' ) ) {
 			if ( current_user_can( 'activate_plugin', $install_status['file'] ) ) {
 				if ( is_plugin_inactive( $install_status['file'] ) ) {
 					$status['activateUrl'] =
-					esc_url_raw(
-						add_query_arg(
-							array(
-								'action'   => 'activate',
-								'plugin'   => $install_status['file'],
-								'_wpnonce' => wp_create_nonce( 'activate-plugin_' . $install_status['file'] ),
-							),
-							admin_url( 'admin.php?page=user-registration-addons' )
-						)
-					);
+						esc_url_raw(
+							add_query_arg(
+								array(
+									'action'   => 'activate',
+									'plugin'   => $install_status['file'],
+									'_wpnonce' => wp_create_nonce( 'activate-plugin_' . $install_status['file'] ),
+								),
+								admin_url( 'admin.php?page=user-registration-addons' )
+							)
+						);
 				} else {
 					$status['deActivateUrl'] =
-					esc_url_raw(
-						add_query_arg(
-							array(
-								'action'   => 'deactivate',
-								'plugin'   => $install_status['file'],
-								'_wpnonce' => wp_create_nonce( 'deactivate-plugin_' . $install_status['file'] ),
-							),
-							admin_url( 'admin.php?page=user-registration-addons' )
-						)
-					);
+						esc_url_raw(
+							add_query_arg(
+								array(
+									'action'   => 'deactivate',
+									'plugin'   => $install_status['file'],
+									'_wpnonce' => wp_create_nonce( 'deactivate-plugin_' . $install_status['file'] ),
+								),
+								admin_url( 'admin.php?page=user-registration-addons' )
+							)
+						);
 				}
 			}
 
@@ -2828,7 +2826,6 @@ if ( ! function_exists( 'ur_install_extensions' ) ) {
 			$status['message'] = $name . ' has been installed and activated successfully';
 
 			return $status;
-
 		} catch ( Exception $e ) {
 
 			$message           = $e->getMessage();
@@ -3898,7 +3895,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				if ( in_array( 'administrator', $user->roles, true ) && ur_option_checked( 'user_registration_login_options_prevent_core_login', true ) ) {
 					$redirect = admin_url();
 				} elseif ( ! empty( $post['redirect'] ) ) {
-						$redirect = esc_url_raw( wp_unslash( $post['redirect'] ) );
+					$redirect = esc_url_raw( wp_unslash( $post['redirect'] ) );
 				} elseif ( wp_get_raw_referer() ) {
 					$redirect = wp_get_raw_referer();
 				} else {
@@ -4225,8 +4222,8 @@ if ( ! function_exists( 'ur_get_ip_address' ) ) {
 			// Proxy servers can send through this header like this: X-Forwarded-For: client1, proxy1, proxy2
 			// Make sure we always only send through the first IP in the list which should always be the client IP.
 			return (string) rest_is_ip_address( trim( current( preg_split( '/[,:]/', sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) ) ) ) ); // WPCS: input var ok, CSRF ok.
-		} elseif ( isset( $_SERVER['REMOTE_ADDR'] ) ) { // @codingStandardsIgnoreLine
-			return sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ); // @codingStandardsIgnoreLine
+		} elseif (isset($_SERVER['REMOTE_ADDR'])) { // @codingStandardsIgnoreLine
+			return sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])); // @codingStandardsIgnoreLine
 		}
 		return '';
 	}
@@ -4461,8 +4458,8 @@ if ( ! function_exists( 'ur_get_ip_address' ) ) {
 			// Proxy servers can send through this header like this: X-Forwarded-For: client1, proxy1, proxy2.
 			// Make sure we always only send through the first IP in the list which should always be the client IP.
 			return (string) rest_is_ip_address( trim( current( preg_split( '/[,:]/', sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) ) ) ) ); // WPCS: input var ok, CSRF ok.
-		} elseif ( isset( $_SERVER['REMOTE_ADDR'] ) ) { // @codingStandardsIgnoreLine
-			return sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ); // @codingStandardsIgnoreLine
+		} elseif (isset($_SERVER['REMOTE_ADDR'])) { // @codingStandardsIgnoreLine
+			return sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])); // @codingStandardsIgnoreLine
 		}
 		return '';
 	}
@@ -4629,14 +4626,114 @@ if ( ! function_exists( 'ur_array_clone' ) ) {
 		return array_map(
 			function ( $element ) {
 				return ( ( is_array( $element ) )
-				? array_clone( $element )
-				: ( ( is_object( $element ) )
-					? clone $element
-					: $element
-				)
+					? array_clone( $element )
+					: ( ( is_object( $element ) )
+						? clone $element
+						: $element
+					)
 				);
 			},
 			$array
 		);
+	}
+	if ( ! function_exists( 'ur_unlink_user_profile_pictures' ) ) {
+		/**
+		 * Remove user uploaded profile pictures and related thumbnail.
+		 *
+		 * @param int $id User ID.
+		 */
+		function ur_unlink_user_profile_pictures( $id ) {
+			$profile_pic_url = get_user_meta( $id, 'user_registration_profile_pic_url', true );
+			if ( ! empty( $profile_pic_url ) ) {
+
+				$profile_id = get_post_meta( $profile_pic_url, '_wp_attachment_metadata' );
+
+				// Unlink profile picture before removing users.
+				if ( is_array( $profile_id ) && ! empty( $profile_id ) ) {
+					foreach ( $profile_id as $profile ) {
+						if ( is_array( $profile ) && isset( $profile['file'] ) ) {
+							$base_dir  = wp_upload_dir()['basedir'];
+							$file      = $profile['file'];
+							$full_path = trailingslashit( $base_dir ) . $file;
+
+							if ( file_exists( $full_path ) ) {
+								unlink( $full_path );
+							}
+
+							// unlink different size thumbnails of profile picture.
+							if ( isset( $profile['sizes'] ) && is_array( $profile['sizes'] ) ) {
+								foreach ( $profile['sizes'] as $size ) {
+									if ( is_array( $size ) && isset( $size['file'] ) ) {
+										$size_file      = $size['file'];
+										$full_size_path = UR_UPLOAD_PATH . 'profile-pictures/' . $size_file;
+
+										if ( file_exists( $full_size_path ) ) {
+											unlink( $full_size_path );
+										}
+									}
+								}
+							}
+
+							// Unlink original uploaded image.
+							if ( isset( $profile['original_image'] ) ) {
+								$original_file = UR_UPLOAD_PATH . 'profile-pictures/' . $profile['original_image'];
+								if ( file_exists( $original_file ) ) {
+									unlink( $original_file );
+								}
+							}
+						}
+					}
+				}
+				// Remove profile pictures related metadata from DB.
+				delete_post_meta( $profile_pic_url, '_wp_attachment_metadata' );
+				delete_post_meta( $profile_pic_url, '_wp_attached_file' );
+			}
+		}
+	}
+	add_action( 'ur_remove_profile_pictures_and_metadata', 'ur_unlink_user_profile_pictures' );
+}
+
+if ( ! function_exists( 'ur_automatic_user_login' ) ) {
+	/**
+	 * Automatically login users.
+	 *
+	 * @since 3.1.5
+	 *
+	 * @param object $user The user.
+	 */
+	function ur_automatic_user_login( $user ) {
+		wp_clear_auth_cookie();
+		$remember = apply_filters( 'user_registration_autologin_remember_user', false );
+		wp_set_auth_cookie( $user->id, $remember );
+
+		wp_redirect( ur_get_my_account_url() );
+	}
+}
+
+if ( ! function_exists( 'ur_resend_verification_email' ) ) {
+	/**
+	 * This function will send email verification email to the user.
+	 *
+	 * @since 3.1.5
+	 *
+	 * @param int $user_id User ID.
+	 */
+	function ur_resend_verification_email( $user_id ) {
+		$user    = get_user_by( 'id', $user_id );
+		$form_id = ur_get_form_id_by_userid( $user_id );
+
+		$confirm_email = new UR_Email_Confirmation();
+		$confirm_email->set_email_status( array(), $form_id, $user_id );
+		/**
+		 * Filter hook to modify the email attachment resending token.
+		 * Default value is empty array.
+		 */
+		$attachments = apply_filters( 'user_registration_email_attachment_resending_token', array() );
+		$name_value  = ur_get_user_extra_fields( $user_id );
+
+		// Get selected email template id for specific form.
+		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
+
+		UR_Emailer::send_mail_to_user( $user->user_email, $user->user_login, $user_id, '', $name_value, $attachments, $template_id );
 	}
 }

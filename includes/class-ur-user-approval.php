@@ -236,7 +236,7 @@ class UR_User_Approval {
 						$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account is still pending approval.', 'user-registration' );
 						return new WP_Error( 'pending_approval', $message );
 					} else {
-						$url      = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $_SERVER['SERVER_NAME'] : 'http://' . $_SERVER['SERVER_NAME']; //phpcs:ignore
+						$url      = (!empty($_SERVER['HTTPS'])) ? 'https://' . $_SERVER['SERVER_NAME'] : 'http://' . $_SERVER['SERVER_NAME']; //phpcs:ignore
 
 						if ( get_option( 'ur_login_ajax_submission' ) ) {
 							$url .= $_SERVER['HTTP_REFERER']; //phpcs:ignore
@@ -268,7 +268,7 @@ class UR_User_Approval {
 			 */
 			do_action( 'ur_user_before_check_email_status_on_login', $status['user_status'], $user );
 
-			$url      = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $_SERVER['SERVER_NAME'] : 'http://' . $_SERVER['SERVER_NAME']; //phpcs:ignore
+			$url      = (!empty($_SERVER['HTTPS'])) ? 'https://' . $_SERVER['SERVER_NAME'] : 'http://' . $_SERVER['SERVER_NAME']; //phpcs:ignore
 
 			if ( get_option( 'ur_login_ajax_submission' ) ) {
 				$url .= $_SERVER['HTTP_REFERER']; //phpcs:ignore
@@ -278,6 +278,13 @@ class UR_User_Approval {
 
 			$url = substr( $url, 0, strpos( $url, '?' ) );
 			$url = wp_nonce_url( $url . '?ur_resend_id=' . crypt_the_string( $user->ID . '_' . time(), 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
+			// if login option is email_confirmation but admin denies user.
+
+			if ( UR_Admin_User_Manager::DENIED === (int) $status['user_status'] ) {
+				$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account has been denied.', 'user-registration' );
+
+				return new WP_Error( 'denied_access', $message );
+			}
 
 			if ( '0' === $status['user_status'] ) {
 				/* translators: %s - Resend Verification Link. */

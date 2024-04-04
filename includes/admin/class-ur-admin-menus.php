@@ -66,6 +66,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'field_class' => 'UR_File',
 					'plan'        => 'Personal Plan',
 					'slug'        => 'file-upload',
+					'video_id'    => 'pzhJ3qjQfC4',
 					'name'        => __( 'User Registration - File Upload', 'user-registration' ),
 				),
 				array(
@@ -75,6 +76,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'field_class' => 'UR_Form_Field_Invite_Code',
 					'plan'        => 'ThemeGrill Agency Plan or Professional Plan or Plus Plan',
 					'slug'        => 'invite-codes',
+					'video_id'    => 'IhqQLAc-yuQ',
 					'name'        => __( 'User Registration Invite Codes', 'user-registration' ),
 				),
 				array(
@@ -92,6 +94,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'icon'        => 'ur-icon ur-icon-credit-card',
 					'field_class' => 'UR_Form_Field_Stripe_Gateway',
 					'plan'        => 'ThemeGrill Agency Plan or Professional Plan or Plus Plan',
+					'video_id'    => 'TxmXryAqhXE',
 					'slug'        => array( 'stripe' ),
 					'name'        => array( __( 'User Registration Stripe', 'user-registration' ) ),
 				),
@@ -120,6 +123,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 							'field_class' => 'UR_Form_Field_Stripe_Gateway',
 							'plan'        => 'ThemeGrill Agency Plan or Professional Plan or Plus Plan',
 							'slug'        => 'stripe',
+							'video_id'    => 'TxmXryAqhXE',
 							'name'        => __( 'User Registration Stripe', 'user-registration' ),
 						),
 					)
@@ -197,59 +201,70 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'name'                => __( 'User Registration-Advanced Fields', 'user-registration' ),
 					'fields'              => array(
 						array(
-							'id'    => 'user_registration_section_title',
-							'label' => 'Section Title',
-							'icon'  => 'ur-icon ur-icon-section-title',
+							'id'       => 'user_registration_section_title',
+							'label'    => 'Section Title',
+							'video_id' => 'fp04hfHF_zU',
+							'icon'     => 'ur-icon ur-icon-section-title',
 						),
 						array(
-							'id'    => 'user_registration_html',
-							'label' => 'HTML',
-							'icon'  => 'ur-icon ur-icon-code',
+							'id'       => 'user_registration_html',
+							'label'    => 'HTML',
+							'video_id' => 'vuQhnp2s24U',
+							'icon'     => 'ur-icon ur-icon-code',
 						),
 						array(
-							'id'    => 'user_registration_timepicker',
-							'label' => 'Time Picker',
-							'icon'  => 'ur-icon ur-icon-time-picker',
+							'id'       => 'user_registration_timepicker',
+							'label'    => 'Time Picker',
+							'video_id' => 'Z8F7h9_d_rc',
+							'icon'     => 'ur-icon ur-icon-time-picker',
 						),
 						array(
-							'id'    => 'user_registration_phone',
-							'label' => 'Phone',
-							'icon'  => 'ur-icon ur-icon-phone',
+							'id'       => 'user_registration_phone',
+							'label'    => 'Phone',
+							'video_id' => '3yS0s1LYI-I',
+							'icon'     => 'ur-icon ur-icon-phone',
 						),
 						array(
-							'id'    => 'user_registration_wysiwyg',
-							'label' => 'WYSIWYG',
-							'icon'  => 'ur-icon ur-icon-text-editor',
+							'id'       => 'user_registration_wysiwyg',
+							'label'    => 'WYSIWYG',
+							'video_id' => 'LR_RZ8Xn1RA',
+							'icon'     => 'ur-icon ur-icon-text-editor',
 						),
 						array(
-							'id'    => 'user_registration_select2',
-							'label' => 'Select2',
-							'icon'  => 'ur-icon ur-icon-select2',
+							'id'       => 'user_registration_select2',
+							'label'    => 'Select2',
+							'video_id' => 'wzcUYN-ToTA',
+							'icon'     => 'ur-icon ur-icon-select2',
 						),
 						array(
-							'id'    => 'user_registration_multi_select2',
-							'label' => 'Multi Select2',
-							'icon'  => 'ur-icon ur-icon-multi-select',
+							'id'       => 'user_registration_multi_select2',
+							'label'    => 'Multi Select2',
+							'video_id' => '6o1beUJ26b8',
+							'icon'     => 'ur-icon ur-icon-multi-select',
 						),
 						array(
-							'id'    => 'user_registration_profile_picture',
-							'label' => 'Profile Picture',
-							'icon'  => 'ur-icon ur-icon-user-display-name',
+							'id'       => 'user_registration_profile_picture',
+							'label'    => 'Profile Picture',
+							'video_id' => 'Ev-_bnuVaGQ',
+							'icon'     => 'ur-icon ur-icon-user-display-name',
 						),
 						array(
-							'id'    => 'user_registration_range',
-							'label' => 'Range',
-							'icon'  => 'ur-icon ur-icon-range',
+							'id'       => 'user_registration_range',
+							'label'    => 'Range',
+							'video_id' => 'MCfHeWGIOmk',
+							'icon'     => 'ur-icon ur-icon-range',
 						),
 						array(
-							'id'    => 'user_registration_custom_url',
-							'label' => 'Custom URL',
-							'icon'  => 'ur-icon ur-icon-website',
+							'id'       => 'user_registration_custom_url',
+							'label'    => 'Custom URL',
+							'video_id' => 'yei0lH9esaQ',
+							'icon'     => 'ur-icon ur-icon-website',
 						),
 						array(
-							'id'    => 'user_registration_hidden',
-							'label' => 'Hidden Field',
-							'icon'  => 'ur-icon ur-icon-hidden-field',
+							'id'       => 'user_registration_hidden',
+							'label'    => 'Hidden Field',
+							'video_id' => 'WtLSzeL17-s',
+							'icon'     => 'ur-icon ur-icon-hidden-field',
 						),
 					),
 				),
@@ -261,69 +276,82 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'name'                => __( 'User Registration - WooCommerce', 'user-registration' ),
 					'fields'              => array(
 						array(
-							'id'    => 'user_registration_billing_address_title',
-							'label' => 'Billing Address',
-							'icon'  => 'ur-icon ur-icon-bill',
+							'id'       => 'user_registration_billing_address_title',
+							'label'    => 'Billing Address',
+							'video_id' => 'CujmKsb6zTk',
+							'icon'     => 'ur-icon ur-icon-bill',
 						),
 						array(
-							'id'    => 'user_registration_billing_country',
-							'label' => 'Country',
-							'icon'  => 'ur-icon ur-icon-flag',
+							'id'       => 'user_registration_billing_country',
+							'label'    => 'Country',
+							'video_id' => '6POWImSKKMI',
+							'icon'     => 'ur-icon ur-icon-flag',
 						),
 						array(
-							'id'    => 'user_registration_billing_first_name',
-							'label' => 'First Name',
-							'icon'  => 'ur-icon ur-icon-input-first-name',
+							'id'       => 'user_registration_billing_first_name',
+							'label'    => 'First Name',
+							'video_id' => 'MmBF9WH3bG4',
+							'icon'     => 'ur-icon ur-icon-input-first-name',
 						),
 						array(
-							'id'    => 'user_registration_billing_last_name',
-							'label' => 'Last Name',
-							'icon'  => 'ur-icon ur-icon-input-last-name',
+							'id'       => 'user_registration_billing_last_name',
+							'label'    => 'Last Name',
+							'video_id' => 'ZprJivoQmYk',
+							'icon'     => 'ur-icon ur-icon-input-last-name',
 						),
 						array(
-							'id'    => 'user_registration_billing_company',
-							'label' => 'Company',
-							'icon'  => 'ur-icon ur-icon-buildings',
+							'id'       => 'user_registration_billing_company',
+							'label'    => 'Company',
+							'video_id' => 'fdK38cCrybI',
+							'icon'     => 'ur-icon ur-icon-buildings',
 						),
 						array(
-							'id'    => 'user_registration_billing_address_1',
-							'label' => 'Address 1',
-							'icon'  => 'ur-icon ur-icon-map-one',
+							'id'       => 'user_registration_billing_address_1',
+							'label'    => 'Address 1',
+							'video_id' => 'CujmKsb6zTk',
+							'icon'     => 'ur-icon ur-icon-map-one',
 						),
 						array(
-							'id'    => 'user_registration_billing_address_2',
-							'label' => 'Address 2',
-							'icon'  => 'ur-icon ur-icon-map-two',
+							'id'       => 'user_registration_billing_address_2',
+							'label'    => 'Address 2',
+							'video_id' => 'CujmKsb6zTk',
+							'icon'     => 'ur-icon ur-icon-map-two',
 						),
 						array(
-							'id'    => 'user_registration_billing_city',
-							'label' => 'Town / City',
-							'icon'  => 'ur-icon ur-icon-buildings',
+							'id'       => 'user_registration_billing_city',
+							'label'    => 'Town / City',
+							'video_id' => '224NTyvz5-g',
+							'icon'     => 'ur-icon ur-icon-buildings',
 						),
 						array(
-							'id'    => 'user_registration_billing_state',
-							'label' => 'State / County',
-							'icon'  => 'ur-icon ur-icon-state',
+							'id'       => 'user_registration_billing_state',
+							'label'    => 'State / County',
+							'video_id' => 'YtamDyhfFcc',
+							'icon'     => 'ur-icon ur-icon-state',
 						),
 						array(
-							'id'    => 'user_registration_billing_postcode',
-							'label' => 'Postcode / Zip',
-							'icon'  => 'ur-icon ur-icon-zip-code',
+							'id'       => 'user_registration_billing_postcode',
+							'label'    => 'Postcode / Zip',
+							'video_id' => 'sgaJNqkrX4E',
+							'icon'     => 'ur-icon ur-icon-zip-code',
 						),
 						array(
-							'id'    => 'user_registration_billing_email',
-							'label' => 'Email',
-							'icon'  => 'ur-icon ur-icon-email',
+							'id'       => 'user_registration_billing_email',
+							'label'    => 'Email',
+							'video_id' => '3LV1lYJZ4k0',
+							'icon'     => 'ur-icon ur-icon-email',
 						),
 						array(
-							'id'    => 'user_registration_billing_phone',
-							'label' => 'Phone',
-							'icon'  => 'ur-icon ur-icon-phone',
+							'id'       => 'user_registration_billing_phone',
+							'label'    => 'Phone',
+							'video_id' => 'mU9k3EufPUQ',
+							'icon'     => 'ur-icon ur-icon-phone',
 						),
 						array(
-							'id'    => 'user_registration_separate_shipping',
-							'label' => 'Separate Shipping',
-							'icon'  => 'ur-icon ur-icon-bill',
+							'id'       => 'user_registration_separate_shipping',
+							'label'    => 'Separate Shipping',
+							'video_id' => '4ZA6byVHm30',
+							'icon'     => 'ur-icon ur-icon-bill',
 						),
 					),
 				),
@@ -335,54 +363,64 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'name'                => __( 'User Registration - WooCommerce', 'user-registration' ),
 					'fields'              => array(
 						array(
-							'id'    => 'user_registration_shipping_address_title',
-							'label' => 'Shipping Address',
-							'icon'  => 'ur-icon ur-icon-bill',
+							'id'       => 'user_registration_shipping_address_title',
+							'label'    => 'Shipping Address',
+							'video_id' => 'CujmKsb6zTk',
+							'icon'     => 'ur-icon ur-icon-bill',
 						),
 						array(
-							'id'    => 'user_registration_shipping_country',
-							'label' => 'Country',
-							'icon'  => 'ur-icon ur-icon-flag',
+							'id'       => 'user_registration_shipping_country',
+							'label'    => 'Country',
+							'video_id' => '6POWImSKKMI',
+							'icon'     => 'ur-icon ur-icon-flag',
 						),
 						array(
-							'id'    => 'user_registration_shipping_first_name',
-							'label' => 'First Name',
-							'icon'  => 'ur-icon ur-icon-input-first-name',
+							'id'       => 'user_registration_shipping_first_name',
+							'label'    => 'First Name',
+							'video_id' => 'MmBF9WH3bG4',
+							'icon'     => 'ur-icon ur-icon-input-first-name',
 						),
 						array(
-							'id'    => 'user_registration_shipping_last_name',
-							'label' => 'Last Name',
-							'icon'  => 'ur-icon ur-icon-input-last-name',
+							'id'       => 'user_registration_shipping_last_name',
+							'label'    => 'Last Name',
+							'video_id' => 'ZprJivoQmYk',
+							'icon'     => 'ur-icon ur-icon-input-last-name',
 						),
 						array(
-							'id'    => 'user_registration_shipping_company',
-							'label' => 'Company',
-							'icon'  => 'ur-icon ur-icon-buildings',
+							'id'       => 'user_registration_shipping_company',
+							'label'    => 'Company',
+							'video_id' => 'fdK38cCrybI',
+							'icon'     => 'ur-icon ur-icon-buildings',
 						),
 						array(
-							'id'    => 'user_registration_shipping_address_1',
-							'label' => 'Address 1',
-							'icon'  => 'ur-icon ur-icon-map-one',
+							'id'       => 'user_registration_shipping_address_1',
+							'label'    => 'Address 1',
+							'video_id' => 'CujmKsb6zTk',
+							'icon'     => 'ur-icon ur-icon-map-one',
 						),
 						array(
-							'id'    => 'user_registration_shipping_address_2',
-							'label' => 'Address 2',
-							'icon'  => 'ur-icon ur-icon-map-two',
+							'id'       => 'user_registration_shipping_address_2',
+							'label'    => 'Address 2',
+							'video_id' => 'CujmKsb6zTk',
+							'icon'     => 'ur-icon ur-icon-map-two',
 						),
 						array(
-							'id'    => 'user_registration_shipping_city',
-							'label' => 'Town / City',
-							'icon'  => 'ur-icon ur-icon-buildings',
+							'id'       => 'user_registration_shipping_city',
+							'label'    => 'Town / City',
+							'video_id' => '224NTyvz5-g',
+							'icon'     => 'ur-icon ur-icon-buildings',
 						),
 						array(
-							'id'    => 'user_registration_shipping_state',
-							'label' => 'State / County',
-							'icon'  => 'ur-icon ur-icon-state',
+							'id'       => 'user_registration_shipping_state',
+							'label'    => 'State / County',
+							'video_id' => 'YtamDyhfFcc',
+							'icon'     => 'ur-icon ur-icon-state',
 						),
 						array(
-							'id'    => 'user_registration_shipping_postcode',
-							'label' => 'Postcode / Zip',
-							'icon'  => 'ur-icon ur-icon-zip-code',
+							'id'       => 'user_registration_shipping_postcode',
+							'label'    => 'Postcode / Zip',
+							'video_id' => 'sgaJNqkrX4E',
+							'icon'     => 'ur-icon ur-icon-zip-code',
 						),
 					),
 				),
@@ -394,29 +432,34 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'name'                => array( __( 'User Registration Payments', 'user-registration' ), __( 'User Registration Stripe', 'user-registration' ) ),
 					'fields'              => array(
 						array(
-							'id'    => 'user_registration_single_item',
-							'label' => 'Single Item',
-							'icon'  => 'ur-icon ur-icon-file-dollar',
+							'id'       => 'user_registration_single_item',
+							'label'    => 'Single Item',
+							'video_id' => 'xH_lLxg8zsQ',
+							'icon'     => 'ur-icon ur-icon-file-dollar',
 						),
 						array(
-							'id'    => 'user_registration_multiple_choice',
-							'label' => 'Multiple Choice',
-							'icon'  => 'ur-icon ur-icon-multichoice',
+							'id'       => 'user_registration_multiple_choice',
+							'label'    => 'Multiple Choice',
+							'video_id' => '_vu87WQBbx8',
+							'icon'     => 'ur-icon ur-icon-multichoice',
 						),
 						array(
-							'id'    => 'user_registration_subscription_plan',
-							'label' => 'Subscription Plan',
-							'icon'  => 'ur-icon ur-icon-subscription-plan',
+							'id'       => 'user_registration_subscription_plan',
+							'label'    => 'Subscription Plan',
+							'video_id' => 'h__3fJu5Bvo',
+							'icon'     => 'ur-icon ur-icon-subscription-plan',
 						),
 						array(
-							'id'    => 'user_registration_total',
-							'label' => 'Total',
-							'icon'  => 'ur-icon ur-icon-total',
+							'id'       => 'user_registration_total',
+							'label'    => 'Total',
+							'video_id' => 'wsaxpXXbE6c',
+							'icon'     => 'ur-icon ur-icon-total',
 						),
 						array(
-							'id'    => 'user_registration_quantity',
-							'label' => 'Quantity',
-							'icon'  => 'ur-icon ur-icon-quantity',
+							'id'       => 'user_registration_quantity',
+							'label'    => 'Quantity',
+							'video_id' => 'Hjml64__-6c',
+							'icon'     => 'ur-icon ur-icon-quantity',
 						),
 					),
 				),
@@ -464,11 +507,14 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			 * @param array $args Args Data.
 			 */
 		public function render_upgradable_field( $args ) {
-			$id    = $args['id'];
-			$icon  = $args['icon'];
-			$label = $args['label'];
-			$plan  = isset( $args['plan'] ) ? $args['plan'] : '';
-			$name  = isset( $args['name'] ) ? ( is_array( $args['name'] ) ? implode( ', and ', $args['name'] ) : $args['name'] ) : '';
+
+			$id       = $args['id'];
+			$icon     = $args['icon'];
+			$label    = $args['label'];
+			$plan     = isset( $args['plan'] ) ? $args['plan'] : '';
+			$video_id = isset( $args['video_id'] ) ? $args['video_id'] : '';
+
+			$name = isset( $args['name'] ) ? ( is_array( $args['name'] ) ? implode( ', and ', $args['name'] ) : $args['name'] ) : '';
 
 			if ( isset( $args['slug'] ) ) {
 				if ( is_array( $args['slug'] ) ) {
@@ -483,7 +529,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					$slug = 'user-registration-' . $args['slug'];
 				}
 			}
-			echo '<li id="' . esc_attr( $id ) . '_list " class="ur-registered-item ur-upgradable-field ui-draggable-disabled" data-field-id="' . esc_attr( $id ) . '" data-name="' . esc_attr( $name ) . '" data-plan="' . esc_attr( $plan ) . '" data-slug ="' . esc_attr( $slug ) . '"><span class="' . esc_attr( $icon ) . '"></span>' . esc_html( $label ) . '</li>';
+			echo '<li id="' . esc_attr( $id ) . '_list " class="ur-registered-item ur-upgradable-field ui-draggable-disabled" data-field-id="' . esc_attr( $id ) . '" data-name="' . esc_attr( $name ) . '" data-plan="' . esc_attr( $plan ) . '" data-slug ="' . esc_attr( $slug ) . '" data-video ="' . esc_attr( $video_id ) . '"><span class="' . esc_attr( $icon ) . '"></span>' . esc_html( $label ) . '</li>';
 		}
 
 			/**
@@ -803,52 +849,52 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			$endpoints = apply_filters( 'user_registration_custom_nav_menu_items', $endpoints );
 
 			?>
-			<div id="posttype-user-registration-endpoints" class="posttypediv">
-				<div id="tabs-panel-user-registration-endpoints" class="tabs-panel tabs-panel-active">
-					<ul id="user-registration-endpoints-checklist" class="categorychecklist form-no-clear">
+<div id="posttype-user-registration-endpoints" class="posttypediv">
+	<div id="tabs-panel-user-registration-endpoints" class="tabs-panel tabs-panel-active">
+		<ul id="user-registration-endpoints-checklist" class="categorychecklist form-no-clear">
 			<?php
 			$i = - 1;
 			foreach ( $endpoints as $key => $value ) :
 				?>
-							<li>
-								<label class="menu-item-title">
-									<input type="checkbox" class="menu-item-checkbox"
-										name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-object-id]"
-										value="<?php echo esc_attr( $i ); ?>"/> <?php echo esc_html( $value ); ?>
-								</label>
-								<input type="hidden" class="menu-item-type"
-									name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-type]" value="custom"/>
-								<input type="hidden" class="menu-item-title"
-									name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-title]"
-									value="<?php echo esc_html( $value ); ?>"/>
-								<input type="hidden" class="menu-item-url"
-									name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-url]"
-									value="<?php echo esc_url( ur_get_account_endpoint_url( $key ) ); ?>"/>
-								<input type="hidden" class="menu-item-classes"
-									name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-classes]"/>
-							</li>
-						<?php
+			<li>
+				<label class="menu-item-title">
+					<input type="checkbox" class="menu-item-checkbox"
+						name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-object-id]"
+						value="<?php echo esc_attr( $i ); ?>" /> <?php echo esc_html( $value ); ?>
+				</label>
+				<input type="hidden" class="menu-item-type"
+					name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-type]" value="custom" />
+				<input type="hidden" class="menu-item-title"
+					name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-title]"
+					value="<?php echo esc_html( $value ); ?>" />
+				<input type="hidden" class="menu-item-url"
+					name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-url]"
+					value="<?php echo esc_url( ur_get_account_endpoint_url( $key ) ); ?>" />
+				<input type="hidden" class="menu-item-classes"
+					name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-classes]" />
+			</li>
+				<?php
 						--$i;
 						endforeach;
 			?>
-					</ul>
-				</div>
-				<p class="button-controls">
-					<span class="list-controls">
-						<input type="checkbox" id="ur-endpoints-tab" class="select-all">
-						<label for="ur-endpoints-tab">
-							<?php esc_html_e( 'Select All', 'user-registration' ); ?>
-						</label>
-					</span>
-					<span class="add-to-menu">
-					<input type="submit" class="button-secondary submit-add-to-menu right"
-						value="<?php esc_attr_e( 'Add to menu', 'user-registration' ); ?>"
-						name="add-post-type-menu-item" id="submit-posttype-user-registration-endpoints">
-					<span class="spinner"></span>
-					</span>
-				</p>
-			</div>
-				<?php
+		</ul>
+	</div>
+	<p class="button-controls">
+		<span class="list-controls">
+			<input type="checkbox" id="ur-endpoints-tab" class="select-all">
+			<label for="ur-endpoints-tab">
+				<?php esc_html_e( 'Select All', 'user-registration' ); ?>
+			</label>
+		</span>
+		<span class="add-to-menu">
+			<input type="submit" class="button-secondary submit-add-to-menu right"
+				value="<?php esc_attr_e( 'Add to menu', 'user-registration' ); ?>" name="add-post-type-menu-item"
+				id="submit-posttype-user-registration-endpoints">
+			<span class="spinner"></span>
+		</span>
+	</p>
+</div>
+			<?php
 		}
 
 			/**
@@ -892,16 +938,19 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			echo '<div class="ur-selected-inputs">';
 			echo '<div class="ur-builder-wrapper-content">';
 			?>
-			<div class="ur-builder-header">
-				<div class="user-registration-editable-title ur-form-name-wrapper ur-my-4">
+<div class="ur-builder-header">
+	<div class="user-registration-editable-title ur-form-name-wrapper ur-my-4">
 			<?php
 			$form_title = isset( $form_data->post_title ) ? trim( $form_data->post_title ) : __( 'Untitled', 'user-registration' );
 			?>
-					<input name="ur-form-name" id="ur-form-name" type="text" class="user-registration-editable-title__input ur-form-name regular-text menu-item-textbox" value="<?php echo esc_html( $form_title ); ?>" data-editing="false">
-					<span id="ur-form-name-edit-button" class="user-registration-editable-title__icon ur-edit-form-name dashicons dashicons-edit"></span>
-				</div>
-				<div class="ur-builder-header-right">
-				<?php
+		<input name="ur-form-name" id="ur-form-name" type="text"
+			class="user-registration-editable-title__input ur-form-name regular-text menu-item-textbox"
+			value="<?php echo esc_html( $form_title ); ?>" data-editing="false">
+		<span id="ur-form-name-edit-button"
+			class="user-registration-editable-title__icon ur-edit-form-name dashicons dashicons-edit"></span>
+	</div>
+	<div class="ur-builder-header-right">
+			<?php
 
 					/**
 					 * Action for Extra Information of Builder Header
@@ -910,119 +959,119 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					 * @param mixed $form_data_array Form Data
 					 */
 					do_action( 'user_registration_builder_header_extra', $form_data->ID, $form_data_array );
-				?>
-				</div>
-			</div>
-				<?php
+			?>
+	</div>
+</div>
+			<?php
 				echo '<div class="ur-input-grids">';
 
 				$row_id  = 0;
 				$last_id = 0;
 
-				foreach ( $form_data_array as $index => $rows ) {
-					$row_id  = ( ! empty( $form_row_ids ) ) ? $form_row_ids_array[ $index ] : $index;
-					$last_id = ( absint( $row_id ) > $last_id ) ? absint( $row_id ) : $last_id;
+			foreach ( $form_data_array as $index => $rows ) {
+				$row_id  = ( ! empty( $form_row_ids ) ) ? $form_row_ids_array[ $index ] : $index;
+				$last_id = ( absint( $row_id ) > $last_id ) ? absint( $row_id ) : $last_id;
 
-					$grid_count = count( $rows );
+				$grid_count = count( $rows );
 
-					$grid_one   = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M28,6V26H4V6H28m2-2H2V28H30V4Z"/></svg>';
-					$grid_two   = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M17,4H2V28H30V4ZM4,26V6H15V26Zm24,0H17V6H28Z"/></svg>';
-					$grid_three = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M22,4H2V28H30V4ZM4,26V6h6V26Zm8,0V6h8V26Zm16,0H22V6h6Z"/></svg>';
+				$grid_one   = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M28,6V26H4V6H28m2-2H2V28H30V4Z"/></svg>';
+				$grid_two   = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M17,4H2V28H30V4ZM4,26V6H15V26Zm24,0H17V6H28Z"/></svg>';
+				$grid_three = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M22,4H2V28H30V4ZM4,26V6h6V26Zm8,0V6h8V26Zm16,0H22V6h6Z"/></svg>';
 
-					$svg_args = array(
-						'svg'   => array(
-							'class'           => true,
-							'aria-hidden'     => true,
-							'aria-labelledby' => true,
-							'role'            => true,
-							'xmlns'           => true,
-							'width'           => true,
-							'height'          => true,
-							'viewbox'         => true, // <= Must be lower case!
-						),
-						'g'     => array( 'fill' => true ),
-						'title' => array( 'title' => true ),
-						'path'  => array(
-							'd'    => true,
-							'fill' => true,
-						),
-					);
-					echo '<div class="ur-single-row"  data-row-id="' . esc_attr( absint( $row_id ) ) . '">';
-					?>
+				$svg_args = array(
+					'svg'   => array(
+						'class'           => true,
+						'aria-hidden'     => true,
+						'aria-labelledby' => true,
+						'role'            => true,
+						'xmlns'           => true,
+						'width'           => true,
+						'height'          => true,
+						'viewbox'         => true, // <= Must be lower case!
+					),
+					'g'     => array( 'fill' => true ),
+					'title' => array( 'title' => true ),
+					'path'  => array(
+						'd'    => true,
+						'fill' => true,
+					),
+				);
+				echo '<div class="ur-single-row"  data-row-id="' . esc_attr( absint( $row_id ) ) . '">';
+				?>
 
-				<div class="ur-grids">
-					<button type="button" class="ur-edit-grid">
-						<?php
-						if ( 1 === $grid_count ) {
-							echo wp_kses( $grid_one, $svg_args );
-						} elseif ( 2 === $grid_count ) {
-							echo wp_kses( $grid_two, $svg_args );
-						} elseif ( 3 === $grid_count ) {
-							echo wp_kses( $grid_three, $svg_args );
+<div class="ur-grids">
+	<button type="button" class="ur-edit-grid">
+				<?php
+				if ( 1 === $grid_count ) {
+					echo wp_kses( $grid_one, $svg_args );
+				} elseif ( 2 === $grid_count ) {
+					echo wp_kses( $grid_two, $svg_args );
+				} elseif ( 3 === $grid_count ) {
+					echo wp_kses( $grid_three, $svg_args );
+				}
+				?>
+	</button>
+	<button type="button" class="dashicons dashicons-no-alt ur-remove-row"></button>
+	<div class="ur-toggle-grid-content" style="display:none">
+		<small>Select the grid column.</small>
+		<div class="ur-grid-selector" data-grid="1">
+				<?php
+
+						echo wp_kses( $grid_one, $svg_args );
+				?>
+		</div>
+		<div class="ur-grid-selector" data-grid="2">
+				<?php echo wp_kses( $grid_two, $svg_args ); ?>
+		</div>
+		<div class="ur-grid-selector" data-grid="3">
+				<?php echo wp_kses( $grid_three, $svg_args ); ?>
+		</div>
+	</div>
+</div>
+
+				<?php
+				echo '<div class="ur-grid-lists">';
+
+				$grid_id = 0;
+
+				foreach ( $rows as $grid_lists ) {
+
+					++$grid_id;
+
+					echo '<div ur-grid-id="' . esc_attr( $grid_id ) . '" class="ur-grid-list-item ui-sortable" style="width: 48%; min-height: 70px;">';
+
+					foreach ( $grid_lists as $single_field ) {
+
+						if ( isset( $single_field->field_key ) ) {
+							/**
+							 * Filter to get the Backward Compatibility for Fields
+							 *
+							 * @param array $single_field Field
+							 */
+							apply_filters( 'user_registration_form_builder_field_before', $single_field );
+
+							$admin_field = $this->get_admin_field( $single_field );
+							echo '<div class="ur-selected-item">';
+							echo '<div class="ur-action-buttons"><span title="Clone" class="dashicons dashicons-admin-page ur-clone"></span><span title="Trash" class="dashicons dashicons-trash ur-trash"></span></div>';
+							$template = isset( $admin_field['template'] ) ? $admin_field['template'] : '' ; // @codingStandardsIgnoreLine
+							echo $template; // phpcs:ignore
+							echo '</div>';
 						}
-						?>
-					</button>
-					<button type="button" class="dashicons dashicons-no-alt ur-remove-row"></button>
-					<div class="ur-toggle-grid-content" style="display:none">
-						<small>Select the grid column.</small>
-						<div class="ur-grid-selector" data-grid = "1">
-							<?php
+					}
 
-							echo wp_kses( $grid_one, $svg_args );
-							?>
-						</div>
-						<div class="ur-grid-selector" data-grid = "2">
-							<?php echo wp_kses( $grid_two, $svg_args ); ?>
-						</div>
-						<div class="ur-grid-selector" data-grid = "3">
-							<?php echo wp_kses( $grid_three, $svg_args ); ?>
-						</div>
-					</div>
-				</div>
-
-					<?php
-					echo '<div class="ur-grid-lists">';
-
-					$grid_id = 0;
-
-					foreach ( $rows as $grid_lists ) {
-
-						++$grid_id;
-
-						echo '<div ur-grid-id="' . esc_attr( $grid_id ) . '" class="ur-grid-list-item ui-sortable" style="width: 48%; min-height: 70px;">';
-
-						foreach ( $grid_lists as $single_field ) {
-
-							if ( isset( $single_field->field_key ) ) {
-								/**
-								 * Filter to get the Backward Compatibility for Fields
-								 *
-								 * @param array $single_field Field
-								 */
-								apply_filters( 'user_registration_form_builder_field_before', $single_field );
-
-								$admin_field = $this->get_admin_field( $single_field );
-								echo '<div class="ur-selected-item">';
-								echo '<div class="ur-action-buttons"><span title="Clone" class="dashicons dashicons-admin-page ur-clone"></span><span title="Trash" class="dashicons dashicons-trash ur-trash"></span></div>';
-								$template = isset( $admin_field['template'] ) ? $admin_field['template'] : '' ; // @codingStandardsIgnoreLine
-								echo $template; // phpcs:ignore
-								echo '</div>';
-							}
-						}
-
-						if ( count( $grid_lists ) === 0 ) {
-							echo '<div class="user-registration-dragged-me">
+					if ( count( $grid_lists ) === 0 ) {
+						echo '<div class="user-registration-dragged-me">
 						<div class="user-registration-dragged-me-text"><p>' . esc_html__( 'Drag your first form item here.', 'user-registration' ) . '</p></div>
 						</div>';
-						}
-
-						echo '</div>';
 					}
 
 					echo '</div>';
-					echo '</div>';
-
 				}
+
+				echo '</div>';
+				echo '</div>';
+
+			}
 				echo '<button type="button" class="button button-primary dashicons dashicons-plus-alt ur-add-new-row" data-total-rows="' . esc_attr( $last_id ) . '">' . esc_html__( 'Add New', 'user-registration' ) . '</button>';
 				echo '</div>';
 				echo '</div>';
