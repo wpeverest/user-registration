@@ -1283,8 +1283,8 @@ function ur_logout_url( $redirect = '' ) {
 		$blocks = parse_blocks( $post_content );
 
 		foreach ( $blocks as $block ) {
-			if ( 'user-registration/form-selector' === $block['blockName'] && isset( $block['attrs']['logoutUrl'] ) ) {
-				$redirect = home_url( $block['attrs']['logoutUrl'] );
+			if ( ('user-registration/form-selector' === $block['blockName'] || 'user-registration/myaccount' === $block['blockName'] || 'user-registration/login-form' === $block['blockName'] ) && isset( $block['attrs']['logoutUrl'] ) ) {
+				$redirect = '' != $block['attrs']['logoutUrl'] ? ur_check_external_url( $block['attrs']['logoutUrl'] ) : ur_get_page_permalink( 'myaccount' );
 			}
 		}
 	}
