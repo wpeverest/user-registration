@@ -1,8 +1,8 @@
 /* global  user_registration_params */
 (function ($) {
+
 	var user_registration_form_init = function () {
 		var ursL10n = user_registration_params.ursL10n;
-
 		$.fn.ur_form_submission = function () {
 			// traverse all nodes
 			return this.each(function () {
@@ -11,7 +11,6 @@
 				var available_field = [];
 				var required_fields =
 					user_registration_params.form_required_fields;
-
 				var form = {
 					init: function () {},
 					get_form_data: function (form_id) {
@@ -864,12 +863,10 @@
 												var message =
 													$('<ul class=""/>');
 												var type = "error";
-
 												try {
 													var response = JSON.parse(
 														ajax_response.responseText,
 													);
-
 													var timeout = response.data
 														.redirect_timeout
 														? response.data
@@ -978,7 +975,7 @@
 																	"</li>",
 															);
 														}
-
+														$('.ur-input-count').text('0');
 														$this[0].reset();
 														if (
 															$this.find(
@@ -1817,7 +1814,24 @@
 				);
 			});
 		});
-
+		/**
+		 * Set the value of count in already exist details of field textarea.
+		 */
+		$(function () {
+			$('textarea').each(function() {
+				var input_count;
+				var selected_area_field = $(this).closest('.ur-field-item');
+				if( selected_area_field.find(".ur-input-count").length > 0 ) {
+					var selected_area_text = $(this).val().trim();
+						if( selected_area_field.find(".ur-input-count").data("count-type") === "characters" ) {
+							input_count = selected_area_text.length;
+						}else{
+							input_count = selected_area_text === '' ? 0 : selected_area_text.split(/\s+/).length;
+						}
+				}
+				selected_area_field.find('.ur-input-count').text(input_count);
+			});
+        });
 		/**
 		 * Append a country option and Remove it on click, if the country is not allowed.
 		 */
@@ -1857,6 +1871,26 @@
 			}
 		});
 	};
+	/**
+		 * show the character and word count in textarea field.
+		 */
+	$('textarea').on('input', user_registration_count);
+
+	function user_registration_count() {
+        $('textarea').each(function() {
+			var input_count;
+			var selected_area_field = $(this).closest('.ur-field-item');
+			if( selected_area_field.find(".ur-input-count").length > 0 ) {
+					var selected_area_text = $(this).val().trim();
+					if( selected_area_field.find(".ur-input-count").data("count-type") === "characters" ) {
+						input_count = selected_area_text.length;
+					}else{
+						input_count = selected_area_text === '' ? 0 : selected_area_text.split(/\s+/).length;
+					}
+				}
+				selected_area_field.find('.ur-input-count').text(input_count);
+		});
+    }
 
 	/**
 	 * @since 2.0.0
