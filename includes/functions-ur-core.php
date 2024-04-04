@@ -3726,7 +3726,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				'denied_access'    => get_option( 'user_registration_message_denied_account', null ),
 			);
 
-			$post = $_POST; // phpcs:ignore WordPress.Security.NonceVerification.
+			$post = $_POST; //phpcs:ignore;
 
 			$recaptcha_value     = isset( $post['g-recaptcha-response'] ) ? ur_clean( wp_unslash( $post['g-recaptcha-response'] ) ) : '';
 			$captcha_response    = isset( $post['CaptchaResponse'] ) ? $post['CaptchaResponse'] : ''; //phpcs:ignore;
@@ -4695,4 +4695,21 @@ if ( ! function_exists( 'ur_array_clone' ) ) {
 		}
 	}
 	add_action( 'ur_remove_profile_pictures_and_metadata', 'ur_unlink_user_profile_pictures' );
+}
+
+if ( ! function_exists( 'ur_automatic_user_login' ) ) {
+	/**
+	 * Automatically login users.
+	 *
+	 * @since 3.1.5
+	 *
+	 * @param object $user The user.
+	 */
+	function ur_automatic_user_login( $user ) {
+		wp_clear_auth_cookie();
+		$remember = apply_filters( 'user_registration_autologin_remember_user', false );
+		wp_set_auth_cookie( $user->id, $remember );
+
+		wp_redirect( ur_get_my_account_url() );
+	}
 }
