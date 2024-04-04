@@ -1,5 +1,4 @@
 <?php
-
 /**
  * UserRegistration Admin Settings Class
  *
@@ -60,7 +59,7 @@ class UR_Admin_User_Manager {
 		}
 
 		if ( ! ( $user instanceof WP_User ) ) {
-			throw new Exception( __( 'Impossible to create an UR_Admin_User_Manager object. Unkwon data type.', 'user-registration' ) );
+			throw new Exception( esc_html__( 'Impossible to create an UR_Admin_User_Manager object. Unkwon data type.', 'user-registration' ) );
 		}
 
 		$this->user = $user;

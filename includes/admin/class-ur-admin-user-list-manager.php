@@ -1,5 +1,4 @@
 <?php
-
 /**
  * UserRegistration Admin Settings Class
  *
