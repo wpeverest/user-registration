@@ -4692,12 +4692,13 @@
 					.find("span:contains(*)")
 					.remove();
 
-				if ($label.is(":checked")) {
-					wrapper
-						.find(".ur-label")
-						.find("label")
-						.append('<span style="color:red">*</span>');
-				}
+
+					if ($label.is(":checked")) {
+						wrapper
+							.find(".ur-label")
+							.find("label")
+							.append('<span style="color:red">*</span>');
+					}
 			},
 			/**
 			 * Reflects changes in required field of field settings into selected field in form builder area.
