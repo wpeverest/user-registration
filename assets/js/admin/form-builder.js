@@ -1136,9 +1136,7 @@
 									)
 									.val();
 								var image = $(element)
-									.find(
-										"input.ur-type-image-choice"
-									)
+									.find("input.ur-type-image-choice")
 									.val();
 								if (
 									array_value.every(function (each_value) {
@@ -1155,22 +1153,32 @@
 								}
 								general_setting_data["options"] = array_value;
 							});
-						} else if ("image-choice" === $(this).attr("data-field-name") ) {
+						} else if (
+							"image-choice" === $(this).attr("data-field-name")
+						) {
 							var li_elements = $(this).closest("ul").find("li");
 							var array_value = [];
 
 							li_elements.each(function (index, element) {
-							  var label = $(element).find("input.ur-type-radio-label,input.ur-type-checkbox-label").val();
-							  var image = $(element).find("input.ur-type-image-choice").val();
+								var label = $(element)
+									.find(
+										"input.ur-type-radio-label,input.ur-type-checkbox-label"
+									)
+									.val();
+								var image = $(element)
+									.find("input.ur-type-image-choice")
+									.val();
 
-							  if (array_value.every(function (each_value) {
-								return each_value.label !== label;
-							  })) {
-								array_value.push({
-								  label: label,
-								  image: image,
-								});
-							  }
+								if (
+									array_value.every(function (each_value) {
+										return each_value.label !== label;
+									})
+								) {
+									array_value.push({
+										label: label,
+										image: image,
+									});
+								}
 							});
 
 							general_setting_data["image_options"] = array_value;
@@ -1185,11 +1193,10 @@
 								})
 							) {
 								general_setting_data["options"] =
-								option_values.push(choice_value);
+									option_values.push(choice_value);
 							}
 							var filteredArray = option_values.filter(Boolean);
 							general_setting_data["options"] = filteredArray;
-
 						} else if (
 							"subscription_plan" ===
 							$(this).attr("data-field-name")
@@ -1206,19 +1213,13 @@
 									.find("input.ur-type-radio-money-input")
 									.val();
 								var sell_value = $(element)
-									.find(
-										"input.ur-radio-selling-price-input"
-									)
+									.find("input.ur-radio-selling-price-input")
 									.val();
 								var interval_count = $(element)
-									.find(
-										"input.ur-radio-interval-count-input"
-									)
+									.find("input.ur-radio-interval-count-input")
 									.val();
 								var recurring_period = $(element)
-									.find(
-										".ur-radio-recurring-period"
-									)
+									.find(".ur-radio-recurring-period")
 									.val();
 								var trail_interval_count = $(element)
 									.find(
@@ -1226,15 +1227,12 @@
 									)
 									.val();
 								var trail_recurring_period = $(element)
-									.find(
-										".ur-radio-trail-recurring-period"
-									)
+									.find(".ur-radio-trail-recurring-period")
 									.val();
 
-									var trail_period_enable = $(element)
-										.find(
-											".ur-radio-enable-trail-period"
-										).val();
+								var trail_period_enable = $(element)
+									.find(".ur-radio-enable-trail-period")
+									.val();
 
 								if (
 									array_value.every(function (each_value) {
@@ -1248,9 +1246,12 @@
 											sell_value: sell_value,
 											interval_count: interval_count,
 											recurring_period: recurring_period,
-											trail_period_enable: trail_period_enable,
-											trail_interval_count: trail_interval_count,
-											trail_recurring_period: trail_recurring_period,
+											trail_period_enable:
+												trail_period_enable,
+											trail_interval_count:
+												trail_interval_count,
+											trail_recurring_period:
+												trail_recurring_period,
 										});
 								}
 								general_setting_data["options"] = array_value;
@@ -1375,9 +1376,7 @@
 
 							default:
 								if (
-									!$this_node.hasClass(
-										"ur-type-image-choice"
-									)
+									!$this_node.hasClass("ur-type-image-choice")
 								) {
 									value = $this_node.val();
 								}
@@ -1807,13 +1806,17 @@
 												.closest(".ur-selected-item")
 												.find(".ur-admin-template")
 												.find(".ur-field")
-												.addClass("user-registration-image-options");
+												.addClass(
+													"user-registration-image-options"
+												);
 										} else {
 											$(this)
 												.closest(".ur-selected-item")
 												.find(".ur-admin-template")
 												.find(".ur-field")
-												.removeClass("user-registration-image-options");
+												.removeClass(
+													"user-registration-image-options"
+												);
 										}
 									}
 								);
@@ -1968,13 +1971,13 @@
 								container,
 								form_field_id
 							) {
-								var form_id = $('#ur_form_id').val();
+								var form_id = $("#ur_form_id").val();
 								var data = {
 									action: "user_registration_user_input_dropped",
 									security:
 										user_registration_form_builder_data.user_input_dropped,
 									form_field_id: form_field_id,
-									form_id: form_id
+									form_id: form_id,
 								};
 
 								var template_text =
@@ -2896,10 +2899,9 @@
 					.find(".ur-field")
 					.data("field-key");
 
-					$(document).trigger(
-						"user_registration_handle_selected_item",
-						[selected_item]
-					);
+				$(document).trigger("user_registration_handle_selected_item", [
+					selected_item,
+				]);
 
 				if (
 					"country" === field_key ||
@@ -2915,7 +2917,10 @@
 					$selected_countries_option_field
 						.on("change", function (e) {
 							var selected_countries_iso_s = $(this).val();
-							var html = "<option value=''>"+user_registration_form_settings_params.ur_default_country_value_option+"</option>";
+							var html =
+								"<option value=''>" +
+								user_registration_form_settings_params.ur_default_country_value_option +
+								"</option>";
 							var self = this;
 
 							// Get html of selected countries
@@ -3194,15 +3199,17 @@
 										.closest(".ur-general-setting-block")
 										.hasClass(
 											"ur-general-setting-select"
-										) || $this_obj
-										.closest(".ur-general-setting-block")
-										.hasClass(
-											"ur-general-setting-select2"
-										) ) &&
-									$this_obj
-										.siblings(
-											'input[data-field="default_value"]'
-										).length>0
+										) ||
+										$this_obj
+											.closest(
+												".ur-general-setting-block"
+											)
+											.hasClass(
+												"ur-general-setting-select2"
+											)) &&
+									$this_obj.siblings(
+										'input[data-field="default_value"]'
+									).length > 0
 								) {
 									URFormBuilder.render_select_box($(this));
 								} else if (
@@ -3211,14 +3218,14 @@
 										.hasClass(
 											"ur-general-setting-multi_select2"
 										) &&
-									$this_obj
-										.siblings(
-											'input[data-field="default_value"]'
-										).length>0
+									$this_obj.siblings(
+										'input[data-field="default_value"]'
+									).length > 0
 								) {
-									URFormBuilder.render_multi_select_box($(this));
-								}
-								 else if (
+									URFormBuilder.render_multi_select_box(
+										$(this)
+									);
+								} else if (
 									$this_obj
 										.closest(".ur-general-setting-block")
 										.hasClass("ur-general-setting-radio")
@@ -3259,11 +3266,11 @@
 
 							$this_obj.on("change", function () {
 								if (
-								$this_obj
-									.closest(".ur-general-setting-block")
-									.hasClass(
-										"ur-general-setting-subscription_plan"
-									)
+									$this_obj
+										.closest(".ur-general-setting-block")
+										.hasClass(
+											"ur-general-setting-subscription_plan"
+										)
 								) {
 									URFormBuilder.render_subscription_plan(
 										$(this)
@@ -3271,22 +3278,46 @@
 								}
 							});
 
-							$(".ur-radio-enable-trail-period").each(function() {
-								if ( $(this).is(":checked") ) {
-									$(this).closest(".ur-subscription-plan").find(".ur-subscription-trail-period-option").show();
-								}
-								else{
-									$(this).closest(".ur-subscription-plan").find(".ur-subscription-trail-period-option").hide();
-
-								}
-								$(this).on("change", function() {
-									if ($(this).is(":checked") ) {
-										$(this).closest(".ur-subscription-plan").find(".ur-subscription-trail-period-option").show();
+							$(".ur-radio-enable-trail-period").each(
+								function () {
+									if ($(this).is(":checked")) {
+										$(this)
+											.closest(".ur-subscription-plan")
+											.find(
+												".ur-subscription-trail-period-option"
+											)
+											.show();
 									} else {
-										$(this).closest(".ur-subscription-plan").find(".ur-subscription-trail-period-option").hide();
+										$(this)
+											.closest(".ur-subscription-plan")
+											.find(
+												".ur-subscription-trail-period-option"
+											)
+											.hide();
 									}
-								});
-							});
+									$(this).on("change", function () {
+										if ($(this).is(":checked")) {
+											$(this)
+												.closest(
+													".ur-subscription-plan"
+												)
+												.find(
+													".ur-subscription-trail-period-option"
+												)
+												.show();
+										} else {
+											$(this)
+												.closest(
+													".ur-subscription-plan"
+												)
+												.find(
+													".ur-subscription-trail-period-option"
+												)
+												.hide();
+										}
+									});
+								}
+							);
 
 							break;
 						case "selling_price":
@@ -3434,41 +3465,60 @@
 					var $this_node = $(this);
 
 					switch ($this_node.attr("data-advance-field")) {
-						case "step" :
-							$this_node.on("keyup keydown", function() {
+						case "step":
+							$this_node.on("keyup keydown", function () {
 								$this_node.attr("step", $this_node.val());
 							});
 							break;
 						case "limit_length_limit_count":
-							$this_node.on("keyup", function() {
+							$this_node.on("keyup", function () {
 								trigger_advance_setting_limit_count($this_node);
 							});
 							break;
 						case "limit_length_limit_mode":
-							$this_node.on("change", function() {
+							$this_node.on("change", function () {
 								trigger_advance_setting_limit_mode($this_node);
 							});
 							break;
 						case "limit_length":
 							$this_node.on("change", function () {
-									URFormBuilder.handle_min_max_length($this_node);
-									var wrapper = $(".ur-selected-item.ur-item-active");
-									var startCount = wrapper.find(".ur_limit_count_mode p.ur_start_count");
-									var limitCount = wrapper.find(".ur_limit_count_mode p.ur_limit_count");
-									var limitMode = wrapper.find(".ur_limit_count_mode p.ur_limit_mode");
-									if ($this_node.is(":checked")) {
-										startCount.text("0 /");
-										limitCount.text(wrapper.find("[data-advance-field='limit_length_limit_count']").val());
-										limitMode.text(wrapper.find("[data-advance-field='limit_length_limit_mode']").val());
-									} else {
-										limitCount.text("");
-										limitMode.text("");
-										startCount.text("");
-
-									}
-								});
 								URFormBuilder.handle_min_max_length($this_node);
-								break;
+								var wrapper = $(
+									".ur-selected-item.ur-item-active"
+								);
+								var startCount = wrapper.find(
+									".ur_limit_count_mode p.ur_start_count"
+								);
+								var limitCount = wrapper.find(
+									".ur_limit_count_mode p.ur_limit_count"
+								);
+								var limitMode = wrapper.find(
+									".ur_limit_count_mode p.ur_limit_mode"
+								);
+								if ($this_node.is(":checked")) {
+									startCount.text("0 /");
+									limitCount.text(
+										wrapper
+											.find(
+												"[data-advance-field='limit_length_limit_count']"
+											)
+											.val()
+									);
+									limitMode.text(
+										wrapper
+											.find(
+												"[data-advance-field='limit_length_limit_mode']"
+											)
+											.val()
+									);
+								} else {
+									limitCount.text("");
+									limitMode.text("");
+									startCount.text("");
+								}
+							});
+							URFormBuilder.handle_min_max_length($this_node);
+							break;
 						case "minimum_length":
 							$this_node.on("change", function () {
 								URFormBuilder.handle_min_max_length($this_node);
@@ -3800,50 +3850,56 @@
 									.toggle();
 							});
 							break;
-							case 'enable_time_slot_booking':
-
-							var form = $this_node.closest('form'),
-							general_settings = form.find('.ur-general-setting-timepicker'),
-							requiredWrapper = general_settings.find('.ur-general-setting-required'),
-							requiredField = requiredWrapper.find('input');
+						case "enable_time_slot_booking":
+							var form = $this_node.closest("form"),
+								general_settings = form.find(
+									".ur-general-setting-timepicker"
+								),
+								requiredWrapper = general_settings.find(
+									".ur-general-setting-required"
+								),
+								requiredField = requiredWrapper.find("input");
 							if (!$this_node.is(":checked")) {
 								$(this)
 									.closest(".ur-advance-setting-block")
 									.find(".ur-advance-target_date_field")
 									.hide();
 							}
-							if($this_node.is(":checked")){
-
+							if ($this_node.is(":checked")) {
 								//Required true if the slot booking is enable.
-								if(!requiredField.is(":checked")){
-									requiredField.trigger('click');
-									requiredField.attr('checked', true);
+								if (!requiredField.is(":checked")) {
+									requiredField.trigger("click");
+									requiredField.attr("checked", true);
 								}
 
-								if(!$(this)
-								.closest(".ur-advance-setting-block")
-								.find(".ur-settings-time_range").is(":checked")){
-
+								if (
+									!$(this)
+										.closest(".ur-advance-setting-block")
+										.find(".ur-settings-time_range")
+										.is(":checked")
+								) {
 									$(this)
-									.closest(".ur-advance-setting-block")
-									.find(".ur-settings-time_range")
-									.trigger("click");
+										.closest(".ur-advance-setting-block")
+										.find(".ur-settings-time_range")
+										.trigger("click");
 									$(this)
-									.closest(".ur-advance-setting-block")
-									.find(".ur-settings-time_range")
-									.attr("checked", true);
+										.closest(".ur-advance-setting-block")
+										.find(".ur-settings-time_range")
+										.attr("checked", true);
 								}
 
-								$(this).closest(".ur-advance-setting-block").find(".ur-advance-time_range").hide();
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-time_range")
+									.hide();
 							}
 
 							$this_node.on("change", function () {
-
-								if($this_node.is(":checked")){
+								if ($this_node.is(":checked")) {
 									//Required true if the slot booking is enable.
-									if(!requiredField.is(":checked")){
-										requiredField.trigger('click');
-										requiredField.attr('checked', true);
+									if (!requiredField.is(":checked")) {
+										requiredField.trigger("click");
+										requiredField.attr("checked", true);
 									}
 								}
 
@@ -3852,49 +3908,65 @@
 									.find(".ur-advance-target_date_field")
 									.toggle();
 
-								if($(this).is(":checked")){
-
-									if(!$(this)
-									.closest(".ur-advance-setting-block")
-									.find(".ur-settings-time_range").is(":checked")){
-
+								if ($(this).is(":checked")) {
+									if (
+										!$(this)
+											.closest(
+												".ur-advance-setting-block"
+											)
+											.find(".ur-settings-time_range")
+											.is(":checked")
+									) {
 										$(this)
-										.closest(".ur-advance-setting-block")
-										.find(".ur-settings-time_range")
-										.trigger("click");
+											.closest(
+												".ur-advance-setting-block"
+											)
+											.find(".ur-settings-time_range")
+											.trigger("click");
 										$(this)
-										.closest(".ur-advance-setting-block")
-										.find(".ur-settings-time_range")
-										.attr("checked", true);
+											.closest(
+												".ur-advance-setting-block"
+											)
+											.find(".ur-settings-time_range")
+											.attr("checked", true);
 									}
 
-									$(this).closest(".ur-advance-setting-block").find(".ur-advance-time_range").hide();
-								}else{
-									$(this).closest(".ur-advance-setting-block").find(".ur-advance-time_range").show();
+									$(this)
+										.closest(".ur-advance-setting-block")
+										.find(".ur-advance-time_range")
+										.hide();
+								} else {
+									$(this)
+										.closest(".ur-advance-setting-block")
+										.find(".ur-advance-time_range")
+										.show();
 								}
-
 							});
 							break;
-						case 'enable_date_slot_booking':
-							var form = $this_node.closest('form'),
-							general_settings = form.find('.ur-general-setting-date'),
-							requiredWrapper = general_settings.find('.ur-general-setting-required'),
-							requiredField = requiredWrapper.find('input');
+						case "enable_date_slot_booking":
+							var form = $this_node.closest("form"),
+								general_settings = form.find(
+									".ur-general-setting-date"
+								),
+								requiredWrapper = general_settings.find(
+									".ur-general-setting-required"
+								),
+								requiredField = requiredWrapper.find("input");
 
-							if($this_node.is(":checked")){
+							if ($this_node.is(":checked")) {
 								//Required true if the slot booking is enable.
-								if(!requiredField.is(":checked")){
-									requiredField.trigger('click');
-									requiredField.attr('checked', true);
+								if (!requiredField.is(":checked")) {
+									requiredField.trigger("click");
+									requiredField.attr("checked", true);
 								}
 							}
 
 							$this_node.on("change", function () {
-								if($this_node.is(":checked")){
+								if ($this_node.is(":checked")) {
 									//Required true if the slot booking is enable.
-									if(!requiredField.is(":checked")){
-										requiredField.trigger('click');
-										requiredField.attr('checked', true);
+									if (!requiredField.is(":checked")) {
+										requiredField.trigger("click");
+										requiredField.attr("checked", true);
 									}
 								}
 							});
@@ -3902,11 +3974,15 @@
 					}
 					function trigger_advance_setting_limit_count($this_node) {
 						var wrapper = $(".ur-selected-item.ur-item-active");
-						wrapper.find(".ur_limit_count_mode p.ur_limit_count").text($this_node.val());
+						wrapper
+							.find(".ur_limit_count_mode p.ur_limit_count")
+							.text($this_node.val());
 					}
 					function trigger_advance_setting_limit_mode($this_node) {
 						var wrapper = $(".ur-selected-item.ur-item-active");
-						wrapper.find(".ur_limit_count_mode p.ur_limit_mode").text($this_node.val());
+						wrapper
+							.find(".ur_limit_count_mode p.ur_limit_mode")
+							.text($this_node.val());
 					}
 					var node_type = $this_node.get(0).tagName.toLowerCase();
 
@@ -4088,26 +4164,35 @@
 			 * @param object this_node Select field from field settings.
 			 */
 			render_select_box: function (this_node) {
-				var value = '';
-				if(this_node.is(":checked")) {
+				var value = "";
+				if (this_node.is(":checked")) {
 					var value = this_node.val().trim();
 				}
 				var wrapper = $(".ur-selected-item.ur-item-active");
 				var checked_index = this_node.closest("li").index();
 				var select = wrapper.find(".ur-field").find("select");
 
-				if(this_node.hasClass('ur-type-radio-label')) {
+				if (this_node.hasClass("ur-type-radio-label")) {
 					value = select.val();
 				}
 
-				var options = this_node.closest('.ur-general-setting-options').find('input.ur-general-setting-field.ur-type-radio-label').map(function(){
-					return $(this).val();
-				});
+				var options = this_node
+					.closest(".ur-general-setting-options")
+					.find("input.ur-general-setting-field.ur-type-radio-label")
+					.map(function () {
+						return $(this).val();
+					});
 
 				select.html("");
-				$.each(options, function(key, option){
+				$.each(options, function (key, option) {
 					select.append(
-						"<option value='" + option + "' "+(value === option ? 'selected' : '')+">" + option + "</option>"
+						"<option value='" +
+							option +
+							"' " +
+							(value === option ? "selected" : "") +
+							">" +
+							option +
+							"</option>"
 					);
 				});
 
@@ -4133,26 +4218,37 @@
 			 * @param object this_node Multi Select field from field settings.
 			 */
 			render_multi_select_box: function (this_node) {
-				var value = '';
-				if(this_node.is(":checked")) {
+				var value = "";
+				if (this_node.is(":checked")) {
 					var value = this_node.val().trim();
 				}
 				var wrapper = $(".ur-selected-item.ur-item-active");
 				var checked_index = this_node.closest("li").index();
 				var select = wrapper.find(".ur-field").find("select");
 
-				if(this_node.hasClass('ur-type-checkbox-label')) {
+				if (this_node.hasClass("ur-type-checkbox-label")) {
 					value = select.val();
 				}
 
-				var options = this_node.closest('.ur-general-setting-options').find('input.ur-general-setting-field.ur-type-checkbox-label').map(function(){
-					return $(this).val();
-				});
+				var options = this_node
+					.closest(".ur-general-setting-options")
+					.find(
+						"input.ur-general-setting-field.ur-type-checkbox-label"
+					)
+					.map(function () {
+						return $(this).val();
+					});
 
 				select.html("");
-				$.each(options, function(key, option){
+				$.each(options, function (key, option) {
 					select.append(
-						"<option value='" + option + "' "+(value === option ? 'selected' : '')+">" + option + "</option>"
+						"<option value='" +
+							option +
+							"' " +
+							(value === option ? "selected" : "") +
+							">" +
+							option +
+							"</option>"
 					);
 				});
 
@@ -4180,7 +4276,10 @@
 			render_radio: function (this_node) {
 				var li_elements = this_node.closest("ul").find("li");
 				var checked_index = undefined;
-				var image_image = this_node.closest(".ur-general-setting-options").siblings(".ur-general-setting-image_choice").find("input");
+				var image_image = this_node
+					.closest(".ur-general-setting-options")
+					.siblings(".ur-general-setting-image_choice")
+					.find("input");
 				var array_value = [];
 
 				li_elements.each(function (index, element) {
@@ -4210,7 +4309,11 @@
 							return each_value.value !== value;
 						})
 					) {
-						array_value.push({ value: value, radio: radio, image:image });
+						array_value.push({
+							value: value,
+							radio: radio,
+							image: image,
+						});
 					}
 				});
 
@@ -4219,23 +4322,36 @@
 				radio.html("");
 
 				for (var i = 0; i < array_value.length; i++) {
-					var imageHTML = '';
-					if ( image_image.is(":checked") ) {
-						if (array_value[i].image && array_value[i].image.trim() !== "") {
-							imageHTML = '<img src="' + array_value[i].image + '" width="200px">';
+					var imageHTML = "";
+					if (image_image.is(":checked")) {
+						if (
+							array_value[i].image &&
+							array_value[i].image.trim() !== ""
+						) {
+							imageHTML =
+								'<img src="' +
+								array_value[i].image +
+								'" width="200px">';
 						} else {
-							imageHTML = '<img src="' + user_registration_form_builder_data.ur_placeholder + '" width="200px">';
+							imageHTML =
+								'<img src="' +
+								user_registration_form_builder_data.ur_placeholder +
+								'" width="200px">';
 						}
 					}
 					if (array_value[i] !== "") {
-						$checked_class = '';
-						if ( image_image.is(":checked") ) {
-							$checked_class = array_value[i].radio ? 'ur-image-choice-checked' : '';
+						$checked_class = "";
+						if (image_image.is(":checked")) {
+							$checked_class = array_value[i].radio
+								? "ur-image-choice-checked"
+								: "";
 						}
 						radio.append(
-							'<label class="'+ $checked_class +'"><span class="user-registration-image-choice">' +
-							imageHTML +
-							'</span><input value="' +
+							'<label class="' +
+								$checked_class +
+								'"><span class="user-registration-image-choice">' +
+								imageHTML +
+								'</span><input value="' +
 								array_value[i].value.trim() +
 								'" type="radio" ' +
 								(array_value[i].radio ? "checked" : "") +
@@ -4271,7 +4387,10 @@
 				var array_value = [];
 				var li_elements = this_node.closest("ul").find("li");
 				var checked_index = this_node.closest("li").index();
-				var image_image = this_node.closest(".ur-general-setting-options").siblings(".ur-general-setting-image_choice").find("input");
+				var image_image = this_node
+					.closest(".ur-general-setting-options")
+					.siblings(".ur-general-setting-image_choice")
+					.find("input");
 				li_elements.each(function (index, element) {
 					var value = $(element)
 						.find("input.ur-type-checkbox-label")
@@ -4299,13 +4418,16 @@
 						.find("input.ur-type-image-choice")
 						.val();
 
-
 					if (
 						array_value.every(function (each_value) {
 							return each_value.value !== value;
 						})
 					) {
-						array_value.push({ value: value, checkbox: checkbox, image:image });
+						array_value.push({
+							value: value,
+							checkbox: checkbox,
+							image: image,
+						});
 					}
 				});
 
@@ -4314,12 +4436,21 @@
 				checkbox.html("");
 
 				for (var i = 0; i < array_value.length; i++) {
-					var imageHTML = '';
-					if ( image_image.is(":checked") ) {
-						if (array_value[i].image && array_value[i].image.trim() !== "") {
-							imageHTML = '<img src="' + array_value[i].image + '" width="200px">';
+					var imageHTML = "";
+					if (image_image.is(":checked")) {
+						if (
+							array_value[i].image &&
+							array_value[i].image.trim() !== ""
+						) {
+							imageHTML =
+								'<img src="' +
+								array_value[i].image +
+								'" width="200px">';
 						} else {
-							imageHTML = '<img src="' + user_registration_form_builder_data.ur_placeholder + '" width="200px">';
+							imageHTML =
+								'<img src="' +
+								user_registration_form_builder_data.ur_placeholder +
+								'" width="200px">';
 						}
 					}
 					if (array_value[i] !== "") {
@@ -4327,14 +4458,18 @@
 							'"',
 							"'"
 						);
-						$checked_class = '';
-						if ( image_image.is(":checked") ) {
-							$checked_class = array_value[i].checkbox ? 'ur-image-choice-checked' : '';
+						$checked_class = "";
+						if (image_image.is(":checked")) {
+							$checked_class = array_value[i].checkbox
+								? "ur-image-choice-checked"
+								: "";
 						}
 						checkbox.append(
-							'<label class="'+ $checked_class +'"><span class="user-registration-image-choice">' +
-							imageHTML +
-							'</span><input value="' +
+							'<label class="' +
+								$checked_class +
+								'"><span class="user-registration-image-choice">' +
+								imageHTML +
+								'</span><input value="' +
 								array_value[i].value.trim() +
 								'" type="checkbox" ' +
 								(array_value[i].checkbox ? "checked" : "") +
@@ -4376,7 +4511,10 @@
 				var array_value = [];
 				var li_elements = this_node.closest("ul").find("li");
 				var checked_index = this_node.closest("li").index();
-				var image_image = this_node.closest(".ur-general-setting-options").siblings(".ur-general-setting-image_choice").find("input");
+				var image_image = this_node
+					.closest(".ur-general-setting-options")
+					.siblings(".ur-general-setting-image_choice")
+					.find("input");
 
 				li_elements.each(function (index, element) {
 					var label = $(element)
@@ -4425,23 +4563,36 @@
 				checkbox.html("");
 
 				for (var i = 0; i < array_value.length; i++) {
-					var imageHTML = '';
-					if ( image_image.is(":checked") ) {
-						if (array_value[i].image && array_value[i].image.trim() !== "") {
-							imageHTML = '<img src="' + array_value[i].image + '" width="200px">';
+					var imageHTML = "";
+					if (image_image.is(":checked")) {
+						if (
+							array_value[i].image &&
+							array_value[i].image.trim() !== ""
+						) {
+							imageHTML =
+								'<img src="' +
+								array_value[i].image +
+								'" width="200px">';
 						} else {
-							imageHTML = '<img src="' + user_registration_form_builder_data.ur_placeholder + '" width="200px">';
+							imageHTML =
+								'<img src="' +
+								user_registration_form_builder_data.ur_placeholder +
+								'" width="200px">';
 						}
 					}
 					if (array_value[i] !== "") {
-						$checked_class = '';
-						if ( image_image.is(":checked") ) {
-							$checked_class = array_value[i].checkbox ? 'ur-image-choice-checked' : '';
+						$checked_class = "";
+						if (image_image.is(":checked")) {
+							$checked_class = array_value[i].checkbox
+								? "ur-image-choice-checked"
+								: "";
 						}
 						checkbox.append(
-							'<label class="'+ $checked_class +'"><span class="user-registration-image-choice">' +
-							imageHTML +
-							'</span><input value="' +
+							'<label class="' +
+								$checked_class +
+								'"><span class="user-registration-image-choice">' +
+								imageHTML +
+								'</span><input value="' +
 								array_value[i].label.trim() +
 								'" type="checkbox" ' +
 								(array_value[i].checkbox ? "checked" : "") +
@@ -4499,35 +4650,46 @@
 						.find("input.ur-radio-selling-price-input")
 						.val();
 					var interval_count = $(element)
-						.find(
-							"input.ur-radio-interval-count-input"
-						)
+						.find("input.ur-radio-interval-count-input")
 						.val();
 					var recurring_period = $(element)
-						.find(
-							".ur-radio-recurring-period"
-						)
+						.find(".ur-radio-recurring-period")
 						.val();
 
 					var trail_interval_count = $(element)
-						.find(
-							"input.ur-radio-trail-interval-count-input"
-						)
+						.find("input.ur-radio-trail-interval-count-input")
 						.val();
 					var trail_recurring_period = $(element)
-						.find(
-							".ur-radio-trail-recurring-period"
-						)
+						.find(".ur-radio-trail-recurring-period")
 						.val();
-						var trail_period_enable_val= $(element).find(".ur-radio-enable-trail-period").prop("checked") ? "on" : "false";
+					var trail_period_enable_val = $(element)
+						.find(".ur-radio-enable-trail-period")
+						.prop("checked")
+						? "on"
+						: "false";
 
-						wrapper.find(".ur-general-setting-options li:nth(" + index + ") .ur-radio-enable-trail-period").val(trail_period_enable_val);
+					wrapper
+						.find(
+							".ur-general-setting-options li:nth(" +
+								index +
+								") .ur-radio-enable-trail-period"
+						)
+						.val(trail_period_enable_val);
 
-						wrapper.find(
-							".ur-general-setting-options li:nth(" + index + ") .ur-radio-recurring-period").val(recurring_period);
-						wrapper.find(
-							".ur-general-setting-options li:nth(" + index + ") .ur-radio-trail-recurring-period").val(trail_recurring_period);
-
+					wrapper
+						.find(
+							".ur-general-setting-options li:nth(" +
+								index +
+								") .ur-radio-recurring-period"
+						)
+						.val(recurring_period);
+					wrapper
+						.find(
+							".ur-general-setting-options li:nth(" +
+								index +
+								") .ur-radio-trail-recurring-period"
+						)
+						.val(trail_recurring_period);
 
 					var currency = $(element)
 						.find("input.ur-type-radio-money-input")
@@ -4612,7 +4774,10 @@
 				var index = $label.closest("li").index();
 				var field_name = $label.attr("data-field-name");
 
-				if ("multiple_choice" === field_name || "subscription_plan" === field_name ) {
+				if (
+					"multiple_choice" === field_name ||
+					"subscription_plan" === field_name
+				) {
 					wrapper
 						.find(
 							".ur-general-setting-block li:nth(" +
@@ -4729,13 +4894,19 @@
 					.find("span:contains(*)")
 					.remove();
 
+				if ($label.is(":checked")) {
+					var label_element = wrapper.find(".ur-label").find("label");
+					var tooltip_icon = label_element.find(".ur-portal-tooltip");
 
-					if ($label.is(":checked")) {
-						wrapper
-							.find(".ur-label")
-							.find("label")
-							.append('<span style="color:red">*</span>');
+					if (tooltip_icon.length === 0) {
+						label_element.append(
+							'<span style="color:red">*</span>'
+						);
+					} else {
+						label_element;
+						tooltip_icon.before('<span style="color:red">*</span>');
 					}
+				}
 			},
 			/**
 			 * Reflects changes in required field of field settings into selected field in form builder area.
@@ -4928,7 +5099,7 @@
 					.find('input[data-field="default_value"]')
 					.prop("checked", false);
 				cloning_element.find('select[data-field="options"]').val("");
-				cloning_element.find('.ur-thumbnail-image img').attr("src","");
+				cloning_element.find(".ur-thumbnail-image img").attr("src", "");
 
 				$this.closest("li").after(cloning_element);
 				$wrapper
@@ -4960,7 +5131,10 @@
 				}
 
 				$(document.body).trigger("ur_field_option_changed", [
-					{ action: "add", wrapper: $wrapper },  URFormBuilder, $this ]);
+					{ action: "add", wrapper: $wrapper },
+					URFormBuilder,
+					$this,
+				]);
 			},
 			/**
 			 * Remove an option in choice field when called.
@@ -4974,7 +5148,7 @@
 					this_index = $this.closest("li").index();
 
 				if ($parent_ul.find("li").length > 1) {
-                       					$this.closest("li").remove();
+					$this.closest("li").remove();
 					$wrapper
 						.find(
 							".ur-general-setting-options .ur-options-list > li:nth( " +
@@ -5008,11 +5182,12 @@
 					) {
 						URFormBuilder.render_subscription_plan($any_siblings);
 					}
-
 				}
 
 				$(document.body).trigger("ur_field_option_changed", [
-					{ action: "remove", wrapper: $wrapper }, URFormBuilder, $this
+					{ action: "remove", wrapper: $wrapper },
+					URFormBuilder,
+					$this,
 				]);
 			},
 		};
