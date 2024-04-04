@@ -27,11 +27,16 @@
 							var multi_value_field = new Array();
 							$.each(frontend_field, function () {
 								var field_name = $(this).attr("name");
+								var field_type = $(this).attr("type");
 								var single_field = form.separate_form_handler(
 									'[name="' + field_name + '"]'
 								);
-
-								if (single_field.length < 2) {
+								var selection_fields_array = ["radio"];
+								
+								if (single_field.length < 2 && $.inArray(
+									field_type,
+									selection_fields_array
+								) < 0 ) {
 									var single_data =
 										this_instance.get_fieldwise_data(
 											$(this)
