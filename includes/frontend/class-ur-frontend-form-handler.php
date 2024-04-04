@@ -245,6 +245,10 @@ class UR_Frontend_Form_Handler {
 				}
 				update_user_meta( $user_id, $field_name, $data->value );
 			}
+			if ( 'user_url' === $data->field_name ) {
+				$data->value = sanitize_text_field( $data->value );
+				update_user_meta( $user_id, $data->field_name, $data->value );
+			}
 		}
 		update_user_meta( $user_id, 'ur_form_id', $form_id );
 
