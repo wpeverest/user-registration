@@ -15,6 +15,26 @@ if ( ! class_exists( 'UR_Settings_Reset_Password_Email', false ) ) :
 	 * UR_Settings_Reset_Password_Email Class.
 	 */
 	class UR_Settings_Reset_Password_Email {
+		/**
+		 * UR_Settings_Reset_Password_Email Id.
+		 *
+		 * @var string
+		 */
+		public $id;
+
+		/**
+		 * UR_Settings_Reset_Password_Email Title.
+		 *
+		 * @var string
+		 */
+		public $title;
+
+		/**
+		 * UR_Settings_Reset_Password_Email Description.
+		 *
+		 * @var string
+		 */
+		public $description;
 
 		/**
 		 * Constructor.

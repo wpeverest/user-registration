@@ -3724,7 +3724,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				'denied_access'    => get_option( 'user_registration_message_denied_account', null ),
 			);
 
-			$post = $_POST; // phpcs:ignore WordPress.Security.NonceVerification.
+			$post = $_POST; //phpcs:ignore;
 
 			$recaptcha_value     = isset( $post['g-recaptcha-response'] ) ? ur_clean( wp_unslash( $post['g-recaptcha-response'] ) ) : '';
 			$captcha_response    = isset($post['CaptchaResponse']) ? $post['CaptchaResponse'] : ''; //phpcs:ignore;
@@ -3962,6 +3962,185 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 	}
 }
 
+if ( ! function_exists( 'paypal_generate_redirect_url' ) ) {
+	/**
+	 * Regenerate PayPal redirect URL to pay after
+	 *
+	 * @param  int $user_id User Id.
+	 * @return string redirect url
+	 */
+	function paypal_generate_redirect_url( $user_id ) {
+
+		// Check an user was created and passed.
+		if ( empty( $user_id ) ) {
+			return '#';
+		}
+
+		// Filter redirect url for other payment add-ons.
+		if ( 'paypal_standard' !== get_user_meta( $user_id, 'ur_payment_method', true ) ) {
+			return apply_filters( 'user_registration_payment_generate_redirect_url', '#', $user_id );
+		}
+
+		$form_id   = get_user_meta( $user_id, 'ur_form_id', true );
+		$user_data = get_user_by( 'id', $user_id );
+
+		// Get data from saved user and for.
+		$currency       = get_user_meta( $user_id, 'ur_payment_currency', true );
+		$payment_mode   = get_user_meta( $user_id, 'ur_payment_mode', true );
+		$payment_type   = get_user_meta( $user_id, 'ur_payment_type', true );
+		$receiver_email = get_user_meta( $user_id, 'ur_payment_recipient', true );
+		$total_amount   = get_user_meta( $user_id, 'ur_payment_total_amount', true );
+		$ur_cart_items  = json_decode( get_user_meta( $user_id, 'ur_cart_items', true ) );
+
+		$cancel_url = ur_get_single_post_meta( $form_id, 'user_registration_paypal_cancel_url', home_url() );
+		$return_url = ur_get_single_post_meta( $form_id, 'user_registration_paypal_return_url', wp_login_url() );
+
+		if ( empty( $form_id ) || empty( $currency ) || empty( $payment_mode ) || empty( $payment_type ) || empty( $receiver_email ) || empty( $total_amount ) ) {
+			return '#';
+		}
+
+		// Build the return URL with hash.
+		$query_args = 'form_id=' . absint( $form_id ) . '&user_id=' . absint( $user_id ) . '&hash=' . wp_hash( $form_id . ',' . $user_id );
+
+		$return_url = esc_url_raw(
+			add_query_arg(
+				array(
+					'user_registration_return' => base64_encode( $query_args ),
+				),
+				$return_url
+			)
+		);
+
+		$redirect   = ( 'production' === $payment_mode ) ? 'https://www.paypal.com/cgi-bin/webscr/?' : 'https://www.sandbox.paypal.com/cgi-bin/webscr/?';
+		$cancel_url = ! empty( $cancel_url ) ? esc_url_raw( $cancel_url ) : home_url();
+
+		// Subscription.
+		$paypal_recurring_enabled = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_enable_paypal_standard_subscription', false ) );
+		if ( $paypal_recurring_enabled ) {
+			$transaction = '_xclick-subscriptions';
+		} elseif ( 'donation' === $payment_type ) {
+			$transaction = '_donations';
+		} else {
+			$transaction = '_cart';
+		}
+		// Setup PayPal arguments.
+		$paypal_args = array(
+			'bn'            => 'UserRegistration_SP',
+			'business'      => sanitize_email( $receiver_email ),
+			'cancel_return' => $cancel_url,
+			'cbt'           => get_bloginfo( 'name' ),
+			'charset'       => get_bloginfo( 'charset' ),
+			'cmd'           => $transaction,
+			'currency_code' => strtoupper( $currency ),
+			'custom'        => absint( $form_id ),
+			'invoice'       => absint( $user_id ),
+			'notify_url'    => add_query_arg( 'user-registration-listener', 'IPN', home_url( 'index.php' ) ),
+			'return'        => $return_url,
+			'rm'            => '2',
+			'tax'           => 0,
+			'upload'        => '1',
+			'amount'        => $total_amount,
+			'sra'           => '1',
+			'src'           => '1',
+			'no_note'       => '1',
+			'no_shipping'   => '1',
+			'shipping'      => '0',
+		);
+
+		// Add cart items.
+		if ( '_cart' === $transaction ) {
+
+			// Product/service.
+			$i = 1;
+
+			if ( ! empty( $ur_cart_items ) ) {
+				$i = 1;
+				foreach ( $ur_cart_items as $key => $payment_items ) {
+					$quantity = isset( $payment_items->quantity ) ? $payment_items->quantity : '';
+					$amount   = isset( $payment_items->amount ) ? $payment_items->amount : '';
+
+					if ( is_object( $payment_items->value ) ) {
+
+						foreach ( $payment_items->value as $label => $value ) {
+
+							if ( ! empty( $quantity ) ) {
+								$paypal_args[ 'item_name_' . $i ] = $label;
+								$paypal_args[ 'amount_' . $i ]    = $quantity * $value;
+
+							} else {
+								$paypal_args[ 'item_name_' . $i ] = $label;
+								$paypal_args[ 'amount_' . $i ]    = $value;
+							}
+							++$i;
+						}
+					} elseif ( ! empty( $quantity ) ) {
+						$paypal_args[ 'item_name_' . $i ] = $payment_items->extra_params->label;
+						$paypal_args[ 'amount_' . $i ]    = $amount;
+
+					} else {
+
+						$paypal_args[ 'item_name_' . $i ] = $payment_items->extra_params->label;
+						$paypal_args[ 'amount_' . $i ]    = $payment_items->value;
+					}
+					++$i;
+				}
+			}
+		} elseif ( '_donations' === $transaction ) {
+
+			// Combine a donation name from all payment fields names.
+			$item_names = array();
+
+			if ( ! empty( $ur_cart_items ) ) {
+				foreach ( $ur_cart_items as $key => $payment_items ) {
+					if ( is_object( $payment_items->value ) ) {
+						foreach ( $payment_items->value as $label => $value ) {
+							$item_names[] = $label;
+						}
+					} else {
+						$item_names[] = $payment_items->extra_params->label;
+					}
+				}
+			}
+
+			$paypal_args['item_name'] = implode( '; ', $item_names );
+			$paypal_args['amount']    = $total_amount;
+		} else {
+			$customer_email          = isset( $user_data->user_email ) ? $user_data->email : '';
+			$post_data               = ur_get_post_content( $form_id );
+			$subscription_plan_field = ur_get_form_data_by_key( $post_data, 'subscription_plan' );
+
+			if ( ! empty( $subscription_plan_field ) ) {
+				if ( isset( $subscription_plan_field['subscription_plan']->general_setting->options ) ) {
+					$plan_lists = $subscription_plan_field['subscription_plan']->general_setting->options;
+					if ( ! empty( $plan_lists ) ) {
+
+						foreach ( $plan_lists as $plan ) {
+							$interval_count   = $plan->interval_count;
+							$plan_name        = $plan->label;
+							$recurring_period = $plan->recurring_period;
+						}
+					}
+				}
+			} else {
+				$plan_name        = ur_get_single_post_meta( $form_id, 'user_registration_paypal_plan_name', '' );
+				$recurring_period = ur_get_single_post_meta( $form_id, 'user_registration_paypal_recurring_period' );
+				$interval_count   = ur_get_single_post_meta( $form_id, 'user_registration_paypal_interval_count', '1' );
+			}
+			$paypal_args['email']     = $customer_email;
+			$paypal_args['a3']        = $total_amount;
+			$paypal_args['item_name'] = ! empty( $plan_name ) ? $plan_name : '';
+			$paypal_args['t3']        = ! empty( $recurring_period ) ? strtoupper( substr( $recurring_period, 0, 1 ) ) : '';
+			$paypal_args['p3']        = ! empty( $interval_count ) ? $interval_count : 1;
+		}
+
+		// Build query.
+		$redirect .= http_build_query( $paypal_args );
+		$redirect  = str_replace( '&amp;', '&', $redirect );
+
+		return $redirect;
+	}
+}
+
 if ( ! function_exists( 'ur_generate_onetime_token' ) ) {
 	/**
 	 * Generate a one-time token for the given user ID and action.
@@ -4094,20 +4273,31 @@ if ( ! function_exists( 'user_registration_process_email_content' ) ) {
 			 */
 			$email_content = apply_filters( 'user_registration_email_template_message', $email_content, $template );
 		} else {
+			$default_width = '50%';
+
+			/**
+			 * Filters to change the email body width.
+			 *
+			 * The 'user_registration_email_body_width' filter allows developers to modify
+			 * the width of the email body used during the user registration process. It provides
+			 * an opportunity to customize the width of the email body based as per user requirements.
+			 *
+			 * @param string $default_width The default width.
+			 */
+			$email_body_width = apply_filters( 'user_registration_email_body_width', $default_width );
 			ob_start();
 			?>
-<div class="user-registration-email-body" style="padding: 100px 0; background-color: #ebebeb;">
-	<table class="user-registration-email" border="0" cellpadding="0" cellspacing="0"
-		style="width: 40%; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
-		<tbody>
-			<tr>
-				<td colspan="2" style="text-align: left;">
-					<?php echo wp_kses_post( $email_content ); ?>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-</div>
+			<div class="user-registration-email-body" style="padding: 100px 0; background-color: #ebebeb;">
+				<table class="user-registration-email" border="0" cellpadding="0" cellspacing="0" style="width: <?php echo esc_attr( $email_body_width ); ?>; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
+					<tbody>
+						<tr>
+							<td colspan="2" style="text-align: left;">
+								<?php echo wp_kses_post( $email_content ); ?>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 			<?php
 			$email_content = wp_kses_post( ob_get_clean() );
 		}
@@ -4447,6 +4637,78 @@ if ( ! function_exists( 'ur_array_clone' ) ) {
 			},
 			$array
 		);
+	}
+	if ( ! function_exists( 'ur_unlink_user_profile_pictures' ) ) {
+		/**
+		 * Remove user uploaded profile pictures and related thumbnail.
+		 *
+		 * @param int $id User ID.
+		 */
+		function ur_unlink_user_profile_pictures( $id ) {
+			$profile_pic_url = get_user_meta( $id, 'user_registration_profile_pic_url', true );
+			if ( ! empty( $profile_pic_url ) ) {
+
+				$profile_id = get_post_meta( $profile_pic_url, '_wp_attachment_metadata' );
+
+				// Unlink profile picture before removing users.
+				if ( is_array( $profile_id ) && ! empty( $profile_id ) ) {
+					foreach ( $profile_id as $profile ) {
+						if ( is_array( $profile ) && isset( $profile['file'] ) ) {
+							$base_dir  = wp_upload_dir()['basedir'];
+							$file      = $profile['file'];
+							$full_path = trailingslashit( $base_dir ) . $file;
+
+							if ( file_exists( $full_path ) ) {
+								unlink( $full_path );
+							}
+
+							// unlink different size thumbnails of profile picture.
+							if ( isset( $profile['sizes'] ) && is_array( $profile['sizes'] ) ) {
+								foreach ( $profile['sizes'] as $size ) {
+									if ( is_array( $size ) && isset( $size['file'] ) ) {
+										$size_file      = $size['file'];
+										$full_size_path = UR_UPLOAD_PATH . 'profile-pictures/' . $size_file;
+
+										if ( file_exists( $full_size_path ) ) {
+											unlink( $full_size_path );
+										}
+									}
+								}
+							}
+
+							// Unlink original uploaded image.
+							if ( isset( $profile['original_image'] ) ) {
+								$original_file = UR_UPLOAD_PATH . 'profile-pictures/' . $profile['original_image'];
+								if ( file_exists( $original_file ) ) {
+									unlink( $original_file );
+								}
+							}
+						}
+					}
+				}
+				// Remove profile pictures related metadata from DB.
+				delete_post_meta( $profile_pic_url, '_wp_attachment_metadata' );
+				delete_post_meta( $profile_pic_url, '_wp_attached_file' );
+			}
+		}
+	}
+	add_action( 'ur_remove_profile_pictures_and_metadata', 'ur_unlink_user_profile_pictures' );
+}
+
+if ( ! function_exists( 'ur_automatic_user_login' ) ) {
+	/**
+	 * Automatically login users.
+	 *
+	 * @since 3.1.5
+	 *
+	 * @param object $user The user.
+	 */
+	function ur_automatic_user_login( $user ) {
+		wp_clear_auth_cookie();
+		$remember = apply_filters( 'user_registration_autologin_remember_user', false );
+		wp_set_auth_cookie( $user->id, $remember );
+
+		wp_redirect( ur_get_my_account_url() );
 	}
 }
 

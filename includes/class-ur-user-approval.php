@@ -279,6 +279,13 @@ class UR_User_Approval {
 
 			$url = substr( $url, 0, strpos( $url, '?' ) );
 			$url = wp_nonce_url( $url . '?ur_resend_id=' . crypt_the_string( $user->ID . '_' . time(), 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
+			// if login option is email_confirmation but admin denies user.
+
+			if ( UR_Admin_User_Manager::DENIED === (int) $status['user_status'] ) {
+				$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account has been denied.', 'user-registration' );
+
+				return new WP_Error( 'denied_access', $message );
+			}
 
 			if ( '0' === $status['user_status'] ) {
 				/* translators: %s - Resend Verification Link. */
@@ -295,21 +302,24 @@ class UR_User_Approval {
 			 * @param WP_User $user The user object.
 			 */
 			do_action( 'ur_user_before_check_payment_status_on_login', $payment_status, $user );
-			/**
-			 * Applies a filter before checking the payment status on user login.
-			 *
-			 * @param string $payment_status Default payment status.
-			 * @param WP_User $user The user object.
-			 */
-			$message = apply_filters( 'ur_user_before_check_payment_status_on_login', $payment_status, $user );
 
 			if ( ! empty( $payment_status ) && 'completed' !== $payment_status ) {
+				$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account is still pending payment.', 'user-registration' );
 
-				$user_id      = $user->ID;
-				$instance     = new User_Registration_Payments_Process();
-				$redirect_url = $instance->generate_redirect_url( $user_id );
-				/* translators: %s - Redirect URL. */
-				$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . sprintf( get_option( 'user_registration_pro_pending_payment_error_message', __( 'Your account is still pending payment. Process the payment by clicking on this: <a id="payment-link" href="%s">link</a>', 'user-registration' ) ), esc_url( $redirect_url ) );
+				$payment_method = get_user_meta( $user->ID, 'ur_payment_method', true );
+				if ( 'paypal_standard' === $payment_method ) {
+					$user_id      = $user->ID;
+					$redirect_url = paypal_generate_redirect_url( $user_id );
+					/* translators: %s - Redirect URL. */
+					$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . sprintf( get_option( 'user_registration_pro_pending_payment_error_message', __( 'Your account is still pending payment. Process the payment by clicking on this: <a id="payment-link" href="%s">link</a>', 'user-registration' ) ), esc_url( $redirect_url ) );
+				}
+				/**
+				 * Applies a filter before checking the payment status on user login.
+				 *
+				 * @param string $message Default Message.
+				 * @param WP_User $user The user object.
+				 */
+				$message = apply_filters( 'ur_user_before_check_payment_status_on_login', $message, $user );
 
 				return new WP_Error( 'user_payment_pending', $message );
 			}

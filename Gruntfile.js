@@ -233,7 +233,7 @@ module.exports = function (grunt) {
 					"!*.zip",
 					"!.*/**",
 					"!sass/**",
-					"!vendor/**",
+					// "!vendor/**",
 					"!tests/**",
 					"!Gruntfile.js",
 					"!package.json",
