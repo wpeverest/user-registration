@@ -26,258 +26,134 @@ import { useOnType } from "use-ontype";
  *  Internal Dependencies
  */
 import { Search } from "../../components/Icon/Icon";
-import Features from "./Features/Features";
-import Addons from "./Addons/Addons";
 import { isEmpty } from "../../../utils/utils";
+
 import {
-	getAllAddons,
-	bulkActivateAddons,
-	bulkDeactivateAddons,
-	bulkInstallAddon,
-} from "./Addons/addons-api";
-import {
-	bulkEnableFeatures,
-	bulkDisableFeatures,
-	getAllFeatures,
-} from "./Features/features-api";
+	getAllModules,
+	bulkActivateModules,
+	bulkDeactivateModules,
+} from "./components/modules-api";
 import AddonSkeleton from "../../skeleton/AddonsSkeleton/AddonsSkeleton";
 import { useStateValue } from "../../../context/StateProvider";
 import { actionTypes } from "../../../context/dashboardContext";
+import ModuleBody from "./components/ModuleBody";
 
 const Modules = () => {
-	const [tabIndex, setTabIndex] = useState(0);
-	const [selectedAddonsSlugs, setSelectedAddonsSlugs] = useState([]);
-	const [selectedAddonsNames, setSelectedAddonsNames] = useState([]);
-	const [selectedFeaturesSlugs, setSelectedFeaturesSlugs] = useState([]);
+	const toast = useToast();
+	const [isSearching, setIsSearching] = useState(false);
+	const [{ allModules }, dispatch] = useStateValue();
+	const [modulesLoaded, setModulesLoaded] = useState(false);
+	const [selectedModuleData, setSelectedModuleData] = useState("");
 	const [bulkAction, setBulkAction] = useState("");
 	const [isPerformingBulkAction, setIsPerformingBulkAction] = useState(false);
-	const toast = useToast();
-	const [addonsLoaded, setAddonsLoaded] = useState(false);
-	const [featuresLoaded, setFeaturesLoaded] = useState(false);
-	const [isSearching, setIsSearching] = useState(false);
-	const [{ allAddons, allFeatures }, dispatch] = useStateValue();
-	const [filteredAddons, setFilteredAddons] = useState([]);
-	const [filteredFeatures, setFilteredFeatures] = useState([]);
+	const [tabIndex, setTabIndex] = useState(0);
 
-	const bulkOptions = [
-		{
-			enable: `${__("Enable", "user-registration")}`,
-			disable: `${__("Disable", "user-registration")}`,
-		},
-		{
-			activate: `${__("Activate", "user-registration")}`,
-			deactivate: `${__("Deactivate", "user-registration")}`,
-			install: `${__("Install", "user-registration")}`,
-		},
-	];
+	const [modules, setModules] = useState([]);
 
-	useEffect(() => {}, [selectedAddonsSlugs]);
+	useEffect(() => {}, [selectedModuleData]);
 	useEffect(() => {
-		if (tabIndex === 0) {
-			if (!featuresLoaded) {
-				getAllFeatures()
-					.then((data) => {
-						if (data.success) {
-							dispatch({
-								type: actionTypes.GET_ALL_Features,
-								allFeatures: data.features_lists,
-							});
-
-							setFilteredFeatures(data.features_lists);
-							setFeaturesLoaded(true);
-						}
-					})
-					.catch((e) => {
-						toast({
-							title: e.message,
-							status: "error",
-							duration: 3000,
+		if (!modulesLoaded) {
+			getAllModules()
+				.then((data) => {
+					if (data.success) {
+						dispatch({
+							type: actionTypes.GET_ALL_MODULES,
+							allModules: data.modules_lists,
 						});
-					});
-			}
-		} else {
-			if (!addonsLoaded) {
-				getAllAddons()
-					.then((data) => {
-						if (data.success) {
-							dispatch({
-								type: actionTypes.GET_ALL_ADDONS,
-								allAddons: data.addons_lists,
-							});
 
-							setFilteredAddons(data.addons_lists);
-							setAddonsLoaded(true);
+						if (tabIndex === 1) {
+							var feature_lists = [];
+							data.modules_lists.map((module) => {
+								if (module.type === "feature") {
+									feature_lists.push(module);
+								}
+							});
+							setModules(feature_lists);
+						} else if (tabIndex === 2) {
+							var addon_lists = [];
+							data.modules_lists.map((module) => {
+								if (module.type === "addon") {
+									addon_lists.push(module);
+								}
+							});
+							setModules(addon_lists);
+						} else {
+							setModules(data.modules_lists);
 						}
-					})
-					.catch((e) => {
-						toast({
-							title: e.message,
-							status: "error",
-							duration: 3000,
-						});
+						setModulesLoaded(true);
+					}
+				})
+				.catch((e) => {
+					toast({
+						title: e.message,
+						status: "error",
+						duration: 3000,
 					});
-			}
+				});
 		}
-	}, [
-		tabIndex,
-		addonsLoaded,
-		filteredAddons,
-		featuresLoaded,
-		filteredFeatures,
-	]);
+	}, [tabIndex, modules, modulesLoaded, isPerformingBulkAction]);
 
 	const handleBulkActions = () => {
 		setIsPerformingBulkAction(true);
 
-		if (tabIndex === 0) {
-			if (bulkAction === "enable") {
-				bulkEnableFeatures(selectedFeaturesSlugs)
-					.then((data) => {
-						if (data.success) {
-							toast({
-								title: data.message,
-								status: "success",
-								duration: 3000,
-							});
-						} else {
-							toast({
-								title: data.message,
-								status: "error",
-								duration: 3000,
-							});
-						}
-					})
-					.catch((e) => {
+		if (bulkAction === "activate") {
+			bulkActivateModules(selectedModuleData)
+				.then((data) => {
+					if (data.success) {
 						toast({
-							title: e.message,
+							title: data.message,
+							status: "success",
+							duration: 3000,
+						});
+					} else {
+						toast({
+							title: data.message,
 							status: "error",
 							duration: 3000,
 						});
-					})
-					.finally(() => {
-						setIsPerformingBulkAction(false);
+					}
+				})
+				.catch((e) => {
+					toast({
+						title: e.message,
+						status: "error",
+						duration: 3000,
 					});
-			} else {
-				bulkDisableFeatures(selectedFeaturesSlugs)
-					.then((data) => {
-						if (data.success) {
-							toast({
-								title: data.message,
-								status: "success",
-								duration: 3000,
-							});
-						} else {
-							toast({
-								title: data.message,
-								status: "error",
-								duration: 3000,
-							});
-						}
-					})
-					.catch((e) => {
+				})
+				.finally(() => {
+					setModulesLoaded(false);
+					setIsPerformingBulkAction(false);
+					setSelectedModuleData({});
+				});
+		} else if (bulkAction === "deactivate") {
+			bulkDeactivateModules(selectedModuleData)
+				.then((data) => {
+					if (data.success) {
 						toast({
-							title: e.message,
+							title: data.message,
+							status: "success",
+							duration: 3000,
+						});
+					} else {
+						toast({
+							title: data.message,
 							status: "error",
 							duration: 3000,
 						});
-					})
-					.finally(() => {
-						setIsPerformingBulkAction(false);
+					}
+				})
+				.catch((e) => {
+					toast({
+						title: e.message,
+						status: "error",
+						duration: 3000,
 					});
-			}
-			setFeaturesLoaded(false);
-		} else {
-			if (bulkAction === "activate") {
-				bulkActivateAddons(selectedAddonsSlugs)
-					.then((data) => {
-						if (data.success) {
-							toast({
-								title: data.message,
-								status: "success",
-								duration: 3000,
-							});
-						} else {
-							toast({
-								title: data.message,
-								status: "error",
-								duration: 3000,
-							});
-						}
-					})
-					.catch((e) => {
-						toast({
-							title: e.message,
-							status: "error",
-							duration: 3000,
-						});
-					})
-					.finally(() => {
-						setIsPerformingBulkAction(false);
-					});
-			} else if (bulkAction === "deactivate") {
-				bulkDeactivateAddons(selectedAddonsSlugs)
-					.then((data) => {
-						if (data.success) {
-							toast({
-								title: data.message,
-								status: "success",
-								duration: 3000,
-							});
-						} else {
-							toast({
-								title: data.message,
-								status: "error",
-								duration: 3000,
-							});
-						}
-					})
-					.catch((e) => {
-						toast({
-							title: e.message,
-							status: "error",
-							duration: 3000,
-						});
-					})
-					.finally(() => {
-						setIsPerformingBulkAction(false);
-					});
-			} else if (bulkAction === "install") {
-				const addonData = selectedAddonsSlugs.map((slug, index) => ({
-					slug: slug,
-					name: selectedAddonsNames[index],
-				}));
-				bulkInstallAddon(addonData)
-					.then((data) => {
-						if (data.success) {
-							toast({
-								title: data.message,
-								status: "success",
-								duration: 3000,
-							});
-							// window.location.reload();
-							// setAddonStatus("active");
-						} else {
-							toast({
-								title: data.message,
-								status: "error",
-								duration: 3000,
-							});
-							// setAddonStatus("inactive");
-						}
-					})
-					.catch((e) => {
-						toast({
-							title: e.message,
-							status: "error",
-							duration: 3000,
-						});
-						// setAddonStatus("inactive");
-					})
-					.finally(() => {
-						setIsPerformingBulkAction(false);
-					});
-			}
-			setAddonsLoaded(false);
+				})
+				.finally(() => {
+					setModulesLoaded(false);
+					setIsPerformingBulkAction(false);
+					setSelectedModuleData({});
+				});
 		}
 	};
 
@@ -287,44 +163,46 @@ const Modules = () => {
 				setIsSearching(true);
 			},
 			onTypeFinish: (val) => {
-				if (0 === tabIndex) {
-					if (isEmpty(val)) {
-						setFeaturesLoaded(false);
-					} else {
-						const searchedData = allFeatures?.filter((feature) =>
-							feature.title
-								.toLowerCase()
-								.includes(val.toLowerCase())
-						);
-						if (!isEmpty(searchedData)) {
-							setFilteredFeatures(searchedData);
-							setFeaturesLoaded(true);
-						} else {
-							setFeaturesLoaded(false);
-						}
-					}
+				if (isEmpty(val)) {
+					setModulesLoaded(false);
 				} else {
-					if (isEmpty(val)) {
-						setAddonsLoaded(false);
-					} else {
-						const searchedData = allAddons?.filter((addon) =>
-							addon.title
-								.toLowerCase()
-								.includes(val.toLowerCase())
+					var searchedData = {};
+
+					if (tabIndex === 1) {
+						searchedData = allModules?.filter(
+							(module) =>
+								module.type === "feature" &&
+								module.title
+									.toLowerCase()
+									.includes(val.toLowerCase()),
 						);
-						if (!isEmpty(searchedData)) {
-							setFilteredAddons(searchedData);
-							setAddonsLoaded(true);
-						} else {
-							setAddonsLoaded(false);
-						}
+					} else if (tabIndex === 2) {
+						searchedData = allModules?.filter(
+							(module) =>
+								module.type === "addon" &&
+								module.title
+									.toLowerCase()
+									.includes(val.toLowerCase()),
+						);
+					} else {
+						searchedData = allModules?.filter((module) =>
+							module.title
+								.toLowerCase()
+								.includes(val.toLowerCase()),
+						);
+					}
+
+					if (!isEmpty(searchedData)) {
+						setModules(searchedData);
+						setModulesLoaded(true);
+					} else {
+						setModulesLoaded(false);
 					}
 				}
-
 				setIsSearching(false);
 			},
 		},
-		800
+		800,
 	);
 
 	const parseDate = (dateString) => {
@@ -339,8 +217,8 @@ const Modules = () => {
 					[...data].sort(
 						(firstAddonInContext, secondAddonInContext) =>
 							parseDate(secondAddonInContext.released_date) -
-							parseDate(firstAddonInContext.released_date)
-					)
+							parseDate(firstAddonInContext.released_date),
+					),
 				);
 				break;
 			case "oldest":
@@ -348,8 +226,8 @@ const Modules = () => {
 					[...data].sort(
 						(firstAddonInContext, secondAddonInContext) =>
 							parseDate(firstAddonInContext.released_date) -
-							parseDate(secondAddonInContext.released_date)
-					)
+							parseDate(secondAddonInContext.released_date),
+					),
 				);
 				break;
 			case "asc":
@@ -357,9 +235,9 @@ const Modules = () => {
 					[...data].sort(
 						(firstAddonInContext, secondAddonInContext) =>
 							firstAddonInContext.title.localeCompare(
-								secondAddonInContext.title
-							)
-					)
+								secondAddonInContext.title,
+							),
+					),
 				);
 				break;
 			case "desc":
@@ -367,53 +245,13 @@ const Modules = () => {
 					[...data].sort(
 						(firstAddonInContext, secondAddonInContext) =>
 							secondAddonInContext.title.localeCompare(
-								firstAddonInContext.title
-							)
-					)
+								firstAddonInContext.title,
+							),
+					),
 				);
 				break;
 			default:
-				if (0 === tabIndex) {
-					getAllFeatures()
-						.then((data) => {
-							if (data.success) {
-								dispatch({
-									type: actionTypes.GET_ALL_Features,
-									allFeatures: data.features_lists,
-								});
-
-								setFilteredFeatures(data.features_lists);
-								setFeaturesLoaded(true);
-							}
-						})
-						.catch((e) => {
-							toast({
-								title: e.message,
-								status: "error",
-								duration: 3000,
-							});
-						});
-				} else {
-					getAllAddons()
-						.then((data) => {
-							if (data.success) {
-								dispatch({
-									type: actionTypes.GET_ALL_ADDONS,
-									allAddons: data.addons_lists,
-								});
-
-								setFilteredAddons(data.addons_lists);
-								setAddonsLoaded(true);
-							}
-						})
-						.catch((e) => {
-							toast({
-								title: e.message,
-								status: "error",
-								duration: 3000,
-							});
-						});
-				}
+				setModulesLoaded(false);
 		}
 	};
 	return (
@@ -432,19 +270,11 @@ const Modules = () => {
 							size="md"
 							bg="#DFDFE0"
 							onChange={(e) => {
-								if (tabIndex === 0) {
-									handleSorterChange(
-										e.target.value,
-										filteredFeatures,
-										setFilteredFeatures
-									);
-								} else {
-									handleSorterChange(
-										e.target.value,
-										filteredAddons,
-										setFilteredAddons
-									);
-								}
+								handleSorterChange(
+									e.target.value,
+									modules,
+									setModules,
+								);
 							}}
 							border="1px solid #DFDFE0 !important"
 							borderRadius="4px !important"
@@ -452,7 +282,7 @@ const Modules = () => {
 							width="fit-content"
 						>
 							<option value="default">
-								{__("Most Downloaded", "user-registration")}
+								{__("Popular", "user-registration")}
 							</option>
 							<option value="newest">
 								{__("Newest", "user-registration")}
@@ -471,7 +301,14 @@ const Modules = () => {
 						<Tabs
 							index={tabIndex}
 							onChange={(index) => {
+								setIsSearching(true);
 								setTabIndex(index);
+								setModulesLoaded(false);
+								new Promise(function (resolve, reject) {
+									setTimeout(resolve, 1000);
+								}).then(function () {
+									setIsSearching(false);
+								});
 							}}
 						>
 							<TabList
@@ -482,25 +319,63 @@ const Modules = () => {
 								<Tab
 									fontSize="14px"
 									borderRadius="4px 0 0 4px"
+									style={{
+										boxSizing: "border-box",
+									}}
+									_focus={{
+										boxShadow: "none",
+									}}
 									_selected={{
 										color: "white",
 										bg: "#2563EB",
 										marginBottom: "0px",
+										boxShadow: "none",
 									}}
 									boxShadow="none !important"
+									transition="none !important"
+								>
+									{__("All", "user-registration")}
+								</Tab>
+								<Tab
+									fontSize="14px"
+									style={{
+										boxSizing: "border-box",
+									}}
+									_focus={{
+										boxShadow: "none",
+									}}
+									_selected={{
+										color: "white",
+										bg: "#2563EB",
+										marginBottom: "0px",
+										boxShadow: "none",
+									}}
+									boxShadow="none !important"
+									borderRight="1px solid #E9E9E9"
+									borderLeft="1px solid #E9E9E9"
+									marginLeft="0px !important"
+									transition="none !important"
 								>
 									{__("Features", "user-registration")}
 								</Tab>
 								<Tab
 									fontSize="14px"
+									style={{
+										boxSizing: "border-box",
+									}}
 									borderRadius="0 4px 4px 0"
+									_focus={{
+										boxShadow: "none",
+									}}
 									_selected={{
 										color: "white",
 										bg: "#2563EB",
 										marginBottom: "0px",
+										boxShadow: "none",
 									}}
 									marginLeft="0px !important"
 									boxShadow="none !important"
+									transition="none !important"
 								>
 									{__("Addons", "user-registration")}
 								</Tab>
@@ -515,7 +390,7 @@ const Modules = () => {
 								bg="#DFDFE0"
 								placeholder={__(
 									"Bulk Actions",
-									"user-registration"
+									"user-registration",
 								)}
 								onChange={(e) => setBulkAction(e.target.value)}
 								icon=""
@@ -523,13 +398,12 @@ const Modules = () => {
 								border="1px solid #DFDFE0 !important"
 								borderRadius="4px !important"
 							>
-								{Object.entries(bulkOptions[tabIndex]).map(
-									([option_key, option_value], k) => (
-										<option key={k} value={option_key}>
-											{option_value}
-										</option>
-									)
-								)}
+								<option value="activate">
+									{__("Activate", "user-registration")}
+								</option>
+								<option value="deactivate">
+									{__("Deactivate", "user-registration")}
+								</option>
 							</Select>
 
 							<Button
@@ -561,7 +435,7 @@ const Modules = () => {
 									type="text"
 									placeholder={__(
 										"Search...",
-										"user-registration"
+										"user-registration",
 									)}
 									paddingLeft="32px !important"
 									{...onSearchInput}
@@ -579,34 +453,39 @@ const Modules = () => {
 						<Tabs index={tabIndex}>
 							<TabPanels>
 								<TabPanel>
-									<Features
+									<ModuleBody
 										isPerformingBulkAction={
 											isPerformingBulkAction
 										}
-										filteredFeatures={filteredFeatures}
-										selectedFeaturesSlugs={
-											selectedFeaturesSlugs
+										filteredAddons={modules}
+										setSelectedModuleData={
+											setSelectedModuleData
 										}
-										setSelectedFeaturesSlugs={
-											setSelectedFeaturesSlugs
-										}
+										selectedModuleData={selectedModuleData}
 									/>
 								</TabPanel>
 								<TabPanel>
-									<Addons
+									<ModuleBody
 										isPerformingBulkAction={
 											isPerformingBulkAction
 										}
-										filteredAddons={filteredAddons}
-										selectedAddonsSlugs={
-											selectedAddonsSlugs
+										filteredAddons={modules}
+										setSelectedModuleData={
+											setSelectedModuleData
 										}
-										setSelectedAddonsSlugs={
-											setSelectedAddonsSlugs
+										selectedModuleData={selectedModuleData}
+									/>
+								</TabPanel>
+								<TabPanel>
+									<ModuleBody
+										isPerformingBulkAction={
+											isPerformingBulkAction
 										}
-										setSelectedAddonsNames={
-											setSelectedAddonsNames
+										filteredAddons={modules}
+										setSelectedModuleData={
+											setSelectedModuleData
 										}
+										selectedModuleData={selectedModuleData}
 									/>
 								</TabPanel>
 							</TabPanels>

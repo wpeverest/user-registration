@@ -6,7 +6,7 @@
       "name" : "User Registration-Advanced Fields",
       "image": "extensions-json/sections/images/advanced-fields.png",
       "excerpt": "Get more custom fields for your registration forms! Use the Advanced Fields add-on to collect vital information from users.",
-      "link": "https://wpuserregistration.com/features/advanced-fields/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=advanced-fields",
+      "link": "https://wpuserregistration.com/features/advanced-fields/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan" : [
         "personal",
         "plus",
@@ -21,7 +21,7 @@
       "name" : "User Registration - WooCommerce",
       "image": "extensions-json/sections/images/woo-extension.png",
       "excerpt": "Add shipping/billing fields to registration forms and sync form data with the checkout page for a pleasant customer experience.",
-      "link": "https://wpuserregistration.com/features/woocommerce/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=woocommerce-integration",
+      "link": "https://wpuserregistration.com/features/woocommerce/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan" : [
         "personal",
         "plus",
@@ -36,7 +36,7 @@
       "name" : "User Registration customize my account",
       "image": "extensions-json/sections/images/customize-my-account.png",
       "excerpt": "Create, edit, and delete additional tabs on the user account page. You can add custom content for individual tabs.",
-      "link": "https://wpuserregistration.com/features/customize-my-account/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=customize-my-account",
+      "link": "https://wpuserregistration.com/features/customize-my-account/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan" : [
         "plus",
         "professional",
@@ -50,7 +50,7 @@
       "name" : "User Registration - File Upload",
       "image": "extensions-json/sections/images/file.png",
       "excerpt": "Users can upload single or multiple files during registration. Several file types are available along with customizable file size limits.",
-      "link": "https://wpuserregistration.com/features/file-upload/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=file-upload",
+      "link": "https://wpuserregistration.com/features/file-upload/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan" : [
         "personal",
         "plus",
@@ -65,7 +65,7 @@
       "name" : "User Registration Style Customizer",
       "image": "extensions-json/sections/images/style-customizer.png",
       "excerpt": "Leverage the power of the User Registration Style Customizer add-on to personalize the look and feel of your registration and login forms.",
-      "link": "https://wpuserregistration.com/features/style-customizer/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=style-customizer",
+      "link": "https://wpuserregistration.com/features/style-customizer/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan" : [
         "plus",
         "professional",
@@ -79,7 +79,7 @@
       "name" : "User Registration Conditional Logic",
       "image": "extensions-json/sections/images/conditional-logic.png",
       "excerpt": "Create dynamic registration forms quickly! Show or hide specific form fields based on user input in previous fields.",
-      "link": "https://wpuserregistration.com/features/conditional-logic/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=conditional-logic",
+      "link": "https://wpuserregistration.com/features/conditional-logic/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan" : [
         "plus",
         "professional",
@@ -93,7 +93,7 @@
       "name" : "User Registration Multi Part",
       "image": "extensions-json/sections/images/multi-part.png",
       "excerpt": "Say goodbye to long and tedious forms! Divide your registration forms into multiple steps for a streamlined signup process.",
-      "link": "https://wpuserregistration.com/features/multi-step/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=multi-part",
+      "link": "https://wpuserregistration.com/features/multi-step/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan" : [
         "plus",
         "professional",
@@ -107,7 +107,7 @@
       "name" : "User Registration Field Visibility",
       "image": "extensions-json/sections/images/field-visibility.png",
       "excerpt": "Control the visibility of particular form fields in the form or the account page. You can hide/show fields or make them read-only.",
-      "link": "https://wpuserregistration.com/features/field-visibility/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=field-visibility",
+      "link": "https://wpuserregistration.com/features/field-visibility/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
 	    "plan" : [
         "plus",
         "professional",
@@ -121,7 +121,7 @@
       "name" : "User Registration Email Templates",
       "image": "extensions-json/sections/images/email-templates.png",
       "excerpt": "Create a new email template or customize pre-designed email templates that match the look and feel of your website and brand.",
-      "link": "https://wpuserregistration.com/features/email-templates/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=email-templates",
+      "link": "https://wpuserregistration.com/features/email-templates/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan" : [
         "plus",
         "professional",
@@ -135,7 +135,7 @@
       "name" : "User Registration - Social Connect",
       "image": "extensions-json/sections/images/social.png",
       "excerpt": "The Social Connect add-on allows users to login or register with social platforms like Facebook, LinkedIn, Twitter, and Google+.",
-      "link": "https://wpuserregistration.com/features/social-connect/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=social-connect",
+      "link": "https://wpuserregistration.com/features/social-connect/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
 	    "plan" : [
 		    "personal",
 		    "plus",
@@ -150,7 +150,7 @@
       "name" : "User Registration - Mailchimp",
       "image": "extensions-json/sections/images/mailchimp.png",
       "excerpt": "Connect your mailing lists with User Registration forms and achieve incredible results in your email marketing efforts.",
-      "link": "https://wpuserregistration.com/features/mailchimp/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=mailchimp",
+      "link": "https://wpuserregistration.com/features/mailchimp/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan" : [
         "personal",
         "plus",
@@ -165,7 +165,7 @@
       "name" : "User Registration Profile Connect",
       "image": "extensions-json/sections/images/profile-connect.png",
       "excerpt": "Need to connect users registered via other plugins to User Registration forms? Try the Profile Connect add-on for seamless connection.",
-      "link": "https://wpuserregistration.com/features/profile-connect/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=profile-connect",
+      "link": "https://wpuserregistration.com/features/profile-connect/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan" : [
         "personal",
         "plus",
@@ -180,7 +180,7 @@
       "name" : "User Registration Invite Codes",
       "image": "extensions-json/sections/images/invite-codes.png",
       "excerpt": "Allow only users with invite codes to register on your site. You can create multiple invitation codes, set usage limits, etc.",
-      "link": "https://wpuserregistration.com/features/invite-codes/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=invite-codes",
+      "link": "https://wpuserregistration.com/features/invite-codes/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan" : [
         "plus",
         "professional",
@@ -194,7 +194,7 @@
       "name" : "User Registration PDF Form Submission",
       "image": "extensions-json/sections/images/pdf-form-submission.png",
       "excerpt": "Export user registration form data to a PDF file. You can customize the PDF paper size, font, orientation, header text, and more.",
-      "link": "https://wpuserregistration.com/features/pdf-form-submission/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=pdf-form-submission",
+      "link": "https://wpuserregistration.com/features/pdf-form-submission/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan" : [
         "personal",
         "plus",
@@ -209,7 +209,8 @@
       "name" : "User Registration LearnDash",
       "image": "extensions-json/sections/images/learndash.png",
       "excerpt": "Automatically enroll users to a specified LearnDash course during registration. You can also view which courses a user is enrolled in.",
-      "link": "https://wpuserregistration.com/features/learndash/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=learndash",
+      "link": "https://wpuserregistration.com/features/learndash/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+
       "plan" : [
         "plus",
         "professional",
@@ -223,8 +224,8 @@
       "name" : "User Registration Import Users",
       "image": "extensions-json/sections/images/import-users.png",
       "excerpt": "Quickly import users to a registration form. You’ll need a user data file in CSV format to map the fields and import them correctly.",
-      "link": "https://wpuserregistration.com/features/import-users/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=import-users",
-	    "plan" : [
+      "link": "https://wpuserregistration.com/features/import-users/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "plan" : [
         "plus",
         "professional",
         "themegrill agency"
@@ -237,8 +238,8 @@
 	    "name" : "User Registration Geolocation",
       "image": "extensions-json/sections/images/geolocation.png",
       "excerpt": "The Geolocation add-on is a must-have for collecting geolocation data on registered users. You can also add Google Maps to forms.",
-      "link": "https://wpuserregistration.com/features/geolocation/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=geolocation",
-	    "plan" : [
+      "link": "https://wpuserregistration.com/features/geolocation/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "plan" : [
         "plus",
         "professional",
         "themegrill agency"
@@ -251,7 +252,7 @@
       "name" : "User Registration Stripe",
       "image": "extensions-json/sections/images/stripe.png",
       "excerpt": "Accept credit card payments using the Stripe gateway. You can collect donations, subscription fees, etc. securely.",
-      "link": "https://wpuserregistration.com/features/stripe/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=stripe",
+      "link": "https://wpuserregistration.com/features/stripe/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
 	    "plan" : [
         "plus",
         "professional",
@@ -265,7 +266,7 @@
       "name" : "User Registration Two Factor Authentication",
       "image": "extensions-json/sections/images/two-factor-authentication.png",
       "excerpt": "Avoid data breaches with the Two Factor Authentication (2FA) system, which provides a OTP-based verification for users.",
-      "link": "https://wpuserregistration.com/features/two-factor-authentication/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=two-factor-authentication",
+      "link": "https://wpuserregistration.com/features/two-factor-authentication/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan" : [
         "personal",
         "plus",
@@ -280,7 +281,7 @@
       "name" : "User Registration Zapier",
       "image": "extensions-json/sections/images/zapier.png",
       "excerpt": "With the Zapier add-on, you can easily automate your work by connecting User Registration forms to 1500+ applications.",
-      "link": "https://wpuserregistration.com/features/zapier/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=zapier",
+      "link": "https://wpuserregistration.com/features/zapier/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan" : [
         "plus",
         "professional",
@@ -294,7 +295,7 @@
       "name" : "User Registration Profile Completeness",
       "image": "extensions-json/sections/images/profile-completeness.png",
       "excerpt": "Display a progress bar to indicate the completeness of a user profile and encourage users to complete their profiles.",
-      "link": "https://wpuserregistration.com/features/profile-completeness/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=profile-completeness",
+      "link": "https://wpuserregistration.com/features/profile-completeness/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan" : [
         "personal",
         "plus",
@@ -309,7 +310,7 @@
       "name" : "User Registration Private Notes",
       "image": "extensions-json/sections/images/private-notes.png",
       "excerpt": "Share important updates, personalized messages, etc., with users. Provide a platform for users to ask questions and receive answers.",
-      "link": "https://wpuserregistration.com/features/private-notes/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=private-notes",
+      "link": "https://wpuserregistration.com/features/private-notes/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan" : [
         "plus",
         "professional",
@@ -323,7 +324,7 @@
       "name" : "User Registration ActiveCampaign",
       "image": "extensions-json/sections/images/activecampaign.png",
       "excerpt": "Effortlessly link your ActiveCampaign account to User Registration forms using the ActiveCampaign add-on and enable seamless subscriber collection.",
-      "link": "https://wpuserregistration.com/features/activecampaign/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=activecampaign",
+      "link": "https://wpuserregistration.com/features/activecampaign/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan" : [
         "plus",
         "professional",
@@ -337,7 +338,7 @@
       "name" : "User Registration MailerLite",
       "image": "extensions-json/sections/images/mailerlite.png",
       "excerpt": "Connect your registered users to MailerLite lists. You can then use the collected data for a fruitful marketing campaign.",
-      "link": "https://wpuserregistration.com/features/mailerlite/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=mailerlite",
+      "link": "https://wpuserregistration.com/features/mailerlite/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan" : [
         "plus",
         "professional",
@@ -351,7 +352,7 @@
       "name" : "User Registration Save and Continue",
       "image": "extensions-json/sections/images/save-and-continue.png",
       "excerpt": "Enable users to save registration forms they’ve partially filled so that they can complete the submission later.",
-      "link": "https://wpuserregistration.com/features/save-and-continue/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=save-and-continue",
+      "link": "https://wpuserregistration.com/features/save-and-continue/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan" : [
         "plus",
         "professional",
@@ -365,7 +366,7 @@
       "name" : "User Registration Post Submissions",
       "image": "extensions-json/sections/images/post-submission.png",
       "excerpt": "Let users create posts on your WordPress site from a front-end registration form without accessing the admin dashboard.",
-      "link": "https://wpuserregistration.com/features/post-submission/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=post-submission",
+      "link": "https://wpuserregistration.com/features/post-submission/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan" : [
         "plus",
         "professional",
@@ -379,7 +380,7 @@
       "name" : "User Registration Klaviyo",
       "image": "extensions-json/sections/images/klaviyo.jpg",
       "excerpt": "Connect your Klaviyo account with User Registration and add users registering on your site to any Klaviyo subscriber list.",
-      "link": "https://wpuserregistration.com/features/klaviyo/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=klaviyo",
+      "link": "https://wpuserregistration.com/features/klaviyo/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan" : [
         "plus",
         "professional",
@@ -393,7 +394,7 @@
       "name" : "User Registration Conversational Forms",
       "image": "extensions-json/sections/images/conversational-forms.png",
       "excerpt": "Transform your boring and simple registration forms and make them super interactive.",
-      "link": "https://wpuserregistration.com/features/conversational-forms/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=conversational-forms",
+      "link": "https://wpuserregistration.com/features/conversational-forms/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan" : [
         "plus",
         "professional",
@@ -407,7 +408,7 @@
       "name" : "User Registration Form Restriction",
       "image": "extensions-json/sections/images/form-restriction.png",
       "excerpt": "Restrict access with custom conditions and optimize your website’s user registration system.",
-      "link": "https://wpuserregistration.com/features/form-restriction/?utm_source=addons-page&utm_medium=banner&utm_campaign=ur-upgrade-to-pro&utm_content=form-restriction",
+      "link": "https://wpuserregistration.com/features/form-restriction/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan" : [
         "plus",
         "professional",

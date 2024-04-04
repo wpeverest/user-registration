@@ -25,11 +25,24 @@ import ShortcodesLists from "./Lists/ShortcodesLists/ShortcodesLists";
 import SmartTagsLists from "./Lists/SmartTagsLists/SmartTagsLists";
 
 const Help = () => {
+	/* global _UR_DASHBOARD_ */
+	const { utmCampaign } =
+		typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
+
 	const [isListViewerOpen, setIsListViewerOpen] = useState(false);
 	const [listViewerType, setListViewerType] = useState("");
 
 	useEffect(() => {}, [isListViewerOpen]);
 
+	const supportURL =
+			"https://wpuserregistration.com/support/?utm_source=dashboard-help&utm_medium=help-button&utm_campaign=" +
+			utmCampaign,
+		helpURL =
+			"https://docs.wpuserregistration.com/?utm_source=dashboard-help&utm_medium=help-button&utm_campaign=" +
+			utmCampaign,
+		featureRequestURL =
+			"https://wpuserregistration.com/feature-requests/?utm_source=dashboard-help&utm_medium=sidebar-link&utm_campaign=" +
+			utmCampaign;
 	return (
 		<Grid
 			my="8"
@@ -77,7 +90,7 @@ const Help = () => {
 							<Text fontSize="13px" color="gray.700">
 								{__(
 									"Find the complete list of shortcodes with their usage information and parameter details.",
-									"user-registration"
+									"user-registration",
 								)}
 							</Text>
 							<Button
@@ -113,7 +126,7 @@ const Help = () => {
 							<Text fontSize="13px" color="gray.700">
 								{__(
 									"Find the complete list of smart tags with their usage information and parameter details.",
-									"user-registration"
+									"user-registration",
 								)}
 							</Text>
 							<Button
@@ -149,7 +162,7 @@ const Help = () => {
 							<Text fontSize="13px" color="gray.700">
 								{__(
 									"If you have any issues or questions, our team is on standby to help you instantly.",
-									"user-registration"
+									"user-registration",
 								)}
 							</Text>
 							<Button
@@ -160,8 +173,9 @@ const Help = () => {
 								borderRadius="base"
 								fontSize="14px"
 								fontWeight="normal"
-								href="https://wpuserregistration.com/support"
+								href={supportURL}
 								isExternal
+								textDecor="none !important"
 							>
 								{__("Contact Support", "user-registration")}
 							</Button>
@@ -184,20 +198,20 @@ const Help = () => {
 							<Text fontSize="13px" color="gray.700">
 								{__(
 									"Check our documentation for detailed information on User Registration features and how to use them.",
-									"user-registration"
+									"user-registration",
 								)}
 							</Text>
 							<Button
 								mt="10"
 								as={Link}
 								colorScheme="primary"
-								variant="link"
 								borderRadius="base"
 								fontSize="14px"
 								fontWeight="normal"
-								textDecor="underline"
-								href="https://docs.wpuserregistration.com/"
+								textDecor="none !important"
+								href={helpURL}
 								isExternal
+								variant="outline"
 							>
 								{__("View Now", "user-registration")}
 							</Button>
@@ -231,7 +245,7 @@ const Help = () => {
 						<Text fontSize="13px" color="gray.700">
 							{__(
 								"Join our exclusive group and connect with fellow User Registration members. Ask questions, contribute to discussions, and share feedback!",
-								"user-registration"
+								"user-registration",
 							)}
 						</Text>
 						<Button
@@ -245,6 +259,7 @@ const Help = () => {
 							color="white !important"
 							isExternal
 							href="https://www.facebook.com/groups/userregistration"
+							textDecor="none !important"
 						>
 							{__("Join Group", "user-registration")}
 						</Button>
@@ -272,7 +287,7 @@ const Help = () => {
 						<Text fontSize="13px" color="gray.700">
 							{__(
 								"Follow us on X to get the latest news and updates about User Registration and the team behind it.",
-								"user-registration"
+								"user-registration",
 							)}
 						</Text>
 						<Button
@@ -286,8 +301,9 @@ const Help = () => {
 							bgColor="black !important"
 							isExternal
 							href="https://twitter.com/user_register"
+							textDecor="none !important"
 						>
-							{__("Join X", "user-registration")}
+							{__("Follow", "user-registration")}
 						</Button>
 					</Stack>
 				</Grid>
@@ -313,7 +329,7 @@ const Help = () => {
 						<Text fontSize="13px" color="gray.700">
 							{__(
 								"Subscribe to our YouTube channel, where we guide you on using User Registration’s features and add-ons.",
-								"user-registration"
+								"user-registration",
 							)}
 						</Text>
 						<Button
@@ -327,6 +343,7 @@ const Help = () => {
 							color="white !important"
 							isExternal
 							href="https://www.youtube.com/@UserRegistration"
+							textDecor="none !important"
 						>
 							{__("Subscribe", "user-registration")}
 						</Button>
@@ -351,7 +368,7 @@ const Help = () => {
 					<Text fontSize="13px" color="gray.700">
 						{__(
 							"Watch our step-by-step video tutorials that’ll help you get the best out of User Registration’s features.",
-							"user-registration"
+							"user-registration",
 						)}
 					</Text>
 					<Link
@@ -380,11 +397,11 @@ const Help = () => {
 					<Text fontSize="13px" color="gray.700">
 						{__(
 							"Don’t find a feature you’re looking for? Suggest any features you think would enhance our product.",
-							"user-registration"
+							"user-registration",
 						)}
 					</Text>
 					<Link
-						href="https://user-registration.feedbear.com/"
+						href={featureRequestURL}
 						color="var(--chakra-colors-primary-500) !important"
 						textDecor="underline"
 						isExternal
@@ -409,7 +426,7 @@ const Help = () => {
 					<Text fontSize="13px" color="gray.700">
 						{__(
 							"Please take a moment to give us a review. We appreciate honest feedback that’ll help us improve our plugin.",
-							"user-registration"
+							"user-registration",
 						)}
 					</Text>
 					<Link

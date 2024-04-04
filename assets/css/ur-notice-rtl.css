@@ -9,6 +9,8 @@
   background-color: #fff; }
   .user-registration-notice .notice-dismiss:before {
     display: none; }
+  .user-registration-notice.is-dismissible .notice-dismiss::before {
+    display: block; }
   .user-registration-notice .user-registration-notice-thumbnail {
     float: right;
     text-align: center;

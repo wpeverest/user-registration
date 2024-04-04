@@ -50,7 +50,7 @@ function App() {
 			title: __("Install Pages", "user-registration"),
 			description: __(
 				"The following pages will be installed automatically.",
-				"user-registration"
+				"user-registration",
 			),
 			isDone: true,
 			component: <InstallPage />,
@@ -61,7 +61,7 @@ function App() {
 			title: __("General Settings", "user-registration"),
 			description: __(
 				"Customize your general settings as per your preference.",
-				"user-registration"
+				"user-registration",
 			),
 			isDone: false,
 			component: <GeneralSettings />,
@@ -72,7 +72,7 @@ function App() {
 			title: __("Registration Settings", "user-registration"),
 			description: __(
 				"Customize your registration settings as per your preference.",
-				"user-registration"
+				"user-registration",
 			),
 			isDone: false,
 			component: <RegistrationSettings />,
@@ -83,7 +83,7 @@ function App() {
 			title: __("My Account Settings", "user-registration"),
 			description: __(
 				"Customize your my account page settings as per your preference.",
-				"user-registration"
+				"user-registration",
 			),
 			isDone: false,
 			component: <MyAccountSettings />,
@@ -141,7 +141,7 @@ function App() {
 			prevStep.map((step) => {
 				if (step.key === activeStep.key) step.isDone = true;
 				return step;
-			})
+			}),
 		);
 		setActiveStep(steps[index + 1]);
 	};
@@ -157,7 +157,7 @@ function App() {
 			prevStep.map((step) => {
 				if (step.key === activeStep.key) step.isDone = false;
 				return step;
-			})
+			}),
 		);
 		setActiveStep(steps[index - 1]);
 	};
@@ -266,7 +266,7 @@ function App() {
 				.filter(
 					(key) =>
 						key !==
-						"user_registration_form_setting_minimum_password_strength"
+						"user_registration_form_setting_minimum_password_strength",
 				)
 				.reduce((obj, key) => {
 					obj[key] = settings[key];
@@ -415,7 +415,7 @@ function App() {
 								>
 									{__(
 										"Install & Proceed",
-										"user-registration"
+										"user-registration",
 									)}
 								</Button>
 							) : (
@@ -450,11 +450,11 @@ function App() {
 								"installed"
 							) {
 								handleSaveSettings(
-									`${adminURL}admin.php?page=user-registration`
+									`${adminURL}admin.php?page=user-registration-dashboard`,
 								);
 							} else {
 								handleSaveSettings(
-									`${adminURL}admin.php?page=user-registration&end-setup-wizard=1`
+									`${adminURL}admin.php?page=user-registration-dashboard&end-setup-wizard=1`,
 								);
 							}
 						}}

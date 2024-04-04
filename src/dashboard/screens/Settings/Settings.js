@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const Settings = ({ to }) => {
 	useEffect(() => {
-		window.location.replace(to);
+		window.open(to);
+		window.history.back();
 	}, [to]);
 
 	return null; // Render nothing or a loading indicator

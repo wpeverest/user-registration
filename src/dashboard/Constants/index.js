@@ -9,11 +9,7 @@ let ROUTES = [
 	},
 	{
 		route: "/features",
-		label: __("Features/Addons", "user-registration"),
-	},
-	{
-		route: "/products",
-		label: __("Products", "user-registration"),
+		label: __("All Features", "user-registration"),
 	},
 	{
 		route: "/settings",
@@ -23,6 +19,10 @@ let ROUTES = [
 	{
 		route: "/help",
 		label: __("Help", "user-registration"),
+	},
+	{
+		route: "/products",
+		label: __("Other Products", "user-registration"),
 	},
 ];
 

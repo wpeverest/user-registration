@@ -1,22 +1,20 @@
 export const initialState = {
 	pluginsStatus: "",
 	themesStatus: "",
-	allAddons: [],
 	upgradeModal: {
 		enable: false,
 		type: "",
 		moduleType: "",
 		moduleName: "",
 	},
-	allFeatures: [],
+	allModules: [],
 };
 
 export const actionTypes = {
 	GET_PLUGINS_STATUS: "GET_PLUGINS_STATUS",
 	GET_THEMES_STATUS: "GET_THEMES_STATUS",
-	GET_ALL_ADDONS: "GET_ALL_ADDONS",
 	GET_UPGRADE_MODAL: "GET_UPGRADE_MODAL",
-	GET_ALL_FEATURES: "GET_ALL_FEATURES",
+	GET_ALL_MODULES: "GET_ALL_MODULES",
 };
 
 const reducer = (state, action) => {
@@ -31,20 +29,15 @@ const reducer = (state, action) => {
 				...state,
 				themesStatus: action.themesStatus,
 			};
-		case actionTypes.GET_ALL_ADDONS:
-			return {
-				...state,
-				allAddons: action.allAddons,
-			};
 		case actionTypes.GET_UPGRADE_MODAL:
 			return {
 				...state,
 				upgradeModal: action.upgradeModal,
 			};
-		case actionTypes.GET_ALL_Features:
+		case actionTypes.GET_ALL_MODULES:
 			return {
 				...state,
-				allFeatures: action.allFeatures,
+				allModules: action.allModules,
 			};
 		default:
 			return state;

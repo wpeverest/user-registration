@@ -20,6 +20,12 @@ class UR_Admin_Dashboard {
 	 */
 	public static function output() {
 
+		// End setup wizard when skipped to list table.
+		if ( ! empty( $_REQUEST['end-setup-wizard'] ) && sanitize_text_field( wp_unslash( $_REQUEST['end-setup-wizard'] ) ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Missing
+			update_option( 'user_registration_first_time_activation_flag', false );
+			update_option( 'user_registration_onboarding_skipped', true );
+		}
+
 		wp_enqueue_script( 'ur-dashboard-script', UR()->plugin_url() . '/chunks/dashboard.js', array( 'wp-element', 'wp-blocks', 'wp-editor' ), UR()->version, true );
 
 		if ( ! function_exists( 'get_plugins' ) ) {
@@ -44,17 +50,20 @@ class UR_Admin_Dashboard {
 			'_UR_DASHBOARD_',
 			array(
 				'adminURL'             => esc_url( admin_url() ),
+				'settingsURL'          => esc_url( admin_url( '/admin.php?page=user-registration-settings' ) ),
 				'siteURL'              => esc_url( home_url( '/' ) ),
 				'liveDemoURL'          => esc_url_raw( 'https://userregistration.demoswp.net/' ),
 				'assetsURL'            => esc_url( UR()->plugin_url() . '/assets/' ),
 				'urRestApiNonce'       => wp_create_nonce( 'wp_rest' ),
 				'newFormURL'           => esc_url( admin_url( '/admin.php?page=add-new-registration' ) ),
+				'allFormsURL'          => esc_url( admin_url( '/admin.php?page=user-registration' ) ),
 				'restURL'              => rest_url(),
 				'version'              => UR()->version,
 				'isPro'                => is_plugin_active( 'user-registration-pro/user-registration.php' ),
 				'licensePlan'          => ur_get_license_plan(),
-				'licenseActivationURL' => esc_url_raw( admin_url() . '?page=user-registration-settings&tab=license' ),
-				'upgradeURL'           => esc_url_raw( 'https://wpuserregistration.com/pricing/?utm_source=addons-page&utm_medium=upgrade-button&utm_campaign=ur-upgrade-to-pro' ),
+				'licenseActivationURL' => esc_url_raw( admin_url( '/admin.php?page=user-registration-settings&tab=license' ) ),
+				'utmCampaign'          => UR()->utm_campaign,
+				'upgradeURL'           => esc_url_raw( 'https://wpuserregistration.com/pricing/?utm_campaign=' . UR()->utm_campaign ),
 				'plugins'              => array_reduce(
 					$allowed_plugin_slugs,
 					function ( $acc, $curr ) use ( $installed_plugin_slugs ) {

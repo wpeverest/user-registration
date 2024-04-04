@@ -24,9 +24,8 @@ import { __ } from "@wordpress/i18n";
  */
 import check from "./images/check.webp";
 import close from "./images/close.webp";
-import { getAllAddons } from "../Modules/Addons/addons-api";
-import { getAllFeatures } from "../Modules/Features/features-api";
 import { Lock } from "../../components/Icon/Icon";
+import { getAllModules } from "../Modules/components/modules-api";
 
 const FreeVsPro = () => {
 	const [contentsLoaded, setContentsLoaded] = useState(false);
@@ -41,7 +40,7 @@ const FreeVsPro = () => {
 				{
 					title: __(
 						"Unlimited Registration Forms",
-						"user-registration"
+						"user-registration",
 					),
 					free: true,
 					pro: true,
@@ -49,7 +48,7 @@ const FreeVsPro = () => {
 				{
 					title: __(
 						"Unlimited User Registrations",
-						"user-registration"
+						"user-registration",
 					),
 					free: true,
 					pro: true,
@@ -72,7 +71,7 @@ const FreeVsPro = () => {
 				{
 					title: __(
 						"Replace Default WordPress Login",
-						"user-registration"
+						"user-registration",
 					),
 					free: true,
 					pro: true,
@@ -85,7 +84,7 @@ const FreeVsPro = () => {
 				{
 					title: __(
 						"4 Registration Approval Methods",
-						"user-registration"
+						"user-registration",
 					),
 					free: true,
 					pro: true,
@@ -103,7 +102,7 @@ const FreeVsPro = () => {
 				{
 					title: __(
 						"User Registration Analytics widget",
-						"user-registration"
+						"user-registration",
 					),
 					free: true,
 					pro: true,
@@ -111,7 +110,7 @@ const FreeVsPro = () => {
 				{
 					title: __(
 						"Customizable Email Notifications",
-						"user-registration"
+						"user-registration",
 					),
 					free: true,
 					pro: true,
@@ -119,7 +118,7 @@ const FreeVsPro = () => {
 				{
 					title: __(
 						"User Redirection After Registration",
-						"user-registration"
+						"user-registration",
 					),
 					free: true,
 					pro: true,
@@ -127,7 +126,7 @@ const FreeVsPro = () => {
 				{
 					title: __(
 						"Google reCAPTCHA v2 and V3",
-						"user-registration"
+						"user-registration",
 					),
 					free: true,
 					pro: true,
@@ -155,7 +154,7 @@ const FreeVsPro = () => {
 				{
 					title: __(
 						"Erase Data After Uninstallation",
-						"user-registration"
+						"user-registration",
 					),
 					free: true,
 					pro: true,
@@ -178,7 +177,7 @@ const FreeVsPro = () => {
 				{
 					title: __(
 						"Admin Approval after Email Confirmation",
-						"user-registration"
+						"user-registration",
 					),
 					free: false,
 					pro: true,
@@ -206,7 +205,7 @@ const FreeVsPro = () => {
 				{
 					title: __(
 						"Registration And Login Popups",
-						"user-registration"
+						"user-registration",
 					),
 					free: false,
 					pro: true,
@@ -234,7 +233,7 @@ const FreeVsPro = () => {
 				{
 					title: __(
 						"Field Mapping with External Plugins",
-						"user-registration"
+						"user-registration",
 					),
 					free: false,
 					pro: true,
@@ -252,7 +251,7 @@ const FreeVsPro = () => {
 				{
 					title: __(
 						"Auto Logout After Inactivity",
-						"user-registration"
+						"user-registration",
 					),
 					free: false,
 					pro: true,
@@ -260,7 +259,7 @@ const FreeVsPro = () => {
 				{
 					title: __(
 						"Send Form Data to External URL After Registration",
-						"user-registration"
+						"user-registration",
 					),
 					free: false,
 					pro: true,
@@ -277,48 +276,52 @@ const FreeVsPro = () => {
 	useEffect(() => {
 		if (!contentsLoaded) {
 			const tableContentsRef = [...tableContents];
-			getAllFeatures().then((data) => {
-				if (data.success) {
-					tableContentsRef.map((tableContent, key) => {
-						if (tableContent.type === "features") {
-							data.features_lists.map((feature) => {
-								tableContent.contents = [
-									...tableContent.contents,
-									{
-										title: feature.title,
-										free: false,
-										pro: true,
-									},
-								];
-							});
-							tableContentsRef[key] = tableContent;
-						}
-					});
-					setTableContents(tableContentsRef);
-				}
-			});
-			const tableContentsRefs = [...tableContents];
 
-			getAllAddons().then((data) => {
-				if (data.success) {
-					tableContentsRefs.map((tableContent, key) => {
-						if (tableContent.type === "addons") {
-							data.addons_lists.map((addon) => {
-								tableContent.contents = [
-									...tableContent.contents,
-									{
-										title: addon.title,
-										free: false,
-										pro: true,
-									},
-								];
-							});
-							tableContentsRefs[key] = tableContent;
-						}
+			getAllModules()
+				.then((data) => {
+					if (data.success) {
+						tableContentsRef.map((tableContent, key) => {
+							if (tableContent.type === "features") {
+								data.modules_lists.map((module) => {
+									if (module.type == "feature") {
+										tableContent.contents = [
+											...tableContent.contents,
+											{
+												title: module.title,
+												free: false,
+												pro: true,
+											},
+										];
+									}
+								});
+								tableContentsRef[key] = tableContent;
+							}
+							if (tableContent.type === "addons") {
+								data.modules_lists.map((module) => {
+									if (module.type == "addon") {
+										tableContent.contents = [
+											...tableContent.contents,
+											{
+												title: module.title,
+												free: false,
+												pro: true,
+											},
+										];
+									}
+								});
+								tableContentsRef[key] = tableContent;
+							}
+						});
+						setTableContents(tableContentsRef);
+					}
+				})
+				.catch((e) => {
+					toast({
+						title: e.message,
+						status: "error",
+						duration: 3000,
 					});
-					setTableContents(tableContentsRefs);
-				}
-			});
+				});
 			setContentsLoaded(true);
 		}
 	}, [contentsLoaded, tableContents]);
@@ -412,13 +415,16 @@ const FreeVsPro = () => {
 				>
 					{__(
 						"Access all premium addons, features and upcoming updates right away by upgrading to the Pro version.",
-						"user-registration"
+						"user-registration",
 					)}
 				</Text>
 				<Button
 					as={Link}
 					colorScheme="primary"
-					href={upgradeURL}
+					href={
+						upgradeURL +
+						"&utm_source=dashboard-free-vs-pro&utm_medium=upgrade-button"
+					}
 					color="white !important"
 					textDecor="none !important"
 					isExternal

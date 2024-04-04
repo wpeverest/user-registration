@@ -28,7 +28,7 @@ class UR_Admin_User_Manager {
 	/**
 	 * The deny value in the db
 	 */
-	const DENIED = - 1;
+	const DENIED = -1;
 
 	/**
 	 * WP user object
@@ -59,7 +59,7 @@ class UR_Admin_User_Manager {
 		}
 
 		if ( ! ( $user instanceof WP_User ) ) {
-			throw new Exception( __( 'Impossible to create an UR_Admin_User_Manager object. Unkwon data type.', 'user-registration' ) );
+			throw new Exception( esc_html__( 'Impossible to create an UR_Admin_User_Manager object. Unkwon data type.', 'user-registration' ) );
 		}
 
 		$this->user = $user;
@@ -187,7 +187,6 @@ class UR_Admin_User_Manager {
 				'login_option' => 'default',
 				'user_status'  => $user_status,
 			);
-
 		} elseif ( '' !== $user_status && '' === $user_email_status ) {
 			/**
 			 * Case: Admin Approval.
@@ -198,7 +197,6 @@ class UR_Admin_User_Manager {
 				'login_option' => 'admin_approval',
 				'user_status'  => $user_status,
 			);
-
 		} elseif ( '' !== $admin_approval_after_email_confirmation_status && '' !== $user_email_status ) {
 			/**
 			 * Case: Admin Approval after Email Confirmation.
@@ -229,7 +227,7 @@ class UR_Admin_User_Manager {
 
 			$result = array(
 				'login_option'    => 'email_confirmation',
-				'user_status'     => $user_email_status,
+				'user_status'     => '' == $user_status ? $user_email_status : $user_status,
 				'email_status'    => $user_email_status,
 				'approval_status' => $user_status,
 			);
