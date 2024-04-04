@@ -59,22 +59,25 @@ class UR_Admin {
 	 * Includes any classes we need within admin.
 	 */
 	public function includes() {
-		include_once dirname( __FILE__ ) . '/functions-ur-admin.php';
-		include_once dirname( __FILE__ ) . '/class-ur-admin-notices.php';
-		include_once dirname( __FILE__ ) . '/class-ur-admin-menus.php';
-		include_once dirname( __FILE__ ) . '/class-ur-admin-export-users.php';
-		include_once dirname( __FILE__ ) . '/class-ur-admin-import-export-forms.php';
-		include_once dirname( __FILE__ ) . '/class-ur-admin-form-modal.php';
-		include_once dirname( __FILE__ ) . '/class-ur-admin-user-list-manager.php';
+		include_once __DIR__ . '/functions-ur-admin.php';
+		include_once __DIR__ . '/class-ur-admin-notices.php';
+		include_once __DIR__ . '/class-ur-admin-menus.php';
+		include_once __DIR__ . '/class-ur-admin-export-users.php';
+		include_once __DIR__ . '/class-ur-admin-import-export-forms.php';
+		include_once __DIR__ . '/class-ur-admin-form-modal.php';
+		include_once __DIR__ . '/class-ur-admin-user-list-manager.php';
 		include_once UR_ABSPATH . 'includes' . UR_DS . 'admin' . UR_DS . 'class-ur-admin-assets.php';
-		include_once dirname( __FILE__ ) . '/class-ur-admin-form-templates.php';
-		include_once dirname( __FILE__ ) . '/class-ur-admin-deactivation-feedback.php';
+		include_once __DIR__ . '/class-ur-admin-form-templates.php';
+		include_once __DIR__ . '/class-ur-admin-deactivation-feedback.php';
 
 		// Setup/welcome.
 		if ( ! empty( $_GET['page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			switch ( $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification
 				case 'user-registration-welcome':
-					include_once dirname( __FILE__ ) . '/class-ur-admin-welcome.php';
+					include_once __DIR__ . '/class-ur-admin-welcome.php';
+					break;
+				case 'user-registration-dashboard':
+					include_once __DIR__ . '/class-ur-admin-dashboard.php';
 					break;
 			}
 		}
@@ -203,7 +206,7 @@ class UR_Admin {
 		$notice_header      = __( 'Bravo! 💪 Well done.', 'user-registration' );
 		$notice_target_link = 'https://wordpress.org/support/plugin/user-registration/reviews/#postform';
 
-		include dirname( __FILE__ ) . '/views/html-notice-promotional.php';
+		include __DIR__ . '/views/html-notice-promotional.php';
 	}
 
 	/**
@@ -266,7 +269,7 @@ class UR_Admin {
 			$notice_type        = 'allow_usage';
 			$notice_header      = __( 'Contribute to the enhancement', 'user-registration' );
 			$notice_target_link = '#';
-			include dirname( __FILE__ ) . '/views/html-notice-promotional.php';
+			include __DIR__ . '/views/html-notice-promotional.php';
 		} else {
 			return false;
 		}
@@ -288,7 +291,7 @@ class UR_Admin {
 				$prompt_count = get_option( 'user_registration_php_deprecated_notice_prompt_count', 0 );
 
 				if ( $prompt_count < $prompt_limit ) {
-					include dirname( __FILE__ ) . '/views/html-notice-php-deprecation.php';
+					include __DIR__ . '/views/html-notice-php-deprecation.php';
 				}
 			}
 		}
@@ -317,7 +320,7 @@ class UR_Admin {
 			$notice_header      = __( 'User Registration Plugin Survey', 'user-registration' );
 			$notice_target_link = 'https://forms.office.com/pages/responsepage.aspx?id=c04iBAejyEWvNQDb6GzDCILyv8m6NoBDvJVtRTCcOvBUNk5OSTA4OEs1SlRPTlhFSFZXRFA0UFEwRCQlQCN0PWcu';
 
-			include dirname( __FILE__ ) . '/views/html-notice-promotional.php';
+			include __DIR__ . '/views/html-notice-promotional.php';
 		} else {
 			return;
 		}
@@ -380,7 +383,7 @@ class UR_Admin {
 		// Check if the screen contains user-registration_page_ as prefix inorder to make sure the page is user registration plugin's page.
 		if ( strpos( $current_screen->id, 'user-registration_page_' ) !== false ) {
 			$classes = 'user-registration';
-		};
+		}
 		return $classes;
 	}
 
