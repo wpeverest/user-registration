@@ -236,7 +236,7 @@ class UR_User_Approval {
 						$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account is still pending approval.', 'user-registration' );
 						return new WP_Error( 'pending_approval', $message );
 					} else {
-						$url      = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $_SERVER['SERVER_NAME'] : 'http://' . $_SERVER['SERVER_NAME']; //phpcs:ignore
+						$url      = (!empty($_SERVER['HTTPS'])) ? 'https://' . $_SERVER['SERVER_NAME'] : 'http://' . $_SERVER['SERVER_NAME']; //phpcs:ignore
 
 						if ( get_option( 'ur_login_ajax_submission' ) ) {
 							$url .= $_SERVER['HTTP_REFERER']; //phpcs:ignore
@@ -268,7 +268,7 @@ class UR_User_Approval {
 			 */
 			do_action( 'ur_user_before_check_email_status_on_login', $status['user_status'], $user );
 
-			$url      = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $_SERVER['SERVER_NAME'] : 'http://' . $_SERVER['SERVER_NAME']; //phpcs:ignore
+			$url      = (!empty($_SERVER['HTTPS'])) ? 'https://' . $_SERVER['SERVER_NAME'] : 'http://' . $_SERVER['SERVER_NAME']; //phpcs:ignore
 
 			if ( get_option( 'ur_login_ajax_submission' ) ) {
 				$url .= $_SERVER['HTTP_REFERER']; //phpcs:ignore
