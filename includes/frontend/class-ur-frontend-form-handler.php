@@ -225,9 +225,10 @@ class UR_Frontend_Form_Handler {
 	public static function ur_update_user_meta( $user_id, $valid_form_data, $form_id ) {
 
 		foreach ( $valid_form_data as $data ) {
-			if ( ! in_array( trim( $data->field_name ), ur_get_user_table_fields() ) ) {
+			$field_key             = isset( $data->extra_params['field_key'] ) ? $data->extra_params['field_key'] : '';
+
+			if ( ! in_array( trim( $data->field_name ), ur_get_user_table_fields() ) && $field_key !== 'file' ) {
 				$field_name            = $data->field_name;
-				$field_key             = isset( $data->extra_params['field_key'] ) ? $data->extra_params['field_key'] : '';
 				$fields_without_prefix = ur_get_fields_without_prefix();
 
 				if ( ! in_array( $field_key, $fields_without_prefix ) ) {
