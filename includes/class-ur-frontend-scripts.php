@@ -400,18 +400,6 @@ class UR_Frontend_Scripts {
 	 * @return array|bool
 	 */
 	private static function get_script_data( $handle ) {
-		$is_compatibile = true;
-
-		if ( is_plugin_active( 'user-registration-payments/user-registration-payments.php' ) ) {
-			if ( version_compare( URP_VERSION, '1.5.3', '<' ) ) {
-				$is_compatibile = false;
-			}
-		}
-		if ( is_plugin_active( 'user-registration-stripe/user-registration-stripe.php' ) ) {
-			if ( version_compare( URS_VERSION, '1.3.2', '<' ) ) {
-				$is_compatibile = false;
-			}
-		}
 		switch ( $handle ) {
 			case 'user-registration':
 				return array(
@@ -447,7 +435,7 @@ class UR_Frontend_Scripts {
 						'show_password_title'     => esc_html__( 'Show Password', 'user-registration' ),
 						'password_strength_error' => esc_html__( 'Password strength is not strong enough', 'user-registration' ),
 					),
-					'is_payment_compatible'             => $is_compatibile,
+					'is_payment_compatible'             => true,
 				);
 			break;
 

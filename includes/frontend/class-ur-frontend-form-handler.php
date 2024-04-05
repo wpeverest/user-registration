@@ -150,39 +150,35 @@ class UR_Frontend_Form_Handler {
 				}
 				$success_params = apply_filters( 'user_registration_success_params', $success_params, self::$valid_form_data, $form_id, $user_id );
 
-				if ( isset( $_POST['ur_stripe_payment_method'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification
-					$success_params = apply_filters( 'user_registration_success_params_before_send_json', $success_params, self::$valid_form_data, $form_id, $user_id );
-					wp_send_json_success( $success_params );
-				} else {
+				foreach ( self::$valid_form_data as $field_key => $field_value ) {
+					if ( isset( $field_value->extra_params ) && isset( $field_value->extra_params['field_key'] ) ) {
+						if ( 'file' === $field_value->extra_params['field_key'] ) {
+							$file_data   = explode( ',', get_user_meta( $user_id, 'user_registration_' . $field_value->field_name, true ) );
+							$upload_data = array();
 
-					foreach ( self::$valid_form_data as $field_key => $field_value ) {
-						if ( isset( $field_value->extra_params ) && isset( $field_value->extra_params['field_key'] ) ) {
-							if ( 'file' === $field_value->extra_params['field_key'] ) {
-								$file_data   = explode( ',', get_user_meta( $user_id, 'user_registration_' . $field_value->field_name, true ) );
-								$upload_data = array();
-
-								foreach ( $file_data as $key => $file_value ) {
-									$file = isset( $file_value ) ? wp_get_attachment_url( $file_value ) : '';
-									array_push( $upload_data, $file );
-								}
-
-								$field_value->value                  = $upload_data;
-								self::$valid_form_data[ $field_key ] = $field_value;
+							foreach ( $file_data as $key => $file_value ) {
+								$file = isset( $file_value ) ? wp_get_attachment_url( $file_value ) : '';
+								array_push( $upload_data, $file );
 							}
 
-							// Process for file upload.
-							if ( 'profile_picture' === $field_value->extra_params['field_key'] ) {
-								$profile_file_data                   = get_user_meta( $user_id, 'user_registration_' . $field_value->field_name, true );
-								$profile_file                        = wp_get_attachment_url( $profile_file_data );
-								$field_value->value                  = $profile_file;
-								self::$valid_form_data[ $field_key ] = $field_value;
-							}
+							$field_value->value                  = $upload_data;
+							self::$valid_form_data[ $field_key ] = $field_value;
+						}
+
+						// Process for file upload.
+						if ( 'profile_picture' === $field_value->extra_params['field_key'] ) {
+							$profile_file_data                   = get_user_meta( $user_id, 'user_registration_' . $field_value->field_name, true );
+							$profile_file                        = wp_get_attachment_url( $profile_file_data );
+							$field_value->value                  = $profile_file;
+							self::$valid_form_data[ $field_key ] = $field_value;
 						}
 					}
-					do_action( 'user_registration_after_register_user_action', self::$valid_form_data, $form_id, $user_id );
-					$success_params = apply_filters( 'user_registration_success_params_before_send_json', $success_params, self::$valid_form_data, $form_id, $user_id );
-					wp_send_json_success( $success_params );
 				}
+				if ( ! isset( $success_params['stripe_process'] ) || $success_params['stripe_process'] == false ) {
+					do_action( 'user_registration_after_register_user_action', self::$valid_form_data, $form_id, $user_id );
+				}
+				$success_params = apply_filters( 'user_registration_success_params_before_send_json', $success_params, self::$valid_form_data, $form_id, $user_id );
+				wp_send_json_success( $success_params );
 			}
 			wp_send_json_error(
 				array(
@@ -229,9 +225,10 @@ class UR_Frontend_Form_Handler {
 	public static function ur_update_user_meta( $user_id, $valid_form_data, $form_id ) {
 
 		foreach ( $valid_form_data as $data ) {
-			if ( ! in_array( trim( $data->field_name ), ur_get_user_table_fields() ) ) {
+			$field_key             = isset( $data->extra_params['field_key'] ) ? $data->extra_params['field_key'] : '';
+
+			if ( ! in_array( trim( $data->field_name ), ur_get_user_table_fields() ) && $field_key !== 'file' ) {
 				$field_name            = $data->field_name;
-				$field_key             = isset( $data->extra_params['field_key'] ) ? $data->extra_params['field_key'] : '';
 				$fields_without_prefix = ur_get_fields_without_prefix();
 
 				if ( ! in_array( $field_key, $fields_without_prefix ) ) {
@@ -244,6 +241,10 @@ class UR_Frontend_Form_Handler {
 					$data->value = sanitize_text_field( htmlentities( $data->value ) );
 				}
 				update_user_meta( $user_id, $field_name, $data->value );
+			}
+			if ( 'user_url' === $data->field_name ) {
+				$data->value = sanitize_text_field( $data->value );
+				update_user_meta( $user_id, $data->field_name, $data->value );
 			}
 		}
 		update_user_meta( $user_id, 'ur_form_id', $form_id );

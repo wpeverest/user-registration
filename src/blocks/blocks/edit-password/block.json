@@ -1,0 +1,22 @@
+{
+  "$schema": "https://schemas.wp.org/block-json/1.1",
+  "apiVersion": 3,
+  "name": "user-registration/edit-password",
+  "version": "1.0.0",
+  "title": "Edit Password",
+  "category": "user-registration",
+  "description": "The block give the edit password interface.",
+  "keywords": ["user registration edit password", "edit password"],
+  "textdomain": "user-registration",
+  "example": {
+    "attributes": {}
+  },
+  "supports": {
+    "className": false,
+    "customClassName": false,
+    "reusable": false
+  },
+  "attributes": {},
+  "editorScript": "user-registration-blocks-editor",
+  "editorStyle": "user-registration-blocks-editor"
+}

@@ -855,8 +855,8 @@ class UR_AJAX {
 			/**
 			 * Perform validation before form save from form builder.
 			 */
-			do_action("user_registration_admin_backend_validation_before_form_save");
-			
+			do_action( 'user_registration_admin_backend_validation_before_form_save' );
+
 			$form_name    = sanitize_text_field( $_POST['data']['form_name'] ); //phpcs:ignore
 			$form_row_ids = sanitize_text_field( $_POST['data']['form_row_ids'] ); //phpcs:ignore
 			$form_id      = sanitize_text_field( $_POST['data']['form_id'] ); //phpcs:ignore
@@ -1474,6 +1474,7 @@ class UR_AJAX {
 		$plan         = isset( $_POST['plan'] ) ? sanitize_text_field( wp_unslash( $_POST['plan'] ) ) : null;
 		$slug         = isset( $_POST['slug'] ) ? sanitize_text_field( wp_unslash( $_POST['slug'] ) ) : null;
 		$name         = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : null;
+		$video_id     = isset( $_POST['video_id'] ) ? sanitize_text_field( wp_unslash( $_POST['video_id'] ) ) : null;
 		$license_data = ur_get_license_plan();
 		$button       = '';
 
@@ -1483,7 +1484,7 @@ class UR_AJAX {
 				$button = '<div class="action-buttons"><a class="button activate-license-now" href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=license' ) ) . '" target="_blank">' . esc_html__( 'Activate License', 'user-registration' ) . '</a></div>';
 				wp_send_json_success( array( 'action_button' => $button ) );
 			} else {
-				$button = '<div class="action-buttons"><a class="button upgrade-now" href="https://wpuserregistration.com/pricing/?utm_source=addons-page&utm_medium=upgrade-button&utm_campaign=ur-upgrade-to-pro" target="_blank">' . esc_html__( 'Upgrade Plan', 'user-registration' ) . '</a></div>';
+				$button = '<div class="action-buttons"><a class="button upgrade-now" href="https://wpuserregistration.com/pricing/?utm_source=builder-fields&utm_medium=premium-field-popup&utm_campaign=' . UR()->utm_campaign . '" target="_blank">' . esc_html__( 'Upgrade Plan', 'user-registration' ) . '</a></div>';
 				wp_send_json_success( array( 'action_button' => $button ) );
 			}
 		}

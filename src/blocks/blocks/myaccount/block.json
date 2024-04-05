@@ -1,0 +1,32 @@
+{
+  "$schema": "https://schemas.wp.org/block-json/1.1",
+  "apiVersion": 3,
+  "name": "user-registration/myaccount",
+  "version": "1.0.0",
+  "title": "Myaccount",
+  "category": "user-registration",
+  "description": "The block give the myaccount form for registered users.",
+  "keywords": [
+    "user registration myaccount",
+    "myaccount"
+  ],
+  "textdomain": "user-registration",
+  "example": {
+    "attributes": {}
+  },
+  "supports": {
+    "className": false,
+    "customClassName": false,
+    "reusable": false
+  },
+  "attributes": {
+    "redirectUrl": {
+      "type": "string"
+    },
+    "logoutUrl": {
+      "type": "string"
+    }
+  },
+  "editorScript": "user-registration-blocks-editor",
+  "editorStyle": "user-registration-blocks-editor"
+}

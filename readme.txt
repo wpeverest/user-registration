@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 5.2
 Requires PHP: 7.2
-Tested up to: 6.4.3
-Stable tag: 3.1.5
+Tested up to: 6.5
+Stable tag: 3.2.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -290,7 +290,7 @@ Here’s a brief look at the features that make User Registration one of the bes
 
 == Get in Touch with us  ==
 
-👉 [Facebook Group](https://www.facebook.com/wpuserregistration)
+👉 [Facebook Group](https://www.facebook.com/groups/userregistration)
 
 👉 [Twitter](https://twitter.com/user_register)
 
@@ -369,6 +369,31 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 3.2.0    - 10/04/2024
+* Feature  - Dashboard Page.
+* Feature  - Automatic user login after email confirmation and reset password.
+* Enhance  - Text Area Enhancement.
+* Enhance  - User registration Gutenberg blocks.
+* Enhance  - Send Bulk Resend Verification Email.
+* Enhance  - Screenshot video on upgrade to pro popup.
+* Tweak    - Filter to change email body width.
+* Tweak    - Change the 'All UR Forms' filter name to 'All Users' at Users > All Users.
+* Tweak    - Tooltip message for Username, Text and Textarea of Length Advance Settings.
+* Dev      - PHP version 8.3 compatibility issue.
+* Dev      - Compatibility for Subscription Plan trail period.
+* Dev      - Compatibility for WooCommerce My-Account Edit Profile sync.
+* Dev      - Compatibility for Added smart phone number in billing phone number.
+* Dev      - Compatibility for Recurring payment to be set 1DAY instead of 1YEAR in payments.
+* Dev      - Compatibility for Tooltip removed when clicked multiple times on field in builder.
+* Fix      - Backend validation for Number field.
+* Fix      - My Account URL issue on custom permalink.
+* Fix      - Avatar files are left behind after deleting user.
+* Fix      - Denied is not working when email confirmation is enabled.
+* Fix      - Checkbox values are not being saved when there is a single option.
+* Fix      - When no redirection the waiting period for redirection should be hidden.
+* Fix      - Required Validation of Text Fields Issue (Input, First Name, Last Name, etc..).
+* Fix      - Email is not sent to the user and admin when stripe field is conditionally hidden.
 
 = 3.1.5    - 05/03/2024
 * Fix      - Missing Escaping for display name.
