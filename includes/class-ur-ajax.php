@@ -882,11 +882,13 @@ class UR_AJAX {
 				$_POST['data']['form_id'] = $post_id; // Form id for new form.
 
              $post_data_setting = isset( $_POST['data']['form_setting_data'] ) ? $_POST['data']['form_setting_data'] : array(); //phpcs:ignore
-				if ( isset( $_POST['data']["form_restriction_submit_data"] ) && ! empty( $_POST['data']["form_restriction_submit_data"] ) ) {
-					$post_data_setting[] = [
-						"name"  => "urfr_qna_restriction_data",
-						"value" => $_POST['data']["form_restriction_submit_data"]
-					];
+				if ( isset( $_POST['data']['form_restriction_submit_data'] ) && ! empty( $_POST['data']['form_restriction_submit_data'] ) ) {
+					$post_data_setting = array(
+						array(
+							'name'  => 'urfr_qna_restriction_data',
+							'value' => sanitize_text_field( wp_unslash( $_POST['data']['form_restriction_submit_data'] ) ),
+						),
+					);
 				}
 				ur_update_form_settings( $post_data_setting, $post_id );
 
