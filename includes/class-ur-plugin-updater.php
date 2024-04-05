@@ -312,7 +312,8 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * Try to activate a license.
 	 *
 	 * @param string $license_key License Key.
-	 * // phpcs:ignore
+	 *
+	 * @throws Exception Throws license activation failed error message.
 	 */
 	public function activate_license( $license_key ) {
 		try {
