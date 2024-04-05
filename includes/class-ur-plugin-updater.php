@@ -527,11 +527,6 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 					'version'     => '1.3.0',
 					'notice_slug' => 'user_registration_conditional_logic_admin_notice',
 				),
-				'user-registration-content-restriction/user-registration-content-restriction.php'   => array(
-					'title'       => 'User Registration Content Restriction',
-					'version'     => '1.1.5',
-					'notice_slug' => 'user_registration_content_restriction_admin_notice',
-				),
 				'user-registration-customize-my-account/user-registration-customize-my-account.php' => array(
 					'title'       => 'User Registration Customize My Account',
 					'version'     => '1.1.4',
@@ -546,11 +541,6 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 					'title'       => 'User Registration File Upload',
 					'version'     => '1.2.4',
 					'notice_slug' => 'user_registration_file_upload_admin_notice',
-				),
-				'user-registration-frontend-listing/user-registration-frontend-listing.php'         => array(
-					'title'       => 'User Registration Frontend Listing',
-					'version'     => '1.0.3',
-					'notice_slug' => 'ur_frontend_listing_admin_notice',
 				),
 				'user-registration-mailchimp/user-registration-mailchimp.php'                       => array(
 					'title'       => 'User Registration MailChimp',

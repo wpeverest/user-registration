@@ -3574,12 +3574,6 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 				'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 				'name'   => esc_html__( 'User Registration - WooCommerce', 'user-registration' ),
 			),
-			'content_restriction'                    => array(
-				'label'  => esc_html__( 'Content Restriction', 'user-registration' ),
-				'plugin' => 'user-registration-content-restriction',
-				'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-				'name'   => esc_html__( 'User Registration - Content Restriction', 'user-registration' ),
-			),
 			'file_upload'                            => array(
 				'label'  => esc_html__( 'File Uploads', 'user-registration' ),
 				'plugin' => 'user-registration-file-upload',
@@ -4735,5 +4729,39 @@ if ( ! function_exists( 'ur_resend_verification_email' ) ) {
 		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
 
 		UR_Emailer::send_mail_to_user( $user->user_email, $user->user_login, $user_id, '', $name_value, $attachments, $template_id );
+	}
+}
+
+
+if ( ! function_exists( 'ur_merge_translations' ) ) {
+	/**
+	 * Merge Addons Translation in Pro text domain.
+	 *
+	 * @since 4.1.5
+	 *
+	 * @param string $source_dir Addon Language Source Directory.
+	 * @param string $destination_dir Pro Language Directory.
+	 * @param string $file_extension File Extentions.
+	 * @param string $text_domain Existing Text Domain/ Addon slug.
+	 */
+	function ur_merge_translations( $source_dir, $destination_dir, $file_extension, $text_domain ) {
+		$source_files = glob( $source_dir . '/*.' . $file_extension );
+
+		foreach ( $source_files as $source_file ) {
+			$language_code             = basename( $source_file, '.' . $file_extension );
+			$destination_language_code = str_replace( '-' . $text_domain, '', $language_code );
+
+			if ( 'user-registration' === $destination_language_code ) {
+				$source_filePath       = $source_dir . '/' . $language_code . '.' . $file_extension;
+				$destination_file_path = $destination_dir . '/' . $destination_language_code . '.' . $file_extension;
+
+				if ( ! file_exists( $destination_file_path ) ) {
+					touch( $destination_file_path );
+				}
+
+				$source_content = file_get_contents( $source_filePath );
+				file_put_contents( $destination_file_path, $source_content, FILE_APPEND );
+			}
+		}
 	}
 }
