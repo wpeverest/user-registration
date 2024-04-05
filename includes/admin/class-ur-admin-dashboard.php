@@ -26,7 +26,7 @@ class UR_Admin_Dashboard {
 			update_option( 'user_registration_onboarding_skipped', true );
 		}
 
-		wp_enqueue_script( 'ur-dashboard-script', UR()->plugin_url() . '/chunks/main.js', array( 'wp-element', 'wp-blocks', 'wp-editor' ), UR()->version, true );
+		wp_enqueue_script( 'ur-dashboard-script', UR()->plugin_url() . '/chunks/dashboard.js', array( 'wp-element', 'wp-blocks', 'wp-editor' ), UR()->version, true );
 
 		if ( ! function_exists( 'get_plugins' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://schemas.wp.org/block-json/1.1",
+  "apiVersion": 3,
+  "name": "user-registration/edit-profile",
+  "version": "1.0.0",
+  "title": "Edit Profile",
+  "category": "user-registration",
+  "description": "The block give edit profile interface.",
+  "keywords": ["user registration edit profile", "edit profile"],
+  "textdomain": "user-registration",
+  "example": {
+    "attributes": {}
+  },
+  "supports": {
+    "className": false,
+    "customClassName": false,
+    "reusable": false
+  },
+  "attributes": {},
+  "editorScript": "user-registration-blocks-editor",
+  "editorStyle": "user-registration-blocks-editor"
+}

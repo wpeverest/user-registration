@@ -36,6 +36,8 @@ class UR_REST_API {
 		include __DIR__ . '/controllers/version1/class-ur-getting-started.php';
 		include __DIR__ . '/controllers/version1/class-ur-modules.php';
 		include __DIR__ . '/controllers/version1/class-ur-changelog.php';
+		include __DIR__ . '/controllers/version1/class-ur-gutenberg-blocks.php';
+
 		add_action( 'rest_api_init', array( __CLASS__, 'register_rest_routes' ) );
 	}
 
@@ -86,9 +88,10 @@ class UR_REST_API {
 	 */
 	protected static function get_v1_rest_classes() {
 		return array(
-			'getting-started' => 'UR_Getting_Started',
-			'modules'         => 'UR_Modules',
-			'changelog'       => 'UR_Changelog',
+			'getting-started'  => 'UR_Getting_Started',
+			'modules'          => 'UR_Modules',
+			'changelog'        => 'UR_Changelog',
+			'gutenberg-blocks' => 'UR_Gutenberg_Blocks',
 		);
 	}
 }

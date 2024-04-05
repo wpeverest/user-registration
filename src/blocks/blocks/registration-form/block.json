@@ -1,0 +1,27 @@
+{
+  "$schema": "https://schemas.wp.org/block-json/1.1",
+  "apiVersion": 3,
+  "name": "user-registration/registration-form",
+  "version": "1.0.0",
+  "title": "Registration Form",
+  "category": "user-registration",
+  "description": "The block lets the user choose the required user registration directly.",
+  "keywords": ["user registration form", "registration form"],
+  "textdomain": "user-registration",
+  "example": {
+    "attributes": {}
+  },
+  "supports": {
+    "className": false,
+    "customClassName": false,
+    "reusable": false
+  },
+  "attributes": {
+    "formId": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "editorScript": "user-registration-blocks-editor",
+  "editorStyle": "user-registration-blocks-editor"
+}

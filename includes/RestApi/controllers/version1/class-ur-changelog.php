@@ -58,7 +58,6 @@ class UR_Changelog {
 	public function get_item( $request ) {
 		$changelog = $this->read_changelog();
 		$changelog = $this->parse_changelog( $changelog );
-
 		return new \WP_REST_Response(
 			array(
 				'success'   => true,

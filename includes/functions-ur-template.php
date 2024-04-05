@@ -364,7 +364,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				}
 				if ( isset( $args['image_choice'] ) && ur_string_to_bool( $args['image_choice'] ) && isset( $image_options ) && array_filter( $image_options ) ) {
 					if ( ! empty( $default ) ) {
-						$default = ( is_serialized( $default ) ) ? unserialize( $default, array( 'allowed_classes' => false ) ) : $default; //phpcs:ignore allowed_classes doesnot support below php v7.1.
+						$default = ( is_serialized( $default ) ) ? unserialize( $default, array( 'allowed_classes' => false ) ) : $default; //phpcs:ignore;
 					}
 						$choices = isset( $image_options ) ? $image_options : array();
 
@@ -407,7 +407,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				} elseif ( isset( $options ) && array_filter( $options ) ) {
 
 					if ( ! empty( $default ) ) {
-						$default = ( is_serialized( $default ) ) ? unserialize( $default, array( 'allowed_classes' => false ) ) : $default; //phpcs:ignore allowed_classes doesnot support below php v7.1.
+						$default = ( is_serialized( $default ) ) ? unserialize( $default, array( 'allowed_classes' => false ) ) : $default; //phpcs:ignore;
 					}
 
 						$choices = isset( $options ) ? $options : array();
@@ -790,7 +790,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$options = $field .= '';
 
 				if ( is_serialized( $value ) ) {
-					$default_value = unserialize( $value, array( 'allowed_classes' => false ) ); //phpcs:ignore allowed_classes parameters does not support below php v7.1.
+					$default_value = unserialize( $value, array( 'allowed_classes' => false ) ); //phpcs:ignore;
 				} else {
 					$default_value = $value;
 				}
@@ -1283,8 +1283,8 @@ function ur_logout_url( $redirect = '' ) {
 		$blocks = parse_blocks( $post_content );
 
 		foreach ( $blocks as $block ) {
-			if ( 'user-registration/form-selector' === $block['blockName'] && isset( $block['attrs']['logoutUrl'] ) ) {
-				$redirect = home_url( $block['attrs']['logoutUrl'] );
+			if ( ( 'user-registration/form-selector' === $block['blockName'] || 'user-registration/myaccount' === $block['blockName'] || 'user-registration/login-form' === $block['blockName'] ) && isset( $block['attrs']['logoutUrl'] ) ) {
+				$redirect = '' != $block['attrs']['logoutUrl'] ? ur_check_external_url( $block['attrs']['logoutUrl'] ) : ur_get_page_permalink( 'myaccount' );
 			}
 		}
 	}
