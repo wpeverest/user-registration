@@ -11,11 +11,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! class_exists( 'UR_AddOn_Updater', false ) ) {
-	include_once dirname( __FILE__ ) . '/admin/updater/class-ur-addon-updater.php';
+	include_once __DIR__ . '/admin/updater/class-ur-addon-updater.php';
 }
 
 if ( ! class_exists( 'UR_Plugin_Updates', false ) ) {
-	include_once dirname( __FILE__ ) . '/admin/updater/class-ur-plugin-updates.php';
+	include_once __DIR__ . '/admin/updater/class-ur-plugin-updates.php';
 }
 
 /**
@@ -89,7 +89,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 
 		// Include required files.
-		include_once dirname( __FILE__ ) . '/admin/updater/class-ur-plugin-updater-api.php';
+		include_once __DIR__ . '/admin/updater/class-ur-plugin-updater-api.php';
 	}
 
 	/**
@@ -253,7 +253,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	public function user_registration_error_notices() {
 		if ( ! empty( $this->errors ) ) {
 			foreach ( $this->errors as $key => $error ) {
-				include dirname( __FILE__ ) . '/admin/views/html-notice-error.php';
+				include __DIR__ . '/admin/views/html-notice-error.php';
 				if ( 'invalid_key' !== $key && did_action( 'all_admin_notices' ) ) {
 					unset( $this->errors[ $key ] );
 				}
@@ -290,7 +290,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 		}
 
 		if ( strtolower( basename( dirname( $plugin_file ) ) ) === strtolower( $slug ) ) {
-			include_once dirname( __FILE__ ) . '/admin/views/html-license-form.php';
+			include_once __DIR__ . '/admin/views/html-license-form.php';
 		}
 	}
 
@@ -312,7 +312,8 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * Try to activate a license.
 	 *
 	 * @param string $license_key License Key.
-	 * // phpcs:ignore
+	 *
+	 * @throws Exception Throws license activation failed error message.
 	 */
 	public function activate_license( $license_key ) {
 		try {
@@ -444,7 +445,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 */
 	public function key_notice() {
 		if ( count( $this->errors ) === 0 && ! get_option( $this->plugin_slug . '_hide_key_notice' ) ) {
-			include dirname( __FILE__ ) . '/admin/views/html-notice-key-unvalidated.php';
+			include __DIR__ . '/admin/views/html-notice-key-unvalidated.php';
 		}
 	}
 
@@ -452,14 +453,14 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * Activation success notice.
 	 */
 	public function activated_key_notice() {
-		include dirname( __FILE__ ) . '/admin/views/html-notice-key-activated.php';
+		include __DIR__ . '/admin/views/html-notice-key-activated.php';
 	}
 
 	/**
 	 * Dectivation success notice.
 	 */
 	public function deactivated_key_notice() {
-		include dirname( __FILE__ ) . '/admin/views/html-notice-key-deactivated.php';
+		include __DIR__ . '/admin/views/html-notice-key-deactivated.php';
 	}
 
 	/**
@@ -527,11 +528,6 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 					'version'     => '1.3.0',
 					'notice_slug' => 'user_registration_conditional_logic_admin_notice',
 				),
-				'user-registration-content-restriction/user-registration-content-restriction.php'   => array(
-					'title'       => 'User Registration Content Restriction',
-					'version'     => '1.1.5',
-					'notice_slug' => 'user_registration_content_restriction_admin_notice',
-				),
 				'user-registration-customize-my-account/user-registration-customize-my-account.php' => array(
 					'title'       => 'User Registration Customize My Account',
 					'version'     => '1.1.4',
@@ -546,11 +542,6 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 					'title'       => 'User Registration File Upload',
 					'version'     => '1.2.4',
 					'notice_slug' => 'user_registration_file_upload_admin_notice',
-				),
-				'user-registration-frontend-listing/user-registration-frontend-listing.php'         => array(
-					'title'       => 'User Registration Frontend Listing',
-					'version'     => '1.0.3',
-					'notice_slug' => 'ur_frontend_listing_admin_notice',
 				),
 				'user-registration-mailchimp/user-registration-mailchimp.php'                       => array(
 					'title'       => 'User Registration MailChimp',
@@ -651,7 +642,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 */
 	public function user_registration_extension_download_success_notice() {
 		$notice_html = __( 'User Registration Pro has been installed successfully.', 'user-registration' );
-		include dirname( __FILE__ ) . '/admin/views/html-notice-key-activated.php';
+		include __DIR__ . '/admin/views/html-notice-key-activated.php';
 	}
 }
 

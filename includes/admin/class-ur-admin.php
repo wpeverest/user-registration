@@ -21,6 +21,7 @@ class UR_Admin {
 	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'includes' ) );
+		add_action( 'init', array( $this, 'translation_migration' ) );
 		add_action( 'current_screen', array( $this, 'conditional_includes' ) );
 		add_action( 'admin_init', array( $this, 'prevent_admin_access' ), 10, 2 );
 		add_action( 'load-users.php', array( $this, 'live_user_read' ), 10, 2 );
@@ -36,6 +37,46 @@ class UR_Admin {
 		add_action( 'admin_init', array( $this, 'admin_redirects' ) );
 		add_action( 'admin_init', array( $this, 'template_actions' ) );
 		add_filter( 'display_post_states', array( $this, 'ur_add_post_state' ), 10, 2 );
+	}
+
+	/**
+	 * Translation Migration for Payments, Content Restriction and Frontend Listing.
+	 */
+	public function translation_migration() {
+		global $wpdb;
+		$migration_flag = get_option( 'ur_translations_migration_done', false );
+		// $migration_flag = false;
+
+		if ( ! $migration_flag ) {
+
+			$merge_addons = array( 'payments', 'content-restriction', 'frontend-listing' );
+			foreach ( $merge_addons as $text_domain ) {
+				$plugin_source_dir = ABSPATH . 'wp-content/plugins/user-registration-' . $text_domain . '/languages';
+				$global_source_dir = ABSPATH . 'wp-content/languages/plugins/';
+				$source_paths      = array( $plugin_source_dir, $global_source_dir );
+
+				foreach ( $source_paths as $source_dir ) {
+					$destination_dir = ABSPATH . 'wp-content/plugins/user-registration-pro/languages';
+					// Merge .po files.
+					ur_merge_translations( $source_dir, $destination_dir, 'po', $text_domain );
+
+					// Merge .mo files.
+					ur_merge_translations( $source_dir, $destination_dir, 'mo', $text_domain );
+				}
+
+				// Check if WPML is active.
+				if ( class_exists( 'SitePress', false ) ) {
+
+					$new_domain = 'user-registration';
+					// Update text domain in wp_icl_strings table.
+					$wpdb->query(
+						$wpdb->prepare( "UPDATE {$wpdb->prefix}icl_strings SET context = %s WHERE context = %s", $new_domain, 'user-registration-' . $text_domain )
+					);
+				}
+			}
+
+			update_option( 'ur_translations_migration_done', true );
+		}
 	}
 
 	/**
