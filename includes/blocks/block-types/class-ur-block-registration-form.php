@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignore;
 /**
  * User registration form block.
  *
@@ -21,7 +21,7 @@ class UR_Block_Regstration_Form extends UR_Block_Abstract {
 	/**
 	 * Build html.
 	 *
-	 * @param string $content
+	 * @param string $content Build html content.
 	 * @return string
 	 */
 	protected function build_html( $content ) {

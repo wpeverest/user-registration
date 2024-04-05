@@ -127,7 +127,7 @@ abstract class UR_Block_Abstract {
 	/**
 	 * Build html.
 	 *
-	 * @param string $content
+	 * @param string $content Build html content.
 	 * @return string
 	 */
 	protected function build_html( $content ) {
