@@ -4752,14 +4752,14 @@ if ( ! function_exists( 'ur_merge_translations' ) ) {
 			$destination_language_code = str_replace( '-' . $text_domain, '', $language_code );
 
 			if ( 'user-registration' === $destination_language_code ) {
-				$source_filePath       = $source_dir . '/' . $language_code . '.' . $file_extension;
+				$source_file_path      = $source_dir . '/' . $language_code . '.' . $file_extension;
 				$destination_file_path = $destination_dir . '/' . $destination_language_code . '.' . $file_extension;
 
 				if ( ! file_exists( $destination_file_path ) ) {
 					touch( $destination_file_path );
 				}
 
-				$source_content = file_get_contents( $source_filePath );
+				$source_content = file_get_contents( $source_file_path );
 				file_put_contents( $destination_file_path, $source_content, FILE_APPEND );
 			}
 		}
