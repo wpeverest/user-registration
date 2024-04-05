@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - UR-1363-enhancement/ur-forms-gutenberg-blocks
+      - master
     workflow_dispatch:
 jobs:
   sync:
