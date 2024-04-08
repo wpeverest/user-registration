@@ -551,7 +551,7 @@ class UR_Admin_User_List_Manager {
 						"select[name='action2']");
 
 					jQuery('<option>').val('await_confirmation').text(
-							'<?php esc_html_e( 'Awaiting Email Confirmation', 'user-registration' ); ?>')
+							'<?php esc_html_e( 'Resend Verification Email', 'user-registration' ); ?>')
 						.appendTo(
 							"select[name='action']");
 					jQuery('<option>').val('await_confirmation').text(
