@@ -400,9 +400,8 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					array( 'user_registration_pro_general_setting_redirect_back_to_previous_page', false ),
 					array( 'user_registration_pro_general_post_submission_settings', '' ),
 					array( 'user_registration_pro_general_setting_post_submission', 'disable' ),
-					array( 'user_registration_pro_role_based_redirection', false ) //phpcs:ignore
-				),
-				'user-registration-content-restriction/user-registration-content-restriction.php' => array(
+					array( 'user_registration_pro_role_based_redirection', false ),//phpcs:ignore
+					array( 'user_registration_payment_currency', 'USD' ),
 					array( 'user_registration_content_restriction_enable', true ),
 					array( 'user_registration_content_restriction_allow_to_roles', '["administrator"]' ) //phpcs:ignore
 				),
@@ -448,9 +447,6 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					array( 'user_registration_tfa_incorrect_otp_limit', '5' ),
 					array( 'user_registration_tfa_login_hold_period', '60' ) //phpcs:ignore
 				),
-				'user-registration-payments/user-registration-payments.php' => array(
-					array( 'user_registration_payment_currency', 'USD' ) //phpcs:ignore
-				) //phpcs:ignore
 			);
 		}
 	}
