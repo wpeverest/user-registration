@@ -386,6 +386,7 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 * Dev      - Compatibility for Added smart phone number in billing phone number.
 * Dev      - Compatibility for Recurring payment to be set 1DAY instead of 1YEAR in payments.
 * Dev      - Compatibility for Tooltip removed when clicked multiple times on field in builder.
+* Dev      - Compatibility for Woocommerce Checkout and Product page Frontend and Backend Validation.
 * Fix      - Backend validation for Number field.
 * Fix      - My Account URL issue on custom permalink.
 * Fix      - Avatar files are left behind after deleting user.

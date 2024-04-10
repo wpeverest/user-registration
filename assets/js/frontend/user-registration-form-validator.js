@@ -2,7 +2,7 @@
 (function ($) {
 	var user_registration_form_selector;
 
-	user_registration_form_selector = $(".ur-frontend-form form, form.cart");
+	user_registration_form_selector = $(".ur-frontend-form form, form.cart, form.checkout");
 
 	var field_selector = "";
 
@@ -208,6 +208,15 @@
 				$this.validate({
 					errorClass: "user-registration-error",
 					validClass: "user-registration-valid",
+					ignore: function (index, element) {
+						// Return true to ignore the element, false to include it in validation
+						return (
+							element.id &&
+							(element.id.startsWith("billing_") ||
+								element.id.startsWith("shipping_") ||
+								element.id.startsWith("quantity_"))
+						);
+					},
 					rules: validator_params.rules,
 					messages: validator_params.messages,
 					focusInvalid: false,
