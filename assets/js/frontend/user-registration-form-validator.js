@@ -2,7 +2,9 @@
 (function ($) {
 	var user_registration_form_selector;
 
-	user_registration_form_selector = $(".ur-frontend-form form, form.cart");
+	user_registration_form_selector = $(
+		".ur-frontend-form form, form.cart, form.checkout",
+	);
 
 	var field_selector = "";
 
@@ -22,7 +24,7 @@
 			this.$user_registration.on(
 				"input validate change",
 				".input-text, select, input:checkbox input:radio",
-				this.validate_field
+				this.validate_field,
 			);
 
 			$(".input-text").keypress(function (event) {
@@ -42,8 +44,8 @@
 				var keyCode = event.keyCode || event.which;
 				var currentValue = $(this).val();
 				if (
-					( keyCode !== 46 || currentValue.indexOf('.') !== -1) &&
-					( keyCode < 48 || keyCode > 57)
+					(keyCode !== 46 || currentValue.indexOf(".") !== -1) &&
+					(keyCode < 48 || keyCode > 57)
 				) {
 					event.preventDefault();
 				}
@@ -85,7 +87,7 @@
 			$.validator.methods.email = function (value, element) {
 				/* https://stackoverflow.com/questions/2855865/jquery-validate-e-mail-address-regex */
 				var pattern = new RegExp(
-					/^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i
+					/^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i,
 				);
 				return this.optional(element) || pattern.test(value);
 			};
@@ -122,7 +124,7 @@
 					}
 					return wordsCount >= param;
 				},
-				$.validator.format("Please enter at least {0} words.")
+				$.validator.format("Please enter at least {0} words."),
 			);
 
 			/**
@@ -135,7 +137,7 @@
 				function (value, element, param) {
 					return value.length <= param;
 				},
-				$.validator.format("Please enter less than {0} characters.")
+				$.validator.format("Please enter less than {0} characters."),
 			);
 
 			/**
@@ -147,11 +149,11 @@
 				"SpecialCharacterValidator",
 				function (value, element) {
 					var reg = new RegExp(
-						/^(?=.{3,20}$)[a-zA-Z][a-zA-Z0-9_.]*(?: [a-zA-Z0-9]+)*$/
+						/^(?=.{3,20}$)[a-zA-Z][a-zA-Z0-9_.]*(?: [a-zA-Z0-9]+)*$/,
 					);
 					return this.optional(element) || reg.test(value);
 				},
-				user_registration_params.message_username_character_fields
+				user_registration_params.message_username_character_fields,
 			);
 
 			/**
@@ -186,7 +188,7 @@
 					return $checked.length <= choiceLimit;
 				},
 
-				$.validator.format("Please select no more than {0} options.")
+				$.validator.format("Please select no more than {0} options."),
 			);
 		},
 		load_validation: function () {
@@ -208,6 +210,15 @@
 				$this.validate({
 					errorClass: "user-registration-error",
 					validClass: "user-registration-valid",
+					ignore: function (index, element) {
+						// Return true to ignore the element, false to include it in validation
+						return (
+							element.id &&
+							(element.id.startsWith("billing_") ||
+								element.id.startsWith("shipping_") ||
+								element.id.startsWith("quantity_"))
+						);
+					},
 					rules: validator_params.rules,
 					messages: validator_params.messages,
 					focusInvalid: false,
@@ -216,7 +227,7 @@
 
 						// Scroll to first error message on submit.
 						$(window).scrollTop(
-							$(validator.errorList[0].element).offset().top
+							$(validator.errorList[0].element).offset().top,
 						);
 					},
 					errorPlacement: function (error, element) {
@@ -238,7 +249,7 @@
 								element
 									.parent()
 									.find(
-										"label.user-registration-error:visible"
+										"label.user-registration-error:visible",
 									).length === 0
 							) {
 								element
@@ -259,7 +270,7 @@
 							error.insertAfter(
 								element
 									.closest(".ur-range-row")
-									.find(".ur-range-number")
+									.find(".ur-range-number"),
 							);
 						} else if (
 							"text" === element.attr("type") &&
@@ -271,7 +282,7 @@
 						} else {
 							$(document).trigger(
 								"user-registration-append-error-messages",
-								element
+								element,
 							);
 							if (
 								element.hasClass("urfu-file-input") ||
@@ -364,7 +375,7 @@
 
 			if ("input" === event_type) {
 				$parent.removeClass(
-					"user-registration-invalid user-registration-invalid-required-field user-registration-invalid-email user-registration-validated"
+					"user-registration-invalid user-registration-invalid-required-field user-registration-invalid-email user-registration-validated",
 				);
 			}
 
@@ -377,14 +388,14 @@
 						$parent
 							.removeClass("user-registration-validated")
 							.addClass(
-								"user-registration-invalid user-registration-invalid-required-field"
+								"user-registration-invalid user-registration-invalid-required-field",
 							);
 						validated = false;
 					} else if ($this.val() === "") {
 						$parent
 							.removeClass("user-registration-validated")
 							.addClass(
-								"user-registration-invalid user-registration-invalid-required-field"
+								"user-registration-invalid user-registration-invalid-required-field",
 							);
 						validated = false;
 					}
@@ -394,14 +405,14 @@
 					if ($this.val()) {
 						/* https://stackoverflow.com/questions/2855865/jquery-validate-e-mail-address-regex */
 						var pattern = new RegExp(
-							/^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i
+							/^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i,
 						);
 
 						if (!pattern.test($this.val())) {
 							$parent
 								.removeClass("user-registration-validated")
 								.addClass(
-									"user-registration-invalid user-registration-invalid-email"
+									"user-registration-invalid user-registration-invalid-email",
 								);
 							validated = false;
 						}
@@ -411,7 +422,7 @@
 				if (validated) {
 					$parent
 						.removeClass(
-							"user-registration-invalid user-registration-invalid-required-field user-registration-invalid-email"
+							"user-registration-invalid user-registration-invalid-required-field user-registration-invalid-email",
 						)
 						.addClass("user-registration-validated");
 				}
@@ -442,7 +453,7 @@
 						wordsValidator:
 							user_registration_params.message_min_words_fields.replace(
 								"%qty%",
-								minWordsValidator.wordsValidator
+								minWordsValidator.wordsValidator,
 							),
 					};
 				});
@@ -571,19 +582,19 @@
 			$.validator.messages.max = function (params, element) {
 				return user_registration_params.message_confirm_number_field_max.replace(
 					"%qty%",
-					element.max
+					element.max,
 				);
 			};
 			$.validator.messages.min = function (params, element) {
 				return user_registration_params.message_confirm_number_field_min.replace(
 					"%qty%",
-					element.min
+					element.min,
 				);
 			};
 			$.validator.messages.step = function (params, element) {
 				return user_registration_params.message_confirm_number_field_step.replace(
 					"%qty%",
-					element.step
+					element.step,
 				);
 			};
 		},
