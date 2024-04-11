@@ -2,7 +2,7 @@
 (function ($) {
 	var user_registration_form_selector;
 
-	user_registration_form_selector = $(".ur-frontend-form form, form.cart, form.checkout");
+	user_registration_form_selector = $(".ur-frontend-form form, form.cart");
 
 	var field_selector = "";
 

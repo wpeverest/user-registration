@@ -5,7 +5,7 @@
  * Description: Drag and Drop user registration form and login form builder.
  * Version: 3.2.0
  * Author: WPEverest
- * Author URI: https://wpeverest.com
+ * Author URI: https://wpuserregistration.com
  * Text Domain: user-registration
  * Domain Path: /languages/
  *
