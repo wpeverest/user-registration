@@ -76,6 +76,7 @@ class UR_Admin_Addons {
 		$section_data = '';
 
 		if ( ! empty( $section->endpoint ) ) {
+			$section_data = get_transient( 'ur_addons_section_' . $section_id );
 
 			$raw_section = wp_safe_remote_get( UR()->plugin_url() . '/assets/' . $section->endpoint, array( 'user-agent' => 'UserRegistration Addons Page' ) );
 

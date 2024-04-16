@@ -54,7 +54,7 @@ class UR_AJAX {
 			'user_form_submit'          => true,
 			'update_profile_details'    => true,
 			'profile_pic_upload'        => true,
-			'profile_pic_remove'        => true,
+			'profile_pic_remove'        => false,
 			'ajax_login_submit'         => true,
 			'send_test_email'           => true,
 			'rated'                     => false,
@@ -805,6 +805,10 @@ class UR_AJAX {
 		try {
 			check_ajax_referer( 'ur_form_save_nonce', 'security' );
 
+			if ( ! current_user_can( 'manage_options' ) ) {
+				throw new Exception( __( "You don't have enough permission to perform this task. Please contact the Administrator.", 'user-registration' ) );
+			}
+
          if ( ! isset( $_POST['data'] ) || ( isset( $_POST['data'] ) && gettype( wp_unslash( $_POST['data'] ) ) != 'array' ) ) { //phpcs:ignore
 				throw new Exception( __( 'post data not set', 'user-registration' ) );
 			} elseif ( ! isset( $_POST['data']['form_data'] )
@@ -1124,18 +1128,34 @@ class UR_AJAX {
 
 		$attachment_id = isset( $_POST['attachment_id'] ) ? intval( wp_unslash( $_POST['attachment_id'] ) ) : '';
 
-		if ( file_exists( get_attached_file( $attachment_id ) ) && ! unlink( get_attached_file( $attachment_id ) ) ) {
+		if ( is_user_logged_in() ) {
+			$user_id             = get_current_user_id();
+			$user_profile_pic_id = get_user_meta( $user_id, 'user_registration_profile_pic_url' );
+
+			if ( $user_profile_pic_id == $attachment_id ) {
+
+				if ( file_exists( get_attached_file( $attachment_id ) ) && ! unlink( get_attached_file( $attachment_id ) ) ) {
+					wp_send_json_error(
+						array(
+							'message' => esc_html__( 'File cannot be removed', 'user-registration' ),
+						)
+					);
+				}
+					update_user_meta( $user_id, 'user_registration_profile_pic_url', '' );
+			} else {
+				wp_send_json_error(
+					array(
+						'message' => esc_html__( 'File cannot be removed', 'user-registration' ),
+					)
+				);
+			}
+		} else {
 			wp_send_json_error(
 				array(
 					'message' => esc_html__( 'File cannot be removed', 'user-registration' ),
 				)
 			);
-		}
 
-		$user_id = get_current_user_id();
-
-		if ( $user_id > 0 ) {
-			update_user_meta( $user_id, 'user_registration_profile_pic_url', '' );
 		}
 
 		wp_send_json_success(

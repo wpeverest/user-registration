@@ -2,7 +2,7 @@
 /**
  * Changelog Controller.
  *
- * @since 3.1.6
+ * @since 3.2.0
  *
  * @package  UserRegistration/Classes
  */
@@ -31,7 +31,7 @@ class UR_Changelog {
 	/**
 	 * Register routes.
 	 *
-	 * @since 3.1.6
+	 * @since 3.2.0
 	 *
 	 * @return void
 	 */

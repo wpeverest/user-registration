@@ -4681,6 +4681,9 @@ if ( ! function_exists( 'ur_array_clone' ) ) {
 				// Remove profile pictures related metadata from DB.
 				delete_post_meta( $profile_pic_url, '_wp_attachment_metadata' );
 				delete_post_meta( $profile_pic_url, '_wp_attached_file' );
+
+				// Remove attachments form media library.
+				wp_delete_attachment( $profile_pic_url, true );
 			}
 		}
 	}

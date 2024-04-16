@@ -58,7 +58,7 @@ class UR_REST_API {
 	/**
 	 * Get API Classes - new classes should be registered here.
 	 *
-	 * @since 3.1.6
+	 * @since 3.2.0
 	 *
 	 * @return array List of Classes.
 	 */

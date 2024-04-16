@@ -22,7 +22,7 @@ import React, { useRef, useState, useEffect } from "react";
 /**
  *  Internal Dependencies
  */
-import { PLUGINS } from "../../../constants/products";
+import { PLUGINS } from "../../../Constants/Products";
 import { useStateValue } from "../../../../context/StateProvider";
 import UsePluginInstallActivate from "../../../components/common/UsePluginInstallActivate";
 
@@ -96,16 +96,16 @@ const Plugin = ({ plugin, index }) => {
 								? sprintf(
 										__(
 											"Are you sure? You want to activate %s plugin.",
-											"user-registration"
+											"user-registration",
 										),
-										plugin.label
+										plugin.label,
 								  )
 								: sprintf(
 										__(
 											"Are you sure? You want to install and activate %s plugin.",
-											"user-registration"
+											"user-registration",
 										),
-										plugin.label
+										plugin.label,
 								  )}
 						</AlertDialogBody>
 						<AlertDialogFooter>

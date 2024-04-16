@@ -282,8 +282,6 @@ class UR_Install {
 
 		include_once 'functions-ur-update.php';
 
-		$current_migration_version = get_option( 'user_registration_migration_version', null );
-
 		// Migrations for User Registration ( Free ).
 		$migration_updates = array(
 			'3.0' => array(
@@ -298,11 +296,14 @@ class UR_Install {
 					'ur_update_30_option_migrate',
 					'ur_pro_update_40_option_migrate',
 				),
+				'4.2.0' => array(
+					'ur_pro_module_addons_migrate',
+				),
 			);
 
-			$current_migration_version = ! is_null( $current_migration_version ) ? $current_migration_version : '3.2.4';
 		}
 
+		$current_migration_version = get_option( 'user_registration_migration_version', null );
 		$current_migration_version = ! is_null( $current_migration_version ) ? $current_migration_version : '2.3.4';
 
 		foreach ( $migration_updates as $version => $update_callbacks ) {

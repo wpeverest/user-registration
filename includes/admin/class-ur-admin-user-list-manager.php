@@ -551,11 +551,11 @@ class UR_Admin_User_List_Manager {
 						"select[name='action2']");
 
 					jQuery('<option>').val('await_confirmation').text(
-							'<?php esc_html_e( 'Awaiting Email Confirmation', 'user-registration' ); ?>')
+							'<?php esc_html_e( 'Resend Verification Email', 'user-registration' ); ?>')
 						.appendTo(
 							"select[name='action']");
 					jQuery('<option>').val('await_confirmation').text(
-							'<?php esc_html_e( 'Awaiting Email Confirmation', 'user-registration' ); ?>')
+							'<?php esc_html_e( 'Resend Verification Email', 'user-registration' ); ?>')
 						.appendTo(
 							"select[name='action2']");
 				});
@@ -608,8 +608,12 @@ class UR_Admin_User_List_Manager {
 			$id = (int) $id;
 
 			if ( 'await_confirmation' == $action ) {
-				ur_resend_verification_email( $id );
-				$redirect = add_query_arg( array( 'resend_verification_sent' => 1 ), $redirect );
+				$user_manager = new UR_Admin_User_Manager( $id );
+				$status       = $user_manager->is_email_pending();
+				if ( $status ) {
+					ur_resend_verification_email( $id );
+					$redirect = add_query_arg( array( 'resend_verification_sent' => 1 ), $redirect );
+				}
 			} else {
 				$user_manager = new UR_Admin_User_Manager( $id );
 				// For each user, check if the current user can change him status.

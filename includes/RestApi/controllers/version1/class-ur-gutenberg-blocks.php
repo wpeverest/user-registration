@@ -2,7 +2,7 @@
 /**
  * Blocks controller class.
  *
- * @since 3.1.6
+ * @since 3.2.0
  *
  * @package  UserRegistration/Classes
  */
@@ -49,7 +49,7 @@ class UR_Gutenberg_Blocks {
 	/**
 	 * Get Addons Lists.
 	 *
-	 * @since 3.1.6
+	 * @since 3.2.0
 	 *
 	 * @return array Addon lists.
 	 */

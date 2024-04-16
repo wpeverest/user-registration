@@ -2,7 +2,7 @@
 /**
  * Modules controller class.
  *
- * @since 3.1.6
+ * @since 3.2.0
  *
  * @package  UserRegistration/Classes
  */
@@ -86,7 +86,7 @@ class UR_Modules {
 	/**
 	 * Get Addons Lists.
 	 *
-	 * @since 3.1.6
+	 * @since 3.2.0
 	 *
 	 * @return array Module lists.
 	 */
@@ -177,7 +177,7 @@ class UR_Modules {
 	/**
 	 * Active a module.
 	 *
-	 * @since 3.1.6
+	 * @since 3.2.0
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -236,7 +236,7 @@ class UR_Modules {
 	/**
 	 * Handler for installing or activating a addon.
 	 *
-	 * @since 3.1.6
+	 * @since 3.2.0
 	 *
 	 * @param string $slug Slug of the addon to install/activate.
 	 * @param string $name Name of the addon to install/activate.
@@ -261,7 +261,7 @@ class UR_Modules {
 	/**
 	 * Enable a feature.
 	 *
-	 * @since 3.1.6
+	 * @since 3.2.0
 	 *
 	 * @param string $slug Slug of the feature to enable.
 	 *
@@ -280,7 +280,7 @@ class UR_Modules {
 	/**
 	 * Deactive a module.
 	 *
-	 * @since 3.1.6
+	 * @since 3.2.0
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -332,7 +332,7 @@ class UR_Modules {
 	/**
 	 * Deactive a addon.
 	 *
-	 * @since 3.1.6
+	 * @since 3.2.0
 	 *
 	 * @param string $slug Slug of the addon to deactivate.
 	 *
@@ -348,7 +348,7 @@ class UR_Modules {
 	/**
 	 * Disable a feature.
 	 *
-	 * @since 3.1.6
+	 * @since 3.2.0
 	 *
 	 * @param string $slug Slug of the feature to disable.
 	 *
@@ -367,7 +367,7 @@ class UR_Modules {
 	/**
 	 * Bulk Activate modules.
 	 *
-	 * @since 3.1.6
+	 * @since 3.2.0
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -465,7 +465,7 @@ class UR_Modules {
 	/**
 	 * Bulk enable features.
 	 *
-	 * @since 3.1.6
+	 * @since 3.2.0
 	 *
 	 * @param array $feature_data Data of the features to enable.
 	 */
@@ -487,7 +487,7 @@ class UR_Modules {
 	/**
 	 * Bulk Deactivate Modules.
 	 *
-	 * @since 3.1.6
+	 * @since 3.2.0
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -549,7 +549,7 @@ class UR_Modules {
 	/**
 	 * Bulk Deactivate addons.
 	 *
-	 * @since 3.1.6
+	 * @since 3.2.0
 	 *
 	 * @param array $addon_slugs Slugs of the addons to deactivate.
 	 */
@@ -565,7 +565,7 @@ class UR_Modules {
 	/**
 	 * Bulk disable features.
 	 *
-	 * @since 3.1.6
+	 * @since 3.2.0
 	 *
 	 * @param array $feature_slugs Slugs of the features to disable.
 	 */

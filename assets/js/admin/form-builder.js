@@ -4269,6 +4269,62 @@
 					});
 			},
 			/**
+			 * Reflects changes in multi select field of field settings into selected field in form builder area.
+			 *
+			 * @param object this_node Multi Select field from field settings.
+			 */
+			render_multi_select_box: function (this_node) {
+				var value = "";
+				if (this_node.is(":checked")) {
+					var value = this_node.val().trim();
+				}
+				var wrapper = $(".ur-selected-item.ur-item-active");
+				var checked_index = this_node.closest("li").index();
+				var select = wrapper.find(".ur-field").find("select");
+
+				if (this_node.hasClass("ur-type-checkbox-label")) {
+					value = select.val();
+				}
+
+				var options = this_node
+					.closest(".ur-general-setting-options")
+					.find(
+						"input.ur-general-setting-field.ur-type-checkbox-label"
+					)
+					.map(function () {
+						return $(this).val();
+					});
+
+				select.html("");
+				$.each(options, function (key, option) {
+					select.append(
+						"<option value='" +
+							option +
+							"' " +
+							(value === option ? "selected" : "") +
+							">" +
+							option +
+							"</option>"
+					);
+				});
+
+				// Loop through options in active fields general setting hidden div.
+				wrapper
+					.find(
+						".ur-general-setting-options > ul.ur-options-list > li"
+					)
+					.each(function (index, element) {
+						var radio_input = $(element).find(
+							'[data-field="default_value"]'
+						);
+						if (index === checked_index) {
+							radio_input.prop("checked", true);
+						} else {
+							radio_input.prop("checked", false);
+						}
+					});
+			},
+			/**
 			 * Reflects changes in radio field of field settings into selected field in form builder area.
 			 *
 			 * @param object this_node Radio field from field settings.
@@ -4827,6 +4883,21 @@
 			 * @param object $label enable selling price field of fields from field settings.
 			 */
 			trigger_general_setting_selling_price: function ($label) {
+				var wrapper = $(".ur-selected-item.ur-item-active");
+
+				wrapper
+					.find(".ur-general-setting-block")
+					.find(
+						'input[data-field="' + $label.attr("data-field") + '"]'
+					)
+					.prop("checked", $label.is(":checked"));
+			},
+			/**
+			 * Reflects changes in enable selling price field of field settings into selected field in form builder area.
+			 *
+			 * @param object $label enable selling price field of fields from field settings.
+			 */
+			trigger_general_setting_trail_period: function ($label) {
 				var wrapper = $(".ur-selected-item.ur-item-active");
 
 				wrapper
