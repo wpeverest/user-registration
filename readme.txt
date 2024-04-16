@@ -20,7 +20,7 @@ Moreover, this free, lightweight, and 100% responsive plugin comes with a beauti
 
 The best thing is that there are unlimited customization options for each field and form. To add more extendibility to this, you get premium add-ons that include extra functionalities in your registration forms. So, you’ve got yourself a fantastic WordPress user registration and login plugin.
 
-[Youtube](https://www.youtube.com/watch?v=ZOXVbfBTNPQ)
+[youtube https://www.youtube.com/watch?v=ZOXVbfBTNPQ]
 
 [All Features](https://wpuserregistration.com/features/?utm_source=wporg&utm_medium=all-features-link&utm_campaign=ur-upgrade-to-pro) | [Documentation](https://docs.wpuserregistration.com/)
 
@@ -39,7 +39,9 @@ The best thing is that there are unlimited customization options for each field 
 
 * **Global Search Settings:** Admins can search in the Global Settings to quickly access the required settings.
 
-* **[In-built Login Form:](https://www.youtube.com/watch?v=jbiBJdowxG0)** No need to make a separate login form for users as you get an in-built login form with User Registration.
+* **In-built Login Form:** No need to make a separate login form for users as you get an in-built login form with User Registration.
+
+[youtube https://www.youtube.com/watch?v=jbiBJdowxG0]
 
 * **Strong Spam Protection with Google reCaptcha and Honeypot:** Block spam attacks like fake user registration and spam submissions with our Google reCaptcha and honeypot feature.
 
