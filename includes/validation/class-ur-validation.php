@@ -27,8 +27,9 @@ class UR_Validation {
 	 * @return boolean or WP_Error.
 	 */
 	public static function required( $value ) {
-		if ( empty( trim( $value ) ) ) { //phpcs:ignore;
-			if ( is_numeric( trim( $value ) ) || '0' === trim( $value ) ) {
+		$value = is_array( $value ) ? $value : trim( $value );
+		if ( empty( $value ) ) { //phpcs:ignore;
+			if ( is_numeric( $value ) || '0' === $value ) {
 				return true;
 			}
 
