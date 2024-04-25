@@ -236,7 +236,14 @@ class UR_Email_Confirmation {
 			$login_option = ur_get_user_login_option( $user_id );
 
 			if ( $user_token === $_GET['ur_token'] && ( 'email_confirmation' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
-				if ( isset( $output[1] ) && time() > ( $output[1] + 60 * 60 * 24 ) ) {
+				$token_expiration_duration = 24 * 60 * 60;
+                /**
+				 * Filter hook to modify the token expiration duration.
+				 * Default email confirmation token expiration duration is 24 hour.
+				 */
+                $token_expiration_duration = apply_filters('user_registration_email_confirmation_token_expiration_duration', $token_expiration_duration );
+
+				if (isset($output[1]) && time() > ($output[1] + $token_expiration_duration)) {
 					add_filter( 'login_message', array( $this, 'custom_token_expired_message' ) );
 					add_filter( 'user_registration_login_form_before_notice', array( $this, 'custom_token_expired_message' ) );
 				} else {

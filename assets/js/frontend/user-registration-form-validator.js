@@ -210,6 +210,9 @@
 					validClass: "user-registration-valid",
 					ignore: function (index, element) {
 						// Return true to ignore the element, false to include it in validation
+						if ( $(element).closest(".ur-field-item").is(":hidden") ) {
+							return true;
+						}
 						return (
 							element.id &&
 							(element.id.startsWith("billing_") ||

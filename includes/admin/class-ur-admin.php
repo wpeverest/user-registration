@@ -22,6 +22,7 @@ class UR_Admin {
 	public function __construct() {
 		add_action( 'init', array( $this, 'includes' ) );
 		add_action( 'init', array( $this, 'translation_migration' ) );
+		add_action( 'init', array( $this, 'run_migration_script' ) );
 		add_action( 'current_screen', array( $this, 'conditional_includes' ) );
 		add_action( 'admin_init', array( $this, 'prevent_admin_access' ), 10, 2 );
 		add_action( 'load-users.php', array( $this, 'live_user_read' ), 10, 2 );
@@ -37,6 +38,18 @@ class UR_Admin {
 		add_action( 'admin_init', array( $this, 'admin_redirects' ) );
 		add_action( 'admin_init', array( $this, 'template_actions' ) );
 		add_filter( 'display_post_states', array( $this, 'ur_add_post_state' ), 10, 2 );
+	}
+
+	/**
+	 * Execute migration script if version is not similar.
+	 *
+	 * @since 4.2.0.1
+	 */
+	public function run_migration_script() {
+		if ( UR_VERSION !== get_option( 'user_registration_version' ) ) {
+			UR_Install::maybe_run_migrations();
+			update_option( 'user_registration_version', UR_VERSION );
+		}
 	}
 
 	/**
