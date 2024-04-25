@@ -62,11 +62,7 @@ class UR_Admin_Assets {
 		wp_style_add_data( 'user-registration-admin', 'rtl', 'replace' );
 
 		// Sitewide menu CSS.
-		wp_enqueue_style( 'user-registration-menu' );
-		wp_enqueue_style( 'user-registration-metabox' );
-		wp_enqueue_style( 'user-registration-form-modal-css' );
 
-		wp_enqueue_style( 'select2', UR()->plugin_url() . '/assets/css/select2/select2.css', array(), '4.0.6' );
 		wp_enqueue_style( 'ur-notice' );
 
 		// Admin styles for UR pages only.
@@ -84,6 +80,12 @@ class UR_Admin_Assets {
 			wp_enqueue_style( 'jquery-confirm-style' );
 			wp_enqueue_style( 'tooltipster' );
 			wp_enqueue_style( 'tooltipster-borderless-theme' );
+
+			wp_enqueue_style( 'user-registration-menu' );
+			wp_enqueue_style( 'user-registration-metabox' );
+			wp_enqueue_style( 'user-registration-form-modal-css' );
+
+			wp_enqueue_style( 'select2', UR()->plugin_url() . '/assets/css/select2/select2.css', array(), '4.0.6' );
 		}
 		// Enqueue flatpickr on user profile screen.
 		if ( 'user-edit' === $screen_id || 'profile' === $screen_id || 'user-registration_page_add-new-registration' === $screen_id ) {
@@ -262,10 +264,6 @@ class UR_Admin_Assets {
 			)
 		);
 
-		wp_enqueue_script( 'user-registration-form-modal-js' );
-		wp_enqueue_script( 'ur-enhanced-select' );
-
-		wp_enqueue_script( 'ur-notice', UR()->plugin_url() . '/assets/js/admin/ur-notice' . $suffix . '.js', array(), UR_VERSION, false );
 		wp_localize_script(
 			'ur-notice',
 			'ur_notice_params',
@@ -413,6 +411,10 @@ class UR_Admin_Assets {
 
 				)
 			);
+			wp_enqueue_script( 'user-registration-form-modal-js' );
+			wp_enqueue_script( 'ur-enhanced-select' );
+
+			wp_enqueue_script( 'ur-notice', UR()->plugin_url() . '/assets/js/admin/ur-notice' . $suffix . '.js', array(), UR_VERSION, false );
 		}
 
 		// Enqueue flatpickr on user profile screen.
