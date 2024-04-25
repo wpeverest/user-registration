@@ -44,7 +44,6 @@ class UR_Admin_Assets {
 		wp_register_style( 'user-registration-admin', UR()->plugin_url() . '/assets/css/admin.css', array( 'nav-menus', 'wp-color-picker' ), UR_VERSION );
 		wp_register_style( 'user-registration-settings', UR()->plugin_url() . '/assets/css/settings.css', array( 'nav-menus' ), UR_VERSION );
 		wp_register_style( 'jquery-ui-style', UR()->plugin_url() . '/assets/css/jquery-ui/jq-smoothness.css', array(), $jquery_version );
-		wp_register_style( 'flatpickr', UR()->plugin_url() . '/assets/css/flatpickr/flatpickr.min.css', array(), '4.6.9' );
 		wp_register_style( 'perfect-scrollbar', UR()->plugin_url() . '/assets/css/perfect-scrollbar/perfect-scrollbar.css', array(), '1.5.0' );
 		wp_register_style( 'sweetalert2', UR()->plugin_url() . '/assets/css/sweetalert2/sweetalert2.min.css', array(), '10.16.7' );
 
@@ -67,6 +66,8 @@ class UR_Admin_Assets {
 
 		// Admin styles for UR pages only.
 		if ( in_array( $screen_id, ur_get_screen_ids(), true ) ) {
+			wp_register_style( 'flatpickr', UR()->plugin_url() . '/assets/css/flatpickr/flatpickr.min.css', array(), '4.6.9' );
+
 			wp_enqueue_style( 'user-registration-admin' );
 
 			if ( strpos( $screen_id, 'user-registration-settings' ) ) {
