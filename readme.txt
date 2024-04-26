@@ -238,12 +238,11 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 
 == Changelog ==
 
-= 3.2.0.1  - 25/04/2024 =
+= 3.2.0.1  - 26/04/2024 =
 * Tweak    - Introduce new hook to modify token expiration duration.
 * Fix      - Unable to submit form due to TypeError.
 * Fix      - Divide by zero error on number validation.
 * Fix      - Required Field error message for conditionally hidden fields.
-* Fix      - Execute Migration Script while zip file upload.
 
 = 3.2.0    - 15/04/2024 =
 * Feature  - Dashboard Page.
