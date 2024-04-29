@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the User Registration plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 3.2.0\n"
+"Project-Id-Version: User Registration 3.2.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-registration\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-04-16T05:32:50+00:00\n"
+"POT-Creation-Date: 2024-04-26T08:16:10+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: user-registration\n"
@@ -999,7 +999,7 @@ msgstr ""
 
 #. translators: 1: Newly registered user count 2: User
 #: includes/admin/class-ur-admin-user-list-manager.php:220
-#: includes/admin/class-ur-admin.php:411
+#: includes/admin/class-ur-admin.php:424
 msgid "User"
 msgid_plural "Users"
 msgstr[0] ""
@@ -1113,41 +1113,41 @@ msgstr ""
 msgid "Skip to Dashboard"
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:93
+#: includes/admin/class-ur-admin.php:106
 msgid "UR My Account Page"
 msgstr ""
 
 #. translators: 1: User Registration 2:: five stars
-#: includes/admin/class-ur-admin.php:208
+#: includes/admin/class-ur-admin.php:221
 msgid "If you like %1$s please leave us a %2$s rating. A huge thanks in advance!"
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:210
+#: includes/admin/class-ur-admin.php:223
 msgid "Thank You!"
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:222
+#: includes/admin/class-ur-admin.php:235
 msgid "Thank you for using User Registration."
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:247
+#: includes/admin/class-ur-admin.php:260
 msgid "Bravo! 💪 Well done."
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:311
+#: includes/admin/class-ur-admin.php:324
 msgid "Contribute to the enhancement"
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:361
+#: includes/admin/class-ur-admin.php:374
 msgid "User Registration Plugin Survey"
 msgstr ""
 
 #. translators: 1: Newly registered user count 2: User
-#: includes/admin/class-ur-admin.php:411
+#: includes/admin/class-ur-admin.php:424
 msgid "%1$d new %2$s registered."
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:468
+#: includes/admin/class-ur-admin.php:481
 msgid "Could not verify nonce"
 msgstr ""
 
@@ -3204,7 +3204,7 @@ msgstr ""
 #. translators: %s - Redirect URL.
 #. translators: %s - Username
 #. translators: %s - Lost password URL
-#: includes/class-ur-email-confirmation.php:420
+#: includes/class-ur-email-confirmation.php:427
 #: includes/class-ur-user-approval.php:207
 #: includes/class-ur-user-approval.php:212
 #: includes/class-ur-user-approval.php:236
@@ -3226,14 +3226,14 @@ msgid "ERROR:"
 msgstr ""
 
 #. translators: %s - Resend Verification Link.
-#: includes/class-ur-email-confirmation.php:420
+#: includes/class-ur-email-confirmation.php:427
 #: includes/class-ur-user-approval.php:249
 #: includes/class-ur-user-approval.php:291
 msgid "Your account is still pending approval. Verify your email by clicking on the link sent to your email. %s"
 msgstr ""
 
 #. translators: %s - Resend Verification Link.
-#: includes/class-ur-email-confirmation.php:420
+#: includes/class-ur-email-confirmation.php:427
 #: includes/class-ur-user-approval.php:249
 #: includes/class-ur-user-approval.php:291
 msgid "Resend Verification Link"
@@ -5198,7 +5198,7 @@ msgid "Please enter a value greater than %d"
 msgstr ""
 
 #. translators: %s - validation message
-#: includes/form/class-ur-form-field-number.php:131
+#: includes/form/class-ur-form-field-number.php:132
 msgid "Please enter multiple of %d"
 msgstr ""
 
@@ -5238,7 +5238,8 @@ msgstr ""
 #. translators: %d - validation message
 #: includes/form/class-ur-form-field-text.php:108
 #: includes/form/class-ur-form-field-textarea.php:106
-msgid "Please enter number of words less than %d."
+#: includes/validation/class-ur-validation.php:178
+msgid "Please enter number of words less than %d"
 msgstr ""
 
 #. translators: %d - validation message
@@ -5250,7 +5251,8 @@ msgstr ""
 #. translators: %d - validation message
 #: includes/form/class-ur-form-field-text.php:162
 #: includes/form/class-ur-form-field-textarea.php:160
-msgid "Please enter number of words at least %d."
+#: includes/validation/class-ur-validation.php:196
+msgid "Please enter number of words at least %d"
 msgstr ""
 
 #: includes/form/class-ur-form-field-textarea.php:44
@@ -6230,55 +6232,45 @@ msgstr ""
 msgid "Please enter a valid value for %s."
 msgstr ""
 
-#: includes/validation/class-ur-validation.php:37
+#: includes/validation/class-ur-validation.php:38
 msgid "Please enter a valid value"
 msgstr ""
 
-#: includes/validation/class-ur-validation.php:53
+#: includes/validation/class-ur-validation.php:54
 msgid "Please enter a numeric value"
 msgstr ""
 
-#: includes/validation/class-ur-validation.php:69
+#: includes/validation/class-ur-validation.php:70
 msgid "Please input a valid email"
 msgstr ""
 
-#: includes/validation/class-ur-validation.php:88
+#: includes/validation/class-ur-validation.php:89
 msgid "Please input a valid url"
 msgstr ""
 
-#: includes/validation/class-ur-validation.php:105
+#: includes/validation/class-ur-validation.php:106
 msgid "Please input a valid date"
 msgstr ""
 
-#: includes/validation/class-ur-validation.php:123
+#: includes/validation/class-ur-validation.php:124
 msgid "Please input a valid value"
 msgstr ""
 
 #. translators: %d - Size
-#: includes/validation/class-ur-validation.php:141
+#: includes/validation/class-ur-validation.php:142
 msgid "Please enter value of length less than %d"
 msgstr ""
 
 #. translators: %d - Size
-#: includes/validation/class-ur-validation.php:159
+#: includes/validation/class-ur-validation.php:160
 msgid "Please enter value of length at least %d"
 msgstr ""
 
-#. translators: %d - Size
-#: includes/validation/class-ur-validation.php:177
-msgid "Please enter number of words less than %d"
-msgstr ""
-
-#. translators: %d - Size
-#: includes/validation/class-ur-validation.php:195
-msgid "Please enter number of words at least %d"
-msgstr ""
-
-#: includes/validation/class-ur-validation.php:211
+#: includes/validation/class-ur-validation.php:212
 msgid "Please enter an integer value"
 msgstr ""
 
-#: includes/validation/class-ur-validation.php:227
+#: includes/validation/class-ur-validation.php:228
 msgid "Please enter a non negative value"
 msgstr ""
 

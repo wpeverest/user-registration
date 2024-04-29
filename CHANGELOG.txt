@@ -1,3 +1,9 @@
+= 3.2.0.1  - 26/04/2024 =
+* Tweak    - Introduce new hook to modify token expiration duration.
+* Fix      - Unable to submit form due to TypeError.
+* Fix      - Divide by zero error on number validation.
+* Fix      - Required Field error message for conditionally hidden fields.
+
 = 3.2.0    - 15/04/2024 =
 * Feature  - Dashboard Page.
 * Feature  - Automatic user login after email confirmation and reset password.
