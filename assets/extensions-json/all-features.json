@@ -1,0 +1,49 @@
+{
+  "features": [
+    {
+      "title": "Content Restriction",
+      "slug" : "user-registration-content-restriction",
+      "name" : "User Registration - Content Restriction",
+      "image": "extensions-json/sections/images/content-restriction.png",
+      "excerpt": "Restrict access partially or fully to specific content, such as pages, posts, and more using advanced conditional rules.",
+      "link": "https://wpuserregistration.com/features/content-restriction/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "released_date": "22/09/2017",
+      "plan" : [
+        "personal",
+        "plus",
+        "professional",
+        "themegrill agency"
+      ]
+    },
+    {
+      "title": "PayPal Payment",
+      "slug" : "user-registration-payments",
+      "name" : "User Registration Payments",
+      "image": "extensions-json/sections/images/payment-paypal.png",
+      "excerpt": "Want quick and secure payments during registration? User Registration has in-built support for the PayPal gateway.",
+      "link": "https://wpuserregistration.com/features/paypal/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "released_date": "14/08/2018",
+      "plan" : [
+        "personal",
+        "plus",
+        "professional",
+        "themegrill agency"
+      ]
+    },
+	  {
+      "title": "Frontend Listing",
+      "slug" : "user-registration-frontend-listing",
+      "name" : "User Registration Frontend Listing",
+      "image": "extensions-json/sections/images/frontend-listing.png",
+      "excerpt": "By listing registered users in the front end, your site visitors or users can view the profile of all the listed members.",
+      "link": "https://wpuserregistration.com/features/frontend-listing/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "released_date": "06/04/2021",
+      "plan" : [
+        "personal",
+        "plus",
+        "professional",
+        "themegrill agency"
+      ]
+	  }
+  ]
+}

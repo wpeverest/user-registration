@@ -99,13 +99,14 @@ jQuery(function ($) {
 		}
 	});
 	// Bind UI Actions for upgradable fields
-	$(document).on("mousedown", ".ur-upgradable-field", function (e) {
+	$(document).on("click", ".ur-upgradable-field", function (e) {
 		e.preventDefault();
 
 		var icon =
 			'<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>';
 		var plan = $(this).data("plan");
 		var name = $(this).data("name");
+		var video_id = $(this).data("video");
 		var slug = $(this).data("slug"),
 			$this = $(this);
 
@@ -118,10 +119,14 @@ jQuery(function ($) {
 					slug: slug,
 					plan: plan,
 					name: name,
+					video_id: video_id,
 					security:
 						user_registration_locked_form_fields_notice_params.user_registration_locked_form_fields_notice_nonce,
 				},
 				success: function (response) {
+					if(video_id !== ''){
+						var video = '<div style="width: 535px; height: 300px;"><iframe width="100%" height="100%" frameborder="0" src="https://www.youtube.com/embed/'+video_id+'" rel="1" allowfullscreen></iframe></div><br>';
+					}
 					var action_button = $(response.data.action_button).find(
 						"a"
 					);
@@ -170,7 +175,7 @@ jQuery(function ($) {
 
 					title += "</span>";
 					message =
-						message + "<br><br>" + response.data.action_button;
+						video + message + "<br><br>" + response.data.action_button;
 					Swal.fire({
 						title: title,
 						html: message,
@@ -178,7 +183,9 @@ jQuery(function ($) {
 							"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-locked-field",
 						showCloseButton: true,
 						showConfirmButton: false,
-						allowOutsideClick: false,
+						allowOutsideClick: true,
+						heightAuto: false,
+    					width: '575px',
 					}).then(function (result) {
 						// Do Nothing.
 					});
@@ -422,6 +429,7 @@ jQuery(function ($) {
 			$(".ur-builder-wrapper-footer").show();
 			// Hide the form settings in fields panel.
 			$(".ur-selected-inputs").find("form#ur-field-settings").hide();
+			$("#user_registration_form_setting_redirect_after_field").hide();
 		}
 	);
 
@@ -541,10 +549,18 @@ jQuery(function ($) {
 		if (selected_redirection_option.length) {
 			switch (selected_redirection_option.val()) {
 				case "internal-page":
+					$("#user_registration_form_setting_redirect_after_field").show();
 					custom_redirection_page.slideDown(800);
 					break;
 				case "external-url":
+					$("#user_registration_form_setting_redirect_after_field").show();
 					redirect_url.slideDown(800);
+					break;
+				case "no-redirection":
+					$("#user_registration_form_setting_redirect_after_field").hide();
+					break;
+				case "previous-page":
+					$("#user_registration_form_setting_redirect_after_field").show();
 					break;
 				default:
 					break;

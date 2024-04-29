@@ -89,7 +89,7 @@ class UR_Form_Field_Text extends UR_Form_Field {
 						add_filter(
 							$filter_hook,
 							function ( $msg ) use ( $label, $message ) {
-								if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
+								if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX && ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
 									return sprintf( $message[ $label ] );
 								} else {
 									wp_send_json_error(
@@ -105,13 +105,13 @@ class UR_Form_Field_Text extends UR_Form_Field {
 					if ( is_wp_error( UR_Validation::validate_max_words_length( $value, $max_size ) ) ) {
 						$message = array(
 							/* translators: %d - validation message */
-							$label       => sprintf( esc_html__( 'Please enter number of words less than %d', 'user-registration' ), $max_size ),
+							$label       => sprintf( esc_html__( 'Please enter number of words less than %d.', 'user-registration' ), $max_size ),
 							'individual' => true,
 						);
 						add_filter(
 							$filter_hook,
 							function ( $msg ) use ( $label, $message ) {
-								if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
+								if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX && ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
 									return sprintf( $message[ $label ] );
 								} else {
 									wp_send_json_error(
@@ -137,13 +137,13 @@ class UR_Form_Field_Text extends UR_Form_Field {
 					if ( is_wp_error( UR_Validation::validate_min_length( $value, $min_size ) ) ) {
 						$message = array(
 							/* translators: %d - validation message */
-							$label       => sprintf( esc_html__( 'Please enter a value of length at least %d', 'user-registration' ), $min_size ),
+							$label       => sprintf( esc_html__( 'Please enter a value of length at least %d.', 'user-registration' ), $min_size ),
 							'individual' => true,
 						);
 						add_filter(
 							$filter_hook,
 							function ( $msg ) use ( $label, $message ) {
-								if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
+								if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX && ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
 									return sprintf( $message[ $label ] );
 								} else {
 									wp_send_json_error(
@@ -159,13 +159,13 @@ class UR_Form_Field_Text extends UR_Form_Field {
 					if ( is_wp_error( UR_Validation::validate_min_words_length( $value, $min_size ) ) ) {
 						$message = array(
 							/* translators: %d - validation message */
-							$label       => sprintf( esc_html__( 'Please enter number of words at least %d', 'user-registration' ), $min_size ),
+							$label       => sprintf( esc_html__( 'Please enter number of words at least %d.', 'user-registration' ), $min_size ),
 							'individual' => true,
 						);
 						add_filter(
 							$filter_hook,
 							function ( $msg ) use ( $label, $message ) {
-								if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
+								if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX && ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
 									return sprintf( $message[ $label ] );
 								} else {
 									wp_send_json_error(

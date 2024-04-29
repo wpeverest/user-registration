@@ -50,7 +50,7 @@ class UR_Form_Block {
 		}
 		wp_register_script(
 			'user-registration-block-editor',
-			UR()->plugin_url() . '/chunks/main.js',
+			UR()->plugin_url() . '/chunks/formblock.js',
 			$enqueue_script,
 			UR_VERSION
 		);
@@ -64,6 +64,7 @@ class UR_Form_Block {
 				'form_select'   => esc_html__( 'Select a Form', 'user-registration' ),
 				'form_settings' => esc_html__( 'Form Settings', 'user-registration' ),
 				'form_selected' => esc_html__( 'Form', 'user-registration' ),
+				'deprecated_notice' => esc_html__( 'The user registration form selector block has been deprecated. Please use the new updated block with new functionality.', 'user-registration' ),
 			),
 		);
 
@@ -127,21 +128,21 @@ class UR_Form_Block {
 			if ( $is_gb_editor ) {
 				add_filter(
 					'user_registration_form_custom_class',
-					function( $class ) {
+					function ( $class ) {
 						return $class . ' ur-gutenberg-editor';
 					}
 				);
 
 				add_action(
 					'user_registration_before_registration_form',
-					function() {
+					function () {
 						echo '<fieldset disabled>';
 					}
 				);
 
 				add_action(
 					'user_registration_form_registration',
-					function() {
+					function () {
 						echo '</fieldset>';
 					}
 				);

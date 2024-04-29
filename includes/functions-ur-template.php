@@ -344,7 +344,10 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 
 			case 'textarea':
-				$field .= '<textarea data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" ' . ( empty( $args['custom_attributes']['rows'] ) ? ' rows="2"' : '' ) . ( empty( $args['custom_attributes']['cols'] ) ? ' cols="5"' : '' ) . implode( ' ', $custom_attributes ) . '>' . esc_textarea( $value ) . '</textarea>';
+				$field .= '<textarea style="margin-bottom:0px;" data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" ' . ( empty( $args['custom_attributes']['rows'] ) ? ' rows="2"' : '' ) . ( empty( $args['custom_attributes']['cols'] ) ? ' cols="5"' : '' ) . implode( ' ', $custom_attributes ) . '>' . esc_textarea( $value ) . '</textarea>';
+				$field .= '<div style="text-align: right; font-size:14px; color:#737373; margin-top:0px;"> <div class="ur-input-count" data-count-type="' . ( isset( $args['max-words'] ) ? 'words' : 'characters' ) . '" style="display: inline-block; margin-right: 1px;">0</div>';
+				$field .= '<div style="display: inline-block;">' . ( isset( $args['max-words'] ) ? '/' . $args['max-words'] . ' words' : ( isset( $args['max-characters'] ) ? '/' . $args['max-characters'] . ' characters' : '&nbsp;characters' ) );
+				$field .= '</div></div>';
 				break;
 
 			case 'checkbox':
@@ -361,7 +364,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				}
 				if ( isset( $args['image_choice'] ) && ur_string_to_bool( $args['image_choice'] ) && isset( $image_options ) && array_filter( $image_options ) ) {
 					if ( ! empty( $default ) ) {
-						$default = ( is_serialized( $default ) ) ? unserialize( $default, array( 'allowed_classes' => false ) ) : $default; //phpcs:ignore allowed_classes doesnot support below php v7.1.
+						$default = ( is_serialized( $default ) ) ? unserialize( $default, array( 'allowed_classes' => false ) ) : $default; //phpcs:ignore;
 					}
 						$choices = isset( $image_options ) ? $image_options : array();
 
@@ -404,7 +407,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				} elseif ( isset( $options ) && array_filter( $options ) ) {
 
 					if ( ! empty( $default ) ) {
-						$default = ( is_serialized( $default ) ) ? unserialize( $default, array( 'allowed_classes' => false ) ) : $default; //phpcs:ignore allowed_classes doesnot support below php v7.1.
+						$default = ( is_serialized( $default ) ) ? unserialize( $default, array( 'allowed_classes' => false ) ) : $default; //phpcs:ignore;
 					}
 
 						$choices = isset( $options ) ? $options : array();
@@ -787,7 +790,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$options = $field .= '';
 
 				if ( is_serialized( $value ) ) {
-					$default_value = unserialize( $value, array( 'allowed_classes' => false ) ); //phpcs:ignore allowed_classes parameters does not support below php v7.1.
+					$default_value = unserialize( $value, array( 'allowed_classes' => false ) ); //phpcs:ignore;
 				} else {
 					$default_value = $value;
 				}
@@ -1280,8 +1283,8 @@ function ur_logout_url( $redirect = '' ) {
 		$blocks = parse_blocks( $post_content );
 
 		foreach ( $blocks as $block ) {
-			if ( 'user-registration/form-selector' === $block['blockName'] && isset( $block['attrs']['logoutUrl'] ) ) {
-				$redirect = home_url( $block['attrs']['logoutUrl'] );
+			if ( ( 'user-registration/form-selector' === $block['blockName'] || 'user-registration/myaccount' === $block['blockName'] || 'user-registration/login-form' === $block['blockName'] ) && isset( $block['attrs']['logoutUrl'] ) ) {
+				$redirect = '' != $block['attrs']['logoutUrl'] ? ur_check_external_url( $block['attrs']['logoutUrl'] ) : ur_get_page_permalink( 'myaccount' );
 			}
 		}
 	}

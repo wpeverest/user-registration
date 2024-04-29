@@ -28,7 +28,6 @@ class UR_Admin_Welcome {
 
 		add_action( 'admin_menu', array( __CLASS__, 'add_menu' ) );
 		add_action( 'admin_init', array( __CLASS__, 'welcome_page' ), 30 );
-
 	}
 
 	/**
@@ -53,26 +52,13 @@ class UR_Admin_Welcome {
 			update_option( 'user_registration_first_time_activation_flag', false );
 		}
 
-		$form_block_data = array(
-			'forms'    => ur_get_all_user_registration_form(),
-			'logo_url' => UR()->plugin_url() . '/assets/images/logo.png',
-			'i18n'     => array(
-				'title'         => esc_html( 'User Registration' ),
-				'description'   => esc_html__( 'Select &#38; display one of your form.', 'user-registration' ),
-				'form_select'   => esc_html__( 'Select a Form', 'user-registration' ),
-				'form_settings' => esc_html__( 'Form Settings', 'user-registration' ),
-				'form_selected' => esc_html__( 'Form', 'user-registration' ),
-			),
-		);
-
-		wp_register_script( 'ur-setup-wizard-script', UR()->plugin_url() . '/chunks/main.js', array( 'wp-element', 'wp-blocks', 'wp-editor' ), UR()->version, true );
+		wp_register_script( 'ur-setup-wizard-script', UR()->plugin_url() . '/chunks/welcome.js', array( 'wp-element', 'wp-blocks', 'wp-editor' ), UR()->version, true );
 		wp_enqueue_style( 'ur-setup-wizard-style', UR()->plugin_url() . '/assets/css/user-registration-setup-wizard.css', array(), UR()->version );
-		wp_localize_script( 'ur-setup-wizard-script', 'ur_form_block_data', $form_block_data );
 		wp_enqueue_script( 'ur-setup-wizard-script' );
 
 		wp_localize_script(
 			'ur-setup-wizard-script',
-			'_UR_',
+			'_UR_WIZARD_',
 			array(
 				'adminURL'        => esc_url( admin_url() ),
 				'siteURL'         => esc_url( home_url( '/' ) ),
@@ -92,7 +78,6 @@ class UR_Admin_Welcome {
 			self::setup_wizard_footer();
 			exit;
 		}
-
 	}
 
 	/**
@@ -174,7 +159,7 @@ class UR_Admin_Welcome {
 						</div>
 
 						<div class="user-registration-skip-btn">
-							<a href="<?php echo esc_url_raw( admin_url() . 'admin.php?page=user-registration&end-setup-wizard=' . true ); ?>">
+							<a href="<?php echo esc_url_raw( admin_url() . 'admin.php?page=user-registration-dashboard&end-setup-wizard=' . true ); ?>">
 								<p style="color: gray; font-style:italic;"><?php esc_html_e( 'Skip to Dashboard', 'user-registration' ); ?> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
 								<path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
 								</svg></p>

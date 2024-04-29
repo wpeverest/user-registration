@@ -60,8 +60,8 @@ class UR_Setting_User_Login extends UR_Field_Settings {
 				'type'        => 'number',
 				'required'    => false,
 				'default'     => $this->field_id . '_username_length',
-				'placeholder' => __( 'Min Value', 'user-registration' ),
-				'tip'         => __( 'Enter minimum number of length of username.', 'user-registration' ),
+				'placeholder' => __( 'Maximum Value', 'user-registration' ),
+				'tip'         => __( 'Enter maximum number of length of username.', 'user-registration' ),
 			),
 			'username_character' => array(
 				'label'       => __( 'Allow Special Character', 'user-registration' ),

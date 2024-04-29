@@ -60,22 +60,8 @@ class UR_Email_Confirmation {
 			$status   = $action;
 
 			if ( 'resend_verification' == $status ) {
-				$user    = get_user_by( 'id', $user_id );
-				$form_id = ur_get_form_id_by_userid( $user_id );
-
-				$this->set_email_status( array(), $form_id, $user_id );
-				/**
-				 * Filter hook to modify the email attachment resending token.
-				 * Default value is empty array.
-				 */
-				$attachments = apply_filters( 'user_registration_email_attachment_resending_token', array() );
-				$name_value  = ur_get_user_extra_fields( $user_id );
-				// Get selected email template id for specific form.
-				$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
-
-				UR_Emailer::send_mail_to_user( $user->user_email, $user->user_login, $user_id, '', $name_value, $attachments, $template_id );
+				ur_resend_verification_email( $user_id );
 				$redirect = add_query_arg( array( 'resend_verification_sent' => 1 ), $redirect );
-
 			}
 			/**
 			 * Filter to modify the admin action redirect.
@@ -187,7 +173,7 @@ class UR_Email_Confirmation {
 		add_action( 'login_enqueue_scripts', array( $this, 'ur_enqueue_script' ), 1 );
 
 		// Condition for resending token.
-		if ( isset( $_GET['ur_resend_id'] ) && isset( $_GET['ur_resend_token'] ) && ur_string_to_bool( $_GET['ur_resend_token'] ) ) { //phpcs:ignore;
+		if (isset($_GET['ur_resend_id']) && isset($_GET['ur_resend_token']) && ur_string_to_bool($_GET['ur_resend_token'])) { //phpcs:ignore;
 			if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( wp_unslash( sanitize_key( $_REQUEST['_wpnonce'] ) ), 'ur_resend_token' ) ) {
 				die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 			}
@@ -210,7 +196,7 @@ class UR_Email_Confirmation {
 				 */
 				$attachments = apply_filters( 'user_registration_email_attachment_resending_token', array() );
 				$name_value  = ur_get_user_extra_fields( $user_id );
-					// Get selected email template id for specific form.
+				// Get selected email template id for specific form.
 				$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
 
 				UR_Emailer::send_mail_to_user( $user->user_email, $user->user_login, $user_id, '', $name_value, $attachments, $template_id );
@@ -250,7 +236,14 @@ class UR_Email_Confirmation {
 			$login_option = ur_get_user_login_option( $user_id );
 
 			if ( $user_token === $_GET['ur_token'] && ( 'email_confirmation' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
-				if ( isset( $output[1] ) && time() > ( $output[1] + 60 * 60 * 24 ) ) {
+				$token_expiration_duration = 24 * 60 * 60;
+                /**
+				 * Filter hook to modify the token expiration duration.
+				 * Default email confirmation token expiration duration is 24 hour.
+				 */
+                $token_expiration_duration = apply_filters('user_registration_email_confirmation_token_expiration_duration', $token_expiration_duration );
+
+				if (isset($output[1]) && time() > ($output[1] + $token_expiration_duration)) {
 					add_filter( 'login_message', array( $this, 'custom_token_expired_message' ) );
 					add_filter( 'user_registration_login_form_before_notice', array( $this, 'custom_token_expired_message' ) );
 				} else {
@@ -266,7 +259,7 @@ class UR_Email_Confirmation {
 					 */
 					$attachments = apply_filters( 'user_registration_email_attachment_resending_token', array() );
 					$name_value  = ur_get_user_extra_fields( $user_id );
-						// Get selected email template id for specific form.
+					// Get selected email template id for specific form.
 					$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
 
 					UR_Emailer::send_mail_to_user( $user->user_email, $user->user_login, $user_id, '', $name_value, $attachments, $template_id );
@@ -275,6 +268,10 @@ class UR_Email_Confirmation {
 						add_filter( 'login_message', array( $this, 'custom_email_confirmed_admin_await_message' ) );
 						add_filter( 'user_registration_login_form_before_notice', array( $this, 'custom_email_confirmed_admin_await_message' ) );
 					} else {
+						$allow_automatic_user_login = apply_filters( 'user_registration_allow_automatic_user_login_email_confirmation', true );
+						if ( $allow_automatic_user_login ) {
+							ur_automatic_user_login( $user );
+						}
 						add_filter( 'login_message', array( $this, 'custom_registration_message' ) );
 						add_filter( 'user_registration_login_form_before_notice', array( $this, 'custom_registration_message' ) );
 					}
@@ -322,11 +319,11 @@ class UR_Email_Confirmation {
 				'user_email' => get_user_meta( $user_id, 'user_registration_pending_email', true ),
 			)
 		);
-			/**
-			 * Trigger an action hook after the email address is updated.
-			 *
-			 * @param int $user_id The user ID.
-			 */
+		/**
+		 * Trigger an action hook after the email address is updated.
+		 *
+		 * @param int $user_id The user ID.
+		 */
 		do_action( 'user_registration_email_change_success', $user_id );
 
 		// Remove the confirmation key, pending email and expiry date.
@@ -426,7 +423,7 @@ class UR_Email_Confirmation {
 			$url = wp_nonce_url( $url . '?ur_resend_id=' . crypt_the_string( $user->ID . '_' . time(), 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
 
 			if ( '0' === $email_status ) {
-					/* translators: %s - Resend Verification Link. */
+				/* translators: %s - Resend Verification Link. */
 				$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . sprintf( __( 'Your account is still pending approval. Verify your email by clicking on the link sent to your email. %s', 'user-registration' ), '<a id="resend-email" href="' . esc_url( $url ) . '">' . __( 'Resend Verification Link', 'user-registration' ) . '</a>' );
 				return new WP_Error( 'user_email_not_verified', $message );
 			}
