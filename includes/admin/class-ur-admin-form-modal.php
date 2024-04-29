@@ -151,7 +151,7 @@ if ( ! class_exists( 'UR_Admin_Form_Modal', false ) ) :
 			}
 			$selector .= '</select>';
 
-			echo $selector;
+			echo $selector; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 	}
 
