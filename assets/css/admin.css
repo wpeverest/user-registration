@@ -7998,7 +7998,7 @@ a.button.ur-smart-tags-list-button {
     visibility: hidden;
     position: absolute;
     right: 0;
-    width: 320px !important; }
+    width: 120px !important; }
 
 .select2-container--open:not(.ur-hide-select2) .ur-select2-dropdown {
   width: 180px !important; }

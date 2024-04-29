@@ -843,6 +843,7 @@ jQuery(function ($) {
 		$(this)
 			.siblings("#select-smart-tags")
 			.select2({
+				placeholder: "",
 				dropdownCssClass: "ur-select2-dropdown",
 				templateResult: function (data, container) {
 					if ($this.siblings(".ur_advance_setting").length > 0) {
@@ -853,6 +854,7 @@ jQuery(function ($) {
 					return data.text;
 				},
 			});
+
 		$(this).siblings(".select2-container").addClass("ur-hide-select2");
 
 		$(this).siblings("#select-smart-tags").select2("open");

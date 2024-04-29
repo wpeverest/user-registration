@@ -143,7 +143,9 @@ if ( ! class_exists( 'UR_Admin_Form_Modal', false ) ) :
 			</svg>';
 			$selector .= esc_html__( 'Add Smart Tags', 'user-registration' );
 			$selector .= '</a>';
-			$selector .= '<select id="select-smart-tags" style="display: none;" title="hello">';
+			$selector .= '<select id="select-smart-tags" style="display: none;">';
+			$selector .= '<option></option>';
+
 			foreach ( $smart_tags_list as $key => $value ) {
 				$selector .= '<option class="ur-select-smart-tag" value = "' . esc_attr( $key ) . '"> ' . esc_html( $value ) . '</option>';
 			}
