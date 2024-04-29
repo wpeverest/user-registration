@@ -278,7 +278,7 @@ class UR_Install {
 	 *
 	 * @return void
 	 */
-	private static function maybe_run_migrations() {
+	public static function maybe_run_migrations() {
 
 		include_once 'functions-ur-update.php';
 
