@@ -864,6 +864,7 @@ class UR_AJAX {
 			$form_name    = sanitize_text_field( $_POST['data']['form_name'] ); //phpcs:ignore
 			$form_row_ids = sanitize_text_field( $_POST['data']['form_row_ids'] ); //phpcs:ignore
 			$form_id      = sanitize_text_field( $_POST['data']['form_id'] ); //phpcs:ignore
+			$form_row_data = sanitize_text_field( $_POST['data']['row_data'] );
 
 			$post_data = array(
 				'post_type'      => 'user_registration',
@@ -890,6 +891,9 @@ class UR_AJAX {
 
 				// Form row_id save.
 				update_post_meta( $form_id, 'user_registration_form_row_ids', $form_row_ids );
+
+				// Form row_data save.
+				update_post_meta( $form_id, 'user_registration_form_row_data', $form_row_data );
 			}
 			/**
 			 * Action after form setting save.

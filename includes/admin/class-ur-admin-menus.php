@@ -834,9 +834,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			if ( ! empty( $form_data ) ) {
 				$form_data_content = $form_data->post_content;
 				$form_row_ids      = get_post_meta( $form_data->ID, 'user_registration_form_row_ids', true );
+				$form_row_data     = get_post_meta( $form_data->ID, 'user_registration_form_row_data', true );
 			} else {
 				$form_data_content = '';
 				$form_row_ids      = '';
+				$form_row_data     = '';
 			}
 
 			try {
@@ -858,6 +860,16 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				}
 			} catch ( Exception $e ) {
 				$form_row_ids_array = array();
+			}
+
+			try {
+				$form_row_data_array = json_decode( $form_row_data, true );
+
+				if ( json_last_error() !== JSON_ERROR_NONE ) {
+					throw new Exception( '' );
+				}
+			} catch ( Exception $e ) {
+				$form_row_data_array = array();
 			}
 
 			echo '<div class="ur-selected-inputs">';

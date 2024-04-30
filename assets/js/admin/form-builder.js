@@ -289,6 +289,7 @@
 				}
 
 				var form_data = URFormBuilder.get_form_data();
+				var row_data = URFormBuilder.get_form_row_data();
 				var form_row_ids = URFormBuilder.get_form_row_ids();
 				var ur_form_id = $("#ur_form_id").val();
 				var ur_form_id_localization =
@@ -333,6 +334,7 @@
 					security: user_registration_form_builder_data.ur_form_save,
 					data: {
 						form_data: JSON.stringify(form_data),
+						row_data: JSON.stringify(row_data),
 						form_row_ids: JSON.stringify(form_row_ids),
 						form_name: $("#ur-form-name").val(),
 						form_id: ur_form_id,
@@ -1067,6 +1069,44 @@
 				return form_data;
 			},
 			/**
+			 * Get all the form row data form builder.
+			 */
+			get_form_row_data: function () {
+				var row_data = [];
+				var single_row = $(".ur-input-grids .ur-single-row");
+				$.each(single_row, function () {
+					var single_row_data = {};
+
+					if ($(this).attr("data-repeater-id")) {
+						single_row_data.row_id = $(this).attr("data-row-id");
+						single_row_data.repeater_id =
+							$(this).attr("data-repeater-id");
+						single_row_data.type = "repeater";
+
+						var repeater_row_setting = $(
+							"#ur-repeater-settings"
+						).serializeArray();
+
+						$.each(repeater_row_setting, function (key, value) {
+							single_row_data[
+								value.name
+									.replace(
+										"user_registration_repeater_row_",
+										""
+									)
+									.replace(
+										"_" + single_row_data.repeater_id,
+										""
+									)
+							] = value.value;
+						});
+						row_data.push(single_row_data);
+					}
+				});
+
+				return row_data;
+			},
+			/**
 			 * Get all the grid wise form data from form builder.
 			 *
 			 * @param Object $grid_item Contains information about grids in which the whole form has been divided into.
@@ -1686,7 +1726,7 @@
 
 								if ($this.find(".ur-add-new-row").length == 0) {
 									$this.append(
-										'<button type="button" class="button button-primary dashicons dashicons-plus-alt ur-add-new-row ui-sortable-handle" data-total-rows="0">' +
+										'<button type="button" class="button button-primary dashicons dashicons-plus-alt ur-add-new-row ui-sortable-handle">' +
 											user_registration_form_builder_data.add_new +
 											"</button>"
 									);
@@ -1697,7 +1737,7 @@
 										.prev()
 										.attr("data-row-id");
 									$this
-										.find(".ur-add-new-row")
+										.find(".ur-row-buttons")
 										.attr("data-total-rows", total_rows);
 								}
 								events.render_draggable_sortable();
@@ -2108,14 +2148,17 @@
 								var $this_obj = this;
 								$("body").on(
 									"click",
-									".ur-add-new-row",
+									".ur-add-row",
 									function () {
-										var total_rows =
-											$(this).attr("data-total-rows");
-										$(this).attr(
-											"data-total-rows",
-											parseInt(total_rows) + 1
-										);
+										var total_rows = $(this)
+											.closest(".ur-row-buttons")
+											.attr("data-total-rows");
+										$(this)
+											.closest(".ur-row-buttons")
+											.attr(
+												"data-total-rows",
+												parseInt(total_rows) + 1
+											);
 
 										var single_row_clone = $(this)
 											.closest(".ur-input-grids")
@@ -2148,11 +2191,41 @@
 											.find(".ur-grid-lists")
 											.append(grid_list.html());
 										single_row_clone.insertBefore(
-											".ur-add-new-row"
+											".ur-row-buttons"
 										);
 										single_row_clone.show();
 										$this_obj.render_draggable_sortable();
 										builder.manage_empty_grid();
+
+										if (
+											$(this).hasClass(
+												"ur-add-repeater-row"
+											)
+										) {
+											single_row_clone.addClass(
+												"ur-repeater-row"
+											);
+
+											var repeater_count = $(this)
+													.closest(".ur-input-grids")
+													.find(
+														".ur-repeater-row"
+													).length,
+												repeater_div =
+													'<div class="ur-repeater-label"  id="user_registration_repeater_row_title_' +
+													repeater_count +
+													'"><label>Repeater Row</label></div>';
+											single_row_clone.attr(
+												"data-repeater-id",
+												repeater_count
+											);
+											$(repeater_div).insertBefore(
+												single_row_clone.find(
+													".ur-grid-lists"
+												)
+											);
+										}
+
 										$(document).trigger(
 											"user_registration_row_added",
 											[single_row_clone]
