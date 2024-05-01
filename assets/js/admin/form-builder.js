@@ -1088,17 +1088,19 @@
 						).serializeArray();
 
 						$.each(repeater_row_setting, function (key, value) {
-							single_row_data[
-								value.name
-									.replace(
-										"user_registration_repeater_row_",
-										""
-									)
-									.replace(
-										"_" + single_row_data.repeater_id,
-										""
-									)
-							] = value.value;
+							if( value.name.includes( "_" + single_row_data.row_id ) ) {
+								single_row_data[
+									value.name
+										.replace(
+											"user_registration_repeater_row_",
+											""
+										)
+										.replace(
+											"_" + single_row_data.repeater_id,
+											""
+										)
+								] = value.value;
+							}
 						});
 						row_data.push(single_row_data);
 					}
@@ -2148,16 +2150,17 @@
 								var $this_obj = this;
 								$("body").on(
 									"click",
-									".ur-add-row",
+									".ur-add-new-row",
 									function () {
 										var total_rows = $(this)
 											.closest(".ur-row-buttons")
 											.attr("data-total-rows");
+											total_rows = "undefined" !== typeof total_rows ? parseInt(total_rows) : 0;
 										$(this)
 											.closest(".ur-row-buttons")
 											.attr(
 												"data-total-rows",
-												parseInt(total_rows) + 1
+												total_rows + 1
 											);
 
 										var single_row_clone = $(this)
@@ -2167,7 +2170,7 @@
 											.clone();
 										single_row_clone.attr(
 											"data-row-id",
-											parseInt(total_rows) + 1
+											total_rows + 1
 										);
 										single_row_clone
 											.find(".ur-grid-lists")
