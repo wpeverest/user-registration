@@ -543,6 +543,7 @@ class UR_Admin_Assets {
 			'i18n_cannot_delete_row'                 => _x( 'Cannot delete row', 'user registration admin', 'user-registration' ),
 			'i18n_user_required_field_already_there' => _x( 'This field is one time draggable.', 'user registration admin', 'user-registration' ),
 			'i18n_user_required_field_already_there_could_not_clone' => _x( 'Could not clone this field.', 'user registration admin', 'user-registration' ),
+			'i18n_repeater_fields_not_droppable'     => _x( 'This field cannot be added to repeater row', 'user registration admin', 'user-registration' ),
 			'i18n_form_successfully_saved'           => _x( 'Form successfully saved.', 'user registration admin', 'user-registration' ),
 			'i18n_success'                           => _x( 'Success', 'user registration admin', 'user-registration' ),
 			'i18n_error'                             => _x( 'Error', 'user registration admin', 'user-registration' ),

@@ -2616,6 +2616,7 @@
 												$.makeArray(
 													user_registration_form_builder_data.form_one_time_draggable_fields
 												);
+
 											if (
 												length_of_required > 0 &&
 												$.inArray(
@@ -2631,6 +2632,22 @@
 												$(ui.helper).remove();
 												return;
 											}
+
+											if (
+												ui.helper.closest(".ur-repeater-row").length > 0 && $.inArray(
+													data_field_id,
+													only_one_field_index
+												) >= 0
+											) {
+												URFormBuilder.show_message(
+													user_registration_form_builder_data
+														.i18n_admin
+														.i18n_repeater_fields_not_droppable
+												);
+												$(ui.helper).remove();
+												return;
+											}
+
 											var clone = $(ui.helper);
 											var form_field_id =
 												$(clone).attr("data-field-id");

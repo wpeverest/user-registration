@@ -2420,7 +2420,7 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 
 		// Check if value contains array.
 		if ( is_array( $value ) ) {
-			$value = implode( ',', $value );
+			$value = ! isset( $value['row_1'] ) ? implode( ',', $value ) : '';
 		}
 
 		$data_html .= '<tr><td>' . $label . ' : </td><td>' . $value . '</td></tr>';
@@ -4765,6 +4765,153 @@ if ( ! function_exists( 'ur_merge_translations' ) ) {
 				$source_content = file_get_contents( $source_file_path );
 				file_put_contents( $destination_file_path, $source_content, FILE_APPEND );
 			}
+		}
+	}
+}
+
+if ( ! function_exists( 'user_registration_validate_form_field_data' ) ) {
+
+	/**
+	 * Function to validate individual form field data.
+	 *
+	 * @param object $data Form field data submitted by the user.
+	 * @param array  $form_data Form Data.
+	 * @param int    $form_id Form id.
+	 * @param array  $response_array Response Array.
+	 * @param array  $form_field_data Form Field Data..
+	 */
+	function user_registration_validate_form_field_data( $data, $form_data, $form_id, $response_array, $form_field_data ) {
+		$form_key_list = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
+
+		$form_validator = new UR_Form_Validation();
+
+		if ( in_array( $data->field_name, $form_key_list, true ) ) {
+			$form_data_index    = array_search( $data->field_name, $form_key_list, true );
+			$single_form_field  = $form_field_data[ $form_data_index ];
+			$general_setting    = isset( $single_form_field->general_setting ) ? $single_form_field->general_setting : new stdClass();
+			$single_field_key   = $single_form_field->field_key;
+			$single_field_label = isset( $general_setting->label ) ? $general_setting->label : '';
+			$single_field_value = isset( $data->value ) ? $data->value : '';
+			$data->extra_params = array(
+				'field_key' => $single_field_key,
+				'label'     => $single_field_label,
+			);
+
+			/**
+			 * Validate form fields according to the validations set in $validations array.
+			 *
+			 * @see this->get_field_validations()
+			 */
+
+			$validations = $form_validator->get_field_validations( $single_field_key );
+
+			if ( $form_validator->is_field_required( $single_form_field, $form_data ) ) {
+				array_unshift( $validations, 'required' );
+			}
+
+			if ( ! empty( $validations ) ) {
+				if ( in_array( 'required', $validations, true ) || ! empty( $single_field_value ) ) {
+					foreach ( $validations as $validation ) {
+						$result = UR_Form_Validation::$validation( $single_field_value );
+
+						if ( is_wp_error( $result ) ) {
+							$form_validator->add_error( $result, $single_field_label );
+							break;
+						}
+					}
+				}
+			}
+
+			/**
+			 * Hook to update form field data.
+			 */
+			$field_hook_name = 'user_registration_form_field_' . $single_form_field->field_key . '_params';
+			/**
+			 * Filter the single field params.
+			 *
+			 * The dynamic portion of the hook name, $field_hook_name.
+			 *
+			 * @param array $data The form data.
+			 * @param array $single_form_field The single form field.
+			 */
+			$data = apply_filters( $field_hook_name, $data, $single_form_field );
+
+			/**
+			 * Hook to custom validate form field.
+			 */
+			$hook        = "user_registration_validate_{$single_form_field->field_key}";
+			$filter_hook = $hook . '_message';
+
+			if ( isset( $data->field_type ) && 'email' === $data->field_type ) {
+				/**
+				 * Action validate email whitelist.
+				 *
+				 * @param array $data->value The data value.
+				 * @param string $filter_hook The dynamic Filter hook.
+				 * @param array $single_form_field The single form field.
+				 * @param int $form_id The form ID.
+				 */
+				do_action( 'user_registration_validate_email_whitelist', $data->value, $filter_hook, $single_form_field, $form_id );
+			}
+
+			if ( 'honeypot' === $single_form_field->field_key ) {
+				/**
+				 * Action validate honeypot container.
+				 *
+				 * @param array $data The data.
+				 * @param string $filter_hook The dynamic Filter hook.
+				 * @param int $form_id The form ID.
+				 * @param array $form_data The form data.
+				 */
+				do_action( 'user_registration_validate_honeypot_container', $data, $filter_hook, $form_id, $form_data );
+			}
+
+			/**
+			 * Slot booking backend validation.
+			 *
+			 * @since 4.1.0
+			 */
+			if ( 'date' === $single_form_field->field_key || 'timepicker' === $single_form_field->field_key ) {
+				/**
+				 * Action validate slot booking.
+				 *
+				 * @param array $form_data The form data.
+				 * @param string $filter_hook The dynamic Filter hook.
+				 * @param array $single_form_field The form field.
+				 * @param int $form_id The form ID.
+				 */
+				do_action( 'user_registration_validate_slot_booking', $form_data, $filter_hook, $single_form_field, $form_id );
+			}
+
+			if (
+				isset( $single_form_field->advance_setting->enable_conditional_logic ) && ur_string_to_bool( $single_form_field->advance_setting->enable_conditional_logic )
+			) {
+				$single_form_field->advance_setting->enable_conditional_logic = ur_string_to_bool( $single_form_field->advance_setting->enable_conditional_logic );
+			}
+			/**
+			 * Action validate single field.
+			 *
+			 * The dynamic portion of the hook name, $hook.
+			 *
+			 * @param array $single_form_field The form field.
+			 * @param array $data The form data.
+			 * @param string $filter_hook The dynamic filter hook.
+			 * @param int $form_id The form ID.
+			 */
+			do_action( $hook, $single_form_field, $data, $filter_hook, $form_id );
+
+			/**
+			 * Filter the validate message.
+			 *
+			 * The dynamic portion of the hook name, $filter_hook.
+			 * Default value is blank string.
+			 */
+			$response = apply_filters( $filter_hook, '' );
+			if ( ! empty( $response ) ) {
+				array_push( $response_array, $response );
+			}
+
+			return $response_array;
 		}
 	}
 }

@@ -61,6 +61,8 @@ class UR_Frontend_Form_Handler {
 
 		$user_pass = '';
 
+		// error_log( print_r( self::$valid_form_data, true ) );
+
 		/**
 		 * Get form field data by post_content array passed.
 		 *
@@ -225,7 +227,7 @@ class UR_Frontend_Form_Handler {
 	public static function ur_update_user_meta( $user_id, $valid_form_data, $form_id ) {
 
 		foreach ( $valid_form_data as $data ) {
-			$field_key             = isset( $data->extra_params['field_key'] ) ? $data->extra_params['field_key'] : '';
+			$field_key = isset( $data->extra_params['field_key'] ) ? $data->extra_params['field_key'] : '';
 
 			if ( ! in_array( trim( $data->field_name ), ur_get_user_table_fields() ) && $field_key !== 'file' ) {
 				$field_name            = $data->field_name;

@@ -98,7 +98,7 @@ class UR_Form_Validation extends UR_Validation {
 			$this->match_password( $form_field_data, $form_data );
 			$this->validate_form_data( $form_id, $form_field_data, $form_data );
 			$this->validate_password_data( $form_field_data, $form_data );
-			$user_pass = $this->valid_form_data['user_pass']->value;
+			$user_pass = isset( $this->valid_form_data['user_pass']->value ) && $this->valid_form_data['user_pass']->value;
 		}
 
 		// Modify UR_Frontend_Form_Handler::$response_array variable.
@@ -156,132 +156,29 @@ class UR_Form_Validation extends UR_Validation {
 
 		foreach ( $form_data as $data ) {
 
-			if ( in_array( $data->field_name, $form_key_list, true ) ) {
-				$form_data_index    = array_search( $data->field_name, $form_key_list, true );
-				$single_form_field  = $form_field_data[ $form_data_index ];
-				$general_setting    = isset( $single_form_field->general_setting ) ? $single_form_field->general_setting : new stdClass();
-				$single_field_key   = $single_form_field->field_key;
-				$single_field_label = isset( $general_setting->label ) ? $general_setting->label : '';
-				$single_field_value = isset( $data->value ) ? $data->value : '';
-				$data->extra_params = array(
-					'field_key' => $single_field_key,
-					'label'     => $single_field_label,
+			if ( isset( $data->field_type ) && 'repeater' === $data->field_type ) {
+				/**
+				 * Action validate honeypot container.
+				 *
+				 * @param array $data The data.
+				 * @param string $filter_hook The dynamic Filter hook.
+				 * @param int $form_id The form ID.
+				 * @param array $form_data The form data.
+				 */
+				list( $this->response_array, $this->valid_form_data ) = apply_filters(
+					'user_registration_validate_repeater_fields',
+					array(
+						$this->response_array,
+						$this->valid_form_data,
+					),
+					$data,
+					$form_id,
+					$form_data,
+					$form_field_data
 				);
-
-				/**
-				 * Validate form fields according to the validations set in $validations array.
-				 *
-				 * @see this->get_field_validations()
-				 */
-
-				$validations = $this->get_field_validations( $single_field_key );
-
-				if ( $this->is_field_required( $single_form_field, $form_data ) ) {
-					array_unshift( $validations, 'required' );
-				}
-
-				if ( ! empty( $validations ) ) {
-					if ( in_array( 'required', $validations, true ) || ! empty( $single_field_value ) ) {
-						foreach ( $validations as $validation ) {
-							$result = self::$validation( $single_field_value );
-
-							if ( is_wp_error( $result ) ) {
-								$this->add_error( $result, $single_field_label );
-								break;
-							}
-						}
-					}
-				}
-
-				/**
-				 * Hook to update form field data.
-				 */
-				$field_hook_name = 'user_registration_form_field_' . $single_form_field->field_key . '_params';
-				/**
-				 * Filter the single field params.
-				 *
-				 * The dynamic portion of the hook name, $field_hook_name.
-				 *
-				 * @param array $data The form data.
-				 * @param array $single_form_field The single form field.
-				 */
-				$data = apply_filters( $field_hook_name, $data, $single_form_field );
-
+			} else {
+				$this->response_array                       = user_registration_validate_form_field_data( $data, $form_data, $form_id, $this->response_array, $form_field_data );
 				$this->valid_form_data[ $data->field_name ] = self::get_sanitize_value( $data );
-
-				/**
-				 * Hook to custom validate form field.
-				 */
-				$hook        = "user_registration_validate_{$single_form_field->field_key}";
-				$filter_hook = $hook . '_message';
-
-				if ( isset( $data->field_type ) && 'email' === $data->field_type ) {
-					/**
-					 * Action validate email whitelist.
-					 *
-					 * @param array $data->value The data value.
-					 * @param string $filter_hook The dynamic Filter hook.
-					 * @param array $single_form_field The single form field.
-					 * @param int $form_id The form ID.
-					 */
-					do_action( 'user_registration_validate_email_whitelist', $data->value, $filter_hook, $single_form_field, $form_id );
-				}
-
-				if ( 'honeypot' === $single_form_field->field_key ) {
-					/**
-					 * Action validate honeypot container.
-					 *
-					 * @param array $data The data.
-					 * @param string $filter_hook The dynamic Filter hook.
-					 * @param int $form_id The form ID.
-					 * @param array $form_data The form data.
-					 */
-					do_action( 'user_registration_validate_honeypot_container', $data, $filter_hook, $form_id, $form_data );
-				}
-
-				/**
-				 * Slot booking backend validation.
-				 *
-				 * @since 4.1.0
-				 */
-				if ( 'date' === $single_form_field->field_key || 'timepicker' === $single_form_field->field_key ) {
-					/**
-					 * Action validate slot booking.
-					 *
-					 * @param array $form_data The form data.
-					 * @param string $filter_hook The dynamic Filter hook.
-					 * @param array $single_form_field The form field.
-					 * @param int $form_id The form ID.
-					 */
-					do_action( 'user_registration_validate_slot_booking', $form_data, $filter_hook, $single_form_field, $form_id );
-				}
-
-				if (
-					isset( $single_form_field->advance_setting->enable_conditional_logic ) && ur_string_to_bool( $single_form_field->advance_setting->enable_conditional_logic )
-				) {
-					$single_form_field->advance_setting->enable_conditional_logic = ur_string_to_bool( $single_form_field->advance_setting->enable_conditional_logic );
-				}
-				/**
-				 * Action validate single field.
-				 *
-				 * The dynamic portion of the hook name, $hook.
-				 *
-				 * @param array $single_form_field The form field.
-				 * @param array $data The form data.
-				 * @param string $filter_hook The dynamic filter hook.
-				 * @param int $this->form_id The form ID.
-				 */
-				do_action( $hook, $single_form_field, $data, $filter_hook, $this->form_id );
-				/**
-				 * Filter the validate message.
-				 *
-				 * The dynamic portion of the hook name, $filter_hook.
-				 * Default value is blank string.
-				 */
-				$response = apply_filters( $filter_hook, '' );
-				if ( ! empty( $response ) ) {
-					array_push( $this->response_array, $response );
-				}
 			}
 		}
 	}
