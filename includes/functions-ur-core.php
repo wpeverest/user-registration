@@ -4768,3 +4768,31 @@ if ( ! function_exists( 'ur_merge_translations' ) ) {
 		}
 	}
 }
+
+if ( ! function_exists( 'ur_get_registration_field_value_by_field_name' ) ) {
+
+	/**
+	 * Get Field value by field name while registration.
+	 *
+	 * @since 0
+	 *
+	 * @param  string $field_name Field Name.
+	 */
+	function ur_get_registration_field_value_by_field_name( $field_name ) {
+		$field_value = '';
+
+		if ( isset( $_POST['form_data'] ) ) {
+			$form_data = json_decode( wp_unslash( $_POST['form_data'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		}
+		if ( gettype( $form_data ) != 'array' && gettype( $form_data ) != 'object' ) {
+			$form_data = array();
+		}
+		foreach ( $form_data as $index => $single_data ) {
+
+			if ( $field_name == $single_data->field_name ) {
+				$field_value = $single_data->value;
+			}
+		}
+		return $field_value;
+	}
+}
