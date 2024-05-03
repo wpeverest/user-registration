@@ -4796,3 +4796,31 @@ if ( ! function_exists( 'ur_get_registration_field_value_by_field_name' ) ) {
 		return $field_value;
 	}
 }
+
+
+if ( ! function_exists( 'ur_get_translated_string' ) ) {
+	/**
+	 * Function to get translated string using WPML
+	 *
+	 * @since 0
+	 *
+	 * @param  string $string String.
+	 * @param  string $language_code Language Code.
+	 */
+	function ur_get_translated_string( $string, $language_code, $field_key, $form_id = 0 ) {
+		$subject = ur_string_translation( $form_id, $field_key, $subject );
+		$message = ur_string_translation( $form_id, $field_key, $message );
+
+		if ( function_exists( 'icl_translate' ) ) {
+			$language_code     = is_array( $language_code ) ? $language_code[0] : $language_code;
+			$translated_string = apply_filters( 'wpml_translate_single_string', $string, 'user-registration', $string, $language_code );
+			if ( $translated_string === false || $translated_string === $language_code ) {
+				return $string;
+			} else {
+				return $translated_string;
+			}
+		} else {
+			return $string;
+		}
+	}
+}
