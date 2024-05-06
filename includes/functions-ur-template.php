@@ -989,6 +989,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 		foreach ( $post_content_array as $post_content_row ) {
 			foreach ( $post_content_row as $post_content_grid ) {
 				foreach ( $post_content_grid as $field ) {
+
 					$field_name             = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
 					$field_label            = isset( $field->general_setting->label ) ? $field->general_setting->label : '';
 					$field_description      = isset( $field->general_setting->description ) ? $field->general_setting->description : '';
@@ -1141,6 +1142,36 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 				} // End foreach().
 			} // End foreach().
 		} // End foreach().
+
+		$form_row_data = get_post_meta( $form_id, 'user_registration_form_row_data', true );
+
+		$row_datas = ! empty( $form_row_data ) ? json_decode( $form_row_data ) : array();
+
+		if ( ! empty( $row_datas ) ) {
+			$row_meta = $fields;
+
+			foreach ( $row_datas as $individual_row_data ) {
+				$field_name = isset( $individual_row_data->field_name ) ? $individual_row_data->field_name : '';
+
+				if ( isset( $all_meta_value[ 'user_registration_' . $field_name ] ) ) {
+					$field_meta_value                                       = isset( $all_meta_value[ 'user_registration_' . $field_name ][0] ) ? maybe_unserialize( $all_meta_value[ 'user_registration_' . $field_name ][0] ) : array();
+					$row_meta[ 'user_registration_' . $field_name ]['type'] = isset( $individual_row_data->type ) ? $individual_row_data->type : '';
+
+					foreach ( $field_meta_value as $row_id => $row_data ) {
+						foreach ( $row_data as $key => $field_data ) {
+							if ( isset( $field_data->field_name ) && isset( $fields[ 'user_registration_' . $field_data->field_name ] ) ) {
+								$fields[ 'user_registration_' . $field_data->field_name ]['default']                  = isset( $field_data->value ) ? $field_data->value : '';
+								$fields[ 'user_registration_' . $field_data->field_name ]['value']                    = isset( $field_data->value ) ? $field_data->value : '';
+								$row_meta[ 'user_registration_' . $field_name ][ $row_id ][ 'user_registration_' . $field_data->field_name ] = $fields[ 'user_registration_' . $field_data->field_name ];
+								unset( $row_meta[ 'user_registration_' . $field_data->field_name ] );
+							}
+						}
+					}
+				}
+			}
+			$fields = $row_meta;
+		}
+
 		return $fields;
 	}
 } // End if().

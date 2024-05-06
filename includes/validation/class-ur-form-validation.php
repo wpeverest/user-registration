@@ -183,7 +183,6 @@ class UR_Form_Validation extends UR_Validation {
 		}
 	}
 
-
 	/**
 	 * Triger validation method for user fields
 	 * Useful for custom fields validation
@@ -194,20 +193,17 @@ class UR_Form_Validation extends UR_Validation {
 	public function add_hook( $form_field_data = array(), $form_data = array() ) {
 		$form_key_list = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
 		foreach ( $form_data as $data ) {
-			if ( in_array( $data->field_name, $form_key_list, true ) ) {
-				$form_data_index   = array_search( $data->field_name, $form_key_list, true );
-				$single_form_field = $form_field_data[ $form_data_index ];
-				$class_name        = ur_load_form_field_class( $single_form_field->field_key );
-				$hook              = "user_registration_validate_{$single_form_field->field_key}";
-				add_action(
-					$hook,
-					array(
-						$class_name::get_instance(),
-						'validation',
-					),
-					10,
-					4
-				);
+			if ( isset( $data->field_type ) && 'repeater' === $data->field_type ) {
+				if ( isset( $data->value ) ) {
+					$data_arr = (array) $data->value;
+					foreach ( $data_arr as $row_id => $value ) {
+						foreach ( $value as $field_data ) {
+							$this->run_field_validations_on_registration( $form_field_data, $field_data->field_name, $form_key_list );
+						}
+					}
+				}
+			} else {
+				$this->run_field_validations_on_registration( $form_field_data, $data->field_name, $form_key_list );
 			}
 		}
 	}
@@ -688,7 +684,7 @@ class UR_Form_Validation extends UR_Validation {
 					}
 				}
 
-				$this->run_field_validations( $single_field_key, $single_form_field, $data, $form_id );
+				$this->run_field_validations_on_profile_update( $single_field_key, $single_form_field, $data, $form_id );
 
 				/** Action to add extra validation to edit profile fields.
 				 *
@@ -782,9 +778,38 @@ class UR_Form_Validation extends UR_Validation {
 		return apply_filters( 'user_registration_update_profile_validation_skip_fields', $skippable_fields, $form_data );
 	}
 
+	/**
+	 * Run all validations and checks defined in the validation() method of field class on registration.
+	 *
+	 * @param [array]  $form_field_data Form Field data.
+	 * @param [string] $field_name Field key.
+	 * @param [array]  $form_key_list List of form field keys.
+	 * @return void
+	 */
+	public function run_field_validations_on_registration( $form_field_data, $field_name, $form_key_list ) {
+		if ( in_array( $field_name, $form_key_list, true ) ) {
+			$form_data_index   = array_search( $field_name, $form_key_list, true );
+			$single_form_field = $form_field_data[ $form_data_index ];
+			$class_name        = ur_load_form_field_class( $single_form_field->field_key );
+			$hook              = "user_registration_validate_{$single_form_field->field_key}";
+
+			/**
+			 * Action to run form field validations.
+			 */
+			add_action(
+				$hook,
+				array(
+					$class_name::get_instance(),
+					'validation',
+				),
+				10,
+				4
+			);
+		}
+	}
 
 	/**
-	 * Run all validations and checks defined in the validation() method of field class.
+	 * Run all validations and checks defined in the validation() method of field class on profile update.
 	 *
 	 * @param [string] $single_field_key Field Key.
 	 * @param [array]  $single_form_field Field Settings.
@@ -792,7 +817,7 @@ class UR_Form_Validation extends UR_Validation {
 	 * @param [int]    $form_id Form Id.
 	 * @return void
 	 */
-	public function run_field_validations( $single_field_key, $single_form_field, $data, $form_id ) {
+	public function run_field_validations_on_profile_update( $single_field_key, $single_form_field, $data, $form_id ) {
 
 		// Bypass validations for these fields on update profile.
 		if ( in_array( $single_field_key, array( 'user_login', 'user_email' ), true ) ) {

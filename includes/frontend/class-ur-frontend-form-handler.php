@@ -61,8 +61,6 @@ class UR_Frontend_Form_Handler {
 
 		$user_pass = '';
 
-		// error_log( print_r( self::$valid_form_data, true ) );
-
 		/**
 		 * Get form field data by post_content array passed.
 		 *
