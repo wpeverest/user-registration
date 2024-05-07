@@ -4916,6 +4916,126 @@ if ( ! function_exists( 'user_registration_validate_form_field_data' ) ) {
 	}
 }
 
+if ( ! function_exists( 'user_registration_validate_edit_profile_form_field_data' ) ) {
+
+	/**
+	 * Function to validate edit profile individual form field data.
+	 *
+	 * @param object $data Form field data submitted by the user.
+	 * @param array  $form_data Form Data.
+	 * @param int    $form_id Form id.
+	 * @param array  $form_field_data Form Field Data..
+	 * @param array  $form_fields Form Fields.
+	 */
+	function user_registration_validate_edit_profile_form_field_data( $data, $form_data, $form_id, $form_field_data, $form_fields ) {
+		$form_validator   = new UR_Form_Validation();
+		$skippable_fields = $form_validator->get_update_profile_validation_skippable_fields( $form_field_data );
+		$form_key_list    = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
+
+		$single_field_name = strpos( $data->field_name, 'user_registration_' ) !== -1 ? trim( str_replace( 'user_registration_', '', $data->field_name ) ) : $data->field_name;
+
+		if ( ! in_array( $single_field_name, $skippable_fields, true ) && in_array( $single_field_name, $form_key_list, true ) ) {
+			$form_data_index   = array_search( $single_field_name, $form_key_list, true );
+			$single_form_field = $form_field_data[ $form_data_index ];
+
+			$general_setting    = isset( $single_form_field->general_setting ) ? $single_form_field->general_setting : new stdClass();
+			$single_field_key   = $single_form_field->field_key;
+			$single_field_label = isset( $general_setting->label ) ? $general_setting->label : '';
+			$single_field_value = isset( $data->value ) ? $data->value : '';
+			$data->extra_params = array(
+				'field_key' => $single_field_key,
+				'label'     => $single_field_label,
+			);
+
+			/**
+			 * Validate form field according to the validations set in $validations array.
+			 *
+			 * @see form_validator->get_field_validations()
+			 */
+			$validations = $form_validator->get_field_validations( $single_field_key );
+
+			$required = isset( $single_form_field->general_setting->required ) ? $single_form_field->general_setting->required : false;
+
+			$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array(); //phpcs:ignore;
+
+			if ( ! in_array( $single_field_name, $urcl_hide_fields, true ) && ur_string_to_bool( $required ) ) {
+				array_unshift( $validations, 'required' );
+			}
+
+			if ( ! empty( $validations ) ) {
+
+				if ( in_array( 'required', $validations, true ) || ! empty( $single_field_value ) ) {
+					foreach ( $validations as $validation ) {
+						$result = UR_Form_Validation::$validation( $single_field_value );
+
+						if ( is_wp_error( $result ) ) {
+							$error_code = $result->get_error_code();
+							$message    = $form_validator->get_error_message( $error_code, $single_field_label );
+							ur_add_notice( $message, 'error' );
+							break;
+						}
+					}
+				}
+			}
+
+			/**
+			 * Filter to allow modification of value.
+			 *
+			 * The dynamic portion of the hook name, $single_field_name.
+			 *
+			 * @param array $single_field_value The single field value.
+			 */
+			$single_field_value = apply_filters( 'user_registration_process_myaccount_field_' . $single_field_name, wp_unslash( $single_field_value ) );
+
+			if ( isset( $data->field_type ) && 'email' === $data->field_type ) {
+				/**
+				 * Action validate email whitelist.
+				 *
+				 * @param array $single_field_value The data value.
+				 * @param array $single_form_field The single form field.
+				 * @param int $form_id The form ID.
+				 */
+				do_action( 'user_registration_validate_email_whitelist', sanitize_text_field( $single_field_value ), '', $single_form_field, $form_id );
+			}
+
+			/**
+			 * Slot booking backend validation.
+			 *
+			 * @since 4.1.0
+			 */
+			if ( 'date' === $single_form_field->field_key || 'timepicker' === $single_form_field->field_key ) {
+				/**
+				 * Action validate slot booking.
+				 *
+				 * @param array $form_data The form data.
+				 * @param array $single_form_field The field setting.
+				 * @param int $form_id The form ID.
+				 */
+				do_action( 'user_registration_validate_slot_booking', $form_data, '', $single_form_field, $form_id );
+			}
+
+			if ( 'user_email' === $single_form_field->field_key ) {
+
+				// Check if email already exists before updating user details.
+				if ( email_exists( sanitize_text_field( wp_unslash( $single_field_value ) ) ) && email_exists( sanitize_text_field( wp_unslash( $single_field_value ) ) ) !== get_current_user_id() ) {
+					ur_add_notice( esc_html__( 'Email already exists', 'user-registration' ), 'error' );
+				}
+			}
+
+			$form_validator->run_field_validations_on_profile_update( $single_field_key, $single_form_field, $data, $form_id );
+
+			/** Action to add extra validation to edit profile fields.
+			 *
+			 * The dynamic portion of the hook name, $single_field_key.
+			 *
+			 * @param array $single_field_value The single field value.
+			 * @param array $single_form_field The form field.
+			 */
+			do_action( 'user_registration_validate_field_' . $single_field_key, wp_unslash( $single_field_value ), $single_form_field ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		}
+	}
+}
+
 if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 
 	/**

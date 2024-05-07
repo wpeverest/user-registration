@@ -38,6 +38,15 @@
 											.closest(".ur-repeater-row")
 											.data("repeater-row");
 
+									if (
+										$(this).closest(
+											".user-registration-EditProfileForm",
+										).length > 0
+									) {
+										fieldName =
+											"user_registration_" + fieldName;
+									}
+
 									if (!repeater_field_data[fieldName]) {
 										repeater_field_data[fieldName] = {
 											field_name: fieldName,
@@ -68,6 +77,16 @@
 								var fieldName = $(this)
 									.closest(".ur-repeater-row")
 									.data("repeater-field-name");
+
+								if (
+									$(this).closest(
+										".user-registration-EditProfileForm",
+									).length > 0
+								) {
+									fieldName =
+										"user_registration_" + fieldName;
+								}
+
 								var rowName =
 									"row_" +
 									$(this)

@@ -1159,11 +1159,15 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 
 					foreach ( $field_meta_value as $row_id => $row_data ) {
 						foreach ( $row_data as $key => $field_data ) {
-							if ( isset( $field_data->field_name ) && isset( $fields[ 'user_registration_' . $field_data->field_name ] ) ) {
-								$fields[ 'user_registration_' . $field_data->field_name ]['default']                  = isset( $field_data->value ) ? $field_data->value : '';
-								$fields[ 'user_registration_' . $field_data->field_name ]['value']                    = isset( $field_data->value ) ? $field_data->value : '';
-								$row_meta[ 'user_registration_' . $field_name ][ $row_id ][ 'user_registration_' . $field_data->field_name ] = $fields[ 'user_registration_' . $field_data->field_name ];
-								unset( $row_meta[ 'user_registration_' . $field_data->field_name ] );
+							if ( isset( $field_data->field_name ) ) {
+								$individual_field_name = strpos( $field_data->field_name, 'user_registration_' ) !== -1 ? $field_data->field_name : 'user_registration_' . $field_data->field_name;
+
+								if ( isset( $fields[ $individual_field_name ] ) ) {
+									$fields[ $individual_field_name ]['default'] = isset( $field_data->value ) ? $field_data->value : '';
+									$fields[ $individual_field_name ]['value']   = isset( $field_data->value ) ? $field_data->value : '';
+									$row_meta[ 'user_registration_' . $field_name ][ $row_id ][ $individual_field_name ] = $fields[ $individual_field_name ];
+									unset( $row_meta[ $individual_field_name ] );
+								}
 							}
 						}
 					}

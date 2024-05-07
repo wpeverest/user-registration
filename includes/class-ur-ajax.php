@@ -333,7 +333,7 @@ class UR_AJAX {
 			$form_data = json_decode( wp_unslash( $_POST['form_data'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			foreach ( $form_data as $data ) {
 				$single_field[ $data->field_name ] = isset( $data->value ) ? $data->value : '';
-				$data->field_name                  = substr( $data->field_name, 18 );
+				$data->field_name                  = trim( str_replace( 'user_registration_', '', $data->field_name ) );
 			}
 		}
 
@@ -366,7 +366,9 @@ class UR_AJAX {
 					}
 					break;
 				default:
-					$single_field[ $key ] = isset( $single_field[ $key ] ) ? $single_field[ $key ] : '';
+					if ( 'repeater' !== $field['type'] ) {
+						$single_field[ $key ] = isset( $single_field[ $key ] ) ? $single_field[ $key ] : '';
+					}
 					break;
 			}
 		}

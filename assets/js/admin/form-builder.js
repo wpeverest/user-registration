@@ -31,10 +31,10 @@
 						if ($(".ur-selected-item.ur-item-active").length == 0) {
 							//Selecting first ur selected item
 							URFormBuilder.handle_selected_item(
-								$(".ur-selected-item:first")
+								$(".ur-selected-item:first"),
 							);
 						}
-					}
+					},
 				);
 				// Handle the field settings when a field is selected in the form builder.
 				$(document).on("click", ".ur-selected-item", function () {
@@ -47,7 +47,7 @@
 							if (
 								"s" ===
 									String.fromCharCode(
-										event.which
+										event.which,
 									).toLowerCase() ||
 								83 === event.which
 							) {
@@ -63,13 +63,13 @@
 							if (
 								"p" ===
 									String.fromCharCode(
-										e.which
+										e.which,
 									).toLowerCase() ||
 								80 === e.which
 							) {
 								e.preventDefault();
 								window.open(
-									user_registration_form_builder_data.ur_preview
+									user_registration_form_builder_data.ur_preview,
 								);
 							}
 						}
@@ -80,13 +80,13 @@
 							if (
 								"u" ===
 									String.fromCharCode(
-										e.which
+										e.which,
 									).toLowerCase() ||
 								85 === e.which
 							) {
 								e.preventDefault();
 								window.open(
-									user_registration_form_builder_data.ur_user_list_table
+									user_registration_form_builder_data.ur_user_list_table,
 								);
 							}
 						}
@@ -97,7 +97,7 @@
 							if (
 								"h" ===
 									String.fromCharCode(
-										e.which
+										e.which,
 									).toLowerCase() ||
 								85 === e.which
 							) {
@@ -128,7 +128,7 @@
 					function () {
 						$message = $(this).closest(".ur-message");
 						URFormBuilder.removeMessage($message);
-					}
+					},
 				);
 
 				// Initialize the actions on choice field options.
@@ -204,7 +204,7 @@
 								.insertAfter($this.parent())
 								.trigger("init_tooltips");
 						}
-					}
+					},
 				);
 
 				// Add custom list of options.
@@ -215,7 +215,7 @@
 						e.preventDefault();
 						var options = $(this).parent().next(".ur-options-list");
 						var bulk_options_container = $(this).parent(
-							".ur-bulk-options-container"
+							".ur-bulk-options-container",
 						);
 						if (options.length) {
 							var options_texts = bulk_options_container
@@ -235,7 +235,7 @@
 
 									URFormBuilder.add_choice_field_option(
 										$add_button,
-										option_text.trim()
+										option_text.trim(),
 									);
 								}
 							});
@@ -243,7 +243,7 @@
 								.find(".ur-type-textarea")
 								.val("");
 						}
-					}
+					},
 				);
 			},
 			init_user_profile_modal: function () {
@@ -254,7 +254,7 @@
 							.on("ur_backbone_modal_loaded", this.backbone.init)
 							.on(
 								"ur_backbone_modal_response",
-								this.backbone.response
+								this.backbone.response,
 							);
 					},
 					add_item: function (e) {
@@ -307,7 +307,7 @@
 				var form_setting_data = $(
 					"#ur-field-settings :not(" +
 						exclude_serialize_setting_classes +
-						")"
+						")",
 				).serializeArray();
 
 				var conditional_roles_settings_data =
@@ -319,15 +319,15 @@
 
 				/** TODO:: Handle from multistep forms add-on if possible. */
 				var multipart_page_setting = $(
-					"#ur-multi-part-page-settings"
+					"#ur-multi-part-page-settings",
 				).serializeArray();
 				/** End Multistep form code. */
 
 				var profile_completeness__custom_percentage = $(
-					"#user_registration_profile_completeness_custom_percentage_field input, #user_registration_profile_completeness_custom_percentage_field select"
+					"#user_registration_profile_completeness_custom_percentage_field input, #user_registration_profile_completeness_custom_percentage_field select",
 				).serializeArray();
 				var form_restriction_extra_settings_data = $(
-					"#urfr_max_limit_user_registration_value, #urfr_max_limit_user_registration_period, #urfr_password_restriction, #urfr_age_criteria_equation"
+					"#urfr_max_limit_user_registration_value, #urfr_max_limit_user_registration_period, #urfr_password_restriction, #urfr_age_criteria_equation",
 				).serializeArray();
 				var data = {
 					action: "user_registration_form_save_action",
@@ -355,7 +355,7 @@
 
 				$(document).trigger(
 					"user_registration_admin_before_form_submit",
-					[data]
+					[data],
 				);
 				// validation for unsupported currency by paypal.
 				if (
@@ -366,7 +366,7 @@
 				) {
 					URFormBuilder.show_message(
 						data.data.ur_invalid_currency_status[0]
-							.validation_message
+							.validation_message,
 					);
 					return;
 				}
@@ -375,23 +375,23 @@
 				if (
 					$(
 						"#user_registration_profile_completeness_completion_percentage",
-						$(document)
+						$(document),
 					).length != 0
 				) {
 					var sanitized_percent = parseFloat(
 						$(
 							"#user_registration_profile_completeness_completion_percentage",
-							$(document)
+							$(document),
 						)
 							.val()
 							.replace(/[^\d\.]/g, "")
-							.replace(/\.(([^\.]*)\.)*/g, ".$2")
+							.replace(/\.(([^\.]*)\.)*/g, ".$2"),
 					);
 
 					if (sanitized_percent <= 0) {
 						URFormBuilder.show_message(
 							user_registration_form_builder_data.i18n_admin
-								.i18n_pc_profile_completion_error
+								.i18n_pc_profile_completion_error,
 						);
 						return;
 					}
@@ -409,16 +409,16 @@
 								sum += parseFloat(
 									profile_completeness__custom_percentage[
 										index + 1
-									].value
+									].value,
 								);
 							}
-						}
+						},
 					);
 
 					if (sum > sanitized_percent) {
 						URFormBuilder.show_message(
 							user_registration_form_builder_data.i18n_admin
-								.i18n_pc_custom_percentage_filed_error
+								.i18n_pc_custom_percentage_filed_error,
 						);
 						return;
 					}
@@ -463,7 +463,7 @@
 							} else {
 								URFormBuilder.show_message(
 									success_message,
-									"success"
+									"success",
 								);
 
 								if (0 === parseInt(ur_form_id)) {
@@ -497,7 +497,7 @@
 								'</span><i class="ur-key-plus"> + </i><span class="ur-key-character"><b>' +
 								key.split("+")[1] +
 								"</b></span></div></li>";
-						}
+						},
 					);
 
 					shortcut_keys_html += "</ul>";
@@ -531,10 +531,10 @@
 			 */
 			get_validation_status: function () {
 				var only_one_field_index = $.makeArray(
-					user_registration_form_builder_data.form_one_time_draggable_fields
+					user_registration_form_builder_data.form_one_time_draggable_fields,
 				);
 				var required_fields = $.makeArray(
-					user_registration_form_builder_data.form_required_fields
+					user_registration_form_builder_data.form_required_fields,
 				);
 				var response = {
 					validation_status: true,
@@ -563,7 +563,7 @@
 				}
 				$.each(
 					$(
-						".ur-selected-item select.ur-settings-selected-countries"
+						".ur-selected-item select.ur-settings-selected-countries",
 					),
 					function () {
 						var selected_countries = $(this).val();
@@ -577,11 +577,11 @@
 								user_registration_form_builder_data.i18n_admin.i18n_select_countries;
 							return response;
 						}
-					}
+					},
 				);
 				$.each(
 					$(
-						'.ur-input-grids .ur-general-setting-block input[data-field="field_name"]'
+						'.ur-input-grids .ur-general-setting-block input[data-field="field_name"]',
 					),
 					function () {
 						var $field = $(this);
@@ -590,11 +590,11 @@
 						try {
 							var field_value = $field.val();
 							var length = $(
-								".ur-input-grids .ur-general-setting-block"
+								".ur-input-grids .ur-general-setting-block",
 							).find(
 								'input[data-field="field_name"][value="' +
 									field_value +
-									'"]'
+									'"]',
 							).length;
 							if (length > 1) {
 								throw user_registration_form_builder_data
@@ -636,7 +636,7 @@
 								.find(
 									'input[data-field="' +
 										field_attribute +
-										'"]'
+										'"]',
 								)
 								.css({ border: "1px solid red" });
 							setTimeout(function () {
@@ -644,7 +644,7 @@
 									.find(
 										'input[data-field="' +
 											field_attribute +
-											'"]'
+											'"]',
 									)
 									.removeAttr("style");
 							}, 2000);
@@ -653,7 +653,7 @@
 						if (need_to_break) {
 							return false;
 						}
-					}
+					},
 				);
 				for (
 					var single_field = 0;
@@ -664,7 +664,7 @@
 						$(".ur-input-grids").find(
 							'.ur-field[data-field-key="' +
 								only_one_field_index[single_field] +
-								'"]'
+								'"]',
 						).length > 1
 					) {
 						response.validation_status = false;
@@ -699,16 +699,16 @@
 				) {
 					if (required_fields[required_index] === "payment_fields") {
 						var multiple_choice = $(".ur-input-grids").find(
-							'.ur-field[data-field-key="multiple_choice"]'
+							'.ur-field[data-field-key="multiple_choice"]',
 						).length;
 						var subscription_plan = $(".ur-input-grids").find(
-							'.ur-field[data-field-key="subscription_plan"]'
+							'.ur-field[data-field-key="subscription_plan"]',
 						).length;
 						var single_item = $(".ur-input-grids").find(
-							'.ur-field[data-field-key="single_item"]'
+							'.ur-field[data-field-key="single_item"]',
 						).length;
 						var payment_slider = $(".ur-input-grids").find(
-							".ur-payment-slider-sign:visible"
+							".ur-payment-slider-sign:visible",
 						).length;
 
 						if (
@@ -735,7 +735,7 @@
 							$(".ur-input-grids").find(
 								'.ur-field[data-field-key="' +
 									required_fields[required_index] +
-									'"]'
+									'"]',
 							).length === 0
 						) {
 							response.validation_status = false;
@@ -766,7 +766,7 @@
 
 				$.each(
 					$(".ur-input-grids").find(
-						'.ur-field[data-field-key="text"]'
+						'.ur-field[data-field-key="text"]',
 					),
 					function () {
 						var $size_field = $(this)
@@ -786,11 +786,11 @@
 								user_registration_form_builder_data.i18n_admin
 									.i18n_input_size;
 						}
-					}
+					},
 				);
 				$.each(
 					$(".ur-input-grids").find(
-						'.ur-field[data-field-key="password"]'
+						'.ur-field[data-field-key="password"]',
 					),
 					function () {
 						var $size_field = $(this)
@@ -809,18 +809,18 @@
 								user_registration_form_builder_data.i18n_admin
 									.i18n_input_size;
 						}
-					}
+					},
 				);
 
 				$.each(
 					$(".ur-input-grids").find(
-						'.ur-field[data-field-key="file"]'
+						'.ur-field[data-field-key="file"]',
 					),
 					function () {
 						var $maximum_number_limit_on_uploads = $(this)
 							.closest(".ur-selected-item")
 							.find(
-								".ur-general-setting-block .ur-general-setting-maximum-number-limit-on-uploads input"
+								".ur-general-setting-block .ur-general-setting-maximum-number-limit-on-uploads input",
 							)
 							.val();
 						var label = $(this)
@@ -839,7 +839,7 @@
 						var $max_upload_size = $(this)
 							.closest(".ur-selected-item")
 							.find(
-								".ur-advance-setting-block input[data-id='file_advance_setting_max_upload_size']"
+								".ur-advance-setting-block input[data-id='file_advance_setting_max_upload_size']",
 							)
 							.val();
 
@@ -857,12 +857,12 @@
 								user_registration_form_builder_data.i18n_admin
 									.i18n_max_upload_size;
 						}
-					}
+					},
 				);
 
 				$.each(
 					$(".ur-input-grids").find(
-						'.ur-field[data-field-key="number"]'
+						'.ur-field[data-field-key="number"]',
 					),
 					function () {
 						var $size_field = $(this)
@@ -899,25 +899,25 @@
 								user_registration_form_builder_data.i18n_admin
 									.i18n_min_max_input;
 						}
-					}
+					},
 				);
 
 				$.each(
 					$(".ur-input-grids").find(
-						'.ur-field[data-field-key="timepicker"]'
+						'.ur-field[data-field-key="timepicker"]',
 					),
 					function () {
 						var $time_interval = $(this)
 							.closest(".ur-selected-item")
 							.find(
-								".ur-advance-setting-block .ur-settings-time_interval"
+								".ur-advance-setting-block .ur-settings-time_interval",
 							)
 							.val();
 
 						var $time_format = $(this)
 							.closest(".ur-selected-item")
 							.find(
-								".ur-advance-setting-block .ur-settings-time_format"
+								".ur-advance-setting-block .ur-settings-time_format",
 							)
 							.val();
 
@@ -933,12 +933,12 @@
 								user_registration_form_builder_data.i18n_admin
 									.i18n_input_size;
 						}
-					}
+					},
 				);
 
 				$.each(
 					$(".ur-input-grids").find(
-						'.ur-field[data-field-key="range"]'
+						'.ur-field[data-field-key="range"]',
 					),
 					function () {
 						var $size_field = $(this)
@@ -975,7 +975,7 @@
 								user_registration_form_builder_data.i18n_admin
 									.i18n_min_max_input;
 						}
-					}
+					},
 				);
 				return response;
 			},
@@ -987,17 +987,17 @@
 			 */
 			show_message: function (message, type) {
 				var $message_container = $(".ur-form-container").find(
-						".ur-builder-message-container"
+						".ur-builder-message-container",
 					),
 					$admin_bar = $("#wpadminbar"),
 					message_string = "";
 
 				if (0 === $message_container.length) {
 					$(".ur-form-container").append(
-						'<div class="ur-builder-message-container"></div>'
+						'<div class="ur-builder-message-container"></div>',
 					);
 					$message_container = $(".ur-form-container").find(
-						".ur-builder-message-container"
+						".ur-builder-message-container",
 					);
 					$message_container.css({ top: $admin_bar.height() + "px" });
 				}
@@ -1084,24 +1084,36 @@
 						single_row_data.type = "repeater";
 
 						var repeater_row_setting = $(
-							"#ur-repeater-settings"
+							"#ur-repeater-settings",
 						).serializeArray();
 
 						$.each(repeater_row_setting, function (key, value) {
-							if( value.name.includes( "_" + single_row_data.row_id ) ) {
+							if (
+								value.name.includes(
+									"_" + single_row_data.row_id,
+								)
+							) {
 								single_row_data[
 									value.name
 										.replace(
 											"user_registration_repeater_row_",
-											""
+											"",
 										)
 										.replace(
 											"_" + single_row_data.repeater_id,
-											""
+											"",
 										)
 								] = value.value;
 							}
 						});
+
+						var fields = [];
+						$(this)
+							.find("input[data-field='field_name']")
+							.each(function () {
+								fields.push($(this).val());
+							});
+						single_row_data["fields"] = fields;
 						row_data.push(single_row_data);
 					}
 				});
@@ -1174,7 +1186,7 @@
 									.val();
 								var sell_value = $(element)
 									.find(
-										"input.ur-checkbox-selling-price-input"
+										"input.ur-checkbox-selling-price-input",
 									)
 									.val();
 								var image = $(element)
@@ -1204,7 +1216,7 @@
 							li_elements.each(function (index, element) {
 								var label = $(element)
 									.find(
-										"input.ur-type-radio-label,input.ur-type-checkbox-label"
+										"input.ur-type-radio-label,input.ur-type-checkbox-label",
 									)
 									.val();
 								var image = $(element)
@@ -1226,7 +1238,7 @@
 							general_setting_data["image_options"] = array_value;
 
 							var choice_value = URFormBuilder.get_ur_data(
-								$(this)
+								$(this),
 							).trim();
 
 							if (
@@ -1265,7 +1277,7 @@
 									.val();
 								var trail_interval_count = $(element)
 									.find(
-										"input.ur-radio-trail-interval-count-input"
+										"input.ur-radio-trail-interval-count-input",
 									)
 									.val();
 								var trail_recurring_period = $(element)
@@ -1327,7 +1339,7 @@
 							});
 						} else {
 							var choice_value = URFormBuilder.get_ur_data(
-								$(this)
+								$(this),
 							).trim();
 						}
 						if (
@@ -1345,7 +1357,7 @@
 								if ($(this).is(":checked")) {
 									general_setting_data["default_value"] =
 										default_values.push(
-											URFormBuilder.get_ur_data($(this))
+											URFormBuilder.get_ur_data($(this)),
 										);
 									general_setting_data["default_value"] =
 										default_values;
@@ -1358,7 +1370,7 @@
 							general_setting_data[$(this).attr("data-field")] =
 								URFormBuilder.get_ur_data($(this)).replace(
 									/"/g,
-									"'"
+									"'",
 								);
 						} else {
 							general_setting_data[$(this).attr("data-field")] =
@@ -1402,7 +1414,7 @@
 
 								if (
 									$this_node.hasClass(
-										"ur-type-checkbox-value"
+										"ur-type-checkbox-value",
 									)
 								) {
 									value = $this_node.val();
@@ -1487,12 +1499,12 @@
 					});
 
 					var conditional_group = $(this).find(
-						".urcl-conditional-group"
+						".urcl-conditional-group",
 					);
 					$.each(conditional_group, function () {
 						var inner_conditions = [];
 						var grid_list_item = $(this).find(
-							".urcl-user-role-field"
+							".urcl-user-role-field",
 						);
 						$.each(grid_list_item, function () {
 							var conditions = {
@@ -1507,13 +1519,13 @@
 					var or_groups = $(this).find(".urcl-or-groups");
 					$.each(or_groups, function () {
 						var conditional_or_group = $(this).find(
-							".urcl-conditional-or-group"
+							".urcl-conditional-or-group",
 						);
 						var or_data = [];
 						$.each(conditional_or_group, function () {
 							var inner_or_conditions = [];
 							var or_list_item = $(this).find(
-								".urcl-user-role-field"
+								".urcl-user-role-field",
 							);
 							$.each(or_list_item, function () {
 								var or_conditions = {
@@ -1560,7 +1572,7 @@
 					});
 
 					var conditional_group = $(this).find(
-						".urcl-conditional-group"
+						".urcl-conditional-group",
 					);
 					$.each(conditional_group, function () {
 						var inner_conditions = [];
@@ -1578,7 +1590,7 @@
 					var or_groups = $(this).find(".urcl-or-groups");
 					$.each(or_groups, function () {
 						var conditional_or_group = $(this).find(
-							".urcl-conditional-or-group"
+							".urcl-conditional-or-group",
 						);
 						var or_data = [];
 						$.each(conditional_or_group, function () {
@@ -1612,15 +1624,15 @@
 			get_form_email_content_override_data: function () {
 				var specific_email_contents = {};
 				var single_row = $(
-					".user-registration-email-template-content-wrap"
+					".user-registration-email-template-content-wrap",
 				);
 
 				$.each(single_row, function () {
 					var email_title_item = $(this).find(
-						".user-registration-card__header"
+						".user-registration-card__header",
 					);
 					var email_body_item = $(this).find(
-						".user-registration-card__body"
+						".user-registration-card__body",
 					);
 
 					specific_email_contents[$(this).prop("id")] = {
@@ -1642,7 +1654,7 @@
 							.find(
 								"#user_registration_" +
 									$(this).prop("id") +
-									"_content"
+									"_content",
 							)
 							.val(),
 					};
@@ -1678,10 +1690,10 @@
 									!user_registration_form_builder_data.is_edit_form
 								) {
 									var single_row = $(
-										"<div class='ur-single-row'/ data-row-id=\"0\">"
+										"<div class='ur-single-row'/ data-row-id=\"0\">",
 									);
 									single_row.append(
-										$("<div class='ur-grids'/>")
+										$("<div class='ur-grids'/>"),
 									);
 									var grid_button = this.get_grid_button();
 									single_row
@@ -1692,18 +1704,18 @@
 										.find(
 											'span[data-id="' +
 												loaded_params.active_grid +
-												'"]'
+												'"]',
 										)
 										.addClass("ur-active-grid");
 									var grid_list = this.get_grid_lists(
-										loaded_params.active_grid
+										loaded_params.active_grid,
 									);
 									single_row.append(
-										'<div style="clear:both"></div>'
+										'<div style="clear:both"></div>',
 									);
 									single_row.append(grid_list);
 									single_row.append(
-										'<div style="clear:both"></div>'
+										'<div style="clear:both"></div>',
 									);
 
 									$this.append(single_row);
@@ -1722,7 +1734,7 @@
 										.find(".ur-grid-list-item")
 										.eq(0)
 										.append(
-											user_registration_form_builder_data.required_form_html
+											user_registration_form_builder_data.required_form_html,
 										);
 								}
 
@@ -1730,7 +1742,7 @@
 									$this.append(
 										'<button type="button" class="button button-primary dashicons dashicons-plus-alt ur-add-new-row ui-sortable-handle">' +
 											user_registration_form_builder_data.add_new +
-											"</button>"
+											"</button>",
 									);
 									var total_rows = $this
 										.find(".ur-add-new-row")
@@ -1751,7 +1763,7 @@
 							 */
 							get_grid_button: function () {
 								var grid_button = $(
-									'<div class="ur-grid-containner"/>'
+									'<div class="ur-grid-containner"/>',
 								);
 								var grid_content =
 									'<button type="button" class="ur-edit-grid"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M28,6V26H4V6H28m2-2H2V28H30V4Z"/></svg></button>';
@@ -1787,13 +1799,13 @@
 							 */
 							get_grid_lists: function (number_of_grid) {
 								var grid_lists = $(
-									'<div class="ur-grid-lists"/>'
+									'<div class="ur-grid-lists"/>',
 								);
 								for (var i = 1; i <= number_of_grid; i++) {
 									var grid_list_item = $(
 										"<div ur-grid-id='" +
 											i +
-											"' class='ur-grid-list-item'></div>"
+											"' class='ur-grid-list-item'></div>",
 									);
 									var width =
 										Math.floor(100 / number_of_grid) -
@@ -1807,7 +1819,7 @@
 									grid_lists.append(grid_list_item);
 								}
 								grid_lists.append(
-									'<div style="clear:both"></div>'
+									'<div style="clear:both"></div>',
 								);
 								grid_lists
 									.find(".ur-grid-list-item")
@@ -1834,7 +1846,7 @@
 												.find("label")
 												.show();
 										}
-									}
+									},
 								);
 							},
 							/**
@@ -1849,7 +1861,7 @@
 												.find(".ur-admin-template")
 												.find(".ur-field")
 												.addClass(
-													"user-registration-image-options"
+													"user-registration-image-options",
 												);
 										} else {
 											$(this)
@@ -1857,10 +1869,10 @@
 												.find(".ur-admin-template")
 												.find(".ur-field")
 												.removeClass(
-													"user-registration-image-options"
+													"user-registration-image-options",
 												);
 										}
-									}
+									},
 								);
 							},
 							/**
@@ -1881,19 +1893,19 @@
 										var field_node = selected_inputs.find(
 											'.ur-field[data-field-key="' +
 												required_fields[i] +
-												'"]'
+												'"]',
 										);
 
 										field_node
 											.closest(".ur-selected-item")
 											.find(
-												'input[data-field="required"]'
+												'input[data-field="required"]',
 											)
 											.trigger("change");
 										field_node
 											.closest(".ur-selected-item")
 											.find(
-												'input[data-field="required"]'
+												'input[data-field="required"]',
 											)
 											.attr("disabled", "disabled");
 									}
@@ -1905,7 +1917,7 @@
 										if (
 											$(this)
 												.find(
-													'input[data-field="required"]'
+													'input[data-field="required"]',
 												)
 												.is(":checked")
 										) {
@@ -1916,7 +1928,7 @@
 												.find("span:contains('*')")
 												.remove();
 											label_node.append(
-												'<span style="color:red">*</span>'
+												'<span style="color:red">*</span>',
 											);
 										}
 									});
@@ -1927,7 +1939,7 @@
 							manage_empty_grid: function () {
 								var main_containner = $(".ur-input-grids");
 								var drag_me = $(
-									'<div class="user-registration-dragged-me"/>'
+									'<div class="user-registration-dragged-me"/>',
 								);
 								main_containner
 									.find(".user-registration-dragged-me")
@@ -1942,7 +1954,7 @@
 										) {
 											$this.append(drag_me.clone());
 										}
-									}
+									},
 								);
 							},
 							/**
@@ -1953,7 +1965,7 @@
 									user_registration_form_builder_data.form_one_time_draggable_fields;
 
 								var ul_node = $(
-									"#ur-tab-registered-fields"
+									"#ur-tab-registered-fields",
 								).find("ul.ur-registered-list");
 
 								$.each(ul_node.find("li"), function () {
@@ -1966,35 +1978,35 @@
 									if (
 										$.inArray(
 											data_field_id,
-											single_draggable_fields
+											single_draggable_fields,
 										) >= 0 &&
 										(!$this.hasClass("ur-locked-field") ||
 											($this.hasClass(
-												"ur-locked-field"
+												"ur-locked-field",
 											) &&
 												$this.hasClass(
-													"ur-one-time-draggable-disabled"
+													"ur-one-time-draggable-disabled",
 												)))
 									) {
 										if (
 											$(".ur-input-grids").find(
 												'.ur-field[data-field-key="' +
 													data_field_id +
-													'"]'
+													'"]',
 											).length > 0
 										) {
 											$this.draggable("disable");
 											$this.addClass("ur-locked-field");
 											$this.addClass(
-												"ur-one-time-draggable-disabled"
+												"ur-one-time-draggable-disabled",
 											);
 										} else {
 											$this.draggable("enable");
 											$this.removeClass(
-												"ur-locked-field"
+												"ur-locked-field",
 											);
 											$this.removeClass(
-												"ur-one-time-draggable-disabled"
+												"ur-one-time-draggable-disabled",
 											);
 										}
 									}
@@ -2011,7 +2023,7 @@
 							 */
 							populate_dropped_node: function (
 								container,
-								form_field_id
+								form_field_id,
 							) {
 								var form_id = $("#ur_form_id").val();
 								var data = {
@@ -2043,7 +2055,7 @@
 											.addClass("ur-selected-item")
 											.css({ width: "auto" });
 										container.html(
-											'<small class="spinner is-active"></small>'
+											'<small class="spinner is-active"></small>',
 										);
 										container.addClass("ur-item-dragged");
 									},
@@ -2058,12 +2070,12 @@
 												template_text.replace(
 													"(content)",
 													response.responseJSON.data
-														.template
-												)
+														.template,
+												),
 											);
 											template.removeClass("ajax_added");
 											template.removeClass(
-												"ur-item-dragged"
+												"ur-item-dragged",
 											);
 											container
 												.find(".ajax_added")
@@ -2083,11 +2095,11 @@
 											.find("[data-field='field_name']")
 											.val();
 										URFormBuilder.manage_conditional_field_options(
-											populated_item
+											populated_item,
 										);
 
 										$(
-											'.ur-input-type-select2 .ur-field[data-field-key="select2"] select, .ur-input-type-multi-select2 .ur-field[data-field-key="multi_select2"] select'
+											'.ur-input-type-select2 .ur-field[data-field-key="select2"] select, .ur-input-type-multi-select2 .ur-field[data-field-key="multi_select2"] select',
 										).selectWoo();
 
 										var $template = $(template);
@@ -2100,7 +2112,7 @@
 										// Get field name.
 										var fieldName = $template
 											.find(
-												'.ur-general-setting.ur-general-setting-field-name input[name="ur_general_setting[field_name]"]'
+												'.ur-general-setting.ur-general-setting-field-name input[name="ur_general_setting[field_name]"]',
 											)
 											.val();
 
@@ -2119,7 +2131,7 @@
 											.find(
 												'select.ur_advance_setting.ur-settings-field-visibility[name="' +
 													fieldKey +
-													'_advance_setting[field_visibility]"]'
+													'_advance_setting[field_visibility]"]',
 											)
 											.val();
 
@@ -2132,7 +2144,7 @@
 													label: label,
 													visibleTo: visibleTo,
 												},
-											]
+											],
 										);
 									},
 								});
@@ -2155,12 +2167,15 @@
 										var total_rows = $(this)
 											.closest(".ur-row-buttons")
 											.attr("data-total-rows");
-											total_rows = "undefined" !== typeof total_rows ? parseInt(total_rows) : 0;
+										total_rows =
+											"undefined" !== typeof total_rows
+												? parseInt(total_rows)
+												: 0;
 										$(this)
 											.closest(".ur-row-buttons")
 											.attr(
 												"data-total-rows",
-												total_rows + 1
+												total_rows + 1,
 											);
 
 										var single_row_clone = $(this)
@@ -2170,7 +2185,7 @@
 											.clone();
 										single_row_clone.attr(
 											"data-row-id",
-											total_rows + 1
+											total_rows + 1,
 										);
 										single_row_clone
 											.find(".ur-grid-lists")
@@ -2184,17 +2199,17 @@
 											.find(
 												'span[data-id="' +
 													loaded_params.active_grid +
-													'"]'
+													'"]',
 											)
 											.addClass("ur-active-grid");
 										var grid_list = builder.get_grid_lists(
-											loaded_params.active_grid
+											loaded_params.active_grid,
 										);
 										single_row_clone
 											.find(".ur-grid-lists")
 											.append(grid_list.html());
 										single_row_clone.insertBefore(
-											".ur-row-buttons"
+											".ur-row-buttons",
 										);
 										single_row_clone.show();
 										$this_obj.render_draggable_sortable();
@@ -2202,17 +2217,17 @@
 
 										if (
 											$(this).hasClass(
-												"ur-add-repeater-row"
+												"ur-add-repeater-row",
 											)
 										) {
 											single_row_clone.addClass(
-												"ur-repeater-row"
+												"ur-repeater-row",
 											);
 
 											var repeater_count = $(this)
 													.closest(".ur-input-grids")
 													.find(
-														".ur-repeater-row"
+														".ur-repeater-row",
 													).length,
 												repeater_div =
 													'<div class="ur-repeater-label"  id="user_registration_repeater_row_title_' +
@@ -2220,20 +2235,20 @@
 													'"><label>Repeater Row</label></div>';
 											single_row_clone.attr(
 												"data-repeater-id",
-												repeater_count
+												repeater_count,
 											);
 											$(repeater_div).insertBefore(
 												single_row_clone.find(
-													".ur-grid-lists"
-												)
+													".ur-grid-lists",
+												),
 											);
 										}
 
 										$(document).trigger(
 											"user_registration_row_added",
-											[single_row_clone]
+											[single_row_clone],
 										);
-									}
+									},
 								);
 							},
 							register_remove_row: function () {
@@ -2244,7 +2259,7 @@
 									function () {
 										if (
 											$(".ur-input-grids").find(
-												".ur-single-row:visible"
+												".ur-single-row:visible",
 											).length > 1
 										) {
 											var $this_row = $(this);
@@ -2262,7 +2277,7 @@
 														var new_btn;
 														if (
 															btn.hasClass(
-																"ur-add-new-row"
+																"ur-add-new-row",
 															)
 														) {
 															new_btn =
@@ -2272,61 +2287,61 @@
 																.clone()
 																.attr(
 																	"class",
-																	"dashicons-minus ur-remove-row"
+																	"dashicons-minus ur-remove-row",
 																);
 														}
 														if (
 															new_btn.hasClass(
-																"ur-add-new-row"
+																"ur-add-new-row",
 															)
 														) {
 															$this_row
 																.closest(
-																	".ur-single-row"
+																	".ur-single-row",
 																)
 																.prev()
 																.find(
-																	".ur-remove-row"
+																	".ur-remove-row",
 																)
 																.before(
-																	new_btn
+																	new_btn,
 																);
 														}
 														var single_row =
 															$this_row.closest(
-																".ur-single-row"
+																".ur-single-row",
 															);
 														$(document).trigger(
 															"user_registration_row_deleted",
-															[single_row]
+															[single_row],
 														);
 
 														// Remove Row Fields from Conditional Select Dropdown.
 														var row_fields =
 															single_row.find(
-																".ur-grid-lists .ur-selected-item .ur-general-setting"
+																".ur-grid-lists .ur-selected-item .ur-general-setting",
 															);
 														$(row_fields).each(
 															function () {
 																var field_label =
 																	$(this)
 																		.closest(
-																			".ur-selected-item"
+																			".ur-selected-item",
 																		)
 																		.find(
-																			" .ur-admin-template .ur-label label"
+																			" .ur-admin-template .ur-label label",
 																		)
 																		.text();
 																var field_key =
 																	$(this)
 																		.closest(
-																			".ur-selected-item"
+																			".ur-selected-item",
 																		)
 																		.find(
-																			" .ur-admin-template .ur-field"
+																			" .ur-admin-template .ur-field",
 																		)
 																		.data(
-																			"field-key"
+																			"field-key",
 																		);
 
 																//strip certain fields
@@ -2348,7 +2363,7 @@
 																var field_name =
 																	$(this)
 																		.find(
-																			"[data-field='field_name']"
+																			"[data-field='field_name']",
 																		)
 																		.val();
 
@@ -2360,17 +2375,17 @@
 																	$(
 																		'[class*="urcl-settings-rules_field_"] option[value="' +
 																			field_name +
-																			'"]'
+																			'"]',
 																	).remove();
 
 																	// Remove Field from Form Setting Conditionally Assign User Role.
 																	$(
 																		'[class*="urcl-field-conditional-field-select"] option[value="' +
 																			field_name +
-																			'"]'
+																			'"]',
 																	).remove();
 																}
-															}
+															},
 														);
 														single_row.remove();
 														$this.check_grid();
@@ -2388,7 +2403,7 @@
 													reject: function () {
 														// Do Nothing.
 													},
-												}
+												},
 											);
 										} else {
 											URFormBuilder.ur_alert(
@@ -2399,10 +2414,10 @@
 													title: user_registration_form_builder_data
 														.i18n_admin
 														.i18n_cannot_delete_row,
-												}
+												},
 											);
 										}
-									}
+									},
 								);
 							},
 							change_ur_grids: function () {
@@ -2417,7 +2432,7 @@
 											.siblings(".ur-toggle-grid-content")
 											.stop(true)
 											.slideToggle(200);
-									}
+									},
 								);
 								$(document).on("click", function () {
 									$(".ur-toggle-grid-content")
@@ -2431,23 +2446,23 @@
 									function () {
 										var $this_single_row =
 												$(this).closest(
-													".ur-single-row"
+													".ur-single-row",
 												),
 											grid_num =
 												$(this).attr("data-grid"),
 											grid_comp = $this_single_row.find(
-												".ur-grid-lists .ur-grid-list-item"
+												".ur-grid-lists .ur-grid-list-item",
 											).length,
 											$grids =
 												builder.get_grid_lists(
-													grid_num
+													grid_num,
 												),
 											iterator = 0;
 
 										// Prevent from selecting same grid.
 										if (
 											$this_single_row.find(
-												".ur-grid-lists .ur-grid-list-item"
+												".ur-grid-lists .ur-grid-list-item",
 											).length === parseInt(grid_num)
 										) {
 											return;
@@ -2459,7 +2474,7 @@
 
 										$.each(
 											$this_single_row.find(
-												".ur-grid-lists .ur-grid-list-item"
+												".ur-grid-lists .ur-grid-list-item",
 											),
 											function () {
 												$(this)
@@ -2467,11 +2482,11 @@
 													.each(function () {
 														$grids
 															.find(
-																".ur-grid-list-item"
+																".ur-grid-list-item",
 															)
 															.eq(iterator)
 															.append(
-																$(this).clone()
+																$(this).clone(),
 															); // "this" is the current element in the loop.
 
 														// In case the fields have to be redistributed into 2 columns - prioritizes left column first, if 3rd column is going away.
@@ -2481,20 +2496,20 @@
 																	$(this)
 																		.parent()
 																		.attr(
-																			"ur-grid-id"
-																		)
+																			"ur-grid-id",
+																		),
 																) &&
 															3 ===
 																parseInt(
-																	grid_comp
+																	grid_comp,
 																) &&
 															2 ===
 																parseInt(
-																	grid_num
+																	grid_num,
 																)
 														) {
 															iterator = Math.abs(
-																--iterator
+																--iterator,
 															); // Alternates between 0 and 1.
 														}
 													});
@@ -2514,7 +2529,7 @@
 															? 0
 															: iterator;
 												}
-											}
+											},
 										);
 
 										$this_single_row
@@ -2525,8 +2540,8 @@
 											.clone()
 											.insertAfter(
 												$this_single_row.find(
-													".ur-grid-lists"
-												)
+													".ur-grid-lists",
+												),
 											);
 										$this_single_row
 											.find(".ur-grid-lists")
@@ -2534,7 +2549,7 @@
 											.remove();
 										$this_obj.render_draggable_sortable();
 										builder.manage_empty_grid();
-									}
+									},
 								);
 							},
 							render_draggable_sortable: function () {
@@ -2543,13 +2558,13 @@
 										containment: ".ur-input-grids",
 										over: function () {
 											$(this).addClass(
-												"ur-sortable-active"
+												"ur-sortable-active",
 											);
 											builder.manage_empty_grid();
 										},
 										out: function () {
 											$(this).removeClass(
-												"ur-sortable-active"
+												"ur-sortable-active",
 											);
 											builder.manage_empty_grid();
 										},
@@ -2566,7 +2581,7 @@
 									},
 									out: function () {
 										$(this).removeClass(
-											"ur-sortable-active"
+											"ur-sortable-active",
 										);
 									},
 								});
@@ -2580,11 +2595,11 @@
 												.insertAfter(
 													$(this)
 														.closest(
-															".ur-tab-contents"
+															".ur-tab-contents",
 														)
 														.siblings(
-															".ur-tab-lists"
-														)
+															".ur-tab-lists",
+														),
 												);
 										},
 										// start: function (event, ui) {
@@ -2592,7 +2607,7 @@
 										stop: function (event, ui) {
 											if (
 												$(ui.helper).closest(
-													".ur-grid-list-item"
+													".ur-grid-list-item",
 												).length === 0
 											) {
 												return;
@@ -2601,48 +2616,51 @@
 												.attr("data-field-id")
 												.replace(
 													"user_registration_",
-													""
+													"",
 												)
 												.trim();
 											var length_of_required = $(
-												".ur-input-grids"
+												".ur-input-grids",
 											).find(
 												'.ur-field[data-field-key="' +
 													data_field_id +
-													'"]'
+													'"]',
 											).length;
 
 											var only_one_field_index =
 												$.makeArray(
-													user_registration_form_builder_data.form_one_time_draggable_fields
+													user_registration_form_builder_data.form_one_time_draggable_fields,
 												);
 
 											if (
 												length_of_required > 0 &&
 												$.inArray(
 													data_field_id,
-													only_one_field_index
+													only_one_field_index,
 												) >= 0
 											) {
 												show_message(
 													user_registration_form_builder_data
 														.i18n_admin
-														.i18n_user_required_field_already_there
+														.i18n_user_required_field_already_there,
 												);
 												$(ui.helper).remove();
 												return;
 											}
 
 											if (
-												ui.helper.closest(".ur-repeater-row").length > 0 && $.inArray(
+												ui.helper.closest(
+													".ur-repeater-row",
+												).length > 0 &&
+												$.inArray(
 													data_field_id,
-													only_one_field_index
+													only_one_field_index,
 												) >= 0
 											) {
 												URFormBuilder.show_message(
 													user_registration_form_builder_data
 														.i18n_admin
-														.i18n_repeater_fields_not_droppable
+														.i18n_repeater_fields_not_droppable,
 												);
 												$(ui.helper).remove();
 												return;
@@ -2657,18 +2675,18 @@
 											) {
 												var this_clone = $(ui.helper)
 													.closest(
-														".ur-grid-list-item"
+														".ur-grid-list-item",
 													)
 													.find(
 														'li[data-field-id="' +
 															$(this).attr(
-																"data-field-id"
+																"data-field-id",
 															) +
-															'"]'
+															'"]',
 													);
 												builder.populate_dropped_node(
 													this_clone,
-													form_field_id
+													form_field_id,
 												);
 											}
 										},
@@ -2684,7 +2702,7 @@
 										var removed_item = $(this)
 												.closest(".ur-selected-item ")
 												.find(
-													"[data-field='field_name']"
+													"[data-field='field_name']",
 												)
 												.val(),
 											ele = $this,
@@ -2700,7 +2718,7 @@
 										var fieldName = $ele
 											.closest(".ur-selected-item")
 											.find(
-												'.ur-general-setting.ur-general-setting-field-name input[name="ur_general_setting[field_name]"]'
+												'.ur-general-setting.ur-general-setting-field-name input[name="ur_general_setting[field_name]"]',
 											)
 											.val();
 
@@ -2736,7 +2754,7 @@
 												removed_item: removed_item,
 												confirm: function () {
 													$ele.closest(
-														".ur-selected-item "
+														".ur-selected-item ",
 													).remove();
 													ele.check_grid();
 													builder.manage_empty_grid();
@@ -2746,14 +2764,14 @@
 													$(
 														'[class*="urcl-settings-rules_field_"] option[value="' +
 															removed_item +
-															'"]'
+															'"]',
 													).remove();
 
 													// Remove Field from Form Setting Conditionally Assign User Role.
 													$(
 														'[class*="urcl-field-conditional-field-select"] option[value="' +
 															removed_item +
-															'"]'
+															'"]',
 													).remove();
 
 													$(document.body).trigger(
@@ -2766,7 +2784,7 @@
 																	fieldKey,
 																label: label,
 															},
-														]
+														],
 													);
 
 													// To prevent click on whole item.
@@ -2775,9 +2793,9 @@
 												reject: function () {
 													return false;
 												},
-											}
+											},
 										);
-									}
+									},
 								);
 							},
 
@@ -2791,11 +2809,11 @@
 											.find(".ur-field")
 											.attr("data-field-key");
 										var selected_node = $(
-											".ur-input-grids"
+											".ur-input-grids",
 										).find(
 											'.ur-field[data-field-key="' +
 												data_field_key +
-												'"]'
+												'"]',
 										);
 										var length_of_required =
 											selected_node.length;
@@ -2803,13 +2821,13 @@
 											length_of_required > 0 &&
 											$.inArray(
 												data_field_key,
-												user_registration_form_builder_data.form_one_time_draggable_fields
+												user_registration_form_builder_data.form_one_time_draggable_fields,
 											) > -1
 										) {
 											URFormBuilder.show_message(
 												user_registration_form_builder_data
 													.i18n_admin
-													.i18n_user_required_field_already_there_could_not_clone
+													.i18n_user_required_field_already_there_could_not_clone,
 											);
 											return;
 										}
@@ -2817,7 +2835,7 @@
 											.closest(".ur-selected-item ")
 											.clone();
 										var label_node = clone.find(
-											'input[data-field="field_name"]'
+											'input[data-field="field_name"]',
 										);
 										var regex = /\d+/g;
 										var matches = label_node
@@ -2832,12 +2850,12 @@
 											.replace(find_string, "");
 										clone
 											.find(
-												'input[data-field="field_name"]'
+												'input[data-field="field_name"]',
 											)
 											.attr(
 												"value",
 												label_string +
-													new Date().getTime()
+													new Date().getTime(),
 											);
 										$(this)
 											.closest(".ur-grid-list-item")
@@ -2847,9 +2865,9 @@
 											.find("[data-field='field_name']")
 											.val();
 										URFormBuilder.manage_conditional_field_options(
-											populated_item
+											populated_item,
 										);
-									}
+									},
 								);
 							},
 							check_grid: function () {
@@ -2874,7 +2892,7 @@
 							.find("a.nav-tab")
 							.removeClass("active");
 						$(this).addClass("active");
-					}
+					},
 				);
 				$(".ur-tabs").tabs();
 				$(".ur-tabs")
@@ -2914,12 +2932,12 @@
 								$(
 									".urcl-field-conditional-field-select option[value='" +
 										field_name +
-										"']"
+										"']",
 								).length > 0;
 							if (select_value_for_user_role === false) {
 								// Append Field in Form Setting Conditionally Assign User Role.
 								$(
-									'[class*="urcl-field-conditional-field-select"]'
+									'[class*="urcl-field-conditional-field-select"]',
 								).append(
 									'<option value ="' +
 										field_name +
@@ -2927,7 +2945,7 @@
 										field_key +
 										'">' +
 										field_label +
-										" </option>"
+										" </option>",
 								);
 							}
 							//check if option exist in the given select
@@ -2935,12 +2953,12 @@
 								$(
 									".urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1 option[value='" +
 										field_name +
-										"']"
+										"']",
 								).length > 0;
 							if (select_value === false) {
 								// Append Field in Field Options
 								$(
-									'[class*="urcl-settings-rules_field_"]'
+									'[class*="urcl-settings-rules_field_"]',
 								).append(
 									'<option value ="' +
 										field_name +
@@ -2948,19 +2966,19 @@
 										field_key +
 										'">' +
 										field_label +
-										" </option>"
+										" </option>",
 								);
 
 								if (field_name == populated_item) {
 									$(
 										'.urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields option[value="' +
 											populated_item +
-											'"]'
+											'"]',
 									).remove();
 								}
 							} else {
 								$(
-									".urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields"
+									".urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields",
 								).append(
 									'<option value ="' +
 										field_name +
@@ -2968,14 +2986,14 @@
 										field_key +
 										'">' +
 										field_label +
-										" </option>"
+										" </option>",
 								);
 							}
 						}
-					}
+					},
 				);
 				$(
-					".urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields"
+					".urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1.empty-fields",
 				).removeClass("empty-fields");
 			},
 			/**
@@ -3005,7 +3023,7 @@
 					 * Bind UI actions for `Selective Countries` feature
 					 */
 					var $selected_countries_option_field = $(
-						"#ur-setting-form select.ur-settings-selected-countries"
+						"#ur-setting-form select.ur-settings-selected-countries",
 					);
 					$selected_countries_option_field
 						.on("change", function (e) {
@@ -3018,29 +3036,29 @@
 
 							// Get html of selected countries
 							if (Array.isArray(selected_countries_iso_s)) {
-								selected_countries_iso_s.forEach(function (
-									iso
-								) {
-									var country_name = $(self)
-										.find('option[value="' + iso + '"]')
-										.html();
-									html +=
-										'<option value="' +
-										iso +
-										'">' +
-										country_name +
-										"</option>";
-								});
+								selected_countries_iso_s.forEach(
+									function (iso) {
+										var country_name = $(self)
+											.find('option[value="' + iso + '"]')
+											.html();
+										html +=
+											'<option value="' +
+											iso +
+											'">' +
+											country_name +
+											"</option>";
+									},
+								);
 							}
 
 							// Update default_value options in `Field Options` tab
 							$(
-								"#ur-setting-form select.ur-settings-default-value"
+								"#ur-setting-form select.ur-settings-default-value",
 							).html(html);
 
 							// Update default_value options (hidden)
 							$(
-								".ur-selected-item.ur-item-active select.ur-settings-default-value"
+								".ur-selected-item.ur-item-active select.ur-settings-default-value",
 							).html(html);
 						})
 						.select2({
@@ -3075,7 +3093,7 @@
 							$(".urcl-rules, .urcl-conditional-group").each(
 								function () {
 									var $urcl_field = $(this).find(
-										".urcl-field"
+										".urcl-field",
 									).length
 										? $(this).find(".urcl-field")
 										: $(this).find(".urcl-form-group");
@@ -3097,18 +3115,18 @@
 										var countries = $(
 											'.ur-general-setting-field-name input[value="' +
 												field_name +
-												'"'
+												'"',
 										)
 											.closest(".ur-selected-item")
 											.find(
-												".ur-advance-selected_countries select option:selected"
+												".ur-advance-selected_countries select option:selected",
 											);
 										var options_html = [];
 
 										$(this)
 											.find(".urcl-value select")
 											.html(
-												'<option value="">--select--</option>'
+												'<option value="">--select--</option>',
 											);
 										countries.each(function () {
 											var country_iso = $(this).val();
@@ -3119,7 +3137,7 @@
 													country_iso +
 													'">' +
 													country_name +
-													"</option>"
+													"</option>",
 											);
 										});
 										$(this)
@@ -3132,11 +3150,11 @@
 											.find(
 												'.urcl-value select option[value="' +
 													selected_value +
-													'"]'
+													'"]',
 											)
 											.attr("selected", "selected");
 									}
-								}
+								},
 							);
 						})
 						/**
@@ -3205,7 +3223,7 @@
 						case "label":
 							$this_obj.on("keyup", function () {
 								URFormBuilder.trigger_general_setting_label(
-									$(this)
+									$(this),
 								);
 							});
 							break;
@@ -3216,7 +3234,7 @@
 						case "custom_class":
 							$this_obj.on("change", function () {
 								URFormBuilder.trigger_general_setting_field_name(
-									$(this)
+									$(this),
 								);
 							});
 						case "default_value":
@@ -3228,58 +3246,58 @@
 									if (
 										$this_obj
 											.closest(
-												".ur-general-setting-block"
+												".ur-general-setting-block",
 											)
 											.hasClass(
-												"ur-general-setting-select"
+												"ur-general-setting-select",
 											)
 									) {
 										URFormBuilder.render_select_box(
-											$(this)
+											$(this),
 										);
 									} else if (
 										$this_obj
 											.closest(
-												".ur-general-setting-block"
+												".ur-general-setting-block",
 											)
 											.hasClass(
-												"ur-general-setting-radio"
+												"ur-general-setting-radio",
 											)
 									) {
 										URFormBuilder.render_radio($(this));
 									} else if (
 										$this_obj
 											.closest(
-												".ur-general-setting-block"
+												".ur-general-setting-block",
 											)
 											.hasClass(
-												"ur-general-setting-checkbox"
+												"ur-general-setting-checkbox",
 											)
 									) {
 										URFormBuilder.render_check_box($(this));
 									} else if (
 										$this_obj
 											.closest(
-												".ur-general-setting-block"
+												".ur-general-setting-block",
 											)
 											.hasClass(
-												"ur-general-setting-multiple_choice"
+												"ur-general-setting-multiple_choice",
 											)
 									) {
 										URFormBuilder.render_multiple_choice(
-											$(this)
+											$(this),
 										);
 									} else if (
 										$this_obj
 											.closest(
-												".ur-general-setting-block"
+												".ur-general-setting-block",
 											)
 											.hasClass(
-												"ur-general-setting-subscription_plan"
+												"ur-general-setting-subscription_plan",
 											)
 									) {
 										URFormBuilder.render_subscription_plan(
-											$(this)
+											$(this),
 										);
 									}
 								}
@@ -3291,17 +3309,17 @@
 									($this_obj
 										.closest(".ur-general-setting-block")
 										.hasClass(
-											"ur-general-setting-select"
+											"ur-general-setting-select",
 										) ||
 										$this_obj
 											.closest(
-												".ur-general-setting-block"
+												".ur-general-setting-block",
 											)
 											.hasClass(
-												"ur-general-setting-select2"
+												"ur-general-setting-select2",
 											)) &&
 									$this_obj.siblings(
-										'input[data-field="default_value"]'
+										'input[data-field="default_value"]',
 									).length > 0
 								) {
 									URFormBuilder.render_select_box($(this));
@@ -3309,14 +3327,14 @@
 									$this_obj
 										.closest(".ur-general-setting-block")
 										.hasClass(
-											"ur-general-setting-multi_select2"
+											"ur-general-setting-multi_select2",
 										) &&
 									$this_obj.siblings(
-										'input[data-field="default_value"]'
+										'input[data-field="default_value"]',
 									).length > 0
 								) {
 									URFormBuilder.render_multi_select_box(
-										$(this)
+										$(this),
 									);
 								} else if (
 									$this_obj
@@ -3334,26 +3352,26 @@
 									$this_obj
 										.closest(".ur-general-setting-block")
 										.hasClass(
-											"ur-general-setting-multiple_choice"
+											"ur-general-setting-multiple_choice",
 										)
 								) {
 									URFormBuilder.render_multiple_choice(
-										$(this)
+										$(this),
 									);
 								} else if (
 									$this_obj
 										.closest(".ur-general-setting-block")
 										.hasClass(
-											"ur-general-setting-subscription_plan"
+											"ur-general-setting-subscription_plan",
 										)
 								) {
 									URFormBuilder.render_subscription_plan(
-										$(this)
+										$(this),
 									);
 								}
 
 								URFormBuilder.trigger_general_setting_options(
-									$(this)
+									$(this),
 								);
 							});
 
@@ -3362,11 +3380,11 @@
 									$this_obj
 										.closest(".ur-general-setting-block")
 										.hasClass(
-											"ur-general-setting-subscription_plan"
+											"ur-general-setting-subscription_plan",
 										)
 								) {
 									URFormBuilder.render_subscription_plan(
-										$(this)
+										$(this),
 									);
 								}
 							});
@@ -3377,14 +3395,14 @@
 										$(this)
 											.closest(".ur-subscription-plan")
 											.find(
-												".ur-subscription-trail-period-option"
+												".ur-subscription-trail-period-option",
 											)
 											.show();
 									} else {
 										$(this)
 											.closest(".ur-subscription-plan")
 											.find(
-												".ur-subscription-trail-period-option"
+												".ur-subscription-trail-period-option",
 											)
 											.hide();
 									}
@@ -3392,24 +3410,24 @@
 										if ($(this).is(":checked")) {
 											$(this)
 												.closest(
-													".ur-subscription-plan"
+													".ur-subscription-plan",
 												)
 												.find(
-													".ur-subscription-trail-period-option"
+													".ur-subscription-trail-period-option",
 												)
 												.show();
 										} else {
 											$(this)
 												.closest(
-													".ur-subscription-plan"
+													".ur-subscription-plan",
 												)
 												.find(
-													".ur-subscription-trail-period-option"
+													".ur-subscription-trail-period-option",
 												)
 												.hide();
 										}
 									});
-								}
+								},
 							);
 
 							break;
@@ -3434,7 +3452,7 @@
 							});
 							$this_obj.on("change", function () {
 								URFormBuilder.trigger_general_setting_selling_price(
-									$(this)
+									$(this),
 								);
 							});
 							break;
@@ -3442,21 +3460,21 @@
 						case "placeholder":
 							$this_obj.on("keyup", function () {
 								URFormBuilder.trigger_general_setting_placeholder(
-									$(this)
+									$(this),
 								);
 							});
 							break;
 						case "required":
 							$this_obj.on("change", function () {
 								URFormBuilder.trigger_general_setting_required(
-									$(this)
+									$(this),
 								);
 							});
 							break;
 						case "hide_label":
 							$this_obj.on("change", function () {
 								URFormBuilder.trigger_general_setting_hide_label(
-									$(this)
+									$(this),
 								);
 							});
 							break;
@@ -3464,27 +3482,27 @@
 						case "html":
 							$this_obj.on("keyup", function () {
 								URFormBuilder.trigger_general_setting_description(
-									$(this)
+									$(this),
 								);
 							});
 							break;
 					}
 					$(document.body).trigger(
 						"ur_general_field_settings_to_update_form_fields_in_builder",
-						[$this_obj]
+						[$this_obj],
 					);
 				});
 				var advance_settings = $(
-					"#ur-setting-form .ur_advance_setting"
+					"#ur-setting-form .ur_advance_setting",
 				);
 
 				$(".ur-settings-enable-min-max").on("change", function () {
 					if ($(this).is(":checked")) {
 						$(
-							".ur-item-active .ur-advance-min_date, #ur-setting-form .ur-advance-min_date"
+							".ur-item-active .ur-advance-min_date, #ur-setting-form .ur-advance-min_date",
 						).show();
 						$(
-							".ur-item-active .ur-advance-max_date, #ur-setting-form .ur-advance-max_date"
+							".ur-item-active .ur-advance-max_date, #ur-setting-form .ur-advance-max_date",
 						).show();
 
 						$("#ur-setting-form .ur-settings-min-date")
@@ -3494,23 +3512,23 @@
 								onChange: function (
 									selectedDates,
 									dateStr,
-									instance
+									instance,
 								) {
 									$(
-										".ur-item-active .ur-settings-min-date"
+										".ur-item-active .ur-settings-min-date",
 									).val(dateStr);
 								},
 								onOpen: function (
 									selectedDates,
 									dateStr,
-									instance
+									instance,
 								) {
 									instance.set(
 										"maxDate",
 										// new Date(
 										$(
-											".ur-item-active .ur-settings-max-date"
-										).val()
+											".ur-item-active .ur-settings-max-date",
+										).val(),
 										// )
 									);
 								},
@@ -3523,33 +3541,33 @@
 								onChange: function (
 									selectedDates,
 									dateStr,
-									instance
+									instance,
 								) {
 									$(
-										".ur-item-active .ur-settings-max-date"
+										".ur-item-active .ur-settings-max-date",
 									).val(dateStr);
 								},
 								onOpen: function (
 									selectedDates,
 									dateStr,
-									instance
+									instance,
 								) {
 									instance.set(
 										"minDate",
 										// new Date(
 										$(
-											".ur-item-active .ur-settings-min-date"
-										).val()
+											".ur-item-active .ur-settings-min-date",
+										).val(),
 										// )
 									);
 								},
 							});
 					} else {
 						$(
-							".ur-item-active .ur-advance-min_date, #ur-setting-form .ur-advance-min_date"
+							".ur-item-active .ur-advance-min_date, #ur-setting-form .ur-advance-min_date",
 						).hide();
 						$(
-							".ur-item-active .ur-advance-max_date, #ur-setting-form .ur-advance-max_date"
+							".ur-item-active .ur-advance-max_date, #ur-setting-form .ur-advance-max_date",
 						).hide();
 					}
 				});
@@ -3577,32 +3595,32 @@
 							$this_node.on("change", function () {
 								URFormBuilder.handle_min_max_length($this_node);
 								var wrapper = $(
-									".ur-selected-item.ur-item-active"
+									".ur-selected-item.ur-item-active",
 								);
 								var startCount = wrapper.find(
-									".ur_limit_count_mode p.ur_start_count"
+									".ur_limit_count_mode p.ur_start_count",
 								);
 								var limitCount = wrapper.find(
-									".ur_limit_count_mode p.ur_limit_count"
+									".ur_limit_count_mode p.ur_limit_count",
 								);
 								var limitMode = wrapper.find(
-									".ur_limit_count_mode p.ur_limit_mode"
+									".ur_limit_count_mode p.ur_limit_mode",
 								);
 								if ($this_node.is(":checked")) {
 									startCount.text("0 /");
 									limitCount.text(
 										wrapper
 											.find(
-												"[data-advance-field='limit_length_limit_count']"
+												"[data-advance-field='limit_length_limit_count']",
 											)
-											.val()
+											.val(),
 									);
 									limitMode.text(
 										wrapper
 											.find(
-												"[data-advance-field='limit_length_limit_mode']"
+												"[data-advance-field='limit_length_limit_mode']",
 											)
-											.val()
+											.val(),
 									);
 								} else {
 									limitCount.text("");
@@ -3621,7 +3639,7 @@
 						case "date_format":
 							$this_node.on("change", function () {
 								URFormBuilder.trigger_general_setting_date_format(
-									$(this)
+									$(this),
 								);
 							});
 							break;
@@ -3638,12 +3656,12 @@
 										defaultDate: new Date(
 											$(".ur-item-active")
 												.find(".ur-settings-min-date")
-												.val()
+												.val(),
 										),
 										onChange: function (
 											selectedDates,
 											dateStr,
-											instance
+											instance,
 										) {
 											$(".ur-item-active")
 												.find(".ur-settings-min-date")
@@ -3652,23 +3670,23 @@
 										onOpen: function (
 											selectedDates,
 											dateStr,
-											instance
+											instance,
 										) {
 											instance.set(
 												"maxDate",
 												new Date(
 													$(".ur-item-active")
 														.find(
-															".ur-settings-max-date"
+															".ur-settings-max-date",
 														)
-														.val()
-												)
+														.val(),
+												),
 											);
 										},
 									});
 							} else {
 								$(
-									".ur-item-active .ur-advance-min_date, #ur-setting-form .ur-advance-min_date"
+									".ur-item-active .ur-advance-min_date, #ur-setting-form .ur-advance-min_date",
 								).hide();
 							}
 							break;
@@ -3685,12 +3703,12 @@
 										defaultDate: new Date(
 											$(".ur-item-active")
 												.find(".ur-settings-max-date")
-												.val()
+												.val(),
 										),
 										onChange: function (
 											selectedDates,
 											dateStr,
-											instance
+											instance,
 										) {
 											$(".ur-item-active")
 												.find(".ur-settings-max-date")
@@ -3699,21 +3717,21 @@
 										onOpen: function (
 											selectedDates,
 											dateStr,
-											instance
+											instance,
 										) {
 											instance.set(
 												"minDate",
 												new Date(
 													$(
-														".ur-item-active .ur-settings-min-date"
-													).val()
-												)
+														".ur-item-active .ur-settings-min-date",
+													).val(),
+												),
 											);
 										},
 									});
 							} else {
 								$(
-									".ur-item-active .ur-advance-max_date, #ur-setting-form .ur-advance-max_date"
+									".ur-item-active .ur-advance-max_date, #ur-setting-form .ur-advance-max_date",
 								).hide();
 							}
 							break;
@@ -3733,7 +3751,7 @@
 
 							$this_node.on("click", function () {
 								var wrapper = $(
-										".ur-selected-item.ur-item-active"
+										".ur-selected-item.ur-item-active",
 									),
 									selector_field_name = $(this)
 										.closest("#ur-setting-form")
@@ -3747,7 +3765,7 @@
 									.find(
 										'input[data-field="' +
 											$(this).attr("data-field") +
-											'"]'
+											'"]',
 									)
 									.prop("checked", $(this).is(":checked"));
 
@@ -3755,7 +3773,7 @@
 									if ($(this).is(":checked")) {
 										$(this)
 											.closest(
-												".ur-advance-setting-block"
+												".ur-advance-setting-block",
 											)
 											.find(".ur-advance-parameter_name")
 											.show();
@@ -3765,7 +3783,7 @@
 									} else {
 										$(this)
 											.closest(
-												".ur-advance-setting-block"
+												".ur-advance-setting-block",
 											)
 											.find(".ur-advance-parameter_name")
 											.hide();
@@ -3791,7 +3809,7 @@
 
 							$this_node.on("click", function () {
 								var wrapper = $(
-										".ur-selected-item.ur-item-active"
+										".ur-selected-item.ur-item-active",
 									),
 									selector_field_name = $(this)
 										.closest("#ur-setting-form")
@@ -3805,7 +3823,7 @@
 									.find(
 										'input[data-field="' +
 											$(this).attr("data-field") +
-											'"]'
+											'"]',
 									)
 									.prop("checked", $(this).is(":checked"));
 
@@ -3813,7 +3831,7 @@
 									if ($(this).is(":checked")) {
 										$(this)
 											.closest(
-												".ur-advance-setting-block"
+												".ur-advance-setting-block",
 											)
 											.find(".ur-advance-address_style")
 											.show();
@@ -3823,7 +3841,7 @@
 									} else {
 										$(this)
 											.closest(
-												".ur-advance-setting-block"
+												".ur-advance-setting-block",
 											)
 											.find(".ur-advance-address_style")
 											.hide();
@@ -3849,7 +3867,7 @@
 
 							$this_node.on("click", function () {
 								var wrapper = $(
-										".ur-selected-item.ur-item-active"
+										".ur-selected-item.ur-item-active",
 									),
 									selector_field_name = $(this)
 										.closest("#ur-setting-form")
@@ -3863,7 +3881,7 @@
 									.find(
 										'input[data-field="' +
 											$(this).attr("data-field") +
-											'"]'
+											'"]',
 									)
 									.prop("checked", $(this).is(":checked"));
 
@@ -3871,29 +3889,29 @@
 									if ($(this).is(":checked")) {
 										$(this)
 											.closest(
-												".ur-advance-setting-block"
+												".ur-advance-setting-block",
 											)
 											.find(
-												".ur-advance-validation_message"
+												".ur-advance-validation_message",
 											)
 											.show();
 										$(".ur-selected-item.ur-item-active")
 											.find(
-												".ur-advance-validation_message"
+												".ur-advance-validation_message",
 											)
 											.show();
 									} else {
 										$(this)
 											.closest(
-												".ur-advance-setting-block"
+												".ur-advance-setting-block",
 											)
 											.find(
-												".ur-advance-validation_message"
+												".ur-advance-validation_message",
 											)
 											.hide();
 										$(".ur-selected-item.ur-item-active")
 											.find(
-												".ur-advance-validation_message"
+												".ur-advance-validation_message",
 											)
 											.hide();
 									}
@@ -3946,10 +3964,10 @@
 						case "enable_time_slot_booking":
 							var form = $this_node.closest("form"),
 								general_settings = form.find(
-									".ur-general-setting-timepicker"
+									".ur-general-setting-timepicker",
 								),
 								requiredWrapper = general_settings.find(
-									".ur-general-setting-required"
+									".ur-general-setting-required",
 								),
 								requiredField = requiredWrapper.find("input");
 							if (!$this_node.is(":checked")) {
@@ -4005,20 +4023,20 @@
 									if (
 										!$(this)
 											.closest(
-												".ur-advance-setting-block"
+												".ur-advance-setting-block",
 											)
 											.find(".ur-settings-time_range")
 											.is(":checked")
 									) {
 										$(this)
 											.closest(
-												".ur-advance-setting-block"
+												".ur-advance-setting-block",
 											)
 											.find(".ur-settings-time_range")
 											.trigger("click");
 										$(this)
 											.closest(
-												".ur-advance-setting-block"
+												".ur-advance-setting-block",
 											)
 											.find(".ur-settings-time_range")
 											.attr("checked", true);
@@ -4039,10 +4057,10 @@
 						case "enable_date_slot_booking":
 							var form = $this_node.closest("form"),
 								general_settings = form.find(
-									".ur-general-setting-date"
+									".ur-general-setting-date",
 								),
 								requiredWrapper = general_settings.find(
-									".ur-general-setting-required"
+									".ur-general-setting-required",
 								),
 								requiredField = requiredWrapper.find("input");
 
@@ -4114,13 +4132,13 @@
 					$(this).on(event, function () {
 						URFormBuilder.trigger_advance_setting(
 							$this_node,
-							node_type
+							node_type,
 						);
 					});
 					$(this).on("paste", function () {
 						URFormBuilder.trigger_advance_setting(
 							$this_node,
-							node_type
+							node_type,
 						);
 					});
 				});
@@ -4164,12 +4182,12 @@
 				wrapper
 					.find(".ur-general-setting-block")
 					.find(
-						'input[data-field="' + $label.attr("data-field") + '"]'
+						'input[data-field="' + $label.attr("data-field") + '"]',
 					)
 					.attr("value", $label.val());
 
 				var field_name = $(
-					".ur-selected-item.ur-item-active .ur-general-setting"
+					".ur-selected-item.ur-item-active .ur-general-setting",
 				)
 					.find("[data-field='field_name']")
 					.val();
@@ -4177,14 +4195,14 @@
 				$(
 					'[class*="urcl-settings-rules_field_"] option[value="' +
 						field_name +
-						'"]'
+						'"]',
 				).text($label.val());
 
 				// Change label of field in Form Setting Conditionally Assign User Role.
 				$(
 					'[class*="urcl-field-conditional-field-select"] option[value="' +
 						field_name +
-						'"]'
+						'"]',
 				).text($label.val());
 			},
 			/**
@@ -4197,13 +4215,13 @@
 				var old_field_name = wrapper
 					.find(".ur-general-setting-block")
 					.find(
-						'input[data-field="' + $label.attr("data-field") + '"]'
+						'input[data-field="' + $label.attr("data-field") + '"]',
 					)
 					.attr("value");
 				wrapper
 					.find(".ur-general-setting-block")
 					.find(
-						'input[data-field="' + $label.attr("data-field") + '"]'
+						'input[data-field="' + $label.attr("data-field") + '"]',
 					)
 					.attr("value", $label.val());
 
@@ -4211,14 +4229,14 @@
 				$(
 					'[class*="urcl-settings-rules_field_"] option[value="' +
 						old_field_name +
-						'"]'
+						'"]',
 				).attr("value", $label.val());
 
 				// Change Field Name of field in Form Setting Conditionally Assign User Role.
 				$(
 					'[class*="urcl-field-conditional-field-select"] option[value="' +
 						old_field_name +
-						'"]'
+						'"]',
 				).attr("value", $label.val());
 			},
 			/**
@@ -4248,7 +4266,7 @@
 				}
 				$(document.body).trigger(
 					"ur_sync_textarea_field_settings_in_selected_field_of_form_builder",
-					[field_type, value]
+					[field_type, value],
 				);
 			},
 			/**
@@ -4285,18 +4303,18 @@
 							(value === option ? "selected" : "") +
 							">" +
 							option +
-							"</option>"
+							"</option>",
 					);
 				});
 
 				// Loop through options in active fields general setting hidden div.
 				wrapper
 					.find(
-						".ur-general-setting-options > ul.ur-options-list > li"
+						".ur-general-setting-options > ul.ur-options-list > li",
 					)
 					.each(function (index, element) {
 						var radio_input = $(element).find(
-							'[data-field="default_value"]'
+							'[data-field="default_value"]',
 						);
 						if (index === checked_index) {
 							radio_input.prop("checked", true);
@@ -4326,7 +4344,7 @@
 				var options = this_node
 					.closest(".ur-general-setting-options")
 					.find(
-						"input.ur-general-setting-field.ur-type-checkbox-label"
+						"input.ur-general-setting-field.ur-type-checkbox-label",
 					)
 					.map(function () {
 						return $(this).val();
@@ -4341,18 +4359,18 @@
 							(value === option ? "selected" : "") +
 							">" +
 							option +
-							"</option>"
+							"</option>",
 					);
 				});
 
 				// Loop through options in active fields general setting hidden div.
 				wrapper
 					.find(
-						".ur-general-setting-options > ul.ur-options-list > li"
+						".ur-general-setting-options > ul.ur-options-list > li",
 					)
 					.each(function (index, element) {
 						var radio_input = $(element).find(
-							'[data-field="default_value"]'
+							'[data-field="default_value"]',
 						);
 						if (index === checked_index) {
 							radio_input.prop("checked", true);
@@ -4382,7 +4400,7 @@
 				var options = this_node
 					.closest(".ur-general-setting-options")
 					.find(
-						"input.ur-general-setting-field.ur-type-checkbox-label"
+						"input.ur-general-setting-field.ur-type-checkbox-label",
 					)
 					.map(function () {
 						return $(this).val();
@@ -4397,18 +4415,18 @@
 							(value === option ? "selected" : "") +
 							">" +
 							option +
-							"</option>"
+							"</option>",
 					);
 				});
 
 				// Loop through options in active fields general setting hidden div.
 				wrapper
 					.find(
-						".ur-general-setting-options > ul.ur-options-list > li"
+						".ur-general-setting-options > ul.ur-options-list > li",
 					)
 					.each(function (index, element) {
 						var radio_input = $(element).find(
-							'[data-field="default_value"]'
+							'[data-field="default_value"]',
 						);
 						if (index === checked_index) {
 							radio_input.prop("checked", true);
@@ -4506,7 +4524,7 @@
 								(array_value[i].radio ? "checked" : "") +
 								" disabled>" +
 								array_value[i].value.trim() +
-								"</label>"
+								"</label>",
 						);
 					}
 				}
@@ -4514,11 +4532,11 @@
 				// Loop through options in active fields general setting hidden div.
 				wrapper
 					.find(
-						".ur-general-setting-options > ul.ur-options-list > li"
+						".ur-general-setting-options > ul.ur-options-list > li",
 					)
 					.each(function (index, element) {
 						var radio_input = $(element).find(
-							'[data-field="default_value"]'
+							'[data-field="default_value"]',
 						);
 						if (index === checked_index) {
 							radio_input.prop("checked", true);
@@ -4552,7 +4570,7 @@
 					// To remove attributes except "href, target, download, rel, hreflang, type, name, accesskey, tabindex, title" from anchor tag.
 					value = value.replace(
 						/(?!href|target|download|rel|hreflang|type|name|accesskey|tabindex|title)\b\w+=['"][^'"]*['"]/g,
-						""
+						"",
 					);
 
 					// To add a closing </a> tag to a string if an open <a> tag is present but not closed.
@@ -4605,7 +4623,7 @@
 					if (array_value[i] !== "") {
 						array_value[i].value = array_value[i].value.replaceAll(
 							'"',
-							"'"
+							"'",
 						);
 						$checked_class = "";
 						if (image_image.is(":checked")) {
@@ -4624,7 +4642,7 @@
 								(array_value[i].checkbox ? "checked" : "") +
 								" disabled>" +
 								array_value[i].value.trim() +
-								"</label>"
+								"</label>",
 						);
 					}
 				}
@@ -4635,7 +4653,7 @@
 							.find(
 								".ur-general-setting-options li:nth(" +
 									checked_index +
-									') input[data-field="default_value"]'
+									') input[data-field="default_value"]',
 							)
 							.prop("checked", true);
 					} else {
@@ -4643,7 +4661,7 @@
 							.find(
 								".ur-general-setting-options li:nth(" +
 									checked_index +
-									') input[data-field="default_value"]'
+									') input[data-field="default_value"]',
 							)
 							.prop("checked", false);
 					}
@@ -4751,7 +4769,7 @@
 								array_value[i].currency.trim() +
 								" " +
 								array_value[i].value.trim() +
-								"</label>"
+								"</label>",
 						);
 					}
 				}
@@ -4762,7 +4780,7 @@
 							.find(
 								".ur-general-setting-options li:nth(" +
 									checked_index +
-									') input[data-field="default_value"]'
+									') input[data-field="default_value"]',
 							)
 							.prop("checked", true);
 					} else {
@@ -4770,7 +4788,7 @@
 							.find(
 								".ur-general-setting-options li:nth(" +
 									checked_index +
-									') input[data-field="default_value"]'
+									') input[data-field="default_value"]',
 							)
 							.prop("checked", false);
 					}
@@ -4821,7 +4839,7 @@
 						.find(
 							".ur-general-setting-options li:nth(" +
 								index +
-								") .ur-radio-enable-trail-period"
+								") .ur-radio-enable-trail-period",
 						)
 						.val(trail_period_enable_val);
 
@@ -4829,14 +4847,14 @@
 						.find(
 							".ur-general-setting-options li:nth(" +
 								index +
-								") .ur-radio-recurring-period"
+								") .ur-radio-recurring-period",
 						)
 						.val(recurring_period);
 					wrapper
 						.find(
 							".ur-general-setting-options li:nth(" +
 								index +
-								") .ur-radio-trail-recurring-period"
+								") .ur-radio-trail-recurring-period",
 						)
 						.val(trail_recurring_period);
 
@@ -4888,7 +4906,7 @@
 								array_value[i].currency.trim() +
 								" " +
 								array_value[i].value.trim() +
-								"</label>"
+								"</label>",
 						);
 					}
 				}
@@ -4899,7 +4917,7 @@
 							.find(
 								".ur-general-setting-options li:nth(" +
 									checked_index +
-									') input[data-field="default_value"]'
+									') input[data-field="default_value"]',
 							)
 							.prop("checked", true);
 					} else {
@@ -4907,7 +4925,7 @@
 							.find(
 								".ur-general-setting-options li:nth(" +
 									checked_index +
-									') input[data-field="default_value"]'
+									') input[data-field="default_value"]',
 							)
 							.prop("checked", false);
 					}
@@ -4933,7 +4951,7 @@
 								index +
 								') input[name="' +
 								$label.attr("name") +
-								'"]'
+								'"]',
 						)
 						.val($label.val());
 				} else if ("captcha" === $label.attr("data-field-name")) {
@@ -4943,7 +4961,7 @@
 								index +
 								') input[name="' +
 								$label.attr("name") +
-								'"]'
+								'"]',
 						)
 						.val($label.val());
 				} else {
@@ -4953,7 +4971,7 @@
 								index +
 								') input[data-field="' +
 								$label.attr("data-field") +
-								'"]'
+								'"]',
 						)
 						.val($label.val());
 				}
@@ -4961,7 +4979,7 @@
 					.find(
 						".ur-general-setting-block li:nth(" +
 							index +
-							') input[data-field="default_value"]'
+							') input[data-field="default_value"]',
 					)
 					.val($label.val());
 
@@ -4981,7 +4999,7 @@
 				wrapper
 					.find(".ur-general-setting-block")
 					.find(
-						'input[data-field="' + $label.attr("data-field") + '"]'
+						'input[data-field="' + $label.attr("data-field") + '"]',
 					)
 					.prop("checked", $label.is(":checked"));
 			},
@@ -4996,7 +5014,7 @@
 				wrapper
 					.find(".ur-general-setting-block")
 					.find(
-						'input[data-field="' + $label.attr("data-field") + '"]'
+						'input[data-field="' + $label.attr("data-field") + '"]',
 					)
 					.prop("checked", $label.is(":checked"));
 			},
@@ -5016,7 +5034,7 @@
 					.find(
 						'textarea[data-field="' +
 							$label.attr("data-field") +
-							'"]'
+							'"]',
 					)
 					.val($label.val());
 			},
@@ -5034,7 +5052,7 @@
 				wrapper
 					.find(".ur-general-setting-block")
 					.find(
-						'input[data-field="' + $label.attr("data-field") + '"]'
+						'input[data-field="' + $label.attr("data-field") + '"]',
 					)
 					.val($label.val());
 			},
@@ -5048,7 +5066,7 @@
 				wrapper
 					.find(".ur-general-setting-block")
 					.find(
-						'input[data-field="' + $label.attr("data-field") + '"]'
+						'input[data-field="' + $label.attr("data-field") + '"]',
 					)
 					.prop("checked", $label.is(":checked"));
 
@@ -5064,7 +5082,7 @@
 
 					if (tooltip_icon.length === 0) {
 						label_element.append(
-							'<span style="color:red">*</span>'
+							'<span style="color:red">*</span>',
 						);
 					} else {
 						label_element;
@@ -5095,7 +5113,7 @@
 				wrapper
 					.find(".ur-general-setting-block")
 					.find(
-						'input[data-field="' + $label.attr("data-field") + '"]'
+						'input[data-field="' + $label.attr("data-field") + '"]',
 					)
 					.prop("checked", $label.is(":checked"));
 
@@ -5123,7 +5141,7 @@
 						if ($this_node.attr("type") === "checkbox") {
 							hidden_node.prop(
 								"checked",
-								$this_node.is(":checked")
+								$this_node.is(":checked"),
 							);
 						} else {
 							hidden_node.val($this_node.val());
@@ -5138,7 +5156,7 @@
 						} else {
 							hidden_node
 								.find(
-									'option[value="' + $this_node.val() + '"]'
+									'option[value="' + $this_node.val() + '"]',
 								)
 								.prop("selected", true);
 						}
@@ -5178,7 +5196,7 @@
 					function (event, ui) {
 						var $this_obj = $(this);
 						URFormBuilder.handle_options_sort($this_obj);
-					}
+					},
 				);
 
 				//Handle adding of options in choice fields on click.
@@ -5196,7 +5214,7 @@
 						e.preventDefault();
 						var $this = $(this);
 						URFormBuilder.remove_choice_field_option($this);
-					}
+					},
 				);
 			},
 			/**
@@ -5241,7 +5259,7 @@
 				var cloning_options = $this_obj.clone(true, true);
 				var wrapper = $(".ur-selected-item.ur-item-active");
 				var cloning_element = wrapper.find(
-					".ur-general-setting-options .ur-options-list"
+					".ur-general-setting-options .ur-options-list",
 				);
 				cloning_element.html("");
 				cloning_element.replaceWith(cloning_options);
@@ -5270,7 +5288,7 @@
 					.find(
 						".ur-general-setting-options .ur-options-list > li:nth( " +
 							this_index +
-							" )"
+							" )",
 					)
 					.after(cloning_element.clone(true, true));
 
@@ -5317,7 +5335,7 @@
 						.find(
 							".ur-general-setting-options .ur-options-list > li:nth( " +
 								this_index +
-								" )"
+								" )",
 						)
 						.remove();
 
@@ -5381,7 +5399,7 @@
 							.val(formated_date);
 					} else {
 						var date_selector = $(
-							".woocommerce-MyAccount-content #" + field_id
+							".woocommerce-MyAccount-content #" + field_id,
 						)
 							.attr("type", "text")
 							.val(formated_date);
@@ -5389,17 +5407,17 @@
 
 					$(this).attr(
 						"data-date-format",
-						date_selector.data("date-format")
+						date_selector.data("date-format"),
 					);
 					$(this).attr("data-mode", date_selector.data("mode"));
 					$(this).attr("data-locale", date_selector.data("locale"));
 					$(this).attr(
 						"data-min-date",
-						date_selector.data("min-date")
+						date_selector.data("min-date"),
 					);
 					$(this).attr(
 						"data-max-date",
-						date_selector.data("max-date")
+						date_selector.data("max-date"),
 					);
 					$(this).attr("data-default-date", formated_date);
 					date_flatpickr = $(this).flatpickr({
@@ -5407,18 +5425,18 @@
 						onChange: function (
 							selectedDates,
 							dateString,
-							instance
+							instance,
 						) {
 							$("#" + field_id).val(dateString);
 						},
 						onOpen: function (selectedDates, dateStr, instance) {
 							instance.set(
 								"minDate",
-								date_selector.data("min-date")
+								date_selector.data("min-date"),
 							);
 							instance.set(
 								"maxDate",
-								date_selector.data("max-date")
+								date_selector.data("max-date"),
 							);
 						},
 					});
@@ -5455,7 +5473,7 @@
 				$(".user-registration-field-option-group.closed").each(
 					function () {
 						$(this).find(".ur-toggle-content").hide();
-					}
+					},
 				);
 			})
 			.trigger("init_field_options_toggle");
@@ -5479,7 +5497,7 @@
 
 		$(document)
 			.find(
-				"input[name='user_registration_form_setting_minimum_password_strength']"
+				"input[name='user_registration_form_setting_minimum_password_strength']",
 			)
 			.each(function () {
 				$(this).on("click", function () {
@@ -5490,7 +5508,7 @@
 					$(this)
 						.closest(".ur-radio-group-list")
 						.find(
-							"input[name='user_registration_form_setting_minimum_password_strength']"
+							"input[name='user_registration_form_setting_minimum_password_strength']",
 						)
 						.prop("checked", false);
 					$(this)
@@ -5516,7 +5534,7 @@
 				e.stopPropagation();
 				$(".ur-smart-tags-list").hide();
 				$(this).parent().find(".ur-smart-tags-list").toggle("show");
-			}
+			},
 		);
 
 		$(document.body).on("click", ".ur-select-smart-tag", function (event) {
@@ -5550,7 +5568,7 @@
 				input_value = $(this).val();
 				field_name = $(this).data("advance-field");
 				update_input(input_value);
-			}
+			},
 		);
 		$(document.body).on(
 			"change",
@@ -5559,7 +5577,7 @@
 				input_value = $(this).val();
 				field_name = $(this).data("field");
 				update_input(input_value);
-			}
+			},
 		);
 
 		$(document.body).on(
@@ -5569,7 +5587,7 @@
 				input_value = $(this).val();
 				field_name = $(this).data("advance-field");
 				update_input(input_value);
-			}
+			},
 		);
 
 		/**
@@ -5578,33 +5596,33 @@
 		function update_input(field_name, input_value) {
 			active_field = $(".ur-item-active");
 			target_input_field = $(active_field).find(
-				".user-registration-field-option-group.ur-advance-setting-block"
+				".user-registration-field-option-group.ur-advance-setting-block",
 			);
 			ur_toggle_content = target_input_field.find(
-				".ur-advance-setting.ur-advance-default_value"
+				".ur-advance-setting.ur-advance-default_value",
 			);
 			target_input = $(ur_toggle_content).find(
-				'input[data-advance-field="' + field_name + '"]'
+				'input[data-advance-field="' + field_name + '"]',
 			);
 			target_textarea = $(ur_toggle_content).find(
-				'input[data-advance-field="' + field_name + '"]'
+				'input[data-advance-field="' + field_name + '"]',
 			);
 
 			target_input_hidden_field = $(active_field).find(
-				".ur-general-setting-block"
+				".ur-general-setting-block",
 			);
 			ur_toggle_hidden_content = target_input_hidden_field.find(
-				".ur-general-setting.ur-general-setting-hidden-value"
+				".ur-general-setting.ur-general-setting-hidden-value",
 			);
 			target_hidden_input = $(ur_toggle_hidden_content).find(
-				'input[data-field="' + field_name + '"]'
+				'input[data-field="' + field_name + '"]',
 			);
 			// pattern value
 			ur_toggle_pattern_content = target_input_field.find(
-				".ur-advance-setting.ur-advance-pattern_value"
+				".ur-advance-setting.ur-advance-pattern_value",
 			);
 			target_pattern_input = $(ur_toggle_pattern_content).find(
-				'input[data-advance-field="' + field_name + '"]'
+				'input[data-advance-field="' + field_name + '"]',
 			);
 			target_input.val(input_value);
 			target_textarea.val(input_value);
@@ -5636,7 +5654,7 @@
 				DropdownSearch,
 				AttachBody,
 				Utils,
-				EventRelay
+				EventRelay,
 			) {
 				// Add placeholder which shows current number of selections
 				SelectionAdapter = Utils.Decorate(SingleSelection, Placeholder);
@@ -5660,7 +5678,7 @@
 					var self = this;
 					var $rendered = decorated.call(this);
 					var $unSelectAllButton = $(
-						'<button class="button button-secondary button-medium ur-unselect-all-countries-button" type="button">Unselect All</button>'
+						'<button class="button button-secondary button-medium ur-unselect-all-countries-button" type="button">Unselect All</button>',
 					);
 
 					$unSelectAllButton.on("click", function () {
@@ -5688,7 +5706,7 @@
 					var self = this;
 					var $rendered = decorated.call(this);
 					var $selectAllButton = $(
-						'<button class="button button-secondary button-medium ur-select-all-countries-button" type="button">Select All</button>'
+						'<button class="button button-secondary button-medium ur-select-all-countries-button" type="button">Select All</button>',
 					);
 
 					$selectAllButton.on("click", function () {
@@ -5711,7 +5729,7 @@
 
 				// Add select all button in dropdown
 				DropdownAdapter = Utils.Decorate(DropdownAdapter, SelectAll);
-			}
+			},
 		);
 
 		// Prevent invalid input for Max Upload Size setting and Maximum upload limit input.
@@ -5724,7 +5742,7 @@
 				var inputValue = $this.val();
 				inputValue = inputValue.replace(/[^0-9]/g, "");
 				$this.val(inputValue);
-			}
+			},
 		);
 
 		$(document.body).on(
@@ -5741,7 +5759,7 @@
 				}
 
 				$this.val(inputValue);
-			}
+			},
 		);
 	});
 })(jQuery, window.user_registration_form_builder_data);
