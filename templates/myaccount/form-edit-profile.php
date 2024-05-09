@@ -214,15 +214,19 @@ do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id
 							wp_nonce_field( 'save_profile_details' );
 							?>
 							<input type="submit" class="user-registration-Button button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" value="
-								<?php
-								esc_attr_e(
-								/**
-								 * Filter to modify the profile update button text.
-								 *
-								 * @param string text content for button.
-								 * @return string button text.
-								 */
-								apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) ) );//PHPCS:ignore ?>" />
+							<?php
+							esc_attr_e(
+							/**
+							 * Filter to modify the profile update button text.
+							 *
+							 * @param string text content for button.
+							 * @return string button text.
+							 */
+								apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) ) );//PHPCS:ignore ?>"
+							/>
+							<?php
+							echo apply_filters( 'user_registration_edit_profile_extra_data_div', '', $form_id ); // phpcs:ignore.
+							?>
 							<input type="hidden" name="action" value="save_profile_details" />
 							<?php
 						}

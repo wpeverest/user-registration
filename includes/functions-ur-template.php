@@ -1156,8 +1156,9 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 				if ( isset( $all_meta_value[ 'user_registration_' . $field_name ] ) ) {
 					$field_meta_value                                       = isset( $all_meta_value[ 'user_registration_' . $field_name ][0] ) ? maybe_unserialize( $all_meta_value[ 'user_registration_' . $field_name ][0] ) : array();
 					$row_meta[ 'user_registration_' . $field_name ]['type'] = isset( $individual_row_data->type ) ? $individual_row_data->type : '';
-
+					$field_meta_value                                       = json_decode( $field_meta_value )->value;
 					foreach ( $field_meta_value as $row_id => $row_data ) {
+
 						foreach ( $row_data as $key => $field_data ) {
 							if ( isset( $field_data->field_name ) ) {
 								$individual_field_name = strpos( $field_data->field_name, 'user_registration_' ) !== -1 ? $field_data->field_name : 'user_registration_' . $field_data->field_name;

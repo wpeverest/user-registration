@@ -5384,3 +5384,58 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 		echo apply_filters( 'user_registration_frontend_form_row_end', '', $form_id, $current_row ); // phpcs:ignore
 	}
 }
+
+if ( ! file_exists( 'user_registration_sanitize_profile_update' ) ) {
+
+	/**
+	 * Sanitize the data submitted by user.
+	 *
+	 * @param array  $submitted_data Submitted data.
+	 * @param string $field_type Field Type.
+	 * @param string $key Field Key.
+	 */
+	function user_registration_sanitize_profile_update( $submitted_data, $field_type, $key ) {
+
+		$value = '';
+
+		switch ( $field_type ) {
+			case 'checkbox':
+				if ( isset( $submitted_data[ $key ] ) && is_array( $submitted_data[ $key ] ) ) { // phpcs:ignore
+					$value = wp_unslash( $submitted_data[ $key ] ); // phpcs:ignore
+				} else {
+					$value = (int) isset( $submitted_data[ $key ] ); // phpcs:ignore
+				}
+				break;
+
+			case 'wysiwyg':
+				if ( isset( $submitted_data[ $key ] ) ) { // phpcs:ignore
+					$value = sanitize_text_field( htmlentities( wp_unslash( $submitted_data[ $key ] ) ) ); // phpcs:ignore
+				} else {
+					$value = '';
+				}
+				break;
+
+			case 'email':
+				if ( isset( $submitted_data[ $key ] ) ) { // phpcs:ignore
+					$value = sanitize_email( wp_unslash( $submitted_data[ $key ] ) ); // phpcs:ignore
+				} else {
+					$user_id   = get_current_user_id();
+					$user_data = get_userdata( $user_id );
+					$value     = $user_data->data->user_email;
+				}
+				break;
+			case 'profile_picture':
+				if ( isset( $submitted_data['profile_pic_url'] ) ) { // phpcs:ignore
+					$value = sanitize_text_field( wp_unslash( $submitted_data['profile_pic_url'] ) ); // phpcs:ignore
+				} else {
+					$value = '';
+				}
+				break;
+			default:
+				$value = isset( $submitted_data[ $key ] ) ? $submitted_data[ $key ] : ''; // phpcs:ignore
+				break;
+		}
+
+		return $value;
+	}
+}

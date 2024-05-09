@@ -319,6 +319,20 @@
 								form_data.push(field_data);
 							}
 
+							Object.keys(repeater_field_data).forEach(
+								function (field_key) {
+									if (
+										$("input[name='" + field_key + "'")
+											.length > 0
+									) {
+										$("input[name='" + field_key + "'").val(
+											JSON.stringify(
+												repeater_field_data[field_key],
+											),
+										);
+									}
+								},
+							);
 							if (Object.keys(repeater_field_data).length > 0) {
 								$.merge(
 									form_data,
@@ -1739,7 +1753,14 @@
 					},
 				};
 				form.init();
-				events.init();
+
+				form.get_form_data(
+					$(".user-registration-EditProfileForm ").data("form-id"),
+				);
+
+				if (user_registration_params.ajax_submission_on_edit_profile) {
+					events.init();
+				}
 			});
 		};
 
@@ -1750,18 +1771,23 @@
 			});
 
 			// Handle edit-profile form submit event.
-			$(".user-registration-submit-Button").on("click", function () {
+			$(
+				"input[name='save_account_details'], button[name='save_account_details']",
+			).on("click", function (event) {
+				// event.preventDefault();
+
 				// Check if the form is edit-profile form and check if ajax submission on edit profile is enabled.
 				if (
 					$(".ur-frontend-form")
 						.find("form.edit-profile")
-						.hasClass("user-registration-EditProfileForm") &&
-					user_registration_params.ajax_submission_on_edit_profile
+						.hasClass("user-registration-EditProfileForm")
 				) {
 					$(
 						"form.user-registration-EditProfileForm",
 					).ur_form_submission();
 				}
+
+				$(this).submit();
 			});
 
 			// Initialize the flatpickr when the document is ready to be manipulated.
