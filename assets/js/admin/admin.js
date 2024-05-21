@@ -745,6 +745,10 @@ jQuery(function ($) {
 		});
 	});
 
+	$("#ur-lists-page-settings-button").on("click", function () {
+		$("#show-settings-link").click();
+	});
+
 	$(document)
 		.find(".ur-form-locate")
 		.on("click", function (e) {
