@@ -79,7 +79,8 @@ class UR_Form_Handler {
 			$form_id = $form_id_array[0];
 		}
 
-		$profile         = user_registration_form_data( $user_id, $form_id );
+		$profile = user_registration_form_data( $user_id, $form_id );
+
 		$form_field_data = ur_get_form_field_data( $form_id );
 		$fields          = array();
 
@@ -146,7 +147,7 @@ class UR_Form_Handler {
 
 			foreach ( $profile as $key => $field ) {
 
-					$new_key = str_replace( 'user_registration_', '', $key );
+				$new_key = str_replace( 'user_registration_', '', $key );
 
 				if ( $is_email_change_confirmation && 'user_email' === $new_key ) {
 

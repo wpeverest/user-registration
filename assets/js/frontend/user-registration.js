@@ -618,7 +618,11 @@
 				var events = {
 					init: function () {
 						this.form_submit_event();
-						this.edit_profile_event();
+						if (
+							user_registration_params.ajax_submission_on_edit_profile
+						) {
+							this.edit_profile_event();
+						}
 					},
 					/**
 					 * Handles registration ajax form submission event.
@@ -1754,13 +1758,15 @@
 				};
 				form.init();
 
-				form.get_form_data(
-					$(".user-registration-EditProfileForm ").data("form-id"),
-				);
-
-				if (user_registration_params.ajax_submission_on_edit_profile) {
-					events.init();
+				if ($(".user-registration-EditProfileForm ").length > 0) {
+					form.get_form_data(
+						$(".user-registration-EditProfileForm ").data(
+							"form-id",
+						),
+					);
 				}
+
+				events.init();
 			});
 		};
 

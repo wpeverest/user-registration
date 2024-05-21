@@ -1156,16 +1156,18 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 				if ( isset( $all_meta_value[ 'user_registration_' . $field_name ] ) ) {
 					$field_meta_value                                       = isset( $all_meta_value[ 'user_registration_' . $field_name ][0] ) ? maybe_unserialize( $all_meta_value[ 'user_registration_' . $field_name ][0] ) : array();
 					$row_meta[ 'user_registration_' . $field_name ]['type'] = isset( $individual_row_data->type ) ? $individual_row_data->type : '';
-					$field_meta_value                                       = json_decode( $field_meta_value )->value;
+					$field_meta_value                                       = ( gettype( $field_meta_value ) === 'string' && json_decode( $field_meta_value ) !== null ) ? json_decode( $field_meta_value )->value : $field_meta_value;
+
 					foreach ( $field_meta_value as $row_id => $row_data ) {
 
 						foreach ( $row_data as $key => $field_data ) {
 							if ( isset( $field_data->field_name ) ) {
-								$individual_field_name = strpos( $field_data->field_name, 'user_registration_' ) !== -1 ? $field_data->field_name : 'user_registration_' . $field_data->field_name;
+								$individual_field_name = strpos( $field_data->field_name, 'user_registration_' ) === 0 ? $field_data->field_name : 'user_registration_' . $field_data->field_name;
 
 								if ( isset( $fields[ $individual_field_name ] ) ) {
 									$fields[ $individual_field_name ]['default'] = isset( $field_data->value ) ? $field_data->value : '';
 									$fields[ $individual_field_name ]['value']   = isset( $field_data->value ) ? $field_data->value : '';
+
 									$row_meta[ 'user_registration_' . $field_name ][ $row_id ][ $individual_field_name ] = $fields[ $individual_field_name ];
 									unset( $row_meta[ $individual_field_name ] );
 								}

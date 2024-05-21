@@ -118,40 +118,25 @@ class UR_Form_Validation extends UR_Validation {
 	 * @param  array $form_data  Form data to validate.
 	 */
 	public function validate_form_data( $form_id, $form_field_data = array(), $form_data = array() ) {
-		$form_data_field = wp_list_pluck( $form_data, 'field_name' );
+		$request_form_keys = wp_list_pluck( $form_data, 'field_name' );
 		/**
 		 * Filter the form field data.
 		 *
 		 * @param array $form_field_data The form data.
 		 * @param int $form_id The form ID.
 		 */
-		$form_field_data     = apply_filters( 'user_registration_add_form_field_data', $form_field_data, $form_id );
-		$form_key_list       = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
-		$duplicate_field_key = array_diff_key( $form_data_field, array_unique( $form_data_field ) );
+		$form_field_data = apply_filters( 'user_registration_add_form_field_data', $form_field_data, $form_id );
+
+		$required_fields     = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
+		$duplicate_field_key = array_diff_key( $request_form_keys, array_unique( $request_form_keys ) );
 		if ( count( $duplicate_field_key ) > 0 ) {
 			array_push( $this->response_array, __( 'Duplicate field key in form, please contact site administrator.', 'user-registration' ) );
 		}
 
-		$contains_search = count( array_intersect( ur_get_required_fields(), $form_data_field ) ) == count( ur_get_required_fields() );
+		$contains_search = count( array_intersect( ur_get_required_fields(), $request_form_keys ) ) == count( ur_get_required_fields() );
 
 		if ( false === $contains_search ) {
 			array_push( $this->response_array, __( 'Required form field not found.', 'user-registration' ) );
-		}
-
-		// Check if a required field is missing.
-		$missing_item = array_diff( $form_key_list, $form_data_field );
-
-		if ( count( $missing_item ) > 0 ) {
-
-			foreach ( $missing_item as $key => $value ) {
-
-				$ignorable_field = array( 'user_pass', 'user_confirm_password', 'user_confirm_email', 'stripe_gateway' );
-
-				// Ignoring confirm password and confirm email field, since they are handled separately.
-				if ( ! in_array( $value, $ignorable_field, true ) ) {
-					$this->ur_missing_field_validation( $form_field_data, $key, $value );
-				}
-			}
 		}
 
 		foreach ( $form_data as $data ) {
@@ -176,9 +161,28 @@ class UR_Form_Validation extends UR_Validation {
 					$form_data,
 					$form_field_data
 				);
+				$required_fields                                      = apply_filters( 'user_registration_missing_repeater_field_keys', $required_fields, $form_id );
+
 			} else {
 				$this->response_array                       = user_registration_validate_form_field_data( $data, $form_data, $form_id, $this->response_array, $form_field_data );
 				$this->valid_form_data[ $data->field_name ] = self::get_sanitize_value( $data );
+			}
+		}
+
+		// Check if a required field is missing.
+		$missing_item = array_diff( $required_fields, $request_form_keys );
+
+		exit;
+		if ( count( $missing_item ) > 0 ) {
+
+			foreach ( $missing_item as $key => $value ) {
+
+				$ignorable_field = array( 'user_pass', 'user_confirm_password', 'user_confirm_email', 'stripe_gateway' );
+
+				// Ignoring confirm password and confirm email field, since they are handled separately.
+				if ( ! in_array( $value, $ignorable_field, true ) ) {
+					$this->ur_missing_field_validation( $form_field_data, $key, $value );
+				}
 			}
 		}
 	}
@@ -404,7 +408,7 @@ class UR_Form_Validation extends UR_Validation {
 	 * @param string $value field name of missing field.
 	 * @return obj $form_data
 	 */
-	public function ur_missing_field_validation( $form_field_data, $key, $value ) {
+	private function ur_missing_field_validation( $form_field_data, $key, $value ) {
 
 		if ( isset( $form_field_data[ $key ]->general_setting->field_name ) && $value == $form_field_data[ $key ]->general_setting->field_name ) {
 

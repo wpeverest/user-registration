@@ -171,13 +171,15 @@ do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id
 
 						<?php
 						foreach ( $form_data_array as $index => $data ) {
+							$row_id = ( ! empty( $row_ids ) ) ? absint( $row_ids[ $index ] ) : $index;
+
 							ob_start();
 							echo '<div class="ur-form-row">';
 							user_registration_edit_profile_row_template( $data, $profile );
 							echo '</div>';
 							$row_template = ob_get_clean();
 
-							$row_template = apply_filters( 'user_registration_frontend_edit_profile_form_row_template', $row_template, $form_id, $profile, $index, $data );
+							$row_template = apply_filters( 'user_registration_frontend_edit_profile_form_row_template', $row_template, $form_id, $profile, $row_id, $data );
 
 							echo $row_template; // phpcs:ignore
 						}
