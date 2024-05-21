@@ -24,6 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</ul>
 		</div>
 	</div>
+	<hr class="wp-header-end">
 </div>
 <div class="user-registration-login-form-container">
 	<div class="wrap user-registration__wrap ur-form-container">

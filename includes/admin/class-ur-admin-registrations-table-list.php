@@ -196,7 +196,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 				<hr class="wp-header-end">
 				<div id="user-registration-list-table-page">
 					<div class="user-registration-list-table-header">
-						<h2>All Registration Forms</h2>
+						<h2><?php esc_html_e( 'All Registration Forms', 'user-registration' ); ?></h2>
 						<a href="<?php echo esc_url( admin_url( 'admin.php?page=add-new-registration' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'user-registration' ); ?></a>
 					</div>
 					<div class="user-registration-list-table-page__body">
@@ -221,8 +221,6 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 
 	/**
 	 * Displays the search box.
-	 *
-	 * @since 4.1
 	 */
 	public function search_box( $text, $input_id ) {
 		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
