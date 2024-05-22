@@ -232,7 +232,7 @@ class UR_Admin_Assets {
 				 *
 				 * @param string URL
 				 */
-				'upgrade_url'                  => apply_filters( 'user_registration_upgrade_url', 'https://wpuserregistration.com/pricing/?utm_source=form-template&utm_medium=button&utm_campaign=' . UR()->utm_campaign ),
+				'upgrade_url'                  => apply_filters( 'user_registration_upgrade_url', 'https://wpuserregistration.com/pricing/?utm_source=form-template&utm_medium=button&utm_campaign=ur-upgrade-to-pro' ),
 				'upgrade_button'               => esc_html__( 'Upgrade Plan', 'user-registration' ),
 				'upgrade_message'              => esc_html__( 'This template requires premium addons. Please upgrade to the Premium plan to unlock all these awesome Templates.', 'user-registration' ),
 				'upgrade_title'                => esc_html__( 'is a Premium Template', 'user-registration' ),
@@ -562,9 +562,12 @@ class UR_Admin_Assets {
 			'i18n_max_upload_size'                   => _x( 'input of max upload size must less than ' . $max_upload_size_ini . ' set in ini configuration', 'user registration admin', 'user-registration' ), // phpcs:ignore
 			'i18n_pc_profile_completion_error'       => esc_html__( 'You cannot set the zero less than zero to the completion percentage.', 'user-registration' ),
 			'i18n_pc_custom_percentage_filed_error'  => esc_html__( 'Sum of progress percentage for each field cannot be greater than the completion perecentage.', 'user-registration' ),
+			'i18n_google_sheets_user_login_missing_error'  => esc_html__( 'User_login field should me mapped.', 'user-registration' ),
+			'i18n_google_sheets_sheet_empty_error'  => esc_html__( 'Look like your sheet is empty ! Please try again', 'user-registration' ),
 		);
 
 		return $i18n;
+
 	}
 }
 
