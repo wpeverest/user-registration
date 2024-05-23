@@ -194,28 +194,29 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 					</div>
 				</div>
 				<hr class="wp-header-end">
-				<div id="user-registration-list-table-page">
-					<div class="user-registration-list-table-header">
-						<h2><?php esc_html_e( 'All Registration Forms', 'user-registration' ); ?></h2>
-						<a href="<?php echo esc_url( admin_url( 'admin.php?page=add-new-registration' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'user-registration' ); ?></a>
-					</div>
-					<div class="user-registration-list-table-page__body">
-						<form id="registration-list" class="user-registration-list-table-action-form" method="get" >
-							<input type="hidden" name="page" value="user-registration" />
-							<?php
-							echo "<div id='user-registration-list-filters-row'>";
-								$this->views();
-								$this->search_box( esc_html__( 'Search Registration', 'user-registration' ), 'user-registration-list-table' );
-								echo '</div>';
+				<div class="user-registration-registration-form-container">
+					<div id="user-registration-list-table-page">
+						<div class="user-registration-list-table-header">
+							<h2><?php esc_html_e( 'All Registration Forms', 'user-registration' ); ?></h2>
+							<a href="<?php echo esc_url( admin_url( 'admin.php?page=add-new-registration' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'user-registration' ); ?></a>
+						</div>
+						<div class="user-registration-list-table-page__body">
+							<form id="registration-list" class="user-registration-list-table-action-form" method="get" >
+								<input type="hidden" name="page" value="user-registration" />
+								<?php
+								echo "<div id='user-registration-list-filters-row'>";
+									$this->views();
+									$this->search_box( esc_html__( 'Search Registration', 'user-registration' ), 'user-registration-list-table' );
+									echo '</div>';
 
-								$this->display();
+									$this->display();
 
-								wp_nonce_field( 'save', 'user_registration_nonce' );
-							?>
-						</form>
+									wp_nonce_field( 'save', 'user_registration_nonce' );
+								?>
+							</form>
+						</div>
 					</div>
 				</div>
-
 		<?php
 	}
 
