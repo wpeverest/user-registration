@@ -4219,6 +4219,10 @@
  .toplevel_page_user-registration,
  body.user-registration {
 
+	#wpcontent {
+		padding-left: 0;
+	}
+
 	 #wpbody-content {
 		background: #f0f0f1;
 
@@ -4228,14 +4232,15 @@
 	}
 }
 
+.ur-admin-page-topnav,
 .ur-admin-page-topnav {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	background: $grey-0;
-	margin-left: -$spacing_20px;
-	padding: $spacing_14px $spacing_16px $spacing_14px $spacing_12px;
-	border-bottom: 1px solid #E1E1E1;
+	// margin-left: -$spacing_20px;
+	padding: $spacing-16px $spacing_24px;
+	border-bottom: $border_width solid #E1E1E1;
 	margin-bottom: 25px;
 
 	.ur-page-title__wrapper {
@@ -4252,9 +4257,11 @@
 			&__items {
 				display: flex;
 				gap: 20px;
+				margin: 0;
 
 				li {
 					font-size: 15px;
+					margin-bottom: 0;
 
 					a {
 						text-decoration: none;
@@ -4335,6 +4342,28 @@
 						fill: $grey-0;
 					}
 				}
+			}
+		}
+	}
+}
+
+.user-registration-registration-form-container {
+	#user-registration-list-table-page {
+		max-width: 100%;
+		margin-left: $spacing_20px;
+		margin-right: $spacing_20px;
+	}
+}
+
+.user-registration-login-form-container {
+	.ur-form-container {
+		#menu-management-liquid {
+			margin-left: 0;
+			min-width: 100%;
+
+			.ur-selected-inputs {
+				padding-left: $spacing_20px !important;
+				padding-right: $spacing_20px !important;
 			}
 		}
 	}
