@@ -222,25 +222,28 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 
 	/**
 	 * Displays the search box.
+	 *
+	 * @param string $text search button Text.
+	 * @param string $input_id Input field id.
 	 */
 	public function search_box( $text, $input_id ) {
-		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
+		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) { // phpcs:ignore;
 			return;
 		}
 
 		$input_id = 'user-registration-list-table-search-input';
 
-		if ( ! empty( $_REQUEST['orderby'] ) ) {
-			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
+		if ( ! empty( $_REQUEST['orderby'] ) ) { // phpcs:ignore;
+			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />'; // phpcs:ignore;
 		}
-		if ( ! empty( $_REQUEST['order'] ) ) {
-			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
+		if ( ! empty( $_REQUEST['order'] ) ) { // phpcs:ignore;
+			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />'; // phpcs:ignore;
 		}
-		if ( ! empty( $_REQUEST['post_mime_type'] ) ) {
-			echo '<input type="hidden" name="post_mime_type" value="' . esc_attr( $_REQUEST['post_mime_type'] ) . '" />';
+		if ( ! empty( $_REQUEST['post_mime_type'] ) ) { // phpcs:ignore;
+			echo '<input type="hidden" name="post_mime_type" value="' . esc_attr( $_REQUEST['post_mime_type'] ) . '" />'; // phpcs:ignore;
 		}
-		if ( ! empty( $_REQUEST['detached'] ) ) {
-			echo '<input type="hidden" name="detached" value="' . esc_attr( $_REQUEST['detached'] ) . '" />';
+		if ( ! empty( $_REQUEST['detached'] ) ) { // phpcs:ignore;
+			echo '<input type="hidden" name="detached" value="' . esc_attr( $_REQUEST['detached'] ) . '" />'; // phpcs:ignore;
 		}
 		?>
 			<div id="user-registration-list-search-form">
