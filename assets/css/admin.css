@@ -5972,7 +5972,8 @@
             cursor: pointer;
             font-size: 15px; }
             .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-lists li a:focus {
-              box-shadow: 0 0 0 0px transparent, 0 0 0px 0px transparent; }
+              box-shadow: 0 0 0 0px transparent,
+ 0 0 0px 0px transparent; }
             .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-lists li a.active {
               background-color: #ffffff;
               color: #475bb2;
@@ -7722,7 +7723,9 @@ a.button.ur-smart-tags-list-button {
     .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row select {
       background-image: linear-gradient(45deg, transparent 50%, gray 50%), linear-gradient(135deg, gray 50%, transparent 50%);
       background-position: calc(100% - 15px) calc(1em + 2px), calc(100% - 10px) calc(1em + 2px), calc(100% - 2.5em) 0.5em;
-      background-size: 5px 5px, 5px 5px, 1px 1.5em;
+      background-size: 5px 5px,
+ 5px 5px,
+ 1px 1.5em;
       background-repeat: no-repeat; }
     .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row .ur-radio-group-list {
       display: flex;
@@ -7983,55 +7986,72 @@ a.button.ur-smart-tags-list-button {
     right: 8px;
     z-index: 2; }
 
+.toplevel_page_user-registration #wpcontent,
+body.user-registration #wpcontent {
+  padding-left: 0; }
+
 .toplevel_page_user-registration #wpbody-content,
-.user-registration_page_user-registration-users #wpbody-content {
+body.user-registration #wpbody-content {
   background: #f0f0f1; }
   .toplevel_page_user-registration #wpbody-content #screen-meta-links,
-  .user-registration_page_user-registration-users #wpbody-content #screen-meta-links {
+  body.user-registration #wpbody-content #screen-meta-links {
     display: none; }
 
+.ur-admin-page-topnav,
 .ur-admin-page-topnav {
   display: flex;
   align-items: center;
   justify-content: space-between;
   background: #ffffff;
-  margin-left: -20px;
-  padding: 14px 16px 14px 12px;
+  padding: 16px 24px;
   border-bottom: 1px solid #E1E1E1;
   margin-bottom: 25px; }
+  .ur-admin-page-topnav .ur-page-title__wrapper,
   .ur-admin-page-topnav .ur-page-title__wrapper {
     display: flex;
     align-items: center;
     gap: 20px; }
+    .ur-admin-page-topnav .ur-page-title__wrapper-logo,
     .ur-admin-page-topnav .ur-page-title__wrapper-logo {
       padding: 0px 20px 0px 0px;
       border-right: 1px solid #E1E1E1; }
+    .ur-admin-page-topnav .ur-page-title__wrapper-menu__items,
     .ur-admin-page-topnav .ur-page-title__wrapper-menu__items {
       display: flex;
-      gap: 20px; }
+      gap: 20px;
+      margin: 0; }
+      .ur-admin-page-topnav .ur-page-title__wrapper-menu__items li,
       .ur-admin-page-topnav .ur-page-title__wrapper-menu__items li {
-        font-size: 15px; }
+        font-size: 15px;
+        margin-bottom: 0; }
+        .ur-admin-page-topnav .ur-page-title__wrapper-menu__items li a,
         .ur-admin-page-topnav .ur-page-title__wrapper-menu__items li a {
           text-decoration: none;
           color: #1f1f1f; }
+          .ur-admin-page-topnav .ur-page-title__wrapper-menu__items li a.current,
           .ur-admin-page-topnav .ur-page-title__wrapper-menu__items li a.current {
             font-weight: 600;
             color: #475bb2; }
+  .ur-admin-page-topnav .ur-back-button,
   .ur-admin-page-topnav .ur-back-button {
     border-right: 1px solid #bababa;
     padding: 4px 14px 4px 4px;
     display: flex;
     cursor: pointer; }
+    .ur-admin-page-topnav .ur-back-button svg,
     .ur-admin-page-topnav .ur-back-button svg {
       width: 24px;
       height: 24px; }
+  .ur-admin-page-topnav .dashicons::before,
   .ur-admin-page-topnav .dashicons::before {
     color: #383838; }
+  .ur-admin-page-topnav .ur-page-actions,
   .ur-admin-page-topnav .ur-page-actions {
     display: flex;
     align-items: center;
     gap: 8px;
     flex-direction: row-reverse; }
+    .ur-admin-page-topnav .ur-page-actions a .ur-button-primary,
     .ur-admin-page-topnav .ur-page-actions a .ur-button-primary {
       border-radius: 3px;
       background: #475bb2;
@@ -8040,8 +8060,10 @@ a.button.ur-smart-tags-list-button {
       line-height: 150%;
       color: #ffffff;
       transition: all 0.3s ease-in-out; }
+      .ur-admin-page-topnav .ur-page-actions a .ur-button-primary:hover,
       .ur-admin-page-topnav .ur-page-actions a .ur-button-primary:hover {
         background: #38488e; }
+    .ur-admin-page-topnav .ur-page-actions > .ur-button-primary,
     .ur-admin-page-topnav .ur-page-actions > .ur-button-primary {
       width: 35px;
       height: 35px;
@@ -8051,13 +8073,28 @@ a.button.ur-smart-tags-list-button {
       border: 1px solid #eaeaea;
       cursor: pointer;
       transition: all 0.3s ease-in-out; }
+      .ur-admin-page-topnav .ur-page-actions > .ur-button-primary svg path,
       .ur-admin-page-topnav .ur-page-actions > .ur-button-primary svg path {
         fill: #383838; }
+      .ur-admin-page-topnav .ur-page-actions > .ur-button-primary:hover,
       .ur-admin-page-topnav .ur-page-actions > .ur-button-primary:hover {
         background: #475bb2;
         border-color: #475bb2; }
-        .ur-admin-page-topnav .ur-page-actions > .ur-button-primary:hover svg path {
+        .ur-admin-page-topnav .ur-page-actions > .ur-button-primary:hover svg path,
+ user-registration-list-table-container > .ur-button-primary:hover svg path {
           fill: #ffffff; }
+
+.user-registration-registration-form-container #user-registration-list-table-page {
+  max-width: 100%;
+  margin-left: 20px;
+  margin-right: 20px; }
+
+.user-registration-login-form-container .ur-form-container #menu-management-liquid {
+  margin-left: 0;
+  min-width: 100%; }
+  .user-registration-login-form-container .ur-form-container #menu-management-liquid .ur-selected-inputs {
+    padding-left: 20px !important;
+    padding-right: 20px !important; }
 
 #user-registration-list-table-page {
   max-width: 1280px;

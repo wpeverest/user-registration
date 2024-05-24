@@ -194,7 +194,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 					</div>
 				</div>
 				<hr class="wp-header-end">
-				<div class="user-registration-registration-form-container">
+				<div class="user-registration-list-table-container">
 					<div id="user-registration-list-table-page">
 						<div class="user-registration-list-table-header">
 							<h2><?php esc_html_e( 'All Registration Forms', 'user-registration' ); ?></h2>
