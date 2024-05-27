@@ -5426,30 +5426,6 @@
 			}
 		);
 
-		$(document.body).on("click", ".ur-select-smart-tag", function (event) {
-			event.preventDefault();
-			var smart_tag;
-			input_value = $(this)
-				.parent()
-				.parent()
-				.parent()
-				.find("input")
-				.val();
-			smart_tag = $(this).data("key");
-			input_value = smart_tag;
-			var inputElement = $(this).parent().parent().parent().find("input"),
-				advanceFieldData = inputElement.data("advance-field"),
-				fieldData = inputElement.data("field"),
-				field_name =
-					advanceFieldData !== undefined
-						? advanceFieldData
-						: fieldData;
-			update_input(field_name, input_value);
-
-			$(this).parent().parent().parent().find("input").val(input_value);
-			$(document.body).find(".ur-smart-tags-list").hide();
-		});
-
 		$(document.body).on(
 			"change",
 			".ur_advance_setting.ur-settings-default-value",
