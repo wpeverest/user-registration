@@ -4344,29 +4344,33 @@
 		}
 
 		> .ur-button-primary {
-			height: 35px;
-			padding: $spacing_8px;
-			background: #eaeaea;
+			color: $grey-400;
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 18px;			
+			background: #EAEAEA;
+			padding: $spacing_8px $spacing_12px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: $spacing_6px;
 			border-radius: $border_radius_3;
 			border: $border_width solid #eaeaea;
 			cursor: pointer;
 			transition: all 0.3s ease-in-out;
 
 			svg {
+				width: 14px;
+				height: 14px;
+
 				path {
 					fill: $grey-400;
 				}
 			}
 
 			&:hover {
-				background: $primary_color;
-				border-color: $primary_color;
-
-				svg {
-					path {
-						fill: $grey-0;
-					}
-				}
+				background: #e1e1e1;
+				border-color: #e1e1e1;
 			}
 		}
 	}
