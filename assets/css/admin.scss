@@ -4232,44 +4232,70 @@
 	}
 }
 
-.ur-admin-page-topnav,
 .ur-admin-page-topnav {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	background: $grey-0;
-	// margin-left: -$spacing_20px;
-	padding: $spacing-16px $spacing_24px;
+	padding: 0px $spacing_24px;
 	border-bottom: $border_width solid #E1E1E1;
 	margin-bottom: 25px;
 
 	.ur-page-title__wrapper {
 		display: flex;
 		align-items: center;
-		gap: 20px;
+		gap: $spacing_20px;
 
 		&-logo {
-			padding: 0px 20px 0px 0px;
+			padding: 0px $spacing_20px 0px 0px;
 			border-right: 1px solid #E1E1E1;
 		}
 
 		&-menu {
 			&__items {
 				display: flex;
-				gap: 20px;
+				gap: 4px;
 				margin: 0;
 
 				li {
 					font-size: 15px;
 					margin-bottom: 0;
+					padding: $spacing_24px 0;
 
 					a {
 						text-decoration: none;
 						color: #1f1f1f;
+						padding: $spacing_24px $spacing_16px;
+						position: relative;
+						transition: all .3s;
+
+						&:focus {
+							outline: none;
+							box-shadow: none;
+						}
+
+						&::after {
+							content: "";
+							background: #475bb2;
+							width: 0px;
+							height: 3px;
+							position: absolute;
+							bottom: 0;
+							left: 0;
+							transition: all .3s;
+						}
+
+						&:hover,
+						&.current {
+							color: #475bb2;
+
+							&::after {
+								width: 100%;
+							}
+						}
 
 						&.current {
 							font-weight: 600;
-							color: #475bb2;
 						}
 					}
 				}
