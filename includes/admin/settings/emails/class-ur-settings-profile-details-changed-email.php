@@ -38,12 +38,20 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Changed_Email', false ) ) :
 		public $description;
 
 		/**
+		 * UR_Settings_Profile_Details_Changed_Email Receiver.
+		 *
+		 * @var string
+		 */
+		public $receiver;
+
+		/**
 		 * Constructor.
 		 */
 		public function __construct() {
 			$this->id          = 'profile_details_changed_email';
 			$this->title       = __( 'Profile Details Changed Admin Email', 'user-registration' );
 			$this->description = __( 'Email sent to the admin when a user changed profile information', 'user-registration' );
+			$this->receiver    = __( 'Admin', 'user-registration' );
 		}
 
 		/**
