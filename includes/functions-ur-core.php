@@ -4755,9 +4755,8 @@ if ( ! function_exists( 'ur_merge_translations' ) ) {
 			$destination_language_code = str_replace( '-' . $text_domain, '', $language_code );
 
 			if ( 'user-registration' === $destination_language_code ) {
-				$source_file_path      = $source_dir . '/' . $language_code . '.' . $file_extension;
-				$destination_file_path = $destination_dir . '/' . $destination_language_code . '.' . $file_extension;
-
+				$source_file_path      = $source_dir . '/' . $language_code . '.' . $file_extension; //phpcs:ignore
+				$destination_file_path = $destination_dir . '/' . $destination_language_code . '.' . $file_extension; //phpcs:ignore
 				if ( ! file_exists( $destination_file_path ) ) {
 					touch( $destination_file_path );
 				}
@@ -4816,7 +4815,7 @@ if ( ! function_exists( 'ur_get_translated_string' ) ) {
 		if ( function_exists( 'icl_translate' ) ) {
 			$language_code     = is_array( $language_code ) ? $language_code[0] : $language_code;
 			$translated_string = apply_filters( 'wpml_translate_single_string', $string, 'user-registration', $string, $language_code );
-			if ( false  === $translated_string || $translated_string === $language_code ) {
+			if ( false === $translated_string || $translated_string === $language_code ) {
 				return $string;
 			} else {
 				return $translated_string;
