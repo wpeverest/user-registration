@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - master
+      - enhance/all-forms-list-table-design
     workflow_dispatch:
 jobs:
   sync:
