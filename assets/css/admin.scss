@@ -4252,6 +4252,10 @@
 		}
 
 		&-menu {
+			h2 {
+				padding: $spacing_24px 0px;
+			}
+
 			&__items {
 				display: flex;
 				gap: 4px;
@@ -4347,7 +4351,7 @@
 			color: $grey-400;
 			font-size: 14px;
 			font-weight: 400;
-			line-height: 18px;			
+			line-height: 18px;
 			background: #EAEAEA;
 			padding: $spacing_8px $spacing_12px;
 			display: flex;
