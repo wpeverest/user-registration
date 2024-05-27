@@ -979,19 +979,29 @@
 						}
 					}
 				);
-				// Validate empty fields for question and answer block.
-				$.each(
-					$(".urfr-qna-block"),
-					function() {
-						var questionValue = $(this).find("input[name='urfr_qna_question']").val();
-						var answer = $(this).find("input[name='urfr_qna_answer']").val();
-						if(questionValue === '' || answer === '') {
-							response.validation_status = false;
-							response.message =
-								user_registration_form_builder_data.i18n_admin
-									.i18n_urfr_field_required_error;
-						}
-					})
+
+				if( $('#urfr_enable_verification').is(":checked") && $("#urfr_verification_type").val() === 'qna' ) {
+					// Validate empty fields for question and answer block.
+					if($('.urfr-qna-question-wrapper').length < 1) {
+						response.validation_status = false;
+						response.message =
+							user_registration_form_builder_data.i18n_admin
+								.i18n_urfr_field_required_error;
+					}
+
+					$.each(
+						$(".urfr-qna-block"),
+						function() {
+							var questionValue = $(this).find("input[name='urfr_qna_question']").val();
+							var answer = $(this).find("input[name='urfr_qna_answer']").val();
+							if(questionValue === '' || answer === '') {
+								response.validation_status = false;
+								response.message =
+									user_registration_form_builder_data.i18n_admin
+										.i18n_urfr_qna_field_empty_error;
+							}
+						});
+				}
 				return response;
 			},
 			/**
@@ -1441,12 +1451,10 @@
 			 * Get all the data related to form_restriction
 			 */
 			get_form_restriction_submit_data: function() {
-				const form_data = $('.urfr-qna-block').map(function(k, item) {
-					let question = $(item).find('input[name="urfr_qna_question"]').val();
-					let answer = $(item).find('input[name="urfr_qna_answer"]').val();
+				var form_data = $('.urfr-qna-block').map(function(k, item) {
 					return {
-						question: question,
-						answer: answer
+						question: $(item).find('input[name="urfr_qna_question"]').val(),
+						answer:  $(item).find('input[name="urfr_qna_answer"]').val()
 					};
 				}).get();
 				return JSON.stringify(form_data);
@@ -5456,6 +5464,30 @@
 				$(this).parent().find(".ur-smart-tags-list").toggle("show");
 			}
 		);
+
+		$(document.body).on("click", ".ur-select-smart-tag", function (event) {
+			event.preventDefault();
+			var smart_tag;
+			input_value = $(this)
+				.parent()
+				.parent()
+				.parent()
+				.find("input")
+				.val();
+			smart_tag = $(this).data("key");
+			input_value = smart_tag;
+			var inputElement = $(this).parent().parent().parent().find("input"),
+				advanceFieldData = inputElement.data("advance-field"),
+				fieldData = inputElement.data("field"),
+				field_name =
+					advanceFieldData !== undefined
+						? advanceFieldData
+						: fieldData;
+			update_input(field_name, input_value);
+
+			$(this).parent().parent().parent().find("input").val(input_value);
+			$(document.body).find(".ur-smart-tags-list").hide();
+		});
 
 		$(document.body).on(
 			"change",
