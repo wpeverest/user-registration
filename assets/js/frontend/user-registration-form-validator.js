@@ -261,7 +261,7 @@
 									.after(error);
 							}
 						} else if (element.hasClass("ur-smart-phone-field")) {
-							var wrapper = element.closest("p.form-row");
+							var wrapper = element.closest(".form-row");
 							wrapper
 								.find("#" + element.data("id") + "-error")
 								.remove();

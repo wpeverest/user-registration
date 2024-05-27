@@ -7433,7 +7433,7 @@ a.button.ur-smart-tags-list-button {
 .ur-advance-setting.ur-advance-default_value, .ur-general-setting.ur-general-setting-hidden-value, .ur-advance-setting.ur-advance-pattern_value {
   position: relative;
   margin-bottom: 15px; }
-  .ur-advance-setting.ur-advance-default_value input.ur_advance_setting.ur-settings-default-value, .ur-advance-setting.ur-advance-default_value input.ur-general-setting-field, .ur-advance-setting.ur-advance-default_value input.ur_advance_setting.ur-settings-pattern_value, .ur-general-setting.ur-general-setting-hidden-value input.ur_advance_setting.ur-settings-default-value, .ur-general-setting.ur-general-setting-hidden-value input.ur-general-setting-field, .ur-general-setting.ur-general-setting-hidden-value input.ur_advance_setting.ur-settings-pattern_value, .ur-advance-setting.ur-advance-pattern_value input.ur_advance_setting.ur-settings-default-value, .ur-advance-setting.ur-advance-pattern_value input.ur-general-setting-field, .ur-advance-setting.ur-advance-pattern_value input.ur_advance_setting.ur-settings-pattern_value {
+  .ur-advance-setting.ur-advance-default_value input.ur-general-setting-field, .ur-advance-setting.ur-advance-default_value input.ur_advance_setting.ur-settings-pattern_value, .ur-general-setting.ur-general-setting-hidden-value input.ur-general-setting-field, .ur-general-setting.ur-general-setting-hidden-value input.ur_advance_setting.ur-settings-pattern_value, .ur-advance-setting.ur-advance-pattern_value input.ur-general-setting-field, .ur-advance-setting.ur-advance-pattern_value input.ur_advance_setting.ur-settings-pattern_value {
     width: calc(100% - 40px) !important;
     min-height: 27px; }
   .ur-advance-setting.ur-advance-default_value a.button.ur-smart-tags-list-button, .ur-general-setting.ur-general-setting-hidden-value a.button.ur-smart-tags-list-button, .ur-advance-setting.ur-advance-pattern_value a.button.ur-smart-tags-list-button {
@@ -7982,6 +7982,65 @@ a.button.ur-smart-tags-list-button {
     top: 8px;
     right: 8px;
     z-index: 2; }
+
+#ur-smart-tags-selector {
+  float: right;
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  color: #6B6B6B;
+  font-weight: 400;
+  font-size: 14px;
+  text-decoration: underline;
+  padding: 10px 0px;
+  cursor: pointer; }
+  #ur-smart-tags-selector ~ .select2-container {
+    visibility: hidden;
+    position: absolute;
+    right: 0;
+    width: 120px !important; }
+
+.select2-container--open:not(.ur-hide-select2) .ur-select2-dropdown {
+  width: 180px !important; }
+  .select2-container--open:not(.ur-hide-select2) .ur-select2-dropdown .select2-search--dropdown {
+    width: 98%;
+    position: relative; }
+  .select2-container--open:not(.ur-hide-select2) .ur-select2-dropdown .ur-select2-title {
+    display: block;
+    padding: 4px;
+    width: 98%;
+    border-radius: 4px;
+    color: #383838; }
+    .select2-container--open:not(.ur-hide-select2) .ur-select2-dropdown .ur-select2-title p {
+      padding: 6px 8px;
+      background-color: #F4F4F4;
+      font-size: 13px;
+      font-weight: 600;
+      margin: 0px; }
+  .select2-container--open:not(.ur-hide-select2) .ur-select2-dropdown ul.select2-results__options {
+    max-height: 250px !important;
+    overflow-y: auto;
+    border-top: 1px solid #ccc; }
+    .select2-container--open:not(.ur-hide-select2) .ur-select2-dropdown ul.select2-results__options::-webkit-scrollbar {
+      width: 4px; }
+    .select2-container--open:not(.ur-hide-select2) .ur-select2-dropdown ul.select2-results__options::-webkit-scrollbar-thumb {
+      background-color: #aaa;
+      border-radius: 10px !important; }
+    .select2-container--open:not(.ur-hide-select2) .ur-select2-dropdown ul.select2-results__options li.select2-results__option--highlighted, .select2-container--open:not(.ur-hide-select2) .ur-select2-dropdown ul.select2-results__options li[data-selected=true] {
+      background: #f8f8fa;
+      color: #475BB2;
+      border: none; }
+  .select2-container--open:not(.ur-hide-select2) .ur-select2-dropdown .select2-search {
+    display: flex;
+    align-items: center;
+    color: #999999; }
+    .select2-container--open:not(.ur-hide-select2) .ur-select2-dropdown .select2-search .select2-search__field {
+      padding-left: 28px; }
+    .select2-container--open:not(.ur-hide-select2) .ur-select2-dropdown .select2-search .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 33;
+      color: #999; }
 
 .toplevel_page_user-registration #wpcontent,
 body.user-registration #wpcontent {
