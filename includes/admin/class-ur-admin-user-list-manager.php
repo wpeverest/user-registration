@@ -608,9 +608,9 @@ class UR_Admin_User_List_Manager {
 			$id = (int) $id;
 
 			if ( 'await_confirmation' == $action ) {
-				$user_manager	= new UR_Admin_User_Manager( $id );
-				$status = $user_manager->is_email_pending();
-				if( $status ) {
+				$user_manager = new UR_Admin_User_Manager( $id );
+				$status       = $user_manager->is_email_pending();
+				if ( $status ) {
 					ur_resend_verification_email( $id );
 					$redirect = add_query_arg( array( 'resend_verification_sent' => 1 ), $redirect );
 				}

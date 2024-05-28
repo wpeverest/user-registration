@@ -219,10 +219,11 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			$columns = apply_filters(
 				'user_registration_email_setting_columns',
 				array(
-					'name'    => __( 'Email', 'user-registration' ),
-					'status'  => __( 'Status', 'user-registration' ),
-					'preview' => __( 'Preview', 'user-registration' ),
-					'actions' => __( 'Configure', 'user-registration' ),
+					'name'     => __( 'Email', 'user-registration' ),
+					'status'   => __( 'Status', 'user-registration' ),
+					'receiver' => __( 'Receiver', 'user-registration' ),
+					'preview'  => __( 'Preview', 'user-registration' ),
+					'actions'  => __( 'Configure', 'user-registration' ),
 				)
 			);
 
@@ -244,8 +245,13 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 				$settings .= '</td>';
 				$settings .= '<td class="ur-email-settings-table">';
 				$label     = ( ( 'email_confirmation' === $email->id ) || ( 'passwordless_login_email' === $email->id ) ) ? esc_html__( 'Always Active', 'user-registration' ) : '<div class="ur-toggle-section"><span class="user-registration-toggle-form user-registration-email-status-toggle" ><input type="checkbox" name="email_status" id="' . esc_attr( $email->id ) . '"' . ( $status ? "checked='checked'" : '' ) . '"/><span class="slider round"></span></span></div>';
-				$settings .= '<label style="' . ( $status ? 'color:green;font-weight:500;' : 'color:red;font-weight:500;' ) . '">';
+				$settings .= '<label class="ur-email-status" style="' . ( $status ? 'color:green;font-weight:500;' : 'color:red;font-weight:500;' ) . '">';
 				$settings .= $label;
+				$settings .= '</label>';
+				$settings .= '</td>';
+				$settings .= '<td class="ur-email-settings-table">';
+				$settings .= '<label class="ur-label ur-email-receiver">';
+				$settings .= isset( $email->receiver ) ? $email->receiver : esc_html__( 'User', 'user-registration' );
 				$settings .= '</label>';
 				$settings .= '</td>';
 				$settings .= '<td class="ur-email-settings-table">';

@@ -630,54 +630,6 @@ jQuery(function ($) {
 		}
 	});
 
-	// 	Hide Email Approval Setting if not set to admin approval
-	if (
-		$("#user_registration_form_setting_login_options").val() !==
-			"admin_approval" &&
-		$("#user_registration_form_setting_login_options").val() !==
-			"admin_approval_after_email_confirmation"
-	) {
-		$("#user_registration_form_setting_enable_email_approval")
-			.parent()
-			.parent()
-			.hide();
-	} else {
-		// Store the initial value of checkbox
-		var user_registration_form_setting_enable_email_approval_initial_value =
-			$("#user_registration_form_setting_enable_email_approval").prop(
-				"checked"
-			);
-	}
-
-	// Toggle display of enable email approval setting
-	$("#user_registration_form_setting_login_options").on(
-		"change",
-		function () {
-			var enable_approval_row = $(
-				"#user_registration_form_setting_enable_email_approval"
-			)
-				.parent()
-				.parent();
-
-			if (
-				$(this).val() === "admin_approval" ||
-				$(this).val() === "admin_approval_after_email_confirmation"
-			) {
-				$("#user_registration_form_setting_enable_email_approval").prop(
-					"checked",
-					user_registration_form_setting_enable_email_approval_initial_value
-				);
-				enable_approval_row.show();
-			} else {
-				enable_approval_row.hide();
-				$("#user_registration_form_setting_enable_email_approval").prop(
-					"checked",
-					false
-				);
-			}
-		}
-	);
-
 	$("input.input-color").wpColorPicker();
 	// send test email message
 	$(".user_registration_send_email_test").on("click", function (e) {
@@ -743,6 +695,10 @@ jQuery(function ($) {
 			},
 			success: function (response) {},
 		});
+	});
+
+	$("#ur-lists-page-settings-button").on("click", function () {
+		$("#show-settings-link").click();
 	});
 
 	$(document)
@@ -814,6 +770,147 @@ jQuery(function ($) {
 				},
 			});
 		});
+
+	// Smart Tags picker
+	if (
+		$("#ur-smart-tags-selector").siblings(".ur_advance_setting").length > 0
+	) {
+		var smart_tag_div = $("#ur-smart-tags-selector");
+		$(smart_tag_div).insertBefore(
+			$("#ur-smart-tags-selector").siblings(".ur_advance_setting")
+		);
+		$("#select-smart-tags").insertAfter($(smart_tag_div));
+		$(smart_tag_div).css({
+			position: "absolute",
+			left: "65%",
+			top: "-10px",
+		});
+	}
+
+	if ($("#ur-smart-tags-selector").closest(".wp-media-buttons").length > 0) {
+		$("#ur-smart-tags-selector")
+			.closest(".wp-media-buttons")
+			.css({ width: "100%", position: "relative" });
+	}
+
+	$(document.body).on("click", "#ur-smart-tags-selector", function () {
+		var $this = $(this);
+
+		$(this)
+			.siblings("#select-smart-tags")
+			.select2({
+				placeholder: "",
+				dropdownCssClass: "ur-select2-dropdown",
+				templateResult: function (data, container) {
+					if ($this.siblings(".ur_advance_setting").length > 0) {
+						if (data.element) {
+							$(container).addClass("ur-select-smart-tag");
+						}
+					}
+					return data.text;
+				},
+			});
+
+		$(this).siblings(".select2-container").addClass("ur-hide-select2");
+
+		$(this).siblings("#select-smart-tags").select2("open");
+		$(this)
+			.siblings(".select2-container")
+			.find(".select2-selection__rendered")
+			.show();
+		$(this)
+			.siblings(".select2-container")
+			.find(".select2-selection--open")
+			.show();
+
+		var buttonOffset = $(this).offset(),
+			buttonOffsetTop = Math.round(
+				buttonOffset.top + $(this).innerHeight()
+			),
+			buttonOffsetRight = Math.round(buttonOffset.left);
+
+		var select2_container = $(
+			".select2-container--open:not(.ur-hide-select2)"
+		);
+		select2_container.css({
+			top: buttonOffsetTop,
+			left: buttonOffsetRight - $(this).innerHeight() - 10,
+		});
+
+		var newDiv =
+			'<span class="ur-select2-title"><p>' +
+			user_registration_admin_data.smart_tags_dropdown_title +
+			"</p></span>";
+		$(newDiv).insertBefore(select2_container.find(".select2-search"));
+
+		var searchField = select2_container.find(".select2-search__field");
+		searchField.attr(
+			"placeholder",
+			user_registration_admin_data.smart_tags_dropdown_search_placeholder
+		);
+		searchField.before(
+			'<span class="search-icon"><svg xmlns="http://www.w3.org/2000/svg" height="16px" width="16px" viewBox="0 0 24 24" fill="#a1a4b9"><path d="M21.71,20.29,18,16.61A9,9,0,1,0,16.61,18l3.68,3.68a1,1,0,0,0,1.42,0A1,1,0,0,0,21.71,20.29ZM11,18a7,7,0,1,1,7-7A7,7,0,0,1,11,18Z"></path></svg></span>'
+		);
+
+		$("#select-smart-tags").on("change", function (event) {
+			event.preventDefault();
+			var input_value = $(this).val(),
+				inputElement = $(this)
+					.closest(".ur-advance-setting")
+					.find("input");
+
+			var advanceFieldData = inputElement.data("advance-field"),
+				fieldData = inputElement.data("field"),
+				field_name =
+					advanceFieldData !== undefined
+						? advanceFieldData
+						: fieldData;
+			update_input(field_name, input_value);
+
+			inputElement.val(input_value);
+			$(document.body).find(".ur-smart-tags-list").hide();
+		});
+	});
+
+	/**
+	 * For update the default value.
+	 */
+	function update_input(field_name, input_value) {
+		active_field = $(".ur-item-active");
+		target_input_field = $(active_field).find(
+			".user-registration-field-option-group.ur-advance-setting-block"
+		);
+		ur_toggle_content = target_input_field.find(
+			".ur-advance-setting.ur-advance-default_value"
+		);
+		target_input = $(ur_toggle_content).find(
+			'input[data-advance-field="' + field_name + '"]'
+		);
+		target_textarea = $(ur_toggle_content).find(
+			'input[data-advance-field="' + field_name + '"]'
+		);
+
+		target_input_hidden_field = $(active_field).find(
+			".ur-general-setting-block"
+		);
+		ur_toggle_hidden_content = target_input_hidden_field.find(
+			".ur-general-setting.ur-general-setting-hidden-value"
+		);
+		target_hidden_input = $(ur_toggle_hidden_content).find(
+			'input[data-field="' + field_name + '"]'
+		);
+		// pattern value
+		ur_toggle_pattern_content = target_input_field.find(
+			".ur-advance-setting.ur-advance-pattern_value"
+		);
+		target_pattern_input = $(ur_toggle_pattern_content).find(
+			'input[data-advance-field="' + field_name + '"]'
+		);
+		target_input.val(input_value);
+		target_textarea.val(input_value);
+		target_hidden_input.val(input_value);
+		target_pattern_input.val(input_value);
+	}
 });
 
 (function ($, user_registration_admin_data) {

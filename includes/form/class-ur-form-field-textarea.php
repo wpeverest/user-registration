@@ -103,7 +103,7 @@ class UR_Form_Field_Textarea extends UR_Form_Field {
 					if ( is_wp_error( UR_Validation::validate_max_words_length( $value, $max_size ) ) ) {
 						$message = array(
 							/* translators: %d - validation message */
-							$label       => sprintf( esc_html__( 'Please enter number of words less than %d', 'user-registration' ), $max_size ),
+							$label       => sprintf( esc_html__( 'Please enter number of words less than %d.', 'user-registration' ), $max_size ),
 							'individual' => true,
 						);
 						add_filter(
@@ -135,7 +135,7 @@ class UR_Form_Field_Textarea extends UR_Form_Field {
 					if ( is_wp_error( UR_Validation::validate_min_length( $value, $min_size ) ) ) {
 						$message = array(
 							/* translators: %d - validation message */
-							$label       => sprintf( esc_html__( 'Please enter a value of length at least %d', 'user-registration' ), $min_size ),
+							$label       => sprintf( esc_html__( 'Please enter a value of length at least %d.', 'user-registration' ), $min_size ),
 							'individual' => true,
 						);
 						add_filter(
@@ -157,7 +157,7 @@ class UR_Form_Field_Textarea extends UR_Form_Field {
 					if ( is_wp_error( UR_Validation::validate_min_words_length( $value, $min_size ) ) ) {
 						$message = array(
 							/* translators: %d - validation message */
-							$label       => sprintf( esc_html__( 'Please enter number of words at least %d', 'user-registration' ), $min_size ),
+							$label       => sprintf( esc_html__( 'Please enter number of words at least %d.', 'user-registration' ), $min_size ),
 							'individual' => true,
 						);
 						add_filter(

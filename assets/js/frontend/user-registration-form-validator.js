@@ -2,7 +2,9 @@
 (function ($) {
 	var user_registration_form_selector;
 
-	user_registration_form_selector = $(".ur-frontend-form form, form.cart");
+	user_registration_form_selector = $(
+		".ur-frontend-form form, form.cart, form.checkout"
+	);
 
 	var field_selector = "";
 
@@ -42,8 +44,8 @@
 				var keyCode = event.keyCode || event.which;
 				var currentValue = $(this).val();
 				if (
-					( keyCode !== 46 || currentValue.indexOf('.') !== -1) &&
-					( keyCode < 48 || keyCode > 57)
+					(keyCode !== 46 || currentValue.indexOf(".") !== -1) &&
+					(keyCode < 48 || keyCode > 57)
 				) {
 					event.preventDefault();
 				}
@@ -259,7 +261,7 @@
 									.after(error);
 							}
 						} else if (element.hasClass("ur-smart-phone-field")) {
-							var wrapper = element.closest("p.form-row");
+							var wrapper = element.closest(".form-row");
 							wrapper
 								.find("#" + element.data("id") + "-error")
 								.remove();
@@ -473,7 +475,7 @@
 				messages.user_confirm_email = {
 					required: user_registration_params.message_required_fields,
 					equalTo:
-						user_registration_params.message_confirm_email_fields,
+						user_registration_params.message_confirm_email_fields
 				};
 			}
 
@@ -482,7 +484,7 @@
 				 * Password matching for `Change Password` form
 				 */
 				rules.password_2 = {
-					equalTo: "#password_1",
+					equalTo: "#password_1"
 				};
 				messages.password_2 =
 					user_registration_params.message_confirm_password_fields;
@@ -497,12 +499,12 @@
 
 				rules.user_confirm_password = {
 					required: true,
-					equalTo: "#" + form_id + " #user_pass",
+					equalTo: "#" + form_id + " #user_pass"
 				};
 				messages.user_confirm_password = {
 					required: user_registration_params.message_required_fields,
 					equalTo:
-						user_registration_params.message_confirm_password_fields,
+						user_registration_params.message_confirm_password_fields
 				};
 			}
 
@@ -538,7 +540,7 @@
 					rules[field_selector + $(this).data("field-id") + "[]"] = {
 						checkLimit: $(this).find("ul").data("choice-limit")
 							? $(this).find("ul").data("choice-limit")
-							: 0,
+							: 0
 					};
 				});
 			}
@@ -548,7 +550,7 @@
 					rules[field_selector + $(this).data("field-id") + "[]"] = {
 						checkLimit: $(this).find("select").data("choice-limit")
 							? $(this).find("select").data("choice-limit")
-							: 0,
+							: 0
 					};
 				});
 			}
@@ -558,7 +560,7 @@
 					rules[field_selector + $(this).data("field-id") + "[]"] = {
 						checkLimit: $(this).find("ul").data("choice-limit")
 							? $(this).find("ul").data("choice-limit")
-							: 0,
+							: 0
 					};
 				});
 			}

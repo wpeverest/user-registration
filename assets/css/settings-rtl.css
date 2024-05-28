@@ -727,7 +727,6 @@
                   color: #475bb2; }
           .user-registration-settings-container .user-registration-options-container .user-registration-card__body table.ur_emails tbody tr .ur-email-settings-table > label {
             padding: 4px 8px;
-            background: #4CC741;
             border-radius: 100px;
             font-weight: 400 !important;
             font-size: 12px;
@@ -737,6 +736,11 @@
               padding: 0;
               background: transparent;
               border-radius: 0px; }
+            .user-registration-settings-container .user-registration-options-container .user-registration-card__body table.ur_emails tbody tr .ur-email-settings-table > label.ur-email-status {
+              background: #4CC741; }
+            .user-registration-settings-container .user-registration-options-container .user-registration-card__body table.ur_emails tbody tr .ur-email-settings-table > label.ur-email-receiver {
+              color: #383838 !important;
+              font-weight: 600 !important; }
           .user-registration-settings-container .user-registration-options-container .user-registration-card__body table.ur_emails tbody tr .ur-email-settings-table .user-registration-help-tip {
             margin-right: 6px;
             color: #bababa; }
