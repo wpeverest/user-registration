@@ -1098,7 +1098,6 @@ body {
 
 										> label {
 											padding: $spacing_4px $spacing_8px;
-											background: #4CC741;
 											border-radius: 100px;
 											font-weight: $regular !important;
 											font-size: 12px;
@@ -1109,6 +1108,15 @@ body {
 												padding: 0;
 												background: transparent;
 												border-radius: 0px;
+											}
+
+											&.ur-email-status {
+												background: #4CC741;
+											}
+
+											&.ur-email-receiver {
+												color: #383838 !important;
+												font-weight: 600 !important;
 											}
 										}
 

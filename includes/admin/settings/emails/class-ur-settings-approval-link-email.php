@@ -38,12 +38,20 @@ if ( ! class_exists( 'UR_Settings_Approval_Link_Email', false ) ) :
 		public $description;
 
 		/**
+		 * UR_Settings_Approval_Link_Email Receiver.
+		 *
+		 * @var string
+		 */
+		public $receiver;
+
+		/**
 		 * Constructor.
 		 */
 		public function __construct() {
 			$this->id          = 'approval_link_email';
 			$this->title       = __( 'Admin Approval Request Email with Approval Link', 'user-registration' );
 			$this->description = __( 'Email sent to the admin with user approval link url when a new user registers', 'user-registration' );
+			$this->receiver    = __( 'Admin', 'user-registration' );
 		}
 
 		/**

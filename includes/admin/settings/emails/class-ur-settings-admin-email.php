@@ -38,12 +38,20 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 		public $description;
 
 		/**
+		 * UR_Settings_Admin_Email Receiver.
+		 *
+		 * @var string
+		 */
+		public $receiver;
+
+		/**
 		 * Constructor.
 		 */
 		public function __construct() {
 			$this->id          = 'admin_email';
-			$this->title       = __( 'Admin Approval Request Email', 'user-registration' );
+			$this->title       = __( 'New User Registered Email', 'user-registration' );
 			$this->description = __( 'Email sent to the admin when a new user registers', 'user-registration' );
+			$this->receiver    = __( 'Admin', 'user-registration' );
 		}
 
 		/**
@@ -63,7 +71,7 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 					'title'    => __( 'Emails', 'user-registration' ),
 					'sections' => array(
 						'admin_email' => array(
-							'title'        => __( 'Admin Approval Request Email', 'user-registration' ),
+							'title'        => __( 'New User Registered Email', 'user-registration' ),
 							'type'         => 'card',
 							'desc'         => '',
 							'back_link'    => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),

@@ -315,6 +315,8 @@
 					URFormBuilder.get_form_conditional_submit_data();
 				var email_content_override_settings_data =
 					URFormBuilder.get_form_email_content_override_data();
+				var form_restriction_submit_data =
+					URFormBuilder.get_form_restriction_submit_data();
 
 				/** TODO:: Handle from multistep forms add-on if possible. */
 				var multipart_page_setting = $(
@@ -348,6 +350,8 @@
 							profile_completeness__custom_percentage,
 						form_restriction_extra_settings_data:
 							form_restriction_extra_settings_data,
+						form_restriction_submit_data:
+							form_restriction_submit_data
 					},
 				};
 
@@ -1006,6 +1010,29 @@
 						}
 					}
 				);
+
+				if( $('#urfr_enable_verification').is(":checked") && $("#urfr_verification_type").val() === 'qna' ) {
+					// Validate empty fields for question and answer block.
+					if($('.urfr-qna-question-wrapper').length < 1) {
+						response.validation_status = false;
+						response.message =
+							user_registration_form_builder_data.i18n_admin
+								.i18n_urfr_field_required_error;
+					}
+
+					$.each(
+						$(".urfr-qna-block"),
+						function() {
+							var questionValue = $(this).find("input[name='urfr_qna_question']").val();
+							var answer = $(this).find("input[name='urfr_qna_answer']").val();
+							if(questionValue === '' || answer === '') {
+								response.validation_status = false;
+								response.message =
+									user_registration_form_builder_data.i18n_admin
+										.i18n_urfr_qna_field_empty_error;
+							}
+						});
+				}
 				return response;
 			},
 			/**
@@ -1452,6 +1479,18 @@
 			 */
 			ur_math_ceil: function (value) {
 				return Math.ceil(value, 0);
+			},
+			/**
+			 * Get all the data related to form_restriction
+			 */
+			get_form_restriction_submit_data: function() {
+				var form_data = $('.urfr-qna-block').map(function(k, item) {
+					return {
+						question: $(item).find('input[name="urfr_qna_question"]').val(),
+						answer:  $(item).find('input[name="urfr_qna_answer"]').val()
+					};
+				}).get();
+				return JSON.stringify(form_data);
 			},
 			/**
 			 * Get all the conditions datas that the user has set in conditionally assign user role settings.

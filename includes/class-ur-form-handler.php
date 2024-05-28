@@ -535,7 +535,7 @@ class UR_Form_Handler {
 						 * Filter to modify the recaptcha domain.
 						 * Default value is https://www.google.com/recaptcha
 						 */
-						$url  = apply_filters( 'user_registration_recaptcha_domain', 'https://www.google.com/recaptcha' );
+						$url  = apply_filters( 'user_registration_recaptcha_domain', 'https://www.google.com/recaptcha/' );
 						$data = wp_remote_get( $url . 'api/siteverify?secret=' . $secret_key . '&response=' . $recaptcha_value );
 						$data = json_decode( wp_remote_retrieve_body( $data ) );
 						/**

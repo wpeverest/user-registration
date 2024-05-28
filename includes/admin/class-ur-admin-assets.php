@@ -62,11 +62,7 @@ class UR_Admin_Assets {
 		wp_style_add_data( 'user-registration-admin', 'rtl', 'replace' );
 
 		// Sitewide menu CSS.
-		wp_enqueue_style( 'user-registration-menu' );
-		wp_enqueue_style( 'user-registration-metabox' );
-		wp_enqueue_style( 'user-registration-form-modal-css' );
 
-		wp_enqueue_style( 'select2', UR()->plugin_url() . '/assets/css/select2/select2.css', array(), '4.0.6' );
 		wp_enqueue_style( 'ur-notice' );
 
 		// Admin styles for UR pages only.
@@ -84,6 +80,12 @@ class UR_Admin_Assets {
 			wp_enqueue_style( 'jquery-confirm-style' );
 			wp_enqueue_style( 'tooltipster' );
 			wp_enqueue_style( 'tooltipster-borderless-theme' );
+
+			wp_enqueue_style( 'user-registration-menu' );
+			wp_enqueue_style( 'user-registration-metabox' );
+			wp_enqueue_style( 'user-registration-form-modal-css' );
+
+			wp_enqueue_style( 'select2', UR()->plugin_url() . '/assets/css/select2/select2.css', array(), '4.0.6' );
 		}
 		// Enqueue flatpickr on user profile screen.
 		if ( 'user-edit' === $screen_id || 'profile' === $screen_id || 'user-registration_page_add-new-registration' === $screen_id ) {
@@ -262,10 +264,6 @@ class UR_Admin_Assets {
 			)
 		);
 
-		wp_enqueue_script( 'user-registration-form-modal-js' );
-		wp_enqueue_script( 'ur-enhanced-select' );
-
-		wp_enqueue_script( 'ur-notice', UR()->plugin_url() . '/assets/js/admin/ur-notice' . $suffix . '.js', array(), UR_VERSION, false );
 		wp_localize_script(
 			'ur-notice',
 			'ur_notice_params',
@@ -376,10 +374,12 @@ class UR_Admin_Assets {
 				'user-registration-admin',
 				'user_registration_admin_data',
 				array(
-					'ajax_url'             => admin_url( 'admin-ajax.php' ),
-					'ur_import_form_save'  => wp_create_nonce( 'ur_import_form_save_nonce' ),
-					'no_file_selected'     => esc_html__( 'No file selected.', 'user-registration' ),
-					'export_error_message' => esc_html__( 'Please choose at least one form to export.', 'user-registration' ),
+					'ajax_url'                  => admin_url( 'admin-ajax.php' ),
+					'ur_import_form_save'       => wp_create_nonce( 'ur_import_form_save_nonce' ),
+					'no_file_selected'          => esc_html__( 'No file selected.', 'user-registration' ),
+					'export_error_message'      => esc_html__( 'Please choose at least one form to export.', 'user-registration' ),
+					'smart_tags_dropdown_title' => esc_html__( 'Smart Tags', 'user-registration' ),
+					'smart_tags_dropdown_search_placeholder' => esc_html__( 'Search Tags...', 'user-registration' ),
 				)
 			);
 			wp_localize_script( 'user-registration-form-builder', 'user_registration_form_builder_data', $params );
@@ -413,6 +413,10 @@ class UR_Admin_Assets {
 
 				)
 			);
+			wp_enqueue_script( 'user-registration-form-modal-js' );
+			wp_enqueue_script( 'ur-enhanced-select' );
+
+			wp_enqueue_script( 'ur-notice', UR()->plugin_url() . '/assets/js/admin/ur-notice' . $suffix . '.js', array(), UR_VERSION, false );
 		}
 
 		// Enqueue flatpickr on user profile screen.
@@ -564,6 +568,8 @@ class UR_Admin_Assets {
 			'i18n_pc_custom_percentage_filed_error'  => esc_html__( 'Sum of progress percentage for each field cannot be greater than the completion perecentage.', 'user-registration' ),
 			'i18n_google_sheets_user_login_missing_error'  => esc_html__( 'User_login field should me mapped.', 'user-registration' ),
 			'i18n_google_sheets_sheet_empty_error'  => esc_html__( 'Look like your sheet is empty ! Please try again', 'user-registration' ),
+			'i18n_urfr_qna_field_empty_error'        => esc_html__( 'Form Restriction: Empty Question or Answer field.', 'user-registration' ),
+			'i18n_urfr_field_required_error'         => esc_html__( 'Form Restriction: Q&A restriction requires at least one question and answer.', 'user-registration' ),
 		);
 
 		return $i18n;
