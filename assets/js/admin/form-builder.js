@@ -388,7 +388,7 @@
 						}
 						var user_login_found = false;
 						for (var key in mapped_fields) {
-							if (mapped_fields.hasOwnProperty(key) && mapped_fields[key] === 'user_login') {
+							if (mapped_fields.hasOwnProperty(key) && mapped_fields[key] === 'user_email') {
 								user_login_found = true;
 								break;
 							}
@@ -396,7 +396,7 @@
 						if(! user_login_found){
 							URFormBuilder.show_message(
 								user_registration_form_builder_data.i18n_admin
-								.i18n_google_sheets_user_login_missing_error
+								.i18n_google_sheets_user_email_missing_error
 								);
 							return;
 						}
