@@ -56,6 +56,10 @@
   .user-registration_page_user-registration-dashboard {
 	#wpcontent{
 		margin-left: 140px;
+
+		#wpbody-content {
+			float: none;
+		}
 	}
   }
 

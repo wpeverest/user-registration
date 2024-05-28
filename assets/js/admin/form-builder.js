@@ -372,8 +372,10 @@
 					);
 					return;
 				}
+
 				//Google Sheet validation
-				if(data.data.ur_google_sheets_integration.length > 0){
+				if(data.data.ur_google_sheets_integration !==
+					undefined){
 					google_sheets_connections = data.data.ur_google_sheets_integration;
 
 					// Send data only if username field is mapped.
