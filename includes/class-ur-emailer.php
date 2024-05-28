@@ -584,6 +584,14 @@ class UR_Emailer {
 			'form_id'  => $form_id,
 		);
 
+		$user = get_user_by( 'login', $username );
+
+		$current_language = ur_get_current_language();
+
+		if ( $user ) {
+			$current_language = get_user_meta( $user->ID, 'ur_registered_language' );
+		}
+
 		// Get selected email template id for specific form.
 		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
 
@@ -620,6 +628,8 @@ class UR_Emailer {
 			$message                   = $settings->ur_get_registration_approved_email();
 			$message                   = get_option( 'user_registration_registration_approved_email', $message );
 			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
+			$message                   = ur_get_translated_string( $message, $current_language, 'user_registration_registration_approved_email' );
+			$subject                   = ur_get_translated_string( $subject, $current_language, 'user_registration_registration_approved_email_subject' );
 			$message                   = self::parse_smart_tags( $message, $values, $name_value );
 			$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
 

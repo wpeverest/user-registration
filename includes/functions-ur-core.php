@@ -4730,9 +4730,8 @@ if ( ! function_exists( 'ur_merge_translations' ) ) {
 			$destination_language_code = str_replace( '-' . $text_domain, '', $language_code );
 
 			if ( 'user-registration' === $destination_language_code ) {
-				$source_file_path      = $source_dir . '/' . $language_code . '.' . $file_extension;
-				$destination_file_path = $destination_dir . '/' . $destination_language_code . '.' . $file_extension;
-
+				$source_file_path      = $source_dir . '/' . $language_code . '.' . $file_extension; //phpcs:ignore
+				$destination_file_path = $destination_dir . '/' . $destination_language_code . '.' . $file_extension; //phpcs:ignore
 				if ( ! file_exists( $destination_file_path ) ) {
 					touch( $destination_file_path );
 				}
@@ -4756,7 +4755,7 @@ if ( ! function_exists( 'ur_get_registration_field_value_by_field_name' ) ) {
 	function ur_get_registration_field_value_by_field_name( $field_name ) {
 		$field_value = '';
 
-		if ( isset( $_POST['form_data'] ) ) {
+		if ( isset( $_POST['form_data'] ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			$form_data = json_decode( wp_unslash( $_POST['form_data'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		}
 		if ( gettype( $form_data ) != 'array' && gettype( $form_data ) != 'object' ) {
@@ -4769,5 +4768,35 @@ if ( ! function_exists( 'ur_get_registration_field_value_by_field_name' ) ) {
 			}
 		}
 		return $field_value;
+	}
+}
+
+
+if ( ! function_exists( 'ur_get_translated_string' ) ) {
+	/**
+	 * Function to get translated string using WPML
+	 *
+	 * @since 4.2.1
+	 *
+	 * @param  string $string String.
+	 * @param  string $language_code Language Code.
+	 * @param  string $field_key Field Key.
+	 * @param  string $form_id Form ID.
+	 */
+	function ur_get_translated_string( $string, $language_code, $field_key, $form_id = 0 ) {
+		$subject = ur_string_translation( $form_id, $field_key, $subject );
+		$message = ur_string_translation( $form_id, $field_key, $message );
+
+		if ( function_exists( 'icl_translate' ) ) {
+			$language_code     = is_array( $language_code ) ? $language_code[0] : $language_code;
+			$translated_string = apply_filters( 'wpml_translate_single_string', $string, 'user-registration', $string, $language_code );
+			if ( false === $translated_string || $translated_string === $language_code ) {
+				return $string;
+			} else {
+				return $translated_string;
+			}
+		} else {
+			return $string;
+		}
 	}
 }
