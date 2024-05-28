@@ -237,13 +237,13 @@ class UR_Email_Confirmation {
 
 			if ( $user_token === $_GET['ur_token'] && ( 'email_confirmation' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
 				$token_expiration_duration = 24 * 60 * 60;
-                /**
+				/**
 				 * Filter hook to modify the token expiration duration.
 				 * Default email confirmation token expiration duration is 24 hour.
 				 */
-                $token_expiration_duration = apply_filters('user_registration_email_confirmation_token_expiration_duration', $token_expiration_duration );
+				$token_expiration_duration = apply_filters( 'user_registration_email_confirmation_token_expiration_duration', $token_expiration_duration );
 
-				if (isset($output[1]) && time() > ($output[1] + $token_expiration_duration)) {
+				if ( isset( $output[1] ) && time() > ( $output[1] + $token_expiration_duration ) ) {
 					add_filter( 'login_message', array( $this, 'custom_token_expired_message' ) );
 					add_filter( 'user_registration_login_form_before_notice', array( $this, 'custom_token_expired_message' ) );
 				} else {
@@ -311,6 +311,12 @@ class UR_Email_Confirmation {
 		if ( time() > $expiration || $confirm_key !== $stored_key ) {
 			return;
 		}
+		/**
+		 * Trigger an action hook before the email address is update.
+		 *
+		 * @param int $user_id The user ID.
+		 */
+		do_action( 'user_registration_before_email_change_update', $user_id );
 
 		// Update the user's email address to the new one.
 		wp_update_user(
