@@ -46,6 +46,9 @@ class UR_Admin {
 	 * @since 4.2.0.1
 	 */
 	public function run_migration_script() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return false;
+		}
 		if ( UR_VERSION !== get_option( 'user_registration_version' ) ) {
 			UR_Install::maybe_run_migrations();
 			update_option( 'user_registration_version', UR_VERSION );
@@ -56,6 +59,9 @@ class UR_Admin {
 	 * Translation Migration for Payments, Content Restriction and Frontend Listing.
 	 */
 	public function translation_migration() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return false;
+		}
 		global $wpdb;
 		$migration_flag = get_option( 'ur_translations_migration_done', false );
 		// $migration_flag = false;
@@ -113,6 +119,9 @@ class UR_Admin {
 	 * Includes any classes we need within admin.
 	 */
 	public function includes() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return false;
+		}
 		include_once __DIR__ . '/functions-ur-admin.php';
 		include_once __DIR__ . '/class-ur-admin-notices.php';
 		include_once __DIR__ . '/class-ur-admin-menus.php';
@@ -141,6 +150,9 @@ class UR_Admin {
 	 * Include admin files conditionally.
 	 */
 	public function conditional_includes() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return false;
+		}
 		$screen = get_current_screen();
 		if ( ! $screen ) {
 			return;

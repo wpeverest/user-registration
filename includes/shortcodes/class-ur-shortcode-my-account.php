@@ -308,13 +308,13 @@ class UR_Shortcode_My_Account {
 		/**
 		 * After sending the reset link, don't show the form again.
 		 */
-		if ( ! empty( $_GET['reset-link-sent'] ) ) {
+		if ( ! empty( $_GET['reset-link-sent'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			return ur_get_template( 'myaccount/lost-password-confirmation.php' );
 
 			/**
 			 * Process reset key / login from email confirmation link
 			 */
-		} elseif ( ! empty( $_GET['show-reset-form'] ) ) {
+		} elseif ( ! empty( $_GET['show-reset-form'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 			if ( isset( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ) && 0 < strpos( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ], ':' ) ) { // phpcs:ignore
 				list( $rp_login, $rp_key ) = array_map( 'ur_clean', explode( ':', wp_unslash( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ), 2 ) ); // phpcs:ignore

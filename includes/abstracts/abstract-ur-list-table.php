@@ -126,7 +126,7 @@ abstract class UR_List_Table extends WP_List_Table {
 	 * @throws RuntimeException RuntimeException.
 	 */
 	protected function get_bulk_actions() {
-		if ( isset( $_GET['status'] ) && ( 'trashed' == $_GET['status'] || 'trash' == $_GET['status'] ) ) {
+		if ( isset( $_GET['status'] ) && ( 'trashed' == $_GET['status'] || 'trash' == $_GET['status'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$actions = array(
 				'untrash' => __( 'Restore', 'user-registration' ),
 				'delete'  => __( 'Delete permanently', 'user-registration' ),
@@ -211,17 +211,17 @@ abstract class UR_List_Table extends WP_List_Table {
 		);
 
 		// Handle the status query.
-		if ( ! empty( $_REQUEST['status'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Missing
-			$args['post_status'] = sanitize_text_field( wp_unslash( $_REQUEST['status'] ) );
+		if ( ! empty( $_REQUEST['status'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$args['post_status'] = sanitize_text_field( wp_unslash( $_REQUEST['status'] ) ); //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		}
 
 		// Handle the search query.
-		if ( ! empty( $_REQUEST['s'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Missing
-			$args['s'] = trim( sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) );
+		if ( ! empty( $_REQUEST['s'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$args['s'] = trim( sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) ); //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		}
 
-		$args['orderby'] = isset( $_REQUEST['orderby'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) ) : 'date_created'; //phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$args['order']   = isset( $_REQUEST['order'] ) && 'ASC' === strtoupper( sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) ) ? 'ASC' : 'DESC'; //phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$args['orderby'] = isset( $_REQUEST['orderby'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) ) : 'date_created'; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$args['order']   = isset( $_REQUEST['order'] ) && 'ASC' === strtoupper( sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) ) ? 'ASC' : 'DESC'; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		// Get the registrations.
 		$query_posts = new WP_Query( $args );
@@ -400,7 +400,7 @@ abstract class UR_List_Table extends WP_List_Table {
 		}
 
 		$qty    = count( $post_list );
-		$status = isset( $_GET['status'] ) ? '&status=' . sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '';
+		$status = isset( $_GET['status'] ) ? '&status=' . sanitize_text_field( wp_unslash( $_GET['status'] ) ) : ''; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		wp_redirect( admin_url( 'admin.php?page=' . $this->page . '' . $status . '&trashed=' . $qty ) );
 		exit;
@@ -435,7 +435,7 @@ abstract class UR_List_Table extends WP_List_Table {
 			wp_delete_post( $post_id, true );
 		}
 
-		$status = isset( $_GET['status'] ) ? '&status=' . sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '';
+		$status = isset( $_GET['status'] ) ? '&status=' . sanitize_text_field( wp_unslash( $_GET['status'] ) ) : ''; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		wp_redirect( admin_url( 'admin.php?page=' . $this->page . '' . $status . '&deleted=' . $qty ) );
 		exit();
@@ -471,7 +471,7 @@ abstract class UR_List_Table extends WP_List_Table {
 	 * @param string $which Which.
 	 */
 	protected function extra_tablenav( $which ) {
-		if ( 'top' === $which && isset( $_GET['status'] ) && 'trash' === $_GET['status'] && current_user_can( 'delete_posts' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if ( 'top' === $which && isset( $_GET['status'] ) && 'trash' === $_GET['status'] && current_user_can( 'delete_posts' ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$empty_trash_link = esc_url( wp_nonce_url( admin_url( 'admin.php?page=' . $this->page . '&action=empty_trash' ), 'empty_trash' ) );
 
 			printf(
@@ -637,7 +637,7 @@ abstract class UR_List_Table extends WP_List_Table {
 	protected function get_views() {
 		$status_links = array();
 		$post_counts  = wp_count_posts( $this->post_type, 'readable' );
-		$class        = empty( $_REQUEST['status'] ) ? ' class="current"' : ''; //phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$class        = empty( $_REQUEST['status'] ) ? ' class="current"' : ''; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$total_posts  = array_sum( (array) $post_counts );
 
 		// Substract counts of posts with a status that is not included in "All" list like trash, inherit etc.
@@ -676,7 +676,7 @@ abstract class UR_List_Table extends WP_List_Table {
 
 		foreach ( $stati_objects as $status ) {
 			$status_name    = $status->name;
-			$current_status = ( ! empty( $_REQUEST['status'] ) && $status_name === $_REQUEST['status'] ); //phpcs:ignore Wordpress.Security.NonceVerification.Missing
+			$current_status = ( ! empty( $_REQUEST['status'] ) && $status_name === $_REQUEST['status'] ); //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 			if ( empty( $post_counts->$status_name ) || ! in_array( $status_name, $allowed_status, true ) ) {
 				continue;
@@ -701,7 +701,7 @@ abstract class UR_List_Table extends WP_List_Table {
 		// TODO :: process bulk action.
 		$this->process_row_actions();
 
-		if ( ! empty( $_REQUEST['_wp_http_referer'] ) ) {
+		if ( ! empty( $_REQUEST['_wp_http_referer'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			// _wp_http_referer is used only on bulk actions, we remove it to keep the $_GET shorter
 			wp_redirect( remove_query_arg( array( '_wp_http_referer', '_wpnonce' ), wp_unslash( $_SERVER['REQUEST_URI'] ) ) ); // phpcs:ignore
 			exit;

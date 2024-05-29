@@ -29,7 +29,7 @@ class UR_Preview {
 	 */
 	public function init() {
 		if ( is_user_logged_in() && ! is_admin() ) {
-			if ( isset( $_GET['ur_preview'] ) ) {
+			if ( isset( $_GET['ur_preview'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				add_filter( 'edit_post_link', array( $this, 'edit_form_link' ) );
 				add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
 				add_filter( 'home_template_hierarchy', array( $this, 'template_include' ) );
@@ -37,14 +37,14 @@ class UR_Preview {
 				add_action( 'template_redirect', array( $this, 'handle_preview' ) );
 				add_filter( 'astra_remove_entry_header_content', '__return_true' ); // Need to remove in next version, If astra release the patches.
 
-			} elseif ( isset( $_GET['ur_login_preview'] ) ) {
+			} elseif ( isset( $_GET['ur_login_preview'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
 				add_action( 'template_redirect', array( $this, 'handle_login_preview' ) );
 				add_filter( 'home_template_hierarchy', array( $this, 'template_include' ) );
 				add_filter( 'frontpage_template_hierarchy', array( $this, 'template_include' ) );
 				add_filter( 'astra_remove_entry_header_content', '__return_true' ); // Need to remove in next version, If astra release the patches.
 
-			} elseif ( isset( $_GET['ur_email_preview'] ) ) {
+			} elseif ( isset( $_GET['ur_email_preview'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				add_filter( 'template_include', array( $this, 'handle_email_preview' ), PHP_INT_MAX );
 				add_filter( 'astra_remove_entry_header_content', '__return_true' ); // Need to remove in next version, If astra release the patches.
 			}
@@ -57,7 +57,7 @@ class UR_Preview {
 	 * @param string $link Link.
 	 */
 	public function edit_form_link( $link ) {
-		$form_id       = isset( $_GET['form_id'] ) ? absint( $_GET['form_id'] ) : 0;
+		$form_id       = isset( $_GET['form_id'] ) ? absint( $_GET['form_id'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$edit_form_url = add_query_arg(
 			array(
 				'page'              => 'add-new-registration',
@@ -99,7 +99,7 @@ class UR_Preview {
 			return;
 		}
 
-		if ( isset( $_GET['form_id'] ) ) {
+		if ( isset( $_GET['form_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			add_filter( 'the_title', array( $this, 'form_preview_title' ) );
 			add_filter( 'the_content', array( $this, 'form_preview_content' ) );
 			add_filter( 'get_the_excerpt', array( $this, 'form_preview_content' ) );
@@ -135,7 +135,7 @@ class UR_Preview {
 	 * @return string
 	 */
 	public function form_preview_content( $content ) {
-		$form_id = isset( $_GET['form_id'] ) ? absint( $_GET['form_id'] ) : 0;
+		$form_id = isset( $_GET['form_id'] ) ? absint( $_GET['form_id'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		remove_filter( 'the_content', array( $this, 'form_preview_content' ) );
 		if ( function_exists( 'apply_shortcodes' ) ) {
@@ -210,8 +210,8 @@ class UR_Preview {
 			return;
 		}
 
-		$option_name    = isset( $_GET['ur_email_preview'] ) ? sanitize_text_field( wp_unslash( $_GET['ur_email_preview'] ) ) : '';
-		$email_template = isset( $_GET['ur_email_template'] ) ? sanitize_text_field( wp_unslash( $_GET['ur_email_template'] ) ) : '';
+		$option_name    = isset( $_GET['ur_email_preview'] ) ? sanitize_text_field( wp_unslash( $_GET['ur_email_preview'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$email_template = isset( $_GET['ur_email_template'] ) ? sanitize_text_field( wp_unslash( $_GET['ur_email_template'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		$class_name = 'UR_Settings_' . str_replace( ' ', '_', ucwords( str_replace( '_', ' ', $option_name ) ) );
 		/**
