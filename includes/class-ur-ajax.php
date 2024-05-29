@@ -888,7 +888,7 @@ class UR_AJAX {
              	$post_data_setting = isset( $_POST['data']['form_setting_data'] ) ? $_POST['data']['form_setting_data'] : array(); //phpcs:ignore
 
 				if ( isset( $_POST['data']['form_restriction_submit_data'] ) && ! empty( $_POST['data']['form_restriction_submit_data'] ) ) {
-					$post_data_setting = array_merge(
+					array_push(
 						$post_data_setting,
 						array(
 							'name'  => 'urfr_qna_restriction_data',
@@ -908,7 +908,7 @@ class UR_AJAX {
 			 */
          do_action( 'user_registration_after_form_settings_save', wp_unslash( $_POST['data'] ) ); //phpcs:ignore
 
-			wp_send_json_success(
+		 wp_send_json_success(
 				array(
 					'data'    => $post_data,
 					'post_id' => $post_id,
