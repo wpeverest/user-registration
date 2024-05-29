@@ -4919,7 +4919,7 @@
 		}
 
 		// Bulk checkbox
-		input[type="checkbox"] {
+		input[type="checkbox"]:not(.urcr-enable-access-rule) {
 			border-radius: $border_radius_2;
 			border-color: $grey-200;
 		}
