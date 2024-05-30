@@ -569,6 +569,11 @@
 				var required_fields = $.makeArray(
 					user_registration_form_builder_data.form_required_fields
 				);
+
+				if( $("#user_registration_pro_auto_password_activate").is(":checked") ) {
+					required_fields.splice( required_fields.indexOf('user_pass'), 1 );
+				}
+
 				var response = {
 					validation_status: true,
 					message: "",

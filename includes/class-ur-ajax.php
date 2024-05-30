@@ -50,13 +50,12 @@ class UR_AJAX {
 	public static function add_ajax_events() {
 		$ajax_events = array(
 			'user_input_dropped'        => true,
-			'form_save_action'          => false,
 			'user_form_submit'          => true,
 			'update_profile_details'    => true,
 			'profile_pic_upload'        => true,
-			'profile_pic_remove'        => false,
 			'ajax_login_submit'         => true,
-			'send_test_email'           => true,
+			'send_test_email'           => false,
+			'create_form'               => false,
 			'rated'                     => false,
 			'dashboard_widget'          => false,
 			'dismiss_notice'            => false,
@@ -64,7 +63,8 @@ class UR_AJAX {
 			'template_licence_check'    => false,
 			'captcha_setup_check'       => false,
 			'install_extension'         => false,
-			'create_form'               => true,
+			'profile_pic_remove'        => false,
+			'form_save_action'          => false,
 			'allow_usage_dismiss'       => false,
 			'cancel_email_change'       => false,
 			'email_setting_status'      => false,
@@ -836,12 +836,6 @@ class UR_AJAX {
 				'user_pass',
 			);
 
-			$contains_search = count( array_intersect( $required_fields, self::$field_key_aray ) ) == count( $required_fields );
-
-			if ( false === $contains_search ) {
-             throw  new Exception( __( 'Could not save form, ' . join( ', ', $required_fields ) . ' fields are required.! ', 'user-registration' ) ); //phpcs:ignore
-			}
-
 			// check captcha configuration before form save action.
 			if ( isset( $_POST['data']['form_setting_data'] ) ) {
 				foreach ( wp_unslash( $_POST['data']['form_setting_data'] )  as $setting_data ) { //phpcs:ignore
@@ -853,7 +847,17 @@ class UR_AJAX {
 								esc_html__( 'Seems like you are trying to enable the captcha feature, but the captcha keys are empty. Please click', 'user-registration' ),
 								esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=captcha' ) ) ) ); //phpcs:ignore
 					}
+
+					if ( 'user_registration_pro_auto_password_activate' === $setting_data['name'] && ur_string_to_bool( $setting_data['value'] ) ) {
+						unset( $required_fields[ array_search( 'user_pass', $required_fields ) ] );
+					}
 				}
+			}
+
+			$contains_search = count( array_intersect( $required_fields, self::$field_key_aray ) ) == count( $required_fields );
+
+			if ( false === $contains_search ) {
+             throw  new Exception( __( 'Could not save form, ' . join( ', ', $required_fields ) . ' fields are required.! ', 'user-registration' ) ); //phpcs:ignore
 			}
 
 			/**
@@ -885,15 +889,18 @@ class UR_AJAX {
 			if ( $post_id > 0 ) {
 				$_POST['data']['form_id'] = $post_id; // Form id for new form.
 
-             $post_data_setting = isset( $_POST['data']['form_setting_data'] ) ? $_POST['data']['form_setting_data'] : array(); //phpcs:ignore
+             	$post_data_setting = isset( $_POST['data']['form_setting_data'] ) ? $_POST['data']['form_setting_data'] : array(); //phpcs:ignore
+
 				if ( isset( $_POST['data']['form_restriction_submit_data'] ) && ! empty( $_POST['data']['form_restriction_submit_data'] ) ) {
-					$post_data_setting = array(
+					array_push(
+						$post_data_setting,
 						array(
 							'name'  => 'urfr_qna_restriction_data',
 							'value' => sanitize_text_field( wp_unslash( $_POST['data']['form_restriction_submit_data'] ) ),
-						),
+						)
 					);
 				}
+
 				ur_update_form_settings( $post_data_setting, $post_id );
 
 				// Form row_id save.
