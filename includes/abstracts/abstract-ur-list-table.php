@@ -395,15 +395,20 @@ abstract class UR_List_Table extends WP_List_Table {
 	 * @param array $post_list Post List.
 	 */
 	public function bulk_trash( $post_list = array() ) {
-		foreach ( $post_list as $post_id ) {
-			wp_trash_post( $post_id );
+		if ( ! empty( $post_list ) ) {
+			$qty = count( $post_list );
+
+			if ( $qty > 0 ) {
+				foreach ( $post_list as $post_id ) {
+					wp_trash_post( $post_id );
+				}
+
+				$status = isset( $_GET['status'] ) ? '&status=' . sanitize_text_field( wp_unslash( $_GET['status'] ) ) : ''; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+				wp_redirect( admin_url( 'admin.php?page=' . $this->page . '' . $status . '&trashed=' . $qty ) );
+				exit;
+			}
 		}
-
-		$qty    = count( $post_list );
-		$status = isset( $_GET['status'] ) ? '&status=' . sanitize_text_field( wp_unslash( $_GET['status'] ) ) : ''; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
-
-		wp_redirect( admin_url( 'admin.php?page=' . $this->page . '' . $status . '&trashed=' . $qty ) );
-		exit;
 	}
 
 	/**
@@ -431,14 +436,16 @@ abstract class UR_List_Table extends WP_List_Table {
 	 */
 	private function bulk_delete( $post_list = array() ) {
 		$qty = is_array( $post_list ) ? count( $post_list ) : 0;
-		foreach ( $post_list as $post_id ) {
-			wp_delete_post( $post_id, true );
+		if ( $qty > 0 ) {
+			foreach ( $post_list as $post_id ) {
+				wp_delete_post( $post_id, true );
+			}
+
+			$status = isset( $_GET['status'] ) ? '&status=' . sanitize_text_field( wp_unslash( $_GET['status'] ) ) : ''; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+			wp_redirect( admin_url( 'admin.php?page=' . $this->page . '' . $status . '&deleted=' . $qty ) );
+			exit();
 		}
-
-		$status = isset( $_GET['status'] ) ? '&status=' . sanitize_text_field( wp_unslash( $_GET['status'] ) ) : ''; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
-
-		wp_redirect( admin_url( 'admin.php?page=' . $this->page . '' . $status . '&deleted=' . $qty ) );
-		exit();
 	}
 
 	/**

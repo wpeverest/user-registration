@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-05-28T11:41:17+00:00\n"
+"POT-Creation-Date: 2024-05-30T09:23:49+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: user-registration\n"
@@ -97,26 +97,26 @@ msgstr ""
 msgid "Copy of "
 msgstr ""
 
-#: includes/abstracts/abstract-ur-list-table.php:480
+#: includes/abstracts/abstract-ur-list-table.php:487
 msgid "Empty trash"
 msgstr ""
 
-#: includes/abstracts/abstract-ur-list-table.php:557
+#: includes/abstracts/abstract-ur-list-table.php:564
 msgid "Y/m/d g:i:s A"
 msgstr ""
 
 #. translators: %s - Human readable time
-#: includes/abstracts/abstract-ur-list-table.php:570
+#: includes/abstracts/abstract-ur-list-table.php:577
 msgid "%s ago"
 msgstr ""
 
-#: includes/abstracts/abstract-ur-list-table.php:574
+#: includes/abstracts/abstract-ur-list-table.php:581
 msgid "Y/m/d"
 msgstr ""
 
-#: includes/abstracts/abstract-ur-list-table.php:657
+#: includes/abstracts/abstract-ur-list-table.php:664
 #: includes/admin/views/html-admin-page-form-templates.php:47
-#: src/dashboard/screens/Modules/Modules.js:337
+#: src/dashboard/screens/Modules/Modules.js:346
 msgid "All"
 msgstr ""
 
@@ -157,7 +157,7 @@ msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:238
 #: includes/admin/class-ur-admin-menus.php:689
-#: includes/class-ur-ajax.php:1515
+#: includes/class-ur-ajax.php:1534
 #: includes/functions-ur-core.php:3610
 #: src/dashboard/screens/Modules/components/ModuleBody.js:116
 #: src/dashboard/screens/Modules/components/ModuleItem.js:328
@@ -880,14 +880,14 @@ msgstr ""
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
-#: includes/admin/class-ur-admin-profile.php:77
+#: includes/admin/class-ur-admin-profile.php:80
 #: includes/admin/functions-ur-admin.php:138
 #: includes/admin/functions-ur-admin.php:201
 msgid "User Extra Information"
 msgstr ""
 
-#: includes/admin/class-ur-admin-profile.php:192
-#: includes/admin/class-ur-admin-profile.php:204
+#: includes/admin/class-ur-admin-profile.php:195
+#: includes/admin/class-ur-admin-profile.php:207
 #: includes/form/class-ur-form-field-select.php:44
 #: includes/form/class-ur-form-field-select.php:49
 #: includes/functions-ur-core.php:860
@@ -1047,7 +1047,7 @@ msgstr ""
 
 #. translators: 1: Newly registered user count 2: User
 #: includes/admin/class-ur-admin-user-list-manager.php:220
-#: includes/admin/class-ur-admin.php:424
+#: includes/admin/class-ur-admin.php:436
 #: includes/admin/settings/class-ur-settings-email.php:254
 msgid "User"
 msgid_plural "Users"
@@ -1162,41 +1162,41 @@ msgstr ""
 msgid "Skip to Dashboard"
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:106
+#: includes/admin/class-ur-admin.php:112
 msgid "UR My Account Page"
 msgstr ""
 
 #. translators: 1: User Registration 2:: five stars
-#: includes/admin/class-ur-admin.php:221
+#: includes/admin/class-ur-admin.php:233
 msgid "If you like %1$s please leave us a %2$s rating. A huge thanks in advance!"
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:223
+#: includes/admin/class-ur-admin.php:235
 msgid "Thank You!"
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:235
+#: includes/admin/class-ur-admin.php:247
 msgid "Thank you for using User Registration."
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:260
+#: includes/admin/class-ur-admin.php:272
 msgid "Bravo! 💪 Well done."
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:324
+#: includes/admin/class-ur-admin.php:336
 msgid "Contribute to the enhancement"
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:374
+#: includes/admin/class-ur-admin.php:386
 msgid "User Registration Plugin Survey"
 msgstr ""
 
 #. translators: 1: Newly registered user count 2: User
-#: includes/admin/class-ur-admin.php:424
+#: includes/admin/class-ur-admin.php:436
 msgid "%1$d new %2$s registered."
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:481
+#: includes/admin/class-ur-admin.php:493
 msgid "Could not verify nonce"
 msgstr ""
 
@@ -2153,7 +2153,7 @@ msgid "Your license has been activated. Enjoy using <strong>User Registration</s
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-license.php:169
-#: includes/class-ur-ajax.php:1512
+#: includes/class-ur-ajax.php:1531
 #: src/dashboard/screens/Modules/components/ModuleBody.js:94
 #: src/dashboard/screens/Modules/components/ModuleBody.js:99
 msgid "Activate License"
@@ -2656,20 +2656,20 @@ msgid ""
 msgstr ""
 
 #. translators: 1: Plugin Name, 2: Changelog Link, 3: New Version, 4: Link Close
-#: includes/admin/updater/class-ur-addon-updater.php:308
+#: includes/admin/updater/class-ur-addon-updater.php:311
 msgid "There is a new version of %1$s available. %2$sView version %3$s details%4$s."
 msgstr ""
 
 #. translators: 1: Plugin Name, 2: Changelog Link, 3: New Version, 4: Link Close, 5: Upgrade Plugin Link, 6: Link Close
-#: includes/admin/updater/class-ur-addon-updater.php:317
+#: includes/admin/updater/class-ur-addon-updater.php:320
 msgid "There is a new version of %1$s available. %2$sView version %3$s details%4$s or %5$supdate now%6$s."
 msgstr ""
 
-#: includes/admin/updater/class-ur-addon-updater.php:586
+#: includes/admin/updater/class-ur-addon-updater.php:589
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
-#: includes/admin/updater/class-ur-addon-updater.php:586
+#: includes/admin/updater/class-ur-addon-updater.php:589
 msgid "Error"
 msgstr ""
 
@@ -3028,7 +3028,7 @@ msgstr ""
 #: includes/class-ur-ajax.php:308
 #: includes/class-ur-ajax.php:530
 #: includes/class-ur-ajax.php:661
-#: includes/class-ur-ajax.php:1132
+#: includes/class-ur-ajax.php:1147
 msgid "Nonce error, please reload."
 msgstr ""
 
@@ -3132,78 +3132,88 @@ msgstr ""
 msgid "Test email was unsuccessful! Something went wrong."
 msgstr ""
 
-#: includes/class-ur-ajax.php:809
+#: includes/class-ur-ajax.php:722
+#: includes/class-ur-ajax.php:791
+#: includes/class-ur-ajax.php:943
+msgid "You do not have permission."
+msgstr ""
+
+#: includes/class-ur-ajax.php:817
 msgid "You don't have enough permission to perform this task. Please contact the Administrator."
 msgstr ""
 
-#: includes/class-ur-ajax.php:813
-#: includes/class-ur-ajax.php:818
+#: includes/class-ur-ajax.php:821
+#: includes/class-ur-ajax.php:826
 msgid "post data not set"
 msgstr ""
 
-#: includes/class-ur-ajax.php:831
+#: includes/class-ur-ajax.php:839
 msgid "Could not save form. Invalid field name. Please check all field name"
 msgstr ""
 
-#: includes/class-ur-ajax.php:842
+#: includes/class-ur-ajax.php:850
 msgid "Could not save form, "
 msgstr ""
 
-#: includes/class-ur-ajax.php:853
+#: includes/class-ur-ajax.php:861
 msgid "Seems like you are trying to enable the captcha feature, but the captcha keys are empty. Please click"
 msgstr ""
 
-#: includes/class-ur-ajax.php:1148
-#: includes/class-ur-ajax.php:1156
 #: includes/class-ur-ajax.php:1163
+#: includes/class-ur-ajax.php:1171
+#: includes/class-ur-ajax.php:1178
 msgid "File cannot be removed"
 msgstr ""
 
-#: includes/class-ur-ajax.php:1171
+#: includes/class-ur-ajax.php:1186
 msgid "User profile picture removed successfully"
 msgstr ""
 
-#: includes/class-ur-ajax.php:1189
+#: includes/class-ur-ajax.php:1204
 msgid "No Plan specified."
 msgstr ""
 
-#: includes/class-ur-ajax.php:1206
+#: includes/class-ur-ajax.php:1221
 msgid "This form template requires the following addons."
 msgstr ""
 
-#: includes/class-ur-ajax.php:1208
+#: includes/class-ur-ajax.php:1223
 msgid "Required Addons"
 msgstr ""
 
 #. translators: %s - Integration tab url
-#: includes/class-ur-ajax.php:1263
+#: includes/class-ur-ajax.php:1278
 msgid "Seems like you haven't added the reCAPTCHA Keys. <a href=\"%s\" >Add Now.</a>"
 msgstr ""
 
-#: includes/class-ur-ajax.php:1287
+#: includes/class-ur-ajax.php:1302
 msgid "No plugin specified."
 msgstr ""
 
-#: includes/class-ur-ajax.php:1301
+#: includes/class-ur-ajax.php:1316
 #: includes/functions-ur-core.php:2679
 msgid "Sorry, you are not allowed to install plugins on this site."
 msgstr ""
 
-#: includes/class-ur-ajax.php:1365
+#: includes/class-ur-ajax.php:1380
 #: includes/functions-ur-core.php:2759
 #: includes/RestApi/controllers/version1/class-ur-modules.php:664
 msgid "Unable to connect to the filesystem. Please confirm your credentials."
 msgstr ""
 
-#: includes/class-ur-ajax.php:1407
+#: includes/class-ur-ajax.php:1422
+msgid "You do not have permission to create form."
+msgstr ""
+
+#: includes/class-ur-ajax.php:1426
 msgid "Blank Form"
 msgstr ""
 
-#: includes/class-ur-ajax.php:1429
+#: includes/class-ur-ajax.php:1448
 msgid "Something went wrong, please try again later"
 msgstr ""
 
-#: includes/class-ur-ajax.php:1453
+#: includes/class-ur-ajax.php:1472
 msgid "Changed email cancelled successfully."
 msgstr ""
 
@@ -6248,11 +6258,11 @@ msgid "Password should not match with Username or Email address."
 msgstr ""
 
 #. translators: %s - Field Label
-#: includes/validation/class-ur-form-validation.php:527
+#: includes/validation/class-ur-form-validation.php:528
 msgid "<strong>%s</strong> is a required field."
 msgstr ""
 
-#: includes/validation/class-ur-form-validation.php:792
+#: includes/validation/class-ur-form-validation.php:793
 msgid "Email already exists"
 msgstr ""
 
@@ -6540,7 +6550,7 @@ msgstr ""
 #: src/dashboard/components/common/UsePluginInstallActivate.js:180
 #: src/dashboard/screens/Dashboard/components/UsefulPlugins.js:78
 #: src/dashboard/screens/Modules/components/ModuleItem.js:327
-#: src/dashboard/screens/Modules/Modules.js:402
+#: src/dashboard/screens/Modules/Modules.js:411
 #: src/dashboard/screens/Products/components/ProductCard.js:142
 msgid "Activate"
 msgstr ""
@@ -6735,7 +6745,7 @@ msgid "Watch Videos"
 msgstr ""
 
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:38
-#: src/dashboard/screens/Modules/Modules.js:359
+#: src/dashboard/screens/Modules/Modules.js:368
 msgid "Features"
 msgstr ""
 
@@ -6880,7 +6890,7 @@ msgid "Send Form Data to External URL After Registration"
 msgstr ""
 
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:271
-#: src/dashboard/screens/Modules/Modules.js:380
+#: src/dashboard/screens/Modules/Modules.js:389
 msgid "Addons"
 msgstr ""
 
@@ -7274,39 +7284,43 @@ msgid "Live Demo"
 msgstr ""
 
 #: src/dashboard/screens/Modules/components/ModuleItem.js:326
-#: src/dashboard/screens/Modules/Modules.js:405
+#: src/dashboard/screens/Modules/Modules.js:414
 msgid "Deactivate"
 msgstr ""
 
-#: src/dashboard/screens/Modules/Modules.js:285
-msgid "Popular"
-msgstr ""
-
-#: src/dashboard/screens/Modules/Modules.js:288
-msgid "Newest"
-msgstr ""
-
-#: src/dashboard/screens/Modules/Modules.js:291
-msgid "Oldest"
+#: src/dashboard/screens/Modules/Modules.js:99
+msgid "Please select at least a feature"
 msgstr ""
 
 #: src/dashboard/screens/Modules/Modules.js:294
-msgid "Ascending"
+msgid "Popular"
 msgstr ""
 
 #: src/dashboard/screens/Modules/Modules.js:297
+msgid "Newest"
+msgstr ""
+
+#: src/dashboard/screens/Modules/Modules.js:300
+msgid "Oldest"
+msgstr ""
+
+#: src/dashboard/screens/Modules/Modules.js:303
+msgid "Ascending"
+msgstr ""
+
+#: src/dashboard/screens/Modules/Modules.js:306
 msgid "Descending"
 msgstr ""
 
-#: src/dashboard/screens/Modules/Modules.js:391
+#: src/dashboard/screens/Modules/Modules.js:400
 msgid "Bulk Actions"
 msgstr ""
 
-#: src/dashboard/screens/Modules/Modules.js:421
+#: src/dashboard/screens/Modules/Modules.js:430
 msgid "Apply"
 msgstr ""
 
-#: src/dashboard/screens/Modules/Modules.js:436
+#: src/dashboard/screens/Modules/Modules.js:445
 msgid "Search..."
 msgstr ""
 
