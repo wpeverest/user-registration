@@ -64,6 +64,7 @@ class UR_Admin_Assets {
 		// Sitewide menu CSS.
 
 		wp_enqueue_style( 'ur-notice' );
+		wp_enqueue_style( 'user-registration-menu' );
 
 		// Admin styles for UR pages only.
 		if ( in_array( $screen_id, ur_get_screen_ids(), true ) ) {
@@ -81,7 +82,6 @@ class UR_Admin_Assets {
 			wp_enqueue_style( 'tooltipster' );
 			wp_enqueue_style( 'tooltipster-borderless-theme' );
 
-			wp_enqueue_style( 'user-registration-menu' );
 			wp_enqueue_style( 'user-registration-metabox' );
 			wp_enqueue_style( 'user-registration-form-modal-css' );
 
@@ -535,45 +535,44 @@ class UR_Admin_Assets {
 		$max_upload_size_ini = wp_max_upload_size() / 1024;
 
 		$i18n = array(
-			'i18n_choice_delete'                     => esc_html__( 'Delete', 'user-registration' ),
-			'i18n_choice_cancel'                     => esc_html__( 'Cancel', 'user-registration' ),
-			'i18n_user_email'                        => _x( 'User Email', 'user-registration admin', 'user-registration' ),
-			'i18n_user_password'                     => _x( 'User Password', 'user-registration admin', 'user-registration' ),
-			'i18n_payment_field'                     => _x( 'Payment', 'user-registration admin', 'user-registration' ),
-			'i18n_stripe_field'                      => _x( 'Stripe Gateway', 'user-registration admin', 'user-registration' ),
-			'i18n_are_you_sure_want_to_delete_row'   => _x( 'Are you sure want to delete this row?', 'user registration admin', 'user-registration' ),
-			'i18n_are_you_sure_want_to_delete_field' => _x( 'Are you sure want to delete this field?', 'user registration admin', 'user-registration' ),
+			'i18n_choice_delete'                          => esc_html__( 'Delete', 'user-registration' ),
+			'i18n_choice_cancel'                          => esc_html__( 'Cancel', 'user-registration' ),
+			'i18n_user_email'                             => _x( 'User Email', 'user-registration admin', 'user-registration' ),
+			'i18n_user_password'                          => _x( 'User Password', 'user-registration admin', 'user-registration' ),
+			'i18n_payment_field'                          => _x( 'Payment', 'user-registration admin', 'user-registration' ),
+			'i18n_stripe_field'                           => _x( 'Stripe Gateway', 'user-registration admin', 'user-registration' ),
+			'i18n_are_you_sure_want_to_delete_row'        => _x( 'Are you sure want to delete this row?', 'user registration admin', 'user-registration' ),
+			'i18n_are_you_sure_want_to_delete_field'      => _x( 'Are you sure want to delete this field?', 'user registration admin', 'user-registration' ),
 			'i18n_at_least_one_row_is_required_to_create_a_registration_form' => _x( 'At least one row is required to create a registration form.', 'user registration admin', 'user-registration' ),
-			'i18n_cannot_delete_row'                 => _x( 'Cannot delete row', 'user registration admin', 'user-registration' ),
-			'i18n_user_required_field_already_there' => _x( 'This field is one time draggable.', 'user registration admin', 'user-registration' ),
+			'i18n_cannot_delete_row'                      => _x( 'Cannot delete row', 'user registration admin', 'user-registration' ),
+			'i18n_user_required_field_already_there'      => _x( 'This field is one time draggable.', 'user registration admin', 'user-registration' ),
 			'i18n_user_required_field_already_there_could_not_clone' => _x( 'Could not clone this field.', 'user registration admin', 'user-registration' ),
-			'i18n_form_successfully_saved'           => _x( 'Form successfully saved.', 'user registration admin', 'user-registration' ),
-			'i18n_success'                           => _x( 'Success', 'user registration admin', 'user-registration' ),
-			'i18n_error'                             => _x( 'Error', 'user registration admin', 'user-registration' ),
-			'i18n_msg_delete'                        => esc_html__( 'Confirm Deletion', 'user-registration' ),
-			'i18n_at_least_one_field_need_to_select' => _x( 'At least one field needs to be selected.', 'user registration admin', 'user-registration' ),
-			'i18n_empty_form_name'                   => _x( 'Empty form name.', 'user registration admin', 'user-registration' ),
-			'i18n_previous_save_action_ongoing'      => _x( 'Previous save action on going.', 'user registration admin', 'user-registration' ),
-			'i18n_duplicate_field_name'              => _x( 'Duplicate field name.', 'user registration admin', 'user-registration' ),
-			'i18n_empty_field_label'                 => _x( 'Empty field label.', 'user registration admin', 'user-registration' ),
-			'i18n_invald_field_name'                 => _x( 'Invalid field name. Please do not use space, empty or special character, you can use underscore.', 'user registration admin', 'user-registration' ),
-			'i18n_multiple_field_key'                => _x( 'Multiple field key ', 'user registration admin', 'user-registration' ),
-			'i18n_field_is_required'                 => _x( 'field is required.', 'user registration admin', 'user-registration' ),
-			'i18n_drag_your_first_item_here'         => _x( 'Drag your first form item here.', 'user registration admin', 'user-registration' ),
-			'i18n_select_countries'                  => _x( 'Please select at least one country.', 'user registration admin', 'user-registration' ),
-			'i18n_input_size'                        => _x( 'input size must be greater than zero.', 'user registration admin', 'user-registration' ),
-			'i18n_min_max_input'                     => _x( 'input of min value must be less than max value.', 'user registration admin', 'user-registration' ),
+			'i18n_form_successfully_saved'                => _x( 'Form successfully saved.', 'user registration admin', 'user-registration' ),
+			'i18n_success'                                => _x( 'Success', 'user registration admin', 'user-registration' ),
+			'i18n_error'                                  => _x( 'Error', 'user registration admin', 'user-registration' ),
+			'i18n_msg_delete'                             => esc_html__( 'Confirm Deletion', 'user-registration' ),
+			'i18n_at_least_one_field_need_to_select'      => _x( 'At least one field needs to be selected.', 'user registration admin', 'user-registration' ),
+			'i18n_empty_form_name'                        => _x( 'Empty form name.', 'user registration admin', 'user-registration' ),
+			'i18n_previous_save_action_ongoing'           => _x( 'Previous save action on going.', 'user registration admin', 'user-registration' ),
+			'i18n_duplicate_field_name'                   => _x( 'Duplicate field name.', 'user registration admin', 'user-registration' ),
+			'i18n_empty_field_label'                      => _x( 'Empty field label.', 'user registration admin', 'user-registration' ),
+			'i18n_invald_field_name'                      => _x( 'Invalid field name. Please do not use space, empty or special character, you can use underscore.', 'user registration admin', 'user-registration' ),
+			'i18n_multiple_field_key'                     => _x( 'Multiple field key ', 'user registration admin', 'user-registration' ),
+			'i18n_field_is_required'                      => _x( 'field is required.', 'user registration admin', 'user-registration' ),
+			'i18n_drag_your_first_item_here'              => _x( 'Drag your first form item here.', 'user registration admin', 'user-registration' ),
+			'i18n_select_countries'                       => _x( 'Please select at least one country.', 'user registration admin', 'user-registration' ),
+			'i18n_input_size'                             => _x( 'input size must be greater than zero.', 'user registration admin', 'user-registration' ),
+			'i18n_min_max_input'                          => _x( 'input of min value must be less than max value.', 'user registration admin', 'user-registration' ),
 			'i18n_max_upload_size'                   => _x( 'input of max upload size must less than ' . $max_upload_size_ini . ' set in ini configuration', 'user registration admin', 'user-registration' ), // phpcs:ignore
-			'i18n_pc_profile_completion_error'       => esc_html__( 'You cannot set the zero less than zero to the completion percentage.', 'user-registration' ),
-			'i18n_pc_custom_percentage_filed_error'  => esc_html__( 'Sum of progress percentage for each field cannot be greater than the completion perecentage.', 'user-registration' ),
-			'i18n_google_sheets_user_email_missing_error'  => esc_html__( 'User Email field should me mapped.', 'user-registration' ),
-			'i18n_google_sheets_sheet_empty_error'  => esc_html__( 'Look like your sheet is empty ! Please try again', 'user-registration' ),
-			'i18n_urfr_qna_field_empty_error'        => esc_html__( 'Form Restriction: Empty Question or Answer field.', 'user-registration' ),
-			'i18n_urfr_field_required_error'         => esc_html__( 'Form Restriction: Q&A restriction requires at least one question and answer.', 'user-registration' ),
+			'i18n_pc_profile_completion_error'            => esc_html__( 'You cannot set the zero less than zero to the completion percentage.', 'user-registration' ),
+			'i18n_pc_custom_percentage_filed_error'       => esc_html__( 'Sum of progress percentage for each field cannot be greater than the completion perecentage.', 'user-registration' ),
+			'i18n_google_sheets_user_email_missing_error' => esc_html__( 'User Email field should me mapped.', 'user-registration' ),
+			'i18n_google_sheets_sheet_empty_error'        => esc_html__( 'Look like your sheet is empty ! Please try again', 'user-registration' ),
+			'i18n_urfr_qna_field_empty_error'             => esc_html__( 'Form Restriction: Empty Question or Answer field.', 'user-registration' ),
+			'i18n_urfr_field_required_error'              => esc_html__( 'Form Restriction: Q&A restriction requires at least one question and answer.', 'user-registration' ),
 		);
 
 		return $i18n;
-
 	}
 }
 

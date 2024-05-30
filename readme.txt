@@ -245,7 +245,9 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 * Enhance  - Admin approval email content updated.
 * Enhance  - WPML email translation with user selected language.
 * Tweak    - Enqueing style and script only to UR screens.
+* Dev      - Check user capability before performing action.
 * Dev      - Introduce function to get field value by field name while registration.
+* Fix      - Import Form Issue from Unpriviledge User.
 * Fix      - Disable the default WordPress not working.
 * Fix      - Deprecated function notices in getting started page.
 * Fix      - Conditionally hidden invite code throws required error message.
