@@ -4765,8 +4765,8 @@ if ( ! function_exists( 'ur_get_registration_field_value_by_field_name' ) ) {
 	function ur_get_registration_field_value_by_field_name( $field_name ) {
 		$field_value = '';
 
-		if ( isset( $_POST['form_data'] ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			$form_data = json_decode( wp_unslash( $_POST['form_data'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		if ( isset( $_POST['form_data'] ) ) { // phpcs:ignore
+			$form_data = json_decode( wp_unslash( $_POST['form_data'] ) ); // phpcs:ignore
 		}
 		if ( gettype( $form_data ) != 'array' && gettype( $form_data ) != 'object' ) {
 			$form_data = array();
@@ -4794,8 +4794,6 @@ if ( ! function_exists( 'ur_get_translated_string' ) ) {
 	 * @param  string $form_id Form ID.
 	 */
 	function ur_get_translated_string( $string, $language_code, $field_key, $form_id = 0 ) {
-		$subject = ur_string_translation( $form_id, $field_key, $subject );
-		$message = ur_string_translation( $form_id, $field_key, $message );
 
 		if ( function_exists( 'icl_translate' ) ) {
 			$language_code     = is_array( $language_code ) ? $language_code[0] : $language_code;
