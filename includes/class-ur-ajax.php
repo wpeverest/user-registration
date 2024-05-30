@@ -718,6 +718,10 @@ class UR_AJAX {
 		global $wpdb;
 		try {
 			check_ajax_referer( 'process-locate-ajax-nonce', 'security' );
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( array( 'message' => __( 'You do not have permission.', 'user-registration' ) ) );
+				wp_die( -1 );
+			}
 			$id                          = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : '';
 			$user_registration_shortcode = '%[user_registration_form id="' . $id . '"%';
 			$form_id_shortcode           = '%{"formId":"' . $id . '"%';
@@ -783,6 +787,10 @@ class UR_AJAX {
 	public static function import_form_action() {
 		try {
 			check_ajax_referer( 'ur_import_form_save_nonce', 'security' );
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( array( 'message' => __( 'You do not have permission.', 'user-registration' ) ) );
+				wp_die( -1 );
+			}
 			UR_Admin_Import_Export_Forms::import_form();
 		} catch ( Exception $e ) {
 			wp_send_json_error(
@@ -931,6 +939,10 @@ class UR_AJAX {
 	public static function dashboard_widget() {
 
 		check_ajax_referer( 'dashboard-widget', 'security' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission.', 'user-registration' ) ) );
+			wp_die( -1 );
+		}
 
 		$form_id = isset( $_POST['form_id'] ) ? wp_unslash( absint( $_POST['form_id'] ) ) : 0;
 
@@ -1406,6 +1418,10 @@ class UR_AJAX {
 		ob_start();
 
 		check_ajax_referer( 'user_registration_create_form', 'security' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to create form.', 'user-registration' ) ) );
+			wp_die( -1 );
+		}
 
 		$title    = isset( $_POST['title'] ) ? sanitize_text_field( wp_unslash( $_POST['title'] ) ) : esc_html__( 'Blank Form', 'user-registration' );
 		$template = isset( $_POST['template'] ) ? sanitize_text_field( wp_unslash( $_POST['template'] ) ) : 'blank';
