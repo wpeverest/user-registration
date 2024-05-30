@@ -66,7 +66,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 			if ( ! empty( $form_fields ) ) {
 
 				foreach ( $form_fields as $key => $value ) {
-					if ( isset( $value['field_key'] ) && 'signature' === $value['field_key'] ) {
+					if ( isset( $value['field_key'] ) && 'signature' === $value['field_key'] && isset( $_GET['user_id'] ) ) {
 						unset( $form_fields[ $key ] );
 					}
 				}

@@ -2399,7 +2399,11 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 			$value = implode( ',', $value );
 		}
 
-		$data_html .= '<tr><td>' . $label . ' : </td><td>' . $value . '</td></tr>';
+		if ( isset( $form_data->extra_params['field_key'] ) && 'signature' === $form_data->extra_params['field_key'] ) {
+			$data_html .= '<tr><td>' . $label . ' : </td><td><img class="profile-preview" alt="Signature" width="50px" height="50px" src="' . ( is_numeric( $value ) ? esc_url( wp_get_attachment_url( $value ) ) : esc_url( $value ) ) . '" /></td></tr>';
+		} else {
+			$data_html .= '<tr><td>' . $label . ' : </td><td>' . $value . '</td></tr>';
+		}
 
 		$name_value[ $field_name ] = $value;
 	}
@@ -3019,6 +3023,10 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 				break;
 			case 'profile_picture':
 				$field_value = '<img class="profile-preview" alt="Profile Picture" width="50px" height="50px" src="' . ( is_numeric( $field_value ) ? esc_url( wp_get_attachment_url( $field_value ) ) : esc_url( $field_value ) ) . '" />';
+				$field_value = wp_kses_post( $field_value );
+				break;
+			case 'signature':
+				$field_value = '<img class="profile-preview" alt="Signature" width="50px" height="50px" src="' . ( is_numeric( $field_value ) ? esc_url( wp_get_attachment_url( $field_value ) ) : esc_url( $field_value ) ) . '" />';
 				$field_value = wp_kses_post( $field_value );
 				break;
 			default:
