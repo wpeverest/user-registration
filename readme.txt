@@ -238,7 +238,7 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 
 == Changelog ==
 
-= 3.2.1    - 30/05/2024 =
+= 3.2.1    - 31/05/2024 =
 * Enhance  - Smart tags picker design.
 * Enhance  - All forms list table design.
 * Enhance  - New user registered email added.
