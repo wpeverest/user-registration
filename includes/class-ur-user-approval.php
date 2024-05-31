@@ -64,7 +64,7 @@ class UR_User_Approval {
 	 */
 	public function registration_completed_message( $errors ) {
 
-		if ( ! ( isset( $_GET['checkemail'] ) && 'registered' === $_GET['checkemail'] ) ) {
+		if ( ! ( isset( $_GET['checkemail'] ) && 'registered' === $_GET['checkemail'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			return $errors;
 		}
 
@@ -379,7 +379,7 @@ class UR_User_Approval {
 	 * @return bool
 	 */
 	protected function is_admin_creation_process() {
-		return ( isset( $_REQUEST['action'] ) && 'createuser' == $_REQUEST['action'] );
+		return ( isset( $_REQUEST['action'] ) && 'createuser' == $_REQUEST['action'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	}
 
 	/**

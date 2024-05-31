@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 5.2
 Requires PHP: 7.2
-Tested up to: 6.5.2
-Stable tag: 3.2.0.1
+Tested up to: 6.5.3
+Stable tag: 3.2.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -237,6 +237,21 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 3.2.1    - 31/05/2024 =
+* Enhance  - Smart tags picker design.
+* Enhance  - All forms list table design.
+* Enhance  - New user registered email added.
+* Enhance  - Admin approval email content updated.
+* Enhance  - WPML email translation with user selected language.
+* Tweak    - Enqueing style and script only to UR screens.
+* Dev      - Check user capability before performing action.
+* Dev      - Introduce function to get field value by field name while registration.
+* Fix      - Import Form Issue from Unpriviledge User.
+* Fix      - Disable the default WordPress not working.
+* Fix      - Deprecated function notices in getting started page.
+* Fix      - Conditionally hidden invite code throws required error message.
+* Fix      - Smart Phone Field required error message not displayed on submit.
 
 = 3.2.0.1  - 26/04/2024 =
 * Tweak    - Introduce new hook to modify token expiration duration.

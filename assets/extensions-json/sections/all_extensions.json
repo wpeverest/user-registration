@@ -415,6 +415,20 @@
         "themegrill agency"
       ],
       "released_date": "12/12/2023"
+	  },
+	  {
+      "title": "Google Sheets",
+      "slug" : "user-registration-google-sheets",
+      "name" : "User Registration Google Sheets",
+      "image": "extensions-json/sections/images/google-sheets.png",
+      "excerpt": "Seamlessly send registration form data from user Registration to Google Sheets directly after form submission.",
+      "link": "https://wpuserregistration.com/features/google-sheets/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "plan" : [
+        "plus",
+        "professional",
+        "themegrill agency"
+      ],
+      "released_date": "30/05/2024"
 	  }
   ]
 }

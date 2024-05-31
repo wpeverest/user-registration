@@ -2965,8 +2965,8 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 			$field_meta_key = substr( $field_meta_key, 0, strpos( $field_meta_key, 'user_registration_' ) );
 		}
 
-		$user_id = isset( $_GET['user'] ) ? sanitize_text_field( wp_unslash( $_GET['user'] ) ) : get_current_user_id();
-		$user_id = isset( $_GET['user_id'] ) ? sanitize_text_field( wp_unslash( $_GET['user_id'] ) ) : $user_id;
+		$user_id = isset( $_GET['user'] ) ? sanitize_text_field( wp_unslash( $_GET['user'] ) ) : get_current_user_id(); //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$user_id = isset( $_GET['user_id'] ) ? sanitize_text_field( wp_unslash( $_GET['user_id'] ) ) : $user_id; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$form_id = isset( $_POST['form_id'] ) ? sanitize_text_field( wp_unslash( $_POST['form_id'] ) ) : ur_get_form_id_by_userid( $user_id ); //phpcs:ignore.
 
 		$field_name = ur_get_field_data_by_field_name( $form_id, $field_meta_key );
@@ -3095,7 +3095,7 @@ if ( ! function_exists( 'ur_find_my_account_in_page' ) ) {
 
 		if ( $matched <= 0 ) {
 			$matched = $wpdb->get_var(
-				$wpdb->prepare( "SELECT COUNT(*) FROM {$post_meta_table} WHERE post_id = '{$login_page_id}' AND ( meta_value LIKE '%[user_registration_login%' OR meta_value LIKE '%[user_registration_my_account%' OR meta_value LIKE '%[woocommerce_my_account%' OR post_content LIKE '%<!-- wp:user-registration/myaccount%' OR post_content LIKE '%<!-- wp:user-registration/login%' )" ) //phpcs:ignore.
+				$wpdb->prepare( "SELECT COUNT(*) FROM {$post_meta_table} WHERE post_id = '{$login_page_id}' AND ( meta_value LIKE '%[user_registration_login%' OR meta_value LIKE '%[user_registration_my_account%' OR meta_value LIKE '%[woocommerce_my_account%' OR meta_value LIKE '%<!-- wp:user-registration/myaccount%' OR meta_value LIKE '%<!-- wp:user-registration/login%' )" ) //phpcs:ignore.
 			);
 		}
 		/**
@@ -4488,8 +4488,8 @@ if ( ! function_exists( 'ur_add_links_to_top_nav' ) ) {
 
 		$form_id = 0;
 
-		if ( isset( $_GET['ur_preview'] ) && isset( $_GET['form_id'] ) ) {
-			$form_id = sanitize_text_field( wp_unslash( $_GET['form_id'] ) );
+		if ( isset( $_GET['ur_preview'] ) && isset( $_GET['form_id'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$form_id = sanitize_text_field( wp_unslash( $_GET['form_id'] ) ); //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		} elseif ( is_page() || is_single() ) {
 			$post_content = get_the_content();
 
@@ -4755,8 +4755,8 @@ if ( ! function_exists( 'ur_get_registration_field_value_by_field_name' ) ) {
 	function ur_get_registration_field_value_by_field_name( $field_name ) {
 		$field_value = '';
 
-		if ( isset( $_POST['form_data'] ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			$form_data = json_decode( wp_unslash( $_POST['form_data'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		if ( isset( $_POST['form_data'] ) ) { // phpcs:ignore
+			$form_data = json_decode( wp_unslash( $_POST['form_data'] ) ); // phpcs:ignore
 		}
 		if ( gettype( $form_data ) != 'array' && gettype( $form_data ) != 'object' ) {
 			$form_data = array();
@@ -4784,9 +4784,6 @@ if ( ! function_exists( 'ur_get_translated_string' ) ) {
 	 * @param  string $form_id Form ID.
 	 */
 	function ur_get_translated_string( $string, $language_code, $field_key, $form_id = 0 ) {
-		$subject = ur_string_translation( $form_id, $field_key, $subject );
-		$message = ur_string_translation( $form_id, $field_key, $message );
-
 		if ( function_exists( 'icl_translate' ) ) {
 			$language_code     = is_array( $language_code ) ? $language_code[0] : $language_code;
 			$translated_string = apply_filters( 'wpml_translate_single_string', $string, 'user-registration', $string, $language_code );

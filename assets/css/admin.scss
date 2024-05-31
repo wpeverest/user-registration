@@ -56,6 +56,10 @@
   .user-registration_page_user-registration-dashboard {
 	#wpcontent{
 		margin-left: 140px;
+
+		#wpbody-content {
+			float: none;
+		}
 	}
   }
 
@@ -1854,9 +1858,9 @@
 
 	  .ur-builder-wrapper-footer {
 		  .button.button-style-customizer {
-			  height: 48px;
-			  width: 48px;
-			  bottom: 72px;
+			  height: 48px !important;
+			  width: 48px !important;
+			  bottom: 72px !important;
 			  box-shadow: 1px 2px 8px transparentize($gray_base, 0.85);
 
 			  .dashicons {
@@ -4915,7 +4919,7 @@
 		}
 
 		// Bulk checkbox
-		input[type="checkbox"] {
+		input[type="checkbox"]:not(.urcr-enable-access-rule) {
 			border-radius: $border_radius_2;
 			border-color: $grey-200;
 		}

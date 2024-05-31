@@ -39,7 +39,7 @@ class UR_Query {
 	 * Get any errors from querystring.
 	 */
 	public function get_errors() {
-		$error = ! empty( $_GET['ur_error'] ) ? sanitize_text_field( wp_unslash( $_GET['ur_error'] ) ) : ''; // WPCS: input var ok, CSRF ok.
+		$error = ! empty( $_GET['ur_error'] ) ? sanitize_text_field( wp_unslash( $_GET['ur_error'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		if ( $error && ! ur_has_notice( $error, 'error' ) ) {
 			ur_add_notice( $error, 'error' );
@@ -173,8 +173,8 @@ class UR_Query {
 
 		// Map query vars to their keys, or get them if endpoints are not supported.
 		foreach ( $this->get_query_vars() as $key => $var ) {
-			if ( isset( $_GET[ $var ] ) ) { // WPCS: input var ok, CSRF ok.
-				$wp->query_vars[ $key ] = sanitize_text_field( wp_unslash( $_GET[ $var ] ) ); // WPCS: input var ok, CSRF ok.
+			if ( isset( $_GET[ $var ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$wp->query_vars[ $key ] = sanitize_text_field( wp_unslash( $_GET[ $var ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			} elseif ( isset( $wp->query_vars[ $var ] ) ) {
 				$wp->query_vars[ $key ] = $wp->query_vars[ $var ];
 			}

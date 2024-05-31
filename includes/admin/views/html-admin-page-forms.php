@@ -146,7 +146,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						?>
 						<div class='ur-builder-wrapper <?php echo esc_attr( $builder_class ); ?>'>
 							<?php
-							if ( ! empty( $form_data ) && isset( $_GET['edit-registration'] ) && is_numeric( $_GET['edit-registration'] ) ) {
+							if ( ! empty( $form_data ) && isset( $_GET['edit-registration'] ) && is_numeric( $_GET['edit-registration'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 								$this->get_edit_form_field( $form_data );
 							} else {
 								?>

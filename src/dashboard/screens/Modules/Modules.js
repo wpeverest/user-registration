@@ -94,66 +94,75 @@ const Modules = () => {
 	}, [tabIndex, modules, modulesLoaded, isPerformingBulkAction]);
 
 	const handleBulkActions = () => {
-		setIsPerformingBulkAction(true);
+		if( selectedModuleData.length < 1 ) {
+			toast({
+				title: __( 'Please select at least a feature', 'user-registration'),
+				status: "error",
+				duration: 3000,
+			});
+		} else {
 
-		if (bulkAction === "activate") {
-			bulkActivateModules(selectedModuleData)
-				.then((data) => {
-					if (data.success) {
+			setIsPerformingBulkAction(true);
+
+			if (bulkAction === "activate") {
+				bulkActivateModules(selectedModuleData)
+					.then((data) => {
+						if (data.success) {
+							toast({
+								title: data.message,
+								status: "success",
+								duration: 3000,
+							});
+						} else {
+							toast({
+								title: data.message,
+								status: "error",
+								duration: 3000,
+							});
+						}
+					})
+					.catch((e) => {
 						toast({
-							title: data.message,
-							status: "success",
-							duration: 3000,
-						});
-					} else {
-						toast({
-							title: data.message,
+							title: e.message,
 							status: "error",
 							duration: 3000,
 						});
-					}
-				})
-				.catch((e) => {
-					toast({
-						title: e.message,
-						status: "error",
-						duration: 3000,
+					})
+					.finally(() => {
+						setModulesLoaded(false);
+						setIsPerformingBulkAction(false);
+						setSelectedModuleData({});
 					});
-				})
-				.finally(() => {
-					setModulesLoaded(false);
-					setIsPerformingBulkAction(false);
-					setSelectedModuleData({});
-				});
-		} else if (bulkAction === "deactivate") {
-			bulkDeactivateModules(selectedModuleData)
-				.then((data) => {
-					if (data.success) {
+			} else if (bulkAction === "deactivate") {
+				bulkDeactivateModules(selectedModuleData)
+					.then((data) => {
+						if (data.success) {
+							toast({
+								title: data.message,
+								status: "success",
+								duration: 3000,
+							});
+						} else {
+							toast({
+								title: data.message,
+								status: "error",
+								duration: 3000,
+							});
+						}
+					})
+					.catch((e) => {
 						toast({
-							title: data.message,
-							status: "success",
-							duration: 3000,
-						});
-					} else {
-						toast({
-							title: data.message,
+							title: e.message,
 							status: "error",
 							duration: 3000,
 						});
-					}
-				})
-				.catch((e) => {
-					toast({
-						title: e.message,
-						status: "error",
-						duration: 3000,
+					})
+					.finally(() => {
+						setModulesLoaded(false);
+						setIsPerformingBulkAction(false);
+						setSelectedModuleData({});
 					});
-				})
-				.finally(() => {
-					setModulesLoaded(false);
-					setIsPerformingBulkAction(false);
-					setSelectedModuleData({});
-				});
+			}
 		}
 	};
 

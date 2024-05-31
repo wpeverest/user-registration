@@ -270,8 +270,8 @@
 						response: function (e, target) {
 							if ("test-demo" === target) {
 							}
-						},
-					},
+						}
+					}
 				};
 				user_profile_modal.init();
 			},
@@ -352,7 +352,7 @@
 							form_restriction_extra_settings_data,
 						form_restriction_submit_data:
 							form_restriction_submit_data
-					},
+					}
 				};
 
 				$(document).trigger(
@@ -373,34 +373,83 @@
 					return;
 				}
 				//Google Sheet validation
-				if(data.data.ur_google_sheets_integration.length > 0){
-					google_sheets_connections = data.data.ur_google_sheets_integration;
+				if (data.data.ur_google_sheets_integration.length > 0) {
+					google_sheets_connections =
+						data.data.ur_google_sheets_integration;
 
 					// Send data only if username field is mapped.
-					if(google_sheets_connections[0].hasOwnProperty('mapped_fields')){
-						var mapped_fields = google_sheets_connections[0]['mapped_fields'];
-						if ($.isEmptyObject(mapped_fields)){
+					if (
+						google_sheets_connections[0].hasOwnProperty(
+							"mapped_fields"
+						)
+					) {
+						var mapped_fields =
+							google_sheets_connections[0]["mapped_fields"];
+						if ($.isEmptyObject(mapped_fields)) {
 							URFormBuilder.show_message(
 								user_registration_form_builder_data.i18n_admin
-								.i18n_google_sheets_sheet_empty_error
+									.i18n_google_sheets_sheet_empty_error
 							);
 							return;
 						}
 						var user_login_found = false;
 						for (var key in mapped_fields) {
-							if (mapped_fields.hasOwnProperty(key) && mapped_fields[key] === 'user_email') {
+							if (
+								mapped_fields.hasOwnProperty(key) &&
+								mapped_fields[key] === "user_email"
+							) {
 								user_login_found = true;
 								break;
 							}
 						}
-						if(! user_login_found){
+						if (!user_login_found) {
 							URFormBuilder.show_message(
 								user_registration_form_builder_data.i18n_admin
-								.i18n_google_sheets_user_email_missing_error
-								);
+									.i18n_google_sheets_user_email_missing_error
+							);
 							return;
 						}
+					}
+				}
 
+				//Google Sheet validation
+				if (data.data.ur_google_sheets_integration !== undefined) {
+					google_sheets_connections =
+						data.data.ur_google_sheets_integration;
+
+					// Send data only if username field is mapped.
+					if (
+						google_sheets_connections.length > 0 &&
+						google_sheets_connections[0].hasOwnProperty(
+							"mapped_fields"
+						)
+					) {
+						var mapped_fields =
+							google_sheets_connections[0]["mapped_fields"];
+						if ($.isEmptyObject(mapped_fields)) {
+							URFormBuilder.show_message(
+								user_registration_form_builder_data.i18n_admin
+									.i18n_google_sheets_sheet_empty_error
+							);
+							return;
+						}
+						var user_login_found = false;
+						for (var key in mapped_fields) {
+							if (
+								mapped_fields.hasOwnProperty(key) &&
+								mapped_fields[key] === "user_email"
+							) {
+								user_login_found = true;
+								break;
+							}
+						}
+						if (!user_login_found) {
+							URFormBuilder.show_message(
+								user_registration_form_builder_data.i18n_admin
+									.i18n_google_sheets_user_email_missing_error
+							);
+							return;
+						}
 					}
 				}
 
@@ -485,7 +534,7 @@
 								Swal.fire({
 									icon: "success",
 									title: title,
-									html: message_body,
+									html: message_body
 								}).then(function (value) {
 									if (0 === parseInt(ur_form_id)) {
 										window.location =
@@ -509,7 +558,7 @@
 							var error = response.responseJSON.data.message;
 							URFormBuilder.show_message(error);
 						}
-					},
+					}
 				});
 			},
 			/**
@@ -546,14 +595,14 @@
 							confirm: {
 								text: user_registration_form_builder_data.i18n_close,
 								btnClass: "btn-confirm",
-								keys: ["enter"],
-							},
+								keys: ["enter"]
+							}
 						},
 						escapeKey: true,
 						backgroundDismiss: function () {
 							return true;
 						},
-						theme: "material",
+						theme: "material"
 					});
 				} else {
 					jc.close();
@@ -571,7 +620,7 @@
 				);
 				var response = {
 					validation_status: true,
-					message: "",
+					message: ""
 				};
 				if ($(".ur-selected-item").length === 0) {
 					response.validation_status = false;
@@ -719,7 +768,7 @@
 					if (stripe.is(":checked")) {
 						var stripe_fields = [
 							"payment_fields",
-							"stripe_gateway",
+							"stripe_gateway"
 						];
 
 						required_fields = required_fields.concat(stripe_fields);
@@ -1011,27 +1060,30 @@
 					}
 				);
 
-				if( $('#urfr_enable_verification').is(":checked") && $("#urfr_verification_type").val() === 'qna' ) {
+				if (
+					$("#urfr_enable_verification").is(":checked") &&
+					$("#urfr_verification_type").val() === "qna"
+				) {
 					// Validate empty fields for question and answer block.
-					if($('.urfr-qna-question-wrapper').length < 1) {
+					if ($(".urfr-qna-question-wrapper").length < 1) {
 						response.validation_status = false;
 						response.message =
-							user_registration_form_builder_data.i18n_admin
-								.i18n_urfr_field_required_error;
+							user_registration_form_builder_data.i18n_admin.i18n_urfr_field_required_error;
 					}
 
-					$.each(
-						$(".urfr-qna-block"),
-						function() {
-							var questionValue = $(this).find("input[name='urfr_qna_question']").val();
-							var answer = $(this).find("input[name='urfr_qna_answer']").val();
-							if(questionValue === '' || answer === '') {
-								response.validation_status = false;
-								response.message =
-									user_registration_form_builder_data.i18n_admin
-										.i18n_urfr_qna_field_empty_error;
-							}
-						});
+					$.each($(".urfr-qna-block"), function () {
+						var questionValue = $(this)
+							.find("input[name='urfr_qna_question']")
+							.val();
+						var answer = $(this)
+							.find("input[name='urfr_qna_answer']")
+							.val();
+						if (questionValue === "" || answer === "") {
+							response.validation_status = false;
+							response.message =
+								user_registration_form_builder_data.i18n_admin.i18n_urfr_qna_field_empty_error;
+						}
+					});
 				}
 				return response;
 			},
@@ -1147,7 +1199,7 @@
 							URFormBuilder.get_field_general_setting($this_item),
 						advance_setting:
 							URFormBuilder.get_field_advance_setting($this_item),
-						icon: icon_class,
+						icon: icon_class
 					};
 
 					all_field_data.push(single_field_data);
@@ -1194,9 +1246,7 @@
 									)
 									.val();
 								var image = $(element)
-									.find(
-										"input.ur-type-image-choice"
-									)
+									.find("input.ur-type-image-choice")
 									.val();
 								if (
 									array_value.every(function (each_value) {
@@ -1208,27 +1258,37 @@
 											label: label,
 											value: value,
 											sell_value: sell_value,
-											image: image,
+											image: image
 										});
 								}
 								general_setting_data["options"] = array_value;
 							});
-						} else if ("image-choice" === $(this).attr("data-field-name") ) {
+						} else if (
+							"image-choice" === $(this).attr("data-field-name")
+						) {
 							var li_elements = $(this).closest("ul").find("li");
 							var array_value = [];
 
 							li_elements.each(function (index, element) {
-							  var label = $(element).find("input.ur-type-radio-label,input.ur-type-checkbox-label").val();
-							  var image = $(element).find("input.ur-type-image-choice").val();
+								var label = $(element)
+									.find(
+										"input.ur-type-radio-label,input.ur-type-checkbox-label"
+									)
+									.val();
+								var image = $(element)
+									.find("input.ur-type-image-choice")
+									.val();
 
-							  if (array_value.every(function (each_value) {
-								return each_value.label !== label;
-							  })) {
-								array_value.push({
-								  label: label,
-								  image: image,
-								});
-							  }
+								if (
+									array_value.every(function (each_value) {
+										return each_value.label !== label;
+									})
+								) {
+									array_value.push({
+										label: label,
+										image: image
+									});
+								}
 							});
 
 							general_setting_data["image_options"] = array_value;
@@ -1243,11 +1303,10 @@
 								})
 							) {
 								general_setting_data["options"] =
-								option_values.push(choice_value);
+									option_values.push(choice_value);
 							}
 							var filteredArray = option_values.filter(Boolean);
 							general_setting_data["options"] = filteredArray;
-
 						} else if (
 							"subscription_plan" ===
 							$(this).attr("data-field-name")
@@ -1264,19 +1323,13 @@
 									.find("input.ur-type-radio-money-input")
 									.val();
 								var sell_value = $(element)
-									.find(
-										"input.ur-radio-selling-price-input"
-									)
+									.find("input.ur-radio-selling-price-input")
 									.val();
 								var interval_count = $(element)
-									.find(
-										"input.ur-radio-interval-count-input"
-									)
+									.find("input.ur-radio-interval-count-input")
 									.val();
 								var recurring_period = $(element)
-									.find(
-										".ur-radio-recurring-period"
-									)
+									.find(".ur-radio-recurring-period")
 									.val();
 								var trail_interval_count = $(element)
 									.find(
@@ -1284,16 +1337,13 @@
 									)
 									.val();
 								var trail_recurring_period = $(element)
-									.find(
-										".ur-radio-trail-recurring-period"
-									)
+									.find(".ur-radio-trail-recurring-period")
 									.val();
 
-									var trail_period_enable = $single_item
-										.find(".ur-general-setting-block")
-										.find(
-											'input[data-field="trail_period"]'
-										).val();
+								var trail_period_enable = $single_item
+									.find(".ur-general-setting-block")
+									.find('input[data-field="trail_period"]')
+									.val();
 
 								if (
 									array_value.every(function (each_value) {
@@ -1307,9 +1357,12 @@
 											sell_value: sell_value,
 											interval_count: interval_count,
 											recurring_period: recurring_period,
-											trail_period_enable: trail_period_enable,
-											trail_interval_count: trail_interval_count,
-											trail_recurring_period: trail_recurring_period,
+											trail_period_enable:
+												trail_period_enable,
+											trail_interval_count:
+												trail_interval_count,
+											trail_recurring_period:
+												trail_recurring_period
 										});
 								}
 								general_setting_data["options"] = array_value;
@@ -1336,7 +1389,7 @@
 									general_setting_data["options"] =
 										captcha_value.push({
 											question: question,
-											answer: answer,
+											answer: answer
 										});
 								}
 								general_setting_data["options"] = captcha_value;
@@ -1434,9 +1487,7 @@
 
 							default:
 								if (
-									!$this_node.hasClass(
-										"ur-type-image-choice"
-									)
+									!$this_node.hasClass("ur-type-image-choice")
 								) {
 									value = $this_node.val();
 								}
@@ -1483,13 +1534,19 @@
 			/**
 			 * Get all the data related to form_restriction
 			 */
-			get_form_restriction_submit_data: function() {
-				var form_data = $('.urfr-qna-block').map(function(k, item) {
-					return {
-						question: $(item).find('input[name="urfr_qna_question"]').val(),
-						answer:  $(item).find('input[name="urfr_qna_answer"]').val()
-					};
-				}).get();
+			get_form_restriction_submit_data: function () {
+				var form_data = $(".urfr-qna-block")
+					.map(function (k, item) {
+						return {
+							question: $(item)
+								.find('input[name="urfr_qna_question"]')
+								.val(),
+							answer: $(item)
+								.find('input[name="urfr_qna_answer"]')
+								.val()
+						};
+					})
+					.get();
 				return JSON.stringify(form_data);
 			},
 			/**
@@ -1527,7 +1584,7 @@
 						$.each(grid_list_item, function () {
 							var conditions = {
 								field_key: $(this).attr("name"),
-								field_value: $(this).val(),
+								field_value: $(this).val()
 							};
 							inner_conditions.push(conditions);
 						});
@@ -1548,7 +1605,7 @@
 							$.each(or_list_item, function () {
 								var or_conditions = {
 									field_key: $(this).attr("name"),
-									field_value: $(this).val(),
+									field_value: $(this).val()
 								};
 								inner_or_conditions.push(or_conditions);
 							});
@@ -1559,7 +1616,7 @@
 					var all_fields = {
 						assign_role: assign_role,
 						conditions: all_field_data,
-						or_conditions: or_field_data,
+						or_conditions: or_field_data
 					};
 					form_data.push(all_fields);
 				});
@@ -1598,7 +1655,7 @@
 						$.each(grid_list_item, function () {
 							var conditions = {
 								field_key: $(this).attr("name"),
-								field_value: $(this).val(),
+								field_value: $(this).val()
 							};
 							inner_conditions.push(conditions);
 						});
@@ -1618,7 +1675,7 @@
 							$.each(or_list_item, function () {
 								var or_conditions = {
 									field_key: $(this).attr("name"),
-									field_value: $(this).val(),
+									field_value: $(this).val()
 								};
 								inner_or_conditions.push(or_conditions);
 							});
@@ -1629,7 +1686,7 @@
 					var all_fields = {
 						action: action,
 						conditions: all_field_data,
-						or_conditions: or_field_data,
+						or_conditions: or_field_data
 					};
 
 					form_data.push(all_fields);
@@ -1674,7 +1731,7 @@
 									$(this).prop("id") +
 									"_content"
 							)
-							.val(),
+							.val()
 					};
 				});
 
@@ -1690,7 +1747,7 @@
 							user_registration_form_builder_data.active_grid,
 						number_of_grid_list:
 							user_registration_form_builder_data.number_of_grid,
-						min_grid_height: 70,
+						min_grid_height: 70
 					};
 					// traverse all nodes
 					return this.each(function () {
@@ -1831,8 +1888,7 @@
 									grid_list_item.css({
 										width: width + "%",
 										"min-height":
-											loaded_params.min_grid_height +
-											"px",
+											loaded_params.min_grid_height + "px"
 									});
 									grid_lists.append(grid_list_item);
 								}
@@ -1878,13 +1934,17 @@
 												.closest(".ur-selected-item")
 												.find(".ur-admin-template")
 												.find(".ur-field")
-												.addClass("user-registration-image-options");
+												.addClass(
+													"user-registration-image-options"
+												);
 										} else {
 											$(this)
 												.closest(".ur-selected-item")
 												.find(".ur-admin-template")
 												.find(".ur-field")
-												.removeClass("user-registration-image-options");
+												.removeClass(
+													"user-registration-image-options"
+												);
 										}
 									}
 								);
@@ -2039,7 +2099,7 @@
 								container,
 								form_field_id
 							) {
-								var form_id = $('#ur_form_id').val();
+								var form_id = $("#ur_form_id").val();
 								var data = {
 									action: "user_registration_user_input_dropped",
 									security:
@@ -2156,13 +2216,13 @@
 													fieldKey: fieldKey,
 													fieldName: fieldName,
 													label: label,
-													visibleTo: visibleTo,
-												},
+													visibleTo: visibleTo
+												}
 											]
 										);
-									},
+									}
 								});
-							},
+							}
 						};
 						var events = {
 							register: function () {
@@ -2374,12 +2434,12 @@
 															customClass:
 																"user-registration-swal2-modal user-registration-swal2-modal--center user-registration-swal2-no-button",
 															showConfirmButton: false,
-															timer: 1000,
+															timer: 1000
 														});
 													},
 													reject: function () {
 														// Do Nothing.
-													},
+													}
 												}
 											);
 										} else {
@@ -2390,7 +2450,7 @@
 												{
 													title: user_registration_form_builder_data
 														.i18n_admin
-														.i18n_cannot_delete_row,
+														.i18n_cannot_delete_row
 												}
 											);
 										}
@@ -2545,7 +2605,7 @@
 											);
 											builder.manage_empty_grid();
 										},
-										connectWith: ".ur-grid-list-item",
+										connectWith: ".ur-grid-list-item"
 									})
 									.disableSelection();
 								$(".ur-input-grids").sortable({
@@ -2560,7 +2620,7 @@
 										$(this).removeClass(
 											"ur-sortable-active"
 										);
-									},
+									}
 								});
 								$("#ur-draggabled .draggable")
 									.draggable({
@@ -2646,7 +2706,7 @@
 													form_field_id
 												);
 											}
-										},
+										}
 									})
 									.disableSelection();
 							},
@@ -2739,8 +2799,8 @@
 																	fieldName,
 																fieldKey:
 																	fieldKey,
-																label: label,
-															},
+																label: label
+															}
 														]
 													);
 
@@ -2749,7 +2809,7 @@
 												},
 												reject: function () {
 													return false;
-												},
+												}
 											}
 										);
 									}
@@ -2833,7 +2893,7 @@
 									.find("a")
 									.eq(0)
 									.trigger("click", ["triggered_click"]);
-							},
+							}
 						};
 						builder.init();
 						events.register();
@@ -2967,10 +3027,9 @@
 					.find(".ur-field")
 					.data("field-key");
 
-					$(document).trigger(
-						"user_registration_handle_selected_item",
-						[selected_item]
-					);
+				$(document).trigger("user_registration_handle_selected_item", [
+					selected_item
+				]);
 
 				if (
 					"country" === field_key ||
@@ -2986,24 +3045,27 @@
 					$selected_countries_option_field
 						.on("change", function (e) {
 							var selected_countries_iso_s = $(this).val();
-							var html = "<option value=''>"+user_registration_form_settings_params.ur_default_country_value_option+"</option>";
+							var html =
+								"<option value=''>" +
+								user_registration_form_settings_params.ur_default_country_value_option +
+								"</option>";
 							var self = this;
 
 							// Get html of selected countries
 							if (Array.isArray(selected_countries_iso_s)) {
-								selected_countries_iso_s.forEach(function (
-									iso
-								) {
-									var country_name = $(self)
-										.find('option[value="' + iso + '"]')
-										.html();
-									html +=
-										'<option value="' +
-										iso +
-										'">' +
-										country_name +
-										"</option>";
-								});
+								selected_countries_iso_s.forEach(
+									function (iso) {
+										var country_name = $(self)
+											.find('option[value="' + iso + '"]')
+											.html();
+										html +=
+											'<option value="' +
+											iso +
+											'">' +
+											country_name +
+											"</option>";
+									}
+								);
 							}
 
 							// Update default_value options in `Field Options` tab
@@ -3042,7 +3104,7 @@
 								}
 
 								return "Selected " + length + " country(s)";
-							},
+							}
 						})
 						.on("change", function (e) {
 							$(".urcl-rules, .urcl-conditional-group").each(
@@ -3163,7 +3225,7 @@
 						.trigger("click", ["triggered_click"]);
 				}
 				$(".ur-options-list").sortable({
-					containment: ".ur-general-setting-options",
+					containment: ".ur-general-setting-options"
 				});
 			},
 
@@ -3265,15 +3327,17 @@
 										.closest(".ur-general-setting-block")
 										.hasClass(
 											"ur-general-setting-select"
-										) || $this_obj
-										.closest(".ur-general-setting-block")
-										.hasClass(
-											"ur-general-setting-select2"
-										) ) &&
-									$this_obj
-										.siblings(
-											'input[data-field="default_value"]'
-										).length>0
+										) ||
+										$this_obj
+											.closest(
+												".ur-general-setting-block"
+											)
+											.hasClass(
+												"ur-general-setting-select2"
+											)) &&
+									$this_obj.siblings(
+										'input[data-field="default_value"]'
+									).length > 0
 								) {
 									URFormBuilder.render_select_box($(this));
 								} else if (
@@ -3282,14 +3346,14 @@
 										.hasClass(
 											"ur-general-setting-multi_select2"
 										) &&
-									$this_obj
-										.siblings(
-											'input[data-field="default_value"]'
-										).length>0
+									$this_obj.siblings(
+										'input[data-field="default_value"]'
+									).length > 0
 								) {
-									URFormBuilder.render_multi_select_box($(this));
-								}
-								 else if (
+									URFormBuilder.render_multi_select_box(
+										$(this)
+									);
+								} else if (
 									$this_obj
 										.closest(".ur-general-setting-block")
 										.hasClass("ur-general-setting-radio")
@@ -3330,11 +3394,11 @@
 
 							$this_obj.on("change", function () {
 								if (
-								$this_obj
-									.closest(".ur-general-setting-block")
-									.hasClass(
-										"ur-general-setting-subscription_plan"
-									)
+									$this_obj
+										.closest(".ur-general-setting-block")
+										.hasClass(
+											"ur-general-setting-subscription_plan"
+										)
 								) {
 									URFormBuilder.render_subscription_plan(
 										$(this)
@@ -3368,31 +3432,37 @@
 								);
 							});
 							break;
-							case "trail_period":
-								if (!$this_obj.is(":checked")) {
-									$(this)
-										.closest(".ur-general-setting-block")
-										.find(".ur-subscription-trail-period-option")
-										.hide();
-								}
+						case "trail_period":
+							if (!$this_obj.is(":checked")) {
+								$(this)
+									.closest(".ur-general-setting-block")
+									.find(
+										".ur-subscription-trail-period-option"
+									)
+									.hide();
+							}
 
-								$this_obj.on("change", function () {
-									$(this)
-										.closest(".ur-general-setting-block")
-										.find(".ur-subscription-trail-period-option")
-										.toggle();
+							$this_obj.on("change", function () {
+								$(this)
+									.closest(".ur-general-setting-block")
+									.find(
+										".ur-subscription-trail-period-option"
+									)
+									.toggle();
 
-									$(".ur-selected-item.ur-item-active")
-										.find(".ur-general-setting-block")
-										.find(".ur-subscription-trail-period-option")
-										.toggle();
-								});
-								$this_obj.on("change", function () {
-									URFormBuilder.trigger_general_setting_trail_period(
-										$(this)
-									);
-								});
-								break;
+								$(".ur-selected-item.ur-item-active")
+									.find(".ur-general-setting-block")
+									.find(
+										".ur-subscription-trail-period-option"
+									)
+									.toggle();
+							});
+							$this_obj.on("change", function () {
+								URFormBuilder.trigger_general_setting_trail_period(
+									$(this)
+								);
+							});
+							break;
 						case "placeholder":
 							$this_obj.on("keyup", function () {
 								URFormBuilder.trigger_general_setting_placeholder(
@@ -3467,7 +3537,7 @@
 										).val()
 										// )
 									);
-								},
+								}
 							});
 
 						$("#ur-setting-form .ur-settings-max-date")
@@ -3496,7 +3566,7 @@
 										).val()
 										// )
 									);
-								},
+								}
 							});
 					} else {
 						$(
@@ -3512,8 +3582,8 @@
 					var $this_node = $(this);
 
 					switch ($this_node.attr("data-advance-field")) {
-						case "step" :
-							$this_node.on("keyup keydown", function() {
+						case "step":
+							$this_node.on("keyup keydown", function () {
 								$this_node.attr("step", $this_node.val());
 							});
 							break;
@@ -3570,7 +3640,7 @@
 														.val()
 												)
 											);
-										},
+										}
 									});
 							} else {
 								$(
@@ -3615,7 +3685,7 @@
 													).val()
 												)
 											);
-										},
+										}
 									});
 							} else {
 								$(
@@ -3849,50 +3919,56 @@
 									.toggle();
 							});
 							break;
-							case 'enable_time_slot_booking':
-
-							var form = $this_node.closest('form'),
-							general_settings = form.find('.ur-general-setting-timepicker'),
-							requiredWrapper = general_settings.find('.ur-general-setting-required'),
-							requiredField = requiredWrapper.find('input');
+						case "enable_time_slot_booking":
+							var form = $this_node.closest("form"),
+								general_settings = form.find(
+									".ur-general-setting-timepicker"
+								),
+								requiredWrapper = general_settings.find(
+									".ur-general-setting-required"
+								),
+								requiredField = requiredWrapper.find("input");
 							if (!$this_node.is(":checked")) {
 								$(this)
 									.closest(".ur-advance-setting-block")
 									.find(".ur-advance-target_date_field")
 									.hide();
 							}
-							if($this_node.is(":checked")){
-
+							if ($this_node.is(":checked")) {
 								//Required true if the slot booking is enable.
-								if(!requiredField.is(":checked")){
-									requiredField.trigger('click');
-									requiredField.attr('checked', true);
+								if (!requiredField.is(":checked")) {
+									requiredField.trigger("click");
+									requiredField.attr("checked", true);
 								}
 
-								if(!$(this)
-								.closest(".ur-advance-setting-block")
-								.find(".ur-settings-time_range").is(":checked")){
-
+								if (
+									!$(this)
+										.closest(".ur-advance-setting-block")
+										.find(".ur-settings-time_range")
+										.is(":checked")
+								) {
 									$(this)
-									.closest(".ur-advance-setting-block")
-									.find(".ur-settings-time_range")
-									.trigger("click");
+										.closest(".ur-advance-setting-block")
+										.find(".ur-settings-time_range")
+										.trigger("click");
 									$(this)
-									.closest(".ur-advance-setting-block")
-									.find(".ur-settings-time_range")
-									.attr("checked", true);
+										.closest(".ur-advance-setting-block")
+										.find(".ur-settings-time_range")
+										.attr("checked", true);
 								}
 
-								$(this).closest(".ur-advance-setting-block").find(".ur-advance-time_range").hide();
+								$(this)
+									.closest(".ur-advance-setting-block")
+									.find(".ur-advance-time_range")
+									.hide();
 							}
 
 							$this_node.on("change", function () {
-
-								if($this_node.is(":checked")){
+								if ($this_node.is(":checked")) {
 									//Required true if the slot booking is enable.
-									if(!requiredField.is(":checked")){
-										requiredField.trigger('click');
-										requiredField.attr('checked', true);
+									if (!requiredField.is(":checked")) {
+										requiredField.trigger("click");
+										requiredField.attr("checked", true);
 									}
 								}
 
@@ -3901,49 +3977,65 @@
 									.find(".ur-advance-target_date_field")
 									.toggle();
 
-								if($(this).is(":checked")){
-
-									if(!$(this)
-									.closest(".ur-advance-setting-block")
-									.find(".ur-settings-time_range").is(":checked")){
-
+								if ($(this).is(":checked")) {
+									if (
+										!$(this)
+											.closest(
+												".ur-advance-setting-block"
+											)
+											.find(".ur-settings-time_range")
+											.is(":checked")
+									) {
 										$(this)
-										.closest(".ur-advance-setting-block")
-										.find(".ur-settings-time_range")
-										.trigger("click");
+											.closest(
+												".ur-advance-setting-block"
+											)
+											.find(".ur-settings-time_range")
+											.trigger("click");
 										$(this)
-										.closest(".ur-advance-setting-block")
-										.find(".ur-settings-time_range")
-										.attr("checked", true);
+											.closest(
+												".ur-advance-setting-block"
+											)
+											.find(".ur-settings-time_range")
+											.attr("checked", true);
 									}
 
-									$(this).closest(".ur-advance-setting-block").find(".ur-advance-time_range").hide();
-								}else{
-									$(this).closest(".ur-advance-setting-block").find(".ur-advance-time_range").show();
+									$(this)
+										.closest(".ur-advance-setting-block")
+										.find(".ur-advance-time_range")
+										.hide();
+								} else {
+									$(this)
+										.closest(".ur-advance-setting-block")
+										.find(".ur-advance-time_range")
+										.show();
 								}
-
 							});
 							break;
-						case 'enable_date_slot_booking':
-							var form = $this_node.closest('form'),
-							general_settings = form.find('.ur-general-setting-date'),
-							requiredWrapper = general_settings.find('.ur-general-setting-required'),
-							requiredField = requiredWrapper.find('input');
+						case "enable_date_slot_booking":
+							var form = $this_node.closest("form"),
+								general_settings = form.find(
+									".ur-general-setting-date"
+								),
+								requiredWrapper = general_settings.find(
+									".ur-general-setting-required"
+								),
+								requiredField = requiredWrapper.find("input");
 
-							if($this_node.is(":checked")){
+							if ($this_node.is(":checked")) {
 								//Required true if the slot booking is enable.
-								if(!requiredField.is(":checked")){
-									requiredField.trigger('click');
-									requiredField.attr('checked', true);
+								if (!requiredField.is(":checked")) {
+									requiredField.trigger("click");
+									requiredField.attr("checked", true);
 								}
 							}
 
 							$this_node.on("change", function () {
-								if($this_node.is(":checked")){
+								if ($this_node.is(":checked")) {
 									//Required true if the slot booking is enable.
-									if(!requiredField.is(":checked")){
-										requiredField.trigger('click');
-										requiredField.attr('checked', true);
+									if (!requiredField.is(":checked")) {
+										requiredField.trigger("click");
+										requiredField.attr("checked", true);
 									}
 								}
 							});
@@ -4129,26 +4221,35 @@
 			 * @param object this_node Select field from field settings.
 			 */
 			render_select_box: function (this_node) {
-				var value = '';
-				if(this_node.is(":checked")) {
+				var value = "";
+				if (this_node.is(":checked")) {
 					var value = this_node.val().trim();
 				}
 				var wrapper = $(".ur-selected-item.ur-item-active");
 				var checked_index = this_node.closest("li").index();
 				var select = wrapper.find(".ur-field").find("select");
 
-				if(this_node.hasClass('ur-type-radio-label')) {
+				if (this_node.hasClass("ur-type-radio-label")) {
 					value = select.val();
 				}
 
-				var options = this_node.closest('.ur-general-setting-options').find('input.ur-general-setting-field.ur-type-radio-label').map(function(){
-					return $(this).val();
-				});
+				var options = this_node
+					.closest(".ur-general-setting-options")
+					.find("input.ur-general-setting-field.ur-type-radio-label")
+					.map(function () {
+						return $(this).val();
+					});
 
 				select.html("");
-				$.each(options, function(key, option){
+				$.each(options, function (key, option) {
 					select.append(
-						"<option value='" + option + "' "+(value === option ? 'selected' : '')+">" + option + "</option>"
+						"<option value='" +
+							option +
+							"' " +
+							(value === option ? "selected" : "") +
+							">" +
+							option +
+							"</option>"
 					);
 				});
 
@@ -4174,28 +4275,26 @@
 			 * @param object this_node Multi Select field from field settings.
 			 */
 			render_multi_select_box: function (this_node) {
-				var value = '';
-				if(this_node.is(":checked")) {
+				var value = "";
+				if (this_node.is(":checked")) {
 					var value = this_node.val().trim();
 				}
 				var wrapper = $(".ur-selected-item.ur-item-active");
 				var checked_index = this_node.closest("li").index();
 				var select = wrapper.find(".ur-field").find("select");
 
-				if(this_node.hasClass('ur-type-checkbox-label')) {
+				if (this_node.hasClass("ur-type-checkbox-label")) {
 					value = select.val();
 				}
 
-				var options = this_node.closest('.ur-general-setting-options').find('input.ur-general-setting-field.ur-type-checkbox-label').map(function(){
-					return $(this).val();
-				});
-
-				select.html("");
-				$.each(options, function(key, option){
-					select.append(
-						"<option value='" + option + "' "+(value === option ? 'selected' : '')+">" + option + "</option>"
-					);
-				});
+				var options = this_node
+					.closest(".ur-general-setting-options")
+					.find(
+						"input.ur-general-setting-field.ur-type-checkbox-label"
+					)
+					.map(function () {
+						return $(this).val();
+					});
 
 				// Loop through options in active fields general setting hidden div.
 				wrapper
@@ -4221,7 +4320,10 @@
 			render_radio: function (this_node) {
 				var li_elements = this_node.closest("ul").find("li");
 				var checked_index = undefined;
-				var image_image = this_node.closest(".ur-general-setting-options").siblings(".ur-general-setting-image_choice").find("input");
+				var image_image = this_node
+					.closest(".ur-general-setting-options")
+					.siblings(".ur-general-setting-image_choice")
+					.find("input");
 				var array_value = [];
 
 				li_elements.each(function (index, element) {
@@ -4251,7 +4353,11 @@
 							return each_value.value !== value;
 						})
 					) {
-						array_value.push({ value: value, radio: radio, image:image });
+						array_value.push({
+							value: value,
+							radio: radio,
+							image: image
+						});
 					}
 				});
 
@@ -4260,23 +4366,36 @@
 				radio.html("");
 
 				for (var i = 0; i < array_value.length; i++) {
-					var imageHTML = '';
-					if ( image_image.is(":checked") ) {
-						if (array_value[i].image && array_value[i].image.trim() !== "") {
-							imageHTML = '<img src="' + array_value[i].image + '" width="200px">';
+					var imageHTML = "";
+					if (image_image.is(":checked")) {
+						if (
+							array_value[i].image &&
+							array_value[i].image.trim() !== ""
+						) {
+							imageHTML =
+								'<img src="' +
+								array_value[i].image +
+								'" width="200px">';
 						} else {
-							imageHTML = '<img src="' + user_registration_form_builder_data.ur_placeholder + '" width="200px">';
+							imageHTML =
+								'<img src="' +
+								user_registration_form_builder_data.ur_placeholder +
+								'" width="200px">';
 						}
 					}
 					if (array_value[i] !== "") {
-						$checked_class = '';
-						if ( image_image.is(":checked") ) {
-							$checked_class = array_value[i].radio ? 'ur-image-choice-checked' : '';
+						$checked_class = "";
+						if (image_image.is(":checked")) {
+							$checked_class = array_value[i].radio
+								? "ur-image-choice-checked"
+								: "";
 						}
 						radio.append(
-							'<label class="'+ $checked_class +'"><span class="user-registration-image-choice">' +
-							imageHTML +
-							'</span><input value="' +
+							'<label class="' +
+								$checked_class +
+								'"><span class="user-registration-image-choice">' +
+								imageHTML +
+								'</span><input value="' +
 								array_value[i].value.trim() +
 								'" type="radio" ' +
 								(array_value[i].radio ? "checked" : "") +
@@ -4312,7 +4431,10 @@
 				var array_value = [];
 				var li_elements = this_node.closest("ul").find("li");
 				var checked_index = this_node.closest("li").index();
-				var image_image = this_node.closest(".ur-general-setting-options").siblings(".ur-general-setting-image_choice").find("input");
+				var image_image = this_node
+					.closest(".ur-general-setting-options")
+					.siblings(".ur-general-setting-image_choice")
+					.find("input");
 				li_elements.each(function (index, element) {
 					var value = $(element)
 						.find("input.ur-type-checkbox-label")
@@ -4340,13 +4462,16 @@
 						.find("input.ur-type-image-choice")
 						.val();
 
-
 					if (
 						array_value.every(function (each_value) {
 							return each_value.value !== value;
 						})
 					) {
-						array_value.push({ value: value, checkbox: checkbox, image:image });
+						array_value.push({
+							value: value,
+							checkbox: checkbox,
+							image: image
+						});
 					}
 				});
 
@@ -4355,12 +4480,21 @@
 				checkbox.html("");
 
 				for (var i = 0; i < array_value.length; i++) {
-					var imageHTML = '';
-					if ( image_image.is(":checked") ) {
-						if (array_value[i].image && array_value[i].image.trim() !== "") {
-							imageHTML = '<img src="' + array_value[i].image + '" width="200px">';
+					var imageHTML = "";
+					if (image_image.is(":checked")) {
+						if (
+							array_value[i].image &&
+							array_value[i].image.trim() !== ""
+						) {
+							imageHTML =
+								'<img src="' +
+								array_value[i].image +
+								'" width="200px">';
 						} else {
-							imageHTML = '<img src="' + user_registration_form_builder_data.ur_placeholder + '" width="200px">';
+							imageHTML =
+								'<img src="' +
+								user_registration_form_builder_data.ur_placeholder +
+								'" width="200px">';
 						}
 					}
 					if (array_value[i] !== "") {
@@ -4368,14 +4502,18 @@
 							'"',
 							"'"
 						);
-						$checked_class = '';
-						if ( image_image.is(":checked") ) {
-							$checked_class = array_value[i].checkbox ? 'ur-image-choice-checked' : '';
+						$checked_class = "";
+						if (image_image.is(":checked")) {
+							$checked_class = array_value[i].checkbox
+								? "ur-image-choice-checked"
+								: "";
 						}
 						checkbox.append(
-							'<label class="'+ $checked_class +'"><span class="user-registration-image-choice">' +
-							imageHTML +
-							'</span><input value="' +
+							'<label class="' +
+								$checked_class +
+								'"><span class="user-registration-image-choice">' +
+								imageHTML +
+								'</span><input value="' +
 								array_value[i].value.trim() +
 								'" type="checkbox" ' +
 								(array_value[i].checkbox ? "checked" : "") +
@@ -4417,7 +4555,10 @@
 				var array_value = [];
 				var li_elements = this_node.closest("ul").find("li");
 				var checked_index = this_node.closest("li").index();
-				var image_image = this_node.closest(".ur-general-setting-options").siblings(".ur-general-setting-image_choice").find("input");
+				var image_image = this_node
+					.closest(".ur-general-setting-options")
+					.siblings(".ur-general-setting-image_choice")
+					.find("input");
 
 				li_elements.each(function (index, element) {
 					var label = $(element)
@@ -4456,7 +4597,7 @@
 							sell_value: sell_value,
 							image: image,
 							currency: currency,
-							checkbox: checkbox,
+							checkbox: checkbox
 						});
 					}
 				});
@@ -4466,23 +4607,36 @@
 				checkbox.html("");
 
 				for (var i = 0; i < array_value.length; i++) {
-					var imageHTML = '';
-					if ( image_image.is(":checked") ) {
-						if (array_value[i].image && array_value[i].image.trim() !== "") {
-							imageHTML = '<img src="' + array_value[i].image + '" width="200px">';
+					var imageHTML = "";
+					if (image_image.is(":checked")) {
+						if (
+							array_value[i].image &&
+							array_value[i].image.trim() !== ""
+						) {
+							imageHTML =
+								'<img src="' +
+								array_value[i].image +
+								'" width="200px">';
 						} else {
-							imageHTML = '<img src="' + user_registration_form_builder_data.ur_placeholder + '" width="200px">';
+							imageHTML =
+								'<img src="' +
+								user_registration_form_builder_data.ur_placeholder +
+								'" width="200px">';
 						}
 					}
 					if (array_value[i] !== "") {
-						$checked_class = '';
-						if ( image_image.is(":checked") ) {
-							$checked_class = array_value[i].checkbox ? 'ur-image-choice-checked' : '';
+						$checked_class = "";
+						if (image_image.is(":checked")) {
+							$checked_class = array_value[i].checkbox
+								? "ur-image-choice-checked"
+								: "";
 						}
 						checkbox.append(
-							'<label class="'+ $checked_class +'"><span class="user-registration-image-choice">' +
-							imageHTML +
-							'</span><input value="' +
+							'<label class="' +
+								$checked_class +
+								'"><span class="user-registration-image-choice">' +
+								imageHTML +
+								'</span><input value="' +
 								array_value[i].label.trim() +
 								'" type="checkbox" ' +
 								(array_value[i].checkbox ? "checked" : "") +
@@ -4540,32 +4694,18 @@
 						.find("input.ur-radio-selling-price-input")
 						.val();
 					var interval_count = $(element)
-						.find(
-							"input.ur-radio-interval-count-input"
-						)
+						.find("input.ur-radio-interval-count-input")
 						.val();
 					var recurring_period = $(element)
-						.find(
-							".ur-radio-recurring-period"
-						)
+						.find(".ur-radio-recurring-period")
 						.val();
 
 					var trail_interval_count = $(element)
-						.find(
-							"input.ur-radio-trail-interval-count-input"
-						)
+						.find("input.ur-radio-trail-interval-count-input")
 						.val();
 					var trail_recurring_period = $(element)
-						.find(
-							".ur-radio-trail-recurring-period"
-						)
+						.find(".ur-radio-trail-recurring-period")
 						.val();
-
-						wrapper.find(
-							".ur-general-setting-options li:nth(" + index + ") .ur-radio-recurring-period").val(recurring_period);
-						wrapper.find(
-							".ur-general-setting-options li:nth(" + index + ") .ur-radio-trail-recurring-period").val(trail_recurring_period);
-
 
 					var currency = $(element)
 						.find("input.ur-type-radio-money-input")
@@ -4593,7 +4733,7 @@
 							trail_interval_count: trail_interval_count,
 							trail_recurring_period: trail_recurring_period,
 							currency: currency,
-							checkbox: checkbox,
+							checkbox: checkbox
 						});
 					}
 				});
@@ -4649,7 +4789,10 @@
 				var index = $label.closest("li").index();
 				var field_name = $label.attr("data-field-name");
 
-				if ("multiple_choice" === field_name || "subscription_plan" === field_name ) {
+				if (
+					"multiple_choice" === field_name ||
+					"subscription_plan" === field_name
+				) {
 					wrapper
 						.find(
 							".ur-general-setting-block li:nth(" +
@@ -4880,7 +5023,7 @@
 					title: options.title,
 					text: message,
 					customClass:
-						"user-registration-swal2-modal user-registration-swal2-modal--center",
+						"user-registration-swal2-modal user-registration-swal2-modal--center"
 				});
 			},
 			/**
@@ -4979,7 +5122,7 @@
 					.find('input[data-field="default_value"]')
 					.prop("checked", false);
 				cloning_element.find('select[data-field="options"]').val("");
-				cloning_element.find('.ur-thumbnail-image img').attr("src","");
+				cloning_element.find(".ur-thumbnail-image img").attr("src", "");
 
 				$this.closest("li").after(cloning_element);
 				$wrapper
@@ -5011,7 +5154,10 @@
 				}
 
 				$(document.body).trigger("ur_field_option_changed", [
-					{ action: "add", wrapper: $wrapper },  URFormBuilder, $this ]);
+					{ action: "add", wrapper: $wrapper },
+					URFormBuilder,
+					$this
+				]);
 			},
 			/**
 			 * Remove an option in choice field when called.
@@ -5025,7 +5171,7 @@
 					this_index = $this.closest("li").index();
 
 				if ($parent_ul.find("li").length > 1) {
-                       					$this.closest("li").remove();
+					$this.closest("li").remove();
 					$wrapper
 						.find(
 							".ur-general-setting-options .ur-options-list > li:nth( " +
@@ -5059,13 +5205,14 @@
 					) {
 						URFormBuilder.render_subscription_plan($any_siblings);
 					}
-
 				}
 
 				$(document.body).trigger("ur_field_option_changed", [
-					{ action: "remove", wrapper: $wrapper }, URFormBuilder, $this
+					{ action: "remove", wrapper: $wrapper },
+					URFormBuilder,
+					$this
 				]);
-			},
+			}
 		};
 
 		URFormBuilder.init();
@@ -5132,7 +5279,7 @@
 								"maxDate",
 								date_selector.data("max-date")
 							);
-						},
+						}
 					});
 					date_flatpickrs[field_id] = date_flatpickr;
 				}
@@ -5339,7 +5486,7 @@
 				"select2/dropdown/search",
 				"select2/dropdown/attachBody",
 				"select2/utils",
-				"select2/selection/eventRelay",
+				"select2/selection/eventRelay"
 			],
 			function (
 				SingleSelection,
