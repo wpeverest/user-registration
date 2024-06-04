@@ -41,7 +41,7 @@ function ur_get_form_field_keys( $form_id ) {
 
 	$field_keys = array();
 
-	if ( ! empty( $form_fields ) && is_array( $form_fields )) {
+	if ( ! empty( $form_fields ) && is_array( $form_fields ) ) {
 		$field_keys = array_keys( $form_fields );
 	}
 
@@ -57,11 +57,10 @@ function ur_get_form_field_keys( $form_id ) {
  * @return array
  */
 function ur_get_form_field_data( $form_id = 0 ) {
-
+	require_once UR_ABSPATH . 'includes/frontend/class-ur-frontend-form-handler.php';
 	$post_content_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
 
 	$form_field_data = UR_Frontend_Form_Handler::get_form_field_data( $post_content_array );
 
 	return $form_field_data;
 }
-
