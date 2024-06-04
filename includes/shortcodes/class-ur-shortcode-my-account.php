@@ -177,12 +177,18 @@ class UR_Shortcode_My_Account {
 	 * @param array $atts Shortcode attributes.
 	 */
 	private static function my_account( $atts ) {
+		$is_disabled = get_user_meta( get_current_user_id(), 'ur_disable_users', true );
+		if($is_disabled){
+			wp_logout();
+		}else{
+
 		ur_get_template(
 			'myaccount/my-account.php',
 			array(
 				'current_user' => get_user_by( 'id', get_current_user_id() ),
 			)
 		);
+	  	}
 	}
 
 	/**

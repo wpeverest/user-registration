@@ -3689,6 +3689,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				'unknown_email'    => get_option( 'user_registration_message_unknown_email', esc_html__( 'A user could not be found with this email address.', 'user-registration' ) ),
 				'pending_approval' => get_option( 'user_registration_message_pending_approval', null ),
 				'denied_access'    => get_option( 'user_registration_message_denied_account', null ),
+                'user_disabled'    => esc_html__( 'Sorry! You are disabled.Please Contact Your Administrator.', 'user-registration' ),
 			);
 
 			$post = $_POST; // phpcs:ignore.
@@ -3860,6 +3861,10 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				$message = $user->get_error_message();
 				$message = str_replace( '<strong>' . esc_html( $login_data['user_login'] ) . '</strong>', '<strong>' . esc_html( $username ) . '</strong>', $message );
 				throw new Exception( $message );
+			}elseif ( isset($user->ID) && $is_disabled = get_user_meta($user->ID, 'ur_disable_users', true)) {
+					wp_logout();
+					throw new Exception( '<strong>' . esc_html__( 'ERROR: ', 'user-registration' ) . '</strong>' . $messages['user_disabled'] );
+
 			} else {
 				if ( in_array( 'administrator', $user->roles, true ) && ur_option_checked( 'user_registration_login_options_prevent_core_login', true ) ) {
 					$redirect = admin_url();
@@ -4794,6 +4799,16 @@ if ( ! function_exists( 'ur_get_translated_string' ) ) {
 			}
 		} else {
 			return $string;
+		}
+	}
+}
+add_action( 'admin_init', 'ur_check_is_disabled' );
+if( ! function_exists( 'ur_check_is_disabled' ) ){
+	function ur_check_is_disabled() {
+
+		$is_disabled = get_user_meta( get_current_user_id(), 'ur_disable_users', true );
+		if($is_disabled){
+			wp_logout();
 		}
 	}
 }
