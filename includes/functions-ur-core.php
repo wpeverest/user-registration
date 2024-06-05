@@ -4678,7 +4678,15 @@ if ( ! function_exists( 'ur_automatic_user_login' ) ) {
 		$remember = apply_filters( 'user_registration_autologin_remember_user', false );
 		wp_set_auth_cookie( $user->id, $remember );
 
-		wp_redirect( ur_get_my_account_url() );
+		/**
+		 * Filters the login redirection.
+		 *
+		 * @param string   $redirect The original redirect URL after successful login.
+		 * @param WP_User  $user     The user object representing the newly registered user.
+		 */
+		$redirect = apply_filters( 'user_registration_login_redirect', ur_get_my_account_url(), $user );
+
+		wp_redirect( $redirect );
 	}
 }
 
