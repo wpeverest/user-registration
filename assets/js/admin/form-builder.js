@@ -372,45 +372,6 @@
 					);
 					return;
 				}
-				//Google Sheet validation
-				if (data.data.ur_google_sheets_integration.length > 0) {
-					google_sheets_connections =
-						data.data.ur_google_sheets_integration;
-
-					// Send data only if username field is mapped.
-					if (
-						google_sheets_connections[0].hasOwnProperty(
-							"mapped_fields"
-						)
-					) {
-						var mapped_fields =
-							google_sheets_connections[0]["mapped_fields"];
-						if ($.isEmptyObject(mapped_fields)) {
-							URFormBuilder.show_message(
-								user_registration_form_builder_data.i18n_admin
-									.i18n_google_sheets_sheet_empty_error
-							);
-							return;
-						}
-						var user_login_found = false;
-						for (var key in mapped_fields) {
-							if (
-								mapped_fields.hasOwnProperty(key) &&
-								mapped_fields[key] === "user_email"
-							) {
-								user_login_found = true;
-								break;
-							}
-						}
-						if (!user_login_found) {
-							URFormBuilder.show_message(
-								user_registration_form_builder_data.i18n_admin
-									.i18n_google_sheets_user_email_missing_error
-							);
-							return;
-						}
-					}
-				}
 
 				//Google Sheet validation
 				if (data.data.ur_google_sheets_integration !== undefined) {
@@ -4296,6 +4257,19 @@
 						return $(this).val();
 					});
 
+				select.html("");
+				$.each(options, function (key, option) {
+					select.append(
+						"<option value='" +
+							option +
+							"' " +
+							(value === option ? "selected" : "") +
+							">" +
+							option +
+							"</option>"
+					);
+				});
+
 				// Loop through options in active fields general setting hidden div.
 				wrapper
 					.find(
@@ -4706,6 +4680,21 @@
 					var trail_recurring_period = $(element)
 						.find(".ur-radio-trail-recurring-period")
 						.val();
+
+					wrapper
+						.find(
+							".ur-general-setting-options li:nth(" +
+								index +
+								") .ur-radio-recurring-period"
+						)
+						.val(recurring_period);
+					wrapper
+						.find(
+							".ur-general-setting-options li:nth(" +
+								index +
+								") .ur-radio-trail-recurring-period"
+						)
+						.val(trail_recurring_period);
 
 					var currency = $(element)
 						.find("input.ur-type-radio-money-input")
