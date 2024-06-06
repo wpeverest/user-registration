@@ -72,7 +72,7 @@
 						if (dataTip) {
 							instance.content(dataTip);
 						}
-					},
+					}
 				};
 				$(".user-registration-help-tip").tooltipster(tooltipster_args);
 			}
@@ -95,20 +95,23 @@
 			//required field
 			$.validator.methods.required = function (value, element, param) {
 				// Check if dependency is met
-			if ( !this.depend( param, element ) ) {
-				return "dependency-mismatch";
-			}
-			if ( element.nodeName.toLowerCase() === "select" ) {
-
-				// Could be an array for select-multiple or a string, both are fine this way
-				var val = $( element ).val();
-				return val && val.length > 0;
-			}
-			if ( this.checkable( element ) ) {
-				return this.getLength( value, element ) > 0;
-			}
-			return value.trim() !== undefined && value.trim() !== null && value.trim().length > 0;
-			}
+				if (!this.depend(param, element)) {
+					return "dependency-mismatch";
+				}
+				if (element.nodeName.toLowerCase() === "select") {
+					// Could be an array for select-multiple or a string, both are fine this way
+					var val = $(element).val();
+					return val && val.length > 0;
+				}
+				if (this.checkable(element)) {
+					return this.getLength(value, element) > 0;
+				}
+				return (
+					value.trim() !== undefined &&
+					value.trim() !== null &&
+					value.trim().length > 0
+				);
+			};
 
 			/**
 			 * Validation for min words.
@@ -212,7 +215,9 @@
 					validClass: "user-registration-valid",
 					ignore: function (index, element) {
 						// Return true to ignore the element, false to include it in validation
-						if ( $(element).closest(".ur-field-item").is(":hidden") ) {
+						if (
+							$(element).closest(".ur-field-item").is(":hidden")
+						) {
 							return true;
 						}
 						return (
@@ -354,7 +359,7 @@
 						}
 
 						return true;
-					},
+					}
 				});
 			});
 		},
@@ -366,7 +371,7 @@
 				email: user_registration_params.message_email_fields,
 				number: user_registration_params.message_number_fields,
 				confirmpassword:
-					user_registration_params.message_confirm_password_fields,
+					user_registration_params.message_confirm_password_fields
 			});
 
 			var $this = $(this),
@@ -457,7 +462,7 @@
 							user_registration_params.message_min_words_fields.replace(
 								"%qty%",
 								minWordsValidator.wordsValidator
-							),
+							)
 					};
 				});
 			}
@@ -470,7 +475,7 @@
 
 				rules.user_confirm_email = {
 					required: true,
-					equalTo: "#" + form_id + " #user_email",
+					equalTo: "#" + form_id + " #user_email"
 				};
 				messages.user_confirm_email = {
 					required: user_registration_params.message_required_fields,
@@ -600,7 +605,7 @@
 					element.step
 				);
 			};
-		},
+		}
 	};
 
 	$(window).on("load", function () {

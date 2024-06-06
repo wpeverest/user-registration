@@ -916,7 +916,7 @@ class UR_AJAX {
 			 */
          do_action( 'user_registration_after_form_settings_save', wp_unslash( $_POST['data'] ) ); //phpcs:ignore
 
-		 wp_send_json_success(
+			wp_send_json_success(
 				array(
 					'data'    => $post_data,
 					'post_id' => $post_id,
