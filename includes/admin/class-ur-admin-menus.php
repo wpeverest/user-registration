@@ -659,7 +659,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				);
 			}
 
-			if ( isset( $_GET['onboarding-skipped'] ) ) {
+			if ( isset( $_GET['onboarding-skipped'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				update_option( 'user_registration_onboarding_skipped', true );
 			}
 			wp_enqueue_script( 'ur-setup' );
@@ -700,7 +700,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'reload_text'                  => esc_html__( 'Just Reload', 'user-registration' ),
 				)
 			);
-			if ( isset( $_GET['edit-registration'] ) ) {
+			if ( isset( $_GET['edit-registration'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				// Forms view.
 				include_once __DIR__ . '/views/html-admin-page-forms.php';
 			} else {

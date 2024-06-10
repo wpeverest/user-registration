@@ -30,51 +30,43 @@ class UR_Email_Approval {
 	 * Verify the token and approve the user if the token matches
 	 */
 	public static function approve_user_after_verification() {
-		if ( ! isset( $_GET['ur_approval_token'] ) || empty( $_GET['ur_approval_token'] ) ) {
+		if ( ! isset( $_GET['ur_approval_token'] ) || empty( $_GET['ur_approval_token'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			return;
-		} else {
-			if ( current_user_can( 'edit_users' ) ) {
+		} elseif ( current_user_can( 'edit_users' ) ) {
 
-				$ur_approval_token_raw = sanitize_text_field( wp_unslash( $_GET['ur_approval_token'] ) );
-				$ur_approval_token     = str_split( $ur_approval_token_raw, 50 );
-				$token_string = $ur_approval_token[1];
+			$ur_approval_token_raw = sanitize_text_field( wp_unslash( $_GET['ur_approval_token'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$ur_approval_token     = str_split( $ur_approval_token_raw, 50 );
+			$token_string          = $ur_approval_token[1];
 
-				if ( 2 < count( $ur_approval_token ) ) {
-					unset( $ur_approval_token[0] );
-					$token_string = join( '', $ur_approval_token );
-				}
-				$output     = crypt_the_string( $token_string, 'd' );
-				$output     = explode( '_', $output );
-				$user_id    = absint( $output[0] );
-				$form_id    = ur_get_form_id_by_userid( $user_id );
-
-				$email_approval_enabled = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval', get_option( 'user_registration_login_option_enable_email_approval', false ) );
-
-				if ( $email_approval_enabled ) {
-					$saved_token = get_user_meta( $user_id, 'ur_confirm_approval_token', true );
-
-					if ( $ur_approval_token_raw === $saved_token ) {
-						$user_manager = new UR_Admin_User_Manager( $user_id );
-						$user_manager->save_status( UR_Admin_User_Manager::APPROVED, true );
-
-						delete_user_meta( $user_id, 'ur_confirm_approval_token' );
-						delete_user_meta( $user_id, 'ur_confirm_denial_token' );
-
-						add_action( 'admin_notices', array( __CLASS__, 'approved_success' ) );
-
-						$redirect_url = admin_url() . 'users.php';
-						wp_redirect( $redirect_url );
-						exit;
-
-					} else {
-						add_action( 'admin_notices', array( __CLASS__, 'invalid_approval_token_message' ) );
-					}
-				} else {
-					add_action( 'admin_notices', array( __CLASS__, 'email_approval_disabled_message' ) );
-				}
-			} else {
-				return;
+			if ( 2 < count( $ur_approval_token ) ) {
+				unset( $ur_approval_token[0] );
+				$token_string = join( '', $ur_approval_token );
 			}
+			$output  = crypt_the_string( $token_string, 'd' );
+			$output  = explode( '_', $output );
+			$user_id = absint( $output[0] );
+			$form_id = ur_get_form_id_by_userid( $user_id );
+
+				$saved_token = get_user_meta( $user_id, 'ur_confirm_approval_token', true );
+
+			if ( $ur_approval_token_raw === $saved_token ) {
+				$user_manager = new UR_Admin_User_Manager( $user_id );
+				$user_manager->save_status( UR_Admin_User_Manager::APPROVED, true );
+
+				delete_user_meta( $user_id, 'ur_confirm_approval_token' );
+				delete_user_meta( $user_id, 'ur_confirm_denial_token' );
+
+				add_action( 'admin_notices', array( __CLASS__, 'approved_success' ) );
+
+				$redirect_url = admin_url() . 'users.php';
+				wp_redirect( $redirect_url );
+				exit;
+
+			} else {
+				add_action( 'admin_notices', array( __CLASS__, 'invalid_approval_token_message' ) );
+			}
+		} else {
+			return;
 		}
 	}
 
@@ -82,51 +74,44 @@ class UR_Email_Approval {
 	 * Verify the token and deny the user if the token matches
 	 */
 	public static function deny_user_after_verification() {
-		if ( ! isset( $_GET['ur_denial_token'] ) || empty( $_GET['ur_denial_token'] ) ) {
+		if ( ! isset( $_GET['ur_denial_token'] ) || empty( $_GET['ur_denial_token'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			return;
-		} else {
-			if ( current_user_can( 'edit_users' ) ) {
+		} elseif ( current_user_can( 'edit_users' ) ) {
 
-				$ur_denial_token_raw = sanitize_text_field( wp_unslash( $_GET['ur_denial_token'] ) );
-				$ur_denial_token     = str_split( $ur_denial_token_raw, 50 );
-				$token_string = $ur_denial_token[1];
+			$ur_denial_token_raw = sanitize_text_field( wp_unslash( $_GET['ur_denial_token'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$ur_denial_token     = str_split( $ur_denial_token_raw, 50 );
+			$token_string        = $ur_denial_token[1];
 
-				if ( 2 < count( $ur_denial_token ) ) {
-					unset( $ur_denial_token[0] );
-					$token_string = join( '', $ur_denial_token );
-				}
-				$output     = crypt_the_string( $token_string, 'd' );
-				$output     = explode( '_', $output );
-				$user_id    = absint( $output[0] );
-				$form_id    = ur_get_form_id_by_userid( $user_id );
-
-				$email_approval_enabled = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval', get_option( 'user_registration_login_option_enable_email_approval', false ) );
-
-				if ( $email_approval_enabled ) {
-					$saved_token = get_user_meta( $user_id, 'ur_confirm_denial_token', true );
-
-					if ( $ur_denial_token_raw === $saved_token ) {
-						$user_manager = new UR_Admin_User_Manager( $user_id );
-						$user_manager->save_status( UR_Admin_User_Manager::DENIED, true );
-
-						delete_user_meta( $user_id, 'ur_confirm_denial_token' );
-						delete_user_meta( $user_id, 'ur_confirm_approval_token' );
-
-						add_action( 'admin_notices', array( __CLASS__, 'denied_success' ) );
-
-						$redirect_url = admin_url() . 'users.php';
-						wp_redirect( $redirect_url );
-						exit;
-
-					} else {
-						add_action( 'admin_notices', array( __CLASS__, 'invalid_approval_token_message' ) );
-					}
-				} else {
-					add_action( 'admin_notices', array( __CLASS__, 'email_denial_disabled_message' ) );
-				}
-			} else {
-				return;
+			if ( 2 < count( $ur_denial_token ) ) {
+				unset( $ur_denial_token[0] );
+				$token_string = join( '', $ur_denial_token );
 			}
+
+			$output  = crypt_the_string( $token_string, 'd' );
+			$output  = explode( '_', $output );
+			$user_id = absint( $output[0] );
+			$form_id = ur_get_form_id_by_userid( $user_id );
+
+			$saved_token = get_user_meta( $user_id, 'ur_confirm_denial_token', true );
+
+			if ( $ur_denial_token_raw === $saved_token ) {
+				$user_manager = new UR_Admin_User_Manager( $user_id );
+				$user_manager->save_status( UR_Admin_User_Manager::DENIED, true );
+
+				delete_user_meta( $user_id, 'ur_confirm_denial_token' );
+				delete_user_meta( $user_id, 'ur_confirm_approval_token' );
+
+				add_action( 'admin_notices', array( __CLASS__, 'denied_success' ) );
+
+				$redirect_url = admin_url() . 'users.php';
+				wp_redirect( $redirect_url );
+				exit;
+
+			} else {
+				add_action( 'admin_notices', array( __CLASS__, 'invalid_approval_token_message' ) );
+			}
+		} else {
+			return;
 		}
 	}
 
@@ -173,12 +158,12 @@ class UR_Email_Approval {
 	 */
 	public function get_token( $user_id ) {
 
-		$length        = 50;
-		$token         = '';
+		$length         = 50;
+		$token          = '';
 		$code_alphabet  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		$code_alphabet .= 'abcdefghijklmnopqrstuvwxyz';
 		$code_alphabet .= '0123456789';
-		$max           = strlen( $code_alphabet );
+		$max            = strlen( $code_alphabet );
 
 		for ( $i = 0; $i < $length; $i++ ) {
 			$token .= $code_alphabet[ random_int( 0, $max - 1 ) ];
@@ -199,12 +184,10 @@ class UR_Email_Approval {
 	 * @param int   $user_id         User ID.
 	 */
 	public function set_approval_status( $valid_form_data, $form_id, $user_id ) {
-		$form_id = isset( $form_id ) ? $form_id : get_user_meta( $this->user->ID, 'ur_form_id', true );
+		$form_id      = isset( $form_id ) ? $form_id : get_user_meta( $this->user->ID, 'ur_form_id', true );
 		$login_option = ur_get_user_login_option( $user_id );
 
-		$email_approval_enabled = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval', get_option( 'user_registration_login_option_enable_email_approval', false ) );
-
-		if ( ( 'admin_approval' == $login_option || 'admin_approval_after_email_confirmation' == $login_option ) && ( $email_approval_enabled ) ) {
+		if ( ( 'admin_approval' == $login_option || 'admin_approval_after_email_confirmation' == $login_option ) ) {
 			$token = $this->get_token( $user_id );
 			update_user_meta( $user_id, 'ur_confirm_approval_token', $token );
 		} else {
@@ -220,12 +203,10 @@ class UR_Email_Approval {
 	 * @param int   $user_id         User ID.
 	 */
 	public function set_denial_status( $valid_form_data, $form_id, $user_id ) {
-		$form_id = isset( $form_id ) ? $form_id : get_user_meta( $this->user->ID, 'ur_form_id', true );
+		$form_id      = isset( $form_id ) ? $form_id : get_user_meta( $this->user->ID, 'ur_form_id', true );
 		$login_option = ur_get_user_login_option( $user_id );
 
-		$email_approval_enabled = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval', get_option( 'user_registration_login_option_enable_email_approval', false ) );
-
-		if ( ( 'admin_approval' == $login_option || 'admin_approval_after_email_confirmation' == $login_option ) && ( $email_approval_enabled ) ) {
+		if ( ( 'admin_approval' == $login_option || 'admin_approval_after_email_confirmation' == $login_option ) ) {
 			$token = $this->get_token( $user_id );
 			update_user_meta( $user_id, 'ur_confirm_denial_token', $token );
 		} else {

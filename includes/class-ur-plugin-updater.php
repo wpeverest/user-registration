@@ -125,13 +125,13 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 
 		if ( ! empty( $_POST[ $this->plugin_slug . '_license_key' ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$this->activate_license_request();
-		} elseif ( ! empty( $_GET[ $this->plugin_slug . '_deactivate_license' ] ) ) {
+		} elseif ( ! empty( $_GET[ $this->plugin_slug . '_deactivate_license' ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$this->deactivate_license_request();
-		} elseif ( ! empty( $_GET[ 'dismiss-' . sanitize_title( $this->plugin_slug ) ] ) ) {
+		} elseif ( ! empty( $_GET[ 'dismiss-' . sanitize_title( $this->plugin_slug ) ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			update_option( $this->plugin_slug . '_hide_key_notice', 1 );
-		} elseif ( ! empty( $_GET['activated_license'] ) && $_GET['activated_license'] === $this->plugin_slug ) {
+		} elseif ( ! empty( $_GET['activated_license'] ) && $_GET['activated_license'] === $this->plugin_slug ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$this->add_notice( array( $this, 'activated_key_notice' ) );
-		} elseif ( ! empty( $_GET['deactivated_license'] ) && $_GET['deactivated_license'] === $this->plugin_slug ) {
+		} elseif ( ! empty( $_GET['deactivated_license'] ) && $_GET['deactivated_license'] === $this->plugin_slug ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$this->add_notice( array( $this, 'deactivated_key_notice' ) );
 		} elseif ( ! empty( $_POST['download_user_registration_pro'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$this->install_extension();
@@ -495,7 +495,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	public function user_registration_upgrade_to_pro_notice() {
 
 		// Donot show notice on form builder page.
-		if ( isset( $_REQUEST['page'] ) && 'add-new-registration' === $_REQUEST['page'] ) {
+		if ( isset( $_REQUEST['page'] ) && 'add-new-registration' === $_REQUEST['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			return;
 		}
 

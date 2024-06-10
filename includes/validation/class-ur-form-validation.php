@@ -417,11 +417,14 @@ class UR_Form_Validation extends UR_Validation {
 				if ( isset( $form_field_data[ $key ]->advance_setting->field_visibility ) && 'edit_form' === $form_field_data[ $key ]->advance_setting->field_visibility ) {
 					return;
 				} else {
-					$field_label = $form_field_data[ $key ]->general_setting->label;
-					/* translators: %s - Field Label */
-					$response = sprintf( __( '<strong>%s</strong> is a required field.', 'user-registration' ), $field_label );
-
-					array_push( $this->response_array, $response );
+					// phpcs:ignore WordPress.Security.NonceVerification.Missing
+					$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array();
+					if ( ! in_array( $form_field_data[ $key ]->general_setting->field_name, $urcl_hide_fields, true ) ) {
+						$field_label = $form_field_data[ $key ]->general_setting->label;
+						/* translators: %s - Field Label */
+						$response = sprintf( __( '<strong>%s</strong> is a required field.', 'user-registration' ), $field_label );
+						array_push( $this->response_array, $response );
+					}
 				}
 			}
 		}

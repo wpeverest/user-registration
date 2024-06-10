@@ -1123,15 +1123,6 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'tip'               => __( 'Login method that should be used by the users registered through this form.', 'user-registration' ),
 			),
 			array(
-				'label'       => __( 'Send User Approval and Denial Link in Email', 'user-registration' ),
-				'description' => '',
-				'id'          => 'user_registration_form_setting_enable_email_approval',
-				'type'        => 'toggle',
-				'tip'         => __( 'Check to receive a link with token in email to approve the users directly.', 'user-registration' ),
-				'css'         => 'min-width: 350px;',
-				'default'     => ur_get_approval_default( $form_id ),
-			),
-			array(
 				'type'              => 'select',
 				'label'             => __( 'Default User Role', 'user-registration' ),
 				'description'       => '',
@@ -1381,22 +1372,6 @@ function ur_login_option_with() {
 			'email'    => __( 'Email', 'user-registration' ),
 		)
 	);
-}
-
-/**
- * Get Default value for Enable Email Approval Checkbox
- *
- * @param int $form_id Form ID.
- */
-function ur_get_approval_default( $form_id ) {
-	if ( isset( $form_id ) && 0 != absint( $form_id ) ) {
-		$value = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval' );
-	} else {
-		$value = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval', get_option( 'user_registration_login_option_enable_email_approval', false ) );
-	}
-	$value = ur_string_to_bool( $value ) ? true : false;
-
-	return $value;
 }
 
 /**
@@ -2990,8 +2965,8 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 			$field_meta_key = substr( $field_meta_key, 0, strpos( $field_meta_key, 'user_registration_' ) );
 		}
 
-		$user_id = isset( $_GET['user'] ) ? sanitize_text_field( wp_unslash( $_GET['user'] ) ) : get_current_user_id();
-		$user_id = isset( $_GET['user_id'] ) ? sanitize_text_field( wp_unslash( $_GET['user_id'] ) ) : $user_id;
+		$user_id = isset( $_GET['user'] ) ? sanitize_text_field( wp_unslash( $_GET['user'] ) ) : get_current_user_id(); //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$user_id = isset( $_GET['user_id'] ) ? sanitize_text_field( wp_unslash( $_GET['user_id'] ) ) : $user_id; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$form_id = isset( $_POST['form_id'] ) ? sanitize_text_field( wp_unslash( $_POST['form_id'] ) ) : ur_get_form_id_by_userid( $user_id ); //phpcs:ignore.
 
 		$field_name = ur_get_field_data_by_field_name( $form_id, $field_meta_key );
@@ -3115,12 +3090,12 @@ if ( ! function_exists( 'ur_find_my_account_in_page' ) ) {
 		$post_meta_table = $wpdb->prefix . 'postmeta';
 
 		$matched = $wpdb->get_var(
-			$wpdb->prepare( "SELECT COUNT(*) FROM {$post_table} WHERE ID = '{$login_page_id}' AND ( post_content LIKE '%[user_registration_login%' OR post_content LIKE '%[user_registration_my_account%' OR post_content LIKE '%[woocommerce_my_account%' )" ) //phpcs:ignore.
+			$wpdb->prepare( "SELECT COUNT(*) FROM {$post_table} WHERE ID = '{$login_page_id}' AND ( post_content LIKE '%[user_registration_login%' OR post_content LIKE '%[user_registration_my_account%' OR post_content LIKE '%[woocommerce_my_account%' OR post_content LIKE '%<!-- wp:user-registration/myaccount%' OR post_content LIKE '%<!-- wp:user-registration/login%')" ) //phpcs:ignore.
 		);
 
 		if ( $matched <= 0 ) {
 			$matched = $wpdb->get_var(
-				$wpdb->prepare( "SELECT COUNT(*) FROM {$post_meta_table} WHERE post_id = '{$login_page_id}' AND ( meta_value LIKE '%[user_registration_login%' OR meta_value LIKE '%[user_registration_my_account%' OR meta_value LIKE '%[woocommerce_my_account%' )" ) //phpcs:ignore.
+				$wpdb->prepare( "SELECT COUNT(*) FROM {$post_meta_table} WHERE post_id = '{$login_page_id}' AND ( meta_value LIKE '%[user_registration_login%' OR meta_value LIKE '%[user_registration_my_account%' OR meta_value LIKE '%[woocommerce_my_account%' OR meta_value LIKE '%<!-- wp:user-registration/myaccount%' OR meta_value LIKE '%<!-- wp:user-registration/login%' )" ) //phpcs:ignore.
 			);
 		}
 		/**
@@ -4513,8 +4488,8 @@ if ( ! function_exists( 'ur_add_links_to_top_nav' ) ) {
 
 		$form_id = 0;
 
-		if ( isset( $_GET['ur_preview'] ) && isset( $_GET['form_id'] ) ) {
-			$form_id = sanitize_text_field( wp_unslash( $_GET['form_id'] ) );
+		if ( isset( $_GET['ur_preview'] ) && isset( $_GET['form_id'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$form_id = sanitize_text_field( wp_unslash( $_GET['form_id'] ) ); //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		} elseif ( is_page() || is_single() ) {
 			$post_content = get_the_content();
 
@@ -4755,9 +4730,8 @@ if ( ! function_exists( 'ur_merge_translations' ) ) {
 			$destination_language_code = str_replace( '-' . $text_domain, '', $language_code );
 
 			if ( 'user-registration' === $destination_language_code ) {
-				$source_file_path      = $source_dir . '/' . $language_code . '.' . $file_extension;
-				$destination_file_path = $destination_dir . '/' . $destination_language_code . '.' . $file_extension;
-
+				$source_file_path      = $source_dir . '/' . $language_code . '.' . $file_extension; //phpcs:ignore
+				$destination_file_path = $destination_dir . '/' . $destination_language_code . '.' . $file_extension; //phpcs:ignore
 				if ( ! file_exists( $destination_file_path ) ) {
 					touch( $destination_file_path );
 				}
@@ -5437,5 +5411,60 @@ if ( ! file_exists( 'user_registration_sanitize_profile_update' ) ) {
 		}
 
 		return $value;
+	}
+}
+
+if ( ! function_exists( 'ur_get_registration_field_value_by_field_name' ) ) {
+
+	/**
+	 * Get Field value by field name while registration.
+	 *
+	 * @since 0
+	 *
+	 * @param  string $field_name Field Name.
+	 */
+	function ur_get_registration_field_value_by_field_name( $field_name ) {
+		$field_value = '';
+
+		if ( isset( $_POST['form_data'] ) ) { // phpcs:ignore
+			$form_data = json_decode( wp_unslash( $_POST['form_data'] ) ); // phpcs:ignore
+		}
+		if ( gettype( $form_data ) != 'array' && gettype( $form_data ) != 'object' ) {
+			$form_data = array();
+		}
+		foreach ( $form_data as $index => $single_data ) {
+
+			if ( $field_name == $single_data->field_name ) {
+				$field_value = $single_data->value;
+			}
+		}
+		return $field_value;
+	}
+}
+
+
+if ( ! function_exists( 'ur_get_translated_string' ) ) {
+	/**
+	 * Function to get translated string using WPML
+	 *
+	 * @since 4.2.1
+	 *
+	 * @param  string $string String.
+	 * @param  string $language_code Language Code.
+	 * @param  string $field_key Field Key.
+	 * @param  string $form_id Form ID.
+	 */
+	function ur_get_translated_string( $string, $language_code, $field_key, $form_id = 0 ) {
+		if ( function_exists( 'icl_translate' ) ) {
+			$language_code     = is_array( $language_code ) ? $language_code[0] : $language_code;
+			$translated_string = apply_filters( 'wpml_translate_single_string', $string, 'user-registration', $string, $language_code );
+			if ( false === $translated_string || $translated_string === $language_code ) {
+				return $string;
+			} else {
+				return $translated_string;
+			}
+		} else {
+			return $string;
+		}
 	}
 }

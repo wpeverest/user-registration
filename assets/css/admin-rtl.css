@@ -5255,6 +5255,8 @@
 
 .user-registration_page_user-registration-dashboard #wpcontent {
   margin-right: 140px; }
+  .user-registration_page_user-registration-dashboard #wpcontent #wpbody-content {
+    float: none; }
 
 .user-registration_page_user-registration-settings .notice {
   display: none; }
@@ -6483,9 +6485,9 @@
         border: 1px dashed #b6bbcf;
         background-color: #f0f1f5; }
   .ur-registered-from .ur-builder-wrapper-footer .button.button-style-customizer {
-    height: 48px;
-    width: 48px;
-    bottom: 72px;
+    height: 48px !important;
+    width: 48px !important;
+    bottom: 72px !important;
     box-shadow: -1px 2px 8px rgba(45, 53, 89, 0.15); }
     .ur-registered-from .ur-builder-wrapper-footer .button.button-style-customizer .dashicons {
       font-size: 24px;
@@ -7436,7 +7438,7 @@ a.button.ur-smart-tags-list-button {
 .ur-advance-setting.ur-advance-default_value, .ur-general-setting.ur-general-setting-hidden-value, .ur-advance-setting.ur-advance-pattern_value {
   position: relative;
   margin-bottom: 15px; }
-  .ur-advance-setting.ur-advance-default_value input.ur_advance_setting.ur-settings-default-value, .ur-advance-setting.ur-advance-default_value input.ur-general-setting-field, .ur-advance-setting.ur-advance-default_value input.ur_advance_setting.ur-settings-pattern_value, .ur-general-setting.ur-general-setting-hidden-value input.ur_advance_setting.ur-settings-default-value, .ur-general-setting.ur-general-setting-hidden-value input.ur-general-setting-field, .ur-general-setting.ur-general-setting-hidden-value input.ur_advance_setting.ur-settings-pattern_value, .ur-advance-setting.ur-advance-pattern_value input.ur_advance_setting.ur-settings-default-value, .ur-advance-setting.ur-advance-pattern_value input.ur-general-setting-field, .ur-advance-setting.ur-advance-pattern_value input.ur_advance_setting.ur-settings-pattern_value {
+  .ur-advance-setting.ur-advance-default_value input.ur-general-setting-field, .ur-advance-setting.ur-advance-default_value input.ur_advance_setting.ur-settings-pattern_value, .ur-general-setting.ur-general-setting-hidden-value input.ur-general-setting-field, .ur-general-setting.ur-general-setting-hidden-value input.ur_advance_setting.ur-settings-pattern_value, .ur-advance-setting.ur-advance-pattern_value input.ur-general-setting-field, .ur-advance-setting.ur-advance-pattern_value input.ur_advance_setting.ur-settings-pattern_value {
     width: calc(100% - 40px) !important;
     min-height: 27px; }
   .ur-advance-setting.ur-advance-default_value a.button.ur-smart-tags-list-button, .ur-general-setting.ur-general-setting-hidden-value a.button.ur-smart-tags-list-button, .ur-advance-setting.ur-advance-pattern_value a.button.ur-smart-tags-list-button {
@@ -7985,3 +7987,443 @@ a.button.ur-smart-tags-list-button {
     top: 8px;
     left: 8px;
     z-index: 2; }
+
+#ur-smart-tags-selector {
+  float: left;
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  color: #6B6B6B;
+  font-weight: 400;
+  font-size: 14px;
+  text-decoration: underline;
+  padding: 10px 0px;
+  cursor: pointer; }
+  #ur-smart-tags-selector ~ .select2-container {
+    visibility: hidden;
+    position: absolute;
+    left: 0;
+    width: 120px !important; }
+
+.select2-container--open:not(.ur-hide-select2) .ur-select2-dropdown {
+  width: 180px !important; }
+  .select2-container--open:not(.ur-hide-select2) .ur-select2-dropdown .select2-search--dropdown {
+    width: 98%;
+    position: relative; }
+  .select2-container--open:not(.ur-hide-select2) .ur-select2-dropdown .ur-select2-title {
+    display: block;
+    padding: 4px;
+    width: 98%;
+    border-radius: 4px;
+    color: #383838; }
+    .select2-container--open:not(.ur-hide-select2) .ur-select2-dropdown .ur-select2-title p {
+      padding: 6px 8px;
+      background-color: #F4F4F4;
+      font-size: 13px;
+      font-weight: 600;
+      margin: 0px; }
+  .select2-container--open:not(.ur-hide-select2) .ur-select2-dropdown ul.select2-results__options {
+    max-height: 250px !important;
+    overflow-y: auto;
+    border-top: 1px solid #ccc; }
+    .select2-container--open:not(.ur-hide-select2) .ur-select2-dropdown ul.select2-results__options::-webkit-scrollbar {
+      width: 4px; }
+    .select2-container--open:not(.ur-hide-select2) .ur-select2-dropdown ul.select2-results__options::-webkit-scrollbar-thumb {
+      background-color: #aaa;
+      border-radius: 10px !important; }
+    .select2-container--open:not(.ur-hide-select2) .ur-select2-dropdown ul.select2-results__options li.select2-results__option--highlighted, .select2-container--open:not(.ur-hide-select2) .ur-select2-dropdown ul.select2-results__options li[data-selected=true] {
+      background: #f8f8fa;
+      color: #475BB2;
+      border: none; }
+  .select2-container--open:not(.ur-hide-select2) .ur-select2-dropdown .select2-search {
+    display: flex;
+    align-items: center;
+    color: #999999; }
+    .select2-container--open:not(.ur-hide-select2) .ur-select2-dropdown .select2-search .select2-search__field {
+      padding-right: 28px; }
+    .select2-container--open:not(.ur-hide-select2) .ur-select2-dropdown .select2-search .search-icon {
+      position: absolute;
+      right: 12px;
+      top: 33;
+      color: #999; }
+
+.toplevel_page_user-registration #wpcontent,
+body.user-registration #wpcontent {
+  padding-right: 0; }
+
+.toplevel_page_user-registration #wpbody-content,
+body.user-registration #wpbody-content {
+  background: #f0f0f1; }
+  .toplevel_page_user-registration #wpbody-content #screen-meta-links,
+  body.user-registration #wpbody-content #screen-meta-links {
+    display: none; }
+
+.ur-admin-page-topnav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  padding: 0px 24px;
+  border-bottom: 1px solid #E1E1E1;
+  margin-bottom: 25px; }
+  .ur-admin-page-topnav .ur-page-title__wrapper {
+    display: flex;
+    align-items: center;
+    gap: 20px; }
+    .ur-admin-page-topnav .ur-page-title__wrapper-logo {
+      padding: 0px 0px 0px 20px;
+      border-left: 1px solid #E1E1E1; }
+    .ur-admin-page-topnav .ur-page-title__wrapper-menu h2 {
+      padding: 24px 0px; }
+    .ur-admin-page-topnav .ur-page-title__wrapper-menu__items {
+      display: flex;
+      gap: 4px;
+      margin: 0; }
+      .ur-admin-page-topnav .ur-page-title__wrapper-menu__items li {
+        font-size: 15px;
+        margin-bottom: 0;
+        padding: 24px 0; }
+        .ur-admin-page-topnav .ur-page-title__wrapper-menu__items li a {
+          text-decoration: none;
+          color: #1f1f1f;
+          padding: 24px 16px;
+          position: relative;
+          transition: all .3s; }
+          .ur-admin-page-topnav .ur-page-title__wrapper-menu__items li a:focus {
+            outline: none;
+            box-shadow: none; }
+          .ur-admin-page-topnav .ur-page-title__wrapper-menu__items li a::after {
+            content: "";
+            background: #475bb2;
+            width: 0px;
+            height: 3px;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            transition: all .3s; }
+          .ur-admin-page-topnav .ur-page-title__wrapper-menu__items li a:hover, .ur-admin-page-topnav .ur-page-title__wrapper-menu__items li a.current {
+            color: #475bb2; }
+            .ur-admin-page-topnav .ur-page-title__wrapper-menu__items li a:hover::after, .ur-admin-page-topnav .ur-page-title__wrapper-menu__items li a.current::after {
+              width: 100%; }
+          .ur-admin-page-topnav .ur-page-title__wrapper-menu__items li a.current {
+            font-weight: 600; }
+  .ur-admin-page-topnav .ur-back-button {
+    border-left: 1px solid #bababa;
+    padding: 4px 4px 4px 14px;
+    display: flex;
+    cursor: pointer; }
+    .ur-admin-page-topnav .ur-back-button svg {
+      width: 24px;
+      height: 24px; }
+  .ur-admin-page-topnav .dashicons::before {
+    color: #383838; }
+  .ur-admin-page-topnav .ur-page-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-direction: row-reverse; }
+    .ur-admin-page-topnav .ur-page-actions a .ur-button-primary {
+      border-radius: 3px;
+      background: #475bb2;
+      padding: 6px 12px;
+      font-size: 14px;
+      line-height: 150%;
+      color: #ffffff;
+      transition: all 0.3s ease-in-out; }
+      .ur-admin-page-topnav .ur-page-actions a .ur-button-primary:hover {
+        background: #38488e; }
+    .ur-admin-page-topnav .ur-page-actions > .ur-button-primary {
+      color: #383838;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 18px;
+      background: #EAEAEA;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border-radius: 3px;
+      border: 1px solid #eaeaea;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out; }
+      .ur-admin-page-topnav .ur-page-actions > .ur-button-primary svg {
+        width: 14px;
+        height: 14px; }
+        .ur-admin-page-topnav .ur-page-actions > .ur-button-primary svg path {
+          fill: #383838; }
+      .ur-admin-page-topnav .ur-page-actions > .ur-button-primary:hover {
+        background: #e1e1e1;
+        border-color: #e1e1e1; }
+
+.user-registration-list-table-container #user-registration-list-table-page {
+  max-width: 100%;
+  margin-right: 20px;
+  margin-left: 20px; }
+
+.user-registration-login-form-container .ur-form-container #menu-management-liquid {
+  margin-right: 0;
+  min-width: 100%; }
+  .user-registration-login-form-container .ur-form-container #menu-management-liquid .ur-selected-inputs {
+    padding-right: 20px !important;
+    padding-left: 20px !important; }
+
+#user-registration-list-table-page {
+  max-width: 1280px;
+  margin: 25px auto;
+  padding: 24px;
+  border-radius: 7px;
+  background: #ffffff; }
+  #user-registration-list-table-page .user-registration-list-table-header {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 15px; }
+    #user-registration-list-table-page .user-registration-list-table-header a {
+      padding: 6px 14px;
+      border-radius: 3px;
+      border: 1px solid #475bb2;
+      background: #f6f7f7;
+      color: #475bb2;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 150%;
+      transition: all 0.3s ease-in-out;
+      text-decoration: none; }
+  #user-registration-list-table-page #user-registration-list-filters-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+    border-bottom: 1px solid #dcdcdc;
+    padding-bottom: 24px;
+    margin-bottom: 24px; }
+    #user-registration-list-table-page #user-registration-list-filters-row ul.subsubsub {
+      font-size: 15px; }
+    #user-registration-list-table-page #user-registration-list-filters-row #user-registration-pro-users-filters {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      padding: 0;
+      margin-top: 0; }
+      #user-registration-list-table-page #user-registration-list-filters-row #user-registration-pro-users-filters li div p {
+        display: none;
+        margin: 0; }
+      #user-registration-list-table-page #user-registration-list-filters-row #user-registration-pro-users-filters li div select {
+        min-height: 36px;
+        padding: 2px 12px;
+        border-radius: 4px;
+        border-color: #bababa;
+        min-width: 130px; }
+        #user-registration-list-table-page #user-registration-list-filters-row #user-registration-pro-users-filters li div select:hover {
+          color: #475bb2; }
+        #user-registration-list-table-page #user-registration-list-filters-row #user-registration-pro-users-filters li div select:focus {
+          box-shadow: none;
+          border: 1px solid #475bb2; }
+      #user-registration-list-table-page #user-registration-list-filters-row #user-registration-pro-users-filters .user-registration-users-filter-btns {
+        display: flex;
+        align-items: center;
+        gap: 8px; }
+        #user-registration-list-table-page #user-registration-list-filters-row #user-registration-pro-users-filters .user-registration-users-filter-btns button {
+          cursor: pointer;
+          transition: all 0.3s ease-in-out; }
+          #user-registration-list-table-page #user-registration-list-filters-row #user-registration-pro-users-filters .user-registration-users-filter-btns button[type="submit"] {
+            padding: 6px 14px;
+            border-radius: 3px;
+            border: 1px solid #475bb2;
+            background: #475bb2;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 150%;
+            letter-spacing: 0.3px; }
+            #user-registration-list-table-page #user-registration-list-filters-row #user-registration-pro-users-filters .user-registration-users-filter-btns button[type="submit"]:hover {
+              background: #38488e;
+              border-color: #38488e; }
+          #user-registration-list-table-page #user-registration-list-filters-row #user-registration-pro-users-filters .user-registration-users-filter-btns button[type="reset"], #user-registration-list-table-page #user-registration-list-filters-row #user-registration-pro-users-filters .user-registration-users-filter-btns button[type="button"] {
+            border-radius: 3px;
+            border: 1px solid #6b6b6b;
+            background: #f6f7f7;
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease-in-out; }
+            #user-registration-list-table-page #user-registration-list-filters-row #user-registration-pro-users-filters .user-registration-users-filter-btns button[type="reset"] svg, #user-registration-list-table-page #user-registration-list-filters-row #user-registration-pro-users-filters .user-registration-users-filter-btns button[type="button"] svg {
+              width: 16px;
+              height: 16px; }
+              #user-registration-list-table-page #user-registration-list-filters-row #user-registration-pro-users-filters .user-registration-users-filter-btns button[type="reset"] svg path, #user-registration-list-table-page #user-registration-list-filters-row #user-registration-pro-users-filters .user-registration-users-filter-btns button[type="button"] svg path {
+                fill: #383838; }
+            #user-registration-list-table-page #user-registration-list-filters-row #user-registration-pro-users-filters .user-registration-users-filter-btns button[type="reset"]:hover, #user-registration-list-table-page #user-registration-list-filters-row #user-registration-pro-users-filters .user-registration-users-filter-btns button[type="button"]:hover {
+              background: #f2f2f2;
+              border-color: #475bb2; }
+              #user-registration-list-table-page #user-registration-list-filters-row #user-registration-pro-users-filters .user-registration-users-filter-btns button[type="reset"]:hover svg path, #user-registration-list-table-page #user-registration-list-filters-row #user-registration-pro-users-filters .user-registration-users-filter-btns button[type="button"]:hover svg path {
+                fill: #475bb2; }
+    #user-registration-list-table-page #user-registration-list-filters-row #search-submit img {
+      width: 18px;
+      height: 18px; }
+    #user-registration-list-table-page #user-registration-list-filters-row form {
+      position: relative; }
+    #user-registration-list-table-page #user-registration-list-filters-row #user-registration-users-advanced-filters {
+      display: block;
+      position: absolute;
+      border-radius: 4px;
+      background: #ffffff;
+      box-shadow: 0px 6px 16px 0px rgba(0, 0, 0, 0.13);
+      padding: 20px 18px;
+      left: 0;
+      top: 38px;
+      z-index: 2;
+      width: 360px; }
+      #user-registration-list-table-page #user-registration-list-filters-row #user-registration-users-advanced-filters ul {
+        margin: 0; }
+        #user-registration-list-table-page #user-registration-list-filters-row #user-registration-users-advanced-filters ul li {
+          margin: 0; }
+          #user-registration-list-table-page #user-registration-list-filters-row #user-registration-users-advanced-filters ul li p {
+            margin-top: 0;
+            margin-bottom: 14px;
+            color: #222222;
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 150%; }
+          #user-registration-list-table-page #user-registration-list-filters-row #user-registration-users-advanced-filters ul li input[type="date"] {
+            width: 47%;
+            border-radius: 4px;
+            border-color: #bababa;
+            background: #ffffff;
+            height: 36px; }
+    #user-registration-list-table-page #user-registration-list-filters-row #user-registration-list-search-form {
+      width: 275px;
+      position: relative; }
+      #user-registration-list-table-page #user-registration-list-filters-row #user-registration-list-search-form #user-registration-list-table-search-input {
+        border-radius: 4px;
+        border: 1px solid #bababa;
+        background: #ffffff;
+        padding: 3px 12px 3px 42px;
+        width: 100%; }
+        #user-registration-list-table-page #user-registration-list-filters-row #user-registration-list-search-form #user-registration-list-table-search-input::placeholder {
+          color: #999999; }
+        #user-registration-list-table-page #user-registration-list-filters-row #user-registration-list-search-form #user-registration-list-table-search-input:focus {
+          box-shadow: none;
+          border: 1px solid #475bb2; }
+      #user-registration-list-table-page #user-registration-list-filters-row #user-registration-list-search-form button#search-submit {
+        position: absolute;
+        border: 0;
+        background: transparent;
+        padding: 0;
+        width: 18px;
+        height: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        left: 12px;
+        top: 8px; }
+        #user-registration-list-table-page #user-registration-list-filters-row #user-registration-list-search-form button#search-submit svg path {
+          fill: #999999; }
+    #user-registration-list-table-page #user-registration-list-filters-row form {
+      position: relative; }
+  #user-registration-list-table-page hr {
+    display: none; }
+  #user-registration-list-table-page .user-registration-list-table-action-form .tablenav {
+    padding: 0;
+    margin: 0 0 16px;
+    height: auto; }
+    #user-registration-list-table-page .user-registration-list-table-action-form .tablenav.bottom {
+      margin-bottom: 0; }
+    #user-registration-list-table-page .user-registration-list-table-action-form .tablenav .actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-left: 12px; }
+      #user-registration-list-table-page .user-registration-list-table-action-form .tablenav .actions select {
+        height: 36px;
+        margin: 0;
+        border-color: #bababa; }
+        #user-registration-list-table-page .user-registration-list-table-action-form .tablenav .actions select:hover {
+          color: #475bb2; }
+        #user-registration-list-table-page .user-registration-list-table-action-form .tablenav .actions select:focus {
+          box-shadow: none;
+          border: 1px solid #475bb2; }
+      #user-registration-list-table-page .user-registration-list-table-action-form .tablenav .actions input[type="submit"] {
+        padding: 6px 14px;
+        border-radius: 3px;
+        border: 1px solid #475bb2;
+        background: #f6f7f7;
+        color: #475bb2;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 150%;
+        transition: all 0.3s ease-in-out; }
+        #user-registration-list-table-page .user-registration-list-table-action-form .tablenav .actions input[type="submit"]:hover {
+          background: #f2f2f2; }
+    #user-registration-list-table-page .user-registration-list-table-action-form .tablenav-pages {
+      margin-bottom: 0; }
+  #user-registration-list-table-page table.wp-list-table {
+    border-color: #dcdcdc;
+    border-radius: 5px;
+    margin-bottom: 16px;
+    overflow: hidden; }
+    #user-registration-list-table-page table.wp-list-table a {
+      color: #383838;
+      transition: all 0.3s ease-in-out; }
+      #user-registration-list-table-page table.wp-list-table a:hover {
+        color: #475bb2; }
+    #user-registration-list-table-page table.wp-list-table thead tr td,
+    #user-registration-list-table-page table.wp-list-table thead tr th {
+      border-bottom-color: #dcdcdc; }
+    #user-registration-list-table-page table.wp-list-table thead tr th {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 24px;
+      color: #383838; }
+      #user-registration-list-table-page table.wp-list-table thead tr th.sortable, #user-registration-list-table-page table.wp-list-table thead tr th.sorted {
+        padding: 0; }
+        #user-registration-list-table-page table.wp-list-table thead tr th.sortable a, #user-registration-list-table-page table.wp-list-table thead tr th.sorted a {
+          font-size: 14px;
+          font-weight: 600;
+          line-height: 24px;
+          padding: 12px 8px;
+          display: flex;
+          align-items: center;
+          gap: 8px; }
+          #user-registration-list-table-page table.wp-list-table thead tr th.sortable a:focus, #user-registration-list-table-page table.wp-list-table thead tr th.sorted a:focus {
+            box-shadow: none; }
+          #user-registration-list-table-page table.wp-list-table thead tr th.sortable a .sorting-indicators, #user-registration-list-table-page table.wp-list-table thead tr th.sorted a .sorting-indicators {
+            gap: 4px; }
+            #user-registration-list-table-page table.wp-list-table thead tr th.sortable a .sorting-indicators .sorting-indicator, #user-registration-list-table-page table.wp-list-table thead tr th.sorted a .sorting-indicators .sorting-indicator {
+              margin: 0; }
+    #user-registration-list-table-page table.wp-list-table tbody tr td.username img {
+      border-radius: 50px;
+      margin-top: 2px; }
+    #user-registration-list-table-page table.wp-list-table tbody tr td.user_status span {
+      font-weight: 500; }
+      #user-registration-list-table-page table.wp-list-table tbody tr td.user_status span.user-status-approved {
+        color: #4CC741; }
+      #user-registration-list-table-page table.wp-list-table tbody tr td.user_status span.user-status-pending {
+        color: #EE9936; }
+      #user-registration-list-table-page table.wp-list-table tbody tr td.user_status span.user-status-denied {
+        color: #F25656; }
+    #user-registration-list-table-page table.wp-list-table tbody tr td.actions a {
+      color: #475bb2;
+      transition: all 0.3s ease-in-out;
+      padding-bottom: 2px;
+      position: relative; }
+      #user-registration-list-table-page table.wp-list-table tbody tr td.actions a::before {
+        content: "";
+        background: #475bb2;
+        width: 100%;
+        height: 1px;
+        position: absolute;
+        bottom: 0;
+        opacity: 0;
+        transition: all 0.3s ease-in-out; }
+      #user-registration-list-table-page table.wp-list-table tbody tr td.actions a:hover::before {
+        opacity: 1; }
+      #user-registration-list-table-page table.wp-list-table tbody tr td.actions a:focus {
+        box-shadow: none;
+        outline: none; }
+    #user-registration-list-table-page table.wp-list-table input[type="checkbox"]:not(.urcr-enable-access-rule) {
+      border-radius: 2px;
+      border-color: #999999; }

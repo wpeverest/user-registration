@@ -54,7 +54,7 @@ class UR_Emailer {
 		global $pagenow;
 
 		// adds the hook if it is for reset password.
-		if ( ( is_admin() && 'users.php' === $pagenow ) || ( is_admin() && 'resetpassword' === isset( $_GET['action'] ) ) ) {
+		if ( ( is_admin() && 'users.php' === $pagenow ) || ( is_admin() && 'resetpassword' === isset( $_GET['action'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			add_filter( 'retrieve_password_message', array( __CLASS__, 'ur_retrieve_password_message' ), 20, 4 );
 			add_filter( 'retrieve_password_title', array( __CLASS__, 'ur_retrieve_password_title' ), 20, 3 );
 			add_filter( 'wp_mail_content_type', array( __CLASS__, 'ur_get_content_type' ) );
@@ -182,9 +182,7 @@ class UR_Emailer {
 
 			self::send_mail_to_user( $email, $username, $user_id, $data_html, $name_value, $attachments, $template_id );
 
-			$email_approval_enabled = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval' );
-
-			if ( $email_approval_enabled ) {
+			if ( 'admin_approval' === $login_option ) {
 				self::send_approve_link_in_email( $email, $username, $user_id, $data_html, $name_value, $attachments, $template_id );
 			} else {
 				self::send_mail_to_admin( $email, $username, $user_id, $data_html, $name_value, $attachments, $template_id );
@@ -479,9 +477,9 @@ class UR_Emailer {
 		// If enabled approval via email setting.
 		if ( ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
 			$values['approval_token'] = get_user_meta( $user_id, 'ur_confirm_approval_token', true );
-			$values['denial_token'] = get_user_meta( $user_id, 'ur_confirm_denial_token', true );
+			$values['denial_token']   = get_user_meta( $user_id, 'ur_confirm_denial_token', true );
 			$values['approval_link']  = '<a href="' . admin_url( '/' ) . '?ur_approval_token=' . $values['approval_token'] . '">' . esc_html__( 'Approve Now', 'user-registration' ) . '</a><br />';
-			$values['denial_link']  = '<a href="' . admin_url( '/' ) . '?ur_denial_token=' . $values['denial_token'] . '">' . esc_html__( 'Deny Now', 'user-registration' ) . '</a><br />';
+			$values['denial_link']    = '<a href="' . admin_url( '/' ) . '?ur_denial_token=' . $values['denial_token'] . '">' . esc_html__( 'Deny Now', 'user-registration' ) . '</a><br />';
 		}
 
 		list( $message, $subject ) = user_registration_email_content_overrider( ur_get_form_id_by_userid( $user_id ), $settings, $message, $subject );
@@ -532,10 +530,9 @@ class UR_Emailer {
 		$subject  = get_option( 'user_registration_approval_link_email_subject', __( 'Approval Link For New User Registration', 'user-registration' ) );
 		$settings = new UR_Settings_Approval_Link_Email();
 
-		$form_id                = ur_get_form_id_by_userid( $user_id );
-		$email_approval_enabled = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_email_approval' );
+		$form_id = ur_get_form_id_by_userid( $user_id );
 
-		$message = $settings->ur_get_approval_link_email( $email_approval_enabled );
+		$message = $settings->ur_get_approval_link_email();
 		$message = get_option( 'user_registration_approval_link_email', $message );
 
 		$values = array(
@@ -549,11 +546,11 @@ class UR_Emailer {
 		$login_option = ur_get_user_login_option( $user_id );
 
 		// If enabled approval via email setting.
-		if ( ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) && ( 1 === absint( $email_approval_enabled ) ) ) {
+		if ( ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
 			$values['approval_token'] = get_user_meta( $user_id, 'ur_confirm_approval_token', true );
-			$values['denial_token'] = get_user_meta( $user_id, 'ur_confirm_denial_token', true );
+			$values['denial_token']   = get_user_meta( $user_id, 'ur_confirm_denial_token', true );
 			$values['approval_link']  = '<a href="' . admin_url( '/' ) . '?ur_approval_token=' . $values['approval_token'] . '">' . esc_html__( 'Approve Now', 'user-registration' ) . '</a><br />';
-			$values['denial_link']  = '<a href="' . admin_url( '/' ) . '?ur_denial_token=' . $values['denial_token'] . '">' . esc_html__( 'Deny Now', 'user-registration' ) . '</a><br />';
+			$values['denial_link']    = '<a href="' . admin_url( '/' ) . '?ur_denial_token=' . $values['denial_token'] . '">' . esc_html__( 'Deny Now', 'user-registration' ) . '</a><br />';
 		}
 
 		list( $message, $subject ) = user_registration_email_content_overrider( ur_get_form_id_by_userid( $user_id ), $settings, $message, $subject );
@@ -586,6 +583,14 @@ class UR_Emailer {
 			'email'    => $email,
 			'form_id'  => $form_id,
 		);
+
+		$user = get_user_by( 'login', $username );
+
+		$current_language = ur_get_current_language();
+
+		if ( $user ) {
+			$current_language = get_user_meta( $user->ID, 'ur_registered_language' );
+		}
 
 		// Get selected email template id for specific form.
 		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
@@ -623,6 +628,8 @@ class UR_Emailer {
 			$message                   = $settings->ur_get_registration_approved_email();
 			$message                   = get_option( 'user_registration_registration_approved_email', $message );
 			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
+			$message                   = ur_get_translated_string( $message, $current_language, 'user_registration_registration_approved_email' );
+			$subject                   = ur_get_translated_string( $subject, $current_language, 'user_registration_registration_approved_email_subject' );
 			$message                   = self::parse_smart_tags( $message, $values, $name_value );
 			$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
 
