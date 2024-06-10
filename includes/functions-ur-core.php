@@ -4910,6 +4910,7 @@ if ( ! function_exists( 'user_registration_validate_form_field_data' ) ) {
 			if ( ! empty( $response ) ) {
 				array_push( $response_array, $response );
 			}
+			remove_all_filters( $filter_hook );
 
 			return $response_array;
 		}
@@ -5361,7 +5362,6 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 					$form_data_array = apply_filters( 'user_registration_' . $field['field_key'] . '_frontend_form_data', $filter_data );
 					$field           = isset( $form_data_array['form_data'] ) ? $form_data_array['form_data'] : $field;
 					$value           = ! empty( $_POST[ $key ] ) ? ur_clean( wp_unslash( $_POST[ $key ] ) ) : $field['value']; // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-
 					$field = user_registration_form_field( $key, $field, $value );
 
 					/**

@@ -172,7 +172,6 @@ class UR_Form_Validation extends UR_Validation {
 		// Check if a required field is missing.
 		$missing_item = array_diff( $required_fields, $request_form_keys );
 
-		exit;
 		if ( count( $missing_item ) > 0 ) {
 
 			foreach ( $missing_item as $key => $value ) {
@@ -739,6 +738,7 @@ class UR_Form_Validation extends UR_Validation {
 		// Validate custom field validations of field class.
 		$hook        = "user_registration_validate_{$single_field_key}";
 		$filter_hook = $hook . '_message';
+
 		/**
 		 * Action validate single field.
 		 *
@@ -760,7 +760,13 @@ class UR_Form_Validation extends UR_Validation {
 		$response = apply_filters( $filter_hook, '' );
 
 		if ( ! empty( $response ) ) {
-			ur_add_notice( $response, 'error' );
+			if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX && ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
+				$response = array_values( $response );
+				ur_add_notice( $response[0], 'error' );
+			} else {
+				ur_add_notice( $response, 'error' );
+			}
+			remove_all_filters( $filter_hook );
 		}
 	}
 }
