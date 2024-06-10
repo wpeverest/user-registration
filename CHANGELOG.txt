@@ -1,3 +1,9 @@
+= 3.2.1.1  - 06/06/2024 =
+* Dev      - Added filter hook to to check user instance.
+* Fix      - Notice not being dismissed.
+* Fix      - Function ur_get_screen_ids not defined.
+* Fix      - Check function exists before checking capabilities.
+
 = 3.2.1    - 31/05/2024 =
 * Enhance  - Smart tags picker design.
 * Enhance  - All forms list table design.
