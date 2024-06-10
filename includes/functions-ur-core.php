@@ -3055,11 +3055,12 @@ if ( ! function_exists( 'user_registration_install_pages_notice' ) ) {
 		if ( $my_account_page ) {
 			$myaccount_page = get_post( $my_account_page );
 		}
-
 		if ( ! empty( $myaccount_page ) ) {
-			$matched = ur_find_my_account_in_page( $myaccount_page->ID );
-		}
 
+			if ( isset( $_GET['page'] ) && 'user-registration-settings' === $_GET['page'] ) { //phpcs:ignore WordPress.Security.NonceVerification
+				$matched = ur_find_my_account_in_page( $myaccount_page->ID );
+			}
+		}
 		if ( 0 === $matched ) {
 			$my_account_setting_link = admin_url() . 'admin.php?page=user-registration-settings#user_registration_myaccount_page_id';
 
