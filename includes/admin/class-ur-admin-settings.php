@@ -846,8 +846,17 @@ class UR_Admin_Settings {
 					} elseif ( is_string( $section['settings'] ) ) {
 						$settings .= $section['settings'];
 					}
-					$settings .= ' </div > ';
-					$settings .= ' </div > ';
+
+					/**
+					 * Filter to retrieve extra settings for this section.
+					 *
+					 * @param string $settings Settings.
+					 * @param mixed $options Section options.
+					 */
+					$settings = apply_filters( 'user_registration_admin_after_global_settings', $settings, $options );
+
+					$settings .= ' </div> ';
+					$settings .= ' </div> ';
 
 					if ( ! empty( $section['id'] ) ) {
 						/**
