@@ -4797,3 +4797,21 @@ if ( ! function_exists( 'ur_get_translated_string' ) ) {
 		}
 	}
 }
+
+// Hook the redirection to admin_init
+add_action(
+	'admin_init',
+	'ur_redirect_to_addons_page'
+);
+
+if ( ! function_exists( 'ur_redirect_to_addons_page' ) ) {
+	/**
+	 * Redirect to addons page.
+	 */
+	function ur_redirect_to_addons_page() {
+		if ( isset( $_GET['page'] ) && 'user-registration-addons' === $_GET['page'] ) {
+			wp_safe_redirect( esc_url_raw( admin_url( 'admin.php?page=user-registration-dashboard#features' ) ) );
+			exit;
+		}
+	}
+}
