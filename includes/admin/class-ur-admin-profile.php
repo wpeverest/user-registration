@@ -431,7 +431,6 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 		 * @param int $user_id User ID of the user being saved.
 		 */
 		public function update_user_profile( $user_id ) {
-			error_log( print_r( 'hellooo', true ) );
 
 			$save_fields = $this->get_user_meta_by_form_fields( $user_id );
 
