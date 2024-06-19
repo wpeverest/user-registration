@@ -464,6 +464,18 @@ class UR_Admin_Settings {
 									$settings .= '</div>';
 									$settings .= '</div>';
 									break;
+								case 'nonce':
+									$settings .= '<div class="user-registration-global-settings">';
+									$settings .= '<div class="user-registration-global-settings--field">';
+									$settings .= '<input
+											name="' . esc_attr( $value['id'] ) . '"
+											id="' . esc_attr( $value['id'] ) . '"
+											type="hidden"
+											value="' . esc_attr( wp_create_nonce( $value['action'] ) ) . '"
+											/>';
+									$settings .= '</div>';
+									$settings .= '</div>';
+									break;
 
 								// Color picker.
 								case 'color':
