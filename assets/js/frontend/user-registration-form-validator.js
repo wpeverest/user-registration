@@ -542,7 +542,9 @@
 
 			if (checkbox_div.length) {
 				checkbox_div.each(function () {
-					rules[field_selector + $(this).data("field-id") + "[]"] = {
+					rules[
+						field_selector + $(this).attr("data-field-id") + "[]"
+					] = {
 						checkLimit: $(this).find("ul").data("choice-limit")
 							? $(this).find("ul").data("choice-limit")
 							: 0
@@ -609,6 +611,10 @@
 	};
 
 	$(window).on("load", function () {
+		user_registration_form_validator.init();
+	});
+
+	$(window).on("user_registration_repeater_modified", function () {
 		user_registration_form_validator.init();
 	});
 })(jQuery);

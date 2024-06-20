@@ -101,8 +101,10 @@ class UR_Form_Validation extends UR_Validation {
 			$user_pass = isset( $this->valid_form_data['user_pass']->value ) && $this->valid_form_data['user_pass']->value;
 		}
 
-		// Modify UR_Frontend_Form_Handler::$response_array variable.
-		$response_array = array_merge( $response_array, $this->response_array );
+		if ( ! is_null( $this->response_array ) ) {
+			// Modify UR_Frontend_Form_Handler::$response_array variable.
+			$response_array = array_merge( $response_array, $this->response_array );
+		}
 
 		// Modify UR_Frontend_Form_Handler::$valid_form_data variable.
 		$valid_form_data = $this->valid_form_data;

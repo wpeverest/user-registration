@@ -177,7 +177,7 @@ do_action( 'user_registration_before_registration_form', $form_id );
 									}
 								}
 								?>
-								<div <?php echo $cl_props; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> data-field-id="<?php echo esc_attr( $field_id ); ?>" class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?> <?php echo esc_attr( ! empty( $single_item->advance_setting->custom_class ) ? $single_item->advance_setting->custom_class : '' ); ?>">
+								<div <?php echo $cl_props; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> data-field-id="<?php echo esc_attr( $field_id ); ?>" class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?> <?php echo esc_attr( ! empty( $single_item->advance_setting->custom_class ) ? $single_item->advance_setting->custom_class : '' ); ?>" data-ref-id="<?php echo esc_attr( $field_id ); ?>">
 									<?php
 									$grid_data =
 									/**
@@ -209,9 +209,7 @@ do_action( 'user_registration_before_registration_form', $form_id );
 												$cl_props = sprintf( 'data-conditional-logic-enabled="%s" data-conditional-logic-map="%s"', esc_attr( $cl_enabled ), esc_attr( $cl_map ) );
 											}
 										}
-										?>
-															<div <?php echo $cl_props; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> data-field-id="<?php echo esc_attr( $field_id ); ?>" class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?> <?php echo esc_attr( ! empty( $single_item->advance_setting->custom_class ) ? $single_item->advance_setting->custom_class : '' ); ?>">
-												<?php
+
 												/**
 												 * Action to fire before rendering of the frontend form field.
 												 *
@@ -229,9 +227,7 @@ do_action( 'user_registration_before_registration_form', $form_id );
 												 */
 												do_action( 'user_registration_after_frontend_form_field', $single_item, $form_id );
 												$is_field_exists = true;
-												?>
-															</div>
-												<?php
+
 									}
 									?>
 								</div>

@@ -144,7 +144,6 @@ class UR_Form_Handler {
 			$email_updated                = false;
 			$pending_email                = '';
 			$user                         = wp_get_current_user();
-
 			foreach ( $profile as $key => $field ) {
 
 				$new_key = str_replace( 'user_registration_', '', $key );
@@ -177,7 +176,7 @@ class UR_Form_Handler {
 					if ( 'disabled' !== $disabled ) {
 
 						if ( isset( $_POST[ $key ] ) ) {
-							update_user_meta( $user_id, $update_key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+							update_user_meta( $user_id, $update_key, $_POST[ $key ] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 						} elseif ( 'checkbox' === $field['field_key'] ) {
 							update_user_meta( $user_id, $update_key, '' );
 						}
@@ -213,23 +212,6 @@ class UR_Form_Handler {
 			wp_safe_redirect( ur_get_account_endpoint_url( $profile_endpoint ) );
 			exit;
 		}
-	}
-
-	/**
-	 * This format returns form field data in object format.
-	 *
-	 * In Non-ajax method of update profile, form data is received in key => value format
-	 * which is different from the data received while using ajax submission.
-	 *
-	 * So, to maintain consistency of form data object while passing to different functions,
-	 * data is formatted properly.
-	 *
-	 * @param [int] $form_id Form Id.
-	 * @return array
-	 */
-	public static function get_form_data_from_post( $form_id ) {
-
-		return $fields;
 	}
 
 	/**

@@ -134,9 +134,33 @@
 											$(this).closest(".ur-repeater-row")
 												.length > 0
 										) {
-											repeater_field_data[fieldName][
-												"value"
-											][rowName].push(single_data);
+											if (
+												$(this)
+													.closest(".form-row")
+													.find(
+														"*[name='" +
+															$(this).attr(
+																"name"
+															) +
+															"']"
+													).length < 2
+											) {
+												repeater_field_data[fieldName][
+													"value"
+												][rowName].push(single_data);
+											} else {
+												if (
+													multi_value_field.indexOf(
+														single_data.field_name +
+															"[]"
+													) === -1
+												) {
+													multi_value_field.push(
+														single_data.field_name +
+															"[]"
+													);
+												}
+											}
 										} else {
 											form_data.push(single_data);
 										}
@@ -163,7 +187,6 @@
 										multi_value_field[multi_start] +
 										'"]'
 								);
-
 								var node_type = field
 									.get(0)
 									.tagName.toLowerCase();
@@ -174,6 +197,8 @@
 										: "null";
 
 								var field_value = new Array();
+
+								var repeater_field_value = {};
 								$.each(field, function () {
 									var this_field = $(this);
 
@@ -206,8 +231,43 @@
 											break;
 										default:
 									}
+
 									if (this_field_value !== "") {
-										field_value.push(this_field_value);
+										if (
+											this_field.closest(
+												".ur-repeater-row"
+											).length > 0
+										) {
+											if (
+												this_field.closest(
+													".field-radio"
+												).length > 0
+											) {
+												repeater_field_value[
+													this_field.attr("data-id")
+												] = this_field_value;
+											} else {
+												if (
+													"undefined" ===
+													typeof repeater_field_value[
+														this_field.attr(
+															"data-id"
+														)
+													]
+												) {
+													repeater_field_value[
+														this_field.attr(
+															"data-id"
+														)
+													] = new Array();
+												}
+												repeater_field_value[
+													this_field.attr("data-id")
+												].push(this_field_value);
+											}
+										} else {
+											field_value.push(this_field_value);
+										}
 									}
 								});
 
@@ -308,7 +368,6 @@
 									multi_value_field[multi_start];
 								single_form_field_name =
 									single_form_field_name.replace("[]", "");
-
 								var field_data = {
 									value: field_value_json,
 									field_type: field_type,
@@ -316,7 +375,71 @@
 									field_name: single_form_field_name
 								};
 
-								form_data.push(field_data);
+								if (
+									Object.keys(repeater_field_value).length > 0
+								) {
+									var field_detail = new Array();
+
+									$.each(
+										repeater_field_value,
+										function (key, value) {
+											var row_id = $(
+												'[name="' + key + '"]'
+											)
+												.closest(".ur-repeater-row")
+												.data("repeater-row");
+											var repeater_value = Object.assign(
+												{},
+												field_data
+											);
+
+											repeater_value.value =
+												"string" === typeof value
+													? value
+													: JSON.stringify(value);
+
+											repeater_value.field_name =
+												single_form_field_name.slice(
+													0,
+													-2
+												);
+
+											var current_repeater_field_name =
+												"undefined" ===
+												typeof repeater_field_data[
+													$("[name='" + key + "']")
+														.closest(
+															".ur-repeater-row"
+														)
+														.data(
+															"repeater-field-name"
+														)
+												]
+													? "user_registration_" +
+													  $("[name='" + key + "']")
+															.closest(
+																".ur-repeater-row"
+															)
+															.data(
+																"repeater-field-name"
+															)
+													: $("[name='" + key + "']")
+															.closest(
+																".ur-repeater-row"
+															)
+															.data(
+																"repeater-field-name"
+															);
+											repeater_field_data[
+												current_repeater_field_name
+											]["value"]["row_" + row_id].push(
+												repeater_value
+											);
+										}
+									);
+								} else {
+									form_data.push(field_data);
+								}
 							}
 
 							Object.keys(repeater_field_data).forEach(
@@ -333,6 +456,7 @@
 									}
 								}
 							);
+
 							if (Object.keys(repeater_field_data).length > 0) {
 								$.merge(
 									form_data,
@@ -355,6 +479,16 @@
 								? field.attr("name")
 								: "null";
 						var phone_id = [];
+						if (
+							field.attr("name") !== undefined &&
+							field.attr("name") !== ""
+						) {
+							formwise_data.field_name = field.attr("name");
+							formwise_data.field_name =
+								formwise_data.field_name.replace("[]", "");
+						} else {
+							formwise_data.field_name = "";
+						}
 
 						$(".field-phone, .field-billing_phone").each(
 							function () {
@@ -382,6 +516,7 @@
 							.get(0)
 							.className.split(" ")[0];
 						formwise_data.value = "";
+
 						switch (node_type) {
 							case "input":
 								var checked_value = new Array();
@@ -407,6 +542,12 @@
 											)
 												? field.val()
 												: "";
+
+											formwise_data.field_name = field
+												.closest(
+													".field-privacy_policy"
+												)
+												.data("ref-id");
 										}
 										break;
 									case "radio":
@@ -415,6 +556,9 @@
 										)
 											? field.val()
 											: "";
+										formwise_data.field_name = field
+											.closest(".field-privacy_policy")
+											.data("ref-id");
 										break;
 									default:
 										formwise_data.value = field.val();
@@ -461,16 +605,7 @@
 						} else {
 							formwise_data.label = formwise_data.field_type;
 						}
-						if (
-							field.attr("name") !== undefined &&
-							field.attr("name") !== ""
-						) {
-							formwise_data.field_name = field.attr("name");
-							formwise_data.field_name =
-								formwise_data.field_name.replace("[]", "");
-						} else {
-							formwise_data.field_name = "";
-						}
+
 						if (
 							$.inArray(
 								formwise_data.field_name,
@@ -479,6 +614,7 @@
 						) {
 							available_field.push(formwise_data.field_name);
 						}
+
 						return formwise_data;
 					},
 					show_message: function (
@@ -1250,6 +1386,7 @@
 																					index +
 																					"_" +
 																					repeater_row_id;
+
 																				if (
 																					$field_id.includes(
 																						index
@@ -1948,7 +2085,7 @@
 							// flatpickr has already been initialized for the field, so open the instance.
 							instance.open();
 						} else {
-							var field_id = field.data("id");
+							var field_id = field.attr("data-id");
 							var formated_date = field
 								.closest(".ur-field-item")
 								.find("#formated_date")
@@ -2220,6 +2357,10 @@
 	 * @since 1.9.0
 	 */
 	$(window).on("load", function () {
+		user_registration_form_init();
+	});
+
+	$(window).on("user_registration_repeater_modified", function () {
 		user_registration_form_init();
 	});
 })(jQuery);

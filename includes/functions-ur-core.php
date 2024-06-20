@@ -5021,6 +5021,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 	 * @param string $current_row Current row id.
 	 */
 	function user_registration_edit_profile_row_template( $data, $profile, $current_row = '' ) {
+
 		$user_id = get_current_user_id();
 		$form_id = ur_get_form_id_by_userid( $user_id );
 		$width   = floor( 100 / count( $data ) ) - count( $data );
@@ -5097,7 +5098,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 					}
 
 					?>
-					<div class="ur-field-item field-<?php echo esc_attr( $single_item->field_key );?> <?php echo esc_attr( ! empty( $single_item->advance_setting->custom_class ) ? $single_item->advance_setting->custom_class : '' ); ?>"  <?php echo $cl_props; //PHPCS:ignore?> data-field-id="<?php echo esc_attr( $field_id ); ?>">
+					<div class="ur-field-item field-<?php echo esc_attr( $single_item->field_key );?> <?php echo esc_attr( ! empty( $single_item->advance_setting->custom_class ) ? $single_item->advance_setting->custom_class : '' ); ?>"  <?php echo $cl_props; //PHPCS:ignore?> data-field-id="<?php echo esc_attr( $field_id ); ?>" data-ref-id="<?php echo esc_attr( $key ); ?>">
 					<?php
 					$readonly_fields = ur_readonly_profile_details_fields();
 
@@ -5336,7 +5337,8 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 					$form_data_array = apply_filters( 'user_registration_' . $field['field_key'] . '_frontend_form_data', $filter_data );
 					$field           = isset( $form_data_array['form_data'] ) ? $form_data_array['form_data'] : $field;
 					$value           = ! empty( $_POST[ $key ] ) ? ur_clean( wp_unslash( $_POST[ $key ] ) ) : $field['value']; // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-					$field = user_registration_form_field( $key, $field, $value );
+
+					$field = user_registration_form_field( $key, $field, $value, $current_row );
 
 					/**
 					 * Embed the current country value to allow to remove it if it's not allowed.
