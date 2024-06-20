@@ -325,6 +325,7 @@ class UR_Smart_Tags {
 						break;
 
 					case 'page_id':
+						$id = get_the_ID();
 						if ( empty( get_the_ID() ) && isset( $_SERVER['HTTP_REFERER'] ) ) {
 							$id = url_to_postid($_SERVER['HTTP_REFERER']);
 						}
