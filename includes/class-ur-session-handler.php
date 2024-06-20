@@ -67,7 +67,11 @@ class UR_Session_Handler extends UR_Session {
 		 * @param string $default_cookie_name The default session cookie name.
 		 */
 		$this->_cookie = apply_filters( 'user_registrtaion_cookie', 'wp_user_registration_session_' . COOKIEHASH );
-		$this->_table  = $wpdb->prefix . 'user_registration_sessions';
+		$prefix = $wpdb->prefix;
+		if (is_multisite()) {
+			$prefix = $wpdb->base_prefix;
+		}
+		$this->_table  = $prefix . 'user_registration_sessions';
 
 		$cookie = $this->get_session_cookie();
 
