@@ -189,22 +189,26 @@ class UR_Admin_User_List_Manager {
 
 		// Remove previously set filter to get exact pending users count.
 		remove_filter( 'pre_get_users', array( $this, 'filter_users_by_approval_status' ) );
+		$prefix = $wpdb->prefix;
+		if (is_multisite()) {
+			$prefix = $wpdb->base_prefix;
+		}
 
 		$users = $wpdb->get_results(
 			"SELECT *
-			FROM {$wpdb->prefix}users AS users
-			JOIN {$wpdb->prefix}usermeta AS meta1 ON users.ID = meta1.user_id
+			FROM {$prefix}users AS users
+			JOIN {$prefix}usermeta AS meta1 ON users.ID = meta1.user_id
 			WHERE meta1.meta_key = 'ur_user_status' AND meta1.meta_value = '0'
 			AND (
 				((meta1.meta_key = 'ur_confirm_email' AND meta1.meta_value != '0')
 				OR NOT EXISTS (
-					SELECT 1 FROM {$wpdb->prefix}usermeta WHERE user_id = users.ID AND meta_key = 'ur_confirm_email'
+					SELECT 1 FROM {$prefix}usermeta WHERE user_id = users.ID AND meta_key = 'ur_confirm_email'
 				))
 				OR
 				(
 				(meta1.meta_key = 'ur_admin_approval_after_email_confirmation' AND meta1.meta_value = 'false')
 				OR NOT EXISTS (
-					SELECT 1 FROM {$wpdb->prefix}usermeta WHERE user_id = users.ID AND meta_key = 'ur_admin_approval_after_email_confirmation'
+					SELECT 1 FROM {$prefix}usermeta WHERE user_id = users.ID AND meta_key = 'ur_admin_approval_after_email_confirmation'
 				)
 			));"
 		);
