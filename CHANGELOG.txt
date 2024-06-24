@@ -1,3 +1,11 @@
+= 3.2.1.2  - 24/06/2024 =
+* Tweak    - Redirect to dashboard addons page when extensions menu is clicked.
+* Dev      - Added filter hook to add extra section settings.
+* Dev      - Added filter hook for login redirection after auto login.
+* Fix      - MultiSite db prefix query issue.
+* Fix      - Duplicate error message for date field.
+* Fix      - Add capability and nonce for license activation and deactivation.
+
 = 3.2.1.1  - 06/06/2024 =
 * Dev      - Added filter hook to to check user instance.
 * Fix      - Notice not being dismissed.
