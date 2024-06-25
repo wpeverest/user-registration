@@ -238,9 +238,10 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 
 == Changelog ==
 
-= 3.2.1.2  - 20/06/2024 =
+= 3.2.1.2  - 24/06/2024 =
 * Tweak    - Redirect to dashboard addons page when extensions menu is clicked.
 * Dev      - Added filter hook to add extra section settings.
+* Dev      - Added filter hook for login redirection after auto login.
 * Fix      - MultiSite db prefix query issue.
 * Fix      - Duplicate error message for date field.
 * Fix      - Add capability and nonce for license activation and deactivation.
