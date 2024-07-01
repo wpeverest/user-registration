@@ -2276,6 +2276,9 @@ function ur_get_valid_form_data_format( $new_string, $post_key, $profile, $value
 	if ( isset( $profile[ $post_key ] ) ) {
 		$field_type = $profile[ $post_key ]['type'];
 
+		if ( 'repeater' === $field_type ) {
+			return $valid_form_data;
+		}
 		switch ( $field_type ) {
 			case 'checkbox':
 			case 'multi_select2':
@@ -2304,6 +2307,7 @@ function ur_get_valid_form_data_format( $new_string, $post_key, $profile, $value
 				}
 				break;
 		}
+
 		$valid_form_data[ $new_string ]               = new stdClass();
 		$valid_form_data[ $new_string ]->field_name   = $new_string;
 		$valid_form_data[ $new_string ]->value        = $value;
@@ -4789,7 +4793,7 @@ if ( ! function_exists( 'user_registration_validate_form_field_data' ) ) {
 						$result = UR_Form_Validation::$validation( $single_field_value );
 
 						if ( is_wp_error( $result ) ) {
-							$form_validator->add_error( $result, $single_field_label );
+							$response_array = $form_validator->add_error( $result, $single_field_label, $response_array );
 							break;
 						}
 					}

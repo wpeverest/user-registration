@@ -578,6 +578,7 @@
 				var only_one_field_index = $.makeArray(
 					user_registration_form_builder_data.form_one_time_draggable_fields
 				);
+
 				var required_fields = $.makeArray(
 					user_registration_form_builder_data.form_required_fields
 				);
@@ -2719,7 +2720,10 @@
 												$.makeArray(
 													user_registration_form_builder_data.form_one_time_draggable_fields
 												);
-
+											var form_repeater_row_not_droppable_fields_lists =
+												$.makeArray(
+													user_registration_form_builder_data.form_repeater_row_not_droppable_fields_lists
+												);
 											if (
 												length_of_required > 0 &&
 												$.inArray(
@@ -2742,13 +2746,18 @@
 												).length > 0 &&
 												$.inArray(
 													data_field_id,
-													only_one_field_index
+													form_repeater_row_not_droppable_fields_lists
 												) >= 0
 											) {
 												URFormBuilder.show_message(
-													user_registration_form_builder_data
-														.i18n_admin
-														.i18n_repeater_fields_not_droppable
+													user_registration_form_builder_data.i18n_admin.i18n_repeater_fields_not_droppable.replace(
+														"%field%",
+														$(
+															"li[data-field-id='user_registration_" +
+																data_field_id +
+																"']:first"
+														).text()
+													)
 												);
 												$(ui.helper).remove();
 												return;

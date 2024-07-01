@@ -542,6 +542,13 @@
 
 			if (checkbox_div.length) {
 				checkbox_div.each(function () {
+					if (
+						$(this)
+							.attr("data-field-id")
+							.indexOf("user_registration_") > -1
+					) {
+						field_selector = "";
+					}
 					rules[
 						field_selector + $(this).attr("data-field-id") + "[]"
 					] = {
@@ -554,7 +561,17 @@
 
 			if (multiselect2_div.length) {
 				multiselect2_div.each(function () {
-					rules[field_selector + $(this).data("field-id") + "[]"] = {
+					if (
+						$(this)
+							.attr("data-field-id")
+							.indexOf("user_registration_") > -1
+					) {
+						field_selector = "";
+					}
+
+					rules[
+						field_selector + $(this).attr("data-field-id") + "[]"
+					] = {
 						checkLimit: $(this).find("select").data("choice-limit")
 							? $(this).find("select").data("choice-limit")
 							: 0

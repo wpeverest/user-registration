@@ -73,6 +73,7 @@
 								var single_field = form.separate_form_handler(
 									'[name="' + field_name + '"]'
 								);
+
 								var selection_fields_array = ["radio"];
 								var fieldName = $(this)
 									.closest(".ur-repeater-row")
@@ -106,6 +107,7 @@
 										this_instance.get_fieldwise_data(
 											$(this)
 										);
+
 									var invite_code =
 										document.querySelector(
 											".field-invite_code"
@@ -117,17 +119,7 @@
 										if (
 											"none" !== invite_code.style.display
 										) {
-											if (
-												$(this).closest(
-													".ur-repeater-row"
-												).length > 0
-											) {
-												repeater_field_data[fieldName][
-													"value"
-												][rowName].push(single_data);
-											} else {
-												form_data.push(single_data);
-											}
+											form_data.push(single_data);
 										}
 									} else {
 										if (
@@ -143,7 +135,12 @@
 																"name"
 															) +
 															"']"
-													).length < 2
+													).length < 2 ||
+												"range" ===
+													$(this).attr("type") ||
+												$(this).hasClass(
+													"ur-smart-phone-field"
+												)
 											) {
 												repeater_field_data[fieldName][
 													"value"
@@ -473,6 +470,7 @@
 					},
 					get_fieldwise_data: function (field) {
 						var formwise_data = {};
+
 						var node_type = field.get(0).tagName.toLowerCase();
 						var field_name =
 							"undefined" !== field.attr("name")
@@ -486,6 +484,26 @@
 							formwise_data.field_name = field.attr("name");
 							formwise_data.field_name =
 								formwise_data.field_name.replace("[]", "");
+
+							if (
+								$(field).closest(".ur-repeater-row").length > 0
+							) {
+								if (
+									$(field).closest(".field-multi_select2")
+										.length > 0
+								) {
+									formwise_data.field_name =
+										formwise_data.field_name.slice(0, -2);
+								}
+
+								if (
+									$(field).closest(".field-file").length > 0
+								) {
+									formwise_data.field_name = $(field)
+										.closest(".field-file")
+										.attr("data-ref-id");
+								}
+							}
 						} else {
 							formwise_data.field_name = "";
 						}
@@ -512,9 +530,11 @@
 							"undefined" !== field.attr("type")
 								? field.attr("type")
 								: "null";
+
 						var textarea_type = field
 							.get(0)
 							.className.split(" ")[0];
+
 						formwise_data.value = "";
 
 						switch (node_type) {
@@ -1116,6 +1136,7 @@
 													var response = JSON.parse(
 														ajax_response.responseText
 													);
+
 													var timeout = response.data
 														.redirect_timeout
 														? response.data
@@ -1487,7 +1508,7 @@
 																	} else {
 																		message.append(
 																			"<li>" +
-																				value +
+																				message_value +
 																				"</li>"
 																		);
 																	}
@@ -1573,9 +1594,16 @@
 					 * @since  1.8.5
 					 */
 					edit_profile_event: function () {
+						if (
+							!user_registration_params.ajax_submission_on_edit_profile
+						) {
+							return;
+						}
 						$("form.user-registration-EditProfileForm")
 							.off("submit")
 							.on("submit", function (event) {
+								event.preventDefault();
+								event.stopImmediatePropagation();
 								var $this = $(this);
 
 								// Validator messages.
@@ -1932,7 +1960,7 @@
 														} else {
 															message.append(
 																"<li>" +
-																	value +
+																	message_value +
 																	"</li>"
 															);
 														}
@@ -2044,33 +2072,29 @@
 		};
 
 		$(function () {
-			// Handle user registration form submit event.
-			$(".ur-submit-button").on("click", function () {
-				$(this).closest("form.register").ur_form_submission();
-			});
-
-			// Handle edit-profile form submit event.
-			$(
-				"input[name='save_account_details'], button[name='save_account_details']"
-			).on("click", function (event) {
-				// event.preventDefault();
-
-				// Check if the form is edit-profile form and check if ajax submission on edit profile is enabled.
-				if (
-					$(".ur-frontend-form")
-						.find("form.edit-profile")
-						.hasClass("user-registration-EditProfileForm")
-				) {
-					$(
-						"form.user-registration-EditProfileForm"
-					).ur_form_submission();
-				}
-
-				$(this).submit();
-			});
-
 			// Initialize the flatpickr when the document is ready to be manipulated.
 			$(document).ready(function () {
+				// Handle user registration form submit event.
+				$(".ur-submit-button").on("click", function () {
+					$(this).closest("form.register").ur_form_submission();
+				});
+
+				// Handle edit-profile form submit event.
+				$(
+					"input[name='save_account_details'], button[name='save_account_details']"
+				).on("click", function (event) {
+					// Check if the form is edit-profile form and check if ajax submission on edit profile is enabled.
+					if (
+						$(".ur-frontend-form")
+							.find("form.edit-profile")
+							.hasClass("user-registration-EditProfileForm")
+					) {
+						$(
+							"form.user-registration-EditProfileForm"
+						).ur_form_submission();
+					}
+					$(this).submit();
+				});
 				if ($(".ur-flatpickr-field").length) {
 					// create an array to store the flatpickr instances.
 					var flatpickrInstances = [];
@@ -2359,7 +2383,6 @@
 	$(window).on("load", function () {
 		user_registration_form_init();
 	});
-
 	$(window).on("user_registration_repeater_modified", function () {
 		user_registration_form_init();
 	});
