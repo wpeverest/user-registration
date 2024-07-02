@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 5.2
 Requires PHP: 7.2
 Tested up to: 6.5.4
-Stable tag: 3.2.1.2
+Stable tag: 3.2.1.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -237,6 +237,9 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 3.2.1.3  - 02/07/2024 =
+* Fix      - Remove unnecessary source map from build.
 
 = 3.2.1.2  - 24/06/2024 =
 * Tweak    - Redirect to dashboard addons page when extensions menu is clicked.
