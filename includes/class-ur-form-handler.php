@@ -39,15 +39,17 @@ class UR_Form_Handler {
 	 * Remove key and login from querystring, set cookie, and redirect to account page to show the form.
 	 */
 	public static function redirect_reset_password_link() {
-		$page_id                     = ur_get_page_id( 'myaccount' );
-		$is_ur_login_or_account_page = ur_find_my_account_in_page( $page_id );
+		if ( ! empty( $_GET['key'] ) && ! empty( $_GET['login'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			$page_id                     = ur_get_page_id( 'myaccount' );
+			$is_ur_login_or_account_page = ur_find_my_account_in_page( $page_id );
 
-		if ( $is_ur_login_or_account_page && ! empty( $_GET['key'] ) && ! empty( $_GET['login'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			$value = sprintf( '%s:%s', sanitize_text_field( wp_unslash( $_GET['login'] ) ), sanitize_text_field( wp_unslash( $_GET['key'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
-			UR_Shortcode_My_Account::set_reset_password_cookie( $value );
+			if ( $is_ur_login_or_account_page ) {
+				$value = sprintf( '%s:%s', sanitize_text_field( wp_unslash( $_GET['login'] ) ), sanitize_text_field( wp_unslash( $_GET['key'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
+				UR_Shortcode_My_Account::set_reset_password_cookie( $value );
 
-			wp_safe_redirect( add_query_arg( 'show-reset-form', 'true', ur_lostpassword_url() ) );
-			exit;
+				wp_safe_redirect( add_query_arg( 'show-reset-form', 'true', ur_lostpassword_url() ) );
+				exit;
+			}
 		}
 	}
 
