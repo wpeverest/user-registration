@@ -311,9 +311,9 @@ class UR_Form_Handler {
 		 *
 		 * @param string $message The message.
 		 */
-		$message     = apply_filters( 'user_registration_email_change_email_content', $message );
-		$message     = UR_Emailer::parse_smart_tags( $message, $values, $name_value );
-		$subject     = UR_Emailer::parse_smart_tags( $subject, $values, $name_value );
+		$message = apply_filters( 'user_registration_email_change_email_content', $message );
+		$message = UR_Emailer::parse_smart_tags( $message, $values, $name_value );
+		$subject = UR_Emailer::parse_smart_tags( $subject, $values, $name_value );
 
 		$headers = array(
 			'From:' . $from_name . ' <' . $sender_email . '>',
@@ -535,7 +535,7 @@ class UR_Form_Handler {
 						 * Filter to modify the recaptcha domain.
 						 * Default value is https://www.google.com/recaptcha
 						 */
-						$url  = apply_filters( 'user_registration_recaptcha_domain', 'https://www.google.com/recaptcha/' );
+						$url  = apply_filters( 'user_registration_recaptcha_domain', 'https://www.google.com/recaptcha' );
 						$data = wp_remote_get( $url . 'api/siteverify?secret=' . $secret_key . '&response=' . $recaptcha_value );
 						$data = json_decode( wp_remote_retrieve_body( $data ) );
 						/**
@@ -653,15 +653,15 @@ class UR_Form_Handler {
 	 * Handle Export Personal data confirmation request.
 	 */
 	public static function export_confirmation_request() {
-		if ( isset( $_REQUEST['action'] ) && 'confirmaction' === $_REQUEST['action'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			if ( ! isset( $_GET['request_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( isset( $_REQUEST['action'] ) && 'confirmaction' === $_REQUEST['action'] ) {
+			if ( ! isset( $_GET['request_id'] ) ) {
 				return;
 			}
 
-			$request_id = (int) $_GET['request_id']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$request_id = (int) $_GET['request_id'];
 
-			if ( isset( $_GET['confirm_key'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				$key    = sanitize_text_field( wp_unslash( $_GET['confirm_key'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( isset( $_GET['confirm_key'] ) ) {
+				$key    = sanitize_text_field( wp_unslash( $_GET['confirm_key'] ) );
 				$result = wp_validate_user_request_key( $request_id, $key );
 			} else {
 				$result = new WP_Error( 'invalid_key', __( 'Invalid Key', 'user-registration' ) );

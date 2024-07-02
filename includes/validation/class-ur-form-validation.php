@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * This class handles validations for all frontend submitted forms.
  */
+require_once UR_ABSPATH . 'includes/functions-ur-notice.php';
 class UR_Form_Validation extends UR_Validation {
 
 	/**
@@ -54,7 +55,7 @@ class UR_Form_Validation extends UR_Validation {
 	 */
 	public function __construct() {
 		add_action( 'user_registration_validate_form_data', array( $this, 'validate_form' ), 10, 6 );
-		add_action( 'user_registration_validate_profile_update', array( $this, 'validate_update_profile' ), 10, 3 );
+		add_action( 'user_registration_validate_profile_update', array( $this, 'validate_update_profile' ), 10, 4 );
 	}
 
 
@@ -520,14 +521,10 @@ class UR_Form_Validation extends UR_Validation {
 				if ( isset( $form_field_data[ $key ]->advance_setting->field_visibility ) && 'edit_form' === $form_field_data[ $key ]->advance_setting->field_visibility ) {
 					return;
 				} else {
-					// phpcs:ignore WordPress.Security.NonceVerification.Missing
-					$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array();
-					if ( ! in_array( $form_field_data[ $key ]->general_setting->field_name, $urcl_hide_fields, true ) ) {
-						$field_label = $form_field_data[ $key ]->general_setting->label;
-						/* translators: %s - Field Label */
-						$response = sprintf( __( '<strong>%s</strong> is a required field.', 'user-registration' ), $field_label );
-						array_push( $this->response_array, $response );
-					}
+					$field_label = $form_field_data[ $key ]->general_setting->label;
+					/* translators: %s - Field Label */
+					$response = sprintf( __( '<strong>%s</strong> is a required field.', 'user-registration' ), $field_label );
+					array_push( $this->response_array, $response );
 				}
 			}
 		}
@@ -661,19 +658,18 @@ class UR_Form_Validation extends UR_Validation {
 	 * @param [int]   $form_id Form Id.
 	 * @return void
 	 */
-	public function validate_update_profile( $form_fields, $form_data, $form_id ) {
-		$user_id = get_current_user_id();
-
-		$form_field_data = ur_get_form_field_data( $form_id );
-
+	public function validate_update_profile( $form_fields, $form_data, $form_id, $user_id = '' ) {
+		if ( '' === $user_id ) {
+			$user_id = get_current_user_id();
+		}
+		$form_field_data   = ur_get_form_field_data( $form_id );
 		$request_form_keys = array_map(
 			function ( $el ) {
 				return $el->field_name;
 			},
 			$form_data
 		);
-
-		$skippable_fields = $this->get_update_profile_validation_skippable_fields( $form_field_data );
+		$skippable_fields  = $this->get_update_profile_validation_skippable_fields( $form_field_data );
 
 		$form_key_list = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
 
@@ -690,7 +686,9 @@ class UR_Form_Validation extends UR_Validation {
 		$invisible_field_names = array_column( $invisible_field_names, 'field_name' ); //phpcs:ignore;
 		$required_fields       = array_diff( $required_fields, $invisible_field_names );
 
+
 		if ( array_diff( $required_fields, $request_form_keys ) ) {
+			include_once UR_ABSPATH . 'includes/functions-ur-notice.php';
 			ur_add_notice( 'Some fields are missing in the submitted form. Please reload the page.', 'error' );
 			return;
 		}
@@ -711,6 +709,7 @@ class UR_Form_Validation extends UR_Validation {
 			$field_setting = empty( $field_setting ) && isset( $form_fields[ 'user_registration_' . $single_field_name ] ) ? $form_fields[ 'user_registration_' . $single_field_name ] : $field_setting;
 
 			if ( in_array( $single_field_name, $form_key_list, true ) && ! empty( $field_setting ) ) {
+
 				$single_field_label = isset( $field_setting['label'] ) ? $field_setting['label'] : '';
 				$single_field_key   = isset( $field_setting['field_key'] ) ? $field_setting['field_key'] : '';
 				$single_field_value = isset( $data->value ) ? $data->value : '';
@@ -727,8 +726,7 @@ class UR_Form_Validation extends UR_Validation {
 
 				$validations = $this->get_field_validations( $single_field_key );
 
-				$required = isset( $single_form_field->general_setting->required ) ? $single_form_field->general_setting->required : false;
-
+				$required         = isset( $single_form_field->general_setting->required ) ? $single_form_field->general_setting->required : false;
 				$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array(); //phpcs:ignore;
 
 				if ( ! in_array( $single_field_name, $urcl_hide_fields, true ) && ur_string_to_bool( $required ) ) {
@@ -749,7 +747,6 @@ class UR_Form_Validation extends UR_Validation {
 						}
 					}
 				}
-
 				/**
 				 * Filter to allow modification of value.
 				 *
@@ -784,7 +781,6 @@ class UR_Form_Validation extends UR_Validation {
 					 */
 					do_action( 'user_registration_validate_slot_booking', $form_data, '', $field_setting, $form_id );
 				}
-
 				if ( 'user_email' === $field_setting['field_key'] ) {
 
 					if ( $field_setting['default'] != $single_field_value ) {
@@ -864,9 +860,9 @@ class UR_Form_Validation extends UR_Validation {
 			function ( $field ) use ( $skippable_field_types ) {
 				if ( in_array( $field->field_key, $skippable_field_types, true ) ) {
 
-					if ( 'range' === $field->field_key && ! ur_string_to_bool( $field->advance_setting->enable_payment_slider ) ) {
-						return false;
-					}
+					// if ( 'range' === $field->field_key && ! ur_string_to_bool( $field->advance_setting->enable_payment_slider ) ) {
+					// return false;
+					// }
 
 					return true;
 				}
