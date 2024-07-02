@@ -238,7 +238,7 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 
 == Changelog ==
 
-= 3.2.1.3  - 02/07/2024 =
+= 3.2.1.3  - 03/07/2024 =
 * Fix      - Remove unnecessary source map from build.
 
 = 3.2.1.2  - 24/06/2024 =
