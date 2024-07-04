@@ -1166,13 +1166,9 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 
 				if ( isset( $all_meta_value[ 'user_registration_' . $field_name ] ) ) {
 
-					// error_log( print_r( $all_meta_value[ 'user_registration_' . $field_name ], true ) );
 					$field_meta_value                                       = isset( $all_meta_value[ 'user_registration_' . $field_name ][0] ) ? maybe_unserialize( $all_meta_value[ 'user_registration_' . $field_name ][0] ) : array();
 					$row_meta[ 'user_registration_' . $field_name ]['type'] = isset( $individual_row_data->type ) ? $individual_row_data->type : '';
-
-					// error_log( print_r( $field_meta_value, true ) );
-					$field_meta_value = ( gettype( $field_meta_value ) === 'string' && json_decode( $field_meta_value ) !== null ) ? json_decode( $field_meta_value )->value : $field_meta_value;
-					// error_log( print_r( $field_meta_value, true ) );
+					$field_meta_value                                       = ( gettype( $field_meta_value ) === 'string' && json_decode( $field_meta_value ) !== null ) ? json_decode( $field_meta_value )->value : $field_meta_value;
 
 					foreach ( $field_meta_value as $row_id => $row_data ) {
 						$user_submitted_fields = array();

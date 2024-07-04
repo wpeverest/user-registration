@@ -2402,7 +2402,15 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 			$value = ! isset( $value['row_1'] ) ? implode( ',', $value ) : '';
 		}
 
-		$data_html .= '<tr><td>' . $label . ' : </td><td>' . $value . '</td></tr>';
+		$data_html .= '<tr>';
+
+		if ( isset( $form_data->field_type ) && 'repeater' === $form_data->field_type ) {
+			$data_html .= '<tr><td>' . $label . ' : </td></tr>';
+		} else {
+
+			$data_html .= '<td>' . $label . ' : </td>';
+		}
+		$data_html .= '<td>' . $value . '</td></tr>';
 
 		$name_value[ $field_name ] = $value;
 	}
@@ -2974,7 +2982,16 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 		$form_id = isset( $_POST['form_id'] ) ? sanitize_text_field( wp_unslash( $_POST['form_id'] ) ) : ur_get_form_id_by_userid( $user_id ); //phpcs:ignore.
 
 		$field_name = ur_get_field_data_by_field_name( $form_id, $field_meta_key );
-		$field_key  = isset( $field_name['field_key'] ) ? $field_name['field_key'] : '';
+
+		$field_key   = isset( $field_name['field_key'] ) ? $field_name['field_key'] : '';
+		$field_value = ur_format_field_values_using_field_key( $field_key, $field_value );
+
+		return $field_value;
+	}
+}
+
+if ( ! function_exists( 'ur_format_field_values_using_field_key' ) ) {
+	function ur_format_field_values_using_field_key( $field_key, $field_value ) {
 
 		switch ( $field_key ) {
 			case 'checkbox':
@@ -3006,7 +3023,6 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 						array_push( $links, $attachment_id );
 					}
 				}
-
 				$field_value = implode( ', ', $links );
 
 				break;

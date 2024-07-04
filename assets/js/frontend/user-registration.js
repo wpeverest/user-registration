@@ -51,7 +51,20 @@
 										repeater_field_data[fieldName] = {
 											field_name: fieldName,
 											field_type: "repeater",
-											value: {}
+											value: {},
+											label: $(this)
+												.closest(".ur-repeater-row")
+												.find(".ur-repeater-label")
+												.find(".ur-label")
+												.text(),
+											extra_params: {
+												field_key: "repeater",
+												label: $(this)
+													.closest(".ur-repeater-row")
+													.find(".ur-repeater-label")
+													.find(".ur-label")
+													.text()
+											}
 										};
 									}
 
@@ -380,6 +393,12 @@
 									$.each(
 										repeater_field_value,
 										function (key, value) {
+											key =
+												$("[name='" + key + "']")
+													.length < 1 &&
+												key.indexOf("[]") === -1
+													? key + "[]"
+													: key;
 											var row_id = $(
 												'[name="' + key + '"]'
 											)
@@ -460,7 +479,6 @@
 									Object.values(repeater_field_data)
 								);
 							}
-
 							$(document).trigger(
 								"user_registration_frontend_form_data_filter",
 								[form_data]

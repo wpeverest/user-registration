@@ -121,6 +121,7 @@ class UR_Form_Validation extends UR_Validation {
 	 */
 	public function validate_form_data( $form_id, $form_field_data = array(), $form_data = array() ) {
 		$request_form_keys = wp_list_pluck( $form_data, 'field_name' );
+
 		/**
 		 * Filter the form field data.
 		 *
@@ -382,6 +383,10 @@ class UR_Form_Validation extends UR_Validation {
 
 		// Find email, username and password value.
 		foreach ( $form_data as $data ) {
+			if ( isset( $data->extra_params ) && 'object' === gettype( $data->extra_params ) ) {
+				$data->extra_params = (array) $data->extra_params;
+			}
+
 			if ( isset( $data->extra_params['field_key'] ) ) {
 				if ( 'user_email' === $data->extra_params['field_key'] ) {
 					$email_value = strtolower( $data->value );
@@ -477,13 +482,14 @@ class UR_Form_Validation extends UR_Validation {
 	 * @param string     $label Field label.
 	 * @return void
 	 */
-	public function add_error( $error, $label = '' ) {
+	public function add_error( $error, $label = '', $response_array = array() ) {
 		if ( ! empty( $error ) && is_wp_error( $error ) ) {
 			$error_code = $error->get_error_code();
 			$message    = $this->get_error_message( $error_code, $label );
 
-			array_push( $this->response_array, $message );
+			array_push( $response_array, $message );
 		}
+		return $response_array;
 	}
 
 
@@ -607,6 +613,10 @@ class UR_Form_Validation extends UR_Validation {
 				user_registration_validate_edit_profile_form_field_data( $data, $form_data, $form_id, $form_field_data, $form_fields );
 			}
 		}
+
+		// error_log( print_r( $required_fields, true ) );
+		// error_log( print_r( $request_form_keys, true ) );
+		// error_log( print_r( array_diff( $required_fields, $request_form_keys ), true ) );
 
 		if ( array_diff( $required_fields, $request_form_keys ) ) {
 			ur_add_notice( 'Some fields are missing in the submitted form. Please reload the page.', 'error' );

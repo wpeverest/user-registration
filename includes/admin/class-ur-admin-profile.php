@@ -120,6 +120,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 			$show_fields    = $this->get_user_meta_by_form_fields( $user->ID );
 			$exclude_fields = $this->get_exclude_fields_for_admin_profile();
+
 			foreach ( $show_fields as $fieldset_key => $fieldset ) :
 				?>
 				<h2><?php echo esc_html( $fieldset['title'] ); ?></h2>
@@ -134,49 +135,53 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 						'textarea',
 						'radio',
 					);
-					foreach ( $fieldset['fields'] as $key => $field ) :
 
-						$field['field_key'] = isset( $field['field_key'] ) ? $field['field_key'] : '';
+					if ( isset( $fieldset['fields'] ) ) {
 
-						if ( in_array( $field['field_key'], $exclude_fields, true ) ) {
-							continue;
-						}
-						$field['label']       = isset( $field['label'] ) ? $field['label'] : '';
-						$field['description'] = isset( $field['description'] ) ? $field['description'] : '';
-						$attributes           = isset( $field['attributes'] ) ? $field['attributes'] : array();
-						$attribute_string     = '';
-						$date_format          = '';
-						$date_mode            = '';
+						foreach ( $fieldset['fields'] as $key => $field ) :
 
-						foreach ( $attributes as $name => $value ) {
-							if ( 'data-date-format' === $name ) {
-								$date_format = $value;
-							}
-							if ( 'data-default-date' === $name ) {
+							$field['field_key'] = isset( $field['field_key'] ) ? $field['field_key'] : '';
+
+							if ( in_array( $field['field_key'], $exclude_fields, true ) || in_array( $key, $exclude_fields, true ) ) {
 								continue;
 							}
-							if ( 'data-mode' === $name ) {
-								$date_mode = $value;
-							}
-							if ( is_bool( $value ) ) {
-								if ( $value ) {
-									$attribute_string .= $name . ' ';
+
+							$field['label']       = isset( $field['label'] ) ? $field['label'] : '';
+							$field['description'] = isset( $field['description'] ) ? $field['description'] : '';
+							$attributes           = isset( $field['attributes'] ) ? $field['attributes'] : array();
+							$attribute_string     = '';
+							$date_format          = '';
+							$date_mode            = '';
+
+							foreach ( $attributes as $name => $value ) {
+								if ( 'data-date-format' === $name ) {
+									$date_format = $value;
 								}
-							} else {
-								$attribute_string .= sprintf( '%s="%s" ', $name, $value );
+								if ( 'data-default-date' === $name ) {
+									continue;
+								}
+								if ( 'data-mode' === $name ) {
+									$date_mode = $value;
+								}
+								if ( is_bool( $value ) ) {
+									if ( $value ) {
+										$attribute_string .= $name . ' ';
+									}
+								} else {
+									$attribute_string .= sprintf( '%s="%s" ', $name, $value );
+								}
 							}
-						}
 
-						$field_label = $field['label'];
-						$field_type  = isset( $field['type'] ) ? $field['type'] : '';
+							$field_label = $field['label'];
+							$field_type  = isset( $field['type'] ) ? $field['type'] : '';
 
-						if ( ! in_array( $field_type, $profile_field_type, true ) ) {
-							$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
-							$extra_params     = json_decode( get_user_meta( $user->ID, $extra_params_key, true ) );
-							$field_label      = isset( $extra_params->label ) ? $extra_params->label : $field_label;
-						}
-						?>
-						<?php if ( 'subscription_plan' === $field_type || 'multiple_choice' === $field_type || 'single_item' === $field_type || 'total_field' === $field_type ) { ?>
+							if ( ! in_array( $field_type, $profile_field_type, true ) ) {
+								$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
+								$extra_params     = json_decode( get_user_meta( $user->ID, $extra_params_key, true ) );
+								$field_label      = isset( $extra_params->label ) ? $extra_params->label : $field_label;
+							}
+							?>
+							<?php if ( 'subscription_plan' === $field_type || 'multiple_choice' === $field_type || 'single_item' === $field_type || 'total_field' === $field_type ) { ?>
 						<?php } else { ?>
 						<tr>
 							<th>
@@ -398,9 +403,10 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 								<br/>
 							</td>
 						</tr>
-							<?php
+								<?php
 						}
 					endforeach;
+					}
 					?>
 				</table>
 				<?php

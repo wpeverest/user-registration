@@ -1162,7 +1162,7 @@
 						$.each(repeater_row_setting, function (key, value) {
 							if (
 								value.name.includes(
-									"_" + single_row_data.row_id
+									"_" + single_row_data.repeater_id
 								)
 							) {
 								single_row_data[
