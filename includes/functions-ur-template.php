@@ -1153,60 +1153,10 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 			} // End foreach().
 		} // End foreach().
 
-		$form_row_data = get_post_meta( $form_id, 'user_registration_form_row_data', true );
-
-		$row_datas = ! empty( $form_row_data ) ? json_decode( $form_row_data ) : array();
-
-		if ( ! empty( $row_datas ) ) {
-			$row_meta = $fields;
-
-			foreach ( $row_datas as $individual_row_data ) {
-				$field_name         = isset( $individual_row_data->field_name ) ? $individual_row_data->field_name : '';
-				$fields_in_repeater = isset( $individual_row_data->fields ) ? $individual_row_data->fields : '';
-
-				if ( isset( $all_meta_value[ 'user_registration_' . $field_name ] ) ) {
-
-					$field_meta_value                                       = isset( $all_meta_value[ 'user_registration_' . $field_name ][0] ) ? maybe_unserialize( $all_meta_value[ 'user_registration_' . $field_name ][0] ) : array();
-					$row_meta[ 'user_registration_' . $field_name ]['type'] = isset( $individual_row_data->type ) ? $individual_row_data->type : '';
-					$field_meta_value                                       = ( gettype( $field_meta_value ) === 'string' && json_decode( $field_meta_value ) !== null ) ? json_decode( $field_meta_value )->value : $field_meta_value;
-
-					foreach ( $field_meta_value as $row_id => $row_data ) {
-						$user_submitted_fields = array();
-
-						foreach ( $row_data as $key => $field_data ) {
-
-							if ( isset( $field_data->field_name ) ) {
-								$individual_field_name = strpos( $field_data->field_name, 'user_registration_' ) === 0 ? $field_data->field_name : 'user_registration_' . $field_data->field_name;
-								array_push( $user_submitted_fields, trim( str_replace( 'user_registration_', '', $individual_field_name ) ) );
-
-								if ( isset( $fields[ $individual_field_name ] ) ) {
-									$fields[ $individual_field_name ]['default'] = isset( $field_data->value ) ? $field_data->value : '';
-									$fields[ $individual_field_name ]['value']   = isset( $field_data->value ) ? $field_data->value : '';
-
-									$row_meta[ 'user_registration_' . $field_name ][ $row_id ][ $individual_field_name ] = $fields[ $individual_field_name ];
-
-									unset( $row_meta[ $individual_field_name ] );
-								}
-							}
-						}
-					}
-
-					foreach ( $field_meta_value as $row_id => $row_data ) {
-
-						$fields_missing_in_repeater = array_diff( $fields_in_repeater, $user_submitted_fields );
-						foreach ( $fields_missing_in_repeater as $field_key ) {
-							$individual_field_name                     = strpos( $field_key, 'user_registration_' ) === 0 ? $field_key : 'user_registration_' . $field_key;
-							$fields[ $individual_field_name ]['value'] = '';
-
-							$row_meta[ 'user_registration_' . $field_name ][ $row_id ][ $individual_field_name ] = $fields[ $individual_field_name ];
-							unset( $row_meta[ $individual_field_name ] );
-						}
-					}
-				}
-			}
-
-			$fields = $row_meta;
-		}
+		/**
+		 * Filter to add extra user data to profile details if any.
+		 */
+		$fields = apply_filters( 'user_registration_user_extra_profile_details', $fields, $form_id, $all_meta_value );
 
 		return $fields;
 	}
