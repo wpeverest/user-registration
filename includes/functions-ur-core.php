@@ -4839,19 +4839,37 @@ if ( ! function_exists( 'ur_check_akismet_installation' ) ) {
 	 * @return string The status message indicating whether Akismet is installed, activated, or configured.
 	 */
 	function ur_check_akismet_installation() {
-		$warning_color = '#FF8C00';
+		$warning_color = '#ffcc00';
 
 		if ( ! file_exists( WP_PLUGIN_DIR . '/akismet/akismet.php' ) ) {
 			return sprintf(
-				'<div><span style="color: %s;">%s</span>%s%s%s</div>',$warning_color,esc_html__( 'Warning:- ', 'user-registration' ),esc_html__( ' This feature is inactive because Akismet plugin has', 'user-registration' ),'<a href="' . esc_url( admin_url( 'plugins.php' ) ) . '" target="_blank">' . esc_html__( ' not been installed.', 'user-registration' ) . '</a>',esc_html__( ' For more', 'user-registration' ),	'<a href="https://docs.wpuserregistration.com/" target="_blank">' . esc_html__( ' information', 'user-registration' ) . '</a>'
+				'<div class="ur-form-settings-warning"><span style="color: %s;">%s</span>%s %s %s %s</div>',
+				$warning_color,
+				esc_html__( 'Warning:-', 'user-registration' ),
+				esc_html__( ' This feature is inactive because', 'user-registration' ),
+				'<a href="' . esc_url_raw( 'https://wordpress.org/plugins/akismet/' ) . '" target="_blank">' . esc_html__( 'Akismet', 'user-registration' ) . '</a>',
+				esc_html__( 'plugin has not been installed. For more', 'user-registration' ),
+				'<a href="https://docs.wpuserregistration.com/docs/individual-form-settings/#10-toc-title" target="_blank">' . esc_html__( 'information.', 'user-registration' ) . '</a>'
 			);
 		} elseif ( ! is_plugin_active( 'akismet/akismet.php' ) ) {
 			return sprintf(
-				'<div><span style="color: %s;">%s</span>%s%s%s%s</div>',$warning_color,	esc_html__( 'Warning:- ', 'user-registration' ),esc_html__( ' This feature is inactive because Akismet plugin has', 'user-registration' ),'<a href="' . esc_url( admin_url( 'plugins.php' ) ) . '" target="_blank">' . esc_html__( ' not been activated', 'user-registration' ) . '</a>',	esc_html__( ' For more ', 'user-registration' ),'<a href="https://docs.wpuserregistration.com/" target="_blank">' . esc_html__( ' information', 'user-registration' ) . '</a>'
+				'<div class="ur-form-settings-warning"><span style="color: %s;">%s</span>%s %s %s %s</div>',
+				$warning_color,
+				esc_html__( 'Warning:- ', 'user-registration' ),
+				esc_html__( 'This feature is inactive because', 'user-registration' ),
+				'<a href="' . esc_url( admin_url( 'plugins.php' ) ) . '" target="_blank">' . esc_html__( 'Akismet', 'user-registration' ) . '</a>',
+				esc_html__( 'plugin is not activated. For more', 'user-registration' ),
+				'<a href="https://docs.wpuserregistration.com/docs/individual-form-settings/#10-toc-title" target="_blank">' . esc_html__( 'information.', 'user-registration' ) . '</a>'
 			);
 		} elseif ( ! ur_is_akismet_configured() ) {
 			return sprintf(
-				'<div><span style="color: %s;">%s</span>%s%s%s</div>',$warning_color,esc_html__( 'Warning:- ', 'user-registration' ),esc_html__( ' This feature is inactive because Akismet plugin has not been properly configured.', 'user-registration' ),esc_html__( ' For more', 'user-registration' ),'<a href="https://docs.wpuserregistration.com/" target="_blank">' . esc_html__( ' information', 'user-registration' ) . '</a>'
+				'<div class="ur-form-settings-warning"><span style="color: %s;">%s</span>%s %s %s %s</div>',
+				$warning_color,
+				esc_html__( 'Warning:-', 'user-registration' ),
+				esc_html__( 'This feature is inactive because', 'user-registration' ),
+				'<a href="' . esc_url( admin_url( 'options-general.php?page=akismet-key-config' ) ) . '" target="_blank">' . esc_html__( 'Akismet', 'user-registration' ) . '</a>',
+				esc_html__( 'plugin has not been properly configured. For more', 'user-registration' ),
+				'<a href="https://docs.wpuserregistration.com/docs/individual-form-settings/#10-toc-title" target="_blank">' . esc_html__( 'information.', 'user-registration' ) . '</a>'
 			);
 		}
 	}
@@ -4923,7 +4941,7 @@ if ( ! function_exists( 'ur_get_akismet_validate' ) ) {
 				'user_ip'              => ur_get_ip_address(),
 				'user_agent'           => isset( $_SERVER['HTTP_USER_AGENT'] ) ? wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) : null, // phpcs:ignore
 				'referrer'             => wp_get_referer() ? wp_get_referer() : null,
-				'permalink'            => evf_current_url(),
+				'permalink'            => ur_current_url(),
 				'comment_type'         => 'registration',
 				'comment_author'       => isset( $form_content['user_login'] ) ? $form_content['user_login'] : '',
 				'comment_author_email' => isset( $form_content['user_email'] ) ? $form_content['user_email'] : '',
@@ -4942,6 +4960,11 @@ if ( ! function_exists( 'ur_get_akismet_validate' ) ) {
 }
 
 if ( ! function_exists( 'ur_get_form_data_for_akismet' ) ) {
+	/**
+	 * Get user submitted form data for akismet spam monitoring.
+	 *
+	 * @param array $form_data User submitted form data.
+	 */
 	function ur_get_form_data_for_akismet( $form_data ) {
 		$field_type_allowlist = ur_get_allowed_field_for_akisment();
 		$entry_data           = array();
@@ -4979,7 +5002,11 @@ if ( ! function_exists( 'ur_get_form_data_for_akismet' ) ) {
 		return $form_content;
 	}
 }
+
 if ( ! function_exists( 'ur_get_allowed_field_for_akisment' ) ) {
+	/**
+	 * List of allowed fields for spam protection by akismet.
+	 */
 	function ur_get_allowed_field_for_akisment() {
 		$field_type_allowlist = array(
 			'user_login',
@@ -4993,5 +5020,31 @@ if ( ! function_exists( 'ur_get_allowed_field_for_akisment' ) ) {
 			'description',
 		);
 		return $field_type_allowlist;
+	}
+}
+
+
+if ( ! function_exists( 'ur_current_url' ) ) {
+	/**
+	 * Get the current URL.
+	 *
+	 * @since 3.2.0
+	 *
+	 * @return string
+	 */
+	function ur_current_url() {
+
+		$parsed_home_url = wp_parse_url( home_url() );
+
+		$url = $parsed_home_url['scheme'] . '://' . $parsed_home_url['host'];
+
+		if ( ! empty( $parsed_home_url['port'] ) ) {
+			$url .= ':' . $parsed_home_url['port'];
+		}
+
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$url .= wp_unslash( $_SERVER['REQUEST_URI'] );
+
+		return esc_url_raw( $url );
 	}
 }
