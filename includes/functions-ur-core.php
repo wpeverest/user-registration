@@ -3029,52 +3029,6 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 	}
 }
 
-add_action( 'admin_init', 'user_registration_install_pages_notice' );
-
-if ( ! function_exists( 'user_registration_install_pages_notice' ) ) {
-	/**
-	 * Display install pages notice if the user has skipped getting started.
-	 *
-	 * @since 2.2.3
-	 */
-	function user_registration_install_pages_notice() {
-
-		if ( get_option( 'user_registration_onboarding_skipped', false ) ) {
-			UR_Admin_Notices::add_notice( 'install' );
-		}
-
-		if ( isset( $_POST['user_registration_myaccount_page_id'] ) ) { //phpcs:ignore.
-			$my_account_page = $_POST['user_registration_myaccount_page_id']; //phpcs:ignore.
-		} else {
-			$my_account_page = get_option( 'user_registration_myaccount_page_id', 0 );
-		}
-
-		$matched        = 0;
-		$myaccount_page = array();
-
-		if ( $my_account_page ) {
-			$myaccount_page = get_post( $my_account_page );
-		}
-
-		if ( ! empty( $myaccount_page ) ) {
-			$matched = ur_find_my_account_in_page( $myaccount_page->ID );
-		}
-
-		if ( 0 === $matched ) {
-			$my_account_setting_link = admin_url() . 'admin.php?page=user-registration-settings#user_registration_myaccount_page_id';
-
-			$message = sprintf(
-				/* translators: %1$s - My account Link. */
-				__( 'Please choose a <strong title="A page with [user_registration_my_account] shortcode">My Account</strong> page in <a href="%1$s" style="text-decoration:none;">General Settings</a>. <br/><strong>Got Stuck? Read</strong> <a href="https://docs.wpuserregistration.com/docs/how-to-show-account-profile/" style="text-decoration:none;" target="_blank">How to setup My Account page</a>.', 'user-registration' ),
-				$my_account_setting_link
-			);
-			UR_Admin_Notices::add_custom_notice( 'select_my_account', $message );
-		} else {
-			UR_Admin_Notices::remove_notice( 'select_my_account' );
-		}
-	}
-}
-
 if ( ! function_exists( 'ur_find_my_account_in_page' ) ) {
 
 	/**

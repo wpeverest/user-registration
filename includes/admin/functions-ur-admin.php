@@ -584,134 +584,193 @@ function ur_check_updation_date( $days ) {
 }
 
 /**
- * Show Notice COntent according to notice type.
- *
- * @param string $notice_type Type.
- */
-function promotional_notice_content( $notice_type ) {
-	switch ( $notice_type ) {
-		case 'review':
-			review_notice_content();
-			break;
-		case 'survey':
-			survey_notice_content();
-			break;
-		case 'allow_usage':
-			allow_usage_content();
-			break;
-
-		default:
-			break;
-	}
-}
-
-/**
  * Links for Promotional Notices.
  *
- * @param string $notice_type Notice Type.
- * @param string $notice_target_link Notice target link.
+ * @param array $notice_target_links Notice target links.
  */
-function promotional_notice_links( $notice_type, $notice_target_link = '#' ) {
-	if ( 'allow_usage' === $notice_type ) {
-		?>
+function promotional_notice_links( $notice_target_links, $is_permanent_dismiss ) {
+	?>
 		<ul class="user-registration-notice-ul">
-			<li><a class="button button-primary ur-allow-usage" href="#"><span class="dashicons dashicons-smiley"></span><?php esc_html_e( 'Allow', 'user-registration' ); ?></a></li>
-			<li><a href="#" class="button button-secondary notice-dismiss notice-dismiss-permanently ur-deny-usage"><span  class="dashicons dashicons-dismiss"></span><?php esc_html_e( 'No, Thanks', 'user-registration' ); ?></a></li>
-		</ul>
-		<?php
-	} else {
+			<?php
+			foreach ( $notice_target_links as $key => $link ) {
+				?>
+			<li><a class="button <?php esc_attr_e( $link['class'], 'user-registration' ); ?>" href="<?php echo esc_url( $link['link'] ); ?>" target="<?php echo esc_attr( $link['target'] ); ?>"><span class="dashicons <?php echo esc_attr( $link['icon'] ); ?>"></span><?php esc_html_e( $link['title'], 'user-registration' ); ?></a></li>
+				<?php
+			}
+			?>
+	</ul>
+	<?php
+	if ( $is_permanent_dismiss ) {
+
 		?>
-		<ul class="user-registration-notice-ul">
-			<li><a class="button button-primary" href="<?php echo esc_url( $notice_target_link ); ?>" target="_blank"><span class="dashicons dashicons-external"></span><?php esc_html_e( 'Sure, I\'d love to!', 'user-registration' ); ?></a></li>
-			<li><a href="#" class="button button-secondary notice-dismiss notice-dismiss-permanently"><span  class="dashicons dashicons-smiley"></span><?php esc_html_e( 'I already did!', 'user-registration' ); ?></a></li>
-			<li><a href="#" class="button button-secondary notice-dismiss notice-dismiss-temporarily"><span class="dashicons dashicons-dismiss"></span><?php esc_html_e( 'Maybe later', 'user-registration' ); ?></a></li>
-			<li><a href="https://wpuserregistration.com/support" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial"></span><?php esc_html_e( 'I have a query', 'user-registration' ); ?></a></li>
-		</ul>
-		<a href="#" class="notice-dismiss notice-dismiss-permanently"><?php esc_html_e( 'Never show again', 'user-registration' ); ?></a>
+			<a href="#" class="notice-dismiss notice-dismiss-permanently"><?php esc_html_e( 'Never show again', 'user-registration' ); ?></a>
 		<?php
 	}
 }
 
-if ( ! function_exists( 'review_notice_content' ) ) {
+if ( ! function_exists( 'ur_check_products_version' ) ) {
 
 	/**
-	 * Review Content.
+	 * Check products version.
+	 *
+	 * @return bool
 	 */
-	function review_notice_content() {
-
-		$form_users         = get_users(
-			array(
-				'meta_key' => 'ur_form_id',
-			)
-		);
-		$total_registration = count( $form_users );
-
-		if ( 20 <= $total_registration ) {
-			echo wp_kses_post(
-				sprintf(
-					"<p>%s</p><p>%s</p><p class='extra-pad'>%s</p>",
-					__( "Congratulations! 👏 You've registered 20 users using our User Registration plugin, way to go! 🎉", 'user-registration' ),
-					__( 'Please share your experience with us by leaving a review. Your feedback will help us improve and serve you better. ', 'user-registration' ),
-					__(
-						'Once again, thank you for choosing us! ❤️ <br>',
-						'user-registration'
-					)
-				)
-			);
-		} else {
-			echo wp_kses_post(
-				sprintf(
-					"<p>%s</p><p>%s</p><p class='extra-pad'>%s</p>",
-					__( '( The above word is just to draw your attention. <span class="dashicons dashicons-smiley smile-icon"></span> )', 'user-registration' ),
-					__( 'Hope you are having nice experience with <strong>User Registration</strong> plugin. Please provide this plugin a nice review.', 'user-registration' ),
-					__(
-						'<strong>What benefit would you have?</strong> <br>
-					Basically, it would encourage us to release updates regularly with new features & bug fixes so that you can keep on using the plugin without any issues and also to provide free support like we have been doing. <span class="dashicons dashicons-smiley smile-icon"></span><br>',
-						'user-registration'
-					)
-				)
-			);
+	function ur_check_products_version( $conditions ) {
+		$valid_product = false;
+		if ( empty( $conditions ) ) {
+			return true;
 		}
+
+		$main_operator   = 'AND';
+		$valid_condition = array();
+
+		foreach ( $conditions as $key => $value ) {
+			if ( 'operator' == $key ) {
+				$main_operator = $value;
+			} else {
+				if ( 'plugins' === $key ) {
+					$valid_plugins = array();
+					$sub_operator  = 'AND';
+
+					foreach ( $value as $plugin_slug => $version_to_compare ) {
+						if ( 'operator' == $plugin_slug ) {
+							$sub_operator = $version_to_compare;
+						} else {
+							$plugin_version = get_plugin_version( $plugin_slug );
+							// Extract the operator and the number
+							preg_match( '/([<>!=]=?)(\d+(\.\d+)+)/', $version_to_compare, $matches );
+							$numeric_operator   = $matches[1];
+							$version_to_compare = $matches[2];
+
+							if ( ! empty( $plugin_version ) ) {
+								$valid = version_compare( $plugin_version, $version_to_compare, $numeric_operator );
+								if ( $valid && $sub_operator == 'OR' ) {
+									array_push( $valid_plugins, $valid );
+									break;
+								} elseif ( $valid && $sub_operator == 'AND' ) {
+									array_push( $valid_plugins, $valid );
+									continue;
+								}
+							}
+						}
+					}
+					if ( 'AND' === $sub_operator && ( count( $value ) - 1 ) === count( $valid_plugins ) ) {
+						array_push( $valid_condition, true );
+					} elseif ( 'OR' === $sub_operator && 1 === count( $valid_plugins ) ) {
+						array_push( $valid_condition, true );
+					}
+				}
+				if ( 'themes' === $key ) {
+					foreach ( $value as $theme_slug => $version_to_compare ) {
+						$theme_version = get_theme_version( $theme_slug );
+						// Extract the operator and the number
+						preg_match( '/([<>!=]=?)(\d+(\.\d+)+)/', $version_to_compare, $matches );
+						$numeric_operator   = $matches[1];
+						$version_to_compare = $matches[2];
+
+						if ( ! empty( $theme_version ) ) {
+							$valid = version_compare( $theme_version, $version_to_compare, $numeric_operator );
+							if ( $valid ) {
+								array_push( $valid_condition, $valid );
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		if ( 'AND' === $main_operator && ( count( $conditions ) - 1 ) === count( $valid_condition ) ) {
+			$valid_product = true;
+		} elseif ( 'OR' === $main_operator && 1 === count( $valid_condition ) ) {
+			$valid_product = true;
+		}
+
+		return $valid_product;
 	}
 }
 
-if ( ! function_exists( 'survey_notice_content' ) ) {
+if ( ! function_exists( 'ur_check_numeric_operator' ) ) {
+
 	/**
-	 * Survey Content
+	 * Check numeric operator.
+	 *
+	 * @return bool
 	 */
-	function survey_notice_content() {
-		echo wp_kses_post(
-			sprintf(
-				"<p>%s</p><p class='extra-pad'>%s</p>",
-				__(
-					'<strong>Hey there!</strong> <br>
-			We would be grateful if you could spare a moment and help us fill this survey. This survey will take approximately 4 minutes to complete.',
-					'user-registration'
-				),
-				__(
-					'<strong>What benefit would you have?</strong> <br>
-			We will take your feedback from the survey and use that information to make the plugin better. As a result, you will have a better plugin as you wanted. <span class="dashicons dashicons-smiley smile-icon"></span><br>',
-					'user-registration'
-				)
-			)
-		);
+	function ur_check_numeric_operator( $value, $condition ) {
+		// Extract the operator and the number
+		preg_match( '/([<>]=?|==|!=|<=|>=)?(\d+)/', $condition, $matches );
+		$operator = $matches[1];
+		$number   = (int) $matches[2];
+
+		$condition = false;
+		switch ( $operator ) {
+			case '>':
+				$condition = $value > $number;
+				break;
+			case '>=':
+				$condition = $value >= $number;
+				break;
+			case '<':
+				$condition = $value < $number;
+				break;
+			case '<=':
+				$condition = $value <= $number;
+				break;
+			case '!=':
+				$condition = $value != $number;
+				break;
+			default:
+				$condition = $value == $number;
+				break;
+		}
+
+		return $condition;
 	}
 }
 
-if ( ! function_exists( 'allow_usage_content' ) ) {
 
+if ( ! function_exists( 'get_plugin_version' ) ) {
 	/**
-	 * Allow Usage Content.
+	 * Get Plugin Version.
+	 *
+	 * @since 3.3.0
+	 *
+	 * @param  string $plugin_slug Plugin Slug.
 	 */
-	function allow_usage_content() {
-		echo wp_kses_post(
-			sprintf(
-				'<br/><p>%s</p>',
-				__(
-					'Help us improve the plugin\'s features by sharing <a href="https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title" target="_blank">non-sensitive plugin data</a> with us.',
-					'user-registration'
-				)
-			)
-		);
+	function get_plugin_version( $plugin_slug ) {
+		if ( ! function_exists( 'get_plugins' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		$plugins = get_plugins();
+
+		foreach ( $plugins as $plugin_file => $plugin_data ) {
+			if ( strpos( $plugin_file, $plugin_slug ) !== false ) {
+				return $plugin_data['Version'];
+			}
+		}
+
+		return false;
 	}
+}
+
+if ( ! function_exists( 'get_theme_version' ) ) {
+	/**
+	 * Get Theme Version.
+	 *
+	 * @since 3.3.0
+	 *
+	 * @param  string $theme_slug Theme Slug.
+	 */
+	function get_theme_version( $theme_slug ) {
+		$theme = wp_get_theme( $theme_slug );
+
+		if ( $theme->exists() ) {
+			return $theme->get( 'Version' );
+		}
+
+		return false;
+	}
+
 }

@@ -269,9 +269,12 @@ class UR_Admin_Assets {
 			'ur-notice',
 			'ur_notice_params',
 			array(
-				'ajax_url'     => admin_url( 'admin-ajax.php' ),
-				'review_nonce' => wp_create_nonce( 'review-nonce' ),
-				'survey_nonce' => wp_create_nonce( 'survey-nonce' ),
+				'ajax_url'          => admin_url( 'admin-ajax.php' ),
+				'important_nonce'   => wp_create_nonce( 'important-nonce' ),
+				'review_nonce'      => wp_create_nonce( 'review-nonce' ),
+				'allow-usage_nonce' => wp_create_nonce( 'allow-usage-nonce' ),
+				'survey_nonce'      => wp_create_nonce( 'survey-nonce' ),
+				'promotional_nonce' => wp_create_nonce( 'promotional-nonce' ),
 			)
 		);
 

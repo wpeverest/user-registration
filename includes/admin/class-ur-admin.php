@@ -27,10 +27,6 @@ class UR_Admin {
 		add_action( 'admin_init', array( $this, 'prevent_admin_access' ), 10, 2 );
 		add_action( 'load-users.php', array( $this, 'live_user_read' ), 10, 2 );
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1 );
-		add_action( 'admin_notices', array( $this, 'review_notice' ) );
-		add_action( 'admin_notices', array( $this, 'survey_notice' ) );
-		add_action( 'admin_notices', array( $this, 'allow_usage_notice' ) );
-		add_action( 'admin_notices', array( $this, 'php_deprecation_notice' ) );
 		add_action( 'delete_user', 'ur_unlink_user_profile_pictures' );
 		add_action( 'admin_footer', 'ur_print_js', 25 );
 		add_filter( 'heartbeat_received', array( $this, 'new_user_live_notice' ), 10, 2 );
@@ -123,7 +119,7 @@ class UR_Admin {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return false;
 		}
-		include_once __DIR__ . '/class-ur-admin-notices.php';
+		include_once __DIR__ . '/notifications/class-ur-admin-notices.php';
 		include_once __DIR__ . '/class-ur-admin-menus.php';
 		include_once __DIR__ . '/class-ur-admin-export-users.php';
 		include_once __DIR__ . '/class-ur-admin-import-export-forms.php';
@@ -249,147 +245,6 @@ class UR_Admin {
 		}
 
 		return $footer_text;
-	}
-
-	/**
-	 * Review notice on header.
-	 *
-	 * @since  1.5.8
-	 * @return void
-	 */
-	public function review_notice() {
-
-		$notice_type = 'review';
-		$show_notice = $this->show_promotional_notice( $notice_type );
-		if ( ! $show_notice ) {
-			return;
-		}
-		// Return if activation date is less than 7 days.
-		if ( ur_check_activation_date( '7' ) === false ) {
-			return;
-		}
-
-		$notice_header      = __( 'Bravo! 💪 Well done.', 'user-registration' );
-		$notice_target_link = 'https://wordpress.org/support/plugin/user-registration/reviews/#postform';
-
-		include __DIR__ . '/views/html-notice-promotional.php';
-	}
-
-	/**
-	 * Check whether notice is showable or not.
-	 *
-	 * @param string $notice_type Notice Type.
-	 * @param string $days Number of days for temparary dismissed.
-	 * @return bool
-	 */
-	public function show_promotional_notice( $notice_type, $days = '1' ) {
-
-		// Show only to Admins.
-		if ( ! current_user_can( 'manage_options' ) ) {
-			return false;
-		}
-
-		$notice_dismissed             = ur_option_checked( 'user_registration_' . $notice_type . '_notice_dismissed', false );
-		$notice_dismissed_temporarily = get_option( 'user_registration_' . $notice_type . '_notice_dismissed_temporarily', '' );
-
-		if ( $notice_dismissed ) {
-			return false;
-		}
-
-		// Return if dismissed date is less than a day.
-		if ( '' !== $notice_dismissed_temporarily ) {
-
-			$days_to_validate = strtotime( $notice_dismissed_temporarily );
-			$days_to_validate = strtotime( '+' . $days . ' day', $days_to_validate );
-			$days_to_validate = date_i18n( 'Y-m-d', $days_to_validate );
-
-			$current_date = date_i18n( 'Y-m-d' );
-
-			if ( $current_date < $days_to_validate ) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * Allow Usage Notice
-	 *
-	 * @since  2.3.2
-	 */
-	public function allow_usage_notice() {
-
-		// Show only to Admins.
-		if ( ! current_user_can( 'manage_options' ) ) {
-			return false;
-		}
-
-		$allow_usage_tracking     = get_option( 'user_registration_allow_usage_tracking', null );
-		$allow_usage_notice_shown = get_option( 'user_registration_allow_usage_notice_shown', false );
-
-		if ( null !== $allow_usage_tracking || $allow_usage_notice_shown ) {
-			return false;
-		}
-
-		if ( ur_check_updation_date( '1' ) === true ) {
-			$notice_type        = 'allow_usage';
-			$notice_header      = __( 'Contribute to the enhancement', 'user-registration' );
-			$notice_target_link = '#';
-			include __DIR__ . '/views/html-notice-promotional.php';
-		} else {
-			return false;
-		}
-	}
-
-
-	/**
-	 * Add PHP Deprecation notice.
-	 */
-	public function php_deprecation_notice() {
-		$php_version  = explode( '-', PHP_VERSION )[0];
-		$base_version = '7.2';
-
-		if ( version_compare( $php_version, $base_version, '<' ) ) {
-			$last_prompt_date = get_option( 'user_registration_php_deprecated_notice_last_prompt_date', '' );
-
-			if ( empty( $last_prompt_date ) || strtotime( $last_prompt_date ) < strtotime( '-1 day' ) ) {
-				$prompt_limit = 3;
-				$prompt_count = get_option( 'user_registration_php_deprecated_notice_prompt_count', 0 );
-
-				if ( $prompt_count < $prompt_limit ) {
-					include __DIR__ . '/views/html-notice-php-deprecation.php';
-				}
-			}
-		}
-	}
-
-
-
-	/**
-	 * Survey notice on header.
-	 *
-	 * @since  2.0.1
-	 * @return void
-	 */
-	public function survey_notice() {
-
-		$notice_type = 'survey';
-		$show_notice = $this->show_promotional_notice( $notice_type );
-		if ( ! $show_notice ) {
-			return;
-		}
-
-		// Return if license key not found.
-		$license_key = trim( get_option( 'user-registration_license_key' ) );
-
-		if ( $license_key && ur_check_activation_date( '10' ) === true ) {
-			$notice_header      = __( 'User Registration Plugin Survey', 'user-registration' );
-			$notice_target_link = 'https://forms.office.com/pages/responsepage.aspx?id=c04iBAejyEWvNQDb6GzDCILyv8m6NoBDvJVtRTCcOvBUNk5OSTA4OEs1SlRPTlhFSFZXRFA0UFEwRCQlQCN0PWcu';
-
-			include __DIR__ . '/views/html-notice-promotional.php';
-		} else {
-			return;
-		}
 	}
 
 	/**
