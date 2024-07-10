@@ -62,9 +62,9 @@ class UR_Admin_Assets {
 		// Sitewide menu CSS.
 
 		wp_enqueue_style( 'ur-notice' );
-		wp_enqueue_style( 'user-registration-menu' );
+		wp_register_style( 'user-registration-menu', UR()->plugin_url() . '/assets/css/menu.css', array(), UR_VERSION );
 		if ( 'plugins' === $screen_id ) {
-			wp_register_style( 'user-registration-menu', UR()->plugin_url() . '/assets/css/menu.css', array(), UR_VERSION );
+			wp_enqueue_style( 'user-registration-menu' );
 		}
 		// Admin styles for UR pages only.
 		if ( in_array( $screen_id, ur_get_screen_ids(), true ) ) {
@@ -74,7 +74,7 @@ class UR_Admin_Assets {
 			if ( strpos( $screen_id, 'user-registration-settings' ) ) {
 				wp_enqueue_style( 'user-registration-settings' );
 			}
-
+			wp_enqueue_style( 'user-registration-menu' );
 			wp_enqueue_style( 'jquery-ui-style' );
 			wp_enqueue_style( 'wp-color-picker' );
 			wp_enqueue_style( 'perfect-scrollbar' );
