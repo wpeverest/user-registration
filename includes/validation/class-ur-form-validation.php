@@ -98,9 +98,8 @@ class UR_Form_Validation extends UR_Validation {
 			$this->match_password( $form_field_data, $form_data );
 			$this->validate_form_data( $form_id, $form_field_data, $form_data );
 			$this->validate_password_data( $form_field_data, $form_data );
-			$user_pass = isset( $this->valid_form_data['user_pass']->value ) && $this->valid_form_data['user_pass']->value;
+			$user_pass = isset( $this->valid_form_data['user_pass']->value ) ? $this->valid_form_data['user_pass']->value : '';
 		}
-
 		if ( ! is_null( $this->response_array ) ) {
 			// Modify UR_Frontend_Form_Handler::$response_array variable.
 			$response_array = array_merge( $response_array, $this->response_array );
