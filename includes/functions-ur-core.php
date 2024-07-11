@@ -4802,13 +4802,38 @@ if ( ! function_exists( 'ur_get_translated_string' ) ) {
 		}
 	}
 }
-add_action( 'admin_init', 'ur_check_is_disabled' );
-if( ! function_exists( 'ur_check_is_disabled' ) ){
+add_action( 'init', 'ur_check_is_disabled' );
+if ( ! function_exists( 'ur_check_is_disabled' ) ) {
 	function ur_check_is_disabled() {
-
+		$is_auto_enable = get_user_meta( get_current_user_id(), 'ur_auto_enable_time', true );
+		if ( $is_auto_enable ) {
+			$current_time = current_time( 'timestamp' );
+			if ( $current_time >= $is_auto_enable ) {
+				delete_user_meta( get_current_user_id(), 'ur_auto_enable_time' );
+				delete_user_meta( get_current_user_id(), 'ur_disable_users' );
+			}
+		}
 		$is_disabled = get_user_meta( get_current_user_id(), 'ur_disable_users', true );
-		if($is_disabled){
+		if ( $is_disabled ) {
 			wp_logout();
 		}
 	}
 }
+if ( ! function_exists( 'ur_check_is_auto_enable_user' ) ) {
+	function ur_check_is_auto_enable_user( $user_id = 0 ) {
+		if ( 0 === $user_id || '' === $user_id ) {
+			return;
+		}
+
+		$is_auto_enable = get_user_meta( $user_id, 'ur_auto_enable_time', true );
+		if ( ! $is_auto_enable || '' === $is_auto_enable ) {
+			return;
+		}
+		if ( strtotime( $is_auto_enable ) < strtotime( date( 'Y-m-d H:i:s' ) ) ) {
+			delete_user_meta( $user_id, 'ur_auto_enable_time' );
+			delete_user_meta( $user_id, 'ur_disable_users' );
+			return;
+		}
+	}
+}
+
