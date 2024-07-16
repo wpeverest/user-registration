@@ -1420,11 +1420,11 @@
 																							"row_",
 																							""
 																						);
+																					index =
+																						index +
+																						"_" +
+																						repeater_row_id;
 																				}
-																				index =
-																					index +
-																					"_" +
-																					repeater_row_id;
 
 																				if (
 																					$field_id.includes(
@@ -1899,12 +1899,12 @@
 																				"row_",
 																				""
 																			);
+																		index =
+																			"user_registration_" +
+																			index +
+																			"_" +
+																			repeater_row_id;
 																	}
-																	index =
-																		"user_registration_" +
-																		index +
-																		"_" +
-																		repeater_row_id;
 																	if (
 																		$field_id.includes(
 																			index

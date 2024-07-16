@@ -4901,6 +4901,7 @@ if ( ! function_exists( 'user_registration_validate_form_field_data' ) ) {
 			 * Default value is blank string.
 			 */
 			$response = apply_filters( $filter_hook, '' );
+
 			if ( ! empty( $response ) ) {
 				array_push( $response_array, $response );
 			}
@@ -5354,9 +5355,10 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 						'data'      => $advance_data,
 					);
 
-					$form_data_array = apply_filters( 'user_registration_' . $field['field_key'] . '_frontend_form_data', $filter_data );
+					$field_key       = isset( $field['field_key'] ) ? $field['field_key'] : '';
+					$form_data_array = apply_filters( 'user_registration_' . $field_key . '_frontend_form_data', $filter_data );
 					$field           = isset( $form_data_array['form_data'] ) ? $form_data_array['form_data'] : $field;
-					$value           = ! empty( $_POST[ $key ] ) ? ur_clean( wp_unslash( $_POST[ $key ] ) ) : $field['value']; // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+					$value           = ! empty( $_POST[ $key ] ) ? ur_clean( wp_unslash( $_POST[ $key ] ) ) : ( isset( $field['value'] ) ? $field['value'] : '' ); // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 					$field = user_registration_form_field( $key, $field, $value, $current_row );
 

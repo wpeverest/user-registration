@@ -392,7 +392,9 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						$choice_label = is_array( $choice ) ? $choice['label'] : $choice->label;
 						$choice_image = is_array( $choice ) ? $choice['image'] : $choice->image;
 						$value        = '';
+
 						if ( '' !== $default ) {
+							$default = 'string' === gettype( $default ) ? json_decode( $default ) : $default;
 
 							if ( is_array( $default ) && in_array( ur_sanitize_tooltip( trim( $choice_index ) ), $default ) ) {
 								$value = 'checked="checked"';
@@ -402,8 +404,8 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						}
 						$field       .= '<li class="ur-checkbox-list">';
 						$choice_index = ur_sanitize_tooltip( $choice_index );
-						$field       .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . esc_attr( $choice_index ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '" value="' . esc_attr( $choice_index ) . '" ' . esc_attr( $value ) . '/>';
-						$field       .= '<label class="ur-checkbox-label" for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '">';
+						$field       .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . ( '' !== $current_row ? '_' . $current_row : '' ) . '[]" ' . implode( ' ', $custom_attributes ) . ' data-value="' . esc_attr( $choice_index ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . ( '' !== $current_row ? '_' . $current_row : '' ) . '[]" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '" value="' . esc_attr( $choice_index ) . '" ' . esc_attr( $value ) . '/>';
+						$field       .= '<label class="ur-checkbox-label" for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . ( '' !== $current_row ? '_' . $current_row : '' ) . '">';
 						if ( ! empty( $choice_image ) ) {
 							$field .= '<span class="user-registration-image-choice">';
 							$field .= '<img src="' . esc_url( $choice_image ) . '" alt="' . esc_attr( trim( $choice_label ) ) . '" width="200px">';
@@ -414,8 +416,6 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					}
 						$field .= '</ul>';
 				} elseif ( isset( $options ) && array_filter( $options ) ) {
-					// $default = 'First Choice';
-
 					if ( ! empty( $default ) ) {
 						$default = ( is_serialized( $default ) ) ? unserialize( $default, array( 'allowed_classes' => false ) ) : ( is_array( $default ) ? $default : ( empty( json_decode( $default ) ) ? $default :  json_decode( $default ) ) ); //phpcs:ignore;
 					}
@@ -447,7 +447,8 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						$choice_index = ur_sanitize_tooltip( $choice_index );
 
 						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . ( '' !== $current_row ? '_' . $current_row : '' ) . '[]" ' . implode( ' ', $custom_attributes ) . ' data-value="' . esc_attr( $choice_index ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . ( '' !== $current_row ? '_' . $current_row : '' ) . '[]" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '" value="' . esc_attr( $choice_index ) . '" ' . esc_attr( $value ) . '/>';
-						$field .= '<label class="ur-checkbox-label" for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '">' . trim( $choice ) . '</label> </li>';
+						$field .= '<label class="ur-checkbox-label" for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . ( '' !== $current_row ? '_' . $current_row : '' ) . '">' . trim( $choice ) . '</label> </li>';
+
 						++$checkbox_start;
 					}
 						$field .= '</ul>';
