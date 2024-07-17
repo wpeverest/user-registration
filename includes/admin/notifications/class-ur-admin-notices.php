@@ -232,7 +232,7 @@ class UR_Admin_Notices {
 				$valid = ur_check_updation_date( $value );
 				break;
 			case 'option_exists':
-				$valid = ! empty( get_option( $value ) );
+				$valid = ! empty( get_option( $value, true ) );
 				break;
 		}
 
@@ -383,7 +383,7 @@ class UR_Admin_Notices {
 					'reopen_times'          => '3',
 					'conditions_to_display' => array(
 						array(
-							'operator'        => 'OR',
+							'operator'        => 'AND',
 							'user_count'      => '<20',
 							'activation_days' => '7',
 						),
