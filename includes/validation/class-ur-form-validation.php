@@ -166,8 +166,10 @@ class UR_Form_Validation extends UR_Validation {
 				$required_fields                                      = apply_filters( 'user_registration_missing_repeater_field_keys', $required_fields, $form_id );
 
 			} else {
-				$this->response_array                       = user_registration_validate_form_field_data( $data, $form_data, $form_id, $this->response_array, $form_field_data );
-				$this->valid_form_data[ $data->field_name ] = self::get_sanitize_value( $data );
+
+				list( $response_array, $valid_form_data ) = user_registration_validate_form_field_data( $data, $form_data, $form_id, $this->response_array, $form_field_data, array() );
+				$this->response_array                     = $response_array;
+				$this->valid_form_data                    = array_merge( $this->valid_form_data, $valid_form_data );
 			}
 		}
 

@@ -4773,8 +4773,9 @@ if ( ! function_exists( 'user_registration_validate_form_field_data' ) ) {
 	 * @param int    $form_id Form id.
 	 * @param array  $response_array Response Array.
 	 * @param array  $form_field_data Form Field Data..
+	 * @param array  $valid_form_data Valid Form Data..
 	 */
-	function user_registration_validate_form_field_data( $data, $form_data, $form_id, $response_array, $form_field_data ) {
+	function user_registration_validate_form_field_data( $data, $form_data, $form_id, $response_array, $form_field_data, $valid_form_data ) {
 		$form_key_list = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
 
 		$form_validator = new UR_Form_Validation();
@@ -4828,7 +4829,8 @@ if ( ! function_exists( 'user_registration_validate_form_field_data' ) ) {
 			 * @param array $data The form data.
 			 * @param array $single_form_field The single form field.
 			 */
-			$data = apply_filters( $field_hook_name, $data, $single_form_field );
+			$data                                 = apply_filters( $field_hook_name, $data, $single_form_field );
+			$valid_form_data[ $data->field_name ] = UR_Form_Validation::get_sanitize_value( $data );
 
 			/**
 			 * Hook to custom validate form field.
@@ -4906,9 +4908,9 @@ if ( ! function_exists( 'user_registration_validate_form_field_data' ) ) {
 				array_push( $response_array, $response );
 			}
 			remove_all_filters( $filter_hook );
-
-			return $response_array;
 		}
+		return array( $response_array, $valid_form_data );
+
 	}
 }
 
@@ -5073,6 +5075,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 				}
 
 				$key = 'user_registration_' . $single_item->general_setting->field_name;
+
 				if ( $found_field ) {
 					$user_id                    = get_current_user_id();
 					$form_id                    = ur_get_form_id_by_userid( $user_id );
@@ -5359,6 +5362,10 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 					$form_data_array = apply_filters( 'user_registration_' . $field_key . '_frontend_form_data', $filter_data );
 					$field           = isset( $form_data_array['form_data'] ) ? $form_data_array['form_data'] : $field;
 					$value           = ! empty( $_POST[ $key ] ) ? ur_clean( wp_unslash( $_POST[ $key ] ) ) : ( isset( $field['value'] ) ? $field['value'] : '' ); // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+
+					if ( ! isset( $field['field_key'] ) ) {
+						return;
+					}
 
 					$field = user_registration_form_field( $key, $field, $value, $current_row );
 

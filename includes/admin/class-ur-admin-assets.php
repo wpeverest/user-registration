@@ -331,6 +331,7 @@ class UR_Admin_Assets {
 				'form_required_fields'                   => ur_get_required_fields(),
 				'form_one_time_draggable_fields'         => ur_get_one_time_draggable_fields(),
 				'form_repeater_row_not_droppable_fields_lists' => function_exists( 'user_registration_repeater_row_not_droppable_fields_lists' ) ? user_registration_repeater_row_not_droppable_fields_lists() : array(),
+				'form_repeater_row_empty'                => esc_html__( 'Please add at least one field to Repeater Row', 'user-registration' ),
 				/* translators: %field%: Field Label */
 				'form_one_time_draggable_fields_locked_title' => esc_html__( '%field% field is Locked.', 'user-registration' ),
 				/* translators: %field%: Field Label */

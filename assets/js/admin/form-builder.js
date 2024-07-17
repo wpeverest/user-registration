@@ -290,6 +290,19 @@
 
 				var form_data = URFormBuilder.get_form_data();
 				var row_data = URFormBuilder.get_form_row_data();
+				var stop_process = false;
+				$.each(row_data, function () {
+					if ($(this)[0].fields.length < 1) {
+						URFormBuilder.show_message(
+							user_registration_form_builder_data.form_repeater_row_empty
+						);
+						stop_process = true;
+					}
+				});
+
+				if (stop_process) {
+					return;
+				}
 				var form_row_ids = URFormBuilder.get_form_row_ids();
 				var ur_form_id = $("#ur_form_id").val();
 				var ur_form_id_localization =
@@ -1185,6 +1198,7 @@
 							.each(function () {
 								fields.push($(this).val());
 							});
+
 						single_row_data["fields"] = fields;
 						row_data.push(single_row_data);
 					}
