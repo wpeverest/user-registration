@@ -41,6 +41,7 @@ class UR_Frontend_Scripts {
 	 * Hook in methods.
 	 */
 	public static function init() {
+		add_action( 'user_registration_enqueue_scripts', array( __CLASS__, 'load_scripts' ), 5 );
 		add_action( 'user_registration_my_account_enqueue_scripts', array( __CLASS__, 'load_scripts' ), 5 );
 		add_action( 'before-user-registration-my-account-shortcode', array( __CLASS__, 'load_my_account_scripts' ) );
 		add_action( 'wp_print_scripts', array( __CLASS__, 'localize_printed_scripts' ), 5 );
