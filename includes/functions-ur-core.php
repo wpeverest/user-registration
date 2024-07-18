@@ -4910,7 +4910,6 @@ if ( ! function_exists( 'user_registration_validate_form_field_data' ) ) {
 			remove_all_filters( $filter_hook );
 		}
 		return array( $response_array, $valid_form_data );
-
 	}
 }
 
@@ -5062,6 +5061,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 					$found_field = isset( $profile[ $key ] );
 				}
 			}
+
 			if ( $found_field ) {
 				?>
 			<div class="ur-form-grid ur-grid-<?php echo esc_attr( ( $grid_key + 1 ) ); ?>" style="width:<?php echo esc_attr( $width ); ?>%;">
@@ -5077,9 +5077,10 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 				$key = 'user_registration_' . $single_item->general_setting->field_name;
 
 				if ( $found_field ) {
-					$user_id                    = get_current_user_id();
-					$form_id                    = ur_get_form_id_by_userid( $user_id );
-					$field                      = isset( $profile[ $key ] ) ? $profile[ $key ] : array();
+					$user_id = get_current_user_id();
+					$form_id = ur_get_form_id_by_userid( $user_id );
+					$field   = isset( $profile[ $key ] ) ? $profile[ $key ] : array();
+
 					$field['input_class']       = array( 'ur-edit-profile-field ' );
 					$advance_data               = array(
 						'general_setting' => (object) $single_item->general_setting,
@@ -5363,11 +5364,9 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 					$field           = isset( $form_data_array['form_data'] ) ? $form_data_array['form_data'] : $field;
 					$value           = ! empty( $_POST[ $key ] ) ? ur_clean( wp_unslash( $_POST[ $key ] ) ) : ( isset( $field['value'] ) ? $field['value'] : '' ); // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
-					if ( ! isset( $field['field_key'] ) ) {
-						return;
+					if ( isset( $field['field_key'] ) ) {
+						$field = user_registration_form_field( $key, $field, $value, $current_row );
 					}
-
-					$field = user_registration_form_field( $key, $field, $value, $current_row );
 
 					/**
 					 * Embed the current country value to allow to remove it if it's not allowed.

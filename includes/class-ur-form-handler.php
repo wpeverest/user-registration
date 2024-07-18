@@ -136,6 +136,7 @@ class UR_Form_Handler {
 			 * @return array $profile
 			 */
 			$profile = apply_filters( 'user_registration_before_save_profile_details', $profile, $user_id, $form_id );
+
 			/**
 			 * Hook to modify confirmation email.
 			 * Default value is true.
@@ -176,7 +177,9 @@ class UR_Form_Handler {
 					if ( 'disabled' !== $disabled ) {
 
 						if ( isset( $_POST[ $key ] ) ) {
-							update_user_meta( $user_id, $update_key, $_POST[ $key ] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+							if ( isset( $field['field_key'] ) && 'file' !== $field['field_key'] ) {
+								update_user_meta( $user_id, $update_key, $_POST[ $key ] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+							}
 						} elseif ( 'checkbox' === $field['field_key'] ) {
 							update_user_meta( $user_id, $update_key, '' );
 						}
