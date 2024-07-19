@@ -653,15 +653,15 @@ class UR_Form_Handler {
 	 * Handle Export Personal data confirmation request.
 	 */
 	public static function export_confirmation_request() {
-		if ( isset( $_REQUEST['action'] ) && 'confirmaction' === $_REQUEST['action'] ) {
-			if ( ! isset( $_GET['request_id'] ) ) {
+		if ( isset( $_REQUEST['action'] ) && 'confirmaction' === $_REQUEST['action'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( ! isset( $_GET['request_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				return;
 			}
 
-			$request_id = (int) $_GET['request_id'];
+			$request_id = (int) $_GET['request_id']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-			if ( isset( $_GET['confirm_key'] ) ) {
-				$key    = sanitize_text_field( wp_unslash( $_GET['confirm_key'] ) );
+			if ( isset( $_GET['confirm_key'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$key    = sanitize_text_field( wp_unslash( $_GET['confirm_key'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				$result = wp_validate_user_request_key( $request_id, $key );
 			} else {
 				$result = new WP_Error( 'invalid_key', __( 'Invalid Key', 'user-registration' ) );

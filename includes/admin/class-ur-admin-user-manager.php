@@ -58,7 +58,16 @@ class UR_Admin_User_Manager {
 			$user = get_userdata( $user );
 		}
 
-		if ( ! ( $user instanceof WP_User ) ) {
+		$user_instance_check = $user instanceof WP_User;
+
+		/**
+		 * Filter to check  user instancec.
+		 *
+		 * @param boolean User instancce found.
+		 */
+		$user_instance_check = apply_filters( 'user_registration_user_instance_check', $user_instance_check, $user );
+
+		if ( ! $user_instance_check ) {
 			throw new Exception( esc_html__( 'Impossible to create an UR_Admin_User_Manager object. Unkwon data type.', 'user-registration' ) );
 		}
 

@@ -192,7 +192,7 @@ class UR_Admin_Notices {
 		$pages_to_exclude = apply_filters( 'user_registration_notice_excluded_pages', $pages_to_exclude );
 
 		// Return on other than user registraion builder page.
-		if ( empty( $_REQUEST['page'] ) || ! in_array( $_REQUEST['page'], $pages_to_exclude ) ) {
+		if ( empty( $_REQUEST['page'] ) || ! in_array( $_REQUEST['page'], $pages_to_exclude ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			return;
 		}
 
@@ -203,13 +203,13 @@ class UR_Admin_Notices {
 				foreach ( $wp_filter[ $wp_notice ]->callbacks as $priority => $hooks ) {
 					foreach ( $hooks as $name => $arr ) {
 						// Remove all notices if the page is form builder page.
-						if ( 'add-new-registration' === $_REQUEST['page'] || 'user-registration-dashboard' === $_REQUEST['page'] ) {
+						if ( 'add-new-registration' === $_REQUEST['page'] || 'user-registration-dashboard' === $_REQUEST['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 							unset( $wp_filter[ $wp_notice ]->callbacks[ $priority ][ $name ] );
 						} else { // phpcs:ignore
 							// Remove all notices except user registration plugins notices.
 							if ( null !== $name ) {
 								if ( strstr( $name, 'user_registration_error_notices' ) ) {
-									if ( ! isset( $_REQUEST['tab'] ) || 'license' !== $_REQUEST['tab'] ) {
+									if ( ! isset( $_REQUEST['tab'] ) || 'license' !== $_REQUEST['tab'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 										unset( $wp_filter[ $wp_notice ]->callbacks[ $priority ][ $name ] );
 									}
 								} elseif ( strpos( $name, 'user_registration_' ) || strpos( $name, 'UR_Admin_Notices' ) ) {
@@ -263,7 +263,7 @@ class UR_Admin_Notices {
 		if ( version_compare( get_option( 'user_registration_db_version' ), UR_VERSION, '<' ) ) {
 			$updater = new UR_Background_Updater();
 
-			if ( $updater->is_updating() || ! empty( $_GET['do_update_user_registration'] ) ) {
+			if ( $updater->is_updating() || ! empty( $_GET['do_update_user_registration'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				include 'views/html-notice-updating.php';
 			} else {
 				include 'views/html-notice-update.php';

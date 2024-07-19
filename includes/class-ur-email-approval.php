@@ -30,11 +30,11 @@ class UR_Email_Approval {
 	 * Verify the token and approve the user if the token matches
 	 */
 	public static function approve_user_after_verification() {
-		if ( ! isset( $_GET['ur_approval_token'] ) || empty( $_GET['ur_approval_token'] ) ) {
+		if ( ! isset( $_GET['ur_approval_token'] ) || empty( $_GET['ur_approval_token'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			return;
 		} elseif ( current_user_can( 'edit_users' ) ) {
 
-			$ur_approval_token_raw = sanitize_text_field( wp_unslash( $_GET['ur_approval_token'] ) );
+			$ur_approval_token_raw = sanitize_text_field( wp_unslash( $_GET['ur_approval_token'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$ur_approval_token     = str_split( $ur_approval_token_raw, 50 );
 			$token_string          = $ur_approval_token[1];
 
@@ -74,11 +74,11 @@ class UR_Email_Approval {
 	 * Verify the token and deny the user if the token matches
 	 */
 	public static function deny_user_after_verification() {
-		if ( ! isset( $_GET['ur_denial_token'] ) || empty( $_GET['ur_denial_token'] ) ) {
+		if ( ! isset( $_GET['ur_denial_token'] ) || empty( $_GET['ur_denial_token'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			return;
 		} elseif ( current_user_can( 'edit_users' ) ) {
 
-			$ur_denial_token_raw = sanitize_text_field( wp_unslash( $_GET['ur_denial_token'] ) );
+			$ur_denial_token_raw = sanitize_text_field( wp_unslash( $_GET['ur_denial_token'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$ur_denial_token     = str_split( $ur_denial_token_raw, 50 );
 			$token_string        = $ur_denial_token[1];
 

@@ -5264,6 +5264,8 @@
 
 .user-registration_page_user-registration-dashboard #wpcontent {
   margin-left: 140px; }
+  .user-registration_page_user-registration-dashboard #wpcontent #wpbody-content {
+    float: none; }
 
 .user-registration_page_user-registration-settings .notice {
   display: none; }
@@ -6489,9 +6491,9 @@
         border: 1px dashed #b6bbcf;
         background-color: #f0f1f5; }
   .ur-registered-from .ur-builder-wrapper-footer .button.button-style-customizer {
-    height: 48px;
-    width: 48px;
-    bottom: 72px;
+    height: 48px !important;
+    width: 48px !important;
+    bottom: 72px !important;
     box-shadow: 1px 2px 8px rgba(45, 53, 89, 0.15); }
     .ur-registered-from .ur-builder-wrapper-footer .button.button-style-customizer .dashicons {
       font-size: 24px;
@@ -8428,6 +8430,6 @@ body.user-registration #wpbody-content {
       #user-registration-list-table-page table.wp-list-table tbody tr td.actions a:focus {
         box-shadow: none;
         outline: none; }
-    #user-registration-list-table-page table.wp-list-table input[type="checkbox"] {
+    #user-registration-list-table-page table.wp-list-table input[type="checkbox"]:not(.urcr-enable-access-rule) {
       border-radius: 2px;
       border-color: #999999; }

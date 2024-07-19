@@ -50,13 +50,12 @@ class UR_AJAX {
 	public static function add_ajax_events() {
 		$ajax_events = array(
 			'user_input_dropped'        => true,
-			'form_save_action'          => false,
 			'user_form_submit'          => true,
 			'update_profile_details'    => true,
 			'profile_pic_upload'        => true,
-			'profile_pic_remove'        => false,
 			'ajax_login_submit'         => true,
-			'send_test_email'           => true,
+			'send_test_email'           => false,
+			'create_form'               => false,
 			'rated'                     => false,
 			'dashboard_widget'          => false,
 			'dismiss_notice'            => false,
@@ -64,7 +63,8 @@ class UR_AJAX {
 			'template_licence_check'    => false,
 			'captcha_setup_check'       => false,
 			'install_extension'         => false,
-			'create_form'               => true,
+			'profile_pic_remove'        => false,
+			'form_save_action'          => false,
 			'allow_usage_dismiss'       => false,
 			'cancel_email_change'       => false,
 			'email_setting_status'      => false,
@@ -718,6 +718,10 @@ class UR_AJAX {
 		global $wpdb;
 		try {
 			check_ajax_referer( 'process-locate-ajax-nonce', 'security' );
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( array( 'message' => __( 'You do not have permission.', 'user-registration' ) ) );
+				wp_die( -1 );
+			}
 			$id                          = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : '';
 			$user_registration_shortcode = '%[user_registration_form id="' . $id . '"%';
 			$form_id_shortcode           = '%{"formId":"' . $id . '"%';
@@ -783,6 +787,10 @@ class UR_AJAX {
 	public static function import_form_action() {
 		try {
 			check_ajax_referer( 'ur_import_form_save_nonce', 'security' );
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( array( 'message' => __( 'You do not have permission.', 'user-registration' ) ) );
+				wp_die( -1 );
+			}
 			UR_Admin_Import_Export_Forms::import_form();
 		} catch ( Exception $e ) {
 			wp_send_json_error(
@@ -885,15 +893,18 @@ class UR_AJAX {
 			if ( $post_id > 0 ) {
 				$_POST['data']['form_id'] = $post_id; // Form id for new form.
 
-             $post_data_setting = isset( $_POST['data']['form_setting_data'] ) ? $_POST['data']['form_setting_data'] : array(); //phpcs:ignore
+             	$post_data_setting = isset( $_POST['data']['form_setting_data'] ) ? $_POST['data']['form_setting_data'] : array(); //phpcs:ignore
+
 				if ( isset( $_POST['data']['form_restriction_submit_data'] ) && ! empty( $_POST['data']['form_restriction_submit_data'] ) ) {
-					$post_data_setting = array(
+					array_push(
+						$post_data_setting,
 						array(
 							'name'  => 'urfr_qna_restriction_data',
 							'value' => sanitize_text_field( wp_unslash( $_POST['data']['form_restriction_submit_data'] ) ),
-						),
+						)
 					);
 				}
+
 				ur_update_form_settings( $post_data_setting, $post_id );
 
 				// Form row_id save.
@@ -928,6 +939,10 @@ class UR_AJAX {
 	public static function dashboard_widget() {
 
 		check_ajax_referer( 'dashboard-widget', 'security' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission.', 'user-registration' ) ) );
+			wp_die( -1 );
+		}
 
 		$form_id = isset( $_POST['form_id'] ) ? wp_unslash( absint( $_POST['form_id'] ) ) : 0;
 
@@ -1403,6 +1418,10 @@ class UR_AJAX {
 		ob_start();
 
 		check_ajax_referer( 'user_registration_create_form', 'security' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to create form.', 'user-registration' ) ) );
+			wp_die( -1 );
+		}
 
 		$title    = isset( $_POST['title'] ) ? sanitize_text_field( wp_unslash( $_POST['title'] ) ) : esc_html__( 'Blank Form', 'user-registration' );
 		$template = isset( $_POST['template'] ) ? sanitize_text_field( wp_unslash( $_POST['template'] ) ) : 'blank';

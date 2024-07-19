@@ -1,3 +1,35 @@
+= 3.2.1.3  - 03/07/2024 =
+* Fix      - Remove unnecessary source map from build.
+
+= 3.2.1.2  - 24/06/2024 =
+* Tweak    - Redirect to dashboard addons page when extensions menu is clicked.
+* Dev      - Added filter hook to add extra section settings.
+* Dev      - Added filter hook for login redirection after auto login.
+* Fix      - MultiSite db prefix query issue.
+* Fix      - Duplicate error message for date field.
+* Fix      - Add capability and nonce for license activation and deactivation.
+
+= 3.2.1.1  - 06/06/2024 =
+* Dev      - Added filter hook to to check user instance.
+* Fix      - Notice not being dismissed.
+* Fix      - Function ur_get_screen_ids not defined.
+* Fix      - Check function exists before checking capabilities.
+
+= 3.2.1    - 31/05/2024 =
+* Enhance  - Smart tags picker design.
+* Enhance  - All forms list table design.
+* Enhance  - New user registered email added.
+* Enhance  - Admin approval email content updated.
+* Enhance  - WPML email translation with user selected language.
+* Tweak    - Enqueing style and script only to UR screens.
+* Dev      - Check user capability before performing action.
+* Dev      - Introduce function to get field value by field name while registration.
+* Fix      - Import Form Issue from Unpriviledge User.
+* Fix      - Disable the default WordPress not working.
+* Fix      - Deprecated function notices in getting started page.
+* Fix      - Conditionally hidden invite code throws required error message.
+* Fix      - Smart Phone Field required error message not displayed on submit.
+
 = 3.2.0.1  - 26/04/2024 =
 * Tweak    - Introduce new hook to modify token expiration duration.
 * Fix      - Unable to submit form due to TypeError.

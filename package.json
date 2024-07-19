@@ -1,7 +1,7 @@
 {
   "name": "user-registration",
   "title": "User Registration",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "homepage": "https://wpuserregistration.com/",
   "repository": {
     "type": "git",
@@ -78,7 +78,7 @@
     "@emotion/styled": "^11.6.0",
     "@wordpress/api-fetch": "^5.2.6",
     "@wordpress/data": "^9.22.0",
-    "chakra-react-select": "^3.0.1",
+    "chakra-react-select": "^4.7.6",
     "css-loader": "^6.5.1",
     "framer-motion": "^5.5.7",
     "grunt-cli": "^1.4.3",

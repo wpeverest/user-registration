@@ -134,9 +134,9 @@ class UR_Admin_Import_Export_Forms {
 	public static function import_form() {
 
 		// Check for $_FILES set or not.
-		if ( isset( $_FILES['jsonfile'] ) ) {
+		if ( isset( $_FILES['jsonfile'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Missing
 
-			$filename = isset( $_FILES['jsonfile']['name'] ) ? esc_html( sanitize_text_field( wp_unslash( $_FILES['jsonfile']['name'] ) ) ) : ''; // Get file name.
+			$filename = isset( $_FILES['jsonfile']['name'] ) ? esc_html( sanitize_text_field( wp_unslash( $_FILES['jsonfile']['name'] ) ) ) : ''; //phpcs:ignore WordPress.Security.NonceVerification.Missing
 			$ext      = pathinfo( $filename, PATHINFO_EXTENSION ); // Get file extention.
 
 			// Check for file format.

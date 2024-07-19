@@ -189,22 +189,26 @@ class UR_Admin_User_List_Manager {
 
 		// Remove previously set filter to get exact pending users count.
 		remove_filter( 'pre_get_users', array( $this, 'filter_users_by_approval_status' ) );
+		$prefix = $wpdb->prefix;
+		if (is_multisite()) {
+			$prefix = $wpdb->base_prefix;
+		}
 
 		$users = $wpdb->get_results(
 			"SELECT *
-			FROM {$wpdb->prefix}users AS users
-			JOIN {$wpdb->prefix}usermeta AS meta1 ON users.ID = meta1.user_id
+			FROM {$prefix}users AS users
+			JOIN {$prefix}usermeta AS meta1 ON users.ID = meta1.user_id
 			WHERE meta1.meta_key = 'ur_user_status' AND meta1.meta_value = '0'
 			AND (
 				((meta1.meta_key = 'ur_confirm_email' AND meta1.meta_value != '0')
 				OR NOT EXISTS (
-					SELECT 1 FROM {$wpdb->prefix}usermeta WHERE user_id = users.ID AND meta_key = 'ur_confirm_email'
+					SELECT 1 FROM {$prefix}usermeta WHERE user_id = users.ID AND meta_key = 'ur_confirm_email'
 				))
 				OR
 				(
 				(meta1.meta_key = 'ur_admin_approval_after_email_confirmation' AND meta1.meta_value = 'false')
 				OR NOT EXISTS (
-					SELECT 1 FROM {$wpdb->prefix}usermeta WHERE user_id = users.ID AND meta_key = 'ur_admin_approval_after_email_confirmation'
+					SELECT 1 FROM {$prefix}usermeta WHERE user_id = users.ID AND meta_key = 'ur_admin_approval_after_email_confirmation'
 				)
 			));"
 		);
@@ -243,8 +247,8 @@ class UR_Admin_User_List_Manager {
 		}
 
 		$message        = null;
-		$users_denied   = ( isset( $_GET['denied'] ) && is_numeric( $_GET['denied'] ) ) ? absint( $_GET['denied'] ) : null;
-		$users_approved = ( isset( $_GET['approved'] ) && is_numeric( $_GET['approved'] ) ) ? absint( $_GET['approved'] ) : null;
+		$users_denied   = ( isset( $_GET['denied'] ) && is_numeric( $_GET['denied'] ) ) ? absint( $_GET['denied'] ) : null; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$users_approved = ( isset( $_GET['approved'] ) && is_numeric( $_GET['approved'] ) ) ? absint( $_GET['approved'] ) : null; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		if ( $users_approved ) {
 			/* translators: %s - Number of users approved. */
@@ -384,11 +388,11 @@ class UR_Admin_User_List_Manager {
 
 		// Get the filter selector id for approval status and the selected status.
 		$status_id           = 'bottom' === $which ? 'ur_user_approval_status2' : 'ur_user_approval_status';
-		$status_filter_value = ( isset( $_GET[ $status_id ] ) && ! empty( $_GET[ $status_id ] ) ) ? sanitize_text_field( wp_unslash( $_GET[ $status_id ] ) ) : false;
+		$status_filter_value = ( isset( $_GET[ $status_id ] ) && ! empty( $_GET[ $status_id ] ) ) ? sanitize_text_field( wp_unslash( $_GET[ $status_id ] ) ) : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		// Get the filter selector id for specific forms and the selected form id.
 		$specific_form_id           = 'bottom' === $which ? 'ur_specific_form_user2' : 'ur_specific_form_user';
-		$specific_form_filter_value = ( isset( $_GET[ $specific_form_id ] ) && ! empty( $_GET[ $specific_form_id ] ) ) ? sanitize_text_field( wp_unslash( $_GET[ $specific_form_id ] ) ) : false;
+		$specific_form_filter_value = ( isset( $_GET[ $specific_form_id ] ) && ! empty( $_GET[ $specific_form_id ] ) ) ? sanitize_text_field( wp_unslash( $_GET[ $specific_form_id ] ) ) : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		$approved_label = UR_Admin_User_Manager::get_status_label( UR_Admin_User_Manager::APPROVED );
 		$pending_label  = UR_Admin_User_Manager::get_status_label( UR_Admin_User_Manager::PENDING );
@@ -442,19 +446,19 @@ class UR_Admin_User_List_Manager {
 	 */
 	public function filter_users_by_approval_status( $query ) {
 
-		$ur_user_filter_action = ( isset( $_REQUEST['ur_user_filter_action'] ) && ! empty( $_REQUEST['ur_user_filter_action'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['ur_user_filter_action'] ) ) : false;
+		$ur_user_filter_action = ( isset( $_REQUEST['ur_user_filter_action'] ) && ! empty( $_REQUEST['ur_user_filter_action'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['ur_user_filter_action'] ) ) : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		// Get the selected value of All UR Form from top or bottom All UR For filter.
-		$all_ur_user  = ( isset( $_REQUEST['ur_specific_form_user'] ) && ! empty( $_REQUEST['ur_specific_form_user'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['ur_specific_form_user'] ) ) : false;
-		$all_ur_user2 = ( isset( $_REQUEST['ur_specific_form_user2'] ) && ! empty( $_REQUEST['ur_specific_form_user2'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['ur_specific_form_user2'] ) ) : false;
+		$all_ur_user  = ( isset( $_REQUEST['ur_specific_form_user'] ) && ! empty( $_REQUEST['ur_specific_form_user'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['ur_specific_form_user'] ) ) : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$all_ur_user2 = ( isset( $_REQUEST['ur_specific_form_user2'] ) && ! empty( $_REQUEST['ur_specific_form_user2'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['ur_specific_form_user2'] ) ) : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		// Get the selected value of user approval status from top or bottom user approval filter.
-		$ur_user_approval_status  = ( isset( $_REQUEST['ur_user_approval_status'] ) && ! empty( $_REQUEST['ur_user_approval_status'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['ur_user_approval_status'] ) ) : false;
-		$ur_user_approval_status2 = ( isset( $_REQUEST['ur_user_approval_status2'] ) && ! empty( $_REQUEST['ur_user_approval_status2'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['ur_user_approval_status2'] ) ) : false;
+		$ur_user_approval_status  = ( isset( $_REQUEST['ur_user_approval_status'] ) && ! empty( $_REQUEST['ur_user_approval_status'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['ur_user_approval_status'] ) ) : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$ur_user_approval_status2 = ( isset( $_REQUEST['ur_user_approval_status2'] ) && ! empty( $_REQUEST['ur_user_approval_status2'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['ur_user_approval_status2'] ) ) : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		// Get the selected id of specific form from top or bottom user form filter.
-		$ur_specific_form_user  = ( isset( $_REQUEST['ur_specific_form_user'] ) && ! empty( $_REQUEST['ur_specific_form_user'] ) ) ? absint( wp_unslash( $_REQUEST['ur_specific_form_user'] ) ) : false;
-		$ur_specific_form_user2 = ( isset( $_REQUEST['ur_specific_form_user2'] ) && ! empty( $_REQUEST['ur_specific_form_user2'] ) ) ? absint( wp_unslash( $_REQUEST['ur_specific_form_user2'] ) ) : false;
+		$ur_specific_form_user  = ( isset( $_REQUEST['ur_specific_form_user'] ) && ! empty( $_REQUEST['ur_specific_form_user'] ) ) ? absint( wp_unslash( $_REQUEST['ur_specific_form_user'] ) ) : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$ur_specific_form_user2 = ( isset( $_REQUEST['ur_specific_form_user2'] ) && ! empty( $_REQUEST['ur_specific_form_user2'] ) ) ? absint( wp_unslash( $_REQUEST['ur_specific_form_user2'] ) ) : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		if ( ! $ur_user_filter_action ) {
 			return;
