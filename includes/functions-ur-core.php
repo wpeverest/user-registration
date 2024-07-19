@@ -3806,11 +3806,14 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				if ( isset( $user->user_login ) ) {
 					$login_data['user_login'] = $user->user_login;
 				} else {
-					if ( empty( $messages['unknown_email'] ) ) {
-						$messages['unknown_email'] = esc_html__( 'A user could not be found with this email address.', 'user-registration' );
-					}
+					$user = get_user_by( 'login', $username );
 
-					throw new Exception( '<strong>' . esc_html__( 'ERROR: ', 'user-registration' ) . '</strong>' . $messages['unknown_email'] );
+					if ( isset( $user->user_login ) ) {
+						$login_data['user_login'] = $user->user_login;
+					} elseif ( empty( $messages['unknown_email'] ) ) {
+						$messages['unknown_email'] = esc_html__( 'A user could not be found with this email address.', 'user-registration' );
+						throw new Exception( '<strong>' . esc_html__( 'ERROR: ', 'user-registration' ) . '</strong>' . $messages['unknown_email'] );
+					}
 				}
 			} else {
 				$login_data['user_login'] = $username;
