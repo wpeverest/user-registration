@@ -509,6 +509,30 @@ jQuery(function ($) {
 		}
 	});
 
+	// Toggle Akismet Settings
+	$(document).ready(function () {
+		wrapper = $("#user_registration_enable_akismet_field");
+		var akismet_activate = $(
+			"#user_registration_enable_akismet"
+		);
+		var	akismet_message = $(
+			"#user_registration_akismet_warning_field"
+		);
+		if (akismet_activate.is(":checked")) {
+			akismet_message.show();
+		} else {
+			akismet_message.hide();
+		}
+		akismet_activate.change(function () {
+			if ($(this).is(":checked")) {
+				akismet_message.show();
+			} else {
+				akismet_message.hide();
+			}
+		});
+
+	})
+
 	$(strong_password_field).on("change", function () {
 		enable_strong_password = $(this).is(":checked");
 
