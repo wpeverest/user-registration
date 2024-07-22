@@ -951,6 +951,7 @@ function ur_get_general_settings( $id ) {
 			'file',
 			'mailchimp',
 			'hidden',
+			'signature',
 		)
 	);
 	$strip_id            = str_replace( 'user_registration_', '', $id );
@@ -2414,7 +2415,11 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 			$value = implode( ',', $value );
 		}
 
-		$data_html .= '<tr><td>' . $label . ' : </td><td>' . $value . '</td></tr>';
+		if ( isset( $form_data->extra_params['field_key'] ) && 'signature' === $form_data->extra_params['field_key'] ) {
+			$data_html .= '<tr><td>' . $label . ' : </td><td><img class="profile-preview" alt="Signature" width="50px" height="50px" src="' . ( is_numeric( $value ) ? esc_url( wp_get_attachment_url( $value ) ) : esc_url( $value ) ) . '" /></td></tr>';
+		} else {
+			$data_html .= '<tr><td>' . $label . ' : </td><td>' . $value . '</td></tr>';
+		}
 
 		$name_value[ $field_name ] = $value;
 	}
@@ -3034,6 +3039,10 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 				break;
 			case 'profile_picture':
 				$field_value = '<img class="profile-preview" alt="Profile Picture" width="50px" height="50px" src="' . ( is_numeric( $field_value ) ? esc_url( wp_get_attachment_url( $field_value ) ) : esc_url( $field_value ) ) . '" />';
+				$field_value = wp_kses_post( $field_value );
+				break;
+			case 'signature':
+				$field_value = '<img class="profile-preview" alt="Signature" width="50px" height="50px" src="' . ( is_numeric( $field_value ) ? esc_url( wp_get_attachment_url( $field_value ) ) : esc_url( $field_value ) ) . '" />';
 				$field_value = wp_kses_post( $field_value );
 				break;
 			default:
@@ -4274,17 +4283,18 @@ if ( ! function_exists( 'user_registration_process_email_content' ) ) {
 			$email_body_width = apply_filters( 'user_registration_email_body_width', $default_width );
 			ob_start();
 			?>
-			<div class="user-registration-email-body" style="padding: 100px 0; background-color: #ebebeb;">
-				<table class="user-registration-email" border="0" cellpadding="0" cellspacing="0" style="width: <?php echo esc_attr( $email_body_width ); ?>; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
-					<tbody>
-						<tr>
-							<td colspan="2" style="text-align: left;">
-								<?php echo wp_kses_post( $email_content ); ?>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
+<div class="user-registration-email-body" style="padding: 100px 0; background-color: #ebebeb;">
+	<table class="user-registration-email" border="0" cellpadding="0" cellspacing="0"
+		style="width: <?php echo esc_attr( $email_body_width ); ?>; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
+		<tbody>
+			<tr>
+				<td colspan="2" style="text-align: left;">
+					<?php echo wp_kses_post( $email_content ); ?>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
 			<?php
 			$email_content = wp_kses_post( ob_get_clean() );
 		}

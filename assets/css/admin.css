@@ -852,6 +852,15 @@
 .ur-icon-captcha-field::before {
   content: ""; }
 
+.ur-icon-membership-field::before {
+  content: ""; }
+
+.ur-icon-coupon-field::before {
+  content: ""; }
+
+.ur-icon-e-signature::before {
+  content: ""; }
+
 .user-registration-table {
   width: 100%;
   background: #ffffff;
