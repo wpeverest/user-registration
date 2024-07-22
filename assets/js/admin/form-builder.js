@@ -359,6 +359,18 @@
 					"user_registration_admin_before_form_submit",
 					[data]
 				);
+
+				// validation for unsupported currency by paypal.
+				if (
+					typeof data.data.ur_payment_disabled !== "undefined" &&
+					data.data.ur_payment_disabled[0].validation_status === false
+				) {
+					URFormBuilder.show_message(
+						data.data.ur_payment_disabled[0].validation_message
+					);
+					return;
+				}
+
 				// validation for unsupported currency by paypal.
 				if (
 					typeof data.data.ur_invalid_currency_status !==
@@ -600,6 +612,7 @@
 						user_registration_form_builder_data.i18n_admin.i18n_empty_form_name;
 					return response;
 				}
+
 				if (
 					$(".ur_save_form_action_button").find(".ur-spinner")
 						.length > 0
@@ -3018,19 +3031,19 @@
 
 							// Get html of selected countries
 							if (Array.isArray(selected_countries_iso_s)) {
-								selected_countries_iso_s.forEach(
-									function (iso) {
-										var country_name = $(self)
-											.find('option[value="' + iso + '"]')
-											.html();
-										html +=
-											'<option value="' +
-											iso +
-											'">' +
-											country_name +
-											"</option>";
-									}
-								);
+								selected_countries_iso_s.forEach(function (
+									iso
+								) {
+									var country_name = $(self)
+										.find('option[value="' + iso + '"]')
+										.html();
+									html +=
+										'<option value="' +
+										iso +
+										'">' +
+										country_name +
+										"</option>";
+								});
 							}
 
 							// Update default_value options in `Field Options` tab
