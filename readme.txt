@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 5.2
 Requires PHP: 7.2
-Tested up to: 6.5.3
-Stable tag: 3.2.1
+Tested up to: 6.5.4
+Stable tag: 3.2.1.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -237,6 +237,23 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 3.2.1.3  - 03/07/2024 =
+* Fix      - Remove unnecessary source map from build.
+
+= 3.2.1.2  - 24/06/2024 =
+* Tweak    - Redirect to dashboard addons page when extensions menu is clicked.
+* Dev      - Added filter hook to add extra section settings.
+* Dev      - Added filter hook for login redirection after auto login.
+* Fix      - MultiSite db prefix query issue.
+* Fix      - Duplicate error message for date field.
+* Fix      - Add capability and nonce for license activation and deactivation.
+
+= 3.2.1.1  - 06/06/2024 =
+* Dev      - Added filter hook to to check user instance.
+* Fix      - Notice not being dismissed.
+* Fix      - Function ur_get_screen_ids not defined.
+* Fix      - Check function exists before checking capabilities.
 
 = 3.2.1    - 31/05/2024 =
 * Enhance  - Smart tags picker design.

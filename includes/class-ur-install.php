@@ -535,9 +535,13 @@ CREATE TABLE {$wpdb->prefix}user_registration_sessions (
 	 */
 	public static function get_tables() {
 		global $wpdb;
+		$prefix = $wpdb->prefix;
+		if (is_multisite()) {
+			$prefix = $wpdb->base_prefix;
+		}
 
 		$tables = array(
-			"{$wpdb->prefix}user_registration_sessions",
+			"{$prefix}user_registration_sessions",
 		);
 
 		return $tables;

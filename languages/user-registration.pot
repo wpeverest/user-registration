@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the User Registration plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 3.2.1\n"
+"Project-Id-Version: User Registration 3.2.1.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-registration\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-05-31T06:14:21+00:00\n"
+"POT-Creation-Date: 2024-07-03T03:36:53+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: user-registration\n"
@@ -121,42 +121,42 @@ msgid "All"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:224
-#: includes/admin/class-ur-admin-menus.php:674
+#: includes/admin/class-ur-admin-menus.php:683
 msgid "Give it a name."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:225
-#: includes/admin/class-ur-admin-menus.php:675
+#: includes/admin/class-ur-admin-menus.php:684
 msgid "You must provide a Form name"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:226
-#: includes/admin/class-ur-admin-menus.php:676
+#: includes/admin/class-ur-admin-menus.php:685
 msgid "Activate Plugins"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:227
-#: includes/admin/class-ur-admin-menus.php:677
+#: includes/admin/class-ur-admin-menus.php:686
 msgid "Activating"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:228
-#: includes/admin/class-ur-admin-menus.php:679
+#: includes/admin/class-ur-admin-menus.php:688
 msgid "Install & Activate"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:229
-#: includes/admin/class-ur-admin-menus.php:680
+#: includes/admin/class-ur-admin-menus.php:689
 msgid "Installing"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:230
-#: includes/admin/class-ur-admin-menus.php:681
+#: includes/admin/class-ur-admin-menus.php:690
 msgid "OK"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:238
-#: includes/admin/class-ur-admin-menus.php:689
+#: includes/admin/class-ur-admin-menus.php:698
 #: includes/class-ur-ajax.php:1534
 #: includes/functions-ur-core.php:3610
 #: src/dashboard/screens/Modules/components/ModuleBody.js:116
@@ -165,37 +165,37 @@ msgid "Upgrade Plan"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:239
-#: includes/admin/class-ur-admin-menus.php:690
+#: includes/admin/class-ur-admin-menus.php:699
 msgid "This template requires premium addons. Please upgrade to the Premium plan to unlock all these awesome Templates."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:240
-#: includes/admin/class-ur-admin-menus.php:691
+#: includes/admin/class-ur-admin-menus.php:700
 msgid "is a Premium Template"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:241
-#: includes/admin/class-ur-admin-menus.php:692
+#: includes/admin/class-ur-admin-menus.php:701
 msgid "Continue"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:242
-#: includes/admin/class-ur-admin-menus.php:693
+#: includes/admin/class-ur-admin-menus.php:702
 msgid "Untitled Form"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:243
-#: includes/admin/class-ur-admin-menus.php:694
+#: includes/admin/class-ur-admin-menus.php:703
 msgid "Uplift your form experience to the next level."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:244
-#: includes/admin/class-ur-admin-menus.php:695
+#: includes/admin/class-ur-admin-menus.php:704
 msgid "Download Failed. Please download and activate addon manually."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:245
-#: includes/admin/class-ur-admin-menus.php:696
+#: includes/admin/class-ur-admin-menus.php:705
 msgid "Installation Successful."
 msgstr ""
 
@@ -204,12 +204,12 @@ msgid "Addons have been Installed and Activated. You have to reload the page."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:247
-#: includes/admin/class-ur-admin-menus.php:698
+#: includes/admin/class-ur-admin-menus.php:707
 msgid "Save Changes and Reload"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:248
-#: includes/admin/class-ur-admin-menus.php:700
+#: includes/admin/class-ur-admin-menus.php:709
 msgid "Just Reload"
 msgstr ""
 
@@ -227,362 +227,362 @@ msgstr ""
 msgid "Select Image"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:281
+#: includes/admin/class-ur-admin-assets.php:282
 msgctxt "enhanced select"
 msgid "No matches found"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:282
+#: includes/admin/class-ur-admin-assets.php:283
 msgctxt "enhanced select"
 msgid "Loading failed"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:283
+#: includes/admin/class-ur-admin-assets.php:284
 msgctxt "enhanced select"
 msgid "Please enter 1 or more characters"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:284
+#: includes/admin/class-ur-admin-assets.php:285
 msgctxt "enhanced select"
 msgid "Please enter %qty% or more characters"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:285
+#: includes/admin/class-ur-admin-assets.php:286
 msgctxt "enhanced select"
 msgid "Please delete 1 character"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:286
+#: includes/admin/class-ur-admin-assets.php:287
 msgctxt "enhanced select"
 msgid "Please delete %qty% characters"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:287
+#: includes/admin/class-ur-admin-assets.php:288
 msgctxt "enhanced select"
 msgid "You can only select 1 item"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:288
+#: includes/admin/class-ur-admin-assets.php:289
 msgctxt "enhanced select"
 msgid "You can only select %qty% items"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:289
+#: includes/admin/class-ur-admin-assets.php:290
 msgctxt "enhanced select"
 msgid "Loading more results&hellip;"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:290
+#: includes/admin/class-ur-admin-assets.php:291
 msgctxt "enhanced select"
 msgid "Searching&hellip;"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:302
+#: includes/admin/class-ur-admin-assets.php:303
 msgid "Could not install."
 msgstr ""
 
 #. translators: %field%: Field Label
-#: includes/admin/class-ur-admin-assets.php:333
+#: includes/admin/class-ur-admin-assets.php:334
 msgid "%field% field is Locked."
 msgstr ""
 
 #. translators: %field%: Field Label
-#: includes/admin/class-ur-admin-assets.php:335
+#: includes/admin/class-ur-admin-assets.php:336
 msgid "%field% field can be used only one time in the form."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:337
+#: includes/admin/class-ur-admin-assets.php:338
 msgid "Keyboard Shortcut Keys"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:339
+#: includes/admin/class-ur-admin-assets.php:340
 msgid "Save Builder"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:340
+#: includes/admin/class-ur-admin-assets.php:341
 msgid "Close Builder"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:341
+#: includes/admin/class-ur-admin-assets.php:342
 #: includes/admin/views/html-admin-page-forms.php:55
 msgid "Preview Form"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:342
+#: includes/admin/class-ur-admin-assets.php:343
 msgid "Go to Users"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:343
+#: includes/admin/class-ur-admin-assets.php:344
 msgid "Open Help"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:345
+#: includes/admin/class-ur-admin-assets.php:346
 #: includes/admin/class-ur-admin-menus.php:576
 #: includes/admin/class-ur-admin-menus.php:577
-#: includes/admin/class-ur-admin-menus.php:1000
+#: includes/admin/class-ur-admin-menus.php:1009
 #: includes/admin/class-ur-admin-registrations-table-list.php:193
 #: includes/functions-ur-core.php:4534
 msgid "Add New"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:356
+#: includes/admin/class-ur-admin-assets.php:357
 msgid "Minimum one letter"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:357
+#: includes/admin/class-ur-admin-assets.php:358
 msgid "Minimum one uppercase letter and must be 4 characters and no repetitive words or common words"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:358
+#: includes/admin/class-ur-admin-assets.php:359
 msgid "Minimum one uppercase letter, a number, must be 7 characters and no repetitive words or common words"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:359
+#: includes/admin/class-ur-admin-assets.php:360
 msgid "Minimum one uppercase letter, a number, a special character, must be 9 characters and no repetitive words or common words"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:368
+#: includes/admin/class-ur-admin-assets.php:369
 msgid "Form not found in content"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:369
+#: includes/admin/class-ur-admin-assets.php:370
 msgid "Form found in page:"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:379
+#: includes/admin/class-ur-admin-assets.php:380
 #: includes/admin/views/html-admin-page-import-export-forms.php:49
 msgid "No file selected."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:380
+#: includes/admin/class-ur-admin-assets.php:381
 msgid "Please choose at least one form to export."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:381
+#: includes/admin/class-ur-admin-assets.php:382
 #: src/dashboard/screens/Help/Help.js:124
 msgid "Smart Tags"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:382
+#: includes/admin/class-ur-admin-assets.php:383
 msgid "Search Tags..."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:394
+#: includes/admin/class-ur-admin-assets.php:395
 msgid "Enabled"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:395
+#: includes/admin/class-ur-admin-assets.php:396
 msgid "Disabled"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:404
+#: includes/admin/class-ur-admin-assets.php:405
 msgid "is a premium field"
 msgstr ""
 
 #. translators: %field%: Field Label %plan%: License Plan.
-#: includes/admin/class-ur-admin-assets.php:406
+#: includes/admin/class-ur-admin-assets.php:407
 msgid "%field% field is locked. Upgrade to <strong>%plan%</strong> to unlock this field."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:407
+#: includes/admin/class-ur-admin-assets.php:408
 #: src/dashboard/screens/Modules/components/ModuleBody.js:82
 msgid "License Activation Required"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:408
+#: includes/admin/class-ur-admin-assets.php:409
 msgid "Please activate your <strong>User Registration License</strong> to use this field"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:409
+#: includes/admin/class-ur-admin-assets.php:410
 msgid "Addon Activation Required"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:410
+#: includes/admin/class-ur-admin-assets.php:411
 msgid "Please activate <strong>%plugin%</strong> addon to use this field."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:411
+#: includes/admin/class-ur-admin-assets.php:412
 msgid "Addon Installation Required"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:412
+#: includes/admin/class-ur-admin-assets.php:413
 msgid "Please install <strong>%plugin%</strong> addon to use this field."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:516
+#: includes/admin/class-ur-admin-assets.php:515
 msgid "Clone"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:516
+#: includes/admin/class-ur-admin-assets.php:515
 #: includes/admin/class-ur-admin-registrations-table-list.php:108
 msgid "Trash"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:538
+#: includes/admin/class-ur-admin-assets.php:537
 msgid "Delete"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:539
+#: includes/admin/class-ur-admin-assets.php:538
 #: includes/admin/class-ur-admin-form-modal.php:118
 #: src/dashboard/components/common/UsePluginInstallActivate.js:166
 msgid "Cancel"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:540
+#: includes/admin/class-ur-admin-assets.php:539
 msgctxt "user-registration admin"
 msgid "User Email"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:541
+#: includes/admin/class-ur-admin-assets.php:540
 msgctxt "user-registration admin"
 msgid "User Password"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:542
+#: includes/admin/class-ur-admin-assets.php:541
 msgctxt "user-registration admin"
 msgid "Payment"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:543
+#: includes/admin/class-ur-admin-assets.php:542
 msgctxt "user-registration admin"
 msgid "Stripe Gateway"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:544
+#: includes/admin/class-ur-admin-assets.php:543
 msgctxt "user registration admin"
 msgid "Are you sure want to delete this row?"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:545
+#: includes/admin/class-ur-admin-assets.php:544
 msgctxt "user registration admin"
 msgid "Are you sure want to delete this field?"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:546
+#: includes/admin/class-ur-admin-assets.php:545
 msgctxt "user registration admin"
 msgid "At least one row is required to create a registration form."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:547
+#: includes/admin/class-ur-admin-assets.php:546
 msgctxt "user registration admin"
 msgid "Cannot delete row"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:548
+#: includes/admin/class-ur-admin-assets.php:547
 msgctxt "user registration admin"
 msgid "This field is one time draggable."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:549
+#: includes/admin/class-ur-admin-assets.php:548
 msgctxt "user registration admin"
 msgid "Could not clone this field."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:550
+#: includes/admin/class-ur-admin-assets.php:549
 msgctxt "user registration admin"
 msgid "Form successfully saved."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:551
+#: includes/admin/class-ur-admin-assets.php:550
 msgctxt "user registration admin"
 msgid "Success"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:552
+#: includes/admin/class-ur-admin-assets.php:551
 msgctxt "user registration admin"
 msgid "Error"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:553
+#: includes/admin/class-ur-admin-assets.php:552
 msgid "Confirm Deletion"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:554
+#: includes/admin/class-ur-admin-assets.php:553
 msgctxt "user registration admin"
 msgid "At least one field needs to be selected."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:555
+#: includes/admin/class-ur-admin-assets.php:554
 msgctxt "user registration admin"
 msgid "Empty form name."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:556
+#: includes/admin/class-ur-admin-assets.php:555
 msgctxt "user registration admin"
 msgid "Previous save action on going."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:557
+#: includes/admin/class-ur-admin-assets.php:556
 msgctxt "user registration admin"
 msgid "Duplicate field name."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:558
+#: includes/admin/class-ur-admin-assets.php:557
 msgctxt "user registration admin"
 msgid "Empty field label."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:559
+#: includes/admin/class-ur-admin-assets.php:558
 msgctxt "user registration admin"
 msgid "Invalid field name. Please do not use space, empty or special character, you can use underscore."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:560
+#: includes/admin/class-ur-admin-assets.php:559
 msgctxt "user registration admin"
 msgid "Multiple field key "
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:561
+#: includes/admin/class-ur-admin-assets.php:560
 msgctxt "user registration admin"
 msgid "field is required."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:562
+#: includes/admin/class-ur-admin-assets.php:561
 msgctxt "user registration admin"
 msgid "Drag your first form item here."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:563
+#: includes/admin/class-ur-admin-assets.php:562
 msgctxt "user registration admin"
 msgid "Please select at least one country."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:564
+#: includes/admin/class-ur-admin-assets.php:563
 msgctxt "user registration admin"
 msgid "input size must be greater than zero."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:565
+#: includes/admin/class-ur-admin-assets.php:564
 msgctxt "user registration admin"
 msgid "input of min value must be less than max value."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:566
+#: includes/admin/class-ur-admin-assets.php:565
 msgctxt "user registration admin"
 msgid "input of max upload size must less than "
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:567
+#: includes/admin/class-ur-admin-assets.php:566
 msgid "You cannot set the zero less than zero to the completion percentage."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:568
+#: includes/admin/class-ur-admin-assets.php:567
 msgid "Sum of progress percentage for each field cannot be greater than the completion perecentage."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:569
+#: includes/admin/class-ur-admin-assets.php:568
 msgid "User Email field should me mapped."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:570
+#: includes/admin/class-ur-admin-assets.php:569
 msgid "Look like your sheet is empty ! Please try again"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:571
+#: includes/admin/class-ur-admin-assets.php:570
 msgid "Form Restriction: Empty Question or Answer field."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:572
+#: includes/admin/class-ur-admin-assets.php:571
 msgid "Form Restriction: Q&A restriction requires at least one question and answer."
 msgstr ""
 
@@ -773,7 +773,7 @@ msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:486
 #: includes/admin/class-ur-admin-menus.php:487
-#: includes/admin/class-ur-admin-user-list-manager.php:419
+#: includes/admin/class-ur-admin-user-list-manager.php:423
 #: includes/functions-ur-core.php:4525
 msgid "All Forms"
 msgstr ""
@@ -822,55 +822,55 @@ msgstr ""
 msgid "Extensions"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:650
+#: includes/admin/class-ur-admin-menus.php:659
 msgid "Create Form"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:652
+#: includes/admin/class-ur-admin-menus.php:661
 msgid "Update form"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:678
+#: includes/admin/class-ur-admin-menus.php:687
 msgid "Please wait until the plugin is being activated"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:697
+#: includes/admin/class-ur-admin-menus.php:706
 msgid "Addons have been installed and Activated. You have to reload the page."
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:699
+#: includes/admin/class-ur-admin-menus.php:708
 msgid "Save changes before activating the plugin"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:743
+#: includes/admin/class-ur-admin-menus.php:752
 msgid "User Registration endpoints"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:767
+#: includes/admin/class-ur-admin-menus.php:776
 #: includes/class-ur-query.php:78
 msgid "Lost password"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:811
+#: includes/admin/class-ur-admin-menus.php:820
 #: includes/functions-ur-template.php:380
 #: includes/functions-ur-template.php:424
 msgid "Select All"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:816
+#: includes/admin/class-ur-admin-menus.php:825
 msgid "Add to menu"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:869
+#: includes/admin/class-ur-admin-menus.php:878
 #: includes/admin/views/html-admin-page-forms.php:156
 msgid "Untitled"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:989
+#: includes/admin/class-ur-admin-menus.php:998
 msgid "Drag your first form item here."
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:1015
+#: includes/admin/class-ur-admin-menus.php:1024
 msgid "Empty form data"
 msgstr ""
 
@@ -1006,23 +1006,23 @@ msgstr ""
 msgid "You have some unsaved changes. Please save and try again."
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:650
+#: includes/admin/class-ur-admin-settings.php:662
 msgid "Select a page&hellip;"
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:713
+#: includes/admin/class-ur-admin-settings.php:725
 msgid "Header Logo"
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:714
+#: includes/admin/class-ur-admin-settings.php:726
 msgid "Upload Image"
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:715
+#: includes/admin/class-ur-admin-settings.php:727
 msgid "Remove Image"
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:1160
+#: includes/admin/class-ur-admin-settings.php:1181
 msgid "No Search result found !"
 msgstr ""
 
@@ -1041,12 +1041,12 @@ msgctxt "The action on users list page"
 msgid "Deny"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:220
+#: includes/admin/class-ur-admin-user-list-manager.php:224
 msgid "User Registration:"
 msgstr ""
 
 #. translators: 1: Newly registered user count 2: User
-#: includes/admin/class-ur-admin-user-list-manager.php:220
+#: includes/admin/class-ur-admin-user-list-manager.php:224
 #: includes/admin/class-ur-admin.php:436
 #: includes/admin/settings/class-ur-settings-email.php:254
 msgid "User"
@@ -1054,94 +1054,94 @@ msgid_plural "Users"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:220
+#: includes/admin/class-ur-admin-user-list-manager.php:224
 msgid "Users"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:220
+#: includes/admin/class-ur-admin-user-list-manager.php:224
 msgid "pending approval."
 msgstr ""
 
 #. translators: %s - Number of users approved.
-#: includes/admin/class-ur-admin-user-list-manager.php:251
+#: includes/admin/class-ur-admin-user-list-manager.php:255
 msgid "User Approved: %s users approved."
 msgstr ""
 
 #. translators: %s - Number of users denied.
-#: includes/admin/class-ur-admin-user-list-manager.php:254
+#: includes/admin/class-ur-admin-user-list-manager.php:258
 msgid "User Denied: %s users denied."
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:282
+#: includes/admin/class-ur-admin-user-list-manager.php:286
 msgid "Source"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:283
+#: includes/admin/class-ur-admin-user-list-manager.php:287
 msgid "Registered At"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:308
-#: includes/admin/class-ur-admin-user-list-manager.php:397
-#: includes/admin/class-ur-admin-user-manager.php:486
+#: includes/admin/class-ur-admin-user-list-manager.php:312
+#: includes/admin/class-ur-admin-user-list-manager.php:401
+#: includes/admin/class-ur-admin-user-manager.php:495
 msgid "Awaiting Email Confirmation"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:405
+#: includes/admin/class-ur-admin-user-list-manager.php:409
 msgid "All statuses"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:407
+#: includes/admin/class-ur-admin-user-list-manager.php:411
 msgid "All approval statuses"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:421
+#: includes/admin/class-ur-admin-user-list-manager.php:425
 msgid "All Sources"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:423
+#: includes/admin/class-ur-admin-user-list-manager.php:427
 msgid "All UR Forms"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:435
+#: includes/admin/class-ur-admin-user-list-manager.php:439
 msgid "Filter"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:543
-#: includes/admin/class-ur-admin-user-list-manager.php:545
+#: includes/admin/class-ur-admin-user-list-manager.php:547
+#: includes/admin/class-ur-admin-user-list-manager.php:549
 msgid "Approve"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:548
-#: includes/admin/class-ur-admin-user-list-manager.php:550
+#: includes/admin/class-ur-admin-user-list-manager.php:552
+#: includes/admin/class-ur-admin-user-list-manager.php:554
 msgid "Deny"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:554
 #: includes/admin/class-ur-admin-user-list-manager.php:558
+#: includes/admin/class-ur-admin-user-list-manager.php:562
 msgid "Resend Verification Email"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:653
+#: includes/admin/class-ur-admin-user-list-manager.php:657
 msgid "Approval Status"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-list-manager.php:667
+#: includes/admin/class-ur-admin-user-list-manager.php:671
 msgid "If user has access to sign in or not."
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-manager.php:62
+#: includes/admin/class-ur-admin-user-manager.php:71
 msgid "Impossible to create an UR_Admin_User_Manager object. Unkwon data type."
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-manager.php:441
+#: includes/admin/class-ur-admin-user-manager.php:450
 msgid "approved"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-manager.php:445
+#: includes/admin/class-ur-admin-user-manager.php:454
 msgid "pending"
 msgstr ""
 
-#: includes/admin/class-ur-admin-user-manager.php:449
+#: includes/admin/class-ur-admin-user-manager.php:458
 msgid "denied"
 msgstr ""
 
@@ -1242,8 +1242,8 @@ msgid "Maybe later"
 msgstr ""
 
 #: includes/admin/functions-ur-admin.php:628
-#: includes/class-ur-plugin-updater.php:606
-#: includes/class-ur-plugin-updater.php:629
+#: includes/class-ur-plugin-updater.php:622
+#: includes/class-ur-plugin-updater.php:645
 msgid "I have a query"
 msgstr ""
 
@@ -2137,33 +2137,33 @@ msgstr ""
 msgid "Please enter the license key"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-license.php:98
-#: includes/admin/settings/class-ur-settings-license.php:106
-#: includes/class-ur-plugin-updater.php:305
+#: includes/admin/settings/class-ur-settings-license.php:103
+#: includes/admin/settings/class-ur-settings-license.php:111
+#: includes/class-ur-plugin-updater.php:320
 msgid "Deactivate License"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-license.php:100
+#: includes/admin/settings/class-ur-settings-license.php:105
 msgid "Deactivate the license of User Registration plugin"
 msgstr ""
 
 #. translators: %1$s - WPeverest My Account url
-#: includes/admin/settings/class-ur-settings-license.php:119
+#: includes/admin/settings/class-ur-settings-license.php:124
 msgid "Your license has been activated. Enjoy using <strong>User Registration</strong>. Please go to %1$sMy Account Page%2$s for more details "
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-license.php:169
+#: includes/admin/settings/class-ur-settings-license.php:174
 #: includes/class-ur-ajax.php:1531
 #: src/dashboard/screens/Modules/components/ModuleBody.js:94
 #: src/dashboard/screens/Modules/components/ModuleBody.js:99
 msgid "Activate License"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-license.php:188
+#: includes/admin/settings/class-ur-settings-license.php:193
 msgid "License Plan"
 msgstr ""
 
-#: includes/admin/settings/class-ur-settings-license.php:193
+#: includes/admin/settings/class-ur-settings-license.php:198
 msgid "License Expiry Date"
 msgstr ""
 
@@ -2656,20 +2656,20 @@ msgid ""
 msgstr ""
 
 #. translators: 1: Plugin Name, 2: Changelog Link, 3: New Version, 4: Link Close
-#: includes/admin/updater/class-ur-addon-updater.php:311
+#: includes/admin/updater/class-ur-addon-updater.php:313
 msgid "There is a new version of %1$s available. %2$sView version %3$s details%4$s."
 msgstr ""
 
 #. translators: 1: Plugin Name, 2: Changelog Link, 3: New Version, 4: Link Close, 5: Upgrade Plugin Link, 6: Link Close
-#: includes/admin/updater/class-ur-addon-updater.php:320
+#: includes/admin/updater/class-ur-addon-updater.php:322
 msgid "There is a new version of %1$s available. %2$sView version %3$s details%4$s or %5$supdate now%6$s."
 msgstr ""
 
-#: includes/admin/updater/class-ur-addon-updater.php:589
+#: includes/admin/updater/class-ur-addon-updater.php:591
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
-#: includes/admin/updater/class-ur-addon-updater.php:589
+#: includes/admin/updater/class-ur-addon-updater.php:591
 msgid "Error"
 msgstr ""
 
@@ -2918,15 +2918,15 @@ msgstr ""
 msgid "By submitting this form, you will also be sending us your email address & website URL."
 msgstr ""
 
-#: includes/admin/views/html-license-form.php:20
+#: includes/admin/views/html-license-form.php:23
 msgid "License:"
 msgstr ""
 
-#: includes/admin/views/html-license-form.php:21
+#: includes/admin/views/html-license-form.php:24
 msgid "XXXX-XXXX-XXXX-XXXX"
 msgstr ""
 
-#: includes/admin/views/html-license-form.php:22
+#: includes/admin/views/html-license-form.php:25
 msgid "Enter your license key and hit return. A valid key is required for updates."
 msgstr ""
 
@@ -3547,110 +3547,110 @@ msgstr ""
 msgid "UR_Logger::log was called with an invalid level \"%s\"."
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:305
+#: includes/class-ur-plugin-updater.php:320
 msgid "Deactivate License Key"
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:343
+#: includes/class-ur-plugin-updater.php:358
 msgid "The provided license key expired on %1$s. Please <a href=\"%2$s\" target=\"_blank\">renew your license key</a>."
 msgstr ""
 
 #. translators: %s: Contact Support URL
-#: includes/class-ur-plugin-updater.php:348
+#: includes/class-ur-plugin-updater.php:363
 msgid "The provided license key has been disabled. Please <a href=\"%s\" target=\"_blank\">contact support</a> for more information."
 msgstr ""
 
 #. translators: %s: Account Page URL
-#: includes/class-ur-plugin-updater.php:353
+#: includes/class-ur-plugin-updater.php:368
 msgid "The provided license is invalid. Please <a href=\"%s\" target=\"_blank\">visit your account page</a> and verify it."
 msgstr ""
 
 #. translators: %s: Account Page URL
-#: includes/class-ur-plugin-updater.php:359
+#: includes/class-ur-plugin-updater.php:374
 msgid "The provided license is not active for this URL. Please <a href=\"%s\" target=\"_blank\">visit your account page</a> to manage your license key URLs."
 msgstr ""
 
 #. translators: %s: Plugin Name
-#: includes/class-ur-plugin-updater.php:365
+#: includes/class-ur-plugin-updater.php:380
 msgid "This appears to be an invalid license key for <strong>%s</strong>."
 msgstr ""
 
 #. translators: %s: Pricing Page URL
-#: includes/class-ur-plugin-updater.php:370
+#: includes/class-ur-plugin-updater.php:385
 msgid "The provided license key has reached its activation limit. Please <a href=\"%s\" target=\"_blank\">View possible upgrades</a> now."
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:374
+#: includes/class-ur-plugin-updater.php:389
 msgid "The key you entered belongs to a bundle, please use the product specific license key."
 msgstr ""
 
 #. translators: %s: Contact Support URL
-#: includes/class-ur-plugin-updater.php:379
+#: includes/class-ur-plugin-updater.php:394
 msgid "The provided license key could not be found. Please <a href=\"%s\" target=\"_blank\">contact support</a> for more information."
 msgstr ""
 
 #. translators: %s: Error Message
-#: includes/class-ur-plugin-updater.php:384
+#: includes/class-ur-plugin-updater.php:399
 msgid "<strong>Activation error:</strong> %s"
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:476
+#: includes/class-ur-plugin-updater.php:491
 msgid " Please manually download <strong>User Registration PRO</strong>."
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:481
+#: includes/class-ur-plugin-updater.php:496
 msgid " Please manually activate <strong>User Registration PRO</strong>."
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:509
+#: includes/class-ur-plugin-updater.php:524
 msgid "<strong>If you have active premium license of User Registration</strong>, please click button below to install and activate <strong>User Registration Pro</strong>. Going forward <strong>User Registration Pro</strong> is necessary for smooth running of premium addons of User Registration that you are currently using."
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:510
+#: includes/class-ur-plugin-updater.php:526
 msgid "Install and Activate User Registration Pro"
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:512
+#: includes/class-ur-plugin-updater.php:528
 msgid "If you already have an active license key."
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:512
+#: includes/class-ur-plugin-updater.php:528
 msgid "please activate the key."
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:513
+#: includes/class-ur-plugin-updater.php:529
 msgid "If you do not have active premium license of User Registration"
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:513
+#: includes/class-ur-plugin-updater.php:529
 msgid "please purchase premium license. Going forward active premium license will be vital for smooth running of premium addons of User Registration that you are currently using."
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:514
+#: includes/class-ur-plugin-updater.php:530
 msgid "Purchase Premium License"
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:515
+#: includes/class-ur-plugin-updater.php:531
 msgid "Activate License Key"
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:600
+#: includes/class-ur-plugin-updater.php:616
 msgid "<strong> Update all addons of User Registration!!</strong>"
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:602
+#: includes/class-ur-plugin-updater.php:618
 msgid "It seems some of the <strong>User Registration</strong> Addons are outdated. Please update the outdated addons to the latest version for the <strong>User Registration Pro</strong> plugin to work correctly.<br>"
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:621
+#: includes/class-ur-plugin-updater.php:637
 msgid "<strong> Upgrade To PRO!!</strong>"
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:624
+#: includes/class-ur-plugin-updater.php:640
 msgid "It seems you are using some premium addons of User Registration plugin. <br>"
 msgstr ""
 
-#: includes/class-ur-plugin-updater.php:644
+#: includes/class-ur-plugin-updater.php:660
 msgid "User Registration Pro has been installed successfully."
 msgstr ""
 

@@ -3806,11 +3806,14 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				if ( isset( $user->user_login ) ) {
 					$login_data['user_login'] = $user->user_login;
 				} else {
-					if ( empty( $messages['unknown_email'] ) ) {
-						$messages['unknown_email'] = esc_html__( 'A user could not be found with this email address.', 'user-registration' );
-					}
+					$user = get_user_by( 'login', $username );
 
-					throw new Exception( '<strong>' . esc_html__( 'ERROR: ', 'user-registration' ) . '</strong>' . $messages['unknown_email'] );
+					if ( isset( $user->user_login ) ) {
+						$login_data['user_login'] = $user->user_login;
+					} elseif ( empty( $messages['unknown_email'] ) ) {
+						$messages['unknown_email'] = esc_html__( 'A user could not be found with this email address.', 'user-registration' );
+						throw new Exception( '<strong>' . esc_html__( 'ERROR: ', 'user-registration' ) . '</strong>' . $messages['unknown_email'] );
+					}
 				}
 			} else {
 				$login_data['user_login'] = $username;
@@ -4678,7 +4681,15 @@ if ( ! function_exists( 'ur_automatic_user_login' ) ) {
 		$remember = apply_filters( 'user_registration_autologin_remember_user', false );
 		wp_set_auth_cookie( $user->id, $remember );
 
-		wp_redirect( ur_get_my_account_url() );
+		/**
+		 * Filters the login redirection.
+		 *
+		 * @param string   $redirect The original redirect URL after successful login.
+		 * @param WP_User  $user     The user object representing the newly registered user.
+		 */
+		$redirect = apply_filters( 'user_registration_login_redirect', ur_get_my_account_url(), $user );
+
+		wp_redirect( $redirect );
 	}
 }
 
@@ -4794,6 +4805,24 @@ if ( ! function_exists( 'ur_get_translated_string' ) ) {
 			}
 		} else {
 			return $string;
+		}
+	}
+}
+
+// Hook the redirection to admin_init
+add_action(
+	'admin_init',
+	'ur_redirect_to_addons_page'
+);
+
+if ( ! function_exists( 'ur_redirect_to_addons_page' ) ) {
+	/**
+	 * Redirect to addons page.
+	 */
+	function ur_redirect_to_addons_page() {
+		if ( isset( $_GET['page'] ) && 'user-registration-addons' === $_GET['page'] ) {
+			wp_safe_redirect( esc_url_raw( admin_url( 'admin.php?page=user-registration-dashboard#features' ) ) );
+			exit;
 		}
 	}
 }

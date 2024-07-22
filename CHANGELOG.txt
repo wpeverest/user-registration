@@ -1,3 +1,20 @@
+= 3.2.1.3  - 03/07/2024 =
+* Fix      - Remove unnecessary source map from build.
+
+= 3.2.1.2  - 24/06/2024 =
+* Tweak    - Redirect to dashboard addons page when extensions menu is clicked.
+* Dev      - Added filter hook to add extra section settings.
+* Dev      - Added filter hook for login redirection after auto login.
+* Fix      - MultiSite db prefix query issue.
+* Fix      - Duplicate error message for date field.
+* Fix      - Add capability and nonce for license activation and deactivation.
+
+= 3.2.1.1  - 06/06/2024 =
+* Dev      - Added filter hook to to check user instance.
+* Fix      - Notice not being dismissed.
+* Fix      - Function ur_get_screen_ids not defined.
+* Fix      - Check function exists before checking capabilities.
+
 = 3.2.1    - 31/05/2024 =
 * Enhance  - Smart tags picker design.
 * Enhance  - All forms list table design.

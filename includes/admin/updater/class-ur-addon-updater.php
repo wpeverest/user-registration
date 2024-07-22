@@ -86,8 +86,10 @@ class UR_AddOn_Updater {
 	 * @param array  $_api_data    Optional data to send with API calls.
 	 */
 	public function __construct( $_api_url, $_plugin_file, $_api_data = null ) {
-		if ( ! current_user_can( 'manage_options' ) ) {
-			return false;
+		if ( function_exists( 'wp_get_current_user' ) ) {
+			if ( ! current_user_can( 'manage_options' ) ) {
+				return false;
+			}
 		}
 
 		global $edd_plugin_data;

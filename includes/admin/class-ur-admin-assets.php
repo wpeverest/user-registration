@@ -264,6 +264,7 @@ class UR_Admin_Assets {
 			)
 		);
 
+		wp_enqueue_script( 'ur-notice', UR()->plugin_url() . '/assets/js/admin/ur-notice' . $suffix . '.js', array(), UR_VERSION, false );
 		wp_localize_script(
 			'ur-notice',
 			'ur_notice_params',
@@ -415,8 +416,6 @@ class UR_Admin_Assets {
 			);
 			wp_enqueue_script( 'user-registration-form-modal-js' );
 			wp_enqueue_script( 'ur-enhanced-select' );
-
-			wp_enqueue_script( 'ur-notice', UR()->plugin_url() . '/assets/js/admin/ur-notice' . $suffix . '.js', array(), UR_VERSION, false );
 		}
 
 		// Enqueue flatpickr on user profile screen.
