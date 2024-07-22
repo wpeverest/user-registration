@@ -119,10 +119,10 @@ class UR_Admin {
 	 * Includes any classes we need within admin.
 	 */
 	public function includes() {
+		include_once __DIR__ . '/functions-ur-admin.php';
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return false;
 		}
-		include_once __DIR__ . '/functions-ur-admin.php';
 		include_once __DIR__ . '/class-ur-admin-notices.php';
 		include_once __DIR__ . '/class-ur-admin-menus.php';
 		include_once __DIR__ . '/class-ur-admin-export-users.php';

@@ -67,21 +67,30 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 			$form_fields       = $this->get_form_fields( $all_meta_for_user, $form_id );
 
 			if ( ! empty( $form_fields ) ) {
+
+				foreach ( $form_fields as $key => $value ) {
+					if ( isset( $value['field_key'] ) && 'signature' === $value['field_key'] && isset( $_GET['user_id'] ) ) {
+						unset( $form_fields[ $key ] );
+					}
+				}
 				unset( $form_fields['user_registration_profile_pic_url'] );
-				/**
-				 * Filter to retrieve the profile meta fields
-				 *
-				 * @param array Array of Profile Meta Fields
-				 */
-				$show_fields = apply_filters(
-					'user_registration_profile_meta_fields',
-					array(
-						'user_registration' => array(
-							'title'  => sprintf( esc_html__( 'User Extra Information', 'user-registration' ), '' ),
-							'fields' => $form_fields,
-						),
-					)
-				);
+
+				if ( ! empty( $form_fields ) ) {
+					/**
+					 * Filter to retrieve the profile meta fields
+					 *
+					 * @param array Array of Profile Meta Fields
+					 */
+					$show_fields = apply_filters(
+						'user_registration_profile_meta_fields',
+						array(
+							'user_registration' => array(
+								'title'  => sprintf( esc_html__( 'User Extra Information', 'user-registration' ), '' ),
+								'fields' => $form_fields,
+							),
+						)
+					);
+				}
 			}
 			return $show_fields;
 		}
@@ -134,6 +143,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 						'textarea',
 						'radio',
 					);
+
 					foreach ( $fieldset['fields'] as $key => $field ) :
 
 						$field['field_key'] = isset( $field['field_key'] ) ? $field['field_key'] : '';
@@ -431,7 +441,6 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 		 * @param int $user_id User ID of the user being saved.
 		 */
 		public function update_user_profile( $user_id ) {
-			error_log( print_r( 'hellooo', true ) );
 
 			$save_fields = $this->get_user_meta_by_form_fields( $user_id );
 

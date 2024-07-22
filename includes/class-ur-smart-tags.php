@@ -303,17 +303,34 @@ class UR_Smart_Tags {
 						break;
 
 					case 'page_title':
-						$page_title = get_the_title( get_the_ID() );
+						$id = get_the_ID();
+						if ( empty( get_the_ID() ) && isset( $_SERVER['HTTP_REFERER'] ) ) {
+							$id = url_to_postid($_SERVER['HTTP_REFERER']);
+						}
+
+						$page_title = get_the_title( $id );
 						$content    = str_replace( '{{' . $other_tag . '}}', $page_title, $content );
 						break;
 
 					case 'page_url':
-						$page_url = get_permalink( get_the_ID() );
+						$id = get_the_ID();
+						if ( empty( get_the_ID() ) && isset( $_SERVER['HTTP_REFERER'] ) ) {
+							$id = url_to_postid($_SERVER['HTTP_REFERER']);
+							$page_url = esc_url_raw(wp_unslash($_SERVER['HTTP_REFERER']));
+						} else {
+							$page_url = get_permalink( $id );
+						}
+
 						$content  = str_replace( '{{' . $other_tag . '}}', $page_url, $content );
 						break;
 
 					case 'page_id':
-						$page_id = get_the_ID();
+						$id = get_the_ID();
+						if ( empty( get_the_ID() ) && isset( $_SERVER['HTTP_REFERER'] ) ) {
+							$id = url_to_postid($_SERVER['HTTP_REFERER']);
+						}
+
+						$page_id = $id;
 						$content = str_replace( '{{' . $other_tag . '}}', $page_id, $content );
 						break;
 

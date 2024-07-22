@@ -269,11 +269,11 @@ class UR_Email_Confirmation {
 						add_filter( 'user_registration_login_form_before_notice', array( $this, 'custom_email_confirmed_admin_await_message' ) );
 					} else {
 						$allow_automatic_user_login = apply_filters( 'user_registration_allow_automatic_user_login_email_confirmation', true );
+						add_filter( 'login_message', array( $this, 'custom_registration_message' ) );
+						add_filter( 'user_registration_login_form_before_notice', array( $this, 'custom_registration_message' ) );
 						if ( $allow_automatic_user_login ) {
 							ur_automatic_user_login( $user );
 						}
-						add_filter( 'login_message', array( $this, 'custom_registration_message' ) );
-						add_filter( 'user_registration_login_form_before_notice', array( $this, 'custom_registration_message' ) );
 					}
 				}
 			} else {

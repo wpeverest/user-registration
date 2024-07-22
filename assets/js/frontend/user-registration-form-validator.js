@@ -220,6 +220,9 @@
 						) {
 							return true;
 						}
+						if( $(element).hasClass("ur-flatpickr-field") ){
+							return true;
+						}
 						return (
 							element.id &&
 							(element.id.startsWith("billing_") ||

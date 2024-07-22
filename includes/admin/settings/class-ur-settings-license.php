@@ -85,6 +85,11 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 									'css'      => 'min-width: 350px;',
 									'desc_tip' => true,
 								),
+								array(
+									'id'     => 'ur_license_nonce',
+									'action' => '_ur_license_nonce',
+									'type'   => 'nonce',
+								),
 							),
 						),
 					),
@@ -104,7 +109,7 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 						'buttons'  => array(
 							array(
 								'title' => __( 'Deactivate License', 'user-registration' ),
-								'href'  => remove_query_arg( array( 'deactivated_license', 'activated_license' ), add_query_arg( 'user-registration_deactivate_license', 1 ) ),
+								'href'  => wp_nonce_url( remove_query_arg( array( 'deactivated_license', 'activated_license' ), add_query_arg( 'user-registration_deactivate_license', 1 ), ), '_ur_license_nonce' ),
 								'class' => 'user_registration-deactivate-license-key',
 							),
 						),

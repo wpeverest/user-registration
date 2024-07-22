@@ -852,6 +852,15 @@
 .ur-icon-captcha-field::before {
   content: ""; }
 
+.ur-icon-membership-field::before {
+  content: ""; }
+
+.ur-icon-coupon-field::before {
+  content: ""; }
+
+.ur-icon-e-signature::before {
+  content: ""; }
+
 .user-registration-table {
   width: 100%;
   background: #ffffff;
@@ -5974,7 +5983,7 @@
             cursor: pointer;
             font-size: 15px; }
             .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-lists li a:focus {
-              box-shadow: 0 0 0 0px transparent, 0 0 0px 0px transparent; }
+              box-shadow: 0 0 0 0px transparent, 0 0 0px 0px transparent; }
             .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-lists li a.active {
               background-color: #ffffff;
               color: #475bb2;
@@ -7698,6 +7707,10 @@ a.button.ur-smart-tags-list-button {
     margin-bottom: 20px; }
     .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row#user_registration_form_setting_minimum_password_strength_field {
       margin-bottom: 0; }
+    .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row .ur-form-settings-warning {
+      padding: 10px 10px;
+      border: 1px solid #eeee;
+      border-left: 4px solid #ffcc00; }
     .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row .ur-label {
       font-size: 15px;
       line-height: 140%;
@@ -7724,7 +7737,7 @@ a.button.ur-smart-tags-list-button {
     .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row select {
       background-image: linear-gradient(45deg, transparent 50%, gray 50%), linear-gradient(135deg, gray 50%, transparent 50%);
       background-position: calc(100% - 15px) calc(1em + 2px), calc(100% - 10px) calc(1em + 2px), calc(100% - 2.5em) 0.5em;
-      background-size: 5px 5px, 5px 5px, 1px 1.5em;
+      background-size: 5px 5px, 5px 5px, 1px 1.5em;
       background-repeat: no-repeat; }
     .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row .ur-radio-group-list {
       display: flex;
