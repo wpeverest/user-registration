@@ -4889,6 +4889,21 @@
 							}
 						}
 					}
+					&.enable_disable {
+						span {
+						  font-weight: $medium;
+
+						  &.enable-disable {
+							&-Enabled {
+							  color: $approve_user;
+							}
+
+							&-Disabled {
+							  color: $deny_color;
+							}
+						  }
+						}
+					  }
 
 					&.actions {
 						a {
