@@ -67,6 +67,10 @@ class UR_Admin_Settings {
 				$settings[] = include 'settings/class-ur-settings-license.php';
 			}
 
+			if ( is_plugin_active( 'user-registration-membership/user-registration-membership.php' ) ) {
+				$settings[] = include 'settings/class-ur-settings-membership.php';
+			}
+
 			/**
 			 * Filter to retrieve settings pages
 			 *

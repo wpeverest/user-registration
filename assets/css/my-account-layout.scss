@@ -6,7 +6,7 @@
 		flex-wrap: wrap;
 
 		.user-registration-error, .user-registration-message {
-			float:none;
+			float: none;
 			width: 100%;
 		}
 
@@ -526,6 +526,54 @@
 				}
 			}
 		}
+
+		.user-registration-membership-content {
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
+
+			.membership-row {
+				display: flex;
+				gap: 50px
+			}
+
+			.membership-row-btn-container {
+				display: flex;
+				flex-direction: row-reverse;
+				align-items: center;
+
+				.cancel-membership-button {
+					border: none;
+					padding: 10px;
+					border-radius: 5px;
+					background: #db0000;
+					color: white;
+					cursor: pointer
+				}
+
+				#membership-error-div {
+					width: 70%;
+					text-align: left;
+
+					padding: 8px 12px 8px 16px;
+					font-size: 14px;
+					font-weight: 500;
+					display: none;
+					&.btn-error {
+						background: #fff4f4;
+						color: red;
+						border-left: 3px solid #f25656;
+					}
+					&.btn-success {
+						background: #d7ede0;
+						color: #554545;
+						border-left: 3px solid #00ff5a;
+					}
+				}
+			}
+		}
+
+
 	}
 }
 

@@ -681,6 +681,7 @@
 */
 .user-registration-message,
 .user-registration-error,
+.user-registration-coupon-error,
 .user-registration-info {
   display: block;
   margin: 0 0 10px;
@@ -698,16 +699,20 @@
   .user-registration-message::before, .user-registration-message::after,
   .user-registration-error::before,
   .user-registration-error::after,
+  .user-registration-coupon-error::before,
+  .user-registration-coupon-error::after,
   .user-registration-info::before,
   .user-registration-info::after {
     content: ' ';
     display: table; }
   .user-registration-message::after,
   .user-registration-error::after,
+  .user-registration-coupon-error::after,
   .user-registration-info::after {
     clear: both; }
   .user-registration-message::before,
   .user-registration-error::before,
+  .user-registration-coupon-error::before,
   .user-registration-info::before {
     content: "\f348";
     display: inline-block;
@@ -717,22 +722,26 @@
     margin-right: 0.875rem; }
   .user-registration-message ul,
   .user-registration-error ul,
+  .user-registration-coupon-error ul,
   .user-registration-info ul {
     margin: 0 !important;
     padding: 0 !important;
     background-color: transparent !important; }
   .user-registration-message .button,
   .user-registration-error .button,
+  .user-registration-coupon-error .button,
   .user-registration-info .button {
     float: right; }
   .user-registration-message li,
   .user-registration-error li,
+  .user-registration-coupon-error li,
   .user-registration-info li {
     list-style: none outside !important;
     padding-left: 0 !important;
     margin-left: 0 !important; }
   .user-registration-message .message,
   .user-registration-error .message,
+  .user-registration-coupon-error .message,
   .user-registration-info .message {
     margin: 0;
     padding: 0; }
@@ -752,6 +761,12 @@
   color: #ff030b; }
   .user-registration-error::before {
     content: "\f534"; }
+
+.user-registration-coupon-error {
+  border-top-color: #ff4f55;
+  background: rgba(255, 79, 85, 0.1);
+  color: #ff030b;
+  margin-top: 10px; }
 
 input.ur-input-border-green, textarea.ur-input-border-green {
   border-color: #1EA71B !important; }

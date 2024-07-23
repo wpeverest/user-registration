@@ -472,7 +472,9 @@ add_filter( 'extra_plugin_headers', 'ur_enable_ur_plugin_headers' );
  */
 function ur_get_field_type( $field_key ) {
 	$fields = ur_get_registered_form_fields();
-
+	if ( ur_pro_is_coupons_addon_activated() ) {
+		$fields[] = 'coupon';
+	}
 	$field_type = 'text';
 
 	if ( in_array( $field_key, $fields ) ) {
@@ -525,6 +527,8 @@ function ur_get_field_type( $field_key ) {
 				break;
 			case 'radio':
 				$field_type = 'radio';
+			case 'coupon':
+				$field_type = 'coupon';
 				break;
 		}
 	}
@@ -4739,6 +4743,41 @@ if ( ! function_exists( 'ur_merge_translations' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ur_get_coupon_details' ) ) {
+	/**
+	 * This function will send email verification email to the user.
+	 *
+	 * @since 3.1.5
+	 *
+	 * @param int $user_id User ID.
+	 */
+	function ur_get_coupon_details( $coupon ) {
+
+		$posts = new WP_Query(
+			array(
+				'post_type'  => 'ur_coupons',
+				'meta_key'   => 'ur_coupon_code',
+				'meta_query' => array(
+					array(
+						'key'     => 'ur_coupon_code',
+						'value'   => $coupon,
+						'compare' => '=',
+					),
+				),
+			)
+		);
+
+		if ( $posts->post_count > 0 ) {
+			$posts_meta               = get_post_meta( $posts->post->ID, 'ur_coupon_meta', true );
+			$coupon_data              = json_decode( $posts_meta, true );
+			$coupon_data['coupon_id'] = $posts->post->ID;
+			return $coupon_data;
+		}
+
+		return $posts->posts;
+	}
+}
+
 if ( ! function_exists( 'ur_get_registration_field_value_by_field_name' ) ) {
 
 	/**
@@ -4793,6 +4832,7 @@ if ( ! function_exists( 'ur_get_translated_string' ) ) {
 		}
 	}
 }
+
 add_action( 'init', 'ur_check_is_disabled' );
 if ( ! function_exists( 'ur_check_is_disabled' ) ) {
 
