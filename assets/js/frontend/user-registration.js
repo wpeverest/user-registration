@@ -32,11 +32,14 @@
 									'[name="' + field_name + '"]'
 								);
 								var selection_fields_array = ["radio"];
-								
-								if (single_field.length < 2 && $.inArray(
-									field_type,
-									selection_fields_array
-								) < 0 ) {
+
+								if (
+									single_field.length < 2 &&
+									$.inArray(
+										field_type,
+										selection_fields_array
+									) < 0
+								) {
 									var single_data =
 										this_instance.get_fieldwise_data(
 											$(this)
@@ -229,7 +232,7 @@
 									value: field_value_json,
 									field_type: field_type,
 									label: field.eq(0).attr("data-label"),
-									field_name: single_form_field_name,
+									field_name: single_form_field_name
 								};
 
 								form_data.push(field_data);
@@ -507,7 +510,7 @@
 								);
 							}
 						}
-					},
+					}
 				};
 
 				var events = {
@@ -555,7 +558,7 @@
 										email: user_registration_params.message_email_fields,
 										number: user_registration_params.message_number_fields,
 										confirmpassword:
-											user_registration_params.message_confirm_password_fields,
+											user_registration_params.message_confirm_password_fields
 									});
 
 									if (
@@ -803,7 +806,7 @@
 										form_data: form_data,
 										captchaResponse: captchaResponse,
 										form_id: form_id,
-										ur_frontend_form_nonce: form_nonce,
+										ur_frontend_form_nonce: form_nonce
 									};
 
 									var $error_message = {};
@@ -1123,6 +1126,7 @@
 													);
 												} else {
 													var $field_id = [];
+
 													$.each(
 														$this
 															.find(
@@ -1133,11 +1137,35 @@
 															),
 														function (index) {
 															var $this = $(this);
-															var $id =
-																$this.attr(
-																	"id"
+
+															if (
+																$this.hasClass(
+																	"input-captcha-icon-radio"
+																)
+															) {
+																var data_id =
+																	$this.attr(
+																		"data-id"
+																	);
+
+																if (
+																	!$field_id.includes(
+																		data_id
+																	)
+																) {
+																	$field_id.push(
+																		data_id
+																	);
+																}
+															} else {
+																var $id =
+																	$this.attr(
+																		"id"
+																	);
+																$field_id.push(
+																	$id
 																);
-															$field_id.push($id);
+															}
 														}
 													);
 													var field_name = "";
@@ -1177,6 +1205,7 @@
 																				index +
 																				"']"
 																		);
+
 																wrapper
 																	.closest(
 																		".ur-field-item"
@@ -1230,14 +1259,17 @@
 													[
 														ajax_response.responseText,
 														type,
-														$this,
+														$this
 													]
 												);
 												$this
 													.find(".ur-submit-button")
 													.prop("disabled", false);
 											}
-										},
+											$(".coupon-message").css({
+												display: "none"
+											});
+										}
 									});
 								});
 						});
@@ -1259,7 +1291,7 @@
 										user_registration_params.message_required_fields,
 									url: user_registration_params.message_url_fields,
 									email: user_registration_params.message_email_fields,
-									number: user_registration_params.message_number_fields,
+									number: user_registration_params.message_number_fields
 								});
 
 								var $el = $this.find(".ur-smart-phone-field");
@@ -1361,7 +1393,7 @@
 									form_data.push({
 										value: profile_picture_url,
 										field_name:
-											"user_registration_profile_pic_url",
+											"user_registration_profile_pic_url"
 									});
 
 									form_data = JSON.stringify(form_data);
@@ -1373,7 +1405,7 @@
 									action: "user_registration_update_profile_details",
 									security:
 										user_registration_params.user_registration_profile_details_save,
-									form_data: form_data,
+									form_data: form_data
 								};
 
 								$(document).trigger(
@@ -1638,10 +1670,10 @@
 										$(window).scrollTop(
 											$(".user-registration").position()
 										);
-									},
+									}
 								});
 							});
-					},
+					}
 				};
 				form.init();
 				events.init();
@@ -1737,7 +1769,7 @@
 									instance
 								) {
 									$("#" + field_id).val(dateString);
-								},
+								}
 							});
 
 							flatpickrInstances.push(instance);

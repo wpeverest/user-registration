@@ -478,6 +478,7 @@ do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id
 													// For slot booking.
 													$field['enable_date_slot_booking'] = isset( $advance_data['advance_setting']->enable_date_slot_booking ) ? $advance_data['advance_setting']->enable_date_slot_booking : false;
 												}
+												$field['form_id'] = $form_id;
 
 												$filter_data = array(
 													'form_data' => $field,

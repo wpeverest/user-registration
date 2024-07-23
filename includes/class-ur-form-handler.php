@@ -249,6 +249,9 @@ class UR_Form_Handler {
 						$value = '';
 					}
 					break;
+				case 'coupon':
+					$value = json_encode( $field->advance_setting );
+					break;
 
 				default:
 					$value = isset( $_POST[ $key ] ) ? $_POST[ $key ] : ''; // phpcs:ignore
@@ -311,9 +314,9 @@ class UR_Form_Handler {
 		 *
 		 * @param string $message The message.
 		 */
-		$message     = apply_filters( 'user_registration_email_change_email_content', $message );
-		$message     = UR_Emailer::parse_smart_tags( $message, $values, $name_value );
-		$subject     = UR_Emailer::parse_smart_tags( $subject, $values, $name_value );
+		$message = apply_filters( 'user_registration_email_change_email_content', $message );
+		$message = UR_Emailer::parse_smart_tags( $message, $values, $name_value );
+		$subject = UR_Emailer::parse_smart_tags( $subject, $values, $name_value );
 
 		$headers = array(
 			'From:' . $from_name . ' <' . $sender_email . '>',

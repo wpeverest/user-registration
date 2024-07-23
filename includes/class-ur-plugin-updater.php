@@ -268,7 +268,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	public function user_registration_error_notices() {
 		if ( ! empty( $this->errors ) ) {
 			foreach ( $this->errors as $key => $error ) {
-				include __DIR__ . '/admin/views/html-notice-error.php';
+				include __DIR__ . '/admin/notifications/views/html-notice-error.php';
 				if ( 'invalid_key' !== $key && did_action( 'all_admin_notices' ) ) {
 					unset( $this->errors[ $key ] );
 				}
@@ -460,7 +460,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 */
 	public function key_notice() {
 		if ( count( $this->errors ) === 0 && ! get_option( $this->plugin_slug . '_hide_key_notice' ) ) {
-			include __DIR__ . '/admin/views/html-notice-key-unvalidated.php';
+			include __DIR__ . '/admin/notifications/views/html-notice-key-unvalidated.php';
 		}
 	}
 
@@ -468,14 +468,14 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * Activation success notice.
 	 */
 	public function activated_key_notice() {
-		include __DIR__ . '/admin/views/html-notice-key-activated.php';
+		include __DIR__ . '/admin/notifications/views/html-notice-key-activated.php';
 	}
 
 	/**
 	 * Dectivation success notice.
 	 */
 	public function deactivated_key_notice() {
-		include __DIR__ . '/admin/views/html-notice-key-deactivated.php';
+		include __DIR__ . '/admin/notifications/views/html-notice-key-deactivated.php';
 	}
 
 	/**
@@ -658,7 +658,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 */
 	public function user_registration_extension_download_success_notice() {
 		$notice_html = __( 'User Registration Pro has been installed successfully.', 'user-registration' );
-		include __DIR__ . '/admin/views/html-notice-key-activated.php';
+		include __DIR__ . '/admin/notifications/views/html-notice-key-activated.php';
 	}
 }
 

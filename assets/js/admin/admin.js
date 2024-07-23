@@ -72,7 +72,7 @@ jQuery(function ($) {
 				html: message,
 				showCloseButton: true,
 				customClass:
-					"user-registration-swal2-modal user-registration-swal2-modal--center user-registration-locked-field",
+					"user-registration-swal2-modal user-registration-swal2-modal--center user-registration-locked-field"
 			}).then(function (result) {
 				// Do Nothing here.
 			});
@@ -89,7 +89,7 @@ jQuery(function ($) {
 				showCloseButton: true,
 				customClass:
 					"user-registration-swal2-modal user-registration-swal2-modal--center user-registration-locked-field",
-				confirmButtonText: field_data.button_title,
+				confirmButtonText: field_data.button_title
 			}).then(function (result) {
 				if (result.value) {
 					var url = field_data.link;
@@ -121,11 +121,14 @@ jQuery(function ($) {
 					name: name,
 					video_id: video_id,
 					security:
-						user_registration_locked_form_fields_notice_params.user_registration_locked_form_fields_notice_nonce,
+						user_registration_locked_form_fields_notice_params.user_registration_locked_form_fields_notice_nonce
 				},
 				success: function (response) {
-					if(video_id !== ''){
-						var video = '<div style="width: 535px; height: 300px;"><iframe width="100%" height="100%" frameborder="0" src="https://www.youtube.com/embed/'+video_id+'" rel="1" allowfullscreen></iframe></div><br>';
+					if (video_id !== "") {
+						var video =
+							'<div style="width: 535px; height: 300px;"><iframe width="100%" height="100%" frameborder="0" src="https://www.youtube.com/embed/' +
+							video_id +
+							'" rel="1" allowfullscreen></iframe></div><br>';
 					}
 					var action_button = $(response.data.action_button).find(
 						"a"
@@ -175,7 +178,10 @@ jQuery(function ($) {
 
 					title += "</span>";
 					message =
-						video + message + "<br><br>" + response.data.action_button;
+						video +
+						message +
+						"<br><br>" +
+						response.data.action_button;
 					Swal.fire({
 						title: title,
 						html: message,
@@ -185,11 +191,11 @@ jQuery(function ($) {
 						showConfirmButton: false,
 						allowOutsideClick: true,
 						heightAuto: false,
-    					width: '575px',
+						width: "575px"
 					}).then(function (result) {
 						// Do Nothing.
 					});
-				},
+				}
 			});
 		}
 	});
@@ -295,7 +301,7 @@ jQuery(function ($) {
 					window.ur_tab_scrollbar = new PerfectScrollbar(
 						document.querySelector(".ur-tab-contents"),
 						{
-							suppressScrollX: true,
+							suppressScrollX: true
 						}
 					);
 
@@ -509,6 +515,25 @@ jQuery(function ($) {
 		}
 	});
 
+	// Toggle Akismet Settings
+	$(document).ready(function () {
+		wrapper = $("#user_registration_enable_akismet_field");
+		var akismet_activate = $("#user_registration_enable_akismet");
+		var akismet_message = $("#user_registration_akismet_warning_field");
+		if (akismet_activate.is(":checked")) {
+			akismet_message.show();
+		} else {
+			akismet_message.hide();
+		}
+		akismet_activate.change(function () {
+			if ($(this).is(":checked")) {
+				akismet_message.show();
+			} else {
+				akismet_message.hide();
+			}
+		});
+	});
+
 	$(strong_password_field).on("change", function () {
 		enable_strong_password = $(this).is(":checked");
 
@@ -549,18 +574,26 @@ jQuery(function ($) {
 		if (selected_redirection_option.length) {
 			switch (selected_redirection_option.val()) {
 				case "internal-page":
-					$("#user_registration_form_setting_redirect_after_field").show();
+					$(
+						"#user_registration_form_setting_redirect_after_field"
+					).show();
 					custom_redirection_page.slideDown(800);
 					break;
 				case "external-url":
-					$("#user_registration_form_setting_redirect_after_field").show();
+					$(
+						"#user_registration_form_setting_redirect_after_field"
+					).show();
 					redirect_url.slideDown(800);
 					break;
 				case "no-redirection":
-					$("#user_registration_form_setting_redirect_after_field").hide();
+					$(
+						"#user_registration_form_setting_redirect_after_field"
+					).hide();
 					break;
 				case "previous-page":
-					$("#user_registration_form_setting_redirect_after_field").show();
+					$(
+						"#user_registration_form_setting_redirect_after_field"
+					).show();
 					break;
 				default:
 					break;
@@ -588,7 +621,7 @@ jQuery(function ($) {
 		.on("init_tooltips", function () {
 			ur_init_tooltips(".tips, .help_tip, .user-registration-help-tip");
 			ur_init_tooltips(".ur-copy-shortcode, .ur-portal-tooltip", {
-				keepAlive: false,
+				keepAlive: false
 			});
 
 			// Add Tooltipster to parent element for widefat tables
@@ -640,7 +673,7 @@ jQuery(function ($) {
 			data: {
 				action: "user_registration_send_test_email",
 				email: email,
-				nonce: user_registration_send_email.test_email_nonce,
+				nonce: user_registration_send_email.test_email_nonce
 			},
 			type: "post",
 			beforeSend: function () {
@@ -674,7 +707,7 @@ jQuery(function ($) {
 					".user-registration_page_user-registration-settings .notice"
 				).css("display", "block");
 				$(window).scrollTop($(".notice").position());
-			},
+			}
 		});
 	});
 
@@ -691,9 +724,9 @@ jQuery(function ($) {
 				status: status,
 				id: id,
 				security:
-					user_registration_email_setting_status.user_registration_email_setting_status_nonce,
+					user_registration_email_setting_status.user_registration_email_setting_status_nonce
 			},
-			success: function (response) {},
+			success: function (response) {}
 		});
 	});
 
@@ -708,7 +741,7 @@ jQuery(function ($) {
 			var data = {
 				action: "user_registration_locate_form_action",
 				id: id,
-				security: user_registration_admin_locate.ajax_locate_nonce,
+				security: user_registration_admin_locate.ajax_locate_nonce
 			};
 			var tag = e.target;
 			var target_tag = tag.closest(".row-actions");
@@ -767,7 +800,7 @@ jQuery(function ($) {
 							);
 					}
 					$(target_tag).find(".ur-spinner").remove();
-				},
+				}
 			});
 		});
 
@@ -783,7 +816,7 @@ jQuery(function ($) {
 		$(smart_tag_div).css({
 			position: "absolute",
 			left: "65%",
-			top: "-10px",
+			top: "-10px"
 		});
 	}
 
@@ -808,7 +841,7 @@ jQuery(function ($) {
 						}
 					}
 					return data.text;
-				},
+				}
 			});
 
 		$(this).siblings(".select2-container").addClass("ur-hide-select2");
@@ -834,7 +867,7 @@ jQuery(function ($) {
 		);
 		select2_container.css({
 			top: buttonOffsetTop,
-			left: buttonOffsetRight - $(this).innerHeight() - 10,
+			left: buttonOffsetRight - $(this).innerHeight() - 10
 		});
 
 		var newDiv =
@@ -967,7 +1000,7 @@ jQuery(function ($) {
 					$(".user-registration-custom-selected-file").html(
 						user_registration_admin_data.no_file_selected
 					);
-				},
+				}
 			});
 		});
 
@@ -1022,7 +1055,7 @@ function ur_init_tooltips($elements, options) {
 				if (dataTip) {
 					instance.content(dataTip);
 				}
-			},
+			}
 		};
 
 		if (options && "object" === typeof options) {
@@ -1073,7 +1106,7 @@ function ur_confirmation(message, options) {
 			"undefined" !== typeof options.cancelButtonText
 				? options.cancelButtonText
 				: user_registration_form_builder_data.i18n_admin
-						.i18n_choice_cancel,
+						.i18n_choice_cancel
 	}).then(function (result) {
 		if (result.value) {
 			options.confirm();
