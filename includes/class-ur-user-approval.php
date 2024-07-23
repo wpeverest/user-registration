@@ -187,7 +187,12 @@ class UR_User_Approval {
 
 		$status = $user_manager->get_user_status();
 
-		if ( ( 'admin_approval' === $login_option || 'admin_approval' === $status['login_option'] ) ) {
+		$is_disabled = get_user_meta( $user->ID, 'ur_disable_users', true );
+
+		if ( $is_disabled ) {
+			$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . apply_filters( 'user_registration_user_disabled_message', __( 'Sorry! You are disabled. Please Contact Your Administrator.', 'user-registration' ) );
+			return new WP_Error( 'disable_user', $message );
+		} elseif ( ( 'admin_approval' === $login_option || 'admin_approval' === $status['login_option'] ) ) {
 			/**
 			 * Executes an action before checking the user status on user login.
 			 *

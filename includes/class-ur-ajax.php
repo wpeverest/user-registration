@@ -844,12 +844,6 @@ class UR_AJAX {
 				'user_pass',
 			);
 
-			$contains_search = count( array_intersect( $required_fields, self::$field_key_aray ) ) == count( $required_fields );
-
-			if ( false === $contains_search ) {
-             throw  new Exception( __( 'Could not save form, ' . join( ', ', $required_fields ) . ' fields are required.! ', 'user-registration' ) ); //phpcs:ignore
-			}
-
 			// check captcha configuration before form save action.
 			if ( isset( $_POST['data']['form_setting_data'] ) ) {
 				foreach ( wp_unslash( $_POST['data']['form_setting_data'] )  as $setting_data ) { //phpcs:ignore
@@ -861,7 +855,17 @@ class UR_AJAX {
 								esc_html__( 'Seems like you are trying to enable the captcha feature, but the captcha keys are empty. Please click', 'user-registration' ),
 								esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=captcha' ) ) ) ); //phpcs:ignore
 					}
+
+					if ( 'user_registration_pro_auto_password_activate' === $setting_data['name'] && ur_string_to_bool( $setting_data['value'] ) ) {
+						unset( $required_fields[ array_search( 'user_pass', $required_fields ) ] );
+					}
 				}
+			}
+
+			$contains_search = count( array_intersect( $required_fields, self::$field_key_aray ) ) == count( $required_fields );
+
+			if ( false === $contains_search ) {
+             throw  new Exception( __( 'Could not save form, ' . join( ', ', $required_fields ) . ' fields are required.! ', 'user-registration' ) ); //phpcs:ignore
 			}
 
 			/**

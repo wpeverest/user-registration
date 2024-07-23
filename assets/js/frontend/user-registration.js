@@ -32,7 +32,7 @@
 									'[name="' + field_name + '"]'
 								);
 								var selection_fields_array = ["radio"];
-								
+
 								if (single_field.length < 2 && $.inArray(
 									field_type,
 									selection_fields_array
@@ -1133,11 +1133,25 @@
 															),
 														function (index) {
 															var $this = $(this);
-															var $id =
-																$this.attr(
-																	"id"
-																);
-															$field_id.push($id);
+
+															if ( $this.hasClass("input-captcha-icon-radio") ) {
+																var data_id = $this.attr("data-id");
+
+																if (
+																	! $field_id.includes(
+																		data_id
+																	)
+																) {
+																	$field_id.push(data_id);
+																}
+
+															} else {
+																var $id =
+																	$this.attr(
+																		"id"
+																	);
+																$field_id.push($id);
+															}
 														}
 													);
 													var field_name = "";

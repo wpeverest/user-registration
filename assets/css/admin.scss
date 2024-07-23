@@ -3709,6 +3709,12 @@
 						 margin-bottom: 0;
 					 }
 
+					 .ur-form-settings-warning {
+						padding: 10px 10px;
+						border: 1px solid #eeee;
+						border-left: 4px solid #ffcc00;
+					 }
+
 					 .ur-label {
 						 font-size: 15px;
 						 line-height: 140%;
@@ -4883,6 +4889,21 @@
 							}
 						}
 					}
+					&.enable_disable {
+						span {
+						  font-weight: $medium;
+
+						  &.enable-disable {
+							&-Enabled {
+							  color: $approve_user;
+							}
+
+							&-Disabled {
+							  color: $deny_color;
+							}
+						  }
+						}
+					  }
 
 					&.actions {
 						a {
@@ -4922,6 +4943,40 @@
 		input[type="checkbox"]:not(.urcr-enable-access-rule) {
 			border-radius: $border_radius_2;
 			border-color: $grey-200;
+		}
+	}
+}
+
+
+// Custom CAPTCHA Form Builder Field Options CSS
+.ur-registered-from {
+	.ur-general-setting {
+		&.ur-setting-captcha {
+			.ur-options-list {
+				.ui-sortable-handle {
+					flex-direction: row;
+					flex-wrap: wrap;
+				}
+			}
+		}
+
+		&.ur-general-setting-image-captcha-options {
+			.ur-options-list {
+				.ui-sortable-handle {
+					.icons-group {
+						display: flex;
+						align-items: center;
+						gap: 16px;
+
+						.icon-wrap {
+							.button {
+								padding-top: 0;
+								padding-bottom: 0;
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 }

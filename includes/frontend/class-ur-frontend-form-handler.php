@@ -106,6 +106,16 @@ class UR_Frontend_Form_Handler {
 
 			$userdata = apply_filters( 'user_registration_before_insert_user', $userdata, self::$valid_form_data, $form_id );
 
+			// If spam and reject registration return early
+			$akismet_result = apply_filters( 'user_registration_get_akismet_validate', $form_id, self::$valid_form_data );
+			if ( $akismet_result ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'Registration blocked due to potential spam. Reach out to support for help.', 'user-registration' ),
+					)
+				);
+			}
+
 			$user_id = wp_insert_user( $userdata ); // Insert user data in users table.
 
 			$filtered_form_data = apply_filters( 'user_registration_before_user_meta_update', self::$valid_form_data, $user_id, $form_id );
@@ -225,7 +235,7 @@ class UR_Frontend_Form_Handler {
 	public static function ur_update_user_meta( $user_id, $valid_form_data, $form_id ) {
 
 		foreach ( $valid_form_data as $data ) {
-			$field_key             = isset( $data->extra_params['field_key'] ) ? $data->extra_params['field_key'] : '';
+			$field_key = isset( $data->extra_params['field_key'] ) ? $data->extra_params['field_key'] : '';
 
 			if ( ! in_array( trim( $data->field_name ), ur_get_user_table_fields() ) && $field_key !== 'file' ) {
 				$field_name            = $data->field_name;

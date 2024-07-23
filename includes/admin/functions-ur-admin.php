@@ -103,6 +103,7 @@ function ur_get_screen_ids() {
 		$ur_screen_id . '_page_user-registration-dashboard',
 		$ur_screen_id . '_page_user-registration-analytics',
 		$ur_screen_id . '_page_add-new-registration',
+		$ur_screen_id . '_page_user-registration-users',
 		$ur_screen_id . '_page_user-registration-settings',
 		$ur_screen_id . '_page_user-registration-mailchimp',
 		$ur_screen_id . '_page_user-registration-status',

@@ -951,6 +951,7 @@ function ur_get_general_settings( $id ) {
 			'file',
 			'mailchimp',
 			'hidden',
+			'signature',
 		)
 	);
 	$strip_id            = str_replace( 'user_registration_', '', $id );
@@ -1314,6 +1315,22 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'min'               => '0',
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after', '2' ),
 				'tip'               => __( 'Time to wait after registration before redirecting user to another page.', 'user-registration' ),
+			),
+			array(
+				'type'              => 'toggle',
+				'label'             => __( 'Activate Spam Protection By Akismet', 'user-registration' ),
+				'required'          => false,
+				'id'                => 'user_registration_enable_akismet',
+				'class'             => array( 'ur-enhanced-select' ),
+				'custom_attributes' => array(),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_enable_akismet', false ),
+				'tip'               => __( 'Enable anti-spam for this form with akismet.', 'user-registration' ),
+
+			),
+			array(
+				'type'        => 'label',
+				'id'          => 'user_registration_akismet_warning',
+				'description' => ur_check_akismet_installation(),
 			),
 		),
 	);
@@ -2398,7 +2415,11 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 			$value = implode( ',', $value );
 		}
 
-		$data_html .= '<tr><td>' . $label . ' : </td><td>' . $value . '</td></tr>';
+		if ( isset( $form_data->extra_params['field_key'] ) && 'signature' === $form_data->extra_params['field_key'] ) {
+			$data_html .= '<tr><td>' . $label . ' : </td><td><img class="profile-preview" alt="Signature" width="50px" height="50px" src="' . ( is_numeric( $value ) ? esc_url( wp_get_attachment_url( $value ) ) : esc_url( $value ) ) . '" /></td></tr>';
+		} else {
+			$data_html .= '<tr><td>' . $label . ' : </td><td>' . $value . '</td></tr>';
+		}
 
 		$name_value[ $field_name ] = $value;
 	}
@@ -3018,6 +3039,10 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 				break;
 			case 'profile_picture':
 				$field_value = '<img class="profile-preview" alt="Profile Picture" width="50px" height="50px" src="' . ( is_numeric( $field_value ) ? esc_url( wp_get_attachment_url( $field_value ) ) : esc_url( $field_value ) ) . '" />';
+				$field_value = wp_kses_post( $field_value );
+				break;
+			case 'signature':
+				$field_value = '<img class="profile-preview" alt="Signature" width="50px" height="50px" src="' . ( is_numeric( $field_value ) ? esc_url( wp_get_attachment_url( $field_value ) ) : esc_url( $field_value ) ) . '" />';
 				$field_value = wp_kses_post( $field_value );
 				break;
 			default:
@@ -3643,6 +3668,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				'unknown_email'    => get_option( 'user_registration_message_unknown_email', esc_html__( 'A user could not be found with this email address.', 'user-registration' ) ),
 				'pending_approval' => get_option( 'user_registration_message_pending_approval', null ),
 				'denied_access'    => get_option( 'user_registration_message_denied_account', null ),
+				'user_disabled'    => esc_html__( 'Sorry! You are disabled.Please Contact Your Administrator.', 'user-registration' ),
 			);
 
 			$post = $_POST; // phpcs:ignore.
@@ -3760,11 +3786,14 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				if ( isset( $user->user_login ) ) {
 					$login_data['user_login'] = $user->user_login;
 				} else {
-					if ( empty( $messages['unknown_email'] ) ) {
-						$messages['unknown_email'] = esc_html__( 'A user could not be found with this email address.', 'user-registration' );
-					}
+					$user = get_user_by( 'login', $username );
 
-					throw new Exception( '<strong>' . esc_html__( 'ERROR: ', 'user-registration' ) . '</strong>' . $messages['unknown_email'] );
+					if ( isset( $user->user_login ) ) {
+						$login_data['user_login'] = $user->user_login;
+					} elseif ( empty( $messages['unknown_email'] ) ) {
+						$messages['unknown_email'] = esc_html__( 'A user could not be found with this email address.', 'user-registration' );
+						throw new Exception( '<strong>' . esc_html__( 'ERROR: ', 'user-registration' ) . '</strong>' . $messages['unknown_email'] );
+					}
 				}
 			} else {
 				$login_data['user_login'] = $username;
@@ -3814,6 +3843,10 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				$message = $user->get_error_message();
 				$message = str_replace( '<strong>' . esc_html( $login_data['user_login'] ) . '</strong>', '<strong>' . esc_html( $username ) . '</strong>', $message );
 				throw new Exception( $message );
+			} elseif ( isset( $user->ID ) && $is_disabled = get_user_meta( $user->ID, 'ur_disable_users', true ) ) {
+					wp_logout();
+					throw new Exception( '<strong>' . esc_html__( 'ERROR: ', 'user-registration' ) . '</strong>' . $messages['user_disabled'] );
+
 			} else {
 				if ( in_array( 'administrator', $user->roles, true ) && ur_option_checked( 'user_registration_login_options_prevent_core_login', true ) ) {
 					$redirect = admin_url();
@@ -4208,17 +4241,18 @@ if ( ! function_exists( 'user_registration_process_email_content' ) ) {
 			$email_body_width = apply_filters( 'user_registration_email_body_width', $default_width );
 			ob_start();
 			?>
-			<div class="user-registration-email-body" style="padding: 100px 0; background-color: #ebebeb;">
-				<table class="user-registration-email" border="0" cellpadding="0" cellspacing="0" style="width: <?php echo esc_attr( $email_body_width ); ?>; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
-					<tbody>
-						<tr>
-							<td colspan="2" style="text-align: left;">
-								<?php echo wp_kses_post( $email_content ); ?>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
+<div class="user-registration-email-body" style="padding: 100px 0; background-color: #ebebeb;">
+	<table class="user-registration-email" border="0" cellpadding="0" cellspacing="0"
+		style="width: <?php echo esc_attr( $email_body_width ); ?>; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
+		<tbody>
+			<tr>
+				<td colspan="2" style="text-align: left;">
+					<?php echo wp_kses_post( $email_content ); ?>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
 			<?php
 			$email_content = wp_kses_post( ob_get_clean() );
 		}
@@ -4759,6 +4793,51 @@ if ( ! function_exists( 'ur_get_translated_string' ) ) {
 		}
 	}
 }
+add_action( 'init', 'ur_check_is_disabled' );
+if ( ! function_exists( 'ur_check_is_disabled' ) ) {
+
+	/**
+	 * Check if user is disabled.
+	 */
+	function ur_check_is_disabled() {
+		$is_auto_enable = get_user_meta( get_current_user_id(), 'ur_auto_enable_time', true );
+		if ( $is_auto_enable ) {
+			$current_time = current_time( 'timestamp' );
+			if ( $current_time >= $is_auto_enable ) {
+				delete_user_meta( get_current_user_id(), 'ur_auto_enable_time' );
+				delete_user_meta( get_current_user_id(), 'ur_disable_users' );
+			}
+		}
+		$is_disabled = get_user_meta( get_current_user_id(), 'ur_disable_users', true );
+		if ( $is_disabled ) {
+			wp_logout();
+		}
+	}
+}
+
+if ( ! function_exists( 'ur_check_is_auto_enable_user' ) ) {
+
+	/**
+	 * Check if user is auto enabled.
+	 *
+	 * @param int $user_id User ID.
+	 */
+	function ur_check_is_auto_enable_user( $user_id = 0 ) {
+		if ( 0 === $user_id || '' === $user_id ) {
+			return;
+		}
+
+		$is_auto_enable = get_user_meta( $user_id, 'ur_auto_enable_time', true );
+		if ( ! $is_auto_enable || '' === $is_auto_enable ) {
+			return;
+		}
+		if ( strtotime( $is_auto_enable ) < strtotime( date( 'Y-m-d H:i:s' ) ) ) {
+			delete_user_meta( $user_id, 'ur_auto_enable_time' );
+			delete_user_meta( $user_id, 'ur_disable_users' );
+			return;
+		}
+	}
+}
 
 // Hook the redirection to admin_init
 add_action(
@@ -4775,5 +4854,222 @@ if ( ! function_exists( 'ur_redirect_to_addons_page' ) ) {
 			wp_safe_redirect( esc_url_raw( admin_url( 'admin.php?page=user-registration-dashboard#features' ) ) );
 			exit;
 		}
+	}
+}
+if ( ! function_exists( 'ur_check_akismet_installation' ) ) {
+
+	/**
+	 * Check the configuration status of Akismet.
+	 *
+	 * @return string The status message indicating whether Akismet is installed, activated, or configured.
+	 */
+	function ur_check_akismet_installation() {
+		$warning_color = '#ffcc00';
+
+		if ( ! file_exists( WP_PLUGIN_DIR . '/akismet/akismet.php' ) ) {
+			return sprintf(
+				'<div class="ur-form-settings-warning"><span style="color: %s;">%s</span>%s %s %s %s</div>',
+				$warning_color,
+				esc_html__( 'Warning:-', 'user-registration' ),
+				esc_html__( ' This feature is inactive because', 'user-registration' ),
+				'<a href="' . esc_url_raw( 'https://wordpress.org/plugins/akismet/' ) . '" target="_blank">' . esc_html__( 'Akismet', 'user-registration' ) . '</a>',
+				esc_html__( 'plugin has not been installed. For more', 'user-registration' ),
+				'<a href="https://docs.wpuserregistration.com/docs/individual-form-settings/#10-toc-title" target="_blank">' . esc_html__( 'information.', 'user-registration' ) . '</a>'
+			);
+		} elseif ( ! is_plugin_active( 'akismet/akismet.php' ) ) {
+			return sprintf(
+				'<div class="ur-form-settings-warning"><span style="color: %s;">%s</span>%s %s %s %s</div>',
+				$warning_color,
+				esc_html__( 'Warning:- ', 'user-registration' ),
+				esc_html__( 'This feature is inactive because', 'user-registration' ),
+				'<a href="' . esc_url( admin_url( 'plugins.php' ) ) . '" target="_blank">' . esc_html__( 'Akismet', 'user-registration' ) . '</a>',
+				esc_html__( 'plugin is not activated. For more', 'user-registration' ),
+				'<a href="https://docs.wpuserregistration.com/docs/individual-form-settings/#10-toc-title" target="_blank">' . esc_html__( 'information.', 'user-registration' ) . '</a>'
+			);
+		} elseif ( ! ur_is_akismet_configured() ) {
+			return sprintf(
+				'<div class="ur-form-settings-warning"><span style="color: %s;">%s</span>%s %s %s %s</div>',
+				$warning_color,
+				esc_html__( 'Warning:-', 'user-registration' ),
+				esc_html__( 'This feature is inactive because', 'user-registration' ),
+				'<a href="' . esc_url( admin_url( 'options-general.php?page=akismet-key-config' ) ) . '" target="_blank">' . esc_html__( 'Akismet', 'user-registration' ) . '</a>',
+				esc_html__( 'plugin has not been properly configured. For more', 'user-registration' ),
+				'<a href="https://docs.wpuserregistration.com/docs/individual-form-settings/#10-toc-title" target="_blank">' . esc_html__( 'information.', 'user-registration' ) . '</a>'
+			);
+		}
+	}
+
+}
+
+if ( ! function_exists( 'ur_is_akismet_configured' ) ) {
+
+	/**
+	 * Has the Akismet plugin been configured wih a valid API key?
+	 *
+	 * @since 4.2.1.2
+	 *
+	 * @return bool
+	 */
+	function ur_is_akismet_configured() {
+
+		if ( ! is_plugin_active( 'akismet/akismet.php' ) ) {
+			return false;
+		}
+		require_once WP_PLUGIN_DIR . '/akismet/akismet.php';
+
+		$akismet_instance = new Akismet();
+		// Akismet will only allow an API key to be saved if it is a valid key.
+		// We can assume that if there is an API key saved, it is valid.
+		$akismet_api_key = $akismet_instance->get_api_key();
+
+		if ( ! empty( $akismet_api_key ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+
+}
+add_filter( 'user_registration_get_akismet_validate', 'ur_get_akismet_validate', 10, 2 );
+if ( ! function_exists( 'ur_get_akismet_validate' ) ) {
+	/**
+	 * Check if registration should be validated by Akismet for potential spam.
+	 *
+	 * This function checks whether the Akismet plugin is installed and configured, and if the Akismet
+	 * validation option is enabled for a specific form. If validation is enabled, it prepares the
+	 * necessary data for the validation request and sends it to Akismet's 'registration-check' endpoint.
+	 *
+	 * @param int   $form_id The form_id to check if to validate.
+	 * @param array $form_data  values to validate.
+	 *
+	 * @return bool
+	 *   - true if the form_data is potentially spam according to Akismet.
+	 *   - false if Akismet validation is not enabled, the plugin is not properly configured, or the form_data is not considered spam.
+	 */
+	function ur_get_akismet_validate( $form_id, $form_data ) {
+		if ( ! file_exists( WP_PLUGIN_DIR . '/akismet/akismet.php' ) ) {
+			return false;
+		}
+
+		if ( ! ur_is_akismet_configured() ) {
+			return false;
+		}
+
+		$is_akismet_enabled = ur_get_single_post_meta( $form_id, 'user_registration_enable_akismet' );
+		if ( $is_akismet_enabled ) {
+
+			$form_content = ur_get_form_data_for_akismet( $form_data );
+
+			$request = array(
+				'blog'                 => home_url(),
+				'user_ip'              => ur_get_ip_address(),
+				'user_agent'           => isset( $_SERVER['HTTP_USER_AGENT'] ) ? wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) : null, // phpcs:ignore
+				'referrer'             => wp_get_referer() ? wp_get_referer() : null,
+				'permalink'            => ur_current_url(),
+				'comment_type'         => 'registration',
+				'comment_author'       => isset( $form_content['user_login'] ) ? $form_content['user_login'] : '',
+				'comment_author_email' => isset( $form_content['user_email'] ) ? $form_content['user_email'] : '',
+				'comment_author_url'   => isset( $form_content['user_url'] ) ? $form_content['user_url'] : '',
+				'comment_content'      => isset( $form_content['other_content'] ) ? $form_content['other_content'] : '',
+				'blog_lang'            => get_locale(),
+				'blog_charset'         => get_bloginfo( 'charset' ),
+			);
+
+			$response = Akismet::http_post( build_query( $request ), 'comment-check' );
+			return ! empty( $response ) && isset( $response[1] ) && 'true' === trim( $response[1] );
+		}
+
+		return false;
+	}
+}
+
+if ( ! function_exists( 'ur_get_form_data_for_akismet' ) ) {
+	/**
+	 * Get user submitted form data for akismet spam monitoring.
+	 *
+	 * @param array $form_data User submitted form data.
+	 */
+	function ur_get_form_data_for_akismet( $form_data ) {
+		$field_type_allowlist = ur_get_allowed_field_for_akisment();
+		$entry_data           = array();
+		$form_content         = array();
+		$other_content        = array();
+
+		foreach ( $form_data as $key => $field ) {
+			if ( isset( $field->extra_params['field_key'] ) ) {
+				$entry_data[ $field->extra_params['field_key'] ] = $field->value;
+			}
+		}
+
+		foreach ( $entry_data as $field_key => $value ) {
+			if ( in_array( $field_key, $field_type_allowlist ) ) {
+				switch ( $field_key ) {
+					case 'user_email':
+						$form_content['user_email'] = $value;
+						break;
+					case 'user_url':
+						$form_content['user_url'] = $value;
+						break;
+					case 'user_login':
+						$form_content['user_login'] = $value;
+						break;
+					default:
+						$other_content[] = $value;
+						break;
+				}
+			}
+		}
+
+		if ( ! empty( $other_content ) ) {
+			$form_content['other_content'] = implode( ' ', $other_content );
+		}
+		return $form_content;
+	}
+}
+
+if ( ! function_exists( 'ur_get_allowed_field_for_akisment' ) ) {
+	/**
+	 * List of allowed fields for spam protection by akismet.
+	 */
+	function ur_get_allowed_field_for_akisment() {
+		$field_type_allowlist = array(
+			'user_login',
+			'text',
+			'textarea',
+			'user_email',
+			'phone',
+			'address',
+			'user_url',
+			'wysiwyg',
+			'description',
+		);
+		return $field_type_allowlist;
+	}
+}
+
+
+if ( ! function_exists( 'ur_current_url' ) ) {
+	/**
+	 * Get the current URL.
+	 *
+	 * @since 3.2.0
+	 *
+	 * @return string
+	 */
+	function ur_current_url() {
+
+		$parsed_home_url = wp_parse_url( home_url() );
+
+		$url = $parsed_home_url['scheme'] . '://' . $parsed_home_url['host'];
+
+		if ( ! empty( $parsed_home_url['port'] ) ) {
+			$url .= ':' . $parsed_home_url['port'];
+		}
+
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$url .= wp_unslash( $_SERVER['REQUEST_URI'] );
+
+		return esc_url_raw( $url );
 	}
 }
