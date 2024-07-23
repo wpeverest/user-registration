@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - UR-1480-image-based-captcha
+      - master
     workflow_dispatch:
 jobs:
   sync:
