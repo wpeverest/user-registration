@@ -852,6 +852,15 @@
 .ur-icon-captcha-field::before {
   content: ""; }
 
+.ur-icon-membership-field::before {
+  content: ""; }
+
+.ur-icon-coupon-field::before {
+  content: ""; }
+
+.ur-icon-e-signature::before {
+  content: ""; }
+
 .user-registration-table {
   width: 100%;
   background: #ffffff;
@@ -7698,6 +7707,10 @@ a.button.ur-smart-tags-list-button {
     margin-bottom: 20px; }
     .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row#user_registration_form_setting_minimum_password_strength_field {
       margin-bottom: 0; }
+    .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row .ur-form-settings-warning {
+      padding: 10px 10px;
+      border: 1px solid #eeee;
+      border-right: 4px solid #ffcc00; }
     .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row .ur-label {
       font-size: 15px;
       line-height: 140%;

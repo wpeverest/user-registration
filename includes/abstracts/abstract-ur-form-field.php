@@ -669,7 +669,6 @@ abstract class UR_Form_Field {
 
 						}
 					} elseif ( 'subscription_plan' === $strip_prefix ) {
-
 						foreach ( $options as $key => $option ) {
 							$label                = is_array( $option ) ? $option['label'] : $option->label;
 							$value                = is_array( $option ) ? $option['value'] : $option->value;

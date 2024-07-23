@@ -62,20 +62,13 @@ function ur_get_page_id( $page ) {
 	if ( 'myaccount' == $page || 'login' == $page ) {
 		$page_id = ! empty( $my_account_page_id ) ? $my_account_page_id : $page_id;
 	}
-
-	/**
-	 * Check if the page sent as parameter is My Account page and return the id,
-	 * Else use the page's page_id sent as parameter.
-	 */
-	$page = ur_find_my_account_in_page( $page_id );
-
-	if ( $page > 0 && function_exists( 'pll_current_language' ) ) {
+	if ( function_exists( 'pll_current_language' ) ) {
 		$current_language = pll_current_language();
 		if ( ! empty( $current_language ) ) {
 			$translations = pll_get_post_translations( $page_id );
 			$page_id      = isset( $translations[ pll_current_language() ] ) ? $translations[ pll_current_language() ] : $page_id;
 		}
-	} elseif ( $page > 0 && class_exists( 'SitePress', false ) ) {
+	} elseif ( class_exists( 'SitePress', false ) ) {
 		$page_id = ur_get_wpml_page_language( $page_id );
 	}
 

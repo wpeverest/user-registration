@@ -260,6 +260,15 @@
 .ur-icon-captcha-field::before {
   content: ""; }
 
+.ur-icon-membership-field::before {
+  content: ""; }
+
+.ur-icon-coupon-field::before {
+  content: ""; }
+
+.ur-icon-e-signature::before {
+  content: ""; }
+
 .user-registration button,
 .user-registration .button,
 .ur-form-container button,

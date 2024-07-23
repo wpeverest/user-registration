@@ -359,6 +359,18 @@
 					"user_registration_admin_before_form_submit",
 					[data]
 				);
+
+				// validation for unsupported currency by paypal.
+				if (
+					typeof data.data.ur_payment_disabled !== "undefined" &&
+					data.data.ur_payment_disabled[0].validation_status === false
+				) {
+					URFormBuilder.show_message(
+						data.data.ur_payment_disabled[0].validation_message
+					);
+					return;
+				}
+
 				// validation for unsupported currency by paypal.
 				if (
 					typeof data.data.ur_invalid_currency_status !==
@@ -579,6 +591,11 @@
 				var required_fields = $.makeArray(
 					user_registration_form_builder_data.form_required_fields
 				);
+
+				if( $("#user_registration_pro_auto_password_activate").is(":checked") ) {
+					required_fields.splice( required_fields.indexOf('user_pass'), 1 );
+				}
+
 				var response = {
 					validation_status: true,
 					message: ""
@@ -595,6 +612,7 @@
 						user_registration_form_builder_data.i18n_admin.i18n_empty_form_name;
 					return response;
 				}
+
 				if (
 					$(".ur_save_form_action_button").find(".ur-spinner")
 						.length > 0
@@ -1298,13 +1316,21 @@
 										"input.ur-radio-trail-interval-count-input"
 									)
 									.val();
+								var subscription_expiry_date = $(element)
+									.find(
+										"input.ur-subscription-expiry-date"
+									)
+									.val().toString();
 								var trail_recurring_period = $(element)
 									.find(".ur-radio-trail-recurring-period")
 									.val();
 
-								var trail_period_enable = $single_item
-									.find(".ur-general-setting-block")
-									.find('input[data-field="trail_period"]')
+								var subscription_expiry_enable_value = $(element)
+								    .find(".ur-radio-enable-expiry-date")
+									.val();
+
+								var trail_period_enable = $(element)
+									.find(".ur-radio-enable-trail-period")
 									.val();
 
 								if (
@@ -1324,7 +1350,11 @@
 											trail_interval_count:
 												trail_interval_count,
 											trail_recurring_period:
-												trail_recurring_period
+												trail_recurring_period,
+											subscription_expiry_date:
+												subscription_expiry_date,
+											subscription_expiry_enable:
+												subscription_expiry_enable_value,
 										});
 								}
 								general_setting_data["options"] = array_value;
@@ -1452,7 +1482,6 @@
 			get_ur_data: function ($this_node) {
 				var node_type = $this_node.get(0).tagName.toLowerCase();
 				var value = "";
-
 				switch (node_type) {
 					case "input":
 						// Check input type.
@@ -1478,7 +1507,7 @@
 
 							default:
 								if (
-									!$this_node.hasClass("ur-type-image-choice")
+									!$this_node.hasClass("ur-type-image-choice") && !$this_node.hasClass("ur-subscription-expiry-date")
 								) {
 									value = $this_node.val();
 								}
@@ -3044,19 +3073,19 @@
 
 							// Get html of selected countries
 							if (Array.isArray(selected_countries_iso_s)) {
-								selected_countries_iso_s.forEach(
-									function (iso) {
-										var country_name = $(self)
-											.find('option[value="' + iso + '"]')
-											.html();
-										html +=
-											'<option value="' +
-											iso +
-											'">' +
-											country_name +
-											"</option>";
-									}
-								);
+								selected_countries_iso_s.forEach(function (
+									iso
+								) {
+									var country_name = $(self)
+										.find('option[value="' + iso + '"]')
+										.html();
+									html +=
+										'<option value="' +
+										iso +
+										'">' +
+										country_name +
+										"</option>";
+								});
 							}
 
 							// Update default_value options in `Field Options` tab
@@ -3396,6 +3425,112 @@
 									);
 								}
 							});
+
+							$(".ur-radio-enable-trail-period").each(
+								function () {
+									if ($(this).is(":checked")) {
+										$(this)
+											.closest(".ur-subscription-plan")
+											.find(
+												".ur-subscription-trail-period-option"
+											)
+											.show();
+									} else {
+										$(this)
+											.closest(".ur-subscription-plan")
+											.find(
+												".ur-subscription-trail-period-option"
+											)
+											.hide();
+									}
+									$(this).on("change", function () {
+										if ($(this).is(":checked")) {
+											$(this)
+												.closest(
+													".ur-subscription-plan"
+												)
+												.find(
+													".ur-subscription-trail-period-option"
+												)
+												.show();
+										} else {
+											$(this)
+												.closest(
+													".ur-subscription-plan"
+												)
+												.find(
+													".ur-subscription-trail-period-option"
+												)
+												.hide();
+										}
+									});
+								}
+							);
+							$(".ur-radio-enable-expiry-date").each(
+								function () {
+									if ($(this).is(":checked")) {
+										$(this)
+											.closest(".ur-subscription-plan")
+											.find(
+												".ur-subscription-expiry-option"
+											)
+											.show();
+									} else {
+										$(this)
+											.closest(".ur-subscription-plan")
+											.find(
+												".ur-subscription-expiry-option"
+											)
+											.hide();
+										$(this)
+											.closest(".ur-subscription-plan")
+											.find(
+												".ur-subscription-expiry-option"
+											)
+											.find(".ur-subscription-expiry-date")
+											.val("")
+									}
+									$(this).on("change", function () {
+										if ($(this).is(":checked")) {
+											$(this)
+												.closest(
+													".ur-subscription-plan"
+												)
+												.find(
+													".ur-subscription-expiry-option"
+												)
+												.show();
+											$(this)
+												.closest(
+													".ur-subscription-plan"
+												)
+												.find(
+													".ur-subscription-expiry-option"
+												)
+												.find(".ur-subscription-expiry-date")
+												.val("");
+										} else {
+											$(this)
+												.closest(
+													".ur-subscription-plan"
+												)
+												.find(
+													".ur-subscription-expiry-option"
+												)
+												.hide();
+											$(this)
+												.closest(
+													".ur-subscription-plan"
+												)
+												.find(
+													".ur-subscription-expiry-option"
+												)
+												.find(".ur-subscription-expiry-date")
+												.val("");
+										}
+									});
+								}
+							);
 
 							break;
 						case "selling_price":
@@ -4683,10 +4818,12 @@
 			 * @since 2.0.3
 			 */
 			render_subscription_plan: function (this_node) {
+
 				var array_value = [];
 				var wrapper = $(".ur-selected-item.ur-item-active");
 				var li_elements = this_node.closest("ul").find("li");
 				var checked_index = this_node.closest("li").index();
+
 				li_elements.each(function (index, element) {
 					var label = $(element)
 						.find("input.ur-type-radio-label")
@@ -4707,9 +4844,47 @@
 					var trail_interval_count = $(element)
 						.find("input.ur-radio-trail-interval-count-input")
 						.val();
+					var subscription_expiry_date = $(element)
+						.find("input.ur-subscription-expiry-date")
+						.val()
 					var trail_recurring_period = $(element)
 						.find(".ur-radio-trail-recurring-period")
 						.val();
+
+					var trail_period_enable_val = $(element)
+						.find(".ur-radio-enable-trail-period")
+						.prop("checked")
+						? "on"
+						: "false";
+
+					wrapper
+						.find(
+							".ur-general-setting-options li:nth(" +
+								index +
+								") .ur-radio-enable-trail-period"
+						)
+						.val(trail_period_enable_val);
+					var subscription_enable_val = $(element)
+						.find(".ur-radio-enable-expiry-date")
+						.prop("checked")
+						? "on"
+						: "false";
+
+					wrapper
+						.find(
+							".ur-general-setting-options li:nth(" +
+								index +
+								") .ur-radio-enable-expiry-date"
+						)
+						.val(subscription_enable_val);
+
+					var inner_toggle_wrapper = wrapper.find(".ur-general-setting-options li:nth(" + index + ") .ur-radio-enable-expiry-date");
+						if(inner_toggle_wrapper.val() === 'on'){
+							inner_toggle_wrapper.prop('checked',true)
+						}else{
+							inner_toggle_wrapper.prop('checked', false);
+
+						}
 
 					wrapper
 						.find(
@@ -4725,6 +4900,13 @@
 								") .ur-radio-trail-recurring-period"
 						)
 						.val(trail_recurring_period);
+					 wrapper
+						.find(
+							".ur-general-setting-options li:nth(" +
+								index +
+								") .ur-subscription-expiry-date"
+						)
+						.val(subscription_expiry_date);
 
 					var currency = $(element)
 						.find("input.ur-type-radio-money-input")
@@ -4751,12 +4933,14 @@
 							recurring_period: recurring_period,
 							trail_interval_count: trail_interval_count,
 							trail_recurring_period: trail_recurring_period,
+							trail_period_enable_val: trail_period_enable_val,
+							subscription_expiry_enable: subscription_enable_val,
+							subscription_expiry_date:subscription_expiry_date,
 							currency: currency,
 							checkbox: checkbox
 						});
 					}
 				});
-
 				var checkbox = wrapper.find(".ur-field");
 				checkbox.html("");
 
@@ -5131,7 +5315,21 @@
 			 * @param string value The value of the option.
 			 */
 			add_choice_field_option: function ($this, value) {
-				var $wrapper = $(".ur-selected-item.ur-item-active");
+				$this_obj = $(this);
+				var $wrapper = $(".ur-selected-item.ur-item-active"),
+					this_index = $this.closest("li").index(),
+					cloning_element = $this.closest("li").clone(true, true);
+				cloning_element
+					.find('input.ur-subscription-expiry-date')
+					.attr('data-id','expiry-date-index-'+this_index+ Math.floor(Math.random() * 900) + 100);
+				cloning_element
+					.find('input[data-field="options"]')
+					.val(typeof value !== "undefined" ? value : "");
+				cloning_element
+					.find('input[data-field="default_value"]')
+					.prop("checked", false);
+				cloning_element.find('select[data-field="options"]').val("");
+				cloning_element.find(".ur-thumbnail-image img").attr("src", "");
 
 				if ( $this.closest(".ur-general-setting-image-captcha-options").length > 0 ) {
 					URFormBuilder.handle_add_image_captcha_group($this, $wrapper);
@@ -5707,6 +5905,15 @@
 				$this.val(inputValue);
 			}
 		);
+		// Make a data-id unique for flatpicker.
+		$(document).on("click", ".ur-input-type-subscription_plan", function () {
+			$(this).next(".ur-general-setting-subscription_plan").find(".ur-subscription-plan").each(function(index) {
+				var expiry_date_id = $(this).find(".ur-subscription-expiry-date");
+					var uniqueId = "expiry-date-index-" + index;
+					expiry_date_id.attr("data-id", uniqueId);
+			});
+		});
+
 
 		$(document.body).on(
 			"focusout",
