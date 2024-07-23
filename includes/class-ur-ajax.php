@@ -1123,15 +1123,21 @@ class UR_AJAX {
 	 * @return void
 	 **/
 	public static function dismiss_notice() {
+		$notice_id = isset( $_POST['notice_id'] ) ? wp_unslash( sanitize_key( $_POST['notice_id'] ) ) : '';   // phpcs:ignore WordPress.Security.NonceVerification
 		$notice_type = isset( $_POST['notice_type'] ) ? wp_unslash( sanitize_key( $_POST['notice_type'] ) ) : '';   // phpcs:ignore WordPress.Security.NonceVerification
 		check_admin_referer( $notice_type . '-nonce', 'security' );
-
 		if ( ! empty( $_POST['dismissed'] ) ) {
 			if ( ! empty( $_POST['dismiss_forever'] ) && ur_string_to_bool( sanitize_text_field( wp_unslash( $_POST['dismiss_forever'] ) ) ) ) {
-				update_option( 'user_registration_' . $notice_type . '_notice_dismissed', true );
-				update_option( 'user_registration_' . $notice_type . '_notice_dismissed_temporarily', '' );
+				update_option( 'user_registration_' . $notice_id . '_notice_dismissed', true );
 			} else {
-				update_option( 'user_registration_' . $notice_type . '_notice_dismissed_temporarily', current_time( 'Y-m-d' ) );
+				$notice_dismissed_temporarily = json_decode( get_option( 'user_registration_' . $notice_id . '_notice_dismissed_temporarily', '' ), true );
+				$reopen_times                 = isset( $notice_dismissed_temporarily ) ? $notice_dismissed_temporarily['reopen_times'] : 0;
+
+				$notice_data = array(
+					'last_dismiss' => current_time( 'Y-m-d' ),
+					'reopen_times' => $reopen_times + 1,
+				);
+				update_option( 'user_registration_' . $notice_id . '_notice_dismissed_temporarily', json_encode( $notice_data ) );
 			}
 		}
 	}

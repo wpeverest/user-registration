@@ -177,7 +177,7 @@ class UR_Install {
 	 * @since 1.2.0
 	 */
 	private static function remove_admin_notices() {
-		include_once __DIR__ . '/admin/class-ur-admin-notices.php';
+		include_once __DIR__ . '/admin/notifications/class-ur-admin-notices.php';
 		UR_Admin_Notices::remove_all_notices();
 	}
 
