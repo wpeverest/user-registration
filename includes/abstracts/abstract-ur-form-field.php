@@ -937,22 +937,61 @@ abstract class UR_Form_Field {
 					break;
 				case 'captcha':
 					$default_options          = isset( $this->field_defaults['default_options'] ) ? $this->field_defaults['default_options'] : array();
+					$default_image_captcha_options          = isset( $this->field_defaults['default_image_options'] ) ? $this->field_defaults['default_image_options'] : array();
 					$old_options              = isset( $this->admin_data->advance_setting->choices ) ? explode( ',', trim( $this->admin_data->advance_setting->choices, ',' ) ) : $default_options;
 					$options                  = isset( $this->admin_data->general_setting->options ) ? $this->admin_data->general_setting->options : $old_options;
+					$image_options            = isset( $this->admin_data->general_setting->image_captcha_options ) ? $this->admin_data->general_setting->image_captcha_options : $default_image_captcha_options;
+
 					$general_setting_wrapper .= '<ul class="ur-options-list">';
 
-					foreach ( $options as $key => $option ) {
-						$label                    = is_array( $option ) ? $option['question'] : $option->question;
-						$answer                   = is_array( $option ) ? $option['answer'] : $option->answer;
-						$general_setting_wrapper .= '<li class="ur-custom-captcha">';
-						$general_setting_wrapper .= '<div class="editor-block-mover__control-drag-handle editor-block-mover__control">
-						<svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" role="img" aria-hidden="true" focusable="false"><path d="M13,8c0.6,0,1-0.4,1-1s-0.4-1-1-1s-1,0.4-1,1S12.4,8,13,8z M5,6C4.4,6,4,6.4,4,7s0.4,1,1,1s1-0.4,1-1S5.6,6,5,6z M5,10 c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S5.6,10,5,10z M13,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S13.6,10,13,10z M9,6 C8.4,6,8,6.4,8,7s0.4,1,1,1s1-0.4,1-1S9.6,6,9,6z M9,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S9.6,10,9,10z"></path></svg>
-						</div>';
-						$general_setting_wrapper .= '<input value="' . esc_attr( $label ) . '" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" class="ur-general-setting-field ur-type-' . esc_attr( $setting_value['type'] ) . '-question" type="text" name="' . esc_attr( $setting_value['name'] ) . '_captcha_question">';
-						$general_setting_wrapper .= '<input value="' . esc_attr( $answer ) . '" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" class="ur-general-setting-field ur-type-' . esc_attr( $setting_value['type'] ) . '-answer" type="text" name="' . esc_attr( $setting_value['name'] ) . '_captcha_answer">';
-						$general_setting_wrapper .= '<a class="add" href="#"><i class="dashicons dashicons-plus"></i></a>';
-						$general_setting_wrapper .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a>';
-						$general_setting_wrapper .= '</li>';
+					if ( "options" === $setting_key ) {
+						foreach ( $options as $key => $option ) {
+							$label                    = is_array( $option ) ? $option['question'] : $option->question;
+							$answer                   = is_array( $option ) ? $option['answer'] : $option->answer;
+							$general_setting_wrapper .= '<li class="ur-custom-captcha">';
+							$general_setting_wrapper .= '<div class="editor-block-mover__control-drag-handle editor-block-mover__control">
+							<svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" role="img" aria-hidden="true" focusable="false"><path d="M13,8c0.6,0,1-0.4,1-1s-0.4-1-1-1s-1,0.4-1,1S12.4,8,13,8z M5,6C4.4,6,4,6.4,4,7s0.4,1,1,1s1-0.4,1-1S5.6,6,5,6z M5,10 c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S5.6,10,5,10z M13,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S13.6,10,13,10z M9,6 C8.4,6,8,6.4,8,7s0.4,1,1,1s1-0.4,1-1S9.6,6,9,6z M9,10c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S9.6,10,9,10z"></path></svg>
+							</div>';
+							$general_setting_wrapper .= '<input value="' . esc_attr( $label ) . '" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" class="ur-general-setting-field ur-type-' . esc_attr( $setting_value['type'] ) . '-question" type="text" name="' . esc_attr( $setting_value['name'] ) . '_captcha_question">';
+							$general_setting_wrapper .= '<input value="' . esc_attr( $answer ) . '" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" class="ur-general-setting-field ur-type-' . esc_attr( $setting_value['type'] ) . '-answer" type="text" name="' . esc_attr( $setting_value['name'] ) . '_captcha_answer">';
+							$general_setting_wrapper .= '<a class="add" href="#"><i class="dashicons dashicons-plus"></i></a>';
+							$general_setting_wrapper .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a>';
+							$general_setting_wrapper .= '</li>';
+						}
+					} elseif ( "image_captcha_options" === $setting_key ) {
+						foreach ( $image_options as $key => $option ) {
+							$option_json = json_encode($option);
+							$option = json_decode( $option_json, true );
+							if ( isset( $option['icon_tag'] ) ) {
+								$icon_tag = $option['icon_tag'];
+								unset( $option['icon_tag'] );
+							}
+							if ( isset( $option['correct_icon'] ) ) {
+								$correct_icon = $option['correct_icon'];
+								unset( $option['correct_icon'] );
+							}
+
+							$general_setting_wrapper .= '<li class="ur-custom-captcha" data-group='.$key.'>';
+
+							$general_setting_wrapper .= '<div class="icons-group">';
+
+							foreach( $option as $icon_key => $icon_value ) {
+								$icon_checked = ( $correct_icon === $icon_key ) ? 'checked=checked' : '';
+								$general_setting_wrapper .= '<div class="icon-wrap">';
+								$general_setting_wrapper .= '<label>';
+								$general_setting_wrapper .= '<input type="radio" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" class="ur-general-setting-field ur-captcha-icon-radio" name="' . esc_attr( $setting_value['name'] ) . '['.$key.'][correct_icon]" value="'. esc_attr( $icon_key ) .'" '. esc_attr( $icon_checked ) .' /><input type="hidden" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" name="' . esc_attr( $setting_value['name'] ) . '['.esc_attr($key).']['.esc_attr( $icon_key ).']" value="'. esc_attr( $icon_value ) .'" class="ur-general-setting-field captcha-icon" />';
+								$general_setting_wrapper .= '<span class="'. esc_attr( $icon_value ) .'"></span>';
+								$general_setting_wrapper .= '</label>';
+								$general_setting_wrapper .= '<input class="button dashicons-picker" type="button" value="Choose Icon" data-name="" data-icon-key="'. esc_attr( $icon_key ) .'" data-group-id="'. esc_attr( $key ) .'" data-target="#dashicons_picker_example_icon1"/>';
+								$general_setting_wrapper .= '</div>';
+							}
+
+							$general_setting_wrapper .= '</div>';
+							$general_setting_wrapper .= '<input value="' . esc_attr( $icon_tag ) . '" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" class="ur-general-setting-field ur-type-' . esc_attr( $setting_value['type'] ) . '-icon-tag" type="text" name="' . esc_attr( $setting_value['name'] ) . '['.esc_attr($key).'][icon_tag]" placeholder="Icon Tag">';
+							$general_setting_wrapper .= '<a class="remove remove-icon-group" href="#"><i class="dashicons dashicons-minus"></i>Remove Group</a>';
+							$general_setting_wrapper .= '</li>';
+						}
+						$general_setting_wrapper .= '<a class="add add-icon-group" data-last-group="'. esc_attr( $key ) .'" href="#"><i class="dashicons dashicons-plus"></i>Add New Group</a>';
 					}
 					$general_setting_wrapper .= '</ul>';
 					break;

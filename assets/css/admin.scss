@@ -4946,3 +4946,37 @@
 		}
 	}
 }
+
+
+// Custom CAPTCHA Form Builder Field Options CSS
+.ur-registered-from {
+	.ur-general-setting {
+		&.ur-setting-captcha {
+			.ur-options-list {
+				.ui-sortable-handle {
+					flex-direction: row;
+					flex-wrap: wrap;
+				}
+			}
+		}
+
+		&.ur-general-setting-image-captcha-options {
+			.ur-options-list {
+				.ui-sortable-handle {
+					.icons-group {
+						display: flex;
+						align-items: center;
+						gap: 16px;
+
+						.icon-wrap {
+							.button {
+								padding-top: 0;
+								padding-bottom: 0;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

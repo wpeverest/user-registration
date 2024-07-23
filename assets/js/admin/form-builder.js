@@ -1198,6 +1198,7 @@
 
 				var option_values = [];
 				var default_values = [];
+				var image_captcha_options = [];
 				$.each(general_setting_field, function () {
 					var is_checkbox = $(this)
 						.closest(".ur-general-setting")
@@ -1420,6 +1421,35 @@
 									/"/g,
 									"'"
 								);
+						} else if ( "image_captcha_options" === $(this).attr("data-field") ) {
+							var li_elements = $(this).closest("ul").find("li");
+							var image_captcha_value = [];
+
+							$.each( li_elements, function( li_index, li_element ) {
+
+								if ( typeof image_captcha_options[ li_index ] !== "undefined" && typeof image_captcha_options[ li_index ]['icon_tag'] !== "undefined" && typeof image_captcha_options[ li_index ]['icon-2'] !== "undefined" && typeof image_captcha_options[ li_index ]['icon-1'] !== "undefined" && typeof image_captcha_options[ li_index ]['icon-3'] !== "undefined" ) {
+									return;
+								}
+								var icon_wraps = $(li_element).find(".icons-group").find(".icon-wrap");
+
+								image_captcha_value[ "correct_icon" ] = $(li_element).find('input[name="ur_general_setting[captcha_image]['+li_index+'][correct_icon]"]:checked').val();
+								image_captcha_value[ "icon_tag" ] = $(li_element).find('input[name="ur_general_setting[captcha_image]['+li_index+'][icon_tag]"]').val();
+
+								$.each(icon_wraps, function(icon_index, icon_wrap){
+									var next_icon_index = icon_index + 1;
+
+									image_captcha_value[ "icon-"+ next_icon_index ] = $(icon_wrap).find('input:hidden[name="ur_general_setting[captcha_image]['+li_index+'][icon-'+next_icon_index+']"]').val();
+								});
+
+								image_captcha_options.push({
+									"icon-1" : image_captcha_value[ "icon-1" ],
+									"icon-2" : image_captcha_value[ "icon-2" ],
+									"icon-3" : image_captcha_value[ "icon-3" ],
+									"icon_tag" : image_captcha_value[ "icon_tag" ],
+									"correct_icon" : image_captcha_value[ "correct_icon" ],
+								});
+							});
+							general_setting_data["image_captcha_options"] = image_captcha_options;
 						} else {
 							general_setting_data[$(this).attr("data-field")] =
 								URFormBuilder.get_ur_data($(this));
@@ -3529,6 +3559,36 @@
 							});
 							break;
 						case "trail_period":
+							if (!$this_obj.is(":checked")) {
+								$(this)
+									.closest(".ur-general-setting-block")
+									.find(
+										".ur-subscription-trail-period-option"
+									)
+									.hide();
+							}
+
+							$this_obj.on("change", function () {
+								$(this)
+									.closest(".ur-general-setting-block")
+									.find(
+										".ur-subscription-trail-period-option"
+									)
+									.toggle();
+
+								$(".ur-selected-item.ur-item-active")
+									.find(".ur-general-setting-block")
+									.find(
+										".ur-subscription-trail-period-option"
+									)
+									.toggle();
+							});
+							$this_obj.on("change", function () {
+								URFormBuilder.trigger_general_setting_trail_period(
+									$(this)
+								);
+							});
+							break;
 						case "placeholder":
 							$this_obj.on("keyup", function () {
 								URFormBuilder.trigger_general_setting_placeholder(
@@ -5271,33 +5331,49 @@
 				cloning_element.find('select[data-field="options"]').val("");
 				cloning_element.find(".ur-thumbnail-image img").attr("src", "");
 
-				$this.closest("li").after(cloning_element);
-				$wrapper
-					.find(
-						".ur-general-setting-options .ur-options-list > li:nth( " +
-							this_index +
-							" )"
-					)
-					.after(cloning_element.clone(true, true));
+				if ( $this.closest(".ur-general-setting-image-captcha-options").length > 0 ) {
+					URFormBuilder.handle_add_image_captcha_group($this, $wrapper);
+				} else {
+					var	this_index = $this.closest("li").index();
+						cloning_element = $this.closest("li").clone(true, true);
+					cloning_element
+						.find('input[data-field="options"]')
+						.val(typeof value !== "undefined" ? value : "");
+					cloning_element
+						.find('input[data-field="default_value"]')
+						.prop("checked", false);
+					cloning_element.find('select[data-field="options"]').val("");
+					cloning_element.find(".ur-thumbnail-image img").attr("src", "");
 
-				if (
-					$this
-						.closest(".ur-general-setting-block")
-						.hasClass("ur-general-setting-radio")
-				) {
-					URFormBuilder.render_radio($this);
-				} else if (
-					$this
-						.closest(".ur-general-setting-block")
-						.hasClass("ur-general-setting-checkbox")
-				) {
-					URFormBuilder.render_check_box($this);
-				} else if (
-					$this
-						.closest(".ur-general-setting-block")
-						.hasClass("ur-general-setting-multiple_choice")
-				) {
-					URFormBuilder.render_multiple_choice($this);
+					$this.closest("li").after(cloning_element);
+					$wrapper
+						.find(
+							".ur-general-setting-options .ur-options-list > li:nth( " +
+								this_index +
+								" )"
+						)
+						.after(cloning_element.clone(true, true));
+
+					if (
+						$this
+							.closest(".ur-general-setting-block")
+							.hasClass("ur-general-setting-radio")
+					) {
+						URFormBuilder.render_radio($this);
+					} else if (
+						$this
+							.closest(".ur-general-setting-block")
+							.hasClass("ur-general-setting-checkbox")
+					) {
+						URFormBuilder.render_check_box($this);
+					} else if (
+						$this
+							.closest(".ur-general-setting-block")
+							.hasClass("ur-general-setting-multiple_choice")
+					) {
+						URFormBuilder.render_multiple_choice($this);
+					}
+
 				}
 
 				$(document.body).trigger("ur_field_option_changed", [
@@ -5318,14 +5394,20 @@
 					this_index = $this.closest("li").index();
 
 				if ($parent_ul.find("li").length > 1) {
-					$this.closest("li").remove();
-					$wrapper
-						.find(
-							".ur-general-setting-options .ur-options-list > li:nth( " +
-								this_index +
-								" )"
-						)
-						.remove();
+					if ( $this.closest(".ur-general-setting-image-captcha-options").length > 0 ) {
+
+						URFormBuilder.handle_remove_image_captcha_group($this, $wrapper, this_index);
+
+					} else {
+						$wrapper
+							.find(
+								".ur-general-setting-options .ur-options-list > li:nth( " +
+									this_index +
+									" )"
+							)
+							.remove();
+						$this.closest("li").remove();
+					}
 
 					if (
 						$any_siblings
@@ -5359,6 +5441,97 @@
 					URFormBuilder,
 					$this
 				]);
+			},
+
+			handle_add_image_captcha_group: function( $this, $wrapper ) {
+				var	this_index = parseInt($this.attr("data-last-group")),
+						next_index = this_index + 1;
+						cloning_element = $this.closest("ul").find('li[data-group="'+this_index+'"]').clone(true, true),
+						cloning_element_icons = cloning_element.find(".icon-wrap");
+
+
+					cloning_element.attr("data-group", next_index);
+					cloning_element.find(".ur-type-captcha-icon-tag").attr("name", 'ur_general_setting[captcha_image]['+next_index+'][icon_tag]');
+					cloning_element.find(".ur-type-captcha-icon-tag").val("");
+					cloning_element.find(".ur-type-captcha-icon-tag").attr("placeholder" , "Icon Tag");
+
+					$.each( cloning_element_icons, function(icon_index, icon_element){
+						var next_icon_index = icon_index+1;
+						$(icon_element).find(".ur-captcha-icon-radio").attr("name", 'ur_general_setting[captcha_image]['+next_index+'][correct_icon]');
+						$(icon_element).find(".ur-captcha-icon-radio").prop("checked", false);
+						$(icon_element).find(".captcha-icon").attr("name", 'ur_general_setting[captcha_image]['+next_index+'][icon-'+next_icon_index+']');
+						$(icon_element).find(".captcha-icon").val("");
+						$(icon_element).find(".captcha-icon").siblings("span").attr("class", "");
+						$(icon_element).find(".dashicons-picker").attr("data-icon-key","icon-"+next_icon_index);
+						$(icon_element).find(".dashicons-picker").attr("data-group-id",next_index);
+					});
+
+					$this.closest("ul").find('li[data-group="'+this_index+'"]').after(cloning_element);
+					$this.attr("data-last-group", next_index);
+					$wrapper
+						.find(
+							".ur-general-setting-image-captcha-options .ur-options-list > li:nth( " +
+								this_index +
+								" )"
+						)
+						.after(cloning_element.clone(true, true));
+					$wrapper
+						.find(
+							".ur-general-setting-image-captcha-options .ur-options-list .add-icon-group"
+						)
+						.attr("data-last-group", next_index);
+			},
+
+			handle_remove_image_captcha_group: function($this, $wrapper, this_index) {
+				$wrapper
+					.find(
+						".ur-general-setting-image-captcha-options .ur-options-list > li:nth( " +
+							this_index +
+							" )"
+					)
+					.remove();
+
+				var next_li_group = $wrapper
+					.find(".ur-general-setting-image-captcha-options .ur-options-list li.ur-custom-captcha"),
+					settings_li_group = $this.closest("li").siblings(".ur-custom-captcha");
+
+				$this.closest("ul.ur-options-list").find(".add-icon-group").attr("data-last-group",(parseInt( settings_li_group.length )-1));
+				$this.closest("li").remove();
+
+				$.each(next_li_group, function(li_index, li_group){
+					$(li_group).attr("data-group", li_index);
+					$(li_group).find(".ur-type-captcha-icon-tag").attr("name", 'ur_general_setting[captcha_image]['+li_index+'][icon_tag]');
+
+					var icon_wrap = $(li_group).find(".icon-wrap");
+
+					$.each( icon_wrap, function( icon_index, icon_element ){
+						var next_icon_index = icon_index + 1;
+						$(icon_element).find(".captcha-icon").attr("name", 'ur_general_setting[captcha_image]['+li_index+'][icon-'+next_icon_index+']');
+						$(icon_element).find(".ur-captcha-icon-radio").attr("name", 'ur_general_setting[captcha_image]['+li_index+'][correct_icon]');
+						$(icon_element).find(".dashicons-picker").attr("data-icon-key","icon-"+next_icon_index);
+						$(icon_element).find(".dashicons-picker").attr("data-group-id",li_index);
+					});
+				});
+				$.each(settings_li_group, function(li_index, li_group){
+					$(li_group).attr("data-group", li_index);
+					$(li_group).find(".ur-type-captcha-icon-tag").attr("name", 'ur_general_setting[captcha_image]['+li_index+'][icon_tag]');
+
+					var icon_wrap = $(li_group).find(".icon-wrap");
+
+					$.each( icon_wrap, function( icon_index, icon_element ){
+						var next_icon_index = icon_index + 1;
+						$(icon_element).find(".captcha-icon").attr("name", 'ur_general_setting[captcha_image]['+li_index+'][icon-'+next_icon_index+']');
+						$(icon_element).find(".ur-captcha-icon-radio").attr("name", 'ur_general_setting[captcha_image]['+li_index+'][correct_icon]');
+						$(icon_element).find(".dashicons-picker").attr("data-icon-key","icon-"+next_icon_index);
+						$(icon_element).find(".dashicons-picker").attr("data-group-id",li_index);
+					});
+				});
+
+				$wrapper
+					.find(
+						".ur-general-setting-image-captcha-options .ur-options-list .add-icon-group"
+					).attr("data-last-group", (parseInt( next_li_group.length )-1));
+
 			}
 		};
 
