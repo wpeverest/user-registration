@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 ?>
-	<div id="user-registration-<?php echo esc_attr( $notice_type ); ?>-notice" class="notice notice-info user-registration-notice" data-purpose="<?php echo esc_attr( $notice_type ); ?>">
+	<div id="user-registration-<?php echo esc_attr( $notice_id ); ?>-notice" class="notice notice-info user-registration-notice" data-purpose="<?php echo esc_attr( $notice_type ); ?>" data-notice-id="<?php echo esc_attr( $notice_id ); ?>">
 		<div class="user-registration-notice-thumbnail">
 			<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/UR-Logo.gif' ); ?>" alt="">
 		</div>
@@ -26,11 +26,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 				?>
 			</div>
 			<?php
-				promotional_notice_content( $notice_type );
+				echo wp_kses_post( $notice_content );
 			?>
 			<div class="user-registration-notice-links">
 			<?php
-				promotional_notice_links( $notice_type, $notice_target_link );
+				promotional_notice_links( $notice_target_links, $permanent_dismiss );
 			?>
 			</div>
 

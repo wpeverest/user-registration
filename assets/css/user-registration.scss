@@ -85,6 +85,7 @@
 */
 .user-registration-message,
 .user-registration-error,
+.user-registration-coupon-error,
 .user-registration-info {
 	display: block;
 	margin: 0 0 10px;
@@ -151,6 +152,13 @@
 		content: "\f534";
 	}
 }
+.user-registration-coupon-error {
+	border-top-color: $red;
+	background: rgba($red, 0.1);
+	color: darken($red, 15%);
+	margin-top: 10px;
+}
+
 input.ur-input-border-green, textarea.ur-input-border-green{
 	border-color: #1EA71B !important;
 }

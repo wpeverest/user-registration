@@ -1563,6 +1563,110 @@
 														$this,
 														success_message_position
 													);
+												} else {
+													var $field_id = [];
+
+													$.each(
+														$this
+															.find(
+																".ur-field-item"
+															)
+															.find(
+																".ur-frontend-field"
+															),
+														function (index) {
+															var $this = $(this);
+
+															if (
+																$this.hasClass(
+																	"input-captcha-icon-radio"
+																)
+															) {
+																var data_id =
+																	$this.attr(
+																		"data-id"
+																	);
+
+																if (
+																	!$field_id.includes(
+																		data_id
+																	)
+																) {
+																	$field_id.push(
+																		data_id
+																	);
+																}
+															} else {
+																var $id =
+																	$this.attr(
+																		"id"
+																	);
+																$field_id.push(
+																	$id
+																);
+															}
+														}
+													);
+													var field_name = "";
+
+													$.each(
+														response.data.message,
+														function (
+															index,
+															value
+														) {
+															if (
+																$field_id.includes(
+																	index
+																)
+															) {
+																field_name =
+																	index;
+																var error_message =
+																	'<label id="' +
+																	index +
+																	"-error" +
+																	'" class="user-registration-error" for="' +
+																	index +
+																	'">' +
+																	value +
+																	"</label>";
+
+																var wrapper =
+																	$this
+																		.find(
+																			".ur-field-item"
+																		)
+																		.find(
+																			"input[id='" +
+																				index +
+																				"'], textarea[id='" +
+																				index +
+																				"']"
+																		);
+
+																wrapper
+																	.closest(
+																		".ur-field-item"
+																	)
+																	.find(
+																		".user-registration-error"
+																	)
+																	.remove();
+																wrapper
+																	.closest(
+																		".form-row"
+																	)
+																	.append(
+																		error_message
+																	);
+															}
+														}
+													);
+													$(document).trigger(
+														"ur_handle_field_error_messages",
+														[$this, field_name]
+													);
 												}
 
 												// Check the position set by the admin and scroll to the message postion accordingly.
@@ -1601,6 +1705,9 @@
 													.find(".ur-submit-button")
 													.prop("disabled", false);
 											}
+											$(".coupon-message").css({
+												display: "none"
+											});
 										}
 									});
 								});

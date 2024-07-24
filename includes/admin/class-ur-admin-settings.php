@@ -67,6 +67,10 @@ class UR_Admin_Settings {
 				$settings[] = include 'settings/class-ur-settings-license.php';
 			}
 
+			if ( is_plugin_active( 'user-registration-membership/user-registration-membership.php' ) ) {
+				$settings[] = include 'settings/class-ur-settings-membership.php';
+			}
+
 			/**
 			 * Filter to retrieve settings pages
 			 *
@@ -464,6 +468,18 @@ class UR_Admin_Settings {
 									$settings .= '</div>';
 									$settings .= '</div>';
 									break;
+								case 'nonce':
+									$settings .= '<div class="user-registration-global-settings">';
+									$settings .= '<div class="user-registration-global-settings--field">';
+									$settings .= '<input
+											name="' . esc_attr( $value['id'] ) . '"
+											id="' . esc_attr( $value['id'] ) . '"
+											type="hidden"
+											value="' . esc_attr( wp_create_nonce( $value['action'] ) ) . '"
+											/>';
+									$settings .= '</div>';
+									$settings .= '</div>';
+									break;
 
 								// Color picker.
 								case 'color':
@@ -846,8 +862,17 @@ class UR_Admin_Settings {
 					} elseif ( is_string( $section['settings'] ) ) {
 						$settings .= $section['settings'];
 					}
-					$settings .= ' </div > ';
-					$settings .= ' </div > ';
+
+					/**
+					 * Filter to retrieve extra settings for this section.
+					 *
+					 * @param string $settings Settings.
+					 * @param mixed $options Section options.
+					 */
+					$settings = apply_filters( 'user_registration_admin_after_global_settings', $settings, $options );
+
+					$settings .= ' </div> ';
+					$settings .= ' </div> ';
 
 					if ( ! empty( $section['id'] ) ) {
 						/**

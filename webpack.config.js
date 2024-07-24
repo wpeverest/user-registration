@@ -1,8 +1,8 @@
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
+const isProd = process.env.NODE_ENV === 'production';
 
 module.exports = (env, argv) => {
-	let production = argv.mode === "production";
 
 	return {
 		entry: {
@@ -16,7 +16,7 @@ module.exports = (env, argv) => {
 			publicPath: "/",
 			filename: "[name].js",
 		},
-		devtool: "source-map",
+		devtool: isProd ? false : "source-map",
 		resolve: {
 			extensions: [".js", ".jsx", ".json"],
 		},

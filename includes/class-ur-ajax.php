@@ -846,12 +846,6 @@ class UR_AJAX {
 				'user_pass',
 			);
 
-			$contains_search = count( array_intersect( $required_fields, self::$field_key_aray ) ) == count( $required_fields );
-
-			if ( false === $contains_search ) {
-             throw  new Exception( __( 'Could not save form, ' . join( ', ', $required_fields ) . ' fields are required.! ', 'user-registration' ) ); //phpcs:ignore
-			}
-
 			// check captcha configuration before form save action.
 			if ( isset( $_POST['data']['form_setting_data'] ) ) {
 				foreach ( wp_unslash( $_POST['data']['form_setting_data'] )  as $setting_data ) { //phpcs:ignore
@@ -863,7 +857,17 @@ class UR_AJAX {
 								esc_html__( 'Seems like you are trying to enable the captcha feature, but the captcha keys are empty. Please click', 'user-registration' ),
 								esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=captcha' ) ) ) ); //phpcs:ignore
 					}
+
+					if ( 'user_registration_pro_auto_password_activate' === $setting_data['name'] && ur_string_to_bool( $setting_data['value'] ) ) {
+						unset( $required_fields[ array_search( 'user_pass', $required_fields ) ] );
+					}
 				}
+			}
+
+			$contains_search = count( array_intersect( $required_fields, self::$field_key_aray ) ) == count( $required_fields );
+
+			if ( false === $contains_search ) {
+             throw  new Exception( __( 'Could not save form, ' . join( ', ', $required_fields ) . ' fields are required.! ', 'user-registration' ) ); //phpcs:ignore
 			}
 
 			/**
@@ -1125,15 +1129,21 @@ class UR_AJAX {
 	 * @return void
 	 **/
 	public static function dismiss_notice() {
+		$notice_id = isset( $_POST['notice_id'] ) ? wp_unslash( sanitize_key( $_POST['notice_id'] ) ) : '';   // phpcs:ignore WordPress.Security.NonceVerification
 		$notice_type = isset( $_POST['notice_type'] ) ? wp_unslash( sanitize_key( $_POST['notice_type'] ) ) : '';   // phpcs:ignore WordPress.Security.NonceVerification
 		check_admin_referer( $notice_type . '-nonce', 'security' );
-
 		if ( ! empty( $_POST['dismissed'] ) ) {
 			if ( ! empty( $_POST['dismiss_forever'] ) && ur_string_to_bool( sanitize_text_field( wp_unslash( $_POST['dismiss_forever'] ) ) ) ) {
-				update_option( 'user_registration_' . $notice_type . '_notice_dismissed', true );
-				update_option( 'user_registration_' . $notice_type . '_notice_dismissed_temporarily', '' );
+				update_option( 'user_registration_' . $notice_id . '_notice_dismissed', true );
 			} else {
-				update_option( 'user_registration_' . $notice_type . '_notice_dismissed_temporarily', current_time( 'Y-m-d' ) );
+				$notice_dismissed_temporarily = json_decode( get_option( 'user_registration_' . $notice_id . '_notice_dismissed_temporarily', '' ), true );
+				$reopen_times                 = isset( $notice_dismissed_temporarily ) ? $notice_dismissed_temporarily['reopen_times'] : 0;
+
+				$notice_data = array(
+					'last_dismiss' => current_time( 'Y-m-d' ),
+					'reopen_times' => $reopen_times + 1,
+				);
+				update_option( 'user_registration_' . $notice_id . '_notice_dismissed_temporarily', json_encode( $notice_data ) );
 			}
 		}
 	}

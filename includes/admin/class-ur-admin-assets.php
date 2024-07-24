@@ -37,11 +37,9 @@ class UR_Admin_Assets {
 		$jquery_version = isset( $wp_scripts->registered['jquery-ui-core']->ver ) ? $wp_scripts->registered['jquery-ui-core']->ver : '1.9.2';
 
 		// Register admin styles.
-		wp_register_style( 'user-registration-menu', UR()->plugin_url() . '/assets/css/menu.css', array(), UR_VERSION );
 		wp_register_style( 'user-registration-metabox', UR()->plugin_url() . '/assets/css/metabox.css', array(), UR_VERSION );
 		wp_register_style( 'user-registration-form-modal-css', UR()->plugin_url() . '/assets/css/form-modal.css', array(), UR_VERSION );
 
-		wp_register_style( 'user-registration-admin', UR()->plugin_url() . '/assets/css/admin.css', array( 'nav-menus', 'wp-color-picker' ), UR_VERSION );
 		wp_register_style( 'user-registration-settings', UR()->plugin_url() . '/assets/css/settings.css', array( 'nav-menus' ), UR_VERSION );
 		wp_register_style( 'jquery-ui-style', UR()->plugin_url() . '/assets/css/jquery-ui/jq-smoothness.css', array(), $jquery_version );
 		wp_register_style( 'flatpickr', UR()->plugin_url() . '/assets/css/flatpickr/flatpickr.min.css', array(), '4.6.9' );
@@ -64,16 +62,19 @@ class UR_Admin_Assets {
 		// Sitewide menu CSS.
 
 		wp_enqueue_style( 'ur-notice' );
-		wp_enqueue_style( 'user-registration-menu' );
-
+		wp_register_style( 'user-registration-menu', UR()->plugin_url() . '/assets/css/menu.css', array(), UR_VERSION );
+		if ( 'plugins' === $screen_id ) {
+			wp_enqueue_style( 'user-registration-menu' );
+		}
 		// Admin styles for UR pages only.
 		if ( in_array( $screen_id, ur_get_screen_ids(), true ) ) {
+			wp_register_style( 'user-registration-admin', UR()->plugin_url() . '/assets/css/admin.css', array( 'nav-menus', 'wp-color-picker' ), UR_VERSION );
 			wp_enqueue_style( 'user-registration-admin' );
 
 			if ( strpos( $screen_id, 'user-registration-settings' ) ) {
 				wp_enqueue_style( 'user-registration-settings' );
 			}
-
+			wp_enqueue_style( 'user-registration-menu' );
 			wp_enqueue_style( 'jquery-ui-style' );
 			wp_enqueue_style( 'wp-color-picker' );
 			wp_enqueue_style( 'perfect-scrollbar' );
@@ -269,9 +270,12 @@ class UR_Admin_Assets {
 			'ur-notice',
 			'ur_notice_params',
 			array(
-				'ajax_url'     => admin_url( 'admin-ajax.php' ),
-				'review_nonce' => wp_create_nonce( 'review-nonce' ),
-				'survey_nonce' => wp_create_nonce( 'survey-nonce' ),
+				'ajax_url'          => admin_url( 'admin-ajax.php' ),
+				'important_nonce'   => wp_create_nonce( 'important-nonce' ),
+				'review_nonce'      => wp_create_nonce( 'review-nonce' ),
+				'allow-usage_nonce' => wp_create_nonce( 'allow-usage-nonce' ),
+				'survey_nonce'      => wp_create_nonce( 'survey-nonce' ),
+				'promotional_nonce' => wp_create_nonce( 'promotional-nonce' ),
 			)
 		);
 

@@ -355,6 +355,39 @@
           background: #38488e; }
       #user-registration .user-registration-MyAccount-content .ur-payments-container .ur-payment-invoices table tbody tr:nth-child(odd) td {
         background: #fafafa; }
+  #user-registration .user-registration-MyAccount-content .user-registration-membership-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; }
+    #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row {
+      display: flex;
+      gap: 50px; }
+    #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container {
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center; }
+      #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .cancel-membership-button {
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        background: #db0000;
+        color: white;
+        cursor: pointer; }
+      #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container #membership-error-div {
+        width: 70%;
+        text-align: right;
+        padding: 8px 16px 8px 12px;
+        font-size: 14px;
+        font-weight: 500;
+        display: none; }
+        #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container #membership-error-div.btn-error {
+          background: #fff4f4;
+          color: red;
+          border-right: 3px solid #f25656; }
+        #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container #membership-error-div.btn-success {
+          background: #d7ede0;
+          color: #554545;
+          border-right: 3px solid #00ff5a; }
 
 .ur-toggle-section .user-registration-toggle-form {
   position: relative;

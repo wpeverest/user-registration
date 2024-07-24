@@ -123,20 +123,35 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 */
 	private function plugin_requests() {
 
-		if ( ! empty( $_POST[ $this->plugin_slug . '_license_key' ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			$this->activate_license_request();
-		} elseif ( ! empty( $_GET[ $this->plugin_slug . '_deactivate_license' ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$this->deactivate_license_request();
-		} elseif ( ! empty( $_GET[ 'dismiss-' . sanitize_title( $this->plugin_slug ) ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			update_option( $this->plugin_slug . '_hide_key_notice', 1 );
-		} elseif ( ! empty( $_GET['activated_license'] ) && $_GET['activated_license'] === $this->plugin_slug ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$this->add_notice( array( $this, 'activated_key_notice' ) );
-		} elseif ( ! empty( $_GET['deactivated_license'] ) && $_GET['deactivated_license'] === $this->plugin_slug ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$this->add_notice( array( $this, 'deactivated_key_notice' ) );
-		} elseif ( ! empty( $_POST['download_user_registration_pro'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			$this->install_extension();
-			wp_redirect( remove_query_arg( array( 'deactivated_license', $this->plugin_slug . '_deactivate_license' ), add_query_arg( 'activated_license', $this->plugin_slug ) ) );
-			exit;
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return false;
+		}
+
+		if ( isset( $_POST['ur_license_nonce'] ) ) {
+			if( ! wp_verify_nonce( $_POST['ur_license_nonce'], '_ur_license_nonce' ) ) {
+				return;
+			}
+			if ( ! empty( $_POST[ $this->plugin_slug . '_license_key' ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+				$this->activate_license_request();
+			}elseif ( ! empty( $_POST['download_user_registration_pro'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+				$this->install_extension();
+				wp_redirect( remove_query_arg( array( 'deactivated_license', $this->plugin_slug . '_deactivate_license' ), add_query_arg( 'activated_license', $this->plugin_slug ) ) );
+				exit;
+			}
+		}
+		if ( isset( $_GET['_wpnonce'] ) ) {
+			if( ! wp_verify_nonce( $_GET['_wpnonce'], '_ur_license_nonce' ) ) {
+				return;
+			}
+			if ( ! empty( $_GET[ $this->plugin_slug . '_deactivate_license' ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$this->deactivate_license_request();
+			} elseif ( ! empty( $_GET[ 'dismiss-' . sanitize_title( $this->plugin_slug ) ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				update_option( $this->plugin_slug . '_hide_key_notice', 1 );
+			} elseif ( ! empty( $_GET['activated_license'] ) && $_GET['activated_license'] === $this->plugin_slug ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$this->add_notice( array( $this, 'activated_key_notice' ) );
+			} elseif ( ! empty( $_GET['deactivated_license'] ) && $_GET['deactivated_license'] === $this->plugin_slug ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$this->add_notice( array( $this, 'deactivated_key_notice' ) );
+			}
 		}
 	}
 
@@ -253,7 +268,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	public function user_registration_error_notices() {
 		if ( ! empty( $this->errors ) ) {
 			foreach ( $this->errors as $key => $error ) {
-				include __DIR__ . '/admin/views/html-notice-error.php';
+				include __DIR__ . '/admin/notifications/views/html-notice-error.php';
 				if ( 'invalid_key' !== $key && did_action( 'all_admin_notices' ) ) {
 					unset( $this->errors[ $key ] );
 				}
@@ -302,7 +317,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 */
 	public function plugin_action_links( $actions ) {
 		$new_actions = array(
-			'deactivate_license' => '<a href="' . remove_query_arg( array( 'deactivated_license', 'activated_license' ), add_query_arg( $this->plugin_slug . '_deactivate_license', 1 ) ) . '" class="deactivate-license" style="color: #a00;" title="' . esc_attr( __( 'Deactivate License Key', 'user-registration' ) ) . '">' . __( 'Deactivate License', 'user-registration' ) . '</a>',
+			'deactivate_license' => '<a href="' . wp_nonce_url( remove_query_arg( array( 'deactivated_license', 'activated_license' ), add_query_arg( $this->plugin_slug . '_deactivate_license', 1 ) ), '_ur_license_nonce' ) . '" class="deactivate-license" style="color: #a00;" title="' . esc_attr( __( 'Deactivate License Key', 'user-registration' ) ) . '">' . __( 'Deactivate License', 'user-registration' ) . '</a>',
 		);
 
 		return array_merge( $actions, $new_actions );
@@ -445,7 +460,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 */
 	public function key_notice() {
 		if ( count( $this->errors ) === 0 && ! get_option( $this->plugin_slug . '_hide_key_notice' ) ) {
-			include __DIR__ . '/admin/views/html-notice-key-unvalidated.php';
+			include __DIR__ . '/admin/notifications/views/html-notice-key-unvalidated.php';
 		}
 	}
 
@@ -453,14 +468,14 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * Activation success notice.
 	 */
 	public function activated_key_notice() {
-		include __DIR__ . '/admin/views/html-notice-key-activated.php';
+		include __DIR__ . '/admin/notifications/views/html-notice-key-activated.php';
 	}
 
 	/**
 	 * Dectivation success notice.
 	 */
 	public function deactivated_key_notice() {
-		include __DIR__ . '/admin/views/html-notice-key-deactivated.php';
+		include __DIR__ . '/admin/notifications/views/html-notice-key-deactivated.php';
 	}
 
 	/**
@@ -507,6 +522,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 
 		if ( $license_key ) {
 			$content .= sprintf( __( '<strong>If you have active premium license of User Registration</strong>, please click button below to install and activate <strong>User Registration Pro</strong>. Going forward <strong>User Registration Pro</strong> is necessary for smooth running of premium addons of User Registration that you are currently using.', 'user-registration' ) );
+			$link    .= '<input name="ur_license_nonce" id="ur_license_nonce" type="hidden" value="'. wp_create_nonce( '_ur_license_nonce' ) .'"/>';
 			$link    .= '<button class="button button-primary" type="text" name="download_user_registration_pro" value="download_user_registration_pro"><span class="dashicons dashicons-external"></span>' . __( 'Install and Activate User Registration Pro', 'user-registration' ) . '</button>';
 		} else {
 			$content .= sprintf( '<p class="extra-pad"><strong>%1$s</strong>, %2$s</p>', __( 'If you already have an active license key.', 'user-registration' ), __( 'please activate the key.', 'user-registration' ) );
@@ -642,7 +658,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 */
 	public function user_registration_extension_download_success_notice() {
 		$notice_html = __( 'User Registration Pro has been installed successfully.', 'user-registration' );
-		include __DIR__ . '/admin/views/html-notice-key-activated.php';
+		include __DIR__ . '/admin/notifications/views/html-notice-key-activated.php';
 	}
 }
 

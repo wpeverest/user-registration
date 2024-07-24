@@ -291,7 +291,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 			$data['base_product']         = $this->get_base_product();
 			$data['global_settings']      = $this->get_global_settings();
 
-			$this->send_request( self::REMOTE_URL, $data );
+			$this->send_request( apply_filters( 'user_registration_tg_tracking_remote_url' , self::REMOTE_URL ), $data );
 		}
 
 		/**
