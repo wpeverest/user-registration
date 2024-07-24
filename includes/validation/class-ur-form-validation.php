@@ -615,10 +615,6 @@ class UR_Form_Validation extends UR_Validation {
 			}
 		}
 
-		// error_log( print_r( $required_fields, true ) );
-		// error_log( print_r( $request_form_keys, true ) );
-		// error_log( print_r( array_diff( $required_fields, $request_form_keys ), true ) );
-
 		if ( array_diff( $required_fields, $request_form_keys ) ) {
 			ur_add_notice( 'Some fields are missing in the submitted form. Please reload the page.', 'error' );
 			return;

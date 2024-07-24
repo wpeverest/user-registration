@@ -178,7 +178,7 @@ class UR_Form_Handler {
 
 						if ( isset( $_POST[ $key ] ) ) {
 							if ( isset( $field['field_key'] ) && 'file' !== $field['field_key'] ) {
-								update_user_meta( $user_id, $update_key, $_POST[ $key ] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+								update_user_meta( $user_id, $update_key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 							}
 						} elseif ( 'checkbox' === $field['field_key'] ) {
 							update_user_meta( $user_id, $update_key, '' );

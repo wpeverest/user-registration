@@ -472,9 +472,10 @@ add_filter( 'extra_plugin_headers', 'ur_enable_ur_plugin_headers' );
  */
 function ur_get_field_type( $field_key ) {
 	$fields = ur_get_registered_form_fields();
-	if ( ur_pro_is_coupons_addon_activated() ) {
+	if ( function_exists( 'ur_pro_is_coupons_addon_activated' ) && ur_pro_is_coupons_addon_activated() ) {
 		$fields[] = 'coupon';
 	}
+
 	$field_type = 'text';
 
 	if ( in_array( $field_key, $fields ) ) {
@@ -527,6 +528,7 @@ function ur_get_field_type( $field_key ) {
 				break;
 			case 'radio':
 				$field_type = 'radio';
+				break;
 			case 'coupon':
 				$field_type = 'coupon';
 				break;
@@ -5194,6 +5196,10 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 						if ( 'smart' === $field['phone_format'] ) {
 							unset( $field['input_mask'] );
 						}
+					}
+
+					if ( 'password' === $single_item->field_key ) {
+						$field['size'] = $advance_data['advance_setting']->size;
 					}
 
 					if ( isset( $single_item->general_setting->hide_label ) ) {

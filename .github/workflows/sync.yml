@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - master
+      - dev/compatibility-with-repeater-fields
     workflow_dispatch:
 jobs:
   sync:

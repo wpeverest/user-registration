@@ -2011,7 +2011,17 @@
 																			index +
 																			"_" +
 																			repeater_row_id;
+																	} else {
+																		index =
+																			index.indexOf(
+																				"user_registration_"
+																			) ===
+																			-1
+																				? "user_registration_" +
+																				  index
+																				: index;
 																	}
+
 																	if (
 																		$field_id.includes(
 																			index
@@ -2026,7 +2036,9 @@
 																			'">' +
 																			value +
 																			"</label>";
-
+																		console.log(
+																			error_message
+																		);
 																		var wrapper =
 																			$this.find(
 																				".ur-form-row"

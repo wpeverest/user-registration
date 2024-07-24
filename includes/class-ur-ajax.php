@@ -1129,7 +1129,7 @@ class UR_AJAX {
 	 * @return void
 	 **/
 	public static function dismiss_notice() {
-		$notice_id = isset( $_POST['notice_id'] ) ? wp_unslash( sanitize_key( $_POST['notice_id'] ) ) : '';   // phpcs:ignore WordPress.Security.NonceVerification
+		$notice_id   = isset( $_POST['notice_id'] ) ? wp_unslash( sanitize_key( $_POST['notice_id'] ) ) : '';   // phpcs:ignore WordPress.Security.NonceVerification
 		$notice_type = isset( $_POST['notice_type'] ) ? wp_unslash( sanitize_key( $_POST['notice_type'] ) ) : '';   // phpcs:ignore WordPress.Security.NonceVerification
 		check_admin_referer( $notice_type . '-nonce', 'security' );
 		if ( ! empty( $_POST['dismissed'] ) ) {
