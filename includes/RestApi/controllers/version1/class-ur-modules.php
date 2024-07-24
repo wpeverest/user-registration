@@ -91,7 +91,7 @@ class UR_Modules {
 	 * @return array Module lists.
 	 */
 	public static function ur_get_modules() {
-		$raw_section = wp_safe_remote_get( UR()->plugin_url() . '/assets/extensions-json/all-features.json', array( 'user-agent' => 'UserRegistration Features Page' ) );
+		$raw_section = ur_file_get_contents( '/assets/extensions-json/all-features.json' );
 
 		if ( is_wp_error( $raw_section ) ) {
 			return new \WP_REST_Response(
@@ -104,7 +104,7 @@ class UR_Modules {
 		}
 
 		// Get Features Lists.
-		$section_data = json_decode( wp_remote_retrieve_body( $raw_section ) );
+		$section_data = json_decode( $raw_section );
 
 		if ( empty( $section_data->features ) ) {
 			return new \WP_REST_Response(
