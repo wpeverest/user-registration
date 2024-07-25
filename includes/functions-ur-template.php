@@ -300,6 +300,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 		if ( ! empty( $args['custom_attributes'] ) && is_array( $args['custom_attributes'] ) ) {
 			foreach ( $args['custom_attributes'] as $attribute => $attribute_value ) {
+				$attribute_value     = is_array( $attribute_value ) ? json_encode( $attribute_value ) : $attribute_value;
 				$custom_attributes[] = esc_attr( $attribute ) . '="' . esc_attr( $attribute_value ) . '"';
 			}
 		}
@@ -914,6 +915,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$field       .= '<input type="hidden" data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" class="input-hidden ur-frontend-field ' . esc_attr( $custom_class ) . '" id="' . esc_attr( $args['id'] ) . '"value="' . esc_attr( $hidden_value ) . '"/>';
 				break;
 		}
+
 		// End switch().
 		if ( $args['description'] ) {
 			$field .= '<span class="description">' . $args['description'] . '</span>';
@@ -940,6 +942,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			$container_id    = esc_attr( $args['id'] ) . '_field';
 			$field           = sprintf( $field_container, $container_class, $container_id, $field_html );
 		}
+
 		/**
 		 * Filters the form field based on its type.
 		 *

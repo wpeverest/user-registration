@@ -115,6 +115,7 @@ class UR_Form_Handler {
 		 * @param int $form_id The form ID.
 		 */
 		do_action( 'user_registration_validate_profile_update', $profile, $form_data, $form_id );
+
 		/**
 		 * Action validate profile on update.
 		 *
@@ -175,10 +176,11 @@ class UR_Form_Handler {
 					}
 					$disabled = isset( $field['custom_attributes']['disabled'] ) ? $field['custom_attributes']['disabled'] : '';
 					if ( 'disabled' !== $disabled ) {
-
 						if ( isset( $_POST[ $key ] ) ) {
 							if ( isset( $field['field_key'] ) && 'file' !== $field['field_key'] ) {
 								update_user_meta( $user_id, $update_key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+							} elseif ( isset( $field['type'] ) && 'repeater' === $field['type'] ) {
+								update_user_meta( $user_id, $update_key, $form_data[ $key ]->value ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 							}
 						} elseif ( 'checkbox' === $field['field_key'] ) {
 							update_user_meta( $user_id, $update_key, '' );

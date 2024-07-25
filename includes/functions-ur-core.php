@@ -3024,7 +3024,11 @@ if ( ! function_exists( 'ur_format_field_values_using_field_key' ) ) {
 		switch ( $field_key ) {
 			case 'checkbox':
 			case 'multi_select2':
-				$field_value = ( is_array( $field_value ) && ! empty( $field_value ) ) ? implode( ', ', $field_value ) : $field_value;
+				if ( is_array( $field_value ) && ! empty( $field_value ) ) {
+					$field_value = implode( ', ', $field_value );
+				} elseif ( ! empty( json_decode( $field_value ) ) ) { // phpcs:ignore;
+						$field_value = implode( ', ', json_decode( $field_value ) );
+				}
 				break;
 			case 'country':
 				$countries = UR_Form_Field_Country::get_instance()->get_country();

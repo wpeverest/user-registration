@@ -947,11 +947,12 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$attributes     = '';
 				$repeater_label = '';
 				foreach ( $form_row_data_array as $row_data ) {
-
-					if ( isset( $row_data['row_id'] ) && $row_id === $row_data['row_id'] && isset( $row_data['type'] ) && 'repeater' === $row_data['type'] ) {
-						$row_class      = 'ur-repeater-row';
-						$attributes     = 'data-repeater-id=' . $row_data['repeater_id'] . '';
-						$repeater_label = '<div class="ur-repeater-label" id="user_registration_repeater_row_title_' . esc_attr( $row_data['repeater_id'] ) . '"><label>' . esc_html__( 'Repeater Row', 'user-registration' ) . '</label></div>';
+					if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'user-registration-repeater-fields/user-registration-repeater-fields.php' ) ) {
+						if ( isset( $row_data['row_id'] ) && $row_id === $row_data['row_id'] && isset( $row_data['type'] ) && 'repeater' === $row_data['type'] ) {
+							$row_class      = 'ur-repeater-row';
+							$attributes     = 'data-repeater-id=' . $row_data['repeater_id'] . '';
+							$repeater_label = '<div class="ur-repeater-label" id="user_registration_repeater_row_title_' . esc_attr( $row_data['repeater_id'] ) . '"><label>' . esc_html__( 'Repeater Row', 'user-registration' ) . '</label></div>';
+						}
 					}
 				}
 
