@@ -393,7 +393,6 @@ class UR_Form_Field_Country extends UR_Form_Field {
 	 */
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
 		// Perform custom validation for the field here ...
-
 		$field_label     = $single_form_field->general_setting->field_name;
 		$value           = isset( $form_data->value ) ? $form_data->value : '';
 		$valid_countries = $single_form_field->advance_setting->selected_countries;
@@ -402,7 +401,7 @@ class UR_Form_Field_Country extends UR_Form_Field {
 			return;
 		}
 
-		if ( ! in_array( $value, $valid_countries, true ) ) {
+		if ( ! empty( $value ) && ! in_array( $value, $valid_countries, true ) ) {
 			$message = array(
 				/* translators: %s - validation message */
 				$field_label => sprintf( __( 'Please choose a different country.', 'user-registration' ) ),
