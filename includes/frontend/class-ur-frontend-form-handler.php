@@ -198,7 +198,7 @@ class UR_Frontend_Form_Handler {
 		} else {
 			wp_send_json_error(
 				array(
-					'message' => array_unique( self::$response_array ),
+					'message' => array_unique( self::$response_array, SORT_REGULAR ),
 				)
 			);
 		}// End if().

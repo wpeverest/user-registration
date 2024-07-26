@@ -1270,17 +1270,17 @@ input.ur-input-border-red, textarea.ur-input-border-red {
   white-space: nowrap;
   box-sizing: border-box; }
 
-.ur-form-row .flatpickr-input {
-  padding-left: 32px !important; }
-
-.ur-form-row .without_icon {
-  padding-left: 10px !important; }
-
-.ur-form-row span.input-wrapper {
-  position: relative; }
-  .ur-form-row span.input-wrapper .ur-icon {
-    position: absolute;
-    top: 50%;
-    padding: 8px;
-    left: 0;
-    transform: translateY(-50%); }
+.ur-form-row {
+  margin-bottom: 24px; }
+  .ur-form-row .flatpickr-input {
+    padding-left: 32px !important; }
+  .ur-form-row .without_icon {
+    padding-left: 10px !important; }
+  .ur-form-row span.input-wrapper {
+    position: relative; }
+    .ur-form-row span.input-wrapper .ur-icon {
+      position: absolute;
+      top: 50%;
+      padding: 8px;
+      left: 0;
+      transform: translateY(-50%); }

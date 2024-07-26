@@ -567,7 +567,7 @@ abstract class UR_Form_Field {
 
 		$general_settings     = ur_get_general_settings( $this->id );
 		$general_setting_html = '';
-		$captcha_unique = uniqid();
+		$captcha_unique       = uniqid();
 
 		foreach ( $general_settings as $setting_key => $setting_value ) {
 			$tooltip_html            = ! empty( $setting_value['tip'] ) ? ur_help_tip( $setting_value['tip'], false, 'ur-portal-tooltip' ) : '';
@@ -937,15 +937,15 @@ abstract class UR_Form_Field {
 					$general_setting_wrapper .= '/>';
 					break;
 				case 'captcha':
-					$default_options          = isset( $this->field_defaults['default_options'] ) ? $this->field_defaults['default_options'] : array();
-					$default_image_captcha_options          = isset( $this->field_defaults['default_image_options'] ) ? $this->field_defaults['default_image_options'] : array();
-					$old_options              = isset( $this->admin_data->advance_setting->choices ) ? explode( ',', trim( $this->admin_data->advance_setting->choices, ',' ) ) : $default_options;
-					$options                  = isset( $this->admin_data->general_setting->options ) ? $this->admin_data->general_setting->options : $old_options;
-					$image_options            = isset( $this->admin_data->general_setting->image_captcha_options ) ? $this->admin_data->general_setting->image_captcha_options : $default_image_captcha_options;
+					$default_options               = isset( $this->field_defaults['default_options'] ) ? $this->field_defaults['default_options'] : array();
+					$default_image_captcha_options = isset( $this->field_defaults['default_image_options'] ) ? $this->field_defaults['default_image_options'] : array();
+					$old_options                   = isset( $this->admin_data->advance_setting->choices ) ? explode( ',', trim( $this->admin_data->advance_setting->choices, ',' ) ) : $default_options;
+					$options                       = isset( $this->admin_data->general_setting->options ) ? $this->admin_data->general_setting->options : $old_options;
+					$image_options                 = isset( $this->admin_data->general_setting->image_captcha_options ) ? $this->admin_data->general_setting->image_captcha_options : $default_image_captcha_options;
 
-					$general_setting_wrapper .= '<ul class="ur-options-list" data-unique-captcha="'. $captcha_unique .'">';
+					$general_setting_wrapper .= '<ul class="ur-options-list" data-unique-captcha="' . $captcha_unique . '">';
 
-					if ( "options" === $setting_key ) {
+					if ( 'options' === $setting_key ) {
 						foreach ( $options as $key => $option ) {
 							$label                    = is_array( $option ) ? $option['question'] : $option->question;
 							$answer                   = is_array( $option ) ? $option['answer'] : $option->answer;
@@ -959,10 +959,10 @@ abstract class UR_Form_Field {
 							$general_setting_wrapper .= '<a class="remove" href="#"><i class="dashicons dashicons-minus"></i></a>';
 							$general_setting_wrapper .= '</li>';
 						}
-					} elseif ( "image_captcha_options" === $setting_key ) {
+					} elseif ( 'image_captcha_options' === $setting_key ) {
 						foreach ( $image_options as $key => $option ) {
-							$option_json = json_encode($option);
-							$option = json_decode( $option_json, true );
+							$option_json = json_encode( $option );
+							$option      = json_decode( $option_json, true );
 							if ( isset( $option['icon_tag'] ) ) {
 								$icon_tag = $option['icon_tag'];
 								unset( $option['icon_tag'] );
@@ -972,27 +972,27 @@ abstract class UR_Form_Field {
 								unset( $option['correct_icon'] );
 							}
 
-							$general_setting_wrapper .= '<li class="ur-custom-captcha" data-group='.$key.'>';
+							$general_setting_wrapper .= '<li class="ur-custom-captcha" data-group=' . $key . '>';
 
 							$general_setting_wrapper .= '<div class="icons-group">';
 
-							foreach( $option as $icon_key => $icon_value ) {
-								$icon_checked = ( $correct_icon === $icon_key ) ? 'checked=checked' : '';
+							foreach ( $option as $icon_key => $icon_value ) {
+								$icon_checked             = ( $correct_icon === $icon_key ) ? 'checked=checked' : '';
 								$general_setting_wrapper .= '<div class="icon-wrap">';
 								$general_setting_wrapper .= '<label>';
-								$general_setting_wrapper .= '<input type="radio" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" class="ur-general-setting-field ur-captcha-icon-radio" name="' . esc_attr( $setting_value['name'] ) . '['.$key.'][correct_icon]['. $captcha_unique .']" value="'. esc_attr( $icon_key ) .'" '. esc_attr( $icon_checked ) .' /><input type="hidden" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" name="' . esc_attr( $setting_value['name'] ) . '['.esc_attr($key).']['.esc_attr( $icon_key ).']" value="'. esc_attr( $icon_value ) .'" class="ur-general-setting-field captcha-icon" />';
-								$general_setting_wrapper .= '<span class="'. esc_attr( $icon_value ) .'"></span>';
+								$general_setting_wrapper .= '<input type="radio" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" class="ur-general-setting-field ur-captcha-icon-radio" name="' . esc_attr( $setting_value['name'] ) . '[' . $key . '][correct_icon][' . $captcha_unique . ']" value="' . esc_attr( $icon_key ) . '" ' . esc_attr( $icon_checked ) . ' /><input type="hidden" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" name="' . esc_attr( $setting_value['name'] ) . '[' . esc_attr( $key ) . '][' . esc_attr( $icon_key ) . ']" value="' . esc_attr( $icon_value ) . '" class="ur-general-setting-field captcha-icon" />';
+								$general_setting_wrapper .= '<span class="' . esc_attr( $icon_value ) . '"></span>';
 								$general_setting_wrapper .= '</label>';
-								$general_setting_wrapper .= '<input class="button dashicons-picker" type="button" value="Choose Icon" data-name="" data-icon-key="'. esc_attr( $icon_key ) .'" data-group-id="'. esc_attr( $key ) .'" data-target="#dashicons_picker_example_icon1"/>';
+								$general_setting_wrapper .= '<input class="button dashicons-picker" type="button" value="Choose Icon" data-name="" data-icon-key="' . esc_attr( $icon_key ) . '" data-group-id="' . esc_attr( $key ) . '" data-target="#dashicons_picker_example_icon1"/>';
 								$general_setting_wrapper .= '</div>';
 							}
 
 							$general_setting_wrapper .= '</div>';
-							$general_setting_wrapper .= '<input value="' . esc_attr( $icon_tag ) . '" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" class="ur-general-setting-field ur-type-' . esc_attr( $setting_value['type'] ) . '-icon-tag" type="text" name="' . esc_attr( $setting_value['name'] ) . '['.esc_attr($key).'][icon_tag]" placeholder="Icon Tag">';
+							$general_setting_wrapper .= '<input value="' . esc_attr( $icon_tag ) . '" data-field="' . esc_attr( $setting_key ) . '" data-field-name="' . esc_attr( $strip_prefix ) . '" class="ur-general-setting-field ur-type-' . esc_attr( $setting_value['type'] ) . '-icon-tag" type="text" name="' . esc_attr( $setting_value['name'] ) . '[' . esc_attr( $key ) . '][icon_tag]" placeholder="Icon Tag">';
 							$general_setting_wrapper .= '<a class="remove remove-icon-group" href="#"><i class="dashicons dashicons-minus"></i>Remove Group</a>';
 							$general_setting_wrapper .= '</li>';
 						}
-						$general_setting_wrapper .= '<a class="add add-icon-group" data-last-group="'. esc_attr( $key ) .'" href="#"><i class="dashicons dashicons-plus"></i>Add New Group</a>';
+						$general_setting_wrapper .= '<a class="add add-icon-group" data-last-group="' . esc_attr( $key ) . '" href="#"><i class="dashicons dashicons-plus"></i>Add New Group</a>';
 					}
 					$general_setting_wrapper .= '</ul>';
 					break;

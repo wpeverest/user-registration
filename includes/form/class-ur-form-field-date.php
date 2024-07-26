@@ -98,27 +98,20 @@ class UR_Form_Field_Date extends UR_Form_Field {
 					);
 					add_filter(
 						$filter_hook,
-						function ( $msg ) use ( $field_label, $message ) {
-							if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX && ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
-								return sprintf( $message[ $field_label ] );
-							} else {
-								wp_send_json_error(
-									array(
-										'message' => $message,
-									)
-								);
-							}
+						function ( $msg ) use ( $message, $form_data ) {
+							$message = apply_filters( 'user_registration_modify_field_validation_response', $message, $form_data );
+							return $message;
 						}
 					);
 				}
 
 				if ( $enabled_min_max ) {
 					if ( ! empty( $min_date ) ) {
-						$this->validate_min_date( $date, $min_date, $filter_hook, $field_label );
+						$this->validate_min_date( $date, $min_date, $filter_hook, $field_label, $form_data );
 					}
 
 					if ( ! empty( $max_date ) ) {
-						$this->validate_max_date( $date, $max_date, $filter_hook, $field_label );
+						$this->validate_max_date( $date, $max_date, $filter_hook, $field_label, $form_data );
 					}
 				}
 			}
@@ -136,16 +129,9 @@ class UR_Form_Field_Date extends UR_Form_Field {
 			);
 			add_filter(
 				$filter_hook,
-				function ( $msg ) use ( $field_label, $message ) {
-					if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
-						return sprintf( $message[ $field_label ] );
-					} else {
-						wp_send_json_error(
-							array(
-								'message' => $message,
-							)
-						);
-					}
+				function ( $msg ) use ( $message, $form_data ) {
+					$message = apply_filters( 'user_registration_modify_field_validation_response', $message, $form_data );
+					return $message;
 				}
 			);
 		}
@@ -154,11 +140,11 @@ class UR_Form_Field_Date extends UR_Form_Field {
 
 		if ( $enabled_min_max ) {
 			if ( ! empty( $min_date ) ) {
-				$this->validate_min_date( $value, $min_date, $filter_hook, $field_label );
+				$this->validate_min_date( $value, $min_date, $filter_hook, $field_label, $form_data );
 			}
 
 			if ( ! empty( $max_date ) ) {
-				$this->validate_max_date( $value, $max_date, $filter_hook, $field_label );
+				$this->validate_max_date( $value, $max_date, $filter_hook, $field_label, $form_data );
 			}
 		}
 	}
@@ -171,9 +157,10 @@ class UR_Form_Field_Date extends UR_Form_Field {
 	 * @param [string] $min_date Min Date.
 	 * @param [string] $filter_hook Filter Hook.
 	 * @param [string] $field_label Field Label.
+	 * @param [object] $form_data Form Data.
 	 * @return void
 	 */
-	private function validate_min_date( $date, $min_date, $filter_hook, $field_label ) {
+	private function validate_min_date( $date, $min_date, $filter_hook, $field_label, $form_data ) {
 		$date_timestamp     = strtotime( str_replace( '/', '-', $date ) );
 		$min_date_timestamp = strtotime( $min_date );
 
@@ -185,16 +172,9 @@ class UR_Form_Field_Date extends UR_Form_Field {
 			);
 			add_filter(
 				$filter_hook,
-				function ( $msg ) use ( $field_label, $message ) {
-					if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
-						return sprintf( $message[ $field_label ] );
-					} else {
-						wp_send_json_error(
-							array(
-								'message' => $message,
-							)
-						);
-					}
+				function ( $msg ) use ( $message, $form_data ) {
+					$message = apply_filters( 'user_registration_modify_field_validation_response', $message, $form_data );
+					return $message;
 				}
 			);
 		}
@@ -203,13 +183,14 @@ class UR_Form_Field_Date extends UR_Form_Field {
 	/**
 	 * Validate whether date is past the max date.
 	 *
-	 * @param [string] $date Date.
-	 * @param [string] $max_date Max Date.
-	 * @param [string] $filter_hook Filter Hook.
-	 * @param [string] $field_label Field Label.
+	 * @param [string]           $date Date.
+	 * @param [string]           $max_date Max Date.
+	 * @param [string]           $filter_hook Filter Hook.
+	 * @param [string]           $field_label Field Label.
+	 * @param [object] Form Data.
 	 * @return void
 	 */
-	private function validate_max_date( $date, $max_date, $filter_hook, $field_label ) {
+	private function validate_max_date( $date, $max_date, $filter_hook, $field_label, $form_data ) {
 		$date_timestamp     = strtotime( str_replace( '/', '-', $date ) );
 		$max_date_timestamp = strtotime( $max_date );
 
@@ -221,16 +202,9 @@ class UR_Form_Field_Date extends UR_Form_Field {
 			);
 			add_filter(
 				$filter_hook,
-				function ( $msg ) use ( $field_label, $message ) {
-					if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
-						return sprintf( $message[ $field_label ] );
-					} else {
-						wp_send_json_error(
-							array(
-								'message' => $message,
-							)
-						);
-					}
+				function ( $msg ) use ( $message, $form_data ) {
+					$message = apply_filters( 'user_registration_modify_field_validation_response', $message, $form_data );
+					return $message;
 				}
 			);
 		}

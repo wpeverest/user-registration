@@ -5983,7 +5983,7 @@
             cursor: pointer;
             font-size: 15px; }
             .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-lists li a:focus {
-              box-shadow: 0 0 0 0px transparent, 0 0 0px 0px transparent; }
+              box-shadow: 0 0 0 0px transparent, 0 0 0px 0px transparent; }
             .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-lists li a.active {
               background-color: #ffffff;
               color: #475bb2;
@@ -6466,22 +6466,25 @@
           border-left: 1px solid #b6bbcf; }
           .ur-registered-from .ur-selected-inputs .ur-single-row:hover .ur-grid-lists .ur-grid-list-item:first-child {
             border-color: transparent; }
-    .ur-registered-from .ur-selected-inputs .ur-add-new-row {
-      display: block;
-      margin: 20px auto;
-      width: auto;
-      height: 32px;
-      text-align: center;
-      font-family: inherit; }
-      .ur-registered-from .ur-selected-inputs .ur-add-new-row::before {
-        width: 16px;
-        height: 16px;
-        font-size: 16px;
-        margin-right: 10px;
-        font-family: dashicons;
-        vertical-align: middle;
-        padding: 1px 10px 1px 0;
-        border-right: 1px solid rgba(255, 255, 255, 0.3); }
+    .ur-registered-from .ur-selected-inputs .ur-row-buttons {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px; }
+      .ur-registered-from .ur-selected-inputs .ur-row-buttons .button {
+        display: block;
+        width: auto;
+        height: 32px;
+        text-align: center;
+        font-family: inherit; }
+        .ur-registered-from .ur-selected-inputs .ur-row-buttons .button::before {
+          width: 16px;
+          height: 16px;
+          font-size: 16px;
+          margin-right: 10px;
+          font-family: dashicons;
+          vertical-align: middle;
+          padding: 1px 10px 1px 0;
+          border-right: 1px solid rgba(255, 255, 255, 0.3); }
     .ur-registered-from .ur-selected-inputs li.ur-registered-item {
       width: 120px !important; }
       .ur-registered-from .ur-selected-inputs li.ur-registered-item.ui-sortable-placeholder {
@@ -7739,7 +7742,7 @@ a.button.ur-smart-tags-list-button {
     .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row select {
       background-image: linear-gradient(45deg, transparent 50%, gray 50%), linear-gradient(135deg, gray 50%, transparent 50%);
       background-position: calc(100% - 15px) calc(1em + 2px), calc(100% - 10px) calc(1em + 2px), calc(100% - 2.5em) 0.5em;
-      background-size: 5px 5px, 5px 5px, 1px 1.5em;
+      background-size: 5px 5px, 5px 5px, 1px 1.5em;
       background-repeat: no-repeat; }
     .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row .ur-radio-group-list {
       display: flex;

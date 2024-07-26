@@ -211,6 +211,13 @@ class UR_Shortcode_My_Account {
 
 		if ( ! empty( $form_data_array ) ) {
 
+			$form_row_ids       = get_post_meta( $form_id, 'user_registration_form_row_ids', true );
+			$form_row_ids_array = json_decode( $form_row_ids );
+
+			if ( gettype( $form_row_ids_array ) != 'array' ) {
+				$form_row_ids_array = array();
+			}
+
 			if ( count( $profile ) < 1 ) {
 				return;
 			}
@@ -246,6 +253,7 @@ class UR_Shortcode_My_Account {
 				array(
 					'profile'         => apply_filters( 'user_registration_profile_to_edit', $profile ),
 					'form_data_array' => apply_filters( 'user_registration_form_data_to_edit', $form_data_array ),
+					'row_ids'         => $form_row_ids_array,
 				)
 			);
 		} else {

@@ -369,8 +369,8 @@ class UR_Form_Field_Country extends UR_Form_Field {
 		);
 
 		$this->field_defaults = array(
-			'default_label'      => __( 'Country', 'user-registration' ),
-			'default_field_name' => 'country_' . ur_get_random_number(),
+			'default_label'       => __( 'Country', 'user-registration' ),
+			'default_field_name'  => 'country_' . ur_get_random_number(),
 			'default_placeholder' => __( 'Select a country', 'user-registration' ),
 		);
 	}
@@ -393,7 +393,6 @@ class UR_Form_Field_Country extends UR_Form_Field {
 	 */
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
 		// Perform custom validation for the field here ...
-
 		$field_label     = $single_form_field->general_setting->field_name;
 		$value           = isset( $form_data->value ) ? $form_data->value : '';
 		$valid_countries = $single_form_field->advance_setting->selected_countries;
@@ -402,7 +401,7 @@ class UR_Form_Field_Country extends UR_Form_Field {
 			return;
 		}
 
-		if ( ! in_array( $value, $valid_countries, true ) ) {
+		if ( ! empty( $value ) && ! in_array( $value, $valid_countries, true ) ) {
 			$message = array(
 				/* translators: %s - validation message */
 				$field_label => sprintf( __( 'Please choose a different country.', 'user-registration' ) ),
@@ -411,16 +410,9 @@ class UR_Form_Field_Country extends UR_Form_Field {
 
 			add_filter(
 				$filter_hook,
-				function ( $msg ) use ( $field_label, $message ) {
-					if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX || ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
-						return sprintf( $message[ $field_label ] );
-					} else {
-						wp_send_json_error(
-							array(
-								'message' => $message,
-							)
-						);
-					}
+				function ( $msg ) use ( $message, $form_data ) {
+					$message = apply_filters( 'user_registration_modify_field_validation_response', $message, $form_data );
+					return $message;
 				}
 			);
 		}

@@ -79,8 +79,34 @@ class UR_Form_Handler {
 			$form_id = $form_id_array[0];
 		}
 
-		$profile   = user_registration_form_data( $user_id, $form_id );
-		$form_data = self::get_form_data_from_post( $form_id );
+		$profile = user_registration_form_data( $user_id, $form_id );
+
+		$form_field_data = ur_get_form_field_data( $form_id );
+		$fields          = array();
+
+		foreach ( $form_field_data as $field ) {
+			$field_name = $field->general_setting->field_name;
+			$key        = 'user_registration_' . $field_name;
+
+			$field_obj             = new StdClass();
+			$field_obj->field_name = $field_name;
+			$fields[ $field_name ] = user_registration_sanitize_profile_update( $_POST, $field->field_key, $key );
+
+			$field_obj->value = ur_clean( $fields[ $field_name ] );
+
+			if ( isset( $field->field_key ) ) {
+				$field_obj->field_type = $field->field_key;
+			}
+
+			if ( isset( $field->general_setting->label ) ) {
+				$field_obj->label = $field->general_setting->label;
+			}
+
+			$fields[ $field_name ] = $field_obj;
+		}
+
+		list( $form_data, $_POST ) = apply_filters( 'user_registration_profile_update_data', array( $fields, $_POST ) );
+
 		/**
 		 * Action validate profile on update.
 		 *
@@ -89,6 +115,7 @@ class UR_Form_Handler {
 		 * @param int $form_id The form ID.
 		 */
 		do_action( 'user_registration_validate_profile_update', $profile, $form_data, $form_id );
+
 		/**
 		 * Action validate profile on update.
 		 *
@@ -110,6 +137,7 @@ class UR_Form_Handler {
 			 * @return array $profile
 			 */
 			$profile = apply_filters( 'user_registration_before_save_profile_details', $profile, $user_id, $form_id );
+
 			/**
 			 * Hook to modify confirmation email.
 			 * Default value is true.
@@ -118,42 +146,44 @@ class UR_Form_Handler {
 			$email_updated                = false;
 			$pending_email                = '';
 			$user                         = wp_get_current_user();
-
 			foreach ( $profile as $key => $field ) {
-				if ( isset( $field['field_key'] ) ) {
-					$new_key = str_replace( 'user_registration_', '', $key );
 
-					if ( $is_email_change_confirmation && 'user_email' === $new_key ) {
+				$new_key = str_replace( 'user_registration_', '', $key );
 
-						if ( $user ) {
-							if ( sanitize_email( wp_unslash( $_POST[ $key ] ) ) !== $user->user_email ) { // phpcs:ignore
-								$email_updated = true;
-								$pending_email = sanitize_email( wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore
-							}
-							continue;
+				if ( $is_email_change_confirmation && 'user_email' === $new_key ) {
+
+					if ( $user ) {
+						if ( sanitize_email( wp_unslash( $_POST[ $key ] ) ) !== $user->user_email ) { // phpcs:ignore
+							$email_updated = true;
+							$pending_email = sanitize_email( wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore
 						}
+						continue;
 					}
+				}
 
-					if ( in_array( $new_key, ur_get_user_table_fields() ) ) {
+				if ( in_array( $new_key, ur_get_user_table_fields() ) ) {
 
-						if ( 'display_name' === $new_key ) {
-							$user_data['display_name'] = isset( $_POST[ $key ] ) ? sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) : '';
-						} else {
-							$user_data[ $new_key ] = isset( $_POST[ $key ] ) ? wp_unslash( $_POST[ $key ] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-						}
+					if ( 'display_name' === $new_key ) {
+						$user_data['display_name'] = isset( $_POST[ $key ] ) ? sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) : '';
 					} else {
-						$update_key = $key;
+						$user_data[ $new_key ] = isset( $_POST[ $key ] ) ? wp_unslash( $_POST[ $key ] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+					}
+				} else {
+					$update_key = $key;
 
-						if ( in_array( $new_key, ur_get_registered_user_meta_fields(), true ) ) {
-							$update_key = str_replace( 'user_', '', $new_key );
-						}
-						$disabled = isset( $field['custom_attributes']['disabled'] ) ? $field['custom_attributes']['disabled'] : '';
-						if ( 'disabled' !== $disabled ) {
-							if ( isset( $_POST[ $key ] ) ) {
+					if ( in_array( $new_key, ur_get_registered_user_meta_fields(), true ) ) {
+						$update_key = str_replace( 'user_', '', $new_key );
+					}
+					$disabled = isset( $field['custom_attributes']['disabled'] ) ? $field['custom_attributes']['disabled'] : '';
+					if ( 'disabled' !== $disabled ) {
+						if ( isset( $_POST[ $key ] ) ) {
+							if ( isset( $field['field_key'] ) && 'file' !== $field['field_key'] ) {
 								update_user_meta( $user_id, $update_key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-							} elseif ( 'checkbox' === $field['field_key'] ) {
-									update_user_meta( $user_id, $update_key, '' );
+							} elseif ( isset( $field['type'] ) && 'repeater' === $field['type'] ) {
+								update_user_meta( $user_id, $update_key, $form_data[ $key ]->value ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 							}
+						} elseif ( 'checkbox' === $field['field_key'] ) {
+							update_user_meta( $user_id, $update_key, '' );
 						}
 					}
 				}

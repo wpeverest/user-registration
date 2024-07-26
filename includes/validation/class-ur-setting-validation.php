@@ -205,7 +205,6 @@ class UR_Setting_Validation {
 		);
 	}
 
-
 	/**
 	 * Returns error message for the error code.
 	 *

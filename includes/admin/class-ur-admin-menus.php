@@ -843,9 +843,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			if ( ! empty( $form_data ) ) {
 				$form_data_content = $form_data->post_content;
 				$form_row_ids      = get_post_meta( $form_data->ID, 'user_registration_form_row_ids', true );
+				$form_row_data     = get_post_meta( $form_data->ID, 'user_registration_form_row_data', true );
 			} else {
 				$form_data_content = '';
 				$form_row_ids      = '';
+				$form_row_data     = '';
 			}
 
 			try {
@@ -867,6 +869,16 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				}
 			} catch ( Exception $e ) {
 				$form_row_ids_array = array();
+			}
+
+			try {
+				$form_row_data_array = json_decode( $form_row_data, true );
+
+				if ( json_last_error() !== JSON_ERROR_NONE ) {
+					throw new Exception( esc_html__( 'Row data not found', 'user-registration' ) );
+				}
+			} catch ( Exception $e ) {
+				$form_row_data_array = array();
 			}
 
 			echo '<div class="ur-selected-inputs">';
@@ -930,40 +942,55 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						'fill' => true,
 					),
 				);
-				echo '<div class="ur-single-row"  data-row-id="' . esc_attr( absint( $row_id ) ) . '">';
-				?>
 
-<div class="ur-grids">
-	<button type="button" class="ur-edit-grid">
-				<?php
-				if ( 1 === $grid_count ) {
-					echo wp_kses( $grid_one, $svg_args );
-				} elseif ( 2 === $grid_count ) {
-					echo wp_kses( $grid_two, $svg_args );
-				} elseif ( 3 === $grid_count ) {
-					echo wp_kses( $grid_three, $svg_args );
+				$row_class      = '';
+				$attributes     = '';
+				$repeater_label = '';
+				foreach ( $form_row_data_array as $row_data ) {
+					if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'user-registration-repeater-fields/user-registration-repeater-fields.php' ) ) {
+						if ( isset( $row_data['row_id'] ) && $row_id === $row_data['row_id'] && isset( $row_data['type'] ) && 'repeater' === $row_data['type'] ) {
+							$row_class      = 'ur-repeater-row';
+							$attributes     = 'data-repeater-id=' . $row_data['repeater_id'] . '';
+							$repeater_label = '<div class="ur-repeater-label" id="user_registration_repeater_row_title_' . esc_attr( $row_data['repeater_id'] ) . '"><label>' . esc_html__( 'Repeater Row', 'user-registration' ) . '</label></div>';
+						}
+					}
 				}
-				?>
-	</button>
-	<button type="button" class="dashicons dashicons-no-alt ur-remove-row"></button>
-	<div class="ur-toggle-grid-content" style="display:none">
-		<small>Select the grid column.</small>
-		<div class="ur-grid-selector" data-grid="1">
-				<?php
 
-						echo wp_kses( $grid_one, $svg_args );
+				echo '<div class="ur-single-row ' . esc_attr( $row_class ) . '"  data-row-id="' . esc_attr( absint( $row_id ) ) . '" ' . esc_attr( $attributes ) . '>';
 				?>
-		</div>
-		<div class="ur-grid-selector" data-grid="2">
-				<?php echo wp_kses( $grid_two, $svg_args ); ?>
-		</div>
-		<div class="ur-grid-selector" data-grid="3">
-				<?php echo wp_kses( $grid_three, $svg_args ); ?>
-		</div>
-	</div>
-</div>
+
+				<div class="ur-grids">
+					<button type="button" class="ur-edit-grid">
+								<?php
+								if ( 1 === $grid_count ) {
+									echo wp_kses( $grid_one, $svg_args );
+								} elseif ( 2 === $grid_count ) {
+									echo wp_kses( $grid_two, $svg_args );
+								} elseif ( 3 === $grid_count ) {
+									echo wp_kses( $grid_three, $svg_args );
+								}
+								?>
+					</button>
+					<button type="button" class="dashicons dashicons-no-alt ur-remove-row"></button>
+					<div class="ur-toggle-grid-content" style="display:none">
+						<small>Select the grid column.</small>
+						<div class="ur-grid-selector" data-grid="1">
+								<?php
+
+										echo wp_kses( $grid_one, $svg_args );
+								?>
+						</div>
+						<div class="ur-grid-selector" data-grid="2">
+								<?php echo wp_kses( $grid_two, $svg_args ); ?>
+						</div>
+						<div class="ur-grid-selector" data-grid="3">
+								<?php echo wp_kses( $grid_three, $svg_args ); ?>
+						</div>
+					</div>
+				</div>
 
 				<?php
+				echo wp_kses_post( $repeater_label );
 				echo '<div class="ur-grid-lists">';
 
 				$grid_id = 0;
@@ -1006,7 +1033,10 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				echo '</div>';
 
 			}
-				echo '<button type="button" class="button button-primary dashicons dashicons-plus-alt ur-add-new-row" data-total-rows="' . esc_attr( $last_id ) . '">' . esc_html__( 'Add New', 'user-registration' ) . '</button>';
+			echo '<div class="ur-row-buttons" data-total-rows="' . esc_attr( $last_id ) . '">';
+				echo '<button type="button" class="button button-primary dashicons dashicons-plus-alt ur-add-new-row">' . esc_html__( 'Add New', 'user-registration' ) . '</button>';
+				do_action( 'user_registration_form_builder_row_buttons' );
+				echo '</div>';
 				echo '</div>';
 				echo '</div>';
 				echo '</div>';
