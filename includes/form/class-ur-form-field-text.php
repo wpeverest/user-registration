@@ -75,11 +75,13 @@ class UR_Form_Field_Text extends UR_Form_Field {
 
 		// Validate Limit Length.
 		if ( isset( $single_form_field->advance_setting->limit_length ) && $single_form_field->advance_setting->limit_length ) {
+
 			if ( isset( $single_form_field->advance_setting->limit_length_limit_count ) && isset( $single_form_field->advance_setting->limit_length_limit_mode ) ) {
 
 				$max_size = $single_form_field->advance_setting->limit_length_limit_count;
 
 				if ( 'characters' === $single_form_field->advance_setting->limit_length_limit_mode ) {
+
 					if ( is_wp_error( UR_Validation::validate_length( $value, $max_size ) ) ) {
 						$message = array(
 							/* translators: %s - validation message */
@@ -88,16 +90,9 @@ class UR_Form_Field_Text extends UR_Form_Field {
 						);
 						add_filter(
 							$filter_hook,
-							function ( $msg ) use ( $label, $message ) {
-								if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX && ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
-									return sprintf( $message[ $label ] );
-								} else {
-									wp_send_json_error(
-										array(
-											'message' => $message,
-										)
-									);
-								}
+							function ( $msg ) use ( $message, $form_data ) {
+								$message = apply_filters( 'user_registration_modify_field_validation_response', $message, $form_data );
+								return $message;
 							}
 						);
 					}
@@ -110,16 +105,9 @@ class UR_Form_Field_Text extends UR_Form_Field {
 						);
 						add_filter(
 							$filter_hook,
-							function ( $msg ) use ( $label, $message ) {
-								if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX && ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
-									return sprintf( $message[ $label ] );
-								} else {
-									wp_send_json_error(
-										array(
-											'message' => $message,
-										)
-									);
-								}
+							function ( $msg ) use ( $message, $form_data ) {
+								$message = apply_filters( 'user_registration_modify_field_validation_response', $message, $form_data );
+								return $message;
 							}
 						);
 					}
@@ -142,16 +130,9 @@ class UR_Form_Field_Text extends UR_Form_Field {
 						);
 						add_filter(
 							$filter_hook,
-							function ( $msg ) use ( $label, $message ) {
-								if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX && ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
-									return sprintf( $message[ $label ] );
-								} else {
-									wp_send_json_error(
-										array(
-											'message' => $message,
-										)
-									);
-								}
+							function ( $msg ) use ( $message, $form_data ) {
+								$message = apply_filters( 'user_registration_modify_field_validation_response', $message, $form_data );
+								return $message;
 							}
 						);
 					}
@@ -164,16 +145,9 @@ class UR_Form_Field_Text extends UR_Form_Field {
 						);
 						add_filter(
 							$filter_hook,
-							function ( $msg ) use ( $label, $message ) {
-								if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX && ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
-									return sprintf( $message[ $label ] );
-								} else {
-									wp_send_json_error(
-										array(
-											'message' => $message,
-										)
-									);
-								}
+							function ( $msg ) use ( $message, $form_data ) {
+								$message = apply_filters( 'user_registration_modify_field_validation_response', $message, $form_data );
+								return $message;
 							}
 						);
 					}

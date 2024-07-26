@@ -333,7 +333,7 @@ class UR_AJAX {
 			$form_data = json_decode( wp_unslash( $_POST['form_data'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			foreach ( $form_data as $data ) {
 				$single_field[ $data->field_name ] = isset( $data->value ) ? $data->value : '';
-				$data->field_name                  = substr( $data->field_name, 18 );
+				$data->field_name                  = trim( str_replace( 'user_registration_', '', $data->field_name ) );
 			}
 		}
 
@@ -366,7 +366,9 @@ class UR_AJAX {
 					}
 					break;
 				default:
-					$single_field[ $key ] = isset( $single_field[ $key ] ) ? $single_field[ $key ] : '';
+					if ( 'repeater' !== $field['type'] ) {
+						$single_field[ $key ] = isset( $single_field[ $key ] ) ? $single_field[ $key ] : '';
+					}
 					break;
 			}
 		}
@@ -876,6 +878,7 @@ class UR_AJAX {
 			$form_name    = sanitize_text_field( $_POST['data']['form_name'] ); //phpcs:ignore
 			$form_row_ids = sanitize_text_field( $_POST['data']['form_row_ids'] ); //phpcs:ignore
 			$form_id      = sanitize_text_field( $_POST['data']['form_id'] ); //phpcs:ignore
+			$form_row_data = sanitize_text_field( $_POST['data']['row_data'] );
 
 			$post_data = array(
 				'post_type'      => 'user_registration',
@@ -913,6 +916,9 @@ class UR_AJAX {
 
 				// Form row_id save.
 				update_post_meta( $form_id, 'user_registration_form_row_ids', $form_row_ids );
+
+				// Form row_data save.
+				update_post_meta( $form_id, 'user_registration_form_row_data', $form_row_data );
 			}
 			/**
 			 * Action after form setting save.
@@ -1123,7 +1129,7 @@ class UR_AJAX {
 	 * @return void
 	 **/
 	public static function dismiss_notice() {
-		$notice_id = isset( $_POST['notice_id'] ) ? wp_unslash( sanitize_key( $_POST['notice_id'] ) ) : '';   // phpcs:ignore WordPress.Security.NonceVerification
+		$notice_id   = isset( $_POST['notice_id'] ) ? wp_unslash( sanitize_key( $_POST['notice_id'] ) ) : '';   // phpcs:ignore WordPress.Security.NonceVerification
 		$notice_type = isset( $_POST['notice_type'] ) ? wp_unslash( sanitize_key( $_POST['notice_type'] ) ) : '';   // phpcs:ignore WordPress.Security.NonceVerification
 		check_admin_referer( $notice_type . '-nonce', 'security' );
 		if ( ! empty( $_POST['dismissed'] ) ) {

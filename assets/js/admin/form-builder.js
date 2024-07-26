@@ -289,6 +289,20 @@
 				}
 
 				var form_data = URFormBuilder.get_form_data();
+				var row_data = URFormBuilder.get_form_row_data();
+				var stop_process = false;
+				$.each(row_data, function () {
+					if ($(this)[0].fields.length < 1) {
+						URFormBuilder.show_message(
+							user_registration_form_builder_data.form_repeater_row_empty
+						);
+						stop_process = true;
+					}
+				});
+
+				if (stop_process) {
+					return;
+				}
 				var form_row_ids = URFormBuilder.get_form_row_ids();
 				var ur_form_id = $("#ur_form_id").val();
 				var ur_form_id_localization =
@@ -335,6 +349,7 @@
 					security: user_registration_form_builder_data.ur_form_save,
 					data: {
 						form_data: JSON.stringify(form_data),
+						row_data: JSON.stringify(row_data),
 						form_row_ids: JSON.stringify(form_row_ids),
 						form_name: $("#ur-form-name").val(),
 						form_id: ur_form_id,
@@ -588,6 +603,7 @@
 				var only_one_field_index = $.makeArray(
 					user_registration_form_builder_data.form_one_time_draggable_fields
 				);
+
 				var required_fields = $.makeArray(
 					user_registration_form_builder_data.form_required_fields
 				);
@@ -1161,6 +1177,59 @@
 					form_data.push(single_row_data);
 				});
 				return form_data;
+			},
+			/**
+			 * Get all the form row data form builder.
+			 */
+			get_form_row_data: function () {
+				var row_data = [];
+				var single_row = $(".ur-input-grids .ur-single-row");
+				$.each(single_row, function () {
+					var single_row_data = {};
+
+					if ($(this).attr("data-repeater-id")) {
+						single_row_data.row_id = $(this).attr("data-row-id");
+						single_row_data.repeater_id =
+							$(this).attr("data-repeater-id");
+						single_row_data.type = "repeater";
+
+						var repeater_row_setting = $(
+							"#ur-repeater-settings"
+						).serializeArray();
+
+						$.each(repeater_row_setting, function (key, value) {
+							if (
+								value.name.includes(
+									"_" + single_row_data.repeater_id
+								)
+							) {
+								single_row_data[
+									value.name
+										.replace(
+											"user_registration_repeater_row_",
+											""
+										)
+										.replace(
+											"_" + single_row_data.repeater_id,
+											""
+										)
+								] = value.value;
+							}
+						});
+
+						var fields = [];
+						$(this)
+							.find("input[data-field='field_name']")
+							.each(function () {
+								fields.push($(this).val());
+							});
+
+						single_row_data["fields"] = fields;
+						row_data.push(single_row_data);
+					}
+				});
+
+				return row_data;
 			},
 			/**
 			 * Get all the grid wise form data from form builder.
@@ -1909,7 +1978,7 @@
 
 								if ($this.find(".ur-add-new-row").length == 0) {
 									$this.append(
-										'<button type="button" class="button button-primary dashicons dashicons-plus-alt ur-add-new-row ui-sortable-handle" data-total-rows="0">' +
+										'<button type="button" class="button button-primary dashicons dashicons-plus-alt ur-add-new-row ui-sortable-handle">' +
 											user_registration_form_builder_data.add_new +
 											"</button>"
 									);
@@ -1920,7 +1989,7 @@
 										.prev()
 										.attr("data-row-id");
 									$this
-										.find(".ur-add-new-row")
+										.find(".ur-row-buttons")
 										.attr("data-total-rows", total_rows);
 								}
 								events.render_draggable_sortable();
@@ -2332,12 +2401,19 @@
 									"click",
 									".ur-add-new-row",
 									function () {
-										var total_rows =
-											$(this).attr("data-total-rows");
-										$(this).attr(
-											"data-total-rows",
-											parseInt(total_rows) + 1
-										);
+										var total_rows = $(this)
+											.closest(".ur-row-buttons")
+											.attr("data-total-rows");
+										total_rows =
+											"undefined" !== typeof total_rows
+												? parseInt(total_rows)
+												: 0;
+										$(this)
+											.closest(".ur-row-buttons")
+											.attr(
+												"data-total-rows",
+												total_rows + 1
+											);
 
 										var single_row_clone = $(this)
 											.closest(".ur-input-grids")
@@ -2346,7 +2422,7 @@
 											.clone();
 										single_row_clone.attr(
 											"data-row-id",
-											parseInt(total_rows) + 1
+											total_rows + 1
 										);
 										single_row_clone
 											.find(".ur-grid-lists")
@@ -2370,11 +2446,41 @@
 											.find(".ur-grid-lists")
 											.append(grid_list.html());
 										single_row_clone.insertBefore(
-											".ur-add-new-row"
+											".ur-row-buttons"
 										);
 										single_row_clone.show();
 										$this_obj.render_draggable_sortable();
 										builder.manage_empty_grid();
+
+										if (
+											$(this).hasClass(
+												"ur-add-repeater-row"
+											)
+										) {
+											single_row_clone.addClass(
+												"ur-repeater-row"
+											);
+
+											var repeater_count = $(this)
+													.closest(".ur-input-grids")
+													.find(
+														".ur-repeater-row"
+													).length,
+												repeater_div =
+													'<div class="ur-repeater-label"  id="user_registration_repeater_row_title_' +
+													repeater_count +
+													'"><label>Repeater Row</label></div>';
+											single_row_clone.attr(
+												"data-repeater-id",
+												repeater_count
+											);
+											$(repeater_div).insertBefore(
+												single_row_clone.find(
+													".ur-grid-lists"
+												)
+											);
+										}
+
 										$(document).trigger(
 											"user_registration_row_added",
 											[single_row_clone]
@@ -2762,6 +2868,10 @@
 												$.makeArray(
 													user_registration_form_builder_data.form_one_time_draggable_fields
 												);
+											var form_repeater_row_not_droppable_fields_lists =
+												$.makeArray(
+													user_registration_form_builder_data.form_repeater_row_not_droppable_fields_lists
+												);
 											if (
 												length_of_required > 0 &&
 												$.inArray(
@@ -2777,6 +2887,30 @@
 												$(ui.helper).remove();
 												return;
 											}
+
+											if (
+												ui.helper.closest(
+													".ur-repeater-row"
+												).length > 0 &&
+												$.inArray(
+													data_field_id,
+													form_repeater_row_not_droppable_fields_lists
+												) >= 0
+											) {
+												URFormBuilder.show_message(
+													user_registration_form_builder_data.i18n_admin.i18n_repeater_fields_not_droppable.replace(
+														"%field%",
+														$(
+															"li[data-field-id='user_registration_" +
+																data_field_id +
+																"']:first"
+														).text()
+													)
+												);
+												$(ui.helper).remove();
+												return;
+											}
+
 											var clone = $(ui.helper);
 											var form_field_id =
 												$(clone).attr("data-field-id");

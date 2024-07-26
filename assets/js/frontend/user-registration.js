@@ -23,6 +23,61 @@
 							var this_instance = this;
 							var form_data = [];
 							var frontend_field = form.separate_form_handler("");
+							var repeater_field_data = {};
+
+							$this
+								.closest("form")
+								.find(".ur-repeater-row")
+								.each(function () {
+									var fieldName = $(this)
+										.closest(".ur-repeater-row")
+										.data("repeater-field-name");
+									var rowName =
+										"row_" +
+										$(this)
+											.closest(".ur-repeater-row")
+											.data("repeater-row");
+
+									if (
+										$(this).closest(
+											".user-registration-EditProfileForm"
+										).length > 0
+									) {
+										fieldName =
+											"user_registration_" + fieldName;
+									}
+
+									if (!repeater_field_data[fieldName]) {
+										repeater_field_data[fieldName] = {
+											field_name: fieldName,
+											field_type: "repeater",
+											value: {},
+											label: $(this)
+												.closest(".ur-repeater-row")
+												.find(".ur-repeater-label")
+												.find(".ur-label")
+												.text(),
+											extra_params: {
+												field_key: "repeater",
+												label: $(this)
+													.closest(".ur-repeater-row")
+													.find(".ur-repeater-label")
+													.find(".ur-label")
+													.text()
+											}
+										};
+									}
+
+									if (
+										!repeater_field_data[fieldName][
+											"value"
+										][rowName]
+									) {
+										repeater_field_data[fieldName]["value"][
+											rowName
+										] = [];
+									}
+								});
 
 							var multi_value_field = new Array();
 							$.each(frontend_field, function () {
@@ -31,10 +86,31 @@
 								var single_field = form.separate_form_handler(
 									'[name="' + field_name + '"]'
 								);
+
 								var selection_fields_array = ["radio"];
+								var fieldName = $(this)
+									.closest(".ur-repeater-row")
+									.data("repeater-field-name");
 
 								if (
-									single_field.length < 2 &&
+									$(this).closest(
+										".user-registration-EditProfileForm"
+									).length > 0
+								) {
+									fieldName =
+										"user_registration_" + fieldName;
+								}
+
+								var rowName =
+									"row_" +
+									$(this)
+										.closest(".ur-repeater-row")
+										.data("repeater-row");
+
+								if (
+									(single_field.length < 2 ||
+										single_field.closest(".ur-repeater-row")
+											.length > 0) &&
 									$.inArray(
 										field_type,
 										selection_fields_array
@@ -44,6 +120,7 @@
 										this_instance.get_fieldwise_data(
 											$(this)
 										);
+
 									var invite_code =
 										document.querySelector(
 											".field-invite_code"
@@ -58,7 +135,45 @@
 											form_data.push(single_data);
 										}
 									} else {
-										form_data.push(single_data);
+										if (
+											$(this).closest(".ur-repeater-row")
+												.length > 0
+										) {
+											if (
+												$(this)
+													.closest(".form-row")
+													.find(
+														"*[name='" +
+															$(this).attr(
+																"name"
+															) +
+															"']"
+													).length < 2 ||
+												"range" ===
+													$(this).attr("type") ||
+												$(this).hasClass(
+													"ur-smart-phone-field"
+												)
+											) {
+												repeater_field_data[fieldName][
+													"value"
+												][rowName].push(single_data);
+											} else {
+												if (
+													multi_value_field.indexOf(
+														single_data.field_name +
+															"[]"
+													) === -1
+												) {
+													multi_value_field.push(
+														single_data.field_name +
+															"[]"
+													);
+												}
+											}
+										} else {
+											form_data.push(single_data);
+										}
 									}
 								} else {
 									if (
@@ -82,7 +197,6 @@
 										multi_value_field[multi_start] +
 										'"]'
 								);
-
 								var node_type = field
 									.get(0)
 									.tagName.toLowerCase();
@@ -93,6 +207,8 @@
 										: "null";
 
 								var field_value = new Array();
+
+								var repeater_field_value = {};
 								$.each(field, function () {
 									var this_field = $(this);
 
@@ -125,8 +241,43 @@
 											break;
 										default:
 									}
+
 									if (this_field_value !== "") {
-										field_value.push(this_field_value);
+										if (
+											this_field.closest(
+												".ur-repeater-row"
+											).length > 0
+										) {
+											if (
+												this_field.closest(
+													".field-radio"
+												).length > 0
+											) {
+												repeater_field_value[
+													this_field.attr("data-id")
+												] = this_field_value;
+											} else {
+												if (
+													"undefined" ===
+													typeof repeater_field_value[
+														this_field.attr(
+															"data-id"
+														)
+													]
+												) {
+													repeater_field_value[
+														this_field.attr(
+															"data-id"
+														)
+													] = new Array();
+												}
+												repeater_field_value[
+													this_field.attr("data-id")
+												].push(this_field_value);
+											}
+										} else {
+											field_value.push(this_field_value);
+										}
 									}
 								});
 
@@ -227,7 +378,6 @@
 									multi_value_field[multi_start];
 								single_form_field_name =
 									single_form_field_name.replace("[]", "");
-
 								var field_data = {
 									value: field_value_json,
 									field_type: field_type,
@@ -235,9 +385,100 @@
 									field_name: single_form_field_name
 								};
 
-								form_data.push(field_data);
+								if (
+									Object.keys(repeater_field_value).length > 0
+								) {
+									var field_detail = new Array();
+
+									$.each(
+										repeater_field_value,
+										function (key, value) {
+											key =
+												$("[name='" + key + "']")
+													.length < 1 &&
+												key.indexOf("[]") === -1
+													? key + "[]"
+													: key;
+											var row_id = $(
+												'[name="' + key + '"]'
+											)
+												.closest(".ur-repeater-row")
+												.data("repeater-row");
+											var repeater_value = Object.assign(
+												{},
+												field_data
+											);
+
+											repeater_value.value =
+												"string" === typeof value
+													? value
+													: JSON.stringify(value);
+
+											repeater_value.field_name =
+												single_form_field_name.slice(
+													0,
+													-2
+												);
+
+											var current_repeater_field_name =
+												"undefined" ===
+												typeof repeater_field_data[
+													$("[name='" + key + "']")
+														.closest(
+															".ur-repeater-row"
+														)
+														.data(
+															"repeater-field-name"
+														)
+												]
+													? "user_registration_" +
+													  $("[name='" + key + "']")
+															.closest(
+																".ur-repeater-row"
+															)
+															.data(
+																"repeater-field-name"
+															)
+													: $("[name='" + key + "']")
+															.closest(
+																".ur-repeater-row"
+															)
+															.data(
+																"repeater-field-name"
+															);
+											repeater_field_data[
+												current_repeater_field_name
+											]["value"]["row_" + row_id].push(
+												repeater_value
+											);
+										}
+									);
+								} else {
+									form_data.push(field_data);
+								}
 							}
 
+							Object.keys(repeater_field_data).forEach(
+								function (field_key) {
+									if (
+										$("input[name='" + field_key + "'")
+											.length > 0
+									) {
+										$("input[name='" + field_key + "'").val(
+											JSON.stringify(
+												repeater_field_data[field_key]
+											)
+										);
+									}
+								}
+							);
+
+							if (Object.keys(repeater_field_data).length > 0) {
+								$.merge(
+									form_data,
+									Object.values(repeater_field_data)
+								);
+							}
 							$(document).trigger(
 								"user_registration_frontend_form_data_filter",
 								[form_data]
@@ -247,12 +488,43 @@
 					},
 					get_fieldwise_data: function (field) {
 						var formwise_data = {};
+
 						var node_type = field.get(0).tagName.toLowerCase();
 						var field_name =
 							"undefined" !== field.attr("name")
 								? field.attr("name")
 								: "null";
 						var phone_id = [];
+						if (
+							field.attr("name") !== undefined &&
+							field.attr("name") !== ""
+						) {
+							formwise_data.field_name = field.attr("name");
+							formwise_data.field_name =
+								formwise_data.field_name.replace("[]", "");
+
+							if (
+								$(field).closest(".ur-repeater-row").length > 0
+							) {
+								if (
+									$(field).closest(".field-multi_select2")
+										.length > 0
+								) {
+									formwise_data.field_name =
+										formwise_data.field_name.slice(0, -2);
+								}
+
+								if (
+									$(field).closest(".field-file").length > 0
+								) {
+									formwise_data.field_name = $(field)
+										.closest(".field-file")
+										.attr("data-ref-id");
+								}
+							}
+						} else {
+							formwise_data.field_name = "";
+						}
 
 						$(".field-phone, .field-billing_phone").each(
 							function () {
@@ -276,10 +548,13 @@
 							"undefined" !== field.attr("type")
 								? field.attr("type")
 								: "null";
+
 						var textarea_type = field
 							.get(0)
 							.className.split(" ")[0];
+
 						formwise_data.value = "";
+
 						switch (node_type) {
 							case "input":
 								var checked_value = new Array();
@@ -305,6 +580,12 @@
 											)
 												? field.val()
 												: "";
+
+											formwise_data.field_name = field
+												.closest(
+													".field-privacy_policy"
+												)
+												.data("ref-id");
 										}
 										break;
 									case "radio":
@@ -313,6 +594,9 @@
 										)
 											? field.val()
 											: "";
+										formwise_data.field_name = field
+											.closest(".field-privacy_policy")
+											.data("ref-id");
 										break;
 									default:
 										formwise_data.value = field.val();
@@ -359,16 +643,7 @@
 						} else {
 							formwise_data.label = formwise_data.field_type;
 						}
-						if (
-							field.attr("name") !== undefined &&
-							field.attr("name") !== ""
-						) {
-							formwise_data.field_name = field.attr("name");
-							formwise_data.field_name =
-								formwise_data.field_name.replace("[]", "");
-						} else {
-							formwise_data.field_name = "";
-						}
+
 						if (
 							$.inArray(
 								formwise_data.field_name,
@@ -377,6 +652,7 @@
 						) {
 							available_field.push(formwise_data.field_name);
 						}
+
 						return formwise_data;
 					},
 					show_message: function (
@@ -516,7 +792,11 @@
 				var events = {
 					init: function () {
 						this.form_submit_event();
-						this.edit_profile_event();
+						if (
+							user_registration_params.ajax_submission_on_edit_profile
+						) {
+							this.edit_profile_event();
+						}
 					},
 					/**
 					 * Handles registration ajax form submission event.
@@ -868,10 +1148,13 @@
 												var message =
 													$('<ul class=""/>');
 												var type = "error";
+												var individual_field_message = false;
+
 												try {
 													var response = JSON.parse(
 														ajax_response.responseText
 													);
+
 													var timeout = response.data
 														.redirect_timeout
 														? response.data
@@ -1077,13 +1360,176 @@
 																	.message,
 																function (
 																	index,
-																	value
+																	message_value
 																) {
-																	message.append(
-																		"<li>" +
-																			value +
-																			"</li>"
-																	);
+																	if (
+																		message_value.hasOwnProperty(
+																			"individual"
+																		)
+																	) {
+																		var $field_id =
+																			[];
+																		$.each(
+																			$this
+																				.find(
+																					".ur-field-item"
+																				)
+																				.find(
+																					".ur-frontend-field"
+																				),
+																			function (
+																				index
+																			) {
+																				var $this =
+																					$(
+																						this
+																					);
+																				var $id =
+																					$this.attr(
+																						"id"
+																					);
+																				$field_id.push(
+																					$id
+																				);
+																			}
+																		);
+
+																		var field_name =
+																			"";
+
+																		$.each(
+																			message_value,
+																			function (
+																				index,
+																				value
+																			) {
+																				var repeater_field_name =
+																					"";
+																				var repeater_row_id =
+																					"";
+
+																				if (
+																					message_value.hasOwnProperty(
+																						"repeater_field_name"
+																					)
+																				) {
+																					repeater_field_name =
+																						message_value.repeater_field_name;
+																					repeater_row_id =
+																						message_value.row_id.replace(
+																							"row_",
+																							""
+																						);
+																					index =
+																						index +
+																						"_" +
+																						repeater_row_id;
+																				}
+
+																				if (
+																					$field_id.includes(
+																						index
+																					)
+																				) {
+																					field_name =
+																						index;
+
+																					var error_message =
+																						'<label id="' +
+																						index +
+																						"-error" +
+																						'" class="user-registration-error" for="' +
+																						index +
+																						'">' +
+																						value +
+																						"</label>";
+
+																					var wrapper =
+																						"";
+
+																					if (
+																						$this.find(
+																							".ur-repeater-row[data-repeater-field-name='" +
+																								repeater_field_name +
+																								"'][data-repeater-row='" +
+																								repeater_row_id +
+																								"'] "
+																						)
+																							.length >
+																						0
+																					) {
+																						wrapper =
+																							$this
+																								.find(
+																									".ur-repeater-row[data-repeater-field-name='" +
+																										repeater_field_name +
+																										"'][data-repeater-row='" +
+																										repeater_row_id +
+																										"'] "
+																								)
+																								.find(
+																									".ur-field-item"
+																								)
+																								.find(
+																									"input[id='" +
+																										index +
+																										"'], textarea[id='" +
+																										index +
+																										"']"
+																								);
+																					} else {
+																						wrapper =
+																							$this
+																								.find(
+																									".ur-form-row"
+																								)
+																								.find(
+																									".ur-field-item"
+																								)
+																								.find(
+																									"input[id='" +
+																										index +
+																										"'], textarea[id='" +
+																										index +
+																										"']"
+																								);
+																					}
+
+																					wrapper
+																						.closest(
+																							".ur-field-item"
+																						)
+																						.find(
+																							".user-registration-error"
+																						)
+																						.remove();
+																					wrapper
+																						.closest(
+																							".form-row"
+																						)
+																						.append(
+																							error_message
+																						);
+																					individual_field_message = true;
+																				}
+																			}
+																		);
+																		$(
+																			document
+																		).trigger(
+																			"ur_handle_field_error_messages",
+																			[
+																				$this,
+																				field_name
+																			]
+																		);
+																	} else {
+																		message.append(
+																			"<li>" +
+																				message_value +
+																				"</li>"
+																		);
+																	}
 																}
 															);
 														} else {
@@ -1110,14 +1556,7 @@
 													).data
 														.success_message_positon;
 
-												if (
-													!response.data.hasOwnProperty(
-														"message"
-													) ||
-													!response.data.message.hasOwnProperty(
-														"individual"
-													)
-												) {
+												if (!individual_field_message) {
 													form.show_message(
 														message,
 														type,
@@ -1280,9 +1719,16 @@
 					 * @since  1.8.5
 					 */
 					edit_profile_event: function () {
+						if (
+							!user_registration_params.ajax_submission_on_edit_profile
+						) {
+							return;
+						}
 						$("form.user-registration-EditProfileForm")
 							.off("submit")
 							.on("submit", function (event) {
+								event.preventDefault();
+								event.stopImmediatePropagation();
 								var $this = $(this);
 
 								// Validator messages.
@@ -1494,160 +1940,227 @@
 												}
 											}
 
+											var individual_field_message = false;
 											if (
-												!response.data.hasOwnProperty(
-													"message"
-												) ||
-												!response.data.message.hasOwnProperty(
-													"individual"
-												)
+												typeof response.data.message ===
+												"object"
 											) {
-												if (
-													typeof response.data
-														.message === "object"
-												) {
-													$.each(
-														response.data.message,
-														function (
-															index,
-															value
+												$.each(
+													response.data.message,
+													function (
+														index,
+														message_value
+													) {
+														if (
+															message_value.hasOwnProperty(
+																"individual"
+															)
 														) {
+															var $field_id = [];
+															$.each(
+																$this
+																	.find(
+																		".ur-form-row"
+																	)
+																	.find(
+																		".ur-field-item"
+																	)
+																	.find(
+																		".ur-edit-profile-field"
+																	),
+																function (
+																	index
+																) {
+																	var $this =
+																		$(this);
+																	var $id =
+																		$this.attr(
+																			"id"
+																		);
+																	$field_id.push(
+																		$id
+																	);
+																}
+															);
+
+															$.each(
+																message_value,
+																function (
+																	index,
+																	value
+																) {
+																	var repeater_field_name =
+																		"";
+																	var repeater_row_id =
+																		"";
+
+																	if (
+																		message_value.hasOwnProperty(
+																			"repeater_field_name"
+																		)
+																	) {
+																		repeater_field_name =
+																			message_value.repeater_field_name;
+																		repeater_row_id =
+																			message_value.row_id.replace(
+																				"row_",
+																				""
+																			);
+																		index =
+																			"user_registration_" +
+																			index +
+																			"_" +
+																			repeater_row_id;
+																	} else {
+																		index =
+																			index.indexOf(
+																				"user_registration_"
+																			) ===
+																			-1
+																				? "user_registration_" +
+																				  index
+																				: index;
+																	}
+
+																	if (
+																		$field_id.includes(
+																			index
+																		)
+																	) {
+																		var error_message =
+																			'<label id="' +
+																			index +
+																			"-error" +
+																			'" class="user-registration-error" for="' +
+																			index +
+																			'">' +
+																			value +
+																			"</label>";
+																		console.log(
+																			error_message
+																		);
+																		var wrapper =
+																			$this.find(
+																				".ur-form-row"
+																			);
+
+																		if (
+																			wrapper.hasClass(
+																				"ur-repeater-row"
+																			)
+																		) {
+																			wrapper =
+																				wrapper
+																					.find(
+																						".ur-repeater-row[data-repeater-field-name='" +
+																							repeater_field_name +
+																							"'][data-repeater-row='" +
+																							repeater_row_id +
+																							"'] "
+																					)
+																					.find(
+																						".ur-field-item"
+																					)
+																					.find(
+																						"input[id='" +
+																							index +
+																							"'], textarea[id='" +
+																							index +
+																							"']"
+																					);
+																		} else {
+																			wrapper =
+																				wrapper
+																					.find(
+																						".ur-field-item"
+																					)
+																					.find(
+																						"input[id='" +
+																							index +
+																							"'], textarea[id='" +
+																							index +
+																							"']"
+																					);
+																		}
+
+																		wrapper
+																			.closest(
+																				".form-row"
+																			)
+																			.append(
+																				error_message
+																			);
+																		individual_field_message = true;
+																	}
+																}
+															);
+														} else {
 															message.append(
 																"<li>" +
-																	value +
+																	message_value +
 																	"</li>"
 															);
 														}
-													);
-												} else {
-													message.append(
-														"<li>" +
-															response.data
-																.message +
-															"</li>"
-													);
-													if (
-														undefined !==
-														response.data
-															.userEmailPendingMessage
-													) {
-														$(
-															".user-registration-info.user-email-change-update-notice"
-														).remove();
-														form.show_message(
-															$(
-																'<ul class=""/>'
-															).append(
-																"<li>" +
-																	response
-																		.data
-																		.userEmailUpdateMessage +
-																	"</li>"
-															),
-															"info user-email-change-update-notice",
-															$this,
-															"0"
-														);
-
-														if (
-															$(
-																"input#user_registration_user_email"
-															).next(
-																"div.email-updated"
-															).length
-														) {
-															$(
-																"input#user_registration_user_email"
-															)
-																.next(
-																	"div.email-updated"
-																)
-																.remove();
-														}
-														$(
-															response.data
-																.userEmailPendingMessage
-														).insertAfter(
-															$(
-																"input#user_registration_user_email"
-															)
-														);
-														$(
-															"input#user_registration_user_email"
-														).val(
-															response.data
-																.oldUserEmail
-														);
 													}
-												}
-												form.show_message(
-													message,
-													type,
-													$this,
-													"0"
 												);
 											} else {
-												var $field_id = [];
-												$.each(
-													$this
-														.find(".ur-form-row")
-														.find(".ur-field-item")
-														.find(
-															".ur-edit-profile-field"
+												message.append(
+													"<li>" +
+														response.data.message +
+														"</li>"
+												);
+												if (
+													undefined !==
+													response.data
+														.userEmailPendingMessage
+												) {
+													$(
+														".user-registration-info.user-email-change-update-notice"
+													).remove();
+													form.show_message(
+														$(
+															'<ul class=""/>'
+														).append(
+															"<li>" +
+																response.data
+																	.userEmailUpdateMessage +
+																"</li>"
 														),
-													function (index) {
-														var $this = $(this);
-														var $id =
-															$this.attr("id");
-														$field_id.push($id);
-													}
-												);
+														"info user-email-change-update-notice",
+														$this,
+														"0"
+													);
 
-												$.each(
-													response.data.message,
-													function (index, value) {
-														index =
-															"user_registration_" +
-															index;
-														if (
-															$field_id.includes(
-																index
+													if (
+														$(
+															"input#user_registration_user_email"
+														).next(
+															"div.email-updated"
+														).length
+													) {
+														$(
+															"input#user_registration_user_email"
+														)
+															.next(
+																"div.email-updated"
 															)
-														) {
-															var error_message =
-																'<label id="' +
-																index +
-																"-error" +
-																'" class="user-registration-error" for="' +
-																index +
-																'">' +
-																value +
-																"</label>";
-
-															var wrapper = $this
-																.find(
-																	".ur-form-row"
-																)
-																.find(
-																	".ur-field-item"
-																)
-																.find(
-																	"input[id='" +
-																		index +
-																		"'], textarea[id='" +
-																		index +
-																		"']"
-																);
-															wrapper
-																.closest(
-																	".form-row"
-																)
-																.append(
-																	error_message
-																);
-														}
+															.remove();
 													}
-												);
+													$(
+														response.data
+															.userEmailPendingMessage
+													).insertAfter(
+														$(
+															"input#user_registration_user_email"
+														)
+													);
+													$(
+														"input#user_registration_user_email"
+													).val(
+														response.data
+															.oldUserEmail
+													);
+												}
 											}
 										} catch (e) {
 											message.append(
@@ -1655,6 +2168,14 @@
 											);
 										}
 
+										if (!individual_field_message) {
+											form.show_message(
+												message,
+												type,
+												$this,
+												"0"
+											);
+										}
 										// Add trigger to handle functionalities that may be needed after edit-profile ajax submission submissions.
 										$(document).trigger(
 											"user_registration_edit_profile_after_ajax_complete",
@@ -1676,33 +2197,41 @@
 					}
 				};
 				form.init();
+
+				if ($(".user-registration-EditProfileForm ").length > 0) {
+					form.get_form_data(
+						$(".user-registration-EditProfileForm ").data("form-id")
+					);
+				}
+
 				events.init();
 			});
 		};
 
 		$(function () {
-			// Handle user registration form submit event.
-			$(".ur-submit-button").on("click", function () {
-				$(this).closest("form.register").ur_form_submission();
-			});
-
-			// Handle edit-profile form submit event.
-			$(".user-registration-submit-Button").on("click", function () {
-				// Check if the form is edit-profile form and check if ajax submission on edit profile is enabled.
-				if (
-					$(".ur-frontend-form")
-						.find("form.edit-profile")
-						.hasClass("user-registration-EditProfileForm") &&
-					user_registration_params.ajax_submission_on_edit_profile
-				) {
-					$(
-						"form.user-registration-EditProfileForm"
-					).ur_form_submission();
-				}
-			});
-
 			// Initialize the flatpickr when the document is ready to be manipulated.
 			$(document).ready(function () {
+				// Handle user registration form submit event.
+				$(".ur-submit-button").on("click", function () {
+					$(this).closest("form.register").ur_form_submission();
+				});
+
+				// Handle edit-profile form submit event.
+				$(
+					"input[name='save_account_details'], button[name='save_account_details']"
+				).on("click", function (event) {
+					// Check if the form is edit-profile form and check if ajax submission on edit profile is enabled.
+					if (
+						$(".ur-frontend-form")
+							.find("form.edit-profile")
+							.hasClass("user-registration-EditProfileForm")
+					) {
+						$(
+							"form.user-registration-EditProfileForm"
+						).ur_form_submission();
+					}
+					$(this).submit();
+				});
 				if ($(".ur-flatpickr-field").length) {
 					// create an array to store the flatpickr instances.
 					var flatpickrInstances = [];
@@ -1717,7 +2246,7 @@
 							// flatpickr has already been initialized for the field, so open the instance.
 							instance.open();
 						} else {
-							var field_id = field.data("id");
+							var field_id = field.attr("data-id");
 							var formated_date = field
 								.closest(".ur-field-item")
 								.find("#formated_date")
@@ -1989,6 +2518,9 @@
 	 * @since 1.9.0
 	 */
 	$(window).on("load", function () {
+		user_registration_form_init();
+	});
+	$(window).on("user_registration_repeater_modified", function () {
 		user_registration_form_init();
 	});
 })(jQuery);

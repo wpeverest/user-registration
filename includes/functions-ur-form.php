@@ -41,7 +41,7 @@ function ur_get_form_field_keys( $form_id ) {
 
 	$field_keys = array();
 
-	if ( ! empty( $form_fields ) && is_array( $form_fields )) {
+	if ( ! empty( $form_fields ) && is_array( $form_fields ) ) {
 		$field_keys = array_keys( $form_fields );
 	}
 
@@ -64,4 +64,3 @@ function ur_get_form_field_data( $form_id = 0 ) {
 
 	return $form_field_data;
 }
-

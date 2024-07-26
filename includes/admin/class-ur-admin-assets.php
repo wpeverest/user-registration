@@ -334,6 +334,8 @@ class UR_Admin_Assets {
 				'admin_url'                              => admin_url( 'admin.php?page=add-new-registration&edit-registration=' ),
 				'form_required_fields'                   => ur_get_required_fields(),
 				'form_one_time_draggable_fields'         => ur_get_one_time_draggable_fields(),
+				'form_repeater_row_not_droppable_fields_lists' => function_exists( 'user_registration_repeater_row_not_droppable_fields_lists' ) ? user_registration_repeater_row_not_droppable_fields_lists() : array(),
+				'form_repeater_row_empty'                => esc_html__( 'Please add at least one field to Repeater Row', 'user-registration' ),
 				/* translators: %field%: Field Label */
 				'form_one_time_draggable_fields_locked_title' => esc_html__( '%field% field is Locked.', 'user-registration' ),
 				/* translators: %field%: Field Label */
@@ -550,6 +552,8 @@ class UR_Admin_Assets {
 			'i18n_cannot_delete_row'                      => _x( 'Cannot delete row', 'user registration admin', 'user-registration' ),
 			'i18n_user_required_field_already_there'      => _x( 'This field is one time draggable.', 'user registration admin', 'user-registration' ),
 			'i18n_user_required_field_already_there_could_not_clone' => _x( 'Could not clone this field.', 'user registration admin', 'user-registration' ),
+			/* translators: %field%: Field Label */
+			'i18n_repeater_fields_not_droppable'          => _x( '%field% cannot be added to repeater row', 'user registration admin', 'user-registration' ),
 			'i18n_form_successfully_saved'                => _x( 'Form successfully saved.', 'user registration admin', 'user-registration' ),
 			'i18n_success'                                => _x( 'Success', 'user registration admin', 'user-registration' ),
 			'i18n_error'                                  => _x( 'Error', 'user registration admin', 'user-registration' ),

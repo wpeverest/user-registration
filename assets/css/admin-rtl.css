@@ -6466,22 +6466,25 @@
           border-right: 1px solid #b6bbcf; }
           .ur-registered-from .ur-selected-inputs .ur-single-row:hover .ur-grid-lists .ur-grid-list-item:first-child {
             border-color: transparent; }
-    .ur-registered-from .ur-selected-inputs .ur-add-new-row {
-      display: block;
-      margin: 20px auto;
-      width: auto;
-      height: 32px;
-      text-align: center;
-      font-family: inherit; }
-      .ur-registered-from .ur-selected-inputs .ur-add-new-row::before {
-        width: 16px;
-        height: 16px;
-        font-size: 16px;
-        margin-left: 10px;
-        font-family: dashicons;
-        vertical-align: middle;
-        padding: 1px 0 1px 10px;
-        border-left: 1px solid rgba(255, 255, 255, 0.3); }
+    .ur-registered-from .ur-selected-inputs .ur-row-buttons {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px; }
+      .ur-registered-from .ur-selected-inputs .ur-row-buttons .button {
+        display: block;
+        width: auto;
+        height: 32px;
+        text-align: center;
+        font-family: inherit; }
+        .ur-registered-from .ur-selected-inputs .ur-row-buttons .button::before {
+          width: 16px;
+          height: 16px;
+          font-size: 16px;
+          margin-left: 10px;
+          font-family: dashicons;
+          vertical-align: middle;
+          padding: 1px 0 1px 10px;
+          border-left: 1px solid rgba(255, 255, 255, 0.3); }
     .ur-registered-from .ur-selected-inputs li.ur-registered-item {
       width: 120px !important; }
       .ur-registered-from .ur-selected-inputs li.ur-registered-item.ui-sortable-placeholder {

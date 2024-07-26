@@ -436,7 +436,21 @@
       "name" : "User Registration Cloud Storage",
       "image": "extensions-json/sections/images/cloud-storage.png",
       "excerpt": "Directly send file upload data from User Registration to Integrated Cloud after registration form submission.",
-      "link": "https://wpuserregistration.com/features/google-sheets/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "link": "https://wpuserregistration.com/features/cloud-storage/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "plan" : [
+        "plus",
+        "professional",
+        "themegrill agency"
+      ],
+      "released_date": "31/07/2024"
+	  },
+	  {
+      "title": "Repeater Fields",
+      "slug" : "user-registration-repeater-fields",
+      "name" : "User Registration Repeater Fields",
+      "image": "extensions-json/sections/images/repeater-fields.png",
+      "excerpt": "Allow users to duplicate fields effortlessly. Perfect for collecting information like family members, certifications, etc.",
+      "link": "https://wpuserregistration.com/features/repeater-fields/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan" : [
         "plus",
         "professional",

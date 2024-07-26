@@ -477,6 +477,7 @@ function ur_get_field_type( $field_key ) {
 			$fields[] = 'coupon';
 		}
 	}
+
 	$field_type = 'text';
 
 	if ( in_array( $field_key, $fields ) ) {
@@ -529,6 +530,7 @@ function ur_get_field_type( $field_key ) {
 				break;
 			case 'radio':
 				$field_type = 'radio';
+				break;
 			case 'coupon':
 				$field_type = 'coupon';
 				break;
@@ -2299,6 +2301,9 @@ function ur_get_valid_form_data_format( $new_string, $post_key, $profile, $value
 	if ( isset( $profile[ $post_key ] ) ) {
 		$field_type = $profile[ $post_key ]['type'];
 
+		if ( 'repeater' === $field_type ) {
+			return $valid_form_data;
+		}
 		switch ( $field_type ) {
 			case 'checkbox':
 			case 'multi_select2':
@@ -2327,6 +2332,7 @@ function ur_get_valid_form_data_format( $new_string, $post_key, $profile, $value
 				}
 				break;
 		}
+
 		$valid_form_data[ $new_string ]               = new stdClass();
 		$valid_form_data[ $new_string ]->field_name   = $new_string;
 		$valid_form_data[ $new_string ]->value        = $value;
@@ -2418,9 +2424,18 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 
 		// Check if value contains array.
 		if ( is_array( $value ) ) {
-			$value = implode( ',', $value );
+			$value = ! isset( $value['row_1'] ) ? implode( ',', $value ) : '';
 		}
 
+		$data_html .= '<tr>';
+
+		if ( isset( $form_data->field_type ) && 'repeater' === $form_data->field_type ) {
+			$data_html .= '<tr><td>' . $label . ' : </td></tr>';
+		} else {
+
+			$data_html .= '<td>' . $label . ' : </td>';
+		}
+		$data_html .= '<td>' . $value . '</td></tr>';
 		if ( isset( $form_data->extra_params['field_key'] ) && 'signature' === $form_data->extra_params['field_key'] ) {
 			$data_html .= '<tr><td>' . $label . ' : </td><td><img class="profile-preview" alt="Signature" width="50px" height="50px" src="' . ( is_numeric( $value ) ? esc_url( wp_get_attachment_url( $value ) ) : esc_url( $value ) ) . '" /></td></tr>';
 		} else {
@@ -2997,12 +3012,25 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 		$form_id = isset( $_POST['form_id'] ) ? sanitize_text_field( wp_unslash( $_POST['form_id'] ) ) : ur_get_form_id_by_userid( $user_id ); //phpcs:ignore.
 
 		$field_name = ur_get_field_data_by_field_name( $form_id, $field_meta_key );
-		$field_key  = isset( $field_name['field_key'] ) ? $field_name['field_key'] : '';
+
+		$field_key   = isset( $field_name['field_key'] ) ? $field_name['field_key'] : '';
+		$field_value = ur_format_field_values_using_field_key( $field_key, $field_value );
+
+		return $field_value;
+	}
+}
+
+if ( ! function_exists( 'ur_format_field_values_using_field_key' ) ) {
+	function ur_format_field_values_using_field_key( $field_key, $field_value ) {
 
 		switch ( $field_key ) {
 			case 'checkbox':
 			case 'multi_select2':
-				$field_value = ( is_array( $field_value ) && ! empty( $field_value ) ) ? implode( ', ', $field_value ) : $field_value;
+				if ( is_array( $field_value ) && ! empty( $field_value ) ) {
+					$field_value = implode( ', ', $field_value );
+				} elseif ( ! empty( json_decode( $field_value ) ) ) { // phpcs:ignore;
+						$field_value = implode( ', ', json_decode( $field_value ) );
+				}
 				break;
 			case 'country':
 				$countries = UR_Form_Field_Country::get_instance()->get_country();
@@ -3029,7 +3057,6 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 						array_push( $links, $attachment_id );
 					}
 				}
-
 				$field_value = implode( ', ', $links );
 
 				break;
@@ -4745,6 +4772,691 @@ if ( ! function_exists( 'ur_merge_translations' ) ) {
 	}
 }
 
+if ( ! function_exists( 'user_registration_validate_form_field_data' ) ) {
+
+	/**
+	 * Function to validate individual form field data.
+	 *
+	 * @param object $data Form field data submitted by the user.
+	 * @param array  $form_data Form Data.
+	 * @param int    $form_id Form id.
+	 * @param array  $response_array Response Array.
+	 * @param array  $form_field_data Form Field Data..
+	 * @param array  $valid_form_data Valid Form Data..
+	 */
+	function user_registration_validate_form_field_data( $data, $form_data, $form_id, $response_array, $form_field_data, $valid_form_data ) {
+		$form_key_list = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
+
+		$form_validator = new UR_Form_Validation();
+
+		if ( in_array( $data->field_name, $form_key_list, true ) ) {
+			$form_data_index    = array_search( $data->field_name, $form_key_list, true );
+			$single_form_field  = $form_field_data[ $form_data_index ];
+			$general_setting    = isset( $single_form_field->general_setting ) ? $single_form_field->general_setting : new stdClass();
+			$single_field_key   = $single_form_field->field_key;
+			$single_field_label = isset( $general_setting->label ) ? $general_setting->label : '';
+			$single_field_value = isset( $data->value ) ? $data->value : '';
+			$data->extra_params = array(
+				'field_key' => $single_field_key,
+				'label'     => $single_field_label,
+			);
+
+			/**
+			 * Validate form fields according to the validations set in $validations array.
+			 *
+			 * @see this->get_field_validations()
+			 */
+
+			$validations = $form_validator->get_field_validations( $single_field_key );
+
+			if ( $form_validator->is_field_required( $single_form_field, $form_data ) ) {
+				array_unshift( $validations, 'required' );
+			}
+
+			if ( ! empty( $validations ) ) {
+				if ( in_array( 'required', $validations, true ) || ! empty( $single_field_value ) ) {
+					foreach ( $validations as $validation ) {
+						$result = UR_Form_Validation::$validation( $single_field_value );
+
+						if ( is_wp_error( $result ) ) {
+							$response_array = $form_validator->add_error( $result, $single_field_label, $response_array );
+							break;
+						}
+					}
+				}
+			}
+
+			/**
+			 * Hook to update form field data.
+			 */
+			$field_hook_name = 'user_registration_form_field_' . $single_form_field->field_key . '_params';
+			/**
+			 * Filter the single field params.
+			 *
+			 * The dynamic portion of the hook name, $field_hook_name.
+			 *
+			 * @param array $data The form data.
+			 * @param array $single_form_field The single form field.
+			 */
+			$data                                 = apply_filters( $field_hook_name, $data, $single_form_field );
+			$valid_form_data[ $data->field_name ] = UR_Form_Validation::get_sanitize_value( $data );
+
+			/**
+			 * Hook to custom validate form field.
+			 */
+			$hook        = "user_registration_validate_{$single_form_field->field_key}";
+			$filter_hook = $hook . '_message';
+
+			if ( isset( $data->field_type ) && 'email' === $data->field_type ) {
+				/**
+				 * Action validate email whitelist.
+				 *
+				 * @param array $data->value The data value.
+				 * @param string $filter_hook The dynamic Filter hook.
+				 * @param array $single_form_field The single form field.
+				 * @param int $form_id The form ID.
+				 */
+				do_action( 'user_registration_validate_email_whitelist', $data->value, $filter_hook, $single_form_field, $form_id );
+			}
+
+			if ( 'honeypot' === $single_form_field->field_key ) {
+				/**
+				 * Action validate honeypot container.
+				 *
+				 * @param array $data The data.
+				 * @param string $filter_hook The dynamic Filter hook.
+				 * @param int $form_id The form ID.
+				 * @param array $form_data The form data.
+				 */
+				do_action( 'user_registration_validate_honeypot_container', $data, $filter_hook, $form_id, $form_data );
+			}
+
+			/**
+			 * Slot booking backend validation.
+			 *
+			 * @since 4.1.0
+			 */
+			if ( 'date' === $single_form_field->field_key || 'timepicker' === $single_form_field->field_key ) {
+				/**
+				 * Action validate slot booking.
+				 *
+				 * @param array $form_data The form data.
+				 * @param string $filter_hook The dynamic Filter hook.
+				 * @param array $single_form_field The form field.
+				 * @param int $form_id The form ID.
+				 */
+				do_action( 'user_registration_validate_slot_booking', $form_data, $filter_hook, $single_form_field, $form_id );
+			}
+
+			if (
+				isset( $single_form_field->advance_setting->enable_conditional_logic ) && ur_string_to_bool( $single_form_field->advance_setting->enable_conditional_logic )
+			) {
+				$single_form_field->advance_setting->enable_conditional_logic = ur_string_to_bool( $single_form_field->advance_setting->enable_conditional_logic );
+			}
+			/**
+			 * Action validate single field.
+			 *
+			 * The dynamic portion of the hook name, $hook.
+			 *
+			 * @param array $single_form_field The form field.
+			 * @param array $data The form data.
+			 * @param string $filter_hook The dynamic filter hook.
+			 * @param int $form_id The form ID.
+			 */
+			do_action( $hook, $single_form_field, $data, $filter_hook, $form_id );
+
+			/**
+			 * Filter the validate message.
+			 *
+			 * The dynamic portion of the hook name, $filter_hook.
+			 * Default value is blank string.
+			 */
+			$response = apply_filters( $filter_hook, '' );
+
+			if ( ! empty( $response ) ) {
+				array_push( $response_array, $response );
+			}
+			remove_all_filters( $filter_hook );
+		}
+		return array( $response_array, $valid_form_data );
+	}
+}
+
+if ( ! function_exists( 'user_registration_validate_edit_profile_form_field_data' ) ) {
+
+	/**
+	 * Function to validate edit profile individual form field data.
+	 *
+	 * @param object $data Form field data submitted by the user.
+	 * @param array  $form_data Form Data.
+	 * @param int    $form_id Form id.
+	 * @param array  $form_field_data Form Field Data..
+	 * @param array  $form_fields Form Fields.
+	 */
+	function user_registration_validate_edit_profile_form_field_data( $data, $form_data, $form_id, $form_field_data, $form_fields ) {
+		$form_validator   = new UR_Form_Validation();
+		$skippable_fields = $form_validator->get_update_profile_validation_skippable_fields( $form_field_data );
+		$form_key_list    = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
+
+		$single_field_name = strpos( $data->field_name, 'user_registration_' ) !== -1 ? trim( str_replace( 'user_registration_', '', $data->field_name ) ) : $data->field_name;
+
+		if ( ! in_array( $single_field_name, $skippable_fields, true ) && in_array( $single_field_name, $form_key_list, true ) ) {
+			$form_data_index   = array_search( $single_field_name, $form_key_list, true );
+			$single_form_field = $form_field_data[ $form_data_index ];
+
+			$general_setting    = isset( $single_form_field->general_setting ) ? $single_form_field->general_setting : new stdClass();
+			$single_field_key   = $single_form_field->field_key;
+			$single_field_label = isset( $general_setting->label ) ? $general_setting->label : '';
+			$single_field_value = isset( $data->value ) ? $data->value : '';
+			$data->extra_params = array(
+				'field_key' => $single_field_key,
+				'label'     => $single_field_label,
+			);
+
+			/**
+			 * Validate form field according to the validations set in $validations array.
+			 *
+			 * @see form_validator->get_field_validations()
+			 */
+			$validations = $form_validator->get_field_validations( $single_field_key );
+
+			$required = isset( $single_form_field->general_setting->required ) ? $single_form_field->general_setting->required : false;
+
+			$urcl_hide_fields = isset( $_POST['urcl_hide_fields'] ) ? (array) json_decode( stripslashes( $_POST['urcl_hide_fields'] ), true ) : array(); //phpcs:ignore;
+
+			if ( ! in_array( $single_field_name, $urcl_hide_fields, true ) && ur_string_to_bool( $required ) ) {
+				array_unshift( $validations, 'required' );
+			}
+
+			if ( ! empty( $validations ) ) {
+
+				if ( in_array( 'required', $validations, true ) || ! empty( $single_field_value ) ) {
+					foreach ( $validations as $validation ) {
+						$result = UR_Form_Validation::$validation( $single_field_value );
+
+						if ( is_wp_error( $result ) ) {
+							$error_code = $result->get_error_code();
+							$message    = $form_validator->get_error_message( $error_code, $single_field_label );
+							ur_add_notice( $message, 'error' );
+							break;
+						}
+					}
+				}
+			}
+
+			/**
+			 * Filter to allow modification of value.
+			 *
+			 * The dynamic portion of the hook name, $single_field_name.
+			 *
+			 * @param array $single_field_value The single field value.
+			 */
+			$single_field_value = apply_filters( 'user_registration_process_myaccount_field_' . $single_field_name, wp_unslash( $single_field_value ) );
+
+			if ( isset( $data->field_type ) && 'email' === $data->field_type ) {
+				/**
+				 * Action validate email whitelist.
+				 *
+				 * @param array $single_field_value The data value.
+				 * @param array $single_form_field The single form field.
+				 * @param int $form_id The form ID.
+				 */
+				do_action( 'user_registration_validate_email_whitelist', sanitize_text_field( $single_field_value ), '', $single_form_field, $form_id );
+			}
+
+			/**
+			 * Slot booking backend validation.
+			 *
+			 * @since 4.1.0
+			 */
+			if ( 'date' === $single_form_field->field_key || 'timepicker' === $single_form_field->field_key ) {
+				/**
+				 * Action validate slot booking.
+				 *
+				 * @param array $form_data The form data.
+				 * @param array $single_form_field The field setting.
+				 * @param int $form_id The form ID.
+				 */
+				do_action( 'user_registration_validate_slot_booking', $form_data, '', $single_form_field, $form_id );
+			}
+
+			if ( 'user_email' === $single_form_field->field_key ) {
+
+				// Check if email already exists before updating user details.
+				if ( email_exists( sanitize_text_field( wp_unslash( $single_field_value ) ) ) && email_exists( sanitize_text_field( wp_unslash( $single_field_value ) ) ) !== get_current_user_id() ) {
+					ur_add_notice( esc_html__( 'Email already exists', 'user-registration' ), 'error' );
+				}
+			}
+
+			$form_validator->run_field_validations_on_profile_update( $single_field_key, $single_form_field, $data, $form_id );
+
+			/** Action to add extra validation to edit profile fields.
+			 *
+			 * The dynamic portion of the hook name, $single_field_key.
+			 *
+			 * @param array $single_field_value The single field value.
+			 * @param array $single_form_field The form field.
+			 */
+			do_action( 'user_registration_validate_field_' . $single_field_key, wp_unslash( $single_field_value ), $single_form_field ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		}
+	}
+}
+
+if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
+
+	/**
+	 * Generate edit profile individual row template
+	 *
+	 * @param array  $data Form row data.
+	 * @param array  $profile User profile data.
+	 * @param string $current_row Current row id.
+	 */
+	function user_registration_edit_profile_row_template( $data, $profile, $current_row = '' ) {
+
+		$user_id = get_current_user_id();
+		$form_id = ur_get_form_id_by_userid( $user_id );
+		$width   = floor( 100 / count( $data ) ) - count( $data );
+
+		foreach ( $data as $grid_key => $grid_data ) {
+			$found_field = false;
+
+			foreach ( $grid_data as $grid_data_key => $single_item ) {
+				if ( ! isset( $single_item->general_setting->field_name ) ) {
+					continue;
+				}
+
+				$key = 'user_registration_' . $single_item->general_setting->field_name;
+				if ( isset( $single_item->field_key ) ) {
+					$found_field = isset( $profile[ $key ] );
+				}
+			}
+
+			if ( $found_field ) {
+				?>
+			<div class="ur-form-grid ur-grid-<?php echo esc_attr( ( $grid_key + 1 ) ); ?>" style="width:<?php echo esc_attr( $width ); ?>%;">
+				<?php
+			}
+
+			foreach ( $grid_data as $grid_data_key => $single_item ) {
+
+				if ( ! isset( $single_item->general_setting->field_name ) ) {
+					continue;
+				}
+
+				$key = 'user_registration_' . $single_item->general_setting->field_name;
+
+				if ( $found_field ) {
+					$user_id = get_current_user_id();
+					$form_id = ur_get_form_id_by_userid( $user_id );
+					$field   = isset( $profile[ $key ] ) ? $profile[ $key ] : array();
+
+					$field['input_class']       = array( 'ur-edit-profile-field ' );
+					$advance_data               = array(
+						'general_setting' => (object) $single_item->general_setting,
+						'advance_setting' => (object) $single_item->advance_setting,
+					);
+					$field['custom_attributes'] = isset( $field['custom_attributes'] ) && is_array( $field['custom_attributes'] ) ? $field['custom_attributes'] : array();
+					$field_id                   = $single_item->general_setting->field_name;
+					$cl_props                   = null;
+
+					// If the conditional logic addon is installed.
+					if ( class_exists( 'UserRegistrationConditionalLogic' ) ) {
+						// Migrate the conditional logic to logic_map schema.
+						$single_item = class_exists( 'URCL_Field_Settings' ) ? URCL_Field_Settings::migrate_to_logic_map_schema( $single_item ) : $single_item;
+
+						$cl_enabled = isset( $single_item->advance_setting->enable_conditional_logic ) && ur_string_to_bool( $single_item->advance_setting->enable_conditional_logic );
+						$cl_props   = sprintf( 'data-conditional-logic-enabled="%s"', esc_attr( $cl_enabled ) );
+
+						if ( $cl_enabled && isset( $single_item->advance_setting->cl_map ) ) {
+							$cl_map   = esc_attr( $single_item->advance_setting->cl_map );
+							$cl_props = sprintf( 'data-conditional-logic-enabled="%s" data-conditional-logic-map="%s"', esc_attr( $cl_enabled ), esc_attr( $cl_map ) );
+						}
+					}
+
+					if ( 'profile_picture' === $single_item->field_key ) {
+						continue;
+					}
+
+					// unset invite code.
+					if ( 'invite_code' === $single_item->field_key ) {
+						continue;
+					}
+					// unset learndash code.
+					if ( 'learndash_course' === $single_item->field_key ) {
+						continue;
+					}
+
+					// Unset multiple choice and single item.
+					if ( 'subscription_plan' === $single_item->field_key || 'multiple_choice' === $single_item->field_key || 'single_item' === $single_item->field_key || 'captcha' === $single_item->field_key || 'stripe_gateway' === $single_item->field_key ) {
+						continue;
+					}
+
+					?>
+					<div class="ur-field-item field-<?php echo esc_attr( $single_item->field_key );?> <?php echo esc_attr( ! empty( $single_item->advance_setting->custom_class ) ? $single_item->advance_setting->custom_class : '' ); ?>"  <?php echo $cl_props; //PHPCS:ignore?> data-field-id="<?php echo esc_attr( $field_id ); ?>" data-ref-id="<?php echo esc_attr( $key ); ?>">
+					<?php
+					$readonly_fields = ur_readonly_profile_details_fields();
+
+					if ( isset( $field['field_key'] ) && array_key_exists( $field['field_key'], $readonly_fields ) ) {
+						$field['custom_attributes']['readonly'] = 'readonly';
+						if ( isset( $readonly_fields[ $field['field_key'] ] ['value'] ) ) {
+							$field['value'] = $readonly_fields[ $field['field_key'] ] ['value'];
+						}
+						if ( isset( $readonly_fields[ $field['field_key'] ] ['message'] ) ) {
+							$field['custom_attributes']['title'] = $readonly_fields[ $field['field_key'] ] ['message'];
+							$field['input_class'][]              = 'user-registration-help-tip';
+						}
+					}
+
+					if ( 'number' === $single_item->field_key ) {
+						$field['min']  = isset( $advance_data['advance_setting']->min ) ? $advance_data['advance_setting']->min : '';
+						$field['max']  = isset( $advance_data['advance_setting']->max ) ? $advance_data['advance_setting']->max : '';
+						$field['step'] = isset( $advance_data['advance_setting']->step ) ? $advance_data['advance_setting']->step : '';
+					}
+
+					if ( 'text' === $single_item->field_key || 'textarea' === $single_item->field_key ) {
+						if ( isset( $advance_data['advance_setting']->limit_length ) && $advance_data['advance_setting']->limit_length ) {
+							if ( isset( $advance_data['advance_setting']->limit_length_limit_count ) && isset( $advance_data['advance_setting']->limit_length_limit_mode ) ) {
+								if ( 'characters' === $advance_data['advance_setting']->limit_length_limit_mode ) {
+									$field['max-characters'] = $advance_data['advance_setting']->limit_length_limit_count;
+								} elseif ( 'words' === $advance_data['advance_setting']->limit_length_limit_mode ) {
+									$field['max-words'] = $advance_data['advance_setting']->limit_length_limit_count;
+								}
+							}
+						}
+
+						if ( isset( $advance_data['advance_setting']->minimum_length ) && $advance_data['advance_setting']->minimum_length ) {
+							if ( isset( $advance_data['advance_setting']->minimum_length_limit_count ) && isset( $advance_data['advance_setting']->minimum_length_limit_mode ) ) {
+								if ( 'characters' === $advance_data['advance_setting']->minimum_length_limit_mode ) {
+									$field['min-characters'] = $advance_data['advance_setting']->minimum_length_limit_count;
+								} elseif ( 'words' === $advance_data['advance_setting']->minimum_length_limit_mode ) {
+									$field['min-words'] = $advance_data['advance_setting']->minimum_length_limit_count;
+								}
+							}
+						}
+					}
+
+					if ( 'range' === $single_item->field_key ) {
+						$field['range_min']             = ( isset( $advance_data['advance_setting']->range_min ) && '' !== $advance_data['advance_setting']->range_min ) ? $advance_data['advance_setting']->range_min : '0';
+						$field['range_max']             = ( isset( $advance_data['advance_setting']->range_max ) && '' !== $advance_data['advance_setting']->range_max ) ? $advance_data['advance_setting']->range_max : '10';
+						$field['range_step']            = isset( $advance_data['advance_setting']->range_step ) ? $advance_data['advance_setting']->range_step : '1';
+						$field['enable_payment_slider'] = isset( $advance_data['advance_setting']->enable_payment_slider ) ? $advance_data['advance_setting']->enable_payment_slider : 'false';
+
+						if ( ur_string_to_bool( $advance_data['advance_setting']->enable_prefix_postfix ) ) {
+							if ( ur_string_to_bool( $advance_data['advance_setting']->enable_text_prefix_postfix ) ) {
+								$field['range_prefix']  = isset( $advance_data['advance_setting']->range_prefix ) ? $advance_data['advance_setting']->range_prefix : '';
+								$field['range_postfix'] = isset( $advance_data['advance_setting']->range_postfix ) ? $advance_data['advance_setting']->range_postfix : '';
+							} else {
+								$field['range_prefix']  = $field['range_min'];
+								$field['range_postfix'] = $field['range_max'];
+							}
+						}
+
+						// to hide the range as payment slider in edit profile.
+						if ( ur_string_to_bool( $field['enable_payment_slider'] ) ) {
+							continue;
+						}
+					}
+
+					if ( 'phone' === $single_item->field_key ) {
+						$field['phone_format'] = $single_item->general_setting->phone_format;
+						if ( 'smart' === $field['phone_format'] ) {
+							unset( $field['input_mask'] );
+						}
+					}
+
+					if ( 'password' === $single_item->field_key ) {
+						$field['size'] = $advance_data['advance_setting']->size;
+					}
+
+					if ( isset( $single_item->general_setting->hide_label ) ) {
+						if ( ur_string_to_bool( $single_item->general_setting->hide_label ) ) {
+							unset( $field['label'] );
+						}
+					}
+
+					if ( 'select' === $single_item->field_key ) {
+						$option_data         = isset( $advance_data['advance_setting']->options ) ? explode( ',', $advance_data['advance_setting']->options ) : array();
+						$option_advance_data = isset( $advance_data['general_setting']->options ) ? $advance_data['general_setting']->options : $option_data;
+						$options             = array();
+
+						if ( is_array( $option_advance_data ) ) {
+							foreach ( $option_advance_data as $index_data => $option ) {
+								$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
+							}
+							$field['options'] = $options;
+						}
+
+						$field['placeholder'] = $single_item->general_setting->placeholder;
+
+					}
+
+					if ( 'radio' === $single_item->field_key ) {
+						if ( isset( $advance_data['general_setting']->image_choice ) && ur_string_to_bool( $advance_data['general_setting']->image_choice ) ) {
+							$option_advance_data = isset( $advance_data['general_setting']->image_options ) ? $advance_data['general_setting']->image_options : array();
+							$options             = array();
+							if ( is_array( $option_advance_data ) ) {
+								foreach ( $option_advance_data as $index_data => $option ) {
+									$options[ $option->label ] = array(
+										'label' => ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option->label ),
+										'image' => $option->image,
+									);
+								}
+								$field['image_options'] = $options;
+							}
+						} else {
+							$option_advance_data = isset( $advance_data['general_setting']->options ) ? $advance_data['general_setting']->options : array();
+							$options             = array();
+
+							if ( is_array( $option_advance_data ) ) {
+								foreach ( $option_advance_data as $index_data => $option ) {
+									$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
+								}
+								$field['options'] = $options;
+							}
+						}
+					}
+
+					if ( 'file' === $single_item->field_key ) {
+						if ( isset( $single_item->general_setting->max_files ) ) {
+							$field['max_files'] = $single_item->general_setting->max_files;
+						} else {
+							$field['max_files'] = 1;
+						}
+
+						if ( isset( $advance_data['advance_setting']->max_upload_size ) ) {
+							$field['max_upload_size'] = $advance_data['advance_setting']->max_upload_size;
+						}
+
+						if ( isset( $advance_data['advance_setting']->valid_file_type ) ) {
+							$field['valid_file_type'] = $advance_data['advance_setting']->valid_file_type;
+						}
+
+						// Remove files attachment id from user meta if file is deleted by admin.
+						if ( '' !== $field['value'] ) {
+							$attachment_ids = is_array( $field['value'] ) ? $field['value'] : explode( ',', $field['value'] );
+
+							foreach ( $attachment_ids as $attachment_key => $attachment_id ) {
+								$attachment_url = get_attached_file( $attachment_id );
+
+								// Check to see if file actually exists or not.
+								if ( '' !== $attachment_url && file_exists( $attachment_url ) ) {
+									continue;
+								}
+								unset( $attachment_ids[ $attachment_key ] );
+							}
+
+							$field['value'] = ! empty( $attachment_ids ) ? implode( ',', $attachment_ids ) : '';
+							update_user_meta( get_current_user_id(), 'user_registration_' . $single_item->general_setting->field_name, $field['value'] );
+						}
+					}
+
+					if ( isset( $advance_data['general_setting']->required ) ) {
+						if ( in_array( $single_item->field_key, ur_get_required_fields() )
+						|| ur_string_to_bool( $advance_data['general_setting']->required ) ) {
+							$field['required']                      = true;
+							$field['custom_attributes']['required'] = 'required';
+						}
+					}
+
+					// Add choice_limit setting valur in order to limit choice fields.
+					if ( 'checkbox' === $single_item->field_key || 'multi_select2' === $single_item->field_key ) {
+						if ( isset( $advance_data['general_setting']->image_choice ) && ur_string_to_bool( $advance_data['general_setting']->image_choice ) ) {
+							$option_data = isset( $advance_data['general_setting']->image_options ) ? $advance_data['general_setting']->image_options : array();
+							$options     = array();
+
+							if ( is_array( $option_data ) ) {
+								foreach ( $option_data as $index_data => $option ) {
+									$options[ $option->label ] = array(
+										'label' => ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option->label ),
+										'image' => $option->image,
+									);
+								}
+								$field['image_options'] = $options;
+							}
+						} else {
+							$option_data = isset( $advance_data['general_setting']->options ) ? $advance_data['general_setting']->options : array();
+							$options     = array();
+
+							if ( is_array( $option_data ) ) {
+								foreach ( $option_data as $index_data => $option ) {
+									$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
+								}
+
+								$field['options'] = $options;
+							}
+						}
+
+						if ( isset( $advance_data['advance_setting']->choice_limit ) ) {
+							$field['choice_limit'] = $advance_data['advance_setting']->choice_limit;
+						}
+						if ( isset( $advance_data['advance_setting']->select_all ) ) {
+							$field['select_all'] = ur_string_to_bool( $advance_data['advance_setting']->select_all );
+						}
+					}
+
+					if ( 'timepicker' === $single_item->field_key ) {
+						$field['current_time']  = isset( $advance_data['advance_setting']->current_time ) ? $advance_data['advance_setting']->current_time : '';
+						$field['time_interval'] = isset( $advance_data['advance_setting']->time_interval ) ? $advance_data['advance_setting']->time_interval : '';
+						$field['time_format']   = isset( $advance_data['advance_setting']->time_format ) ? $advance_data['advance_setting']->time_format : '';
+						$field['time_range']    = isset( $advance_data['advance_setting']->time_range ) ? $advance_data['advance_setting']->time_range : '';
+						$field['time_min']      = ( isset( $advance_data['advance_setting']->time_min ) && '' !== $advance_data['advance_setting']->time_min ) ? $advance_data['advance_setting']->time_min : '';
+						$field['time_max']      = ( isset( $advance_data['advance_setting']->time_max ) && '' !== $advance_data['advance_setting']->time_max ) ? $advance_data['advance_setting']->time_max : '';
+						$timemin                = isset( $field['time_min'] ) ? strtolower( substr( $field['time_min'], -2 ) ) : '';
+						$timemax                = isset( $field['time_max'] ) ? strtolower( substr( $field['time_max'], -2 ) ) : '';
+						$minampm                = intval( $field['time_min'] ) <= 12 ? 'AM' : 'PM';
+						$maxampm                = intval( $field['time_max'] ) <= 12 ? 'AM' : 'PM';
+						// For slot booking.
+						$field['enable_time_slot_booking'] = isset( $advance_data['advance_setting']->enable_time_slot_booking ) ? $advance_data['advance_setting']->enable_time_slot_booking : '';
+						$field['target_date_field']        = isset( $advance_data['advance_setting']->target_date_field ) ? $advance_data['advance_setting']->target_date_field : '';
+							// Handles the time format.
+						if ( 'am' === $timemin || 'pm' === $timemin ) {
+							$field['time_min'] = $field['time_min'];
+						} else {
+							$field['time_min'] = $field['time_min'] . '' . $minampm;
+						}
+
+						if ( 'am' === $timemax || 'pm' === $timemax ) {
+							$field['time_max'] = $field['time_max'];
+						} else {
+							$field['time_max'] = $field['time_max'] . '' . $maxampm;
+						}
+					}
+
+					if ( 'date' === $single_item->field_key ) {
+						// For slot booking.
+						$field['enable_date_slot_booking'] = isset( $advance_data['advance_setting']->enable_date_slot_booking ) ? $advance_data['advance_setting']->enable_date_slot_booking : false;
+					}
+
+					$filter_data = array(
+						'form_data' => $field,
+						'data'      => $advance_data,
+					);
+
+					$field_key       = isset( $field['field_key'] ) ? $field['field_key'] : '';
+					$form_data_array = apply_filters( 'user_registration_' . $field_key . '_frontend_form_data', $filter_data );
+					$field           = isset( $form_data_array['form_data'] ) ? $form_data_array['form_data'] : $field;
+					$value           = ! empty( $_POST[ $key ] ) ? ur_clean( wp_unslash( $_POST[ $key ] ) ) : ( isset( $field['value'] ) ? $field['value'] : '' ); // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+
+					if ( isset( $field['field_key'] ) ) {
+						$field = user_registration_form_field( $key, $field, $value, $current_row );
+					}
+
+					/**
+					 * Embed the current country value to allow to remove it if it's not allowed.
+					 */
+					if ( 'country' === $single_item->field_key && ! empty( $value ) ) {
+						printf( '<span hidden class="ur-data-holder" data-option-value="%s" data-option-html="%s"></span>', esc_attr( $value ), esc_attr( UR_Form_Field_Country::get_instance()->get_country()[ $value ] ) );
+					}
+					?>
+					</div>
+					<?php } ?>
+				<?php } ?>
+
+					<?php if ( $found_field ) { ?>
+				</div>
+						<?php
+					}
+		}
+
+		echo apply_filters( 'user_registration_frontend_form_row_end', '', $form_id, $current_row ); // phpcs:ignore
+	}
+}
+
+if ( ! file_exists( 'user_registration_sanitize_profile_update' ) ) {
+
+	/**
+	 * Sanitize the data submitted by user.
+	 *
+	 * @param array  $submitted_data Submitted data.
+	 * @param string $field_type Field Type.
+	 * @param string $key Field Key.
+	 */
+	function user_registration_sanitize_profile_update( $submitted_data, $field_type, $key ) {
+
+		$value = '';
+
+		switch ( $field_type ) {
+			case 'checkbox':
+				if ( isset( $submitted_data[ $key ] ) && is_array( $submitted_data[ $key ] ) ) { // phpcs:ignore
+					$value = wp_unslash( $submitted_data[ $key ] ); // phpcs:ignore
+				} else {
+					$value = (int) isset( $submitted_data[ $key ] ); // phpcs:ignore
+				}
+				break;
+
+			case 'wysiwyg':
+				if ( isset( $submitted_data[ $key ] ) ) { // phpcs:ignore
+					$value = sanitize_text_field( htmlentities( wp_unslash( $submitted_data[ $key ] ) ) ); // phpcs:ignore
+				} else {
+					$value = '';
+				}
+				break;
+
+			case 'email':
+				if ( isset( $submitted_data[ $key ] ) ) { // phpcs:ignore
+					$value = sanitize_email( wp_unslash( $submitted_data[ $key ] ) ); // phpcs:ignore
+				} else {
+					$user_id   = get_current_user_id();
+					$user_data = get_userdata( $user_id );
+					$value     = $user_data->data->user_email;
+				}
+				break;
+			case 'profile_picture':
+				if ( isset( $submitted_data['profile_pic_url'] ) ) { // phpcs:ignore
+					$value = sanitize_text_field( wp_unslash( $submitted_data['profile_pic_url'] ) ); // phpcs:ignore
+				} else {
+					$value = '';
+				}
+				break;
+			default:
+				$value = isset( $submitted_data[ $key ] ) ? $submitted_data[ $key ] : ''; // phpcs:ignore
+				break;
+		}
+
+		return $value;
+	}
+}
+
 if ( ! function_exists( 'ur_get_coupon_details' ) ) {
 	/**
 	 * This function will send email verification email to the user.
@@ -4898,6 +5610,7 @@ if ( ! function_exists( 'ur_redirect_to_addons_page' ) ) {
 		}
 	}
 }
+
 if ( ! function_exists( 'ur_check_akismet_installation' ) ) {
 
 	/**
@@ -4973,6 +5686,7 @@ if ( ! function_exists( 'ur_is_akismet_configured' ) ) {
 
 
 }
+
 add_filter( 'user_registration_get_akismet_validate', 'ur_get_akismet_validate', 10, 2 );
 if ( ! function_exists( 'ur_get_akismet_validate' ) ) {
 	/**
@@ -5089,7 +5803,6 @@ if ( ! function_exists( 'ur_get_allowed_field_for_akisment' ) ) {
 		return $field_type_allowlist;
 	}
 }
-
 
 if ( ! function_exists( 'ur_current_url' ) ) {
 	/**

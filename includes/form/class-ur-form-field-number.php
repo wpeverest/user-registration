@@ -81,18 +81,12 @@ class UR_Form_Field_Number extends UR_Form_Field {
 					$label       => sprintf( __( 'Please enter a value less than %d', 'user-registration' ), $max_value ),
 					'individual' => true,
 				);
+
 				add_filter(
 					$filter_hook,
-					function ( $msg ) use ( $label, $message ) {
-						if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX && ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
-							return sprintf( $message[ $label ] );
-						} else {
-							wp_send_json_error(
-								array(
-									'message' => $message,
-								)
-							);
-						}
+					function ( $msg ) use ( $message, $form_data ) {
+						$message = apply_filters( 'user_registration_modify_field_validation_response', $message, $form_data );
+						return $message;
 					}
 				);
 			}
@@ -100,24 +94,19 @@ class UR_Form_Field_Number extends UR_Form_Field {
 
 		if ( isset( $single_form_field->advance_setting->min ) && '' !== $single_form_field->advance_setting->min ) {
 			$min_value = $single_form_field->advance_setting->min;
+
 			if ( floatval( $value ) < floatval( $min_value ) ) {
 				$message = array(
 					/* translators: %s - validation message */
 					$label       => sprintf( __( 'Please enter a value greater than %d', 'user-registration' ), $min_value ),
 					'individual' => true,
 				);
+
 				add_filter(
 					$filter_hook,
-					function ( $msg ) use ( $label, $message ) {
-						if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX && ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
-							return sprintf( $message[ $label ] );
-						} else {
-							wp_send_json_error(
-								array(
-									'message' => $message,
-								)
-							);
-						}
+					function ( $msg ) use ( $message, $form_data ) {
+						$message = apply_filters( 'user_registration_modify_field_validation_response', $message, $form_data );
+						return $message;
 					}
 				);
 			}
@@ -134,18 +123,9 @@ class UR_Form_Field_Number extends UR_Form_Field {
 					);
 					add_filter(
 						$filter_hook,
-						function ( $msg ) use ( $label, $message ) {
-
-							if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX && ! ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
-								return sprintf( $message[ $label ] );
-							} else {
-
-								wp_send_json_error(
-									array(
-										'message' => $message,
-									)
-								);
-							}
+						function ( $msg ) use ( $message, $form_data ) {
+							$message = apply_filters( 'user_registration_modify_field_validation_response', $message, $form_data );
+							return $message;
 						}
 					);
 				}

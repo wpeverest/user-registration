@@ -338,7 +338,8 @@ class UR_Shortcodes {
 		$form_row_ids    = '';
 
 		if ( ! empty( $form_data_array ) ) {
-			$form_row_ids = get_post_meta( $form_id, 'user_registration_form_row_ids', true );
+			$form_row_ids  = get_post_meta( $form_id, 'user_registration_form_row_ids', true );
+			$form_row_data = get_post_meta( $form_id, 'user_registration_form_row_data', true );
 		}
 		$form_row_ids_array = json_decode( $form_row_ids );
 
@@ -425,6 +426,7 @@ class UR_Shortcodes {
 				'recaptcha_node'            => $recaptcha_node,
 				'parts'                     => self::$parts,
 				'row_ids'                   => $form_row_ids_array,
+				'form_row_data'             => $form_row_data,
 				'recaptcha_enabled'         => $recaptcha_enabled,
 			)
 		);
