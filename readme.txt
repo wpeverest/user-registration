@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 5.2
 Requires PHP: 7.2
-Tested up to: 6.5.4
-Stable tag: 3.2.1.3
+Tested up to: 6.6
+Stable tag: 3.3.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -237,6 +237,18 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 3.3.0    - 31/07/2024 =
+Refactor   - Custom plugin notice rendering.
+Feature    - Akismet integration.
+Enhance    - Script and styles optimization.
+Dev        - Compatibility for Signature Field.
+Dev        - Compatibility temporarily disable users.
+Dev        - Compatibility for image based captcha.
+Fix        - Avoid multiple query for same info.
+Fix        - Login Redirection not working after email confirmation.
+Fix        - Not able to login with email provided in username field.
+Fix        - Smart Tags related to current page not working in certain emails.
 
 = 3.2.1.3  - 03/07/2024 =
 * Fix      - Remove unnecessary source map from build.
