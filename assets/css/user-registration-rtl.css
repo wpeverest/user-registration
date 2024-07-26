@@ -670,6 +670,9 @@
 .user-registration-swal2-container {
   z-index: 9999; }
 
+.user-registration-page .select2-dropdown {
+  padding: 0px !important; }
+
 .ur-timepicker-range {
   display: flex; }
 

@@ -240,8 +240,10 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 
 = 3.3.0    - 31/07/2024 =
 Refactor   - Custom plugin notice rendering.
+Refactor   - Server side validation error message process.
 Feature    - Akismet integration.
 Enhance    - Script and styles optimization.
+Dev        - Compatibility for Repeater Fields.
 Dev        - Compatibility for Signature Field.
 Dev        - Compatibility temporarily disable users.
 Dev        - Compatibility for image based captcha.
