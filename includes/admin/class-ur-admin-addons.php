@@ -22,11 +22,11 @@ class UR_Admin_Addons {
 	 */
 	public static function get_sections() {
 
-		$raw_sections   = wp_safe_remote_get( UR()->plugin_url() . '/assets/extensions-json/addon-section.json', array( 'user-agent' => 'UserRegistration Addons Page' ) );
+		$raw_sections   = ur_file_get_contents( '/assets/extensions-json/addon-section.json' );
 		$addon_sections = array();
 
 		if ( ! is_wp_error( $raw_sections ) ) {
-			$sections = json_decode( wp_remote_retrieve_body( $raw_sections ) );
+			$sections = json_decode( $raw_sections );
 
 			if ( $sections ) {
 				foreach ( $sections as $sections_id => $section ) {
@@ -72,16 +72,17 @@ class UR_Admin_Addons {
 	 * @return array
 	 */
 	public static function get_section_data( $section_id ) {
+
 		$section      = self::get_section( $section_id );
 		$section_data = '';
 
 		if ( ! empty( $section->endpoint ) ) {
 			$section_data = get_transient( 'ur_addons_section_' . $section_id );
 
-			$raw_section = wp_safe_remote_get( UR()->plugin_url() . '/assets/' . $section->endpoint, array( 'user-agent' => 'UserRegistration Addons Page' ) );
+			$raw_section = ur_file_get_contents( '/assets/' . $section->endpoint );
 
 			if ( ! is_wp_error( $raw_section ) ) {
-				$section_data = json_decode( wp_remote_retrieve_body( $raw_section ) );
+				$section_data = json_decode( $raw_section );
 			}
 		}
 
