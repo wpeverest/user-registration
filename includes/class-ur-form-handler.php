@@ -178,7 +178,11 @@ class UR_Form_Handler {
 					if ( 'disabled' !== $disabled ) {
 						if ( isset( $_POST[ $key ] ) ) {
 							if ( isset( $field['field_key'] ) && 'file' !== $field['field_key'] ) {
-								update_user_meta( $user_id, $update_key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+								if ( 'signature' === $field['field_key'] ) {
+									update_user_meta( $user_id, $update_key, apply_filters( 'user_registration_process_signature_field_data', $_POST[ $key ] ) );
+								} else {
+									update_user_meta( $user_id, $update_key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+								}
 							} elseif ( isset( $field['type'] ) && 'repeater' === $field['type'] ) {
 								update_user_meta( $user_id, $update_key, $form_data[ $key ]->value ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 							}

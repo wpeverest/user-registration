@@ -669,6 +669,7 @@ class UR_Form_Validation extends UR_Validation {
 			'total_field',
 			'stripe_gateway',
 			'captcha',
+			'signature',
 		);
 
 		$form_skippable_fields = array_filter(
