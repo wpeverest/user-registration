@@ -5557,11 +5557,14 @@
 		}
 	}
 
-	// Delete Popup CSS
+}
+
+// Delete Popup CSS
+.user-registration_page_user-registration-coupons, .user-registration_page_member-payment-history {
 	.swal2-container {
 		.swal2-header {
 			padding: 24px !important;
-    		padding-bottom: 16px !important;
+			padding-bottom: 16px !important;
 
 			.swal2-title {
 				display: flex !important;
