@@ -99,7 +99,7 @@ class UR_Admin_Notices {
 
 			$message = sprintf(
 				/* translators: %1$s - My account Link. */
-				__( 'Please choose a <strong title="A page with [user_registration_my_account] shortcode">My Account</strong> page in <a href="%1$s" style="text-decoration:none;">General Settings</a>. <br/><strong>Got Stuck? Read</strong> <a href="https://docs.wpuserregistration.com/docs/how-to-show-account-profile/" style="text-decoration:none;" target="_blank">How to setup My Account page</a>.', 'user-registration' ),
+				__( 'Please choose a <strong title="A page with [user_registration_my_account] shortcode">My Account</strong> page in <a href="%1$s" style="text-decoration:none;">General Settings</a>. <br/><strong>Got Stuck? Read</strong> <a href="https://docs.wpuserregistration.com/docs/how-to-show-account-profile/" style="text-decoration:none;" rel="noreferrer noopener" target="_blank">How to setup My Account page</a>.', 'user-registration' ),
 				$my_account_setting_link
 			);
 			self::add_custom_notice( 'select_my_account', $message );
@@ -461,7 +461,7 @@ class UR_Admin_Notices {
 						sprintf(
 							'<br/><p>%s</p>',
 							__(
-								'Help us improve the plugin\'s features by sharing <a href="https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title" target="_blank">non-sensitive plugin data</a> with us.',
+								'Help us improve the plugin\'s features by sharing <a href="https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title" rel="noreferrer noopener" target="_blank">non-sensitive plugin data</a> with us.',
 								'user-registration'
 							)
 						)
