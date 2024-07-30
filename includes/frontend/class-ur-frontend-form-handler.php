@@ -271,6 +271,7 @@ class UR_Frontend_Form_Handler {
 		update_user_meta( $user_id, 'ur_login_option', $login_option );
 
 		$current_language = ur_get_current_language();
+		$current_language = isset( $_POST['registration_language'] ) ? ur_clean( $_POST['registration_language'] ) : $current_language; //phpcs:ignore.
 		update_user_meta( $user_id, 'ur_registered_language', $current_language );
 	}
 }

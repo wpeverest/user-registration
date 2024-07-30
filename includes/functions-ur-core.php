@@ -5527,15 +5527,17 @@ if ( ! function_exists( 'ur_get_translated_string' ) ) {
 	 *
 	 * @since 4.2.1
 	 *
-	 * @param  string $string String.
+	 * @param  string $domain Domain.
+	 * @param  string $string String Value.
 	 * @param  string $language_code Language Code.
 	 * @param  string $field_key Field Key.
 	 * @param  string $form_id Form ID.
 	 */
-	function ur_get_translated_string( $string, $language_code, $field_key, $form_id = 0 ) {
+	function ur_get_translated_string( $domain, $string, $language_code, $field_key, $form_id = 0 ) {
 		if ( function_exists( 'icl_translate' ) ) {
 			$language_code     = is_array( $language_code ) ? $language_code[0] : $language_code;
-			$translated_string = apply_filters( 'wpml_translate_single_string', $string, 'user-registration', $string, $language_code );
+			$translated_string = apply_filters( 'wpml_translate_single_string', $string, $domain, $field_key, $language_code );
+
 			if ( false === $translated_string || $translated_string === $language_code ) {
 				return $string;
 			} else {
