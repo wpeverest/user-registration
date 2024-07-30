@@ -331,6 +331,8 @@ class UR_Admin_Assets {
 				'is_edit_form'                           => isset( $_GET['edit-registration'] ) ? true : false, //phpcs:ignore WordPress.Security.NonceVerification
 				'is_form_builder'                        => ( isset( $_GET['page'] ) && 'add-new-registration' === $_GET['page'] ) ? true : false, //phpcs:ignore WordPress.Security.NonceVerification
 				'post_id'                                => $form_id,
+				'ur_embed_page_list'                     => wp_create_nonce( 'ur_embed_page_list_nonce' ),
+				'ur_embed_action'                        => wp_create_nonce( 'ur_embed_action_nonce' ),
 				'admin_url'                              => admin_url( 'admin.php?page=add-new-registration&edit-registration=' ),
 				'form_required_fields'                   => ur_get_required_fields(),
 				'form_one_time_draggable_fields'         => ur_get_one_time_draggable_fields(),
@@ -558,6 +560,14 @@ class UR_Admin_Assets {
 			'i18n_success'                                => _x( 'Success', 'user registration admin', 'user-registration' ),
 			'i18n_error'                                  => _x( 'Error', 'user registration admin', 'user-registration' ),
 			'i18n_msg_delete'                             => esc_html__( 'Confirm Deletion', 'user-registration' ),
+			'i18n_embed_form_title'                       => esc_html__( 'Embed in Page', 'user-registration' ),
+			'i18n_embed_description'                      => esc_html__( 'We can help embed your form with just a few clicks!', 'user-registration' ),
+			'i18n_embed_to_existing_page'                 => esc_html__( 'Select Existing Page', 'user-registration' ),
+			'i18n_embed_to_new_page'                      => esc_html__( 'Create New Page', 'user-registration' ),
+			'i18n_embed_existing_page_description'        => esc_html__( 'Select the page you would like to embed your form in.', 'user-registration' ),
+			'i18n_embed_go_back_btn'                      => esc_html__( 'Go Back', 'user-registration' ),
+			'i18n_embed_lets_go_btn'                      => esc_html__( 'Lets Go!', 'user-registration' ),
+			'i18n_embed_new_page_description'             => esc_html__( 'What would you like to call the new page?', 'user-registration' ),
 			'i18n_at_least_one_field_need_to_select'      => _x( 'At least one field needs to be selected.', 'user registration admin', 'user-registration' ),
 			'i18n_empty_form_name'                        => _x( 'Empty form name.', 'user registration admin', 'user-registration' ),
 			'i18n_previous_save_action_ongoing'           => _x( 'Previous save action on going.', 'user registration admin', 'user-registration' ),

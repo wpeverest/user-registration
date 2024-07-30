@@ -121,6 +121,11 @@
 					URFormBuilder.ur_save_form();
 				});
 
+				//Embed the form in the page.
+				$(".ur-embed-form-button").on("click", function () {
+					URFormBuilder.ur_embed_form($(this));
+				});
+
 				// Close validation message on form builder.
 				$(document).on(
 					"click",
@@ -548,6 +553,105 @@
 						}
 					}
 				});
+			},
+			/**
+			 * Handel the process of embedding the form.
+			 */
+			ur_embed_form: function ($this) {
+				var data = {
+					'action' 	: 'user_registration_embed_page_list',
+					security	: user_registration_form_builder_data.ur_embed_page_list,
+				};
+
+				$.ajax({
+					url : user_registration_form_builder_data.ajax_url,
+					data : data,
+					type : 'POST',
+					beforeSend: function () {
+						var spinner =
+						'<span class="ur-spinner is-active"></span>';
+						$this.append(spinner);
+						$(".ur-notices").remove();
+					},
+
+					success: function (response) {
+						$this.find(".ur-spinner").remove();
+						var modelContent = '';
+						var message = '<div class="ur-embed-container"><p>We can help embed your form with just a few clicks!</p>';
+						var existing_page_option = '<button class="user-registration-btn ur-embed-select-existing-page">'+user_registration_form_builder_data.i18n_admin.i18n_embed_to_existing_page+'</button>';
+    					var new_page_option = '<button class="user-registration-btn ur-embed-create-new-page">'+ user_registration_form_builder_data.i18n_admin.i18n_embed_to_new_page+'</button></div><div class="ur-embed-show-exist-page"></div>';
+
+    					modelContent = message + existing_page_option + new_page_option;
+						Swal.fire({
+							title: user_registration_form_builder_data.i18n_admin.i18n_embed_form_title,
+							html:  modelContent,
+							showCancelButton: false,
+							showConfirmButton: false,
+							showCloseButton: true,
+							showActions: true,
+							didOpen: function () {
+								var form_id = $(".ur-embed-form-button").attr('data-form_id');
+								var back_btn 	= '<div style="cursor:pointer" class="ur-embed-go-back">Go Back</div></div>';
+								var lets_go_btn = '<button class="ur-embed-lets-go-btn" style="cursor:pointer">Lets Go!</button>';
+  								// When clicked on 'Select Existing Page' button.
+								$(".ur-embed-select-existing-page").on('click', function () {
+									$(".ur-embed-container").hide();
+									var select_start = '<div class="ur-embed-select-existing-page-container"><p>Select the page you would like to embed your form in.</p><select name="ur-embed-select-existing-page-name" id="ur-embed-select-existing-page-name">';
+									var option;
+									response.data.forEach(page => {
+										option += '<option data-id="' + page.ID + '" value="' + page.ID + '">' + page.post_title + '</option>';
+									});
+									var select_end = '</select>';
+
+									modelContent = select_start + option + select_end + lets_go_btn + back_btn;
+									$(".ur-embed-show-exist-page").append(modelContent);
+									$( ".ur-embed-go-back" ).click(function(){
+										$( ".ur-embed-container" ).show();
+										$( ".ur-embed-select-existing-page-container" ).remove();
+									})
+
+								});
+								// When clicked on 'Create New Page' button.
+								$(".ur-embed-create-new-page").on('click', function () {
+									$(".ur-embed-container").hide();
+									var description		= '<div class="ur-embed-new-page-container"><p>What would you like to call the new page?</p>';
+									var page_name 	= '<div><input type="text" name="page_title"/>';
+
+									modelContent = description + page_name + lets_go_btn + back_btn;
+
+									$(".ur-embed-show-exist-page").append(modelContent);
+									$( ".ur-embed-go-back" ).click(function(){
+										$( ".ur-embed-container" ).show();
+										$( ".ur-embed-new-page-container" ).remove();
+									})
+									$( ".ur-embed-lets-go-btn" ).click(function(){
+										var page_title = $( "[name='page_title']" ).val();
+
+										var data = {
+											'action'	: 'user_registration_embed_form_action',
+											security	: user_registration_form_builder_data.ur_embed_action,
+											page_title	: page_title,
+											'form_id'	: form_id,
+										}
+										$.ajax({
+											url		: user_registration_form_builder_data.ajax_url,
+											type	: 'POST',
+											data	: data,
+											success	: function( response ){
+												if ( response.success ) {
+													window.location = response.data
+												}
+											}
+										})
+									})
+								});
+
+							},
+						});
+					},
+
+				})
+
 			},
 			/**
 			 * Show Help Popup

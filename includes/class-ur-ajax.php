@@ -65,6 +65,8 @@ class UR_AJAX {
 			'install_extension'         => false,
 			'profile_pic_remove'        => false,
 			'form_save_action'          => false,
+			'embed_form_action'         => false,
+			'embed_page_list'           => false,
 			'allow_usage_dismiss'       => false,
 			'cancel_email_change'       => false,
 			'email_setting_status'      => false,
@@ -941,6 +943,28 @@ class UR_AJAX {
 		}// End try().
 	}
 
+	/**
+	 * Get all pages for embed form form builder to page.
+	 *
+	 * @since 4.3.0
+	 */
+	public static function embed_page_list() {
+		check_ajax_referer( 'embed_page_list', 'security' );
+		$args  = array(
+			'post_status' => 'publish',
+			'post_type'   => 'page',
+		);
+		$pages = get_pages( $args );
+		wp_send_json_success( $pages );
+	}
+
+	/**
+	 *
+	 *
+	 * @since 4.3.0
+	 */
+	public static function embed_form_action() {
+	}
 	/**
 	 * Dashboard Widget data.
 	 *
