@@ -588,6 +588,7 @@ class UR_Form_Validation extends UR_Validation {
 		$filteredfields = array_filter(
 			$form_field_data,
 			function ( $fields ) {
+				$fields = json_decode( json_encode( $fields ) );
 				return property_exists( $fields, 'advance_setting' ) && property_exists( $fields->advance_setting, 'field_visibility' ) && 'reg_form' === $fields->advance_setting->field_visibility;
 			}
 		);
