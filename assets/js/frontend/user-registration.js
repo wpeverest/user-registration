@@ -1384,13 +1384,36 @@
 																					$(
 																						this
 																					);
-																				var $id =
-																					$this.attr(
-																						"id"
-																					);
-																				$field_id.push(
-																					$id
-																				);
+
+																					if (
+																						$this.hasClass(
+																							"input-captcha-icon-radio"
+																						)
+																					) {
+																						var data_id =
+																							$this.attr(
+																								"data-id"
+																							);
+
+																						if (
+																							!$field_id.includes(
+																								data_id
+																							)
+																						) {
+																							$field_id.push(
+																								data_id
+																							);
+																						}
+																					} else {
+
+																						var $id =
+																							$this.attr(
+																								"id"
+																							);
+																						$field_id.push(
+																							$id
+																						);
+																					}
 																			}
 																		);
 
@@ -1577,34 +1600,13 @@
 														function (index) {
 															var $this = $(this);
 
-															if (
-																$this.hasClass(
-																	"input-captcha-icon-radio"
-																)
-															) {
-																var data_id =
-																	$this.attr(
-																		"data-id"
-																	);
-
-																if (
-																	!$field_id.includes(
-																		data_id
-																	)
-																) {
-																	$field_id.push(
-																		data_id
-																	);
-																}
-															} else {
-																var $id =
-																	$this.attr(
-																		"id"
-																	);
-																$field_id.push(
-																	$id
+															var $id =
+																$this.attr(
+																	"id"
 																);
-															}
+															$field_id.push(
+																$id
+															);
 														}
 													);
 													var field_name = "";
