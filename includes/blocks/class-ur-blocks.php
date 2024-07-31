@@ -35,7 +35,7 @@ class UR_Blocks {
 	 */
 	public function enqueue_block_editor_assets() {
 		global $pagenow;
-		$enqueue_script = array( 'wp-blocks', 'wp-element', 'wp-i18n', 'wp-editor', 'wp-components', 'react', 'react-dom' );
+		$enqueue_script = array( 'wp-blocks', 'wp-element', 'wp-i18n', 'wp-editor', 'wp-components', 'react', 'react-dom', 'tooltipster' );
 		wp_register_style(
 			'user-registration-blocks-editor',
 			UR()->plugin_url() . '/assets/css/user-registration.css',
@@ -59,8 +59,17 @@ class UR_Blocks {
 				'isPro'          => is_plugin_active( 'user-registration-pro/user-registration.php' ),
 			)
 		);
+		wp_register_script(
+			'user-registration-shortcode-embed-form',
+			UR()->plugin_url() . '/assets/js/admin/shortcode-form-embed.js',
+			$enqueue_script,
+			UR_VERSION
+		);
 
 		wp_enqueue_script( 'user-registration-blocks-editor' );
+		if ( 'post.php' === $pagenow && 'edit' === $_GET['action'] && 'user_registration' === $_GET['form'] ) {
+			wp_enqueue_script( 'user-registration-shortcode-embed-form' );
+		}
 	}
 
 	/**

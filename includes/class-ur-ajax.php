@@ -949,7 +949,7 @@ class UR_AJAX {
 	 * @since 4.3.0
 	 */
 	public static function embed_page_list() {
-		check_ajax_referer( 'embed_page_list', 'security' );
+		check_ajax_referer( 'ur_embed_page_list_nonce', 'security' );
 		$args  = array(
 			'post_status' => 'publish',
 			'post_type'   => 'page',
@@ -959,11 +959,36 @@ class UR_AJAX {
 	}
 
 	/**
-	 *
+	 * Embed form action.
 	 *
 	 * @since 4.3.0
 	 */
 	public static function embed_form_action() {
+		check_ajax_referer( 'ur_embed_action_nonce', 'security' );
+		$page_id = empty( $_POST['page_id'] ) ? 0 : sanitize_text_field( absint( $_POST['page_id'] ) );
+
+		if ( empty( $page_id ) ) {
+			$url  = add_query_arg( 'post_type', 'page', admin_url( 'post-new.php' ) );
+			$meta = array(
+				'embed_page'       => 0,
+				'embed_page_title' => ! empty( $_POST['page_title'] ) ? sanitize_text_field( wp_unslash( $_POST['page_title'] ) ) : '',
+			);
+		} else {
+			$url  = get_edit_post_link( $page_id, '' );
+			$meta = array(
+				'embed_page' => $page_id,
+			);
+		}
+		$page_url        = add_query_arg(
+			array(
+				'form' => 'user_registration',
+			),
+			esc_url_raw( $url )
+		);
+		$meta['form_id'] = ! empty( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
+		UR_Admin_Embed_Wizard::set_meta( $meta );
+
+		wp_send_json_success( $page_url );
 	}
 	/**
 	 * Dashboard Widget data.
