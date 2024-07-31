@@ -123,6 +123,9 @@
 
 				//Embed the form in the page.
 				$(".ur-embed-form-button").on("click", function () {
+					if( $(this).find(".ur-spinner").length > 0 ) {
+						return;
+					}
 					URFormBuilder.ur_embed_form($(this));
 				});
 
@@ -578,11 +581,12 @@
 						$this.find(".ur-spinner").remove();
 						var modelContent = '';
 						var message = '<div class="ur-embed-container"><p>We can help embed your form with just a few clicks!</p>';
-						var existing_page_option = '<button class="user-registration-btn ur-embed-select-existing-page">'+user_registration_form_builder_data.i18n_admin.i18n_embed_to_existing_page+'</button>';
-    					var new_page_option = '<button class="user-registration-btn ur-embed-create-new-page">'+ user_registration_form_builder_data.i18n_admin.i18n_embed_to_new_page+'</button></div><div class="ur-embed-show-exist-page"></div>';
+						var existing_page_option = '<button class="user-registration-btn button-large button button-primary ur-embed-select-existing-page ur-shortcod-form-embed-theme-done-btn">'+user_registration_form_builder_data.i18n_admin.i18n_embed_to_existing_page+'</button>';
+    					var new_page_option = '<button class="user-registration-btn button-large button button-primary ur-embed-create-new-page">'+ user_registration_form_builder_data.i18n_admin.i18n_embed_to_new_page+'</button></div><div class="ur-embed-show-exist-page"></div>';
 
     					modelContent = message + existing_page_option + new_page_option;
 						Swal.fire({
+							icon: 'info',
 							title: user_registration_form_builder_data.i18n_admin.i18n_embed_form_title,
 							html:  modelContent,
 							showCancelButton: false,
@@ -592,7 +596,7 @@
 							didOpen: function () {
 								var form_id = $(".ur-embed-form-button").attr('data-form_id');
 								var back_btn 	= '<div style="cursor:pointer" class="ur-embed-go-back">' + user_registration_form_builder_data.i18n_admin.i18n_embed_go_back_btn + '</div></div>';
-								var lets_go_btn = '<button class="ur-embed-lets-go-btn" style="cursor:pointer">'+user_registration_form_builder_data.i18n_admin.i18n_embed_lets_go_btn +'</button>';
+								var lets_go_btn = '<button class="ur-embed-lets-go-btn button button-primary" >'+user_registration_form_builder_data.i18n_admin.i18n_embed_lets_go_btn +'</button>';
   								// When clicked on 'Select Existing Page' button.
 								$(".ur-embed-select-existing-page").on('click', function () {
 									$(".ur-embed-container").hide();
@@ -675,6 +679,7 @@
 								});
 
 							},
+							
 						});
 					},
 

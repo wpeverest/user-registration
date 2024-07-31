@@ -564,7 +564,7 @@ class UR_Admin_Assets {
 			'i18n_embed_description'                      => esc_html__( 'We can help embed your form with just a few clicks!', 'user-registration' ),
 			'i18n_embed_to_existing_page'                 => esc_html__( 'Select Existing Page', 'user-registration' ),
 			'i18n_embed_to_new_page'                      => esc_html__( 'Create New Page', 'user-registration' ),
-			'i18n_embed_existing_page_description'        => esc_html__( 'Select the page you would like to embed your form in.', 'user-registration' ),
+			'i18n_embed_existing_page_description'        => esc_html__( 'Select the page to embed your form in.', 'user-registration' ),
 			'i18n_embed_go_back_btn'                      => esc_html__( 'Go Back', 'user-registration' ),
 			'i18n_embed_lets_go_btn'                      => esc_html__( 'Lets Go!', 'user-registration' ),
 			'i18n_embed_new_page_description'             => esc_html__( 'What would you like to call the new page?', 'user-registration' ),
