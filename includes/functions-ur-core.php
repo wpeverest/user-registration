@@ -2432,12 +2432,10 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 		if ( isset( $form_data->field_type ) && 'repeater' === $form_data->field_type ) {
 			$data_html .= '<tr><td>' . $label . ' : </td></tr>';
 			$data_html .= '<td>' . $value . '</td></tr>';
-		} else {
-			if ( isset( $form_data->extra_params['field_key'] ) && 'signature' === $form_data->extra_params['field_key'] ) {
+		} elseif ( isset( $form_data->extra_params['field_key'] ) && 'signature' === $form_data->extra_params['field_key'] ) {
 				$data_html .= '<tr><td>' . $label . ' : </td><td><img class="profile-preview" alt="Signature" width="50px" height="50px" src="' . ( is_numeric( $value ) ? esc_url( wp_get_attachment_url( $value ) ) : esc_url( $value ) ) . '" /></td></tr>';
-			} else {
-				$data_html .= '<tr><td>' . $label . ' : </td><td>' . $value . '</td></tr>';
-			}
+		} else {
+			$data_html .= '<tr><td>' . $label . ' : </td><td>' . $value . '</td></tr>';
 		}
 
 		$name_value[ $field_name ] = $value;
@@ -3024,10 +3022,12 @@ if ( ! function_exists( 'ur_format_field_values_using_field_key' ) ) {
 		switch ( $field_key ) {
 			case 'checkbox':
 			case 'multi_select2':
-				if ( is_array( $field_value ) && ! empty( $field_value ) ) {
+				if ( empty( $field_value ) ) {
+					$field_value = '';
+				} elseif ( is_array( $field_value ) && ! empty( $field_value ) ) {
 					$field_value = implode( ', ', $field_value );
 				} elseif ( ! empty( json_decode( $field_value ) ) ) { // phpcs:ignore;
-						$field_value = implode( ', ', json_decode( $field_value ) );
+					$field_value = implode( ', ', json_decode( $field_value ) );
 				}
 				break;
 			case 'country':
@@ -5048,8 +5048,9 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 	 * @param array  $data Form row data.
 	 * @param array  $profile User profile data.
 	 * @param string $current_row Current row id.
+	 * @param string $row_count Current row count.
 	 */
-	function user_registration_edit_profile_row_template( $data, $profile, $current_row = '' ) {
+	function user_registration_edit_profile_row_template( $data, $profile, $current_row = '', $row_count = '' ) {
 
 		$user_id = get_current_user_id();
 		$form_id = ur_get_form_id_by_userid( $user_id );
@@ -5376,7 +5377,8 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 					$value           = ! empty( $_POST[ $key ] ) ? ur_clean( wp_unslash( $_POST[ $key ] ) ) : ( isset( $field['value'] ) ? $field['value'] : '' ); // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 					if ( isset( $field['field_key'] ) ) {
-						$field = user_registration_form_field( $key, $field, $value, $current_row );
+						$row_count_to_send = '' === $row_count ? $current_row : $row_count;
+						$field             = user_registration_form_field( $key, $field, $value, $row_count_to_send );
 					}
 
 					/**
