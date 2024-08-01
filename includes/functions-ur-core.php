@@ -2430,7 +2430,6 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 		$data_html .= '<tr>';
 
 		if ( isset( $form_data->field_type ) && 'repeater' === $form_data->field_type ) {
-			$data_html .= '<tr><td>' . $label . ' : </td></tr>';
 			$data_html .= '<td>' . $value . '</td></tr>';
 		} elseif ( isset( $form_data->extra_params['field_key'] ) && 'signature' === $form_data->extra_params['field_key'] ) {
 				$data_html .= '<tr><td>' . $label . ' : </td><td><img class="profile-preview" alt="Signature" width="50px" height="50px" src="' . ( is_numeric( $value ) ? esc_url( wp_get_attachment_url( $value ) ) : esc_url( $value ) ) . '" /></td></tr>';

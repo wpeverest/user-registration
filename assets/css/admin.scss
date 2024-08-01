@@ -5691,56 +5691,61 @@
 }
 
 // Delete Popup CSS
-.user-registration_page_user-registration-coupons, .user-registration_page_member-payment-history {
-	.swal2-container {
-		.swal2-header {
-			padding: 24px !important;
-    		padding-bottom: 16px !important;
+.user-registration_page {
+	&_user-registration-membership,
+	&_user-registration-coupons,
+	&_user-registration-members,
+	&_member-payment-history {
+		.swal2-container {
+			.swal2-header {
+				padding: 24px !important;
+				padding-bottom: 16px !important;
 
-			.swal2-title {
-				display: flex !important;
-				align-items: center;
-				gap: 8px;
-				font-size: 18px;
-				line-height: 26px;
-				margin-bottom: 0;
-				width: 100%;
-				border-bottom: 1px solid #e9e9e9;
-				padding-bottom: 16px;
-				color: #222;
-				margin-bottom: 0;
+				.swal2-title {
+					display: flex !important;
+					align-items: center;
+					gap: 8px;
+					font-size: 18px;
+					line-height: 26px;
+					margin-bottom: 0;
+					width: 100%;
+					border-bottom: 1px solid #e9e9e9;
+					padding-bottom: 16px;
+					color: #222;
+					margin-bottom: 0;
 
-				img {
-					width: 20px;
-					height: 20px;
+					img {
+						width: 20px;
+						height: 20px;
+					}
 				}
 			}
-		}
 
-		.swal2-content {
-			padding: 0 24px;
+			.swal2-content {
+				padding: 0 24px;
 
-			.swal2-html-container {
-				text-align: left;
+				.swal2-html-container {
+					text-align: left;
 
-				p {
-					font-size: 15px;
-					line-height: 23px;
-					color: #383838;
+					p {
+						font-size: 15px;
+						line-height: 23px;
+						color: #383838;
+						margin: 0;
+					}
+				}
+			}
+
+			.swal2-actions {
+				button {
 					margin: 0;
-				}
-			}
-		}
 
-		.swal2-actions {
-			button {
-				margin: 0;
+					&.swal2-confirm {
+						background: #F25656 !important;
 
-				&.swal2-confirm {
-					background: #F25656 !important;
-
-					&:hover {
-						background: #e34747 !important;
+						&:hover {
+							background: #e34747 !important;
+						}
 					}
 				}
 			}

@@ -217,6 +217,10 @@ User Registration is updated regularly to ensure compatibility with the latest v
 
 We are ready to assist you! You can contact us through the WordPress.org help forums or by visiting our [help page](https://wpuserregistration.com/support/).
 
+= How can I report security bugs? =
+
+You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team help validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/user-registration)
+
 == Screenshots ==
 
 1. Form Fields
@@ -238,7 +242,7 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 
 == Changelog ==
 
-= 3.3.0    - 31/07/2024 =
+= 3.3.0    - 01/08/2024 =
 * Refactor - Custom plugin notice rendering.
 * Feature  - Akismet integration.
 * Enhance  - Script and styles optimization.

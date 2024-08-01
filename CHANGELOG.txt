@@ -1,4 +1,4 @@
-= 3.3.0    - 31/07/2024 =
+= 3.3.0    - 01/08/2024 =
 * Refactor - Custom plugin notice rendering.
 * Feature  - Akismet integration.
 * Enhance  - Script and styles optimization.
