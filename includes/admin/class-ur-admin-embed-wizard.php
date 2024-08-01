@@ -35,13 +35,8 @@ class UR_Admin_Embed_Wizard {
 	 * @param \WP_Post $post       Post object.
 	 */
 	public static function set_embed_page_title( $post_title, $post ) {
-		lg( 'set_embed_page_title' );
 		$meta = self::get_meta();
-		lg( 'meta' );
-		lg( $meta );
 		self::delete_meta();
-		lg( empty( $meta['embed_page_title'] ) ? $post_title : $meta['embed_page_title'] );
-
 		return empty( $meta['embed_page_title'] ) ? $post_title : $meta['embed_page_title'];
 	}
 
@@ -74,7 +69,6 @@ class UR_Admin_Embed_Wizard {
 	 * @param array $data Data array to set as embed meta data.
 	 */
 	public static function set_meta( $data ) {
-		lg( 'set_meta' );
 		update_user_meta( get_current_user_id(), 'user-registration_form_embed', $data );
 		add_filter( 'default_title', array( __CLASS__, 'set_embed_page_title' ), 10, 2 );
 		add_filter( 'default_content', array( __CLASS__, 'set_embed_page_content' ), 10, 2 );
