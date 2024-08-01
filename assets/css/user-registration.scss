@@ -953,7 +953,7 @@ input.ur-input-border-red, textarea.ur-input-border-red{
 }
 /* For shortcode embed */
 
-@keyframes everest-forms-heartbeat {
+@keyframes user-registration-heartbeat {
 	0% {
 		box-shadow: 0 0 0 0 rgba(71, 91, 178, 0.6);
 	}
@@ -969,7 +969,7 @@ span.ur-shortcode-form-embed-dot {
 	border: 0 !important;
 	border-radius: 50%;
 	background-color: #475bb2;
-	animation: everest-forms-heartbeat 1.5s infinite !important;
+	animation: user-registration-heartbeat 1.5s infinite !important;
 	margin: 3px 10px;
 }
 .wp-editor-tools span.ur-shortcode-form-embed-dot {
