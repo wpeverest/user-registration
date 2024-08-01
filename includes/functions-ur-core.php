@@ -5828,3 +5828,20 @@ if ( ! function_exists( 'ur_current_url' ) ) {
 		return esc_url_raw( $url );
 	}
 }
+add_filter( 'user_registration_settings_prevent_default_login', 'ur_prevent_default_login' );
+if ( ! function_exists( 'ur_prevent_default_login' ) ) {
+	/**
+	 * Handel error when default login screen is disabled but redirect login poage is not selected.
+	 *
+	 * @return @mixed
+	 */
+	function ur_prevent_default_login( $data ) {
+		// Return if default wp_login is disabled and no redirect url is set.
+		if ( isset( $data['user_registration_login_options_prevent_core_login'] ) && $data['user_registration_login_options_prevent_core_login'] ) {
+			if ( isset( $data['user_registration_login_options_login_redirect_url'] ) && ! $data['user_registration_login_options_login_redirect_url'] ) {
+				return 'redirect_login_error';
+			}
+		}
+		return true;
+	}
+}
