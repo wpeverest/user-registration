@@ -637,6 +637,23 @@
 				}
 
 				if (
+					$("#user_registration_enable_stripe").is(":checked") &&
+					$("#user_registration_enable_stripe_recurring").is(
+						":checked"
+					) &&
+					$(".ur-input-type-coupon-field").length > 0
+				) {
+					$("#user_registration_enable_stripe_recurring").prop(
+						"checked",
+						false
+					);
+					response.validation_status = false;
+					response.message =
+						user_registration_form_builder_data.i18n_admin.i18n_no_stripe_for_coupon;
+					return response;
+				}
+
+				if (
 					$(".ur_save_form_action_button").find(".ur-spinner")
 						.length > 0
 				) {

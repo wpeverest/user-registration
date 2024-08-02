@@ -776,3 +776,16 @@ if ( ! function_exists( 'get_theme_version' ) ) {
 	}
 
 }
+
+if ( ! function_exists( 'ur_check_notice_already_permanent_dismissed' ) ) {
+	/**
+	 * Check whether provided notice type already dismissed notice permanently.
+	 *
+	 * @since 3.3.0
+	 *
+	 * @param string $notice_type Notice Type.
+	 */
+	function ur_check_notice_already_permanent_dismissed( $notice_type ) {
+		return get_option( 'user_registration_' . $notice_type . '_notice_dismissed', false );
+	}
+}

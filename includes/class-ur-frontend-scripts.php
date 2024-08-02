@@ -461,6 +461,8 @@ class UR_Frontend_Scripts {
 						'captcha_error'           => get_option( 'user_registration_form_submission_error_message_recaptcha', esc_html__( 'Captcha code error, please try again.', 'user-registration' ) ),
 						'hide_password_title'     => esc_html__( 'Hide Password', 'user-registration' ),
 						'show_password_title'     => esc_html__( 'Show Password', 'user-registration' ),
+						'i18n_total_field_value_zero' => esc_html__( 'Total field value should be greater than zero.', 'user-registration' ),
+						'i18n_discount_total_zero' => esc_html__('Discounted amount cannot be less than or equals to Zero. Please adjust your coupon code.', 'user-registration' ),
 						'password_strength_error' => esc_html__( 'Password strength is not strong enough', 'user-registration' ),
 					),
 					'is_payment_compatible'             => true,

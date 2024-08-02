@@ -187,7 +187,7 @@ class UR_Admin_Notices {
 	 * @since 3.3.0
 	 *
 	 * @param  string $key Condition type.
-	 * @param  mixed $value Condition value.
+	 * @param  mixed  $value Condition value.
 	 * @return bool
 	 */
 	public static function validate_notice_conditions( $key, $value ) {
@@ -234,6 +234,9 @@ class UR_Admin_Notices {
 			case 'option_exists':
 				$valid = ! empty( get_option( $value, true ) );
 				break;
+			case 'show_notice':
+				$valid = $value;
+				break;
 		}
 
 		return $valid;
@@ -271,235 +274,242 @@ class UR_Admin_Notices {
 	 */
 	public static function custom_notices() {
 		if ( empty( self::$custom_notices ) ) {
-			self::$custom_notices = array(
+			self::$custom_notices = apply_filters(
+				'user_registration_custom_notices',
 				array(
-					'id'                    => '1',
-					'type'                  => 'review',
-					'status'                => 'active',
-					'priority'              => '2',
-					'title'                 => __( 'Bravo! 💪 Well done.', 'user-registration' ),
-					'message_content'       => wp_kses_post(
-						sprintf(
-							"<p>%s</p><p>%s</p><p class='extra-pad'>%s</p>",
-							__( "Congratulations! 👏 You've registered 20 users using our User Registration plugin, way to go! 🎉", 'user-registration' ),
-							__( 'Please share your experience with us by leaving a review. Your feedback will help us improve and serve you better. ', 'user-registration' ),
-							__(
-								'Once again, thank you for choosing us! ❤️ <br>',
-								'user-registration'
+					array(
+						'id'                    => 'ur_20_user_registered_review_notice',
+						'type'                  => 'review',
+						'status'                => 'active',
+						'priority'              => '2',
+						'title'                 => __( 'Bravo! 💪 Well done.', 'user-registration' ),
+						'message_content'       => wp_kses_post(
+							sprintf(
+								"<p>%s</p><p>%s</p><p class='extra-pad'>%s</p>",
+								__( "Congratulations! 👏 You've registered 20 users using our User Registration plugin, way to go! 🎉", 'user-registration' ),
+								__( 'Please share your experience with us by leaving a review. Your feedback will help us improve and serve you better. ', 'user-registration' ),
+								__(
+									'Once again, thank you for choosing us! ❤️ <br>',
+									'user-registration'
+								)
 							)
-						)
-					),
-					'buttons'               => array(
-						array(
-							'title'  => __( "Sure, I'd love to!", 'user-registration' ),
-							'icon'   => 'dashicons-external',
-							'link'   => 'https://wordpress.org/support/plugin/user-registration/reviews/#postform',
-							'class'  => 'button-primary',
-							'target' => '_blank',
 						),
-						array(
-							'title'  => __( 'I already did!', 'user-registration' ),
-							'icon'   => 'dashicons-smiley',
-							'link'   => '#',
-							'class'  => 'button-secondary notice-dismiss notice-dismiss-permanently',
-							'target' => '',
-						),
-						array(
-							'title'  => __( 'Maybe later', 'user-registration' ),
-							'icon'   => 'dashicons-dismiss',
-							'link'   => '#',
-							'class'  => 'button-secondary notice-dismiss notice-dismiss-temporarily',
-							'target' => '',
-						),
-						array(
-							'title'  => __( 'I have a query', 'user-registration' ),
-							'icon'   => 'dashicons-testimonial',
-							'link'   => 'https://wpuserregistration.com/support',
-							'class'  => 'button-secondary notice-have-query',
-							'target' => '_blank',
-						),
-					),
-					'permanent_dismiss'     => true,
-					'reopen_days'           => '1',
-					'reopen_times'          => '3',
-					'conditions_to_display' => array(
-						array(
-							'operator'        => 'AND',
-							'user_count'      => '>=20',
-							'activation_days' => '7',
-						),
-					),
-				),
-				array(
-					'id'                    => '2',
-					'type'                  => 'review',
-					'status'                => 'active',
-					'priority'              => '2',
-					'title'                 => __( 'Bravo! 💪 Well done.', 'user-registration' ),
-					'message_content'       => wp_kses_post(
-						sprintf(
-							"<p>%s</p><p>%s</p><p class='extra-pad'>%s</p>",
-							__( '( The above word is just to draw your attention. <span class="dashicons dashicons-smiley smile-icon"></span> )', 'user-registration' ),
-							__( 'Hope you are having nice experience with <strong>User Registration</strong> plugin. Please provide this plugin a nice review.', 'user-registration' ),
-							__(
-								'<strong>What benefit would you have?</strong> <br>
-								Basically, it would encourage us to release updates regularly with new features & bug fixes so that you can keep on using the plugin without any issues and also to provide free support like we have been doing. <span class="dashicons dashicons-smiley smile-icon"></span><br>',
-								'user-registration'
-							)
-						)
-					),
-					'buttons'               => array(
-						array(
-							'title'  => __( "Sure, I'd love to!", 'user-registration' ),
-							'icon'   => 'dashicons-external',
-							'link'   => 'https://wordpress.org/support/plugin/user-registration/reviews/#postform',
-							'class'  => 'button-primary',
-							'target' => '_blank',
-						),
-						array(
-							'title'  => __( 'I already did!', 'user-registration' ),
-							'icon'   => 'dashicons-smiley',
-							'link'   => '#',
-							'class'  => 'button-secondary notice-dismiss notice-dismiss-permanently',
-							'target' => '',
-						),
-						array(
-							'title'  => __( 'Maybe later', 'user-registration' ),
-							'icon'   => 'dashicons-dismiss',
-							'link'   => '#',
-							'class'  => 'button-secondary notice-dismiss notice-dismiss-temporarily',
-							'target' => '',
-						),
-						array(
-							'title'  => __( 'I have a query', 'user-registration' ),
-							'icon'   => 'dashicons-testimonial',
-							'link'   => 'https://wpuserregistration.com/support',
-							'class'  => 'button-secondary notice-have-query',
-							'target' => '_blank',
-						),
-					),
-					'permanent_dismiss'     => true,
-					'reopen_days'           => '1',
-					'reopen_times'          => '3',
-					'conditions_to_display' => array(
-						array(
-							'operator'        => 'AND',
-							'user_count'      => '<20',
-							'activation_days' => '7',
-						),
-					),
-				),
-				array(
-					'id'                    => '3',
-					'type'                  => 'survey',
-					'status'                => 'active',
-					'priority'              => '4',
-					'title'                 => __( 'User Registration Plugin Survey', 'user-registration' ),
-					'message_content'       => wp_kses_post(
-						sprintf(
-							"<p>%s</p><p class='extra-pad'>%s</p>",
-							__(
-								'<strong>Hey there!</strong> <br>
-								We would be grateful if you could spare a moment and help us fill this survey. This survey will take approximately 4 minutes to complete.',
-								'user-registration'
+						'buttons'               => array(
+							array(
+								'title'  => __( "Sure, I'd love to!", 'user-registration' ),
+								'icon'   => 'dashicons-external',
+								'link'   => 'https://wordpress.org/support/plugin/user-registration/reviews/#postform',
+								'class'  => 'button-primary',
+								'target' => '_blank',
 							),
-							__(
-								'<strong>What benefit would you have?</strong> <br>
-								We will take your feedback from the survey and use that information to make the plugin better. As a result, you will have a better plugin as you wanted. <span class="dashicons dashicons-smiley smile-icon"></span><br>',
-								'user-registration'
+							array(
+								'title'  => __( 'I already did!', 'user-registration' ),
+								'icon'   => 'dashicons-smiley',
+								'link'   => '#',
+								'class'  => 'button-secondary notice-dismiss notice-dismiss-permanently',
+								'target' => '',
+							),
+							array(
+								'title'  => __( 'Maybe later', 'user-registration' ),
+								'icon'   => 'dashicons-dismiss',
+								'link'   => '#',
+								'class'  => 'button-secondary notice-dismiss notice-dismiss-temporarily',
+								'target' => '',
+							),
+							array(
+								'title'  => __( 'I have a query', 'user-registration' ),
+								'icon'   => 'dashicons-testimonial',
+								'link'   => 'https://wpuserregistration.com/support',
+								'class'  => 'button-secondary notice-have-query',
+								'target' => '_blank',
+							),
+						),
+						'permanent_dismiss'     => true,
+						'reopen_days'           => '1',
+						'reopen_times'          => '3',
+						'conditions_to_display' => array(
+							array(
+								'operator'        => 'AND',
+								'user_count'      => '>=20',
+								'activation_days' => '7',
+								'show_notice'     => ! ur_check_notice_already_permanent_dismissed( 'review' ),
+							),
+						),
+					),
+					array(
+						'id'                    => 'ur_early_review_notice',
+						'type'                  => 'review',
+						'status'                => 'active',
+						'priority'              => '2',
+						'title'                 => __( 'Bravo! 💪 Well done.', 'user-registration' ),
+						'message_content'       => wp_kses_post(
+							sprintf(
+								"<p>%s</p><p>%s</p><p class='extra-pad'>%s</p>",
+								__( '( The above word is just to draw your attention. <span class="dashicons dashicons-smiley smile-icon"></span> )', 'user-registration' ),
+								__( 'Hope you are having nice experience with <strong>User Registration</strong> plugin. Please provide this plugin a nice review.', 'user-registration' ),
+								__(
+									'<strong>What benefit would you have?</strong> <br>
+								Basically, it would encourage us to release updates regularly with new features & bug fixes so that you can keep on using the plugin without any issues and also to provide free support like we have been doing. <span class="dashicons dashicons-smiley smile-icon"></span><br>',
+									'user-registration'
+								)
 							)
-						)
-					),
-					'buttons'               => array(
-						array(
-							'title'  => __( "Sure, I'd love to!", 'user-registration' ),
-							'icon'   => 'dashicons-external',
-							'link'   => 'https://forms.office.com/pages/responsepage.aspx?id=c04iBAejyEWvNQDb6GzDCILyv8m6NoBDvJVtRTCcOvBUNk5OSTA4OEs1SlRPTlhFSFZXRFA0UFEwRCQlQCN0PWcu',
-							'class'  => 'button-primary',
-							'target' => '_blank',
 						),
-						array(
-							'title'  => __( 'I already did!', 'user-registration' ),
-							'icon'   => 'dashicons-smiley',
-							'link'   => '#',
-							'class'  => 'button-secondary notice-dismiss notice-dismiss-permanently',
-							'target' => '',
+						'buttons'               => array(
+							array(
+								'title'  => __( "Sure, I'd love to!", 'user-registration' ),
+								'icon'   => 'dashicons-external',
+								'link'   => 'https://wordpress.org/support/plugin/user-registration/reviews/#postform',
+								'class'  => 'button-primary',
+								'target' => '_blank',
+							),
+							array(
+								'title'  => __( 'I already did!', 'user-registration' ),
+								'icon'   => 'dashicons-smiley',
+								'link'   => '#',
+								'class'  => 'button-secondary notice-dismiss notice-dismiss-permanently',
+								'target' => '',
+							),
+							array(
+								'title'  => __( 'Maybe later', 'user-registration' ),
+								'icon'   => 'dashicons-dismiss',
+								'link'   => '#',
+								'class'  => 'button-secondary notice-dismiss notice-dismiss-temporarily',
+								'target' => '',
+							),
+							array(
+								'title'  => __( 'I have a query', 'user-registration' ),
+								'icon'   => 'dashicons-testimonial',
+								'link'   => 'https://wpuserregistration.com/support',
+								'class'  => 'button-secondary notice-have-query',
+								'target' => '_blank',
+							),
 						),
-						array(
-							'title'  => __( 'Maybe later', 'user-registration' ),
-							'icon'   => 'dashicons-dismiss',
-							'link'   => '#',
-							'class'  => 'button-secondary notice-dismiss notice-dismiss-temporarily',
-							'target' => '',
-						),
-						array(
-							'title'  => __( 'I have a query', 'user-registration' ),
-							'icon'   => 'dashicons-testimonial',
-							'link'   => 'https://wpuserregistration.com/support',
-							'class'  => 'button-secondary notice-have-query',
-							'target' => '_blank',
-						),
-					),
-					'permanent_dismiss'     => true,
-					'reopen_days'           => '1',
-					'reopen_times'          => '3',
-					'conditions_to_display' => array(
-						array(
-							'operator'        => 'AND',
-							'activation_days' => '10',
-							'option_exists'   => 'user_registration_license_key',
-						),
-					),
-				),
-				array(
-					'id'                    => '4',
-					'type'                  => 'allow-usage',
-					'status'                => 'active',
-					'priority'              => '3',
-					'title'                 => __( 'Contribute to the enhancement', 'user-registration' ),
-					'message_content'       => wp_kses_post(
-						sprintf(
-							'<br/><p>%s</p>',
-							__(
-								'Help us improve the plugin\'s features by sharing <a href="https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title" target="_blank">non-sensitive plugin data</a> with us.',
-								'user-registration'
-							)
-						)
-					),
-					'buttons'               => array(
-						array(
-							'title'  => __( 'Allow', 'user-registration' ),
-							'icon'   => 'dashicons-smiley',
-							'link'   => 'https://forms.office.com/pages/responsepage.aspx?id=c04iBAejyEWvNQDb6GzDCILyv8m6NoBDvJVtRTCcOvBUNk5OSTA4OEs1SlRPTlhFSFZXRFA0UFEwRCQlQCN0PWcu',
-							'class'  => 'button-primary ur-allow-usage',
-							'target' => '_blank',
-						),
-						array(
-							'title'  => __( 'No, Thanks', 'user-registration' ),
-							'icon'   => 'dashicons-dismiss',
-							'link'   => '#',
-							'class'  => 'button-secondary notice-dismiss notice-dismiss-permanently ur-deny-usage',
-							'target' => '',
+						'permanent_dismiss'     => true,
+						'reopen_days'           => '1',
+						'reopen_times'          => '3',
+						'conditions_to_display' => array(
+							array(
+								'operator'        => 'AND',
+								'user_count'      => '<20',
+								'activation_days' => '7',
+								'show_notice'     => ! ur_check_notice_already_permanent_dismissed( 'review' ),
+							),
 						),
 					),
-					'permanent_dismiss'     => false,
-					'reopen_days'           => '1',
-					'reopen_times'          => '3',
-					'conditions_to_display' => array(
-						array(
-							'operator'      => 'AND',
-							'updation_days' => '1',
-							'option_exists' => 'user_registration_allow_usage_tracking',
-							'option_exists' => 'user_registration_allow_usage_notice_shown',
+					array(
+						'id'                    => 'ur_survey_form',
+						'type'                  => 'survey',
+						'status'                => 'active',
+						'priority'              => '4',
+						'title'                 => __( 'User Registration Plugin Survey', 'user-registration' ),
+						'message_content'       => wp_kses_post(
+							sprintf(
+								"<p>%s</p><p class='extra-pad'>%s</p>",
+								__(
+									'<strong>Hey there!</strong> <br>
+									We would be grateful if you could spare a moment and help us fill this survey. This survey will take approximately 4 minutes to complete.',
+									'user-registration'
+								),
+								__(
+									'<strong>What benefit would you have?</strong> <br>
+									We will take your feedback from the survey and use that information to make the plugin better. As a result, you will have a better plugin as you wanted. <span class="dashicons dashicons-smiley smile-icon"></span><br>',
+									'user-registration'
+									)
+									)
+								),
+								'buttons'               => array(
+									array(
+								'title'  => __( "Sure, I'd love to!", 'user-registration' ),
+								'icon'   => 'dashicons-external',
+								'link'   => 'https://forms.office.com/pages/responsepage.aspx?id=c04iBAejyEWvNQDb6GzDCILyv8m6NoBDvJVtRTCcOvBUNk5OSTA4OEs1SlRPTlhFSFZXRFA0UFEwRCQlQCN0PWcu',
+								'class'  => 'button-primary',
+								'target' => '_blank',
+							),
+							array(
+								'title'  => __( 'I already did!', 'user-registration' ),
+								'icon'   => 'dashicons-smiley',
+								'link'   => '#',
+								'class'  => 'button-secondary notice-dismiss notice-dismiss-permanently',
+								'target' => '',
+							),
+							array(
+								'title'  => __( 'Maybe later', 'user-registration' ),
+								'icon'   => 'dashicons-dismiss',
+								'link'   => '#',
+								'class'  => 'button-secondary notice-dismiss notice-dismiss-temporarily',
+								'target' => '',
+							),
+							array(
+								'title'  => __( 'I have a query', 'user-registration' ),
+								'icon'   => 'dashicons-testimonial',
+								'link'   => 'https://wpuserregistration.com/support',
+								'class'  => 'button-secondary notice-have-query',
+								'target' => '_blank',
+							),
+						),
+						'permanent_dismiss'     => true,
+						'reopen_days'           => '1',
+						'reopen_times'          => '3',
+						'conditions_to_display' => array(
+							array(
+								'operator'        => 'AND',
+								'activation_days' => '10',
+								'option_exists'   => 'user_registration_license_key',
+								'show_notice'     => ! ur_check_notice_already_permanent_dismissed( 'survey' ),
+							),
 						),
 					),
-				),
-			);
-		}
-		$notices = apply_filters( 'user_registration_get_remote_notices', false );
-		if ( $notices ) {
-			self::$custom_notices = array_merge( self::$custom_notices, $notices );
-		}
+					array(
+						'id'                    => 'ur_allow_usage',
+						'type'                  => 'allow-usage',
+						'status'                => 'active',
+						'priority'              => '3',
+						'title'                 => __( 'Contribute to the enhancement', 'user-registration' ),
+						'message_content'       => wp_kses_post(
+							sprintf(
+								'<br/><p>%s</p>',
+								__(
+									'Help us improve the plugin\'s features by sharing <a href="https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title" target="_blank">non-sensitive plugin data</a> with us.',
+									'user-registration'
+									)
+									)
+								),
+								'buttons'               => array(
+									array(
+										'title'  => __( 'Allow', 'user-registration' ),
+										'icon'   => 'dashicons-smiley',
+										'link'   => 'https://forms.office.com/pages/responsepage.aspx?id=c04iBAejyEWvNQDb6GzDCILyv8m6NoBDvJVtRTCcOvBUNk5OSTA4OEs1SlRPTlhFSFZXRFA0UFEwRCQlQCN0PWcu',
+										'class'  => 'button-primary ur-allow-usage',
+										'target' => '_blank',
+									),
+									array(
+										'title'  => __( 'No, Thanks', 'user-registration' ),
+										'icon'   => 'dashicons-dismiss',
+										'link'   => '#',
+										'class'  => 'button-secondary notice-dismiss notice-dismiss-permanently ur-deny-usage',
+										'target' => '',
+									),
+						),
+						'permanent_dismiss'     => false,
+						'reopen_days'           => '1',
+						'reopen_times'          => '3',
+						'conditions_to_display' => array(
+							array(
+								'operator'      => 'AND',
+								'updation_days' => '1',
+								'option_exists' => 'user_registration_allow_usage_tracking',
+								'option_exists' => 'user_registration_allow_usage_notice_shown',
+								'show_notice'     => ! ur_check_notice_already_permanent_dismissed( 'allow-usage' ),
+							),
+						),
+					),
+					)
+				);
+			}
+			$notices = apply_filters( 'user_registration_get_remote_notices', false );
+			if ( $notices ) {
+				self::$custom_notices = array_merge( self::$custom_notices, $notices );
+			}
 	}
 
 	/**
@@ -527,7 +537,7 @@ class UR_Admin_Notices {
 
 		// Return if dismissed date is less than a day.
 		if ( ! empty( $notice_dismissed_temporarily ) ) {
-			if ( $reopen_times === $reopened_times ) {
+			if ( $reopen_times == $reopened_times ) {
 				return false;
 			}
 

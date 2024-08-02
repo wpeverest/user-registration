@@ -8765,31 +8765,39 @@ body.user-registration #wpbody-content {
           font-size: 14px;
           font-weight: 400;
           line-height: 24px; }
-  .user-registration #user-registration-list-table-page #ur-coupon-list-form {
+  .user-registration #user-registration-list-table-page #ur-coupon-list-form,
+  .user-registration #user-registration-list-table-page #ur-membership-payment-history-form {
     margin-top: 24px;
     padding-top: 24px;
     border-top: 1px solid #DCDCDC; }
-    .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap {
+    .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap,
+    .user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap {
       margin: 0; }
-      .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .tablenav {
+      .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .tablenav,
+      .user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .tablenav {
         margin: 0;
         padding: 0;
         height: auto; }
-        .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .tablenav .bulkactions {
+        .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .tablenav .bulkactions,
+        .user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .tablenav .bulkactions {
           padding-right: 0;
           display: flex;
           align-items: center;
           gap: 10px; }
           .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .tablenav .bulkactions select,
-          .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .tablenav .bulkactions input {
+          .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .tablenav .bulkactions input,
+          .user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .tablenav .bulkactions select,
+          .user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .tablenav .bulkactions input {
             margin-right: 0; }
-          .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .tablenav .bulkactions select {
+          .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .tablenav .bulkactions select,
+          .user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .tablenav .bulkactions select {
             border-color: #BABABA;
             height: 38px;
             width: 220px;
             padding-inline: 14px;
             color: #383838; }
-          .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .tablenav .bulkactions input[type="submit"] {
+          .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .tablenav .bulkactions input[type="submit"],
+          .user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .tablenav .bulkactions input[type="submit"] {
             border-radius: 3px;
             border: 1px solid #475BB2;
             background: #F6F7F7;
@@ -8798,40 +8806,140 @@ body.user-registration #wpbody-content {
             font-size: 13px;
             font-weight: 500;
             line-height: 20px; }
-      .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons {
+      .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons,
+      .user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .wp-list-table.coupons {
         margin-top: 20px;
         margin-bottom: 20px; }
-        .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons thead tr th#title {
+        .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons thead tr th#title,
+        .user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .wp-list-table.coupons thead tr th#title {
           width: 220px; }
-        .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons thead tr th#code {
+        .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons thead tr th#code,
+        .user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .wp-list-table.coupons thead tr th#code {
           width: 170px; }
-        .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons thead tr th#amount, .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons thead tr th#expires {
+        .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons thead tr th#amount, .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons thead tr th#expires,
+        .user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .wp-list-table.coupons thead tr th#amount,
+        .user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .wp-list-table.coupons thead tr th#expires {
           width: 180px; }
-        .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons thead tr th#status {
+        .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons thead tr th#status,
+        .user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .wp-list-table.coupons thead tr th#status {
           width: 140px; }
-        .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons thead tr th#action {
+        .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons thead tr th#action,
+        .user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .wp-list-table.coupons thead tr th#action {
           width: 120px; }
-        .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons tbody tr:nth-child(odd) {
+        .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons tbody tr:nth-child(odd),
+        .user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .wp-list-table.coupons tbody tr:nth-child(odd) {
           background: #F8F8FA; }
-        .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons tbody tr td {
+        .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons tbody tr td,
+        .user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .wp-list-table.coupons tbody tr td {
           font-size: 14px;
           line-height: 24px;
           color: #383838;
           vertical-align: middle; }
-        .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons tbody .coupon-active {
+        .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons tbody .coupon-active,
+        .user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .wp-list-table.coupons tbody .coupon-active {
           font-weight: 500;
           color: #4CC741; }
-        .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons tbody .coupon-inactive {
+        .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons tbody .coupon-inactive,
+        .user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .wp-list-table.coupons tbody .coupon-inactive {
           font-weight: 500;
           color: #F25656; }
-        .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons tbody .coupon-expired {
+        .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons tbody .coupon-expired,
+        .user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .wp-list-table.coupons tbody .coupon-expired {
           font-weight: 500;
           color: #636363; }
+      .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.orders,
+      .user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .wp-list-table.orders {
+        margin: 20px 0; }
+        .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.orders tbody tr td,
+        .user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .wp-list-table.orders tbody tr td {
+          font-size: 14px;
+          line-height: 24px; }
+          .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.orders tbody tr td.membership_type .user-registration-badge,
+          .user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .wp-list-table.orders tbody tr td.membership_type .user-registration-badge {
+            background: none;
+            padding: 0;
+            color: #383838;
+            font-weight: 500; }
+          .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.orders tbody tr td.status .payment-status-btn,
+          .user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .wp-list-table.orders tbody tr td.status .payment-status-btn {
+            display: block;
+            width: max-content;
+            border-radius: 3px;
+            color: #383838;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 16px;
+            padding: 4px 8px; }
+            .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.orders tbody tr td.status .payment-status-btn.completed,
+            .user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .wp-list-table.orders tbody tr td.status .payment-status-btn.completed {
+              border: 1px solid #4CC741;
+              background: #F5FFF4; }
+            .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.orders tbody tr td.status .payment-status-btn.pending,
+            .user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .wp-list-table.orders tbody tr td.status .payment-status-btn.pending {
+              border: 1px solid #EE9936;
+              background: #FFFAF5; }
+            .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.orders tbody tr td.status .payment-status-btn.failed,
+            .user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .wp-list-table.orders tbody tr td.status .payment-status-btn.failed {
+              border: 1px solid #F25656;
+              background: #FFF4F4; }
 
-.user-registration .swal2-container .swal2-header {
+.user-registration #payment-detail-modal .modal-content {
+  margin: 0;
+  border-radius: 12px;
+  background: #FFF;
+  box-shadow: 0px 6px 21px 0px rgba(10, 10, 10, 0.08);
+  padding: 28px 32px;
+  box-sizing: border-box;
+  width: 820px;
+  max-width: 100%; }
+  .user-registration #payment-detail-modal .modal-content .modal-header h2 {
+    margin: 0;
+    color: #222222;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 34px; }
+  .user-registration #payment-detail-modal .modal-content .modal-header hr {
+    margin: 16px 0 24px; }
+  .user-registration #payment-detail-modal .modal-content .modal-body {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    align-items: unset;
+    justify-content: unset; }
+    .user-registration #payment-detail-modal .modal-content .modal-body .payment-detail-box {
+      margin-bottom: 0; }
+    .user-registration #payment-detail-modal .modal-content .modal-body .payment-detail-label {
+      color: #383838;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 24px;
+      margin-bottom: 6px; }
+    .user-registration #payment-detail-modal .modal-content .modal-body .payment-detail-data {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #6B6B6B;
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 23px;
+      overflow-wrap: break-word; }
+      .user-registration #payment-detail-modal .modal-content .modal-body .payment-detail-data .payment-status-btn {
+        display: block;
+        width: max-content; }
+        .user-registration #payment-detail-modal .modal-content .modal-body .payment-detail-data .payment-status-btn.completed {
+          border: 1px solid #4CC741;
+          background: #F5FFF4; }
+        .user-registration #payment-detail-modal .modal-content .modal-body .payment-detail-data .payment-status-btn-pending {
+          border: 1px solid #EE9936;
+          background: #FFFAF5; }
+        .user-registration #payment-detail-modal .modal-content .modal-body .payment-detail-data .payment-status-btn.failed {
+          border: 1px solid #F25656;
+          background: #FFF4F4; }
+
+.user-registration_page_user-registration-membership .swal2-container .swal2-header, .user-registration_page_user-registration-coupons .swal2-container .swal2-header, .user-registration_page_user-registration-members .swal2-container .swal2-header, .user-registration_page_member-payment-history .swal2-container .swal2-header {
   padding: 24px !important;
   padding-bottom: 16px !important; }
-  .user-registration .swal2-container .swal2-header .swal2-title {
+  .user-registration_page_user-registration-membership .swal2-container .swal2-header .swal2-title, .user-registration_page_user-registration-coupons .swal2-container .swal2-header .swal2-title, .user-registration_page_user-registration-members .swal2-container .swal2-header .swal2-title, .user-registration_page_member-payment-history .swal2-container .swal2-header .swal2-title {
     display: flex !important;
     align-items: center;
     gap: 8px;
@@ -8843,25 +8951,25 @@ body.user-registration #wpbody-content {
     padding-bottom: 16px;
     color: #222;
     margin-bottom: 0; }
-    .user-registration .swal2-container .swal2-header .swal2-title img {
+    .user-registration_page_user-registration-membership .swal2-container .swal2-header .swal2-title img, .user-registration_page_user-registration-coupons .swal2-container .swal2-header .swal2-title img, .user-registration_page_user-registration-members .swal2-container .swal2-header .swal2-title img, .user-registration_page_member-payment-history .swal2-container .swal2-header .swal2-title img {
       width: 20px;
       height: 20px; }
 
-.user-registration .swal2-container .swal2-content {
+.user-registration_page_user-registration-membership .swal2-container .swal2-content, .user-registration_page_user-registration-coupons .swal2-container .swal2-content, .user-registration_page_user-registration-members .swal2-container .swal2-content, .user-registration_page_member-payment-history .swal2-container .swal2-content {
   padding: 0 24px; }
-  .user-registration .swal2-container .swal2-content .swal2-html-container {
+  .user-registration_page_user-registration-membership .swal2-container .swal2-content .swal2-html-container, .user-registration_page_user-registration-coupons .swal2-container .swal2-content .swal2-html-container, .user-registration_page_user-registration-members .swal2-container .swal2-content .swal2-html-container, .user-registration_page_member-payment-history .swal2-container .swal2-content .swal2-html-container {
     text-align: left; }
-    .user-registration .swal2-container .swal2-content .swal2-html-container p {
+    .user-registration_page_user-registration-membership .swal2-container .swal2-content .swal2-html-container p, .user-registration_page_user-registration-coupons .swal2-container .swal2-content .swal2-html-container p, .user-registration_page_user-registration-members .swal2-container .swal2-content .swal2-html-container p, .user-registration_page_member-payment-history .swal2-container .swal2-content .swal2-html-container p {
       font-size: 15px;
       line-height: 23px;
       color: #383838;
       margin: 0; }
 
-.user-registration .swal2-container .swal2-actions button {
+.user-registration_page_user-registration-membership .swal2-container .swal2-actions button, .user-registration_page_user-registration-coupons .swal2-container .swal2-actions button, .user-registration_page_user-registration-members .swal2-container .swal2-actions button, .user-registration_page_member-payment-history .swal2-container .swal2-actions button {
   margin: 0; }
-  .user-registration .swal2-container .swal2-actions button.swal2-confirm {
+  .user-registration_page_user-registration-membership .swal2-container .swal2-actions button.swal2-confirm, .user-registration_page_user-registration-coupons .swal2-container .swal2-actions button.swal2-confirm, .user-registration_page_user-registration-members .swal2-container .swal2-actions button.swal2-confirm, .user-registration_page_member-payment-history .swal2-container .swal2-actions button.swal2-confirm {
     background: #F25656 !important; }
-    .user-registration .swal2-container .swal2-actions button.swal2-confirm:hover {
+    .user-registration_page_user-registration-membership .swal2-container .swal2-actions button.swal2-confirm:hover, .user-registration_page_user-registration-coupons .swal2-container .swal2-actions button.swal2-confirm:hover, .user-registration_page_user-registration-members .swal2-container .swal2-actions button.swal2-confirm:hover, .user-registration_page_member-payment-history .swal2-container .swal2-actions button.swal2-confirm:hover {
       background: #e34747 !important; }
 
 .ur-registered-from .ur-general-setting.ur-setting-captcha .ur-options-list .ui-sortable-handle {

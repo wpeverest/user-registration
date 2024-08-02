@@ -365,6 +365,13 @@ class UR_AJAX {
 						$single_field[ $key ] = '';
 					}
 					break;
+				case 'signature':
+					if ( isset( $single_field[ $key ] ) ) {
+						$single_field[ $key ] = apply_filters( 'user_registration_process_signature_field_data', $single_field[ $key ] );
+					} else {
+						$single_field[ $key ] = $field['default'];
+					}
+					break;
 				default:
 					if ( 'repeater' !== $field['type'] ) {
 						$single_field[ $key ] = isset( $single_field[ $key ] ) ? $single_field[ $key ] : '';
