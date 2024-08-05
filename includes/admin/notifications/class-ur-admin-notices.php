@@ -159,6 +159,8 @@ class UR_Admin_Notices {
 					} elseif ( $valid && $operator == 'AND' ) {
 						array_push( $valid_condition, $valid );
 						continue;
+					} elseif ( ! $valid && $operator == 'AND' ){
+						break;
 					}
 				}
 			}
@@ -217,12 +219,24 @@ class UR_Admin_Notices {
 				// code...
 				break;
 			case 'user_count':
-				$form_users         = get_users(
-					array(
-						'meta_key' => 'ur_form_id',
-					)
-				);
-				$total_registration = count( $form_users );
+				$cache_key = 'total_registration_count';
+				$total_registration = wp_cache_get($cache_key);
+
+				if ($total_registration === false) {
+					global $wpdb;
+					$form_id_meta_key = 'ur_form_id';
+					$table_usermeta = $wpdb->usermeta;
+
+					$total_registration = $wpdb->get_var(
+						$wpdb->prepare(
+							"SELECT COUNT(DISTINCT user_id)
+							FROM $table_usermeta
+							WHERE meta_key = %s",
+							$form_id_meta_key
+						)
+					);
+					wp_cache_set($cache_key, $total_registration, '', 3600);
+				}
 				$valid              = ur_check_numeric_operator( $total_registration, $value );
 				break;
 			case 'activation_days':
@@ -285,7 +299,7 @@ class UR_Admin_Notices {
 						'title'                 => __( 'Bravo! 💪 Well done.', 'user-registration' ),
 						'message_content'       => wp_kses_post(
 							sprintf(
-								"<p>%s</p><p>%s</p><p class='extra-pad'>%s</p>",
+								"<p>%s</p><p>%s</p><p class='extra-pad'>%s</p><br/>",
 								__( "Congratulations! 👏 You've registered 20 users using our User Registration plugin, way to go! 🎉", 'user-registration' ),
 								__( 'Please share your experience with us by leaving a review. Your feedback will help us improve and serve you better. ', 'user-registration' ),
 								__(
@@ -330,9 +344,9 @@ class UR_Admin_Notices {
 						'conditions_to_display' => array(
 							array(
 								'operator'        => 'AND',
+								'show_notice'     => ! ur_check_notice_already_permanent_dismissed( 'review' ),
 								'user_count'      => '>=20',
 								'activation_days' => '7',
-								'show_notice'     => ! ur_check_notice_already_permanent_dismissed( 'review' ),
 							),
 						),
 					),
@@ -390,9 +404,9 @@ class UR_Admin_Notices {
 						'conditions_to_display' => array(
 							array(
 								'operator'        => 'AND',
+								'show_notice'     => ! ur_check_notice_already_permanent_dismissed( 'review' ),
 								'user_count'      => '<20',
 								'activation_days' => '7',
-								'show_notice'     => ! ur_check_notice_already_permanent_dismissed( 'review' ),
 							),
 						),
 					),
@@ -453,9 +467,9 @@ class UR_Admin_Notices {
 						'conditions_to_display' => array(
 							array(
 								'operator'        => 'AND',
+								'show_notice'     => ! ur_check_notice_already_permanent_dismissed( 'survey' ),
 								'activation_days' => '10',
 								'option_exists'   => 'user_registration_license_key',
-								'show_notice'     => ! ur_check_notice_already_permanent_dismissed( 'survey' ),
 							),
 						),
 					),
@@ -467,7 +481,7 @@ class UR_Admin_Notices {
 						'title'                 => __( 'Contribute to the enhancement', 'user-registration' ),
 						'message_content'       => wp_kses_post(
 							sprintf(
-								'<br/><p>%s</p>',
+								'<p>%s</p><br/>',
 								__(
 									'Help us improve the plugin\'s features by sharing <a href="https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title" target="_blank">non-sensitive plugin data</a> with us.',
 									'user-registration'
@@ -496,10 +510,10 @@ class UR_Admin_Notices {
 						'conditions_to_display' => array(
 							array(
 								'operator'      => 'AND',
+								'show_notice'     => ! ur_check_notice_already_permanent_dismissed( 'allow-usage' ),
 								'updation_days' => '1',
 								'option_exists' => 'user_registration_allow_usage_tracking',
 								'option_exists' => 'user_registration_allow_usage_notice_shown',
-								'show_notice'     => ! ur_check_notice_already_permanent_dismissed( 'allow-usage' ),
 							),
 						),
 					),
