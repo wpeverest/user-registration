@@ -367,6 +367,7 @@ class UR_Admin_Assets {
 				'isPro'                                  => is_plugin_active( 'user-registration-pro/user-registration.php' ),
 				'ur_upgrade_plan_link'                   => esc_url( 'https://wpuserregistration.com/pricing/?utm_source=plugin&utm_medium=button&utm_campaign=ur-upgrade-to-pro' ),
 				'ur_remove_password_field_link'          => esc_url( 'https://docs.wpuserregistration.com/docs/remove-password-field/' ),
+				'ur_form_non_deletable_fields'           => ur_non_deletable_fields(),
 
 			);
 
@@ -585,8 +586,11 @@ class UR_Admin_Assets {
 			'i18n_urfr_field_required_error'              => esc_html__( 'Form Restriction: Q&A restriction requires at least one question and answer.', 'user-registration' ),
 			'i18n_delete_pass_available_in_pro'           => esc_html__( 'To remove the password field, you need to upgrade to the Pro version.', 'user-registration' ),
 			'i18n_auto_generate_password'                 => esc_html__( 'To remove the password field, enable the auto-generate password feature in form  settings.', 'user-registration' ),
-			'i18n_password_field_is_required'             => esc_html__( 'Password field is required.', 'user-registration' ),
+			'i18n_this_field_is_required'                 => esc_html__( 'This field is required.', 'user-registration' ),
 			'i18n_learn_more'                             => esc_html__( 'Learn More', 'user-registration' ),
+			'i18n_upgrade_to_pro'                         => esc_html__( 'Upgrade plan', 'user-registration' ),
+			'i18n_ok'                                     => esc_html__( 'OK', 'user-registration' ),
+			'i18n_default_cannot_delete_message'          => esc_html__( 'Sorry this field cannot be deleted.', 'user-registration' ),
 		);
 
 		return $i18n;
