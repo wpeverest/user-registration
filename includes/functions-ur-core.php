@@ -5827,3 +5827,4 @@ if ( ! function_exists( 'ur_current_url' ) ) {
 		return esc_url_raw( $url );
 	}
 }
+

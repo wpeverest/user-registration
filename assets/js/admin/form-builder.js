@@ -2994,6 +2994,10 @@
 											})
 											.text()
 											.trim();
+										if ( 'user_pass' === fieldKey ) {
+											show_feature_notice();
+											return;
+										}
 
 										ur_confirmation(
 											user_registration_form_builder_data
@@ -6152,6 +6156,44 @@
 			target_pattern_input.val(input_value);
 		}
 
+		/**
+		 * Displays a feature notice if user try to delete the password_field.
+		 */
+		function show_feature_notice() {
+			if ( user_registration_form_builder_data.isPro ){
+				var description_message = user_registration_form_builder_data.i18n_admin.i18n_auto_generate_password;
+				var confirmButtonText =user_registration_form_builder_data.i18n_admin.i18n_learn_more;
+				var btn_link = user_registration_form_builder_data.i18n_admin.ur_remove_password_field_link;
+			}else{
+				var description_message = user_registration_form_builder_data.i18n_admin.i18n_delete_pass_available_in_pro;
+        		var confirmButtonText = ur_setup_params.upgrade_button;
+				var btn_link = user_registration_form_builder_data.ur_upgrade_plan_link;
+
+			}
+			var title_message = user_registration_form_builder_data.i18n_admin.i18n_password_field_is_required;
+			var icon = '<i class="dashicons dashicons-lock" style="color:#72aee6 !important; border-color: #72aee6;"></i>';
+			var title =
+				icon +
+				'<span class="user-registration-swal2-modal__title">' + title_message
+				;
+			Swal.fire({
+				customClass:
+					"user-registration-swal2-modal user-registration-swal2-modal--centered",
+				title: title,
+				text: description_message,
+				showCancelButton: true,
+				cancelButtonText:user_registration_form_builder_data.i18n_admin
+								.i18n_choice_cancel,
+				showConfirmButton: true,
+				confirmButtonText: confirmButtonText,
+				confirmButtonColor: "##475bb2",
+
+			}).then(function (result) {
+				if (result.isConfirmed) {
+					window.open(btn_link, "_blank");
+				}
+		});
+		}
 		/**
 		 * This block of code is for the "Selected Countries" option of "Country" field
 		 *
