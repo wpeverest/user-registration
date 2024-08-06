@@ -10,8 +10,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-$notice_border = 'important' === $notice_type ? 'notice-error' : 'notice-info';
+$notice_border = 'notice-info';
 
+switch ( $notice_type ) {
+	case 'important':
+		$notice_border = 'notice-error';
+		break;
+	case 'warning':
+		$notice_border = 'notice-warning';
+		break;
+	default:
+		$notice_border = 'notice-info';
+}
 ?>
 	<div id="user-registration-<?php echo esc_attr( $notice_id ); ?>-notice" class="notice <?php echo esc_attr( $notice_border ); ?> user-registration-notice" data-purpose="<?php echo esc_attr( $notice_type ); ?>" data-notice-id="<?php echo esc_attr( $notice_id ); ?>">
 		<div class="user-registration-notice-thumbnail">
