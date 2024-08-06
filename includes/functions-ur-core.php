@@ -5882,13 +5882,13 @@ if ( ! function_exists( 'ur_email_send_failed_notice' ) ) {
 		$custom_notice = array(
 			array(
 				'id'                    => 'ur_email_send_failed',
-				'type'                  => 'warning',
+				'type'                  => 'info',
 				'status'                => 'active',
 				'priority'              => '1',
 				'title'                 => __( 'User Registration Email Send Error', 'user-registration' ),
 				'message_content'       => wp_kses_post(
 					sprintf(
-						'<p>%s</p><p style="border-left: 2px solid yellow; background: #FFFFF0; padding: 10px;">%s</p><br/>',
+						'<p>%s</p><p style="border-left: 2px solid #72aee6; background: #F0FFFF; padding: 10px;">%s</p><br/>',
 						__( 'The last emails sent from User Registration Plugin was not delivered to the user. ', 'user-registration' ),
 						$error_message
 					)
