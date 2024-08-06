@@ -716,7 +716,8 @@ class UR_AJAX {
 		if ( $status ) {
 			wp_send_json_success( array( 'message' => __( 'Test email was sent successfully! Please check your inbox to make sure it is delivered.', 'user-registration' ) ) );
 		} {
-			wp_send_json_error( array( 'message' => __( 'Test email was unsuccessful! Something went wrong.', 'user-registration' ) ) );
+			$error_message = apply_filters( 'user_registration_email_send_failed_message', '' );
+			wp_send_json_error( array( 'message' => sprintf( __( 'Test email was unsuccessful!. %s', 'user-registration' ), $error_message ) ) );
 		}
 	}
 

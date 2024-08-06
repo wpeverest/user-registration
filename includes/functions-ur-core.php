@@ -5827,3 +5827,34 @@ if ( ! function_exists( 'ur_current_url' ) ) {
 		return esc_url_raw( $url );
 	}
 }
+
+add_action( 'wp_mail_failed', 'ur_email_send_failed_handler', 1 );
+
+if ( ! function_exists( 'ur_email_send_failed_handler' ) ) {
+
+	/**
+	 * Handle errors fetch mechanism when mail send failed.
+	 *
+	 * @param object $error_instance WP_Error message instance.
+	 */
+	function ur_email_send_failed_handler( $error_instance ) {
+		$error_message = '';
+
+		if ( '' !== json_decode( $error_instance->get_error_message() ) ) {
+			/* translators: %s: Status Log URL*/
+			$error_message = wp_kses_post( sprintf( __( 'Please check the `ur_mail_errors` log under <a target="_blank" href= "%s"> Status Log </a> section.', 'user-registration' ), admin_url( 'admin.php?page=user-registration-status' ) ) );
+			ur_get_logger()->error( $error_instance->get_error_message(), array( 'source' => 'ur_mail_errors' ) );
+		} else {
+			$error_message = $error_instance->get_error_message();
+		}
+
+		if ( '' !== $error_message ) {
+			add_filter(
+				'user_registration_email_send_failed_message',
+				function ( $msg ) use ( $error_message ) {
+					return $error_message;
+				}
+			);
+		}
+	}
+}
