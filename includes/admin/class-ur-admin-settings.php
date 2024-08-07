@@ -189,6 +189,7 @@ class UR_Admin_Settings {
 					'captcha_failed'  => esc_html__( 'Some error occured. Please verify that the keys you entered are valid.', 'user-registration' ),
 					'unsaved_changes' => esc_html__( 'You have some unsaved changes. Please save and try again.', 'user-registration' ),
 				),
+				'is_advanced_field_active' => is_plugin_active( 'user-registration-advanced-fields/user-registration-advanced-fields.php' ),
 			)
 		);
 
