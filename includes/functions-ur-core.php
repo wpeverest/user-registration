@@ -1348,6 +1348,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 	 * @param array $arguments An array of form settings.
 	 */
 	$arguments = apply_filters( 'user_registration_get_form_settings', $arguments );
+	$arguments['setting_data'] = apply_filters( 'user_registration_settings_text_format', $arguments['setting_data'] );
 
 	return $arguments['setting_data'];
 }
@@ -2569,7 +2570,7 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 		$output .= '<span class="slider round">';
 		$output .= '</span>';
 		$output .= '</span>';
-		$output .= '<label>' . esc_html__( 'Use conditional logics', 'user-registration' ) . '</label>';
+		$output .= '<label>' . esc_html__( 'Use Conditional Logics', 'user-registration' ) . '</label>';
 		$output .= '</div>';
 		$output .= '</div>';
 
@@ -5825,5 +5826,47 @@ if ( ! function_exists( 'ur_current_url' ) ) {
 		$url .= wp_unslash( $_SERVER['REQUEST_URI'] );
 
 		return esc_url_raw( $url );
+	}
+}
+
+add_filter( 'user_registration_settings_text_format', 'ur_settings_text_format', 10 );
+if ( ! function_exists( 'ur_settings_text_format' ) ) {
+	/**
+	 * Settings text format.
+	 *
+	 * @param array $args
+	 * @return array
+	 */
+	function ur_settings_text_format( $args ) {
+		//Group similar text format fields.
+		$fields_to_format = array( 'description', 'tip', 'tooltip', 'tooltip_message', 'desc' );
+
+		foreach ( $args as &$arg ) {
+			if ( isset( $arg['label'] ) ) {
+				$arg['label'] = ucWords( strtolower( $arg['label'] ) );
+			}
+
+			if ( isset( $arg['desc_tip'] ) && ( $arg['desc_tip'] != 1  || $arg['desc_tip'] !== true ) ) {
+				$arg['desc_tip'] = ucWords( strtolower( $arg['desc_tip'] ) );
+			}
+
+			if ( isset( $arg['title'] ) ) {
+				$arg['title'] = strtoupper( $arg['desc'] );
+			}
+
+			foreach ( $fields_to_format as $field ) {
+				if ( isset( $arg[ $field ] ) ) {
+					$arg[ $field ] = ucfirst( strtolower( $arg[ $field ] ) );
+				}
+			}
+
+			if ( isset( $arg['options'] ) && is_array( $arg['options'] ) ) {
+				foreach ( $arg['options'] as $key => $option ) {
+					$arg['options'][ $key ] = ucfirst( strtolower( $option ) );
+				}
+			}
+		}
+
+		return $args;
 	}
 }
