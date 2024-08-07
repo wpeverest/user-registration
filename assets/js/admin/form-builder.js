@@ -547,6 +547,12 @@
 							URFormBuilder.show_message(error);
 						}
 					}
+				}).fail(function () {
+					URFormBuilder.show_message(
+						user_registration_form_builder_data.ajax_form_submit_error,
+						"error"
+					);
+					return;
 				});
 			},
 			/**
@@ -2401,6 +2407,12 @@
 											]
 										);
 									}
+								}).fail(function () {
+									URFormBuilder.show_message(
+										user_registration_form_builder_data.ajax_form_submit_error_on_field_drag,
+										"error"
+									);
+									return;
 								});
 							}
 						};
