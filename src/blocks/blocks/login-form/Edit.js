@@ -3,7 +3,7 @@ import { __ } from "@wordpress/i18n";
 import { Box } from "@chakra-ui/react";
 import metadata from "./block.json";
 
-import { TextControl, SelectControl, PanelBody } from "@wordpress/components";
+import {TextControl, SelectControl, PanelBody, Disabled} from "@wordpress/components";
 import { InspectorControls, useBlockProps } from "@wordpress/block-editor";
 const ServerSideRender = wp.serverSideRender
 	? wp.serverSideRender
@@ -59,11 +59,13 @@ const Edit = (props) => {
 				</PanelBody>
 			</InspectorControls>
 			<Box {...useProps}>
-				<ServerSideRender
-					key="ur-gutenberg-login-form-server-side-renderer"
-					block={blockName}
-					attributes={props.attributes}
-				/>
+				<Disabled>
+					<ServerSideRender
+						key="ur-gutenberg-login-form-server-side-renderer"
+						block={blockName}
+						attributes={props.attributes}
+					/>
+				</Disabled>
 			</Box>
 		</>
 	);

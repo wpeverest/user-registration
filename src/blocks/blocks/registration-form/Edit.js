@@ -12,7 +12,7 @@ import {
 	Stack
 } from "@chakra-ui/react";
 
-import { SelectControl, PanelBody } from "@wordpress/components";
+import { SelectControl, PanelBody, Disabled } from "@wordpress/components";
 
 import { InspectorControls, useBlockProps } from "@wordpress/block-editor";
 import { ChakraProvider } from "@chakra-ui/react";
@@ -161,11 +161,13 @@ const Edit = (props) => {
 						</CardBody>
 					</Card>
 				) : (
-					<ServerSideRender
-						key="ur-gutenberg-registration-form-server-side-renderer"
-						block={blockName}
-						attributes={{ ...props.attributes, userState }}
-					/>
+					<Disabled>
+						<ServerSideRender
+							key="ur-gutenberg-registration-form-server-side-renderer"
+							block={blockName}
+							attributes={{ ...props.attributes, userState }}
+						/>
+					</Disabled>
 				)}
 			</Box>
 		</ChakraProvider>

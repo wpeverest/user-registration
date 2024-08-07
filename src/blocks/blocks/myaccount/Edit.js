@@ -2,7 +2,7 @@ import React from "react";
 import { __ } from "@wordpress/i18n";
 import { Box } from "@chakra-ui/react";
 
-import { TextControl, SelectControl, PanelBody } from "@wordpress/components";
+import {TextControl, SelectControl, PanelBody, Disabled} from "@wordpress/components";
 import { InspectorControls, useBlockProps } from "@wordpress/block-editor";
 import metadata from "./block.json";
 
@@ -63,11 +63,13 @@ const Edit = (props) => {
 				</PanelBody>
 			</InspectorControls>
 			<Box {...useProps}>
-				<ServerSideRender
-					key="ur-gutenberg-myaccount-server-side-renderer"
-					block={blockName}
-					attributes={props.attributes}
-				/>
+				<Disabled>
+					<ServerSideRender
+						key="ur-gutenberg-myaccount-server-side-renderer"
+						block={blockName}
+						attributes={props.attributes}
+					/>
+				</Disabled>
 			</Box>
 		</>
 	);
