@@ -364,8 +364,9 @@ class UR_Admin_Assets {
 				'user_registration_weak_password_info'   => esc_html__( 'Minimum one uppercase letter and must be 4 characters and no repetitive words or common words', 'user-registration' ),
 				'user_registration_medium_password_info' => esc_html__( 'Minimum one uppercase letter, a number, must be 7 characters and no repetitive words or common words', 'user-registration' ),
 				'user_registration_strong_password_info' => esc_html__( 'Minimum one uppercase letter, a number, a special character, must be 9 characters and no repetitive words or common words', 'user-registration' ),
+				'ajax_form_submit_error_title'           => esc_html__( 'Form could not be saved', 'user-registration' ),
 				'ajax_form_submit_error'                 => esc_html__( 'Something went wrong while saving form through AJAX request.', 'user-registration' ),
-				'ajax_form_submit_error_on_field_drag'   => esc_html__( 'Something went wrong while dragging the field through AJAX request.', 'user-registration' ),
+				'ajax_form_submit_troubleshooting_link'  => esc_url_raw( 'https://docs.wpuserregistration.com/docs/how-to-check-plugin-theme-conflict/' ),
 			);
 
 			wp_localize_script(

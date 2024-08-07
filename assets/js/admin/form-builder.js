@@ -548,10 +548,24 @@
 						}
 					}
 				}).fail(function () {
-					URFormBuilder.show_message(
-						user_registration_form_builder_data.ajax_form_submit_error,
-						"error"
-					);
+					Swal.fire({
+						icon: "error",
+						title: user_registration_form_builder_data.ajax_form_submit_error_title,
+						html:
+							"<br />" +
+							user_registration_form_builder_data.ajax_form_submit_error,
+						customClass:
+							"user-registration-swal2-modal user-registration-swal2-modal--center",
+						confirmButtonText: "Troubleshoot",
+						allowOutsideClick: false,
+						showCloseButton: true
+					}).then(function (result) {
+						if (result.isConfirmed) {
+							window.open(
+								user_registration_form_builder_data.ajax_form_submit_troubleshooting_link
+							);
+						}
+					});
 					return;
 				});
 			},
