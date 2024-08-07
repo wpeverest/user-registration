@@ -5851,7 +5851,7 @@ if ( ! function_exists( 'ur_settings_text_format' ) ) {
 			}
 
 			if ( isset( $arg['title'] ) ) {
-				$arg['title'] = strtoupper( $arg['desc'] );
+				$arg['title'] = strtoupper( $arg['title'] );
 			}
 
 			foreach ( $fields_to_format as $field ) {
