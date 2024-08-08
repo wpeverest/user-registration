@@ -51,8 +51,8 @@ const Edit = (props) => {
 						label={__("User State", "user-registration")}
 						value={userState}
 						options={[
-							{ label: "Logged In", value: "logged_in" },
 							{ label: "Logged Out", value: "logged_out" },
+							{ label: "Logged In", value: "logged_in" },
 						]}
 						onChange={setUserState}
 					/>
