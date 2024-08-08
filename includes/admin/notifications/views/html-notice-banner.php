@@ -9,8 +9,21 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
+
+$notice_border = 'notice-info';
+
+switch ( $notice_type ) {
+	case 'important':
+		$notice_border = 'notice-error';
+		break;
+	case 'warning':
+		$notice_border = 'notice-warning';
+		break;
+	default:
+		$notice_border = 'notice-info';
+}
 ?>
-	<div id="user-registration-<?php echo esc_attr( $notice_id ); ?>-notice" class="notice notice-info user-registration-notice" data-purpose="<?php echo esc_attr( $notice_type ); ?>" data-notice-id="<?php echo esc_attr( $notice_id ); ?>">
+	<div id="user-registration-<?php echo esc_attr( $notice_id ); ?>-notice" class="notice <?php echo esc_attr( $notice_border ); ?> user-registration-notice" data-purpose="<?php echo esc_attr( $notice_type ); ?>" data-notice-id="<?php echo esc_attr( $notice_id ); ?>">
 		<div class="user-registration-notice-thumbnail">
 			<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/UR-Logo.gif' ); ?>" alt="">
 		</div>
