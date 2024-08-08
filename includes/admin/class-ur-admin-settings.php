@@ -119,7 +119,16 @@ class UR_Admin_Settings {
 
 			self::add_error(
 				esc_html__(
-					'Your settings have not been saved. You enabled "Disable Default WordPress Login Screen" but did not select a login page. Please select a page for "Redirect Default WordPress Login To".',
+					'Your settings has not been saved. You enabled "Disable Default WordPress Login Screen" but did not select a login page. Please select a page for "Redirect Default WordPress Login To".',
+					'user-registration'
+				)
+			);
+
+		} elseif ( $flag && 'redirect_login_not_myaccount' === $flag ) {
+
+			self::add_error(
+				esc_html__(
+					'Your settings has not been saved.The selected page for "Redirect Default WordPress Login To" is not an login page. Please select an valid login page.',
 					'user-registration'
 				)
 			);

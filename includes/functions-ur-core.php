@@ -5833,13 +5833,25 @@ if ( ! function_exists( 'ur_prevent_default_login' ) ) {
 	/**
 	 * Handel error when default login screen is disabled but redirect login poage is not selected.
 	 *
+	 * @since 3.3.1
+	 *
 	 * @return @mixed
 	 */
 	function ur_prevent_default_login( $data ) {
 		// Return if default wp_login is disabled and no redirect url is set.
 		if ( isset( $data['user_registration_login_options_prevent_core_login'] ) && $data['user_registration_login_options_prevent_core_login'] ) {
-			if ( isset( $data['user_registration_login_options_login_redirect_url'] ) && ! $data['user_registration_login_options_login_redirect_url'] ) {
-				return 'redirect_login_error';
+			if ( isset( $data['user_registration_login_options_login_redirect_url'] )  ) {
+				gettype( $data['user_registration_login_options_login_redirect_url'] );
+				if( ! $data['user_registration_login_options_login_redirect_url'] ) {
+					return 'redirect_login_error';
+				}
+				if( is_numeric( $data['user_registration_login_options_login_redirect_url'] ) ) {
+					$is_page_my_account_page = ur_find_my_account_in_page( $data['user_registration_login_options_login_redirect_url'] );
+					if ( ! $is_page_my_account_page ) {
+						return 'redirect_login_not_myaccount';
+					}
+
+				}
 			}
 		}
 		return true;
