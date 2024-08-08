@@ -5827,3 +5827,33 @@ if ( ! function_exists( 'ur_current_url' ) ) {
 		return esc_url_raw( $url );
 	}
 }
+
+// TODO: Remove this code once Really Simple SSL plugin resolves the conflict from their side.
+if ( ! function_exists( 'ur_rsssl_anyone_can_register_conflict_resolver' ) ) {
+
+	/**
+	 * Resolve anyone can register setting conflict with Really Simple SSL Plugin.
+	 *
+	 * @param bool $value Option value.
+	 */
+	function ur_rsssl_anyone_can_register_conflict_resolver( $value ) {
+		global $wpdb;
+
+		if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'really-simple-ssl/rlrsssl-really-simple-ssl.php' ) ) {
+
+			$rsssl_options = get_option( 'rsssl_options', '' );
+			$rsssl_options = maybe_unserialize( $rsssl_options );
+
+			if ( isset( $rsssl_options['disable_anyone_can_register'] ) && $rsssl_options['disable_anyone_can_register'] ) {
+				$value = $wpdb->get_var( "SELECT option_value FROM {$wpdb->prefix}options WHERE option_name = 'users_can_register';" ); // phpcs:ignore;
+
+				if ( $value ) {
+					return true;
+				}
+			}
+		}
+
+		return $value;
+	}
+}
+add_filter( 'ur_register_setting_override', 'ur_rsssl_anyone_can_register_conflict_resolver', 10, 1 );
