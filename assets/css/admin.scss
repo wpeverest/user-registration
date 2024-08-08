@@ -5464,7 +5464,8 @@ body.user-registration {
 			}
 		}
 
-		#ur-coupon-list-form {
+		#ur-coupon-list-form,
+		#ur-membership-payment-history-form {
 			margin-top: 24px;
 			padding-top: 24px;
 			border-top: 1px solid #dcdcdc;
@@ -5509,119 +5510,257 @@ body.user-registration {
 					}
 				}
 
-				.wp-list-table.coupons {
-					margin-top: 20px;
-					margin-bottom: 20px;
+				.wp-list-table {
+					&.coupons {
+						margin-top: 20px;
+						margin-bottom: 20px;
 
-					thead {
-						tr {
-							th {
-								&#title {
-									width: 220px;
+						thead {
+							tr {
+								th {
+									&#title {
+										width: 220px;
+									}
+									&#code {
+										width: 170px;
+									}
+
+									&#amount,
+									&#expires {
+										width: 180px;
+									}
+
+									&#status {
+										width: 140px;
+									}
+
+									&#action {
+										width: 120px;
+									}
 								}
-								&#code {
-									width: 170px;
+							}
+						}
+
+						tbody {
+							tr {
+								&:nth-child(odd) {
+									background: #F8F8FA;
 								}
 
-								&#amount,
-								&#expires {
-									width: 180px;
+								td {
+									font-size: 14px;
+									line-height: 24px;
+									color: #383838;
+									vertical-align: middle;
 								}
+							}
 
-								&#status {
-									width: 140px;
-								}
+							.coupon-active {
+								font-weight: 500;
+								color: #4CC741;
+							}
+							.coupon-inactive {
+								font-weight: 500;
+								color: #F25656;
+							}
 
-								&#action {
-									width: 120px;
-								}
+							.coupon-expired {
+								font-weight: 500;
+								color: #636363;
 							}
 						}
 					}
 
-					tbody {
-						tr {
-							&:nth-child(odd) {
-								background: #f8f8fa;
+					&.orders {
+						margin: 20px 0;
+
+						tbody {
+							tr {
+								td {
+									font-size: 14px;
+									line-height: 24px;
+
+									&.membership_type {
+										.user-registration-badge {
+											background: none;
+											padding: 0;
+											color: #383838;
+											font-weight: 500;
+										}
+									}
+
+									&.status {
+										.payment-status-btn {
+											display: block;
+											width: max-content;
+											border-radius: 3px;
+											color: #383838;
+											font-size: 14px;
+											font-weight: 400;
+											line-height: 16px;
+											padding: 4px 8px;
+
+											&.completed {
+												border: 1px solid #4CC741;
+												background: #F5FFF4;
+											}
+
+											&.pending {
+												border: 1px solid #EE9936;
+												background: #FFFAF5;
+											}
+
+											&.failed {
+												border: 1px solid #F25656;
+												background: #FFF4F4;
+											}
+										}
+									}
+								}
 							}
-
-							td {
-								font-size: 14px;
-								line-height: 24px;
-								color: #383838;
-								vertical-align: middle;
-							}
-						}
-
-						.coupon-active {
-							font-weight: 500;
-							color: #4cc741;
-						}
-						.coupon-inactive {
-							font-weight: 500;
-							color: #f25656;
-						}
-
-						.coupon-expired {
-							font-weight: 500;
-							color: #636363;
 						}
 					}
 				}
 			}
 		}
 	}
+	#payment-detail-modal {
+		.modal-content {
+			margin: 0;
+			border-radius: 12px;
+			background: #FFF;
+			box-shadow: 0px 6px 21px 0px rgba(10, 10, 10, 0.08);
+			padding: 28px 32px;
+			box-sizing: border-box;
+			width: 820px;
+			max-width: 100%;
 
-	// Delete Popup CSS
-	.swal2-container {
-		.swal2-header {
-			padding: 24px !important;
-			padding-bottom: 16px !important;
-
-			.swal2-title {
-				display: flex !important;
-				align-items: center;
-				gap: 8px;
-				font-size: 18px;
-				line-height: 26px;
-				margin-bottom: 0;
-				width: 100%;
-				border-bottom: 1px solid #e9e9e9;
-				padding-bottom: 16px;
-				color: #222;
-				margin-bottom: 0;
-
-				img {
-					width: 20px;
-					height: 20px;
-				}
-			}
-		}
-
-		.swal2-content {
-			padding: 0 24px;
-
-			.swal2-html-container {
-				text-align: left;
-
-				p {
-					font-size: 15px;
-					line-height: 23px;
-					color: #383838;
+			.modal-header {
+				h2 {
 					margin: 0;
+					color: #222222;
+					font-size: 24px;
+					font-weight: 700;
+					line-height: 34px;
+				}
+
+				hr {
+					margin: 16px 0 24px;
+				}
+			}
+
+			.modal-body {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+				gap: 20px;
+				align-items: unset;
+				justify-content: unset;
+
+				.payment-detail {
+					&-box {
+						margin-bottom: 0;
+					}
+
+					&-label {
+						color: #383838;
+						font-size: 16px;
+						font-weight: 500;
+						line-height: 24px;
+						margin-bottom: 6px;
+					}
+
+					&-data {
+						display: flex;
+						align-items: center;
+						gap: 10px;
+						color: #6B6B6B;
+						font-size: 15px;
+						font-weight: 400;
+						line-height: 23px;
+						overflow-wrap: break-word;
+
+						.payment-status-btn {
+							display: block;
+							width: max-content;
+
+							&.completed {
+								border: 1px solid #4CC741;
+								background: #F5FFF4;
+							}
+
+							&-pending {
+								border: 1px solid #EE9936;
+								background: #FFFAF5;
+							}
+
+							&.failed {
+								border: 1px solid #F25656;
+								background: #FFF4F4;
+							}
+						}
+					}
 				}
 			}
 		}
+	}
+}
 
-		.swal2-actions {
-			button {
-				margin: 0;
+// Delete Popup CSS
+.user-registration_page {
+	&_user-registration-membership,
+	&_user-registration-coupons,
+	&_user-registration-members,
+	&_member-payment-history {
+		.swal2-container {
+			.swal2-header {
+				padding: 24px !important;
+				padding-bottom: 16px !important;
 
-				&.swal2-confirm {
-					background: #f25656 !important;
+				.swal2-title {
+					display: flex !important;
+					align-items: center;
+					gap: 8px;
+					font-size: 18px;
+					line-height: 26px;
+					margin-bottom: 0;
+					width: 100%;
+					border-bottom: 1px solid #e9e9e9;
+					padding-bottom: 16px;
+					color: #222;
+					margin-bottom: 0;
 
-					&:hover {
-						background: #e34747 !important;
+					img {
+						width: 20px;
+						height: 20px;
+					}
+				}
+			}
+
+			.swal2-content {
+				padding: 0 24px;
+
+				.swal2-html-container {
+					text-align: left;
+
+					p {
+						font-size: 15px;
+						line-height: 23px;
+						color: #383838;
+						margin: 0;
+					}
+				}
+			}
+
+			.swal2-actions {
+				button {
+					margin: 0;
+
+					&.swal2-confirm {
+						background: #F25656 !important;
+
+						&:hover {
+							background: #e34747 !important;
+						}
 					}
 				}
 			}

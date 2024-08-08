@@ -178,7 +178,11 @@ class UR_Form_Handler {
 					if ( 'disabled' !== $disabled ) {
 						if ( isset( $_POST[ $key ] ) ) {
 							if ( isset( $field['field_key'] ) && 'file' !== $field['field_key'] ) {
-								update_user_meta( $user_id, $update_key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+								if ( 'signature' === $field['field_key'] ) {
+									update_user_meta( $user_id, $update_key, apply_filters( 'user_registration_process_signature_field_data', $_POST[ $key ] ) );
+								} else {
+									update_user_meta( $user_id, $update_key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+								}
 							} elseif ( isset( $field['type'] ) && 'repeater' === $field['type'] ) {
 								update_user_meta( $user_id, $update_key, $form_data[ $key ]->value ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 							}
@@ -809,6 +813,10 @@ class UR_Form_Handler {
 			foreach ( $form_data as $sec ) {
 				foreach ( $sec as $fields ) {
 					foreach ( $fields as $field ) {
+						if ( ! isset( $field->general_setting->field_name ) ) {
+							continue;
+						}
+
 						$field_id    = $field->general_setting->field_name;
 						$field_label = $field->general_setting->label;
 						if ( ! in_array( $field_id, $hide_fields, true ) ) {
