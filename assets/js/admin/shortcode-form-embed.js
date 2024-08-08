@@ -8,7 +8,7 @@ jQuery(document).ready(function($){
 	var $dot = $( '<span class="ur-shortcode-form-embed-dot">&nbsp;</span>' ),
 	anchor = isGutenberg() ? '.block-editor .edit-post-header' : '';
 
-	var content = '<div><h3>Add a Block</h3><p>Click the plus button, search for User Registration, click the block to<br>embed it. <a href="#" target="_blank" rel="noopener noreferrer">Learn More</a></p><i class="ur-shortcode-form-embed-theme-tooltips-red-arrow"></i><button type="button" class="ur-shortcod-form-embed-theme-done-btn">Done</button></div>'
+	var content = '<div><h3>'+user_registration_blocks_editor_prams.i18n_add_a_block+'</h3><p>'+user_registration_blocks_editor_prams.i18n_add_a_block_tip+'</p><i class="ur-shortcode-form-embed-theme-tooltips-red-arrow"></i><button type="button" class="ur-shortcod-form-embed-theme-done-btn">'+user_registration_blocks_editor_prams.i18n_done_btn+'</button></div>'
 	var tooltipsterArgs = {
 		content          : $( content ),
 		trigger          : 'load',

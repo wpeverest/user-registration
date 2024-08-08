@@ -580,7 +580,7 @@
 					success: function (response) {
 						$this.find(".ur-spinner").remove();
 						var modelContent = '';
-						var message = '<div class="ur-embed-container"><p>We can help embed your form with just a few clicks!</p>';
+						var message = '<div class="ur-embed-container"><p>'+user_registration_form_builder_data.i18n_admin.i18n_embed_description+'</p>';
 						var existing_page_option = '<button class="user-registration-btn button-large button button-primary ur-embed-select-existing-page ur-shortcod-form-embed-theme-done-btn">'+user_registration_form_builder_data.i18n_admin.i18n_embed_to_existing_page+'</button>';
     					var new_page_option = '<button class="user-registration-btn button-large button button-primary ur-embed-create-new-page">'+ user_registration_form_builder_data.i18n_admin.i18n_embed_to_new_page+'</button></div><div class="ur-embed-show-exist-page"></div>';
 
@@ -679,7 +679,7 @@
 								});
 
 							},
-							
+
 						});
 					},
 

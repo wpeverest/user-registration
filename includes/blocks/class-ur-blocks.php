@@ -69,6 +69,15 @@ class UR_Blocks {
 		wp_enqueue_script( 'user-registration-blocks-editor' );
 		if ( 'post.php' === $pagenow && 'edit' === $_GET['action'] && 'user_registration' === $_GET['form'] ) {
 			wp_enqueue_script( 'user-registration-shortcode-embed-form' );
+			wp_localize_script(
+				'user-registration-shortcode-embed-form',
+				'user_registration_blocks_editor_prams',
+				array(
+					'i18n_add_a_block'     => esc_html__( 'Add a block', 'user-registration' ),
+					'i18n_add_a_block_tip' => sprintf( '%s %s', esc_html__( 'Click the plus button, search for User Registration, click the block to embed it. ', 'user-registration' ), '<a href="#" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Learn More', 'user-registration' ) . '</a>' ),
+					'i18n_done_btn'        => esc_html__( 'Done', 'user-registration' ),
+				)
+			);
 		}
 	}
 
