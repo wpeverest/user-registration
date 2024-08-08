@@ -2,7 +2,7 @@ import React from "react";
 import { __ } from "@wordpress/i18n";
 import { Box } from "@chakra-ui/react";
 
-import { TextControl, PanelBody } from "@wordpress/components";
+import {TextControl, SelectControl, PanelBody, Disabled} from "@wordpress/components";
 import { InspectorControls, useBlockProps } from "@wordpress/block-editor";
 import metadata from "./block.json";
 
@@ -15,7 +15,7 @@ const Edit = (props) => {
 	const blockName = metadata.name;
 
 	const {
-		attributes: { redirectUrl, logoutUrl },
+		attributes: { redirectUrl, logoutUrl, userState },
 		setAttributes,
 	} = props;
 
@@ -24,6 +24,9 @@ const Edit = (props) => {
 	};
 	const setLogoutUrl = (url) => {
 		setAttributes({ logoutUrl: url });
+	};
+	const setUserState = (state) => {
+		setAttributes({ userState: state });
 	};
 
 	return (
@@ -47,14 +50,26 @@ const Edit = (props) => {
 						value={logoutUrl}
 						onChange={setLogoutUrl}
 					/>
+					<SelectControl
+						key="ur-gutenberg-myaccount-user-login-state"
+						label={__("User State", "user-registration")}
+						value={userState}
+						options={[
+							{ label: "Logged In", value: "logged_in" },
+							{ label: "Logged Out", value: "logged_out" },
+						]}
+						onChange={setUserState}
+					/>
 				</PanelBody>
 			</InspectorControls>
 			<Box {...useProps}>
-				<ServerSideRender
-					key="ur-gutenberg-myaccount-server-side-renderer"
-					block={blockName}
-					attributes={props.attributes}
-				/>
+				<Disabled>
+					<ServerSideRender
+						key="ur-gutenberg-myaccount-server-side-renderer"
+						block={blockName}
+						attributes={props.attributes}
+					/>
+				</Disabled>
 			</Box>
 		</>
 	);

@@ -25,6 +25,9 @@
     },
     "logoutUrl": {
       "type": "string"
+    },
+    "userState": {
+      "type": "string"
     }
   },
   "editorScript": "user-registration-blocks-editor",
