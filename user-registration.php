@@ -260,6 +260,13 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			include_once UR_ABSPATH . 'includes/admin/class-ur-config.php';
 
 			/**
+			 * Elementor classes.
+			 */
+			if ( class_exists( '\Elementor\Plugin' ) ) {
+				include_once UR_ABSPATH . 'includes/3rd-party/elementor/class-ur-elementor.php';
+			}
+
+			/**
 			 * Plugin/Addon Updater.
 			 */
 			include_once UR_ABSPATH . 'includes/class-ur-plugin-updater.php';
