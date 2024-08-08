@@ -983,8 +983,8 @@ class UR_Emailer {
 	public static function user_registration_process_and_send_email( $email, $subject, $message, $header, $attachment, $template_id ) {
 		$message                     = user_registration_process_email_content( $message, $template_id );
 		$status                      = wp_mail( $email, $subject, $message, $header, $attachment, $template_id );
-		$mail_error_notice_dismissed = get_option( 'user_registration_important_ur_email_send_failed_notice_dismissed_temporarily', false );
-		$mail_error_notice_dismissed = ! $mail_error_notice_dismissed ? get_option( 'user_registration_important_ur_email_send_failed_notice_dismissed', false ) : $mail_error_notice_dismissed;
+		$mail_error_notice_dismissed = get_option( 'user_registration_info_ur_email_send_failed_notice_dismissed_temporarily', false );
+		$mail_error_notice_dismissed = ! $mail_error_notice_dismissed ? get_option( 'user_registration_info_ur_email_send_failed_notice_dismissed', false ) : $mail_error_notice_dismissed;
 
 		if ( ! $status && ! $mail_error_notice_dismissed ) {
 			$error_message = apply_filters( 'user_registration_email_send_failed_message', '' );

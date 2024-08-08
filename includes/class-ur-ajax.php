@@ -1155,7 +1155,7 @@ class UR_AJAX {
 			}
 
 			// Never display mail send failed notice once dismissed.
-			if ( 'important_ur_email_send_failed' === $notice_id ) {
+			if ( 'info_ur_email_send_failed' === $notice_id ) {
 				delete_transient( 'user_registration_mail_send_failed_count' );
 			}
 		}
