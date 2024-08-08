@@ -1,3 +1,6 @@
+= 3.3.0.1  - 05/08/2024 =
+* Fix      - Fatal error while fetching large amount of user data on page load.
+
 = 3.3.0    - 01/08/2024 =
 * Refactor - Custom plugin notice rendering.
 * Feature  - Akismet integration.
