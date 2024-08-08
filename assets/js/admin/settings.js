@@ -633,6 +633,31 @@
 			);
 		}
 	);
+		// Display the sync profile picture settings when the disable profile picture is checked and advanced fields is active.
+		$("#user_registration_disable_profile_picture").on(
+			"change",
+			function () {
+				var is_advanced_fields_active = parseInt(user_registration_settings_params.is_advanced_field_active);
+				if ($(this).prop("checked") && is_advanced_fields_active === 1) {
+					 $("#user_registration_sync_profile_picture").closest(".user-registration-global-settings").css("display", "flex");
+					} else {
+						$("#user_registration_sync_profile_picture").prop("checked", false);
+						$("#user_registration_sync_profile_picture").closest(".user-registration-global-settings").css("display", "none");
+					}
+			}
+		);
+		// If not checked on load hide the sync profile picture settings.
+		$("#user_registration_sync_profile_picture").ready(function () {
+			$this = $("#user_registration_sync_profile_picture");
+			if( $this.prop("checked") ) {
+				$this.closest(".user-registration-global-settings").css("display", "flex");
+			}else if($("#user_registration_disable_profile_picture").prop("checked") && parseInt(user_registration_settings_params.is_advanced_field_active) === 1) {
+				$this.closest(".user-registration-global-settings").css("display", "flex");
+			}else{
+				$this.closest(".user-registration-global-settings").css("display", "none");
+			}
+
+		});
 
 	// Change span with file name when user selects a file.
 	$(".user-registration-custom-file__input").on("change", function () {

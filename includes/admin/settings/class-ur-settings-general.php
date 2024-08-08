@@ -160,6 +160,15 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'default'  => 'no',
 								),
 								array(
+									'title'    => __( 'Sync Profile picture', 'user-registration' ),
+									'desc'     => __( 'Check to enable if you want to display profile picture on edit profile if form have profile field', 'user-registration' ),
+									'id'       => 'user_registration_sync_profile_picture',
+									'type'     => 'toggle',
+									'desc_tip' => true,
+									'css'      => 'min-width: 350px;',
+									'default'  => '',
+								),
+								array(
 									'title'    => __( 'Disable Logout Confirmation', 'user-registration' ),
 									'desc'     => __( 'Check to disable logout confirmation.', 'user-registration' ),
 									'id'       => 'user_registration_disable_logout_confirmation',
