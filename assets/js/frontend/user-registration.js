@@ -1011,6 +1011,7 @@
 									var form_id = 0;
 									var form_nonce = "0";
 									var captchaResponse = "";
+									var registration_language = "";
 									if (
 										"hcaptcha" ===
 										user_registration_params.recaptcha_type
@@ -1063,6 +1064,20 @@
 											)
 											.val();
 									}
+									if (
+										$(this)
+											.closest("form")
+											.find(
+												'input[name="ur-registration-language"]'
+											).length === 1
+									) {
+										registration_language = $(this)
+											.closest("form")
+											.find(
+												'input[name="ur-registration-language"]'
+											)
+											.val();
+									}
 
 									if (
 										$(this)
@@ -1086,6 +1101,7 @@
 										form_data: form_data,
 										captchaResponse: captchaResponse,
 										form_id: form_id,
+										registration_language: registration_language,
 										ur_frontend_form_nonce: form_nonce
 									};
 

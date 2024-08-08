@@ -325,7 +325,10 @@ do_action( 'user_registration_before_registration_form', $form_id );
 				<div style="clear:both"></div>
 				<?php if ( $enable_field_icon ) { ?>
 				<input type="hidden" id="ur-form-field-icon" name="ur-field-icon" value="<?php echo esc_attr( $enable_field_icon ); ?>"/>
-				<?php } ?>
+				<?php }
+				$current_language = ur_get_current_language();
+				?>
+				<input type="hidden" name="ur-registration-language" value="<?php echo esc_attr( $current_language ); ?>"/>
 				<input type="hidden" name="ur-user-form-id" value="<?php echo absint( $form_id ); ?>"/>
 				<input type="hidden" name="ur-redirect-url" value="<?php echo esc_url( ur_string_translation( $form_id, 'user_registration_form_setting_redirect_options', $redirect_url ) ); ?>"/>
 				<?php wp_nonce_field( 'ur_frontend_form_id-' . $form_id, 'ur_frontend_form_nonce', false ); ?>
