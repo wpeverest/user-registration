@@ -7338,7 +7338,7 @@ body {
     border-top: 1px solid #e1e1e1;
     padding: 16px;
     border-radius: 0 0 13px 13px;
-    justify-content: flex-start;
+    justify-content: center;
     flex-direction: row-reverse;
     gap: 12px; }
     .user-registration .swal2-container .swal2-popup .swal2-actions .swal2-confirm {

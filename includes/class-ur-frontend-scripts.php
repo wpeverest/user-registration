@@ -455,17 +455,18 @@ class UR_Frontend_Scripts {
 					'message_confirm_number_field_min'  => esc_html__( 'Please enter a value greater than or equal to %qty%.', 'user-registration' ),
 					'message_confirm_number_field_step' => esc_html__( 'Please enter a multiple of %qty%.', 'user-registration' ),
 					'ursL10n'                           => array(
-						'user_successfully_saved' => get_option( 'user_registration_successful_form_submission_message_manual_registation', esc_html__( 'User successfully registered.', 'user-registration' ) ),
-						'user_under_approval'     => get_option( 'user_registration_successful_form_submission_message_admin_approval', esc_html__( 'User registered. Wait until admin approves your registration.', 'user-registration' ) ),
-						'user_email_pending'      => get_option( 'user_registration_successful_form_submission_message_email_confirmation', esc_html__( 'User registered. Verify your email by clicking on the link sent to your email.', 'user-registration' ) ),
-						'captcha_error'           => get_option( 'user_registration_form_submission_error_message_recaptcha', esc_html__( 'Captcha code error, please try again.', 'user-registration' ) ),
-						'hide_password_title'     => esc_html__( 'Hide Password', 'user-registration' ),
-						'show_password_title'     => esc_html__( 'Show Password', 'user-registration' ),
+						'user_successfully_saved'     => get_option( 'user_registration_successful_form_submission_message_manual_registation', esc_html__( 'User successfully registered.', 'user-registration' ) ),
+						'user_under_approval'         => get_option( 'user_registration_successful_form_submission_message_admin_approval', esc_html__( 'User registered. Wait until admin approves your registration.', 'user-registration' ) ),
+						'user_email_pending'          => get_option( 'user_registration_successful_form_submission_message_email_confirmation', esc_html__( 'User registered. Verify your email by clicking on the link sent to your email.', 'user-registration' ) ),
+						'captcha_error'               => get_option( 'user_registration_form_submission_error_message_recaptcha', esc_html__( 'Captcha code error, please try again.', 'user-registration' ) ),
+						'hide_password_title'         => esc_html__( 'Hide Password', 'user-registration' ),
+						'show_password_title'         => esc_html__( 'Show Password', 'user-registration' ),
 						'i18n_total_field_value_zero' => esc_html__( 'Total field value should be greater than zero.', 'user-registration' ),
-						'i18n_discount_total_zero' => esc_html__('Discounted amount cannot be less than or equals to Zero. Please adjust your coupon code.', 'user-registration' ),
-						'password_strength_error' => esc_html__( 'Password strength is not strong enough', 'user-registration' ),
+						'i18n_discount_total_zero'    => esc_html__( 'Discounted amount cannot be less than or equals to Zero. Please adjust your coupon code.', 'user-registration' ),
+						'password_strength_error'     => esc_html__( 'Password strength is not strong enough', 'user-registration' ),
 					),
 					'is_payment_compatible'             => true,
+					'ajax_form_submit_error'            => esc_html__( 'Something went wrong while submitting form through AJAX request. Please contact site administrator.', 'user-registration' ),
 				);
 			break;
 
@@ -501,6 +502,7 @@ class UR_Frontend_Scripts {
 					'ur_login_form_save_nonce'    => wp_create_nonce( 'ur_login_form_save_nonce' ),
 					'ajax_submission_on_ur_login' => ur_option_checked( 'ur_login_ajax_submission', false ),
 					'recaptcha_type'              => get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' ),
+					'ajax_form_submit_error'      => esc_html__( 'Something went wrong while submitting form through AJAX request. Please contact site administrator.', 'user-registration' ),
 				);
 					break;
 		}

@@ -364,6 +364,9 @@ class UR_Admin_Assets {
 				'user_registration_weak_password_info'   => esc_html__( 'Minimum one uppercase letter and must be 4 characters and no repetitive words or common words', 'user-registration' ),
 				'user_registration_medium_password_info' => esc_html__( 'Minimum one uppercase letter, a number, must be 7 characters and no repetitive words or common words', 'user-registration' ),
 				'user_registration_strong_password_info' => esc_html__( 'Minimum one uppercase letter, a number, a special character, must be 9 characters and no repetitive words or common words', 'user-registration' ),
+				'ajax_form_submit_error_title'           => esc_html__( 'Form could not be saved', 'user-registration' ),
+				'ajax_form_submit_error'                 => esc_html__( 'Something went wrong while saving form through AJAX request.', 'user-registration' ),
+				'ajax_form_submit_troubleshooting_link'  => esc_url_raw( 'https://docs.wpuserregistration.com/docs/how-to-check-plugin-theme-conflict/' ),
 			);
 
 			wp_localize_script(
@@ -559,8 +562,8 @@ class UR_Admin_Assets {
 			'i18n_error'                                  => _x( 'Error', 'user registration admin', 'user-registration' ),
 			'i18n_msg_delete'                             => esc_html__( 'Confirm Deletion', 'user-registration' ),
 			'i18n_at_least_one_field_need_to_select'      => _x( 'At least one field needs to be selected.', 'user registration admin', 'user-registration' ),
-			'i18n_total_required_on_coupon'      		  => _x( 'Total field is required with coupon.', 'user registration admin', 'user-registration' ),
-			'i18n_no_stripe_for_coupon'      		  	  => _x( 'Recurring subscription with Stripe gateway is not currently available for coupon field.', 'user registration admin', 'user-registration' ),
+			'i18n_total_required_on_coupon'               => _x( 'Total field is required with coupon.', 'user registration admin', 'user-registration' ),
+			'i18n_no_stripe_for_coupon'                   => _x( 'Recurring subscription with Stripe gateway is not currently available for coupon field.', 'user registration admin', 'user-registration' ),
 			'i18n_empty_form_name'                        => _x( 'Empty form name.', 'user registration admin', 'user-registration' ),
 			'i18n_previous_save_action_ongoing'           => _x( 'Previous save action on going.', 'user registration admin', 'user-registration' ),
 			'i18n_duplicate_field_name'                   => _x( 'Duplicate field name.', 'user registration admin', 'user-registration' ),
