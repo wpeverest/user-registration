@@ -223,7 +223,7 @@ class UR_Getting_Started {
 				'settings' => array(
 					array(
 						'title'   => __( 'Enable Strong Password', 'user-registration' ),
-						'desc'    => __( 'Make strong password compulsary.', 'user-registration' ),
+						'desc'    => __( 'Enforce strong password.', 'user-registration' ),
 						'id'      => 'user_registration_form_setting_enable_strong_password',
 						'type'    => 'checkbox',
 						'default' => 'no',
@@ -256,7 +256,7 @@ class UR_Getting_Started {
 				'settings' => array(
 					array(
 						'title'   => __( 'My Account Page Layout', 'user-registration' ),
-						'desc'    => __( 'This option lets you choose layout for user registration my account tab.', 'user-registration' ),
+						'desc'    => __( 'Select account page layout.', 'user-registration' ),
 						'id'      => 'user_registration_my_account_layout',
 						'type'    => 'radio',
 						'default' => 0,
