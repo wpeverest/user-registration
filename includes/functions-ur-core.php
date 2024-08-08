@@ -5827,3 +5827,117 @@ if ( ! function_exists( 'ur_current_url' ) ) {
 		return esc_url_raw( $url );
 	}
 }
+
+add_action( 'user_registration_custom_notices', 'ur_spam_users_detected' );
+
+if ( ! function_exists( 'ur_spam_users_detected' ) ) {
+
+	/**
+	 * Display spam users registered notice if spam users count exceeds 20 in past hour.
+	 *
+	 * @param array $notices Custom Notices.
+	 */
+	function ur_spam_users_detected( $notices ) {
+		$spam_users_count = get_transient( 'ur_spam_users_detected_count' );
+
+		if ( ! $spam_users_count ) {
+			return $notices;
+		}
+
+		$custom_notice = array(
+			array(
+				'id'                    => 'ur_spam_users_detected',
+				'type'                  => 'info',
+				'status'                => 'active',
+				'priority'              => '1',
+				'title'                 => __( 'Unusual User Registrations Detected', 'user-registration' ),
+				'message_content'       => wp_kses_post(
+					sprintf(
+						'<p>%s</p><p>%s</p><br/>',
+						__( 'A significant number of users have registered on your site from sources other than the User Registration plugin\'s form.', 'user-registration' ),
+						__( 'These registrations may be suspicious. Please review and disable any other methods that allow user registrations if they are not intended. Additionally, consider enabling spam protection measures in the User Registration plugin to safeguard your site.', 'user-registration' ),
+					)
+				),
+				'buttons'               => array(
+					array(
+						'title'  => __( 'It was a false alarm', 'user-registration' ),
+						'icon'   => 'dashicons-no-alt',
+						'link'   => 'https://wpuserregistration.com/support',
+						'class'  => 'notice-dismiss notice-dismiss-permanently',
+						'target' => '_blank',
+					),
+					array(
+						'title'  => __( 'I have a query', 'user-registration' ),
+						'icon'   => 'dashicons-testimonial',
+						'link'   => 'https://wpuserregistration.com/support',
+						'class'  => 'button-secondary notice-have-query',
+						'target' => '_blank',
+					),
+					array(
+						'title'  => __( 'Visit Documentation', 'user-registration' ),
+						'icon'   => 'dashicons-media-document',
+						'link'   => 'https://docs.wpuserregistration.com/docs/how-to-integrate-google-recaptcha/',
+						'class'  => 'button-secondary',
+						'target' => '_blank',
+					),
+				),
+				'permanent_dismiss'     => true,
+				'reopen_days'           => '1',
+				'reopen_times'          => '1',
+				'conditions_to_display' => array(
+					array(
+						'operator'    => 'AND',
+						'show_notice' => $spam_users_count > 20 ? true : false,
+					),
+				),
+			),
+		);
+
+		$notices = array_merge( $notices, $custom_notice );
+
+		return $custom_notice;
+	}
+}
+
+add_action( 'admin_init', 'user_registration_spam_users_detector' );
+
+if ( ! function_exists( 'user_registration_spam_users_detector' ) ) {
+
+	/**
+	 * Count numbers of spams registered in previous hour.
+	 */
+	function user_registration_spam_users_detector() {
+		global $wpdb;
+		$activation_date   = get_option( 'user_registration_activated' );
+		$current_timestamp = time();
+
+		$spam_notice_dismissed = get_option( 'user_registration_info_ur_spam_users_detected_notice_dismissed_temporarily', false );
+		$spam_notice_dismissed = ! $spam_notice_dismissed ? get_option( 'user_registration_ur_spam_users_detected_notice_dismissed', false ) : $spam_notice_dismissed;
+
+		if ( $current_timestamp - strtotime( $activation_date ) > 86400 && ! $spam_notice_dismissed ) {
+			$spam_count = get_transient( 'ur_spam_users_detected_count' );
+
+			if ( ! $spam_count ) {
+
+				$current_hour_time_gmt   = gmdate( 'Y-m-d H:i:s', $current_timestamp );
+				$previous_hour_timestamp = $current_timestamp - 3600;
+				$previous_hour_time_gmt  = gmdate( 'Y-m-d H:i:s', $previous_hour_timestamp );
+
+				$results = $wpdb->get_results(
+					$wpdb->prepare(
+						"SELECT u.ID
+						FROM {$wpdb->users} u
+						LEFT JOIN {$wpdb->usermeta} um ON u.ID = um.user_id AND um.meta_key = 'ur_form_id'
+						WHERE um.user_id IS NULL
+						AND u.user_registered BETWEEN %s AND %s",
+						$previous_hour_time_gmt,
+						$current_hour_time_gmt
+					)
+				);
+
+				$total_users = count( $results );
+				set_transient( 'ur_spam_users_detected_count', $total_users, HOUR_IN_SECONDS );
+			}
+		}
+	}
+}
