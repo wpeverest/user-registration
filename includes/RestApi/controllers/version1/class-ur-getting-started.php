@@ -165,10 +165,11 @@ class UR_Getting_Started {
 
 		return new \WP_REST_Response(
 			array(
-				'success'         => true,
-				'page_slug'       => $page_slug,
-				'default_form_id' => $default_form_page_id,
-				'is_pro'          => $is_pro,
+				'success'                => true,
+				'page_slug'              => $page_slug,
+				'default_form_id'        => $default_form_page_id,
+				'is_pro'                 => $is_pro,
+				'registration_page_link' => get_permalink( $default_form_page_id ),
 			),
 			200
 		);

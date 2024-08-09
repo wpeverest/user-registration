@@ -37,10 +37,10 @@ function App() {
 		adminURL,
 		siteURL,
 		defaultFormURL,
-		newFormURL,
 		urRestApiNonce,
 		onBoardIconsURL,
-		restURL
+		restURL,
+		registrationPageLink
 	} = typeof _UR_WIZARD_ !== "undefined" && _UR_WIZARD_;
 
 	const [steps, setSteps] = useState([
@@ -206,6 +206,13 @@ function App() {
 					});
 				}
 
+				if (res.registration_page_link) {
+					dispatch({
+						type: actionTypes.GET_DEFAULT_REGISTRATION_PAGE,
+						registrationPageLink: res.registration_page_link
+					});
+				}
+
 				if (res.is_pro) {
 					dispatch({
 						type: actionTypes.GET_IS_PRO,
@@ -342,7 +349,7 @@ function App() {
 							colorScheme="gray"
 							onClick={() => {
 								setDisabledLink(true);
-								handleSaveSettings(defaultFormURL);
+								handleSaveSettings(registrationPageLink);
 							}}
 							disabled={disabledLink}
 							style={{
@@ -351,7 +358,7 @@ function App() {
 								border: "1px solid #999999"
 							}}
 						>
-							{__("Edit Default Form", "user-registration")}
+							{__("View Registration Page", "user-registration")}
 						</Button>
 					) : steps[0].key !== activeStep.key ? (
 						<Button
@@ -377,11 +384,11 @@ function App() {
 							color="#FAFAFA !important"
 							onClick={() => {
 								setDisabledLink(true);
-								handleSaveSettings(newFormURL);
+								handleSaveSettings(defaultFormURL);
 							}}
 							disabled={disabledLink}
 						>
-							{__("Create New Form", "user-registration")}
+							{__("Edit Default Form", "user-registration")}
 						</Button>
 					) : (
 						<React.Fragment>
