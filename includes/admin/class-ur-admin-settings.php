@@ -128,7 +128,7 @@ class UR_Admin_Settings {
 
 			self::add_error(
 				esc_html__(
-					'Your settings has not been saved.The selected page for "Redirect Default WordPress Login To" is not an login page. Please select an valid login page.',
+					'Your settings has not been saved.The selected page for "Redirect Default WordPress Login To" is not a login page. Please select a valid login page.',
 					'user-registration'
 				)
 			);
