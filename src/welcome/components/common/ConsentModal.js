@@ -36,13 +36,23 @@ const ConsentModal = (openPopup) => {
 				<ModalHeader>Contribute to the enhancement</ModalHeader>
 				<ModalBody>
 					<Text fontSize="16px">
-						{sprintf(
-							__(
-								"Help us improve the plugin's features by sharing <a target='_blank' style='color: #475BB2' href='%s' >non-sensitive plugin data</a> %s with us",
+						<Text fontSize="16px">
+							{__(
+								"Help us improve the plugin's features by sharing",
 								"user-registration"
-							),
-							"https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title"
-						)}
+							)}{" "}
+							<Link
+								href="https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title"
+								isExternal
+								color="#475BB2"
+							>
+								{__(
+									"non-sensitive plugin data",
+									"user-registration"
+								)}{" "}
+							</Link>
+							{__("with us.", "user-registration")}
+						</Text>
 					</Text>
 				</ModalBody>
 
