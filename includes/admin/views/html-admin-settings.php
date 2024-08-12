@@ -169,8 +169,8 @@ $is_quick_setup_sidebar_class   = $is_quick_setup_sidebar_enabled ? 'user-regist
 				?>
 			<div class="user-registration-settings-sidebar <?php echo esc_attr( $is_quick_setup_sidebar_class ); ?>" id="user-registration-settings-sidebar">
 				<?php
-				$content = '<h3>Quick Setup Tab</h3>
-							<p>Follow these steps to start registering users on your website.</p>
+				$content = '<h3>' . esc_html( 'Quick Setup Tab', 'user-registration' ) . '</h3>
+							<p>' . esc_html( 'Follow these steps to start registering users on your website.', 'user-registration' ) . '</p>
 							<br />
 							<ul class="user-registration-quick-setup-tab-list">';
 
@@ -180,7 +180,7 @@ $is_quick_setup_sidebar_class   = $is_quick_setup_sidebar_enabled ? 'user-regist
 					}
 				}
 
-				$content .= '</ul><p>Thank you for choosing User Registration 😊</p>';
+				$content .= '</ul><p>' . esc_html( 'Thank you for choosing User Registration 😊', 'user-registration' ) . '</p>';
 				echo wp_kses_post( $content );
 				?>
 			</div>
