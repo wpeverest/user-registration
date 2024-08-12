@@ -3859,18 +3859,34 @@
 			 &--top {
 				 display: flex;
 				 align-items: center;
+				 justify-content: space-between;
 
-				 h3 {
-					 margin: 0;
-					 font-weight: $semi_bold;
-					 font-size: 26px;
-					 line-height: 120%;
-					 color: $grey-800;
+				 &__left {
+					 h3 {
+						 margin: 0;
+						 font-weight: $semi_bold;
+						 font-size: 26px;
+						 line-height: 120%;
+						 color: $grey-800;
+					 }
 				 }
 
-				 p.submit {
-					 display: none;
-					 margin-top: 0;
+				 &__right {
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					gap: 10px;
+
+					.user-registration-toggle-form {
+						height: unset !important;
+					}
+
+					span.user-registration-toggle-text {
+						font-size: 16px;
+						line-height: 24px;
+						color: #383838;
+						font-weight: 500;
+					}
 				 }
 			 }
 
@@ -5860,4 +5876,8 @@
 			}
 		}
 	}
+}
+
+.user-registration-hidden {
+	display: none;
 }

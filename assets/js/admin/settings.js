@@ -47,7 +47,7 @@
 					.css({ backgroundColor: ui.color.toString() });
 			},
 			hide: true,
-			border: true,
+			border: true
 		})
 		.on("click", function () {
 			$(".iris-picker").hide();
@@ -485,7 +485,7 @@
 								{
 									sitekey: ur_recaptcha_code.site_key,
 									theme: "light",
-									style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
+									style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"
 								}
 							);
 
@@ -515,7 +515,7 @@
 							try {
 								grecaptcha
 									.execute(ur_recaptcha_code.site_key, {
-										action: "click",
+										action: "click"
 									})
 									.then(function (d) {
 										display_captcha_test_status(
@@ -540,7 +540,7 @@
 								{
 									sitekey: ur_recaptcha_code.site_key,
 									theme: "light",
-									style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
+									style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"
 								}
 							);
 							break;
@@ -555,7 +555,7 @@
 									{
 										sitekey: ur_recaptcha_code.site_key,
 										theme: ur_recaptcha_code.theme_mode,
-										style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
+										style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"
 									}
 								);
 
@@ -647,11 +647,11 @@
 		var image = wp
 			.media({
 				library: {
-					type: ["image"],
+					type: ["image"]
 				},
 				title: ur_uploader.upload_file,
 				// multiple: true if you want to upload multiple files at once
-				multiple: false,
+				multiple: false
 			})
 			.open()
 			.on("select", function (e) {
@@ -740,11 +740,11 @@
 						response(results);
 					}
 					$(".user-registration-search-icon").show();
-				},
+				}
 			});
 		},
 		classes: {
-			"ui-autocomplete": "user-registration-ui-autocomplete",
+			"ui-autocomplete": "user-registration-ui-autocomplete"
 		},
 		minLength: 3, // Minimum characters required to trigger autocomplete
 		focus: function (event, ui) {
@@ -763,7 +763,7 @@
 				window.location.href = ui.item.value;
 			}
 			return false; // Prevent the default behavior of the widget
-		},
+		}
 	});
 
 	// Set localStorage with expiry
@@ -772,7 +772,7 @@
 
 		var data = {
 			value: value,
-			expiry: current.getTime() + 86400000, // 1day of expiry time
+			expiry: current.getTime() + 86400000 // 1day of expiry time
 		};
 
 		localStorage.setItem(key, JSON.stringify(data));
@@ -866,7 +866,7 @@
 		var offset = $(".ur-searched-settings-focus").offset().top;
 		window.scrollTo({
 			top: offset - 300,
-			behavior: "smooth",
+			behavior: "smooth"
 		});
 		setTimeout(function () {
 			wrapper_div.removeClass("ur-searched-settings-focus");
@@ -909,4 +909,81 @@
 				$(this).find("input").prop("checked", true);
 			});
 		});
+
+	// Function to handle changes in the premium sidebar.
+	$(document).ready(function () {
+		function handleSettingsSidebar() {
+			var isCheckboxChecked = $(
+				"#user_registration_hide_show_sidebar"
+			).is(":checked");
+
+			localStorage.setItem("isSidebarEnabled", isCheckboxChecked);
+			document.cookie =
+				"isSidebarEnabled=" + isCheckboxChecked + "; path=/;";
+			if (isCheckboxChecked) {
+				$("#user-registration-settings-sidebar").addClass(
+					"user-registration-hidden"
+				);
+			} else {
+				$("#user-registration-settings-sidebar").removeClass(
+					"user-registration-hidden"
+				);
+			}
+		}
+
+		var isSidebarEnabled =
+			localStorage.getItem("isSidebarEnabled") === "true";
+
+		$("#user_registration_hide_show_sidebar").prop(
+			"checked",
+			isSidebarEnabled
+		);
+
+		if (isSidebarEnabled) {
+			$("#user-registration-settings-sidebar").addClass(
+				"user-registration-hidden"
+			);
+			$(".user-registration-toggle-text").text("Show Sidebar");
+		} else {
+			$("#user-registration-settings-sidebar").removeClass(
+				"user-registration-hidden"
+			);
+			$(".user-registration-toggle-text").text("Hide Sidebar");
+		}
+		handleSettingsSidebar();
+
+		$(document).on(
+			"change",
+			"#user_registration_hide_show_sidebar",
+			function (e) {
+				handleSettingsSidebar();
+			}
+		);
+
+		disableFormChangeModal();
+	});
+
+	/**
+	 * Disable leave page before saving changes modal when hid/show sidebar is clicked.
+	 */
+	function disableFormChangeModal() {
+		const form = $(".user-registration").find("form")[0];
+
+		var formChanged = false;
+
+		$(form).on("change", function (event) {
+			if (event.target.name !== "user_registration_enable_sidebar") {
+				formChanged = true;
+			}
+		});
+
+		$(window).on("beforeunload", function (event) {
+			if (formChanged) {
+				event.preventDefault();
+				event.returnValue = "";
+			} else {
+				event.stopImmediatePropagation();
+			}
+		});
+	}
 })(jQuery);
