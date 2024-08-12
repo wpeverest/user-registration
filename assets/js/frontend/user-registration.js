@@ -2563,9 +2563,13 @@ function customPasswordChecks(password) {
 		return 0;
 	}
 
-	for (var letter of password) {
+
+	for (var i = 0; i < password.length; i++) {
+		var letter = password[i];
 		// Check if the character is uppercase
 		if (/[A-Z]/.test(letter)) {
+			uppercaseCount++;
+			uppercaseCount++;
 			uppercaseCount ++;
 		}
 

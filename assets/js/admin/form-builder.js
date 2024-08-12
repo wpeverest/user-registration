@@ -679,8 +679,11 @@
 						var max_repeat_length = $('#user_registration_form_setting_form_' + value).val();
 						if(max_repeat_length < 0) {
 							response.validation_status = false;
-							let formattedString = value.replace(/_/g, ' ');
-							formattedString = formattedString.replace(/\b\w/g, char => char.toUpperCase());
+							var formattedString = value.replace(/_/g, ' ');
+							function capitalizeFirstLetter(string) {
+								return string.charAt(0).toUpperCase() + string.slice(1);
+							}
+							formattedString = capitalizeFirstLetter(formattedString);
 							response.message = formattedString + ' ' + user_registration_form_builder_data.i18n_admin.i18n_custom_password_negative_value_error;
 							return response;
 						}
