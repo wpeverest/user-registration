@@ -540,17 +540,18 @@ class UR_Frontend_Scripts {
 			return '';
 		}
 		$custom_params = array(
-			'minimum_uppercase'     => esc_html__(ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_uppercase' )),
-			'minimum_digits'        => esc_html__(ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_digits' )),
-			'minimum_special_chars' => esc_html__(ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_special_chars' )),
-			'minimum_pass_length'   => esc_html__(ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_pass_length' )),
+			'minimum_uppercase'     => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_uppercase' ),
+			'minimum_digits'        => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_digits' ),
+			'minimum_special_chars' => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_special_chars' ),
+			'minimum_pass_length'   => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_pass_length' ),
 			'no_rep_chars'          => ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_no_repeat_chars' ) ),
-			'max_rep_chars'         => esc_html__(ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_max_char_repeat_length' )),
+			'max_rep_chars'         => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_max_char_repeat_length' ),
 		);
 		$add_prefix    = true;
 		$hint          = 'The password must have minimum length of ' . $custom_params['minimum_pass_length'] . ' characters';
 		if ( $custom_params['minimum_uppercase'] > 0 ) {
-			$hint .= ( $add_prefix ? ' and contain at-least ' : '' ) . $custom_params['minimum_uppercase'] . ' uppercase ';
+			$hint .= ' and contain at-least '. $custom_params['minimum_uppercase'] . ' uppercase ';
+			$add_prefix    = false;
 		}
 		if ( $custom_params['minimum_digits'] > 0 ) {
 			$hint       .= ( $add_prefix ? ' and contain at-least ' : '' ) . $custom_params['minimum_uppercase'] . ' number ';
