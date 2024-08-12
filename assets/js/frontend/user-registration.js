@@ -2565,16 +2565,16 @@ function customPasswordChecks(password) {
 
 
 	for (var i = 0; i < password.length; i++) {
-		var letter = password[i].toLowerCase();
+		var letter = password[i];
 		// Check if the character is uppercase
 		if (/[A-Z]/.test(letter)) {
-			uppercaseCount++;
-			uppercaseCount++;
 			uppercaseCount ++;
 		}
-
+		letter = letter.toLowerCase();
 		// Check if the character is a digit
 		if (/\d/.test(letter)) {
+
+
 			digitCount++;
 		}
 
@@ -2587,6 +2587,7 @@ function customPasswordChecks(password) {
 		if (canRepeatChars && letter === lastChar) {
 			repeatCount++;
 			if (repeatCount >= maxRepeatChars) {
+
 				return 0;
 			}
 		} else {
@@ -2603,6 +2604,7 @@ function customPasswordChecks(password) {
 		return 0;
 	}
 	if (minimumDigitsCount > 0 && digitCount < minimumDigitsCount) {
+
 		return 0;
 	}
 	return 4;

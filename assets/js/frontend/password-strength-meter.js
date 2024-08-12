@@ -133,7 +133,6 @@ jQuery(function ($) {
 				.attr("data-current-strength", strength);
 			switch (strength) {
 				case 0:
-					console.log('check')
 					meter.addClass("short").html(pwsL10n.shortpw);
 					break;
 				case 1:
