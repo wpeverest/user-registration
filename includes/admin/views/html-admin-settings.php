@@ -18,9 +18,8 @@ $collapse_by_default = isset( $_GET['tab'] ) && ( strpos( $_GET['tab'], 'user-re
  */
 $user_registration_settings_form_method_tab = apply_filters( 'user_registration_settings_form_method_tab_' . $current_tab, 'post' );
 
-$setup_tab_lists       = ur_quick_settings_tab_content();
-$quick_setup_completed = get_option( 'user_registration_quick_setup_completed', false );
-
+$setup_tab_lists                = ur_quick_settings_tab_content();
+$quick_setup_completed          = get_option( 'user_registration_quick_setup_completed', false );
 $is_quick_setup_sidebar_enabled = $quick_setup_completed ? true : ( isset( $_COOKIE['isSidebarEnabled'] ) ? sanitize_text_field( wp_unslash( $_COOKIE['isSidebarEnabled'] ) ) : '' );
 $is_quick_setup_sidebar_class   = $is_quick_setup_sidebar_enabled ? 'user-registration-hidden' : '';
 

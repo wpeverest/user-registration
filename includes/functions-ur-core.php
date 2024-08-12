@@ -5859,6 +5859,12 @@ if ( ! function_exists( 'ur_quick_settings_tab_content' ) ) {
 			$onboarding_completed = false;
 		}
 
+		$create_pages_button       = '';
+		$registration_form_page_id = false;
+		if ( ! $registration_form_page_id ) {
+			$create_pages_button = sprintf( __( '<a href="%s">Create Pages</a>', 'user-registration' ), esc_url( add_query_arg( 'install_user_registration_pages', 'true', admin_url( 'admin.php?page=user-registration-settings' ) ) ) );
+		}
+
 		$lists = array(
 			array(
 				'text'      => $onboarding_complete_text,
@@ -5869,7 +5875,7 @@ if ( ! function_exists( 'ur_quick_settings_tab_content' ) ) {
 				'completed' => $default_form_page_id ? true : false,
 			),
 			array(
-				'text'      => esc_html__( 'Create registration and my account page.', 'user-registration' ),
+				'text'      => esc_html__( 'Create registration and my account page.', 'user-registration' ) . ( ! $registration_form_page_id ? $create_pages_button : '' ),
 				'completed' => $registration_form_page_id ? true : false,
 			),
 			array(
