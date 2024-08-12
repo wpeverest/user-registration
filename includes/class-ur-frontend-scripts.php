@@ -540,12 +540,12 @@ class UR_Frontend_Scripts {
 			return '';
 		}
 		$custom_params = array(
-			'minimum_uppercase'     => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_uppercase' ),
-			'minimum_digits'        => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_digits' ),
-			'minimum_special_chars' => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_special_chars' ),
+			'minimum_uppercase'     => absint(ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_uppercase' )),
+			'minimum_digits'        => absint(ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_digits' )),
+			'minimum_special_chars' => absint(ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_special_chars' )),
 			'minimum_pass_length'   => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_pass_length' ),
 			'no_rep_chars'          => ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_no_repeat_chars' ) ),
-			'max_rep_chars'         => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_max_char_repeat_length' ),
+			'max_rep_chars'         => absint(ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_max_char_repeat_length' )),
 		);
 		$add_prefix    = true;
 		$hint          = 'The password must have minimum length of ' . $custom_params['minimum_pass_length'] . ' characters';
@@ -562,7 +562,7 @@ class UR_Frontend_Scripts {
 		};
 
 		if ( $custom_params['no_rep_chars'] ) {
-			$hint .= ' and should not have any repetitive characters';
+			$hint .= ' and should only have '.$custom_params['max_rep_chars'].' repetitive characters at max';
 		}
 		$hint                  .= '.';
 		$custom_params['hint'] = esc_html__( $hint, 'user-registration' );
