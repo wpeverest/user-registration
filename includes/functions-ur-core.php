@@ -5841,10 +5841,28 @@ if ( ! function_exists( 'ur_quick_settings_tab_content' ) ) {
 		$anyone_can_register       = get_option( 'users_can_register', false );
 		$first_time_activation     = get_option( 'user_registration_first_time_activation_flag', false );
 
+		$onboarding_completed     = true;
+		$onboarding_complete_text = esc_html__( 'Setup wizard completed.', 'user-registration' );
+
+		if ( ! $first_time_activation ) {
+			$onboard_skipped      = get_option( 'user_registration_onboarding_skipped', false );
+			$onboard_skipped_step = get_option( 'user_registration_onboarding_skipped_step', false );
+
+			if ( $onboard_skipped && $onboard_skipped_step ) {
+				/* translators: %s: Continue wizard URL */
+				$onboarding_complete_text = sprintf( __( 'Setup wizard Skipped. <a href="%s">Continue Setup Wizard</a>', 'user-registration' ), esc_url( admin_url( '/admin.php?page=user-registration-welcome&tab=setup-wizard&step=' . $onboard_skipped_step . '' ) ) );
+				$onboarding_completed     = false;
+			} else {
+				$onboarding_completed = true;
+			}
+		} else {
+			$onboarding_completed = false;
+		}
+
 		$lists = array(
 			array(
-				'text'      => esc_html__( 'Setup wizard completed.', 'user-registration' ),
-				'completed' => ! $first_time_activation ? true : false,
+				'text'      => $onboarding_complete_text,
+				'completed' => $onboarding_completed,
 			),
 			array(
 				'text'      => esc_html__( 'Create a registration form.', 'user-registration' ),
@@ -5870,13 +5888,13 @@ if ( ! function_exists( 'ur_quick_settings_tab_content' ) ) {
 
 		$completed_count = 0;
 
-		foreach ($lists as $list ) {
-			if( isset( $list['completed'] ) && $list['completed'] ) {
-				$completed_count++;
+		foreach ( $lists as $list ) {
+			if ( isset( $list['completed'] ) && $list['completed'] ) {
+				++$completed_count;
 			}
 		}
 
-		if( $completed_count === count( $lists ) ) {
+		if ( $completed_count === count( $lists ) ) {
 			update_option( 'user_registration_quick_setup_completed', true );
 		}
 

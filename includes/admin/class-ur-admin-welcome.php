@@ -19,10 +19,11 @@ class UR_Admin_Welcome {
 	 * Hook in methods.
 	 */
 	public static function init() {
-		$wizard_ran = get_option( 'user_registration_first_time_activation_flag', false );
+		$wizard_ran      = get_option( 'user_registration_first_time_activation_flag', false );
+		$onboard_skipped = get_option( 'user_registration_onboarding_skipped', false );
 
 		// If Wizard was ran already or user is an old user of plugin, then do not proceed to Wizard page again.
-		if ( ! $wizard_ran ) {
+		if ( ! $wizard_ran && ! $onboard_skipped ) {
 			return;
 		}
 

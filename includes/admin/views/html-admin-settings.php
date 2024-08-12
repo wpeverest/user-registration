@@ -169,36 +169,19 @@ $is_quick_setup_sidebar_class   = $is_quick_setup_sidebar_enabled ? 'user-regist
 				?>
 			<div class="user-registration-settings-sidebar <?php echo esc_attr( $is_quick_setup_sidebar_class ); ?>" id="user-registration-settings-sidebar">
 				<?php
-				$allowed_html = array(
-					'a'   => array(
-						'href'   => array(),
-						'target' => array(),
-					),
-					'h2'  => array(),
-					'p'   => array(),
-					'h3'  => array(),
-					'ul'  => array(
-						'class' => array(),
-					),
-					'li'  => array(
-						'class' => array(),
-					),
-					'!--' => array(),
-					'br'  => array(),
-				);
-				$content      = '<h3>Quick Setup Tab</h3>
+				$content = '<h3>Quick Setup Tab</h3>
 							<p>Follow these steps to start registering users on your website.</p>
 							<br />
 							<ul class="user-registration-quick-setup-tab-list">';
 
 				foreach ( $setup_tab_lists as $list ) {
 					if ( isset( $list['text'] ) ) {
-						$content .= '<li class="' . esc_attr( ( isset( $list['completed'] ) && $list['completed'] ) ? 'completed' : '' ) . '">' . esc_html( $list['text'] ) . '</li>';
+						$content .= '<li class="' . esc_attr( ( isset( $list['completed'] ) && $list['completed'] ) ? 'completed' : '' ) . '">' . wp_kses_post( $list['text'] ) . '</li>';
 					}
 				}
 
 				$content .= '</ul><p>Thank you for choosing User Registration 😊</p>';
-				echo wp_kses( $content, $allowed_html );
+				echo wp_kses_post( $content );
 				?>
 			</div>
 				<?php
