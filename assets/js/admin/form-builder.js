@@ -974,6 +974,13 @@
 						break;
 					}
 				}
+				var login_options = $("#user_registration_form_setting_login_options").val();
+
+				if('sms_verification' === login_options ){
+					var phone_fields = ["phone_fields"];
+					required_fields = required_fields.concat(phone_fields);
+				}
+
 				var paypal = $("#user_registration_enable_paypal_standard");
 				var stripe = $("#user_registration_enable_stripe");
 				var anet = $("#user_registration_enable_authorize_net");
@@ -1004,7 +1011,28 @@
 					required_index < required_fields.length;
 					required_index++
 				) {
-					if (required_fields[required_index] === "payment_fields") {
+					if (required_fields[required_index] === "phone_fields") {
+						var phone = $(".ur-input-grids").find(
+							'.ur-field[data-field-key="phone"]'
+						).length;
+
+						if ( phone < 1 ) {
+							response.validation_status = false;
+
+							var field =
+								user_registration_form_builder_data.i18n_admin
+									.i18n_phone_field;
+
+							response.message =
+								field +
+								" " +
+								user_registration_form_builder_data.i18n_admin
+									.i18n_field_is_required;
+							break;
+						}else{
+							var phone_field = $('user_registration_form_setting_default_phone_field').val();
+						}
+					} else if (required_fields[required_index] === "payment_fields") {
 						var multiple_choice = $(".ur-input-grids").find(
 							'.ur-field[data-field-key="multiple_choice"]'
 						).length;
@@ -2856,6 +2884,13 @@
 																			field_name +
 																			'"]'
 																	).remove();
+
+																	// Remove Field from Form Setting Default Phone field for SMS Verification.
+																	$(
+																		'[id="user_registration_form_setting_default_phone_field"] option[value="' +
+																			field_name +
+																			'"]'
+																	).remove();
 																}
 															}
 														);
@@ -3267,6 +3302,12 @@
 															'"]'
 													).remove();
 
+													$(
+														'[id="user_registration_form_setting_default_phone_field"] option[value="' +
+														removed_item +
+															'"]'
+													).remove();
+
 													$(document.body).trigger(
 														"ur_field_removed",
 														[
@@ -3481,6 +3522,46 @@
 										field_label +
 										" </option>"
 								);
+							}
+
+
+							// Handle Drag Phone field option set for sms verification field list.
+							if('phone' === field_key){
+
+								if( 0 >= $('#user_registration_form_setting_default_phone_field').length ){
+									var html = '<div class="form-row ur-enhanced-select" id="user_registration_form_setting_default_phone_field_field" data-priority="">';
+									html += '<label for="user_registration_form_setting_default_phone_field" class="ur-label">'+user_registration_form_builder_data.i18n_admin.i18n_default_phone_field+'</label>';
+									html += '<select data-rules="" data-id="user_registration_form_setting_default_phone_field" name="user_registration_form_setting_default_phone_field" id="user_registration_form_setting_default_phone_field" class="select " data-allow_clear="true" data-placeholder="">';
+									html += '<option value="'+field_name+'">'+field_label+'</option>';
+									html += '</select></div>';
+									$("#user_registration_form_setting_login_options_field").after(html);
+
+									// 	Hide SMS Verification phone field mapping setting if not set to sms verification
+									if (
+										$("#user_registration_form_setting_login_options").val() ===
+											"sms_verification"
+									) {
+										$("#user_registration_form_setting_default_phone_field").parent()
+										.show();
+									} else {
+										$("#user_registration_form_setting_default_phone_field")
+											.parent()
+											.hide();
+									}
+								}else{
+									$(
+										'#user_registration_form_setting_default_phone_field option[value="' +
+										field_name +
+										'"]'
+									).remove();
+									$("#user_registration_form_setting_default_phone_field").append(
+										'<option value ="' +
+										field_name +
+										'">' +
+										field_label +
+										" </option>"
+									);
+								}
 							}
 						}
 					}
@@ -4720,6 +4801,13 @@
 						field_name +
 						'"]'
 				).text($label.val());
+
+				// Change label of field in Form Setting Default Phone field for SMS Verification.
+				$(
+					'[id="user_registration_form_setting_default_phone_field"] option[value="' +
+						field_name +
+						'"]'
+				).text($label.val());
 			},
 			/**
 			 * Reflects changes in field name field of field settings into selected field in form builder area.
@@ -4751,6 +4839,13 @@
 				// Change Field Name of field in Form Setting Conditionally Assign User Role.
 				$(
 					'[class*="urcl-field-conditional-field-select"] option[value="' +
+						old_field_name +
+						'"]'
+				).attr("value", $label.val());
+
+				// Change Field Name of field in Form Setting Default Phone field for SMS Verification.
+				$(
+					'[id="user_registration_form_setting_default_phone_field"] option[value="' +
 						old_field_name +
 						'"]'
 				).attr("value", $label.val());
