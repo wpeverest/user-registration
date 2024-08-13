@@ -1229,7 +1229,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 			),
 			array(
 				'type'              => 'toggle',
-				'label'             => __( 'No Repetitive letters', 'user-registration' ),
+				'label'             => __( 'Limit Repetitive letters', 'user-registration' ),
 				'description'       => '',
 				'required'          => false,
 				'id'                => 'user_registration_form_setting_no_repeat_chars',
@@ -1250,7 +1250,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'custom_attributes' => array(),
 				'min'               => '1',
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_max_char_repeat_length', '' ),
-				'tip'               => __( 'Set the Maximum repeat amount for characters in a password.', 'user-registration' ),
+				'tip'               => __( 'Set the Maximum repeat amount for letters in a password.', 'user-registration' ),
 			),
 			array(
 				'type'              => 'text',
