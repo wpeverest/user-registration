@@ -5838,9 +5838,11 @@ if ( ! function_exists( 'ur_spam_users_detected' ) ) {
 	 * @param array $notices Custom Notices.
 	 */
 	function ur_spam_users_detected( $notices ) {
-		$spam_users_count = get_transient( 'ur_spam_users_detected_count' );
+		$spam_users_count      = get_transient( 'ur_spam_users_detected_count' );
+		$spam_notice_dismissed = get_option( 'user_registration_info_ur_spam_users_detected_notice_dismissed_temporarily', false );
+		$spam_notice_dismissed = ! $spam_notice_dismissed ? get_option( 'user_registration_ur_spam_users_detected_notice_dismissed', false ) : $spam_notice_dismissed;
 
-		if ( ! $spam_users_count ) {
+		if ( ! $spam_users_count || $spam_notice_dismissed ) {
 			return $notices;
 		}
 
@@ -5862,9 +5864,9 @@ if ( ! function_exists( 'ur_spam_users_detected' ) ) {
 					array(
 						'title'  => __( 'It was a false alarm', 'user-registration' ),
 						'icon'   => 'dashicons-no-alt',
-						'link'   => 'https://wpuserregistration.com/support',
 						'class'  => 'notice-dismiss notice-dismiss-permanently',
-						'target' => '_blank',
+						'target' => '',
+						'link'   => '',
 					),
 					array(
 						'title'  => __( 'I have a query', 'user-registration' ),
