@@ -345,6 +345,8 @@ class UR_Admin_Assets {
 				'form_one_time_draggable_fields_locked_message' => esc_html__( '%field% field can be used only one time in the form.', 'user-registration' ),
 				'i18n_admin'                             => self::get_i18n_admin_data(),
 				'i18n_shortcut_key_title'                => esc_html__( 'Keyboard Shortcut Keys', 'user-registration' ),
+				'i18n_publish_form_button_text'          => esc_html__( 'Publish form', 'user-registration' ),
+				'i18n_update_form_button_text'           => esc_html__( 'Update form', 'user-registration' ),
 				'i18n_shortcut_keys'                     => array(
 					'Ctrl+S' => esc_html__( 'Save Builder', 'user-registration' ),
 					'Ctrl+W' => esc_html__( 'Close Builder', 'user-registration' ),
@@ -367,11 +369,13 @@ class UR_Admin_Assets {
 				'user_registration_weak_password_info'   => esc_html__( 'Minimum one uppercase letter and must be 4 characters and no repetitive words or common words', 'user-registration' ),
 				'user_registration_medium_password_info' => esc_html__( 'Minimum one uppercase letter, a number, must be 7 characters and no repetitive words or common words', 'user-registration' ),
 				'user_registration_strong_password_info' => esc_html__( 'Minimum one uppercase letter, a number, a special character, must be 9 characters and no repetitive words or common words', 'user-registration' ),
+				'ajax_form_submit_error_title'           => esc_html__( 'Form could not be saved', 'user-registration' ),
+				'ajax_form_submit_error'                 => esc_html__( 'Something went wrong while saving form through AJAX request.', 'user-registration' ),
+				'ajax_form_submit_troubleshooting_link'  => esc_url_raw( 'https://docs.wpuserregistration.com/docs/how-to-check-plugin-theme-conflict/' ),
 				'isPro'                                  => is_plugin_active( 'user-registration-pro/user-registration.php' ),
 				'ur_upgrade_plan_link'                   => esc_url( 'https://wpuserregistration.com/pricing/?utm_source=plugin&utm_medium=button&utm_campaign=ur-upgrade-to-pro' ),
 				'ur_remove_password_field_link'          => esc_url( 'https://docs.wpuserregistration.com/docs/remove-password-field/' ),
 				'ur_form_non_deletable_fields'           => ur_non_deletable_fields(),
-
 			);
 
 			wp_localize_script(
@@ -575,8 +579,8 @@ class UR_Admin_Assets {
 			'i18n_embed_lets_go_btn'                      => esc_html__( 'Lets Go!', 'user-registration' ),
 			'i18n_embed_new_page_description'             => esc_html__( 'What would you like to call the new page?', 'user-registration' ),
 			'i18n_at_least_one_field_need_to_select'      => _x( 'At least one field needs to be selected.', 'user registration admin', 'user-registration' ),
-			'i18n_total_required_on_coupon'      		  => _x( 'Total field is required with coupon.', 'user registration admin', 'user-registration' ),
-			'i18n_no_stripe_for_coupon'      		  	  => _x( 'Recurring subscription with Stripe gateway is not currently available for coupon field.', 'user registration admin', 'user-registration' ),
+			'i18n_total_required_on_coupon'               => _x( 'Total field is required with coupon.', 'user registration admin', 'user-registration' ),
+			'i18n_no_stripe_for_coupon'                   => _x( 'Recurring subscription with Stripe gateway is not currently available for coupon field.', 'user registration admin', 'user-registration' ),
 			'i18n_empty_form_name'                        => _x( 'Empty form name.', 'user registration admin', 'user-registration' ),
 			'i18n_previous_save_action_ongoing'           => _x( 'Previous save action on going.', 'user registration admin', 'user-registration' ),
 			'i18n_duplicate_field_name'                   => _x( 'Duplicate field name.', 'user registration admin', 'user-registration' ),

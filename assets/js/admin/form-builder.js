@@ -148,17 +148,26 @@
 					var urlParams = new URLSearchParams(queryString);
 					var urPage = urlParams.get("page");
 					var isEditPage = urlParams.get("edit-registration");
+					var formId = urlParams.get("form_id");
 					var isTemplatePage = $(".user-registration-setup").length;
 
 					var previousPage = document.referrer.split("page=")[1];
+					var formUpdated =
+						localStorage.getItem("formUpdated_" + isEditPage) ===
+						"true";
 
 					if (
 						"add-new-registration" === urPage &&
 						(null === isEditPage ||
 							(null !== isEditPage &&
-								"add-new-registration" === previousPage)) &&
-						0 === isTemplatePage
+								"add-new-registration" === previousPage &&
+								null !== formId)) &&
+						0 === isTemplatePage &&
+						!formUpdated
 					) {
+						$(".ur_save_form_action_button").text(
+							user_registration_form_builder_data.i18n_publish_form_button_text
+						);
 						URFormBuilder.ur_show_help();
 					}
 				});
@@ -554,7 +563,31 @@
 							var error = response.responseJSON.data.message;
 							URFormBuilder.show_message(error);
 						}
+						$(".ur_save_form_action_button").text(
+							user_registration_form_builder_data.i18n_update_form_button_text
+						);
+						localStorage.setItem("formUpdated_" + ur_form_id, true);
 					}
+				}).fail(function () {
+					Swal.fire({
+						icon: "error",
+						title: user_registration_form_builder_data.ajax_form_submit_error_title,
+						html:
+							"<br />" +
+							user_registration_form_builder_data.ajax_form_submit_error,
+						customClass:
+							"user-registration-swal2-modal user-registration-swal2-modal--center",
+						confirmButtonText: "Troubleshoot",
+						allowOutsideClick: false,
+						showCloseButton: true
+					}).then(function (result) {
+						if (result.isConfirmed) {
+							window.open(
+								user_registration_form_builder_data.ajax_form_submit_troubleshooting_link
+							);
+						}
+					});
+					return;
 				});
 			},
 			/**
@@ -2547,6 +2580,12 @@
 											]
 										);
 									}
+								}).fail(function () {
+									URFormBuilder.show_message(
+										user_registration_form_builder_data.ajax_form_submit_error_on_field_drag,
+										"error"
+									);
+									return;
 								});
 							}
 						};

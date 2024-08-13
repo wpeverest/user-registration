@@ -1724,6 +1724,19 @@
 												display: "none"
 											});
 										}
+									}).fail(function () {
+										form.show_message(
+											"<p>" +
+												user_registration_params.ajax_form_submit_error +
+												"</p>",
+											"error",
+											$this,
+											"1"
+										);
+										$this
+											.find(".ur-submit-button")
+											.prop("disabled", false);
+										return;
 									});
 								});
 						});
@@ -2207,6 +2220,21 @@
 											$(".user-registration").position()
 										);
 									}
+								}).fail(function () {
+									form.show_message(
+										"<p>" +
+											user_registration_params.ajax_form_submit_error +
+											"</p>",
+										"error",
+										$this,
+										"1"
+									);
+									$this
+										.find(
+											".user-registration-submit-Button"
+										)
+										.prop("disabled", false);
+									return;
 								});
 							});
 					}
