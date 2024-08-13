@@ -5945,7 +5945,7 @@ body.user-registration {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 20px;
-	padding-bottom: 25px;
+	padding-bottom: 10px;
 	justify-content: space-evenly;
 }
 .ur-embed-container {
@@ -5959,8 +5959,8 @@ body.user-registration {
 		font-size: 14px;
 	}
 	select {
-		margin-right: 20px;
-		width: 65%;
+		margin: opx 20px;
+		width: 90%;
 		border: 1px solid #eae2e2;
 	}
 }
@@ -5973,8 +5973,8 @@ body.user-registration {
 		font-size: 14px;
 	}
 	input {
-		margin-right: 20px;
-		width: 65%;
+		margin-right:0px 20px;
+		width: 90%;
 		border: 1px solid #eae2e2;
 	}
 }

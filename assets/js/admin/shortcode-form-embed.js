@@ -36,7 +36,7 @@ jQuery(document).ready(function($){
 
 	// The Gutenberg header can be loaded after the window load event.
 	// We have to wait until the Gutenberg heading is added to the DOM.
-	const closeAnchorListener = wp.data.subscribe( function() {
+	var closeAnchorListener = wp.data.subscribe( function() {
 
 		if ( ! $( anchor ).length ) {
 			return;

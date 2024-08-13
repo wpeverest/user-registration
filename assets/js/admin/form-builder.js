@@ -589,9 +589,9 @@
                     			cancelButtonText: user_registration_form_builder_data.i18n_admin.i18n_embed_to_new_page,
                     			showCloseButton: true,
 								customClass:
-									"user-registration-swal2-modal  user-registration user-registration-swal2-modal--center user-registrationswal2-icon-content-info swal2-show"
+									"user-registration-swal2-modal  user-registration user-registration-swal2-modal--center user-registrationswal2-icon-content-info user-registration-info swal2-show"
 
-               				 }).then((result) => {
+               				 }).then(function(result)  {
                     			var form_id = $(".ur-embed-form-button").attr('data-form_id');
 
                    				 if (result.isConfirmed) {
@@ -605,7 +605,7 @@
 
 							var select_start = '<div class="ur-embed-select-existing-page-container"><p>' + user_registration_form_builder_data.i18n_admin.i18n_embed_existing_page_description + '</p><select name="ur-embed-select-existing-page-name" id="ur-embed-select-existing-page-name">';
 							var option = '<option disabled selected>Select Page</option>';
-							response.data.forEach(page => {
+							response.data.forEach(function(page){
 								option += '<option data-id="' + page.ID + '" value="' + page.ID + '">' + page.post_title + '</option>';
 							});
 							var select_end = '</select>';
@@ -622,7 +622,7 @@
 								cancelButtonText: user_registration_form_builder_data.i18n_admin.i18n_embed_go_back_btn,
 								customClass:
 									"user-registration-swal2-modal  user-registration user-registration-swal2-modal--center user-registration-info swal2-show"
-							}).then((result) => {
+							}).then(function(result)  {
 								if(result.isDismissed){
 									showInitialAlert();
 								}else if(result.isConfirmed){
@@ -662,7 +662,7 @@
 								customClass:
 								"user-registration-swal2-modal  user-registration user-registration-swal2-modal--center user-registration-info swal2-show"
 
-							}).then((result) => {
+							}).then(function(result) {
 								if(result.isDismissed){
 									showInitialAlert();
 								}else if(result.isConfirmed){
