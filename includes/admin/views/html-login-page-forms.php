@@ -73,7 +73,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 										</div>
 										</div>
 										<div class="ur-login-view-doc">
-											<a href="<?php echo esc_url_raw( 'https://docs.wpuserregistration.com/docs/how-to-show-login-form/' ); ?>" target="_blank"><?php echo esc_html__( 'View Documentation For More Details', 'user-registration' ); ?></a>
+											<a href="<?php echo esc_url_raw( 'https://docs.wpuserregistration.com/docs/how-to-show-login-form/' ); ?>" rel="noreferrer noopener" target="_blank"><?php echo esc_html__( 'View Documentation For More Details', 'user-registration' ); ?></a>
 										</div>
 									</div>
 								</div>

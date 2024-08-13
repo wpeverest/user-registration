@@ -260,6 +260,13 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			include_once UR_ABSPATH . 'includes/admin/class-ur-config.php';
 
 			/**
+			 * Elementor classes.
+			 */
+			if ( class_exists( '\Elementor\Plugin' ) ) {
+				include_once UR_ABSPATH . 'includes/3rd-party/elementor/class-ur-elementor.php';
+			}
+
+			/**
 			 * Plugin/Addon Updater.
 			 */
 			include_once UR_ABSPATH . 'includes/class-ur-plugin-updater.php';
@@ -267,6 +274,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			if ( $this->is_request( 'admin' ) ) {
 				include_once UR_ABSPATH . 'includes/admin/class-ur-admin.php';
 				include_once UR_ABSPATH . 'includes/abstracts/abstract-ur-meta-boxes.php';
+				include_once UR_ABSPATH . 'includes/admin/class-ur-admin-embed-wizard.php';
 			}
 
 			if ( $this->is_request( 'frontend' ) ) {
