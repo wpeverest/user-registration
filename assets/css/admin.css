@@ -7777,6 +7777,10 @@ a.button.ur-smart-tags-list-button {
         color: #4CC741;
         border-color: #4CC741;
         background-color: #F5FFF4; }
+      .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row .ur-radio-group-list--item.custom:hover label, .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row .ur-radio-group-list--item.custom.active label {
+        color: #475bb3;
+        border-color: #475bb3;
+        background-color: #ebecf1; }
 
 #wpcontent .wp-heading-inline {
   font-weight: 600;
@@ -9074,3 +9078,19 @@ body.user-registration #wpbody-content {
   margin-right: 0px 20px;
   width: 90%;
   border: 1px solid #eae2e2; }
+
+@font-face {
+  font-family: 'UserRegistration';
+  src: url("../fonts/UserRegistration.eot?v5p6f");
+  src: url("../fonts/UserRegistration.eot?v5p6f#iefix") format("embedded-opentype"), url("../fonts/UserRegistration.ttf?v5p6f") format("truetype"), url("../fonts/UserRegistration.woff?v5p6f") format("woff"), url("../fonts/UserRegistration.svg?v5p6f#UserRegistration") format("svg");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block; }
+
+#elementor-editor-wrapper .ur-icon-user-registration:before,
+.elementor-edit-area .ur-icon-user-registration:before {
+  content: '\e031';
+  font-family: 'UserRegistration';
+  font-weight: normal;
+  font-style: normal;
+  font-display: block; }
