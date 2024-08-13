@@ -342,6 +342,8 @@ class UR_Admin_Assets {
 				'form_one_time_draggable_fields_locked_message' => esc_html__( '%field% field can be used only one time in the form.', 'user-registration' ),
 				'i18n_admin'                             => self::get_i18n_admin_data(),
 				'i18n_shortcut_key_title'                => esc_html__( 'Keyboard Shortcut Keys', 'user-registration' ),
+				'i18n_publish_form_button_text'          => esc_html__( 'Publish form', 'user-registration' ),
+				'i18n_update_form_button_text'           => esc_html__( 'Update form', 'user-registration' ),
 				'i18n_shortcut_keys'                     => array(
 					'Ctrl+S' => esc_html__( 'Save Builder', 'user-registration' ),
 					'Ctrl+W' => esc_html__( 'Close Builder', 'user-registration' ),
