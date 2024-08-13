@@ -3835,6 +3835,17 @@
 									 }
 								 }
 							 }
+
+							 &.custom {
+								 &:hover,
+								 &.active {
+									 label {
+										 color: #475bb3;
+										 border-color: #475bb3;
+										 background-color: #ebecf1;
+									 }
+								 }
+							 }
 						 }
 					 }
 				 }

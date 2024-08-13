@@ -841,6 +841,34 @@
 						user_registration_form_builder_data.i18n_admin.i18n_previous_save_action_ongoing;
 					return response;
 				}
+				if($('#user_registration_form_setting_minimum_password_strength_Custom').is(':checked')) {
+					var password_length = $('#user_registration_form_setting_form_minimum_pass_length').val();
+					if(password_length < 6) {
+						response.validation_status = false;
+						response.message = user_registration_form_builder_data.i18n_admin.i18n_min_custom_password_length_error;
+						return response;
+					}
+					var custom_fields = [
+						'minimum_uppercase',
+						'minimum_digits',
+						'minimum_special_chars',
+						'max_char_repeat_length'
+					];
+					custom_fields.forEach( function(value) {
+						var max_repeat_length = $('#user_registration_form_setting_form_' + value).val();
+						if(max_repeat_length < 0) {
+							response.validation_status = false;
+							var formattedString = value.replace(/_/g, ' ');
+							function capitalizeFirstLetter(string) {
+								return string.charAt(0).toUpperCase() + string.slice(1);
+							}
+							formattedString = capitalizeFirstLetter(formattedString);
+							response.message = formattedString + ' ' + user_registration_form_builder_data.i18n_admin.i18n_custom_password_negative_value_error;
+							return response;
+						}
+					});
+				}
+
 				$.each(
 					$(
 						".ur-selected-item select.ur-settings-selected-countries"
