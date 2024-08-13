@@ -1347,7 +1347,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 	 *
 	 * @param array $arguments An array of form settings.
 	 */
-	$arguments = apply_filters( 'user_registration_get_form_settings', $arguments );
+	$arguments                 = apply_filters( 'user_registration_get_form_settings', $arguments );
 	$arguments['setting_data'] = apply_filters( 'user_registration_settings_text_format', $arguments['setting_data'] );
 
 	return $arguments['setting_data'];
@@ -5828,25 +5828,26 @@ if ( ! function_exists( 'ur_current_url' ) ) {
 		return esc_url_raw( $url );
 	}
 }
-
 add_filter( 'user_registration_settings_text_format', 'ur_settings_text_format', 10 );
 if ( ! function_exists( 'ur_settings_text_format' ) ) {
 	/**
 	 * Settings text format.
 	 *
+	 * @since 3.3.1
+	 *
 	 * @param array $args
 	 * @return array
 	 */
 	function ur_settings_text_format( $args ) {
-		//Group similar text format fields.
+		// Group similar text format fields.
 		$fields_to_format = array( 'description', 'tip', 'tooltip', 'tooltip_message', 'desc' );
 
 		foreach ( $args as &$arg ) {
 			if ( isset( $arg['label'] ) ) {
-				$arg['label'] = ucWords( strtolower( $arg['label'] ) );
+				$arg['label'] = ur_get_capitalized_words( $arg['label'] );
 			}
 
-			if ( isset( $arg['desc_tip'] ) && ( $arg['desc_tip'] != 1  || $arg['desc_tip'] !== true ) ) {
+			if ( isset( $arg['desc_tip'] ) && ( $arg['desc_tip'] != 1 || $arg['desc_tip'] !== true ) ) {
 				$arg['desc_tip'] = ucWords( strtolower( $arg['desc_tip'] ) );
 			}
 
@@ -5869,4 +5870,55 @@ if ( ! function_exists( 'ur_settings_text_format' ) ) {
 
 		return $args;
 	}
+}
+
+if ( ! function_exists( 'ur_get_capitalized_words' ) ) {
+	/**
+	 * Get form data.
+	 *
+	 *  @since 3.3.1
+	 *
+	 * @param string $label
+	 * @return array
+	 */
+	function ur_get_capitalized_words( $label ) {
+		$prepositions = array( 'at', 'by', 'for', 'in', 'on', 'to', 'or' );
+
+		$words = explode( ' ', $label );
+
+		$capitalized_words = array();
+
+		foreach ( $words as $word ) {
+
+			$word = trim( $word );
+			//Convert the word to lowercase if it is a preposition.
+			if ( in_array( strtolower( $word ), $prepositions ) ) {
+				$capitalized_words[] = strtolower( $word );
+				continue;
+			}
+			//Convert the word to uppercase if it is an abbreviation.
+			if ( strpos( $word, '-' ) !== false || strpos( $word, '/' ) !== false ) {
+				$separators = array( '-', '/' );
+				foreach ( $separators as $separator ) {
+					if ( strpos( $word, $separator ) !== false ) {
+						$terms             = explode( $separator, $word );
+						$capitalized_terms = array();
+						foreach ( $terms as $term ) {
+							$capitalized_terms[] = ucfirst( strtolower( $term ) );
+						}
+						$word = implode( $separator, $capitalized_terms );
+						break;
+					}
+				}
+			} else {
+				$word = ucfirst( strtolower( $word ) );
+			}
+
+			$capitalized_words[] = $word;
+		}
+
+		return implode( ' ', $capitalized_words );
+	}
+
+
 }
