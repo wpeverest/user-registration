@@ -5526,15 +5526,17 @@ if ( ! function_exists( 'ur_get_translated_string' ) ) {
 	 *
 	 * @since 4.2.1
 	 *
-	 * @param  string $string String.
+	 * @param  string $domain Domain.
+	 * @param  string $string String Value.
 	 * @param  string $language_code Language Code.
 	 * @param  string $field_key Field Key.
 	 * @param  string $form_id Form ID.
 	 */
-	function ur_get_translated_string( $string, $language_code, $field_key, $form_id = 0 ) {
+	function ur_get_translated_string( $domain, $string, $language_code, $field_key, $form_id = 0 ) {
 		if ( function_exists( 'icl_translate' ) ) {
 			$language_code     = is_array( $language_code ) ? $language_code[0] : $language_code;
-			$translated_string = apply_filters( 'wpml_translate_single_string', $string, 'user-registration', $string, $language_code );
+			$translated_string = apply_filters( 'wpml_translate_single_string', $string, $domain, $field_key, $language_code );
+
 			if ( false === $translated_string || $translated_string === $language_code ) {
 				return $string;
 			} else {
@@ -5825,5 +5827,80 @@ if ( ! function_exists( 'ur_current_url' ) ) {
 		$url .= wp_unslash( $_SERVER['REQUEST_URI'] );
 
 		return esc_url_raw( $url );
+	}
+}
+
+if ( ! function_exists( 'ur_non_deletable_fields' ) ) {
+	/**
+	 * user registration non deletable fields.
+	 */
+	function ur_non_deletable_fields() {
+		return apply_filters(
+			'user_registration_non_deletable_fields',
+			array(
+				'user_email',
+				'user_pass',
+				)
+		);
+	}
+}
+
+// TODO: Remove this code once Really Simple SSL plugin resolves the conflict from their side.
+if ( ! function_exists( 'ur_rsssl_anyone_can_register_conflict_resolver' ) ) {
+
+	/**
+	 * Resolve anyone can register setting conflict with Really Simple SSL Plugin.
+	 *
+	 * @param bool $value Option value.
+	 */
+	function ur_rsssl_anyone_can_register_conflict_resolver( $value ) {
+		global $wpdb;
+
+		if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'really-simple-ssl/rlrsssl-really-simple-ssl.php' ) ) {
+
+			$rsssl_options = get_option( 'rsssl_options', '' );
+			$rsssl_options = maybe_unserialize( $rsssl_options );
+
+			if ( isset( $rsssl_options['disable_anyone_can_register'] ) && $rsssl_options['disable_anyone_can_register'] ) {
+				$value = $wpdb->get_var( "SELECT option_value FROM {$wpdb->prefix}options WHERE option_name = 'users_can_register';" ); // phpcs:ignore;
+
+				if ( $value ) {
+					return true;
+				}
+			}
+		}
+
+		return $value;
+	}
+}
+add_filter( 'ur_register_setting_override', 'ur_rsssl_anyone_can_register_conflict_resolver', 10, 1 );
+
+add_filter( 'user_registration_settings_prevent_default_login', 'ur_prevent_default_login' );
+if ( ! function_exists( 'ur_prevent_default_login' ) ) {
+	/**
+	 * Handel error when default login screen is disabled but redirect login poage is not selected.
+	 *
+	 * @since 3.3.1
+	 *
+	 * @return @mixed
+	 */
+	function ur_prevent_default_login( $data ) {
+		// Return if default wp_login is disabled and no redirect url is set.
+		if ( isset( $data['user_registration_login_options_prevent_core_login'] ) && $data['user_registration_login_options_prevent_core_login'] ) {
+			if ( isset( $data['user_registration_login_options_login_redirect_url'] )  ) {
+				gettype( $data['user_registration_login_options_login_redirect_url'] );
+				if( ! $data['user_registration_login_options_login_redirect_url'] ) {
+					return 'redirect_login_error';
+				}
+				if( is_numeric( $data['user_registration_login_options_login_redirect_url'] ) ) {
+					$is_page_my_account_page = ur_find_my_account_in_page( $data['user_registration_login_options_login_redirect_url'] );
+					if ( ! $is_page_my_account_page ) {
+						return 'redirect_login_not_myaccount';
+					}
+
+				}
+			}
+		}
+		return true;
 	}
 }

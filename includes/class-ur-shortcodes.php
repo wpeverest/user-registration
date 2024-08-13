@@ -254,7 +254,12 @@ class UR_Shortcodes {
 		 * @param bool $default_value Default value retrieved from the 'users_can_register' setting.
 		 */
 		$users_can_register = apply_filters( 'ur_register_setting_override', get_option( 'users_can_register' ) );
-
+		$check_user_state 		= isset( $atts['userState'] ) && 'logged_in' === $atts['userState'];
+		
+		if( $check_user_state ) {
+			return wp_kses_post( apply_filters( 'user_registration_logged_in_message', sprintf( __( 'You are already logged in. <a href="%s">Log out?</a>', 'user-registration' ), ur_logout_url() ) ) );
+		}
+		
 		if ( ! is_user_logged_in() ) {
 			if ( ! $users_can_register ) {
 				/**
@@ -336,6 +341,7 @@ class UR_Shortcodes {
 		$content         = apply_filters( 'user_registration_process_smart_tags', $form_json_data, $values, array() );
 		$form_data_array = json_decode( $content );
 		$form_row_ids    = '';
+		$form_row_data   = array();
 
 		if ( ! empty( $form_data_array ) ) {
 			$form_row_ids  = get_post_meta( $form_id, 'user_registration_form_row_ids', true );
