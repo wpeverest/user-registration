@@ -121,6 +121,14 @@
 					URFormBuilder.ur_save_form();
 				});
 
+				//Embed the form in the page.
+				$(".ur-embed-form-button").on("click", function () {
+					if( $(this).find(".ur-spinner").length > 0 ) {
+						return;
+					}
+					URFormBuilder.ur_embed_form($(this));
+				});
+
 				// Close validation message on form builder.
 				$(document).on(
 					"click",
@@ -549,6 +557,144 @@
 					}
 				});
 			},
+			/**
+			 * Handel the process of embedding the form.
+			 */
+			ur_embed_form: function ($this) {
+				var data = {
+					'action': 'user_registration_embed_page_list',
+					security: user_registration_form_builder_data.ur_embed_page_list,
+				};
+
+				$.ajax({
+					url: user_registration_form_builder_data.ajax_url,
+					data: data,
+					type: 'POST',
+					beforeSend: function () {
+						var spinner = '<span class="ur-spinner is-active"></span>';
+						$this.append(spinner);
+						$(".ur-notices").remove();
+					},
+					success: function (response) {
+						$this.find(".ur-spinner").remove();
+						function showInitialAlert(){
+							var modelContent = '<div class=""><p>' + user_registration_form_builder_data.i18n_admin.i18n_embed_description + '</p></div>';
+
+                			Swal.fire({
+                    			icon: 'info',
+                    			title: user_registration_form_builder_data.i18n_admin.i18n_embed_form_title,
+                    			html: modelContent,
+                    			showCancelButton: true,
+                    			confirmButtonText: user_registration_form_builder_data.i18n_admin.i18n_embed_to_existing_page,
+                    			cancelButtonText: user_registration_form_builder_data.i18n_admin.i18n_embed_to_new_page,
+                    			showCloseButton: true,
+								customClass:
+									"user-registration-swal2-modal  user-registration user-registration-swal2-modal--center user-registrationswal2-icon-content-info user-registration-info swal2-show"
+
+               				 }).then(function(result)  {
+                    			var form_id = $(".ur-embed-form-button").attr('data-form_id');
+
+                   				 if (result.isConfirmed) {
+                        				showExistingPageSelection(response, form_id);
+                    				} else if (result.dismiss === Swal.DismissReason.cancel) {
+                        				showCreateNewPageForm(form_id);
+                    				}
+               				 });
+						}
+						function showExistingPageSelection(response, form_id){
+
+							var select_start = '<div class="ur-embed-select-existing-page-container"><p>' + user_registration_form_builder_data.i18n_admin.i18n_embed_existing_page_description + '</p><select name="ur-embed-select-existing-page-name" id="ur-embed-select-existing-page-name">';
+							var option = '<option disabled selected>Select Page</option>';
+							response.data.forEach(function(page){
+								option += '<option data-id="' + page.ID + '" value="' + page.ID + '">' + page.post_title + '</option>';
+							});
+							var select_end = '</select>';
+
+							modelContent = select_start + option + select_end;
+							Swal.fire({
+								icon: 'info',
+								title: user_registration_form_builder_data.i18n_admin.i18n_embed_form_title,
+								html: modelContent,
+								showCloseButton: true,
+								showCancelButton: true,
+								cancelButtonText: user_registration_form_builder_data.i18n_admin.i18n_embed_go_back_btn,
+								confirmButtonText: user_registration_form_builder_data.i18n_admin.i18n_embed_lets_go_btn,
+								cancelButtonText: user_registration_form_builder_data.i18n_admin.i18n_embed_go_back_btn,
+								customClass:
+									"user-registration-swal2-modal  user-registration user-registration-swal2-modal--center user-registration-info swal2-show"
+							}).then(function(result)  {
+								if(result.isDismissed){
+									showInitialAlert();
+								}else if(result.isConfirmed){
+									var page_id = $("#ur-embed-select-existing-page-name").val();
+
+									var data = {
+										'action': 'user_registration_embed_form_action',
+										security: user_registration_form_builder_data.ur_embed_action,
+										'page_id': page_id,
+										'form_id': form_id,
+									};
+									$.ajax({
+										url: user_registration_form_builder_data.ajax_url,
+										type: 'POST',
+										data: data,
+										success: function (response) {
+											if (response.success) {
+												window.location = response.data;
+											}
+										}
+									});
+								}
+							});
+						}
+						function showCreateNewPageForm(form_id){
+							var description = '<div class="ur-embed-new-page-container"><p>' + user_registration_form_builder_data.i18n_admin.i18n_embed_new_page_description + '</p>';
+							var page_name = '<div style="min-width:400px; width:100%;"><input type="text" name="page_title" /></div>';
+
+							modelContent = description + page_name;
+							Swal.fire({
+								icon: 'info',
+								title: user_registration_form_builder_data.i18n_admin.i18n_embed_form_title,
+								html: modelContent,
+								showCancelButton: true,
+								confirmButtonText: user_registration_form_builder_data.i18n_admin.i18n_embed_lets_go_btn,
+								cancelButtonText: user_registration_form_builder_data.i18n_admin.i18n_embed_go_back_btn,
+								customClass:
+								"user-registration-swal2-modal  user-registration user-registration-swal2-modal--center user-registration-info swal2-show"
+
+							}).then(function(result) {
+								if(result.isDismissed){
+									showInitialAlert();
+								}else if(result.isConfirmed){
+									var page_title = $("[name='page_title']").val();
+
+									var data = {
+										'action': 'user_registration_embed_form_action',
+										security: user_registration_form_builder_data.ur_embed_action,
+										page_title: page_title,
+										'form_id': form_id,
+									};
+									$.ajax({
+										url: user_registration_form_builder_data.ajax_url,
+										type: 'POST',
+										data: data,
+										success: function (response) {
+											if (response.success) {
+												window.location = response.data;
+											}
+										}
+									});
+								}
+							});
+						}
+						showInitialAlert();
+
+					}
+				});
+			},
+
+
+
 			/**
 			 * Show Help Popup
 			 */
