@@ -1229,7 +1229,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 			),
 			array(
 				'type'              => 'toggle',
-				'label'             => __( 'No Repetitive chars', 'user-registration' ),
+				'label'             => __( 'No Repetitive letters', 'user-registration' ),
 				'description'       => '',
 				'required'          => false,
 				'id'                => 'user_registration_form_setting_no_repeat_chars',
@@ -1237,7 +1237,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'input_class'       => array(),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_no_repeat_chars', ur_string_to_bool( get_option( 'user_registration_form_setting_no_repeat_chars', 0 ) ) ),
-				'tip'               => __( 'Check repetitive words or common words.', 'user-registration' ),
+				'tip'               => __( 'Check repetitive letters.', 'user-registration' ),
 			),
 			array(
 				'type'              => 'number',

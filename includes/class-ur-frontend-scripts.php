@@ -563,7 +563,7 @@ class UR_Frontend_Scripts {
 		};
 
 		if ( $custom_params['no_rep_chars'] ) {
-			$hint .= ' and should only have '.$custom_params['max_rep_chars'].' repetitive characters at max';
+			$hint .= ' and should only have '.$custom_params['max_rep_chars'].' repetitive letters at max';
 		}
 		$hint                  .= '.';
 		$custom_params['hint'] = esc_html__( $hint, 'user-registration' );
