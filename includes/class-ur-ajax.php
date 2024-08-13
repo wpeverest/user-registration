@@ -718,7 +718,8 @@ class UR_AJAX {
 		if ( $status ) {
 			wp_send_json_success( array( 'message' => __( 'Test email was sent successfully! Please check your inbox to make sure it is delivered.', 'user-registration' ) ) );
 		} {
-			wp_send_json_error( array( 'message' => __( 'Test email was unsuccessful! Something went wrong.', 'user-registration' ) ) );
+			$error_message = apply_filters( 'user_registration_email_send_failed_message', '' );
+			wp_send_json_error( array( 'message' => sprintf( __( 'Test email was unsuccessful!. %s', 'user-registration' ), $error_message ) ) );
 		}
 	}
 
@@ -1200,6 +1201,11 @@ class UR_AJAX {
 					'reopen_times' => $reopen_times + 1,
 				);
 				update_option( 'user_registration_' . $notice_id . '_notice_dismissed_temporarily', json_encode( $notice_data ) );
+			}
+
+			// Never display mail send failed notice once dismissed.
+			if ( 'info_ur_email_send_failed' === $notice_id ) {
+				delete_transient( 'user_registration_mail_send_failed_count' );
 			}
 		}
 	}

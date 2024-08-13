@@ -5830,6 +5830,105 @@ if ( ! function_exists( 'ur_current_url' ) ) {
 	}
 }
 
+add_action( 'wp_mail_failed', 'ur_email_send_failed_handler', 1 );
+
+if ( ! function_exists( 'ur_email_send_failed_handler' ) ) {
+
+	/**
+	 * Handle errors fetch mechanism when mail send failed.
+	 *
+	 * @param object $error_instance WP_Error message instance.
+	 */
+	function ur_email_send_failed_handler( $error_instance ) {
+		$error_message = '';
+
+		if ( '' !== json_decode( $error_instance->get_error_message() ) ) {
+			/* translators: %s: Status Log URL*/
+			$error_message = wp_kses_post( sprintf( __( 'Please check the `ur_mail_errors` log under <a target="_blank" href= "%s"> Status Log </a> section.', 'user-registration' ), admin_url( 'admin.php?page=user-registration-status' ) ) );
+			ur_get_logger()->error( $error_instance->get_error_message(), array( 'source' => 'ur_mail_errors' ) );
+		} else {
+			$error_message = $error_instance->get_error_message();
+			ur_get_logger()->error( $error_instance->get_error_message(), array( 'source' => 'ur_mail_errors' ) );
+		}
+
+		if ( '' !== $error_message ) {
+			add_filter(
+				'user_registration_email_send_failed_message',
+				function ( $msg ) use ( $error_message ) {
+					return $error_message;
+				}
+			);
+		}
+	}
+}
+
+add_action( 'user_registration_custom_notices', 'ur_email_send_failed_notice' );
+
+if ( ! function_exists( 'ur_email_send_failed_notice' ) ) {
+
+	/**
+	 * Add notice about email send failed to be displayed in dashboard.
+	 *
+	 * @param array $notices Custom notices.
+	 */
+	function ur_email_send_failed_notice( $notices ) {
+		$failed_data = get_transient( 'user_registration_mail_send_failed_count' );
+
+		if ( ! $failed_data ) {
+			return $notices;
+		}
+
+		$failed_count  = isset( $failed_data['failed_count'] ) ? $failed_data['failed_count'] : 0;
+		$error_message = isset( $failed_data['error_message'] ) ? $failed_data['error_message'] : '';
+
+		$custom_notice = array(
+			array(
+				'id'                    => 'ur_email_send_failed',
+				'type'                  => 'info',
+				'status'                => 'active',
+				'priority'              => '1',
+				'title'                 => __( 'User Registration Email Send Error', 'user-registration' ),
+				'message_content'       => wp_kses_post(
+					sprintf(
+						'<p>%s</p><p style="border-left: 2px solid #72aee6; background: #F0FFFF; padding: 10px;">%s</p><br/>',
+						__( 'The last emails sent from User Registration Plugin was not delivered to the user. ', 'user-registration' ),
+						$error_message
+					)
+				),
+				'buttons'               => array(
+					array(
+						'title'  => __( 'I have a query', 'user-registration' ),
+						'icon'   => 'dashicons-testimonial',
+						'link'   => 'https://wpuserregistration.com/support',
+						'class'  => 'button-secondary notice-have-query',
+						'target' => '_blank',
+					),
+					array(
+						'title'  => __( 'Visit Documentation', 'user-registration' ),
+						'icon'   => 'dashicons-media-document',
+						'link'   => 'https://docs.wpuserregistration.com/docs/emails-are-not-being-delivered/',
+						'class'  => 'button-secondary notice-have-query',
+						'target' => '_blank',
+					),
+				),
+				'permanent_dismiss'     => true,
+				'reopen_days'           => '1',
+				'reopen_times'          => '1',
+				'conditions_to_display' => array(
+					array(
+						'operator'    => 'AND',
+						'show_notice' => $failed_count > 5 ? true : false,
+					),
+				),
+			),
+		);
+
+		$notices = array_merge( $notices, $custom_notice );
+
+		return $custom_notice;
+  }
+}
+
 if ( ! function_exists( 'ur_non_deletable_fields' ) ) {
 	/**
 	 * user registration non deletable fields.

@@ -272,6 +272,7 @@ class UR_Admin_Assets {
 			array(
 				'ajax_url'          => admin_url( 'admin-ajax.php' ),
 				'important_nonce'   => wp_create_nonce( 'important-nonce' ),
+				'info_nonce'        => wp_create_nonce( 'info-nonce' ),
 				'review_nonce'      => wp_create_nonce( 'review-nonce' ),
 				'allow-usage_nonce' => wp_create_nonce( 'allow-usage-nonce' ),
 				'survey_nonce'      => wp_create_nonce( 'survey-nonce' ),
