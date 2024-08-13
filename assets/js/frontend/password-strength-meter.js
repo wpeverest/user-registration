@@ -1,6 +1,8 @@
 /* global wp, ur_password_strength_meter_params */
 jQuery(function ($) {
 	var pwsL10n = ur_password_strength_meter_params.pwsL10n;
+	var custom_password_params = ur_password_strength_meter_params.custom_password_params;
+
 	/**
 	 * Password Strength Meter class.
 	 */
@@ -94,7 +96,16 @@ jQuery(function ($) {
 					'input[type="submit"].user-registration-Button'
 				),
 				disallowedListArray = [];
-
+			var strength = ur_password_strength_meter.extraPasswordChecks(
+				field.val(),
+				disallowedListArray
+			);
+			if('4' === minimum_password_strength) {
+				strength = customPasswordChecks(field.val());
+				hint_html = '<small class="user-registration-password-hint">' +
+					custom_password_params.hint +
+					'</small>';
+			}
 			if (
 				"function" ===
 				typeof wp.passwordStrength.userInputDisallowedList
@@ -111,10 +122,6 @@ jQuery(function ($) {
 				wrapper.find('input[data-id="user_login"]').val()
 			); // Add username in disallowedList.
 
-			var strength = ur_password_strength_meter.extraPasswordChecks(
-				field.val(),
-				disallowedListArray
-			);
 
 			// Reset
 			meter.removeClass("short bad good strong");
@@ -124,7 +131,6 @@ jQuery(function ($) {
 			wrapper
 				.find(".user-registration-password-strength")
 				.attr("data-current-strength", strength);
-
 			switch (strength) {
 				case 0:
 					meter.addClass("short").html(pwsL10n.shortpw);

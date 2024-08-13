@@ -1,4 +1,4 @@
-/* global  user_registration_params */
+/* global  user_registration_params, ur_password_strength_meter_params */
 (function ($) {
 	var user_registration_form_init = function () {
 		var ursL10n = user_registration_params.ursL10n;
@@ -1011,6 +1011,7 @@
 									var form_id = 0;
 									var form_nonce = "0";
 									var captchaResponse = "";
+									var registration_language = "";
 									if (
 										"hcaptcha" ===
 										user_registration_params.recaptcha_type
@@ -1063,6 +1064,20 @@
 											)
 											.val();
 									}
+									if (
+										$(this)
+											.closest("form")
+											.find(
+												'input[name="ur-registration-language"]'
+											).length === 1
+									) {
+										registration_language = $(this)
+											.closest("form")
+											.find(
+												'input[name="ur-registration-language"]'
+											)
+											.val();
+									}
 
 									if (
 										$(this)
@@ -1086,6 +1101,7 @@
 										form_data: form_data,
 										captchaResponse: captchaResponse,
 										form_id: form_id,
+										registration_language: registration_language,
 										ur_frontend_form_nonce: form_nonce
 									};
 
@@ -1708,6 +1724,19 @@
 												display: "none"
 											});
 										}
+									}).fail(function () {
+										form.show_message(
+											"<p>" +
+												user_registration_params.ajax_form_submit_error +
+												"</p>",
+											"error",
+											$this,
+											"1"
+										);
+										$this
+											.find(".ur-submit-button")
+											.prop("disabled", false);
+										return;
 									});
 								});
 						});
@@ -2035,9 +2064,6 @@
 																			'">' +
 																			value +
 																			"</label>";
-																		console.log(
-																			error_message
-																		);
 																		var wrapper =
 																			$this.find(
 																				".ur-form-row"
@@ -2191,6 +2217,21 @@
 											$(".user-registration").position()
 										);
 									}
+								}).fail(function () {
+									form.show_message(
+										"<p>" +
+											user_registration_params.ajax_form_submit_error +
+											"</p>",
+										"error",
+										$this,
+										"1"
+									);
+									$this
+										.find(
+											".user-registration-submit-Button"
+										)
+										.prop("disabled", false);
+									return;
 								});
 							});
 					}
@@ -2353,6 +2394,11 @@
 								$this.val(),
 								disallowedListArray
 							);
+
+							if(minimum_password_strength === "4") {
+								strength = customPasswordChecks($this.val())
+							}
+
 							if (strength < minimum_password_strength) {
 								if ($this.val() !== "") {
 									wrapper
@@ -2533,4 +2579,77 @@ function ur_includes(arr, item) {
 		}
 	}
 	return false;
+}
+
+/**
+ *
+ * @param password
+ * @returns {number}
+ */
+function customPasswordChecks(password) {
+	var custom_password_params = ur_password_strength_meter_params.custom_password_params,
+	minLength = custom_password_params.minimum_pass_length !== undefined && custom_password_params.minimum_pass_length >= 3 ? custom_password_params.minimum_pass_length : 3,
+		maxRepeatChars = custom_password_params.max_rep_chars !== undefined ? custom_password_params.max_rep_chars : 0,
+		canRepeatChars = custom_password_params.no_rep_chars !== undefined ? custom_password_params.no_rep_chars : 0,
+		minUppercaseCount = custom_password_params.minimum_uppercase !== undefined ? custom_password_params.minimum_uppercase : 0,
+		minSpecialCharCount = custom_password_params.minimum_special_chars !== undefined ? custom_password_params.minimum_special_chars : 0,
+		minimumDigitsCount = custom_password_params.minimum_digits !== undefined ? custom_password_params.minimum_digits : 0,
+		specialChars = new Set(['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '=', '+', '{', '}', '[', ']', '|', '\\', ':', ';', '"', "'", '<', '>', ',', '.', '?', '/']),
+		lastChar = '',
+		repeatCount = 0,
+		uppercaseCount = 0 ,
+		digitCount = 0 ,
+		specialCharCount = 0 ;
+
+
+
+	if (password.length < minLength) {
+		return 0;
+	}
+
+
+	for (var i = 0; i < password.length; i++) {
+		var letter = password[i];
+		// Check if the character is uppercase
+		if (/[A-Z]/.test(letter)) {
+			uppercaseCount ++;
+		}
+		letter = letter.toLowerCase();
+		// Check if the character is a digit
+		if (/\d/.test(letter)) {
+
+
+			digitCount++;
+		}
+
+		// Check if the character is a special character
+		if (specialChars.has(letter)) {
+			specialCharCount++;
+		}
+
+		// Check for repeated characters
+		if (canRepeatChars && letter === lastChar) {
+			repeatCount++;
+			if (repeatCount >= maxRepeatChars) {
+
+				return 0;
+			}
+		} else {
+			repeatCount = 0; // Reset count if the character changes
+		}
+		lastChar = letter;
+	}
+
+	// Check if the password meets the required criteria
+	if (minUppercaseCount > 0 && uppercaseCount < minUppercaseCount) {
+		return 0;
+	}
+	if (minSpecialCharCount > 0 && specialCharCount < minSpecialCharCount) {
+		return 0;
+	}
+	if (minimumDigitsCount > 0 && digitCount < minimumDigitsCount) {
+
+		return 0;
+	}
+	return 4;
 }
