@@ -1132,6 +1132,19 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'tip'               => __( 'Login method that should be used by the users registered through this form.', 'user-registration' ),
 			),
 			array(
+				'label'             => __( 'Select Phone Fields for SMS Verification', 'user-registration' ),
+				'description'       => '',
+				'id'                => 'user_registration_form_setting_default_phone_field',
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_default_phone_field', '' ),
+				'type'              => 'select',
+				'class'             => array( 'ur-enhanced-select' ),
+				'custom_attributes' => array(),
+				'input_class'       => array(),
+				'required'          => false,
+				'options'           => user_registration_get_form_fields_for_dropdown( $form_id ),
+				'tip'               => __( 'This option is to map phone field for sms verification.', 'user-registration' ),
+			),
+			array(
 				'type'              => 'select',
 				'label'             => __( 'Default User Role', 'user-registration' ),
 				'description'       => '',
@@ -2562,6 +2575,26 @@ function ur_get_field_data_by_field_name( $form_id, $field_name ) {
 		}
 	}
 	return $field_data;
+}
+
+if ( ! function_exists( 'user_registration_get_form_fields_for_dropdown' ) ) {
+	/**
+	 * Get form fields array for dropdown
+	 *
+	 * @param int    $form_id Form ID.
+	 */
+	function user_registration_get_form_fields_for_dropdown( $form_id ) {
+		$get_all_fields = user_registration_pro_get_conditional_fields_by_form_id( $form_id, '' );
+		$field_array    = array();
+		if ( isset( $get_all_fields ) ) {
+			foreach ( $get_all_fields as $key => $field ) {
+				if( $field['field_key'] === 'phone' ) {
+					$field_array[ $key ] = $field['label'];
+				}
+			}
+		}
+		return $field_array;
+	}
 }
 
 if ( ! function_exists( 'user_registration_pro_get_conditional_fields_by_form_id' ) ) {
@@ -4775,7 +4808,7 @@ if ( ! function_exists( 'ur_automatic_user_login' ) ) {
 	function ur_automatic_user_login( $user ) {
 		wp_clear_auth_cookie();
 		$remember = apply_filters( 'user_registration_autologin_remember_user', false );
-		wp_set_auth_cookie( $user->id, $remember );
+		wp_set_auth_cookie( $user->ID, $remember );
 
 		/**
 		 * Filters the login redirection.
@@ -4784,8 +4817,16 @@ if ( ! function_exists( 'ur_automatic_user_login' ) ) {
 		 * @param WP_User  $user     The user object representing the newly registered user.
 		 */
 		$redirect = apply_filters( 'user_registration_login_redirect', ur_get_my_account_url(), $user );
-
-		wp_redirect( $redirect );
+		if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) {
+			wp_redirect( esc_url_raw( $redirect ) );
+			exit();
+		} else {
+			wp_send_json_success(
+				array(
+					'redirect' => esc_url_raw( $redirect ),
+				)
+			);
+		}
 	}
 }
 

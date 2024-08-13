@@ -559,6 +559,8 @@ class UR_Admin_Assets {
 			'i18n_user_password'                          => _x( 'User Password', 'user-registration admin', 'user-registration' ),
 			'i18n_payment_field'                          => _x( 'Payment', 'user-registration admin', 'user-registration' ),
 			'i18n_stripe_field'                           => _x( 'Stripe Gateway', 'user-registration admin', 'user-registration' ),
+			'i18n_phone_field'                            => _x( 'Phone', 'user-registration admin', 'user-registration' ),
+			'i18n_default_phone_field'                    => _x( 'Select Smart Phone Fields for SMS Verification', 'user-registration admin', 'user-registration' ),
 			'i18n_anet_field'                             => _x( 'Authorize.net', 'user-registration admin', 'user-registration' ),
 			'i18n_are_you_sure_want_to_delete_row'        => _x( 'Are you sure want to delete this row?', 'user registration admin', 'user-registration' ),
 			'i18n_are_you_sure_want_to_delete_field'      => _x( 'Are you sure want to delete this field?', 'user registration admin', 'user-registration' ),

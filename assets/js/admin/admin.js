@@ -475,6 +475,7 @@ jQuery(function ($) {
 	} else {
 		custom_password_params.hide();
 	}
+
 	if (enable_strong_password) {
 		minimum_password_strength_wrapper_field.show();
 	} else {
@@ -708,6 +709,37 @@ jQuery(function ($) {
 		}
 	});
 
+	// 	Hide SMS Verification phone field mapping setting if not set to sms verification
+	if (
+		$("#user_registration_form_setting_login_options").val() ===
+			"sms_verification"
+	) {
+		$("#user_registration_form_setting_default_phone_field").parent()
+		.show();
+	} else {
+		$("#user_registration_form_setting_default_phone_field")
+			.parent()
+			.hide();
+	}
+
+	// Toggle display of enable email approval setting
+	$("#user_registration_form_setting_login_options").on(
+		"change",
+		function () {
+			if (
+				$(this).val() === "sms_verification"
+			) {
+				$("#user_registration_form_setting_default_phone_field")
+			.parent()
+			.show();
+			} else {
+				$("#user_registration_form_setting_default_phone_field")
+				.parent()
+				.hide();
+			}
+		}
+	);
+
 	$("input.input-color").wpColorPicker();
 	// send test email message
 	$(".user_registration_send_email_test").on("click", function (e) {
@@ -822,7 +854,7 @@ jQuery(function ($) {
 							add_tag +=
 								' <a href="' +
 								value +
-								' "rel="noreferrer noopener" target="_blank">' +
+								' " rel="noreferrer noopener" target="_blank">' +
 								index +
 								"</a>";
 							i++;
