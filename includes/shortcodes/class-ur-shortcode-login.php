@@ -39,7 +39,11 @@ class UR_Shortcode_Login {
 		$redirect_url = isset( $atts['redirect_url'] ) ? trim( $atts['redirect_url'] ) : '';
 		$redirect_url = UR_Shortcodes::check_is_valid_redirect_url( $redirect_url );
 
-		if ( ! is_user_logged_in() ) {
+		$check_state = true;
+		if ( isset( $atts['userState'] ) ) {
+			$check_state = 'logged_out' === $atts['userState'];
+		}
+		if ( ! is_user_logged_in() || $check_state  ) {
 			// After password reset, add confirmation message.
 			$is_password_resetted = get_transient( 'ur_password_resetted_flag' );
 			if ( ! empty( $is_password_resetted ) ) {
