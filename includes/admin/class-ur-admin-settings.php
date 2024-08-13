@@ -91,7 +91,6 @@ class UR_Admin_Settings {
 		if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'user-registration-settings' ) ) {
 			die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 		}
-
 		/**
 		 * Action to save current tab settings
 		 */
@@ -112,10 +111,29 @@ class UR_Admin_Settings {
 		 */
 		$flag = apply_filters( 'show_user_registration_setting_message', true );
 
-		if ( $flag ) {
-			self::add_message( esc_html__( 'Your settings have been saved.', 'user-registration' ) );
-		}
+		$flag = apply_filters( 'user_registration_settings_prevent_default_login', $_REQUEST );
 
+		if ( $flag && is_bool( $flag ) ) {
+			self::add_message( esc_html__( 'Your settings have been saved.', 'user-registration' ) );
+		} elseif ( $flag && 'redirect_login_error' === $flag ) {
+
+			self::add_error(
+				esc_html__(
+					'Your settings has not been saved. You enabled "Disable Default WordPress Login Screen" but did not select a login page. Please select a page for "Redirect Default WordPress Login To".',
+					'user-registration'
+				)
+			);
+
+		} elseif ( $flag && 'redirect_login_not_myaccount' === $flag ) {
+
+			self::add_error(
+				esc_html__(
+					'Your settings has not been saved.The selected page for "Redirect Default WordPress Login To" is not a login page. Please select a valid login page.',
+					'user-registration'
+				)
+			);
+
+		}
 		// Flush rules.
 		wp_schedule_single_event( time(), 'user_registration_flush_rewrite_rules' );
 
@@ -189,6 +207,7 @@ class UR_Admin_Settings {
 					'captcha_failed'  => esc_html__( 'Some error occured. Please verify that the keys you entered are valid.', 'user-registration' ),
 					'unsaved_changes' => esc_html__( 'You have some unsaved changes. Please save and try again.', 'user-registration' ),
 				),
+				'is_advanced_field_active' => is_plugin_active( 'user-registration-advanced-fields/user-registration-advanced-fields.php' ),
 			)
 		);
 
@@ -198,7 +217,6 @@ class UR_Admin_Settings {
 		// Get current tab/section.
 		$current_tab     = empty( $_GET['tab'] ) ? 'general' : sanitize_title( wp_unslash( $_GET['tab'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 		$current_section = empty( $_REQUEST['section'] ) ? '' : sanitize_title( wp_unslash( $_REQUEST['section'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
-
 		/**
 		 * Filter to save settings actions
 		 *
@@ -957,6 +975,11 @@ class UR_Admin_Settings {
 
 		if ( empty( $options ) ) {
 			return false;
+		}
+		// Return if default wp_login is disabled and no redirect url is set.
+		$is_wp_login_disabled_error = apply_filters( 'user_registration_settings_prevent_default_login', $_POST );
+		if ( $is_wp_login_disabled_error && 'redirect_login_error' === $is_wp_login_disabled_error ) {
+			return;
 		}
 
 		// Loop options and get values to save.

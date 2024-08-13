@@ -29,7 +29,9 @@ jQuery(function ($) {
 							.closest("form")
 							.find('[name="h-captcha-response"]')
 							.val();
-					} else if ("cloudflare" === ur_login_params.recaptcha_type) {
+					} else if (
+						"cloudflare" === ur_login_params.recaptcha_type
+					) {
 						var CaptchaResponse = $this
 							.closest("form")
 							.find('[name="cf-turnstile-response"]')
@@ -48,7 +50,7 @@ jQuery(function ($) {
 
 					if (window.location.href.indexOf("pl=true") > -1) {
 						// "pl=true" is present in the URL.
-						url += '&pl=true';
+						url += "&pl=true";
 					}
 
 					$this
@@ -61,13 +63,14 @@ jQuery(function ($) {
 						username: username,
 						password: password,
 						CaptchaResponse: CaptchaResponse,
-						redirect: redirect_url,
+						redirect: redirect_url
 					};
 
-					if ( $this
-						.closest("form")
-						.find('input[name="rememberme"]')
-						.is(':checked')
+					if (
+						$this
+							.closest("form")
+							.find('input[name="rememberme"]')
+							.is(":checked")
 					) {
 						data.rememberme = rememberme;
 					}
@@ -108,11 +111,11 @@ jQuery(function ($) {
 											"</ul>"
 									);
 							} else {
-								if(res.data.status) {
+								if (res.data.status) {
 									$this
-									.closest("#user-registration")
-									.find(".user-registration-error")
-									.remove();
+										.closest("#user-registration")
+										.find(".user-registration-error")
+										.remove();
 
 									$this
 										.closest("#user-registration")
@@ -128,13 +131,33 @@ jQuery(function ($) {
 										);
 
 									$this
-									.closest("#user-registration")
-									.find('input#username').val("");
+										.closest("#user-registration")
+										.find("input#username")
+										.val("");
 								} else {
 									window.location.href = res.data.message;
 								}
 							}
-						},
+						}
+					}).fail(function () {
+						$this
+							.closest("#user-registration")
+							.find(".user-registration-error")
+							.remove();
+
+						$this
+							.closest("#user-registration")
+							.find(".user-registration-message")
+							.remove();
+
+						$this
+							.closest("#user-registration")
+							.prepend(
+								'<ul class="user-registration-error">' +
+									ur_login_params.ajax_form_submit_error +
+									"</ul>"
+							);
+						return;
 					});
 				});
 		});
