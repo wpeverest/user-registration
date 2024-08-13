@@ -2999,11 +2999,11 @@
 											);
 											if ( $.inArray( fieldKey, user_registration_form_builder_data.ur_form_non_deletable_fields ) > -1 ) {
 												if( 'user_pass' === fieldKey &&  ! is_auto_generate_pass_enable  ) {
-													show_feature_notice(fieldKey);
+													show_feature_notice(fieldKey ,label);
 													return;
 												}
 												if ( 'user_pass' !== fieldKey ) {
-													show_feature_notice(fieldKey);
+													show_feature_notice(fieldKey, label);
 													return;
 												}
 										}
@@ -6168,8 +6168,9 @@
 		/**
 		 * Displays a feature notice if user try to delete the password_field.
 		 */
-		function show_feature_notice(field_key) {
+		function show_feature_notice(field_key ,label) {
 			var isPro = user_registration_form_builder_data.isPro;
+			var cancelBtn = true
 			if ( 'user_pass' === field_key  ){
 				if( isPro ){
 					var description_message = user_registration_form_builder_data.i18n_admin.i18n_auto_generate_password;
@@ -6184,19 +6185,20 @@
 			else{
 				var description_message = user_registration_form_builder_data.i18n_admin.i18n_default_cannot_delete_message;
 				var confirmButtonText = user_registration_form_builder_data.i18n_admin.i18n_ok;
+				cancelBtn = false
 			}
 			var title_message =user_registration_form_builder_data.i18n_admin.i18n_this_field_is_required;
 			var icon = '<i class="dashicons dashicons-trash" ></i>';
 			var title =
 				icon +
-				'<span class="user-registration-swal2-modal__title">' + title_message
+				'<span class="user-registration-swal2-modal__title">'+ label + title_message
 				;
 			Swal.fire({
 				customClass:
 					"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-upgrade",
 				title: title,
 				text: description_message,
-				showCancelButton: true,
+				showCancelButton: cancelBtn,
 				cancelButtonText:user_registration_form_builder_data.i18n_admin
 								.i18n_choice_cancel,
 				showConfirmButton: true,
