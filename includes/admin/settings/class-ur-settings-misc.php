@@ -98,15 +98,15 @@ if ( ! class_exists( 'UR_Settings_Misc' ) ) :
 							),
 						),
 					),
-				)
+				),
 			);
 
-			/**
-			 * Filter to enlist the advanced settings option.
-			 *
-			 * @param array $settings Advanced Settings to be enlisted.
-			 */
-			return apply_filters( 'user_registration_get_advanced_settings_' . $this->id, $settings );
+				/**
+				 * Filter to enlist the advanced settings option.
+				 *
+				 * @param array $settings Advanced Settings to be enlisted.
+				 */
+				return apply_filters( 'user_registration_get_advanced_settings_' . $this->id, $settings );
 		}
 
 		/**
