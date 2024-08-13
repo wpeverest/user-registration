@@ -20,6 +20,9 @@
     "formId": {
       "type": "string",
       "default": ""
+    },
+    "userState": {
+      "type": "string"
     }
   },
   "editorScript": "user-registration-blocks-editor",
