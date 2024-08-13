@@ -169,7 +169,7 @@ class UR_Getting_Started {
 				'page_slug'              => $page_slug,
 				'default_form_id'        => $default_form_page_id,
 				'is_pro'                 => $is_pro,
-				'registration_page_link' => get_permalink( $default_form_page_id ),
+				'registration_page_link' => get_permalink( get_option( 'user_registration_registration_page_id' ) ),
 			),
 			200
 		);

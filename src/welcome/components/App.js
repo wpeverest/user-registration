@@ -28,7 +28,7 @@ import { useStateValue } from "../../context/StateProvider";
 import { actionTypes } from "../../context/gettingStartedContext";
 
 function App() {
-	const [{ settings, installPage }, dispatch] = useStateValue();
+	const [{ settings, installPage, registrationPageLink }, dispatch] = useStateValue();
 	const [initiateInstall, setInitiateInstall] = useState(false);
 	const [disabledLink, setDisabledLink] = useState(false);
 
@@ -39,8 +39,7 @@ function App() {
 		defaultFormURL,
 		urRestApiNonce,
 		onBoardIconsURL,
-		restURL,
-		registrationPageLink
+		restURL
 	} = typeof _UR_WIZARD_ !== "undefined" && _UR_WIZARD_;
 
 	const [steps, setSteps] = useState([
