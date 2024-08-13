@@ -470,7 +470,8 @@ class UR_Frontend_Scripts {
 						'i18n_discount_total_zero'    => esc_html__( 'Discounted amount cannot be less than or equals to Zero. Please adjust your coupon code.', 'user-registration' ),
 						'password_strength_error'     => esc_html__( 'Password strength is not strong enough', 'user-registration' ),
 					),
-					'is_payment_compatible'                          => true,
+					'is_payment_compatible'             => true,
+					'ajax_form_submit_error'            => esc_html__( 'Something went wrong while submitting form through AJAX request. Please contact site administrator.', 'user-registration' ),
 				);
 				break;
 
@@ -507,6 +508,7 @@ class UR_Frontend_Scripts {
 					'ur_login_form_save_nonce'    => wp_create_nonce( 'ur_login_form_save_nonce' ),
 					'ajax_submission_on_ur_login' => ur_option_checked( 'ur_login_ajax_submission', false ),
 					'recaptcha_type'              => get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' ),
+					'ajax_form_submit_error'      => esc_html__( 'Something went wrong while submitting form through AJAX request. Please contact site administrator.', 'user-registration' ),
 				);
 				break;
 		}

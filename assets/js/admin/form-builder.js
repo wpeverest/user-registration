@@ -121,6 +121,14 @@
 					URFormBuilder.ur_save_form();
 				});
 
+				//Embed the form in the page.
+				$(".ur-embed-form-button").on("click", function () {
+					if( $(this).find(".ur-spinner").length > 0 ) {
+						return;
+					}
+					URFormBuilder.ur_embed_form($(this));
+				});
+
 				// Close validation message on form builder.
 				$(document).on(
 					"click",
@@ -140,17 +148,26 @@
 					var urlParams = new URLSearchParams(queryString);
 					var urPage = urlParams.get("page");
 					var isEditPage = urlParams.get("edit-registration");
+					var formId = urlParams.get("form_id");
 					var isTemplatePage = $(".user-registration-setup").length;
 
 					var previousPage = document.referrer.split("page=")[1];
+					var formUpdated =
+						localStorage.getItem("formUpdated_" + isEditPage) ===
+						"true";
 
 					if (
 						"add-new-registration" === urPage &&
 						(null === isEditPage ||
 							(null !== isEditPage &&
-								"add-new-registration" === previousPage)) &&
-						0 === isTemplatePage
+								"add-new-registration" === previousPage &&
+								null !== formId)) &&
+						0 === isTemplatePage &&
+						!formUpdated
 					) {
+						$(".ur_save_form_action_button").text(
+							user_registration_form_builder_data.i18n_publish_form_button_text
+						);
 						URFormBuilder.ur_show_help();
 					}
 				});
@@ -546,9 +563,171 @@
 							var error = response.responseJSON.data.message;
 							URFormBuilder.show_message(error);
 						}
+						$(".ur_save_form_action_button").text(
+							user_registration_form_builder_data.i18n_update_form_button_text
+						);
+						localStorage.setItem("formUpdated_" + ur_form_id, true);
+					}
+				}).fail(function () {
+					Swal.fire({
+						icon: "error",
+						title: user_registration_form_builder_data.ajax_form_submit_error_title,
+						html:
+							"<br />" +
+							user_registration_form_builder_data.ajax_form_submit_error,
+						customClass:
+							"user-registration-swal2-modal user-registration-swal2-modal--center",
+						confirmButtonText: "Troubleshoot",
+						allowOutsideClick: false,
+						showCloseButton: true
+					}).then(function (result) {
+						if (result.isConfirmed) {
+							window.open(
+								user_registration_form_builder_data.ajax_form_submit_troubleshooting_link
+							);
+						}
+					});
+					return;
+				});
+			},
+			/**
+			 * Handel the process of embedding the form.
+			 */
+			ur_embed_form: function ($this) {
+				var data = {
+					'action': 'user_registration_embed_page_list',
+					security: user_registration_form_builder_data.ur_embed_page_list,
+				};
+
+				$.ajax({
+					url: user_registration_form_builder_data.ajax_url,
+					data: data,
+					type: 'POST',
+					beforeSend: function () {
+						var spinner = '<span class="ur-spinner is-active"></span>';
+						$this.append(spinner);
+						$(".ur-notices").remove();
+					},
+					success: function (response) {
+						$this.find(".ur-spinner").remove();
+						function showInitialAlert(){
+							var modelContent = '<div class=""><p>' + user_registration_form_builder_data.i18n_admin.i18n_embed_description + '</p></div>';
+
+                			Swal.fire({
+                    			icon: 'info',
+                    			title: user_registration_form_builder_data.i18n_admin.i18n_embed_form_title,
+                    			html: modelContent,
+                    			showCancelButton: true,
+                    			confirmButtonText: user_registration_form_builder_data.i18n_admin.i18n_embed_to_existing_page,
+                    			cancelButtonText: user_registration_form_builder_data.i18n_admin.i18n_embed_to_new_page,
+                    			showCloseButton: true,
+								customClass:
+									"user-registration-swal2-modal  user-registration user-registration-swal2-modal--center user-registrationswal2-icon-content-info user-registration-info swal2-show"
+
+               				 }).then(function(result)  {
+                    			var form_id = $(".ur-embed-form-button").attr('data-form_id');
+
+                   				 if (result.isConfirmed) {
+                        				showExistingPageSelection(response, form_id);
+                    				} else if (result.dismiss === Swal.DismissReason.cancel) {
+                        				showCreateNewPageForm(form_id);
+                    				}
+               				 });
+						}
+						function showExistingPageSelection(response, form_id){
+
+							var select_start = '<div class="ur-embed-select-existing-page-container"><p>' + user_registration_form_builder_data.i18n_admin.i18n_embed_existing_page_description + '</p><select name="ur-embed-select-existing-page-name" id="ur-embed-select-existing-page-name">';
+							var option = '<option disabled selected>Select Page</option>';
+							response.data.forEach(function(page){
+								option += '<option data-id="' + page.ID + '" value="' + page.ID + '">' + page.post_title + '</option>';
+							});
+							var select_end = '</select>';
+
+							modelContent = select_start + option + select_end;
+							Swal.fire({
+								icon: 'info',
+								title: user_registration_form_builder_data.i18n_admin.i18n_embed_form_title,
+								html: modelContent,
+								showCloseButton: true,
+								showCancelButton: true,
+								cancelButtonText: user_registration_form_builder_data.i18n_admin.i18n_embed_go_back_btn,
+								confirmButtonText: user_registration_form_builder_data.i18n_admin.i18n_embed_lets_go_btn,
+								cancelButtonText: user_registration_form_builder_data.i18n_admin.i18n_embed_go_back_btn,
+								customClass:
+									"user-registration-swal2-modal  user-registration user-registration-swal2-modal--center user-registration-info swal2-show"
+							}).then(function(result)  {
+								if(result.isDismissed){
+									showInitialAlert();
+								}else if(result.isConfirmed){
+									var page_id = $("#ur-embed-select-existing-page-name").val();
+
+									var data = {
+										'action': 'user_registration_embed_form_action',
+										security: user_registration_form_builder_data.ur_embed_action,
+										'page_id': page_id,
+										'form_id': form_id,
+									};
+									$.ajax({
+										url: user_registration_form_builder_data.ajax_url,
+										type: 'POST',
+										data: data,
+										success: function (response) {
+											if (response.success) {
+												window.location = response.data;
+											}
+										}
+									});
+								}
+							});
+						}
+						function showCreateNewPageForm(form_id){
+							var description = '<div class="ur-embed-new-page-container"><p>' + user_registration_form_builder_data.i18n_admin.i18n_embed_new_page_description + '</p>';
+							var page_name = '<div style="min-width:400px; width:100%;"><input type="text" name="page_title" /></div>';
+
+							modelContent = description + page_name;
+							Swal.fire({
+								icon: 'info',
+								title: user_registration_form_builder_data.i18n_admin.i18n_embed_form_title,
+								html: modelContent,
+								showCancelButton: true,
+								confirmButtonText: user_registration_form_builder_data.i18n_admin.i18n_embed_lets_go_btn,
+								cancelButtonText: user_registration_form_builder_data.i18n_admin.i18n_embed_go_back_btn,
+								customClass:
+								"user-registration-swal2-modal  user-registration user-registration-swal2-modal--center user-registration-info swal2-show"
+
+							}).then(function(result) {
+								if(result.isDismissed){
+									showInitialAlert();
+								}else if(result.isConfirmed){
+									var page_title = $("[name='page_title']").val();
+
+									var data = {
+										'action': 'user_registration_embed_form_action',
+										security: user_registration_form_builder_data.ur_embed_action,
+										page_title: page_title,
+										'form_id': form_id,
+									};
+									$.ajax({
+										url: user_registration_form_builder_data.ajax_url,
+										type: 'POST',
+										data: data,
+										success: function (response) {
+											if (response.success) {
+												window.location = response.data;
+											}
+										}
+									});
+								}
+							});
+						}
+						showInitialAlert();
+
 					}
 				});
 			},
+
+
+
 			/**
 			 * Show Help Popup
 			 */
@@ -2429,6 +2608,12 @@
 											]
 										);
 									}
+								}).fail(function () {
+									URFormBuilder.show_message(
+										user_registration_form_builder_data.ajax_form_submit_error_on_field_drag,
+										"error"
+									);
+									return;
 								});
 							}
 						};
@@ -3022,6 +3207,19 @@
 											})
 											.text()
 											.trim();
+											var is_auto_generate_pass_enable = $("#user_registration_pro_auto_password_activate").is(
+												":checked"
+											);
+											if ( $.inArray( fieldKey, user_registration_form_builder_data.ur_form_non_deletable_fields ) > -1 ) {
+												if( 'user_pass' === fieldKey &&  ! is_auto_generate_pass_enable  ) {
+													show_feature_notice(fieldKey ,label);
+													return;
+												}
+												if ( 'user_pass' !== fieldKey ) {
+													show_feature_notice(fieldKey, label);
+													return;
+												}
+										}
 
 										ur_confirmation(
 											user_registration_form_builder_data
@@ -6180,6 +6378,52 @@
 			target_pattern_input.val(input_value);
 		}
 
+		/**
+		 * Displays a feature notice if user try to delete the password_field.
+		 */
+		function show_feature_notice(field_key ,label) {
+			var isPro = user_registration_form_builder_data.isPro;
+			var cancelBtn = true
+			if ( 'user_pass' === field_key  ){
+				if( isPro ){
+					var description_message = user_registration_form_builder_data.i18n_admin.i18n_auto_generate_password;
+					var confirmButtonText =user_registration_form_builder_data.i18n_admin.i18n_learn_more;
+					var btn_link = user_registration_form_builder_data.ur_remove_password_field_link;
+			}else{
+					var description_message = user_registration_form_builder_data.i18n_admin.i18n_delete_pass_available_in_pro;
+					var confirmButtonText = ur_setup_params.upgrade_button;
+					var btn_link = user_registration_form_builder_data.ur_upgrade_plan_link;
+				}
+			}
+			else{
+				var description_message = user_registration_form_builder_data.i18n_admin.i18n_default_cannot_delete_message;
+				var confirmButtonText = user_registration_form_builder_data.i18n_admin.i18n_ok;
+				cancelBtn = false
+			}
+			var title_message =user_registration_form_builder_data.i18n_admin.i18n_this_field_is_required;
+			var icon = '<i class="dashicons dashicons-trash" ></i>';
+			var title =
+				icon +
+				'<span class="user-registration-swal2-modal__title">'+ label + title_message
+				;
+			Swal.fire({
+				customClass:
+					"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-upgrade",
+				title: title,
+				text: description_message,
+				showCancelButton: cancelBtn,
+				cancelButtonText:user_registration_form_builder_data.i18n_admin
+								.i18n_choice_cancel,
+				showConfirmButton: true,
+				confirmButtonText: confirmButtonText,
+				confirmButtonColor: "#475bb2 !important",
+
+			}).then(function (result) {
+				if (result.isConfirmed && btn_link) {
+					window.open(btn_link, "_blank");
+				}
+		});
+		}
 		/**
 		 * This block of code is for the "Selected Countries" option of "Country" field
 		 *
