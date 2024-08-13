@@ -615,6 +615,8 @@ class UR_Emailer {
 			$message                   = $settings->ur_get_registration_denied_email();
 			$message                   = get_option( 'user_registration_registration_denied_email', $message );
 			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
+			$message                   = ur_get_translated_string(  'admin_texts_user_registration_registration_denied_email', $message, $current_language, 'user_registration_registration_denied_email' );
+			$subject                   = ur_get_translated_string(  'admin_texts_user_registration_registration_denied_email_subject', $subject, $current_language, 'user_registration_registration_denied_email_subject' );
 			$message                   = self::parse_smart_tags( $message, $values, $name_value );
 			$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
 
@@ -628,8 +630,8 @@ class UR_Emailer {
 			$message                   = $settings->ur_get_registration_approved_email();
 			$message                   = get_option( 'user_registration_registration_approved_email', $message );
 			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
-			$message                   = ur_get_translated_string( $message, $current_language, 'user_registration_registration_approved_email' );
-			$subject                   = ur_get_translated_string( $subject, $current_language, 'user_registration_registration_approved_email_subject' );
+			$message                   = ur_get_translated_string(  'admin_texts_user_registration_registration_approved_email', $message, $current_language, 'user_registration_registration_approved_email' );
+			$subject                   = ur_get_translated_string(  'admin_texts_user_registration_registration_approved_email_subject', $subject, $current_language, 'user_registration_registration_approved_email_subject' );
 			$message                   = self::parse_smart_tags( $message, $values, $name_value );
 			$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
 
@@ -981,8 +983,24 @@ class UR_Emailer {
 	 * @return void
 	 */
 	public static function user_registration_process_and_send_email( $email, $subject, $message, $header, $attachment, $template_id ) {
-		$message = user_registration_process_email_content( $message, $template_id );
-		wp_mail( $email, $subject, $message, $header, $attachment, $template_id );
+		$message                     = user_registration_process_email_content( $message, $template_id );
+		$status                      = wp_mail( $email, $subject, $message, $header, $attachment, $template_id );
+		$mail_error_notice_dismissed = get_option( 'user_registration_info_ur_email_send_failed_notice_dismissed_temporarily', false );
+		$mail_error_notice_dismissed = ! $mail_error_notice_dismissed ? get_option( 'user_registration_info_ur_email_send_failed_notice_dismissed', false ) : $mail_error_notice_dismissed;
+
+		if ( ! $status && ! $mail_error_notice_dismissed ) {
+			$error_message = apply_filters( 'user_registration_email_send_failed_message', '' );
+			$failed_data   = get_transient( 'user_registration_mail_send_failed_count' );
+			$failed_count  = $failed_data && isset( $failed_data['failed_count'] ) ? $failed_data['failed_count'] : 0;
+			++$failed_count;
+			set_transient(
+				'user_registration_mail_send_failed_count',
+				array(
+					'failed_count'  => $failed_count,
+					'error_message' => $error_message,
+				)
+			);
+		}
 	}
 }
 

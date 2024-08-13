@@ -1169,10 +1169,88 @@ function ur_admin_form_settings_fields( $form_id ) {
 					'1' => __( 'Weak', 'user-registration' ),
 					'2' => __( 'Medium', 'user-registration' ),
 					'3' => __( 'Strong', 'user-registration' ),
+					'4' => __( 'Custom', 'user-registration' ),
 				),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength', get_option( 'user_registration_form_setting_minimum_password_strength', '3' ) ),
 				'tip'               => __( 'Set minimum required password strength.', 'user-registration' ),
+			),
+			array(
+				'type'              => 'number',
+				'label'             => __( 'Minimum Uppercase', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_setting_form_minimum_uppercase',
+				'class'             => array( 'ur-enhanced-select custom-password-params' ),
+				'input_class'       => array(),
+				'custom_attributes' => array(),
+				'min'               => '0',
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_uppercase', '0' ),
+				'tip'               => __( 'Enter the minimum amount of uppercase you want to allow for password strength.', 'user-registration' ),
+			),
+			array(
+				'type'              => 'number',
+				'label'             => __( 'Minimum digits', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_setting_form_minimum_digits',
+				'class'             => array( 'ur-enhanced-select custom-password-params' ),
+				'input_class'       => array(),
+				'custom_attributes' => array(),
+				'min'               => '0',
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_digits', '0' ),
+				'tip'               => __( 'Set the minimum number of digits/numbers required for password strength.', 'user-registration' ),
+			),
+			array(
+				'type'              => 'number',
+				'label'             => __( 'Minimum Special Characters', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_setting_form_minimum_special_chars',
+				'class'             => array( 'ur-enhanced-select custom-password-params' ),
+				'input_class'       => array(),
+				'custom_attributes' => array(),
+				'min'               => '0',
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_special_chars', '0' ),
+				'tip'               => __( 'Set the minimum number of special characters required for password strength.', 'user-registration' ),
+			),
+			array(
+				'type'              => 'number',
+				'label'             => __( 'Minimum Password Length', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_setting_form_minimum_pass_length',
+				'class'             => array( 'ur-enhanced-select custom-password-params' ),
+				'input_class'       => array(),
+				'custom_attributes' => array(),
+				'min'               => '3',
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_pass_length', '6' ),
+				'tip'               => __( 'Set the minimum password length required for password strength.', 'user-registration' ),
+			),
+			array(
+				'type'              => 'toggle',
+				'label'             => __( 'Limit Repetitive letters', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_setting_no_repeat_chars',
+				'class'             => array( 'ur-enhanced-select custom-password-params' ),
+				'input_class'       => array(),
+				'custom_attributes' => array(),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_no_repeat_chars', ur_string_to_bool( get_option( 'user_registration_form_setting_no_repeat_chars', 0 ) ) ),
+				'tip'               => __( 'Check repetitive letters.', 'user-registration' ),
+			),
+			array(
+				'type'              => 'number',
+				'label'             => __( 'Max Repeat Length', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_setting_form_max_char_repeat_length',
+				'class'             => array( 'ur-enhanced-select custom-password-params' ),
+				'input_class'       => array(),
+				'custom_attributes' => array(),
+				'min'               => '1',
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_max_char_repeat_length', '' ),
+				'tip'               => __( 'Set the Maximum repeat amount for letters in a password.', 'user-registration' ),
 			),
 			array(
 				'type'              => 'text',
@@ -1347,7 +1425,8 @@ function ur_admin_form_settings_fields( $form_id ) {
 	 *
 	 * @param array $arguments An array of form settings.
 	 */
-	$arguments = apply_filters( 'user_registration_get_form_settings', $arguments );
+	$arguments                 = apply_filters( 'user_registration_get_form_settings', $arguments );
+	$arguments['setting_data'] = apply_filters( 'user_registration_settings_text_format', $arguments['setting_data'] );
 
 	return $arguments['setting_data'];
 }
@@ -2430,14 +2509,9 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 		$data_html .= '<tr>';
 
 		if ( isset( $form_data->field_type ) && 'repeater' === $form_data->field_type ) {
-			$data_html .= '<tr><td>' . $label . ' : </td></tr>';
-		} else {
-
-			$data_html .= '<td>' . $label . ' : </td>';
-		}
-		$data_html .= '<td>' . $value . '</td></tr>';
-		if ( isset( $form_data->extra_params['field_key'] ) && 'signature' === $form_data->extra_params['field_key'] ) {
-			$data_html .= '<tr><td>' . $label . ' : </td><td><img class="profile-preview" alt="Signature" width="50px" height="50px" src="' . ( is_numeric( $value ) ? esc_url( wp_get_attachment_url( $value ) ) : esc_url( $value ) ) . '" /></td></tr>';
+			$data_html .= '<td>' . $value . '</td></tr>';
+		} elseif ( isset( $form_data->extra_params['field_key'] ) && 'signature' === $form_data->extra_params['field_key'] ) {
+				$data_html .= '<tr><td>' . $label . ' : </td><td><img class="profile-preview" alt="Signature" width="50px" height="50px" src="' . ( is_numeric( $value ) ? esc_url( wp_get_attachment_url( $value ) ) : esc_url( $value ) ) . '" /></td></tr>';
 		} else {
 			$data_html .= '<tr><td>' . $label . ' : </td><td>' . $value . '</td></tr>';
 		}
@@ -2574,7 +2648,7 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 		$output .= '<span class="slider round">';
 		$output .= '</span>';
 		$output .= '</span>';
-		$output .= '<label>' . esc_html__( 'Use conditional logics', 'user-registration' ) . '</label>';
+		$output .= '<label>' . esc_html__( 'Use Conditional Logics', 'user-registration' ) . '</label>';
 		$output .= '</div>';
 		$output .= '</div>';
 
@@ -3026,10 +3100,12 @@ if ( ! function_exists( 'ur_format_field_values_using_field_key' ) ) {
 		switch ( $field_key ) {
 			case 'checkbox':
 			case 'multi_select2':
-				if ( is_array( $field_value ) && ! empty( $field_value ) ) {
+				if ( empty( $field_value ) ) {
+					$field_value = '';
+				} elseif ( is_array( $field_value ) && ! empty( $field_value ) ) {
 					$field_value = implode( ', ', $field_value );
 				} elseif ( ! empty( json_decode( $field_value ) ) ) { // phpcs:ignore;
-						$field_value = implode( ', ', json_decode( $field_value ) );
+					$field_value = implode( ', ', json_decode( $field_value ) );
 				}
 				break;
 			case 'country':
@@ -5051,8 +5127,9 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 	 * @param array  $data Form row data.
 	 * @param array  $profile User profile data.
 	 * @param string $current_row Current row id.
+	 * @param string $row_count Current row count.
 	 */
-	function user_registration_edit_profile_row_template( $data, $profile, $current_row = '' ) {
+	function user_registration_edit_profile_row_template( $data, $profile, $current_row = '', $row_count = '' ) {
 
 		$user_id = get_current_user_id();
 		$form_id = ur_get_form_id_by_userid( $user_id );
@@ -5379,7 +5456,8 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 					$value           = ! empty( $_POST[ $key ] ) ? ur_clean( wp_unslash( $_POST[ $key ] ) ) : ( isset( $field['value'] ) ? $field['value'] : '' ); // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 					if ( isset( $field['field_key'] ) ) {
-						$field = user_registration_form_field( $key, $field, $value, $current_row );
+						$row_count_to_send = '' === $row_count ? $current_row : $row_count;
+						$field             = user_registration_form_field( $key, $field, $value, $row_count_to_send );
 					}
 
 					/**
@@ -5528,15 +5606,17 @@ if ( ! function_exists( 'ur_get_translated_string' ) ) {
 	 *
 	 * @since 4.2.1
 	 *
-	 * @param  string $string String.
+	 * @param  string $domain Domain.
+	 * @param  string $string String Value.
 	 * @param  string $language_code Language Code.
 	 * @param  string $field_key Field Key.
 	 * @param  string $form_id Form ID.
 	 */
-	function ur_get_translated_string( $string, $language_code, $field_key, $form_id = 0 ) {
+	function ur_get_translated_string( $domain, $string, $language_code, $field_key, $form_id = 0 ) {
 		if ( function_exists( 'icl_translate' ) ) {
 			$language_code     = is_array( $language_code ) ? $language_code[0] : $language_code;
-			$translated_string = apply_filters( 'wpml_translate_single_string', $string, 'user-registration', $string, $language_code );
+			$translated_string = apply_filters( 'wpml_translate_single_string', $string, $domain, $field_key, $language_code );
+
 			if ( false === $translated_string || $translated_string === $language_code ) {
 				return $string;
 			} else {
@@ -5827,5 +5907,387 @@ if ( ! function_exists( 'ur_current_url' ) ) {
 		$url .= wp_unslash( $_SERVER['REQUEST_URI'] );
 
 		return esc_url_raw( $url );
+	}
+}
+
+add_filter( 'user_registration_settings_text_format', 'ur_settings_text_format', 10 );
+if ( ! function_exists( 'ur_settings_text_format' ) ) {
+	/**
+	 * Settings text format.
+	 *
+	 * @since 3.3.1
+	 *
+	 * @param array $args
+	 * @return array
+	 */
+	function ur_settings_text_format( $args ) {
+		// Group similar text format fields.
+		$fields_to_format = array( 'description', 'tip', 'tooltip', 'tooltip_message', 'desc' );
+
+		foreach ( $args as &$arg ) {
+			if ( isset( $arg['label'] ) ) {
+				$arg['label'] = ur_get_capitalized_words( $arg['label'] );
+			}
+
+			if ( isset( $arg['desc_tip'] ) && ( $arg['desc_tip'] != 1 || $arg['desc_tip'] !== true ) ) {
+				$arg['desc_tip'] = ucWords( strtolower( $arg['desc_tip'] ) );
+			}
+
+			if ( isset( $arg['title'] ) ) {
+				$arg['title'] = strtoupper( $arg['title'] );
+			}
+
+			foreach ( $fields_to_format as $field ) {
+				if ( isset( $arg[ $field ] ) ) {
+					$arg[ $field ] = ucfirst( strtolower( $arg[ $field ] ) );
+				}
+			}
+
+			if ( isset( $arg['options'] ) && is_array( $arg['options'] ) ) {
+				foreach ( $arg['options'] as $key => $option ) {
+					$arg['options'][ $key ] = ucfirst( strtolower( $option ) );
+				}
+			}
+		}
+
+		return $args;
+	}
+}
+
+if ( ! function_exists( 'ur_get_capitalized_words' ) ) {
+	/**
+	 * Get form data.
+	 *
+	 *  @since 3.3.1
+	 *
+	 * @param string $label
+	 * @return array
+	 */
+	function ur_get_capitalized_words( $label ) {
+		$prepositions = array( 'at', 'by', 'for', 'in', 'on', 'to', 'or' );
+
+		$words = explode( ' ', $label );
+
+		$capitalized_words = array();
+
+		foreach ( $words as $word ) {
+
+			$word = trim( $word );
+			// Convert the word to lowercase if it is a preposition.
+			if ( in_array( strtolower( $word ), $prepositions ) ) {
+				$capitalized_words[] = strtolower( $word );
+				continue;
+			}
+			// Convert the word to uppercase if it is an abbreviation.
+			if ( strpos( $word, '-' ) !== false || strpos( $word, '/' ) !== false ) {
+				$separators = array( '-', '/' );
+				foreach ( $separators as $separator ) {
+					if ( strpos( $word, $separator ) !== false ) {
+						$terms             = explode( $separator, $word );
+						$capitalized_terms = array();
+						foreach ( $terms as $term ) {
+							$capitalized_terms[] = ucfirst( strtolower( $term ) );
+						}
+						$word = implode( $separator, $capitalized_terms );
+						break;
+					}
+				}
+			} else {
+				$word = ucfirst( strtolower( $word ) );
+			}
+
+			$capitalized_words[] = $word;
+		}
+
+		return implode( ' ', $capitalized_words );
+	}
+}
+
+add_action( 'wp_mail_failed', 'ur_email_send_failed_handler', 1 );
+
+if ( ! function_exists( 'ur_email_send_failed_handler' ) ) {
+
+	/**
+	 * Handle errors fetch mechanism when mail send failed.
+	 *
+	 * @param object $error_instance WP_Error message instance.
+	 */
+	function ur_email_send_failed_handler( $error_instance ) {
+		$error_message = '';
+
+		if ( '' !== json_decode( $error_instance->get_error_message() ) ) {
+			/* translators: %s: Status Log URL*/
+			$error_message = wp_kses_post( sprintf( __( 'Please check the `ur_mail_errors` log under <a target="_blank" href= "%s"> Status Log </a> section.', 'user-registration' ), admin_url( 'admin.php?page=user-registration-status' ) ) );
+			ur_get_logger()->error( $error_instance->get_error_message(), array( 'source' => 'ur_mail_errors' ) );
+		} else {
+			$error_message = $error_instance->get_error_message();
+			ur_get_logger()->error( $error_instance->get_error_message(), array( 'source' => 'ur_mail_errors' ) );
+		}
+
+		if ( '' !== $error_message ) {
+			add_filter(
+				'user_registration_email_send_failed_message',
+				function ( $msg ) use ( $error_message ) {
+					return $error_message;
+				}
+			);
+		}
+	}
+}
+
+add_action( 'user_registration_custom_notices', 'ur_email_send_failed_notice' );
+
+if ( ! function_exists( 'ur_email_send_failed_notice' ) ) {
+
+	/**
+	 * Add notice about email send failed to be displayed in dashboard.
+	 *
+	 * @param array $notices Custom notices.
+	 */
+	function ur_email_send_failed_notice( $notices ) {
+		$failed_data = get_transient( 'user_registration_mail_send_failed_count' );
+
+		if ( ! $failed_data ) {
+			return $notices;
+		}
+
+		$failed_count  = isset( $failed_data['failed_count'] ) ? $failed_data['failed_count'] : 0;
+		$error_message = isset( $failed_data['error_message'] ) ? $failed_data['error_message'] : '';
+
+		$custom_notice = array(
+			array(
+				'id'                    => 'ur_email_send_failed',
+				'type'                  => 'info',
+				'status'                => 'active',
+				'priority'              => '1',
+				'title'                 => __( 'User Registration Email Send Error', 'user-registration' ),
+				'message_content'       => wp_kses_post(
+					sprintf(
+						'<p>%s</p><p style="border-left: 2px solid #72aee6; background: #F0FFFF; padding: 10px;">%s</p><br/>',
+						__( 'The last emails sent from User Registration Plugin was not delivered to the user. ', 'user-registration' ),
+						$error_message
+					)
+				),
+				'buttons'               => array(
+					array(
+						'title'  => __( 'I have a query', 'user-registration' ),
+						'icon'   => 'dashicons-testimonial',
+						'link'   => 'https://wpuserregistration.com/support',
+						'class'  => 'button-secondary notice-have-query',
+						'target' => '_blank',
+					),
+					array(
+						'title'  => __( 'Visit Documentation', 'user-registration' ),
+						'icon'   => 'dashicons-media-document',
+						'link'   => 'https://docs.wpuserregistration.com/docs/emails-are-not-being-delivered/',
+						'class'  => 'button-secondary notice-have-query',
+						'target' => '_blank',
+					),
+				),
+				'permanent_dismiss'     => true,
+				'reopen_days'           => '1',
+				'reopen_times'          => '1',
+				'conditions_to_display' => array(
+					array(
+						'operator'    => 'AND',
+						'show_notice' => $failed_count > 5 ? true : false,
+					),
+				),
+			),
+		);
+
+		$notices = array_merge( $notices, $custom_notice );
+
+		return $custom_notice;
+	}
+}
+
+add_action( 'admin_init', 'user_registration_spam_users_detector' );
+
+if ( ! function_exists( 'user_registration_spam_users_detector' ) ) {
+
+	/**
+	 * Count numbers of spams registered in previous hour.
+	 */
+	function user_registration_spam_users_detector() {
+		global $wpdb;
+		$activation_date   = get_option( 'user_registration_activated' );
+		$current_timestamp = time();
+
+		$spam_notice_dismissed = get_option( 'user_registration_info_ur_spam_users_detected_notice_dismissed_temporarily', false );
+		$spam_notice_dismissed = ! $spam_notice_dismissed ? get_option( 'user_registration_ur_spam_users_detected_notice_dismissed', false ) : $spam_notice_dismissed;
+
+		if ( $current_timestamp - strtotime( $activation_date ) > 86400 && ! $spam_notice_dismissed ) {
+			$spam_count = get_transient( 'ur_spam_users_detected_count' );
+
+			if ( ! $spam_count ) {
+
+				$current_hour_time_gmt   = gmdate( 'Y-m-d H:i:s', $current_timestamp );
+				$previous_hour_timestamp = $current_timestamp - 3600;
+				$previous_hour_time_gmt  = gmdate( 'Y-m-d H:i:s', $previous_hour_timestamp );
+
+				$results = $wpdb->get_results(
+					$wpdb->prepare(
+						"SELECT u.ID
+						FROM {$wpdb->users} u
+						LEFT JOIN {$wpdb->usermeta} um ON u.ID = um.user_id AND um.meta_key = 'ur_form_id'
+						WHERE um.user_id IS NULL
+						AND u.user_registered BETWEEN %s AND %s",
+						$previous_hour_time_gmt,
+						$current_hour_time_gmt
+					)
+				);
+
+				$total_users = count( $results );
+				set_transient( 'ur_spam_users_detected_count', $total_users, HOUR_IN_SECONDS );
+			}
+		}
+	}
+}
+
+add_action( 'user_registration_custom_notices', 'ur_spam_users_detected' );
+
+if ( ! function_exists( 'ur_spam_users_detected' ) ) {
+
+	/**
+	 * Display spam users registered notice if spam users count exceeds 20 in past hour.
+	 *
+	 * @param array $notices Custom Notices.
+	 */
+	function ur_spam_users_detected( $notices ) {
+		$spam_users_count      = get_transient( 'ur_spam_users_detected_count' );
+		$spam_notice_dismissed = get_option( 'user_registration_info_ur_spam_users_detected_notice_dismissed_temporarily', false );
+		$spam_notice_dismissed = ! $spam_notice_dismissed ? get_option( 'user_registration_ur_spam_users_detected_notice_dismissed', false ) : $spam_notice_dismissed;
+
+		if ( ! $spam_users_count || $spam_notice_dismissed ) {
+			return $notices;
+		}
+
+		$custom_notice = array(
+			array(
+				'id'                    => 'ur_spam_users_detected',
+				'type'                  => 'info',
+				'status'                => 'active',
+				'priority'              => '1',
+				'title'                 => __( 'Unusual User Registrations Detected', 'user-registration' ),
+				'message_content'       => wp_kses_post(
+					sprintf(
+						'<p>%s</p><p>%s</p><br/>',
+						__( 'A significant number of users have registered on your site from sources other than the User Registration plugin\'s form.', 'user-registration' ),
+						__( 'These registrations may be suspicious. Please review and disable any other methods that allow user registrations if they are not intended. Additionally, consider enabling spam protection measures in the User Registration plugin to safeguard your site.', 'user-registration' ),
+					)
+				),
+				'buttons'               => array(
+					array(
+						'title'  => __( 'It was a false alarm', 'user-registration' ),
+						'icon'   => 'dashicons-no-alt',
+						'class'  => 'notice-dismiss notice-dismiss-permanently',
+						'target' => '',
+						'link'   => '',
+					),
+					array(
+						'title'  => __( 'I have a query', 'user-registration' ),
+						'icon'   => 'dashicons-testimonial',
+						'link'   => 'https://wpuserregistration.com/support',
+						'class'  => 'button-secondary notice-have-query',
+						'target' => '_blank',
+					),
+					array(
+						'title'  => __( 'Visit Documentation', 'user-registration' ),
+						'icon'   => 'dashicons-media-document',
+						'link'   => 'https://docs.wpuserregistration.com/docs/how-to-integrate-google-recaptcha/',
+						'class'  => 'button-secondary',
+						'target' => '_blank',
+					),
+				),
+				'permanent_dismiss'     => true,
+				'reopen_days'           => '1',
+				'reopen_times'          => '1',
+				'conditions_to_display' => array(
+					array(
+						'operator'    => 'AND',
+						'show_notice' => $spam_users_count > 20 ? true : false,
+					),
+				),
+			),
+		);
+
+		$notices = array_merge( $notices, $custom_notice );
+
+		return $custom_notice;
+	}
+}
+
+if ( ! function_exists( 'ur_non_deletable_fields' ) ) {
+	/**
+	 * user registration non deletable fields.
+	 */
+	function ur_non_deletable_fields() {
+		return apply_filters(
+			'user_registration_non_deletable_fields',
+			array(
+				'user_email',
+				'user_pass',
+			)
+		);
+	}
+}
+
+// TODO: Remove this code once Really Simple SSL plugin resolves the conflict from their side.
+if ( ! function_exists( 'ur_rsssl_anyone_can_register_conflict_resolver' ) ) {
+
+	/**
+	 * Resolve anyone can register setting conflict with Really Simple SSL Plugin.
+	 *
+	 * @param bool $value Option value.
+	 */
+	function ur_rsssl_anyone_can_register_conflict_resolver( $value ) {
+		global $wpdb;
+
+		if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'really-simple-ssl/rlrsssl-really-simple-ssl.php' ) ) {
+
+			$rsssl_options = get_option( 'rsssl_options', '' );
+			$rsssl_options = maybe_unserialize( $rsssl_options );
+
+			if ( isset( $rsssl_options['disable_anyone_can_register'] ) && $rsssl_options['disable_anyone_can_register'] ) {
+				$value = $wpdb->get_var( "SELECT option_value FROM {$wpdb->prefix}options WHERE option_name = 'users_can_register';" ); // phpcs:ignore;
+
+				if ( $value ) {
+					return true;
+				}
+			}
+		}
+
+		return $value;
+	}
+}
+add_filter( 'ur_register_setting_override', 'ur_rsssl_anyone_can_register_conflict_resolver', 10, 1 );
+
+add_filter( 'user_registration_settings_prevent_default_login', 'ur_prevent_default_login' );
+if ( ! function_exists( 'ur_prevent_default_login' ) ) {
+	/**
+	 * Handel error when default login screen is disabled but redirect login poage is not selected.
+	 *
+	 * @since 3.3.1
+	 *
+	 * @return @mixed
+	 */
+	function ur_prevent_default_login( $data ) {
+		// Return if default wp_login is disabled and no redirect url is set.
+		if ( isset( $data['user_registration_login_options_prevent_core_login'] ) && $data['user_registration_login_options_prevent_core_login'] ) {
+			if ( isset( $data['user_registration_login_options_login_redirect_url'] ) ) {
+				gettype( $data['user_registration_login_options_login_redirect_url'] );
+				if ( ! $data['user_registration_login_options_login_redirect_url'] ) {
+					return 'redirect_login_error';
+				}
+				if ( is_numeric( $data['user_registration_login_options_login_redirect_url'] ) ) {
+					$is_page_my_account_page = ur_find_my_account_in_page( $data['user_registration_login_options_login_redirect_url'] );
+					if ( ! $is_page_my_account_page ) {
+						return 'redirect_login_not_myaccount';
+					}
+				}
+			}
+		}
+		return true;
 	}
 }

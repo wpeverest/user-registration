@@ -65,6 +65,8 @@ class UR_AJAX {
 			'install_extension'         => false,
 			'profile_pic_remove'        => false,
 			'form_save_action'          => false,
+			'embed_form_action'         => false,
+			'embed_page_list'           => false,
 			'allow_usage_dismiss'       => false,
 			'cancel_email_change'       => false,
 			'email_setting_status'      => false,
@@ -363,6 +365,13 @@ class UR_AJAX {
 						$single_field[ $key ] = sanitize_text_field( htmlentities( $single_field[ $key ] ) );
 					} else {
 						$single_field[ $key ] = '';
+					}
+					break;
+				case 'signature':
+					if ( isset( $single_field[ $key ] ) ) {
+						$single_field[ $key ] = apply_filters( 'user_registration_process_signature_field_data', $single_field[ $key ] );
+					} else {
+						$single_field[ $key ] = $field['default'];
 					}
 					break;
 				default:
@@ -709,7 +718,8 @@ class UR_AJAX {
 		if ( $status ) {
 			wp_send_json_success( array( 'message' => __( 'Test email was sent successfully! Please check your inbox to make sure it is delivered.', 'user-registration' ) ) );
 		} {
-			wp_send_json_error( array( 'message' => __( 'Test email was unsuccessful! Something went wrong.', 'user-registration' ) ) );
+			$error_message = apply_filters( 'user_registration_email_send_failed_message', '' );
+			wp_send_json_error( array( 'message' => sprintf( __( 'Test email was unsuccessful!. %s', 'user-registration' ), $error_message ) ) );
 		}
 	}
 
@@ -942,6 +952,53 @@ class UR_AJAX {
 	}
 
 	/**
+	 * Get all pages for embed form form builder to page.
+	 *
+	 * @since 4.3.0
+	 */
+	public static function embed_page_list() {
+		check_ajax_referer( 'ur_embed_page_list_nonce', 'security' );
+		$args  = array(
+			'post_status' => 'publish',
+			'post_type'   => 'page',
+		);
+		$pages = get_pages( $args );
+		wp_send_json_success( $pages );
+	}
+
+	/**
+	 * Embed form action.
+	 *
+	 * @since 4.3.0
+	 */
+	public static function embed_form_action() {
+		check_ajax_referer( 'ur_embed_action_nonce', 'security' );
+		$page_id = empty( $_POST['page_id'] ) ? 0 : sanitize_text_field( absint( $_POST['page_id'] ) );
+
+		if ( empty( $page_id ) ) {
+			$url  = add_query_arg( 'post_type', 'page', admin_url( 'post-new.php' ) );
+			$meta = array(
+				'embed_page'       => 0,
+				'embed_page_title' => ! empty( $_POST['page_title'] ) ? sanitize_text_field( wp_unslash( $_POST['page_title'] ) ) : '',
+			);
+		} else {
+			$url  = get_edit_post_link( $page_id, '' );
+			$meta = array(
+				'embed_page' => $page_id,
+			);
+		}
+		$page_url        = add_query_arg(
+			array(
+				'form' => 'user_registration',
+			),
+			esc_url_raw( $url )
+		);
+		$meta['form_id'] = ! empty( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
+		UR_Admin_Embed_Wizard::set_meta( $meta );
+
+		wp_send_json_success( $page_url );
+	}
+	/**
 	 * Dashboard Widget data.
 	 *
 	 * @since 1.5.8
@@ -1144,6 +1201,11 @@ class UR_AJAX {
 					'reopen_times' => $reopen_times + 1,
 				);
 				update_option( 'user_registration_' . $notice_id . '_notice_dismissed_temporarily', json_encode( $notice_data ) );
+			}
+
+			// Never display mail send failed notice once dismissed.
+			if ( 'info_ur_email_send_failed' === $notice_id ) {
+				delete_transient( 'user_registration_mail_send_failed_count' );
 			}
 		}
 	}

@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 5.2
 Requires PHP: 7.2
-Tested up to: 6.6
-Stable tag: 3.3.0
+Tested up to: 6.6.1
+Stable tag: 3.3.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -217,6 +217,10 @@ User Registration is updated regularly to ensure compatibility with the latest v
 
 We are ready to assist you! You can contact us through the WordPress.org help forums or by visiting our [help page](https://wpuserregistration.com/support/).
 
+= How can I report security bugs? =
+
+You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team help validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/user-registration)
+
 == Screenshots ==
 
 1. Form Fields
@@ -238,17 +242,23 @@ We are ready to assist you! You can contact us through the WordPress.org help fo
 
 == Changelog ==
 
-= 3.3.0    - 31/07/2024 =
-Refactor   - Custom plugin notice rendering.
-Feature    - Akismet integration.
-Enhance    - Script and styles optimization.
-Dev        - Compatibility for Signature Field.
-Dev        - Compatibility temporarily disable users.
-Dev        - Compatibility for image based captcha.
-Fix        - Avoid multiple query for same info.
-Fix        - Login Redirection not working after email confirmation.
-Fix        - Not able to login with email provided in username field.
-Fix        - Smart Tags related to current page not working in certain emails.
+= 3.3.0.1  - 05/08/2024 =
+* Fix      - Fatal error while fetching large amount of user data on page load.
+
+= 3.3.0    - 01/08/2024 =
+* Refactor - Custom plugin notice rendering.
+* Feature  - Akismet integration.
+* Enhance  - Script and styles optimization.
+* Dev      - Compatibility for Signature Field.
+* Dev      - Compatibility temporarily disable users.
+* Dev      - Compatibility for image based captcha.
+* Fix      - Avoid multiple query for same info.
+* Fix      - Modules not loading due to ssl issue.
+* Fix      - Input field validating while conditionally hidden.
+* Fix      - Login Redirection not working after email confirmation.
+* Fix      - Not able to login with email provided in username field.
+* Fix      - Smart Tags related to current page not working in certain emails.
+
 
 = 3.2.1.3  - 03/07/2024 =
 * Fix      - Remove unnecessary source map from build.
