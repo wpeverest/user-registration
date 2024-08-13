@@ -615,6 +615,8 @@ class UR_Emailer {
 			$message                   = $settings->ur_get_registration_denied_email();
 			$message                   = get_option( 'user_registration_registration_denied_email', $message );
 			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
+			$message                   = ur_get_translated_string(  'admin_texts_user_registration_registration_denied_email', $message, $current_language, 'user_registration_registration_denied_email' );
+			$subject                   = ur_get_translated_string(  'admin_texts_user_registration_registration_denied_email_subject', $subject, $current_language, 'user_registration_registration_denied_email_subject' );
 			$message                   = self::parse_smart_tags( $message, $values, $name_value );
 			$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
 
@@ -628,8 +630,8 @@ class UR_Emailer {
 			$message                   = $settings->ur_get_registration_approved_email();
 			$message                   = get_option( 'user_registration_registration_approved_email', $message );
 			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
-			$message                   = ur_get_translated_string( $message, $current_language, 'user_registration_registration_approved_email' );
-			$subject                   = ur_get_translated_string( $subject, $current_language, 'user_registration_registration_approved_email_subject' );
+			$message                   = ur_get_translated_string(  'admin_texts_user_registration_registration_approved_email', $message, $current_language, 'user_registration_registration_approved_email' );
+			$subject                   = ur_get_translated_string(  'admin_texts_user_registration_registration_approved_email_subject', $subject, $current_language, 'user_registration_registration_approved_email_subject' );
 			$message                   = self::parse_smart_tags( $message, $values, $name_value );
 			$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
 
