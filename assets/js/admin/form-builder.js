@@ -297,6 +297,7 @@
 			 */
 			ur_save_form: function () {
 				var validation_response = URFormBuilder.get_validation_status();
+
 				if (validation_response.validation_status === false) {
 					URFormBuilder.show_message(validation_response.message);
 					return;
@@ -815,20 +816,10 @@
 					return response;
 				}
 
-				if (
-					$("#user_registration_enable_stripe").is(":checked") &&
-					$("#user_registration_enable_stripe_recurring").is(
-						":checked"
-					) &&
-					$(".ur-input-type-coupon-field").length > 0
-				) {
-					$("#user_registration_enable_stripe_recurring").prop(
-						"checked",
-						false
-					);
+				if($('#user_registration_enable_stripe').is(':checked') && $('#user_registration_enable_stripe_recurring').is(':checked') && $('.ur-input-type-coupon-field').length > 0) {
+					$('#user_registration_enable_stripe_recurring').prop('checked', false)
 					response.validation_status = false;
-					response.message =
-						user_registration_form_builder_data.i18n_admin.i18n_no_stripe_for_coupon;
+					response.message = user_registration_form_builder_data.i18n_admin.i18n_no_stripe_for_coupon;
 					return response;
 				}
 
@@ -985,6 +976,7 @@
 				}
 				var paypal = $("#user_registration_enable_paypal_standard");
 				var stripe = $("#user_registration_enable_stripe");
+				var anet = $("#user_registration_enable_authorize_net");
 
 				if (paypal.is(":checked")) {
 					var payment_fields = ["payment_fields"];
@@ -998,6 +990,13 @@
 						];
 
 						required_fields = required_fields.concat(stripe_fields);
+					} else if (anet.is(":checked")) {
+						var anet_fields = [
+							"payment_fields",
+							"authorize_net_gateway"
+						];
+
+						required_fields = required_fields.concat(anet_fields);
 					}
 				}
 				for (
@@ -1057,9 +1056,15 @@
 									user_registration_form_builder_data
 										.i18n_admin.i18n_user_password;
 							} else {
-								var field =
-									user_registration_form_builder_data
-										.i18n_admin.i18n_stripe_field;
+								if ( "authorize_net_gateway" === required_fields[required_index] ) {
+									var field =
+										user_registration_form_builder_data
+											.i18n_admin.i18n_anet_field;
+								} else {
+									var field =
+										user_registration_form_builder_data
+											.i18n_admin.i18n_stripe_field;
+								}
 							}
 
 							response.message =

@@ -559,6 +559,7 @@ class UR_Admin_Assets {
 			'i18n_user_password'                          => _x( 'User Password', 'user-registration admin', 'user-registration' ),
 			'i18n_payment_field'                          => _x( 'Payment', 'user-registration admin', 'user-registration' ),
 			'i18n_stripe_field'                           => _x( 'Stripe Gateway', 'user-registration admin', 'user-registration' ),
+			'i18n_anet_field'                             => _x( 'Authorize.net', 'user-registration admin', 'user-registration' ),
 			'i18n_are_you_sure_want_to_delete_row'        => _x( 'Are you sure want to delete this row?', 'user registration admin', 'user-registration' ),
 			'i18n_are_you_sure_want_to_delete_field'      => _x( 'Are you sure want to delete this field?', 'user registration admin', 'user-registration' ),
 			'i18n_at_least_one_row_is_required_to_create_a_registration_form' => _x( 'At least one row is required to create a registration form.', 'user registration admin', 'user-registration' ),

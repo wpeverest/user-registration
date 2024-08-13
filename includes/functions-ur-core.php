@@ -2599,6 +2599,7 @@ if ( ! function_exists( 'user_registration_pro_get_conditional_fields_by_form_id
 									'billing_address_title',
 									'shipping_address_title',
 									'stripe_gateway',
+									'authorize_net_gateway',
 									'profile_picture',
 									'file',
 								);
