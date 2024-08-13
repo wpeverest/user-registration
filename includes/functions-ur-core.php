@@ -5527,15 +5527,17 @@ if ( ! function_exists( 'ur_get_translated_string' ) ) {
 	 *
 	 * @since 4.2.1
 	 *
-	 * @param  string $string String.
+	 * @param  string $domain Domain.
+	 * @param  string $string String Value.
 	 * @param  string $language_code Language Code.
 	 * @param  string $field_key Field Key.
 	 * @param  string $form_id Form ID.
 	 */
-	function ur_get_translated_string( $string, $language_code, $field_key, $form_id = 0 ) {
+	function ur_get_translated_string( $domain, $string, $language_code, $field_key, $form_id = 0 ) {
 		if ( function_exists( 'icl_translate' ) ) {
 			$language_code     = is_array( $language_code ) ? $language_code[0] : $language_code;
-			$translated_string = apply_filters( 'wpml_translate_single_string', $string, 'user-registration', $string, $language_code );
+			$translated_string = apply_filters( 'wpml_translate_single_string', $string, $domain, $field_key, $language_code );
+
 			if ( false === $translated_string || $translated_string === $language_code ) {
 				return $string;
 			} else {
@@ -5828,6 +5830,7 @@ if ( ! function_exists( 'ur_current_url' ) ) {
 		return esc_url_raw( $url );
 	}
 }
+
 add_filter( 'user_registration_settings_text_format', 'ur_settings_text_format', 10 );
 if ( ! function_exists( 'ur_settings_text_format' ) ) {
 	/**
@@ -5919,6 +5922,178 @@ if ( ! function_exists( 'ur_get_capitalized_words' ) ) {
 
 		return implode( ' ', $capitalized_words );
 	}
+}
 
+add_action( 'wp_mail_failed', 'ur_email_send_failed_handler', 1 );
 
+if ( ! function_exists( 'ur_email_send_failed_handler' ) ) {
+
+	/**
+	 * Handle errors fetch mechanism when mail send failed.
+	 *
+	 * @param object $error_instance WP_Error message instance.
+	 */
+	function ur_email_send_failed_handler( $error_instance ) {
+		$error_message = '';
+
+		if ( '' !== json_decode( $error_instance->get_error_message() ) ) {
+			/* translators: %s: Status Log URL*/
+			$error_message = wp_kses_post( sprintf( __( 'Please check the `ur_mail_errors` log under <a target="_blank" href= "%s"> Status Log </a> section.', 'user-registration' ), admin_url( 'admin.php?page=user-registration-status' ) ) );
+			ur_get_logger()->error( $error_instance->get_error_message(), array( 'source' => 'ur_mail_errors' ) );
+		} else {
+			$error_message = $error_instance->get_error_message();
+			ur_get_logger()->error( $error_instance->get_error_message(), array( 'source' => 'ur_mail_errors' ) );
+		}
+
+		if ( '' !== $error_message ) {
+			add_filter(
+				'user_registration_email_send_failed_message',
+				function ( $msg ) use ( $error_message ) {
+					return $error_message;
+				}
+			);
+		}
+	}
+}
+
+add_action( 'user_registration_custom_notices', 'ur_email_send_failed_notice' );
+
+if ( ! function_exists( 'ur_email_send_failed_notice' ) ) {
+
+	/**
+	 * Add notice about email send failed to be displayed in dashboard.
+	 *
+	 * @param array $notices Custom notices.
+	 */
+	function ur_email_send_failed_notice( $notices ) {
+		$failed_data = get_transient( 'user_registration_mail_send_failed_count' );
+
+		if ( ! $failed_data ) {
+			return $notices;
+		}
+
+		$failed_count  = isset( $failed_data['failed_count'] ) ? $failed_data['failed_count'] : 0;
+		$error_message = isset( $failed_data['error_message'] ) ? $failed_data['error_message'] : '';
+
+		$custom_notice = array(
+			array(
+				'id'                    => 'ur_email_send_failed',
+				'type'                  => 'info',
+				'status'                => 'active',
+				'priority'              => '1',
+				'title'                 => __( 'User Registration Email Send Error', 'user-registration' ),
+				'message_content'       => wp_kses_post(
+					sprintf(
+						'<p>%s</p><p style="border-left: 2px solid #72aee6; background: #F0FFFF; padding: 10px;">%s</p><br/>',
+						__( 'The last emails sent from User Registration Plugin was not delivered to the user. ', 'user-registration' ),
+						$error_message
+					)
+				),
+				'buttons'               => array(
+					array(
+						'title'  => __( 'I have a query', 'user-registration' ),
+						'icon'   => 'dashicons-testimonial',
+						'link'   => 'https://wpuserregistration.com/support',
+						'class'  => 'button-secondary notice-have-query',
+						'target' => '_blank',
+					),
+					array(
+						'title'  => __( 'Visit Documentation', 'user-registration' ),
+						'icon'   => 'dashicons-media-document',
+						'link'   => 'https://docs.wpuserregistration.com/docs/emails-are-not-being-delivered/',
+						'class'  => 'button-secondary notice-have-query',
+						'target' => '_blank',
+					),
+				),
+				'permanent_dismiss'     => true,
+				'reopen_days'           => '1',
+				'reopen_times'          => '1',
+				'conditions_to_display' => array(
+					array(
+						'operator'    => 'AND',
+						'show_notice' => $failed_count > 5 ? true : false,
+					),
+				),
+			),
+		);
+
+		$notices = array_merge( $notices, $custom_notice );
+
+		return $custom_notice;
+  }
+}
+
+if ( ! function_exists( 'ur_non_deletable_fields' ) ) {
+	/**
+	 * user registration non deletable fields.
+	 */
+	function ur_non_deletable_fields() {
+		return apply_filters(
+			'user_registration_non_deletable_fields',
+			array(
+				'user_email',
+				'user_pass',
+				)
+		);
+	}
+}
+
+// TODO: Remove this code once Really Simple SSL plugin resolves the conflict from their side.
+if ( ! function_exists( 'ur_rsssl_anyone_can_register_conflict_resolver' ) ) {
+
+	/**
+	 * Resolve anyone can register setting conflict with Really Simple SSL Plugin.
+	 *
+	 * @param bool $value Option value.
+	 */
+	function ur_rsssl_anyone_can_register_conflict_resolver( $value ) {
+		global $wpdb;
+
+		if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'really-simple-ssl/rlrsssl-really-simple-ssl.php' ) ) {
+
+			$rsssl_options = get_option( 'rsssl_options', '' );
+			$rsssl_options = maybe_unserialize( $rsssl_options );
+
+			if ( isset( $rsssl_options['disable_anyone_can_register'] ) && $rsssl_options['disable_anyone_can_register'] ) {
+				$value = $wpdb->get_var( "SELECT option_value FROM {$wpdb->prefix}options WHERE option_name = 'users_can_register';" ); // phpcs:ignore;
+
+				if ( $value ) {
+					return true;
+				}
+			}
+		}
+
+		return $value;
+	}
+}
+add_filter( 'ur_register_setting_override', 'ur_rsssl_anyone_can_register_conflict_resolver', 10, 1 );
+
+add_filter( 'user_registration_settings_prevent_default_login', 'ur_prevent_default_login' );
+if ( ! function_exists( 'ur_prevent_default_login' ) ) {
+	/**
+	 * Handel error when default login screen is disabled but redirect login poage is not selected.
+	 *
+	 * @since 3.3.1
+	 *
+	 * @return @mixed
+	 */
+	function ur_prevent_default_login( $data ) {
+		// Return if default wp_login is disabled and no redirect url is set.
+		if ( isset( $data['user_registration_login_options_prevent_core_login'] ) && $data['user_registration_login_options_prevent_core_login'] ) {
+			if ( isset( $data['user_registration_login_options_login_redirect_url'] )  ) {
+				gettype( $data['user_registration_login_options_login_redirect_url'] );
+				if( ! $data['user_registration_login_options_login_redirect_url'] ) {
+					return 'redirect_login_error';
+				}
+				if( is_numeric( $data['user_registration_login_options_login_redirect_url'] ) ) {
+					$is_page_my_account_page = ur_find_my_account_in_page( $data['user_registration_login_options_login_redirect_url'] );
+					if ( ! $is_page_my_account_page ) {
+						return 'redirect_login_not_myaccount';
+					}
+
+				}
+			}
+		}
+		return true;
+	}
 }
