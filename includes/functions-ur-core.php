@@ -5830,6 +5830,21 @@ if ( ! function_exists( 'ur_current_url' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ur_non_deletable_fields' ) ) {
+	/**
+	 * user registration non deletable fields.
+	 */
+	function ur_non_deletable_fields() {
+		return apply_filters(
+			'user_registration_non_deletable_fields',
+			array(
+				'user_email',
+				'user_pass',
+				)
+		);
+	}
+}
+
 // TODO: Remove this code once Really Simple SSL plugin resolves the conflict from their side.
 if ( ! function_exists( 'ur_rsssl_anyone_can_register_conflict_resolver' ) ) {
 
