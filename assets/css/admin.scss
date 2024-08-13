@@ -3017,6 +3017,60 @@ body {
 			font-weight: $regular;
 		}
 
+		.user-registration-info {
+			.swl2_header {
+				&.swl2_title {
+					margin-bottom: 24px;
+				}
+				&.swal2-icon {
+					&.swal2-icon-content {
+						font-size: 2.4rem !important;
+					}
+				}
+			}
+			.swal2-content {
+				padding: 0;
+				text-align: center;
+
+				.swal2-html-container {
+					text-align: center;
+
+					p {
+						font-size: 1rem;
+					}
+					&.ur-embed-new-page-container input {
+						min-width: 300px !important;
+						width: 100% !important;
+					}
+
+					&.user-registration-settings-swal2 {
+						padding: $spacing_16px;
+					}
+				}
+			}
+			button {
+				margin: 0;
+				transition: all 0.3s ease-in-out;
+
+				&.swal2-confirm {
+					background-color: #475bb2 !important;
+					border: $border_width solid #475bb2;
+					border-radius: $border_radius_3;
+					transition: all 0.3s ease-in-out;
+				}
+
+				&.swal2-cancel {
+					background: transparent;
+					border: $border_width solid $grey-200;
+					color: $grey-200;
+
+					&:hover {
+						border-color: $grey-500;
+						color: $grey-500;
+					}
+				}
+			}
+		}
 		.user-registration-trashed {
 			button {
 				margin: 0;
@@ -5544,7 +5598,7 @@ body.user-registration {
 						tbody {
 							tr {
 								&:nth-child(odd) {
-									background: #F8F8FA;
+									background: #f8f8fa;
 								}
 
 								td {
@@ -5557,11 +5611,11 @@ body.user-registration {
 
 							.coupon-active {
 								font-weight: 500;
-								color: #4CC741;
+								color: #4cc741;
 							}
 							.coupon-inactive {
 								font-weight: 500;
-								color: #F25656;
+								color: #f25656;
 							}
 
 							.coupon-expired {
@@ -5601,18 +5655,18 @@ body.user-registration {
 											padding: 4px 8px;
 
 											&.completed {
-												border: 1px solid #4CC741;
-												background: #F5FFF4;
+												border: 1px solid #4cc741;
+												background: #f5fff4;
 											}
 
 											&.pending {
-												border: 1px solid #EE9936;
-												background: #FFFAF5;
+												border: 1px solid #ee9936;
+												background: #fffaf5;
 											}
 
 											&.failed {
-												border: 1px solid #F25656;
-												background: #FFF4F4;
+												border: 1px solid #f25656;
+												background: #fff4f4;
 											}
 										}
 									}
@@ -5628,7 +5682,7 @@ body.user-registration {
 		.modal-content {
 			margin: 0;
 			border-radius: 12px;
-			background: #FFF;
+			background: #fff;
 			box-shadow: 0px 6px 21px 0px rgba(10, 10, 10, 0.08);
 			padding: 28px 32px;
 			box-sizing: border-box;
@@ -5673,7 +5727,7 @@ body.user-registration {
 						display: flex;
 						align-items: center;
 						gap: 10px;
-						color: #6B6B6B;
+						color: #6b6b6b;
 						font-size: 15px;
 						font-weight: 400;
 						line-height: 23px;
@@ -5684,18 +5738,18 @@ body.user-registration {
 							width: max-content;
 
 							&.completed {
-								border: 1px solid #4CC741;
-								background: #F5FFF4;
+								border: 1px solid #4cc741;
+								background: #f5fff4;
 							}
 
 							&-pending {
-								border: 1px solid #EE9936;
-								background: #FFFAF5;
+								border: 1px solid #ee9936;
+								background: #fffaf5;
 							}
 
 							&.failed {
-								border: 1px solid #F25656;
-								background: #FFF4F4;
+								border: 1px solid #f25656;
+								background: #fff4f4;
 							}
 						}
 					}
@@ -5756,7 +5810,7 @@ body.user-registration {
 					margin: 0;
 
 					&.swal2-confirm {
-						background: #F25656 !important;
+						background: #f25656 !important;
 
 						&:hover {
 							background: #e34747 !important;
