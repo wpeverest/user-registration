@@ -822,7 +822,7 @@ jQuery(function ($) {
 							add_tag +=
 								' <a href="' +
 								value +
-								'" target="_blank">' +
+								' "rel="noreferrer noopener" target="_blank">' +
 								index +
 								"</a>";
 							i++;

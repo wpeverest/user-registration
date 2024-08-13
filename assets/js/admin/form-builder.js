@@ -535,7 +535,7 @@
 							) {
 								var title = "Form successfully created.";
 								message_body =
-									"<p>Want to create a login form as well? Check this <a target='_blank' href='https://docs.wpuserregistration.com/registration-form-and-login-form/how-to-show-login-form/'>link</a>. To know more about other cool features check our <a target='_blank' href='https://docs.wpuserregistration.com/'>docs</a>.</p>";
+									"<p>Want to create a login form as well? Check this <a rel='noreferrer noopener' target='_blank' href='https://docs.wpuserregistration.com/registration-form-and-login-form/how-to-show-login-form/'>link</a>. To know more about other cool features check our <a rel='noreferrer noopener' target='_blank' href='https://docs.wpuserregistration.com/'>docs</a>.</p>";
 								Swal.fire({
 									icon: "success",
 									title: title,

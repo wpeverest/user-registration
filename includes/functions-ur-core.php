@@ -1297,7 +1297,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'type'              => 'toggle',
 
 				/* translators: 1: Link tag open 2:: Link content 3:: Link tag close */
-				'label'             => sprintf( __( 'Enable &nbsp; %1$s %2$s Captcha %3$s &nbsp; Support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=captcha" target="_blank">', '</a>' ),
+				'label'             => sprintf( __( 'Enable &nbsp; %1$s %2$s Captcha %3$s &nbsp; Support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=captcha" rel="noreferrer noopener" target="_blank">', '</a>' ),
 				'description'       => '',
 				'required'          => false,
 				'id'                => 'user_registration_form_setting_enable_recaptcha_support',
@@ -3695,7 +3695,7 @@ if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
 
 					/* translators: %s: License Plan Name. */
 					$tooltip_html = sprintf( __( 'You have been subscribed to %s plan. Please upgrade to higher plans to use this feature.', 'user-registration' ), ucfirst( $license_plan ) );
-					$button       = '<a target="_blank" href="https://wpuserregistration.com/pricing/?utm_source=settings-sidebar&utm_medium=premium-addon-tooltip&utm_campaign=' . UR()->utm_campaign . '">' . esc_html__( 'Upgrade Plan', 'user-registration' ) . '</a>';
+					$button       = '<a rel="noreferrer noopener" target="_blank" href="https://wpuserregistration.com/pricing/?utm_source=settings-sidebar&utm_medium=premium-addon-tooltip&utm_campaign=' . UR()->utm_campaign . '">' . esc_html__( 'Upgrade Plan', 'user-registration' ) . '</a>';
 					array_push( $tabs_to_display, $tab );
 				} else {
 					$plugin_name = $detail['name'];
@@ -3725,7 +3725,7 @@ if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
 				}
 
 				$tooltip_html = __( 'You are currently using the free version of our plugin. Please upgrade to premium version to use this feature.', 'user-registration' );
-				$button       = '<a target="_blank" href="https://wpuserregistration.com/pricing/?utm_source=settings-sidebar&utm_medium=premium-addon-tooltip&utm_campaign=' . UR()->utm_campaign . '">' . esc_html__( 'Upgrade to Pro', 'user-registration' ) . '</a>';
+				$button       = '<a rel="noreferrer noopener" target="_blank" href="https://wpuserregistration.com/pricing/?utm_source=settings-sidebar&utm_medium=premium-addon-tooltip&utm_campaign=' . UR()->utm_campaign . '">' . esc_html__( 'Upgrade to Pro', 'user-registration' ) . '</a>';
 				array_push( $tabs_to_display, $tab );
 			}
 
@@ -4610,6 +4610,7 @@ if ( ! function_exists( 'ur_add_links_to_top_nav' ) ) {
 					),
 					'meta'   => array(
 						'target' => '_blank',
+						'rel'    => 'noopener noreferrer',
 					),
 				)
 			);
@@ -5707,9 +5708,9 @@ if ( ! function_exists( 'ur_check_akismet_installation' ) ) {
 				$warning_color,
 				esc_html__( 'Warning:-', 'user-registration' ),
 				esc_html__( ' This feature is inactive because', 'user-registration' ),
-				'<a href="' . esc_url_raw( 'https://wordpress.org/plugins/akismet/' ) . '" target="_blank">' . esc_html__( 'Akismet', 'user-registration' ) . '</a>',
+				'<a href="' . esc_url_raw( 'https://wordpress.org/plugins/akismet/' ) . '" rel="noreferrer noopener" target="_blank">' . esc_html__( 'Akismet', 'user-registration' ) . '</a>',
 				esc_html__( 'plugin has not been installed. For more', 'user-registration' ),
-				'<a href="https://docs.wpuserregistration.com/docs/individual-form-settings/#10-toc-title" target="_blank">' . esc_html__( 'information.', 'user-registration' ) . '</a>'
+				'<a href="https://docs.wpuserregistration.com/docs/individual-form-settings/#10-toc-title" rel="noreferrer noopener" target="_blank">' . esc_html__( 'information.', 'user-registration' ) . '</a>'
 			);
 		} elseif ( ! is_plugin_active( 'akismet/akismet.php' ) ) {
 			return sprintf(
@@ -5717,9 +5718,9 @@ if ( ! function_exists( 'ur_check_akismet_installation' ) ) {
 				$warning_color,
 				esc_html__( 'Warning:- ', 'user-registration' ),
 				esc_html__( 'This feature is inactive because', 'user-registration' ),
-				'<a href="' . esc_url( admin_url( 'plugins.php' ) ) . '" target="_blank">' . esc_html__( 'Akismet', 'user-registration' ) . '</a>',
+				'<a href="' . esc_url( admin_url( 'plugins.php' ) ) . '" rel="noreferrer noopener" target="_blank">' . esc_html__( 'Akismet', 'user-registration' ) . '</a>',
 				esc_html__( 'plugin is not activated. For more', 'user-registration' ),
-				'<a href="https://docs.wpuserregistration.com/docs/individual-form-settings/#10-toc-title" target="_blank">' . esc_html__( 'information.', 'user-registration' ) . '</a>'
+				'<a href="https://docs.wpuserregistration.com/docs/individual-form-settings/#10-toc-title" rel="noreferrer noopener" target="_blank">' . esc_html__( 'information.', 'user-registration' ) . '</a>'
 			);
 		} elseif ( ! ur_is_akismet_configured() ) {
 			return sprintf(
@@ -5727,9 +5728,9 @@ if ( ! function_exists( 'ur_check_akismet_installation' ) ) {
 				$warning_color,
 				esc_html__( 'Warning:-', 'user-registration' ),
 				esc_html__( 'This feature is inactive because', 'user-registration' ),
-				'<a href="' . esc_url( admin_url( 'options-general.php?page=akismet-key-config' ) ) . '" target="_blank">' . esc_html__( 'Akismet', 'user-registration' ) . '</a>',
+				'<a href="' . esc_url( admin_url( 'options-general.php?page=akismet-key-config' ) ) . '" rel="noreferrer noopener" target="_blank">' . esc_html__( 'Akismet', 'user-registration' ) . '</a>',
 				esc_html__( 'plugin has not been properly configured. For more', 'user-registration' ),
-				'<a href="https://docs.wpuserregistration.com/docs/individual-form-settings/#10-toc-title" target="_blank">' . esc_html__( 'information.', 'user-registration' ) . '</a>'
+				'<a href="https://docs.wpuserregistration.com/docs/individual-form-settings/#10-toc-title" rel="noreferrer noopener" target="_blank">' . esc_html__( 'information.', 'user-registration' ) . '</a>'
 			);
 		}
 	}

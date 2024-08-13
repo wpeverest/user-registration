@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			sprintf(
 					/* translators: 1 General Settings, 2: Link to anyone can register settings */
 				__( 'To allow users to register for your website via User registration, you must first enable user registration. Go to %1$sSettings > General%2$s tab, and under Membership make sure to check <strong>Anyone can register</strong>.', 'user-registration' ),
-				'<a target="_blank" href="' . admin_url( 'options-general.php#admin_email' ) . '">',
+				'<a rel="noreferrer noopener" target="_blank" href="' . admin_url( 'options-general.php#admin_email' ) . '">',
 				'</a>'
 			)
 		);

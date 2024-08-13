@@ -255,7 +255,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 				$settings .= '</label>';
 				$settings .= '</td>';
 				$settings .= '<td class="ur-email-settings-table">';
-				$settings .= '<a class="button tips user-registration-email-preview " target="__blank" data-tip="' . esc_attr__( 'Preview', 'user-registration' ) . '" href="' . esc_url(
+				$settings .= '<a class="button tips user-registration-email-preview " rel="noreferrer noopener" target="__blank" data-tip="' . esc_attr__( 'Preview', 'user-registration' ) . '" href="' . esc_url(
 					add_query_arg(
 						array(
 							'ur_email_preview' => $email->id,
@@ -318,7 +318,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			if ( ! empty( $current_section ) ) {
 				?>
 				<div id ="smart-tags">
-				<a href="https://docs.wpuserregistration.com/docs/smart-tags/" target="_blank"><?php echo esc_html__( 'Smart Tags Used', 'user-registration' ); ?></a>
+				<a href="https://docs.wpuserregistration.com/docs/smart-tags/" rel="noreferrer noopener" target="_blank"><?php echo esc_html__( 'Smart Tags Used', 'user-registration' ); ?></a>
 				</div>
 				<?php
 			}

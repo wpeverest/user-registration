@@ -863,7 +863,7 @@ class UR_AJAX {
 						throw new Exception(
 							sprintf(
 							/* translators: %s - Integration tab url */
-								'%s <a href="%s" class="ur-captcha-error" target="_blank">here</a> to add them and save your form.',
+								'%s <a href="%s" class="ur-captcha-error" rel="noreferrer noopener" target="_blank">here</a> to add them and save your form.',
 								esc_html__( 'Seems like you are trying to enable the captcha feature, but the captcha keys are empty. Please click', 'user-registration' ),
 								esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=captcha' ) ) ) ); //phpcs:ignore
 					}
@@ -1606,10 +1606,10 @@ class UR_AJAX {
 		if ( false === $license_data ) {
 
 			if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
-				$button = '<div class="action-buttons"><a class="button activate-license-now" href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=license' ) ) . '" target="_blank">' . esc_html__( 'Activate License', 'user-registration' ) . '</a></div>';
+				$button = '<div class="action-buttons"><a class="button activate-license-now" href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=license' ) ) . '" rel="noreferrer noopener" target="_blank">' . esc_html__( 'Activate License', 'user-registration' ) . '</a></div>';
 				wp_send_json_success( array( 'action_button' => $button ) );
 			} else {
-				$button = '<div class="action-buttons"><a class="button upgrade-now" href="https://wpuserregistration.com/pricing/?utm_source=builder-fields&utm_medium=premium-field-popup&utm_campaign=' . UR()->utm_campaign . '" target="_blank">' . esc_html__( 'Upgrade Plan', 'user-registration' ) . '</a></div>';
+				$button = '<div class="action-buttons"><a class="button upgrade-now" href="https://wpuserregistration.com/pricing/?utm_source=builder-fields&utm_medium=premium-field-popup&utm_campaign=' . UR()->utm_campaign . '" rel="noreferrer noopener" target="_blank">' . esc_html__( 'Upgrade Plan', 'user-registration' ) . '</a></div>';
 				wp_send_json_success( array( 'action_button' => $button ) );
 			}
 		}
