@@ -7,8 +7,10 @@
 .user-registration-notice {
   padding: 15px 0 15px 15px;
   background-color: #fff; }
-  .user-registration-notice .notice-dismiss:before {
-    display: none; }
+  .user-registration-notice .notice-dismiss {
+    margin-right: 2px; }
+    .user-registration-notice .notice-dismiss:before {
+      display: none; }
   .user-registration-notice.is-dismissible .notice-dismiss::before {
     display: block; }
   .user-registration-notice .user-registration-notice-thumbnail {

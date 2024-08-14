@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 5.2
 Requires PHP: 7.2
 Tested up to: 6.6.1
-Stable tag: 3.3.0.1
+Stable tag: 3.3.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -241,6 +241,26 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 16. User Account Page -  Vertical Layout
 
 == Changelog ==
+
+= 3.3.1     - 19/08/2024 =
+* Feature   - Embed option in form builder.
+* Enhance   - Gutenberg block preview.
+* Enhance   - Improved error handling for mail sending.
+* Enhance   - Prevent deleting user email and password fields.
+* Enhance   - Disable profile picture sync with registration form.
+* Enhance   - Custom password strength and realtime password strength guide.
+* Enhance   - Display notice about possible spam registrations.
+* Tweak     - Improve error handling when ajax is disabled.
+* Tweak     - Moved Elementor Widget for Registration Forms to free.
+* Tweak     - Onboarding texts and buttons improvement.
+* Dev       - Compatibility for Authorize.net Addon.
+* Dev       - Compatibility for SMS verification.
+* Dev       - Add noreferer and noopener in all target blank anchor tags.
+* Fix       - Unable to publish form from draft status. 
+* Fix       - Undefined variable $form_row_data.
+* Fix       - Disable default wordpress login not working.
+* Fix       - The email content translation issues with WPML plugin.
+* Fix       - Anyone can register option not working due to conflict with the Really Simple SSL plugin.
 
 = 3.3.0.1  - 05/08/2024 =
 * Fix      - Fatal error while fetching large amount of user data on page load.

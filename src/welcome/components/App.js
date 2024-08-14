@@ -9,7 +9,7 @@ import {
 	Heading,
 	Text,
 	Flex,
-	Center,
+	Center
 } from "@chakra-ui/react";
 import apiFetch from "@wordpress/api-fetch";
 import { __ } from "@wordpress/i18n";
@@ -28,7 +28,7 @@ import { useStateValue } from "../../context/StateProvider";
 import { actionTypes } from "../../context/gettingStartedContext";
 
 function App() {
-	const [{ settings, installPage }, dispatch] = useStateValue();
+	const [{ settings, installPage, registrationPageLink }, dispatch] = useStateValue();
 	const [initiateInstall, setInitiateInstall] = useState(false);
 	const [disabledLink, setDisabledLink] = useState(false);
 
@@ -37,10 +37,9 @@ function App() {
 		adminURL,
 		siteURL,
 		defaultFormURL,
-		newFormURL,
 		urRestApiNonce,
 		onBoardIconsURL,
-		restURL,
+		restURL
 	} = typeof _UR_WIZARD_ !== "undefined" && _UR_WIZARD_;
 
 	const [steps, setSteps] = useState([
@@ -49,11 +48,11 @@ function App() {
 			label: __("Install Pages", "user-registration"),
 			title: __("Install Pages", "user-registration"),
 			description: __(
-				"The following pages will be installed automatically.",
-				"user-registration",
+				"The following pages and forms will be created automatically.",
+				"user-registration"
 			),
 			isDone: true,
-			component: <InstallPage />,
+			component: <InstallPage />
 		},
 		{
 			key: "general_settings",
@@ -61,10 +60,10 @@ function App() {
 			title: __("General Settings", "user-registration"),
 			description: __(
 				"Customize your general settings as per your preference.",
-				"user-registration",
+				"user-registration"
 			),
 			isDone: false,
-			component: <GeneralSettings />,
+			component: <GeneralSettings />
 		},
 		{
 			key: "registration_settings",
@@ -72,28 +71,28 @@ function App() {
 			title: __("Registration Settings", "user-registration"),
 			description: __(
 				"Customize your registration settings as per your preference.",
-				"user-registration",
+				"user-registration"
 			),
 			isDone: false,
-			component: <RegistrationSettings />,
+			component: <RegistrationSettings />
 		},
 		{
 			key: "my_account_settings",
 			label: __("My Account", "user-registration"),
 			title: __("My Account Settings", "user-registration"),
 			description: __(
-				"Customize your my account page settings as per your preference.",
-				"user-registration",
+				"Customize my account page settings as per your preference.",
+				"user-registration"
 			),
 			isDone: false,
-			component: <MyAccountSettings />,
+			component: <MyAccountSettings />
 		},
 		{
 			key: "final_step",
 			label: __("Final Step", "user-registration"),
 			isDone: false,
-			component: <LastPage />,
-		},
+			component: <LastPage />
+		}
 	]);
 	const [activeStep, setActiveStep] = useState(steps[0]);
 
@@ -104,8 +103,8 @@ function App() {
 		apiFetch({
 			path: restURL + "user-registration/v1/getting-started",
 			headers: {
-				"X-WP-Nonce": urRestApiNonce,
-			},
+				"X-WP-Nonce": urRestApiNonce
+			}
 		}).then((data) => {
 			const newStepsRef = steps.map((step) => {
 				step.sectionSettings = data.options[step.key]
@@ -127,7 +126,7 @@ function App() {
 
 			dispatch({
 				type: actionTypes.GET_SETTINGS,
-				settings: newSettingsRef,
+				settings: newSettingsRef
 			});
 		});
 	}, []);
@@ -141,7 +140,7 @@ function App() {
 			prevStep.map((step) => {
 				if (step.key === activeStep.key) step.isDone = true;
 				return step;
-			}),
+			})
 		);
 		setActiveStep(steps[index + 1]);
 	};
@@ -157,7 +156,7 @@ function App() {
 			prevStep.map((step) => {
 				if (step.key === activeStep.key) step.isDone = false;
 				return step;
-			}),
+			})
 		);
 		setActiveStep(steps[index - 1]);
 	};
@@ -178,7 +177,7 @@ function App() {
 
 		dispatch({
 			type: actionTypes.GET_SETTINGS,
-			settings: newSettingsRef,
+			settings: newSettingsRef
 		});
 		handleNext();
 	};
@@ -194,22 +193,29 @@ function App() {
 				restURL + "user-registration/v1/getting-started/install-pages",
 			method: "POST",
 			headers: {
-				"X-WP-Nonce": urRestApiNonce,
+				"X-WP-Nonce": urRestApiNonce
 			},
-			data: { install_pages: true },
+			data: { install_pages: true }
 		}).then((res) => {
 			if (res.success) {
 				if (res.default_form_id) {
 					dispatch({
 						type: actionTypes.GET_DEFAULT_FORM,
-						defaultFormId: res.default_form_id,
+						defaultFormId: res.default_form_id
+					});
+				}
+
+				if (res.registration_page_link) {
+					dispatch({
+						type: actionTypes.GET_DEFAULT_REGISTRATION_PAGE,
+						registrationPageLink: res.registration_page_link
 					});
 				}
 
 				if (res.is_pro) {
 					dispatch({
 						type: actionTypes.GET_IS_PRO,
-						defaultFormId: res.is_pro,
+						defaultFormId: res.is_pro
 					});
 				}
 
@@ -220,7 +226,7 @@ function App() {
 
 				dispatch({
 					type: actionTypes.GET_INSTALL_PAGE,
-					installPage: newInstallPageRef,
+					installPage: newInstallPageRef
 				});
 
 				new Promise(function (resolve, reject) {
@@ -233,7 +239,7 @@ function App() {
 
 					dispatch({
 						type: actionTypes.GET_INSTALL_PAGE,
-						installPage: newInstallPageRef,
+						installPage: newInstallPageRef
 					});
 
 					new Promise(function (resolve, reject) {
@@ -243,7 +249,7 @@ function App() {
 
 						dispatch({
 							type: actionTypes.GET_INSTALL_PAGE,
-							installPage: newInstallPageRef,
+							installPage: newInstallPageRef
 						});
 					});
 				});
@@ -266,7 +272,7 @@ function App() {
 				.filter(
 					(key) =>
 						key !==
-						"user_registration_form_setting_minimum_password_strength",
+						"user_registration_form_setting_minimum_password_strength"
 				)
 				.reduce((obj, key) => {
 					obj[key] = settings[key];
@@ -279,9 +285,9 @@ function App() {
 			path: restURL + "user-registration/v1/getting-started/save",
 			method: "POST",
 			headers: {
-				"X-WP-Nonce": urRestApiNonce,
+				"X-WP-Nonce": urRestApiNonce
 			},
-			data: { settings: newSettingsRef },
+			data: { settings: newSettingsRef }
 		}).then((res) => {
 			if (res.success) {
 				if ("" !== redirectLink) {
@@ -301,7 +307,7 @@ function App() {
 					cloneElement(activeStep.component, {
 						sectionSettings: activeStep.sectionSettings && {},
 						siteURL: siteURL,
-						onBoardIconsURL: onBoardIconsURL,
+						onBoardIconsURL: onBoardIconsURL
 					})
 				) : (
 					<Flex
@@ -329,7 +335,7 @@ function App() {
 						{cloneElement(activeStep.component, {
 							sectionSettings: activeStep.sectionSettings,
 							siteURL: siteURL,
-							onBoardIconsURL: onBoardIconsURL,
+							onBoardIconsURL: onBoardIconsURL
 						})}
 					</Flex>
 				)}
@@ -342,16 +348,16 @@ function App() {
 							colorScheme="gray"
 							onClick={() => {
 								setDisabledLink(true);
-								handleSaveSettings(defaultFormURL);
+								handleSaveSettings(registrationPageLink);
 							}}
 							disabled={disabledLink}
 							style={{
 								backgroundColor: "#FAFAFA",
 								color: "#6B6B6B",
-								border: "1px solid #999999",
+								border: "1px solid #999999"
 							}}
 						>
-							{__("Edit Default Form", "user-registration")}
+							{__("View Registration Page", "user-registration")}
 						</Button>
 					) : steps[0].key !== activeStep.key ? (
 						<Button
@@ -360,7 +366,7 @@ function App() {
 							style={{
 								backgroundColor: "#FAFAFA",
 								color: "#6B6B6B",
-								border: "1px solid #999999",
+								border: "1px solid #999999"
 							}}
 						>
 							{__("Back", "user-registration")}
@@ -377,11 +383,11 @@ function App() {
 							color="#FAFAFA !important"
 							onClick={() => {
 								setDisabledLink(true);
-								handleSaveSettings(newFormURL);
+								handleSaveSettings(defaultFormURL);
 							}}
 							disabled={disabledLink}
 						>
-							{__("Create New Form", "user-registration")}
+							{__("Edit Default Form", "user-registration")}
 						</Button>
 					) : (
 						<React.Fragment>
@@ -415,7 +421,7 @@ function App() {
 								>
 									{__(
 										"Install & Proceed",
-										"user-registration",
+										"user-registration"
 									)}
 								</Button>
 							) : (
@@ -450,11 +456,11 @@ function App() {
 								"installed"
 							) {
 								handleSaveSettings(
-									`${adminURL}admin.php?page=user-registration-dashboard`,
+									`${adminURL}admin.php?page=user-registration-dashboard`
 								);
 							} else {
 								handleSaveSettings(
-									`${adminURL}admin.php?page=user-registration-dashboard&end-setup-wizard=1`,
+									`${adminURL}admin.php?page=user-registration-dashboard&end-setup-wizard=1`
 								);
 							}
 						}}

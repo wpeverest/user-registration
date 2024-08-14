@@ -473,6 +473,21 @@
 			"themegrill agency"
 		],
       	"released_date": "01/08/2024"
+	  },
+	  {
+		"title": "Authorize.net Payment",
+		"slug" : "user-registration-authorize-net",
+		"name" : "User Registration Authorize.net",
+		"image": "extensions-json/sections/images/authorize-net.png",
+		"excerpt": "Accept credit card, online payments using the Authorize.net payment gateway. Secure payment acceptance, your way.",
+		"link": "https://wpuserregistration.com/features/authorize-net/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+		"plan" : [
+			"personal",
+			"plus",
+			"professional",
+			"themegrill agency"
+		],
+      	"released_date": "01/08/2024"
 	  }
   ]
 }

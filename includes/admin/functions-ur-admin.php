@@ -596,7 +596,7 @@ function promotional_notice_links( $notice_target_links, $is_permanent_dismiss )
 			<?php
 			foreach ( $notice_target_links as $key => $link ) {
 				?>
-			<li><a class="button <?php esc_attr_e( $link['class'], 'user-registration' ); ?>" href="<?php echo esc_url( $link['link'] ); ?>" target="<?php echo esc_attr( $link['target'] ); ?>"><span class="dashicons <?php echo esc_attr( $link['icon'] ); ?>"></span><?php esc_html_e( $link['title'], 'user-registration' ); ?></a></li>
+			<li><a class="button <?php esc_attr_e( $link['class'], 'user-registration' ); ?>" href="<?php echo esc_url( $link['link'] ); ?>" target="<?php echo esc_attr( $link['target'] ); ?>" rel="noreferrer noopener"><span class="dashicons <?php echo esc_attr( $link['icon'] ); ?>"></span><?php esc_html_e( $link['title'], 'user-registration' ); ?></a></li>
 				<?php
 			}
 			?>

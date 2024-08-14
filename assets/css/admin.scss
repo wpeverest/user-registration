@@ -3113,7 +3113,7 @@
 				 border-top: $border_width solid $border-color;
 				 padding: $spacing_16px;
 				 border-radius: 0 0 $border_radius_13 $border_radius_13;
-				 justify-content: flex-start;
+				 justify-content: center;
 				 flex-direction: row-reverse;
 				 gap: $spacing_12px;
 
@@ -3832,6 +3832,17 @@
 										 color: #4CC741;
 										 border-color: #4CC741;
 										 background-color: #F5FFF4;
+									 }
+								 }
+							 }
+
+							 &.custom {
+								 &:hover,
+								 &.active {
+									 label {
+										 color: #475bb3;
+										 border-color: #475bb3;
+										 background-color: #ebecf1;
 									 }
 								 }
 							 }
@@ -5860,4 +5871,71 @@
 			}
 		}
 	}
+}
+.ur-embed-form-button {
+	background: #edeff7 !important;
+	border-color: #edeff7 !important;
+	box-shadow: 0 1px 0 #edeff7 !important;
+	font-size: 14px !important;
+	color: #383838 !important;
+	border-radius: 3px !important;
+}
+.embed-form-swl-container {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
+	padding-bottom: 10px;
+	justify-content: space-evenly;
+}
+.ur-embed-container {
+	@extend .embed-form-swl-container;
+}
+.ur-embed-select-existing-page-container {
+	@extend .embed-form-swl-container;
+	.ur-embed-go-back {
+		flex-basis: 100%;
+		text-align: center;
+		font-size: 14px;
+	}
+	select {
+		margin: opx 20px;
+		width: 90%;
+		border: 1px solid #eae2e2;
+	}
+}
+.ur-embed-new-page-container {
+	@extend .embed-form-swl-container;
+	.ur-embed-go-back {
+		flex-basis: 100%;
+		text-align: center;
+		margin-top: 10px;
+		font-size: 14px;
+	}
+	input {
+		margin-right:0px 20px;
+		width: 90%;
+		border: 1px solid #eae2e2;
+	}
+}
+
+
+@font-face {
+	font-family: 'UserRegistration';
+	src:  url('../fonts/UserRegistration.eot?v5p6f');
+	src:  url('../fonts/UserRegistration.eot?v5p6f#iefix') format('embedded-opentype'),
+	  url('../fonts/UserRegistration.ttf?v5p6f') format('truetype'),
+	  url('../fonts/UserRegistration.woff?v5p6f') format('woff'),
+	  url('../fonts/UserRegistration.svg?v5p6f#UserRegistration') format('svg');
+	font-weight: normal;
+	font-style: normal;
+	font-display: block;
+  }
+
+#elementor-editor-wrapper .ur-icon-user-registration:before,
+.elementor-edit-area .ur-icon-user-registration:before {
+	content: '\e031';
+	font-family: 'UserRegistration';
+	font-weight: normal;
+	font-style: normal;
+	font-display: block;
 }
