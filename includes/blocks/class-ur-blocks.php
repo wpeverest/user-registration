@@ -67,7 +67,7 @@ class UR_Blocks {
 		);
 
 		wp_enqueue_script( 'user-registration-blocks-editor' );
-		if ( 'post.php' === $pagenow && 'edit' === $_GET['action'] && 'user_registration' === $_GET['form'] ) {
+		if ( 'post.php' === $pagenow && isset( $_GET['action'] ) && 'edit' === $_GET['action'] && isset( $_GET['form'] ) && 'user_registration' === $_GET['form'] ) {
 			wp_enqueue_script( 'user-registration-shortcode-embed-form' );
 			wp_localize_script(
 				'user-registration-shortcode-embed-form',

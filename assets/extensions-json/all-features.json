@@ -5,9 +5,9 @@
       "slug" : "user-registration-sms-integration",
       "name" : "User Registration - SMS Integration",
       "image": "extensions-json/sections/images/sms-integration-addon.png",
-      "excerpt": "The Payment Histories Overview feature provides users with a detailed and searchable list of all past orders and transactions, enabling easy tracking and management of their payment activities.",
+      "excerpt": "Send SMS verifications to users after each registration; registration will be automatically approved after successful verification.",
       "link": "https://wpuserregistration.com/features/sms-integration/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
-      "released_date": "20/06/2024",
+      "released_date": "19/08/2024",
       "plan" : [
         "personal",
         "plus",

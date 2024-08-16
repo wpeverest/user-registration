@@ -1346,6 +1346,29 @@
 													response.data
 														.role_based_redirect_url;
 											}
+											if (
+												typeof response.data
+													.form_login_option !==
+													"undefined" &&
+												response.data.form_login_option === 'sms_verification'
+											) {
+												window.setTimeout(
+													function () {
+														if (
+															typeof response
+																.data
+																.redirect_url !==
+																"undefined" &&
+															response.data
+																.redirect_url
+														) {
+															window.location =
+																response.data.redirect_url;
+														}
+													},
+													timeout
+												);
+											}
 
 											if (
 												"undefined" !==

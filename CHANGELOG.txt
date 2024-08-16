@@ -6,9 +6,9 @@
 * Enhance   - Disable profile picture sync with registration form.
 * Enhance   - Custom password strength and realtime password strength guide.
 * Enhance   - Display notice about possible spam registrations.
+* Tweak     - Onboarding texts and buttons improvement.
 * Tweak     - Improve error handling when ajax is disabled.
 * Tweak     - Moved Elementor Widget for Registration Forms to free.
-* Tweak     - Onboarding texts and buttons improvement.
 * Dev       - Compatibility for Authorize.net Addon.
 * Dev       - Compatibility for SMS verification.
 * Dev       - Add noreferer and noopener in all target blank anchor tags.

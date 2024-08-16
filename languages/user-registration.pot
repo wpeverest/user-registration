@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-08-14T03:42:45+00:00\n"
+"POT-Creation-Date: 2024-08-16T11:12:33+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: user-registration\n"
@@ -140,43 +140,43 @@ msgstr ""
 msgid "All"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:225
+#: includes/admin/class-ur-admin-assets.php:227
 #: includes/admin/class-ur-admin-menus.php:683
 msgid "Give it a name."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:226
+#: includes/admin/class-ur-admin-assets.php:228
 #: includes/admin/class-ur-admin-menus.php:684
 msgid "You must provide a Form name"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:227
+#: includes/admin/class-ur-admin-assets.php:229
 #: includes/admin/class-ur-admin-menus.php:685
 msgid "Activate Plugins"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:228
+#: includes/admin/class-ur-admin-assets.php:230
 #: includes/admin/class-ur-admin-menus.php:686
 msgid "Activating"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:229
+#: includes/admin/class-ur-admin-assets.php:231
 #: includes/admin/class-ur-admin-menus.php:688
 msgid "Install & Activate"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:230
+#: includes/admin/class-ur-admin-assets.php:232
 #: includes/admin/class-ur-admin-menus.php:689
 msgid "Installing"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:231
-#: includes/admin/class-ur-admin-assets.php:613
+#: includes/admin/class-ur-admin-assets.php:233
+#: includes/admin/class-ur-admin-assets.php:617
 #: includes/admin/class-ur-admin-menus.php:690
 msgid "OK"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:239
+#: includes/admin/class-ur-admin-assets.php:241
 #: includes/admin/class-ur-admin-menus.php:698
 #: includes/class-ur-ajax.php:1612
 #: includes/functions-ur-core.php:3732
@@ -185,172 +185,172 @@ msgstr ""
 msgid "Upgrade Plan"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:240
+#: includes/admin/class-ur-admin-assets.php:242
 #: includes/admin/class-ur-admin-menus.php:699
 msgid "This template requires premium addons. Please upgrade to the Premium plan to unlock all these awesome Templates."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:241
+#: includes/admin/class-ur-admin-assets.php:243
 #: includes/admin/class-ur-admin-menus.php:700
 msgid "is a Premium Template"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:242
+#: includes/admin/class-ur-admin-assets.php:244
 #: includes/admin/class-ur-admin-menus.php:701
 msgid "Continue"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:243
+#: includes/admin/class-ur-admin-assets.php:245
 #: includes/admin/class-ur-admin-menus.php:702
 msgid "Untitled Form"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:244
+#: includes/admin/class-ur-admin-assets.php:246
 #: includes/admin/class-ur-admin-menus.php:703
 msgid "Uplift your form experience to the next level."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:245
+#: includes/admin/class-ur-admin-assets.php:247
 #: includes/admin/class-ur-admin-menus.php:704
 msgid "Download Failed. Please download and activate addon manually."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:246
+#: includes/admin/class-ur-admin-assets.php:248
 #: includes/admin/class-ur-admin-menus.php:705
 msgid "Installation Successful."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:247
+#: includes/admin/class-ur-admin-assets.php:249
 msgid "Addons have been Installed and Activated. You have to reload the page."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:248
+#: includes/admin/class-ur-admin-assets.php:250
 #: includes/admin/class-ur-admin-menus.php:707
 msgid "Save Changes and Reload"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:249
+#: includes/admin/class-ur-admin-assets.php:251
 #: includes/admin/class-ur-admin-menus.php:709
 msgid "Just Reload"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:253
+#: includes/admin/class-ur-admin-assets.php:255
 #: includes/form/settings/class-ur-setting-country.php:109
 #: includes/form/settings/class-ur-setting-country.php:111
 msgid "None"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:262
+#: includes/admin/class-ur-admin-assets.php:264
 msgid "Upload Profile Picture"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:263
+#: includes/admin/class-ur-admin-assets.php:265
 msgid "Select Image"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:287
-msgctxt "enhanced select"
-msgid "No matches found"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:288
-msgctxt "enhanced select"
-msgid "Loading failed"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:289
 msgctxt "enhanced select"
-msgid "Please enter 1 or more characters"
+msgid "No matches found"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:290
 msgctxt "enhanced select"
-msgid "Please enter %qty% or more characters"
+msgid "Loading failed"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:291
 msgctxt "enhanced select"
-msgid "Please delete 1 character"
+msgid "Please enter 1 or more characters"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:292
 msgctxt "enhanced select"
-msgid "Please delete %qty% characters"
+msgid "Please enter %qty% or more characters"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:293
 msgctxt "enhanced select"
-msgid "You can only select 1 item"
+msgid "Please delete 1 character"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:294
 msgctxt "enhanced select"
-msgid "You can only select %qty% items"
+msgid "Please delete %qty% characters"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:295
 msgctxt "enhanced select"
-msgid "Loading more results&hellip;"
+msgid "You can only select 1 item"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:296
 msgctxt "enhanced select"
+msgid "You can only select %qty% items"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:297
+msgctxt "enhanced select"
+msgid "Loading more results&hellip;"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:298
+msgctxt "enhanced select"
 msgid "Searching&hellip;"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:308
+#: includes/admin/class-ur-admin-assets.php:310
 msgid "Could not install."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:341
+#: includes/admin/class-ur-admin-assets.php:343
 msgid "Please add at least one field to Repeater Row"
 msgstr ""
 
 #. translators: %field%: Field Label
-#: includes/admin/class-ur-admin-assets.php:343
+#: includes/admin/class-ur-admin-assets.php:345
 msgid "%field% field is Locked."
 msgstr ""
 
 #. translators: %field%: Field Label
-#: includes/admin/class-ur-admin-assets.php:345
+#: includes/admin/class-ur-admin-assets.php:347
 msgid "%field% field can be used only one time in the form."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:347
+#: includes/admin/class-ur-admin-assets.php:349
 msgid "Keyboard Shortcut Keys"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:348
+#: includes/admin/class-ur-admin-assets.php:350
 msgid "Publish form"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:349
+#: includes/admin/class-ur-admin-assets.php:351
 #: includes/admin/class-ur-admin-menus.php:661
 msgid "Update form"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:351
+#: includes/admin/class-ur-admin-assets.php:353
 msgid "Save Builder"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:352
+#: includes/admin/class-ur-admin-assets.php:354
 msgid "Close Builder"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:353
+#: includes/admin/class-ur-admin-assets.php:355
 #: includes/admin/views/html-admin-page-forms.php:55
 msgid "Preview Form"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:354
+#: includes/admin/class-ur-admin-assets.php:356
 msgid "Go to Users"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:355
+#: includes/admin/class-ur-admin-assets.php:357
 msgid "Open Help"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:357
+#: includes/admin/class-ur-admin-assets.php:359
 #: includes/admin/class-ur-admin-menus.php:576
 #: includes/admin/class-ur-admin-menus.php:577
 #: includes/admin/class-ur-admin-menus.php:1037
@@ -359,376 +359,386 @@ msgstr ""
 msgid "Add New"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:368
+#: includes/admin/class-ur-admin-assets.php:370
 msgid "Minimum one letter"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:369
+#: includes/admin/class-ur-admin-assets.php:371
 msgid "Minimum one uppercase letter and must be 4 characters and no repetitive words or common words"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:370
+#: includes/admin/class-ur-admin-assets.php:372
 msgid "Minimum one uppercase letter, a number, must be 7 characters and no repetitive words or common words"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:371
+#: includes/admin/class-ur-admin-assets.php:373
 msgid "Minimum one uppercase letter, a number, a special character, must be 9 characters and no repetitive words or common words"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:372
+#: includes/admin/class-ur-admin-assets.php:374
 msgid "Set custom passwords by defining criteria such as length, uppercase and lowercase letters, digits, and special characters for enhanced security."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:373
+#: includes/admin/class-ur-admin-assets.php:375
 msgid "Form could not be saved"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:374
+#: includes/admin/class-ur-admin-assets.php:376
 msgid "Something went wrong while saving form through AJAX request."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:388
+#: includes/admin/class-ur-admin-assets.php:390
 msgid "Form not found in content"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:389
+#: includes/admin/class-ur-admin-assets.php:391
 msgid "Form found in page:"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:399
+#: includes/admin/class-ur-admin-assets.php:401
 #: includes/admin/views/html-admin-page-import-export-forms.php:49
 msgid "No file selected."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:400
+#: includes/admin/class-ur-admin-assets.php:402
 msgid "Please choose at least one form to export."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:401
+#: includes/admin/class-ur-admin-assets.php:403
 #: src/dashboard/screens/Help/Help.js:124
 msgid "Smart Tags"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:402
+#: includes/admin/class-ur-admin-assets.php:404
 msgid "Search Tags..."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:414
+#: includes/admin/class-ur-admin-assets.php:416
 msgid "Enabled"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:415
+#: includes/admin/class-ur-admin-assets.php:417
 msgid "Disabled"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:424
+#: includes/admin/class-ur-admin-assets.php:426
 msgid "is a premium field"
 msgstr ""
 
 #. translators: %field%: Field Label %plan%: License Plan.
-#: includes/admin/class-ur-admin-assets.php:426
+#: includes/admin/class-ur-admin-assets.php:428
 msgid "%field% field is locked. Upgrade to <strong>%plan%</strong> to unlock this field."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:427
+#: includes/admin/class-ur-admin-assets.php:429
 #: src/dashboard/screens/Modules/components/ModuleBody.js:82
 msgid "License Activation Required"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:428
+#: includes/admin/class-ur-admin-assets.php:430
 msgid "Please activate your <strong>User Registration License</strong> to use this field"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:429
+#: includes/admin/class-ur-admin-assets.php:431
 msgid "Addon Activation Required"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:430
+#: includes/admin/class-ur-admin-assets.php:432
 msgid "Please activate <strong>%plugin%</strong> addon to use this field."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:431
+#: includes/admin/class-ur-admin-assets.php:433
 msgid "Addon Installation Required"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:432
+#: includes/admin/class-ur-admin-assets.php:434
 msgid "Please install <strong>%plugin%</strong> addon to use this field."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:534
+#: includes/admin/class-ur-admin-assets.php:536
 msgid "Clone"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:534
+#: includes/admin/class-ur-admin-assets.php:536
 #: includes/admin/class-ur-admin-registrations-table-list.php:108
 msgid "Trash"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:556
+#: includes/admin/class-ur-admin-assets.php:558
 msgid "Delete"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:557
+#: includes/admin/class-ur-admin-assets.php:559
 #: includes/admin/class-ur-admin-form-modal.php:118
 #: src/dashboard/components/common/UsePluginInstallActivate.js:166
 msgid "Cancel"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:558
+#: includes/admin/class-ur-admin-assets.php:560
 msgctxt "user-registration admin"
 msgid "User Email"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:559
+#: includes/admin/class-ur-admin-assets.php:561
 msgctxt "user-registration admin"
 msgid "User Password"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:560
+#: includes/admin/class-ur-admin-assets.php:562
 msgctxt "user-registration admin"
 msgid "Payment"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:561
+#: includes/admin/class-ur-admin-assets.php:563
 msgctxt "user-registration admin"
 msgid "Stripe Gateway"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:562
+#: includes/admin/class-ur-admin-assets.php:564
 msgctxt "user-registration admin"
 msgid "Phone"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:563
+#: includes/admin/class-ur-admin-assets.php:565
+msgctxt "user-registration admin"
+msgid "Selected default phone field must be in smart format."
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:566
 msgctxt "user-registration admin"
 msgid "Select Smart Phone Fields for SMS Verification"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:564
+#: includes/admin/class-ur-admin-assets.php:567
 msgctxt "user-registration admin"
 msgid "Authorize.net"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:565
+#: includes/admin/class-ur-admin-assets.php:568
 msgctxt "user registration admin"
 msgid "Are you sure want to delete this row?"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:566
+#: includes/admin/class-ur-admin-assets.php:569
 msgctxt "user registration admin"
 msgid "Are you sure want to delete this field?"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:567
+#: includes/admin/class-ur-admin-assets.php:570
 msgctxt "user registration admin"
 msgid "At least one row is required to create a registration form."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:568
+#: includes/admin/class-ur-admin-assets.php:571
 msgctxt "user registration admin"
 msgid "Cannot delete row"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:569
+#: includes/admin/class-ur-admin-assets.php:572
+msgctxt "user registration admin"
+msgid "Email and Password fields are required to create a registration form."
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:573
 msgctxt "user registration admin"
 msgid "This field is one time draggable."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:570
+#: includes/admin/class-ur-admin-assets.php:574
 msgctxt "user registration admin"
 msgid "Could not clone this field."
 msgstr ""
 
 #. translators: %field%: Field Label
-#: includes/admin/class-ur-admin-assets.php:572
+#: includes/admin/class-ur-admin-assets.php:576
 msgctxt "user registration admin"
 msgid "%field% cannot be added to repeater row"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:573
+#: includes/admin/class-ur-admin-assets.php:577
 msgctxt "user registration admin"
 msgid "Form successfully saved."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:574
+#: includes/admin/class-ur-admin-assets.php:578
 msgctxt "user registration admin"
 msgid "Success"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:575
+#: includes/admin/class-ur-admin-assets.php:579
 msgctxt "user registration admin"
 msgid "Error"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:576
+#: includes/admin/class-ur-admin-assets.php:580
 msgid "Confirm Deletion"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:577
+#: includes/admin/class-ur-admin-assets.php:581
 msgid "Embed in Page"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:578
+#: includes/admin/class-ur-admin-assets.php:582
 msgid "We can help embed your form with just a few clicks!"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:579
+#: includes/admin/class-ur-admin-assets.php:583
 msgid "Select Existing Page"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:580
+#: includes/admin/class-ur-admin-assets.php:584
 msgid "Create New Page"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:581
+#: includes/admin/class-ur-admin-assets.php:585
 msgid "Select the page to embed your form in."
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:582
+#: includes/admin/class-ur-admin-assets.php:586
 msgid "Go Back"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:583
+#: includes/admin/class-ur-admin-assets.php:587
 msgid "Lets Go!"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:584
-msgid "What would you like to call the new page?"
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:585
-msgctxt "user registration admin"
-msgid "At least one field needs to be selected."
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:586
-msgctxt "user registration admin"
-msgid "Total field is required with coupon."
-msgstr ""
-
-#: includes/admin/class-ur-admin-assets.php:587
-msgctxt "user registration admin"
-msgid "Recurring subscription with Stripe gateway is not currently available for coupon field."
-msgstr ""
-
 #: includes/admin/class-ur-admin-assets.php:588
-msgctxt "user registration admin"
-msgid "Minimum Password Length value should at least be 6."
+msgid "What would you like to call the new page?"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:589
 msgctxt "user registration admin"
-msgid "Value in custom password cannot be less than 0."
+msgid "At least one field needs to be selected."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:590
 msgctxt "user registration admin"
-msgid "Empty form name."
+msgid "Total field is required with coupon."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:591
 msgctxt "user registration admin"
-msgid "Previous save action on going."
+msgid "Recurring subscription with Stripe gateway is not currently available for coupon field."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:592
 msgctxt "user registration admin"
-msgid "Duplicate field name."
+msgid "Minimum Password Length value should at least be 6."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:593
 msgctxt "user registration admin"
-msgid "Empty field label."
+msgid "Value in custom password cannot be less than 0."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:594
 msgctxt "user registration admin"
-msgid "Invalid field name. Please do not use space, empty or special character, you can use underscore."
+msgid "Empty form name."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:595
 msgctxt "user registration admin"
-msgid "Multiple field key "
+msgid "Previous save action on going."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:596
 msgctxt "user registration admin"
-msgid "field is required."
+msgid "Duplicate field name."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:597
 msgctxt "user registration admin"
-msgid "Drag your first form item here."
+msgid "Empty field label."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:598
 msgctxt "user registration admin"
-msgid "Please select at least one country."
+msgid "Invalid field name. Please do not use space, empty or special character, you can use underscore."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:599
 msgctxt "user registration admin"
-msgid "input size must be greater than zero."
+msgid "Multiple field key "
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:600
 msgctxt "user registration admin"
-msgid "input of min value must be less than max value."
+msgid "field is required."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:601
 msgctxt "user registration admin"
-msgid "input of max upload size must less than "
+msgid "Drag your first form item here."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:602
-msgid "You cannot set the zero less than zero to the completion percentage."
+msgctxt "user registration admin"
+msgid "Please select at least one country."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:603
-msgid "Sum of progress percentage for each field cannot be greater than the completion perecentage."
+msgctxt "user registration admin"
+msgid "input size must be greater than zero."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:604
-msgid "User Email field should me mapped."
+msgctxt "user registration admin"
+msgid "input of min value must be less than max value."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:605
-msgid "Look like your sheet is empty ! Please try again"
+msgctxt "user registration admin"
+msgid "input of max upload size must less than "
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:606
-msgid "Form Restriction: Empty Question or Answer field."
+msgid "You cannot set the zero less than zero to the completion percentage."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:607
-msgid "Form Restriction: Q&A restriction requires at least one question and answer."
+msgid "Sum of progress percentage for each field cannot be greater than the completion perecentage."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:608
-msgid "Subscribe to User Registration Pro to get the Autogenerated Password feature which lets you remove the password field."
+msgid "User Email field should me mapped."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:609
-msgid "To remove the password field, enable the auto-generate password feature in form  settings."
+msgid "Look like your sheet is empty ! Please try again"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:610
-msgid " is required."
+msgid "Form Restriction: Empty Question or Answer field."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:611
+msgid "Form Restriction: Q&A restriction requires at least one question and answer."
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:612
+msgid "Subscribe to User Registration Pro to get the Autogenerated Password feature which lets you remove the password field."
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:613
+msgid "To remove the password field, enable the auto-generate password feature in form  settings."
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:614
+msgid " is required."
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:615
 #: includes/admin/notifications/views/html-notice-php-deprecation.php:28
 #: includes/blocks/class-ur-blocks.php:77
 #: src/dashboard/screens/Products/components/ProductCard.js:94
 msgid "Learn More"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:612
+#: includes/admin/class-ur-admin-assets.php:616
 msgid "Upgrade plan"
 msgstr ""
 
-#: includes/admin/class-ur-admin-assets.php:614
+#: includes/admin/class-ur-admin-assets.php:618
 msgid "WordPress requires the user to have an email address during registration."
 msgstr ""
 
@@ -1199,7 +1209,7 @@ msgstr ""
 
 #. translators: 1: Newly registered user count 2: User
 #: includes/admin/class-ur-admin-user-list-manager.php:224
-#: includes/admin/class-ur-admin.php:291
+#: includes/admin/class-ur-admin.php:292
 #: includes/admin/settings/class-ur-settings-email.php:254
 msgid "User"
 msgid_plural "Users"
@@ -1319,24 +1329,24 @@ msgid "UR My Account Page"
 msgstr ""
 
 #. translators: 1: User Registration 2:: five stars
-#: includes/admin/class-ur-admin.php:229
+#: includes/admin/class-ur-admin.php:230
 msgid "If you like %1$s please leave us a %2$s rating. A huge thanks in advance!"
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:231
+#: includes/admin/class-ur-admin.php:232
 msgid "Thank You!"
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:243
+#: includes/admin/class-ur-admin.php:244
 msgid "Thank you for using User Registration."
 msgstr ""
 
 #. translators: 1: Newly registered user count 2: User
-#: includes/admin/class-ur-admin.php:291
+#: includes/admin/class-ur-admin.php:292
 msgid "%1$d new %2$s registered."
 msgstr ""
 
-#: includes/admin/class-ur-admin.php:348
+#: includes/admin/class-ur-admin.php:349
 msgid "Could not verify nonce"
 msgstr ""
 

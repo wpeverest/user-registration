@@ -1030,7 +1030,16 @@
 									.i18n_field_is_required;
 							break;
 						}else{
-							var phone_field = $('user_registration_form_setting_default_phone_field').val();
+							var phone_field = $('#user_registration_form_setting_default_phone_field option:selected');
+							var phone_format = phone_field.data('phone-format');
+
+							if( "undefined" === typeof phone_format || 'smart' === phone_format){
+								continue;
+							}else{
+								response.validation_status = false;
+								response.message = user_registration_form_builder_data.i18n_admin.i18n_smart_phone_field;
+								break;
+							}
 						}
 					} else if (required_fields[required_index] === "payment_fields") {
 						var multiple_choice = $(".ur-input-grids").find(
@@ -2757,12 +2766,30 @@
 									"click",
 									".ur-remove-row",
 									function () {
+										var $this_row = $(this).closest(".ur-single-row");
+        								var fieldKeys = [];
+        								$this_row.find(".ur-selected-item .ur-field").each(function () {
+            							var fieldKey = $(this).data("field-key");
+           							 	fieldKeys.push(fieldKey);
+       								 	});
+										if( fieldKeys.includes("user_pass") && fieldKeys.includes("user_email") ) {
+											show_feature_notice('','');
+											return;
+										}else if( fieldKeys.includes("user_pass") ) {
+											show_feature_notice('user_pass','');
+											return;
+										}else if( fieldKeys.includes("user_email") ) {
+											show_feature_notice('user_email','');
+											return;
+										}
+
 										if (
 											$(".ur-input-grids").find(
 												".ur-single-row:visible"
 											).length > 1
 										) {
-											var $this_row = $(this);
+
+
 											ur_confirmation(
 												user_registration_form_builder_data
 													.i18n_admin
@@ -3528,11 +3555,13 @@
 							// Handle Drag Phone field option set for sms verification field list.
 							if('phone' === field_key){
 
+								var phone_format = $(this).parent().find('.ur-general-setting-select-format').find("[data-field='phone_format']").val();
+
 								if( 0 >= $('#user_registration_form_setting_default_phone_field').length ){
 									var html = '<div class="form-row ur-enhanced-select" id="user_registration_form_setting_default_phone_field_field" data-priority="">';
 									html += '<label for="user_registration_form_setting_default_phone_field" class="ur-label">'+user_registration_form_builder_data.i18n_admin.i18n_default_phone_field+'</label>';
 									html += '<select data-rules="" data-id="user_registration_form_setting_default_phone_field" name="user_registration_form_setting_default_phone_field" id="user_registration_form_setting_default_phone_field" class="select " data-allow_clear="true" data-placeholder="">';
-									html += '<option value="'+field_name+'">'+field_label+'</option>';
+									html += '<option value="'+field_name+'" data-phone-format="'+phone_format+'">'+field_label+'</option>';
 									html += '</select></div>';
 									$("#user_registration_form_setting_login_options_field").after(html);
 
@@ -3554,10 +3583,11 @@
 										field_name +
 										'"]'
 									).remove();
+
 									$("#user_registration_form_setting_default_phone_field").append(
 										'<option value ="' +
 										field_name +
-										'">' +
+										'" data-phone-format="'+phone_format+'">' +
 										field_label +
 										" </option>"
 									);
@@ -3810,6 +3840,24 @@
 								URFormBuilder.trigger_general_setting_field_name(
 									$(this)
 								);
+							});
+						case "phone_format":
+							$this_obj.on("change", function () {
+								var wrapper = $(".ur-selected-item.ur-item-active");
+
+								var old_field_name = wrapper
+									.find(".ur-general-setting-block")
+									.find(
+										'input[data-field="field_name"]'
+									)
+									.attr("value");
+
+								// Change Field Name of field in Form Setting Default Phone field for SMS Verification.
+								$(
+									'[id="user_registration_form_setting_default_phone_field"] option[value="' +
+										old_field_name +
+										'"]'
+								).attr("data-phone-format", $this_obj.val());
 							});
 						case "default_value":
 							$this_obj.on("change", function () {
@@ -6494,18 +6542,32 @@
 					var confirmButtonText = ur_setup_params.upgrade_button;
 					var btn_link = user_registration_form_builder_data.ur_upgrade_plan_link;
 				}
-			}
-			else{
+			}else if('user_email' === field_key){
 				var description_message = user_registration_form_builder_data.i18n_admin.i18n_default_cannot_delete_message;
 				var confirmButtonText = user_registration_form_builder_data.i18n_admin.i18n_ok;
 				cancelBtn = false
 			}
-			var title_message =user_registration_form_builder_data.i18n_admin.i18n_this_field_is_required;
+			else{
+				var description_message = user_registration_form_builder_data.i18n_admin.i18n_user_email_and_password_fields_are_required_to_create_a_registration_form;
+				var confirmButtonText = user_registration_form_builder_data.i18n_admin.i18n_ok;
+				cancelBtn = false
+			}
+
 			var icon = '<i class="dashicons dashicons-trash" ></i>';
-			var title =
+			if( label !== '' ){
+				var title_message =user_registration_form_builder_data.i18n_admin.i18n_this_field_is_required;
+				var title =
 				icon +
 				'<span class="user-registration-swal2-modal__title">'+ label + title_message
 				;
+			}else{
+				var title_message = user_registration_form_builder_data.i18n_admin.i18n_cannot_delete_row;
+				var title =
+				icon +
+				'<span class="user-registration-swal2-modal__title">'+ title_message
+				;
+			}
+
 			Swal.fire({
 				customClass:
 					"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-upgrade",

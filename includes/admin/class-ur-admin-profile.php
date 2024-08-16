@@ -21,7 +21,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 		 * Class Constructor.
 		 */
 		public function __construct() {
-			if ( ! current_user_can( 'manage_options' ) ) {
+			if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'manage_user_registration' ) ) {
 				return false;
 			}
 			add_action( 'show_user_profile', array( $this, 'show_user_extra_fields' ) );
@@ -123,7 +123,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 			 *
 			 * @return bool
 			 */
-			if ( ! current_user_can( 'manage_options' ) && apply_filters( 'user_registration_hide_user_extra_fields_to_non_admin', true ) ) {
+			if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'manage_user_registration', true ) ) {
 				return;
 			}
 
