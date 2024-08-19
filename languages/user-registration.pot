@@ -9,9 +9,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-08-19T08:01:24+00:00\n"
+"POT-Creation-Date: 2024-08-19T11:53:10+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.10.0\n"
+"X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: user-registration\n"
 
 #. Plugin Name of the plugin
@@ -1420,8 +1420,8 @@ msgstr ""
 #: includes/admin/notifications/class-ur-admin-notices.php:457
 #: includes/class-ur-plugin-updater.php:622
 #: includes/class-ur-plugin-updater.php:645
-#: includes/functions-ur-core.php:6115
-#: includes/functions-ur-core.php:6231
+#: includes/functions-ur-core.php:6118
+#: includes/functions-ur-core.php:6234
 msgid "I have a query"
 msgstr ""
 
@@ -6365,79 +6365,79 @@ msgstr ""
 msgid "Email already exists"
 msgstr ""
 
-#: includes/functions-ur-core.php:5751
-#: includes/functions-ur-core.php:5771
+#: includes/functions-ur-core.php:5754
+#: includes/functions-ur-core.php:5774
 msgid "Warning:-"
 msgstr ""
 
-#: includes/functions-ur-core.php:5752
+#: includes/functions-ur-core.php:5755
 msgid " This feature is inactive because"
 msgstr ""
 
-#: includes/functions-ur-core.php:5753
-#: includes/functions-ur-core.php:5763
-#: includes/functions-ur-core.php:5773
+#: includes/functions-ur-core.php:5756
+#: includes/functions-ur-core.php:5766
+#: includes/functions-ur-core.php:5776
 msgid "Akismet"
 msgstr ""
 
-#: includes/functions-ur-core.php:5754
+#: includes/functions-ur-core.php:5757
 msgid "plugin has not been installed. For more"
 msgstr ""
 
-#: includes/functions-ur-core.php:5755
-#: includes/functions-ur-core.php:5765
-#: includes/functions-ur-core.php:5775
+#: includes/functions-ur-core.php:5758
+#: includes/functions-ur-core.php:5768
+#: includes/functions-ur-core.php:5778
 msgid "information."
 msgstr ""
 
-#: includes/functions-ur-core.php:5761
+#: includes/functions-ur-core.php:5764
 msgid "Warning:- "
 msgstr ""
 
-#: includes/functions-ur-core.php:5762
-#: includes/functions-ur-core.php:5772
+#: includes/functions-ur-core.php:5765
+#: includes/functions-ur-core.php:5775
 msgid "This feature is inactive because"
 msgstr ""
 
-#: includes/functions-ur-core.php:5764
+#: includes/functions-ur-core.php:5767
 msgid "plugin is not activated. For more"
 msgstr ""
 
-#: includes/functions-ur-core.php:5774
+#: includes/functions-ur-core.php:5777
 msgid "plugin has not been properly configured. For more"
 msgstr ""
 
 #. translators: %s: Status Log URL
-#: includes/functions-ur-core.php:6062
+#: includes/functions-ur-core.php:6065
 msgid "Please check the `ur_mail_errors` log under <a target=\"_blank\" href= \"%s\"> Status Log </a> section."
 msgstr ""
 
-#: includes/functions-ur-core.php:6105
+#: includes/functions-ur-core.php:6108
 msgid "User Registration Email Send Error"
 msgstr ""
 
-#: includes/functions-ur-core.php:6109
+#: includes/functions-ur-core.php:6112
 msgid "The last emails sent from User Registration Plugin was not delivered to the user. "
 msgstr ""
 
-#: includes/functions-ur-core.php:6122
-#: includes/functions-ur-core.php:6238
+#: includes/functions-ur-core.php:6125
+#: includes/functions-ur-core.php:6241
 msgid "Visit Documentation"
 msgstr ""
 
-#: includes/functions-ur-core.php:6214
+#: includes/functions-ur-core.php:6217
 msgid "Unusual User Registrations Detected"
 msgstr ""
 
-#: includes/functions-ur-core.php:6218
+#: includes/functions-ur-core.php:6221
 msgid "A significant number of users have registered on your site from sources other than the User Registration plugin's form."
 msgstr ""
 
-#: includes/functions-ur-core.php:6219
+#: includes/functions-ur-core.php:6222
 msgid "These registrations may be suspicious. Please review and disable any other methods that allow user registrations if they are not intended. Additionally, consider enabling spam protection measures in the User Registration plugin to safeguard your site."
 msgstr ""
 
-#: includes/functions-ur-core.php:6224
+#: includes/functions-ur-core.php:6227
 msgid "It was a false alarm"
 msgstr ""
 

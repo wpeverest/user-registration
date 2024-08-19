@@ -374,7 +374,7 @@ class UR_Admin_Assets {
 				'user_registration_custom_password_info' => esc_html__( 'Set custom passwords by defining criteria such as length, uppercase and lowercase letters, digits, and special characters for enhanced security.', 'user-registration' ),
 				'ajax_form_submit_error_title'           => esc_html__( 'Form could not be saved', 'user-registration' ),
 				'ajax_form_submit_error'                 => esc_html__( 'Something went wrong while saving form through AJAX request.', 'user-registration' ),
-				'ajax_form_submit_troubleshooting_link'  => esc_url_raw( 'https://docs.wpuserregistration.com/docs/how-to-check-plugin-theme-conflict/' ),
+				'ajax_form_submit_troubleshooting_link'  => esc_url_raw( 'https://docs.wpuserregistration.com/docs/how-to-handle-ajax-submission-error' ),
 				'isPro'                                  => is_plugin_active( 'user-registration-pro/user-registration.php' ),
 				'ur_upgrade_plan_link'                   => esc_url( 'https://wpuserregistration.com/pricing/?utm_source=plugin&utm_medium=button&utm_campaign=ur-upgrade-to-pro' ),
 				'ur_remove_password_field_link'          => esc_url( 'https://docs.wpuserregistration.com/docs/remove-password-field/' ),
