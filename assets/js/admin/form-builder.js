@@ -1031,7 +1031,7 @@
 							break;
 						}else{
 							var phone_field = $('#user_registration_form_setting_default_phone_field option:selected');
-							var phone_format = phone_field.data('phone-format');
+							var phone_format = phone_field.attr('data-phone-format');
 
 							if( "undefined" === typeof phone_format || 'smart' === phone_format){
 								continue;
