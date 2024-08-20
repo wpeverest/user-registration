@@ -15,7 +15,7 @@ const Edit = (props) => {
 	const blockName = metadata.name;
 
 	const {
-		attributes: { redirectUrl, logoutUrl, userState },
+		attributes: { redirectUrl, logoutUrl },
 		setAttributes,
 	} = props;
 
@@ -25,9 +25,9 @@ const Edit = (props) => {
 	const setLogoutUrl = (url) => {
 		setAttributes({ logoutUrl: url });
 	};
-	const setUserState = (state) => {
-		setAttributes({ userState: state });
-	};
+
+	const [userState, setUserState] = useState("logged_out");
+
 
 	return (
 		<>
@@ -67,7 +67,7 @@ const Edit = (props) => {
 					<ServerSideRender
 						key="ur-gutenberg-myaccount-server-side-renderer"
 						block={blockName}
-						attributes={props.attributes}
+						attributes={{...props.attributes, userState  }}
 					/>
 				</Disabled>
 			</Box>
