@@ -66,9 +66,11 @@ class UR_Admin_Assets {
 		if ( 'plugins' === $screen_id ) {
 			wp_enqueue_style( 'user-registration-menu' );
 		}
+
+		wp_register_style( 'user-registration-admin', UR()->plugin_url() . '/assets/css/admin.css', array( 'nav-menus', 'wp-color-picker' ), UR_VERSION );
+
 		// Admin styles for UR pages only.
 		if ( in_array( $screen_id, ur_get_screen_ids(), true ) ) {
-			wp_register_style( 'user-registration-admin', UR()->plugin_url() . '/assets/css/admin.css', array( 'nav-menus', 'wp-color-picker' ), UR_VERSION );
 			wp_enqueue_style( 'user-registration-admin' );
 
 			if ( strpos( $screen_id, 'user-registration-settings' ) ) {
@@ -372,7 +374,7 @@ class UR_Admin_Assets {
 				'user_registration_custom_password_info' => esc_html__( 'Set custom passwords by defining criteria such as length, uppercase and lowercase letters, digits, and special characters for enhanced security.', 'user-registration' ),
 				'ajax_form_submit_error_title'           => esc_html__( 'Form could not be saved', 'user-registration' ),
 				'ajax_form_submit_error'                 => esc_html__( 'Something went wrong while saving form through AJAX request.', 'user-registration' ),
-				'ajax_form_submit_troubleshooting_link'  => esc_url_raw( 'https://docs.wpuserregistration.com/docs/how-to-check-plugin-theme-conflict/' ),
+				'ajax_form_submit_troubleshooting_link'  => esc_url_raw( 'https://docs.wpuserregistration.com/docs/how-to-handle-ajax-submission-error' ),
 				'isPro'                                  => is_plugin_active( 'user-registration-pro/user-registration.php' ),
 				'ur_upgrade_plan_link'                   => esc_url( 'https://wpuserregistration.com/pricing/?utm_source=plugin&utm_medium=button&utm_campaign=ur-upgrade-to-pro' ),
 				'ur_remove_password_field_link'          => esc_url( 'https://docs.wpuserregistration.com/docs/remove-password-field/' ),
@@ -560,12 +562,14 @@ class UR_Admin_Assets {
 			'i18n_payment_field'                          => _x( 'Payment', 'user-registration admin', 'user-registration' ),
 			'i18n_stripe_field'                           => _x( 'Stripe Gateway', 'user-registration admin', 'user-registration' ),
 			'i18n_phone_field'                            => _x( 'Phone', 'user-registration admin', 'user-registration' ),
+			'i18n_smart_phone_field'                      => _x( 'Selected default phone field must be in smart format.', 'user-registration admin', 'user-registration' ),
 			'i18n_default_phone_field'                    => _x( 'Select Smart Phone Fields for SMS Verification', 'user-registration admin', 'user-registration' ),
 			'i18n_anet_field'                             => _x( 'Authorize.net', 'user-registration admin', 'user-registration' ),
 			'i18n_are_you_sure_want_to_delete_row'        => _x( 'Are you sure want to delete this row?', 'user registration admin', 'user-registration' ),
 			'i18n_are_you_sure_want_to_delete_field'      => _x( 'Are you sure want to delete this field?', 'user registration admin', 'user-registration' ),
 			'i18n_at_least_one_row_is_required_to_create_a_registration_form' => _x( 'At least one row is required to create a registration form.', 'user registration admin', 'user-registration' ),
 			'i18n_cannot_delete_row'                      => _x( 'Cannot delete row', 'user registration admin', 'user-registration' ),
+			'i18n_user_email_and_password_fields_are_required_to_create_a_registration_form' => _x( 'Email and Password fields are required to create a registration form.', 'user registration admin', 'user-registration' ),
 			'i18n_user_required_field_already_there'      => _x( 'This field is one time draggable.', 'user registration admin', 'user-registration' ),
 			'i18n_user_required_field_already_there_could_not_clone' => _x( 'Could not clone this field.', 'user registration admin', 'user-registration' ),
 			/* translators: %field%: Field Label */

@@ -269,6 +269,9 @@
 .ur-icon-e-signature::before {
   content: ""; }
 
+.ur-icon-authorize-net::before {
+  content: ""; }
+
 .user-registration button,
 .user-registration .button,
 .ur-form-container button,

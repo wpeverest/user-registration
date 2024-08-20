@@ -5189,6 +5189,9 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 				if ( isset( $single_item->field_key ) ) {
 					$found_field = isset( $profile[ $key ] );
 				}
+				if ( $found_field ) {
+					break;
+				}
 			}
 
 			if ( $found_field ) {

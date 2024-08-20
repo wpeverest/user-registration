@@ -460,12 +460,13 @@ jQuery(function ($) {
 	var max_repeat_char_field = $("#general-settings").find(
 		"#user_registration_form_setting_form_max_char_repeat_length_field"
 	);
+
 	var enable_strong_password = strong_password_field.is(":checked");
 	var enable_custom_password = custom_password_field.is(":checked");
 	var enable_no_repetitive_chars = no_repeat_char_field.is(":checked");
 
 	if (enable_custom_password) {
-		custom_password_params.show();
+
 		if(enable_no_repetitive_chars) {
 			max_repeat_char_field.show();
 		}
@@ -479,6 +480,7 @@ jQuery(function ($) {
 	if (enable_strong_password) {
 		minimum_password_strength_wrapper_field.show();
 	} else {
+		custom_password_params.hide();
 		minimum_password_strength_wrapper_field.hide();
 	}
 	var password_strength_option = minimum_password_strength_wrapper_field.find(
@@ -513,6 +515,13 @@ jQuery(function ($) {
 
 			if( $strength === "4" ) {
 				custom_password_params.show();
+				max_repeat_char_field.hide();
+				if(enable_no_repetitive_chars) {
+					max_repeat_char_field.show();
+				}
+				else {
+					max_repeat_char_field.hide();
+				}
 			}
 		});
 
@@ -584,9 +593,13 @@ jQuery(function ($) {
 		enable_strong_password = $(this).is(":checked");
 
 		if (enable_strong_password) {
+			if ( enable_custom_password ) {
+				custom_password_params.show();
+			}
 			minimum_password_strength_wrapper_field.show("slow");
 		} else {
 			minimum_password_strength_wrapper_field.hide("slow");
+			custom_password_params.hide();
 		}
 	});
 
@@ -737,6 +750,44 @@ jQuery(function ($) {
 				.parent()
 				.hide();
 			}
+		}
+	);
+
+	$("#user_registration_form_setting_default_phone_field").on(
+		"change",
+		function () {
+			$('#user_registration_form_setting_default_phone_field option').each(function() {
+				var phone_options = $(this);
+				var field_name = $(this).val();
+
+				$('.ur-selected-item').each(function() {
+
+					var old_field_name = $(this)
+					.find(".ur-general-setting-block")
+					.find(
+						'input[data-field="field_name"]'
+					)
+					.attr("value");
+
+					if(field_name === old_field_name){
+
+						var phone_format = $(this)
+						.find(".ur-general-setting-block")
+						.find(
+							'select[data-field="phone_format"]'
+						).val();
+
+						phone_options.attr('data-phone-format', phone_format);
+					}
+				});
+			});
+
+			// Change Field Name of field in Form Setting Default Phone field for SMS Verification.
+			$(
+				'[id="user_registration_form_setting_default_phone_field"] option[value="' +
+					old_field_name +
+					'"]'
+			).attr("data-phone-format", $this_obj.val());
 		}
 	);
 

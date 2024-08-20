@@ -1150,7 +1150,7 @@
 									var hit_third_party_api =
 										events.wait_third_party_api($this);
 									if (hit_third_party_api) {
-										const thirdPartyHandlerPromise =
+										var thirdPartyHandlerPromise =
 											new Promise(function (
 												resolve,
 												reject
@@ -1165,7 +1165,7 @@
 														reject
 													]
 												);
-											}).then((val) => {
+											}).then(function(val){
 												events.ajax_form_submit(val);
 											});
 									} else {
@@ -1345,6 +1345,29 @@
 												redirect_url =
 													response.data
 														.role_based_redirect_url;
+											}
+											if (
+												typeof response.data
+													.form_login_option !==
+													"undefined" &&
+												response.data.form_login_option === 'sms_verification'
+											) {
+												window.setTimeout(
+													function () {
+														if (
+															typeof response
+																.data
+																.redirect_url !==
+																"undefined" &&
+															response.data
+																.redirect_url
+														) {
+															window.location =
+																response.data.redirect_url;
+														}
+													},
+													timeout
+												);
 											}
 
 											if (

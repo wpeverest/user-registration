@@ -1,3 +1,23 @@
+= 3.3.1     - 19/08/2024 =
+* Feature   - Embed option in form builder.
+* Enhance   - Gutenberg block preview.
+* Enhance   - Improved error handling for mail sending.
+* Enhance   - Prevent deleting user email and password fields.
+* Enhance   - Disable profile picture sync with registration form.
+* Enhance   - Custom password strength and realtime password strength guide.
+* Enhance   - Display notice about possible spam registrations.
+* Tweak     - Onboarding texts and buttons improvement.
+* Tweak     - Improve error handling when ajax is disabled.
+* Tweak     - Moved Elementor Widget for Registration Forms to free.
+* Dev       - Compatibility for Authorize.net Addon.
+* Dev       - Compatibility for SMS verification.
+* Dev       - Add noreferer and noopener in all target blank anchor tags.
+* Fix       - Unable to publish form from draft status. 
+* Fix       - Undefined variable $form_row_data.
+* Fix       - Disable default wordpress login not working.
+* Fix       - The email content translation issues with WPML plugin.
+* Fix       - Anyone can register option not working due to conflict with the Really Simple SSL plugin.
+
 = 3.3.0.1  - 05/08/2024 =
 * Fix      - Fatal error while fetching large amount of user data on page load.
 
