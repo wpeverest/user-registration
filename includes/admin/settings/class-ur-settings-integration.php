@@ -40,13 +40,16 @@ if ( ! class_exists( 'UR_Settings_Integration ' ) ) :
 			$this->id    = 'integration';
 			$this->label = __( 'Integration', 'user-registration' );
 
+			
 			$this->integrations = apply_filters( 'user_registration_integrations_classes', $this->integrations );
-			add_filter( 'user_registration_settings_tabs_array', array( $this, 'add_settings_page' ), 20 );
-			add_action( 'user_registration_settings_' . $this->id, array( $this, 'output' ) );
-			add_action( 'user_registration_settings_save_' . $this->id, array( $this, 'save' ) );
-			if ( empty( $this->integrations ) ) {
-
+			if ( ! empty( $this->integrations ) ) {
+				add_filter( 'user_registration_settings_tabs_array', array( $this, 'add_settings_page' ), 20 );
+				add_action( 'user_registration_settings_' . $this->id, array( $this, 'output' ) );
+				add_action( 'user_registration_settings_save_' . $this->id, array( $this, 'save' ) );
 			}
+
+
+
 		}
 
 		/**

@@ -6337,22 +6337,6 @@ if ( ! function_exists( 'ur_prevent_default_login' ) ) {
 	}
 }
 
-if ( ! function_exists( 'ur_is_addon_active' ) ) {
-	/**
-	 * Check if addon is active.
-	 *
-	 * @since 3.3.1
-	 *
-	 * @return bool
-	 */
-	function ur_is_addon_active( $plugin ) {
-		if ( is_plugin_active( $plugin . '/' . $plugin . '.php' ) ) {
-			return true;
-		}
-		return false;
-	}
-}
-
 if ( ! function_exists( 'ur_integration_addons' ) ) {
 	/**
 	 * List of integrations.
@@ -6364,30 +6348,43 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 	function ur_integration_addons() {
 
 		$integration_list = array(
-			'UR_Settings_SMS_Integration'   => array(
-				'id'        => 'sms_integration',
-				'type'      => 'accordian',
-				'title'     => 'Twilio',
-				'is_active' => false,
-				'video_id'  => '4xDCbsBZaTs',
-			),
-			'UR_Settings_Slack_Integration' => array(
-				'id'        => 'slack_integration',
-				'type'      => 'accordian',
-				'title'     => 'Slack',
-				'is_active' => true,
-				'video_id'  => '4xDCbsBZaTs',
+			'UR_Settings_SMS_Integration' => array(
+				'id'       => 'sms_integration',
+				'type'     => 'accordian',
+				'title'    => 'Twilio',
+				'video_id' => '4xDCbsBZaTs',
 			),
 			$integration['UR_Settings_ActiveCampaign'] = array(
-				'id'        => 'activecampaign',
-				'type'      => 'accordian',
-				'title'     => 'ActiveCampaign',
-				'desc'      => '',
-				'is_active' => ur_is_addon_active( 'user-registration-addon-activecampaign' ),
-				'video_id'  => '4xDCbsBZaTs',
+				'id'       => 'activecampaign',
+				'type'     => 'accordian',
+				'title'    => 'ActiveCampaign',
+				'desc'     => '',
+				'video_id' => '4xDCbsBZaTs',
+			),
+			$integration['UR_Settings_MailerLite'] = array(
+				'id'       => 'mailerlite',
+				'type'     => 'accordian',
+				'title'    => 'MailerLite',
+				'desc'     => '',
+				'video_id' => '4xDCbsBZaTs',
+			),
+			$integration['UR_Settings_klaviyo'] = array(
+				'id'       => 'klaviyo',
+				'type'     => 'accordian',
+				'title'    => 'Klaviyo',
+				'desc'     => '',
+				'video_id' => '4xDCbsBZaTs',
+			),
+			$integration['UR_Settings_Mailchimp'] = array(
+				'id'       => 'mailchimp',
+				'type'     => 'accordian',
+				'title'    => 'Mailchimp',
+				'desc'     => '',
+				'video_id' => '4xDCbsBZaTs',
 			),
 
 		);
+
 		return $integration_list;
 	}
 
@@ -6402,11 +6399,14 @@ if ( ! function_exists( 'ur_list_top_integrations' ) ) {
 	 * @return array
 	 */
 	function ur_list_top_integrations( $integrations ) {
-		$integration_addons = ur_integration_addons();
-		foreach ( $integration_addons as $key => $addon ) {
-			$integration[ $key ] = $addon;
+		$is_free = is_plugin_active( 'user-registration/user-registration.php' );
+		if ( $is_free ) {
+			$integration_addons = ur_integration_addons();
+			foreach ( $integration_addons as $key => $addon ) {
+				$integration[ $key ] = $addon;
+			}
+			return $integration;
 		}
-		return $integration;
 	}
 }
 add_filter( 'user_registration_integrations_classes', 'ur_list_top_integrations' );

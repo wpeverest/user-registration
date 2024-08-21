@@ -383,11 +383,8 @@ class UR_Admin_Settings {
 					}
 
 					if ( 'accordian' === $section['type'] ) {
-
-						$inactive_class = isset( $section['is_active'] ) && $section['is_active'] ? '' : 'user-registration-inactive-addon';
-						// $disabled       = isset( $section['is_active'] ) && $section['is_active'] ? '' : 'disabled';
-						// $data_id        = isset( $section['is_active'] ) && $section['is_active'] ? '' : 'data-id="' . $section['id'] . '"';
-						$extras = isset( $section['is_active'] ) && $section['is_active']
+						$inactive_class = isset( $section['video_id'] ) &&  empty( $section['video_id'] ) ? '' : 'user-registration-inactive-addon';
+						$extras         = isset( $section['video_id'] ) &&  empty( $section['video_id'] )
 								? ''
 								: 'data-title="' . $section['title'] . '" data-id="' . $section['id'] . '" data-video="' . $section['video_id'] . '"';
 
