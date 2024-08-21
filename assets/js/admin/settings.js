@@ -915,7 +915,9 @@
 		}
 		return vars;
 	}
-
+	/**
+	 * Display the upgrade message for the top addons.
+	 */
 	$("body").on("click",'.user-registration-inactive-addon', function (e) {
 		$this = $(this);
 		e.preventDefault();

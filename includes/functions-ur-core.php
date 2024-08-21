@@ -6359,28 +6359,28 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 				'type'     => 'accordian',
 				'title'    => 'ActiveCampaign',
 				'desc'     => '',
-				'video_id' => '4xDCbsBZaTs',
+				'video_id' => 'AfapJxM9klk',
 			),
 			$integration['UR_Settings_MailerLite'] = array(
 				'id'       => 'mailerlite',
 				'type'     => 'accordian',
 				'title'    => 'MailerLite',
 				'desc'     => '',
-				'video_id' => '4xDCbsBZaTs',
+				'video_id' => '4f1lGgFuJx4',
 			),
 			$integration['UR_Settings_klaviyo'] = array(
 				'id'       => 'klaviyo',
 				'type'     => 'accordian',
 				'title'    => 'Klaviyo',
 				'desc'     => '',
-				'video_id' => '4xDCbsBZaTs',
+				'video_id' => 'nKOMqrkNK3Y',
 			),
 			$integration['UR_Settings_Mailchimp'] = array(
 				'id'       => 'mailchimp',
 				'type'     => 'accordian',
 				'title'    => 'Mailchimp',
 				'desc'     => '',
-				'video_id' => '4xDCbsBZaTs',
+				'video_id' => 'iyCByez_7U8',
 			),
 
 		);

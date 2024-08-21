@@ -383,12 +383,13 @@ class UR_Admin_Settings {
 					}
 
 					if ( 'accordian' === $section['type'] ) {
-						$inactive_class = isset( $section['video_id'] ) &&  empty( $section['video_id'] ) ? '' : 'user-registration-inactive-addon';
-						$extras         = isset( $section['video_id'] ) &&  empty( $section['video_id'] )
-								? ''
-								: 'data-title="' . $section['title'] . '" data-id="' . $section['id'] . '" data-video="' . $section['video_id'] . '"';
-
-						$settings .= '<div class="user-registration-card ur-mb-2 ' . $inactive_class . '" ' . $extras . ' >';
+						if ( isset( $section['video_id'] ) ) {
+							$inactive_class = 'user-registration-inactive-addon';
+							$extras         = 'data-title="' . $section['title'] . '" data-id="' . $section['id'] . '" data-video="' . $section['video_id'] . '"';
+							$settings      .= '<div class="user-registration-card ur-mb-2 ' . $inactive_class . '" ' . $extras . '>';
+						} else {
+							$settings .= '<div class="user-registration-card ur-mb-2">';
+						}
 						$settings .= '<div class="user-registration-card__header ur-d-flex ur-align-items-center ur-p-3 integration-header-info accordion">';
 						$settings .= '<div class="integration-detail">';
 						$settings .= '<span class="integration-status">';
@@ -405,7 +406,7 @@ class UR_Admin_Settings {
 						$settings .= '<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><polyline points="6 9 12 15 18 9"></polyline></svg>';
 						$settings .= '</div>';
 						$settings .= '</div>';
-						if ( isset( $section['is_active'] ) ) {
+						if ( isset( $section['video_id'] ) ) {
 							$settings .= '<div>';
 						} else {
 							$settings .= '<div class="user-registration-card__body ur-p-3 integration-body-info">';
