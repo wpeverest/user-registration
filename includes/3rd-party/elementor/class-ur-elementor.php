@@ -47,9 +47,17 @@ class UR_Elementor {
 	 */
 	public function register_widget() {
 			// Include Widget files.
-			require_once UR_ABSPATH . 'includes/3rd-party/elementor/class-ur-widget.php';
+			require_once UR_ABSPATH . 'includes/3rd-party/elementor/widgets/class-ur-widget-registration.php';
+			require_once UR_ABSPATH . 'includes/3rd-party/elementor/widgets/class-ur-widgets-login.php';
+			require_once UR_ABSPATH . 'includes/3rd-party/elementor/widgets/class-ur-widgets-myaccount.php';
+			require_once UR_ABSPATH . 'includes/3rd-party/elementor/widgets/class-ur-widgets-edit-profile.php';
+			require_once UR_ABSPATH . 'includes/3rd-party/elementor/widgets/class-ur-widgets-edit-password.php';
 
-			ElementorPlugin::instance()->widgets_manager->register( new UR_Widget() );
+			ElementorPlugin::instance()->widgets_manager->register( new UR_Elementor_Widget_Registration() );
+			ElementorPlugin::instance()->widgets_manager->register( new UR_Elementor_Widget_Login() );
+			ElementorPlugin::instance()->widgets_manager->register( new UR_Elementor_Widget_MyAccount() );
+			ElementorPlugin::instance()->widgets_manager->register( new UR_Elementor_Widget_Edit_Profile() );
+			ElementorPlugin::instance()->widgets_manager->register( new UR_Elementor_Widget_Edit_Password() );
 	}
 
 	/**

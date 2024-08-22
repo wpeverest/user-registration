@@ -15,7 +15,7 @@ use Elementor\Controls_Manager;
  *
  * @since 3.0.5
  */
-class UR_Widget extends Widget_Base {
+class UR_Elementor_Widget_MyAccount extends Widget_Base {
 	/**
 	 * Get widget name.
 	 *
@@ -26,7 +26,7 @@ class UR_Widget extends Widget_Base {
 	 * @return string Widget name.
 	 */
 	public function get_name() {
-		return 'user-registration';
+		return 'user-registration-myaccount';
 	}
 	/**
 	 * Get widget title.
@@ -38,7 +38,7 @@ class UR_Widget extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return __( 'User Registration', 'user-registration' );
+		return __( 'My Account', 'user-registration' );
 	}
 	/**
 	 * Get widget icon.
@@ -61,15 +61,9 @@ class UR_Widget extends Widget_Base {
 	 */
 	public function get_categories() {
 
-		if ( class_exists( 'User_Registration_Style_Customizer' ) ) {
-			return array(
-				'user-registration',
-			);
-		} else {
-			return array(
-				'basic',
-			);
-		}
+		return array(
+			'user-registration',
+		);
 	}
 	/**
 	 * Get widget keywords.
@@ -81,7 +75,7 @@ class UR_Widget extends Widget_Base {
 	 * @return array Widget keywords.
 	 */
 	public function get_keywords() {
-		return array( 'form', 'forms', 'user-registration', 'registration form', 'userregistration', 'userregistrations' );
+		return array( 'form', 'forms', 'user-registration', 'login form', 'user-registration-login', 'userregistrations' );
 	}
 	/**
 	 * Register controls.
@@ -92,23 +86,24 @@ class UR_Widget extends Widget_Base {
 		$this->start_controls_section(
 			'section_content_layout',
 			array(
-				'label' => esc_html__( 'Form', 'user-registration' ),
+				'label' => esc_html__( 'My Account', 'user-registration' ),
 			)
 		);
 
 		$forms = $this->get_forms();
 
 		$this->add_control(
-			'user_registration_form',
+			'ur_my_account',
 			array(
 				'label'   => esc_html__( 'Select Form', 'user-registration' ),
 				'type'    => Controls_Manager::SELECT,
 				'options' => $forms,
+				'default' => 'ur_my_account',
 			)
 		);
 		$this->end_controls_section();
 
-		do_action( 'user_registration_elementor_style', $this );
+		do_action( 'user_registration_elementor_login_style', $this );
 	}
 	/**
 	 * Retrieve the shortcode.
@@ -118,19 +113,10 @@ class UR_Widget extends Widget_Base {
 	private function get_shortcode() {
 
 		$settings = $this->get_settings_for_display();
-		if ( ! $settings['user_registration_form'] ) {
-			return '<p>' . __( 'Please select a User Registration Forms.', 'user-registration' ) . '</p>';
+		if ( ! $settings['ur_my_account'] ) {
+			return '<p>' . __( 'Please select a User Registration Login Forms.', 'user-registration' ) . '</p>';
 		}
-
-		$attributes = array(
-			'id' => $settings['user_registration_form'],
-		);
-
-		$this->add_render_attribute( 'shortcode', $attributes );
-		$shortcode   = array();
-		$shortcode[] = sprintf( '[user_registration_form %s]', $this->get_render_attribute_string( 'shortcode' ) );
-
-		return implode( '', $shortcode );
+		return  sprintf( '[user_registration_my_account]' );
 	}
 	/**
 	 * Render widget output.
@@ -138,6 +124,8 @@ class UR_Widget extends Widget_Base {
 	 * @since 3.0.5
 	 */
 	protected function render() {
+		lg( do_shortcode( $this->get_shortcode() ));
+
 		echo do_shortcode( $this->get_shortcode() );
 	}
 	/**
@@ -149,16 +137,7 @@ class UR_Widget extends Widget_Base {
 		$user_registration_forms = array();
 
 		if ( empty( $user_registration_forms ) ) {
-			$ur_forms = ur_get_all_user_registration_form();
-			if ( ! empty( $ur_forms ) ) {
-
-				foreach ( $ur_forms as $form_value => $form_name ) {
-					$user_registration_forms[ $form_value ] = $form_name;
-				}
-			} else {
-				$user_registration_forms[0] = esc_html__( 'You have not created a form, Please Create a form first', 'user-registration' );
-			}
-
+			$user_registration_forms['ur_my_account'] = esc_html__( 'Login Form', 'user-registration' );
 			return $user_registration_forms;
 		}
 	}
