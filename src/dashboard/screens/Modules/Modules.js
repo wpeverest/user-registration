@@ -1,7 +1,7 @@
 /**
  *  External Dependencies
  */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
 	Box,
 	Container,
@@ -18,9 +18,11 @@ import {
 	Input,
 	FormControl,
 	useToast,
+	Text,
+	Image
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
-import { useOnType } from "use-ontype";
+import { debounce } from "lodash";
 
 /**
  *  Internal Dependencies
@@ -31,12 +33,13 @@ import { isEmpty } from "../../../utils/utils";
 import {
 	getAllModules,
 	bulkActivateModules,
-	bulkDeactivateModules,
+	bulkDeactivateModules
 } from "./components/modules-api";
 import AddonSkeleton from "../../skeleton/AddonsSkeleton/AddonsSkeleton";
 import { useStateValue } from "../../../context/StateProvider";
 import { actionTypes } from "../../../context/dashboardContext";
 import ModuleBody from "./components/ModuleBody";
+import emptyData from "../../images/empty-table.webp";
 
 const Modules = () => {
 	const toast = useToast();
@@ -47,7 +50,8 @@ const Modules = () => {
 	const [bulkAction, setBulkAction] = useState("");
 	const [isPerformingBulkAction, setIsPerformingBulkAction] = useState(false);
 	const [tabIndex, setTabIndex] = useState(0);
-
+	const [searchItem, setSearchItem] = useState("");
+	const [noItemFound, setNoItemFound] = useState(false);
 	const [modules, setModules] = useState([]);
 
 	useEffect(() => {}, [selectedModuleData]);
@@ -58,7 +62,7 @@ const Modules = () => {
 					if (data.success) {
 						dispatch({
 							type: actionTypes.GET_ALL_MODULES,
-							allModules: data.modules_lists,
+							allModules: data.modules_lists
 						});
 
 						if (tabIndex === 1) {
@@ -87,21 +91,23 @@ const Modules = () => {
 					toast({
 						title: e.message,
 						status: "error",
-						duration: 3000,
+						duration: 3000
 					});
 				});
 		}
 	}, [tabIndex, modules, modulesLoaded, isPerformingBulkAction]);
 
 	const handleBulkActions = () => {
-		if( selectedModuleData.length < 1 ) {
+		if (selectedModuleData.length < 1) {
 			toast({
-				title: __( 'Please select at least a feature', 'user-registration'),
+				title: __(
+					"Please select at least a feature",
+					"user-registration"
+				),
 				status: "error",
-				duration: 3000,
+				duration: 3000
 			});
 		} else {
-
 			setIsPerformingBulkAction(true);
 
 			if (bulkAction === "activate") {
@@ -111,13 +117,13 @@ const Modules = () => {
 							toast({
 								title: data.message,
 								status: "success",
-								duration: 3000,
+								duration: 3000
 							});
 						} else {
 							toast({
 								title: data.message,
 								status: "error",
-								duration: 3000,
+								duration: 3000
 							});
 						}
 					})
@@ -125,7 +131,7 @@ const Modules = () => {
 						toast({
 							title: e.message,
 							status: "error",
-							duration: 3000,
+							duration: 3000
 						});
 					})
 					.finally(() => {
@@ -140,13 +146,13 @@ const Modules = () => {
 							toast({
 								title: data.message,
 								status: "success",
-								duration: 3000,
+								duration: 3000
 							});
 						} else {
 							toast({
 								title: data.message,
 								status: "error",
-								duration: 3000,
+								duration: 3000
 							});
 						}
 					})
@@ -154,7 +160,7 @@ const Modules = () => {
 						toast({
 							title: e.message,
 							status: "error",
-							duration: 3000,
+							duration: 3000
 						});
 					})
 					.finally(() => {
@@ -166,53 +172,70 @@ const Modules = () => {
 		}
 	};
 
-	const onSearchInput = useOnType(
-		{
-			onTypeStart: (val) => {
-				setIsSearching(true);
-			},
-			onTypeFinish: (val) => {
-				if (isEmpty(val)) {
-					setModulesLoaded(false);
-				} else {
-					var searchedData = {};
+	const debounceSearch = debounce((val) => {
+		setIsSearching(true);
 
-					if (tabIndex === 1) {
-						searchedData = allModules?.filter(
-							(module) =>
-								module.type === "feature" &&
-								module.title
-									.toLowerCase()
-									.includes(val.toLowerCase()),
-						);
-					} else if (tabIndex === 2) {
-						searchedData = allModules?.filter(
-							(module) =>
-								module.type === "addon" &&
-								module.title
-									.toLowerCase()
-									.includes(val.toLowerCase()),
-						);
-					} else {
-						searchedData = allModules?.filter((module) =>
-							module.title
-								.toLowerCase()
-								.includes(val.toLowerCase()),
-						);
-					}
+		if (!val) {
+			setModulesLoaded(false);
+			setIsSearching(false);
+			return;
+		}
 
-					if (!isEmpty(searchedData)) {
-						setModules(searchedData);
-						setModulesLoaded(true);
-					} else {
-						setModulesLoaded(false);
-					}
-				}
-				setIsSearching(false);
-			},
-		},
-		800,
-	);
+		let searchedData = [];
+
+		if (tabIndex === 1) {
+			searchedData = modules?.filter(
+				(module) =>
+					module.type === "feature" &&
+					module.title.toLowerCase().includes(val.toLowerCase())
+			);
+		} else if (tabIndex === 2) {
+			searchedData = modules?.filter(
+				(module) =>
+					module.type === "addon" &&
+					module.title.toLowerCase().includes(val.toLowerCase())
+			);
+		} else {
+			searchedData = modules?.filter((module) =>
+				module.title.toLowerCase().includes(val.toLowerCase())
+			);
+		}
+
+		if (searchedData.length > 0) {
+			setModules(searchedData);
+			setModulesLoaded(true);
+			setNoItemFound(false);
+		} else {
+			setModulesLoaded(false);
+			setNoItemFound(true);
+		}
+
+		setIsSearching(false);
+	}, 800);
+
+	const onSearchInput = (
+		val,
+		modules,
+		setModules,
+		setModulesLoaded,
+		setIsSearching,
+		tabIndex
+	) => {
+		debounceSearch(val);
+	};
+
+	const handleSearchInputChange = (e) => {
+		const val = e.target.value;
+		setSearchItem(val);
+		onSearchInput(
+			val,
+			modules,
+			setModules,
+			setModulesLoaded,
+			setIsSearching,
+			tabIndex
+		);
+	};
 
 	const parseDate = (dateString) => {
 		const [day, month, year] = dateString.split("/").map(Number);
@@ -226,8 +249,8 @@ const Modules = () => {
 					[...data].sort(
 						(firstAddonInContext, secondAddonInContext) =>
 							parseDate(secondAddonInContext.released_date) -
-							parseDate(firstAddonInContext.released_date),
-					),
+							parseDate(firstAddonInContext.released_date)
+					)
 				);
 				break;
 			case "oldest":
@@ -235,8 +258,8 @@ const Modules = () => {
 					[...data].sort(
 						(firstAddonInContext, secondAddonInContext) =>
 							parseDate(firstAddonInContext.released_date) -
-							parseDate(secondAddonInContext.released_date),
-					),
+							parseDate(secondAddonInContext.released_date)
+					)
 				);
 				break;
 			case "asc":
@@ -244,9 +267,9 @@ const Modules = () => {
 					[...data].sort(
 						(firstAddonInContext, secondAddonInContext) =>
 							firstAddonInContext.title.localeCompare(
-								secondAddonInContext.title,
-							),
-					),
+								secondAddonInContext.title
+							)
+					)
 				);
 				break;
 			case "desc":
@@ -254,9 +277,9 @@ const Modules = () => {
 					[...data].sort(
 						(firstAddonInContext, secondAddonInContext) =>
 							secondAddonInContext.title.localeCompare(
-								firstAddonInContext.title,
-							),
-					),
+								firstAddonInContext.title
+							)
+					)
 				);
 				break;
 			default:
@@ -282,7 +305,7 @@ const Modules = () => {
 								handleSorterChange(
 									e.target.value,
 									modules,
-									setModules,
+									setModules
 								);
 							}}
 							border="1px solid #DFDFE0 !important"
@@ -329,16 +352,16 @@ const Modules = () => {
 									fontSize="14px"
 									borderRadius="4px 0 0 4px"
 									style={{
-										boxSizing: "border-box",
+										boxSizing: "border-box"
 									}}
 									_focus={{
-										boxShadow: "none",
+										boxShadow: "none"
 									}}
 									_selected={{
 										color: "white",
 										bg: "#2563EB",
 										marginBottom: "0px",
-										boxShadow: "none",
+										boxShadow: "none"
 									}}
 									boxShadow="none !important"
 									transition="none !important"
@@ -348,16 +371,16 @@ const Modules = () => {
 								<Tab
 									fontSize="14px"
 									style={{
-										boxSizing: "border-box",
+										boxSizing: "border-box"
 									}}
 									_focus={{
-										boxShadow: "none",
+										boxShadow: "none"
 									}}
 									_selected={{
 										color: "white",
 										bg: "#2563EB",
 										marginBottom: "0px",
-										boxShadow: "none",
+										boxShadow: "none"
 									}}
 									boxShadow="none !important"
 									borderRight="1px solid #E9E9E9"
@@ -370,17 +393,17 @@ const Modules = () => {
 								<Tab
 									fontSize="14px"
 									style={{
-										boxSizing: "border-box",
+										boxSizing: "border-box"
 									}}
 									borderRadius="0 4px 4px 0"
 									_focus={{
-										boxShadow: "none",
+										boxShadow: "none"
 									}}
 									_selected={{
 										color: "white",
 										bg: "#2563EB",
 										marginBottom: "0px",
-										boxShadow: "none",
+										boxShadow: "none"
 									}}
 									marginLeft="0px !important"
 									boxShadow="none !important"
@@ -399,7 +422,7 @@ const Modules = () => {
 								bg="#DFDFE0"
 								placeholder={__(
 									"Bulk Actions",
-									"user-registration",
+									"user-registration"
 								)}
 								onChange={(e) => setBulkAction(e.target.value)}
 								icon=""
@@ -444,10 +467,11 @@ const Modules = () => {
 									type="text"
 									placeholder={__(
 										"Search...",
-										"user-registration",
+										"user-registration"
 									)}
 									paddingLeft="32px !important"
-									{...onSearchInput}
+									value={searchItem}
+									onChange={handleSearchInputChange}
 								/>
 							</InputGroup>
 						</FormControl>
@@ -457,6 +481,10 @@ const Modules = () => {
 			<Container maxW="container.xl">
 				{isSearching ? (
 					<AddonSkeleton />
+				) : noItemFound ? (
+					<Box display="flex" justifyContent="center">
+						<Image src={emptyData} alt="data not found" />
+					</Box>
 				) : (
 					<Box>
 						<Tabs index={tabIndex}>
