@@ -471,7 +471,7 @@ const ModuleItem = (props) => {
 								isPerformingBulkAction)
 						}
 					>
-						{__("Upgrade Plan", "everest-forms")}
+						{__("Upgrade Plan", "user-registration")}
 					</Button>
 				)}
 			</Box>
