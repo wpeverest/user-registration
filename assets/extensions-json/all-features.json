@@ -13,7 +13,9 @@
         "plus",
         "professional",
         "themegrill agency"
-      ]
+      ],
+      "setting_url": "admin.php?page=user-registration-settings&tab=sms",
+      "demo_video_url": ""
     },
     {
       "title": "Payment History",
@@ -28,7 +30,9 @@
         "plus",
         "professional",
         "themegrill agency"
-      ]
+      ],
+      "setting_url": "admin.php?page=user-registration-payment-history",
+      "demo_video_url": ""
     },
     {
       "title": "Coupons",
@@ -43,7 +47,9 @@
         "plus",
         "professional",
         "themegrill agency"
-      ]
+      ],
+      "setting_url": "admin.php?page=user-registration-coupons",
+      "demo_video_url": "XWUAiFmjf0w"
     },
     {
       "title": "Content Restriction",
@@ -58,7 +64,9 @@
         "plus",
         "professional",
         "themegrill agency"
-      ]
+      ],
+      "setting_url": "admin.php?page=user-registration-content-restriction",
+      "demo_video_url": "pTGPvYvU_Ig"
     },
     {
       "title": "PayPal Payment",
@@ -73,7 +81,9 @@
         "plus",
         "professional",
         "themegrill agency"
-      ]
+      ],
+      "setting_url": "admin.php?page=user-registration-settings&tab=payments",
+      "demo_video_url": "RKvdEN2xGo8"
     },
 	  {
       "title": "Frontend Listing",
@@ -88,7 +98,9 @@
         "plus",
         "professional",
         "themegrill agency"
-      ]
+      ],
+      "setting_url": "admin.php?page=user-registration-frontend-listing",
+      "demo_video_url": "4xDCbsBZaTs"
 	  }
   ]
 }
