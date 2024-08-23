@@ -63,7 +63,7 @@
 		"professional",
 		"themegrill agency"
     ],
-    "setting_url": "admin.php?page=user-registration-settings&tab=membership",
+    "setting_url": "admin.php?page=user-registration-membership",
     "demo_video_url": "3T6AILWb7OI",
 	  "released_date": "01/08/2024"
   	},
@@ -79,7 +79,7 @@
         "professional",
         "themegrill agency"
       ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=customize-my-account",
+      "setting_url": "admin.php?page=user-registration-settings&tab=user-registration-customize-my-account",
       "demo_video_url": "xOeV8JkE_es",
       "released_date": "09/04/2020"
     },
@@ -96,7 +96,7 @@
         "professional",
         "themegrill agency"
       ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=file-upload",
+      "setting_url": "admin.php?page=user-registration-settings&tab=file_upload",
       "demo_video_url": "pzhJ3qjQfC4",
       "released_date": "22/09/2017"
     },
@@ -193,7 +193,7 @@
 		    "professional",
         "themegrill agency"
       ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=social-connect",
+      "setting_url": "admin.php?page=user-registration-settings&tab=social_connect",
       "demo_video_url": "3fkboDBOujY",
       "released_date": "22/09/2017"
     },
@@ -210,7 +210,7 @@
         "professional",
         "themegrill agency"
       ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=profile-connect",
+      "setting_url": "admin.php?page=user-registration-settings&tab=profile_connect",
       "demo_video_url": "EOAWGqe1HbA",
       "released_date": "18/07/2018"
     },
@@ -243,7 +243,7 @@
         "professional",
         "themegrill agency"
       ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=invite-codes",
+      "setting_url": "admin.php?page=user-registration-settings&tab=user-registration-invite-codes",
       "demo_video_url": "IhqQLAc-yuQ",
       "released_date": "20/09/2018"
     },
@@ -260,7 +260,7 @@
         "professional",
         "themegrill agency"
       ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=pdf-form-submission",
+      "setting_url": "admin.php?page=user-registration-settings&tab=pdf_submission",
       "demo_video_url": "O0SJdXEyfjE",
       "released_date": "02/08/2018"
     },
@@ -277,7 +277,7 @@
         "professional",
         "themegrill agency"
       ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=2fa",
+      "setting_url": "admin.php?page=user-registration-settings&tab=user-registration-two-factor-authentication",
       "demo_video_url": "RBq9Oliq42Y",
       "released_date": "10/11/2022"
 	  },
@@ -293,7 +293,7 @@
         "professional",
         "themegrill agency"
       ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=import-users",
+      "setting_url": "admin.php?page=user-registration-settings&tab=import_export&section=import-users",
       "demo_video_url": "1acA7OBPxQs",
       "released_date": "15/10/2020"
     },
@@ -309,7 +309,7 @@
         "professional",
         "themegrill agency"
       ],
-      "setting_url": "",
+      "setting_url": "admin.php?page=user-registration-settings&tab=geolocation",
       "demo_video_url": "02S7XuLgbUM",
       "released_date": "20/09/2018"
     },
@@ -359,7 +359,7 @@
         "professional",
         "themegrill agency"
       ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=payments",
+      "setting_url": "admin.php?page=user-registration-settings&tab=payment",
       "demo_video_url": "IhAuojzys8k",
       "released_date": "16/07/2020"
     },
@@ -391,7 +391,7 @@
         "professional",
         "themegrill agency"
       ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=integration",
+      "setting_url": "",
       "demo_video_url": "zxl2nsXyOmw",
       "released_date": "19/11/2020"
 	  },
@@ -455,7 +455,7 @@
         "professional",
         "themegrill agency"
       ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=mailerlite",
+      "setting_url": "admin.php?page=user-registration-settings&tab=integration",
       "demo_video_url": "4f1lGgFuJx4",
       "released_date": "16/03/2021"
 	  },
@@ -552,7 +552,7 @@
         "professional",
         "themegrill agency"
       ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=payments",
+      "setting_url": "admin.php?page=user-registration-settings&tab=payment",
       "demo_video_url": "",
       "released_date": "01/08/2024"
 	  }

@@ -198,7 +198,7 @@ const ModuleItem = (props) => {
 		if (!isPro) {
 			const plan_upgrade_url =
 				upgradeURL +
-				"&utm_source=dashboard-all-feature&utm_medium=upgrade-plan-button";
+				"&utm_source=dashboard-all-feature&utm_medium=dashboard-upgrade-plan";
 			window.open(plan_upgrade_url, "_blank");
 		} else if (isPro && !licenseActivated) {
 			upgradeModalRef.type = "license";
@@ -281,6 +281,12 @@ const ModuleItem = (props) => {
 									playing={true}
 									width={"100%"}
 									controls
+									onReady={() =>
+										setThumbnailVideoLoading(false)
+									}
+									onBufferEnd={() =>
+										setThumbnailVideoLoading(false)
+									}
 								/>
 								{thumbnailVideoLoading && (
 									<Box
@@ -312,10 +318,7 @@ const ModuleItem = (props) => {
 							borderTopEndRadius={10}
 						>
 							<Tooltip
-								label={__(
-									"Play Video",
-									"learning-management-system"
-								)}
+								label={__("Play Video", "user-registration")}
 							>
 								<span>
 									<FaPlayCircle
@@ -404,49 +407,42 @@ const ModuleItem = (props) => {
 					>
 						{__("Documentation", "user-registration")}
 					</Link>
-					<Text as="span" lineHeight="1" color="gray.500">
-						|
-					</Text>
-					<Link
-						href={liveDemoURL}
-						fontSize="xs"
-						color="gray.500"
-						textDecoration="underline"
-						isExternal
-					>
-						{__("Live Demo", "user-registration")}
-					</Link>
-				</HStack>
-				{moduleEnabled &&
-					setting_url !== "" &&
-					moduleStatus === "active" && (
-						<IconButton
-							size="sm"
-							icon={<SettingsIcon />}
-							onClick={handleModuleSettingsURL}
-						/>
-					)}
-				{moduleEnabled && (
-					<>
-						{isAddonActivating ? (
-							<Spinner
-								speed="0.50s"
-								emptyColor="gray.200"
-								color="blue.500"
-								size="md"
-							/>
-						) : (
-							<Switch
-								isChecked={moduleStatus === "active"}
-								onChange={
-									moduleEnabled
-										? handleModuleAction
-										: handleBoxClick
-								}
-								colorScheme="green"
-							/>
+					{moduleEnabled &&
+						setting_url !== "" &&
+						moduleStatus === "active" && (
+							<>
+								<Text as="span" lineHeight="1" color="gray.500">
+									|
+								</Text>
+								<IconButton
+									size="sm"
+									icon={<SettingsIcon />}
+									onClick={handleModuleSettingsURL}
+								/>
+							</>
 						)}
-					</>
+				</HStack>
+				{isPerformingAction ||
+				(selectedModuleData.hasOwnProperty(slug) &&
+					isPerformingBulkAction) ? (
+					<Spinner
+						speed="0.50s"
+						emptyColor="gray.200"
+						color="blue.500"
+						size="md"
+					/>
+				) : (
+					moduleEnabled && (
+						<Switch
+							isChecked={"active" === moduleStatus ? true : false}
+							onChange={
+								moduleEnabled
+									? handleModuleAction
+									: handleBoxClick
+							}
+							colorScheme="green"
+						/>
+					)
 				)}
 
 				{!moduleEnabled && (

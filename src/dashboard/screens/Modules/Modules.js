@@ -28,7 +28,6 @@ import { debounce } from "lodash";
  *  Internal Dependencies
  */
 import { Search } from "../../components/Icon/Icon";
-import { isEmpty } from "../../../utils/utils";
 
 import {
 	getAllModules,
@@ -46,6 +45,7 @@ const Modules = () => {
 	const [isSearching, setIsSearching] = useState(false);
 	const [{ allModules }, dispatch] = useStateValue();
 	const [modulesLoaded, setModulesLoaded] = useState(false);
+	const [originalModules, setOriginalModules] = useState([]);
 	const [selectedModuleData, setSelectedModuleData] = useState("");
 	const [bulkAction, setBulkAction] = useState("");
 	const [isPerformingBulkAction, setIsPerformingBulkAction] = useState(false);
@@ -54,48 +54,47 @@ const Modules = () => {
 	const [noItemFound, setNoItemFound] = useState(false);
 	const [modules, setModules] = useState([]);
 
-	useEffect(() => {}, [selectedModuleData]);
-	useEffect(() => {
-		if (!modulesLoaded) {
-			getAllModules()
-				.then((data) => {
-					if (data.success) {
-						dispatch({
-							type: actionTypes.GET_ALL_MODULES,
-							allModules: data.modules_lists
-						});
-
-						if (tabIndex === 1) {
-							var feature_lists = [];
-							data.modules_lists.map((module) => {
-								if (module.type === "feature") {
-									feature_lists.push(module);
-								}
-							});
-							setModules(feature_lists);
-						} else if (tabIndex === 2) {
-							var addon_lists = [];
-							data.modules_lists.map((module) => {
-								if (module.type === "addon") {
-									addon_lists.push(module);
-								}
-							});
-							setModules(addon_lists);
-						} else {
-							setModules(data.modules_lists);
-						}
-						setModulesLoaded(true);
-					}
-				})
-				.catch((e) => {
-					toast({
-						title: e.message,
-						status: "error",
-						duration: 3000
+	const fetchModules = useCallback(() => {
+		getAllModules()
+			.then((data) => {
+				if (data.success) {
+					dispatch({
+						type: actionTypes.GET_ALL_MODULES,
+						allModules: data.modules_lists
 					});
-				});
+					setOriginalModules(data.modules_lists);
+					filterModules(data.modules_lists);
+					setModulesLoaded(true);
+				}
+			})
+			.catch((error) => {
+				setError(error.message);
+			});
+	}, [dispatch, tabIndex]);
+
+	const filterModules = (modules) => {
+		let filteredModules = modules;
+
+		if (tabIndex === 1) {
+			filteredModules = modules.filter(
+				(module) => module.type === "feature"
+			);
+		} else if (tabIndex === 2) {
+			filteredModules = modules.filter(
+				(module) => module.type === "addon"
+			);
 		}
-	}, [tabIndex, modules, modulesLoaded, isPerformingBulkAction]);
+		setModules(filteredModules);
+		setModulesLoaded(true);
+	};
+
+	useEffect(() => {
+		fetchModules();
+	}, [fetchModules]);
+
+	useEffect(() => {
+		filterModules(originalModules);
+	}, [tabIndex, originalModules]);
 
 	const handleBulkActions = () => {
 		if (selectedModuleData.length < 1) {
@@ -110,65 +109,31 @@ const Modules = () => {
 		} else {
 			setIsPerformingBulkAction(true);
 
-			if (bulkAction === "activate") {
-				bulkActivateModules(selectedModuleData)
-					.then((data) => {
-						if (data.success) {
-							toast({
-								title: data.message,
-								status: "success",
-								duration: 3000
-							});
-						} else {
-							toast({
-								title: data.message,
-								status: "error",
-								duration: 3000
-							});
-						}
-					})
-					.catch((e) => {
-						toast({
-							title: e.message,
-							status: "error",
-							duration: 3000
-						});
-					})
-					.finally(() => {
-						setModulesLoaded(false);
-						setIsPerformingBulkAction(false);
-						setSelectedModuleData({});
+			const actionFunction =
+				bulkAction === "activate"
+					? bulkActivateModules
+					: bulkDeactivateModules;
+
+			actionFunction(selectedModuleData)
+				.then((data) => {
+					toast({
+						title: data.message,
+						status: data.success ? "success" : "error",
+						duration: 3000
 					});
-			} else if (bulkAction === "deactivate") {
-				bulkDeactivateModules(selectedModuleData)
-					.then((data) => {
-						if (data.success) {
-							toast({
-								title: data.message,
-								status: "success",
-								duration: 3000
-							});
-						} else {
-							toast({
-								title: data.message,
-								status: "error",
-								duration: 3000
-							});
-						}
-					})
-					.catch((e) => {
-						toast({
-							title: e.message,
-							status: "error",
-							duration: 3000
-						});
-					})
-					.finally(() => {
-						setModulesLoaded(false);
-						setIsPerformingBulkAction(false);
-						setSelectedModuleData({});
+				})
+				.catch((e) => {
+					toast({
+						title: e.message,
+						status: "error",
+						duration: 3000
 					});
-			}
+				})
+				.finally(() => {
+					setIsPerformingBulkAction(false);
+					setSelectedModuleData({});
+					fetchModules();
+				});
 		}
 	};
 
@@ -176,7 +141,7 @@ const Modules = () => {
 		setIsSearching(true);
 
 		if (!val) {
-			setModulesLoaded(false);
+			filterModules(originalModules);
 			setIsSearching(false);
 			return;
 		}
@@ -184,19 +149,19 @@ const Modules = () => {
 		let searchedData = [];
 
 		if (tabIndex === 1) {
-			searchedData = modules?.filter(
+			searchedData = originalModules.filter(
 				(module) =>
 					module.type === "feature" &&
 					module.title.toLowerCase().includes(val.toLowerCase())
 			);
 		} else if (tabIndex === 2) {
-			searchedData = modules?.filter(
+			searchedData = originalModules.filter(
 				(module) =>
 					module.type === "addon" &&
 					module.title.toLowerCase().includes(val.toLowerCase())
 			);
 		} else {
-			searchedData = modules?.filter((module) =>
+			searchedData = originalModules.filter((module) =>
 				module.title.toLowerCase().includes(val.toLowerCase())
 			);
 		}
@@ -206,6 +171,7 @@ const Modules = () => {
 			setModulesLoaded(true);
 			setNoItemFound(false);
 		} else {
+			setModules([]);
 			setModulesLoaded(false);
 			setNoItemFound(true);
 		}
@@ -213,28 +179,10 @@ const Modules = () => {
 		setIsSearching(false);
 	}, 800);
 
-	const onSearchInput = (
-		val,
-		modules,
-		setModules,
-		setModulesLoaded,
-		setIsSearching,
-		tabIndex
-	) => {
-		debounceSearch(val);
-	};
-
 	const handleSearchInputChange = (e) => {
 		const val = e.target.value;
 		setSearchItem(val);
-		onSearchInput(
-			val,
-			modules,
-			setModules,
-			setModulesLoaded,
-			setIsSearching,
-			tabIndex
-		);
+		debounceSearch(val);
 	};
 
 	const parseDate = (dateString) => {
@@ -333,14 +281,7 @@ const Modules = () => {
 						<Tabs
 							index={tabIndex}
 							onChange={(index) => {
-								setIsSearching(true);
 								setTabIndex(index);
-								setModulesLoaded(false);
-								new Promise(function (resolve, reject) {
-									setTimeout(resolve, 1000);
-								}).then(function () {
-									setIsSearching(false);
-								});
 							}}
 						>
 							<TabList
@@ -365,8 +306,13 @@ const Modules = () => {
 									}}
 									boxShadow="none !important"
 									transition="none !important"
+									onClick={() =>
+										handleSearchInputChange({
+											target: { value: searchItem }
+										})
+									}
 								>
-									{__("All", "user-registration")}
+									{__("All Modules", "user-registration")}
 								</Tab>
 								<Tab
 									fontSize="14px"
@@ -387,6 +333,11 @@ const Modules = () => {
 									borderLeft="1px solid #E9E9E9"
 									marginLeft="0px !important"
 									transition="none !important"
+									onClick={() =>
+										handleSearchInputChange({
+											target: { value: searchItem }
+										})
+									}
 								>
 									{__("Features", "user-registration")}
 								</Tab>
@@ -408,6 +359,11 @@ const Modules = () => {
 									marginLeft="0px !important"
 									boxShadow="none !important"
 									transition="none !important"
+									onClick={() =>
+										handleSearchInputChange({
+											target: { value: searchItem }
+										})
+									}
 								>
 									{__("Addons", "user-registration")}
 								</Tab>

@@ -14,7 +14,7 @@
         "professional",
         "themegrill agency"
       ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=sms",
+      "setting_url": "admin.php?page=user-registration-settings&tab=integration",
       "demo_video_url": ""
     },
     {
@@ -31,7 +31,7 @@
         "professional",
         "themegrill agency"
       ],
-      "setting_url": "admin.php?page=user-registration-payment-history",
+      "setting_url": "admin.php?page=member-payment-history",
       "demo_video_url": ""
     },
     {
@@ -82,7 +82,7 @@
         "professional",
         "themegrill agency"
       ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=payments",
+      "setting_url": "admin.php?page=user-registration-settings&tab=payment",
       "demo_video_url": "RKvdEN2xGo8"
     },
 	  {
@@ -99,7 +99,7 @@
         "professional",
         "themegrill agency"
       ],
-      "setting_url": "admin.php?page=user-registration-frontend-listing",
+      "setting_url": "admin.php?page=user-registration-frontend-list",
       "demo_video_url": "4xDCbsBZaTs"
 	  }
   ]
