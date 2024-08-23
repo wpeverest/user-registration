@@ -292,6 +292,8 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 	const [isShortcodeCopied, setShortcodeCopied] = useState({});
 
 	const { onCopy, hasCopied } = useClipboard();
+	const [isExampleShortcodeCopied, setIsExampleShortcodeCopied] =
+		useState("");
 
 	const toast = useToast();
 
@@ -332,6 +334,25 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 				[shortcode_id]: !isShortcodeCopied[shortcode_id]
 			});
 			event.stopPropagation();
+		} catch (error) {
+			console.error("Error copying shortcode:", error);
+		}
+	};
+
+	const handleExampleShortcodeCopy = (example_name) => {
+		try {
+			const textField = document.createElement("textarea");
+			textField.innerText = example_name;
+			document.body.appendChild(textField);
+			textField.select();
+			document.execCommand("copy");
+			textField.remove();
+			onCopy();
+			setIsExampleShortcodeCopied(example_name);
+			event.stopPropagation();
+			setTimeout(() => {
+				setIsExampleShortcodeCopied("");
+			}, 1000);
 		} catch (error) {
 			console.error("Error copying shortcode:", error);
 		}
@@ -570,6 +591,44 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 															>
 																{example_name}
 															</Box>
+														</Td>
+														<Td>
+															{example_name && (
+																<Box>
+																	<IconButton
+																		size="md"
+																		icon={
+																			<CopyIcon />
+																		}
+																		onClick={(
+																			event
+																		) =>
+																			handleExampleShortcodeCopy(
+																				example_name,
+																				event
+																			)
+																		}
+																	/>
+																	{isExampleShortcodeCopied ===
+																	example_name ? (
+																		<Tooltip
+																			hasArrow={
+																				true
+																			}
+																			closeDelay={
+																				1000
+																			}
+																		>
+																			{__(
+																				"Copied!",
+																				"user-registration"
+																			)}
+																		</Tooltip>
+																	) : (
+																		""
+																	)}
+																</Box>
+															)}
 														</Td>
 													</Tr>
 													<Tr>

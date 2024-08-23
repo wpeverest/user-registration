@@ -40,7 +40,7 @@ import { actionTypes } from "../../../../context/dashboardContext";
 
 const ModuleItem = (props) => {
 	/* global _UR_DASHBOARD_ */
-	const { assetsURL, liveDemoURL, isPro, licensePlan, adminURL } =
+	const { assetsURL, liveDemoURL, isPro, licensePlan, adminURL, upgradeURL } =
 		typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 	const [{ upgradeModal }, dispatch] = useStateValue();
 	const [requirementFulfilled, setRequirementFulfilled] = useState(false);
@@ -196,8 +196,10 @@ const ModuleItem = (props) => {
 		upgradeModalRef.moduleName = data.name;
 
 		if (!isPro) {
-			upgradeModalRef.type = "pro";
-			upgradeModalRef.enable = true;
+			const plan_upgrade_url =
+				upgradeURL +
+				"&utm_source=dashboard-all-feature&utm_medium=upgrade-plan-button";
+			window.open(plan_upgrade_url, "_blank");
 		} else if (isPro && !licenseActivated) {
 			upgradeModalRef.type = "license";
 			upgradeModalRef.enable = true;

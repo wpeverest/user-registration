@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - master
+      - enhance/dashboard-page
     workflow_dispatch:
 jobs:
   sync:
