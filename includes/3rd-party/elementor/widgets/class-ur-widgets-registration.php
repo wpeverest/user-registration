@@ -1,6 +1,6 @@
 <?php
 /**
- * User Registration Edit Profile Form for Elementor.
+ * User Registration Form for Elementor.
  *
  * @package UserRegistration\Class
  * @since 3.2.2
@@ -11,10 +11,10 @@ use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
 
 /**
- * User Registration Edit Profile Forms Widget for Elementor.
+ * User Registration Forms Widget for Elementor.
  *
  */
-class UR_Elementor_Widget_Edit_Profile extends Widget_Base {
+class UR_Elementor_Widget_Registration extends Widget_Base {
 	/**
 	 * Get widget name.
 	 *
@@ -23,7 +23,7 @@ class UR_Elementor_Widget_Edit_Profile extends Widget_Base {
 	 * @return string Widget name.
 	 */
 	public function get_name() {
-		return 'user-registration-edit-profile';
+		return 'user-registration-form';
 	}
 	/**
 	 * Get widget title.
@@ -33,7 +33,7 @@ class UR_Elementor_Widget_Edit_Profile extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return __( 'Edit Profile', 'user-registration' );
+		return __( 'Registration Form', 'user-registration' );
 	}
 	/**
 	 * Get widget icon.
@@ -49,7 +49,6 @@ class UR_Elementor_Widget_Edit_Profile extends Widget_Base {
 	/**
 	 * Get widget categories.
 	 *
-	 * @since 3.2.2
 	 *
 	 * @return array Widget categories.
 	 */
@@ -68,7 +67,7 @@ class UR_Elementor_Widget_Edit_Profile extends Widget_Base {
 	 * @return array Widget keywords.
 	 */
 	public function get_keywords() {
-		return array( 'form', 'forms', 'user-registration', 'login form', 'user-registration-edit-profile', 'edit profile' );
+		return array( 'form', 'forms', 'user-registration', 'registration form', 'userregistration', 'userregistrations' );
 	}
 	/**
 	 * Register controls.
@@ -76,26 +75,25 @@ class UR_Elementor_Widget_Edit_Profile extends Widget_Base {
 	 */
 	protected function register_controls() { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
 		$this->start_controls_section(
-			'ur_elementor_edit_profile',
+			'ur_elementor_registration_form',
 			array(
-				'label' => esc_html__( 'Edit Profile', 'user-registration' ),
+				'label' => esc_html__( 'Form', 'user-registration' ),
 			)
 		);
 
 		$forms = $this->get_forms();
 
 		$this->add_control(
-			'ur_edit_profile',
+			'user_registration_form',
 			array(
 				'label'   => esc_html__( 'Select Form', 'user-registration' ),
 				'type'    => Controls_Manager::SELECT,
 				'options' => $forms,
-				'default' => 'ur_edit_profile',
 			)
 		);
 		$this->end_controls_section();
 
-		do_action( 'user_registration_elementor_edit_profile_style', $this );
+		do_action( 'user_registration_elementor_style', $this );
 	}
 	/**
 	 * Retrieve the shortcode.
@@ -104,11 +102,19 @@ class UR_Elementor_Widget_Edit_Profile extends Widget_Base {
 	private function get_shortcode() {
 
 		$settings = $this->get_settings_for_display();
-		if ( ! $settings['ur_edit_profile'] ) {
-			return '<p>' . __( 'Please select a User Registration Login Forms.', 'user-registration' ) . '</p>';
+		if ( ! $settings['user_registration_form'] ) {
+			return '<p>' . __( 'Please select a User Registration Forms.', 'user-registration' ) . '</p>';
 		}
-		$shortcode =  '[user_registration_edit_profile]' ;
-		$shortcode = sprintf( apply_filters( 'user_registration_elementor_shortcode_edit_profile', $shortcode, $settings ) );
+
+		$attributes = array(
+			'id' => $settings['user_registration_form'],
+		);
+
+		$this->add_render_attribute( 'shortcode', $attributes );
+		$shortcode   = array();
+		$shortcode[] = sprintf( '[user_registration_form %s]', $this->get_render_attribute_string( 'shortcode' ) );
+		$shortcode = implode( '', $shortcode );
+		$shortcode = sprintf( apply_filters( 'user_registration_elementor_shortcode_registration_form', $shortcode, $settings ) );
 		return $shortcode;
 	}
 	/**
@@ -119,14 +125,23 @@ class UR_Elementor_Widget_Edit_Profile extends Widget_Base {
 		echo do_shortcode( $this->get_shortcode() );
 	}
 	/**
-	 * Retrieve the  available  forms.
+	 * Retrieve the  available UR forms.
 	 *
 	 */
 	public function get_forms() {
 		$user_registration_forms = array();
 
 		if ( empty( $user_registration_forms ) ) {
-			$user_registration_forms['ur_edit_profile'] = esc_html__( 'Default Form', 'user-registration' );
+			$ur_forms = ur_get_all_user_registration_form();
+			if ( ! empty( $ur_forms ) ) {
+
+				foreach ( $ur_forms as $form_value => $form_name ) {
+					$user_registration_forms[ $form_value ] = $form_name;
+				}
+			} else {
+				$user_registration_forms[0] = esc_html__( 'You have not created a form, Please Create a form first', 'user-registration' );
+			}
+
 			return $user_registration_forms;
 		}
 	}

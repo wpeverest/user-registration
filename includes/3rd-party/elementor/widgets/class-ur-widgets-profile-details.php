@@ -1,7 +1,7 @@
 <?php
 
 /**
- * User Registration MyAccount for Elementor.
+ * User Registration Profile Details for Elementor.
  *
  * @package UserRegistration\Class
  * @since 3.2.2
@@ -12,9 +12,9 @@ use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
 
 /**
- * User Registration MyAccount Widget for Elementor.
+ * User Registration Profile Details Widget for Elementor.
  */
-class UR_Elementor_Widget_MyAccount extends Widget_Base {
+class UR_Elementor_Widget_View_Details extends Widget_Base {
 
 	/**
 	 * Get widget name.
@@ -24,8 +24,9 @@ class UR_Elementor_Widget_MyAccount extends Widget_Base {
 	 * @return string Widget name.
 	 */
 	public function get_name() {
-		return 'user-registration-myaccount';
+		return 'user-registration-view-profile-details';
 	}
+
 	/**
 	 * Get widget title.
 	 *
@@ -34,8 +35,9 @@ class UR_Elementor_Widget_MyAccount extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return __( 'My Account', 'user-registration' );
+		return __( 'View Profile Details', 'user-registration' );
 	}
+
 	/**
 	 * Get widget icon.
 	 *
@@ -46,17 +48,16 @@ class UR_Elementor_Widget_MyAccount extends Widget_Base {
 	public function get_icon() {
 		return 'ur-icon-user-registration';
 	}
+
 	/**
 	 * Get widget categories.
 	 *
 	 * @return array Widget categories.
 	 */
 	public function get_categories() {
-
-		return array(
-			'user-registration',
-		);
+		return array( 'user-registration' );
 	}
+
 	/**
 	 * Get widget keywords.
 	 *
@@ -65,75 +66,67 @@ class UR_Elementor_Widget_MyAccount extends Widget_Base {
 	 * @return array Widget keywords.
 	 */
 	public function get_keywords() {
-		return array( 'form', 'forms', 'user-registration', 'my-account', 'user-registration-login', 'my account' );
+		return array( 'form', 'forms', 'user-registration', 'view profile details', 'user-registration-view-profile-details' );
 	}
+
 	/**
 	 * Register controls.
 	 */
 	protected function register_controls() {
-		// phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
+
 		$this->start_controls_section(
-			'ur_elementor_myaccount',
+			'ur_elementor_view_profile_details',
 			array(
-				'label' => esc_html__( 'My Account', 'user-registration' ),
+				'label' => esc_html__( 'Profile Details', 'user-registration' ),
 			)
 		);
 
 		$forms = $this->get_forms();
 
 		$this->add_control(
-			'ur_my_account',
+			'ur_view_profile_details',
 			array(
 				'label'   => esc_html__( 'Select Form', 'user-registration' ),
 				'type'    => Controls_Manager::SELECT,
 				'options' => $forms,
-				'default' => 'ur_my_account',
+				'default' => 'ur_view_profile_details',
 			)
 		);
 		$this->end_controls_section();
+		do_action( 'user_registration_elementor_profile_details_style', $this );
 
-		do_action( 'user_registration_elementor_myaccount_style', $this );
 	}
+
 	/**
 	 * Retrieve the shortcode.
 	 */
 	private function get_shortcode() {
-
 		$settings = $this->get_settings_for_display();
-		if ( ! is_user_logged_in() ) {
-			return sprintf( '[user_registration_login]' );
+		if ( ! $settings['ur_view_profile_details'] ) {
+			return '<p>' . __( 'Please select a View Profile Details Forms.', 'user-registration' ) . '</p>';
 		}
-
-		if ( ! $settings['ur_my_account'] ) {
-			return '<p>' . __( 'Please select a User Registration Login Forms.', 'user-registration' ) . '</p>';
-		}
-		$shortcode = '[user_registration_my_account]';
-		$shortcode = sprintf( apply_filters( 'user_registration_elementor_shortcode_my_account', $shortcode, $settings ) );
+		$shortcode = '[user_registration_view_profile_details]';
+		$shortcode = sprintf( apply_filters( 'user_registration_elementor_shortcode_view_profile_details', $shortcode, $settings ) );
 		return $shortcode;
 	}
+
 	/**
 	 * Render widget output.
 	 */
 	protected function render() {
-
-		// To preview in builder editor.
-		if ( Elementor\Plugin::$instance->editor->is_edit_mode()  ) {
-			echo '<div id="user-registration" class= "user-registration horizontal">';
-			ur_get_template( 'myaccount/my-account.php' );
-			echo '</div>';
-		} else {
-			echo do_shortcode( $this->get_shortcode() );
-		}
+		echo do_shortcode( $this->get_shortcode() );
 	}
+
 	/**
-	 * Retrieve the  available  forms.
+	 * Retrieve the available UR.
 	 */
 	public function get_forms() {
 		$user_registration_forms = array();
 
 		if ( empty( $user_registration_forms ) ) {
-			$user_registration_forms['ur_my_account'] = esc_html__( 'Default Form', 'user-registration' );
-			return $user_registration_forms;
+			$user_registration_forms['ur_view_profile_details'] = esc_html__( 'Default Form', 'user-registration' );
 		}
+
+		return $user_registration_forms;
 	}
 }
