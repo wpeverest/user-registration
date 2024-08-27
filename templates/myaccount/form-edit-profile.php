@@ -64,7 +64,24 @@ do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id
 						 */
 						apply_filters( 'user_registation_profile_detail_title', __( 'Profile Detail', 'user-registration' ) ) ); //PHPCS:ignore ?></h2>
 					<?php
-					if ( ! ur_option_checked( 'user_registration_disable_profile_picture', false ) ) {
+
+					$is_sync_profile = ur_option_checked( 'user_registration_sync_profile_picture', false );
+					$is_profile_field_disabled = ur_option_checked( 'user_registration_disable_profile_picture', false );
+					$is_profile_pic_on_form   = false;
+					if($is_sync_profile){
+						foreach ( $form_data_array as $data ) {
+							foreach ( $data as $grid_key => $grid_data ) {
+								foreach ( $grid_data as $grid_data_key => $single_item ) {
+									if ( isset( $single_item->field_key ) && 'profile_picture' === $single_item->field_key ) {
+										$is_profile_pic_on_form = true;
+									}
+								}
+							}
+						}
+					}else{
+						$is_profile_pic_on_form = ! $is_profile_field_disabled;
+					}
+					if ( $is_profile_pic_on_form ) {
 						?>
 						<div class="user-registration-profile-header">
 							<div class="user-registration-img-container" style="width:100%">

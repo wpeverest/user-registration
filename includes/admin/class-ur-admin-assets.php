@@ -66,9 +66,11 @@ class UR_Admin_Assets {
 		if ( 'plugins' === $screen_id ) {
 			wp_enqueue_style( 'user-registration-menu' );
 		}
+
+		wp_register_style( 'user-registration-admin', UR()->plugin_url() . '/assets/css/admin.css', array( 'nav-menus', 'wp-color-picker' ), UR_VERSION );
+
 		// Admin styles for UR pages only.
 		if ( in_array( $screen_id, ur_get_screen_ids(), true ) ) {
-			wp_register_style( 'user-registration-admin', UR()->plugin_url() . '/assets/css/admin.css', array( 'nav-menus', 'wp-color-picker' ), UR_VERSION );
 			wp_enqueue_style( 'user-registration-admin' );
 
 			if ( strpos( $screen_id, 'user-registration-settings' ) ) {
@@ -272,6 +274,7 @@ class UR_Admin_Assets {
 			array(
 				'ajax_url'          => admin_url( 'admin-ajax.php' ),
 				'important_nonce'   => wp_create_nonce( 'important-nonce' ),
+				'info_nonce'        => wp_create_nonce( 'info-nonce' ),
 				'review_nonce'      => wp_create_nonce( 'review-nonce' ),
 				'allow-usage_nonce' => wp_create_nonce( 'allow-usage-nonce' ),
 				'survey_nonce'      => wp_create_nonce( 'survey-nonce' ),
@@ -331,6 +334,8 @@ class UR_Admin_Assets {
 				'is_edit_form'                           => isset( $_GET['edit-registration'] ) ? true : false, //phpcs:ignore WordPress.Security.NonceVerification
 				'is_form_builder'                        => ( isset( $_GET['page'] ) && 'add-new-registration' === $_GET['page'] ) ? true : false, //phpcs:ignore WordPress.Security.NonceVerification
 				'post_id'                                => $form_id,
+				'ur_embed_page_list'                     => wp_create_nonce( 'ur_embed_page_list_nonce' ),
+				'ur_embed_action'                        => wp_create_nonce( 'ur_embed_action_nonce' ),
 				'admin_url'                              => admin_url( 'admin.php?page=add-new-registration&edit-registration=' ),
 				'form_required_fields'                   => ur_get_required_fields(),
 				'form_one_time_draggable_fields'         => ur_get_one_time_draggable_fields(),
@@ -342,6 +347,8 @@ class UR_Admin_Assets {
 				'form_one_time_draggable_fields_locked_message' => esc_html__( '%field% field can be used only one time in the form.', 'user-registration' ),
 				'i18n_admin'                             => self::get_i18n_admin_data(),
 				'i18n_shortcut_key_title'                => esc_html__( 'Keyboard Shortcut Keys', 'user-registration' ),
+				'i18n_publish_form_button_text'          => esc_html__( 'Publish form', 'user-registration' ),
+				'i18n_update_form_button_text'           => esc_html__( 'Update form', 'user-registration' ),
 				'i18n_shortcut_keys'                     => array(
 					'Ctrl+S' => esc_html__( 'Save Builder', 'user-registration' ),
 					'Ctrl+W' => esc_html__( 'Close Builder', 'user-registration' ),
@@ -364,6 +371,14 @@ class UR_Admin_Assets {
 				'user_registration_weak_password_info'   => esc_html__( 'Minimum one uppercase letter and must be 4 characters and no repetitive words or common words', 'user-registration' ),
 				'user_registration_medium_password_info' => esc_html__( 'Minimum one uppercase letter, a number, must be 7 characters and no repetitive words or common words', 'user-registration' ),
 				'user_registration_strong_password_info' => esc_html__( 'Minimum one uppercase letter, a number, a special character, must be 9 characters and no repetitive words or common words', 'user-registration' ),
+				'user_registration_custom_password_info' => esc_html__( 'Set custom passwords by defining criteria such as length, uppercase and lowercase letters, digits, and special characters for enhanced security.', 'user-registration' ),
+				'ajax_form_submit_error_title'           => esc_html__( 'Form could not be saved', 'user-registration' ),
+				'ajax_form_submit_error'                 => esc_html__( 'Something went wrong while saving form through AJAX request.', 'user-registration' ),
+				'ajax_form_submit_troubleshooting_link'  => esc_url_raw( 'https://docs.wpuserregistration.com/docs/how-to-handle-ajax-submission-error' ),
+				'isPro'                                  => is_plugin_active( 'user-registration-pro/user-registration.php' ),
+				'ur_upgrade_plan_link'                   => esc_url( 'https://wpuserregistration.com/pricing/?utm_source=plugin&utm_medium=button&utm_campaign=ur-upgrade-to-pro' ),
+				'ur_remove_password_field_link'          => esc_url( 'https://docs.wpuserregistration.com/docs/remove-password-field/' ),
+				'ur_form_non_deletable_fields'           => ur_non_deletable_fields(),
 			);
 
 			wp_localize_script(
@@ -546,10 +561,15 @@ class UR_Admin_Assets {
 			'i18n_user_password'                          => _x( 'User Password', 'user-registration admin', 'user-registration' ),
 			'i18n_payment_field'                          => _x( 'Payment', 'user-registration admin', 'user-registration' ),
 			'i18n_stripe_field'                           => _x( 'Stripe Gateway', 'user-registration admin', 'user-registration' ),
+			'i18n_phone_field'                            => _x( 'Phone', 'user-registration admin', 'user-registration' ),
+			'i18n_smart_phone_field'                      => _x( 'Selected default phone field must be in smart format.', 'user-registration admin', 'user-registration' ),
+			'i18n_default_phone_field'                    => _x( 'Select Smart Phone Fields for SMS Verification', 'user-registration admin', 'user-registration' ),
+			'i18n_anet_field'                             => _x( 'Authorize.net', 'user-registration admin', 'user-registration' ),
 			'i18n_are_you_sure_want_to_delete_row'        => _x( 'Are you sure want to delete this row?', 'user registration admin', 'user-registration' ),
 			'i18n_are_you_sure_want_to_delete_field'      => _x( 'Are you sure want to delete this field?', 'user registration admin', 'user-registration' ),
 			'i18n_at_least_one_row_is_required_to_create_a_registration_form' => _x( 'At least one row is required to create a registration form.', 'user registration admin', 'user-registration' ),
 			'i18n_cannot_delete_row'                      => _x( 'Cannot delete row', 'user registration admin', 'user-registration' ),
+			'i18n_user_email_and_password_fields_are_required_to_create_a_registration_form' => _x( 'Email and Password fields are required to create a registration form.', 'user registration admin', 'user-registration' ),
 			'i18n_user_required_field_already_there'      => _x( 'This field is one time draggable.', 'user registration admin', 'user-registration' ),
 			'i18n_user_required_field_already_there_could_not_clone' => _x( 'Could not clone this field.', 'user registration admin', 'user-registration' ),
 			/* translators: %field%: Field Label */
@@ -558,9 +578,19 @@ class UR_Admin_Assets {
 			'i18n_success'                                => _x( 'Success', 'user registration admin', 'user-registration' ),
 			'i18n_error'                                  => _x( 'Error', 'user registration admin', 'user-registration' ),
 			'i18n_msg_delete'                             => esc_html__( 'Confirm Deletion', 'user-registration' ),
+			'i18n_embed_form_title'                       => esc_html__( 'Embed in Page', 'user-registration' ),
+			'i18n_embed_description'                      => esc_html__( 'We can help embed your form with just a few clicks!', 'user-registration' ),
+			'i18n_embed_to_existing_page'                 => esc_html__( 'Select Existing Page', 'user-registration' ),
+			'i18n_embed_to_new_page'                      => esc_html__( 'Create New Page', 'user-registration' ),
+			'i18n_embed_existing_page_description'        => esc_html__( 'Select the page to embed your form in.', 'user-registration' ),
+			'i18n_embed_go_back_btn'                      => esc_html__( 'Go Back', 'user-registration' ),
+			'i18n_embed_lets_go_btn'                      => esc_html__( 'Lets Go!', 'user-registration' ),
+			'i18n_embed_new_page_description'             => esc_html__( 'What would you like to call the new page?', 'user-registration' ),
 			'i18n_at_least_one_field_need_to_select'      => _x( 'At least one field needs to be selected.', 'user registration admin', 'user-registration' ),
-			'i18n_total_required_on_coupon'      		  => _x( 'Total field is required with coupon.', 'user registration admin', 'user-registration' ),
-			'i18n_no_stripe_for_coupon'      		  	  => _x( 'Recurring subscription with Stripe gateway is not currently available for coupon field.', 'user registration admin', 'user-registration' ),
+			'i18n_total_required_on_coupon'               => _x( 'Total field is required with coupon.', 'user registration admin', 'user-registration' ),
+			'i18n_no_stripe_for_coupon'                   => _x( 'Recurring subscription with Stripe gateway is not currently available for coupon field.', 'user registration admin', 'user-registration' ),
+			'i18n_min_custom_password_length_error'       => _x( 'Minimum Password Length value should at least be 6.', 'user registration admin', 'user-registration' ),
+			'i18n_custom_password_negative_value_error'   => _x( 'Value in custom password cannot be less than 0.', 'user registration admin', 'user-registration' ),
 			'i18n_empty_form_name'                        => _x( 'Empty form name.', 'user registration admin', 'user-registration' ),
 			'i18n_previous_save_action_ongoing'           => _x( 'Previous save action on going.', 'user registration admin', 'user-registration' ),
 			'i18n_duplicate_field_name'                   => _x( 'Duplicate field name.', 'user registration admin', 'user-registration' ),
@@ -579,6 +609,13 @@ class UR_Admin_Assets {
 			'i18n_google_sheets_sheet_empty_error'        => esc_html__( 'Look like your sheet is empty ! Please try again', 'user-registration' ),
 			'i18n_urfr_qna_field_empty_error'             => esc_html__( 'Form Restriction: Empty Question or Answer field.', 'user-registration' ),
 			'i18n_urfr_field_required_error'              => esc_html__( 'Form Restriction: Q&A restriction requires at least one question and answer.', 'user-registration' ),
+			'i18n_delete_pass_available_in_pro'           => esc_html__( 'Subscribe to User Registration Pro to get the Autogenerated Password feature which lets you remove the password field.', 'user-registration' ),
+			'i18n_auto_generate_password'                 => esc_html__( 'To remove the password field, enable the auto-generate password feature in form  settings.', 'user-registration' ),
+			'i18n_this_field_is_required'                 => esc_html__( ' is required.', 'user-registration' ),
+			'i18n_learn_more'                             => esc_html__( 'Learn More', 'user-registration' ),
+			'i18n_upgrade_to_pro'                         => esc_html__( 'Upgrade plan', 'user-registration' ),
+			'i18n_ok'                                     => esc_html__( 'OK', 'user-registration' ),
+			'i18n_default_cannot_delete_message'          => esc_html__( 'WordPress requires the user to have an email address during registration.', 'user-registration' ),
 		);
 
 		return $i18n;

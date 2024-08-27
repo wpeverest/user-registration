@@ -35,7 +35,7 @@ class UR_Blocks {
 	 */
 	public function enqueue_block_editor_assets() {
 		global $pagenow;
-		$enqueue_script = array( 'wp-blocks', 'wp-element', 'wp-i18n', 'wp-editor', 'wp-components', 'react', 'react-dom' );
+		$enqueue_script = array( 'wp-blocks', 'wp-element', 'wp-i18n', 'wp-editor', 'wp-components', 'react', 'react-dom', 'tooltipster' );
 		wp_register_style(
 			'user-registration-blocks-editor',
 			UR()->plugin_url() . '/assets/css/user-registration.css',
@@ -59,8 +59,26 @@ class UR_Blocks {
 				'isPro'          => is_plugin_active( 'user-registration-pro/user-registration.php' ),
 			)
 		);
+		wp_register_script(
+			'user-registration-shortcode-embed-form',
+			UR()->plugin_url() . '/assets/js/admin/shortcode-form-embed.js',
+			$enqueue_script,
+			UR_VERSION
+		);
 
 		wp_enqueue_script( 'user-registration-blocks-editor' );
+		if ( 'post.php' === $pagenow && isset( $_GET['action'] ) && 'edit' === $_GET['action'] && isset( $_GET['form'] ) && 'user_registration' === $_GET['form'] ) {
+			wp_enqueue_script( 'user-registration-shortcode-embed-form' );
+			wp_localize_script(
+				'user-registration-shortcode-embed-form',
+				'user_registration_blocks_editor_prams',
+				array(
+					'i18n_add_a_block'     => esc_html__( 'Add a block', 'user-registration' ),
+					'i18n_add_a_block_tip' => sprintf( '%s %s', esc_html__( 'Click the plus button, search for User Registration, click the block to embed it. ', 'user-registration' ), '<a href="#" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Learn More', 'user-registration' ) . '</a>' ),
+					'i18n_done_btn'        => esc_html__( 'Done', 'user-registration' ),
+				)
+			);
+		}
 	}
 
 	/**

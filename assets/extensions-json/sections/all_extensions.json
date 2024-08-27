@@ -49,7 +49,7 @@
 	  "slug" : "user-registration-membership",
 	  "name" : "User Registration Membership",
 	  "image": "extensions-json/sections/images/membership.png",
-	  "excerpt": "Directly send file upload data from User Registration to Integrated Cloud after registration form submission.",
+	  "excerpt": "Create custom membership plans and deliver content accordingly with User Registration’s Membership add-on with specific website and content access.",
 	  "link": "https://wpuserregistration.com/features/membership/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
 	  "plan" : [
 		"personal",
@@ -468,6 +468,20 @@
 		"link": "https://wpuserregistration.com/features/cloud-storage/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
 		"plan" : [
 			"personal",
+			"plus",
+			"professional",
+			"themegrill agency"
+		],
+      	"released_date": "01/08/2024"
+	  },
+	  {
+		"title": "Authorize.net Payment",
+		"slug" : "user-registration-authorize-net",
+		"name" : "User Registration Authorize.net",
+		"image": "extensions-json/sections/images/authorize-net.png",
+		"excerpt": "Accept credit card, online payments using the Authorize.net payment gateway. Secure payment acceptance, your way.",
+		"link": "https://wpuserregistration.com/features/authorize-net/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+		"plan" : [
 			"plus",
 			"professional",
 			"themegrill agency"

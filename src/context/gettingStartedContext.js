@@ -3,22 +3,23 @@ export const initialState = {
 	installPage: {
 		registration_page: {
 			status: "not_installed",
-			slug: "",
+			slug: ""
 		},
 		my_account_page: {
 			status: "not_installed",
-			slug: "",
-		},
+			slug: ""
+		}
 	},
 	defaultFormId: "",
-	isPro: false,
+	isPro: false
 };
 
 export const actionTypes = {
 	GET_SETTINGS: "GET_SETTINGS",
 	GET_INSTALL_PAGE: "GET_INSTALL_PAGE",
 	GET_DEFAULT_FORM: "GET_DEFAULT_FORM",
-	GET_IS_PRO: "GET_IS_PRO",
+	GET_DEFAULT_REGISTRATION_PAGE: "GET_DEFAULT_REGISTRATION_PAGE",
+	GET_IS_PRO: "GET_IS_PRO"
 };
 
 const reducer = (state, action) => {
@@ -26,22 +27,27 @@ const reducer = (state, action) => {
 		case actionTypes.GET_SETTINGS:
 			return {
 				...state,
-				settings: action.settings,
+				settings: action.settings
 			};
 		case actionTypes.GET_INSTALL_PAGE:
 			return {
 				...state,
-				installPage: action.installPage,
+				installPage: action.installPage
 			};
 		case actionTypes.GET_DEFAULT_FORM:
 			return {
 				...state,
-				defaultFormId: action.defaultFormId,
+				defaultFormId: action.defaultFormId
+			};
+		case actionTypes.GET_DEFAULT_REGISTRATION_PAGE:
+			return {
+				...state,
+				registrationPageLink: action.registrationPageLink
 			};
 		case actionTypes.GET_IS_PRO:
 			return {
 				...state,
-				isPro: action.isPro,
+				isPro: action.isPro
 			};
 		default:
 			return state;

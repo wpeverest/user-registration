@@ -99,7 +99,7 @@ class UR_Admin_Notices {
 
 			$message = sprintf(
 				/* translators: %1$s - My account Link. */
-				__( 'Please choose a <strong title="A page with [user_registration_my_account] shortcode">My Account</strong> page in <a href="%1$s" style="text-decoration:none;">General Settings</a>. <br/><strong>Got Stuck? Read</strong> <a href="https://docs.wpuserregistration.com/docs/how-to-show-account-profile/" style="text-decoration:none;" target="_blank">How to setup My Account page</a>.', 'user-registration' ),
+				__( 'Please choose a <strong title="A page with [user_registration_my_account] shortcode">My Account</strong> page in <a href="%1$s" style="text-decoration:none;">General Settings</a>. <br/><strong>Got Stuck? Read</strong> <a href="https://docs.wpuserregistration.com/docs/how-to-show-account-profile/" style="text-decoration:none;" rel="noreferrer noopener" target="_blank">How to setup My Account page</a>.', 'user-registration' ),
 				$my_account_setting_link
 			);
 			self::add_custom_notice( 'select_my_account', $message );
@@ -159,7 +159,7 @@ class UR_Admin_Notices {
 					} elseif ( $valid && $operator == 'AND' ) {
 						array_push( $valid_condition, $valid );
 						continue;
-					} elseif ( ! $valid && $operator == 'AND' ){
+					} elseif ( ! $valid && $operator == 'AND' ) {
 						break;
 					}
 				}
@@ -219,13 +219,13 @@ class UR_Admin_Notices {
 				// code...
 				break;
 			case 'user_count':
-				$cache_key = 'total_registration_count';
-				$total_registration = wp_cache_get($cache_key);
+				$cache_key          = 'total_registration_count';
+				$total_registration = wp_cache_get( $cache_key );
 
-				if ($total_registration === false) {
+				if ( $total_registration === false ) {
 					global $wpdb;
 					$form_id_meta_key = 'ur_form_id';
-					$table_usermeta = $wpdb->usermeta;
+					$table_usermeta   = $wpdb->usermeta;
 
 					$total_registration = $wpdb->get_var(
 						$wpdb->prepare(
@@ -235,9 +235,9 @@ class UR_Admin_Notices {
 							$form_id_meta_key
 						)
 					);
-					wp_cache_set($cache_key, $total_registration, '', 3600);
+					wp_cache_set( $cache_key, $total_registration, '', 3600 );
 				}
-				$valid              = ur_check_numeric_operator( $total_registration, $value );
+				$valid = ur_check_numeric_operator( $total_registration, $value );
 				break;
 			case 'activation_days':
 				$valid = ur_check_activation_date( $value );
@@ -428,11 +428,11 @@ class UR_Admin_Notices {
 									'<strong>What benefit would you have?</strong> <br>
 									We will take your feedback from the survey and use that information to make the plugin better. As a result, you will have a better plugin as you wanted. <span class="dashicons dashicons-smiley smile-icon"></span><br>',
 									'user-registration'
-									)
-									)
-								),
-								'buttons'               => array(
-									array(
+								)
+							)
+						),
+						'buttons'               => array(
+							array(
 								'title'  => __( "Sure, I'd love to!", 'user-registration' ),
 								'icon'   => 'dashicons-external',
 								'link'   => 'https://forms.office.com/pages/responsepage.aspx?id=c04iBAejyEWvNQDb6GzDCILyv8m6NoBDvJVtRTCcOvBUNk5OSTA4OEs1SlRPTlhFSFZXRFA0UFEwRCQlQCN0PWcu',
@@ -485,24 +485,24 @@ class UR_Admin_Notices {
 								__(
 									'Help us improve the plugin\'s features by sharing <a href="https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title" target="_blank">non-sensitive plugin data</a> with us.',
 									'user-registration'
-									)
-									)
-								),
-								'buttons'               => array(
-									array(
-										'title'  => __( 'Allow', 'user-registration' ),
-										'icon'   => 'dashicons-smiley',
-										'link'   => 'https://forms.office.com/pages/responsepage.aspx?id=c04iBAejyEWvNQDb6GzDCILyv8m6NoBDvJVtRTCcOvBUNk5OSTA4OEs1SlRPTlhFSFZXRFA0UFEwRCQlQCN0PWcu',
-										'class'  => 'button-primary ur-allow-usage',
-										'target' => '_blank',
-									),
-									array(
-										'title'  => __( 'No, Thanks', 'user-registration' ),
-										'icon'   => 'dashicons-dismiss',
-										'link'   => '#',
-										'class'  => 'button-secondary notice-dismiss notice-dismiss-permanently ur-deny-usage',
-										'target' => '',
-									),
+								)
+							)
+						),
+						'buttons'               => array(
+							array(
+								'title'  => __( 'Allow', 'user-registration' ),
+								'icon'   => 'dashicons-smiley',
+								'link'   => 'https://forms.office.com/pages/responsepage.aspx?id=c04iBAejyEWvNQDb6GzDCILyv8m6NoBDvJVtRTCcOvBUNk5OSTA4OEs1SlRPTlhFSFZXRFA0UFEwRCQlQCN0PWcu',
+								'class'  => 'button-primary ur-allow-usage',
+								'target' => '_blank',
+							),
+							array(
+								'title'  => __( 'No, Thanks', 'user-registration' ),
+								'icon'   => 'dashicons-dismiss',
+								'link'   => '#',
+								'class'  => 'button-secondary notice-dismiss notice-dismiss-permanently ur-deny-usage',
+								'target' => '',
+							),
 						),
 						'permanent_dismiss'     => false,
 						'reopen_days'           => '1',
@@ -510,20 +510,21 @@ class UR_Admin_Notices {
 						'conditions_to_display' => array(
 							array(
 								'operator'      => 'AND',
-								'show_notice'     => ! ur_check_notice_already_permanent_dismissed( 'allow-usage' ),
+								'show_notice'   => ! ur_check_notice_already_permanent_dismissed( 'allow-usage' ),
 								'updation_days' => '1',
 								'option_exists' => 'user_registration_allow_usage_tracking',
 								'option_exists' => 'user_registration_allow_usage_notice_shown',
 							),
 						),
 					),
-					)
-				);
-			}
-			$notices = apply_filters( 'user_registration_get_remote_notices', false );
-			if ( $notices ) {
-				self::$custom_notices = array_merge( self::$custom_notices, $notices );
-			}
+				)
+			);
+		}
+
+		$notices = apply_filters( 'user_registration_get_remote_notices', false );
+		if ( $notices && is_array( $notices ) ) {
+			self::$custom_notices = array_merge( self::$custom_notices, $notices );
+		}
 	}
 
 	/**

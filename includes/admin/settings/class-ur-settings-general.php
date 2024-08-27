@@ -160,6 +160,15 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'default'  => 'no',
 								),
 								array(
+									'title'    => __( 'Sync Profile picture', 'user-registration' ),
+									'desc'     => __( 'Check to enable if you want to display profile picture on edit profile if form have profile field', 'user-registration' ),
+									'id'       => 'user_registration_sync_profile_picture',
+									'type'     => 'toggle',
+									'desc_tip' => true,
+									'css'      => 'min-width: 350px;',
+									'default'  => '',
+								),
+								array(
 									'title'    => __( 'Disable Logout Confirmation', 'user-registration' ),
 									'desc'     => __( 'Check to disable logout confirmation.', 'user-registration' ),
 									'id'       => 'user_registration_disable_logout_confirmation',
@@ -480,7 +489,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'desc'     => '',
 									'id'       => 'user_registration_login_options_enable_recaptcha',
 									'type'     => 'toggle',
-									'desc_tip' => sprintf( __( 'Enable %1$s %2$s Captcha %3$s support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=captcha" target="_blank" style="color: #9ef01a;text-decoration:none;">', '</a>' ), //phpcs:ignore
+									'desc_tip' => sprintf( __( 'Enable %1$s %2$s Captcha %3$s support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=captcha" rel="noreferrer noopener" target="_blank" style="color: #9ef01a;text-decoration:none;">', '</a>' ), //phpcs:ignore
 									'css'      => 'min-width: 350px;',
 									'default'  => 'no',
 								),
@@ -512,7 +521,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'desc_tip'   => __( 'Default WordPress login page wp-login.php will  be disabled.', 'user-registration' ),
 									'css'        => 'min-width: 350px;',
 									'default'    => 'no',
-									'desc_field' => __( 'Please make sure that you have created a login or my-account page which has a login form before enabling this option. Learn how to create a login form <a href="https://docs.wpuserregistration.com/docs/how-to-show-login-form/" target="_blank">here</a>.', 'user-registration' ),
+									'desc_field' => __( 'Please make sure that you have created a login or my-account page which has a login form before enabling this option. Learn how to create a login form <a href="https://docs.wpuserregistration.com/docs/how-to-show-login-form/" rel="noreferrer noopener" target="_blank">here</a>.', 'user-registration' ),
 								),
 
 								array(
@@ -709,7 +718,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 				if ( ur_string_to_bool( $captcha_enabled ) && ! ur_check_captch_keys() ) {
 					echo '<div id="ur-captcha-error" class="notice notice-warning is-dismissible"><p><strong>' . sprintf(
 						/* translators: %s - Integration tab url */
-						'%s<a href="%s" target="_blank">Add Now.</a>',
+						'%s<a href="%s" rel="noreferrer noopener" target="_blank">Add Now.</a>',
 						esc_html__( "Seems like you haven't added the CAPTCHA Keys. ", 'user-registration' ),
 						esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=captcha' ) )
 					) . '</strong></p></div>';

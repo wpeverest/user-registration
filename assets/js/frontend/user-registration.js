@@ -1,4 +1,4 @@
-/* global  user_registration_params */
+/* global  user_registration_params, ur_password_strength_meter_params */
 (function ($) {
 	var user_registration_form_init = function () {
 		var ursL10n = user_registration_params.ursL10n;
@@ -1011,6 +1011,7 @@
 									var form_id = 0;
 									var form_nonce = "0";
 									var captchaResponse = "";
+									var registration_language = "";
 									if (
 										"hcaptcha" ===
 										user_registration_params.recaptcha_type
@@ -1063,6 +1064,20 @@
 											)
 											.val();
 									}
+									if (
+										$(this)
+											.closest("form")
+											.find(
+												'input[name="ur-registration-language"]'
+											).length === 1
+									) {
+										registration_language = $(this)
+											.closest("form")
+											.find(
+												'input[name="ur-registration-language"]'
+											)
+											.val();
+									}
 
 									if (
 										$(this)
@@ -1086,6 +1101,8 @@
 										form_data: form_data,
 										captchaResponse: captchaResponse,
 										form_id: form_id,
+										registration_language:
+											registration_language,
 										ur_frontend_form_nonce: form_nonce
 									};
 
@@ -1114,602 +1131,619 @@
 										return;
 									}
 
+									if (
+										$this
+											.find(
+												'.field-authorize_net_gateway[data-field-id="authorizenet_gateway"]'
+											)
+											.find(".ur-authorize-net-errors")
+											.length > 0
+									) {
+										return;
+									}
+
 									$this
 										.find(".ur-submit-button")
 										.find("span")
 										.addClass("ur-front-spinner");
 
-									$.ajax({
-										url: user_registration_params.ajax_url,
-										data: data,
-										type: "POST",
-										async: true,
-										complete: function (ajax_response) {
-											var ajaxFlag = [];
-											ajaxFlag["status"] = true;
-											$(document).trigger(
-												"user_registration_frontend_before_ajax_complete_success_message",
-												[ajax_response, ajaxFlag, $this]
+									var hit_third_party_api =
+										events.wait_third_party_api($this);
+									if (hit_third_party_api) {
+										var thirdPartyHandlerPromise =
+											new Promise(function (
+												resolve,
+												reject
+											) {
+												$(document).trigger(
+													"user_registration_third_party_api_before_form_submit",
+													[
+														data,
+														$this,
+														$error_message,
+														resolve,
+														reject
+													]
+												);
+											}).then(function(val){
+												events.ajax_form_submit(val);
+											});
+									} else {
+										events.ajax_form_submit(data);
+									}
+								});
+						});
+					},
+					/**
+					 * Wait Form submission for third party api hit response.
+					 *
+					 */
+					wait_third_party_api: function ($form) {
+						var flag = false;
+						if (
+							$form.find(
+								"#user_registration_authorize_net_gateway[data-gateway='authorize_net']"
+							).length > 0
+						) {
+							flag = true;
+						}
+						return flag;
+					},
+					/**
+					 * Ajax form submission event.
+					 *
+					 */
+					ajax_form_submit: function (posted_data) {
+						$.ajax({
+							url: user_registration_params.ajax_url,
+							data: posted_data,
+							type: "POST",
+							async: true,
+							complete: function (ajax_response) {
+								var ajaxFlag = [];
+								ajaxFlag["status"] = true;
+								$(document).trigger(
+									"user_registration_frontend_before_ajax_complete_success_message",
+									[ajax_response, ajaxFlag, $this]
+								);
+								if (ajaxFlag["status"]) {
+									$this
+										.find(".ur-submit-button")
+										.find("span")
+										.removeClass("ur-front-spinner");
+
+									var redirect_url = $this
+										.find('input[name="ur-redirect-url"]')
+										.val();
+
+									var message = $('<ul class=""/>');
+									var type = "error";
+									var individual_field_message = false;
+
+									try {
+										var response = JSON.parse(
+											ajax_response.responseText
+										);
+
+										var timeout = response.data
+											.redirect_timeout
+											? response.data.redirect_timeout
+											: 2000;
+
+										if (
+											typeof response.success !==
+												"undefined" &&
+											response.success === true &&
+											typeof response.data
+												.paypal_redirect !== "undefined"
+										) {
+											window.setTimeout(function () {
+												window.location =
+													response.data.paypal_redirect;
+											}, timeout);
+										}
+
+										if (
+											typeof response.success !==
+												"undefined" &&
+											response.success === true
+										) {
+											type = "message";
+										}
+
+										if (type === "message") {
+											$this
+												.find(
+													".user-registration-password-hint"
+												)
+												.remove();
+											$this
+												.find(
+													".user-registration-password-strength"
+												)
+												.remove();
+
+											if (
+												response.data
+													.form_login_option ==
+												"admin_approval"
+											) {
+												message.append(
+													"<li>" +
+														ursL10n.user_under_approval +
+														"</li>"
+												);
+											} else if (
+												response.data
+													.form_login_option ==
+													"email_confirmation" ||
+												response.data
+													.form_login_option ==
+													"admin_approval_after_email_confirmation"
+											) {
+												message.append(
+													"<li>" +
+														ursL10n.user_email_pending +
+														"</li>"
+												);
+											} else if (
+												response.data
+													.form_login_option ==
+												"payment"
+											) {
+												message.append(
+													"<li>" +
+														response.data.message +
+														"</li>"
+												);
+											} else {
+												message.append(
+													"<li>" +
+														(typeof response.data
+															.message ===
+															"undefined")
+														? ursL10n.user_successfully_saved
+														: response.data
+																.message +
+																"</li>"
+												);
+											}
+
+											if (
+												"undefined" !==
+												typeof response.data
+													.auto_password_generation_success_message
+											) {
+												message.append(
+													"<li>" +
+														response.data
+															.auto_password_generation_success_message +
+														"</li>"
+												);
+											}
+											$(".ur-input-count").text("0");
+											$this[0].reset();
+											if (
+												$this.find("#profile_pic_url")
+													.length
+											) {
+												$("#profile_pic_url").val("");
+											}
+
+											jQuery("#billing_country").trigger(
+												"change"
 											);
-											if (ajaxFlag["status"]) {
-												$this
-													.find(".ur-submit-button")
-													.find("span")
-													.removeClass(
-														"ur-front-spinner"
+											jQuery("#shipping_country").trigger(
+												"change"
+											);
+
+											if (
+												"undefined" !==
+												typeof response.data
+													.role_based_redirect_url
+											) {
+												redirect_url =
+													response.data
+														.role_based_redirect_url;
+											}
+											if (
+												typeof response.data
+													.form_login_option !==
+													"undefined" &&
+												response.data.form_login_option === 'sms_verification'
+											) {
+												window.setTimeout(
+													function () {
+														if (
+															typeof response
+																.data
+																.redirect_url !==
+																"undefined" &&
+															response.data
+																.redirect_url
+														) {
+															window.location =
+																response.data.redirect_url;
+														}
+													},
+													timeout
+												);
+											}
+
+											if (
+												"undefined" !==
+													typeof redirect_url &&
+												redirect_url !== ""
+											) {
+												$(document).trigger(
+													"user_registration_frontend_before_redirect_url",
+													[redirect_url]
+												);
+
+												window.setTimeout(function () {
+													window.location =
+														redirect_url;
+												}, timeout);
+											} else {
+												if (
+													typeof response.data
+														.auto_login !==
+														"undefined" &&
+													response.data.auto_login
+												) {
+													$(document).trigger(
+														"user_registration_frontend_before_auto_login"
 													);
 
-												var redirect_url = $this
-													.find(
-														'input[name="ur-redirect-url"]'
-													)
-													.val();
-
-												var message =
-													$('<ul class=""/>');
-												var type = "error";
-												var individual_field_message = false;
-
-												try {
-													var response = JSON.parse(
-														ajax_response.responseText
-													);
-
-													var timeout = response.data
-														.redirect_timeout
-														? response.data
-																.redirect_timeout
-														: 2000;
-
-													if (
-														typeof response.success !==
-															"undefined" &&
-														response.success ===
-															true &&
-														typeof response.data
-															.paypal_redirect !==
-															"undefined"
-													) {
-														window.setTimeout(
-															function () {
-																window.location =
-																	response.data.paypal_redirect;
-															},
-															timeout
-														);
-													}
-
-													if (
-														typeof response.success !==
-															"undefined" &&
-														response.success ===
-															true
-													) {
-														type = "message";
-													}
-
-													if (type === "message") {
-														$this
-															.find(
-																".user-registration-password-hint"
-															)
-															.remove();
-														$this
-															.find(
-																".user-registration-password-strength"
-															)
-															.remove();
-
-														if (
-															response.data
-																.form_login_option ==
-															"admin_approval"
-														) {
-															message.append(
-																"<li>" +
-																	ursL10n.user_under_approval +
-																	"</li>"
-															);
-														} else if (
-															response.data
-																.form_login_option ==
-																"email_confirmation" ||
-															response.data
-																.form_login_option ==
-																"admin_approval_after_email_confirmation"
-														) {
-															message.append(
-																"<li>" +
-																	ursL10n.user_email_pending +
-																	"</li>"
-															);
-														} else if (
-															response.data
-																.form_login_option ==
-															"payment"
-														) {
-															message.append(
-																"<li>" +
-																	response
-																		.data
-																		.message +
-																	"</li>"
-															);
-														} else {
-															message.append(
-																"<li>" +
-																	(typeof response
-																		.data
-																		.message ===
-																		"undefined")
-																	? ursL10n.user_successfully_saved
-																	: response
-																			.data
-																			.message +
-																			"</li>"
-															);
-														}
-
-														if (
-															"undefined" !==
-															typeof response.data
-																.auto_password_generation_success_message
-														) {
-															message.append(
-																"<li>" +
-																	response
-																		.data
-																		.auto_password_generation_success_message +
-																	"</li>"
-															);
-														}
-														$(
-															".ur-input-count"
-														).text("0");
-														$this[0].reset();
-														if (
-															$this.find(
-																"#profile_pic_url"
-															).length
-														) {
-															$(
-																"#profile_pic_url"
-															).val("");
-														}
-
-														jQuery(
-															"#billing_country"
-														).trigger("change");
-														jQuery(
-															"#shipping_country"
-														).trigger("change");
-
-														if (
-															"undefined" !==
-															typeof response.data
-																.role_based_redirect_url
-														) {
-															redirect_url =
-																response.data
-																	.role_based_redirect_url;
-														}
-
-														if (
-															"undefined" !==
-																typeof redirect_url &&
-															redirect_url !== ""
-														) {
-															$(document).trigger(
-																"user_registration_frontend_before_redirect_url",
-																[redirect_url]
-															);
-
-															window.setTimeout(
-																function () {
-																	window.location =
-																		redirect_url;
-																},
-																timeout
-															);
-														} else {
+													window.setTimeout(
+														function () {
 															if (
 																typeof response
 																	.data
-																	.auto_login !==
+																	.redirect_url !==
 																	"undefined" &&
 																response.data
-																	.auto_login
+																	.redirect_url
 															) {
-																$(
-																	document
-																).trigger(
-																	"user_registration_frontend_before_auto_login"
-																);
-
-																window.setTimeout(
-																	function () {
-																		if (
-																			typeof response
-																				.data
-																				.redirect_url !==
-																				"undefined" &&
-																			response
-																				.data
-																				.redirect_url
-																		) {
-																			window.location =
-																				response.data.redirect_url;
-																		} else {
-																			location.reload();
-																		}
-																	},
-																	timeout
-																);
+																window.location =
+																	response.data.redirect_url;
+															} else {
+																location.reload();
 															}
-														}
-													} else if (
-														type === "error"
+														},
+														timeout
+													);
+												}
+											}
+										} else if (type === "error") {
+											if (
+												typeof response.data.message ===
+												"object"
+											) {
+												$.each(
+													response.data.message,
+													function (
+														index,
+														message_value
 													) {
 														if (
-															typeof response.data
-																.message ===
-															"object"
+															message_value.hasOwnProperty(
+																"individual"
+															)
 														) {
+															var $field_id = [];
 															$.each(
-																response.data
-																	.message,
+																$this
+																	.find(
+																		".ur-field-item"
+																	)
+																	.find(
+																		".ur-frontend-field"
+																	),
 																function (
-																	index,
-																	message_value
+																	index
 																) {
+																	var $this =
+																		$(this);
+
 																	if (
-																		message_value.hasOwnProperty(
-																			"individual"
+																		$this.hasClass(
+																			"input-captcha-icon-radio"
 																		)
 																	) {
-																		var $field_id =
-																			[];
-																		$.each(
-																			$this
-																				.find(
-																					".ur-field-item"
-																				)
-																				.find(
-																					".ur-frontend-field"
-																				),
-																			function (
-																				index
-																			) {
-																				var $this =
-																					$(
-																						this
-																					);
+																		var data_id =
+																			$this.attr(
+																				"data-id"
+																			);
 
-																				if (
-																					$this.hasClass(
-																						"input-captcha-icon-radio"
-																					)
-																				) {
-																					var data_id =
-																						$this.attr(
-																							"data-id"
-																						);
-
-																					if (
-																						!$field_id.includes(
-																							data_id
-																						)
-																					) {
-																						$field_id.push(
-																							data_id
-																						);
-																					}
-																				} else {
-																					var $id =
-																						$this.attr(
-																							"id"
-																						);
-																					$field_id.push(
-																						$id
-																					);
-																				}
-																			}
-																		);
-
-																		var field_name =
-																			"";
-
-																		$.each(
-																			message_value,
-																			function (
-																				index,
-																				value
-																			) {
-																				var repeater_field_name =
-																					"";
-																				var repeater_row_id =
-																					"";
-
-																				if (
-																					message_value.hasOwnProperty(
-																						"repeater_field_name"
-																					)
-																				) {
-																					repeater_field_name =
-																						message_value.repeater_field_name;
-																					repeater_row_id =
-																						message_value.row_id.replace(
-																							"row_",
-																							""
-																						);
-																					index =
-																						index +
-																						"_" +
-																						repeater_row_id;
-																				}
-
-																				if (
-																					$field_id.includes(
-																						index
-																					)
-																				) {
-																					field_name =
-																						index;
-
-																					var error_message =
-																						'<label id="' +
-																						index +
-																						"-error" +
-																						'" class="user-registration-error" for="' +
-																						index +
-																						'">' +
-																						value +
-																						"</label>";
-
-																					var wrapper =
-																						"";
-
-																					if (
-																						$this.find(
-																							".ur-repeater-row[data-repeater-field-name='" +
-																								repeater_field_name +
-																								"'][data-repeater-row='" +
-																								repeater_row_id +
-																								"'] "
-																						)
-																							.length >
-																						0
-																					) {
-																						wrapper =
-																							$this
-																								.find(
-																									".ur-repeater-row[data-repeater-field-name='" +
-																										repeater_field_name +
-																										"'][data-repeater-row='" +
-																										repeater_row_id +
-																										"'] "
-																								)
-																								.find(
-																									".ur-field-item"
-																								)
-																								.find(
-																									"input[id='" +
-																										index +
-																										"'], textarea[id='" +
-																										index +
-																										"']"
-																								);
-																					} else {
-																						wrapper =
-																							$this
-																								.find(
-																									".ur-form-row"
-																								)
-																								.find(
-																									".ur-field-item"
-																								)
-																								.find(
-																									"input[id='" +
-																										index +
-																										"'], textarea[id='" +
-																										index +
-																										"']"
-																								);
-																					}
-
-																					wrapper
-																						.closest(
-																							".ur-field-item"
-																						)
-																						.find(
-																							".user-registration-error"
-																						)
-																						.remove();
-																					wrapper
-																						.closest(
-																							".form-row"
-																						)
-																						.append(
-																							error_message
-																						);
-																					individual_field_message = true;
-																				}
-																			}
-																		);
-																		$(
-																			document
-																		).trigger(
-																			"ur_handle_field_error_messages",
-																			[
-																				$this,
-																				field_name
-																			]
-																		);
+																		if (
+																			!$field_id.includes(
+																				data_id
+																			)
+																		) {
+																			$field_id.push(
+																				data_id
+																			);
+																		}
 																	} else {
-																		message.append(
-																			"<li>" +
-																				message_value +
-																				"</li>"
+																		var $id =
+																			$this.attr(
+																				"id"
+																			);
+																		$field_id.push(
+																			$id
 																		);
 																	}
 																}
 															);
+
+															var field_name = "";
+
+															$.each(
+																message_value,
+																function (
+																	index,
+																	value
+																) {
+																	var repeater_field_name =
+																		"";
+																	var repeater_row_id =
+																		"";
+
+																	if (
+																		message_value.hasOwnProperty(
+																			"repeater_field_name"
+																		)
+																	) {
+																		repeater_field_name =
+																			message_value.repeater_field_name;
+																		repeater_row_id =
+																			message_value.row_id.replace(
+																				"row_",
+																				""
+																			);
+																		index =
+																			index +
+																			"_" +
+																			repeater_row_id;
+																	}
+
+																	if (
+																		$field_id.includes(
+																			index
+																		)
+																	) {
+																		field_name =
+																			index;
+
+																		var error_message =
+																			'<label id="' +
+																			index +
+																			"-error" +
+																			'" class="user-registration-error" for="' +
+																			index +
+																			'">' +
+																			value +
+																			"</label>";
+
+																		var wrapper =
+																			"";
+
+																		if (
+																			$this.find(
+																				".ur-repeater-row[data-repeater-field-name='" +
+																					repeater_field_name +
+																					"'][data-repeater-row='" +
+																					repeater_row_id +
+																					"'] "
+																			)
+																				.length >
+																			0
+																		) {
+																			wrapper =
+																				$this
+																					.find(
+																						".ur-repeater-row[data-repeater-field-name='" +
+																							repeater_field_name +
+																							"'][data-repeater-row='" +
+																							repeater_row_id +
+																							"'] "
+																					)
+																					.find(
+																						".ur-field-item"
+																					)
+																					.find(
+																						"input[id='" +
+																							index +
+																							"'], textarea[id='" +
+																							index +
+																							"']"
+																					);
+																		} else {
+																			wrapper =
+																				$this
+																					.find(
+																						".ur-form-row"
+																					)
+																					.find(
+																						".ur-field-item"
+																					)
+																					.find(
+																						"input[id='" +
+																							index +
+																							"'], textarea[id='" +
+																							index +
+																							"']"
+																					);
+																		}
+
+																		wrapper
+																			.closest(
+																				".ur-field-item"
+																			)
+																			.find(
+																				".user-registration-error"
+																			)
+																			.remove();
+																		wrapper
+																			.closest(
+																				".form-row"
+																			)
+																			.append(
+																				error_message
+																			);
+																		individual_field_message = true;
+																	}
+																}
+															);
+															$(document).trigger(
+																"ur_handle_field_error_messages",
+																[
+																	$this,
+																	field_name
+																]
+															);
 														} else {
 															message.append(
 																"<li>" +
-																	response
-																		.data
-																		.message +
+																	message_value +
 																	"</li>"
 															);
 														}
 													}
-												} catch (e) {
-													message.append(
-														"<li>" +
-															e.message +
-															"</li>"
-													);
-												}
-
-												var success_message_position =
-													JSON.parse(
-														ajax_response.responseText
-													).data
-														.success_message_positon;
-
-												if (!individual_field_message) {
-													form.show_message(
-														message,
-														type,
-														$this,
-														success_message_position
-													);
-												} else {
-													var $field_id = [];
-
-													$.each(
-														$this
-															.find(
-																".ur-field-item"
-															)
-															.find(
-																".ur-frontend-field"
-															),
-														function (index) {
-															var $this = $(this);
-
-															var $id =
-																$this.attr(
-																	"id"
-																);
-															$field_id.push($id);
-														}
-													);
-													var field_name = "";
-
-													$.each(
-														response.data.message,
-														function (
-															index,
-															value
-														) {
-															if (
-																$field_id.includes(
-																	index
-																)
-															) {
-																field_name =
-																	index;
-																var error_message =
-																	'<label id="' +
-																	index +
-																	"-error" +
-																	'" class="user-registration-error" for="' +
-																	index +
-																	'">' +
-																	value +
-																	"</label>";
-
-																var wrapper =
-																	$this
-																		.find(
-																			".ur-field-item"
-																		)
-																		.find(
-																			"input[id='" +
-																				index +
-																				"'], textarea[id='" +
-																				index +
-																				"']"
-																		);
-
-																wrapper
-																	.closest(
-																		".ur-field-item"
-																	)
-																	.find(
-																		".user-registration-error"
-																	)
-																	.remove();
-																wrapper
-																	.closest(
-																		".form-row"
-																	)
-																	.append(
-																		error_message
-																	);
-															}
-														}
-													);
-													$(document).trigger(
-														"ur_handle_field_error_messages",
-														[$this, field_name]
-													);
-												}
-
-												// Check the position set by the admin and scroll to the message postion accordingly.
-												if (
-													"1" ===
-													success_message_position
-												) {
-													// Scroll to the bottom on ajax submission complete.
-													$(window).scrollTop(
-														$this
-															.find(
-																".ur-button-container"
-															)
-															.offset().top
-													);
-												} else {
-													// Scroll to the top on ajax submission complete.
-													$(window).scrollTop(
-														$this
-															.closest(
-																".ur-frontend-form"
-															)
-															.offset().top
-													);
-												}
-
-												$(document).trigger(
-													"user_registration_frontend_after_ajax_complete",
-													[
-														ajax_response.responseText,
-														type,
-														$this
-													]
 												);
-												$this
-													.find(".ur-submit-button")
-													.prop("disabled", false);
+											} else {
+												message.append(
+													"<li>" +
+														response.data.message +
+														"</li>"
+												);
 											}
-											$(".coupon-message").css({
-												display: "none"
-											});
 										}
-									});
+									} catch (e) {
+										message.append(
+											"<li>" + e.message + "</li>"
+										);
+									}
+
+									var success_message_position = JSON.parse(
+										ajax_response.responseText
+									).data.success_message_positon;
+
+									if (!individual_field_message) {
+										form.show_message(
+											message,
+											type,
+											$this,
+											success_message_position
+										);
+									} else {
+										var $field_id = [];
+
+										$.each(
+											$this
+												.find(".ur-field-item")
+												.find(".ur-frontend-field"),
+											function (index) {
+												var $this = $(this);
+
+												var $id = $this.attr("id");
+												$field_id.push($id);
+											}
+										);
+										var field_name = "";
+
+										$.each(
+											response.data.message,
+											function (index, value) {
+												if ($field_id.includes(index)) {
+													field_name = index;
+													var error_message =
+														'<label id="' +
+														index +
+														"-error" +
+														'" class="user-registration-error" for="' +
+														index +
+														'">' +
+														value +
+														"</label>";
+
+													var wrapper = $this
+														.find(".ur-field-item")
+														.find(
+															"input[id='" +
+																index +
+																"'], textarea[id='" +
+																index +
+																"']"
+														);
+
+													wrapper
+														.closest(
+															".ur-field-item"
+														)
+														.find(
+															".user-registration-error"
+														)
+														.remove();
+													wrapper
+														.closest(".form-row")
+														.append(error_message);
+												}
+											}
+										);
+										$(document).trigger(
+											"ur_handle_field_error_messages",
+											[$this, field_name]
+										);
+									}
+
+									// Check the position set by the admin and scroll to the message postion accordingly.
+									if ("1" === success_message_position) {
+										// Scroll to the bottom on ajax submission complete.
+										$(window).scrollTop(
+											$this
+												.find(".ur-button-container")
+												.offset().top
+										);
+									} else {
+										// Scroll to the top on ajax submission complete.
+										$(window).scrollTop(
+											$this
+												.closest(".ur-frontend-form")
+												.offset().top
+										);
+									}
+
+									$(document).trigger(
+										"user_registration_frontend_after_ajax_complete",
+										[
+											ajax_response.responseText,
+											type,
+											$this
+										]
+									);
+									$this
+										.find(".ur-submit-button")
+										.prop("disabled", false);
+								}
+								$(".coupon-message").css({
+									display: "none"
 								});
+							}
+						}).fail(function () {
+							form.show_message(
+								"<p>" +
+									user_registration_params.ajax_form_submit_error +
+									"</p>",
+								"error",
+								$this,
+								"1"
+							);
+							$this
+								.find(".ur-submit-button")
+								.prop("disabled", false);
+							return;
 						});
 					},
 					/**
@@ -2035,9 +2069,6 @@
 																			'">' +
 																			value +
 																			"</label>";
-																		console.log(
-																			error_message
-																		);
 																		var wrapper =
 																			$this.find(
 																				".ur-form-row"
@@ -2191,6 +2222,21 @@
 											$(".user-registration").position()
 										);
 									}
+								}).fail(function () {
+									form.show_message(
+										"<p>" +
+											user_registration_params.ajax_form_submit_error +
+											"</p>",
+										"error",
+										$this,
+										"1"
+									);
+									$this
+										.find(
+											".user-registration-submit-Button"
+										)
+										.prop("disabled", false);
+									return;
 								});
 							});
 					}
@@ -2353,6 +2399,11 @@
 								$this.val(),
 								disallowedListArray
 							);
+
+							if (minimum_password_strength === "4") {
+								strength = customPasswordChecks($this.val());
+							}
+
 							if (strength < minimum_password_strength) {
 								if ($this.val() !== "") {
 									wrapper
@@ -2533,4 +2584,121 @@ function ur_includes(arr, item) {
 		}
 	}
 	return false;
+}
+
+/**
+ *
+ * @param password
+ * @returns {number}
+ */
+function customPasswordChecks(password) {
+	var custom_password_params =
+			ur_password_strength_meter_params.custom_password_params,
+		minLength =
+			custom_password_params.minimum_pass_length !== undefined &&
+			custom_password_params.minimum_pass_length >= 3
+				? custom_password_params.minimum_pass_length
+				: 3,
+		maxRepeatChars =
+			custom_password_params.max_rep_chars !== undefined
+				? custom_password_params.max_rep_chars
+				: 0,
+		canRepeatChars =
+			custom_password_params.no_rep_chars !== undefined
+				? custom_password_params.no_rep_chars
+				: 0,
+		minUppercaseCount =
+			custom_password_params.minimum_uppercase !== undefined
+				? custom_password_params.minimum_uppercase
+				: 0,
+		minSpecialCharCount =
+			custom_password_params.minimum_special_chars !== undefined
+				? custom_password_params.minimum_special_chars
+				: 0,
+		minimumDigitsCount =
+			custom_password_params.minimum_digits !== undefined
+				? custom_password_params.minimum_digits
+				: 0,
+		specialChars = new Set([
+			"!",
+			"@",
+			"#",
+			"$",
+			"%",
+			"^",
+			"&",
+			"*",
+			"(",
+			")",
+			"-",
+			"_",
+			"=",
+			"+",
+			"{",
+			"}",
+			"[",
+			"]",
+			"|",
+			"\\",
+			":",
+			";",
+			'"',
+			"'",
+			"<",
+			">",
+			",",
+			".",
+			"?",
+			"/"
+		]),
+		lastChar = "",
+		repeatCount = 0,
+		uppercaseCount = 0,
+		digitCount = 0,
+		specialCharCount = 0;
+
+	if (password.length < minLength) {
+		return 0;
+	}
+
+	for (var i = 0; i < password.length; i++) {
+		var letter = password[i];
+		// Check if the character is uppercase
+		if (/[A-Z]/.test(letter)) {
+			uppercaseCount++;
+		}
+		letter = letter.toLowerCase();
+		// Check if the character is a digit
+		if (/\d/.test(letter)) {
+			digitCount++;
+		}
+
+		// Check if the character is a special character
+		if (specialChars.has(letter)) {
+			specialCharCount++;
+		}
+
+		// Check for repeated characters
+		if (canRepeatChars && letter === lastChar) {
+			repeatCount++;
+			if (repeatCount >= maxRepeatChars) {
+				return 0;
+			}
+		} else {
+			repeatCount = 0; // Reset count if the character changes
+		}
+		lastChar = letter;
+	}
+
+	// Check if the password meets the required criteria
+	if (minUppercaseCount > 0 && uppercaseCount < minUppercaseCount) {
+		return 0;
+	}
+	if (minSpecialCharCount > 0 && specialCharCount < minSpecialCharCount) {
+		return 0;
+	}
+	if (minimumDigitsCount > 0 && digitCount < minimumDigitsCount) {
+		return 0;
+	}
+	return 4;
 }

@@ -28,7 +28,8 @@ import { useStateValue } from "../../context/StateProvider";
 import { actionTypes } from "../../context/gettingStartedContext";
 
 function App() {
-	const [{ settings, installPage }, dispatch] = useStateValue();
+	const [{ settings, installPage, registrationPageLink }, dispatch] =
+		useStateValue();
 	const [initiateInstall, setInitiateInstall] = useState(false);
 	const [disabledLink, setDisabledLink] = useState(false);
 
@@ -37,7 +38,6 @@ function App() {
 		adminURL,
 		siteURL,
 		defaultFormURL,
-		newFormURL,
 		urRestApiNonce,
 		onBoardIconsURL,
 		restURL
@@ -49,7 +49,7 @@ function App() {
 			label: __("Install Pages", "user-registration"),
 			title: __("Install Pages", "user-registration"),
 			description: __(
-				"The following pages will be installed automatically.",
+				"The following pages and forms will be created automatically.",
 				"user-registration"
 			),
 			isDone: true,
@@ -82,7 +82,7 @@ function App() {
 			label: __("My Account", "user-registration"),
 			title: __("My Account Settings", "user-registration"),
 			description: __(
-				"Customize your my account page settings as per your preference.",
+				"Customize my account page settings as per your preference.",
 				"user-registration"
 			),
 			isDone: false,
@@ -225,6 +225,13 @@ function App() {
 					});
 				}
 
+				if (res.registration_page_link) {
+					dispatch({
+						type: actionTypes.GET_DEFAULT_REGISTRATION_PAGE,
+						registrationPageLink: res.registration_page_link
+					});
+				}
+
 				if (res.is_pro) {
 					dispatch({
 						type: actionTypes.GET_IS_PRO,
@@ -361,7 +368,7 @@ function App() {
 							colorScheme="gray"
 							onClick={() => {
 								setDisabledLink(true);
-								handleSaveSettings(defaultFormURL);
+								handleSaveSettings(registrationPageLink);
 							}}
 							disabled={disabledLink}
 							style={{
@@ -370,7 +377,7 @@ function App() {
 								border: "1px solid #999999"
 							}}
 						>
-							{__("Edit Default Form", "user-registration")}
+							{__("View Registration Page", "user-registration")}
 						</Button>
 					) : steps[0].key !== activeStep.key ? (
 						<Button
@@ -396,11 +403,11 @@ function App() {
 							color="#FAFAFA !important"
 							onClick={() => {
 								setDisabledLink(true);
-								handleSaveSettings(newFormURL);
+								handleSaveSettings(defaultFormURL);
 							}}
 							disabled={disabledLink}
 						>
-							{__("Create New Form", "user-registration")}
+							{__("Edit Default Form", "user-registration")}
 						</Button>
 					) : (
 						<React.Fragment>
@@ -464,14 +471,18 @@ function App() {
 						disabled={disabledLink}
 						onClick={() => {
 							setDisabledLink(true);
-							var extraParams =
-								"my_account_settings" === activeStep.key ||
-								"final_step" === activeStep.key
-									? ""
-									: `activeStep=${activeStep.key}`;
-							handleSaveSettings(
-								`${adminURL}admin.php?page=user-registration-dashboard&end-setup-wizard=1&${extraParams}`
-							);
+							if (
+								installPage.my_account_page.status ===
+								"installed"
+							) {
+								handleSaveSettings(
+									`${adminURL}admin.php?page=user-registration-dashboard`
+								);
+							} else {
+								handleSaveSettings(
+									`${adminURL}admin.php?page=user-registration-dashboard&end-setup-wizard=1`
+								);
+							}
 						}}
 						mr={10}
 						ml={10}

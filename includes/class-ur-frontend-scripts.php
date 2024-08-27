@@ -58,7 +58,7 @@ class UR_Frontend_Scripts {
 		 * Applies filters to enqueue styles for the User Registration plugin.
 		 *
 		 * @param string $filter_name The name of the filter hook, 'user_registration_enqueue_styles'.
-		 * @param array  $styles      An array containing style information for different components.
+		 * @param array $styles An array containing style information for different components.
 		 *                            Each component is identified by a unique key, and its details include:
 		 *                            - 'src'     (string) The source URL of the stylesheet.
 		 *                            - 'deps'    (string|array) Dependencies for the stylesheet.
@@ -97,7 +97,7 @@ class UR_Frontend_Scripts {
 				 * Applies a filter to retrieve the breakpoint for small-screen styles.
 				 *
 				 * @param string $filter_name The name of the filter hook, 'user_registration_style_smallscreen_breakpoint'.
-				 * @param string $breakpoint  The default breakpoint value for small screens, in pixels.
+				 * @param string $breakpoint The default breakpoint value for small screens, in pixels.
 				 *
 				 * @return string The filtered breakpoint value for small-screen styles.
 				 */
@@ -130,8 +130,8 @@ class UR_Frontend_Scripts {
 		 * Applies a filter to retrieve the URL of an asset (e.g., stylesheet or script).
 		 *
 		 * @param string $filter_name The name of the filter hook, 'user_registration_get_asset_url'.
-		 * @param string $url         The default URL of the asset, generated using plugins_url and the provided path.
-		 * @param string $path        The relative path to the asset within the plugin.
+		 * @param string $url The default URL of the asset, generated using plugins_url and the provided path.
+		 * @param string $path The relative path to the asset within the plugin.
 		 *
 		 * @return string The filtered URL of the asset.
 		 */
@@ -141,13 +141,14 @@ class UR_Frontend_Scripts {
 	/**
 	 * Register a script for use.
 	 *
+	 * @param string $handle Script handler.
+	 * @param string $path Script Path.
+	 * @param string[] $deps Dependencies.
+	 * @param string $version Version.
+	 * @param boolean $in_footer In Footer Enable/Disable.
+	 *
 	 * @uses   wp_register_script()
 	 *
-	 * @param  string   $handle Script handler.
-	 * @param  string   $path Script Path.
-	 * @param  string[] $deps Dependencies.
-	 * @param  string   $version Version.
-	 * @param  boolean  $in_footer In Footer Enable/Disable.
 	 */
 	private static function register_script( $handle, $path, $deps = array( 'jquery' ), $version = UR_VERSION, $in_footer = true ) {
 		self::$scripts[] = $handle;
@@ -157,13 +158,14 @@ class UR_Frontend_Scripts {
 	/**
 	 * Register and enqueue a script for use.
 	 *
+	 * @param string $handle Script handler.
+	 * @param string $path Script Path.
+	 * @param string[] $deps Dependencies.
+	 * @param string $version Version.
+	 * @param boolean $in_footer In Footer Enable/Disable.
+	 *
 	 * @uses   wp_enqueue_script()
 	 *
-	 * @param  string   $handle Script handler.
-	 * @param  string   $path Script Path.
-	 * @param  string[] $deps Dependencies.
-	 * @param  string   $version Version.
-	 * @param  boolean  $in_footer In Footer Enable/Disable.
 	 */
 	private static function enqueue_script( $handle, $path = '', $deps = array( 'jquery' ), $version = UR_VERSION, $in_footer = true ) {
 		if ( ! in_array( $handle, self::$scripts ) && $path ) {
@@ -175,14 +177,15 @@ class UR_Frontend_Scripts {
 	/**
 	 * Register a style for use.
 	 *
+	 * @param string $handle Script handler.
+	 * @param string $path Script Path.
+	 * @param string[] $deps Dependencies.
+	 * @param string $version Version.
+	 * @param string $media Media.
+	 * @param boolean $has_rtl RTL.
+	 *
 	 * @uses   wp_register_style()
 	 *
-	 * @param  string   $handle Script handler.
-	 * @param  string   $path Script Path.
-	 * @param  string[] $deps Dependencies.
-	 * @param  string   $version Version.
-	 * @param  string   $media Media.
-	 * @param  boolean  $has_rtl RTL.
 	 */
 	private static function register_style( $handle, $path, $deps = array(), $version = UR_VERSION, $media = 'all', $has_rtl = false ) {
 		self::$styles[] = $handle;
@@ -196,14 +199,15 @@ class UR_Frontend_Scripts {
 	/**
 	 * Register and enqueue a styles for use.
 	 *
+	 * @param string $handle Script handler.
+	 * @param string $path Script Path.
+	 * @param string[] $deps Dependencies.
+	 * @param string $version Version.
+	 * @param string $media Media.
+	 * @param boolean $has_rtl RTL.
+	 *
 	 * @uses   wp_enqueue_style()
 	 *
-	 * @param  string   $handle Script handler.
-	 * @param  string   $path Script Path.
-	 * @param  string[] $deps Dependencies.
-	 * @param  string   $version Version.
-	 * @param  string   $media Media.
-	 * @param  boolean  $has_rtl RTL.
 	 */
 	private static function enqueue_style( $handle, $path = '', $deps = array(), $version = UR_VERSION, $media = 'all', $has_rtl = false ) {
 		if ( ! in_array( $handle, self::$styles ) && $path ) {
@@ -378,6 +382,7 @@ class UR_Frontend_Scripts {
 
 		wp_enqueue_style( 'dashicons' );
 	}
+
 	/**
 	 * Register/queue my-account scripts.
 	 */
@@ -399,7 +404,7 @@ class UR_Frontend_Scripts {
 	/**
 	 * Localize a UR script once.
 	 *
-	 * @param  string $handle Script Handler.
+	 * @param string $handle Script Handler.
 	 */
 	private static function localize_script( $handle ) {
 		if ( ! in_array( $handle, self::$wp_localize_scripts ) && wp_script_is( $handle ) && ( $data = self::get_script_data( $handle ) ) ) { //phpcs:ignore
@@ -412,7 +417,7 @@ class UR_Frontend_Scripts {
 			 * before it is passed to the corresponding script using wp_localize_script.
 			 *
 			 * @param string $filter_name The name of the filter hook, dynamically generated based on the script handle.
-			 * @param array  $data        The default localized data obtained using self::get_script_data.
+			 * @param array $data The default localized data obtained using self::get_script_data.
 			 *
 			 * @return array The filtered localized data to be passed to the script.
 			 */
@@ -423,7 +428,7 @@ class UR_Frontend_Scripts {
 	/**
 	 * Return data for script handles.
 	 *
-	 * @param  string $handle Script handler.
+	 * @param string $handle Script handler.
 	 *
 	 * @return array|bool
 	 */
@@ -431,49 +436,50 @@ class UR_Frontend_Scripts {
 		switch ( $handle ) {
 			case 'user-registration':
 				return array(
-					'ajax_url'                          => admin_url( 'admin-ajax.php' ),
-					'user_registration_form_data_save'  => wp_create_nonce( 'user_registration_form_data_save_nonce' ),
-					'user_registration_profile_details_save' => wp_create_nonce( 'user_registration_profile_details_save_nonce' ),
+					'ajax_url'                                       => admin_url( 'admin-ajax.php' ),
+					'user_registration_form_data_save'               => wp_create_nonce( 'user_registration_form_data_save_nonce' ),
+					'user_registration_profile_details_save'         => wp_create_nonce( 'user_registration_profile_details_save_nonce' ),
 					'user_registration_profile_picture_upload_nonce' => wp_create_nonce( 'user_registration_profile_picture_upload_nonce' ),
 					'user_registration_profile_picture_remove_nonce' => wp_create_nonce( 'user_registration_profile_picture_remove_nonce' ),
-					'form_required_fields'              => ur_get_required_fields(),
-					'login_option'                      => get_option( 'user_registration_general_setting_login_options' ),
-					'recaptcha_type'                    => get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' ),
-					'user_registration_profile_picture_uploading' => esc_html__( 'Uploading...', 'user-registration' ),
-					'user_registration_profile_picture_removing' => esc_html__( 'Removing...', 'user-registration' ),
-					'ajax_submission_on_edit_profile'   => ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ),
-					'message_required_fields'           => get_option( 'user_registration_form_submission_error_message_required_fields', esc_html__( 'This field is required.', 'user-registration' ) ),
-					'message_email_fields'              => get_option( 'user_registration_form_submission_error_message_email', esc_html__( 'Please enter a valid email address.', 'user-registration' ) ),
-					'message_url_fields'                => get_option( 'user_registration_form_submission_error_message_website_URL', esc_html__( 'Please enter a valid URL.', 'user-registration' ) ),
-					'message_number_fields'             => get_option( 'user_registration_form_submission_error_message_number', esc_html__( 'Please enter a valid number.', 'user-registration' ) ),
-					'message_confirm_password_fields'   => get_option( 'user_registration_form_submission_error_message_confirm_password', esc_html__( 'Password and confirm password not matched.', 'user-registration' ) ),
-					'message_min_words_fields'          => get_option( 'user_registration_form_submission_error_message_min_words', esc_html__( 'Please enter at least %qty% words.', 'user-registration' ) ),
-					'message_validate_phone_number'     => get_option( 'user_registration_form_submission_error_message_phone_number', esc_html__( 'Please enter a valid phone number.', 'user-registration' ) ),
-					'message_username_character_fields' => get_option( 'user_registration_form_submission_error_message_disallow_username_character', esc_html__( 'Please enter a valid username.', 'user-registration' ) ),
-					'message_confirm_email_fields'      => get_option( 'user_registration_form_submission_error_message_confirm_email', esc_html__( 'Email and confirm email not matched.', 'user-registration' ) ),
-					'message_confirm_number_field_max'  => esc_html__( 'Please enter a value less than or equal to %qty%.', 'user-registration' ),
-					'message_confirm_number_field_min'  => esc_html__( 'Please enter a value greater than or equal to %qty%.', 'user-registration' ),
-					'message_confirm_number_field_step' => esc_html__( 'Please enter a multiple of %qty%.', 'user-registration' ),
-					'ursL10n'                           => array(
-						'user_successfully_saved' => get_option( 'user_registration_successful_form_submission_message_manual_registation', esc_html__( 'User successfully registered.', 'user-registration' ) ),
-						'user_under_approval'     => get_option( 'user_registration_successful_form_submission_message_admin_approval', esc_html__( 'User registered. Wait until admin approves your registration.', 'user-registration' ) ),
-						'user_email_pending'      => get_option( 'user_registration_successful_form_submission_message_email_confirmation', esc_html__( 'User registered. Verify your email by clicking on the link sent to your email.', 'user-registration' ) ),
-						'captcha_error'           => get_option( 'user_registration_form_submission_error_message_recaptcha', esc_html__( 'Captcha code error, please try again.', 'user-registration' ) ),
-						'hide_password_title'     => esc_html__( 'Hide Password', 'user-registration' ),
-						'show_password_title'     => esc_html__( 'Show Password', 'user-registration' ),
+					'form_required_fields'                           => ur_get_required_fields(),
+					'login_option'                                   => get_option( 'user_registration_general_setting_login_options' ),
+					'recaptcha_type'                                 => get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' ),
+					'user_registration_profile_picture_uploading'    => esc_html__( 'Uploading...', 'user-registration' ),
+					'user_registration_profile_picture_removing'     => esc_html__( 'Removing...', 'user-registration' ),
+					'ajax_submission_on_edit_profile'                => ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ),
+					'message_required_fields'                        => get_option( 'user_registration_form_submission_error_message_required_fields', esc_html__( 'This field is required.', 'user-registration' ) ),
+					'message_email_fields'                           => get_option( 'user_registration_form_submission_error_message_email', esc_html__( 'Please enter a valid email address.', 'user-registration' ) ),
+					'message_url_fields'                             => get_option( 'user_registration_form_submission_error_message_website_URL', esc_html__( 'Please enter a valid URL.', 'user-registration' ) ),
+					'message_number_fields'                          => get_option( 'user_registration_form_submission_error_message_number', esc_html__( 'Please enter a valid number.', 'user-registration' ) ),
+					'message_confirm_password_fields'                => get_option( 'user_registration_form_submission_error_message_confirm_password', esc_html__( 'Password and confirm password not matched.', 'user-registration' ) ),
+					'message_min_words_fields'                       => get_option( 'user_registration_form_submission_error_message_min_words', esc_html__( 'Please enter at least %qty% words.', 'user-registration' ) ),
+					'message_validate_phone_number'                  => get_option( 'user_registration_form_submission_error_message_phone_number', esc_html__( 'Please enter a valid phone number.', 'user-registration' ) ),
+					'message_username_character_fields'              => get_option( 'user_registration_form_submission_error_message_disallow_username_character', esc_html__( 'Please enter a valid username.', 'user-registration' ) ),
+					'message_confirm_email_fields'                   => get_option( 'user_registration_form_submission_error_message_confirm_email', esc_html__( 'Email and confirm email not matched.', 'user-registration' ) ),
+					'message_confirm_number_field_max'               => esc_html__( 'Please enter a value less than or equal to %qty%.', 'user-registration' ),
+					'message_confirm_number_field_min'               => esc_html__( 'Please enter a value greater than or equal to %qty%.', 'user-registration' ),
+					'message_confirm_number_field_step'              => esc_html__( 'Please enter a multiple of %qty%.', 'user-registration' ),
+					'ursL10n'                                        => array(
+						'user_successfully_saved'     => get_option( 'user_registration_successful_form_submission_message_manual_registation', esc_html__( 'User successfully registered.', 'user-registration' ) ),
+						'user_under_approval'         => get_option( 'user_registration_successful_form_submission_message_admin_approval', esc_html__( 'User registered. Wait until admin approves your registration.', 'user-registration' ) ),
+						'user_email_pending'          => get_option( 'user_registration_successful_form_submission_message_email_confirmation', esc_html__( 'User registered. Verify your email by clicking on the link sent to your email.', 'user-registration' ) ),
+						'captcha_error'               => get_option( 'user_registration_form_submission_error_message_recaptcha', esc_html__( 'Captcha code error, please try again.', 'user-registration' ) ),
+						'hide_password_title'         => esc_html__( 'Hide Password', 'user-registration' ),
+						'show_password_title'         => esc_html__( 'Show Password', 'user-registration' ),
 						'i18n_total_field_value_zero' => esc_html__( 'Total field value should be greater than zero.', 'user-registration' ),
-						'i18n_discount_total_zero' => esc_html__('Discounted amount cannot be less than or equals to Zero. Please adjust your coupon code.', 'user-registration' ),
-						'password_strength_error' => esc_html__( 'Password strength is not strong enough', 'user-registration' ),
+						'i18n_discount_total_zero'    => esc_html__( 'Discounted amount cannot be less than or equals to Zero. Please adjust your coupon code.', 'user-registration' ),
+						'password_strength_error'     => esc_html__( 'Password strength is not strong enough', 'user-registration' ),
 					),
 					'is_payment_compatible'             => true,
+					'ajax_form_submit_error'            => esc_html__( 'Something went wrong while submitting form through AJAX request. Please contact site administrator.', 'user-registration' ),
 				);
-			break;
+				break;
 
 			case 'ur-password-strength-meter':
 				return array(
-					'home_url'             => home_url(),
-					'i18n_password_error'  => esc_attr__( 'Please enter a stronger password.', 'user-registration' ),
-					'pwsL10n'              => array(
+					'home_url'               => home_url(),
+					'i18n_password_error'    => esc_attr__( 'Please enter a stronger password.', 'user-registration' ),
+					'pwsL10n'                => array(
 						'shortpw'  => esc_html__( 'Very Weak', 'user-registration' ),
 						'bad'      => esc_html__( 'Weak', 'user-registration' ),
 						'good'     => esc_html__( 'Medium', 'user-registration' ),
@@ -489,10 +495,11 @@ class UR_Frontend_Scripts {
 					 * @param string $filter_name The name of the filter hook, 'user_registration_strong_password_message'.
 					 * @param string $default_message The default message for strong password requirements, obtained using esc_html__().
 					 */
-					'i18n_password_hint'   => apply_filters( 'user_registration_strong_password_message', esc_html__( 'Hint: To make password stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ & ).', 'user-registration' ) ),
-					'i18n_password_hint_1' => esc_html__( 'Hint: Minimum one uppercase letter and must be 4 characters and no repetitive words or common words', 'user-registration' ),
-					'i18n_password_hint_2' => esc_html__( 'Hint: Minimum one uppercase letter, a number, must be 7 characters and no repetitive words or common words', 'user-registration' ),
-					'i18n_password_hint_3' => esc_html__( 'Hint: Minimum one uppercase letter, a number, a special character, must be 9 characters and no repetitive words or common words', 'user-registration' ),
+					'i18n_password_hint'     => apply_filters( 'user_registration_strong_password_message', esc_html__( 'Hint: To make password stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ & ).', 'user-registration' ) ),
+					'i18n_password_hint_1'   => esc_html__( 'Hint: Minimum one uppercase letter and must be 4 characters and no repetitive words or common words', 'user-registration' ),
+					'i18n_password_hint_2'   => esc_html__( 'Hint: Minimum one uppercase letter, a number, must be 7 characters and no repetitive words or common words', 'user-registration' ),
+					'i18n_password_hint_3'   => apply_filters( 'user_registration_password_hint3_message', esc_html__( 'Hint: Minimum one uppercase letter, a number, a special character, must be 9 characters and no repetitive words or common words', 'user-registration' ) ),
+					'custom_password_params' => self::get_custom_password_params(),
 				);
 				break;
 			case 'ur-login':
@@ -501,8 +508,9 @@ class UR_Frontend_Scripts {
 					'ur_login_form_save_nonce'    => wp_create_nonce( 'ur_login_form_save_nonce' ),
 					'ajax_submission_on_ur_login' => ur_option_checked( 'ur_login_ajax_submission', false ),
 					'recaptcha_type'              => get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' ),
+					'ajax_form_submit_error'      => esc_html__( 'Something went wrong while submitting form through AJAX request. Please contact site administrator.', 'user-registration' ),
 				);
-					break;
+				break;
 		}
 
 		return false;
@@ -515,6 +523,54 @@ class UR_Frontend_Scripts {
 		foreach ( self::$scripts as $handle ) {
 			self::localize_script( $handle );
 		}
+	}
+
+	/**
+	 * Load form custom password params.
+	 **
+	 * @return array|string
+	 */
+	public static function get_custom_password_params() {
+
+		if ( ! isset( $_REQUEST['form_id'] ) ) {
+			return '';
+		}
+		$form_id = absint( $_REQUEST['form_id'] );
+
+		$enable_strong_password = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' ) );
+		if ( ! $enable_strong_password ) {
+			return '';
+		}
+		$custom_params = array(
+			'minimum_uppercase'     => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_uppercase' ),
+			'minimum_digits'        => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_digits' ),
+			'minimum_special_chars' => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_special_chars' ),
+			'minimum_pass_length'   => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_pass_length' ),
+			'no_rep_chars'          => ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_no_repeat_chars' ) ),
+			'max_rep_chars'         => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_max_char_repeat_length' ),
+		);
+		$add_prefix    = true;
+		$hint          = 'The password must have minimum length of ' . $custom_params['minimum_pass_length'] . ' characters';
+		if ( $custom_params['minimum_uppercase'] > 0 ) {
+			$hint .= ' and contain at-least '. $custom_params['minimum_uppercase'] . ' uppercase ';
+			$add_prefix    = false;
+		}
+		if ( $custom_params['minimum_digits'] > 0 ) {
+			$hint       .= ( $add_prefix ? ' and contain at-least ' : '' ) . $custom_params['minimum_uppercase'] . ' number ';
+			$add_prefix = false;
+		};
+		if ( $custom_params['minimum_special_chars'] > 0 ) {
+			$hint       .= ( $add_prefix ? ' and contain at-least ' : '' ) . $custom_params['minimum_special_chars'] . ' special characters ';
+			$add_prefix = false;
+		};
+
+		if ( $custom_params['no_rep_chars'] ) {
+			$hint .= ' and should only have '.$custom_params['max_rep_chars'].' repetitive letters at max';
+		}
+		$hint                  .= '.';
+		$custom_params['hint'] = esc_html__( $hint, 'user-registration' );
+
+		return $custom_params;
 	}
 }
 

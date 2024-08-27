@@ -8,11 +8,12 @@ import {
 	ModalHeader,
 	ModalBody,
 	ModalFooter,
-	Button,
+	Button
 } from "@chakra-ui/react";
 
 import { useStateValue } from "../../../context/StateProvider";
 import { actionTypes } from "../../../context/gettingStartedContext";
+import { sprintf, __ } from "@wordpress/i18n";
 
 const ConsentModal = (openPopup) => {
 	const [{ settings, isPro }, dispatch] = useStateValue();
@@ -24,7 +25,7 @@ const ConsentModal = (openPopup) => {
 			type === "allow" ? "yes" : "no";
 		dispatch({
 			type: actionTypes.GET_SETTINGS,
-			settings: newChangedValueRef,
+			settings: newChangedValueRef
 		});
 	};
 
@@ -34,33 +35,25 @@ const ConsentModal = (openPopup) => {
 			<ModalContent>
 				<ModalHeader>Contribute to the enhancement</ModalHeader>
 				<ModalBody>
-					{isPro ? (
+					<Text fontSize="16px">
 						<Text fontSize="16px">
-							Help us improve the plugin's features by sharing{" "}
+							{__(
+								"Help us improve the plugin's features by sharing",
+								"user-registration"
+							)}{" "}
 							<Link
 								href="https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title"
 								isExternal
 								color="#475BB2"
 							>
-								non-sensitive plugin data
-							</Link>{" "}
-							with us.
+								{__(
+									"non-sensitive plugin data",
+									"user-registration"
+								)}{" "}
+							</Link>
+							{__("with us.", "user-registration")}
 						</Text>
-					) : (
-						<Text fontSize="16px">
-							Help us improve the plugin's features and receive an
-							instant discount coupon with occasional email
-							updates by sharing{" "}
-							<Link
-								href="https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title"
-								isExternal
-								color="#475BB2"
-							>
-								non-sensitive plugin data
-							</Link>{" "}
-							with us.
-						</Text>
-					)}
+					</Text>
 				</ModalBody>
 
 				<ModalFooter>

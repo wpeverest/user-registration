@@ -165,10 +165,11 @@ class UR_Getting_Started {
 
 		return new \WP_REST_Response(
 			array(
-				'success'         => true,
-				'page_slug'       => $page_slug,
-				'default_form_id' => $default_form_page_id,
-				'is_pro'          => $is_pro,
+				'success'                => true,
+				'page_slug'              => $page_slug,
+				'default_form_id'        => $default_form_page_id,
+				'is_pro'                 => $is_pro,
+				'registration_page_link' => get_permalink( get_option( 'user_registration_registration_page_id' ) ),
 			),
 			200
 		);
@@ -223,7 +224,7 @@ class UR_Getting_Started {
 				'settings' => array(
 					array(
 						'title'   => __( 'Enable Strong Password', 'user-registration' ),
-						'desc'    => __( 'Make strong password compulsary.', 'user-registration' ),
+						'desc'    => __( 'Enforce strong password.', 'user-registration' ),
 						'id'      => 'user_registration_form_setting_enable_strong_password',
 						'type'    => 'checkbox',
 						'default' => 'no',
@@ -256,7 +257,7 @@ class UR_Getting_Started {
 				'settings' => array(
 					array(
 						'title'   => __( 'My Account Page Layout', 'user-registration' ),
-						'desc'    => __( 'This option lets you choose layout for user registration my account tab.', 'user-registration' ),
+						'desc'    => __( 'Select account page layout.', 'user-registration' ),
 						'id'      => 'user_registration_my_account_layout',
 						'type'    => 'radio',
 						'default' => 0,

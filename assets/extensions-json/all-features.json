@@ -1,6 +1,21 @@
 {
   "features": [
     {
+      "title": "SMS Integration",
+      "slug" : "user-registration-sms-integration",
+      "name" : "User Registration - SMS Integration",
+      "image": "extensions-json/sections/images/sms-integration-addon.png",
+      "excerpt": "Send SMS verifications to users after each registration; registration will be automatically approved after successful verification.",
+      "link": "https://wpuserregistration.com/features/sms-integration/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "released_date": "19/08/2024",
+      "plan" : [
+        "personal",
+        "plus",
+        "professional",
+        "themegrill agency"
+      ]
+    },
+    {
       "title": "Payment History",
       "slug" : "user-registration-payment-history",
       "name" : "User Registration Membership - Payment History",
