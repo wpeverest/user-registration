@@ -571,6 +571,9 @@
 													JSON.stringify(
 														checked_value
 													);
+												if ( "separate_shipping" === field.attr("data-id") ) {
+													formwise_data.value = field.val();
+												}
 											} else {
 												formwise_data.value = "";
 											}
