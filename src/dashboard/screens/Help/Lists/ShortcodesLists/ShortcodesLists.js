@@ -414,23 +414,38 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 							</Box>
 							<Box textAlign="right">
 								<HStack>
-									<IconButton
-										size="md"
-										icon={<CopyIcon />}
-										onClick={(event) =>
-											handleCopyClick(shortcode.id, event)
-										}
-									/>
 									{hasCopied &&
 									isShortcodeCopied[shortcode.id] ? (
 										<Tooltip
 											hasArrow={true}
 											closeDelay={2000}
+											label={__(
+												"Copied!",
+												"user-registration"
+											)}
 										>
-											{__("Copied!", "user-registration")}
+											<IconButton
+												size="md"
+												icon={<CopyIcon />}
+												onClick={(event) =>
+													handleCopyClick(
+														shortcode.id,
+														event
+													)
+												}
+											/>
 										</Tooltip>
 									) : (
-										""
+										<IconButton
+											size="md"
+											icon={<CopyIcon />}
+											onClick={(event) =>
+												handleCopyClick(
+													shortcode.id,
+													event
+												)
+											}
+										/>
 									)}
 									{isAccordionOpen[shortcode.id] ? (
 										<Minus h="5" w="5" />
@@ -595,20 +610,6 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 														<Td>
 															{example_name && (
 																<Box>
-																	<IconButton
-																		size="md"
-																		icon={
-																			<CopyIcon />
-																		}
-																		onClick={(
-																			event
-																		) =>
-																			handleExampleShortcodeCopy(
-																				example_name,
-																				event
-																			)
-																		}
-																	/>
 																	{isExampleShortcodeCopied ===
 																	example_name ? (
 																		<Tooltip
@@ -618,14 +619,41 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 																			closeDelay={
 																				1000
 																			}
-																		>
-																			{__(
+																			label={__(
 																				"Copied!",
 																				"user-registration"
 																			)}
+																		>
+																			<IconButton
+																				size="md"
+																				icon={
+																					<CopyIcon />
+																				}
+																				onClick={(
+																					event
+																				) =>
+																					handleExampleShortcodeCopy(
+																						example_name,
+																						event
+																					)
+																				}
+																			/>
 																		</Tooltip>
 																	) : (
-																		""
+																		<IconButton
+																			size="md"
+																			icon={
+																				<CopyIcon />
+																			}
+																			onClick={(
+																				event
+																			) =>
+																				handleExampleShortcodeCopy(
+																					example_name,
+																					event
+																				)
+																			}
+																		/>
 																	)}
 																</Box>
 															)}

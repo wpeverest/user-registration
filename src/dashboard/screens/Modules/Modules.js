@@ -28,6 +28,7 @@ import { debounce } from "lodash";
  *  Internal Dependencies
  */
 import { Search } from "../../components/Icon/Icon";
+import { PageNotFound } from "../../components/Icon/Icon";
 
 import {
 	getAllModules,
@@ -38,7 +39,6 @@ import AddonSkeleton from "../../skeleton/AddonsSkeleton/AddonsSkeleton";
 import { useStateValue } from "../../../context/StateProvider";
 import { actionTypes } from "../../../context/dashboardContext";
 import ModuleBody from "./components/ModuleBody";
-import emptyData from "../../images/empty-table.webp";
 
 const Modules = () => {
 	const toast = useToast();
@@ -438,8 +438,24 @@ const Modules = () => {
 				{isSearching ? (
 					<AddonSkeleton />
 				) : noItemFound ? (
-					<Box display="flex" justifyContent="center">
-						<Image src={emptyData} alt="data not found" />
+					<Box
+						display="flex"
+						justifyContent="center"
+						flexDirection="column"
+						padding="100px"
+						gap="10px"
+						alignItems="center"
+					>
+						<PageNotFound color="gray.300" />
+						<Text fontSize="20px" fontWeight="600">
+							{__("Sorry, no result found.", "user-registration")}
+						</Text>
+						<Text fontSize="14px" color="gray.500">
+							{__(
+								"Please try another search",
+								"user-registration"
+							)}
+						</Text>
 					</Box>
 				) : (
 					<Box>
