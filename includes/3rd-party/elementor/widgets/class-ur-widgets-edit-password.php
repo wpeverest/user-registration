@@ -45,7 +45,7 @@ class UR_Elementor_Widget_Edit_Password extends Widget_Base {
 	 * @return string Widget icon.
 	 */
 	public function get_icon() {
-		return 'ur-icon-user-registration';
+		return 'ur-icon-edit-password';
 	}
 	/**
 	 * Get widget categories.

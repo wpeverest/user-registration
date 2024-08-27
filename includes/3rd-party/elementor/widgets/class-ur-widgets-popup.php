@@ -42,7 +42,7 @@ class UR_Elementor_Widget_Popup extends Widget_Base {
 	 * @return string Widget icon.
 	 */
 	public function get_icon() {
-		return 'ur-icon-user-registration';
+		return 'ur-icon-popup';
 	}
 	/**
 	 * Get widget categories.

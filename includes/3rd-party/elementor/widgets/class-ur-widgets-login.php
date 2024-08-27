@@ -51,7 +51,7 @@ class UR_Elementor_Widget_Login extends Widget_Base {
 	 * @return string Widget icon.
 	 */
 	public function get_icon() {
-		return 'ur-icon-user-registration';
+		return 'ur-icon-login';
 	}
 	/**
 	 * Get widget categories.
