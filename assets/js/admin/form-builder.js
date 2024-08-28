@@ -3248,7 +3248,8 @@
 												)
 												.val(),
 											ele = $this,
-											$ele = $(this);
+											$ele = $(this),
+											delete_item = true;
 
 										// Get fieldKey from data-field-key attribute.
 										var fieldKey = $ele
@@ -3274,88 +3275,101 @@
 											})
 											.text()
 											.trim();
-											var is_auto_generate_pass_enable = $("#user_registration_pro_auto_password_activate").is(
-												":checked"
-											);
-											if ( $.inArray( fieldKey, user_registration_form_builder_data.ur_form_non_deletable_fields ) > -1 ) {
-												if( 'user_pass' === fieldKey &&  ! is_auto_generate_pass_enable  ) {
-													show_feature_notice(fieldKey ,label);
-													return;
-												}
-												if ( 'user_pass' !== fieldKey ) {
-													show_feature_notice(fieldKey, label);
-													return;
-												}
+										var is_auto_generate_pass_enable = $("#user_registration_pro_auto_password_activate").is(
+											":checked"
+										);
+										if ( $.inArray( fieldKey, user_registration_form_builder_data.ur_form_non_deletable_fields ) > -1 ) {
+											if( 'user_pass' === fieldKey &&  ! is_auto_generate_pass_enable  ) {
+												show_feature_notice(fieldKey ,label);
+												return;
+											}
+											if ( 'user_pass' !== fieldKey ) {
+												show_feature_notice(fieldKey, label);
+												return;
+											}
 										}
 
-										ur_confirmation(
-											user_registration_form_builder_data
-												.i18n_admin
-												.i18n_are_you_sure_want_to_delete_field,
-											{
-												title: user_registration_form_builder_data
-													.i18n_admin.i18n_msg_delete,
-												showCancelButton: true,
-												confirmButtonText:
-													user_registration_form_builder_data
-														.i18n_admin
-														.i18n_choice_ok,
-												cancelButtonText:
-													user_registration_form_builder_data
-														.i18n_admin
-														.i18n_choice_cancel,
-												ele: ele,
-												$ele: $ele,
-												removed_item: removed_item,
-												confirm: function () {
-													$ele.closest(
-														".ur-selected-item "
-													).remove();
-													ele.check_grid();
-													builder.manage_empty_grid();
-													builder.manage_draggable_users_fields();
+										var data = {
+											delete_item : delete_item,
+											removed_item : removed_item,
+											label : label,
+										};
 
-													// Remove item from conditional logic options
-													$(
-														'[class*="urcl-settings-rules_field_"] option[value="' +
-															removed_item +
-															'"]'
-													).remove();
-
-													// Remove Field from Form Setting Conditionally Assign User Role.
-													$(
-														'[class*="urcl-field-conditional-field-select"] option[value="' +
-															removed_item +
-															'"]'
-													).remove();
-
-													$(
-														'[id="user_registration_form_setting_default_phone_field"] option[value="' +
-														removed_item +
-															'"]'
-													).remove();
-
-													$(document.body).trigger(
-														"ur_field_removed",
-														[
-															{
-																fieldName:
-																	fieldName,
-																fieldKey:
-																	fieldKey,
-																label: label
-															}
-														]
-													);
-
-													// To prevent click on whole item.
-													return false;
-												},
-												reject: function () {
-													return false;
-												}
-											}
+										$(document).trigger(
+											"user_registration_before_admin_field_remove",
+											[data]
 										);
+
+										if ( data.delete_item ) {
+											ur_confirmation(
+												user_registration_form_builder_data
+													.i18n_admin
+													.i18n_are_you_sure_want_to_delete_field,
+												{
+													title: user_registration_form_builder_data
+														.i18n_admin.i18n_msg_delete,
+													showCancelButton: true,
+													confirmButtonText:
+														user_registration_form_builder_data
+															.i18n_admin
+															.i18n_choice_ok,
+													cancelButtonText:
+														user_registration_form_builder_data
+															.i18n_admin
+															.i18n_choice_cancel,
+													ele: ele,
+													$ele: $ele,
+													removed_item: removed_item,
+													confirm: function () {
+														$ele.closest(
+															".ur-selected-item "
+														).remove();
+														ele.check_grid();
+														builder.manage_empty_grid();
+														builder.manage_draggable_users_fields();
+
+														// Remove item from conditional logic options
+														$(
+															'[class*="urcl-settings-rules_field_"] option[value="' +
+																removed_item +
+																'"]'
+														).remove();
+
+														// Remove Field from Form Setting Conditionally Assign User Role.
+														$(
+															'[class*="urcl-field-conditional-field-select"] option[value="' +
+																removed_item +
+																'"]'
+														).remove();
+
+														$(
+															'[id="user_registration_form_setting_default_phone_field"] option[value="' +
+															removed_item +
+																'"]'
+														).remove();
+
+														$(document.body).trigger(
+															"ur_field_removed",
+															[
+																{
+																	fieldName:
+																		fieldName,
+																	fieldKey:
+																		fieldKey,
+																	label: label
+																}
+															]
+														);
+
+														// To prevent click on whole item.
+														return false;
+													},
+													reject: function () {
+														return false;
+													}
+												}
+											);
+										}
 									}
 								);
 							},
