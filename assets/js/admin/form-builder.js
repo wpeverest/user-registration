@@ -2768,10 +2768,19 @@
 									function () {
 										var $this_row = $(this).closest(".ur-single-row");
         								var fieldKeys = [];
+        								var fieldNames = [];
         								$this_row.find(".ur-selected-item .ur-field").each(function () {
             							var fieldKey = $(this).data("field-key");
+            							var fieldName = $(this).closest('.ur-selected-item').find('.ur-general-setting-field-name input[data-field="field_name"]').val();
+            							var fieldLabel = $(this).closest('.ur-selected-item').find('.ur-general-setting-label input[data-field="label"]').val();
            							 	fieldKeys.push(fieldKey);
+           							 	var field_data = {
+											fieldName: fieldName,
+											fieldLabel: fieldLabel
+										};
+										fieldNames.push(field_data);
        								 	});
+
 										if( fieldKeys.includes("user_pass") && fieldKeys.includes("user_email") ) {
 											show_feature_notice('','');
 											return;
@@ -2783,162 +2792,170 @@
 											return;
 										}
 
+										var data ={
+											delete_item : true,
+											fields : fieldNames,
+										};
+
+										$(document).trigger('user_registration_before_admin_row_remove',[data]);
+
 										if (
 											$(".ur-input-grids").find(
 												".ur-single-row:visible"
 											).length > 1
 										) {
 
-
-											ur_confirmation(
-												user_registration_form_builder_data
-													.i18n_admin
-													.i18n_are_you_sure_want_to_delete_row,
-												{
-													title: user_registration_form_builder_data
+											if ( data.delete_item ) {
+												ur_confirmation(
+													user_registration_form_builder_data
 														.i18n_admin
-														.i18n_msg_delete,
-													confirm: function () {
-														var btn =
-															$this_row.prev();
-														var new_btn;
-														if (
-															btn.hasClass(
-																"ur-add-new-row"
-															)
-														) {
-															new_btn =
-																btn.clone();
-														} else {
-															new_btn = $this_row
-																.clone()
-																.attr(
-																	"class",
-																	"dashicons-minus ur-remove-row"
-																);
-														}
-														if (
-															new_btn.hasClass(
-																"ur-add-new-row"
-															)
-														) {
-															$this_row
-																.closest(
-																	".ur-single-row"
+														.i18n_are_you_sure_want_to_delete_row,
+													{
+														title: user_registration_form_builder_data
+															.i18n_admin
+															.i18n_msg_delete,
+														confirm: function () {
+															var btn =
+																$this_row.prev();
+															var new_btn;
+															if (
+																btn.hasClass(
+																	"ur-add-new-row"
 																)
-																.prev()
-																.find(
-																	".ur-remove-row"
-																)
-																.before(
-																	new_btn
-																);
-														}
-														var single_row =
-															$this_row.closest(
-																".ur-single-row"
-															);
-														$(document).trigger(
-															"user_registration_row_deleted",
-															[single_row]
-														);
-
-														// Remove Row Fields from Conditional Select Dropdown.
-														var row_fields =
-															single_row.find(
-																".ur-grid-lists .ur-selected-item .ur-general-setting"
-															);
-														$(row_fields).each(
-															function () {
-																var field_label =
-																	$(this)
-																		.closest(
-																			".ur-selected-item"
-																		)
-																		.find(
-																			" .ur-admin-template .ur-label label"
-																		)
-																		.text();
-																var field_key =
-																	$(this)
-																		.closest(
-																			".ur-selected-item"
-																		)
-																		.find(
-																			" .ur-admin-template .ur-field"
-																		)
-																		.data(
-																			"field-key"
-																		);
-
-																//strip certain fields
-																if (
-																	"section_title" ==
-																		field_key ||
-																	"html" ==
-																		field_key ||
-																	"wysiwyg" ==
-																		field_key ||
-																	"billing_address_title" ==
-																		field_key ||
-																	"shipping_address_title" ==
-																		field_key
-																) {
-																	return;
-																}
-
-																var field_name =
-																	$(this)
-																		.find(
-																			"[data-field='field_name']"
-																		)
-																		.val();
-
-																if (
-																	typeof field_name !==
-																	"undefined"
-																) {
-																	// Remove item from conditional logic options
-																	$(
-																		'[class*="urcl-settings-rules_field_"] option[value="' +
-																			field_name +
-																			'"]'
-																	).remove();
-
-																	// Remove Field from Form Setting Conditionally Assign User Role.
-																	$(
-																		'[class*="urcl-field-conditional-field-select"] option[value="' +
-																			field_name +
-																			'"]'
-																	).remove();
-
-																	// Remove Field from Form Setting Default Phone field for SMS Verification.
-																	$(
-																		'[id="user_registration_form_setting_default_phone_field"] option[value="' +
-																			field_name +
-																			'"]'
-																	).remove();
-																}
+															) {
+																new_btn =
+																	btn.clone();
+															} else {
+																new_btn = $this_row
+																	.clone()
+																	.attr(
+																		"class",
+																		"dashicons-minus ur-remove-row"
+																	);
 															}
-														);
-														single_row.remove();
-														$this.check_grid();
-														builder.manage_draggable_users_fields();
+															if (
+																new_btn.hasClass(
+																	"ur-add-new-row"
+																)
+															) {
+																$this_row
+																	.closest(
+																		".ur-single-row"
+																	)
+																	.prev()
+																	.find(
+																		".ur-remove-row"
+																	)
+																	.before(
+																		new_btn
+																	);
+															}
+															var single_row =
+																$this_row.closest(
+																	".ur-single-row"
+																);
+															$(document).trigger(
+																"user_registration_row_deleted",
+																[single_row]
+															);
 
-														Swal.fire({
-															icon: "success",
-															title: "Successfully deleted!",
-															customClass:
-																"user-registration-swal2-modal user-registration-swal2-modal--center user-registration-swal2-no-button",
-															showConfirmButton: false,
-															timer: 1000
-														});
-													},
-													reject: function () {
-														// Do Nothing.
+															// Remove Row Fields from Conditional Select Dropdown.
+															var row_fields =
+																single_row.find(
+																	".ur-grid-lists .ur-selected-item .ur-general-setting"
+																);
+															$(row_fields).each(
+																function () {
+																	var field_label =
+																		$(this)
+																			.closest(
+																				".ur-selected-item"
+																			)
+																			.find(
+																				" .ur-admin-template .ur-label label"
+																			)
+																			.text();
+																	var field_key =
+																		$(this)
+																			.closest(
+																				".ur-selected-item"
+																			)
+																			.find(
+																				" .ur-admin-template .ur-field"
+																			)
+																			.data(
+																				"field-key"
+																			);
+
+																	//strip certain fields
+																	if (
+																		"section_title" ==
+																			field_key ||
+																		"html" ==
+																			field_key ||
+																		"wysiwyg" ==
+																			field_key ||
+																		"billing_address_title" ==
+																			field_key ||
+																		"shipping_address_title" ==
+																			field_key
+																	) {
+																		return;
+																	}
+
+																	var field_name =
+																		$(this)
+																			.find(
+																				"[data-field='field_name']"
+																			)
+																			.val();
+
+																	if (
+																		typeof field_name !==
+																		"undefined"
+																	) {
+																		// Remove item from conditional logic options
+																		$(
+																			'[class*="urcl-settings-rules_field_"] option[value="' +
+																				field_name +
+																				'"]'
+																		).remove();
+
+																		// Remove Field from Form Setting Conditionally Assign User Role.
+																		$(
+																			'[class*="urcl-field-conditional-field-select"] option[value="' +
+																				field_name +
+																				'"]'
+																		).remove();
+
+																		// Remove Field from Form Setting Default Phone field for SMS Verification.
+																		$(
+																			'[id="user_registration_form_setting_default_phone_field"] option[value="' +
+																				field_name +
+																				'"]'
+																		).remove();
+																	}
+																}
+															);
+															single_row.remove();
+															$this.check_grid();
+															builder.manage_draggable_users_fields();
+
+															Swal.fire({
+																icon: "success",
+																title: "Successfully deleted!",
+																customClass:
+																	"user-registration-swal2-modal user-registration-swal2-modal--center user-registration-swal2-no-button",
+																showConfirmButton: false,
+																timer: 1000
+															});
+														},
+														reject: function () {
+															// Do Nothing.
+														}
 													}
-												}
-											);
+												);
+											}
 										} else {
 											URFormBuilder.ur_alert(
 												user_registration_form_builder_data
