@@ -92,6 +92,41 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 				array(
 					'title'    => '',
 					'sections' => array(
+						'send_test_email'             => array(
+							'title'    => __( 'Send a Test Email', 'user-registration' ),
+							'type'     => 'card',
+							'desc'     => '',
+							'settings' => array(
+								array(
+									'title'             => __( 'Send To', 'user-registration' ),
+									'desc'              => __( 'Enter email address where test email will be sent.', 'user-registration' ),
+									'id'                => 'user_registration_email_send_to',
+									'type'              => 'email',
+									'custom_attributes' => array(
+										'multiple' => 'multiple',
+									),
+									'css'               => 'min-width:300px;',
+									'default'           => get_option( 'admin_email' ),
+									'autoload'          => false,
+									'desc_tip'          => true,
+								),
+								array(
+									'title'    => __( 'Send Email', 'user-registration' ),
+									'desc'     => __( 'Click to send test email.', 'user-registration' ),
+									'id'       => 'user_registration_email_test',
+									'type'     => 'link',
+									'css'      => 'min-width:90px;',
+									'buttons'  => array(
+										array(
+											'title' => __( 'Send Email', 'user-registration' ),
+											'href'  => '#',
+											'class' => 'button user_registration_send_email_test',
+										),
+									),
+									'desc_tip' => true,
+								),
+							),
+						),
 						'email_notification_settings' => array(
 							'title'    => __( 'Email notifications', 'user-registration' ),
 							'type'     => 'card',
@@ -139,41 +174,6 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 									'default'           => get_option( 'admin_email' ),
 									'autoload'          => false,
 									'desc_tip'          => true,
-								),
-							),
-						),
-						'send_test_email'             => array(
-							'title'    => __( 'Send a Test Email', 'user-registration' ),
-							'type'     => 'card',
-							'desc'     => '',
-							'settings' => array(
-								array(
-									'title'             => __( 'Send To', 'user-registration' ),
-									'desc'              => __( 'Enter email address where test email will be sent.', 'user-registration' ),
-									'id'                => 'user_registration_email_send_to',
-									'type'              => 'email',
-									'custom_attributes' => array(
-										'multiple' => 'multiple',
-									),
-									'css'               => 'min-width:300px;',
-									'default'           => get_option( 'admin_email' ),
-									'autoload'          => false,
-									'desc_tip'          => true,
-								),
-								array(
-									'title'    => __( 'Send Email', 'user-registration' ),
-									'desc'     => __( 'Click to send test email.', 'user-registration' ),
-									'id'       => 'user_registration_email_test',
-									'type'     => 'link',
-									'css'      => 'min-width:90px;',
-									'buttons'  => array(
-										array(
-											'title' => __( 'Send Email', 'user-registration' ),
-											'href'  => '#',
-											'class' => 'button user_registration_send_email_test',
-										),
-									),
-									'desc_tip' => true,
 								),
 							),
 						),
@@ -255,7 +255,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 				$settings .= '</label>';
 				$settings .= '</td>';
 				$settings .= '<td class="ur-email-settings-table">';
-				$settings .= '<a class="button tips user-registration-email-preview " target="__blank" data-tip="' . esc_attr__( 'Preview', 'user-registration' ) . '" href="' . esc_url(
+				$settings .= '<a class="button tips user-registration-email-preview " rel="noreferrer noopener" target="__blank" data-tip="' . esc_attr__( 'Preview', 'user-registration' ) . '" href="' . esc_url(
 					add_query_arg(
 						array(
 							'ur_email_preview' => $email->id,
@@ -318,7 +318,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			if ( ! empty( $current_section ) ) {
 				?>
 				<div id ="smart-tags">
-				<a href="https://docs.wpuserregistration.com/docs/smart-tags/" target="_blank"><?php echo esc_html__( 'Smart Tags Used', 'user-registration' ); ?></a>
+				<a href="https://docs.wpuserregistration.com/docs/smart-tags/" rel="noreferrer noopener" target="_blank"><?php echo esc_html__( 'Smart Tags Used', 'user-registration' ); ?></a>
 				</div>
 				<?php
 			}

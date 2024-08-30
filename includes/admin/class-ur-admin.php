@@ -116,7 +116,8 @@ class UR_Admin {
 	 */
 	public function includes() {
 		include_once __DIR__ . '/functions-ur-admin.php';
-		if ( ! current_user_can( 'manage_options' ) ) {
+
+		if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'manage_user_registration' ) ) {
 			return false;
 		}
 		include_once __DIR__ . '/notifications/class-ur-admin-notices.php';
@@ -146,7 +147,7 @@ class UR_Admin {
 	 * Include admin files conditionally.
 	 */
 	public function conditional_includes() {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'manage_user_registration' ) ) {
 			return false;
 		}
 		$screen = get_current_screen();
@@ -228,7 +229,7 @@ class UR_Admin {
 						/* translators: 1: User Registration 2:: five stars */
 						__( 'If you like %1$s please leave us a %2$s rating. A huge thanks in advance!', 'user-registration' ),
 						sprintf( '<strong>%s</strong>', esc_html( 'User Registration' ) ),
-						'<a href="https://wordpress.org/support/plugin/user-registration/reviews?rate=5#new-post" target="_blank" class="ur-rating-link" data-rated="' . esc_attr__( 'Thank You!', 'user-registration' ) . '">&#9733;&#9733;&#9733;&#9733;&#9733;</a>'
+						'<a href="https://wordpress.org/support/plugin/user-registration/reviews?rate=5#new-post" rel="noreferrer noopener" target="_blank" class="ur-rating-link" data-rated="' . esc_attr__( 'Thank You!', 'user-registration' ) . '">&#9733;&#9733;&#9733;&#9733;&#9733;</a>'
 					)
 				);
 				ur_enqueue_js(

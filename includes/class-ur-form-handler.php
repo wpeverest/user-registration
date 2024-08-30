@@ -813,6 +813,10 @@ class UR_Form_Handler {
 			foreach ( $form_data as $sec ) {
 				foreach ( $sec as $fields ) {
 					foreach ( $fields as $field ) {
+						if ( ! isset( $field->general_setting->field_name ) ) {
+							continue;
+						}
+
 						$field_id    = $field->general_setting->field_name;
 						$field_label = $field->general_setting->label;
 						if ( ! in_array( $field_id, $hide_fields, true ) ) {

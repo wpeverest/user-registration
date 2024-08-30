@@ -121,6 +121,14 @@
 					URFormBuilder.ur_save_form();
 				});
 
+				//Embed the form in the page.
+				$(".ur-embed-form-button").on("click", function () {
+					if( $(this).find(".ur-spinner").length > 0 ) {
+						return;
+					}
+					URFormBuilder.ur_embed_form($(this));
+				});
+
 				// Close validation message on form builder.
 				$(document).on(
 					"click",
@@ -140,17 +148,26 @@
 					var urlParams = new URLSearchParams(queryString);
 					var urPage = urlParams.get("page");
 					var isEditPage = urlParams.get("edit-registration");
+					var formId = urlParams.get("form_id");
 					var isTemplatePage = $(".user-registration-setup").length;
 
 					var previousPage = document.referrer.split("page=")[1];
+					var formUpdated =
+						localStorage.getItem("formUpdated_" + isEditPage) ===
+						"true";
 
 					if (
 						"add-new-registration" === urPage &&
 						(null === isEditPage ||
 							(null !== isEditPage &&
-								"add-new-registration" === previousPage)) &&
-						0 === isTemplatePage
+								"add-new-registration" === previousPage &&
+								null !== formId)) &&
+						0 === isTemplatePage &&
+						!formUpdated
 					) {
+						$(".ur_save_form_action_button").text(
+							user_registration_form_builder_data.i18n_publish_form_button_text
+						);
 						URFormBuilder.ur_show_help();
 					}
 				});
@@ -280,6 +297,7 @@
 			 */
 			ur_save_form: function () {
 				var validation_response = URFormBuilder.get_validation_status();
+
 				if (validation_response.validation_status === false) {
 					URFormBuilder.show_message(validation_response.message);
 					return;
@@ -518,7 +536,7 @@
 							) {
 								var title = "Form successfully created.";
 								message_body =
-									"<p>Want to create a login form as well? Check this <a target='_blank' href='https://docs.wpuserregistration.com/registration-form-and-login-form/how-to-show-login-form/'>link</a>. To know more about other cool features check our <a target='_blank' href='https://docs.wpuserregistration.com/'>docs</a>.</p>";
+									"<p>Want to create a login form as well? Check this <a rel='noreferrer noopener' target='_blank' href='https://docs.wpuserregistration.com/registration-form-and-login-form/how-to-show-login-form/'>link</a>. To know more about other cool features check our <a rel='noreferrer noopener' target='_blank' href='https://docs.wpuserregistration.com/'>docs</a>.</p>";
 								Swal.fire({
 									icon: "success",
 									title: title,
@@ -546,9 +564,171 @@
 							var error = response.responseJSON.data.message;
 							URFormBuilder.show_message(error);
 						}
+						$(".ur_save_form_action_button").text(
+							user_registration_form_builder_data.i18n_update_form_button_text
+						);
+						localStorage.setItem("formUpdated_" + ur_form_id, true);
+					}
+				}).fail(function () {
+					Swal.fire({
+						icon: "error",
+						title: user_registration_form_builder_data.ajax_form_submit_error_title,
+						html:
+							"<br />" +
+							user_registration_form_builder_data.ajax_form_submit_error,
+						customClass:
+							"user-registration-swal2-modal user-registration-swal2-modal--center",
+						confirmButtonText: "Troubleshoot",
+						allowOutsideClick: false,
+						showCloseButton: true
+					}).then(function (result) {
+						if (result.isConfirmed) {
+							window.open(
+								user_registration_form_builder_data.ajax_form_submit_troubleshooting_link
+							);
+						}
+					});
+					return;
+				});
+			},
+			/**
+			 * Handel the process of embedding the form.
+			 */
+			ur_embed_form: function ($this) {
+				var data = {
+					'action': 'user_registration_embed_page_list',
+					security: user_registration_form_builder_data.ur_embed_page_list,
+				};
+
+				$.ajax({
+					url: user_registration_form_builder_data.ajax_url,
+					data: data,
+					type: 'POST',
+					beforeSend: function () {
+						var spinner = '<span class="ur-spinner is-active"></span>';
+						$this.append(spinner);
+						$(".ur-notices").remove();
+					},
+					success: function (response) {
+						$this.find(".ur-spinner").remove();
+						function showInitialAlert(){
+							var modelContent = '<div class=""><p>' + user_registration_form_builder_data.i18n_admin.i18n_embed_description + '</p></div>';
+
+                			Swal.fire({
+                    			icon: 'info',
+                    			title: user_registration_form_builder_data.i18n_admin.i18n_embed_form_title,
+                    			html: modelContent,
+                    			showCancelButton: true,
+                    			confirmButtonText: user_registration_form_builder_data.i18n_admin.i18n_embed_to_existing_page,
+                    			cancelButtonText: user_registration_form_builder_data.i18n_admin.i18n_embed_to_new_page,
+                    			showCloseButton: true,
+								customClass:
+									"user-registration-swal2-modal  user-registration user-registration-swal2-modal--center user-registrationswal2-icon-content-info user-registration-info swal2-show"
+
+               				 }).then(function(result)  {
+                    			var form_id = $(".ur-embed-form-button").attr('data-form_id');
+
+                   				 if (result.isConfirmed) {
+                        				showExistingPageSelection(response, form_id);
+                    				} else if (result.dismiss === Swal.DismissReason.cancel) {
+                        				showCreateNewPageForm(form_id);
+                    				}
+               				 });
+						}
+						function showExistingPageSelection(response, form_id){
+
+							var select_start = '<div class="ur-embed-select-existing-page-container"><p>' + user_registration_form_builder_data.i18n_admin.i18n_embed_existing_page_description + '</p><select name="ur-embed-select-existing-page-name" id="ur-embed-select-existing-page-name">';
+							var option = '<option disabled selected>Select Page</option>';
+							response.data.forEach(function(page){
+								option += '<option data-id="' + page.ID + '" value="' + page.ID + '">' + page.post_title + '</option>';
+							});
+							var select_end = '</select>';
+
+							modelContent = select_start + option + select_end;
+							Swal.fire({
+								icon: 'info',
+								title: user_registration_form_builder_data.i18n_admin.i18n_embed_form_title,
+								html: modelContent,
+								showCloseButton: true,
+								showCancelButton: true,
+								cancelButtonText: user_registration_form_builder_data.i18n_admin.i18n_embed_go_back_btn,
+								confirmButtonText: user_registration_form_builder_data.i18n_admin.i18n_embed_lets_go_btn,
+								cancelButtonText: user_registration_form_builder_data.i18n_admin.i18n_embed_go_back_btn,
+								customClass:
+									"user-registration-swal2-modal  user-registration user-registration-swal2-modal--center user-registration-info swal2-show"
+							}).then(function(result)  {
+								if(result.isDismissed){
+									showInitialAlert();
+								}else if(result.isConfirmed){
+									var page_id = $("#ur-embed-select-existing-page-name").val();
+
+									var data = {
+										'action': 'user_registration_embed_form_action',
+										security: user_registration_form_builder_data.ur_embed_action,
+										'page_id': page_id,
+										'form_id': form_id,
+									};
+									$.ajax({
+										url: user_registration_form_builder_data.ajax_url,
+										type: 'POST',
+										data: data,
+										success: function (response) {
+											if (response.success) {
+												window.location = response.data;
+											}
+										}
+									});
+								}
+							});
+						}
+						function showCreateNewPageForm(form_id){
+							var description = '<div class="ur-embed-new-page-container"><p>' + user_registration_form_builder_data.i18n_admin.i18n_embed_new_page_description + '</p>';
+							var page_name = '<div style="min-width:400px; width:100%;"><input type="text" name="page_title" /></div>';
+
+							modelContent = description + page_name;
+							Swal.fire({
+								icon: 'info',
+								title: user_registration_form_builder_data.i18n_admin.i18n_embed_form_title,
+								html: modelContent,
+								showCancelButton: true,
+								confirmButtonText: user_registration_form_builder_data.i18n_admin.i18n_embed_lets_go_btn,
+								cancelButtonText: user_registration_form_builder_data.i18n_admin.i18n_embed_go_back_btn,
+								customClass:
+								"user-registration-swal2-modal  user-registration user-registration-swal2-modal--center user-registration-info swal2-show"
+
+							}).then(function(result) {
+								if(result.isDismissed){
+									showInitialAlert();
+								}else if(result.isConfirmed){
+									var page_title = $("[name='page_title']").val();
+
+									var data = {
+										'action': 'user_registration_embed_form_action',
+										security: user_registration_form_builder_data.ur_embed_action,
+										page_title: page_title,
+										'form_id': form_id,
+									};
+									$.ajax({
+										url: user_registration_form_builder_data.ajax_url,
+										type: 'POST',
+										data: data,
+										success: function (response) {
+											if (response.success) {
+												window.location = response.data;
+											}
+										}
+									});
+								}
+							});
+						}
+						showInitialAlert();
+
 					}
 				});
 			},
+
+
+
 			/**
 			 * Show Help Popup
 			 */
@@ -636,6 +816,13 @@
 					return response;
 				}
 
+				if($('#user_registration_enable_stripe').is(':checked') && $('#user_registration_enable_stripe_recurring').is(':checked') && $('.ur-input-type-coupon-field').length > 0) {
+					$('#user_registration_enable_stripe_recurring').prop('checked', false)
+					response.validation_status = false;
+					response.message = user_registration_form_builder_data.i18n_admin.i18n_no_stripe_for_coupon;
+					return response;
+				}
+
 				if (
 					$(".ur_save_form_action_button").find(".ur-spinner")
 						.length > 0
@@ -645,6 +832,34 @@
 						user_registration_form_builder_data.i18n_admin.i18n_previous_save_action_ongoing;
 					return response;
 				}
+				if($('#user_registration_form_setting_minimum_password_strength_Custom').is(':checked')) {
+					var password_length = $('#user_registration_form_setting_form_minimum_pass_length').val();
+					if(password_length < 6) {
+						response.validation_status = false;
+						response.message = user_registration_form_builder_data.i18n_admin.i18n_min_custom_password_length_error;
+						return response;
+					}
+					var custom_fields = [
+						'minimum_uppercase',
+						'minimum_digits',
+						'minimum_special_chars',
+						'max_char_repeat_length'
+					];
+					custom_fields.forEach( function(value) {
+						var max_repeat_length = $('#user_registration_form_setting_form_' + value).val();
+						if(max_repeat_length < 0) {
+							response.validation_status = false;
+							var formattedString = value.replace(/_/g, ' ');
+							function capitalizeFirstLetter(string) {
+								return string.charAt(0).toUpperCase() + string.slice(1);
+							}
+							formattedString = capitalizeFirstLetter(formattedString);
+							response.message = formattedString + ' ' + user_registration_form_builder_data.i18n_admin.i18n_custom_password_negative_value_error;
+							return response;
+						}
+					});
+				}
+
 				$.each(
 					$(
 						".ur-selected-item select.ur-settings-selected-countries"
@@ -759,8 +974,16 @@
 						break;
 					}
 				}
+				var login_options = $("#user_registration_form_setting_login_options").val();
+
+				if('sms_verification' === login_options ){
+					var phone_fields = ["phone_fields"];
+					required_fields = required_fields.concat(phone_fields);
+				}
+
 				var paypal = $("#user_registration_enable_paypal_standard");
 				var stripe = $("#user_registration_enable_stripe");
+				var anet = $("#user_registration_enable_authorize_net");
 
 				if (paypal.is(":checked")) {
 					var payment_fields = ["payment_fields"];
@@ -774,6 +997,13 @@
 						];
 
 						required_fields = required_fields.concat(stripe_fields);
+					} else if (anet.is(":checked")) {
+						var anet_fields = [
+							"payment_fields",
+							"authorize_net_gateway"
+						];
+
+						required_fields = required_fields.concat(anet_fields);
 					}
 				}
 				for (
@@ -781,7 +1011,37 @@
 					required_index < required_fields.length;
 					required_index++
 				) {
-					if (required_fields[required_index] === "payment_fields") {
+					if (required_fields[required_index] === "phone_fields") {
+						var phone = $(".ur-input-grids").find(
+							'.ur-field[data-field-key="phone"]'
+						).length;
+
+						if ( phone < 1 ) {
+							response.validation_status = false;
+
+							var field =
+								user_registration_form_builder_data.i18n_admin
+									.i18n_phone_field;
+
+							response.message =
+								field +
+								" " +
+								user_registration_form_builder_data.i18n_admin
+									.i18n_field_is_required;
+							break;
+						}else{
+							var phone_field = $('#user_registration_form_setting_default_phone_field option:selected');
+							var phone_format = phone_field.attr('data-phone-format');
+
+							if( "undefined" === typeof phone_format || 'smart' === phone_format){
+								continue;
+							}else{
+								response.validation_status = false;
+								response.message = user_registration_form_builder_data.i18n_admin.i18n_smart_phone_field;
+								break;
+							}
+						}
+					} else if (required_fields[required_index] === "payment_fields") {
 						var multiple_choice = $(".ur-input-grids").find(
 							'.ur-field[data-field-key="multiple_choice"]'
 						).length;
@@ -833,9 +1093,15 @@
 									user_registration_form_builder_data
 										.i18n_admin.i18n_user_password;
 							} else {
-								var field =
-									user_registration_form_builder_data
-										.i18n_admin.i18n_stripe_field;
+								if ( "authorize_net_gateway" === required_fields[required_index] ) {
+									var field =
+										user_registration_form_builder_data
+											.i18n_admin.i18n_anet_field;
+								} else {
+									var field =
+										user_registration_form_builder_data
+											.i18n_admin.i18n_stripe_field;
+								}
 							}
 
 							response.message =
@@ -2384,6 +2650,12 @@
 											]
 										);
 									}
+								}).fail(function () {
+									URFormBuilder.show_message(
+										user_registration_form_builder_data.ajax_form_submit_error_on_field_drag,
+										"error"
+									);
+									return;
 								});
 							}
 						};
@@ -2494,12 +2766,30 @@
 									"click",
 									".ur-remove-row",
 									function () {
+										var $this_row = $(this).closest(".ur-single-row");
+        								var fieldKeys = [];
+        								$this_row.find(".ur-selected-item .ur-field").each(function () {
+            							var fieldKey = $(this).data("field-key");
+           							 	fieldKeys.push(fieldKey);
+       								 	});
+										if( fieldKeys.includes("user_pass") && fieldKeys.includes("user_email") ) {
+											show_feature_notice('','');
+											return;
+										}else if( fieldKeys.includes("user_pass") ) {
+											show_feature_notice('user_pass','');
+											return;
+										}else if( fieldKeys.includes("user_email") ) {
+											show_feature_notice('user_email','');
+											return;
+										}
+
 										if (
 											$(".ur-input-grids").find(
 												".ur-single-row:visible"
 											).length > 1
 										) {
-											var $this_row = $(this);
+
+
 											ur_confirmation(
 												user_registration_form_builder_data
 													.i18n_admin
@@ -2618,6 +2908,13 @@
 																	// Remove Field from Form Setting Conditionally Assign User Role.
 																	$(
 																		'[class*="urcl-field-conditional-field-select"] option[value="' +
+																			field_name +
+																			'"]'
+																	).remove();
+
+																	// Remove Field from Form Setting Default Phone field for SMS Verification.
+																	$(
+																		'[id="user_registration_form_setting_default_phone_field"] option[value="' +
 																			field_name +
 																			'"]'
 																	).remove();
@@ -2977,6 +3274,19 @@
 											})
 											.text()
 											.trim();
+											var is_auto_generate_pass_enable = $("#user_registration_pro_auto_password_activate").is(
+												":checked"
+											);
+											if ( $.inArray( fieldKey, user_registration_form_builder_data.ur_form_non_deletable_fields ) > -1 ) {
+												if( 'user_pass' === fieldKey &&  ! is_auto_generate_pass_enable  ) {
+													show_feature_notice(fieldKey ,label);
+													return;
+												}
+												if ( 'user_pass' !== fieldKey ) {
+													show_feature_notice(fieldKey, label);
+													return;
+												}
+										}
 
 										ur_confirmation(
 											user_registration_form_builder_data
@@ -3016,6 +3326,12 @@
 													$(
 														'[class*="urcl-field-conditional-field-select"] option[value="' +
 															removed_item +
+															'"]'
+													).remove();
+
+													$(
+														'[id="user_registration_form_setting_default_phone_field"] option[value="' +
+														removed_item +
 															'"]'
 													).remove();
 
@@ -3233,6 +3549,49 @@
 										field_label +
 										" </option>"
 								);
+							}
+
+
+							// Handle Drag Phone field option set for sms verification field list.
+							if('phone' === field_key){
+
+								var phone_format = $(this).parent().find('.ur-general-setting-select-format').find("[data-field='phone_format']").val();
+
+								if( 0 >= $('#user_registration_form_setting_default_phone_field').length ){
+									var html = '<div class="form-row ur-enhanced-select" id="user_registration_form_setting_default_phone_field_field" data-priority="">';
+									html += '<label for="user_registration_form_setting_default_phone_field" class="ur-label">'+user_registration_form_builder_data.i18n_admin.i18n_default_phone_field+'</label>';
+									html += '<select data-rules="" data-id="user_registration_form_setting_default_phone_field" name="user_registration_form_setting_default_phone_field" id="user_registration_form_setting_default_phone_field" class="select " data-allow_clear="true" data-placeholder="">';
+									html += '<option value="'+field_name+'" data-phone-format="'+phone_format+'">'+field_label+'</option>';
+									html += '</select></div>';
+									$("#user_registration_form_setting_login_options_field").after(html);
+
+									// 	Hide SMS Verification phone field mapping setting if not set to sms verification
+									if (
+										$("#user_registration_form_setting_login_options").val() ===
+											"sms_verification"
+									) {
+										$("#user_registration_form_setting_default_phone_field").parent()
+										.show();
+									} else {
+										$("#user_registration_form_setting_default_phone_field")
+											.parent()
+											.hide();
+									}
+								}else{
+									$(
+										'#user_registration_form_setting_default_phone_field option[value="' +
+										field_name +
+										'"]'
+									).remove();
+
+									$("#user_registration_form_setting_default_phone_field").append(
+										'<option value ="' +
+										field_name +
+										'" data-phone-format="'+phone_format+'">' +
+										field_label +
+										" </option>"
+									);
+								}
 							}
 						}
 					}
@@ -3481,6 +3840,24 @@
 								URFormBuilder.trigger_general_setting_field_name(
 									$(this)
 								);
+							});
+						case "phone_format":
+							$this_obj.on("change", function () {
+								var wrapper = $(".ur-selected-item.ur-item-active");
+
+								var old_field_name = wrapper
+									.find(".ur-general-setting-block")
+									.find(
+										'input[data-field="field_name"]'
+									)
+									.attr("value");
+
+								// Change Field Name of field in Form Setting Default Phone field for SMS Verification.
+								$(
+									'[id="user_registration_form_setting_default_phone_field"] option[value="' +
+										old_field_name +
+										'"]'
+								).attr("data-phone-format", $this_obj.val());
 							});
 						case "default_value":
 							$this_obj.on("change", function () {
@@ -4472,6 +4849,13 @@
 						field_name +
 						'"]'
 				).text($label.val());
+
+				// Change label of field in Form Setting Default Phone field for SMS Verification.
+				$(
+					'[id="user_registration_form_setting_default_phone_field"] option[value="' +
+						field_name +
+						'"]'
+				).text($label.val());
 			},
 			/**
 			 * Reflects changes in field name field of field settings into selected field in form builder area.
@@ -4503,6 +4887,13 @@
 				// Change Field Name of field in Form Setting Conditionally Assign User Role.
 				$(
 					'[class*="urcl-field-conditional-field-select"] option[value="' +
+						old_field_name +
+						'"]'
+				).attr("value", $label.val());
+
+				// Change Field Name of field in Form Setting Default Phone field for SMS Verification.
+				$(
+					'[id="user_registration_form_setting_default_phone_field"] option[value="' +
 						old_field_name +
 						'"]'
 				).attr("value", $label.val());
@@ -6135,6 +6526,66 @@
 			target_pattern_input.val(input_value);
 		}
 
+		/**
+		 * Displays a feature notice if user try to delete the password_field.
+		 */
+		function show_feature_notice(field_key ,label) {
+			var isPro = user_registration_form_builder_data.isPro;
+			var cancelBtn = true
+			if ( 'user_pass' === field_key  ){
+				if( isPro ){
+					var description_message = user_registration_form_builder_data.i18n_admin.i18n_auto_generate_password;
+					var confirmButtonText =user_registration_form_builder_data.i18n_admin.i18n_learn_more;
+					var btn_link = user_registration_form_builder_data.ur_remove_password_field_link;
+			}else{
+					var description_message = user_registration_form_builder_data.i18n_admin.i18n_delete_pass_available_in_pro;
+					var confirmButtonText = ur_setup_params.upgrade_button;
+					var btn_link = user_registration_form_builder_data.ur_upgrade_plan_link;
+				}
+			}else if('user_email' === field_key){
+				var description_message = user_registration_form_builder_data.i18n_admin.i18n_default_cannot_delete_message;
+				var confirmButtonText = user_registration_form_builder_data.i18n_admin.i18n_ok;
+				cancelBtn = false
+			}
+			else{
+				var description_message = user_registration_form_builder_data.i18n_admin.i18n_user_email_and_password_fields_are_required_to_create_a_registration_form;
+				var confirmButtonText = user_registration_form_builder_data.i18n_admin.i18n_ok;
+				cancelBtn = false
+			}
+
+			var icon = '<i class="dashicons dashicons-trash" ></i>';
+			if( label !== '' ){
+				var title_message =user_registration_form_builder_data.i18n_admin.i18n_this_field_is_required;
+				var title =
+				icon +
+				'<span class="user-registration-swal2-modal__title">'+ label + title_message
+				;
+			}else{
+				var title_message = user_registration_form_builder_data.i18n_admin.i18n_cannot_delete_row;
+				var title =
+				icon +
+				'<span class="user-registration-swal2-modal__title">'+ title_message
+				;
+			}
+
+			Swal.fire({
+				customClass:
+					"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-upgrade",
+				title: title,
+				text: description_message,
+				showCancelButton: cancelBtn,
+				cancelButtonText:user_registration_form_builder_data.i18n_admin
+								.i18n_choice_cancel,
+				showConfirmButton: true,
+				confirmButtonText: confirmButtonText,
+				confirmButtonColor: "#475bb2 !important",
+
+			}).then(function (result) {
+				if (result.isConfirmed && btn_link) {
+					window.open(btn_link, "_blank");
+				}
+		});
+		}
 		/**
 		 * This block of code is for the "Selected Countries" option of "Country" field
 		 *

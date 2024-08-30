@@ -124,7 +124,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 			$duplicate_link = admin_url( 'admin.php?page=user-registration&action=duplicate&nonce=' . $duplicate_nonce . '&post-id=' . $row->ID );
 
 			if ( 'trash' !== $post_status ) {
-				$actions['view'] = '<a href="' . esc_url( $preview_link ) . '" rel="bookmark" target="_blank">' . esc_html__( 'Preview', 'user-registration' ) . '</a>';
+				$actions['view'] = '<a href="' . esc_url( $preview_link ) . '" rel="bookmark" rel="noreferrer noopener" target="_blank">' . esc_html__( 'Preview', 'user-registration' ) . '</a>';
 			}
 
 			if ( 'publish' === $post_status ) {

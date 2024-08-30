@@ -341,6 +341,7 @@ class UR_Shortcodes {
 		$content         = apply_filters( 'user_registration_process_smart_tags', $form_json_data, $values, array() );
 		$form_data_array = json_decode( $content );
 		$form_row_ids    = '';
+		$form_row_data   = array();
 
 		if ( ! empty( $form_data_array ) ) {
 			$form_row_ids  = get_post_meta( $form_id, 'user_registration_form_row_ids', true );

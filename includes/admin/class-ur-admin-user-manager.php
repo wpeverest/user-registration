@@ -174,11 +174,26 @@ class UR_Admin_User_Manager {
 			return $this->user_status;
 		}
 
+		$user_login_option                              = get_user_meta( $this->user->ID, 'ur_login_option', true );
 		$user_status                                    = get_user_meta( $this->user->ID, 'ur_user_status', true );
 		$user_email_status                              = get_user_meta( $this->user->ID, 'ur_confirm_email', true );
 		$admin_approval_after_email_confirmation_status = get_user_meta( $this->user->ID, 'ur_admin_approval_after_email_confirmation', true );
 
 		$result = '';
+
+		if('sms_verification' === $user_login_option ){
+			/**
+			 * Case: SMS Verification.
+			 */
+			$this->user_status = $user_status;
+
+			$result = array(
+				'login_option' => $user_login_option,
+				'user_status'  => $user_status,
+			);
+			return $result;
+
+		}
 
 		if ( '' === $user_status && '' === $user_email_status ) {
 			// If the exact_value is true, allow to understand if an user has status "approved" or has registered when the plugin wash not active.

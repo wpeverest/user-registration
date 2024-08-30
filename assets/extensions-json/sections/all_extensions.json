@@ -30,6 +30,35 @@
       ],
       "released_date": "22/09/2017"
     },
+	{
+	  "title": "Repeater Fields",
+	  "slug" : "user-registration-repeater-fields",
+	  "name" : "User Registration Repeater Fields",
+	  "image": "extensions-json/sections/images/repeater-fields.png",
+	  "excerpt": "Allow users to duplicate fields effortlessly. Perfect for collecting information like family members, certifications, etc.",
+	  "link": "https://wpuserregistration.com/features/repeater-fields/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+	  "plan" : [
+		  "plus",
+		  "professional",
+		  "themegrill agency"
+	  ],
+	  "released_date": "01/08/2024"
+	},
+	{
+	  "title": "Membership",
+	  "slug" : "user-registration-membership",
+	  "name" : "User Registration Membership",
+	  "image": "extensions-json/sections/images/membership.png",
+	  "excerpt": "Create custom membership plans and deliver content accordingly with User Registration’s Membership add-on with specific website and content access.",
+	  "link": "https://wpuserregistration.com/features/membership/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+	  "plan" : [
+		"personal",
+		"plus",
+		"professional",
+		"themegrill agency"
+	  ],
+	  "released_date": "01/08/2024"
+  	},
     {
       "title": "Customize My Account",
       "slug" : "user-registration-customize-my-account",
@@ -417,46 +446,47 @@
       "released_date": "12/12/2023"
 	  },
 	  {
-      "title": "Google Sheets",
-      "slug" : "user-registration-google-sheets",
-      "name" : "User Registration Google Sheets",
-      "image": "extensions-json/sections/images/google-sheets.png",
-      "excerpt": "Seamlessly send registration form data from user Registration to Google Sheets directly after form submission.",
-      "link": "https://wpuserregistration.com/features/google-sheets/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
-      "plan" : [
-        "plus",
-        "professional",
-        "themegrill agency"
-      ],
-      "released_date": "30/05/2024"
+		"title": "Google Sheets",
+		"slug" : "user-registration-google-sheets",
+		"name" : "User Registration Google Sheets",
+		"image": "extensions-json/sections/images/google-sheets.png",
+		"excerpt": "Seamlessly send registration form data from user Registration to Google Sheets directly after form submission.",
+		"link": "https://wpuserregistration.com/features/google-sheets/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+		"plan" : [
+			"plus",
+			"professional",
+			"themegrill agency"
+		],
+		"released_date": "30/05/2024"
 	  },
 	  {
-      "title": "Cloud Storage",
-      "slug" : "user-registration-cloud-storage",
-      "name" : "User Registration Cloud Storage",
-      "image": "extensions-json/sections/images/cloud-storage.png",
-      "excerpt": "Directly send file upload data from User Registration to Integrated Cloud after registration form submission.",
-      "link": "https://wpuserregistration.com/features/cloud-storage/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
-      "plan" : [
-        "plus",
-        "professional",
-        "themegrill agency"
-      ],
-      "released_date": "31/07/2024"
+		"title": "Cloud Storage",
+		"slug" : "user-registration-cloud-storage",
+		"name" : "User Registration Cloud Storage",
+		"image": "extensions-json/sections/images/cloud-storage.png",
+		"excerpt": "Directly send file upload data from User Registration to Integrated Cloud after registration form submission.",
+		"link": "https://wpuserregistration.com/features/cloud-storage/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+		"plan" : [
+			"personal",
+			"plus",
+			"professional",
+			"themegrill agency"
+		],
+      	"released_date": "01/08/2024"
 	  },
 	  {
-      "title": "Repeater Fields",
-      "slug" : "user-registration-repeater-fields",
-      "name" : "User Registration Repeater Fields",
-      "image": "extensions-json/sections/images/repeater-fields.png",
-      "excerpt": "Allow users to duplicate fields effortlessly. Perfect for collecting information like family members, certifications, etc.",
-      "link": "https://wpuserregistration.com/features/repeater-fields/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
-      "plan" : [
-        "plus",
-        "professional",
-        "themegrill agency"
-      ],
-      "released_date": "31/07/2024"
+		"title": "Authorize.net Payment",
+		"slug" : "user-registration-authorize-net",
+		"name" : "User Registration Authorize.net",
+		"image": "extensions-json/sections/images/authorize-net.png",
+		"excerpt": "Accept credit card, online payments using the Authorize.net payment gateway. Secure payment acceptance, your way.",
+		"link": "https://wpuserregistration.com/features/authorize-net/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+		"plan" : [
+			"plus",
+			"professional",
+			"themegrill agency"
+		],
+      	"released_date": "01/08/2024"
 	  }
   ]
 }
