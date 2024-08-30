@@ -597,7 +597,7 @@ function promotional_notice_links( $notice_target_links, $is_permanent_dismiss )
 			foreach ( $notice_target_links as $key => $link ) {
 				if ( ! empty( $link['link'] ) && ! is_string( $link['link'] ) ) {
 					$url          = isset( $link['link']['link_function'] ) ? $link['link']['link_function'] : 'admin_url';
-					$url          = ( 'admin_url' === $url ? admin_url() : ( 'home_url' === $url ? home_url() : '' ) );
+					$url          = function_exists( $url ) ? $url() : '';
 					$link['link'] = $url . ( isset( $link['link']['link_params'] ) ? $link['link']['link_params'] : '#' );
 				}
 				?>
