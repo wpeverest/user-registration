@@ -313,7 +313,7 @@ class UR_AJAX {
 		}
 
 		// Current user id.
-		$user_id = get_current_user_id();
+		$user_id = !empty($_REQUEST['user_id']) ? absint($_REQUEST['user_id']) : get_current_user_id();
 
 		if ( $user_id <= 0 ) {
 			return;
@@ -388,9 +388,9 @@ class UR_AJAX {
 		 * @param array $profile User profile data.
 		 * @param array $form_data The form data.
 		 * @param int $form_id The form ID.
+		 * @param int $user_id The user id.
 		 */
-		do_action( 'user_registration_validate_profile_update', $profile, $form_data, $form_id );
-
+		do_action( 'user_registration_validate_profile_update', $profile, $form_data, $form_id, $user_id );
 		/**
 		 * Action after the save profile validation.
 		 *
@@ -408,7 +408,7 @@ class UR_AJAX {
 			$is_email_change_confirmation = (bool) apply_filters( 'user_registration_email_change_confirmation', true );
 			$email_updated                = false;
 			$pending_email                = '';
-			$user                         = wp_get_current_user();
+			$user                         = get_userdata( $user_id );
 			/**
 			 * Filter to modify the field settings.
 			 *
@@ -452,7 +452,7 @@ class UR_AJAX {
 			}
 
 			if ( count( $user_data ) > 0 ) {
-				$user_data['ID'] = get_current_user_id();
+				$user_data['ID'] = $user_id;
 				wp_update_user( $user_data );
 			}
 			/**
