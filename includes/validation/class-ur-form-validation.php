@@ -54,7 +54,7 @@ class UR_Form_Validation extends UR_Validation {
 	 */
 	public function __construct() {
 		add_action( 'user_registration_validate_form_data', array( $this, 'validate_form' ), 10, 6 );
-		add_action( 'user_registration_validate_profile_update', array( $this, 'validate_update_profile' ), 10, 3 );
+		add_action( 'user_registration_validate_profile_update', array( $this, 'validate_update_profile' ), 10, 4 );
 	}
 
 
