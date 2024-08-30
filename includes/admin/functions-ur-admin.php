@@ -640,7 +640,7 @@ if ( ! function_exists( 'ur_check_all_functions' ) ) {
 				if ( isset( $value['params'] ) ) {
 					$params = explode( ',', $value['params'] );
 				}
-				$result = call_user_func_array( $key, $params );
+				$result = function_exists( $key ) ? call_user_func_array( $key, $params ) : '';
 
 				$expected_value        = isset( $value['expected_value'] ) ? $value['expected_value'] : '';
 				$condition_to_validate = isset( $value['condition_to_validate'] ) ? $value['condition_to_validate'] : '==';
