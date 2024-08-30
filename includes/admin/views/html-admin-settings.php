@@ -182,15 +182,13 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 									$content  .= '<div class="user-registration-settings-sidebar__body--list-item card ' . esc_attr( $completed ? 'completed' : '' ) . '">';
 
 									if ( $completed ) {
-										$content .= '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none">
-														<rect x="1" y="1" width="20" height="20" rx="10" fill="#6DBA50"/>
-														<rect x="1" y="1" width="20" height="20" rx="10" stroke="#6DBA50" stroke-width="1.5"/>
-														<path d="M16.3327 7L8.99935 14.3333L5.66602 11" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+										$content .= '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+														<circle cx="10" cy="10" r="10" fill="#6DBA50"/>
+														<path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="m15.333 6-7.334 7.333L4.666 10"/>
 													</svg>';
 									} else {
-										$content .= '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none">
-														<rect x="1" y="2" width="20" height="20" rx="10" fill="white"/>
-														<rect x="1" y="2" width="20" height="20" rx="10" stroke="#999999" stroke-width="1.5"/>
+										$content .= '<svg xmlns="http://www.w3.org/2000/svg" fill="#999" viewBox="0 0 20 20">
+														<path fill-rule="evenodd" d="M10 1.395a8.605 8.605 0 1 0 0 17.21 8.605 8.605 0 0 0 0-17.21ZM0 10C0 4.477 4.477 0 10 0s10 4.477 10 10-4.477 10-10 10S0 15.523 0 10Z" clip-rule="evenodd"/>
 													</svg>';
 									}
 
@@ -237,8 +235,8 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 							foreach ( $premium_benefits as $list ) {
 								$content .= '<div class="user-registration-settings-sidebar__body--list-item">';
 
-								$content .= '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="22" viewBox="0 0 22 22" fill="none">
-												<path d="M7.5 17L12.5 12L7.5 7" stroke="#383838" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+								$content .= '<svg xmlns="http://www.w3.org/2000/svg" fill="#383838" viewBox="0 0 20 20">
+												<path fill-rule="evenodd" d="M6.91 4.41a.833.833 0 0 1 1.179 0l5 5a.833.833 0 0 1 0 1.179l-5 5A.833.833 0 0 1 6.91 14.41L11.32 10 6.91 5.588a.833.833 0 0 1 0-1.179Z" clip-rule="evenodd"/>
 											</svg>';
 
 								$content .= '<span>';

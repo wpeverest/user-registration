@@ -2618,7 +2618,7 @@ body {
 		position: relative;
 		display: inline-block;
 		width: 36px;
-		height: 16px;
+		height: 20px;
 
 		input {
 			position: relative;
@@ -2636,7 +2636,7 @@ body {
 			}
 
 			&:checked + .slider::before {
-				transform: translateX(14px);
+				transform: translateX(16px);
 			}
 		}
 
@@ -3925,11 +3925,7 @@ a.button.ur-smart-tags-list-button {
 					display: flex;
 					align-items: center;
 					justify-content: space-between;
-					gap: 10px;
-
-					.user-registration-toggle-form {
-						height: unset !important;
-					}
+					gap: $spacing_10px;
 
 					span.user-registration-toggle-text {
 						font-size: 16px;
@@ -4410,7 +4406,8 @@ body.user-registration {
 	}
 
 	#wpbody-content {
-		background: #f0f0f1;
+		background: #EFF2F6;
+		padding-bottom: $spacing_30px;
 
 		#screen-meta-links {
 			display: none;
@@ -5946,16 +5943,7 @@ body {
 			margin-right: -910px;
 			display: none;
 		}
-	}
-
-	&.ur-settings-sidebar-show {
-		.user-registration-settings-sidebar-container {
-			display: block;
-			width: 300px;
-			max-width: 100%;
-			padding: 18px 10px 26px 10px;
-		}
-	}
+	}	
 }
 
 .ur-embed-form-button {
