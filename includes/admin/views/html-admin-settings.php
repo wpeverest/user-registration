@@ -102,15 +102,21 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 								}
 								?>
 							</div>
-							<div class="user-registration-options-header--top__right">
-								<div class="ur-toggle-section">
-									<span class="user-registration-toggle-form">
-										<input type="checkbox" name="user_registration_enable_sidebar" id="user_registration_hide_show_sidebar" <?php echo esc_attr( $is_settings_sidebar_enabled ? 'checked="checked"' : '' ); ?>>
-										<span class="slider round active"></span>
-									</span>
+							<?php
+							if ( ! $is_pro_active || ! $quick_setup_completed ) {
+								?>
+								<div class="user-registration-options-header--top__right">
+									<div class="ur-toggle-section">
+										<span class="user-registration-toggle-form">
+											<input type="checkbox" name="user_registration_enable_sidebar" id="user_registration_hide_show_sidebar" <?php echo esc_attr( $is_settings_sidebar_enabled ? 'checked="checked"' : '' ); ?>>
+											<span class="slider round active"></span>
+										</span>
+									</div>
+									<span class="user-registration-toggle-text"><?php printf( esc_html__( '%s Sidebar', 'user-registration' ), $is_settings_sidebar_enabled ? 'Show' : 'Hide' ); ?></span>
 								</div>
-								<span class="user-registration-toggle-text"><?php printf( esc_html__( '%s Sidebar', 'user-registration' ), $is_settings_sidebar_enabled ? 'Show' : 'Hide' ); ?></span>
-							</div>
+								<?php
+							}
+							?>
 						</div>
 						<div class="user-registration-options-header--bottom" >
 							<div class="ur-scroll-ui">

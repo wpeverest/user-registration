@@ -1001,8 +1001,13 @@
 			}
 		});
 
+		var skipBeforeUnloadPopup = false;
+		$(form).on("submit", function () {
+			skipBeforeUnloadPopup = true;
+		});
+
 		$(window).on("beforeunload", function (event) {
-			if (formChanged) {
+			if (formChanged && !skipBeforeUnloadPopup) {
 				event.preventDefault();
 				event.returnValue = "";
 			} else {
