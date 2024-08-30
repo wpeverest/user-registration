@@ -207,10 +207,9 @@ class UR_Admin_Settings {
 					'captcha_success'   => esc_html__( 'Captcha Test Successful !', 'user-registration' ),
 					'captcha_failed'    => esc_html__( 'Some error occured. Please verify that the keys you entered are valid.', 'user-registration' ),
 					'unsaved_changes'   => esc_html__( 'You have some unsaved changes. Please save and try again.', 'user-registration' ),
-					'pro_feature_title' => esc_html__( 'is a PRO Feature', 'user-registration' ),
+					'pro_feature_title' => esc_html__( 'is a Pro Feature', 'user-registration' ),
 					'upgrade_message'   => esc_html__(
-						"We're sorry, The %title% is not available on your plan.
-													Please upgrade to the PRO plan to unlock all these awesome features.",
+						'We apologize, but %title% is not available with the free version. To access this fantastic features, please consider upgrading to the %plan%.',
 						'user-registration'
 					),
 					'upgrade_plan'      => esc_html__( 'Upgrade Plan', 'user-registration' ),
@@ -383,10 +382,15 @@ class UR_Admin_Settings {
 					}
 
 					if ( 'accordian' === $section['type'] ) {
+						$available_in = isset( $section['available_in'] ) ? sanitize_text_field( wp_unslash( $section['available_in'] ) ) : '';
+
 						if ( isset( $section['video_id'] ) ) {
 							$inactive_class = 'user-registration-inactive-addon';
-							$extras         = 'data-title="' . $section['title'] . '" data-id="' . $section['id'] . '" data-video="' . $section['video_id'] . '"';
-							$settings      .= '<div class="user-registration-card ur-mb-2 ' . $inactive_class . '" ' . $extras . '>';
+							$extras         = 'data-title="' . esc_attr( $section['title'] ) . '"';
+							$extras        .= 'data-id="' . esc_attr( $section['id'] ) . '"';
+							$extras        .= 'data-video="' . esc_attr( $section['video_id'] ) . '"';
+							$extras        .= 'data-available-in="' . esc_attr( $available_in ) . '"';
+							$settings      .= '<div class="user-registration-card ur-mb-2 ' . esc_attr( $inactive_class ) . '" ' . $extras . '>';
 						} else {
 							$settings .= '<div class="user-registration-card ur-mb-2">';
 						}
