@@ -25,11 +25,11 @@ class UR_Admin_Dashboard {
 			update_option( 'user_registration_first_time_activation_flag', false );
 			update_option( 'user_registration_onboarding_skipped', true );
 
+			error_log( print_r( $_REQUEST, true ) );
+
 			if ( isset( $_REQUEST['activeStep'] ) ) {
 				update_option( 'user_registration_onboarding_skipped_step', sanitize_text_field( wp_unslash( $_REQUEST['activeStep'] ) ) );
 			} else {
-				update_option( 'user_registration_onboarding_skipped', true );
-				update_option( 'user_registration_first_time_activation_flag', false );
 				delete_option( 'user_registration_onboarding_skipped_step' );
 			}
 		}

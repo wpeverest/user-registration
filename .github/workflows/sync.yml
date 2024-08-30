@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - master
+      - enhance/quick-setup-tab
     workflow_dispatch:
 jobs:
   sync:

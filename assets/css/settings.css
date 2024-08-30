@@ -73,7 +73,7 @@
 
 .user-registration-settings {
   display: flex;
-  gap: 15px; }
+  gap: 24px; }
   .user-registration-settings .user-registration-settings-wrapper {
     display: flex;
     flex-direction: row;
@@ -322,99 +322,137 @@
             opacity: 1; }
           .user-registration-settings .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link:last-child {
             border-bottom: 1px solid #e1e1e1; }
-  .user-registration-settings .user-registration-settings-sidebar {
-    background-color: #ffffff;
+  .user-registration-settings .user-registration-settings-sidebar-container {
+    display: flex;
+    gap: 32px;
+    flex-direction: column;
+    background-color: #f0f0f1;
     max-width: 100%;
-    padding: 18px 10px 26px 25px;
+    padding: 24px 8px 26px 8px;
     transition: all .3s; }
-    .user-registration-settings .user-registration-settings-sidebar h2 {
-      color: #222222;
-      font-size: 18px;
-      font-weight: 600;
-      line-height: 140%;
-      margin: 0;
-      padding-bottom: 16px;
-      margin-bottom: 20px;
-      border-bottom: 1px solid #EEE8F7; }
-    .user-registration-settings .user-registration-settings-sidebar p {
-      margin: 0;
-      color: #383838;
-      font-size: 15px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 24px; }
-    .user-registration-settings .user-registration-settings-sidebar h3 {
-      color: #383838;
-      font-size: 16px;
-      font-weight: 600;
-      line-height: 24px;
-      margin-top: 20px;
-      margin-bottom: 12px; }
-    .user-registration-settings .user-registration-settings-sidebar ul {
-      margin: 0;
-      margin-bottom: 16px;
+    .user-registration-settings .user-registration-settings-sidebar-container .user-registration-settings-sidebar {
       display: flex;
       flex-direction: column;
-      gap: 12px; }
-      .user-registration-settings .user-registration-settings-sidebar ul li {
+      gap: 20px; }
+      .user-registration-settings .user-registration-settings-sidebar-container .user-registration-settings-sidebar h2 {
+        color: #222222;
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 140%;
+        margin: 0;
+        padding-bottom: 16px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #EEE8F7; }
+      .user-registration-settings .user-registration-settings-sidebar-container .user-registration-settings-sidebar p {
+        margin: 0;
         color: #383838;
-        font-size: 15px;
+        font-size: 16px;
+        font-style: normal;
         font-weight: 400;
-        line-height: 23px;
-        margin-bottom: 0;
-        padding-left: 26px;
-        position: relative; }
-        .user-registration-settings .user-registration-settings-sidebar ul li::before {
-          content: "";
-          background-image: url("../images/icons/premium-list-check-icon.svg");
-          background-repeat: no-repeat;
-          background-position: center;
-          background-size: 100%;
-          width: 18px;
-          height: 18px;
-          position: absolute;
-          left: 0;
-          top: 2px; }
-      .user-registration-settings .user-registration-settings-sidebar ul.user-registration-quick-setup-tab-list li.completed {
-        text-decoration: line-through; }
-        .user-registration-settings .user-registration-settings-sidebar ul.user-registration-quick-setup-tab-list li.completed::before {
-          content: '\2713'; }
-      .user-registration-settings .user-registration-settings-sidebar ul.user-registration-quick-setup-tab-list li::before {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 20px;
-        height: 20px;
+        line-height: 24px; }
+      .user-registration-settings .user-registration-settings-sidebar-container .user-registration-settings-sidebar__header {
+        border-bottom: 1px solid #e1e1e1;
+        padding-bottom: 18px; }
+        .user-registration-settings .user-registration-settings-sidebar-container .user-registration-settings-sidebar__header h3 {
+          color: #222222;
+          font-size: 20px;
+          font-weight: 600;
+          line-height: 30px;
+          margin: 0px; }
+      .user-registration-settings .user-registration-settings-sidebar-container .user-registration-settings-sidebar__body {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #475bb2;
-        border: 1px solid #475bb2;
-        background: #ffffff;
-        border-radius: 50%;
-        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3); }
-    .user-registration-settings .user-registration-settings-sidebar a {
-      border-radius: 3px;
-      border: 1px solid #475bb2;
-      background: #475bb2;
-      padding: 10px 16px;
-      display: block;
-      color: #ffffff;
-      font-size: 14px;
-      font-style: normal;
-      font-weight: 500;
-      line-height: 24px;
-      text-decoration: none;
-      letter-spacing: .05px;
-      width: max-content;
-      margin: 20px 0;
-      transition: all .3s; }
-      .user-registration-settings .user-registration-settings-sidebar a:hover {
-        background: #2e44a1;
-        border-color: #2e44a1; }
-    .user-registration-settings .user-registration-settings-sidebar.everest-forms-hidden {
-      margin-right: -325px;
-      display: unset; }
+        flex-direction: column;
+        gap: 20px; }
+        .user-registration-settings .user-registration-settings-sidebar-container .user-registration-settings-sidebar__body--list {
+          margin: 0;
+          margin-bottom: 16px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px; }
+          .user-registration-settings .user-registration-settings-sidebar-container .user-registration-settings-sidebar__body--list.normal {
+            gap: 16px; }
+            .user-registration-settings .user-registration-settings-sidebar-container .user-registration-settings-sidebar__body--list.normal-item {
+              gap: 8px; }
+          .user-registration-settings .user-registration-settings-sidebar-container .user-registration-settings-sidebar__body--list-item {
+            display: flex;
+            color: #383838;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 24px;
+            margin-bottom: 0;
+            gap: 12px; }
+            .user-registration-settings .user-registration-settings-sidebar-container .user-registration-settings-sidebar__body--list-item.card {
+              padding: 12px 16px;
+              border-radius: 6px;
+              background-color: #ffffff;
+              border: none;
+              margin-top: 0px; }
+            .user-registration-settings .user-registration-settings-sidebar-container .user-registration-settings-sidebar__body--list-item.completed {
+              text-decoration: line-through;
+              color: #999999; }
+            .user-registration-settings .user-registration-settings-sidebar-container .user-registration-settings-sidebar__body--list-item svg {
+              position: relative;
+              top: 2px; }
+            .user-registration-settings .user-registration-settings-sidebar-container .user-registration-settings-sidebar__body--list-item .button {
+              border-radius: 3px;
+              border: 1px solid #475bb2;
+              background: #475bb2;
+              padding: 5px 8px;
+              display: block;
+              color: #ffffff;
+              font-size: 14px;
+              font-style: normal;
+              font-weight: 500;
+              line-height: 24px;
+              text-decoration: none;
+              letter-spacing: .05px;
+              width: max-content;
+              margin: 20px 0;
+              transition: all .3s; }
+              .user-registration-settings .user-registration-settings-sidebar-container .user-registration-settings-sidebar__body--list-item .button:hover {
+                background: #2e44a1;
+                border-color: #2e44a1; }
+            .user-registration-settings .user-registration-settings-sidebar-container .user-registration-settings-sidebar__body--list-item a:not(.button) {
+              text-decoration: none; }
+              .user-registration-settings .user-registration-settings-sidebar-container .user-registration-settings-sidebar__body--list-item a:not(.button) svg {
+                position: relative;
+                top: 6px;
+                margin-left: 2px; }
+      .user-registration-settings .user-registration-settings-sidebar-container .user-registration-settings-sidebar__footer {
+        display: flex;
+        flex-direction: column;
+        gap: 32px; }
+        .user-registration-settings .user-registration-settings-sidebar-container .user-registration-settings-sidebar__footer--card {
+          background-color: #6969DE;
+          padding: 40px;
+          border-radius: 12px;
+          display: flex;
+          gap: 24px;
+          flex-direction: column;
+          align-items: center; }
+          .user-registration-settings .user-registration-settings-sidebar-container .user-registration-settings-sidebar__footer--card p {
+            font-size: 18px;
+            line-height: 27px;
+            font-weight: 600;
+            text-align: center;
+            color: #FFFFFF;
+            padding: 0px 20px; }
+          .user-registration-settings .user-registration-settings-sidebar-container .user-registration-settings-sidebar__footer--card a {
+            text-decoration: none;
+            padding: 12px;
+            background: #fff;
+            border-radius: 2px;
+            color: #3F4D8A;
+            font-weight: 600;
+            transition: all .3s ease-in-out;
+            width: 75%;
+            text-align: center;
+            border-radius: 6px;
+            font-size: 16px;
+            line-height: 24px; }
+            .user-registration-settings .user-registration-settings-sidebar-container .user-registration-settings-sidebar__footer--card a:hover {
+              background-color: #475bb2;
+              color: #fff; }
 
 .user-registration-settings-container {
   flex: auto;
@@ -1095,7 +1133,7 @@
 .user-registration select {
   background-image: linear-gradient(45deg, transparent 50%, gray 50%), linear-gradient(135deg, gray 50%, transparent 50%);
   background-position: calc(100% - 15px) calc(1em + 2px), calc(100% - 10px) calc(1em + 2px), calc(100% - 2.5em) 0.5em;
-  background-size: 5px 5px, 5px 5px, 1px 1.5em;
+  background-size: 5px 5px, 5px 5px, 1px 1.5em;
   background-repeat: no-repeat; }
   .user-registration select:focus {
     outline: none;

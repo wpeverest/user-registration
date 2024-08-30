@@ -3729,7 +3729,7 @@ if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
 
 					/* translators: %s: License Plan Name. */
 					$tooltip_html = sprintf( __( 'You have been subscribed to %s plan. Please upgrade to higher plans to use this feature.', 'user-registration' ), ucfirst( $license_plan ) );
-					$button       = '<a rel="noreferrer noopener" target="_blank" href="https://wpuserregistration.com/pricing/?utm_source=settings-sidebar&utm_medium=premium-addon-tooltip&utm_campaign=' . UR()->utm_campaign . '">' . esc_html__( 'Upgrade Plan', 'user-registration' ) . '</a>';
+					$button       = '<a rel="noreferrer noopener" target="_blank" href="https://wpuserregistration.com/pricing/?utm_source=settings-sidebar-right&utm_medium=premium-addon-tooltip&utm_campaign=' . UR()->utm_campaign . '">' . esc_html__( 'Upgrade Plan', 'user-registration' ) . '</a>';
 					array_push( $tabs_to_display, $tab );
 				} else {
 					$plugin_name = $detail['name'];
@@ -3759,7 +3759,7 @@ if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
 				}
 
 				$tooltip_html = __( 'You are currently using the free version of our plugin. Please upgrade to premium version to use this feature.', 'user-registration' );
-				$button       = '<a rel="noreferrer noopener" target="_blank" href="https://wpuserregistration.com/pricing/?utm_source=settings-sidebar&utm_medium=premium-addon-tooltip&utm_campaign=' . UR()->utm_campaign . '">' . esc_html__( 'Upgrade to Pro', 'user-registration' ) . '</a>';
+				$button       = '<a rel="noreferrer noopener" target="_blank" href="https://wpuserregistration.com/pricing/?utm_source=settings-sidebar-right&utm_medium=premium-addon-tooltip&utm_campaign=' . UR()->utm_campaign . '">' . esc_html__( 'Upgrade to Pro', 'user-registration' ) . '</a>';
 				array_push( $tabs_to_display, $tab );
 			}
 
@@ -5955,6 +5955,27 @@ if ( ! function_exists( 'ur_current_url' ) ) {
 	}
 }
 
+add_action(
+	'admin_head',
+	function () {
+		$js = <<<JS
+		const isSidebarEnabled = localStorage.getItem( 'isSidebarEnabled' );
+
+		const interval = setInterval( () => {
+			if ( document.body ) {
+				clearInterval(interval);
+				if ('true' === isSidebarEnabled) {
+					document.body.classList.add( 'ur-settings-sidebar-show' );
+				} else {
+					document.body.classList.add( 'ur-settings-sidebar-hidden' );
+				}
+			}
+		}, 1 );
+		JS;
+		wp_print_inline_script_tag( $js );
+	}
+);
+
 if ( ! function_exists( 'ur_quick_settings_tab_content' ) ) {
 
 	/**
@@ -5963,59 +5984,35 @@ if ( ! function_exists( 'ur_quick_settings_tab_content' ) ) {
 	function ur_quick_settings_tab_content() {
 		$default_form_page_id      = get_option( 'user_registration_default_form_page_id', false );
 		$registration_form_page_id = get_option( 'user_registration_registration_page_id', false );
+		$my_account_page_id        = get_option( 'user_registration_myaccount_page_id', false );
 		$prevent_core_login        = get_option( 'user_registration_login_options_prevent_core_login', false );
 		$captcha_setup             = get_option( 'user_registration_captcha_setting_recaptcha_version', false );
 		$anyone_can_register       = get_option( 'users_can_register', false );
-		$first_time_activation     = get_option( 'user_registration_first_time_activation_flag', false );
-
-		$onboarding_completed     = true;
-		$onboarding_complete_text = esc_html__( 'Setup wizard completed.', 'user-registration' );
-
-		if ( ! $first_time_activation ) {
-			$onboard_skipped      = get_option( 'user_registration_onboarding_skipped', false );
-			$onboard_skipped_step = get_option( 'user_registration_onboarding_skipped_step', false );
-
-			if ( $onboard_skipped && $onboard_skipped_step ) {
-				/* translators: %s: Continue wizard URL */
-				$onboarding_complete_text = sprintf( __( 'Setup wizard Skipped. <a href="%s">Continue Setup Wizard</a>', 'user-registration' ), esc_url( admin_url( '/admin.php?page=user-registration-welcome&tab=setup-wizard&step=' . $onboard_skipped_step . '' ) ) );
-				$onboarding_completed     = false;
-			} else {
-				$onboarding_completed = true;
-			}
-		} else {
-			$onboarding_completed = false;
-		}
-
-		$create_pages_button       = '';
-		$registration_form_page_id = false;
-		if ( ! $registration_form_page_id ) {
-			$create_pages_button = sprintf( __( '<a href="%s">Create Pages</a>', 'user-registration' ), esc_url( add_query_arg( 'install_user_registration_pages', 'true', admin_url( 'admin.php?page=user-registration-settings' ) ) ) );
-		}
 
 		$lists = array(
 			array(
-				'text'      => $onboarding_complete_text,
-				'completed' => $onboarding_completed,
+				'text'          => esc_html__( 'Create a registration form.', 'user-registration' ),
+				'completed'     => $default_form_page_id ? true : false,
+				'documentation' => esc_url_raw( "https://docs.wpuserregistration.com/docs/how-to-create-a-user-registration-form/?utm_source=settings-sidebar-right&utm_medium=quick-setup-card&utm_campaign='" . UR()->utm_campaign . "'" ),
 			),
 			array(
-				'text'      => esc_html__( 'Create a registration form.', 'user-registration' ),
-				'completed' => $default_form_page_id ? true : false,
-			),
-			array(
-				'text'      => esc_html__( 'Create registration and my account page.', 'user-registration' ) . ( ! $registration_form_page_id ? $create_pages_button : '' ),
-				'completed' => $registration_form_page_id ? true : false,
+				'text'          => esc_html__( 'Create registration and my account page.', 'user-registration' ),
+				'completed'     => $registration_form_page_id || $my_account_page_id ? true : false,
+				'documentation' => esc_url_raw( "https://docs.wpuserregistration.com/docs/how-to-show-account-profile/?utm_source=settings-sidebar-right&utm_medium=quick-setup-card&utm_campaign='" . UR()->utm_campaign . "'" ),
 			),
 			array(
 				'text'      => esc_html__( 'Enable anyone can register.', 'user-registration' ),
 				'completed' => ur_string_to_bool( $anyone_can_register ),
 			),
 			array(
-				'text'      => esc_html__( 'Disable WordPress default registration and login page.', 'user-registration' ),
-				'completed' => $prevent_core_login ? ur_string_to_bool( $prevent_core_login ) : false,
+				'text'          => esc_html__( 'Disable WordPress default registration and login page.', 'user-registration' ),
+				'completed'     => $prevent_core_login ? ur_string_to_bool( $prevent_core_login ) : false,
+				'documentation' => esc_url_raw( "https://docs.wpuserregistration.com/docs/how-to-hide-the-wordpress-default-login-page-and-use-user-registration-login-page/?utm_source=settings-sidebar-right&utm_medium=quick-setup-card&utm_campaign='" . UR()->utm_campaign . "'" ),
 			),
 			array(
-				'text'      => esc_html__( 'Setup spam protection mechanisms.', 'user-registration' ),
-				'completed' => $captcha_setup ? true : false,
+				'text'          => esc_html__( 'Setup spam protection mechanisms.', 'user-registration' ),
+				'completed'     => $captcha_setup ? true : false,
+				'documentation' => esc_url_raw( "https://docs.wpuserregistration.com/docs/how-to-integrate-google-recaptcha/?utm_source=settings-sidebar-right&utm_medium=quick-setup-card&utm_campaign='" . UR()->utm_campaign . "'" ),
 			),
 		);
 
@@ -6028,6 +6025,19 @@ if ( ! function_exists( 'ur_quick_settings_tab_content' ) ) {
 		}
 
 		if ( $completed_count === count( $lists ) ) {
+			update_option( 'user_registration_quick_setup_completed', true );
+		}
+
+		$activation_date   = get_option( 'user_registration_activated' );
+		$installation_date = get_option( 'user_registration_installation_date', $activation_date );
+
+		$days_to_validate = strtotime( $installation_date );
+		$days_to_validate = strtotime( '+15 day', $days_to_validate );
+		$days_to_validate = date_i18n( 'Y-m-d', $days_to_validate );
+
+		$current_date = date_i18n( 'Y-m-d' );
+
+		if ( $current_date > $days_to_validate ) {
 			update_option( 'user_registration_quick_setup_completed', true );
 		}
 

@@ -471,18 +471,14 @@ function App() {
 						disabled={disabledLink}
 						onClick={() => {
 							setDisabledLink(true);
-							if (
-								installPage.my_account_page.status ===
-								"installed"
-							) {
-								handleSaveSettings(
-									`${adminURL}admin.php?page=user-registration-dashboard`
-								);
-							} else {
-								handleSaveSettings(
-									`${adminURL}admin.php?page=user-registration-dashboard&end-setup-wizard=1`
-								);
-							}
+							var extraParams =
+								"my_account_settings" === activeStep.key ||
+								"final_step" === activeStep.key
+									? ""
+									: `activeStep=${activeStep.key}`;
+							handleSaveSettings(
+								`${adminURL}admin.php?page=user-registration-dashboard&end-setup-wizard=1&${extraParams}`
+							);
 						}}
 						mr={10}
 						ml={10}

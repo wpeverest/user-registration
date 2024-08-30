@@ -633,31 +633,44 @@
 			);
 		}
 	);
-		// Display the sync profile picture settings when the disable profile picture is checked and advanced fields is active.
-		$("#user_registration_disable_profile_picture").on(
-			"change",
-			function () {
-				var is_advanced_fields_active = parseInt(user_registration_settings_params.is_advanced_field_active);
-				if ($(this).prop("checked") && is_advanced_fields_active === 1) {
-					 $("#user_registration_sync_profile_picture").closest(".user-registration-global-settings").css("display", "flex");
-					} else {
-						$("#user_registration_sync_profile_picture").prop("checked", false);
-						$("#user_registration_sync_profile_picture").closest(".user-registration-global-settings").css("display", "none");
-					}
-			}
+	// Display the sync profile picture settings when the disable profile picture is checked and advanced fields is active.
+	$("#user_registration_disable_profile_picture").on("change", function () {
+		var is_advanced_fields_active = parseInt(
+			user_registration_settings_params.is_advanced_field_active
 		);
-		// If not checked on load hide the sync profile picture settings.
-		$("#user_registration_sync_profile_picture").ready(function () {
-			$this = $("#user_registration_sync_profile_picture");
-			if( $this.prop("checked") ) {
-				$this.closest(".user-registration-global-settings").css("display", "flex");
-			}else if($("#user_registration_disable_profile_picture").prop("checked") && parseInt(user_registration_settings_params.is_advanced_field_active) === 1) {
-				$this.closest(".user-registration-global-settings").css("display", "flex");
-			}else{
-				$this.closest(".user-registration-global-settings").css("display", "none");
-			}
-
-		});
+		if ($(this).prop("checked") && is_advanced_fields_active === 1) {
+			$("#user_registration_sync_profile_picture")
+				.closest(".user-registration-global-settings")
+				.css("display", "flex");
+		} else {
+			$("#user_registration_sync_profile_picture").prop("checked", false);
+			$("#user_registration_sync_profile_picture")
+				.closest(".user-registration-global-settings")
+				.css("display", "none");
+		}
+	});
+	// If not checked on load hide the sync profile picture settings.
+	$("#user_registration_sync_profile_picture").ready(function () {
+		$this = $("#user_registration_sync_profile_picture");
+		if ($this.prop("checked")) {
+			$this
+				.closest(".user-registration-global-settings")
+				.css("display", "flex");
+		} else if (
+			$("#user_registration_disable_profile_picture").prop("checked") &&
+			parseInt(
+				user_registration_settings_params.is_advanced_field_active
+			) === 1
+		) {
+			$this
+				.closest(".user-registration-global-settings")
+				.css("display", "flex");
+		} else {
+			$this
+				.closest(".user-registration-global-settings")
+				.css("display", "none");
+		}
+	});
 
 	// Change span with file name when user selects a file.
 	$(".user-registration-custom-file__input").on("change", function () {
@@ -937,51 +950,37 @@
 
 	// Function to handle changes in the premium sidebar.
 	$(document).ready(function () {
-		function handleSettingsSidebar() {
-			var isCheckboxChecked = $(
-				"#user_registration_hide_show_sidebar"
-			).is(":checked");
+		function handleSettingsSidebar(node) {
+			var isCheckboxChecked = $(node).is(":checked");
 
 			localStorage.setItem("isSidebarEnabled", isCheckboxChecked);
 			document.cookie =
 				"isSidebarEnabled=" + isCheckboxChecked + "; path=/;";
+
 			if (isCheckboxChecked) {
-				$("#user-registration-settings-sidebar").addClass(
-					"user-registration-hidden"
-				);
+				$("body")
+					.removeClass("ur-settings-sidebar-hidden")
+					.addClass("ur-settings-sidebar-show");
+				$(node)
+					.closest(".user-registration-options-header--top__right")
+					.find(".user-registration-toggle-text")
+					.text("Show Sidebar");
 			} else {
-				$("#user-registration-settings-sidebar").removeClass(
-					"user-registration-hidden"
-				);
+				$("body")
+					.removeClass("ur-settings-sidebar-show")
+					.addClass("ur-settings-sidebar-hidden");
+				$(node)
+					.closest(".user-registration-options-header--top__right")
+					.find(".user-registration-toggle-text")
+					.text("Hide Sidebar");
 			}
 		}
-
-		var isSidebarEnabled =
-			localStorage.getItem("isSidebarEnabled") === "true";
-
-		$("#user_registration_hide_show_sidebar").prop(
-			"checked",
-			isSidebarEnabled
-		);
-
-		if (isSidebarEnabled) {
-			$("#user-registration-settings-sidebar").addClass(
-				"user-registration-hidden"
-			);
-			$(".user-registration-toggle-text").text("Show Sidebar");
-		} else {
-			$("#user-registration-settings-sidebar").removeClass(
-				"user-registration-hidden"
-			);
-			$(".user-registration-toggle-text").text("Hide Sidebar");
-		}
-		handleSettingsSidebar();
 
 		$(document).on(
 			"change",
 			"#user_registration_hide_show_sidebar",
 			function (e) {
-				handleSettingsSidebar();
+				handleSettingsSidebar($(this));
 			}
 		);
 

@@ -5940,9 +5940,24 @@ body.user-registration {
 	}
 }
 
-.user-registration-hidden {
-	display: none;
+body {
+	&.ur-settings-sidebar-hidden {
+		.user-registration-settings-sidebar-container {
+			margin-right: -910px;
+			display: none;
+		}
+	}
+
+	&.ur-settings-sidebar-show {
+		.user-registration-settings-sidebar-container {
+			display: block;
+			width: 300px;
+			max-width: 100%;
+			padding: 18px 10px 26px 10px;
+		}
+	}
 }
+
 .ur-embed-form-button {
 	background: #edeff7 !important;
 	border-color: #edeff7 !important;

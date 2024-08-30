@@ -50,7 +50,6 @@ class UR_Admin_Settings {
 			if ( ! empty( $_GET['install_user_registration_pages'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification
 				UR_Install::create_pages();
 				UR_Admin_Notices::remove_notice( 'install' );
-				delete_option( 'user_registration_onboarding_skipped' );
 			}
 
 			$settings[] = include 'settings/class-ur-settings-general.php';
@@ -199,10 +198,10 @@ class UR_Admin_Settings {
 			'user-registration-settings',
 			'user_registration_settings_params',
 			array(
-				'ajax_url'         => admin_url( 'admin-ajax.php' ),
+				'ajax_url'                 => admin_url( 'admin-ajax.php' ),
 				'user_registration_search_global_settings_nonce' => wp_create_nonce( 'user_registration_search_global_settings' ),
-				'i18n_nav_warning' => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
-				'i18n'             => array(
+				'i18n_nav_warning'         => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
+				'i18n'                     => array(
 					'captcha_success' => esc_html__( 'Captcha Test Successful !', 'user-registration' ),
 					'captcha_failed'  => esc_html__( 'Some error occured. Please verify that the keys you entered are valid.', 'user-registration' ),
 					'unsaved_changes' => esc_html__( 'You have some unsaved changes. Please save and try again.', 'user-registration' ),
