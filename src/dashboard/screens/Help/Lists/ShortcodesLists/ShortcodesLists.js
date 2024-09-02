@@ -286,6 +286,39 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 				"Requires User Registration Pro and User Registration PDF Form Submission add-on to be activated.",
 				"user-registration"
 			)
+		},
+		{
+			id: "[user_registration_membership_member_registration_form]",
+			description: __(
+				"Displays a registration form for users to sign up for a membership.",
+				"user-registration"
+			),
+			requires: __(
+				"Requires User Registration Pro and User Registration Membership add-on to be activated.",
+				"user-registration"
+			)
+		},
+		{
+			id: "[user_registration_membership_listing]",
+			description: __(
+				"Shows a list of available membership options for users to browse.",
+				"user-registration"
+			),
+			requires: __(
+				"Requires User Registration Pro and User Registration Membership add-on to be activated.",
+				"user-registration"
+			)
+		},
+		{
+			id: "[user_registration_membership_thank_you]",
+			description: __(
+				"Displays a thank you message to users after successfully registering for a membership.",
+				"user-registration"
+			),
+			requires: __(
+				"Requires User Registration Pro and User Registration Membership add-on to be activated.",
+				"user-registration"
+			)
 		}
 	];
 	const [isAccordionOpen, setIsAccordionOpen] = useState({});
