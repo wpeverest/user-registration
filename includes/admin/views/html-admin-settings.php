@@ -164,8 +164,8 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 				</div>
 			</div>
 			<?php
-			if ( ! $is_pro_active || ! $quick_setup_completed) {
-			?>
+			if ( ! $is_pro_active || ! $quick_setup_completed ) {
+				?>
 				<div class="user-registration-settings-sidebar-container" id="user-registration-settings-sidebar">
 					<?php
 					if ( ! $quick_setup_completed ) {
@@ -266,7 +266,7 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 					}
 					?>
 				</div>
-				<?
+				<?php
 			}
 			?>
 		</div>

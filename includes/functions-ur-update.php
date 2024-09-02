@@ -388,8 +388,16 @@ function ur_update_30_option_migrate() {
  */
 function ur_update_322_option_migrate() {
 
-	$activation_date = get_option( 'user_registration_activated' );
+	$activation_date = get_option( 'user_registration_activated', false );
 
 	update_option( 'user_registration_installation_date', $activation_date );
-	update_option( 'user_registration_quick_setup_completed', true );
+	$days_to_validate = strtotime( $activation_date );
+	$days_to_validate = strtotime( '+1 day', $days_to_validate );
+	$days_to_validate = date_i18n( 'Y-m-d', $days_to_validate );
+
+	$current_date = date_i18n( 'Y-m-d' );
+
+	if ( $activation_date && $current_date >= $days_to_validate ) {
+		update_option( 'user_registration_quick_setup_completed', true );
+	}
 }
