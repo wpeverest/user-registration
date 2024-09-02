@@ -73,28 +73,7 @@ class UR_Elementor_Widget_View_Details extends Widget_Base {
 	 * Register controls.
 	 */
 	protected function register_controls() {
-
-		$this->start_controls_section(
-			'ur_elementor_view_profile_details',
-			array(
-				'label' => esc_html__( 'Profile Details', 'user-registration' ),
-			)
-		);
-
-		$forms = $this->get_forms();
-
-		$this->add_control(
-			'ur_view_profile_details',
-			array(
-				'label'   => esc_html__( 'Select Form', 'user-registration' ),
-				'type'    => Controls_Manager::SELECT,
-				'options' => $forms,
-				'default' => 'ur_view_profile_details',
-			)
-		);
-		$this->end_controls_section();
 		do_action( 'user_registration_elementor_profile_details_style', $this );
-
 	}
 
 	/**
@@ -102,9 +81,6 @@ class UR_Elementor_Widget_View_Details extends Widget_Base {
 	 */
 	private function get_shortcode() {
 		$settings = $this->get_settings_for_display();
-		if ( ! $settings['ur_view_profile_details'] ) {
-			return '<p>' . __( 'Please select a View Profile Details Forms.', 'user-registration' ) . '</p>';
-		}
 		$shortcode = '[user_registration_view_profile_details]';
 		$shortcode = sprintf( apply_filters( 'user_registration_elementor_shortcode_view_profile_details', $shortcode, $settings ) );
 		return $shortcode;

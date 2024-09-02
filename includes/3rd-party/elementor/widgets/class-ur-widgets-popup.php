@@ -32,7 +32,7 @@ class UR_Elementor_Widget_Popup extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return __( 'PopUP Form', 'user-registration' );
+		return __( 'Popup Form', 'user-registration' );
 	}
 	/**
 	 * Get widget icon.
@@ -72,7 +72,7 @@ class UR_Elementor_Widget_Popup extends Widget_Base {
 		$this->start_controls_section(
 			'section_content_layout',
 			array(
-				'label' => esc_html__( 'PopUp Form', 'user-registration' ),
+				'label' => esc_html__( 'Popup', 'user-registration' ),
 			)
 		);
 
@@ -81,7 +81,7 @@ class UR_Elementor_Widget_Popup extends Widget_Base {
 		$this->add_control(
 			'ur_popup_form',
 			array(
-				'label'   => esc_html__( 'Select Form', 'user-registration' ),
+				'label'   => esc_html__( 'Select Popup', 'user-registration' ),
 				'type'    => Controls_Manager::SELECT,
 				'options' => $forms,
 			)
@@ -90,6 +90,7 @@ class UR_Elementor_Widget_Popup extends Widget_Base {
 		$this->end_controls_section();
 
 		do_action( 'user_registration_elementor_popup_style', $this );
+
 	}
 	/**
 	 * Retrieve the shortcode.
@@ -98,7 +99,7 @@ class UR_Elementor_Widget_Popup extends Widget_Base {
 
 		$settings = $this->get_settings_for_display();
 		if ( ! $settings['ur_popup_form'] ) {
-			return '<p>' . __( 'Please select a User Registration Popup Forms.', 'user-registration' ) . '</p>';
+			return '<p>' . __( 'Please select a User Registration Popup.', 'user-registration' ) . '</p>';
 		}
 		$attributes = array(
 			'id' => $settings['ur_popup_form'],

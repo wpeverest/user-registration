@@ -72,27 +72,6 @@ class UR_Elementor_Widget_Edit_Password extends Widget_Base {
 	 * Register controls.
 	 */
 	protected function register_controls() {
-	 // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
-		$this->start_controls_section(
-			'ur_elementor_edit_password',
-			array(
-				'label' => esc_html__( 'Edit Profile', 'user-registration' ),
-			)
-		);
-
-		$forms = $this->get_forms();
-
-		$this->add_control(
-			'ur_edit_password',
-			array(
-				'label'   => esc_html__( 'Select Form', 'user-registration' ),
-				'type'    => Controls_Manager::SELECT,
-				'options' => $forms,
-				'default' => 'ur_edit_password',
-			)
-		);
-		$this->end_controls_section();
-
 		do_action( 'user_registration_elementor_edit_password_style', $this );
 	}
 	/**
@@ -101,9 +80,7 @@ class UR_Elementor_Widget_Edit_Password extends Widget_Base {
 	private function get_shortcode() {
 
 		$settings = $this->get_settings_for_display();
-		if ( ! $settings['ur_edit_password'] ) {
-			return '<p>' . __( 'Please select a Edit Password Form.', 'user-registration' ) . '</p>';
-		}
+
 		$shortcode = '[user_registration_edit_password]';
 		$shortcode = sprintf( apply_filters( 'user_registration_elementor_shortcode_edit_password', $shortcode, $settings ) );
 		return $shortcode;

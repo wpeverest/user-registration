@@ -71,28 +71,8 @@ class UR_Elementor_Widget_MyAccount extends Widget_Base {
 	 * Register controls.
 	 */
 	protected function register_controls() {
-		// phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
-		$this->start_controls_section(
-			'ur_elementor_myaccount',
-			array(
-				'label' => esc_html__( 'My Account', 'user-registration' ),
-			)
-		);
-
-		$forms = $this->get_forms();
-
-		$this->add_control(
-			'ur_my_account',
-			array(
-				'label'   => esc_html__( 'Select Form', 'user-registration' ),
-				'type'    => Controls_Manager::SELECT,
-				'options' => $forms,
-				'default' => 'ur_my_account',
-			)
-		);
-		$this->end_controls_section();
-
 		do_action( 'user_registration_elementor_myaccount_style', $this );
+
 	}
 	/**
 	 * Retrieve the shortcode.
@@ -104,9 +84,6 @@ class UR_Elementor_Widget_MyAccount extends Widget_Base {
 			return sprintf( '[user_registration_login]' );
 		}
 
-		if ( ! $settings['ur_my_account'] ) {
-			return '<p>' . __( 'Please select a User Registration Login Forms.', 'user-registration' ) . '</p>';
-		}
 		$shortcode = '[user_registration_my_account]';
 		$shortcode = sprintf( apply_filters( 'user_registration_elementor_shortcode_my_account', $shortcode, $settings ) );
 		return $shortcode;

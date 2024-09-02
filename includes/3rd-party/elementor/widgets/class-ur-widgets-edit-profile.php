@@ -74,28 +74,9 @@ class UR_Elementor_Widget_Edit_Profile extends Widget_Base {
 	 * Register controls.
 	 *
 	 */
-	protected function register_controls() { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
-		$this->start_controls_section(
-			'ur_elementor_edit_profile',
-			array(
-				'label' => esc_html__( 'Edit Profile', 'user-registration' ),
-			)
-		);
-
-		$forms = $this->get_forms();
-
-		$this->add_control(
-			'ur_edit_profile',
-			array(
-				'label'   => esc_html__( 'Select Form', 'user-registration' ),
-				'type'    => Controls_Manager::SELECT,
-				'options' => $forms,
-				'default' => 'ur_edit_profile',
-			)
-		);
-		$this->end_controls_section();
-
+	protected function register_controls() {
 		do_action( 'user_registration_elementor_edit_profile_style', $this );
+
 	}
 	/**
 	 * Retrieve the shortcode.
@@ -104,9 +85,7 @@ class UR_Elementor_Widget_Edit_Profile extends Widget_Base {
 	private function get_shortcode() {
 
 		$settings = $this->get_settings_for_display();
-		if ( ! $settings['ur_edit_profile'] ) {
-			return '<p>' . __( 'Please select a User Registration Login Forms.', 'user-registration' ) . '</p>';
-		}
+
 		$shortcode =  '[user_registration_edit_profile]' ;
 		$shortcode = sprintf( apply_filters( 'user_registration_elementor_shortcode_edit_profile', $shortcode, $settings ) );
 		return $shortcode;

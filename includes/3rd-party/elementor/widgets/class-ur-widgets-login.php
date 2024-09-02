@@ -84,28 +84,7 @@ class UR_Elementor_Widget_Login extends Widget_Base {
 	 * @since 3.2.2
 	 */
 	protected function register_controls() {
-	 // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
-		$this->start_controls_section(
-			'ur_elementor_login_form',
-			array(
-				'label' => esc_html__( 'Login Form', 'user-registration' ),
-			)
-		);
-
-		$forms = $this->get_forms();
-
-		$this->add_control(
-			'ur_login_form',
-			array(
-				'label'   => esc_html__( 'Select Form', 'user-registration' ),
-				'type'    => Controls_Manager::SELECT,
-				'options' => $forms,
-				'default' => 'ur_login_form',
-			)
-		);
-		$this->end_controls_section();
-
-		do_action( 'user_registration_elementor_login_style', $this );
+	 do_action( 'user_registration_elementor_login_style', $this );
 	}
 	/**
 	 * Retrieve the shortcode.
@@ -115,9 +94,7 @@ class UR_Elementor_Widget_Login extends Widget_Base {
 	private function get_shortcode() {
 
 		$settings = $this->get_settings_for_display();
-		if ( ! $settings['ur_login_form'] ) {
-			return '<p>' . __( 'Please select a User Registration Login Forms.', 'user-registration' ) . '</p>';
-		}
+
 		$shortcode =  '[user_registration_login]' ;
 		$shortcode = sprintf( apply_filters( 'user_registration_elementor_shortcode_login_form', $shortcode, $settings ) );
 		return $shortcode;
