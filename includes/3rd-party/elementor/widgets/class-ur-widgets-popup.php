@@ -42,7 +42,7 @@ class UR_Elementor_Widget_Popup extends Widget_Base {
 	 * @return string Widget icon.
 	 */
 	public function get_icon() {
-		return 'ur-icon-popup';
+		return 'ur-icon-user-registration';
 	}
 	/**
 	 * Get widget categories.
@@ -106,7 +106,7 @@ class UR_Elementor_Widget_Popup extends Widget_Base {
 		);
 		$this->add_render_attribute( 'shortcode', $attributes );
 		$shortcode   = array();
-		$shortcode[] = sprintf( '[user_registration_popup %s type="button" ]', $this->get_render_attribute_string( 'shortcode' ) );
+		$shortcode[] = sprintf( '[user_registration_popup %s]', $this->get_render_attribute_string( 'shortcode' ) );
 
 		return implode( '', $shortcode );
 	}
