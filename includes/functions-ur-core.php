@@ -3139,7 +3139,7 @@ if ( ! function_exists( 'ur_format_field_values_using_field_key' ) ) {
 				} elseif ( is_array( $field_value ) && ! empty( $field_value ) ) {
 					$field_value = implode( ', ', $field_value );
 				} elseif ( ! empty( json_decode( $field_value ) ) ) { // phpcs:ignore;
-					$field_value = implode( ', ', json_decode( $field_value ) );
+					$field_value = is_array( json_decode( $field_value ) ) ? implode( ', ', json_decode( $field_value ) ) : $field_value;
 				}
 				break;
 			case 'country':
