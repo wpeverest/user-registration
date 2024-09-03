@@ -954,6 +954,7 @@
 			var isCheckboxChecked = $(node).is(":checked");
 
 			localStorage.setItem("isSidebarEnabled", isCheckboxChecked);
+
 			document.cookie =
 				"isSidebarEnabled=" + isCheckboxChecked + "; path=/;";
 
@@ -991,7 +992,7 @@
 	 * Disable leave page before saving changes modal when hid/show sidebar is clicked.
 	 */
 	function disableFormChangeModal() {
-		const form = $(".user-registration").find("form")[0];
+		var form = $(".user-registration").find("form")[0];
 
 		var formChanged = false;
 

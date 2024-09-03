@@ -5959,12 +5959,15 @@ add_action(
 	'admin_head',
 	function () {
 		$js = <<<JS
-		const isSidebarEnabled = localStorage.getItem( 'isSidebarEnabled' );
+		let isSidebarEnabled = localStorage.getItem( 'isSidebarEnabled' );
+		isSidebarEnabled = 'false' === isSidebarEnabled ? false : true;
 
+		document.cookie =
+		"isSidebarEnabled=" + isSidebarEnabled + "; path=/;";
 		const interval = setInterval( () => {
 			if ( document.body ) {
 				clearInterval(interval);
-				if ('true' === isSidebarEnabled) {
+				if (isSidebarEnabled) {
 					document.body.classList.add( 'ur-settings-sidebar-show' );
 				} else {
 					document.body.classList.add( 'ur-settings-sidebar-hidden' );
