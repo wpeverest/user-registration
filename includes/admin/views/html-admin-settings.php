@@ -18,8 +18,8 @@ $collapse_by_default = isset( $_GET['tab'] ) && ( strpos( $_GET['tab'], 'user-re
  */
 $user_registration_settings_form_method_tab = apply_filters( 'user_registration_settings_form_method_tab_' . $current_tab, 'post' );
 
-$setup_tab_lists       = ur_quick_settings_tab_content();
-$quick_setup_completed = get_option( 'user_registration_quick_setup_completed', false );
+$setup_tab_lists             = ur_quick_settings_tab_content();
+$quick_setup_completed       = get_option( 'user_registration_quick_setup_completed', false );
 $is_settings_sidebar_enabled = isset( $_COOKIE['isSidebarEnabled'] ) ? ur_string_to_bool( sanitize_text_field( wp_unslash( $_COOKIE['isSidebarEnabled'] ) ) ) : true;
 
 $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php' );
@@ -172,7 +172,7 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 						?>
 						<div class="user-registration-settings-sidebar">
 							<?php
-							$content = '<div class="user-registration-settings-sidebar__header"><h3>' . esc_html( 'Quick Setup Tab', 'user-registration' ) . '</h3></div><div class="user-registration-settings-sidebar__body">
+							$content = '<div class="user-registration-settings-sidebar__header"><h3>' . esc_html( 'Setup Checklist', 'user-registration' ) . '</h3></div><div class="user-registration-settings-sidebar__body">
 										<p>' . esc_html( 'Follow these steps to start registering users on your website.', 'user-registration' ) . '</p>
 										<div class="user-registration-settings-sidebar__body--list">';
 
@@ -217,50 +217,52 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 					if ( ! $is_pro_active ) {
 						?>
 						<div class="user-registration-settings-sidebar">
-							<?php
-							$content = '<div class="user-registration-settings-sidebar__header"><h3>' . esc_html( 'Premium Benefits', 'user-registration' ) . '</h3></div>
-										<div class="user-registration-settings-sidebar__body"><p>' . esc_html( 'The free version of User Registration & Membership is just the start. Upgrade to our Pro version for everything you need for advanced form building.', 'user-registration' ) . '</p>
+						<?php
+						$content = '<div class="user-registration-settings-sidebar__header"><h3>' . esc_html( 'Premium Benefits', 'user-registration' ) . '</h3></div>
+										<div class="user-registration-settings-sidebar__body"><p>' . esc_html( 'Get Even More from User Registration with the Premium Plan', 'user-registration' ) . '</p>
+										<div class="user-registration-settings-sidebar__body"><p>' . esc_html( 'The free version of User Registration is just the start. Upgrade to our Pro version for everything you need for advanced form building.', 'user-registration' ) . '</p>
 										<div class="user-registration-settings-sidebar__body--list normal">';
 
-							$premium_benefits = array(
-								esc_html__( 'Instant access to 35+ unique addons', 'user-registration' ),
-								esc_html__( 'Attention grabbing forms with advanced style customizer', 'user-registration' ),
-								esc_html__( 'Form security with custom captcha', 'user-registration' ),
-								esc_html__( 'Multiple payment options (PayPal, Stripe, etc.)', 'user-registration' ),
-								esc_html__( 'Interactive multi-step forms, and quizzes', 'user-registration' ),
-								esc_html__( 'Tables and graphics in Entries', 'user-registration' ),
-								esc_html__( 'Priority support for premium users', 'user-registration' ),
-							);
+						$premium_benefits = array(
+							esc_html__( 'Instant access to 40+ unique addons', 'user-registration' ),
+							esc_html__( 'Advanced fields to enhance your registration forms', 'user-registration' ),
+							esc_html__( 'Simple WooCommerce integration with billing and shipping fields', 'user-registration' ),
+							esc_html__( 'Customization options for user accounts', 'user-registration' ),
+							esc_html__( 'Support for 12 different file types in the file upload option', 'user-registration' ),
+							esc_html__( 'Eye-catching forms with the advanced style customizer', 'user-registration' ),
+							esc_html__( 'Dynamic forms with Conditional Logic', 'user-registration' ),
+							esc_html__( 'Full control over content visibility with Content Restriction', 'user-registration' ),
+						);
 
-							foreach ( $premium_benefits as $list ) {
-								$content .= '<div class="user-registration-settings-sidebar__body--list-item">';
+						foreach ( $premium_benefits as $list ) {
+							$content .= '<div class="user-registration-settings-sidebar__body--list-item">';
 
-								$content .= '<svg xmlns="http://www.w3.org/2000/svg" fill="#383838" viewBox="0 0 20 20">
+							$content .= '<svg xmlns="http://www.w3.org/2000/svg" fill="#383838" viewBox="0 0 20 20">
 												<path fill-rule="evenodd" d="M6.91 4.41a.833.833 0 0 1 1.179 0l5 5a.833.833 0 0 1 0 1.179l-5 5A.833.833 0 0 1 6.91 14.41L11.32 10 6.91 5.588a.833.833 0 0 1 0-1.179Z" clip-rule="evenodd"/>
 											</svg>';
 
-								$content .= '<span>';
-								$content .= wp_kses_post( $list );
-								$content .= '</span>';
-								$content .= '</div>';
-							}
+							$content .= '<span>';
+							$content .= wp_kses_post( $list );
+							$content .= '</span>';
+							$content .= '</div>';
+						}
 
-							$content .= '</div>';
-							$content .= '</div>';
-							$content .= '<div class="user-registration-settings-sidebar__footer">';
-							$content .= '<p>' . esc_html( 'Thank you for choosing User Registration 😊', 'user-registration' ) . '</p>';
-							$content .= '<div class="user-registration-settings-sidebar__footer--card">';
-							$content .= '<svg xmlns="http://www.w3.org/2000/svg" width="62" height="62" viewBox="0 0 62 62" fill="none">
+						$content .= '</div>';
+						$content .= '</div>';
+						$content .= '<div class="user-registration-settings-sidebar__footer">';
+						$content .= '<p>' . esc_html( 'Thank you for choosing User Registration! 😊', 'user-registration' ) . '</p>';
+						$content .= '<div class="user-registration-settings-sidebar__footer--card">';
+						$content .= '<svg xmlns="http://www.w3.org/2000/svg" width="62" height="62" viewBox="0 0 62 62" fill="none">
 											<rect x="3.00521" y="3.00521" width="55.9896" height="55.9896" rx="27.9948" fill="#7878E1" stroke="#7878E1" stroke-width="5.98958"/>
 											<path d="M31.0013 17.1074L39.3346 39.3296H22.668L31.0013 17.1074Z" fill="#EBEBEB"/>
 											<path fill-rule="evenodd" clip-rule="evenodd" d="M17.1055 22.666L19.0896 39.3327H42.8991L44.8833 22.666L30.9944 34.1243L17.1055 22.666ZM42.9037 40.9155H19.0942V44.8838H42.9037V40.9155Z" fill="white"/>
 										</svg>';
-							$content .= '<p>' . esc_html( 'Get More Features with Pro', 'user-registration' ) . '</p>';
-							$content .= '<a rel="noreferrer noopener" target="_blank" href="https://wpuserregistration.com/pricing/?utm_source=settings-sidebar-right&amp;utm_medium=premium-benefits-card&amp;utm_campaign=lite-version">Upgrade to Pro</a>';
-							$content .= '</div>';
-							$content .= '</div>';
-							echo $content; // phpcs:ignore
-							?>
+						$content .= '<p>' . esc_html( 'Get More Features with Pro', 'user-registration' ) . '</p>';
+						$content .= '<a rel="noreferrer noopener" target="_blank" href="https://wpuserregistration.com/pricing/?utm_source=settings-sidebar-right&amp;utm_medium=premium-benefits-card&amp;utm_campaign=lite-version">Upgrade to Pro</a>';
+						$content .= '</div>';
+						$content .= '</div>';
+						echo $content; // phpcs:ignore
+						?>
 						</div>
 						<?php
 					}
