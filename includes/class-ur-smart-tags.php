@@ -422,6 +422,7 @@ class UR_Smart_Tags {
 						 */
 						$prefix    = apply_filters( 'ur_unique_id_prefix', 'ur' );
 						$unique_id = uniqid( $prefix, $uni_entropy );
+						$unique_id = apply_filters( 'ur_modify_unique_id_smart_tag', $unique_id );
 						$content   = str_replace( '{{' . $tag . '}}', $unique_id, $content );
 						break;
 					case 'approval_link':

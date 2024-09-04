@@ -1169,3 +1169,7 @@
 
 .user-registration-global-settings.radio-image input[type="radio"] + img {
   cursor: pointer; }
+
+.user-registration-inactive-addon {
+  opacity: 0.7;
+  pointer-events: pointer; }

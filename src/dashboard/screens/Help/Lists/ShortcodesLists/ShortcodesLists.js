@@ -16,8 +16,14 @@ import {
 	Td,
 	Tr,
 	Thead,
+	HStack,
+	IconButton,
+	Tooltip,
+	useClipboard,
+	useToast
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
+import { CopyIcon } from "@chakra-ui/icons";
 
 /**
  *  Internal Dependencies
@@ -39,8 +45,8 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 						"ID of the form to display.",
 						"user-registration"
 					),
-					required: true,
-				},
+					required: true
+				}
 			],
 			example: [
 				{
@@ -48,9 +54,9 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 					example_description: __(
 						"Displays Registration form with id 5",
 						"user-registration"
-					),
-				},
-			],
+					)
+				}
+			]
 		},
 		{
 			id: "[user_registration_login]",
@@ -64,8 +70,8 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 					param_description: __(
 						"Slug or Link of the page to redirect users to after login.",
 						"user-registration"
-					),
-				},
+					)
+				}
 			],
 			example: [
 				{
@@ -74,7 +80,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 					example_description: __(
 						"Redirects to the page with the slug sample-page, i.e., Sample Page after login.",
 						"user-registration"
-					),
+					)
 				},
 				{
 					example_name:
@@ -82,9 +88,9 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 					example_description: __(
 						"Redirects to User Registration website after login.",
 						"user-registration"
-					),
-				},
-			],
+					)
+				}
+			]
 		},
 		{
 			id: "[user_registration_my_account]",
@@ -98,22 +104,22 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 					param_description: __(
 						"Displays registration form of provided ID along with login form.",
 						"user-registration"
-					),
+					)
 				},
 				{
 					param_name: "redirect_url",
 					param_description: __(
 						"Slug or Link of the page to redirect users to after login.",
 						"user-registration"
-					),
+					)
 				},
 				{
 					param_name: "logout_redirect",
 					param_description: __(
 						"Slug or Link of the page to redirect users to after logout.",
 						"user-registration"
-					),
-				},
+					)
+				}
 			],
 			example: [
 				{
@@ -121,7 +127,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 					example_description: __(
 						"Renders login form and registration form with form ID 5 on the same page.",
 						"user-registration"
-					),
+					)
 				},
 				{
 					example_name:
@@ -129,7 +135,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 					example_description: __(
 						"Redirects to page with the slug sample-page, i.e., Sample Page after login. Redirects to page with the slug hello-world after user logout.",
 						"user-registration"
-					),
+					)
 				},
 				{
 					example_name:
@@ -137,23 +143,23 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 					example_description: __(
 						"Redirects to the User Registration website on login and redirects to the Everest Forms website after user logout.",
 						"user-registration"
-					),
-				},
-			],
+					)
+				}
+			]
 		},
 		{
 			id: "[user_registration_edit_profile]",
 			description: __(
 				"Displays the Edit Profile form in the front end.",
 				"user-registration"
-			),
+			)
 		},
 		{
 			id: "[user_registration_edit_password]",
 			description: __(
 				"Displays the Password Change form in the front end.",
 				"user-registration"
-			),
+			)
 		},
 		{
 			id: "[user_registration_view_profile_details]",
@@ -164,7 +170,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 			requires: __(
 				"Requires User Registration Pro to be activated.",
 				"user-registration"
-			),
+			)
 		},
 		{
 			id: "[user_registration_popup]",
@@ -179,15 +185,15 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 						"ID of the form to display as a popup.",
 						"user-registration"
 					),
-					required: true,
+					required: true
 				},
 				{
 					param_name: "type",
 					param_description: __(
 						"Type of the popup to be displayed. (It will be rendered by default on page load. But, if you set it to ‘button,’ a button that opens the popup when clicked will be displayed.)",
 						"user-registration"
-					),
-				},
+					)
+				}
 			],
 			example: [
 				{
@@ -195,20 +201,20 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 					example_description: __(
 						"Displays user registration popup with id 1",
 						"user-registration"
-					),
+					)
 				},
 				{
 					example_name: '[user_registration_popup type="button"]',
 					example_description: __(
 						"Displays a button on the area where this shortcode is used which will display the popup when clicked.",
 						"user-registration"
-					),
-				},
+					)
+				}
 			],
 			requires: __(
 				"Requires User Registration Pro to be activated.",
 				"user-registration"
-			),
+			)
 		},
 		{
 			id: "[urcr_restrict]...[/urcr_restrict]",
@@ -222,8 +228,8 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 					param_description: __(
 						"Allow access to the mentioned user role only.",
 						"user-registration"
-					),
-				},
+					)
+				}
 			],
 			example: [
 				{
@@ -232,13 +238,13 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 					example_description: __(
 						"Restricts the text inside the shortcode for all users except Administrators.",
 						"user-registration"
-					),
-				},
+					)
+				}
 			],
 			requires: __(
 				"Requires User Registration Pro to be activated.",
 				"user-registration"
-			),
+			)
 		},
 		{
 			id: "[user_registration_frontend_listing]",
@@ -253,8 +259,8 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 						"Frontend Listing ID to render.",
 						"user-registration"
 					),
-					required: true,
-				},
+					required: true
+				}
 			],
 			example: [
 				{
@@ -262,13 +268,13 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 					example_description: __(
 						"Displays user listing with ID 1 in the front end.",
 						"user-registration"
-					),
-				},
+					)
+				}
 			],
 			requires: __(
 				"Requires User Registration Pro to be activated.",
 				"user-registration"
-			),
+			)
 		},
 		{
 			id: "[user_registration_download_pdf_button]",
@@ -279,10 +285,50 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 			requires: __(
 				"Requires User Registration Pro and User Registration PDF Form Submission add-on to be activated.",
 				"user-registration"
-			),
+			)
 		},
+		{
+			id: "[user_registration_membership_member_registration_form]",
+			description: __(
+				"Displays a registration form for users to sign up for a membership.",
+				"user-registration"
+			),
+			requires: __(
+				"Requires User Registration Pro and User Registration Membership add-on to be activated.",
+				"user-registration"
+			)
+		},
+		{
+			id: "[user_registration_membership_listing]",
+			description: __(
+				"Shows a list of available membership options for users to browse.",
+				"user-registration"
+			),
+			requires: __(
+				"Requires User Registration Pro and User Registration Membership add-on to be activated.",
+				"user-registration"
+			)
+		},
+		{
+			id: "[user_registration_membership_thank_you]",
+			description: __(
+				"Displays a thank you message to users after successfully registering for a membership.",
+				"user-registration"
+			),
+			requires: __(
+				"Requires User Registration Pro and User Registration Membership add-on to be activated.",
+				"user-registration"
+			)
+		}
 	];
 	const [isAccordionOpen, setIsAccordionOpen] = useState({});
+	const [isShortcodeCopied, setShortcodeCopied] = useState({});
+
+	const { onCopy, hasCopied } = useClipboard();
+	const [isExampleShortcodeCopied, setIsExampleShortcodeCopied] =
+		useState("");
+
+	const toast = useToast();
 
 	useEffect(() => {
 		const accordionOpener = { ...isAccordionOpen };
@@ -292,11 +338,57 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 		setIsAccordionOpen(accordionOpener);
 	}, []);
 
+	useEffect(() => {
+		const shortcodeAccordion = isShortcodeCopied;
+		ShortcodeList.map((shortcode) => {
+			shortcodeAccordion[shortcode.id] = false;
+		});
+		setShortcodeCopied(shortcodeAccordion);
+	}, [isShortcodeCopied]);
+
 	const handleAccordionToggle = (shortcode_id) => {
 		setIsAccordionOpen({
 			...isAccordionOpen,
-			[shortcode_id]: !isAccordionOpen[shortcode_id],
+			[shortcode_id]: !isAccordionOpen[shortcode_id]
 		});
+	};
+
+	const handleCopyClick = (shortcode_id, event) => {
+		try {
+			const textField = document.createElement("textarea");
+			textField.innerText = shortcode_id;
+			document.body.appendChild(textField);
+			textField.select();
+			document.execCommand("copy");
+			textField.remove();
+			onCopy();
+			setShortcodeCopied({
+				...isShortcodeCopied,
+				[shortcode_id]: !isShortcodeCopied[shortcode_id]
+			});
+			event.stopPropagation();
+		} catch (error) {
+			console.error("Error copying shortcode:", error);
+		}
+	};
+
+	const handleExampleShortcodeCopy = (example_name) => {
+		try {
+			const textField = document.createElement("textarea");
+			textField.innerText = example_name;
+			document.body.appendChild(textField);
+			textField.select();
+			document.execCommand("copy");
+			textField.remove();
+			onCopy();
+			setIsExampleShortcodeCopied(example_name);
+			event.stopPropagation();
+			setTimeout(() => {
+				setIsExampleShortcodeCopied("");
+			}, 1000);
+		} catch (error) {
+			console.error("Error copying shortcode:", error);
+		}
 	};
 
 	return (
@@ -353,11 +445,48 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 							>
 								{shortcode.id}
 							</Box>
-							{isAccordionOpen[shortcode.id] ? (
-								<Minus h="5" w="5" />
-							) : (
-								<Add h="5" w="5" />
-							)}
+							<Box textAlign="right">
+								<HStack>
+									{hasCopied &&
+									isShortcodeCopied[shortcode.id] ? (
+										<Tooltip
+											hasArrow={true}
+											closeDelay={2000}
+											label={__(
+												"Copied!",
+												"user-registration"
+											)}
+										>
+											<IconButton
+												size="md"
+												icon={<CopyIcon />}
+												onClick={(event) =>
+													handleCopyClick(
+														shortcode.id,
+														event
+													)
+												}
+											/>
+										</Tooltip>
+									) : (
+										<IconButton
+											size="md"
+											icon={<CopyIcon />}
+											onClick={(event) =>
+												handleCopyClick(
+													shortcode.id,
+													event
+												)
+											}
+										/>
+									)}
+									{isAccordionOpen[shortcode.id] ? (
+										<Minus h="5" w="5" />
+									) : (
+										<Add h="5" w="5" />
+									)}
+								</HStack>
+							</Box>
 						</AccordionButton>
 						<AccordionPanel
 							pb={4}
@@ -365,7 +494,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 							sx={{
 								display: "flex",
 								flexDirection: "column",
-								gap: "20px",
+								gap: "20px"
 							}}
 						>
 							<Text fontSize="14px">{shortcode.description}</Text>
@@ -377,7 +506,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 									sx={{
 										display: "flex",
 										flexDirection: "column",
-										gap: "16px",
+										gap: "16px"
 									}}
 								>
 									<Thead>
@@ -386,7 +515,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 												sx={{
 													fontWeight: "600",
 													paddingLeft: "0px",
-													border: "none",
+													border: "none"
 												}}
 											>
 												{__(
@@ -400,7 +529,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 										sx={{
 											display: "flex",
 											flexDirection: "column",
-											gap: "12px",
+											gap: "12px"
 										}}
 									>
 										{shortcode.params.map(
@@ -408,7 +537,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 												{
 													param_name,
 													param_description,
-													required,
+													required
 												},
 												key
 											) => (
@@ -457,7 +586,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 									sx={{
 										display: "flex",
 										flexDirection: "column",
-										gap: "16px",
+										gap: "16px"
 									}}
 								>
 									<Thead>
@@ -466,7 +595,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 												sx={{
 													fontWeight: "600",
 													paddingLeft: "0px",
-													border: "none",
+													border: "none"
 												}}
 											>
 												{__(
@@ -480,14 +609,14 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 										sx={{
 											display: "flex",
 											flexDirection: "column",
-											gap: "12px",
+											gap: "12px"
 										}}
 									>
 										{shortcode.example.map(
 											(
 												{
 													example_name,
-													example_description,
+													example_description
 												},
 												key
 											) => (
@@ -510,6 +639,57 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 															>
 																{example_name}
 															</Box>
+														</Td>
+														<Td>
+															{example_name && (
+																<Box>
+																	{isExampleShortcodeCopied ===
+																	example_name ? (
+																		<Tooltip
+																			hasArrow={
+																				true
+																			}
+																			closeDelay={
+																				1000
+																			}
+																			label={__(
+																				"Copied!",
+																				"user-registration"
+																			)}
+																		>
+																			<IconButton
+																				size="md"
+																				icon={
+																					<CopyIcon />
+																				}
+																				onClick={(
+																					event
+																				) =>
+																					handleExampleShortcodeCopy(
+																						example_name,
+																						event
+																					)
+																				}
+																			/>
+																		</Tooltip>
+																	) : (
+																		<IconButton
+																			size="md"
+																			icon={
+																				<CopyIcon />
+																			}
+																			onClick={(
+																				event
+																			) =>
+																				handleExampleShortcodeCopy(
+																					example_name,
+																					event
+																				)
+																			}
+																		/>
+																	)}
+																</Box>
+															)}
 														</Td>
 													</Tr>
 													<Tr>

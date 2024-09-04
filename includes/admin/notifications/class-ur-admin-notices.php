@@ -220,6 +220,9 @@ class UR_Admin_Notices {
 			case 'products':
 				$valid = ur_check_products_version( $value );
 				break;
+			case 'functions':
+				$valid = ur_check_all_functions( $value );
+				break;
 			case 'db_conditions':
 				// code...
 				break;

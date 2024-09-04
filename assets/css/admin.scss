@@ -5943,7 +5943,7 @@ body {
 			margin-right: -910px;
 			display: none;
 		}
-	}	
+	}
 }
 
 .ur-embed-form-button {
@@ -6016,6 +6016,62 @@ body {
 #elementor-editor-wrapper .ur-icon-user-registration:before,
 .elementor-edit-area .ur-icon-user-registration:before {
 	content: "\e031";
+	font-family: "UserRegistration";
+	font-weight: normal;
+	font-style: normal;
+	font-display: block;
+}
+#elementor-editor-wrapper .ur-icon-edit-password:before,
+.elementor-edit-area .ur-icon-edit-password:before {
+	content: "\e045";
+	font-family: "UserRegistration";
+	font-weight: normal;
+	font-style: normal;
+	font-display: block;
+}
+#elementor-editor-wrapper .ur-icon-edit-profile:before,
+.elementor-edit-area .ur-icon-edit-profile:before {
+	content: "\e046";
+	font-family: "UserRegistration";
+	font-weight: normal;
+	font-style: normal;
+	font-display: block;
+}
+#elementor-editor-wrapper .ur-icon-login:before,
+.elementor-edit-area .ur-icon-login:before {
+	content: "\e048";
+	font-family: "UserRegistration";
+	font-weight: normal;
+	font-style: normal;
+	font-display: block;
+}
+#elementor-editor-wrapper .form:before,
+.elementor-edit-area .form:before {
+	content: "\e048";
+	font-family: "UserRegistration";
+	font-weight: normal;
+	font-style: normal;
+	font-display: block;
+}
+#elementor-editor-wrapper .ur-icon-myaccount:before,
+.elementor-edit-area .ur-icon-myaccount:before {
+	content: "\e047";
+	font-family: "UserRegistration";
+	font-weight: normal;
+	font-style: normal;
+	font-display: block;
+}
+#elementor-editor-wrapper .ur-icon-popup:before,
+.elementor-edit-area .ur-icon-popup:before {
+	content: "\e043";
+	font-family: "UserRegistration";
+	font-weight: normal;
+	font-style: normal;
+	font-display: block;
+}
+#elementor-editor-wrapper .ur-icon-profile-details:before,
+.elementor-edit-area .ur-icon-profile-details:before {
+	content: "\e044";
 	font-family: "UserRegistration";
 	font-weight: normal;
 	font-style: normal;

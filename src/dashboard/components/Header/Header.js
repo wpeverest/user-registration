@@ -19,7 +19,7 @@ import {
 	useDisclosure,
 	Divider,
 	Center,
-	Tooltip,
+	Tooltip
 } from "@chakra-ui/react";
 import { sprintf, __ } from "@wordpress/i18n";
 import React, { useEffect, useRef } from "react";
@@ -57,7 +57,7 @@ const Header = () => {
 		<>
 			<Box
 				position={{
-					sm: "sticky",
+					sm: "sticky"
 				}}
 				top="var(--wp-admin--admin-bar--height, 0)"
 				bg={"white"}
@@ -88,16 +88,16 @@ const Header = () => {
 										lineHeight="150%"
 										color="#64748B"
 										_hover={{
-											color: "primary.500",
+											color: "primary.500"
 										}}
 										_focus={{
-											boxShadow: "none",
+											boxShadow: "none"
 										}}
 										_activeLink={{
 											color: "primary.500",
 											borderBottom: "3px solid",
 											borderColor: "primary.500",
-											marginBottom: "-2px",
+											marginBottom: "-2px"
 										}}
 										display="inline-flex"
 										alignItems="center"
@@ -122,9 +122,9 @@ const Header = () => {
 								label={sprintf(
 									__(
 										"You are currently using User Registration %s",
-										"user-registration",
+										"user-registration"
 									),
-									(isPro && "Pro ") + "v" + version,
+									(isPro && "Pro ") + "v" + version
 								)}
 							>
 								<Tag
@@ -168,7 +168,7 @@ const Header = () => {
 								<Tooltip
 									label={__(
 										"Latest Updates",
-										"user-registration",
+										"user-registration"
 									)}
 								>
 									<Image
@@ -192,6 +192,7 @@ const Header = () => {
 				placement="right"
 				onClose={onClose}
 				finalFocusRef={ref}
+				size="md"
 			>
 				<DrawerOverlay
 					bgColor="rgb(0,0,0,0.05)"

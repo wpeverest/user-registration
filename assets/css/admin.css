@@ -5638,7 +5638,7 @@
       border: 0;
       border-left: 1px solid #e1e1e1;
       background-color: transparent;
-      transition: color 0.1s ease-in-out, background 0.1s ease-in-out; }
+      transition: color 0.1s ease-in-out, background 0.1s ease-in-out; }
       .ur-backbone-modal-main .ur-backbone-modal-header .modal-close-link::before {
         font: normal 22px/50px "dashicons" !important;
         color: #676d8a;
@@ -6010,7 +6010,7 @@
             cursor: pointer;
             font-size: 15px; }
             .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-lists li a:focus {
-              box-shadow: 0 0 0 0px transparent, 0 0 0px 0px transparent; }
+              box-shadow: 0 0 0 0px transparent, 0 0 0px 0px transparent; }
             .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-lists li a.active {
               background-color: #ffffff;
               color: #475bb2;
@@ -7826,7 +7826,7 @@ a.button.ur-smart-tags-list-button {
     .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row select {
       background-image: linear-gradient(45deg, transparent 50%, gray 50%), linear-gradient(135deg, gray 50%, transparent 50%);
       background-position: calc(100% - 15px) calc(1em + 2px), calc(100% - 10px) calc(1em + 2px), calc(100% - 2.5em) 0.5em;
-      background-size: 5px 5px, 5px 5px, 1px 1.5em;
+      background-size: 5px 5px, 5px 5px, 1px 1.5em;
       background-repeat: no-repeat; }
     .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row .ur-radio-group-list {
       display: flex;
@@ -7987,10 +7987,10 @@ a.button.ur-smart-tags-list-button {
                 font-size: 15px; }
               #wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .ur-login-shortcode--wrapper .ur-login-content .login-forms-shortcode-action .ur-copy-shortcode {
                 box-shadow: none;
-                transition: all 0.3s ease-in-out; }
+                transition: all 0.3s ease-in-out; }
                 #wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .ur-login-shortcode--wrapper .ur-login-content .login-forms-shortcode-action .ur-copy-shortcode svg path {
                   fill: #475bb2;
-                  transition: all 0.3s ease-in-out; }
+                  transition: all 0.3s ease-in-out; }
                 #wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .ur-login-shortcode--wrapper .ur-login-content .login-forms-shortcode-action .ur-copy-shortcode:hover {
                   background: #475bb2 !important; }
                   #wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .ur-login-shortcode--wrapper .ur-login-content .login-forms-shortcode-action .ur-copy-shortcode:hover svg path {
@@ -8702,7 +8702,7 @@ body.user-registration #wpbody-content {
                 align-items: center;
                 gap: 8px;
                 margin: 4px;
-                padding: 0px 8px 0px 10px;
+                padding: 0px 8px 0px 10px;
                 border: 0;
                 color: #383838;
                 flex-direction: row-reverse; }
@@ -9193,6 +9193,62 @@ body.ur-settings-sidebar-hidden .user-registration-settings-sidebar-container {
 #elementor-editor-wrapper .ur-icon-user-registration:before,
 .elementor-edit-area .ur-icon-user-registration:before {
   content: "\e031";
+  font-family: "UserRegistration";
+  font-weight: normal;
+  font-style: normal;
+  font-display: block; }
+
+#elementor-editor-wrapper .ur-icon-edit-password:before,
+.elementor-edit-area .ur-icon-edit-password:before {
+  content: "\e045";
+  font-family: "UserRegistration";
+  font-weight: normal;
+  font-style: normal;
+  font-display: block; }
+
+#elementor-editor-wrapper .ur-icon-edit-profile:before,
+.elementor-edit-area .ur-icon-edit-profile:before {
+  content: "\e046";
+  font-family: "UserRegistration";
+  font-weight: normal;
+  font-style: normal;
+  font-display: block; }
+
+#elementor-editor-wrapper .ur-icon-login:before,
+.elementor-edit-area .ur-icon-login:before {
+  content: "\e048";
+  font-family: "UserRegistration";
+  font-weight: normal;
+  font-style: normal;
+  font-display: block; }
+
+#elementor-editor-wrapper .form:before,
+.elementor-edit-area .form:before {
+  content: "\e048";
+  font-family: "UserRegistration";
+  font-weight: normal;
+  font-style: normal;
+  font-display: block; }
+
+#elementor-editor-wrapper .ur-icon-myaccount:before,
+.elementor-edit-area .ur-icon-myaccount:before {
+  content: "\e047";
+  font-family: "UserRegistration";
+  font-weight: normal;
+  font-style: normal;
+  font-display: block; }
+
+#elementor-editor-wrapper .ur-icon-popup:before,
+.elementor-edit-area .ur-icon-popup:before {
+  content: "\e043";
+  font-family: "UserRegistration";
+  font-weight: normal;
+  font-style: normal;
+  font-display: block; }
+
+#elementor-editor-wrapper .ur-icon-profile-details:before,
+.elementor-edit-area .ur-icon-profile-details:before {
+  content: "\e044";
   font-family: "UserRegistration";
   font-weight: normal;
   font-style: normal;

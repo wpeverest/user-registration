@@ -928,6 +928,60 @@
 		}
 		return vars;
 	}
+	/**
+	 * Display the upgrade message for the top addons.
+	 */
+	$("body").on("click", ".user-registration-inactive-addon", function (e) {
+		$this = $(this);
+		e.preventDefault();
+		var video_id = $this.data("video");
+		var plugin_title = $this.data("title");
+		var available_in = $(this).data("available-in");
+
+		if (video_id !== "") {
+			var video =
+				'<div style="width: 535px; height: 300px;"><iframe width="100%" height="100%" frameborder="0" src="https://www.youtube.com/embed/' +
+				video_id +
+				'" rel="1" allowfullscreen></iframe></div><br>';
+		}
+		var icon =
+			'<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>';
+
+		var message =
+			video + user_registration_settings_params.i18n.upgrade_message;
+
+		message = message
+			.replace("%title%", plugin_title)
+			.replace("%plan%", available_in);
+
+		var title =
+			icon +
+			'<span class="user-registration-swal2-modal__title">' +
+			plugin_title +
+			" " +
+			user_registration_settings_params.i18n.pro_feature_title;
+		("</span>");
+		Swal.fire({
+			title: title,
+			html: message,
+			customClass:
+				"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-locked-field",
+			showCloseButton: true,
+			showConfirmButton: true,
+			allowOutsideClick: true,
+			heightAuto: false,
+			width: "575px",
+			confirmButtonText:
+				user_registration_settings_params.i18n.upgrade_plan
+		}).then(function (result) {
+			if (result.isConfirmed) {
+				window.open(
+					user_registration_settings_params.i18n.upgrade_link,
+					"_blank"
+				);
+			}
+		});
+	});
 
 	$(document)
 		.find(".user-registration-global-settings--field")
