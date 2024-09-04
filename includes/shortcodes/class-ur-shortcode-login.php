@@ -39,7 +39,7 @@ class UR_Shortcode_Login {
 		$redirect_url = isset( $atts['redirect_url'] ) ? trim( $atts['redirect_url'] ) : '';
 		$redirect_url = UR_Shortcodes::check_is_valid_redirect_url( $redirect_url );
 
-		$check_state = true;
+		$check_state = false;
 		if ( isset( $atts['userState'] ) ) {
 			$check_state = 'logged_out' === $atts['userState'];
 		}
