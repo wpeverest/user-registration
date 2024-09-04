@@ -12,6 +12,7 @@ const urls = {
 	deactivateModule: base + "modules/deactivate",
 	bulkActivateModules: base + "modules/bulk-activate",
 	bulkDeactivateModules: base + "modules/bulk-deactivate",
+	activateLicense: base + "modules/activate-license"
 };
 
 export const getAllModules = () => {
@@ -19,8 +20,8 @@ export const getAllModules = () => {
 		path: `${urls.modules}`,
 		method: "get",
 		headers: {
-			"X-WP-Nonce": urRestApiNonce,
-		},
+			"X-WP-Nonce": urRestApiNonce
+		}
 	}).then((res) => res);
 };
 
@@ -29,13 +30,13 @@ export const activateModule = (slug, name, type) => {
 		path: urls.activateModule,
 		method: "POST",
 		headers: {
-			"X-WP-Nonce": urRestApiNonce,
+			"X-WP-Nonce": urRestApiNonce
 		},
 		data: {
 			slug: slug,
 			name: name,
-			type: type,
-		},
+			type: type
+		}
 	}).then((res) => res);
 };
 
@@ -44,12 +45,12 @@ export const deactivateModule = (slug, type) => {
 		path: `${urls.deactivateModule}`,
 		method: "POST",
 		headers: {
-			"X-WP-Nonce": urRestApiNonce,
+			"X-WP-Nonce": urRestApiNonce
 		},
 		data: {
 			slug: slug,
-			type: type,
-		},
+			type: type
+		}
 	}).then((res) => res);
 };
 
@@ -58,11 +59,11 @@ export const bulkActivateModules = (moduleData) => {
 		path: urls.bulkActivateModules,
 		method: "POST",
 		headers: {
-			"X-WP-Nonce": urRestApiNonce,
+			"X-WP-Nonce": urRestApiNonce
 		},
 		data: {
-			moduleData: moduleData,
-		},
+			moduleData: moduleData
+		}
 	}).then((res) => res);
 };
 
@@ -71,10 +72,23 @@ export const bulkDeactivateModules = (moduleData) => {
 		path: urls.bulkDeactivateModules,
 		method: "POST",
 		headers: {
-			"X-WP-Nonce": urRestApiNonce,
+			"X-WP-Nonce": urRestApiNonce
 		},
 		data: {
-			moduleData: moduleData,
+			moduleData: moduleData
+		}
+	}).then((res) => res);
+};
+
+export const activateLicense = async (licenseActivationKey) => {
+	return await apiFetch({
+		path: urls.activateLicense,
+		method: "POST",
+		headers: {
+			"X-WP-Nonce": urRestApiNonce
 		},
+		data: {
+			licenseActivationKey: licenseActivationKey
+		}
 	}).then((res) => res);
 };
