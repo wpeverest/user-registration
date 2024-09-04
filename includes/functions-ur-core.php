@@ -4622,6 +4622,10 @@ if ( ! function_exists( 'ur_add_links_to_top_nav' ) ) {
 		if ( isset( $_GET['ur_preview'] ) && isset( $_GET['form_id'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$form_id = sanitize_text_field( wp_unslash( $_GET['form_id'] ) ); //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		} elseif ( is_page() || is_single() ) {
+
+			if( isset( $_GET['vc_editable'] ) ) {
+				return;
+			}
 			$post_content = get_the_content();
 
 			if ( has_shortcode( $post_content, 'user_registration_form' ) ) {
@@ -6430,6 +6434,133 @@ if ( ! function_exists( 'ur_prevent_default_login' ) ) {
 	}
 }
 
+if ( ! function_exists( 'get_forms_for_wpbakery' ) ) {
+
+	/**
+	 * Get User Registration forms list for wpbakery.
+	 */
+	function get_forms_for_wpbakery() {
+		$user_registration_forms = array();
+
+		if ( empty( $user_registration_forms ) ) {
+			$ur_forms = ur_get_all_user_registration_form();
+			if ( ! empty( $ur_forms ) ) {
+
+				foreach ( $ur_forms as $form_value => $form_name ) {
+					$user_registration_forms[ $form_name ] = $form_value;
+				}
+			} else {
+				$user_registration_forms[0] = esc_html__( 'You have not created a form, Please Create a form first', 'user-registration' );
+			}
+
+			return $user_registration_forms;
+		}
+	}
+}
+
+/**
+ * Create WPBakery Widget for User Registration.
+ */
+add_action( 'vc_before_init', 'create_wpbakery_widget_category' );
+
+/**
+ * Create WPBakery Widgets for User Registration.
+ *
+ * @since 3.3.2
+ */
+function create_wpbakery_widget_category() {
+	vc_map(
+		array(
+			'name'        => esc_html__( 'Registration Form', 'user-registration' ),
+			'base'        => 'user_registration_form',
+			'icon'        => 'icon-wpb-vc_user_registration',
+			'category'    => esc_html__( 'User Registration', 'user-registration' ),
+			'description' => esc_html__( 'Registration Form widget for WPBakery.', 'user-registration' ),
+			'params'      => array(
+				array(
+					'type'        => 'dropdown',
+					'heading'     => esc_html__( 'Form', 'user-registration' ),
+					'param_name'  => 'id',
+					'value'       => get_forms_for_wpbakery(),
+					'description' => esc_html__( 'Select Form.', 'user-registration' ),
+				),
+			),
+		)
+	);
+	vc_map(
+		array(
+			'name'        => esc_html__( 'My Account', 'user-registration' ),
+			'base'        => 'user_registration_my_account',
+			'icon'        => 'icon-wpb-vc_user_registration',
+			'category'    => esc_html__( 'User Registration', 'user-registration' ),
+			'description' => esc_html__( 'My Account widget for WPBakery.', 'user-registration' ),
+			'params'      => array(
+				array(
+					'type'        => 'textfield',
+					'heading'     => esc_html__( 'Redirect URL', 'user-registration' ),
+					'param_name'  => 'redirect_url',
+					'value'       => '',
+					'description' => esc_html__( 'Enter redirect url after login.', 'user-registration' ),
+				),
+				array(
+					'type'        => 'textfield',
+					'heading'     => esc_html__( 'Logout URL', 'user-registration' ),
+					'param_name'  => 'logout_url',
+					'value'       => '',
+					'description' => esc_html__( 'Enter url which redirect after logout.', 'user-registration' ),
+				),
+			),
+		),
+	);
+	vc_map(
+		array(
+			'name'        => esc_html__( 'Login Form', 'user-registration' ),
+			'base'        => 'user_registration_login',
+			'icon'        => 'icon-wpb-vc_user_registration',
+			'category'    => esc_html__( 'User Registration', 'user-registration' ),
+			'description' => esc_html__( 'Login Form widget for WPBakery.', 'user-registration' ),
+			'params'      => array(
+				array(
+					'type'        => 'textfield',
+					'heading'     => esc_html__( 'Redirect URL', 'user-registration' ),
+					'param_name'  => 'redirect_url',
+					'value'       => '',
+					'description' => esc_html__( 'Enter redirect url after login.', 'user-registration' ),
+				),
+				array(
+					'type'        => 'textfield',
+					'heading'     => esc_html__( 'Logout URL', 'user-registration' ),
+					'param_name'  => 'logout_url',
+					'value'       => '',
+					'description' => esc_html__( 'Enter url which redirect after logout.', 'user-registration' ),
+				),
+			),
+		),
+	);
+	vc_map(
+		array(
+			'name'        => esc_html__( 'Edit Profile', 'user-registration' ),
+			'base'        => 'user_registration_edit_profile',
+			'icon'        => 'icon-wpb-vc_user_registration',
+			'category'    => esc_html__( 'User Registration', 'user-registration' ),
+			'description' => esc_html__( 'Edit Profile widget for WPBakery.', 'user-registration' ),
+		),
+	);
+	vc_map(
+		array(
+			'name'        => esc_html__( 'Edit Password', 'user-registration' ),
+			'base'        => 'user_registration_edit_password',
+			'icon'        => 'icon-wpb-vc_user_registration',
+			'category'    => esc_html__( 'User Registration', 'user-registration' ),
+			'description' => esc_html__( 'Edit Password widget for WPBakery.', 'user-registration' ),
+		),
+	);
+
+	/**
+	 * Hook to add more wpbakery widget for user registration.
+	 */
+	do_action( 'user_registration_add_wpbakery_widget' );
+}
 if ( ! function_exists( 'ur_integration_addons' ) ) {
 	/**
 	 * List of integrations.
