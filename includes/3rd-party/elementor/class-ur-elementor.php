@@ -3,7 +3,7 @@
  * UserRegistation Elementor
  *
  * @package UserRegistration\Class
- * @version 3.0.5
+ * @since 3.2.2
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -26,7 +26,6 @@ class UR_Elementor {
 	/**
 	 * Initialize elementor hooks.
 	 *
-	 * @since 3.0.5
 	 */
 	public function init() {
 
@@ -43,13 +42,29 @@ class UR_Elementor {
 	/**
 	 * Register User Registration forms Widget.
 	 *
-	 * @since 1.8.5
 	 */
 	public function register_widget() {
 			// Include Widget files.
-			require_once UR_ABSPATH . 'includes/3rd-party/elementor/class-ur-widget.php';
+			require_once UR_ABSPATH . 'includes/3rd-party/elementor/widgets/class-ur-widgets-registration.php';
+			require_once UR_ABSPATH . 'includes/3rd-party/elementor/widgets/class-ur-widgets-login.php';
+			require_once UR_ABSPATH . 'includes/3rd-party/elementor/widgets/class-ur-widgets-myaccount.php';
+			require_once UR_ABSPATH . 'includes/3rd-party/elementor/widgets/class-ur-widgets-edit-profile.php';
+			require_once UR_ABSPATH . 'includes/3rd-party/elementor/widgets/class-ur-widgets-edit-password.php';
 
-			ElementorPlugin::instance()->widgets_manager->register( new UR_Widget() );
+			ElementorPlugin::instance()->widgets_manager->register( new UR_Elementor_Widget_Registration() );
+			ElementorPlugin::instance()->widgets_manager->register( new UR_Elementor_Widget_Login() );
+			ElementorPlugin::instance()->widgets_manager->register( new UR_Elementor_Widget_MyAccount() );
+			ElementorPlugin::instance()->widgets_manager->register( new UR_Elementor_Widget_Edit_Profile() );
+			ElementorPlugin::instance()->widgets_manager->register( new UR_Elementor_Widget_Edit_Password() );
+
+
+			//include if pro version
+			if(is_plugin_active('user-registration-pro/user-registration.php')){
+				require_once UR_ABSPATH . 'includes/3rd-party/elementor/widgets/class-ur-widgets-profile-details.php';
+				require_once UR_ABSPATH . 'includes/3rd-party/elementor/widgets/class-ur-widgets-popup.php';
+				ElementorPlugin::instance()->widgets_manager->register( new UR_Elementor_Widget_View_Details() );
+				ElementorPlugin::instance()->widgets_manager->register( new UR_Elementor_Widget_Popup() );
+			}
 	}
 
 	/**
@@ -57,7 +72,6 @@ class UR_Elementor {
 	 *
 	 * @param object $elements_manager Elementor elements manager.
 	 *
-	 * @since 1.8.5
 	 */
 	public function ur_elementor_widget_categories( $elements_manager ) {
 		$elements_manager->add_category(
@@ -74,7 +88,10 @@ class UR_Elementor {
 	 */
 	public function editor_assets() {
 		wp_register_style( 'user-registration-admin', UR()->plugin_url() . '/assets/css/admin.css', array(), UR()->version );
+		wp_register_style( 'user-registration-my-account', UR()->plugin_url() . '/assets/css/my-account-layout.css', array( ), UR()->version );
+
 		wp_enqueue_style( 'user-registration-admin' );
+		wp_enqueue_style( 'user-registration-my-account' );
 	}
 
 	/**
