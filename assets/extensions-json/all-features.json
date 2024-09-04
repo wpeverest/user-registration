@@ -6,14 +6,16 @@
       "name" : "User Registration - SMS Integration",
       "image": "extensions-json/sections/images/sms-integration-addon.png",
       "excerpt": "Send SMS verifications to users after each registration; registration will be automatically approved after successful verification.",
-      "link": "https://wpuserregistration.com/features/sms-integration/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "link": "https://docs.wpuserregistration.com/docs/sms-notification/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "released_date": "19/08/2024",
       "plan" : [
         "personal",
         "plus",
         "professional",
         "themegrill agency"
-      ]
+      ],
+      "setting_url": "admin.php?page=user-registration-settings&tab=integration",
+      "demo_video_url": "-iUMcr03FP8"
     },
     {
       "title": "Payment History",
@@ -21,14 +23,16 @@
       "name" : "User Registration Membership - Payment History",
       "image": "extensions-json/sections/images/payment-history-addon.png",
       "excerpt": "The Payment Histories Overview feature provides users with a detailed and searchable list of all past orders and transactions, enabling easy tracking and management of their payment activities.",
-      "link": "https://wpuserregistration.com/features/payment-history/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "link": "https://docs.wpuserregistration.com/docs/user-registration-pro/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "released_date": "20/06/2024",
       "plan" : [
         "personal",
         "plus",
         "professional",
         "themegrill agency"
-      ]
+      ],
+      "setting_url": "admin.php?page=member-payment-history",
+      "demo_video_url": "DuWX7i7eYsY"
     },
     {
       "title": "Coupons",
@@ -36,14 +40,16 @@
       "name" : "User Registration - Coupons",
       "image": "extensions-json/sections/images/coupon-addon.png",
       "excerpt": "Enhance user registration with a seamless coupon add-on, offering personalized discounts and boosting engagement from day one.",
-      "link": "https://wpuserregistration.com/features/coupons/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "link": "https://docs.wpuserregistration.com/docs/user-registration-pro/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "released_date": "20/06/2024",
       "plan" : [
         "personal",
         "plus",
         "professional",
         "themegrill agency"
-      ]
+      ],
+      "setting_url": "admin.php?page=user-registration-coupons",
+      "demo_video_url": "XWUAiFmjf0w"
     },
     {
       "title": "Content Restriction",
@@ -51,14 +57,16 @@
       "name" : "User Registration - Content Restriction",
       "image": "extensions-json/sections/images/content-restriction.png",
       "excerpt": "Restrict access partially or fully to specific content, such as pages, posts, and more using advanced conditional rules.",
-      "link": "https://wpuserregistration.com/features/content-restriction/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "link": "https://docs.wpuserregistration.com/docs/user-registration-content-restriction/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "released_date": "22/09/2017",
       "plan" : [
         "personal",
         "plus",
         "professional",
         "themegrill agency"
-      ]
+      ],
+      "setting_url": "admin.php?page=user-registration-content-restriction",
+      "demo_video_url": "pTGPvYvU_Ig"
     },
     {
       "title": "PayPal Payment",
@@ -66,14 +74,16 @@
       "name" : "User Registration Payments",
       "image": "extensions-json/sections/images/payment-paypal.png",
       "excerpt": "Want quick and secure payments during registration? User Registration has in-built support for the PayPal gateway.",
-      "link": "https://wpuserregistration.com/features/paypal/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "link": "https://docs.wpuserregistration.com/docs/user-registration-payments-paypal/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "released_date": "14/08/2018",
       "plan" : [
         "personal",
         "plus",
         "professional",
         "themegrill agency"
-      ]
+      ],
+      "setting_url": "admin.php?page=user-registration-settings&tab=payment",
+      "demo_video_url": "RKvdEN2xGo8"
     },
 	  {
       "title": "Frontend Listing",
@@ -81,14 +91,16 @@
       "name" : "User Registration Frontend Listing",
       "image": "extensions-json/sections/images/frontend-listing.png",
       "excerpt": "By listing registered users in the front end, your site visitors or users can view the profile of all the listed members.",
-      "link": "https://wpuserregistration.com/features/frontend-listing/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "link": "https://docs.wpuserregistration.com/docs/user-registration-frontend-listing/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "released_date": "06/04/2021",
       "plan" : [
         "personal",
         "plus",
         "professional",
         "themegrill agency"
-      ]
+      ],
+      "setting_url": "admin.php?page=user-registration-frontend-list",
+      "demo_video_url": "4xDCbsBZaTs"
 	  }
   ]
 }

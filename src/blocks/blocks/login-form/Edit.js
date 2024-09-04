@@ -1,10 +1,11 @@
-import React from "react";
+import React, {useState} from "react";
 import { __ } from "@wordpress/i18n";
 import { Box } from "@chakra-ui/react";
 import metadata from "./block.json";
 
 import {TextControl, SelectControl, PanelBody, Disabled} from "@wordpress/components";
 import { InspectorControls, useBlockProps } from "@wordpress/block-editor";
+
 const ServerSideRender = wp.serverSideRender
 	? wp.serverSideRender
 	: wp.components.ServerSideRender;
@@ -14,7 +15,7 @@ const Edit = (props) => {
 	const blockName = metadata.name;
 
 	const {
-		attributes: { redirectUrl, logoutUrl, userState },
+		attributes: { redirectUrl, logoutUrl },
 		setAttributes,
 	} = props;
 
@@ -24,9 +25,9 @@ const Edit = (props) => {
 	const setLogoutUrl = (url) => {
 		setAttributes({ logoutUrl: url });
 	};
-	const setUserState = (state) => {
-		setAttributes({ userState: state });
-	};
+
+	const [userState, setUserState] = useState("logged_out");
+
 
 	return (
 		<>
@@ -51,8 +52,8 @@ const Edit = (props) => {
 						label={__("User State", "user-registration")}
 						value={userState}
 						options={[
-							{ label: "Logged Out", value: "logged_out" },
 							{ label: "Logged In", value: "logged_in" },
+							{ label: "Logged Out", value: "logged_out" },
 						]}
 						onChange={setUserState}
 					/>
@@ -63,7 +64,7 @@ const Edit = (props) => {
 					<ServerSideRender
 						key="ur-gutenberg-login-form-server-side-renderer"
 						block={blockName}
-						attributes={props.attributes}
+						attributes={{...props.attributes, userState  }}
 					/>
 				</Disabled>
 			</Box>

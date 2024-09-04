@@ -284,15 +284,18 @@ class UR_Install {
 
 		// Migrations for User Registration ( Free ).
 		$migration_updates = array(
-			'3.0' => array(
+			'3.0'   => array(
 				'ur_update_30_option_migrate',
+			),
+			'3.2.2' => array(
+				'ur_update_322_option_migrate',
 			),
 		);
 
 		if ( defined( 'UR_PRO_ACTIVE' ) ) {
 			// Migrations for User Registration ( Pro ).
 			$migration_updates = array(
-				'4.0' => array(
+				'4.0'   => array(
 					'ur_update_30_option_migrate',
 					'ur_pro_update_40_option_migrate',
 				),
@@ -536,7 +539,7 @@ CREATE TABLE {$wpdb->prefix}user_registration_sessions (
 	public static function get_tables() {
 		global $wpdb;
 		$prefix = $wpdb->prefix;
-		if (is_multisite()) {
+		if ( is_multisite() ) {
 			$prefix = $wpdb->base_prefix;
 		}
 

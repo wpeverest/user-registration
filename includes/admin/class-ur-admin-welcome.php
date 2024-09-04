@@ -19,10 +19,11 @@ class UR_Admin_Welcome {
 	 * Hook in methods.
 	 */
 	public static function init() {
-		$wizard_ran = get_option( 'user_registration_first_time_activation_flag', false );
+		$wizard_ran      = get_option( 'user_registration_first_time_activation_flag', false );
+		$onboard_skipped = get_option( 'user_registration_onboarding_skipped', false );
 
 		// If Wizard was ran already or user is an old user of plugin, then do not proceed to Wizard page again.
-		if ( ! $wizard_ran ) {
+		if ( ! $wizard_ran && ! $onboard_skipped ) {
 			return;
 		}
 
@@ -160,7 +161,7 @@ class UR_Admin_Welcome {
 						</div>
 
 						<div class="user-registration-skip-btn">
-							<a href="<?php echo esc_url_raw( admin_url() . 'admin.php?page=user-registration-dashboard&end-setup-wizard=' . true ); ?>">
+							<a href="<?php echo esc_url_raw( admin_url() . 'admin.php?page=user-registration-dashboard&end-setup-wizard=' . true . '&activeStep=install_page' ); ?>">
 								<p style="color: gray; font-style:italic;"><?php esc_html_e( 'Skip to Dashboard', 'user-registration' ); ?> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
 								<path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
 								</svg></p>

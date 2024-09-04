@@ -200,18 +200,22 @@ do_action( 'user_registration_before_customer_login_form' );
 						$url_options = get_option( 'user_registration_general_setting_registration_url_options' );
 
 						if ( ! empty( $url_options ) ) {
+							$url_pattern = "/^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}(\\.[a-zA-Z0-9()]{1,6})?\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$/";
+							if ( ! filter_var( $url_options, FILTER_VALIDATE_URL ) || ! preg_match( $url_pattern, $url_options ) ) {
+								$url_options = home_url( $url_options );
+							}
 							echo '<p class="user-registration-register register">';
 							$label = get_option( 'user_registration_general_setting_registration_label' );
 
 							if ( ! empty( $label ) ) {
 								?>
-								<a href="<?php echo esc_url( get_option( 'user_registration_general_setting_registration_url_options' ) ); ?>"> <?php echo esc_html( get_option( 'user_registration_general_setting_registration_label' ) ); ?>
+								<a href="<?php echo esc_url( $url_options ); ?>"> <?php echo esc_html( get_option( 'user_registration_general_setting_registration_label' ) ); ?>
 									</a>
 								<?php
 							} else {
 								update_option( 'user_registration_general_setting_registration_label', __( 'Not a member yet? Register now.', 'user-registration' ) );
 								?>
-									<a href="<?php echo esc_url( get_option( 'user_registration_general_setting_registration_url_options' ) ); ?>"> <?php echo esc_html( get_option( 'user_registration_general_setting_registration_label' ) ); ?>
+									<a href="<?php echo esc_url( $url_options ); ?>"> <?php echo esc_html( get_option( 'user_registration_general_setting_registration_label' ) ); ?>
 									</a>
 								<?php
 							}

@@ -81,6 +81,16 @@ class UR_Modules {
 				'permission_callback' => array( __CLASS__, 'check_admin_plugin_activation_permissions' ),
 			)
 		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/activate-license',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( __CLASS__, 'activate_license' ),
+				'permission_callback' => array( __CLASS__, 'check_admin_plugin_activation_permissions' ),
+			)
+		);
 	}
 
 	/**
@@ -453,7 +463,7 @@ class UR_Modules {
 			);
 			$status      = self::ur_install_individual_addon( $slug, $plugin, $name, $status );
 
-			if ( isset( $status['success'] ) && ! $status['success'] ) {
+			if ( isset( $status['success'] ) && '' === $status['success'] ) {
 				array_push( $failed_addon, $name );
 				continue;
 			}
@@ -696,5 +706,42 @@ class UR_Modules {
 	 */
 	public static function check_admin_plugin_installation_permissions( $request ) {
 		return current_user_can( 'install_plugins' ) && current_user_can( 'activate_plugin' );
+	}
+
+
+	/**
+	 * Activate the plugin license.
+	 *
+	 * @since 3.3.2
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public static function activate_license( $request ) {
+		if ( isset( $request['licenseActivationKey'] ) ) {
+			$user_registration_updater   = new UR_Plugin_Updater();
+			$user_registration_activator = $user_registration_updater->activate_license( $request['licenseActivationKey'] );
+
+			if ( isset( $user_registration_activator ) && $user_registration_activator ) {
+				return new \WP_REST_Response(
+					array(
+						'status'  => true,
+						'message' => esc_html__( 'User Registration Pro activated successfully.', 'user-registration' ),
+						'code'    => 200,
+					),
+					200
+				);
+			} else {
+				return new \WP_REST_Response(
+					array(
+						'status'  => true,
+						'message' => esc_html__( 'Please enter the valid license key.', 'user-registration' ),
+						'code'    => 400,
+					),
+					200
+				);
+			}
+		}
 	}
 }
