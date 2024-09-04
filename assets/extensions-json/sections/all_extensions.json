@@ -540,7 +540,7 @@
       "demo_video_url": "xZr2R5CmVF8",
       "released_date": "01/08/2024"
 	  },
-	  {
+    {
       "title": "Authorize.net Payment",
       "slug" : "user-registration-authorize-net",
       "name" : "User Registration Authorize.net",
@@ -555,6 +555,23 @@
       "setting_url": "admin.php?page=user-registration-settings&tab=payment",
       "demo_video_url": "tNj6yg9okMQ",
       "released_date": "01/08/2024"
-	  }
+	  },
+	  {
+		"title": "MailPoet",
+		"slug" : "user-registration-mailpoet",
+		"name" : "User Registration MailPoet",
+		"image": "extensions-json/sections/images/mailpoet.png",
+		"excerpt": "Allows you to combine MailPoet with Everest Forms for enhanced email marketing efforts. Access over 50 pre-designed email templates for effective email marketing and lead conversion.",
+		"link": "https://wpuserregistration.com/features/mailpoet/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+		"plan" : [
+			"personal",
+			"plus",
+			"professional",
+			"themegrill agency"
+		],
+      	"released_date": "09/09/2024",
+		"setting_url": "admin.php?page=user-registration-settings&tab=integration",
+		"demo_video_url": ""
+    }
   ]
 }
