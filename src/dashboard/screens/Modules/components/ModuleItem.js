@@ -14,9 +14,22 @@ import {
 	Button,
 	Divider,
 	HStack,
+	IconButton,
+	Modal,
+	Tooltip,
+	ModalCloseButton,
+	ModalContent,
+	ModalOverlay,
+	ModalHeader,
+	Spinner,
+	useDisclosure,
+	Switch
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 import React, { useState, useEffect } from "react";
+import YouTubePlayer from "react-player/youtube";
+import { FaInfoCircle, FaPlayCircle } from "react-icons/fa";
+import { SettingsIcon } from "@chakra-ui/icons";
 
 /**
  *  Internal Dependencies
@@ -27,19 +40,25 @@ import { actionTypes } from "../../../../context/dashboardContext";
 
 const ModuleItem = (props) => {
 	/* global _UR_DASHBOARD_ */
-	const { assetsURL, liveDemoURL, isPro, licensePlan } =
+	const { assetsURL, liveDemoURL, isPro, licensePlan, adminURL, upgradeURL } =
 		typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 	const [{ upgradeModal }, dispatch] = useStateValue();
 	const [requirementFulfilled, setRequirementFulfilled] = useState(false);
 	const [licenseActivated, setLicenseActivated] = useState(false);
 	const [moduleEnabled, setModuleEnabled] = useState(false);
+	const [showPlayVideoButton, setShowPlayVideoButton] = useState(false);
+	const [thumbnailVideoPlaying, setThumbnailVideoPlaying] = useState(false);
+
+	const [thumbnailVideoLoading, setThumbnailVideoLoading] = useState(true);
+	const { isOpen, onOpen, onClose } = useDisclosure();
+	const [isAddonActivating, setAddonActivated] = useState(false);
 
 	const {
 		data,
 		isChecked,
 		onCheckedChange,
 		isPerformingBulkAction,
-		selectedModuleData,
+		selectedModuleData
 	} = props;
 	const toast = useToast();
 	const {
@@ -53,11 +72,15 @@ const ModuleItem = (props) => {
 		status,
 		required_plan,
 		type,
+		demo_video_url,
+		setting_url
 	} = data;
 	const [moduleStatus, setModuleStatus] = useState(status);
 	const [isPerformingAction, setIsPerformingAction] = useState(false);
+	const [moduleSettingsURL, setModuleSettingsURL] = useState("");
 
 	const handleModuleAction = () => {
+		setAddonActivated(true);
 		setIsPerformingAction(true);
 
 		if (moduleEnabled) {
@@ -71,28 +94,30 @@ const ModuleItem = (props) => {
 							toast({
 								title: data.message,
 								status: "success",
-								duration: 3000,
+								duration: 3000
 							});
 							setModuleStatus("active");
 						} else {
 							toast({
 								title: data.message,
 								status: "error",
-								duration: 3000,
+								duration: 3000
 							});
 							setModuleStatus("not-installed");
 						}
+						setAddonActivated(false);
 					})
 					.catch((e) => {
 						toast({
 							title: e.message,
 							status: "error",
-							duration: 3000,
+							duration: 3000
 						});
 						setModuleStatus("not-installed");
 					})
 					.finally(() => {
 						setIsPerformingAction(false);
+						setAddonActivated(false);
 					});
 			} else {
 				deactivateModule(slug, type)
@@ -101,19 +126,20 @@ const ModuleItem = (props) => {
 							toast({
 								title: data.message,
 								status: "success",
-								duration: 3000,
+								duration: 3000
 							});
 							setModuleStatus("inactive");
 						} else {
 							toast({
 								title: data.message,
 								status: "error",
-								duration: 3000,
+								duration: 3000
 							});
 							setModuleStatus("active");
 						}
 					})
 					.finally(() => {
+						setAddonActivated(false);
 						setIsPerformingAction(false);
 					});
 			}
@@ -123,7 +149,7 @@ const ModuleItem = (props) => {
 			// Handle Pro Upgrade notice
 			dispatch({
 				type: actionTypes.GET_UPGRADE_MODAL,
-				upgradeModal: upgradeModalRef,
+				upgradeModal: upgradeModalRef
 			});
 		}
 	};
@@ -140,7 +166,7 @@ const ModuleItem = (props) => {
 			if (licensePlan) {
 				const requiredPlan = licensePlan.item_plan.replace(
 					" lifetime",
-					"",
+					""
 				);
 
 				if (data.plan && data.plan.includes(requiredPlan.trim())) {
@@ -158,14 +184,22 @@ const ModuleItem = (props) => {
 		}
 	}, [data, upgradeModal]);
 
+	useEffect(() => {
+		if (thumbnailVideoPlaying) {
+			setShowPlayVideoButton(false);
+		}
+	}, [thumbnailVideoPlaying]);
+
 	const handleBoxClick = () => {
 		const upgradeModalRef = { ...upgradeModal };
-		upgradeModalRef.moduleType = "module";
+		upgradeModalRef.moduleType = data.type;
 		upgradeModalRef.moduleName = data.name;
 
 		if (!isPro) {
-			upgradeModalRef.type = "pro";
-			upgradeModalRef.enable = true;
+			const plan_upgrade_url =
+				upgradeURL +
+				"&utm_source=dashboard-all-feature&utm_medium=dashboard-upgrade-plan";
+			window.open(plan_upgrade_url, "_blank");
 		} else if (isPro && !licenseActivated) {
 			upgradeModalRef.type = "license";
 			upgradeModalRef.enable = true;
@@ -178,8 +212,13 @@ const ModuleItem = (props) => {
 
 		dispatch({
 			type: actionTypes.GET_UPGRADE_MODAL,
-			upgradeModal: upgradeModalRef,
+			upgradeModal: upgradeModalRef
 		});
+	};
+
+	const handleModuleSettingsURL = () => {
+		var settingsURL = adminURL + setting_url;
+		window.open(settingsURL, "_blank");
 	};
 
 	return (
@@ -199,16 +238,103 @@ const ModuleItem = (props) => {
 				position="relative"
 				overflow="visible"
 				opacity={moduleEnabled ? 1 : 0.7}
-				onClick={() => {
-					!moduleEnabled && handleBoxClick();
-				}}
 			>
-				<Image
-					src={assetsURL + image}
+				<Box
+					position="relative"
 					borderTopRightRadius="sm"
 					borderTopLeftRadius="sm"
-					w="full"
-				/>
+					overflow="hidden"
+					onMouseLeave={() =>
+						demo_video_url && setShowPlayVideoButton(false)
+					}
+				>
+					{((demo_video_url && !thumbnailVideoPlaying) ||
+						!demo_video_url) && (
+						<Image
+							src={assetsURL + image}
+							borderTopRightRadius="sm"
+							borderTopLeftRadius="sm"
+							w="full"
+							onMouseOver={() =>
+								demo_video_url && setShowPlayVideoButton(true)
+							}
+						/>
+					)}
+
+					{thumbnailVideoPlaying && (
+						<Modal
+							isOpen={true}
+							onClose={() => setThumbnailVideoPlaying(false)}
+							size="3xl"
+						>
+							<ModalOverlay />
+							<ModalContent px={4} pb={4}>
+								<ModalHeader textAlign="center">
+									{title}
+								</ModalHeader>
+								<ModalCloseButton />
+								<YouTubePlayer
+									url={
+										"https://www.youtube.com/embed/" +
+										demo_video_url
+									}
+									playing={true}
+									width={"100%"}
+									controls
+									onReady={() =>
+										setThumbnailVideoLoading(false)
+									}
+									onBufferEnd={() =>
+										setThumbnailVideoLoading(false)
+									}
+								/>
+								{thumbnailVideoLoading && (
+									<Box
+										position={"absolute"}
+										top={"50%"}
+										left={"50%"}
+										transform={"translate(-50%, -50%)"}
+									>
+										<Spinner size={"lg"} />
+									</Box>
+								)}
+							</ModalContent>
+						</Modal>
+					)}
+
+					{showPlayVideoButton && (
+						<Box
+							pos="absolute"
+							top={0}
+							left={0}
+							right={0}
+							bottom={0}
+							bg="black"
+							opacity={0.7}
+							display="flex"
+							alignItems="center"
+							justifyContent="center"
+							borderTopStartRadius={10}
+							borderTopEndRadius={10}
+						>
+							<Tooltip
+								label={__("Play Video", "user-registration")}
+							>
+								<span>
+									<FaPlayCircle
+										color="white"
+										size={50}
+										cursor={"pointer"}
+										onClick={() => {
+											setThumbnailVideoPlaying(true);
+											setThumbnailVideoLoading(true);
+										}}
+									/>
+								</span>
+							</Tooltip>
+						</Box>
+					)}
+				</Box>
 				<Badge
 					backgroundColor="black"
 					color="white"
@@ -241,7 +367,7 @@ const ModuleItem = (props) => {
 										moduleEnabled
 											? onCheckedChange(
 													slug,
-													e.target.checked,
+													e.target.checked
 											  )
 											: handleBoxClick();
 									}}
@@ -281,52 +407,71 @@ const ModuleItem = (props) => {
 					>
 						{__("Documentation", "user-registration")}
 					</Link>
-					<Text as="span" lineHeight="1" color="gray.500">
-						|
-					</Text>
-					<Link
-						href={liveDemoURL}
-						fontSize="xs"
-						color="gray.500"
-						textDecoration="underline"
-						isExternal
-					>
-						{__("Live Demo", "user-registration")}
-					</Link>
+					{moduleEnabled &&
+						setting_url !== "" &&
+						moduleStatus === "active" && (
+							<>
+								<Text as="span" lineHeight="1" color="gray.500">
+									|
+								</Text>
+								<IconButton
+									size="sm"
+									icon={<SettingsIcon />}
+									onClick={handleModuleSettingsURL}
+								/>
+							</>
+						)}
 				</HStack>
-				<Button
-					colorScheme={
-						moduleEnabled
-							? "active" === moduleStatus
-								? "red"
-								: "green"
-							: "primary"
-					}
-					size="sm"
-					fontSize="xs"
-					borderRadius="base"
-					fontWeight="semibold"
-					_hover={{
-						color: "white",
-						textDecoration: "none",
-					}}
-					_focus={{
-						color: "white",
-						textDecoration: "none",
-					}}
-					onClick={handleModuleAction}
-					isLoading={
-						isPerformingAction ||
-						(selectedModuleData.hasOwnProperty(slug) &&
-							isPerformingBulkAction)
-					}
-				>
-					{moduleEnabled
-						? "active" === moduleStatus
-							? __("Deactivate", "user-registration")
-							: __("Activate", "user-registration")
-						: __("Upgrade Plan", "user-registration")}
-				</Button>
+				{isPerformingAction ||
+				(selectedModuleData.hasOwnProperty(slug) &&
+					isPerformingBulkAction) ? (
+					<Spinner
+						speed="0.50s"
+						emptyColor="gray.200"
+						color="blue.500"
+						size="md"
+					/>
+				) : (
+					moduleEnabled && (
+						<Switch
+							isChecked={"active" === moduleStatus ? true : false}
+							onChange={
+								moduleEnabled
+									? handleModuleAction
+									: handleBoxClick
+							}
+							colorScheme="green"
+						/>
+					)
+				)}
+
+				{!moduleEnabled && (
+					<Button
+						colorScheme={"primary"}
+						size="sm"
+						fontSize="xs"
+						borderRadius="base"
+						fontWeight="semibold"
+						_hover={{
+							color: "white",
+							textDecoration: "none"
+						}}
+						_focus={{
+							color: "white",
+							textDecoration: "none"
+						}}
+						onClick={
+							moduleEnabled ? handleModuleAction : handleBoxClick
+						}
+						isLoading={
+							isPerformingAction ||
+							(selectedModuleData.hasOwnProperty(slug) &&
+								isPerformingBulkAction)
+						}
+					>
+						{__("Upgrade Plan", "user-registration")}
+					</Button>
+				)}
 			</Box>
 		</Box>
 	);

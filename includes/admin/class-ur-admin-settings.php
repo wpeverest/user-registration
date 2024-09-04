@@ -50,7 +50,6 @@ class UR_Admin_Settings {
 			if ( ! empty( $_GET['install_user_registration_pages'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification
 				UR_Install::create_pages();
 				UR_Admin_Notices::remove_notice( 'install' );
-				delete_option( 'user_registration_onboarding_skipped' );
 			}
 
 			$settings[] = include 'settings/class-ur-settings-general.php';
@@ -58,6 +57,7 @@ class UR_Admin_Settings {
 			$settings[] = include 'settings/class-ur-settings-email.php';
 			$settings[] = include 'settings/class-ur-settings-import-export.php';
 			$settings[] = include 'settings/class-ur-settings-misc.php';
+			$settings[] = include 'settings/class-ur-settings-integration.php';
 
 			if ( ! function_exists( 'is_plugin_active' ) ) {
 				include_once ABSPATH . 'wp-admin/includes/plugin.php';
@@ -65,10 +65,6 @@ class UR_Admin_Settings {
 
 			if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
 				$settings[] = include 'settings/class-ur-settings-license.php';
-			}
-
-			if ( is_plugin_active( 'user-registration-membership/user-registration-membership.php' ) ) {
-				$settings[] = include 'settings/class-ur-settings-membership.php';
 			}
 
 			/**
@@ -199,15 +195,23 @@ class UR_Admin_Settings {
 			'user-registration-settings',
 			'user_registration_settings_params',
 			array(
-				'ajax_url'         => admin_url( 'admin-ajax.php' ),
+				'ajax_url'                 => admin_url( 'admin-ajax.php' ),
 				'user_registration_search_global_settings_nonce' => wp_create_nonce( 'user_registration_search_global_settings' ),
-				'i18n_nav_warning' => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
-				'i18n'             => array(
-					'captcha_success' => esc_html__( 'Captcha Test Successful !', 'user-registration' ),
-					'captcha_failed'  => esc_html__( 'Some error occured. Please verify that the keys you entered are valid.', 'user-registration' ),
-					'unsaved_changes' => esc_html__( 'You have some unsaved changes. Please save and try again.', 'user-registration' ),
+				'i18n_nav_warning'         => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
+				'i18n'                     => array(
+					'captcha_success'   => esc_html__( 'Captcha Test Successful !', 'user-registration' ),
+					'captcha_failed'    => esc_html__( 'Some error occured. Please verify that the keys you entered are valid.', 'user-registration' ),
+					'unsaved_changes'   => esc_html__( 'You have some unsaved changes. Please save and try again.', 'user-registration' ),
+					'pro_feature_title' => esc_html__( 'is a Pro Feature', 'user-registration' ),
+					'upgrade_message'   => esc_html__(
+						'We apologize, but %title% is not available with the free version. To access this fantastic features, please consider upgrading to the %plan%.',
+						'user-registration'
+					),
+					'upgrade_plan'      => esc_html__( 'Upgrade Plan', 'user-registration' ),
+					'upgrade_link'      => esc_url( 'https://wpuserregistration.com/pricing/?utm_source=integration-settings&utm_medium=premium-addon-popup&utm_campaign=' . urlencode( UR()->utm_campaign ) ),
 				),
 				'is_advanced_field_active' => is_plugin_active( 'user-registration-advanced-fields/user-registration-advanced-fields.php' ),
+
 			)
 		);
 
@@ -373,7 +377,18 @@ class UR_Admin_Settings {
 					}
 
 					if ( 'accordian' === $section['type'] ) {
-						$settings .= '<div class="user-registration-card ur-mb-2">';
+						$available_in = isset( $section['available_in'] ) ? sanitize_text_field( wp_unslash( $section['available_in'] ) ) : '';
+
+						if ( isset( $section['video_id'] ) ) {
+							$inactive_class = 'user-registration-inactive-addon';
+							$extras         = 'data-title="' . esc_attr( $section['title'] ) . '"';
+							$extras        .= 'data-id="' . esc_attr( $section['id'] ) . '"';
+							$extras        .= 'data-video="' . esc_attr( $section['video_id'] ) . '"';
+							$extras        .= 'data-available-in="' . esc_attr( $available_in ) . '"';
+							$settings      .= '<div class="user-registration-card ur-mb-2 ' . esc_attr( $inactive_class ) . '" ' . $extras . '>';
+						} else {
+							$settings .= '<div class="user-registration-card ur-mb-2">';
+						}
 						$settings .= '<div class="user-registration-card__header ur-d-flex ur-align-items-center ur-p-3 integration-header-info accordion">';
 						$settings .= '<div class="integration-detail">';
 						$settings .= '<span class="integration-status">';
@@ -390,7 +405,11 @@ class UR_Admin_Settings {
 						$settings .= '<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><polyline points="6 9 12 15 18 9"></polyline></svg>';
 						$settings .= '</div>';
 						$settings .= '</div>';
-						$settings .= '<div class="user-registration-card__body ur-p-3 integration-body-info">';
+						if ( isset( $section['video_id'] ) ) {
+							$settings .= '<div>';
+						} else {
+							$settings .= '<div class="user-registration-card__body ur-p-3 integration-body-info">';
+						}
 
 						if ( ! empty( $id ) ) {
 							/**
@@ -400,7 +419,7 @@ class UR_Admin_Settings {
 						}
 					}
 
-					if ( is_array( $section['settings'] ) || is_object( $section['settings'] ) ) {
+					if ( isset( $section['settings'] ) && ( is_array( $section['settings'] ) || is_object( $section['settings'] ) ) ) {
 						foreach ( $section['settings'] as $key => $value ) {
 
 							if ( ! isset( $value['type'] ) ) {
@@ -877,7 +896,7 @@ class UR_Admin_Settings {
 									break;
 							}// End switch case.
 						}
-					} elseif ( is_string( $section['settings'] ) ) {
+					} elseif ( isset( $section['settings'] ) && is_string( $section['settings'] ) ) {
 						$settings .= $section['settings'];
 					}
 

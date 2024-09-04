@@ -35,9 +35,10 @@ class UR_Admin_Notices {
 	 * @var array
 	 */
 	private static $core_notices = array(
-		'update'   => 'update_notice',
-		'install'  => 'install_notice',
-		'register' => 'register_notice',
+		'update'                => 'update_notice',
+		'install'               => 'install_notice',
+		'register'              => 'register_notice',
+		'continue_setup_wizard' => 'continue_setup_wizard_notice',
 	);
 
 	/**
@@ -74,13 +75,17 @@ class UR_Admin_Notices {
 	public static function user_registration_install_pages_notice() {
 
 		if ( get_option( 'user_registration_onboarding_skipped', false ) ) {
-			self::add_notice( 'install' );
+			self::add_notice( 'continue_setup_wizard' );
 		}
 
 		if ( isset( $_POST['user_registration_myaccount_page_id'] ) ) { //phpcs:ignore.
 			$my_account_page = $_POST['user_registration_myaccount_page_id']; //phpcs:ignore.
 		} else {
 			$my_account_page = get_option( 'user_registration_myaccount_page_id', 0 );
+		}
+
+		if ( ! $my_account_page ) {
+			self::add_notice( 'install' );
 		}
 
 		$matched        = 0;
@@ -214,6 +219,9 @@ class UR_Admin_Notices {
 				break;
 			case 'products':
 				$valid = ur_check_products_version( $value );
+				break;
+			case 'functions':
+				$valid = ur_check_all_functions( $value );
 				break;
 			case 'db_conditions':
 				// code...
@@ -833,6 +841,40 @@ class UR_Admin_Notices {
 			include 'views/html-notice-registration.php';
 		} else {
 			self::remove_notice( 'register' );
+		}
+	}
+
+	/**
+	 * If user have skipped setup wizard display the notice.
+	 */
+	public static function continue_setup_wizard_notice() {
+
+		$first_time_activation = get_option( 'user_registration_first_time_activation_flag', false );
+
+		$onboarding_completed = true;
+
+		if ( ! $first_time_activation ) {
+			$onboard_skipped      = get_option( 'user_registration_onboarding_skipped', false );
+			$onboard_skipped_step = get_option( 'user_registration_onboarding_skipped_step', false );
+
+			if ( $onboard_skipped && $onboard_skipped_step ) {
+				/* translators: % s: continue wizard URL */
+				$onboarding_complete_text = sprintf( __( '<a href="%s" class="button-primary">Continue Setup Wizard</a>', 'user-registration' ), esc_url( admin_url( '/admin.php?page=user-registration-welcome&tab=setup-wizard&step=' . $onboard_skipped_step . '' ) ) );
+				$onboarding_completed     = false;
+			} else {
+				$onboarding_completed = true;
+			}
+		} else {
+			$onboarding_completed = false;
+		}
+
+		if ( ! $onboarding_completed ) {
+			$notice  = '<div id="message" class="updated user-registration-message ur-connect">';
+			$notice .= '<p>' . wp_kses_post( 'It appears that the setup wizard was skipped. To ensure the User Registration Plugin is properly configured, please proceed with the setup wizard.', 'user-registration' ) . '</p>';
+			$notice .= '<p class="submit">' . wp_kses_post( $onboarding_complete_text ) . '</p>';
+			$notice .= '</div>';
+
+			echo wp_kses_post( $notice );
 		}
 	}
 }

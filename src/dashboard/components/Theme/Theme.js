@@ -12,41 +12,41 @@ const theme = extendTheme({
 			600: "#134fd2",
 			700: "#0f3ea3",
 			800: "#0b2c75",
-			900: "#061a46",
-		},
+			900: "#061a46"
+		}
 	},
 	styles: {
 		global: {
 			".wp-admin #user-registration": {
-				ms: "-20px",
+				ms: "-20px"
 			},
-			".toplevel_page_user-registration #wpwrap": {
-				bgColor: "primary.50",
+			".user-registration_page_user-registration-dashboard #wpwrap": {
+				bgColor: "primary.50"
 			},
 			".ba-modal-open": {
 				"#adminmenuwrap": {
-					zIndex: 999,
-				},
-			},
-		},
+					zIndex: 999
+				}
+			}
+		}
 	},
 	components: {
 		Button: {
 			baseStyle: {
-				borderRadius: "base",
-			},
+				borderRadius: "base"
+			}
 		},
 		Heading: {
 			baseStyle: {
-				margin: 0,
-			},
+				margin: 0
+			}
 		},
 		Text: {
 			baseStyle: {
-				margin: 0,
-			},
-		},
-	},
+				margin: 0
+			}
+		}
+	}
 });
 
 export default theme;

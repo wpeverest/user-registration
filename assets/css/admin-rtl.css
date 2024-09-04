@@ -7033,7 +7033,7 @@ body {
   position: relative;
   display: inline-block;
   width: 36px;
-  height: 16px; }
+  height: 20px; }
   .ur-toggle-section .user-registration-toggle-form input {
     position: relative;
     z-index: 99;
@@ -7045,7 +7045,7 @@ body {
     .ur-toggle-section .user-registration-toggle-form input:focus + .slider {
       box-shadow: 0 0 1px #2196f3; }
     .ur-toggle-section .user-registration-toggle-form input:checked + .slider::before {
-      transform: translateX(-14px); }
+      transform: translateX(-16px); }
   .ur-toggle-section .user-registration-toggle-form .slider {
     position: absolute;
     cursor: pointer;
@@ -7877,16 +7877,24 @@ a.button.ur-smart-tags-list-button {
   margin: 24px 0 0; }
   #wpcontent .user-registration-settings-container .user-registration-options-header--top {
     display: flex;
-    align-items: center; }
-    #wpcontent .user-registration-settings-container .user-registration-options-header--top h3 {
+    align-items: center;
+    justify-content: space-between; }
+    #wpcontent .user-registration-settings-container .user-registration-options-header--top__left h3 {
       margin: 0;
       font-weight: 600;
       font-size: 26px;
       line-height: 120%;
       color: #131313; }
-    #wpcontent .user-registration-settings-container .user-registration-options-header--top p.submit {
-      display: none;
-      margin-top: 0; }
+    #wpcontent .user-registration-settings-container .user-registration-options-header--top__right {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px; }
+      #wpcontent .user-registration-settings-container .user-registration-options-header--top__right span.user-registration-toggle-text {
+        font-size: 16px;
+        line-height: 24px;
+        color: #383838;
+        font-weight: 500; }
   #wpcontent .user-registration-settings-container .user-registration-options-header--bottom ul {
     display: flex;
     align-items: center;
@@ -8156,7 +8164,8 @@ body.user-registration #wpcontent {
 
 .toplevel_page_user-registration #wpbody-content,
 body.user-registration #wpbody-content {
-  background: #f0f0f1; }
+  background: #EFF2F6;
+  padding-bottom: 30px; }
   .toplevel_page_user-registration #wpbody-content #screen-meta-links,
   body.user-registration #wpbody-content #screen-meta-links {
     display: none; }
@@ -9127,6 +9136,10 @@ body.user-registration #wpbody-content {
   padding: 8px 16px;
   height: auto; }
 
+body.ur-settings-sidebar-hidden .user-registration-settings-sidebar-container {
+  margin-left: -910px;
+  display: none; }
+
 .ur-embed-form-button {
   background: #edeff7 !important;
   border-color: #edeff7 !important;
@@ -9180,6 +9193,62 @@ body.user-registration #wpbody-content {
 #elementor-editor-wrapper .ur-icon-user-registration:before,
 .elementor-edit-area .ur-icon-user-registration:before {
   content: "\e031";
+  font-family: "UserRegistration";
+  font-weight: normal;
+  font-style: normal;
+  font-display: block; }
+
+#elementor-editor-wrapper .ur-icon-edit-password:before,
+.elementor-edit-area .ur-icon-edit-password:before {
+  content: "\e045";
+  font-family: "UserRegistration";
+  font-weight: normal;
+  font-style: normal;
+  font-display: block; }
+
+#elementor-editor-wrapper .ur-icon-edit-profile:before,
+.elementor-edit-area .ur-icon-edit-profile:before {
+  content: "\e046";
+  font-family: "UserRegistration";
+  font-weight: normal;
+  font-style: normal;
+  font-display: block; }
+
+#elementor-editor-wrapper .ur-icon-login:before,
+.elementor-edit-area .ur-icon-login:before {
+  content: "\e048";
+  font-family: "UserRegistration";
+  font-weight: normal;
+  font-style: normal;
+  font-display: block; }
+
+#elementor-editor-wrapper .form:before,
+.elementor-edit-area .form:before {
+  content: "\e048";
+  font-family: "UserRegistration";
+  font-weight: normal;
+  font-style: normal;
+  font-display: block; }
+
+#elementor-editor-wrapper .ur-icon-myaccount:before,
+.elementor-edit-area .ur-icon-myaccount:before {
+  content: "\e047";
+  font-family: "UserRegistration";
+  font-weight: normal;
+  font-style: normal;
+  font-display: block; }
+
+#elementor-editor-wrapper .ur-icon-popup:before,
+.elementor-edit-area .ur-icon-popup:before {
+  content: "\e043";
+  font-family: "UserRegistration";
+  font-weight: normal;
+  font-style: normal;
+  font-display: block; }
+
+#elementor-editor-wrapper .ur-icon-profile-details:before,
+.elementor-edit-area .ur-icon-profile-details:before {
+  content: "\e044";
   font-family: "UserRegistration";
   font-weight: normal;
   font-style: normal;

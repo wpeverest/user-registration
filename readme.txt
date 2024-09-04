@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 5.2
 Requires PHP: 7.2
 Tested up to: 6.6.1
-Stable tag: 3.3.1
+Stable tag: 3.3.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -14,13 +14,13 @@ The best drag and drop user registration form and login form builder with a user
 
 **User Registration and Membership – The Best Registration and Members Plugin for WordPress**
 
-Are you a beginner with absolutely zero coding skills? No problem! User Registration and Membership’s drag-and-drop form builder lets you create custom registration forms of any kind for your WordPress site. Go for simple forms or create complex multi-step forms. It’s all up to you. 
+Are you a beginner with absolutely zero coding skills? No problem! User Registration and Membership’s drag-and-drop form builder lets you create custom registration forms of any kind for your WordPress site. Go for simple forms or create complex multi-step forms. It’s all up to you.
 
-Additionally, you can integrate members into your website using the plugin’s membership ecosystem, which includes registration forms, login forms, user profiles, content restriction, and more. If you need even more functionality, you can use the premium membership add-on to sell membership plans. 
+Additionally, you can integrate members into your website using the plugin’s membership ecosystem, which includes registration forms, login forms, user profiles, content restriction, and more. If you need even more functionality, you can use the premium membership add-on to sell membership plans.
 
-This free, lightweight, and fully responsive plugin also includes a beautifully designed login form ready to use. It automatically creates a user profile account for registered members. 
+This free, lightweight, and fully responsive plugin also includes a beautifully designed login form ready to use. It automatically creates a user profile account for registered members.
 
-The best thing is that there are unlimited customization options for each field & form. To add more extendibility to this, you get premium add-ons that include extra functionalities in your forms. So, you’ve got yourself a fantastic WordPress user registration & membership plugin.  
+The best thing is that there are unlimited customization options for each field & form. To add more extendibility to this, you get premium add-ons that include extra functionalities in your forms. So, you’ve got yourself a fantastic WordPress user registration & membership plugin.
 
 [youtube https://www.youtube.com/watch?v=ZOXVbfBTNPQ]
 
@@ -73,7 +73,7 @@ The best thing is that there are unlimited customization options for each field 
 
 * **[Premium] [Create Membership website:](https://wpuserregistration.com/features/membership/)** Use the membership addon and create a full-fledged membership website. Create membership plans with multiple tiers of content access and benefits, then, sell them for a recurring fee.
 
-* **[Premium] [Create Easy Content Restriction Rules:](https://wpuserregistration.com/features/content-restriction/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Enable content restriction for posts, pages, & categories. You can also create advanced custom content access rules based on memberships, roles, capabilities, user state, & more. 
+* **[Premium] [Create Easy Content Restriction Rules:](https://wpuserregistration.com/features/content-restriction/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Enable content restriction for posts, pages, & categories. You can also create advanced custom content access rules based on memberships, roles, capabilities, user state, & more.
 
 * **[Premium] [Multi-Step Form:](https://wpuserregistration.com/features/multi-step-form/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Use multi-step forms that let you break long forms into multiple sections for a cleaner and more engaging presentation.
 
@@ -99,7 +99,7 @@ The best thing is that there are unlimited customization options for each field 
 
 * **[Premium] [Connect Registration Forms with 1000+ Services via Zapier:](https://wpuserregistration.com/features/zapier/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Zapier passes information to all the applications your registration forms are connected with. This helps you save time by automating tasks like collecting form responses, sending texts, and reminders.
 
-* **[Premium] Integrations with Email Marketing Services:** Promote your business with the correct email marketing tools like [Mailchimp](https://wpuserregistration.com/features/mailchimp/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) , [MailerLite](https://wpuserregistration.com/features/mailerlite/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro), [ActiveCampaign](https://wpuserregistration.com/features/activecampaign/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) and [Klaviyo](https://wpuserregistration.com/features/klaviyo/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro). 
+* **[Premium] Integrations with Email Marketing Services:** Promote your business with the correct email marketing tools like [Mailchimp](https://wpuserregistration.com/features/mailchimp/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) , [MailerLite](https://wpuserregistration.com/features/mailerlite/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro), [ActiveCampaign](https://wpuserregistration.com/features/activecampaign/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) and [Klaviyo](https://wpuserregistration.com/features/klaviyo/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro).
 
 * **[Premium] [Collect Geolocation Data for Users:](https://wpuserregistration.com/features/geolocation/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** This premium add-on enables you to collect and save the geolocation data of users who register on your website. It’s easy to do this when you have fields like Country, City, and Postcode.
 
@@ -140,7 +140,7 @@ And there’s more we haven’t listed here.
 * Event Registration
 * JobSeeker Registration
 * Appointment Form
-* Membership Form 
+* Membership Form
 * Document Application Form
 * Social Registration
 * Student Registration
@@ -246,6 +246,22 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
+= 3.3.2    - 09/09/2024 =
+* Feature  - WPBakery compatibility with user registration widgets.
+* Feature  - Support relative url in registration url .
+* Enhance  - User Registration Dashboard Page.
+* Enhance  - Show Most used Integration Lists on Integration Tab.
+* Enhance  - Introduced Settings Sidebar ( Quick setup tab and Premium Benefits ).
+* Enhance  - Warning for field deletion used in Conditional Logic.
+* Dev      - Compatibility for Mail Poet Integration.
+* Dev      - Elementor widget.
+* Fix      - Mismatch Columns error log on External Field Sync.
+* Fix      - Checkbox and Multiselect smart tag parse issue.
+* Fix      - Moved membership settings from free to membership.
+* Fix      - Userstate attributes login and my account block not synchronized.
+* Fix      - Textarea text count not working in woocommerce checkout block.
+* Fix      - Save Value for seperate shipping as true or false in WooCommerce.
+
 = 3.3.1     – 19/08/2024 =
 * Feature   – Embed option in form builder.
 * Enhance   – Gutenberg block preview.
@@ -260,7 +276,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * Dev       – Compatibility for Authorize.net Addon.
 * Dev       – Compatibility for SMS verification.
 * Dev       – Add noreferer and noopener in all target blank anchor tags.
-* Fix       – Unable to publish form from draft status. 
+* Fix       – Unable to publish form from draft status.
 * Fix       – Undefined variable $form_row_data.
 * Fix       – Disable default wordpress login not working.
 * Fix       – The email content translation issues with WPML plugin.

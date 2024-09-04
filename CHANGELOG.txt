@@ -1,3 +1,19 @@
+= 3.3.2    - 09/09/2024 =
+* Feature  - WPBakery compatibility with user registration widgets.
+* Feature  - Support relative url in registration url .
+* Enhance  - User Registration Dashboard Page.
+* Enhance  - Show Most used Integration Lists on Integration Tab.
+* Enhance  - Introduced Settings Sidebar ( Quick setup tab and Premium Benefits ).
+* Enhance  - Warning for field deletion used in Conditional Logic.
+* Dev      - Compatibility for Mail Poet Integration.
+* Dev      - Elementor widget.
+* Fix      - Mismatch Columns error log on External Field Sync.
+* Fix      - Checkbox and Multiselect smart tag parse issue.
+* Fix      - Moved membership settings from free to membership.
+* Fix      - Userstate attributes login and my account block not synchronized.
+* Fix      - Textarea text count not working in woocommerce checkout block.
+* Fix      - Save Value for seperate shipping as true or false in WooCommerce.
+
 = 3.3.1     - 19/08/2024 =
 * Feature   - Embed option in form builder.
 * Enhance   - Gutenberg block preview.
@@ -12,7 +28,7 @@
 * Dev       - Compatibility for Authorize.net Addon.
 * Dev       - Compatibility for SMS verification.
 * Dev       - Add noreferer and noopener in all target blank anchor tags.
-* Fix       - Unable to publish form from draft status. 
+* Fix       - Unable to publish form from draft status.
 * Fix       - Undefined variable $form_row_data.
 * Fix       - Disable default wordpress login not working.
 * Fix       - The email content translation issues with WPML plugin.

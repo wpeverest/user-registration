@@ -12,8 +12,11 @@ import {
 	ModalFooter,
 	Button,
 	Text,
-	Link,
 	SimpleGrid,
+	Input,
+	Link,
+	VStack,
+	useToast
 } from "@chakra-ui/react";
 import { sprintf, __ } from "@wordpress/i18n";
 
@@ -26,15 +29,16 @@ import { useStateValue } from "../../../../context/StateProvider";
 import { Lock } from "../../../components/Icon/Icon";
 import ModuleItem from "./ModuleItem";
 import AddonSkeleton from "../../../skeleton/AddonsSkeleton/AddonsSkeleton";
+import { activateLicense } from "./modules-api";
 
 const ModuleBody = ({
 	isPerformingBulkAction,
 	filteredAddons,
 	setSelectedModuleData,
-	selectedModuleData,
+	selectedModuleData
 }) => {
 	/* global _UR_DASHBOARD_ */
-	const { upgradeURL, licenseActivationURL } =
+	const { upgradeURL, licenseActivationURL, isPro } =
 		typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 	const [{ upgradeModal }, dispatch] = useStateValue();
 	const [upgradeContent, setUpgradeContent] = useState({
@@ -44,7 +48,24 @@ const ModuleBody = ({
 		upgradeURL:
 			upgradeURL +
 			"&utm_source=dashboard-all-features&utm_medium=upgrade-popup",
+		licenseActivationPlaceholder: __("License key", "user-registration")
 	});
+
+	const toast = useToast();
+
+	const [licenseActivationKey, setLicenseKey] = useState("");
+	const [licenseActivationValidationMessage, setLicenseValidationMessage] =
+		useState("");
+	const [reloadPage, setReloadPage] = useState(false);
+
+	const handleActivationKeyChange = (event) => {
+		setLicenseKey(event.target.value);
+	};
+
+	const [licenseValidationStatus, setLicenseValidationStatus] = useState("");
+
+	const [isLicenseActivation, setLicenseActivation] = useState(false);
+
 	const handleCheckedChange = (slug, checked, name, type) => {
 		var selectedModules = { ...selectedModuleData };
 
@@ -52,7 +73,7 @@ const ModuleBody = ({
 			selectedModules[slug] = {
 				slug: slug + "/" + slug + ".php",
 				name,
-				type,
+				type
 			};
 		} else {
 			if (selectedModules.hasOwnProperty(slug)) {
@@ -69,52 +90,51 @@ const ModuleBody = ({
 			if (upgradeModal.type === "pro") {
 				upgradeContentRef.title = __(
 					"User Registration Pro Required",
-					"user-registration",
+					"user-registration"
 				);
 				upgradeContentRef.body = sprintf(
 					__(
 						"%s requires User Registration Pro to be activated. Please upgrade to a premium plan and unlock this addon",
-						"user-registration",
+						"user-registration"
 					),
-					upgradeModal.moduleName,
+					upgradeModal.moduleName
 				);
 			} else if (upgradeModal.type === "license") {
 				upgradeContentRef.title = __(
 					"License Activation Required",
-					"user-registration",
+					"user-registration"
 				);
 				upgradeContentRef.body = sprintf(
 					__(
 						"Please activate license of User Registration Pro plugin in order to use %s",
-						"user-registration",
+						"user-registration"
 					),
-					upgradeModal.moduleName,
+					upgradeModal.moduleName
 				);
 				upgradeContentRef.buttonText = sprintf(
 					__("Activate License", "user-registration"),
-					upgradeModal.moduleName,
+					upgradeModal.moduleName
 				);
-				upgradeContentRef.buttonText = upgradeContentRef.buttonText =
-					sprintf(
-						__("Activate License", "user-registration"),
-						upgradeModal.moduleName,
-					);
+				upgradeContentRef.licenseActivationPlaceholder = sprintf(
+					__("Enter your license key", "user-registration"),
+					upgradeModal.moduleName
+				);
 				upgradeContentRef.upgradeURL = licenseActivationURL;
 			} else {
 				upgradeContentRef.title = __(
 					"License Upgrade Required",
-					"user-registration",
+					"user-registration"
 				);
 				upgradeContentRef.body = sprintf(
 					__(
 						"%s is only available in the plus plan and above. Please upgrade to a plus plan and above to unlock this addon",
-						"user-registration",
+						"user-registration"
 					),
-					upgradeModal.moduleName,
+					upgradeModal.moduleName
 				);
 				upgradeContentRef.buttonText = sprintf(
 					__("Upgrade Plan", "user-registration"),
-					upgradeModal.moduleName,
+					upgradeModal.moduleName
 				);
 			}
 
@@ -122,13 +142,78 @@ const ModuleBody = ({
 		}
 	}, [upgradeModal]);
 
+	useEffect(() => {
+		if (reloadPage) {
+			window.location.reload();
+			setReloadPage(false);
+		}
+	}, [reloadPage]);
+
 	const updateUpgradeModal = () => {
 		const upgradeModalRef = { ...upgradeModal };
 		upgradeModalRef.enable = false;
 		dispatch({
 			type: actionTypes.GET_UPGRADE_MODAL,
-			upgradeModal: upgradeModalRef,
+			upgradeModal: upgradeModalRef
 		});
+	};
+
+	const licenseActivation = () => {
+		if ("" === licenseActivationKey) {
+			setLicenseValidationMessage(
+				sprintf(
+					__(
+						"Please enter your plugin activation license key",
+						"user-registration"
+					)
+				)
+			);
+			setLicenseValidationStatus(true);
+		} else if (licenseActivationKey.length < 32) {
+			setLicenseValidationMessage(
+				sprintf(
+					__(
+						"Please enter the valid license key",
+						"user-registration"
+					)
+				)
+			);
+			setLicenseValidationStatus(true);
+		} else {
+			setLicenseValidationMessage("");
+			setLicenseValidationStatus(false);
+			setLicenseActivation(true);
+
+			activateLicense(licenseActivationKey)
+				.then((data) => {
+					setLicenseActivation(true);
+					if (data.code === 200) {
+						toast({
+							title: data.message,
+							status: "success",
+							duration: 3000
+						});
+						setLicenseActivation(false);
+						setReloadPage(true);
+					} else if (data.code === 400) {
+						toast({
+							title: data.message,
+							status: "error",
+							duration: 3000
+						});
+					}
+				})
+				.catch((e) => {
+					toast({
+						title: e.message,
+						status: "error",
+						duration: 3000
+					});
+				})
+				.finally(() => {
+					setLicenseActivation(false);
+				});
+		}
 	};
 
 	return (
@@ -164,18 +249,41 @@ const ModuleBody = ({
 								{upgradeContent.body}
 							</Text>
 							<ModalFooter paddingBottom="0px" w="400px">
-								<Button
-									as={Link}
-									colorScheme="primary"
-									href={upgradeContent.upgradeURL}
-									color="white !important"
-									textDecor="none !important"
-									isExternal
-									onClick={updateUpgradeModal}
-									w="100%"
-								>
-									{upgradeContent.buttonText}
-								</Button>
+								<VStack width="100%">
+									{isPro && (
+										<Input
+											placeholder={
+												upgradeContent.licenseActivationPlaceholder
+											}
+											onChange={handleActivationKeyChange}
+										/>
+									)}
+									<Button
+										colorScheme="primary"
+										color="white !important"
+										textDecor="none !important"
+										onClick={licenseActivation}
+										w="100%"
+										as={!isPro ? Link : undefined}
+										href={
+											!isPro
+												? upgradeContent.upgradeURL
+												: ""
+										}
+										isLoading={isLicenseActivation}
+										{...(!isPro && { isExternal: true })}
+									>
+										{upgradeContent.buttonText}
+									</Button>
+									{isPro &&
+										licenseActivationValidationMessage && (
+											<Text fontSize="md" color="red">
+												{
+													licenseActivationValidationMessage
+												}
+											</Text>
+										)}
+								</VStack>
 							</ModalFooter>
 						</ModalContent>
 					</Modal>
@@ -191,14 +299,14 @@ const ModuleBody = ({
 										key={data.slug}
 										data={data}
 										isChecked={selectedModuleData.hasOwnProperty(
-											data.slug,
+											data.slug
 										)}
 										onCheckedChange={(slug, checked) => {
 											handleCheckedChange(
 												slug,
 												checked,
 												data.name,
-												data.type,
+												data.type
 											);
 										}}
 										isPerformingBulkAction={

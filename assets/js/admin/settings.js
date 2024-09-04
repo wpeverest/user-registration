@@ -47,7 +47,7 @@
 					.css({ backgroundColor: ui.color.toString() });
 			},
 			hide: true,
-			border: true,
+			border: true
 		})
 		.on("click", function () {
 			$(".iris-picker").hide();
@@ -485,7 +485,7 @@
 								{
 									sitekey: ur_recaptcha_code.site_key,
 									theme: "light",
-									style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
+									style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"
 								}
 							);
 
@@ -515,7 +515,7 @@
 							try {
 								grecaptcha
 									.execute(ur_recaptcha_code.site_key, {
-										action: "click",
+										action: "click"
 									})
 									.then(function (d) {
 										display_captcha_test_status(
@@ -540,7 +540,7 @@
 								{
 									sitekey: ur_recaptcha_code.site_key,
 									theme: "light",
-									style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
+									style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"
 								}
 							);
 							break;
@@ -555,7 +555,7 @@
 									{
 										sitekey: ur_recaptcha_code.site_key,
 										theme: ur_recaptcha_code.theme_mode,
-										style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
+										style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"
 									}
 								);
 
@@ -633,31 +633,44 @@
 			);
 		}
 	);
-		// Display the sync profile picture settings when the disable profile picture is checked and advanced fields is active.
-		$("#user_registration_disable_profile_picture").on(
-			"change",
-			function () {
-				var is_advanced_fields_active = parseInt(user_registration_settings_params.is_advanced_field_active);
-				if ($(this).prop("checked") && is_advanced_fields_active === 1) {
-					 $("#user_registration_sync_profile_picture").closest(".user-registration-global-settings").css("display", "flex");
-					} else {
-						$("#user_registration_sync_profile_picture").prop("checked", false);
-						$("#user_registration_sync_profile_picture").closest(".user-registration-global-settings").css("display", "none");
-					}
-			}
+	// Display the sync profile picture settings when the disable profile picture is checked and advanced fields is active.
+	$("#user_registration_disable_profile_picture").on("change", function () {
+		var is_advanced_fields_active = parseInt(
+			user_registration_settings_params.is_advanced_field_active
 		);
-		// If not checked on load hide the sync profile picture settings.
-		$("#user_registration_sync_profile_picture").ready(function () {
-			$this = $("#user_registration_sync_profile_picture");
-			if( $this.prop("checked") ) {
-				$this.closest(".user-registration-global-settings").css("display", "flex");
-			}else if($("#user_registration_disable_profile_picture").prop("checked") && parseInt(user_registration_settings_params.is_advanced_field_active) === 1) {
-				$this.closest(".user-registration-global-settings").css("display", "flex");
-			}else{
-				$this.closest(".user-registration-global-settings").css("display", "none");
-			}
-
-		});
+		if ($(this).prop("checked") && is_advanced_fields_active === 1) {
+			$("#user_registration_sync_profile_picture")
+				.closest(".user-registration-global-settings")
+				.css("display", "flex");
+		} else {
+			$("#user_registration_sync_profile_picture").prop("checked", false);
+			$("#user_registration_sync_profile_picture")
+				.closest(".user-registration-global-settings")
+				.css("display", "none");
+		}
+	});
+	// If not checked on load hide the sync profile picture settings.
+	$("#user_registration_sync_profile_picture").ready(function () {
+		$this = $("#user_registration_sync_profile_picture");
+		if ($this.prop("checked")) {
+			$this
+				.closest(".user-registration-global-settings")
+				.css("display", "flex");
+		} else if (
+			$("#user_registration_disable_profile_picture").prop("checked") &&
+			parseInt(
+				user_registration_settings_params.is_advanced_field_active
+			) === 1
+		) {
+			$this
+				.closest(".user-registration-global-settings")
+				.css("display", "flex");
+		} else {
+			$this
+				.closest(".user-registration-global-settings")
+				.css("display", "none");
+		}
+	});
 
 	// Change span with file name when user selects a file.
 	$(".user-registration-custom-file__input").on("change", function () {
@@ -672,11 +685,11 @@
 		var image = wp
 			.media({
 				library: {
-					type: ["image"],
+					type: ["image"]
 				},
 				title: ur_uploader.upload_file,
 				// multiple: true if you want to upload multiple files at once
-				multiple: false,
+				multiple: false
 			})
 			.open()
 			.on("select", function (e) {
@@ -765,11 +778,11 @@
 						response(results);
 					}
 					$(".user-registration-search-icon").show();
-				},
+				}
 			});
 		},
 		classes: {
-			"ui-autocomplete": "user-registration-ui-autocomplete",
+			"ui-autocomplete": "user-registration-ui-autocomplete"
 		},
 		minLength: 3, // Minimum characters required to trigger autocomplete
 		focus: function (event, ui) {
@@ -788,7 +801,7 @@
 				window.location.href = ui.item.value;
 			}
 			return false; // Prevent the default behavior of the widget
-		},
+		}
 	});
 
 	// Set localStorage with expiry
@@ -797,7 +810,7 @@
 
 		var data = {
 			value: value,
-			expiry: current.getTime() + 86400000, // 1day of expiry time
+			expiry: current.getTime() + 86400000 // 1day of expiry time
 		};
 
 		localStorage.setItem(key, JSON.stringify(data));
@@ -891,7 +904,7 @@
 		var offset = $(".ur-searched-settings-focus").offset().top;
 		window.scrollTo({
 			top: offset - 300,
-			behavior: "smooth",
+			behavior: "smooth"
 		});
 		setTimeout(function () {
 			wrapper_div.removeClass("ur-searched-settings-focus");
@@ -915,6 +928,60 @@
 		}
 		return vars;
 	}
+	/**
+	 * Display the upgrade message for the top addons.
+	 */
+	$("body").on("click", ".user-registration-inactive-addon", function (e) {
+		$this = $(this);
+		e.preventDefault();
+		var video_id = $this.data("video");
+		var plugin_title = $this.data("title");
+		var available_in = $(this).data("available-in");
+
+		if (video_id !== "") {
+			var video =
+				'<div style="width: 535px; height: 300px;"><iframe width="100%" height="100%" frameborder="0" src="https://www.youtube.com/embed/' +
+				video_id +
+				'" rel="1" allowfullscreen></iframe></div><br>';
+		}
+		var icon =
+			'<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>';
+
+		var message =
+			video + user_registration_settings_params.i18n.upgrade_message;
+
+		message = message
+			.replace("%title%", plugin_title)
+			.replace("%plan%", available_in);
+
+		var title =
+			icon +
+			'<span class="user-registration-swal2-modal__title">' +
+			plugin_title +
+			" " +
+			user_registration_settings_params.i18n.pro_feature_title;
+		("</span>");
+		Swal.fire({
+			title: title,
+			html: message,
+			customClass:
+				"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-locked-field",
+			showCloseButton: true,
+			showConfirmButton: true,
+			allowOutsideClick: true,
+			heightAuto: false,
+			width: "575px",
+			confirmButtonText:
+				user_registration_settings_params.i18n.upgrade_plan
+		}).then(function (result) {
+			if (result.isConfirmed) {
+				window.open(
+					user_registration_settings_params.i18n.upgrade_link,
+					"_blank"
+				);
+			}
+		});
+	});
 
 	$(document)
 		.find(".user-registration-global-settings--field")
@@ -934,4 +1001,73 @@
 				$(this).find("input").prop("checked", true);
 			});
 		});
+
+	// Function to handle changes in the premium sidebar.
+	$(document).ready(function () {
+		function handleSettingsSidebar(node) {
+			var isCheckboxChecked = $(node).is(":checked");
+
+			localStorage.setItem("isSidebarEnabled", isCheckboxChecked);
+
+			document.cookie =
+				"isSidebarEnabled=" + isCheckboxChecked + "; path=/;";
+
+			if (isCheckboxChecked) {
+				$("body")
+					.removeClass("ur-settings-sidebar-hidden")
+					.addClass("ur-settings-sidebar-show");
+				$(node)
+					.closest(".user-registration-options-header--top__right")
+					.find(".user-registration-toggle-text")
+					.text("Show Sidebar");
+			} else {
+				$("body")
+					.removeClass("ur-settings-sidebar-show")
+					.addClass("ur-settings-sidebar-hidden");
+				$(node)
+					.closest(".user-registration-options-header--top__right")
+					.find(".user-registration-toggle-text")
+					.text("Hide Sidebar");
+			}
+		}
+
+		$(document).on(
+			"change",
+			"#user_registration_hide_show_sidebar",
+			function (e) {
+				handleSettingsSidebar($(this));
+			}
+		);
+
+		disableFormChangeModal();
+	});
+
+	/**
+	 * Disable leave page before saving changes modal when hid/show sidebar is clicked.
+	 */
+	function disableFormChangeModal() {
+		var form = $(".user-registration").find("form")[0];
+
+		var formChanged = false;
+
+		$(form).on("change", function (event) {
+			if (event.target.name !== "user_registration_enable_sidebar") {
+				formChanged = true;
+			}
+		});
+
+		var skipBeforeUnloadPopup = false;
+		$(form).on("submit", function () {
+			skipBeforeUnloadPopup = true;
+		});
+
+		$(window).on("beforeunload", function (event) {
+			if (formChanged && !skipBeforeUnloadPopup) {
+				event.preventDefault();
+				event.returnValue = "";
+			} else {
+				event.stopImmediatePropagation();
+			}
+		});
+	}
 })(jQuery);

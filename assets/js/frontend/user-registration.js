@@ -571,6 +571,9 @@
 													JSON.stringify(
 														checked_value
 													);
+												if ( "separate_shipping" === field.attr("data-id") ) {
+													formwise_data.value = field.val();
+												}
 											} else {
 												formwise_data.value = "";
 											}
@@ -1165,7 +1168,7 @@
 														reject
 													]
 												);
-											}).then(function(val){
+											}).then(function (val) {
 												events.ajax_form_submit(val);
 											});
 									} else {
@@ -1350,24 +1353,22 @@
 												typeof response.data
 													.form_login_option !==
 													"undefined" &&
-												response.data.form_login_option === 'sms_verification'
+												response.data
+													.form_login_option ===
+													"sms_verification"
 											) {
-												window.setTimeout(
-													function () {
-														if (
-															typeof response
-																.data
-																.redirect_url !==
-																"undefined" &&
-															response.data
-																.redirect_url
-														) {
-															window.location =
-																response.data.redirect_url;
-														}
-													},
-													timeout
-												);
+												window.setTimeout(function () {
+													if (
+														typeof response.data
+															.redirect_url !==
+															"undefined" &&
+														response.data
+															.redirect_url
+													) {
+														window.location =
+															response.data.redirect_url;
+													}
+												}, timeout);
 											}
 
 											if (
@@ -2434,6 +2435,10 @@
 		 */
 		$(function () {
 			$("textarea").each(function () {
+				/**
+				 * show the character and word count in textarea field.
+				 */
+				$(this).on("input", user_registration_count);
 				var input_count;
 				var selected_area_field = $(this).closest(".ur-field-item");
 				if (selected_area_field.find(".ur-input-count").length > 0) {
@@ -2493,10 +2498,6 @@
 			}
 		});
 	};
-	/**
-	 * show the character and word count in textarea field.
-	 */
-	$("textarea").on("input", user_registration_count);
 
 	function user_registration_count() {
 		$("textarea").each(function () {
