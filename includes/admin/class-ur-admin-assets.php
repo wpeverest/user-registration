@@ -584,7 +584,7 @@ class UR_Admin_Assets {
 			'i18n_embed_to_new_page'                      => esc_html__( 'Create New Page', 'user-registration' ),
 			'i18n_embed_existing_page_description'        => esc_html__( 'Select the page to embed your form in.', 'user-registration' ),
 			'i18n_embed_go_back_btn'                      => esc_html__( 'Go Back', 'user-registration' ),
-			'i18n_embed_lets_go_btn'                      => esc_html__( 'Lets Go!', 'user-registration' ),
+			'i18n_embed_lets_go_btn'                      => esc_html__( "Let's Go!", 'user-registration' ),
 			'i18n_embed_new_page_description'             => esc_html__( 'What would you like to call the new page?', 'user-registration' ),
 			'i18n_at_least_one_field_need_to_select'      => _x( 'At least one field needs to be selected.', 'user registration admin', 'user-registration' ),
 			'i18n_total_required_on_coupon'               => _x( 'Total field is required with coupon.', 'user registration admin', 'user-registration' ),

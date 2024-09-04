@@ -198,7 +198,7 @@ class UR_Setting_Validation {
 				'negative_value'   => __( 'Please enter a value greater than 0 for %s.', 'user-registration' ),
 				'non_integer'      => __( 'Please enter an integer value for %s.', 'user-registration' ),
 				'non_numeric_data' => __( 'Please enter a numeric value for %s.', 'user-registration' ),
-				'invalid_url'      => __( 'Please enter a valid url for %s.', 'user-registration' ),
+				'invalid_url'      => __( 'Please enter a valid url or path for %s.', 'user-registration' ),
 				'invalid_email'    => __( 'Please enter a valid email for %s.', 'user-registration' )
 				// phpcs:enable
 			)

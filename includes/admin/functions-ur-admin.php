@@ -595,6 +595,11 @@ function promotional_notice_links( $notice_target_links, $is_permanent_dismiss )
 		<ul class="user-registration-notice-ul">
 			<?php
 			foreach ( $notice_target_links as $key => $link ) {
+				if ( ! empty( $link['link'] ) && ! is_string( $link['link'] ) ) {
+					$url          = isset( $link['link']['link_function'] ) ? $link['link']['link_function'] : 'admin_url';
+					$url          = function_exists( $url ) ? $url() : '';
+					$link['link'] = $url . ( isset( $link['link']['link_params'] ) ? $link['link']['link_params'] : '#' );
+				}
 				?>
 			<li><a class="button <?php esc_attr_e( $link['class'], 'user-registration' ); ?>" href="<?php echo esc_url( $link['link'] ); ?>" target="<?php echo esc_attr( $link['target'] ); ?>" rel="noreferrer noopener"><span class="dashicons <?php echo esc_attr( $link['icon'] ); ?>"></span><?php esc_html_e( $link['title'], 'user-registration' ); ?></a></li>
 				<?php
@@ -607,6 +612,61 @@ function promotional_notice_links( $notice_target_links, $is_permanent_dismiss )
 		?>
 			<a href="#" class="notice-dismiss notice-dismiss-permanently"><?php esc_html_e( 'Never show again', 'user-registration' ); ?></a>
 		<?php
+	}
+}
+
+if ( ! function_exists( 'ur_check_all_functions' ) ) {
+
+	/**
+	 * Check common functions.
+	 *
+	 * @return bool
+	 */
+	function ur_check_all_functions( $conditions ) {
+		$valid_function = false;
+		if ( empty( $conditions ) ) {
+			return true;
+		}
+
+		$main_operator   = 'AND';
+		$valid_condition = array();
+
+		foreach ( $conditions as $key => $value ) {
+			if ( 'operator' == $key ) {
+				$main_operator = $value;
+			} else {
+
+				$params = array();
+				if ( isset( $value['params'] ) ) {
+					$params = explode( ',', $value['params'] );
+				}
+				$result = function_exists( $key ) ? call_user_func_array( $key, $params ) : '';
+
+				$expected_value        = isset( $value['expected_value'] ) ? $value['expected_value'] : '';
+				$condition_to_validate = isset( $value['condition_to_validate'] ) ? $value['condition_to_validate'] : '==';
+
+				$response_value = $result;
+
+				if ( isset( $value['expected_attribute'] ) ) {
+					$expected_attribute = $value['expected_attribute'];
+					if ( is_array( $result ) && ! empty( $result ) ) {
+						$response_value = isset( $result[ $expected_attribute ] ) ? $result[ $expected_attribute ] : '';
+					} elseif ( is_object( $result ) && ! empty( $result ) ) {
+						$response_value = isset( $result->$expected_attribute ) ? $result->$expected_attribute : '';
+					}
+				}
+				if ( ur_check_condition_operator( $condition_to_validate, $expected_value, $response_value ) ) {
+					array_push( $valid_condition, true );
+				}
+			}
+		}
+		if ( 'AND' === $main_operator && ( count( $conditions ) - 1 ) === count( $valid_condition ) ) {
+			$valid_function = true;
+		} elseif ( 'OR' === $main_operator && 1 === count( $valid_condition ) ) {
+			$valid_function = true;
+		}
+
+		return $valid_function;
 	}
 }
 
@@ -692,6 +752,50 @@ if ( ! function_exists( 'ur_check_products_version' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ur_check_condition_operator' ) ) {
+
+	/**
+	 * Check condition operator.
+	 *
+	 * @return bool
+	 */
+	function ur_check_condition_operator( $condition_to_validate, $expected_value, $response_value ) {
+		// Extract the operator and the number
+		$condition_met = false;
+
+		switch ( $condition_to_validate ) {
+			case '==':
+				$condition_met = ( $expected_value == $response_value );
+				break;
+			case '===':
+				$condition_met = ( $expected_value === $response_value );
+				break;
+			case '!=':
+				$condition_met = ( $expected_value != $response_value );
+				break;
+			case '!==':
+				$condition_met = ( $expected_value !== $response_value );
+				break;
+			case '>':
+				$condition_met = ( $expected_value > $response_value );
+				break;
+			case '<':
+				$condition_met = ( $expected_value < $response_value );
+				break;
+			case '>=':
+				$condition_met = ( $expected_value >= $response_value );
+				break;
+			case '<=':
+				$condition_met = ( $expected_value <= $response_value );
+				break;
+			default:
+				$condition_met = false;
+				break;
+		}
+
+		return $condition_met;
+	}
+}
 if ( ! function_exists( 'ur_check_numeric_operator' ) ) {
 
 	/**

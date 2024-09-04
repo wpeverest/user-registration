@@ -466,11 +466,9 @@ jQuery(function ($) {
 	var enable_no_repetitive_chars = no_repeat_char_field.is(":checked");
 
 	if (enable_custom_password) {
-
-		if(enable_no_repetitive_chars) {
+		if (enable_no_repetitive_chars) {
 			max_repeat_char_field.show();
-		}
-		else {
+		} else {
 			max_repeat_char_field.hide();
 		}
 	} else {
@@ -513,13 +511,12 @@ jQuery(function ($) {
 			show_password_strength_info($strength);
 			custom_password_params.hide();
 
-			if( $strength === "4" ) {
+			if ($strength === "4") {
 				custom_password_params.show();
 				max_repeat_char_field.hide();
-				if(enable_no_repetitive_chars) {
+				if (enable_no_repetitive_chars) {
 					max_repeat_char_field.show();
-				}
-				else {
+				} else {
 					max_repeat_char_field.hide();
 				}
 			}
@@ -528,10 +525,9 @@ jQuery(function ($) {
 		$(no_repeat_char_field).on("click", function () {
 			max_repeat_char_field.hide();
 
-			if($(this).is(":checked")) {
+			if ($(this).is(":checked")) {
 				max_repeat_char_field.show();
-			}
-			else {
+			} else {
 				max_repeat_char_field.hide();
 			}
 		});
@@ -593,7 +589,7 @@ jQuery(function ($) {
 		enable_strong_password = $(this).is(":checked");
 
 		if (enable_strong_password) {
-			if ( enable_custom_password ) {
+			if (enable_custom_password) {
 				custom_password_params.show();
 			}
 			minimum_password_strength_wrapper_field.show("slow");
@@ -725,10 +721,11 @@ jQuery(function ($) {
 	// 	Hide SMS Verification phone field mapping setting if not set to sms verification
 	if (
 		$("#user_registration_form_setting_login_options").val() ===
-			"sms_verification"
+		"sms_verification"
 	) {
-		$("#user_registration_form_setting_default_phone_field").parent()
-		.show();
+		$("#user_registration_form_setting_default_phone_field")
+			.parent()
+			.show();
 	} else {
 		$("#user_registration_form_setting_default_phone_field")
 			.parent()
@@ -739,16 +736,14 @@ jQuery(function ($) {
 	$("#user_registration_form_setting_login_options").on(
 		"change",
 		function () {
-			if (
-				$(this).val() === "sms_verification"
-			) {
+			if ($(this).val() === "sms_verification") {
 				$("#user_registration_form_setting_default_phone_field")
-			.parent()
-			.show();
+					.parent()
+					.show();
 			} else {
 				$("#user_registration_form_setting_default_phone_field")
-				.parent()
-				.hide();
+					.parent()
+					.hide();
 			}
 		}
 	);
@@ -756,28 +751,25 @@ jQuery(function ($) {
 	$("#user_registration_form_setting_default_phone_field").on(
 		"change",
 		function () {
-			$('#user_registration_form_setting_default_phone_field option').each(function() {
+			$(
+				"#user_registration_form_setting_default_phone_field option"
+			).each(function () {
 				var phone_options = $(this);
 				var field_name = $(this).val();
 
-				$('.ur-selected-item').each(function() {
-
+				$(".ur-selected-item").each(function () {
 					var old_field_name = $(this)
-					.find(".ur-general-setting-block")
-					.find(
-						'input[data-field="field_name"]'
-					)
-					.attr("value");
-
-					if(field_name === old_field_name){
-
-						var phone_format = $(this)
 						.find(".ur-general-setting-block")
-						.find(
-							'select[data-field="phone_format"]'
-						).val();
+						.find('input[data-field="field_name"]')
+						.attr("value");
 
-						phone_options.attr('data-phone-format', phone_format);
+					if (field_name === old_field_name) {
+						var phone_format = $(this)
+							.find(".ur-general-setting-block")
+							.find('select[data-field="phone_format"]')
+							.val();
+
+						phone_options.attr("data-phone-format", phone_format);
 					}
 				});
 			});
