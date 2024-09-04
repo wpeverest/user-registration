@@ -1001,4 +1001,73 @@
 				$(this).find("input").prop("checked", true);
 			});
 		});
+
+	// Function to handle changes in the premium sidebar.
+	$(document).ready(function () {
+		function handleSettingsSidebar(node) {
+			var isCheckboxChecked = $(node).is(":checked");
+
+			localStorage.setItem("isSidebarEnabled", isCheckboxChecked);
+
+			document.cookie =
+				"isSidebarEnabled=" + isCheckboxChecked + "; path=/;";
+
+			if (isCheckboxChecked) {
+				$("body")
+					.removeClass("ur-settings-sidebar-hidden")
+					.addClass("ur-settings-sidebar-show");
+				$(node)
+					.closest(".user-registration-options-header--top__right")
+					.find(".user-registration-toggle-text")
+					.text("Show Sidebar");
+			} else {
+				$("body")
+					.removeClass("ur-settings-sidebar-show")
+					.addClass("ur-settings-sidebar-hidden");
+				$(node)
+					.closest(".user-registration-options-header--top__right")
+					.find(".user-registration-toggle-text")
+					.text("Hide Sidebar");
+			}
+		}
+
+		$(document).on(
+			"change",
+			"#user_registration_hide_show_sidebar",
+			function (e) {
+				handleSettingsSidebar($(this));
+			}
+		);
+
+		disableFormChangeModal();
+	});
+
+	/**
+	 * Disable leave page before saving changes modal when hid/show sidebar is clicked.
+	 */
+	function disableFormChangeModal() {
+		var form = $(".user-registration").find("form")[0];
+
+		var formChanged = false;
+
+		$(form).on("change", function (event) {
+			if (event.target.name !== "user_registration_enable_sidebar") {
+				formChanged = true;
+			}
+		});
+
+		var skipBeforeUnloadPopup = false;
+		$(form).on("submit", function () {
+			skipBeforeUnloadPopup = true;
+		});
+
+		$(window).on("beforeunload", function (event) {
+			if (formChanged && !skipBeforeUnloadPopup) {
+				event.preventDefault();
+				event.returnValue = "";
+			} else {
+				event.stopImmediatePropagation();
+			}
+		});
+	}
 })(jQuery);

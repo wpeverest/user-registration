@@ -3729,7 +3729,7 @@ if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
 
 					/* translators: %s: License Plan Name. */
 					$tooltip_html = sprintf( __( 'You have been subscribed to %s plan. Please upgrade to higher plans to use this feature.', 'user-registration' ), ucfirst( $license_plan ) );
-					$button       = '<a rel="noreferrer noopener" target="_blank" href="https://wpuserregistration.com/pricing/?utm_source=settings-sidebar&utm_medium=premium-addon-tooltip&utm_campaign=' . UR()->utm_campaign . '">' . esc_html__( 'Upgrade Plan', 'user-registration' ) . '</a>';
+					$button       = '<a rel="noreferrer noopener" target="_blank" href="https://wpuserregistration.com/pricing/?utm_source=settings-sidebar-right&utm_medium=premium-addon-tooltip&utm_campaign=' . UR()->utm_campaign . '">' . esc_html__( 'Upgrade Plan', 'user-registration' ) . '</a>';
 					array_push( $tabs_to_display, $tab );
 				} else {
 					$plugin_name = $detail['name'];
@@ -3759,7 +3759,7 @@ if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
 				}
 
 				$tooltip_html = __( 'You are currently using the free version of our plugin. Please upgrade to premium version to use this feature.', 'user-registration' );
-				$button       = '<a rel="noreferrer noopener" target="_blank" href="https://wpuserregistration.com/pricing/?utm_source=settings-sidebar&utm_medium=premium-addon-tooltip&utm_campaign=' . UR()->utm_campaign . '">' . esc_html__( 'Upgrade to Pro', 'user-registration' ) . '</a>';
+				$button       = '<a rel="noreferrer noopener" target="_blank" href="https://wpuserregistration.com/pricing/?utm_source=settings-sidebar-right&utm_medium=premium-addon-tooltip&utm_campaign=' . UR()->utm_campaign . '">' . esc_html__( 'Upgrade to Pro', 'user-registration' ) . '</a>';
 				array_push( $tabs_to_display, $tab );
 			}
 
@@ -5952,6 +5952,99 @@ if ( ! function_exists( 'ur_current_url' ) ) {
 		$url .= wp_unslash( $_SERVER['REQUEST_URI'] );
 
 		return esc_url_raw( $url );
+	}
+}
+
+add_action(
+	'admin_head',
+	function () {
+		$js = <<<JS
+		let isSidebarEnabled = localStorage.getItem( 'isSidebarEnabled' );
+		isSidebarEnabled = 'false' === isSidebarEnabled ? false : true;
+
+		document.cookie =
+		"isSidebarEnabled=" + isSidebarEnabled + "; path=/;";
+		const interval = setInterval( () => {
+			if ( document.body ) {
+				clearInterval(interval);
+				if (isSidebarEnabled) {
+					document.body.classList.add( 'ur-settings-sidebar-show' );
+				} else {
+					document.body.classList.add( 'ur-settings-sidebar-hidden' );
+				}
+			}
+		}, 1 );
+		JS;
+		wp_print_inline_script_tag( $js );
+	}
+);
+
+if ( ! function_exists( 'ur_quick_settings_tab_content' ) ) {
+
+	/**
+	 * Quick settings tab content.
+	 */
+	function ur_quick_settings_tab_content() {
+		$default_form_page_id      = get_option( 'user_registration_default_form_page_id', false );
+		$registration_form_page_id = get_option( 'user_registration_registration_page_id', false );
+		$my_account_page_id        = get_option( 'user_registration_myaccount_page_id', false );
+		$prevent_core_login        = get_option( 'user_registration_login_options_prevent_core_login', false );
+		$captcha_setup             = get_option( 'user_registration_captcha_setting_recaptcha_version', false );
+		$anyone_can_register       = get_option( 'users_can_register', false );
+
+		$lists = array(
+			array(
+				'text'          => esc_html__( 'Create a registration form.', 'user-registration' ),
+				'completed'     => $default_form_page_id ? true : false,
+				'documentation' => esc_url_raw( "https://docs.wpuserregistration.com/docs/how-to-create-a-user-registration-form/?utm_source=settings-sidebar-right&utm_medium=quick-setup-card&utm_campaign='" . UR()->utm_campaign . "'" ),
+			),
+			array(
+				'text'          => esc_html__( 'Create registration and my account page.', 'user-registration' ),
+				'completed'     => $registration_form_page_id || $my_account_page_id ? true : false,
+				'documentation' => esc_url_raw( "https://docs.wpuserregistration.com/docs/how-to-show-account-profile/?utm_source=settings-sidebar-right&utm_medium=quick-setup-card&utm_campaign='" . UR()->utm_campaign . "'" ),
+			),
+			array(
+				'text'      => esc_html__( 'Enable anyone can register.', 'user-registration' ),
+				'completed' => ur_string_to_bool( $anyone_can_register ),
+			),
+			array(
+				'text'          => esc_html__( 'Disable WordPress default registration and login page.', 'user-registration' ),
+				'completed'     => $prevent_core_login ? ur_string_to_bool( $prevent_core_login ) : false,
+				'documentation' => esc_url_raw( "https://docs.wpuserregistration.com/docs/how-to-hide-the-wordpress-default-login-page-and-use-user-registration-login-page/?utm_source=settings-sidebar-right&utm_medium=quick-setup-card&utm_campaign='" . UR()->utm_campaign . "'" ),
+			),
+			array(
+				'text'          => esc_html__( 'Setup spam protection mechanisms.', 'user-registration' ),
+				'completed'     => $captcha_setup ? true : false,
+				'documentation' => esc_url_raw( "https://docs.wpuserregistration.com/docs/how-to-integrate-google-recaptcha/?utm_source=settings-sidebar-right&utm_medium=quick-setup-card&utm_campaign='" . UR()->utm_campaign . "'" ),
+			),
+		);
+
+		$completed_count = 0;
+
+		foreach ( $lists as $list ) {
+			if ( isset( $list['completed'] ) && $list['completed'] ) {
+				++$completed_count;
+			}
+		}
+
+		if ( $completed_count === count( $lists ) ) {
+			update_option( 'user_registration_quick_setup_completed', true );
+		}
+
+		$activation_date   = get_option( 'user_registration_activated' );
+		$installation_date = get_option( 'user_registration_installation_date', $activation_date );
+
+		$days_to_validate = strtotime( $installation_date );
+		$days_to_validate = strtotime( '+15 day', $days_to_validate );
+		$days_to_validate = date_i18n( 'Y-m-d', $days_to_validate );
+
+		$current_date = date_i18n( 'Y-m-d' );
+
+		if ( $current_date > $days_to_validate ) {
+			update_option( 'user_registration_quick_setup_completed', true );
+		}
+
+		return $lists;
 	}
 }
 

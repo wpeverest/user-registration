@@ -50,7 +50,6 @@ class UR_Admin_Settings {
 			if ( ! empty( $_GET['install_user_registration_pages'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification
 				UR_Install::create_pages();
 				UR_Admin_Notices::remove_notice( 'install' );
-				delete_option( 'user_registration_onboarding_skipped' );
 			}
 
 			$settings[] = include 'settings/class-ur-settings-general.php';

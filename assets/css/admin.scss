@@ -2618,7 +2618,7 @@ body {
 		position: relative;
 		display: inline-block;
 		width: 36px;
-		height: 16px;
+		height: 20px;
 
 		input {
 			position: relative;
@@ -2636,7 +2636,7 @@ body {
 			}
 
 			&:checked + .slider::before {
-				transform: translateX(14px);
+				transform: translateX(16px);
 			}
 		}
 
@@ -3909,19 +3909,31 @@ a.button.ur-smart-tags-list-button {
 			&--top {
 				display: flex;
 				align-items: center;
+				justify-content: space-between;
 
-				h3 {
-					margin: 0;
-					font-weight: $semi_bold;
-					font-size: 26px;
-					line-height: 120%;
-					color: $grey-800;
+				&__left {
+					h3 {
+						margin: 0;
+						font-weight: $semi_bold;
+						font-size: 26px;
+						line-height: 120%;
+						color: $grey-800;
+					}
 				}
 
-				p.submit {
-					display: none;
-					margin-top: 0;
-				}
+				&__right {
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					gap: $spacing_10px;
+
+					span.user-registration-toggle-text {
+						font-size: 16px;
+						line-height: 24px;
+						color: #383838;
+						font-weight: 500;
+					}
+				 }
 			}
 
 			&--bottom {
@@ -4394,6 +4406,8 @@ body.user-registration {
 	}
 
 	#wpbody-content {
+		background: #EFF2F6;
+		padding-bottom: $spacing_30px;
 
 		#screen-meta-links {
 			display: none;
@@ -5922,6 +5936,16 @@ body.user-registration {
 		}
 	}
 }
+
+body {
+	&.ur-settings-sidebar-hidden {
+		.user-registration-settings-sidebar-container {
+			margin-right: -910px;
+			display: none;
+		}
+	}
+}
+
 .ur-embed-form-button {
 	background: #edeff7 !important;
 	border-color: #edeff7 !important;

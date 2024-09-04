@@ -28,7 +28,8 @@ import { useStateValue } from "../../context/StateProvider";
 import { actionTypes } from "../../context/gettingStartedContext";
 
 function App() {
-	const [{ settings, installPage, registrationPageLink }, dispatch] = useStateValue();
+	const [{ settings, installPage, registrationPageLink }, dispatch] =
+		useStateValue();
 	const [initiateInstall, setInitiateInstall] = useState(false);
 	const [disabledLink, setDisabledLink] = useState(false);
 
@@ -129,6 +130,25 @@ function App() {
 				settings: newSettingsRef
 			});
 		});
+
+		const params = new URLSearchParams(window.location.href);
+		if (params.get("step")) {
+			const index = steps.findIndex(
+				(step) => step.key === params.get("step")
+			);
+
+			if ("final_step" === params.get("step")) {
+				return;
+			}
+
+			setSteps((prevStep) =>
+				prevStep.map((step) => {
+					if (step.key === params.get("step")) step.isDone = true;
+					return step;
+				})
+			);
+			setActiveStep(steps[index + 1]);
+		}
 	}, []);
 
 	/**
@@ -451,18 +471,14 @@ function App() {
 						disabled={disabledLink}
 						onClick={() => {
 							setDisabledLink(true);
-							if (
-								installPage.my_account_page.status ===
-								"installed"
-							) {
-								handleSaveSettings(
-									`${adminURL}admin.php?page=user-registration-dashboard`
-								);
-							} else {
-								handleSaveSettings(
-									`${adminURL}admin.php?page=user-registration-dashboard&end-setup-wizard=1`
-								);
-							}
+							var extraParams =
+								"my_account_settings" === activeStep.key ||
+								"final_step" === activeStep.key
+									? ""
+									: `activeStep=${activeStep.key}`;
+							handleSaveSettings(
+								`${adminURL}admin.php?page=user-registration-dashboard&end-setup-wizard=1&${extraParams}`
+							);
 						}}
 						mr={10}
 						ml={10}

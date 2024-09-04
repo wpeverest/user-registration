@@ -380,3 +380,24 @@ function ur_update_30_option_migrate() {
 	delete_option( 'user_registration_integration_setting_recaptcha_site_secret_hcaptcha' );
 	delete_option( 'user_registration_enable_pro_auto_generated_password_email' );
 }
+
+/**
+ * Set user registration installed date option.
+ *
+ * @return void
+ */
+function ur_update_322_option_migrate() {
+
+	$activation_date = get_option( 'user_registration_activated', false );
+
+	update_option( 'user_registration_installation_date', $activation_date );
+	$days_to_validate = strtotime( $activation_date );
+	$days_to_validate = strtotime( '+1 day', $days_to_validate );
+	$days_to_validate = date_i18n( 'Y-m-d', $days_to_validate );
+
+	$current_date = date_i18n( 'Y-m-d' );
+
+	if ( $activation_date && $current_date >= $days_to_validate ) {
+		update_option( 'user_registration_quick_setup_completed', true );
+	}
+}
