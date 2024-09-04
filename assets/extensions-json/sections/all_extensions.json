@@ -501,7 +501,9 @@
 			"professional",
 			"themegrill agency"
 		],
-      	"released_date": "09/09/2024"
+      	"released_date": "09/09/2024",
+		"setting_url": "admin.php?page=user-registration-settings&tab=integration",
+		"demo_video_url": ""
 	  }
   ]
 }
