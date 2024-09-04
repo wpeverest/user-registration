@@ -4622,7 +4622,8 @@ if ( ! function_exists( 'ur_add_links_to_top_nav' ) ) {
 		if ( isset( $_GET['ur_preview'] ) && isset( $_GET['form_id'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$form_id = sanitize_text_field( wp_unslash( $_GET['form_id'] ) ); //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		} elseif ( is_page() || is_single() ) {
-			if ( isset( $_GET['vc_editable'] ) ) {
+
+			if( isset( $_GET['vc_editable'] ) ) {
 				return;
 			}
 			$post_content = get_the_content();
