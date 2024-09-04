@@ -84,10 +84,16 @@ class UR_Validation {
 		$url_pattern = "/^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}(\\.[a-zA-Z0-9()]{1,6})?\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$/";
 
 		if ( ! filter_var( $url, FILTER_VALIDATE_URL ) || ! preg_match( $url_pattern, $url ) ) {
-			return new WP_Error(
-				'user_registration_validation_invalid_url',
-				__( 'Please input a valid url', 'user-registration' )
-			);
+
+			$new_url   = home_url( $url );
+			$page_path = trim( parse_url( $new_url, PHP_URL_PATH ), '/' );
+			$page      = get_page_by_path( $page_path );
+			if ( ! $page ) {
+				return new WP_Error(
+					'user_registration_validation_invalid_url',
+					__( 'Please input a valid url or path', 'user-registration' )
+				);
+			}
 		}
 		return true;
 	}
