@@ -4040,7 +4040,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				if ( ur_is_ajax_login_enabled() ) {
 					wp_send_json_error(
 						array(
-							'message' => $message,
+							'message' => apply_filters( 'login_errors', $message ),
 						)
 					);
 				}
