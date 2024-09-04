@@ -2581,14 +2581,14 @@ if ( ! function_exists( 'user_registration_get_form_fields_for_dropdown' ) ) {
 	/**
 	 * Get form fields array for dropdown
 	 *
-	 * @param int    $form_id Form ID.
+	 * @param int $form_id Form ID.
 	 */
 	function user_registration_get_form_fields_for_dropdown( $form_id ) {
 		$get_all_fields = user_registration_pro_get_conditional_fields_by_form_id( $form_id, '' );
 		$field_array    = array();
 		if ( isset( $get_all_fields ) ) {
 			foreach ( $get_all_fields as $key => $field ) {
-				if( $field['field_key'] === 'phone' ) {
+				if ( $field['field_key'] === 'phone' ) {
 					$field_array[ $key ] = $field['label'];
 				}
 			}
@@ -6336,3 +6336,82 @@ if ( ! function_exists( 'ur_prevent_default_login' ) ) {
 		return true;
 	}
 }
+
+if ( ! function_exists( 'ur_integration_addons' ) ) {
+	/**
+	 * List of integrations.
+	 *
+	 * @since 3.3.1
+	 *
+	 * @return array
+	 */
+	function ur_integration_addons() {
+
+		$integration_list = array(
+			'UR_Settings_SMS_Integration' => array(
+				'id'           => 'sms_integration',
+				'type'         => 'accordian',
+				'title'        => 'Twilio',
+				'video_id'     => '-iUMcr03FP8',
+				'available_in' => 'Personal Plan',
+			),
+			$integration['UR_Settings_ActiveCampaign'] = array(
+				'id'           => 'activecampaign',
+				'type'         => 'accordian',
+				'title'        => 'ActiveCampaign',
+				'desc'         => '',
+				'video_id'     => 'AfapJxM9klk',
+				'available_in' => 'Plus or Professional Plan',
+			),
+			$integration['UR_Settings_MailerLite'] = array(
+				'id'           => 'mailerlite',
+				'type'         => 'accordian',
+				'title'        => 'MailerLite',
+				'desc'         => '',
+				'video_id'     => '4f1lGgFuJx4',
+				'available_in' => 'Plus or Professional Plan',
+			),
+			$integration['UR_Settings_klaviyo'] = array(
+				'id'           => 'klaviyo',
+				'type'         => 'accordian',
+				'title'        => 'Klaviyo',
+				'desc'         => '',
+				'video_id'     => 'nKOMqrkNK3Y',
+				'available_in' => 'Plus or Professional Plan',
+			),
+			$integration['UR_Settings_Mailchimp'] = array(
+				'id'           => 'mailchimp',
+				'type'         => 'accordian',
+				'title'        => 'Mailchimp',
+				'desc'         => '',
+				'video_id'     => 'iyCByez_7U8',
+				'available_in' => 'Personal Plan',
+			),
+
+		);
+
+		return $integration_list;
+	}
+
+}
+if ( ! function_exists( 'ur_list_top_integrations' ) ) {
+	/**
+	 * List top integrations.
+	 *
+	 * @since 3.3.1
+	 *
+	 * @param array $integrations Integrations.
+	 * @return array
+	 */
+	function ur_list_top_integrations( $integrations ) {
+		$is_free = is_plugin_active( 'user-registration/user-registration.php' );
+		if ( $is_free ) {
+			$integration_addons = ur_integration_addons();
+			foreach ( $integration_addons as $key => $addon ) {
+				$integration[ $key ] = $addon;
+			}
+			return $integration;
+		}
+	}
+}
+add_filter( 'user_registration_integrations_classes', 'ur_list_top_integrations' );
