@@ -379,11 +379,13 @@ abstract class UR_Form_Field {
 
 			if ( is_array( $option_data ) ) {
 				foreach ( $option_data as $index_data => $option ) {
-					$options[ $option->label ] = array(
-						'label'      => $option->label,
-						'value'      => $option->value,
-						'sell_value' => $option->sell_value,
-					);
+					if ( isset( $option->label ) ) {
+						$options[ $option->label ] = array(
+							'label'      => $option->label,
+							'value'      => $option->value,
+							'sell_value' => $option->sell_value,
+						);
+					}
 				}
 
 				$form_data['options'] = $options;
@@ -671,8 +673,8 @@ abstract class UR_Form_Field {
 						}
 					} elseif ( 'subscription_plan' === $strip_prefix ) {
 						foreach ( $options as $key => $option ) {
-							$label                = is_array( $option ) ? $option['label'] : $option->label;
-							$value                = is_array( $option ) ? $option['value'] : $option->value;
+							$label                = is_array( $option ) ? $option['label'] : ( $option->label ?? '' );
+							$value                = is_array( $option ) ? $option['value'] : ( $option->value ?? '' );
 							$sell_value           = ( is_array( $option ) && isset( $option['sell_value'] ) ) ? $option['sell_value'] : ( ( is_object( $option ) && isset( $option->sell_value ) ) ? $option->sell_value : null );
 							$currency             = get_option( 'user_registration_payment_currency', 'USD' );
 							$currencies           = ur_payment_integration_get_currencies();
