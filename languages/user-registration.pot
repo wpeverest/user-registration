@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-09-04T12:27:57+00:00\n"
+"POT-Creation-Date: 2024-09-06T03:57:29+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: user-registration\n"
@@ -127,12 +127,12 @@ msgstr ""
 msgid "Registration Form"
 msgstr ""
 
-#: includes/abstracts/abstract-ur-form-field.php:1032
+#: includes/abstracts/abstract-ur-form-field.php:1034
 #: src/welcome/components/App.js:61
 msgid "General Settings"
 msgstr ""
 
-#: includes/abstracts/abstract-ur-form-field.php:1042
+#: includes/abstracts/abstract-ur-form-field.php:1044
 msgid "Advanced Settings"
 msgstr ""
 
