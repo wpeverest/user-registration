@@ -2243,7 +2243,7 @@ img.tips {
 	vertical-align: baseline;
 	width: 16px;
 
-	&::after {
+	&::after:not(.no-icon) {
 		@include icon_dashicons("\f223");
 		cursor: help;
 	}

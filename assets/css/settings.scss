@@ -69,7 +69,7 @@ body {
 			max-width: 300px;
 			padding: $spacing_24px 0 0;
 			background: #fafafc;
-			border-right: $border_width solid $border-color; 
+			border-right: $border_width solid $border-color;
 
 			&.collapsed {
 				max-width: 70px;
@@ -1458,6 +1458,10 @@ body {
 						.select2-selection {
 							padding-left: 0;
 							padding-right: 0;
+
+							ul {
+								flex-wrap: wrap;
+							}
 
 							&__choice {
 								background: $grey-50;

@@ -247,21 +247,20 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 == Changelog ==
 
 = 3.3.2    - 09/09/2024 =
-* Feature  - Support relative url in registration url .
-* Feature  - WPBakery compatibility with user registration widgets.
+* Feature  - All User Registration widgets for WPBakery.
+* Feature  - All User Registration widgets for Elementor.
 * Enhance  - User Registration Dashboard Page.
+* Enhance  - Support relative url in registration url .
 * Enhance  - Show Most used Integration Lists on Integration Tab.
 * Enhance  - Warning for field deletion used in Conditional Logic.
 * Enhance  - Introduced Settings Sidebar ( Setup Checklist and Premium Benefits ).
-* Dev      - Elementor widget.
-* Dev      - Compatibility for Mail Poet Integration.
+* Dev      - Compatibility for MailPoet Integration.
 * Fix      - Checkbox and Multiselect smart tag parse issue.
 * Fix 	   - Option values not saved properly in form builder.
-* Fix      - Mismatch Columns error log on External Field Sync.
-* Fix      - Moved membership settings from free to membership.
-* Fix      - Textarea text count not working in WooCommerce checkout block.
-* Fix      - Save Value for seperate shipping as true or false in WooCommerce.
-* Fix      - Userstate attributes login and my account block not synchronized.
+* Fix      - Mismatch columns error log on External Field Sync.
+* Fix      - Login block displaying login form when user is logged in.
+* Fix      - Handle Exception while any option field is blank and form saved.
+* Fix      - Save Value for separate shipping as true or false in WooCommerce.
 
 = 3.3.1     – 19/08/2024 =
 * Feature   – Embed option in form builder.
