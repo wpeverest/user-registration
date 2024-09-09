@@ -1826,14 +1826,9 @@
 								return each_value !== choice_value;
 							})
 						) {
-							if (
-								"undefined" ==
-								typeof general_setting_data.options
-							) {
 								general_setting_data["options"] =
 									option_values.push(choice_value);
 								general_setting_data["options"] = option_values;
-							}
 						}
 					} else {
 						if ("default_value" === $(this).attr("data-field")) {

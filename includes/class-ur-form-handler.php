@@ -680,7 +680,11 @@ class UR_Form_Handler {
 				}
 
 				set_transient( 'ur_password_resetted_flag', true, 60 );
-				wp_redirect( add_query_arg( 'password-reset', 'true', $ur_login_or_account_page ) );
+
+				$redirect = add_query_arg( 'password-reset', 'true', $ur_login_or_account_page );
+				$redirect = apply_filters( 'user_registration_reset_password_redirect', $redirect, $user );
+				
+				wp_redirect( $redirect );
 				exit;
 			}
 		}

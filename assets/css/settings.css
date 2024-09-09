@@ -960,6 +960,7 @@
           .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field input[type='text'],
           .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field input[type='number'] {
             width: 100%;
+            min-width: 100% !important;
             height: 38px; }
           .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .user_registration_send_email_test {
             width: 10%; }
@@ -1023,7 +1024,8 @@
             min-width: 100% !important; }
           .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .ur-radio-group-list {
             display: flex;
-            gap: 20px; }
+            flex-wrap: wrap;
+            gap: 16px; }
             .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .ur-radio-group-list--item {
               max-width: 120px;
               height: auto;

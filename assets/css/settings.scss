@@ -1421,6 +1421,7 @@ body {
 						input[type='text'],
 						input[type='number'] {
 							width: 100%;
+							min-width: 100% !important;
 							height: 38px;
 						}
 
@@ -1531,7 +1532,8 @@ body {
 
 						.ur-radio-group-list {
 							display: flex;
-							gap: 20px;
+							flex-wrap: wrap;
+							gap: $spacing-16px;
 
 							&--item {
 								max-width: 120px;
