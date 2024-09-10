@@ -1425,6 +1425,11 @@ body {
 							height: 38px;
 						}
 
+						textarea,
+						select {
+							min-width: 100% !important;
+						}
+
 						.user_registration_send_email_test {
 							width: 10%;
 						}
@@ -1697,6 +1702,32 @@ body {
 							input[name="date_range"] {
 								width: 100%;
 								padding: $spacing_4px $spacing_10px;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		#popups-list {
+			.ur-list-table-wrapper {
+				width: 100%;
+				overflow-x: auto;
+
+				.wp-list-table {
+					width: 100%;
+    				border-collapse: collapse;
+
+					thead {
+						tr {
+							th {
+								&.column {
+									&-shortcode,
+									&-author,
+									&-date {
+										width: auto;
+									}
+								}
 							}
 						}
 					}

@@ -962,6 +962,9 @@
             width: 100%;
             min-width: 100% !important;
             height: 38px; }
+          .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field textarea,
+          .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field select {
+            min-width: 100% !important; }
           .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .user_registration_send_email_test {
             width: 10%; }
           .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field select {
@@ -1129,6 +1132,14 @@
         .user-registration-settings-container .user-registration-options-container .ur-export-users-page .nav-tab-inside .postbox .inside .ur-export-custom-fields input[name="date_range"] {
           width: 100%;
           padding: 4px 10px; }
+  .user-registration-settings-container .user-registration-options-container #popups-list .ur-list-table-wrapper {
+    width: 100%;
+    overflow-x: auto; }
+    .user-registration-settings-container .user-registration-options-container #popups-list .ur-list-table-wrapper .wp-list-table {
+      width: 100%;
+      border-collapse: collapse; }
+      .user-registration-settings-container .user-registration-options-container #popups-list .ur-list-table-wrapper .wp-list-table thead tr th.column-shortcode, .user-registration-settings-container .user-registration-options-container #popups-list .ur-list-table-wrapper .wp-list-table thead tr th.column-author, .user-registration-settings-container .user-registration-options-container #popups-list .ur-list-table-wrapper .wp-list-table thead tr th.column-date {
+        width: auto; }
   .user-registration-settings-container p.submit {
     margin: 32px 0 0 0;
     padding: 0; }
