@@ -6505,7 +6505,7 @@ function create_wpbakery_widget_category() {
 				array(
 					'type'        => 'textfield',
 					'heading'     => esc_html__( 'Logout URL', 'user-registration' ),
-					'param_name'  => 'logout_url',
+					'param_name'  => 'logout_redirect',
 					'value'       => '',
 					'description' => esc_html__( 'Enter url which redirect after logout.', 'user-registration' ),
 				),
@@ -6530,7 +6530,7 @@ function create_wpbakery_widget_category() {
 				array(
 					'type'        => 'textfield',
 					'heading'     => esc_html__( 'Logout URL', 'user-registration' ),
-					'param_name'  => 'logout_url',
+					'param_name'  => 'logout_redirect',
 					'value'       => '',
 					'description' => esc_html__( 'Enter url which redirect after logout.', 'user-registration' ),
 				),

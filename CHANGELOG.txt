@@ -1,4 +1,4 @@
-= 3.3.2    - 09/09/2024 =
+= 3.3.2    - 10/09/2024 =
 * Feature  - All User Registration widgets for WPBakery.
 * Feature  - All User Registration widgets for Elementor.
 * Enhance  - User Registration Dashboard Page.

@@ -39,16 +39,15 @@ class UR_Block_Myaccount extends UR_Block_Abstract {
 		if ( ! empty( $attr['userState'] ) ) {
 			$parameters['userState'] = $attr['userState'];
 		}
-		
 
-		if ( empty( $parameters )  || ( isset($parameters['userState']) && "logged_in" === $parameters['userState'] )) {
+		if ( (empty( $parameters )  || ( isset($parameters['userState']) && "logged_in" === $parameters['userState'] ) ) || (!empty($parameters) && !isset($parameters['userState'])) ) {
 			return UR_Shortcodes::my_account(
 				$parameters
 			);
+		} else if(isset($parameters['userState']) && "logged_out" === $parameters['userState']) {
+			return UR_Shortcodes::login(
+				$parameters
+			);
 		}
-		
-		return UR_Shortcodes::login(
-			$parameters
-		);
 	}
 }
