@@ -2243,9 +2243,11 @@ img.tips {
 	vertical-align: baseline;
 	width: 16px;
 
-	&::after:not(.no-icon) {
-		@include icon_dashicons("\f223");
-		cursor: help;
+	&:not(.no-icon) {
+		&::after {
+			@include icon_dashicons("\f223");
+			cursor: help;
+		}
 	}
 }
 
