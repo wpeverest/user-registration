@@ -53,7 +53,11 @@ body {
 	display: flex;
     gap: $spacing_24px;
 
-	.user-registration-settings-wrapper {
+	@media screen and (max-width: 1180px) {
+		flex-direction: column;
+	}
+
+	&-wrapper {
 		display: flex;
 		flex-direction: row;
 		background: $grey-0;
@@ -65,7 +69,7 @@ body {
 			max-width: 300px;
 			padding: $spacing_24px 0 0;
 			background: #fafafc;
-			border-right: $border_width solid $border-color; 
+			border-right: $border_width solid $border-color;
 
 			&.collapsed {
 				max-width: 70px;
@@ -484,7 +488,7 @@ body {
 		}
 	}
 
-	.user-registration-settings-sidebar-container {
+	&-sidebar-container {
 		display: flex;
 		gap: $spacing_32px;
 		flex-direction: column;
@@ -492,6 +496,10 @@ body {
 		transition: all .3s;
 		width: 320px;
 		max-width: 100%;
+
+		@media screen and (max-width: 1180px) {
+			width: 100%;
+		}
 
 		.user-registration-settings-sidebar {
 			display: flex;
@@ -506,12 +514,12 @@ body {
 				margin: 0;
 				padding-bottom: $spacing-16px;
 				margin-bottom: $spacing_20px;
-				border-bottom: 1px solid #EEE8F7;
+				border-bottom: $border_width solid #EEE8F7;
 			}
 
 			p {
 				margin: 0;
-				color: #383838;
+				color: $grey-400;
 				font-size: 16px;
 				font-style: normal;
 				font-weight: $regular;
@@ -519,11 +527,11 @@ body {
 			}
 
 			&__header {
-				border-bottom: 1px solid #e1e1e1;
+				border-bottom: $border_width solid #e1e1e1;
 				padding-bottom: $spacing-16px;
 
 				h3 {
-					color: #222222;
+					color: $grey-500;
 					font-size: 20px;
 					font-weight: $semi-bold;
 					line-height: 30px;
@@ -550,7 +558,7 @@ body {
 
 					&-item {
 						display: flex;
-						color: #383838;
+						color: $grey-400;
 						font-size: 16px;
 						font-weight: $regular;
 						line-height: 24px;
@@ -560,9 +568,13 @@ body {
 						&.card {
 							padding: $spacing_12px $spacing-16px;
 							border-radius: 6px;
-							background-color: #ffffff;
+							background: $white;
 							border: none;
 							margin-top: 0px;
+
+							@media screen and (max-width: 1180px) {
+								max-width: 100%;
+							}
 						}
 
 						&.completed {
@@ -583,11 +595,11 @@ body {
 
 						.button {
 							border-radius: 3px;
-							border: 1px solid #475bb2;
-							background: #475bb2;
-							padding: 5px 8px;
+							border: $border_width solid $primary_color;
+							background: $primary_color;
+							padding: $spacing_5px $spacing_8px;
 							display: block;
-							color: #ffffff;
+							color: $white;
 							font-size: 14px;
 							font-style: normal;
 							font-weight: $medium;
@@ -595,7 +607,7 @@ body {
 							text-decoration: none;
 							letter-spacing: .05px;
 							width: max-content;
-							margin: 20px 0;
+							margin: $spacing_20px 0;
 							transition: all .3s;
 
 							&:hover {
@@ -636,12 +648,16 @@ body {
 					flex-direction: column;
 					align-items: center;
 
+					@media screen and (max-width: 1180px) {
+						max-width: 300px;
+					}
+
 					> p {
 						font-size: 18px;
 						line-height: 27px;
 						font-weight: $semi-bold;
 						text-align: center;
-						color: #FFFFFF;
+						color: $white;
 						padding: 0px $spacing_20px;
 						position: relative;
 
@@ -662,8 +678,8 @@ body {
 					a {
 						text-decoration: none;
 						padding: $spacing_12px;
-						background: #fff;
-						border-radius: 2px;
+						background: $white;
+						border-radius: $border_radius_2;
 						color: #3F4D8A;
 						font-weight: $semi-bold;
 						transition: all .3s;
@@ -675,7 +691,7 @@ body {
 
 						&:hover {
 							background: $primary_color;
-							color: #fff;
+							color: $white;
 						}
 					}
 				}
@@ -824,15 +840,15 @@ body {
 
 
 		.user-registration-integrations {
-			border-radius: 3px;
+			border-radius: $border_radius_3;
 			background: #fafafc;
-			border: 1px solid #ced4da;
-			padding: 10px 20px;
+			border: $border_width solid #ced4da;
+			padding: $spacing_10px $spacing_20px;
 			display: flex;
 			flex-wrap: wrap;
 			align-items: center;
 			justify-content: space-between;
-			margin-bottom: 10px;
+			margin-bottom: $spacing_10px;
 		}
 
 		.integration-header-info {
@@ -866,7 +882,7 @@ body {
 					width: 16px;
 					height: 16px;
 					border: $border_width solid $border-color;
-					border-radius: 2px;
+					border-radius: $border_radius_2;
 				}
 
 				&.ur-integration-account-connected {
@@ -887,9 +903,9 @@ body {
 			display: flex;
 			overflow: hidden;
 			margin: 0;
-			border-radius: 4px;
+			border-radius: $border_radius_4;
 			align-items: center;
-			border: 1px solid #ced4da;
+			border: $border_width solid #ced4da;
 
 			img {
 				width: 100%;
@@ -898,13 +914,13 @@ body {
 		}
 
 		.integration-info {
-			margin-right: 20px;
+			margin-right: $spacing_20px;
 		}
 
 		.integration-action {
 			background: $grey-0;
 			border: $border_width solid $grey-50;
-			border-radius: 3px;
+			border-radius: $border_radius_3;
 			width: 28px;
 			height: 28px;
 			display: flex;
@@ -986,7 +1002,7 @@ body {
 					cursor: pointer;
 
 					&.active {
-						border-bottom: 1px solid #dee0e9;
+						border-bottom: $border_width solid #dee0e9;
 						padding-bottom: $spacing_18px;
 
 						.integration-action {
@@ -1008,7 +1024,7 @@ body {
 				cursor: pointer;
 
 				&.active {
-					border-bottom: 1px solid #dee0e9;
+					border-bottom: $border_width solid #dee0e9;
 					padding-bottom: $spacing_18px;
 
 					.integration-action {
@@ -1321,8 +1337,8 @@ body {
 										}
 
 										&.ur-email-receiver {
-											color: #383838 !important;
-											font-weight: 600 !important;
+											color: $grey-400 !important;
+											font-weight: $semi-bold !important;
 										}
 									}
 
@@ -1405,7 +1421,13 @@ body {
 						input[type='text'],
 						input[type='number'] {
 							width: 100%;
+							min-width: 100% !important;
 							height: 38px;
+						}
+
+						textarea,
+						select {
+							min-width: 100% !important;
 						}
 
 						.user_registration_send_email_test {
@@ -1442,6 +1464,10 @@ body {
 						.select2-selection {
 							padding-left: 0;
 							padding-right: 0;
+
+							ul {
+								flex-wrap: wrap;
+							}
 
 							&__choice {
 								background: $grey-50;
@@ -1511,15 +1537,16 @@ body {
 
 						.ur-radio-group-list {
 							display: flex;
-							gap: 20px;
+							flex-wrap: wrap;
+							gap: $spacing-16px;
 
 							&--item {
 								max-width: 120px;
 								height: auto;
-								border: 1px solid #E9E9E9;
-								border-radius: 5px;
+								border: $border_width solid #E9E9E9;
+								border-radius: $border_radius_5;
 								text-align: center;
-								padding: 6px;
+								padding: $spacing_6px;
 								align-items: center;
 								display: flex;
 
@@ -1535,7 +1562,7 @@ body {
 								label {
 									font-size: 12px;
 									font-weight: $semi-bold;
-									color: #383838;
+									color: $grey-400;
 									opacity: 0.5;
 
 									input {
@@ -1675,6 +1702,32 @@ body {
 							input[name="date_range"] {
 								width: 100%;
 								padding: $spacing_4px $spacing_10px;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		#popups-list {
+			.ur-list-table-wrapper {
+				width: 100%;
+				overflow-x: auto;
+
+				.wp-list-table {
+					width: 100%;
+    				border-collapse: collapse;
+
+					thead {
+						tr {
+							th {
+								&.column {
+									&-shortcode,
+									&-author,
+									&-date {
+										width: auto;
+									}
+								}
 							}
 						}
 					}

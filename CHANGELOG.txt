@@ -1,3 +1,22 @@
+= 3.3.2.1  - 11/09/2024 =
+* Fix      - Tooltip icon is not being displayed in Global Settings.
+
+= 3.3.2    - 10/09/2024 =
+* Feature  - All User Registration widgets for WPBakery.
+* Feature  - All User Registration widgets for Elementor.
+* Enhance  - User Registration Dashboard Page.
+* Enhance  - Support relative url in registration url .
+* Enhance  - Show Most used Integration Lists on Integration Tab.
+* Enhance  - Warning for field deletion used in Conditional Logic.
+* Enhance  - Introduced Settings Sidebar ( Setup Checklist and Premium Benefits ).
+* Dev      - Compatibility for MailPoet Integration.
+* Fix      - Checkbox and Multiselect smart tag parse issue.
+* Fix 	   - Option values not saved properly in form builder.
+* Fix      - Mismatch columns error log on External Field Sync.
+* Fix      - Login block displaying login form when user is logged in.
+* Fix      - Handle Exception while any option field is blank and form saved.
+* Fix      - Save Value for separate shipping as true or false in WooCommerce.
+
 = 3.3.1     - 19/08/2024 =
 * Feature   - Embed option in form builder.
 * Enhance   - Gutenberg block preview.
@@ -12,7 +31,11 @@
 * Dev       - Compatibility for Authorize.net Addon.
 * Dev       - Compatibility for SMS verification.
 * Dev       - Add noreferer and noopener in all target blank anchor tags.
-* Fix       - Unable to publish form from draft status. 
+<<<<<<< HEAD
+* Fix       - Unable to publish form from draft status.
+=======
+* Fix       - Unable to publish form from draft status.
+>>>>>>> master
 * Fix       - Undefined variable $form_row_data.
 * Fix       - Disable default wordpress login not working.
 * Fix       - The email content translation issues with WPML plugin.

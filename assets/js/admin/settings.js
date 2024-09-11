@@ -1061,6 +1061,12 @@
 			skipBeforeUnloadPopup = true;
 		});
 
+		$(form)
+			.find(".ur-nav__link")
+			.on("click", function () {
+				skipBeforeUnloadPopup = true;
+			});
+
 		$(window).on("beforeunload", function (event) {
 			if (formChanged && !skipBeforeUnloadPopup) {
 				event.preventDefault();
@@ -1070,4 +1076,8 @@
 			}
 		});
 	}
+
+	$(document)
+		.find(".wp-list-table")
+		.wrap("<div class='ur-list-table-wrapper'></div>");
 })(jQuery);
