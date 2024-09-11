@@ -74,6 +74,7 @@ class UR_AJAX {
 			'search_global_settings'    => false,
 			'php_notice_dismiss'        => false,
 			'locate_form_action'        => false,
+			'generate_row_settings'     => false,
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -1666,6 +1667,33 @@ class UR_AJAX {
 		update_option( 'user_registration_php_deprecated_notice_prompt_count', ++$prompt_count );
 
 		return false;
+	}
+
+	/**
+	 * Handle Row settings generation.
+	 *
+	 * @return bool
+	 */
+	public static function generate_row_settings() {
+		$security = isset( $_POST['security'] ) ? sanitize_text_field( wp_unslash( $_POST['security'] ) ) : '';
+		if ( '' === $security || ! wp_verify_nonce( $security, 'ur_new_row_added_nonce' ) ) {
+			wp_send_json_error( 'Nonce verification failed' );
+			return;
+		}
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( 'Permision Denied' );
+			return;
+		}
+		$form_id = isset( $_POST['form_id'] ) ? intval( $_POST['form_id'] ) : 0;
+		$row_id  = isset( $_POST['row_id'] ) ? intval( $_POST['row_id'] ) : 0;
+
+		ob_start();
+		echo "<div class='ur-form-row ur-individual-row-settings' data-row-id='" . esc_attr( $row_id ) . "'>";
+		do_action( 'user_registration_get_row_settings', $form_id, $row_id );
+		echo '</div>';
+		$template = ob_get_clean();
+
+		wp_send_json_success( $template );
 	}
 }
 

@@ -783,62 +783,63 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			$endpoints = apply_filters( 'user_registration_custom_nav_menu_items', $endpoints );
 
 			?>
-<div id="posttype-user-registration-endpoints" class="posttypediv">
-	<div id="tabs-panel-user-registration-endpoints" class="tabs-panel tabs-panel-active">
-		<ul id="user-registration-endpoints-checklist" class="categorychecklist form-no-clear">
-			<?php
-			$i = - 1;
-			foreach ( $endpoints as $key => $value ) :
-				?>
-			<li>
-				<label class="menu-item-title">
-					<input type="checkbox" class="menu-item-checkbox"
-						name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-object-id]"
-						value="<?php echo esc_attr( $i ); ?>" /> <?php echo esc_html( $value ); ?>
-				</label>
-				<input type="hidden" class="menu-item-type"
-					name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-type]" value="custom" />
-				<input type="hidden" class="menu-item-title"
-					name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-title]"
-					value="<?php echo esc_html( $value ); ?>" />
-				<input type="hidden" class="menu-item-url"
-					name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-url]"
-					value="<?php echo esc_url( ur_get_account_endpoint_url( $key ) ); ?>" />
-				<input type="hidden" class="menu-item-classes"
-					name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-classes]" />
-			</li>
-				<?php
-						--$i;
-						endforeach;
-			?>
-		</ul>
-	</div>
-	<p class="button-controls">
-		<span class="list-controls">
-			<input type="checkbox" id="ur-endpoints-tab" class="select-all">
-			<label for="ur-endpoints-tab">
-				<?php esc_html_e( 'Select All', 'user-registration' ); ?>
-			</label>
-		</span>
-		<span class="add-to-menu">
-			<input type="submit" class="button-secondary submit-add-to-menu right"
-				value="<?php esc_attr_e( 'Add to menu', 'user-registration' ); ?>" name="add-post-type-menu-item"
-				id="submit-posttype-user-registration-endpoints">
-			<span class="spinner"></span>
-		</span>
-	</p>
-</div>
+			<div id="posttype-user-registration-endpoints" class="posttypediv">
+				<div id="tabs-panel-user-registration-endpoints" class="tabs-panel tabs-panel-active">
+					<ul id="user-registration-endpoints-checklist" class="categorychecklist form-no-clear">
+						<?php
+						$i = - 1;
+						foreach ( $endpoints as $key => $value ) :
+							?>
+						<li>
+							<label class="menu-item-title">
+								<input type="checkbox" class="menu-item-checkbox"
+									name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-object-id]"
+									value="<?php echo esc_attr( $i ); ?>" /> <?php echo esc_html( $value ); ?>
+							</label>
+							<input type="hidden" class="menu-item-type"
+								name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-type]" value="custom" />
+							<input type="hidden" class="menu-item-title"
+								name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-title]"
+								value="<?php echo esc_html( $value ); ?>" />
+							<input type="hidden" class="menu-item-url"
+								name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-url]"
+								value="<?php echo esc_url( ur_get_account_endpoint_url( $key ) ); ?>" />
+							<input type="hidden" class="menu-item-classes"
+								name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-classes]" />
+						</li>
+							<?php
+									--$i;
+									endforeach;
+						?>
+					</ul>
+				</div>
+				<p class="button-controls">
+					<span class="list-controls">
+						<input type="checkbox" id="ur-endpoints-tab" class="select-all">
+						<label for="ur-endpoints-tab">
+							<?php esc_html_e( 'Select All', 'user-registration' ); ?>
+						</label>
+					</span>
+					<span class="add-to-menu">
+						<input type="submit" class="button-secondary submit-add-to-menu right"
+							value="<?php esc_attr_e( 'Add to menu', 'user-registration' ); ?>" name="add-post-type-menu-item"
+							id="submit-posttype-user-registration-endpoints">
+						<span class="spinner"></span>
+					</span>
+				</p>
+			</div>
 			<?php
 		}
 
-			/**
-			 * Get Edit Form Field.
-			 *
-			 * @param object $form_data Form Data.
-			 *
-			 * @throws Exception Throws exception if error in json.
-			 */
+		/**
+		 * Get Edit Form Field.
+		 *
+		 * @param object $form_data Form Data.
+		 *
+		 * @throws Exception Throws exception if error in json.
+		 */
 		private function get_edit_form_field( $form_data ) {
+			$form_row_data = array();
 
 			if ( ! empty( $form_data ) ) {
 				$form_data_content = $form_data->post_content;
@@ -948,7 +949,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$repeater_label = '';
 				foreach ( $form_row_data_array as $row_data ) {
 					if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'user-registration-repeater-fields/user-registration-repeater-fields.php' ) ) {
-						if ( isset( $row_data['row_id'] ) && $row_id === $row_data['row_id'] && isset( $row_data['type'] ) && 'repeater' === $row_data['type'] ) {
+						if ( isset( $row_data['row_id'] ) && $row_id === $row_data['row_id'] && isset( $row_data['type'] ) && 'repeater' === $row_data['type'] && isset( $row_data['repeater_id'] ) ) {
 							$row_class      = 'ur-repeater-row';
 							$attributes     = 'data-repeater-id=' . $row_data['repeater_id'] . '';
 							$repeater_label = '<div class="ur-repeater-label" id="user_registration_repeater_row_title_' . esc_attr( $row_data['repeater_id'] ) . '"><label>' . esc_html__( 'Repeater Row', 'user-registration' ) . '</label></div>';
@@ -971,6 +972,9 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 								}
 								?>
 					</button>
+					<?php
+					do_action( 'user_registration_form_grid_options' );
+					?>
 					<button type="button" class="dashicons dashicons-no-alt ur-remove-row"></button>
 					<div class="ur-toggle-grid-content" style="display:none">
 						<small>Select the grid column.</small>
