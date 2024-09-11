@@ -561,7 +561,7 @@
 		"slug" : "user-registration-mailpoet",
 		"name" : "User Registration MailPoet",
 		"image": "extensions-json/sections/images/mailpoet.png",
-		"excerpt": "Allows you to combine MailPoet with User Registration for enhanced email marketing efforts. Access over 50 pre-designed email templates for effective email marketing and lead conversion.",
+		"excerpt": "Easily connect your User Registration forms with MailPoet. Seamlessly map user details to your MailPoet Subscriber Lists for more efficient and convenient email marketing efforts.",
 		"link": "https://wpuserregistration.com/features/mailpoet/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
 		"plan" : [
 			"plus",

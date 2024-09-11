@@ -1,3 +1,6 @@
+= 3.3.2.1  - 11/09/2024 =
+* Fix      - Tooltip icon is not being displayed in Global Settings.
+
 = 3.3.2    - 10/09/2024 =
 * Feature  - All User Registration widgets for WPBakery.
 * Feature  - All User Registration widgets for Elementor.
