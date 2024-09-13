@@ -616,6 +616,14 @@ class UR_Admin_Assets {
 			'i18n_upgrade_to_pro'                         => esc_html__( 'Upgrade plan', 'user-registration' ),
 			'i18n_ok'                                     => esc_html__( 'OK', 'user-registration' ),
 			'i18n_default_cannot_delete_message'          => esc_html__( 'WordPress requires the user to have an email address during registration.', 'user-registration' ),
+			'pro_feature_title'                           => esc_html__( 'is a Pro Feature', 'user-registration' ),
+			'upgrade_message'                             => esc_html__(
+				'We apologize, but %title% is not available with the free version. To access this fantastic features, please consider upgrading to the %plan%.',
+				'user-registration'
+			),
+			'upgrade_plan'                                => esc_html__( 'Upgrade Plan', 'user-registration' ),
+			'upgrade_link'                                => esc_url( 'https://wpuserregistration.com/pricing/?utm_source=integration-settings&utm_medium=premium-addon-popup&utm_campaign=' . urlencode( UR()->utm_campaign ) ),
+
 		);
 
 		return $i18n;

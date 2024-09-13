@@ -34,6 +34,32 @@ class UR_Admin {
 		add_action( 'admin_init', array( $this, 'admin_redirects' ) );
 		add_action( 'admin_init', array( $this, 'template_actions' ) );
 		add_filter( 'display_post_states', array( $this, 'ur_add_post_state' ), 10, 2 );
+		add_action( 'user_registration_after_form_settings', array( $this, 'render_integration_section' ) );
+	}
+
+	/**
+	 * Render Integration Section
+	 *
+	 * @since 3.3.3
+	 * @param  int $form_id Form Id.
+	 * @return void
+	 */
+	public function render_integration_section( $form_id = 0 ) {
+
+		echo '<div id="integration-settings"><h3 class="ur-integration">' . esc_html__( 'Integration', 'user-registration' ) . '</h3>';
+
+		$integration_addons = ur_integration_addons();
+
+		foreach ( $integration_addons as $key => $integration ) {
+			if ( 'sms_integration' === $integration['id'] ) {
+				continue;
+			}
+			$available_in = isset( $integration['available_in'] ) ? sanitize_text_field( wp_unslash( $integration['available_in'] ) ) : '';
+			echo '<div class="form-settings-sub-tab " id="' . esc_attr( $integration['id'] ) . '-settings" data-title="' . esc_attr( $integration['title'] ) . '" data-id="' . esc_attr( $integration['id'] ) . '" data-video="' . esc_attr( $integration['video_id'] ) . '" data-available-in="' . esc_attr( $available_in ) . '"><h3 class="ur-integration-list">' . esc_html( $integration['title'] ) . '</h3>';
+			do_action( 'user_registration_form_settings_integration', $integration['id'], $form_id );
+			echo '</div>';
+		}
+		echo '</div>';
 	}
 
 	/**

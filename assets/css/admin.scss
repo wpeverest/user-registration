@@ -6077,3 +6077,52 @@ body {
 	font-style: normal;
 	font-display: block;
 }
+
+#integration-settings .ur-nav-premium {
+    cursor: not-allowed;
+	opacity: 0.5;
+}
+
+
+.form-settings-main-tab {
+	margin-bottom: 0;
+	border-radius: 0;
+	padding: $spacing_18px $spacing_24px;
+	border-bottom: $border_width solid #ececec;
+	background: transparent;
+	font-size: 15px;
+	font-weight: $regular;
+	line-height: 150%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding-right: $spacing_16px;
+	&::after {
+		content: "";
+		background-image: url("../images/icons/ur-right-arrow.svg");
+		background-repeat: no-repeat;
+		background-size: 100%;
+		background-position: center;
+		width: 18px;
+		height: 18px;
+	}
+}
+.form-settings-sub-tab {
+	margin-bottom: $spacing_10px;
+	border-radius: $border_radius_4;
+	padding: $spacing_18px $spacing_24px;
+	border-bottom: $border_width solid #ececec;
+	background: $color_gray_four;
+	font-size: 15px;
+	font-weight: $regular;
+	line-height: 150%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: $spacing_10px $spacing_15px;
+	color: $gray_base;
+	&.active {
+		background: $primary_color;
+		color: $white;
+	}
+}
