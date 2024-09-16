@@ -54,8 +54,19 @@ class UR_Admin {
 			if ( 'sms_integration' === $integration['id'] ) {
 				continue;
 			}
+			$is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php' );
+			$css_class     = '';
+
+			if ( ! $is_pro_active ) {
+				$css_class = 'ur-nav-premium';
+			} else {
+				$is_addon_active = is_plugin_active( 'user-registration-' . $integration['id'] . '/user-registration-' . $integration['id'] . '.php' );
+				if ( ! $is_addon_active ) {
+					continue;
+				}
+			}
 			$available_in = isset( $integration['available_in'] ) ? sanitize_text_field( wp_unslash( $integration['available_in'] ) ) : '';
-			echo '<div class="form-settings-sub-tab " id="' . esc_attr( $integration['id'] ) . '-settings" data-title="' . esc_attr( $integration['title'] ) . '" data-id="' . esc_attr( $integration['id'] ) . '" data-video="' . esc_attr( $integration['video_id'] ) . '" data-available-in="' . esc_attr( $available_in ) . '"><h3 class="ur-integration-list">' . esc_html( $integration['title'] ) . '</h3>';
+			echo '<div class="form-settings-sub-tab ' . esc_attr( $css_class ) . '" id="' . esc_attr( $integration['id'] ) . '-settings" data-title="' . esc_attr( $integration['title'] ) . '" data-id="' . esc_attr( $integration['id'] ) . '" data-video="' . esc_attr( $integration['video_id'] ) . '" data-available-in="' . esc_attr( $available_in ) . '"><h3 class="ur-integration-list">' . esc_html( $integration['title'] ) . '</h3>';
 			do_action( 'user_registration_form_settings_integration', $integration['id'], $form_id );
 			echo '</div>';
 		}

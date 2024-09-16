@@ -472,62 +472,212 @@ jQuery(function ($) {
 		 * Display the upgrade message for the top addons.
 		 */
 		form_settings_section
-			.find(".form-settings-sub-tab .ur-nav-premium")
+			.find(".form-settings-sub-tab")
 			.on("click", function (e) {
-				$this = $(this);
 				e.preventDefault();
-				var video_id = $this.data("video");
-				var plugin_title = $this.data("title");
-				var available_in = $(this).data("available-in");
+				if ($(this).hasClass("ur-nav-premium")) {
 
-				if (video_id !== "") {
-					var video =
-						'<div style="width: 535px; height: 300px;"><iframe width="100%" height="100%" frameborder="0" src="https://www.youtube.com/embed/' +
-						video_id +
-						'" rel="1" allowfullscreen></iframe></div><br>';
-				}
-				var icon =
-					'<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>';
+					var icon =
+			'<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>';
+		var plan = $(this).data("plan");
+		var name = $(this).data("name");
+		var video_id = $(this).data("video");
+		var slug = $(this).data("slug"),
+			$this = $(this);
 
-				var message =
-					video +
-					user_registration_form_builder_data.i18n_admin
-						.upgrade_message;
+		if (slug != "" && plan != "") {
+			$.ajax({
+				url: user_registration_locked_form_fields_notice_params.ajax_url,
+				type: "POST",
+				data: {
+					action: "user_registration_locked_form_fields_notice",
+					slug: slug,
+					plan: plan,
+					name: name,
+					video_id: video_id,
+					security:
+						user_registration_locked_form_fields_notice_params.user_registration_locked_form_fields_notice_nonce
+				},
+				success: function (response) {
+					if (video_id !== "") {
+						var video =
+							'<div style="width: 535px; height: 300px;"><iframe width="100%" height="100%" frameborder="0" src="https://www.youtube.com/embed/' +
+							video_id +
+							'" rel="1" allowfullscreen></iframe></div><br>';
+					}
+					var action_button = $(response.data.action_button).find(
+						"a"
+					);
 
-				message = message
-					.replace("%title%", plugin_title)
-					.replace("%plan%", available_in);
-
-				var title =
-					icon +
-					'<span class="user-registration-swal2-modal__title">' +
-					plugin_title +
-					" " +
-					user_registration_form_builder_data.i18n_admin
-						.pro_feature_title;
-				("</span>");
-				Swal.fire({
-					title: title,
-					html: message,
-					customClass:
-						"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-locked-field",
-					showCloseButton: true,
-					showConfirmButton: true,
-					allowOutsideClick: true,
-					heightAuto: false,
-					width: "575px",
-					confirmButtonText:
-						user_registration_form_builder_data.i18n_admin
-							.upgrade_plan
-				}).then(function (result) {
-					if (result.isConfirmed) {
-						window.open(
-							user_registration_form_builder_data.i18n_admin
-								.upgrade_link,
-							"_blank"
+					if (!action_button.length) {
+						action_button = $(response.data.action_button).find(
+							"form"
 						);
 					}
-				});
+
+					var title =
+						icon +
+						'<span class="user-registration-swal2-modal__title" > ';
+
+					if (action_button.hasClass("activate-license-now")) {
+						var message =
+							user_registration_locked_form_fields_notice_params.license_activation_required_message;
+						title +=
+							user_registration_locked_form_fields_notice_params.license_activation_required_title;
+					} else if (action_button.hasClass("activate-now")) {
+						var message =
+							user_registration_locked_form_fields_notice_params.activation_required_message.replace(
+								"%plugin%",
+								name
+							);
+						title +=
+							user_registration_locked_form_fields_notice_params.activation_required_title;
+					} else if (action_button.hasClass("install-now")) {
+						var message =
+							user_registration_locked_form_fields_notice_params.installation_required_message.replace(
+								"%plugin%",
+								name
+							);
+						title +=
+							user_registration_locked_form_fields_notice_params.installation_required_title;
+					} else {
+						var message =
+						video +
+						user_registration_form_builder_data.i18n_admin
+							.upgrade_message;
+
+							message = message
+						.replace("%title%", plugin_title)
+						.replace("%plan%", available_in);
+						
+						title +=
+							plugin_title +
+							" " +
+							user_registration_form_builder_data.i18n_admin
+							.pro_feature_title;
+					}
+
+					title += "</span>";
+					message =
+						video +
+						message +
+						"<br><br>" +
+						response.data.action_button;
+					Swal.fire({
+						title: title,
+						html: message,
+						customClass:
+							"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-locked-field",
+						showCloseButton: true,
+						showConfirmButton: false,
+						allowOutsideClick: true,
+						heightAuto: false,
+						width: "575px"
+					}).then(function (result) {
+						// Do Nothing.
+					});
+				}
+			});
+		}
+
+
+					$this = $(this);
+					var video_id = $this.data("video");
+					var plugin_title = $this.data("title");
+					var available_in = $(this).data("available-in");
+
+					if (video_id !== "") {
+						var video =
+							'<div style="width: 535px; height: 300px;"><iframe width="100%" height="100%" frameborder="0" src="https://www.youtube.com/embed/' +
+							video_id +
+							'" rel="1" allowfullscreen></iframe></div><br>';
+					}
+					var icon =
+						'<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>';
+
+					var message =
+						video +
+						user_registration_form_builder_data.i18n_admin
+							.upgrade_message;
+
+					message = message
+						.replace("%title%", plugin_title)
+						.replace("%plan%", available_in);
+
+					var title =
+						icon +
+						'<span class="user-registration-swal2-modal__title">' +
+						plugin_title +
+						" " +
+						user_registration_form_builder_data.i18n_admin
+							.pro_feature_title;
+					("</span>");
+					Swal.fire({
+						title: title,
+						html: message,
+						customClass:
+							"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-locked-field",
+						showCloseButton: true,
+						showConfirmButton: true,
+						allowOutsideClick: true,
+						heightAuto: false,
+						width: "575px",
+						confirmButtonText:
+							user_registration_form_builder_data.i18n_admin
+								.upgrade_plan
+					}).then(function (result) {
+						if (result.isConfirmed) {
+							window.open(
+								user_registration_form_builder_data.i18n_admin
+									.upgrade_link,
+								"_blank"
+							);
+						}
+					});
+				} else {
+					this_id = $(this).attr("id");
+					// Remove all active classes initially.
+					$(this).siblings().removeClass("active");
+
+					// Add active class on clicked tab.
+					$(this).addClass("active");
+
+					// Hide other settings and show respective id's settings.
+					fields_panel
+						.find("form #ur-field-all-settings > div")
+						.hide();
+
+					if ($(this).parent().hasClass("form-settings-main-tab")) {
+						// Hide other settings and show respective id's settings.
+						fields_panel
+							.find(
+								"form #ur-field-all-settings > div#integration-settings"
+							)
+							.show();
+						fields_panel
+							.find("form #integration-settings .ur-integration")
+							.remove();
+						fields_panel
+							.find("form #integration-settings > div")
+							.hide();
+						fields_panel
+							.find("form #integration-settings > div#" + this_id)
+							.show();
+					} else {
+						// Hide other settings and show respective id's settings.
+						fields_panel
+							.find("form #ur-field-all-settings > div")
+							.hide();
+						fields_panel
+							.find(
+								"form #ur-field-all-settings > div#" + this_id
+							)
+							.show();
+					}
+
+					$(document).trigger("update_perfect_scrollbar");
+					$(".ur-builder-wrapper").scrollTop(0);
+				}
 			});
 	});
 
