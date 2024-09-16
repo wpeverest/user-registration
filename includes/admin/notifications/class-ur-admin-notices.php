@@ -674,8 +674,9 @@ class UR_Admin_Notices {
 			self::remove_notice( $hide_notice );
 
 			// Remove the onboarding skipped checker if install notice is removed.
-			if ( 'install' === $hide_notice ) {
+			if ( 'install' === $hide_notice || 'continue_setup_wizard' === $hide_notice ) {
 				delete_option( 'user_registration_onboarding_skipped' );
+				delete_option( 'user_registration_onboarding_skipped_step' );
 			}
 
 			/**
@@ -859,8 +860,9 @@ class UR_Admin_Notices {
 
 			if ( $onboard_skipped && $onboard_skipped_step ) {
 				/* translators: % s: continue wizard URL */
-				$onboarding_complete_text = sprintf( __( '<a href="%s" class="button-primary">Continue Setup Wizard</a>', 'user-registration' ), esc_url( admin_url( '/admin.php?page=user-registration-welcome&tab=setup-wizard&step=' . $onboard_skipped_step . '' ) ) );
-				$onboarding_completed     = false;
+				$onboarding_complete_text  = sprintf( __( '<a href="%s" class="button-primary" style="margin-right: 5px;">Continue Setup Wizard</a>', 'user-registration' ), esc_url( admin_url( '/admin.php?page=user-registration-welcome&tab=setup-wizard&step=' . $onboard_skipped_step . '' ) ) );
+				$onboarding_complete_text .= sprintf( __( '<a class="button-secondary skip" href="%s">Skip setup</a>', 'user-registration' ), esc_url( wp_nonce_url( add_query_arg( 'ur-hide-notice', 'continue_setup_wizard' ), 'user_registration_hide_notices_nonce', '_ur_notice_nonce' ) ) );
+				$onboarding_completed      = false;
 			} else {
 				$onboarding_completed = true;
 			}
