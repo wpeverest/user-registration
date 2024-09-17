@@ -4,6 +4,8 @@
 	&.vertical {
 		display: flex;
 		flex-wrap: wrap;
+		padding: $spacing_12px;
+		border-radius: $border_radius_16;
 
 		.user-registration-error, .user-registration-message {
 			float: none;
@@ -11,17 +13,42 @@
 		}
 
 		.user-registration-MyAccount-navigation {
-			background: $color_gray_five;
-			width: 25%;
+			border-radius: $border_radius_10;
+			background: #F8F8FA;
+			max-width: 260px;
+			width: 100%;
+			padding: $spacing_26px $spacing_20px $spacing_16px;
+			border: 0;
 
 			ul {
 				flex-direction: column;
 				flex-wrap: nowrap;
+				gap: $spacing_4px;
 
 				.user-registration-MyAccount-navigation-link {
+					transition: all .3s;
+
+					a {
+						padding: $spacing_12px $spacing_12px $spacing_12px $spacing_24px;
+						border-radius: $border_radius_4;
+						border-left: 3px solid transparent;						
+						color: #4E4E4E;
+						font-size: 14px;
+						font-weight: 600;
+						line-height: 22px;
+					}
+
+					&:hover {
+						a {
+							background: $blue-50;
+							color: $primary_color;
+						}
+					}
+
 					&.is-active {
 						a {
-							background: $color_gray_four;
+							color: $primary_color;
+							background: $blue-50;
 							border-color: $primary_color;
 						}
 					}
@@ -64,6 +91,8 @@
 				.user-registration-MyAccount-navigation-link {
 					a {
 						padding: 15px 20px;
+						font-family: inherit;
+						font-weight: 500;
 					}
 
 					&.is-active {
