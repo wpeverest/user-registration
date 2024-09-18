@@ -74,18 +74,22 @@ class UR_Admin_Notices {
 	 */
 	public static function user_registration_install_pages_notice() {
 
-		if ( get_option( 'user_registration_onboarding_skipped', false ) ) {
-			self::add_notice( 'continue_setup_wizard' );
-		}
-
 		if ( isset( $_POST['user_registration_myaccount_page_id'] ) ) { //phpcs:ignore.
 			$my_account_page = $_POST['user_registration_myaccount_page_id']; //phpcs:ignore.
 		} else {
 			$my_account_page = get_option( 'user_registration_myaccount_page_id', 0 );
 		}
 
-		if ( ! $my_account_page ) {
-			self::add_notice( 'install' );
+		if ( get_option( 'user_registration_onboarding_skipped', false ) ) {
+			self::add_notice( 'continue_setup_wizard' );
+		} elseif ( ! $my_account_page && ! get_option( 'user_registration_first_time_activation_flag', false ) ) {
+			if ( get_option( 'user_registration_install_pages_notice_removed', false ) ) {
+				self::remove_notice( 'install' );
+			} else {
+				self::add_notice( 'install' );
+			}
+		} else {
+			self::remove_notice( 'install' );
 		}
 
 		$matched        = 0;
@@ -674,9 +678,13 @@ class UR_Admin_Notices {
 			self::remove_notice( $hide_notice );
 
 			// Remove the onboarding skipped checker if install notice is removed.
-			if ( 'install' === $hide_notice || 'continue_setup_wizard' === $hide_notice ) {
+			if ( 'continue_setup_wizard' === $hide_notice ) {
 				delete_option( 'user_registration_onboarding_skipped' );
 				delete_option( 'user_registration_onboarding_skipped_step' );
+			}
+
+			if ( 'install' === $hide_notice ) {
+				update_option( 'user_registration_install_pages_notice_removed', true );
 			}
 
 			/**
