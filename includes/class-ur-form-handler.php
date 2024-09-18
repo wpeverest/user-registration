@@ -39,6 +39,10 @@ class UR_Form_Handler {
 	 * Remove key and login from querystring, set cookie, and redirect to account page to show the form.
 	 */
 	public static function redirect_reset_password_link() {
+		global $wp;
+		if ( ( isset( $wp->query_vars['ur-lost-password'] ) && empty( $wp->query_vars['ur-lost-password'] ) ) || ! isset( $wp->query_vars['ur-lost-password'] ) ) {
+			return;
+		}
 		$page_id                     = ur_get_page_id( 'myaccount' );
 		$is_ur_login_or_account_page = ur_find_my_account_in_page( $page_id );
 
