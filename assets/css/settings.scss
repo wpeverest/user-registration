@@ -52,6 +52,7 @@ body {
 .user-registration-settings {
 	display: flex;
     gap: $spacing_24px;
+	overflow-x: hidden;
 
 	@media screen and (max-width: 1180px) {
 		flex-direction: column;
@@ -354,7 +355,7 @@ body {
 							white-space: pre-line;
 							text-align: left;
 							top: 50%;
-							right: -214px;
+							right: -200px;
 							z-index: 10;
 							transform: translateY(-50%);
 
@@ -708,10 +709,10 @@ body {
 	padding-top: 0;
 
 	.user-registration-options-header {
-		position: sticky;
-		position: -webkit-sticky;
-		top: var(--wp-admin--admin-bar--height, $spacing_32px);
-		z-index: 5;
+		// position: sticky;
+		// position: -webkit-sticky;
+		// top: var(--wp-admin--admin-bar--height, $spacing_32px);
+		// z-index: 5;
 		background: $grey-0;
 		padding-top: $spacing_24px;
 
@@ -790,7 +791,7 @@ body {
 
 			.ur-scroll-ui {
 				&__scroll-nav {
-					padding-bottom: $spacing_20px;
+					padding-bottom: $spacing_22px;
 				}
 			}
 		}
@@ -938,11 +939,12 @@ body {
 		// General Settings
 		.user-registration-card {
 			padding: $spacing_16px $spacing_20px $spacing_22px;
-			background: #fafafc;
-			border: $border_width solid #edeff7 !important;
+			// background: #fafafc;
+			// border: $border_width solid #edeff7 !important;
+			border: $border_width solid $grey-50 !important;
 			border-radius: $border_radius_7;
 			margin-top: 0 !important;
-			margin-bottom: $spacing_24px;
+			margin-bottom: $spacing_28px;
 			max-width: 680px;
 			position: relative;
 
@@ -992,7 +994,7 @@ body {
 				margin-bottom: $spacing_24px;
 				padding: 0 0 $spacing_16px;
 				position: relative;
-				border-bottom: $border_width solid $border-color !important;
+				border-bottom: $border_width solid $grey-50 !important;
 
 				// Integration Settings
 				&.integration-header-info {
@@ -1628,7 +1630,8 @@ body {
 			p.ur-p-tag {
 				margin: -$spacing_6px 0 $spacing_24px;
 				padding: $spacing_10px $spacing_12px $spacing_10px $spacing_16px;
-				background: $grey-0;
+				// background: $grey-0;
+				background: #F8F8F8;
 				border-left: 3px solid #17a2b8;
 				font-weight: $regular;
 				color: $grey-300;
@@ -1652,9 +1655,15 @@ body {
 					width: 100%;
 					max-width: 680px;
 					padding: $spacing_16px $spacing_20px $spacing_22px;
-					background: #fafafc;
-					border: $border_width solid $blue-50;
-					border-radius: $border_radius_9 $border_radius_9 0 0;
+					background: $grey-0;
+					border: $border_width solid $grey-50;
+					border-radius: $border_radius_7;
+					margin-bottom: $spacing_28px;
+					box-shadow: none;
+
+					&:last-child {
+						margin-bottom: 0;
+					}
 
 					.hndle {
 						font-weight: $semi-bold;
@@ -1685,6 +1694,11 @@ body {
 								border: $border_width solid $border-color;
 								border-radius: $border_radius_4;
 							}
+						}
+
+						.button-primary {
+							margin-top: $spacing_12px;
+							box-shadow: none;
 						}
 
 						.ur-export-custom-fields {
