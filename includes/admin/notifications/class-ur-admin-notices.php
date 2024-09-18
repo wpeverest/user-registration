@@ -855,8 +855,16 @@ class UR_Admin_Notices {
 		$onboarding_completed = true;
 
 		if ( ! $first_time_activation ) {
-			$onboard_skipped      = get_option( 'user_registration_onboarding_skipped', false );
-			$onboard_skipped_step = get_option( 'user_registration_onboarding_skipped_step', false );
+			$onboard_skipped           = get_option( 'user_registration_onboarding_skipped', false );
+			$onboard_skipped_step      = get_option( 'user_registration_onboarding_skipped_step', false );
+			$registration_form_page_id = get_option( 'user_registration_registration_page_id', false );
+			$my_account_page_id        = get_option( 'user_registration_myaccount_page_id', false );
+			$install_pages_done        = ( $registration_form_page_id || $my_account_page_id ) ? true : false;
+			$onboard_skipped_step      = 'install_page' === $onboard_skipped_step ? 'install_pages' : $onboard_skipped_step;
+
+			if ( ( 'install_pages' === $onboard_skipped_step ) && $install_pages_done ) {
+				$onboard_skipped_step .= '&installed';
+			}
 
 			if ( $onboard_skipped && $onboard_skipped_step ) {
 				/* translators: % s: continue wizard URL */
