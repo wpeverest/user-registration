@@ -57,7 +57,7 @@
 		}
 
 		.user-registration-MyAccount-content {
-			width: 75%;
+			flex: 1;
 
 			.user-registration-profile-header {
 				display: flex;
@@ -146,11 +146,34 @@
 	}
 
 	.user-registration-MyAccount-content {
-		// text-align: left;
-		padding: 40px 40px 40px 48px;
+		padding: $spacing_24px $spacing_20px 52px 36px;
 
 		@media (max-width: 991px) {
 			padding: 36px 30px;
+		}
+
+		> h2 {
+			margin-bottom: $spacing_24px;
+		}
+
+		.user-registration-profile-header {
+			margin-bottom: $spacing_20px;
+			gap: $spacing_16px;
+
+			header {
+				h3 {
+					margin-bottom: 0;
+				}
+			}
+		}
+
+		> p {
+			margin-bottom: $spacing_8px;
+
+			a {
+				font-weight: 500;
+				color: $primary_color;
+			}
 		}
 
 		.ur-frontend-form {
