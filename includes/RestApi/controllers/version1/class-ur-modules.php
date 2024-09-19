@@ -137,6 +137,7 @@ class UR_Modules {
 			}
 			$feature->link          = $feature->link . '&utm_campaign=' . UR()->utm_campaign;
 			$feature->type          = 'feature';
+			$feature->required_plan = __( 'Personal', 'user-registration' );
 			$features_lists[ $key ] = $feature;
 		}
 

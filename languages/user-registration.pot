@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the User Registration plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 3.3.2.1\n"
+"Project-Id-Version: User Registration 3.3.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-registration\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-09-11T04:39:19+00:00\n"
+"POT-Creation-Date: 2024-09-19T04:31:17+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: user-registration\n"
@@ -94,7 +94,7 @@ msgstr ""
 #: includes/3rd-party/elementor/widgets/class-ur-widgets-myaccount.php:37
 #: includes/functions-ur-core.php:6492
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:256
-#: src/welcome/components/App.js:82
+#: src/welcome/components/App.js:84
 msgid "My Account"
 msgstr ""
 
@@ -128,7 +128,7 @@ msgid "Registration Form"
 msgstr ""
 
 #: includes/abstracts/abstract-ur-form-field.php:1034
-#: src/welcome/components/App.js:61
+#: src/welcome/components/App.js:63
 msgid "General Settings"
 msgstr ""
 
@@ -166,7 +166,7 @@ msgstr ""
 #: includes/admin/class-ur-admin-settings.php:88
 #: includes/admin/class-ur-admin-status.php:170
 #: includes/admin/class-ur-admin-status.php:187
-#: includes/admin/notifications/class-ur-admin-notices.php:666
+#: includes/admin/notifications/class-ur-admin-notices.php:670
 #: includes/class-ur-email-confirmation.php:178
 msgid "Action failed. Please refresh the page and retry."
 msgstr ""
@@ -1446,7 +1446,7 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-general.php:86
 #: includes/admin/settings/class-ur-settings-general.php:408
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:195
-#: src/welcome/components/App.js:60
+#: src/welcome/components/App.js:62
 msgid "General"
 msgstr ""
 
@@ -1455,48 +1455,48 @@ msgid "Never show again"
 msgstr ""
 
 #. translators: %1$s - My account Link.
-#: includes/admin/notifications/class-ur-admin-notices.php:107
+#: includes/admin/notifications/class-ur-admin-notices.php:111
 msgid "Please choose a <strong title=\"A page with [user_registration_my_account] shortcode\">My Account</strong> page in <a href=\"%1$s\" style=\"text-decoration:none;\">General Settings</a>. <br/><strong>Got Stuck? Read</strong> <a href=\"https://docs.wpuserregistration.com/docs/how-to-show-account-profile/\" style=\"text-decoration:none;\" rel=\"noreferrer noopener\" target=\"_blank\">How to setup My Account page</a>."
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:307
-#: includes/admin/notifications/class-ur-admin-notices.php:366
+#: includes/admin/notifications/class-ur-admin-notices.php:311
+#: includes/admin/notifications/class-ur-admin-notices.php:370
 msgid "Bravo! 💪 Well done."
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:311
+#: includes/admin/notifications/class-ur-admin-notices.php:315
 msgid "Congratulations! 👏 You've registered 20 users using our User Registration plugin, way to go! 🎉"
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:312
+#: includes/admin/notifications/class-ur-admin-notices.php:316
 msgid "Please share your experience with us by leaving a review. Your feedback will help us improve and serve you better. "
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:313
+#: includes/admin/notifications/class-ur-admin-notices.php:317
 msgid "Once again, thank you for choosing us! ❤️ <br>"
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:321
-#: includes/admin/notifications/class-ur-admin-notices.php:381
-#: includes/admin/notifications/class-ur-admin-notices.php:444
+#: includes/admin/notifications/class-ur-admin-notices.php:325
+#: includes/admin/notifications/class-ur-admin-notices.php:385
+#: includes/admin/notifications/class-ur-admin-notices.php:448
 msgid "Sure, I'd love to!"
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:328
-#: includes/admin/notifications/class-ur-admin-notices.php:388
-#: includes/admin/notifications/class-ur-admin-notices.php:451
+#: includes/admin/notifications/class-ur-admin-notices.php:332
+#: includes/admin/notifications/class-ur-admin-notices.php:392
+#: includes/admin/notifications/class-ur-admin-notices.php:455
 msgid "I already did!"
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:335
-#: includes/admin/notifications/class-ur-admin-notices.php:395
-#: includes/admin/notifications/class-ur-admin-notices.php:458
+#: includes/admin/notifications/class-ur-admin-notices.php:339
+#: includes/admin/notifications/class-ur-admin-notices.php:399
+#: includes/admin/notifications/class-ur-admin-notices.php:462
 msgid "Maybe later"
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:342
-#: includes/admin/notifications/class-ur-admin-notices.php:402
-#: includes/admin/notifications/class-ur-admin-notices.php:465
+#: includes/admin/notifications/class-ur-admin-notices.php:346
+#: includes/admin/notifications/class-ur-admin-notices.php:406
+#: includes/admin/notifications/class-ur-admin-notices.php:469
 #: includes/class-ur-plugin-updater.php:622
 #: includes/class-ur-plugin-updater.php:645
 #: includes/functions-ur-core.php:6215
@@ -1504,71 +1504,65 @@ msgstr ""
 msgid "I have a query"
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:370
+#: includes/admin/notifications/class-ur-admin-notices.php:374
 msgid "( The above word is just to draw your attention. <span class=\"dashicons dashicons-smiley smile-icon\"></span> )"
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:371
+#: includes/admin/notifications/class-ur-admin-notices.php:375
 msgid "Hope you are having nice experience with <strong>User Registration</strong> plugin. Please provide this plugin a nice review."
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:372
+#: includes/admin/notifications/class-ur-admin-notices.php:376
 msgid ""
 "<strong>What benefit would you have?</strong> <br>\r\n"
 "\t\t\t\t\t\t\t\tBasically, it would encourage us to release updates regularly with new features & bug fixes so that you can keep on using the plugin without any issues and also to provide free support like we have been doing. <span class=\"dashicons dashicons-smiley smile-icon\"></span><br>"
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:426
+#: includes/admin/notifications/class-ur-admin-notices.php:430
 msgid "User Registration Plugin Survey"
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:430
+#: includes/admin/notifications/class-ur-admin-notices.php:434
 msgid ""
 "<strong>Hey there!</strong> <br>\r\n"
 "\t\t\t\t\t\t\t\t\tWe would be grateful if you could spare a moment and help us fill this survey. This survey will take approximately 4 minutes to complete."
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:435
+#: includes/admin/notifications/class-ur-admin-notices.php:439
 msgid ""
 "<strong>What benefit would you have?</strong> <br>\r\n"
 "\t\t\t\t\t\t\t\t\tWe will take your feedback from the survey and use that information to make the plugin better. As a result, you will have a better plugin as you wanted. <span class=\"dashicons dashicons-smiley smile-icon\"></span><br>"
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:489
+#: includes/admin/notifications/class-ur-admin-notices.php:493
 msgid "Contribute to the enhancement"
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:493
+#: includes/admin/notifications/class-ur-admin-notices.php:497
 msgid "Help us improve the plugin's features by sharing <a href=\"https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title\" target=\"_blank\">non-sensitive plugin data</a> with us."
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:501
+#: includes/admin/notifications/class-ur-admin-notices.php:505
 msgid "Allow"
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:508
+#: includes/admin/notifications/class-ur-admin-notices.php:512
 msgid "No, Thanks"
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:670
+#: includes/admin/notifications/class-ur-admin-notices.php:674
 #: user-registration.php:91
 #: user-registration.php:100
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
 #. translators: % s: continue wizard URL
-#: includes/admin/notifications/class-ur-admin-notices.php:862
-msgid "<a href=\"%s\" class=\"button-primary\">Continue Setup Wizard</a>"
+#: includes/admin/notifications/class-ur-admin-notices.php:879
+msgid "<a href=\"%s\" class=\"button-primary\" style=\"margin-right: 5px;\">Continue Setup Wizard</a>"
 msgstr ""
 
-#: includes/admin/notifications/views/html-notice-continue-setup-wizard.php:15
-#: includes/admin/notifications/views/html-notice-install.php:15
-msgid "Install User Registration Pages"
-msgstr ""
-
-#: includes/admin/notifications/views/html-notice-continue-setup-wizard.php:15
-#: includes/admin/notifications/views/html-notice-install.php:15
-msgid "Skip setup"
+#: includes/admin/notifications/class-ur-admin-notices.php:880
+msgid "<a class=\"button-secondary skip\" href=\"%s\">Skip setup</a>"
 msgstr ""
 
 #: includes/admin/notifications/views/html-notice-custom.php:17
@@ -1579,6 +1573,14 @@ msgstr ""
 
 #: includes/admin/notifications/views/html-notice-deactivation.php:23
 msgid "Before we deactivate User Registration, would you care to <a href=\"%1$s\" rel=\"noreferrer noopener\" target=\"_blank\">let us know why</a> so we can improve it for you? <a href=\"%2$s\">No, deactivate now</a>."
+msgstr ""
+
+#: includes/admin/notifications/views/html-notice-install.php:15
+msgid "Install User Registration Pages"
+msgstr ""
+
+#: includes/admin/notifications/views/html-notice-install.php:15
+msgid "Skip setup"
 msgstr ""
 
 #. translators: %s - Link to logout.
@@ -2163,7 +2165,7 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:375
 #: includes/class-ur-ajax.php:227
-#: includes/class-ur-form-handler.php:588
+#: includes/class-ur-form-handler.php:592
 #: includes/class-ur-frontend-scripts.php:466
 #: includes/functions-ur-core.php:3887
 msgid "Captcha code error, please try again."
@@ -3367,18 +3369,18 @@ msgid "Nonce error, please reload."
 msgstr ""
 
 #: includes/class-ur-ajax.php:187
-#: includes/class-ur-form-handler.php:551
+#: includes/class-ur-form-handler.php:555
 #: includes/functions-ur-core.php:3862
 msgid "Error on hCaptcha. Contact your site administrator."
 msgstr ""
 
 #: includes/class-ur-ajax.php:205
-#: includes/class-ur-form-handler.php:567
+#: includes/class-ur-form-handler.php:571
 msgid "Error on Cloudflare Turnstile. Contact your site administrator."
 msgstr ""
 
 #: includes/class-ur-ajax.php:219
-#: includes/class-ur-form-handler.php:583
+#: includes/class-ur-form-handler.php:587
 #: includes/functions-ur-core.php:3883
 msgid "Error on google reCaptcha. Contact your site administrator."
 msgstr ""
@@ -3411,14 +3413,14 @@ msgid "Logout"
 msgstr ""
 
 #: includes/class-ur-ajax.php:461
-#: includes/class-ur-form-handler.php:203
+#: includes/class-ur-form-handler.php:207
 msgid "User profile updated successfully."
 msgstr ""
 
 #. translators: %s : user email
 #. translators: user_email
 #: includes/class-ur-ajax.php:481
-#: includes/class-ur-form-handler.php:208
+#: includes/class-ur-form-handler.php:212
 msgid "Your email address has not been updated yet. Please check your inbox at <strong>%s</strong> for a confirmation email."
 msgstr ""
 
@@ -3531,7 +3533,7 @@ msgstr ""
 
 #: includes/class-ur-ajax.php:1458
 #: includes/functions-ur-core.php:2909
-#: includes/RestApi/controllers/version1/class-ur-modules.php:674
+#: includes/RestApi/controllers/version1/class-ur-modules.php:675
 msgid "Unable to connect to the filesystem. Please confirm your credentials."
 msgstr ""
 
@@ -3685,63 +3687,63 @@ msgstr ""
 msgid "The user registration form selector block has been deprecated. Please use the new updated block with new functionality."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:325
+#: includes/class-ur-form-handler.php:329
 msgid "Confirm Your Email Address Change"
 msgstr ""
 
-#: includes/class-ur-form-handler.php:433
+#: includes/class-ur-form-handler.php:437
 msgid "Please fill out all password fields."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:436
+#: includes/class-ur-form-handler.php:440
 msgid "Please enter your current password."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:439
+#: includes/class-ur-form-handler.php:443
 msgid "Please enter your new password."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:442
+#: includes/class-ur-form-handler.php:446
 msgid "Please re-enter your password."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:445
+#: includes/class-ur-form-handler.php:449
 msgid "New passwords do not match."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:448
+#: includes/class-ur-form-handler.php:452
 msgid "Your current password is incorrect."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:451
+#: includes/class-ur-form-handler.php:455
 msgid "New password must not be same as old password"
 msgstr ""
 
-#: includes/class-ur-form-handler.php:479
+#: includes/class-ur-form-handler.php:483
 msgid "Password changed successfully."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:643
+#: includes/class-ur-form-handler.php:647
 msgid "Please enter your password."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:647
+#: includes/class-ur-form-handler.php:651
 msgid "Passwords do not match."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:651
+#: includes/class-ur-form-handler.php:655
 msgid "New password must not be same as old password."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:708
+#: includes/class-ur-form-handler.php:712
 msgid "Invalid Key"
 msgstr ""
 
-#: includes/class-ur-form-handler.php:732
+#: includes/class-ur-form-handler.php:736
 msgid "Thanks for confirming your export request."
 msgstr ""
 
-#: includes/class-ur-form-handler.php:737
+#: includes/class-ur-form-handler.php:741
 msgid "Thanks for confirming your erasure request."
 msgstr ""
 
@@ -4006,7 +4008,7 @@ msgstr ""
 
 #: includes/class-ur-post-types.php:57
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:223
-#: src/welcome/components/App.js:71
+#: src/welcome/components/App.js:73
 msgid "Registration"
 msgstr ""
 
@@ -6697,80 +6699,81 @@ msgstr ""
 msgid "Cannot access Features. Please try again some time later."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:165
+#: includes/RestApi/controllers/version1/class-ur-modules.php:140
+#: includes/RestApi/controllers/version1/class-ur-modules.php:166
 msgid "Personal"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:167
+#: includes/RestApi/controllers/version1/class-ur-modules.php:168
 msgid "Plus"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:169
+#: includes/RestApi/controllers/version1/class-ur-modules.php:170
 msgid "Professional"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:203
+#: includes/RestApi/controllers/version1/class-ur-modules.php:204
 msgid "Module slug is a required field"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:230
+#: includes/RestApi/controllers/version1/class-ur-modules.php:231
 msgid "Module couldn't be activated at the moment. Please try again later."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:238
+#: includes/RestApi/controllers/version1/class-ur-modules.php:239
 msgid "Module Activated Successfully"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:305
+#: includes/RestApi/controllers/version1/class-ur-modules.php:306
 msgid "Addon slug is a required field"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:327
+#: includes/RestApi/controllers/version1/class-ur-modules.php:328
 msgid "Module couldn't be deactivated. Please try again later."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:335
+#: includes/RestApi/controllers/version1/class-ur-modules.php:336
 msgid "Module deactivated successfully"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:393
+#: includes/RestApi/controllers/version1/class-ur-modules.php:394
 msgid "Please select addons to activate"
 msgstr ""
 
 #. translators: 1: Failed Addon Names
-#: includes/RestApi/controllers/version1/class-ur-modules.php:425
+#: includes/RestApi/controllers/version1/class-ur-modules.php:426
 msgid "%1$s activation failed. Please try again sometime later."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:433
+#: includes/RestApi/controllers/version1/class-ur-modules.php:434
 msgid "All of the selected modules have been activated successfully."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:513
+#: includes/RestApi/controllers/version1/class-ur-modules.php:514
 msgid "Please select a module to deactivate"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:544
+#: includes/RestApi/controllers/version1/class-ur-modules.php:545
 msgid "All of the selected modules have been deactivated."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:552
+#: includes/RestApi/controllers/version1/class-ur-modules.php:553
 msgid "Some of the selected modules may not have been deactivated. Please try again later"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:626
+#: includes/RestApi/controllers/version1/class-ur-modules.php:627
 msgid "Addons activated successfully"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:687
+#: includes/RestApi/controllers/version1/class-ur-modules.php:688
 msgid "Addon installed Successfully"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:730
+#: includes/RestApi/controllers/version1/class-ur-modules.php:731
 msgid "User Registration Pro activated successfully."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:739
+#: includes/RestApi/controllers/version1/class-ur-modules.php:740
 msgid "Please enter the valid license key."
 msgstr ""
 
@@ -7951,64 +7954,64 @@ msgstr ""
 msgid "Themes"
 msgstr ""
 
-#: src/welcome/components/App.js:49
-#: src/welcome/components/App.js:50
+#: src/welcome/components/App.js:51
+#: src/welcome/components/App.js:52
 msgid "Install Pages"
 msgstr ""
 
-#: src/welcome/components/App.js:51
+#: src/welcome/components/App.js:53
 msgid "The following pages and forms will be created automatically."
 msgstr ""
 
-#: src/welcome/components/App.js:62
+#: src/welcome/components/App.js:64
 msgid "Customize your general settings as per your preference."
 msgstr ""
 
-#: src/welcome/components/App.js:72
+#: src/welcome/components/App.js:74
 msgid "Registration Settings"
 msgstr ""
 
-#: src/welcome/components/App.js:73
+#: src/welcome/components/App.js:75
 msgid "Customize your registration settings as per your preference."
 msgstr ""
 
-#: src/welcome/components/App.js:83
+#: src/welcome/components/App.js:85
 msgid "My Account Settings"
 msgstr ""
 
-#: src/welcome/components/App.js:84
+#: src/welcome/components/App.js:86
 msgid "Customize my account page settings as per your preference."
 msgstr ""
 
-#: src/welcome/components/App.js:93
+#: src/welcome/components/App.js:95
 msgid "Final Step"
 msgstr ""
 
-#: src/welcome/components/App.js:380
+#: src/welcome/components/App.js:416
 msgid "View Registration Page"
 msgstr ""
 
-#: src/welcome/components/App.js:392
+#: src/welcome/components/App.js:431
 msgid "Back"
 msgstr ""
 
-#: src/welcome/components/App.js:410
+#: src/welcome/components/App.js:449
 msgid "Edit Default Form"
 msgstr ""
 
-#: src/welcome/components/App.js:429
+#: src/welcome/components/App.js:471
 msgid "Skip this step"
 msgstr ""
 
-#: src/welcome/components/App.js:442
+#: src/welcome/components/App.js:487
 msgid "Install & Proceed"
 msgstr ""
 
-#: src/welcome/components/App.js:460
+#: src/welcome/components/App.js:505
 msgid "Next"
 msgstr ""
 
-#: src/welcome/components/App.js:496
+#: src/welcome/components/App.js:542
 msgid "Go to dashboard"
 msgstr ""
 
