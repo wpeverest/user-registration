@@ -74,18 +74,22 @@ class UR_Admin_Notices {
 	 */
 	public static function user_registration_install_pages_notice() {
 
-		if ( get_option( 'user_registration_onboarding_skipped', false ) ) {
-			self::add_notice( 'continue_setup_wizard' );
-		}
-
 		if ( isset( $_POST['user_registration_myaccount_page_id'] ) ) { //phpcs:ignore.
 			$my_account_page = $_POST['user_registration_myaccount_page_id']; //phpcs:ignore.
 		} else {
 			$my_account_page = get_option( 'user_registration_myaccount_page_id', 0 );
 		}
 
-		if ( ! $my_account_page ) {
-			self::add_notice( 'install' );
+		if ( get_option( 'user_registration_onboarding_skipped', false ) ) {
+			self::add_notice( 'continue_setup_wizard' );
+		} elseif ( ! $my_account_page && ! get_option( 'user_registration_first_time_activation_flag', false ) ) {
+			if ( get_option( 'user_registration_install_pages_notice_removed', false ) ) {
+				self::remove_notice( 'install' );
+			} else {
+				self::add_notice( 'install' );
+			}
+		} else {
+			self::remove_notice( 'install' );
 		}
 
 		$matched        = 0;
@@ -674,8 +678,13 @@ class UR_Admin_Notices {
 			self::remove_notice( $hide_notice );
 
 			// Remove the onboarding skipped checker if install notice is removed.
-			if ( 'install' === $hide_notice ) {
+			if ( 'continue_setup_wizard' === $hide_notice ) {
 				delete_option( 'user_registration_onboarding_skipped' );
+				delete_option( 'user_registration_onboarding_skipped_step' );
+			}
+
+			if ( 'install' === $hide_notice ) {
+				update_option( 'user_registration_install_pages_notice_removed', true );
 			}
 
 			/**
@@ -854,13 +863,22 @@ class UR_Admin_Notices {
 		$onboarding_completed = true;
 
 		if ( ! $first_time_activation ) {
-			$onboard_skipped      = get_option( 'user_registration_onboarding_skipped', false );
-			$onboard_skipped_step = get_option( 'user_registration_onboarding_skipped_step', false );
+			$onboard_skipped           = get_option( 'user_registration_onboarding_skipped', false );
+			$onboard_skipped_step      = get_option( 'user_registration_onboarding_skipped_step', false );
+			$registration_form_page_id = get_option( 'user_registration_registration_page_id', false );
+			$my_account_page_id        = get_option( 'user_registration_myaccount_page_id', false );
+			$install_pages_done        = ( $registration_form_page_id || $my_account_page_id ) ? true : false;
+			$onboard_skipped_step      = 'install_page' === $onboard_skipped_step ? 'install_pages' : $onboard_skipped_step;
+
+			if ( ( 'install_pages' === $onboard_skipped_step ) && $install_pages_done ) {
+				$onboard_skipped_step .= '&installed';
+			}
 
 			if ( $onboard_skipped && $onboard_skipped_step ) {
 				/* translators: % s: continue wizard URL */
-				$onboarding_complete_text = sprintf( __( '<a href="%s" class="button-primary">Continue Setup Wizard</a>', 'user-registration' ), esc_url( admin_url( '/admin.php?page=user-registration-welcome&tab=setup-wizard&step=' . $onboard_skipped_step . '' ) ) );
-				$onboarding_completed     = false;
+				$onboarding_complete_text  = sprintf( __( '<a href="%s" class="button-primary" style="margin-right: 5px;">Continue Setup Wizard</a>', 'user-registration' ), esc_url( admin_url( '/admin.php?page=user-registration-welcome&tab=setup-wizard&step=' . $onboard_skipped_step . '' ) ) );
+				$onboarding_complete_text .= sprintf( __( '<a class="button-secondary skip" href="%s">Skip setup</a>', 'user-registration' ), esc_url( wp_nonce_url( add_query_arg( 'ur-hide-notice', 'continue_setup_wizard' ), 'user_registration_hide_notices_nonce', '_ur_notice_nonce' ) ) );
+				$onboarding_completed      = false;
 			} else {
 				$onboarding_completed = true;
 			}

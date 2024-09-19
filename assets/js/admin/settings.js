@@ -1077,6 +1077,7 @@
 		});
 	}
 
-	$(document).find(".wp-list-table").wrap("<div class='ur-list-table-wrapper'></div>");
-	
+	$(document)
+		.find(".wp-list-table")
+		.wrap("<div class='ur-list-table-wrapper'></div>");
 })(jQuery);
