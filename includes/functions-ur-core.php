@@ -4623,7 +4623,7 @@ if ( ! function_exists( 'ur_add_links_to_top_nav' ) ) {
 			$form_id = sanitize_text_field( wp_unslash( $_GET['form_id'] ) ); //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		} elseif ( is_page() || is_single() ) {
 
-			if( isset( $_GET['vc_editable'] ) ) {
+			if ( isset( $_GET['vc_editable'] ) ) {
 				return;
 			}
 			$post_content = get_the_content();
@@ -6639,3 +6639,29 @@ if ( ! function_exists( 'ur_list_top_integrations' ) ) {
 	}
 }
 add_filter( 'user_registration_integrations_classes', 'ur_list_top_integrations' );
+
+// Hook the end setup wizard to admin_init
+add_action(
+	'admin_init',
+	'ur_end_setup_wizard'
+);
+
+if ( ! function_exists( 'ur_end_setup_wizard' ) ) {
+	/**
+	 * End to setup wizard.
+	 */
+	function ur_end_setup_wizard() {
+		// End setup wizard when skipped to list table.
+		if ( ! empty( $_REQUEST['end-setup-wizard'] ) && sanitize_text_field( wp_unslash( $_REQUEST['end-setup-wizard'] ) ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			update_option( 'user_registration_first_time_activation_flag', false );
+			update_option( 'user_registration_onboarding_skipped', true );
+
+			if ( isset( $_REQUEST['activeStep'] ) ) {
+				update_option( 'user_registration_onboarding_skipped_step', sanitize_text_field( wp_unslash( $_REQUEST['activeStep'] ) ) );
+			} else {
+				delete_option( 'user_registration_onboarding_skipped_step' );
+				update_option( 'user_registration_onboarding_skipped', false );
+			}
+		}
+	}
+}

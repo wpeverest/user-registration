@@ -91,6 +91,14 @@ class UR_Getting_Started {
 		if ( isset( $settings_to_update['user_registration_form_setting_minimum_password_strength'] ) ) {
 			update_post_meta( absint( $default_form_page_id ), 'user_registration_form_setting_minimum_password_strength', $settings_to_update['user_registration_form_setting_minimum_password_strength'] );
 		}
+
+		if ( isset( $settings_to_update['user_registration_end_setup_wizard'] ) ) {
+			update_option( 'user_registration_first_time_activation_flag', false );
+			update_option( 'user_registration_onboarding_skipped', false );
+			delete_option( 'user_registration_onboarding_skipped_step' );
+			unset( $settings_to_update['user_registration_end_setup_wizard'] );
+		}
+
 		if ( isset( $settings_to_update['user_registration_form_setting_default_user_role'] ) ) {
 			$all_roles      = ur_get_default_admin_roles();
 			$role_to_update = $settings_to_update['user_registration_form_setting_default_user_role'];

@@ -34,6 +34,7 @@ function App() {
 		useStateValue();
 	const [initiateInstall, setInitiateInstall] = useState(false);
 	const [disabledLink, setDisabledLink] = useState(false);
+	const [nextStepProgess, setNextStepProgess] = useState(false);
 
 	/* global _UR_WIZARD_ */
 	const {
@@ -42,7 +43,8 @@ function App() {
 		defaultFormURL,
 		urRestApiNonce,
 		onBoardIconsURL,
-		restURL
+		restURL,
+		registrationPageURL
 	} = typeof _UR_WIZARD_ !== "undefined" && _UR_WIZARD_;
 
 	const [steps, setSteps] = useState([
@@ -135,7 +137,7 @@ function App() {
 			});
 		} else {
 			const params = new URLSearchParams(window.location.href);
-			if (params.get("step")) {
+			if (params.get("step") && !nextStepProgess) {
 				const index = steps.findIndex(
 					(step) => step.key === params.get("step")
 				);
@@ -186,6 +188,7 @@ function App() {
 			})
 		);
 		setActiveStep(steps[index + 1]);
+		setNextStepProgess(true);
 	};
 
 	/**
@@ -323,6 +326,11 @@ function App() {
 				}, {});
 		}
 
+		if (activeStep.key === "final_step") {
+			newSettingsRef = { ...newSettingsRef };
+			newSettingsRef.user_registration_end_setup_wizard = true;
+		}
+
 		// POST
 		apiFetch({
 			path: restURL + "user-registration/v1/getting-started/save",
@@ -403,7 +411,10 @@ function App() {
 									onClick={() => {
 										setDisabledLink(true);
 										handleSaveSettings(
-											registrationPageLink
+											"undefined" ===
+												typeof registrationPageLink
+												? registrationPageURL
+												: registrationPageLink
 										);
 									}}
 									disabled={disabledLink}
@@ -442,7 +453,10 @@ function App() {
 									color="#FAFAFA !important"
 									onClick={() => {
 										setDisabledLink(true);
-										handleSaveSettings(defaultFormURL);
+										handleSaveSettings(
+											defaultFormURL +
+												"&end-setup-wizard=1"
+										);
 									}}
 									disabled={disabledLink}
 								>
@@ -521,9 +535,9 @@ function App() {
 											activeStep.key ||
 										"final_step" === activeStep.key
 											? ""
-											: `activeStep=${activeStep.key}`;
+											: `&activeStep=${activeStep.key}`;
 									handleSaveSettings(
-										`${adminURL}admin.php?page=user-registration-dashboard&end-setup-wizard=1&${extraParams}`
+										`${adminURL}admin.php?page=user-registration-dashboard&end-setup-wizard=1${extraParams}`
 									);
 								}}
 								mr={10}

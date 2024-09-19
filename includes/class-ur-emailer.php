@@ -367,6 +367,11 @@ class UR_Emailer {
 			'form_id'     => $form_id,
 		);
 
+		$current_language = get_user_meta( $user_id, 'ur_registered_language' );
+		if ( empty( $current_language ) ) {
+			$current_language = ur_get_current_language();
+		}
+
 		if ( '0' === $email_status ) {
 			$subject  = get_option( 'user_registration_email_confirmation_subject', __( 'Please confirm your registration on {{blog_info}}', 'user-registration' ) );
 			$settings = new UR_Settings_Email_Confirmation();
@@ -374,6 +379,8 @@ class UR_Emailer {
 			$message  = get_option( 'user_registration_email_confirmation', $message );
 
 			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
+			$message                   = ur_get_translated_string( 'admin_texts_user_registration_email_confirmation', $message, $current_language, 'user_registration_email_confirmation' );
+			$subject                   = ur_get_translated_string( 'admin_texts_user_registration_email_confirmation_subject', $subject, $current_language, 'user_registration_email_confirmation_subject' );
 
 			$message = self::parse_smart_tags( $message, $values, $name_value );
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
@@ -386,6 +393,8 @@ class UR_Emailer {
 			$message                   = $settings->ur_get_awaiting_admin_approval_email();
 			$message                   = get_option( 'user_registration_awaiting_admin_approval_email', $message );
 			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
+			$message                   = ur_get_translated_string( 'admin_texts_user_registration_awaiting_admin_approval_email', $message, $current_language, 'user_registration_awaiting_admin_approval_email' );
+			$subject                   = ur_get_translated_string( 'admin_texts_user_registration_awaiting_admin_approval_email_subject', $subject, $current_language, 'user_registration_awaiting_admin_approval_email_subject' );
 
 			$message = self::parse_smart_tags( $message, $values, $name_value );
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
@@ -399,6 +408,8 @@ class UR_Emailer {
 			$message                   = $settings->ur_get_registration_denied_email();
 			$message                   = get_option( 'user_registration_registration_denied_email', $message );
 			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
+			$message                   = ur_get_translated_string( 'admin_texts_user_registration_registration_denied_email', $message, $current_language, 'user_registration_registration_denied_email' );
+			$subject                   = ur_get_translated_string( 'admin_texts_user_registration_registration_denied_email_subject', $subject, $current_language, 'user_registration_registration_denied_email_subject' );
 
 			$message = self::parse_smart_tags( $message, $values, $name_value );
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
@@ -413,6 +424,8 @@ class UR_Emailer {
 			$message  = get_option( 'user_registration_successfully_registered_email', $message );
 
 			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
+			$message                   = ur_get_translated_string( 'admin_texts_user_registration_successfully_registered_email', $message, $current_language, 'user_registration_successfully_registered_email' );
+			$subject                   = ur_get_translated_string( 'admin_texts_user_registration_successfully_registered_email_subject', $subject, $current_language, 'user_registration_successfully_registered_email_subject' );
 
 			$message = self::parse_smart_tags( $message, $values, $name_value );
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
@@ -472,6 +485,11 @@ class UR_Emailer {
 			'form_id'    => $form_id,
 		);
 
+		$current_language = get_user_meta( $user_id, 'ur_registered_language' );
+		if ( empty( $current_language ) ) {
+			$current_language = ur_get_current_language();
+		}
+
 		$login_option = ur_get_user_login_option( $user_id );
 
 		// If enabled approval via email setting.
@@ -483,8 +501,11 @@ class UR_Emailer {
 		}
 
 		list( $message, $subject ) = user_registration_email_content_overrider( ur_get_form_id_by_userid( $user_id ), $settings, $message, $subject );
-		$message                   = self::parse_smart_tags( $message, $values, $name_value );
-		$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
+		$message                   = ur_get_translated_string( 'admin_texts_user_registration_admin_email', $message, $current_language, 'user_registration_admin_email' );
+		$subject                   = ur_get_translated_string( 'admin_texts_user_registration_admin_email_subject', $subject, $current_language, 'user_registration_admin_email_subject' );
+
+		$message = self::parse_smart_tags( $message, $values, $name_value );
+		$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
 		if ( ur_option_checked( 'user_registration_enable_admin_email', true ) ) {
 			foreach ( $admin_email as $email ) {
@@ -543,6 +564,11 @@ class UR_Emailer {
 			'form_id'    => $form_id,
 		);
 
+		$current_language = get_user_meta( $user_id, 'ur_registered_language' );
+		if ( empty( $current_language ) ) {
+			$current_language = ur_get_current_language();
+		}
+
 		$login_option = ur_get_user_login_option( $user_id );
 
 		// If enabled approval via email setting.
@@ -554,8 +580,11 @@ class UR_Emailer {
 		}
 
 		list( $message, $subject ) = user_registration_email_content_overrider( ur_get_form_id_by_userid( $user_id ), $settings, $message, $subject );
-		$message                   = self::parse_smart_tags( $message, $values, $name_value );
-		$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
+		$message                   = ur_get_translated_string( 'admin_texts_user_registration_approval_link_email', $message, $current_language, 'user_registration_approval_link_email' );
+		$subject                   = ur_get_translated_string( 'admin_texts_user_registration_approval_link_email_subject', $subject, $current_language, 'user_registration_approval_link_email_subject' );
+
+		$message = self::parse_smart_tags( $message, $values, $name_value );
+		$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
 		if ( ur_option_checked( 'user_registration_enable_approval_link_email', true ) ) {
 			foreach ( $admin_email as $email ) {
@@ -602,8 +631,11 @@ class UR_Emailer {
 			$message                   = $settings->ur_get_registration_pending_email();
 			$message                   = get_option( 'user_registration_registration_pending_email', $message );
 			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
-			$message                   = self::parse_smart_tags( $message, $values, $name_value );
-			$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
+			$message                   = ur_get_translated_string( 'admin_texts_user_registration_registration_pending_email', $message, $current_language, 'user_registration_registration_pending_email' );
+			$subject                   = ur_get_translated_string( 'admin_texts_user_registration_registration_pending_email_subject', $subject, $current_language, 'user_registration_registration_pending_email_subject' );
+
+			$message = self::parse_smart_tags( $message, $values, $name_value );
+			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
 			if ( ur_option_checked( 'user_registration_enable_registration_pending_email', true ) ) {
 				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), '', $template_id );
@@ -615,8 +647,8 @@ class UR_Emailer {
 			$message                   = $settings->ur_get_registration_denied_email();
 			$message                   = get_option( 'user_registration_registration_denied_email', $message );
 			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
-			$message                   = ur_get_translated_string(  'admin_texts_user_registration_registration_denied_email', $message, $current_language, 'user_registration_registration_denied_email' );
-			$subject                   = ur_get_translated_string(  'admin_texts_user_registration_registration_denied_email_subject', $subject, $current_language, 'user_registration_registration_denied_email_subject' );
+			$message                   = ur_get_translated_string( 'admin_texts_user_registration_registration_denied_email', $message, $current_language, 'user_registration_registration_denied_email' );
+			$subject                   = ur_get_translated_string( 'admin_texts_user_registration_registration_denied_email_subject', $subject, $current_language, 'user_registration_registration_denied_email_subject' );
 			$message                   = self::parse_smart_tags( $message, $values, $name_value );
 			$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
 
@@ -630,8 +662,8 @@ class UR_Emailer {
 			$message                   = $settings->ur_get_registration_approved_email();
 			$message                   = get_option( 'user_registration_registration_approved_email', $message );
 			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
-			$message                   = ur_get_translated_string(  'admin_texts_user_registration_registration_approved_email', $message, $current_language, 'user_registration_registration_approved_email' );
-			$subject                   = ur_get_translated_string(  'admin_texts_user_registration_registration_approved_email_subject', $subject, $current_language, 'user_registration_registration_approved_email_subject' );
+			$message                   = ur_get_translated_string( 'admin_texts_user_registration_registration_approved_email', $message, $current_language, 'user_registration_registration_approved_email' );
+			$subject                   = ur_get_translated_string( 'admin_texts_user_registration_registration_approved_email_subject', $subject, $current_language, 'user_registration_registration_approved_email_subject' );
 			$message                   = self::parse_smart_tags( $message, $values, $name_value );
 			$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
 
@@ -661,6 +693,11 @@ class UR_Emailer {
 			return false;
 		}
 
+		$current_language = get_user_meta( $user_id, 'ur_registered_language' );
+		if ( empty( $current_language ) ) {
+			$current_language = ur_get_current_language();
+		}
+
 		$subject  = get_option( 'user_registration_reset_password_email_subject', __( 'Password Reset Email: {{blog_info}}', 'user-registration' ) );
 		$settings = new UR_Settings_Reset_Password_Email();
 		$message  = $settings->ur_get_reset_password_email();
@@ -674,8 +711,11 @@ class UR_Emailer {
 		);
 
 		list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
-		$message                   = self::parse_smart_tags( $message, $values );
-		$subject                   = self::parse_smart_tags( $subject, $values );
+		$message                   = ur_get_translated_string( 'admin_texts_user_registration_reset_password_email', $message, $current_language, 'user_registration_reset_password_email' );
+		$subject                   = ur_get_translated_string( 'admin_texts_user_registration_reset_password_email_subject', $subject, $current_language, 'user_registration_reset_password_email_subject' );
+
+		$message = self::parse_smart_tags( $message, $values );
+		$subject = self::parse_smart_tags( $subject, $values );
 
 		if ( ur_option_checked( 'user_registration_enable_reset_password_email', true ) ) {
 
@@ -809,6 +849,10 @@ class UR_Emailer {
 		$message  = get_option( 'user_registration_profile_details_changed_email', $message );
 		$form_id  = ur_get_form_id_by_userid( $user_id );
 
+		$current_language = get_user_meta( $user_id, 'ur_registered_language' );
+		if ( empty( $current_language ) ) {
+			$current_language = ur_get_current_language();
+		}
 		$values = array(
 			'username'   => $username,
 			'email'      => $user_email,
@@ -817,8 +861,11 @@ class UR_Emailer {
 		);
 
 		list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
-		$message                   = self::parse_smart_tags( $message, $values, $name_value );
-		$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
+		$message                   = ur_get_translated_string( 'admin_texts_user_registration_profile_details_changed_email', $message, $current_language, 'user_registration_profile_details_changed_email' );
+		$subject                   = ur_get_translated_string( 'admin_texts_user_registration_profile_details_changed_email_subject', $subject, $current_language, 'user_registration_profile_details_changed_email_subject' );
+
+		$message = self::parse_smart_tags( $message, $values, $name_value );
+		$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
 		if ( ur_option_checked( 'user_registration_enable_profile_details_changed_email', true ) ) {
 			foreach ( $admin_email as $email ) {
@@ -851,7 +898,7 @@ class UR_Emailer {
 		$subject    = get_option( 'user_registration_profile_details_updated_email_subject', esc_html__( 'Profile Details Updated Email: {{blog_info}}', 'user-registration' ) );
 		$settings   = new UR_Settings_Profile_Details_Updated_Email();
 		$message    = $settings->ur_get_profile_details_updated_email();
-		$message    = get_option( 'user_registration_profile_details_updated_email', $message );
+		$message    = get_option( 'user_registration_profile_details_Updated_email', $message );
 		$form_id    = ur_get_form_id_by_userid( $user_id );
 
 		$values = array(
@@ -861,9 +908,17 @@ class UR_Emailer {
 			'form_id'    => $form_id,
 		);
 
+		$current_language = get_user_meta( $user_id, 'ur_registered_language' );
+		if ( empty( $current_language ) ) {
+			$current_language = ur_get_current_language();
+		}
+
 		list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
-		$message                   = self::parse_smart_tags( $message, $values, $name_value );
-		$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
+		$message                   = ur_get_translated_string( 'admin_texts_user_registration_profile_details_updated_email', $message, $current_language, 'user_registration_profile_details_updated_email' );
+		$subject                   = ur_get_translated_string( 'admin_texts_user_registration_profile_details_updated_email_subject', $subject, $current_language, 'user_registration_profile_details_updated_email_subject' );
+
+		$message = self::parse_smart_tags( $message, $values, $name_value );
+		$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
 		if ( ur_option_checked( 'user_registration_enable_profile_details_updated_email', true ) ) {
 			$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
@@ -904,9 +959,17 @@ class UR_Emailer {
 			'form_id'    => $form_id,
 		);
 
+		$current_language = get_user_meta( $user_id, 'ur_registered_language' );
+		if ( empty( $current_language ) ) {
+			$current_language = ur_get_current_language();
+		}
+
 		list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
-		$message                   = self::parse_smart_tags( $message, $values, $name_value );
-		$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
+		$message                   = ur_get_translated_string( 'admin_texts_user_registration_confirm_email_address_change_email', $message, $current_language, 'user_registration_confirm_email_address_change_email' );
+		$subject                   = ur_get_translated_string( 'admin_texts_user_registration_confirm_email_address_change_subject', $subject, $current_language, 'user_registration_confirm_email_address_change_subject' );
+
+		$message = self::parse_smart_tags( $message, $values, $name_value );
+		$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
 		if ( ur_option_checked( 'user_registration_enable_confirm_email_address_change_email', true ) ) {
 			$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
