@@ -249,6 +249,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 = 3.3.3    - 19/09/2024 =
 * Fix      - Select all option not working in checkbox field.
 * Fix      - Continue setup wizard button not working properly.
+* Fix      - Email translations issue with user registered language in WPML.
 * Fix      - Conflict with lost password when WooCommerce My Account Page selected in user registration settings.
 * Tweak    - Added skip setup button in continue setup wizard notice.
 * Tweak    - Added filters to change reset password validation error message.
