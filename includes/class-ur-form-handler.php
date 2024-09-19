@@ -40,7 +40,7 @@ class UR_Form_Handler {
 	 */
 	public static function redirect_reset_password_link() {
 		global $wp;
-		if ( ( isset( $wp->query_vars['ur-lost-password'] ) && empty( $wp->query_vars['ur-lost-password'] ) ) || ! isset( $wp->query_vars['ur-lost-password'] ) ) {
+		if ( isset( $wp->query_vars['ur-lost-password'] ) && empty( $wp->query_vars['ur-lost-password'] ) ) {
 			return;
 		}
 		$page_id                     = ur_get_page_id( 'myaccount' );
