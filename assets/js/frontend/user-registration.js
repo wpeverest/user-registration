@@ -571,8 +571,12 @@
 													JSON.stringify(
 														checked_value
 													);
-												if ( "separate_shipping" === field.attr("data-id") ) {
-													formwise_data.value = field.val();
+												if (
+													"separate_shipping" ===
+													field.attr("data-id")
+												) {
+													formwise_data.value =
+														field.val();
 												}
 											} else {
 												formwise_data.value = "";
@@ -2540,7 +2544,7 @@
 
 		$('input[type="checkbox"]#checkall').on("click", function () {
 			var checkAll = $(this).attr("data-check");
-			$('[data-id = "' + checkAll + '" ]').prop(
+			$('[data-id = "' + checkAll + '[]" ]').prop(
 				"checked",
 				$(this).prop("checked")
 			);
@@ -2548,6 +2552,8 @@
 
 		$(".input-checkbox").on("change", function () {
 			var checkAll = $(this).attr("data-id");
+			checkAll = checkAll.replace("[]", "");
+
 			if ($(this).prop("checked") === false) {
 				$('[data-check = "' + checkAll + '" ]').prop("checked", false);
 			}

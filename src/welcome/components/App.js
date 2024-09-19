@@ -9,7 +9,9 @@ import {
 	Heading,
 	Text,
 	Flex,
-	Center
+	Center,
+	Spinner,
+	Box
 } from "@chakra-ui/react";
 import apiFetch from "@wordpress/api-fetch";
 import { __ } from "@wordpress/i18n";
@@ -101,55 +103,76 @@ function App() {
 	 * Fetch settings from api on first load.
 	 */
 	useEffect(() => {
-		apiFetch({
-			path: restURL + "user-registration/v1/getting-started",
-			headers: {
-				"X-WP-Nonce": urRestApiNonce
-			}
-		}).then((data) => {
-			const newStepsRef = steps.map((step) => {
-				step.sectionSettings = data.options[step.key]
-					? data.options[step.key]
-					: {};
+		if (Object.keys(settings).length < 1) {
+			apiFetch({
+				path: restURL + "user-registration/v1/getting-started",
+				headers: {
+					"X-WP-Nonce": urRestApiNonce
+				}
+			}).then((data) => {
+				const newStepsRef = steps.map((step) => {
+					step.sectionSettings = data.options[step.key]
+						? data.options[step.key]
+						: {};
 
-				return { ...step };
-			});
+					return { ...step };
+				});
 
-			const newSettingsRef = {};
-			Object.keys(data.options).map((key) => {
-				var sectionSettings = data.options[key].settings;
-				sectionSettings.map((individualSettings) => {
-					newSettingsRef[individualSettings.id] =
-						individualSettings.default;
+				const newSettingsRef = {};
+				Object.keys(data.options).map((key) => {
+					var sectionSettings = data.options[key].settings;
+					sectionSettings.map((individualSettings) => {
+						newSettingsRef[individualSettings.id] =
+							individualSettings.default;
+					});
+				});
+				setSteps(newStepsRef);
+
+				dispatch({
+					type: actionTypes.GET_SETTINGS,
+					settings: newSettingsRef
 				});
 			});
-			setSteps(newStepsRef);
+		} else {
+			const params = new URLSearchParams(window.location.href);
+			if (params.get("step")) {
+				const index = steps.findIndex(
+					(step) => step.key === params.get("step")
+				);
 
-			dispatch({
-				type: actionTypes.GET_SETTINGS,
-				settings: newSettingsRef
-			});
-		});
+				if ("final_step" === params.get("step")) {
+					return;
+				}
 
-		const params = new URLSearchParams(window.location.href);
-		if (params.get("step")) {
-			const index = steps.findIndex(
-				(step) => step.key === params.get("step")
-			);
+				setSteps((prevStep) =>
+					prevStep.map((step) => {
+						if (step.key === params.get("step")) {
+							if ("install_pages" === params.get("step")) {
+								if (null !== params.get("installed")) {
+									step.isDone = true;
+								} else {
+									step.isDone = false;
+								}
+							} else {
+								step.isDone = true;
+							}
+						}
+						return step;
+					})
+				);
 
-			if ("final_step" === params.get("step")) {
-				return;
+				if ("install_pages" === params.get("step")) {
+					if (null !== params.get("installed")) {
+						setActiveStep(steps[index + 1]);
+					} else {
+						setActiveStep(steps[index]);
+					}
+				} else {
+					setActiveStep(steps[index + 1]);
+				}
 			}
-
-			setSteps((prevStep) =>
-				prevStep.map((step) => {
-					if (step.key === params.get("step")) step.isDone = true;
-					return step;
-				})
-			);
-			setActiveStep(steps[index + 1]);
 		}
-	}, []);
+	}, [settings]);
 
 	/**
 	 * Progress to next item on menu when next button is clicked.
@@ -321,196 +344,225 @@ function App() {
 
 	return (
 		<ChakraProvider>
-			<Header steps={steps} activeStep={activeStep} siteURL={siteURL} />
-			<div className="user-registration-setup-wizard__body">
-				{steps[steps.length - 1].key === activeStep.key ? (
-					cloneElement(activeStep.component, {
-						sectionSettings: activeStep.sectionSettings && {},
-						siteURL: siteURL,
-						onBoardIconsURL: onBoardIconsURL
-					})
-				) : (
-					<Flex
-						direction="column"
-						justifyContent="space-between"
-						alignItems="left"
-					>
-						{activeStep.title && (
-							<Heading
-								as="h2"
-								size="lg"
-								fontSize="22px"
-								mb={4}
-								color="#383838"
-								fontWeight="600"
+			{Object.keys(settings).length > 0 ? (
+				<>
+					<Header
+						steps={steps}
+						activeStep={activeStep}
+						siteURL={siteURL}
+					/>
+					<div className="user-registration-setup-wizard__body">
+						{steps[steps.length - 1].key === activeStep.key ? (
+							cloneElement(activeStep.component, {
+								sectionSettings:
+									activeStep.sectionSettings && {},
+								siteURL: siteURL,
+								onBoardIconsURL: onBoardIconsURL
+							})
+						) : (
+							<Flex
+								direction="column"
+								justifyContent="space-between"
+								alignItems="left"
 							>
-								{activeStep.title}
-							</Heading>
+								{activeStep.title && (
+									<Heading
+										as="h2"
+										size="lg"
+										fontSize="22px"
+										mb={4}
+										color="#383838"
+										fontWeight="600"
+									>
+										{activeStep.title}
+									</Heading>
+								)}
+								{activeStep.description && (
+									<Text
+										fontSize="16px"
+										as="i"
+										color="#6B6B6B"
+									>
+										{activeStep.description}
+									</Text>
+								)}
+								{cloneElement(activeStep.component, {
+									sectionSettings: activeStep.sectionSettings,
+									siteURL: siteURL,
+									onBoardIconsURL: onBoardIconsURL
+								})}
+							</Flex>
 						)}
-						{activeStep.description && (
-							<Text fontSize="16px" as="i" color="#6B6B6B">
-								{activeStep.description}
-							</Text>
-						)}
-						{cloneElement(activeStep.component, {
-							sectionSettings: activeStep.sectionSettings,
-							siteURL: siteURL,
-							onBoardIconsURL: onBoardIconsURL
-						})}
-					</Flex>
-				)}
-			</div>
-			<div className="user-registration-setup-wizard__footer">
-				<div className="user-registration-setup-wizard__footer--left">
-					{steps[steps.length - 1].key === activeStep.key ? (
-						<Button
-							variant="outline"
-							colorScheme="gray"
-							onClick={() => {
-								setDisabledLink(true);
-								handleSaveSettings(registrationPageLink);
-							}}
-							disabled={disabledLink}
-							style={{
-								backgroundColor: "#FAFAFA",
-								color: "#6B6B6B",
-								border: "1px solid #999999"
-							}}
-						>
-							{__("View Registration Page", "user-registration")}
-						</Button>
-					) : steps[0].key !== activeStep.key ? (
-						<Button
-							variant="outline"
-							onClick={handleBack}
-							style={{
-								backgroundColor: "#FAFAFA",
-								color: "#6B6B6B",
-								border: "1px solid #999999"
-							}}
-						>
-							{__("Back", "user-registration")}
-						</Button>
-					) : (
-						""
-					)}
-				</div>
-				<div className="user-registration-setup-wizard__footer--right">
-					{steps[steps.length - 1].key === activeStep.key ? (
-						<Button
-							colorScheme="blue"
-							backgroundColor="#475BB2 !important"
-							color="#FAFAFA !important"
-							onClick={() => {
-								setDisabledLink(true);
-								handleSaveSettings(defaultFormURL);
-							}}
-							disabled={disabledLink}
-						>
-							{__("Edit Default Form", "user-registration")}
-						</Button>
-					) : (
-						<React.Fragment>
-							{steps[0].key !== activeStep.key && (
+					</div>
+					<div className="user-registration-setup-wizard__footer">
+						<div className="user-registration-setup-wizard__footer--left">
+							{steps[steps.length - 1].key === activeStep.key ? (
 								<Button
-									variant="link"
+									variant="outline"
 									colorScheme="gray"
-									onClick={handleSkip}
-									mr={10}
-									ml={10}
-									fontStyle="italic"
-									textDecoration="underline"
-									fontSize="14px"
-									fontWeight="400"
-									background="none !important"
-									color="#6B6B6B !important"
-									border="none !important"
-								>
-									{__("Skip this step", "user-registration")}
-								</Button>
-							)}
-							{steps[0].key === activeStep.key &&
-							installPage.my_account_page.status !==
-								"installed" ? (
-								<Button
-									variant="solid"
-									backgroundColor="#475BB2 !important"
-									color="#FAFAFA !important"
-									disabled={initiateInstall}
-									onClick={handleInstallPages}
+									onClick={() => {
+										setDisabledLink(true);
+										handleSaveSettings(
+											registrationPageLink
+										);
+									}}
+									disabled={disabledLink}
+									style={{
+										backgroundColor: "#FAFAFA",
+										color: "#6B6B6B",
+										border: "1px solid #999999"
+									}}
 								>
 									{__(
-										"Install & Proceed",
+										"View Registration Page",
 										"user-registration"
 									)}
 								</Button>
+							) : steps[0].key !== activeStep.key ? (
+								<Button
+									variant="outline"
+									onClick={handleBack}
+									style={{
+										backgroundColor: "#FAFAFA",
+										color: "#6B6B6B",
+										border: "1px solid #999999"
+									}}
+								>
+									{__("Back", "user-registration")}
+								</Button>
 							) : (
+								""
+							)}
+						</div>
+						<div className="user-registration-setup-wizard__footer--right">
+							{steps[steps.length - 1].key === activeStep.key ? (
 								<Button
 									colorScheme="blue"
 									backgroundColor="#475BB2 !important"
 									color="#FAFAFA !important"
-									disabled={
-										steps[steps.length - 1].key ===
-										activeStep.key
-									}
 									onClick={() => {
-										handleSaveSettings("");
+										setDisabledLink(true);
+										handleSaveSettings(defaultFormURL);
 									}}
+									disabled={disabledLink}
 								>
-									{__("Next", "user-registration")}
+									{__(
+										"Edit Default Form",
+										"user-registration"
+									)}
 								</Button>
+							) : (
+								<React.Fragment>
+									{steps[0].key !== activeStep.key && (
+										<Button
+											variant="link"
+											colorScheme="gray"
+											onClick={handleSkip}
+											mr={10}
+											ml={10}
+											fontStyle="italic"
+											textDecoration="underline"
+											fontSize="14px"
+											fontWeight="400"
+											background="none !important"
+											color="#6B6B6B !important"
+											border="none !important"
+										>
+											{__(
+												"Skip this step",
+												"user-registration"
+											)}
+										</Button>
+									)}
+									{steps[0].key === activeStep.key &&
+									installPage.my_account_page.status !==
+										"installed" ? (
+										<Button
+											variant="solid"
+											backgroundColor="#475BB2 !important"
+											color="#FAFAFA !important"
+											disabled={initiateInstall}
+											onClick={handleInstallPages}
+										>
+											{__(
+												"Install & Proceed",
+												"user-registration"
+											)}
+										</Button>
+									) : (
+										<Button
+											colorScheme="blue"
+											backgroundColor="#475BB2 !important"
+											color="#FAFAFA !important"
+											disabled={
+												steps[steps.length - 1].key ===
+												activeStep.key
+											}
+											onClick={() => {
+												handleSaveSettings("");
+											}}
+										>
+											{__("Next", "user-registration")}
+										</Button>
+									)}
+								</React.Fragment>
 							)}
-						</React.Fragment>
-					)}
-				</div>
-			</div>
-			<center>
-				<Link>
-					<Button
-						variant="link"
-						disabled={disabledLink}
-						onClick={() => {
-							setDisabledLink(true);
-							var extraParams =
-								"my_account_settings" === activeStep.key ||
-								"final_step" === activeStep.key
-									? ""
-									: `activeStep=${activeStep.key}`;
-							handleSaveSettings(
-								`${adminURL}admin.php?page=user-registration-dashboard&end-setup-wizard=1&${extraParams}`
-							);
-						}}
-						mr={10}
-						ml={10}
-						pt="6"
-						fontStyle="italic"
-						textDecoration="underline"
-						fontSize="16px"
-						fontWeight="400"
-						gap="10px"
-						className="button-tertiary"
-						background="none !important"
-						color="#6B6B6B !important"
-						border="none !important"
-					>
-						{__("Go to dashboard", "user-registration")}
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="12"
-							height="12"
-							fill="currentColor"
-							className="bi bi-arrow-right"
-							viewBox="0 0 16 16"
-							marginleft="100px"
-						>
-							<path
-								fillRule="evenodd"
-								d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"
-							/>
-						</svg>
-					</Button>
-				</Link>
-			</center>
+						</div>
+					</div>
+					<center>
+						<Link>
+							<Button
+								variant="link"
+								disabled={disabledLink}
+								onClick={() => {
+									setDisabledLink(true);
+									var extraParams =
+										"my_account_settings" ===
+											activeStep.key ||
+										"final_step" === activeStep.key
+											? ""
+											: `activeStep=${activeStep.key}`;
+									handleSaveSettings(
+										`${adminURL}admin.php?page=user-registration-dashboard&end-setup-wizard=1&${extraParams}`
+									);
+								}}
+								mr={10}
+								ml={10}
+								pt="6"
+								fontStyle="italic"
+								textDecoration="underline"
+								fontSize="16px"
+								fontWeight="400"
+								gap="10px"
+								className="button-tertiary"
+								background="none !important"
+								color="#6B6B6B !important"
+								border="none !important"
+							>
+								{__("Go to dashboard", "user-registration")}
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="12"
+									height="12"
+									fill="currentColor"
+									className="bi bi-arrow-right"
+									viewBox="0 0 16 16"
+									marginleft="100px"
+								>
+									<path
+										fillRule="evenodd"
+										d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"
+									/>
+								</svg>
+							</Button>
+						</Link>
+					</center>
+				</>
+			) : (
+				<Box display="flex" justifyContent="center" padding="250px">
+					<Spinner size={"lg"} />
+				</Box>
+			)}
 		</ChakraProvider>
 	);
 }

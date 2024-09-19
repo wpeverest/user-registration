@@ -1,3 +1,11 @@
+= 3.3.3    - 19/09/2024 =
+* Fix      - Select all option not working in checkbox field.
+* Fix      - Continue setup wizard button not working properly.
+* Fix      - Conflict with lost password when WooCommerce My Account Page selected in user registration settings.
+* Tweak    - Added skip setup button in continue setup wizard notice.
+* Tweak    - Changed feature item label from Pro to Personal to avoid confusion.
+* Tweak    - Install pages notice display only if continue setup wizard notice is skipped.
+
 = 3.3.2.1  - 11/09/2024 =
 * Fix      - Tooltip icon is not being displayed in Global Settings.
 
@@ -31,7 +39,11 @@
 * Dev       - Compatibility for Authorize.net Addon.
 * Dev       - Compatibility for SMS verification.
 * Dev       - Add noreferer and noopener in all target blank anchor tags.
+<<<<<<< HEAD
 * Fix       - Unable to publish form from draft status.
+=======
+* Fix       - Unable to publish form from draft status.
+>>>>>>> master
 * Fix       - Undefined variable $form_row_data.
 * Fix       - Disable default wordpress login not working.
 * Fix       - The email content translation issues with WPML plugin.
