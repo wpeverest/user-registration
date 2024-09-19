@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-09-19T04:42:18+00:00\n"
+"POT-Creation-Date: 2024-09-19T08:37:30+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: user-registration\n"
@@ -93,8 +93,8 @@ msgstr ""
 
 #: includes/3rd-party/elementor/widgets/class-ur-widgets-myaccount.php:37
 #: includes/functions-ur-core.php:6492
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:256
-#: src/welcome/components/App.js:84
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:264
+#: src/welcome/components/App.js:86
 msgid "My Account"
 msgstr ""
 
@@ -128,7 +128,7 @@ msgid "Registration Form"
 msgstr ""
 
 #: includes/abstracts/abstract-ur-form-field.php:1034
-#: src/welcome/components/App.js:63
+#: src/welcome/components/App.js:65
 msgid "General Settings"
 msgstr ""
 
@@ -909,7 +909,7 @@ msgid "Start From Scratch"
 msgstr ""
 
 #: includes/admin/class-ur-admin-form-templates.php:102
-#: includes/admin/class-ur-admin-welcome.php:157
+#: includes/admin/class-ur-admin-welcome.php:158
 #: includes/admin/views/html-admin-page-form-templates.php:106
 msgid "Get Started"
 msgstr ""
@@ -1387,19 +1387,19 @@ msgid "denied"
 msgstr ""
 
 #: includes/admin/class-ur-admin-welcome.php:39
-#: includes/admin/class-ur-admin-welcome.php:152
+#: includes/admin/class-ur-admin-welcome.php:153
 msgid "Welcome to User Registration"
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:96
+#: includes/admin/class-ur-admin-welcome.php:97
 msgid "User Registration - Setup Wizard"
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:153
+#: includes/admin/class-ur-admin-welcome.php:154
 msgid "Thank you for choosing User Registration - the most powerful and easy drag & drop WordPress form builder in the market."
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:165
+#: includes/admin/class-ur-admin-welcome.php:166
 msgid "Skip to Dashboard"
 msgstr ""
 
@@ -1445,8 +1445,8 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-general.php:34
 #: includes/admin/settings/class-ur-settings-general.php:86
 #: includes/admin/settings/class-ur-settings-general.php:408
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:195
-#: src/welcome/components/App.js:62
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:203
+#: src/welcome/components/App.js:64
 msgid "General"
 msgstr ""
 
@@ -1879,12 +1879,12 @@ msgid "Frontend Messages"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:91
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:213
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:221
 msgid "Prevent WP Dashboard Access"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:92
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:214
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:222
 msgid "Selected user roles will not be able to view and access the WP Dashboard area."
 msgstr ""
 
@@ -1918,12 +1918,12 @@ msgid "This option lets you choose the layout for the user registration my accou
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:136
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:265
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:273
 msgid "Horizontal"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:137
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:266
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:274
 msgid "Vertical"
 msgstr ""
 
@@ -1940,7 +1940,7 @@ msgid "Disable Profile Picture"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:155
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:271
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:279
 msgid "Check to disable profile picture in edit profile page."
 msgstr ""
 
@@ -2632,7 +2632,7 @@ msgid "The email subject you want to customize."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:106
-#: includes/class-ur-emailer.php:460
+#: includes/class-ur-emailer.php:473
 msgid "A New User Registered"
 msgstr ""
 
@@ -2690,7 +2690,7 @@ msgid "Enable this email to send approval link for user registration."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-approval-link-email.php:106
-#: includes/class-ur-emailer.php:530
+#: includes/class-ur-emailer.php:551
 msgid "Approval Link For New User Registration"
 msgstr ""
 
@@ -2724,7 +2724,7 @@ msgid "Enable this email sent to user notifying the registration is awaiting adm
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:88
-#: includes/class-ur-emailer.php:384
+#: includes/class-ur-emailer.php:391
 msgid "Thank you for registration on {{blog_info}}"
 msgstr ""
 
@@ -2779,7 +2779,7 @@ msgid "Confirmation Email"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:80
-#: includes/class-ur-emailer.php:371
+#: includes/class-ur-emailer.php:376
 msgid "Please confirm your registration on {{blog_info}}"
 msgstr ""
 
@@ -2808,7 +2808,7 @@ msgid "Enable this email sent to the admin when a user changed profile informati
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:107
-#: includes/class-ur-emailer.php:806
+#: includes/class-ur-emailer.php:846
 msgid "Profile Details Changed Email: {{blog_info}}"
 msgstr ""
 
@@ -2841,7 +2841,7 @@ msgid "Enable this email sent to the user when a user updated their profile info
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-profile-details-updated-email.php:89
-#: includes/class-ur-emailer.php:851
+#: includes/class-ur-emailer.php:898
 msgid "Profile Details Updated Email: {{blog_info}}"
 msgstr ""
 
@@ -2869,7 +2869,7 @@ msgid "Enable this email sent to the user notifying the registration is approved
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-approved-email.php:89
-#: includes/class-ur-emailer.php:628
+#: includes/class-ur-emailer.php:660
 msgid "Congratulations! Registration approved on {{blog_info}}"
 msgstr ""
 
@@ -2898,8 +2898,8 @@ msgid "Enable this email sent to the user notifying the registration is denied b
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:89
-#: includes/class-ur-emailer.php:397
-#: includes/class-ur-emailer.php:613
+#: includes/class-ur-emailer.php:406
+#: includes/class-ur-emailer.php:645
 msgid "Sorry! Registration denied on {{blog_info}}"
 msgstr ""
 
@@ -2928,7 +2928,7 @@ msgid "Enable this email sent to the user notifying the registration is pending.
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:90
-#: includes/class-ur-emailer.php:600
+#: includes/class-ur-emailer.php:629
 msgid "Sorry! Registration changed to pending on {{blog_info}}"
 msgstr ""
 
@@ -2959,8 +2959,8 @@ msgid "Enable this to send an email to the user when they request for a password
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-reset-password-email.php:88
-#: includes/class-ur-emailer.php:664
-#: includes/class-ur-emailer.php:757
+#: includes/class-ur-emailer.php:701
+#: includes/class-ur-emailer.php:797
 msgid "Password Reset Email: {{blog_info}}"
 msgstr ""
 
@@ -2993,7 +2993,7 @@ msgid "Enable this email sent to the user after successful user registration."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:90
-#: includes/class-ur-emailer.php:410
+#: includes/class-ur-emailer.php:421
 msgid "Congratulations! Registration Complete on {{blog_info}}"
 msgstr ""
 
@@ -3657,19 +3657,19 @@ msgstr ""
 msgid "Chosen Password"
 msgstr ""
 
-#: includes/class-ur-emailer.php:481
-#: includes/class-ur-emailer.php:552
+#: includes/class-ur-emailer.php:499
+#: includes/class-ur-emailer.php:578
 #: includes/class-ur-smart-tags.php:438
 msgid "Approve Now"
 msgstr ""
 
-#: includes/class-ur-emailer.php:482
-#: includes/class-ur-emailer.php:553
+#: includes/class-ur-emailer.php:500
+#: includes/class-ur-emailer.php:579
 #: includes/class-ur-smart-tags.php:470
 msgid "Deny Now"
 msgstr ""
 
-#: includes/class-ur-emailer.php:894
+#: includes/class-ur-emailer.php:949
 msgid "Confirm Email Address Change Email: {{blog_info}}"
 msgstr ""
 
@@ -3813,25 +3813,25 @@ msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:483
 #: includes/functions-ur-core.php:1181
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:239
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:247
 msgid "Very Weak"
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:484
 #: includes/functions-ur-core.php:1182
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:240
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:248
 msgid "Weak"
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:485
 #: includes/functions-ur-core.php:1183
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:241
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:249
 msgid "Medium"
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:486
 #: includes/functions-ur-core.php:1184
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:242
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:250
 msgid "Strong"
 msgstr ""
 
@@ -3856,25 +3856,25 @@ msgid "Hint: Minimum one uppercase letter, a number, a special character, must b
 msgstr ""
 
 #: includes/class-ur-install.php:411
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:155
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:163
 msgctxt "Page slug"
 msgid "my-account"
 msgstr ""
 
 #: includes/class-ur-install.php:412
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:156
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:164
 msgctxt "Page title"
 msgid "My Account"
 msgstr ""
 
 #: includes/class-ur-install.php:422
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:148
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:156
 msgctxt "Page slug"
 msgid "registration"
 msgstr ""
 
 #: includes/class-ur-install.php:423
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:149
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:157
 msgctxt "Page title"
 msgid "Registration"
 msgstr ""
@@ -4004,8 +4004,8 @@ msgid "Registrations"
 msgstr ""
 
 #: includes/class-ur-post-types.php:57
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:223
-#: src/welcome/components/App.js:73
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:231
+#: src/welcome/components/App.js:75
 msgid "Registration"
 msgstr ""
 
@@ -6153,12 +6153,12 @@ msgid "Options"
 msgstr ""
 
 #: includes/functions-ur-core.php:1122
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:205
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:213
 msgid "User Approval And Login Option"
 msgstr ""
 
 #: includes/functions-ur-core.php:1123
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:206
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:214
 msgid "This option lets you choose login option after user registration."
 msgstr ""
 
@@ -6175,17 +6175,17 @@ msgid "This option is to map phone field for sms verification."
 msgstr ""
 
 #: includes/functions-ur-core.php:1149
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:246
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:254
 msgid "Default User Role"
 msgstr ""
 
 #: includes/functions-ur-core.php:1158
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:247
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:255
 msgid "Default role for the users registered through this form."
 msgstr ""
 
 #: includes/functions-ur-core.php:1162
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:226
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:234
 msgid "Enable Strong Password"
 msgstr ""
 
@@ -6194,7 +6194,7 @@ msgid "Make strong password compulsary."
 msgstr ""
 
 #: includes/functions-ur-core.php:1174
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:233
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:241
 msgid "Minimum Password Strength"
 msgstr ""
 
@@ -6203,7 +6203,7 @@ msgid "Custom"
 msgstr ""
 
 #: includes/functions-ur-core.php:1189
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:234
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:242
 msgid "Set minimum required password strength."
 msgstr ""
 
@@ -6660,35 +6660,35 @@ msgstr ""
 msgid "Failed to read changelog."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:114
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:122
 msgid "OnBoarding completed successfully"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:134
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:142
 msgid "Pages cannot be installed"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:198
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:206
 msgid "Anyone can register"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:199
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:207
 msgid "Check to enable users to register"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:227
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:235
 msgid "Enforce strong password."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:259
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:267
 msgid "My Account Page Layout"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:260
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:268
 msgid "Select account page layout."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:270
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:278
 msgid "Disable profile picture"
 msgstr ""
 
@@ -7951,64 +7951,64 @@ msgstr ""
 msgid "Themes"
 msgstr ""
 
-#: src/welcome/components/App.js:51
-#: src/welcome/components/App.js:52
+#: src/welcome/components/App.js:53
+#: src/welcome/components/App.js:54
 msgid "Install Pages"
 msgstr ""
 
-#: src/welcome/components/App.js:53
+#: src/welcome/components/App.js:55
 msgid "The following pages and forms will be created automatically."
 msgstr ""
 
-#: src/welcome/components/App.js:64
+#: src/welcome/components/App.js:66
 msgid "Customize your general settings as per your preference."
 msgstr ""
 
-#: src/welcome/components/App.js:74
+#: src/welcome/components/App.js:76
 msgid "Registration Settings"
 msgstr ""
 
-#: src/welcome/components/App.js:75
+#: src/welcome/components/App.js:77
 msgid "Customize your registration settings as per your preference."
 msgstr ""
 
-#: src/welcome/components/App.js:85
+#: src/welcome/components/App.js:87
 msgid "My Account Settings"
 msgstr ""
 
-#: src/welcome/components/App.js:86
+#: src/welcome/components/App.js:88
 msgid "Customize my account page settings as per your preference."
 msgstr ""
 
-#: src/welcome/components/App.js:95
+#: src/welcome/components/App.js:97
 msgid "Final Step"
 msgstr ""
 
-#: src/welcome/components/App.js:416
+#: src/welcome/components/App.js:427
 msgid "View Registration Page"
 msgstr ""
 
-#: src/welcome/components/App.js:431
+#: src/welcome/components/App.js:442
 msgid "Back"
 msgstr ""
 
-#: src/welcome/components/App.js:449
+#: src/welcome/components/App.js:463
 msgid "Edit Default Form"
 msgstr ""
 
-#: src/welcome/components/App.js:471
+#: src/welcome/components/App.js:485
 msgid "Skip this step"
 msgstr ""
 
-#: src/welcome/components/App.js:487
+#: src/welcome/components/App.js:501
 msgid "Install & Proceed"
 msgstr ""
 
-#: src/welcome/components/App.js:505
+#: src/welcome/components/App.js:519
 msgid "Next"
 msgstr ""
 
-#: src/welcome/components/App.js:542
+#: src/welcome/components/App.js:556
 msgid "Go to dashboard"
 msgstr ""
 
