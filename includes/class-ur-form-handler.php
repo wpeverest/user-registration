@@ -40,7 +40,7 @@ class UR_Form_Handler {
 	 */
 	public static function redirect_reset_password_link() {
 		global $wp;
-		if ( ( isset( $wp->query_vars['ur-lost-password'] ) && empty( $wp->query_vars['ur-lost-password'] ) ) || ! isset( $wp->query_vars['ur-lost-password'] ) ) {
+		if ( isset( $wp->query_vars['ur-lost-password'] ) && empty( $wp->query_vars['ur-lost-password'] ) ) {
 			return;
 		}
 		$page_id                     = ur_get_page_id( 'myaccount' );
@@ -644,16 +644,20 @@ class UR_Form_Handler {
 
 		if ( $user instanceof WP_User ) {
 			if ( empty( $posted_fields['password_1'] ) ) {
-				ur_add_notice( esc_html__( 'Please enter your password.', 'user-registration' ), 'error' );
+				$err_msg = apply_filters( 'user_registration_reset_password_error_message', __( 'Please enter your password.', 'user-registration' ) );
+				ur_add_notice( $err_msg, 'error' );
 			}
 
 			if ( $posted_fields['password_1'] !== $posted_fields['password_2'] ) {
-				ur_add_notice( esc_html__( 'Passwords do not match.', 'user-registration' ), 'error' );
+				$err_msg = apply_filters( 'user_registration_reset_password_error_message', __( 'New password must not be same as old password.', 'user-registration' ) );
+				ur_add_notice( $err_msg, 'error' );
 			}
 
 			if ( wp_check_password( $posted_fields['password_1'], $user->user_pass, $user->ID ) ) {
-				ur_add_notice( esc_html__( 'New password must not be same as old password.', 'user-registration' ), 'error' );
+				$err_msg = apply_filters( 'user_registration_reset_password_error_message', __( 'New password must not be same as old password.', 'user-registration' ) );
+				ur_add_notice( $err_msg, 'error' );
 			}
+
 			$errors = new WP_Error();
 			/**
 			 * Fires an action hook to validate a password reset attempt.
@@ -687,7 +691,7 @@ class UR_Form_Handler {
 
 				$redirect = add_query_arg( 'password-reset', 'true', $ur_login_or_account_page );
 				$redirect = apply_filters( 'user_registration_reset_password_redirect', $redirect, $user );
-				
+
 				wp_redirect( $redirect );
 				exit;
 			}
