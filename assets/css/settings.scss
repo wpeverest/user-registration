@@ -939,7 +939,7 @@ body {
 		// General Settings
 		.user-registration-card {
 			padding: $spacing_16px $spacing_20px $spacing_22px;
-			// background: #fafafc;
+			background: #fafafc;
 			// border: $border_width solid #edeff7 !important;
 			border: $border_width solid $grey-50 !important;
 			border-radius: $border_radius_7;
@@ -1630,8 +1630,8 @@ body {
 			p.ur-p-tag {
 				margin: -$spacing_6px 0 $spacing_24px;
 				padding: $spacing_10px $spacing_12px $spacing_10px $spacing_16px;
-				// background: $grey-0;
-				background: #F8F8F8;
+				background: $grey-0;
+				// background: #FAFAFA;
 				border-left: 3px solid #17a2b8;
 				font-weight: $regular;
 				color: $grey-300;
@@ -1655,10 +1655,13 @@ body {
 					width: 100%;
 					max-width: 680px;
 					padding: $spacing_16px $spacing_20px $spacing_22px;
-					background: $grey-0;
+					// background: $grey-0;
 					border: $border_width solid $grey-50;
 					border-radius: $border_radius_7;
 					margin-bottom: $spacing_28px;
+					background: #fafafc;
+					// border: $border_width solid #edeff7 !important;
+					border: $border_width solid $grey-50;
 					box-shadow: none;
 
 					&:last-child {
@@ -1854,8 +1857,8 @@ body {
 	input[type="radio"] + img {
 	  cursor: pointer;
 	}
+}
 
-  }
 .user-registration-inactive-addon{
 	opacity: 0.7;
 	pointer-events: pointer;
