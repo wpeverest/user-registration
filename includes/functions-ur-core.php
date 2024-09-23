@@ -1114,6 +1114,15 @@ function ur_admin_form_settings_fields( $form_id ) {
 
 	$all_roles = ur_get_default_admin_roles();
 
+	$ur_captchas = ur_get_captcha_integrations();
+	$ur_enabled_captchas = array();
+
+	foreach ( $ur_captchas as $key => $value ) {
+		if ( get_option( 'user_registration_captcha_setting_recaptcha_enable_' . $key, false ) ) {
+			$ur_enabled_captchas[ $key ] = $value;
+		}
+	}
+
 	$arguments = array(
 		'form_id'      => $form_id,
 
@@ -1319,6 +1328,19 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'custom_attributes' => array(),
 				'default'           => ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_recaptcha_support', false ) ),
 				'tip'               => __( 'Enable Captcha for strong security from spams and bots.', 'user-registration' ),
+			),
+			array(
+				'type'              => 'select',
+				'label'             => __( 'Select Configured Captcha', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_setting_configured_captcha_type',
+				'class'             => array( 'ur-enhanced-select' ),
+				'input_class'       => array(),
+				'options'           => $ur_enabled_captchas,
+				'custom_attributes' => array(),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_configured_captcha_type', '1' ),
+				'tip'               => __( 'Select the type of Captcha you want in this form.', 'user-registration' ),
 			),
 			array(
 				'type'              => 'select',
@@ -1785,11 +1807,17 @@ function ur_get_all_user_registration_form( $post_count = -1 ) {
  * @param string $recaptcha_enabled Is Recaptcha enabled.
  * @return string
  */
-function ur_get_recaptcha_node( $context, $recaptcha_enabled = false ) {
+function ur_get_recaptcha_node( $context, $recaptcha_enabled = false, $form_id = 0 ) {
 
 	$recaptcha_type      = get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' );
 	$invisible_recaptcha = ur_option_checked( 'user_registration_captcha_setting_invisible_recaptcha_v2', false );
 	$theme_mod           = '';
+
+	if ( 'login' === $context ) {
+		$recaptcha_type      = get_option( 'user_registration_login_options_configured_captcha_type', $recaptcha_type );
+	} elseif ( 'register' === $context && ! $form_id ) {
+		$recaptcha_type      = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_configured_captcha_type', $recaptcha_type );
+	}
 
 	if ( 'v2' === $recaptcha_type && ! $invisible_recaptcha ) {
 		$recaptcha_site_key    = get_option( 'user_registration_captcha_setting_recaptcha_site_key' );
@@ -4599,6 +4627,9 @@ if ( ! function_exists( 'ur_add_links_to_top_nav' ) ) {
 			return;
 		}
 
+		if ( apply_filters ( 'user_registration_show_link_to_admin_top_nav', false ) ){
+			return;
+		}
 		/**
 		 * Add User Registration links in the admin top nav bar.
 		 */
@@ -6611,7 +6642,6 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 				'video_id'     => 'iyCByez_7U8',
 				'available_in' => 'Personal Plan',
 			),
-
 		);
 
 		return $integration_list;
@@ -6639,3 +6669,24 @@ if ( ! function_exists( 'ur_list_top_integrations' ) ) {
 	}
 }
 add_filter( 'user_registration_integrations_classes', 'ur_list_top_integrations' );
+
+if ( ! function_exists( 'ur_get_captcha_integrations' ) ) {
+	/**
+	 * List top captchas.
+	 *
+	 * @since 3.3.4
+	 *
+	 * @return array
+	 */
+	function ur_get_captcha_integrations() {
+		return apply_filters( 'user_registration_captcha_integrations', array(
+			'v2' => "reCaptcha v2",
+			'v3' => 'reCaptcha v3',
+			'hCaptcha' => 'hcaptcha',
+			'cloudflare' => "Cloudflare Turnstile" )
+		);
+	}
+}
+
+
+add_filter("user_registration_lost_password_options_enable_recaptcha", function(){ return 'yes'; });
