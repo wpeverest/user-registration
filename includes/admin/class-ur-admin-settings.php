@@ -884,6 +884,13 @@ class UR_Admin_Settings {
 
 									}
 									break;
+								case 'button':
+									$settings .= '<div class="user-registration-global-settings">';
+									$settings .= '<div class="user-registration-global-settings--field">';
+									$settings .= '<button type="button" class="button button-primary user-registration-captcha-save-settings" data-source="' . esc_attr( $value['id'] ) . '" style="' . esc_attr( $value['css'] ) . '" >' . esc_html__( 'Save', 'user-registration' ) . '</button>';
+									$settings .= '</div>';
+									$settings .= '</div>';
+									break;
 								// Default: run an action.
 								default:
 									/**

@@ -57,197 +57,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 				'user_registration_captcha_settings',
 				array(
 					'title'    => '',
-					'sections' => array(
-						'captcha_options' => array(
-							'title'    => __( 'Captcha', 'user-registration' ),
-							'type'     => 'card',
-							'desc'     => '',
-							'settings' => array(
-								array(
-									'title'    => __( 'Captcha Type', 'user-registration' ),
-									'desc'     => __( 'Select the Captcha type', 'user-registration' ),
-									'id'       => 'user_registration_captcha_setting_recaptcha_version',
-									'default'  => 'v2',
-									'type'     => 'radio',
-									'class'    => '',
-									'desc_tip' => true,
-									'options'  => array(
-										'v2'         => 'reCAPTCHA v2',
-										'v3'         => 'reCAPTCHA v3',
-										'hCaptcha'   => 'hCaptcha',
-										'cloudflare' => 'Cloudflare Turnstile',
-									),
-								),
-								array(
-									'title'      => __( 'Site Key (reCAPTCHA v2)', 'user-registration' ),
-									/* translators: %1$s - Google reCAPTCHA docs url */
-									'desc'       => sprintf( __( 'Get site key from google %1$s reCAPTCHA %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" rel="noreferrer noopener" target="_blank">', '</a>' ),
-									'id'         => 'user_registration_captcha_setting_recaptcha_site_key',
-									'default'    => '',
-									'type'       => 'text',
-									'is_visible' => 'v2' === $recaptcha_type && 'no' === $invisible,
-									'class'      => '',
-									'css'        => 'min-width: 350px;',
-									'desc_tip'   => true,
-
-								),
-								array(
-									'title'      => __( 'Secret Key ( reCAPTCHA v2)', 'user-registration' ),
-									/* translators: %1$s - Google reCAPTCHA docs url */
-									'desc'       => sprintf( __( 'Get secret key from google %1$s reCAPTCHA %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" rel="noreferrer noopener" target="_blank">', '</a>' ),
-									'id'         => 'user_registration_captcha_setting_recaptcha_site_secret',
-									'default'    => '',
-									'type'       => 'text',
-									'is_visible' => 'v2' === $recaptcha_type && 'no' === $invisible,
-									'class'      => '',
-									'css'        => 'min-width: 350px;',
-									'desc_tip'   => true,
-								),
-								array(
-									'title'      => __( 'Site Key (reCAPTCHA v2)', 'user-registration' ),
-									/* translators: %1$s - Google reCAPTCHA docs url */
-									'desc'       => sprintf( __( 'Get site key from google %1$s reCAPTCHA %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" rel="noreferrer noopener" target="_blank">', '</a>' ),
-									'id'         => 'user_registration_captcha_setting_recaptcha_invisible_site_key',
-									'default'    => '',
-									'type'       => 'text',
-									'is_visible' => 'v2' === $recaptcha_type && 'yes' === $invisible,
-									'class'      => '',
-									'css'        => 'min-width: 350px;',
-									'desc_tip'   => true,
-
-								),
-								array(
-									'title'      => __( 'Secret Key (reCAPTCHA v2)', 'user-registration' ),
-									/* translators: %1$s - Google reCAPTCHA docs url */
-									'desc'       => sprintf( __( 'Get secret key from google %1$s reCAPTCHA %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" rel="noreferrer noopener" target="_blank">', '</a>' ),
-									'id'         => 'user_registration_captcha_setting_recaptcha_invisible_site_secret',
-									'default'    => '',
-									'type'       => 'text',
-									'is_visible' => 'v2' === $recaptcha_type && 'yes' === $invisible,
-									'class'      => '',
-									'css'        => 'min-width: 350px;',
-									'desc_tip'   => true,
-								),
-								array(
-									'title'      => __( 'Invisible reCAPTCHA', 'user-registration' ),
-									/* translators: %1$s - Google reCAPTCHA docs url */
-									'desc'       => sprintf( __( 'check this to enable invisible reCAPTCHA.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" rel="noreferrer noopener" target="_blank">', '</a>' ),
-									'id'         => 'user_registration_captcha_setting_invisible_recaptcha_v2',
-									'default'    => 'no',
-									'type'       => 'toggle',
-									'is_visible' => 'v2' === $recaptcha_type,
-									'css'        => 'min-width: 350px;',
-									'desc_tip'   => true,
-								),
-								array(
-									'title'      => __( 'Site Key (reCAPTCHA v3)', 'user-registration' ),
-									/* translators: %1$s - Google reCAPTCHA docs url */
-									'desc'       => sprintf( __( 'Get site key from google %1$s reCAPTCHA %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" rel="noreferrer noopener" target="_blank">', '</a>' ),
-									'id'         => 'user_registration_captcha_setting_recaptcha_site_key_v3',
-									'default'    => '',
-									'type'       => 'text',
-									'is_visible' => 'v3' === $recaptcha_type,
-									'class'      => '',
-									'css'        => 'min-width: 350px;',
-									'desc_tip'   => true,
-
-								),
-								array(
-									'title'      => __( 'Secret Key (reCAPTCHA v3)', 'user-registration' ),
-									/* translators: %1$s - Google reCAPTCHA docs url */
-									'desc'       => sprintf( __( 'Get secret key from google %1$s reCAPTCHA %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" rel="noreferrer noopener" target="_blank">', '</a>' ),
-									'id'         => 'user_registration_captcha_setting_recaptcha_site_secret_v3',
-									'default'    => '',
-									'type'       => 'text',
-									'is_visible' => 'v3' === $recaptcha_type,
-									'class'      => '',
-									'css'        => 'min-width: 350px;',
-									'desc_tip'   => true,
-								),
-								array(
-									'title'    => __( 'Site Key (hCaptcha)', 'user-registration' ),
-									/* translators: %1$s - hCaptcha docs url */
-									'desc'     => sprintf( __( 'Get site key from %1$s hCaptcha %2$s.', 'user-registration' ), '<a href="https://www.hcaptcha.com/" rel="noreferrer noopener" target="_blank">', '</a>' ), //phpcs:ignore
-									'id'       => 'user_registration_captcha_setting_recaptcha_site_key_hcaptcha',
-									'default'  => '',
-									'type'     => 'text',
-									'class'    => '',
-									'css'      => 'min-width: 350px;',
-									'desc_tip' => true,
-
-								),
-								array(
-									'title'    => __( 'Secret Key (hCaptcha)', 'user-registration' ),
-									/* translators: %1$s - hCaptcha docs url */
-									'desc'     => sprintf( __( 'Get secret key from %1$s hCaptcha %2$s.', 'user-registration' ), '<a href="https://www.hcaptcha.com/" rel="noreferrer noopener" target="_blank">', '</a>' ), 	//phpcs:ignore
-									'id'       => 'user_registration_captcha_setting_recaptcha_site_secret_hcaptcha',
-									'default'  => '',
-									'type'     => 'text',
-									'class'    => '',
-									'css'      => 'min-width: 350px;',
-									'desc_tip' => true,
-								),
-								array(
-									'title'             => __( 'Threshold score', 'user-registration' ),
-									'desc'              => esc_html__( 'reCAPTCHA v3 returns a score (1.0 is very likely a good interaction, 0.0 is very likely a bot). If the score less than or equal to this threshold.', 'user-registration' ),
-									'id'                => 'user_registration_captcha_setting_recaptcha_threshold_score_v3',
-									'type'              => 'number',
-									'is_visible'        => 'v3' === $recaptcha_type,
-									'custom_attributes' => array(
-										'step' => '0.1',
-										'min'  => '0.0',
-										'max'  => '1.0',
-									),
-									'default'           => '0.4',
-									'css'               => 'min-width: 350px;',
-									'desc_tip'          => true,
-								),
-								array(
-									'title'    => __( 'Site Key (Cloudflare Turnstile)', 'user-registration' ),
-									/* translators: %1$s - Cloudflare Turnstile docs url */
-									'desc'     => sprintf( __( 'Get site key from %1$s Cloudflare Turnstile %2$s.', 'user-registration' ), '<a href="https://www.cloudflare.com/products/turnstile/" rel="noreferrer noopener" target="_blank">', '</a>' ), //phpcs:ignore
-									'id'       => 'user_registration_captcha_setting_recaptcha_site_key_cloudflare',
-									'default'  => '',
-									'type'     => 'text',
-									'class'    => '',
-									'css'      => 'min-width: 350px;',
-									'desc_tip' => true,
-
-								),
-								array(
-									'title'    => __( 'Secret Key (Cloudflare Turnstile)', 'user-registration' ),
-									/* translators: %1$s - Cloudflare Turnstile docs url */
-									'desc'     => sprintf( __( 'Get secret key from %1$s Cloudflare Turnstile %2$s.', 'user-registration' ), '<a href="https://www.cloudflare.com/products/turnstile/" rel="noreferrer noopener" target="_blank">', '</a>' ), 	//phpcs:ignore
-									'id'       => 'user_registration_captcha_setting_recaptcha_site_secret_cloudflare',
-									'default'  => '',
-									'type'     => 'text',
-									'class'    => '',
-									'css'      => 'min-width: 350px;',
-									'desc_tip' => true,
-								),
-								array(
-									'title'    => __( 'Theme', 'user-registration' ),
-									/* translators: %1$s - Cloudflare Turnstile docs url */
-									'desc'     => sprintf( esc_html__( 'Please select theme mode for your Cloudflare Turnstile. <a href="%1$s" rel="noreferrer noopener" target="_blank">Learn More</a>', 'user-registration' ), esc_url( 'https://www.cloudflare.com/products/turnstile/' ) ),
-									'id'       => 'user_registration_captcha_setting_recaptcha_cloudflare_theme',
-									'options'  => array(
-										'auto'  => esc_html__( 'Auto', 'user-registration' ),
-										'light' => esc_html__( 'Light', 'user-registration' ),
-										'dark'  => esc_html__( 'Dark', 'user-registration' ),
-									),
-									'type'     => 'select',
-									'class'    => '',
-									'css'      => 'min-width: 350px;',
-									'desc_tip' => true,
-								),
-								array(
-									'title' => __( 'Test Captcha', 'user-registration' ),
-									'id'    => 'user_registration_captcha_setting_recaptcha_test',
-									'type'  => 'recaptcha_test',
-								),
-							),
-						),
-					),
+					'sections' => $this->get_captcha_global_settings(),
 				)
 			);
 
@@ -398,6 +208,271 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 					 */
 				return apply_filters( 'user_registration_active_recaptcha', false );
 			}
+		}
+
+		/**
+		 * Output the settings.
+		 */
+		public function output() {
+			global $current_section, $hide_save_button;
+			$settings         = $this->get_settings();
+			$hide_save_button = true;
+
+			UR_Admin_Settings::output_fields( $settings );
+		}
+
+		public function get_captcha_global_settings() {
+			$captcha_global_settings = array();
+
+			$captcha_global_settings = array(
+				'v2' => array(
+					'title'     => 'reCAPTCHA v2',
+					'type'      => 'accordian',
+					'id'        => 'v2',
+					'settings' => array(
+						array(
+							'title'    => __( 'Enable reCAPTCHA v2', 'user-registration' ),
+							/* translators: %1$s - hCaptcha docs url */
+							'desc'     => __( 'Enable v2 for the site.', 'user-registration' ), //phpcs:ignore
+							'id'       => 'user_registration_captcha_setting_recaptcha_enable_v2',
+							'default'  => '',
+							'type'     => 'toggle',
+							'class'    => '',
+							'css'      => 'min-width: 350px;',
+							'desc_tip' => true,
+						),
+						array(
+							'title'      => __( 'Site Key (reCAPTCHA v2)', 'user-registration' ),
+							/* translators: %1$s - Google reCAPTCHA docs url */
+							'desc'       => sprintf( __( 'Get site key from google %1$s reCAPTCHA %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" rel="noreferrer noopener" target="_blank">', '</a>' ),
+							'id'         => 'user_registration_captcha_setting_recaptcha_site_key',
+							'default'    => '',
+							'type'       => 'text',
+							// 'is_visible' => 'v2' === $recaptcha_type && 'no' === $invisible,
+							'class'      => '',
+							'css'        => 'min-width: 350px;',
+							'desc_tip'   => true,
+						),
+						array(
+							'title'      => __( 'Secret Key (reCAPTCHA v2)', 'user-registration' ),
+							/* translators: %1$s - Google reCAPTCHA docs url */
+							'desc'       => sprintf( __( 'Get secret key from google %1$s reCAPTCHA %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" rel="noreferrer noopener" target="_blank">', '</a>' ),
+							'id'         => 'user_registration_captcha_setting_recaptcha_site_secret',
+							'default'    => '',
+							'type'       => 'text',
+							'class'      => '',
+							'css'        => 'min-width: 350px;',
+							'desc_tip'   => true,
+						),
+						array(
+							'title'      => __( 'Site Key (reCAPTCHA v2)', 'user-registration' ),
+							/* translators: %1$s - Google reCAPTCHA docs url */
+							'desc'       => sprintf( __( 'Get site key from google %1$s reCAPTCHA %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" rel="noreferrer noopener" target="_blank">', '</a>' ),
+							'id'         => 'user_registration_captcha_setting_recaptcha_invisible_site_key',
+							'default'    => '',
+							'type'       => 'text',
+							'class'      => '',
+							'css'        => 'min-width: 350px;',
+							'desc_tip'   => true,
+
+						),
+						array(
+							'title'      => __( 'Secret Key (reCAPTCHA v2)', 'user-registration' ),
+							/* translators: %1$s - Google reCAPTCHA docs url */
+							'desc'       => sprintf( __( 'Get secret key from google %1$s reCAPTCHA %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" rel="noreferrer noopener" target="_blank">', '</a>' ),
+							'id'         => 'user_registration_captcha_setting_recaptcha_invisible_site_secret',
+							'default'    => '',
+							'type'       => 'text',
+							'class'      => '',
+							'css'        => 'min-width: 350px;',
+							'desc_tip'   => true,
+						),
+						array(
+							'title'      => __( 'Invisible reCAPTCHA', 'user-registration' ),
+							/* translators: %1$s - Google reCAPTCHA docs url */
+							'desc'       => sprintf( __( 'check this to enable invisible reCAPTCHA.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" rel="noreferrer noopener" target="_blank">', '</a>' ),
+							'id'         => 'user_registration_captcha_setting_invisible_recaptcha_v2',
+							'default'    => 'no',
+							'type'       => 'toggle',
+							'css'        => 'min-width: 350px;',
+							'desc_tip'   => true,
+						),
+						array(
+							'id'         => 'save_recaptcha_v3',
+							'css'        => 'min-width: 50px;margin-bottom:10px;',
+							'type'       => 'button',
+						),
+					),
+				),
+				'v3' => array(
+					'title'     => 'reCAPTCHA v3',
+					'type'      => 'accordian',
+					'id'        => 'v3',
+					'settings' => array(
+						array(
+							'title'    => __( 'Enable reCAPTCHA v3', 'user-registration' ),
+							/* translators: %1$s - recaptchav3 docs url */
+							'desc'     => __( 'Enable reCAPTCHA v3 for the site.', 'user-registration' ), //phpcs:ignore
+							'id'       => 'user_registration_captcha_setting_recaptcha_enable_v3',
+							'default'  => '',
+							'type'     => 'toggle',
+							'class'    => '',
+							'css'      => 'min-width: 350px;',
+							'desc_tip' => true,
+						),
+						array(
+							'title'      => __( 'Site Key (reCAPTCHA v3)', 'user-registration' ),
+							/* translators: %1$s - Google reCAPTCHA docs url */
+							'desc'       => sprintf( __( 'Get site key from google %1$s reCAPTCHA %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" rel="noreferrer noopener" target="_blank">', '</a>' ),
+							'id'         => 'user_registration_captcha_setting_recaptcha_site_key_v3',
+							'default'    => '',
+							'type'       => 'text',
+							'class'      => '',
+							'css'        => 'min-width: 350px;',
+							'desc_tip'   => true,
+
+						),
+						array(
+							'title'      => __( 'Secret Key (reCAPTCHA v3)', 'user-registration' ),
+							/* translators: %1$s - Google reCAPTCHA docs url */
+							'desc'       => sprintf( __( 'Get secret key from google %1$s reCAPTCHA %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" rel="noreferrer noopener" target="_blank">', '</a>' ),
+							'id'         => 'user_registration_captcha_setting_recaptcha_site_secret_v3',
+							'default'    => '',
+							'type'       => 'text',
+							'class'      => '',
+							'css'        => 'min-width: 350px;',
+							'desc_tip'   => true,
+						),
+						array(
+							'id'         => 'save_recaptcha_v3',
+							'css'        => 'min-width: 50px;margin-bottom:10px;',
+							'type'       => 'button',
+						),
+					),
+				),
+				'hCaptcha' => array(
+					'title'     => 'hCaptcha',
+					'type'      => 'accordian',
+					'id'        => 'hCaptcha',
+					'settings'  => array(
+						array(
+							'title'    => __( 'Enable hCaptcha', 'user-registration' ),
+							/* translators: %1$s - hCaptcha docs url */
+							'desc'     => __( 'Enable hCaptcha for the site.', 'user-registration' ), //phpcs:ignore
+							'id'       => 'user_registration_captcha_setting_recaptcha_enable_hcaptcha',
+							'default'  => '',
+							'type'     => 'toggle',
+							'class'    => '',
+							'css'      => 'min-width: 350px;',
+							'desc_tip' => true,
+						),
+						array(
+							'title'    => __( 'Site Key (hCaptcha)', 'user-registration' ),
+							/* translators: %1$s - hCaptcha docs url */
+							'desc'     => sprintf( __( 'Get site key from %1$s hCaptcha %2$s.', 'user-registration' ), '<a href="https://www.hcaptcha.com/" rel="noreferrer noopener" target="_blank">', '</a>' ), //phpcs:ignore
+							'id'       => 'user_registration_captcha_setting_recaptcha_site_key_hcaptcha',
+							'default'  => '',
+							'type'     => 'text',
+							'class'    => '',
+							'css'      => 'min-width: 350px;',
+							'desc_tip' => true,
+						),
+						array(
+							'title'    => __( 'Secret Key (hCaptcha)', 'user-registration' ),
+							/* translators: %1$s - hCaptcha docs url */
+							'desc'     => sprintf( __( 'Get secret key from %1$s hCaptcha %2$s.', 'user-registration' ), '<a href="https://www.hcaptcha.com/" rel="noreferrer noopener" target="_blank">', '</a>' ), 	//phpcs:ignore
+							'id'       => 'user_registration_captcha_setting_recaptcha_site_secret_hcaptcha',
+							'default'  => '',
+							'type'     => 'text',
+							'class'    => '',
+							'css'      => 'min-width: 350px;',
+							'desc_tip' => true,
+						),
+						array(
+							'title'             => __( 'Threshold score', 'user-registration' ),
+							'desc'              => esc_html__( 'reCAPTCHA v3 returns a score (1.0 is very likely a good interaction, 0.0 is very likely a bot). If the score less than or equal to this threshold.', 'user-registration' ),
+							'id'                => 'user_registration_captcha_setting_recaptcha_threshold_score_v3',
+							'type'              => 'number',
+							'custom_attributes' => array(
+								'step' => '0.1',
+								'min'  => '0.0',
+								'max'  => '1.0',
+							),
+							'default'           => '0.4',
+							'css'               => 'min-width: 350px;',
+							'desc_tip'          => true,
+						),
+						array(
+							'id'         => 'save_recaptcha_v3',
+							'css'        => 'min-width: 50px;margin-bottom:10px;',
+							'type'       => 'button',
+						),
+					),
+				),
+				'cloudflare' => array(
+					'title'     => 'Cloudflare Turnstile',
+					'type'      => 'accordian',
+					'id'        => 'cloudflare',
+					'settings'  => array(
+						array(
+							'title'    => __( 'Enable Cloudflare Turnstile', 'user-registration' ),
+							/* translators: %1$s - hCaptcha docs url */
+							'desc'     => __( 'Enable Cloudflare Turnstile for the site.', 'user-registration' ), //phpcs:ignore
+							'id'       => 'user_registration_captcha_setting_recaptcha_enable_cloudflare',
+							'default'  => '',
+							'type'     => 'toggle',
+							'class'    => '',
+							'css'      => 'min-width: 350px;',
+							'desc_tip' => true,
+						),
+						array(
+							'title'    => __( 'Site Key (Cloudflare Turnstile)', 'user-registration' ),
+							/* translators: %1$s - Cloudflare Turnstile docs url */
+							'desc'     => sprintf( __( 'Get site key from %1$s Cloudflare Turnstile %2$s.', 'user-registration' ), '<a href="https://www.cloudflare.com/products/turnstile/" rel="noreferrer noopener" target="_blank">', '</a>' ), //phpcs:ignore
+							'id'       => 'user_registration_captcha_setting_recaptcha_site_key_cloudflare',
+							'default'  => '',
+							'type'     => 'text',
+							'class'    => '',
+							'css'      => 'min-width: 350px;',
+							'desc_tip' => true,
+
+						),
+						array(
+							'title'    => __( 'Secret Key (Cloudflare Turnstile)', 'user-registration' ),
+							/* translators: %1$s - Cloudflare Turnstile docs url */
+							'desc'     => sprintf( __( 'Get secret key from %1$s Cloudflare Turnstile %2$s.', 'user-registration' ), '<a href="https://www.cloudflare.com/products/turnstile/" rel="noreferrer noopener" target="_blank">', '</a>' ), 	//phpcs:ignore
+							'id'       => 'user_registration_captcha_setting_recaptcha_site_secret_cloudflare',
+							'default'  => '',
+							'type'     => 'text',
+							'class'    => '',
+							'css'      => 'min-width: 350px;',
+							'desc_tip' => true,
+						),
+						array(
+							'title'    => __( 'Theme', 'user-registration' ),
+							/* translators: %1$s - Cloudflare Turnstile docs url */
+							'desc'     => sprintf( esc_html__( 'Please select theme mode for your Cloudflare Turnstile. <a href="%1$s" rel="noreferrer noopener" target="_blank">Learn More</a>', 'user-registration' ), esc_url( 'https://www.cloudflare.com/products/turnstile/' ) ),
+							'id'       => 'user_registration_captcha_setting_recaptcha_cloudflare_theme',
+							'options'  => array(
+								'auto'  => esc_html__( 'Auto', 'user-registration' ),
+								'light' => esc_html__( 'Light', 'user-registration' ),
+								'dark'  => esc_html__( 'Dark', 'user-registration' ),
+							),
+							'type'     => 'select',
+							'class'    => '',
+							'css'      => 'min-width: 350px;',
+							'desc_tip' => true,
+						),
+						array(
+							'id'         => 'save_recaptcha_v3',
+							'css'        => 'min-width: 50px;margin-bottom:10px;',
+							'type'       => 'button',
+						),
+					),
+				)
+			);
+
+			return $captcha_global_settings;
 		}
 	}
 
