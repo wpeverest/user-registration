@@ -394,6 +394,15 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		 * @return array
 		 */
 		public function get_login_options_settings() {
+
+			$ur_captchas = ur_get_captcha_integrations();
+			$ur_enabled_captchas = array();
+
+			foreach ( $ur_captchas as $key => $value ) {
+				if ( get_option( 'user_registration_captcha_setting_recaptcha_enable_' . $key, false ) ) {
+					$ur_enabled_captchas[ $key ] = $value;
+				}
+			}
 			/**
 			 * Filter to add the login options settings.
 			 *
@@ -493,7 +502,16 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'css'      => 'min-width: 350px;',
 									'default'  => 'no',
 								),
-
+								array(
+									'title'    => __( 'Select Configured Captcha', 'user-registration' ),
+									'desc'     => __( 'Choose the captcha type for Login Form.', 'user-registration' ),
+									'id'       => 'user_registration_login_options_configured_captcha_type',
+									'type'     => 'select',
+									'desc_tip' => true,
+									'css'      => 'min-width: 350px;',
+									'default'  => 'default',
+									'options'  => $ur_enabled_captchas,
+								),
 								array(
 									'title'    => __( 'Registration URL', 'user-registration' ),
 									'desc'     => __( 'This option lets you display the registration page URL in the login form.', 'user-registration' ),

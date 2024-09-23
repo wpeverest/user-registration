@@ -216,7 +216,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 		public function output() {
 			global $current_section, $hide_save_button;
 			$settings         = $this->get_settings();
-			$hide_save_button = true;
+			// $hide_save_button = true;
 
 			UR_Admin_Settings::output_fields( $settings );
 		}
@@ -227,7 +227,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 			$captcha_global_settings = array(
 				'v2' => array(
 					'title'     => 'reCAPTCHA v2',
-					'type'      => 'accordian',
+					'type'      => 'card',
 					'id'        => 'v2',
 					'settings' => array(
 						array(
@@ -265,7 +265,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 							'desc_tip'   => true,
 						),
 						array(
-							'title'      => __( 'Site Key (reCAPTCHA v2)', 'user-registration' ),
+							'title'      => __( 'Site Key (Invisible reCAPTCHA v2)', 'user-registration' ),
 							/* translators: %1$s - Google reCAPTCHA docs url */
 							'desc'       => sprintf( __( 'Get site key from google %1$s reCAPTCHA %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" rel="noreferrer noopener" target="_blank">', '</a>' ),
 							'id'         => 'user_registration_captcha_setting_recaptcha_invisible_site_key',
@@ -277,7 +277,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 
 						),
 						array(
-							'title'      => __( 'Secret Key (reCAPTCHA v2)', 'user-registration' ),
+							'title'      => __( 'Secret Key (Invisible reCAPTCHA v2)', 'user-registration' ),
 							/* translators: %1$s - Google reCAPTCHA docs url */
 							'desc'       => sprintf( __( 'Get secret key from google %1$s reCAPTCHA %2$s.', 'user-registration' ), '<a href="https://www.google.com/recaptcha" rel="noreferrer noopener" target="_blank">', '</a>' ),
 							'id'         => 'user_registration_captcha_setting_recaptcha_invisible_site_secret',
@@ -296,17 +296,12 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 							'type'       => 'toggle',
 							'css'        => 'min-width: 350px;',
 							'desc_tip'   => true,
-						),
-						array(
-							'id'         => 'save_recaptcha_v3',
-							'css'        => 'min-width: 50px;margin-bottom:10px;',
-							'type'       => 'button',
-						),
+						)
 					),
 				),
 				'v3' => array(
 					'title'     => 'reCAPTCHA v3',
-					'type'      => 'accordian',
+					'type'      => 'card',
 					'id'        => 'v3',
 					'settings' => array(
 						array(
@@ -342,17 +337,12 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 							'class'      => '',
 							'css'        => 'min-width: 350px;',
 							'desc_tip'   => true,
-						),
-						array(
-							'id'         => 'save_recaptcha_v3',
-							'css'        => 'min-width: 50px;margin-bottom:10px;',
-							'type'       => 'button',
-						),
+						)
 					),
 				),
 				'hCaptcha' => array(
 					'title'     => 'hCaptcha',
-					'type'      => 'accordian',
+					'type'      => 'card',
 					'id'        => 'hCaptcha',
 					'settings'  => array(
 						array(
@@ -401,17 +391,12 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 							'default'           => '0.4',
 							'css'               => 'min-width: 350px;',
 							'desc_tip'          => true,
-						),
-						array(
-							'id'         => 'save_recaptcha_v3',
-							'css'        => 'min-width: 50px;margin-bottom:10px;',
-							'type'       => 'button',
-						),
+						)
 					),
 				),
 				'cloudflare' => array(
 					'title'     => 'Cloudflare Turnstile',
-					'type'      => 'accordian',
+					'type'      => 'card',
 					'id'        => 'cloudflare',
 					'settings'  => array(
 						array(
@@ -462,12 +447,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 							'class'    => '',
 							'css'      => 'min-width: 350px;',
 							'desc_tip' => true,
-						),
-						array(
-							'id'         => 'save_recaptcha_v3',
-							'css'        => 'min-width: 50px;margin-bottom:10px;',
-							'type'       => 'button',
-						),
+						)
 					),
 				)
 			);
