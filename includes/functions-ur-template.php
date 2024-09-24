@@ -1265,7 +1265,6 @@ function ur_logout_url( $redirect = '' ) {
 	$wp_version   = '5.0';
 	$post_content = isset( $post->post_content ) ? $post->post_content : '';
 
-
 	if ( ( ur_post_content_has_shortcode( 'user_registration_login' ) || ur_post_content_has_shortcode( 'user_registration_my_account' ) ) && is_user_logged_in() ) {
 		if ( version_compare( $GLOBALS['wp_version'], $wp_version, '>=' ) ) {
 			$blocks        = parse_blocks( $post_content );
@@ -1311,11 +1310,11 @@ function ur_logout_url( $redirect = '' ) {
 			} else {
 
 				$new_shortcode = wp_strip_all_tags( $block['innerHTML'] );
-				$pattern = '/\[user_registration_my_account(?:\s+redirect_url="[^"]*")?(?:\s+logout_redirect="[^"]*")?\s*\]/';
+				$pattern       = '/\[user_registration_my_account(?:\s+redirect_url="[^"]*")?(?:\s+logout_redirect="[^"]*")?\s*\]/';
 
-				preg_match($pattern, $new_shortcode, $shortcodes);
+				preg_match( $pattern, $new_shortcode, $shortcodes );
 
-				if( !empty( $shortcodes[0] ) ) {
+				if ( ! empty( $shortcodes[0] ) ) {
 					preg_match( '/' . get_shortcode_regex() . '/s', $shortcodes[0], $matches );
 					$matches_attr = isset( $matches[3] ) ? $matches[3] : '';
 					$attributes   = shortcode_parse_atts( $matches_attr );
@@ -1333,7 +1332,6 @@ function ur_logout_url( $redirect = '' ) {
 						$redirect = '' != $redirect ? ur_check_external_url( $redirect ) : ur_get_page_permalink( 'myaccount' );
 					}
 				}
-
 			}
 		}
 	}
@@ -1349,7 +1347,11 @@ function ur_logout_url( $redirect = '' ) {
 	$redirect = apply_filters( 'user_registration_redirect_after_logout', $redirect );
 
 	if ( $logout_endpoint && ! is_front_page() ) {
-		return wp_nonce_url( ur_get_endpoint_url( 'user-logout', '', $redirect ), 'user-logout' );
+		if ( $redirect === home_url( '/' ) ) {
+			return wp_logout_url( $redirect );
+		} else {
+			return wp_nonce_url( ur_get_endpoint_url( 'user-logout', '', $redirect ), 'user-logout' );
+		}
 	} else {
 		if ( '' === $redirect ) {
 			$redirect = ur_get_page_permalink( 'myaccount' );
