@@ -5939,6 +5939,143 @@ body.user-registration {
 	}
 }
 
+.ur-multi-device-form-preview {
+    #nav-menu-header {
+		padding: 12px;
+		display: flex;
+		align-items: center;
+		position: relative;
+		border-color: $border_color;
+		background-color: $white;
+		z-index: 9;
+
+		.ur-form-title {
+			font-weight: $semi_bold;
+			font-size: 16px;
+			line-height: 150%;
+			color: #414141;
+			padding-left: $spacing_18px;
+			padding-right: $spacing_8px;
+		}
+
+
+		.ur-brand-logo {
+			border-right: 1px solid $border_color;
+
+			img {
+				width: 32px;
+				height: 32px;
+				margin-right: 8px;
+				display: flex;
+			}
+			a {
+				text-decoration: none;
+				border: none;
+			}
+			a:focus {
+				outline: none;
+				box-shadow: none;
+			}
+		}
+
+		&::before,
+		&::after {
+			content: "";
+			display: flex;
+			position: absolute;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: $white;
+		}
+
+		&::before {
+			top: 0;
+			z-index: -1;
+		}
+
+		&::after {
+			height: 10px;
+			box-shadow: 0px 4px 8px transparentize($gray_base, 0.92);
+			z-index: -2;
+		}
+
+    }
+	.major-publishing-actions {
+		clear: both;
+		line-height: 28px;
+		margin-left: auto;
+
+		.publishing-action {
+			text-align: right;
+			float: right;
+
+			input {
+				&.code {
+					width: 280px;
+					height: 33px;
+					padding: 0 $spacing_6px;
+					margin: 0;
+					border-color: $grey-50;
+					background: $blue-25;
+					border-radius: 3px 0 0 3px;
+				}
+			}
+		}
+
+
+		#copy-shortcode {
+			margin-left: -5px;
+			border-radius: 0 4px 4px 0;
+			background: $blue-50 !important;
+			border-color: $grey-50 !important;
+
+			svg {
+				width: 18px;
+				height: 18px;
+			}
+		}
+	}
+	.ur-form-preview-devices{
+		clear: both;
+		line-height: 28px;
+		margin-left: auto;
+	}
+	.ur-form-preview-main-content{
+
+		display: flex;
+
+		.ur-form-preview-form{
+			width: 1060px;
+			padding: 38px;
+			justify-content: center;
+			align-items: flex-start;
+			gap: 30px;
+			border: 1px solid $border_color;
+			border-radius: 0.5px;
+			margin:20px;
+
+
+		}
+
+		.ur-form-side-panel{
+			display: flex;
+			width: 380px;
+			padding: 20px;
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 36px;
+			align-self: stretch;
+		}
+
+	}
+
+
+}
+
+
+
+
 body {
 	&.ur-settings-sidebar-hidden {
 		.user-registration-settings-sidebar-container {
