@@ -4623,7 +4623,7 @@ if ( ! function_exists( 'ur_add_links_to_top_nav' ) ) {
 			$form_id = sanitize_text_field( wp_unslash( $_GET['form_id'] ) ); //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		} elseif ( is_page() || is_single() ) {
 
-			if( isset( $_GET['vc_editable'] ) ) {
+			if ( isset( $_GET['vc_editable'] ) ) {
 				return;
 			}
 			$post_content = get_the_content();
@@ -6585,7 +6585,7 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 				'title'        => 'ActiveCampaign',
 				'desc'         => '',
 				'video_id'     => 'AfapJxM9klk',
-				'available_in' => 'Plus or Professional Plan',
+				'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
 			),
 			$integration['UR_Settings_MailerLite'] = array(
 				'id'           => 'mailerlite',
@@ -6593,7 +6593,7 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 				'title'        => 'MailerLite',
 				'desc'         => '',
 				'video_id'     => '4f1lGgFuJx4',
-				'available_in' => 'Plus or Professional Plan',
+				'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
 			),
 			$integration['UR_Settings_klaviyo'] = array(
 				'id'           => 'klaviyo',
@@ -6601,7 +6601,7 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 				'title'        => 'Klaviyo',
 				'desc'         => '',
 				'video_id'     => 'nKOMqrkNK3Y',
-				'available_in' => 'Plus or Professional Plan',
+				'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
 			),
 			$integration['UR_Settings_Mailchimp'] = array(
 				'id'           => 'mailchimp',

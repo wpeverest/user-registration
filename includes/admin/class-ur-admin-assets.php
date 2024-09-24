@@ -623,7 +623,13 @@ class UR_Admin_Assets {
 			),
 			'upgrade_plan'                                => esc_html__( 'Upgrade Plan', 'user-registration' ),
 			'upgrade_link'                                => esc_url( 'https://wpuserregistration.com/pricing/?utm_source=integration-settings&utm_medium=premium-addon-popup&utm_campaign=' . urlencode( UR()->utm_campaign ) ),
-
+			'user_registration_locked_form_fields_notice_nonce' => wp_create_nonce( 'locked_form_fields_notice_nonce' ),
+			'license_activation_required_title'           => __( 'License Activation Required', 'user-registration' ),
+			'license_activation_required_message'         => __( 'Please activate your <strong>User Registration License</strong> to use this integration', 'user-registration' ),
+			'activation_required_title'                   => __( 'Addon Activation Required', 'user-registration' ),
+			'activation_required_message'                 => __( 'Please activate <strong>%plugin%</strong> addon to use this integration.', 'user-registration' ),
+			'installation_required_title'                 => __( 'Addon Installation Required', 'user-registration' ),
+			'installation_required_message'               => __( 'Please install <strong>%plugin%</strong> addon to use this integration.', 'user-registration' ),
 		);
 
 		return $i18n;
