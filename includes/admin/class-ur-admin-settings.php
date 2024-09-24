@@ -87,18 +87,6 @@ class UR_Admin_Settings {
 		if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'user-registration-settings' ) ) {
 			die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 		}
-		/**
-		 * Action to save current tab settings
-		 */
-		do_action( 'user_registration_settings_save_' . $current_tab );
-		/**
-		 * Action to save current tab options
-		 */
-		do_action( 'user_registration_update_options_' . $current_tab );
-		/**
-		 * Action to save options
-		 */
-		do_action( 'user_registration_update_options' );
 
 		/**
 		 * Filter to modify display of setting message
@@ -111,6 +99,19 @@ class UR_Admin_Settings {
 
 		if ( $flag && is_bool( $flag ) ) {
 			self::add_message( esc_html__( 'Your settings have been saved.', 'user-registration' ) );
+
+			/**
+			 * Action to save current tab settings
+			 */
+			do_action( 'user_registration_settings_save_' . $current_tab );
+			/**
+			 * Action to save current tab options
+			 */
+			do_action( 'user_registration_update_options_' . $current_tab );
+			/**
+			 * Action to save options
+			 */
+			do_action( 'user_registration_update_options' );
 		} elseif ( $flag && 'redirect_login_error' === $flag ) {
 
 			self::add_error(
@@ -197,6 +198,7 @@ class UR_Admin_Settings {
 			array(
 				'ajax_url'                 => admin_url( 'admin-ajax.php' ),
 				'user_registration_search_global_settings_nonce' => wp_create_nonce( 'user_registration_search_global_settings' ),
+				'user_registration_my_account_selection_validator_nonce' => wp_create_nonce( 'user_registration_my_account_selection_validator' ),
 				'i18n_nav_warning'         => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
 				'i18n'                     => array(
 					'captcha_success'   => esc_html__( 'Captcha Test Successful !', 'user-registration' ),

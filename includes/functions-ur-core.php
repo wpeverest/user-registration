@@ -6429,6 +6429,13 @@ if ( ! function_exists( 'ur_prevent_default_login' ) ) {
 					}
 				}
 			}
+		} elseif ( isset( $data['user_registration_myaccount_page_id'] ) ) {
+			if ( is_numeric( $data['user_registration_myaccount_page_id'] ) ) {
+				$is_page_my_account_page = ur_find_my_account_in_page( $data['user_registration_myaccount_page_id'] );
+				if ( ! $is_page_my_account_page ) {
+					return 'redirect_login_not_myaccount';
+				}
+			}
 		}
 		return true;
 	}
