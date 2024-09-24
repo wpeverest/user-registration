@@ -56,18 +56,26 @@ class UR_Admin_Welcome {
 		wp_register_script( 'ur-setup-wizard-script', UR()->plugin_url() . '/chunks/welcome.js', array( 'wp-element', 'wp-blocks', 'wp-editor' ), UR()->version, true );
 		wp_enqueue_style( 'ur-setup-wizard-style', UR()->plugin_url() . '/assets/css/user-registration-setup-wizard.css', array(), UR()->version );
 		wp_enqueue_script( 'ur-setup-wizard-script' );
+		$default_form_page_id   = get_option( 'user_registration_default_form_page_id' );
+		$registration_page_id   = get_option( 'user_registration_registration_page_id' );
+		$my_account_page_id     = get_option( 'user_registration_myaccount_page_id' );
+		$registration_page_slug = $registration_page_id ? get_post_field( 'post_name', $registration_page_id ) : '';
+		$my_account_page_slug   = $my_account_page_id ? get_post_field( 'post_name', $my_account_page_id ) : '';
 
 		wp_localize_script(
 			'ur-setup-wizard-script',
 			'_UR_WIZARD_',
 			array(
-				'adminURL'            => esc_url( admin_url() ),
-				'siteURL'             => esc_url( home_url( '/' ) ),
-				'defaultFormURL'      => esc_url( admin_url( '/admin.php?page=add-new-registration&edit-registration=' . get_option( 'user_registration_default_form_page_id' ) ) ),
-				'urRestApiNonce'      => wp_create_nonce( 'wp_rest' ),
-				'onBoardIconsURL'     => esc_url( UR()->plugin_url() . '/assets/images/onboard-icons' ),
-				'restURL'             => rest_url(),
-				'registrationPageURL' => get_permalink( get_option( 'user_registration_registration_page_id' ) ),
+				'adminURL'             => esc_url( admin_url() ),
+				'siteURL'              => esc_url( home_url( '/' ) ),
+				'defaultFormId'        => $default_form_page_id,
+				'registrationPageSlug' => $registration_page_slug,
+				'myAccountPageSlug'    => $my_account_page_slug,
+				'defaultFormURL'       => esc_url( admin_url( '/admin.php?page=add-new-registration&edit-registration=' . $default_form_page_id ) ),
+				'urRestApiNonce'       => wp_create_nonce( 'wp_rest' ),
+				'onBoardIconsURL'      => esc_url( UR()->plugin_url() . '/assets/images/onboard-icons' ),
+				'restURL'              => rest_url(),
+				'registrationPageURL'  => get_permalink( get_option( 'user_registration_registration_page_id' ) ),
 			)
 		);
 
