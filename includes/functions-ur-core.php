@@ -1815,7 +1815,7 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false, $form_id =
 
 	if ( 'login' === $context ) {
 		$recaptcha_type      = get_option( 'user_registration_login_options_configured_captcha_type', $recaptcha_type );
-	} elseif ( 'register' === $context && ! $form_id ) {
+	} elseif ( 'register' === $context && $form_id ) {
 		$recaptcha_type      = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_configured_captcha_type', $recaptcha_type );
 	}
 
@@ -3648,9 +3648,15 @@ if ( ! function_exists( 'ur_check_captch_keys' ) ) {
 	 *
 	 * @return bool
 	 */
-	function ur_check_captch_keys() {
+	function ur_check_captch_keys( $context = "register", $form_id = 0 ) {
 		$recaptcha_type      = get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' );
 		$invisible_recaptcha = ur_option_checked( 'user_registration_captcha_setting_invisible_recaptcha_v2', false );
+
+		if ( 'login' === $context ) {
+			$recaptcha_type      = get_option( 'user_registration_login_options_configured_captcha_type', $recaptcha_type );
+		} elseif ( 'register' === $context && ! $form_id ) {
+			$recaptcha_type      = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_configured_captcha_type', $recaptcha_type );
+		}
 
 		$site_key   = '';
 		$secret_key = '';
@@ -3848,6 +3854,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 			$captcha_response    = isset( $post['CaptchaResponse'] ) ? $post['CaptchaResponse'] : ''; //phpcs:ignore.
 			$recaptcha_enabled   = ur_option_checked( 'user_registration_login_options_enable_recaptcha', false );
 			$recaptcha_type      = get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' );
+			$recaptcha_type      = get_option( 'user_registration_login_options_configured_captcha_type', $recaptcha_type );
 			$invisible_recaptcha = ur_option_checked( 'user_registration_captcha_setting_invisible_recaptcha_v2', false );
 
 			$login_data = array(
@@ -6689,4 +6696,14 @@ if ( ! function_exists( 'ur_get_captcha_integrations' ) ) {
 }
 
 
-add_filter("user_registration_lost_password_options_enable_recaptcha", function(){ return 'yes'; });
+// add_filter("user_registration_lost_password_options_enable_recaptcha", function(){ return 'yes'; });
+
+add_action( "user_registration_form_shortcode_scripts", function( $atts ){
+	$form_id = isset( $atts['id'] ) ? $atts['id'] : 0;
+	$recaptcha_type = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_configured_captcha_type', "v2" );
+
+	add_filter( 'user_registration_params', function( $data ) use ( $recaptcha_type ) {
+		$data['recaptcha_type'] = $recaptcha_type;
+		return $data;
+	});
+}, 10, 1 );
