@@ -6699,6 +6699,7 @@ if ( ! function_exists( 'ur_get_captcha_integrations' ) ) {
 // add_filter("user_registration_lost_password_options_enable_recaptcha", function(){ return 'yes'; });
 
 add_action( "user_registration_form_shortcode_scripts", function( $atts ){
+
 	$form_id = isset( $atts['id'] ) ? $atts['id'] : 0;
 	$recaptcha_type = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_configured_captcha_type', "v2" );
 
@@ -6706,4 +6707,42 @@ add_action( "user_registration_form_shortcode_scripts", function( $atts ){
 		$data['recaptcha_type'] = $recaptcha_type;
 		return $data;
 	});
+	
 }, 10, 1 );
+
+
+add_action( 'user_registration_init', 'ur_captcha_settings_migration_script' );
+
+if ( ! function_exists( 'ur_captcha_settings_migration_script' ) ) {
+
+	/**
+	 * Update Captcha Settings for all forms and global settings.
+	 *
+	 * @since 3.3.4.
+	 */
+	function ur_captcha_settings_migration_script() {
+
+		if ( ! get_option( 'ur_captcha_settings_migrated', false ) ) {
+
+			$all_forms = ur_get_all_user_registration_form();
+			$enabled_recaptcha_type = get_option( "user_registration_captcha_setting_recaptcha_version", "v2" );
+
+			foreach ( $all_forms as $key => $value ) {
+
+				$form_id            = $key;
+
+				$form_captcha_enabled = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_recaptcha_support', false );
+				if ( $form_captcha_enabled ) {
+					update_post_meta( $form_id, 'user_registration_form_setting_configured_captcha_type', $enabled_recaptcha_type );
+				}
+			}
+
+			if ( get_option( 'user_registration_login_options_enable_recaptcha', false ) ) {
+				update_option( 'user_registration_login_options_configured_captcha_type' , $enabled_recaptcha_type );
+			}
+			update_option( 'user_registration_captcha_setting_recaptcha_enable_' . $enabled_recaptcha_type , true );
+
+			update_option( 'ur_captcha_settings_migrated', true );
+		}
+	}
+}
