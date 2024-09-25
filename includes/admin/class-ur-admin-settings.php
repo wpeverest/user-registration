@@ -197,6 +197,7 @@ class UR_Admin_Settings {
 			array(
 				'ajax_url'                 => admin_url( 'admin-ajax.php' ),
 				'user_registration_search_global_settings_nonce' => wp_create_nonce( 'user_registration_search_global_settings' ),
+				'user_registration_captcha_test_nonce' => wp_create_nonce( 'user_registration_captcha_test_nonce' ),
 				'i18n_nav_warning'         => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
 				'i18n'                     => array(
 					'captcha_success'   => esc_html__( 'Captcha Test Successful !', 'user-registration' ),
@@ -883,13 +884,6 @@ class UR_Admin_Settings {
 										$settings .= '</div>';
 
 									}
-									break;
-								case 'button':
-									$settings .= '<div class="user-registration-global-settings">';
-									$settings .= '<div class="user-registration-global-settings--field">';
-									$settings .= '<button type="button" class="button button-primary user-registration-captcha-save-settings" data-source="' . esc_attr( $value['id'] ) . '" style="' . esc_attr( $value['css'] ) . '" >' . esc_html__( 'Save', 'user-registration' ) . '</button>';
-									$settings .= '</div>';
-									$settings .= '</div>';
 									break;
 								// Default: run an action.
 								default:

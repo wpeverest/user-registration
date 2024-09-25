@@ -1588,17 +1588,17 @@ body {
 						}
 					}
 
-					#user_registration_captcha_setting_captcha_test {
+					.user_registration_captcha_setting_captcha_test {
 						.spinner {
 							visibility: visible !important;
 						}
 					}
 
-					#ur-captcha-test-container {
+					.ur-captcha-test-container {
 						min-width: 512px;
 						display: block;
 
-						#ur-captcha-notice {
+						.ur-captcha-notice {
 							padding: 8px;
 							margin: 2px;
 							border-radius: 4px;
@@ -1607,7 +1607,7 @@ body {
 							&.success {
 								background: rgba(0,255,0,0.3);
 
-								#ur-captcha-notice--icon {
+								.ur-captcha-notice--icon {
 									color: green;
 								}
 							}
@@ -1615,7 +1615,7 @@ body {
 							&.error {
 								background: rgba(255,0,0,0.3);
 
-								#ur-captcha-notice--icon {
+								.disconnect {
 									color: red;
 								}
 							}

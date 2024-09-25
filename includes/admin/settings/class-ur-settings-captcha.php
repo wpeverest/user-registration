@@ -86,32 +86,34 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 		 */
 		public function output_captcha_test( $settings, $value ) {
 
-			$active_captcha = self::get_active_captcha();
-
+			$active_captcha = self::get_active_captcha( $value );
 			if ( ! $active_captcha ) {
 				return $settings;
 			}
 
+			$captcha_type = $value['captcha_type'];
 			$test_captcha = <<<HTML
 				<div class="user-registration-global-settings">
-					<button class="button ur-button" id="user_registration_captcha_setting_captcha_test">%s<span class="spinner" style="display:none"></span></button>
+					<button class="button ur-button user_registration_captcha_setting_captcha_test" id="user_registration_captcha_setting_%s_captcha_test" data-captcha-type="%s">%s<span class="spinner" style="display:none"></span></button>
 					<div>
-						<div id="ur-captcha-test-container">
-							<div id="ur-captcha-node">%s</div>
-							<div id="ur-captcha-notice">
-								<span id="ur-captcha-notice--icon"></span>
-								<span id="ur-captcha-notice--text"></span>
+						<div class="ur-captcha-test-container" data-captcha-type="%s">
+							<div class="ur-captcha-node">%s</div>
+							<div class="ur-captcha-notice">
+								<span class="ur-captcha-notice--icon"></span>
+								<span class="ur-captcha-notice--text"></span>
 							</div>
 						</div>
 					</div>
 				</div>
 			HTML;  //phpcs:ignore;
 
-			$captcha_node = ur_get_recaptcha_node( 'login', true );
-
+			$captcha_node = ur_get_recaptcha_node( 'test_captcha', $captcha_type );
 			$test_captcha = sprintf(
 				$test_captcha,
+				$captcha_type,
+				$captcha_type,
 				__( 'Test Captcha', 'user-registration' ),
+				$captcha_type,
 				$captcha_node
 			);
 
@@ -126,8 +128,8 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 		 *
 		 * @return array or boolean
 		 */
-		public static function get_active_captcha() {
-			$captcha_type = get_option( 'user_registration_captcha_setting_recaptcha_version' );
+		public static function get_active_captcha( $value ) {
+			$captcha_type = $value['captcha_type'];
 
 			switch ( $captcha_type ) {
 				case 'v2':
@@ -296,7 +298,13 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 							'type'       => 'toggle',
 							'css'        => 'min-width: 350px;',
 							'desc_tip'   => true,
-						)
+						),
+						array(
+							'title' => __( 'Test Captcha', 'user-registration' ),
+							'id'    => 'user_registration_captcha_setting_v2_recaptcha_test',
+							'type'  => 'recaptcha_test',
+							'captcha_type'  => 'v2',
+						),
 					),
 				),
 				'v3' => array(
@@ -337,7 +345,27 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 							'class'      => '',
 							'css'        => 'min-width: 350px;',
 							'desc_tip'   => true,
-						)
+						),
+						array(
+							'title'             => __( 'Threshold score', 'user-registration' ),
+							'desc'              => esc_html__( 'reCAPTCHA v3 returns a score (1.0 is very likely a good interaction, 0.0 is very likely a bot). If the score less than or equal to this threshold.', 'user-registration' ),
+							'id'                => 'user_registration_captcha_setting_recaptcha_threshold_score_v3',
+							'type'              => 'number',
+							'custom_attributes' => array(
+								'step' => '0.1',
+								'min'  => '0.0',
+								'max'  => '1.0',
+							),
+							'default'           => '0.4',
+							'css'               => 'min-width: 350px;',
+							'desc_tip'          => true,
+						),
+						array(
+							'title' => __( 'Test Captcha', 'user-registration' ),
+							'id'    => 'user_registration_captcha_setting_v3_recaptcha_test',
+							'captcha_type'  => 'v3',
+							'type'  => 'recaptcha_test',
+						),
 					),
 				),
 				'hCaptcha' => array(
@@ -379,19 +407,11 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 							'desc_tip' => true,
 						),
 						array(
-							'title'             => __( 'Threshold score', 'user-registration' ),
-							'desc'              => esc_html__( 'reCAPTCHA v3 returns a score (1.0 is very likely a good interaction, 0.0 is very likely a bot). If the score less than or equal to this threshold.', 'user-registration' ),
-							'id'                => 'user_registration_captcha_setting_recaptcha_threshold_score_v3',
-							'type'              => 'number',
-							'custom_attributes' => array(
-								'step' => '0.1',
-								'min'  => '0.0',
-								'max'  => '1.0',
-							),
-							'default'           => '0.4',
-							'css'               => 'min-width: 350px;',
-							'desc_tip'          => true,
-						)
+							'title' => __( 'Test Captcha', 'user-registration' ),
+							'id'    => 'user_registration_captcha_setting_hcaptcha_recaptcha_test',
+							'captcha_type'  => 'hCaptcha',
+							'type'  => 'recaptcha_test',
+						),
 					),
 				),
 				'cloudflare' => array(
@@ -447,7 +467,13 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 							'class'    => '',
 							'css'      => 'min-width: 350px;',
 							'desc_tip' => true,
-						)
+						),
+						array(
+							'title' => __( 'Test Captcha', 'user-registration' ),
+							'id'    => 'user_registration_captcha_setting_cloudflare_recaptcha_test',
+							'captcha_type'  => 'cloudflare',
+							'type'  => 'recaptcha_test',
+						),
 					),
 				)
 			);

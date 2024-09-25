@@ -74,6 +74,7 @@ class UR_AJAX {
 			'search_global_settings'    => false,
 			'php_notice_dismiss'        => false,
 			'locate_form_action'        => false,
+			'captcha_test'              => false,
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -1667,6 +1668,62 @@ class UR_AJAX {
 		update_option( 'user_registration_php_deprecated_notice_prompt_count', ++$prompt_count );
 
 		return false;
+	}
+	/**
+	 * Handle Testing for Captcha Settings.
+	 *
+	 * @return bool
+	 */
+	public static function captcha_test() {
+
+		$security = isset( $_POST['security'] ) ? sanitize_text_field( wp_unslash( $_POST['security'] ) ) : '';
+		if ( '' === $security || ! wp_verify_nonce( $security, 'user_registration_captcha_test_nonce' ) ) {
+			wp_send_json_error( 'Nonce verification failed' );
+			return;
+		}
+
+		$captcha_type = isset( $_POST['captcha_type'] ) ? sanitize_text_field( wp_unslash( $_POST['captcha_type'] ) ) : '';
+		$ur_recaptcha_code = array();
+
+		$invisible_recaptcha = false;
+		if ( isset( $_POST['invisible_recaptcha'] ) ) {
+			$invisible_recaptcha = $_POST['invisible_recaptcha'];
+		}
+
+		if ( '' === $captcha_type  ) {
+			wp_send_json_error( 'Captcha Test failed' );
+			return;
+		}
+
+		if ( 'v2' === $captcha_type && 'false' == $invisible_recaptcha ) {
+			$recaptcha_site_key    = get_option( 'user_registration_captcha_setting_recaptcha_site_key' );
+			$recaptcha_site_secret = get_option( 'user_registration_captcha_setting_recaptcha_site_secret' );
+		} elseif ( 'v2' === $captcha_type && 'false' != $invisible_recaptcha ) {
+			$recaptcha_site_key    = get_option( 'user_registration_captcha_setting_recaptcha_invisible_site_key' );
+			$recaptcha_site_secret = get_option( 'user_registration_captcha_setting_recaptcha_invisible_site_secret' );
+		} elseif ( 'v3' === $captcha_type ) {
+			$recaptcha_site_key    = get_option( 'user_registration_captcha_setting_recaptcha_site_key_v3' );
+			$recaptcha_site_secret = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_v3' );
+		} elseif ( 'hCaptcha' === $captcha_type ) {
+			$recaptcha_site_key    = get_option( 'user_registration_captcha_setting_recaptcha_site_key_hcaptcha' );
+			$recaptcha_site_secret = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_hcaptcha' );
+		} elseif ( 'cloudflare' === $captcha_type ) {
+			$recaptcha_site_key = get_option( 'user_registration_captcha_setting_recaptcha_site_key_cloudflare' );
+			$theme_mod          = get_option( 'user_registration_captcha_setting_recaptcha_cloudflare_theme' );
+		}
+
+		$ur_recaptcha_code = array(
+			'site_key'          => sanitize_text_field( $recaptcha_site_key ),
+			'is_invisible'      => $invisible_recaptcha,
+			'theme_mode'        => isset( $theme_mod ) ? $theme_mod : '',
+		);
+
+
+		wp_send_json_success( array(
+			'success' => true,
+			'captcha_type' => $captcha_type,
+			'ur_recaptcha_code' => $ur_recaptcha_code,
+		) );
 	}
 }
 
