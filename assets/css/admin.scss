@@ -6040,35 +6040,126 @@ body.user-registration {
 		clear: both;
 		line-height: 28px;
 		margin-left: auto;
+
+		svg{
+			width: 18px;
+			height: 18px;
+			cursor: pointer;
+		}
+
 	}
 	.ur-form-preview-main-content{
 
 		display: flex;
+		background: #f2f2f2;
 
 		.ur-form-preview-form{
 			width: 1060px;
-			padding: 38px;
-			justify-content: center;
-			align-items: flex-start;
+			padding: 30px;
 			gap: 30px;
 			border: 1px solid $border_color;
-			border-radius: 0.5px;
-			margin:20px;
+			border-radius: 25px;
+			margin:38px;
+			background: #fff;
 
+			.ur-form-preview-title{
+				padding:24px;
+				font-size: 20px;
+				font-style: normal;
+				font-weight: 600;
+				line-height: 150%;
+				color: #414141;
+
+			}
+			.ur-form-preview-content{
+				padding:24px;
+			}
 
 		}
 
 		.ur-form-side-panel{
 			display: flex;
-			width: 380px;
+			min-width: 380px;
 			padding: 20px;
 			flex-direction: column;
-			align-items: flex-start;
 			gap: 36px;
-			align-self: stretch;
+			border: 1px solid $border_color;
+			margin-left: auto;
+			background: #fff;
+
+
+
+			.ur-from-preview-theme-toggle{
+				display: flex;
+				justify-content: space-between;
+
+				.ur-form-preview-toggle-title{
+					color: #222;
+					font-size: 16px;
+					font-style: normal;
+					font-weight: 600;
+					line-height: 150%;
+				}
+
+			}
+
+			.ur-form-preview-pro-features{
+				display: flex;
+				flex-direction: column;
+				gap: 16px;
+				margin: 0;
+
+				.ur-form-preview-sidebar__body--list-item{
+					svg{
+						height: 18px;
+						width: 18px;
+						position: relative;
+						top: 5px;
+						margin-right: 10px;
+					}
+
+				}
+			}
+		}
+		.hidden{
+			display: none;
 		}
 
 	}
+
+	.ur-small-screen-preview{
+			.ur-form-row {
+				display: -webkit-flex;
+				display: flex;
+
+				-webkit-flex-direction: column;
+				flex-direction: column;
+				.ur-form-grid{
+					width: 100% !important;
+					margin-bottom: 20px;
+					&:nth-child(1n+2) {
+						border-left: 1px solid $border_color;
+					}
+					&:last-child {
+						margin-bottom: 0;
+						border-left: 0 none;
+					}
+				}
+			}
+	}
+	.ur-form-preview-sidepanel-toggler{
+		position: absolute;
+    	width: 27px;
+    	height: 48px;
+    	top: 50%;
+    	left: calc(100% - 457px);
+
+	}
+	.inactive{
+		left: calc(100% - 27px);
+
+	}
+
 
 
 }

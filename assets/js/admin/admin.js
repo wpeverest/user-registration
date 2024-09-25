@@ -438,6 +438,45 @@ jQuery(function ($) {
 			$("#user_registration_form_setting_redirect_after_field").hide();
 		}
 	);
+	/**
+	 * View how form look with/without theme.
+	 */
+	$(document.body).on("click", ".ur-form-preview-sidepanel-toggler", function () {
+		$(".ur-form-side-panel").toggleClass("hidden");
+		$(this).toggleClass("inactive");
+	})
+
+	/**
+	 * Change form preview based on device selected.
+	 */
+	$(document.body).on("click", ".ur-form-preview-device", function () {
+
+		var device = $(this).data("device");
+		var container_wrapper = $(".ur-frontend-form");
+		var preview_form = $(".ur-form-preview-form");
+
+		$(this).parent().find("svg path").css("fill", "#383838")
+		$(this).find("path").css("fill", "#475BB2");
+
+		var isDesktop = (device === "desktop");
+    	var width = isDesktop ? "100%" : (device === "tablet" ? "768px" : "375px");
+
+		if (isDesktop) {
+        	container_wrapper.removeClass("ur-small-screen-preview");
+    	} else {
+        	container_wrapper.addClass("ur-small-screen-preview");
+    	}
+		container_wrapper.css("width", width);
+
+		preview_form.css({
+			"width": width,
+			"margin-left": isDesktop ? "" : "auto",
+			"margin-right": isDesktop ? "" : "auto"
+		});
+
+
+	})
+
 
 	/**
 	 * Hide/Show minimum password strength field on the basis of enable strong password value.
