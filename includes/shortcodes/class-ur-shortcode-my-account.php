@@ -178,17 +178,17 @@ class UR_Shortcode_My_Account {
 	 */
 	private static function my_account( $atts ) {
 		$is_disabled = get_user_meta( get_current_user_id(), 'ur_disable_users', true );
-		if($is_disabled){
+		if ( $is_disabled ) {
 			wp_logout();
-		}else{
+		} else {
 
-		ur_get_template(
-			'myaccount/my-account.php',
-			array(
-				'current_user' => get_user_by( 'id', get_current_user_id() ),
-			)
-		);
-	  	}
+			ur_get_template(
+				'myaccount/my-account.php',
+				array(
+					'current_user' => get_user_by( 'id', get_current_user_id() ),
+				)
+			);
+		}
 	}
 
 	/**
@@ -254,6 +254,7 @@ class UR_Shortcode_My_Account {
 					'profile'         => apply_filters( 'user_registration_profile_to_edit', $profile ),
 					'form_data_array' => apply_filters( 'user_registration_form_data_to_edit', $form_data_array ),
 					'row_ids'         => $form_row_ids_array,
+					'endpoint_label'  => ur_get_account_menu_items()['edit-profile'],
 				)
 			);
 		} else {
@@ -283,6 +284,7 @@ class UR_Shortcode_My_Account {
 				'user'                      => get_user_by( 'id', get_current_user_id() ),
 				'enable_strong_password'    => $enable_strong_password,
 				'minimum_password_strength' => $minimum_password_strength,
+				'endpoint_label'            => ur_get_account_menu_items()['edit-password'],
 			)
 		);
 	}

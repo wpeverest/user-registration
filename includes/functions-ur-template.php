@@ -1177,6 +1177,7 @@ if ( ! function_exists( 'user_registration_account_content' ) ) {
 
 		if ( ! empty( $wp->query_vars ) ) {
 			foreach ( $wp->query_vars as $key => $value ) {
+
 				// Ignore pagename param.
 				if ( 'pagename' === $key ) {
 					continue;
@@ -1201,6 +1202,7 @@ if ( ! function_exists( 'user_registration_account_content' ) ) {
 			'myaccount/dashboard.php',
 			array(
 				'current_user' => get_user_by( 'id', get_current_user_id() ),
+				'endpoint_label'     => ur_get_account_menu_items()['dashboard'],
 			)
 		);
 	}
@@ -1226,6 +1228,7 @@ if ( ! function_exists( 'user_registration_account_dashboard' ) ) {
 			'myaccount/dashboard.php',
 			array(
 				'current_user' => get_user_by( 'id', get_current_user_id() ),
+				'endpoint_label'     => ur_get_account_menu_items()['dashboard'],
 			)
 		);
 	}
@@ -1264,7 +1267,6 @@ function ur_logout_url( $redirect = '' ) {
 	global $post;
 	$wp_version   = '5.0';
 	$post_content = isset( $post->post_content ) ? $post->post_content : '';
-
 
 	if ( ( ur_post_content_has_shortcode( 'user_registration_login' ) || ur_post_content_has_shortcode( 'user_registration_my_account' ) ) && is_user_logged_in() ) {
 		if ( version_compare( $GLOBALS['wp_version'], $wp_version, '>=' ) ) {
@@ -1311,11 +1313,11 @@ function ur_logout_url( $redirect = '' ) {
 			} else {
 
 				$new_shortcode = wp_strip_all_tags( $block['innerHTML'] );
-				$pattern = '/\[user_registration_my_account(?:\s+redirect_url="[^"]*")?(?:\s+logout_redirect="[^"]*")?\s*\]/';
+				$pattern       = '/\[user_registration_my_account(?:\s+redirect_url="[^"]*")?(?:\s+logout_redirect="[^"]*")?\s*\]/';
 
-				preg_match($pattern, $new_shortcode, $shortcodes);
+				preg_match( $pattern, $new_shortcode, $shortcodes );
 
-				if( !empty( $shortcodes[0] ) ) {
+				if ( ! empty( $shortcodes[0] ) ) {
 					preg_match( '/' . get_shortcode_regex() . '/s', $shortcodes[0], $matches );
 					$matches_attr = isset( $matches[3] ) ? $matches[3] : '';
 					$attributes   = shortcode_parse_atts( $matches_attr );
@@ -1333,7 +1335,6 @@ function ur_logout_url( $redirect = '' ) {
 						$redirect = '' != $redirect ? ur_check_external_url( $redirect ) : ur_get_page_permalink( 'myaccount' );
 					}
 				}
-
 			}
 		}
 	}
