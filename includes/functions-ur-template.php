@@ -723,14 +723,6 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					if ( empty( $value ) && ur_string_to_bool( $default_date ) ) {
 						$value        = date_i18n( $date_format );
 						$actual_value = date_i18n( $date_format );
-					} else {
-						$value = str_replace( '/', '-', $value );
-						if ( ! strpos( $value, 'to' ) ) {
-							$value = '' !== $value ? date_i18n( $date_format, strtotime( $value ) ) : '';
-						} else {
-							$date_range = explode( 'to', $value );
-							$value      = date_i18n( $date_format, strtotime( trim( $date_range[0] ) ) ) . ' to ' . date_i18n( $date_format, strtotime( trim( $date_range[1] ) ) );
-						}
 					}
 				}
 
