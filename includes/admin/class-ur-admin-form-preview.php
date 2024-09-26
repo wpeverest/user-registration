@@ -1,8 +1,8 @@
 <?php
 /**
- * Welcome Class
+ * Preview Class
  *
- * Takes new users to Welcome Page.
+ * Takes new users to Preview Page.
  *
  * @package UserRegistration/Admin
  * @version 2.1.3
@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Welcome class.
+ * Preview class.
  */
 class UR_Admin_Form_Preview {
 
@@ -43,26 +43,24 @@ class UR_Admin_Form_Preview {
 
 		wp_register_script( 'ur-form-preview-admin-script', UR()->plugin_url() . '/assets/js/admin/admin.js', array( 'wp-element', 'wp-blocks', 'wp-editor' ), UR()->version, true );
 		wp_register_style( 'ur-form-preview-admin-style', UR()->plugin_url() . '/assets/css/admin.css', array(), UR()->version );
-		wp_register_style( 'ur-form-preview-user-style', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR()->version );
-		wp_register_style( 'ur-form-preview-user-style-screens', UR()->plugin_url() . '/assets/css/user-registration-smallscreen.css', array(), UR()->version );
+		wp_register_style( 'ur-form-preview-theme-style', UR()->plugin_url() . '/assets/css/user-registration-default.css', array(), UR()->version );
+		wp_register_style( 'ur-form-preview-default-style', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR()->version );
+		wp_register_style( 'ur-form-preview-smallscreens', UR()->plugin_url() . '/assets/css/user-registration-smallscreen.css', array(), UR()->version );
 		wp_enqueue_style( 'ur-form-preview-admin-style' );
-		wp_enqueue_style( 'ur-form-preview-user-style' );
-		wp_enqueue_style( 'ur-form-preview-user-style-screens' );
-		// wp_enqueue_script( 'ur-setup-wizard-script' );
+		wp_enqueue_style( 'ur-form-preview-smallscreens' );
+		wp_enqueue_style( 'ur-form-preview-default-style' );
+		wp_enqueue_style( 'ur-form-preview-theme-style' );
+		wp_enqueue_script( 'ur-form-preview-admin-script' );
 
-		// wp_localize_script(
-		// 	'ur-setup-wizard-script',
-		// 	'_UR_WIZARD_',
-		// 	array(
-		// 		'adminURL'            => esc_url( admin_url() ),
-		// 		'siteURL'             => esc_url( home_url( '/' ) ),
-		// 		'defaultFormURL'      => esc_url( admin_url( '/admin.php?page=add-new-registration&edit-registration=' . get_option( 'user_registration_default_form_page_id' ) ) ),
-		// 		'urRestApiNonce'      => wp_create_nonce( 'wp_rest' ),
-		// 		'onBoardIconsURL'     => esc_url( UR()->plugin_url() . '/assets/images/onboard-icons' ),
-		// 		'restURL'             => rest_url(),
-		// 		'registrationPageURL' => get_permalink( get_option( 'user_registration_registration_page_id' ) ),
-		// 	)
-		// );
+		wp_localize_script(
+			'ur-form-preview-admin-script',
+			'user_registration_form_preview',
+			array(
+				'ajax_url' => admin_url( 'admin-ajax.php' ),
+				'form_preview_nonce'    => wp_create_nonce( 'ur_form_preview_nonce' ),
+				'pro_upgrade_link' => 'https://wpeverest.com/wordpress-plugins/user-registration/?utm_source=plugin&utm_medium=form-preview&utm_campaign=pro-upgrade',
+			)
+		);
 
 		if ( ! empty( $_GET['page'] ) && ! empty( $_GET['form_id'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification
 
@@ -223,9 +221,6 @@ class UR_Admin_Form_Preview {
 
 			echo $html;
 
-			// add_filter( 'the_content', array( $this, 'form_preview_content' ) );
-			// add_filter( 'get_the_excerpt', array( $this, 'form_preview_content' ) );
-			// add_filter( 'post_thumbnail_html', '__return_empty_string' );
 
 		}
 	}
@@ -245,13 +240,23 @@ class UR_Admin_Form_Preview {
 			esc_html__( 'SMS Notifications', 'user-registration' ),
 			esc_html__( 'Calculated Fields', 'user-registration' ),
 		);
-
+		$is_theme_style = get_post_meta( $_GET['form_id'],'user_registration_enable_theme_style', 'no' );
+		if ( 'no' === $is_theme_style || empty( $is_theme_style ) ) {
+			$checked = '';
+			$data_theme = 'default';
+		} else {
+			$checked = 'checked';
+			$data_theme = 'theme_style';
+		}
 		$html ='';
 		$html .= '<div class="ur-from-preview-theme-toggle">';
 		$html .= '<label class="ur-form-preview-toggle-title">Apply Theme Style</label>';
-		$html .= '<input type="checkbox" class="ur-form-preview-theme-toggle-checkbox" id="ur_toggle_form_preview_theme">';
+		$html .= '<input type="checkbox" class="ur-form-preview-theme-toggle-checkbox" id="ur_toggle_form_preview_theme" ' . $checked . '>';
 		$html .= '</div>';
-
+		$html .= '<div class="ur-form-preview-save hidden" id="ur-form-save" data-theme="default" data-id="'.$_GET['form_id'].'">';
+		$html .= '<img src="' . esc_url( UR()->plugin_url() . '/assets/images/save-frame.svg' ) . '" alt="Save">';
+		$html .= '<div class="ur-form-preview-save-title">Save</div>';
+		$html .= '</div>';
 		$html .= '<div class="ur-form-preview-pro-features">';
 		$html .= '<h3 class="ur-form-preview-pro-features-title">Our Pro Features</h3>';
 		foreach ( $pro_features as $list ) {
@@ -265,7 +270,13 @@ class UR_Admin_Form_Preview {
 			$html .= wp_kses_post( $list );
 			$html .= '</span>';
 			$html .= '</div>';
+
 		}
+		$html .= '<div class="ur-form-preview-upgrade  id="ur-form-save" data-theme="default" ">';
+		$html .= '<img src="' . esc_url( UR()->plugin_url() . '/assets/images/upgrade-icon.svg' ) . '" alt="Save">';
+		$html .= '<div class="ur-form-preview-upgrade-title">Upgrade to Pro</div>';
+		$html .= '</div>';
+
 		echo $html;
 
 		?>

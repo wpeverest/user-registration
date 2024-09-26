@@ -439,7 +439,7 @@ jQuery(function ($) {
 		}
 	);
 	/**
-	 * View how form look with/without theme.
+	 * Toggle sidepanel.
 	 */
 	$(document.body).on("click", ".ur-form-preview-sidepanel-toggler", function () {
 		$(".ur-form-side-panel").toggleClass("hidden");
@@ -476,6 +476,73 @@ jQuery(function ($) {
 
 
 	})
+
+	/**
+	 * Save form preview settings.
+	 */
+	$(document.body).on("click", "#ur-form-save", function () {
+		var form_id = $(this).data( "id" );
+		var form_theme = $( this ).data( 'theme' );
+
+		$.ajax({
+			url: user_registration_form_preview.ajax_url,
+			type: "POST",
+			data: {
+				action: "user_registration_form_preview_save",
+				id: form_id,
+				theme: form_theme,
+				security: user_registration_form_preview.form_preview_nonce,
+			},
+			beforeSend: function () {
+				var spinner =
+					'<span class="ur-spinner is-active" style="margin-left: 20px"></span>';
+				$(".ur-form-preview-save").append(spinner);
+			},
+			complete: function (response) {
+				$(".ur-spinner").remove();
+				$('.ur-form-preview-save').find('img').remove()
+				if (response.responseJSON.success === true) {
+					$(".ur-form-preview-save-title").html(  response.responseJSON.data.message);
+
+				} else {
+					$(".ur-form-preview-save-title").html(  response.responseJSON.data.message);
+				}
+				setTimeout(function() {
+					$(".ur-form-preview-save").toggleClass('hidden');
+				}, 3000);
+
+			}
+
+		})
+	})
+
+	$(document).ready(function () {
+		$('#ur_toggle_form_preview_theme').is(":checked") ? $('link#ur-form-preview-theme-style-css').prop('disabled', true) : $('link#ur-form-preview-default-style-css').prop('disabled', false);
+
+	})
+
+	$(document.body).on("click", ".ur-form-preview-upgrade", function () {
+		window.open(user_registration_form_preview.pro_upgrade_link, "_blank");
+	})
+
+	/**
+	 * Save form applying theme style.
+	 */
+	$(document.body).on("change", "#ur_toggle_form_preview_theme", function () {
+		$('.ur-form-preview-save').toggleClass("hidden");
+		if($(this).is(":checked")) {
+			$('link#ur-form-preview-theme-style-css').prop('disabled', false);
+			$('link#ur-form-preview-default-style-css').prop('disabled', true);
+		}else{
+			$('link#ur-form-preview-theme-style-css').prop('disabled', true);
+			$('link#ur-form-preview-default-style-css').prop('disabled', false);
+		}
+
+	})
+
+
+
+
 
 
 	/**
