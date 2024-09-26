@@ -1,0 +1,773 @@
+/**
+* user-registration.scss
+* Governs the general look and feel of User Registration sections of stores using themes that do not
+* integrate with User Registration specifically.
+*/
+
+/**
+* Imports
+*/
+@import "variables/variables";
+@import "mixins/mixins";
+@import "fonts";
+
+// Components
+@import "components/button", "components/modal";
+
+
+/**
+* Utility classes
+*/
+.clear {
+	clear: both;
+}
+
+.user-registration-page .select2-dropdown,
+.user-registration-swal2-container {
+	z-index: 9999;
+}
+
+.user-registration-page .select2-dropdown {
+	padding: 0px !important;
+}
+
+
+.ur-timepicker-range {
+    display: flex;
+}
+
+.timepicker-start {
+    margin-right: 1rem;
+}
+/**
+* Main User Registration styles
+*/
+.user-registration-message,
+.user-registration-error,
+.user-registration-coupon-error,
+.user-registration-info {
+	display: block;
+	margin: 0 0 10px;
+	padding: 10px 15px;
+	background-color: lighten($primary_color, 47%);
+	color: $color_gray_one;
+	border-top: 3px solid $primary_color;
+	list-style: none outside;
+	@include clearfix();
+	width: auto;
+	word-wrap: break-word;
+	line-height: 1.25;
+	text-transform: none;
+	font-size: 14px;
+
+	&::before {
+		content: "\f348";
+		display: inline-block;
+		vertical-align: middle;
+		font-family: "Dashicons";
+		font-size: calc(100% + 10px);
+		margin-right: 0.875rem;
+	}
+
+	ul {
+		margin: 0 !important;
+		padding: 0 !important;
+		background-color: transparent !important;
+	}
+
+	.button {
+		float: right;
+	}
+
+	li {
+		list-style: none outside !important; // Required for default theme compatibility
+		padding-left: 0 !important; // Required for default theme compatibility
+		margin-left: 0 !important; // Required for default theme compatibility
+	}
+
+	.message {
+		margin: 0;
+		padding: 0;
+	}
+}
+
+.user-registration-message {
+	border-top-color: #8fae1b;
+	background: rgba(#8fae1b, 0.1);
+	color: darken(#8fae1b, 15%);
+}
+
+.user-registration-info {
+	color: #1e85be;
+	border-top-color: #1e85be;
+}
+
+.user-registration-error {
+	border-top-color: $red;
+	background: rgba($red, 0.1);
+	color: darken($red, 15%);
+
+	&::before {
+		content: "\f534";
+	}
+}
+.user-registration-coupon-error {
+	border-top-color: $red;
+	background: rgba($red, 0.1);
+	color: darken($red, 15%);
+	margin-top: 10px;
+}
+
+input.ur-input-border-green, textarea.ur-input-border-green{
+	border-color: #1EA71B !important;
+}
+input.ur-input-border-red, textarea.ur-input-border-red{
+	border-color: $red !important;
+}
+
+.ur-frontend-form {
+	//For borders around the form
+	margin-bottom: 30px;
+	border: 1px solid $border_color;
+	padding: 20px;
+	box-sizing: border-box;
+
+	//For login form
+	//ToDO: Need to remove this class
+	&.login {
+		margin: 0;
+		padding: 10px;
+		box-shadow: none;
+		background: none;
+
+		input[name="rememberme"]#rememberme {
+			vertical-align: middle;
+		}
+	}
+
+	&.login-registration {
+		margin: 0;
+		border: none;
+		padding: 0;
+	}
+
+	.register {
+		#node_recaptcha_register {
+			padding: 0 10px;
+		}
+	}
+
+	#ur-recaptcha-node {
+		margin-top: 10px;
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
+	.description {
+		display: block;
+		font-size: 14px;
+		line-height: 1.5;
+	}
+
+	.ur-form-row {
+		display: flex;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+
+		.ur-form-grid {
+			flex: 1;
+			padding: 0 10px;
+
+			&:nth-child(1n + 2) {
+				border-left: 0 none;
+			}
+
+			// .ur-field-item {
+			// 	margin-bottom: 20px;
+			// 	&.field-multiple_choice,
+			// 	&.field-subscription_plan,
+			// 	&.field-checkbox,
+			// 	&.field-radio {
+			// 		ul {
+			// 			margin: 0;
+			// 			list-style: none;
+
+			// 			li {
+			// 				margin-left: 0;
+			// 				line-height: 1.3;
+			// 				vertical-align: middle;
+			// 				margin-bottom: 10px;
+
+			// 				input,
+			// 				label {
+			// 					display: inline-block;
+			// 					vertical-align: inherit;
+			// 				}
+
+			// 				input {
+			// 					&[type="checkbox"],
+			// 					&[type="radio"] {
+			// 						margin-top: 2px;
+			// 					}
+			// 				}
+
+			// 				label {
+			// 					display: inline;
+			// 				}
+			// 			}
+			// 		}
+			// 	}
+
+			// 	&:last-child {
+			// 		margin-bottom: 0;
+			// 	}
+
+			// 	.form-row {
+			// 		display: block;
+			// 	}
+			// }
+			input{
+				border-style: solid;
+			}
+			input[type="text"],
+			input[type="email"],
+			input[type="url"],
+			input[type="password"],
+			input[type="date"],
+			input[type="number"],
+			input[type="timepicker"],
+			input[type="phone"],
+			textarea,
+			select,
+
+			.__PrivateStripeElement {
+				width: 100%;
+				padding: 4px 8px;
+				border-radius: 0;
+				min-height: 36px;
+				margin-bottom: 10px;
+				line-height: 1.5;
+
+				&::placeholder {
+					color: #ddd;
+				}
+			}
+
+			input[type="password"] {
+				display: inline;
+				margin-bottom: 0px;
+			}
+
+			.StripeElement {
+				padding: 4px 8px;
+				border: 1px solid $border_color;
+
+				.__PrivateStripeElement {
+					iframe {
+						// height: 20px !important;
+						position: absolute;
+						top: 50%;
+						transform: translateY(-50%);
+					}
+				}
+			}
+
+			input[type="checkbox"],
+			input[type="radio"] {
+				font-size: 12px;
+				display: inline-block;
+				vertical-align: middle;
+				margin-right: 5px;
+				margin-left: 20px;
+
+				&:first-child {
+					margin-left: 0;
+				}
+			}
+
+			input[type="radio"]:focus,
+			input[type="text"]:focus,
+			input[type="email"]:focus,
+			input[type="url"]:focus,
+			input[type="password"]:focus,
+			textarea:focus,
+			select:focus,
+			button:focus {
+				outline: 0;
+			}
+
+			input[readonly],
+			select[readonly],
+			textarea[readonly] {
+				cursor: auto;
+			}
+
+			select {
+				-webkit-appearance: none;
+				background: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E")
+					no-repeat right 5px top 55%;
+			}
+
+			legend,
+			label {
+				display: block;
+				font-size: 14px;
+				margin-bottom: 10px;
+				margin-top: 10px;
+
+				.required {
+					text-decoration: none;
+					border: none;
+					color: $red;
+				}
+
+				&.ur-label {
+					font-weight: bold;
+				}
+			}
+
+			textarea {
+				padding: 10px;
+				height: 100px;
+				resize: none;
+				padding: 5px 20px;
+			}
+
+			.hide_show_password {
+				input[type="password"] {
+					padding-right: 50px;
+				}
+
+				.password-input-group {
+					position: relative;
+
+					.password_preview {
+						color: $color_gray_two;
+						position: absolute;
+						top: 50%;
+						right: 15px;
+						transform: translateY(-50%);
+
+						&.dashicons {
+							&.dashicons-hidden {
+								opacity: 0.6;
+
+								&:hover {
+									opacity: 1;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		.select2-container {
+			.select2-selection--multiple {
+				border: 1px solid $color_gray_five;
+
+				.select2-selection__rendered {
+					display: block;
+
+					li {
+						&:last-child {
+							margin-left: 0;
+						}
+					}
+				}
+
+				.select2-selection__choice {
+					margin: 5px;
+				}
+
+				.select2-search--inline {
+					input[type="text"] {
+						margin: 5px;
+						height: inherit;
+					}
+				}
+			}
+		}
+	}
+
+	button,
+	input[type="submit"],
+	button[type="submit"] {
+		padding: 10px 20px;
+		line-height: 1.5;
+		text-align: center;
+		word-break: break-word;
+		white-space: normal;
+		border: none;
+		cursor: pointer;
+		transition: 0.35s all ease-out;
+	}
+
+	input[type="submit"] {
+		float: right;
+	}
+
+	.ur-button-container {
+		display: flex;
+		margin-top: 10px;
+		padding: 0 10px;
+
+		.ur-submit-button {
+			margin-left: auto;
+		}
+	}
+
+	.user-registration-submit-Button {
+		float: right;
+	}
+
+	.ur-submit-button {
+		margin-right: 10px;
+		margin-bottom: 0;
+	}
+
+	label {
+		abbr.required {
+			text-decoration: none;
+			border: none;
+			color: $red;
+		}
+	}
+
+	&.ur-frontend-form--bordered {
+		form {
+			.ur-form-row {
+				.ur-form-grid {
+					input[type="text"],
+					input[type="email"],
+					input[type="url"],
+					input[type="password"],
+					input[type="date"],
+					input[type="number"],
+					textarea,
+					select {
+						border: none;
+						border-bottom: 1px solid $border_color_input;
+						outline: none;
+						transition: all 0.35s;
+						padding: 10px 15px;
+						background: $input_background_color;
+						color: $label_color;
+						height: 45px;
+					}
+
+					legend,
+					label {
+						margin-left: 5px;
+						color: $label_color;
+					}
+
+					textarea {
+						height: 100px;
+					}
+
+					.hide_show_password {
+						input[type="password"] {
+							padding-right: 50px;
+						}
+					}
+				}
+			}
+
+			input[type="submit"],
+			button[type="submit"],
+			button.user-registration-multi-part-nav-prev,
+			button.user-registration-multi-part-nav-next {
+				background: $input_background_color;
+				border: 1px solid $border_color;
+				color: $label_color;
+				border-radius: 0;
+
+				&:hover {
+					background: $primary_color;
+					color: $white;
+					border-color: $primary_color;
+				}
+			}
+		}
+	}
+
+	&.ur-frontend-form--flat {
+		background: $color_sortable_background;
+		border: none transparent;
+
+		form {
+			.ur-form-row {
+				.ur-form-grid {
+					.ur-field-item,
+					.form-row {
+						margin-bottom: 0;
+					}
+
+					input[type="text"],
+					input[type="email"],
+					input[type="url"],
+					input[type="password"],
+					input[type="date"],
+					input[type="number"],
+					textarea,
+					select {
+						border: none;
+						outline: none;
+						padding: 10px 15px;
+						background: $white;
+						color: $label_color;
+						margin-bottom: 10px;
+						height: 45px;
+
+						&:focus {
+							box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.05);
+						}
+					}
+
+					select {
+						margin-bottom: 10px;
+					}
+
+					legend,
+					label {
+						color: $label_color;
+					}
+
+					textarea {
+						height: 100px;
+					}
+
+					.hide_show_password {
+						input[type="password"] {
+							padding-right: 50px;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	&.ur-frontend-form--rounded {
+		form {
+			.ur-form-row {
+				.ur-form-grid {
+					input[type="text"],
+					input[type="email"],
+					input[type="url"],
+					input[type="password"],
+					input[type="date"],
+					input[type="number"],
+					textarea,
+					select {
+						border: 1px solid $rounded-color;
+						border-radius: 25px;
+						outline: none;
+						transition: all 0.35s;
+						padding: 10px 15px;
+						background: $white;
+						color: $label_color;
+						height: 45px;
+					}
+
+					button[type="button"] {
+						border-radius: 25px;
+					}
+
+					legend,
+					label {
+						margin-left: 5px;
+						color: $label_color;
+					}
+
+					textarea {
+						height: 100px;
+					}
+
+					.hide_show_password {
+						input[type="password"] {
+							padding-right: 50px;
+						}
+					}
+				}
+			}
+
+			input[type="submit"],
+			button[type="submit"],
+			button.user-registration-multi-part-nav-prev,
+			button.user-registration-multi-part-nav-next {
+				border: 0 none;
+				color: $white;
+				border-radius: 25px;
+				float: none;
+				display: block;
+				padding: 15px 25px;
+			}
+		}
+
+		&.ur-frontend-form--rounded-edge {
+			form {
+				.ur-form-row {
+					.ur-form-grid {
+						input[type="text"],
+						input[type="email"],
+						input[type="url"],
+						input[type="password"],
+						input[type="date"],
+						input[type="number"],
+						textarea,
+						select {
+							border-radius: 2px;
+						}
+
+						.hide_show_password {
+							input[type="password"] {
+								padding-right: 50px;
+							}
+						}
+
+						button[type="button"] {
+							border-radius: 2px;
+						}
+					}
+				}
+
+				input[type="submit"],
+				button[type="submit"],
+				button.user-registration-multi-part-nav-prev,
+				button.user-registration-multi-part-nav-next {
+					border-radius: 2px;
+				}
+			}
+		}
+	}
+
+	#ur-submit-message-node {
+		margin: 20px 0 0 0;
+
+		&.ur-error {
+			background: rgba(206, 0, 0, 0.1);
+		}
+
+		&.ur-message.message {
+			background: rgba(143, 174, 27, 0.2);
+		}
+	}
+}
+
+#user-registration {
+	background-color: $white;
+	margin: 30px 0;
+
+	&.user-registration,
+	* {
+		box-sizing: border-box;
+	}
+
+	p {
+		color: #333333;
+	}
+
+	.user-registration-tips {
+		font-size: 12px;
+		color: $color_gray_three;
+		margin-bottom: 0;
+	}
+
+
+
+}
+
+/**
+* Password strength meter
+*/
+.user-registration-password-strength {
+	text-align: center;
+	font-weight: 600;
+	padding: 3px 0.5em;
+	font-size: 1em;
+
+	&.strong {
+		background-color: #c1e1b9;
+		border-color: #83c373;
+	}
+
+	&.short {
+		background-color: #f1adad;
+		border-color: #e35b5b;
+	}
+
+	&.bad {
+		background-color: #fbc5a9;
+		border-color: #f78b53;
+	}
+
+	&.good {
+		background-color: #ffe399;
+		border-color: #ffc733;
+	}
+}
+
+.user-registration-password-hint {
+	margin: 0.5em 0 0;
+	display: block;
+}
+
+.ur-front-spinner {
+	background: url("../images/wpspin_light-2x.gif") no-repeat;
+	background-size: 16px 16px;
+	display: block;
+	opacity: 0.7;
+	filter: alpha(opacity=70);
+	width: 16px;
+	height: 16px;
+	margin-left: -40px;
+	float: left;
+}
+
+.ur-hidden {
+	display: none;
+}
+
+.button-check-all {
+	display: inline-block;
+	text-decoration: none;
+	font-size: 13px;
+	line-height: 2.15384615;
+	min-height: 30px;
+	margin: 0;
+	padding: 0 10px;
+	cursor: pointer;
+	border-width: 1px;
+	border-style: solid;
+	-webkit-appearance: none;
+	border-radius: 3px;
+	white-space: nowrap;
+	box-sizing: border-box;
+}
+
+.ur-form-row {
+	margin-bottom: 24px;
+
+	.flatpickr-input {
+		padding-left: 32px !important;
+	}
+	.without_icon {
+		padding-left: 10px !important;
+	}
+	span.input-wrapper {
+		position: relative;
+
+		.ur-icon {
+			position: absolute;
+			top: 50%;
+			padding: 8px;
+			left: 0;
+			transform: translateY(-50%);
+		}
+	}
+}

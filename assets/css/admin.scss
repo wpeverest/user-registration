@@ -5939,6 +5939,258 @@ body.user-registration {
 	}
 }
 
+.ur-multi-device-form-preview {
+    #nav-menu-header {
+		padding: 12px;
+		display: flex;
+		align-items: center;
+		position: relative;
+		border-color: $border_color;
+		background-color: $white;
+		z-index: 9;
+
+		.ur-form-title {
+			font-weight: $semi_bold;
+			font-size: 16px;
+			line-height: 150%;
+			color: #414141;
+			padding-left: $spacing_18px;
+			padding-right: $spacing_8px;
+		}
+
+
+		.ur-brand-logo {
+			border-right: 1px solid $border_color;
+
+			img {
+				width: 32px;
+				height: 32px;
+				margin-right: 8px;
+				display: flex;
+			}
+			a {
+				text-decoration: none;
+				border: none;
+			}
+			a:focus {
+				outline: none;
+				box-shadow: none;
+			}
+		}
+
+		&::before,
+		&::after {
+			content: "";
+			display: flex;
+			position: absolute;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: $white;
+		}
+
+		&::before {
+			top: 0;
+			z-index: -1;
+		}
+
+		&::after {
+			height: 10px;
+			box-shadow: 0px 4px 8px transparentize($gray_base, 0.92);
+			z-index: -2;
+		}
+
+    }
+	.major-publishing-actions {
+		clear: both;
+		line-height: 28px;
+		margin-left: auto;
+
+		.publishing-action {
+			text-align: right;
+			float: right;
+
+			input {
+				&.code {
+					width: 280px;
+					height: 33px;
+					padding: 0 $spacing_6px;
+					margin: 0;
+					border-color: $grey-50;
+					background: $blue-25;
+					border-radius: 3px 0 0 3px;
+				}
+			}
+		}
+
+
+		#copy-shortcode {
+			margin-left: -5px;
+			border-radius: 0 4px 4px 0;
+			background: $blue-50 !important;
+			border-color: $grey-50 !important;
+
+			svg {
+				width: 18px;
+				height: 18px;
+			}
+		}
+	}
+	.ur-form-preview-devices{
+		clear: both;
+		line-height: 28px;
+		margin-left: auto;
+
+		svg{
+			width: 18px;
+			height: 18px;
+			cursor: pointer;
+		}
+
+	}
+	.ur-form-preview-main-content{
+
+		display: flex;
+		background: #f2f2f2;
+
+		.ur-form-preview-form{
+			width: 1060px;
+			padding: 30px;
+			gap: 30px;
+			border: 1px solid $border_color;
+			border-radius: 25px;
+			margin:38px;
+			background: #fff;
+
+			.ur-form-preview-title{
+				padding:24px;
+				font-size: 20px;
+				font-style: normal;
+				font-weight: 600;
+				line-height: 150%;
+				color: #414141;
+
+			}
+			.ur-form-preview-content{
+				padding:24px;
+			}
+
+		}
+
+		.ur-form-side-panel{
+			display: flex;
+			min-width: 380px;
+			padding: 20px;
+			flex-direction: column;
+			gap: 36px;
+			border: 1px solid $border_color;
+			margin-left: auto;
+			background: #fff;
+
+			.hidden{
+				display:none !important;
+			}
+			.ur-form-preview-save,
+			.ur-form-preview-upgrade {
+				background: #475BB2;
+    			width: max-content;
+    			padding: 10px;
+    			margin-bottom: 0px;
+    			display: flex;
+    			margin-left: auto;
+    			margin-right: auto;
+				gap: 8px;
+				border-radius: 4px;
+				border: 1px solid #475BB2;
+				cursor: pointer;
+
+				.ur-form-preview-save-title{
+					font-size: 14px;
+					font-style: normal;
+					font-weight: 500;
+					line-height: 150%;
+				}
+
+			}
+
+			.ur-from-preview-theme-toggle{
+				display: flex;
+				justify-content: space-between;
+
+				.ur-form-preview-toggle-title{
+					color: #222;
+					font-size: 16px;
+					font-style: normal;
+					font-weight: 600;
+					line-height: 150%;
+				}
+
+			}
+
+			.ur-form-preview-pro-features{
+				display: flex;
+				flex-direction: column;
+				gap: 16px;
+				margin: 0;
+
+				.ur-form-preview-sidebar__body--list-item{
+					svg{
+						height: 18px;
+						width: 18px;
+						position: relative;
+						top: 5px;
+						margin-right: 10px;
+					}
+
+				}
+			}
+		}
+		.hidden{
+			display: none;
+		}
+
+	}
+
+	.ur-small-screen-preview{
+			.ur-form-row {
+				display: -webkit-flex;
+				display: flex;
+
+				-webkit-flex-direction: column;
+				flex-direction: column;
+				.ur-form-grid{
+					width: 100% !important;
+					margin-bottom: 20px;
+					&:nth-child(1n+2) {
+						border-left: 1px solid $border_color;
+					}
+					&:last-child {
+						margin-bottom: 0;
+						border-left: 0 none;
+					}
+				}
+			}
+	}
+	.ur-form-preview-sidepanel-toggler{
+		position: absolute;
+    	width: 27px;
+    	height: 48px;
+    	top: 50%;
+    	left: calc(100% - 457px);
+
+	}
+	.inactive{
+		left: calc(100% - 27px);
+
+	}
+
+
+
+}
+
+
+
+
 body {
 	&.ur-settings-sidebar-hidden {
 		.user-registration-settings-sidebar-container {

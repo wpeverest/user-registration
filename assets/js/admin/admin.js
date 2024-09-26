@@ -438,6 +438,113 @@ jQuery(function ($) {
 			$("#user_registration_form_setting_redirect_after_field").hide();
 		}
 	);
+	/**
+	 * Toggle sidepanel.
+	 */
+	$(document.body).on("click", ".ur-form-preview-sidepanel-toggler", function () {
+		$(".ur-form-side-panel").toggleClass("hidden");
+		$(this).toggleClass("inactive");
+	})
+
+	/**
+	 * Change form preview based on device selected.
+	 */
+	$(document.body).on("click", ".ur-form-preview-device", function () {
+
+		var device = $(this).data("device");
+		var container_wrapper = $(".ur-frontend-form");
+		var preview_form = $(".ur-form-preview-form");
+
+		$(this).parent().find("svg path").css("fill", "#383838")
+		$(this).find("path").css("fill", "#475BB2");
+
+		var isDesktop = (device === "desktop");
+    	var width = isDesktop ? "100%" : (device === "tablet" ? "768px" : "375px");
+
+		if (isDesktop) {
+        	container_wrapper.removeClass("ur-small-screen-preview");
+    	} else {
+        	container_wrapper.addClass("ur-small-screen-preview");
+    	}
+		container_wrapper.css("width", width);
+
+		preview_form.css({
+			"width": width,
+			"margin-left": isDesktop ? "" : "auto",
+			"margin-right": isDesktop ? "" : "auto"
+		});
+
+
+	})
+
+	/**
+	 * Save form preview settings.
+	 */
+	$(document.body).on("click", "#ur-form-save", function () {
+		var form_id = $(this).data( "id" );
+		var form_theme = $( this ).data( 'theme' );
+
+		$.ajax({
+			url: user_registration_form_preview.ajax_url,
+			type: "POST",
+			data: {
+				action: "user_registration_form_preview_save",
+				id: form_id,
+				theme: form_theme,
+				security: user_registration_form_preview.form_preview_nonce,
+			},
+			beforeSend: function () {
+				var spinner =
+					'<span class="ur-spinner is-active" style="margin-left: 20px"></span>';
+				$(".ur-form-preview-save").append(spinner);
+			},
+			complete: function (response) {
+				$(".ur-spinner").remove();
+				$('.ur-form-preview-save').find('img').remove()
+				if (response.responseJSON.success === true) {
+					$(".ur-form-preview-save-title").html(  response.responseJSON.data.message);
+
+				} else {
+					$(".ur-form-preview-save-title").html(  response.responseJSON.data.message);
+				}
+				setTimeout(function() {
+					$(".ur-form-preview-save").toggleClass('hidden');
+				}, 3000);
+
+			}
+
+		})
+	})
+
+	$(document).ready(function () {
+		// $('#ur_toggle_form_preview_theme').is(":checked") ? $('link#ur-form-preview-theme-style-css').prop('disabled', true) : $('link#ur-form-preview-default-style-css').prop('disabled', false);
+			$('#ur_toggle_form_preview_theme').is(":checked") ? $('.ur-frontend-form').addClass("ur-frontend-form-preview") : $('.ur-frontend-form').removeClass("ur-frontend-form-preview");
+	})
+
+	$(document.body).on("click", ".ur-form-preview-upgrade", function () {
+		window.open(user_registration_form_preview.pro_upgrade_link, "_blank");
+	})
+
+	/**
+	 * Save form applying theme style.
+	 */
+	$(document.body).on("change", "#ur_toggle_form_preview_theme", function () {
+		$('.ur-form-preview-save').toggleClass("hidden");
+		$('.ur-frontend-form').toggleClass("ur-frontend-form-preview");
+		// if($(this).is(":checked")) {
+		// 	$('link#ur-form-preview-theme-style-css').prop('disabled', false);
+		// 	$('link#ur-form-preview-default-style-css').prop('disabled', true);
+		// }else{
+		// 	$('link#ur-form-preview-theme-style-css').prop('disabled', true);
+		// 	$('link#ur-form-preview-default-style-css').prop('disabled', false);
+		// }
+
+	})
+
+
+
+
+
 
 	/**
 	 * Hide/Show minimum password strength field on the basis of enable strong password value.

@@ -139,8 +139,12 @@ class UR_Admin {
 				case 'user-registration-dashboard':
 					include_once __DIR__ . '/class-ur-admin-dashboard.php';
 					break;
+				case 'ur_form_preview':
+					include_once __DIR__ . '/class-ur-admin-form-preview.php';
+					break;
 			}
 		}
+		
 	}
 
 	/**
