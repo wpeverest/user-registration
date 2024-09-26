@@ -43,13 +43,13 @@ class UR_Admin_Form_Preview {
 
 		wp_register_script( 'ur-form-preview-admin-script', UR()->plugin_url() . '/assets/js/admin/admin.js', array( 'wp-element', 'wp-blocks', 'wp-editor' ), UR()->version, true );
 		wp_register_style( 'ur-form-preview-admin-style', UR()->plugin_url() . '/assets/css/admin.css', array(), UR()->version );
-		wp_register_style( 'ur-form-preview-theme-style', UR()->plugin_url() . '/assets/css/user-registration-default.css', array(), UR()->version );
+		// wp_register_style( 'ur-form-preview-theme-style', UR()->plugin_url() . '/assets/css/user-registration-default.css', array(), UR()->version );
 		wp_register_style( 'ur-form-preview-default-style', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR()->version );
 		wp_register_style( 'ur-form-preview-smallscreens', UR()->plugin_url() . '/assets/css/user-registration-smallscreen.css', array(), UR()->version );
 		wp_enqueue_style( 'ur-form-preview-admin-style' );
 		wp_enqueue_style( 'ur-form-preview-smallscreens' );
 		wp_enqueue_style( 'ur-form-preview-default-style' );
-		wp_enqueue_style( 'ur-form-preview-theme-style' );
+		// wp_enqueue_style( 'ur-form-preview-theme-style' );
 		wp_enqueue_script( 'ur-form-preview-admin-script' );
 
 		wp_localize_script(
