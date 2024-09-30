@@ -4,8 +4,6 @@
 	&.vertical {
 		display: flex;
 		flex-wrap: wrap;
-		padding: $spacing_12px;
-		border-radius: $border_radius_16;
 
 		.user-registration-error, .user-registration-message {
 			float: none;
@@ -13,42 +11,13 @@
 		}
 
 		.user-registration-MyAccount-navigation {
-			border-radius: $border_radius_10;
-			background: #F8F8FA;
-			max-width: 260px;
-			width: 100%;
-			padding: $spacing_26px $spacing_20px $spacing_16px;
-			border: 0;
-
 			ul {
 				flex-direction: column;
 				flex-wrap: nowrap;
-				gap: $spacing_4px;
 
 				.user-registration-MyAccount-navigation-link {
-					transition: all .3s;
-
-					a {
-						padding: $spacing_12px $spacing_12px $spacing_12px $spacing_24px;
-						border-radius: $border_radius_4;
-						border-left: 3px solid transparent;						
-						color: #4E4E4E;
-						font-size: 14px;
-						font-weight: 600;
-						line-height: 22px;
-					}
-
-					&:hover {
-						a {
-							background: $blue-50;
-							color: $primary_color;
-						}
-					}
-
 					&.is-active {
 						a {
-							color: $primary_color;
-							background: $blue-50;
 							border-color: $primary_color;
 						}
 					}
@@ -57,18 +26,7 @@
 		}
 
 		.user-registration-MyAccount-content {
-			flex: 1;
-
-			.user-registration-profile-header {
-				display: flex;
-				flex-wrap: wrap;
-				align-items: center;
-				flex-direction: column;
-
-				.user-registration-img-container {
-					margin: auto;
-				}
-			}
+			flex: 1;			
 		}
 	}
 
@@ -146,8 +104,6 @@
 	}
 
 	.user-registration-MyAccount-content {
-		padding: $spacing_24px $spacing_20px 52px 36px;
-
 		@media (max-width: 991px) {
 			padding: 36px 30px;
 		}
@@ -736,5 +692,270 @@
 		padding: $spacing_4px $spacing_8px;
 		border-radius: $border_radius_4;
 		border-color: $grey-400;
+	}
+}
+
+// My Account Page Design Revamp CSS
+#user-registration {
+	&.vertical,
+	&.horizontal {
+		border-radius: $border_radius_16;
+		background: $grey-0;
+		box-shadow: 0px 6px 26px 0px rgba(10, 10, 10, 0.08);
+
+		.user-registration-MyAccount-content {
+			&__body {
+				h2 {
+					margin-bottom: $spacing_20px;
+					color: $grey-400;
+					font-size: 22px;
+					line-height: 32px;
+				}
+
+				.user-registration-profile-header {
+					display: flex;
+					flex-wrap: wrap;
+					align-items: center;
+					flex-direction: column;
+					margin-bottom: $spacing_20px;
+	
+					.user-registration-img-container {
+						margin: auto;
+					}
+				}
+
+				p {
+					margin-bottom: $spacing_8px;
+
+					a {
+						font-weight: $medium;
+						color: $primary_color;
+					}
+				}
+
+				.ur-frontend-form {
+					&.login {
+						.ur-form-row {
+							.ur-form-grid {
+								padding: 0;
+
+								fieldset {
+									padding: 0;
+									margin: 0;
+									border: 0;
+
+									.user-registration-form-row {
+										margin-bottom: $spacing_20px;
+
+										&:last-child {
+											margin-bottom: 0;
+										}
+
+										label {
+											margin-top: 0;
+											margin-bottom: $spacing_8px;
+											color: $grey-500;
+											font-size: 15px;
+											font-weight: $medium;
+											line-height: 21px;
+										}
+
+										.password-input-group {
+											display: block;
+
+											.input-text {
+												height: 38px;
+												padding: $spacing_8px $spacing_10px $spacing_8px $spacing_14px;
+												border-radius: $border_radius_4;
+												border: $border_width solid #E1E1E1;
+												background: $grey-0;
+
+												&:focus {
+													border-color: $primary_color;
+												}
+											}
+										}
+									}
+								}
+
+								// Save Changes Button CSS
+								> p {
+									float: unset;
+									margin-top: $spacing_32px;
+									text-align: right;
+
+									input[type="submit"] {
+										float: unset;
+										border-radius: $border_radius_4;
+										background: $primary_color;
+										border: $border_width solid $primary_color;
+										color: $grey-0;
+										font-size: 15px;
+										line-height: 22px;
+										padding: $spacing_8px $spacing_16px;
+										transition: all .3s;
+
+										&:hover {
+											background: darken($primary_color, 10%);
+											border-color: darken($primary_color, 10%);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+
+				.user-registration-membership-content {
+					.membership {
+						&-label {
+							width: 40%;
+							text-align: left;
+						}
+
+						&-data {
+							flex: 1;
+							text-align: left;
+						}
+
+						&-row {
+							gap: 0;
+
+							&-btn-container {
+								margin-top: $spacing_20px;
+								justify-content: flex-start;
+								flex-direction: unset;
+
+								.btn-div {
+									width: 100%;
+
+									.cancel-membership-button {
+										background: #F25656;
+										padding: $spacing_8px $spacing_16px;
+										display: flex;
+										align-items: center;
+
+										&::before {
+											content: "";
+											background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 24 24'%3E%3Cpath fill-rule='evenodd' d='M12 3.818a8.182 8.182 0 1 0 0 16.364 8.182 8.182 0 0 0 0-16.364ZM2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm13.37-3.37a.91.91 0 0 1 0 1.286L13.286 12l2.084 2.084a.91.91 0 0 1-1.286 1.286L12 13.286 9.916 15.37a.91.91 0 0 1-1.286-1.286L10.714 12 8.63 9.916A.91.91 0 0 1 9.916 8.63L12 10.714l2.084-2.084a.91.91 0 0 1 1.286 0Z' clip-rule='evenodd'/%3E%3C/svg%3E");
+											background-repeat: no-repeat;
+											background-position: center;
+											background-size: 100%;
+											width: 16px;
+											height: 16px;
+											display: block;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}			
+		}
+	}
+
+	&.vertical {
+		padding: $spacing_12px;
+		border-radius: $border_radius_16;
+
+		.user-registration-MyAccount {
+			&-navigation {
+				border-radius: $border_radius_10;
+				background: #F8F8FA;
+				max-width: 260px;
+				width: 100%;
+				padding: $spacing_26px $spacing_20px $spacing_16px;
+				border: 0;
+	
+				ul {
+					gap: $spacing_4px;
+	
+					.user-registration-MyAccount-navigation-link {
+						transition: all .3s;
+	
+						a {
+							padding: $spacing_12px $spacing_12px $spacing_12px $spacing_24px;
+							border-radius: $border_radius_4;
+							border-left: 3px solid transparent;						
+							color: #4E4E4E;
+							font-size: 14px;
+							font-weight: 500;
+							line-height: 22px;
+						}
+	
+						&:hover {
+							a {
+								background: $blue-50;
+								color: $primary_color;
+							}
+						}
+	
+						&.is-active {
+							a {
+								color: $primary_color;
+								background: $blue-50;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		.user-registration-MyAccount-content {
+			padding: $spacing_24px $spacing_24px 52px 36px;
+
+			&__header {
+				border-bottom: $border_width solid #F4F4F4;
+				padding-bottom: $spacing_16px;
+				margin-bottom: $spacing_32px;
+
+				h1 {
+					margin-bottom: 0;
+					text-align: left;
+					color: $grey-500;
+					font-size: 24px;
+					font-weight: 500;
+					line-height: 36px;
+				}
+			}		
+		}
+	}
+
+	&.horizontal {
+		.user-registration-MyAccount {
+			&-navigation {
+				&-link {
+					a {
+						border-left: 0 !important;
+						padding: $spacing_16px $spacing_24px;					
+						font-size: 14px;
+						font-weight: 500;
+						line-height: 22px;
+						color: #4E4E4E;
+						border-bottom: 3px solid $grey-0 !important;
+						transition: all .3s;
+
+						&:hover {
+							color: $primary_color;
+							background: $blue-50;
+							border-bottom-color: $blue-50 !important;
+						}
+					}
+
+					&.is-active {
+						a {
+							border-bottom-color: $primary_color !important;
+							color: $primary_color;
+							background: $blue-50 !important;
+						}
+					}
+				}
+			}
+
+			&-content {
+				padding: $spacing_24px 36px 52px 36px;
+			}
+		}
 	}
 }
