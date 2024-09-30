@@ -308,6 +308,7 @@
 
 				var form_data = URFormBuilder.get_form_data();
 				var row_data = URFormBuilder.get_form_row_data();
+
 				var stop_process = false;
 				$.each(row_data, function () {
 					if ($(this)[0].fields && $(this)[0].fields.length < 1) {
@@ -1560,12 +1561,9 @@
 								.find(
 									"#user_registration_row_setting_enable_conditional_logic"
 								)
-								.val();
+								.is(":checked");
 
-						if (
-							conditional_logic_enabled &&
-							element.find(".urcl-row-logic-wrap").length
-						) {
+						if (element.find(".urcl-row-logic-wrap").length) {
 							single_row_data.type = "normal";
 							single_row_data.conditional_logic_enabled =
 								conditional_logic_enabled;
