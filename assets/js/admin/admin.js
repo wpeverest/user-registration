@@ -356,7 +356,6 @@ jQuery(function ($) {
 		var form_settings = form_settings_section.find("form");
 
 		form_settings.appendTo(fields_panel);
-
 		fields_panel
 			.find("form #ur-field-all-settings > div")
 			.each(function (index, el) {
@@ -367,7 +366,7 @@ jQuery(function ($) {
 					form_settings_section.append(
 						'<div id="' +
 							appending_id +
-							'" class="form-settings-main-tab">' +
+							'" class="form-settings-tab">' +
 							appending_text +
 							"</div>"
 					);
@@ -413,16 +412,60 @@ jQuery(function ($) {
 							}
 						});
 				} else {
+					var style = $(el).hasClass("integration-lists-settings")
+						? "style='display:none;'"
+						: "";
+					var classToAdd = $(el).hasClass(
+						"integration-lists-settings"
+					)
+						? "integration-lists-settings"
+						: "";
+
 					form_settings_section.append(
 						'<div id="' +
 							appending_id +
-							'" class="form-settings-tab">' +
+							'" class="form-settings-tab ' +
+							classToAdd +
+							'" ' +
+							style +
+							">" +
 							appending_text +
 							"</div>"
 					);
 				}
 
 				$(el).hide();
+			});
+
+		form_settings_section.find("#integration-settings").click(function (e) {
+			e.stopImmediatePropagation();
+			$(this)
+				.closest("#ur-tab-field-settings")
+				.find(".form-settings-tab:not(.integration-lists-settings)")
+				.hide();
+			$(this)
+				.closest("#ur-tab-field-settings")
+				.find(".integration-lists-settings")
+				.show();
+
+			$(
+				'<div id="integration_settings_back" class="form-settings-tab-back" style="font-weight: bold;">' +
+					$(this).text() +
+					"</div>"
+			).insertBefore($(this));
+		});
+		form_settings_section
+			.find("#integration_settings_back")
+			.click(function (e) {
+				$(this).remove();
+				$(this)
+					.closest("#ur-tab-field-settings")
+					.find(".form-settings-tab:not(.integration-lists-settings)")
+					.show();
+				$(this)
+					.closest("#ur-tab-field-settings")
+					.find(".integration-lists-settings")
+					.hide();
 			});
 
 		// Add active class to general settings and form-settings-tab for all settings.
@@ -564,7 +607,6 @@ jQuery(function ($) {
 											.installation_required_title;
 								} else {
 									var message =
-										video +
 										user_registration_form_builder_data
 											.i18n_admin.upgrade_message;
 

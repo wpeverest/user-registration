@@ -1035,6 +1035,32 @@
 						margin-right: -$spacing_12px;
 					}
 
+					.form-settings-tab-back {
+						margin-bottom: 0;
+						border-radius: 0;
+						padding: $spacing_18px $spacing_24px;
+						border-bottom: $border_width solid #ececec;
+						background: transparent;
+						font-size: 15px;
+						font-weight: $semi_bold;
+						gap: 20px;
+						line-height: 150%;
+						display: flex;
+						align-items: center;
+						padding-right: $spacing_16px;
+
+						&::before {
+							content: "";
+							background-image: url("../images/icons/ur-right-arrow.svg");
+							background-repeat: no-repeat;
+							background-size: 100%;
+							background-position: center;
+							width: 18px;
+							height: 18px;
+							transform: rotate(180deg);
+						}
+					}
+
 					.form-settings-tab {
 						margin-bottom: 0;
 						border-radius: 0;

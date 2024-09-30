@@ -5930,6 +5930,28 @@
         margin-top: -32px;
         margin-left: -12px;
         margin-right: -12px; }
+      .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-contents .ur-tab-content .form-settings-tab-back {
+        margin-bottom: 0;
+        border-radius: 0;
+        padding: 18px 24px;
+        border-bottom: 1px solid #ececec;
+        background: transparent;
+        font-size: 15px;
+        font-weight: 600;
+        gap: 20px;
+        line-height: 150%;
+        display: flex;
+        align-items: center;
+        padding-right: 16px; }
+        .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-contents .ur-tab-content .form-settings-tab-back::before {
+          content: "";
+          background-image: url("../images/icons/ur-right-arrow.svg");
+          background-repeat: no-repeat;
+          background-size: 100%;
+          background-position: center;
+          width: 18px;
+          height: 18px;
+          transform: rotate(180deg); }
       .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-contents .ur-tab-content .form-settings-tab {
         margin-bottom: 0;
         border-radius: 0;
@@ -9253,3 +9275,47 @@ body.ur-settings-sidebar-hidden .user-registration-settings-sidebar-container {
   font-weight: normal;
   font-style: normal;
   font-display: block; }
+
+#integration-settings .ur-nav-premium {
+  cursor: not-allowed;
+  opacity: 0.5; }
+
+.form-settings-main-tab {
+  margin-bottom: 0;
+  border-radius: 0;
+  padding: 18px 24px;
+  border-bottom: 1px solid #ececec;
+  background: transparent;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 150%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 16px; }
+  .form-settings-main-tab::after {
+    content: "";
+    background-image: url("../images/icons/ur-right-arrow.svg");
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-position: center;
+    width: 18px;
+    height: 18px; }
+
+.form-settings-sub-tab {
+  margin-bottom: 10px;
+  border-radius: 4px;
+  padding: 18px 24px;
+  border-bottom: 1px solid #ececec;
+  background: #dee0e9;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 150%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 15px;
+  color: #2d3559; }
+  .form-settings-sub-tab.active {
+    background: #475bb2;
+    color: #ffffff; }
