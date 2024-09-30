@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - master
+      - UR-916-my-account-page-design
     workflow_dispatch:
 jobs:
   sync:
