@@ -396,7 +396,9 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		public function get_login_options_settings() {
 
 			$ur_captchas = ur_get_captcha_integrations();
-			$ur_enabled_captchas = array();
+			$ur_enabled_captchas = array(
+				'' => __( "Select Enabled Captcha", 'user-registration' )
+			);
 
 			foreach ( $ur_captchas as $key => $value ) {
 				if ( get_option( 'user_registration_captcha_setting_recaptcha_enable_' . $key, false ) ) {

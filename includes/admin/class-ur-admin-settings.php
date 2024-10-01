@@ -380,6 +380,8 @@ class UR_Admin_Settings {
 					if ( 'accordian' === $section['type'] ) {
 						$available_in = isset( $section['available_in'] ) ? sanitize_text_field( wp_unslash( $section['available_in'] ) ) : '';
 						$is_captcha = isset( $section['settings_type'] ) ? " ur-captcha-settings" : '';
+						$is_captcha_header = isset( $section['settings_type'] ) ? $is_captcha."-header" : '';
+						$is_captcha_body = isset( $section['settings_type'] ) ? $is_captcha."-body" : '';
 						if ( isset( $section['video_id'] ) ) {
 							$inactive_class = 'user-registration-inactive-addon';
 							$extras         = 'data-title="' . esc_attr( $section['title'] ) . '"';
@@ -388,9 +390,9 @@ class UR_Admin_Settings {
 							$extras        .= 'data-available-in="' . esc_attr( $available_in ) . '"';
 							$settings      .= '<div class="user-registration-card ur-mb-2 ' . esc_attr( $inactive_class ) . '" ' . $extras . '>';
 						} else {
-							$settings .= '<div class="user-registration-card ur-mb-2">';
+							$settings .= '<div class="user-registration-card ur-mb-2'. $is_captcha .'">';
 						}
-						$settings .= '<div class="user-registration-card__header ur-d-flex ur-align-items-center ur-p-3 integration-header-info accordion'. $is_captcha .'">';
+						$settings .= '<div class="user-registration-card__header ur-d-flex ur-align-items-center ur-p-3 integration-header-info accordion'. $is_captcha_header .'">';
 						$settings .= '<div class="integration-detail">';
 						$settings .= '<span class="integration-status">';
 						$settings .= '</span>';
@@ -409,7 +411,7 @@ class UR_Admin_Settings {
 						if ( isset( $section['video_id'] ) ) {
 							$settings .= '<div>';
 						} else {
-							$settings .= '<div class="user-registration-card__body ur-p-3 integration-body-info">';
+							$settings .= '<div class="user-registration-card__body ur-p-3 integration-body-info'. $is_captcha_body .'">';
 						}
 
 						if ( ! empty( $id ) ) {
@@ -813,6 +815,7 @@ class UR_Admin_Settings {
 									break;
 								// Toggle input.
 								case 'toggle':
+
 									$option_value = self::get_option( $value['id'], $value['default'] );
 
 									$settings .= '<div class="user-registration-global-settings">';

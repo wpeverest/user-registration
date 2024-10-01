@@ -1683,6 +1683,11 @@ class UR_AJAX {
 		}
 
 		$captcha_type = isset( $_POST['captcha_type'] ) ? sanitize_text_field( wp_unslash( $_POST['captcha_type'] ) ) : '';
+		if ( ! get_option( 'user_registration_captcha_setting_recaptcha_enable_' . $captcha_type, false )  ) {
+			wp_send_json_error( 'Please Enable the Captcha first to test and Refresh the page.' );
+			return;
+		}
+
 		$ur_recaptcha_code = array();
 
 		$invisible_recaptcha = false;

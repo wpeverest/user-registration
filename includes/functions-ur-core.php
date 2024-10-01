@@ -1115,7 +1115,9 @@ function ur_admin_form_settings_fields( $form_id ) {
 	$all_roles = ur_get_default_admin_roles();
 
 	$ur_captchas = ur_get_captcha_integrations();
-	$ur_enabled_captchas = array();
+	$ur_enabled_captchas = array(
+		'' => __( "Select Enabled Captcha", 'user-registration' )
+	);
 
 	foreach ( $ur_captchas as $key => $value ) {
 		if ( get_option( 'user_registration_captcha_setting_recaptcha_enable_' . $key, false ) ) {
@@ -1818,6 +1820,8 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false, $form_id =
 		$recaptcha_type      = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_configured_captcha_type', $recaptcha_type );
 	} elseif ( 'test_captcha' === $context && false !== $recaptcha_enabled ) {
 		$recaptcha_type = $recaptcha_enabled;
+	} elseif ( 'lost_password' === $context ) {
+		$recaptcha_type = apply_filters( 'user_registration_lost_password_captcha_type', $recaptcha_type );
 	}
 
 	if ( 'v2' === $recaptcha_type && ! $invisible_recaptcha ) {
@@ -6692,17 +6696,16 @@ if ( ! function_exists( 'ur_get_captcha_integrations' ) ) {
 	 * @return array
 	 */
 	function ur_get_captcha_integrations() {
-		return apply_filters( 'user_registration_captcha_integrations', array(
-			'v2' => "reCaptcha v2",
-			'v3' => 'reCaptcha v3',
-			'hCaptcha' => 'hcaptcha',
-			'cloudflare' => "Cloudflare Turnstile" )
+		return apply_filters( 'user_registration_captcha_integrations',
+			array(
+				'v2' => "reCaptcha v2",
+				'v3' => 'reCaptcha v3',
+				'hCaptcha' => 'hCaptcha',
+				'cloudflare' => "Cloudflare Turnstile"
+			)
 		);
 	}
 }
-
-
-// add_filter("user_registration_lost_password_options_enable_recaptcha", function(){ return 'yes'; });
 
 add_action( "user_registration_form_shortcode_scripts", function( $atts ){
 

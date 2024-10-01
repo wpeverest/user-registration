@@ -217,9 +217,8 @@
 		.find("input, select")
 		.on("change", function () {
 			captchaSettingsChanged = true;
-			$(".user_registration_captcha_setting_captcha_test")
-				.parent()
-				.hide();
+			$(this).closest(".ur-captcha-settings-body").find(".user_registration_captcha_setting_captcha_test")
+				.closest(".user-registration-global-settings").hide();
 		});
 	/**
 	 * Test Captcha from settings page.
@@ -377,7 +376,18 @@
 							}
 						}
 					}
-				}
+
+					if ( ! response.success ) {
+						var msg = response.data;
+						console.log(msg);
+						display_captcha_test_status(
+							msg,
+							"error",
+							captcha_type
+						);
+						return;
+					}
+ 				}
 			});
 
 		}
@@ -874,6 +884,13 @@
 				}
 			});
 		}
+
+		$.each($('.ur-captcha-settings'), function () {
+			var is_enabled = $(this).find(".ur-captcha-settings-body .ur-captcha-enable").is(":checked");
+			if ( is_enabled ) {
+				$(this).find(".ur-captcha-settings-header .integration-status").addClass("ur-integration-account-connected");
+			}
+		});
 	}
 
 	/**
