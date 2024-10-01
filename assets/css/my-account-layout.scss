@@ -711,6 +711,20 @@
 					&:last-child {
 						border: 0 !important;
 					}
+
+					> a {
+						display: flex;
+						gap: $spacing_8px;
+
+						i {
+							width: 20px;
+							height: 20px;
+							display: flex;
+							align-items: center;
+							justify-content: center;
+							margin-right: 0 !important;
+						}
+					}
 				}
 			}
 
