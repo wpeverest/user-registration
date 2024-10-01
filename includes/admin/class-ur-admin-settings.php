@@ -379,7 +379,7 @@ class UR_Admin_Settings {
 
 					if ( 'accordian' === $section['type'] ) {
 						$available_in = isset( $section['available_in'] ) ? sanitize_text_field( wp_unslash( $section['available_in'] ) ) : '';
-
+						$is_captcha = isset( $section['settings_type'] ) ? " ur-captcha-settings" : '';
 						if ( isset( $section['video_id'] ) ) {
 							$inactive_class = 'user-registration-inactive-addon';
 							$extras         = 'data-title="' . esc_attr( $section['title'] ) . '"';
@@ -390,7 +390,7 @@ class UR_Admin_Settings {
 						} else {
 							$settings .= '<div class="user-registration-card ur-mb-2">';
 						}
-						$settings .= '<div class="user-registration-card__header ur-d-flex ur-align-items-center ur-p-3 integration-header-info accordion">';
+						$settings .= '<div class="user-registration-card__header ur-d-flex ur-align-items-center ur-p-3 integration-header-info accordion'. $is_captcha .'">';
 						$settings .= '<div class="integration-detail">';
 						$settings .= '<span class="integration-status">';
 						$settings .= '</span>';

@@ -848,7 +848,33 @@
 		);
 
 		disableFormChangeModal();
+		init_accordion_settings();
 	});
+	/**
+	 * Initialize accordion_settings elements.
+	 */
+	function init_accordion_settings() {
+		var acc = document.getElementsByClassName('accordion');
+		var i;
+		for (i = 0; i < acc.length; i++) {
+			var panel = acc[i].nextElementSibling;
+			panel.style.display = 'none';
+
+			acc[i].addEventListener('click', function () {
+				/* Toggle between adding and removing the "active" class,
+			to highlight the button that controls the panel */
+				this.classList.toggle('active');
+
+				/* Toggle between hiding and showing the active panel */
+				var panel = this.nextElementSibling;
+				if (panel.style.display === 'block') {
+					panel.style.display = 'none';
+				} else {
+					panel.style.display = 'block';
+				}
+			});
+		}
+	}
 
 	/**
 	 * Disable leave page before saving changes modal when hid/show sidebar is clicked.

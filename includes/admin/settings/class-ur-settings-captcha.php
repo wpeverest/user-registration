@@ -94,8 +94,10 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 			$captcha_type = $value['captcha_type'];
 			$test_captcha = <<<HTML
 				<div class="user-registration-global-settings">
-					<button class="button ur-button user_registration_captcha_setting_captcha_test" id="user_registration_captcha_setting_%s_captcha_test" data-captcha-type="%s">%s<span class="spinner" style="display:none"></span></button>
-					<div>
+					<div class="ur-captcha-test-button">
+						<button class="button ur-button user_registration_captcha_setting_captcha_test" id="user_registration_captcha_setting_%s_captcha_test" data-captcha-type="%s">%s<span class="spinner" style="display:none"></span></button>
+					</div>
+					<div class="ur-captcha-test">
 						<div class="ur-captcha-test-container" data-captcha-type="%s">
 							<div class="ur-captcha-node">%s</div>
 							<div class="ur-captcha-notice">
@@ -229,7 +231,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 			$captcha_global_settings = array(
 				'v2' => array(
 					'title'     => 'reCAPTCHA v2',
-					'type'      => 'card',
+					'type'      => 'accordian',
 					'id'        => 'v2',
 					'settings' => array(
 						array(
@@ -306,10 +308,12 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 							'captcha_type'  => 'v2',
 						),
 					),
+					'settings_type' => 'captcha'
 				),
 				'v3' => array(
 					'title'     => 'reCAPTCHA v3',
-					'type'      => 'card',
+					'type'      => 'accordian',
+					'settings_type' => 'captcha',
 					'id'        => 'v3',
 					'settings' => array(
 						array(
@@ -370,7 +374,8 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 				),
 				'hCaptcha' => array(
 					'title'     => 'hCaptcha',
-					'type'      => 'card',
+					'type'      => 'accordian',
+					'settings_type' => 'captcha',
 					'id'        => 'hCaptcha',
 					'settings'  => array(
 						array(
@@ -416,7 +421,8 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 				),
 				'cloudflare' => array(
 					'title'     => 'Cloudflare Turnstile',
-					'type'      => 'card',
+					'type'      => 'accordian',
+					'settings_type' => 'captcha',
 					'id'        => 'cloudflare',
 					'settings'  => array(
 						array(
