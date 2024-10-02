@@ -507,7 +507,7 @@ class UR_Frontend_Scripts {
 					'ajax_url'                    => admin_url( 'admin-ajax.php' ),
 					'ur_login_form_save_nonce'    => wp_create_nonce( 'ur_login_form_save_nonce' ),
 					'ajax_submission_on_ur_login' => ur_option_checked( 'ur_login_ajax_submission', false ),
-					'recaptcha_type'              => get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' ),
+					'recaptcha_type'              => get_option( 'user_registration_login_options_configured_captcha_type', get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' ) ),
 					'ajax_form_submit_error'      => esc_html__( 'Something went wrong while submitting form through AJAX request. Please contact site administrator.', 'user-registration' ),
 				);
 				break;
