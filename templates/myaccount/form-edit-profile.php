@@ -65,10 +65,10 @@ do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id
 						apply_filters( 'user_registation_profile_detail_title', __( 'Profile Detail', 'user-registration' ) ) ); //PHPCS:ignore ?></h2>
 					<?php
 
-					$is_sync_profile = ur_option_checked( 'user_registration_sync_profile_picture', false );
+					$is_sync_profile           = ur_option_checked( 'user_registration_sync_profile_picture', false );
 					$is_profile_field_disabled = ur_option_checked( 'user_registration_disable_profile_picture', false );
-					$is_profile_pic_on_form   = false;
-					if($is_sync_profile){
+					$is_profile_pic_on_form    = false;
+					if ( $is_sync_profile ) {
 						foreach ( $form_data_array as $data ) {
 							foreach ( $data as $grid_key => $grid_data ) {
 								foreach ( $grid_data as $grid_data_key => $single_item ) {
@@ -78,7 +78,7 @@ do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id
 								}
 							}
 						}
-					}else{
+					} else {
 						$is_profile_pic_on_form = ! $is_profile_field_disabled;
 					}
 					if ( $is_profile_pic_on_form ) {
@@ -188,10 +188,28 @@ do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id
 
 						<?php
 						foreach ( $form_data_array as $index => $data ) {
-							$row_id = ( ! empty( $row_ids ) ) ? absint( $row_ids[ $index ] ) : $index;
+							$row_id       = ( ! empty( $row_ids ) ) ? absint( $row_ids[ $index ] ) : $index;
+							$row_cl_props = '';
+
+							// If the conditional logic addon is installed.
+							if ( class_exists( 'UserRegistrationConditionalLogic' ) ) {
+								$form_row_data = get_post_meta( $form_id, 'user_registration_form_row_data', true );
+								$row_datas     = ! empty( $form_row_data ) ? json_decode( $form_row_data ) : array();
+								foreach ( $row_datas as $individual_row_data ) {
+									$conditional_logic_enabled = false;
+									$conditional_settings      = array();
+
+									if ( isset( $individual_row_data->row_id ) && $row_id == $individual_row_data->row_id && isset( $individual_row_data->conditional_logic_enabled ) ) {
+
+										$row_cl_enabled = ur_string_to_bool( $individual_row_data->conditional_logic_enabled ) ? ur_string_to_bool( $individual_row_data->conditional_logic_enabled ) : '';
+										$row_cl_map     = isset( $individual_row_data->cl_map ) ? $individual_row_data->cl_map : array();
+										$row_cl_props   = sprintf( 'data-conditional-logic-enabled="%s" data-conditional-logic-map="%s"', esc_attr( $row_cl_enabled ), esc_attr( $row_cl_map ) );
+									}
+								}
+							}
 
 							ob_start();
-							echo '<div class="ur-form-row">';
+							echo '<div class="ur-form-row" data-row-id="' . esc_attr( $row_id ) . '" ' . $row_cl_props . '>'; // phpcs:ignore
 							user_registration_edit_profile_row_template( $data, $profile );
 							echo '</div>';
 							$row_template = ob_get_clean();
