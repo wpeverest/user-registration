@@ -117,8 +117,9 @@ class UR_Form_Handler {
 		 * @param array $profile The user profile data.
 		 * @param array $form_data The form data.
 		 * @param int $form_id The form ID.
+		 * @param int $user_id The user id.
 		 */
-		do_action( 'user_registration_validate_profile_update', $profile, $form_data, $form_id );
+		do_action( 'user_registration_validate_profile_update', $profile, $form_data, $form_id, $user_id );
 
 		/**
 		 * Action validate profile on update.
