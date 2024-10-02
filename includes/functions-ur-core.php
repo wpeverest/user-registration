@@ -4623,7 +4623,7 @@ if ( ! function_exists( 'ur_add_links_to_top_nav' ) ) {
 			$form_id = sanitize_text_field( wp_unslash( $_GET['form_id'] ) ); //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		} elseif ( is_page() || is_single() ) {
 
-			if( isset( $_GET['vc_editable'] ) ) {
+			if ( isset( $_GET['vc_editable'] ) ) {
 				return;
 			}
 			$post_content = get_the_content();
@@ -5055,8 +5055,9 @@ if ( ! function_exists( 'user_registration_validate_edit_profile_form_field_data
 	 * @param int    $form_id Form id.
 	 * @param array  $form_field_data Form Field Data..
 	 * @param array  $form_fields Form Fields.
+	 * @param int    $user_id User ID.
 	 */
-	function user_registration_validate_edit_profile_form_field_data( $data, $form_data, $form_id, $form_field_data, $form_fields ) {
+	function user_registration_validate_edit_profile_form_field_data( $data, $form_data, $form_id, $form_field_data, $form_fields, $user_id ) {
 		$form_validator   = new UR_Form_Validation();
 		$skippable_fields = $form_validator->get_update_profile_validation_skippable_fields( $form_field_data );
 		$form_key_list    = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
@@ -5144,9 +5145,12 @@ if ( ! function_exists( 'user_registration_validate_edit_profile_form_field_data
 			}
 
 			if ( 'user_email' === $single_form_field->field_key ) {
-
+				// Do not allow admin to update others email, case may change in future
+				if ( !email_exists( sanitize_text_field( wp_unslash( $single_field_value ) ) ) && $user_id !== get_current_user_id() ) {
+					ur_add_notice( esc_html__( 'Email field is not editable.', 'user-registration' ), 'error' );
+				}
 				// Check if email already exists before updating user details.
-				if ( email_exists( sanitize_text_field( wp_unslash( $single_field_value ) ) ) && email_exists( sanitize_text_field( wp_unslash( $single_field_value ) ) ) !== get_current_user_id() ) {
+				if ( email_exists( sanitize_text_field( wp_unslash( $single_field_value ) ) ) && email_exists( sanitize_text_field( wp_unslash( $single_field_value ) ) ) !== $user_id ) {
 					ur_add_notice( esc_html__( 'Email already exists', 'user-registration' ), 'error' );
 				}
 			}
@@ -5177,9 +5181,10 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 	 */
 	function user_registration_edit_profile_row_template( $data, $profile, $current_row = '', $row_count = '' ) {
 
-		$user_id = get_current_user_id();
+		$user_id = !empty($_REQUEST['user_id']) ? absint($_REQUEST['user_id']) : get_current_user_id();
 		$form_id = ur_get_form_id_by_userid( $user_id );
 		$width   = floor( 100 / count( $data ) ) - count( $data );
+		$is_edit = isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'edit' && $user_id !== get_current_user_id();
 
 		foreach ( $data as $grid_key => $grid_data ) {
 			$found_field = false;
@@ -5213,7 +5218,6 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 				$key = 'user_registration_' . $single_item->general_setting->field_name;
 
 				if ( $found_field ) {
-					$user_id = get_current_user_id();
 					$form_id = ur_get_form_id_by_userid( $user_id );
 					$field   = isset( $profile[ $key ] ) ? $profile[ $key ] : array();
 
@@ -5262,7 +5266,9 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 					<div class="ur-field-item field-<?php echo esc_attr( $single_item->field_key );?> <?php echo esc_attr( ! empty( $single_item->advance_setting->custom_class ) ? $single_item->advance_setting->custom_class : '' ); ?>"  <?php echo $cl_props; //PHPCS:ignore?> data-field-id="<?php echo esc_attr( $field_id ); ?>" data-ref-id="<?php echo esc_attr( $key ); ?>">
 					<?php
 					$readonly_fields = ur_readonly_profile_details_fields();
-
+					if ( $is_edit  ) {
+						unset( $readonly_fields['user_pass'] );
+					}
 					if ( isset( $field['field_key'] ) && array_key_exists( $field['field_key'], $readonly_fields ) ) {
 						$field['custom_attributes']['readonly'] = 'readonly';
 						if ( isset( $readonly_fields[ $field['field_key'] ] ['value'] ) ) {
@@ -5525,8 +5531,9 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 						<?php
 					}
 		}
-
-		echo apply_filters( 'user_registration_frontend_form_row_end', '', $form_id, $current_row ); // phpcs:ignore
+		if( !$is_edit ) {
+			echo apply_filters( 'user_registration_frontend_form_row_end', '', $form_id, $current_row ); // phpcs:ignore
+		}
 	}
 }
 
@@ -6429,6 +6436,13 @@ if ( ! function_exists( 'ur_prevent_default_login' ) ) {
 					}
 				}
 			}
+		} elseif ( isset( $data['user_registration_myaccount_page_id'] ) ) {
+			if ( is_numeric( $data['user_registration_myaccount_page_id'] ) ) {
+				$is_page_my_account_page = ur_find_my_account_in_page( $data['user_registration_myaccount_page_id'] );
+				if ( ! $is_page_my_account_page ) {
+					return 'redirect_login_not_myaccount';
+				}
+			}
 		}
 		return true;
 	}
@@ -6639,3 +6653,29 @@ if ( ! function_exists( 'ur_list_top_integrations' ) ) {
 	}
 }
 add_filter( 'user_registration_integrations_classes', 'ur_list_top_integrations' );
+
+// Hook the end setup wizard to admin_init
+add_action(
+	'admin_init',
+	'ur_end_setup_wizard'
+);
+
+if ( ! function_exists( 'ur_end_setup_wizard' ) ) {
+	/**
+	 * End to setup wizard.
+	 */
+	function ur_end_setup_wizard() {
+		// End setup wizard when skipped to list table.
+		if ( ! empty( $_REQUEST['end-setup-wizard'] ) && sanitize_text_field( wp_unslash( $_REQUEST['end-setup-wizard'] ) ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			update_option( 'user_registration_first_time_activation_flag', false );
+			update_option( 'user_registration_onboarding_skipped', true );
+
+			if ( isset( $_REQUEST['activeStep'] ) ) {
+				update_option( 'user_registration_onboarding_skipped_step', sanitize_text_field( wp_unslash( $_REQUEST['activeStep'] ) ) );
+			} else {
+				delete_option( 'user_registration_onboarding_skipped_step' );
+				update_option( 'user_registration_onboarding_skipped', false );
+			}
+		}
+	}
+}

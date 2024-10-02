@@ -49,32 +49,33 @@ class UR_AJAX {
 	 */
 	public static function add_ajax_events() {
 		$ajax_events = array(
-			'user_input_dropped'        => true,
-			'user_form_submit'          => true,
-			'update_profile_details'    => true,
-			'profile_pic_upload'        => true,
-			'ajax_login_submit'         => true,
-			'send_test_email'           => false,
-			'create_form'               => false,
-			'rated'                     => false,
-			'dashboard_widget'          => false,
-			'dismiss_notice'            => false,
-			'import_form_action'        => false,
-			'template_licence_check'    => false,
-			'captcha_setup_check'       => false,
-			'install_extension'         => false,
-			'profile_pic_remove'        => false,
-			'form_save_action'          => false,
-			'embed_form_action'         => false,
-			'embed_page_list'           => false,
-			'allow_usage_dismiss'       => false,
-			'cancel_email_change'       => false,
-			'email_setting_status'      => false,
-			'locked_form_fields_notice' => false,
-			'search_global_settings'    => false,
-			'php_notice_dismiss'        => false,
-			'locate_form_action'        => false,
-			'generate_row_settings'     => false,
+			'user_input_dropped'             => true,
+			'user_form_submit'               => true,
+			'update_profile_details'         => true,
+			'profile_pic_upload'             => true,
+			'ajax_login_submit'              => true,
+			'send_test_email'                => false,
+			'create_form'                    => false,
+			'rated'                          => false,
+			'dashboard_widget'               => false,
+			'dismiss_notice'                 => false,
+			'import_form_action'             => false,
+			'template_licence_check'         => false,
+			'captcha_setup_check'            => false,
+			'install_extension'              => false,
+			'profile_pic_remove'             => false,
+			'form_save_action'               => false,
+			'embed_form_action'              => false,
+			'embed_page_list'                => false,
+			'allow_usage_dismiss'            => false,
+			'cancel_email_change'            => false,
+			'email_setting_status'           => false,
+			'locked_form_fields_notice'      => false,
+			'search_global_settings'         => false,
+			'php_notice_dismiss'             => false,
+			'locate_form_action'             => false,
+			'generate_row_settings'          => false,
+			'my_account_selection_validator' => false,
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -314,7 +315,7 @@ class UR_AJAX {
 		}
 
 		// Current user id.
-		$user_id = get_current_user_id();
+		$user_id = ! empty( $_REQUEST['user_id'] ) ? absint( $_REQUEST['user_id'] ) : get_current_user_id();
 
 		if ( $user_id <= 0 ) {
 			return;
@@ -389,9 +390,9 @@ class UR_AJAX {
 		 * @param array $profile User profile data.
 		 * @param array $form_data The form data.
 		 * @param int $form_id The form ID.
+		 * @param int $user_id The user id.
 		 */
-		do_action( 'user_registration_validate_profile_update', $profile, $form_data, $form_id );
-
+		do_action( 'user_registration_validate_profile_update', $profile, $form_data, $form_id, $user_id );
 		/**
 		 * Action after the save profile validation.
 		 *
@@ -409,7 +410,7 @@ class UR_AJAX {
 			$is_email_change_confirmation = (bool) apply_filters( 'user_registration_email_change_confirmation', true );
 			$email_updated                = false;
 			$pending_email                = '';
-			$user                         = wp_get_current_user();
+			$user                         = get_userdata( $user_id );
 			/**
 			 * Filter to modify the field settings.
 			 *
@@ -453,7 +454,7 @@ class UR_AJAX {
 			}
 
 			if ( count( $user_data ) > 0 ) {
-				$user_data['ID'] = get_current_user_id();
+				$user_data['ID'] = $user_id;
 				wp_update_user( $user_data );
 			}
 			/**
@@ -1694,6 +1695,37 @@ class UR_AJAX {
 		$template = ob_get_clean();
 
 		wp_send_json_success( $template );
+	}
+
+	/**
+	 * AJAX validate selected my account page.
+	 */
+	public static function my_account_selection_validator() {
+		check_ajax_referer( 'user_registration_my_account_selection_validator', 'security' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to edit settings form.', 'user-registration' ) ) );
+			wp_die( -1 );
+		}
+
+		// Return if default wp_login is disabled and no redirect url is set.
+		if ( isset( $_POST['user_registration_selected_my_account_page'] ) ) {
+			if ( is_numeric( $_POST['user_registration_selected_my_account_page'] ) ) {
+				$is_page_my_account_page = ur_find_my_account_in_page( sanitize_text_field( wp_unslash( $_POST['user_registration_selected_my_account_page'] ) ) );
+				if ( ! $is_page_my_account_page ) {
+					wp_send_json_error(
+						array(
+							'message' => esc_html__(
+								'The selected page is not a User Registration Login or My Account page.',
+								'user-registration'
+							),
+						)
+					);
+				}
+			}
+		}
+
+		wp_send_json_success();
 	}
 }
 
