@@ -54,7 +54,7 @@ class UR_Form_Validation extends UR_Validation {
 	 */
 	public function __construct() {
 		add_action( 'user_registration_validate_form_data', array( $this, 'validate_form' ), 10, 6 );
-		add_action( 'user_registration_validate_profile_update', array( $this, 'validate_update_profile' ), 10, 3 );
+		add_action( 'user_registration_validate_profile_update', array( $this, 'validate_update_profile' ), 10, 4 );
 	}
 
 
@@ -565,11 +565,10 @@ class UR_Form_Validation extends UR_Validation {
 	 * @param [array] $form_fields Form Fields.
 	 * @param array   $form_data Form Data.
 	 * @param [int]   $form_id Form Id.
+	 * @param [int]   $user_id User Id.
 	 * @return void
 	 */
-	public function validate_update_profile( $form_fields, $form_data, $form_id ) {
-		$user_id = get_current_user_id();
-
+	public function validate_update_profile( $form_fields, $form_data, $form_id , $user_id ) {
 		$form_field_data = ur_get_form_field_data( $form_id );
 
 		$request_form_keys = array_map(
@@ -612,7 +611,7 @@ class UR_Form_Validation extends UR_Validation {
 				);
 				$required_fields = apply_filters( 'user_registration_missing_repeater_field_keys', $required_fields, $form_id );
 			} else {
-				user_registration_validate_edit_profile_form_field_data( $data, $form_data, $form_id, $form_field_data, $form_fields );
+				user_registration_validate_edit_profile_form_field_data( $data, $form_data, $form_id, $form_field_data, $form_fields, $user_id );
 			}
 		}
 

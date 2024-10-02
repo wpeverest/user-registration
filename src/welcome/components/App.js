@@ -30,10 +30,9 @@ import { useStateValue } from "../../context/StateProvider";
 import { actionTypes } from "../../context/gettingStartedContext";
 
 function App() {
-	const [{ settings, installPage, registrationPageLink }, dispatch] =
-		useStateValue();
-	const [initiateInstall, setInitiateInstall] = useState(false);
+	const [{ settings, registrationPageLink }, dispatch] = useStateValue();
 	const [disabledLink, setDisabledLink] = useState(false);
+	const [nextStepProgess, setNextStepProgess] = useState(false);
 
 	/* global _UR_WIZARD_ */
 	const {
@@ -42,7 +41,8 @@ function App() {
 		defaultFormURL,
 		urRestApiNonce,
 		onBoardIconsURL,
-		restURL
+		restURL,
+		registrationPageURL
 	} = typeof _UR_WIZARD_ !== "undefined" && _UR_WIZARD_;
 
 	const [steps, setSteps] = useState([
@@ -51,7 +51,7 @@ function App() {
 			label: __("Install Pages", "user-registration"),
 			title: __("Install Pages", "user-registration"),
 			description: __(
-				"The following pages and forms will be created automatically.",
+				"The following pages have been created automatically.",
 				"user-registration"
 			),
 			isDone: true,
@@ -135,7 +135,7 @@ function App() {
 			});
 		} else {
 			const params = new URLSearchParams(window.location.href);
-			if (params.get("step")) {
+			if (params.get("step") && !nextStepProgess) {
 				const index = steps.findIndex(
 					(step) => step.key === params.get("step")
 				);
@@ -186,6 +186,7 @@ function App() {
 			})
 		);
 		setActiveStep(steps[index + 1]);
+		setNextStepProgess(true);
 	};
 
 	/**
@@ -226,83 +227,6 @@ function App() {
 	};
 
 	/**
-	 * Install Pages in backend when Install Pages button is clicked.
-	 */
-	const handleInstallPages = () => {
-		setInitiateInstall(true);
-		// POST
-		apiFetch({
-			path:
-				restURL + "user-registration/v1/getting-started/install-pages",
-			method: "POST",
-			headers: {
-				"X-WP-Nonce": urRestApiNonce
-			},
-			data: { install_pages: true }
-		}).then((res) => {
-			if (res.success) {
-				if (res.default_form_id) {
-					dispatch({
-						type: actionTypes.GET_DEFAULT_FORM,
-						defaultFormId: res.default_form_id
-					});
-				}
-
-				if (res.registration_page_link) {
-					dispatch({
-						type: actionTypes.GET_DEFAULT_REGISTRATION_PAGE,
-						registrationPageLink: res.registration_page_link
-					});
-				}
-
-				if (res.is_pro) {
-					dispatch({
-						type: actionTypes.GET_IS_PRO,
-						defaultFormId: res.is_pro
-					});
-				}
-
-				let newInstallPageRef = { ...installPage };
-				newInstallPageRef.registration_page.status = "installing";
-				newInstallPageRef.registration_page.slug =
-					"/" + res.page_slug[0];
-
-				dispatch({
-					type: actionTypes.GET_INSTALL_PAGE,
-					installPage: newInstallPageRef
-				});
-
-				new Promise(function (resolve, reject) {
-					setTimeout(resolve, 5000);
-				}).then(function () {
-					newInstallPageRef.registration_page.status = "installed";
-					newInstallPageRef.my_account_page.status = "installing";
-					newInstallPageRef.my_account_page.slug =
-						"/" + res.page_slug[1];
-
-					dispatch({
-						type: actionTypes.GET_INSTALL_PAGE,
-						installPage: newInstallPageRef
-					});
-
-					new Promise(function (resolve, reject) {
-						setTimeout(resolve, 5000);
-					}).then(function () {
-						newInstallPageRef.my_account_page.status = "installed";
-
-						dispatch({
-							type: actionTypes.GET_INSTALL_PAGE,
-							installPage: newInstallPageRef
-						});
-					});
-				});
-			} else {
-				console.log(res.message);
-			}
-		});
-	};
-
-	/**
 	 * Save settings on button press.
 	 */
 	const handleSaveSettings = (redirectLink) => {
@@ -321,6 +245,11 @@ function App() {
 					obj[key] = settings[key];
 					return obj;
 				}, {});
+		}
+
+		if (activeStep.key === "final_step") {
+			newSettingsRef = { ...newSettingsRef };
+			newSettingsRef.user_registration_end_setup_wizard = true;
 		}
 
 		// POST
@@ -403,7 +332,10 @@ function App() {
 									onClick={() => {
 										setDisabledLink(true);
 										handleSaveSettings(
-											registrationPageLink
+											"undefined" ===
+												typeof registrationPageLink
+												? registrationPageURL
+												: registrationPageLink
 										);
 									}}
 									disabled={disabledLink}
@@ -442,7 +374,10 @@ function App() {
 									color="#FAFAFA !important"
 									onClick={() => {
 										setDisabledLink(true);
-										handleSaveSettings(defaultFormURL);
+										handleSaveSettings(
+											defaultFormURL +
+												"&end-setup-wizard=1"
+										);
 									}}
 									disabled={disabledLink}
 								>
@@ -474,37 +409,20 @@ function App() {
 											)}
 										</Button>
 									)}
-									{steps[0].key === activeStep.key &&
-									installPage.my_account_page.status !==
-										"installed" ? (
-										<Button
-											variant="solid"
-											backgroundColor="#475BB2 !important"
-											color="#FAFAFA !important"
-											disabled={initiateInstall}
-											onClick={handleInstallPages}
-										>
-											{__(
-												"Install & Proceed",
-												"user-registration"
-											)}
-										</Button>
-									) : (
-										<Button
-											colorScheme="blue"
-											backgroundColor="#475BB2 !important"
-											color="#FAFAFA !important"
-											disabled={
-												steps[steps.length - 1].key ===
-												activeStep.key
-											}
-											onClick={() => {
-												handleSaveSettings("");
-											}}
-										>
-											{__("Next", "user-registration")}
-										</Button>
-									)}
+									<Button
+										colorScheme="blue"
+										backgroundColor="#475BB2 !important"
+										color="#FAFAFA !important"
+										disabled={
+											steps[steps.length - 1].key ===
+											activeStep.key
+										}
+										onClick={() => {
+											handleSaveSettings("");
+										}}
+									>
+										{__("Next", "user-registration")}
+									</Button>
 								</React.Fragment>
 							)}
 						</div>
@@ -521,9 +439,9 @@ function App() {
 											activeStep.key ||
 										"final_step" === activeStep.key
 											? ""
-											: `activeStep=${activeStep.key}`;
+											: `&activeStep=${activeStep.key}`;
 									handleSaveSettings(
-										`${adminURL}admin.php?page=user-registration-dashboard&end-setup-wizard=1&${extraParams}`
+										`${adminURL}admin.php?page=user-registration-dashboard&end-setup-wizard=1${extraParams}`
 									);
 								}}
 								mr={10}

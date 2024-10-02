@@ -622,6 +622,63 @@
 		}
 	});
 
+	// Display error when page with our my account or login shortcode is not selected
+	$(
+		"#user_registration_login_options_login_redirect_url, #user_registration_myaccount_page_id"
+	).on("change", function () {
+		var $this = $(this),
+			data = {
+				action: "user_registration_my_account_selection_validator",
+				security:
+					user_registration_settings_params.user_registration_my_account_selection_validator_nonce
+			};
+
+		data.user_registration_selected_my_account_page = $this.val();
+
+		$this.prop("disabled", true);
+		$this.css("border", "1px solid #e1e1e1");
+		$this
+			.closest(".user-registration-global-settings--field")
+			.find(".error.inline")
+			.remove();
+		$this
+			.closest(".user-registration-global-settings")
+			.append('<div class="ur-spinner is-active"></div>');
+
+		$.ajax({
+			url: user_registration_settings_params.ajax_url,
+			data: data,
+			type: "POST",
+			complete: function (response) {
+				if (response.responseJSON.success === false) {
+					$this
+						.closest(".user-registration-global-settings--field")
+						.append(
+							"<div id='message' class='error inline' style='padding:10px;'>" +
+								response.responseJSON.data.message +
+								"</div>"
+						);
+					$this.css("border", "1px solid red");
+					$this
+						.closest("form")
+						.find("input[name='save']")
+						.prop("disabled", true);
+				} else {
+					$this
+						.closest("form")
+						.find("input[name='save']")
+						.prop("disabled", false);
+				}
+				$this.prop("disabled", false);
+
+				$this
+					.closest(".user-registration-global-settings")
+					.find(".ur-spinner")
+					.remove();
+			}
+		});
+	});
+
 	// Set localStorage with expiry
 	function setStorageValue(key, value) {
 		var current = new Date();

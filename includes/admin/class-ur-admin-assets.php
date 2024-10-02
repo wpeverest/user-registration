@@ -329,6 +329,7 @@ class UR_Admin_Assets {
 				'ajax_url'                               => admin_url( 'admin-ajax.php' ),
 				'user_input_dropped'                     => wp_create_nonce( 'user_input_dropped_nonce' ),
 				'ur_form_save'                           => wp_create_nonce( 'ur_form_save_nonce' ),
+				'ur_new_row_added'                       => wp_create_nonce( 'ur_new_row_added_nonce' ),
 				'number_of_grid'                         => UR_Config::$ur_form_grid,
 				'active_grid'                            => UR_Config::$default_active_grid,
 				'is_edit_form'                           => isset( $_GET['edit-registration'] ) ? true : false, //phpcs:ignore WordPress.Security.NonceVerification
