@@ -117,8 +117,9 @@ class UR_Form_Handler {
 		 * @param array $profile The user profile data.
 		 * @param array $form_data The form data.
 		 * @param int $form_id The form ID.
+		 * @param int $user_id The user id.
 		 */
-		do_action( 'user_registration_validate_profile_update', $profile, $form_data, $form_id );
+		do_action( 'user_registration_validate_profile_update', $profile, $form_data, $form_id, $user_id );
 
 		/**
 		 * Action validate profile on update.
@@ -522,6 +523,8 @@ class UR_Form_Handler {
 			$recaptcha_enabled   = ur_string_to_bool( apply_filters( 'user_registration_lost_password_options_enable_recaptcha', false ) );
 			$recaptcha_type      = get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' );
 			$invisible_recaptcha = ur_option_checked( 'user_registration_captcha_setting_invisible_recaptcha_v2', false );
+
+			$recaptcha_type = apply_filters( 'user_registration_lost_password_captcha_type', $recaptcha_type );
 
 			if ( 'v2' === $recaptcha_type && ! $invisible_recaptcha ) {
 				$site_key   = get_option( 'user_registration_captcha_setting_recaptcha_site_key' );

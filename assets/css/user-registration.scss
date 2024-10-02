@@ -144,9 +144,9 @@
 }
 
 .user-registration-error {
-	border-top-color: $red;
-	background: rgba($red, 0.1);
-	color: darken($red, 15%);
+	border-top-color: $red !important;
+	background: rgba($red, 0.1) !important;
+	color: darken($red, 15%) !important;
 
 	&::before {
 		content: "\f534";
@@ -1132,5 +1132,31 @@ span.ur-shortcode-form-embed-dot {
 		.ur-shortcode-form-embed-theme-tooltips-red-arrow {
 			left: 105px;
 		}
+	}
+}
+
+.wp-block-user-registration-content-restriction-enhanced {
+	.block-editor-inner-blocks {
+		margin-bottom: 25px;
+	}
+
+	.user-registration-content-restriction-block-note{
+		display: flex;
+		.dashicons-lock{
+			font-size: 25px;
+			margin: 1px 5px 0px 0px;
+		}
+		.user-registration-content-restriction-block-note-text{
+			margin: 0px;
+		}
+	}
+}
+
+#ur-frontend-form {
+	.empty-list-table-container {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 50px;
 	}
 }
