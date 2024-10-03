@@ -5190,8 +5190,10 @@
 
 				if (
 					$(".ur-selected-item.ur-item-active .ur-general-setting")
-						.find("[data-field='required']")
-						.is(":checked")
+					.find("[name='ur_general_setting[required]']")
+					.filter(function () {
+					  return $(this).is(":checked") || $(this).val() === "1";
+					}).length
 				) {
 					wrapper
 						.find(".ur-label")
