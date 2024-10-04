@@ -1132,14 +1132,22 @@
 
 			h2 {
 				border-bottom: 1px solid #D3D3D3;
-				padding-bottom: 12px;
+				padding-bottom: $spacing_16px;
 				width: 100%;
 				text-align: left;
+				margin-bottom: 0;
+				color: #222222;
+				font-size: 16px;
+				font-weight: 500;
+				line-height: 24px;
 			}
 		}
 
 		.swal2-content {
+			text-align: left;
+			color: $grey-400;
 			font-size: 14px;
+			font-weight: 400;
 			line-height: 24px;
 		}
 
@@ -1148,14 +1156,34 @@
 			flex-direction: row-reverse;
 			justify-content: center;
 			background-color: #F0F0F0;
-			padding: 18px 20px;
-			gap: 12px;
+			padding: 18px $spacing_20px;
+			gap: $spacing_16px;
+			margin-top: $spacing_20px;
+			border-radius: 0 0 5px 5px;
+			background: #F4F4F4;
 
 			button {
 				width: 45%;
+				color: $grey-400;
+				font-size: 14px;
+				font-weight: 400;
+				line-height: 24px;
+				margin: 0;
+				padding: 6px 12px;
+
+				&:focus {
+					border: 0;
+					outline: none;
+					box-shadow: none;
+				}
+
+				&.swal2-confirm {
+					color: $grey-0;
+				}
 
 				&.swal2-cancel {
-					color: black;
+					color: $grey-400;
+					background: $grey-0 !important;
 				}
 			}
 		}
