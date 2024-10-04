@@ -86,6 +86,12 @@ class UR_Admin {
 			echo '</div>';
 			echo '</div>';
 		}
+		echo '<div id="integration-selection-settings" style="display:none;">';
+		echo '<img src="' . esc_url_raw( UR()->plugin_url() . '/assets/images/no-integration-selected.png' ) . '"/>';
+		echo '<div class="integration-selection-settings-contents">';
+		echo '<h3>' . esc_attr__( 'No Integration Selected', 'user-registration' ) . '</h3>';
+		echo '<p>' . esc_attr__( 'Please select an integration from the list to configure its settings', 'user-registration' ) . '</p>';
+		echo '</div>';
 	}
 
 	/**

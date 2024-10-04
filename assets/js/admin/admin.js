@@ -420,18 +420,59 @@ jQuery(function ($) {
 					)
 						? "integration-lists-settings"
 						: "";
+					var divToAppend = "";
 
-					form_settings_section.append(
-						'<div id="' +
+					if ($(el).hasClass("integration-lists-settings")) {
+						$(document)
+							.find(".ur-nav-premium")
+							.each(function () {
+								if ($(this).attr("id") === appending_id) {
+									classToAdd += " ur-nav-premium";
+								}
+							});
+
+						divToAppend =
+							'<div id="' +
 							appending_id +
 							'" class="form-settings-tab ' +
 							classToAdd +
 							'" ' +
 							style +
-							">" +
+							">";
+						divToAppend += '<div class="integration-detail">';
+						divToAppend +=
+							'<span class="integration-status"></span>';
+						divToAppend += '<figure class="logo">';
+						divToAppend +=
+							'<img src="http://test-wpeverest.local/wp-content/plugins/user-registration/assets/images/settings-icons/' +
+							appending_text.toLowerCase() +
+							'.png" alt="' +
 							appending_text +
-							"</div>"
-					);
+							'">';
+						divToAppend += "</figure>";
+						divToAppend += "<h3>";
+						divToAppend += appending_text;
+						divToAppend += "</h3>";
+						divToAppend += "</div>";
+						divToAppend += "</div>";
+					} else {
+						if (
+							$(el).attr("id") !==
+							"integration-selection-settings"
+						) {
+							divToAppend =
+								'<div id="' +
+								appending_id +
+								'" class="form-settings-tab ' +
+								classToAdd +
+								'" ' +
+								style +
+								" >" +
+								appending_text +
+								"</div>";
+						}
+					}
+					form_settings_section.append(divToAppend);
 				}
 
 				$(el).hide();
@@ -439,6 +480,7 @@ jQuery(function ($) {
 
 		form_settings_section.find("#integration-settings").click(function (e) {
 			e.stopImmediatePropagation();
+
 			$(this)
 				.closest("#ur-tab-field-settings")
 				.find(".form-settings-tab:not(.integration-lists-settings)")
@@ -448,25 +490,39 @@ jQuery(function ($) {
 				.find(".integration-lists-settings")
 				.show();
 
+			$(document)
+				.find("#integration-selection-settings")
+				.siblings()
+				.hide();
+			$(document).find("#integration-selection-settings").show();
+
 			$(
-				'<div id="integration_settings_back" class="form-settings-tab-back" style="font-weight: bold;">' +
+				'<div id="integration_settings_back" class="form-settings-tab-back">' +
 					$(this).text() +
 					"</div>"
 			).insertBefore($(this));
+
+			$(document)
+				.find("#integration_settings_back")
+				.click(function (e) {
+					$(this)
+						.closest("#ur-tab-field-settings")
+						.find(
+							".form-settings-tab:not(.integration-lists-settings)"
+						)
+						.show();
+					$(this)
+						.closest("#ur-tab-field-settings")
+						.find(".integration-lists-settings")
+						.hide();
+					$(this)
+						.closest("#ur-tab-field-settings")
+						.find("#general-settings")
+						.trigger("click");
+
+					$(this).remove();
+				});
 		});
-		form_settings_section
-			.find("#integration_settings_back")
-			.click(function (e) {
-				$(this).remove();
-				$(this)
-					.closest("#ur-tab-field-settings")
-					.find(".form-settings-tab:not(.integration-lists-settings)")
-					.show();
-				$(this)
-					.closest("#ur-tab-field-settings")
-					.find(".integration-lists-settings")
-					.hide();
-			});
 
 		// Add active class to general settings and form-settings-tab for all settings.
 		form_settings_section.find("#general-settings").addClass("active");
@@ -475,53 +531,73 @@ jQuery(function ($) {
 		form_settings_section
 			.find(".form-settings-tab")
 			.on("click", function () {
-				this_id = $(this).attr("id");
-				// Remove all active classes initially.
-				$(this).siblings().removeClass("active");
-
-				// Add active class on clicked tab.
-				$(this).addClass("active");
-
-				// Hide other settings and show respective id's settings.
-				fields_panel.find("form #ur-field-all-settings > div").hide();
-
-				if ($(this).parent().hasClass("form-settings-main-tab")) {
-					// Hide other settings and show respective id's settings.
-					fields_panel
-						.find(
-							"form #ur-field-all-settings > div#integration-settings"
-						)
-						.show();
-					fields_panel
-						.find("form #integration-settings .ur-integration")
-						.remove();
-					fields_panel
-						.find("form #integration-settings > div")
-						.hide();
-					fields_panel
-						.find("form #integration-settings > div#" + this_id)
-						.show();
+				if ($(this).hasClass("ur-nav-premium")) {
+					if (
+						$(document).find(
+							".form-settings-sub-tab#" + $(this).attr("id")
+						).length
+					) {
+						$(document)
+							.find(
+								".form-settings-sub-tab#" + $(this).attr("id")
+							)
+							.trigger("click");
+					}
 				} else {
+					this_id = $(this).attr("id");
+					// Remove all active classes initially.
+					$(this).siblings().removeClass("active");
+
+					// Add active class on clicked tab.
+					$(this).addClass("active");
+
 					// Hide other settings and show respective id's settings.
 					fields_panel
 						.find("form #ur-field-all-settings > div")
 						.hide();
-					fields_panel
-						.find("form #ur-field-all-settings > div#" + this_id)
-						.show();
-				}
 
-				$(document).trigger("update_perfect_scrollbar");
-				$(".ur-builder-wrapper").scrollTop(0);
+					if ($(this).parent().hasClass("form-settings-main-tab")) {
+						// Hide other settings and show respective id's settings.
+						fields_panel
+							.find(
+								"form #ur-field-all-settings > div#integration-settings"
+							)
+							.show();
+						fields_panel
+							.find("form #integration-settings .ur-integration")
+							.remove();
+						fields_panel
+							.find("form #integration-settings > div")
+							.hide();
+						fields_panel
+							.find("form #integration-settings > div#" + this_id)
+							.show();
+					} else {
+						// Hide other settings and show respective id's settings.
+						fields_panel
+							.find("form #ur-field-all-settings > div")
+							.hide();
+						fields_panel
+							.find(
+								"form #ur-field-all-settings > div#" + this_id
+							)
+							.show();
+					}
+
+					$(document).trigger("update_perfect_scrollbar");
+					$(".ur-builder-wrapper").scrollTop(0);
+				}
 			});
 
 		/**
 		 * Display the upgrade message for the top addons.
 		 */
-		form_settings_section
+		$(document)
 			.find(".form-settings-sub-tab")
 			.on("click", function (e) {
 				e.preventDefault();
+				e.stopImmediatePropagation();
+
 				if ($(this).hasClass("ur-nav-premium")) {
 					var icon =
 						'<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>';
@@ -532,7 +608,6 @@ jQuery(function ($) {
 					$this = $(this);
 
 					if (slug != "" && plan != "") {
-						console.log(slug);
 						$.ajax({
 							url: user_registration_form_builder_data.ajax_url,
 							type: "POST",
