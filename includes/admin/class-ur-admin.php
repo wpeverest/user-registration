@@ -63,18 +63,20 @@ class UR_Admin {
 		$integration_addons = ur_integration_addons();
 
 		foreach ( $integration_addons as $key => $integration ) {
-			if ( 'sms_integration' === $integration['id'] ) {
+			if ( isset( $integration['display'] ) && ! in_array( 'form_settings', $integration['display'] ) ) {
 				continue;
 			}
 
-			echo '<div id="' . esc_attr( $integration['id'] ) . '-settings" class="integration-lists-settings">';
+			echo '<div id="' . esc_attr( $integration['id'] ) . '-settings" class="integration-lists-settings" data-connected="' . esc_attr( $integration['connected'] ) . '">';
 			$is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php' );
 			$css_class     = '';
 
 			if ( ! $is_pro_active ) {
 				$css_class = 'ur-nav-premium';
 			} else {
+
 				$is_addon_active = is_plugin_active( 'user-registration-' . $integration['id'] . '/user-registration-' . $integration['id'] . '.php' );
+
 				if ( ! $is_addon_active ) {
 					$css_class = 'ur-nav-premium';
 				}
@@ -91,6 +93,7 @@ class UR_Admin {
 		echo '<div class="integration-selection-settings-contents">';
 		echo '<h3>' . esc_attr__( 'No Integration Selected', 'user-registration' ) . '</h3>';
 		echo '<p>' . esc_attr__( 'Please select an integration from the list to configure its settings', 'user-registration' ) . '</p>';
+		echo '</div>';
 		echo '</div>';
 	}
 

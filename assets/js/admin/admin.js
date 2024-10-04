@@ -441,7 +441,11 @@ jQuery(function ($) {
 							">";
 						divToAppend += '<div class="integration-detail">';
 						divToAppend +=
-							'<span class="integration-status"></span>';
+							'<span class="integration-status ' +
+							($(el).attr("data-connected") === 1
+								? "ur-integration-account-connected"
+								: "") +
+							'"></span>';
 						divToAppend += '<figure class="logo">';
 						divToAppend +=
 							'<img src="http://test-wpeverest.local/wp-content/plugins/user-registration/assets/images/settings-icons/' +
@@ -537,186 +541,128 @@ jQuery(function ($) {
 							".form-settings-sub-tab#" + $(this).attr("id")
 						).length
 					) {
-						$(document)
-							.find(
-								".form-settings-sub-tab#" + $(this).attr("id")
-							)
-							.trigger("click");
-					}
-				} else {
-					this_id = $(this).attr("id");
-					// Remove all active classes initially.
-					$(this).siblings().removeClass("active");
+						var node = $(document).find(
+							".form-settings-sub-tab#" + $(this).attr("id")
+						);
 
-					// Add active class on clicked tab.
-					$(this).addClass("active");
+						var icon =
+							'<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>';
+						var plan = node.data("available-in");
+						var name = node.data("title");
+						var video_id = node.data("video");
+						var slug = node.data("integration-id");
 
-					// Hide other settings and show respective id's settings.
-					fields_panel
-						.find("form #ur-field-all-settings > div")
-						.hide();
-
-					if ($(this).parent().hasClass("form-settings-main-tab")) {
-						// Hide other settings and show respective id's settings.
-						fields_panel
-							.find(
-								"form #ur-field-all-settings > div#integration-settings"
-							)
-							.show();
-						fields_panel
-							.find("form #integration-settings .ur-integration")
-							.remove();
-						fields_panel
-							.find("form #integration-settings > div")
-							.hide();
-						fields_panel
-							.find("form #integration-settings > div#" + this_id)
-							.show();
-					} else {
-						// Hide other settings and show respective id's settings.
-						fields_panel
-							.find("form #ur-field-all-settings > div")
-							.hide();
-						fields_panel
-							.find(
-								"form #ur-field-all-settings > div#" + this_id
-							)
-							.show();
-					}
-
-					$(document).trigger("update_perfect_scrollbar");
-					$(".ur-builder-wrapper").scrollTop(0);
-				}
-			});
-
-		/**
-		 * Display the upgrade message for the top addons.
-		 */
-		$(document)
-			.find(".form-settings-sub-tab")
-			.on("click", function (e) {
-				e.preventDefault();
-				e.stopImmediatePropagation();
-
-				if ($(this).hasClass("ur-nav-premium")) {
-					var icon =
-						'<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>';
-					var plan = $(this).data("available-in");
-					var name = $(this).data("title");
-					var video_id = $(this).data("video");
-					var slug = $(this).data("integration-id");
-					$this = $(this);
-
-					if (slug != "" && plan != "") {
-						$.ajax({
-							url: user_registration_form_builder_data.ajax_url,
-							type: "POST",
-							data: {
-								action: "user_registration_locked_form_fields_notice",
-								slug: slug,
-								plan: plan,
-								name: name,
-								video_id: video_id,
-								security:
-									user_registration_form_builder_data
-										.i18n_admin
-										.user_registration_locked_form_fields_notice_nonce
-							},
-							success: function (response) {
-								if (video_id !== "") {
-									var video =
-										'<div style="width: 535px; height: 300px;"><iframe width="100%" height="100%" frameborder="0" src="https://www.youtube.com/embed/' +
-										video_id +
-										'" rel="1" allowfullscreen></iframe></div><br>';
-								}
-								var action_button = $(
-									response.data.action_button
-								).find("a");
-
-								if (!action_button.length) {
-									action_button = $(
+						if (slug != "" && plan != "") {
+							$.ajax({
+								url: user_registration_form_builder_data.ajax_url,
+								type: "POST",
+								data: {
+									action: "user_registration_locked_form_fields_notice",
+									slug: slug,
+									plan: plan,
+									name: name,
+									video_id: video_id,
+									security:
+										user_registration_form_builder_data
+											.i18n_admin
+											.user_registration_locked_form_fields_notice_nonce
+								},
+								success: function (response) {
+									if (video_id !== "") {
+										var video =
+											'<div style="width: 535px; height: 300px;"><iframe width="100%" height="100%" frameborder="0" src="https://www.youtube.com/embed/' +
+											video_id +
+											'" rel="1" allowfullscreen></iframe></div><br>';
+									}
+									var action_button = $(
 										response.data.action_button
-									).find("form");
+									).find("a");
+
+									if (!action_button.length) {
+										action_button = $(
+											response.data.action_button
+										).find("form");
+									}
+
+									var title =
+										icon +
+										'<span class="user-registration-swal2-modal__title" > ';
+
+									if (
+										action_button.hasClass(
+											"activate-license-now"
+										)
+									) {
+										var message =
+											user_registration_form_builder_data
+												.i18n_admin
+												.license_activation_required_message;
+										title +=
+											user_registration_form_builder_data
+												.i18n_admin
+												.license_activation_required_title;
+									} else if (
+										action_button.hasClass("activate-now")
+									) {
+										var message =
+											user_registration_form_builder_data.i18n_admin.activation_required_message.replace(
+												"%plugin%",
+												name
+											);
+										title +=
+											user_registration_form_builder_data
+												.i18n_admin
+												.activation_required_title;
+									} else if (
+										action_button.hasClass("install-now")
+									) {
+										var message =
+											user_registration_form_builder_data.i18n_admin.installation_required_message.replace(
+												"%plugin%",
+												name
+											);
+										title +=
+											user_registration_form_builder_data
+												.i18n_admin
+												.installation_required_title;
+									} else {
+										var message =
+											user_registration_form_builder_data
+												.i18n_admin.upgrade_message;
+
+										message = message
+											.replace("%title%", name)
+											.replace("%plan%", plan);
+
+										title +=
+											name +
+											" " +
+											user_registration_form_builder_data
+												.i18n_admin.pro_feature_title;
+									}
+
+									title += "</span>";
+									message =
+										video +
+										message +
+										"<br><br>" +
+										response.data.action_button;
+									Swal.fire({
+										title: title,
+										html: message,
+										customClass:
+											"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-locked-field",
+										showCloseButton: true,
+										showConfirmButton: false,
+										allowOutsideClick: true,
+										heightAuto: false,
+										width: "575px"
+									}).then(function (result) {
+										// Do Nothing.
+									});
 								}
-
-								var title =
-									icon +
-									'<span class="user-registration-swal2-modal__title" > ';
-
-								if (
-									action_button.hasClass(
-										"activate-license-now"
-									)
-								) {
-									var message =
-										user_registration_form_builder_data
-											.i18n_admin
-											.license_activation_required_message;
-									title +=
-										user_registration_form_builder_data
-											.i18n_admin
-											.license_activation_required_title;
-								} else if (
-									action_button.hasClass("activate-now")
-								) {
-									var message =
-										user_registration_form_builder_data.i18n_admin.activation_required_message.replace(
-											"%plugin%",
-											name
-										);
-									title +=
-										user_registration_form_builder_data
-											.i18n_admin
-											.activation_required_title;
-								} else if (
-									action_button.hasClass("install-now")
-								) {
-									var message =
-										user_registration_form_builder_data.i18n_admin.installation_required_message.replace(
-											"%plugin%",
-											name
-										);
-									title +=
-										user_registration_form_builder_data
-											.i18n_admin
-											.installation_required_title;
-								} else {
-									var message =
-										user_registration_form_builder_data
-											.i18n_admin.upgrade_message;
-
-									message = message
-										.replace("%title%", name)
-										.replace("%plan%", plan);
-
-									title +=
-										name +
-										" " +
-										user_registration_form_builder_data
-											.i18n_admin.pro_feature_title;
-								}
-
-								title += "</span>";
-								message =
-									video +
-									message +
-									"<br><br>" +
-									response.data.action_button;
-								Swal.fire({
-									title: title,
-									html: message,
-									customClass:
-										"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-locked-field",
-									showCloseButton: true,
-									showConfirmButton: false,
-									allowOutsideClick: true,
-									heightAuto: false,
-									width: "575px"
-								}).then(function (result) {
-									// Do Nothing.
-								});
-							}
-						});
+							});
+						}
 					}
 				} else {
 					this_id = $(this).attr("id");
