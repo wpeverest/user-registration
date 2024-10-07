@@ -1035,6 +1035,10 @@
 						 margin-right: -$spacing_12px;
 					 }
 
+					 #integration_settings_back {
+						cursor: pointer;
+					 }
+
 					 .form-settings-tab-back {
 						 margin-bottom: 0;
 						 border-radius: 0;
@@ -1043,10 +1047,12 @@
 						 background: transparent;
 						 font-size: 15px;
 						 font-weight: $semi_bold;
-						 gap: 20px;
+						 gap: $spacing_16px;
 						 line-height: 150%;
 						 display: flex;
 						 align-items: center;
+						 color: $grey-400;
+						 transition: all .3s;
 
 						 &::before {
 							 content: "";
@@ -1057,6 +1063,12 @@
 							 width: 18px;
 							 height: 18px;
 							 transform: rotate(180deg);
+						 }
+
+						 &:hover {
+							&::before {
+								filter: brightness(0) saturate(100%) invert(35%) sepia(13%) saturate(3079%) hue-rotate(194deg) brightness(96%) contrast(89%);
+							}
 						 }
 					 }
 
@@ -1151,7 +1163,6 @@
 								 .logo {
 									 width: 40px;
 									 height: 40px;
-									 flex: 0 0 39px;
 									 display: flex;
 									 overflow: hidden;
 									 margin: 0;
@@ -1167,16 +1178,16 @@
 								 }
 
 								 h3 {
-									 font-size: 16px;
-									 line-height: 19.2px;
+									 font-size: 15px;
+									 line-height: 150%;
 									 margin: 0;
-									 font-weight: 600;
+									 font-weight: $medium;
 								 }
 							 }
 
 							 .form-settings-sub-tab {
 								 padding: 0px;
-								 background-color: #fffff;
+								 background: $grey-0;
 								 align-items: baseline;
 							 }
 						 }
@@ -2244,6 +2255,7 @@
 		 }
 	 }
  }
+
 
  /**
 	 * Tooltips
@@ -3992,9 +4004,10 @@
 				 #integration-selection-settings {
 					 display: flex;
 					 flex-direction: column;
-					 gap: 24px;
+					 gap: $spacing_24px;
 					 align-items: center;
-					 padding: 100px 0px;
+					 padding: $spacing_100px 0px;
+					 justify-content: center;
 
 					 .integration-selection-settings-contents {
 						 text-align: center;
@@ -4152,8 +4165,7 @@
 								 padding: $spacing_24px;
 
 								 .ur-builder-wrapper-content {
-									 padding: $spacing_20px $spacing_30px
-										 $spacing_60px;
+									 padding: $spacing_20px $spacing_30px $spacing_60px;
 									 border-radius: $border_radius_7;
 
 									 .ur-login {
