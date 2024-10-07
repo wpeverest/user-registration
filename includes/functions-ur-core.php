@@ -5754,6 +5754,21 @@ if ( ! function_exists( 'ur_check_is_disabled' ) ) {
 	}
 }
 
+add_action( 'init', 'ur_check_is_denied' );
+
+if ( ! function_exists( 'ur_check_is_denied' ) ) {
+	/**
+	 * Check if user is denied.
+	 */
+	function ur_check_is_denied() {
+		$is_denied = get_user_meta( get_current_user_id(), 'ur_user_status', true );
+		if ( '-1' === $is_denied ) {
+			wp_logout();
+		}
+	}
+}
+
+
 if ( ! function_exists( 'ur_check_is_auto_enable_user' ) ) {
 
 	/**
