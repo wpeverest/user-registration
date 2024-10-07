@@ -3664,7 +3664,7 @@ if ( ! function_exists( 'ur_check_captch_keys' ) ) {
 
 		if ( 'login' === $context ) {
 			$recaptcha_type = get_option( 'user_registration_login_options_configured_captcha_type', $recaptcha_type );
-		} elseif ( 'register' === $context && ! $form_id ) {
+		} elseif ( 'register' === $context && $form_id ) {
 			$recaptcha_type = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_configured_captcha_type', $recaptcha_type );
 		}
 
