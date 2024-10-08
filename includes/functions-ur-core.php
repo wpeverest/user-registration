@@ -6150,8 +6150,15 @@ if ( ! function_exists( 'ur_settings_text_format' ) ) {
 			}
 
 			foreach ( $fields_to_format as $field ) {
+
 				if ( isset( $arg[ $field ] ) ) {
-					$arg[ $field ] = ucfirst( strtolower( $arg[ $field ] ) );
+					if ( strpos( trim( $arg[ $field ] ), '<div' ) !== 0 ) {
+						strpos( trim( $arg[ $field ] ), '<div' );
+						$arg[ $field ] = ur_format_sentence_case( strtolower( $arg[ $field ] ) );
+
+					} else {
+						$arg[ $field ] = $arg[ $field ];
+					}
 				}
 			}
 
@@ -6163,6 +6170,21 @@ if ( ! function_exists( 'ur_settings_text_format' ) ) {
 		}
 
 		return $args;
+	}
+}
+if ( ! function_exists( 'ur_format_sentence_case' ) ) {
+	/**
+	 * Capitalizes the first letter of the initial word and each word after a period.
+	 *
+	 * @param string $string
+	 * @return string
+	 */
+	function ur_format_sentence_case( $string ) {
+		$sentences = preg_split( '/(\.\s+)/', $string, -1, PREG_SPLIT_DELIM_CAPTURE );
+		foreach ( $sentences as &$sentence ) {
+			$sentence = ucfirst( trim( $sentence ) );
+		}
+		return implode( '', $sentences );
 	}
 }
 
