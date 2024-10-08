@@ -379,6 +379,7 @@ class UR_Admin_Assets {
 				'ur_upgrade_plan_link'                   => esc_url( 'https://wpuserregistration.com/pricing/?utm_source=plugin&utm_medium=button&utm_campaign=ur-upgrade-to-pro' ),
 				'ur_remove_password_field_link'          => esc_url( 'https://docs.wpuserregistration.com/docs/remove-password-field/' ),
 				'ur_form_non_deletable_fields'           => ur_non_deletable_fields(),
+				'ur_assets_url'             => UR()->plugin_url() . '/assets/',
 			);
 
 			wp_localize_script(

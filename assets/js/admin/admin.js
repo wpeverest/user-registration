@@ -448,7 +448,9 @@ jQuery(function ($) {
 							'"></span>';
 						divToAppend += '<figure class="logo">';
 						divToAppend +=
-							'<img src="http://test-wpeverest.local/wp-content/plugins/user-registration/assets/images/settings-icons/' +
+							'<img src="' +
+							user_registration_form_builder_data.ur_assets_url +
+							"images/settings-icons/" +
 							appending_text.toLowerCase() +
 							'.png" alt="' +
 							appending_text +
