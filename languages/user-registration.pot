@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-10-02T11:03:16+00:00\n"
+"POT-Creation-Date: 2024-10-16T04:07:41+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: user-registration\n"
@@ -19,11 +19,11 @@ msgstr ""
 #: includes/3rd-party/elementor/class-ur-widget.php:41
 #: includes/blocks/class-ur-blocks.php:96
 #: includes/functions-ur-core.php:4659
-#: includes/functions-ur-core.php:6539
-#: includes/functions-ur-core.php:6557
-#: includes/functions-ur-core.php:6582
-#: includes/functions-ur-core.php:6607
-#: includes/functions-ur-core.php:6616
+#: includes/functions-ur-core.php:6576
+#: includes/functions-ur-core.php:6594
+#: includes/functions-ur-core.php:6619
+#: includes/functions-ur-core.php:6644
+#: includes/functions-ur-core.php:6653
 msgid "User Registration"
 msgstr ""
 
@@ -46,7 +46,7 @@ msgstr ""
 #: includes/3rd-party/elementor/class-ur-widget.php:95
 #: includes/3rd-party/elementor/widgets/class-ur-widgets-registration.php:80
 #: includes/class-ur-form-block.php:66
-#: includes/functions-ur-core.php:6544
+#: includes/functions-ur-core.php:6581
 msgid "Form"
 msgstr ""
 
@@ -63,12 +63,12 @@ msgstr ""
 
 #: includes/3rd-party/elementor/class-ur-widget.php:159
 #: includes/3rd-party/elementor/widgets/class-ur-widgets-registration.php:142
-#: includes/functions-ur-core.php:6515
+#: includes/functions-ur-core.php:6552
 msgid "You have not created a form, Please Create a form first"
 msgstr ""
 
 #: includes/3rd-party/elementor/widgets/class-ur-widgets-edit-password.php:38
-#: includes/functions-ur-core.php:6613
+#: includes/functions-ur-core.php:6650
 msgid "Edit Password"
 msgstr ""
 
@@ -81,18 +81,18 @@ msgstr ""
 
 #: includes/3rd-party/elementor/widgets/class-ur-widgets-edit-profile.php:36
 #: includes/admin/settings/class-ur-settings-general.php:188
-#: includes/functions-ur-core.php:6604
+#: includes/functions-ur-core.php:6641
 msgid "Edit Profile"
 msgstr ""
 
 #: includes/3rd-party/elementor/widgets/class-ur-widgets-login.php:42
 #: includes/3rd-party/elementor/widgets/class-ur-widgets-login.php:119
-#: includes/functions-ur-core.php:6579
+#: includes/functions-ur-core.php:6616
 msgid "Login Form"
 msgstr ""
 
 #: includes/3rd-party/elementor/widgets/class-ur-widgets-myaccount.php:37
-#: includes/functions-ur-core.php:6554
+#: includes/functions-ur-core.php:6591
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:197
 #: src/welcome/components/App.js:84
 msgid "My Account"
@@ -123,7 +123,7 @@ msgid "View Profile Details"
 msgstr ""
 
 #: includes/3rd-party/elementor/widgets/class-ur-widgets-registration.php:36
-#: includes/functions-ur-core.php:6536
+#: includes/functions-ur-core.php:6573
 msgid "Registration Form"
 msgstr ""
 
@@ -810,6 +810,15 @@ msgid "Upgrade plan"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:619
+#: includes/admin/views/html-admin-page-forms.php:53
+msgid "Fullscreen"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:620
+msgid "Exit Fullscreen"
+msgstr ""
+
+#: includes/admin/class-ur-admin-assets.php:621
 msgid "WordPress requires the user to have an email address during registration."
 msgstr ""
 
@@ -1499,8 +1508,8 @@ msgstr ""
 #: includes/admin/notifications/class-ur-admin-notices.php:469
 #: includes/class-ur-plugin-updater.php:622
 #: includes/class-ur-plugin-updater.php:645
-#: includes/functions-ur-core.php:6270
-#: includes/functions-ur-core.php:6386
+#: includes/functions-ur-core.php:6307
+#: includes/functions-ur-core.php:6423
 msgid "I have a query"
 msgstr ""
 
@@ -3183,10 +3192,6 @@ msgstr ""
 msgid "Copied!"
 msgstr ""
 
-#: includes/admin/views/html-admin-page-forms.php:53
-msgid "Fullscreen"
-msgstr ""
-
 #: includes/admin/views/html-admin-page-forms.php:57
 msgid "Embed"
 msgstr ""
@@ -3303,8 +3308,8 @@ msgid "Save Changes"
 msgstr ""
 
 #: includes/admin/views/html-admin-settings.php:199
-#: includes/functions-ur-core.php:6277
-#: includes/functions-ur-core.php:6393
+#: includes/functions-ur-core.php:6314
+#: includes/functions-ur-core.php:6430
 msgid "Visit Documentation"
 msgstr ""
 
@@ -6400,8 +6405,8 @@ msgid "Choose the custom page to redirect after registration"
 msgstr ""
 
 #: includes/functions-ur-core.php:1421
-#: includes/functions-ur-core.php:6562
-#: includes/functions-ur-core.php:6587
+#: includes/functions-ur-core.php:6599
+#: includes/functions-ur-core.php:6624
 #: src/blocks/blocks/login-form/Edit.js:40
 #: src/blocks/blocks/myaccount/Edit.js:43
 msgid "Redirect URL"
@@ -6553,135 +6558,135 @@ msgstr ""
 msgid "Email already exists"
 msgstr ""
 
-#: includes/functions-ur-core.php:5813
-#: includes/functions-ur-core.php:5833
+#: includes/functions-ur-core.php:5828
+#: includes/functions-ur-core.php:5848
 msgid "Warning:-"
 msgstr ""
 
-#: includes/functions-ur-core.php:5814
+#: includes/functions-ur-core.php:5829
 msgid " This feature is inactive because"
 msgstr ""
 
-#: includes/functions-ur-core.php:5815
-#: includes/functions-ur-core.php:5825
-#: includes/functions-ur-core.php:5835
+#: includes/functions-ur-core.php:5830
+#: includes/functions-ur-core.php:5840
+#: includes/functions-ur-core.php:5850
 msgid "Akismet"
 msgstr ""
 
-#: includes/functions-ur-core.php:5816
+#: includes/functions-ur-core.php:5831
 msgid "plugin has not been installed. For more"
 msgstr ""
 
-#: includes/functions-ur-core.php:5817
-#: includes/functions-ur-core.php:5827
-#: includes/functions-ur-core.php:5837
+#: includes/functions-ur-core.php:5832
+#: includes/functions-ur-core.php:5842
+#: includes/functions-ur-core.php:5852
 msgid "information."
 msgstr ""
 
-#: includes/functions-ur-core.php:5823
+#: includes/functions-ur-core.php:5838
 msgid "Warning:- "
 msgstr ""
 
-#: includes/functions-ur-core.php:5824
-#: includes/functions-ur-core.php:5834
+#: includes/functions-ur-core.php:5839
+#: includes/functions-ur-core.php:5849
 msgid "This feature is inactive because"
 msgstr ""
 
-#: includes/functions-ur-core.php:5826
+#: includes/functions-ur-core.php:5841
 msgid "plugin is not activated. For more"
 msgstr ""
 
-#: includes/functions-ur-core.php:5836
+#: includes/functions-ur-core.php:5851
 msgid "plugin has not been properly configured. For more"
 msgstr ""
 
-#: includes/functions-ur-core.php:6056
+#: includes/functions-ur-core.php:6071
 msgid "Create a registration form."
 msgstr ""
 
-#: includes/functions-ur-core.php:6061
+#: includes/functions-ur-core.php:6076
 msgid "Create registration and my account page."
 msgstr ""
 
-#: includes/functions-ur-core.php:6066
+#: includes/functions-ur-core.php:6081
 msgid "Enable anyone can register."
 msgstr ""
 
-#: includes/functions-ur-core.php:6070
+#: includes/functions-ur-core.php:6085
 msgid "Disable WordPress default registration and login page."
 msgstr ""
 
-#: includes/functions-ur-core.php:6075
+#: includes/functions-ur-core.php:6090
 msgid "Setup spam protection mechanisms."
 msgstr ""
 
 #. translators: %s: Status Log URL
-#: includes/functions-ur-core.php:6217
+#: includes/functions-ur-core.php:6254
 msgid "Please check the `ur_mail_errors` log under <a target=\"_blank\" href= \"%s\"> Status Log </a> section."
 msgstr ""
 
-#: includes/functions-ur-core.php:6260
+#: includes/functions-ur-core.php:6297
 msgid "User Registration Email Send Error"
 msgstr ""
 
-#: includes/functions-ur-core.php:6264
+#: includes/functions-ur-core.php:6301
 msgid "The last emails sent from User Registration Plugin was not delivered to the user. "
 msgstr ""
 
-#: includes/functions-ur-core.php:6369
+#: includes/functions-ur-core.php:6406
 msgid "Unusual User Registrations Detected"
 msgstr ""
 
-#: includes/functions-ur-core.php:6373
+#: includes/functions-ur-core.php:6410
 msgid "A significant number of users have registered on your site from sources other than the User Registration plugin's form."
 msgstr ""
 
-#: includes/functions-ur-core.php:6374
+#: includes/functions-ur-core.php:6411
 msgid "These registrations may be suspicious. Please review and disable any other methods that allow user registrations if they are not intended. Additionally, consider enabling spam protection measures in the User Registration plugin to safeguard your site."
 msgstr ""
 
-#: includes/functions-ur-core.php:6379
+#: includes/functions-ur-core.php:6416
 msgid "It was a false alarm"
 msgstr ""
 
-#: includes/functions-ur-core.php:6540
+#: includes/functions-ur-core.php:6577
 msgid "Registration Form widget for WPBakery."
 msgstr ""
 
-#: includes/functions-ur-core.php:6547
+#: includes/functions-ur-core.php:6584
 msgid "Select Form."
 msgstr ""
 
-#: includes/functions-ur-core.php:6558
+#: includes/functions-ur-core.php:6595
 msgid "My Account widget for WPBakery."
 msgstr ""
 
-#: includes/functions-ur-core.php:6565
-#: includes/functions-ur-core.php:6590
+#: includes/functions-ur-core.php:6602
+#: includes/functions-ur-core.php:6627
 msgid "Enter redirect url after login."
 msgstr ""
 
-#: includes/functions-ur-core.php:6569
-#: includes/functions-ur-core.php:6594
+#: includes/functions-ur-core.php:6606
+#: includes/functions-ur-core.php:6631
 #: src/blocks/blocks/login-form/Edit.js:46
 #: src/blocks/blocks/myaccount/Edit.js:49
 msgid "Logout URL"
 msgstr ""
 
-#: includes/functions-ur-core.php:6572
-#: includes/functions-ur-core.php:6597
+#: includes/functions-ur-core.php:6609
+#: includes/functions-ur-core.php:6634
 msgid "Enter url which redirect after logout."
 msgstr ""
 
-#: includes/functions-ur-core.php:6583
+#: includes/functions-ur-core.php:6620
 msgid "Login Form widget for WPBakery."
 msgstr ""
 
-#: includes/functions-ur-core.php:6608
+#: includes/functions-ur-core.php:6645
 msgid "Edit Profile widget for WPBakery."
 msgstr ""
 
-#: includes/functions-ur-core.php:6617
+#: includes/functions-ur-core.php:6654
 msgid "Edit Password widget for WPBakery."
 msgstr ""
 
@@ -7176,7 +7181,7 @@ msgstr ""
 
 #: src/dashboard/components/common/UsePluginInstallActivate.js:180
 #: src/dashboard/screens/Dashboard/components/UsefulPlugins.js:78
-#: src/dashboard/screens/Modules/Modules.js:390
+#: src/dashboard/screens/Modules/Modules.js:391
 #: src/dashboard/screens/Products/components/ProductCard.js:142
 msgid "Activate"
 msgstr ""
@@ -7371,7 +7376,7 @@ msgid "Watch Videos"
 msgstr ""
 
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:38
-#: src/dashboard/screens/Modules/Modules.js:342
+#: src/dashboard/screens/Modules/Modules.js:343
 msgid "Features"
 msgstr ""
 
@@ -7516,7 +7521,7 @@ msgid "Send Form Data to External URL After Registration"
 msgstr ""
 
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:271
-#: src/dashboard/screens/Modules/Modules.js:368
+#: src/dashboard/screens/Modules/Modules.js:369
 msgid "Addons"
 msgstr ""
 
@@ -7942,55 +7947,55 @@ msgstr ""
 msgid "Play Video"
 msgstr ""
 
-#: src/dashboard/screens/Modules/Modules.js:102
+#: src/dashboard/screens/Modules/Modules.js:103
 msgid "Please select at least a feature"
 msgstr ""
 
-#: src/dashboard/screens/Modules/Modules.js:265
+#: src/dashboard/screens/Modules/Modules.js:266
 msgid "Popular"
 msgstr ""
 
-#: src/dashboard/screens/Modules/Modules.js:268
+#: src/dashboard/screens/Modules/Modules.js:269
 msgid "Newest"
 msgstr ""
 
-#: src/dashboard/screens/Modules/Modules.js:271
+#: src/dashboard/screens/Modules/Modules.js:272
 msgid "Oldest"
 msgstr ""
 
-#: src/dashboard/screens/Modules/Modules.js:274
+#: src/dashboard/screens/Modules/Modules.js:275
 msgid "Ascending"
 msgstr ""
 
-#: src/dashboard/screens/Modules/Modules.js:277
+#: src/dashboard/screens/Modules/Modules.js:278
 msgid "Descending"
 msgstr ""
 
-#: src/dashboard/screens/Modules/Modules.js:315
+#: src/dashboard/screens/Modules/Modules.js:316
 msgid "All Modules"
 msgstr ""
 
-#: src/dashboard/screens/Modules/Modules.js:379
+#: src/dashboard/screens/Modules/Modules.js:380
 msgid "Bulk Actions"
 msgstr ""
 
-#: src/dashboard/screens/Modules/Modules.js:393
+#: src/dashboard/screens/Modules/Modules.js:394
 msgid "Deactivate"
 msgstr ""
 
-#: src/dashboard/screens/Modules/Modules.js:409
+#: src/dashboard/screens/Modules/Modules.js:410
 msgid "Apply"
 msgstr ""
 
-#: src/dashboard/screens/Modules/Modules.js:424
+#: src/dashboard/screens/Modules/Modules.js:425
 msgid "Search..."
 msgstr ""
 
-#: src/dashboard/screens/Modules/Modules.js:451
+#: src/dashboard/screens/Modules/Modules.js:452
 msgid "Sorry, no result found."
 msgstr ""
 
-#: src/dashboard/screens/Modules/Modules.js:454
+#: src/dashboard/screens/Modules/Modules.js:455
 msgid "Please try another search"
 msgstr ""
 

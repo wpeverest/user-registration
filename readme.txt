@@ -246,7 +246,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 3.3.4    - 07/10/2024 =
+= 3.3.4    - 16/10/2024 =
 * Enhance  - Separate Captcha Settings for Login and Registration Form.
 * Tweak    - My account selection validation and install pages.
 * Tweak    - Send new registered email if approval link email is disabled.
