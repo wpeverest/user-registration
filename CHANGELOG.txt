@@ -1,3 +1,6 @@
+= 3.3.4.1  - 16/10/2024 =
+* Fix      - Setup wizard going blank on registration settings step.
+
 = 3.3.4    - 16/10/2024 =
 * Enhance  - Separate Captcha Settings for Login and Registration Form.
 * Tweak    - My account selection validation and install pages.
