@@ -6331,3 +6331,84 @@ body {
 	font-style: normal;
 	font-display: block;
 }
+
+// Form Preview Revamp CSS
+body {
+	&.ur-multi-device-form-preview {
+		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+		margin: 0;
+
+		#nav-menu-header {
+			padding: 0 $spacing_30px;
+
+			.ur-brand-logo {
+				padding-left: 0 !important;
+				padding-right: $spacing_30px !important;
+				padding-top: $spacing_20px;
+				padding-bottom: $spacing_20px;
+				margin-right: $spacing_30px;
+
+				img {
+					width: 36px;
+					height: 36px;
+					margin-right: 0;
+				}
+			}
+
+			.ur-form-title {
+				padding: 0;
+				color: $grey-500;
+				font-size: 16px;
+				font-weight: $semi_bold;
+				line-height: 24px;
+			}
+
+			.ur-form-preview-devices {
+				border-radius: $border_radius_8;
+				background: #EDEFF7;
+				padding: $spacing_4px;
+				display: flex;
+				align-items: center;
+				gap: $spacing_2px;
+
+				svg {
+					padding: $spacing_8px;
+					width: 20px;
+					height: 20px;
+				}
+			}
+
+			.major-publishing-actions {
+				.publishing-action {
+					position: relative;
+
+					input[type="text"] {
+						all: unset;
+						height: 38px;
+						background: #EDEFF7;
+						border: $border_width solid #EDEFF7;
+						text-align: left;
+						border-radius: $border_radius_4;
+						padding: 0 $spacing_12px;
+					}
+
+					.ur-copy-shortcode {
+						position: absolute;
+						right: 5px;
+						top: 50%;
+						transform: translateY(-50%);
+						background: $grey-0 !important;
+						border: 0;
+						border-radius: $border_radius_3;
+						width: 30px;
+						height: 30px;
+						padding: 0;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+					}
+				}
+			}
+		}
+	}
+}
