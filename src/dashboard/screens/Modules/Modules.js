@@ -53,6 +53,7 @@ const Modules = () => {
 	const [searchItem, setSearchItem] = useState("");
 	const [noItemFound, setNoItemFound] = useState(false);
 	const [modules, setModules] = useState([]);
+	const [error, setError] = useState([]);
 
 	const fetchModules = useCallback(() => {
 		getAllModules()

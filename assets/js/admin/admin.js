@@ -702,11 +702,13 @@ jQuery(function ($) {
 		if ($this.hasClass("closed")) {
 			$this.removeClass("closed");
 			$this.addClass("opened");
+			$(this).attr('title' ,  user_registration_form_builder_data.i18n_admin.i18n_exit_fullscreen_mode )
 
 			$("body").addClass("ur-full-screen-mode");
 		} else {
 			$this.removeClass("opened");
 			$this.addClass("closed");
+			$(this).attr('title' , user_registration_form_builder_data.i18n_admin.i18n_fullscreen_mode );
 
 			$("body").removeClass("ur-full-screen-mode");
 		}

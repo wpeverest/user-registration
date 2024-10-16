@@ -3664,7 +3664,7 @@ if ( ! function_exists( 'ur_check_captch_keys' ) ) {
 
 		if ( 'login' === $context ) {
 			$recaptcha_type = get_option( 'user_registration_login_options_configured_captcha_type', $recaptcha_type );
-		} elseif ( 'register' === $context && ! $form_id ) {
+		} elseif ( 'register' === $context && $form_id ) {
 			$recaptcha_type = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_configured_captcha_type', $recaptcha_type );
 		}
 
@@ -5754,6 +5754,21 @@ if ( ! function_exists( 'ur_check_is_disabled' ) ) {
 	}
 }
 
+add_action( 'init', 'ur_check_is_denied' );
+
+if ( ! function_exists( 'ur_check_is_denied' ) ) {
+	/**
+	 * Check if user is denied.
+	 */
+	function ur_check_is_denied() {
+		$is_denied = get_user_meta( get_current_user_id(), 'ur_user_status', true );
+		if ( '-1' === $is_denied ) {
+			wp_logout();
+		}
+	}
+}
+
+
 if ( ! function_exists( 'ur_check_is_auto_enable_user' ) ) {
 
 	/**
@@ -6135,8 +6150,15 @@ if ( ! function_exists( 'ur_settings_text_format' ) ) {
 			}
 
 			foreach ( $fields_to_format as $field ) {
+
 				if ( isset( $arg[ $field ] ) ) {
-					$arg[ $field ] = ucfirst( strtolower( $arg[ $field ] ) );
+					if ( strpos( trim( $arg[ $field ] ), '<div' ) !== 0 ) {
+						strpos( trim( $arg[ $field ] ), '<div' );
+						$arg[ $field ] = ur_format_sentence_case( strtolower( $arg[ $field ] ) );
+
+					} else {
+						$arg[ $field ] = $arg[ $field ];
+					}
 				}
 			}
 
@@ -6148,6 +6170,21 @@ if ( ! function_exists( 'ur_settings_text_format' ) ) {
 		}
 
 		return $args;
+	}
+}
+if ( ! function_exists( 'ur_format_sentence_case' ) ) {
+	/**
+	 * Capitalizes the first letter of the initial word and each word after a period.
+	 *
+	 * @param string $string
+	 * @return string
+	 */
+	function ur_format_sentence_case( $string ) {
+		$sentences = preg_split( '/(\.\s+)/', $string, -1, PREG_SPLIT_DELIM_CAPTURE );
+		foreach ( $sentences as &$sentence ) {
+			$sentence = ucfirst( trim( $sentence ) );
+		}
+		return implode( '', $sentences );
 	}
 }
 

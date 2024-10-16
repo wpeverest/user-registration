@@ -616,6 +616,8 @@ class UR_Admin_Assets {
 			'i18n_learn_more'                             => esc_html__( 'Learn More', 'user-registration' ),
 			'i18n_upgrade_to_pro'                         => esc_html__( 'Upgrade plan', 'user-registration' ),
 			'i18n_ok'                                     => esc_html__( 'OK', 'user-registration' ),
+			'i18n_fullscreen_mode'                        => esc_html__( 'Fullscreen', 'user-registration' ),
+			'i18n_exit_fullscreen_mode'                   => esc_html__( 'Exit Fullscreen', 'user-registration' ),
 			'i18n_default_cannot_delete_message'          => esc_html__( 'WordPress requires the user to have an email address during registration.', 'user-registration' ),
 		);
 
