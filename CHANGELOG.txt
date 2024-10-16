@@ -1,3 +1,6 @@
+= 3.3.4.1  - 16/10/2024 =
+* Fix      - Setup wizard going blank on registration settings step.
+
 = 3.3.4    - 16/10/2024 =
 * Enhance  - Separate Captcha Settings for Login and Registration Form.
 * Tweak    - My account selection validation and install pages.
@@ -51,11 +54,7 @@
 * Dev       - Compatibility for Authorize.net Addon.
 * Dev       - Compatibility for SMS verification.
 * Dev       - Add noreferer and noopener in all target blank anchor tags.
-<<<<<<< HEAD
 * Fix       - Unable to publish form from draft status.
-=======
-* Fix       - Unable to publish form from draft status.
->>>>>>> master
 * Fix       - Undefined variable $form_row_data.
 * Fix       - Disable default wordpress login not working.
 * Fix       - The email content translation issues with WPML plugin.

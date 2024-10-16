@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 5.2
 Requires PHP: 7.2
 Tested up to: 6.6.2
-Stable tag: 3.3.4
+Stable tag: 3.3.4.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -245,6 +245,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 16. User Account Page –  Vertical Layout
 
 == Changelog ==
+
+= 3.3.4.1  - 16/10/2024 =
+* Fix      - Setup wizard going blank on registration settings step.
 
 = 3.3.4    - 16/10/2024 =
 * Enhance  - Separate Captcha Settings for Login and Registration Form.
