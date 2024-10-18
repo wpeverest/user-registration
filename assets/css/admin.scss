@@ -4033,6 +4033,72 @@
 						 }
 					 }
 				 }
+
+				 .integration-lists-settings {
+					.form-settings-sub-tab {
+						border-bottom: 0;
+						margin-bottom: 0;
+					}
+
+					.ur-integration-list {
+						padding-bottom: $spacing_16px;
+						margin-bottom: $spacing_24px;
+					}
+
+					.user-registration-notice {
+						margin: 0;
+						padding: 0;
+					}
+
+					.user-registration-card {
+						margin: $spacing_4px 0 $spacing_16px !important;
+
+						&:last-child {
+							margin-bottom: $spacing_12px !important;
+						}
+
+						&__header {
+							border-bottom: 0;
+							padding-left: $spacing_20px !important;
+							padding-right: $spacing_14px !important;
+
+							.user-registration-card__title {
+								color: $grey-400;
+								font-size: 16px;
+								font-weight: $semi_bold;
+								line-height: 24px;
+							}
+
+							.user-registration-card__button {
+								display: flex;
+								align-items: center;
+
+								.button {
+									display: flex;
+									align-items: center;
+									justify-content: center;
+
+									svg {
+										width: 22px;
+										height: 22px;
+										margin: 0;
+									}
+								}
+							}
+						}
+
+						&__body {
+							border-top: 1px solid #E1E1E1;
+    						padding-left: $spacing_20px !important;
+							padding-right: $spacing_20px !important;
+
+							[class*="urmc-mailchimp-"],
+							[class*="ur-mailchimp-"] {
+								margin-bottom: $spacing_12px;
+							}
+						}
+					}
+				 }
 			 }
 		 }
 	 }
@@ -6089,6 +6155,104 @@
 		 }
 	 }
  }
+
+
+ .user-registration {
+	.swal2-container {
+		.swal2 {
+			&-header {
+				padding: $spacing_32px $spacing_32px 0;
+				gap: $spacing_16px;
+			}
+
+			&-icon {
+                margin-block: 0;
+				border-color: #41C4EE;
+				color: #41C4EE;
+				width: 60px;
+				height: 60px;
+
+				&-content {
+					font-size: 50px;
+				}
+			}
+
+			&-title {
+				color: #131313;
+				text-align: center;
+				font-size: 22px;
+				font-weight: $semi_bold;
+				line-height: 30px;
+				margin-bottom: 0 !important;
+			}
+
+			&-content {
+				padding: 0 $spacing_32px;
+				margin-top: $spacing_20px;
+
+				input[type="text"] {
+					margin: 0;
+					height: 38px;
+					font-size: 15px;
+					line-height: 25px;
+					padding: 0 $spacing_12px;
+					color: $grey-400;
+					border-radius: $border_radius_4;
+
+                    &::placeholder {
+                        color: #999999;
+                    }
+
+					&:focus {
+                        outline: none;
+                        box-shadow: none;
+						border-color: $primary_color;
+					}
+				}
+			}
+
+            &-actions {
+                margin-top: $spacing_30px !important;
+                padding: $spacing_20px $spacing_32px !important;
+                gap: $spacing_16px !important;
+
+                button {
+                    margin: 0;
+                    text-transform: capitalize;
+                    padding: $spacing_10px $spacing_14px;
+                    border-radius: $border_radius_3;
+                    font-size: 14px;
+                    font-weight: 400;
+                    line-height: 16px;
+                    border: $border_width solid transparent;
+                    transition: all .3s;
+
+                    &.swal2-confirm {
+                        width: 48%;
+                        background:$primary_color !important;
+                        color: $grey-0;
+                        border-color: $primary_color;
+
+                        &:hover {
+                            background: darken($primary_color, 10%);
+                        }
+                    }
+
+                    &.swal2-cancel {
+                        width: 45%;
+                        background: transparent;
+                        border-color: #6B6B6B;
+                        color: #6B6B6B;
+
+                        &:hover {
+                            background: #f0f0f0;
+                        }
+                    }
+                }
+            }
+		}
+	}
+}
 
  .ur-embed-form-button {
 	 background: #edeff7 !important;

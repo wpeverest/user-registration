@@ -5930,6 +5930,8 @@
         margin-top: -32px;
         margin-left: -12px;
         margin-right: -12px; }
+      .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-contents .ur-tab-content #integration_settings_back {
+        cursor: pointer; }
       .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-contents .ur-tab-content .form-settings-tab-back {
         margin-bottom: 0;
         border-radius: 0;
@@ -5938,10 +5940,12 @@
         background: transparent;
         font-size: 15px;
         font-weight: 600;
-        gap: 20px;
+        gap: 16px;
         line-height: 150%;
         display: flex;
-        align-items: center; }
+        align-items: center;
+        color: #383838;
+        transition: all .3s; }
         .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-contents .ur-tab-content .form-settings-tab-back::before {
           content: "";
           background-image: url("../images/icons/ur-right-arrow.svg");
@@ -5951,6 +5955,8 @@
           width: 18px;
           height: 18px;
           transform: rotate(180deg); }
+        .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-contents .ur-tab-content .form-settings-tab-back:hover::before {
+          filter: brightness(0) saturate(100%) invert(35%) sepia(13%) saturate(3079%) hue-rotate(194deg) brightness(96%) contrast(89%); }
       .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-contents .ur-tab-content .form-settings-tab {
         margin-bottom: 0;
         border-radius: 0;
@@ -6017,7 +6023,6 @@
           .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-contents .ur-tab-content .form-settings-tab.integration-lists-settings .integration-detail .logo {
             width: 40px;
             height: 40px;
-            flex: 0 0 39px;
             display: flex;
             overflow: hidden;
             margin: 0;
@@ -6029,13 +6034,13 @@
               height: 38px;
               display: block; }
           .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-contents .ur-tab-content .form-settings-tab.integration-lists-settings .integration-detail h3 {
-            font-size: 16px;
-            line-height: 19.2px;
+            font-size: 15px;
+            line-height: 150%;
             margin: 0;
-            font-weight: 600; }
+            font-weight: 500; }
         .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-contents .ur-tab-content .form-settings-tab.integration-lists-settings .form-settings-sub-tab {
           padding: 0px;
-          background-color: #fffff;
+          background: #ffffff;
           align-items: baseline; }
       .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-contents.ps--active-y .ur-tab-content {
         padding: 32px 12px 12px; }
@@ -7941,7 +7946,8 @@ a.button.ur-smart-tags-list-button {
     flex-direction: column;
     gap: 24px;
     align-items: center;
-    padding: 100px 0px; }
+    padding: 100px 0px;
+    justify-content: center; }
     .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings #integration-selection-settings .integration-selection-settings-contents {
       text-align: center;
       display: flex;
@@ -7960,6 +7966,46 @@ a.button.ur-smart-tags-list-button {
         font-weight: 400;
         line-height: 24px;
         color: #6B6B6B; }
+  .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .integration-lists-settings .form-settings-sub-tab {
+    border-bottom: 0;
+    margin-bottom: 0; }
+  .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .integration-lists-settings .ur-integration-list {
+    padding-bottom: 16px;
+    margin-bottom: 24px; }
+  .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .integration-lists-settings .user-registration-notice {
+    margin: 0;
+    padding: 0; }
+  .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .integration-lists-settings .user-registration-card {
+    margin: 4px 0 16px !important; }
+    .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .integration-lists-settings .user-registration-card:last-child {
+      margin-bottom: 12px !important; }
+    .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .integration-lists-settings .user-registration-card__header {
+      border-bottom: 0;
+      padding-left: 20px !important;
+      padding-right: 14px !important; }
+      .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .integration-lists-settings .user-registration-card__header .user-registration-card__title {
+        color: #383838;
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 24px; }
+      .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .integration-lists-settings .user-registration-card__header .user-registration-card__button {
+        display: flex;
+        align-items: center; }
+        .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .integration-lists-settings .user-registration-card__header .user-registration-card__button .button {
+          display: flex;
+          align-items: center;
+          justify-content: center; }
+          .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .integration-lists-settings .user-registration-card__header .user-registration-card__button .button svg {
+            width: 22px;
+            height: 22px;
+            margin: 0; }
+    .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .integration-lists-settings .user-registration-card__body {
+      border-top: 1px solid #E1E1E1;
+      padding-left: 20px !important;
+      padding-right: 20px !important; }
+      .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .integration-lists-settings .user-registration-card__body [class*="urmc-mailchimp-"],
+      .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .integration-lists-settings .user-registration-card__body [class*="ur-mailchimp-"] {
+        margin-bottom: 12px; }
 
 #wpcontent .wp-heading-inline {
   font-weight: 600;
@@ -9234,6 +9280,74 @@ body.user-registration #wpbody-content {
 body.ur-settings-sidebar-hidden .user-registration-settings-sidebar-container {
   margin-right: -910px;
   display: none; }
+
+.user-registration .swal2-container .swal2-header {
+  padding: 32px 32px 0;
+  gap: 16px; }
+
+.user-registration .swal2-container .swal2-icon {
+  margin-block: 0;
+  border-color: #41C4EE;
+  color: #41C4EE;
+  width: 60px;
+  height: 60px; }
+  .user-registration .swal2-container .swal2-icon-content {
+    font-size: 50px; }
+
+.user-registration .swal2-container .swal2-title {
+  color: #131313;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 30px;
+  margin-bottom: 0 !important; }
+
+.user-registration .swal2-container .swal2-content {
+  padding: 0 32px;
+  margin-top: 20px; }
+  .user-registration .swal2-container .swal2-content input[type="text"] {
+    margin: 0;
+    height: 38px;
+    font-size: 15px;
+    line-height: 25px;
+    padding: 0 12px;
+    color: #383838;
+    border-radius: 4px; }
+    .user-registration .swal2-container .swal2-content input[type="text"]::placeholder {
+      color: #999999; }
+    .user-registration .swal2-container .swal2-content input[type="text"]:focus {
+      outline: none;
+      box-shadow: none;
+      border-color: #475bb2; }
+
+.user-registration .swal2-container .swal2-actions {
+  margin-top: 30px !important;
+  padding: 20px 32px !important;
+  gap: 16px !important; }
+  .user-registration .swal2-container .swal2-actions button {
+    margin: 0;
+    text-transform: capitalize;
+    padding: 10px 14px;
+    border-radius: 3px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 16px;
+    border: 1px solid transparent;
+    transition: all .3s; }
+    .user-registration .swal2-container .swal2-actions button.swal2-confirm {
+      width: 48%;
+      background: #475bb2 !important;
+      color: #ffffff;
+      border-color: #475bb2; }
+      .user-registration .swal2-container .swal2-actions button.swal2-confirm:hover {
+        background: #38488e; }
+    .user-registration .swal2-container .swal2-actions button.swal2-cancel {
+      width: 45%;
+      background: transparent;
+      border-color: #6B6B6B;
+      color: #6B6B6B; }
+      .user-registration .swal2-container .swal2-actions button.swal2-cancel:hover {
+        background: #f0f0f0; }
 
 .ur-embed-form-button {
   background: #edeff7 !important;
