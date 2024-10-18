@@ -1196,6 +1196,7 @@ if ( ! function_exists( 'user_registration_account_content' ) ) {
 
 		if ( ! empty( $wp->query_vars ) ) {
 			foreach ( $wp->query_vars as $key => $value ) {
+
 				// Ignore pagename param.
 				if ( 'pagename' === $key ) {
 					continue;
@@ -1221,6 +1222,7 @@ if ( ! function_exists( 'user_registration_account_content' ) ) {
 			'myaccount/dashboard.php',
 			array(
 				'current_user' => get_user_by( 'id', get_current_user_id() ),
+				'endpoint_label'     => ur_get_account_menu_items()['dashboard'],
 			)
 		);
 	}
@@ -1246,6 +1248,7 @@ if ( ! function_exists( 'user_registration_account_dashboard' ) ) {
 			'myaccount/dashboard.php',
 			array(
 				'current_user' => get_user_by( 'id', get_current_user_id() ),
+				'endpoint_label'     => ur_get_account_menu_items()['dashboard'],
 			)
 		);
 	}

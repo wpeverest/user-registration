@@ -20,52 +20,63 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-?>
+$layout = get_option( 'user_registration_my_account_layout', 'horizontal' );
 
-<h2>
-	<?php
-	/* translators: %s - Users display name. */
-	esc_html_e( 'Welcome, {{display_name}}', 'user-registration' );
+if ( 'vertical' === $layout ) {
 	?>
-</h2>
-
-<div class='user-registration-profile-header'>
-	<div class='user-registration-img-container'>
-		<?php
-		if ( ! ur_option_checked( 'user_registration_disable_profile_picture', false ) ) {
-
-			?>
-					{{profile_pic_box}}
-				<?php } ?>
-
+	<div class="user-registration-MyAccount-content__header">
+		<h1><?php echo wp_kses_post( $endpoint_label ); ?></h1>
 	</div>
-	<header>
-		<h3>
-		{{full_name}}
-			</h3>
-	</header>
-</div>
-
-<p>
-<?php
-	/* translators: 1 profile details url, 2: change password url */
-	echo wp_kses_post( __( 'From your account dashboard you can edit your {{profile_details_link}} and {{edit_password_link}}.', 'user-registration' ) );
-?>
-</p>
-
-<p>
 	<?php
-		/* translators: 1: user display name 2: logout url */
-		echo wp_kses_post( __( 'Not {{display_name}}? <strong>{{sign_out_link}}</strong>', 'user-registration' ) );
+}
+?>
+<div class="user-registration-MyAccount-content__body">
+	<h2>
+		<?php
+		/* translators: %s - Users display name. */
+		esc_html_e( 'Welcome, {{display_name}}', 'user-registration' );
+		?>
+	</h2>
+
+	<div class='user-registration-profile-header'>
+		<div class='user-registration-img-container'>
+			<?php
+			if ( ! ur_option_checked( 'user_registration_disable_profile_picture', false ) ) {
+
+				?>
+						{{profile_pic_box}}
+					<?php } ?>
+
+		</div>
+		<header>
+			<h3>
+			{{full_name}}
+				</h3>
+		</header>
+	</div>
+
+	<p>
+	<?php
+		/* translators: 1 profile details url, 2: change password url */
+		echo wp_kses_post( __( 'From your account dashboard you can edit your {{profile_details_link}} and {{edit_password_link}}.', 'user-registration' ) );
 	?>
-</p>
+	</p>
 
-<?php
-	/**
-	 * My Account dashboard.
-	 *
-	 * @since 2.6.0
-	 */
-	do_action( 'user_registration_account_dashboard' );
+	<p>
+		<?php
+			/* translators: 1: user display name 2: logout url */
+			echo wp_kses_post( __( 'Not {{display_name}}? <strong>{{sign_out_link}}</strong>', 'user-registration' ) );
+		?>
+	</p>
 
-/* Omit closing PHP tag at the end of PHP files to avoid "headers already sent" issues. */
+	<?php
+		/**
+		 * My Account dashboard.
+		 *
+		 * @since 2.6.0
+		 */
+		do_action( 'user_registration_account_dashboard' );
+
+	/* Omit closing PHP tag at the end of PHP files to avoid "headers already sent" issues. */
+	?>
+</div>

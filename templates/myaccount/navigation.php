@@ -23,6 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Action to fire before the rendering of user registration account navigation.
  */
 do_action( 'user_registration_before_account_navigation' );
+$logout_confirmation = ur_option_checked( 'user_registration_disable_logout_confirmation', false );
 ?>
 
 <nav class="user-registration-MyAccount-navigation">
@@ -31,7 +32,7 @@ do_action( 'user_registration_before_account_navigation' );
 			<?php $label = ur_string_translation( 0, 'user_registration_' . $endpoint . '_label', $label ); ?>
 			<?php $endpoint = ur_string_translation( 0, 'user_registration_' . $endpoint . '_slug', $endpoint ); ?>
 			<li class="<?php echo esc_attr( ur_get_account_menu_item_classes( $endpoint ) ); ?>">
-				<a href="<?php echo esc_url( ur_get_account_endpoint_url( $endpoint ) ); ?>"><?php echo esc_html( $label ); ?></a>
+				<a href="<?php echo esc_url( ur_get_account_endpoint_url( $endpoint ) ); ?>" <?php echo 'user-logout' === $endpoint && ! $logout_confirmation ? esc_attr( 'class=ur-logout' ) : ''; ?> ><?php echo esc_html( $label ); ?></a>
 			</li>
 		<?php endforeach; ?>
 	</ul>
