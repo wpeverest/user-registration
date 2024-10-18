@@ -508,8 +508,9 @@ class UR_Smart_Tags {
 						$content            = str_replace( '{{' . $tag . '}}', wp_kses_post( $edit_password_link ), $content );
 						break;
 					case 'sign_out_link':
-						$sign_out_link = '<a href="' . esc_url( ur_logout_url( ur_get_page_permalink( 'myaccount' ) ) ) . '" class="ur-logout">' . esc_html__( 'Sign out', 'user-registration' ) . '</a>';
-						$content       = str_replace( '{{' . $tag . '}}', wp_kses_post( $sign_out_link ), $content );
+						$logout_confirmation = ur_option_checked( 'user_registration_disable_logout_confirmation', false );
+						$sign_out_link       = '<a href="' . esc_url( ur_logout_url( ur_get_page_permalink( 'myaccount' ) ) ) . '" ' . ( ! $logout_confirmation ? 'class="ur-logout"' : '' ) . '>' . esc_html__( 'Sign out', 'user-registration' ) . '</a>';
+						$content             = str_replace( '{{' . $tag . '}}', wp_kses_post( $sign_out_link ), $content );
 						break;
 					case 'passwordless_login_link':
 						$passwordless_login_link = isset( $values['passwordless_login_link'] ) ? '<a href="' . esc_url( $values['passwordless_login_link'] ) . '"></a>' : '';
