@@ -394,6 +394,17 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		 * @return array
 		 */
 		public function get_login_options_settings() {
+
+			$ur_captchas = ur_get_captcha_integrations();
+			$ur_enabled_captchas = array(
+				'' => __( "Select Enabled Captcha", 'user-registration' )
+			);
+
+			foreach ( $ur_captchas as $key => $value ) {
+				if ( get_option( 'user_registration_captcha_setting_recaptcha_enable_' . $key, false ) ) {
+					$ur_enabled_captchas[ $key ] = $value;
+				}
+			}
 			/**
 			 * Filter to add the login options settings.
 			 *
@@ -493,7 +504,16 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'css'      => 'min-width: 350px;',
 									'default'  => 'no',
 								),
-
+								array(
+									'title'    => __( 'Select Configured Captcha', 'user-registration' ),
+									'desc'     => __( 'Choose the captcha type for Login Form.', 'user-registration' ),
+									'id'       => 'user_registration_login_options_configured_captcha_type',
+									'type'     => 'select',
+									'desc_tip' => true,
+									'css'      => 'min-width: 350px;',
+									'default'  => 'default',
+									'options'  => $ur_enabled_captchas,
+								),
 								array(
 									'title'    => __( 'Registration URL', 'user-registration' ),
 									'desc'     => __( 'This option lets you display the registration page URL in the login form.', 'user-registration' ),
@@ -531,8 +551,8 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'type'     => 'single_select_page',
 									'desc_tip' => true,
 									'css'      => 'min-width: 350px;',
-									'class'    => 'ur-redirect-to-login-page',
-									'default'  => '',
+									'class'    => 'ur-redirect-to-login-page ur-enhanced-select-nostd',
+									'default'  => get_option( 'user_registration_myaccount_page_id', '' ),
 								),
 							),
 						),
@@ -715,7 +735,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 				$settings        = $this->get_login_options_settings();
 				$captcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha' );
 
-				if ( ur_string_to_bool( $captcha_enabled ) && ! ur_check_captch_keys() ) {
+				if ( ur_string_to_bool( $captcha_enabled ) && ! ur_check_captch_keys( "login" ) ) {
 					echo '<div id="ur-captcha-error" class="notice notice-warning is-dismissible"><p><strong>' . sprintf(
 						/* translators: %s - Integration tab url */
 						'%s<a href="%s" rel="noreferrer noopener" target="_blank">Add Now.</a>',

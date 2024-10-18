@@ -571,8 +571,12 @@
 													JSON.stringify(
 														checked_value
 													);
-												if ( "separate_shipping" === field.attr("data-id") ) {
-													formwise_data.value = field.val();
+												if (
+													"separate_shipping" ===
+													field.attr("data-id")
+												) {
+													formwise_data.value =
+														field.val();
 												}
 											} else {
 												formwise_data.value = "";
@@ -2530,33 +2534,51 @@
 	$(function () {
 		$(".input-checkbox").each(function () {
 			var checkAll = $(this).attr("data-id");
-			if (
-				$('input[name="' + checkAll + '[]"]:checked').length ==
-				$('[data-id = "' + checkAll + '" ]').length
-			) {
-				$('[data-check = "' + checkAll + '" ]').prop("checked", true);
+			if ("undefined" !== typeof checkAll) {
+				if (
+					$('input[name="' + checkAll + '[]"]:checked').length ==
+					$('[data-id = "' + checkAll + '" ]').length
+				) {
+					$('[data-check = "' + checkAll + '" ]').prop(
+						"checked",
+						true
+					);
+				}
 			}
 		});
 
 		$('input[type="checkbox"]#checkall').on("click", function () {
 			var checkAll = $(this).attr("data-check");
-			$('[data-id = "' + checkAll + '" ]').prop(
-				"checked",
-				$(this).prop("checked")
-			);
+			if ("undefined" !== typeof checkAll) {
+				$('[data-id = "' + checkAll + '[]" ]').prop(
+					"checked",
+					$(this).prop("checked")
+				);
+			}
 		});
 
 		$(".input-checkbox").on("change", function () {
 			var checkAll = $(this).attr("data-id");
-			if ($(this).prop("checked") === false) {
-				$('[data-check = "' + checkAll + '" ]').prop("checked", false);
-			}
 
-			if (
-				$('input[name="' + checkAll + '[]"]:checked').length ==
-				$('[data-id = "' + checkAll + '" ]').length
-			) {
-				$('[data-check = "' + checkAll + '" ]').prop("checked", true);
+			if ("undefined" !== typeof checkAll) {
+				checkAll = checkAll.replace("[]", "");
+
+				if ($(this).prop("checked") === false) {
+					$('[data-check = "' + checkAll + '" ]').prop(
+						"checked",
+						false
+					);
+				}
+
+				if (
+					$('input[name="' + checkAll + '[]"]:checked').length ==
+					$('[data-id = "' + checkAll + '" ]').length
+				) {
+					$('[data-check = "' + checkAll + '" ]').prop(
+						"checked",
+						true
+					);
+				}
 			}
 		});
 	});
