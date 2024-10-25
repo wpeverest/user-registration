@@ -6377,11 +6377,11 @@ body {
 										text-transform: capitalize;
 									}
 								}
-								
+
 							}
 						}
 					}
-					
+
 					button[type=submit]{
 						padding: 10px 16px 8px;
 						border-radius: 4px;
@@ -6403,7 +6403,7 @@ body {
 						}
 						.ur-button-container {
 							margin-top: 8px;
-						}				
+						}
 					}
 				}
 			}
@@ -6438,8 +6438,62 @@ body {
 					padding: 8px 18px 8px 16px;
 					color: #fff;
 				}
+				.ur-form-preview-toggle-theme-preview {
+					position: relative;
+					display: inline-block;
+					width: 36px;
+					height: 20px;
+
+					input {
+						position: relative;
+						z-index: 99;
+						opacity: 0;
+						height: 22px;
+						width: 40px;
+
+						&:checked + .slider {
+							background-color: #475bb2;
+						}
+
+						&:focus + .slider {
+							box-shadow: 0 0 1px #2196f3;
+						}
+
+						&:checked + .slider::before {
+							transform: translateX(16px);
+						}
+					}
+
+					.slider {
+						position: absolute;
+						cursor: pointer;
+						inset: 0;
+						background-color: #dfe1ea;
+						transition: 0.4s;
+
+						&.round {
+							border-radius: 30px;
+						}
+
+						&.round::before {
+							border-radius: 50%;
+						}
+
+						&::before {
+							position: absolute;
+							content: "";
+							height: 16px;
+							width: 16px;
+							left: 2px;
+							bottom: 2px;
+							background-color: white;
+							transition: 0.4s;
+							border-radius: 100%;
+						}
+					}
+				}
 			}
-				
+
 		}
 
 		.ur-form-preview-sidepanel-toggler{

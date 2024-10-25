@@ -56,9 +56,9 @@ class UR_Admin_Form_Preview {
 			'ur-form-preview-admin-script',
 			'user_registration_form_preview',
 			array(
-				'ajax_url' => admin_url( 'admin-ajax.php' ),
-				'form_preview_nonce'    => wp_create_nonce( 'ur_form_preview_nonce' ),
-				'pro_upgrade_link' => 'https://wpeverest.com/wordpress-plugins/user-registration/?utm_source=plugin&utm_medium=form-preview&utm_campaign=pro-upgrade',
+				'ajax_url'           => admin_url( 'admin-ajax.php' ),
+				'form_preview_nonce' => wp_create_nonce( 'ur_form_preview_nonce' ),
+				'pro_upgrade_link'   => 'https://wpeverest.com/wordpress-plugins/user-registration/?utm_source=plugin&utm_medium=form-preview&utm_campaign=pro-upgrade',
 			)
 		);
 
@@ -93,14 +93,14 @@ class UR_Admin_Form_Preview {
 					?>
 				</head>
 				<body class="ur-multi-device-form-preview">
-    		<div id="nav-menu-header">
-        	<div class="ur-brand-logo ur-px-2">
+			<div id="nav-menu-header">
+			<div class="ur-brand-logo ur-px-2">
 
-            <img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/logo.svg' ); ?>" alt="Logo">
+			<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/logo.svg' ); ?>" alt="Logo">
 		</div>
 		<span class="ur-form-title"><?php esc_html_e( 'Form Preview', 'user-registration' ); ?></span>
 
-        <div class="ur-form-preview-devices">
+		<div class="ur-form-preview-devices">
 		<svg class="ur-form-preview-device" data-device="desktop" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
 		<path fill-rule="evenodd" clip-rule="evenodd" d="M10.7574 14.6212H16.0604C17.3156 14.6212 18.3332 13.6037 18.3332 12.3485V4.77273C18.3332 3.51753 17.3156 2.5 16.0604 2.5H3.93923C2.68404 2.5 1.6665 3.51753 1.6665 4.77273V12.3485C1.6665 13.6037 2.68404 14.6212 3.93923 14.6212H9.24226V16.1364H6.96953C6.55114 16.1364 6.21196 16.4755 6.21196 16.8939C6.21196 17.3123 6.55114 17.6515 6.96953 17.6515H13.0301C13.4485 17.6515 13.7877 17.3123 13.7877 16.8939C13.7877 16.4755 13.4485 16.1364 13.0301 16.1364H10.7574V14.6212ZM3.93923 4.01515C3.52083 4.01515 3.18166 4.35433 3.18166 4.77273V12.3485C3.18166 12.7669 3.52083 13.1061 3.93923 13.1061H16.0604C16.4788 13.1061 16.818 12.7669 16.818 12.3485V4.77273C16.818 4.35433 16.4788 4.01515 16.0604 4.01515H3.93923Z" fill="#475BB2"/>
 		</svg>
@@ -113,24 +113,24 @@ class UR_Admin_Form_Preview {
 		<path fill-rule="evenodd" clip-rule="evenodd" d="M6.43923 1.6665C5.18404 1.6665 4.1665 2.68404 4.1665 3.93923V16.0604C4.1665 17.3156 5.18404 18.3332 6.43923 18.3332H14.015C15.2702 18.3332 16.2877 17.3156 16.2877 16.0604V3.93923C16.2877 2.68404 15.2702 1.6665 14.015 1.6665H6.43923ZM5.68166 3.93923C5.68166 3.52083 6.02083 3.18166 6.43923 3.18166H14.015C14.4334 3.18166 14.7726 3.52083 14.7726 3.93923V16.0604C14.7726 16.4788 14.4334 16.818 14.015 16.818H6.43923C6.02083 16.818 5.68166 16.4788 5.68166 16.0604V3.93923Z" fill="#383838"/>
 		</svg>
 
-        </div>
+		</div>
 
-        <div class="major-publishing-actions wp-clearfix">
-            <div class="publishing-action">
-                <input type="text" onfocus="this.select();" readonly="readonly"
-                       value='[user_registration_form id="<?php echo esc_attr( $form_id ); ?>"]'
-                       class="code" size="35">
-                <button id="copy-shortcode" class="button button-primary button-large ur-copy-shortcode"
-                        data-tip="<?php esc_attr_e( 'Copy Shortcode!', 'user-registration' ); ?>"
-                        data-copied="<?php esc_attr_e( 'Copied!', 'user-registration' ); ?>">
+		<div class="major-publishing-actions wp-clearfix">
+			<div class="publishing-action">
+				<input type="text" onfocus="this.select();" readonly="readonly"
+						value='[user_registration_form id="<?php echo esc_attr( $form_id ); ?>"]'
+						class="code" size="35">
+				<button id="copy-shortcode" class="button button-primary button-large ur-copy-shortcode"
+						data-tip="<?php esc_attr_e( 'Copy Shortcode!', 'user-registration' ); ?>"
+						data-copied="<?php esc_attr_e( 'Copied!', 'user-registration' ); ?>">
 
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <path fill="#383838" fill-rule="evenodd" d="M3.116 3.116A1.25 1.25 0 0 1 4 2.75h9A1.25 1.25 0 0 1 14.25 4v1a.75.75 0 0 0 1.5 0V4A2.75 2.75 0 0 0 13 1.25H4A2.75 2.75 0 0 0 1.25 4v9A2.75 2.75 0 0 0 4 15.75h1a.75.75 0 0 0 0-1.5H4A1.25 1.25 0 0 1 2.75 13V4c0-.332.132-.65.366-.884ZM9.75 11c0-.69.56-1.25 1.25-1.25h9c.69 0 1.25.56 1.25 1.25v9c0 .69-.56 1.25-1.25 1.25h-9c-.69 0-1.25-.56-1.25-1.25v-9ZM11 8.25A2.75 2.75 0 0 0 8.25 11v9A2.75 2.75 0 0 0 11 22.75h9A2.75 2.75 0 0 0 22.75 20v-9A2.75 2.75 0 0 0 20 8.25h-9Z" clip-rule="evenodd"/>
-                    </svg>
-                </button>
-            </div>
-        </div>
-    </div>
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+						<path fill="#383838" fill-rule="evenodd" d="M3.116 3.116A1.25 1.25 0 0 1 4 2.75h9A1.25 1.25 0 0 1 14.25 4v1a.75.75 0 0 0 1.5 0V4A2.75 2.75 0 0 0 13 1.25H4A2.75 2.75 0 0 0 1.25 4v9A2.75 2.75 0 0 0 4 15.75h1a.75.75 0 0 0 0-1.5H4A1.25 1.25 0 0 1 2.75 13V4c0-.332.132-.65.366-.884ZM9.75 11c0-.69.56-1.25 1.25-1.25h9c.69 0 1.25.56 1.25 1.25v9c0 .69-.56 1.25-1.25 1.25h-9c-.69 0-1.25-.56-1.25-1.25v-9ZM11 8.25A2.75 2.75 0 0 0 8.25 11v9A2.75 2.75 0 0 0 11 22.75h9A2.75 2.75 0 0 0 22.75 20v-9A2.75 2.75 0 0 0 20 8.25h-9Z" clip-rule="evenodd"/>
+					</svg>
+				</button>
+			</div>
+		</div>
+	</div>
 </body>
 
 		<?php
@@ -144,19 +144,15 @@ class UR_Admin_Form_Preview {
 	public static function form_preview_body() {
 
 		ob_start();
-        if ( is_user_logged_in() && isset( $_GET['form_id'] ) ) {
-            self::handle_preview();
-        }
-        $form_content = ob_get_clean();
+		if ( is_user_logged_in() && isset( $_GET['form_id'] ) ) {
+			self::handle_preview();
+		}
+		$form_content = ob_get_clean();
 		?>
-		<svg class="ur-form-preview-sidepanel-toggler" xmlns="http://www.w3.org/2000/svg" width="27" height="48" viewBox="0 0 27 48" fill="none">
-<mask id="path-1-inside-1_10273_358" fill="white">
-<path d="M0 4C0 1.79086 1.79086 0 4 0H27V48H4C1.79086 48 0 46.2091 0 44V4Z"/>
-</mask>
-<path d="M0 4C0 1.79086 1.79086 0 4 0H27V48H4C1.79086 48 0 46.2091 0 44V4Z" fill="white"/>
-<path d="M-1 4C-1 1.23858 1.23858 -1 4 -1H27V1H4C2.34315 1 1 2.34315 1 4H-1ZM27 49H4C1.23858 49 -1 46.7614 -1 44H1C1 45.6569 2.34315 47 4 47H27V49ZM4 49C1.23858 49 -1 46.7614 -1 44V4C-1 1.23858 1.23858 -1 4 -1V1C2.34315 1 1 2.34315 1 4V44C1 45.6569 2.34315 47 4 47V49ZM27 0V48V0Z" fill="#EDEFF7" mask="url(#path-1-inside-1_10273_358)"/>
-<path d="M13.5 29L18.5 24L13.5 19" stroke="#9B9B9B" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
+			<svg class="ur-form-preview-sidepanel-toggler" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 12">
+				<path fill-rule="evenodd" d="M.91.41a.833.833 0 0 1 1.18 0l5 5a.833.833 0 0 1 0 1.18l-5 5a.833.833 0 1 1-1.18-1.18L5.323 6 .91 1.59a.833.833 0 0 1 0-1.18Z" clip-rule="evenodd"/>
+		</svg>
+
 
 		<div class="ur-form-preview-main-content">
 
@@ -194,8 +190,8 @@ class UR_Admin_Form_Preview {
 	}
 
 		/**
-	 * Handles the preview of form.
-	 */
+		 * Handles the preview of form.
+		 */
 	public static function handle_preview() {
 		if ( ! is_user_logged_in() ) {
 			return;
@@ -204,23 +200,21 @@ class UR_Admin_Form_Preview {
 		if ( isset( $_GET['form_id'] ) ) {
 			$form_id = $_GET['form_id'];// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-			$html = '';
+			$html  = '';
 			$html .= '<div>';
 			$html .= '<span class="ur-form-preview-title">';
-			$html .=  get_the_title( $form_id );
+			$html .= get_the_title( $form_id );
 			$html .= '</span>';
-			$html .= '<div class="ur-form-preview-content">';
+
 			if ( function_exists( 'apply_shortcodes' ) ) {
 				$content = apply_shortcodes( '[user_registration_form id="' . $form_id . '"]' );
 			} else {
 				$content = do_shortcode( '[user_registration_form id="' . $form_id . '"]' );
 			}
-			$html .= '</div>';
 			$html .= $content;
 			$html .= '</div>';
 
 			echo $html;
-
 
 		}
 	}
@@ -229,7 +223,7 @@ class UR_Admin_Form_Preview {
 	 * Side panel content.
 	 */
 	public static function side_panel_content() {
-		$pro_features = array(
+		$pro_features   = array(
 			esc_html__( 'Stripe & PayPal Integration', 'user-registration' ),
 			esc_html__( 'Style Export & Import', 'user-registration' ),
 			esc_html__( 'Conditional Email Routing', 'user-registration' ),
@@ -240,20 +234,24 @@ class UR_Admin_Form_Preview {
 			esc_html__( 'SMS Notifications', 'user-registration' ),
 			esc_html__( 'Calculated Fields', 'user-registration' ),
 		);
-		$is_theme_style = get_post_meta( $_GET['form_id'],'user_registration_enable_theme_style', 'no' );
+		$is_theme_style = get_post_meta( $_GET['form_id'], 'user_registration_enable_theme_style', 'no' );
 		if ( 'no' === $is_theme_style || empty( $is_theme_style ) ) {
-			$checked = '';
+			$checked    = '';
 			$data_theme = 'default';
 		} else {
-			$checked = 'checked';
+			$checked    = 'checked';
 			$data_theme = 'theme_style';
 		}
-		$html ='';
+
+		$html  = '';
 		$html .= '<div class="ur-from-preview-theme-toggle">';
 		$html .= '<label class="ur-form-preview-toggle-title">Apply Theme Style</label>';
-		$html .= '<input type="checkbox" class="ur-form-preview-theme-toggle-checkbox" id="ur_toggle_form_preview_theme" ' . $checked . '>';
+		$html .= '<span class="ur-form-preview-toggle-theme-preview">';
+		$html .= '<input type="checkbox" class="ur-form-preview-theme-toggle-checkbox input-checkbox " id="ur_toggle_form_preview_theme" ' . $checked . '>';
+		$html .= '<span class="slider round"></span>';
+		$html .= '</span>';
 		$html .= '</div>';
-		$html .= '<div class="ur-form-preview-save hidden" id="ur-form-save" data-theme="default" data-id="'.$_GET['form_id'].'">';
+		$html .= '<div class="ur-form-preview-save hidden" id="ur-form-save" data-theme="default" data-id="' . $_GET['form_id'] . '">';
 		$html .= '<img src="' . esc_url( UR()->plugin_url() . '/assets/images/save-frame.svg' ) . '" alt="Save">';
 		$html .= '<div class="ur-form-preview-save-title">Save</div>';
 		$html .= '</div>';
@@ -285,9 +283,6 @@ class UR_Admin_Form_Preview {
 
 		<?php
 	}
-
-
-
 }
 
 UR_Admin_Form_Preview::init();
