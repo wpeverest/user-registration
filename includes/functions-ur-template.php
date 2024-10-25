@@ -575,6 +575,9 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$username_character = isset( $args['username_character'] ) ? $args['username_character'] : '';
 				$time_slot_booking  = isset( $args['enable_time_slot_booking'] ) ? $args['enable_time_slot_booking'] : '';
 				$target_date_field  = isset( $args['target_date_field'] ) ? isset( $args['target_date_field'] ) : '';
+				$enable_calculations = $args['enable_calculations'] ?? '';
+				$calculation_formula = $args['calculation_formula'] ?? '';
+				$decimal_places = $args['decimal_places'] ?? '';
 				$attr               = '';
 
 				if ( '' !== $username_length ) {
@@ -608,7 +611,9 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				if ( $current_time ) {
 					$attr .= 'data-current-time="' . $current_time . '"';
 				}
-
+				if ( '' !== $enable_calculations && $enable_calculations ) {
+					$attr .= 'readonly data-decimal-places="' . $decimal_places . '" data-calculation-formula="' . $calculation_formula . '"';
+				}
 				if ( ur_string_to_bool( $time_slot_booking ) ) {
 					$target_date_field = isset( $args['target_date_field'] ) ? $args['target_date_field'] : '';
 
