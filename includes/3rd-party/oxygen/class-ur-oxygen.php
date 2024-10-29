@@ -12,8 +12,6 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Oxygen class.
  */
-require_once 'widgets/class-ur-oxygen-widgets.php';
-require_once 'widgets/class-ur-oxygen-widget-registration.php';
 
 class UR_OXYGEN {
 
@@ -24,7 +22,8 @@ class UR_OXYGEN {
 	 */
 	public function __construct() {
 
-		$this->setup();
+		// $this->setup();
+		add_action( 'wp_loaded', array( $this, 'setup' ) );
 	}
 
 	/**
@@ -39,8 +38,8 @@ class UR_OXYGEN {
 
 		add_action( 'oxygen_add_plus_sections', array( $this, 'add_accordion_section' ) );
 		add_action( 'oxygen_add_plus_user-registration_section_content', array( $this, 'register_add_plus_subsections' ) );
-		// new UR_OXYGEN_WIDGET();
-		new UR_OXYGEN_WIDGET_REGISTRATION();
+
+		$this->register_widgets();
 	}
 
 	/**
@@ -54,12 +53,55 @@ class UR_OXYGEN {
 	}
 
 	/**
+	 * Enqueue the styles.
+	 *
+	 * @since xx.xx.xx
+	 */
+	public function custom_init() {
+		wp_register_style( 'user-registration-general', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR()->version );
+		wp_register_style( 'user-registration-admin', UR()->plugin_url() . '/assets/css/admin.css', array(), UR()->version );
+		wp_register_style( 'user-registration-my-account', UR()->plugin_url() . '/assets/css/my-account-layout.css', array(), UR()->version );
+
+		wp_enqueue_style( 'user-registration-general' );
+		wp_enqueue_style( 'user-registration-admin' );
+		wp_enqueue_style( 'user-registration-my-account' );
+	}
+
+	/**
 	 * Add subsection.
 	 *
 	 * @since xx.xx.xx
 	 */
 	public function register_add_plus_subsections() {
 		do_action( 'oxygen_add_plus_user-registration_forms' );
+	}
+
+	/**
+	 * Register widgets.
+	 *
+	 * @since xx.xx.xx
+	 */
+	public function register_widgets() {
+		require_once UR_ABSPATH . 'includes/3rd-party/oxygen/widgets/class-ur-oxygen-widget-registration.php';
+		require_once UR_ABSPATH . 'includes/3rd-party/oxygen/widgets/class-ur-oxygen-widget-login.php';
+		require_once UR_ABSPATH . 'includes/3rd-party/oxygen/widgets/class-ur-oxygen-widget-myaccount.php';
+		require_once UR_ABSPATH . 'includes/3rd-party/oxygen/widgets/class-ur-oxygen-widget-editprofile.php';
+		require_once UR_ABSPATH . 'includes/3rd-party/oxygen/widgets/class-ur-oxygen-widget-editpassword.php';
+
+		new UR_OXYGEN_WIDGET_REGISTRATION();
+		new UR_OXYGEN_WIDGET_LOGIN();
+		new UR_OXYGEN_WIDGET_MYACCOUNT();
+		new UR_OXYGEN_WIDGET_EDITPROFILE();
+		new UR_OXYGEN_WIDGET_EDITPASSWORD();
+
+		// include if pro version
+		if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
+			require_once UR_ABSPATH . 'includes/3rd-party/oxygen/widgets/class-ur-oxygen-widget-popup.php';
+			require_once UR_ABSPATH . 'includes/3rd-party/oxygen/widgets/class-ur-oxygen-widget-profile-details.php';
+
+			new UR_OXYGEN_WIDGET_PROFILE_DETAILS();
+			new UR_OXYGEN_WIDGET_POPUP();
+		}
 	}
 }
 new UR_OXYGEN();

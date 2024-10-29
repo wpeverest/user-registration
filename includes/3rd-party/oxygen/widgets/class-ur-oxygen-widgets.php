@@ -71,14 +71,6 @@ class UR_OXYGEN_WIDGET extends \OxyEl {
 		$this->priority = $priority;
 	}
 
-	/**
-	 * Get the default icon for the widget.
-	 *
-	 * @return string The default icon in SVG format.
-	 */
-	protected function default_icon() {
-		return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="#82878c" d="M18.1 4h-3.8l1.2 2h3.9zM20.6 8h-3.9l1.2 2h3.9zM20.6 18H5.8L12 7.9l2.5 4.1H12l-1.2 2h7.3L12 4.1 2.2 20h19.6z"/></g></svg>';
-	}
 
 	/**
 	 * Get the name of the widget.
@@ -86,8 +78,6 @@ class UR_OXYGEN_WIDGET extends \OxyEl {
 	 * @return string The name.
 	 */
 	public function name() {
-		lg( 'name' );
-		lg( $this->name );
 		return $this->name;
 	}
 
@@ -101,6 +91,15 @@ class UR_OXYGEN_WIDGET extends \OxyEl {
 	}
 
 	/**
+	 * Get the icon for the widget.
+	 *
+	 * @return string The icon.
+	 */
+	public function icon() {
+		return $this->icon;
+	}
+
+	/**
 	 * Get the button priority for the widget.
 	 *
 	 * @return int The button priority.
@@ -109,17 +108,6 @@ class UR_OXYGEN_WIDGET extends \OxyEl {
 		return $this->priority;
 	}
 
-	/**
-	 * Get the icon for the widget.
-	 *
-	 * @param string $fill The fill color for the icon.
-	 * @param bool   $base64 Whether to return the icon as a base64 encoded string.
-	 * @return string The icon in SVG or base64 format.
-	 */
-	public function icon() {
-		$this->icon = $this->icon ? $this->icon : $this->default_icon();
-		$this->icon = $base64 ? 'data:image/svg+xml;base64,' . base64_encode( $this->icon ) : $this->icon;
-	}
 
 	/**
 	 * Get the class names for the widget.
@@ -158,18 +146,206 @@ class UR_OXYGEN_WIDGET extends \OxyEl {
 	}
 
 	/**
-	 * Define controls for the widget.
+	 * Get the icon in SVG format.
+	 *
+	 * @param string $svg The SVG content.
+	 * @return string The base64 encoded SVG.
 	 */
-	public function controls() {
-		// Override in specific widgets.
+	public function get_icon_svg( $svg ) {
+		return 'data:image/svg+xml;base64,' . base64_encode( $svg );
+	}
+
+
+	/**
+	 * Get forms based on type.
+	 *
+	 * @param string $type The type of form to retrieve.
+	 * @return array The forms array.
+	 */
+	public function get_forms( $type ) {
+
+		$forms = array();
+		if ( 'popup' === $type ) {
+			$forms[0] = __( 'Select a Form', 'user-registration' );
+			$ur_forms = ur_get_all_user_registration_pop();
+		}
+
+		if ( 'registration' === $type ) {
+			$forms[0] = __( 'Select a Form', 'user-registration' );
+			$ur_forms = ur_get_all_user_registration_form();
+		}
+
+		if ( ! empty( $ur_forms ) ) {
+			foreach ( $ur_forms as $form_value => $form_name ) {
+				$forms[ $form_value ] = $form_name;
+			}
+		}
+		return $forms;
+	}
+
+
+	/**
+	 * Form contrainer style controls.
+	 *
+	 * @since xx.xx.xx
+	 */
+	public function form_container_style_controls() {
+		$section_container = $this->addControlSection(
+			'ur_container',
+			__( 'Form Container', 'user-registration' ),
+			'assets/icon.png',
+			$this
+		);
+		$selector          = '.user-registration';
+		$section_container->addStyleControls(
+			array(
+				array(
+					'name'     => __( 'Background Color', 'user-registration' ),
+					'selector' => $selector,
+					'property' => 'background-color',
+				),
+				array(
+					'name'     => __( 'Max Width', 'user-registration' ),
+					'selector' => $selector,
+					'property' => 'width',
+				),
+			)
+		);
+
+		$section_container->addPreset(
+			'padding',
+			'ur_container_padding',
+			__( 'Padding', 'user-registration' ),
+			$selector
+		)->whiteList();
+
+		$section_container->addPreset(
+			'margin',
+			'ur_container_margin',
+			__( 'Margin', 'user-registration' ),
+			$selector
+		)->whiteList();
+
+		$section_container->addPreset(
+			'border',
+			'ur_container_border',
+			__( 'Border', 'user-registration' ),
+			$selector
+		)->whiteList();
+
+		$section_container->addPreset(
+			'border-radius',
+			'ur_container_radius',
+			__( 'Border Radius', 'user-registration' ),
+			$selector
+		)->whiteList();
+
+		$section_container->boxShadowSection(
+			__( 'Box Shadow', 'user-registration' ),
+			$selector,
+			$this
+		);
 	}
 
 	/**
-	 * Render the element's UI.
+	 * Field input label styles.
+	 *
+	 * @since xx.xx.xx
 	 */
-	public function render( $options, $defaults, $content ) {
-		echo '<div class="ur-form-widget">';
-		echo 'Default content - Override in specific widgets';
-		echo '</div>';
+	public function form_input_labels_style() {
+		$section_label = $this->addControlSection(
+			'ur-label',
+			__( 'Labels', 'user-registration' ),
+			'assets/icon.png',
+			$this
+		);
+
+		$selector = '.ur-label';
+		$section_label->typographySection( __( 'Typography' ), $selector, $this );
+		$section_label->addStyleControls(
+			array(
+				array(
+					'name'     => __( 'Text Color', 'user-registration' ),
+					'selector' => $selector,
+					'property' => 'color',
+				),
+			)
+		);
+		$section_label->addStyleControl(
+			array(
+				'name'     => __( 'Asterisk Color', 'user-registration' ),
+				'selector' => '.ur-label .required',
+				'property' => 'color',
+			)
+		);
+	}
+
+	/**
+	 * Submit button style.
+	 *
+	 * @since xx.xx.xx
+	 */
+	public function submit_btn_style( $selector = '.ur-submit-button' ) {
+		$section_submit_btn = $this->addControlSection(
+			'ur-submit-button',
+			__( 'Submit Button', 'user-registration' ),
+			'assets/icon.png',
+			$this
+		);
+
+		$selector_submit_bttn = $selector;
+		$section_submit_btn->addStyleControls(
+			array(
+				array(
+					'name'     => __( 'Color', 'user-registration' ),
+					'selector' => $selector_submit_bttn,
+					'property' => 'color',
+				),
+				array(
+					'name'     => __( 'Background Color', 'user-registration' ),
+					'selector' => $selector_submit_bttn,
+					'property' => 'background-color',
+				),
+				array(
+					'name'     => __( 'Hover Color', 'user-registration' ),
+					'selector' => '.ur-submit-button:hover',
+					'property' => 'background-color',
+				),
+				array(
+					'name'         => __( 'Width', 'user-registration' ),
+					'selector'     => $selector_submit_bttn,
+					'property'     => 'width',
+					'control_type' => 'slider-measurebox',
+					'unit'         => 'px',
+				),
+				array(
+					'name'         => __( 'Margin Top', 'user-registration' ),
+					'selector'     => $selector_submit_bttn,
+					'property'     => 'margin-top',
+					'control_type' => 'slider-measurebox',
+					'unit'         => 'px',
+				),
+			)
+		);
+
+		$section_submit_btn->addPreset(
+			'padding',
+			'ur_submit_bttn_padding',
+			__( 'Padding', 'user-registration' ),
+			$selector_submit_bttn
+		)->whiteList();
+
+		$section_submit_btn->addPreset(
+			'margin',
+			'ur_submit_bttn_margin',
+			__( 'Margin', 'user-registration' ),
+			$selector_submit_bttn
+		)->whiteList();
+
+		$section_submit_btn->typographySection( __( 'Typography', 'user-registration' ), $selector_submit_bttn, $this );
+		$section_submit_btn->borderSection( __( 'Border', 'user-registration' ), $selector_submit_bttn, $this );
+		$section_submit_btn->borderSection( __( 'Hover Border', 'user-registration' ), $selector_submit_bttn . ':hover', $this );
+		$section_submit_btn->boxShadowSection( __( 'Box Shadow', 'user-registration' ), $selector_submit_bttn, $this );
+		$section_submit_btn->boxShadowSection( __( 'Hover Box Shadow', 'user-registration' ), $selector_submit_bttn . ':hover', $this );
 	}
 }
