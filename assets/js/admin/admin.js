@@ -444,6 +444,8 @@ jQuery(function ($) {
 	$(document.body).on("click", ".ur-form-preview-sidepanel-toggler", function () {
 		$(".ur-form-side-panel").toggleClass("hidden");
 		$(this).toggleClass("inactive");
+		$(".ur-form-preview-main-content").toggleClass("ur-form-preview-overlay");
+
 	})
 
 	/**
