@@ -154,7 +154,7 @@ class UR_Admin_Form_Preview {
 		</svg>
 
 
-		<div class="ur-form-preview-main-content">
+		<div class="ur-form-preview-main-content ur-form-preview-overlay">
 
 			<div class="ur-form-preview-form">
 				<?php
