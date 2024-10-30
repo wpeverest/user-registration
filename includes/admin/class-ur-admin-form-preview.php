@@ -101,7 +101,7 @@ class UR_Admin_Form_Preview {
 		<span class="ur-form-title"><?php esc_html_e( 'Form Preview', 'user-registration' ); ?></span>
 
 		<div class="ur-form-preview-devices">
-		<svg class="ur-form-preview-device" data-device="desktop" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+		<svg class="ur-form-preview-device active" data-device="desktop" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
 		<path fill-rule="evenodd" clip-rule="evenodd" d="M10.7574 14.6212H16.0604C17.3156 14.6212 18.3332 13.6037 18.3332 12.3485V4.77273C18.3332 3.51753 17.3156 2.5 16.0604 2.5H3.93923C2.68404 2.5 1.6665 3.51753 1.6665 4.77273V12.3485C1.6665 13.6037 2.68404 14.6212 3.93923 14.6212H9.24226V16.1364H6.96953C6.55114 16.1364 6.21196 16.4755 6.21196 16.8939C6.21196 17.3123 6.55114 17.6515 6.96953 17.6515H13.0301C13.4485 17.6515 13.7877 17.3123 13.7877 16.8939C13.7877 16.4755 13.4485 16.1364 13.0301 16.1364H10.7574V14.6212ZM3.93923 4.01515C3.52083 4.01515 3.18166 4.35433 3.18166 4.77273V12.3485C3.18166 12.7669 3.52083 13.1061 3.93923 13.1061H16.0604C16.4788 13.1061 16.818 12.7669 16.818 12.3485V4.77273C16.818 4.35433 16.4788 4.01515 16.0604 4.01515H3.93923Z" fill="#475BB2"/>
 		</svg>
 		<svg class="ur-form-preview-device" data-device="tablet" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">

@@ -459,23 +459,30 @@ jQuery(function ($) {
 		$(this).find("path").css("fill", "#475BB2");
 
 		var isDesktop = (device === "desktop");
-    	var width = isDesktop ? "100%" : (device === "tablet" ? "768px" : "375px");
 
 		if (device === "desktop") {
 			container_wrapper.addClass("ur-frontend-form-desktop-view");
 			container_wrapper.removeClass("ur-frontend-form-table-view");
 			container_wrapper.removeClass("ur-frontend-form-mobile-view");
+			preview_form.removeClass("ur-preview-tablet-wrapper");
+			preview_form.removeClass("ur-preview-mobile-wrapper");
 			$(this).addClass("active");
+
 
     	} else if(device === "tablet") {
 			container_wrapper.addClass("ur-frontend-form-table-view");
 			container_wrapper.removeClass("ur-frontend-form-desktop-view");
 			container_wrapper.removeClass("ur-frontend-form-mobile-view");
+			preview_form.addClass("ur-preview-tablet-wrapper");
+			preview_form.removeClass("ur-preview-mobile-wrapper");
 			$(this).addClass("active");
 		}else if(device === "mobile") {
 			container_wrapper.addClass("ur-frontend-form-mobile-view");
 			container_wrapper.removeClass("ur-frontend-form-desktop-view");
 			container_wrapper.removeClass("ur-frontend-form-table-view");
+			preview_form.addClass("ur-preview-mobile-wrapper");
+			preview_form.removeClass("ur-preview-tablet-wrapper");
+
 			$(this).addClass("active");
 		}else{
 			container_wrapper.removeClass("ur-frontend-form-desktop-view");
@@ -484,11 +491,7 @@ jQuery(function ($) {
 			$(this).addClass("active");
 		}
 
-		preview_form.css({
-			"width": width,
-			"margin-left": isDesktop ? "" : "auto",
-			"margin-right": isDesktop ? "" : "auto"
-		});
+
 
 
 	})
