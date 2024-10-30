@@ -6443,6 +6443,7 @@ body {
 				border-left: 1px solid #EDEFF7; //----color change
 				border:none;
 				margin-left: unset;
+				z-index: 1;
 				.ur-form-preview-pro-features-title{
 					padding-bottom: 12px;
 					margin:0 0 4px 0;
@@ -6532,6 +6533,16 @@ body {
 					height: 100%;
 					border-left: 1px solid #edeff7;
 				}
+				&.ur-form-preview-overlay::after{
+					content: '';
+					position: absolute;
+					top: 0;
+					left: 0;
+					background: #1a1a1a;
+					opacity: 0.5;
+					width: 100%;
+					height: 100%;
+				}
 			}
 
 		}
@@ -6551,6 +6562,7 @@ body {
 			border-bottom-left-radius: 4px;
 			border-top-right-radius: 0px;
 			border-bottom-right-radius: 0px;
+			z-index: 1;
 			&.inactive{
 				right: 0;
 				left: unset;
