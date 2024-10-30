@@ -453,12 +453,11 @@ jQuery(function ($) {
 
 		var device = $(this).data("device");
 		var container_wrapper = $(".ur-frontend-form");
-		var preview_form = $(".ur-form-preview-form");
+		var preview_form = $(".ur-preview-content");
 		$(this).closest('.ur-form-preview-devices').find(".ur-form-preview-device").removeClass("active");
 		$(this).parent().find("svg path").css("fill", "#383838")
 		$(this).find("path").css("fill", "#475BB2");
 
-		var isDesktop = (device === "desktop");
 
 		if (device === "desktop") {
 			container_wrapper.addClass("ur-frontend-form-desktop-view");

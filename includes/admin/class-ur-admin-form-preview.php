@@ -201,7 +201,7 @@ class UR_Admin_Form_Preview {
 			$form_id = $_GET['form_id'];// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 			$html  = '';
-			$html .= '<div>';
+			$html .= '<div class="ur-preview-content">';
 			$html .= '<span class="ur-form-preview-title">';
 			$html .= get_the_title( $form_id );
 			$html .= '</span>';
