@@ -588,11 +588,15 @@
 												? field.val()
 												: "";
 
-											formwise_data.field_name = field
+											privacy_field_name = field
 												.closest(
 													".field-privacy_policy"
 												)
 												.data("ref-id");
+
+											if ( "undefined" !== typeof privacy_field_name ) {
+												formwise_data.field_name = privacy_field_name;
+											}
 										}
 										break;
 									case "radio":
