@@ -16,15 +16,25 @@ body {
 // ToolTip CSSs
 .tooltipster-sidetip {
 	.tooltipster-box {
-		background-color: $grey-400 !important;
+		background-color: $grey-0 !important;
+		max-width: 220px;
+		box-shadow: 0px 6px 24px 0px rgba(10, 10, 10, 0.10);
+		padding: $spacing_16px $spacing_18px;
+
+		.tooltipster-content {
+			font-size: 14px;
+			line-height: 20px;
+			color: $grey-500;
+			padding: 0;
+		}
 	}
 
 	&.tooltipster-base {
 		.tooltipster-arrow {
 			.tooltipster-arrow-uncropped {
 				.tooltipster-arrow-border {
-					border-top-color: $grey-400 !important;
-					border-bottom-color: $grey-400 !important;
+					border-top-color: $grey-0 !important;
+					border-bottom-color: $grey-0 !important;
 				}
 			}
 		}
@@ -69,7 +79,7 @@ body {
 			width: 100%;
 			max-width: 300px;
 			padding: $spacing_24px 0 0;
-			background: #fafafc;
+			background: $grey-0;
 			border-right: $border_width solid $border-color;
 
 			&.collapsed {
@@ -442,10 +452,6 @@ body {
 							font-size: 14px;
 							margin: 0;
 						}
-
-						// > svg {
-						// 	margin-right: $spacing_16px;
-						// }
 					}
 
 					.ur-nav-icon {
@@ -466,18 +472,19 @@ body {
 
 					&:hover,
 					&.is-active {
-						background: $grey-0;
+						background: #F8F8FA;
 						border-radius: 0;
 						color: $primary_color;
 
 						&:not(#ur-settings-collapse)::before {
-							opacity: 1;
+							opacity: 1;							
 						}
 					}
 
 					&.is-active {
 						&:not(#ur-settings-collapse)::after {
 							opacity: 1;
+							background: #F8F8FA;
 						}
 					}
 
@@ -707,18 +714,18 @@ body {
 	flex-direction: column;
 	padding: $spacing_24px;
 	padding-top: 0;
+	background: #FAFAFC;
+	margin-top: 0 !important;
 
 	.user-registration-options-header {
-		// position: sticky;
-		// position: -webkit-sticky;
-		// top: var(--wp-admin--admin-bar--height, $spacing_32px);
-		// z-index: 5;
-		background: $grey-0;
+		background: #fafafc;
 		padding-top: $spacing_24px;
 
 		&--top {
 			display: flex;
 			align-items: center;
+			padding-bottom: $spacing_24px;
+            border-bottom: $border_width solid #EBEBEB;
 
 			h3 {
 				margin: 0;
@@ -735,7 +742,7 @@ body {
 		}
 
 		&--bottom {
-			margin-top: $spacing_40px;
+			margin-top: $spacing_32px;
 
 			ul {
 				display: flex;
@@ -791,7 +798,7 @@ body {
 
 			.ur-scroll-ui {
 				&__scroll-nav {
-					padding-bottom: $spacing_22px;
+					padding-bottom: $spacing_28px;
 				}
 			}
 		}
@@ -939,9 +946,8 @@ body {
 		// General Settings
 		.user-registration-card {
 			padding: $spacing_16px $spacing_20px $spacing_22px;
-			background: #fafafc;
-			// border: $border_width solid #edeff7 !important;
-			border: $border_width solid $grey-50 !important;
+			background: $grey-0;
+			border: $border_width solid #EBEBEB !important;
 			border-radius: $border_radius_7;
 			margin-top: 0 !important;
 			margin-bottom: $spacing_28px;
@@ -994,7 +1000,7 @@ body {
 				margin-bottom: $spacing_24px;
 				padding: 0 0 $spacing_16px;
 				position: relative;
-				border-bottom: $border_width solid $grey-50 !important;
+				border-bottom: $border_width solid #EBEBEB !important;
 
 				// Integration Settings
 				&.integration-header-info {
@@ -1628,13 +1634,16 @@ body {
 			}
 
 			p.ur-p-tag {
-				margin: -$spacing_6px 0 $spacing_24px;
+				margin-bottom: $spacing_24px;
 				padding: $spacing_10px $spacing_12px $spacing_10px $spacing_16px;
-				background: $grey-0;
-				// background: #FAFAFA;
-				border-left: 3px solid #17a2b8;
+				background: rgba(71, 91, 178, 0.04);
+				border: $border_width solid $primary_color;
 				font-weight: $regular;
-				color: $grey-300;
+				color: $grey-400;
+				border-radius: $border_radius_4;
+				font-size: 14px;
+				line-height: 22px;
+				font-style: normal;
 
 				strong {
 					font-weight: $semi_bold;
@@ -1655,12 +1664,10 @@ body {
 					width: 100%;
 					max-width: 680px;
 					padding: $spacing_16px $spacing_20px $spacing_22px;
-					// background: $grey-0;
 					border: $border_width solid $grey-50;
 					border-radius: $border_radius_7;
 					margin-bottom: $spacing_28px;
 					background: #fafafc;
-					// border: $border_width solid #edeff7 !important;
 					border: $border_width solid $grey-50;
 					box-shadow: none;
 
