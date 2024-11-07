@@ -1,0 +1,1216 @@
+# Copyright (C) 2024 WPEverest
+# This file is distributed under the GNU General Public License v3.0.
+msgid ""
+msgstr ""
+"Project-Id-Version: User Registration Membership 1.0.2\n"
+"Report-Msgid-Bugs-To: help@wpeverest.com\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-10-02T10:07:46+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.10.0\n"
+"X-Domain: user-registration-membership\n"
+
+#. Plugin Name of the plugin
+msgid "User Registration Membership"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://wpuserregistration.com/features/membership/"
+msgstr ""
+
+#. Description of the plugin
+msgid "Membership addon for user registration plugin."
+msgstr ""
+
+#. Author of the plugin
+msgid "WPEverest"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://wpeverest.com"
+msgstr ""
+
+#: includes/Admin.php:174
+msgid "View User Registration Membership Settings"
+msgstr ""
+
+#: includes/Admin.php:174
+#: includes/Admin/Views/Partials/header.php:21
+#: includes/Admin/Views/Partials/membership-admin-payments.php:454
+msgid "Settings"
+msgstr ""
+
+#: includes/Admin.php:215
+#: includes/Admin/Views/Partials/header.php:9
+msgid "Memberships"
+msgstr ""
+
+#: includes/Admin.php:216
+#: includes/Admin/Members/Members.php:286
+#: includes/Admin/Membership/Membership.php:250
+#: includes/Admin/Membership/Membership.php:251
+#: includes/Admin/Views/member-create.php:200
+#: includes/Admin/Views/member-create.php:204
+msgid "Membership"
+msgstr ""
+
+#: includes/Admin.php:217
+msgid "All Memberships"
+msgstr ""
+
+#: includes/Admin.php:218
+msgctxt "Admin menu name"
+msgid "Memberships"
+msgstr ""
+
+#: includes/Admin.php:219
+msgid "Add New"
+msgstr ""
+
+#: includes/Admin.php:220
+msgid "Add new"
+msgstr ""
+
+#: includes/Admin.php:221
+#: includes/Admin/Members/MembersListTable.php:148
+#: includes/Admin/Membership/ListTable.php:179
+msgid "Edit"
+msgstr ""
+
+#: includes/Admin.php:222
+msgid "Edit membership"
+msgstr ""
+
+#: includes/Admin.php:223
+msgid "New membership"
+msgstr ""
+
+#: includes/Admin.php:224
+msgid "View membership"
+msgstr ""
+
+#: includes/Admin.php:225
+msgid "View memberships"
+msgstr ""
+
+#: includes/Admin.php:226
+msgid "Search memberships"
+msgstr ""
+
+#: includes/Admin.php:227
+msgid "No memberships found"
+msgstr ""
+
+#: includes/Admin.php:228
+msgid "No memberships found in trash"
+msgstr ""
+
+#: includes/Admin.php:229
+msgid "Parent membership"
+msgstr ""
+
+#: includes/Admin.php:230
+msgid "Membership image"
+msgstr ""
+
+#: includes/Admin.php:231
+msgid "Set membership image"
+msgstr ""
+
+#: includes/Admin.php:232
+msgid "Remove membership image"
+msgstr ""
+
+#: includes/Admin.php:233
+msgid "Use as membership image"
+msgstr ""
+
+#: includes/Admin.php:234
+msgid "Insert into membership"
+msgstr ""
+
+#: includes/Admin.php:235
+msgid "Uploaded to this membership"
+msgstr ""
+
+#: includes/Admin.php:236
+msgid "Filter membership"
+msgstr ""
+
+#: includes/Admin.php:237
+msgid "Membership navigation"
+msgstr ""
+
+#: includes/Admin.php:238
+msgid "Membership list"
+msgstr ""
+
+#: includes/Admin.php:269
+#: includes/Admin/Views/Partials/membership-admin-payments.php:71
+msgid "Paypal"
+msgstr ""
+
+#: includes/Admin.php:270
+#: includes/Admin/Views/Partials/membership-admin-payments.php:338
+msgid "Stripe"
+msgstr ""
+
+#: includes/Admin.php:271
+msgid "Bank"
+msgstr ""
+
+#: includes/Admin/Members/Members.php:131
+#: includes/Admin/Membership/Membership.php:413
+#: includes/Frontend/Frontend.php:109
+msgid "Network error"
+msgstr ""
+
+#: includes/Admin/Members/Members.php:132
+#: includes/Admin/Membership/Membership.php:414
+msgctxt "user registration membership"
+msgid "field is required."
+msgstr ""
+
+#: includes/Admin/Members/Members.php:133
+msgctxt "user registration membership"
+msgid "Please enter a valid email address."
+msgstr ""
+
+#: includes/Admin/Members/Members.php:134
+msgctxt "user registration membership"
+msgid "Password does not match with confirm password."
+msgstr ""
+
+#: includes/Admin/Members/Members.php:135
+msgctxt "user registration membership"
+msgid "Start date must be greater than or equal to today."
+msgstr ""
+
+#: includes/Admin/Members/Members.php:136
+msgid "Delete Members"
+msgstr ""
+
+#: includes/Admin/Members/Members.php:137
+msgid "Are you sure you want to delete these members permanently?"
+msgstr ""
+
+#: includes/Admin/Members/Members.php:138
+msgid "Are you sure you want to delete this members permanently?"
+msgstr ""
+
+#: includes/Admin/Members/Members.php:139
+#: includes/Admin/Members/MembersListTable.php:428
+#: includes/Admin/Membership/ListTable.php:183
+#: includes/Admin/Membership/Membership.php:423
+msgid "Delete"
+msgstr ""
+
+#: includes/Admin/Members/Members.php:140
+#: includes/Admin/Membership/Membership.php:424
+#: includes/Admin/Views/Partials/footer-actions.php:4
+msgid "Cancel"
+msgstr ""
+
+#: includes/Admin/Members/Members.php:141
+msgid "Please select at least one member."
+msgstr ""
+
+#: includes/Admin/Members/Members.php:178
+msgid "Membership Members"
+msgstr ""
+
+#: includes/Admin/Members/Members.php:179
+#: includes/Admin/Membership/ListTable.php:67
+#: includes/Admin/Views/Partials/header.php:15
+msgid "Members"
+msgstr ""
+
+#: includes/Admin/Members/Members.php:216
+msgid "You need a higher level of permission."
+msgstr ""
+
+#: includes/Admin/Members/Members.php:217
+msgid "Sorry, you are not allowed to list users."
+msgstr ""
+
+#: includes/Admin/Members/Members.php:231
+msgid "All Members"
+msgstr ""
+
+#: includes/Admin/Members/Members.php:236
+msgid "Add new Member"
+msgstr ""
+
+#: includes/Admin/Members/Members.php:284
+#: includes/Admin/Views/member-create.php:66
+#: includes/Admin/Views/member-create.php:75
+#: includes/Templates/membership-registration-form.php:45
+#: includes/Templates/membership-registration-form.php:49
+msgid "Username"
+msgstr ""
+
+#: includes/Admin/Members/Members.php:285
+#: includes/Admin/Views/member-create.php:87
+#: includes/Admin/Views/member-create.php:95
+#: includes/Templates/membership-registration-form.php:60
+#: includes/Templates/membership-registration-form.php:63
+msgid "Email"
+msgstr ""
+
+#: includes/Admin/Members/Members.php:287
+msgid "Subscription Status"
+msgstr ""
+
+#: includes/Admin/Members/Members.php:288
+msgid "User Registered"
+msgstr ""
+
+#: includes/Admin/Members/Members.php:292
+msgid "Actions"
+msgstr ""
+
+#: includes/Admin/Members/MembersListTable.php:109
+msgid "You don't have any Members yet."
+msgstr ""
+
+#: includes/Admin/Members/MembersListTable.php:110
+msgid "Please add Members and you are good to go."
+msgstr ""
+
+#. translators: Hidden accessibility text. %s: User login.
+#: includes/Admin/Members/MembersListTable.php:171
+msgid "Select %s"
+msgstr ""
+
+#: includes/Admin/Members/MembersListTable.php:266
+msgid "Search Members ..."
+msgstr ""
+
+#: includes/Admin/Members/MembersListTable.php:280
+#: includes/Admin/Membership/ListTable.php:202
+msgid "All Membership"
+msgstr ""
+
+#: includes/Admin/Members/MembersListTable.php:295
+msgid "Filter"
+msgstr ""
+
+#: includes/Admin/Members/MembersListTable.php:308
+msgid "All Plans"
+msgstr ""
+
+#: includes/Admin/Members/MembersListTable.php:309
+#: includes/Admin/Views/membership-create.php:148
+#: includes/Frontend/Frontend.php:160
+msgid "Free"
+msgstr ""
+
+#: includes/Admin/Members/MembersListTable.php:310
+#: includes/Admin/Views/membership-create.php:178
+msgid "Paid"
+msgstr ""
+
+#: includes/Admin/Members/MembersListTable.php:311
+msgid "Subscription"
+msgstr ""
+
+#: includes/Admin/Members/MembersListTable.php:424
+msgid "Remove"
+msgstr ""
+
+#: includes/Admin/Membership/ListTable.php:51
+msgid "You don't have any Memberships yet."
+msgstr ""
+
+#: includes/Admin/Membership/ListTable.php:52
+msgid "Please add memberships and you are good to go."
+msgstr ""
+
+#: includes/Admin/Membership/ListTable.php:65
+#: includes/Admin/Views/membership-create.php:29
+msgid "Membership Name"
+msgstr ""
+
+#: includes/Admin/Membership/ListTable.php:66
+msgid "Membership Plan Type"
+msgstr ""
+
+#: includes/Admin/Membership/ListTable.php:68
+msgid "Status"
+msgstr ""
+
+#: includes/Admin/Membership/ListTable.php:69
+msgid "Action"
+msgstr ""
+
+#: includes/Admin/Membership/ListTable.php:183
+msgid "Delete this item"
+msgstr ""
+
+#: includes/Admin/Membership/ListTable.php:208
+msgid "Create new Membership"
+msgstr ""
+
+#: includes/Admin/Membership/Membership.php:124
+msgid "You do not have permissions to edit user registration membership lists!"
+msgstr ""
+
+#: includes/Admin/Membership/Membership.php:172
+msgid "You do not have permissions to trash Memberships.!"
+msgstr ""
+
+#: includes/Admin/Membership/Membership.php:187
+msgid "Action failed. Please refresh the page and retry."
+msgstr ""
+
+#: includes/Admin/Membership/Membership.php:191
+msgid "You do not have permissions to delete Memberships!"
+msgstr ""
+
+#: includes/Admin/Membership/Membership.php:346
+msgid "Untitled"
+msgstr ""
+
+#: includes/Admin/Membership/Membership.php:415
+msgctxt "user registration membership"
+msgid "Please enter a valid url for"
+msgstr ""
+
+#: includes/Admin/Membership/Membership.php:416
+msgctxt "user registration membership"
+msgid "Input Field Amount must be greater than 0."
+msgstr ""
+
+#: includes/Admin/Membership/Membership.php:417
+msgctxt "user registration membership"
+msgid "Trial period must be less than subscription period."
+msgstr ""
+
+#: includes/Admin/Membership/Membership.php:418
+#: includes/Frontend/Frontend.php:126
+msgctxt "user registration membership"
+msgid "Error"
+msgstr ""
+
+#: includes/Admin/Membership/Membership.php:419
+msgctxt "user registration membership"
+msgid "Save"
+msgstr ""
+
+#: includes/Admin/Membership/Membership.php:420
+msgid "Delete Membership"
+msgstr ""
+
+#: includes/Admin/Membership/Membership.php:421
+msgid "Are you sure you want to delete these memberships permanently?"
+msgstr ""
+
+#: includes/Admin/Membership/Membership.php:422
+msgid "Are you sure you want to delete this membership permanently?"
+msgstr ""
+
+#: includes/Admin/Membership/Membership.php:425
+msgid "Please select at least one membership."
+msgstr ""
+
+#: includes/Admin/Membership/Membership.php:426
+msgid "Please select at least one payment gateway."
+msgstr ""
+
+#: includes/Admin/Membership/Membership.php:427
+msgctxt "user registration membership"
+msgid "Trial period must atleast be of 1 day."
+msgstr ""
+
+#: includes/Admin/Membership/Membership.php:428
+msgctxt "user registration membership"
+msgid "Subscription period must atleast be of 1 day."
+msgstr ""
+
+#: includes/Admin/Membership/Membership.php:429
+#: includes/Admin/Services/MembershipService.php:138
+msgid "Incomplete Stripe Gateway setup."
+msgstr ""
+
+#: includes/Admin/Repositories/SubscriptionRepository.php:43
+msgid "Subscription is already canceled."
+msgstr ""
+
+#: includes/Admin/Repositories/SubscriptionRepository.php:56
+#: includes/Admin/Repositories/SubscriptionRepository.php:67
+msgid "Subscription Cancelled Successfully"
+msgstr ""
+
+#: includes/Admin/Services/EmailService.php:70
+#: includes/Admin/Services/EmailService.php:101
+msgid "Congratulations! Registration completed"
+msgstr ""
+
+#: includes/Admin/Services/EmailService.php:71
+#: includes/Admin/Services/EmailService.php:102
+msgid "Hi, %s"
+msgstr ""
+
+#: includes/Admin/Services/EmailService.php:72
+msgid "Account created successfully under membership <b><i>%s</i></b>."
+msgstr ""
+
+#: includes/Admin/Services/EmailService.php:73
+msgid "<b>Username: </b><i>%1$s</i> <b>Password: </b><i>%2$s</i> "
+msgstr ""
+
+#: includes/Admin/Services/EmailService.php:74
+#: includes/Admin/Services/EmailService.php:105
+#: includes/Admin/Services/EmailService.php:137
+#: includes/Admin/Services/EmailService.php:229
+#: includes/Templates/thank-you-page.php:10
+msgid "Thank You."
+msgstr ""
+
+#: includes/Admin/Services/EmailService.php:103
+msgid "We have successfully received your request for registration under membership <b><i>%s</i></b>."
+msgstr ""
+
+#: includes/Admin/Services/EmailService.php:108
+msgid "Please wait for your payment to be verified. "
+msgstr ""
+
+#: includes/Admin/Services/EmailService.php:134
+msgid "New Member Registration!"
+msgstr ""
+
+#: includes/Admin/Services/EmailService.php:135
+msgid "A new user <b><i>%1$s</i></b> has been registered under membership <b><i>%2$s</i></b>,"
+msgstr ""
+
+#: includes/Admin/Services/EmailService.php:140
+msgid "paid with <b><i>%s</i></b>."
+msgstr ""
+
+#: includes/Admin/Services/EmailService.php:168
+msgid "Payment Received!"
+msgstr ""
+
+#: includes/Admin/Services/EmailService.php:223
+msgid "Payment Approved!"
+msgstr ""
+
+#: includes/Admin/Services/EmailService.php:227
+msgid "Hi <b><i>%s</i></b>, Your payment of amount %s for the membership: <b>%s</b> has been approved by admin."
+msgstr ""
+
+#: includes/Admin/Services/EmailService.php:259
+msgid "Membership Cancelled Successfully!"
+msgstr ""
+
+#: includes/Admin/Services/EmailService.php:262
+msgid "Hi <b><i>%1$s</i></b>, Your request for cancellation of current membership  <b><i>%2$s</i></b> was successful."
+msgstr ""
+
+#: includes/Admin/Services/EmailService.php:263
+msgid "We are sorry to see you leave."
+msgstr ""
+
+#: includes/Admin/Services/EmailService.php:264
+msgid "Good Bye."
+msgstr ""
+
+#: includes/Admin/Services/EmailService.php:292
+msgid "Membership Cancelled!"
+msgstr ""
+
+#: includes/Admin/Services/EmailService.php:295
+msgid "User <b><i>%1$s</i></b>, has cancelled their subscription under membership  <b><i>%2$s</i></b>."
+msgstr ""
+
+#: includes/Admin/Services/MembershipService.php:143
+msgid "Stripe gateway is not enabled."
+msgstr ""
+
+#: includes/Admin/Services/MembersService.php:33
+msgid "Username: "
+msgstr ""
+
+#: includes/Admin/Services/MembersService.php:41
+msgid "Email: "
+msgstr ""
+
+#: includes/Admin/Services/MembersService.php:49
+msgid "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character"
+msgstr ""
+
+#: includes/Admin/Services/MembersService.php:57
+msgid "Confirm password field cannot be empty."
+msgstr ""
+
+#: includes/Admin/Services/MembersService.php:64
+#: includes/Admin/Services/MembersService.php:73
+msgid "Password does not match."
+msgstr ""
+
+#: includes/Admin/Services/MembersService.php:83
+msgid "Coupon does not exist."
+msgstr ""
+
+#: includes/Admin/Services/MembersService.php:90
+msgid "Coupon is Inactive."
+msgstr ""
+
+#: includes/Admin/Services/MembersService.php:97
+msgid "Coupon expired."
+msgstr ""
+
+#: includes/Admin/Services/MembersService.php:104
+msgid "Invalid coupon type."
+msgstr ""
+
+#: includes/Admin/Services/MembersService.php:112
+msgid "Coupon cannot be applied for the selected membership."
+msgstr ""
+
+#: includes/Admin/Services/MembersService.php:119
+msgid "Coupon is not valid until "
+msgstr ""
+
+#: includes/Admin/Services/MembersService.php:128
+msgid "Invalid membership type (Free)."
+msgstr ""
+
+#: includes/Admin/Services/Paypal/PaypalService.php:188
+msgid "Class User_Registration_Pro_PayPal_Standard does not exist."
+msgstr ""
+
+#: includes/Admin/Services/Paypal/PaypalService.php:195
+msgid "Custom param not found for subscription."
+msgstr ""
+
+#: includes/Admin/Services/Paypal/PaypalService.php:224
+msgid "Invalid response from paypal IPN for txn: "
+msgstr ""
+
+#: includes/Admin/Services/Paypal/PaypalService.php:285
+msgid "Payment failed: recipient emails do not match"
+msgstr ""
+
+#: includes/Admin/Services/Paypal/PaypalService.php:288
+msgid "Payment failed: payment amounts do not match "
+msgstr ""
+
+#: includes/Admin/Services/Paypal/PaypalService.php:406
+msgid "Invalid response from paypal, check Client ID or Secret."
+msgstr ""
+
+#: includes/Admin/Services/Paypal/PaypalService.php:415
+msgid "Paypal Subscription ID not present"
+msgstr ""
+
+#: includes/Admin/Services/Paypal/PaypalService.php:450
+msgid "Subscription successfully canceled from paypal."
+msgstr ""
+
+#: includes/Admin/Services/Paypal/PaypalService.php:457
+msgid "Subscription cancellation failed from Paypal."
+msgstr ""
+
+#: includes/Admin/Services/Stripe/StripeService.php:121
+msgid "Stripe Payment stopped, Total amount after discount cannot be less than One."
+msgstr ""
+
+#: includes/Admin/Services/Stripe/StripeService.php:130
+msgid "Stripe Payment stopped, Invalid/Empty amount"
+msgstr ""
+
+#: includes/Admin/Services/Stripe/StripeService.php:172
+#: includes/Admin/Services/Stripe/StripeService.php:360
+msgid "Stripe Payment failed."
+msgstr ""
+
+#: includes/Admin/Services/Stripe/StripeService.php:221
+msgid "Stripe subscription failed, price or product not found"
+msgstr ""
+
+#: includes/Admin/Services/Stripe/StripeService.php:357
+#: includes/AJAX.php:116
+msgid "New member has been successfully created with successful stripe subscription."
+msgstr ""
+
+#: includes/Admin/Services/Stripe/StripeService.php:494
+msgid "Generated with stripe webhook"
+msgstr ""
+
+#: includes/Admin/Views/member-create.php:20
+msgid "Edit Member"
+msgstr ""
+
+#: includes/Admin/Views/member-create.php:20
+msgid "Create New Member"
+msgstr ""
+
+#: includes/Admin/Views/member-create.php:29
+#: includes/Templates/membership-registration-form.php:14
+#: includes/Templates/membership-registration-form.php:17
+#: includes/Templates/membership-registration-form.php:20
+msgid "First Name"
+msgstr ""
+
+#: includes/Admin/Views/member-create.php:37
+msgid "firstname"
+msgstr ""
+
+#: includes/Admin/Views/member-create.php:48
+#: includes/Templates/membership-registration-form.php:30
+#: includes/Templates/membership-registration-form.php:33
+#: includes/Templates/membership-registration-form.php:35
+msgid "Last Name"
+msgstr ""
+
+#: includes/Admin/Views/member-create.php:55
+msgid "lastname"
+msgstr ""
+
+#: includes/Admin/Views/member-create.php:106
+#: includes/Admin/Views/member-create.php:114
+#: includes/Templates/membership-registration-form.php:75
+#: includes/Templates/membership-registration-form.php:78
+msgid "Password"
+msgstr ""
+
+#: includes/Admin/Views/member-create.php:127
+#: includes/Templates/membership-registration-form.php:88
+#: includes/Templates/membership-registration-form.php:90
+msgid "Confirm Password"
+msgstr ""
+
+#: includes/Admin/Views/member-create.php:135
+msgid "confirm_password"
+msgstr ""
+
+#: includes/Admin/Views/member-create.php:148
+msgid "Member Role"
+msgstr ""
+
+#: includes/Admin/Views/member-create.php:155
+#: includes/Admin/Views/membership-create.php:101
+msgid "Role"
+msgstr ""
+
+#: includes/Admin/Views/member-create.php:174
+msgid "Member Status"
+msgstr ""
+
+#: includes/Admin/Views/member-create.php:179
+msgid "member_status"
+msgstr ""
+
+#: includes/Admin/Views/member-create.php:193
+msgid "Select Plan"
+msgstr ""
+
+#: includes/Admin/Views/member-create.php:221
+msgid "Start Date"
+msgstr ""
+
+#: includes/Admin/Views/member-create.php:225
+msgid "start_date"
+msgstr ""
+
+#: includes/Admin/Views/member-create.php:236
+#: includes/Admin/Views/membership-create.php:423
+msgid "Save"
+msgstr ""
+
+#: includes/Admin/Views/member-create.php:236
+msgid "Create Member"
+msgstr ""
+
+#: includes/Admin/Views/membership-create.php:20
+msgid "Edit Membership"
+msgstr ""
+
+#: includes/Admin/Views/membership-create.php:20
+msgid "Create New Membership"
+msgstr ""
+
+#: includes/Admin/Views/membership-create.php:70
+msgid "Membership Status"
+msgstr ""
+
+#: includes/Admin/Views/membership-create.php:92
+msgid "Membership Role"
+msgstr ""
+
+#: includes/Admin/Views/membership-create.php:124
+msgid "Membership Type & Price"
+msgstr ""
+
+#: includes/Admin/Views/membership-create.php:131
+msgid "Type"
+msgstr ""
+
+#: includes/Admin/Views/membership-create.php:155
+msgid ""
+"This is a free membership. This is free of cost and doesn't\r\n"
+"\t\t\t\t\t\t\t\t\t\t\t\t\t\trequire any fees."
+msgstr ""
+
+#: includes/Admin/Views/membership-create.php:185
+msgid "This is a paid membership plan. It requires a certain amount to get you started."
+msgstr ""
+
+#: includes/Admin/Views/membership-create.php:205
+msgid "Subscription Based"
+msgstr ""
+
+#: includes/Admin/Views/membership-create.php:212
+msgid "This plan requires to get renewed after certain period of time."
+msgstr ""
+
+#: includes/Admin/Views/membership-create.php:251
+msgid "Cancel immediately."
+msgstr ""
+
+#: includes/Admin/Views/membership-create.php:274
+msgid "Amount"
+msgstr ""
+
+#: includes/Admin/Views/membership-create.php:304
+msgid "Duration"
+msgstr ""
+
+#: includes/Admin/Views/membership-create.php:423
+msgid "Create Membership"
+msgstr ""
+
+#: includes/Admin/Views/Partials/membership-admin-payments.php:99
+#: includes/Admin/Views/Partials/membership-admin-payments.php:108
+msgid "Paypal Email"
+msgstr ""
+
+#: includes/Admin/Views/Partials/membership-admin-payments.php:124
+#: includes/Admin/Views/Partials/membership-admin-payments.php:370
+msgid "Mode"
+msgstr ""
+
+#: includes/Admin/Views/Partials/membership-admin-payments.php:140
+msgid "Sandbox"
+msgstr ""
+
+#: includes/Admin/Views/Partials/membership-admin-payments.php:145
+msgid "Production"
+msgstr ""
+
+#: includes/Admin/Views/Partials/membership-admin-payments.php:157
+#: includes/Admin/Views/Partials/membership-admin-payments.php:167
+msgid "Cancel Url"
+msgstr ""
+
+#: includes/Admin/Views/Partials/membership-admin-payments.php:183
+#: includes/Admin/Views/Partials/membership-admin-payments.php:192
+msgid "Return Url"
+msgstr ""
+
+#: includes/Admin/Views/Partials/membership-admin-payments.php:211
+#: includes/Admin/Views/Partials/membership-admin-payments.php:221
+msgid "Client ID"
+msgstr ""
+
+#: includes/Admin/Views/Partials/membership-admin-payments.php:237
+#: includes/Admin/Views/Partials/membership-admin-payments.php:248
+msgid "Client Secret"
+msgstr ""
+
+#: includes/Admin/Views/Partials/membership-admin-payments.php:282
+msgid "Bank Transfer"
+msgstr ""
+
+#: includes/Admin/Views/Partials/membership-admin-payments.php:379
+msgid "Stripe Mode"
+msgstr ""
+
+#: includes/Admin/Views/Partials/membership-admin-payments.php:396
+#: includes/Admin/Views/Partials/membership-admin-payments.php:405
+msgid "Publishable Key"
+msgstr ""
+
+#: includes/Admin/Views/Partials/membership-admin-payments.php:422
+#: includes/Admin/Views/Partials/membership-admin-payments.php:431
+msgid "Secret Key"
+msgstr ""
+
+#: includes/Admin/Views/Partials/membership-admin-payments.php:456
+msgid "Payments"
+msgstr ""
+
+#: includes/Admin/Views/Shortcode/MemberRegistrationFormShortcode.php:40
+#: includes/Admin/Views/Shortcode/MembershipListingShortcode.php:47
+msgid "Please add at least one membership to allow user registration."
+msgstr ""
+
+#. translators: %s - Link to logout.
+#. translators: %s - Link to logout.
+#: includes/Admin/Views/Shortcode/MemberRegistrationFormShortcode.php:58
+#: includes/Admin/Views/Shortcode/MembershipListingShortcode.php:64
+msgid "You are already logged in. <a href=\"%s\">Log out?</a>"
+msgstr ""
+
+#: includes/AJAX.php:85
+msgid "Field members data is required."
+msgstr ""
+
+#: includes/AJAX.php:124
+msgid "Sorry! There was an unexpected error while registering the user . "
+msgstr ""
+
+#: includes/AJAX.php:142
+msgid "Sorry, You do not have permission to create membership"
+msgstr ""
+
+#: includes/AJAX.php:188
+msgid "Successfully created the membership . "
+msgstr ""
+
+#: includes/AJAX.php:196
+#: includes/AJAX.php:287
+#: includes/AJAX.php:409
+msgid "Sorry! There was an unexpected error while saving the membership data . "
+msgstr ""
+
+#: includes/AJAX.php:211
+msgid "Field membership_id is required."
+msgstr ""
+
+#: includes/AJAX.php:218
+#: includes/AJAX.php:386
+msgid "Sorry, You do not have permission to edit membership"
+msgstr ""
+
+#: includes/AJAX.php:270
+msgid "Sorry! Could not create stripe product. "
+msgstr ""
+
+#: includes/AJAX.php:279
+msgid "Successfully updated the membership data."
+msgstr ""
+
+#: includes/AJAX.php:303
+#: includes/AJAX.php:344
+msgid "Permission not allowed."
+msgstr ""
+
+#: includes/AJAX.php:312
+msgid "Field membership_ids is required."
+msgstr ""
+
+#: includes/AJAX.php:324
+msgid "Memberships deleted successfully."
+msgstr ""
+
+#: includes/AJAX.php:330
+msgid "Sorry! There was an unexpected error while deleting the memberships."
+msgstr ""
+
+#: includes/AJAX.php:353
+msgid "Field members_ids is required."
+msgstr ""
+
+#: includes/AJAX.php:365
+msgid "Members deleted successfully."
+msgstr ""
+
+#: includes/AJAX.php:371
+msgid "Sorry! There was an unexpected error while deleting the selected members."
+msgstr ""
+
+#: includes/AJAX.php:403
+msgid "Successfully updated the membership status . "
+msgstr ""
+
+#: includes/AJAX.php:425
+msgid "Sorry, You do not have permission to create users"
+msgstr ""
+
+#: includes/AJAX.php:439
+msgid "New member has been successfully created. "
+msgstr ""
+
+#: includes/AJAX.php:443
+msgid "Sorry! There was an unexpected error while saving the members data . "
+msgstr ""
+
+#: includes/AJAX.php:488
+msgid "Field member_id is required"
+msgstr ""
+
+#: includes/Frontend/Frontend.php:110
+msgctxt "user registration membership."
+msgid "field is required."
+msgstr ""
+
+#: includes/Frontend/Frontend.php:111
+msgctxt "user registration membership."
+msgid "Password cannot be empty"
+msgstr ""
+
+#: includes/Frontend/Frontend.php:112
+msgctxt "user registration membership."
+msgid "Please enter a valid email address."
+msgstr ""
+
+#: includes/Frontend/Frontend.php:113
+msgctxt "user registration membership."
+msgid "Password does not match with confirm password."
+msgstr ""
+
+#: includes/Frontend/Frontend.php:114
+msgctxt "user registration membership."
+msgid "Password must be at least 8 characters long"
+msgstr ""
+
+#: includes/Frontend/Frontend.php:115
+msgctxt "user registration membership"
+msgid "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character."
+msgstr ""
+
+#: includes/Frontend/Frontend.php:116
+msgctxt "user registration membership"
+msgid "Please select a Payment Gateway."
+msgstr ""
+
+#: includes/Frontend/Frontend.php:117
+msgctxt "user registration membership"
+msgid "Thank You"
+msgstr ""
+
+#: includes/Frontend/Frontend.php:118
+msgctxt "user registration membership"
+msgid "Sign In"
+msgstr ""
+
+#: includes/Frontend/Frontend.php:119
+msgctxt "user registration membership"
+msgid "Your order has been successfully placed."
+msgstr ""
+
+#: includes/Frontend/Frontend.php:120
+msgctxt "user registration membership"
+msgid "Please use this transaction ID for future references."
+msgstr ""
+
+#: includes/Frontend/Frontend.php:121
+msgctxt "user registration membership"
+msgid "Membership field is required."
+msgstr ""
+
+#: includes/Frontend/Frontend.php:122
+msgctxt "user registration membership"
+msgid "Coupon is Invalid."
+msgstr ""
+
+#: includes/Frontend/Frontend.php:123
+msgctxt "user registration membership"
+msgid "discount on membership has been applied."
+msgstr ""
+
+#: includes/Frontend/Frontend.php:124
+msgctxt "user registration membership"
+msgid "Coupon Field is empty."
+msgstr ""
+
+#: includes/Frontend/Frontend.php:125
+msgctxt "user registration membership"
+msgid "Invalid membership type (Free)."
+msgstr ""
+
+#: includes/Frontend/Frontend.php:160
+msgid "Lifetime"
+msgstr ""
+
+#. translators: %s: user-registration plugin link
+#: includes/Functions/CoreFunctions.php:76
+msgid "User Registration Membership requires %s version 4.1.6 or greater to work!"
+msgstr ""
+
+#. translators: %s: user-registration plugin link
+#: includes/Functions/CoreFunctions.php:76
+msgid "User Registration Pro"
+msgstr ""
+
+#: includes/Functions/CoreFunctions.php:191
+msgid "Nonce error please reload."
+msgstr ""
+
+#: includes/Functions/CoreFunctions.php:210
+msgid "U.S. Dollar"
+msgstr ""
+
+#: includes/Functions/CoreFunctions.php:218
+msgid "Pound Sterling"
+msgstr ""
+
+#: includes/Functions/CoreFunctions.php:226
+msgid "Euro"
+msgstr ""
+
+#: includes/Functions/CoreFunctions.php:234
+msgid "Australian Dollar"
+msgstr ""
+
+#: includes/Functions/CoreFunctions.php:242
+msgid "Brazilian Real"
+msgstr ""
+
+#: includes/Functions/CoreFunctions.php:250
+msgid "Canadian Dollar"
+msgstr ""
+
+#: includes/Functions/CoreFunctions.php:258
+msgid "Czech Koruna"
+msgstr ""
+
+#: includes/Functions/CoreFunctions.php:266
+msgid "Danish Krone"
+msgstr ""
+
+#: includes/Functions/CoreFunctions.php:274
+msgid "Hong Kong Dollar"
+msgstr ""
+
+#: includes/Functions/CoreFunctions.php:282
+msgid "Hungarian Forint"
+msgstr ""
+
+#: includes/Functions/CoreFunctions.php:290
+msgid "Israeli New Sheqel"
+msgstr ""
+
+#: includes/Functions/CoreFunctions.php:298
+msgid "Malaysian Ringgit"
+msgstr ""
+
+#: includes/Functions/CoreFunctions.php:306
+msgid "Mexican Peso"
+msgstr ""
+
+#: includes/Functions/CoreFunctions.php:314
+msgid "Norwegian Krone"
+msgstr ""
+
+#: includes/Functions/CoreFunctions.php:322
+msgid "New Zealand Dollar"
+msgstr ""
+
+#: includes/Functions/CoreFunctions.php:330
+msgid "Philippine Peso"
+msgstr ""
+
+#: includes/Functions/CoreFunctions.php:338
+msgid "Polish Zloty"
+msgstr ""
+
+#: includes/Functions/CoreFunctions.php:346
+msgid "Russian Ruble"
+msgstr ""
+
+#: includes/Functions/CoreFunctions.php:354
+msgid "Singapore Dollar"
+msgstr ""
+
+#: includes/Functions/CoreFunctions.php:362
+msgid "South African Rand"
+msgstr ""
+
+#: includes/Functions/CoreFunctions.php:370
+msgid "Swedish Krona"
+msgstr ""
+
+#: includes/Functions/CoreFunctions.php:378
+msgid "Swiss Franc"
+msgstr ""
+
+#: includes/Functions/CoreFunctions.php:386
+msgid "Taiwan New Dollar"
+msgstr ""
+
+#: includes/Functions/CoreFunctions.php:394
+msgid "Thai Baht"
+msgstr ""
+
+#: includes/Templates/Emails/payment-successful-email.php:35
+#: includes/Templates/Emails/payment-successful-email.php:39
+#: includes/Templates/Emails/payment-successful-email.php:43
+msgid "N/A"
+msgstr ""
+
+#: includes/Templates/membership-listing.php:5
+msgid "Available Memberships"
+msgstr ""
+
+#: includes/Templates/membership-listing.php:31
+#: includes/Templates/membership-registration-form.php:9
+#: includes/Templates/membership-registration-form.php:213
+msgid "Sign Up"
+msgstr ""
+
+#: includes/Templates/membership-registration-form.php:50
+msgid "abc123"
+msgstr ""
+
+#: includes/Templates/membership-registration-form.php:65
+msgid "example@email.com"
+msgstr ""
+
+#: includes/Templates/membership-registration-form.php:106
+#: includes/Templates/membership-registration-form.php:114
+msgid "Coupon"
+msgstr ""
+
+#: includes/Templates/membership-registration-form.php:111
+msgid "coupon"
+msgstr ""
+
+#: includes/Templates/membership-registration-form.php:121
+msgid "Apply Coupon"
+msgstr ""
+
+#: includes/Templates/membership-registration-form.php:131
+msgid "Select Membership"
+msgstr ""
+
+#: includes/Templates/membership-registration-form.php:160
+#: includes/Templates/membership-registration-form.php:163
+msgid "Total"
+msgstr ""
+
+#: includes/Templates/membership-registration-form.php:177
+msgid "Select Payment Gateway"
+msgstr ""
+
+#: includes/Templates/membership-registration-form.php:200
+msgid "Credit Card"
+msgstr ""
+
+#: includes/Templates/thank-you-page.php:15
+msgid "For paid memberships there might be a delay of few minutes for your subscription status to be updated by the payment gateways."
+msgstr ""
+
+#: includes/Templates/thank-you-page.php:28
+msgid "Please use this transaction/order id for support regarding payments if needed."
+msgstr ""
+
+#: includes/Templates/thank-you-page.php:29
+msgid "Transaction ID : "
+msgstr ""
+
+#. translators: 1: composer command. 2: plugin directory
+#: user-registration-membership.php:30
+msgid "Your installation of the User Registration Membership plugin is incomplete. Please run %1$s within the %2$s directory."
+msgstr ""
+
+#. translators: 1: composer command. 2: plugin directory
+#: user-registration-membership.php:49
+msgid "Your installation of the  User Registration Membership plugin is incomplete. Please run %1$s within the %2$s directory."
+msgstr ""

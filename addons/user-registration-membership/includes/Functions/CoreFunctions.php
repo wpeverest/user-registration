@@ -1,0 +1,434 @@
+<?php
+/**
+ * URMembership CoreFunctions.
+ *
+ * General core functions available on both the front-end and admin.
+ *
+ * @author   WPEverest
+ * @category Core
+ * @package  URMembership/Handler
+ * @version  1.0.0
+ */
+
+if ( ! function_exists( 'ur_membership_is_compatible' ) ) {
+
+	/**
+	 * Check if Membership addon is compatible.
+	 *
+	 * @return string
+	 */
+	function ur_membership_is_compatible() {
+
+		$ur_pro_plugins_path = WP_PLUGIN_DIR . UR_MEMBERSHIP_DS . 'user-registration' . UR_MEMBERSHIP_DS . 'user-registration.php';
+
+		if ( ! file_exists( $ur_pro_plugins_path ) ) {
+			return false;
+		}
+
+		$ur_pro_plugin_file_path = 'user-registration/user-registration.php';
+
+		include_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+		if ( ! is_plugin_active( $ur_pro_plugin_file_path ) ) {
+			return false;
+		}
+
+		if ( function_exists( 'UR' ) ) {
+			$user_registration_version = UR()->version;
+		} else {
+			$user_registration_version = get_option( 'user_registration_version' );
+		}
+
+		if ( version_compare( $user_registration_version, '4.1.6', '<' ) ) {
+			return false;
+		}
+
+		return 'YES';
+
+	}
+}
+
+if ( ! function_exists( 'ur_membership_check_plugin_compatibility' ) ) {
+
+	/**
+	 * Check Plugin Compatibility.
+	 */
+	function ur_membership_check_plugin_compatibility() {
+
+		add_action( 'admin_notices', 'ur_membership_admin_notice', 10 );
+
+	}
+}
+
+if ( ! function_exists( 'ur_membership_admin_notice' ) ) {
+
+	/**
+	 * Print Admin Notice.
+	 */
+	function ur_membership_admin_notice() {
+
+		$class = 'notice notice-error';
+
+		$message = ur_membership_is_compatible();
+
+		if ( 'YES' !== $message && '' !== $message ) {
+			/* translators: %s: user-registration plugin link */
+			echo '<div class="error notice is-dismissible"><p>' . sprintf( esc_html__( 'User Registration Membership requires %s version 4.1.6 or greater to work!', 'user-registration-membership' ), '<a href="https://wpuserregistration.com/" target="_blank">' . esc_html__( 'User Registration Pro', 'user-registration-membership' ) . '</a>' ) . '</p></div>';
+		}
+	}
+}
+
+if ( ! function_exists( 'ur_membership_is_paypal_activated' ) ) {
+	/**
+	 * Check paypal module enabled or not.
+	 *
+	 * @return bool
+	 */
+	function ur_membership_is_paypal_activated() {
+		$enabled_features = get_option( 'user_registration_enabled_features', array() );
+
+		return in_array( 'user-registration-payments', $enabled_features, true ) ? true : false;
+	}
+}
+
+if ( ! function_exists( 'ur_membership_get_all_capabilities' ) ) {
+	/**
+	 * Get a list containing all available capabilities.
+	 *
+	 * @return array List of capabilities.
+	 * @since 2.0.0
+	 */
+	function ur_membership_get_all_capabilities() {
+		global $wp_roles;
+
+		$wp_capabilities = array();
+
+		foreach ( $wp_roles->roles as $role ) {
+			$role_cap_slugs    = array_keys( $role['capabilities'] );
+			$role_capabilities = array_combine( $role_cap_slugs, $role_cap_slugs );
+			$wp_capabilities   = array_merge( $wp_capabilities, $role_capabilities );
+		}
+
+		return $wp_capabilities;
+	}
+}
+
+if ( ! function_exists( 'ur_membership_get_all_roles' ) ) {
+	/**
+	 * Retrieves all the roles available in the WordPress system.
+	 *
+	 * This function checks if the WP_Roles class exists and returns an array containing all the roles and their names.
+	 *
+	 * @global WP_Roles $wp_roles The global WP_Roles object.
+	 * @return array An associative array where the keys are the role keys and the values are the role names.
+	 */
+	function ur_membership_get_all_roles() {
+		global $wp_roles; // phpcs:ignore
+
+		if ( ! class_exists( 'WP_Roles' ) ) {
+			return;
+		}
+
+		$roles = array();
+		if ( ! isset( $wp_roles ) ) {
+			$wp_roles = new WP_Roles();
+		}
+		$roles = $wp_roles->roles;
+
+		$all_roles = array();
+
+		foreach ( $roles as $role_key => $role ) {
+
+			$all_roles[ $role_key ] = $role['name'];
+		}
+
+		return $all_roles;
+	}
+}
+
+if ( ! function_exists( 'ur_membership_remove_unrelated_notices' ) ) {
+	/**
+	 * Removes unrelated notices from the WordPress admin.
+	 *
+	 * This function iterates over the 'user_admin_notices', 'admin_notices', and 'all_admin_notices'
+	 * hooks and removes all notices that are not related to the 'user_registration_' plugin.
+	 *
+	 * @global array $wp_filter The global WordPress filter
+	 * @return void
+	 */
+	function ur_membership_remove_unrelated_notices() {
+		global $wp_filter;
+		foreach ( array( 'user_admin_notices', 'admin_notices', 'all_admin_notices' ) as $wp_notice ) {
+			if ( ! empty( $wp_filter[ $wp_notice ]->callbacks ) && is_array( $wp_filter[ $wp_notice ]->callbacks ) ) {
+				foreach ( $wp_filter[ $wp_notice ]->callbacks as $priority => $hooks ) {
+					foreach ( $hooks as $name => $arr ) {
+						// Remove all notices except user registration plugins notices.
+						if ( ! strstr( $name, 'user_registration_' ) ) {
+							unset( $wp_filter[ $wp_notice ]->callbacks[ $priority ][ $name ] );
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+if ( ! function_exists( 'ur_membership_verify_nonce' ) ) {
+	/**
+	 * Verify the nonce for AJAX requests.
+	 *
+	 * This function checks the AJAX referer nonce to ensure that the request is valid.
+	 * If the nonce is invalid, an error response is sent back to the client.
+	 *
+	 * @param string $nonce The nonce value to verify.
+	 * @throws WP_Error If the nonce is invalid.
+	 * @return void
+	 */
+	function ur_membership_verify_nonce( $nonce ) {
+		if ( ! check_ajax_referer( $nonce, 'security' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Nonce error please reload.', 'user-registration-membership' ),
+				)
+			);
+		}
+	}
+}
+
+if ( ! function_exists( 'ur_membership_get_currencies' ) ) {
+	/**
+	 * ur_membership_get_currencies
+	 *
+	 * This function returns a list of currencies of different countries, this is a copy of a function in payment gateways
+	 *
+	 * @return mixed|void
+	 */
+	function ur_membership_get_currencies() {
+
+		$currencies = array(
+			'USD' => array(
+				'name'                => esc_html__( 'U.S. Dollar', 'user-registration-membership' ),
+				'symbol'              => '&#36;',
+				'symbol_pos'          => 'left',
+				'thousands_separator' => ',',
+				'decimal_separator'   => '.',
+				'decimals'            => 2,
+			),
+			'GBP' => array(
+				'name'                => esc_html__( 'Pound Sterling', 'user-registration-membership' ),
+				'symbol'              => '&pound;',
+				'symbol_pos'          => 'left',
+				'thousands_separator' => ',',
+				'decimal_separator'   => '.',
+				'decimals'            => 2,
+			),
+			'EUR' => array(
+				'name'                => esc_html__( 'Euro', 'user-registration-membership' ),
+				'symbol'              => '&euro;',
+				'symbol_pos'          => 'right',
+				'thousands_separator' => '.',
+				'decimal_separator'   => ',',
+				'decimals'            => 2,
+			),
+			'AUD' => array(
+				'name'                => esc_html__( 'Australian Dollar', 'user-registration-membership' ),
+				'symbol'              => '&#36;',
+				'symbol_pos'          => 'left',
+				'thousands_separator' => ',',
+				'decimal_separator'   => '.',
+				'decimals'            => 2,
+			),
+			'BRL' => array(
+				'name'                => esc_html__( 'Brazilian Real', 'user-registration-membership' ),
+				'symbol'              => 'R$',
+				'symbol_pos'          => 'left',
+				'thousands_separator' => '.',
+				'decimal_separator'   => ',',
+				'decimals'            => 2,
+			),
+			'CAD' => array(
+				'name'                => esc_html__( 'Canadian Dollar', 'user-registration-membership' ),
+				'symbol'              => '&#36;',
+				'symbol_pos'          => 'left',
+				'thousands_separator' => ',',
+				'decimal_separator'   => '.',
+				'decimals'            => 2,
+			),
+			'CZK' => array(
+				'name'                => esc_html__( 'Czech Koruna', 'user-registration-membership' ),
+				'symbol'              => '&#75;&#269;',
+				'symbol_pos'          => 'right',
+				'thousands_separator' => '.',
+				'decimal_separator'   => ',',
+				'decimals'            => 2,
+			),
+			'DKK' => array(
+				'name'                => esc_html__( 'Danish Krone', 'user-registration-membership' ),
+				'symbol'              => 'kr.',
+				'symbol_pos'          => 'right',
+				'thousands_separator' => '.',
+				'decimal_separator'   => ',',
+				'decimals'            => 2,
+			),
+			'HKD' => array(
+				'name'                => esc_html__( 'Hong Kong Dollar', 'user-registration-membership' ),
+				'symbol'              => '&#36;',
+				'symbol_pos'          => 'right',
+				'thousands_separator' => ',',
+				'decimal_separator'   => '.',
+				'decimals'            => 2,
+			),
+			'HUF' => array(
+				'name'                => esc_html__( 'Hungarian Forint', 'user-registration-membership' ),
+				'symbol'              => 'Ft',
+				'symbol_pos'          => 'right',
+				'thousands_separator' => '.',
+				'decimal_separator'   => ',',
+				'decimals'            => 2,
+			),
+			'ILS' => array(
+				'name'                => esc_html__( 'Israeli New Sheqel', 'user-registration-membership' ),
+				'symbol'              => '&#8362;',
+				'symbol_pos'          => 'left',
+				'thousands_separator' => ',',
+				'decimal_separator'   => '.',
+				'decimals'            => 2,
+			),
+			'MYR' => array(
+				'name'                => esc_html__( 'Malaysian Ringgit', 'user-registration-membership' ),
+				'symbol'              => '&#82;&#77;',
+				'symbol_pos'          => 'left',
+				'thousands_separator' => ',',
+				'decimal_separator'   => '.',
+				'decimals'            => 2,
+			),
+			'MXN' => array(
+				'name'                => esc_html__( 'Mexican Peso', 'user-registration-membership' ),
+				'symbol'              => '&#36;',
+				'symbol_pos'          => 'left',
+				'thousands_separator' => ',',
+				'decimal_separator'   => '.',
+				'decimals'            => 2,
+			),
+			'NOK' => array(
+				'name'                => esc_html__( 'Norwegian Krone', 'user-registration-membership' ),
+				'symbol'              => 'Kr',
+				'symbol_pos'          => 'left',
+				'thousands_separator' => '.',
+				'decimal_separator'   => ',',
+				'decimals'            => 2,
+			),
+			'NZD' => array(
+				'name'                => esc_html__( 'New Zealand Dollar', 'user-registration-membership' ),
+				'symbol'              => '&#36;',
+				'symbol_pos'          => 'left',
+				'thousands_separator' => ',',
+				'decimal_separator'   => '.',
+				'decimals'            => 2,
+			),
+			'PHP' => array(
+				'name'                => esc_html__( 'Philippine Peso', 'user-registration-membership' ),
+				'symbol'              => 'Php',
+				'symbol_pos'          => 'left',
+				'thousands_separator' => ',',
+				'decimal_separator'   => '.',
+				'decimals'            => 2,
+			),
+			'PLN' => array(
+				'name'                => esc_html__( 'Polish Zloty', 'user-registration-membership' ),
+				'symbol'              => '&#122;&#322;',
+				'symbol_pos'          => 'left',
+				'thousands_separator' => '.',
+				'decimal_separator'   => ',',
+				'decimals'            => 2,
+			),
+			'RUB' => array(
+				'name'                => esc_html__( 'Russian Ruble', 'user-registration-membership' ),
+				'symbol'              => 'pyб',
+				'symbol_pos'          => 'right',
+				'thousands_separator' => ' ',
+				'decimal_separator'   => '.',
+				'decimals'            => 2,
+			),
+			'SGD' => array(
+				'name'                => esc_html__( 'Singapore Dollar', 'user-registration-membership' ),
+				'symbol'              => '&#36;',
+				'symbol_pos'          => 'left',
+				'thousands_separator' => ',',
+				'decimal_separator'   => '.',
+				'decimals'            => 2,
+			),
+			'ZAR' => array(
+				'name'                => esc_html__( 'South African Rand', 'user-registration-membership' ),
+				'symbol'              => 'R',
+				'symbol_pos'          => 'left',
+				'thousands_separator' => ',',
+				'decimal_separator'   => '.',
+				'decimals'            => 2,
+			),
+			'SEK' => array(
+				'name'                => esc_html__( 'Swedish Krona', 'user-registration-membership' ),
+				'symbol'              => 'Kr',
+				'symbol_pos'          => 'right',
+				'thousands_separator' => '.',
+				'decimal_separator'   => ',',
+				'decimals'            => 2,
+			),
+			'CHF' => array(
+				'name'                => esc_html__( 'Swiss Franc', 'user-registration-membership' ),
+				'symbol'              => 'CHF',
+				'symbol_pos'          => 'left',
+				'thousands_separator' => ',',
+				'decimal_separator'   => '.',
+				'decimals'            => 2,
+			),
+			'TWD' => array(
+				'name'                => esc_html__( 'Taiwan New Dollar', 'user-registration-membership' ),
+				'symbol'              => '&#36;',
+				'symbol_pos'          => 'left',
+				'thousands_separator' => ',',
+				'decimal_separator'   => '.',
+				'decimals'            => 2,
+			),
+			'THB' => array(
+				'name'                => esc_html__( 'Thai Baht', 'user-registration-membership' ),
+				'symbol'              => '&#3647;',
+				'symbol_pos'          => 'left',
+				'thousands_separator' => ',',
+				'decimal_separator'   => '.',
+				'decimals'            => 2,
+			),
+		);
+
+		return apply_filters( 'user_registration_membership_payments_currencies', $currencies );
+	}
+}
+
+if ( ! function_exists( 'ur_membership_redirect_to_thank_you_page' ) ) {
+	/**
+	 * Redirect to thank you page
+	 *
+	 * @param $member_id
+	 * @param $member_order
+	 *
+	 * @return void
+	 */
+	 function ur_membership_redirect_to_thank_you_page( $member_id, $member_order ) {
+
+		$thank_you_page_id = get_option( 'user_registration_thank_you_page_id' );
+		$thank_you_page    = get_permalink( $thank_you_page_id );
+		$user              = get_userdata( $member_id );
+		$params            = array(
+			'username'       => $user->user_login,
+			'transaction_id' => empty( $member_order['transaction_id'] ) ? $member_order['ID'] : $member_order['transaction_id'],
+			'payment_type'   => 'paid',
+		);
+		$url               = $thank_you_page . '?' . http_build_query( $params );
+
+		wp_redirect( $url );
+		exit;
+	}
+}
+
+
+

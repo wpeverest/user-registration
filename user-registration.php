@@ -162,6 +162,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			$this->define( 'UR_TEMPLATE_DEBUG_MODE', false );
 			$this->define( 'UR_FORM_PATH', UR_ABSPATH . 'includes' . UR_DS . 'form' . UR_DS );
 			$this->define( 'UR_SESSION_CACHE_GROUP', 'ur_session_id' );
+			$this->define( 'UR_IS_PRO', false );
 		}
 
 		/**
@@ -258,6 +259,9 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			 * Config classes.
 			 */
 			include_once UR_ABSPATH . 'includes/admin/class-ur-config.php';
+
+			/** include addons */
+			include_once UR_ABSPATH . 'addons/user-registration-membership/user-registration-membership.php';
 
 			/**
 			 * Elementor classes.
