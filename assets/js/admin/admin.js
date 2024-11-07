@@ -438,6 +438,16 @@ jQuery(function ($) {
 			$("#user_registration_form_setting_redirect_after_field").hide();
 		}
 	);
+
+
+	/**
+	 * Save form applying theme style.
+	 */
+		$(document.body).on("change", "#ur_toggle_form_preview_theme", function () {
+			$('.ur-frontend-form').toggleClass("ur-frontend-form-preview");
+
+
+		})
 	/**
 	 * Toggle sidepanel.
 	 */
@@ -502,7 +512,12 @@ jQuery(function ($) {
 	 */
 	$(document.body).on("click", "#ur-form-save", function () {
 		var form_id = $(this).data( "id" );
-		var form_theme = $( this ).data( 'theme' );
+		var is_enabled = $('#ur_toggle_form_preview_theme').is(":checked");
+		if(is_enabled){
+			form_theme = 'theme';
+		}else{
+			form_theme = 'default';
+		}
 
 		$.ajax({
 			url: user_registration_form_preview.ajax_url,
@@ -527,10 +542,6 @@ jQuery(function ($) {
 				} else {
 					$(".ur-form-preview-save-title").html(  response.responseJSON.data.message);
 				}
-				setTimeout(function() {
-					$(".ur-form-preview-save").toggleClass('hidden');
-				}, 3000);
-
 			}
 
 		})
@@ -544,25 +555,6 @@ jQuery(function ($) {
 	$(document.body).on("click", ".ur-form-preview-upgrade", function () {
 		window.open(user_registration_form_preview.pro_upgrade_link, "_blank");
 	})
-
-	/**
-	 * Save form applying theme style.
-	 */
-	$(document.body).on("change", "#ur_toggle_form_preview_theme", function () {
-		$('.ur-form-preview-save').toggleClass("hidden");
-		$('.ur-frontend-form').toggleClass("ur-frontend-form-preview");
-		// if($(this).is(":checked")) {
-		// 	$('link#ur-form-preview-theme-style-css').prop('disabled', false);
-		// 	$('link#ur-form-preview-default-style-css').prop('disabled', true);
-		// }else{
-		// 	$('link#ur-form-preview-theme-style-css').prop('disabled', true);
-		// 	$('link#ur-form-preview-default-style-css').prop('disabled', false);
-		// }
-
-	})
-
-
-
 
 
 
