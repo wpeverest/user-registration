@@ -612,7 +612,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$attr .= 'data-current-time="' . $current_time . '"';
 				}
 				if ( '' !== $enable_calculations && $enable_calculations ) {
-					$attr .= 'readonly data-decimal-places="' . $decimal_places . '" data-calculation-formula="' . $calculation_formula . '"';
+					$attr .= 'readonly data-decimal-places="' . esc_attr($decimal_places) . '" data-calculation-formula="' . esc_attr($calculation_formula) . '"';
 				}
 				if ( ur_string_to_bool( $time_slot_booking ) ) {
 					$target_date_field = isset( $args['target_date_field'] ) ? $args['target_date_field'] : '';
