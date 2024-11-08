@@ -13,11 +13,14 @@
         .ur-button-container{
             display: block;
             margin-top: 36px;
+            .ur-submit-button br{
+                display: none;
+            }
         }
         &.ur-frontend-form--default {
             .ur-form-row{
                 gap: 24px;
-                margin-bottom: 28px;
+                margin-bottom: 0;
                 .form-row{
                     .ur-label{
                         font-weight: 500;
