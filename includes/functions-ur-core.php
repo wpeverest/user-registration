@@ -5453,7 +5453,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 						}
 
 						// Remove files attachment id from user meta if file is deleted by admin.
-						if ( '' !== $field['value'] ) {
+						if ( isset( $field['value'] ) && '' !== $field['value'] ) {
 							$attachment_ids = is_array( $field['value'] ) ? $field['value'] : explode( ',', $field['value'] );
 
 							foreach ( $attachment_ids as $attachment_key => $attachment_id ) {

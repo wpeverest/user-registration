@@ -87,8 +87,6 @@ if ( 'vertical' === $layout ) {
 										}
 									}
 								}
-							} else {
-								$is_profile_pic_on_form = ! $is_profile_field_disabled;
 							}
 						} else {
 							$is_profile_pic_on_form = ! $is_profile_field_disabled;
