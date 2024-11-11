@@ -477,7 +477,7 @@ body {
 						color: $primary_color;
 
 						&:not(#ur-settings-collapse)::before {
-							opacity: 1;							
+							opacity: 1;
 						}
 					}
 
@@ -1353,6 +1353,10 @@ body {
 									.user-registration-help-tip {
 										margin-left: $spacing_6px;
 										color: $grey-100;
+
+										&::after {
+											content: url('../images/settings-icons/information.svg') !important;
+										}
 									}
 								}
 							}
@@ -1410,6 +1414,14 @@ body {
 
 						span {
 							color: #BABABA;
+
+							&.user-registration-help-tip {
+								font-size: 19px;
+
+								&::after {
+									content: url('../images/settings-icons/information.svg');
+								}
+							}
 						}
 					}
 
@@ -1467,6 +1479,33 @@ body {
 							// @media (max-width: 1199px) {
 							// 	width: 100% !important;
 							// }
+
+							&--open {
+								.select2-selection {
+									&__arrow {
+										height: 30px;
+										b {
+											width: 12px;
+											border-color: transparent transparent #888 transparent;
+											border-width: 0 6px 7px 6px;
+										}
+									}
+
+									&--multiple {
+										&:before {
+											content: "";
+											position: absolute;
+											right: 7px;
+											top: 42%;
+											border-bottom: 7px solid #888;
+											border-left: 6px solid transparent;
+											border-right: 6px solid transparent;
+											border-top: 0px;
+										}
+									}
+								}
+
+							}
 						}
 
 						.select2-selection {
@@ -1507,6 +1546,16 @@ body {
 									padding-left: 0;
 									padding-right: 0;
 								}
+
+								&:before {
+									content: "";
+									position: absolute;
+									right: 7px;
+									top: 42%;
+									border-top: 7px solid #888;
+									border-left: 6px solid transparent;
+									border-right: 6px solid transparent;
+								}
 							}
 
 							&--single {
@@ -1529,8 +1578,16 @@ body {
 								}
 
 								.select2-selection__arrow {
-									height: 36px;
+									height: 30px;
 									right: $spacing_8px;
+								}
+							}
+
+							&__arrow {
+								b {
+									width: 12px;
+									border-color: #888 transparent transparent transparent;
+									border-width: 7px 6px 0 6px;
 								}
 							}
 						}
