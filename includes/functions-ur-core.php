@@ -3658,14 +3658,24 @@ if ( ! function_exists( 'ur_check_captch_keys' ) ) {
 	 *
 	 * @return bool
 	 */
-	function ur_check_captch_keys( $context = 'register', $form_id = 0 ) {
+	function ur_check_captch_keys( $context = 'register', $form_id = 0, $form_save_action = false ) {
 		$recaptcha_type      = get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' );
 		$invisible_recaptcha = ur_option_checked( 'user_registration_captcha_setting_invisible_recaptcha_v2', false );
 
 		if ( 'login' === $context ) {
 			$recaptcha_type = get_option( 'user_registration_login_options_configured_captcha_type', $recaptcha_type );
 		} elseif ( 'register' === $context && $form_id ) {
-			$recaptcha_type = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_configured_captcha_type', $recaptcha_type );
+			if ( $form_save_action ) {
+				if ( isset( $_POST['data']['form_setting_data'] ) ) {
+					foreach (  $_POST['data']['form_setting_data'] as $value ) {
+						if ( "user_registration_form_setting_configured_captcha_type" === $value["name"] ) {
+							$recaptcha_type = $value["value"];
+						}
+					}
+				}
+			} else {
+				$recaptcha_type = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_configured_captcha_type', $recaptcha_type );
+			}
 		}
 
 		$site_key   = '';
