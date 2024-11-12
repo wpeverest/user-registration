@@ -11,9 +11,6 @@
 		}
 
 		.user-registration-MyAccount-navigation {
-			background: $color_gray_five;
-			width: 25%;
-
 			ul {
 				flex-direction: column;
 				flex-wrap: nowrap;
@@ -21,7 +18,6 @@
 				.user-registration-MyAccount-navigation-link {
 					&.is-active {
 						a {
-							background: $color_gray_four;
 							border-color: $primary_color;
 						}
 					}
@@ -30,18 +26,7 @@
 		}
 
 		.user-registration-MyAccount-content {
-			width: 75%;
-
-			.user-registration-profile-header {
-				display: flex;
-				flex-wrap: wrap;
-				align-items: center;
-				flex-direction: column;
-
-				.user-registration-img-container {
-					margin: auto;
-				}
-			}
+			flex: 1;
 		}
 	}
 
@@ -64,6 +49,8 @@
 				.user-registration-MyAccount-navigation-link {
 					a {
 						padding: 15px 20px;
+						font-family: inherit;
+						font-weight: 500;
 					}
 
 					&.is-active {
@@ -117,11 +104,32 @@
 	}
 
 	.user-registration-MyAccount-content {
-		// text-align: left;
-		padding: 40px 40px 40px 48px;
-
 		@media (max-width: 991px) {
 			padding: 36px 30px;
+		}
+
+		> h2 {
+			margin-bottom: $spacing_24px;
+		}
+
+		.user-registration-profile-header {
+			margin-bottom: $spacing_20px;
+			gap: $spacing_16px;
+
+			header {
+				h3 {
+					margin-bottom: 0;
+				}
+			}
+		}
+
+		> p {
+			margin-bottom: $spacing_8px;
+
+			a {
+				font-weight: 500;
+				color: $primary_color;
+			}
 		}
 
 		.ur-frontend-form {
@@ -684,5 +692,500 @@
 		padding: $spacing_4px $spacing_8px;
 		border-radius: $border_radius_4;
 		border-color: $grey-400;
+	}
+}
+
+// My Account Page Design Revamp CSS
+#user-registration {
+	&.vertical,
+	&.horizontal {
+		border-radius: $border_radius_16;
+		background: $grey-0;
+		box-shadow: 0px 6px 26px 0px rgba(10, 10, 10, 0.08);
+
+		.user-registration-MyAccount {
+			&-navigation {
+				&-link {
+					border: 0 !important;
+
+					&:last-child {
+						border: 0 !important;
+					}
+
+					> a {
+						display: flex;
+						gap: $spacing_8px;
+
+						i {
+							width: 20px;
+							height: 20px;
+							display: flex;
+							align-items: center;
+							justify-content: center;
+							margin-right: 0 !important;
+						}
+					}
+				}
+			}
+
+			&-content {
+				&__body {
+					h2 {
+						margin-bottom: $spacing_20px;
+						color: $grey-400;
+						font-size: 22px;
+						line-height: 32px;
+					}
+
+					.user-registration-profile-header {
+						display: flex;
+						flex-wrap: wrap;
+						align-items: center;
+						flex-direction: column;
+						margin-bottom: $spacing_20px;
+
+						.user-registration-img-container {
+							margin: auto;
+						}
+					}
+
+					p {
+						margin-bottom: $spacing_8px;
+
+						a {
+							font-weight: $medium;
+							color: $primary_color;
+						}
+					}
+
+					.ur-frontend-form {
+						&.login {
+							.ur-form-row {
+								.ur-form-grid {
+									padding: 0;
+
+									fieldset {
+										padding: 0;
+										margin: 0;
+										border: 0;
+
+										.user-registration-form-row {
+											margin-bottom: $spacing_20px;
+
+											&:last-child {
+												margin-bottom: 0;
+											}
+
+											label {
+												margin-top: 0;
+												margin-bottom: $spacing_8px;
+												color: $grey-500;
+												font-size: 15px;
+												font-weight: $medium;
+												line-height: 21px;
+											}
+
+											.password-input-group {
+												display: block;
+
+												.input-text {
+													height: 38px;
+													padding: $spacing_8px $spacing_10px $spacing_8px $spacing_14px;
+													border-radius: $border_radius_4;
+													border: $border_width solid #E1E1E1;
+													background: $grey-0;
+
+													&:focus {
+														border-color: $primary_color;
+													}
+												}
+											}
+										}
+									}
+
+									.user-registration-form-row {
+										.ur-privacy-button {
+											margin-bottom: 0;
+										}
+									}
+
+									// Save Changes Button CSS
+									> p {
+										float: unset;
+										margin-top: $spacing_32px;
+										text-align: right;
+
+										input[type="submit"] {
+											float: unset;
+											border-radius: $border_radius_4;
+											background: $primary_color;
+											border: $border_width solid $primary_color;
+											color: $grey-0;
+											font-size: 15px;
+											line-height: 22px;
+											padding: $spacing_8px $spacing_16px;
+											transition: all .3s;
+
+											&:hover {
+												background: darken($primary_color, 10%);
+												border-color: darken($primary_color, 10%);
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
+					.user-registration-membership-content {
+						.membership {
+							&-label {
+								width: 40%;
+								text-align: left;
+							}
+
+							&-data {
+								flex: 1;
+								text-align: left;
+							}
+
+							&-row {
+								gap: 0;
+
+								&-btn-container {
+									margin-top: $spacing_20px;
+									justify-content: flex-start;
+									flex-direction: unset;
+
+									.btn-div {
+										width: 100%;
+
+										.cancel-membership-button {
+											background: #F25656;
+											padding: $spacing_8px $spacing_16px;
+											display: flex;
+											gap: 6px;
+											align-items: center;
+
+											&::before {
+												content: "";
+												background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 24 24'%3E%3Cpath fill-rule='evenodd' d='M12 3.818a8.182 8.182 0 1 0 0 16.364 8.182 8.182 0 0 0 0-16.364ZM2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm13.37-3.37a.91.91 0 0 1 0 1.286L13.286 12l2.084 2.084a.91.91 0 0 1-1.286 1.286L12 13.286 9.916 15.37a.91.91 0 0 1-1.286-1.286L10.714 12 8.63 9.916A.91.91 0 0 1 9.916 8.63L12 10.714l2.084-2.084a.91.91 0 0 1 1.286 0Z' clip-rule='evenodd'/%3E%3C/svg%3E");
+												background-repeat: no-repeat;
+												background-position: center;
+												background-size: 100%;
+												width: 18px;
+												height: 18px;
+												display: block;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
+					.user-registration-pn-section {
+						.user-registration-pn-container {
+							.user-registration-pn-lists {
+								border-radius: 8px 0 0 8px;
+							}
+
+							.user-registration-pn-display-detail-area {
+								border-radius: 0px 8px 8px 0px;
+								border: 1px solid #F1F1F1;
+								background: $grey-0;
+								border-left: 0;
+							}
+						}
+					}
+
+					// Payments Details New Design CSS
+					.ur-payments-container {
+						.ur-payments-details {
+							margin-bottom: 40px;
+
+							.ur-payments-table {
+								margin-bottom: 0;
+
+								tbody {
+									tr {
+										&.ur-payment-table-row {
+											padding: 0;
+											border-bottom: 0;
+
+											th {
+												padding: 0;
+												width: 360px;
+												padding: 12px 0;
+											}
+
+											td {
+												padding: 12px 0;
+											}
+										}
+									}
+								}
+							}
+						}
+
+						.ur-payment-invoices {
+							margin-top: 0 !important;
+							padding: 0 !important;
+
+							table.ur-payment-invoice-table {
+								border-radius: 6px !important;
+								margin-bottom: 0;
+								border: 0 !important;
+
+								tbody {
+									tr {
+										&:has(th) {
+											background: #EDEFF7 !important;
+											border-radius: 6px !important;
+										}
+
+										th {
+											padding: 16px 20px;
+											color: $grey-500;
+											font-size: 15px;
+											font-weight: 500;
+											line-height: 21px;
+											border-radius: 0 !important;
+											background: transparent !important;
+											border: 0;
+
+											&:first-child {
+												width: 200px;
+											}
+
+											&:nth-child(2) {
+												width: 230px !important;
+											}
+										}
+
+										td {
+											border: 0;
+											padding: 16px 20px;
+											color: $grey-400;
+											font-size: 14px;
+											font-weight: 400;
+											line-height: 20px;
+
+											a {
+												&#ur_download_payment_invoice {
+													padding: 0;
+													background: none;
+													color: $primary_color;
+													border-radius: 0;
+													position: relative;
+
+													&::after {
+														content: "";
+														background: darken($primary_color, 10%);
+														width: 0px;
+														height: 1.5px;
+														position: absolute;
+														bottom: -2px;
+														left: 0;
+														transition: all .3s ease-in-out;
+													}
+
+													&:hover {
+														background: transparent;
+														color: darken($primary_color, 10%);
+
+														&::after {
+															width: 100%;
+														}
+													}
+												}
+											}
+										}
+
+										&:nth-child(odd) {
+											td {
+												background: #f8f8fa !important;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	&.vertical {
+		padding: $spacing_12px;
+		border-radius: $border_radius_16;
+
+		.user-registration-MyAccount {
+			&-navigation {
+				border-radius: $border_radius_10;
+				background: #F8F8FA;
+				max-width: 260px;
+				width: 100%;
+				padding: $spacing_26px $spacing_20px $spacing_16px;
+				border: 0;
+
+				ul {
+					gap: $spacing_4px;
+
+					.user-registration-MyAccount-navigation-link {
+						transition: all .3s;
+
+						a {
+							padding: $spacing_12px $spacing_12px $spacing_12px $spacing_24px;
+							border-radius: $border_radius_4;
+							border-left: 3px solid transparent;
+							color: #4E4E4E;
+							font-size: 14px;
+							font-weight: 500;
+							line-height: 22px;
+						}
+
+						&:hover {
+							a {
+								background: $blue-50;
+								color: $primary_color;
+							}
+						}
+
+						&.is-active {
+							a {
+								color: $primary_color;
+								background: $blue-50;
+							}
+						}
+					}
+				}
+			}
+
+			&-content {
+				padding: $spacing_24px $spacing_24px 52px 36px;
+
+				&__header {
+					border-bottom: $border_width solid #F4F4F4;
+					padding-bottom: $spacing_16px;
+					margin-bottom: $spacing_32px;
+
+					h1 {
+						margin-bottom: 0;
+						text-align: left;
+						color: $grey-500;
+						font-size: 24px;
+						font-weight: 500;
+						line-height: 36px;
+					}
+				}
+			}
+		}
+	}
+
+	&.horizontal {
+		.user-registration-MyAccount {
+			&-navigation {
+				&-link {
+					a {
+						border-left: 0 !important;
+						padding: $spacing_16px $spacing_24px;
+						font-size: 14px;
+						font-weight: 500;
+						line-height: 22px;
+						color: #4E4E4E;
+						border-bottom: 3px solid $grey-0 !important;
+						transition: all .3s;
+
+						&:hover {
+							color: $primary_color;
+							background: $blue-50;
+							border-bottom-color: $blue-50 !important;
+						}
+					}
+
+					&.is-active {
+						a {
+							border-bottom-color: $primary_color !important;
+							color: $primary_color;
+							background: $blue-50 !important;
+						}
+					}
+				}
+			}
+
+			&-content {
+				padding: $spacing_24px 36px 52px 36px;
+			}
+		}
+	}
+}
+
+.user-registration-logout-swal2-container {
+	.swal2-modal {
+		padding: 0px !important;
+
+		.swal2-header {
+			padding: 20px;
+			align-items: baseline;
+
+			h2 {
+				border-bottom: 1px solid #D3D3D3;
+				padding-bottom: $spacing_16px;
+				width: 100%;
+				text-align: left;
+				margin-bottom: 0;
+				color: #222222;
+				font-size: 16px;
+				font-weight: 500;
+				line-height: 24px;
+			}
+		}
+
+		.swal2-content {
+			text-align: left;
+			color: $grey-400;
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 24px;
+		}
+
+		.swal2-actions {
+			display: flex;
+			flex-direction: row-reverse;
+			justify-content: center;
+			background-color: #F0F0F0;
+			padding: 18px $spacing_20px;
+			gap: $spacing_16px;
+			margin-top: $spacing_20px;
+			border-radius: 0 0 5px 5px;
+			background: #F4F4F4;
+
+			button {
+				width: 45%;
+				color: $grey-400;
+				font-size: 14px;
+				font-weight: 400;
+				line-height: 24px;
+				margin: 0;
+				padding: 6px 12px;
+
+				&:focus {
+					border: 0;
+					outline: none;
+					box-shadow: none;
+				}
+
+				&.swal2-confirm {
+					color: $grey-0;
+				}
+
+				&.swal2-cancel {
+					color: $grey-400;
+					background: $grey-0 !important;
+				}
+			}
+		}
 	}
 }

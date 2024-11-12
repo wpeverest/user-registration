@@ -762,9 +762,9 @@
   border-top-color: #1e85be; }
 
 .user-registration-error {
-  border-top-color: #ff4f55;
-  background: rgba(255, 79, 85, 0.1);
-  color: #ff030b; }
+  border-top-color: #ff4f55 !important;
+  background: rgba(255, 79, 85, 0.1) !important;
+  color: #ff030b !important; }
   .user-registration-error::before {
     content: "\f534"; }
 
@@ -1431,3 +1431,20 @@ span.ur-shortcode-form-embed-dot {
 
 .block-editor-page.is-fullscreen-mode .ur-shortcode-form-embed-theme .ur-shortcode-form-embed-theme-tooltips-red-arrow {
   left: 105px; }
+
+.wp-block-user-registration-content-restriction-enhanced .block-editor-inner-blocks {
+  margin-bottom: 25px; }
+
+.wp-block-user-registration-content-restriction-enhanced .user-registration-content-restriction-block-note {
+  display: flex; }
+  .wp-block-user-registration-content-restriction-enhanced .user-registration-content-restriction-block-note .dashicons-lock {
+    font-size: 25px;
+    margin: 1px 5px 0px 0px; }
+  .wp-block-user-registration-content-restriction-enhanced .user-registration-content-restriction-block-note .user-registration-content-restriction-block-note-text {
+    margin: 0px; }
+
+#ur-frontend-form .empty-list-table-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 50px; }

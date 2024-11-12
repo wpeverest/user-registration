@@ -19,21 +19,6 @@ class UR_Admin_Dashboard {
 	 * Show the Dashboard Page.
 	 */
 	public static function output() {
-
-		// End setup wizard when skipped to list table.
-		if ( ! empty( $_REQUEST['end-setup-wizard'] ) && sanitize_text_field( wp_unslash( $_REQUEST['end-setup-wizard'] ) ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			update_option( 'user_registration_first_time_activation_flag', false );
-			update_option( 'user_registration_onboarding_skipped', true );
-
-			error_log( print_r( $_REQUEST, true ) );
-
-			if ( isset( $_REQUEST['activeStep'] ) ) {
-				update_option( 'user_registration_onboarding_skipped_step', sanitize_text_field( wp_unslash( $_REQUEST['activeStep'] ) ) );
-			} else {
-				delete_option( 'user_registration_onboarding_skipped_step' );
-			}
-		}
-
 		wp_enqueue_script( 'ur-dashboard-script', UR()->plugin_url() . '/chunks/dashboard.js', array( 'wp-element', 'wp-blocks', 'wp-editor' ), UR()->version, true );
 
 		if ( ! function_exists( 'get_plugins' ) ) {

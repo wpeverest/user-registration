@@ -571,6 +571,22 @@
       	"released_date": "09/09/2024",
 		"setting_url": "admin.php?page=user-registration-settings&tab=integration",
 		"demo_video_url": "4uFlZoXlye4"
-    }
+    },
+    {
+      "title": "Brevo",
+      "slug" : "user-registration-brevo",
+      "name" : "User Registration Brevo",
+      "image": "extensions-json/sections/images/brevo.png",
+      "excerpt": "Effortlessly integrate WordPress registration forms with Brevo to collect client info and automatically sync it to your Brevo email list.",
+      "link": "https://wpuserregistration.com/features/brevo/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "plan" : [
+        "plus",
+        "professional",
+        "themegrill agency"
+      ],
+          "released_date": "07/10/2024",
+      "setting_url": "admin.php?page=user-registration-settings&tab=integration",
+      "demo_video_url": ""
+      }
   ]
 }

@@ -53,15 +53,6 @@ class UR_Getting_Started {
 				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
 			)
 		);
-		register_rest_route(
-			$this->namespace,
-			'/' . $this->rest_base . '/install-pages',
-			array(
-				'methods'             => 'POST',
-				'callback'            => array( __CLASS__, 'ur_getting_started_install_pages' ),
-				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
-			)
-		);
 	}
 
 	/**
@@ -91,6 +82,14 @@ class UR_Getting_Started {
 		if ( isset( $settings_to_update['user_registration_form_setting_minimum_password_strength'] ) ) {
 			update_post_meta( absint( $default_form_page_id ), 'user_registration_form_setting_minimum_password_strength', $settings_to_update['user_registration_form_setting_minimum_password_strength'] );
 		}
+
+		if ( isset( $settings_to_update['user_registration_end_setup_wizard'] ) ) {
+			update_option( 'user_registration_first_time_activation_flag', false );
+			update_option( 'user_registration_onboarding_skipped', false );
+			delete_option( 'user_registration_onboarding_skipped_step' );
+			unset( $settings_to_update['user_registration_end_setup_wizard'] );
+		}
+
 		if ( isset( $settings_to_update['user_registration_form_setting_default_user_role'] ) ) {
 			$all_roles      = ur_get_default_admin_roles();
 			$role_to_update = $settings_to_update['user_registration_form_setting_default_user_role'];
@@ -112,64 +111,6 @@ class UR_Getting_Started {
 			array(
 				'success' => true,
 				'message' => __( 'OnBoarding completed successfully', 'user-registration' ),
-			),
-			200
-		);
-	}
-
-	/**
-	 * Install default pages when user hits Install & Proceed button in setup wizard.
-	 *
-	 * @since 2.1.4
-	 *
-	 * @param WP_REST_Request $request Full data about the request.
-	 * @return array settings.
-	 */
-	public static function ur_getting_started_install_pages( $request ) {
-
-		if ( ! isset( $request['install_pages'] ) || ! $request['install_pages'] ) {
-			return new \WP_REST_Response(
-				array(
-					'success' => false,
-					'message' => __( 'Pages cannot be installed', 'user-registration' ),
-				),
-				200
-			);
-		}
-
-		include_once untrailingslashit( plugin_dir_path( UR_PLUGIN_FILE ) ) . '/includes/admin/functions-ur-admin.php';
-
-		$pages                = apply_filters( 'user_registration_create_pages', array() );
-		$default_form_page_id = get_option( 'user_registration_default_form_page_id' );
-		$is_pro               = false !== ur_get_license_plan() ? true : false;
-
-		if ( $default_form_page_id ) {
-			$pages['registration'] = array(
-				'name'    => _x( 'registration', 'Page slug', 'user-registration' ),
-				'title'   => _x( 'Registration', 'Page title', 'user-registration' ),
-				'content' => '[' . apply_filters( 'user_registration_form_shortcode_tag', 'user_registration_form' ) . ' id="' . esc_attr( $default_form_page_id ) . '"]',
-			);
-		}
-
-		$pages['myaccount'] = array(
-			'name'    => _x( 'my-account', 'Page slug', 'user-registration' ),
-			'title'   => _x( 'My Account', 'Page title', 'user-registration' ),
-			'content' => '[' . apply_filters( 'user_registration_my_account_shortcode_tag', 'user_registration_my_account' ) . ']',
-		);
-
-		$page_slug = array();
-		foreach ( $pages as $key => $page ) {
-			$post_id = ur_create_page( esc_sql( $page['name'] ), 'user_registration_' . $key . '_page_id', wp_kses_post( ( $page['title'] ) ), wp_kses_post( $page['content'] ) );
-			array_push( $page_slug, get_post_field( 'post_name', $post_id ) );
-		}
-
-		return new \WP_REST_Response(
-			array(
-				'success'                => true,
-				'page_slug'              => $page_slug,
-				'default_form_id'        => $default_form_page_id,
-				'is_pro'                 => $is_pro,
-				'registration_page_link' => get_permalink( get_option( 'user_registration_registration_page_id' ) ),
 			),
 			200
 		);

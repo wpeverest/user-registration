@@ -329,6 +329,7 @@ class UR_Admin_Assets {
 				'ajax_url'                               => admin_url( 'admin-ajax.php' ),
 				'user_input_dropped'                     => wp_create_nonce( 'user_input_dropped_nonce' ),
 				'ur_form_save'                           => wp_create_nonce( 'ur_form_save_nonce' ),
+				'ur_new_row_added'                       => wp_create_nonce( 'ur_new_row_added_nonce' ),
 				'number_of_grid'                         => UR_Config::$ur_form_grid,
 				'active_grid'                            => UR_Config::$default_active_grid,
 				'is_edit_form'                           => isset( $_GET['edit-registration'] ) ? true : false, //phpcs:ignore WordPress.Security.NonceVerification
@@ -615,6 +616,8 @@ class UR_Admin_Assets {
 			'i18n_learn_more'                             => esc_html__( 'Learn More', 'user-registration' ),
 			'i18n_upgrade_to_pro'                         => esc_html__( 'Upgrade plan', 'user-registration' ),
 			'i18n_ok'                                     => esc_html__( 'OK', 'user-registration' ),
+			'i18n_fullscreen_mode'                        => esc_html__( 'Fullscreen', 'user-registration' ),
+			'i18n_exit_fullscreen_mode'                   => esc_html__( 'Exit Fullscreen', 'user-registration' ),
 			'i18n_default_cannot_delete_message'          => esc_html__( 'WordPress requires the user to have an email address during registration.', 'user-registration' ),
 		);
 
