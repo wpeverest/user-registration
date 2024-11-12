@@ -442,7 +442,7 @@ jQuery(function ($) {
 						divToAppend += '<div class="integration-detail">';
 						divToAppend +=
 							'<span class="integration-status ' +
-							($(el).attr("data-connected") === 1
+							($(el).attr("data-connected") == 1
 								? "ur-integration-account-connected"
 								: "") +
 							'"></span>';
@@ -570,8 +570,9 @@ jQuery(function ($) {
 											.user_registration_locked_form_fields_notice_nonce
 								},
 								success: function (response) {
+									var video = "";
 									if (video_id !== "") {
-										var video =
+										video =
 											'<div style="width: 535px; height: 300px;"><iframe width="100%" height="100%" frameborder="0" src="https://www.youtube.com/embed/' +
 											video_id +
 											'" rel="1" allowfullscreen></iframe></div><br>';
@@ -1018,11 +1019,21 @@ jQuery(function ($) {
 		if ($this.hasClass("closed")) {
 			$this.removeClass("closed");
 			$this.addClass("opened");
+			$(this).attr(
+				"title",
+				user_registration_form_builder_data.i18n_admin
+					.i18n_exit_fullscreen_mode
+			);
 
 			$("body").addClass("ur-full-screen-mode");
 		} else {
 			$this.removeClass("opened");
 			$this.addClass("closed");
+			$(this).attr(
+				"title",
+				user_registration_form_builder_data.i18n_admin
+					.i18n_fullscreen_mode
+			);
 
 			$("body").removeClass("ur-full-screen-mode");
 		}

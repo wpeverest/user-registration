@@ -39,6 +39,10 @@ class UR_Form_Handler {
 	 * Remove key and login from querystring, set cookie, and redirect to account page to show the form.
 	 */
 	public static function redirect_reset_password_link() {
+		global $wp;
+		if ( isset( $wp->query_vars['ur-lost-password'] ) && empty( $wp->query_vars['ur-lost-password'] ) ) {
+			return;
+		}
 		$page_id                     = ur_get_page_id( 'myaccount' );
 		$is_ur_login_or_account_page = ur_find_my_account_in_page( $page_id );
 
@@ -113,8 +117,9 @@ class UR_Form_Handler {
 		 * @param array $profile The user profile data.
 		 * @param array $form_data The form data.
 		 * @param int $form_id The form ID.
+		 * @param int $user_id The user id.
 		 */
-		do_action( 'user_registration_validate_profile_update', $profile, $form_data, $form_id );
+		do_action( 'user_registration_validate_profile_update', $profile, $form_data, $form_id, $user_id );
 
 		/**
 		 * Action validate profile on update.
@@ -519,6 +524,8 @@ class UR_Form_Handler {
 			$recaptcha_type      = get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' );
 			$invisible_recaptcha = ur_option_checked( 'user_registration_captcha_setting_invisible_recaptcha_v2', false );
 
+			$recaptcha_type = apply_filters( 'user_registration_lost_password_captcha_type', $recaptcha_type );
+
 			if ( 'v2' === $recaptcha_type && ! $invisible_recaptcha ) {
 				$site_key   = get_option( 'user_registration_captcha_setting_recaptcha_site_key' );
 				$secret_key = get_option( 'user_registration_captcha_setting_recaptcha_site_secret' );
@@ -640,16 +647,20 @@ class UR_Form_Handler {
 
 		if ( $user instanceof WP_User ) {
 			if ( empty( $posted_fields['password_1'] ) ) {
-				ur_add_notice( esc_html__( 'Please enter your password.', 'user-registration' ), 'error' );
+				$err_msg = apply_filters( 'user_registration_reset_password_error_message', __( 'Please enter your password.', 'user-registration' ) );
+				ur_add_notice( $err_msg, 'error' );
 			}
 
 			if ( $posted_fields['password_1'] !== $posted_fields['password_2'] ) {
-				ur_add_notice( esc_html__( 'Passwords do not match.', 'user-registration' ), 'error' );
+				$err_msg = apply_filters( 'user_registration_reset_password_error_message', __( 'New password must not be same as old password.', 'user-registration' ) );
+				ur_add_notice( $err_msg, 'error' );
 			}
 
 			if ( wp_check_password( $posted_fields['password_1'], $user->user_pass, $user->ID ) ) {
-				ur_add_notice( esc_html__( 'New password must not be same as old password.', 'user-registration' ), 'error' );
+				$err_msg = apply_filters( 'user_registration_reset_password_error_message', __( 'New password must not be same as old password.', 'user-registration' ) );
+				ur_add_notice( $err_msg, 'error' );
 			}
+
 			$errors = new WP_Error();
 			/**
 			 * Fires an action hook to validate a password reset attempt.
@@ -680,7 +691,11 @@ class UR_Form_Handler {
 				}
 
 				set_transient( 'ur_password_resetted_flag', true, 60 );
-				wp_redirect( add_query_arg( 'password-reset', 'true', $ur_login_or_account_page ) );
+
+				$redirect = add_query_arg( 'password-reset', 'true', $ur_login_or_account_page );
+				$redirect = apply_filters( 'user_registration_reset_password_redirect', $redirect, $user );
+
+				wp_redirect( $redirect );
 				exit;
 			}
 		}

@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 5.2
 Requires PHP: 7.2
-Tested up to: 6.6.1
-Stable tag: 3.3.2
+Tested up to: 6.6.2
+Stable tag: 3.3.4.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -246,21 +246,47 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 3.3.2    - 09/09/2024 =
-* Feature  - WPBakery compatibility with user registration widgets.
-* Feature  - Support relative url in registration url .
+= 3.3.4.1  - 16/10/2024 =
+* Fix      - Setup wizard going blank on registration settings step.
+
+= 3.3.4    - 16/10/2024 =
+* Enhance  - Separate Captcha Settings for Login and Registration Form.
+* Tweak    - My account selection validation and install pages.
+* Tweak    - Send new registered email if approval link email is disabled.
+* Dev      - User edit feature for admin.
+* Dev 	   - Compatibility for Conditional logic in row.
+* Fix      - Logout not working when redirect URL is home page.
+* Fix      - Export CSV user with big data cause the bad gateway error.
+* Fix      - Date Range throws validation message when date field is localized.
+
+= 3.3.3    - 19/09/2024 =
+* Fix      - Select all option not working in checkbox field.
+* Fix      - Continue setup wizard button not working properly.
+* Fix      - Email translations issue with user registered language in WPML.
+* Fix      - Conflict with lost password when WooCommerce My Account Page selected in user registration settings.
+* Tweak    - Added skip setup button in continue setup wizard notice.
+* Tweak    - Added filters to change reset password validation error message.
+* Tweak    - Changed feature item label from Pro to Personal to avoid confusion.
+* Tweak    - Install pages notice display only if continue setup wizard notice is skipped.
+
+= 3.3.2.1  - 11/09/2024 =
+* Fix      - Tooltip icon is not being displayed in Global Settings.
+
+= 3.3.2    - 10/09/2024 =
+* Feature  - All User Registration widgets for WPBakery.
+* Feature  - All User Registration widgets for Elementor.
 * Enhance  - User Registration Dashboard Page.
+* Enhance  - Support relative url in registration url .
 * Enhance  - Show Most used Integration Lists on Integration Tab.
-* Enhance  - Introduced Settings Sidebar ( Quick setup tab and Premium Benefits ).
 * Enhance  - Warning for field deletion used in Conditional Logic.
-* Dev      - Compatibility for Mail Poet Integration.
-* Dev      - Elementor widget.
-* Fix      - Mismatch Columns error log on External Field Sync.
+* Enhance  - Introduced Settings Sidebar ( Setup Checklist and Premium Benefits ).
+* Dev      - Compatibility for MailPoet Integration.
 * Fix      - Checkbox and Multiselect smart tag parse issue.
-* Fix      - Moved membership settings from free to membership.
-* Fix      - Userstate attributes login and my account block not synchronized.
-* Fix      - Textarea text count not working in woocommerce checkout block.
-* Fix      - Save Value for seperate shipping as true or false in WooCommerce.
+* Fix 	   - Option values not saved properly in form builder.
+* Fix      - Mismatch columns error log on External Field Sync.
+* Fix      - Login block displaying login form when user is logged in.
+* Fix      - Handle Exception while any option field is blank and form saved.
+* Fix      - Save Value for separate shipping as true or false in WooCommerce.
 
 = 3.3.1     – 19/08/2024 =
 * Feature   – Embed option in form builder.

@@ -6861,8 +6861,8 @@ img.tips {
   position: relative;
   vertical-align: baseline;
   width: 16px; }
-  .user-registration-help-tip::after,
-  .ur-portal-tooltip::after {
+  .user-registration-help-tip:not(.no-icon)::after,
+  .ur-portal-tooltip:not(.no-icon)::after {
     font-family: 'Dashicons';
     speak: none;
     font-weight: normal;
@@ -9513,3 +9513,9 @@ body.ur-settings-sidebar-hidden .user-registration-settings-sidebar-container {
   background-color: #ffffff;
   align-items: normal;
   flex-direction: column; }
+
+#ur-row-section-settings {
+  padding: 10px 0px; }
+  #ur-row-section-settings .ur-individual-row-settings {
+    display: flex;
+    flex-direction: column; }

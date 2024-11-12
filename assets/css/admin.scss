@@ -2256,7 +2256,6 @@
 	 }
  }
 
-
  /**
 	 * Tooltips
 	 */
@@ -2355,9 +2354,11 @@
 	 vertical-align: baseline;
 	 width: 16px;
 
-	 &::after {
-		 @include icon_dashicons("\f223");
-		 cursor: help;
+	 &:not(.no-icon) {
+		 &::after {
+			 @include icon_dashicons("\f223");
+			 cursor: help;
+		 }
 	 }
  }
 
@@ -6437,10 +6438,19 @@
  }
  .integration-lists-settings {
 
-	 .form-settings-sub-tab {
-		 padding: 0px;
-		 background-color: #ffffff;
-		 align-items: normal;
+	.form-settings-sub-tab {
+		padding: 0px;
+		background-color: #ffffff;
+		align-items: normal;
+		flex-direction: column;
+	}
+}
+
+ #ur-row-section-settings {
+	 padding: 10px 0px;
+
+	 .ur-individual-row-settings {
+		 display: flex;
 		 flex-direction: column;
 	 }
  }

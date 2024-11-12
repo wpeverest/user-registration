@@ -11,8 +11,19 @@
 
 		initSettings: function () {
 			$this.initImageUploader();
+			$this.handleRecaptchaFormSettings();
+			$(".user-registration").on("change","#user_registration_form_setting_enable_recaptcha_support", function(){
+				$this.handleRecaptchaFormSettings();
+			});
 		},
-
+		handleRecaptchaFormSettings: function() {
+			var login_captcha_enabled = $("#user_registration_form_setting_enable_recaptcha_support").is(":checked");
+			if ( login_captcha_enabled ) {
+				$("#user_registration_form_setting_configured_captcha_type_field").show();
+			} else {
+				$("#user_registration_form_setting_configured_captcha_type_field").hide();
+			}
+		},
 		initImageUploader: function () {
 			$( '.form-row.ur-image-uploader' ).each(
 				function ( _, row ) {
