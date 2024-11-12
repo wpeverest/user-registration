@@ -40,6 +40,7 @@ class UR_Admin_Form_Preview {
 	 * Show the welcome page.
 	 */
 	public static function welcome_page() {
+		wp_register_script( 'ur-form-preview-tooltipster', UR()->plugin_url() . '/assets/js/tooltipster/tooltipster.bundle.js', array( 'jquery' ), UR()->version, true );
 		wp_register_script( 'ur-form-preview-admin-script', UR()->plugin_url() . '/assets/js/admin/admin.js', array( 'wp-element', 'wp-blocks', 'wp-editor' ), UR()->version, true );
 		wp_register_style( 'ur-form-preview-admin-style', UR()->plugin_url() . '/assets/css/admin.css', array(), UR()->version );
 		wp_register_style( 'ur-form-preview-default-style', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR()->version );
@@ -48,6 +49,7 @@ class UR_Admin_Form_Preview {
 		wp_enqueue_style( 'ur-form-preview-smallscreens' );
 		wp_enqueue_style( 'ur-form-preview-default-style' );
 		wp_enqueue_script( 'ur-form-preview-admin-script' );
+		wp_enqueue_script( 'ur-form-preview-tooltipster' );
 
 		wp_localize_script(
 			'ur-form-preview-admin-script',
@@ -181,6 +183,7 @@ class UR_Admin_Form_Preview {
 		}
 		wp_print_footer_scripts();
 		wp_print_scripts( 'ur-form-preview-admin-script' );
+		wp_print_scripts( 'ur-form-preview-tooltipster' );
 		?>
 		</html>
 		<?php
@@ -232,14 +235,13 @@ class UR_Admin_Form_Preview {
 			esc_html__( 'Calculated Fields', 'user-registration' ),
 		);
 		$is_theme_style = get_post_meta( $_GET['form_id'], 'user_registration_enable_theme_style', true );
-		if ( 'default' === $is_theme_style || empty( $is_theme_style ) ) {
+		if ( 'default' === $is_theme_style ) {
 			$checked    = '';
 			$data_theme = 'default';
 		} else {
 			$checked    = 'checked';
-			$data_theme = 'theme_style';
+			$data_theme = 'theme';
 		}
-
 		$html  = '';
 		$html .= '<div class="ur-from-preview-theme-toggle">';
 		$html .= '<label class="ur-form-preview-toggle-title">Apply Theme Style</label>';
@@ -248,7 +250,7 @@ class UR_Admin_Form_Preview {
 		$html .= '<span class="slider round"></span>';
 		$html .= '</span>';
 		$html .= '</div>';
-		$html .= '<div class="ur-form-preview-save" id="ur-form-save" data-theme="' . $data_theme . '" data-id="' . $_GET['form_id'] . '">';
+		$html .= '<div class="ur-form-preview-save hidden" id="ur-form-save" data-theme="' . $data_theme . '" data-id="' . $_GET['form_id'] . '">';
 		$html .= '<img src="' . esc_url( UR()->plugin_url() . '/assets/images/save-frame.svg' ) . '" alt="Save">';
 		$html .= '<div class="ur-form-preview-save-title">Save</div>';
 		$html .= '</div>';

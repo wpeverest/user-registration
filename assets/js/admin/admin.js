@@ -445,6 +445,7 @@ jQuery(function ($) {
 	 */
 		$(document.body).on("change", "#ur_toggle_form_preview_theme", function () {
 			$('.ur-frontend-form').toggleClass("ur-frontend-form-preview");
+			$('#ur-form-save').toggleClass("hidden");
 
 
 		})
@@ -535,13 +536,14 @@ jQuery(function ($) {
 			},
 			complete: function (response) {
 				$(".ur-spinner").remove();
-				$('.ur-form-preview-save').find('img').remove()
-				if (response.responseJSON.success === true) {
-					$(".ur-form-preview-save-title").html(  response.responseJSON.data.message);
+				$("#ur-form-save").addClass("hidden");
+				// $('.ur-form-preview-save').find('img').remove()
+				// if (response.responseJSON.success === true) {
+				// 	$(".ur-form-preview-save-title").html(  response.responseJSON.data.message);
 
-				} else {
-					$(".ur-form-preview-save-title").html(  response.responseJSON.data.message);
-				}
+				// } else {
+				// 	$(".ur-form-preview-save-title").html(  response.responseJSON.data.message);
+				// }
 			}
 
 		})
