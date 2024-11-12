@@ -268,8 +268,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			/**
 			 * Oxygen classes.
 			 */
-			if ( is_plugin_active( 'oxygen/functions.php' ) ) {
-
+			if ( in_array( 'oxygen/functions.php', get_option( 'active_plugins', array() ), true ) ) {
 				include_once UR_ABSPATH . 'includes/3rd-party/oxygen/class-ur-oxygen.php';
 			}
 
