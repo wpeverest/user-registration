@@ -3658,14 +3658,24 @@ if ( ! function_exists( 'ur_check_captch_keys' ) ) {
 	 *
 	 * @return bool
 	 */
-	function ur_check_captch_keys( $context = 'register', $form_id = 0 ) {
+	function ur_check_captch_keys( $context = 'register', $form_id = 0, $form_save_action = false ) {
 		$recaptcha_type      = get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' );
 		$invisible_recaptcha = ur_option_checked( 'user_registration_captcha_setting_invisible_recaptcha_v2', false );
 
 		if ( 'login' === $context ) {
 			$recaptcha_type = get_option( 'user_registration_login_options_configured_captcha_type', $recaptcha_type );
 		} elseif ( 'register' === $context && $form_id ) {
-			$recaptcha_type = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_configured_captcha_type', $recaptcha_type );
+			if ( $form_save_action ) {
+				if ( isset( $_POST['data']['form_setting_data'] ) ) {
+					foreach (  $_POST['data']['form_setting_data'] as $value ) {
+						if ( "user_registration_form_setting_configured_captcha_type" === $value["name"] ) {
+							$recaptcha_type = $value["value"];
+						}
+					}
+				}
+			} else {
+				$recaptcha_type = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_configured_captcha_type', $recaptcha_type );
+			}
 		}
 
 		$site_key   = '';
@@ -6671,12 +6681,15 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 	function ur_integration_addons() {
 
 		$integration_list = array(
-			'UR_Settings_SMS_Integration' => array(
+			'UR_Settings_SMS_Integration'  => array(
 				'id'           => 'sms_integration',
 				'type'         => 'accordian',
 				'title'        => 'Twilio',
 				'video_id'     => '-iUMcr03FP8',
 				'available_in' => 'Personal Plan',
+				'activated'    => function_exists( 'ur_pro_is_sms_integration_activated' ) ? ur_pro_is_sms_integration_activated() : '',
+				'display'      => array( 'settings' ),
+				'connected'    => ! empty( get_option( 'ur_sms_integration_accounts', array() ) ) ? true : false,
 			),
 			$integration['UR_Settings_ActiveCampaign'] = array(
 				'id'           => 'activecampaign',
@@ -6684,7 +6697,10 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 				'title'        => 'ActiveCampaign',
 				'desc'         => '',
 				'video_id'     => 'AfapJxM9klk',
-				'available_in' => 'Plus or Professional Plan',
+				'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
+				'activated'    => is_plugin_active( 'user-registration-activecampaign/user-registration-activecampaign.php' ),
+				'display'      => array( 'settings', 'form_settings' ),
+				'connected'    => ! empty( get_option( 'ur_activecampaign_accounts', array() ) ) ? true : false,
 			),
 			$integration['UR_Settings_MailerLite'] = array(
 				'id'           => 'mailerlite',
@@ -6692,7 +6708,10 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 				'title'        => 'MailerLite',
 				'desc'         => '',
 				'video_id'     => '4f1lGgFuJx4',
-				'available_in' => 'Plus or Professional Plan',
+				'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
+				'activated'    => is_plugin_active( 'user-registration-mailerlite/user-registration-mailerlite.php' ),
+				'display'      => array( 'settings', 'form_settings' ),
+				'connected'    => ! empty( get_option( 'ur_mailerlite_accounts', array() ) ) ? true : false,
 			),
 			$integration['UR_Settings_klaviyo'] = array(
 				'id'           => 'klaviyo',
@@ -6700,7 +6719,10 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 				'title'        => 'Klaviyo',
 				'desc'         => '',
 				'video_id'     => 'nKOMqrkNK3Y',
-				'available_in' => 'Plus or Professional Plan',
+				'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
+				'activated'    => is_plugin_active( 'user-registration-klaviyo/user-registration-klaviyo.php' ),
+				'display'      => array( 'settings', 'form_settings' ),
+				'connected'    => ! empty( get_option( 'ur_klaviyo_accounts', array() ) ) ? true : false,
 			),
 			$integration['UR_Settings_Mailchimp'] = array(
 				'id'           => 'mailchimp',
@@ -6709,7 +6731,79 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 				'desc'         => '',
 				'video_id'     => 'iyCByez_7U8',
 				'available_in' => 'Personal Plan',
+				'activated'    => is_plugin_active( 'user-registration-mailchimp/user-registration-mailchimp.php' ),
+				'display'      => array( 'settings', 'form_settings' ),
+				'connected'    => ! empty( get_option( 'ur_mailchimp_accounts', array() ) ) ? true : false,
 			),
+			'User_Registration_Zapier'     => array(
+				'id'           => 'zapier',
+				'type'         => 'accordian',
+				'title'        => 'Zapier',
+				'desc'         => '',
+				'video_id'     => 'zxl2nsXyOmw',
+				'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
+				'activated'    => is_plugin_active( 'user-registration-zapier/user-registration-zapier.php' ),
+				'display'      => array( 'form_settings' ),
+				'connected'    => ! empty( get_option( 'ur_zapier_accounts', array() ) ) ? true : false,
+			),
+			'WPEverest\URMailPoet'         => array(
+				'id'           => 'mailpoet',
+				'type'         => 'accordian',
+				'title'        => 'MailPoet',
+				'desc'         => '',
+				'video_id'     => '4uFlZoXlye4',
+				'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
+				'activated'    => is_plugin_active( 'user-registration-mailpoet/user-registration-mailpoet.php' ),
+				'display'      => array( 'settings', 'form_settings' ),
+				'connected'    => ur_string_to_bool( get_option( 'user_registration_integrations_mailpoet_connection', false ) ),
+			),
+			'WPEverest\URConvertKit'       => array(
+				'id'           => 'convertkit',
+				'type'         => 'accordian',
+				'title'        => 'Kit (formerly ConvertKit)',
+				'desc'         => '',
+				'video_id'     => '',
+				'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
+				'activated'    => is_plugin_active( 'user-registration-convertkit/user-registration-convertkit.php' ),
+				'display'      => array( 'settings', 'form_settings' ),
+				'connected'    => is_plugin_active( 'user-registration-convertkit/user-registration-convertkit.php' ) && ! empty( get_option( 'ur_convertkit_accounts', array() ) ) ? true : false,
+			),
+			'User_Registration_Brevo'      => array(
+				'id'           => 'brevo',
+				'type'         => 'accordian',
+				'title'        => 'Brevo',
+				'desc'         => '',
+				'video_id'     => '',
+				'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
+				'activated'    => is_plugin_active( 'user-registration-brevo/user-registration-brevo.php' ),
+				'display'      => array( 'settings', 'form_settings' ),
+				'connected'    => is_plugin_active( 'user-registration-brevo/user-registration-brevo.php' ) && ur_string_to_bool( get_option( 'user_registration_integrations_brevo_connection', false ) ),
+			),
+			'User_Registration_Salesforce' => array(
+				'id'           => 'salesforce',
+				'type'         => 'accordian',
+				'title'        => 'Salesforce',
+				'desc'         => '',
+				'video_id'     => '',
+				'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
+				'activated'    => is_plugin_active( 'user-registration-salesforce/user-registration-salesforce.php' ),
+				'display'      => array( 'settings', 'form_settings' ),
+				'connected'    => is_plugin_active( 'user-registration-salesforce/user-registration-salesforce.php' ) && ur_string_to_bool( get_option( 'user_registration_integrations_salesforce_connection', false ) ),
+			),
+		);
+
+		usort(
+			$integration_list,
+			function ( $a, $b ) {
+			return $b['activated'] <=> $a['activated']; //phpcs:ignore;
+			}
+		);
+
+		usort(
+			$integration_list,
+			function ( $a, $b ) {
+			return $b['connected'] <=> $a['connected']; //phpcs:ignore;
+			}
 		);
 
 		return $integration_list;
@@ -6730,6 +6824,10 @@ if ( ! function_exists( 'ur_list_top_integrations' ) ) {
 		if ( $is_free ) {
 			$integration_addons = ur_integration_addons();
 			foreach ( $integration_addons as $key => $addon ) {
+				if ( isset( $addon['display'] ) && ! in_array( 'settings', $addon['display'] ) ) {
+					continue;
+				}
+
 				$integration[ $key ] = $addon;
 			}
 			return $integration;

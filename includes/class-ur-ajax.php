@@ -863,7 +863,7 @@ class UR_AJAX {
 			// check captcha configuration before form save action.
 			if ( isset( $_POST['data']['form_setting_data'] ) ) {
 				foreach ( wp_unslash( $_POST['data']['form_setting_data'] )  as $setting_data ) { //phpcs:ignore
-					if ( 'user_registration_form_setting_enable_recaptcha_support' === $setting_data['name'] && ur_string_to_bool( $setting_data['value'] ) && ! ur_check_captch_keys( 'register', $_POST['data']['form_id'] ) ) {
+					if ( 'user_registration_form_setting_enable_recaptcha_support' === $setting_data['name'] && ur_string_to_bool( $setting_data['value'] ) && ! ur_check_captch_keys( 'register', $_POST['data']['form_id'], true ) ) {
 						throw new Exception(
 							sprintf(
 							/* translators: %s - Integration tab url */

@@ -34,6 +34,67 @@ class UR_Admin {
 		add_action( 'admin_init', array( $this, 'admin_redirects' ) );
 		add_action( 'admin_init', array( $this, 'template_actions' ) );
 		add_filter( 'display_post_states', array( $this, 'ur_add_post_state' ), 10, 2 );
+		add_action( 'user_registration_after_form_settings', array( $this, 'render_integration_section' ) );
+		add_action( 'user_registration_after_form_settings', array( $this, 'render_integration_List_section' ) );
+	}
+
+	/**
+	 * Render Integration Section
+	 *
+	 * @since 3.3.3
+	 * @param  int $form_id Form Id.
+	 * @return void
+	 */
+	public function render_integration_section( $form_id = 0 ) {
+
+		echo '<div id="integration-settings"><h3 class="ur-integration">' . esc_html__( 'Integration', 'user-registration' ) . '</h3>';
+		echo '</div>';
+	}
+
+	/**
+	 * Render Integration Lists Section
+	 *
+	 * @since 3.3.3
+	 * @param  int $form_id Form Id.
+	 * @return void
+	 */
+	public function render_integration_List_section( $form_id = 0 ) {
+
+		$integration_addons = ur_integration_addons();
+
+		foreach ( $integration_addons as $key => $integration ) {
+			if ( isset( $integration['display'] ) && ! in_array( 'form_settings', $integration['display'] ) ) {
+				continue;
+			}
+
+			echo '<div id="' . esc_attr( $integration['id'] ) . '-settings" class="integration-lists-settings" data-connected="' . esc_attr( $integration['connected'] ) . '">';
+			$is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php' );
+			$css_class     = '';
+
+			if ( ! $is_pro_active ) {
+				$css_class = 'ur-nav-premium';
+			} else {
+
+				$is_addon_active = is_plugin_active( 'user-registration-' . $integration['id'] . '/user-registration-' . $integration['id'] . '.php' );
+
+				if ( ! $is_addon_active ) {
+					$css_class = 'ur-nav-premium';
+				}
+			}
+
+			$available_in = isset( $integration['available_in'] ) ? sanitize_text_field( wp_unslash( $integration['available_in'] ) ) : '';
+			echo '<div class="form-settings-sub-tab ' . esc_attr( $css_class ) . '" id="' . esc_attr( $integration['id'] ) . '-settings" data-title="' . esc_attr( $integration['title'] ) . '" data-integration-id="user-registration-' . esc_attr( $integration['id'] ) . '" data-video="' . esc_attr( $integration['video_id'] ) . '" data-available-in="' . esc_attr( $available_in ) . '"><h3 class="ur-integration-list">' . esc_html( $integration['title'] ) . '</h3>';
+			do_action( 'user_registration_form_settings_integration', $integration['id'], $form_id );
+			echo '</div>';
+			echo '</div>';
+		}
+		echo '<div id="integration-selection-settings" style="display:none;">';
+		echo '<img src="' . esc_url_raw( UR()->plugin_url() . '/assets/images/no-integration-selected.png' ) . '"/>';
+		echo '<div class="integration-selection-settings-contents">';
+		echo '<h3>' . esc_attr__( 'No Integration Selected', 'user-registration' ) . '</h3>';
+		echo '<p>' . esc_attr__( 'Please select an integration from the list to configure its settings', 'user-registration' ) . '</p>';
+		echo '</div>';
+		echo '</div>';
 	}
 
 	/**

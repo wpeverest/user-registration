@@ -265,6 +265,12 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			if ( class_exists( '\Elementor\Plugin' ) ) {
 				include_once UR_ABSPATH . 'includes/3rd-party/elementor/class-ur-elementor.php';
 			}
+			/**
+			 * Oxygen classes.
+			 */
+			if ( in_array( 'oxygen/functions.php', get_option( 'active_plugins', array() ), true ) ) {
+				include_once UR_ABSPATH . 'includes/3rd-party/oxygen/class-ur-oxygen.php';
+			}
 
 			/**
 			 * Plugin/Addon Updater.

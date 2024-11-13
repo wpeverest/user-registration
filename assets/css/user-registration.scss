@@ -1160,3 +1160,10 @@ span.ur-shortcode-form-embed-dot {
 		padding: 50px;
 	}
 }
+//Individual oxygen widgets styles.
+.oxygen-add-section-accordion-contents[ng-if*="user-registration"] {
+	.oxygen-add-section-element {
+			min-height: 100px !important;
+			line-height: 15px;
+	 }
+}
