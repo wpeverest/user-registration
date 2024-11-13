@@ -6,7 +6,7 @@ class UR_OXYGEN_WIDGET_REGISTRATION extends UR_OXYGEN_WIDGET {
 	/**
 	 * Constructor for the Oxygen Form Widget.
 	 *
-	 * @since xx.xx.xx
+	 * @since 3.3.5
 	 */
 	public function __construct() {
 		$this->name     = __( 'Registration Form ', 'user-registration' );
@@ -19,7 +19,7 @@ class UR_OXYGEN_WIDGET_REGISTRATION extends UR_OXYGEN_WIDGET {
 	/**
 	 * Register widget controls.
 	 *
-	 * @since xx.xx.xx
+	 * @since 3.3.5
 	 */
 	public function controls() {
 		$templates_control = $this->addOptionControl(
@@ -46,7 +46,7 @@ class UR_OXYGEN_WIDGET_REGISTRATION extends UR_OXYGEN_WIDGET {
 	/**
 	 * Render the widget.
 	 *
-	 * @since xx.xx.xx
+	 * @since 3.3.5
 	 */
 	public function render( $options, $defaults, $content ) {
 		$form_id = isset( $options['ur_registration_form_id'] ) ? $options['ur_registration_form_id'] : '';
@@ -56,7 +56,7 @@ class UR_OXYGEN_WIDGET_REGISTRATION extends UR_OXYGEN_WIDGET {
 	/**
 	 * Add the form.
 	 *
-	 * @since xx.xx.xx
+	 * @since 3.3.5
 	 */
 	public function add_form( $form_id ) {
 		if ( empty( $form_id ) ) {

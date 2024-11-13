@@ -18,7 +18,7 @@ class UR_OXYGEN {
 	/**
 	 * Constructor.
 	 *
-	 * @since xx.xx.xx
+	 * @since 3.3.5
 	 */
 	public function __construct() {
 
@@ -29,7 +29,7 @@ class UR_OXYGEN {
 	/**
 	 * Init.
 	 *
-	 * @since xx.xx.xx
+	 * @since 3.3.5
 	 */
 	public function setup() {
 		if ( ! class_exists( 'OxyEl' ) ) {
@@ -38,6 +38,8 @@ class UR_OXYGEN {
 
 		add_action( 'oxygen_add_plus_sections', array( $this, 'add_accordion_section' ) );
 		add_action( 'oxygen_add_plus_user-registration_section_content', array( $this, 'register_add_plus_subsections' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'custom_init' ) );
+
 
 		$this->register_widgets();
 	}
@@ -45,7 +47,7 @@ class UR_OXYGEN {
 	/**
 	 * Add accordin section in the elements.
 	 *
-	 * @since xx.xx.xx
+	 * @since 3.3.5
 	 */
 	public function add_accordion_section() {
 		$brand_name = __( 'User Registration', 'user-registration' );
@@ -55,7 +57,7 @@ class UR_OXYGEN {
 	/**
 	 * Enqueue the styles.
 	 *
-	 * @since xx.xx.xx
+	 * @since 3.3.5 
 	 */
 	public function custom_init() {
 		wp_register_style( 'user-registration-general', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR()->version );
@@ -70,7 +72,7 @@ class UR_OXYGEN {
 	/**
 	 * Add subsection.
 	 *
-	 * @since xx.xx.xx
+	 * @since 3.3.5
 	 */
 	public function register_add_plus_subsections() {
 		do_action( 'oxygen_add_plus_user-registration_forms' );
@@ -79,7 +81,7 @@ class UR_OXYGEN {
 	/**
 	 * Register widgets.
 	 *
-	 * @since xx.xx.xx
+	 * @since 3.3.5
 	 */
 	public function register_widgets() {
 		require_once UR_ABSPATH . 'includes/3rd-party/oxygen/widgets/class-ur-oxygen-widget-registration.php';

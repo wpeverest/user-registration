@@ -3,7 +3,7 @@
  * User Registration Form for Oxygen Builder.
  *
  * @package UserRegistration\Class
- * @version xx.xx.xx
+ * @version 3.3.5
  */
 
 /**
@@ -187,7 +187,7 @@ class UR_OXYGEN_WIDGET extends \OxyEl {
 	/**
 	 * Form contrainer style controls.
 	 *
-	 * @since xx.xx.xx
+	 * @since 3.3.5
 	 */
 	public function form_container_style_controls() {
 		$section_container = $this->addControlSection(
@@ -250,7 +250,7 @@ class UR_OXYGEN_WIDGET extends \OxyEl {
 	/**
 	 * Field input label styles.
 	 *
-	 * @since xx.xx.xx
+	 * @since 3.3.5
 	 */
 	public function form_input_labels_style() {
 		$section_label = $this->addControlSection(
@@ -283,7 +283,7 @@ class UR_OXYGEN_WIDGET extends \OxyEl {
 	/**
 	 * Submit button style.
 	 *
-	 * @since xx.xx.xx
+	 * @since 3.3.5
 	 */
 	public function submit_btn_style( $selector = '.ur-submit-button' ) {
 		$section_submit_btn = $this->addControlSection(

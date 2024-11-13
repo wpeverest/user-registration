@@ -6,7 +6,7 @@ class UR_OXYGEN_WIDGET_EDITPROFILE extends UR_OXYGEN_WIDGET {
 	/**
 	 * Constructor for the Oxygen Form Widget.
 	 *
-	 * @since xx.xx.xx
+	 * @since 3.3.5
 	 */
 	public function __construct() {
 		$this->name     = __( 'Edit Profile', 'user-registration' );
@@ -19,7 +19,7 @@ class UR_OXYGEN_WIDGET_EDITPROFILE extends UR_OXYGEN_WIDGET {
 	/**
 	 * Register widget controls.
 	 *
-	 * @since xx.xx.xx
+	 * @since 3.3.5 
 	 */
 	public function controls() {
 		$templates_control = $this->addOptionControl(
@@ -47,7 +47,7 @@ class UR_OXYGEN_WIDGET_EDITPROFILE extends UR_OXYGEN_WIDGET {
 	/**
 	 * Render the widget.
 	 *
-	 * @since xx.xx.xx
+	 * @since 3.3.5
 	 */
 	public function render( $options, $defaults, $content ) {
 
@@ -58,7 +58,7 @@ class UR_OXYGEN_WIDGET_EDITPROFILE extends UR_OXYGEN_WIDGET {
 	/**
 	 * Add the form.
 	 *
-	 * @since xx.xx.xx
+	 * @since 3.3.5
 	 */
 	public function add_form( $shortcode ) {
 		if ( ! empty( $shortcode ) ) {
