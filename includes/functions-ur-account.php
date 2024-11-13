@@ -201,11 +201,8 @@ function ur_get_account_endpoint_url( $endpoint ) {
 		return ur_get_page_permalink( 'myaccount' );
 	}
 	if ( 'user-logout' === $endpoint ) {
-		if ( get_option( 'user_registration_logout_endpoint', 'user-logout' ) === $endpoint && ur_option_checked( 'user_registration_disable_logout_confirmation', false ) ) {
-			return ur_logout_url( ur_get_page_permalink( 'myaccount' ) );
-		}
+		return ur_logout_url( ur_get_page_permalink( 'myaccount' ) );
 	}
-
 	return ur_get_endpoint_url( $endpoint, '', ur_get_page_permalink( 'myaccount' ) );
 }
 
@@ -254,6 +251,7 @@ function ur_replace_gravatar_image( $avatar, $id_or_email, $size, $default, $alt
 	if ( is_numeric( $profile_picture_url ) ) {
 		$profile_picture_url = wp_get_attachment_url( $profile_picture_url );
 	}
+	$profile_picture_url = apply_filters( 'user_registration_profile_picture_url', $profile_picture_url, $user->ID );
 
 	$class = array( 'avatar', 'avatar-' . (int) $args['size'], 'photo' );
 
@@ -269,7 +267,7 @@ function ur_replace_gravatar_image( $avatar, $id_or_email, $size, $default, $alt
 		}
 	}
 
-	if ( $profile_picture_url ) {
+	if ( $profile_picture_url && ur_check_url_is_image($profile_picture_url) ) {
 		$avatar = sprintf(
 			"<img alt='%s' src='%s' srcset='%s' class='%s' height='%d' width='%d' %s/>",
 			esc_attr( $args['alt'] ),

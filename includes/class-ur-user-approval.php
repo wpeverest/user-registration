@@ -373,7 +373,9 @@ class UR_User_Approval {
 			return;
 		}
 
-		if ( 'admin_approval' === ur_get_user_login_option( get_current_user_id() ) ) {
+		$form_id = ur_get_form_id_by_userid( get_current_user_id() );
+
+		if ( 'admin_approval' === ur_get_user_login_option( get_current_user_id() ) && $form_id ) {
 
 			// Try to hide the not approved users from any theme or plugin request in frontend.
 			$disable_pre_get = apply_filters( 'user_registration_disable_pre_get_users', 'no' );

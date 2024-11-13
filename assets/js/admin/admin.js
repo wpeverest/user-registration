@@ -356,22 +356,179 @@ jQuery(function ($) {
 		var form_settings = form_settings_section.find("form");
 
 		form_settings.appendTo(fields_panel);
-
 		fields_panel
 			.find("form #ur-field-all-settings > div")
 			.each(function (index, el) {
 				var appending_text = $(el).find("h3").text();
 				var appending_id = $(el).attr("id");
+				if ("integration-settings" === appending_id) {
+					var appending_text = $(el).find(".ur-integration").text();
+					form_settings_section.append(
+						'<div id="' +
+							appending_id +
+							'" class="form-settings-tab">' +
+							appending_text +
+							"</div>"
+					);
 
-				form_settings_section.append(
-					'<div id="' +
-						appending_id +
-						'" class="form-settings-tab">' +
-						appending_text +
-						"</div>"
-				);
+					$(el)
+						.find("div")
+						.each(function (indexs, els) {
+							var appending_texts = $(els)
+								.find(".ur-integration-list")
+								.text();
+							var appending_ids = $(els).attr("id");
+							var video_id = $(els).data("video");
+							var plugin_title = $(els).data("title");
+							var available_in = $(els).data("available-in");
+							var integration_id = $(els).data("integration-id");
+							var classes = $(els).attr("class");
+
+							if ("undefined" != typeof appending_ids) {
+								$("#ur-tab-field-settings")
+									.find("#integration-settings")
+									.append(
+										'<div id="' +
+											appending_ids +
+											'" class="' +
+											classes +
+											'"' +
+											' data-video="' +
+											video_id +
+											'"' +
+											' data-title="' +
+											plugin_title +
+											'"' +
+											' data-integration-id="' +
+											integration_id +
+											'"' +
+											' data-available-in="' +
+											available_in +
+											'"' +
+											" >" +
+											appending_texts +
+											"</div>"
+									);
+							}
+						});
+				} else {
+					var style = $(el).hasClass("integration-lists-settings")
+						? "style='display:none;'"
+						: "";
+					var classToAdd = $(el).hasClass(
+						"integration-lists-settings"
+					)
+						? "integration-lists-settings"
+						: "";
+					var divToAppend = "";
+
+					if ($(el).hasClass("integration-lists-settings")) {
+						$(document)
+							.find(".ur-nav-premium")
+							.each(function () {
+								if ($(this).attr("id") === appending_id) {
+									classToAdd += " ur-nav-premium";
+								}
+							});
+
+						divToAppend =
+							'<div id="' +
+							appending_id +
+							'" class="form-settings-tab ' +
+							classToAdd +
+							'" ' +
+							style +
+							">";
+						divToAppend += '<div class="integration-detail">';
+						divToAppend +=
+							'<span class="integration-status ' +
+							($(el).attr("data-connected") == 1
+								? "ur-integration-account-connected"
+								: "") +
+							'"></span>';
+						divToAppend += '<figure class="logo">';
+						divToAppend +=
+							'<img src="' +
+							user_registration_form_builder_data.ur_assets_url +
+							"images/settings-icons/" +
+							appending_text.toLowerCase() +
+							'.png" alt="' +
+							appending_text +
+							'">';
+						divToAppend += "</figure>";
+						divToAppend += "<h3>";
+						divToAppend += appending_text;
+						divToAppend += "</h3>";
+						divToAppend += "</div>";
+						divToAppend += "</div>";
+					} else {
+						if (
+							$(el).attr("id") !==
+							"integration-selection-settings"
+						) {
+							divToAppend =
+								'<div id="' +
+								appending_id +
+								'" class="form-settings-tab ' +
+								classToAdd +
+								'" ' +
+								style +
+								" >" +
+								appending_text +
+								"</div>";
+						}
+					}
+					form_settings_section.append(divToAppend);
+				}
+
 				$(el).hide();
 			});
+
+		form_settings_section.find("#integration-settings").click(function (e) {
+			e.stopImmediatePropagation();
+
+			$(this)
+				.closest("#ur-tab-field-settings")
+				.find(".form-settings-tab:not(.integration-lists-settings)")
+				.hide();
+			$(this)
+				.closest("#ur-tab-field-settings")
+				.find(".integration-lists-settings")
+				.show();
+
+			$(document)
+				.find("#integration-selection-settings")
+				.siblings()
+				.hide();
+			$(document).find("#integration-selection-settings").show();
+
+			$(
+				'<div id="integration_settings_back" class="form-settings-tab-back">' +
+					$(this).text() +
+					"</div>"
+			).insertBefore($(this));
+
+			$(document)
+				.find("#integration_settings_back")
+				.click(function (e) {
+					$(this)
+						.closest("#ur-tab-field-settings")
+						.find(
+							".form-settings-tab:not(.integration-lists-settings)"
+						)
+						.show();
+					$(this)
+						.closest("#ur-tab-field-settings")
+						.find(".integration-lists-settings")
+						.hide();
+					$(this)
+						.closest("#ur-tab-field-settings")
+						.find("#general-settings")
+						.trigger("click");
+
+					$(this).remove();
+				});
+		});
 
 		// Add active class to general settings and form-settings-tab for all settings.
 		form_settings_section.find("#general-settings").addClass("active");
@@ -380,20 +537,180 @@ jQuery(function ($) {
 		form_settings_section
 			.find(".form-settings-tab")
 			.on("click", function () {
-				this_id = $(this).attr("id");
-				// Remove all active classes initially.
-				$(this).siblings().removeClass("active");
+				if ($(this).hasClass("ur-nav-premium")) {
+					if (
+						$(document).find(
+							".form-settings-sub-tab#" + $(this).attr("id")
+						).length
+					) {
+						var node = $(document).find(
+							".form-settings-sub-tab#" + $(this).attr("id")
+						);
 
-				// Add active class on clicked tab.
-				$(this).addClass("active");
+						var icon =
+							'<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>';
+						var plan = node.data("available-in");
+						var name = node.data("title");
+						var video_id = node.data("video");
+						var slug = node.data("integration-id");
 
-				// Hide other settings and show respective id's settings.
-				fields_panel.find("form #ur-field-all-settings > div").hide();
-				fields_panel
-					.find("form #ur-field-all-settings > div#" + this_id)
-					.show();
-				$(document).trigger("update_perfect_scrollbar");
-				$(".ur-builder-wrapper").scrollTop(0);
+						if (slug != "" && plan != "") {
+							$.ajax({
+								url: user_registration_form_builder_data.ajax_url,
+								type: "POST",
+								data: {
+									action: "user_registration_locked_form_fields_notice",
+									slug: slug,
+									plan: plan,
+									name: name,
+									video_id: video_id,
+									security:
+										user_registration_form_builder_data
+											.i18n_admin
+											.user_registration_locked_form_fields_notice_nonce
+								},
+								success: function (response) {
+									var video = "";
+									if (video_id !== "") {
+										video =
+											'<div style="width: 535px; height: 300px;"><iframe width="100%" height="100%" frameborder="0" src="https://www.youtube.com/embed/' +
+											video_id +
+											'" rel="1" allowfullscreen></iframe></div><br>';
+									}
+									var action_button = $(
+										response.data.action_button
+									).find("a");
+
+									if (!action_button.length) {
+										action_button = $(
+											response.data.action_button
+										).find("form");
+									}
+
+									var title =
+										icon +
+										'<span class="user-registration-swal2-modal__title" > ';
+
+									if (
+										action_button.hasClass(
+											"activate-license-now"
+										)
+									) {
+										var message =
+											user_registration_form_builder_data
+												.i18n_admin
+												.license_activation_required_message;
+										title +=
+											user_registration_form_builder_data
+												.i18n_admin
+												.license_activation_required_title;
+									} else if (
+										action_button.hasClass("activate-now")
+									) {
+										var message =
+											user_registration_form_builder_data.i18n_admin.activation_required_message.replace(
+												"%plugin%",
+												name
+											);
+										title +=
+											user_registration_form_builder_data
+												.i18n_admin
+												.activation_required_title;
+									} else if (
+										action_button.hasClass("install-now")
+									) {
+										var message =
+											user_registration_form_builder_data.i18n_admin.installation_required_message.replace(
+												"%plugin%",
+												name
+											);
+										title +=
+											user_registration_form_builder_data
+												.i18n_admin
+												.installation_required_title;
+									} else {
+										var message =
+											user_registration_form_builder_data
+												.i18n_admin.upgrade_message;
+
+										message = message
+											.replace("%title%", name)
+											.replace("%plan%", plan);
+
+										title +=
+											name +
+											" " +
+											user_registration_form_builder_data
+												.i18n_admin.pro_feature_title;
+									}
+
+									title += "</span>";
+									message =
+										video +
+										message +
+										"<br><br>" +
+										response.data.action_button;
+									Swal.fire({
+										title: title,
+										html: message,
+										customClass:
+											"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-locked-field",
+										showCloseButton: true,
+										showConfirmButton: false,
+										allowOutsideClick: true,
+										heightAuto: false,
+										width: "575px"
+									}).then(function (result) {
+										// Do Nothing.
+									});
+								}
+							});
+						}
+					}
+				} else {
+					this_id = $(this).attr("id");
+					// Remove all active classes initially.
+					$(this).siblings().removeClass("active");
+
+					// Add active class on clicked tab.
+					$(this).addClass("active");
+
+					// Hide other settings and show respective id's settings.
+					fields_panel
+						.find("form #ur-field-all-settings > div")
+						.hide();
+
+					if ($(this).parent().hasClass("form-settings-main-tab")) {
+						// Hide other settings and show respective id's settings.
+						fields_panel
+							.find(
+								"form #ur-field-all-settings > div#integration-settings"
+							)
+							.show();
+						fields_panel
+							.find("form #integration-settings .ur-integration")
+							.remove();
+						fields_panel
+							.find("form #integration-settings > div")
+							.hide();
+						fields_panel
+							.find("form #integration-settings > div#" + this_id)
+							.show();
+					} else {
+						// Hide other settings and show respective id's settings.
+						fields_panel
+							.find("form #ur-field-all-settings > div")
+							.hide();
+						fields_panel
+							.find(
+								"form #ur-field-all-settings > div#" + this_id
+							)
+							.show();
+					}
+
+					$(document).trigger("update_perfect_scrollbar");
+					$(".ur-builder-wrapper").scrollTop(0);
+				}
 			});
 	});
 
@@ -702,13 +1019,21 @@ jQuery(function ($) {
 		if ($this.hasClass("closed")) {
 			$this.removeClass("closed");
 			$this.addClass("opened");
-			$(this).attr('title' ,  user_registration_form_builder_data.i18n_admin.i18n_exit_fullscreen_mode )
+			$(this).attr(
+				"title",
+				user_registration_form_builder_data.i18n_admin
+					.i18n_exit_fullscreen_mode
+			);
 
 			$("body").addClass("ur-full-screen-mode");
 		} else {
 			$this.removeClass("opened");
 			$this.addClass("closed");
-			$(this).attr('title' , user_registration_form_builder_data.i18n_admin.i18n_fullscreen_mode );
+			$(this).attr(
+				"title",
+				user_registration_form_builder_data.i18n_admin
+					.i18n_fullscreen_mode
+			);
 
 			$("body").removeClass("ur-full-screen-mode");
 		}

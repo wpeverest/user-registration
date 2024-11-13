@@ -3,7 +3,7 @@
  * Plugin Name: User Registration
  * Plugin URI: https://wpuserregistration.com/
  * Description: Drag and Drop user registration form and login form builder.
- * Version: 3.3.4.1
+ * Version: 3.3.5
  * Author: WPEverest
  * Author URI: https://wpuserregistration.com
  * Text Domain: user-registration
@@ -31,7 +31,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '3.3.4.1';
+		public $version = '3.3.5';
 
 		/**
 		 * Session instance.
@@ -264,6 +264,12 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			 */
 			if ( class_exists( '\Elementor\Plugin' ) ) {
 				include_once UR_ABSPATH . 'includes/3rd-party/elementor/class-ur-elementor.php';
+			}
+			/**
+			 * Oxygen classes.
+			 */
+			if ( in_array( 'oxygen/functions.php', get_option( 'active_plugins', array() ), true ) ) {
+				include_once UR_ABSPATH . 'includes/3rd-party/oxygen/class-ur-oxygen.php';
 			}
 
 			/**

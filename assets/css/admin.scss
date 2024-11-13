@@ -1035,6 +1035,43 @@
 						 margin-right: -$spacing_12px;
 					 }
 
+					 #integration_settings_back {
+						cursor: pointer;
+					 }
+
+					 .form-settings-tab-back {
+						 margin-bottom: 0;
+						 border-radius: 0;
+						 padding: $spacing_18px $spacing_24px;
+						 border-bottom: $border_width solid #ececec;
+						 background: transparent;
+						 font-size: 15px;
+						 font-weight: $semi_bold;
+						 gap: $spacing_16px;
+						 line-height: 150%;
+						 display: flex;
+						 align-items: center;
+						 color: $grey-400;
+						 transition: all .3s;
+
+						 &::before {
+							 content: "";
+							 background-image: url("../images/icons/ur-right-arrow.svg");
+							 background-repeat: no-repeat;
+							 background-size: 100%;
+							 background-position: center;
+							 width: 18px;
+							 height: 18px;
+							 transform: rotate(180deg);
+						 }
+
+						 &:hover {
+							&::before {
+								filter: brightness(0) saturate(100%) invert(35%) sepia(13%) saturate(3079%) hue-rotate(194deg) brightness(96%) contrast(89%);
+							}
+						 }
+					 }
+
 					 .form-settings-tab {
 						 margin-bottom: 0;
 						 border-radius: 0;
@@ -1081,7 +1118,81 @@
 									 contrast(88%);
 							 }
 						 }
+
+						 &.integration-lists-settings {
+							 .integration-detail {
+								 display: flex;
+								 align-items: center;
+								 gap: 14px;
+
+								 .integration-status {
+									 position: relative;
+
+									 &::before {
+										 content: "";
+										 position: absolute;
+										 width: 8px;
+										 height: 8px;
+										 background: #e1e1e1;
+										 border-radius: 1px;
+										 top: 50%;
+										 left: 50%;
+										 transform: translate(-50%, -50%);
+									 }
+
+									 &::after {
+										 content: "";
+										 display: block;
+										 width: 16px;
+										 height: 16px;
+										 border: 1px solid #e1e1e1;
+										 border-radius: 2px;
+									 }
+
+									 &.ur-integration-account-connected {
+										&::before {
+											background: #4CC741;
+										}
+
+										&::after {
+											border-color: #4CC741;
+										}
+									}
+								 }
+
+								 .logo {
+									 width: 40px;
+									 height: 40px;
+									 display: flex;
+									 overflow: hidden;
+									 margin: 0;
+									 border-radius: 4px;
+									 align-items: center;
+									 border: 1px solid #ced4da;
+
+									 img {
+										 width: 38px;
+										 height: 38px;
+										 display: block;
+									 }
+								 }
+
+								 h3 {
+									 font-size: 15px;
+									 line-height: 150%;
+									 margin: 0;
+									 font-weight: $medium;
+								 }
+							 }
+
+							 .form-settings-sub-tab {
+								 padding: 0px;
+								 background: $grey-0;
+								 align-items: baseline;
+							 }
+						 }
 					 }
+
 				 }
 
 				 &.ps--active-y {
@@ -3890,6 +4001,105 @@
 						 }
 					 }
 				 }
+
+				 #integration-selection-settings {
+					 display: flex;
+					 flex-direction: column;
+					 gap: $spacing_24px;
+					 align-items: center;
+					 padding: $spacing_100px 0px;
+					 justify-content: center;
+
+					 .integration-selection-settings-contents {
+						 text-align: center;
+						 display: flex;
+						 flex-direction: column;
+						 width: 40%;
+
+						 h3 {
+							 font-size: 22px;
+							 line-height: 28px;
+							 font-weight: 600;
+							 margin: 0px;
+							 border: none;
+							 padding: 0px;
+							 color: #131313;
+						 }
+
+						 p {
+							 font-size: 16px;
+							 font-weight: 400;
+							 line-height: 24px;
+							 color: #6B6B6B;
+						 }
+					 }
+				 }
+
+				 .integration-lists-settings {
+					.form-settings-sub-tab {
+						border-bottom: 0;
+						margin-bottom: 0;
+					}
+
+					.ur-integration-list {
+						padding-bottom: $spacing_16px;
+						margin-bottom: $spacing_24px;
+					}
+
+					.user-registration-notice {
+						margin: 0;
+						padding: 0;
+					}
+
+					.user-registration-card {
+						margin: $spacing_4px 0 $spacing_16px !important;
+
+						&:last-child {
+							margin-bottom: $spacing_12px !important;
+						}
+
+						&__header {
+							border-bottom: 0;
+							padding-left: $spacing_20px !important;
+							padding-right: $spacing_14px !important;
+
+							.user-registration-card__title {
+								color: $grey-400;
+								font-size: 16px;
+								font-weight: $semi_bold;
+								line-height: 24px;
+							}
+
+							.user-registration-card__button {
+								display: flex;
+								align-items: center;
+
+								.button {
+									display: flex;
+									align-items: center;
+									justify-content: center;
+
+									svg {
+										width: 22px;
+										height: 22px;
+										margin: 0;
+									}
+								}
+							}
+						}
+
+						&__body {
+							border-top: 1px solid #E1E1E1;
+    						padding-left: $spacing_20px !important;
+							padding-right: $spacing_20px !important;
+
+							[class*="urmc-mailchimp-"],
+							[class*="ur-mailchimp-"] {
+								margin-bottom: $spacing_12px;
+							}
+						}
+					}
+				 }
 			 }
 		 }
 	 }
@@ -3914,12 +4124,35 @@
 				 justify-content: space-between;
 
 				 &__left {
+					display: flex;
+					gap: 16px;
+					align-items: center;
+
 					 h3 {
 						 margin: 0;
 						 font-weight: $semi_bold;
-						 font-size: 26px;
-						 line-height: 120%;
-						 color: $grey-800;
+						font-size: 24px;
+						line-height: 36px;
+						color: $grey-500;
+					}
+
+					&--icon {
+						width: 40px;
+						height: 40px;
+						background: #EDEFF7;
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						border-radius: 3.75px;
+
+						svg {
+							width: 20px;
+    						height: 20px;
+
+							path {
+								fill: #475bb2;
+							}
+						}
 					 }
 				 }
 
@@ -3930,10 +4163,10 @@
 					 gap: $spacing_10px;
 
 					 span.user-registration-toggle-text {
-						 font-size: 16px;
+						font-size: 14px;
 						 line-height: 24px;
-						 color: #383838;
-						 font-weight: 500;
+						color: #6B6B6B;
+						font-weight: 400;
 					 }
 				  }
 			 }
@@ -4022,8 +4255,7 @@
 								 padding: $spacing_24px;
 
 								 .ur-builder-wrapper-content {
-									 padding: $spacing_20px $spacing_30px
-										 $spacing_60px;
+									 padding: $spacing_20px $spacing_30px $spacing_60px;
 									 border-radius: $border_radius_7;
 
 									 .ur-login {
@@ -5948,6 +6180,104 @@
 	 }
  }
 
+
+ .user-registration {
+	.swal2-container {
+		.swal2 {
+			&-header {
+				padding: $spacing_32px $spacing_32px 0;
+				gap: $spacing_16px;
+			}
+
+			&-icon {
+                margin-block: 0;
+				border-color: #41C4EE;
+				color: #41C4EE;
+				width: 60px;
+				height: 60px;
+
+				&-content {
+					font-size: 50px;
+				}
+			}
+
+			&-title {
+				color: #131313;
+				text-align: center;
+				font-size: 22px;
+				font-weight: $semi_bold;
+				line-height: 30px;
+				margin-bottom: 0 !important;
+			}
+
+			&-content {
+				padding: 0 $spacing_32px;
+				margin-top: $spacing_20px;
+
+				input[type="text"] {
+					margin: 0;
+					height: 38px;
+					font-size: 15px;
+					line-height: 25px;
+					padding: 0 $spacing_12px;
+					color: $grey-400;
+					border-radius: $border_radius_4;
+
+                    &::placeholder {
+                        color: #999999;
+                    }
+
+					&:focus {
+                        outline: none;
+                        box-shadow: none;
+						border-color: $primary_color;
+					}
+				}
+			}
+
+            &-actions {
+                margin-top: $spacing_30px !important;
+                padding: $spacing_20px $spacing_32px !important;
+                gap: $spacing_16px !important;
+
+                button {
+                    margin: 0;
+                    text-transform: capitalize;
+                    padding: $spacing_10px $spacing_14px;
+                    border-radius: $border_radius_3;
+                    font-size: 14px;
+                    font-weight: 400;
+                    line-height: 16px;
+                    border: $border_width solid transparent;
+                    transition: all .3s;
+
+                    &.swal2-confirm {
+                        width: 48%;
+                        background:$primary_color !important;
+                        color: $grey-0;
+                        border-color: $primary_color;
+
+                        &:hover {
+                            background: darken($primary_color, 10%);
+                        }
+                    }
+
+                    &.swal2-cancel {
+                        width: 45%;
+                        background: transparent;
+                        border-color: #6B6B6B;
+                        color: #6B6B6B;
+
+                        &:hover {
+                            background: #f0f0f0;
+                        }
+                    }
+                }
+            }
+		}
+	}
+}
+
  .ur-embed-form-button {
 	 background: #edeff7 !important;
 	 border-color: #edeff7 !important;
@@ -6023,7 +6353,6 @@
 	 font-style: normal;
 	 font-display: block;
  }
-
  #elementor-editor-wrapper .ur-icon-edit-password:before,
  .elementor-edit-area .ur-icon-edit-password:before {
 	 content: "\e045";
@@ -6080,6 +6409,65 @@
 	 font-style: normal;
 	 font-display: block;
  }
+
+ #integration-settings .ur-nav-premium,
+ .integration-lists-settings.ur-nav-premium {
+	 cursor: not-allowed;
+	 opacity: 0.5;
+ }
+
+
+ .form-settings-main-tab {
+	 margin-bottom: 0;
+	 border-radius: 0;
+	 padding: $spacing_18px $spacing_24px;
+	 border-bottom: $border_width solid #ececec;
+	 background: transparent;
+	 font-size: 15px;
+	 font-weight: $regular;
+	 line-height: 150%;
+	 display: flex;
+	 align-items: center;
+	 justify-content: space-between;
+	 padding-right: $spacing_16px;
+	 &::after {
+		 content: "";
+		 background-image: url("../images/icons/ur-right-arrow.svg");
+		 background-repeat: no-repeat;
+		 background-size: 100%;
+		 background-position: center;
+		 width: 18px;
+		 height: 18px;
+	 }
+ }
+ .form-settings-sub-tab {
+	 margin-bottom: $spacing_10px;
+	 border-radius: $border_radius_4;
+	 padding: $spacing_18px $spacing_24px;
+	 border-bottom: $border_width solid #ececec;
+	 background: $color_gray_four;
+	 font-size: 15px;
+	 font-weight: $regular;
+	 line-height: 150%;
+	 display: flex;
+	 align-items: center;
+	 justify-content: space-between;
+	 padding: $spacing_10px $spacing_15px;
+	 color: $gray_base;
+	 &.active {
+		 background: $primary_color;
+		 color: $white;
+	 }
+ }
+ .integration-lists-settings {
+
+	.form-settings-sub-tab {
+		padding: 0px;
+		background-color: #ffffff;
+		align-items: normal;
+		flex-direction: column;
+	}
+}
 
  #ur-row-section-settings {
 	 padding: 10px 0px;

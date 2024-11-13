@@ -40,49 +40,59 @@ do_action_deprecated( 'user_registration_before_edit_profile_form', array(), '3.
  * @param int $form_id Form id through which user registered.
  */
 do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id );
+
+$layout = get_option( 'user_registration_my_account_layout', 'horizontal' );
+
+if ( 'vertical' === $layout ) {
+	?>
+	<div class="user-registration-MyAccount-content__header">
+		<h1><?php echo wp_kses_post( $endpoint_label ); ?></h1>
+	</div>
+	<?php
+}
 ?>
-
-<div class="ur-frontend-form login ur-edit-profile" id="ur-frontend-form">
-	<form class="user-registration-EditProfileForm edit-profile" action="" method="post" enctype="multipart/form-data" data-form-id="<?php echo esc_attr( $form_id ); ?>">
-		<div class="ur-form-row">
-			<div class="ur-form-grid">
-				<div class="user-registration-profile-fields">
-					<?php
-					/**
-					 * Fires before rendering of profile detail title.
-					 */
-					do_action( 'user_registration_before_profile_detail_title' );
-					?>
-					<h2>
-					<?php
-					esc_html_e(
+<div class="user-registration-MyAccount-content__body">
+	<div class="ur-frontend-form login ur-edit-profile" id="ur-frontend-form">
+		<form class="user-registration-EditProfileForm edit-profile" action="" method="post" enctype="multipart/form-data" data-form-id="<?php echo esc_attr( $form_id ); ?>">
+			<div class="ur-form-row">
+				<div class="ur-form-grid">
+					<div class="user-registration-profile-fields">
+						<?php
 						/**
-						 * Filter to modify the profile detail title.
-						 *
-						 * @param string Profile detail title content.
-						 * @return string modified profile detail title.
+						 * Fires before rendering of profile detail title.
 						 */
-						apply_filters( 'user_registation_profile_detail_title', __( 'Profile Detail', 'user-registration' ) ) ); //PHPCS:ignore ?></h2>
-					<?php
+						do_action( 'user_registration_before_profile_detail_title' );
+						?>
+						<h2>
+						<?php
+						esc_html_e(
+							/**
+							 * Filter to modify the profile detail title.
+							 *
+							 * @param string Profile detail title content.
+							 * @return string modified profile detail title.
+							 */
+							apply_filters( 'user_registation_profile_detail_title', __( 'Profile Detail', 'user-registration' ) ) ); //PHPCS:ignore ?></h2>
+						<?php
 
-					$is_sync_profile           = ur_option_checked( 'user_registration_sync_profile_picture', false );
-					$is_profile_field_disabled = ur_option_checked( 'user_registration_disable_profile_picture', false );
-					$is_profile_pic_on_form    = false;
-					if ( $is_sync_profile ) {
-						foreach ( $form_data_array as $data ) {
-							foreach ( $data as $grid_key => $grid_data ) {
-								foreach ( $grid_data as $grid_data_key => $single_item ) {
-									if ( isset( $single_item->field_key ) && 'profile_picture' === $single_item->field_key ) {
-										$is_profile_pic_on_form = true;
+						$is_sync_profile           = ur_option_checked( 'user_registration_sync_profile_picture', false );
+						$is_profile_field_disabled = ur_option_checked( 'user_registration_disable_profile_picture', false );
+						$is_profile_pic_on_form    = false;
+						if ( $is_sync_profile ) {
+							foreach ( $form_data_array as $data ) {
+								foreach ( $data as $grid_key => $grid_data ) {
+									foreach ( $grid_data as $grid_data_key => $single_item ) {
+										if ( isset( $single_item->field_key ) && 'profile_picture' === $single_item->field_key ) {
+											$is_profile_pic_on_form = true;
+										}
 									}
 								}
 							}
+						} else {
+							$is_profile_pic_on_form = ! $is_profile_field_disabled;
 						}
-					} else {
-						$is_profile_pic_on_form = ! $is_profile_field_disabled;
-					}
-					if ( $is_profile_pic_on_form ) {
-						?>
+						if ( $is_profile_pic_on_form ) {
+							?>
 						<div class="user-registration-profile-header">
 							<div class="user-registration-img-container" style="width:100%">
 								<?php
@@ -93,12 +103,13 @@ do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id
 									$profile_picture_url = wp_get_attachment_url( $profile_picture_url );
 								}
 
-								$image                        = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
-								$max_size                     = wp_max_upload_size();
-								$max_upload_size              = $max_size;
-								$crop_picture                 = false;
-								$profile_pic_args             = array();
-								$edit_profile_valid_file_type = 'image/jpeg,image/gif,image/png';
+									$profile_picture_url          = apply_filters( 'user_registration_profile_picture_url', $profile_picture_url , $user_id);
+									$image                        = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
+									$max_size                     = wp_max_upload_size();
+									$max_upload_size              = $max_size;
+									$crop_picture                 = false;
+									$profile_pic_args             = array();
+									$edit_profile_valid_file_type = 'image/jpeg,image/gif,image/png';
 
 								foreach ( $form_data_array as $data ) {
 									foreach ( $data as $grid_key => $grid_data ) {
@@ -115,78 +126,74 @@ do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id
 								}
 
 								?>
-									<img class="profile-preview" alt="profile-picture" src="<?php echo esc_url( $image ); ?>" style='max-width:96px; max-height:96px;' >
+										<img class="profile-preview" alt="profile-picture" src="<?php echo esc_url( $image ); ?>" style='max-width:96px; max-height:96px;' >
 
-									<p class="user-registration-tips"><?php echo esc_html__( 'Max size: ', 'user-registration' ) . esc_attr( size_format( $max_upload_size * 1024 ) ); ?></p>
-								</div>
-								<header>
-									<p><strong>
-									<?php
-									echo esc_html(
-										/**
-										 * Filter to modify the upload new profile image message.
-										 *
-										 * @param string Message content to be modified.
-										 * @return string modified message.
-										 */
-										apply_filters( 'user_registration_upload_new_profile_image_message', esc_html__( 'Upload your new profile image.', 'user-registration' ) )
-									);
-									?>
-										</strong></p>
-									<div class="button-group">
-										<?php
-
-										if ( has_action( 'uraf_profile_picture_buttons' ) ) {
-											?>
-											<div class="uraf-profile-picture-upload">
-												<p class="form-row " id="profile_pic_url_field" data-priority="">
-													<span class="uraf-profile-picture-upload-node" style="height: 0;width: 0;margin: 0;padding: 0;float: left;border: 0;overflow: hidden;">
-													<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" size="<?php echo esc_attr( $max_upload_size ); ?>" accept="<?php echo esc_attr( $edit_profile_valid_file_type ); ?>" style="<?php echo esc_attr( ( $gravatar_image !== $image ) ? 'display:none;' : '' ); ?>" data-crop-picture="<?php echo esc_attr( $crop_picture ); ?>"/>
-													<?php echo '<input type="text" class="uraf-profile-picture-input input-text ur-frontend-field" name="profile_pic_url" id="profile_pic_url" value="' . get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true ) . '" />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-													</span>
-													<?php
-													/**
-													 * Fires to display buttons for user profile picture.
-													 *
-													 * @param array $profile_pic_args Array of buttons to be added.
-													 */
-													do_action( 'uraf_profile_picture_buttons', $profile_pic_args );
-													?>
-												</p>
-												<div style="clear:both; margin-bottom: 20px"></div>
-											</div>
-
-											<?php
-										} else {
-											?>
-											<input type="hidden" name="profile-pic-url" id="profile_pic_url" value="<?php echo esc_attr( $profile_picture_url ); ?>" />
-											<input type="hidden" name="profile-default-image" value="<?php echo esc_url( $gravatar_image ); ?>" />
-											<button class="button profile-pic-remove" data-attachment-id="<?php echo esc_attr( get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true ) ); ?>" style="<?php echo esc_attr( ( $gravatar_image === $image ) ? 'display:none;' : '' ); ?>"><?php echo esc_html__( 'Remove', 'user-registration' ); ?></php></button>
-
-											<button type="button" class="button user_registration_profile_picture_upload hide-if-no-js" style="<?php echo esc_attr( ( $gravatar_image !== $image ) ? 'display:none;' : '' ); ?>" ><?php echo esc_html__( 'Upload Picture', 'user-registration' ); ?></button>
-											<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg,image/gif,image/png" style="display:none" />
-											<?php
-										}
-										?>
-
+										<p class="user-registration-tips"><?php echo esc_html__( 'Max size: ', 'user-registration' ) . esc_attr( size_format( $max_upload_size * 1024 ) ); ?></p>
 									</div>
-									<?php
-									if ( ! $profile_picture_url ) {
+									<header>
+										<p><strong>
+										<?php
+										echo esc_html(
+											/**
+											 * Filter to modify the upload new profile image message.
+											 *
+											 * @param string Message content to be modified.
+											 * @return string modified message.
+											 */
+											apply_filters( 'user_registration_upload_new_profile_image_message', esc_html__( 'Upload your new profile image.', 'user-registration' ) )
+										);
 										?>
-										<span><i><?php echo esc_html__( 'You can change your profile picture on', 'user-registration' ); ?> <a href="https://en.gravatar.com/"><?php esc_html_e( 'Gravatar', 'user-registration' ); ?></a></i></span>
-									<?php } ?>
-								</header>
-							</div>
-					<?php } ?>
-					<?php
-					/**
-					 * Fires at the start of rendering user registration edit profile form.
-					 */
-					do_action( 'user_registration_edit_profile_form_start' );
-					?>
-					<div class="user-registration-profile-fields__field-wrapper">
+											</strong></p>
+										<div class="button-group">
+											<?php
 
+											if ( has_action( 'uraf_profile_picture_buttons' ) ) {
+												?>
+												<div class="uraf-profile-picture-upload">
+													<p class="form-row " id="profile_pic_url_field" data-priority="">
+														<span class="uraf-profile-picture-upload-node" style="height: 0;width: 0;margin: 0;padding: 0;float: left;border: 0;overflow: hidden;">
+														<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" size="<?php echo esc_attr( $max_upload_size ); ?>" accept="<?php echo esc_attr( $edit_profile_valid_file_type ); ?>" style="<?php echo esc_attr( ( $gravatar_image !== $image ) ? 'display:none;' : '' ); ?>" data-crop-picture="<?php echo esc_attr( $crop_picture ); ?>"/>
+														<?php echo '<input type="text" class="uraf-profile-picture-input input-text ur-frontend-field" name="profile_pic_url" id="profile_pic_url" value="' . get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true ) . '" />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+														</span>
+														<?php
+														/**
+														 * Fires to display buttons for user profile picture.
+														 *
+														 * @param array $profile_pic_args Array of buttons to be added.
+														 */
+														do_action( 'uraf_profile_picture_buttons', $profile_pic_args );
+														?>
+													</p>
+													<div style="clear:both; margin-bottom: 20px"></div>
+												</div>
+
+												<?php
+											} else {
+												?>
+												<input type="hidden" name="profile-pic-url" id="profile_pic_url" value="<?php echo esc_attr( $profile_picture_url ); ?>" />
+												<input type="hidden" name="profile-default-image" value="<?php echo esc_url( $gravatar_image ); ?>" />
+												<button class="button profile-pic-remove" data-attachment-id="<?php echo esc_attr( get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true ) ); ?>" style="<?php echo esc_attr( ( $gravatar_image === $image ) ? 'display:none;' : '' ); ?>"><?php echo esc_html__( 'Remove', 'user-registration' ); ?></php></button>
+
+												<button type="button" class="button user_registration_profile_picture_upload hide-if-no-js" style="<?php echo esc_attr( ( $gravatar_image !== $image ) ? 'display:none;' : '' ); ?>" ><?php echo esc_html__( 'Upload Picture', 'user-registration' ); ?></button>
+												<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg,image/gif,image/png" style="display:none" />
+												<?php
+											}
+											?>
+
+										</div>
+										<?php
+										if ( ! $profile_picture_url ) {
+											?>
+											<span><i><?php echo esc_html__( 'You can change your profile picture on', 'user-registration' ); ?> <a href="https://en.gravatar.com/"><?php esc_html_e( 'Gravatar', 'user-registration' ); ?></a></i></span>
+										<?php } ?>
+									</header>
+								</div>
+							<?php } ?>
 						<?php
+						/**
+						 * Fires at the start of rendering user registration edit profile form.
+						 */
+						do_action( 'user_registration_edit_profile_form_start' );
 						foreach ( $form_data_array as $index => $data ) {
 							$row_id       = ( ! empty( $row_ids ) ) ? absint( $row_ids[ $index ] ) : $index;
 							$row_cl_props = '';
@@ -219,65 +226,84 @@ do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id
 							echo $row_template; // phpcs:ignore
 						}
 						?>
+						<div class="user-registration-profile-fields__field-wrapper">
 
-					</div>
-					<?php
-					do_action( 'user_registration_edit_profile_form' );
-					$submit_btn_class =
-					/**
-					 * Filter to modify the form update button class.
-					 *
-					 * @param array array value.
-					 * @return array form update button classes.
-					 */
-					apply_filters( 'user_registration_form_update_btn_class', array() );
-					?>
-					<p>
-						<?php
-						if ( ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
+							<?php
+							foreach ( $form_data_array as $index => $data ) {
+								$row_id = ( ! empty( $row_ids ) ) ? absint( $row_ids[ $index ] ) : $index;
+
+								ob_start();
+								echo '<div class="ur-form-row">';
+								user_registration_edit_profile_row_template( $data, $profile );
+								echo '</div>';
+								$row_template = ob_get_clean();
+
+								$row_template = apply_filters( 'user_registration_frontend_edit_profile_form_row_template', $row_template, $form_id, $profile, $row_id, $data );
+
+								echo $row_template; // phpcs:ignore
+							}
 							?>
-							<button type="submit" class="user-registration-submit-Button btn button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" ><span></span>
+
+						</div>
+						<?php
+						do_action( 'user_registration_edit_profile_form' );
+						$submit_btn_class =
+						/**
+						 * Filter to modify the form update button class.
+						 *
+						 * @param array array value.
+						 * @return array form update button classes.
+						 */
+						apply_filters( 'user_registration_form_update_btn_class', array() );
+						?>
+						<p>
+							<?php
+							if ( ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
+								?>
+								<button type="submit" class="user-registration-submit-Button btn button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" ><span></span>
+									<?php
+									esc_html_e(
+									/**
+									 * Filter to modify the profile update button text.
+									 *
+									 * @param string Text content to be modified.
+									 * @return string button text.
+									 */
+									apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) ) ); //PHPCS:ignore?></button>
 								<?php
-								esc_html_e(
+							} else {
+								wp_nonce_field( 'save_profile_details' );
+								?>
+								<input type="submit" class="user-registration-Button button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" value="
+								<?php
+								esc_attr_e(
 								/**
 								 * Filter to modify the profile update button text.
 								 *
-								 * @param string Text content to be modified.
+								 * @param string text content for button.
 								 * @return string button text.
 								 */
-								apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) ) ); //PHPCS:ignore?></button>
-							<?php
-						} else {
-							wp_nonce_field( 'save_profile_details' );
+									apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) ) );//PHPCS:ignore ?>"
+								/>
+								<?php
+								echo apply_filters( 'user_registration_edit_profile_extra_data_div', '', $form_id ); // phpcs:ignore.
+								?>
+								<input type="hidden" name="action" value="save_profile_details" />
+								<?php
+							}
 							?>
-							<input type="submit" class="user-registration-Button button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" value="
-							<?php
-							esc_attr_e(
-							/**
-							 * Filter to modify the profile update button text.
-							 *
-							 * @param string text content for button.
-							 * @return string button text.
-							 */
-								apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) ) );//PHPCS:ignore ?>"
-							/>
-							<?php
-							echo apply_filters( 'user_registration_edit_profile_extra_data_div', '', $form_id ); // phpcs:ignore.
-							?>
-							<input type="hidden" name="action" value="save_profile_details" />
-							<?php
-						}
-						?>
-					</p>
+						</p>
+					</div>
 				</div>
+
 			</div>
+		</form>
+	</div>
 
-		</div>
-	</form>
+	<?php
+	/**
+	 * Fires after rendering the user registration edit profile form.
+	 */
+	do_action( 'user_registration_after_edit_profile_form' );
+	?>
 </div>
-
-<?php
-/**
- * Fires after rendering the user registration edit profile form.
- */
-do_action( 'user_registration_after_edit_profile_form' ); ?>

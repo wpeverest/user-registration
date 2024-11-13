@@ -16,15 +16,34 @@ body {
 // ToolTip CSSs
 .tooltipster-sidetip {
 	.tooltipster-box {
-		background-color: $grey-400 !important;
+		background-color: $grey-0 !important;
+		max-width: 220px;
+		box-shadow: 0px 6px 24px 0px rgba(10, 10, 10, 0.10);
+		padding: $spacing_16px $spacing_18px;
+
+		.tooltipster-content {
+			font-size: 14px;
+			line-height: 20px;
+			color: $grey-500;
+			padding: 0;
+
+			a {
+				color: $primary_color !important;
+
+				&:focus {
+					box-shadow: none;
+					outline: none;
+				}
+			}
+		}
 	}
 
 	&.tooltipster-base {
 		.tooltipster-arrow {
 			.tooltipster-arrow-uncropped {
 				.tooltipster-arrow-border {
-					border-top-color: $grey-400 !important;
-					border-bottom-color: $grey-400 !important;
+					border-top-color: $grey-0 !important;
+					border-bottom-color: $grey-0 !important;
 				}
 			}
 		}
@@ -52,6 +71,7 @@ body {
 .user-registration-settings {
 	display: flex;
     gap: $spacing_24px;
+	overflow-x: hidden;
 
 	@media screen and (max-width: 1180px) {
 		flex-direction: column;
@@ -68,7 +88,7 @@ body {
 			width: 100%;
 			max-width: 300px;
 			padding: $spacing_24px 0 0;
-			background: #fafafc;
+			background: $grey-0;
 			border-right: $border_width solid $border-color;
 
 			&.collapsed {
@@ -230,7 +250,7 @@ body {
 					font-weight: $regular;
 					line-height: 150%;
 					color: $grey-400;
-					padding: $spacing_14px $spacing_20px $spacing_14px $spacing_22px;
+					padding: $spacing-16px $spacing_20px;
 					background: transparent;
 					border: 0;
 					border-top: $border_width solid $border-color;
@@ -242,10 +262,12 @@ body {
 
 					&-label {
 						> p {
-							font-weight: $regular;
-							font-size: 14px;
-							line-height: 150%;
-							color: $grey-400;
+							font-weight: $medium;
+							font-size: 15px;
+							margin: 0;
+							line-height: 21px;
+							color: #4e4e4e;
+							transition: all 0.3s ease-in-out;
 						}
 
 						span.ur-nav__link-label {
@@ -287,10 +309,6 @@ body {
 					svg {
 						width: 18px;
 						height: 18px;
-
-						path {
-							color: $grey-400;
-						}
 					}
 
 					&.ur-nav-premium {
@@ -300,14 +318,6 @@ body {
 							background: transparent;
 							border-radius: 0;
 							color: $grey-400;
-
-							.ur-nav__link-icon {
-								svg {
-									path {
-										fill: $grey-400;
-									}
-								}
-							}
 
 							.ur-nav__link-label {
 								p {
@@ -344,24 +354,27 @@ body {
 							align-items: flex-end;
 							gap: $spacing_10px;
 							position: absolute;
-							padding: $spacing_10px $spacing_12px;
+							padding: $spacing_16px $spacing_18px;
 							border-radius: $border_radius_4;
-							background: $grey-400;
-							color: $grey-0;
+							box-shadow: 0px 6px 24px 0px rgba(10, 10, 10, 0.10);
+							background: $grey-0;
+							color: $grey-500;
+							font-size: 14px;
+							line-height: 20px;
 							text-align: center;
 							transition: .3s opacity;
 							width: 200px;
 							white-space: pre-line;
 							text-align: left;
 							top: 50%;
-							right: -214px;
+							right: -200px;
 							z-index: 10;
 							transform: translateY(-50%);
 
 							&::after {
 								content: "";
 								position: absolute;
-								border-right: 12px solid $grey-400;
+								border-right: 12px solid #e9e9e9;
 								border-top: 12px solid transparent;
 								border-bottom: 12px solid transparent;
 								top: 50%;
@@ -371,12 +384,13 @@ body {
 
 							a {
 								text-decoration: none;
-								border: $border_width solid $grey-0;
-								padding: $spacing_4px $spacing_10px;
-								background: $grey-0;
-								border-radius: $border_radius_2;
-								color: $primary_color;
-								font-weight: $semi_bold;
+								border: $border_width solid $primary_color;
+								padding: $spacing_6px $spacing_12px;
+								background: $primary_color;
+								border-radius: $border_radius_4;
+								color: $grey-0;
+								font-weight: $regular;
+								letter-spacing: 0.3px;
 								transition: all .3s ease-in-out;
 
 								&:hover {
@@ -398,12 +412,8 @@ body {
 						display: flex;
 
 						svg {
-							height: 24px;
-							width: 24px;
-
-							path {
-								fill: $grey-400;
-							}
+							height: 20px;
+							width: 20px;
 						}
 					}
 
@@ -436,15 +446,6 @@ body {
 						flex-direction: row;
 						width: 100%;
 						align-items: center;
-
-						> p {
-							font-size: 14px;
-							margin: 0;
-						}
-
-						// > svg {
-						// 	margin-right: $spacing_16px;
-						// }
 					}
 
 					.ur-nav-icon {
@@ -465,7 +466,7 @@ body {
 
 					&:hover,
 					&.is-active {
-						background: $grey-0;
+						background: #F8F8FA;
 						border-radius: 0;
 						color: $primary_color;
 
@@ -477,6 +478,7 @@ body {
 					&.is-active {
 						&:not(#ur-settings-collapse)::after {
 							opacity: 1;
+							background: #F8F8FA;
 						}
 					}
 
@@ -706,18 +708,18 @@ body {
 	flex-direction: column;
 	padding: $spacing_24px;
 	padding-top: 0;
+	background: #FAFAFC;
+	margin-top: 0 !important;
 
 	.user-registration-options-header {
-		position: sticky;
-		position: -webkit-sticky;
-		top: var(--wp-admin--admin-bar--height, $spacing_32px);
-		z-index: 5;
-		background: $grey-0;
+		background: #fafafc;
 		padding-top: $spacing_24px;
 
 		&--top {
 			display: flex;
 			align-items: center;
+			padding-bottom: $spacing_24px;
+            border-bottom: $border_width solid #EBEBEB;
 
 			h3 {
 				margin: 0;
@@ -734,13 +736,13 @@ body {
 		}
 
 		&--bottom {
-			margin-top: $spacing_40px;
+			margin-top: $spacing_32px;
 
 			ul {
 				display: flex;
 				align-items: center;
 				gap: $spacing_32px;
-				border-bottom: $border_width solid $border-color;
+				border-bottom: $border_width solid #EBEBEB !important;
 				width: 100%;
 
 				li {
@@ -790,7 +792,7 @@ body {
 
 			.ur-scroll-ui {
 				&__scroll-nav {
-					padding-bottom: $spacing_20px;
+					padding-bottom: $spacing_28px;
 				}
 			}
 		}
@@ -945,11 +947,11 @@ body {
 		// General Settings
 		.user-registration-card {
 			padding: $spacing_16px $spacing_20px $spacing_22px;
-			background: #fafafc;
-			border: $border_width solid #edeff7 !important;
+			background: $grey-0;
+			border: $border_width solid #EBEBEB !important;
 			border-radius: $border_radius_7;
 			margin-top: 0 !important;
-			margin-bottom: $spacing_24px;
+			margin-bottom: $spacing_28px;
 			max-width: 680px;
 			position: relative;
 
@@ -999,7 +1001,7 @@ body {
 				margin-bottom: $spacing_24px;
 				padding: 0 0 $spacing_16px;
 				position: relative;
-				border-bottom: $border_width solid $border-color !important;
+				border-bottom: $border_width solid #EBEBEB !important;
 
 				// Integration Settings
 				&.integration-header-info {
@@ -1071,7 +1073,7 @@ body {
 
 				// Integration Settings
 				&.integration-body-info {
-					padding: $spacing_20px 0 0 0 !important;
+					padding: $spacing_20px 0 !important;
 
 					.nav-tab-inside {
 						> div {
@@ -1352,6 +1354,10 @@ body {
 									.user-registration-help-tip {
 										margin-left: $spacing_6px;
 										color: $grey-100;
+
+										&::after {
+											content: url('../images/settings-icons/information.svg') !important;
+										}
 									}
 								}
 							}
@@ -1409,6 +1415,33 @@ body {
 
 						span {
 							color: #BABABA;
+
+							&.user-registration-help-tip {
+								font-size: 16px;
+								top: 3px;
+								left: 4px;
+
+								&::after {
+									content: "";
+									background-image: url('../images/settings-icons/information.svg') !important;
+									background-repeat: no-repeat !important;
+									background-size: 100% !important;
+									background-position: center;
+									display: block;
+									width: 8px;
+									height: 8px;
+									cursor: pointer;
+									padding: $spacing_4px;
+									background: transparent;
+									border-radius: $border_radius_3;
+								}
+
+								&:hover {
+									&::after {
+										filter: brightness(0) saturate(100%) invert(33%) sepia(19%) saturate(2330%) hue-rotate(195deg) brightness(100%) contrast(87%);
+									}
+								}
+							}
 						}
 					}
 
@@ -1466,6 +1499,33 @@ body {
 							// @media (max-width: 1199px) {
 							// 	width: 100% !important;
 							// }
+
+							&--open {
+								.select2-selection {
+									&__arrow {
+										height: 30px;
+										b {
+											width: 12px;
+											border-color: transparent transparent #888 transparent;
+											border-width: 0 6px 7px 6px;
+										}
+									}
+
+									&--multiple {
+										&:before {
+											content: "";
+											position: absolute;
+											right: 7px;
+											top: 42%;
+											border-bottom: 7px solid #888;
+											border-left: 6px solid transparent;
+											border-right: 6px solid transparent;
+											border-top: 0px;
+										}
+									}
+								}
+
+							}
 						}
 
 						.select2-selection {
@@ -1506,6 +1566,16 @@ body {
 									padding-left: 0;
 									padding-right: 0;
 								}
+
+								&:before {
+									content: "";
+									position: absolute;
+									right: 7px;
+									top: 42%;
+									border-top: 7px solid #888;
+									border-left: 6px solid transparent;
+									border-right: 6px solid transparent;
+								}
 							}
 
 							&--single {
@@ -1528,8 +1598,16 @@ body {
 								}
 
 								.select2-selection__arrow {
-									height: 36px;
+									height: 30px;
 									right: $spacing_8px;
+								}
+							}
+
+							&__arrow {
+								b {
+									width: 12px;
+									border-color: #888 transparent transparent transparent;
+									border-width: 7px 6px 0 6px;
 								}
 							}
 						}
@@ -1643,12 +1721,16 @@ body {
 			}
 
 			p.ur-p-tag {
-				margin: -$spacing_6px 0 $spacing_24px;
+				margin-bottom: $spacing_24px;
 				padding: $spacing_10px $spacing_12px $spacing_10px $spacing_16px;
-				background: $grey-0;
-				border-left: 3px solid #17a2b8;
+				background: rgba(71, 91, 178, 0.04);
+				border: $border_width solid $primary_color;
 				font-weight: $regular;
-				color: $grey-300;
+				color: $grey-400;
+				border-radius: $border_radius_4;
+				font-size: 14px;
+				line-height: 22px;
+				font-style: normal;
 
 				strong {
 					font-weight: $semi_bold;
@@ -1669,9 +1751,16 @@ body {
 					width: 100%;
 					max-width: 680px;
 					padding: $spacing_16px $spacing_20px $spacing_22px;
+					border: $border_width solid $grey-50;
+					border-radius: $border_radius_7;
+					margin-bottom: $spacing_28px;
 					background: #fafafc;
-					border: $border_width solid $blue-50;
-					border-radius: $border_radius_9 $border_radius_9 0 0;
+					border: $border_width solid $grey-50;
+					box-shadow: none;
+
+					&:last-child {
+						margin-bottom: 0;
+					}
 
 					.hndle {
 						font-weight: $semi-bold;
@@ -1702,6 +1791,11 @@ body {
 								border: $border_width solid $border-color;
 								border-radius: $border_radius_4;
 							}
+						}
+
+						.button-primary {
+							margin-top: $spacing_12px;
+							box-shadow: none;
 						}
 
 						.ur-export-custom-fields {
@@ -1857,8 +1951,8 @@ body {
 	input[type="radio"] + img {
 	  cursor: pointer;
 	}
+}
 
-  }
 .user-registration-inactive-addon{
 	opacity: 0.7;
 	pointer-events: pointer;

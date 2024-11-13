@@ -161,13 +161,13 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 	 * Outputs a form fields on frontend.
 	 *
 	 * @param string $key Key.
-	 * @param mixed $args Arguments.
+	 * @param mixed  $args Arguments.
 	 * @param string $value (default: null).
 	 * @param string $current_row (default: empty).
 	 *
 	 * @return string
 	 */
-	function user_registration_form_field( $key, $args, $value = null, $current_row = '' ) {
+	function user_registration_form_field( $key, $args, $value = null, $current_row = '' , $is_edit = false ) {
 
 
 		/* Conditional Logic codes */
@@ -530,7 +530,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$field_container = '<div class="form-row %1$s hide_show_password" id="%2$s" data-priority="' . esc_attr( $sort ) . '">%3$s</div>';
 					$field           .= '<span class="password-input-group input-form-field-icons">';
 					$field           .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
-					if ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) {
+					if ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) && ! $is_edit ) {
 						$field .= '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title=" Show password "></a>';
 					}
 					$field .= '</span>';
@@ -551,7 +551,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					 * @param int $form_id The ID of the user registration form.
 					 * @param array $args The arguments for the form field.
 					 */
-					$field = apply_filters( 'user_registration_field_icon', $field, $form_id, $args );
+					$field  = apply_filters( 'user_registration_field_icon', $field, $form_id, $args );
 					$field .= ' </span> ';
 				}
 				break;
@@ -914,9 +914,19 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 
 			case 'hidden':
-				$hidden_value = isset( $args['hidden_value'] ) ? $args['hidden_value'] : '';
-				$custom_class = isset( $args['custom_class'] ) ? $args['custom_class'] : '';
-				$field        .= '<input type="hidden" data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" class="input-hidden ur-frontend-field ' . esc_attr( $custom_class ) . '" id="' . esc_attr( $args['id'] ) . '"value="' . esc_attr( $hidden_value ) . '"/>';
+
+				$hidden_value = $args['hidden_value'] ?? '';
+				$custom_class = $args['custom_class'] ?? '';
+				$input_type   = ! $is_edit ? 'type="hidden"' : 'type="text"';
+				if ( $is_edit ) {
+					$default_value = $args['default'] ?? '';
+					$hidden_value  = ! empty( $value ) ? $value : $default_value;
+					$label         = $args['label'] ?? 'Hidden Field';
+					$field         .= '<label for="' . esc_attr( $key ) . '" class="ur-label">' . esc_html( $label ) . '</label>';
+					$field         .= '<span class="input-wrapper">';
+				}
+				$field .= '<input ' . $input_type . ' data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" class="input-hidden input-text ur-frontend-field ur-edit-profile-field' . esc_attr( $custom_class ) . '" id="' . esc_attr( $args['id'] ) . '"value="' . esc_attr( $hidden_value ) . '" data-field-type="hidden"/>';
+				$field .=  ($is_edit) ? '</span>' : '';
 				break;
 		}
 
@@ -986,8 +996,11 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 		$all_meta_value = get_user_meta( $user_id );
 		$user_details   = get_user_by( 'ID', $user_id );
 		$user_info      = (array) $user_details->data;
-		$fields         = array();
+		$allowed_user_roles = array( 'administrator' );
+		$current_user =  wp_get_current_user();
+		$is_admin = count(array_intersect($allowed_user_roles, (array) $current_user->roles )) > 0 ;
 
+		$fields         = array();
 		$post_content_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
 
 		$all_meta_value_keys = array();
@@ -1004,8 +1017,9 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 		 *
 		 * @param array $post_content_array The original post content array for the profile account.
 		 * @param int $form_id The ID of the user registration form associated with the account.
+		 * @param bool $is_admin Is the current logged in user admin
 		 */
-		$post_content_array = apply_filters( 'user_registration_profile_account_filter_all_fields', $post_content_array, $form_id );
+		$post_content_array = apply_filters( 'user_registration_profile_account_filter_all_fields', $post_content_array, $form_id , $is_admin );
 
 		foreach ( $post_content_array as $post_content_row ) {
 			foreach ( $post_content_row as $post_content_grid ) {
@@ -1027,7 +1041,14 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 					$validate_message       = isset( $field->advance_setting->validation_message ) ? $field->advance_setting->validation_message : esc_html__( 'This field value needs to be unique.', 'user-registration' );
 					$enable_payment_slider  = isset( $field->advance_setting->enable_payment_slider ) ? $field->advance_setting->enable_payment_slider : false;
 					$enable_image_choice    = isset( $field->general_setting->image_choice ) ? $field->general_setting->image_choice : false;
+					$enable_image_choice    = isset( $field->general_setting->image_choice ) ? $field->general_setting->image_choice : false;
+					$default           = '';
 
+					if ( isset( $field->general_setting->default_value ) ) {
+						$default = $field->general_setting->default_value;
+					} elseif ( isset( $field->advance_setting->default_value ) ) {
+						$default = $field->advance_setting->default_value;
+					}
 					if ( empty( $field_label ) ) {
 						$field_label_array = explode( '_', $field_name );
 						$field_label       = join( ' ', array_map( 'ucwords', $field_label_array ) );
@@ -1101,6 +1122,9 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 
 						$extra_params['default'] = isset( $all_meta_value[ 'user_registration_' . $field_name ][0] ) ? $all_meta_value[ 'user_registration_' . $field_name ][0] : ( isset( $all_meta_value[ $field_name ][0] ) ? $all_meta_value[ $field_name ][0] : '' );
 
+						if ( empty( $extra_params['default'] ) ) {
+							$extra_params['default'] = $default;
+						}
 
 						if ( empty( $extra_params['default'] ) ) {
 							$extra_params['default'] = isset( $user_info[ $field_name ] ) ? $user_info[ $field_name ] : '';
@@ -1108,7 +1132,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 						$user_profile_fields = ur_get_user_profile_field_only();
 
 						$is_admin_request = $_REQUEST['is_admin_user'] ?? false;
-						if ($is_admin_request || (isset( $_REQUEST['action'] ) && sanitize_text_field($_REQUEST['action']) === 'edit' && $user_id !== get_current_user_id() ) ) {
+						if ( $is_admin_request || ( isset( $_REQUEST['action'] ) && sanitize_text_field( $_REQUEST['action'] ) === 'edit' && $user_id !== get_current_user_id() ) ) {
 							array_push( $user_profile_fields, 'user_pass' );
 						}
 
@@ -1196,6 +1220,7 @@ if ( ! function_exists( 'user_registration_account_content' ) ) {
 
 		if ( ! empty( $wp->query_vars ) ) {
 			foreach ( $wp->query_vars as $key => $value ) {
+
 				// Ignore pagename param.
 				if ( 'pagename' === $key ) {
 					continue;
@@ -1221,6 +1246,7 @@ if ( ! function_exists( 'user_registration_account_content' ) ) {
 			'myaccount/dashboard.php',
 			array(
 				'current_user' => get_user_by( 'id', get_current_user_id() ),
+				'endpoint_label'     => ur_get_account_menu_items()['dashboard'],
 			)
 		);
 	}
@@ -1246,6 +1272,7 @@ if ( ! function_exists( 'user_registration_account_dashboard' ) ) {
 			'myaccount/dashboard.php',
 			array(
 				'current_user' => get_user_by( 'id', get_current_user_id() ),
+				'endpoint_label'     => ur_get_account_menu_items()['dashboard'],
 			)
 		);
 	}
@@ -1386,7 +1413,6 @@ function ur_logout_url( $redirect = '' ) {
  *
  * @return bool
  * @since 1.8.5
- *
  */
 function is_elementor_editing_page() {
 	return ( ! empty( $_POST['action'] ) && 'elementor_ajax' === $_POST['action'] ) || //PHPCS:ignore;
