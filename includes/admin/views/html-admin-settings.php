@@ -89,6 +89,9 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 						<div class="user-registration-options-header--top">
 							<div class="user-registration-options-header--top__left">
 								<?php if ( isset( $tabs[ $current_tab ] ) ) { ?>
+									<span class="user-registration-options-header--top__left--icon">
+										<?php echo ur_file_get_contents( '/assets/images/settings-icons/' . $current_tab . '.svg' ); //phpcs:ignore ?>
+									</span>
 									<h3><?php echo esc_html( $tabs[ $current_tab ] ); ?></h3>
 									<?php
 								} else {
@@ -106,13 +109,13 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 							if ( ! $is_pro_active || ! $quick_setup_completed ) {
 								?>
 								<div class="user-registration-options-header--top__right">
+									<span class="user-registration-toggle-text"><?php esc_html_e( 'Sidebar', 'user-registration' ); ?></span>
 									<div class="ur-toggle-section">
 										<span class="user-registration-toggle-form">
 											<input type="checkbox" name="user_registration_enable_sidebar" id="user_registration_hide_show_sidebar" <?php echo esc_attr( $is_settings_sidebar_enabled ? 'checked="checked"' : '' ); ?>>
 											<span class="slider round active"></span>
 										</span>
 									</div>
-									<span class="user-registration-toggle-text"><?php printf( esc_html__( '%s Sidebar', 'user-registration' ), $is_settings_sidebar_enabled ? 'Show' : 'Hide' ); ?></span>
 								</div>
 								<?php
 							}

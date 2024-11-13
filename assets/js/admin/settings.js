@@ -932,7 +932,7 @@
 				$(node)
 					.closest(".user-registration-options-header--top__right")
 					.find(".user-registration-toggle-text")
-					.text("Show Sidebar");
+					.text("Sidebar");
 			} else {
 				$("body")
 					.removeClass("ur-settings-sidebar-show")
@@ -940,7 +940,7 @@
 				$(node)
 					.closest(".user-registration-options-header--top__right")
 					.find(".user-registration-toggle-text")
-					.text("Hide Sidebar");
+					.text("Sidebar");
 			}
 		}
 

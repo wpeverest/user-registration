@@ -4124,12 +4124,35 @@
 				 justify-content: space-between;
 
 				 &__left {
+					display: flex;
+					gap: 16px;
+					align-items: center;
+
 					 h3 {
 						 margin: 0;
 						 font-weight: $semi_bold;
-						 font-size: 26px;
-						 line-height: 120%;
-						 color: $grey-800;
+						font-size: 24px;
+						line-height: 36px;
+						color: $grey-500;
+					}
+
+					&--icon {
+						width: 40px;
+						height: 40px;
+						background: #EDEFF7;
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						border-radius: 3.75px;
+
+						svg {
+							width: 20px;
+    						height: 20px;
+
+							path {
+								fill: #475bb2;
+							}
+						}
 					 }
 				 }
 
@@ -4140,10 +4163,10 @@
 					 gap: $spacing_10px;
 
 					 span.user-registration-toggle-text {
-						 font-size: 16px;
+						font-size: 14px;
 						 line-height: 24px;
-						 color: #383838;
-						 font-weight: 500;
+						color: #6B6B6B;
+						font-weight: 400;
 					 }
 				  }
 			 }
