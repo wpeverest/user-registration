@@ -190,6 +190,7 @@ class UR_Email_Approval {
 		if ( ( 'admin_approval' == $login_option || 'admin_approval_after_email_confirmation' == $login_option ) ) {
 			$token = $this->get_token( $user_id );
 			update_user_meta( $user_id, 'ur_confirm_approval_token', $token );
+			update_user_meta( $user_id,'ur_user_status_changed_time' , current_time( 'mysql' ) ) ;
 		} else {
 			return;
 		}

@@ -281,6 +281,18 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 */
 	public function plugin_activation() {
 		delete_option( $this->plugin_slug . '_hide_key_notice' );
+
+		// Register cron jobs.
+		wp_clear_scheduled_hook( 'ur_delete_non_active_users' );
+
+		if ( ! wp_next_scheduled( 'ur_delete_non_active_users' ) ) {
+			wp_schedule_event( time() + ( 24 * HOUR_IN_SECONDS ), 'daily', 'ur_delete_non_active_users' );
+		}
+
+		// Schedule a one-time event (for backward compatibility) to set a record of un activated users before version 4.3.5
+		if ( ! wp_next_scheduled( 'ur_add_record_time_for_unactive_account' ) ) {
+			wp_schedule_single_event( time() + 1, 'ur_add_record_time_for_unactive_account' ); // Runs 1 second after activation
+		}
 	}
 
 	/**

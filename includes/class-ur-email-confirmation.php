@@ -251,6 +251,7 @@ class UR_Email_Confirmation {
 
 					update_user_meta( $user_id, 'ur_confirm_email', 1 );
 					delete_user_meta( $user_id, 'ur_confirm_email_token' );
+					delete_user_meta( $user_id, 'ur_user_status_changed_time' );
 
 					$user = get_user_by( 'id', $user_id );
 					/**
@@ -380,10 +381,12 @@ class UR_Email_Confirmation {
 			$token = $this->get_token( $user_id );
 			update_user_meta( $user_id, 'ur_confirm_email', 0 );
 			update_user_meta( $user_id, 'ur_confirm_email_token', $token );
+			update_user_meta( $user_id, 'ur_user_status_changed_time', current_time( 'mysql' ) );
 
 			if ( 'admin_approval_after_email_confirmation' === $login_option ) {
 				update_user_meta( $user_id, 'ur_admin_approval_after_email_confirmation', 'false' );
 				update_user_meta( $user_id, 'ur_user_status', 0 );
+				update_user_meta( $user_id, 'ur_user_status_changed_time', current_time( 'mysql' ) );
 			}
 
 			// update user status when login using social connect.
@@ -395,6 +398,8 @@ class UR_Email_Confirmation {
 				if ( 'admin_approval_after_email_confirmation' === $login_option ) {
 					update_user_meta( $user_id, 'ur_admin_approval_after_email_confirmation', 'true' );
 					update_user_meta( $user_id, 'ur_user_status', 0 );
+					update_user_meta( $user_id, 'ur_user_status_changed_time', current_time( 'mysql' ) );
+
 				}
 			}
 		}
