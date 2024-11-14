@@ -777,6 +777,8 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 				$value   = ! empty( $value ) ? $value : $default_value;
 				$options = $field .= '';
+				$args['options'] = apply_filters('override_options_for_select_field', $args['options']);
+
 				if ( ! empty( $args['options'] ) ) {
 					// If we have a blank option, select2 needs a placeholder.
 					if ( '' === $value && ! empty( $args['placeholder'] ) ) {
@@ -811,6 +813,8 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				} else {
 					$default_value = $value;
 				}
+
+				$args['options'] = apply_filters('override_options_for_select_field', $args['options']);
 
 				if ( ! empty( $args['options'] ) ) {
 					foreach ( $args['options'] as $option_key => $option_text ) {
