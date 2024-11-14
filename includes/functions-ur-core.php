@@ -6760,7 +6760,7 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 			'WPEverest\URConvertKit'       => array(
 				'id'           => 'convertkit',
 				'type'         => 'accordian',
-				'title'        => 'Kit',
+				'title'        => 'convertkit',
 				'desc'         => '',
 				'video_id'     => '',
 				'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
@@ -6779,17 +6779,17 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 				'display'      => array( 'settings', 'form_settings' ),
 				'connected'    => is_plugin_active( 'user-registration-brevo/user-registration-brevo.php' ) && ur_string_to_bool( get_option( 'user_registration_integrations_brevo_connection', false ) ),
 			),
-			'User_Registration_Salesforce' => array(
-				'id'           => 'salesforce',
-				'type'         => 'accordian',
-				'title'        => 'Salesforce',
-				'desc'         => '',
-				'video_id'     => '',
-				'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
-				'activated'    => is_plugin_active( 'user-registration-salesforce/user-registration-salesforce.php' ),
-				'display'      => array( 'settings', 'form_settings' ),
-				'connected'    => is_plugin_active( 'user-registration-salesforce/user-registration-salesforce.php' ) && ur_string_to_bool( get_option( 'user_registration_integrations_salesforce_connection', false ) ),
-			),
+			// 'User_Registration_Salesforce' => array(
+			// 	'id'           => 'salesforce',
+			// 	'type'         => 'accordian',
+			// 	'title'        => 'Salesforce',
+			// 	'desc'         => '',
+			// 	'video_id'     => '',
+			// 	'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
+			// 	'activated'    => is_plugin_active( 'user-registration-salesforce/user-registration-salesforce.php' ),
+			// 	'display'      => array( 'settings', 'form_settings' ),
+			// 	'connected'    => is_plugin_active( 'user-registration-salesforce/user-registration-salesforce.php' ) && ur_string_to_bool( get_option( 'user_registration_integrations_salesforce_connection', false ) ),
+			// ),
 		);
 
 		usort(
@@ -6938,4 +6938,3 @@ if ( ! function_exists( 'ur_end_setup_wizard' ) ) {
 		}
 	}
 }
-
