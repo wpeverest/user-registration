@@ -485,7 +485,7 @@ class UR_Smart_Tags {
 						if ( is_numeric( $profile_picture_url ) ) {
 							$profile_picture_url = wp_get_attachment_url( $profile_picture_url );
 						}
-				}
+				
 						$profile_picture_url = apply_filters( 'user_registration_profile_picture_url', $profile_picture_url, $user_id );
 						$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
 						$profile_pic_box     = '<img class="profile-preview" alt="profile-picture" src="' . esc_url( $image ) . '" />';
