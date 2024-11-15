@@ -777,6 +777,10 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 				$value   = ! empty( $value ) ? $value : $default_value;
 				$options = $field .= '';
+				$backtrace = debug_backtrace();
+				$parent_function = isset($backtrace[1]) ? $backtrace[1]['function'] : '';
+				$args['options'] =  ($parent_function === 'frontend_includes') ? apply_filters('override_options_for_select_field', $args['options'] , $args['id']) : $args['options'];
+
 				if ( ! empty( $args['options'] ) ) {
 					// If we have a blank option, select2 needs a placeholder.
 					if ( '' === $value && ! empty( $args['placeholder'] ) ) {
