@@ -6760,7 +6760,7 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 			'WPEverest\URConvertKit'       => array(
 				'id'           => 'convertkit',
 				'type'         => 'accordian',
-				'title'        => 'convertkit',
+				'title'        => 'ConvertKit',
 				'desc'         => '',
 				'video_id'     => '',
 				'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
