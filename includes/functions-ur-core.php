@@ -1813,6 +1813,8 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false, $form_id =
 	$recaptcha_type      = get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' );
 	$invisible_recaptcha = ur_option_checked( 'user_registration_captcha_setting_invisible_recaptcha_v2', false );
 	$theme_mod           = '';
+	$enqueue_script           = '';
+	$recaptcha_site_key           = '';
 
 	if ( 'login' === $context ) {
 		$recaptcha_type = get_option( 'user_registration_login_options_configured_captcha_type', $recaptcha_type );
@@ -6147,6 +6149,10 @@ if ( ! function_exists( 'ur_settings_text_format' ) ) {
 		$fields_to_format = array( 'description', 'tip', 'tooltip', 'tooltip_message', 'desc' );
 
 		foreach ( $args as &$arg ) {
+			if ( in_array( $arg['id'], ur_get_exclude_text_format_settings() ) ) {
+				continue;
+			}
+
 			if ( isset( $arg['label'] ) ) {
 				$arg['label'] = ur_get_capitalized_words( $arg['label'] );
 			}
@@ -6936,5 +6942,15 @@ if ( ! function_exists( 'ur_end_setup_wizard' ) ) {
 				update_option( 'user_registration_onboarding_skipped', false );
 			}
 		}
+	}
+}
+
+if ( ! function_exists( 'ur_get_exclude_text_format_settings' ) ) {
+	function ur_get_exclude_text_format_settings() {
+		$settings = array(
+			'user_registration_form_setting_enable_recaptcha_support',
+		);
+
+		return $settings;
 	}
 }
