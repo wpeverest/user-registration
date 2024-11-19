@@ -3880,7 +3880,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 			$invisible_recaptcha = ur_option_checked( 'user_registration_captcha_setting_invisible_recaptcha_v2', false );
 
 			$login_data = array(
-				'user_password' => isset( $post['password'] ) ? wp_unslash( $post['password'] ) : '', //phpcs:ignore.
+				'user_password' => isset( $post['password'] ) ? $post['password'] : '', //phpcs:ignore.
 				'remember'      => isset( $post['rememberme'] ),
 			);
 
@@ -3970,7 +3970,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 			 * @param string   $username         The sanitized username submitted during registration.
 			 * @param string   $password         The sanitized password submitted during registration.
 			 */
-			$validation_error = apply_filters( 'user_registration_process_login_errors', $validation_error, sanitize_user( wp_unslash( $post['username'] ) ), sanitize_user( wp_unslash( $post['password'] ) ) );
+			$validation_error = apply_filters( 'user_registration_process_login_errors', $validation_error, sanitize_user( wp_unslash( $post['username'] ) ), sanitize_user( $post['password'] ) );
 
 			if ( $validation_error->get_error_code() ) {
 				throw new Exception( '<strong>' . esc_html__( 'ERROR:', 'user-registration' ) . '</strong>' . $validation_error->get_error_message() );
