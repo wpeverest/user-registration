@@ -1,10 +1,10 @@
 === User Registration & Membership – Custom Registration Form, Login Form, and User Profile  ===
 Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
-Requires at least: 5.2
+Requires at least: 5.5
 Requires PHP: 7.2
-Tested up to: 6.6.2
-Stable tag: 3.3.4.1
+Tested up to: 6.7
+Stable tag: 3.3.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -245,6 +245,16 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 16. User Account Page –  Vertical Layout
 
 == Changelog ==
+
+= 3.3.5     - 18/11/2024 =
+* Feature  	- All User Registration widgets for Oxygen builder.
+* Enhance	- My account page design.
+* Enhance   - Most used integration list on integration settings in form builder.
+* Tweak     - Global settings design.
+* Fix		- Form save action not working for initial form publish captcha setting.
+* Fix		- Random order of form fields in email template during user registration.
+* Fix		- Hide Unapproved Users action run for users not from our source.
+* Dev		- Compatibility for convertKit.
 
 = 3.3.4.1  - 16/10/2024 =
 * Fix      - Setup wizard going blank on registration settings step.

@@ -481,14 +481,15 @@ class UR_Smart_Tags {
 					case 'profile_pic_box':
 						$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
 						$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
-
+						$user_id             = ! empty( $values['user_id'] ) ? $values['user_id'] : get_current_user_id();
 						if ( is_numeric( $profile_picture_url ) ) {
 							$profile_picture_url = wp_get_attachment_url( $profile_picture_url );
 						}
 
-						$image           = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
-						$profile_pic_box = '<img class="profile-preview" alt="profile-picture" src="' . esc_url( $image ) . '" />';
-						$content         = str_replace( '{{' . $tag . '}}', wp_kses_post( $profile_pic_box ), $content );
+						$profile_picture_url = apply_filters( 'user_registration_profile_picture_url', $profile_picture_url, $user_id );
+						$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
+						$profile_pic_box     = '<img class="profile-preview" alt="profile-picture" src="' . esc_url( $image ) . '" />';
+						$content             = str_replace( '{{' . $tag . '}}', wp_kses_post( $profile_pic_box ), $content );
 						break;
 					case 'full_name':
 						$first_name = ucfirst( get_user_meta( get_current_user_id(), 'first_name', true ) );

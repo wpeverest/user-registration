@@ -345,16 +345,18 @@ class UR_AJAX {
 
 		$profile = user_registration_form_data( $user_id, $form_id );
 
+		$is_admin_user = $_POST['is_admin_user'] ?? false;
 		foreach ( $profile as $key => $field ) {
+
 			if ( ! isset( $field['type'] ) ) {
 				$field['type'] = 'text';
 			}
 			// Unset hidden field value.
-			if ( 'hidden' === $field['type'] && 'hidden' === $field['field_key'] || ( 'range' === $field['type'] && ur_string_to_bool( $field['enable_payment_slider'] ) ) ) {
-				$key = array_search( $field, $profile, true );
-				if ( false !== ( $key ) ) {
-					unset( $profile[ $key ] );
-				}
+			if ( 'hidden' === $field['field_key'] || ( 'range' === $field['type'] && ur_string_to_bool( $field['enable_payment_slider'] ) ) ) {
+				self::unset_field( $field, $profile );
+			}
+			if ( ! $is_admin_user && 'hidden' === $field['type'] ) {
+				self::unset_field( $field, $profile );
 			}
 			// Get Value.
 			switch ( $field['type'] ) {
@@ -526,6 +528,12 @@ class UR_AJAX {
 		}
 	}
 
+	public static function unset_field( $field, $profile ) {
+		$key = array_search( $field, $profile, true );
+		if ( false !== ( $key ) ) {
+			unset( $profile[ $key ] );
+		}
+	}
 	/**
 	 * Get Post data on frontend form submit
 	 *

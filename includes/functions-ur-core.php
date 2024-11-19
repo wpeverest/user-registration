@@ -1813,6 +1813,8 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false, $form_id =
 	$recaptcha_type      = get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' );
 	$invisible_recaptcha = ur_option_checked( 'user_registration_captcha_setting_invisible_recaptcha_v2', false );
 	$theme_mod           = '';
+	$enqueue_script      = '';
+	$recaptcha_site_key  = '';
 
 	if ( 'login' === $context ) {
 		$recaptcha_type = get_option( 'user_registration_login_options_configured_captcha_type', $recaptcha_type );
@@ -3667,9 +3669,9 @@ if ( ! function_exists( 'ur_check_captch_keys' ) ) {
 		} elseif ( 'register' === $context && $form_id ) {
 			if ( $form_save_action ) {
 				if ( isset( $_POST['data']['form_setting_data'] ) ) {
-					foreach (  $_POST['data']['form_setting_data'] as $value ) {
-						if ( "user_registration_form_setting_configured_captcha_type" === $value["name"] ) {
-							$recaptcha_type = $value["value"];
+					foreach ( $_POST['data']['form_setting_data'] as $value ) {
+						if ( 'user_registration_form_setting_configured_captcha_type' === $value['name'] ) {
+							$recaptcha_type = $value['value'];
 						}
 					}
 				}
@@ -5570,7 +5572,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 
 					if ( isset( $field['field_key'] ) ) {
 						$row_count_to_send = '' === $row_count ? $current_row : $row_count;
-						$field             = user_registration_form_field( $key, $field, $value, $row_count_to_send );
+						$field             = user_registration_form_field( $key, $field, $value, $row_count_to_send, $is_edit );
 					}
 
 					/**
@@ -6147,6 +6149,10 @@ if ( ! function_exists( 'ur_settings_text_format' ) ) {
 		$fields_to_format = array( 'description', 'tip', 'tooltip', 'tooltip_message', 'desc' );
 
 		foreach ( $args as &$arg ) {
+			if ( in_array( $arg['id'], ur_get_exclude_text_format_settings() ) ) {
+				continue;
+			}
+
 			if ( isset( $arg['label'] ) ) {
 				$arg['label'] = ur_get_capitalized_words( $arg['label'] );
 			}
@@ -6681,7 +6687,7 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 	function ur_integration_addons() {
 
 		$integration_list = array(
-			'UR_Settings_SMS_Integration'  => array(
+			'UR_Settings_SMS_Integration' => array(
 				'id'           => 'sms_integration',
 				'type'         => 'accordian',
 				'title'        => 'Twilio',
@@ -6735,7 +6741,7 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 				'display'      => array( 'settings', 'form_settings' ),
 				'connected'    => ! empty( get_option( 'ur_mailchimp_accounts', array() ) ) ? true : false,
 			),
-			'User_Registration_Zapier'     => array(
+			'User_Registration_Zapier'    => array(
 				'id'           => 'zapier',
 				'type'         => 'accordian',
 				'title'        => 'Zapier',
@@ -6746,7 +6752,7 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 				'display'      => array( 'form_settings' ),
 				'connected'    => ! empty( get_option( 'ur_zapier_accounts', array() ) ) ? true : false,
 			),
-			'WPEverest\URMailPoet'         => array(
+			'WPEverest\URMailPoet'        => array(
 				'id'           => 'mailpoet',
 				'type'         => 'accordian',
 				'title'        => 'MailPoet',
@@ -6757,10 +6763,10 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 				'display'      => array( 'settings', 'form_settings' ),
 				'connected'    => ur_string_to_bool( get_option( 'user_registration_integrations_mailpoet_connection', false ) ),
 			),
-			'WPEverest\URConvertKit'       => array(
+			'WPEverest\URConvertKit'      => array(
 				'id'           => 'convertkit',
 				'type'         => 'accordian',
-				'title'        => 'Kit (formerly ConvertKit)',
+				'title'        => 'ConvertKit',
 				'desc'         => '',
 				'video_id'     => '',
 				'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
@@ -6768,7 +6774,7 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 				'display'      => array( 'settings', 'form_settings' ),
 				'connected'    => is_plugin_active( 'user-registration-convertkit/user-registration-convertkit.php' ) && ! empty( get_option( 'ur_convertkit_accounts', array() ) ) ? true : false,
 			),
-			'User_Registration_Brevo'      => array(
+			'User_Registration_Brevo'     => array(
 				'id'           => 'brevo',
 				'type'         => 'accordian',
 				'title'        => 'Brevo',
@@ -6779,17 +6785,17 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 				'display'      => array( 'settings', 'form_settings' ),
 				'connected'    => is_plugin_active( 'user-registration-brevo/user-registration-brevo.php' ) && ur_string_to_bool( get_option( 'user_registration_integrations_brevo_connection', false ) ),
 			),
-			'User_Registration_Salesforce' => array(
-				'id'           => 'salesforce',
-				'type'         => 'accordian',
-				'title'        => 'Salesforce',
-				'desc'         => '',
-				'video_id'     => '',
-				'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
-				'activated'    => is_plugin_active( 'user-registration-salesforce/user-registration-salesforce.php' ),
-				'display'      => array( 'settings', 'form_settings' ),
-				'connected'    => is_plugin_active( 'user-registration-salesforce/user-registration-salesforce.php' ) && ur_string_to_bool( get_option( 'user_registration_integrations_salesforce_connection', false ) ),
-			),
+			// 'User_Registration_Salesforce' => array(
+			// 'id'           => 'salesforce',
+			// 'type'         => 'accordian',
+			// 'title'        => 'Salesforce',
+			// 'desc'         => '',
+			// 'video_id'     => '',
+			// 'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
+			// 'activated'    => is_plugin_active( 'user-registration-salesforce/user-registration-salesforce.php' ),
+			// 'display'      => array( 'settings', 'form_settings' ),
+			// 'connected'    => is_plugin_active( 'user-registration-salesforce/user-registration-salesforce.php' ) && ur_string_to_bool( get_option( 'user_registration_integrations_salesforce_connection', false ) ),
+			// ),
 		);
 
 		usort(
@@ -6936,5 +6942,15 @@ if ( ! function_exists( 'ur_end_setup_wizard' ) ) {
 				update_option( 'user_registration_onboarding_skipped', false );
 			}
 		}
+	}
+}
+
+if ( ! function_exists( 'ur_get_exclude_text_format_settings' ) ) {
+	function ur_get_exclude_text_format_settings() {
+		$settings = array(
+			'user_registration_form_setting_enable_recaptcha_support',
+		);
+
+		return $settings;
 	}
 }

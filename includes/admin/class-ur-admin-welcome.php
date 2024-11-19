@@ -116,7 +116,7 @@ class UR_Admin_Welcome {
 								jQuery(this).find(".welcome-video-container").remove();
 
 								var video =
-									'<div class="welcome-video-container"><iframe width="560" height="315" src="https://www.youtube.com/embed/ce7OCzXO7EM?amprel=0&amp;showinfo=0&amp;autoplay=true" frameborder="0" allowfullscreen></iframe></div>';
+									'<div class="welcome-video-container"><iframe width="560" height="315" src="https://www.youtube.com/embed/DYPg3x8OVe4?amprel=0&amp;showinfo=0&amp;autoplay=true" frameborder="0" allowfullscreen></iframe></div>';
 
 								event.preventDefault();
 

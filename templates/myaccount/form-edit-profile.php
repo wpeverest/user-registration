@@ -103,12 +103,13 @@ if ( 'vertical' === $layout ) {
 									$profile_picture_url = wp_get_attachment_url( $profile_picture_url );
 								}
 
-									$image                        = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
-									$max_size                     = wp_max_upload_size();
-									$max_upload_size              = $max_size;
-									$crop_picture                 = false;
-									$profile_pic_args             = array();
-									$edit_profile_valid_file_type = 'image/jpeg,image/gif,image/png';
+								$profile_picture_url          = apply_filters( 'user_registration_profile_picture_url', $profile_picture_url, $user_id );
+								$image                        = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
+								$max_size                     = wp_max_upload_size();
+								$max_upload_size              = $max_size;
+								$crop_picture                 = false;
+								$profile_pic_args             = array();
+								$edit_profile_valid_file_type = 'image/jpeg,image/gif,image/png';
 
 								foreach ( $form_data_array as $data ) {
 									foreach ( $data as $grid_key => $grid_data ) {
