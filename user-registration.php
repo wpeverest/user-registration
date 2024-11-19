@@ -3,7 +3,7 @@
  * Plugin Name: User Registration
  * Plugin URI: https://wpuserregistration.com/
  * Description: Drag and Drop user registration form and login form builder.
- * Version: 3.3.5
+ * Version: 3.3.5.1
  * Author: WPEverest
  * Author URI: https://wpuserregistration.com
  * Text Domain: user-registration
@@ -31,7 +31,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '3.3.5';
+		public $version = '3.3.5.1';
 
 		/**
 		 * Session instance.

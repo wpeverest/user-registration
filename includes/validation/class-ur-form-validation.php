@@ -591,7 +591,7 @@ class UR_Form_Validation extends UR_Validation {
 	 * @param [int]   $user_id User Id.
 	 * @return void
 	 */
-	public function validate_update_profile( $form_fields, $form_data, $form_id , $user_id ) {
+	public function validate_update_profile( $form_fields, $form_data, $form_id, $user_id ) {
 		$form_field_data = ur_get_form_field_data( $form_id );
 
 		$request_form_keys = array_map(
@@ -740,18 +740,22 @@ class UR_Form_Validation extends UR_Validation {
 			$single_form_field = $form_field_data[ $form_data_index ];
 			$class_name        = ur_load_form_field_class( $single_form_field->field_key );
 			$hook              = "user_registration_validate_{$single_form_field->field_key}";
-			/**
-			 * Action to run form field validations.
-			 */
-			add_action(
-				$hook,
-				array(
-					$class_name::get_instance(),
-					'validation',
-				),
-				10,
-				4
-			);
+
+			if ( class_exists( $class_name ) ) {
+
+				/**
+				 * Action to run form field validations.
+				 */
+				add_action(
+					$hook,
+					array(
+						$class_name::get_instance(),
+						'validation',
+					),
+					10,
+					4
+				);
+			}
 		}
 	}
 

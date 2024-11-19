@@ -1,3 +1,6 @@
+= 3.3.5.1   - 19/11/2024 =
+* Fix   	- Edit profile form duplication.
+
 = 3.3.5     - 18/11/2024 =
 * Feature  	- All User Registration widgets for Oxygen builder.
 * Enhance	- My account page design.

@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 5.5
 Requires PHP: 7.2
 Tested up to: 6.7
-Stable tag: 3.3.5
+Stable tag: 3.3.5.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -245,6 +245,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 16. User Account Page –  Vertical Layout
 
 == Changelog ==
+
+= 3.3.5.1   - 19/11/2024 =
+* Fix   	- Edit profile form duplication.
 
 = 3.3.5     - 18/11/2024 =
 * Feature  	- All User Registration widgets for Oxygen builder.
