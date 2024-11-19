@@ -6477,3 +6477,74 @@
 		 flex-direction: column;
 	 }
  }
+
+
+// For RTL Options CSS
+.user-registration {
+	&.rtl {
+		.user-registration__wrap {
+			.ur-form-subcontainer {
+				#menu-management {
+					.menu-edit {
+						left: 0 !important;
+						right: 160px;
+
+						#nav-menu-header {
+							padding-left: $spacing_30px;
+							padding-right: $spacing_12px;
+
+							.ur-brand-logo {
+								border-left: 1px solid #e1e1e1;
+								border-right: 0;
+
+								img {
+									margin-right: 0;
+									margin-left: 8px;
+								}
+							}
+
+							.ur-form-title {
+								padding-right: $spacing_18px;
+								padding-left: $spacing_8px;
+							}
+
+							.major-publishing-actions {
+								margin-right: auto;
+								margin-left: unset;
+							}
+						}
+
+						#post-body {
+							.ur-registered {
+								&-inputs {
+									.nav-tab-wrapper {
+										.ur-tab-content {
+											.ur-search-input {
+												input.ur-type-text {
+													padding-right: $spacing_40px;
+													color: $grey-400;
+												}
+											}
+										}
+									}
+								}
+
+								&-from {
+									.ur-builder-wrapper {
+										.ur-selected-inputs {
+											#ur-field-settings {
+												select {
+													padding-right: $spacing_30px;
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
