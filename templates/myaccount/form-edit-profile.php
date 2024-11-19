@@ -103,13 +103,13 @@ if ( 'vertical' === $layout ) {
 									$profile_picture_url = wp_get_attachment_url( $profile_picture_url );
 								}
 
-									$profile_picture_url          = apply_filters( 'user_registration_profile_picture_url', $profile_picture_url , $user_id);
-									$image                        = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
-									$max_size                     = wp_max_upload_size();
-									$max_upload_size              = $max_size;
-									$crop_picture                 = false;
-									$profile_pic_args             = array();
-									$edit_profile_valid_file_type = 'image/jpeg,image/gif,image/png';
+								$profile_picture_url          = apply_filters( 'user_registration_profile_picture_url', $profile_picture_url, $user_id );
+								$image                        = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
+								$max_size                     = wp_max_upload_size();
+								$max_upload_size              = $max_size;
+								$crop_picture                 = false;
+								$profile_pic_args             = array();
+								$edit_profile_valid_file_type = 'image/jpeg,image/gif,image/png';
 
 								foreach ( $form_data_array as $data ) {
 									foreach ( $data as $grid_key => $grid_data ) {
@@ -126,9 +126,9 @@ if ( 'vertical' === $layout ) {
 								}
 
 								?>
-										<img class="profile-preview" alt="profile-picture" src="<?php echo esc_url( $image ); ?>" style='max-width:96px; max-height:96px;' >
+									<img class="profile-preview" alt="profile-picture" src="<?php echo esc_url( $image ); ?>" style='max-width:96px; max-height:96px;' >
 
-										<p class="user-registration-tips"><?php echo esc_html__( 'Max size: ', 'user-registration' ) . esc_attr( size_format( $max_upload_size * 1024 ) ); ?></p>
+									<p class="user-registration-tips"><?php echo esc_html__( 'Max size: ', 'user-registration' ) . esc_attr( size_format( $max_upload_size * 1024 ) ); ?></p>
 									</div>
 									<header>
 										<p><strong>
@@ -194,43 +194,31 @@ if ( 'vertical' === $layout ) {
 						 * Fires at the start of rendering user registration edit profile form.
 						 */
 						do_action( 'user_registration_edit_profile_form_start' );
-						foreach ( $form_data_array as $index => $data ) {
-							$row_id       = ( ! empty( $row_ids ) ) ? absint( $row_ids[ $index ] ) : $index;
-							$row_cl_props = '';
-
-							// If the conditional logic addon is installed.
-							if ( class_exists( 'UserRegistrationConditionalLogic' ) ) {
-								$form_row_data = get_post_meta( $form_id, 'user_registration_form_row_data', true );
-								$row_datas     = ! empty( $form_row_data ) ? json_decode( $form_row_data ) : array();
-								foreach ( $row_datas as $individual_row_data ) {
-									$conditional_logic_enabled = false;
-									$conditional_settings      = array();
-
-									if ( isset( $individual_row_data->row_id ) && $row_id == $individual_row_data->row_id && isset( $individual_row_data->conditional_logic_enabled ) ) {
-
-										$row_cl_enabled = ur_string_to_bool( $individual_row_data->conditional_logic_enabled ) ? ur_string_to_bool( $individual_row_data->conditional_logic_enabled ) : '';
-										$row_cl_map     = isset( $individual_row_data->cl_map ) ? $individual_row_data->cl_map : array();
-										$row_cl_props   = sprintf( 'data-conditional-logic-enabled="%s" data-conditional-logic-map="%s"', esc_attr( $row_cl_enabled ), esc_attr( $row_cl_map ) );
-									}
-								}
-							}
-
-							ob_start();
-							echo '<div class="ur-form-row" data-row-id="' . esc_attr( $row_id ) . '" ' . $row_cl_props . '>'; // phpcs:ignore
-							user_registration_edit_profile_row_template( $data, $profile );
-							echo '</div>';
-							$row_template = ob_get_clean();
-
-							$row_template = apply_filters( 'user_registration_frontend_edit_profile_form_row_template', $row_template, $form_id, $profile, $row_id, $data );
-
-							echo $row_template; // phpcs:ignore
-						}
 						?>
 						<div class="user-registration-profile-fields__field-wrapper">
 
 							<?php
 							foreach ( $form_data_array as $index => $data ) {
 								$row_id = ( ! empty( $row_ids ) ) ? absint( $row_ids[ $index ] ) : $index;
+
+								$row_cl_props = '';
+
+								// If the conditional logic addon is installed.
+								if ( class_exists( 'UserRegistrationConditionalLogic' ) ) {
+									$form_row_data = get_post_meta( $form_id, 'user_registration_form_row_data', true );
+									$row_datas     = ! empty( $form_row_data ) ? json_decode( $form_row_data ) : array();
+									foreach ( $row_datas as $individual_row_data ) {
+										$conditional_logic_enabled = false;
+										$conditional_settings      = array();
+
+										if ( isset( $individual_row_data->row_id ) && $row_id == $individual_row_data->row_id && isset( $individual_row_data->conditional_logic_enabled ) ) {
+
+											$row_cl_enabled = ur_string_to_bool( $individual_row_data->conditional_logic_enabled ) ? ur_string_to_bool( $individual_row_data->conditional_logic_enabled ) : '';
+											$row_cl_map     = isset( $individual_row_data->cl_map ) ? $individual_row_data->cl_map : array();
+											$row_cl_props   = sprintf( 'data-conditional-logic-enabled="%s" data-conditional-logic-map="%s"', esc_attr( $row_cl_enabled ), esc_attr( $row_cl_map ) );
+										}
+									}
+								}
 
 								ob_start();
 								echo '<div class="ur-form-row">';
