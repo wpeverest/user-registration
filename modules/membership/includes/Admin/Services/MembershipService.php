@@ -135,12 +135,12 @@ class MembershipService {
 
 				if ( empty( $secret_key ) || empty( $publishable_key ) ) {
 					$result['status']  = false;
-					$result['message'] = esc_html__( "Incomplete Stripe Gateway setup.", "user-registration-membership" );
+					$result['message'] = esc_html__( "Incomplete Stripe Gateway setup.", "user-registration" );
 				}
 
 			} else {
 				$result['status']  = false;
-				$result['message'] = esc_html__( "Stripe gateway is not enabled.", "user-registration-membership" );
+				$result['message'] = esc_html__( "Stripe gateway is not enabled.", "user-registration" );
 			}
 		}
 

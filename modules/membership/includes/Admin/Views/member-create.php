@@ -17,7 +17,7 @@ require __DIR__ . '/./Partials/header.php'
 							</svg>
 						</a>
 						<h3>
-							<?php echo isset( $_GET['post_id'] ) ? esc_html_e( 'Edit Member', 'user-registration-membership' ) : esc_html_e( 'Create New Member', 'user-registration-membership' ); ?>
+							<?php echo isset( $_GET['post_id'] ) ? esc_html_e( 'Edit Member', 'user-registration' ) : esc_html_e( 'Create New Member', 'user-registration' ); ?>
 						</h3>
 					</div>
 
@@ -26,7 +26,7 @@ require __DIR__ . '/./Partials/header.php'
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
 							<div class="ur-label" style="width: 30%">
 								<label
-									for="ur-input-type-membership-first-name"><?php esc_html_e( 'First Name', 'user-registration-membership' ); ?>
+									for="ur-input-type-membership-first-name"><?php esc_html_e( 'First Name', 'user-registration' ); ?>
 								</label>
 							</div>
 							<div class="ur-input-type-membership-name ur-admin-template" style="width: 100%">
@@ -34,7 +34,7 @@ require __DIR__ . '/./Partials/header.php'
 									<input
 										class="ur-membership-members-input"
 										type="text"
-										data-key-name="<?php echo esc_html__( 'firstname', 'user-registration-membership' ); ?>"
+										data-key-name="<?php echo esc_html__( 'firstname', 'user-registration' ); ?>"
 										id="ur-input-type-membership-first-name" name="ur_membership_first_name"
 										style="width: 100%"
 									>
@@ -45,14 +45,14 @@ require __DIR__ . '/./Partials/header.php'
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
 							<div class="ur-label" style="width: 30%">
 								<label
-									for="ur-input-type-membership-last-name"><?php esc_html_e( 'Last Name', 'user-registration-membership' ); ?>
+									for="ur-input-type-membership-last-name"><?php esc_html_e( 'Last Name', 'user-registration' ); ?>
 								</label>
 							</div>
 							<div class="ur-input-type-membership-name ur-admin-template" style="width: 100%">
 								<div class="ur-field">
 									<input type="text"
 										   class="ur-membership-members-input"
-										   data-key-name="<?php echo esc_html__( 'lastname', 'user-registration-membership' ); ?>"
+										   data-key-name="<?php echo esc_html__( 'lastname', 'user-registration' ); ?>"
 										   id="ur-input-type-membership-last-name" name="ur_membership_last_name"
 										   style="width: 100%"
 									>
@@ -63,7 +63,7 @@ require __DIR__ . '/./Partials/header.php'
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
 							<div class="ur-label" style="width: 30%">
 								<label
-									for="ur-input-type-membership-username"><?php esc_html_e( 'Username', 'user-registration-membership' ); ?>
+									for="ur-input-type-membership-username"><?php esc_html_e( 'Username', 'user-registration' ); ?>
 									<span style="color:red">*</span>
 								</label>
 							</div>
@@ -72,7 +72,7 @@ require __DIR__ . '/./Partials/header.php'
 									<input type="text"
 										   autocomplete="off"
 										   class="ur-membership-members-input"
-										   data-key-name="<?php echo esc_html__( 'Username', 'user-registration-membership' ); ?>"
+										   data-key-name="<?php echo esc_html__( 'Username', 'user-registration' ); ?>"
 										   id="ur-input-type-membership-username" name="ur_membership_username"
 										   style="width: 100%"
 										   required>
@@ -84,7 +84,7 @@ require __DIR__ . '/./Partials/header.php'
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
 							<div class="ur-label" style="width: 30%">
 								<label
-									for="ur-input-type-membership-email"><?php echo esc_html_e( 'Email', 'user-registration-membership' ); ?>
+									for="ur-input-type-membership-email"><?php echo esc_html_e( 'Email', 'user-registration' ); ?>
 									<span style="color:red">*</span>
 								</label>
 							</div>
@@ -92,7 +92,7 @@ require __DIR__ . '/./Partials/header.php'
 								<div class="ur-field">
 									<input type="email"
 										   class="ur-membership-members-input"
-										   data-key-name="<?php echo esc_html__( 'Email', 'user-registration-membership' ); ?>"
+										   data-key-name="<?php echo esc_html__( 'Email', 'user-registration' ); ?>"
 										   id="ur-input-type-membership-email" name="ur_membership_email"
 										   style="width: 100%"
 										   required>
@@ -103,7 +103,7 @@ require __DIR__ . '/./Partials/header.php'
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
 							<div class="ur-label" style="width: 30%">
 								<label
-									for="ur-input-type-membership-password"><?php esc_html_e( 'Password', 'user-registration-membership' ); ?>
+									for="ur-input-type-membership-password"><?php esc_html_e( 'Password', 'user-registration' ); ?>
 									<span style="color:red">*</span>
 								</label>
 							</div>
@@ -111,7 +111,7 @@ require __DIR__ . '/./Partials/header.php'
 								<div class="ur-field">
 									<input
 										autocomplete="off"
-										data-key-name="<?php echo esc_html__( 'Password', 'user-registration-membership' ); ?>"
+										data-key-name="<?php echo esc_html__( 'Password', 'user-registration' ); ?>"
 										class="ur-membership-members-input"
 										type="password"
 										id="ur-input-type-membership-password" name="ur_membership_password"
@@ -124,7 +124,7 @@ require __DIR__ . '/./Partials/header.php'
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
 							<div class="ur-label" style="width: 30%">
 								<label
-									for="ur-input-type-membership-confirm-password"><?php esc_html_e( 'Confirm Password', 'user-registration-membership' ); ?>
+									for="ur-input-type-membership-confirm-password"><?php esc_html_e( 'Confirm Password', 'user-registration' ); ?>
 									<span style="color:red">*</span>
 								</label>
 							</div>
@@ -132,7 +132,7 @@ require __DIR__ . '/./Partials/header.php'
 								 style="width: 100%">
 								<div class="ur-field">
 									<input type="password"
-										   data-key-name="<?php echo esc_html__( 'confirm_password', 'user-registration-membership' ); ?>"
+										   data-key-name="<?php echo esc_html__( 'confirm_password', 'user-registration' ); ?>"
 										   class="ur-membership-members-input"
 										   id="ur-input-type-membership-confirm-password"
 										   name="ur_membership_confirm_password"
@@ -145,14 +145,14 @@ require __DIR__ . '/./Partials/header.php'
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
 							<div class="ur-label" style="width: 30%">
 								<label
-									for="ur-input-type-membership-member-role"><?php esc_html_e( 'Member Role', 'user-registration-membership' ); ?>
+									for="ur-input-type-membership-member-role"><?php esc_html_e( 'Member Role', 'user-registration' ); ?>
 									<span style="color:red">*</span>
 								</label>
 							</div>
 							<div class="ur-input-type-membership-name ur-admin-template" style="width: 100%">
 								<div class="ur-field">
 									<select
-										data-key-name="<?php echo esc_html__( 'Role', 'user-registration-membership' ); ?>"
+										data-key-name="<?php echo esc_html__( 'Role', 'user-registration' ); ?>"
 										id="ur-input-type-membership-member-role"
 										class="user-membership-enhanced-select2 ur-membership-members-input">
 										<?php
@@ -171,12 +171,12 @@ require __DIR__ . '/./Partials/header.php'
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px">
 							<div class="ur-label" style="width: 30%">
 								<label class="ur-membership-enable-status"
-									   for="ur-membership-status"><?php esc_html_e( 'Member Status', 'user-registration-membership' ); ?></label>
+									   for="ur-membership-status"><?php esc_html_e( 'Member Status', 'user-registration' ); ?></label>
 							</div>
 							<div class="user-registration-switch ur-ml-auto" style="width: 100%">
 
 								<input
-									data-key-name="<?php echo esc_html__( 'member_status', 'user-registration-membership' ); ?>"
+									data-key-name="<?php echo esc_html__( 'member_status', 'user-registration' ); ?>"
 									id="ur-membership-status" type="checkbox"
 									class="user-registration-switch__control hide-show-check enabled ur-membership-members-input"
 									<?php echo esc_attr( isset( $membership_content ) && $membership_content['status'] == 'true' ? 'checked' : '' ); ?>
@@ -190,18 +190,18 @@ require __DIR__ . '/./Partials/header.php'
 				<div id="ur-member-form-right" class="ur-p-4">
 					<div class="right-title">
 						<h3 class="ur-mt-2">
-							<?php esc_html_e( 'Select Plan', 'user-registration-membership' ); ?>
+							<?php esc_html_e( 'Select Plan', 'user-registration' ); ?>
 						</h3>
 					</div>
-					
+
 					<div class="right-body ur-d-flex ur-flex-column">
 						<div class="form-row ur-enhanced-select ur-mt-3">
 							<label for="ur-membership-select" class="ur-label">
-								<?php echo esc_html__( 'Membership', 'user-registration-membership' ); ?>
+								<?php echo esc_html__( 'Membership', 'user-registration' ); ?>
 							</label>
 							<select
 								class="ur-membership-members-input"
-								data-key-name="<?php echo esc_html__( 'Membership', 'user-registration-membership' ); ?>"
+								data-key-name="<?php echo esc_html__( 'Membership', 'user-registration' ); ?>"
 								name="ur-membership-select"
 								id="ur-membership-select" class="user-membership-enhanced-select2"
 								style="width: 100%"
@@ -218,11 +218,11 @@ require __DIR__ . '/./Partials/header.php'
 						</div>
 						<div class="form-row ur-mt-3">
 							<label for="ur-membership-start-date" class="ur-label">
-								<?php echo esc_html__( 'Start Date', 'user-registration-membership' ); ?>
+								<?php echo esc_html__( 'Start Date', 'user-registration' ); ?>
 							</label>
 							<input
 								class="ur-membership-members-input"
-								data-key-name="<?php echo esc_html__( 'start_date', 'user-registration-membership' ); ?>"
+								data-key-name="<?php echo esc_html__( 'start_date', 'user-registration' ); ?>"
 								id="ur-membership-start-date" type="date" style="width: 100%"
 								value="<?php echo date( 'Y-m-d' ); ?>">
 
@@ -233,7 +233,7 @@ require __DIR__ . '/./Partials/header.php'
 			</div>
 			<?php
 			$save_btn_class  = 'ur-member-save-btn';
-			$create_btn_text = isset( $_GET['post_id'] ) ? esc_html__( 'Save', 'user-registration-membership' ) : esc_html__( 'Create Member', 'user-registration-membership' );
+			$create_btn_text = isset( $_GET['post_id'] ) ? esc_html__( 'Save', 'user-registration' ) : esc_html__( 'Create Member', 'user-registration' );
 			require __DIR__ . '/./Partials/footer-actions.php'
 			?>
 		</div>

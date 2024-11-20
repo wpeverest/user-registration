@@ -68,7 +68,7 @@ function render_paypal_settings( $membership_details ) {
 			id="ur-membership-paypal-toggle-container"
 			class="ur-d-flex ur-justify-content-between ur-payment-option-header"
 		>
-			<h2><?php echo __( 'Paypal', 'user-registration-membership' ); ?></h2>
+			<h2><?php echo __( 'Paypal', 'user-registration' ); ?></h2>
 			<div class="user-registration-switch">
 
 				<input
@@ -96,7 +96,7 @@ function render_paypal_settings( $membership_details ) {
 				 style="gap:20px;">
 				<div class="ur-label" style="width: 30%">
 					<label
-						for="ur-input-type-paypal-email"><?php esc_html_e( 'Paypal Email', 'user-registration-membership' ); ?>
+						for="ur-input-type-paypal-email"><?php esc_html_e( 'Paypal Email', 'user-registration' ); ?>
 						<span style="color:red">*</span>
 					</label>
 				</div>
@@ -105,7 +105,7 @@ function render_paypal_settings( $membership_details ) {
 					style="width: 100%">
 					<div class="ur-field" data-field-key="paypal_email">
 						<input type="email"
-							   data-key-name="<?php esc_html_e( 'Paypal Email', 'user-registration-membership' ); ?>"
+							   data-key-name="<?php esc_html_e( 'Paypal Email', 'user-registration' ); ?>"
 							   id="ur-input-type-paypal-email"
 							   name="ur_membership_paypal_email"
 							   style="width: 100%"
@@ -121,7 +121,7 @@ function render_paypal_settings( $membership_details ) {
 				style="gap:20px;">
 				<div class="ur-label" style="width: 30%">
 					<label
-						for="ur-membership-paypal-mode"><?php esc_html_e( 'Mode', 'user-registration-membership' ); ?>
+						for="ur-membership-paypal-mode"><?php esc_html_e( 'Mode', 'user-registration' ); ?>
 						<span style="color:red">*</span>
 					</label>
 				</div>
@@ -137,12 +137,12 @@ function render_paypal_settings( $membership_details ) {
 						<option
 							value="sandbox" <?php echo isset( $membership_details['payment_gateways']['paypal']['mode'] ) && $membership_details['payment_gateways']['paypal'] == 'sandbox' ? 'selected="selected"' : ''; ?>
 						>
-							<?php esc_html_e( 'Sandbox', 'user-registration-membership' ); ?>
+							<?php esc_html_e( 'Sandbox', 'user-registration' ); ?>
 						</option>
 						<option
 							value="production" <?php echo isset( $membership_details['payment_gateways']['paypal']['mode'] ) && $membership_details['payment_gateways']['paypal']['mode'] == 'production' ? 'selected="selected"' : ''; ?>
 						>
-							<?php esc_html_e( 'Production', 'user-registration-membership' ); ?>
+							<?php esc_html_e( 'Production', 'user-registration' ); ?>
 						</option>
 
 					</select>
@@ -154,7 +154,7 @@ function render_paypal_settings( $membership_details ) {
 				style="gap:20px;">
 				<div class="ur-label" style="width: 30%">
 					<label
-						for="ur-input-type-cancel-url"><?php esc_html_e( 'Cancel Url', 'user-registration-membership' ); ?>
+						for="ur-input-type-cancel-url"><?php esc_html_e( 'Cancel Url', 'user-registration' ); ?>
 						<span style="color:red">*</span>
 					</label>
 				</div>
@@ -164,7 +164,7 @@ function render_paypal_settings( $membership_details ) {
 					<div class="ur-field"
 						 data-field-key="paypal_cancel_url">
 						<input type="url"
-							   data-key-name="<?php esc_html_e( 'Cancel Url', 'user-registration-membership' ); ?>"
+							   data-key-name="<?php esc_html_e( 'Cancel Url', 'user-registration' ); ?>"
 							   id="ur-input-type-cancel-url"
 							   name="ur_membership_cancel_url"
 							   style="width: 100%"
@@ -180,7 +180,7 @@ function render_paypal_settings( $membership_details ) {
 				style="gap:20px;">
 				<div class="ur-label" style="width: 30%">
 					<label
-						for="ur-input-type-return-url"><?php esc_html_e( 'Return Url', 'user-registration-membership' ); ?>
+						for="ur-input-type-return-url"><?php esc_html_e( 'Return Url', 'user-registration' ); ?>
 						<span style="color:red">*</span>
 					</label>
 				</div>
@@ -189,7 +189,7 @@ function render_paypal_settings( $membership_details ) {
 					style="width: 100%">
 					<div class="ur-field" data-field-key="return_url">
 						<input type="url"
-							   data-key-name="<?php esc_html_e( 'Return Url', 'user-registration-membership' ); ?>"
+							   data-key-name="<?php esc_html_e( 'Return Url', 'user-registration' ); ?>"
 							   id="ur-input-type-return-url"
 							   name="ur_membership_return_url"
 							   style="width: 100%"
@@ -208,7 +208,7 @@ function render_paypal_settings( $membership_details ) {
 					style="gap:20px;">
 					<div class="ur-label" style="width: 30%">
 						<label
-							for="ur-input-type-client-id"><?php esc_html_e( 'Client ID', 'user-registration-membership' ); ?>
+							for="ur-input-type-client-id"><?php esc_html_e( 'Client ID', 'user-registration' ); ?>
 							<span style="color:red">*</span>
 						</label>
 					</div>
@@ -218,7 +218,7 @@ function render_paypal_settings( $membership_details ) {
 						<div class="ur-field" data-field-key="client_id">
 							<input type="text"
 								   autocomplete="off"
-								   data-key-name="<?php esc_html_e( 'Client ID', 'user-registration-membership' ); ?>"
+								   data-key-name="<?php esc_html_e( 'Client ID', 'user-registration' ); ?>"
 								   id="ur-input-type-client-id"
 								   name="ur_membership_client_id"
 								   style="width: 100%"
@@ -234,7 +234,7 @@ function render_paypal_settings( $membership_details ) {
 					style="gap:20px;">
 					<div class="ur-label" style="width: 30%">
 						<label
-							for="ur-input-type-client-secret"><?php esc_html_e( 'Client Secret', 'user-registration-membership' ); ?>
+							for="ur-input-type-client-secret"><?php esc_html_e( 'Client Secret', 'user-registration' ); ?>
 							<span style="color:red">*</span>
 						</label>
 					</div>
@@ -245,7 +245,7 @@ function render_paypal_settings( $membership_details ) {
 							 data-field-key="client_secret">
 							<input type="text"
 								   autocomplete="off"
-								   data-key-name="<?php esc_html_e( 'Client Secret', 'user-registration-membership' ); ?>"
+								   data-key-name="<?php esc_html_e( 'Client Secret', 'user-registration' ); ?>"
 								   id="ur-input-type-client-secret"
 								   name="ur_membership_client_secret"
 								   style="width: 100%"
@@ -279,7 +279,7 @@ function render_bank_settings( $membership_details ) {
 		<div
 			id="ur-membership-bank-toggle-container"
 			class="ur-d-flex ur-justify-content-between ur-payment-option-header">
-			<h2><?php echo __( 'Bank Transfer', 'user-registration-membership' ); ?></h2>
+			<h2><?php echo __( 'Bank Transfer', 'user-registration' ); ?></h2>
 			<div class="user-registration-switch">
 				<input
 					data-key-name="Payment Gateway"
@@ -335,7 +335,7 @@ function render_stripe_settings($membership_details) {
 		<div
 			id="ur-membership-stripe-toggle-container"
 			class="ur-d-flex ur-justify-content-between ur-payment-option-header">
-			<h2><?php echo __( 'Stripe', 'user-registration-membership' ); ?></h2>
+			<h2><?php echo __( 'Stripe', 'user-registration' ); ?></h2>
 			<div class="user-registration-switch">
 				<input
 					data-key-name="Payment Gateway"
@@ -367,7 +367,7 @@ function render_stripe_settings($membership_details) {
 				style="gap:20px;">
 				<div class="ur-label" style="width: 30%">
 					<label
-						for="ur-input-type-cancel-url"><?php esc_html_e( 'Mode', 'user-registration-membership' ); ?>
+						for="ur-input-type-cancel-url"><?php esc_html_e( 'Mode', 'user-registration' ); ?>
 					</label>
 				</div>
 				<div
@@ -376,7 +376,7 @@ function render_stripe_settings($membership_details) {
 					<div class="ur-field"
 						 data-field-key="stripe_mode">
 						<input type="url"
-							   data-key-name="<?php esc_html_e( 'Stripe Mode', 'user-registration-membership' ); ?>"
+							   data-key-name="<?php esc_html_e( 'Stripe Mode', 'user-registration' ); ?>"
 							   id="ur-input-type-stripe-mode"
 							   name="ur_membership_stripe_mode"
 							   style="width: 100%"
@@ -393,7 +393,7 @@ function render_stripe_settings($membership_details) {
 				style="gap:20px;">
 				<div class="ur-label" style="width: 30%">
 					<label
-						for="ur-input-type-cancel-url"><?php esc_html_e( 'Publishable Key', 'user-registration-membership' ); ?>
+						for="ur-input-type-cancel-url"><?php esc_html_e( 'Publishable Key', 'user-registration' ); ?>
 					</label>
 				</div>
 				<div
@@ -402,7 +402,7 @@ function render_stripe_settings($membership_details) {
 					<div class="ur-field"
 						 data-field-key="publishable_key">
 						<input type="url"
-							   data-key-name="<?php esc_html_e( 'Publishable Key', 'user-registration-membership' ); ?>"
+							   data-key-name="<?php esc_html_e( 'Publishable Key', 'user-registration' ); ?>"
 							   id="ur-input-type-publishable-key"
 							   name="ur_membership_publishable_key"
 							   style="width: 100%"
@@ -419,7 +419,7 @@ function render_stripe_settings($membership_details) {
 				style="gap:20px;">
 				<div class="ur-label" style="width: 30%">
 					<label
-						for="ur-input-type-cancel-url"><?php esc_html_e( 'Secret Key', 'user-registration-membership' ); ?>
+						for="ur-input-type-cancel-url"><?php esc_html_e( 'Secret Key', 'user-registration' ); ?>
 					</label>
 				</div>
 				<div
@@ -428,7 +428,7 @@ function render_stripe_settings($membership_details) {
 					<div class="ur-field"
 						 data-field-key="secret_key">
 						<input type="url"
-							   data-key-name="<?php esc_html_e( 'Secret Key', 'user-registration-membership' ); ?>"
+							   data-key-name="<?php esc_html_e( 'Secret Key', 'user-registration' ); ?>"
 							   id="ur-input-type-secret-key"
 							   name="ur_membership_secret_key"
 							   style="width: 100%"
@@ -451,9 +451,9 @@ function render_stripe_settings($membership_details) {
 				<p><?php echo "$message" ?></p>
 				<a href="<?php echo esc_url( $settings_url ) ?>"
 				   target="_blank">
-					<?php echo esc_html__( "Settings", "user-registration-membership" ) ?>
+					<?php echo esc_html__( "Settings", "user-registration" ) ?>
 					>
-					<?php echo esc_html__( "Payments", "user-registration-membership" ) ?>
+					<?php echo esc_html__( "Payments", "user-registration" ) ?>
 				</a>
 			</div>
 		</div>

@@ -6,19 +6,19 @@
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-membership' ) ); ?>"
 		   class="<?php echo esc_attr( ( $_GET['page'] == 'user-registration-membership' ) ? 'row-title' : '' ); ?>"
 		>
-			<?php esc_html_e( 'Memberships', 'user-registration-membership' ); ?>
+			<?php esc_html_e( 'Memberships', 'user-registration' ); ?>
 		</a>
 
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-members' ) ); ?>"
 		   class="<?php echo esc_attr( ( $_GET['page'] == 'user-registration-members' ) ? 'row-title' : '' ); ?>"
 		>
-			<?php esc_html_e( 'Members', 'user-registration-membership' ); ?>
+			<?php esc_html_e( 'Members', 'user-registration' ); ?>
 		</a>
 	</div>
 	<div class="membership-menu-right ur-d-flex ur-p-3 ur-mr-0 ur-align-items-center">
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=membership' ) ); ?>"
 		   class="chakra-link css-e6i1ju">
-			<span><?php echo __( 'Settings', 'user-registration-membership' ); ?></span>
+			<span><?php echo __( 'Settings', 'user-registration' ); ?></span>
 		</a>
 	</div>
 

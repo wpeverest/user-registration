@@ -123,7 +123,6 @@ if ( ! class_exists( 'Admin' ) ) :
 				register_deactivation_hook( UR_PLUGIN_FILE, array( $this, 'on_deactivation' ) );
 
 				register_activation_hook( UR_PLUGIN_FILE, array( $this, 'on_activation' ) );
-				$this->load_plugin_textdomain();
 
 		}
 
@@ -163,7 +162,7 @@ if ( ! class_exists( 'Admin' ) ) :
 		 */
 		public function plugin_action_links( $actions ) {
 			$new_actions = array(
-				'settings' => '<a href="' . admin_url( 'admin.php?page=user-registration-membership' ) . '" title="' . esc_attr( __( 'View User Registration Membership Settings', 'user-registration-membership' ) ) . '">' . __( 'Settings', 'user-registration-membership' ) . '</a>',
+				'settings' => '<a href="' . admin_url( 'admin.php?page=user-registration-membership' ) . '" title="' . esc_attr( __( 'View User Registration Membership Settings', 'user-registration' ) ) . '">' . __( 'Settings', 'user-registration' ) . '</a>',
 			);
 
 			return array_merge( $new_actions, $actions );
@@ -178,19 +177,7 @@ if ( ! class_exists( 'Admin' ) ) :
 			return untrailingslashit( plugins_url( '/', __FILE__ ) );
 		}
 
-		/**
-		 * Load Localization files.
-		 *
-		 * Note: the first-loaded translation file overrides any following ones if the same translation is present.
-		 */
-		public function load_plugin_textdomain() {
-			$locale = is_admin() && function_exists( 'get_user_locale' ) ? get_user_locale() : get_locale();
-			$locale = apply_filters( 'plugin_locale', $locale, 'user-registration-membership' );
 
-			unload_textdomain( 'user-registration-membership' );
-			load_textdomain( 'user-registration-membership', UR_MEMBERSHIP_DIR . 'languages/user-registration-membership-' . $locale . '.mo' );
-			load_plugin_textdomain( 'user-registration-membership', false, UR_MEMBERSHIP_DIR . 'languages' );
-		}
 
 		/**
 		 * Rgister Custom Post Type.
@@ -204,30 +191,30 @@ if ( ! class_exists( 'Admin' ) ) :
 					'user_registration_membership_post_type',
 					array(
 						'labels'              => array(
-							'name'                  => __( 'Memberships', 'user-registration-membership' ),
-							'singular_name'         => __( 'Membership', 'user-registration-membership' ),
-							'all_items'             => __( 'All Memberships', 'user-registration-membership' ),
-							'menu_name'             => _x( 'Memberships', 'Admin menu name', 'user-registration-membership' ),
-							'add_new'               => __( 'Add New', 'user-registration-membership' ),
-							'add_new_item'          => __( 'Add new', 'user-registration-membership' ),
-							'edit'                  => __( 'Edit', 'user-registration-membership' ),
-							'edit_item'             => __( 'Edit membership', 'user-registration-membership' ),
-							'new_item'              => __( 'New membership', 'user-registration-membership' ),
-							'view'                  => __( 'View membership', 'user-registration-membership' ),
-							'view_item'             => __( 'View memberships', 'user-registration-membership' ),
-							'search_items'          => __( 'Search memberships', 'user-registration-membership' ),
-							'not_found'             => __( 'No memberships found', 'user-registration-membership' ),
-							'not_found_in_trash'    => __( 'No memberships found in trash', 'user-registration-membership' ),
-							'parent'                => __( 'Parent membership', 'user-registration-membership' ),
-							'featured_image'        => __( 'Membership image', 'user-registration-membership' ),
-							'set_featured_image'    => __( 'Set membership image', 'user-registration-membership' ),
-							'remove_featured_image' => __( 'Remove membership image', 'user-registration-membership' ),
-							'use_featured_image'    => __( 'Use as membership image', 'user-registration-membership' ),
-							'insert_into_item'      => __( 'Insert into membership', 'user-registration-membership' ),
-							'uploaded_to_this_item' => __( 'Uploaded to this membership', 'user-registration-membership' ),
-							'filter_items_list'     => __( 'Filter membership', 'user-registration-membership' ),
-							'items_list_navigation' => __( 'Membership navigation', 'user-registration-membership' ),
-							'items_list'            => __( 'Membership list', 'user-registration-membership' ),
+							'name'                  => __( 'Memberships', 'user-registration' ),
+							'singular_name'         => __( 'Membership', 'user-registration' ),
+							'all_items'             => __( 'All Memberships', 'user-registration' ),
+							'menu_name'             => _x( 'Memberships', 'Admin menu name', 'user-registration' ),
+							'add_new'               => __( 'Add New', 'user-registration' ),
+							'add_new_item'          => __( 'Add new', 'user-registration' ),
+							'edit'                  => __( 'Edit', 'user-registration' ),
+							'edit_item'             => __( 'Edit membership', 'user-registration' ),
+							'new_item'              => __( 'New membership', 'user-registration' ),
+							'view'                  => __( 'View membership', 'user-registration' ),
+							'view_item'             => __( 'View memberships', 'user-registration' ),
+							'search_items'          => __( 'Search memberships', 'user-registration' ),
+							'not_found'             => __( 'No memberships found', 'user-registration' ),
+							'not_found_in_trash'    => __( 'No memberships found in trash', 'user-registration' ),
+							'parent'                => __( 'Parent membership', 'user-registration' ),
+							'featured_image'        => __( 'Membership image', 'user-registration' ),
+							'set_featured_image'    => __( 'Set membership image', 'user-registration' ),
+							'remove_featured_image' => __( 'Remove membership image', 'user-registration' ),
+							'use_featured_image'    => __( 'Use as membership image', 'user-registration' ),
+							'insert_into_item'      => __( 'Insert into membership', 'user-registration' ),
+							'uploaded_to_this_item' => __( 'Uploaded to this membership', 'user-registration' ),
+							'filter_items_list'     => __( 'Filter membership', 'user-registration' ),
+							'items_list_navigation' => __( 'Membership navigation', 'user-registration' ),
+							'items_list'            => __( 'Membership list', 'user-registration' ),
 
 						),
 						'show_ui'             => true,
@@ -258,9 +245,9 @@ if ( ! class_exists( 'Admin' ) ) :
 			add_option(
 				'ur_membership_payment_gateways',
 				array(
-					'paypal'      => __( 'Paypal', 'user-registration-membership' ),
-					'stripe'      => __( 'Stripe', 'user-registration-membership' ),
-					'bank'        => __( 'Bank', 'user-registration-membership' ),
+					'paypal'      => __( 'Paypal', 'user-registration' ),
+					'stripe'      => __( 'Stripe', 'user-registration' ),
+					'bank'        => __( 'Bank', 'user-registration' ),
 				)
 			);
 		}

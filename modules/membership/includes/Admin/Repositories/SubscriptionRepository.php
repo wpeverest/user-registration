@@ -36,11 +36,11 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 	public function cancel_subscription_by_id( $subscription_id ) {
 		$subscription = $this->retrieve( $subscription_id );
 		$order        = $this->orders_repository->get_order_by_subscription( $subscription_id );
-		
+
 		if ( 'canceled' === $subscription['status'] ) {
 			return array(
 				'status'  => false,
-				'message' => esc_html__( 'Subscription is already canceled.', 'user-registration-membership' ),
+				'message' => esc_html__( 'Subscription is already canceled.', 'user-registration' ),
 			);
 		}
 		if ( 'free' === $order['order_type'] || 'paid' === $order['order_type'] || empty( $order['payment_method'] ) ) {
@@ -53,7 +53,7 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 
 			return array(
 				'status'  => true,
-				'message' => esc_html__( 'Subscription Cancelled Successfully', 'user-registration-membership' ),
+				'message' => esc_html__( 'Subscription Cancelled Successfully', 'user-registration' ),
 			);
 		} else {
 			$subscription_service = new SubscriptionService();
@@ -64,7 +64,7 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 
 				return array(
 					'status'  => true,
-					'message' => esc_html__( 'Subscription Cancelled Successfully', 'user-registration-membership' ),
+					'message' => esc_html__( 'Subscription Cancelled Successfully', 'user-registration' ),
 				);
 			} else {
 				return $cancel_sub;

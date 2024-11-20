@@ -17,7 +17,7 @@
 						</svg>
 					</a>
 					<h3>
-						<?php echo isset( $_GET['post_id'] ) ? esc_html_e( 'Edit Membership', 'user-registration-membership' ) : esc_html_e( 'Create New Membership', 'user-registration-membership' ); ?>
+						<?php echo isset( $_GET['post_id'] ) ? esc_html_e( 'Edit Membership', 'user-registration' ) : esc_html_e( 'Create New Membership', 'user-registration' ); ?>
 					</h3>
 				</div>
 				<div class="user-registration-card__body">
@@ -26,7 +26,7 @@
 						<div class="ur-membership-input-container ur-d-flex ur-p-1" style="gap:20px;">
 							<div class="ur-label" style="width: 30%">
 								<label
-									for="ur-input-type-membership-name"><?php esc_html_e( 'Membership Name', 'user-registration-membership' ); ?>
+									for="ur-input-type-membership-name"><?php esc_html_e( 'Membership Name', 'user-registration' ); ?>
 									<span style="color:red">*</span>
 								</label>
 							</div>
@@ -67,7 +67,7 @@
 						<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3" style="gap:20px">
 							<div class="ur-label" style="width: 30%">
 								<label class="ur-membership-enable-status"
-									   for="ur-membership-status"><?php esc_html_e( 'Membership Status', 'user-registration-membership' ); ?>
+									   for="ur-membership-status"><?php esc_html_e( 'Membership Status', 'user-registration' ); ?>
 									<span class="user-registration-help-tip tooltipstered"
 										  data-tip="<?php echo esc_attr__( "Active or Inactive state of a membership." ) ?>"></span>
 
@@ -89,7 +89,7 @@
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
 							<div class="ur-label" style="width: 30%">
 								<label
-									for="ur-input-type-membership-role"><?php esc_html_e( 'Membership Role', 'user-registration-membership' ); ?>
+									for="ur-input-type-membership-role"><?php esc_html_e( 'Membership Role', 'user-registration' ); ?>
 									<span style="color:red">*</span>
 									<span class="user-registration-help-tip tooltipstered"
 										  data-tip="Assign members to the selected role upon registration."></span>
@@ -98,7 +98,7 @@
 							<div class="ur-input-type-membership-name ur-admin-template" style="width: 100%">
 								<div class="ur-field">
 									<select
-										data-key-name="<?php echo esc_html__( 'Role', 'user-registration-membership' ); ?>"
+										data-key-name="<?php echo esc_html__( 'Role', 'user-registration' ); ?>"
 										id="ur-input-type-membership-role"
 										class="user-membership-enhanced-select2">
 										<?php
@@ -121,14 +121,14 @@
 							<!--							membership type and price header-->
 
 							<div class="user-registration-card__header ur-d-flex ur-align-items-center">
-								<h3><?php esc_html_e( 'Membership Type & Price', 'user-registration-membership' ); ?></h3>
+								<h3><?php esc_html_e( 'Membership Type & Price', 'user-registration' ); ?></h3>
 							</div>
 							<div class="user-registration-card__body">
 								<!--								membership type-->
 								<div class="ur-membership-selection-container ur-d-flex ur-p-1" style="gap:20px;">
 									<div class="ur-label" style="width: 30%">
 										<label
-											for="ur-membership-free-type"><?php esc_html_e( 'Type', 'user-registration-membership' ); ?></label>
+											for="ur-membership-free-type"><?php esc_html_e( 'Type', 'user-registration' ); ?></label>
 									</div>
 									<div class="ur-input-type-select ur-admin-template" style="width: 100%">
 										<div class="ur-field ur-d-flex"
@@ -145,7 +145,7 @@
 														   required>
 													<label class="ur-p-2" for="ur-membership-free-type">
 														<b
-															class="user-registration-image-label "><?php esc_html_e( 'Free', 'user-registration-membership' ); ?>
+															class="user-registration-image-label "><?php esc_html_e( 'Free', 'user-registration' ); ?>
 														</b>
 													</label>
 												</div>
@@ -155,7 +155,7 @@
 														echo __(
 															"This is a free membership. This is free of cost and doesn't
 														require any fees.",
-															'user-registration-membership'
+															'user-registration'
 														)
 														?>
 													</p>
@@ -175,14 +175,14 @@
 													>
 													<label class="ur-p-2" for="ur-membership-paid-type">
 														<b
-															class="user-registration-image-label"><?php esc_html_e( 'Paid', 'user-registration-membership' ); ?>
+															class="user-registration-image-label"><?php esc_html_e( 'Paid', 'user-registration' ); ?>
 														</b>
 													</label>
 												</div>
 												<div class="ur-membership-type-description">
 													<p style="word-break: break-word; font-size: 12px;">
 														<?php
-														echo __( 'This is a paid membership plan. It requires a certain amount to get you started.', 'user-registration-membership' )
+														echo __( 'This is a paid membership plan. It requires a certain amount to get you started.', 'user-registration' )
 														?>
 													</p>
 												</div>
@@ -202,14 +202,14 @@
 													>
 													<label class="ur-p-2" for="ur-membership-subscription-type">
 														<b
-															class="user-registration-image-label"><?php esc_html_e( 'Subscription Based', 'user-registration-membership' ); ?>
+															class="user-registration-image-label"><?php esc_html_e( 'Subscription Based', 'user-registration' ); ?>
 														</b>
 													</label>
 												</div>
 												<div class="ur-membership-type-description">
 													<p style="word-break: break-word; font-size: 12px;">
 														<?php
-														echo __( 'This plan requires to get renewed after certain period of time.', 'user-registration-membership' )
+														echo __( 'This plan requires to get renewed after certain period of time.', 'user-registration' )
 														?>
 
 													</p>
@@ -238,7 +238,7 @@
 												<!--													--><?php // echo isset( $membership_details['cancel_subscription'] ) && $membership_details['cancel_subscription'] == 'expiry' ? 'checked' : '' ?>
 												<!--												>-->
 												<!--												<label for="ur-membership-cancel-sub-on-expiry">-->
-												<?php // echo __("Do not cancel subscription until plan expired.", "user-registration-membership") ?><!--</label>-->
+												<?php // echo __("Do not cancel subscription until plan expired.", "user-registration") ?><!--</label>-->
 												<input data-key-name="Cancel Subscription" type="radio"
 													   id="ur-membership-cancel-sub-immediately"
 													   style="margin: 0"
@@ -248,7 +248,7 @@
 													<?php echo isset( $membership_details['cancel_subscription'] ) && $membership_details['cancel_subscription'] == 'immediately' ? 'checked' : ''; ?>
 												>
 												<label
-													for="ur-membership-cancel-sub-immediately"><?php echo __( 'Cancel immediately.', 'user-registration-membership' ); ?></label>
+													for="ur-membership-cancel-sub-immediately"><?php echo __( 'Cancel immediately.', 'user-registration' ); ?></label>
 											</div>
 										</div>
 									</div>
@@ -271,7 +271,7 @@
 										 style="gap:20px;">
 										<div class="ur-label" style="width: 30%">
 											<label
-												for="ur-membership-amount"><?php esc_html_e( 'Amount', 'user-registration-membership' ); ?>
+												for="ur-membership-amount"><?php esc_html_e( 'Amount', 'user-registration' ); ?>
 												<span style="color:red">*</span>
 											</label>
 										</div>
@@ -301,7 +301,7 @@
 											 style="gap:20px;">
 											<div class="ur-label" style="width: 30%">
 												<label
-													for="ur-membership-duration"><?php esc_html_e( 'Duration', 'user-registration-membership' ); ?>
+													for="ur-membership-duration"><?php esc_html_e( 'Duration', 'user-registration' ); ?>
 													<span style="color:red">*</span>
 												</label>
 											</div>
@@ -420,7 +420,7 @@
 				<hr>
 				<?php
 				$save_btn_class  = 'ur-membership-save-btn';
-				$create_btn_text = isset( $_GET['post_id'] ) ? esc_html__( 'Save', 'user-registration-membership' ) : esc_html__( 'Create Membership', 'user-registration-membership' );
+				$create_btn_text = isset( $_GET['post_id'] ) ? esc_html__( 'Save', 'user-registration' ) : esc_html__( 'Create Membership', 'user-registration' );
 				require __DIR__ . '/./Partials/footer-actions.php'
 				?>
 			</div>

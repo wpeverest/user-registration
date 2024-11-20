@@ -185,14 +185,14 @@ class PaypalService {
 		$paypal_standard_class = new \User_Registration_Pro_PayPal_Standard();
 
 		if ( ! class_exists( 'User_Registration_Pro_PayPal_Standard' ) ) {
-			$logger->notice( esc_html__( 'Class User_Registration_Pro_PayPal_Standard does not exist.', 'user-registration-membership' ), array( 'source' => 'ur-membership-paypal' ) );
+			$logger->notice( esc_html__( 'Class User_Registration_Pro_PayPal_Standard does not exist.', 'user-registration' ), array( 'source' => 'ur-membership-paypal' ) );
 
 			return;
 		}
 
 		$txn_type = $data['txn_type'];
 		if ( ! isset( $data['custom'] ) ) {
-			$logger->notice( esc_html__( 'Custom param not found for subscription.', 'user-registration-membership' ), array( 'source' => 'ur-membership-paypal' ) );
+			$logger->notice( esc_html__( 'Custom param not found for subscription.', 'user-registration' ), array( 'source' => 'ur-membership-paypal' ) );
 
 			return;
 		}
@@ -221,7 +221,7 @@ class PaypalService {
 		);
 
 		if ( ! $paypal_standard_class->validate_ipn( $payment_mode ) ) {
-			$logger->notice( esc_html__( 'Invalid response from paypal IPN for txn: ', 'user-registration-membership' ) . $data['txn_id'], array( 'source' => 'ur-membership-paypal' ) );
+			$logger->notice( esc_html__( 'Invalid response from paypal IPN for txn: ', 'user-registration' ) . $data['txn_id'], array( 'source' => 'ur-membership-paypal' ) );
 
 			return;
 		}
@@ -282,10 +282,10 @@ class PaypalService {
 
 		// Verify receiver's email address.
 		if ( empty( $receiver_email ) || ! is_email( $receiver_email ) || strtolower( $data['business'] ) !== strtolower( trim( $receiver_email ) ) ) {
-			$error = esc_html__( 'Payment failed: recipient emails do not match', 'user-registration-membership' );
+			$error = esc_html__( 'Payment failed: recipient emails do not match', 'user-registration' );
 		} elseif ( empty( $amount ) || number_format( (float) $data['mc_gross'] ) !== number_format( (float) $amount ) ) {
 			// Verify amount.
-			$error = esc_html__( 'Payment failed: payment amounts do not match ', 'user-registration-membership' );
+			$error = esc_html__( 'Payment failed: payment amounts do not match ', 'user-registration' );
 		}
 
 		if ( ! empty( $error ) ) {
@@ -403,7 +403,7 @@ class PaypalService {
 		$url             = ( 'production' === $paypal_options['mode'] ) ? 'https://api-m.paypal.com/' : 'https://api-m.sandbox.paypal.com/';
 		$login_request   = self::login_paypal( $url, $client_id, $client_secret );
 		if ( 200 !== $login_request['status_code'] ) {
-			$message = esc_html__( 'Invalid response from paypal, check Client ID or Secret.', 'user-registration-membership' );
+			$message = esc_html__( 'Invalid response from paypal, check Client ID or Secret.', 'user-registration' );
 			ur_get_logger()->notice( $message, array( 'source' => 'ur-membership-paypal' ) );
 
 			return array(
@@ -412,7 +412,7 @@ class PaypalService {
 			);
 		}
 		if ( empty( $subscription['subscription_id'] ) ) {
-			$message = esc_html__( 'Paypal Subscription ID not present, please contact your administrator.', 'user-registration-membership' );
+			$message = esc_html__( 'Paypal Subscription ID not present, please contact your administrator.', 'user-registration' );
 			ur_get_logger()->notice( $message, array( 'source' => 'ur-membership-paypal' ) );
 
 			return array(
@@ -447,14 +447,14 @@ class PaypalService {
 		ur_get_logger()->notice( 'Paypal Response Status Code: ' . $status_code, array( 'source' => 'ur-membership-paypal' ) );
 
 		if ( 204 === $status_code ) {
-			$message = esc_html__( 'Subscription successfully canceled from paypal.', 'user-registration-membership' );
+			$message = esc_html__( 'Subscription successfully canceled from paypal.', 'user-registration' );
 			ur_get_logger()->notice( $message, array( 'source' => 'ur-membership-paypal' ) );
 
 			return array(
 				'status' => true,
 			);
 		}
-		$message = esc_html__( 'Subscription cancellation failed from Paypal.', 'user-registration-membership' );
+		$message = esc_html__( 'Subscription cancellation failed from Paypal.', 'user-registration' );
 		ur_get_logger()->notice( $response, array( 'source' => 'ur-membership-paypal' ) );
 
 		return array(

@@ -83,7 +83,7 @@ class AJAX {
 		if ( ! isset( $_POST['members_data'] ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Field members data is required.', 'user-registration-membership' ),
+					'message' => __( 'Field members data is required.', 'user-registration' ),
 				)
 			);
 		}
@@ -114,7 +114,7 @@ class AJAX {
 				array(
 					'member_id'      => absint( $member_id ),
 					'transaction_id' => esc_html( $transaction_id ),
-					'message'        => esc_html__( 'New member has been successfully created with successful stripe subscription.', 'user-registration-membership' ),
+					'message'        => esc_html__( 'New member has been successfully created with successful stripe subscription.', 'user-registration' ),
 				)
 			);
 			if ( 'free' !== $data['payment_method'] ) {
@@ -122,7 +122,7 @@ class AJAX {
 			}
 			wp_send_json_success( $response );
 		} else {
-			$message = $response['message'] ?? esc_html__( 'Sorry! There was an unexpected error while registering the user . ', 'user-registration-membership' );
+			$message = $response['message'] ?? esc_html__( 'Sorry! There was an unexpected error while registering the user . ', 'user-registration' );
 			wp_send_json_error(
 				array(
 					'message' => $message,
@@ -140,7 +140,7 @@ class AJAX {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Sorry, You do not have permission to create membership', 'user-registration-membership' ),
+					'message' => __( 'Sorry, You do not have permission to create membership', 'user-registration' ),
 				)
 			);
 		}
@@ -186,7 +186,7 @@ class AJAX {
 
 			$response = array(
 				'membership_id' => $new_membership_ID,
-				'message'       => esc_html__( 'Successfully created the membership . ', 'user-registration-membership' ),
+				'message'       => esc_html__( 'Successfully created the membership . ', 'user-registration' ),
 			);
 
 			$response = apply_filters( 'ur_membership_before_create_membership_response', $response );
@@ -194,7 +194,7 @@ class AJAX {
 		} else {
 			wp_send_json_error(
 				array(
-					'message' => esc_html__( 'Sorry! There was an unexpected error while saving the membership data . ', 'user-registration-membership' ),
+					'message' => esc_html__( 'Sorry! There was an unexpected error while saving the membership data . ', 'user-registration' ),
 				)
 			);
 		}
@@ -209,14 +209,14 @@ class AJAX {
 		if ( empty( $_POST['membership_id'] ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Field membership_id is required.', 'user-registration-membership' ),
+					'message' => __( 'Field membership_id is required.', 'user-registration' ),
 				)
 			);
 		}
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Sorry, You do not have permission to edit membership', 'user-registration-membership' ),
+					'message' => __( 'Sorry, You do not have permission to edit membership', 'user-registration' ),
 				)
 			);
 		}
@@ -268,7 +268,7 @@ class AJAX {
 					} else {
 						wp_send_json_error(
 							array(
-								'message' => esc_html__( 'Sorry! Could not create stripe product. ', 'user-registration-membership' ),
+								'message' => esc_html__( 'Sorry! Could not create stripe product. ', 'user-registration' ),
 							)
 						);
 					}
@@ -277,7 +277,7 @@ class AJAX {
 			}
 			$response = array(
 				'membership_id' => $updated_ID,
-				'message'       => esc_html__( 'Successfully updated the membership data.', 'user-registration-membership' ),
+				'message'       => esc_html__( 'Successfully updated the membership data.', 'user-registration' ),
 			);
 
 			$response = apply_filters( 'ur_membership_before_create_membership_response', $response );
@@ -285,7 +285,7 @@ class AJAX {
 		} else {
 			wp_send_json_error(
 				array(
-					'message' => esc_html__( 'Sorry! There was an unexpected error while saving the membership data . ', 'user-registration-membership' ),
+					'message' => esc_html__( 'Sorry! There was an unexpected error while saving the membership data . ', 'user-registration' ),
 				)
 			);
 		}
@@ -301,7 +301,7 @@ class AJAX {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Permission not allowed.', 'user-registration-membership' ),
+					'message' => __( 'Permission not allowed.', 'user-registration' ),
 				),
 				403
 			);
@@ -310,7 +310,7 @@ class AJAX {
 		if ( ! isset( $_POST ) && ! isset( $_POST['membership_ids'] ) && ! empty( $_POST['membership_ids'] ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Field membership_ids is required.', 'user-registration-membership' ),
+					'message' => __( 'Field membership_ids is required.', 'user-registration' ),
 				),
 				422
 			);
@@ -322,13 +322,13 @@ class AJAX {
 		if ( $deleted ) {
 			wp_send_json_success(
 				array(
-					'message' => esc_html__( 'Memberships deleted successfully.', 'user-registration-membership' ),
+					'message' => esc_html__( 'Memberships deleted successfully.', 'user-registration' ),
 				)
 			);
 		}
 		wp_send_json_error(
 			array(
-				'message' => esc_html__( 'Sorry! There was an unexpected error while deleting the memberships.', 'user-registration-membership' ),
+				'message' => esc_html__( 'Sorry! There was an unexpected error while deleting the memberships.', 'user-registration' ),
 			)
 		);
 	}
@@ -342,7 +342,7 @@ class AJAX {
 		if ( ! current_user_can( 'delete_users' ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Permission not allowed.', 'user-registration-membership' ),
+					'message' => __( 'Permission not allowed.', 'user-registration' ),
 				),
 				403
 			);
@@ -351,7 +351,7 @@ class AJAX {
 		if ( ! isset( $_POST ) && ! isset( $_POST['members_ids'] ) && ! empty( $_POST['members_ids'] ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Field members_ids is required.', 'user-registration-membership' ),
+					'message' => __( 'Field members_ids is required.', 'user-registration' ),
 				),
 				422
 			);
@@ -363,13 +363,13 @@ class AJAX {
 		if ( $deleted ) {
 			wp_send_json_success(
 				array(
-					'message' => esc_html__( 'Members deleted successfully.', 'user-registration-membership' ),
+					'message' => esc_html__( 'Members deleted successfully.', 'user-registration' ),
 				)
 			);
 		}
 		wp_send_json_error(
 			array(
-				'message' => esc_html__( 'Sorry! There was an unexpected error while deleting the selected members.', 'user-registration-membership' ),
+				'message' => esc_html__( 'Sorry! There was an unexpected error while deleting the selected members.', 'user-registration' ),
 			)
 		);
 	}
@@ -384,7 +384,7 @@ class AJAX {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Sorry, You do not have permission to edit membership', 'user-registration-membership' ),
+					'message' => __( 'Sorry, You do not have permission to edit membership', 'user-registration' ),
 				)
 			);
 		}
@@ -401,13 +401,13 @@ class AJAX {
 			wp_send_json_success(
 				array(
 					'membership_id' => $updated_ID,
-					'message'       => esc_html__( 'Successfully updated the membership status . ', 'user-registration-membership' ),
+					'message'       => esc_html__( 'Successfully updated the membership status . ', 'user-registration' ),
 				)
 			);
 		} else {
 			wp_send_json_error(
 				array(
-					'message' => esc_html__( 'Sorry! There was an unexpected error while saving the membership data . ', 'user-registration-membership' ),
+					'message' => esc_html__( 'Sorry! There was an unexpected error while saving the membership data . ', 'user-registration' ),
 				)
 			);
 		}
@@ -423,7 +423,7 @@ class AJAX {
 		if ( ! current_user_can( 'add_users' ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Sorry, You do not have permission to create users', 'user-registration-membership' ),
+					'message' => __( 'Sorry, You do not have permission to create users', 'user-registration' ),
 				)
 			);
 		}
@@ -437,11 +437,11 @@ class AJAX {
 			wp_send_json_success(
 				array(
 					'member_id' => $response['member_id'],
-					'message'   => esc_html__( 'New member has been successfully created. ', 'user-registration-membership' ),
+					'message'   => esc_html__( 'New member has been successfully created. ', 'user-registration' ),
 				)
 			);
 		} else {
-			$message = $response['message'] ?? esc_html__( 'Sorry! There was an unexpected error while saving the members data . ', 'user-registration-membership' );
+			$message = $response['message'] ?? esc_html__( 'Sorry! There was an unexpected error while saving the members data . ', 'user-registration' );
 			wp_send_json_error(
 				array(
 					'message' => $message,
@@ -486,7 +486,7 @@ class AJAX {
 		if ( empty( $_POST['member_id'] ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Field member_id is required', 'user-registration-membership' ),
+					'message' => __( 'Field member_id is required', 'user-registration' ),
 				)
 			);
 		}
@@ -559,7 +559,7 @@ class AJAX {
 				)
 			);
 		} else {
-			$message = $cancel_status['message'] ?? esc_html__( 'Something went wrong while cancelling your subscription. Please contact support', 'user-registration-membership' );
+			$message = $cancel_status['message'] ?? esc_html__( 'Something went wrong while cancelling your subscription. Please contact support', 'user-registration' );
 			wp_send_json_error(
 				array(
 					'message' => $message,

@@ -7,12 +7,12 @@ $username       = ( isset( $_GET['username'] ) && ! empty( $_GET['username'] ) )
 <!--order successful section-->
 <div id="order-complete-section" class="thank-you-page-container">
 	<div class="message-section">
-		<p><?php echo __( 'Thank You.', 'user-registration-membership' ); ?></p>
-		<p><?php echo __( "Hello <b><i>$username</i></b>, Your registration was completed successfully.", 'user-registration-membership' ); ?></p>
+		<p><?php echo __( 'Thank You.', 'user-registration' ); ?></p>
+		<p><?php echo __( "Hello <b><i>$username</i></b>, Your registration was completed successfully.", 'user-registration' ); ?></p>
 		<?php
 		if ( isset( $_GET['payment_type'] ) && ! empty( $_GET['payment_type'] ) && 'paid' === $_GET['payment_type'] ) :
 			?>
-			<p class="thank-you-notice warning"><?php echo __( 'For paid memberships there might be a delay of few minutes for your subscription status to be updated by the payment gateways.', 'user-registration-membership' ); ?></p>
+			<p class="thank-you-notice warning"><?php echo __( 'For paid memberships there might be a delay of few minutes for your subscription status to be updated by the payment gateways.', 'user-registration' ); ?></p>
 			<?php
 		endif;
 		?>
@@ -25,8 +25,8 @@ $username       = ( isset( $_GET['username'] ) && ! empty( $_GET['username'] ) )
 	<?php
 	if ( ! empty( $transaction_id ) ) :
 		?>
-		<p><?php echo __( 'Please use this transaction/order id for support regarding payments if needed.', 'user-registration-membership' ); ?></p>
-		<p><?php echo __("Transaction ID : ", "user-registration-membership") ?><b><i><?php echo $transaction_id; ?></i></b></p>
+		<p><?php echo __( 'Please use this transaction/order id for support regarding payments if needed.', 'user-registration' ); ?></p>
+		<p><?php echo __("Transaction ID : ", "user-registration") ?><b><i><?php echo $transaction_id; ?></i></b></p>
 		<?php
 	endif;
 	?>

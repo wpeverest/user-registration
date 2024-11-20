@@ -48,8 +48,8 @@ class ListTable extends \UR_List_Table {
 		?>
 		<div class="empty-list-table-container">
 			<img src="<?php echo $image_url; ?>" alt="">
-			<h3><?php echo _e( 'You don\'t have any Memberships yet.', 'user-registration-membership' ); ?></h3>
-			<p><?php echo __( 'Please add memberships and you are good to go.', 'user-registration-membership' ); ?></p>
+			<h3><?php echo _e( 'You don\'t have any Memberships yet.', 'user-registration' ); ?></h3>
+			<p><?php echo __( 'Please add memberships and you are good to go.', 'user-registration' ); ?></p>
 		</div>
 		<?php
 	}
@@ -62,11 +62,11 @@ class ListTable extends \UR_List_Table {
 	public function get_columns() {
 		return array(
 			'cb'              => '<input type="checkbox" />',
-			'title'           => __( 'Membership Name', 'user-registration-membership' ),
-			'membership_type' => __( 'Membership Plan Type', 'user-registration-membership' ),
-			'members'         => __( 'Members', 'user-registration-membership' ),
-			'status'          => __( 'Status', 'user-registration-membership' ),
-			'action'          => __( 'Action', 'user-registration-membership' ),
+			'title'           => __( 'Membership Name', 'user-registration' ),
+			'membership_type' => __( 'Membership Plan Type', 'user-registration' ),
+			'members'         => __( 'Members', 'user-registration' ),
+			'status'          => __( 'Status', 'user-registration' ),
+			'action'          => __( 'Action', 'user-registration' ),
 		);
 	}
 
@@ -176,11 +176,11 @@ class ListTable extends \UR_List_Table {
 					</div>
 					&nbsp | &nbsp
 					<span class="edit">
-						<a href="' . esc_url( $edit_link ) . '">' . __( 'Edit', 'user-registration-membership' ) . '</a>
+						<a href="' . esc_url( $edit_link ) . '">' . __( 'Edit', 'user-registration' ) . '</a>
 					</span>
 					&nbsp | &nbsp
 					<span class="delete">
-						<a class="delete-membership" aria-label="' . esc_attr__( 'Delete this item', 'user-registration-membership' ) . '" href="' . $delete_link . '">' . esc_html__( 'Delete', 'user-registration-membership' ) . '</a>
+						<a class="delete-membership" aria-label="' . esc_attr__( 'Delete this item', 'user-registration' ) . '" href="' . $delete_link . '">' . esc_html__( 'Delete', 'user-registration' ) . '</a>
 					</span>
 					</div>
 
@@ -199,13 +199,13 @@ class ListTable extends \UR_List_Table {
 			<div id="user-registration-list-table-page">
 				<div class="user-registration-list-table-heading">
 					<h1>
-						<?php esc_html_e( 'All Membership', 'user-registration-membership' ); ?>
+						<?php esc_html_e( 'All Membership', 'user-registration' ); ?>
 					</h1>
 					<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $this->page . '&action=add_new_membership' ) ); ?>"
 					   class="button ur-button-primary">
 						+
 						<?php
-						echo __( 'Create new Membership', 'user-registration-membership' )
+						echo __( 'Create new Membership', 'user-registration' )
 						?>
 					</a>
 				</div>

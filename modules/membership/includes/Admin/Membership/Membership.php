@@ -121,7 +121,7 @@ class Membership {
 	private function bulk_actions() {
 
 		if ( ! current_user_can( 'edit_posts' ) ) {
-			wp_die( esc_html__( 'You do not have permissions to edit user registration membership lists!', 'user-registration-membership' ) );
+			wp_die( esc_html__( 'You do not have permissions to edit user registration membership lists!', 'user-registration' ) );
 		}
 		$membership_list = array_map( 'absint', ! empty( $_REQUEST['membership'] ) ? (array) $_REQUEST['membership'] : array() );
 		$action          = isset( $_REQUEST['action'] ) ? wp_unslash( $_REQUEST['action'] ) : array();
@@ -169,7 +169,7 @@ class Membership {
 	 */
 	private function bulk_untrash( $membership_lists ) {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You do not have permissions to trash Memberships.!', 'user-registration-membership' ) );
+			wp_die( esc_html__( 'You do not have permissions to trash Memberships.!', 'user-registration' ) );
 		}
 		foreach ( $membership_lists as $membership_id ) {
 			wp_untrash_post( $membership_lists );
@@ -184,11 +184,11 @@ class Membership {
 	 */
 	private function empty_trash() {
 		if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( wp_unslash( $_REQUEST['_wpnonce'] ), 'empty_trash' ) ) {
-			wp_die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration-membership' ) );
+			wp_die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 		}
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You do not have permissions to delete Memberships!', 'user-registration-membership' ) );
+			wp_die( esc_html__( 'You do not have permissions to delete Memberships!', 'user-registration' ) );
 		}
 
 		$membership_lists = get_posts(
@@ -247,8 +247,8 @@ class Membership {
 	public function add_urm_menu() {
 		$rules_page = add_submenu_page(
 			'user-registration',
-			__( 'Membership', 'user-registration-membership' ), // page title
-			__( 'Membership', 'user-registration-membership' ), // menu title
+			__( 'Membership', 'user-registration' ), // page title
+			__( 'Membership', 'user-registration' ), // menu title
 			'edit_posts', // capability
 			'user-registration-membership', // slug
 			array(
@@ -343,7 +343,7 @@ class Membership {
 	public function localize_scripts() {
 		$membership_id      = ! empty( $_GET['post_id'] ) ? $_GET['post_id'] : null;
 		$membership_content = null;
-		$title              = esc_html__( 'Untitled', 'user-registration-membership' );
+		$title              = esc_html__( 'Untitled', 'user-registration' );
 
 		if ( $membership_id ) {
 			$rule_as_wp_post = get_post( $membership_id, ARRAY_A );
@@ -410,23 +410,23 @@ class Membership {
 	 */
 	public function get_i18_labels() {
 		return array(
-			'network_error'                                => esc_html__( 'Network error', 'user-registration-membership' ),
-			'i18n_field_is_required'                       => _x( 'field is required.', 'user registration membership', 'user-registration-membership' ),
-			'i18n_valid_url_field_validation'              => _x( 'Please enter a valid url for', 'user registration membership', 'user-registration-membership' ),
-			'i18n_valid_amount_field_validation'           => _x( 'Input Field Amount must be greater than 0.', 'user registration membership', 'user-registration-membership' ),
-			'i18n_valid_trial_period_field_validation'     => _x( 'Trial period must be less than subscription period.', 'user registration membership', 'user-registration-membership' ),
-			'i18n_error'                                   => _x( 'Error', 'user registration membership', 'user-registration-membership' ),
-			'i18n_save'                                    => _x( 'Save', 'user registration membership', 'user-registration-membership' ),
-			'i18n_prompt_title'                            => __( 'Delete Membership', 'user-registration-membership' ),
-			'i18n_prompt_bulk_subtitle'                    => __( 'Are you sure you want to delete these memberships permanently?', 'user-registration-membership' ),
-			'i18n_prompt_single_subtitle'                  => __( 'Are you sure you want to delete this membership permanently?', 'user-registration-membership' ),
-			'i18n_prompt_delete'                           => __( 'Delete', 'user-registration-membership' ),
-			'i18n_prompt_cancel'                           => __( 'Cancel', 'user-registration-membership' ),
-			'i18n_prompt_no_membership_selected'           => __( 'Please select at least one membership.', 'user-registration-membership' ),
-			'i18n_pg_validation_error'                     => __( 'Please select at least one payment gateway.', 'user-registration-membership' ),
-			'i18n_valid_min_trial_period_field_validation' => _x( 'Trial period must atleast be of 1 day.', 'user registration membership', 'user-registration-membership' ),
-			'i18n_valid_min_subs_period_field_validation'  => _x( 'Subscription period must atleast be of 1 day.', 'user registration membership', 'user-registration-membership' ),
-			'i18n_stripe_setup_error'                      => __( 'Incomplete Stripe Gateway setup.', 'user-registration-membership' ),
+			'network_error'                                => esc_html__( 'Network error', 'user-registration' ),
+			'i18n_field_is_required'                       => _x( 'field is required.', 'user registration membership', 'user-registration' ),
+			'i18n_valid_url_field_validation'              => _x( 'Please enter a valid url for', 'user registration membership', 'user-registration' ),
+			'i18n_valid_amount_field_validation'           => _x( 'Input Field Amount must be greater than 0.', 'user registration membership', 'user-registration' ),
+			'i18n_valid_trial_period_field_validation'     => _x( 'Trial period must be less than subscription period.', 'user registration membership', 'user-registration' ),
+			'i18n_error'                                   => _x( 'Error', 'user registration membership', 'user-registration' ),
+			'i18n_save'                                    => _x( 'Save', 'user registration membership', 'user-registration' ),
+			'i18n_prompt_title'                            => __( 'Delete Membership', 'user-registration' ),
+			'i18n_prompt_bulk_subtitle'                    => __( 'Are you sure you want to delete these memberships permanently?', 'user-registration' ),
+			'i18n_prompt_single_subtitle'                  => __( 'Are you sure you want to delete this membership permanently?', 'user-registration' ),
+			'i18n_prompt_delete'                           => __( 'Delete', 'user-registration' ),
+			'i18n_prompt_cancel'                           => __( 'Cancel', 'user-registration' ),
+			'i18n_prompt_no_membership_selected'           => __( 'Please select at least one membership.', 'user-registration' ),
+			'i18n_pg_validation_error'                     => __( 'Please select at least one payment gateway.', 'user-registration' ),
+			'i18n_valid_min_trial_period_field_validation' => _x( 'Trial period must atleast be of 1 day.', 'user registration membership', 'user-registration' ),
+			'i18n_valid_min_subs_period_field_validation'  => _x( 'Subscription period must atleast be of 1 day.', 'user registration membership', 'user-registration' ),
+			'i18n_stripe_setup_error'                      => __( 'Incomplete Stripe Gateway setup.', 'user-registration' ),
 		);
 	}
 }
