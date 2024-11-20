@@ -79,6 +79,8 @@ class UR_Frontend_Form_Handler {
 			)
 		);
 
+		self::$valid_form_data = apply_filters( 'user_registration_reorganize_form_data', self::$valid_form_data, $form_field_data );
+
 		self::$response_array = apply_filters( 'user_registration_response_array', self::$response_array, $form_data, $form_id );
 
 		if ( count( self::$response_array ) === 0 ) {

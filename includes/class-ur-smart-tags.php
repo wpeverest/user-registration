@@ -305,7 +305,7 @@ class UR_Smart_Tags {
 					case 'page_title':
 						$id = get_the_ID();
 						if ( empty( get_the_ID() ) && isset( $_SERVER['HTTP_REFERER'] ) ) {
-							$id = url_to_postid($_SERVER['HTTP_REFERER']);
+							$id = url_to_postid( $_SERVER['HTTP_REFERER'] );
 						}
 
 						$page_title = get_the_title( $id );
@@ -315,19 +315,19 @@ class UR_Smart_Tags {
 					case 'page_url':
 						$id = get_the_ID();
 						if ( empty( get_the_ID() ) && isset( $_SERVER['HTTP_REFERER'] ) ) {
-							$id = url_to_postid($_SERVER['HTTP_REFERER']);
-							$page_url = esc_url_raw(wp_unslash($_SERVER['HTTP_REFERER']));
+							$id       = url_to_postid( $_SERVER['HTTP_REFERER'] );
+							$page_url = esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) );
 						} else {
 							$page_url = get_permalink( $id );
 						}
 
-						$content  = str_replace( '{{' . $other_tag . '}}', $page_url, $content );
+						$content = str_replace( '{{' . $other_tag . '}}', $page_url, $content );
 						break;
 
 					case 'page_id':
 						$id = get_the_ID();
 						if ( empty( get_the_ID() ) && isset( $_SERVER['HTTP_REFERER'] ) ) {
-							$id = url_to_postid($_SERVER['HTTP_REFERER']);
+							$id = url_to_postid( $_SERVER['HTTP_REFERER'] );
 						}
 
 						$page_id = $id;
@@ -481,14 +481,15 @@ class UR_Smart_Tags {
 					case 'profile_pic_box':
 						$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
 						$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
-
+						$user_id             = ! empty( $values['user_id'] ) ? $values['user_id'] : get_current_user_id();
 						if ( is_numeric( $profile_picture_url ) ) {
 							$profile_picture_url = wp_get_attachment_url( $profile_picture_url );
 						}
 
-						$image           = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
-						$profile_pic_box = '<img class="profile-preview" alt="profile-picture" src="' . esc_url( $image ) . '" />';
-						$content         = str_replace( '{{' . $tag . '}}', wp_kses_post( $profile_pic_box ), $content );
+						$profile_picture_url = apply_filters( 'user_registration_profile_picture_url', $profile_picture_url, $user_id );
+						$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
+						$profile_pic_box     = '<img class="profile-preview" alt="profile-picture" src="' . esc_url( $image ) . '" />';
+						$content             = str_replace( '{{' . $tag . '}}', wp_kses_post( $profile_pic_box ), $content );
 						break;
 					case 'full_name':
 						$first_name = ucfirst( get_user_meta( get_current_user_id(), 'first_name', true ) );
@@ -508,8 +509,9 @@ class UR_Smart_Tags {
 						$content            = str_replace( '{{' . $tag . '}}', wp_kses_post( $edit_password_link ), $content );
 						break;
 					case 'sign_out_link':
-						$sign_out_link = '<a href="' . esc_url( ur_logout_url( ur_get_page_permalink( 'myaccount' ) ) ) . '">' . esc_html__( 'Sign out', 'user-registration' ) . '</a>';
-						$content       = str_replace( '{{' . $tag . '}}', wp_kses_post( $sign_out_link ), $content );
+						$logout_confirmation = ur_option_checked( 'user_registration_disable_logout_confirmation', false );
+						$sign_out_link       = '<a href="' . esc_url( ur_logout_url( ur_get_page_permalink( 'myaccount' ) ) ) . '" ' . ( ! $logout_confirmation ? 'class="ur-logout"' : '' ) . '>' . esc_html__( 'Sign out', 'user-registration' ) . '</a>';
+						$content             = str_replace( '{{' . $tag . '}}', wp_kses_post( $sign_out_link ), $content );
 						break;
 					case 'passwordless_login_link':
 						$passwordless_login_link = isset( $values['passwordless_login_link'] ) ? '<a href="' . esc_url( $values['passwordless_login_link'] ) . '"></a>' : '';
