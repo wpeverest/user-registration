@@ -161,7 +161,9 @@ const ModuleItem = (props) => {
 			setIsPerformingAction(false);
 		}
 
-		if (isPro) {
+		if( data.plan.includes( 'free' ) ) {
+			setModuleEnabled(true);
+		} else if (isPro ) {
 			setModuleEnabled(true);
 			if (licensePlan) {
 				const requiredPlan = licensePlan.item_plan.replace(
@@ -196,10 +198,16 @@ const ModuleItem = (props) => {
 		upgradeModalRef.moduleName = data.name;
 
 		if (!isPro) {
-			const plan_upgrade_url =
-				upgradeURL +
-				"&utm_source=dashboard-all-feature&utm_medium=dashboard-upgrade-plan";
-			window.open(plan_upgrade_url, "_blank");
+
+			if ( data.plan.includes( 'free' ) ) {
+				upgradeModalRef.enable = false;
+			} else {
+				const plan_upgrade_url =
+					upgradeURL +
+					"&utm_source=dashboard-all-feature&utm_medium=dashboard-upgrade-plan";
+				window.open(plan_upgrade_url, "_blank");
+			}
+
 		} else if (isPro && !licenseActivated) {
 			upgradeModalRef.type = "license";
 			upgradeModalRef.enable = true;

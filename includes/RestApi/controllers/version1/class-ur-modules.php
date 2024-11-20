@@ -135,9 +135,15 @@ class UR_Modules {
 			} else {
 				$feature->status = 'inactive';
 			}
-			$feature->link          = $feature->link . '&utm_campaign=' . UR()->utm_campaign;
-			$feature->type          = 'feature';
-			$feature->required_plan = __( 'Personal', 'user-registration' );
+			$feature->link = $feature->link . '&utm_campaign=' . UR()->utm_campaign;
+			$feature->type = 'feature';
+
+			if ( in_array( 'free', $feature->plan ) ) {
+				$feature->required_plan = __( 'Free', 'user-registration' );
+			} else {
+				$feature->required_plan = __( 'Personal', 'user-registration' );
+			}
+
 			$features_lists[ $key ] = $feature;
 		}
 
@@ -162,7 +168,9 @@ class UR_Modules {
 				$addon->status = 'not-installed';
 			}
 
-			if ( in_array( 'personal', $addon->plan ) ) {
+			if ( in_array( 'free', $addon->plan ) ) {
+				$addon->required_plan = __( 'Free', 'user-registration' );
+			} if ( in_array( 'personal', $addon->plan ) ) {
 				$addon->required_plan = __( 'Personal', 'user-registration' );
 			} elseif ( in_array( 'plus', $addon->plan ) ) {
 				$addon->required_plan = __( 'Plus', 'user-registration' );

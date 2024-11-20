@@ -1,6 +1,24 @@
 {
   "features": [
     {
+      "title": "Membership",
+      "slug" : "user-registration-membership",
+      "name" : "User Registration Membership",
+      "image": "extensions-json/sections/images/membership.png",
+      "excerpt": "Create custom membership plans and deliver content accordingly with User Registration’s Membership module with specific website and content access.",
+      "link": "https://docs.wpuserregistration.com/docs/user-registration-membership/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "plan" : [
+        "free",
+        "personal",
+        "plus",
+        "professional",
+        "themegrill agency"
+      ],
+      "setting_url": "admin.php?page=user-registration-membership",
+      "demo_video_url": "3T6AILWb7OI",
+      "released_date": "01/08/2024"
+    },
+    {
       "title": "SMS Integration",
       "slug" : "user-registration-sms-integration",
       "name" : "User Registration - SMS Integration",

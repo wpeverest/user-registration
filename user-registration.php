@@ -224,6 +224,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			 * Core classes.
 			 */
 			include_once UR_ABSPATH . 'includes/functions-ur-core.php';
+			include_once UR_ABSPATH . 'modules/functions-ur-modules.php';
 			include_once UR_ABSPATH . 'includes/functions-ur-form.php';
 			include_once UR_ABSPATH . 'includes/class-ur-install.php';
 			include_once UR_ABSPATH . 'includes/class-ur-post-types.php'; // Registers post types.
@@ -260,8 +261,10 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			 */
 			include_once UR_ABSPATH . 'includes/admin/class-ur-config.php';
 
-			/** include addons */
-			include_once UR_ABSPATH . 'modules/membership/user-registration-membership.php';
+			if ( ur_check_module_activation( 'membership' ) ) {
+				/** include modules */
+				include_once UR_ABSPATH . 'modules/membership/user-registration-membership.php';
+			}
 
 			/**
 			 * Elementor classes.
