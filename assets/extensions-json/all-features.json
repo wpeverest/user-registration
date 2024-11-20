@@ -19,23 +19,6 @@
       "released_date": "01/08/2024"
     },
     {
-      "title": "SMS Integration",
-      "slug" : "user-registration-sms-integration",
-      "name" : "User Registration - SMS Integration",
-      "image": "extensions-json/sections/images/sms-integration-addon.png",
-      "excerpt": "Send SMS verifications to users after each registration; registration will be automatically approved after successful verification.",
-      "link": "https://docs.wpuserregistration.com/docs/sms-notification/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
-      "released_date": "19/08/2024",
-      "plan" : [
-        "personal",
-        "plus",
-        "professional",
-        "themegrill agency"
-      ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=integration",
-      "demo_video_url": "-iUMcr03FP8"
-    },
-    {
       "title": "Payment History",
       "slug" : "user-registration-payment-history",
       "name" : "User Registration Membership - Payment History",
@@ -50,7 +33,26 @@
         "themegrill agency"
       ],
       "setting_url": "admin.php?page=member-payment-history",
-      "demo_video_url": "DuWX7i7eYsY"
+      "demo_video_url": "DuWX7i7eYsY",
+      "activation_requirements": [ "membership" ]
+    },
+    {
+      "title": "PayPal Payment",
+      "slug" : "user-registration-payments",
+      "name" : "User Registration Payments",
+      "image": "extensions-json/sections/images/payment-paypal.png",
+      "excerpt": "Want quick and secure payments during registration? User Registration has in-built support for the PayPal gateway.",
+      "link": "https://docs.wpuserregistration.com/docs/user-registration-payments-paypal/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "released_date": "14/08/2018",
+      "plan" : [
+        "personal",
+        "plus",
+        "professional",
+        "themegrill agency"
+      ],
+      "setting_url": "admin.php?page=user-registration-settings&tab=payment",
+      "demo_video_url": "RKvdEN2xGo8",
+      "activation_requirements": [ "membership", "pro" ]
     },
     {
       "title": "Coupons",
@@ -86,23 +88,6 @@
       "setting_url": "admin.php?page=user-registration-content-restriction",
       "demo_video_url": "pTGPvYvU_Ig"
     },
-    {
-      "title": "PayPal Payment",
-      "slug" : "user-registration-payments",
-      "name" : "User Registration Payments",
-      "image": "extensions-json/sections/images/payment-paypal.png",
-      "excerpt": "Want quick and secure payments during registration? User Registration has in-built support for the PayPal gateway.",
-      "link": "https://docs.wpuserregistration.com/docs/user-registration-payments-paypal/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
-      "released_date": "14/08/2018",
-      "plan" : [
-        "personal",
-        "plus",
-        "professional",
-        "themegrill agency"
-      ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=payment",
-      "demo_video_url": "RKvdEN2xGo8"
-    },
 	  {
       "title": "Frontend Listing",
       "slug" : "user-registration-frontend-listing",
@@ -119,6 +104,23 @@
       ],
       "setting_url": "admin.php?page=user-registration-frontend-list",
       "demo_video_url": "4xDCbsBZaTs"
-	  }
+	  },
+    {
+      "title": "SMS Integration",
+      "slug" : "user-registration-sms-integration",
+      "name" : "User Registration - SMS Integration",
+      "image": "extensions-json/sections/images/sms-integration-addon.png",
+      "excerpt": "Send SMS verifications to users after each registration; registration will be automatically approved after successful verification.",
+      "link": "https://docs.wpuserregistration.com/docs/sms-notification/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "released_date": "19/08/2024",
+      "plan" : [
+        "personal",
+        "plus",
+        "professional",
+        "themegrill agency"
+      ],
+      "setting_url": "admin.php?page=user-registration-settings&tab=integration",
+      "demo_video_url": "-iUMcr03FP8"
+    }
   ]
 }
