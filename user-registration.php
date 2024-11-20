@@ -261,7 +261,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			include_once UR_ABSPATH . 'includes/admin/class-ur-config.php';
 
 			/** include addons */
-			include_once UR_ABSPATH . 'addons/user-registration-membership/user-registration-membership.php';
+			include_once UR_ABSPATH . 'modules/membership/user-registration-membership.php';
 
 			/**
 			 * Elementor classes.

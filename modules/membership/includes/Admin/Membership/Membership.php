@@ -56,14 +56,15 @@ class Membership {
 	public function enqueue_scripts() {
 		global $wp_scripts;
 		$suffix = defined( 'SCRIPT_DEBUG' ) ? '' : '.min';
+
 		//consists logic to hide members from admin sidebar menu
-		wp_register_script( 'user-registration-membership-custom', UR_MEMBERSHIP_ASSETS_URL . '/js/admin/custom' . $suffix . '.js', array( 'jquery' ), '1.0.0', true );
+		wp_register_script( 'user-registration-membership-custom', UR_MEMBERSHIP_JS_ASSETS_URL . '/admin/custom' . $suffix . '.js', array( 'jquery' ), '1.0.0', true );
 		wp_enqueue_script( 'user-registration-membership-custom' );
 
 		if ( empty( $_GET['page'] ) || 'user-registration-membership' !== $_GET['page'] ) {
 			return;
 		}
-		wp_register_script( 'user-registration-membership', UR_MEMBERSHIP_ASSETS_URL . '/js/admin/user-registration-membership-admin' . $suffix . '.js', array( 'jquery' ), '1.0.0', true );
+		wp_register_script( 'user-registration-membership', UR_MEMBERSHIP_JS_ASSETS_URL . '/admin/user-registration-membership-admin' . $suffix . '.js', array( 'jquery' ), '1.0.0', true );
 		wp_register_script( 'ur-snackbar', UR()->plugin_url() . '/assets/js/ur-snackbar/ur-snackbar' . $suffix . '.js', array(), '1.0.0', true );
 		wp_enqueue_script( 'ur-snackbar' );
 		wp_enqueue_script( 'sweetalert2' );
@@ -85,9 +86,10 @@ class Membership {
 			wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), '1.0.0' );
 			wp_enqueue_style( 'ur-snackbar' );
 		}
+
 		wp_enqueue_style( 'sweetalert2' );
-		wp_register_style( 'ur-membership-admin-style', UR_MEMBERSHIP_ASSETS_URL . '/css/user-registration-membership-admin.css', array(), UR_VERSION );
-		wp_register_style( 'ur-core-builder-style', UR()->plugin_url() . '/assets/css/admin.css', array(), UR_VERSION );
+		wp_register_style( 'ur-membership-admin-style', UR_MEMBERSHIP_CSS_ASSETS_URL . '/user-registration-membership-admin.css', array(), UR_MEMBERSHIP_VERSION );
+		wp_register_style( 'ur-core-builder-style', UR()->plugin_url() . '/assets/css/admin.css', array(), UR_MEMBERSHIP_VERSION );
 		wp_enqueue_style( 'ur-core-builder-style' );
 		wp_enqueue_style( 'ur-membership-admin-style' );
 	}

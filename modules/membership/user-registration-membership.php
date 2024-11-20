@@ -18,48 +18,12 @@
  * @package User_Registration_MEMBERSHIP
  */
 
+
+if ( file_exists( UR()->plugin_path() . '/vendor/autoload.php' ) ) {
+	require_once UR()->plugin_path() . '/vendor/autoload.php';
+}
 defined( 'ABSPATH' ) || exit;
 
-if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
-	require_once __DIR__ . '/vendor/autoload.php';
-} else {
-	if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-		error_log( // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-			sprintf(
-			/* translators: 1: composer command. 2: plugin directory */
-				esc_html__( 'Your installation of the User Registration Membership plugin is incomplete. Please run %1$s within the %2$s directory.', 'user-registration-membership' ),
-				'`composer install`',
-				'`' . esc_html( str_replace( ABSPATH, '', __DIR__ ) ) . '`'
-			)
-		);
-	}
-
-	/**
-	 * Outputs an admin notice if composer install has not been ran.
-	 */
-	add_action(
-		'admin_notices',
-		function () {
-			?>
-			<div class="notice notice-error">
-				<p>
-					<?php
-					printf(
-						/* translators: 1: composer command. 2: plugin directory */
-						esc_html__( 'Your installation of the  User Registration Membership plugin is incomplete. Please run %1$s within the %2$s directory.', 'user-registration-membership' ),
-						'<code>composer install</code>',
-						'<code>' . esc_html( str_replace( ABSPATH, '', __DIR__ ) ) . '</code>'
-					);
-					?>
-				</p>
-			</div>
-			<?php
-		}
-	);
-	return;
-}
-
-use WPEverest\URMembership\Admin;
 
 if ( ! defined( 'UR_MEMBERSHIP_VERSION' ) ) {
 	define( 'UR_MEMBERSHIP_VERSION', '1.0.2' );
@@ -87,13 +51,22 @@ if ( ! defined( 'UR_MEMBERSHIP_URL' ) ) {
 
 // Define UR_MEMBERSHIP_ASSETS_URL.
 if ( ! defined( 'UR_MEMBERSHIP_ASSETS_URL' ) ) {
-	define( 'UR_MEMBERSHIP_ASSETS_URL', UR_MEMBERSHIP_URL . 'assets' );
+	define( 'UR_MEMBERSHIP_ASSETS_URL', UR()->plugin_url() . '/assets' );
 }
-
+// Define UR_MEMBERSHIP_CSS_ASSETS_URL.
+if ( ! defined( 'UR_MEMBERSHIP_CSS_ASSETS_URL' ) ) {
+	define( 'UR_MEMBERSHIP_CSS_ASSETS_URL', UR()->plugin_url() . '/assets/css/modules/membership' );
+}
+// Define UR_MEMBERSHIP_JS_ASSETS_URL.
+if ( ! defined( 'UR_MEMBERSHIP_JS_ASSETS_URL' ) ) {
+	define( 'UR_MEMBERSHIP_JS_ASSETS_URL', UR()->plugin_url() . '/assets/js/modules/membership' );
+}
 // Define UR_MEMBERSHIP_TEMPLATE_PATH.
 if ( ! defined( ' UR_MEMBERSHIP_TEMPLATE_PATH' ) ) {
 	define( 'UR_MEMBERSHIP_TEMPLATE_PATH', UR_MEMBERSHIP_DIR . 'templates' );
 }
+
+use WPEverest\URMembership\Admin;
 
 /**
  * Initialization of Membership instance.

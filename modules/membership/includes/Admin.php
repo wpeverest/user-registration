@@ -104,8 +104,6 @@ if ( ! class_exists( 'Admin' ) ) :
 		 * @since 1.0.0
 		 */
 		private function __construct() {
-			require 'Functions/CoreFunctions.php';
-
 				// Actions and Filters.
 
 				add_filter(
