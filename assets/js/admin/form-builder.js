@@ -1417,6 +1417,76 @@
 					}
 				);
 
+				// Validate min/max advance settings in form builder.
+				$.each($('.ur-advance-setting'), function(index, element) {
+					var maxLength = $(element)
+						.find('input[data-advance-field="limit_length"]');
+					var minLength = $(element)
+						.find('input[data-advance-field="minimum_length"]');
+
+					var generalSettingWrapper = $(element)
+						.closest(".ur-advance-setting-block")
+						.prevAll(".ur-general-setting-block")
+						.first();
+					var fieldName = generalSettingWrapper
+						.find('.ur-general-setting.ur-general-setting-label input[name="ur_general_setting[label]"]')
+						.val();
+
+					if (minLength.is(':checked')) {
+						var minLengthCount = $(element)
+							.next(".ur-advance-minimum_length_limit_count")
+							.find('input[data-advance-field="minimum_length_limit_count"]')
+							.val();
+
+						if (minLengthCount === '' || isNaN(minLengthCount) || parseInt(minLengthCount, 10) < 1) {
+							response.validation_status = false;
+							response.message = 'Invalid minimum length count for' + ' ' + fieldName ;
+						}
+					}
+
+					if (maxLength.is(':checked')) {
+						var maxLengthCount = $(element)
+							.next(".ur-advance-limit_length_limit_count")
+							.find('input[data-advance-field="limit_length_limit_count"]')
+							.val();
+
+						if (maxLengthCount === '' || isNaN(maxLengthCount) || parseInt(maxLengthCount, 10) < 1) {
+							response.validation_status = false;
+							response.message = 'Invalid maximum length count for' + ' ' + fieldName ;
+						}
+					}
+
+					if (maxLength.is(':checked') && minLength.is(':checked')) {
+						var minLengthCount = $(element)
+							.next(".ur-advance-minimum_length_limit_count")
+							.find('input[data-advance-field="minimum_length_limit_count"]')
+							.val();
+						var maxLengthCount = $(element)
+							.next(".ur-advance-limit_length_limit_count")
+							.find('input[data-advance-field="limit_length_limit_count"]')
+							.val();
+
+						var minLengthType = $(element)
+							.next(".ur-settings-minimum-length-limit-mode")
+							.find('select[data-advance-field="minimum_length_limit_mode"]')
+							.val();
+						var maxLengthType = $(element)
+							.next(".ur-advance-limit_length_limit_mode")
+							.find('select[data-advance-field="limit_length_limit_mode"]')
+							.val();
+
+						if (minLengthType === maxLengthType) {
+								if (parseInt(minLengthCount, 10) > parseInt(maxLengthCount, 10)) {
+									response.validation_status = false;
+									response.message = 'Minimum length count should be less than maximum length count for ' + fieldName;
+								}
+							}
+
+					}
+
+
+				});
+
 				if (
 					$("#urfr_enable_verification").is(":checked") &&
 					$("#urfr_verification_type").val() === "qna"
