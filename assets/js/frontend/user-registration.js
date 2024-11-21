@@ -2361,6 +2361,16 @@
 				}
 			});
 
+				// Handel WYSIWYG field client side validation.
+				$( document ).on( 'tinymce-editor-init', function( event, editor ) {
+					var $editorContainer = $(editor.getContainer());
+					var containerId = $editorContainer.attr('id');
+					var hiddenEditor = $("#"+containerId).parent().parent().parent().find("[data-label = 'WYSIWYG']");
+					editor.on('keyup', function(e) {
+						hiddenEditor.val(tinyMCE.activeEditor.getContent());
+					});
+				});
+
 			$(".ur-frontend-form").each(function () {
 				var $registration_form = $(this).find("form.register");
 
