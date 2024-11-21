@@ -11,7 +11,8 @@
       "includes/Functions/CoreFunctions.php"
     ],
     "psr-4": {
-      "WPEverest\\URMembership\\": "modules/membership/includes/"
+      "WPEverest\\URMembership\\": "modules/membership/includes/",
+      "WPEverest\\URMembership\\Payment\\": "modules/payment-history/"
     }
   },
   "authors": [

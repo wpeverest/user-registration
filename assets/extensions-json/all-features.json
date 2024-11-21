@@ -27,6 +27,7 @@
       "link": "https://docs.wpuserregistration.com/docs/user-registration-pro/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "released_date": "20/06/2024",
       "plan" : [
+        "free",
         "personal",
         "plus",
         "professional",
@@ -34,7 +35,7 @@
       ],
       "setting_url": "admin.php?page=member-payment-history",
       "demo_video_url": "DuWX7i7eYsY",
-      "activation_requirements": [ "membership" ]
+      "activation_requirements": [ "membership", "pro" ]
     },
     {
       "title": "PayPal Payment",

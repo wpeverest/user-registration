@@ -16,6 +16,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+	require_once __DIR__ . '/vendor/autoload.php';
+}
+
 if ( ! class_exists( 'UserRegistration' ) ) :
 
 	/**
@@ -264,6 +268,10 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			if ( ur_check_module_activation( 'membership' ) ) {
 				/** include modules */
 				include_once UR_ABSPATH . 'modules/membership/user-registration-membership.php';
+			}
+
+			if ( ur_check_module_activation( 'membership' ) || ur_check_module_activation( 'payment-history' ) ) {
+				include_once UR_ABSPATH . 'modules/payment-history/Orders.php';
 			}
 
 			/**
