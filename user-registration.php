@@ -356,7 +356,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			$locale = is_admin() && function_exists( 'get_user_locale' ) ? get_user_locale() : get_locale();
 			$locale = apply_filters( 'plugin_locale', $locale, 'user-registration' );
 
-			unload_textdomain( 'user-registration' );
+			unload_textdomain( 'user-registration', true );
 			load_textdomain( 'user-registration', WP_LANG_DIR . '/user-registration/user-registration-' . $locale . '.mo' );
 			load_plugin_textdomain( 'user-registration', false, plugin_basename( __DIR__ ) . '/languages' );
 		}
