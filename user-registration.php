@@ -3,7 +3,7 @@
  * Plugin Name: User Registration
  * Plugin URI: https://wpuserregistration.com/
  * Description: Drag and Drop user registration form and login form builder.
- * Version: 3.3.5.1
+ * Version: 3.3.5.2
  * Author: WPEverest
  * Author URI: https://wpuserregistration.com
  * Text Domain: user-registration
@@ -31,7 +31,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '3.3.5.1';
+		public $version = '3.3.5.2';
 
 		/**
 		 * Session instance.
@@ -436,7 +436,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		/**
 		 * Filter for _doing_it_wrong() calls.
 		 *
-		 * @since 3.5.5.2
+		 * @since 3.3.5.2
 		 *
 		 * @param bool|mixed $trigger       Whether to trigger the error for _doing_it_wrong() calls. Default true.
 		 * @param string     $function_name The function that was called.

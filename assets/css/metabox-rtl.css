@@ -1,1 +1,130 @@
-#urcr-meta-box .select2-container,#user_registration_frontend_listing_filter .select2-container,#user_registration_frontend_listing_general .select2-container,#user_registration_frontend_listing_pagination .select2-container,#user_registration_frontend_listing_search .select2-container,#user_registration_frontend_listing_shortcode .select2-container,#user_registration_frontend_listing_view_profile .select2-container{width:100%!important}#urcr-meta-box .select2-container .select2-selection--multiple,#user_registration_frontend_listing_filter .select2-container .select2-selection--multiple,#user_registration_frontend_listing_general .select2-container .select2-selection--multiple,#user_registration_frontend_listing_pagination .select2-container .select2-selection--multiple,#user_registration_frontend_listing_search .select2-container .select2-selection--multiple,#user_registration_frontend_listing_shortcode .select2-container .select2-selection--multiple,#user_registration_frontend_listing_view_profile .select2-container .select2-selection--multiple{border-color:#dee0e9!important}#urcr-meta-box .meta-box-sortables input[type=email],#urcr-meta-box .meta-box-sortables input[type=text],#urcr-meta-box .meta-box-sortables select,#user_registration_frontend_listing_filter .meta-box-sortables input[type=email],#user_registration_frontend_listing_filter .meta-box-sortables input[type=text],#user_registration_frontend_listing_filter .meta-box-sortables select,#user_registration_frontend_listing_general .meta-box-sortables input[type=email],#user_registration_frontend_listing_general .meta-box-sortables input[type=text],#user_registration_frontend_listing_general .meta-box-sortables select,#user_registration_frontend_listing_pagination .meta-box-sortables input[type=email],#user_registration_frontend_listing_pagination .meta-box-sortables input[type=text],#user_registration_frontend_listing_pagination .meta-box-sortables select,#user_registration_frontend_listing_search .meta-box-sortables input[type=email],#user_registration_frontend_listing_search .meta-box-sortables input[type=text],#user_registration_frontend_listing_search .meta-box-sortables select,#user_registration_frontend_listing_shortcode .meta-box-sortables input[type=email],#user_registration_frontend_listing_shortcode .meta-box-sortables input[type=text],#user_registration_frontend_listing_shortcode .meta-box-sortables select,#user_registration_frontend_listing_view_profile .meta-box-sortables input[type=email],#user_registration_frontend_listing_view_profile .meta-box-sortables input[type=text],#user_registration_frontend_listing_view_profile .meta-box-sortables select{width:100%}#urcr-meta-box .meta-box-sortables input,#urcr-meta-box .meta-box-sortables select,#user_registration_frontend_listing_filter .meta-box-sortables input,#user_registration_frontend_listing_filter .meta-box-sortables select,#user_registration_frontend_listing_general .meta-box-sortables input,#user_registration_frontend_listing_general .meta-box-sortables select,#user_registration_frontend_listing_pagination .meta-box-sortables input,#user_registration_frontend_listing_pagination .meta-box-sortables select,#user_registration_frontend_listing_search .meta-box-sortables input,#user_registration_frontend_listing_search .meta-box-sortables select,#user_registration_frontend_listing_shortcode .meta-box-sortables input,#user_registration_frontend_listing_shortcode .meta-box-sortables select,#user_registration_frontend_listing_view_profile .meta-box-sortables input,#user_registration_frontend_listing_view_profile .meta-box-sortables select{border-color:#dee0e9}#urcr-meta-box p.description,#user_registration_frontend_listing_filter p.description,#user_registration_frontend_listing_general p.description,#user_registration_frontend_listing_pagination p.description,#user_registration_frontend_listing_search p.description,#user_registration_frontend_listing_shortcode p.description,#user_registration_frontend_listing_view_profile p.description{color:grey;font-style:italic;font-size:12px}#urcr-meta-box .ur-metabox-field-row,#user_registration_frontend_listing_filter .ur-metabox-field-row,#user_registration_frontend_listing_general .ur-metabox-field-row,#user_registration_frontend_listing_pagination .ur-metabox-field-row,#user_registration_frontend_listing_search .ur-metabox-field-row,#user_registration_frontend_listing_shortcode .ur-metabox-field-row,#user_registration_frontend_listing_view_profile .ur-metabox-field-row{display:flex;flex-wrap:nowrap;padding:15px 0 15px 0;color:#1d2327}#urcr-meta-box .ur-metabox-field-row .ur-metabox-field-label,#user_registration_frontend_listing_filter .ur-metabox-field-row .ur-metabox-field-label,#user_registration_frontend_listing_general .ur-metabox-field-row .ur-metabox-field-label,#user_registration_frontend_listing_pagination .ur-metabox-field-row .ur-metabox-field-label,#user_registration_frontend_listing_search .ur-metabox-field-row .ur-metabox-field-label,#user_registration_frontend_listing_shortcode .ur-metabox-field-row .ur-metabox-field-label,#user_registration_frontend_listing_view_profile .ur-metabox-field-row .ur-metabox-field-label{flex:0 0 35%}#urcr-meta-box .ur-metabox-field-row .ur-metabox-field-label label,#user_registration_frontend_listing_filter .ur-metabox-field-row .ur-metabox-field-label label,#user_registration_frontend_listing_general .ur-metabox-field-row .ur-metabox-field-label label,#user_registration_frontend_listing_pagination .ur-metabox-field-row .ur-metabox-field-label label,#user_registration_frontend_listing_search .ur-metabox-field-row .ur-metabox-field-label label,#user_registration_frontend_listing_shortcode .ur-metabox-field-row .ur-metabox-field-label label,#user_registration_frontend_listing_view_profile .ur-metabox-field-row .ur-metabox-field-label label{font-weight:600}@media (max-width:767px){#urcr-meta-box .ur-metabox-field-row .ur-metabox-field-label,#user_registration_frontend_listing_filter .ur-metabox-field-row .ur-metabox-field-label,#user_registration_frontend_listing_general .ur-metabox-field-row .ur-metabox-field-label,#user_registration_frontend_listing_pagination .ur-metabox-field-row .ur-metabox-field-label,#user_registration_frontend_listing_search .ur-metabox-field-row .ur-metabox-field-label,#user_registration_frontend_listing_shortcode .ur-metabox-field-row .ur-metabox-field-label,#user_registration_frontend_listing_view_profile .ur-metabox-field-row .ur-metabox-field-label{width:100%;margin-bottom:10px}}#urcr-meta-box .ur-metabox-field-row .ur-metabox-field-detail,#user_registration_frontend_listing_filter .ur-metabox-field-row .ur-metabox-field-detail,#user_registration_frontend_listing_general .ur-metabox-field-row .ur-metabox-field-detail,#user_registration_frontend_listing_pagination .ur-metabox-field-row .ur-metabox-field-detail,#user_registration_frontend_listing_search .ur-metabox-field-row .ur-metabox-field-detail,#user_registration_frontend_listing_shortcode .ur-metabox-field-row .ur-metabox-field-detail,#user_registration_frontend_listing_view_profile .ur-metabox-field-row .ur-metabox-field-detail{flex:0 0 65%}@media (max-width:767px){#urcr-meta-box .ur-metabox-field-row .ur-metabox-field-detail,#user_registration_frontend_listing_filter .ur-metabox-field-row .ur-metabox-field-detail,#user_registration_frontend_listing_general .ur-metabox-field-row .ur-metabox-field-detail,#user_registration_frontend_listing_pagination .ur-metabox-field-row .ur-metabox-field-detail,#user_registration_frontend_listing_search .ur-metabox-field-row .ur-metabox-field-detail,#user_registration_frontend_listing_shortcode .ur-metabox-field-row .ur-metabox-field-detail,#user_registration_frontend_listing_view_profile .ur-metabox-field-row .ur-metabox-field-detail{width:100%}}.wpb-content-layouts .icon-wpb-vc_user_registration{background-image:url('data:image/svg+xml,<svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(%23clip0_11764_6161)"><path d="M22.3883 1.71087C20.7945 2.64838 19.2945 3.86714 17.982 5.17963C16.6695 6.49215 15.4507 7.99213 14.5132 9.49215C15.1694 10.8047 15.732 12.1172 16.2007 13.5234C17.0445 11.7422 18.0757 10.1484 19.3883 8.74216V13.8047C19.3883 16.8984 17.3258 19.6172 14.3257 20.4609H14.1382C13.9507 18.0234 13.3882 15.6797 12.5445 13.4297C11.3257 10.3359 9.45067 7.5234 7.01319 5.17963C5.70068 3.86714 4.20069 2.74213 2.60693 1.71087L2.23193 1.52336V13.7109C2.23193 18.6797 5.79443 22.9922 10.7632 23.836H10.8569C11.9819 24.0235 13.1069 24.0235 14.1382 23.836H14.232C19.2007 22.9922 22.7633 18.6797 22.7633 13.7109V1.52336L22.3883 1.71087ZM5.60692 13.7109V8.74216C8.51317 12.0234 10.2945 16.0547 10.6695 20.3672C7.66947 19.5234 5.60692 16.8047 5.60692 13.7109ZM12.4507 0.0233765C11.0444 0.0233765 9.91944 1.14836 9.91944 2.55462C9.91944 3.96087 11.0444 5.08588 12.4507 5.08588C13.857 5.08588 14.9819 3.96087 14.9819 2.55462C14.9819 1.14836 13.857 0.0233765 12.4507 0.0233765Z" fill="%23475BB2"/></g><defs><clipPath id="clip0_11764_6161"><rect width="24" height="23.9532" fill="white" transform="translate(0.5 0.0233765)"/></clipPath></defs></svg>')!important}
+/**
+ * MetaBox styling begins.
+ */
+#urcr-meta-box .select2-container,
+#user_registration_frontend_listing_filter .select2-container,
+#user_registration_frontend_listing_general .select2-container,
+#user_registration_frontend_listing_search .select2-container,
+#user_registration_frontend_listing_view_profile .select2-container,
+#user_registration_frontend_listing_pagination .select2-container,
+#user_registration_frontend_listing_shortcode .select2-container {
+  width: 100% !important; }
+  #urcr-meta-box .select2-container .select2-selection--multiple,
+  #user_registration_frontend_listing_filter .select2-container .select2-selection--multiple,
+  #user_registration_frontend_listing_general .select2-container .select2-selection--multiple,
+  #user_registration_frontend_listing_search .select2-container .select2-selection--multiple,
+  #user_registration_frontend_listing_view_profile .select2-container .select2-selection--multiple,
+  #user_registration_frontend_listing_pagination .select2-container .select2-selection--multiple,
+  #user_registration_frontend_listing_shortcode .select2-container .select2-selection--multiple {
+    border-color: #dee0e9 !important; }
+
+#urcr-meta-box .meta-box-sortables select,
+#urcr-meta-box .meta-box-sortables input[type="text"],
+#urcr-meta-box .meta-box-sortables input[type="email"],
+#user_registration_frontend_listing_filter .meta-box-sortables select,
+#user_registration_frontend_listing_filter .meta-box-sortables input[type="text"],
+#user_registration_frontend_listing_filter .meta-box-sortables input[type="email"],
+#user_registration_frontend_listing_general .meta-box-sortables select,
+#user_registration_frontend_listing_general .meta-box-sortables input[type="text"],
+#user_registration_frontend_listing_general .meta-box-sortables input[type="email"],
+#user_registration_frontend_listing_search .meta-box-sortables select,
+#user_registration_frontend_listing_search .meta-box-sortables input[type="text"],
+#user_registration_frontend_listing_search .meta-box-sortables input[type="email"],
+#user_registration_frontend_listing_view_profile .meta-box-sortables select,
+#user_registration_frontend_listing_view_profile .meta-box-sortables input[type="text"],
+#user_registration_frontend_listing_view_profile .meta-box-sortables input[type="email"],
+#user_registration_frontend_listing_pagination .meta-box-sortables select,
+#user_registration_frontend_listing_pagination .meta-box-sortables input[type="text"],
+#user_registration_frontend_listing_pagination .meta-box-sortables input[type="email"],
+#user_registration_frontend_listing_shortcode .meta-box-sortables select,
+#user_registration_frontend_listing_shortcode .meta-box-sortables input[type="text"],
+#user_registration_frontend_listing_shortcode .meta-box-sortables input[type="email"] {
+  width: 100%; }
+
+#urcr-meta-box .meta-box-sortables select,
+#urcr-meta-box .meta-box-sortables input,
+#user_registration_frontend_listing_filter .meta-box-sortables select,
+#user_registration_frontend_listing_filter .meta-box-sortables input,
+#user_registration_frontend_listing_general .meta-box-sortables select,
+#user_registration_frontend_listing_general .meta-box-sortables input,
+#user_registration_frontend_listing_search .meta-box-sortables select,
+#user_registration_frontend_listing_search .meta-box-sortables input,
+#user_registration_frontend_listing_view_profile .meta-box-sortables select,
+#user_registration_frontend_listing_view_profile .meta-box-sortables input,
+#user_registration_frontend_listing_pagination .meta-box-sortables select,
+#user_registration_frontend_listing_pagination .meta-box-sortables input,
+#user_registration_frontend_listing_shortcode .meta-box-sortables select,
+#user_registration_frontend_listing_shortcode .meta-box-sortables input {
+  border-color: #dee0e9; }
+
+#urcr-meta-box p.description,
+#user_registration_frontend_listing_filter p.description,
+#user_registration_frontend_listing_general p.description,
+#user_registration_frontend_listing_search p.description,
+#user_registration_frontend_listing_view_profile p.description,
+#user_registration_frontend_listing_pagination p.description,
+#user_registration_frontend_listing_shortcode p.description {
+  color: grey;
+  font-style: italic;
+  font-size: 12px; }
+
+#urcr-meta-box .ur-metabox-field-row,
+#user_registration_frontend_listing_filter .ur-metabox-field-row,
+#user_registration_frontend_listing_general .ur-metabox-field-row,
+#user_registration_frontend_listing_search .ur-metabox-field-row,
+#user_registration_frontend_listing_view_profile .ur-metabox-field-row,
+#user_registration_frontend_listing_pagination .ur-metabox-field-row,
+#user_registration_frontend_listing_shortcode .ur-metabox-field-row {
+  display: flex;
+  flex-wrap: nowrap;
+  padding: 15px 0px 15px 0px;
+  color: #1d2327; }
+  #urcr-meta-box .ur-metabox-field-row .ur-metabox-field-label,
+  #user_registration_frontend_listing_filter .ur-metabox-field-row .ur-metabox-field-label,
+  #user_registration_frontend_listing_general .ur-metabox-field-row .ur-metabox-field-label,
+  #user_registration_frontend_listing_search .ur-metabox-field-row .ur-metabox-field-label,
+  #user_registration_frontend_listing_view_profile .ur-metabox-field-row .ur-metabox-field-label,
+  #user_registration_frontend_listing_pagination .ur-metabox-field-row .ur-metabox-field-label,
+  #user_registration_frontend_listing_shortcode .ur-metabox-field-row .ur-metabox-field-label {
+    flex: 0 0 35%; }
+    #urcr-meta-box .ur-metabox-field-row .ur-metabox-field-label label,
+    #user_registration_frontend_listing_filter .ur-metabox-field-row .ur-metabox-field-label label,
+    #user_registration_frontend_listing_general .ur-metabox-field-row .ur-metabox-field-label label,
+    #user_registration_frontend_listing_search .ur-metabox-field-row .ur-metabox-field-label label,
+    #user_registration_frontend_listing_view_profile .ur-metabox-field-row .ur-metabox-field-label label,
+    #user_registration_frontend_listing_pagination .ur-metabox-field-row .ur-metabox-field-label label,
+    #user_registration_frontend_listing_shortcode .ur-metabox-field-row .ur-metabox-field-label label {
+      font-weight: 600; }
+    @media (max-width: 767px) {
+      #urcr-meta-box .ur-metabox-field-row .ur-metabox-field-label,
+      #user_registration_frontend_listing_filter .ur-metabox-field-row .ur-metabox-field-label,
+      #user_registration_frontend_listing_general .ur-metabox-field-row .ur-metabox-field-label,
+      #user_registration_frontend_listing_search .ur-metabox-field-row .ur-metabox-field-label,
+      #user_registration_frontend_listing_view_profile .ur-metabox-field-row .ur-metabox-field-label,
+      #user_registration_frontend_listing_pagination .ur-metabox-field-row .ur-metabox-field-label,
+      #user_registration_frontend_listing_shortcode .ur-metabox-field-row .ur-metabox-field-label {
+        width: 100%;
+        margin-bottom: 10px; } }
+  #urcr-meta-box .ur-metabox-field-row .ur-metabox-field-detail,
+  #user_registration_frontend_listing_filter .ur-metabox-field-row .ur-metabox-field-detail,
+  #user_registration_frontend_listing_general .ur-metabox-field-row .ur-metabox-field-detail,
+  #user_registration_frontend_listing_search .ur-metabox-field-row .ur-metabox-field-detail,
+  #user_registration_frontend_listing_view_profile .ur-metabox-field-row .ur-metabox-field-detail,
+  #user_registration_frontend_listing_pagination .ur-metabox-field-row .ur-metabox-field-detail,
+  #user_registration_frontend_listing_shortcode .ur-metabox-field-row .ur-metabox-field-detail {
+    flex: 0 0 65%; }
+    @media (max-width: 767px) {
+      #urcr-meta-box .ur-metabox-field-row .ur-metabox-field-detail,
+      #user_registration_frontend_listing_filter .ur-metabox-field-row .ur-metabox-field-detail,
+      #user_registration_frontend_listing_general .ur-metabox-field-row .ur-metabox-field-detail,
+      #user_registration_frontend_listing_search .ur-metabox-field-row .ur-metabox-field-detail,
+      #user_registration_frontend_listing_view_profile .ur-metabox-field-row .ur-metabox-field-detail,
+      #user_registration_frontend_listing_pagination .ur-metabox-field-row .ur-metabox-field-detail,
+      #user_registration_frontend_listing_shortcode .ur-metabox-field-row .ur-metabox-field-detail {
+        width: 100%; } }
+
+/**
+ * MetaBox styling ends.
+ */
+.wpb-content-layouts .icon-wpb-vc_user_registration {
+  background-image: url('data:image/svg+xml,<svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(%23clip0_11764_6161)"><path d="M22.3883 1.71087C20.7945 2.64838 19.2945 3.86714 17.982 5.17963C16.6695 6.49215 15.4507 7.99213 14.5132 9.49215C15.1694 10.8047 15.732 12.1172 16.2007 13.5234C17.0445 11.7422 18.0757 10.1484 19.3883 8.74216V13.8047C19.3883 16.8984 17.3258 19.6172 14.3257 20.4609H14.1382C13.9507 18.0234 13.3882 15.6797 12.5445 13.4297C11.3257 10.3359 9.45067 7.5234 7.01319 5.17963C5.70068 3.86714 4.20069 2.74213 2.60693 1.71087L2.23193 1.52336V13.7109C2.23193 18.6797 5.79443 22.9922 10.7632 23.836H10.8569C11.9819 24.0235 13.1069 24.0235 14.1382 23.836H14.232C19.2007 22.9922 22.7633 18.6797 22.7633 13.7109V1.52336L22.3883 1.71087ZM5.60692 13.7109V8.74216C8.51317 12.0234 10.2945 16.0547 10.6695 20.3672C7.66947 19.5234 5.60692 16.8047 5.60692 13.7109ZM12.4507 0.0233765C11.0444 0.0233765 9.91944 1.14836 9.91944 2.55462C9.91944 3.96087 11.0444 5.08588 12.4507 5.08588C13.857 5.08588 14.9819 3.96087 14.9819 2.55462C14.9819 1.14836 13.857 0.0233765 12.4507 0.0233765Z" fill="%23475BB2"/></g><defs><clipPath id="clip0_11764_6161"><rect width="24" height="23.9532" fill="white" transform="translate(0.5 0.0233765)"/></clipPath></defs></svg>') !important; }
