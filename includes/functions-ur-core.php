@@ -6954,3 +6954,103 @@ if ( ! function_exists( 'ur_get_exclude_text_format_settings' ) ) {
 		return $settings;
 	}
 }
+if ( ! function_exists( 'ur_check_url_is_image' ) ) {
+
+	/**
+	 * ur_check_is_image
+	 *
+	 * @param string $url
+	 *
+	 * @return bool
+	 */
+	function ur_check_url_is_image( $url ) {
+		$ch = curl_init();
+		$response    = curl_exec( $ch );
+		$headers = array(
+			'Accept: application/json',
+			'Content-Type: application/json',
+
+		);
+		curl_setopt( $ch, CURLOPT_URL, $url );
+
+		curl_setopt( $ch, CURLOPT_NOBODY, true );
+		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+		curl_setopt( $ch, CURLOPT_HEADER, true );
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+		curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, true );
+		curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, 'GET' );
+
+		$response = curl_exec( $ch );
+
+		if ( false === $response ) {
+			curl_close( $ch );
+			return false;
+		}
+
+		$contentType = curl_getinfo( $ch, CURLINFO_CONTENT_TYPE );
+		return str_contains( $contentType, 'image/' );
+	}
+
+
+}
+
+if ( ! function_exists( 'ur_get_user_registered_source' ) ) {
+	/**
+	 * Returns the user registered source/form name.
+	 *
+	 * @param [int] $user_id User Id.
+	 *
+	 * @since 4.1
+	 *
+	 * @return string
+	 */
+	function ur_get_user_registered_source( $user_id ) {
+		$user_metas = get_user_meta( $user_id );
+		if ( isset( $user_metas['user_registration_social_connect_bypass_current_password'] ) ) {
+			$networks = array( 'facebook', 'linkedin', 'google', 'twitter' );
+
+			foreach ( $networks as $network ) {
+
+				if ( isset( $user_metas[ 'user_registration_social_connect_' . $network . '_username' ] ) ) {
+					return ucfirst( $network );
+				}
+			}
+		} elseif ( isset( $user_metas['ur_form_id'] ) ) {
+			$form_post = get_post( $user_metas['ur_form_id'][0] );
+
+			if ( ! empty( $form_post ) ) {
+				return $form_post->post_title;
+			} else {
+				return '-';
+			}
+		}
+
+		return '';
+	}
+}
+
+if ( ! function_exists( 'ur_return_social_profile_pic' ) ) {
+
+	/**
+	 * ur_return_social_profile_pic
+	 *
+	 * @param $url
+	 * @param $user_id
+	 *
+	 * @return mixed
+	 */
+	function ur_return_social_profile_pic( $url, $user_id ) {
+		$source = ur_get_user_registered_source( $user_id );
+
+		$user_meta = get_user_meta( $user_id, 'user_registration_social_connect_' . strtolower( $source ) . '_profile_pic', true );
+
+		if ( ! empty( $user_meta ) && ur_check_url_is_image($user_meta)) {
+			return $user_meta;
+		}
+
+		return $url;
+	}
+}
+
+add_filter( 'user_registration_profile_picture_url',  'ur_return_social_profile_pic' , 10, 2 );
