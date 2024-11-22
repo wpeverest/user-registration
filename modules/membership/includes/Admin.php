@@ -9,6 +9,7 @@
 namespace WPEverest\URMembership;
 
 use WPEverest\URMembership\Admin\Database\Database;
+use WPEverest\URMembership\Admin\Forms\FormFields;
 use WPEverest\URMembership\Admin\Members\Members;
 use WPEverest\URMembership\Admin\Membership\Membership;
 use WPEverest\URMembership\Admin\Services\PaymentGatewaysWebhookActions;
@@ -104,25 +105,25 @@ if ( ! class_exists( 'Admin' ) ) :
 		 * @since 1.0.0
 		 */
 		private function __construct() {
-				// Actions and Filters.
+			// Actions and Filters.
 
-				add_filter(
-					'plugin_action_links_' . plugin_basename( UR_MEMBERSHIP_PLUGIN_FILE ),
-					array(
-						$this,
-						'plugin_action_links',
-					)
-				);
-				add_action( 'init', array( $this, 'includes' ) );
-				add_action( 'init', array( $this, 'create_post_type' ), 0 );
-				add_action( 'init', array( 'WPEverest\URMembership\ShortCodes', 'init' ) );
-				add_action( 'init', array( $this, 'add_membership_options' ) );
-				add_action( 'plugins_loaded', array( $this, 'include_membership_payment_files' ) );
-				add_filter( 'user_registration_get_settings_pages', array( $this, 'add_membership_settings_page' ), 10, 1 );
+			add_filter(
+				'plugin_action_links_' . plugin_basename( UR_MEMBERSHIP_PLUGIN_FILE ),
+				array(
+					$this,
+					'plugin_action_links',
+				)
+			);
+			add_action( 'init', array( $this, 'includes' ) );
+			add_action( 'init', array( $this, 'create_post_type' ), 0 );
+			add_action( 'init', array( 'WPEverest\URMembership\ShortCodes', 'init' ) );
+			add_action( 'init', array( $this, 'add_membership_options' ) );
+			add_action( 'plugins_loaded', array( $this, 'include_membership_payment_files' ) );
+			add_filter( 'user_registration_get_settings_pages', array( $this, 'add_membership_settings_page' ), 10, 1 );
 
-				register_deactivation_hook( UR_PLUGIN_FILE, array( $this, 'on_deactivation' ) );
+			register_deactivation_hook( UR_PLUGIN_FILE, array( $this, 'on_deactivation' ) );
 
-				register_activation_hook( UR_PLUGIN_FILE, array( $this, 'on_activation' ) );
+			register_activation_hook( UR_PLUGIN_FILE, array( $this, 'on_activation' ) );
 
 		}
 
@@ -134,6 +135,7 @@ if ( ! class_exists( 'Admin' ) ) :
 			if ( $this->is_admin() ) {
 				$this->admin   = new Membership();
 				$this->members = new Members();
+				new FormFields();
 			} else {
 				// require file.
 				$this->frontend = new Frontend();
@@ -178,7 +180,6 @@ if ( ! class_exists( 'Admin' ) ) :
 		}
 
 
-
 		/**
 		 * Rgister Custom Post Type.
 		 */
@@ -190,7 +191,7 @@ if ( ! class_exists( 'Admin' ) ) :
 				apply_filters(
 					'user_registration_membership_post_type',
 					array(
-						'labels'              => array(
+						'labels'            => array(
 							'name'                  => __( 'Memberships', 'user-registration' ),
 							'singular_name'         => __( 'Membership', 'user-registration' ),
 							'all_items'             => __( 'All Memberships', 'user-registration' ),
@@ -217,16 +218,16 @@ if ( ! class_exists( 'Admin' ) ) :
 							'items_list'            => __( 'Membership list', 'user-registration' ),
 
 						),
-						'show_ui'             => true,
-						'capability_type'     => 'post',
-						'map_meta_cap'        => true,
-						'show_in_menu'        => false,
-						'hierarchical'        => false,
-						'rewrite'             => false,
-						'query_var'           => false,
-						'show_in_nav_menus'   => false,
-						'show_in_admin_bar'   => false,
-						'supports'            => array( 'title' ),
+						'show_ui'           => true,
+						'capability_type'   => 'post',
+						'map_meta_cap'      => true,
+						'show_in_menu'      => false,
+						'hierarchical'      => false,
+						'rewrite'           => false,
+						'query_var'         => false,
+						'show_in_nav_menus' => false,
+						'show_in_admin_bar' => false,
+						'supports'          => array( 'title' ),
 					)
 				)
 			);
@@ -245,9 +246,9 @@ if ( ! class_exists( 'Admin' ) ) :
 			add_option(
 				'ur_membership_payment_gateways',
 				array(
-					'paypal'      => __( 'Paypal', 'user-registration' ),
-					'stripe'      => __( 'Stripe', 'user-registration' ),
-					'bank'        => __( 'Bank', 'user-registration' ),
+					'paypal' => __( 'Paypal', 'user-registration' ),
+					'stripe' => __( 'Stripe', 'user-registration' ),
+					'bank'   => __( 'Bank', 'user-registration' ),
 				)
 			);
 		}

@@ -31,7 +31,7 @@ class MembershipService {
 		if ( ! $validate_data['status'] ) {
 			return $validate_data;
 		}
-		$post_meta_data = $this->sanitize_membership_meta_data( $data['post_meta_data'] , $membership_id );
+		$post_meta_data = $this->sanitize_membership_meta_data( $data['post_meta_data'], $membership_id );
 
 		return array(
 			'post_data'      => array(
@@ -64,17 +64,17 @@ class MembershipService {
 	 *
 	 * @return array
 	 */
-	public function sanitize_membership_meta_data( $data ,$membership_id ) {
+	public function sanitize_membership_meta_data( $data, $membership_id ) {
 
 		$product_id = "";
-		$price_id = "";
-		if(! empty($membership_id)) {
-			$membership_meta = get_post_meta($membership_id,'ur_membership');
-			$membership_meta = json_decode($membership_meta[0], true);
+		$price_id   = "";
+		if ( ! empty( $membership_id ) ) {
+			$membership_meta = get_post_meta( $membership_id, 'ur_membership' );
+			$membership_meta = json_decode( $membership_meta[0], true );
 
-			if(isset($membership_meta["payment_gateways"]["stripe"]) && "on" == $membership_meta["payment_gateways"]["stripe"]["status"]) {
+			if ( isset( $membership_meta["payment_gateways"]["stripe"] ) && "on" == $membership_meta["payment_gateways"]["stripe"]["status"] ) {
 				$product_id = $membership_meta["payment_gateways"]["stripe"]["product_id"] ?? "";
-				$price_id = $membership_meta["payment_gateways"]["stripe"]["price_id"] ?? "";
+				$price_id   = $membership_meta["payment_gateways"]["stripe"]["price_id"] ?? "";
 			}
 
 		}
@@ -105,9 +105,9 @@ class MembershipService {
 				$data['payment_gateways']['bank']['status'] = sanitize_text_field( $data['payment_gateways']['bank']['status'] );
 			}
 			if ( isset( $data['payment_gateways']['stripe'] ) && 'on' === $data['payment_gateways']['stripe']['status'] ) {
-				$data['payment_gateways']['stripe']['status'] = sanitize_text_field( $data['payment_gateways']['stripe']['status'] );
+				$data['payment_gateways']['stripe']['status']     = sanitize_text_field( $data['payment_gateways']['stripe']['status'] );
 				$data['payment_gateways']['stripe']['product_id'] = sanitize_text_field( $product_id );
-				$data['payment_gateways']['stripe']['price_id'] = sanitize_text_field( $price_id );
+				$data['payment_gateways']['stripe']['price_id']   = sanitize_text_field( $price_id );
 			}
 		}
 
@@ -149,7 +149,7 @@ class MembershipService {
 
 	public function get_membership_details( $membership_id ) {
 		$membership_repository = new MembershipRepository();
-		$membership                     = $membership_repository->get_single_membership_by_ID( $membership_id );
+		$membership            = $membership_repository->get_single_membership_by_ID( $membership_id );
 
 		return wp_unslash( json_decode( $membership['meta_value'], true ) );
 	}

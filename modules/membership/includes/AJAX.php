@@ -19,6 +19,7 @@ use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
 use WPEverest\URMembership\Admin\Repositories\SubscriptionRepository;
 use WPEverest\URMembership\Admin\Services\CouponService;
 use WPEverest\URMembership\Admin\Services\EmailService;
+use WPEverest\URMembership\Admin\Services\MembershipGroupService;
 use WPEverest\URMembership\Admin\Services\MembershipService;
 use WPEverest\URMembership\Admin\Services\PaymentService;
 use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
@@ -57,6 +58,7 @@ class AJAX {
 			'register_member'            => true,
 			'validate_coupon'            => true,
 			'cancel_subscription'        => false,
+			'get_group_memberships'      => false,
 		);
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
 			add_action( 'wp_ajax_user_registration_membership_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -174,7 +176,7 @@ class AJAX {
 				$stripe_service        = new StripeService();
 				$data["membership_id"] = $new_membership_ID;
 
-				$stripe_price_and_product = $stripe_service->create_stripe_product_and_price( $data["post_data"], $meta_data , false);
+				$stripe_price_and_product = $stripe_service->create_stripe_product_and_price( $data["post_data"], $meta_data, false );
 
 				if ( ! empty( $stripe_price_and_product ) ) {
 					$meta_data["payment_gateways"]["stripe"]["product_id"] = $stripe_price_and_product->product;
@@ -252,14 +254,14 @@ class AJAX {
 
 
 				//check if any significant value has been changed
-				$should_create_new_product = ($old_membership_data['amount'] !== $meta_data['amount'] || $old_membership_data["subscription"]["value"] !== $meta_data["subscription"]["value"] || $old_membership_data["subscription"]["duration"] !== $meta_data["subscription"]["duration"]);
+				$should_create_new_product = ( $old_membership_data['amount'] !== $meta_data['amount'] || $old_membership_data["subscription"]["value"] !== $meta_data["subscription"]["value"] || $old_membership_data["subscription"]["duration"] !== $meta_data["subscription"]["duration"] );
 
 				$meta_data = json_decode( $data["post_meta_data"]["meta_value"], true );
 
 				if ( $should_create_new_product || empty( $meta_data["payment_gateways"]["stripe"]["product_id"] ) ) {
 					$stripe_service           = new StripeService();
 					$data["membership_id"]    = $updated_ID;
-					$stripe_price_and_product = $stripe_service->create_stripe_product_and_price( $data["post_data"], $meta_data , $should_create_new_product );
+					$stripe_price_and_product = $stripe_service->create_stripe_product_and_price( $data["post_data"], $meta_data, $should_create_new_product );
 
 					if ( ! empty( $stripe_price_and_product ) ) {
 						$meta_data["payment_gateways"]["stripe"]["product_id"] = $stripe_price_and_product->product;
@@ -537,6 +539,7 @@ class AJAX {
 		$security = isset( $_POST['security'] ) ? sanitize_text_field( wp_unslash( $_POST['security'] ) ) : '';
 		if ( '' === $security || ! wp_verify_nonce( $security, 'ur_members_frontend' ) ) {
 			wp_send_json_error( 'Nonce verification failed' );
+
 			return;
 		}
 
@@ -571,5 +574,27 @@ class AJAX {
 
 	}
 
+	public static function get_group_memberships() {
+		ur_membership_verify_nonce( 'ur_membership_group' );
+		if ( ! isset( $_POST['group_id'] ) ) {
+			wp_send_json_error( __( 'Wrong request.', 'user-registration' ) );
+		}
+		$group_id           = absint( $_POST['group_id'] );
+		$membership_group_service = new MembershipGroupService();
+		$membership_plans   = $membership_group_service->get_group_memberships( $group_id );
+
+		if(empty($membership_plans)) {
+			wp_send_json_error(
+				array(
+					'message' => __('No membership is available for the selected group.', 'user-registration'),
+				)
+			);
+		}
+		wp_send_json_success(
+			array(
+				'plans' => $membership_plans,
+			)
+		);
+	}
 
 }

@@ -119,8 +119,8 @@ if ( ! function_exists( 'ur_membership_get_all_roles' ) ) {
 	 *
 	 * This function checks if the WP_Roles class exists and returns an array containing all the roles and their names.
 	 *
-	 * @global WP_Roles $wp_roles The global WP_Roles object.
 	 * @return array An associative array where the keys are the role keys and the values are the role names.
+	 * @global WP_Roles $wp_roles The global WP_Roles object.
 	 */
 	function ur_membership_get_all_roles() {
 		global $wp_roles; // phpcs:ignore
@@ -153,8 +153,8 @@ if ( ! function_exists( 'ur_membership_remove_unrelated_notices' ) ) {
 	 * This function iterates over the 'user_admin_notices', 'admin_notices', and 'all_admin_notices'
 	 * hooks and removes all notices that are not related to the 'user_registration_' plugin.
 	 *
-	 * @global array $wp_filter The global WordPress filter
 	 * @return void
+	 * @global array $wp_filter The global WordPress filter
 	 */
 	function ur_membership_remove_unrelated_notices() {
 		global $wp_filter;
@@ -181,8 +181,9 @@ if ( ! function_exists( 'ur_membership_verify_nonce' ) ) {
 	 * If the nonce is invalid, an error response is sent back to the client.
 	 *
 	 * @param string $nonce The nonce value to verify.
-	 * @throws WP_Error If the nonce is invalid.
+	 *
 	 * @return void
+	 * @throws WP_Error If the nonce is invalid.
 	 */
 	function ur_membership_verify_nonce( $nonce ) {
 		if ( ! check_ajax_referer( $nonce, 'security' ) ) {
@@ -413,7 +414,7 @@ if ( ! function_exists( 'ur_membership_redirect_to_thank_you_page' ) ) {
 	 *
 	 * @return void
 	 */
-	 function ur_membership_redirect_to_thank_you_page( $member_id, $member_order ) {
+	function ur_membership_redirect_to_thank_you_page( $member_id, $member_order ) {
 
 		$thank_you_page_id = get_option( 'user_registration_thank_you_page_id' );
 		$thank_you_page    = get_permalink( $thank_you_page_id );
@@ -429,6 +430,53 @@ if ( ! function_exists( 'ur_membership_redirect_to_thank_you_page' ) ) {
 		exit;
 	}
 }
+add_filter( 'build_membership_list_frontend', 'build_membership_list_frontend', 10, 1 );
+if ( ! function_exists( 'build_membership_list_frontend' ) ) {
+	/**
+	 * Builds the frontend membership list.
+	 *
+	 * This function takes an array of memberships and transforms it into a new array
+	 * with specific properties for each membership. The properties include:
+	 * - ID: The ID of the membership.
+	 * - title: The title of the membership.
+	 * - type: The type of the membership.
+	 * - amount: The amount of the membership.
+	 * - period: The period of the membership, calculated based on the type.
+	 * - active_payment_gateways: An array of active payment gateways for the membership.
+	 *
+	 * @param array $memberships The array of memberships.
+	 *
+	 * @return array The transformed membership list.
+	 */
+	function build_membership_list_frontend( $memberships ) {
+		$currency                = get_option( 'user_registration_payment_currency', 'USD' );
+		$currencies              = ur_membership_get_currencies();
+		$symbol                  = $currencies[ $currency ]['symbol'];
+		$new_mem                 = array();
+		$active_payment_gateways = array();
+		foreach ( $memberships as $k => $membership ) {
+			$new_mem[ $k ] = array(
+				'ID'                => $membership['ID'],
+				'title'             => $membership['post_title'],
+				'type'              => $membership['meta_value']['type'],
+				'amount'            => $membership['meta_value']['amount'] ?? 0,
+				'currency_symbol'   => $symbol,
+				'calculated_amount' => 'free' === $membership['meta_value']['type'] ? 0 : round( $membership['meta_value']['amount'] ),
+				'period'            => 'free' === $membership['meta_value']['type'] ? __( 'Free', 'user-registration' ) : ( 'subscription' === $membership['meta_value']['type'] ? $symbol . $membership['meta_value']['amount'] . ' / ' . number_format( $membership['meta_value']['subscription']['value'] ) . ' ' . ucfirst( $membership['meta_value']['subscription']['duration'] ) . ( $membership['meta_value']['subscription']['value'] > 1 ? '\'s' : '' ) : $symbol . round( $membership['meta_value']['amount'] ) . ' ' . __( 'Lifetime', 'user-registration' ) ),
+			);
+			if ( isset( $membership['meta_value']['payment_gateways'] ) ) {
+				foreach ( $membership['meta_value']['payment_gateways'] as $key => $gateways ) {
+					if ( 'on' !== $gateways['status'] ) {
+						continue;
+					}
+					$active_payment_gateways[ $key ] = $gateways['status'];
+				}
 
+				$new_mem[ $k ]['active_payment_gateways'] = ( wp_unslash( wp_json_encode( $active_payment_gateways ) ) );
+			}
+			$active_payment_gateways = array();
+		}
 
-
+		return $new_mem;
+	}
+}
