@@ -318,7 +318,13 @@ function InputHandler({ setting, onBoardIconsURL }) {
 	return (
 		<Flex justify={"space-between"} align="center">
 			<Flex align="center" flex="0 0 40%">
-				<FormLabel sx={{ fontWeight: "600", fontSize: "15px" }}>
+				<FormLabel
+					sx={{
+						fontWeight: "600",
+						fontSize: "15px",
+						marginInlineEnd: "0.5rem"
+					}}
+				>
 					{setting.title}
 				</FormLabel>
 				<Tooltip
@@ -329,7 +335,7 @@ function InputHandler({ setting, onBoardIconsURL }) {
 					backgroundColor="#383838"
 				>
 					<span
-						className="dashicons dashicons-editor-help"
+						className="ur-setup-wizard-tool-tip"
 						style={{
 							color: "#BABABA",
 							marginBottom: "5px"

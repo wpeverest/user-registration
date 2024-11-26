@@ -634,6 +634,25 @@
 			color: #2D3559;
 			width: 796px;
 
+			.ur-setup-wizard-tool-tip{
+				margin-bottom: 8px !important;
+
+				&::after {
+					content: "";
+					background-image: url('../images/settings-icons/information.svg') !important;
+					background-repeat: no-repeat !important;
+					background-size: 100% !important;
+					background-position: center;
+					display: block;
+					width: 16px;
+					height: 16px;
+					cursor: pointer;
+					padding: $spacing_4px;
+					background: transparent;
+					border-radius: $border_radius_3;
+				}
+			}
+
 			&--select {
 				flex: 1 0 60%;
 

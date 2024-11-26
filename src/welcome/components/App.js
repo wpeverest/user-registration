@@ -24,7 +24,6 @@ import Header from "./common/Header";
 import InstallPage from "./screens/InstallPage";
 import RegistrationSettings from "./screens/RegistrationSettings";
 import GeneralSettings from "./screens/GeneralSettings";
-import MyAccountSettings from "./screens/MyAccountSettings";
 import LastPage from "./screens/LastPage";
 import { useStateValue } from "../../context/StateProvider";
 import { actionTypes } from "../../context/gettingStartedContext";
@@ -59,36 +58,9 @@ function App() {
 		},
 		{
 			key: "general_settings",
-			label: __("General", "user-registration"),
-			title: __("General Settings", "user-registration"),
-			description: __(
-				"Customize your general settings as per your preference.",
-				"user-registration"
-			),
+			label: __("Settings", "user-registration"),
 			isDone: false,
 			component: <GeneralSettings />
-		},
-		{
-			key: "registration_settings",
-			label: __("Registration", "user-registration"),
-			title: __("Registration Settings", "user-registration"),
-			description: __(
-				"Customize your registration settings as per your preference.",
-				"user-registration"
-			),
-			isDone: false,
-			component: <RegistrationSettings />
-		},
-		{
-			key: "my_account_settings",
-			label: __("My Account", "user-registration"),
-			title: __("My Account Settings", "user-registration"),
-			description: __(
-				"Customize my account page settings as per your preference.",
-				"user-registration"
-			),
-			isDone: false,
-			component: <MyAccountSettings />
 		},
 		{
 			key: "final_step",
@@ -120,8 +92,15 @@ function App() {
 
 				const newSettingsRef = {};
 				Object.keys(data.options).map((key) => {
-					var sectionSettings = data.options[key].settings;
+					var sectionSettings = data.options[key].settings.general;
 					sectionSettings.map((individualSettings) => {
+						newSettingsRef[individualSettings.id] =
+							individualSettings.default;
+					});
+
+					var registrationSectionSettings =
+						data.options[key].settings.registration;
+					registrationSectionSettings.map((individualSettings) => {
 						newSettingsRef[individualSettings.id] =
 							individualSettings.default;
 					});
@@ -435,8 +414,7 @@ function App() {
 								onClick={() => {
 									setDisabledLink(true);
 									var extraParams =
-										"my_account_settings" ===
-											activeStep.key ||
+										"general_settings" === activeStep.key ||
 										"final_step" === activeStep.key
 											? ""
 											: `&activeStep=${activeStep.key}`;
