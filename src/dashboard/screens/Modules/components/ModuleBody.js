@@ -120,6 +120,24 @@ const ModuleBody = ({
 					upgradeModal.moduleName
 				);
 				upgradeContentRef.upgradeURL = licenseActivationURL;
+			} else if (upgradeModal.type === "requirement") {
+				upgradeContentRef.title = __(
+					"Activation Requirement not Fulfilled",
+					"user-registration"
+				);
+				upgradeContentRef.body = sprintf(
+					__(
+						"%s requires Membership module to be activated. Please activate Membership module in order to activate %s",
+						"user-registration"
+					),
+					upgradeModal.moduleName,
+					upgradeModal.moduleName
+				);
+				upgradeContentRef.buttonText = sprintf(
+					__("Ok", "user-registration"),
+					upgradeModal.moduleName
+				);
+				upgradeContentRef.upgradeURL = "";
 			} else {
 				upgradeContentRef.title = __(
 					"License Upgrade Required",
@@ -158,61 +176,70 @@ const ModuleBody = ({
 		});
 	};
 
-	const licenseActivation = () => {
-		if ("" === licenseActivationKey) {
-			setLicenseValidationMessage(
-				sprintf(
-					__(
-						"Please enter your plugin activation license key",
-						"user-registration"
-					)
-				)
-			);
-			setLicenseValidationStatus(true);
-		} else if (licenseActivationKey.length < 32) {
-			setLicenseValidationMessage(
-				sprintf(
-					__(
-						"Please enter the valid license key",
-						"user-registration"
-					)
-				)
-			);
-			setLicenseValidationStatus(true);
+	const licenseActivation = (upgradeURL) => {
+		if ("" === upgradeURL) {
+			const upgradeModalRef = { ...upgradeModal };
+			upgradeModalRef.enable = false;
+			dispatch({
+				type: actionTypes.GET_UPGRADE_MODAL,
+				upgradeModal: upgradeModalRef
+			});
 		} else {
-			setLicenseValidationMessage("");
-			setLicenseValidationStatus(false);
-			setLicenseActivation(true);
+			if ("" === licenseActivationKey) {
+				setLicenseValidationMessage(
+					sprintf(
+						__(
+							"Please enter your plugin activation license key",
+							"user-registration"
+						)
+					)
+				);
+				setLicenseValidationStatus(true);
+			} else if (licenseActivationKey.length < 32) {
+				setLicenseValidationMessage(
+					sprintf(
+						__(
+							"Please enter the valid license key",
+							"user-registration"
+						)
+					)
+				);
+				setLicenseValidationStatus(true);
+			} else {
+				setLicenseValidationMessage("");
+				setLicenseValidationStatus(false);
+				setLicenseActivation(true);
 
-			activateLicense(licenseActivationKey)
-				.then((data) => {
-					setLicenseActivation(true);
-					if (data.code === 200) {
+				activateLicense(licenseActivationKey)
+					.then((data) => {
+						setLicenseActivation(true);
+						if (data.code === 200) {
+							toast({
+								title: data.message,
+								status: "success",
+								duration: 3000
+							});
+							setLicenseActivation(false);
+							setReloadPage(true);
+						} else if (data.code === 400) {
+							toast({
+								title: data.message,
+								status: "error",
+								duration: 3000
+							});
+						}
+					})
+					.catch((e) => {
 						toast({
-							title: data.message,
-							status: "success",
-							duration: 3000
-						});
-						setLicenseActivation(false);
-						setReloadPage(true);
-					} else if (data.code === 400) {
-						toast({
-							title: data.message,
+							title: e.message,
 							status: "error",
 							duration: 3000
 						});
-					}
-				})
-				.catch((e) => {
-					toast({
-						title: e.message,
-						status: "error",
-						duration: 3000
+					})
+					.finally(() => {
+						setLicenseActivation(false);
 					});
-				})
-				.finally(() => {
-					setLicenseActivation(false);
-				});
+			}
 		}
 	};
 
@@ -262,16 +289,30 @@ const ModuleBody = ({
 										colorScheme="primary"
 										color="white !important"
 										textDecor="none !important"
-										onClick={licenseActivation}
+										onClick={() =>
+											licenseActivation(
+												upgradeContent.upgradeURL
+											)
+										}
 										w="100%"
-										as={!isPro ? Link : undefined}
+										as={
+											!isPro &&
+											"" !== upgradeContent.upgradeURL
+												? Link
+												: undefined
+										}
 										href={
-											!isPro
+											!isPro &&
+											"" !== upgradeContent.upgradeURL
 												? upgradeContent.upgradeURL
 												: ""
 										}
 										isLoading={isLicenseActivation}
-										{...(!isPro && { isExternal: true })}
+										{...(!isPro &&
+											"" !==
+												upgradeContent.upgradeURL && {
+												isExternal: true
+											})}
 									>
 										{upgradeContent.buttonText}
 									</Button>

@@ -40,9 +40,9 @@ import { actionTypes } from "../../../../context/dashboardContext";
 
 const ModuleItem = (props) => {
 	/* global _UR_DASHBOARD_ */
-	const { assetsURL, liveDemoURL, isPro, licensePlan, adminURL, upgradeURL } =
+	const { assetsURL, isPro, licensePlan, adminURL, upgradeURL } =
 		typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
-	const [{ upgradeModal }, dispatch] = useStateValue();
+	const [{ upgradeModal, isMembershipActivated }, dispatch] = useStateValue();
 	const [requirementFulfilled, setRequirementFulfilled] = useState(false);
 	const [licenseActivated, setLicenseActivated] = useState(false);
 	const [moduleEnabled, setModuleEnabled] = useState(false);
@@ -51,7 +51,7 @@ const ModuleItem = (props) => {
 
 	const [thumbnailVideoLoading, setThumbnailVideoLoading] = useState(true);
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const [isAddonActivating, setAddonActivated] = useState(false);
+	const [isFreeModuleEnabled, setIsFreeModuleEnabled] = useState(true);
 
 	const {
 		data,
@@ -80,10 +80,9 @@ const ModuleItem = (props) => {
 	const [moduleSettingsURL, setModuleSettingsURL] = useState("");
 
 	const handleModuleAction = () => {
-		setAddonActivated(true);
 		setIsPerformingAction(true);
 
-		if (moduleEnabled) {
+		if (moduleEnabled && isFreeModuleEnabled) {
 			if (
 				moduleStatus === "inactive" ||
 				moduleStatus === "not-installed"
@@ -105,7 +104,6 @@ const ModuleItem = (props) => {
 							});
 							setModuleStatus("not-installed");
 						}
-						setAddonActivated(false);
 					})
 					.catch((e) => {
 						toast({
@@ -117,7 +115,6 @@ const ModuleItem = (props) => {
 					})
 					.finally(() => {
 						setIsPerformingAction(false);
-						setAddonActivated(false);
 					});
 			} else {
 				deactivateModule(slug, type)
@@ -139,20 +136,24 @@ const ModuleItem = (props) => {
 						}
 					})
 					.finally(() => {
-						setAddonActivated(false);
 						setIsPerformingAction(false);
 					});
 			}
 		} else {
-			const upgradeModalRef = { ...upgradeModal };
-			upgradeModalRef.enable = true;
-			// Handle Pro Upgrade notice
-			dispatch({
-				type: actionTypes.GET_UPGRADE_MODAL,
-				upgradeModal: upgradeModalRef
-			});
+			handleBoxClick();
 		}
 	};
+
+	useEffect(() => {
+		if (data.plan.includes("free")) {
+			if (
+				data.activation_requirements &&
+				data.activation_requirements.includes("membership")
+			) {
+				setIsFreeModuleEnabled(isMembershipActivated);
+			}
+		}
+	}, [isMembershipActivated]);
 
 	useEffect(() => {
 		setModuleStatus(data.status);
@@ -161,9 +162,16 @@ const ModuleItem = (props) => {
 			setIsPerformingAction(false);
 		}
 
-		if( data.plan.includes( 'free' ) ) {
+		if (data.plan.includes("free")) {
+			if (
+				data.activation_requirements &&
+				data.activation_requirements.includes("membership")
+			) {
+				setIsFreeModuleEnabled(isMembershipActivated);
+			}
+
 			setModuleEnabled(true);
-		} else if (isPro ) {
+		} else if (isPro) {
 			setModuleEnabled(true);
 			if (licensePlan) {
 				const requiredPlan = licensePlan.item_plan.replace(
@@ -192,22 +200,34 @@ const ModuleItem = (props) => {
 		}
 	}, [thumbnailVideoPlaying]);
 
+	useEffect(() => {
+		if ("user-registration-membership" === slug) {
+			dispatch({
+				type: actionTypes.GET_IS_MEMBERSHIP_ACTIVATED,
+				isMembershipActivated: moduleStatus === "active"
+			});
+		}
+	}, [moduleStatus]);
+
 	const handleBoxClick = () => {
 		const upgradeModalRef = { ...upgradeModal };
 		upgradeModalRef.moduleType = data.type;
 		upgradeModalRef.moduleName = data.name;
 
 		if (!isPro) {
-
-			if ( data.plan.includes( 'free' ) ) {
+			if (data.plan.includes("free")) {
 				upgradeModalRef.enable = false;
+
+				if (!isFreeModuleEnabled) {
+					upgradeModalRef.enable = true;
+					upgradeModalRef.type = "requirement";
+				}
 			} else {
 				const plan_upgrade_url =
 					upgradeURL +
 					"&utm_source=dashboard-all-feature&utm_medium=dashboard-upgrade-plan";
 				window.open(plan_upgrade_url, "_blank");
 			}
-
 		} else if (isPro && !licenseActivated) {
 			upgradeModalRef.type = "license";
 			upgradeModalRef.enable = true;
@@ -440,9 +460,16 @@ const ModuleItem = (props) => {
 						size="md"
 					/>
 				) : (
-					moduleEnabled && (
+					(moduleEnabled || plan.includes("free")) && (
 						<Switch
-							isChecked={"active" === moduleStatus ? true : false}
+							isChecked={
+								"active" === moduleStatus
+									? plan.includes("free") &&
+									  !isFreeModuleEnabled
+										? false
+										: true
+									: false
+							}
 							onChange={
 								moduleEnabled
 									? handleModuleAction
@@ -453,7 +480,7 @@ const ModuleItem = (props) => {
 					)
 				)}
 
-				{!moduleEnabled && (
+				{(!moduleEnabled || !plan.includes("free")) && (
 					<Button
 						colorScheme={"primary"}
 						size="sm"
