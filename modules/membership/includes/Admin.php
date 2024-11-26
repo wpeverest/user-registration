@@ -115,7 +115,8 @@ if ( ! class_exists( 'Admin' ) ) :
 				)
 			);
 			add_action( 'init', array( $this, 'includes' ) );
-			add_action( 'init', array( $this, 'create_post_type' ), 0 );
+			add_action( 'init', array( $this, 'create_membership_post_type' ), 0 );
+			add_action( 'init', array( $this, 'create_membership_groups_post_type' ), 0 );
 			add_action( 'init', array( 'WPEverest\URMembership\ShortCodes', 'init' ) );
 			add_action( 'init', array( $this, 'add_membership_options' ) );
 			add_action( 'plugins_loaded', array( $this, 'include_membership_payment_files' ) );
@@ -183,7 +184,7 @@ if ( ! class_exists( 'Admin' ) ) :
 		/**
 		 * Rgister Custom Post Type.
 		 */
-		public function create_post_type() {
+		public function create_membership_post_type() {
 			$raw_referer = wp_parse_args( wp_parse_url( wp_get_raw_referer(), PHP_URL_QUERY ) );
 
 			register_post_type(
@@ -232,7 +233,55 @@ if ( ! class_exists( 'Admin' ) ) :
 				)
 			);
 		}
+		public function create_membership_groups_post_type() {
+			$raw_referer = wp_parse_args( wp_parse_url( wp_get_raw_referer(), PHP_URL_QUERY ) );
 
+			register_post_type(
+				'ur_membership_groups',
+				apply_filters(
+					'user_registration_membership_groups_post_type',
+					array(
+						'labels'            => array(
+							'name'                  => __( 'Membership Groups', 'user-registration' ),
+							'singular_name'         => __( 'Membership Group', 'user-registration' ),
+							'all_items'             => __( 'All Membership Groups', 'user-registration' ),
+							'menu_name'             => _x( 'Membership Groups', 'Admin menu name', 'user-registration' ),
+							'add_new'               => __( 'Add New', 'user-registration' ),
+							'add_new_item'          => __( 'Add new', 'user-registration' ),
+							'edit'                  => __( 'Edit', 'user-registration' ),
+							'edit_item'             => __( 'Edit membership group', 'user-registration' ),
+							'new_item'              => __( 'New membership group', 'user-registration' ),
+							'view'                  => __( 'View membership group', 'user-registration' ),
+							'view_item'             => __( 'View memberships group', 'user-registration' ),
+							'search_items'          => __( 'Search membership groups', 'user-registration' ),
+							'not_found'             => __( 'No membership groups found', 'user-registration' ),
+							'not_found_in_trash'    => __( 'No membership groups found in trash', 'user-registration' ),
+							'parent'                => __( 'Parent membership group', 'user-registration' ),
+							'featured_image'        => __( 'Membership group image', 'user-registration' ),
+							'set_featured_image'    => __( 'Set membership group image', 'user-registration' ),
+							'remove_featured_image' => __( 'Remove membership group image', 'user-registration' ),
+							'use_featured_image'    => __( 'Use as membership group image', 'user-registration' ),
+							'insert_into_item'      => __( 'Insert into membership group', 'user-registration' ),
+							'uploaded_to_this_item' => __( 'Uploaded to this membership group', 'user-registration' ),
+							'filter_items_list'     => __( 'Filter membership group', 'user-registration' ),
+							'items_list_navigation' => __( 'Membership group navigation', 'user-registration' ),
+							'items_list'            => __( 'Membership group list', 'user-registration' ),
+
+						),
+						'show_ui'           => true,
+						'capability_type'   => 'post',
+						'map_meta_cap'      => true,
+						'show_in_menu'      => false,
+						'hierarchical'      => false,
+						'rewrite'           => false,
+						'query_var'         => false,
+						'show_in_nav_menus' => false,
+						'show_in_admin_bar' => false,
+						'supports'          => array( 'title' ),
+					)
+				)
+			);
+		}
 		/**
 		 * Adds the membership options to the database.
 		 *

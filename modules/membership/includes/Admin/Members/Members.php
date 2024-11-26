@@ -194,13 +194,13 @@ if ( ! class_exists( 'Members' ) ) {
 		 */
 		public function render_members_page() {
 			$action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
-
+			$menu_items = get_memberhsip_menus();
 			switch ( $action ) {
 				case 'add_new_member':
-					$this->render_members_create_page();
+					$this->render_members_create_page($menu_items);
 					break;
 				default:
-					$this->render_members_list_page();
+					$this->render_members_list_page($menu_items);
 					break;
 			}
 		}
@@ -210,7 +210,7 @@ if ( ! class_exists( 'Members' ) ) {
 		 *
 		 * @return void
 		 */
-		public function render_members_list_page() {
+		public function render_members_list_page($menu_items) {
 			if ( ! current_user_can( 'list_users' ) ) {
 				wp_die(
 					'<h1>' . esc_html__( 'You need a higher level of permission.', 'user-registration' ) . '</h1>' .
@@ -263,7 +263,7 @@ if ( ! class_exists( 'Members' ) ) {
 		 *
 		 * @return void
 		 */
-		public function render_members_create_page() {
+		public function render_members_create_page($menu_items) {
 			$members_list_table = new MembersListTable();
 			$roles              = $members_list_table->get_roles();
 			$memberships        = $members_list_table->get_all_memberships();

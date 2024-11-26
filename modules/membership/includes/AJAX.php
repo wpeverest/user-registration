@@ -59,6 +59,8 @@ class AJAX {
 			'validate_coupon'            => true,
 			'cancel_subscription'        => false,
 			'get_group_memberships'      => false,
+			'create_membership_group'    => false,
+			'delete_membership_groups'   => false,
 		);
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
 			add_action( 'wp_ajax_user_registration_membership_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -336,6 +338,48 @@ class AJAX {
 	}
 
 	/**
+	 * Delete multiple Memberships
+	 *
+	 * @return void
+	 */
+	public static function delete_membership_groups() {
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Permission not allowed.', 'user-registration' ),
+				),
+				403
+			);
+		}
+		ur_membership_verify_nonce( 'ur_membership_group' );
+		if ( ! isset( $_POST )  || empty( $_POST['membership_group_ids'] ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Field membership_group_ids is required.', 'user-registration' ),
+				),
+				422
+			);
+		}
+		$membership_group_ids        = wp_unslash( $_POST['membership_group_ids'] );
+		$membership_group_ids        = implode( ",", json_decode( $membership_group_ids, true ) );
+		$membership_repository = new MembershipRepository();
+		$deleted               = $membership_repository->delete_multiple( $membership_group_ids );
+		if ( $deleted ) {
+			wp_send_json_success(
+				array(
+					'message' => esc_html__( 'Memberships Groups deleted successfully.', 'user-registration' ),
+				)
+			);
+		}
+		wp_send_json_error(
+			array(
+				'message' => esc_html__( 'Sorry! There was an unexpected error while deleting the membership groups.', 'user-registration' ),
+			)
+		);
+	}
+
+	/**
 	 * Delete multiple Members
 	 *
 	 * @return void
@@ -574,19 +618,24 @@ class AJAX {
 
 	}
 
+	/**
+	 * get_group_memberships
+	 *
+	 * @return void
+	 */
 	public static function get_group_memberships() {
 		ur_membership_verify_nonce( 'ur_membership_group' );
 		if ( ! isset( $_POST['group_id'] ) ) {
 			wp_send_json_error( __( 'Wrong request.', 'user-registration' ) );
 		}
-		$group_id           = absint( $_POST['group_id'] );
+		$group_id                 = absint( $_POST['group_id'] );
 		$membership_group_service = new MembershipGroupService();
-		$membership_plans   = $membership_group_service->get_group_memberships( $group_id );
+		$membership_plans         = $membership_group_service->get_group_memberships( $group_id );
 
-		if(empty($membership_plans)) {
+		if ( empty( $membership_plans ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __('No membership is available for the selected group.', 'user-registration'),
+					'message' => __( 'No membership is available for the selected group.', 'user-registration' ),
 				)
 			);
 		}
@@ -595,6 +644,47 @@ class AJAX {
 				'plans' => $membership_plans,
 			)
 		);
+	}
+
+	/**
+	 * create_membership_group
+	 *
+	 * @return void
+	 */
+	public static function create_membership_group() {
+		ur_membership_verify_nonce( 'ur_membership_group' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Sorry, You do not have permission to create membership groups.', 'user-registration' ),
+				)
+			);
+		}
+		if ( ! isset( $_POST['membership_groups_data'] ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Field membership_groups_data is required', 'user-registration' ),
+				)
+			);
+		}
+		$data                     = $_POST['membership_groups_data'];
+		$membership_group_service = new MembershipGroupService();
+		$create_groups            = $membership_group_service->create_membership_groups( $data );
+
+		if ( ! $create_groups['status'] ) {
+			wp_send_json_error(
+				array(
+					'message' => esc_html__( 'Sorry! There was an unexpected error while saving the membership group data . ', 'user-registration' ),
+				)
+			);
+		}
+		wp_send_json_success(
+			array(
+				'membership_group_id' => $create_groups['membership_group_id'],
+				'message'             => __( 'Membership Groups saved successfully.', 'user-registration' ),
+			)
+		);
+
 	}
 
 }

@@ -5,6 +5,18 @@ namespace WPEverest\URMembership\Admin\Services;
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 
 class MembershipService {
+	private $membership_repository;
+
+	public function __construct() {
+		$this->membership_repository = new MembershipRepository();
+	}
+
+	public function list_active_memberships() {
+		$memberships = $this->membership_repository->get_all_membership();
+
+		return apply_filters( 'build_membership_list_frontend', $memberships );
+	}
+
 	public function prepare_membership_data( $memberships ) {
 		foreach ( $memberships as $key => $membership ) {
 			$membership_post_content = json_decode( wp_unslash( $membership['post_content'] ), true );

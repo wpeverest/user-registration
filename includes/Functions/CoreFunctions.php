@@ -480,3 +480,34 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 		return $new_mem;
 	}
 }
+
+if ( ! function_exists( 'get_memberhsip_menus' ) ) {
+	/**
+	 * get_memberhsip_menus
+	 *
+	 * @return array[]
+	 */
+	function get_memberhsip_menus() {
+		return array(
+			'memberships'       => [
+				'label'  => __( 'Memberships', 'user-registration' ),
+				'url'    => admin_url( 'admin.php?page=user-registration-membership' ),
+				'active' => isset( $_GET['page'] ) &&
+				            $_GET['page'] === 'user-registration-membership' &&
+				            ! in_array( $_GET['action'], [ 'list_groups', 'add_groups' ] ),
+			],
+			'membership_groups' => [
+				'label'  => __( 'Membership Groups', 'user-registration' ),
+				'url'    => admin_url( 'admin.php?page=user-registration-membership&action=list_groups' ),
+				'active' => isset( $_GET['page'], $_GET['action'] ) &&
+				            $_GET['page'] === 'user-registration-membership' &&
+				            in_array( $_GET['action'], [ 'list_groups', 'add_groups' ] ),
+			],
+			'members'           => [
+				'label'  => __( 'Members', 'user-registration' ),
+				'url'    => admin_url( 'admin.php?page=user-registration-members' ),
+				'active' => isset( $_GET['page'] ) && $_GET['page'] === 'user-registration-members',
+			],
+		);
+	}
+}
