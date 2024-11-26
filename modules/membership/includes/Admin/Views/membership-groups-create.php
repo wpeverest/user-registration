@@ -40,6 +40,7 @@
 										   style="width: 100%"
 										   autocomplete="off"
 										   value="<?php echo ! empty( $membership_group['post_title'] ) ? $membership_group['post_title'] : ''; ?>"
+									       class="urmg-input"
 										   required>
 								</div>
 							</div>
@@ -70,6 +71,7 @@
 										  id="ur-input-type-membership-group-description"
 										  name="ur_membership_description"
 										  style="width: 100%" rows="5"
+										  class="urmg-input"
 										  value=""><?php echo $membership_description; ?></textarea>
 							</div>
 						</div>
@@ -86,7 +88,7 @@
 								<input
 									data-key-name="Membership Status"
 									id="ur-membership-group-status" type="checkbox"
-									class="user-registration-switch__control hide-show-check enabled"
+									class="user-registration-switch__control hide-show-check enabled urmg-input"
 									<?php echo isset( $membership_content ) && $membership_content['status'] == 'true' ? 'checked' : ''; ?>
 									name="ur_membership_status"
 									style="width: 100%; text-align: left">
@@ -108,7 +110,7 @@
 									<select
 										data-key-name="<?php echo esc_html__( 'Memberships', 'user-registration' ); ?>"
 										id="ur-input-type-membership-group-memberships"
-										class="user-membership-group-enhanced-select2"
+										class="user-membership-group-enhanced-select2 urmg-input"
 										multiple="multiple"
 										required>
 

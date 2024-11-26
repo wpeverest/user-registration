@@ -353,7 +353,7 @@ class AJAX {
 			);
 		}
 		ur_membership_verify_nonce( 'ur_membership_group' );
-		if ( ! isset( $_POST )  || empty( $_POST['membership_group_ids'] ) ) {
+		if ( ! isset( $_POST ) || empty( $_POST['membership_group_ids'] ) ) {
 			wp_send_json_error(
 				array(
 					'message' => __( 'Field membership_group_ids is required.', 'user-registration' ),
@@ -361,10 +361,15 @@ class AJAX {
 				422
 			);
 		}
-		$membership_group_ids        = wp_unslash( $_POST['membership_group_ids'] );
-		$membership_group_ids        = implode( ",", json_decode( $membership_group_ids, true ) );
+		$membership_group_ids = wp_unslash( $_POST['membership_group_ids'] );
+		$membership_service   = new MembershipGroupService();
+		$membership_group_ids = $membership_service->remove_form_related_groups( json_decode( $membership_group_ids, true ) );
+
+		$membership_group_ids = implode( ",", $membership_group_ids );
+
 		$membership_repository = new MembershipRepository();
-		$deleted               = $membership_repository->delete_multiple( $membership_group_ids );
+
+		$deleted = $membership_repository->delete_multiple( $membership_group_ids );
 		if ( $deleted ) {
 			wp_send_json_success(
 				array(

@@ -7,6 +7,7 @@
 
 namespace WPEverest\URMembership\Admin\MembershipGroups;
 
+use WPEverest\URMembership\Admin\Services\MembershipGroupService;
 use WPEverest\URMembership\TableList;
 
 if ( ! class_exists( 'UR_List_Table' ) ) {
@@ -80,7 +81,12 @@ class MembershipGroupsListTable extends \UR_List_Table {
 	}
 
 	public function get_delete_links( $row ) {
-		return admin_url( 'admin.php?membership_group_id=' . $row->ID . '&action=delete&page=' . $this->page );
+		$membership_group_service = new MembershipGroupService();
+		$is_form_related = $membership_group_service->get_group_form_id($row->ID) ;
+
+		$url = 'admin.php?membership_group_id=' . $row->ID . '&action=delete&page=' . $this->page;
+		$url.= ( "" != $is_form_related) ? "&form=" . get_the_title($is_form_related) : '';
+		return admin_url(  $url );
 	}
 
 	/**

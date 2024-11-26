@@ -17,9 +17,16 @@ class MembershipGroups {
 	}
 
 	public function init() {
+		add_filter( 'update_group_ids_before_deleting', array( $this, 'remove_group_ids_having_form' ) , 10 , 1 );
 		$this->enqueue_scripts();
 	}
 
+	public function remove_group_ids_having_form( $ids  ) {
+		echo '<pre>';
+		print_r( 'here' );
+		echo '</pre>';
+		die();
+	}
 	public function enqueue_scripts() {
 		if ( empty( $_GET['page'] ) || 'user-registration-membership' !== $_GET['page'] && ! in_array( $_GET['page'], array(
 				'add_groups',
@@ -60,6 +67,7 @@ class MembershipGroups {
 			'i18n_prompt_bulk_subtitle'          => __( 'Are you sure you want to delete these groups permanently?', 'user-registration' ),
 			'i18n_prompt_single_subtitle'        => __( 'Are you sure you want to delete this group permanently?', 'user-registration' ),
 			'i18n_prompt_delete'                 => __( 'Delete', 'user-registration' ),
+			'i18n_prompt_cannot_delete'          => __( 'Sorry, this group is currently being used in a form. To delete this group please remove this group from form ', 'user-registration' ),
 			'i18n_prompt_cancel'                 => __( 'Cancel', 'user-registration' ),
 			'i18n_prompt_no_membership_selected' => __( 'Please select at least one group.', 'user-registration' ),
 		);
@@ -72,14 +80,14 @@ class MembershipGroups {
 		$membership_table_list->display_page();
 	}
 
-	public function render_membership_group_creator($menu_items) {
-		$membership_service = new MembershipService();
-		$memberships        = $membership_service->list_active_memberships();
+	public function render_membership_group_creator( $menu_items ) {
+		$membership_service       = new MembershipService();
+		$memberships              = $membership_service->list_active_memberships();
 		$membership_group_service = new MembershipGroupService();
 
-		if(isset($_GET['post_id']) && !empty($_GET['post_id'])) {
-			$group_id = absint($_GET['post_id']);
-			$membership_group = $membership_group_service->get_membership_group_by_id($group_id);
+		if ( isset( $_GET['post_id'] ) && ! empty( $_GET['post_id'] ) ) {
+			$group_id         = absint( $_GET['post_id'] );
+			$membership_group = $membership_group_service->get_membership_group_by_id( $group_id );
 		}
 		include __DIR__ . '/../Views/membership-groups-create.php';
 	}

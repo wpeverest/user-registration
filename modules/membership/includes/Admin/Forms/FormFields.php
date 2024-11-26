@@ -23,20 +23,44 @@ class FormFields {
 			$this,
 			'ur_add_membership_template'
 		), 10, 1 );
-		add_filter( 'user_registration_one_time_draggable_form_fields', array( $this, 'enable_one_time_drag_for_membership_field' ), 10, 1 );
+		add_filter( 'user_registration_one_time_draggable_form_fields', array(
+			$this,
+			'enable_one_time_drag_for_membership_field'
+		), 10, 1 );
 
 		$extend_fields = array( 'user_registration_other_form_fields' => 'membership' ); //use this array to add more fields in future if required related with membership
 		$this->load_field_classes( $extend_fields );
 		$this->extend_fields( $extend_fields );
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		add_action( 'user_registration_after_form_settings_save', array(
+			$this,
+			'update_post_membership_group_meta_'
+		) );
 	}
 
-	public function enable_one_time_drag_for_membership_field(  ) {
+	public function update_post_membership_group_meta_( $post ) {
+		$settings             = ur_get_form_data_by_key( json_decode( $post['form_data'] ), 'membership' );
+		$has_membership_group = false;
+		foreach ( $settings as $s ) {
+			if ( ! isset( $s->general_setting ) ) {
+				return;
+			}
+			$has_membership_group = true;
+			$membership_group     = $s->general_setting->membership_group;
+		}
+		if ( $has_membership_group ) {
+			update_post_meta( $post['form_id'], 'urm_form_group_' . $membership_group, true );
+		}
+
+	}
+
+	public function enable_one_time_drag_for_membership_field() {
 		$fields[] = 'membership';
 
 		return $fields;
 	}
+
 	public function enqueue_scripts() {
 		if ( empty( $_GET['page'] ) || 'add-new-registration' !== $_GET['page'] ) {
 			return;

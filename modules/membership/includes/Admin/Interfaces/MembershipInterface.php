@@ -28,4 +28,13 @@ interface MembershipInterface extends BaseInterface {
 	 * @return array $result
 	 */
 	public function get_single_membership_by_ID( $id );
+
+	/**
+	 * get_multiple_membership_by_ID
+	 *
+	 * @param $ids
+	 *
+	 * @return mixed
+	 */
+	public function get_multiple_membership_by_ID( $ids );
 }

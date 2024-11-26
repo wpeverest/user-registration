@@ -9298,6 +9298,33 @@ body.ur-settings-sidebar-hidden .user-registration-settings-sidebar-container {
   margin-left: -910px;
   display: none; }
 
+#membership-group-list .wp-list-table.membership_groups .user-registration-switch input[type=checkbox] {
+  border-radius: 10px !important;
+  border-color: #4cc741 !important; }
+
+#membership-group-list .wp-list-table.membership_groups tbody tr.no-items {
+  background: #ffffff; }
+  #membership-group-list .wp-list-table.membership_groups tbody tr.no-items td {
+    padding: 0; }
+    #membership-group-list .wp-list-table.membership_groups tbody tr.no-items td .empty-list-table-container {
+      text-align: center;
+      margin-top: 30px;
+      margin-bottom: 30px; }
+      #membership-group-list .wp-list-table.membership_groups tbody tr.no-items td .empty-list-table-container img {
+        width: 300px; }
+      #membership-group-list .wp-list-table.membership_groups tbody tr.no-items td .empty-list-table-container h3 {
+        margin-top: 16px;
+        margin-bottom: 8px;
+        color: #222222;
+        font-size: 22px;
+        font-weight: 600;
+        line-height: 32px; }
+      #membership-group-list .wp-list-table.membership_groups tbody tr.no-items td .empty-list-table-container p {
+        color: #6B6B6B;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 24px; }
+
 .user-registration .swal2-container .swal2-header {
   padding: 32px 32px 0;
   gap: 16px; }
