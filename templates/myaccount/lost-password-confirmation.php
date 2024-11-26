@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 ur_print_notices();
-ur_print_notice( __( 'Password reset email has been sent.', 'user-registration' ) );
+ur_print_notice( apply_filters( 'ur_password_reset_change_message', __( 'Password reset email has been sent.', 'user-registration' ) ) );
 ?>
 
 <p>

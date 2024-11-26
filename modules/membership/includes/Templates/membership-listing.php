@@ -2,7 +2,7 @@
 
 	<div class="membership-list-notice-div">
 		<div class="membership-title">
-			<?php echo esc_html__( 'Available Memberships', 'user-registration-membership' ); ?>
+			<?php echo esc_html__( 'Available Memberships', 'user-registration' ); ?>
 		</div>
 		<div class="subscription-message">
 			<p>
@@ -28,7 +28,7 @@
 					<span
 						class="membership-amount"><?php echo $symbol ?> <?php echo esc_html( sprintf( '%.2f', $membership['meta_value']['amount'] ) ); ?></span>
 					<button type="button"
-							class="membership-signup-button" <?php echo (empty($registration_page_id) ? 'disabled' : '') ?>><?php echo esc_html__( 'Sign Up', 'user-registration-membership' ); ?></button>
+							class="membership-signup-button" <?php echo (empty($registration_page_id) ? 'disabled' : '') ?>><?php echo esc_html__( 'Sign Up', 'user-registration' ); ?></button>
 				</div>
 			</div>
 			<?php

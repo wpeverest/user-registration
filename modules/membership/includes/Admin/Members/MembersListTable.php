@@ -106,8 +106,8 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 			?>
 			<div class="empty-list-table-container">
 				<img src="<?php echo $image_url; ?>" alt="">
-				<h3><?php echo __( 'You don\'t have any Members yet.', 'user-registration-membership' ); ?></h3>
-				<p><?php echo __( 'Please add Members and you are good to go.', 'user-registration-membership' ); ?></p>
+				<h3><?php echo __( 'You don\'t have any Members yet.', 'user-registration' ); ?></h3>
+				<p><?php echo __( 'Please add Members and you are good to go.', 'user-registration' ); ?></p>
 			</div>
 			<?php
 		}
@@ -146,7 +146,7 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 				);
 
 				if ( current_user_can( 'edit_user', $user_id ) ) {
-					$actions['edit'] = '<a href="' . $edit_link . '" target="_blank">' . __( 'Edit', 'user-registration-membership' ) . '</a>';
+					$actions['edit'] = '<a href="' . $edit_link . '" target="_blank">' . __( 'Edit', 'user-registration' ) . '</a>';
 				}
 
 				/**
@@ -169,7 +169,7 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 					'<input type="checkbox" name="users[]" id="user_%1$s" class="" value="%1$s" />',
 					$user_id,
 					/* translators: Hidden accessibility text. %s: User login. */
-					sprintf( __( 'Select %s', 'user-registration-membership' ), $user_object['user_login'] )
+					sprintf( __( 'Select %s', 'user-registration' ), $user_object['user_login'] )
 				);
 
 			}
@@ -264,7 +264,7 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 			<div style="position: relative">
 				<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s"
 						value="<?php _admin_search_query(); ?>"
-						placeholder="<?php esc_html_e( 'Search Members ...', 'user-registration-membership' ); ?>"/>
+						placeholder="<?php esc_html_e( 'Search Members ...', 'user-registration' ); ?>"/>
 				<?php wp_nonce_field( 'user-registration-pro-filter-members' ); ?>
 				<button type="submit" id="search-submit">
 					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -278,7 +278,7 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 			<div class="" id="user-registration-pro-members-filters" style="display: flex; gap: 10px">
 				<select name="membership_id" id="user_registration_pro_users_form_filter">
 					<option
-						value=""><?php echo esc_html__( 'All Membership', 'user-registration-membership' ); ?></option>
+						value=""><?php echo esc_html__( 'All Membership', 'user-registration' ); ?></option>
 					<?php
 					foreach ( $this->get_all_memberships() as $id => $form ) {
 						$selected = isset( $_REQUEST['membership_id'] ) && $id == $_REQUEST['membership_id'] ? 'selected=selected' : '';
@@ -293,7 +293,7 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 			</div>
 			<button type="submit" id="user-registration-users-filter-btn"
 					class="button ur-button-primary">
-				<?php esc_html_e( 'Filter', 'user-registration-membership' ); ?>
+				<?php esc_html_e( 'Filter', 'user-registration' ); ?>
 			</button>
 			<?php
 		}
@@ -306,10 +306,10 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 		 */
 		protected function get_all_membership_types() {
 			$forms = array(
-				'0' => __( 'All Plans', 'user-registration-membership' ),
-				'1' => __( 'Free', 'user-registration-membership' ),
-				'2' => __( 'Paid', 'user-registration-membership' ),
-				'3' => __( 'Subscription', 'user-registration-membership' ),
+				'0' => __( 'All Plans', 'user-registration' ),
+				'1' => __( 'Free', 'user-registration' ),
+				'2' => __( 'Paid', 'user-registration' ),
+				'3' => __( 'Subscription', 'user-registration' ),
 			);
 
 			return $forms;
@@ -422,10 +422,10 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 			$actions = array();
 			if ( is_multisite() ) {
 				if ( current_user_can( 'remove_users' ) ) {
-					$actions['remove'] = __( 'Remove', 'user-registration-membership' );
+					$actions['remove'] = __( 'Remove', 'user-registration' );
 				}
 			} elseif ( current_user_can( 'delete_users' ) ) {
-					$actions['delete'] = __( 'Delete', 'user-registration-membership' );
+					$actions['delete'] = __( 'Delete', 'user-registration' );
 			}
 
 			return $actions;

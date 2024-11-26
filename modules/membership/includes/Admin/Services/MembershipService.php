@@ -5,6 +5,18 @@ namespace WPEverest\URMembership\Admin\Services;
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 
 class MembershipService {
+	private $membership_repository;
+
+	public function __construct() {
+		$this->membership_repository = new MembershipRepository();
+	}
+
+	public function list_active_memberships() {
+		$memberships = $this->membership_repository->get_all_membership();
+
+		return apply_filters( 'build_membership_list_frontend', $memberships );
+	}
+
 	public function prepare_membership_data( $memberships ) {
 		foreach ( $memberships as $key => $membership ) {
 			$membership_post_content = json_decode( wp_unslash( $membership['post_content'] ), true );
@@ -31,7 +43,7 @@ class MembershipService {
 		if ( ! $validate_data['status'] ) {
 			return $validate_data;
 		}
-		$post_meta_data = $this->sanitize_membership_meta_data( $data['post_meta_data'] , $membership_id );
+		$post_meta_data = $this->sanitize_membership_meta_data( $data['post_meta_data'], $membership_id );
 
 		return array(
 			'post_data'      => array(
@@ -64,17 +76,17 @@ class MembershipService {
 	 *
 	 * @return array
 	 */
-	public function sanitize_membership_meta_data( $data ,$membership_id ) {
+	public function sanitize_membership_meta_data( $data, $membership_id ) {
 
 		$product_id = "";
-		$price_id = "";
-		if(! empty($membership_id)) {
-			$membership_meta = get_post_meta($membership_id,'ur_membership');
-			$membership_meta = json_decode($membership_meta[0], true);
+		$price_id   = "";
+		if ( ! empty( $membership_id ) ) {
+			$membership_meta = get_post_meta( $membership_id, 'ur_membership' );
+			$membership_meta = json_decode( $membership_meta[0], true );
 
-			if(isset($membership_meta["payment_gateways"]["stripe"]) && "on" == $membership_meta["payment_gateways"]["stripe"]["status"]) {
+			if ( isset( $membership_meta["payment_gateways"]["stripe"] ) && "on" == $membership_meta["payment_gateways"]["stripe"]["status"] ) {
 				$product_id = $membership_meta["payment_gateways"]["stripe"]["product_id"] ?? "";
-				$price_id = $membership_meta["payment_gateways"]["stripe"]["price_id"] ?? "";
+				$price_id   = $membership_meta["payment_gateways"]["stripe"]["price_id"] ?? "";
 			}
 
 		}
@@ -105,9 +117,9 @@ class MembershipService {
 				$data['payment_gateways']['bank']['status'] = sanitize_text_field( $data['payment_gateways']['bank']['status'] );
 			}
 			if ( isset( $data['payment_gateways']['stripe'] ) && 'on' === $data['payment_gateways']['stripe']['status'] ) {
-				$data['payment_gateways']['stripe']['status'] = sanitize_text_field( $data['payment_gateways']['stripe']['status'] );
+				$data['payment_gateways']['stripe']['status']     = sanitize_text_field( $data['payment_gateways']['stripe']['status'] );
 				$data['payment_gateways']['stripe']['product_id'] = sanitize_text_field( $product_id );
-				$data['payment_gateways']['stripe']['price_id'] = sanitize_text_field( $price_id );
+				$data['payment_gateways']['stripe']['price_id']   = sanitize_text_field( $price_id );
 			}
 		}
 
@@ -135,12 +147,12 @@ class MembershipService {
 
 				if ( empty( $secret_key ) || empty( $publishable_key ) ) {
 					$result['status']  = false;
-					$result['message'] = esc_html__( "Incomplete Stripe Gateway setup.", "user-registration-membership" );
+					$result['message'] = esc_html__( "Incomplete Stripe Gateway setup.", "user-registration" );
 				}
 
 			} else {
 				$result['status']  = false;
-				$result['message'] = esc_html__( "Stripe gateway is not enabled.", "user-registration-membership" );
+				$result['message'] = esc_html__( "Stripe gateway is not enabled.", "user-registration" );
 			}
 		}
 
@@ -149,7 +161,7 @@ class MembershipService {
 
 	public function get_membership_details( $membership_id ) {
 		$membership_repository = new MembershipRepository();
-		$membership                     = $membership_repository->get_single_membership_by_ID( $membership_id );
+		$membership            = $membership_repository->get_single_membership_by_ID( $membership_id );
 
 		return wp_unslash( json_decode( $membership['meta_value'], true ) );
 	}

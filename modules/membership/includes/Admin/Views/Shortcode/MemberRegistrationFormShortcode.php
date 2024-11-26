@@ -37,7 +37,7 @@ class MemberRegistrationFormShortcode {
 			$memberships           = apply_filters( 'build_membership_list_frontend', $memberships );
 
 			if ( empty( $memberships ) ) {
-				echo wp_kses_post( apply_filters( 'user_registration_membership_no_membership_message', __( 'Please add at least one membership to allow user registration.', 'user-registration-membership' ) ) );
+				echo wp_kses_post( apply_filters( 'user_registration_membership_no_membership_message', __( 'Please add at least one membership to allow user registration.', 'user-registration' ) ) );
 				return;
 			}
 
@@ -55,7 +55,7 @@ class MemberRegistrationFormShortcode {
 			 * @param mixed $ur_logout_url UR logout URL.
 			 */
 			/* translators: %s - Link to logout. */
-			echo wp_kses_post( apply_filters( 'user_registration_logged_in_message', sprintf( __( 'You are already logged in. <a href="%s">Log out?</a>', 'user-registration-membership' ), ur_logout_url() ) ) );
+			echo wp_kses_post( apply_filters( 'user_registration_logged_in_message', sprintf( __( 'You are already logged in. <a href="%s">Log out?</a>', 'user-registration' ), ur_logout_url() ) ) );
 		}
 	}
 }

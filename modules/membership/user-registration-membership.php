@@ -1,21 +1,8 @@
 <?php
 /**
- * Plugin Name: User Registration Membership
- * Plugin URI: https://wpuserregistration.com/features/membership/
- * Description: Membership addon for user registration plugin.
- * Version: 1.0.2
- * Author: WPEverest
- * Author URI: https://wpeverest.com
- * Text Domain: user-registration-membership
- * Domain Path: /languages/
- * UR Pro requires at least: 4.2.0
- * UR tested up to: 4.3.4
- *
- * Copyright: © 2020 WPEverest.
- * License: GNU General Public License v3.0
- * License URI: http://www.gnu.org/licenses/gpl-3.0.html
- *
+ * Description: Membership module for user registration plugin.
  * @package User_Registration_MEMBERSHIP
+ * @version 1.0.2
  */
 
 

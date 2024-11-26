@@ -118,7 +118,7 @@ class StripeService {
 			wp_delete_user( absint( $member_id ) );
 			wp_send_json_error(
 				array(
-					'message' => __( 'Stripe Payment stopped, Total amount after discount cannot be less than One.', 'user-registration-membership' ),
+					'message' => __( 'Stripe Payment stopped, Total amount after discount cannot be less than One.', 'user-registration' ),
 				)
 			);
 		}
@@ -127,7 +127,7 @@ class StripeService {
 			wp_delete_user( absint( $member_id ) );
 			wp_send_json_error(
 				array(
-					'message' => __( 'Stripe Payment stopped, Invalid/Empty amount', 'user-registration-membership' ),
+					'message' => __( 'Stripe Payment stopped, Invalid/Empty amount', 'user-registration' ),
 				)
 			);
 		}
@@ -159,7 +159,7 @@ class StripeService {
 			wp_delete_user( absint( $member_id ) );
 			wp_send_json_error(
 				array(
-					'message' => __( 'Stripe Payment stopped, Incomplete Stripe setup.', 'user-registration-membership' ),
+					'message' => __( 'Stripe Payment stopped, Incomplete Stripe setup.', 'user-registration' ),
 				)
 			);
 		}
@@ -177,7 +177,7 @@ class StripeService {
 			'status' => true,
 		);
 		if ( 'failed' === $payment_status ) {
-			$error_msg = __( 'Stripe Payment failed.', 'user-registration-membership' );
+			$error_msg = __( 'Stripe Payment failed.', 'user-registration' );
 			$error_msg = $data['payment_result']['error']['message'] ?? $error_msg;
 			wp_delete_user( absint( $member_id ) );
 			$this->members_orders_repository->delete_member_order( $member_id );
@@ -228,7 +228,7 @@ class StripeService {
 
 		if ( ! isset( $stripe_product_details["price_id"] ) || ! isset( $stripe_product_details["product_id"] ) ) {
 			$response['status']  = false;
-			$response['message'] = __( "Stripe subscription failed, price or product not found", "user-registration-membership" );
+			$response['message'] = __( "Stripe subscription failed, price or product not found", "user-registration" );
 
 			return $response;
 		}
@@ -365,11 +365,11 @@ class StripeService {
 		$mail_send = $email_service->send_email( $email_data, 'payment_successful' );
 
 		if ( ! $mail_send ) {
-			$logger->notice( __( 'Payment Mail could not be sent after successful stripe payment ', '"user-registration-membership' ), array( 'source' => 'ur-membership-stripe' ) );
+			$logger->notice( __( 'Payment Mail could not be sent after successful stripe payment ', '"user-registration' ), array( 'source' => 'ur-membership-stripe' ) );
 		}
 
 		return array(
-			'message' => __( "New member has been successfully created with successful stripe subscription.", "user-registration-membership" ),
+			'message' => __( "New member has been successfully created with successful stripe subscription.", "user-registration" ),
 			'status'  => true
 		);
 	}
@@ -502,7 +502,7 @@ class StripeService {
 		$order_data['orders_data']['user_id']         = $member_id;
 		$order_data['orders_data']['created_by']      = $member_id;
 		$order_data['orders_data']['trial_status']    = 'off';
-		$order_data['orders_data']['notes']           = sanitize_text_field( esc_html__( "Generated with stripe webhook", "user-registration-membership" ) );
+		$order_data['orders_data']['notes']           = sanitize_text_field( esc_html__( "Generated with stripe webhook", "user-registration" ) );
 		$order_data['orders_data']['total_amount']    = $membership_metas['amount'];
 		$order_data['orders_data']['transaction_id']  = $invoice_id;
 		$order_data['orders_data']['subscription_id'] = $current_subscription['sub_id'];

@@ -35,7 +35,6 @@ class Frontend {
 	 */
 	private function init_hooks() {
 		add_action( 'wp_enqueue_membership_scripts', array( $this, 'load_scripts' ), 10, 2 );
-		add_filter( 'build_membership_list_frontend', array( $this, 'build_membership_list_frontend' ), 10, 1 );
 		add_action( 'wp_loaded', array( $this, 'ur_add_membership_tab_endpoint' ) );
 		add_filter( 'user_registration_account_menu_items', array( $this, 'ur_membership_tab' ), 10, 1 );
 		add_action(
@@ -193,76 +192,30 @@ class Frontend {
 	public function get_i18_labels() {
 
 		return array(
-			'network_error'                                => esc_html__( 'Network error', 'user-registration-membership' ),
-			'i18n_field_is_required'                       => _x( 'field is required.', 'user registration membership.', 'user-registration-membership' ),
-			'i18n_field_password_empty_validation'         => _x( 'Password cannot be empty', 'user registration membership.', 'user-registration-membership' ),
-			'i18n_field_email_field_validation'            => _x( 'Please enter a valid email address.', 'user registration membership.', 'user-registration-membership' ),
-			'i18n_field_confirm_password_field_validation' => _x( 'Password does not match with confirm password.', 'user registration membership.', 'user-registration-membership' ),
-			'i18n_field_password_field_length_validation'  => _x( 'Password must be at least 8 characters long', 'user registration membership.', 'user-registration-membership' ),
-			'i18n_field_password_field_regex_validation'   => _x( 'Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character.', 'user registration membership', 'user-registration-membership' ),
-			'i18n_field_payment_gateway_field_validation'  => _x( 'Please select a Payment Gateway.', 'user registration membership', 'user-registration-membership' ),
-			'i18n_thank_you'                               => _x( 'Thank You', 'user registration membership', 'user-registration-membership' ),
-			'i18n_sign_in'                                 => _x( 'Sign In', 'user registration membership', 'user-registration-membership' ),
-			'i18n_order_successful'                        => _x( 'Your order has been successfully placed.', 'user registration membership', 'user-registration-membership' ),
-			'i18n_transaction_id'                          => _x( 'Please use this transaction ID for future references.', 'user registration membership', 'user-registration-membership' ),
-			'i18n_membership_required'                     => _x( 'Membership field is required.', 'user registration membership', 'user-registration-membership' ),
-			'i18n_coupon_invalid_error'                    => _x( 'Coupon is Invalid.', 'user registration membership', 'user-registration-membership' ),
-			'i18n_coupon_discount_message'                 => _x( 'discount on membership has been applied.', 'user registration membership', 'user-registration-membership' ),
-			'i18n_coupon_empty_error'                      => _x( 'Coupon Field is empty.', 'user registration membership', 'user-registration-membership' ),
-			'i18n_coupon_free_membership_error'            => _x( 'Invalid membership type (Free).', 'user registration membership', 'user-registration-membership' ),
-			'i18n_incomplete_stripe_setup_error'           => _x( 'Stripe Payment stopped. Incomplete Stripe setup.', 'user registration membership', 'user-registration-membership' ),
-			'i18n_error'                                   => _x( 'Error', 'user registration membership', 'user-registration-membership' ),
-			'i18n_cancel_membership_text'                  => _x( 'Cancel membership.', 'user registration membership', 'user-registration-membership' ),
-			'i18n_cancel_membership_subtitle'              => _x( 'Are you sure you want to cancel membership permanently?', 'user registration membership', 'user-registration-membership' ),
-			'i18n_sending_text'              => __( 'Sending ...', 'user-registration-membership' ),
+			'network_error'                                => esc_html__( 'Network error', 'user-registration' ),
+			'i18n_field_is_required'                       => _x( 'field is required.', 'user registration membership.', 'user-registration' ),
+			'i18n_field_password_empty_validation'         => _x( 'Password cannot be empty', 'user registration membership.', 'user-registration' ),
+			'i18n_field_email_field_validation'            => _x( 'Please enter a valid email address.', 'user registration membership.', 'user-registration' ),
+			'i18n_field_confirm_password_field_validation' => _x( 'Password does not match with confirm password.', 'user registration membership.', 'user-registration' ),
+			'i18n_field_password_field_length_validation'  => _x( 'Password must be at least 8 characters long', 'user registration membership.', 'user-registration' ),
+			'i18n_field_password_field_regex_validation'   => _x( 'Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character.', 'user registration membership', 'user-registration' ),
+			'i18n_field_payment_gateway_field_validation'  => _x( 'Please select a Payment Gateway.', 'user registration membership', 'user-registration' ),
+			'i18n_thank_you'                               => _x( 'Thank You', 'user registration membership', 'user-registration' ),
+			'i18n_sign_in'                                 => _x( 'Sign In', 'user registration membership', 'user-registration' ),
+			'i18n_order_successful'                        => _x( 'Your order has been successfully placed.', 'user registration membership', 'user-registration' ),
+			'i18n_transaction_id'                          => _x( 'Please use this transaction ID for future references.', 'user registration membership', 'user-registration' ),
+			'i18n_membership_required'                     => _x( 'Membership field is required.', 'user registration membership', 'user-registration' ),
+			'i18n_coupon_invalid_error'                    => _x( 'Coupon is Invalid.', 'user registration membership', 'user-registration' ),
+			'i18n_coupon_discount_message'                 => _x( 'discount on membership has been applied.', 'user registration membership', 'user-registration' ),
+			'i18n_coupon_empty_error'                      => _x( 'Coupon Field is empty.', 'user registration membership', 'user-registration' ),
+			'i18n_coupon_free_membership_error'            => _x( 'Invalid membership type (Free).', 'user registration membership', 'user-registration' ),
+			'i18n_incomplete_stripe_setup_error'           => _x( 'Stripe Payment stopped. Incomplete Stripe setup.', 'user registration membership', 'user-registration' ),
+			'i18n_error'                                   => _x( 'Error', 'user registration membership', 'user-registration' ),
+			'i18n_cancel_membership_text'                  => _x( 'Cancel membership.', 'user registration membership', 'user-registration' ),
+			'i18n_cancel_membership_subtitle'              => _x( 'Are you sure you want to cancel membership permanently?', 'user registration membership', 'user-registration' ),
+			'i18n_sending_text'              => __( 'Sending ...', 'user-registration' ),
 		);
 	}
 
-	/**
-	 * Builds the frontend membership list.
-	 *
-	 * This function takes an array of memberships and transforms it into a new array
-	 * with specific properties for each membership. The properties include:
-	 * - ID: The ID of the membership.
-	 * - title: The title of the membership.
-	 * - type: The type of the membership.
-	 * - amount: The amount of the membership.
-	 * - period: The period of the membership, calculated based on the type.
-	 * - active_payment_gateways: An array of active payment gateways for the membership.
-	 *
-	 * @param array $memberships The array of memberships.
-	 *
-	 * @return array The transformed membership list.
-	 */
-	public function build_membership_list_frontend( $memberships ) {
-		$currency                = get_option( 'user_registration_payment_currency', 'USD' );
-		$currencies              = ur_membership_get_currencies();
-		$symbol                  = $currencies[ $currency ]['symbol'];
-		$new_mem                 = array();
-		$active_payment_gateways = array();
-		foreach ( $memberships as $k => $membership ) {
-			$new_mem[ $k ] = array(
-				'ID'                => $membership['ID'],
-				'title'             => $membership['post_title'],
-				'type'              => $membership['meta_value']['type'],
-				'amount'            => $membership['meta_value']['amount'] ?? 0,
-				'currency_symbol'   => $symbol,
-				'calculated_amount' => 'free' === $membership['meta_value']['type'] ? 0 : round( $membership['meta_value']['amount'] ),
-				'period'            => 'free' === $membership['meta_value']['type'] ? __( 'Free', 'user-registration-membership' ) : ( 'subscription' === $membership['meta_value']['type'] ? $symbol . $membership['meta_value']['amount'] . ' / ' . number_format( $membership['meta_value']['subscription']['value'] ) . ' ' . ucfirst( $membership['meta_value']['subscription']['duration'] ) . ( $membership['meta_value']['subscription']['value'] > 1 ? '\'s' : '' ) : $symbol . round( $membership['meta_value']['amount'] ) . ' ' . __( 'Lifetime', 'user-registration-membership' ) ),
-			);
-			if ( isset( $membership['meta_value']['payment_gateways'] ) ) {
-				foreach ( $membership['meta_value']['payment_gateways'] as $key => $gateways ) {
-					if ( 'on' !== $gateways['status'] ) {
-						continue;
-					}
-					$active_payment_gateways[ $key ] = $gateways['status'];
-				}
 
-				$new_mem[ $k ]['active_payment_gateways'] = ( wp_unslash( wp_json_encode( $active_payment_gateways ) ) );
-			}
-			$active_payment_gateways = array();
-		}
-
-		return $new_mem;
-	}
 }
