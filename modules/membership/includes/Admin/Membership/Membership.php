@@ -404,7 +404,6 @@ class Membership {
 				'membership_content'  => $membership_content,
 				'ajax_url'            => admin_url( 'admin-ajax.php' ),
 				'wp_roles'            => ur_membership_get_all_roles(),
-				'wp_capabilities'     => ur_membership_get_all_capabilities(),
 				'posts'               => $posts,
 				'labels'              => $this->get_i18_labels(),
 				'membership_page_url' => admin_url( 'admin.php?page=user-registration-membership&action=add_new_membership' ),

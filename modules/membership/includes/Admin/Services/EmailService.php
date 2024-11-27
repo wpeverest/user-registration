@@ -172,7 +172,7 @@ class EmailService
 		$membership_metas = $data['membership_metas'];
 		$extra_message    = $data['extra_message'] ?? '';
 		$currency         = get_option('user_registration_payment_currency', 'USD');
-		$currencies       = ur_membership_get_currencies();
+		$currencies       = ur_payment_integration_get_currencies();
 		$symbol           = $currencies[$currency]['symbol'];
 
 		$total = $order['total_amount'];
@@ -222,7 +222,7 @@ class EmailService
 
 		$subject          = __('Payment Approved!', 'user-registration');
 		$currency         = get_option('user_registration_payment_currency', 'USD');
-		$currencies       = ur_membership_get_currencies();
+		$currencies       = ur_payment_integration_get_currencies();
 		$symbol           = $currencies[$currency]['symbol'];
 		$message          = sprintf(__('Hi <b><i>%s</i></b>, Your payment of amount %s for the membership: <b>%s</b> has been approved by admin.', 'user-registration'), $data['display_name'] ?? '', number_format($data['total_amount'], 2) . $symbol, $data['post_title'] ?? '') . "\n\n";
 		$extra_message    = __("You can now login as a member.");

@@ -113,7 +113,6 @@ if ( ! class_exists( 'Members' ) ) {
 					'member_id'        => $member_id,
 					'ajax_url'         => admin_url( 'admin-ajax.php' ),
 					'wp_roles'         => ur_membership_get_all_roles(),
-					'wp_capabilities'  => ur_membership_get_all_capabilities(),
 					'labels'           => $this->get_i18_labels(),
 					'members_page_url' => admin_url( 'admin.php?page=user-registration-members&action=add_new_member' ),
 					'delete_icon'      => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE ),

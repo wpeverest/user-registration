@@ -6526,3 +6526,16 @@
 	display: flex;
 	justify-content: center;
 }
+
+.urmg-shortcode {
+	display: flex;
+	line-height: 1;
+	gap: 10px;
+	button {
+		line-height: 1 !important;
+		padding: 4px !important;
+	}
+	input {
+		border-color: #8d8d8d;
+	}
+}

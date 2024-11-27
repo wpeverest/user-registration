@@ -86,8 +86,10 @@ class MembershipGroupRepository extends BaseRepository implements MembershipGrou
 	 * @return array|mixed
 	 */
 	public function get_group_memberships_by_id( $id ) {
+
 		$memberships = get_post_meta( $id, 'urmg_memberships', true );
 		$memberships = str_replace( array( '[', ']' ), '', $memberships );
+
 		$membership_repository = new MembershipRepository();
 		return $membership_repository->get_multiple_membership_by_ID($memberships);
 	}
