@@ -12,16 +12,27 @@ const Header = ({ steps, activeStep, siteURL }) => {
 			<ul className="user-registration-setup-wizard__header--nav">
 				{steps.map((step, i) => {
 					return (
-						<li
-							key={i}
-							className={`user-registration-setup-wizard__header--nav-item step ${
-								activeStep.key === step.key ? "active" : ""
-							} ${step.isDone ? "done" : ""}`}
-							id={`step-${i + 1}`}
-						>
-							<span className="step-label">{step.label}</span>
-							<p className="step-identifier" />
-						</li>
+						<>
+							{i > 0 && (
+								<li
+									className={`center-line ${
+										activeStep.key === step.key ||
+										step.isDone
+											? "done"
+											: ""
+									} `}
+								></li>
+							)}
+							<li
+								key={i}
+								className={`user-registration-setup-wizard__header--nav-item step ${
+									activeStep.key === step.key ? "active" : ""
+								} ${step.isDone ? "done" : ""}`}
+								id={`step-${i + 1}`}
+							>
+								<span className="step-label">{step.label}</span>
+							</li>
+						</>
 					);
 				})}
 			</ul>
