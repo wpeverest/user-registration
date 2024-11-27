@@ -650,14 +650,16 @@
 				}
 			}
 
-			.chakra-checkbox__control {
-				border-radius: 50%;
-				height: 32px;
-				width: 32px;
-				margin-right: 10px;
+			&--checkbox {
+				.chakra-checkbox__control {
+					border-radius: 50%;
+					height: 32px;
+					width: 32px;
+					margin-right: 10px;
 
-				svg {
-					font-size: 15px;
+					svg {
+						font-size: 15px;
+					}
 				}
 			}
 		}

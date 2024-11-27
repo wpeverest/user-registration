@@ -12,14 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 
-/**
- * Internal Dependencies
- */
-import ConsentModal from "../common/ConsentModal";
-
 const InstallPage = () => {
-	const [allowTracking, setAllowTracking] = useState(false);
-
 	/* global _UR_WIZARD_ */
 	const { defaultFormId, registrationPageSlug, myAccountPageSlug } =
 		typeof _UR_WIZARD_ !== "undefined" && _UR_WIZARD_;
@@ -61,8 +54,6 @@ const InstallPage = () => {
 	};
 	return (
 		<Fragment>
-			{!allowTracking ? <ConsentModal openPopup={true} /> : ""}
-
 			<Box
 				bg="#F8F9FC"
 				w="100%"

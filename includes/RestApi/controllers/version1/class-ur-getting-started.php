@@ -53,6 +53,16 @@ class UR_Getting_Started {
 				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
 			)
 		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/save-allow-usage-data',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( __CLASS__, 'ur_save_allow_usage_data' ),
+				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
+			)
+		);
 	}
 
 	/**
@@ -117,6 +127,40 @@ class UR_Getting_Started {
 	}
 
 	/**
+	 * Save settings for allow usage data.
+	 *
+	 * @since 4.0
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return array settings.
+	 */
+	public static function ur_save_allow_usage_data( $request ) {
+
+		if ( ! isset( $request['settings'] ) ) {
+			return;
+		}
+
+		$settings_to_update = $request['settings'];
+
+		foreach ( $settings_to_update as $option => $value ) {
+
+			if ( 'yes' === $value || 'no' === $value ) {
+				$value = ur_string_to_bool( $value );
+			}
+
+			update_option( $option, $value );
+		}
+
+		return new \WP_REST_Response(
+			array(
+				'success' => true,
+				'message' => __( 'Settings submitted successfully', 'user-registration' ),
+			),
+			200
+		);
+	}
+
+	/**
 	 * Get settings for getting started page.
 	 *
 	 * @since 2.1.4
@@ -158,7 +202,7 @@ class UR_Getting_Started {
 							'title'   => __( 'Enable Strong Password', 'user-registration' ),
 							'desc'    => __( 'Enforce strong password.', 'user-registration' ),
 							'id'      => 'user_registration_form_setting_enable_strong_password',
-							'type'    => 'checkbox',
+							'type'    => 'switch',
 							'default' => 'no',
 						),
 						array(
