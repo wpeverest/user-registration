@@ -15,21 +15,21 @@ import {
 } from "@chakra-ui/react";
 import apiFetch from "@wordpress/api-fetch";
 import { __ } from "@wordpress/i18n";
-import * as Promise from "promise";
 
 /**
  * Internal Dependencies
  */
 import Header from "./common/Header";
 import InstallPage from "./screens/InstallPage";
-import RegistrationSettings from "./screens/RegistrationSettings";
 import GeneralSettings from "./screens/GeneralSettings";
+import RegistrationType from "./screens/RegistrationType";
 import LastPage from "./screens/LastPage";
 import { useStateValue } from "../../context/StateProvider";
 import { actionTypes } from "../../context/gettingStartedContext";
 
 function App() {
-	const [{ settings, registrationPageLink }, dispatch] = useStateValue();
+	const [{ settings, registrationPageLink, registrationType }, dispatch] =
+		useStateValue();
 	const [disabledLink, setDisabledLink] = useState(false);
 	const [nextStepProgess, setNextStepProgess] = useState(false);
 
@@ -45,6 +45,17 @@ function App() {
 	} = typeof _UR_WIZARD_ !== "undefined" && _UR_WIZARD_;
 
 	const [steps, setSteps] = useState([
+		{
+			key: "registration_type",
+			label: __("Registration Type", "user-registration"),
+			title: __("Registration Type", "user-registration"),
+			description: __(
+				"Select which registration page type you want to proceed with.",
+				"user-registration"
+			),
+			isDone: true,
+			component: <RegistrationType />
+		},
 		{
 			key: "install_pages",
 			label: __("Install Pages", "user-registration"),
@@ -164,8 +175,33 @@ function App() {
 				return step;
 			})
 		);
-		setActiveStep(steps[index + 1]);
-		setNextStepProgess(true);
+
+		if (activeStep.key === "registration_type") {
+			// POST
+			apiFetch({
+				path:
+					restURL +
+					"user-registration/v1/getting-started/registration-type-selected",
+				method: "POST",
+				headers: {
+					"X-WP-Nonce": urRestApiNonce
+				},
+				data: { registrationType: registrationType }
+			}).then((res) => {
+				if (res.success) {
+					dispatch({
+						type: actionTypes.GET_INSTALLED_PAGES,
+						installedPages: res.page_details
+					});
+
+					setActiveStep(steps[index + 1]);
+					setNextStepProgess(true);
+				}
+			});
+		} else {
+			setActiveStep(steps[index + 1]);
+			setNextStepProgess(true);
+		}
 	};
 
 	/**
@@ -272,28 +308,35 @@ function App() {
 								direction="column"
 								justifyContent="space-between"
 								alignItems="left"
+								gap="36px"
 							>
-								{activeStep.title && (
-									<Heading
-										as="h2"
-										size="lg"
-										fontSize="22px"
-										mb={4}
-										color="#383838"
-										fontWeight="600"
-									>
-										{activeStep.title}
-									</Heading>
-								)}
-								{activeStep.description && (
-									<Text
-										fontSize="16px"
-										as="i"
-										color="#6B6B6B"
-									>
-										{activeStep.description}
-									</Text>
-								)}
+								<Flex
+									direction="column"
+									justifyContent="space-between"
+									alignItems="left"
+									gap="12px"
+								>
+									{activeStep.title && (
+										<Heading
+											as="h2"
+											size="lg"
+											fontSize="22px"
+											color="#383838"
+											fontWeight="600"
+										>
+											{activeStep.title}
+										</Heading>
+									)}
+									{activeStep.description && (
+										<Text
+											fontSize="16px"
+											as="i"
+											color="#6B6B6B"
+										>
+											{activeStep.description}
+										</Text>
+									)}
+								</Flex>
 								{cloneElement(activeStep.component, {
 									sectionSettings: activeStep.sectionSettings,
 									siteURL: siteURL,
@@ -329,7 +372,8 @@ function App() {
 										"user-registration"
 									)}
 								</Button>
-							) : steps[0].key !== activeStep.key ? (
+							) : steps[0].key !== activeStep.key &&
+							  steps[1].key !== activeStep.key ? (
 								<Button
 									variant="outline"
 									onClick={handleBack}
@@ -367,7 +411,7 @@ function App() {
 								</Button>
 							) : (
 								<React.Fragment>
-									{steps[0].key !== activeStep.key && (
+									{/* {steps[0].key !== activeStep.key && (
 										<Button
 											variant="link"
 											colorScheme="gray"
@@ -387,7 +431,7 @@ function App() {
 												"user-registration"
 											)}
 										</Button>
-									)}
+									)} */}
 									<Button
 										colorScheme="blue"
 										backgroundColor="#475BB2 !important"
@@ -406,7 +450,7 @@ function App() {
 							)}
 						</div>
 					</div>
-					<center>
+					{/* <center>
 						<Link>
 							<Button
 								variant="link"
@@ -452,7 +496,7 @@ function App() {
 								</svg>
 							</Button>
 						</Link>
-					</center>
+					</center> */}
 				</>
 			) : (
 				<Box display="flex" justifyContent="center" padding="250px">

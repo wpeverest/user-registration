@@ -8,14 +8,20 @@ export const initialState = {
 		user_registration_allow_usage_tracking: "yes",
 		user_registration_allow_email_updates: "yes",
 		user_registration_updates_admin_email: adminEmail
-	}
+	},
+	registrationType: "user_registration_normal_registration",
+	defaultFormId: "",
+	installedPages: {}
 };
 
 export const actionTypes = {
 	GET_SETTINGS: "GET_SETTINGS",
 	GET_SETTINGS: "GET_ALLOW_USAGE",
 	GET_DEFAULT_REGISTRATION_PAGE: "GET_DEFAULT_REGISTRATION_PAGE",
-	GET_IS_PRO: "GET_IS_PRO"
+	GET_IS_PRO: "GET_IS_PRO",
+	GET_REGISTRATION_TYPE: "GET_REGISTRATION_TYPE",
+	GET_DEFAULT_FORM: "GET_DEFAULT_FORM",
+	GET_INSTALLED_PAGES: "GET_INSTALLED_PAGES"
 };
 
 const reducer = (state, action) => {
@@ -39,6 +45,21 @@ const reducer = (state, action) => {
 			return {
 				...state,
 				isPro: action.isPro
+			};
+		case actionTypes.GET_REGISTRATION_TYPE:
+			return {
+				...state,
+				registrationType: action.registrationType
+			};
+		case actionTypes.GET_DEFAULT_FORM:
+			return {
+				...state,
+				defaultFormId: action.defaultFormId
+			};
+		case actionTypes.GET_INSTALLED_PAGES:
+			return {
+				...state,
+				installedPages: action.installedPages
 			};
 		default:
 			return state;

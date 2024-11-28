@@ -8,83 +8,77 @@ import {
 	Box,
 	Checkbox,
 	CircularProgress,
-	CircularProgressLabel
+	CircularProgressLabel,
+	Link
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
+
+import { useStateValue } from "../../../context/StateProvider";
 
 const InstallPage = () => {
 	/* global _UR_WIZARD_ */
 	const { defaultFormId, registrationPageSlug, myAccountPageSlug } =
 		typeof _UR_WIZARD_ !== "undefined" && _UR_WIZARD_;
-
+	const [{ installedPages }, dispatch] = useStateValue();
 	/**
 	 * Create the HTML block for the pages to be installed.
 	 *
 	 * @param {object} page The detals of page to be installed.
 	 * @returns
 	 */
-	const createInstallPageBox = (page, slug) => {
+	const CreateInstallPageBox = ({ pageDetails }) => {
 		return (
 			<Box
 				bg="#F8F9FC"
 				w="100%"
-				p={4}
+				p="10px 16px"
 				color="#383838"
-				mt={3}
-				border="1px solid #DEE0E9"
+				border="1px solid #EDEFF7"
 				borderRadius="md"
+				height="75px"
+				display="flex"
 			>
-				<Flex justify="space-between" align="center">
-					<Checkbox isChecked={true} isReadOnly>
+				<Flex justify="space-between" align="center" width="100%">
+					<Checkbox
+						isChecked={true}
+						isReadOnly
+						className="user-registration-setup-wizard__body--checkbox"
+					>
 						<Text fontSize="15px" fontWeight={600} color="#383838">
-							{slug === "registration_page"
-								? __("Registration Page", "user-registration")
-								: __("My Account Page", "user-registration")}
+							{pageDetails.title}
 						</Text>
-						<Text fontSize="13px" color="#6B6B6B">
-							{"/" + page}
+						<Text fontSize="14px" color="#6B6B6B">
+							{pageDetails.page_slug}
 						</Text>
 					</Checkbox>
-					<Text fontSize="12px" color="#475BB2">
-						{__("Installed", "user-registration")}
-					</Text>
+					{pageDetails.page_url !== "" && (
+						<Link
+							href={pageDetails.page_url}
+							isExternal
+							textDecoration="underline"
+							fontSize="12px"
+							color="#475BB2"
+						>
+							{pageDetails.page_url_text}
+						</Link>
+					)}
 				</Flex>
 			</Box>
 		);
 	};
+
 	return (
 		<Fragment>
-			<Box
-				bg="#F8F9FC"
-				w="100%"
-				p={4}
-				color="#383838"
-				mt={3}
-				borderRadius="md"
-			>
-				<Flex justify="space-between" align="center">
-					<Checkbox isChecked isReadOnly>
-						<Text fontSize="15px" fontWeight={600} color="#383838">
-							{__(
-								"Default Registration Form",
-								"user-registration"
-							)}
-						</Text>
-						{defaultFormId && (
-							<Text fontSize="13px" color="#6B6B6B">
-								Form id : {defaultFormId}
-							</Text>
-						)}
-					</Checkbox>
-					<Flex align="center">
-						<Text fontSize="12px" color="#475BB2">
-							{__("Installed", "user-registration")}
-						</Text>
-					</Flex>
-				</Flex>
-			</Box>
-			{createInstallPageBox(registrationPageSlug, "registration_page")}
-			{createInstallPageBox(myAccountPageSlug, "my_account_page")}
+			<Flex gap="20px" flexDirection="column">
+				{Object.keys(installedPages).map((key) => {
+					return (
+						<CreateInstallPageBox
+							key={key}
+							pageDetails={installedPages[key]}
+						/>
+					);
+				})}
+			</Flex>
 		</Fragment>
 	);
 };

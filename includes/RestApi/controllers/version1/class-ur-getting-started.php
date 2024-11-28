@@ -63,6 +63,16 @@ class UR_Getting_Started {
 				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
 			)
 		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/registration-type-selected',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( __CLASS__, 'ur_registration_type_install_pages' ),
+				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
+			)
+		);
 	}
 
 	/**
@@ -155,6 +165,114 @@ class UR_Getting_Started {
 			array(
 				'success' => true,
 				'message' => __( 'Settings submitted successfully', 'user-registration' ),
+			),
+			200
+		);
+	}
+
+	/**
+	 * Install required pages as per registration type selected.
+	 *
+	 * @since 4.0
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return array settings.
+	 */
+	public static function ur_registration_type_install_pages( $request ) {
+
+		if ( ! isset( $request['registrationType'] ) ) {
+			return;
+		}
+
+		update_option( 'users_can_register', true );
+
+		include_once untrailingslashit( plugin_dir_path( UR_PLUGIN_FILE ) ) . '/includes/admin/functions-ur-admin.php';
+
+		$page_details = array(
+			'anyone_can_register' => array(
+				'title'         => esc_html__( 'Guest Registration allowed through User Registration Form', 'user-registration' ),
+				'page_url'      => '',
+				'page_url_text' => '',
+				'page_slug'     => '',
+			),
+		);
+
+		$pages                = apply_filters( 'user_registration_create_pages', array() );
+		$default_form_page_id = get_option( 'user_registration_default_form_page_id' );
+
+		$page_details['default_form_id'] = array(
+			'page_url'      => admin_url( 'admin.php?page=add-new-registration&edit-registration=' . $default_form_page_id ),
+			'page_url_text' => esc_html__( 'View Form', 'user-registration' ),
+			'title'         => esc_html__( 'Default Registration Form', 'user-registration' ),
+			'page_slug'     => sprintf( esc_html__( 'Form Id: %s', 'user-registration' ), $default_form_page_id ),
+		);
+
+		$pages['myaccount'] = array(
+			'name'    => _x( 'my-account', 'Page slug', 'user-registration' ),
+			'title'   => _x( 'My Account', 'Page title', 'user-registration' ),
+			'content' => '[' . apply_filters( 'user_registration_my_account_shortcode_tag', 'user_registration_my_account' ) . ']',
+		);
+
+		$pages['login'] = array(
+			'name'    => _x( 'login', 'Page slug', 'user-registration' ),
+			'title'   => _x( 'Login', 'Page title', 'user-registration' ),
+			'content' => '[' . apply_filters( 'user_registration_login_shortcode_tag', 'user_registration_login' ) . ']',
+		);
+
+		$pages['lost_password'] = array(
+			'name'    => _x( 'lost-password', 'Page slug', 'user-registration' ),
+			'title'   => _x( 'Lost Password', 'Page title', 'user-registration' ),
+			'content' => '[user_registration_lost_password]',
+		);
+
+		if ( 'user_registration_normal_registration' === $request['registrationType'] ) {
+			if ( $default_form_page_id ) {
+				$pages['registration'] = array(
+					'name'    => _x( 'registration', 'Page slug', 'user-registration' ),
+					'title'   => _x( 'Registration', 'Page title', 'user-registration' ),
+					'content' => '[' . apply_filters( 'user_registration_form_shortcode_tag', 'user_registration_form' ) . ' id="' . esc_attr( $default_form_page_id ) . '"]',
+				);
+			}
+		} else {
+			$enabled_features = get_option( 'user_registration_enabled_features', array() );
+			array_push( $enabled_features, 'user-registration-membership' );
+			update_option( 'user_registration_enabled_features', $enabled_features );
+
+			if ( $default_form_page_id ) {
+				$pages['membership_registration'] = array(
+					'name'    => _x( 'membership-registration', 'Page slug', 'user-registration' ),
+					'title'   => _x( 'Membership Registration', 'Page title', 'user-registration' ),
+					'content' => '[' . apply_filters( 'user_registration_form_shortcode_tag', 'user_registration_form' ) . ' id="' . esc_attr( $default_form_page_id ) . '"]',
+				);
+			}
+
+			$pages['membership_pricing']  = array(
+				'name'    => _x( 'membership-pricing', 'Page slug', 'user-registration' ),
+				'title'   => _x( 'Membership Pricing', 'Page title', 'user-registration' ),
+				'content' => '[user_registration_membership_listing]',
+			);
+			$pages['membership_thankyou'] = array(
+				'name'    => _x( 'membership-thankyou', 'Page slug', 'user-registration' ),
+				'title'   => _x( 'Membership Thankyou', 'Page title', 'user-registration' ),
+				'content' => '[user_registration_membership_thank_you]',
+			);
+		}
+
+		foreach ( $pages as $key => $page ) {
+			$post_id = ur_create_page( esc_sql( $page['name'] ), 'user_registration_' . $key . '_page_id', wp_kses_post( ( $page['title'] ) ), wp_kses_post( $page['content'] ) );
+
+			$page_details[ get_post_field( 'post_name', $post_id ) ] = array(
+				'page_url'      => get_permalink( $post_id ),
+				'page_url_text' => esc_html__( 'View Page', 'user-registration' ),
+				'title'         => get_the_title( $post_id ) . esc_html__( ' Page', 'user-registration' ),
+				'page_slug'     => '/' . get_post_field( 'post_name', $post_id ),
+			);
+		}
+
+		return new \WP_REST_Response(
+			array(
+				'success'      => true,
+				'page_details' => $page_details,
 			),
 			200
 		);

@@ -612,7 +612,7 @@
 
 		&__body {
 			flex: 0 0 50%;
-			padding: 32px 32px 46px 32px;
+			padding: 32px;
 			background-color: $white;
 			border-radius: 13px 13px 0px 0px;
 			color: #2D3559;
@@ -653,8 +653,8 @@
 			&--checkbox {
 				.chakra-checkbox__control {
 					border-radius: 50%;
-					height: 32px;
-					width: 32px;
+					height: 28px;
+					width: 28px;
 					margin-right: 10px;
 
 					svg {

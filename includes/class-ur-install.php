@@ -146,7 +146,6 @@ class UR_Install {
 		self::maybe_update_db_version();
 		self::maybe_add_installation_date();
 		self::maybe_run_migrations();
-		self::create_pages();
 
 		$path = UR_UPLOAD_PATH . 'profile-pictures';
 
