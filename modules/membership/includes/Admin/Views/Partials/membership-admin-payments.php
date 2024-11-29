@@ -34,20 +34,13 @@
  * @return void
  */
 function render_payment_gateways( $membership_details ) {
-	$is_stripe_active = is_plugin_active( 'user-registration-stripe/user-registration-stripe.php' );
-
-	// render paypal settings
 	$enabled_features = get_option( 'user_registration_enabled_features', array() );
 	if ( in_array( 'user-registration-payments', $enabled_features ) || ! UR_PRO_ACTIVE ) :
 		render_paypal_settings( $membership_details );
 	endif;
 	// render bank settings
 	render_bank_settings( $membership_details );
-
-	// render stripe Section
-	if ( $is_stripe_active ) :
-		render_stripe_settings( $membership_details );
-	endif;
+	render_stripe_settings( $membership_details );
 }
 
 /**

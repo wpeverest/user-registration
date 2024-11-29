@@ -16,10 +16,12 @@ class SubscriptionService {
 	 * @return array
 	 */
 	public function prepare_subscription_data( $data, $member ) {
+
 		$current_user    = wp_get_current_user();
 		$membership      = get_post( $data['membership_data']['membership'], ARRAY_A );
 		$membership_meta = json_decode( wp_unslash( get_post_meta( $membership['ID'], 'ur_membership', true ) ), true );
 		$status          = 'pending';
+
 		if ( 'subscription' == $membership_meta['type'] ) { // TODO: calculate with trail date
 			$expiry_date = self::get_expiry_date( $data['membership_data']['start_date'], $membership_meta['subscription']['duration'], $membership_meta['subscription']['value'] );
 			$status      = 'on' === $membership_meta['trial_status'] ? 'trial' : 'pending';

@@ -29,9 +29,10 @@ class MemberRegistrationFormShortcode {
 	 * @param array $attributes Shortcode attributes.
 	 */
 	public static function display_form( $attributes ) {
-
 		global $wp, $post;
-		if ( ! is_user_logged_in() ) {
+		$allow =  (is_user_logged_in() && $attributes['preview']) || ! is_user_logged_in();
+
+		if ( $allow ) {
 			$membership_repository = new MembershipRepository();
 			$memberships           = $membership_repository->get_all_membership();
 			$memberships           = apply_filters( 'build_membership_list_frontend', $memberships );

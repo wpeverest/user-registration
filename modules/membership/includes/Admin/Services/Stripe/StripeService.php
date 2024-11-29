@@ -101,7 +101,6 @@ class StripeService {
 			'type' => $payment_data["type"]
 		);
 
-
 		if ( isset( $payment_data['coupon'] ) && ! empty( $payment_data['coupon'] ) && ur_pro_is_coupons_addon_activated() ) {
 			$coupon_details  = ur_get_coupon_details( $payment_data['coupon'] );
 			$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $amount * $coupon_details['coupon_discount'] / 100;

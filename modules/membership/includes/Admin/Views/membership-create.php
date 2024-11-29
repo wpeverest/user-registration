@@ -1,6 +1,7 @@
 <div class="ur-membership">
 	<?php
 	require __DIR__ . '/./Partials/header.php';
+
 	?>
 	<div
 		class="ur-membership-tab-contents-wrapper ur-registered-from ur-align-items-center ur-justify-content-center">

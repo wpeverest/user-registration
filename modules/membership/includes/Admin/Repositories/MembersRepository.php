@@ -118,4 +118,5 @@ class MembersRepository extends BaseRepository implements MembersInterface {
 
 		return ! $result ? array() : $result;
 	}
+
 }

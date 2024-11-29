@@ -34,7 +34,7 @@ class OrderService {
 			$total = 0;
 		} else {
 
-			if ( 'bank' === $data['membership_data']['payment_method'] && ur_pro_is_coupons_addon_activated() && ! empty( $data['coupon_data'] ) ) {
+			if ( 'bank' === $data['membership_data']['payment_method'] && ur_check_module_activation('coupon') && ! empty( $data['coupon_data'] ) ) {
 				$discount_amount = ( isset( $data['coupon_data']['coupon_discount_type'] ) && 'fixed' === $data['coupon_data']['coupon_discount_type'] ) ? $data['coupon_data']['coupon_discount'] : $total * $data['coupon_data']['coupon_discount'] / 100;
 				$total           = $total - $discount_amount;
 			}

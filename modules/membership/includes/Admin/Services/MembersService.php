@@ -25,45 +25,6 @@ class MembersService {
 	 * @return array|bool[]
 	 */
 	public function validate_user_data( $data ) {
-		// validate username
-		if ( username_exists( $data['username'] ) ) {
-			return array(
-				'status'  => false,
-				'key'     => 'name',
-				'message' => esc_html__( 'Username: ' . $data['username'] . ' is already taken.', 'user-registration' ),
-			);
-		}
-		// validate email
-		if ( email_exists( $data['email'] ) ) {
-			return array(
-				'status'  => false,
-				'key'     => 'name',
-				'message' => __( 'Email: ' . $data['email'] . ' is already taken.', 'user-registration' ),
-			);
-		}
-
-		if ( ! preg_match( '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).*$/', $data['password'] ) ) {
-			return array(
-				'status'  => false,
-				'key'     => 'password',
-				'message' => __( 'Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character', 'user-registration' ),
-			);
-		}
-		// validate password
-		if ( $data['password'] !== $data['confirm_password'] ) {
-			if ( empty( $data['confirm_password'] ) ) {
-				return array(
-					'status'  => false,
-					'message' => __( 'Confirm password field cannot be empty.', 'user-registration' ),
-				);
-			}
-
-			return array(
-				'status'  => false,
-				'key'     => 'password',
-				'message' => __( 'Password does not match.', 'user-registration' ),
-			);
-		}
 
 		// validate membership_start date
 		if ( $data['start_date'] < date( 'Y-m-d' ) ) {
@@ -144,19 +105,19 @@ class MembersService {
 	 */
 	public function prepare_members_data( $data ) {
 
-		if(!isset($data['role'])) {
+		if ( ! isset( $data['role'] ) ) {
 			$membership_details = $this->membership_repository->get_single_membership_by_ID( absint( $data['membership'] ) );
 			$membership_meta    = json_decode( $membership_details['meta_value'], true );
-			$data['role'] = $membership_meta['role'] ?? 'subscriber';
+			$data['role']       = $membership_meta['role'] ?? 'subscriber';
 		}
-		$role           = $data['role'] ?? 'subscriber';
+		$role = $data['role'] ?? 'subscriber';
 
 		$coupon_details = array();
 		if ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) && ur_pro_is_coupons_addon_activated() ) {
 			$coupon_details = ur_get_coupon_details( sanitize_text_field( $data['coupon'] ) );
 		}
 
-		$user_data       = array(
+		$user_data = array(
 			'user_login'    => sanitize_text_field( $data['username'] ),
 			'user_email'    => sanitize_email( $data['email'] ),
 			'user_pass'     => $data['password'],
@@ -164,13 +125,13 @@ class MembersService {
 			'display_name'  => sanitize_text_field( $data['username'] ),
 			'first_name'    => sanitize_text_field( $data['firstname'] ),
 			'last_name'     => sanitize_text_field( $data['lastname'] ),
-			'user_status'   => isset($data['member_status']) ? absint( $data['member_status'] ) : 1,
+			'user_status'   => isset( $data['member_status'] ) ? absint( $data['member_status'] ) : 1,
 		);
 
 		$membership_data = array(
 			'membership'     => absint( $data['membership'] ),
 			'start_date'     => date( 'Y-m-d', strtotime( $data['start_date'] ) ),
-			'payment_method' => sanitize_text_field( $data['payment_method'] ?? '' ) ,
+			'payment_method' => sanitize_text_field( $data['payment_method'] ?? '' ),
 		);
 
 		return array(
@@ -180,4 +141,17 @@ class MembersService {
 			'coupon_data'     => $coupon_details,
 		);
 	}
+
+	public function update_user_meta( $data, $new_user_id ) {
+		$user = new \WP_User( $new_user_id );
+		update_user_meta( $new_user_id, 'ur_registration_source', 'membership' );
+		$user->set_role( $data['role'] );
+		if ( ! empty( $data['coupon_data'] ) ) {
+			update_user_meta( $new_user_id, 'ur_coupon_discount_type', $data['coupon_data']['coupon_discount_type'] );
+			update_user_meta( $new_user_id, 'ur_coupon_discount', $data['coupon_data']['coupon_discount'] );
+		}
+		return $user;
+
+	}
+
 }

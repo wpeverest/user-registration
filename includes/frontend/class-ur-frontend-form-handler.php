@@ -132,7 +132,7 @@ class UR_Frontend_Form_Handler {
 					'username' => isset( $userdata['user_login'] ) ? $userdata['user_login'] : '',
 				);
 
-				if ( isset( $_POST['ur_stripe_payment_method'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification
+				if ( isset( $_POST['ur_stripe_payment_method'] )  || isset($_POST['is_membership_stripe_selected']) ) { //phpcs:ignore WordPress.Security.NonceVerification
 
 					if ( 'auto_login' === $login_option ) {
 						$success_params['auto_login'] = true;

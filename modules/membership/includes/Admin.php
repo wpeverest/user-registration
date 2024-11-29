@@ -106,7 +106,6 @@ if ( ! class_exists( 'Admin' ) ) :
 		 */
 		private function __construct() {
 			// Actions and Filters.
-
 			add_filter(
 				'plugin_action_links_' . plugin_basename( UR_MEMBERSHIP_PLUGIN_FILE ),
 				array(
@@ -121,13 +120,28 @@ if ( ! class_exists( 'Admin' ) ) :
 			add_action( 'init', array( $this, 'add_membership_options' ) );
 			add_action( 'plugins_loaded', array( $this, 'include_membership_payment_files' ) );
 			add_filter( 'user_registration_get_settings_pages', array( $this, 'add_membership_settings_page' ), 10, 1 );
-
+			add_filter( 'user_registration_success_params_before_send_json', array( $this, 'update_success_params_for_membership' ), 10, 4 );
 			register_deactivation_hook( UR_PLUGIN_FILE, array( $this, 'on_deactivation' ) );
-
 			register_activation_hook( UR_PLUGIN_FILE, array( $this, 'on_activation' ) );
-
 		}
 
+		public function update_success_params_for_membership( $success_params, $valid_form_data, $form_id, $user_id ) {
+			$keyFound = false;
+			foreach ($valid_form_data as $key => $value) {
+				if (preg_match('/^membership_field_.*/', $key)) {
+					$keyFound = true;
+					break;
+				}
+			}
+
+			if(!$keyFound) {
+				return $success_params;
+			}
+			$success_params['registration_type'] = 'membership';
+			unset($success_params['auto_login'], $success_params['redirect_url']);
+
+			return $success_params;
+		}
 		/**
 		 * Includes.
 		 */
@@ -136,11 +150,12 @@ if ( ! class_exists( 'Admin' ) ) :
 			if ( $this->is_admin() ) {
 				$this->admin   = new Membership();
 				$this->members = new Members();
-				new FormFields();
 			} else {
 				// require file.
 				$this->frontend = new Frontend();
 			}
+			new FormFields();
+
 		}
 
 		/**

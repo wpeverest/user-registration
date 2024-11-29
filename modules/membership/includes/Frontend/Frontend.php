@@ -37,6 +37,7 @@ class Frontend {
 		add_action( 'wp_enqueue_membership_scripts', array( $this, 'load_scripts' ), 10, 2 );
 		add_action( 'wp_loaded', array( $this, 'ur_add_membership_tab_endpoint' ) );
 		add_filter( 'user_registration_account_menu_items', array( $this, 'ur_membership_tab' ), 10, 1 );
+
 		add_action(
 			'user_registration_account_membership_endpoint',
 			array(
@@ -138,9 +139,8 @@ class Frontend {
 		wp_register_style( 'user-registration-membership-frontend-style', UR_MEMBERSHIP_CSS_ASSETS_URL . '/user-registration-membership-frontend.css', array(), UR_MEMBERSHIP_VERSION );
 		wp_enqueue_style( 'user-registration-membership-frontend-style' );
 
-		if ( is_plugin_active( 'user-registration-stripe/user-registration-stripe.php' ) ) {
-			wp_enqueue_script( 'user-registration-membership-stripe-v3', 'https://js.stripe.com/v3/', array() );
-		}
+		wp_enqueue_script( 'user-registration-membership-stripe-v3', 'https://js.stripe.com/v3/', array() );
+
 
 		$this->localize_scripts();
 	}
@@ -211,9 +211,10 @@ class Frontend {
 			'i18n_coupon_free_membership_error'            => _x( 'Invalid membership type (Free).', 'user registration membership', 'user-registration' ),
 			'i18n_incomplete_stripe_setup_error'           => _x( 'Stripe Payment stopped. Incomplete Stripe setup.', 'user registration membership', 'user-registration' ),
 			'i18n_error'                                   => _x( 'Error', 'user registration membership', 'user-registration' ),
+			'i18n_empty_card_details'                      => __( 'Your card number is empty.', 'user-registration' ),
 			'i18n_cancel_membership_text'                  => _x( 'Cancel membership.', 'user registration membership', 'user-registration' ),
 			'i18n_cancel_membership_subtitle'              => _x( 'Are you sure you want to cancel membership permanently?', 'user registration membership', 'user-registration' ),
-			'i18n_sending_text'              => __( 'Sending ...', 'user-registration' ),
+			'i18n_sending_text'                            => __( 'Sending ...', 'user-registration' ),
 		);
 	}
 

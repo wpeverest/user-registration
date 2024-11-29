@@ -21,4 +21,5 @@ interface MembersInterface extends BaseInterface {
 	 * @return array
 	 */
 	public function get_member_membership_by_id( $id );
+
 }

@@ -21,6 +21,7 @@ use WPEverest\URMembership\Admin\Services\CouponService;
 use WPEverest\URMembership\Admin\Services\EmailService;
 use WPEverest\URMembership\Admin\Services\MembershipGroupService;
 use WPEverest\URMembership\Admin\Services\MembershipService;
+use WPEverest\URMembership\Admin\Services\MembersService;
 use WPEverest\URMembership\Admin\Services\PaymentService;
 use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
 
@@ -83,6 +84,7 @@ class AJAX {
 	 * @return void
 	 */
 	public static function register_member() {
+
 		ur_membership_verify_nonce( 'ur_members_frontend' ); // nonce verification.
 		if ( ! isset( $_POST['members_data'] ) ) {
 			wp_send_json_error(
@@ -94,24 +96,32 @@ class AJAX {
 
 		$data = apply_filters( 'user_registration_membership_before_register_member', isset( $_POST['members_data'] ) ? (array) json_decode( wp_unslash( $_POST['members_data'] ), true ) : array() );
 
-		$members_controller = new MembersController( new MembersRepository(), new OrdersRepository(), new SubscriptionRepository() );
-		$response           = $members_controller->create_members_public( $data );
 
-		$member_id               = $response['member_id'] ?? 0;
+		if ( ! isset( $data['username'] ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Field username is required.', 'user-registration' ),
+				)
+			);
+		}
+
+		$membership_service = new MembershipService();
+		$response                = $membership_service->create_membership_order_and_subscription( $data );
+		$member_id               = $response['member_id'];
 		$transaction_id          = $response['transaction_id'] ?? 0;
 		$data['member_id']       = $member_id;
 		$data['subscription_id'] = $response['subscription_id'] ?? 0;
+		$data['email']           = $response['member_email'];
 
 		$pg_data = array();
 		if ( 'free' !== $data['payment_method'] && $response['status'] ) {
 			$payment_service = new PaymentService( $data['payment_method'], $data['membership'], $data['email'] );
 			$pg_data         = $payment_service->build_response( $data );
-
 		}
 		if ( $response['status'] ) {
-			$email_service = new EmailService();
-			$email_service->send_email( $data, 'user_register_user' );
-			$email_service->send_email( $data, 'user_register_admin' );
+//			$email_service = new EmailService();
+//			$email_service->send_email( $data, 'user_register_user' );
+//			$email_service->send_email( $data, 'user_register_admin' );
 
 			$response = apply_filters(
 				'user_registration_membership_after_register_member',
@@ -226,8 +236,7 @@ class AJAX {
 		}
 		ur_membership_verify_nonce( 'ur_membership' );
 
-		$membership = new MembershipService();
-
+		$membership        = new MembershipService();
 		$data              = isset( $_POST['membership_data'] ) ? (array) json_decode( wp_unslash( $_POST['membership_data'] ), true ) : array();
 		$is_stripe_enabled = isset( $data['post_meta_data']['payment_gateways']['stripe'] ) && "on" === $data['post_meta_data']['payment_gateways']['stripe']["status"];
 

@@ -5,96 +5,104 @@
 	</div>
 </div>
 <!--user registration section-->
-<form id="ur-membership-registration" class="ur_membership_registration_container ur-form-container">
-	<h3 class="ur_membership_title"><?php echo esc_html__( 'Sign Up', 'user-registration' ); ?></h3>
-	<hr class="ur_membership_divider">
-	<!--	firstname-->
-	<div class="ur_membership_frontend_input_container">
-		<label class="ur_membership_input_label" for="ur-membership-first-name">
-			<?php echo esc_html__( 'First Name', 'user-registration' ); ?>
-		</label>
-		<input class="ur_membership_input_class"
-			   data-key-name="<?php echo esc_html__( 'First Name', 'user-registration' ); ?>"
-			   id="ur-membership-first-name"
-			   type="text"
-			   placeholder="<?php echo esc_html__( 'First Name', 'user-registration' ); ?>"
-			   name="urm_firstname"
-			   te
-		>
-		<span class="notice_red"></span>
+<div id="ur-membership-registration" class="ur_membership_registration_container ur-form-container">
+	<?php
+	if ( false ):
+		?>
+		<h3 class="ur_membership_title"><?php echo esc_html__( 'Sign Up', 'user-registration' ); ?></h3>
+		<hr class="ur_membership_divider">
+		<!--	firstname-->
+		<div class="ur_membership_frontend_input_container">
+			<label class="ur_membership_input_label" for="ur-membership-first-name">
+				<?php echo esc_html__( 'First Name', 'user-registration' ); ?>
+			</label>
+			<input class="ur_membership_input_class"
+				   data-key-name="<?php echo esc_html__( 'First Name', 'user-registration' ); ?>"
+				   id="ur-membership-first-name"
+				   type="text"
+				   placeholder="<?php echo esc_html__( 'First Name', 'user-registration' ); ?>"
+				   name="urm_firstname"
+				   te
+			>
+			<span class="notice_red"></span>
 
-	</div>
-	<!--	lastname-->
-	<div class="ur_membership_frontend_input_container">
-		<label class="ur_membership_input_label"
-			   for="ur-membership-last-name"><?php echo esc_html__( 'Last Name', 'user-registration' ); ?></label>
-		<input class="ur_membership_input_class"
-			   id="ur-membership-last-name"
-			   data-key-name="<?php echo esc_html__( 'Last Name', 'user-registration' ); ?>"
-			   type="text"
-			   placeholder="<?php echo esc_html__( 'Last Name', 'user-registration' ); ?>"
-			   name="urm_lastname"
+		</div>
+		<!--	lastname-->
+		<div class="ur_membership_frontend_input_container">
+			<label class="ur_membership_input_label"
+				   for="ur-membership-last-name"><?php echo esc_html__( 'Last Name', 'user-registration' ); ?></label>
+			<input class="ur_membership_input_class"
+				   id="ur-membership-last-name"
+				   data-key-name="<?php echo esc_html__( 'Last Name', 'user-registration' ); ?>"
+				   type="text"
+				   placeholder="<?php echo esc_html__( 'Last Name', 'user-registration' ); ?>"
+				   name="urm_lastname"
 
-		>
-		<span class="notice_red"></span>
+			>
+			<span class="notice_red"></span>
 
-	</div>
-	<!--	username-->
-	<div class="ur_membership_frontend_input_container">
-		<label class="ur_membership_input_label required"
-			   for="ur-membership-username"><?php echo esc_html__( 'Username', 'user-registration' ); ?></label>
-		<input class="ur_membership_input_class"
-			   id="ur-membership-username"
-			   type="text"
-			   data-key-name="<?php echo esc_html__( 'Username', 'user-registration' ); ?>"
-			   placeholder="<?php echo esc_html__( 'abc123', 'user-registration' ); ?>"
-			   name="urm_username"
-			   required
-		>
-		<span class="notice_red"></span>
+		</div>
+		<!--	username-->
+		<div class="ur_membership_frontend_input_container">
+			<label class="ur_membership_input_label required"
+				   for="ur-membership-username"><?php echo esc_html__( 'Username', 'user-registration' ); ?></label>
+			<input class="ur_membership_input_class"
+				   id="ur-membership-username"
+				   type="text"
+				   data-key-name="<?php echo esc_html__( 'Username', 'user-registration' ); ?>"
+				   placeholder="<?php echo esc_html__( 'abc123', 'user-registration' ); ?>"
+				   name="urm_username"
+				   required
+			>
+			<span class="notice_red"></span>
 
-	</div>
-	<!--	email-->
-	<div class="ur_membership_frontend_input_container">
-		<label class="ur_membership_input_label required"
-			   for="ur-membership-email"><?php echo esc_html__( 'Email', 'user-registration' ); ?></label>
-		<input class="ur_membership_input_class"
-			   id="ur-membership-email"
-			   data-key-name="<?php echo esc_html__( 'Email', 'user-registration' ); ?>"
-			   type="email"
-			   placeholder="<?php echo esc_html__( 'example@email.com', 'user-registration' ); ?>"
-			   name="urm_email"
-			   required
-		>
-		<span class="notice_red"></span>
+		</div>
+		<!--	email-->
+		<div class="ur_membership_frontend_input_container">
+			<label class="ur_membership_input_label required"
+				   for="ur-membership-email"><?php echo esc_html__( 'Email', 'user-registration' ); ?></label>
+			<input class="ur_membership_input_class"
+				   id="ur-membership-email"
+				   data-key-name="<?php echo esc_html__( 'Email', 'user-registration' ); ?>"
+				   type="email"
+				   placeholder="<?php echo esc_html__( 'example@email.com', 'user-registration' ); ?>"
+				   name="urm_email"
+				   required
+			>
+			<span class="notice_red"></span>
 
-	</div>
-	<!--	password-->
-	<div class="ur_membership_frontend_input_container">
-		<label class="ur_membership_input_label required"
-			   for="ur-membership-password"><?php echo esc_html__( 'Password', 'user-registration' ); ?></label>
-		<input class="ur_membership_input_class"
-			   id="ur-membership-password"
-			   data-key-name="<?php echo esc_html__( 'Password', 'user-registration' ); ?>"
-			   type="password"
-			   name="urm_password"
-			   required
-		>
-		<span id="password-notice" class="notice_red"></span>
-	</div>
-	<!--	confirm password-->
-	<div class="ur_membership_frontend_input_container">
-		<label class="ur_membership_input_label required"
-			   for="ur-membership-confirm-password"><?php echo esc_html__( 'Confirm Password', 'user-registration' ); ?></label>
-		<input class="ur_membership_input_class"
-			   data-key-name="<?php echo esc_html__( 'Confirm Password', 'user-registration' ); ?>"
-			   id="ur-membership-confirm-password"
-			   type="password"
-			   name="urm_confirm_password"
-			   required
-		>
-		<span id="confirm-password-notice" class="notice_red"></span>
-	</div>
+		</div>
+		<!--	password-->
+		<div class="ur_membership_frontend_input_container">
+			<label class="ur_membership_input_label required"
+				   for="ur-membership-password"><?php echo esc_html__( 'Password', 'user-registration' ); ?></label>
+			<input class="ur_membership_input_class"
+				   id="ur-membership-password"
+				   data-key-name="<?php echo esc_html__( 'Password', 'user-registration' ); ?>"
+				   type="password"
+				   name="urm_password"
+				   required
+			>
+			<span id="password-notice" class="notice_red"></span>
+		</div>
+
+		<!--	confirm password-->
+		<div class="ur_membership_frontend_input_container">
+			<label class="ur_membership_input_label required"
+				   for="ur-membership-confirm-password"><?php echo esc_html__( 'Confirm Password', 'user-registration' ); ?></label>
+			<input class="ur_membership_input_class"
+				   data-key-name="<?php echo esc_html__( 'Confirm Password', 'user-registration' ); ?>"
+				   id="ur-membership-confirm-password"
+				   type="password"
+				   name="urm_confirm_password"
+				   required
+			>
+			<span id="confirm-password-notice" class="notice_red"></span>
+		</div>
+
+	<?php
+	endif;
+	?>
 	<!--	coupon container-->
 	<?php
 	$is_coupon_addon_activated = function_exists( 'ur_pro_is_coupons_addon_activated' ) && ur_pro_is_coupons_addon_activated();
@@ -128,18 +136,25 @@
 	?>
 	<!--	membership-->
 	<div class="ur_membership_frontend_input_container radio">
-		<span
-			class="ur_membership_input_label required"><?php echo esc_html__( 'Select Membership', 'user-registration' ); ?></span>
+
+		<label
+			class="ur-label required"><?php echo esc_html__( esc_html($attributes['label']), 'user-registration' ); ?>
+			<abbr class="required" title="required">*</abbr>
+		</label>
 		<?php
+
 		foreach ( $memberships as $m => $membership ) :
 			?>
 			<label class="ur_membership_input_label"
 				   for="ur-membership-select-membership-<?php echo esc_attr( $membership['ID'] ); ?>">
-				<input class="ur_membership_input_class ur_membership_radio_input"
+				<input class="ur_membership_input_class ur_membership_radio_input ur-frontend-field"
 					   data-key-name="ur-membership-id"
 					   id="ur-membership-select-membership-<?php echo esc_attr( $membership['ID'] ); ?>"
 					   type="radio"
 					   name="urm_membership"
+					   data-name=<?php echo esc_html__( esc_html($attributes['field_name']), 'user-registration' ); ?>
+					   data-label=<?php echo esc_html__( esc_html($attributes['type']), 'user-registration' ); ?>
+					   required="required"
 					   value="<?php echo esc_attr( $membership['ID'] ); ?>"
 					   data-urm-pg='<?php echo esc_attr( ( $membership['active_payment_gateways'] ?? '' ) ); ?>'
 					   data-urm-pg-type="<?php echo esc_attr( $membership['type'] ); ?>"
@@ -152,6 +167,8 @@
 					class="ur-membership-duration"> - <?php echo esc_html__( $membership['period'], 'user-registration' ); ?></span>
 			</label>
 		<?php endforeach; ?>
+		<span id="membership-input-notice">
+		</span>
 	</div>
 
 	<!--	total container-->
@@ -186,6 +203,7 @@
 						   id="ur-membership-<?php echo esc_attr( strtolower( $gateway ) ); ?>"
 						   type="radio"
 						   name="urm_payment_method"
+						   required
 						   value="<?php echo esc_attr( strtolower( $gateway ) ); ?>"
 						<?php echo 0 === $g ? 'checked' : ''; ?>
 					>
@@ -204,16 +222,15 @@
 				</div>
 			</div>
 		</div>
-		<span id="stripe-errors" class="notice_red"></span>
 	</div>
 
 
 	<!--	submit button-->
-	<div class="ur_membership_frontend_input_container ">
+	<div class="ur_membership_frontend_input_container urm-d-none">
 		<button type="button"
 				class="membership-primary-btn  membership_register_button"><?php echo esc_html__( 'Sign Up', 'user-registration' ); ?></button>
 	</div>
-</form>
+</div>
 <!--user order successful section-->
 
 

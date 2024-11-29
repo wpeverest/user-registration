@@ -216,7 +216,7 @@
 					ignore: function (index, element) {
 						// Return true to ignore the element, false to include it in validation
 						if (
-							$(element).closest(".ur-field-item").is(":hidden")
+							$(element).closest(".ur-field-item").is(":hidden") || $(element).closest(".ur_membership_frontend_input_container").is(":hidden")
 						) {
 							return true;
 						}

@@ -31,7 +31,11 @@ if ( ! empty( $selected_group_id ) ) {
 		echo "<span class='urmg-loader'></span>";
 		echo "<div class='urmg-container'>";
 		foreach ( $memberships as $k => $option ) {
-			echo "<label><input type = 'radio'  value='" . esc_attr( trim( $option['ID'] ) ) . "' disabled/><span class='user-registration-image-label'>" . esc_html( trim( $option['title'] ) ) . '</span></label>';
+			echo "<label>
+					<input type = 'radio'  value='" . esc_attr( trim( $option['ID'] ) ) . "' disabled/>
+					<span class='user-registration-image-label'>" . esc_html( trim( $option['title'] ) ) . "</span>
+				 	<span class='ur-membership-duration'> - ". esc_html__( $option["period"], "user-registration" ) ."</span>
+				 </label>";
 		}
 		echo "</div>"
 		?>

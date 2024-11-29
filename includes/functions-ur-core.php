@@ -4969,7 +4969,6 @@ if ( ! function_exists( 'user_registration_validate_form_field_data' ) ) {
 	 */
 	function user_registration_validate_form_field_data( $data, $form_data, $form_id, $response_array, $form_field_data, $valid_form_data ) {
 		$form_key_list = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
-
 		$form_validator = new UR_Form_Validation();
 
 		if ( in_array( $data->field_name, $form_key_list, true ) ) {

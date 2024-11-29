@@ -271,3 +271,53 @@ if ( ! function_exists( 'paypal_supported_currencies_list' ) ) {
 		);
 	}
 }
+
+if(!function_exists('user_registration_sanitize_amount')) {
+	/**
+	 * Sanitize Amount.
+	 *
+	 * Returns a sanitized amount by stripping out thousands separators.
+	 *
+	 * @param string $amount Amount.
+	 * @param string $currency Currency.
+	 *
+	 * @return string $amount
+	 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/blob/master/includes/formatting.php#L24
+	 *
+	 * @since 1.0.0
+	 */
+	function user_registration_sanitize_amount( $amount, $currency = 'USD' ) {
+
+		$currency      = strtoupper( $currency );
+		$currencies    = ur_payment_integration_get_currencies();
+		$thousands_sep = $currencies[ $currency ]['thousands_separator'];
+		$decimal_sep   = $currencies[ $currency ]['decimal_separator'];
+		$is_negative   = false;
+
+		// Sanitize the amount.
+		if ( ',' === $decimal_sep && false !== ( strpos( $amount, $decimal_sep ) ) ) {
+			if ( ( '.' === $thousands_sep || ' ' === $thousands_sep ) && false !== ( strpos( $amount, $thousands_sep ) ) ) {
+				$amount = str_replace( $thousands_sep, '', $amount );
+			} elseif ( empty( $thousands_sep ) && false !== ( strpos( $amount, '.' ) ) ) {
+				$amount = str_replace( '.', '', $amount );
+			}
+			$amount = str_replace( $decimal_sep, '.', $amount );
+		} elseif ( ',' === $thousands_sep && false !== ( strpos( $amount, $thousands_sep ) ) ) {
+			$amount = str_replace( $thousands_sep, '', $amount );
+		}
+
+		if ( $amount < 0 ) {
+			$is_negative = true;
+		}
+
+		$amount   = preg_replace( '/[^0-9\.]/', '', $amount );
+		$decimals = apply_filters( 'user_registration_sanitize_amount_decimals', 2, $amount );
+		$amount   = number_format( (float) $amount, $decimals, '.', '' );
+
+		if ( $is_negative ) {
+			$amount *= - 1;
+		}
+
+		return $amount;
+	}
+}

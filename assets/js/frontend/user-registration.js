@@ -378,6 +378,10 @@
 									multi_value_field[multi_start];
 								single_form_field_name =
 									single_form_field_name.replace("[]", "");
+
+								if(single_form_field_name === "urm_membership") {
+									single_form_field_name = field.eq(0).attr('data-name');
+								}
 								var field_data = {
 									value: field_value_json,
 									field_type: field_type,
@@ -494,6 +498,7 @@
 							"undefined" !== field.attr("name")
 								? field.attr("name")
 								: "null";
+
 						var phone_id = [];
 						if (
 							field.attr("name") !== undefined &&
@@ -981,19 +986,23 @@
 											)
 											.after(error_message);
 									}
-
+									//place it before user_registration_frontend_validate_before_form_submit trigger gets used by other addons so that regular validation is shown before addon validations
+									if (!$this.valid()) {
+										return;
+									}
 									$(document).trigger(
 										"user_registration_frontend_validate_before_form_submit",
 										[$this]
 									);
-
+									if($('.user-registration-error').length) {
+										return;
+									}
 									if (
 										0 <
 										$this.find(".dz-error-message").length
 									) {
 										return;
 									}
-
 									if (
 										$this
 											.find(
@@ -1011,9 +1020,7 @@
 										return;
 									}
 
-									if (!$this.valid()) {
-										return;
-									}
+
 
 									$this
 										.find(".ur-submit-button")
@@ -1213,10 +1220,12 @@
 							complete: function (ajax_response) {
 								var ajaxFlag = [];
 								ajaxFlag["status"] = true;
+
 								$(document).trigger(
 									"user_registration_frontend_before_ajax_complete_success_message",
 									[ajax_response, ajaxFlag, $this]
 								);
+									return;
 								if (ajaxFlag["status"]) {
 									$this
 										.find(".ur-submit-button")
@@ -1403,7 +1412,6 @@
 													$(document).trigger(
 														"user_registration_frontend_before_auto_login"
 													);
-
 													window.setTimeout(
 														function () {
 															if (
@@ -1736,6 +1744,7 @@
 										.find(".ur-submit-button")
 										.prop("disabled", false);
 								}
+
 								$(".coupon-message").css({
 									display: "none"
 								});
