@@ -61,13 +61,26 @@ const RegistrationType = () => {
 		return (
 			<Box
 				as="label"
-				border={`2px solid ${borderColor}`}
+				border={`1px solid ${borderColor}`}
 				borderRadius="12px"
 				padding="20px"
 			>
 				<input {...input} />
 				<Flex direction="column" align="center" gap="16px">
-					<Image src={image} width="322px" height="215px" />
+					<Box
+						p="20px"
+						border="1px solid #E1E1E1"
+						borderRadius="8px"
+						width="315px"
+						height="270px"
+					>
+						<Image
+							src={image}
+							width="100%"
+							height="100%"
+							objectFit="contain"
+						/>
+					</Box>
 					<Flex direction="column" align="center" gap="6px">
 						<Text
 							fontSize="18px"
