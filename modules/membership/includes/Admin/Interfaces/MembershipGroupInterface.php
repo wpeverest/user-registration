@@ -28,4 +28,22 @@ interface MembershipGroupInterface extends BaseInterface {
 	 * @return array $result
 	 */
 	public function get_single_membership_group_by_ID( $id );
+
+	/**
+	 * get_group_memberships_by_id
+	 *
+	 * @param $id
+	 *
+	 * @return mixed
+	 */
+	public function get_group_memberships_by_id( $id );
+
+	/**
+	 * is_form_related
+	 *
+	 * @param $id
+	 *
+	 * @return mixed
+	 */
+	public function get_group_form_id( $id );
 }

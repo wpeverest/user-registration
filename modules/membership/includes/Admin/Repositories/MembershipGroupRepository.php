@@ -4,6 +4,7 @@ namespace WPEverest\URMembership\Admin\Repositories;
 
 use WPEverest\URMembership\Admin\Interfaces\MembershipGroupInterface;
 use WPEverest\URMembership\Admin\Interfaces\MembershipInterface;
+use WPEverest\URMembership\Admin\Services\MembershipGroupService;
 use WPEverest\URMembership\Admin\Services\MembershipService;
 use WPEverest\URMembership\TableList;
 
@@ -20,7 +21,6 @@ class MembershipGroupRepository extends BaseRepository implements MembershipGrou
 	 */
 	public function get_all_membership_groups() {
 		// TODO : maybe change this raw queries to wp_Query
-		global $wpdb;
 		$sql = "
 				SELECT wpp.ID,
 				       wpp.post_title,
@@ -30,18 +30,19 @@ class MembershipGroupRepository extends BaseRepository implements MembershipGrou
 				       wpm.meta_value
 				FROM $this->table wpp
 				         JOIN $this->posts_meta_table wpm on wpm.post_id = wpp.ID
-				WHERE wpm.meta_key = 'ur_membership'
-				  AND wpp.post_type = 'ur_membership'
+				WHERE wpm.meta_key = 'urmg_memberships'
+				  AND wpp.post_type = 'ur_membership_groups'
 				  AND wpp.post_status = 'publish'
 				ORDER BY 1 DESC
 		";
 
-		$memberships        = $wpdb->get_results(
+		$membership_groups = $this->wpdb()->get_results(
 			$sql,
 			ARRAY_A
 		);
-		$membership_service = new MembershipService();
-		return $membership_service->prepare_membership_data( $memberships );
+
+		return $membership_groups;
+
 
 	}
 
@@ -54,9 +55,8 @@ class MembershipGroupRepository extends BaseRepository implements MembershipGrou
 	 */
 	public function get_single_membership_group_by_ID( $id ) {
 		// TODO : maybe change this raw queries to wp_Query
-		global $wpdb;
 
-		return $wpdb->get_row(
+		return $this->wpdb()->get_row(
 			$this->wpdb()->prepare(
 				"SELECT wpp.ID,
 				       wpp.post_title,
@@ -78,4 +78,37 @@ class MembershipGroupRepository extends BaseRepository implements MembershipGrou
 
 	}
 
+	/**
+	 * get_group_memberships_by_id
+	 *
+	 * @param $id
+	 *
+	 * @return array|mixed
+	 */
+	public function get_group_memberships_by_id( $id ) {
+
+		$memberships = get_post_meta( $id, 'urmg_memberships', true );
+		$memberships = str_replace( array( '[', ']' ), '', $memberships );
+
+		$membership_repository = new MembershipRepository();
+		return $membership_repository->get_multiple_membership_by_ID($memberships);
+	}
+
+	/**
+	 * is_form_related
+	 * Just having the meta key means the form consist of a membership group
+	 * @param $group_id
+	 *
+	 * @return bool
+	 */
+	public function get_group_form_id( $group_id ) {
+		$meta_key_exists = $this->wpdb()->get_var(
+			$this->wpdb()->prepare(
+				"SELECT post_id FROM $this->posts_meta_table WHERE meta_key = %s LIMIT 1",
+				"urm_form_group_".$group_id
+			)
+		);
+		return $meta_key_exists;
+
+	}
 }

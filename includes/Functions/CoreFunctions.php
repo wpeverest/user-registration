@@ -14,107 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-if ( ! function_exists( 'ur_membership_is_compatible' ) ) {
-
-	/**
-	 * Check if Membership addon is compatible.
-	 *
-	 * @return string
-	 */
-	function ur_membership_is_compatible() {
-
-		$ur_pro_plugins_path = WP_PLUGIN_DIR . UR_MEMBERSHIP_DS . 'user-registration' . UR_MEMBERSHIP_DS . 'user-registration.php';
-
-		if ( ! file_exists( $ur_pro_plugins_path ) ) {
-			return false;
-		}
-
-		$ur_pro_plugin_file_path = 'user-registration/user-registration.php';
-
-		include_once ABSPATH . 'wp-admin/includes/plugin.php';
-
-		if ( ! is_plugin_active( $ur_pro_plugin_file_path ) ) {
-			return false;
-		}
-
-		if ( function_exists( 'UR' ) ) {
-			$user_registration_version = UR()->version;
-		} else {
-			$user_registration_version = get_option( 'user_registration_version' );
-		}
-
-		if ( version_compare( $user_registration_version, '4.1.6', '<' ) ) {
-			return false;
-		}
-
-		return 'YES';
-	}
-}
-
-if ( ! function_exists( 'ur_membership_check_plugin_compatibility' ) ) {
-
-	/**
-	 * Check Plugin Compatibility.
-	 */
-	function ur_membership_check_plugin_compatibility() {
-
-		add_action( 'admin_notices', 'ur_membership_admin_notice', 10 );
-	}
-}
-
-if ( ! function_exists( 'ur_membership_admin_notice' ) ) {
-
-	/**
-	 * Print Admin Notice.
-	 */
-	function ur_membership_admin_notice() {
-
-		$class = 'notice notice-error';
-
-		$message = ur_membership_is_compatible();
-
-		if ( 'YES' !== $message && '' !== $message ) {
-			/* translators: %s: user-registration plugin link */
-			echo '<div class="error notice is-dismissible"><p>' . sprintf( esc_html__( 'User Registration Membership requires %s version 4.1.6 or greater to work!', 'user-registration-membership' ), '<a href="https://wpuserregistration.com/" target="_blank">' . esc_html__( 'User Registration Pro', 'user-registration-membership' ) . '</a>' ) . '</p></div>';
-		}
-	}
-}
-
-if ( ! function_exists( 'ur_membership_is_paypal_activated' ) ) {
-	/**
-	 * Check paypal module enabled or not.
-	 *
-	 * @return bool
-	 */
-	function ur_membership_is_paypal_activated() {
-		$enabled_features = get_option( 'user_registration_enabled_features', array() );
-
-		return in_array( 'user-registration-payments', $enabled_features, true ) ? true : false;
-	}
-}
-
-if ( ! function_exists( 'ur_membership_get_all_capabilities' ) ) {
-	/**
-	 * Get a list containing all available capabilities.
-	 *
-	 * @return array List of capabilities.
-	 * @since 2.0.0
-	 */
-	function ur_membership_get_all_capabilities() {
-		global $wp_roles;
-
-		$wp_capabilities = array();
-
-		foreach ( $wp_roles->roles as $role ) {
-			$role_cap_slugs    = array_keys( $role['capabilities'] );
-			$role_capabilities = array_combine( $role_cap_slugs, $role_cap_slugs );
-			$wp_capabilities   = array_merge( $wp_capabilities, $role_capabilities );
-		}
-
-		return $wp_capabilities;
-	}
-}
-
 if ( ! function_exists( 'ur_membership_get_all_roles' ) ) {
 	/**
 	 * Retrieves all the roles available in the WordPress system.
@@ -452,7 +351,7 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 	 */
 	function build_membership_list_frontend( $memberships ) {
 		$currency                = get_option( 'user_registration_payment_currency', 'USD' );
-		$currencies              = ur_membership_get_currencies();
+		$currencies              = ur_payment_integration_get_currencies();
 		$symbol                  = $currencies[ $currency ]['symbol'];
 		$new_mem                 = array();
 		$active_payment_gateways = array();

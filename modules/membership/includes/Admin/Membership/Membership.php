@@ -15,6 +15,7 @@ use WPEverest\URMembership\Admin\Members\Members;
 use WPEverest\URMembership\Admin\Membership\ListTable;
 use WPEverest\URMembership\Admin\MembershipGroups\MembershipGroups;
 use WPEverest\URMembership\Admin\Repositories\SubscriptionRepository;
+use WPEverest\URMembership\Admin\Services\MembershipGroupService;
 use WPEverest\URMembership\Admin\Services\SubscriptionService;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -103,7 +104,7 @@ class Membership {
 		if ( isset( $_GET['page'] ) && 'user-registration-membership' === $_GET['page'] ) {
 
 			// Bulk actions.
-			if ( isset( $_REQUEST['action'] ) && (isset( $_REQUEST['membership'] ) || isset( $_REQUEST['membership_group_id']) )) {
+			if ( isset( $_REQUEST['action'] ) && ( isset( $_REQUEST['membership'] ) || isset( $_REQUEST['membership_group_id'] ) ) ) {
 				$this->bulk_actions();
 			}
 
@@ -157,9 +158,13 @@ class Membership {
 	 * @param bool $delete Delete action.
 	 */
 	private function bulk_trash( $membership_lists, $delete = false, $is_membership = true ) {
-
+		$membership_group_service = new MembershipGroupService();
 		foreach ( $membership_lists as $membership_id ) {
+			$form_id = $membership_group_service->get_group_form_id( $membership_id );
 			if ( $delete ) {
+				if ( ! $is_membership && ( "" != $form_id ) ) {
+					break;
+				}
 				wp_delete_post( $membership_id, true );
 			} else {
 				wp_trash_post( $membership_id );
@@ -170,7 +175,7 @@ class Membership {
 		$qty    = count( $membership_lists );
 		$status = isset( $_GET['status'] ) ? '&status=' . sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '';
 
-		wp_safe_redirect( esc_url( admin_url( 'admin.php?page=user-registration-membership' . (! $is_membership ? '&action=list_groups' : '') . $status . '&' . $type . '=' . $qty ) ) );
+		wp_safe_redirect( esc_url( admin_url( 'admin.php?page=user-registration-membership' . ( ! $is_membership ? '&action=list_groups' : '' ) . $status . '&' . $type . '=' . $qty ) ) );
 		exit();
 	}
 
@@ -399,7 +404,6 @@ class Membership {
 				'membership_content'  => $membership_content,
 				'ajax_url'            => admin_url( 'admin-ajax.php' ),
 				'wp_roles'            => ur_membership_get_all_roles(),
-				'wp_capabilities'     => ur_membership_get_all_capabilities(),
 				'posts'               => $posts,
 				'labels'              => $this->get_i18_labels(),
 				'membership_page_url' => admin_url( 'admin.php?page=user-registration-membership&action=add_new_membership' ),

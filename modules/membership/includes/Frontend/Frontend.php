@@ -159,7 +159,7 @@ class Frontend {
 	 */
 	public function localize_scripts() {
 		$currency             = get_option( 'user_registration_payment_currency', 'USD' );
-		$currencies           = ur_membership_get_currencies();
+		$currencies           = ur_payment_integration_get_currencies();
 		$symbol               = $currencies[ $currency ]['symbol'];
 		$registration_page_id = get_option( 'user_registration_member_registration_page_id' );
 		$redirect_page_url    = get_permalink( $registration_page_id );

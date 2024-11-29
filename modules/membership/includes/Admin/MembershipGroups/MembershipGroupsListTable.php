@@ -7,6 +7,7 @@
 
 namespace WPEverest\URMembership\Admin\MembershipGroups;
 
+use WPEverest\URMembership\Admin\Services\MembershipGroupService;
 use WPEverest\URMembership\TableList;
 
 if ( ! class_exists( 'UR_List_Table' ) ) {
@@ -61,10 +62,11 @@ class MembershipGroupsListTable extends \UR_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'     => '<input type="checkbox" />',
-			'title'  => __( 'Group Name', 'user-registration' ),
-			'status' => __( 'Status', 'user-registration' ),
-			'action' => __( 'Action', 'user-registration' ),
+			'cb'        => '<input type="checkbox" />',
+			'title'     => __( 'Group Name', 'user-registration' ),
+			'shortcode' => __( 'Shortcode', 'user-registration' ),
+			'status'    => __( 'Status', 'user-registration' ),
+			'action'    => __( 'Action', 'user-registration' ),
 		);
 	}
 
@@ -80,7 +82,13 @@ class MembershipGroupsListTable extends \UR_List_Table {
 	}
 
 	public function get_delete_links( $row ) {
-		return admin_url( 'admin.php?membership_group_id=' . $row->ID . '&action=delete&page=' . $this->page );
+		$membership_group_service = new MembershipGroupService();
+		$is_form_related          = $membership_group_service->get_group_form_id( $row->ID );
+
+		$url = 'admin.php?membership_group_id=' . $row->ID . '&action=delete&page=' . $this->page;
+		$url .= ( "" != $is_form_related ) ? "&form=" . get_the_title( $is_form_related ) : '';
+
+		return admin_url( $url );
 	}
 
 	/**
@@ -108,26 +116,38 @@ class MembershipGroupsListTable extends \UR_List_Table {
 	 *
 	 * @return string
 	 */
-	public function column_status( $membership ) {
-		$membership_content = json_decode( $membership->post_content, true );
+	public function column_status( $membership_group ) {
+		$membership_content = json_decode( $membership_group->post_content, true );
 		$enabled            = $membership_content['status'] == 'true';
 		$status_class       = $enabled ? 'user-registration-badge user-registration-badge--success-subtle' : 'user-registration-badge user-registration-badge--secondary-subtle';
 		$status_label       = $enabled ? esc_html__( 'Active', 'user-registration-content-restriction' ) : esc_html__( 'Inactive', 'user-registration-content-restriction' );
 
-		return sprintf( '<span id="ur-membership-list-status-' . $membership->ID . '" class="%s">%s</span>', $status_class, $status_label );
+		return sprintf( '<span id="ur-membership-list-status-' . $membership_group->ID . '" class="%s">%s</span>', $status_class, $status_label );
 	}
 
+	public function column_shortcode( $membership_group ) {
+
+		$shortcode = '[user_registration_membership_listing  group_id="' . $membership_group->ID . '"]';
+		return "
+				<div class='urmg-shortcode'>
+					<input type='text' onfocus='this.select();' readonly='readonly' value='$shortcode' class='widefat code'>
+					<button id='copy-shortcode-16' class='button ur-copy-shortcode tooltipstered' href='#' data-tip='Copy Shortcode ! ' data-copied='Copied ! '>
+						<span class='dashicons dashicons-admin-page'></span>
+					</button>
+				</div>
+			";
+	}
 
 	/**
 	 * @param $membership
 	 *
 	 * @return string
 	 */
-	public function column_action( $membership ) {
+	public function column_action( $membership_group ) {
 
-		$edit_link          = $this->get_edit_links( $membership );
-		$delete_link        = $this->get_delete_links( $membership );
-		$membership_content = json_decode( $membership->post_content, true );
+		$edit_link          = $this->get_edit_links( $membership_group );
+		$delete_link        = $this->get_delete_links( $membership_group );
+		$membership_content = json_decode( $membership_group->post_content, true );
 		$checked            = ( $membership_content['status'] == 'true' ) ? 'checked' : '';
 		$actions            = '
 				<div class="row-actions ur-d-flex ur-align-items-center visible" style="gap: 5px">
@@ -137,7 +157,7 @@ class MembershipGroupsListTable extends \UR_List_Table {
 						 		type="checkbox"
 						 		' . $checked . '
 							   	class="ur-membership-change-status user-registration-switch__control hide-show-check enabled"
-							   	data-ur-membership-id = ' . $membership->ID . '
+							   	data-ur-membership-id = ' . $membership_group->ID . '
 						>
 					</div>
 					&nbsp | &nbsp

@@ -281,7 +281,7 @@
 											<span>
 												<?php
 												$currency   = get_option( 'user_registration_payment_currency', 'USD' );
-												$currencies = ur_membership_get_currencies();
+												$currencies = ur_payment_integration_get_currencies();
 												$symbol     = $currencies[ $currency ]['symbol'];
 												echo $symbol;
 												?>

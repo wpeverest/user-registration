@@ -77,4 +77,31 @@ class MembershipRepository extends BaseRepository implements MembershipInterface
 
 	}
 
+
+	public function get_multiple_membership_by_ID( $ids ) {
+		global $wpdb;
+		$sql = "
+				SELECT wpp.ID,
+				       wpp.post_title,
+				       wpp.post_content,
+				       wpp.post_status,
+				       wpp.post_type,
+				       wpm.meta_value
+				FROM $this->table wpp
+				         JOIN $this->posts_meta_table wpm on wpm.post_id = wpp.ID
+				WHERE wpm.meta_key = 'ur_membership'
+				  AND wpp.post_type = 'ur_membership'
+				  AND wpp.post_status = 'publish'
+				AND wpp.ID IN ($ids)
+				ORDER BY 1 DESC
+		";
+
+		$memberships        = $wpdb->get_results(
+			$sql,
+			ARRAY_A
+		);
+		$membership_service = new MembershipService();
+		return $membership_service->prepare_membership_data( $memberships );
+	}
+
 }

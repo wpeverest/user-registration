@@ -1,6 +1,7 @@
 /**UR_Snackbar**/
 (function ($, urmg_data) {
-	if (UR_Snackbar) {
+
+	if (typeof UR_Snackbar !== 'undefined') {
 		var snackbar = new UR_Snackbar();
 	}
 	var membership_group_object = {
@@ -85,7 +86,7 @@
 		validate_membership_group_form: function () {
 			var
 				form = $('#ur-membership-group-create-form'),
-				main_fields = form.find('#ur-membership-main-fields').find('input,select'),
+				main_fields = form.find('#ur-membership-main-fields .urmg-input'),
 				no_errors = true;
 			//main fields validation
 			main_fields = Object.values(main_fields).reverse().slice(2);
@@ -125,7 +126,7 @@
 					value = $this.val(),
 					is_required = $this.attr('required'),
 					name = $this.data('key-name');
-				if (is_required && (value === '' || value === null)) {
+				if (is_required && (value === '' || value === null || value.length < 1)) {
 					no_errors = false;
 					membership_group_object.show_failure_message(urmg_data.labels.i18n_error + '! ' + name + ' ' + urmg_data.labels.i18n_field_is_required);
 					return false;
@@ -201,6 +202,7 @@
 		bind_ui_actions: function () {
 			// listen for changes in the membership group select box
 			$(document).on('change', '#ur-setting-form .ur-general-setting-membership_group select', function () {
+
 				var $this = $(this),
 					group_id = Number($this.val()),
 					loader_container = $('.urmg-loader'),
@@ -268,7 +270,49 @@
 				}
 
 			});
+			//delete membership
+			$('.delete-membership-groups').on('click', function (e) {
+				e.preventDefault();
+				e.stopPropagation();
+				membership_group_object.delete_single_membership_group($(this));
+			});
+		},
+		delete_single_membership_group : function ($this) {
+			var urlParams = new URLSearchParams($this.attr('href'));
+			var form_title = urlParams.get('form');
 
+			if(form_title !== null) {
+				Swal.fire({
+					title:
+						'<img src="' +
+						urmg_data.delete_icon +
+						'" id="delete-user-icon">' +
+						urmg_data.labels.i18n_prompt_title,
+					html: '<p id="html_1">' +
+						urmg_data.labels.i18n_prompt_cannot_delete + '`' + form_title + '`.' +
+						'</p>',
+					allowOutsideClick: true
+				});
+				return;
+			}
+			Swal.fire({
+				title:
+					'<img src="' +
+					urmg_data.delete_icon +
+					'" id="delete-user-icon">' +
+					urmg_data.labels.i18n_prompt_title,
+				html: '<p id="html_1">' +
+					urmg_data.labels.i18n_prompt_single_subtitle +
+					'</p>',
+				showCancelButton: true,
+				confirmButtonText: urmg_data.labels.i18n_prompt_delete,
+				cancelButtonText: urmg_data.labels.i18n_prompt_cancel,
+				allowOutsideClick: false
+			}).then(function (result) {
+				if (result.isConfirmed) {
+					$(location).attr('href', $this.attr('href'));
+				}
+			});
 		},
 		/**
 		 * Handles the bulk deletion of membership groups.
@@ -347,6 +391,20 @@
 					);
 				}
 			});
+		},
+		/**
+		 *
+		 * @param selected_memberships
+		 * @param is_multiple
+		 */
+		remove_deleted_memberships: function (selected_memberships, is_multiple) {
+			if (is_multiple) {
+				selected_memberships.each(function () {
+					$(this).parents('tr').remove();
+				});
+			} else {
+				$(selected_memberships).parents('tr').remove();
+			}
 		},
 		/**
 		 * Handles the response after a successful ajax request of membership by group
