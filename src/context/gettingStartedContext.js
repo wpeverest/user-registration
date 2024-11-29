@@ -11,7 +11,8 @@ export const initialState = {
 	},
 	registrationType: "user_registration_normal_registration",
 	defaultFormId: "",
-	installedPages: {}
+	installedPages: {},
+	registrationPageLink: ""
 };
 
 export const actionTypes = {

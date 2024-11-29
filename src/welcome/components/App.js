@@ -194,6 +194,22 @@ function App() {
 						installedPages: res.page_details
 					});
 
+					var registrationPageUrl = "";
+
+					if (res.page_details["registration"]) {
+						registrationPageUrl =
+							res.page_details["registration"]["page_url"];
+					} else {
+						registrationPageUrl =
+							res.page_details["membership-registration"][
+								"page_url"
+							];
+					}
+					dispatch({
+						type: actionTypes.GET_DEFAULT_REGISTRATION_PAGE,
+						registrationPageLink: registrationPageUrl
+					});
+
 					setActiveStep(steps[index + 1]);
 					setNextStepProgess(true);
 				}
@@ -355,7 +371,8 @@ function App() {
 										setDisabledLink(true);
 										handleSaveSettings(
 											"undefined" ===
-												typeof registrationPageLink
+												typeof registrationPageLink ||
+												"" === registrationPageLink
 												? registrationPageURL
 												: registrationPageLink
 										);
