@@ -1,4 +1,4 @@
-/*global console */
+/*global console, user_registration_params, Promise */
 (function ($, urmf_data) {
 	$(document).on('ready', function () {
 		var elements = {};
@@ -95,7 +95,78 @@
 				$('.notice_message').text(message);
 				this.toggleNotice();
 			},
+			show_form_success_message: function (form_response, thank_you_data) {
+				var response_data = form_response.data,
+					ursL10n = user_registration_params.ursL10n,
+					$registration_form = $('#user-registration-form-' + form_response.form_id),
+					message = $('<ul class=""/>'),
+					success_message_position = response_data.success_message_positon,
+					redirect_url = urmf_data.thank_you_page_url;
 
+
+				if ('undefined' !== typeof response_data.role_based_redirect_url) {
+					redirect_url = response_data.role_based_redirect_url;
+				}
+				if ('undefined' !== typeof response_data.redirect_url) {
+					redirect_url = response_data.redirect_url;
+				}
+
+				/**
+				 * Remove Spinner.
+				 */
+				$registration_form
+					.find('.ur-submit-button')
+					.find("span")
+					.removeClass('ur-front-spinner');
+
+				/**
+				 * Append Success Message according to login option.
+				 */
+				if (response_data.form_login_option == 'admin_approval') {
+					message.append('<li>' + ursL10n.user_under_approval + '</li>');
+				} else if (
+					response_data.form_login_option === 'email_confirmation' ||
+					response_data.form_login_option ===
+					'admin_approval_after_email_confirmation'
+				) {
+					message.append("<li>" + ursL10n.user_email_pending + "</li>");
+				} else {
+					message.append("<li>" + ursL10n.user_successfully_saved + "</li>");
+				}
+
+				$registration_form.find('form')[0].reset();
+				var wrapper = $(
+					'<div class="ur-message user-registration-message" id="ur-submit-message-node"/>'
+				);
+				wrapper.append(message);
+
+				// Check the position set by the admin and append message accordingly.
+				if ('1' === success_message_position) {
+					$registration_form.find('form').append(wrapper);
+					$(window).scrollTop(
+						$registration_form.find('form').find('.ur-button-container').offset().top
+					);
+				} else {
+					$registration_form.find('form').prepend(wrapper);
+					$(window).scrollTop(
+						$registration_form.find('form').closest('.ur-frontend-form').offset().top
+					);
+				}
+				$registration_form.find('form').find('.ur-submit-button').prop('disabled', false);
+
+				if ('undefined' !== typeof redirect_url && redirect_url !== '') {
+					ur_membership_ajax_utils.show_default_response(redirect_url, thank_you_data);
+				} else {
+					if (
+						typeof response_data.auto_login !== 'undefined' &&
+						response_data.auto_login
+					) {
+						ur_membership_ajax_utils.show_default_response(redirect_url, thank_you_data);
+					}
+				}
+
+
+			},
 			isEventRegistered: function (selector, eventType) {
 				var events = $._data($(selector)[0], 'events');
 				return (events && events[eventType]);
@@ -190,19 +261,21 @@
 			 * called to create a new membership
 			 * @param data
 			 */
-			create_member: function (response) {
+			create_member: function (form_response) {
 				var prepare_members_data = this.prepare_members_data();
-				prepare_members_data.username = response.data.username;
+				prepare_members_data.username = form_response.data.username;
+
 				this.send_data(
 					{
 						action: 'user_registration_membership_register_member',
-						members_data: JSON.stringify(prepare_members_data)
+						members_data: JSON.stringify(prepare_members_data),
+						form_response: JSON.stringify(form_response.data)
 					},
 					{
 						success: function (response) {
 							if (response.success) {
 								//first show successful toast
-								ur_membership_ajax_utils.handle_response(response, prepare_members_data);
+								ur_membership_ajax_utils.handle_response(response, prepare_members_data, form_response);
 							} else {
 								ur_membership_frontend_utils.show_failure_message(
 									response.data.message
@@ -231,7 +304,7 @@
 			 * @param {Object} response - The response data from the server.
 			 * @param {Object} prepare_members_data - The data for preparing members.
 			 */
-			handle_response: async function (response, prepare_members_data) {
+			handle_response: async function (response, prepare_members_data, form_response) {
 				switch (prepare_members_data.payment_method) {
 					case 'paypal': //for paypal response must contain `payment_url` field
 						ur_membership_frontend_utils.show_success_message(
@@ -240,19 +313,13 @@
 						window.location.replace(response.data.pg_data.payment_url);
 						break;
 					case 'bank':
-						ur_membership_frontend_utils.show_success_message(
-							response.data.message
-						);
-						this.show_bank_response(response, prepare_members_data);
+						this.show_bank_response(response, prepare_members_data, form_response);
 						break;
 					case 'stripe':
-						await stripe_settings.handle_stripe_response(response, prepare_members_data);
+						await stripe_settings.handle_stripe_response(response, prepare_members_data, form_response);
 						break;
 					default:
-						ur_membership_frontend_utils.show_success_message(
-							response.data.message
-						);
-						this.show_default_response({
+						ur_membership_frontend_utils.show_form_success_message(form_response, {
 							'username': prepare_members_data.username
 						});
 						break;
@@ -265,27 +332,26 @@
 			 * @param {Object} response - The response data from the server.
 			 * @return {void} No return value.
 			 */
-			show_bank_response: function (response, prepare_members_data) {
-				var thank_you_page_url = urmf_data.thank_you_page_url,
-					bank_data = {
-						'transaction_id': response.data.transaction_id,
-						'payment_type': 'unpaid',
-						'info': response.data.pg_data.data,
-						'username': prepare_members_data.username
-					},
-					url_params = $.param(bank_data).toString();
+			show_bank_response: function (response, prepare_members_data, form_response) {
+				var bank_data = {
+					'transaction_id': response.data.transaction_id,
+					'payment_type': 'unpaid',
+					'info': response.data.pg_data.data,
+					'username': prepare_members_data.username
+				};
 
-				window.location.replace(thank_you_page_url + '?' + url_params);
+				ur_membership_frontend_utils.show_form_success_message(form_response, bank_data);
 			},
 
 			/**
 			 * Shows the default response when payment method is free.
 			 */
-			show_default_response: function (thank_you_data) {
-				var thank_you_page_url = urmf_data.thank_you_page_url,
-					url_params = $.param(thank_you_data).toString();
+			show_default_response: function (url, thank_you_data) {
+				var url_params = $.param(thank_you_data).toString();
+				window.setTimeout(function () {
+					window.location.replace(url + '?' + url_params);
+				}, 1000);
 
-				window.location.replace(thank_you_page_url + '?' + url_params);
 			},
 			validate_coupon: function ($this) {
 				ur_membership_frontend_utils.toggleSaveButtons(true, $this);
@@ -395,7 +461,13 @@
 				total_input.val(urmf_data.currency_symbol + total);
 			}
 		};
-
+		var form_object = {
+			hide_loader: function (form_id) {
+				var $registration_form = $('#user-registration-form-' + form_id);
+				$registration_form.find('.ur-submit-button').find("span").removeClass('ur-front-spinner');
+				$registration_form.find('form').find('.ur-submit-button').prop('disabled', false);
+			}
+		};
 		var stripe_settings = {
 			show_stripe_error: function (message) {
 				if ($membership_registration_form.find("#stripe-errors").length > 0) {
@@ -456,20 +528,21 @@
 				};
 			},
 
-			handle_stripe_response: function (response, prepare_members_data) {
+			handle_stripe_response: function (response, prepare_members_data, form_response) {
 				if (response.data.pg_data.type === 'paid') {
-					this.handle_one_time_payment(response, prepare_members_data)
+					this.handle_one_time_payment(response, prepare_members_data, form_response);
 				} else {
 					this.handle_recurring_payment(response, {
 						paymentElements: elements,
 						user_id: response.data.member_id,
 						response_data: response,
-						prepare_members_data: prepare_members_data
-					})
+						prepare_members_data: prepare_members_data,
+						form_response: form_response
+					});
 				}
 			},
 
-			handle_one_time_payment: function (response, prepare_members_data) {
+			handle_one_time_payment: function (response, prepare_members_data, form_response) {
 				elements.stripe
 					.confirmCardPayment(response.data.pg_data.client_secret, {
 						payment_method: {
@@ -480,10 +553,10 @@
 						var button = $('.membership_register_button');
 						ur_membership_frontend_utils.toggleSaveButtons(true, button);
 						ur_membership_frontend_utils.append_spinner(button);
-						stripe_settings.update_order_status(result, response, prepare_members_data)
+						stripe_settings.update_order_status(result, response, prepare_members_data, form_response)
 					});
 			},
-			update_order_status: function (result, response, prepare_members_data) {
+			update_order_status: function (result, response, prepare_members_data, form_response) {
 				ur_membership_ajax_utils.send_data(
 					{
 						_wpnonce: urmf_data._confirm_payment_nonce,
@@ -491,16 +564,13 @@
 						members_data: JSON.stringify(prepare_members_data),
 						member_id: response.data.member_id,
 						payment_status: result.error ? "failed" : "succeeded",
+						form_response: JSON.stringify(form_response.data)
 					},
 					{
 						success: function (response) {
 							if (response.success) {
 								//first show successful toast
-								ur_membership_frontend_utils.show_success_message(
-									response.data.message
-								);
-
-								ur_membership_ajax_utils.show_default_response({
+								ur_membership_ajax_utils.show_default_response(urmf_data.thank_you_page_url, {
 									'username': prepare_members_data.username,
 									'transaction_id': result.paymentIntent.id
 								});
@@ -509,6 +579,8 @@
 								ur_membership_frontend_utils.show_failure_message(
 									response.data.message
 								);
+								form_object.hide_loader(form_response.form_id);
+
 							}
 						},
 						failure: function (xhr, statusText) {
@@ -534,9 +606,8 @@
 					.then(stripe_settings.handleCustomerActionRequired)
 					.then(stripe_settings.handleOnComplete)
 					.catch(function (message, error) {
-						stripe_settings.update_order_status({error: {}}, response, data.prepare_members_data)
-
-					})
+						stripe_settings.update_order_status({error: {}}, response, data.prepare_members_data, data.form_response);
+					});
 			},
 			/**
 			 * Create payment method.
@@ -581,6 +652,7 @@
 						member_id: data.user_id,
 						customer_id: data.customer_id,
 						payment_method_id: data.payment_method_id,
+						form_response: JSON.stringify(data.form_response.data)
 					}, {
 						success: function (response) {
 							if (response.success) {
@@ -596,7 +668,7 @@
 								if ("trialing" !== response.data.subscription.status) {
 									if (paymentIntent && "requires_payment_method" === paymentIntent.status) {
 										var message = "Your card was declined";
-										reject(response, message)
+										reject(response, message);
 									}
 								}
 								resolve(
@@ -607,7 +679,8 @@
 								);
 
 							} else {
-								reject(response, message)
+								form_object.hide_loader(data.form_id);
+								reject(response, message);
 							}
 						},
 						failure: function (xhr, statusText) {
@@ -618,7 +691,7 @@
 								')'
 							);
 						}
-					})
+					});
 				});
 			},
 
@@ -629,6 +702,7 @@
 			 *
 			 */
 			handleCustomerActionRequired: function (data) {
+
 				return new Promise(function (resolve, reject) {
 					if (
 						data.subscription &&
@@ -640,12 +714,14 @@
 							response_data: data.response_data,
 							message: data.message,
 							prepare_members_data: data.prepare_members_data,
+							form_response: data.form_response
 						});
 					}
 
 					var paymentIntent = data.subscription.latest_invoice.payment_intent;
 
 					if ("trialing" !== data.subscription.status) {
+
 						if ("requires_action" === paymentIntent.status) {
 							data.paymentElements.stripe
 								.confirmCardPayment(paymentIntent.client_secret, {
@@ -664,6 +740,7 @@
 											subscription: data.subscription,
 											form_id: data.form_id,
 											response_data: data.response_data,
+											form_response: data.form_response
 										});
 									} else {
 										var message = "Unable to complete the payment.";
@@ -683,27 +760,17 @@
 			 * @param {object} data  Contains stripe, card, formid, paymentItems, form_selector, customerId, paymentMethodId and subscription.
 			 */
 			handleOnComplete: function (data) {
-				//   var subscriptionId = data.subscription.id;
-				//   var paymentIntentId = data.subscription.latest_invoice.payment_intent.id;
 				if (
 					data.subscription &&
 					(data.subscription.status === "active" ||
 						data.subscription.status === "trialing")
 				) {
-					var button = $('.membership_register_button');
-					ur_membership_frontend_utils.toggleSaveButtons(false, button);
-					ur_membership_frontend_utils.remove_spinner(button);
-					ur_membership_frontend_utils.show_success_message(
-						data.message
-					);
-					ur_membership_ajax_utils.show_default_response({
+					ur_membership_frontend_utils.show_form_success_message(data.form_response, {
 						'username': data.prepare_members_data.username,
 						'transaction_id': data.subscription.id
 					});
-
-
 				}
-			},
+			}
 		};
 		//activate payment gateways
 		$('input[name="urm_membership"]').on('change', function () {
@@ -811,18 +878,23 @@
 		$(document).on(
 			"user_registration_frontend_before_form_submit",
 			function (event, data, pointer, $error_message) {
-				if ($(pointer).find('input[name="urm_payment_method"]:checked').val() === "stripe") {
-					data['is_membership_stripe_selected'] = 'stripe';
+				if ($(pointer).find('#ur-membership-registration').length > 0) {
+					data['is_membership_active'] = $(pointer).find('input[name="urm_membership"]:checked').val();
+					data['membership_type'] = $('input[name="urm_membership"]:checked').val();
 				}
 			}
 		);
 		$(document).on('user_registration_frontend_before_ajax_complete_success_message', function (event, ajax_response, ajaxFlag, form) {
 			var flag = true,
-				response = JSON.parse(ajax_response.responseText);
+				response = JSON.parse(ajax_response.responseText),
+				required_data = {
+					data: response.data,
+					form_id: $(form).data('form-id')
+				};
 
 			if (typeof response.data.registration_type !== 'undefined' && response.data.registration_type === 'membership') {
 				flag = false;
-				ur_membership_ajax_utils.create_member(JSON.parse(ajax_response.responseText));
+				ur_membership_ajax_utils.create_member(required_data);
 			}
 			ajaxFlag['status'] = flag;
 

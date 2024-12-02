@@ -150,8 +150,22 @@ class MembersService {
 			update_user_meta( $new_user_id, 'ur_coupon_discount_type', $data['coupon_data']['coupon_discount_type'] );
 			update_user_meta( $new_user_id, 'ur_coupon_discount', $data['coupon_data']['coupon_discount'] );
 		}
+
 		return $user;
 
+	}
+
+	/**
+	 * login_member
+	 *
+	 * @param $user_id
+	 *
+	 * @return void
+	 */
+	public function login_member( $user_id ) {
+		wp_clear_auth_cookie();
+		$remember = apply_filters( 'user_registration_autologin_remember_user', false );
+		wp_set_auth_cookie( $user_id, $remember );
 	}
 
 }

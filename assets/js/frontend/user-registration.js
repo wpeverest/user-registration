@@ -1225,7 +1225,7 @@
 									"user_registration_frontend_before_ajax_complete_success_message",
 									[ajax_response, ajaxFlag, $this]
 								);
-									return;
+
 								if (ajaxFlag["status"]) {
 									$this
 										.find(".ur-submit-button")

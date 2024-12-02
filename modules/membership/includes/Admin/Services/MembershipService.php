@@ -32,7 +32,7 @@ class MembershipService {
 			$member       = get_user_by( 'login', $data['username'] );
 
 			//update user source and add membership_role
-			$this->members_service->update_user_meta( $data, $member->ID );
+			$this->members_service->update_user_meta( $members_data, $member->ID );
 
 			$subscription_service = new SubscriptionService();
 			$subscription_data    = $subscription_service->prepare_subscription_data( $members_data, $member );

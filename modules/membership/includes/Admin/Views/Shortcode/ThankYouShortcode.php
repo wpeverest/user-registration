@@ -31,16 +31,13 @@ class ThankYouShortcode {
 	 * @param array $attributes Shortcode attributes.
 	 */
 	public static function render_template( $attributes ) {
-
-		if ( ! is_user_logged_in() ) {
-			$membership_repository = new MembershipRepository();
-			$memberships           = $membership_repository->get_all_membership();
-			$template_file         = locate_template( 'membership-registration-form.php' );
-			if ( ! $template_file ) {
-				$template_file = UR_MEMBERSHIP_DIR . 'includes/Templates/thank-you-page.php';
-			}
-			require $template_file;
+		$membership_repository = new MembershipRepository();
+		$memberships           = $membership_repository->get_all_membership();
+		$template_file         = locate_template( 'membership-registration-form.php' );
+		if ( ! $template_file ) {
+			$template_file = UR_MEMBERSHIP_DIR . 'includes/Templates/thank-you-page.php';
 		}
+		require $template_file;
 
 	}
 }

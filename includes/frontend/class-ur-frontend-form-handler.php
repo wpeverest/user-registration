@@ -44,8 +44,9 @@ class UR_Frontend_Form_Handler {
 	/**
 	 * Handle frontend form POST data.
 	 *
-	 * @param  array $form_data Submitted form data.
-	 * @param  int   $form_id   ID of the form.
+	 * @param array $form_data Submitted form data.
+	 * @param int $form_id ID of the form.
+	 *
 	 * @return void
 	 */
 	public static function handle_form( $form_data, $form_id ) {
@@ -65,6 +66,7 @@ class UR_Frontend_Form_Handler {
 		 * Get form field data by post_content array passed.
 		 *
 		 * @param array $post_content_array Post Content Array.
+		 *
 		 * @return array
 		 */
 		apply_filters_ref_array(
@@ -132,8 +134,7 @@ class UR_Frontend_Form_Handler {
 					'username' => isset( $userdata['user_login'] ) ? $userdata['user_login'] : '',
 				);
 
-				if ( isset( $_POST['ur_stripe_payment_method'] )  || isset($_POST['is_membership_stripe_selected']) ) { //phpcs:ignore WordPress.Security.NonceVerification
-
+				if ( isset( $_POST['ur_stripe_payment_method'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification
 					if ( 'auto_login' === $login_option ) {
 						$success_params['auto_login'] = true;
 					}
@@ -141,12 +142,18 @@ class UR_Frontend_Form_Handler {
 					if ( 'auto_login' === $login_option ) {
 						$success_params['auto_login'] = false;
 					}
-				} elseif ( 'auto_login' === $login_option ) {
-
-						wp_clear_auth_cookie();
-						$remember = apply_filters( 'user_registration_autologin_remember_user', false );
-						wp_set_auth_cookie( $user_id, $remember );
+				}
+				else if ( isset( $_POST['is_membership_active'] )) {
+					if ( 'auto_login' === $login_option ) {
 						$success_params['auto_login'] = true;
+						$success_params['membership_type'] = $_POST['membership_type'];
+					}
+				}
+				elseif ( 'auto_login' === $login_option ) {
+					wp_clear_auth_cookie();
+					$remember = apply_filters( 'user_registration_autologin_remember_user', false );
+					wp_set_auth_cookie( $user_id, $remember );
+					$success_params['auto_login'] = true;
 				}
 				$success_params['success_message_positon'] = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_success_message_position', '1' );
 				$success_params['form_login_option']       = $login_option;
@@ -210,6 +217,7 @@ class UR_Frontend_Form_Handler {
 	 * Get form field data by post_content array passed.
 	 *
 	 * @param array $post_content_array Post Content Array.
+	 *
 	 * @return array
 	 */
 	public static function get_form_field_data( $post_content_array ) {
@@ -223,15 +231,17 @@ class UR_Frontend_Form_Handler {
 				}
 			}
 		}
+
 		return ( $form_field_data_array );
 	}
 
 	/**
 	 * Update form data to usermeta table.
 	 *
-	 * @param  int   $user_id         User ID.
-	 * @param  array $valid_form_data All valid form data.
-	 * @param  int   $form_id         Form ID.
+	 * @param int $user_id User ID.
+	 * @param array $valid_form_data All valid form data.
+	 * @param int $form_id Form ID.
+	 *
 	 * @return void
 	 */
 	public static function ur_update_user_meta( $user_id, $valid_form_data, $form_id ) {
@@ -277,4 +287,5 @@ class UR_Frontend_Form_Handler {
 		update_user_meta( $user_id, 'ur_registered_language', $current_language );
 	}
 }
+
 return new UR_Frontend_Form_Handler();

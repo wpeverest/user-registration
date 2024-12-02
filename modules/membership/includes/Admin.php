@@ -120,28 +120,61 @@ if ( ! class_exists( 'Admin' ) ) :
 			add_action( 'init', array( $this, 'add_membership_options' ) );
 			add_action( 'plugins_loaded', array( $this, 'include_membership_payment_files' ) );
 			add_filter( 'user_registration_get_settings_pages', array( $this, 'add_membership_settings_page' ), 10, 1 );
-			add_filter( 'user_registration_success_params_before_send_json', array( $this, 'update_success_params_for_membership' ), 10, 4 );
+
+			add_filter( 'user_registration_form_redirect_url', array(
+				$this,
+				'update_redirect_url_for_membership'
+			), 10, 2 );
+			add_filter( 'user_registration_success_params_before_send_json', array(
+				$this,
+				'update_success_params_for_membership'
+			), 10, 4 );
+
 			register_deactivation_hook( UR_PLUGIN_FILE, array( $this, 'on_deactivation' ) );
 			register_activation_hook( UR_PLUGIN_FILE, array( $this, 'on_activation' ) );
 		}
 
 		public function update_success_params_for_membership( $success_params, $valid_form_data, $form_id, $user_id ) {
 			$keyFound = false;
-			foreach ($valid_form_data as $key => $value) {
-				if (preg_match('/^membership_field_.*/', $key)) {
+			foreach ( $valid_form_data as $key => $value ) {
+				if ( preg_match( '/^membership_field_.*/', $key ) ) {
 					$keyFound = true;
 					break;
 				}
 			}
 
-			if(!$keyFound) {
+			if ( ! $keyFound ) {
 				return $success_params;
 			}
 			$success_params['registration_type'] = 'membership';
-			unset($success_params['auto_login'], $success_params['redirect_url']);
 
 			return $success_params;
 		}
+
+		public function update_redirect_url_for_membership( $redirect_url, $form_id ) {
+			$thank_you_page_id           = get_option( 'user_registration_thank_you_page_id' );
+			$login_option                = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_login_options' );
+			$redirect_after_registration = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_redirect_after_registration' );
+
+			$form_data = ur_get_form_field_keys( $form_id );
+			$keyFound  = false;
+			foreach ( $form_data as $value ) {
+				if ( preg_match( '/^membership_field_.*/', $value ) ) {
+					$keyFound = true;
+					break;
+				}
+			}
+			if ( ! $keyFound ) {
+				return $redirect_url;
+			}
+
+			if ( "auto_login" === $login_option && "external-url" == $redirect_after_registration ) {
+				return $redirect_url;
+			} else if ( "auto_login" === $login_option ) {
+				return get_permalink( $thank_you_page_id );
+			}
+		}
+
 		/**
 		 * Includes.
 		 */
@@ -248,6 +281,7 @@ if ( ! class_exists( 'Admin' ) ) :
 				)
 			);
 		}
+
 		public function create_membership_groups_post_type() {
 			$raw_referer = wp_parse_args( wp_parse_url( wp_get_raw_referer(), PHP_URL_QUERY ) );
 
@@ -297,6 +331,7 @@ if ( ! class_exists( 'Admin' ) ) :
 				)
 			);
 		}
+
 		/**
 		 * Adds the membership options to the database.
 		 *
@@ -326,7 +361,7 @@ if ( ! class_exists( 'Admin' ) ) :
 		 * @return void
 		 */
 		public function include_membership_payment_files() {
-			if ( ur_check_module_activation('payments') ) {
+			if ( ur_check_module_activation( 'payments' ) ) {
 				new PaymentGatewaysWebhookActions();
 			}
 
@@ -365,6 +400,7 @@ if ( ! class_exists( 'Admin' ) ) :
 			if ( class_exists( 'UR_Settings_Page' ) ) {
 				$settings[] = include 'Admin/Settings/class-ur-settings-membership.php';
 			}
+
 			return $settings;
 		}
 	}

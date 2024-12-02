@@ -105,7 +105,7 @@ class AJAX {
 			);
 		}
 
-		$membership_service = new MembershipService();
+		$membership_service      = new MembershipService();
 		$response                = $membership_service->create_membership_order_and_subscription( $data );
 		$member_id               = $response['member_id'];
 		$transaction_id          = $response['transaction_id'] ?? 0;
@@ -118,7 +118,13 @@ class AJAX {
 			$payment_service = new PaymentService( $data['payment_method'], $data['membership'], $data['email'] );
 			$pg_data         = $payment_service->build_response( $data );
 		}
+
 		if ( $response['status'] ) {
+			$form_response = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
+			if ( ! empty( $form_response ) && $form_response["auto_login"] && 'free' == $data['payment_method'] ) {
+				$members_service = new MembersService();
+				$members_service->login_member( $member_id );
+			}
 //			$email_service = new EmailService();
 //			$email_service->send_email( $data, 'user_register_user' );
 //			$email_service->send_email( $data, 'user_register_admin' );
@@ -551,8 +557,14 @@ class AJAX {
 			);
 		}
 		$stripe_service      = new StripeService();
+		$payment_status      = sanitize_text_field( $_POST['payment_status'] );
 		$update_stripe_order = $stripe_service->update_order( $_POST );
 		if ( $update_stripe_order['status'] ) {
+			$form_response = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
+			if ( ! empty( $form_response ) && $form_response["auto_login"] && $payment_status !== "failed" ) {
+				$members_service = new MembersService();
+				$members_service->login_member( $_POST['member_id'] );
+			}
 			wp_send_json_success(
 				array(
 					'message' => $update_stripe_order["message"]
@@ -573,10 +585,16 @@ class AJAX {
 		$payment_method_id   = isset( $_POST['payment_method_id'] ) ? sanitize_text_field( $_POST['payment_method_id'] ) : '';
 		$member_id           = absint( wp_unslash( $_POST['member_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 		$stripe_service      = new StripeService();
+		$form_response       = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
 		$stripe_subscription = $stripe_service->create_subscription( $customer_id, $payment_method_id, $member_id );
 
 		if ( $stripe_subscription['status'] ) {
-			return $stripe_subscription;
+			$form_response = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
+			if ( ! empty( $form_response ) && $form_response["auto_login"] ) {
+				$members_service = new MembersService();
+				$members_service->login_member( $member_id );
+			}
+			wp_send_json_success( $stripe_subscription );
 		} else {
 			wp_delete_user( absint( $member_id ) );
 			wp_send_json_error(

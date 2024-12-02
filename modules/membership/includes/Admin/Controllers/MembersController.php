@@ -50,8 +50,8 @@ class MembersController {
 	/**
 	 * Constructor for the MembersController class.
 	 *
-	 * @param MembersRepository      $members The repository for managing members.
-	 * @param OrdersRepository       $orders The repository for managing orders.
+	 * @param MembersRepository $members The repository for managing members.
+	 * @param OrdersRepository $orders The repository for managing orders.
 	 * @param SubscriptionRepository $subscriptions The repository for managing subscriptions.
 	 */
 	public function __construct( MembersRepository $members, OrdersRepository $orders, SubscriptionRepository $subscriptions ) {
@@ -97,7 +97,7 @@ class MembersController {
 							'member_id'      => $member->ID,
 						)
 					);
-					$data = apply_filters( 'urm_create_member_admin_before_sending_email', $data );
+					$data                 = apply_filters( 'urm_create_member_admin_before_sending_email', $data );
 					$email_service->send_email( $data, 'user_register_backend_user' );
 
 					if ( $subscription ) {
@@ -154,6 +154,7 @@ class MembersController {
 					$order                = $this->orders->create( $orders_data );
 					if ( $subscription && $order ) {
 						$this->members->wpdb()->query( 'COMMIT' );
+
 						return array(
 							'member_id'       => $member->ID,
 							'subscription_id' => $subscription['ID'],
@@ -177,4 +178,5 @@ class MembersController {
 			return $validation;
 		}
 	}
+
 }

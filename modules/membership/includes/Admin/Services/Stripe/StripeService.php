@@ -300,7 +300,7 @@ class StripeService {
 				$this->sendEmail( $member_order['ID'], $member_subscription, $membership_metas, $member_id, $response );
 				$response['subscription'] = $subscription;
 				$response['message']      = __( "New member has been successfully created with successful stripe subscription." );
-				wp_send_json_success( $response );
+				$response['status']       = true;
 			}
 			$logger->notice( '-------------------------------------------- Stripe Subscription process ended for ' . $member_id . ' --------------------------------------------', array( 'source' => 'ur-membership-stripe' ) );
 
@@ -313,7 +313,7 @@ class StripeService {
 			$this->members_orders_repository->delete_member_order( $member_id );
 			$customer = \Stripe\Customer::retrieve( $customer_id );
 			$customer->delete();
-			wp_send_json_error( $e->getMessage(), 400 );
+			wp_send_json_error( $e->getMessage() );
 		}
 	}
 
