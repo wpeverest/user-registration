@@ -239,6 +239,9 @@ class UR_Getting_Started {
 			update_option( 'user_registration_enabled_features', $enabled_features );
 			update_option( 'user_registration_membership_installed_flag', true );
 
+			array_push( $enabled_features, 'payment-history' );
+			array_push( $enabled_features, 'content-restriction' );
+
 			if ( $default_form_page_id ) {
 				$pages['membership_registration'] = array(
 					'name'    => _x( 'membership-registration', 'Page slug', 'user-registration' ),
