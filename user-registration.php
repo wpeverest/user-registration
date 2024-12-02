@@ -278,6 +278,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 
 			if ( ur_check_module_activation( 'content-restriction' ) ) {
 				include_once UR_ABSPATH . 'modules/content-restriction/user-registration-content-restriction.php';
+				include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-content-restriction.php';
 			}
 
 			/**
