@@ -32,12 +32,10 @@ class OrderService {
 		$total = number_format( $membership_meta['amount'], 2 );
 		if ( isset( $membership_meta['trial_status'] ) && 'on' == $membership_meta['trial_status'] ) {
 			$total = 0;
-		} else {
+		} elseif ( 'bank' === $data['membership_data']['payment_method'] && ur_check_module_activation( 'coupon' ) && ! empty( $data['coupon_data'] ) ) {
 
-			if ( 'bank' === $data['membership_data']['payment_method'] && ur_pro_is_coupons_addon_activated() && ! empty( $data['coupon_data'] ) ) {
 				$discount_amount = ( isset( $data['coupon_data']['coupon_discount_type'] ) && 'fixed' === $data['coupon_data']['coupon_discount_type'] ) ? $data['coupon_data']['coupon_discount'] : $total * $data['coupon_data']['coupon_discount'] / 100;
 				$total           = $total - $discount_amount;
-			}
 		}
 
 		$orders_data = array(
@@ -64,5 +62,4 @@ class OrderService {
 			'orders_meta_data' => $orders_meta,
 		);
 	}
-
 }

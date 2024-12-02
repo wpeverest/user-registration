@@ -16,15 +16,14 @@ class StripeService {
 
 	public function __construct() {
 
-		//		initialize necessary repos
+		// initialize necessary repos
 		$this->members_orders_repository       = new MembersOrderRepository();
 		$this->members_subscription_repository = new MembersSubscriptionRepository();
 		$this->membership_repository           = new MembershipRepository();
 		$this->orders_repository               = new OrdersRepository();
 
-
 		if ( ! class_exists( 'Stripe\Stripe' ) ) {
-			require_once( plugin_dir_path( __FILE__ ) . 'lib/stripe-php/init.php' );
+			require_once plugin_dir_path( __FILE__ ) . 'lib/stripe-php/init.php';
 		}
 		$stripe_settings = self::get_stripe_settings();
 
@@ -34,36 +33,43 @@ class StripeService {
 
 	public function create_stripe_product_and_price( $post_data, $meta_data, $should_create_new_price ) {
 		$products      = \Stripe\Product::all();
-		$membership_id = $post_data["ID"];
+		$membership_id = $post_data['ID'];
 		$currency      = get_option( 'user_registration_payment_currency', 'USD' );
 
+		$product_exists = array_filter(
+			$products->data,
+			function ( $item, $key ) use ( $membership_id ) {
+				if ( isset( $item['metadata']['membership_id'] ) ) {
+					return $item['metadata']['membership_id'] == $membership_id;
+				}
+			},
+			ARRAY_FILTER_USE_BOTH
+		);
 
-		$product_exists = array_filter( $products->data, function ( $item, $key ) use ( $membership_id ) {
-			if ( isset( $item["metadata"]["membership_id"] ) ) {
-				return $item["metadata"]["membership_id"] == $membership_id;
-			}
-		}, ARRAY_FILTER_USE_BOTH );
-
-		if ( count( $product_exists ) > 0 ) { //product already exists, don't create new
+		if ( count( $product_exists ) > 0 ) { // product already exists, don't create new
 			$product = $product_exists[0];
 		} else {
-			$product = \Stripe\Product::create( [
-				'name'        => $post_data["post_title"],
-				'description' => json_decode( $meta_data["post_data"]["post_content"], true )["description"] ?? "N/A",
-				'metadata'    => [
-					'membership_id' => $membership_id // Your custom ID
-				],
-			] );
+			$product = \Stripe\Product::create(
+				array(
+					'name'        => $post_data['post_title'],
+					'description' => json_decode( $meta_data['post_data']['post_content'], true )['description'] ?? 'N/A',
+					'metadata'    => array(
+						'membership_id' => $membership_id, // Your custom ID
+					),
+				)
+			);
 		}
 		try {
 
-			$prices = \Stripe\Price::all( [
-				'product' => $product->id // Replace with your product ID
-			] );
+			$prices = \Stripe\Price::all(
+				array(
+					'product' => $product->id, // Replace with your product ID
+				)
+			);
 
 			if ( ! empty( $prices->data ) && ! $should_create_new_price ) {
 				$price = $prices->data[0];
-			} else if ( empty( $prices->data ) || $should_create_new_price ) {
+			} elseif ( empty( $prices->data ) || $should_create_new_price ) {
 				if ( 'JPY' === $currency ) {
 					$amount = abs( $meta_data['amount'] );
 				} else {
@@ -72,42 +78,38 @@ class StripeService {
 				$price_details = array(
 					'unit_amount' => $amount, // New amount in cents
 					'currency'    => strtolower( $currency ),
-					'product'     => $product->id
+					'product'     => $product->id,
 				);
-				if ( "subscription" === $meta_data["type"] ) {
-					$price_details["recurring"] = array(
-						'interval'       => $meta_data["subscription"]["duration"],
-						'interval_count' => $meta_data["subscription"]["value"],
+				if ( 'subscription' === $meta_data['type'] ) {
+					$price_details['recurring'] = array(
+						'interval'       => $meta_data['subscription']['duration'],
+						'interval_count' => $meta_data['subscription']['value'],
 					);
 				}
 
 				$price = \Stripe\Price::create( $price_details );
 			}
-
 		} catch ( ApiErrorException $e ) {
 			ur_get_logger()->debug( 'Error creating price: ' . $e->getMessage(), array( 'source' => 'user-registration-membership-stripe' ) );
 		}
-
 
 		return $price;
 	}
 
 	public function process_stripe_payment( $payment_data, $response_data ) {
 		$currency   = get_option( 'user_registration_payment_currency', 'USD' );
-		$amount     = $payment_data["amount"];
+		$amount     = $payment_data['amount'];
 		$user_email = $response_data['email'];
-		$member_id  = $response_data["member_id"];
+		$member_id  = $response_data['member_id'];
 		$response   = array(
-			'type' => $payment_data["type"]
+			'type' => $payment_data['type'],
 		);
 
-
-		if ( isset( $payment_data['coupon'] ) && ! empty( $payment_data['coupon'] ) && ur_pro_is_coupons_addon_activated() ) {
+		if ( isset( $payment_data['coupon'] ) && ! empty( $payment_data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
 			$coupon_details  = ur_get_coupon_details( $payment_data['coupon'] );
 			$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $amount * $coupon_details['coupon_discount'] / 100;
 			$amount          = $amount - $discount_amount;
 		}
-
 
 		if ( 'JPY' === $currency ) {
 			$amount = abs( $amount );
@@ -142,7 +144,7 @@ class StripeService {
 			if ( ! empty( $customer ) ) {
 				add_user_meta( $member_id, 'ur_payment_customer', $customer->id );
 			}
-			if ( "paid" === $payment_data["type"] ) {
+			if ( 'paid' === $payment_data['type'] ) {
 				$intent                    = \Stripe\PaymentIntent::create(
 					array(
 						'amount'               => $amount,
@@ -163,8 +165,6 @@ class StripeService {
 				)
 			);
 		}
-
-
 	}
 
 	public function update_order( $data ) {
@@ -187,7 +187,7 @@ class StripeService {
 			$logger->notice( '-------------------------------------------- Stripe Subscription process failed for ' . $member_id . ' --------------------------------------------', array( 'source' => 'ur-membership-stripe' ) );
 
 			return $response;
-		} else if ( 'succeeded' === $payment_status ) {
+		} elseif ( 'succeeded' === $payment_status ) {
 			$member_order                   = $this->members_orders_repository->get_member_orders( $member_id );
 			$membership                     = $this->membership_repository->get_single_membership_by_ID( $member_order['item_id'] );
 			$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
@@ -197,10 +197,13 @@ class StripeService {
 			if ( 'completed' === $member_order['status'] ) {
 				ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
 			}
-			$is_order_updated = $this->members_orders_repository->update( $member_order['ID'], array(
-				'status'         => 'completed',
-				'transaction_id' => $transaction_id
-			) );
+			$is_order_updated = $this->members_orders_repository->update(
+				$member_order['ID'],
+				array(
+					'status'         => 'completed',
+					'transaction_id' => $transaction_id,
+				)
+			);
 			if ( $is_order_updated && 'paid' === $member_order['order_type'] ) {
 				$this->members_subscription_repository->update( $member_subscription['ID'], array( 'status' => 'active' ) );
 				$logger->notice( 'Order and subscription status updated ', array( 'source' => 'ur-membership-stripe' ) );
@@ -224,15 +227,14 @@ class StripeService {
 		$response               = array(
 			'status' => false,
 		);
-		$stripe_product_details = $membership_metas["payment_gateways"]["stripe"] ?? [];
+		$stripe_product_details = $membership_metas['payment_gateways']['stripe'] ?? array();
 
-		if ( ! isset( $stripe_product_details["price_id"] ) || ! isset( $stripe_product_details["product_id"] ) ) {
+		if ( ! isset( $stripe_product_details['price_id'] ) || ! isset( $stripe_product_details['product_id'] ) ) {
 			$response['status']  = false;
-			$response['message'] = __( "Stripe subscription failed, price or product not found", "user-registration" );
+			$response['message'] = __( 'Stripe subscription failed, price or product not found', 'user-registration' );
 
 			return $response;
 		}
-
 
 		try {
 			$customer       = \Stripe\Customer::retrieve( $customer_id );
@@ -255,21 +257,21 @@ class StripeService {
 				'customer' => $customer->id,
 				'items'    => array(
 					array(
-						'price' => $stripe_product_details["price_id"],
+						'price' => $stripe_product_details['price_id'],
 					),
-				)
+				),
 			);
-//			handle trial period
-			$trail_period = strtotime( date( 'Y-m-d H:i:s', strtotime( "+" . $membership_metas["trial_data"]["value"] . " " . $membership_metas["trial_data"]["duration"] ) ) );
+			// handle trial period
+			$trail_period = strtotime( date( 'Y-m-d H:i:s', strtotime( '+' . $membership_metas['trial_data']['value'] . ' ' . $membership_metas['trial_data']['duration'] ) ) );
 
-			if ( isset( $membership_metas["trial_status"] ) && "on" === $membership_metas["trial_status"] ) {
-				$subscription_details["trial_end"] = $trail_period;
+			if ( isset( $membership_metas['trial_status'] ) && 'on' === $membership_metas['trial_status'] ) {
+				$subscription_details['trial_end'] = $trail_period;
 			} else {
-				$subscription_details["expand"] = [ 'latest_invoice.payment_intent' ];
+				$subscription_details['expand'] = array( 'latest_invoice.payment_intent' );
 
 			}
 
-//			handle coupon section
+			// handle coupon section
 			$order_detail = $this->orders_repository->get_order_detail( $member_order['ID'] );
 			if ( ! empty( $order_detail['coupon'] ) ) {
 				$coupon_details = ur_get_coupon_details( $order_detail['coupon'] );
@@ -282,10 +284,13 @@ class StripeService {
 			$subscription_status = $subscription->status ?? '';
 
 			if ( 'active' === $subscription_status || 'trialing' === $subscription_status ) {
-				$this->members_orders_repository->update( $member_order['ID'], array(
-					'status'         => 'completed',
-					'transaction_id' => $subscription->id
-				) );
+				$this->members_orders_repository->update(
+					$member_order['ID'],
+					array(
+						'status'         => 'completed',
+						'transaction_id' => $subscription->id,
+					)
+				);
 				switch ( $subscription_status ) {
 					case 'trialing':
 						$subscription_status = 'trial';
@@ -294,22 +299,28 @@ class StripeService {
 						break;
 				}
 
-				$this->members_subscription_repository->update( $member_order['subscription_id'], array(
-					'subscription_id' => sanitize_text_field( $subscription->id ),
-					'status'          => $subscription_status
-				) );
+				$this->members_subscription_repository->update(
+					$member_order['subscription_id'],
+					array(
+						'subscription_id' => sanitize_text_field( $subscription->id ),
+						'status'          => $subscription_status,
+					)
+				);
 				$this->sendEmail( $member_order['ID'], $member_subscription, $membership_metas, $member_id, $response );
 				$response['subscription'] = $subscription;
-				$response['message']      = __( "New member has been successfully created with successful stripe subscription." );
+				$response['message']      = __( 'New member has been successfully created with successful stripe subscription.' );
 				wp_send_json_success( $response );
 			}
 			$logger->notice( '-------------------------------------------- Stripe Subscription process ended for ' . $member_id . ' --------------------------------------------', array( 'source' => 'ur-membership-stripe' ) );
 
 			return $response;
 		} catch ( \Exception $e ) {
-			$this->members_orders_repository->update( $member_order['ID'], array(
-				'status' => 'failed',
-			) );
+			$this->members_orders_repository->update(
+				$member_order['ID'],
+				array(
+					'status' => 'failed',
+				)
+			);
 			wp_delete_user( absint( $member_id ) );
 			$this->members_orders_repository->delete_member_order( $member_id );
 			$customer = \Stripe\Customer::retrieve( $customer_id );
@@ -331,7 +342,7 @@ class StripeService {
 		return array(
 			'mode'            => $mode,
 			'publishable_key' => $publishable_key,
-			'secret_key'      => $secret_key
+			'secret_key'      => $secret_key,
 		);
 	}
 
@@ -339,10 +350,10 @@ class StripeService {
 	 * getResponse
 	 *
 	 * @param $ID
-	 * @param mixed $member_subscription
+	 * @param mixed        $member_subscription
 	 * @param array|string $membership_metas
-	 * @param int $member_id
-	 * @param array $response
+	 * @param int          $member_id
+	 * @param array        $response
 	 *
 	 * @return array
 	 */
@@ -369,8 +380,8 @@ class StripeService {
 		}
 
 		return array(
-			'message' => __( "New member has been successfully created with successful stripe subscription.", "user-registration" ),
-			'status'  => true
+			'message' => __( 'New member has been successfully created with successful stripe subscription.', 'user-registration' ),
+			'status'  => true,
 		);
 	}
 
@@ -394,8 +405,8 @@ class StripeService {
 				$stripe_coupon_id = $coupon->id;
 			}
 		}
-//		delete coupon if new changes introduced
-		if ( $coupon_exists && ( $old_coupon_data['coupon_discount'] !== $data["post_meta_data"]["coupon_discount"] || $old_coupon_data["coupon_discount_type"] !== $data["post_meta_data"]["post_meta_data"] ) ) {
+		// delete coupon if new changes introduced
+		if ( $coupon_exists && ( $old_coupon_data['coupon_discount'] !== $data['post_meta_data']['coupon_discount'] || $old_coupon_data['coupon_discount_type'] !== $data['post_meta_data']['post_meta_data'] ) ) {
 			$coupon = \Stripe\Coupon::retrieve( $stripe_coupon_id );
 			$coupon->delete();
 		}
@@ -410,17 +421,16 @@ class StripeService {
 			'currency' => strtolower( $currency ),
 			'duration' => 'once',
 			'metadata' => array(
-				'coupon' => strtolower( $data['post_data']['post_content'] )
-			)
+				'coupon' => strtolower( $data['post_data']['post_content'] ),
+			),
 		);
-		if ( "fixed" === $data['post_meta_data']['coupon_discount_type'] ) {
+		if ( 'fixed' === $data['post_meta_data']['coupon_discount_type'] ) {
 			$coupon_details['amount_off'] = $amount;
-		} else if ( "percent" === $data['post_meta_data']['coupon_discount_type'] ) {
+		} elseif ( 'percent' === $data['post_meta_data']['coupon_discount_type'] ) {
 			$coupon_details['percent_off'] = $data['post_meta_data']['coupon_discount'];
 		}
 		$coupon           = \Stripe\Coupon::create( $coupon_details );
 		$stripe_coupon_id = $coupon->id;
-
 
 		$data['post_meta_data']['stripe_coupon_id'] = $stripe_coupon_id;
 
@@ -436,12 +446,11 @@ class StripeService {
 		}
 		$subscription = \Stripe\Subscription::retrieve( $subscription['subscription_id'] );
 		$deleted_sub  = $subscription->delete();
-		if ( "" !== $deleted_sub["canceled_at"] ) {
-			$response["status"] = true;
+		if ( '' !== $deleted_sub['canceled_at'] ) {
+			$response['status'] = true;
 		}
 
 		return $response;
-
 	}
 
 	public function handle_webhook( $event, $subscription_id ) {
@@ -476,15 +485,13 @@ class StripeService {
 		}
 		$subscription_status = ( 'trial' == $current_subscription['status'] ) ? 'active' : $current_subscription['status'];
 
-
 		$member_id     = $current_subscription['user_id'];
 		$membership_id = $current_subscription['item_id'];
 		$invoice_id    = $event['data']['object']['id'];
 
 		$invoice_amount = $event['data']['object']['amount_due'];
 
-
-		//create new order
+		// create new order
 		$order_info = array(
 			'membership_data' => array(
 				'membership'     => $membership_id,
@@ -502,7 +509,7 @@ class StripeService {
 		$order_data['orders_data']['user_id']         = $member_id;
 		$order_data['orders_data']['created_by']      = $member_id;
 		$order_data['orders_data']['trial_status']    = 'off';
-		$order_data['orders_data']['notes']           = sanitize_text_field( esc_html__( "Generated with stripe webhook", "user-registration" ) );
+		$order_data['orders_data']['notes']           = sanitize_text_field( esc_html__( 'Generated with stripe webhook', 'user-registration' ) );
 		$order_data['orders_data']['total_amount']    = $membership_metas['amount'];
 		$order_data['orders_data']['transaction_id']  = $invoice_id;
 		$order_data['orders_data']['subscription_id'] = $current_subscription['sub_id'];
@@ -512,13 +519,15 @@ class StripeService {
 		$logger->notice( "New order ID $order_id created: " . json_encode( $order_data ), array( 'source' => 'user-registration-membership-stripe' ) );
 
 		$next_billing_date = SubscriptionService::get_expiry_date( date( 'Y-m-d' ), $membership_metas['subscription']['duration'], $membership_metas['subscription']['value'] );
-		$this->members_subscription_repository->update( $current_subscription['sub_id'], array(
-			'next_billing_date' => $next_billing_date,
-			'expiry_date'       => $next_billing_date,
-			'status'            => $subscription_status
-		) );
-		$logger->notice( "Subscription updated with new billing date", array( 'source' => 'user-registration-membership-stripe' ) );
-
+		$this->members_subscription_repository->update(
+			$current_subscription['sub_id'],
+			array(
+				'next_billing_date' => $next_billing_date,
+				'expiry_date'       => $next_billing_date,
+				'status'            => $subscription_status,
+			)
+		);
+		$logger->notice( 'Subscription updated with new billing date', array( 'source' => 'user-registration-membership-stripe' ) );
 	}
 
 	public function handle_failed_invoice( $event, $subscription_id ) {
@@ -560,5 +569,4 @@ class StripeService {
 			)
 		);
 	}
-
 }

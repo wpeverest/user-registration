@@ -14,12 +14,12 @@
 			<?php echo esc_html__( 'First Name', 'user-registration' ); ?>
 		</label>
 		<input class="ur_membership_input_class"
-			   data-key-name="<?php echo esc_html__( 'First Name', 'user-registration' ); ?>"
-			   id="ur-membership-first-name"
-			   type="text"
-			   placeholder="<?php echo esc_html__( 'First Name', 'user-registration' ); ?>"
-			   name="urm_firstname"
-			   te
+				data-key-name="<?php echo esc_html__( 'First Name', 'user-registration' ); ?>"
+				id="ur-membership-first-name"
+				type="text"
+				placeholder="<?php echo esc_html__( 'First Name', 'user-registration' ); ?>"
+				name="urm_firstname"
+				te
 		>
 		<span class="notice_red"></span>
 
@@ -27,13 +27,13 @@
 	<!--	lastname-->
 	<div class="ur_membership_frontend_input_container">
 		<label class="ur_membership_input_label"
-			   for="ur-membership-last-name"><?php echo esc_html__( 'Last Name', 'user-registration' ); ?></label>
+				for="ur-membership-last-name"><?php echo esc_html__( 'Last Name', 'user-registration' ); ?></label>
 		<input class="ur_membership_input_class"
-			   id="ur-membership-last-name"
-			   data-key-name="<?php echo esc_html__( 'Last Name', 'user-registration' ); ?>"
-			   type="text"
-			   placeholder="<?php echo esc_html__( 'Last Name', 'user-registration' ); ?>"
-			   name="urm_lastname"
+				id="ur-membership-last-name"
+				data-key-name="<?php echo esc_html__( 'Last Name', 'user-registration' ); ?>"
+				type="text"
+				placeholder="<?php echo esc_html__( 'Last Name', 'user-registration' ); ?>"
+				name="urm_lastname"
 
 		>
 		<span class="notice_red"></span>
@@ -42,14 +42,14 @@
 	<!--	username-->
 	<div class="ur_membership_frontend_input_container">
 		<label class="ur_membership_input_label required"
-			   for="ur-membership-username"><?php echo esc_html__( 'Username', 'user-registration' ); ?></label>
+				for="ur-membership-username"><?php echo esc_html__( 'Username', 'user-registration' ); ?></label>
 		<input class="ur_membership_input_class"
-			   id="ur-membership-username"
-			   type="text"
-			   data-key-name="<?php echo esc_html__( 'Username', 'user-registration' ); ?>"
-			   placeholder="<?php echo esc_html__( 'abc123', 'user-registration' ); ?>"
-			   name="urm_username"
-			   required
+				id="ur-membership-username"
+				type="text"
+				data-key-name="<?php echo esc_html__( 'Username', 'user-registration' ); ?>"
+				placeholder="<?php echo esc_html__( 'abc123', 'user-registration' ); ?>"
+				name="urm_username"
+				required
 		>
 		<span class="notice_red"></span>
 
@@ -57,14 +57,14 @@
 	<!--	email-->
 	<div class="ur_membership_frontend_input_container">
 		<label class="ur_membership_input_label required"
-			   for="ur-membership-email"><?php echo esc_html__( 'Email', 'user-registration' ); ?></label>
+				for="ur-membership-email"><?php echo esc_html__( 'Email', 'user-registration' ); ?></label>
 		<input class="ur_membership_input_class"
-			   id="ur-membership-email"
-			   data-key-name="<?php echo esc_html__( 'Email', 'user-registration' ); ?>"
-			   type="email"
-			   placeholder="<?php echo esc_html__( 'example@email.com', 'user-registration' ); ?>"
-			   name="urm_email"
-			   required
+				id="ur-membership-email"
+				data-key-name="<?php echo esc_html__( 'Email', 'user-registration' ); ?>"
+				type="email"
+				placeholder="<?php echo esc_html__( 'example@email.com', 'user-registration' ); ?>"
+				name="urm_email"
+				required
 		>
 		<span class="notice_red"></span>
 
@@ -72,36 +72,36 @@
 	<!--	password-->
 	<div class="ur_membership_frontend_input_container">
 		<label class="ur_membership_input_label required"
-			   for="ur-membership-password"><?php echo esc_html__( 'Password', 'user-registration' ); ?></label>
+				for="ur-membership-password"><?php echo esc_html__( 'Password', 'user-registration' ); ?></label>
 		<input class="ur_membership_input_class"
-			   id="ur-membership-password"
-			   data-key-name="<?php echo esc_html__( 'Password', 'user-registration' ); ?>"
-			   type="password"
-			   name="urm_password"
-			   required
+				id="ur-membership-password"
+				data-key-name="<?php echo esc_html__( 'Password', 'user-registration' ); ?>"
+				type="password"
+				name="urm_password"
+				required
 		>
 		<span id="password-notice" class="notice_red"></span>
 	</div>
 	<!--	confirm password-->
 	<div class="ur_membership_frontend_input_container">
 		<label class="ur_membership_input_label required"
-			   for="ur-membership-confirm-password"><?php echo esc_html__( 'Confirm Password', 'user-registration' ); ?></label>
+				for="ur-membership-confirm-password"><?php echo esc_html__( 'Confirm Password', 'user-registration' ); ?></label>
 		<input class="ur_membership_input_class"
-			   data-key-name="<?php echo esc_html__( 'Confirm Password', 'user-registration' ); ?>"
-			   id="ur-membership-confirm-password"
-			   type="password"
-			   name="urm_confirm_password"
-			   required
+				data-key-name="<?php echo esc_html__( 'Confirm Password', 'user-registration' ); ?>"
+				id="ur-membership-confirm-password"
+				type="password"
+				name="urm_confirm_password"
+				required
 		>
 		<span id="confirm-password-notice" class="notice_red"></span>
 	</div>
 	<!--	coupon container-->
 	<?php
-	$is_coupon_addon_activated = function_exists( 'ur_pro_is_coupons_addon_activated' ) && ur_pro_is_coupons_addon_activated();
+	$is_coupon_addon_activated = ur_check_module_activation( 'coupon' );
 	if ( $is_coupon_addon_activated ) :
 		?>
 		<div class="ur_membership_frontend_input_container urm_hidden_payment_container urm-d-none"
-			 id="ur_coupon_container">
+			id="ur_coupon_container">
 
 			<label class="ur_membership_input_label" for="ur-membership-coupon">
 				<?php echo esc_html__( 'Coupon', 'user-registration' ); ?>
@@ -109,11 +109,11 @@
 			<div class="coupon-input-area">
 				<div class="input_with_clear_btn">
 					<input class="ur_membership_input_class"
-						   data-key-name="<?php echo esc_html__( 'coupon', 'user-registration' ); ?>"
-						   id="ur-membership-coupon"
-						   type="text"
-						   placeholder="<?php echo esc_html__( 'Coupon', 'user-registration' ); ?>"
-						   name="urm_coupon"
+							data-key-name="<?php echo esc_html__( 'coupon', 'user-registration' ); ?>"
+							id="ur-membership-coupon"
+							type="text"
+							placeholder="<?php echo esc_html__( 'Coupon', 'user-registration' ); ?>"
+							name="urm_coupon"
 					>
 					<span class="ur_clear_coupon">x</span>
 				</div>
@@ -123,7 +123,7 @@
 			</div>
 			<span id="coupon-validation-error" class="notice_red"></span>
 		</div>
-	<?php
+		<?php
 	endif;
 	?>
 	<!--	membership-->
@@ -134,16 +134,16 @@
 		foreach ( $memberships as $m => $membership ) :
 			?>
 			<label class="ur_membership_input_label"
-				   for="ur-membership-select-membership-<?php echo esc_attr( $membership['ID'] ); ?>">
+					for="ur-membership-select-membership-<?php echo esc_attr( $membership['ID'] ); ?>">
 				<input class="ur_membership_input_class ur_membership_radio_input"
-					   data-key-name="ur-membership-id"
-					   id="ur-membership-select-membership-<?php echo esc_attr( $membership['ID'] ); ?>"
-					   type="radio"
-					   name="urm_membership"
-					   value="<?php echo esc_attr( $membership['ID'] ); ?>"
-					   data-urm-pg='<?php echo esc_attr( ( $membership['active_payment_gateways'] ?? '' ) ); ?>'
-					   data-urm-pg-type="<?php echo esc_attr( $membership['type'] ); ?>"
-					   data-urm-pg-calculated-amount="<?php echo esc_attr( $membership['calculated_amount'] ); ?>"
+						data-key-name="ur-membership-id"
+						id="ur-membership-select-membership-<?php echo esc_attr( $membership['ID'] ); ?>"
+						type="radio"
+						name="urm_membership"
+						value="<?php echo esc_attr( $membership['ID'] ); ?>"
+						data-urm-pg='<?php echo esc_attr( ( $membership['active_payment_gateways'] ?? '' ) ); ?>'
+						data-urm-pg-type="<?php echo esc_attr( $membership['type'] ); ?>"
+						data-urm-pg-calculated-amount="<?php echo esc_attr( $membership['calculated_amount'] ); ?>"
 					<?php echo isset( $_GET['membership_id'] ) && ! empty( $_GET['membership_id'] ) && $_GET['membership_id'] == $membership['ID'] ? 'checked' : ''; ?>
 				>
 				<span
@@ -156,15 +156,15 @@
 
 	<!--	total container-->
 	<div id="urm-total_container"
-		 class="ur_membership_frontend_input_container urm-d-none urm_hidden_payment_container">
+		class="ur_membership_frontend_input_container urm-d-none urm_hidden_payment_container">
 		<label class="ur_membership_input_label"
-			   for="ur-membership-total"><?php echo esc_html__( 'Total', 'user-registration' ); ?></label>
+				for="ur-membership-total"><?php echo esc_html__( 'Total', 'user-registration' ); ?></label>
 		<input class="ur_membership_input_class"
-			   id="ur-membership-total"
-			   data-key-name="<?php echo esc_html__( 'Total', 'user-registration' ); ?>"
-			   name="urm_total"
-			   value="<?php echo ceil( 0 ); ?>"
-			   disabled
+				id="ur-membership-total"
+				data-key-name="<?php echo esc_html__( 'Total', 'user-registration' ); ?>"
+				name="urm_total"
+				value="<?php echo ceil( 0 ); ?>"
+				disabled
 		>
 		<span id="total-input-notice">
 		</span>
@@ -180,13 +180,13 @@
 		<div id="payment-gateway-body" class="ur_membership_frontend_input_container">
 			<?php foreach ( get_option( 'ur_membership_payment_gateways' ) as $g => $gateway ) : ?>
 				<label class="ur_membership_input_label"
-					   for="ur-membership-<?php echo esc_attr( strtolower( $gateway ) ); ?>">
+						for="ur-membership-<?php echo esc_attr( strtolower( $gateway ) ); ?>">
 					<input class="ur_membership_input_class pg-list"
-						   data-key-name="ur-payment-method"
-						   id="ur-membership-<?php echo esc_attr( strtolower( $gateway ) ); ?>"
-						   type="radio"
-						   name="urm_payment_method"
-						   value="<?php echo esc_attr( strtolower( $gateway ) ); ?>"
+							data-key-name="ur-payment-method"
+							id="ur-membership-<?php echo esc_attr( strtolower( $gateway ) ); ?>"
+							type="radio"
+							name="urm_payment_method"
+							value="<?php echo esc_attr( strtolower( $gateway ) ); ?>"
 						<?php echo 0 === $g ? 'checked' : ''; ?>
 					>
 					<span class="ur-membership-duration"><?php echo esc_html__( $gateway ); ?></span>
@@ -198,7 +198,7 @@
 	<div class="ur_membership_frontend_input_container">
 		<div class="stripe-container urm-d-none">
 			<button type="button" class="stripe-card-indicator ur-stripe-element-selected"
-					id="credit_card"><?php echo esc_html__( "Credit Card", "user-registration" ) ?></button>
+					id="credit_card"><?php echo esc_html__( 'Credit Card', 'user-registration' ); ?></button>
 			<div class="stripe-input-container">
 				<div id="card-element">
 				</div>
@@ -215,5 +215,3 @@
 	</div>
 </form>
 <!--user order successful section-->
-
-

@@ -25,7 +25,7 @@ class PaypalService {
 		$this->members_orders_repository       = new MembersOrderRepository();
 		$this->members_subscription_repository = new MembersSubscriptionRepository();
 		$this->membership_repository           = new MembershipRepository();
-		$this->orders_repository           = new OrdersRepository();
+		$this->orders_repository               = new OrdersRepository();
 	}
 
 	/**
@@ -44,8 +44,8 @@ class PaypalService {
 		$redirect          = ( 'production' === $paypal_options['mode'] ) ? 'https://www.paypal.com/cgi-bin/webscr/?' : 'https://www.sandbox.paypal.com/cgi-bin/webscr/?';
 		$post              = get_post( $membership );
 		$membership_amount = number_format( $data['amount'] );
-		$discount_amount = 0;
-		if ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) && ur_pro_is_coupons_addon_activated() ) {
+		$discount_amount   = 0;
+		if ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
 			$coupon_details  = ur_get_coupon_details( $data['coupon'] );
 			$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $membership_amount * $coupon_details['coupon_discount'] / 100;
 			$amount          = $membership_amount - $discount_amount;
@@ -144,7 +144,7 @@ class PaypalService {
 			$logger->notice( 'Return to merchant log' . $member_subscription['ID'], array( 'source' => 'ur-membership-paypal' ) );
 		}
 		$email_service = new EmailService();
-		$order_detail = $this->orders_repository->get_order_detail($member_order['ID']);
+		$order_detail  = $this->orders_repository->get_order_detail( $member_order['ID'] );
 		if ( ! empty( $order_detail['coupon'] ) ) {
 			$order_detail['coupon_discount']      = get_user_meta( $order_detail['user_id'], 'ur_coupon_discount', true );
 			$order_detail['coupon_discount_type'] = get_user_meta( $order_detail['user_id'], 'ur_coupon_discount_type', true );
@@ -162,7 +162,6 @@ class PaypalService {
 		if ( $mail_send ) {
 			ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
 		}
-
 	}
 
 
@@ -255,7 +254,7 @@ class PaypalService {
 			} else {
 				$this->members_subscription_repository->update( $subscription_id, array( 'subscription_id' => sanitize_text_field( $data['subscr_id'] ) ) );
 			}
-			$order_detail = $this->orders_repository->get_order_detail($latest_order['ID']);
+			$order_detail = $this->orders_repository->get_order_detail( $latest_order['ID'] );
 			if ( ! empty( $order_detail['coupon'] ) ) {
 				$order_detail['coupon_discount']      = get_user_meta( $order_detail['user_id'], 'ur_coupon_discount', true );
 				$order_detail['coupon_discount_type'] = get_user_meta( $order_detail['user_id'], 'ur_coupon_discount_type', true );
@@ -347,7 +346,6 @@ class PaypalService {
 			);
 
 		}
-
 	}
 
 	/**

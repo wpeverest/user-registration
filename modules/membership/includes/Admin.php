@@ -125,7 +125,6 @@ if ( ! class_exists( 'Admin' ) ) :
 			register_deactivation_hook( UR_PLUGIN_FILE, array( $this, 'on_deactivation' ) );
 
 			register_activation_hook( UR_PLUGIN_FILE, array( $this, 'on_activation' ) );
-
 		}
 
 		/**
@@ -305,16 +304,15 @@ if ( ! class_exists( 'Admin' ) ) :
 		/**
 		 * Includes the necessary payment files for the membership plugin if PayPal is activated.
 		 *
-		 * This function checks if PayPal is activated by calling the `ur_pro_is_paypal_activated()` function.
+		 * This function checks if PayPal is activated by calling the `ur_check_module_activation()` function.
 		 * If PayPal is activated, it instantiates a new `PaypalActions` object.
 		 *
 		 * @return void
 		 */
 		public function include_membership_payment_files() {
-			if ( ur_check_module_activation('payments') ) {
+			if ( ur_check_module_activation( 'payments' ) ) {
 				new PaymentGatewaysWebhookActions();
 			}
-
 		}
 
 		/**
