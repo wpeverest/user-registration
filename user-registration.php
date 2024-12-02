@@ -276,6 +276,10 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 				include_once UR_ABSPATH . 'modules/payment-history/Orders.php';
 			}
 
+			if ( ur_check_module_activation( 'content-restriction' ) ) {
+				include_once UR_ABSPATH . 'modules/content-restriction/user-registration-content-restriction.php';
+			}
+
 			/**
 			 * Elementor classes.
 			 */

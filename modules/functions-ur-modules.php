@@ -308,3 +308,33 @@ if ( ! function_exists( 'ur_membership_install_required_pages' ) ) {
 		update_option( 'user_registration_membership_installed_flag', true );
 	}
 }
+
+
+if ( ! function_exists( 'ur_get_all_roles' ) ) {
+
+	/**
+	 * Retrieve list of roles.
+	 */
+	function ur_get_all_roles() {
+		global $wp_roles;
+
+		if ( ! class_exists( 'WP_Roles' ) ) {
+			return;
+		}
+
+		$roles = array();
+		if ( ! isset( $wp_roles ) ) {
+			$wp_roles = new WP_Roles();
+		}
+		$roles = $wp_roles->roles;
+
+		$all_roles = array();
+
+		foreach ( $roles as $role_key => $role ) {
+
+			$all_roles[ $role_key ] = $role['name'];
+		}
+
+		return apply_filters( 'user_registration_all_roles', $all_roles );
+	}
+}
