@@ -3516,6 +3516,72 @@
 	 }
  }
 
+ .user-registration_page_user-registration-login-forms {
+	.ur-admin-page-topnav {
+		.ur-editing-tag {
+			padding: $spacing_4px $spacing_10px;
+			background: $blue-50;
+			border-radius: $border_radius_50;
+			font-style: italic;
+			font-weight: $regular;
+			font-size: 12px;
+			line-height: 150%;
+			color: $grey-400;
+		}
+
+		.major-publishing-actions {
+			clear: both;
+			line-height: 28px;
+			margin-left: auto;
+
+			.publishing-action {
+				text-align: right;
+				float: right;
+
+				input {
+					&.code {
+						width: 280px;
+						height: 33px;
+						padding: 0 $spacing_6px;
+						margin: 0;
+						border-color: $grey-50;
+						background: $blue-25;
+						border-radius: 3px 0 0 3px;
+					}
+				}
+			}
+			.login-forms-shortcode-action {
+				input {
+					&.code {
+						font-size: large;
+						width: 320px;
+						height: 33px;
+						padding: 0 $spacing_6px;
+						margin: 0;
+						border-color: $grey-50;
+						background: $blue-25;
+						border-radius: 3px 0 0 3px;
+						display: inline;
+					}
+				}
+			}
+
+			#copy-shortcode {
+				margin-left: -5px;
+				border-radius: 0 4px 4px 0;
+				background: $blue-50 !important;
+				border-color: $grey-50 !important;
+
+				svg {
+					fill: $white;
+					margin-bottom: 5px;
+					vertical-align: middle;
+				}
+			}
+		}
+	}
+ }
+
  .user-registration_page_add-new-registration,
  .toplevel_page_user-registration {
 	 #nav-menu-header {
@@ -4242,7 +4308,7 @@
 				 }
 				 #post-body {
 					 .ur-registered-from {
-						 display: block;
+						 display: flex;
 						 background-color: transparent;
 						 .ur-builder-wrapper {
 							 height: auto;

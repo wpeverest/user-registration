@@ -492,6 +492,10 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'registration_page',
 				)
 			);
+			if ( isset( $_GET['page'] ) && ('user-registration' === $_GET['page'] || 'user-registration-registration-forms' === $_GET['page'] || 'user-registration-login-forms' === $_GET['page']) ) {
+				add_submenu_page( 'user-registration', __( 'Registration Forms', 'user-registration' ), '↳ ' . __( 'Registration Forms', 'user-registration' ), 'manage_user_registration', 'user-registration', array(  $this, 'registration_page') );
+				add_submenu_page( 'user-registration', __( 'Login Forms', 'user-registration' ), '↳ ' . __( 'Login Forms', 'user-registration' ), 'manage_user_registration', 'user-registration-login-forms', array(  $this, 'registration_page') );
+			}
 		}
 
 			/**
@@ -637,12 +641,13 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			return $status;
 		}
 
-			/**
-			 * Init the settings page.
-			 */
+		/**
+		 * Init the settings page.
+		 */
 		public function registration_page() {
 			global $registration_table_list;
-			if ( isset( $_GET['tab'] ) && 'login-forms' === $_GET['tab'] ) { //phpcs:ignore WordPress.Security.NonceVerification
+			if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page'] ) { //phpcs:ignore WordPress.Security.NonceVerification
+				$login_form_settings = get_login_options_settings();
 				include_once __DIR__ . '/views/html-login-page-forms.php';
 			} else {
 				$registration_table_list->display_page();
