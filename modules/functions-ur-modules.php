@@ -321,3 +321,70 @@ if(!function_exists('user_registration_sanitize_amount')) {
 		return $amount;
 	}
 }
+
+
+if ( ! function_exists( 'ur_membership_install_required_pages' ) ) {
+
+	/**
+	 * Install required membership pages.
+	 */
+	function ur_membership_install_required_pages() {
+		include_once untrailingslashit( plugin_dir_path( UR_PLUGIN_FILE ) ) . '/includes/admin/functions-ur-admin.php';
+
+		$pages                = apply_filters( 'user_registration_create_pages', array() );
+		$default_form_page_id = get_option( 'user_registration_default_form_page_id' );
+
+		$pages['membership_registration'] = array(
+			'name'    => _x( 'membership-registration', 'Page slug', 'user-registration' ),
+			'title'   => _x( 'Membership Registration', 'Page title', 'user-registration' ),
+			'content' => '[' . apply_filters( 'user_registration_form_shortcode_tag', 'user_registration_form' ) . ' id="' . esc_attr( $default_form_page_id ) . '"]',
+		);
+
+		$pages['membership_pricing']  = array(
+			'name'    => _x( 'membership-pricing', 'Page slug', 'user-registration' ),
+			'title'   => _x( 'Membership Pricing', 'Page title', 'user-registration' ),
+			'content' => '[user_registration_membership_listing]',
+		);
+		$pages['membership_thankyou'] = array(
+			'name'    => _x( 'membership-thankyou', 'Page slug', 'user-registration' ),
+			'title'   => _x( 'Membership Thankyou', 'Page title', 'user-registration' ),
+			'content' => '[user_registration_membership_thank_you]',
+		);
+
+		foreach ( $pages as $key => $page ) {
+			ur_create_page( esc_sql( $page['name'] ), 'user_registration_' . $key . '_page_id', wp_kses_post( ( $page['title'] ) ), wp_kses_post( $page['content'] ) );
+		}
+
+		update_option( 'user_registration_membership_installed_flag', true );
+	}
+}
+
+
+if ( ! function_exists( 'ur_get_all_roles' ) ) {
+
+	/**
+	 * Retrieve list of roles.
+	 */
+	function ur_get_all_roles() {
+		global $wp_roles;
+
+		if ( ! class_exists( 'WP_Roles' ) ) {
+			return;
+		}
+
+		$roles = array();
+		if ( ! isset( $wp_roles ) ) {
+			$wp_roles = new WP_Roles();
+		}
+		$roles = $wp_roles->roles;
+
+		$all_roles = array();
+
+		foreach ( $roles as $role_key => $role ) {
+
+			$all_roles[ $role_key ] = $role['name'];
+		}
+
+		return apply_filters( 'user_registration_all_roles', $all_roles );
+	}
+}

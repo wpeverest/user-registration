@@ -106,6 +106,7 @@ if ( ! class_exists( 'Admin' ) ) :
 		 */
 		private function __construct() {
 			// Actions and Filters.
+
 			add_filter(
 				'plugin_action_links_' . plugin_basename( UR_MEMBERSHIP_PLUGIN_FILE ),
 				array(
@@ -355,7 +356,7 @@ if ( ! class_exists( 'Admin' ) ) :
 		/**
 		 * Includes the necessary payment files for the membership plugin if PayPal is activated.
 		 *
-		 * This function checks if PayPal is activated by calling the `ur_pro_is_paypal_activated()` function.
+		 * This function checks if PayPal is activated by calling the `ur_check_module_activation()` function.
 		 * If PayPal is activated, it instantiates a new `PaypalActions` object.
 		 *
 		 * @return void
@@ -364,7 +365,6 @@ if ( ! class_exists( 'Admin' ) ) :
 			if ( ur_check_module_activation( 'payments' ) ) {
 				new PaymentGatewaysWebhookActions();
 			}
-
 		}
 
 		/**

@@ -290,6 +290,15 @@ class UR_Modules {
 
 		// Logic to enable Feature.
 		$enabled_features = get_option( 'user_registration_enabled_features', array() );
+
+		if ( 'user-registration-membership' === $slug ) {
+			if ( ! get_option( 'user_registration_membership_installed_flag', false ) ) {
+				array_push( $enabled_features, 'payment-history' );
+				array_push( $enabled_features, 'content-restriction' );
+				ur_membership_install_required_pages();
+			}
+		}
+
 		array_push( $enabled_features, $slug );
 		update_option( 'user_registration_enabled_features', $enabled_features );
 
@@ -496,6 +505,14 @@ class UR_Modules {
 
 		foreach ( $feature_data as $slug => $name ) {
 			array_push( $enabled_features, $slug );
+
+			if ( 'user-registration-membership' === $slug ) {
+				if ( ! get_option( 'user_registration_membership_installed_flag', false ) ) {
+					array_push( $enabled_features, 'payment-history' );
+					array_push( $enabled_features, 'content-restriction' );
+					ur_membership_install_required_pages();
+				}
+			}
 		}
 
 		update_option( 'user_registration_enabled_features', $enabled_features );

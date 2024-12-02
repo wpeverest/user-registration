@@ -35,7 +35,7 @@ class MembersService {
 			);
 		}
 		// validate coupon if applied
-		if ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) && ur_pro_is_coupons_addon_activated() ) {
+		if ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
 			$coupon_details = ur_get_coupon_details( $data['coupon'] );
 			if ( empty( $coupon_details ) ) {
 				return array(
@@ -113,7 +113,7 @@ class MembersService {
 		$role = $data['role'] ?? 'subscriber';
 
 		$coupon_details = array();
-		if ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) && ur_pro_is_coupons_addon_activated() ) {
+		if ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
 			$coupon_details = ur_get_coupon_details( sanitize_text_field( $data['coupon'] ) );
 		}
 
