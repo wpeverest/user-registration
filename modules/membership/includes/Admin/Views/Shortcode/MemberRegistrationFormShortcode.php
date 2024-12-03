@@ -30,19 +30,17 @@ class MemberRegistrationFormShortcode {
 	 */
 	public static function display_form( $attributes ) {
 		global $wp, $post;
-		$allow =  (is_user_logged_in() && $attributes['preview']) || ! is_user_logged_in();
+		$allow = ( is_user_logged_in() && $attributes['preview'] ) || ! is_user_logged_in();
 
 		if ( $allow ) {
-			$membership_repository = new MembershipRepository();
-			$memberships           = $membership_repository->get_all_membership();
-			$memberships           = apply_filters( 'build_membership_list_frontend', $memberships );
-
+			$memberships = isset( $attributes['options'] ) ? $attributes['options'] : array();
 			if ( empty( $memberships ) ) {
 				echo wp_kses_post( apply_filters( 'user_registration_membership_no_membership_message', __( 'Please add at least one membership to allow user registration.', 'user-registration' ) ) );
+
 				return;
 			}
 
-			$template_file         = locate_template( 'membership-registration-form.php' );
+			$template_file = locate_template( 'membership-registration-form.php' );
 
 			if ( ! $template_file ) {
 				$template_file = UR_MEMBERSHIP_DIR . 'includes/Templates/membership-registration-form.php';
