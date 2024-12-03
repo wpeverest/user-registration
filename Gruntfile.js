@@ -181,6 +181,7 @@ module.exports = function (grunt) {
 			js: {
 				files: [
 					"<%= dirs.js %>/admin/*js",
+					"<%= dirs.js %>/modules/**/*js",
 					"<%= dirs.js %>/frontend/*js",
 					"<%= dirs.js %>/ur-snackbar/*js",
 					"!<%= dirs.js %>/admin/*.min.js",

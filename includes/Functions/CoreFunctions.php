@@ -382,20 +382,20 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 	}
 }
 
-if ( ! function_exists( 'get_memberhsip_menus' ) ) {
+if ( ! function_exists( 'get_membership_menus' ) ) {
 	/**
 	 * get_memberhsip_menus
 	 *
 	 * @return array[]
 	 */
-	function get_memberhsip_menus() {
+	function get_membership_menus() {
 		return array(
 			'memberships'       => array(
 				'label'  => __( 'Memberships', 'user-registration' ),
 				'url'    => admin_url( 'admin.php?page=user-registration-membership' ),
 				'active' => isset( $_GET['page'] ) &&
 							$_GET['page'] === 'user-registration-membership' &&
-							! in_array( $_GET['action'], array( 'list_groups', 'add_groups' ) ),
+				            ( isset( $_GET['action'] ) ? ! in_array( $_GET['action'], array( 'list_groups', 'add_groups' ) ) : true ),
 			),
 			'membership_groups' => array(
 				'label'  => __( 'Membership Groups', 'user-registration' ),

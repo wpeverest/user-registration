@@ -308,7 +308,7 @@ class Membership {
 		$post_id            = isset( $_GET['post_id'] ) ? sanitize_text_field( $_GET['post_id'] ) : '';
 		$membership_details = array();
 		$membership         = array();
-		$menu_items         = get_memberhsip_menus();
+		$menu_items         = get_membership_menus();
 		$membership_groups  = new MembershipGroups();
 
 		switch ( $action_page ) {

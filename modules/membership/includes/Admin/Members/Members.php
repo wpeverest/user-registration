@@ -193,7 +193,7 @@ if ( ! class_exists( 'Members' ) ) {
 		 */
 		public function render_members_page() {
 			$action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
-			$menu_items = get_memberhsip_menus();
+			$menu_items = get_membership_menus();
 			switch ( $action ) {
 				case 'add_new_member':
 					$this->render_members_create_page($menu_items);
