@@ -129,7 +129,7 @@ class URCR_Admin {
 				default:
 					global $content_access_rules_table_list;
 
-					require_once UR_PLUGIN_FILE . '/includes/pro/addons/content-restriction/admin/class-urcr-admin-content-access-rules-table-list.php';
+					require_once UR_ABSPATH . 'includes/pro/addons/content-restriction/admin/class-urcr-admin-content-access-rules-table-list.php';
 					$content_access_rules_table_list = new URCR_Admin_Content_Access_Rules_Table_List();
 					$content_access_rules_table_list->process_actions();
 					break;
@@ -162,7 +162,7 @@ class URCR_Admin {
 	 * @since 4.0
 	 */
 	public function render_content_access_rules_creator() {
-		include UR_PLUGIN_FILE . '/includes/pro/addons/content-restriction/admin/content-access-rules-creator.php';
+		include UR_ABSPATH . 'includes/pro/addons/content-restriction/admin/content-access-rules-creator.php';
 	}
 
 	/**

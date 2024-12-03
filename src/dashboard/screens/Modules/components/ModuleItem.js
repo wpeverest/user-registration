@@ -480,7 +480,8 @@ const ModuleItem = (props) => {
 					)
 				)}
 
-				{(!moduleEnabled || !plan.includes("free")) && (
+				{(!moduleEnabled ||
+					(!moduleEnabled && !plan.includes("free"))) && (
 					<Button
 						colorScheme={"primary"}
 						size="sm"

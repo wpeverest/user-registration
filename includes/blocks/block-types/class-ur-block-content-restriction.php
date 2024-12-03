@@ -25,8 +25,6 @@ class UR_Block_Content_Restriction extends UR_Block_Abstract {
 	 * @return string
 	 */
 	protected function build_html( $content ) {
-		error_log( print_r( $content, true ) );
-
 		return $content;
 	}
 }

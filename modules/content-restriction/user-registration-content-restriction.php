@@ -62,8 +62,8 @@ class User_Registration_Content_Restriction {
 		}
 
 		if ( UR_PRO_ACTIVE ) {
-			include_once UR_PLUGIN_FILE . '/includes/pro/addons/content-restriction/functions-urcr-core.php';
-			include_once UR_PLUGIN_FILE . '/includes/pro/addons/content-restriction/class-urcr-ajax.php';
+			include_once UR_ABSPATH . 'includes/pro/addons/content-restriction/functions-urcr-core.php';
+			include_once UR_ABSPATH . 'includes/pro/addons/content-restriction/class-urcr-ajax.php';
 		}
 
 		include_once __DIR__ . '/class-urcr-post-types.php';
@@ -72,7 +72,7 @@ class User_Registration_Content_Restriction {
 		if ( $this->is_request( 'admin' ) ) {
 
 			if ( UR_PRO_ACTIVE ) {
-				include_once UR_PLUGIN_FILE . '/includes/pro/addons/content-restriction/admin/class-urcr-admin-assets.php';
+				include_once UR_ABSPATH . 'includes/pro/addons/content-restriction/admin/class-urcr-admin-assets.php';
 			}
 
 			include_once __DIR__ . '/admin/class-urcr-admin.php';
