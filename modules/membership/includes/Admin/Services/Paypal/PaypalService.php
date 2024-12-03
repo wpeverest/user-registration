@@ -9,6 +9,7 @@ use WPEverest\URMembership\Admin\Repositories\MembersRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
 use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
 use WPEverest\URMembership\Admin\Services\EmailService;
+use WPEverest\URMembership\Admin\Services\MembersService;
 use WPEverest\URMembership\Admin\Services\OrderService;
 use WPEverest\URMembership\Admin\Services\SubscriptionService;
 
@@ -123,6 +124,8 @@ class PaypalService {
 	 */
 	public function handle_paypal_redirect_response( $params, $payer_id ) {
 		parse_str( $params, $url_params );
+		$logger = ur_get_logger();
+
 		$membership_id                  = $url_params['membership'];
 		$member_id                      = $url_params['member_id'];
 		$member_order                   = $this->members_orders_repository->get_member_orders( $member_id );
@@ -140,7 +143,6 @@ class PaypalService {
 		if ( $is_order_updated && 'paid' === $member_order['order_type'] ) {
 			$member_subscription = $this->members_subscription_repository->get_member_subscription( $member_id );
 			$this->members_subscription_repository->update( $member_subscription['ID'], array( 'status' => 'active' ) );
-			$logger = ur_get_logger();
 			$logger->notice( 'Return to merchant log' . $member_subscription['ID'], array( 'source' => 'ur-membership-paypal' ) );
 		}
 		$email_service = new EmailService();
@@ -159,9 +161,15 @@ class PaypalService {
 
 		$mail_send = $email_service->send_email( $email_data, 'payment_successful' );
 
-		if ( $mail_send ) {
-			ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
+		if ( ! $mail_send ) {
+			$logger->notice( 'Email not sent for member: ' . $member_id . 'and subscription: ' . $member_subscription['ID'], array( 'source' => 'ur-membership-paypal' ) );
 		}
+		$login_option = ur_get_user_login_option( $member_id );
+		if ( "auto_login" === $login_option ) {
+			$member_service = new MembersService();
+			$member_service->login_member( $member_id );
+		}
+		ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
 	}
 
 

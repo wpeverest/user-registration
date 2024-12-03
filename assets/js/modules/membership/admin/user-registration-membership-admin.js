@@ -636,7 +636,12 @@
 
 		}
 	});
-
+	$(document).on('keydown', function (e) {
+		if (e.ctrlKey && e.key === 's') {
+			e.preventDefault();
+			$('.ur-membership-save-btn').trigger('click');
+		}
+	});
 	/**
 	 * membership save button event
 	 */

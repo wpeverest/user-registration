@@ -362,9 +362,7 @@ if ( ! class_exists( 'Admin' ) ) :
 		 * @return void
 		 */
 		public function include_membership_payment_files() {
-			if ( ur_check_module_activation( 'payments' ) ) {
-				new PaymentGatewaysWebhookActions();
-			}
+			new PaymentGatewaysWebhookActions();
 		}
 
 		/**

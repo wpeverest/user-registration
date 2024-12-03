@@ -42,7 +42,6 @@ class PaymentGatewaysWebhookActions {
 	 * @return void
 	 */
 	public function handle_paypal_redirect_response() {
-
 		if ( ! isset( $_GET['ur-membership-return'] ) ) {
 			return;
 		}
