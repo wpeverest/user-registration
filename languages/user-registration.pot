@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the User Registration plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration 3.3.5.1\n"
+"Project-Id-Version: User Registration 3.3.5.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-registration\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-11-19T10:57:10+00:00\n"
+"POT-Creation-Date: 2024-12-04T06:41:22+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: user-registration\n"
@@ -1179,7 +1179,7 @@ msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:525
 #: includes/functions-ur-core.php:4739
-#: user-registration.php:408
+#: user-registration.php:410
 #: src/dashboard/Constants/index.js:16
 msgid "Settings"
 msgstr ""
@@ -1243,8 +1243,8 @@ msgid "Lost password"
 msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:820
-#: includes/functions-ur-template.php:392
-#: includes/functions-ur-template.php:437
+#: includes/functions-ur-template.php:391
+#: includes/functions-ur-template.php:436
 msgid "Select All"
 msgstr ""
 
@@ -3634,7 +3634,7 @@ msgstr ""
 
 #. translators: 1: Pending email message 2: Cancel Link
 #: includes/class-ur-ajax.php:504
-#: includes/functions-ur-template.php:691
+#: includes/functions-ur-template.php:686
 msgid "There is a pending change of your email to <code>%1$s</code>. <a href=\"%2$s\">Cancel</a>"
 msgstr ""
 
@@ -5761,7 +5761,7 @@ msgid "Country"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:374
-#: includes/functions-ur-template.php:791
+#: includes/functions-ur-template.php:786
 msgid "Select a country"
 msgstr ""
 
@@ -6845,15 +6845,15 @@ msgstr ""
 msgid "This function should not be called before user_registration_init."
 msgstr ""
 
-#: includes/functions-ur-template.php:233
+#: includes/functions-ur-template.php:232
 msgid "required"
 msgstr ""
 
-#: includes/functions-ur-template.php:825
+#: includes/functions-ur-template.php:822
 msgid "Choose an option"
 msgstr ""
 
-#: includes/functions-ur-template.php:1045
+#: includes/functions-ur-template.php:1040
 msgid "This field value needs to be unique."
 msgstr ""
 
@@ -7261,31 +7261,31 @@ msgid "A password reset email has been sent to the email address on file for you
 msgstr ""
 
 #. translators: 1: error message 2: file name and path 3: line number
-#: user-registration.php:141
+#: user-registration.php:143
 msgid "%1$s in %2$s on line %3$s"
 msgstr ""
 
-#: user-registration.php:408
+#: user-registration.php:410
 msgid "View User Registration settings"
 msgstr ""
 
-#: user-registration.php:424
+#: user-registration.php:426
 msgid "View User Registration documentation"
 msgstr ""
 
-#: user-registration.php:424
+#: user-registration.php:426
 msgid "Docs"
 msgstr ""
 
-#: user-registration.php:425
+#: user-registration.php:427
 msgid "Visit free customer support"
 msgstr ""
 
-#: user-registration.php:425
+#: user-registration.php:427
 msgid "Free support"
 msgstr ""
 
-#: user-registration.php:529
+#: user-registration.php:553
 msgid "As <strong>User Registration Pro</strong> is active, <strong>User Registration Free</strong> is now not needed."
 msgstr ""
 

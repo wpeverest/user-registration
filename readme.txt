@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 5.5
 Requires PHP: 7.2
-Tested up to: 6.7
-Stable tag: 3.3.5.1
+Tested up to: 6.7.1
+Stable tag: 3.3.5.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -245,6 +245,11 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 16. User Account Page –  Vertical Layout
 
 == Changelog ==
+
+= 3.3.5.2   - 21/11/2024 =
+* Fix   	- Fatal error when replacing gravatar image.
+* Fix       - Translation not working properly after WordPress v6.7.
+* Fix       - WordPress _load_textdomain_just_in_time notice after v6.7.
 
 = 3.3.5.1   - 19/11/2024 =
 * Fix   	- Edit profile form duplication.
