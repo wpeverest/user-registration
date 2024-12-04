@@ -171,7 +171,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 						<div class="ur-page-title__wrapper-menu">
 							<ul class="ur-page-title__wrapper-menu__items">
 								<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration' ) ); ?>" class="current"><?php esc_html_e( 'Registration Forms', 'user-registration' ); ?></a></li>
-								<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-login-forms' ) ); ?>" class=""><?php esc_html_e( 'Login Forms', 'user-registration' ); ?></a></li>
+								<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-login-forms' ) ); ?>" class=""><?php esc_html_e( 'Login Form', 'user-registration' ); ?></a></li>
 							</ul>
 						</div>
 					</div>

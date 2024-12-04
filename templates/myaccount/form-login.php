@@ -56,6 +56,7 @@ $login_title = ur_option_checked( 'user_registration_login_title', false );
 
 $is_passwordless_enabled = ! ur_is_passwordless_login_enabled() || ! isset( $_GET['pl'] ) || ! ur_string_to_bool( $_GET['pl'] ); // phpcs:ignore;
 
+$is_login_settings = ( isset( $_GET['page'] ) && "user-registration-login-forms" === $_GET['page'] ) ? true : false;
 ?>
 
 <?php
@@ -81,7 +82,7 @@ do_action( 'user_registration_before_customer_login_form' );
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
 				<?php
-				if ( $login_title ) {
+				if ( $login_title || $is_login_settings ) {
 					$login_title_label =
 					/**
 					 * Filter to modify the login title.
@@ -102,7 +103,7 @@ do_action( 'user_registration_before_customer_login_form' );
 					?>
 					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide">
 						<?php
-						if ( ! $hide_labels ) {
+						if ( ! $hide_labels || $is_login_settings ) {
 							printf( '<label for="username">%s <span class="required">*</span></label>', esc_html( $labels['username'] ) );
 						}
 						?>
@@ -116,7 +117,7 @@ do_action( 'user_registration_before_customer_login_form' );
 					<?php if ( $is_passwordless_enabled ) : ?>
 					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide<?php echo ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) ? ' hide_show_password' : ''; ?>">
 						<?php
-						if ( ! $hide_labels ) {
+						if ( ! $hide_labels || $is_login_settings ) {
 							printf( '<label for="password">%s <span class="required">*</span></label>', esc_html( $labels['password'] ) );
 						}
 						?>
@@ -161,17 +162,17 @@ do_action( 'user_registration_before_customer_login_form' );
 						do_action( 'user_registration_login_form_before_submit_button' );
 						?>
 							<?php if ( $enable_ajax ) { ?>
-							<input type="submit" class="user-registration-Button button ur-submit-button" id="user_registration_ajax_login_submit" name="login" value="<?php echo esc_html( $labels['login'] ); ?>" />
+							<input type="submit" class="user-registration-Button button ur-submit-button" id="user_registration_ajax_login_submit" name="login" value="<?php echo esc_html( $labels['login'] ); ?>" <?php echo ( $is_login_settings || ( isset( $_GET['ur_login_preview'] ) && $_GET['ur_login_preview'] ) ) ? "disabled" : ""; ?>/>
 							<span></span>
 							<?php } else { ?>
-							<input type="submit" class="user-registration-Button button " name="login" value="<?php echo esc_html( $labels['login'] ); ?>" />
+							<input type="submit" class="user-registration-Button button " name="login" value="<?php echo esc_html( $labels['login'] ); ?>"<?php echo ( $is_login_settings || ( isset( $_GET['ur_login_preview'] ) && $_GET['ur_login_preview'] ) ) ? "disabled" : "" ?> />
 							<?php } ?>
 						</div>
 						<input type="hidden" name="redirect" value="<?php echo isset( $redirect ) ? esc_attr( $redirect ) : esc_attr( the_permalink() ); ?>" />
 						<?php
 							$remember_me_enabled = ur_option_checked( 'user_registration_login_options_remember_me', true );
 
-						if ( $remember_me_enabled && $is_passwordless_enabled ) {
+						if (( $remember_me_enabled && $is_passwordless_enabled ) || $is_login_settings ) {
 							?>
 								<label class="user-registration-form__label user-registration-form__label-for-checkbox inline">
 									<input class="user-registration-form__input user-registration-form__input-checkbox" name="rememberme" type="checkbox" id="rememberme" value="forever" /> <span><?php echo esc_html( $labels['remember_me'] ); ?></span>
@@ -184,7 +185,7 @@ do_action( 'user_registration_before_customer_login_form' );
 					<?php
 						$lost_password_enabled = ur_option_checked( 'user_registration_login_options_lost_password', true );
 
-					if ( $lost_password_enabled && $is_passwordless_enabled ) {
+					if (( $lost_password_enabled && $is_passwordless_enabled ) || $is_login_settings ) {
 						?>
 								<p class="user-registration-LostPassword lost_password">
 									<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php echo esc_html( $labels['lost_your_password'] ); ?></a>
@@ -199,7 +200,7 @@ do_action( 'user_registration_before_customer_login_form' );
 					if ( $users_can_register ) {
 						$url_options = get_option( 'user_registration_general_setting_registration_url_options' );
 
-						if ( ! empty( $url_options ) ) {
+						if ( ! empty( $url_options ) || $is_login_settings ) {
 							$url_pattern = "/^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}(\\.[a-zA-Z0-9()]{1,6})?\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$/";
 							if ( ! filter_var( $url_options, FILTER_VALIDATE_URL ) || ! preg_match( $url_pattern, $url_options ) ) {
 								$url_options = home_url( $url_options );

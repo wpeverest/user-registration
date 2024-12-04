@@ -20,13 +20,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="ur-page-title__wrapper-menu">
 			<ul class="ur-page-title__wrapper-menu__items">
 				<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration' ) ); ?>" class=""><?php esc_html_e( 'Registration Forms', 'user-registration' ); ?></a></li>
-				<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-login-forms' ) ); ?>" class="current"><?php esc_html_e( 'Login Forms', 'user-registration' ); ?></a><span class="ur-editing-tag"><?php esc_html_e( 'Now Editing', 'user-registration' ); ?></span></li>
+				<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-login-forms' ) ); ?>" class="current"><?php esc_html_e( 'Login Form', 'user-registration' ); ?></a><span class="ur-editing-tag"><?php esc_html_e( 'Now Editing', 'user-registration' ); ?></span></li>
 			</ul>
 		</div>
 	</div>
 	<div class="major-publishing-actions wp-clearfix">
 		<div class="publishing-action">
-			<a href="<?php echo esc_url( "http://ur-wordpress.me/?ur_preview=true&form_id=login-form" ); ?>" rel="noreferrer noopener" target="_blank" class="button button-secondary button-large" title="<?php esc_attr_e( 'Preview Form', 'user-registration' ); ?>"><?php esc_html_e( 'Preview', 'user-registration' ); ?></a>
+			<a href="<?php echo esc_url( "http://ur-wordpress.me/?ur_login_preview=true" ); ?>" rel="noreferrer noopener" target="_blank" class="button button-secondary button-large" title="<?php esc_attr_e( 'Preview Form', 'user-registration' ); ?>"><?php esc_html_e( 'Preview', 'user-registration' ); ?></a>
 			<button type="button" name="save_login_form" id="save_form_footer" class="button button-primary button-large menu-form ur_save_login_form_action_button"> <?php echo __( "Update Form", 'user-registration' ); ?> </button>
 		</div><!-- END .publishing-action -->
 	</div>
@@ -51,9 +51,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 											<?php
 												echo '<form id="ur-login-form-setting">';
 												foreach ( $login_form_settings['sections'] as $section ) {
+													echo '<div class="ur-login-form-setting-block" style="display:block;">';
 													echo '<h2 class="ur-toggle-heading">'.  __( $section['title'], 'user-registration' ) . '</h2>';
-													lg($section['settings']);
 													echo '<hr/>';
+													echo '<div class="ur-toggle-content" style="display:none;">';
+													render_login_option_settings( $section );
+													echo '</div>';
+													echo '</div>';
 												}
 												echo '</form>';
 											?>

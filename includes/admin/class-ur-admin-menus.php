@@ -494,7 +494,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			);
 			if ( isset( $_GET['page'] ) && ('user-registration' === $_GET['page'] || 'user-registration-registration-forms' === $_GET['page'] || 'user-registration-login-forms' === $_GET['page']) ) {
 				add_submenu_page( 'user-registration', __( 'Registration Forms', 'user-registration' ), '↳ ' . __( 'Registration Forms', 'user-registration' ), 'manage_user_registration', 'user-registration', array(  $this, 'registration_page') );
-				add_submenu_page( 'user-registration', __( 'Login Forms', 'user-registration' ), '↳ ' . __( 'Login Forms', 'user-registration' ), 'manage_user_registration', 'user-registration-login-forms', array(  $this, 'registration_page') );
+				add_submenu_page( 'user-registration', __( 'Login Form', 'user-registration' ), '↳ ' . __( 'Login Form', 'user-registration' ), 'manage_user_registration', 'user-registration-login-forms', array(  $this, 'registration_page') );
 			}
 		}
 
@@ -646,7 +646,22 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 */
 		public function registration_page() {
 			global $registration_table_list;
+			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+
 			if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page'] ) { //phpcs:ignore WordPress.Security.NonceVerification
+				wp_enqueue_script( 'user-registration-settings', UR()->plugin_url() . '/assets/js/admin/settings' . $suffix . '.js', array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-sortable', 'iris', 'tooltipster' ), UR_VERSION, true );
+				wp_enqueue_script( 'user-registration-login-settings', UR()->plugin_url() . '/assets/js/admin/login-settings' . $suffix . '.js', array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-sortable', 'iris', 'tooltipster' ), UR_VERSION, true );
+				wp_enqueue_style( 'user-registration-css', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR_VERSION );
+
+				wp_localize_script(
+					'user-registration-login-settings',
+					'ur_login_form_params',
+					array(
+						'ajax_url'           => admin_url( 'admin-ajax.php' ),
+						'ur_login_settings_save' => wp_create_nonce( "ur_login_settings_save_nonce" ),
+						'login_settings' => get_login_options_settings(),
+					)
+				);
 				$login_form_settings = get_login_options_settings();
 				include_once __DIR__ . '/views/html-login-page-forms.php';
 			} else {

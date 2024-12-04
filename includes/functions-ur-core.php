@@ -7381,11 +7381,490 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 			)
 		);
 
-		/**
-		 * Filter to get the login options settings.
-		 *
-		 * @param array $settings Login Options Settings to be enlisted.
-		 */
-		return apply_filters( 'user_registration_get_login_options_settings_general', $settings );
+		return $settings;
+	}
+}
+
+
+if ( ! function_exists( 'render_login_option_settings' ) ) {
+
+	function render_login_option_settings( $section ) {
+		$settings = '';
+		foreach ( $section['settings'] as $key => $value ) {
+
+			if ( ! isset( $value['type'] ) ) {
+				continue;
+			}
+
+			if ( ! isset( $value['id'] ) ) {
+				$value['id'] = '';
+			}
+			if ( ! isset( $value['row_class'] ) ) {
+				$value['row_class'] = '';
+			}
+			if ( ! isset( $value['rows'] ) ) {
+				$value['rows'] = '';
+			}
+			if ( ! isset( $value['cols'] ) ) {
+				$value['cols'] = '';
+			}
+			if ( ! isset( $value['title'] ) ) {
+				$value['title'] = isset( $value['name'] ) ? $value['name'] : '';
+			}
+			if ( ! isset( $value['class'] ) ) {
+				$value['class'] = '';
+			}
+			if ( ! isset( $value['css'] ) ) {
+				$value['css'] = '';
+			}
+			if ( ! isset( $value['default'] ) ) {
+				$value['default'] = '';
+			}
+			if ( ! isset( $value['desc'] ) ) {
+				$value['desc'] = '';
+			}
+			if ( ! isset( $value['desc_tip'] ) ) {
+				$value['desc_tip'] = false;
+			}
+			if ( ! isset( $value['desc_field'] ) ) {
+				$value['desc_field'] = false;
+			}
+			if ( ! isset( $value['placeholder'] ) ) {
+				$value['placeholder'] = '';
+			}
+
+			// Capitalize Setting Label.
+			$value['title'] = UR_Admin_Settings::capitalize_title( $value['title'] );
+
+			// Custom attribute handling.
+			$custom_attributes = array();
+
+			if ( ! empty( $value['custom_attributes'] ) && is_array( $value['custom_attributes'] ) ) {
+				foreach ( $value['custom_attributes'] as $attribute => $attribute_value ) {
+					$custom_attributes[] = esc_attr( $attribute ) . '=' . esc_attr( $attribute_value ) . '';
+				}
+			}
+
+			$field_description = UR_Admin_Settings::get_field_description( $value );
+			extract( $field_description );
+
+			// Switch based on type.
+			switch ( $value['type'] ) {
+
+				// Standard text inputs and subtypes like 'number'.
+				case 'text':
+				case 'email':
+				case 'number':
+				case 'password':
+				case 'date':
+					$option_value = UR_Admin_Settings::get_option( $value['id'], $value['default'] );
+
+					$settings .= '<div class="user-registration-login-form-global-settings">';
+					$settings .= '<label class="ur-label" for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+					$settings .= '<div class="user-registration-login-form-global-settings--field">';
+					$settings .= '<input
+							name="' . esc_attr( $value['id'] ) . '"
+							id="' . esc_attr( $value['id'] ) . '"
+							type="' . esc_attr( $value['type'] ) . '"
+							style="' . esc_attr( $value['css'] ) . '"
+							value="' . esc_attr( $option_value ) . '"
+							class="' . esc_attr( $value['class'] ) . '"
+							placeholder="' . esc_attr( $value['placeholder'] ) . '"
+							' . esc_attr( implode( ' ', $custom_attributes ) ) . ' ' . wp_kses_post( $description ) . '/>';
+					$settings .= '</div>';
+					$settings .= '</div>';
+					break;
+				case 'nonce':
+					$settings .= '<div class="user-registration-login-form-global-settings">';
+					$settings .= '<div class="user-registration-login-form-global-settings--field">';
+					$settings .= '<input
+							name="' . esc_attr( $value['id'] ) . '"
+							id="' . esc_attr( $value['id'] ) . '"
+							type="hidden"
+							value="' . esc_attr( wp_create_nonce( $value['action'] ) ) . '"
+							/>';
+					$settings .= '</div>';
+					$settings .= '</div>';
+					break;
+
+				// Color picker.
+				case 'color':
+					$option_value = UR_Admin_Settings::get_option( $value['id'], $value['default'] );
+					$settings    .= '<div class="user-registration-login-form-global-settings">';
+					$settings    .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+					$settings    .= '<div class="user-registration-login-form-global-settings--field">';
+					$settings    .= '<input
+							name="' . esc_attr( $value['id'] ) . '"
+							id="' . esc_attr( $value['id'] ) . '"
+							type="text"
+							dir="ltr"
+							style="' . esc_attr( $value['css'] ) . '"
+							value="' . esc_attr( $option_value ) . '"
+							class="' . esc_attr( $value['class'] ) . 'colorpick"
+							placeholder="' . esc_attr( $value['placeholder'] ) . '"
+							' . esc_attr( implode( ' ', $custom_attributes ) ) . '/>&lrm;' . wp_kses_post( $description );
+					$settings    .= '<div id="colorPickerDiv_' . esc_attr( $value['id'] ) . '" class="colorpickdiv" style="z-index: 100;background:#eee;border:1px solid #ccc;position:absolute;display:none;"></div></div>';
+					$settings    .= '</div>';
+					break;
+
+				// Textarea.
+				case 'textarea':
+					$option_value = UR_Admin_Settings::get_option( $value['id'], $value['default'] );
+
+					$settings .= '<div class="user-registration-login-form-global-settings">';
+					$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+					$settings .= '<div class="user-registration-login-form-global-settings--field">';
+					$settings .= wp_kses_post( $description );
+					$settings .= '<textarea
+							name="' . esc_attr( $value['id'] ) . '"
+							id="' . esc_attr( $value['id'] ) . '"
+							style="' . esc_attr( $value['css'] ) . '"
+							class="' . esc_attr( $value['class'] ) . '"
+							rows="' . esc_attr( $value['rows'] ) . '"
+							cols="' . esc_attr( $value['cols'] ) . '"
+							placeholder="' . esc_attr( $value['placeholder'] ) . '"
+							' . esc_html( implode( ' ', $custom_attributes ) ) . '>'
+							. esc_textarea( $option_value ) . '</textarea>';
+					$settings .= '</div>';
+					$settings .= '</div>';
+					break;
+
+				// Select boxes.
+				case 'select':
+				case 'multiselect':
+					$option_value = UR_Admin_Settings::get_option( $value['id'], $value['default'] );
+
+					$settings .= '<div class="user-registration-login-form-global-settings">';
+					$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+					$settings .= '<div class="user-registration-login-form-global-settings--field">';
+					$multiple  = '';
+					$type      = '';
+					if ( 'multiselect' == $value['type'] ) {
+						$type     = '[]';
+						$multiple = 'multiple="multiple"';
+					}
+
+					$settings .= '<select
+							name="' . esc_attr( $value['id'] ) . '' . $type . '"
+							id="' . esc_attr( $value['id'] ) . '"
+							style="' . esc_attr( $value['css'] ) . '"
+							class="' . esc_attr( $value['class'] ) . '"
+							' . esc_attr( implode( ' ', $custom_attributes ) ) . '
+							' . esc_attr( $multiple ) . '>';
+
+					foreach ( $value['options'] as $key => $val ) {
+						$selected = '';
+
+						if ( is_array( $option_value ) ) {
+							$selected = selected( in_array( $key, $option_value ), true, false );
+						} else {
+							$selected = selected( $option_value, $key, false );
+						}
+
+						$settings .= '<option value="' . esc_attr( $key ) . '" ' . esc_attr( $selected ) . '>';
+						$settings .= esc_html( $val );
+						$settings .= '</option>';
+					}
+
+					$settings .= '</select>' . wp_kses_post( $description );
+					$settings .= '</div>';
+					$settings .= '</div>';
+					break;
+
+				// Radio inputs.
+				case 'radio':
+					$option_value = UR_Admin_Settings::get_option( $value['id'], $value['default'] );
+					$settings    .= '<div class="user-registration-login-form-global-settings">';
+					$settings    .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+					$settings    .= '<div class="user-registration-login-form-global-settings--field">';
+					$settings    .= '<fieldset>';
+					$settings    .= wp_kses_post( $description );
+					$settings    .= '<ul>';
+
+					foreach ( $value['options'] as $key => $val ) {
+						$settings .= '<li>';
+						$settings .= '<label>';
+						$settings .= '<input
+									name="' . esc_attr( $value['id'] ) . '"
+									value="' . esc_attr( $key ) . '"
+									type="radio"
+									style="' . esc_attr( $value['css'] ) . '"
+									class="' . esc_attr( $value['class'] ) . '"
+									' . esc_attr( implode( ' ', $custom_attributes ) ) . '
+									' . esc_attr( checked( $key, $option_value, false ) ) . '
+									/>' . wp_kses_post( $val ) . '</label>';
+						$settings .= '</li>';
+					}
+
+					$settings .= '</ul>';
+					$settings .= '</fieldset>';
+					$settings .= '</div>';
+					$settings .= '</div>';
+					break;
+
+				// Checkbox input.
+				case 'checkbox':
+					$option_value = UR_Admin_Settings::get_option( $value['id'], $value['default'] );
+
+					$visbility_class = array();
+
+					if ( ! isset( $value['hide_if_checked'] ) ) {
+						$value['hide_if_checked'] = false;
+					}
+					if ( ! isset( $value['show_if_checked'] ) ) {
+						$value['show_if_checked'] = false;
+					}
+					if ( 'yes' === $value['hide_if_checked'] || 'yes' === $value['show_if_checked'] ) {
+						$visbility_class[] = 'hidden_option';
+					}
+					if ( 'option' === $value['hide_if_checked'] ) {
+						$visbility_class[] = 'hide_options_if_checked';
+					}
+					if ( 'option' === $value['show_if_checked'] ) {
+						$visbility_class[] = 'show_options_if_checked';
+					}
+					$settings .= '<div class="user-registration-login-form-global-settings ' . esc_attr( implode( ' ', $visbility_class ) ) . ' ' . esc_attr( $value['row_class'] ) . '">';
+
+					if ( ! isset( $value['checkboxgroup'] ) || 'start' === $value['checkboxgroup'] ) {
+						$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+						$settings .= '<div class="user-registration-login-form-global-settings--field">';
+						$settings .= '<fieldset>';
+					} else {
+						$settings .= '<div class="user-registration-login-form-global-settings--field">';
+						$settings .= '<fieldset class="' . esc_attr( implode( ' ', $visbility_class ) ) . '">';
+					}
+
+					$settings .= '<input
+							name="' . esc_attr( $value['id'] ) . '"
+							id="' . esc_attr( $value['id'] ) . '"
+							type="checkbox"
+							class="' . esc_attr( isset( $value['class'] ) ? $value['class'] : '' ) . '"
+							value="1"
+							' . esc_attr( checked( $option_value, 'yes', false ) ) . '
+							' . esc_attr( implode( ' ', $custom_attributes ) ) . '/>';
+
+					$settings .= '</fieldset>';
+					$settings .= wp_kses_post( $description );
+					$settings .= wp_kses_post( $desc_field );
+					$settings .= '</div>';
+					break;
+
+				// Single page selects.
+				case 'single_select_page':
+					$args = array(
+						'name'             => $value['id'],
+						'id'               => $value['id'],
+						'sort_column'      => 'menu_order',
+						'sort_order'       => 'ASC',
+						'show_option_none' => ' ',
+						'class'            => $value['class'],
+						'echo'             => false,
+						'selected'         => absint( UR_Admin_Settings::get_option( $value['id'], $value['default'] ) ),
+					);
+
+					if ( isset( $value['args'] ) ) {
+						$args = wp_parse_args( $value['args'], $args );
+					}
+
+					$settings .= '<div class="user-registration-login-form-global-settings single_select_page" ' . ( ( isset( $value['display'] ) && 'none' === $value['display'] ) ? 'style="display:none"' : '' ) . '>';
+					$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+					$settings .= '<div class="user-registration-login-form-global-settings--field">';
+					$settings .= str_replace( ' id=', " data-placeholder='" . esc_attr__( 'Select a page&hellip;', 'user-registration' ) . "' style='" . esc_attr( $value['css'] ) . "' class='" . esc_attr( $value['class'] ) . "' id=", wp_dropdown_pages( $args ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					$settings .= wp_kses_post( $description );
+					$settings .= '</div>';
+					$settings .= '</div>';
+					break;
+
+				case 'tinymce':
+					$editor_settings = array(
+						'name'       => esc_attr( $value['id'] ),
+						'id'         => esc_attr( $value['id'] ),
+						'style'      => esc_attr( $value['css'] ),
+						'default'    => esc_attr( $value['default'] ),
+						'class'      => esc_attr( $value['class'] ),
+						'quicktags'  => array( 'buttons' => 'em,strong,link' ),
+						'tinymce'    => array(
+							'theme_advanced_buttons1' => 'bold,italic,strikethrough,separator,bullist,numlist,separator,blockquote,separator,justifyleft,justifycenter,justifyright,separator,link,unlink,separator,undo,redo,separator',
+							'theme_advanced_buttons2' => '',
+						),
+						'editor_css' => '<style>#wp-excerpt-editor-container .wp-editor-area{height:175px; width:100%;}</style>',
+					);
+
+					$option_value = UR_Admin_Settings::get_option( $value['id'], $value['default'] );
+
+					$settings .= '<div class="user-registration-login-form-global-settings">';
+					$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+					$settings .= '<div class="user-registration-login-form-global-settings--field">';
+					$settings .= wp_kses_post( $description );
+
+					// Output buffer for tinymce editor.
+					ob_start();
+					wp_editor( $option_value, $value['id'], $editor_settings );
+					$settings .= ob_get_clean();
+
+					$settings .= '</div>';
+					$settings .= '</div>';
+
+					break;
+
+				case 'link':
+					$settings .= '<div class="user-registration-login-form-global-settings">';
+					$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_attr( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+					$settings .= '<div class="user-registration-login-form-global-settings--field">';
+
+					if ( isset( $value['buttons'] ) && is_array( $value['buttons'] ) ) {
+						foreach ( $value['buttons'] as $button ) {
+							$settings .= '<a
+										href="' . esc_url( $button['href'] ) . '"
+										class="button ' . esc_attr( $button['class'] ) . '" style="' . esc_attr( $value['css'] ) . '">' . esc_html( $button['title'] ) . '</a>';
+						}
+					}
+
+					$settings .= ( isset( $value['desc'] ) && isset( $value['desc_tip'] ) && true !== $value['desc_tip'] ) ? '<p class="description" >' . wp_kses_post( $value['desc'] ) . '</p>' : '';
+					$settings .= '</div>';
+					$settings .= '</div>';
+					break;
+				// Image upload.
+				case 'image':
+					$option_value = UR_Admin_Settings::get_option( $value['id'], $value['default'] );
+
+					$settings .= '<div class="user-registration-login-form-global-settings image-upload">';
+
+					$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_attr( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+					$settings .= '<div class="user-registration-login-form-global-settings--field">';
+					$settings .= '<img src="' . esc_attr( $option_value ) . '" alt="' . esc_attr__( 'Header Logo', 'user-registration' ) . '" class="ur-image-uploader" height="auto" width="20%">';
+					$settings .= '<button type="button" class="ur-image-uploader ur-button button-secondary" ' . ( empty( $option_value ) ? '' : 'style = "display:none"' ) . '>' . esc_html__( 'Upload Image', 'user-registration' ) . '</button>';
+					$settings .= '<button type="button" class="ur-image-remover ur-button button-secondary" ' . ( ! empty( $option_value ) ? '' : 'style = "display:none"' ) . '>' . esc_html__( 'Remove Image', 'user-registration' ) . '</button>';
+
+					$settings .= '	<input
+							name="' . esc_attr( $value['id'] ) . '"
+							id="' . esc_attr( $value['id'] ) . '"
+							value="' . esc_attr( $option_value ) . '"
+							type="hidden"
+						>';
+					$settings .= '</div>';
+					$settings .= '</div>';
+					wp_enqueue_media();
+
+					break;
+
+				// Radio image inputs.
+				case 'radio-image':
+					$option_value = UR_Admin_Settings::get_option( $value['id'], $value['default'] );
+
+					$settings .= '<div class="user-registration-login-form-global-settings radio-image">';
+					$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_attr( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+					$settings .= '<div class="user-registration-login-form-global-settings--field">';
+					$settings .= '<ul>';
+
+					foreach ( $value['options'] as $key => $val ) {
+						$settings .= '<li>';
+						$settings .= '<label class="' . ( esc_attr( checked( $key, $option_value, false ) ) ? 'selected' : '' ) . '">';
+						$settings .= '<img src="' . esc_html( $val['image'] ) . '">';
+						$settings .= '<input
+									name="' . esc_attr( $value['id'] ) . '"
+									value="' . esc_attr( $key ) . '"
+									type="radio"
+									style="' . esc_attr( $value['css'] ) . '"
+									class="' . esc_attr( $value['class'] ) . '"
+									' . esc_attr( implode( ' ', $custom_attributes ) ) . '
+									' . esc_attr( checked( $key, $option_value, false ) ) . '>';
+
+						$settings .= esc_html( $val['name'] );
+						$settings .= '</label>';
+						$settings .= '</li>';
+					}
+
+					$settings .= '</ul>';
+					$settings .= '</div>';
+					$settings .= '</div>';
+					break;
+				// Toggle input.
+				case 'toggle':
+					$option_value = UR_Admin_Settings::get_option( $value['id'], $value['default'] );
+
+					$settings .= '<div class="user-registration-login-form-global-settings">';
+					$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+					$settings .= '<div class="user-registration-login-form-global-settings--field">';
+					$settings .= '<div class="ur-toggle-section">';
+					$settings .= '<span class="user-registration-toggle-form">';
+					$settings .= '<input
+								type="checkbox"
+								name="' . esc_attr( $value['id'] ) . '"
+								id="' . esc_attr( $value['id'] ) . '"
+								style="' . esc_attr( $value['css'] ) . '"
+								class="' . esc_attr( $value['class'] ) . '"
+								value="1"
+								' . esc_attr( implode( ' ', $custom_attributes ) ) . '
+								' . esc_attr( checked( true, ur_string_to_bool( $option_value ), false ) ) . '>';
+					$settings .= '<span class="slider round"></span>';
+					$settings .= '</span>';
+					$settings .= '</div>';
+					$settings .= wp_kses_post( $description );
+					$settings .= wp_kses_post( $desc_field );
+					$settings .= '</div>';
+					$settings .= '</div>';
+					break;
+				case 'radio-group':
+					$option_value = UR_Admin_Settings::get_option( $value['id'], $value['default'] );
+					$options      = isset( $value['options'] ) ? $value['options'] : array(); // $args['choices'] for backward compatibility. Modified since 1.5.7.
+
+					if ( ! empty( $options ) ) {
+						$settings .= '<div class="user-registration-login-form-global-settings">';
+						$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+						$settings .= '<div class="user-registration-login-form-global-settings--field">';
+
+						$settings .= '<ul class="ur-radio-group-list">';
+						foreach ( $options as $option_index => $option_text ) {
+							$class     = str_replace( ' ', '-', strtolower( $option_text ) );
+							$settings .= '<li class="ur-radio-group-list--item  ' . $class . ( trim( $option_index ) === $option_value ? ' active' : '' ) . '">';
+
+							$checked = '';
+
+							if ( '' !== $option_value ) {
+								$checked = checked( $option_value, trim( $option_index ), false );
+							}
+
+							$settings .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" class="radio">';
+
+							if ( isset( $value['radio-group-images'] ) ) {
+								$settings .= '<img src="' . $value['radio-group-images'][ $option_index ] . '" />';
+							}
+
+							$settings .= wp_kses(
+								trim( $option_text ),
+								array(
+									'a'    => array(
+										'href' => array(),
+										'title' => array(),
+									),
+									'span' => array(),
+								)
+							);
+
+							$settings .= '<input type="radio" name="' . esc_attr( $value['id'] ) . '" id="' . esc_attr( $value['id'] ) . '"	style="' . esc_attr( $value['css'] ) . '" class="' . esc_attr( $value['class'] ) . '" value="' . esc_attr( trim( $option_index ) ) . '" ' . implode( ' ', $custom_attributes ) . ' / ' . $checked . ' /> ';
+							$settings .= '</label>';
+
+							$settings .= '</li>';
+						}
+						$settings .= '</ul>';
+						$settings .= '</div>';
+						$settings .= '</div>';
+
+					}
+					break;
+				// Default: run an action.
+				default:
+					/**
+					 * Filter to retrieve default admin field for output
+					 *
+					 * @param string $settings Settings.
+					 * @param mixed $settings Field value.
+					 */
+					$settings = apply_filters( 'user_registration_admin_field_' . $value['type'], $settings, $value );
+					break;
+			}// End switch case.
+		}
+		echo $settings;
 	}
 }

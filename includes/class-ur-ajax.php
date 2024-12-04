@@ -65,6 +65,7 @@ class UR_AJAX {
 			'install_extension'              => false,
 			'profile_pic_remove'             => false,
 			'form_save_action'               => false,
+			'login_settings_save_action'               => false,
 			'embed_form_action'              => false,
 			'embed_page_list'                => false,
 			'allow_usage_dismiss'            => false,
@@ -946,7 +947,7 @@ class UR_AJAX {
 			 * Action after form setting save.
 			 * Default is the $_POST['data'].
 			 */
-         do_action( 'user_registration_after_form_settings_save', wp_unslash( $_POST['data'] ) ); //phpcs:ignore
+         	do_action( 'user_registration_after_form_settings_save', wp_unslash( $_POST['data'] ) ); //phpcs:ignore
 
 			wp_send_json_success(
 				array(
@@ -961,6 +962,18 @@ class UR_AJAX {
 				)
 			);
 		}// End try().
+	}
+
+	public static function login_settings_save_action() {
+		check_ajax_referer( 'ur_login_settings_save_nonce', 'security' );
+
+		$settings_data = $_POST['data']['setting_data'];
+
+		foreach( $settings_data as $settings ) {
+			lg($settings);
+			// update_option( $settings['option'], $settings['value'] );
+		}
+
 	}
 
 	/**
