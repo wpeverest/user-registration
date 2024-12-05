@@ -65,14 +65,21 @@
 				$(".ur_save_login_form_action_button")
 					.find(".ur-spinner")
 					.remove();
-				console.log(response);
+
 				var success_message =
 					ur_login_form_params.i18n_admin
 									.i18n_settings_successfully_saved;
+
 				if ( response.responseJSON.success === true ) {
 					show_message(
 						success_message,
 						"success"
+					);
+				} else {
+					var res = JSON.parse( response.responseText );
+					show_message(
+						res.data.message,
+						"error"
 					);
 				}
 			}

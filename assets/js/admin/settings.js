@@ -637,7 +637,7 @@
 
 	// Display error when page with our my account or login shortcode is not selected
 	$(
-		"#user_registration_login_options_login_redirect_url, #user_registration_myaccount_page_id"
+		"#user_registration_myaccount_page_id"
 	).on("change", function () {
 		var $this = $(this),
 			data = {
