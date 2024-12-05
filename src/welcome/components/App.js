@@ -28,21 +28,22 @@ import { useStateValue } from "../../context/StateProvider";
 import { actionTypes } from "../../context/gettingStartedContext";
 
 function App() {
-	const [{ settings, registrationPageLink, registrationType }, dispatch] =
-		useStateValue();
+	const [
+		{
+			settings,
+			registrationPageLink,
+			registrationType,
+			defaultFormURL,
+			installedPages
+		},
+		dispatch
+	] = useStateValue();
 	const [disabledLink, setDisabledLink] = useState(false);
 	const [nextStepProgess, setNextStepProgess] = useState(false);
 
 	/* global _UR_WIZARD_ */
-	const {
-		adminURL,
-		siteURL,
-		defaultFormURL,
-		urRestApiNonce,
-		onBoardIconsURL,
-		restURL,
-		registrationPageURL
-	} = typeof _UR_WIZARD_ !== "undefined" && _UR_WIZARD_;
+	const { adminURL, siteURL, urRestApiNonce, onBoardIconsURL, restURL } =
+		typeof _UR_WIZARD_ !== "undefined" && _UR_WIZARD_;
 
 	const [steps, setSteps] = useState([
 		{
@@ -205,6 +206,13 @@ function App() {
 								"page_url"
 							];
 					}
+
+					dispatch({
+						type: actionTypes.GET_DEFAULT_FORM_URL,
+						defaultFormURL:
+							res.page_details["default_form_id"].page_url
+					});
+
 					dispatch({
 						type: actionTypes.GET_DEFAULT_REGISTRATION_PAGE,
 						registrationPageLink: registrationPageUrl
@@ -373,7 +381,7 @@ function App() {
 											"undefined" ===
 												typeof registrationPageLink ||
 												"" === registrationPageLink
-												? registrationPageURL
+												? ""
 												: registrationPageLink
 										);
 									}}

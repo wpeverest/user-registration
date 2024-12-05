@@ -272,7 +272,7 @@ if ( ! function_exists( 'paypal_supported_currencies_list' ) ) {
 	}
 }
 
-if(!function_exists('user_registration_sanitize_amount')) {
+if ( ! function_exists( 'user_registration_sanitize_amount' ) ) {
 	/**
 	 * Sanitize Amount.
 	 *
@@ -332,7 +332,21 @@ if ( ! function_exists( 'ur_membership_install_required_pages' ) ) {
 		include_once untrailingslashit( plugin_dir_path( UR_PLUGIN_FILE ) ) . '/includes/admin/functions-ur-admin.php';
 
 		$pages                = apply_filters( 'user_registration_create_pages', array() );
-		$default_form_page_id = get_option( 'user_registration_default_form_page_id' );
+		$default_form_page_id = 0;
+
+		$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]],[[{"field_key":"membership","general_setting":{"label":"Membership Field","description":"","field_name":"membership_field_' . ur_get_random_number() . '","placeholder":"","required":"false","hide_label":"false","membership_group":"0"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-membership-field"}]]]';
+
+		// Insert default form.
+		$default_form_page_id = wp_insert_post(
+			array(
+				'post_type'      => 'user_registration',
+				'post_title'     => esc_html__( 'Default Membership Registration Form', 'user-registration' ),
+				'post_content'   => $post_content,
+				'post_status'    => 'publish',
+				'comment_status' => 'closed',
+				'ping_status'    => 'closed',
+			)
+		);
 
 		$pages['membership_registration'] = array(
 			'name'    => _x( 'membership-registration', 'Page slug', 'user-registration' ),

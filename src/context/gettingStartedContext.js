@@ -12,7 +12,8 @@ export const initialState = {
 	registrationType: "user_registration_normal_registration",
 	defaultFormId: "",
 	installedPages: {},
-	registrationPageLink: ""
+	registrationPageLink: "",
+	defaultFormURL: ""
 };
 
 export const actionTypes = {
@@ -22,7 +23,8 @@ export const actionTypes = {
 	GET_IS_PRO: "GET_IS_PRO",
 	GET_REGISTRATION_TYPE: "GET_REGISTRATION_TYPE",
 	GET_DEFAULT_FORM: "GET_DEFAULT_FORM",
-	GET_INSTALLED_PAGES: "GET_INSTALLED_PAGES"
+	GET_INSTALLED_PAGES: "GET_INSTALLED_PAGES",
+	GET_DEFAULT_FORM_URL: "GET_DEFAULT_FORM_URL"
 };
 
 const reducer = (state, action) => {
@@ -61,6 +63,11 @@ const reducer = (state, action) => {
 			return {
 				...state,
 				installedPages: action.installedPages
+			};
+		case actionTypes.GET_DEFAULT_FORM_URL:
+			return {
+				...state,
+				defaultFormURL: action.defaultFormURL
 			};
 		default:
 			return state;

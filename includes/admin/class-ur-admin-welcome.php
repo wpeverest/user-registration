@@ -61,14 +61,12 @@ class UR_Admin_Welcome {
 			'ur-setup-wizard-script',
 			'_UR_WIZARD_',
 			array(
-				'adminURL'            => esc_url( admin_url() ),
-				'siteURL'             => esc_url( home_url( '/' ) ),
-				'urRestApiNonce'      => wp_create_nonce( 'wp_rest' ),
-				'onBoardIconsURL'     => esc_url( UR()->plugin_url() . '/assets/images/onboard-icons' ),
-				'restURL'             => rest_url(),
-				'registrationPageURL' => get_permalink( ! get_option( 'user_registration_registration_page_id' ) ? get_option( 'user_registration_membership_registration_page_id' ) : get_option( 'user_registration_registration_page_id' ) ),
-				'adminEmail'          => get_option( 'admin_email' ),
-				'defaultFormURL'      => esc_url( admin_url( '/admin.php?page=add-new-registration&edit-registration=' . get_option( 'user_registration_default_form_page_id' ) ) ),
+				'adminURL'        => esc_url( admin_url() ),
+				'siteURL'         => esc_url( home_url( '/' ) ),
+				'urRestApiNonce'  => wp_create_nonce( 'wp_rest' ),
+				'onBoardIconsURL' => esc_url( UR()->plugin_url() . '/assets/images/onboard-icons' ),
+				'restURL'         => rest_url(),
+				'adminEmail'      => get_option( 'admin_email' ),
 			)
 		);
 

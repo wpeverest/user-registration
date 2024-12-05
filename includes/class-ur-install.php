@@ -140,7 +140,13 @@ class UR_Install {
 		self::create_tables();
 		self::create_roles();
 		self::setup_environment();
-		self::create_form();
+
+		$hasposts = get_posts( 'post_type=user_registration' );
+
+		if ( 0 === count( $hasposts ) ) {
+			update_option( 'user_registration_first_time_activation_flag', true );
+
+		}
 		self::create_files();
 		self::update_ur_version();
 		self::maybe_update_db_version();
@@ -292,7 +298,7 @@ class UR_Install {
 			),
 		);
 
-		if ( defined( 'UR_PRO_ACTIVE' ) ) {
+		if ( defined( 'UR_PRO_ACTIVE' ) && UR_PRO_ACTIVE ) {
 			// Migrations for User Registration ( Pro ).
 			$migration_updates = array(
 				'4.0'   => array(
