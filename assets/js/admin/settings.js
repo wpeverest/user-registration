@@ -104,15 +104,6 @@
 		return false;
 	});
 
-	handleRecaptchaLoginSettings();
-	$(".user-registration").on(
-		"change",
-		"#user_registration_login_options_enable_recaptcha",
-		function () {
-			handleRecaptchaLoginSettings();
-		}
-	);
-
 	// reCaptcha version selection
 	var recaptchav2_invisible_input_value = $(".user-registration")
 		.find("#user_registration_captcha_setting_invisible_recaptcha_v2")
@@ -193,21 +184,6 @@
 			$(
 				"#user_registration_captcha_setting_recaptcha_invisible_site_secret"
 			)
-				.closest(".user-registration-global-settings")
-				.hide();
-		}
-	}
-
-	function handleRecaptchaLoginSettings() {
-		var login_captcha_enabled = $(
-			"#user_registration_login_options_enable_recaptcha"
-		).is(":checked");
-		if (login_captcha_enabled) {
-			$("#user_registration_login_options_configured_captcha_type")
-				.closest(".user-registration-global-settings")
-				.show();
-		} else {
-			$("#user_registration_login_options_configured_captcha_type")
 				.closest(".user-registration-global-settings")
 				.hide();
 		}

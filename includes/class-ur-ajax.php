@@ -968,11 +968,25 @@ class UR_AJAX {
 		check_ajax_referer( 'ur_login_settings_save_nonce', 'security' );
 
 		$settings_data = $_POST['data']['setting_data'];
+		lg($settings_data);
+
+		do_action( 'user_registration_validation_before_login_form_save', $settings_data );
 
 		foreach( $settings_data as $settings ) {
-			lg($settings);
-			// update_option( $settings['option'], $settings['value'] );
+			update_option( $settings['option'], $settings['value'] );
 		}
+
+		/**
+		 * Action after form setting save.
+		 * Default is the $_POST['data'].
+		 */
+		do_action( 'user_registration_after_login_form_settings_save', wp_unslash( $settings_data ) ); //phpcs:ignore
+
+		wp_send_json_success(
+			array(
+
+			)
+		);
 
 	}
 

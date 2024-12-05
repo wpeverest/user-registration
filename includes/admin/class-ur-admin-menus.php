@@ -660,6 +660,12 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						'ajax_url'           => admin_url( 'admin-ajax.php' ),
 						'ur_login_settings_save' => wp_create_nonce( "ur_login_settings_save_nonce" ),
 						'login_settings' => get_login_options_settings(),
+						'is_login_settings_page' => isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page'] ? true : false,
+						'i18n_admin' => array(
+							'i18n_settings_successfully_saved' => _x( 'Settings successfully saved.', 'user registration admin', 'user-registration' ),
+							'i18n_success'                     => _x( 'Success', 'user registration admin', 'user-registration' ),
+							'i18n_error'                       => _x( 'Error', 'user registration admin', 'user-registration' ),
+						),
 					)
 				);
 				$login_form_settings = get_login_options_settings();
