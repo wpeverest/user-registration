@@ -759,6 +759,52 @@ CREATE TABLE {$wpdb->prefix}user_registration_sessions (
 
 		return wp_kses_post( $upgrade_notice );
 	}
+
+	public static function create_membership_form( $group_id ) {
+		$has_posts = get_posts( array(
+			'post_type'      => 'user_registration',
+			'post_status'    => 'publish',
+			's'              => '"field_key":"membership"',
+			'posts_per_page' => - 1,
+		) );
+
+		if ( 0 === count( $has_posts ) ) {
+			$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]],[[{"field_key":"membership","general_setting":{"membership_group":"' . $group_id . '","label":"Membership Field","description":"","field_name":"membership_field_1733727913","hide_label":"false"},"advance_setting":{},"icon":"ur-icon ur-icon-membership-field"}]]]';
+			// Insert default form.
+			$default_post_id = wp_insert_post(
+				array(
+					'post_type'      => 'user_registration',
+					'post_title'     => esc_html__( 'Default Membership form', 'user-registration' ),
+					'post_content'   => $post_content,
+					'post_status'    => 'publish',
+					'comment_status' => 'closed',
+					'ping_status'    => 'closed',
+				)
+			);
+
+			update_option( 'user_registration_default_membership_form_id', $default_post_id );
+		}
+	}
+
+	public static function create_default_membership_group( $memberships ) {
+		$membership_ids = array_column( $memberships, 'ID' );
+		$post_content   = '{"description":"","status":true}';
+		// Insert default form.
+		$default_post_id = wp_insert_post(
+			array(
+				'post_type'      => 'ur_membership_groups',
+				'post_title'     => esc_html__( 'Default Group', 'user-registration' ),
+				'post_content'   => $post_content,
+				'post_status'    => 'publish',
+				'comment_status' => 'closed',
+				'ping_status'    => 'closed',
+			)
+		);
+		add_post_meta( $default_post_id, 'urmg_memberships', json_encode( $membership_ids ) );
+		update_option( 'user_registration_default_membership_form_id', $default_post_id );
+
+		return $default_post_id;
+	}
 }
 
 UR_Install::init();

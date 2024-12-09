@@ -23,6 +23,7 @@ class UR_Admin {
 		add_action( 'init', array( $this, 'includes' ) );
 		add_action( 'init', array( $this, 'translation_migration' ) );
 		add_action( 'init', array( $this, 'run_migration_script' ) );
+		add_action( 'init', array( $this, 'run_membership_migration_script' ) );
 		add_action( 'current_screen', array( $this, 'conditional_includes' ) );
 		add_action( 'admin_init', array( $this, 'prevent_admin_access' ), 10, 2 );
 		add_action( 'load-users.php', array( $this, 'live_user_read' ), 10, 2 );
@@ -38,6 +39,23 @@ class UR_Admin {
 		add_action( 'user_registration_after_form_settings', array( $this, 'render_integration_List_section' ) );
 	}
 
+	public function run_membership_migration_script() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return false;
+		}
+
+		if ( ur_check_module_activation( 'membership' ) && ( UR_VERSION <= '4.3.5.2' ) && ! get_option( 'membership_migration_finished', false ) ) {
+			$membership_service = new \WPEverest\URMembership\Admin\Services\MembershipService();
+			$memberships        = $membership_service->list_active_memberships();
+			if ( count( $memberships ) === 0 ) {
+				return;
+			}
+			$group_id = UR_Install::create_default_membership_group( $memberships );
+
+			UR_Install::create_membership_form($group_id);
+			add_option('membership_migration_finished', true);
+		}
+	}
 	/**
 	 * Render Integration Section
 	 *
