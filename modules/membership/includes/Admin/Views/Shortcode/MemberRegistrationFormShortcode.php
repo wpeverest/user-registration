@@ -34,11 +34,7 @@ class MemberRegistrationFormShortcode {
 
 		if ( $allow ) {
 			$memberships = isset( $attributes['options'] ) ? $attributes['options'] : array();
-			if ( empty( $memberships ) ) {
-				echo wp_kses_post( apply_filters( 'user_registration_membership_no_membership_message', __( 'Please add at least one membership to allow user registration.', 'user-registration' ) ) );
-
-				return;
-			}
+			$form_id     = isset( $attributes['form_id'] ) ? $attributes['form_id'] : array();
 
 			$template_file = locate_template( 'membership-registration-form.php' );
 

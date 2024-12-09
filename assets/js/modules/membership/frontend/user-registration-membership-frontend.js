@@ -973,5 +973,15 @@
 				}
 			});
 		});
+
+		//disable submit button if empty membership field
+		if ($('.field-membership').length) {
+			$('.field-membership').each(function (key, item) {
+				if ($(item).find('.no-membership')) {
+					var form_id = $(item).find('.no-membership').attr('data-form-id');
+					$('#user-registration-form-'+form_id).find('.ur-submit-button').prop('disabled', true);
+				}
+			});
+		}
 	});
 })(jQuery, window.ur_membership_frontend_localized_data);

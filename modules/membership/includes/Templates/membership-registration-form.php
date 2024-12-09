@@ -138,35 +138,40 @@
 	<div class="ur_membership_frontend_input_container radio">
 
 		<label
-			class="ur-label required"><?php echo esc_html__( esc_html($attributes['label']), 'user-registration' ); ?>
+			class="ur-label required"><?php echo esc_html__( esc_html( $attributes['label'] ), 'user-registration' ); ?>
 			<abbr class="required" title="required">*</abbr>
 		</label>
 		<?php
-
-		foreach ( $memberships as $m => $membership ) :
-			?>
-			<label class="ur_membership_input_label"
-				   for="ur-membership-select-membership-<?php echo esc_attr( $membership['ID'] ); ?>">
-				<input class="ur_membership_input_class ur_membership_radio_input ur-frontend-field"
-					   data-key-name="ur-membership-id"
-					   id="ur-membership-select-membership-<?php echo esc_attr( $membership['ID'] ); ?>"
-					   type="radio"
-					   name="urm_membership"
-					   data-name=<?php echo esc_html__( esc_html($attributes['field_name']), 'user-registration' ); ?>
-					   data-label=<?php echo esc_html__( esc_html($attributes['type']), 'user-registration' ); ?>
-					   required="required"
-					   value="<?php echo esc_attr( $membership['ID'] ); ?>"
-					   data-urm-pg='<?php echo esc_attr( ( $membership['active_payment_gateways'] ?? '' ) ); ?>'
-					   data-urm-pg-type="<?php echo esc_attr( $membership['type'] ); ?>"
-					   data-urm-pg-calculated-amount="<?php echo esc_attr( $membership['calculated_amount'] ); ?>"
-					<?php echo isset( $_GET['membership_id'] ) && ! empty( $_GET['membership_id'] ) && $_GET['membership_id'] == $membership['ID'] ? 'checked' : ''; ?>
-				>
-				<span
-					class="ur-membership-duration"><?php echo esc_html__( $membership['title'], 'user-registration' ); ?></span>
-				<span
-					class="ur-membership-duration"> - <?php echo esc_html__( $membership['period'], 'user-registration' ); ?></span>
-			</label>
-		<?php endforeach; ?>
+		if ( ! empty( $memberships ) ) :
+			foreach ( $memberships as $m => $membership ) :
+				?>
+				<label class="ur_membership_input_label"
+					   for="ur-membership-select-membership-<?php echo esc_attr( $membership['ID'] ); ?>">
+					<input class="ur_membership_input_class ur_membership_radio_input ur-frontend-field"
+						   data-key-name="ur-membership-id"
+						   id="ur-membership-select-membership-<?php echo esc_attr( $membership['ID'] ); ?>"
+						   type="radio"
+						   name="urm_membership"
+						   data-name=<?php echo esc_html__( esc_html( $attributes['field_name'] ), 'user-registration' ); ?>
+						   data-label=<?php echo esc_html__( esc_html( $attributes['type'] ), 'user-registration' ); ?>
+						   required="required"
+						   value="<?php echo esc_attr( $membership['ID'] ); ?>"
+						   data-urm-pg='<?php echo esc_attr( ( $membership['active_payment_gateways'] ?? '' ) ); ?>'
+						   data-urm-pg-type="<?php echo esc_attr( $membership['type'] ); ?>"
+						   data-urm-pg-calculated-amount="<?php echo esc_attr( $membership['calculated_amount'] ); ?>"
+						<?php echo isset( $_GET['membership_id'] ) && ! empty( $_GET['membership_id'] ) && $_GET['membership_id'] == $membership['ID'] ? 'checked' : ''; ?>
+					>
+					<span
+						class="ur-membership-duration"><?php echo esc_html__( $membership['title'], 'user-registration' ); ?></span>
+					<span
+						class="ur-membership-duration"> - <?php echo esc_html__( $membership['period'], 'user-registration' ); ?></span>
+				</label>
+			<?php endforeach;
+		else:
+			$message = wp_kses_post( apply_filters( 'user_registration_membership_no_membership_message', __( 'No membership\'s under the selected group.', 'user-registration' ) ) );
+			echo '<label data-form-id="' . absint( $form_id ) . '"  class="user-registration-error no-membership">' . $message . '</label>';
+		endif;
+		?>
 		<span id="membership-input-notice">
 		</span>
 	</div>
