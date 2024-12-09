@@ -381,6 +381,7 @@ class UR_Admin_Assets {
 				'ur_remove_password_field_link'          => esc_url( 'https://docs.wpuserregistration.com/docs/remove-password-field/' ),
 				'ur_form_non_deletable_fields'           => ur_non_deletable_fields(),
 				'ur_assets_url'             => UR()->plugin_url() . '/assets/',
+				'i18n_prompt_no_membership_group_selected' => __( 'Membership Field requires a membership group to be selected.', 'user-registration' ),
 			);
 
 			wp_localize_script(
@@ -634,6 +635,7 @@ class UR_Admin_Assets {
 			'activation_required_message'                 => __( 'Please activate <strong>%plugin%</strong> addon to use this integration.', 'user-registration' ),
 			'installation_required_title'                 => __( 'Addon Installation Required', 'user-registration' ),
 			'installation_required_message'               => __( 'Please install <strong>%plugin%</strong> addon to use this integration.', 'user-registration' ),
+			'i18n_prompt_no_membership_group_selected'    => __( 'Please select a membership group for the selected membership field.', 'user-registration' ),
 		);
 
 		return $i18n;

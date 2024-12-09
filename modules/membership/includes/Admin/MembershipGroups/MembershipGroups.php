@@ -22,10 +22,7 @@ class MembershipGroups {
 	}
 
 	public function remove_group_ids_having_form( $ids  ) {
-		echo '<pre>';
-		print_r( 'here' );
-		echo '</pre>';
-		die();
+
 	}
 	public function enqueue_scripts() {
 		if ( empty( $_GET['page'] ) || 'user-registration-membership' !== $_GET['page'] && ! in_array( $_GET['page'], array(
@@ -69,7 +66,7 @@ class MembershipGroups {
 			'i18n_prompt_delete'                 => __( 'Delete', 'user-registration' ),
 			'i18n_prompt_cannot_delete'          => __( 'Sorry, this group is currently being used in a form. To delete this group please remove this group from form ', 'user-registration' ),
 			'i18n_prompt_cancel'                 => __( 'Cancel', 'user-registration' ),
-			'i18n_prompt_no_membership_selected' => __( 'Please select at least one group.', 'user-registration' ),
+			'i18n_prompt_no_membership_selected' => __( 'Please select at least one group.', 'user-registration' )
 		);
 	}
 

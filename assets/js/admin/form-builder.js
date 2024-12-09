@@ -418,7 +418,13 @@
 					);
 					return;
 				}
-
+				// validation for empty membership group.
+				if($('[data-field="membership_group"]').length && $('[data-field="membership_group"]').val() == "0") {
+					URFormBuilder.show_message(
+						user_registration_form_builder_data.i18n_admin.i18n_prompt_no_membership_group_selected
+					);
+					return;
+				}
 				//Google Sheet validation
 				if (data.data.ur_google_sheets_integration !== undefined) {
 					google_sheets_connections =
