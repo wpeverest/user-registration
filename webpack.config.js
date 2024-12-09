@@ -10,6 +10,7 @@ module.exports = (env, argv) => {
 			dashboard: "./src/dashboard/index.js",
 			formblock: "./assets/js/admin/gutenberg/form-block.js",
 			blocks: "./src/blocks/index.js",
+			form_templates : "./src/form-templates/index.js",
 		},
 		output: {
 			path: path.resolve(__dirname + "/chunks"),
