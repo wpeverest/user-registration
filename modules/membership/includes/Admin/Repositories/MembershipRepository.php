@@ -104,4 +104,44 @@ class MembershipRepository extends BaseRepository implements MembershipInterface
 		return $membership_service->prepare_membership_data( $memberships );
 	}
 
+	/**
+	 * replace_old_form_shortcode_with_new
+	 *
+	 * @param $form_id
+	 *
+	 * @return bool
+	 */
+	public function replace_old_form_shortcode_with_new( $form_id ) {
+		global $wpdb;
+		$new_shortcode = '[user_registration_form id="' . $form_id . '"]';
+
+		$sql = "
+				SELECT ID, post_title, post_content
+				FROM $this->table
+				WHERE post_content LIKE '%[user_registration_membership_member_registration_form]%'
+				  AND post_type = 'page';
+				";
+
+		$results       = $wpdb->get_results( $sql, ARRAY_A );
+		if ( ! empty( $results ) ) {
+			foreach ( $results as $post ) {
+				$updated_content = str_replace(
+					'[user_registration_membership_member_registration_form]',
+					$new_shortcode,
+					$post['post_content']
+				);
+				$wpdb->update(
+					$this->table,
+					array( 'post_content' => $updated_content ),
+					array( 'ID' => $post['ID'] ),
+					array( '%s', '%d' )
+				);
+
+			}
+		}
+		else {
+			return false;
+		}
+		return true;
+	}
 }

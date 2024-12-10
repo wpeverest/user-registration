@@ -19,12 +19,45 @@ class MembershipService {
 		$this->logger                  = ur_get_logger();
 	}
 
+	/**
+	 * Retrieves and filters the list of all active memberships.
+	 *
+	 * This function fetches all memberships from the membership repository
+	 * and applies the 'build_membership_list_frontend' filter to the result.
+	 *
+	 * @return array Filtered list of active memberships.
+	 */
 	public function list_active_memberships() {
 		$memberships = $this->membership_repository->get_all_membership();
 
 		return apply_filters( 'build_membership_list_frontend', $memberships );
 	}
 
+	/**
+	 * Replace the old membership form shortcode with new registration form shortcode.
+	 *
+	 * @param int $form_id The form ID of the membership form which needs to be updated.
+	 *
+	 * @return string The updated form shortcode.
+	 */
+	public function find_and_replace_membership_form_with_registration_form( $form_id ) {
+		return $this->membership_repository->replace_old_form_shortcode_with_new($form_id);
+	}
+
+	/**
+	 * Creates a membership order and subscription.
+	 *
+	 * This function begins a database transaction to prepare and create a membership order and subscription.
+	 * It utilizes member and order services to prepare necessary data and repositories to create the subscription
+	 * and order records. If both subscription and order creation are successful, it commits the transaction,
+	 * logs the success, and returns an array with the member ID, email, subscription ID, transaction ID, and status.
+	 * In case of failure, it rolls back the transaction, logs the error, and returns an error message and status.
+	 *
+	 * @param array $data The data required to create the membership order and subscription.
+	 *
+	 * @return array An array containing member ID, email, subscription ID, transaction ID, and status on success,
+	 *               or an error message and status on failure.
+	 */
 	public function create_membership_order_and_subscription( $data ) {
 		try {
 			$this->members_repository->wpdb()->query( 'START TRANSACTION' ); // Start the transaction.
@@ -65,6 +98,14 @@ class MembershipService {
 		}
 	}
 
+	/**
+	 * Prepare membership data by unserializing post_content and meta_value,
+	 * and removing any memberships with status set to false.
+	 *
+	 * @param array $memberships Array of membership data.
+	 *
+	 * @return array Prepared membership data.
+	 */
 	public function prepare_membership_data(
 		$memberships
 	) {
@@ -83,8 +124,18 @@ class MembershipService {
 		return array_values( $memberships );
 	}
 
+	
 	/**
-	 * @return array[]
+	 * Prepare membership post data by validating and sanitizing it.
+	 *
+	 * This function validates the membership data and sanitizes post meta data.
+	 * It returns an associative array with two keys: 'post_data' and 'post_meta_data'.
+	 * The 'post_data' key contains the data required to create a membership post
+	 * and the 'post_meta_data' key contains the sanitized post meta data.
+	 *
+	 * @param array $data The data required to create a membership post.
+	 *
+	 * @return array An associative array with 'post_data' and 'post_meta_data' keys.
 	 */
 	public function prepare_membership_post_data(
 		$data
@@ -209,6 +260,13 @@ class MembershipService {
 		return $result;
 	}
 
+	/**
+	 * Retrieve Membership Details
+	 *
+	 * @param int $membership_id
+	 *
+	 * @return array
+	 */
 	public function get_membership_details(
 		$membership_id
 	) {

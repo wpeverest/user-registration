@@ -7,6 +7,8 @@
  * @package  UserRegistration/Admin
  */
 
+use WPEverest\URMembership\Admin\Services\MembershipService;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -39,29 +41,91 @@ class UR_Admin {
 		add_action( 'user_registration_after_form_settings', array( $this, 'render_integration_List_section' ) );
 	}
 
+	/**
+	 * Migration script for membership module.
+	 *
+	 * This script is responsible for creating a default membership group and a registration form with membership field.
+	 * It also replaces the old membership form shortcode with the newly created form.
+	 *
+	 * @return void
+	 */
 	public function run_membership_migration_script() {
+		$membership_service = new MembershipService();
+		$logger = ur_get_logger();
+		$logger->notice( '---------- Begin Membership Migration. ----------', array( 'source', 'migration-logger' ) );
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return false;
 		}
 
 		if ( ur_check_module_activation( 'membership' ) && ( UR_VERSION <= '4.3.5.2' ) && ! get_option( 'membership_migration_finished', false ) ) {
-			$membership_service = new \WPEverest\URMembership\Admin\Services\MembershipService();
+
 			$memberships        = $membership_service->list_active_memberships();
 			if ( count( $memberships ) === 0 ) {
-				return;
-			}
-			$group_id = UR_Install::create_default_membership_group( $memberships );
+				$logger->error( '! No memberships available....aborting migration.', array(
+					'source' => 'migration-logger'
+				) );
 
-			UR_Install::create_membership_form($group_id);
-			add_option('membership_migration_finished', true);
+				return false;
+			}
+			$logger->notice( 'Begin Default Membership Group creation.', array( 'source' => 'migration-logger' ) );
+
+			//first create a default membership group and assign all the memberships to the group.
+			$group_id = UR_Install::create_default_membership_group( $memberships );
+			if ( $group_id ) {
+				$logger->notice( 'Created Default Membership Group.', array( 'source' => 'migration-logger' ) );
+
+				//then use the group id to create a new registration form with membership field and the default group selected.
+				$logger->notice( 'Begin Membership form creation.', array( 'source' => 'migration-logger' ) );
+
+				$form_id = UR_Install::create_membership_form( $group_id );
+				if ( $form_id ) {
+					$logger->notice( 'Membership form created successfully.', array( 'source' => 'migration-logger' ) );
+					//find and replace old shortcode with newly created form.
+					$result = $membership_service->find_and_replace_membership_form_with_registration_form( $form_id );					echo '<pre>';
+
+					if( $result ) {
+						add_option( 'membership_migration_finished', true );
+						$logger->notice( '---------- Membership Migration Completed ----------', array(
+							'source' => 'migration-logger'
+						) );
+					}
+					else {
+						$logger->error( 'Skipped old shortcode replace process.', array(
+							'source' => 'migration-logger'
+						) );
+
+						return false;
+					}
+
+				} else {
+					$logger->error( '! Membership form creation failed....aborting migration.', array(
+						'source' => 'migration-logger'
+					) );
+
+					return false;
+				}
+			} else {
+				$logger->error( '! Group creation failed....aborting migration.', array(
+					'source' => 'migration-logger'
+				) );
+
+				return false;
+			}
 		}
+		$logger->error( '! Membership migration failed....aborting migration.', array(
+			'source' => 'migration-logger'
+		) );
+
+		return false;
 	}
+
 	/**
 	 * Render Integration Section
 	 *
-	 * @since 3.3.3
-	 * @param  int $form_id Form Id.
+	 * @param int $form_id Form Id.
+	 *
 	 * @return void
+	 * @since 3.3.3
 	 */
 	public function render_integration_section( $form_id = 0 ) {
 
@@ -72,9 +136,10 @@ class UR_Admin {
 	/**
 	 * Render Integration Lists Section
 	 *
-	 * @since 3.3.3
-	 * @param  int $form_id Form Id.
+	 * @param int $form_id Form Id.
+	 *
 	 * @return void
+	 * @since 3.3.3
 	 */
 	public function render_integration_List_section( $form_id = 0 ) {
 
@@ -176,7 +241,7 @@ class UR_Admin {
 	/**
 	 * Add Tag for My Account to know which page is current my account page.
 	 *
-	 * @param mixed  $post_states Tags.
+	 * @param mixed $post_states Tags.
 	 * @param object $post Post.
 	 */
 	public function ur_add_post_state( $post_states, $post ) {
@@ -278,11 +343,11 @@ class UR_Admin {
 	/**
 	 * Change the admin footer text on User Registration admin pages.
 	 *
-	 * @since  1.1.2
-	 *
-	 * @param  string $footer_text User Registration Plugin footer text.
+	 * @param string $footer_text User Registration Plugin footer text.
 	 *
 	 * @return string
+	 * @since  1.1.2
+	 *
 	 */
 	public function admin_footer_text( $footer_text ) {
 		if ( ! current_user_can( 'manage_user_registration' ) || ! function_exists( 'ur_get_screen_ids' ) ) {
@@ -305,7 +370,7 @@ class UR_Admin {
 			if ( ! get_option( 'user_registration_admin_footer_text_rated' ) ) {
 				$footer_text = wp_kses_post(
 					sprintf(
-						/* translators: 1: User Registration 2:: five stars */
+					/* translators: 1: User Registration 2:: five stars */
 						__( 'If you like %1$s please leave us a %2$s rating. A huge thanks in advance!', 'user-registration' ),
 						sprintf( '<strong>%s</strong>', esc_html( 'User Registration' ) ),
 						'<a href="https://wordpress.org/support/plugin/user-registration/reviews?rate=5#new-post" rel="noreferrer noopener" target="_blank" class="ur-rating-link" data-rated="' . esc_attr__( 'Thank You!', 'user-registration' ) . '">&#9733;&#9733;&#9733;&#9733;&#9733;</a>'
@@ -370,6 +435,7 @@ class UR_Admin {
 		/* translators: 1: Newly registered user count 2: User */
 		$response['user_registration_new_user_message'] = sprintf( esc_html__( '%1$d new %2$s registered.', 'user-registration' ), $user_count, _n( 'User', 'Users', $user_count, 'user-registration' ) );
 		$response['user_registration_new_user_count']   = $user_count;
+
 		return $response;
 	}
 
@@ -385,6 +451,7 @@ class UR_Admin {
 		if ( strpos( $current_screen->id, 'user-registration_page_' ) !== false ) {
 			$classes = 'user-registration';
 		}
+
 		return $classes;
 	}
 

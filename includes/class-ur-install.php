@@ -760,6 +760,13 @@ CREATE TABLE {$wpdb->prefix}user_registration_sessions (
 		return wp_kses_post( $upgrade_notice );
 	}
 
+	/**
+	 * create_membership_form
+	 *
+	 * @param $group_id
+	 *
+	 * @return int|void|WP_Error
+	 */
 	public static function create_membership_form( $group_id ) {
 		$has_posts = get_posts( array(
 			'post_type'      => 'user_registration',
@@ -783,6 +790,7 @@ CREATE TABLE {$wpdb->prefix}user_registration_sessions (
 			);
 
 			update_option( 'user_registration_default_membership_form_id', $default_post_id );
+			return $default_post_id;
 		}
 	}
 

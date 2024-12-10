@@ -37,4 +37,11 @@ interface MembershipInterface extends BaseInterface {
 	 * @return mixed
 	 */
 	public function get_multiple_membership_by_ID( $ids );
+
+	/**
+	 * get_all_page_with_membership_form
+	 *
+	 * @return mixed
+	 */
+	public function replace_old_form_shortcode_with_new( $form_id );
 }
