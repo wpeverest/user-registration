@@ -21,6 +21,15 @@ class MembershipGroupService {
 		$this->membership_group_repository = new MembershipGroupRepository();
 	}
 
+	/**
+	 * get_defaut_group_id
+	 *
+	 * @return string|null
+	 */
+	public function get_default_group_id(  ) {
+		return $this->membership_group_repository->get_default_group_id();
+	}
+
 	public function remove_form_related_groups( $ids ) {
 
 		return array_filter($ids,function($item){

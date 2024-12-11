@@ -44,4 +44,20 @@ interface MembershipInterface extends BaseInterface {
 	 * @return mixed
 	 */
 	public function replace_old_form_shortcode_with_new( $form_id );
+
+	/**
+	 * get_membership_forms
+	 *
+	 * @return mixed
+	 */
+	public function get_membership_forms(  );
+
+	/**
+	 * assign_users_to_new_form
+	 *
+	 * @param $form_id
+	 *
+	 * @return mixed
+	 */
+	public function assign_users_to_new_form( $form_id );
 }

@@ -109,6 +109,19 @@ class MembershipGroupRepository extends BaseRepository implements MembershipGrou
 			)
 		);
 		return $meta_key_exists;
+	}
 
+	/**
+	 * get_default_group_id
+	 *
+	 * @return string|null
+	 */
+	public function get_default_group_id(  ) {
+		return $this->wpdb()->get_var(
+			$this->wpdb()->prepare(
+				"SELECT post_id FROM $this->posts_meta_table WHERE meta_key = %s LIMIT 1",
+				"urmg_default_group"
+			)
+		);
 	}
 }

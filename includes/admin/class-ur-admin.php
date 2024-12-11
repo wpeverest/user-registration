@@ -50,6 +50,10 @@ class UR_Admin {
 	 * @return void
 	 */
 	public function run_membership_migration_script() {
+		if( is_plugin_active('user-registration-membership/user-registration-membership.php') ) {
+			deactivate_plugins('user-registration-membership/user-registration-membership.php');
+		}
+
 		$membership_service = new MembershipService();
 		$logger = ur_get_logger();
 
@@ -57,9 +61,9 @@ class UR_Admin {
 			return;
 		}
 
-		if ( ur_check_module_activation( 'membership' ) && ( UR_VERSION <= '4.3.5.2' ) && ! get_option( 'membership_migration_finished', false ) ) {
-			$logger->notice( '---------- Begin Membership Migration. ----------', array( 'source' => 'migration-logger' ) );
+		if ( ( UR_VERSION <= '4.3.5.1' ) && ! get_option( 'membership_migration_finished', false ) ) {
 
+			$logger->notice( '---------- Begin Membership Migration. ----------', array( 'source' => 'migration-logger' ) );
 			$memberships        = $membership_service->list_active_memberships();
 
 			if ( count( $memberships ) === 0 ) {
@@ -83,7 +87,9 @@ class UR_Admin {
 				if ( $form_id ) {
 					$logger->notice( 'Membership form created successfully.', array( 'source' => 'migration-logger' ) );
 					//find and replace old shortcode with newly created form.
-					$result = $membership_service->find_and_replace_membership_form_with_registration_form( $form_id );					echo '<pre>';
+					$result = $membership_service->find_and_replace_membership_form_with_registration_form( $form_id );
+					//assign old members to new membership form
+					$membership_service->assign_users_to_new_form($form_id);
 					if( !$result ) {
 						$logger->notice( 'Skipped old shortcode replace process.', array(
 							'source' => 'migration-logger'
@@ -92,17 +98,17 @@ class UR_Admin {
 					$logger->notice( '---------- Membership Migration Completed ----------', array(
 						'source' => 'migration-logger'
 					) );
-
-					add_option( 'membership_migration_finished', true );
-					return;
+					add_option( 'membership_migration_finished', true ); // to check if migration runs just once
+					update_option( 'user_registration_membership_installed_flag', true ); // to check if membership has been installed
+					$enabled_features = get_option( 'user_registration_enabled_features', array() );
+					$enabled_features[] = 'user-registration-membership';
+					update_option( 'user_registration_enabled_features',$enabled_features );
 
 				} else {
 					wp_delete_post($group_id);
 					$logger->error( '! Membership form creation failed....aborting migration.', array(
 						'source' => 'migration-logger'
 					) );
-
-					return;
 				}
 			} else {
 				$logger->error( '! Group creation failed....aborting migration.', array(

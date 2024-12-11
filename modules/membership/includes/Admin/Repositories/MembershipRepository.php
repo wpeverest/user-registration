@@ -7,10 +7,11 @@ use WPEverest\URMembership\Admin\Services\MembershipService;
 use WPEverest\URMembership\TableList;
 
 class MembershipRepository extends BaseRepository implements MembershipInterface {
-	protected $table, $posts_meta_table;
+	protected $table, $members_meta, $posts_meta_table;
 
 	public function __construct() {
 		$this->table            = TableList::posts_table();
+		$this->members_meta     = TableList::users_meta_table();
 		$this->posts_meta_table = TableList::posts_meta_table();
 	}
 
@@ -122,7 +123,7 @@ class MembershipRepository extends BaseRepository implements MembershipInterface
 				  AND post_type = 'page';
 				";
 
-		$results       = $wpdb->get_results( $sql, ARRAY_A );
+		$results = $wpdb->get_results( $sql, ARRAY_A );
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $post ) {
 				$updated_content = str_replace(
@@ -138,10 +139,56 @@ class MembershipRepository extends BaseRepository implements MembershipInterface
 				);
 
 			}
-		}
-		else {
+		} else {
 			return false;
 		}
+
 		return true;
+	}
+
+	/**
+	 * get_membership_forms
+	 *
+	 * @return array|mixed|object|\stdClass[]|null
+	 */
+	public function get_membership_forms() {
+		$like = '"field_key":"membership"';
+		$sql  = "
+				 SELECT *
+			    FROM $this->table
+			    WHERE post_type = 'user_registration'
+			    AND post_status = 'publish'
+			    AND post_content LIKE '%" . $like . "%'
+				";
+
+		return $this->wpdb()->get_results( $sql, ARRAY_A );
+	}
+
+	/**
+	 * assign_users_to_new_form
+	 *
+	 * @param $form_id
+	 *
+	 * @return void
+	 */
+	public function assign_users_to_new_form( $form_id ) {
+		$sql = "
+				 SELECT user_id
+			    FROM $this->members_meta
+			    WHERE meta_key = 'ur_registration_source'
+			    AND meta_value = 'membership'
+				";
+
+		$users = $this->wpdb()->get_results( $sql, ARRAY_A );
+		if ( empty( $users ) ) {
+			return;
+		}
+		foreach ( $users as $user ) {
+
+			if ( ! add_user_meta( $user['user_id'], 'ur_form_id', $form_id, true ) ) {
+				// If the meta already exists, update it
+				update_user_meta( $user['user_id'], 'ur_form_id', $form_id );
+			}
+		}
 	}
 }

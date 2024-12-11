@@ -20,6 +20,16 @@ class MembershipService {
 	}
 
 	/**
+	 * assign_users_to_new_form
+	 *
+	 * @param $form_id
+	 *
+	 * @return void
+	 */
+	public function assign_users_to_new_form( $form_id ) {
+		 $this->membership_repository->assign_users_to_new_form($form_id);
+	}
+	/**
 	 * Retrieves and filters the list of all active memberships.
 	 *
 	 * This function fetches all memberships from the membership repository
@@ -124,7 +134,7 @@ class MembershipService {
 		return array_values( $memberships );
 	}
 
-	
+
 	/**
 	 * Prepare membership post data by validating and sanitizing it.
 	 *
