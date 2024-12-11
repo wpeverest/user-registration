@@ -52,20 +52,22 @@ class UR_Admin {
 	public function run_membership_migration_script() {
 		$membership_service = new MembershipService();
 		$logger = ur_get_logger();
-		$logger->notice( '---------- Begin Membership Migration. ----------', array( 'source', 'migration-logger' ) );
+
 		if ( ! current_user_can( 'manage_options' ) ) {
-			return false;
+			return;
 		}
 
 		if ( ur_check_module_activation( 'membership' ) && ( UR_VERSION <= '4.3.5.2' ) && ! get_option( 'membership_migration_finished', false ) ) {
+			$logger->notice( '---------- Begin Membership Migration. ----------', array( 'source' => 'migration-logger' ) );
 
 			$memberships        = $membership_service->list_active_memberships();
+
 			if ( count( $memberships ) === 0 ) {
 				$logger->error( '! No memberships available....aborting migration.', array(
 					'source' => 'migration-logger'
 				) );
 
-				return false;
+				return;
 			}
 			$logger->notice( 'Begin Default Membership Group creation.', array( 'source' => 'migration-logger' ) );
 
@@ -82,41 +84,33 @@ class UR_Admin {
 					$logger->notice( 'Membership form created successfully.', array( 'source' => 'migration-logger' ) );
 					//find and replace old shortcode with newly created form.
 					$result = $membership_service->find_and_replace_membership_form_with_registration_form( $form_id );					echo '<pre>';
-
-					if( $result ) {
-						add_option( 'membership_migration_finished', true );
-						$logger->notice( '---------- Membership Migration Completed ----------', array(
+					if( !$result ) {
+						$logger->notice( 'Skipped old shortcode replace process.', array(
 							'source' => 'migration-logger'
 						) );
 					}
-					else {
-						$logger->error( 'Skipped old shortcode replace process.', array(
-							'source' => 'migration-logger'
-						) );
+					$logger->notice( '---------- Membership Migration Completed ----------', array(
+						'source' => 'migration-logger'
+					) );
 
-						return false;
-					}
+					add_option( 'membership_migration_finished', true );
+					return;
 
 				} else {
+					wp_delete_post($group_id);
 					$logger->error( '! Membership form creation failed....aborting migration.', array(
 						'source' => 'migration-logger'
 					) );
 
-					return false;
+					return;
 				}
 			} else {
 				$logger->error( '! Group creation failed....aborting migration.', array(
 					'source' => 'migration-logger'
 				) );
-
-				return false;
 			}
 		}
-		$logger->error( '! Membership migration failed....aborting migration.', array(
-			'source' => 'migration-logger'
-		) );
 
-		return false;
 	}
 
 	/**
