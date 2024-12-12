@@ -59,10 +59,6 @@ class Membership {
 		global $wp_scripts;
 		$suffix = defined( 'SCRIPT_DEBUG' ) ? '' : '.min';
 
-		//consists logic to hide members from admin sidebar menu
-		wp_register_script( 'user-registration-membership-custom', UR_MEMBERSHIP_JS_ASSETS_URL . '/admin/custom' . $suffix . '.js', array( 'jquery' ), '1.0.0', true );
-		wp_enqueue_script( 'user-registration-membership-custom' );
-
 		if ( empty( $_GET['page'] ) || 'user-registration-membership' !== $_GET['page'] ) {
 			return;
 		}

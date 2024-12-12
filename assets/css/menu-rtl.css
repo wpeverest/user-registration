@@ -139,3 +139,6 @@
 
 #toplevel_page_user-registration ul li a[href*="ur-upgrade-to-pro"] {
   color: #FF8C39 !important; }
+
+#toplevel_page_user-registration ul li a[href="admin.php?page=user-registration-members"] {
+  display: none; }
