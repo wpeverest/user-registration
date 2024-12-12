@@ -55,8 +55,7 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 		//override the general settings to add membership group setting.
 		add_filter( "user_registration_field_options_general_settings", array( $this, 'settings_override' ), 10, 2 );
 		add_filter( "user_registration_form_field_args", array( $this, 'set_args_for_membership' ), 10, 3 );
-		add_filter( "user_registration_form_field_membership", array( $this, 'set_membership_field' ), 10, 5 );
-
+		add_filter( 'user_registration_payment_fields', array( $this, 'remove_payment_fields' ), 11, 1 );
 	}
 
 	public function settings_override( $settings, $id ) {
@@ -67,6 +66,7 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 		$membership_settings      = array(
 			'membership_group' => array(
 				'setting_id'  => 'membership_group',
+				'name'        => 'membership_group',
 				'type'        => 'select',
 				'label'       => __( 'Membership Group', 'user-registration' ),
 				'placeholder' => __( 'Select any membership group.', 'user-registration' ),
@@ -83,6 +83,18 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 
 		return $settings;
 
+	}
+
+	public function remove_payment_fields( $fields ) {
+		if ( ! isset( $_GET['edit-registration'] ) ) {
+			return $fields;
+		}
+		$has_membership_field = check_membership_field_in_form();
+		if ( ! $has_membership_field ) {
+			return $fields;
+		}
+
+		return array();
 	}
 
 	/**
