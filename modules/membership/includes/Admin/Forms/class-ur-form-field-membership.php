@@ -56,6 +56,8 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 		add_filter( "user_registration_field_options_general_settings", array( $this, 'settings_override' ), 10, 2 );
 		add_filter( "user_registration_form_field_args", array( $this, 'set_args_for_membership' ), 10, 3 );
 		add_filter( 'user_registration_payment_fields', array( $this, 'remove_payment_fields' ), 11, 1 );
+		add_filter( "user_registration_form_field_membership", array( $this, 'set_membership_field' ), 10, 5 );
+
 	}
 
 	public function settings_override( $settings, $id ) {

@@ -393,7 +393,8 @@
 					"user_registration_admin_before_form_submit",
 					[data]
 				);
-
+				var check_membership_validations = URFormBuilder.check_membership_validation(data);
+				if(!check_membership_validations) return;
 				// validation for unsupported currency by paypal.
 				if (
 					typeof data.data.ur_payment_disabled !== "undefined" &&
@@ -418,13 +419,7 @@
 					);
 					return;
 				}
-				// validation for empty membership group.
-				if($('[data-field="membership_group"]').length && $('[data-field="membership_group"]').val() == "0") {
-					URFormBuilder.show_message(
-						user_registration_form_builder_data.i18n_admin.i18n_prompt_no_membership_group_selected
-					);
-					return;
-				}
+
 				//Google Sheet validation
 				if (data.data.ur_google_sheets_integration !== undefined) {
 					google_sheets_connections =
@@ -6650,6 +6645,24 @@
 						"data-last-group",
 						parseInt(next_li_group.length) - 1
 					);
+			},
+			check_membership_validation: function (data) {
+				var validations = ['empty_membership_group_status', 'payment_field_present_status'],
+					is_valid = true;
+
+				for (var i = 0; i < validations.length; i++) {
+					var key = validations[i];
+					if (
+						typeof data.data[key] !== "undefined" &&
+						data.data[key][0].validation_status === false
+					) {
+
+						is_valid = false;
+						URFormBuilder.show_message(data.data[key][0].validation_message);
+						return is_valid;
+					}
+				}
+				return is_valid;
 			}
 		};
 

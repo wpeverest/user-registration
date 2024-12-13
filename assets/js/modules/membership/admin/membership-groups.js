@@ -228,7 +228,7 @@
 				}, {
 					success: function (response) {
 						if (response.success) {
-							membership_group_object.handle_membership_by_group_success_response(response.data);
+							membership_group_object.handle_membership_by_group_success_response(response.data, group_id);
 						} else {
 
 						}
@@ -275,6 +275,26 @@
 				e.preventDefault();
 				e.stopPropagation();
 				membership_group_object.delete_single_membership_group($(this));
+			});
+			$(document).on('ur_new_field_created', function () {
+				var paypal_settings = $('#paypal-standard-settings'),
+					stripe_settings = $('#stripe-settings');
+				paypal_settings.show();
+				stripe_settings.show();
+				if ($('.ur-selected-inputs').find('div[data-field-key="membership"]').length) {
+					paypal_settings.hide();
+					stripe_settings.hide();
+				}
+			});
+			$(document).on('ur_new_field_created', function () {
+				var paypal_settings = $('#paypal-standard-settings'),
+					stripe_settings = $('#stripe-settings');
+				paypal_settings.show();
+				stripe_settings.show();
+				if ($('.ur-selected-inputs').find('div[data-field-key="membership"]').length) {
+					paypal_settings.hide();
+					stripe_settings.hide();
+				}
 			});
 		},
 		delete_single_membership_group : function ($this) {
@@ -409,15 +429,17 @@
 		/**
 		 * Handles the response after a successful ajax request of membership by group
 		 * @param {object} data - The response data
+		 * @param group_id - The response data
 		 * @return {void}
 		 */
-		handle_membership_by_group_success_response: function (data) {
+		handle_membership_by_group_success_response: function (data , group_id) {
 			var membership_details = '',
 				urmg_container = $('.urmg-container');
 			$(data.plans).each(function (k, item) {
 				membership_details += '<label><input type="radio" value="' + item.ID + '" disabled/><span>' + item.title + '</span> - <span> ' + item.period + ' </span></label>';
 			});
 			urmg_container.append(membership_details);
+			$('.ur-selected-inputs .ur-general-setting-membership_group').find('select[data-field="membership_group"]  option[value="'+group_id+'"]').attr('selected','selected');
 		},
 		/**
 		 * Sends data to the backend API.
