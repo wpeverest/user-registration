@@ -254,6 +254,13 @@ class MembershipService {
 		$result = array(
 			'status' => true,
 		);
+
+		if( isset($data['post_meta_data']['type']) && "subscription" === $data['post_meta_data']['type'] && ! (is_plugin_active( 'user-registration-pro/user-registration.php' ))) {
+			$result['status']  = false;
+			$result['message'] = esc_html__( "Subscription type is a paid feature.", "user-registration" );
+			return $result;
+		}
+
 		//		payment gateway validation:stripe
 		if ( isset( $data['post_meta_data']['payment_gateways']['stripe'] ) && "on" === $data['post_meta_data']['payment_gateways']['stripe']['status'] ) {
 			$mode            = get_option( 'user_registration_stripe_test_mode', false ) ? 'test' : 'live';
@@ -264,6 +271,7 @@ class MembershipService {
 			if ( empty( $secret_key ) || empty( $publishable_key ) ) {
 				$result['status']  = false;
 				$result['message'] = esc_html__( "Incomplete Stripe Gateway setup.", "user-registration" );
+				return $result;
 			}
 		}
 

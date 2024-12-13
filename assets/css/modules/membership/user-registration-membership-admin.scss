@@ -1102,3 +1102,26 @@
 		}
 	}
 }
+
+#ur-membership-plan-and-price-section .upgradable-type {
+	position: relative;
+	color: #bababa;
+	.ur-membership-type-title,
+	.ur-membership-type-description {
+		opacity: 0.5;
+	}
+	&::before {
+		opacity: 1;
+		content: "";
+		background-image: url("../../../images/icons/ur-pro-icon.png");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 100%;
+		position: absolute;
+		border-radius: 2px;
+		width: 16px;
+		height: 16px;
+		top: 8px;
+		right: 8px;
+	}
+}

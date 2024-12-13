@@ -56,7 +56,7 @@ if ( ! class_exists( 'Members' ) ) {
 		 * @since 1.0.0
 		 */
 		public function enqueue_scripts() {
-			if ( empty($_GET['page']) ||   'user-registration-members' !== $_GET['page'] ) {
+			if ( empty( $_GET['page'] ) || 'user-registration-members' !== $_GET['page'] ) {
 				return;
 			}
 			$suffix = defined( 'SCRIPT_DEBUG' ) ? '' : '.min';
@@ -77,7 +77,7 @@ if ( ! class_exists( 'Members' ) ) {
 		 * @since 1.0.0
 		 */
 		public function enqueue_styles() {
-			if ( empty($_GET['page']) ||   'user-registration-members' !== $_GET['page'] ) {
+			if ( empty( $_GET['page'] ) || 'user-registration-members' !== $_GET['page'] ) {
 				return;
 			}
 			wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), '1.0.0' );
@@ -192,14 +192,14 @@ if ( ! class_exists( 'Members' ) ) {
 		 * @return void
 		 */
 		public function render_members_page() {
-			$action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
+			$action     = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
 			$menu_items = get_membership_menus();
 			switch ( $action ) {
 				case 'add_new_member':
-					$this->render_members_create_page($menu_items);
+					$this->render_members_create_page( $menu_items );
 					break;
 				default:
-					$this->render_members_list_page($menu_items);
+					$this->render_members_list_page( $menu_items );
 					break;
 			}
 		}
@@ -209,7 +209,7 @@ if ( ! class_exists( 'Members' ) ) {
 		 *
 		 * @return void
 		 */
-		public function render_members_list_page($menu_items) {
+		public function render_members_list_page( $menu_items ) {
 			if ( ! current_user_can( 'list_users' ) ) {
 				wp_die(
 					'<h1>' . esc_html__( 'You need a higher level of permission.', 'user-registration' ) . '</h1>' .
@@ -262,7 +262,7 @@ if ( ! class_exists( 'Members' ) ) {
 		 *
 		 * @return void
 		 */
-		public function render_members_create_page($menu_items) {
+		public function render_members_create_page( $menu_items ) {
 			$members_list_table = new MembersListTable();
 			$roles              = $members_list_table->get_roles();
 			$memberships        = $members_list_table->get_all_memberships();
@@ -287,8 +287,9 @@ if ( ! class_exists( 'Members' ) ) {
 					'user_registered'     => __( 'User Registered', 'user-registration' ),
 				)
 			);
-
-			$column_headers['actions'] = esc_html__( 'Actions', 'user-registration' );
+			if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
+				$column_headers['actions'] = esc_html__( 'Actions', 'user-registration' );
+			}
 
 			return $column_headers;
 		}

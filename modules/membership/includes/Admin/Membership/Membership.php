@@ -449,6 +449,7 @@ class Membership {
 			'i18n_valid_min_trial_period_field_validation' => _x( 'Trial period must atleast be of 1 day.', 'user registration membership', 'user-registration' ),
 			'i18n_valid_min_subs_period_field_validation'  => _x( 'Subscription period must atleast be of 1 day.', 'user registration membership', 'user-registration' ),
 			'i18n_stripe_setup_error'                      => __( 'Incomplete Stripe Gateway setup.', 'user-registration' ),
+			'i18n_previous_save_action_ongoing'           => _x( 'Previous save action on going.', 'user registration admin', 'user-registration' ),
 		);
 	}
 }

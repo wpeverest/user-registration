@@ -1,7 +1,7 @@
 <div class="ur-membership">
 	<?php
 	require __DIR__ . '/./Partials/header.php';
-
+	$is_pro = is_plugin_active( 'user-registration-pro/user-registration.php' );
 	?>
 	<div
 		class="ur-membership-tab-contents-wrapper ur-registered-from ur-align-items-center ur-justify-content-center">
@@ -189,7 +189,7 @@
 												</div>
 											</label>
 											<!--											subscription type-->
-											<label class="ur-membership-types" for="ur-membership-subscription-type">
+											<label class="ur-membership-types <?php echo ! $is_pro ? 'upgradable-type' : '' ?>" for="ur-membership-subscription-type">
 												<div class="ur-membership-type-title ur-d-flex ur-align-items-center">
 													<input
 														data-key-name="Type"
@@ -199,7 +199,7 @@
 														name="ur_membership_type"
 														class="ur_membership_paid_type"
 														<?php echo isset( $membership_details['type'] ) && $membership_details['type'] == 'subscription' ? 'checked' : ''; ?>
-
+														<?php echo ! $is_pro ? 'disabled' : '' ?>
 													>
 													<label class="ur-p-2" for="ur-membership-subscription-type">
 														<b

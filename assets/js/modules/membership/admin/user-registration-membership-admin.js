@@ -649,6 +649,12 @@
 		e.preventDefault();
 		e.stopPropagation();
 		var $this = $(this);
+		if($(this).find('.ur-spinner.is-active').length) {
+			ur_membership_utils.show_failure_message(
+				ur_membership_data.labels.i18n_previous_save_action_ongoing
+			);
+			return;
+		}
 		if (ur_membership_data.membership_id && ur_membership_data.membership_id !== '') {
 			ur_membership_request_utils.update_membership($this);
 		} else {
