@@ -75,6 +75,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 									<div class="ur-builder-wrapper-content ur-login-form-wrapper">
 										<?php echo do_shortcode( '[user_registration_login]' ); ?>
 									</div>
+
+									<?php do_action( 'user_registration_after_login_form_settings' ); ?>
 								</div>
 							</div>
 							<div class="ur-registered-inputs ur-login-form-shortcode">
