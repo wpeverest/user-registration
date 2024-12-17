@@ -36,12 +36,20 @@ class URCR_Shortcodes {
 			$override_global_settings = get_post_meta( $post->ID, 'urcr_meta_override_global_settings', $single = true );
 
 			$allowed_roles = get_option( 'user_registration_content_restriction_allow_to_roles', 'administrator' );
+			$allowed_memberships = get_option( 'user_registration_content_restriction_allow_to_memberships');
 
 			$current_user_role = is_user_logged_in() ? wp_get_current_user()->roles[0] : 'guest';
-
 			$get_meta_data_roles = get_post_meta( $post->ID, 'urcr_meta_roles', $single = true );
+			$get_meta_data_memberships = get_post_meta( $post->ID, 'urcr_meta_memberships', true );
 
 			$roles = isset( $atts['access_role'] ) ? trim( $atts['access_role'] ) : '';
+			$is_membership_active = ur_check_module_activation('membership');
+
+			if( $is_membership_active ) {
+				$members_subscription = new \WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository();
+				$subscription = $members_subscription->get_member_subscription( wp_get_current_user()->ID);
+				$current_user_membership = $subscription['item_id'];
+			}
 
 			if ( empty( $roles ) ) {
 				$override_global_settings = get_post_meta( $post->ID, 'urcr_meta_override_global_settings', $single = true );
@@ -57,6 +65,11 @@ class URCR_Shortcodes {
 						}
 					} elseif ( '2' === get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
 						if ( ! is_user_logged_in() ) {
+							return do_shortcode( $content );
+						}
+					}
+					elseif ( '3' === get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
+						if ( is_array( $allowed_memberships ) && in_array( $current_user_membership, $allowed_memberships ) ) {
 							return do_shortcode( $content );
 						}
 					}
@@ -79,6 +92,13 @@ class URCR_Shortcodes {
 						case '2':
 							if ( ! is_user_logged_in() ) {
 								return do_shortcode( $content );
+							}
+							break;
+						case '3':
+							if ( ! empty( $get_meta_data_memberships ) ) {
+								if ( is_array( $get_meta_data_memberships ) && in_array( $current_user_membership, $get_meta_data_memberships ) ) {
+									return do_shortcode( $content );
+								}
 							}
 							break;
 					}

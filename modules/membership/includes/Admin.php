@@ -12,6 +12,8 @@ use WPEverest\URMembership\Admin\Database\Database;
 use WPEverest\URMembership\Admin\Forms\FormFields;
 use WPEverest\URMembership\Admin\Members\Members;
 use WPEverest\URMembership\Admin\Membership\Membership;
+use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
+use WPEverest\URMembership\Admin\Services\MembershipService;
 use WPEverest\URMembership\Admin\Services\PaymentGatewaysWebhookActions;
 use WPEverest\URMembership\Frontend\Frontend;
 
@@ -133,6 +135,32 @@ if ( ! class_exists( 'Admin' ) ) :
 
 			register_deactivation_hook( UR_PLUGIN_FILE, array( $this, 'on_deactivation' ) );
 			register_activation_hook( UR_PLUGIN_FILE, array( $this, 'on_activation' ) );
+			add_filter( 'user_registration_content_restriction_settings', array(
+				$this,
+				'add_memberships_in_urcr_settings'
+			), 10, 1 );
+		}
+
+		public function add_memberships_in_urcr_settings( $settings ) {
+			$options = get_active_membership_id_name();
+			$additional_settings = array(
+				array(
+					'row_class' => 'urcr_content_restriction_allow_access_to_memberships',
+					'title'     => __( 'Select Memberships', 'user-registration' ),
+					'desc'      => __( 'The memberships selected here will have access to restricted content.', 'user-registration' ),
+					'id'        => 'user_registration_content_restriction_allow_to_memberships',
+					'type'      => 'multiselect',
+					'class'     => 'ur-enhanced-select',
+					'css'       => 'min-width: 350px; ' . ( '3' != get_option( 'user_registration_content_restriction_allow_access_to', '0' ) ) ? 'display:none;' : '',
+					'desc_tip'  => true,
+					'options'   => $options,
+				)
+			);
+			$just_settings       = $settings['sections']['user_registration_content_restriction_settings']['settings'];
+			array_splice( $just_settings, 3, 0, $additional_settings );
+			$settings['sections']['user_registration_content_restriction_settings']['settings'] = $just_settings;
+
+			return $settings;
 		}
 
 		public function update_success_params_for_membership( $success_params, $valid_form_data, $form_id, $user_id ) {

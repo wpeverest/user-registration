@@ -96,7 +96,7 @@ if ( ! class_exists( 'URCR_Settings_File ' ) ) :
 									'class'     => 'ur-enhanced-select',
 									'css'       => 'min-width: 350px;',
 									'desc_tip'  => true,
-									'options'   => array( 'All Logged In Users', 'Choose Specific Roles', 'Guest Users' ),
+									'options'   => array( 'All Logged In Users', 'Choose Specific Roles', 'Guest Users', 'Memberships' ),
 								),
 
 								array(

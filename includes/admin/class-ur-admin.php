@@ -61,7 +61,7 @@ class UR_Admin {
 			return;
 		}
 
-		if ( ( UR_VERSION <= '4.3.5.1' ) && ! get_option( 'membership_migration_finished', false ) ) {
+		if ( ( UR_VERSION <= '4.3.5.2' ) && ! get_option( 'membership_migration_finished', false ) ) {
 
 			$logger->notice( '---------- Begin Membership Migration. ----------', array( 'source' => 'migration-logger' ) );
 			$memberships        = $membership_service->list_active_memberships();

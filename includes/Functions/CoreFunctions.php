@@ -10,6 +10,8 @@
  * @version  1.0.0
  */
 
+use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -394,15 +396,18 @@ if ( ! function_exists( 'get_membership_menus' ) ) {
 				'label'  => __( 'Memberships', 'user-registration' ),
 				'url'    => admin_url( 'admin.php?page=user-registration-membership' ),
 				'active' => isset( $_GET['page'] ) &&
-							$_GET['page'] === 'user-registration-membership' &&
-				            ( isset( $_GET['action'] ) ? ! in_array( $_GET['action'], array( 'list_groups', 'add_groups' ) ) : true ),
+				            $_GET['page'] === 'user-registration-membership' &&
+				            ( isset( $_GET['action'] ) ? ! in_array( $_GET['action'], array(
+					            'list_groups',
+					            'add_groups'
+				            ) ) : true ),
 			),
 			'membership_groups' => array(
 				'label'  => __( 'Membership Groups', 'user-registration' ),
 				'url'    => admin_url( 'admin.php?page=user-registration-membership&action=list_groups' ),
 				'active' => isset( $_GET['page'], $_GET['action'] ) &&
-							$_GET['page'] === 'user-registration-membership' &&
-							in_array( $_GET['action'], array( 'list_groups', 'add_groups' ) ),
+				            $_GET['page'] === 'user-registration-membership' &&
+				            in_array( $_GET['action'], array( 'list_groups', 'add_groups' ) ),
 			),
 			'members'           => array(
 				'label'  => __( 'Members', 'user-registration' ),
@@ -410,5 +415,22 @@ if ( ! function_exists( 'get_membership_menus' ) ) {
 				'active' => isset( $_GET['page'] ) && $_GET['page'] === 'user-registration-members',
 			),
 		);
+	}
+}
+
+if ( ! function_exists( 'get_active_membership_id_name' ) ) {
+	/**
+	 * get_active_membership_id_name
+	 *
+	 * @return array
+	 */
+	function get_active_membership_id_name() {
+		$new_membership     = array();
+		$membership_service = new MembershipRepository();
+		$memberships        = $membership_service->get_all_membership();
+		foreach ( $memberships as $membership ) {
+			$new_membership[ $membership['ID'] ] = $membership['post_title'];
+		}
+		return $new_membership;
 	}
 }

@@ -124,7 +124,7 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 			array(
 				'id'      => 'urcr_allow_to',
 				'label'   => __( 'Allow Access To: ', 'user-registration' ),
-				'options' => array( 'All Logged In Users', 'Choose Specific Roles', 'Guest Users' ),
+				'options' => array( 'All Logged In Users', 'Choose Specific Roles', 'Guest Users', 'Memberships' ),
 				'desc'    => __( 'Only select this if you want to override global setting for allow option', 'user-registration' ),
 				'class'   => 'ur-enhanced-select',
 			)
@@ -136,6 +136,16 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 				'label'   => __( 'Allow Access To Roles: ', 'user-registration' ),
 				'options' => ur_get_all_roles(),
 				'desc'    => __( 'Only select this if you want to override global setting for access roles', 'user-registration' ),
+				'class'   => 'ur-enhanced-select',
+			)
+		);
+
+		$this->ur_metabox_multiple_select(
+			array(
+				'id'      => 'urcr_meta_memberships[]',
+				'label'   => __( 'Allow Access To Memberships: ', 'user-registration' ),
+				'options' => get_active_membership_id_name(),
+				'desc'    => __( 'Only select this if you want to override global setting for membership', 'user-registration' ),
 				'class'   => 'ur-enhanced-select',
 			)
 		);
@@ -164,6 +174,8 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 
 		$array_of_roles = isset( $_POST['urcr_meta_roles'] ) ? $_POST['urcr_meta_roles'] : '';
 
+		$array_of_memberships = isset( $_POST['urcr_meta_memberships'] ) ? $_POST['urcr_meta_memberships'] : '';
+
 		update_post_meta( $post_id, 'urcr_meta_checkbox', $checkbox );
 
 		update_post_meta( $post_id, 'urcr_meta_override_global_settings', $override_global_settings );
@@ -171,6 +183,8 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 		update_post_meta( $post_id, 'urcr_allow_to', $allow_to );
 
 		update_post_meta( $post_id, 'urcr_meta_roles', $array_of_roles );
+
+		update_post_meta( $post_id, 'urcr_meta_memberships', $array_of_memberships );
 
 		// Add nonce for security and authentication.
 		$nonce_name   = isset( $_POST['custom_nonce'] ) ? $_POST['custom_nonce'] : '';

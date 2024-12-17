@@ -1,80 +1,70 @@
 jQuery(document).ready(function () {
-	jQuery(".multiple-select").select2();
-	jQuery(".multiple-select").select2({
+	// Initialize Select2
+	var $multipleSelect = jQuery('.multiple-select');
+	$multipleSelect.select2({
 		dropdownAutoWidth: true,
-		containerCss: { display: "block" },
-		width: "20%"
+		containerCss: { display: 'block' },
+		width: '20%'
 	});
 
-	jQuery("#urcr_meta_override_global_settings").on("change", function (e) {
-		if (jQuery("#urcr_meta_override_global_settings").is(":checked")) {
-			jQuery(".urcr_allow_to_field").show();
-			if (jQuery("#urcr_allow_to").val() == "1") {
-				jQuery(".urcr-multiple-select").show();
-			} else {
-				jQuery(".urcr-multiple-select").hide();
-			}
+	var $metaOverride = jQuery('#urcr_meta_override_global_settings'),
+		$allowTo = jQuery('#urcr_allow_to'),
+		$allowToField = jQuery('.urcr_allow_to_field'),
+		$rolesField = jQuery('.urcr_meta_roles_field'),
+		$membershipsField = jQuery('.urcr_meta_memberships_field');
+
+	// Function to toggle visibility based on global override checkbox
+	function toggleGlobalOverride() {
+		if ($metaOverride.is(':checked')) {
+			$allowToField.show();
+			toggleFieldsBasedOnAllowTo();
 		} else {
-			jQuery(".urcr_allow_to_field, .urcr_meta_roles_field").hide();
+			$allowToField.hide();
+			$rolesField.hide();
+			$membershipsField.hide();
 		}
-	});
+	}
 
-	jQuery("#urcr_allow_to").on("change", function () {
-		if (this.value == "1") {
-			jQuery(".urcr_meta_roles_field").show();
-		} else {
-			jQuery(".urcr_meta_roles_field").hide();
+	// Function to toggle fields based on the 'Allow To' selection
+	function toggleFieldsBasedOnAllowTo() {
+		var allowToValue = $allowTo.val();
+		$rolesField.hide();
+		$membershipsField.hide();
+
+		if (allowToValue === '1') {
+			$rolesField.show();
+		} else if (allowToValue === '3') {
+			$membershipsField.show();
 		}
-	});
+	}
 
-	jQuery(window).load(function () {
-		if (jQuery("#urcr_meta_override_global_settings").is(":checked")) {
-			if (jQuery("#urcr_allow_to").val() == "1") {
-			} else {
-				jQuery(".urcr_meta_roles_field").hide();
-			}
-		} else {
-			jQuery(".urcr_allow_to_field, .urcr_meta_roles_field ").hide();
+	// Event Listeners
+	$metaOverride.on('change', toggleGlobalOverride);
+	$allowTo.on('change', toggleFieldsBasedOnAllowTo);
+
+	// Initial Setup on Page Load
+	jQuery(window).on('load', toggleGlobalOverride);
+
+	// Content Restriction Section
+	var $allowAccessTo = jQuery('#user_registration_content_restriction_allow_access_to');
+	var $rolesInput = jQuery('#user_registration_content_restriction_allow_to_roles').closest('.user-registration-global-settings');
+	var $membershipsInput = jQuery('#user_registration_content_restriction_allow_to_memberships').closest('.user-registration-global-settings');
+
+	function toggleContentRestrictionFields() {
+		var selectedValue = $allowAccessTo.val();
+		$rolesInput.hide();
+		$membershipsInput.hide();
+
+		if (selectedValue === '1') {
+			$rolesInput.show();
+		} else if (selectedValue === '3') {
+			$membershipsInput.show();
 		}
-	});
+	}
 
-	jQuery(function () {
-		var mySelect = jQuery(
-			"#user_registration_content_restriction_allow_access_to option:selected"
-		).val();
+	// Initialize Content Restriction Fields
+	toggleContentRestrictionFields();
 
-		if (mySelect == "1") {
-			jQuery("#user_registration_content_restriction_allow_to_roles")
-				.parent()
-				.parent()
-				.show();
-		} else {
-			jQuery("#user_registration_content_restriction_allow_to_roles")
-				.parent()
-				.parent()
-				.hide();
-		}
-
-		jQuery("body").on(
-			"select2:select",
-			"#user_registration_content_restriction_allow_access_to",
-			function () {
-				if (jQuery(this).find("option:selected").val() == "1") {
-					jQuery(
-						"#user_registration_content_restriction_allow_to_roles"
-					)
-						.parent()
-						.parent()
-						.show();
-				} else {
-					jQuery(
-						"#user_registration_content_restriction_allow_to_roles"
-					)
-						.parent()
-						.parent()
-						.hide();
-				}
-			}
-		);
-	});
+	// Event Listener for Select2 Change
+	jQuery('body').on('select2:select', '#user_registration_content_restriction_allow_access_to', toggleContentRestrictionFields);
 });
