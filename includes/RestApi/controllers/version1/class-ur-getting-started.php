@@ -7,6 +7,8 @@
  * @package  UserRegistration/Classes
  */
 
+use WPEverest\URMembership\Admin\Database\Database;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -301,6 +303,8 @@ class UR_Getting_Started {
 				'page_slug'     => '/' . get_post_field( 'post_name', $post_id ),
 			);
 		}
+
+		Database::create_tables();
 
 		return new \WP_REST_Response(
 			array(

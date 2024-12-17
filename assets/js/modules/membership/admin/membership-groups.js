@@ -286,16 +286,28 @@
 					stripe_settings.hide();
 				}
 			});
-			$(document).on('ur_new_field_created', function () {
-				var paypal_settings = $('#paypal-standard-settings'),
-					stripe_settings = $('#stripe-settings');
-				paypal_settings.show();
-				stripe_settings.show();
-				if ($('.ur-selected-inputs').find('div[data-field-key="membership"]').length) {
-					paypal_settings.hide();
-					stripe_settings.hide();
-				}
-			});
+			$(document).on(
+				'user_registration_admin_before_form_submit',
+				function (event, data) {
+					// validation for empty membership group.
+					if($('[data-field="membership_group"]').length && $('[data-field="membership_group"]').val() == "0") {
+						data.data['empty_membership_group_status'] = [
+							{
+								validation_status: false,
+								validation_message: user_registration_form_builder_data.i18n_admin.i18n_prompt_no_membership_group_selected
+							}
+						];
+					}
+					if(data.data.payment_field_present && $('.ur-selected-inputs').find('div[data-field-key="membership"]').length) {
+
+						data.data['payment_field_present_status'] = [
+							{
+								validation_status: false,
+								validation_message: user_registration_form_builder_data.i18n_admin.i18n_prompt_payment_field_present
+							}
+						];
+					}
+				});
 		},
 		delete_single_membership_group : function ($this) {
 			var urlParams = new URLSearchParams($this.attr('href'));

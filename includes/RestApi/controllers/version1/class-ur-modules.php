@@ -296,6 +296,7 @@ class UR_Modules {
 				array_push( $enabled_features, 'payment-history' );
 				array_push( $enabled_features, 'content-restriction' );
 				ur_membership_install_required_pages();
+				\WPEverest\URMembership\Admin\Database\Database::create_tables();
 			}
 		}
 
