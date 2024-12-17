@@ -1,5 +1,5 @@
 /**
- *  External Dependencies
+ * External Dependencies
  */
 import {
 	Badge,
@@ -26,13 +26,13 @@ import {
 	Switch
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import YouTubePlayer from "react-player/youtube";
-import { FaInfoCircle, FaPlayCircle } from "react-icons/fa";
+import { FaPlayCircle } from "react-icons/fa";
 import { SettingsIcon } from "@chakra-ui/icons";
 
 /**
- *  Internal Dependencies
+ * Internal Dependencies
  */
 import { activateModule, deactivateModule } from "./modules-api";
 import { useStateValue } from "../../../../context/StateProvider";
@@ -42,16 +42,10 @@ const ModuleItem = (props) => {
 	/* global _UR_DASHBOARD_ */
 	const { assetsURL, isPro, licensePlan, adminURL, upgradeURL } =
 		typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
-	const [{ upgradeModal, isMembershipActivated }, dispatch] = useStateValue();
-	const [requirementFulfilled, setRequirementFulfilled] = useState(false);
-	const [licenseActivated, setLicenseActivated] = useState(false);
-	const [moduleEnabled, setModuleEnabled] = useState(false);
-	const [showPlayVideoButton, setShowPlayVideoButton] = useState(false);
-	const [thumbnailVideoPlaying, setThumbnailVideoPlaying] = useState(false);
 
-	const [thumbnailVideoLoading, setThumbnailVideoLoading] = useState(true);
+	const [{ upgradeModal, isMembershipActivated }, dispatch] = useStateValue();
+	const toast = useToast();
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const [isFreeModuleEnabled, setIsFreeModuleEnabled] = useState(true);
 
 	const {
 		data,
@@ -60,7 +54,7 @@ const ModuleItem = (props) => {
 		isPerformingBulkAction,
 		selectedModuleData
 	} = props;
-	const toast = useToast();
+
 	const {
 		title,
 		name,
@@ -75,10 +69,31 @@ const ModuleItem = (props) => {
 		demo_video_url,
 		setting_url
 	} = data;
+
+	// States
 	const [moduleStatus, setModuleStatus] = useState(status);
 	const [isPerformingAction, setIsPerformingAction] = useState(false);
-	const [moduleSettingsURL, setModuleSettingsURL] = useState("");
+	const [thumbnailVideoPlaying, setThumbnailVideoPlaying] = useState(false);
+	const [showPlayButton, setShowPlayButton] = useState(false);
+	const [moduleEnabled, setModuleEnabled] = useState(false);
+	const [thumbnailVideoLoading, setThumbnailVideoLoading] = useState(true);
+	const [isFreeModuleEnabled, setIsFreeModuleEnabled] = useState(true);
+	const [requirementFulfilled, setRequirementFulfilled] = useState(false);
+	const [licenseActivated, setLicenseActivated] = useState(false);
 
+	// Helper for showing toast
+	const showToast = useCallback(
+		(message, status) => {
+			toast({
+				title: message,
+				status,
+				duration: 3000
+			});
+		},
+		[toast]
+	);
+
+	// Handle module activation/deactivation
 	const handleModuleAction = () => {
 		setIsPerformingAction(true);
 
@@ -90,27 +105,15 @@ const ModuleItem = (props) => {
 				activateModule(slug, name, type)
 					.then((data) => {
 						if (data.success) {
-							toast({
-								title: data.message,
-								status: "success",
-								duration: 3000
-							});
+							showToast(data.message, "success");
 							setModuleStatus("active");
 						} else {
-							toast({
-								title: data.message,
-								status: "error",
-								duration: 3000
-							});
+							showToast(data.message, "error");
 							setModuleStatus("not-installed");
 						}
 					})
 					.catch((e) => {
-						toast({
-							title: e.message,
-							status: "error",
-							duration: 3000
-						});
+						showToast(e.message, "error");
 						setModuleStatus("not-installed");
 					})
 					.finally(() => {
@@ -120,18 +123,10 @@ const ModuleItem = (props) => {
 				deactivateModule(slug, type)
 					.then((data) => {
 						if (data.success) {
-							toast({
-								title: data.message,
-								status: "success",
-								duration: 3000
-							});
+							showToast(data.message, "success");
 							setModuleStatus("inactive");
 						} else {
-							toast({
-								title: data.message,
-								status: "error",
-								duration: 3000
-							});
+							showToast(data.message, "error");
 							setModuleStatus("active");
 						}
 					})
@@ -190,13 +185,14 @@ const ModuleItem = (props) => {
 				setModuleEnabled(false);
 			}
 		} else {
-			setModuleEnabled(false);
+			setModuleEnabled(isPro && licensePlan?.item_plan.includes(plan));
 		}
 	}, [data, upgradeModal]);
 
+	// Update membership activation status
 	useEffect(() => {
 		if (thumbnailVideoPlaying) {
-			setShowPlayVideoButton(false);
+			setShowPlayButton(false);
 		}
 	}, [thumbnailVideoPlaying]);
 
@@ -207,7 +203,7 @@ const ModuleItem = (props) => {
 				isMembershipActivated: moduleStatus === "active"
 			});
 		}
-	}, [moduleStatus]);
+	}, [moduleStatus, dispatch, slug]);
 
 	const handleBoxClick = () => {
 		const upgradeModalRef = { ...upgradeModal };
@@ -244,10 +240,16 @@ const ModuleItem = (props) => {
 		});
 	};
 
-	const handleModuleSettingsURL = () => {
-		var settingsURL = adminURL + setting_url;
-		window.open(settingsURL, "_blank");
-	};
+	const renderThumbnail = () => (
+		<Image
+			src={assetsURL + image}
+			loading="lazy"
+			borderTopRightRadius="sm"
+			borderTopLeftRadius="sm"
+			w="full"
+			onMouseOver={() => demo_video_url && setShowPlayButton(true)}
+		/>
+	);
 
 	return (
 		<Box
@@ -273,21 +275,12 @@ const ModuleItem = (props) => {
 					borderTopLeftRadius="sm"
 					overflow="hidden"
 					onMouseLeave={() =>
-						demo_video_url && setShowPlayVideoButton(false)
+						demo_video_url && setShowPlayButton(false)
 					}
 				>
 					{((demo_video_url && !thumbnailVideoPlaying) ||
-						!demo_video_url) && (
-						<Image
-							src={assetsURL + image}
-							borderTopRightRadius="sm"
-							borderTopLeftRadius="sm"
-							w="full"
-							onMouseOver={() =>
-								demo_video_url && setShowPlayVideoButton(true)
-							}
-						/>
-					)}
+						!demo_video_url) &&
+						renderThumbnail()}
 
 					{thumbnailVideoPlaying && (
 						<Modal
@@ -330,7 +323,7 @@ const ModuleItem = (props) => {
 						</Modal>
 					)}
 
-					{showPlayVideoButton && (
+					{showPlayButton && (
 						<Box
 							pos="absolute"
 							top={0}
@@ -445,7 +438,12 @@ const ModuleItem = (props) => {
 								<IconButton
 									size="sm"
 									icon={<SettingsIcon />}
-									onClick={handleModuleSettingsURL}
+									onClick={() =>
+										window.open(
+											adminURL + setting_url,
+											"_blank"
+										)
+									}
 								/>
 							</>
 						)}

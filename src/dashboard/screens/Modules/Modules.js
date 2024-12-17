@@ -18,18 +18,12 @@ import {
 	Input,
 	FormControl,
 	useToast,
-	Text,
-	Image
+	Text
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 import { debounce } from "lodash";
 
-/**
- *  Internal Dependencies
- */
-import { Search } from "../../components/Icon/Icon";
-import { PageNotFound } from "../../components/Icon/Icon";
-
+import { Search, PageNotFound } from "../../components/Icon/Icon";
 import {
 	getAllModules,
 	bulkActivateModules,
@@ -42,18 +36,20 @@ import ModuleBody from "./components/ModuleBody";
 
 const Modules = () => {
 	const toast = useToast();
-	const [isSearching, setIsSearching] = useState(false);
 	const [{ allModules }, dispatch] = useStateValue();
-	const [modulesLoaded, setModulesLoaded] = useState(false);
-	const [originalModules, setOriginalModules] = useState([]);
-	const [selectedModuleData, setSelectedModuleData] = useState("");
-	const [bulkAction, setBulkAction] = useState("");
-	const [isPerformingBulkAction, setIsPerformingBulkAction] = useState(false);
+	const [state, setState] = useState({
+		modules: [],
+		originalModules: [],
+		modulesLoaded: false,
+		selectedModuleData: [],
+		bulkAction: "",
+		isPerformingBulkAction: false,
+		searchItem: "",
+		noItemFound: false,
+		isSearching: false,
+		error: null
+	});
 	const [tabIndex, setTabIndex] = useState(0);
-	const [searchItem, setSearchItem] = useState("");
-	const [noItemFound, setNoItemFound] = useState(false);
-	const [modules, setModules] = useState([]);
-	const [error, setError] = useState([]);
 
 	const fetchModules = useCallback(() => {
 		getAllModules()
@@ -63,126 +59,103 @@ const Modules = () => {
 						type: actionTypes.GET_ALL_MODULES,
 						allModules: data.modules_lists
 					});
-					setOriginalModules(data.modules_lists);
-					filterModules(data.modules_lists);
-					setModulesLoaded(true);
+					setState((prev) => ({
+						...prev,
+						originalModules: data.modules_lists,
+						modulesLoaded: true
+					}));
+					filterModules(data.modules_lists, tabIndex);
 				}
 			})
-			.catch((error) => {
-				setError(error.message);
-			});
+			.catch((error) =>
+				setState((prev) => ({ ...prev, error: error.message }))
+			);
 	}, [dispatch, tabIndex]);
-
-	const filterModules = (modules) => {
-		let filteredModules = modules;
-
-		if (tabIndex === 1) {
-			filteredModules = modules.filter(
-				(module) => module.type === "feature"
-			);
-		} else if (tabIndex === 2) {
-			filteredModules = modules.filter(
-				(module) => module.type === "addon"
-			);
-		}
-		setModules(filteredModules);
-		setModulesLoaded(true);
-	};
 
 	useEffect(() => {
 		fetchModules();
 	}, [fetchModules]);
 
 	useEffect(() => {
-		filterModules(originalModules);
-	}, [tabIndex, originalModules]);
+		filterModules(state.originalModules, tabIndex);
+	}, [tabIndex]);
 
-	const handleBulkActions = () => {
-		if (selectedModuleData.length < 1) {
-			toast({
-				title: __(
-					"Please select at least a feature",
-					"user-registration"
-				),
-				status: "error",
-				duration: 3000
-			});
-		} else {
-			setIsPerformingBulkAction(true);
+	// Filter Modules by Tabs
+	const filterModules = (modules, index) => {
+		let filtered = modules;
+		if (index === 1)
+			filtered = modules.filter((mod) => mod.type === "feature");
+		else if (index === 2)
+			filtered = modules.filter((mod) => mod.type === "addon");
 
-			const actionFunction =
-				bulkAction === "activate"
-					? bulkActivateModules
-					: bulkDeactivateModules;
-
-			actionFunction(selectedModuleData)
-				.then((data) => {
-					toast({
-						title: data.message,
-						status: data.success ? "success" : "error",
-						duration: 3000
-					});
-				})
-				.catch((e) => {
-					toast({
-						title: e.message,
-						status: "error",
-						duration: 3000
-					});
-				})
-				.finally(() => {
-					setIsPerformingBulkAction(false);
-					setSelectedModuleData({});
-					fetchModules();
-				});
-		}
+		setState((prev) => ({
+			...prev,
+			modules: filtered,
+			noItemFound: filtered.length === 0
+		}));
 	};
 
-	const debounceSearch = debounce((val) => {
-		setIsSearching(true);
-
-		if (!val) {
-			filterModules(originalModules);
-			setIsSearching(false);
+	// Bulk Actions
+	const handleBulkActions = () => {
+		const { selectedModuleData, bulkAction } = state;
+		if (!selectedModuleData.length) {
+			showToast("Please select at least a feature", "error");
 			return;
 		}
 
-		let searchedData = [];
+		setState((prev) => ({ ...prev, isPerformingBulkAction: true }));
+		const actionFunc =
+			bulkAction === "activate"
+				? bulkActivateModules
+				: bulkDeactivateModules;
 
-		if (tabIndex === 1) {
-			searchedData = originalModules.filter(
-				(module) =>
-					module.type === "feature" &&
-					module.title.toLowerCase().includes(val.toLowerCase())
-			);
-		} else if (tabIndex === 2) {
-			searchedData = originalModules.filter(
-				(module) =>
-					module.type === "addon" &&
-					module.title.toLowerCase().includes(val.toLowerCase())
-			);
-		} else {
-			searchedData = originalModules.filter((module) =>
-				module.title.toLowerCase().includes(val.toLowerCase())
-			);
-		}
+		actionFunc(selectedModuleData)
+			.then((data) =>
+				showToast(data.message, data.success ? "success" : "error")
+			)
+			.catch((e) => showToast(e.message, "error"))
+			.finally(() => {
+				setState((prev) => ({
+					...prev,
+					isPerformingBulkAction: false,
+					selectedModuleData: {}
+				}));
+				fetchModules();
+			});
+	};
 
-		if (searchedData.length > 0) {
-			setModules(searchedData);
-			setModulesLoaded(true);
-			setNoItemFound(false);
-		} else {
-			setModules([]);
-			setModulesLoaded(false);
-			setNoItemFound(true);
-		}
+	const showToast = (title, status) => {
+		toast({
+			title: __(title, "user-registration"),
+			status,
+			duration: 3000
+		});
+	};
 
-		setIsSearching(false);
-	}, 800);
+	// Search Modules
+	const debounceSearch = useCallback(
+		debounce((val) => {
+			const lowerVal = val.toLowerCase();
+			const filtered = state.originalModules.filter(
+				(mod) =>
+					(tabIndex === 1 ? mod.type === "feature" : true) &&
+					(tabIndex === 2 ? mod.type === "addon" : true) &&
+					mod.title.toLowerCase().includes(lowerVal)
+			);
+
+			setState((prev) => ({
+				...prev,
+				modules: filtered,
+				noItemFound: filtered.length === 0,
+				isSearching: false
+			}));
+		}, 800),
+		[state.originalModules, tabIndex]
+	);
 
 	const handleSearchInputChange = (e) => {
 		const val = e.target.value;
-		setSearchItem(val);
+		setState((prev) => ({ ...prev, searchItem: val, isSearching: true }));
 		debounceSearch(val);
 	};
 
@@ -191,50 +164,59 @@ const Modules = () => {
 		return new Date(year, month - 1, day);
 	};
 
-	const handleSorterChange = (sortType, data, setData) => {
+	const handleSorterChange = (sortType, data) => {
 		switch (sortType) {
 			case "newest":
-				setData(
-					[...data].sort(
+				setState((prev) => ({
+					...prev,
+					modules: [...data].sort(
 						(firstAddonInContext, secondAddonInContext) =>
 							parseDate(secondAddonInContext.released_date) -
 							parseDate(firstAddonInContext.released_date)
 					)
-				);
+				}));
+
 				break;
 			case "oldest":
-				setData(
-					[...data].sort(
+				setState((prev) => ({
+					...prev,
+					modules: [...data].sort(
 						(firstAddonInContext, secondAddonInContext) =>
 							parseDate(firstAddonInContext.released_date) -
 							parseDate(secondAddonInContext.released_date)
 					)
-				);
+				}));
 				break;
 			case "asc":
-				setData(
-					[...data].sort(
+				setState((prev) => ({
+					...prev,
+					modules: [...data].sort(
 						(firstAddonInContext, secondAddonInContext) =>
 							firstAddonInContext.title.localeCompare(
 								secondAddonInContext.title
 							)
 					)
-				);
+				}));
 				break;
 			case "desc":
-				setData(
-					[...data].sort(
+				setState((prev) => ({
+					...prev,
+					modules: [...data].sort(
 						(firstAddonInContext, secondAddonInContext) =>
 							secondAddonInContext.title.localeCompare(
 								firstAddonInContext.title
 							)
 					)
-				);
+				}));
 				break;
 			default:
-				setModulesLoaded(false);
+				setState((prev) => ({
+					...prev,
+					modulesLoaded: false
+				}));
 		}
 	};
+
 	return (
 		<Box top="var(--wp-admin--admin-bar--height, 0)" zIndex={1}>
 			<Container maxW="container.xl">
@@ -253,8 +235,7 @@ const Modules = () => {
 							onChange={(e) => {
 								handleSorterChange(
 									e.target.value,
-									modules,
-									setModules
+									state.modules
 								);
 							}}
 							border="1px solid #DFDFE0 !important"
@@ -278,12 +259,9 @@ const Modules = () => {
 								{__("Descending", "user-registration")}
 							</option>
 						</Select>
-
 						<Tabs
 							index={tabIndex}
-							onChange={(index) => {
-								setTabIndex(index);
-							}}
+							onChange={(index) => setTabIndex(index)}
 						>
 							<TabList
 								borderBottom="0px"
@@ -309,7 +287,9 @@ const Modules = () => {
 									transition="none !important"
 									onClick={() =>
 										handleSearchInputChange({
-											target: { value: searchItem }
+											target: {
+												value: state.searchItem
+											}
 										})
 									}
 								>
@@ -336,7 +316,7 @@ const Modules = () => {
 									transition="none !important"
 									onClick={() =>
 										handleSearchInputChange({
-											target: { value: searchItem }
+											target: { value: state.searchItem }
 										})
 									}
 								>
@@ -362,7 +342,9 @@ const Modules = () => {
 									transition="none !important"
 									onClick={() =>
 										handleSearchInputChange({
-											target: { value: searchItem }
+											target: {
+												value: state.searchItem
+											}
 										})
 									}
 								>
@@ -370,7 +352,6 @@ const Modules = () => {
 								</Tab>
 							</TabList>
 						</Tabs>
-
 						<Box display="flex" gap="8px">
 							<Select
 								display="inline-flex"
@@ -405,7 +386,7 @@ const Modules = () => {
 								textDecor="none !important"
 								padding="6px 12px"
 								onClick={handleBulkActions}
-								isLoading={isPerformingBulkAction}
+								isLoading={state.isPerformingBulkAction}
 							>
 								{__("Apply", "user-registration")}
 							</Button>
@@ -427,7 +408,7 @@ const Modules = () => {
 										"user-registration"
 									)}
 									paddingLeft="32px !important"
-									value={searchItem}
+									value={state.searchItem}
 									onChange={handleSearchInputChange}
 								/>
 							</InputGroup>
@@ -436,9 +417,9 @@ const Modules = () => {
 				</Stack>
 			</Container>
 			<Container maxW="container.xl">
-				{isSearching ? (
+				{state.isSearching ? (
 					<AddonSkeleton />
-				) : noItemFound ? (
+				) : state.noItemFound && state.searchItem ? (
 					<Box
 						display="flex"
 						justifyContent="center"
@@ -465,37 +446,52 @@ const Modules = () => {
 								<TabPanel>
 									<ModuleBody
 										isPerformingBulkAction={
-											isPerformingBulkAction
+											state.isPerformingBulkAction
 										}
-										filteredAddons={modules}
-										setSelectedModuleData={
-											setSelectedModuleData
+										filteredAddons={state.modules}
+										setSelectedModuleData={(data) =>
+											setState((prev) => ({
+												...prev,
+												selectedModuleData: data
+											}))
 										}
-										selectedModuleData={selectedModuleData}
+										selectedModuleData={
+											state.selectedModuleData
+										}
 									/>
 								</TabPanel>
 								<TabPanel>
 									<ModuleBody
 										isPerformingBulkAction={
-											isPerformingBulkAction
+											state.isPerformingBulkAction
 										}
-										filteredAddons={modules}
-										setSelectedModuleData={
-											setSelectedModuleData
+										filteredAddons={state.modules}
+										setSelectedModuleData={(data) =>
+											setState((prev) => ({
+												...prev,
+												selectedModuleData: data
+											}))
 										}
-										selectedModuleData={selectedModuleData}
+										selectedModuleData={
+											state.selectedModuleData
+										}
 									/>
 								</TabPanel>
 								<TabPanel>
 									<ModuleBody
 										isPerformingBulkAction={
-											isPerformingBulkAction
+											state.isPerformingBulkAction
 										}
-										filteredAddons={modules}
-										setSelectedModuleData={
-											setSelectedModuleData
+										filteredAddons={state.modules}
+										setSelectedModuleData={(data) =>
+											setState((prev) => ({
+												...prev,
+												selectedModuleData: data
+											}))
 										}
-										selectedModuleData={selectedModuleData}
+										selectedModuleData={
+											state.selectedModuleData
+										}
 									/>
 								</TabPanel>
 							</TabPanels>
