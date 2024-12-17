@@ -261,6 +261,19 @@
         }
     }
 
+	function handlePasswordlessLogin() {
+		var value = $(
+			"#user_registration_pro_passwordless_login"
+		).is(":checked"),
+		form = $(".ur-login-form-wrapper").find(".ur-frontend-form.login");
+
+		if (value) {
+			form.find(".user-registration-passwordless-login").show();
+		} else {
+			form.find(".user-registration-passwordless-login").hide();
+		}
+    }
+
     function hide_show_field_icon() {
         var login_captcha_enabled = $(
                 "#user_registration_pro_general_setting_login_form"
@@ -290,6 +303,15 @@
             "#user_registration_pro_general_setting_prevent_active_login",
             function () {
                 handlePreventActiveLogin();
+            }
+        );
+
+		handlePasswordlessLogin();
+		$(document).on(
+            "change",
+            "#user_registration_pro_passwordless_login",
+            function () {
+                handlePasswordlessLogin();
             }
         );
 
