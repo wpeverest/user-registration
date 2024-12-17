@@ -201,14 +201,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'desc_tip' => true,
 								),
 								array(
-									'title'    => __( 'Lost Password', 'user-registration' ),
-									'desc'     => __( 'Endpoint for the "My account &rarr; Lost password" page.', 'user-registration' ),
-									'id'       => 'user_registration_myaccount_lost_password_endpoint',
-									'type'     => 'text',
-									'default'  => 'lost-password',
-									'desc_tip' => true,
-								),
-								array(
 									'title'    => __( 'User Logout', 'user-registration' ),
 									'desc'     => __( 'Endpoint for triggering logout. You can add this to your menus via a custom link: yoursite.com/?user-logout=true', 'user-registration' ),
 									'id'       => 'user_registration_logout_endpoint',
@@ -395,9 +387,9 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		 */
 		public function get_login_options_settings() {
 
-			$ur_captchas = ur_get_captcha_integrations();
+			$ur_captchas         = ur_get_captcha_integrations();
 			$ur_enabled_captchas = array(
-				'' => __( "Select Enabled Captcha", 'user-registration' )
+				'' => __( 'Select Enabled Captcha', 'user-registration' ),
 			);
 
 			foreach ( $ur_captchas as $key => $value ) {
@@ -735,7 +727,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 				$settings        = $this->get_login_options_settings();
 				$captcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha' );
 
-				if ( ur_string_to_bool( $captcha_enabled ) && ! ur_check_captch_keys( "login" ) ) {
+				if ( ur_string_to_bool( $captcha_enabled ) && ! ur_check_captch_keys( 'login' ) ) {
 					echo '<div id="ur-captcha-error" class="notice notice-warning is-dismissible"><p><strong>' . sprintf(
 						/* translators: %s - Integration tab url */
 						'%s<a href="%s" rel="noreferrer noopener" target="_blank">Add Now.</a>',

@@ -80,25 +80,32 @@ function ur_lostpassword_url( $default_url = '' ) {
 		return $default_url;
 	}
 
-	$ur_account_page_url = ur_get_page_permalink( 'myaccount' );
+	$lost_password_page = get_option( 'user_registration_lost_password_page_id', false );
 
-	$ur_account_page_exists = ur_get_page_id( 'myaccount' ) > 0;
-	$lost_password_endpoint = get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' );
-
-	$ur_login_page_exists = ur_get_page_id( 'login' ) > 0;
-
-	if ( ! $ur_account_page_exists && $ur_login_page_exists ) {
-		update_option( 'user_registration_login_page_id', ur_get_page_id( 'login' ) );
-	}
-
-	if ( $ur_account_page_exists && ! empty( $lost_password_endpoint ) ) {
-		return ur_get_endpoint_url( $lost_password_endpoint, '', $ur_account_page_url );
-	} elseif ( $ur_login_page_exists && ! empty( $lost_password_endpoint ) ) {
-		return ur_get_endpoint_url( $lost_password_endpoint, '', get_permalink( ur_get_page_id( 'login' ) ) );
-	} elseif ( ! empty( $lost_password_endpoint ) && 'lost-password' !== $lost_password_endpoint ) {
-		return str_replace( 'lost-password', $lost_password_endpoint, $default_url );
+	if ( $lost_password_page ) {
+		return get_permalink( $lost_password_page );
 	} else {
-		return $default_url;
+
+		$ur_account_page_url = ur_get_page_permalink( 'myaccount' );
+
+		$ur_account_page_exists = ur_get_page_id( 'myaccount' ) > 0;
+		$lost_password_endpoint = get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' );
+
+		$ur_login_page_exists = ur_get_page_id( 'login' ) > 0;
+
+		if ( ! $ur_account_page_exists && $ur_login_page_exists ) {
+			update_option( 'user_registration_login_page_id', ur_get_page_id( 'login' ) );
+		}
+
+		if ( $ur_account_page_exists && ! empty( $lost_password_endpoint ) ) {
+			return ur_get_endpoint_url( $lost_password_endpoint, '', $ur_account_page_url );
+		} elseif ( $ur_login_page_exists && ! empty( $lost_password_endpoint ) ) {
+			return ur_get_endpoint_url( $lost_password_endpoint, '', get_permalink( ur_get_page_id( 'login' ) ) );
+		} elseif ( ! empty( $lost_password_endpoint ) && 'lost-password' !== $lost_password_endpoint ) {
+			return str_replace( 'lost-password', $lost_password_endpoint, $default_url );
+		} else {
+			return $default_url;
+		}
 	}
 }
 
@@ -267,7 +274,7 @@ function ur_replace_gravatar_image( $avatar, $id_or_email, $size, $default, $alt
 		}
 	}
 
-	if ( $profile_picture_url && ur_check_url_is_image($profile_picture_url) ) {
+	if ( $profile_picture_url && ur_check_url_is_image( $profile_picture_url ) ) {
 		$avatar = sprintf(
 			"<img alt='%s' src='%s' srcset='%s' class='%s' height='%d' width='%d' %s/>",
 			esc_attr( $args['alt'] ),

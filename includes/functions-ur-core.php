@@ -124,7 +124,9 @@ if ( ! function_exists( 'is_ur_lost_password_page' ) ) {
 	function is_ur_lost_password_page() {
 		global $wp;
 
-		return ( is_ur_account_page() && isset( $wp->query_vars['ur-lost-password'] ) );
+		$lost_password_page_id = get_option( 'user_registration_lost_password_page_id', false );
+
+		return ( is_ur_account_page() && isset( $wp->query_vars['ur-lost-password'] ) ) || is_page( $lost_password_page_id );
 	}
 }
 
@@ -3270,6 +3272,41 @@ if ( ! function_exists( 'ur_find_my_account_in_page' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ur_find_lost_password_in_page' ) ) {
+
+	/**
+	 * Find Lost Password Shortcode.
+	 *
+	 * @param int $lost_password_page_id Lost Password Page ID.
+	 * @return int If matched then 1 else 0.
+	 * @since  4.0
+	 */
+	function ur_find_lost_password_in_page( $lost_password_page_id ) {
+		global $wpdb;
+		$post_table      = $wpdb->prefix . 'posts';
+		$post_meta_table = $wpdb->prefix . 'postmeta';
+
+		$matched = $wpdb->get_var(
+			$wpdb->prepare( "SELECT COUNT(*) FROM {$post_table} WHERE ID = '{$lost_password_page_id}' AND ( post_content LIKE '%[user_registration_lost_password%' OR post_content LIKE '%<!-- wp:user-registration/lost_password%' OR post_content LIKE '%<!-- wp:user-registration/lost_password%')" ) //phpcs:ignore.
+		);
+
+		if ( $matched <= 0 ) {
+			$matched = $wpdb->get_var(
+				$wpdb->prepare( "SELECT COUNT(*) FROM {$post_meta_table} WHERE post_id = '{$lost_password_page_id}' AND ( meta_value LIKE '%[user_registration_lost_password%' OR meta_value LIKE '%<!-- wp:user-registration/lost_password%' OR meta_value LIKE '%<!-- wp:user-registration/lost_password%' )" ) //phpcs:ignore.
+			);
+		}
+		/**
+		 * Filters the result of finding "Lost Password" in a page.
+		 *
+		 * @param bool  $matched         The result of finding "Lost Password" in a page.
+		 * @param int   $lost_password_page_id   The ID of the associated lost password page.
+		 */
+		$matched = apply_filters( 'user_registration_find_lost_password_in_page', $matched, $lost_password_page_id );
+
+		return $matched;
+	}
+}
+
 if ( ! function_exists( 'ur_get_license_plan' ) ) {
 
 	/**
@@ -4966,7 +5003,7 @@ if ( ! function_exists( 'user_registration_validate_form_field_data' ) ) {
 	 * @param array  $valid_form_data Valid Form Data..
 	 */
 	function user_registration_validate_form_field_data( $data, $form_data, $form_id, $response_array, $form_field_data, $valid_form_data ) {
-		$form_key_list = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
+		$form_key_list  = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
 		$form_validator = new UR_Form_Validation();
 
 		if ( in_array( $data->field_name, $form_key_list, true ) ) {
