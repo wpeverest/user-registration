@@ -72,7 +72,7 @@
 			show_validation_error: function (notice_div, message) {
 				notice_div.removeClass('notice_blue').addClass('notice_red').text(message);
 				this.clear_validation_error();
-				const input = notice_div.siblings('input');
+				var input = notice_div.siblings('input');
 				$('html, body').animate({
 					scrollTop: notice_div.parent().offset().top
 				}, 200);
@@ -304,7 +304,7 @@
 			 * @param {Object} response - The response data from the server.
 			 * @param {Object} prepare_members_data - The data for preparing members.
 			 */
-			handle_response: async function (response, prepare_members_data, form_response) {
+			handle_response:  function (response, prepare_members_data, form_response) {
 				switch (prepare_members_data.payment_method) {
 					case 'paypal': //for paypal response must contain `payment_url` field
 						ur_membership_frontend_utils.show_success_message(
@@ -316,7 +316,7 @@
 						this.show_bank_response(response, prepare_members_data, form_response);
 						break;
 					case 'stripe':
-						await stripe_settings.handle_stripe_response(response, prepare_members_data, form_response);
+						stripe_settings.handle_stripe_response(response, prepare_members_data, form_response);
 						break;
 					default:
 						ur_membership_frontend_utils.show_form_success_message(form_response, {
