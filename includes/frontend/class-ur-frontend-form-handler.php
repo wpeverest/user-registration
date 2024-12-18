@@ -97,6 +97,22 @@ class UR_Frontend_Form_Handler {
 				'user_registered' => current_time( 'Y-m-d H:i:s' ),
 			);
 
+
+			/**
+			 * Disallow certain special characters in the username.
+			 *
+			 * @since xx.xx.xx
+			 */
+			$username_disallow_character_patten = '/[@\.\-_]/';
+
+            if ( preg_match_all( $username_disallow_character_patten, $userdata['user_login'] ) ) {
+                wp_send_json_error(
+                    array(
+                        'message' => __( 'Please enter the valid username.', 'user-registration' ),
+                    )
+                );
+            }
+
 			self::$valid_form_data = apply_filters( 'user_registration_before_register_user_filter', self::$valid_form_data, $form_id );
 			do_action( 'user_registration_before_register_user_action', self::$valid_form_data, $form_id );
 
