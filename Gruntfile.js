@@ -75,6 +75,17 @@ module.exports = function (grunt) {
 					},
 				],
 			},
+			modules: {
+				files: [
+					{
+						expand: true,
+						cwd: "<%= dirs.js %>/modules/",
+						src: ["**/*.js", "!**/*.min.js"],
+						dest: "<%= dirs.js %>/modules/",
+						ext: ".min.js",
+					},
+				],
+			},
 			urSnackbar: {
 				files: [
 					{
@@ -181,7 +192,7 @@ module.exports = function (grunt) {
 			js: {
 				files: [
 					"<%= dirs.js %>/admin/*js",
-					"<%= dirs.js %>/modules/**/*js",
+					"<%= dirs.js %>/modules/**/**/*js",
 					"<%= dirs.js %>/frontend/*js",
 					"<%= dirs.js %>/ur-snackbar/*js",
 					"!<%= dirs.js %>/admin/*.min.js",
@@ -270,6 +281,7 @@ module.exports = function (grunt) {
 		"uglify:admin",
 		"uglify:frontend",
 		"uglify:urComponents",
+		"uglify:modules",
 		"uglify:urSnackbar",
 	]);
 
