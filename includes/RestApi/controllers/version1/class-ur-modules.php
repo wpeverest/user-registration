@@ -285,6 +285,13 @@ class UR_Modules {
 		array_push( $enabled_features, $slug );
 		update_option( 'user_registration_enabled_features', $enabled_features );
 
+		/**
+		 * Track module installation.
+		 *
+		 * @since xx.xx.xx
+		 */
+		do_action('user_registration_feature_track_data_for_tg_user_tracking', $slug );
+
 		return array( 'success' => true );
 	}
 
