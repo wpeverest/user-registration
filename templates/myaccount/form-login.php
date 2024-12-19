@@ -108,8 +108,8 @@ do_action( 'user_registration_before_customer_login_form' );
 						}
 						?>
 						<span class="input-wrapper">
-						<input placeholder="<?php echo esc_attr( $placeholders['username'] ); ?>" type="text" class="user-registration-Input user-registration-Input--text input-text" name="username" id="username" value="<?php echo ( ! empty( $_POST['username'] ) ) ? esc_attr( wp_unslash( sanitize_text_field( $_POST['username'] ) ) ) : ''; // phpcs:ignore ?>" style="<?php echo $enable_field_icon ? "padding-left: 32px !important" : '' ?>"/>
-						<?php if ( $enable_field_icon ) { ?>
+						<input placeholder="<?php echo esc_attr( $placeholders['username'] ); ?>" type="text" class="user-registration-Input user-registration-Input--text input-text" name="username" id="username" value="<?php echo ( ! empty( $_POST['username'] ) ) ? esc_attr( wp_unslash( sanitize_text_field( $_POST['username'] ) ) ) : ''; // phpcs:ignore ?>" style="<?php echo ($enable_field_icon || $is_login_settings) ? "padding-left: 32px !important" : '' ?>"/>
+						<?php if ( $enable_field_icon || $is_login_settings ) { ?>
 						<span class="ur-icon ur-icon-user"></span>
 						<?php } ?>
 						</span>
@@ -123,7 +123,7 @@ do_action( 'user_registration_before_customer_login_form' );
 						?>
 						<span class="input-wrapper">
 						<span class="password-input-group">
-						<input placeholder="<?php echo esc_attr( $placeholders['password'] ); ?>" class="user-registration-Input user-registration-Input--text input-text" type="password" name="password" id="password" style="<?php echo $enable_field_icon ? 'padding-left: 32px !important' : ''; ?>" />
+						<input placeholder="<?php echo esc_attr( $placeholders['password'] ); ?>" class="user-registration-Input user-registration-Input--text input-text" type="password" name="password" id="password" style="<?php echo ($enable_field_icon || $is_login_settings) ? 'padding-left: 32px !important' : ''; ?>" />
 
 						<?php
 						if ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) {
@@ -133,7 +133,7 @@ do_action( 'user_registration_before_customer_login_form' );
 							<?php
 						}
 						?>
-						<?php if ( $enable_field_icon ) { ?>
+						<?php if ( $enable_field_icon || $is_login_settings ) { ?>
 						<span class="ur-icon ur-icon-password"></span>
 						<?php } ?>
 						</span>
