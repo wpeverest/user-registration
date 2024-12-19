@@ -181,6 +181,16 @@ class UR_Preview {
 	 * @return string
 	 */
 	public function login_form_preview_content( $content ) {
+
+		/**
+		 * Enqueues scripts and applies filters for User Registration 'login' shortcode.
+		 *
+		 * The 'user_registration_my_account_enqueue_scripts' action allows developers to enqueue scripts
+		 * before rendering the 'login' shortcode. The 'user_registration_login_shortcode' filter
+		 * lets developers customize shortcode attributes like class, before, and after.
+		 */
+		do_action( 'user_registration_my_account_enqueue_scripts', array(), 0 );
+
 		remove_filter( 'the_content', array( $this, 'form_preview_content' ) );
 
 		wp_enqueue_script( 'ur-my-account' );
