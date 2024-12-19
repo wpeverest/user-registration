@@ -268,10 +268,8 @@ class AJAX {
 
 			if ( $is_stripe_enabled && "free" !== $meta_data["type"] ) {
 
-
-
 				//check if any significant value has been changed  , trial not included since trial value change does not affect the type of product and price in stripe, instead handled during subscription
-				$should_create_new_product = ( $old_membership_data['amount'] !== $meta_data['amount'] || $old_membership_data["subscription"]["value"] !== $meta_data["subscription"]["value"] || $old_membership_data["subscription"]["duration"] !== $meta_data["subscription"]["duration"] );
+				$should_create_new_product = ( $old_membership_data['amount'] !== $meta_data['amount'] || (isset($old_membership_data["subscription"]) && $old_membership_data["subscription"]["value"] !== $meta_data["subscription"]["value"]) ||  (isset($old_membership_data["subscription"]) && $old_membership_data["subscription"]["duration"] !== $meta_data["subscription"]["duration"] ));
 
 				$meta_data = json_decode( $data["post_meta_data"]["meta_value"], true );
 
