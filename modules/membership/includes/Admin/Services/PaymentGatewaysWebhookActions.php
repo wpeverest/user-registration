@@ -31,7 +31,8 @@ class PaymentGatewaysWebhookActions {
 		add_action( 'rest_api_init', function () {
 			register_rest_route( 'user-registration', '/stripe-webhook', [
 				'methods'  => 'POST',
-				'callback' => array( $this, 'handle_stripe_webhook', )
+				'callback' => array( $this, 'handle_stripe_webhook', ),
+				'permission_callback' => '__return_true',
 			] );
 		} );
 	}

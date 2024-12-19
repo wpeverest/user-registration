@@ -134,7 +134,7 @@ class AJAX {
 				array(
 					'member_id'      => absint( $member_id ),
 					'transaction_id' => esc_html( $transaction_id ),
-					'message'        => esc_html__( 'New member has been successfully created with successful stripe subscription.', 'user-registration' ),
+					'message'        => esc_html__( 'New member has been successfully created.', 'user-registration' ),
 				)
 			);
 			if ( 'free' !== $data['payment_method'] ) {
