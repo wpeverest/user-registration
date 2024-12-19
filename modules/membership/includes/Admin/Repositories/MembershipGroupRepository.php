@@ -89,14 +89,18 @@ class MembershipGroupRepository extends BaseRepository implements MembershipGrou
 
 		$memberships = get_post_meta( $id, 'urmg_memberships', true );
 		$memberships = str_replace( array( '[', ']' ), '', $memberships );
-
+		if ( empty( $memberships ) ) {
+			return array();
+		}
 		$membership_repository = new MembershipRepository();
-		return $membership_repository->get_multiple_membership_by_ID($memberships);
+
+		return $membership_repository->get_multiple_membership_by_ID( $memberships );
 	}
 
 	/**
 	 * is_form_related
 	 * Just having the meta key means the form consist of a membership group
+	 *
 	 * @param $group_id
 	 *
 	 * @return bool
@@ -105,9 +109,10 @@ class MembershipGroupRepository extends BaseRepository implements MembershipGrou
 		$meta_key_exists = $this->wpdb()->get_var(
 			$this->wpdb()->prepare(
 				"SELECT post_id FROM $this->posts_meta_table WHERE meta_key = %s LIMIT 1",
-				"urm_form_group_".$group_id
+				"urm_form_group_" . $group_id
 			)
 		);
+
 		return $meta_key_exists;
 	}
 
@@ -116,7 +121,7 @@ class MembershipGroupRepository extends BaseRepository implements MembershipGrou
 	 *
 	 * @return string|null
 	 */
-	public function get_default_group_id(  ) {
+	public function get_default_group_id() {
 		return $this->wpdb()->get_var(
 			$this->wpdb()->prepare(
 				"SELECT post_id FROM $this->posts_meta_table WHERE meta_key = %s LIMIT 1",

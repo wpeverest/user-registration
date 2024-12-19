@@ -194,7 +194,9 @@ class StripeService {
 			$member_subscription            = $this->members_subscription_repository->get_member_subscription( $member_id );
 
 			if ( 'completed' === $member_order['status'] ) {
-				ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
+				$response['message'] = __( "New member has been successfully created with successful stripe subscription.", "user-registration" );
+				return $response;
+//				ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
 			}
 			$is_order_updated = $this->members_orders_repository->update( $member_order['ID'], array(
 				'status'         => 'completed',
