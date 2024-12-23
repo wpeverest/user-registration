@@ -90,9 +90,18 @@ do_action( 'user_registration_before_customer_login_form' );
 					 * @param array $labels['login].
 					 * @return array.
 					 */
-					apply_filters( 'ur_login_title', $labels['login'] );
+					apply_filters( 'ur_login_title', "Welcome" );
+					$login_title_description =
+					/**
+					 * Filter to modify the login title.
+					 *
+					 * @param array $labels['login].
+					 * @return array.
+					 */
+					apply_filters( 'ur_login_title_description', "Please enter your details to access your account." );
 					/* translators: %s - Login Title. */
-					echo wp_kses_post( sprintf( __( '<span class="user-registration-login-title"> %s </span>', 'user-registration' ), $login_title_label ) );
+					echo wp_kses_post( sprintf( __( '<span class="user-registration-login-title"> %s </span> </br>', 'user-registration' ), $login_title_label ) );
+					echo wp_kses_post( sprintf( __( '<p class="user-registration-login-description"> %s </p>', 'user-registration' ), $login_title_description ) );
 				}
 				?>
 					<?php
@@ -109,7 +118,7 @@ do_action( 'user_registration_before_customer_login_form' );
 						?>
 						<span class="input-wrapper">
 						<input placeholder="<?php echo esc_attr( $placeholders['username'] ); ?>" type="text" class="user-registration-Input user-registration-Input--text input-text" name="username" id="username" value="<?php echo ( ! empty( $_POST['username'] ) ) ? esc_attr( wp_unslash( sanitize_text_field( $_POST['username'] ) ) ) : ''; // phpcs:ignore ?>" style="<?php echo ($enable_field_icon || $is_login_settings) ? "padding-left: 32px !important" : '' ?>"/>
-						<?php if ( $enable_field_icon || $is_login_settings ) { ?>
+						<?php lg($is_login_settings);lg($enable_field_icon);if ( $enable_field_icon || $is_login_settings ) { ?>
 						<span class="ur-icon ur-icon-user"></span>
 						<?php } ?>
 						</span>

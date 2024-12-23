@@ -174,7 +174,9 @@
             form = $(".ur-login-form-wrapper").find(".ur-frontend-form.login");
         if (value) {
             form.find(".user-registration-login-title").show();
+            form.find(".user-registration-login-description").show();
         } else {
+            form.find(".user-registration-login-description").hide();
             form.find(".user-registration-login-title").hide();
         }
     }
@@ -382,12 +384,6 @@
             }
         );
         hide_show_registration_url();
-
-				if ( "" === value.trim() ) {
-				form.find(".user-registration-register").hide();
-			} else {
-				form.find(".user-registration-register").show();
-			}
 
         $("#user_registration_general_setting_registration_label").on(
             "keyup",
