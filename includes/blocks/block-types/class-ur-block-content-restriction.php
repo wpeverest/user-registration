@@ -16,7 +16,7 @@ class UR_Block_Content_Restriction extends UR_Block_Abstract {
 	 *
 	 * @var string Block name.
 	 */
-	protected $block_name = 'content-restriction';
+	protected $block_name = 'content-restriction-enhanced';
 
 	/**
 	 * Build html.

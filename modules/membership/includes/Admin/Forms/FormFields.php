@@ -55,7 +55,7 @@ class FormFields {
 
 	}
 
-	public function enable_one_time_drag_for_membership_field() {
+	public function enable_one_time_drag_for_membership_field( $fields ) {
 		$fields[] = 'membership';
 
 		return $fields;

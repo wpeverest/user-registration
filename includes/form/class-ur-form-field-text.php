@@ -46,7 +46,8 @@ class UR_Form_Field_Text extends UR_Form_Field {
 		);
 
 		$this->field_defaults = array(
-			'default_label'      => __( 'Input Field', 'user-registration' )
+			'default_label'      => __( 'Input Field', 'user-registration' ),
+			'default_field_name' => 'input_box_' . ur_get_random_number(),
 		);
 	}
 

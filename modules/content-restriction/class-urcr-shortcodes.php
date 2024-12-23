@@ -48,7 +48,8 @@ class URCR_Shortcodes {
 			if( $is_membership_active ) {
 				$members_subscription = new \WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository();
 				$subscription = $members_subscription->get_member_subscription( wp_get_current_user()->ID);
-				$current_user_membership = $subscription['item_id'];
+
+				$current_user_membership = ( !empty ( $subscription ) ) ? $subscription['item_id'] : array();
 			}
 
 			if ( empty( $roles ) ) {
