@@ -55,11 +55,13 @@ if ( ! defined( ' UR_MEMBERSHIP_TEMPLATE_PATH' ) ) {
 
 use WPEverest\URMembership\Admin;
 
-/**
- * Initialization of Membership instance.
- **/
-function user_registration_membership() {
-	return Admin::get_instance();
+if( !function_exists('user_registration_membership') ) {
+	/**
+	 * Initialization of Membership instance.
+	 **/
+	function user_registration_membership() {
+		return Admin::get_instance();
+	}
 }
 
 user_registration_membership();
