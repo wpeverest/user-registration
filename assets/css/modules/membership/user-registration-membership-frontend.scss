@@ -289,6 +289,9 @@ html {
 .ur-membership-duration {
 	font-weight: normal;
 	color: $color_4;
+	display: inline-block;
+	vertical-align: middle;
+	margin-top: 2px;
 }
 
 .membership-primary-btn {

@@ -279,6 +279,13 @@ class Membership {
 	 * @since 1.0.0
 	 */
 	public function membership_initialization() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die(
+				'<h1>' . esc_html__( 'You need a higher level of permission.', 'user-registration' ) . '</h1>' .
+				'<p>' . esc_html__( 'Sorry, you are not allowed to list users.', 'user-registration' ) . '</p>',
+				403
+			);
+		}
 		if ( isset( $_GET['page'] ) && 'user-registration-membership' === $_GET['page'] ) {
 
 			$action_page = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';

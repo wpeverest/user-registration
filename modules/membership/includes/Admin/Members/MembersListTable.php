@@ -66,7 +66,8 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 						ARRAY_A
 					);
 					$valid_users     = wp_list_pluck( $valid_users, 'user_id' );
-					$args['include'] = ! empty( $valid_users ) ? $valid_users : 99999999;
+
+					$args['include'] = $valid_users ;
 				}
 			}
 

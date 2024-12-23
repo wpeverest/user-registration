@@ -994,7 +994,7 @@
 										"user_registration_frontend_validate_before_form_submit",
 										[$this]
 									);
-									if($('.user-registration-error').length) {
+									if($('.user-registration-error:visible').length) {
 										return;
 									}
 									if (
