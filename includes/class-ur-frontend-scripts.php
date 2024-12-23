@@ -46,8 +46,22 @@ class UR_Frontend_Scripts {
 		add_action( 'before-user-registration-my-account-shortcode', array( __CLASS__, 'load_my_account_scripts' ) );
 		add_action( 'wp_print_scripts', array( __CLASS__, 'localize_printed_scripts' ), 5 );
 		add_action( 'wp_print_footer_scripts', array( __CLASS__, 'localize_printed_scripts' ), 5 );
+		add_action( 'user_registration_enqueue_scripts', array( __CLASS__, 'localize_scripts_with_form_id' ), 10 , 2 );
 	}
 
+	/**
+	 * localize_scripts_with_form_id
+	 *
+	 * @param $form_data
+	 * @param $form_id
+	 *
+	 * @return void
+	 */
+	public static function localize_scripts_with_form_id( $form_data , $form_id  ) {
+		wp_localize_script( 'user-registration', 'ur_frontend_params_with_form_id', array(
+			'custom_password_params' => self::get_custom_password_params($form_id),
+		) );
+	}
 	/**
 	 * Get styles for the frontend.
 	 *
@@ -495,8 +509,7 @@ class UR_Frontend_Scripts {
 					'i18n_password_hint'     => apply_filters( 'user_registration_strong_password_message', esc_html__( 'Hint: To make password stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ & ).', 'user-registration' ) ),
 					'i18n_password_hint_1'   => esc_html__( 'Hint: Minimum one uppercase letter and must be 4 characters and no repetitive words or common words', 'user-registration' ),
 					'i18n_password_hint_2'   => esc_html__( 'Hint: Minimum one uppercase letter, a number, must be 7 characters and no repetitive words or common words', 'user-registration' ),
-					'i18n_password_hint_3'   => apply_filters( 'user_registration_password_hint3_message', esc_html__( 'Hint: Minimum one uppercase letter, a number, a special character, must be 9 characters and no repetitive words or common words', 'user-registration' ) ),
-					'custom_password_params' => self::get_custom_password_params(),
+					'i18n_password_hint_3'   => apply_filters( 'user_registration_password_hint3_message', esc_html__( 'Hint: Minimum one uppercase letter, a number, a special character, must be 9 characters and no repetitive words or common words', 'user-registration' ) )
 				);
 				break;
 			case 'ur-login':
@@ -527,12 +540,7 @@ class UR_Frontend_Scripts {
 	 *
 	 * @return array|string
 	 */
-	public static function get_custom_password_params() {
-
-		if ( ! isset( $_REQUEST['form_id'] ) ) {
-			return '';
-		}
-		$form_id = absint( $_REQUEST['form_id'] );
+	public static function get_custom_password_params($form_id) {
 
 		$enable_strong_password = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' ) );
 		if ( ! $enable_strong_password ) {
