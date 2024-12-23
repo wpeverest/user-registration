@@ -1,4 +1,4 @@
-/* global  user_registration_params, ur_password_strength_meter_params */
+/* global  user_registration_params, ur_frontend_params_with_form_id */
 (function ($) {
 	var user_registration_form_init = function () {
 		var ursL10n = user_registration_params.ursL10n;
@@ -2620,7 +2620,7 @@ function ur_includes(arr, item) {
  */
 function customPasswordChecks(password) {
 	var custom_password_params =
-			ur_password_strength_meter_params.custom_password_params,
+			ur_frontend_params_with_form_id.custom_password_params,
 		minLength =
 			custom_password_params.minimum_pass_length !== undefined &&
 			custom_password_params.minimum_pass_length >= 3

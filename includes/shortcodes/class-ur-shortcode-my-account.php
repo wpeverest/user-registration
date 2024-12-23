@@ -405,7 +405,13 @@ class UR_Shortcode_My_Account {
 		$login = isset( $_POST['user_login'] ) ? trim( wp_unslash( $_POST['user_login'] ) ) : null; // phpcs:ignore
 
 		if ( empty( $login ) ) {
-			ur_add_notice( __( 'Enter a username or email address.', 'user-registration' ), 'error' );
+			ur_add_notice(
+				apply_filters(
+					'user_registration_empty_login_error_message',
+					__( 'Enter a username or email address.', 'user-registration' )
+				),
+				'error'
+			);
 			return false;
 		} else {
 			// Check on username first, as customers can use emails as usernames.
@@ -424,11 +430,14 @@ class UR_Shortcode_My_Account {
 			ur_add_notice( $errors->get_error_message(), 'error' );
 			return false;
 		}
-
+		/**
+		 * Show same error message for invalid username or email as login form.
+		 */
+		$invalid_username_or_email_error_message = get_option('user_registration_message_invalid_username' , __( 'Invalid username or email.', 'user-registration' ) );
 		/**
 		 * Filter to modify invalid username or email error message.
 		 */
-		$error_message = apply_filters( 'user_registration_invalid_username_or_email_error_message', __( 'Invalid username or email.', 'user-registration' ) );
+		$error_message = apply_filters( 'user_registration_invalid_username_or_email_error_message', $invalid_username_or_email_error_message );
 
 		if ( ! $user_data || ( is_multisite() && ! is_user_member_of_blog( $user_data->ID, get_current_blog_id() ) ) ) {
 			ur_add_notice( $error_message, 'error' );
