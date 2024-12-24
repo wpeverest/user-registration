@@ -1407,6 +1407,23 @@ body {
                                     }
                                 }
                             }
+                            
+                            > div {
+                                display: block;
+                                margin-top: 32px;
+                                
+                                input[type="submit"] {
+                                    width: 100%;
+                                    border: 0;
+                                    padding: 10px 24px;
+                                    color: #ffffff;
+                                    font-size: 15px;
+                                    font-weight: 400;
+                                    line-height: 24px;
+                                    letter-spacing: 0.15px;
+                                    background: #475BB2;
+                                }
+                            }
                         }
                     }
                 }
