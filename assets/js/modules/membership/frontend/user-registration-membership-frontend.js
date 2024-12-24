@@ -564,7 +564,8 @@
 						members_data: JSON.stringify(prepare_members_data),
 						member_id: response.data.member_id,
 						payment_status: result.error ? "failed" : "succeeded",
-						form_response: JSON.stringify(form_response.data)
+						form_response: JSON.stringify(form_response.data),
+						payment_result: result
 					},
 					{
 						success: function (response) {

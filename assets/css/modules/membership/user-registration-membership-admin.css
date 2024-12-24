@@ -350,14 +350,6 @@
       text-transform: capitalize;
       color: #383838;
       font-weight: 500; }
-    .user-registration #user-registration-list-table-page #membership-list .wp-list-table.memberships tbody tr td.status .user-registration-badge {
-      background: none;
-      padding: 0px;
-      font-weight: 500; }
-      .user-registration #user-registration-list-table-page #membership-list .wp-list-table.memberships tbody tr td.status .user-registration-badge--success-subtle {
-        color: #4CC741; }
-      .user-registration #user-registration-list-table-page #membership-list .wp-list-table.memberships tbody tr td.status .user-registration-badge--secondary-subtle {
-        color: #F25656; }
     .user-registration #user-registration-list-table-page #membership-list .wp-list-table.memberships tbody tr td.action .row-actions .user-registration-switch input[type="checkbox"] {
       border-radius: 20px;
       border: 0;

@@ -2,6 +2,7 @@
 	<?php
 	require __DIR__ . '/./Partials/header.php';
 	$is_pro = is_plugin_active( 'user-registration-pro/user-registration.php' );
+	$return_url = admin_url( 'admin.php?page=user-registration-membership' );
 	?>
 	<div
 		class="ur-membership-tab-contents-wrapper ur-registered-from ur-align-items-center ur-justify-content-center">
@@ -9,7 +10,7 @@
 			<div class="user-registration-card">
 				<div class="user-registration-card__header ur-d-flex ur-align-items-center">
 					<a class="ur-text-muted ur-d-flex"
-					   href="<?php echo esc_attr( empty( $_SERVER['HTTP_REFERER'] ) ? '#' : $_SERVER['HTTP_REFERER'] ); ?>">
+					   href="<?php echo $return_url; ?>">
 						<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
 							 fill="none"
 							 stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">

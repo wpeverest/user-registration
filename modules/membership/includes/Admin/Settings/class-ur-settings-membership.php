@@ -62,7 +62,7 @@ if ( ! class_exists( 'UR_Settings_Membership ' ) ) :
 							'settings' => array(
 								array(
 									'title'    => __( 'Member Registration Form Page', 'user-registration' ),
-									'desc'     => sprintf( __( 'Select the page which contains your Member Registration form: [%s]', 'user-registration' ), apply_filters( 'user_registration_myaccount_shortcode_tag', 'user_registration_membership_member_registration_form' ) ), //phpcs:ignore
+									'desc'     => sprintf( __( 'Select the redirection page which opens from the membership listing shortcode: [%s]', 'user-registration' ), apply_filters( 'user_registration_myaccount_shortcode_tag', 'user_registration_membership_listing' ) ), //phpcs:ignore
 									'id'       => 'user_registration_member_registration_page_id',
 									'type'     => 'single_select_page',
 									'default'  => '',
@@ -72,7 +72,7 @@ if ( ! class_exists( 'UR_Settings_Membership ' ) ) :
 								),
 								array(
 									'title'    => __( 'Thank You Page', 'user-registration' ),
-									'desc'     => sprintf( __( 'Select the page which will be shown after successful registration: [%s]', 'user-registration' ), apply_filters( 'user_registration_myaccount_shortcode_tag', 'user_registration_membership_thank_you' ) ), //phpcs:ignore
+									'desc'     => sprintf( __( 'Select the page which contains the membership thank you shortcode: [%s]', 'user-registration' ), apply_filters( 'user_registration_myaccount_shortcode_tag', 'user_registration_membership_thank_you' ) ), //phpcs:ignore
 									'id'       => 'user_registration_thank_you_page_id',
 									'type'     => 'single_select_page',
 									'default'  => '',

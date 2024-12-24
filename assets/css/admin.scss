@@ -39,7 +39,7 @@
  }
 
  .toplevel_page_user-registration,
- .user-registration_page_user-registration-frontend-list {
+ .user-registration-membership_page_user-registration-frontend-list {
 	 // Design customize for shortcode in list table
 	 .shortcode {
 		 .widefat {
@@ -53,7 +53,7 @@
 	 }
  }
 
- .user-registration_page_user-registration-dashboard {
+ .user-registration-membership_page_user-registration-dashboard {
 	 #wpcontent {
 		 margin-left: 140px;
 
@@ -63,7 +63,7 @@
 	 }
  }
 
- .user-registration_page_user-registration-settings {
+ .user-registration-membership_page_user-registration-settings {
 	 .notice {
 		 display: none;
 	 }
@@ -324,7 +324,7 @@
  /**
 	 * Form Builder Styles
 	 **/
- .user-registration_page_add-new-registration,
+ .user-registration-membership_page_add-new-registration,
  .toplevel_page_user-registration {
 	 #wpfooter {
 		 display: none; //Hide WP footer on form builder page
@@ -2638,7 +2638,7 @@
  }
 
  @media screen and (max-width: 782px) {
-	 body.user-registration_page_add-new-registration {
+	 body.user-registration-membership_page_add-new-registration {
 		 min-width: 0 !important;
 	 }
 
@@ -2668,7 +2668,7 @@
  }
 
  @media screen and (max-width: 600px) {
-	 .user-registration_page_add-new-registration .major-publishing-actions {
+	 .user-registration-membership_page_add-new-registration .major-publishing-actions {
 		 clear: both;
 		 padding: 10px 0 19px;
 		 line-height: 28px;
@@ -3516,7 +3516,7 @@
 	 }
  }
 
- .user-registration_page_add-new-registration,
+ .user-registration-membership_page_add-new-registration,
  .toplevel_page_user-registration {
 	 #nav-menu-header {
 		 padding-right: $spacing_30px;
@@ -4357,7 +4357,7 @@
 		 padding-left: 0;
 	 }
 
-	 .user-registration_page_add-new-registration
+	 .user-registration-membership_page_add-new-registration
 		 .ur-form-container
 		 #menu-management
 		 .menu-edit {

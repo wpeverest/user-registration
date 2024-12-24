@@ -3,6 +3,7 @@
 namespace WPEverest\URMembership\Admin\Views\Shortcode;
 
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
+use WPEverest\URMembership\Admin\Services\MembershipGroupService;
 
 /**
  * Registration Shortcodes
@@ -33,7 +34,14 @@ class MemberRegistrationFormShortcode {
 		$allow = ( is_user_logged_in() && $attributes['preview'] ) || ! is_user_logged_in();
 
 		if ( $allow ) {
-			$memberships = isset( $attributes['options'] ) ? $attributes['options'] : array();
+			$group_id = isset( $attributes['membership_group'] ) ? $attributes['membership_group'] : array();
+			$group_service = new MembershipGroupService();
+			$group = $group_service->get_membership_group_by_id($group_id);
+			$content = json_decode( wp_unslash( $group['post_content'] ), true );
+			$group_status = ur_string_to_bool($content['status']);
+
+			$memberships = isset( $attributes['options'] ) && $group_status ? $attributes['options'] : array();
+
 			$form_id     = isset( $attributes['form_id'] ) ? $attributes['form_id'] : array();
 
 			$template_file = locate_template( 'membership-registration-form.php' );

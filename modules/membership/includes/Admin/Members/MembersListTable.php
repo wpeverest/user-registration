@@ -91,6 +91,7 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 			$members_repository = new MembersRepository();
 
 			$this->items = $members_repository->get_all_members( $args );
+
 			$this->set_pagination_args(
 				array(
 					'total_items' => count( $this->items ),
@@ -211,12 +212,20 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 							break;
 						case 'subscription_status':
 							$status      = $user_object['status'] ?? '';
+							$status_class       = 'user-registration-badge user-registration-badge--secondary-subtle';
+							if( $status == 'active') {
+								$status_class =  'user-registration-badge user-registration-badge--success-subtle';
+							} else if( $status == 'pending') {
+								$status_class =  'user-registration-badge user-registration-badge--warning';
+							}
+
 							$expiry_date = new \DateTime( $user_object['expiry_date'] );
 
 							if ( ! empty( $user_object['payment_method'] ) && ( 'subscription' == $user_object['payment_method'] ) && date( 'Y-m-d' ) > $expiry_date->format( 'Y-m-d' ) ) {
 								$status = 'expired';
 							}
-							$row .= $status;
+
+							$row .=  sprintf( '<span id="" class="user-registration-badge %s">%s</span>', $status_class, ucfirst($status) );
 							break;
 						case 'user_registered':
 							$row .= date_i18n( 'F j, Y h:i A', strtotime( $user_object['user_registered'] ) );

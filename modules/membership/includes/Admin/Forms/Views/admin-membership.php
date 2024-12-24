@@ -14,9 +14,14 @@ $default_group            = isset( $this->field_defaults['default_group'] ) && !
 $selected_group_id        = isset( $this->admin_data->general_setting->membership_group ) && ! empty( $this->admin_data->general_setting->membership_group ) ? $this->admin_data->general_setting->membership_group : $default_group;
 $selected_group_id        = trim( $selected_group_id );
 $memberships              = array();
-
+$group_status = false;
 if ( ! empty( $selected_group_id ) ) {
-	$memberships = $membership_group_service->get_group_memberships( $selected_group_id );
+	$group = $membership_group_service->get_membership_group_by_id($selected_group_id);
+	$content = json_decode( wp_unslash( $group['post_content'] ), true );
+	$group_status = ur_string_to_bool($content['status']);
+	if($group_status) {
+		$memberships = $membership_group_service->get_group_memberships( $selected_group_id );
+	}
 }
 
 ?>
@@ -26,7 +31,8 @@ if ( ! empty( $selected_group_id ) ) {
 	</div>
 	<div class="ur-field" data-field-key="membership">
 		<?php
-		$style = ! empty( $selected_group_id ) ? " style='display:none;'" : "";
+		$style = ! empty( $selected_group_id ) &&  $group_status ? " style='display:none;'" : "";
+
 		echo "<span class='empty-urmg-label' " . $style . " > " . __( "Please select a membership group." . "</span>", "user-registration" );
 		echo "<span class='urmg-loader'></span>";
 		echo "<div class='urmg-container'>";

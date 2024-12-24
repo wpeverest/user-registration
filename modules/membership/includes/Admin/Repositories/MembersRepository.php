@@ -107,7 +107,7 @@ class MembersRepository extends BaseRepository implements MembersInterface {
 		if ( isset( $args['membership_id'] ) ) {
 			$sql .= sprintf( " AND wpp.ID = '%d'", $args['membership_id'] );
 		}
-		if ( isset( $args['search'] ) ) {
+		if ( !empty($args['search']) ) {
 			$sql .= sprintf( " AND (wpu.display_name LIKE '%%%s%%' OR wpu.user_email LIKE '%%%s%%')", $args['search'], $args['search'] );
 		}
 		if ( !empty($args['include']) ) {

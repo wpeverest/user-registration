@@ -62,7 +62,9 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 		if ( "user_registration_membership" !== $id ) {
 			return $settings;
 		}
+
 		$membership_group_service = new MembershipGroupService();
+
 		$membership_settings      = array(
 			'membership_group' => array(
 				'setting_id'  => 'membership_group',

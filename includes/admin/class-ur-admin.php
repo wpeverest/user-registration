@@ -448,7 +448,7 @@ class UR_Admin {
 		global $current_screen;
 
 		// Check if the screen contains user-registration_page_ as prefix inorder to make sure the page is user registration plugin's page.
-		if ( strpos( $current_screen->id, 'user-registration_page_' ) !== false ) {
+		if ( strpos( $current_screen->id, 'user-registration-membership_page_' ) !== false ) {
 			$classes = 'user-registration';
 		}
 

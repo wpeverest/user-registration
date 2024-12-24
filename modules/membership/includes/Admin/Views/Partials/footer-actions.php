@@ -1,6 +1,6 @@
 <div class="submit ur-d-flex ur-justify-content-end ur-p-3" style="gap: 10px">
-	<button class="button-secondary">
-		<a href="<?php echo esc_attr( empty( $_SERVER['HTTP_REFERER'] ) ? '#' : $_SERVER['HTTP_REFERER'] ); ?>">
+	<button class="button-secondary" type="button">
+		<a href="<?php echo $return_url; ?>">
 			<?php echo esc_html__( 'Cancel', 'user-registration' ); ?>
 		</a>
 	</button>

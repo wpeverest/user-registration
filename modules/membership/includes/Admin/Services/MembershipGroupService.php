@@ -26,25 +26,28 @@ class MembershipGroupService {
 	 *
 	 * @return string|null
 	 */
-	public function get_default_group_id(  ) {
+	public function get_default_group_id() {
 		return $this->membership_group_repository->get_default_group_id();
 	}
 
 	public function remove_form_related_groups( $ids ) {
 
-		return array_filter($ids,function($item){
-			$form_id = $this->get_group_form_id($item);
+		return array_filter( $ids, function ( $item ) {
+			$form_id = $this->get_group_form_id( $item );
+
 			return $form_id == "";
-		});
+		} );
 	}
+
 	/**
 	 * get_membership_groups
 	 *
 	 * @return array
 	 */
 	public function get_membership_groups() {
-		$membership_groups =  $this->membership_group_repository->get_all_membership_groups();
-		return $this->prepare_membership_group_data( $membership_groups );
+		$membership_groups = $this->membership_group_repository->get_all_membership_groups();
+
+		return $this->structure_membership_group_data( $membership_groups );
 	}
 
 	/**
@@ -55,8 +58,9 @@ class MembershipGroupService {
 	 * @return bool
 	 */
 	public function get_group_form_id( $group_id ) {
-		return $this->membership_group_repository->get_group_form_id($group_id);
+		return $this->membership_group_repository->get_group_form_id( $group_id );
 	}
+
 	/**
 	 * get_membership_group_by_id
 	 *
@@ -69,7 +73,8 @@ class MembershipGroupService {
 	}
 
 	public function get_group_memberships( $group_id ) {
-		$memberships           = $this->membership_group_repository->get_group_memberships_by_id($group_id);
+		$memberships = $this->membership_group_repository->get_group_memberships_by_id( $group_id );
+
 		return apply_filters( 'build_membership_list_frontend', $memberships );
 
 	}
@@ -90,7 +95,7 @@ class MembershipGroupService {
 		return $response;
 	}
 
-	public function prepare_membership_data( $post_data ) {
+	public function prepare_membership_group_data( $post_data ) {
 		$membership_group_id = ! empty( $post_data['post_data']['ID'] ) ? absint( $post_data['post_data']['ID'] ) : '';
 		$post_meta_data      = array_map( 'sanitize_text_field', $post_data['post_meta_data']['memberships'] );
 
@@ -100,7 +105,7 @@ class MembershipGroupService {
 				'post_title'     => sanitize_text_field( $post_data['post_data']['name'] ),
 				'post_content'   => wp_json_encode( array(
 					'description' => sanitize_text_field( $post_data['post_data']['description'] ),
-					'status'      => wp_validate_boolean( $post_data['post_data']['status'] ),
+					'status'      => ur_string_to_bool( $post_data['post_data']['status'] ),
 				) ),
 				'post_type'      => 'ur_membership_groups',
 				'post_status'    => 'publish',
@@ -125,7 +130,7 @@ class MembershipGroupService {
 		$post_data = json_decode( wp_unslash( $post_data ), true );
 		$data      = $this->validate_membership_group_data( $post_data );
 		if ( $data['status'] ) {
-			$data                = $this->prepare_membership_data( $post_data );
+			$data                = $this->prepare_membership_group_data( $post_data );
 			$data                = apply_filters( 'ur_membership_after_create_membership_groups_data_before_save', $data );
 			$membership_group_id = wp_insert_post( $data['post_data'] );
 			if ( $membership_group_id ) {
@@ -147,11 +152,18 @@ class MembershipGroupService {
 		return $data;
 	}
 
-	public function prepare_membership_group_data( $membership_groups ) {
+	public function structure_membership_group_data( $membership_groups ) {
 		$updated_array = array();
+
 		foreach ( $membership_groups as $key => $membership_group ) {
-			$updated_array[$membership_group['ID']] = $membership_group['post_title'];
+			$group_content = json_decode( wp_unslash( $membership_group['post_content'] ), true );
+
+
+			if ( $group_content['status'] ) {
+				$updated_array[ $membership_group['ID'] ] = $membership_group['post_title'];
+			}
 		}
-		return $updated_array ;
+
+		return $updated_array;
 	}
 }

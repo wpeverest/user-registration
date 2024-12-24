@@ -39,7 +39,7 @@ if ( ! class_exists( 'Members' ) ) {
 			add_action( 'admin_menu', array( $this, 'ur_membership_members_menu' ), 60 );
 			add_action( 'in_admin_header', array( __CLASS__, 'hide_unrelated_notices' ) );
 			add_filter(
-				'manage_user-registration_page_user-registration-members_columns',
+				'manage_user-registration-membership_page_user-registration-members_columns',
 				array(
 					$this,
 					'get_column_headers',

@@ -245,7 +245,7 @@ class Membership {
 	public function ur_membership_add_screen_id( $screen_ids ) {
 
 		$urm_screen_ids = array(
-			'user-registration_page_user-registration-membership',
+			'user-registration-membership_page_user-registration-membership',
 			'ur_membership',
 		);
 

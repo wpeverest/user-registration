@@ -1,5 +1,7 @@
 <?php
-require __DIR__ . '/./Partials/header.php'
+require __DIR__ . '/./Partials/header.php';
+$return_url = admin_url( 'admin.php?page=user-registration-members' );
+
 ?>
 <div class="ur-membership-tab-contents-wrapper ur-align-items-center ur-justify-content-center">
 	<form id="ur-membership-create-form" method="post">
@@ -168,23 +170,23 @@ require __DIR__ . '/./Partials/header.php'
 							</div>
 						</div>
 						<!--						status-->
-						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px">
-							<div class="ur-label" style="width: 30%">
-								<label class="ur-membership-enable-status"
-									   for="ur-membership-status"><?php esc_html_e( 'Member Status', 'user-registration' ); ?></label>
-							</div>
-							<div class="user-registration-switch ur-ml-auto" style="width: 100%">
-
-								<input
-									data-key-name="<?php echo esc_html__( 'member_status', 'user-registration' ); ?>"
-									id="ur-membership-status" type="checkbox"
-									class="user-registration-switch__control hide-show-check enabled ur-membership-members-input"
-									<?php echo esc_attr( isset( $membership_content ) && $membership_content['status'] == 'true' ? 'checked' : '' ); ?>
-									name="ur_membership_status"
-									style="width: 100%; text-align: left">
-							</div>
-
-						</div>
+<!--						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px">-->
+<!--							<div class="ur-label" style="width: 30%">-->
+<!--								<label class="ur-membership-enable-status"-->
+<!--									   for="ur-membership-status">--><?php //esc_html_e( 'Member Status', 'user-registration' ); ?><!--</label>-->
+<!--							</div>-->
+<!--							<div class="user-registration-switch ur-ml-auto" style="width: 100%">-->
+<!---->
+<!--								<input-->
+<!--									data-key-name="--><?php //echo esc_html__( 'member_status', 'user-registration' ); ?><!--"-->
+<!--									id="ur-membership-status" type="checkbox"-->
+<!--									class="user-registration-switch__control hide-show-check enabled ur-membership-members-input"-->
+<!--									--><?php //echo esc_attr( isset( $membership_content ) && $membership_content['status'] == 'true' ? 'checked' : '' ); ?>
+<!--									name="ur_membership_status"-->
+<!--									style="width: 100%; text-align: left">-->
+<!--							</div>-->
+<!---->
+<!--						</div>-->
 					</div>
 				</div>
 				<div id="ur-member-form-right" class="ur-p-4">

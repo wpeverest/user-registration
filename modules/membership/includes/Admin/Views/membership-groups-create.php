@@ -1,6 +1,7 @@
 <div class="ur-membership">
 	<?php
 	require __DIR__ . '/./Partials/header.php';
+	$return_url = admin_url( 'admin.php?page=user-registration-membership&action=list_groups' );
 
 	?>
 	<div
