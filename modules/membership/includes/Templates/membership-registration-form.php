@@ -168,7 +168,7 @@
 				</label>
 			<?php endforeach;
 		else:
-			$message = wp_kses_post( apply_filters( 'user_registration_membership_no_membership_message', __( 'No membership\'s under the selected group.', 'user-registration' ) ) );
+			$message = wp_kses_post( apply_filters( 'user_registration_membership_no_membership_message', __( 'No membership\'s group selected.', 'user-registration' ) ) );
 			echo '<label data-form-id="' . absint( $form_id ) . '"  class="user-registration-error no-membership">' . $message . '</label>';
 		endif;
 		?>
