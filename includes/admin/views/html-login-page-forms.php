@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</div>
 	<div class="major-publishing-actions wp-clearfix">
 		<div class="publishing-action">
-			<a href="<?php echo esc_url( "http://ur-wordpress.me/?ur_login_preview=true" ); ?>" rel="noreferrer noopener" target="_blank" class="button button-secondary button-large" title="<?php esc_attr_e( 'Preview Form', 'user-registration' ); ?>"><?php esc_html_e( 'Preview', 'user-registration' ); ?></a>
+			<a href="<?php echo esc_url( add_query_arg( array( 'ur_login_preview' => 'true' ), home_url() ) ); ?>" rel="noreferrer noopener" target="_blank" class="button button-secondary button-large" title="<?php esc_attr_e( 'Preview', 'user-registration' ); ?>"><?php esc_html_e( 'Preview', 'user-registration' ); ?></a>
 			<button type="button" name="save_login_form" id="save_form_footer" class="button button-primary button-large menu-form ur_save_login_form_action_button"> <?php echo __( "Update Form", 'user-registration' ); ?> </button>
 		</div><!-- END .publishing-action -->
 	</div>
