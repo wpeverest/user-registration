@@ -4364,6 +4364,19 @@ if ( ! function_exists( 'ur_is_passwordless_login_enabled' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ur_is_user_registration_pro_passwordless_login_default_login_area_enabled' ) ) {
+	/**
+	 * Check whether the passwordless login as default login is enabled or not.
+	 *
+	 * @return bool
+	 *
+	 * @since 4.0
+	 */
+	function ur_is_user_registration_pro_passwordless_login_default_login_area_enabled() {
+		return ur_option_checked( 'user_registration_pro_passwordless_login_default_login_area', false );
+	}
+}
+
 if ( ! function_exists( 'ur_get_ip_address' ) ) {
 
 	/**
