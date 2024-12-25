@@ -182,7 +182,7 @@ class UR_Frontend {
 
 		if ( is_user_logged_in() ) {
 			$layout              = get_option( 'user_registration_my_account_layout', 'horizontal' );
-			$attributes['class'] = $attributes['class'] . ' ' . $layout;
+			$attributes['class'] = $attributes['class'] . ' user-registration-MyAccount ' . $layout;
 		}
 		return $attributes;
 	}
