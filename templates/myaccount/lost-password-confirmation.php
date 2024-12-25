@@ -25,8 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
   <path d="M9.5 12.5005L11.5 14.5005L15.5 10.5005" stroke="#49C85F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
 		<?php
-		// ur_print_notices();
-		// ur_print_notice( apply_filters( 'ur_password_reset_change_message', __( 'Password reset email has been sent.', 'user-registration' ) ) );
+		   ur_print_notice( apply_filters( 'ur_password_reset_change_message', __( 'Password reset email has been sent.', 'user-registration' ) ) );
 		?>
 
 		<div class="ur-message-content">

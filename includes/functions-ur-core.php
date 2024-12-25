@@ -3861,7 +3861,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 		try {
 			// Custom error messages.
 			$messages = array(
-				'empty_username'   => get_option( 'user_registration_message_username_requiredj', esc_html__( 'Username is requiredh.', 'user-registration' ) ),
+				'empty_username'   => get_option( 'user_registration_message_username_required', esc_html__( 'Username is required.', 'user-registration' ) ),
 				'empty_password'   => get_option( 'user_registration_message_empty_password', null ),
 				'invalid_username' => get_option( 'user_registration_message_invalid_username', null ),
 				'unknown_email'    => get_option( 'user_registration_message_unknown_email', esc_html__( 'A user could not be found with this email address.', 'user-registration' ) ),
