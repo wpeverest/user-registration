@@ -61,23 +61,21 @@ $is_login_settings = ( isset( $_GET['page'] ) && "user-registration-login-forms"
 
 <?php
 /**
- * Filter to modify the notice content before rendering of user registration login form.
- *
- * @param function Print notice function.
- * @return function.
- */
-apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() );
-?>
-
-<?php
-/**
  * Action to fire before the rendering of customer login form.
  */
 do_action( 'user_registration_before_customer_login_form' );
 ?>
 
 <div class="ur-frontend-form login <?php echo esc_attr( $template_class ); ?>" id="ur-frontend-form">
-
+	<?php
+	/**
+	 * Filter to modify the notice content before rendering of user registration login form.
+	 *
+	 * @param function Print notice function.
+	 * @return function.
+	 */
+	apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() );
+	?>
 	<form class="user-registration-form user-registration-form-login login" method="post">
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
@@ -110,7 +108,7 @@ do_action( 'user_registration_before_customer_login_form' );
 					 */
 					do_action( 'user_registration_login_form_start' );
 					?>
-					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide">
+					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide" data-field="username">
 						<?php
 						if ( ! $hide_labels || $is_login_settings ) {
 							printf( '<label for="username">%s <span class="required">*</span></label>', esc_html( $labels['username'] ) );
@@ -118,16 +116,16 @@ do_action( 'user_registration_before_customer_login_form' );
 						?>
 						<span class="input-wrapper">
 						<input placeholder="<?php echo esc_attr( $placeholders['username'] ); ?>" type="text" class="user-registration-Input user-registration-Input--text input-text" name="username" id="username" value="<?php echo ( ! empty( $_POST['username'] ) ) ? esc_attr( wp_unslash( sanitize_text_field( $_POST['username'] ) ) ) : ''; // phpcs:ignore ?>" style="<?php echo ($enable_field_icon || $is_login_settings) ? "padding-left: 32px !important" : '' ?>"/>
-						<span id="ur-login-error-message ur-field-item"></span>
 						<?php if (  $enable_field_icon || $is_login_settings ) { ?>
 						<span class="ur-icon ur-icon-user">
 
 						</span>
 						<?php } ?>
 						</span>
+						<label class="ur-login-error-message"></label>
 					</p>
 					<?php if ( $is_passwordless_enabled ) : ?>
-					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide<?php echo ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) ? ' hide_show_password' : ''; ?>">
+					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide<?php echo ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) ? ' hide_show_password' : ''; ?>" data-field="password">
 						<?php
 						if ( ! $hide_labels || $is_login_settings ) {
 							printf( '<label for="password">%s <span class="required">*</span></label>', esc_html( $labels['password'] ) );
@@ -149,6 +147,7 @@ do_action( 'user_registration_before_customer_login_form' );
 						<span class="ur-icon ur-icon-password"></span>
 						<?php } ?>
 						</span>
+						<label class="ur-login-error-message"></label>
 					</p>
 					<?php endif; ?>
 					<?php
@@ -200,10 +199,9 @@ do_action( 'user_registration_before_customer_login_form' );
 						do_action( 'user_registration_login_form_before_submit_button' );
 						?>
 							<?php if ( $enable_ajax ) { ?>
-							<input type="submit" class="user-registration-Button button ur-submit-button" id="user_registration_ajax_login_submit" name="login" value="<?php echo esc_html( $labels['login'] ); ?>" <?php echo ( $is_login_settings || ( isset( $_GET['ur_login_preview'] ) && $_GET['ur_login_preview'] ) ) ? "disabled" : ""; ?>/>
-							<span></span>
+							<button type="submit" class="user-registration-Button button ur-submit-button" id="user_registration_ajax_login_submit" name="login" value="<?php echo esc_html( $labels['login'] ); ?>" <?php echo ( $is_login_settings || ( isset( $_GET['ur_login_preview'] ) && $_GET['ur_login_preview'] ) ) ? "disabled" : ""; ?>/><?php echo esc_html( $labels['login'] ); ?><span></span></button>
 							<?php } else { ?>
-							<input type="submit" class="user-registration-Button button " name="login" value="<?php echo esc_html( $labels['login'] ); ?>"<?php echo ( $is_login_settings || ( isset( $_GET['ur_login_preview'] ) && $_GET['ur_login_preview'] ) ) ? "disabled" : "" ?> />
+							<button type="submit" class="user-registration-Button button " name="login" value="<?php echo esc_html( $labels['login'] ); ?>"<?php echo ( $is_login_settings || ( isset( $_GET['ur_login_preview'] ) && $_GET['ur_login_preview'] ) ) ? "disabled" : "" ?> /><?php echo esc_html( $labels['login'] ); ?></button>
 							<?php } ?>
 						</div>
 						<input type="hidden" name="redirect" value="<?php echo isset( $redirect ) ? esc_attr( $redirect ) : esc_attr( the_permalink() ); ?>" />
