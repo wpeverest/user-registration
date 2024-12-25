@@ -1424,6 +1424,30 @@ body {
                                     background: #475BB2;
                                 }
                             }
+                            
+                            .user-registration-before-login-btn {
+                                display: flex;
+                                align-items: center;
+                                justify-content: space-between;
+                                margin-top: -4px;
+                                
+                                label {
+                                    margin: 0;
+                                }
+                                
+                                .user-registration-LostPassword {
+                                    font-size: 14px;
+                                    font-weight: 400;
+                                    line-height: 21px;
+                                    letter-spacing: 0.15px;
+                                    text-decoration-line: underline;
+                                    text-underline-position: from-font;
+                                    
+                                    a {
+										color: $primary_color;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
