@@ -7067,3 +7067,41 @@ if ( ! function_exists( 'ur_return_social_profile_pic' ) ) {
 }
 
 add_filter( 'user_registration_profile_picture_url',  'ur_return_social_profile_pic' , 10, 2 );
+
+add_filter('user_registration_find_my_account_in_page', 'ur_find_my_account_in_custom_template', 10, 2);
+
+if ( ! function_exists( 'ur_find_my_account_in_custom_template' ) ) {
+	/**
+	 * Return true if found ur my account or login
+	 *
+	 * @param $value
+	 * @param $page_id
+	 *
+	 * @return mixed
+	 */
+	function ur_find_my_account_in_custom_template( $value, $page_id ) {
+
+		if ( $value ) {
+			return $value;
+		}
+
+		$content = file_get_contents( get_page_template() );
+		if ( strpos( $content, '[user_registration_my_account' ) !== false ) {
+			return true;
+		}
+		if ( strpos( $content, '[user_registration_login' ) !== false ) {
+			return true;
+		}
+		if ( strpos( $content, '[woocommerce_my_account' ) !== false ) {
+			return true;
+		}
+		if ( strpos( $content, '<!-- wp:user-registration/myaccount' ) !== false ) {
+			return true;
+		}
+		if ( strpos( $content, '<!-- wp:user-registration/login' ) !== false ) {
+			return true;
+		}
+
+		return $value;
+	}
+}
