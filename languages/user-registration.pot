@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-11-21T06:47:40+00:00\n"
+"POT-Creation-Date: 2024-12-04T06:41:22+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: user-registration\n"
@@ -1243,8 +1243,8 @@ msgid "Lost password"
 msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:820
-#: includes/functions-ur-template.php:392
-#: includes/functions-ur-template.php:437
+#: includes/functions-ur-template.php:391
+#: includes/functions-ur-template.php:436
 msgid "Select All"
 msgstr ""
 
@@ -3634,7 +3634,7 @@ msgstr ""
 
 #. translators: 1: Pending email message 2: Cancel Link
 #: includes/class-ur-ajax.php:504
-#: includes/functions-ur-template.php:691
+#: includes/functions-ur-template.php:686
 msgid "There is a pending change of your email to <code>%1$s</code>. <a href=\"%2$s\">Cancel</a>"
 msgstr ""
 
@@ -5761,7 +5761,7 @@ msgid "Country"
 msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:374
-#: includes/functions-ur-template.php:791
+#: includes/functions-ur-template.php:786
 msgid "Select a country"
 msgstr ""
 
@@ -6845,15 +6845,15 @@ msgstr ""
 msgid "This function should not be called before user_registration_init."
 msgstr ""
 
-#: includes/functions-ur-template.php:233
+#: includes/functions-ur-template.php:232
 msgid "required"
 msgstr ""
 
-#: includes/functions-ur-template.php:825
+#: includes/functions-ur-template.php:822
 msgid "Choose an option"
 msgstr ""
 
-#: includes/functions-ur-template.php:1045
+#: includes/functions-ur-template.php:1040
 msgid "This field value needs to be unique."
 msgstr ""
 

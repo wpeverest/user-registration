@@ -9536,3 +9536,27 @@ body.ur-settings-sidebar-hidden .user-registration-settings-sidebar-container {
   #ur-row-section-settings .ur-individual-row-settings {
     display: flex;
     flex-direction: column; }
+
+.user-registration.rtl .user-registration__wrap .ur-form-subcontainer #menu-management .menu-edit {
+  left: 0 !important;
+  right: 160px; }
+  .user-registration.rtl .user-registration__wrap .ur-form-subcontainer #menu-management .menu-edit #nav-menu-header {
+    padding-left: 30px;
+    padding-right: 12px; }
+    .user-registration.rtl .user-registration__wrap .ur-form-subcontainer #menu-management .menu-edit #nav-menu-header .ur-brand-logo {
+      border-left: 1px solid #e1e1e1;
+      border-right: 0; }
+      .user-registration.rtl .user-registration__wrap .ur-form-subcontainer #menu-management .menu-edit #nav-menu-header .ur-brand-logo img {
+        margin-right: 0;
+        margin-left: 8px; }
+    .user-registration.rtl .user-registration__wrap .ur-form-subcontainer #menu-management .menu-edit #nav-menu-header .ur-form-title {
+      padding-right: 18px;
+      padding-left: 8px; }
+    .user-registration.rtl .user-registration__wrap .ur-form-subcontainer #menu-management .menu-edit #nav-menu-header .major-publishing-actions {
+      margin-right: auto;
+      margin-left: unset; }
+  .user-registration.rtl .user-registration__wrap .ur-form-subcontainer #menu-management .menu-edit #post-body .ur-registered-inputs .nav-tab-wrapper .ur-tab-content .ur-search-input input.ur-type-text {
+    padding-right: 40px;
+    color: #383838; }
+  .user-registration.rtl .user-registration__wrap .ur-form-subcontainer #menu-management .menu-edit #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs #ur-field-settings select {
+    padding-right: 30px; }
