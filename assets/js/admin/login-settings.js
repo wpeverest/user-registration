@@ -3,7 +3,7 @@
     // Function to handle changes in the premium sidebar.
     $(document).ready(function () {
         init_login_form_settings();
-
+console.log("hello");
         if (ur_login_form_params.is_login_settings_page) {
             $(window).on("keydown", function (event) {
                 if (event.ctrlKey || event.metaKey) {
