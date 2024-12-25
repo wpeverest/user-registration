@@ -1333,7 +1333,9 @@
 												);
 											}
 											$(".ur-input-count").text("0");
-											$this[0].reset();
+											if ( ! user_registration_params.ur_hold_data_before_redirection ) {
+												$this[0].reset();
+											}
 											if (
 												$this.find("#profile_pic_url")
 													.length

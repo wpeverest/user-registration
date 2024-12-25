@@ -485,6 +485,7 @@ class UR_Frontend_Scripts {
 						'password_strength_error'     => esc_html__( 'Password strength is not strong enough', 'user-registration' ),
 					),
 					'is_payment_compatible'             => true,
+					'ur_hold_data_before_redirection'   => apply_filters( 'user_registration_hold_form_data_before_redirection', false),
 					'ajax_form_submit_error'            => esc_html__( 'Something went wrong while submitting form through AJAX request. Please contact site administrator.', 'user-registration' ),
 					'logout_popup_text'                 => esc_html__( 'Are you sure you want to logout? Once you logged out, you need to login again.', 'user-registration' ),
 				);
