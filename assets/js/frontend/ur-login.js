@@ -102,13 +102,12 @@ jQuery(function ($) {
 									.closest("#user-registration")
 									.find(".user-registration-message")
 									.remove();
+								console.log('hello');
 
 								$this
-									.closest("#user-registration")
-									.prepend(
-										'<ul class="user-registration-error">' +
-											res.data.message +
-											"</ul>"
+									.closest("#ur-login-error-message")
+									.append(
+										'hello'
 									);
 							} else {
 								if (res.data.status) {

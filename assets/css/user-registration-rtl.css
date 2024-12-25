@@ -273,6 +273,54 @@
 .ur-icon-authorize-net::before {
   content: ""; }
 
+/**
+* Keyframe animation
+*/
+@keyframes spin {
+  100% {
+    transform: rotate(-360deg); } }
+
+@keyframes ur-circle-loading {
+  0%,
+  100% {
+    animation-timing-function: cubic-bezier(0.2, 0, 0.8, 1); }
+  50% {
+    animation-timing-function: cubic-bezier(0, 0.2, 1, 0.8); }
+  0% {
+    transform: rotate(0deg) translate(0, -20px) scale(0); }
+  50% {
+    transform: rotate(-180deg) translate(0, -20px) scale(1); }
+  100% {
+    transform: rotate(-360deg) translate(0, -20px) scale(0); } }
+
+@-webkit-keyframes ur-circle-loading-keyframe {
+  0%,
+  100% {
+    animation-timing-function: cubic-bezier(0.2, 0, 0.8, 1); }
+  50% {
+    animation-timing-function: cubic-bezier(0, 0.2, 1, 0.8); }
+  0% {
+    transform: rotate(0deg) translate(0, -20px) scale(0); }
+  50% {
+    transform: rotate(-180deg) translate(0, -20px) scale(1); }
+  100% {
+    transform: rotate(-360deg) translate(0, -20px) scale(0); } }
+
+@keyframes open-message {
+  0% {
+    opacity: 0;
+    transform: translateY(-120%); }
+  100% {
+    transform: translateY(0px); } }
+
+@keyframes close-message {
+  0% {
+    opacity: 1;
+    transform: scale(1); }
+  100% {
+    opacity: 0;
+    transform: scale(0.9); } }
+
 .user-registration button,
 .user-registration .button,
 .ur-form-container button,
@@ -686,7 +734,6 @@
 /**
 * Main User Registration styles
 */
-.user-registration-message,
 .user-registration-error,
 .user-registration-coupon-error,
 .user-registration-info {
@@ -703,21 +750,17 @@
   line-height: 1.25;
   text-transform: none;
   font-size: 14px; }
-  .user-registration-message::before, .user-registration-message::after,
-  .user-registration-error::before,
-  .user-registration-error::after,
+  .user-registration-error::before, .user-registration-error::after,
   .user-registration-coupon-error::before,
   .user-registration-coupon-error::after,
   .user-registration-info::before,
   .user-registration-info::after {
     content: ' ';
     display: table; }
-  .user-registration-message::after,
   .user-registration-error::after,
   .user-registration-coupon-error::after,
   .user-registration-info::after {
     clear: both; }
-  .user-registration-message::before,
   .user-registration-error::before,
   .user-registration-coupon-error::before,
   .user-registration-info::before {
@@ -727,36 +770,27 @@
     font-family: "Dashicons";
     font-size: calc(100% + 10px);
     margin-left: 0.875rem; }
-  .user-registration-message ul,
   .user-registration-error ul,
   .user-registration-coupon-error ul,
   .user-registration-info ul {
     margin: 0 !important;
     padding: 0 !important;
     background-color: transparent !important; }
-  .user-registration-message .button,
   .user-registration-error .button,
   .user-registration-coupon-error .button,
   .user-registration-info .button {
     float: left; }
-  .user-registration-message li,
   .user-registration-error li,
   .user-registration-coupon-error li,
   .user-registration-info li {
     list-style: none outside !important;
     padding-right: 0 !important;
     margin-right: 0 !important; }
-  .user-registration-message .message,
   .user-registration-error .message,
   .user-registration-coupon-error .message,
   .user-registration-info .message {
     margin: 0;
     padding: 0; }
-
-.user-registration-message {
-  border-top-color: #8fae1b;
-  background: rgba(143, 174, 27, 0.1);
-  color: #596c11; }
 
 .user-registration-info {
   color: #1e85be;
@@ -789,10 +823,50 @@ textarea.ur-input-border-red {
   padding: 20px;
   box-sizing: border-box; }
   .ur-frontend-form.login {
-    margin: 0;
-    padding: 10px;
-    box-shadow: none;
-    background: none; }
+    border: none;
+    padding: 60px;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05); }
+    .ur-frontend-form.login .ur-lost-password-content-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center; }
+      .ur-frontend-form.login .ur-lost-password-content-container .ur-lost-password-title {
+        color: var(--Grey-grey-600, #1F1F1F);
+        font-size: 32px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 48px;
+        letter-spacing: 0.15px;
+        margin: auto;
+        margin-top: 20px; }
+      .ur-frontend-form.login .ur-lost-password-content-container .ur-lost-password-message {
+        font-size: 14px;
+        letter-spacing: 0.15px;
+        margin-top: 5px; }
+    .ur-frontend-form.login .ur-input-with-icon {
+      position: relative;
+      display: flex;
+      align-items: center; }
+      .ur-frontend-form.login .ur-input-with-icon .input-icon {
+        position: absolute;
+        right: 10px;
+        top: 50%; }
+      .ur-frontend-form.login .ur-input-with-icon input {
+        padding-right: 40px; }
+    .ur-frontend-form.login .required {
+      margin-right: 5px; }
+    .ur-frontend-form.login #user_login {
+      border-radius: 4px;
+      border: 1px solid #E9E9E9;
+      margin-top: -24px; }
+    .ur-frontend-form.login .ur-reset-password-btn {
+      border: 1px solid #475BB2;
+      background: #475BB2;
+      width: 100%;
+      color: #FFF;
+      letter-spacing: 0.15px; }
     .ur-frontend-form.login input[name="rememberme"]#rememberme {
       vertical-align: middle; }
   .ur-frontend-form.login-registration {
@@ -1116,6 +1190,10 @@ textarea.ur-input-border-red {
     border-radius: 2px; }
   .ur-frontend-form #ur-submit-message-node {
     margin: 20px 0 0 0; }
+    .ur-frontend-form #ur-submit-message-node.user-registration-error {
+      position: unset;
+      margin-bottom: 10px;
+      width: 100%; }
     .ur-frontend-form #ur-submit-message-node.ur-error {
       background: rgba(206, 0, 0, 0.1); }
     .ur-frontend-form #ur-submit-message-node.ur-message.message {
@@ -1455,6 +1533,334 @@ span.ur-shortcode-form-embed-dot {
 .oxygen-add-section-accordion-contents[ng-if*="user-registration"] .oxygen-add-section-element {
   min-height: 100px !important;
   line-height: 15px; }
+
+.ur-message-container {
+  border-radius: 8px;
+  box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+  padding: 60px; }
+  .ur-message-container .user-registration-message {
+    position: relative;
+    padding: 10px;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    border-right: 4px solid #49C85F;
+    background: #F7FDF8;
+    border-top: none;
+    margin: 20px 0px;
+    padding-right: 40px; }
+  .ur-message-container svg {
+    position: absolute;
+    z-index: 999999;
+    margin-top: 33px;
+    margin-right: 10px; }
+
+.user-registration-error {
+  position: absolute;
+  padding: 10px !important;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  border-right: 4px solid #ff4f55;
+  background: 4px solid #FDE8E8;
+  border-top: none;
+  margin-right: 65px !important;
+  margin-left: 125px !important;
+  width: 72%; }
+  .user-registration-error::before {
+    content: '';
+    display: ''; }
+  .user-registration-error svg {
+    margin-left: 10px; }
+
+.user-registration-login-extra-section {
+  display: flex;
+  justify-content: space-between; }
+  .user-registration-login-extra-section .user-registration-LostPassword {
+    color: #475BB2; }
+
+.user-registration-Button,
+.ur-submit-button {
+  width: 100%;
+  background: #475BB2 !important;
+  border-radius: 4px !important;
+  border: 1px solid #475BB2 !important; }
+  .user-registration-Button .ur-spinner,
+  .ur-submit-button .ur-spinner {
+    width: 16px;
+    height: 16px;
+    margin-right: 6px;
+    margin-bottom: 2px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: 5px;
+    float: left; }
+    .user-registration-Button .ur-spinner::before,
+    .ur-submit-button .ur-spinner::before {
+      width: 16px;
+      height: 16px;
+      position: absolute;
+      display: block;
+      content: '';
+      animation: spin 1s ease-in-out infinite;
+      background: url("../images/icons/loader.svg") center center;
+      background-size: cover; }
+
+.ur-login-registration-nav {
+  width: 100%; }
+  .ur-login-registration-nav ul {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 100%; }
+    .ur-login-registration-nav ul li {
+      flex: 1;
+      text-align: center;
+      padding: 15px 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: #C5C5C5;
+      font-weight: 500;
+      border-radius: 0 8px 0 0;
+      border-top: 1px solid #F1F1F1;
+      background: #F9F9F9;
+      box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+      clip-path: inset(0px -1px -1px -1px); }
+      .ur-login-registration-nav ul li:first-child {
+        border-radius: 0px 8px 0 0;
+        border-top: 1px solid #F1F1F1;
+        margin-right: 10px; }
+      .ur-login-registration-nav ul li:last-child {
+        border-radius: 8px 0 0 0px;
+        margin-left: 10px; }
+      .ur-login-registration-nav ul li.active {
+        background: #fff;
+        color: #1F1F1F;
+        border-top: 1px solid #F1F1F1; }
+
+.login-registration .hidden {
+  display: none; }
+
+.ur-field-item input {
+  border-radius: 4px !important; }
+
+.ur-field-item .user-registration-error {
+  width: 100%;
+  position: unset;
+  letter-spacing: 0.18px;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 19px;
+  padding: 0px !important;
+  border: none !important;
+  background: transparent !important;
+  margin-right: unset !important; }
+  .ur-field-item .user-registration-error::before {
+    content: "\f534";
+    color: #FF0000; }
+
+.user-registration.ur-frontend-form {
+  background: #FFF;
+  border-radius: 8px;
+  box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+  padding: 60px; }
+  .user-registration.ur-frontend-form input {
+    border-radius: 4px; }
+  .user-registration.ur-frontend-form #user_email::before {
+    content: "\f348";
+    display: inline-block;
+    vertical-align: middle;
+    font-family: "Dashicon	s";
+    font-size: calc(100% + 10px);
+    margin-left: 0.875rem; }
+
+.ur-icon-user {
+  margin-left: 0.875rem; }
+  .ur-icon-user::before {
+    content: "\f465";
+    display: inline-block;
+    vertical-align: middle;
+    font-family: "Dashicons"; }
+
+.ur-registration-icon {
+  position: relative;
+  top: 50%;
+  padding: 8px;
+  right: 0;
+  transform: translateY(-50%); }
+
+.user-registration-login-form-container .ur-registered-from .ur-login-form-wrapper #user-registration {
+  width: 100%; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .ur-admin-page-topnav {
+  margin-bottom: 0; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap.wrap {
+  margin: 0 auto; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .menu-edit {
+  border: none; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-tab-contents {
+  padding: 24px;
+  background-color: #fafafc; }
+  .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-tab-contents .ur-login-view-doc {
+    border-radius: 3px;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+    box-shadow: none;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0px;
+    padding: 10px 24px;
+    border: none;
+    background-color: #475bb2;
+    color: #ffffff;
+    display: block;
+    margin: 24px auto 0; }
+    .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-tab-contents .ur-login-view-doc a {
+      color: #fff; }
+    .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-tab-contents .ur-login-view-doc:disabled {
+      cursor: default;
+      opacity: 0.5; }
+      .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-tab-contents .ur-login-view-doc:disabled:hover {
+        background-color: #475bb2; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-heading {
+  margin-top: 0;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e9e9e9;
+  text-transform: uppercase;
+  font-size: 16px; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-login-content p {
+  font-size: 16px;
+  margin: 20px auto; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-login-content .login-forms-shortcode-action {
+  display: flex;
+  padding: 6px 12px 6px 6px;
+  gap: 8px;
+  justify-content: space-between;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #edeff7;
+  border-radius: 4px; }
+  .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-login-content .login-forms-shortcode-action input {
+    background: transparent;
+    border: none; }
+  .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-login-content .login-forms-shortcode-action .ur-copy-shortcode {
+    line-height: unset;
+    padding: 6px;
+    background: #edeff7;
+    border: none; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents {
+  padding: 16px 16px 0 16px; }
+  .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content {
+    padding: 0; }
+    .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content form .ur-login-form-setting-block:first-child h2.ur-toggle-heading {
+      margin-top: 0; }
+    .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content form .ur-login-form-setting-block .ur-toggle-content {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px; }
+      .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content form .ur-login-form-setting-block .ur-toggle-content .user-registration-login-form-global-settings {
+        display: flex;
+        flex-direction: column;
+        gap: 12px; }
+        .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content form .ur-login-form-setting-block .ur-toggle-content .user-registration-login-form-global-settings label {
+          font-weight: 600;
+          gap: 6px;
+          margin-bottom: 0; }
+          .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content form .ur-login-form-setting-block .ur-toggle-content .user-registration-login-form-global-settings label .user-registration-help-tip {
+            font-size: 20px; }
+        .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content form .ur-login-form-setting-block .ur-toggle-content .user-registration-login-form-global-settings select {
+          height: 38px; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings #ur-login-form-setting .ur-login-form-setting-block {
+  display: flex;
+  flex-direction: column;
+  gap: 24px; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer #post-body .ur-builder-wrapper .ur-selected-inputs {
+  background: transparent;
+  padding: 24px; }
+
+body.user-registration-page #user-registration {
+  max-width: 520px;
+  margin: 30px auto;
+  border-radius: 8px;
+  background: #FFF;
+  box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05); }
+  body.user-registration-page #user-registration .ur-frontend-form {
+    border: 0;
+    padding: 60px; }
+    body.user-registration-page #user-registration .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid {
+      padding: 0; }
+      body.user-registration-page #user-registration .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid br {
+        display: none; }
+      body.user-registration-page #user-registration .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-login-title {
+        color: #1f1f1f;
+        font-size: 32px;
+        font-weight: 600;
+        line-height: 48px;
+        letter-spacing: 0.15px;
+        display: block;
+        text-align: center;
+        margin-bottom: 8px; }
+      body.user-registration-page #user-registration .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-login-description {
+        color: #333;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 21px;
+        letter-spacing: 0.15px;
+        margin-bottom: 30px;
+        text-align: center; }
+      body.user-registration-page #user-registration .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row {
+        margin-bottom: 24px; }
+        body.user-registration-page #user-registration .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row label {
+          margin-top: 0;
+          margin-bottom: 12px;
+          color: #222;
+          font-size: 15px;
+          font-weight: 500;
+          line-height: 19px; }
+        body.user-registration-page #user-registration .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row .input-wrapper {
+          display: block; }
+          body.user-registration-page #user-registration .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row .input-wrapper input {
+            margin-bottom: 0;
+            border-radius: 4px;
+            border: 1px solid #E9E9E9;
+            min-height: 38px;
+            font-size: 14px;
+            line-height: 20px;
+            padding: 0 14px;
+            color: #383838; }
+            body.user-registration-page #user-registration .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row .input-wrapper input:focus {
+              border-color: #027ABB; }
+            body.user-registration-page #user-registration .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row .input-wrapper input::placeholder {
+              color: #858585; }
+      body.user-registration-page #user-registration .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div {
+        display: block;
+        margin-top: 32px; }
+        body.user-registration-page #user-registration .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div input[type="submit"] {
+          width: 100%;
+          border: 0;
+          padding: 10px 24px;
+          color: #ffffff;
+          font-size: 15px;
+          font-weight: 400;
+          line-height: 24px;
+          letter-spacing: 0.15px;
+          background: #475BB2; }
 
 .user-registration-login-form-container .ur-registered-from .ur-login-form-wrapper #user-registration {
   width: 100%; }
