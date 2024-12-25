@@ -41,15 +41,23 @@ class UR_Admin_Form_Preview {
 	 */
 	public static function welcome_page() {
 		wp_register_script( 'ur-form-preview-tooltipster', UR()->plugin_url() . '/assets/js/tooltipster/tooltipster.bundle.js', array( 'jquery' ), UR()->version, true );
+		wp_register_script( 'ur-form-preview-copy', UR()->plugin_url() . '/assets/js/admin/ur-copy.js', array( 'jquery' ), UR()->version, true );
 		wp_register_script( 'ur-form-preview-admin-script', UR()->plugin_url() . '/assets/js/admin/admin.js', array( 'wp-element', 'wp-blocks', 'wp-editor' ), UR()->version, true );
 		wp_register_style( 'ur-form-preview-admin-style', UR()->plugin_url() . '/assets/css/admin.css', array(), UR()->version );
 		wp_register_style( 'ur-form-preview-default-style', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR()->version );
 		wp_register_style( 'ur-form-preview-smallscreens', UR()->plugin_url() . '/assets/css/user-registration-smallscreen.css', array(), UR()->version );
+		wp_register_style( 'ur-form-preview-tooltip', UR()->plugin_url() . '/assets/css/tooltipster/tooltipster-sideTip-borderless.min.css', array(), UR()->version );
+		wp_register_style( 'ur-form-preview-bundle-css', UR()->plugin_url() . '/assets/css/tooltipster/tooltipster.bundle.css', array(), UR()->version );
+		wp_register_style( 'ur-form-preview-min-css', UR()->plugin_url() . '/assets/css/tooltipster/tooltipster.bundle.min.css', array(), UR()->version );
 		wp_enqueue_style( 'ur-form-preview-admin-style' );
 		wp_enqueue_style( 'ur-form-preview-smallscreens' );
 		wp_enqueue_style( 'ur-form-preview-default-style' );
 		wp_enqueue_script( 'ur-form-preview-admin-script' );
 		wp_enqueue_script( 'ur-form-preview-tooltipster' );
+		wp_enqueue_style( 'ur-form-preview-bundle-css' );
+		wp_enqueue_style( 'ur-form-preview-min-css' );
+		wp_enqueue_script( 'ur-form-preview-copy' );
+		wp_enqueue_style( 'ur-form-preview-tooltip' );
 
 		wp_localize_script(
 			'ur-form-preview-admin-script',
@@ -119,14 +127,16 @@ class UR_Admin_Form_Preview {
 				<input type="text" onfocus="this.select();" readonly="readonly"
 						value='[user_registration_form id="<?php echo esc_attr( $form_id ); ?>"]'
 						class="code" size="35">
-				<button id="copy-shortcode" class="button button-primary button-large ur-copy-shortcode"
-						data-tip="<?php esc_attr_e( 'Copy Shortcode!', 'user-registration' ); ?>"
-						data-copied="<?php esc_attr_e( 'Copied!', 'user-registration' ); ?>">
+						<button id="copy-shortcode" type="button" class="button button-primary button-large ur-copy-shortcode"
+    data-tip="<?php esc_attr_e( 'Copy Shortcode!', 'user-registration' ); ?>"
+    data-copied="<?php esc_attr_e( 'Copied!', 'user-registration' ); ?>">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true" role="img">
+        <path fill="#383838" fill-rule="evenodd"
+            d="M3.116 3.116A1.25 1.25 0 0 1 4 2.75h9A1.25 1.25 0 0 1 14.25 4v1a.75.75 0 0 0 1.5 0V4A2.75 2.75 0 0 0 13 1.25H4A2.75 2.75 0 0 0 1.25 4v9A2.75 2.75 0 0 0 4 15.75h1a.75.75 0 0 0 0-1.5H4A1.25 1.25 0 0 1 2.75 13V4c0-.332.132-.65.366-.884ZM9.75 11c0-.69.56-1.25 1.25-1.25h9c.69 0 1.25.56 1.25 1.25v9c0 .69-.56 1.25-1.25 1.25h-9c-.69 0-1.25-.56-1.25-1.25v-9ZM11 8.25A2.75 2.75 0 0 0 8.25 11v9A2.75 2.75 0 0 0 11 22.75h9A2.75 2.75 0 0 0 22.75 20v-9A2.75 2.75 0 0 0 20 8.25h-9Z"
+            clip-rule="evenodd" />
+    </svg>
+</button>
 
-					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-						<path fill="#383838" fill-rule="evenodd" d="M3.116 3.116A1.25 1.25 0 0 1 4 2.75h9A1.25 1.25 0 0 1 14.25 4v1a.75.75 0 0 0 1.5 0V4A2.75 2.75 0 0 0 13 1.25H4A2.75 2.75 0 0 0 1.25 4v9A2.75 2.75 0 0 0 4 15.75h1a.75.75 0 0 0 0-1.5H4A1.25 1.25 0 0 1 2.75 13V4c0-.332.132-.65.366-.884ZM9.75 11c0-.69.56-1.25 1.25-1.25h9c.69 0 1.25.56 1.25 1.25v9c0 .69-.56 1.25-1.25 1.25h-9c-.69 0-1.25-.56-1.25-1.25v-9ZM11 8.25A2.75 2.75 0 0 0 8.25 11v9A2.75 2.75 0 0 0 11 22.75h9A2.75 2.75 0 0 0 22.75 20v-9A2.75 2.75 0 0 0 20 8.25h-9Z" clip-rule="evenodd"/>
-					</svg>
-				</button>
 			</div>
 		</div>
 	</div>
@@ -184,6 +194,7 @@ class UR_Admin_Form_Preview {
 		wp_print_footer_scripts();
 		wp_print_scripts( 'ur-form-preview-admin-script' );
 		wp_print_scripts( 'ur-form-preview-tooltipster' );
+		wp_print_scripts( 'ur-form-preview-copy' );
 		?>
 		</html>
 		<?php
