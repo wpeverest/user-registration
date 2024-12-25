@@ -288,7 +288,7 @@ class UR_Modules {
 		/**
 		 * Track module installation.
 		 *
-		 * @since xx.xx.xx
+		 * @since 4.0
 		 */
 		do_action('user_registration_feature_track_data_for_tg_user_tracking', $slug );
 

@@ -40,7 +40,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 			/**
 			 * Enable module tracking.
 			 *
-			 * @since xx.xx.xx
+			 * @since 4.0
 			 */
 			add_action( 'user_registration_feature_track_data_for_tg_user_tracking', array( $this, 'on_module_activate' ) ); // Hook on module activation ( Our UR module activation ).
 		}
@@ -168,23 +168,30 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 			/**
 			 * Format module data to track in TG Tracking.
 			 *
-			 * @since xx.xx.xx
+			 * @since 4.0
 			 */
+			 $enabled_features = get_option( 'user_registration_enabled_features', array() );
 
-			$enabled_features = get_option( 'user_registration_enabled_features', array() );
+			 $addons_list_moved_into_module = array(
+                'user-registration-payments',
+                'user-registration-content-restriction',
+                'user-registration-frontend-listing',
+                'user-registration-membership',
+             );
 
 			if ( ! empty( $enabled_features ) ) {
 				$our_modules     = $this->get_modules();
 				$modules_by_slug = array_column( $our_modules, null, 'slug' );
 				foreach ( $enabled_features as $slug ) {
 					if ( isset( $modules_by_slug[ $slug ] ) ) {
-						$module               = $modules_by_slug[ $slug ];
-						$addons_data[ $slug ] = array(
+						$module                       = $modules_by_slug[ $slug ];
+						$product_slug 				  = in_array( $slug, $addons_list_moved_into_module ) ? $slug . '/' . $slug . '.php' : $slug;
+						$addons_data[ $product_slug ] = array(
 							'product_name'    => $module['name'],
 							'product_version' => UR()->version,
-							'product_type'    => 'module',
-							'product_slug'    => $slug,
-							'is_premium'      => 1
+							'product_type'    => in_array( $slug, $addons_list_moved_into_module ) ? 'plugin' : 'module',
+							'product_slug'    => $product_slug,
+							'is_premium'      => $is_premium
 						);
 					}
 				}
@@ -487,7 +494,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		/**
 		 * Track module installation data.
 		 *
-		 * @since xx.xx.xx
+		 * @since 4.0
 		 *
 		 * @param  string $slug Slug.
 		 */
@@ -505,7 +512,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		/**
 		 * Get all modules.
 		 *
-		 * @since xx.xx.xx
+		 * @since 4.0
 		 */
 		public function get_modules(){
 			$all_modules  = file_get_contents( ur()->plugin_path() . '/assets/extensions-json/all-features.json' );
