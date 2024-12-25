@@ -184,8 +184,6 @@ class UR_Preview {
 		remove_filter( 'the_content', array( $this, 'form_preview_content' ) );
 
 		wp_enqueue_script( 'ur-my-account' );
-		do_action( 'user_registration_my_account_enqueue_scripts', array(), 0 );
-
 		$recaptcha_enabled = ur_option_checked( 'user_registration_login_options_enable_recaptcha', false );
 		$recaptcha_node    = ur_get_recaptcha_node( 'login', $recaptcha_enabled );
 
@@ -239,7 +237,11 @@ class UR_Preview {
 			if ( 'passwordless_login_email' === $option_name ) {
 				$email_content = get_option( 'user_registration_' . $option_name . '_content', $class_instance->$default_content() );
 			} else {
-				$email_content = get_option( 'user_registration_' . $option_name, $class_instance->$default_content() );
+				if ( "email_verified_admin_email" === $option_name ) {
+					$email_content = get_option( 'user_registration_pro_' . $option_name, $class_instance->$default_content() );
+				} else {
+					$email_content = get_option( 'user_registration_' . $option_name, $class_instance->$default_content() );
+				}
 			}
 			/**
 			 * Filter to process the smart tags.
