@@ -85,7 +85,9 @@ if ( 'default' === $is_theme_style ) {
 } else {
 	$default_class = '';
 }
-
+//For small screen
+wp_register_style( 'ur-frontend-small-screen', UR()->plugin_url() . '/assets/css/user-registration-smallscreen.css', array(), UR()->version );
+wp_enqueue_style( 'ur-frontend-small-screen' );
 ?>
 	<div class='user-registration ur-frontend-form  <?php echo esc_attr( $template_class ) . ' ' . esc_attr( $custom_class ) . '' . esc_attr( $default_class ); ?>' id='user-registration-form-<?php echo absint( $form_id ); ?>'>
 		<?php
