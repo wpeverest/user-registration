@@ -66,8 +66,7 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 						ARRAY_A
 					);
 					$valid_users     = wp_list_pluck( $valid_users, 'user_id' );
-
-					$args['include'] = $valid_users ;
+					$args['include'] = ! empty( $valid_users ) ? $valid_users : array( 999999999 );
 				}
 			}
 
@@ -118,9 +117,9 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 		 * Handle what to show on each row for the list-table.
 		 *
 		 * @param object $user_object user object.
-		 * @param mixed  $style style params.
-		 * @param mixed  $role role params.
-		 * @param mixed  $numposts num-posts.
+		 * @param mixed $style style params.
+		 * @param mixed $role role params.
+		 * @param mixed $numposts num-posts.
 		 *
 		 * @return string
 		 * @throws Exception exception type.
@@ -211,12 +210,12 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 							$row .= $user_object['post_title'] ?? '';
 							break;
 						case 'subscription_status':
-							$status      = $user_object['status'] ?? '';
-							$status_class       = 'user-registration-badge user-registration-badge--secondary-subtle';
-							if( $status == 'active') {
-								$status_class =  'user-registration-badge user-registration-badge--success-subtle';
-							} else if( $status == 'pending') {
-								$status_class =  'user-registration-badge user-registration-badge--warning';
+							$status       = $user_object['status'] ?? '';
+							$status_class = 'user-registration-badge user-registration-badge--secondary-subtle';
+							if ( $status == 'active' ) {
+								$status_class = 'user-registration-badge user-registration-badge--success-subtle';
+							} else if ( $status == 'pending' ) {
+								$status_class = 'user-registration-badge user-registration-badge--warning';
 							}
 
 							$expiry_date = new \DateTime( $user_object['expiry_date'] );
@@ -225,7 +224,7 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 								$status = 'expired';
 							}
 
-							$row .=  sprintf( '<span id="" class="user-registration-badge %s">%s</span>', $status_class, ucfirst($status) );
+							$row .= sprintf( '<span id="" class="user-registration-badge %s">%s</span>', $status_class, ucfirst( $status ) );
 							break;
 						case 'user_registered':
 							$row .= date_i18n( 'F j, Y h:i A', strtotime( $user_object['user_registered'] ) );
@@ -273,14 +272,14 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 
 			<div style="position: relative">
 				<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s"
-						value="<?php _admin_search_query(); ?>"
-						placeholder="<?php esc_html_e( 'Search Members ...', 'user-registration' ); ?>"/>
+					   value="<?php _admin_search_query(); ?>"
+					   placeholder="<?php esc_html_e( 'Search Members ...', 'user-registration' ); ?>"/>
 				<?php wp_nonce_field( 'user-registration-pro-filter-members' ); ?>
 				<button type="submit" id="search-submit">
 					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
 						<path fill="#000" fill-rule="evenodd"
-								d="M4 11a7 7 0 1 1 12.042 4.856 1.012 1.012 0 0 0-.186.186A7 7 0 0 1 4 11Zm12.618 7.032a9 9 0 1 1 1.414-1.414l3.675 3.675a1 1 0 0 1-1.414 1.414l-3.675-3.675Z"
-								clip-rule="evenodd"></path>
+							  d="M4 11a7 7 0 1 1 12.042 4.856 1.012 1.012 0 0 0-.186.186A7 7 0 0 1 4 11Zm12.618 7.032a9 9 0 1 1 1.414-1.414l3.675 3.675a1 1 0 0 1-1.414 1.414l-3.675-3.675Z"
+							  clip-rule="evenodd"></path>
 					</svg>
 				</button>
 			</div>
@@ -435,7 +434,7 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 					$actions['remove'] = __( 'Remove', 'user-registration' );
 				}
 			} elseif ( current_user_can( 'delete_users' ) ) {
-					$actions['delete'] = __( 'Delete', 'user-registration' );
+				$actions['delete'] = __( 'Delete', 'user-registration' );
 			}
 
 			return $actions;
