@@ -229,12 +229,12 @@
 		</div>
 	</div>
 
+	<span class="description">
+		<?php
+		echo esc_html( $attributes['description'] );
+		?>
+	</span>
 
-	<!--	submit button-->
-	<div class="ur_membership_frontend_input_container urm-d-none">
-		<button type="button"
-				class="membership-primary-btn  membership_register_button"><?php echo esc_html__( 'Sign Up', 'user-registration' ); ?></button>
-	</div>
 </div>
 <!--user order successful section-->
 
