@@ -118,13 +118,13 @@ class MembersService {
 		}
 
 		$user_data = array(
-			'user_login'    => sanitize_text_field( $data['username'] ),
-			'user_email'    => sanitize_email( $data['email'] ),
-			'user_pass'     => $data['password'],
-			'user_nicename' => sanitize_text_field( $data['firstname'] ) . ' ' . sanitize_text_field( $data['lastname'] ),
-			'display_name'  => sanitize_text_field( $data['username'] ),
-			'first_name'    => sanitize_text_field( $data['firstname'] ),
-			'last_name'     => sanitize_text_field( $data['lastname'] ),
+			'user_login'    => !empty( $data['username']) ? sanitize_text_field( $data['username'] ) : '',
+			'user_email'    => !empty($data['email']) ?  sanitize_email( $data['email'] ) : '',
+			'user_pass'     => !empty($data['password']) ? $data['password'] : '',
+			'user_nicename' => (!empty($data['firstname']) && !empty($data['lastname'])) ? sanitize_text_field( $data['firstname'] ) . ' ' . sanitize_text_field( $data['lastname'] ) : '',
+			'display_name'  => !empty($data['username']) ? sanitize_text_field( $data['username'] ) : '',
+			'first_name'    => !empty($data['firstname']) ? sanitize_text_field( $data['firstname'] ) : '',
+			'last_name'     => !empty($data['lastname']) ? sanitize_text_field( $data['lastname'] ) : '',
 			'user_status'   => isset( $data['member_status'] ) ? absint( $data['member_status'] ) : 1,
 		);
 
@@ -136,7 +136,6 @@ class MembersService {
 
 		return array(
 			'role'            => sanitize_text_field( $role ),
-			'user_data'       => $user_data,
 			'membership_data' => $membership_data,
 			'coupon_data'     => $coupon_details,
 		);
