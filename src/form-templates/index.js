@@ -6,25 +6,25 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 // Create a client
 const queryClient = new QueryClient({
-		defaultOptions: {
-			queries: {
-				refetchOnWindowFocus: false,
-				refetchOnReconnect: false,
-				retry: false,
-			},
-		},
-	});
+	defaultOptions: {
+		queries: {
+			refetchOnWindowFocus: false,
+			refetchOnReconnect: false,
+			retry: false
+		}
+	}
+});
 
 // Render the app
 (() => {
-  const root = createRoot(
-    document.getElementById("user-registration-form-templates")
-  );
+	const root = createRoot(
+		document.getElementById("user-registration-form-templates")
+	);
 
-  root.render(
-    <QueryClientProvider client={queryClient}>
-      <App />
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
-  );
+	root.render(
+		<QueryClientProvider client={queryClient}>
+			<App />
+			<ReactQueryDevtools initialIsOpen={false} />
+		</QueryClientProvider>
+	);
 })();
