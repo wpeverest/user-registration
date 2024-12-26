@@ -5814,7 +5814,25 @@ if ( ! function_exists( 'ur_check_is_denied' ) ) {
 	}
 }
 
+add_action( 'init', 'ur_check_is_inactive' );
 
+if ( ! function_exists( 'ur_check_is_inactive' ) ) {
+	/**
+	 * Check if user is denied.
+	 */
+	function ur_check_is_inactive() {
+		$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
+		$membership         = $members_repository->get_member_membership_by_id( get_current_user_id() );
+
+		if ( empty( $membership ) ) {
+			return;
+		}
+		if ( in_array( $membership['status'], array( 'pending', 'canceled', 'inactive' ) ) ) {
+			wp_logout();
+		}
+
+	}
+}
 if ( ! function_exists( 'ur_check_is_auto_enable_user' ) ) {
 
 	/**
