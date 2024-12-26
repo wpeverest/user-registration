@@ -35,14 +35,13 @@ class UR_Admin_Form_Templates {
 	 * @return array
 	 */
 	public static function get_template_data() {
-		$template_data = get_transient( 'ur_template_section_list' );
+		$template_data = get_transient( 'user_registration_templates_data' );
 
 		$template_url = 'https://d13ue4sfmuf7fw.cloudfront.net/';
 
-
 		if ( false === $template_data ) {
 
-			$template_json_url = $template_url . 'templates.json';
+			$template_json_url = $template_url . 'templates1.json';
 
 			try {
 				$content       = wp_remote_get( $template_json_url );
@@ -89,15 +88,15 @@ class UR_Admin_Form_Templates {
 	 */
 	public static function load_template_view() {
 		echo "<div id='user-registration-form-templates'></div>";
-		wp_register_script('ur-templates', UR()->plugin_url() .'/chunks/form_templates.js', array('wp-element', 'react', 'react-dom', 'wp-api-fetch', 'wp-i18n', 'wp-blocks'), UR()->version, true);
+		wp_register_script( 'ur-templates', UR()->plugin_url() . '/chunks/form_templates.js', array( 'wp-element', 'react', 'react-dom', 'wp-api-fetch', 'wp-i18n', 'wp-blocks' ), UR()->version, true );
 		wp_localize_script(
 			'ur-templates',
 			'ur_templates_script',
 			array(
-				'security' => wp_create_nonce('wp_rest'),
+				'security' => wp_create_nonce( 'wp_rest' ),
 				'restURL'  => rest_url(),
 			)
 		);
-		wp_enqueue_script('ur-templates');
+		wp_enqueue_script( 'ur-templates' );
 	}
-	}
+}

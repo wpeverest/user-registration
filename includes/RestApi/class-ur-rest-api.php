@@ -38,6 +38,7 @@ class UR_REST_API {
 		include __DIR__ . '/controllers/version1/class-ur-changelog.php';
 		include __DIR__ . '/controllers/version1/class-ur-gutenberg-blocks.php';
 		include __DIR__ . '/controllers/version1/class-ur-form-templates.php';
+		include __DIR__ . '/controllers/version1/class-ur-plugin-status.php';
 
 		add_action( 'rest_api_init', array( __CLASS__, 'register_rest_routes' ) );
 	}
@@ -94,6 +95,7 @@ class UR_REST_API {
 			'changelog'        => 'UR_Changelog',
 			'gutenberg-blocks' => 'UR_Gutenberg_Blocks',
 			'form-templates'   => 'UR_Form_Templates',
+			'plugin'           => 'UR_Plugin_Status',
 		);
 	}
 }
