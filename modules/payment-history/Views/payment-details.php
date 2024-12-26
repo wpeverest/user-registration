@@ -64,7 +64,7 @@ if ( isset( $order_detail['order_id'] ) ) :
 			?>
 		</div>
 	</div>
-	<?php
+<?php
 endif;
 ?>
 <div class="payment-detail-box">
@@ -105,8 +105,8 @@ endif;
 		if ( 'pending' === $status && 'bank' === $order_detail['payment_method'] ) :
 			?>
 			<a href="javascript:void(0)" class="approve-payment"
-				data-order-id="<?php echo absint( $order_detail['order_id'] ); ?>"><?php echo __( 'Approve', 'user-registration' ); ?></a>
-			<?php
+			   data-order-id="<?php echo absint( $order_detail['order_id'] ); ?>"><?php echo __( 'Approve', 'user-registration' ); ?></a>
+		<?php
 		endif;
 		?>
 	</div>
@@ -187,7 +187,7 @@ endif;
 		$amount = ( $order_detail['product_amount'] ) ?? $order_detail['total_amount'];
 
 		if ( 'bank' !== $order_detail['payment_method'] && isset( $post_content ) && ( 'paid' === $post_content['type'] || ( 'subscription' === $post_content['type'] && 'off' === $order_detail['trial_status'] ) ) ) {
-			$discount_amount = ( $order_detail['coupon_discount_type'] === 'fixed' ) ? $order_detail['coupon_discount'] : $amount * $order_detail['coupon_discount'] / 100;
+			$discount_amount = ( isset( $order_detail['coupon_discount_type'] ) && $order_detail['coupon_discount_type'] === 'fixed' ) ? ( ! empty( $order_detail['coupon_discount'] ) ? $order_detail['coupon_discount'] : 0 ) : $amount * ( ! empty( $order_detail['coupon_discount'] ) ? $order_detail['coupon_discount'] : 1 ) / 100;
 			$total           = $amount - $discount_amount;
 		}
 

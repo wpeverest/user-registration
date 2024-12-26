@@ -52,7 +52,7 @@ class StripeService {
 			$product = \Stripe\Product::create(
 				array(
 					'name'        => $post_data['post_title'],
-					'description' => json_decode( $meta_data['post_data']['post_content'], true )['description'] ?? 'N/A',
+					'description' => ! empty( $meta_data['post_data'] ) && ( json_decode( $meta_data['post_data']['post_content'], true )['description'] ) ?? 'N/A',
 					'metadata'    => array(
 						'membership_id' => $membership_id, // Your custom ID
 					),
@@ -197,6 +197,7 @@ class StripeService {
 			if ( 'completed' === $member_order['status'] ) {
 				$response['message'] = __( 'New member has been successfully created with successful stripe payment.', 'user-registration' );
 				$response['status']  = true;
+
 				return $response;
 				// ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
 			}
@@ -352,11 +353,11 @@ class StripeService {
 	/**
 	 * Sends an email.
 	 *
-	 * @param int   $ID                  The ID of the email.
+	 * @param int $ID The ID of the email.
 	 * @param mixed $member_subscription The subscription details of the member.
-	 * @param array $membership_metas    Metadata related to the membership.
-	 * @param int   $member_id           The ID of the member.
-	 * @param array $response            The response data.
+	 * @param array $membership_metas Metadata related to the membership.
+	 * @param int $member_id The ID of the member.
+	 * @param array $response The response data.
 	 *
 	 * @return array The result of the email operation.
 	 */
