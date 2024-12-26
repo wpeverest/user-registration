@@ -80,16 +80,29 @@ class MembershipGroupService {
 	}
 
 	public function validate_membership_group_data( $data ) {
+
 		$response = array(
 			'status' => true
 		);
 		if ( isset( $data['post_data']['name'] ) && empty( $data['post_data']['name'] ) ) {
 			$response['status']  = false;
-			$response['message'] = __( 'Field name is required', 'user-registration' );
+			$response['message'] = 'Field name is required.';
+		} else {
+			$group        = $this->membership_group_repository->get_single_membership_group_by_name( $data['post_data']['name'] );
+			$unique_error = false;
+			if ( ! isset( $data['post_data']['ID'] ) && ! empty( $group ) ) {
+				$unique_error = true;
+			} else if ( isset( $data['post_data']['ID'] ) && ! empty( $group ) && $data['post_data']['ID'] !== $group['ID'] ) {
+				$unique_error = true;
+			}
+			if ( $unique_error ) {
+				$response['status']  = false;
+				$response['message'] = 'Group name must be unique.';
+			}
 		}
 		if ( isset( $data['post_meta_data']['name'] ) && empty( $data['post_meta_data']['memberships'] ) ) {
 			$response['status']  = false;
-			$response['message'] = __( 'Field memberships is required', 'user-registration' );
+			$response['message'] = 'Field memberships is required.';
 		}
 
 		return $response;

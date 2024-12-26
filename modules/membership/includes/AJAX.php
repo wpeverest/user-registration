@@ -704,7 +704,7 @@ class AJAX {
 		if ( ! $create_groups['status'] ) {
 			wp_send_json_error(
 				array(
-					'message' => esc_html__( 'Sorry! There was an unexpected error while saving the membership group data . ', 'user-registration' ),
+					'message' => esc_html__( $create_groups['message'], 'user-registration' ),
 				)
 			);
 		}

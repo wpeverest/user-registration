@@ -98,6 +98,37 @@ class MembershipGroupRepository extends BaseRepository implements MembershipGrou
 	}
 
 	/**
+	 * get_single_membership_group_by_name
+	 *
+	 * @param $name
+	 *
+	 * @return array|object|\stdClass|null
+	 */
+	public function get_single_membership_group_by_name( $name ) {
+		// TODO : maybe change this raw queries to wp_Query
+
+		return $this->wpdb()->get_row(
+			$this->wpdb()->prepare(
+				"SELECT wpp.ID,
+				       wpp.post_title,
+				       wpp.post_content,
+				       wpp.post_status,
+				       wpp.post_type,
+				       wpm.meta_value as memberships
+				FROM $this->table wpp
+				         JOIN $this->posts_meta_table wpm on wpm.post_id = wpp.ID
+				WHERE wpm.meta_key = 'urmg_memberships'
+				  AND wpp.post_type = 'ur_membership_groups'
+				AND wpp.post_title = %s
+				ORDER BY 1 DESC",
+				strtolower($name)
+			),
+			ARRAY_A
+		);
+
+	}
+
+	/**
 	 * is_form_related
 	 * Just having the meta key means the form consist of a membership group
 	 *
