@@ -121,7 +121,7 @@ class AJAX {
 
 		if ( $response['status'] ) {
 			$form_response = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
-			if ( ! empty( $form_response ) && $form_response["auto_login"] && 'free' == $data['payment_method'] ) {
+			if ( ! empty( $form_response ) && isset($form_response["auto_login"]) && $form_response["auto_login"] && 'free' == $data['payment_method'] ) {
 				$members_service = new MembersService();
 				$members_service->login_member( $member_id );
 			}
