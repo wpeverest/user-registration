@@ -338,7 +338,7 @@ class UR_User_Approval {
 	}
 
 	public function check_user_membership( $user ) {
-		$is_membership_active = is_plugin_active( 'user-registration-membership/user-registration-membership.php' );
+		$is_membership_active = ur_check_module_activation('membership');
 		if ( $is_membership_active ) {
 			$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
 			$membership         = $members_repository->get_member_membership_by_id( $user->ID );
