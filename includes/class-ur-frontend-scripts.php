@@ -561,7 +561,7 @@ class UR_Frontend_Scripts {
 			$add_prefix = false;
 		}
 		if ( $custom_params['minimum_digits'] > 0 ) {
-			$hint      .= ( $add_prefix ? ' and contain at-least ' : '' ) . $custom_params['minimum_uppercase'] . ' number ';
+			$hint      .= ( $add_prefix ? ' and contain at-least ' : '' ) . $custom_params['minimum_digits'] . ' number ';
 			$add_prefix = false;
 		}
 		if ( $custom_params['minimum_special_chars'] > 0 ) {
