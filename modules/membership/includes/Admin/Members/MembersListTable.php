@@ -44,7 +44,7 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 
 			$usersearch = isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : ''; //phpcs:ignore
 
-			$users_per_page = $this->get_items_per_page( 'user_registration_page_user_registration_users_per_page' );
+			$users_per_page = $this->get_items_per_page( 'user_registration-membership_page_user_registration_users_per_page' );
 
 			$paged = $this->get_pagenum();
 
