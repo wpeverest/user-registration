@@ -184,6 +184,7 @@
 								ur_membership_members_utils.show_success_message(
 									response.data.message
 								);
+								location.reload();
 							} else {
 								ur_membership_members_utils.show_failure_message(
 									response.data.message
