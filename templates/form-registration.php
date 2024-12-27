@@ -70,7 +70,6 @@ $notices =
  * @return function.
  */
 apply_filters( 'user_registration_before_registration_form_notice', ur_print_notices() );
-
 echo esc_html( $notices );
 /**
  * Hook for Before registration form
@@ -78,9 +77,19 @@ echo esc_html( $notices );
  * @since 1.5.1
  */
 do_action( 'user_registration_before_registration_form', $form_id );
-
+$is_theme_style = get_post_meta( $form_id, 'user_registration_enable_theme_style', true );
+if ( 'default' === $is_theme_style ) {
+	$default_class = 'ur-frontend-form--default';
+	wp_register_style( 'ur-frontend-default-css', UR()->plugin_url() . '/assets/css/user-registration-default-frontend.css', array(), UR()->version );
+	wp_enqueue_style( 'ur-frontend-default-css' );
+} else {
+	$default_class = '';
+}
+//For small screen
+wp_register_style( 'ur-frontend-small-screen', UR()->plugin_url() . '/assets/css/user-registration-smallscreen.css', array(), UR()->version );
+wp_enqueue_style( 'ur-frontend-small-screen' );
 ?>
-	<div class='user-registration ur-frontend-form <?php echo esc_attr( $template_class ) . ' ' . esc_attr( $custom_class ); ?>' id='user-registration-form-<?php echo absint( $form_id ); ?>'>
+	<div class='user-registration ur-frontend-form  <?php echo esc_attr( $template_class ) . ' ' . esc_attr( $custom_class ) . '' . esc_attr( $default_class ); ?>' id='user-registration-form-<?php echo absint( $form_id ); ?>'>
 		<?php
 		$form_status = get_post_status( $form_id );
 
@@ -307,8 +316,10 @@ do_action( 'user_registration_before_registration_form', $form_id );
 							$condition_submit_settings = ur_maybe_unserialize( get_post_meta( $form_id, 'user_registration_submit_condition', true ) );
 
 							$submit_btn_class = array_merge( $submit_btn_class, (array) ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_class' ) );
+							$disabled = isset($_GET['page']) && 'ur_form_preview' === $_GET['page'] ? 'disabled' : '';
+                            $css = $disabled ? 'cursor: not-allowed;' : '';
 							?>
-							<button type="submit" class="btn button ur-submit-button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" conditional_rules="<?php echo ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_submit_conditional_logic', true ) ) ? esc_attr( wp_json_encode( $condition_submit_settings ) ) : ''; ?>">
+							<button type="submit" <?php echo esc_attr($disabled)  ?> class="btn button ur-submit-button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" style="<?php echo $css  ?>" conditional_rules="<?php echo ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_submit_conditional_logic', true ) ) ? esc_attr( wp_json_encode( $condition_submit_settings ) ) : ''; ?>">
 								<span></span>
 								<?php
 								$submit = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_label' );
