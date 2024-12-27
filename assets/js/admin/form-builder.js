@@ -308,9 +308,10 @@
 
 				var form_data = URFormBuilder.get_form_data();
 				var row_data = URFormBuilder.get_form_row_data();
+
 				var stop_process = false;
 				$.each(row_data, function () {
-					if ($(this)[0].fields.length < 1) {
+					if ($(this)[0].fields && $(this)[0].fields.length < 1) {
 						URFormBuilder.show_message(
 							user_registration_form_builder_data.form_repeater_row_empty
 						);
@@ -1540,46 +1541,169 @@
 				var single_row = $(".ur-input-grids .ur-single-row");
 				$.each(single_row, function () {
 					var single_row_data = {};
+					var row_id = $(this).attr("data-row-id");
 
-					if ($(this).attr("data-repeater-id")) {
+					if (
+						$(
+							".ur-individual-row-settings[data-row-id='" +
+								row_id +
+								"']"
+						).length
+					) {
 						single_row_data.row_id = $(this).attr("data-row-id");
-						single_row_data.repeater_id =
-							$(this).attr("data-repeater-id");
-						single_row_data.type = "repeater";
 
-						var repeater_row_setting = $(
-							"#ur-repeater-settings"
-						).serializeArray();
-
-						$.each(repeater_row_setting, function (key, value) {
-							if (
-								value.name.includes(
-									"_" + single_row_data.repeater_id
+						var element = $(document).find(
+								".ur-individual-row-settings[data-row-id='" +
+									row_id +
+									"']"
+							),
+							conditional_logic_enabled = element
+								.find(
+									"#user_registration_row_setting_enable_conditional_logic"
 								)
-							) {
-								single_row_data[
-									value.name
-										.replace(
-											"user_registration_repeater_row_",
-											""
-										)
-										.replace(
-											"_" + single_row_data.repeater_id,
-											""
-										)
-								] = value.value;
-							}
-						});
+								.is(":checked");
 
-						var fields = [];
-						$(this)
-							.find("input[data-field='field_name']")
-							.each(function () {
-								fields.push($(this).val());
-							});
+						if (element.find(".urcl-row-logic-wrap").length) {
+							single_row_data.type = "normal";
+							single_row_data.conditional_logic_enabled =
+								conditional_logic_enabled;
 
-						single_row_data["fields"] = fields;
-						row_data.push(single_row_data);
+							var $mapCreator = element.find(
+									".urcl-row-logic-wrap"
+								),
+								rule = {
+									action: $mapCreator
+										.find(".urcl-row-field")
+										.val(),
+									logic_map: {
+										type: "group",
+										logic_gate: $mapCreator
+											.find(".urcl-root-logic-gate")
+											.val(),
+										conditions: []
+									}
+								},
+								sub_group_conditions = [],
+								logic_map = null,
+								cl_fields,
+								logic_gate;
+
+							$mapCreator
+								.find(
+									".urcl-row-conditional-logic-conditions-container"
+								)
+								.each(function () {
+									cl_fields = [];
+									logic_gate = $(this)
+										.find(".urcl-logic-gate")
+										.hasClass("is-active")
+										? $(this)
+												.find(
+													".urcl-logic-gate.is-active"
+												)
+												.data("value")
+										: "OR";
+
+									$(this)
+										.find(".urcl-field")
+										.each(function () {
+											cl_fields.push({
+												type: "field",
+												triggerer_id: $(this)
+													.find(
+														".urcl-field-conditional-field-select"
+													)
+													.val(),
+												operator: $(this)
+													.find(
+														".urcl-select-operator"
+													)
+													.val(),
+												value: $(this)
+													.find(
+														".urcl-row-field-value"
+													)
+													.val()
+											});
+										});
+
+									sub_group_conditions.push({
+										type: "group",
+										logic_gate: logic_gate
+											? logic_gate
+											: "",
+										conditions: cl_fields
+									});
+								});
+							rule.logic_map.conditions = sub_group_conditions;
+							logic_map = JSON.stringify(rule);
+							single_row_data.cl_map = logic_map;
+						}
+
+						if (
+							element
+								.find(".ur-repeater-row-option")
+								.attr("data-repeater-id")
+						) {
+							var repeater_id = element
+								.find(".ur-repeater-row-option")
+								.attr("data-repeater-id");
+							single_row_data.type = "repeater";
+							single_row_data["repeater_id"] = repeater_id;
+							single_row_data["title"] = element
+								.find(".ur-repeater-row-option")
+								.find(
+									"input[name='user_registration_repeater_row_title_" +
+										repeater_id +
+										"']"
+								)
+								.val();
+							single_row_data["field_name"] = element
+								.find(".ur-repeater-row-option")
+								.find(
+									"input[name='user_registration_repeater_row_field_name_" +
+										repeater_id +
+										"']"
+								)
+								.val();
+							single_row_data["add_new_label"] = element
+								.find(".ur-repeater-row-option")
+								.find(
+									"input[name='user_registration_repeater_row_add_new_label_" +
+										repeater_id +
+										"']"
+								)
+								.val();
+							single_row_data["remove_label"] = element
+								.find(".ur-repeater-row-option")
+								.find(
+									"input[name='user_registration_repeater_row_remove_label_" +
+										repeater_id +
+										"']"
+								)
+								.val();
+							single_row_data["repeat_limit"] = element
+								.find(".ur-repeater-row-option")
+								.find(
+									"input[name='user_registration_repeater_row_repeat_limit_" +
+										repeater_id +
+										"']"
+								)
+								.val();
+
+							var fields = [];
+							$(this)
+								.find("input[data-field='field_name']")
+								.each(function () {
+									fields.push($(this).val());
+								});
+
+							single_row_data["fields"] = fields;
+						}
+
+						if (single_row_data) {
+							row_data.push(single_row_data);
+						}
 					}
 				});
 
@@ -2839,6 +2963,55 @@
 												)
 											);
 										}
+										var form_id = $("#ur_form_id").val(),
+											row_id =
+												$(single_row_clone).attr(
+													"data-row-id"
+												);
+
+										var data = {
+											action: "user_registration_generate_row_settings",
+											security:
+												user_registration_form_builder_data.ur_new_row_added,
+											form_id: form_id,
+											row_id: row_id
+										};
+
+										$.ajax({
+											url: user_registration_form_builder_data.ajax_url,
+											data: data,
+											type: "POST",
+											complete: function (response) {
+												if (
+													response.responseJSON
+														.success === true
+												) {
+													var settings_div =
+														response.responseJSON
+															.data;
+													$(
+														"form#ur-row-settings"
+													).append(settings_div);
+
+													$(
+														".ur-individual-row-settings"
+													).each(function () {
+														if (
+															$(this).attr(
+																"data-row-id"
+															) === row_id
+														) {
+															$(this).show();
+														} else {
+															$(this).hide();
+														}
+													});
+													$(single_row_clone).trigger(
+														"click"
+													);
+												}
+											}
+										});
 
 										$(document).trigger(
 											"user_registration_row_added",
@@ -5017,8 +5190,10 @@
 
 				if (
 					$(".ur-selected-item.ur-item-active .ur-general-setting")
-						.find("[data-field='required']")
-						.is(":checked")
+					.find("[name='ur_general_setting[required]']")
+					.filter(function () {
+					  return $(this).is(":checked") || $(this).val() === "1";
+					}).length
 				) {
 					wrapper
 						.find(".ur-label")

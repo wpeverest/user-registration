@@ -128,19 +128,19 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 		}
 
 		if ( isset( $_POST['ur_license_nonce'] ) ) {
-			if( ! wp_verify_nonce( $_POST['ur_license_nonce'], '_ur_license_nonce' ) ) {
+			if ( ! wp_verify_nonce( $_POST['ur_license_nonce'], '_ur_license_nonce' ) ) {
 				return;
 			}
 			if ( ! empty( $_POST[ $this->plugin_slug . '_license_key' ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 				$this->activate_license_request();
-			}elseif ( ! empty( $_POST['download_user_registration_pro'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			} elseif ( ! empty( $_POST['download_user_registration_pro'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 				$this->install_extension();
 				wp_redirect( remove_query_arg( array( 'deactivated_license', $this->plugin_slug . '_deactivate_license' ), add_query_arg( 'activated_license', $this->plugin_slug ) ) );
 				exit;
 			}
 		}
 		if ( isset( $_GET['_wpnonce'] ) ) {
-			if( ! wp_verify_nonce( $_GET['_wpnonce'], '_ur_license_nonce' ) ) {
+			if ( ! wp_verify_nonce( $_GET['_wpnonce'], '_ur_license_nonce' ) ) {
 				return;
 			}
 			if ( ! empty( $_GET[ $this->plugin_slug . '_deactivate_license' ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -201,13 +201,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * Display plugin license view.
 	 */
 	private function plugin_license_view() {
-		if ( ! $this->api_key ) {
-			add_action( 'after_plugin_row', array( $this, 'plugin_license_form' ) );
-			$this->add_notice( array( $this, 'key_notice' ) );
-		} else {
-			add_filter( 'plugin_action_links_' . $this->plugin_name, array( $this, 'plugin_action_links' ) );
-		}
-
+		add_filter( 'plugin_action_links_' . $this->plugin_name, array( $this, 'plugin_action_links' ) );
 		add_action( 'admin_notices', array( $this, 'user_registration_error_notices' ) );
 	}
 
@@ -316,9 +310,13 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * @return array
 	 */
 	public function plugin_action_links( $actions ) {
-		$new_actions = array(
-			'deactivate_license' => '<a href="' . wp_nonce_url( remove_query_arg( array( 'deactivated_license', 'activated_license' ), add_query_arg( $this->plugin_slug . '_deactivate_license', 1 ) ), '_ur_license_nonce' ) . '" class="deactivate-license" style="color: #a00;" title="' . esc_attr( __( 'Deactivate License Key', 'user-registration' ) ) . '">' . __( 'Deactivate License', 'user-registration' ) . '</a>',
-		);
+		$new_actions = array();
+
+		if ( ! $this->api_key ) {
+			$new_actions['activate_license_settings'] = '<a href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=license' ) ) . '">' . __( 'Activate License', 'user-registration' ) . '</a>';
+		} else {
+			$new_actions['deactivate_license'] = '<a href="' . wp_nonce_url( remove_query_arg( array( 'deactivated_license', 'activated_license' ), add_query_arg( $this->plugin_slug . '_deactivate_license', 1 ) ), '_ur_license_nonce' ) . '" class="deactivate-license" style="color: #a00;" title="' . esc_attr( __( 'Deactivate License Key', 'user-registration' ) ) . '">' . __( 'Deactivate License', 'user-registration' ) . '</a>';
+		}
 
 		return array_merge( $actions, $new_actions );
 	}
@@ -522,7 +520,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 
 		if ( $license_key ) {
 			$content .= sprintf( __( '<strong>If you have active premium license of User Registration</strong>, please click button below to install and activate <strong>User Registration Pro</strong>. Going forward <strong>User Registration Pro</strong> is necessary for smooth running of premium addons of User Registration that you are currently using.', 'user-registration' ) );
-			$link    .= '<input name="ur_license_nonce" id="ur_license_nonce" type="hidden" value="'. wp_create_nonce( '_ur_license_nonce' ) .'"/>';
+			$link    .= '<input name="ur_license_nonce" id="ur_license_nonce" type="hidden" value="' . wp_create_nonce( '_ur_license_nonce' ) . '"/>';
 			$link    .= '<button class="button button-primary" type="text" name="download_user_registration_pro" value="download_user_registration_pro"><span class="dashicons dashicons-external"></span>' . __( 'Install and Activate User Registration Pro', 'user-registration' ) . '</button>';
 		} else {
 			$content .= sprintf( '<p class="extra-pad"><strong>%1$s</strong>, %2$s</p>', __( 'If you already have an active license key.', 'user-registration' ), __( 'please activate the key.', 'user-registration' ) );

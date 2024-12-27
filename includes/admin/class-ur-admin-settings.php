@@ -87,18 +87,6 @@ class UR_Admin_Settings {
 		if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'user-registration-settings' ) ) {
 			die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
 		}
-		/**
-		 * Action to save current tab settings
-		 */
-		do_action( 'user_registration_settings_save_' . $current_tab );
-		/**
-		 * Action to save current tab options
-		 */
-		do_action( 'user_registration_update_options_' . $current_tab );
-		/**
-		 * Action to save options
-		 */
-		do_action( 'user_registration_update_options' );
 
 		/**
 		 * Filter to modify display of setting message
@@ -111,6 +99,19 @@ class UR_Admin_Settings {
 
 		if ( $flag && is_bool( $flag ) ) {
 			self::add_message( esc_html__( 'Your settings have been saved.', 'user-registration' ) );
+
+			/**
+			 * Action to save current tab settings
+			 */
+			do_action( 'user_registration_settings_save_' . $current_tab );
+			/**
+			 * Action to save current tab options
+			 */
+			do_action( 'user_registration_update_options_' . $current_tab );
+			/**
+			 * Action to save options
+			 */
+			do_action( 'user_registration_update_options' );
 		} elseif ( $flag && 'redirect_login_error' === $flag ) {
 
 			self::add_error(
@@ -195,10 +196,12 @@ class UR_Admin_Settings {
 			'user-registration-settings',
 			'user_registration_settings_params',
 			array(
-				'ajax_url'                 => admin_url( 'admin-ajax.php' ),
+				'ajax_url'                             => admin_url( 'admin-ajax.php' ),
 				'user_registration_search_global_settings_nonce' => wp_create_nonce( 'user_registration_search_global_settings' ),
-				'i18n_nav_warning'         => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
-				'i18n'                     => array(
+				'user_registration_captcha_test_nonce' => wp_create_nonce( 'user_registration_captcha_test_nonce' ),
+				'user_registration_my_account_selection_validator_nonce' => wp_create_nonce( 'user_registration_my_account_selection_validator' ),
+				'i18n_nav_warning'                     => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
+				'i18n'                                 => array(
 					'captcha_success'   => esc_html__( 'Captcha Test Successful !', 'user-registration' ),
 					'captcha_failed'    => esc_html__( 'Some error occured. Please verify that the keys you entered are valid.', 'user-registration' ),
 					'unsaved_changes'   => esc_html__( 'You have some unsaved changes. Please save and try again.', 'user-registration' ),
@@ -210,7 +213,7 @@ class UR_Admin_Settings {
 					'upgrade_plan'      => esc_html__( 'Upgrade Plan', 'user-registration' ),
 					'upgrade_link'      => esc_url( 'https://wpuserregistration.com/pricing/?utm_source=integration-settings&utm_medium=premium-addon-popup&utm_campaign=' . urlencode( UR()->utm_campaign ) ),
 				),
-				'is_advanced_field_active' => is_plugin_active( 'user-registration-advanced-fields/user-registration-advanced-fields.php' ),
+				'is_advanced_field_active'             => is_plugin_active( 'user-registration-advanced-fields/user-registration-advanced-fields.php' ),
 
 			)
 		);
@@ -377,8 +380,10 @@ class UR_Admin_Settings {
 					}
 
 					if ( 'accordian' === $section['type'] ) {
-						$available_in = isset( $section['available_in'] ) ? sanitize_text_field( wp_unslash( $section['available_in'] ) ) : '';
-
+						$available_in      = isset( $section['available_in'] ) ? sanitize_text_field( wp_unslash( $section['available_in'] ) ) : '';
+						$is_captcha        = isset( $section['settings_type'] ) ? ' ur-captcha-settings' : '';
+						$is_captcha_header = isset( $section['settings_type'] ) ? $is_captcha . '-header' : '';
+						$is_captcha_body   = isset( $section['settings_type'] ) ? $is_captcha . '-body' : '';
 						if ( isset( $section['video_id'] ) ) {
 							$inactive_class = 'user-registration-inactive-addon';
 							$extras         = 'data-title="' . esc_attr( $section['title'] ) . '"';
@@ -387,9 +392,9 @@ class UR_Admin_Settings {
 							$extras        .= 'data-available-in="' . esc_attr( $available_in ) . '"';
 							$settings      .= '<div class="user-registration-card ur-mb-2 ' . esc_attr( $inactive_class ) . '" ' . $extras . '>';
 						} else {
-							$settings .= '<div class="user-registration-card ur-mb-2">';
+							$settings .= '<div class="user-registration-card ur-mb-2' . $is_captcha . '">';
 						}
-						$settings .= '<div class="user-registration-card__header ur-d-flex ur-align-items-center ur-p-3 integration-header-info accordion">';
+						$settings .= '<div class="user-registration-card__header ur-d-flex ur-align-items-center ur-p-3 integration-header-info accordion' . $is_captcha_header . '">';
 						$settings .= '<div class="integration-detail">';
 						$settings .= '<span class="integration-status">';
 						$settings .= '</span>';
@@ -408,7 +413,7 @@ class UR_Admin_Settings {
 						if ( isset( $section['video_id'] ) ) {
 							$settings .= '<div>';
 						} else {
-							$settings .= '<div class="user-registration-card__body ur-p-3 integration-body-info">';
+							$settings .= '<div class="user-registration-card__body ur-p-3 integration-body-info' . $is_captcha_body . '">';
 						}
 
 						if ( ! empty( $id ) ) {
@@ -690,7 +695,7 @@ class UR_Admin_Settings {
 										'show_option_none' => ' ',
 										'class'            => $value['class'],
 										'echo'             => false,
-										'selected'         => absint( self::get_option( $value['id'] ) ),
+										'selected'         => absint( self::get_option( $value['id'], $value['default'] ) ),
 									);
 
 									if ( isset( $value['args'] ) ) {

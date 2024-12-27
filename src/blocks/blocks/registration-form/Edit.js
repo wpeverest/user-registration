@@ -75,7 +75,7 @@ const Edit = (props) => {
 
 	return (
 		<ChakraProvider>
-			<Box {...useProps} maxW="sm" borderWidth="1px" borderRadius="lg">
+			<Box {...useProps} borderWidth="1px" borderRadius="lg">
 				<InspectorControls key="ur-gutenberg-registration-form-inspector-controls">
 					<PanelBody
 						title={__(

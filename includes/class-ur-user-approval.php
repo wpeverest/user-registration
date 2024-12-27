@@ -280,9 +280,10 @@ class UR_User_Approval {
 			$url      = (!empty($_SERVER['HTTPS'])) ? 'https://' . $_SERVER['SERVER_NAME'] : 'http://' . $_SERVER['SERVER_NAME']; //phpcs:ignore
 
 			if ( get_option( 'ur_login_ajax_submission' ) ) {
+				$url .= isset( $_SERVER['HTTP_REFERER' ] ) ? $_SERVER['HTTP_REFERER'] : ""; //phpcs:ignore
 				$url .= $_SERVER['HTTP_REFERER']; //phpcs:ignore
 			} else {
-				$url .= $_SERVER['REQUEST_URI']; //phpcs:ignore
+				$url .= isset( $_SERVER['REQUEST_URI' ] ) ? $_SERVER['REQUEST_URI'] : ""; //phpcs:ignore
 			}
 
 			$url = substr( $url, 0, strpos( $url, '?' ) );
@@ -373,7 +374,9 @@ class UR_User_Approval {
 			return;
 		}
 
-		if ( 'admin_approval' === ur_get_user_login_option( get_current_user_id() ) ) {
+		$form_id = ur_get_form_id_by_userid( get_current_user_id() );
+
+		if ( 'admin_approval' === ur_get_user_login_option( get_current_user_id() ) && $form_id ) {
 
 			// Try to hide the not approved users from any theme or plugin request in frontend.
 			$disable_pre_get = apply_filters( 'user_registration_disable_pre_get_users', 'no' );

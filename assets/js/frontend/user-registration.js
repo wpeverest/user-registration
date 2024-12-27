@@ -1,4 +1,4 @@
-/* global  user_registration_params, ur_password_strength_meter_params */
+/* global  user_registration_params, ur_frontend_params_with_form_id */
 (function ($) {
 	var user_registration_form_init = function () {
 		var ursL10n = user_registration_params.ursL10n;
@@ -588,11 +588,15 @@
 												? field.val()
 												: "";
 
-											formwise_data.field_name = field
+											privacy_field_name = field
 												.closest(
 													".field-privacy_policy"
 												)
 												.data("ref-id");
+
+											if ( "undefined" !== typeof privacy_field_name ) {
+												formwise_data.field_name = privacy_field_name;
+											}
 										}
 										break;
 									case "radio":
@@ -1329,7 +1333,9 @@
 												);
 											}
 											$(".ur-input-count").text("0");
-											$this[0].reset();
+											if ( ! user_registration_params.ur_hold_data_before_redirection ) {
+												$this[0].reset();
+											}
 											if (
 												$this.find("#profile_pic_url")
 													.length
@@ -2357,6 +2363,16 @@
 				}
 			});
 
+				// Handel WYSIWYG field client side validation.
+				$( document ).on( 'tinymce-editor-init', function( event, editor ) {
+					var $editorContainer = $(editor.getContainer());
+					var containerId = $editorContainer.attr('id');
+					var hiddenEditor = $("#"+containerId).parent().parent().parent().find("[data-label = 'WYSIWYG']");
+					editor.on('keyup', function(e) {
+						hiddenEditor.val(tinyMCE.activeEditor.getContent());
+					});
+				});
+
 			$(".ur-frontend-form").each(function () {
 				var $registration_form = $(this).find("form.register");
 
@@ -2534,35 +2550,51 @@
 	$(function () {
 		$(".input-checkbox").each(function () {
 			var checkAll = $(this).attr("data-id");
-			if (
-				$('input[name="' + checkAll + '[]"]:checked').length ==
-				$('[data-id = "' + checkAll + '" ]').length
-			) {
-				$('[data-check = "' + checkAll + '" ]').prop("checked", true);
+			if ("undefined" !== typeof checkAll) {
+				if (
+					$('input[name="' + checkAll + '[]"]:checked').length ==
+					$('[data-id = "' + checkAll + '" ]').length
+				) {
+					$('[data-check = "' + checkAll + '" ]').prop(
+						"checked",
+						true
+					);
+				}
 			}
 		});
 
 		$('input[type="checkbox"]#checkall').on("click", function () {
 			var checkAll = $(this).attr("data-check");
-			$('[data-id = "' + checkAll + '[]" ]').prop(
-				"checked",
-				$(this).prop("checked")
-			);
+			if ("undefined" !== typeof checkAll) {
+				$('[data-id = "' + checkAll + '[]" ]').prop(
+					"checked",
+					$(this).prop("checked")
+				);
+			}
 		});
 
 		$(".input-checkbox").on("change", function () {
 			var checkAll = $(this).attr("data-id");
-			checkAll = checkAll.replace("[]", "");
 
-			if ($(this).prop("checked") === false) {
-				$('[data-check = "' + checkAll + '" ]').prop("checked", false);
-			}
+			if ("undefined" !== typeof checkAll) {
+				checkAll = checkAll.replace("[]", "");
 
-			if (
-				$('input[name="' + checkAll + '[]"]:checked').length ==
-				$('[data-id = "' + checkAll + '" ]').length
-			) {
-				$('[data-check = "' + checkAll + '" ]').prop("checked", true);
+				if ($(this).prop("checked") === false) {
+					$('[data-check = "' + checkAll + '" ]').prop(
+						"checked",
+						false
+					);
+				}
+
+				if (
+					$('input[name="' + checkAll + '[]"]:checked').length ==
+					$('[data-id = "' + checkAll + '" ]').length
+				) {
+					$('[data-check = "' + checkAll + '" ]').prop(
+						"checked",
+						true
+					);
+				}
 			}
 		});
 	});
@@ -2600,7 +2632,7 @@ function ur_includes(arr, item) {
  */
 function customPasswordChecks(password) {
 	var custom_password_params =
-			ur_password_strength_meter_params.custom_password_params,
+			ur_frontend_params_with_form_id.custom_password_params,
 		minLength =
 			custom_password_params.minimum_pass_length !== undefined &&
 			custom_password_params.minimum_pass_length >= 3

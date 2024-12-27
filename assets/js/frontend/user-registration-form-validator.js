@@ -152,7 +152,7 @@
 				"SpecialCharacterValidator",
 				function (value, element) {
 					var reg = new RegExp(
-						/^(?=.{3,20}$)[a-zA-Z][a-zA-Z0-9_.]*(?: [a-zA-Z0-9]+)*$/
+						/^(?=.{3,20}$)[a-zA-Z][a-zA-Z0-9]*(?: [a-zA-Z0-9]+)*$/
 					);
 					return this.optional(element) || reg.test(value);
 				},
@@ -220,7 +220,7 @@
 						) {
 							return true;
 						}
-						if( $(element).hasClass("ur-flatpickr-field") ){
+						if ($(element).hasClass("ur-flatpickr-field")) {
 							return true;
 						}
 						return (
@@ -529,9 +529,10 @@
 					user_login_div.data("username-length");
 			}
 
-			if (user_login_div.data("username-character") == "no") {
-				username_validator.SpecialCharacterValidator =
-					user_login_div.data("username-character");
+			if (
+				typeof user_login_div.data("username-character") === "undefined"
+			) {
+				username_validator.SpecialCharacterValidator = true;
 			}
 
 			rules.user_login = username_validator;

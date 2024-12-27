@@ -54,11 +54,24 @@
     min-width: 600px; } }
 
 .tooltipster-sidetip .tooltipster-box {
-  background-color: #383838 !important; }
+  background-color: #ffffff !important;
+  max-width: 220px;
+  box-shadow: 0px 6px 24px 0px rgba(10, 10, 10, 0.1);
+  padding: 16px 18px; }
+  .tooltipster-sidetip .tooltipster-box .tooltipster-content {
+    font-size: 14px;
+    line-height: 20px;
+    color: #222222;
+    padding: 0; }
+    .tooltipster-sidetip .tooltipster-box .tooltipster-content a {
+      color: #475bb2 !important; }
+      .tooltipster-sidetip .tooltipster-box .tooltipster-content a:focus {
+        box-shadow: none;
+        outline: none; }
 
 .tooltipster-sidetip.tooltipster-base .tooltipster-arrow .tooltipster-arrow-uncropped .tooltipster-arrow-border {
-  border-top-color: #383838 !important;
-  border-bottom-color: #383838 !important; }
+  border-top-color: #ffffff !important;
+  border-bottom-color: #ffffff !important; }
 
 #wpcontent {
   padding-right: 0; }
@@ -74,7 +87,8 @@
 
 .user-registration-settings {
   display: flex;
-  gap: 24px; }
+  gap: 24px;
+  overflow-x: hidden; }
   @media screen and (max-width: 1180px) {
     .user-registration-settings {
       flex-direction: column; } }
@@ -88,7 +102,7 @@
       width: 100%;
       max-width: 300px;
       padding: 24px 0 0;
-      background: #fafafc;
+      background: #ffffff;
       border-left: 1px solid #e1e1e1; }
       .user-registration-settings-wrapper .user-registration-header.collapsed {
         max-width: 70px; }
@@ -182,7 +196,7 @@
           font-weight: 400;
           line-height: 150%;
           color: #383838;
-          padding: 14px 22px 14px 20px;
+          padding: 16px 20px;
           background: transparent;
           border: 0;
           border-top: 1px solid #e1e1e1;
@@ -192,10 +206,12 @@
           gap: 15px;
           cursor: pointer; }
           .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link-label > p {
-            font-weight: 400;
-            font-size: 14px;
-            line-height: 150%;
-            color: #383838; }
+            font-weight: 500;
+            font-size: 15px;
+            margin: 0;
+            line-height: 21px;
+            color: #4e4e4e;
+            transition: all 0.3s ease-in-out; }
           .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link-label span.ur-nav__link-label > :not(svg) {
             opacity: 0.5; }
           .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link:focus {
@@ -224,16 +240,12 @@
           .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link svg {
             width: 18px;
             height: 18px; }
-            .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link svg path {
-              color: #383838; }
           .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link.ur-nav-premium {
             cursor: not-allowed; }
             .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link.ur-nav-premium:hover {
               background: transparent;
               border-radius: 0;
               color: #383838; }
-              .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link.ur-nav-premium:hover .ur-nav__link-icon svg path {
-                fill: #383838; }
               .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link.ur-nav-premium:hover .ur-nav__link-label p {
                 color: #383838; }
             .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link.ur-nav-premium::before, .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link.ur-nav-premium::after {
@@ -250,23 +262,26 @@
               align-items: flex-end;
               gap: 10px;
               position: absolute;
-              padding: 10px 12px;
+              padding: 16px 18px;
               border-radius: 4px;
-              background: #383838;
-              color: #ffffff;
+              box-shadow: 0px 6px 24px 0px rgba(10, 10, 10, 0.1);
+              background: #ffffff;
+              color: #222222;
+              font-size: 14px;
+              line-height: 20px;
               text-align: center;
               transition: .3s opacity;
               width: 200px;
               white-space: pre-line;
               text-align: right;
               top: 50%;
-              left: -214px;
+              left: -200px;
               z-index: 10;
               transform: translateY(-50%); }
               .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link.ur-nav-premium .ur-tooltip::after {
                 content: "";
                 position: absolute;
-                border-left: 12px solid #383838;
+                border-left: 12px solid #e9e9e9;
                 border-top: 12px solid transparent;
                 border-bottom: 12px solid transparent;
                 top: 50%;
@@ -274,12 +289,13 @@
                 transform: translateY(-50%); }
               .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link.ur-nav-premium .ur-tooltip a {
                 text-decoration: none;
-                border: 1px solid #ffffff;
-                padding: 4px 10px;
-                background: #ffffff;
-                border-radius: 2px;
-                color: #475bb2;
-                font-weight: 600;
+                border: 1px solid #475bb2;
+                padding: 6px 12px;
+                background: #475bb2;
+                border-radius: 4px;
+                color: #ffffff;
+                font-weight: 400;
+                letter-spacing: 0.3px;
                 transition: all .3s ease-in-out; }
                 .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link.ur-nav-premium .ur-tooltip a:hover {
                   background: #475bb2;
@@ -290,10 +306,8 @@
           .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link-icon {
             display: flex; }
             .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link-icon svg {
-              height: 24px;
-              width: 24px; }
-              .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link-icon svg path {
-                fill: #383838; }
+              height: 20px;
+              width: 20px; }
           .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link:hover .ur-nav__link-icon svg path, .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link.is-active .ur-nav__link-icon svg path {
             fill: #475bb2; }
           .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link:hover .ur-nav__link-label p, .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link.is-active .ur-nav__link-label p {
@@ -306,9 +320,6 @@
             flex-direction: row;
             width: 100%;
             align-items: center; }
-            .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link-label > p {
-              font-size: 14px;
-              margin: 0; }
           .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link .ur-nav-icon {
             display: flex; }
           .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link:hover .ur-nav-icon img {
@@ -316,13 +327,14 @@
           .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link:hover .ur-nav__link-label {
             color: #222; }
           .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link:hover, .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link.is-active {
-            background: #ffffff;
+            background: #F8F8FA;
             border-radius: 0;
             color: #475bb2; }
             .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link:hover:not(#ur-settings-collapse)::before, .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link.is-active:not(#ur-settings-collapse)::before {
               opacity: 1; }
           .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link.is-active:not(#ur-settings-collapse)::after {
-            opacity: 1; }
+            opacity: 1;
+            background: #F8F8FA; }
           .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link:last-child {
             border-bottom: 1px solid #e1e1e1; }
   .user-registration-settings-sidebar-container {
@@ -487,17 +499,17 @@
   display: flex;
   flex-direction: column;
   padding: 24px;
-  padding-top: 0; }
+  padding-top: 0;
+  background: #FAFAFC;
+  margin-top: 0 !important; }
   .user-registration-settings-container .user-registration-options-header {
-    position: sticky;
-    position: -webkit-sticky;
-    top: var(--wp-admin--admin-bar--height, 32px);
-    z-index: 5;
-    background: #ffffff;
+    background: #fafafc;
     padding-top: 24px; }
     .user-registration-settings-container .user-registration-options-header--top {
       display: flex;
-      align-items: center; }
+      align-items: center;
+      padding-bottom: 24px;
+      border-bottom: 1px solid #EBEBEB; }
       .user-registration-settings-container .user-registration-options-header--top h3 {
         margin: 0;
         font-weight: 600;
@@ -508,12 +520,12 @@
         display: none;
         margin-top: 0; }
     .user-registration-settings-container .user-registration-options-header--bottom {
-      margin-top: 40px; }
+      margin-top: 32px; }
       .user-registration-settings-container .user-registration-options-header--bottom ul {
         display: flex;
         align-items: center;
         gap: 32px;
-        border-bottom: 1px solid #e1e1e1;
+        border-bottom: 1px solid #EBEBEB !important;
         width: 100%; }
         .user-registration-settings-container .user-registration-options-header--bottom ul li a {
           font-weight: 400;
@@ -545,7 +557,7 @@
             .user-registration-settings-container .user-registration-options-header--bottom ul li a:hover::before, .user-registration-settings-container .user-registration-options-header--bottom ul li a.current::before {
               opacity: 1; }
       .user-registration-settings-container .user-registration-options-header--bottom .ur-scroll-ui__scroll-nav {
-        padding-bottom: 20px; }
+        padding-bottom: 28px; }
   .user-registration-settings-container .user-registration-options-container .ur-searched-settings-focus {
     border: 2px solid #475bb2;
     border-radius: 5px;
@@ -628,6 +640,9 @@
     .user-registration-settings-container .user-registration-options-container .logo img {
       width: 100%;
       display: block; }
+  .user-registration-settings-container .user-registration-options-container .ur-captcha-settings-header img {
+    width: 75% !important;
+    margin-right: 5px !important; }
   .user-registration-settings-container .user-registration-options-container .integration-info {
     margin-left: 20px; }
   .user-registration-settings-container .user-registration-options-container .integration-action {
@@ -647,11 +662,11 @@
       transition: all .3s ease-in-out; }
   .user-registration-settings-container .user-registration-options-container .user-registration-card {
     padding: 16px 20px 22px;
-    background: #fafafc;
-    border: 1px solid #edeff7 !important;
+    background: #ffffff;
+    border: 1px solid #EBEBEB !important;
     border-radius: 7px;
     margin-top: 0 !important;
-    margin-bottom: 24px;
+    margin-bottom: 28px;
     max-width: 680px;
     position: relative; }
     @media (min-width: 1440px) {
@@ -685,7 +700,7 @@
       margin-bottom: 24px;
       padding: 0 0 16px;
       position: relative;
-      border-bottom: 1px solid #e1e1e1 !important; }
+      border-bottom: 1px solid #EBEBEB !important; }
       .user-registration-settings-container .user-registration-options-container .user-registration-card__header.integration-header-info {
         padding: 16px 0 !important;
         border: 0;
@@ -727,7 +742,7 @@
           bottom: 2px;
           right: 2px; }
       .user-registration-settings-container .user-registration-options-container .user-registration-card__body.integration-body-info {
-        padding: 20px 0 0 0 !important; }
+        padding: 20px 0 !important; }
         .user-registration-settings-container .user-registration-options-container .user-registration-card__body.integration-body-info .nav-tab-inside > div {
           display: block; }
         .user-registration-settings-container .user-registration-options-container .user-registration-card__body.integration-body-info .postbox {
@@ -909,6 +924,8 @@
           .user-registration-settings-container .user-registration-options-container .user-registration-card__body table.ur_emails tbody tr .ur-email-settings-table .user-registration-help-tip {
             margin-right: 6px;
             color: #bababa; }
+            .user-registration-settings-container .user-registration-options-container .user-registration-card__body table.ur_emails tbody tr .ur-email-settings-table .user-registration-help-tip::after {
+              content: url("../images/settings-icons/information.svg") !important; }
       .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings {
         display: flex;
         justify-content: space-between;
@@ -946,6 +963,25 @@
           margin-bottom: 0; }
           .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings label span {
             color: #BABABA; }
+            .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings label span.user-registration-help-tip {
+              font-size: 16px;
+              top: 3px;
+              right: 4px; }
+              .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings label span.user-registration-help-tip::after {
+                content: "";
+                background-image: url("../images/settings-icons/information.svg") !important;
+                background-repeat: no-repeat !important;
+                background-size: 100% !important;
+                background-position: center;
+                display: block;
+                width: 8px;
+                height: 8px;
+                cursor: pointer;
+                padding: 4px;
+                background: transparent;
+                border-radius: 3px; }
+              .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings label span.user-registration-help-tip:hover::after {
+                filter: brightness(0) saturate(100%) invert(33%) sepia(19%) saturate(2330%) hue-rotate(195deg) brightness(100%) contrast(87%); }
         .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field {
           display: flex;
           flex-direction: column;
@@ -981,6 +1017,21 @@
               color: #383838; }
           .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field span.select2-container {
             width: 100% !important; }
+            .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field span.select2-container--open .select2-selection__arrow {
+              height: 30px; }
+              .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field span.select2-container--open .select2-selection__arrow b {
+                width: 12px;
+                border-color: transparent transparent #888 transparent;
+                border-width: 0 6px 7px 6px; }
+            .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field span.select2-container--open .select2-selection--multiple:before {
+              content: "";
+              position: absolute;
+              left: 7px;
+              top: 42%;
+              border-bottom: 7px solid #888;
+              border-right: 6px solid transparent;
+              border-left: 6px solid transparent;
+              border-top: 0px; }
           .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection {
             padding-right: 0;
             padding-left: 0; }
@@ -1008,6 +1059,14 @@
             .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection--multiple .select2-selection__rendered {
               padding-right: 0;
               padding-left: 0; }
+            .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection--multiple:before {
+              content: "";
+              position: absolute;
+              left: 7px;
+              top: 42%;
+              border-top: 7px solid #888;
+              border-right: 6px solid transparent;
+              border-left: 6px solid transparent; }
             .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection--single {
               height: 38px; }
               .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection--single .select2-selection__rendered {
@@ -1021,8 +1080,12 @@
                   .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection--single .select2-selection__rendered .select2-selection__clear:hover {
                     color: #475bb2; }
               .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection--single .select2-selection__arrow {
-                height: 36px;
+                height: 30px;
                 left: 8px; }
+            .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection__arrow b {
+              width: 12px;
+              border-color: #888 transparent transparent transparent;
+              border-width: 7px 6px 0 6px; }
           .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .ur-toggle-section .user-registration-toggle-form input[type="checkbox"] {
             min-width: 100% !important; }
           .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .ur-radio-group-list {
@@ -1060,31 +1123,41 @@
             text-align: center;
             line-height: 18px;
             width: 30%; }
-        .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings #user_registration_captcha_setting_captcha_test .spinner {
-          visibility: visible !important; }
-        .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings #ur-captcha-test-container {
-          min-width: 512px;
-          display: block; }
-          .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings #ur-captcha-test-container #ur-captcha-notice {
-            padding: 8px;
-            margin: 2px;
-            border-radius: 4px;
-            border-width: 0px !important; }
-            .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings #ur-captcha-test-container #ur-captcha-notice.success {
-              background: rgba(0, 255, 0, 0.3); }
-              .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings #ur-captcha-test-container #ur-captcha-notice.success #ur-captcha-notice--icon {
-                color: green; }
-            .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings #ur-captcha-test-container #ur-captcha-notice.error {
-              background: rgba(255, 0, 0, 0.3); }
-              .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings #ur-captcha-test-container #ur-captcha-notice.error #ur-captcha-notice--icon {
-                color: red; }
+        .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings .ur-captcha-test-button {
+          flex: 0 0 38%; }
+          .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings .ur-captcha-test-button .user_registration_captcha_setting_captcha_test {
+            margin-bottom: 10px; }
+            .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings .ur-captcha-test-button .user_registration_captcha_setting_captcha_test .spinner {
+              visibility: visible !important; }
+        .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings .ur-captcha-test {
+          flex: 0 0 60%; }
+          .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings .ur-captcha-test .ur-captcha-test-container {
+            min-width: 512px;
+            display: block; }
+            .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings .ur-captcha-test .ur-captcha-test-container .ur-captcha-notice {
+              padding: 8px;
+              margin: 2px;
+              border-radius: 4px;
+              border-width: 0px !important; }
+              .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings .ur-captcha-test .ur-captcha-test-container .ur-captcha-notice.success {
+                background: rgba(0, 255, 0, 0.3); }
+                .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings .ur-captcha-test .ur-captcha-test-container .ur-captcha-notice.success .ur-captcha-notice--icon {
+                  color: green; }
+              .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings .ur-captcha-test .ur-captcha-test-container .ur-captcha-notice.error {
+                background: rgba(255, 0, 0, 0.3); }
+                .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings .ur-captcha-test .ur-captcha-test-container .ur-captcha-notice.error .disconnect {
+                  color: red; }
     .user-registration-settings-container .user-registration-options-container .user-registration-card p.ur-p-tag {
-      margin: -6px 0 24px;
+      margin-bottom: 24px;
       padding: 10px 16px 10px 12px;
-      background: #ffffff;
-      border-right: 3px solid #17a2b8;
+      background: rgba(71, 91, 178, 0.04);
+      border: 1px solid #475bb2;
       font-weight: 400;
-      color: #6b6b6b; }
+      color: #383838;
+      border-radius: 4px;
+      font-size: 14px;
+      line-height: 22px;
+      font-style: normal; }
       .user-registration-settings-container .user-registration-options-container .user-registration-card p.ur-p-tag strong {
         font-weight: 600; }
   .user-registration-settings-container .user-registration-options-container .ur-settings-section-header {
@@ -1095,9 +1168,14 @@
       width: 100%;
       max-width: 680px;
       padding: 16px 20px 22px;
+      border: 1px solid #e9e9e9;
+      border-radius: 7px;
+      margin-bottom: 28px;
       background: #fafafc;
-      border: 1px solid #edeff7;
-      border-radius: 9px 9px 0 0; }
+      border: 1px solid #e9e9e9;
+      box-shadow: none; }
+      .user-registration-settings-container .user-registration-options-container .ur-export-users-page .nav-tab-inside .postbox:last-child {
+        margin-bottom: 0; }
       .user-registration-settings-container .user-registration-options-container .ur-export-users-page .nav-tab-inside .postbox .hndle {
         font-weight: 600;
         font-size: 16px;
@@ -1122,6 +1200,9 @@
             padding-right: 12px;
             border: 1px solid #e1e1e1;
             border-radius: 4px; }
+        .user-registration-settings-container .user-registration-options-container .ur-export-users-page .nav-tab-inside .postbox .inside .button-primary {
+          margin-top: 12px;
+          box-shadow: none; }
         .user-registration-settings-container .user-registration-options-container .ur-export-users-page .nav-tab-inside .postbox .inside .ur-export-custom-fields .ur-form-fields-container,
         .user-registration-settings-container .user-registration-options-container .ur-export-users-page .nav-tab-inside .postbox .inside .ur-export-custom-fields .ur-form-additional-fields-container,
         .user-registration-settings-container .user-registration-options-container .ur-export-users-page .nav-tab-inside .postbox .inside .ur-export-custom-fields select[name="export_format"] {
@@ -1178,7 +1259,7 @@
 .user-registration select {
   background-image: linear-gradient(-45deg, transparent 50%, gray 50%), linear-gradient(-135deg, gray 50%, transparent 50%);
   background-position: calc(100% - (100% - 15px)) calc(1em + 2px), calc(100% - (100% - 10px)) calc(1em + 2px), calc(100% - (100% - 2.5em)) 0.5em;
-  background-size: 5px 5px, 5px 5px, 1px 1.5em;
+  background-size: 5px 5px, 5px 5px, 1px 1.5em;
   background-repeat: no-repeat; }
   .user-registration select:focus {
     outline: none;

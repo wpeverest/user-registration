@@ -177,18 +177,19 @@ class UR_Shortcode_My_Account {
 	 * @param array $atts Shortcode attributes.
 	 */
 	private static function my_account( $atts ) {
+		wp_enqueue_script( 'ur-my-account' );
 		$is_disabled = get_user_meta( get_current_user_id(), 'ur_disable_users', true );
-		if($is_disabled){
+		if ( $is_disabled ) {
 			wp_logout();
-		}else{
+		} else {
 
-		ur_get_template(
-			'myaccount/my-account.php',
-			array(
-				'current_user' => get_user_by( 'id', get_current_user_id() ),
-			)
-		);
-	  	}
+			ur_get_template(
+				'myaccount/my-account.php',
+				array(
+					'current_user' => get_user_by( 'id', get_current_user_id() ),
+				)
+			);
+		}
 	}
 
 	/**
@@ -254,6 +255,7 @@ class UR_Shortcode_My_Account {
 					'profile'         => apply_filters( 'user_registration_profile_to_edit', $profile ),
 					'form_data_array' => apply_filters( 'user_registration_form_data_to_edit', $form_data_array ),
 					'row_ids'         => $form_row_ids_array,
+					'endpoint_label'  => ur_get_account_menu_items()['edit-profile'],
 				)
 			);
 		} else {
@@ -283,6 +285,7 @@ class UR_Shortcode_My_Account {
 				'user'                      => get_user_by( 'id', get_current_user_id() ),
 				'enable_strong_password'    => $enable_strong_password,
 				'minimum_password_strength' => $minimum_password_strength,
+				'endpoint_label'            => ur_get_account_menu_items()['edit-password'],
 			)
 		);
 	}
@@ -402,7 +405,13 @@ class UR_Shortcode_My_Account {
 		$login = isset( $_POST['user_login'] ) ? trim( wp_unslash( $_POST['user_login'] ) ) : null; // phpcs:ignore
 
 		if ( empty( $login ) ) {
-			ur_add_notice( __( 'Enter a username or email address.', 'user-registration' ), 'error' );
+			ur_add_notice(
+				apply_filters(
+					'user_registration_empty_login_error_message',
+					__( 'Enter a username or email address.', 'user-registration' )
+				),
+				'error'
+			);
 			return false;
 		} else {
 			// Check on username first, as customers can use emails as usernames.
@@ -421,11 +430,14 @@ class UR_Shortcode_My_Account {
 			ur_add_notice( $errors->get_error_message(), 'error' );
 			return false;
 		}
-
+		/**
+		 * Show same error message for invalid username or email as login form.
+		 */
+		$invalid_username_or_email_error_message = get_option('user_registration_message_invalid_username' , __( 'Invalid username or email.', 'user-registration' ) );
 		/**
 		 * Filter to modify invalid username or email error message.
 		 */
-		$error_message = apply_filters( 'user_registration_invalid_username_or_email_error_message', __( 'Invalid username or email.', 'user-registration' ) );
+		$error_message = apply_filters( 'user_registration_invalid_username_or_email_error_message', $invalid_username_or_email_error_message );
 
 		if ( ! $user_data || ( is_multisite() && ! is_user_member_of_blog( $user_data->ID, get_current_blog_id() ) ) ) {
 			ur_add_notice( $error_message, 'error' );

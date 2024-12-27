@@ -1,7 +1,7 @@
 {
   "name": "user-registration",
   "title": "User Registration",
-  "version": "3.3.3",
+  "version": "3.3.5",
   "homepage": "https://wpuserregistration.com/",
   "repository": {
     "type": "git",
@@ -75,7 +75,7 @@
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.17",
-    "@chakra-ui/react": "^2.8.2",
+    "@chakra-ui/react": "^2.10.2",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
     "@wordpress/api-fetch": "^5.2.6",

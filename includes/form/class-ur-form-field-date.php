@@ -86,7 +86,13 @@ class UR_Form_Field_Date extends UR_Form_Field {
 		}
 
 		if ( $is_enable_date_range ) {
-			$dates = explode( 'to', $value );
+			$dates = array();
+			preg_match( '/(\d{4}-\d{2}-\d{2}|\d{2}-\d{2}-\d{4}|\d{2}\/\d{2}\/\d{4}|[A-Za-z]+\s\d{1,2},\s\d{4})\s*[\w\s]+\s*(\d{4}-\d{2}-\d{2}|\d{2}-\d{2}-\d{4}|\d{2}\/\d{2}\/\d{4}|[A-Za-z]+\s\d{1,2},\s\d{4})/', $value, $matches );
+
+			if ( count( $matches ) == 3 ) {
+				$dates = array( $matches[1], $matches[2] );
+			}
+
 			foreach ( $dates as $date ) {
 				$result = UR_Validation::is_date( trim( $date ) );
 

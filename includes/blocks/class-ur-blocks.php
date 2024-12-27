@@ -36,6 +36,11 @@ class UR_Blocks {
 	public function enqueue_block_editor_assets() {
 		global $pagenow;
 		$enqueue_script = array( 'wp-blocks', 'wp-element', 'wp-i18n', 'wp-editor', 'wp-components', 'react', 'react-dom', 'tooltipster' );
+
+		if ( 'widgets.php' === $pagenow ) {
+			unset( $enqueue_script[ array_search( 'wp-editor', $enqueue_script ) ] );
+		}
+
 		wp_register_style(
 			'user-registration-blocks-editor',
 			UR()->plugin_url() . '/assets/css/user-registration.css',

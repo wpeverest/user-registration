@@ -508,6 +508,22 @@
       "released_date": "31/05/2023"
 	  },
 	  {
+      "title": "Kit (formerly ConvertKit)",
+      "slug" : "user-registration-convertkit",
+      "name" : "User Registration convertkit",
+      "image": "extensions-json/sections/images/convertkit.jpg",
+      "excerpt": "Allows you to efficiently grow your business by generating more leads with ConvertKit. It also helps increase automated emails for better lead generation.",
+      "link": "https://docs.wpuserregistration.com/docs/user-registration-convertkit/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "plan" : [
+        "plus",
+        "professional",
+        "themegrill agency"
+      ],
+      "setting_url": "admin.php?page=user-registration-settings&tab=integration",
+      "demo_video_url": "",
+      "released_date": "18/11/2024"
+	  },
+	  {
       "title": "Google Sheets",
       "slug" : "user-registration-google-sheets",
       "name" : "User Registration Google Sheets",
@@ -571,6 +587,22 @@
       	"released_date": "09/09/2024",
 		"setting_url": "admin.php?page=user-registration-settings&tab=integration",
 		"demo_video_url": "4uFlZoXlye4"
-    }
+    },
+    {
+      "title": "Brevo",
+      "slug" : "user-registration-brevo",
+      "name" : "User Registration Brevo",
+      "image": "extensions-json/sections/images/brevo.png",
+      "excerpt": "Effortlessly integrate WordPress registration forms with Brevo to collect client info and automatically sync it to your Brevo email list.",
+      "link": "https://wpuserregistration.com/features/brevo/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "plan" : [
+        "plus",
+        "professional",
+        "themegrill agency"
+      ],
+          "released_date": "07/10/2024",
+      "setting_url": "admin.php?page=user-registration-settings&tab=integration",
+      "demo_video_url": ""
+      }
   ]
 }

@@ -54,9 +54,32 @@ class UR_Form_Validation extends UR_Validation {
 	 */
 	public function __construct() {
 		add_action( 'user_registration_validate_form_data', array( $this, 'validate_form' ), 10, 6 );
-		add_action( 'user_registration_validate_profile_update', array( $this, 'validate_update_profile' ), 10, 3 );
+		add_action( 'user_registration_validate_profile_update', array( $this, 'validate_update_profile' ), 10, 4 );
+		add_filter( 'user_registration_reorganize_form_data', array( $this, 'reorganize_form_data' ), 10, 2 );
 	}
 
+	/**
+	 * Reorganize form data according to the actual form structure instead of the submitted data structure
+	 *
+	 * @param $valid_form_data
+	 * @param $form_field_data
+	 *
+	 * @return array
+	 */
+	public function reorganize_form_data( $valid_form_data, $form_field_data ) {
+		if ( empty( $form_field_data ) ) {
+			return $valid_form_data;
+		}
+		$new_form_data = array();
+
+		foreach ( $form_field_data as $key => $data ) {
+			$field_name = $data->general_setting->field_name;
+			if ( array_key_exists( $field_name, $valid_form_data ) ) {
+				$new_form_data[ $field_name ] = $valid_form_data[ $field_name ];
+			}
+		}
+		return $new_form_data;
+	}
 
 	/**
 	 * Validates the user submitted registration form field values.
@@ -565,11 +588,10 @@ class UR_Form_Validation extends UR_Validation {
 	 * @param [array] $form_fields Form Fields.
 	 * @param array   $form_data Form Data.
 	 * @param [int]   $form_id Form Id.
+	 * @param [int]   $user_id User Id.
 	 * @return void
 	 */
-	public function validate_update_profile( $form_fields, $form_data, $form_id ) {
-		$user_id = get_current_user_id();
-
+	public function validate_update_profile( $form_fields, $form_data, $form_id, $user_id ) {
 		$form_field_data = ur_get_form_field_data( $form_id );
 
 		$request_form_keys = array_map(
@@ -612,7 +634,7 @@ class UR_Form_Validation extends UR_Validation {
 				);
 				$required_fields = apply_filters( 'user_registration_missing_repeater_field_keys', $required_fields, $form_id );
 			} else {
-				user_registration_validate_edit_profile_form_field_data( $data, $form_data, $form_id, $form_field_data, $form_fields );
+				user_registration_validate_edit_profile_form_field_data( $data, $form_data, $form_id, $form_field_data, $form_fields, $user_id );
 			}
 		}
 
@@ -718,18 +740,22 @@ class UR_Form_Validation extends UR_Validation {
 			$single_form_field = $form_field_data[ $form_data_index ];
 			$class_name        = ur_load_form_field_class( $single_form_field->field_key );
 			$hook              = "user_registration_validate_{$single_form_field->field_key}";
-			/**
-			 * Action to run form field validations.
-			 */
-			add_action(
-				$hook,
-				array(
-					$class_name::get_instance(),
-					'validation',
-				),
-				10,
-				4
-			);
+
+			if ( class_exists( $class_name ) ) {
+
+				/**
+				 * Action to run form field validations.
+				 */
+				add_action(
+					$hook,
+					array(
+						$class_name::get_instance(),
+						'validation',
+					),
+					10,
+					4
+				);
+			}
 		}
 	}
 

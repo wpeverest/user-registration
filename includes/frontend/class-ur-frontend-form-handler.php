@@ -79,6 +79,8 @@ class UR_Frontend_Form_Handler {
 			)
 		);
 
+		self::$valid_form_data = apply_filters( 'user_registration_reorganize_form_data', self::$valid_form_data, $form_field_data );
+
 		self::$response_array = apply_filters( 'user_registration_response_array', self::$response_array, $form_data, $form_id );
 
 		if ( count( self::$response_array ) === 0 ) {
@@ -117,6 +119,19 @@ class UR_Frontend_Form_Handler {
 			}
 
 			$user_id = wp_insert_user( $userdata ); // Insert user data in users table.
+
+			if ( is_wp_error( $user_id ) ) {
+				$err_msg = "";
+				foreach ( $user_id->errors as $error ) {
+					$err_msg .= "<p>" . $error[0] . "</p>";
+				}
+
+				wp_send_json_error(
+					array(
+						'message' => sprintf( __( '%s', 'user-registration' ), $err_msg ),
+					)
+				);
+			}
 
 			$filtered_form_data = apply_filters( 'user_registration_before_user_meta_update', self::$valid_form_data, $user_id, $form_id );
 

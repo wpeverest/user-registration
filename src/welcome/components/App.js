@@ -30,9 +30,7 @@ import { useStateValue } from "../../context/StateProvider";
 import { actionTypes } from "../../context/gettingStartedContext";
 
 function App() {
-	const [{ settings, installPage, registrationPageLink }, dispatch] =
-		useStateValue();
-	const [initiateInstall, setInitiateInstall] = useState(false);
+	const [{ settings, registrationPageLink }, dispatch] = useStateValue();
 	const [disabledLink, setDisabledLink] = useState(false);
 	const [nextStepProgess, setNextStepProgess] = useState(false);
 
@@ -53,7 +51,7 @@ function App() {
 			label: __("Install Pages", "user-registration"),
 			title: __("Install Pages", "user-registration"),
 			description: __(
-				"The following pages and forms will be created automatically.",
+				"The following pages have been created automatically.",
 				"user-registration"
 			),
 			isDone: true,
@@ -226,83 +224,6 @@ function App() {
 			settings: newSettingsRef
 		});
 		handleNext();
-	};
-
-	/**
-	 * Install Pages in backend when Install Pages button is clicked.
-	 */
-	const handleInstallPages = () => {
-		setInitiateInstall(true);
-		// POST
-		apiFetch({
-			path:
-				restURL + "user-registration/v1/getting-started/install-pages",
-			method: "POST",
-			headers: {
-				"X-WP-Nonce": urRestApiNonce
-			},
-			data: { install_pages: true }
-		}).then((res) => {
-			if (res.success) {
-				if (res.default_form_id) {
-					dispatch({
-						type: actionTypes.GET_DEFAULT_FORM,
-						defaultFormId: res.default_form_id
-					});
-				}
-
-				if (res.registration_page_link) {
-					dispatch({
-						type: actionTypes.GET_DEFAULT_REGISTRATION_PAGE,
-						registrationPageLink: res.registration_page_link
-					});
-				}
-
-				if (res.is_pro) {
-					dispatch({
-						type: actionTypes.GET_IS_PRO,
-						defaultFormId: res.is_pro
-					});
-				}
-
-				let newInstallPageRef = { ...installPage };
-				newInstallPageRef.registration_page.status = "installing";
-				newInstallPageRef.registration_page.slug =
-					"/" + res.page_slug[0];
-
-				dispatch({
-					type: actionTypes.GET_INSTALL_PAGE,
-					installPage: newInstallPageRef
-				});
-
-				new Promise(function (resolve, reject) {
-					setTimeout(resolve, 5000);
-				}).then(function () {
-					newInstallPageRef.registration_page.status = "installed";
-					newInstallPageRef.my_account_page.status = "installing";
-					newInstallPageRef.my_account_page.slug =
-						"/" + res.page_slug[1];
-
-					dispatch({
-						type: actionTypes.GET_INSTALL_PAGE,
-						installPage: newInstallPageRef
-					});
-
-					new Promise(function (resolve, reject) {
-						setTimeout(resolve, 5000);
-					}).then(function () {
-						newInstallPageRef.my_account_page.status = "installed";
-
-						dispatch({
-							type: actionTypes.GET_INSTALL_PAGE,
-							installPage: newInstallPageRef
-						});
-					});
-				});
-			} else {
-				console.log(res.message);
-			}
-		});
 	};
 
 	/**
@@ -488,37 +409,20 @@ function App() {
 											)}
 										</Button>
 									)}
-									{steps[0].key === activeStep.key &&
-									installPage.my_account_page.status !==
-										"installed" ? (
-										<Button
-											variant="solid"
-											backgroundColor="#475BB2 !important"
-											color="#FAFAFA !important"
-											disabled={initiateInstall}
-											onClick={handleInstallPages}
-										>
-											{__(
-												"Install & Proceed",
-												"user-registration"
-											)}
-										</Button>
-									) : (
-										<Button
-											colorScheme="blue"
-											backgroundColor="#475BB2 !important"
-											color="#FAFAFA !important"
-											disabled={
-												steps[steps.length - 1].key ===
-												activeStep.key
-											}
-											onClick={() => {
-												handleSaveSettings("");
-											}}
-										>
-											{__("Next", "user-registration")}
-										</Button>
-									)}
+									<Button
+										colorScheme="blue"
+										backgroundColor="#475BB2 !important"
+										color="#FAFAFA !important"
+										disabled={
+											steps[steps.length - 1].key ===
+											activeStep.key
+										}
+										onClick={() => {
+											handleSaveSettings("");
+										}}
+									>
+										{__("Next", "user-registration")}
+									</Button>
 								</React.Fragment>
 							)}
 						</div>

@@ -10,7 +10,7 @@ import {
 	useRadioGroup,
 	HStack,
 	Image,
-	Icon,
+	Icon
 } from "@chakra-ui/react";
 import { Select } from "chakra-react-select";
 
@@ -49,7 +49,7 @@ function InputHandler({ setting, onBoardIconsURL }) {
 
 				return newOptionsRef.push({
 					label: setting.options[key],
-					value: key,
+					value: key
 				});
 			});
 		}
@@ -59,10 +59,10 @@ function InputHandler({ setting, onBoardIconsURL }) {
 
 	const RadioCard = (props) => {
 		const { radioProps, label, identifier, color, backgroundColor } = props;
-		const { state, getInputProps, getCheckboxProps } = useRadio(radioProps);
+		const { state, getInputProps, getRadioProps } = useRadio(radioProps);
 
 		const input = getInputProps();
-		const checkbox = getCheckboxProps();
+		const checkbox = getRadioProps();
 		return (
 			<Box as="label" marginleft="0px !important" marginBottom="0px">
 				<input {...input} />
@@ -80,15 +80,15 @@ function InputHandler({ setting, onBoardIconsURL }) {
 					}
 					_checked={{
 						bg: backgroundColor,
-						borderColor: color,
+						borderColor: color
 					}}
 					_focus={{
-						boxShadow: "outline",
+						boxShadow: "outline"
 					}}
 					px={5}
 					py={3}
 					style={{
-						flex: "1 0 30%",
+						flex: "1 0 30%"
 					}}
 				>
 					{setting.id ===
@@ -153,7 +153,7 @@ function InputHandler({ setting, onBoardIconsURL }) {
 
 		dispatch({
 			type: actionTypes.GET_SETTINGS,
-			settings: newChangedValueRef,
+			settings: newChangedValueRef
 		});
 	};
 
@@ -233,7 +233,7 @@ function InputHandler({ setting, onBoardIconsURL }) {
 
 				var color = {
 					activeBackgroundColor: "#F9FAFC",
-					activeFontColor: "#475BB2",
+					activeFontColor: "#475BB2"
 				};
 				if (
 					setting.id ===
@@ -243,7 +243,7 @@ function InputHandler({ setting, onBoardIconsURL }) {
 				) {
 					setting["color"] = {
 						activeBackgroundColor: "#F5FFF4",
-						activeFontColor: "#4CC741",
+						activeFontColor: "#4CC741"
 					};
 				}
 				const { getRootProps, getRadioProps } = useRadioGroup({
@@ -275,7 +275,7 @@ function InputHandler({ setting, onBoardIconsURL }) {
 						setting.color = color;
 
 						handleInputChange(setting.type, setting.id, data);
-					},
+					}
 				});
 
 				const group = getRootProps();
@@ -291,7 +291,7 @@ function InputHandler({ setting, onBoardIconsURL }) {
 								<RadioCard
 									key={value}
 									radioProps={getRadioProps({
-										value: key.toString(),
+										value: key.toString()
 									})}
 									label={setting.options[value]}
 									identifier={value}
@@ -332,7 +332,7 @@ function InputHandler({ setting, onBoardIconsURL }) {
 						className="dashicons dashicons-editor-help"
 						style={{
 							color: "#BABABA",
-							marginBottom: "5px",
+							marginBottom: "5px"
 						}}
 					/>
 				</Tooltip>
