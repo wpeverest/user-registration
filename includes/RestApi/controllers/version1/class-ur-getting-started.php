@@ -269,14 +269,15 @@ class UR_Getting_Started {
 			array_push( $enabled_features, 'user-registration-membership' );
 			update_option( 'user_registration_enabled_features', $enabled_features );
 			update_option( 'user_registration_membership_installed_flag', true );
-
 			array_push( $enabled_features, 'payment-history' );
 			array_push( $enabled_features, 'content-restriction' );
+
 
 			if ( $default_form_page_id ) {
 				$pages['membership_registration'] = array(
 					'name'    => _x( 'membership-registration', 'Page slug', 'user-registration' ),
 					'title'   => _x( 'Membership Registration', 'Page title', 'user-registration' ),
+					'option' => 'user_registration_member_registration_page_id',
 					'content' => '[' . apply_filters( 'user_registration_form_shortcode_tag', 'user_registration_form' ) . ' id="' . esc_attr( $default_form_page_id ) . '"]',
 				);
 			}
@@ -284,11 +285,13 @@ class UR_Getting_Started {
 			$pages['membership_pricing']  = array(
 				'name'    => _x( 'membership-pricing', 'Page slug', 'user-registration' ),
 				'title'   => _x( 'Membership Pricing', 'Page title', 'user-registration' ),
+				'option' => '',
 				'content' => '[user_registration_membership_listing]',
 			);
 			$pages['membership_thankyou'] = array(
 				'name'    => _x( 'membership-thankyou', 'Page slug', 'user-registration' ),
 				'title'   => _x( 'Membership Thankyou', 'Page title', 'user-registration' ),
+				'option' => 'user_registration_thank_you_page_id',
 				'content' => '[user_registration_membership_thank_you]',
 			);
 		}
@@ -296,6 +299,9 @@ class UR_Getting_Started {
 		foreach ( $pages as $key => $page ) {
 			$post_id = ur_create_page( esc_sql( $page['name'] ), 'user_registration_' . $key . '_page_id', wp_kses_post( ( $page['title'] ) ), wp_kses_post( $page['content'] ) );
 
+			if( !empty( $page['option'] )) {
+				update_option( $page['option'] , $post_id );
+			}
 			$page_details[ get_post_field( 'post_name', $post_id ) ] = array(
 				'page_url'      => get_permalink( $post_id ),
 				'page_url_text' => esc_html__( 'View Page', 'user-registration' ),
@@ -303,9 +309,7 @@ class UR_Getting_Started {
 				'page_slug'     => '/' . get_post_field( 'post_name', $post_id ),
 			);
 		}
-
 		Database::create_tables();
-
 		return new \WP_REST_Response(
 			array(
 				'success'      => true,

@@ -5821,6 +5821,9 @@ if ( ! function_exists( 'ur_check_is_inactive' ) ) {
 	 * Check if user is denied.
 	 */
 	function ur_check_is_inactive() {
+		if ( ! ur_check_module_activation( 'membership' ) ) {
+			return;
+		}
 		$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
 		$membership         = $members_repository->get_member_membership_by_id( get_current_user_id() );
 
