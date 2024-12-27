@@ -42,7 +42,7 @@ class UR_Admin_Form_Preview {
 	public static function welcome_page() {
 		wp_register_script( 'ur-form-preview-tooltipster', UR()->plugin_url() . '/assets/js/tooltipster/tooltipster.bundle.js', array( 'jquery' ), UR()->version, true );
 		wp_register_script( 'ur-form-preview-copy', UR()->plugin_url() . '/assets/js/admin/ur-copy.js', array( 'jquery' ), UR()->version, true );
-		wp_register_script( 'ur-form-preview-admin-script', UR()->plugin_url() . '/assets/js/admin/admin.js', array( 'wp-element', 'wp-blocks', 'wp-editor' ), UR()->version, true );
+		wp_register_script( 'ur-form-preview-admin-script', UR()->plugin_url() . '/assets/js/admin/admin.js', array( 'wp-element', 'wp-blocks', 'wp-editor' ), UR()->version );
 		wp_register_style( 'ur-form-preview-admin-style', UR()->plugin_url() . '/assets/css/admin.css', array(), UR()->version );
 		wp_register_style( 'ur-form-preview-default-style', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR()->version );
 		wp_register_style( 'ur-form-preview-smallscreens', UR()->plugin_url() . '/assets/css/user-registration-smallscreen.css', array(), UR()->version );
@@ -65,7 +65,7 @@ class UR_Admin_Form_Preview {
 			array(
 				'ajax_url'           => admin_url( 'admin-ajax.php' ),
 				'form_preview_nonce' => wp_create_nonce( 'ur_form_preview_nonce' ),
-				'pro_upgrade_link'   => 'https://wpeverest.com/wordpress-plugins/user-registration/?utm_source=plugin&utm_medium=form-preview&utm_campaign=pro-upgrade',
+				'pro_upgrade_link' => esc_url('https://wpuserregistration.com/pricing/?utm_source=form-preview&utm_medium=sidebar-upgrade-button&utm_campaign=' . UR()->utm_campaign),
 			)
 		);
 
@@ -74,7 +74,7 @@ class UR_Admin_Form_Preview {
 			ob_start();
 			self::form_preview_header();
 			self::form_preview_body();
-			self::setup_wizard_footer();
+			self::form_preview_footer();
 			exit;
 		}
 	}
@@ -187,7 +187,7 @@ class UR_Admin_Form_Preview {
 	 *
 	 * @since 1.0.0
 	 */
-	public static function setup_wizard_footer() {
+	public static function form_preview_footer() {
 		if ( function_exists( 'wp_print_media_templates' ) ) {
 			wp_print_media_templates();
 		}

@@ -295,8 +295,10 @@ wp_enqueue_style( 'ur-frontend-small-screen' );
 							$condition_submit_settings = ur_maybe_unserialize( get_post_meta( $form_id, 'user_registration_submit_condition', true ) );
 
 							$submit_btn_class = array_merge( $submit_btn_class, (array) ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_class' ) );
+							$disabled = isset($_GET['page']) && 'ur_form_preview' === $_GET['page'] ? 'disabled' : '';
+                            $css = $disabled ? 'cursor: not-allowed;' : '';
 							?>
-							<button type="submit" class="btn button ur-submit-button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" conditional_rules="<?php echo ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_submit_conditional_logic', true ) ) ? esc_attr( wp_json_encode( $condition_submit_settings ) ) : ''; ?>">
+							<button type="submit" <?php echo esc_attr($disabled)  ?> class="btn button ur-submit-button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" style="<?php echo $css  ?>" conditional_rules="<?php echo ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_submit_conditional_logic', true ) ) ? esc_attr( wp_json_encode( $condition_submit_settings ) ) : ''; ?>">
 								<span></span>
 								<?php
 								$submit = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_label' );
