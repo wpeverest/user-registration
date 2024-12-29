@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - UR-1688-enhance/login-form-builder
+      - UR-1917-login-form-design-tweak-according-to-improvised-design
     workflow_dispatch:
 jobs:
   sync:

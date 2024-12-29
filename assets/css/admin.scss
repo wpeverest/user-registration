@@ -4877,10 +4877,10 @@
 			 margin-left: 0;
 			 min-width: 100%;
 
-			 .ur-selected-inputs {
-				 padding-left: $spacing_20px !important;
-				 padding-right: $spacing_20px !important;
-			 }
+			//  .ur-selected-inputs {
+			// 	 padding-left: $spacing_20px !important;
+			// 	 padding-right: $spacing_20px !important;
+			//  }
 		 }
 	 }
  }
@@ -6543,3 +6543,127 @@
 		 flex-direction: column;
 	 }
  }
+
+
+// Login Form Builder CSS
+body {
+	&.user-registration_page_user-registration-login-forms {
+		overflow-x: hidden;
+
+		.user-registration-login-form-container {
+			.ur-registered-from {
+				.ur-login-form-settings {
+					max-width: 360px;
+					width: 100% !important;
+
+					.nav-tab-wrapper {
+						height: 100%;
+
+						.ur-tab-contents {
+							height: 100%;
+							border-right: 1px solid #e1e1e1;
+							padding-bottom: 16px !important;
+
+							#ur-login-form-setting {
+								.ur-toggle-content {
+									gap: 24px !important;
+
+									select {
+										min-height: 38px;
+										width: 100%;
+										min-width: unset !important;
+										margin: 0;
+									}
+
+									.select2 {
+										&-selection {
+											min-height: 38px;
+
+											&__rendered {
+												height: 100%;
+												padding: 2px 12px;
+											}
+
+											&__arrow {
+												top: 5px;
+											}
+										}
+									}
+
+									.user-registration-login-form-global-settings {
+										&--field {
+											input {
+												min-width: unset !important;
+												margin: 0;
+
+												&:focus {
+													border-color: #475BB2;
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
+					&.collapsed {
+						max-width: 0px;
+					}
+				}
+
+				#ur-collapse {
+					background: #FAFAFC;
+
+					&.close {
+						right: -21px;
+					}
+
+					&.open {
+						left: 0;
+					}
+				}
+			}
+
+			.ur-builder-wrapper {
+				.ur-selected-inputs {
+					position: sticky;
+					position: -webkit-sticky;
+					top: 30px;
+					padding: 30px !important;
+				}
+			}
+
+			.ur-registered-inputs {
+				&.ur-login-form-shortcode {
+					max-width: 350px;
+					width: 100% !important;
+
+					.nav-tab-wrapper {
+						height: 100%;
+
+						.ur-tab-contents {
+							border-left: 1px solid #e1e1e1;
+							height: 100%;
+							position: sticky;
+							position: -webkit-sticky;
+							top: 30px;
+						}
+
+						.ur-login-shortcode {
+							&--wrapper {
+								.ur-login-content {
+									.login-forms-shortcode-action {
+										input[type="text"] {
+											padding: 0;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
