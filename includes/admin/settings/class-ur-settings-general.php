@@ -403,7 +403,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 				$settings        = get_login_options_settings();
 				$captcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha' );
 
-				if ( ur_string_to_bool( $captcha_enabled ) && ! ur_check_captch_keys( "login" ) ) {
+				if ( ur_string_to_bool( $captcha_enabled ) && ! ur_check_captch_keys( 'login' ) ) {
 					echo '<div id="ur-captcha-error" class="notice notice-warning is-dismissible"><p><strong>' . sprintf(
 						/* translators: %s - Integration tab url */
 						'%s<a href="%s" rel="noreferrer noopener" target="_blank">Add Now.</a>',
@@ -430,8 +430,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 				$settings = $this->get_settings();
 			} elseif ( 'frontend-messages' === $current_section ) {
 				$settings = $this->get_frontend_messages_settings();
-			} elseif ( 'login-options' === $current_section ) {
-				$settings = get_login_options_settings();
 			}
 
 			UR_Admin_Settings::save_fields( $settings );

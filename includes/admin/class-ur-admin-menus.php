@@ -492,9 +492,9 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'registration_page',
 				)
 			);
-			if ( isset( $_GET['page'] ) && ('user-registration' === $_GET['page'] || 'user-registration-registration-forms' === $_GET['page'] || 'user-registration-login-forms' === $_GET['page']) ) {
-				add_submenu_page( 'user-registration', __( 'Registration Forms', 'user-registration' ), '↳ ' . __( 'Registration Forms', 'user-registration' ), 'manage_user_registration', 'user-registration', array(  $this, 'registration_page') );
-				add_submenu_page( 'user-registration', __( 'Login Form', 'user-registration' ), '↳ ' . __( 'Login Form', 'user-registration' ), 'manage_user_registration', 'user-registration-login-forms', array(  $this, 'registration_page') );
+			if ( isset( $_GET['page'] ) && ( 'user-registration' === $_GET['page'] || 'user-registration-registration-forms' === $_GET['page'] || 'user-registration-login-forms' === $_GET['page'] ) ) {
+				add_submenu_page( 'user-registration', __( 'Registration Forms', 'user-registration' ), '<span style="margin-left:5px;">  ⤷ </span>' . __( 'Registration Forms', 'user-registration' ), 'manage_user_registration', 'user-registration', array( $this, 'registration_page' ) );
+				add_submenu_page( 'user-registration', __( 'Login Form', 'user-registration' ), '<span style="margin-left:5px;">  ⤷ </span>' . __( 'Login Form', 'user-registration' ), 'manage_user_registration', 'user-registration-login-forms', array( $this, 'registration_page' ) );
 			}
 		}
 
@@ -654,11 +654,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				wp_enqueue_style( 'user-registration-css', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR_VERSION );
 
 				$ur_login_form_params = array(
-					'ajax_url'           => admin_url( 'admin-ajax.php' ),
-					'ur_login_settings_save' => wp_create_nonce( "ur_login_settings_save_nonce" ),
-					'login_settings' => get_login_options_settings(),
+					'ajax_url'               => admin_url( 'admin-ajax.php' ),
+					'ur_login_settings_save' => wp_create_nonce( 'ur_login_settings_save_nonce' ),
+					'login_settings'         => get_login_options_settings(),
 					'is_login_settings_page' => isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page'] ? true : false,
-					'i18n_admin' => array(
+					'i18n_admin'             => array(
 						'i18n_settings_successfully_saved' => _x( 'Settings successfully saved.', 'user registration admin', 'user-registration' ),
 						'i18n_success'                     => _x( 'Success', 'user registration admin', 'user-registration' ),
 						'i18n_error'                       => _x( 'Error', 'user registration admin', 'user-registration' ),

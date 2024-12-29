@@ -26,8 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</div>
 	<div class="major-publishing-actions wp-clearfix">
 		<div class="publishing-action">
-			<a href="<?php echo esc_url( add_query_arg( array( 'ur_login_preview' => 'true' ), home_url() ) ); ?>" rel="noreferrer noopener" target="_blank" class="button button-secondary button-large" title="<?php esc_attr_e( 'Preview', 'user-registration' ); ?>"><?php esc_html_e( 'Preview', 'user-registration' ); ?></a>
-			<button type="button" name="save_login_form" id="save_form_footer" class="button button-primary button-large menu-form ur_save_login_form_action_button"> <?php echo __( "Update Form", 'user-registration' ); ?> </button>
+			<button type="button" name="save_login_form" id="save_form_footer" class="button button-primary button-large menu-form ur_save_login_form_action_button"> <?php echo __( 'Update Form', 'user-registration' ); ?> </button>
 		</div><!-- END .publishing-action -->
 	</div>
 </div>
@@ -50,15 +49,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 										<div id="ur-tab-login-options" class="ur-tab-content">
 											<?php
 												echo '<form id="ur-login-form-setting">';
-												foreach ( $login_form_settings['sections'] as $section ) {
-													echo '<div class="ur-login-form-setting-block" style="display:block;">';
-													echo '<h2 class="ur-toggle-heading">'.  __( $section['title'], 'user-registration' ) . '</h2>';
-													echo '<hr/>';
-													echo '<div class="ur-toggle-content" style="display:none;">';
-													render_login_option_settings( $section );
-													echo '</div>';
-													echo '</div>';
-												}
+											foreach ( $login_form_settings['sections'] as $section ) {
+												echo '<div class="ur-login-form-setting-block" style="display:block;">';
+												echo '<h2 class="ur-toggle-heading">' . __( $section['title'], 'user-registration' ) . '</h2>';
+												echo '<hr/>';
+												echo '<div class="ur-toggle-content" style="display:none;">';
+												render_login_option_settings( $section );
+												echo '</div>';
+												echo '</div>';
+											}
 												echo '</form>';
 											?>
 										</div>

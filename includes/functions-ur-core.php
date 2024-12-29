@@ -4092,7 +4092,14 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 					);
 				}
 
-				ur_add_notice( $message, 'success' );
+				/**
+				 * Filters the error messages displayed on the login screen.
+				 *
+				 * @param string $message The original error message displayed on the login screen.
+				 */
+				add_filter( "user_registration_passwordless_login_notice", function( $err_msg ) use ($message) {
+					return $message;
+				}, 10, 1 );
 			} else {
 
 				if ( ur_is_ajax_login_enabled() ) {
@@ -4107,7 +4114,9 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				 *
 				 * @param string $message The original error message displayed on the login screen.
 				 */
-				ur_add_notice( apply_filters( 'login_errors', $message ), 'error' );
+				add_filter( "user_registration_post_login_errors", function( $err_msg ) use ($message) {
+					return apply_filters( 'login_errors', $message );
+				}, 10, 1 );
 				/**
 				 * Triggered when a user fails to log in during the user registration process.
 				 */
@@ -7784,7 +7793,7 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 				case 'toggle':
 					$option_value = UR_Admin_Settings::get_option( $value['id'], $value['default'] );
 
-					$settings .= '<div class="user-registration-login-form-global-settings">';
+					$settings .= '<div class="user-registration-login-form-global-settings user-registration-login-form-toggle-option">';
 					$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 					$settings .= '<div class="user-registration-login-form-global-settings--field">';
 					$settings .= '<div class="ur-toggle-section">';

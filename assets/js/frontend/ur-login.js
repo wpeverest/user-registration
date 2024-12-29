@@ -102,7 +102,7 @@ jQuery(function ($) {
 									.remove();
 
 								$this
-									.closest("#user-registration")
+									.closest(".ur-frontend-form")
 									.prepend(
 										'<ul class="user-registration-error">' +
 											res.data.message +
@@ -121,7 +121,7 @@ jQuery(function ($) {
 										.remove();
 
 									$this
-										.closest("#user-registration")
+										.closest(".ur-frontend-form")
 										.prepend(
 											'<ul class="user-registration-message">' +
 												res.data.message +
@@ -149,7 +149,7 @@ jQuery(function ($) {
 							.remove();
 
 						$this
-							.closest("#user-registration")
+							.closest(".ur-frontend-form")
 							.prepend(
 								'<ul class="user-registration-error">' +
 									ur_login_params.ajax_form_submit_error +

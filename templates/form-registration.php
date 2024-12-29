@@ -113,27 +113,27 @@ do_action( 'user_registration_before_registration_form', $form_id );
 		} else {
 			?>
 			<?php
-				if ( apply_filters( 'user_registration_show_registration_form_title', true ) ) {
-					$registration_title_label =
-					/**
-					 * Filter to modify the registration title.
-					 *
-					 * @param string.
-					 * @return array.
-					 */
-					apply_filters( 'ur_registration_title', "Register" );
-					$registration_title_description =
-					/**
-					 * Filter to modify the registration title description.
-					 *
-					 * @param string.
-					 * @return array.
-					 */
-					apply_filters( 'ur_registration_title_description', "Fill the form below to create an account." );
-					/* translators: %s - registration Title. */
-					echo wp_kses_post( sprintf( __( '<span class="user-registration-registration-title"> %s </span> </br>', 'user-registration' ), $registration_title_label ) );
-					echo wp_kses_post( sprintf( __( '<p class="user-registration-registration-description"> %s </p>', 'user-registration' ), $registration_title_description ) );
-				}
+			if ( apply_filters( 'user_registration_show_registration_form_title', true ) ) {
+				$registration_title_label =
+				/**
+				 * Filter to modify the registration title.
+				 *
+				 * @param string.
+				 * @return array.
+				 */
+				apply_filters( 'ur_registration_title', 'Register' );
+				$registration_title_description =
+				/**
+				 * Filter to modify the registration title description.
+				 *
+				 * @param string.
+				 * @return array.
+				 */
+				apply_filters( 'ur_registration_title_description', 'Fill the form below to create an account.' );
+				/* translators: %s - registration Title. */
+				echo wp_kses_post( sprintf( __( '<span class="user-registration-registration-title"> %s </span> </br>', 'user-registration' ), $registration_title_label ) );
+				echo wp_kses_post( sprintf( __( '<p class="user-registration-registration-description"> %s </p>', 'user-registration' ), $registration_title_description ) );
+			}
 			?>
 			<form method='post' class='register' data-form-id="<?php echo absint( $form_id ); ?>"
 				data-enable-strength-password="<?php echo esc_attr( $enable_strong_password ); ?>" data-minimum-password-strength="<?php echo esc_attr( $minimum_password_strength ); ?>"
