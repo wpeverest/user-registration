@@ -4374,6 +4374,19 @@ if ( ! function_exists( 'ur_is_passwordless_login_enabled' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ur_is_user_registration_pro_passwordless_login_default_login_area_enabled' ) ) {
+	/**
+	 * Check whether the passwordless login as default login is enabled or not.
+	 *
+	 * @return bool
+	 *
+	 * @since 4.0
+	 */
+	function ur_is_user_registration_pro_passwordless_login_default_login_area_enabled() {
+		return ur_option_checked( 'user_registration_pro_passwordless_login_default_login_area', false );
+	}
+}
+
 if ( ! function_exists( 'ur_get_ip_address' ) ) {
 
 	/**
@@ -7065,7 +7078,6 @@ if ( ! function_exists( 'ur_return_social_profile_pic' ) ) {
 
 add_filter( 'user_registration_profile_picture_url',  'ur_return_social_profile_pic' , 10, 2 );
 
-
 if ( ! function_exists( 'get_login_options_settings' ) ) {
 	/**
 	 * Get settings for login form
@@ -7394,7 +7406,6 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 		return $settings;
 	}
 }
-
 
 if ( ! function_exists( 'render_login_option_settings' ) ) {
 
@@ -7876,5 +7887,43 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 			}// End switch case.
 		}
 		echo $settings;
+	}
+}
+
+add_filter('user_registration_find_my_account_in_page', 'ur_find_my_account_in_custom_template', 10, 2);
+
+if ( ! function_exists( 'ur_find_my_account_in_custom_template' ) ) {
+	/**
+	 * Return true if found ur my account or login
+	 *
+	 * @param $value
+	 * @param $page_id
+	 *
+	 * @return mixed
+	 */
+	function ur_find_my_account_in_custom_template( $value, $page_id ) {
+
+		if ( $value ) {
+			return $value;
+		}
+
+		$content = file_get_contents( get_page_template() );
+		if ( strpos( $content, '[user_registration_my_account' ) !== false ) {
+			return true;
+		}
+		if ( strpos( $content, '[user_registration_login' ) !== false ) {
+			return true;
+		}
+		if ( strpos( $content, '[woocommerce_my_account' ) !== false ) {
+			return true;
+		}
+		if ( strpos( $content, '<!-- wp:user-registration/myaccount' ) !== false ) {
+			return true;
+		}
+		if ( strpos( $content, '<!-- wp:user-registration/login' ) !== false ) {
+			return true;
+		}
+
+		return $value;
 	}
 }

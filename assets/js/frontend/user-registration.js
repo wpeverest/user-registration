@@ -1,4 +1,4 @@
-/* global  user_registration_params, ur_password_strength_meter_params */
+/* global  user_registration_params, ur_frontend_params_with_form_id */
 (function ($) {
 	var user_registration_form_init = function () {
 		var ursL10n = user_registration_params.ursL10n;
@@ -1355,7 +1355,9 @@
 												);
 											}
 											$(".ur-input-count").text("0");
-											$this[0].reset();
+											if ( ! user_registration_params.ur_hold_data_before_redirection ) {
+												$this[0].reset();
+											}
 											if (
 												$this.find("#profile_pic_url")
 													.length
@@ -2383,6 +2385,16 @@
 				}
 			});
 
+				// Handel WYSIWYG field client side validation.
+				$( document ).on( 'tinymce-editor-init', function( event, editor ) {
+					var $editorContainer = $(editor.getContainer());
+					var containerId = $editorContainer.attr('id');
+					var hiddenEditor = $("#"+containerId).parent().parent().parent().find("[data-label = 'WYSIWYG']");
+					editor.on('keyup', function(e) {
+						hiddenEditor.val(tinyMCE.activeEditor.getContent());
+					});
+				});
+
 			$(".ur-frontend-form").each(function () {
 				var $registration_form = $(this).find("form.register");
 
@@ -2670,7 +2682,7 @@ function ur_includes(arr, item) {
  */
 function customPasswordChecks(password) {
 	var custom_password_params =
-			ur_password_strength_meter_params.custom_password_params,
+			ur_frontend_params_with_form_id.custom_password_params,
 		minLength =
 			custom_password_params.minimum_pass_length !== undefined &&
 			custom_password_params.minimum_pass_length >= 3

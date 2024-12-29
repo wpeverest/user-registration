@@ -59,26 +59,36 @@ $is_passwordless_enabled = ! ur_is_passwordless_login_enabled() || ! isset( $_GE
 $is_login_settings = ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page'] ) ? true : false;
 $settings_class    = $is_login_settings ? 'user-registration-login-settings-form' : '';
 $template_class   .= ' ' . $settings_class;
-?>
 
-<?php
+/**
+ * Check passwordless login as default Login Page is enabled or not.
+ *
+ * @since 4.0
+ */
+if ( ur_is_passwordless_login_enabled() ) {
+	$is_passwordless_login_default_login_area_enabled = ur_is_user_registration_pro_passwordless_login_default_login_area_enabled();
+} else {
+	$is_passwordless_login_default_login_area_enabled = 0;
+}
+
 /**
  * Action to fire before the rendering of customer login form.
  */
 do_action( 'user_registration_before_customer_login_form' );
-?>
-<?php
-	/**
-	 * Filter to modify the notice content before rendering of user registration login form.
-	 *
-	 * @param function Print notice function.
-	 * @return function.
-	 */
-	ur_add_notice( apply_filters( 'user_registration_post_login_errors', '' ), 'error' );
+
+
+/**
+ * Filter to modify the notice content before rendering of user registration login form.
+ *
+ * @param function Print notice function.
+ * @return function.
+ */
+ur_add_notice( apply_filters( 'user_registration_post_login_errors', '' ), 'error' );
 if ( ! $is_passwordless_enabled ) {
 	ur_add_notice( apply_filters( 'user_registration_passwordless_login_notice', '' ), 'success' );
 }
-	apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() );
+apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() );
+
 ?>
 <div class="ur-frontend-form login <?php echo esc_attr( $template_class ); ?>" id="ur-frontend-form">
 	<form class="user-registration-form user-registration-form-login login" method="post">
@@ -128,8 +138,8 @@ if ( ! $is_passwordless_enabled ) {
 						<?php } ?>
 						</span>
 					</p>
-					<?php if ( $is_passwordless_enabled ) : ?>
-					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide<?php echo ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) ? ' hide_show_password' : ''; ?>" data-field="password">
+					<?php if ( $is_passwordless_enabled && ! $is_passwordless_login_default_login_area_enabled ) : ?>
+					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide<?php echo ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) ? ' hide_show_password' : ''; ?>">
 						<?php
 						if ( ! $hide_labels || $is_login_settings ) {
 							printf( '<label for="password">%s <span class="required">*</span></label>', esc_html( $labels['password'] ) );
@@ -172,7 +182,7 @@ if ( ! $is_passwordless_enabled ) {
 							<?php
 								$remember_me_enabled = ur_option_checked( 'user_registration_login_options_remember_me', true );
 
-							if ( ( $remember_me_enabled && $is_passwordless_enabled ) || $is_login_settings ) {
+							if ( ( $remember_me_enabled && $is_passwordless_enabled && ! $is_passwordless_login_default_login_area_enabled ) || $is_login_settings ) {
 								?>
 									<label class="user-registration-form__label user-registration-form__label-for-checkbox inline">
 										<input class="user-registration-form__input user-registration-form__input-checkbox" name="rememberme" type="checkbox" id="rememberme" value="forever" /> <span><?php echo esc_html( $labels['remember_me'] ); ?></span>
@@ -185,7 +195,7 @@ if ( ! $is_passwordless_enabled ) {
 							<?php
 								$lost_password_enabled = ur_option_checked( 'user_registration_login_options_lost_password', true );
 
-							if ( ( $lost_password_enabled && $is_passwordless_enabled ) || $is_login_settings ) {
+							if ( ( $lost_password_enabled && $is_passwordless_enabled && ! $is_passwordless_login_default_login_area_enabled ) || $is_login_settings ) {
 								?>
 										<p class="user-registration-LostPassword lost_password">
 											<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php echo esc_html( $labels['lost_your_password'] ); ?></a>
@@ -196,10 +206,13 @@ if ( ! $is_passwordless_enabled ) {
 					</div>
 						<div>
 						<?php
-						/**
-						 * Action to fire before rendering of submit button for user registration login form.
-						 */
-						do_action( 'user_registration_login_form_before_submit_button' );
+
+						if ( ! $is_passwordless_login_default_login_area_enabled ) {
+							/**
+							 * Action to fire before rendering of submit button for user registration login form.
+							 */
+							do_action( 'user_registration_login_form_before_submit_button' );
+						}
 						?>
 							<?php if ( $enable_ajax ) { ?>
 							<button type="submit" class="user-registration-Button button ur-submit-button" id="user_registration_ajax_login_submit" name="login" value="<?php echo esc_html( $labels['login'] ); ?>" <?php echo ( $is_login_settings || ( isset( $_GET['ur_login_preview'] ) && $_GET['ur_login_preview'] ) ) ? 'disabled' : ''; ?>/><?php echo esc_html( $labels['login'] ); ?><span></span></button>

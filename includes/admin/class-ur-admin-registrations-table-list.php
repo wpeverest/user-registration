@@ -115,10 +115,11 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 		if ( current_user_can( $post_type_object->cap->edit_post, $row->ID ) ) {
 			$preview_link = add_query_arg(
 				array(
-					'ur_preview' => 'true',
+					'page' => 'ur_form_preview',
 					'form_id'    => absint( $row->ID ),
+
 				),
-				home_url()
+				admin_url('admin.php')
 			);
 
 			$duplicate_link = admin_url( 'admin.php?page=user-registration&action=duplicate&nonce=' . $duplicate_nonce . '&post-id=' . $row->ID );

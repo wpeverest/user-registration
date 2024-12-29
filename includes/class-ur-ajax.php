@@ -75,6 +75,7 @@ class UR_AJAX {
 			'search_global_settings'         => false,
 			'php_notice_dismiss'             => false,
 			'locate_form_action'             => false,
+			'form_preview_save'              => false,
 			'captcha_test'                   => false,
 			'generate_row_settings'          => false,
 			'my_account_selection_validator' => false,
@@ -767,6 +768,29 @@ class UR_AJAX {
 				)
 			);
 		}
+	}
+
+	/**
+	 * Get form settings theme styles
+	 */
+	public static function form_preview_save() {
+		check_ajax_referer( 'ur_form_preview_nonce', 'security' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission.', 'user-registration' ) ) );
+			wp_die( -1 );
+		}
+		$form_id = isset( $_POST['id'] ) ? sanitize_text_field( $_POST['id'] ) : '';
+		$theme   = isset( $_POST['theme'] ) ? sanitize_text_field( $_POST['theme'] ) : '';
+
+		if ( empty( $form_id ) || empty( $theme ) ) {
+			wp_send_json_error( array( 'message' => __( 'Insufficient information', 'user-registration' ) ) );
+		}
+
+		$default_theme = ( 'default' === $theme ) ? 'default' : 'theme';
+		update_post_meta( $form_id, 'user_registration_enable_theme_style', $default_theme );
+
+		wp_send_json_success( array( 'message' => __( 'Saved', 'user-registration' ) ) );
 	}
 
 	/**
