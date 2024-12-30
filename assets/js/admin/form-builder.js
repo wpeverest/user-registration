@@ -393,7 +393,8 @@
 					"user_registration_admin_before_form_submit",
 					[data]
 				);
-
+				var check_membership_validations = URFormBuilder.check_membership_validation(data);
+				if(!check_membership_validations) return;
 				// validation for unsupported currency by paypal.
 				if (
 					typeof data.data.ur_payment_disabled !== "undefined" &&
@@ -6644,6 +6645,24 @@
 						"data-last-group",
 						parseInt(next_li_group.length) - 1
 					);
+			},
+			check_membership_validation: function (data) {
+				var validations = ['empty_membership_group_status', 'payment_field_present_status'],
+					is_valid = true;
+
+				for (var i = 0; i < validations.length; i++) {
+					var key = validations[i];
+					if (
+						typeof data.data[key] !== "undefined" &&
+						data.data[key][0].validation_status === false
+					) {
+
+						is_valid = false;
+						URFormBuilder.show_message(data.data[key][0].validation_message);
+						return is_valid;
+					}
+				}
+				return is_valid;
 			}
 		};
 

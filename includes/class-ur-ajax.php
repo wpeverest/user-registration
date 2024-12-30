@@ -65,6 +65,7 @@ class UR_AJAX {
 			'install_extension'              => false,
 			'profile_pic_remove'             => false,
 			'form_save_action'               => false,
+			'login_settings_save_action'     => false,
 			'embed_form_action'              => false,
 			'embed_page_list'                => false,
 			'allow_usage_dismiss'            => false,
@@ -74,6 +75,7 @@ class UR_AJAX {
 			'search_global_settings'         => false,
 			'php_notice_dismiss'             => false,
 			'locate_form_action'             => false,
+			'form_preview_save'              => false,
 			'captcha_test'                   => false,
 			'generate_row_settings'          => false,
 			'my_account_selection_validator' => false,
@@ -769,6 +771,29 @@ class UR_AJAX {
 	}
 
 	/**
+	 * Get form settings theme styles
+	 */
+	public static function form_preview_save() {
+		check_ajax_referer( 'ur_form_preview_nonce', 'security' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission.', 'user-registration' ) ) );
+			wp_die( -1 );
+		}
+		$form_id = isset( $_POST['id'] ) ? sanitize_text_field( $_POST['id'] ) : '';
+		$theme   = isset( $_POST['theme'] ) ? sanitize_text_field( $_POST['theme'] ) : '';
+
+		if ( empty( $form_id ) || empty( $theme ) ) {
+			wp_send_json_error( array( 'message' => __( 'Insufficient information', 'user-registration' ) ) );
+		}
+
+		$default_theme = ( 'default' === $theme ) ? 'default' : 'theme';
+		update_post_meta( $form_id, 'user_registration_enable_theme_style', $default_theme );
+
+		wp_send_json_success( array( 'message' => __( 'Saved', 'user-registration' ) ) );
+	}
+
+	/**
 	 * User input dropped function
 	 *
 	 * @throws Exception Throws If Empty Form Data.
@@ -946,7 +971,7 @@ class UR_AJAX {
 			 * Action after form setting save.
 			 * Default is the $_POST['data'].
 			 */
-         do_action( 'user_registration_after_form_settings_save', wp_unslash( $_POST['data'] ) ); //phpcs:ignore
+         	do_action( 'user_registration_after_form_settings_save', wp_unslash( $_POST['data'] ) ); //phpcs:ignore
 
 			wp_send_json_success(
 				array(
@@ -961,6 +986,63 @@ class UR_AJAX {
 				)
 			);
 		}// End try().
+	}
+
+	public static function login_settings_save_action() {
+
+		check_ajax_referer( 'ur_login_settings_save_nonce', 'security' );
+
+		$settings_data = $_POST['data']['setting_data'];
+
+		$output = array_combine(
+			array_column($settings_data, 'option'),
+			array_column($settings_data, 'value')
+		);
+
+		do_action( 'user_registration_validation_before_login_form_save', $output );
+
+		if ( ur_string_to_bool( $output[ 'user_registration_login_options_enable_recaptcha' ] ) ) {
+			if ( "" === $output[ 'user_registration_login_options_configured_captcha_type' ] || ! $output[ 'user_registration_login_options_configured_captcha_type' ]  ) {
+				wp_send_json_error(
+					array(
+						'message' => esc_html__( "Seems like you haven't selected the reCAPTCHA type (Configured Captcha).", 'user-registration' ),
+					)
+				);
+			}
+		}
+
+		if ( ur_string_to_bool( $output['user_registration_login_options_prevent_core_login'] ) ) {
+			if ( is_numeric( $output['user_registration_login_options_login_redirect_url'] ) ) {
+				$is_page_my_account_page = ur_find_my_account_in_page( sanitize_text_field( wp_unslash( $output['user_registration_login_options_login_redirect_url'] ) ) );
+				if ( ! $is_page_my_account_page ) {
+					wp_send_json_error(
+						array(
+							'message' => esc_html__(
+								'The selected page is not a User Registration Login or My Account page.',
+								'user-registration'
+							),
+						)
+					);
+				}
+			}
+		}
+
+		foreach( $output as $key => $settings ) {
+			update_option( $key, $settings );
+		}
+
+		/**
+		 * Action after form setting save.
+		 * Default is the $_POST['data'].
+		 */
+		do_action( 'user_registration_after_login_form_settings_save', wp_unslash( $settings_data ) ); //phpcs:ignore
+
+		wp_send_json_success(
+			array(
+
+			)
+		);
+
 	}
 
 	/**
@@ -1481,7 +1563,7 @@ class UR_AJAX {
 		$install_status = install_plugin_install_status( $api );
 
 		if ( current_user_can( 'activate_plugin', $install_status['file'] ) && is_plugin_inactive( $install_status['file'] ) ) {
-			if ( isset( $_POST['page'] ) && 'user-registration_page_add-new-registration' === $_POST['page'] ) {
+			if ( isset( $_POST['page'] ) && 'user-registration-membership_page_add-new-registration' === $_POST['page'] ) {
 				activate_plugin( $install_status['file'] );
 			} else {
 				$status['activateUrl'] =

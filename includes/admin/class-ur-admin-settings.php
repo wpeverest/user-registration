@@ -59,6 +59,15 @@ class UR_Admin_Settings {
 			$settings[] = include 'settings/class-ur-settings-misc.php';
 			$settings[] = include 'settings/class-ur-settings-integration.php';
 
+			if( ur_check_module_activation( 'membership' ) ) {
+				include_once UR_ABSPATH . 'modules/class-ur-payment-settings.php';
+				include_once UR_ABSPATH . 'modules/stripe/class-ur-stripe-module.php';
+			}
+			else if ( UR_PRO_ACTIVE && ur_check_module_activation( 'payments' ) )
+			{
+				include_once UR_ABSPATH . 'modules/class-ur-payment-settings.php';
+			}
+
 			if ( ! function_exists( 'is_plugin_active' ) ) {
 				include_once ABSPATH . 'wp-admin/includes/plugin.php';
 			}
@@ -1186,7 +1195,7 @@ class UR_Admin_Settings {
 						} else {
 							switch ( $subsection ) {
 								case 'login-options':
-									$subsection_array = $section->get_login_options_settings();
+									$subsection_array = get_login_options_settings();
 									break;
 								case 'frontend-messages':
 									$subsection_array = $section->get_frontend_messages_settings();

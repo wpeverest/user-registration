@@ -626,6 +626,7 @@ class UR_Emailer {
 
 		if ( 0 === intval( $status ) ) {
 
+			$user_action               = isset( $_POST['action'] ) ? $_POST['action'] : '';
 			$subject                   = get_option( 'user_registration_registration_pending_email_subject', __( 'Sorry! Registration changed to pending on {{blog_info}}', 'user-registration' ) );
 			$settings                  = new UR_Settings_Registration_Pending_Email();
 			$message                   = $settings->ur_get_registration_pending_email();
@@ -638,7 +639,9 @@ class UR_Emailer {
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
 			if ( ur_option_checked( 'user_registration_enable_registration_pending_email', true ) ) {
-				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), '', $template_id );
+				if ( "user_registration_user_form_submit" !== $user_action ) {
+					self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), '', $template_id );
+				}
 			}
 		} elseif ( -1 === intval( $status ) ) {
 

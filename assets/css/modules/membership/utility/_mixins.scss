@@ -1,0 +1,147 @@
+// Form Fields Design
+@mixin form-field-style {
+    height: 38px;
+    border-color: #BABABA;
+    color: #383838;
+    padding: 8px 12px;
+    font-size: 14px;
+    line-height: 24px;
+    border-radius: 4px;
+
+    &::placeholder {
+        color: #999999;
+    }
+
+    &:focus {
+        box-shadow: none;
+        outline: none;
+        border-color: #475BB2;
+    }
+}
+
+// Bulk Action CSS
+@mixin bulk-action {
+    margin: 0;
+    padding: 0;
+    height: auto;
+    margin-bottom: 20px;
+
+    .bulkactions {
+        select {
+            min-height: 38px;
+            padding: 0 12px;
+            width: 220px;
+            margin-right: 10px;
+            border-color: #BABABA;
+            color: #383838;
+
+            &:focus {
+                box-shadow: none;
+                outline: none;
+                border-color: #475BB2;
+            }
+        }
+
+        input[type="submit"] {
+            padding: 8px 14px;
+            font-size: 14px;
+            line-height: 20px;
+            margin-right: 0;
+            color: #475BB2;
+            border-color: #475BB2;
+            background: #F6F7F7;
+            font-weight: 500;
+        }
+    }
+}
+
+// Form Toggle Button
+@mixin form-toggle {
+    input[type="checkbox"] {
+        border-radius: 20px;
+        border: 0;
+        width: 30px;
+        flex: 0 0 30px;
+        background: #d5d5d5;
+        box-shadow: none;
+
+        &::after {
+            width: 12px;
+            height: 12px;
+            transform: translateX(3px);
+        }
+
+        &:checked {
+            background: #475BB2;
+            border-color: #475BB2;
+
+            &::after {
+                transform: translateX(15px);
+            }
+        }
+    }
+}
+
+
+// Form Footer Save and Cancel Buttons
+@mixin form-footer-button {
+    margin-bottom: 0;
+    padding: 0 !important;
+    padding-top: 28px !important;
+    border-top: 1px solid #e1e1e1;
+    margin-top: 30px;
+
+    .button {
+        &-secondary {
+            border-radius: 4px;
+            box-shadow: none;
+            padding: 8px 16px;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 24px;
+            border: 0;
+            background: transparent;
+            border: 1px solid #bababa;
+
+            a {
+                color: #6B6B6B;
+            }
+        }
+
+        &-primary {
+            border-radius: 4px;
+            box-shadow: none;
+            padding: 8px 16px;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 24px;
+            border: 0;
+        }
+    }
+}
+
+// Back Button CSS
+@mixin back-button {
+    margin-right: 0;
+    padding-right: 0;
+    border-right: 0;
+    width: 40px;
+    height: 40px;
+    background: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+
+    &:focus {
+        box-shadow: none;
+        outline: none;
+    }
+
+    svg {
+        width: 20px;
+        height: 20px;
+    }
+}

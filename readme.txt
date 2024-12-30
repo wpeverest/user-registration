@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 5.5
 Requires PHP: 7.2
 Tested up to: 6.7.1
-Stable tag: 3.3.5.2
+Stable tag: 4.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -245,6 +245,36 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 16. User Account Page –  Vertical Layout
 
 == Changelog ==
+
+= 4.0       - 08/01/2025 =
+* Feature   - Login form builder.
+* Feature   - Membership module in core.
+* Feature   - Basic restriction in core.
+* Feature   - Payment History module in core.
+* Feature   - Enforce default plugin form styles.
+* Feature   - Multi device registration form preview.
+* Enhance   - Setup wizard flow.
+* Enhance   - Registration form preview design.
+* Enhance   - Force user logout on password change.
+* Enhance   - Login and registration responsive form design.
+* Enhance   - Optimized modules loading and searching in Dashboard.
+* Enhance   - Check for UR my account and login in custom template
+* Enhance   - Login and Lost password page auto installation in first activation.
+* Dev       - Analytics refactor compatibility.
+* Dev       - Set passwordless login as default login Area.
+* Dev       - Added filter to change password reset success message.
+* Dev       - Hook before automatic user login after email confirmation.
+* Tweak     - Hold data before registration form submit redirection.
+* Fix       - Undefined issue on custom password.
+* Fix       - Issue while making WYSWYG required.
+* Fix       - Form Builder RTL layout design issue.
+* Fix       - Email Preview issue on Verified email.
+* Fix       - Slug translation issue on my account links.
+* Fix       - Username accepting some special characters.
+* Fix       - Login preview styles not loaded in customizer.
+* Fix       - Status changed to pending mail on registration.
+* Fix       - Error handling when wp_insert_user throws error.
+* Fix       - Show invalid user/email message form message options.
 
 = 3.3.5.2   - 21/11/2024 =
 * Fix   	- Fatal error when replacing gravatar image.

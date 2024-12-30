@@ -15,37 +15,48 @@ import {
 } from "@chakra-ui/react";
 import apiFetch from "@wordpress/api-fetch";
 import { __ } from "@wordpress/i18n";
-import * as Promise from "promise";
 
 /**
  * Internal Dependencies
  */
 import Header from "./common/Header";
 import InstallPage from "./screens/InstallPage";
-import RegistrationSettings from "./screens/RegistrationSettings";
 import GeneralSettings from "./screens/GeneralSettings";
-import MyAccountSettings from "./screens/MyAccountSettings";
+import RegistrationType from "./screens/RegistrationType";
 import LastPage from "./screens/LastPage";
 import { useStateValue } from "../../context/StateProvider";
 import { actionTypes } from "../../context/gettingStartedContext";
 
 function App() {
-	const [{ settings, registrationPageLink }, dispatch] = useStateValue();
+	const [
+		{
+			settings,
+			registrationPageLink,
+			registrationType,
+			defaultFormURL,
+			installedPages
+		},
+		dispatch
+	] = useStateValue();
 	const [disabledLink, setDisabledLink] = useState(false);
 	const [nextStepProgess, setNextStepProgess] = useState(false);
 
 	/* global _UR_WIZARD_ */
-	const {
-		adminURL,
-		siteURL,
-		defaultFormURL,
-		urRestApiNonce,
-		onBoardIconsURL,
-		restURL,
-		registrationPageURL
-	} = typeof _UR_WIZARD_ !== "undefined" && _UR_WIZARD_;
+	const { adminURL, siteURL, urRestApiNonce, onBoardIconsURL, restURL } =
+		typeof _UR_WIZARD_ !== "undefined" && _UR_WIZARD_;
 
 	const [steps, setSteps] = useState([
+		{
+			key: "registration_type",
+			label: __("Registration Type", "user-registration"),
+			title: __("Registration Type", "user-registration"),
+			description: __(
+				"Select which registration page type you want to proceed with.",
+				"user-registration"
+			),
+			isDone: true,
+			component: <RegistrationType />
+		},
 		{
 			key: "install_pages",
 			label: __("Install Pages", "user-registration"),
@@ -59,36 +70,9 @@ function App() {
 		},
 		{
 			key: "general_settings",
-			label: __("General", "user-registration"),
-			title: __("General Settings", "user-registration"),
-			description: __(
-				"Customize your general settings as per your preference.",
-				"user-registration"
-			),
+			label: __("Settings", "user-registration"),
 			isDone: false,
 			component: <GeneralSettings />
-		},
-		{
-			key: "registration_settings",
-			label: __("Registration", "user-registration"),
-			title: __("Registration Settings", "user-registration"),
-			description: __(
-				"Customize your registration settings as per your preference.",
-				"user-registration"
-			),
-			isDone: false,
-			component: <RegistrationSettings />
-		},
-		{
-			key: "my_account_settings",
-			label: __("My Account", "user-registration"),
-			title: __("My Account Settings", "user-registration"),
-			description: __(
-				"Customize my account page settings as per your preference.",
-				"user-registration"
-			),
-			isDone: false,
-			component: <MyAccountSettings />
 		},
 		{
 			key: "final_step",
@@ -120,8 +104,15 @@ function App() {
 
 				const newSettingsRef = {};
 				Object.keys(data.options).map((key) => {
-					var sectionSettings = data.options[key].settings;
+					var sectionSettings = data.options[key].settings.general;
 					sectionSettings.map((individualSettings) => {
+						newSettingsRef[individualSettings.id] =
+							individualSettings.default;
+					});
+
+					var registrationSectionSettings =
+						data.options[key].settings.registration;
+					registrationSectionSettings.map((individualSettings) => {
 						newSettingsRef[individualSettings.id] =
 							individualSettings.default;
 					});
@@ -185,8 +176,56 @@ function App() {
 				return step;
 			})
 		);
-		setActiveStep(steps[index + 1]);
-		setNextStepProgess(true);
+
+		if (activeStep.key === "registration_type") {
+			// POST
+			apiFetch({
+				path:
+					restURL +
+					"user-registration/v1/getting-started/registration-type-selected",
+				method: "POST",
+				headers: {
+					"X-WP-Nonce": urRestApiNonce
+				},
+				data: { registrationType: registrationType }
+			}).then((res) => {
+				if (res.success) {
+					dispatch({
+						type: actionTypes.GET_INSTALLED_PAGES,
+						installedPages: res.page_details
+					});
+
+					var registrationPageUrl = "";
+
+					if (res.page_details["registration"]) {
+						registrationPageUrl =
+							res.page_details["registration"]["page_url"];
+					} else {
+						registrationPageUrl =
+							res.page_details["membership-registration"][
+								"page_url"
+							];
+					}
+
+					dispatch({
+						type: actionTypes.GET_DEFAULT_FORM_URL,
+						defaultFormURL:
+							res.page_details["default_form_id"].page_url
+					});
+
+					dispatch({
+						type: actionTypes.GET_DEFAULT_REGISTRATION_PAGE,
+						registrationPageLink: registrationPageUrl
+					});
+
+					setActiveStep(steps[index + 1]);
+					setNextStepProgess(true);
+				}
+			});
+		} else {
+			setActiveStep(steps[index + 1]);
+			setNextStepProgess(true);
+		}
 	};
 
 	/**
@@ -293,28 +332,35 @@ function App() {
 								direction="column"
 								justifyContent="space-between"
 								alignItems="left"
+								gap="36px"
 							>
-								{activeStep.title && (
-									<Heading
-										as="h2"
-										size="lg"
-										fontSize="22px"
-										mb={4}
-										color="#383838"
-										fontWeight="600"
-									>
-										{activeStep.title}
-									</Heading>
-								)}
-								{activeStep.description && (
-									<Text
-										fontSize="16px"
-										as="i"
-										color="#6B6B6B"
-									>
-										{activeStep.description}
-									</Text>
-								)}
+								<Flex
+									direction="column"
+									justifyContent="space-between"
+									alignItems="left"
+									gap="12px"
+								>
+									{activeStep.title && (
+										<Heading
+											as="h2"
+											size="lg"
+											fontSize="22px"
+											color="#383838"
+											fontWeight="600"
+										>
+											{activeStep.title}
+										</Heading>
+									)}
+									{activeStep.description && (
+										<Text
+											fontSize="16px"
+											as="i"
+											color="#6B6B6B"
+										>
+											{activeStep.description}
+										</Text>
+									)}
+								</Flex>
 								{cloneElement(activeStep.component, {
 									sectionSettings: activeStep.sectionSettings,
 									siteURL: siteURL,
@@ -333,8 +379,9 @@ function App() {
 										setDisabledLink(true);
 										handleSaveSettings(
 											"undefined" ===
-												typeof registrationPageLink
-												? registrationPageURL
+												typeof registrationPageLink ||
+												"" === registrationPageLink
+												? ""
 												: registrationPageLink
 										);
 									}}
@@ -350,7 +397,8 @@ function App() {
 										"user-registration"
 									)}
 								</Button>
-							) : steps[0].key !== activeStep.key ? (
+							) : steps[0].key !== activeStep.key &&
+							  steps[1].key !== activeStep.key ? (
 								<Button
 									variant="outline"
 									onClick={handleBack}
@@ -388,7 +436,7 @@ function App() {
 								</Button>
 							) : (
 								<React.Fragment>
-									{steps[0].key !== activeStep.key && (
+									{/* {steps[0].key !== activeStep.key && (
 										<Button
 											variant="link"
 											colorScheme="gray"
@@ -408,7 +456,7 @@ function App() {
 												"user-registration"
 											)}
 										</Button>
-									)}
+									)} */}
 									<Button
 										colorScheme="blue"
 										backgroundColor="#475BB2 !important"
@@ -427,7 +475,7 @@ function App() {
 							)}
 						</div>
 					</div>
-					<center>
+					{/* <center>
 						<Link>
 							<Button
 								variant="link"
@@ -435,8 +483,7 @@ function App() {
 								onClick={() => {
 									setDisabledLink(true);
 									var extraParams =
-										"my_account_settings" ===
-											activeStep.key ||
+										"general_settings" === activeStep.key ||
 										"final_step" === activeStep.key
 											? ""
 											: `&activeStep=${activeStep.key}`;
@@ -474,7 +521,7 @@ function App() {
 								</svg>
 							</Button>
 						</Link>
-					</center>
+					</center> */}
 				</>
 			) : (
 				<Box display="flex" justifyContent="center" padding="250px">

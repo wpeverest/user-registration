@@ -415,7 +415,7 @@ body {
     margin-bottom: 25px;
     display: flex;
     flex-direction: column;
-    gap: 70px; }
+    gap: 32px; }
     #user-registration-setup-wizard .user-registration-setup-wizard__header--logo {
       display: flex;
       justify-content: center;
@@ -433,63 +433,66 @@ body {
       justify-content: space-between;
       list-style-type: none; }
       #user-registration-setup-wizard .user-registration-setup-wizard__header--nav .step {
-        width: 100%;
-        height: 2px;
+        height: 0px;
         color: #BFBFBF;
-        position: relative;
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: flex-end;
-        background-color: #BFBFBF; }
+        justify-content: center;
+        align-items: center; }
         #user-registration-setup-wizard .user-registration-setup-wizard__header--nav .step .step-label {
-          margin-bottom: 20px;
           font-weight: 500;
-          font-size: 18px; }
-        #user-registration-setup-wizard .user-registration-setup-wizard__header--nav .step p.step-identifier {
-          display: inline-block;
-          vertical-align: middle;
-          background-color: #E5E5E5;
-          width: 14px;
-          height: 14px;
-          border: solid 4px #BFBFBF;
-          border-radius: 50%;
-          position: absolute;
-          top: -6px;
-          right: calc(50% - 5px); }
-      #user-registration-setup-wizard .user-registration-setup-wizard__header--nav .done p.step-identifier,
-      #user-registration-setup-wizard .user-registration-setup-wizard__header--nav .active p.step-identifier {
-        border-color: #475BB2; }
+          font-size: 16px;
+          line-height: 26px; }
       #user-registration-setup-wizard .user-registration-setup-wizard__header--nav .done .step-label,
       #user-registration-setup-wizard .user-registration-setup-wizard__header--nav .active .step-label {
         color: #475BB2; }
       #user-registration-setup-wizard .user-registration-setup-wizard__header--nav .done {
         background-color: #475BB2; }
-      #user-registration-setup-wizard .user-registration-setup-wizard__header--nav .active:not(#step-6) {
-        background: linear-gradient(to left, #475BB2 50%, #bfbfbf 50%); }
       #user-registration-setup-wizard .user-registration-setup-wizard__header--nav .active {
         background-color: #475BB2; }
-        #user-registration-setup-wizard .user-registration-setup-wizard__header--nav .active p.step-identifier {
-          border: 3px solid #475BB2; }
+    #user-registration-setup-wizard .user-registration-setup-wizard__header .center-line {
+      flex-grow: 1;
+      height: 1px;
+      background-color: #BABABA;
+      margin: 0 10px; }
+      #user-registration-setup-wizard .user-registration-setup-wizard__header .center-line.done {
+        background-color: #475BB2; }
   #user-registration-setup-wizard .user-registration-setup-wizard__body {
     flex: 0 0 50%;
-    padding: 32px 32px 46px 32px;
+    padding: 32px;
     background-color: #ffffff;
     border-radius: 13px 13px 0px 0px;
     color: #2D3559;
-    width: 796px; }
+    width: 796px;
+    margin-top: 42px; }
+    #user-registration-setup-wizard .user-registration-setup-wizard__body .ur-setup-wizard-tool-tip {
+      margin-bottom: 8px !important; }
+      #user-registration-setup-wizard .user-registration-setup-wizard__body .ur-setup-wizard-tool-tip::after {
+        content: "";
+        background-image: url("../images/settings-icons/information.svg") !important;
+        background-repeat: no-repeat !important;
+        background-size: 100% !important;
+        background-position: center;
+        display: block;
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+        padding: 4px;
+        background: transparent;
+        border-radius: 3px; }
     #user-registration-setup-wizard .user-registration-setup-wizard__body--select {
       flex: 1 0 60%; }
       #user-registration-setup-wizard .user-registration-setup-wizard__body--select input {
         border: none; }
       #user-registration-setup-wizard .user-registration-setup-wizard__body--select span.css-1f1glkn {
         height: 29px; }
-    #user-registration-setup-wizard .user-registration-setup-wizard__body .chakra-checkbox__control {
+    #user-registration-setup-wizard .user-registration-setup-wizard__body--checkbox .chakra-checkbox__control {
       border-radius: 50%;
-      height: 32px;
-      width: 32px;
+      height: 28px;
+      width: 28px;
       margin-left: 10px; }
-      #user-registration-setup-wizard .user-registration-setup-wizard__body .chakra-checkbox__control svg {
+      #user-registration-setup-wizard .user-registration-setup-wizard__body--checkbox .chakra-checkbox__control svg {
         font-size: 15px; }
   #user-registration-setup-wizard .user-registration-setup-wizard__footer {
     flex: 0 0 25%;

@@ -272,6 +272,13 @@ class UR_Email_Confirmation {
 						add_filter( 'login_message', array( $this, 'custom_registration_message' ) );
 						add_filter( 'user_registration_login_form_before_notice', array( $this, 'custom_registration_message' ) );
 						if ( $allow_automatic_user_login ) {
+							/**
+							 * Action hook to check the token complete.
+							 *
+							 * @param array $user_id The user ID.
+							 * @param bool $user_reg_successful The user registration successful.
+							 */
+							do_action( 'user_registration_check_token_complete', $user_id, $user_reg_successful );
 							ur_automatic_user_login( $user );
 						}
 					}

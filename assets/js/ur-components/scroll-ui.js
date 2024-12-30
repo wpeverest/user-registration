@@ -1,6 +1,6 @@
 // Script to scroll menu horizontally for better User experience.
 jQuery(function ($) {
-	$(".user-registration_page_user-registration-settings")
+	$(".user-registration-membership_page_user-registration-settings")
 		.find(".notice")
 		.show();
 

@@ -1,4 +1,4 @@
-/* global  user_registration_params, ur_password_strength_meter_params */
+/* global  user_registration_params, ur_frontend_params_with_form_id */
 (function ($) {
 	var user_registration_form_init = function () {
 		var ursL10n = user_registration_params.ursL10n;
@@ -378,6 +378,10 @@
 									multi_value_field[multi_start];
 								single_form_field_name =
 									single_form_field_name.replace("[]", "");
+
+								if(single_form_field_name === "urm_membership") {
+									single_form_field_name = field.eq(0).attr('data-name');
+								}
 								var field_data = {
 									value: field_value_json,
 									field_type: field_type,
@@ -494,6 +498,7 @@
 							"undefined" !== field.attr("name")
 								? field.attr("name")
 								: "null";
+
 						var phone_id = [];
 						if (
 							field.attr("name") !== undefined &&
@@ -594,8 +599,12 @@
 												)
 												.data("ref-id");
 
-											if ( "undefined" !== typeof privacy_field_name ) {
-												formwise_data.field_name = privacy_field_name;
+											if (
+												"undefined" !==
+												typeof privacy_field_name
+											) {
+												formwise_data.field_name =
+													privacy_field_name;
 											}
 										}
 										break;
@@ -703,8 +712,24 @@
 									type +
 									'" id="ur-submit-message-node"/>'
 							);
-							wrapper.append(message);
+							if (type === "error") {
+								var svgIcon =
+									'<svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 35 35" fill="none">' +
+									'    <g clip-path="url(#clip0_8269_857)">' +
+									'        <path d="M10.4979 24.6391C14.4408 28.5063 20.7721 28.445 24.6394 24.5022C28.5066 20.5593 28.4453 14.2279 24.5025 10.3607C20.5596 6.49343 14.2283 6.55472 10.361 10.4976C6.49374 14.4404 6.55503 20.7718 10.4979 24.6391Z" stroke="#F25656" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>' +
+									'        <path d="M20.3008 14.6445L14.699 20.3559" stroke="#F25656" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>' +
+									'        <path d="M14.6445 14.6992L20.3559 20.301" stroke="#F25656" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>' +
+									"    </g>" +
+									"    <defs>" +
+									'        <clipPath id="clip0_8269_857">' +
+									'            <rect width="24" height="24" fill="white" transform="translate(17.3359 0.530273) rotate(44.4454)"></rect>' +
+									"        </clipPath>" +
+									"    </defs>" +
+									"</svg>";
 
+								wrapper.append(svgIcon);
+							}
+							wrapper.append(message);
 							// Check the position set by the admin and append message accordingly.
 							if ("1" === position) {
 								$submit_node.append(wrapper);
@@ -720,7 +745,9 @@
 									$submit_node.append(wrapper);
 								}
 							} else {
-								$submit_node.prepend(wrapper);
+								$submit_node
+									.closest(".ur-frontend-form")
+									.prepend(wrapper);
 							}
 						}
 					},
@@ -981,19 +1008,23 @@
 											)
 											.after(error_message);
 									}
-
+									//place it before user_registration_frontend_validate_before_form_submit trigger gets used by other addons so that regular validation is shown before addon validations
+									if (!$this.valid()) {
+										return;
+									}
 									$(document).trigger(
 										"user_registration_frontend_validate_before_form_submit",
 										[$this]
 									);
-
+									if($('.user-registration-error:visible').length) {
+										return;
+									}
 									if (
 										0 <
 										$this.find(".dz-error-message").length
 									) {
 										return;
 									}
-
 									if (
 										$this
 											.find(
@@ -1011,9 +1042,7 @@
 										return;
 									}
 
-									if (!$this.valid()) {
-										return;
-									}
+
 
 									$this
 										.find(".ur-submit-button")
@@ -1156,7 +1185,7 @@
 									$this
 										.find(".ur-submit-button")
 										.find("span")
-										.addClass("ur-front-spinner");
+										.addClass("ur-spinner");
 
 									var hit_third_party_api =
 										events.wait_third_party_api($this);
@@ -1213,15 +1242,17 @@
 							complete: function (ajax_response) {
 								var ajaxFlag = [];
 								ajaxFlag["status"] = true;
+
 								$(document).trigger(
 									"user_registration_frontend_before_ajax_complete_success_message",
 									[ajax_response, ajaxFlag, $this]
 								);
+
 								if (ajaxFlag["status"]) {
 									$this
 										.find(".ur-submit-button")
 										.find("span")
-										.removeClass("ur-front-spinner");
+										.removeClass("ur-spinner");
 
 									var redirect_url = $this
 										.find('input[name="ur-redirect-url"]')
@@ -1333,7 +1364,9 @@
 												);
 											}
 											$(".ur-input-count").text("0");
-											$this[0].reset();
+											if ( ! user_registration_params.ur_hold_data_before_redirection ) {
+												$this[0].reset();
+											}
 											if (
 												$this.find("#profile_pic_url")
 													.length
@@ -1403,7 +1436,6 @@
 													$(document).trigger(
 														"user_registration_frontend_before_auto_login"
 													);
-
 													window.setTimeout(
 														function () {
 															if (
@@ -1736,6 +1768,7 @@
 										.find(".ur-submit-button")
 										.prop("disabled", false);
 								}
+
 								$(".coupon-message").css({
 									display: "none"
 								});
@@ -1904,7 +1937,7 @@
 								$this
 									.find(".user-registration-submit-Button")
 									.find("span")
-									.addClass("ur-front-spinner");
+									.addClass("ur-spinner");
 
 								$.ajax({
 									type: "POST",
@@ -1913,8 +1946,8 @@
 									data: data,
 									complete: function (ajax_response) {
 										$this
-											.find("span.ur-front-spinner")
-											.removeClass("ur-front-spinner");
+											.find("span.ur-spinner")
+											.removeClass("ur-spinner");
 										$this
 											.closest(".user-registration")
 											.find(".user-registration-error")
@@ -2361,6 +2394,16 @@
 				}
 			});
 
+				// Handel WYSIWYG field client side validation.
+				$( document ).on( 'tinymce-editor-init', function( event, editor ) {
+					var $editorContainer = $(editor.getContainer());
+					var containerId = $editorContainer.attr('id');
+					var hiddenEditor = $("#"+containerId).parent().parent().parent().find("[data-label = 'WYSIWYG']");
+					editor.on('keyup', function(e) {
+						hiddenEditor.val(tinyMCE.activeEditor.getContent());
+					});
+				});
+
 			$(".ur-frontend-form").each(function () {
 				var $registration_form = $(this).find("form.register");
 
@@ -2600,6 +2643,34 @@
 	$(window).on("user_registration_repeater_modified", function () {
 		user_registration_form_init();
 	});
+
+	$(document).on(
+		"click",
+		"#login-registration--login,#login-registration--registration",
+		function () {
+			var action = $(this).data("action");
+			if (action === "login" && !$(this).hasClass("active")) {
+				$(this).addClass("active");
+				$("#login-registration--registration").removeClass("active");
+				$(".login-registration")
+					.find(".ur-login-form")
+					.removeClass("hidden");
+				$(".login-registration")
+					.find(".ur-registration-form")
+					.addClass("hidden");
+			}
+			if (action === "registration" && !$(this).hasClass("active")) {
+				$(this).addClass("active");
+				$("#login-registration--login").removeClass("active");
+				$(".login-registration")
+					.find(".ur-login-form")
+					.addClass("hidden");
+				$(".login-registration")
+					.find(".ur-registration-form")
+					.removeClass("hidden");
+			}
+		}
+	);
 })(jQuery);
 
 function ur_includes(arr, item) {
@@ -2620,7 +2691,7 @@ function ur_includes(arr, item) {
  */
 function customPasswordChecks(password) {
 	var custom_password_params =
-			ur_password_strength_meter_params.custom_password_params,
+			ur_frontend_params_with_form_id.custom_password_params,
 		minLength =
 			custom_password_params.minimum_pass_length !== undefined &&
 			custom_password_params.minimum_pass_length >= 3
