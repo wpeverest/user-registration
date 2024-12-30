@@ -3516,6 +3516,72 @@
 	 }
  }
 
+ .user-registration_page_user-registration-login-forms {
+	.ur-admin-page-topnav {
+		.ur-editing-tag {
+			padding: $spacing_4px $spacing_10px;
+			background: $blue-50;
+			border-radius: $border_radius_50;
+			font-style: italic;
+			font-weight: $regular;
+			font-size: 12px;
+			line-height: 150%;
+			color: $grey-400;
+		}
+
+		.major-publishing-actions {
+			clear: both;
+			line-height: 28px;
+			margin-left: auto;
+
+			.publishing-action {
+				text-align: right;
+				float: right;
+
+				input {
+					&.code {
+						width: 280px;
+						height: 33px;
+						padding: 0 $spacing_6px;
+						margin: 0;
+						border-color: $grey-50;
+						background: $blue-25;
+						border-radius: 3px 0 0 3px;
+					}
+				}
+			}
+			.login-forms-shortcode-action {
+				input {
+					&.code {
+						font-size: large;
+						width: 320px;
+						height: 33px;
+						padding: 0 $spacing_6px;
+						margin: 0;
+						border-color: $grey-50;
+						background: $blue-25;
+						border-radius: 3px 0 0 3px;
+						display: inline;
+					}
+				}
+			}
+
+			#copy-shortcode {
+				margin-left: -5px;
+				border-radius: 0 4px 4px 0;
+				background: $blue-50 !important;
+				border-color: $grey-50 !important;
+
+				svg {
+					fill: $white;
+					margin-bottom: 5px;
+					vertical-align: middle;
+				}
+			}
+		}
+	}
+ }
+
  .user-registration_page_add-new-registration,
  .toplevel_page_user-registration {
 	 #nav-menu-header {
@@ -4242,7 +4308,7 @@
 				 }
 				 #post-body {
 					 .ur-registered-from {
-						 display: block;
+						 display: flex;
 						 background-color: transparent;
 						 .ur-builder-wrapper {
 							 height: auto;
@@ -4811,10 +4877,10 @@
 			 margin-left: 0;
 			 min-width: 100%;
 
-			 .ur-selected-inputs {
-				 padding-left: $spacing_20px !important;
-				 padding-right: $spacing_20px !important;
-			 }
+			//  .ur-selected-inputs {
+			// 	 padding-left: $spacing_20px !important;
+			// 	 padding-right: $spacing_20px !important;
+			//  }
 		 }
 	 }
  }
@@ -6478,6 +6544,141 @@
 	 }
  }
 
+// Login Form Builder CSS
+body {
+	&.user-registration_page_user-registration-login-forms {
+		overflow-x: hidden;
+
+		.user-registration-login-form-container {
+			.ur-registered-from {
+				.ur-login-form-settings {
+					max-width: 360px;
+					width: 100% !important;
+
+					.nav-tab-wrapper {
+						height: 100%;
+
+						.ur-tab-contents {
+							height: 100%;
+							border-right: 1px solid #e1e1e1;
+							padding-bottom: 16px !important;
+
+							#ur-login-form-setting {
+								.ur-toggle-content {
+									gap: 24px !important;
+
+									select {
+										min-height: 38px;
+										width: 100%;
+										min-width: unset !important;
+										margin: 0;
+									}
+
+									.select2 {
+										&-selection {
+											min-height: 38px;
+
+											&__rendered {
+												height: 100%;
+												padding: 2px 12px;
+											}
+
+											&__arrow {
+												top: 5px;
+											}
+										}
+									}
+
+									.user-registration-login-form-global-settings {
+
+										.user-registration-login-form-toggle-option {
+											display: flex;
+											justify-content: space-between;
+											gap: 40px;
+										}
+
+										label {
+											font-weight: 500 !important;
+											align-items: baseline;
+										}
+
+										&--field {
+											input {
+												min-width: unset !important;
+												margin: 0;
+
+												&:focus {
+													border-color: #475BB2;
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
+					&.collapsed {
+							max-width: 0px;
+						}
+					}
+
+					#ur-collapse {
+						background: #FAFAFC;
+
+						&.close {
+							right: -21px;
+						}
+
+						&.open {
+							left: 0;
+						}
+					}
+				}
+
+				.ur-builder-wrapper {
+					.ur-selected-inputs {
+						position: sticky;
+						position: -webkit-sticky;
+						top: 30px;
+						padding: 30px !important;
+					}
+				}
+
+				.ur-registered-inputs {
+					&.ur-login-form-shortcode {
+						max-width: 350px;
+						width: 100% !important;
+
+						.nav-tab-wrapper {
+							height: 100%;
+
+							.ur-tab-contents {
+								border-left: 1px solid #e1e1e1;
+								height: 100%;
+								position: sticky;
+								position: -webkit-sticky;
+								top: 30px;
+							}
+
+							.ur-login-shortcode {
+								&--wrapper {
+									.ur-login-content {
+										.login-forms-shortcode-action {
+											input[type="text"] {
+												padding: 0;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 
 
 
@@ -6971,7 +7172,6 @@ body {
 				.ur-form-preview-title{
 					width: calc(100% - 48px);
 					padding: 24px;
-					background: #fafafa;
 					border-top-left-radius: 8px;
 					border-top-right-radius: 8px;
 					display: block;

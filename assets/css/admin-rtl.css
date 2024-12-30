@@ -7644,6 +7644,51 @@ a.button.ur-smart-tags-list-button {
     .ur-advance-setting.ur-advance-pattern_value .ur-smart-tags-list:hover {
       cursor: pointer; }
 
+.user-registration_page_user-registration-login-forms .ur-admin-page-topnav .ur-editing-tag {
+  padding: 4px 10px;
+  background: #edeff7;
+  border-radius: 50px;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 150%;
+  color: #383838; }
+
+.user-registration_page_user-registration-login-forms .ur-admin-page-topnav .major-publishing-actions {
+  clear: both;
+  line-height: 28px;
+  margin-right: auto; }
+  .user-registration_page_user-registration-login-forms .ur-admin-page-topnav .major-publishing-actions .publishing-action {
+    text-align: left;
+    float: left; }
+    .user-registration_page_user-registration-login-forms .ur-admin-page-topnav .major-publishing-actions .publishing-action input.code {
+      width: 280px;
+      height: 33px;
+      padding: 0 6px;
+      margin: 0;
+      border-color: #e9e9e9;
+      background: #f8f8fa;
+      border-radius: 0 3px 3px 0; }
+  .user-registration_page_user-registration-login-forms .ur-admin-page-topnav .major-publishing-actions .login-forms-shortcode-action input.code {
+    font-size: large;
+    width: 320px;
+    height: 33px;
+    padding: 0 6px;
+    margin: 0;
+    border-color: #e9e9e9;
+    background: #f8f8fa;
+    border-radius: 0 3px 3px 0;
+    display: inline; }
+  .user-registration_page_user-registration-login-forms .ur-admin-page-topnav .major-publishing-actions #copy-shortcode {
+    margin-right: -5px;
+    border-radius: 4px 0 0 4px;
+    background: #edeff7 !important;
+    border-color: #e9e9e9 !important; }
+    .user-registration_page_user-registration-login-forms .ur-admin-page-topnav .major-publishing-actions #copy-shortcode svg {
+      fill: #ffffff;
+      margin-bottom: 5px;
+      vertical-align: middle; }
+
 .user-registration_page_add-new-registration #nav-menu-header,
 .toplevel_page_user-registration #nav-menu-header {
   padding-left: 30px; }
@@ -8096,7 +8141,7 @@ a.button.ur-smart-tags-list-button {
   position: unset; }
 
 #wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from {
-  display: block;
+  display: flex;
   background-color: transparent; }
   #wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper {
     height: auto;
@@ -8434,9 +8479,6 @@ body.user-registration #wpbody-content {
 .user-registration-login-form-container .ur-form-container #menu-management-liquid {
   margin-right: 0;
   min-width: 100%; }
-  .user-registration-login-form-container .ur-form-container #menu-management-liquid .ur-selected-inputs {
-    padding-right: 20px !important;
-    padding-left: 20px !important; }
 
 #user-registration-list-table-page {
   max-width: 1280px;
@@ -9537,6 +9579,70 @@ body.ur-settings-sidebar-hidden .user-registration-settings-sidebar-container {
     display: flex;
     flex-direction: column; }
 
+body.user-registration_page_user-registration-login-forms {
+  overflow-x: hidden; }
+  body.user-registration_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-from .ur-login-form-settings {
+    max-width: 360px;
+    width: 100% !important; }
+    body.user-registration_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-from .ur-login-form-settings .nav-tab-wrapper {
+      height: 100%; }
+      body.user-registration_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-from .ur-login-form-settings .nav-tab-wrapper .ur-tab-contents {
+        height: 100%;
+        border-left: 1px solid #e1e1e1;
+        padding-bottom: 16px !important; }
+        body.user-registration_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-from .ur-login-form-settings .nav-tab-wrapper .ur-tab-contents #ur-login-form-setting .ur-toggle-content {
+          gap: 24px !important; }
+          body.user-registration_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-from .ur-login-form-settings .nav-tab-wrapper .ur-tab-contents #ur-login-form-setting .ur-toggle-content select {
+            min-height: 38px;
+            width: 100%;
+            min-width: unset !important;
+            margin: 0; }
+          body.user-registration_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-from .ur-login-form-settings .nav-tab-wrapper .ur-tab-contents #ur-login-form-setting .ur-toggle-content .select2-selection {
+            min-height: 38px; }
+            body.user-registration_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-from .ur-login-form-settings .nav-tab-wrapper .ur-tab-contents #ur-login-form-setting .ur-toggle-content .select2-selection__rendered {
+              height: 100%;
+              padding: 2px 12px; }
+            body.user-registration_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-from .ur-login-form-settings .nav-tab-wrapper .ur-tab-contents #ur-login-form-setting .ur-toggle-content .select2-selection__arrow {
+              top: 5px; }
+          body.user-registration_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-from .ur-login-form-settings .nav-tab-wrapper .ur-tab-contents #ur-login-form-setting .ur-toggle-content .user-registration-login-form-global-settings .user-registration-login-form-toggle-option {
+            display: flex;
+            justify-content: space-between;
+            gap: 40px; }
+          body.user-registration_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-from .ur-login-form-settings .nav-tab-wrapper .ur-tab-contents #ur-login-form-setting .ur-toggle-content .user-registration-login-form-global-settings label {
+            font-weight: 500 !important;
+            align-items: baseline; }
+          body.user-registration_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-from .ur-login-form-settings .nav-tab-wrapper .ur-tab-contents #ur-login-form-setting .ur-toggle-content .user-registration-login-form-global-settings--field input {
+            min-width: unset !important;
+            margin: 0; }
+            body.user-registration_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-from .ur-login-form-settings .nav-tab-wrapper .ur-tab-contents #ur-login-form-setting .ur-toggle-content .user-registration-login-form-global-settings--field input:focus {
+              border-color: #475BB2; }
+    body.user-registration_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-from .ur-login-form-settings.collapsed {
+      max-width: 0px; }
+  body.user-registration_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-from #ur-collapse {
+    background: #FAFAFC; }
+    body.user-registration_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-from #ur-collapse.close {
+      left: -21px; }
+    body.user-registration_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-from #ur-collapse.open {
+      right: 0; }
+  body.user-registration_page_user-registration-login-forms .user-registration-login-form-container .ur-builder-wrapper .ur-selected-inputs {
+    position: sticky;
+    position: -webkit-sticky;
+    top: 30px;
+    padding: 30px !important; }
+  body.user-registration_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-inputs.ur-login-form-shortcode {
+    max-width: 350px;
+    width: 100% !important; }
+    body.user-registration_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-inputs.ur-login-form-shortcode .nav-tab-wrapper {
+      height: 100%; }
+      body.user-registration_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-inputs.ur-login-form-shortcode .nav-tab-wrapper .ur-tab-contents {
+        border-right: 1px solid #e1e1e1;
+        height: 100%;
+        position: sticky;
+        position: -webkit-sticky;
+        top: 30px; }
+      body.user-registration_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-inputs.ur-login-form-shortcode .nav-tab-wrapper .ur-login-shortcode--wrapper .ur-login-content .login-forms-shortcode-action input[type="text"] {
+        padding: 0; }
+
 .ur-registration--loading .loading-content {
   display: flex;
   justify-content: space-between;
@@ -9860,7 +9966,6 @@ body.ur-multi-device-form-preview {
       body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-preview-form .ur-form-preview-title {
         width: calc(100% - 48px);
         padding: 24px;
-        background: #fafafa;
         border-top-right-radius: 8px;
         border-top-left-radius: 8px;
         display: block;

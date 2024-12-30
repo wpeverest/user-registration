@@ -272,6 +272,54 @@
 .ur-icon-authorize-net::before {
   content: ""; }
 
+/**
+* Keyframe animation
+*/
+@keyframes spin {
+  100% {
+    transform: rotate(360deg); } }
+
+@keyframes ur-circle-loading {
+  0%,
+  100% {
+    animation-timing-function: cubic-bezier(0.2, 0, 0.8, 1); }
+  50% {
+    animation-timing-function: cubic-bezier(0, 0.2, 1, 0.8); }
+  0% {
+    transform: rotate(0deg) translate(0, -20px) scale(0); }
+  50% {
+    transform: rotate(180deg) translate(0, -20px) scale(1); }
+  100% {
+    transform: rotate(360deg) translate(0, -20px) scale(0); } }
+
+@-webkit-keyframes ur-circle-loading-keyframe {
+  0%,
+  100% {
+    animation-timing-function: cubic-bezier(0.2, 0, 0.8, 1); }
+  50% {
+    animation-timing-function: cubic-bezier(0, 0.2, 1, 0.8); }
+  0% {
+    transform: rotate(0deg) translate(0, -20px) scale(0); }
+  50% {
+    transform: rotate(180deg) translate(0, -20px) scale(1); }
+  100% {
+    transform: rotate(360deg) translate(0, -20px) scale(0); } }
+
+@keyframes open-message {
+  0% {
+    opacity: 0;
+    transform: translateY(-120%); }
+  100% {
+    transform: translateY(0px); } }
+
+@keyframes close-message {
+  0% {
+    opacity: 1;
+    transform: scale(1); }
+  100% {
+    opacity: 0;
+    transform: scale(0.9); } }
+
 .user-registration button,
 .user-registration .button,
 .ur-form-container button,
@@ -685,7 +733,6 @@
 /**
 * Main User Registration styles
 */
-.user-registration-message,
 .user-registration-error,
 .user-registration-coupon-error,
 .user-registration-info {
@@ -702,21 +749,17 @@
   line-height: 1.25;
   text-transform: none;
   font-size: 14px; }
-  .user-registration-message::before, .user-registration-message::after,
-  .user-registration-error::before,
-  .user-registration-error::after,
+  .user-registration-error::before, .user-registration-error::after,
   .user-registration-coupon-error::before,
   .user-registration-coupon-error::after,
   .user-registration-info::before,
   .user-registration-info::after {
     content: ' ';
     display: table; }
-  .user-registration-message::after,
   .user-registration-error::after,
   .user-registration-coupon-error::after,
   .user-registration-info::after {
     clear: both; }
-  .user-registration-message::before,
   .user-registration-error::before,
   .user-registration-coupon-error::before,
   .user-registration-info::before {
@@ -726,36 +769,28 @@
     font-family: "Dashicons";
     font-size: calc(100% + 10px);
     margin-right: 0.875rem; }
-  .user-registration-message ul,
   .user-registration-error ul,
   .user-registration-coupon-error ul,
   .user-registration-info ul {
     margin: 0 !important;
     padding: 0 !important;
     background-color: transparent !important; }
-  .user-registration-message .button,
   .user-registration-error .button,
   .user-registration-coupon-error .button,
   .user-registration-info .button {
     float: right; }
-  .user-registration-message li,
   .user-registration-error li,
   .user-registration-coupon-error li,
   .user-registration-info li {
     list-style: none outside !important;
     padding-left: 0 !important;
-    margin-left: 0 !important; }
-  .user-registration-message .message,
+    margin-left: 0 !important;
+    flex: 1; }
   .user-registration-error .message,
   .user-registration-coupon-error .message,
   .user-registration-info .message {
     margin: 0;
     padding: 0; }
-
-.user-registration-message {
-  border-top-color: #8fae1b;
-  background: rgba(143, 174, 27, 0.1);
-  color: #596c11; }
 
 .user-registration-info {
   color: #1e85be;
@@ -774,10 +809,12 @@
   color: #ff030b;
   margin-top: 10px; }
 
-input.ur-input-border-green, textarea.ur-input-border-green {
-  border-color: #1EA71B !important; }
+input.ur-input-border-green,
+textarea.ur-input-border-green {
+  border-color: #1ea71b !important; }
 
-input.ur-input-border-red, textarea.ur-input-border-red {
+input.ur-input-border-red,
+textarea.ur-input-border-red {
   border-color: #ff4f55 !important; }
 
 .ur-frontend-form {
@@ -786,10 +823,50 @@ input.ur-input-border-red, textarea.ur-input-border-red {
   padding: 20px;
   box-sizing: border-box; }
   .ur-frontend-form.login {
-    margin: 0;
-    padding: 10px;
-    box-shadow: none;
-    background: none; }
+    border: none;
+    padding: 60px;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05); }
+    .ur-frontend-form.login .ur-lost-password-content-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center; }
+      .ur-frontend-form.login .ur-lost-password-content-container .ur-lost-password-title {
+        color: var(--Grey-grey-600, #1F1F1F);
+        font-size: 32px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 48px;
+        letter-spacing: 0.15px;
+        margin: auto;
+        margin-top: 20px; }
+      .ur-frontend-form.login .ur-lost-password-content-container .ur-lost-password-message {
+        font-size: 14px;
+        letter-spacing: 0.15px;
+        margin-top: 5px; }
+    .ur-frontend-form.login .ur-input-with-icon {
+      position: relative;
+      display: flex;
+      align-items: center; }
+      .ur-frontend-form.login .ur-input-with-icon .input-icon {
+        position: absolute;
+        left: 10px;
+        top: 50%; }
+      .ur-frontend-form.login .ur-input-with-icon input {
+        padding-left: 40px; }
+    .ur-frontend-form.login .required {
+      margin-left: 5px; }
+    .ur-frontend-form.login #user_login {
+      border-radius: 4px;
+      border: 1px solid #E9E9E9;
+      margin-top: -24px; }
+    .ur-frontend-form.login .ur-reset-password-btn {
+      border: 1px solid #475BB2;
+      background: #475BB2;
+      width: 100%;
+      color: #FFF;
+      letter-spacing: 0.15px; }
     .ur-frontend-form.login input[name="rememberme"]#rememberme {
       vertical-align: middle; }
   .ur-frontend-form.login-registration {
@@ -815,6 +892,35 @@ input.ur-input-border-red, textarea.ur-input-border-red {
       padding: 0 10px; }
       .ur-frontend-form .ur-form-row .ur-form-grid:nth-child(1n + 2) {
         border-left: 0 none; }
+      .ur-frontend-form .ur-form-row .ur-form-grid .user-registration-form-row label[for="user_otp"] {
+        margin-top: 0;
+        margin-bottom: 12px;
+        color: #222;
+        font-size: 15px;
+        font-weight: 500;
+        line-height: 19px; }
+      .ur-frontend-form .ur-form-row .ur-form-grid .user-registration-form-row input.input-text {
+        margin-bottom: 0;
+        border-radius: 4px;
+        border: 1px solid #e9e9e9;
+        min-height: 38px;
+        font-size: 14px;
+        line-height: 20px;
+        padding: 0 14px;
+        color: #383838; }
+      .ur-frontend-form .ur-form-row .ur-form-grid #user-registration-tfa-footer {
+        gap: 2px; }
+        .ur-frontend-form .ur-form-row .ur-form-grid #user-registration-tfa-footer .user-registration-Button {
+          flex: 1;
+          color: #ffffff;
+          padding: 10px 20px;
+          font-size: 14px;
+          line-height: 24px;
+          box-shadow: none;
+          float: none; }
+          .ur-frontend-form .ur-form-row .ur-form-grid #user-registration-tfa-footer .user-registration-Button:hover {
+            background: #38488e !important;
+            border-color: #38488e !important; }
       .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item {
         margin-bottom: 20px; }
         .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-multiple_choice ul, .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-subscription_plan ul, .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-checkbox ul, .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-radio ul {
@@ -1066,7 +1172,7 @@ input.ur-input-border-red, textarea.ur-input-border-red {
   .ur-frontend-form.ur-frontend-form--rounded form .ur-form-row .ur-form-grid textarea,
   .ur-frontend-form.ur-frontend-form--rounded form .ur-form-row .ur-form-grid select {
     border: 1px solid #c0c4d4;
-    border-radius: 25px;
+    border-radius: 25px !important;
     outline: none;
     transition: all 0.35s;
     padding: 10px 15px;
@@ -1074,7 +1180,9 @@ input.ur-input-border-red, textarea.ur-input-border-red {
     color: #676d8a;
     height: 45px; }
   .ur-frontend-form.ur-frontend-form--rounded form .ur-form-row .ur-form-grid button[type="button"] {
-    border-radius: 25px; }
+    border-radius: 25px !important; }
+  .ur-frontend-form.ur-frontend-form--rounded form .ur-form-row .ur-form-grid .user-registration-passwordless-login a {
+    border-radius: 25px !important; }
   .ur-frontend-form.ur-frontend-form--rounded form .ur-form-row .ur-form-grid legend,
   .ur-frontend-form.ur-frontend-form--rounded form .ur-form-row .ur-form-grid label {
     margin-left: 5px;
@@ -1089,7 +1197,7 @@ input.ur-input-border-red, textarea.ur-input-border-red {
   .ur-frontend-form.ur-frontend-form--rounded form button.user-registration-multi-part-nav-next {
     border: 0 none;
     color: #ffffff;
-    border-radius: 25px;
+    border-radius: 25px !important;
     float: none;
     display: block;
     padding: 15px 25px; }
@@ -1113,6 +1221,10 @@ input.ur-input-border-red, textarea.ur-input-border-red {
     border-radius: 2px; }
   .ur-frontend-form #ur-submit-message-node {
     margin: 20px 0 0 0; }
+    .ur-frontend-form #ur-submit-message-node.user-registration-error {
+      position: unset;
+      margin-bottom: 10px;
+      width: 100%; }
     .ur-frontend-form #ur-submit-message-node.ur-error {
       background: rgba(206, 0, 0, 0.1); }
     .ur-frontend-form #ur-submit-message-node.ur-message.message {
@@ -1455,3 +1567,875 @@ span.ur-shortcode-form-embed-dot {
 .oxygen-add-section-accordion-contents[ng-if*="user-registration"] .oxygen-add-section-element {
   min-height: 100px !important;
   line-height: 15px; }
+
+.ur-message-container {
+  border-radius: 8px;
+  box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+  padding: 60px; }
+  .ur-message-container .user-registration-message {
+    position: relative;
+    padding: 10px;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    border-left: 4px solid #49C85F;
+    background: #F7FDF8;
+    border-top: none;
+    margin: 20px 0px;
+    padding-left: 40px; }
+  .ur-message-container svg {
+    position: absolute;
+    z-index: 999999;
+    margin-top: 33px;
+    margin-left: 10px; }
+
+.user-registration-error {
+  padding: 10px !important;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  border-left: 4px solid #ff4f55;
+  background: 4px solid #FDE8E8;
+  border-top: none; }
+  .user-registration-error::before {
+    content: '';
+    display: ''; }
+  .user-registration-error svg {
+    margin-right: 10px; }
+
+.user-registration-login-extra-section {
+  display: flex;
+  justify-content: space-between; }
+  .user-registration-login-extra-section .user-registration-LostPassword {
+    color: #475BB2; }
+
+.user-registration-Button,
+.ur-submit-button {
+  width: 100%;
+  background: #475BB2 !important;
+  border-radius: 4px !important;
+  border: 1px solid #475BB2 !important;
+  color: #ffffff; }
+  .user-registration-Button .ur-spinner,
+  .ur-submit-button .ur-spinner {
+    width: 16px;
+    height: 16px;
+    margin-left: 6px;
+    margin-bottom: 2px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: 5px;
+    float: right; }
+    .user-registration-Button .ur-spinner::before,
+    .ur-submit-button .ur-spinner::before {
+      width: 16px;
+      height: 16px;
+      position: absolute;
+      display: block;
+      content: '';
+      animation: spin 1s ease-in-out infinite;
+      background: url("../images/icons/loader.svg") center center;
+      background-size: cover; }
+
+.ur-login-registration-nav {
+  width: 100%; }
+  .ur-login-registration-nav ul {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 100%; }
+    .ur-login-registration-nav ul li {
+      flex: 1;
+      text-align: center;
+      padding: 15px 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: #C5C5C5;
+      font-weight: 500;
+      border-radius: 8px 0 0 0;
+      border-top: 1px solid #F1F1F1;
+      background: #F9F9F9;
+      box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+      clip-path: inset(0px -1px -1px -1px); }
+      .ur-login-registration-nav ul li:first-child {
+        border-radius: 8px 0px 0 0;
+        border-top: 1px solid #F1F1F1;
+        margin-left: 10px; }
+      .ur-login-registration-nav ul li:last-child {
+        border-radius: 0 8px 0px 0;
+        margin-right: 10px; }
+      .ur-login-registration-nav ul li.active {
+        background: #fff;
+        color: #1F1F1F;
+        border-top: 1px solid #F1F1F1; }
+
+.login-registration .hidden {
+  display: none; }
+
+.ur-field-item input {
+  border-radius: 4px !important; }
+
+.ur-field-item .user-registration-error {
+  width: 100%;
+  position: unset;
+  letter-spacing: 0.18px;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 19px;
+  padding: 0px !important;
+  border: none !important;
+  background: transparent !important;
+  margin-left: unset !important; }
+  .ur-field-item .user-registration-error::before {
+    content: "\f534";
+    color: #FF0000; }
+
+.user-registration.ur-frontend-form {
+  background: #FFF;
+  border-radius: 8px;
+  box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+  padding: 60px; }
+  .user-registration.ur-frontend-form input {
+    border-radius: 4px; }
+  .user-registration.ur-frontend-form #user_email::before {
+    content: "\f348";
+    display: inline-block;
+    vertical-align: middle;
+    font-family: "Dashicon	s";
+    font-size: calc(100% + 10px);
+    margin-right: 0.875rem; }
+
+.ur-icon-user {
+  margin-right: 0.875rem; }
+  .ur-icon-user::before {
+    content: "\f465";
+    display: inline-block;
+    vertical-align: middle;
+    font-family: "Dashicons"; }
+
+.ur-registration-icon {
+  position: relative;
+  top: 50%;
+  padding: 8px;
+  left: 0;
+  transform: translateY(-50%); }
+
+.user-registration-login-form-container .ur-registered-from .ur-login-form-wrapper #user-registration {
+  width: 100%; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .ur-admin-page-topnav {
+  margin-bottom: 0; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap.wrap {
+  margin: 0 auto; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .menu-edit {
+  border: none; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-tab-contents {
+  padding: 24px;
+  background-color: #fafafc; }
+  .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-tab-contents .ur-login-view-doc {
+    border-radius: 3px;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+    box-shadow: none;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0px;
+    padding: 10px 24px;
+    border: none;
+    background-color: #475bb2;
+    color: #ffffff;
+    display: block;
+    margin: 24px auto 0; }
+    .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-tab-contents .ur-login-view-doc a {
+      color: #fff; }
+    .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-tab-contents .ur-login-view-doc:disabled {
+      cursor: default;
+      opacity: 0.5; }
+      .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-tab-contents .ur-login-view-doc:disabled:hover {
+        background-color: #475bb2; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-heading {
+  margin-top: 0;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e9e9e9;
+  text-transform: uppercase;
+  font-size: 16px;
+  font-weight: 500; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-login-content p {
+  font-size: 16px;
+  margin: 20px auto; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-login-content .login-forms-shortcode-action {
+  display: flex;
+  padding: 6px 6px 6px 12px;
+  gap: 8px;
+  justify-content: space-between;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #edeff7;
+  border-radius: 4px; }
+  .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-login-content .login-forms-shortcode-action input {
+    background: transparent;
+    border: none; }
+  .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-login-content .login-forms-shortcode-action .ur-copy-shortcode {
+    line-height: unset;
+    padding: 6px;
+    background: #edeff7;
+    border: none; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents {
+  padding: 16px 16px 0 16px; }
+  .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content {
+    padding: 0; }
+    .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content form .ur-login-form-setting-block:first-child h2.ur-toggle-heading {
+      margin-top: 0; }
+    .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content form .ur-login-form-setting-block .ur-toggle-content {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px; }
+      .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content form .ur-login-form-setting-block .ur-toggle-content .user-registration-login-form-global-settings {
+        display: flex;
+        flex-direction: column;
+        gap: 12px; }
+        .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content form .ur-login-form-setting-block .ur-toggle-content .user-registration-login-form-global-settings label {
+          font-weight: 600;
+          gap: 6px;
+          margin-bottom: 0; }
+          .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content form .ur-login-form-setting-block .ur-toggle-content .user-registration-login-form-global-settings label .user-registration-help-tip {
+            font-size: 20px; }
+        .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content form .ur-login-form-setting-block .ur-toggle-content .user-registration-login-form-global-settings select {
+          height: 38px; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings #ur-login-form-setting .ur-login-form-setting-block {
+  display: flex;
+  flex-direction: column;
+  gap: 24px; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer #post-body .ur-builder-wrapper .ur-selected-inputs {
+  background: transparent;
+  padding: 24px; }
+
+body.user-registration-page .user-registration-error, body.user-registration_page_user-registration-login-forms .user-registration-error {
+  position: unset;
+  width: 100%;
+  margin: 0 0 24px !important;
+  align-items: flex-start; }
+  body.user-registration-page .user-registration-error svg, body.user-registration_page_user-registration-login-forms .user-registration-error svg {
+    width: 28px;
+    height: 28px; }
+  body.user-registration-page .user-registration-error li, body.user-registration_page_user-registration-login-forms .user-registration-error li {
+    flex: 1;
+    color: #222222;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 21px;
+    letter-spacing: 0.15px; }
+    body.user-registration-page .user-registration-error li strong, body.user-registration_page_user-registration-login-forms .user-registration-error li strong {
+      font-weight: 500; }
+
+body.user-registration-page #user-registration:not(.user-registration-MyAccount), body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) {
+  padding: 60px 50px; }
+  body.user-registration-page #user-registration:not(.user-registration-MyAccount) .user-registration-message, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .user-registration-message {
+    align-items: flex-start;
+    margin: 0 0 24px; }
+    body.user-registration-page #user-registration:not(.user-registration-MyAccount) .user-registration-message li, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .user-registration-message li {
+      flex: 1; }
+
+body.user-registration-page #user-registration .ur-message-container, body.user-registration_page_user-registration-login-forms #user-registration .ur-message-container {
+  box-shadow: none;
+  padding: 0;
+  border-radius: 0; }
+  body.user-registration-page #user-registration .ur-message-container svg, body.user-registration_page_user-registration-login-forms #user-registration .ur-message-container svg {
+    display: none; }
+  body.user-registration-page #user-registration .ur-message-container .user-registration-message, body.user-registration_page_user-registration-login-forms #user-registration .ur-message-container .user-registration-message {
+    margin-top: 0; }
+
+body.user-registration-page .user-registration-message, body.user-registration_page_user-registration-login-forms .user-registration-message {
+  background: #F7FDF8;
+  padding: 12px 12px 12px 16px;
+  border-radius: 4px;
+  border-left: 4px solid #49C85F;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #222222;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  letter-spacing: 0.15px; }
+  body.user-registration-page .user-registration-message::before, body.user-registration_page_user-registration-login-forms .user-registration-message::before {
+    content: "";
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 25 25'%3E%3Cpath stroke='%2349C85F' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12.5 22.5c5.523 0 10-4.477 10-10s-4.477-10-10-10-10 4.477-10 10 4.477 10 10 10Z'/%3E%3Cpath stroke='%2349C85F' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m9.5 12.5 2 2 4-4'/%3E%3C/svg%3E%0A");
+    background-position: center;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    width: 24px;
+    height: 24px;
+    display: block; }
+
+body.user-registration-page #user-registration:not(.user-registration-MyAccount),
+body.user-registration-page .user-registration:not(.user-registration-MyAccount), body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount),
+body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) {
+  max-width: 520px;
+  margin: 24px auto;
+  border-radius: 8px;
+  background: #FFF;
+  box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+  border: 0; }
+  body.user-registration-page #user-registration:not(.user-registration-MyAccount) .user-registration-login-title,
+  body.user-registration-page #user-registration:not(.user-registration-MyAccount) .user-registration-registration-title,
+  body.user-registration-page .user-registration:not(.user-registration-MyAccount) .user-registration-login-title,
+  body.user-registration-page .user-registration:not(.user-registration-MyAccount) .user-registration-registration-title, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .user-registration-login-title,
+  body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .user-registration-registration-title,
+  body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .user-registration-login-title,
+  body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .user-registration-registration-title {
+    color: #1f1f1f;
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 48px;
+    letter-spacing: 0.15px;
+    display: block;
+    text-align: center;
+    margin-bottom: 8px; }
+  body.user-registration-page #user-registration:not(.user-registration-MyAccount) .user-registration-login-description,
+  body.user-registration-page #user-registration:not(.user-registration-MyAccount) .user-registration-registration-description,
+  body.user-registration-page .user-registration:not(.user-registration-MyAccount) .user-registration-login-description,
+  body.user-registration-page .user-registration:not(.user-registration-MyAccount) .user-registration-registration-description, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .user-registration-login-description,
+  body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .user-registration-registration-description,
+  body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .user-registration-login-description,
+  body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .user-registration-registration-description {
+    color: #333;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 21px;
+    letter-spacing: 0.15px;
+    margin-bottom: 30px;
+    text-align: center; }
+  body.user-registration-page #user-registration:not(.user-registration-MyAccount) br,
+  body.user-registration-page .user-registration:not(.user-registration-MyAccount) br, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) br,
+  body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) br {
+    display: none; }
+  body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid #user-registration-tfa-attempts-left,
+  body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid #user-registration-tfa-attempts-left, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid #user-registration-tfa-attempts-left,
+  body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid #user-registration-tfa-attempts-left {
+    margin-bottom: 12px; }
+  body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-error,
+  body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-error, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-error,
+  body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-error {
+    width: 100%;
+    position: unset;
+    align-items: center;
+    margin: 0 !important;
+    margin-bottom: 24px !important;
+    color: #F25656 !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    line-height: 24px !important;
+    letter-spacing: 0.18px; }
+    body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-error::before,
+    body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-error::before, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-error::before,
+    body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-error::before {
+      margin-right: 4px;
+      font-size: 16px;
+      color: #F25656; }
+    body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-error svg,
+    body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-error svg, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-error svg,
+    body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-error svg {
+      width: 28px;
+      height: 28px; }
+    body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-error li,
+    body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-error li, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-error li,
+    body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-error li {
+      color: #222222;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 21px;
+      letter-spacing: 0.15px; }
+      body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-error li strong,
+      body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-error li strong, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-error li strong,
+      body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-error li strong {
+        font-weight: 500;
+        padding-right: 4px; }
+  body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-message,
+  body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-message, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-message,
+  body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-message {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 24px; }
+    body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-message ul,
+    body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-message ul, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-message ul,
+    body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-message ul {
+      margin: 0; }
+  body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-lost-password-content-container,
+  body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-lost-password-content-container, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-lost-password-content-container,
+  body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-lost-password-content-container {
+    margin-bottom: 24px; }
+    body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-lost-password-content-container .ur-lost-password-title,
+    body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-lost-password-content-container .ur-lost-password-title, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-lost-password-content-container .ur-lost-password-title,
+    body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-lost-password-content-container .ur-lost-password-title {
+      margin: 0; }
+  body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-form-row,
+  body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-form-row, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-form-row,
+  body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-form-row {
+    margin-bottom: 12px; }
+    body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-form-row label,
+    body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-form-row label, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-form-row label,
+    body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .user-registration-form-row label {
+      margin-top: 0;
+      margin-bottom: 12px; }
+  body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-input-with-icon,
+  body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-input-with-icon, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-input-with-icon,
+  body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-input-with-icon {
+    display: block; }
+    body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-input-with-icon svg,
+    body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-input-with-icon svg, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-input-with-icon svg,
+    body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-input-with-icon svg {
+      top: 50%;
+      transform: translateY(-50%);
+      left: 12px;
+      width: 14px;
+      height: 14px; }
+    body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-input-with-icon input,
+    body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-input-with-icon input, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-input-with-icon input,
+    body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-input-with-icon input {
+      min-height: 38px;
+      margin-bottom: 0;
+      padding: 0 14px 0 36px; }
+      body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-input-with-icon input:focus,
+      body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-input-with-icon input:focus, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-input-with-icon input:focus,
+      body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-input-with-icon input:focus {
+        border-color: #027abb; }
+  body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-field-item label,
+  body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-field-item label, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-field-item label,
+  body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-field-item label {
+    margin-top: 0;
+    margin-bottom: 12px;
+    color: #222;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 19px; }
+  body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-field-item .input-wrapper,
+  body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-field-item .input-wrapper, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-field-item .input-wrapper,
+  body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-field-item .input-wrapper {
+    display: block; }
+    body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-field-item .input-wrapper input,
+    body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-field-item .input-wrapper input, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-field-item .input-wrapper input,
+    body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-field-item .input-wrapper input {
+      margin-bottom: 0;
+      border-radius: 4px;
+      border: 1px solid #E9E9E9;
+      min-height: 38px;
+      font-size: 14px;
+      line-height: 20px;
+      padding: 0 14px;
+      color: #383838; }
+      body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-field-item .input-wrapper input:focus,
+      body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-field-item .input-wrapper input:focus, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-field-item .input-wrapper input:focus,
+      body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-field-item .input-wrapper input:focus {
+        border-color: #027ABB; }
+      body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-field-item .input-wrapper input::placeholder,
+      body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-field-item .input-wrapper input::placeholder, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-field-item .input-wrapper input::placeholder,
+      body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-field-item .input-wrapper input::placeholder {
+        color: #858585; }
+  body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-button-container,
+  body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-button-container, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-button-container,
+  body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-button-container {
+    margin-top: 32px;
+    padding: 0 10px; }
+    body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-button-container .ur-submit-button,
+    body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-button-container .ur-submit-button, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-button-container .ur-submit-button,
+    body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-button-container .ur-submit-button {
+      width: 100%;
+      border: 0;
+      padding: 10px 24px;
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 24px;
+      letter-spacing: 0.15px;
+      background: #475BB2;
+      border: 1px solid #475BB2;
+      margin-right: 0;
+      transition: all .3s; }
+      body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-button-container .ur-submit-button:hover,
+      body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-button-container .ur-submit-button:hover, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-button-container .ur-submit-button:hover,
+      body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-button-container .ur-submit-button:hover {
+        background: #38488e !important;
+        border-color: #38488e !important; }
+  body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form,
+  body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form,
+  body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form {
+    border: 0;
+    padding: 0;
+    box-shadow: none;
+    margin-bottom: 0; }
+    body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-error,
+    body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-error, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-error,
+    body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-error {
+      position: unset;
+      width: 100%;
+      margin: 0 !important; }
+    body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row,
+    body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row,
+    body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row {
+      margin-bottom: 24px; }
+      body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row label,
+      body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row label, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row label,
+      body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row label {
+        margin-top: 0;
+        margin-bottom: 12px;
+        color: #222;
+        font-size: 15px;
+        font-weight: 500;
+        line-height: 19px; }
+      body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row .input-wrapper,
+      body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row .input-wrapper, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row .input-wrapper,
+      body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row .input-wrapper {
+        display: block; }
+        body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row .input-wrapper input,
+        body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row .input-wrapper input, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row .input-wrapper input,
+        body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row .input-wrapper input {
+          margin-bottom: 0;
+          border-radius: 4px;
+          border: 1px solid #E9E9E9;
+          min-height: 38px;
+          font-size: 14px;
+          line-height: 20px;
+          padding: 0 14px;
+          color: #383838; }
+          body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row .input-wrapper input:focus,
+          body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row .input-wrapper input:focus, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row .input-wrapper input:focus,
+          body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row .input-wrapper input:focus {
+            border-color: #027ABB; }
+          body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row .input-wrapper input::placeholder,
+          body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row .input-wrapper input::placeholder, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row .input-wrapper input::placeholder,
+          body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-form-row .input-wrapper input::placeholder {
+            color: #858585; }
+    body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div,
+    body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div,
+    body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div {
+      display: block;
+      margin-top: 32px;
+      float: unset !important;
+      flex-direction: row-reverse; }
+      body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div input[type="submit"],
+      body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div input[type="submit"], body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div input[type="submit"],
+      body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div input[type="submit"] {
+        width: 100%;
+        border: 0;
+        padding: 10px 24px;
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 24px;
+        letter-spacing: 0.15px;
+        background: #475BB2;
+        border: 1px solid #475BB2; }
+        body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div input[type="submit"]:hover,
+        body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div input[type="submit"]:hover, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div input[type="submit"]:hover,
+        body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div input[type="submit"]:hover {
+          background: #38488e !important;
+          border-color: #38488e !important; }
+      body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-Button,
+      body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-Button, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-Button,
+      body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-Button {
+        padding: 10px 24px;
+        font-size: 15px;
+        line-height: 25px; }
+        body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-Button:disabled,
+        body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-Button:disabled, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-Button:disabled,
+        body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-Button:disabled {
+          pointer-events: none;
+          border-color: #F6F7F7; }
+        body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-Button:hover,
+        body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-Button:hover, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-Button:hover,
+        body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-Button:hover {
+          color: #ffffff;
+          background: #38488e !important;
+          border-color: #38488e !important; }
+      body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div:has(.user-registration-passwordless-login),
+      body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div:has(.user-registration-passwordless-login), body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div:has(.user-registration-passwordless-login),
+      body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div:has(.user-registration-passwordless-login) {
+        display: flex;
+        flex-direction: column-reverse;
+        gap: 16px !important; }
+      body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-passwordless-login,
+      body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-passwordless-login, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-passwordless-login,
+      body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-passwordless-login {
+        width: 100%;
+        text-align: center;
+        margin: 0; }
+        body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-passwordless-login a,
+        body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-passwordless-login a, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-passwordless-login a,
+        body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-passwordless-login a {
+          font-size: 15px;
+          line-height: 25px;
+          color: #4e4e4e;
+          background: #f4f4f4;
+          border: 1px solid #f4f4f4;
+          width: 100%;
+          display: block;
+          padding: 10px 24px;
+          border-radius: 4px;
+          transition: all .3s; }
+          body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-passwordless-login a:hover,
+          body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-passwordless-login a:hover, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-passwordless-login a:hover,
+          body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-passwordless-login a:hover {
+            background: #475BB2;
+            border-color: #475BB2;
+            color: #ffffff; }
+    body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-before-login-btn,
+    body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-before-login-btn, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-before-login-btn,
+    body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-before-login-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-direction: row;
+      margin-top: -4px;
+      float: unset !important; }
+      body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-before-login-btn label,
+      body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-before-login-btn label, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-before-login-btn label,
+      body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-before-login-btn label {
+        margin: 0;
+        width: auto; }
+      body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-before-login-btn .user-registration-LostPassword,
+      body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-before-login-btn .user-registration-LostPassword, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-before-login-btn .user-registration-LostPassword,
+      body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-before-login-btn .user-registration-LostPassword {
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 21px;
+        letter-spacing: 0.15px;
+        text-decoration-line: underline;
+        text-underline-position: from-font; }
+        body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-before-login-btn .user-registration-LostPassword a,
+        body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-before-login-btn .user-registration-LostPassword a, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-before-login-btn .user-registration-LostPassword a,
+        body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-before-login-btn .user-registration-LostPassword a {
+          color: #475bb2; }
+    body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-register,
+    body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-register, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-register,
+    body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-register {
+      display: flex;
+      width: 100%;
+      padding-top: 16px;
+      justify-content: center;
+      margin-bottom: 0; }
+      body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-register a,
+      body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-register a, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-register a,
+      body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-register a {
+        color: #475bb2; }
+    body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks,
+    body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks,
+    body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks {
+      flex-direction: column;
+      position: relative;
+      margin-bottom: 0; }
+      body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks::before,
+      body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks::before, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks::before,
+      body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks::before {
+        content: "or";
+        font-size: 14px;
+        line-height: 24px;
+        background: #ffffff;
+        padding: 0 10px;
+        display: block;
+        z-index: 1;
+        position: relative;
+        color: #333;
+        letter-spacing: 0.15px; }
+      body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks::after,
+      body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks::after, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks::after,
+      body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 1px;
+        top: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #D9D9D9;
+        z-index: 0; }
+      body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks .ursc-network-lists,
+      body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks .ursc-network-lists, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks .ursc-network-lists,
+      body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks .ursc-network-lists {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        width: 100%; }
+        body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks .ursc-network-lists .ursc-login-media,
+        body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks .ursc-network-lists .ursc-login-media, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks .ursc-network-lists .ursc-login-media,
+        body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks .ursc-network-lists .ursc-login-media {
+          margin: 0; }
+        body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks .ursc-network-lists.ursc_theme_2 .ursc-login-media a, body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks .ursc-network-lists.ursc_theme_3 .ursc-login-media a,
+        body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks .ursc-network-lists.ursc_theme_2 .ursc-login-media a,
+        body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks .ursc-network-lists.ursc_theme_3 .ursc-login-media a, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks .ursc-network-lists.ursc_theme_2 .ursc-login-media a, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks .ursc-network-lists.ursc_theme_3 .ursc-login-media a,
+        body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks .ursc-network-lists.ursc_theme_2 .ursc-login-media a,
+        body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks .ursc-network-lists.ursc_theme_3 .ursc-login-media a {
+          width: 40px;
+          height: 40px;
+          padding: 0; }
+        body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks .ursc-network-lists.ursc_theme_4,
+        body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks .ursc-network-lists.ursc_theme_4, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks .ursc-network-lists.ursc_theme_4,
+        body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks .ursc-network-lists.ursc_theme_4 {
+          flex-wrap: wrap; }
+          body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks .ursc-network-lists.ursc_theme_4 .ursc-login-media,
+          body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks .ursc-network-lists.ursc_theme_4 .ursc-login-media, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks .ursc-network-lists.ursc_theme_4 .ursc-login-media,
+          body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks .ursc-network-lists.ursc_theme_4 .ursc-login-media {
+            width: 47%; }
+            body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks .ursc-network-lists.ursc_theme_4 .ursc-login-media .ursc-login-text,
+            body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks .ursc-network-lists.ursc_theme_4 .ursc-login-media .ursc-login-text, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks .ursc-network-lists.ursc_theme_4 .ursc-login-media .ursc-login-text,
+            body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks .ursc-network-lists.ursc_theme_4 .ursc-login-media .ursc-login-text {
+              font-size: 13px;
+              line-height: 24px; }
+  body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-login-registration-nav ul li,
+  body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-login-registration-nav ul li, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-login-registration-nav ul li,
+  body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-login-registration-nav ul li {
+    margin: 0;
+    padding: 16px;
+    color: #C5C5C5;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 21px;
+    letter-spacing: 0.85px;
+    text-transform: uppercase;
+    border: 0;
+    box-shadow: none;
+    clip-path: none; }
+    body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-login-registration-nav ul li.active,
+    body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-login-registration-nav ul li.active, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-login-registration-nav ul li.active,
+    body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-login-registration-nav ul li.active {
+      color: #1f1f1f; }
+  body.user-registration-page #user-registration:not(.user-registration-MyAccount):has(.ur-login-registration-nav),
+  body.user-registration-page .user-registration:not(.user-registration-MyAccount):has(.ur-login-registration-nav), body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount):has(.ur-login-registration-nav),
+  body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount):has(.ur-login-registration-nav) {
+    padding: 0; }
+    body.user-registration-page #user-registration:not(.user-registration-MyAccount):has(.ur-login-registration-nav) .ur-frontend-form,
+    body.user-registration-page .user-registration:not(.user-registration-MyAccount):has(.ur-login-registration-nav) .ur-frontend-form, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount):has(.ur-login-registration-nav) .ur-frontend-form,
+    body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount):has(.ur-login-registration-nav) .ur-frontend-form {
+      padding: 50px 40px 40px; }
+      body.user-registration-page #user-registration:not(.user-registration-MyAccount):has(.ur-login-registration-nav) .ur-frontend-form .ur-form-row .ur-form-grid .user-registration,
+      body.user-registration-page .user-registration:not(.user-registration-MyAccount):has(.ur-login-registration-nav) .ur-frontend-form .ur-form-row .ur-form-grid .user-registration, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount):has(.ur-login-registration-nav) .ur-frontend-form .ur-form-row .ur-form-grid .user-registration,
+      body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount):has(.ur-login-registration-nav) .ur-frontend-form .ur-form-row .ur-form-grid .user-registration {
+        margin-top: 0; }
+      body.user-registration-page #user-registration:not(.user-registration-MyAccount):has(.ur-login-registration-nav) .ur-frontend-form .ur-form-row .ur-form-grid .ur-frontend-form,
+      body.user-registration-page .user-registration:not(.user-registration-MyAccount):has(.ur-login-registration-nav) .ur-frontend-form .ur-form-row .ur-form-grid .ur-frontend-form, body.user-registration_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount):has(.ur-login-registration-nav) .ur-frontend-form .ur-form-row .ur-form-grid .ur-frontend-form,
+      body.user-registration_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount):has(.ur-login-registration-nav) .ur-frontend-form .ur-form-row .ur-form-grid .ur-frontend-form {
+        padding: 0;
+        box-shadow: none;
+        margin-bottom: 0; }
+
+.user-registration-login-form-container .ur-registered-from .ur-login-form-wrapper #user-registration {
+  width: 100%; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .ur-admin-page-topnav {
+  margin-bottom: 0; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap.wrap {
+  margin: 0 auto; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .menu-edit {
+  border: none; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-tab-contents {
+  padding: 24px;
+  background-color: #fafafc; }
+  .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-tab-contents .ur-login-view-doc {
+    border-radius: 3px;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+    box-shadow: none;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0px;
+    padding: 10px 24px;
+    border: none;
+    background-color: #475bb2;
+    color: #ffffff;
+    display: block;
+    margin: 24px auto 0; }
+    .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-tab-contents .ur-login-view-doc a {
+      color: #fff; }
+    .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-tab-contents .ur-login-view-doc:disabled {
+      cursor: default;
+      opacity: 0.5; }
+      .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-tab-contents .ur-login-view-doc:disabled:hover {
+        background-color: #475bb2; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-heading {
+  margin-top: 0;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e9e9e9;
+  text-transform: uppercase;
+  font-size: 16px; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-login-content p {
+  font-size: 16px;
+  margin: 20px auto; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-login-content .login-forms-shortcode-action {
+  display: flex;
+  padding: 6px 6px 6px 12px;
+  gap: 8px;
+  justify-content: space-between;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #edeff7;
+  border-radius: 4px; }
+  .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-login-content .login-forms-shortcode-action input {
+    background: transparent;
+    border: none; }
+  .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-login-content .login-forms-shortcode-action .ur-copy-shortcode {
+    line-height: unset;
+    padding: 6px;
+    background: #edeff7;
+    border: none; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents {
+  padding: 16px 16px 0 16px; }
+  .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content {
+    padding: 0; }
+    .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content form .ur-login-form-setting-block:first-child h2.ur-toggle-heading {
+      margin-top: 0; }
+    .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content form .ur-login-form-setting-block .ur-toggle-content {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px; }
+      .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content form .ur-login-form-setting-block .ur-toggle-content .user-registration-login-form-global-settings {
+        display: flex;
+        flex-direction: column;
+        gap: 12px; }
+        .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content form .ur-login-form-setting-block .ur-toggle-content .user-registration-login-form-global-settings label {
+          font-weight: 600;
+          gap: 6px;
+          margin-bottom: 0; }
+          .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content form .ur-login-form-setting-block .ur-toggle-content .user-registration-login-form-global-settings label .user-registration-help-tip {
+            font-size: 20px; }
+        .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content form .ur-login-form-setting-block .ur-toggle-content .user-registration-login-form-global-settings select {
+          height: 38px; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings #ur-login-form-setting .ur-login-form-setting-block {
+  display: flex;
+  flex-direction: column;
+  gap: 24px; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer #post-body .ur-builder-wrapper .ur-selected-inputs {
+  background: transparent;
+  padding: 24px; }
+
+.user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .user-registration-login-settings-form a {
+  pointer-events: none; }

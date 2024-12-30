@@ -1186,7 +1186,7 @@ class UR_Admin_Settings {
 						} else {
 							switch ( $subsection ) {
 								case 'login-options':
-									$subsection_array = $section->get_login_options_settings();
+									$subsection_array = get_login_options_settings();
 									break;
 								case 'frontend-messages':
 									$subsection_array = $section->get_frontend_messages_settings();
