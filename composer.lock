@@ -4243,15 +4243,15 @@
             },
             "type": "wp-cli-package",
             "extra": {
-                "branch-alias": {
-                    "dev-main": "2.x-dev"
-                },
                 "bundled": true,
                 "commands": [
                     "i18n",
                     "i18n make-pot",
                     "i18n make-json"
-                ]
+                ],
+                "branch-alias": {
+                    "dev-main": "2.x-dev"
+                }
             },
             "autoload": {
                 "files": [
