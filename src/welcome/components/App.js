@@ -201,9 +201,12 @@ function App() {
 						registrationPageUrl =
 							res.page_details["registration"]["page_url"];
 					} else {
-						registrationPageUrl =
-							res.page_details["membership-registration"][
-								"page_url"
+						var membershipRegistrationKey = Object.keys(res.page_details).filter(function (key) {
+							return key.indexOf('membership-registration') === 0;
+						});
+
+						registrationPageUrl = res.page_details[membershipRegistrationKey[0]][
+							'page_url'
 							];
 					}
 
