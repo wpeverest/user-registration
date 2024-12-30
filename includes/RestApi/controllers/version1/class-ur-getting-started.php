@@ -237,7 +237,12 @@ class UR_Getting_Started {
 			'title'         => esc_html__( 'Default Registration Form', 'user-registration' ),
 			'page_slug'     => sprintf( esc_html__( 'Form Id: %s', 'user-registration' ), $default_form_page_id ),
 		);
-
+		$page_details['membership_details'] = array(
+			'page_url'      => admin_url( 'admin.php?page=user-registration-membership&action=add_new_membership' ),
+			'page_url_text' => esc_html__( 'Create Membership', 'user-registration' ),
+			'title'         => esc_html__( '+ Create Membership', 'user-registration' ),
+			'page_slug'     => '',
+		);
 		$pages['myaccount'] = array(
 			'name'    => _x( 'my-account', 'Page slug', 'user-registration' ),
 			'title'   => _x( 'My Account', 'Page title', 'user-registration' ),
