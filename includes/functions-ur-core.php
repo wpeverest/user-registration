@@ -124,7 +124,9 @@ if ( ! function_exists( 'is_ur_lost_password_page' ) ) {
 	function is_ur_lost_password_page() {
 		global $wp;
 
-		return ( is_ur_account_page() && isset( $wp->query_vars['ur-lost-password'] ) );
+		$lost_password_page_id = get_option( 'user_registration_lost_password_page_id', false );
+
+		return ( is_ur_account_page() && isset( $wp->query_vars['ur-lost-password'] ) ) || is_page( $lost_password_page_id );
 	}
 }
 
@@ -472,10 +474,8 @@ add_filter( 'extra_plugin_headers', 'ur_enable_ur_plugin_headers' );
  */
 function ur_get_field_type( $field_key ) {
 	$fields = ur_get_registered_form_fields();
-	if ( function_exists( 'ur_pro_is_coupons_addon_activated' ) ) {
-		if ( ur_pro_is_coupons_addon_activated() ) {
-			$fields[] = 'coupon';
-		}
+	if ( ur_check_module_activation( 'coupon' ) ) {
+		$fields[] = 'coupon';
 	}
 
 	$field_type = 'text';
@@ -3272,6 +3272,41 @@ if ( ! function_exists( 'ur_find_my_account_in_page' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ur_find_lost_password_in_page' ) ) {
+
+	/**
+	 * Find Lost Password Shortcode.
+	 *
+	 * @param int $lost_password_page_id Lost Password Page ID.
+	 * @return int If matched then 1 else 0.
+	 * @since  4.0
+	 */
+	function ur_find_lost_password_in_page( $lost_password_page_id ) {
+		global $wpdb;
+		$post_table      = $wpdb->prefix . 'posts';
+		$post_meta_table = $wpdb->prefix . 'postmeta';
+
+		$matched = $wpdb->get_var(
+			$wpdb->prepare( "SELECT COUNT(*) FROM {$post_table} WHERE ID = '{$lost_password_page_id}' AND ( post_content LIKE '%[user_registration_lost_password%' OR post_content LIKE '%<!-- wp:user-registration/lost_password%' OR post_content LIKE '%<!-- wp:user-registration/lost_password%')" ) //phpcs:ignore.
+		);
+
+		if ( $matched <= 0 ) {
+			$matched = $wpdb->get_var(
+				$wpdb->prepare( "SELECT COUNT(*) FROM {$post_meta_table} WHERE post_id = '{$lost_password_page_id}' AND ( meta_value LIKE '%[user_registration_lost_password%' OR meta_value LIKE '%<!-- wp:user-registration/lost_password%' OR meta_value LIKE '%<!-- wp:user-registration/lost_password%' )" ) //phpcs:ignore.
+			);
+		}
+		/**
+		 * Filters the result of finding "Lost Password" in a page.
+		 *
+		 * @param bool  $matched         The result of finding "Lost Password" in a page.
+		 * @param int   $lost_password_page_id   The ID of the associated lost password page.
+		 */
+		$matched = apply_filters( 'user_registration_find_lost_password_in_page', $matched, $lost_password_page_id );
+
+		return $matched;
+	}
+}
+
 if ( ! function_exists( 'ur_get_license_plan' ) ) {
 
 	/**
@@ -4991,8 +5026,7 @@ if ( ! function_exists( 'user_registration_validate_form_field_data' ) ) {
 	 * @param array  $valid_form_data Valid Form Data..
 	 */
 	function user_registration_validate_form_field_data( $data, $form_data, $form_id, $response_array, $form_field_data, $valid_form_data ) {
-		$form_key_list = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
-
+		$form_key_list  = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
 		$form_validator = new UR_Form_Validation();
 
 		if ( in_array( $data->field_name, $form_key_list, true ) ) {
@@ -5803,7 +5837,28 @@ if ( ! function_exists( 'ur_check_is_denied' ) ) {
 	}
 }
 
+add_action( 'init', 'ur_check_is_inactive' );
 
+if ( ! function_exists( 'ur_check_is_inactive' ) ) {
+	/**
+	 * Check if user is denied.
+	 */
+	function ur_check_is_inactive() {
+		if ( ! ur_check_module_activation( 'membership' ) ) {
+			return;
+		}
+		$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
+		$membership         = $members_repository->get_member_membership_by_id( get_current_user_id() );
+
+		if ( empty( $membership ) ) {
+			return;
+		}
+		if ( in_array( $membership['status'], array( 'pending', 'canceled', 'inactive' ) ) ) {
+			wp_logout();
+		}
+
+	}
+}
 if ( ! function_exists( 'ur_check_is_auto_enable_user' ) ) {
 
 	/**
@@ -6716,7 +6771,7 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 				'title'        => 'Twilio',
 				'video_id'     => '-iUMcr03FP8',
 				'available_in' => 'Personal Plan',
-				'activated'    => function_exists( 'ur_pro_is_sms_integration_activated' ) ? ur_pro_is_sms_integration_activated() : '',
+				'activated'    => ur_check_module_activation( 'sms-integration' ),
 				'display'      => array( 'settings' ),
 				'connected'    => ! empty( get_option( 'ur_sms_integration_accounts', array() ) ) ? true : false,
 			),
@@ -6987,9 +7042,9 @@ if ( ! function_exists( 'ur_check_url_is_image' ) ) {
 	 * @return bool
 	 */
 	function ur_check_url_is_image( $url ) {
-		$ch = curl_init();
-		$response    = curl_exec( $ch );
-		$headers = array(
+		$ch       = curl_init();
+		$response = curl_exec( $ch );
+		$headers  = array(
 			'Accept: application/json',
 			'Content-Type: application/json',
 
@@ -6999,7 +7054,7 @@ if ( ! function_exists( 'ur_check_url_is_image' ) ) {
 		curl_setopt( $ch, CURLOPT_NOBODY, true );
 		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 		curl_setopt( $ch, CURLOPT_HEADER, true );
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers );
 
 		curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, true );
 		curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, 'GET' );
@@ -7068,7 +7123,7 @@ if ( ! function_exists( 'ur_return_social_profile_pic' ) ) {
 
 		$user_meta = get_user_meta( $user_id, 'user_registration_social_connect_' . strtolower( $source ) . '_profile_pic', true );
 
-		if ( ! empty( $user_meta ) && ur_check_url_is_image($user_meta)) {
+		if ( ! empty( $user_meta ) && ur_check_url_is_image( $user_meta ) ) {
 			return $user_meta;
 		}
 

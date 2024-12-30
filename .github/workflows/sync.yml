@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - UR-1688-enhance/login-form-builder
+      - UR-1901-user-registration-membership-shift-from-pro-to-free
     workflow_dispatch:
 jobs:
   sync:

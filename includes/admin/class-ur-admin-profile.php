@@ -72,6 +72,9 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 					if ( isset( $value['field_key'] ) && 'signature' === $value['field_key'] && isset( $_GET['user_id'] ) ) {
 						unset( $form_fields[ $key ] );
 					}
+					if( isset( $value['field_key'] ) && 'membership' === $value['field_key'] && isset( $_GET['user_id'] )) {
+						unset( $form_fields[ $key ] );
+					}
 				}
 				unset( $form_fields['user_registration_profile_pic_url'] );
 

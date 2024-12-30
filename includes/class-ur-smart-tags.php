@@ -519,7 +519,28 @@ class UR_Smart_Tags {
 						$passwordless_login_link = isset( $values['passwordless_login_link'] ) ? '<a href="' . esc_url( $values['passwordless_login_link'] ) . '"></a>' : '';
 						$content                 = str_replace( '{{' . $tag . '}}', wp_kses_post( $passwordless_login_link ), $content );
 						break;
+					case 'ur_reset_pass_slug':
+						$lost_password_page = get_option( 'user_registration_lost_password_page_id', false );
+						$reset_pass_slug    = '';
 
+						if ( $lost_password_page ) {
+							$lost_password_url = get_permalink( $lost_password_page );
+							$ur_lost_pass      = ( get_home_url() !== $lost_password_url ) ? $lost_password_url : wp_login_url();
+							$reset_pass_slug   = str_replace( get_home_url() . '/', '', $ur_lost_pass );
+						} else {
+							$ur_account_page_exists   = ur_get_page_id( 'myaccount' ) > 0;
+							$ur_login_or_account_page = ur_get_page_permalink( 'myaccount' );
+
+							if ( ! $ur_account_page_exists ) {
+								$ur_login_or_account_page = ur_get_page_permalink( 'login' );
+							}
+
+							$ur_login        = ( get_home_url() !== $ur_login_or_account_page ) ? $ur_login_or_account_page : wp_login_url();
+							$reset_pass_slug = str_replace( get_home_url() . '/', '', $ur_login );
+						}
+
+						$content = str_replace( '{{' . $other_tag . '}}', $reset_pass_slug, $content );
+						break;
 				}
 			}
 		}

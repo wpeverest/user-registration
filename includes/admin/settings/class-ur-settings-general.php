@@ -201,14 +201,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'desc_tip' => true,
 								),
 								array(
-									'title'    => __( 'Lost Password', 'user-registration' ),
-									'desc'     => __( 'Endpoint for the "My account &rarr; Lost password" page.', 'user-registration' ),
-									'id'       => 'user_registration_myaccount_lost_password_endpoint',
-									'type'     => 'text',
-									'default'  => 'lost-password',
-									'desc_tip' => true,
-								),
-								array(
 									'title'    => __( 'User Logout', 'user-registration' ),
 									'desc'     => __( 'Endpoint for triggering logout. You can add this to your menus via a custom link: yoursite.com/?user-logout=true', 'user-registration' ),
 									'id'       => 'user_registration_logout_endpoint',

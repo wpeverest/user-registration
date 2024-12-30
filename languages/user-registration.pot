@@ -299,7 +299,7 @@ msgstr ""
 #: includes/abstracts/abstract-ur-list-table.php:298
 #: includes/admin/class-ur-admin-export-users.php:51
 #: includes/admin/class-ur-admin-import-export-forms.php:51
-#: includes/admin/class-ur-admin-settings.php:88
+#: includes/admin/class-ur-admin-settings.php:93
 #: includes/admin/class-ur-admin-status.php:170
 #: includes/admin/class-ur-admin-status.php:187
 #: includes/admin/notifications/class-ur-admin-notices.php:670
@@ -389,7 +389,7 @@ msgstr ""
 #: includes/class-ur-ajax.php:1682
 #: includes/functions-ur-core.php:3788
 #: src/dashboard/screens/Modules/components/ModuleBody.js:136
-#: src/dashboard/screens/Modules/components/ModuleItem.js:472
+#: src/dashboard/screens/Modules/components/ModuleItem.js:480
 msgid "Upgrade Plan"
 msgstr ""
 
@@ -966,12 +966,12 @@ msgid "WordPress requires the user to have an email address during registration.
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:623
-#: includes/admin/class-ur-admin-settings.php:208
+#: includes/admin/class-ur-admin-settings.php:213
 msgid "is a Pro Feature"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:624
-#: includes/admin/class-ur-admin-settings.php:209
+#: includes/admin/class-ur-admin-settings.php:214
 msgid "We apologize, but %title% is not available with the free version. To access this fantastic features, please consider upgrading to the %plan%."
 msgstr ""
 
@@ -1388,31 +1388,31 @@ msgstr ""
 msgid "Search Forms ..."
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:101
+#: includes/admin/class-ur-admin-settings.php:106
 msgid "Your settings have been saved."
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:118
+#: includes/admin/class-ur-admin-settings.php:123
 msgid "Your settings has not been saved. You enabled \"Disable Default WordPress Login Screen\" but did not select a login page. Please select a page for \"Redirect Default WordPress Login To\"."
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:127
+#: includes/admin/class-ur-admin-settings.php:132
 msgid "Your settings has not been saved.The selected page for \"Redirect Default WordPress Login To\" is not a login page. Please select a valid login page."
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:203
+#: includes/admin/class-ur-admin-settings.php:208
 msgid "The changes you made will be lost if you navigate away from this page."
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:205
+#: includes/admin/class-ur-admin-settings.php:210
 msgid "Captcha Test Successful !"
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:206
+#: includes/admin/class-ur-admin-settings.php:211
 msgid "Some error occured. Please verify that the keys you entered are valid."
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:207
+#: includes/admin/class-ur-admin-settings.php:212
 msgid "You have some unsaved changes. Please save and try again."
 msgstr ""
 
@@ -1436,7 +1436,7 @@ msgstr ""
 msgid "Remove Image"
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:1232
+#: includes/admin/class-ur-admin-settings.php:1237
 msgid "No Search result found !"
 msgstr ""
 
@@ -3023,6 +3023,8 @@ msgid "Refresh Templates"
 msgstr ""
 
 #: includes/admin/views/html-admin-page-form-templates.php:50
+#: includes/RestApi/controllers/version1/class-ur-modules.php:142
+#: includes/RestApi/controllers/version1/class-ur-modules.php:172
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:344
 msgid "Free"
 msgstr ""
@@ -3131,7 +3133,7 @@ msgstr ""
 
 #: includes/admin/views/html-admin-page-forms.php:172
 #: includes/functions-ur-core.php:4757
-#: src/dashboard/screens/Modules/components/ModuleItem.js:408
+#: src/dashboard/screens/Modules/components/ModuleItem.js:416
 msgid "Documentation"
 msgstr ""
 
@@ -3486,7 +3488,7 @@ msgstr ""
 
 #: includes/class-ur-ajax.php:1528
 #: includes/functions-ur-core.php:2949
-#: includes/RestApi/controllers/version1/class-ur-modules.php:675
+#: includes/RestApi/controllers/version1/class-ur-modules.php:683
 msgid "Unable to connect to the filesystem. Please confirm your credentials."
 msgstr ""
 
@@ -4125,6 +4127,8 @@ msgid "We share information with third parties who help us provide our orders an
 msgstr ""
 
 #: includes/class-ur-privacy.php:81
+#: modules/class-ur-payment-settings.php:34
+#: modules/class-ur-payment-settings.php:54
 msgid "Payments"
 msgstr ""
 
@@ -6920,81 +6924,81 @@ msgstr ""
 msgid "Cannot access Features. Please try again some time later."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:140
-#: includes/RestApi/controllers/version1/class-ur-modules.php:166
+#: includes/RestApi/controllers/version1/class-ur-modules.php:144
+#: includes/RestApi/controllers/version1/class-ur-modules.php:174
 msgid "Personal"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:168
+#: includes/RestApi/controllers/version1/class-ur-modules.php:176
 msgid "Plus"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:170
+#: includes/RestApi/controllers/version1/class-ur-modules.php:178
 msgid "Professional"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:204
+#: includes/RestApi/controllers/version1/class-ur-modules.php:212
 msgid "Module slug is a required field"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:231
+#: includes/RestApi/controllers/version1/class-ur-modules.php:239
 msgid "Module couldn't be activated at the moment. Please try again later."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:239
+#: includes/RestApi/controllers/version1/class-ur-modules.php:247
 msgid "Module Activated Successfully"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:306
+#: includes/RestApi/controllers/version1/class-ur-modules.php:314
 msgid "Addon slug is a required field"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:328
+#: includes/RestApi/controllers/version1/class-ur-modules.php:336
 msgid "Module couldn't be deactivated. Please try again later."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:336
+#: includes/RestApi/controllers/version1/class-ur-modules.php:344
 msgid "Module deactivated successfully"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:394
+#: includes/RestApi/controllers/version1/class-ur-modules.php:402
 msgid "Please select addons to activate"
 msgstr ""
 
 #. translators: 1: Failed Addon Names
-#: includes/RestApi/controllers/version1/class-ur-modules.php:426
+#: includes/RestApi/controllers/version1/class-ur-modules.php:434
 msgid "%1$s activation failed. Please try again sometime later."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:434
+#: includes/RestApi/controllers/version1/class-ur-modules.php:442
 msgid "All of the selected modules have been activated successfully."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:514
+#: includes/RestApi/controllers/version1/class-ur-modules.php:522
 msgid "Please select a module to deactivate"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:545
+#: includes/RestApi/controllers/version1/class-ur-modules.php:553
 msgid "All of the selected modules have been deactivated."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:553
+#: includes/RestApi/controllers/version1/class-ur-modules.php:561
 msgid "Some of the selected modules may not have been deactivated. Please try again later"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:627
+#: includes/RestApi/controllers/version1/class-ur-modules.php:635
 msgid "Addons activated successfully"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:688
+#: includes/RestApi/controllers/version1/class-ur-modules.php:696
 msgid "Addon installed Successfully"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:731
+#: includes/RestApi/controllers/version1/class-ur-modules.php:739
 msgid "User Registration Pro activated successfully."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:740
+#: includes/RestApi/controllers/version1/class-ur-modules.php:748
 msgid "Please enter the valid license key."
 msgstr ""
 
@@ -7138,6 +7142,196 @@ msgstr ""
 msgid "Please enter a non negative value"
 msgstr ""
 
+#: modules/class-ur-payment-settings.php:57
+msgid "Payment Settings"
+msgstr ""
+
+#: modules/class-ur-payment-settings.php:62
+msgid "Currency"
+msgstr ""
+
+#: modules/class-ur-payment-settings.php:63
+msgid "This option lets you choose currency for payments."
+msgstr ""
+
+#: modules/class-ur-payment-settings.php:92
+msgid "CURRENCY_NOT_SUPPORTED Currency Code :"
+msgstr ""
+
+#: modules/class-ur-payment-settings.php:92
+msgid " is not currently supported by Paypal. Please Refer"
+msgstr ""
+
+#: modules/class-ur-payment-settings.php:92
+msgid "Paypal supported currencies"
+msgstr ""
+
+#: modules/functions-ur-modules.php:40
+msgid "U.S. Dollar"
+msgstr ""
+
+#: modules/functions-ur-modules.php:48
+msgid "Pound Sterling"
+msgstr ""
+
+#: modules/functions-ur-modules.php:56
+msgid "Euro"
+msgstr ""
+
+#: modules/functions-ur-modules.php:64
+msgid "Australian Dollar"
+msgstr ""
+
+#: modules/functions-ur-modules.php:72
+msgid "Brazilian Real"
+msgstr ""
+
+#: modules/functions-ur-modules.php:80
+msgid "Canadian Dollar"
+msgstr ""
+
+#: modules/functions-ur-modules.php:88
+msgid "Czech Koruna"
+msgstr ""
+
+#: modules/functions-ur-modules.php:96
+msgid "Danish Krone"
+msgstr ""
+
+#: modules/functions-ur-modules.php:104
+msgid "Hong Kong Dollar"
+msgstr ""
+
+#: modules/functions-ur-modules.php:112
+msgid "Hungarian Forint"
+msgstr ""
+
+#: modules/functions-ur-modules.php:120
+msgid "Israeli New Sheqel"
+msgstr ""
+
+#: modules/functions-ur-modules.php:128
+msgid "Malaysian Ringgit"
+msgstr ""
+
+#: modules/functions-ur-modules.php:136
+msgid "Mexican Peso"
+msgstr ""
+
+#: modules/functions-ur-modules.php:144
+msgid "Norwegian Krone"
+msgstr ""
+
+#: modules/functions-ur-modules.php:152
+msgid "New Zealand Dollar"
+msgstr ""
+
+#: modules/functions-ur-modules.php:160
+msgid "Philippine Peso"
+msgstr ""
+
+#: modules/functions-ur-modules.php:168
+msgid "Polish Zloty"
+msgstr ""
+
+#: modules/functions-ur-modules.php:176
+msgid "Russian Ruble"
+msgstr ""
+
+#: modules/functions-ur-modules.php:184
+msgid "Singapore Dollar"
+msgstr ""
+
+#: modules/functions-ur-modules.php:192
+msgid "South African Rand"
+msgstr ""
+
+#: modules/functions-ur-modules.php:200
+msgid "Swedish Krona"
+msgstr ""
+
+#: modules/functions-ur-modules.php:208
+msgid "Swiss Franc"
+msgstr ""
+
+#: modules/functions-ur-modules.php:216
+msgid "Taiwan New Dollar"
+msgstr ""
+
+#: modules/functions-ur-modules.php:224
+msgid "Thai Baht"
+msgstr ""
+
+#: modules/membership/includes/Admin/Settings/class-ur-settings-membership.php:34
+#: modules/membership/includes/Admin/Settings/class-ur-settings-membership.php:59
+#: modules/membership/includes/Frontend/Frontend.php:63
+msgid "Membership"
+msgstr ""
+
+#: modules/membership/includes/Admin/Settings/class-ur-settings-membership.php:64
+msgid "Member Registration Form Page"
+msgstr ""
+
+#: modules/membership/includes/Admin/Settings/class-ur-settings-membership.php:65
+msgid "Select the page which contains your Member Registration form: [%s]"
+msgstr ""
+
+#: modules/membership/includes/Admin/Settings/class-ur-settings-membership.php:74
+msgid "Thank You Page"
+msgstr ""
+
+#: modules/membership/includes/Admin/Settings/class-ur-settings-membership.php:75
+msgid "Select the page which will be shown after successful registration: [%s]"
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:544
+msgid "Wrong request."
+msgstr ""
+
+#: modules/stripe/class-ur-stripe-module.php:35
+msgid "Stripe Settings"
+msgstr ""
+
+#: modules/stripe/class-ur-stripe-module.php:40
+msgid "Test Publishable key"
+msgstr ""
+
+#: modules/stripe/class-ur-stripe-module.php:41
+msgid "Stripe test publishable  key."
+msgstr ""
+
+#: modules/stripe/class-ur-stripe-module.php:49
+msgid "Test Secret key"
+msgstr ""
+
+#: modules/stripe/class-ur-stripe-module.php:50
+msgid "Stripe test secret key."
+msgstr ""
+
+#: modules/stripe/class-ur-stripe-module.php:59
+msgid "Enable Test Mode"
+msgstr ""
+
+#: modules/stripe/class-ur-stripe-module.php:60
+msgid "Check if using test mode."
+msgstr ""
+
+#: modules/stripe/class-ur-stripe-module.php:66
+msgid "Live Publishable Key"
+msgstr ""
+
+#: modules/stripe/class-ur-stripe-module.php:67
+msgid "Stripe live publishable key."
+msgstr ""
+
+#: modules/stripe/class-ur-stripe-module.php:75
+msgid "Live Secret key"
+msgstr ""
+
+#: modules/stripe/class-ur-stripe-module.php:76
+msgid "Stripe live secret key."
+msgstr ""
+
 #: templates/dashboard-widget.php:28
 msgid "Current Version:"
 msgstr ""
@@ -7277,6 +7471,31 @@ msgstr ""
 
 #: templates/myaccount/lost-password-confirmation.php:35
 msgid "A password reset email has been sent to the email address on file for your account, but may take several minutes to show up in your inbox. Please wait at least 10 minutes before attempting another reset."
+msgstr ""
+
+#: templates/myaccount/membership.php:30
+msgid "Membership Title"
+msgstr ""
+
+#: templates/myaccount/membership.php:39
+#: templates/myaccount/membership.php:55
+msgid "N/A"
+msgstr ""
+
+#: templates/myaccount/membership.php:46
+msgid "Membership Type"
+msgstr ""
+
+#: templates/myaccount/membership.php:62
+msgid "Membership Status"
+msgstr ""
+
+#: templates/myaccount/membership.php:93
+msgid "Cancel Membership"
+msgstr ""
+
+#: templates/myaccount/membership.php:96
+msgid "Cancellation will be according to the current membership cancellation type."
 msgstr ""
 
 #. translators: 1: error message 2: file name and path 3: line number
@@ -8107,7 +8326,7 @@ msgstr ""
 msgid "Please enter the valid license key"
 msgstr ""
 
-#: src/dashboard/screens/Modules/components/ModuleItem.js:321
+#: src/dashboard/screens/Modules/components/ModuleItem.js:329
 msgid "Play Video"
 msgstr ""
 

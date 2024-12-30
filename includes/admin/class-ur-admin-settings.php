@@ -59,6 +59,15 @@ class UR_Admin_Settings {
 			$settings[] = include 'settings/class-ur-settings-misc.php';
 			$settings[] = include 'settings/class-ur-settings-integration.php';
 
+			if( ur_check_module_activation( 'membership' ) ) {
+				include_once UR_ABSPATH . 'modules/class-ur-payment-settings.php';
+				include_once UR_ABSPATH . 'modules/stripe/class-ur-stripe-module.php';
+			}
+			else if ( UR_PRO_ACTIVE && ur_check_module_activation( 'payments' ) )
+			{
+				include_once UR_ABSPATH . 'modules/class-ur-payment-settings.php';
+			}
+
 			if ( ! function_exists( 'is_plugin_active' ) ) {
 				include_once ABSPATH . 'wp-admin/includes/plugin.php';
 			}

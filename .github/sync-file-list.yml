@@ -1,6 +1,7 @@
-wpeverest/user-registration-pro@UR-1688-enhance/login-form-builder:
+wpeverest/user-registration-pro@UR-1901-user-registration-membership-shift-from-pro-to-free:
       - assets
       - includes
+      - modules
       - src
       - templates
       - .babelrc

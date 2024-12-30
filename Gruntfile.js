@@ -75,6 +75,17 @@ module.exports = function (grunt) {
 					},
 				],
 			},
+			modules: {
+				files: [
+					{
+						expand: true,
+						cwd: "<%= dirs.js %>/modules/",
+						src: ["**/*.js", "!**/*.min.js"],
+						dest: "<%= dirs.js %>/modules/",
+						ext: ".min.js",
+					},
+				],
+			},
 			urSnackbar: {
 				files: [
 					{
@@ -126,7 +137,7 @@ module.exports = function (grunt) {
 					{
 						expand: true,
 						cwd: "<%= dirs.css %>/",
-						src: ["*.scss"],
+						src: ["*.scss", "modules/**/*.scss"], // Include the modules directory
 						dest: "<%= dirs.css %>/",
 						ext: ".css",
 					},
@@ -175,12 +186,13 @@ module.exports = function (grunt) {
 		// Watch changes for assets.
 		watch: {
 			css: {
-				files: ["<%= dirs.css %>/*.scss"],
+				files: ["<%= dirs.css %>/*.scss","<%= dirs.css %>/modules/**/*.scss"],
 				tasks: ["sass", "rtlcss", "cssmin", "concat"],
 			},
 			js: {
 				files: [
 					"<%= dirs.js %>/admin/*js",
+					"<%= dirs.js %>/modules/**/**/*js",
 					"<%= dirs.js %>/frontend/*js",
 					"<%= dirs.js %>/ur-snackbar/*js",
 					"!<%= dirs.js %>/admin/*.min.js",
@@ -269,6 +281,7 @@ module.exports = function (grunt) {
 		"uglify:admin",
 		"uglify:frontend",
 		"uglify:urComponents",
+		"uglify:modules",
 		"uglify:urSnackbar",
 	]);
 

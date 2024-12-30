@@ -478,7 +478,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			 */
 		public function admin_menu() {
 
-			$registration_page = add_menu_page( 'User Registration', 'User Registration', 'manage_user_registration', 'user-registration', array( $this, 'registration_page' ), $this->get_icon_svg(), '55.8' );
+			$registration_page = add_menu_page( 'User Registration', 'User Registration & Membership', 'manage_user_registration', 'user-registration', array( $this, 'registration_page' ), $this->get_icon_svg(), '55.8' );
 
 			add_action( 'load-' . $registration_page, array( $this, 'registration_page_init' ) );
 			add_submenu_page(
@@ -714,6 +714,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				update_option( 'user_registration_onboarding_skipped', true );
 			}
 			wp_enqueue_script( 'ur-setup' );
+
 			wp_localize_script(
 				'ur-setup',
 				'ur_setup_params',

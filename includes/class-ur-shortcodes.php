@@ -26,6 +26,7 @@ class UR_Shortcodes {
 			'user_registration_form'          => __CLASS__ . '::form', // change it to user_registration_form.
 			'user_registration_my_account'    => __CLASS__ . '::my_account',
 			'user_registration_login'         => __CLASS__ . '::login',
+			'user_registration_lost_password' => __CLASS__ . '::lost_password',
 			'user_registration_edit_profile'  => __CLASS__ . '::edit_profile',
 			'user_registration_edit_password' => __CLASS__ . '::edit_password',
 		);
@@ -149,6 +150,19 @@ class UR_Shortcodes {
 				)
 			)
 		);
+	}
+
+	/**
+	 * Lost password page shortcode.
+	 *
+	 * @param mixed $atts Extra attributes.
+	 *
+	 * @return string
+	 */
+	public static function lost_password( $atts ) {
+		do_action( 'user_registration_my_account_enqueue_scripts', array(), 0 );
+
+		return self::shortcode_wrapper( array( 'UR_Shortcode_My_Account', 'lost_password' ), $atts );
 	}
 
 	/**

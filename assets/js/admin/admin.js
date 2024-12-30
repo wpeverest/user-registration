@@ -218,10 +218,10 @@ jQuery(function ($) {
 		.on("ur_adjust_builder_width", function () {
 			var adminMenuWidth = $("#adminmenuwrap").width(),
 				$builder = $(
-					".user-registration_page_add-new-registration .ur-form-subcontainer .menu-edit"
+					".user-registration-membership_page_add-new-registration .ur-form-subcontainer .menu-edit"
 				),
 				$loading = $(
-					".user-registration_page_add-new-registration .ur-form-subcontainer .ur-loading-container"
+					".user-registration-membership_page_add-new-registration .ur-form-subcontainer .ur-loading-container"
 				);
 
 			$builder.css({ left: adminMenuWidth + "px" });
@@ -1252,7 +1252,7 @@ jQuery(function ($) {
 			complete: function (response) {
 				$(".ur-spinner").remove();
 				$(
-					".user-registration_page_user-registration-settings .notice"
+					".user-registration-membership_page_user-registration-settings .notice"
 				).remove();
 				if (response.responseJSON.success === true) {
 					message_string =
@@ -1272,7 +1272,7 @@ jQuery(function ($) {
 					);
 				}
 				$(
-					".user-registration_page_user-registration-settings .notice"
+					".user-registration-membership_page_user-registration-settings .notice"
 				).css("display", "block");
 				$(window).scrollTop($(".notice").position());
 			}
