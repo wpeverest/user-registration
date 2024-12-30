@@ -9604,6 +9604,13 @@ body.user-registration_page_user-registration-login-forms {
               padding: 2px 12px; }
             body.user-registration_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-from .ur-login-form-settings .nav-tab-wrapper .ur-tab-contents #ur-login-form-setting .ur-toggle-content .select2-selection__arrow {
               top: 5px; }
+          body.user-registration_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-from .ur-login-form-settings .nav-tab-wrapper .ur-tab-contents #ur-login-form-setting .ur-toggle-content .user-registration-login-form-global-settings .user-registration-login-form-toggle-option {
+            display: flex;
+            justify-content: space-between;
+            gap: 40px; }
+          body.user-registration_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-from .ur-login-form-settings .nav-tab-wrapper .ur-tab-contents #ur-login-form-setting .ur-toggle-content .user-registration-login-form-global-settings label {
+            font-weight: 500 !important;
+            align-items: baseline; }
           body.user-registration_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-from .ur-login-form-settings .nav-tab-wrapper .ur-tab-contents #ur-login-form-setting .ur-toggle-content .user-registration-login-form-global-settings--field input {
             min-width: unset !important;
             margin: 0; }
@@ -9959,7 +9966,6 @@ body.ur-multi-device-form-preview {
       body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-preview-form .ur-form-preview-title {
         width: calc(100% - 48px);
         padding: 24px;
-        background: #fafafa;
         border-top-right-radius: 8px;
         border-top-left-radius: 8px;
         display: block;

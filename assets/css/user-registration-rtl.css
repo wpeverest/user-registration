@@ -1768,7 +1768,8 @@ span.ur-shortcode-form-embed-dot {
   padding-bottom: 16px;
   border-bottom: 1px solid #e9e9e9;
   text-transform: uppercase;
-  font-size: 16px; }
+  font-size: 16px;
+  font-weight: 500; }
 
 .user-registration_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-login-content p {
   font-size: 16px;

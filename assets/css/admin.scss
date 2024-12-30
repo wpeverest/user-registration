@@ -6590,6 +6590,18 @@ body {
 									}
 
 									.user-registration-login-form-global-settings {
+
+										.user-registration-login-form-toggle-option {
+											display: flex;
+											justify-content: space-between;
+											gap: 40px;
+										}
+
+										label {
+											font-weight: 500 !important;
+											align-items: baseline;
+										}
+
 										&--field {
 											input {
 												min-width: unset !important;
@@ -7160,7 +7172,6 @@ body {
 				.ur-form-preview-title{
 					width: calc(100% - 48px);
 					padding: 24px;
-					background: #fafafa;
 					border-top-left-radius: 8px;
 					border-top-right-radius: 8px;
 					display: block;

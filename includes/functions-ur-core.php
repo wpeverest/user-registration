@@ -7804,7 +7804,8 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 				case 'toggle':
 					$option_value = UR_Admin_Settings::get_option( $value['id'], $value['default'] );
 
-					$settings .= '<div class="user-registration-login-form-global-settings user-registration-login-form-toggle-option">';
+					$settings .= '<div class="user-registration-login-form-global-settings">';
+					$settings .= '<div class="user-registration-login-form-toggle-option">';
 					$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 					$settings .= '<div class="user-registration-login-form-global-settings--field">';
 					$settings .= '<div class="ur-toggle-section">';
@@ -7821,9 +7822,10 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 					$settings .= '<span class="slider round"></span>';
 					$settings .= '</span>';
 					$settings .= '</div>';
+					$settings .= '</div>';
+					$settings .= '</div>';
 					$settings .= wp_kses_post( $description );
 					$settings .= wp_kses_post( $desc_field );
-					$settings .= '</div>';
 					$settings .= '</div>';
 					break;
 				case 'radio-group':
