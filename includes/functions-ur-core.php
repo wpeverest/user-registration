@@ -7043,13 +7043,13 @@ if ( ! function_exists( 'ur_check_url_is_image' ) ) {
 	 */
 	function ur_check_url_is_image( $url ) {
 		$ch       = curl_init();
-		$response = curl_exec( $ch );
 		$headers  = array(
 			'Accept: application/json',
 			'Content-Type: application/json',
 
 		);
 		curl_setopt( $ch, CURLOPT_URL, $url );
+		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false); //used for sites that have ssl disabled
 
 		curl_setopt( $ch, CURLOPT_NOBODY, true );
 		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
