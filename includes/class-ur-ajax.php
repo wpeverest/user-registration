@@ -783,6 +783,8 @@ class UR_AJAX {
 		$form_id = isset( $_POST['id'] ) ? sanitize_text_field( $_POST['id'] ) : '';
 		$theme   = isset( $_POST['theme'] ) ? sanitize_text_field( $_POST['theme'] ) : '';
 
+		error_log( print_r( $_POST, true ) );
+
 		if ( empty( $form_id ) || empty( $theme ) ) {
 			wp_send_json_error( array( 'message' => __( 'Insufficient information', 'user-registration' ) ) );
 		}
@@ -995,14 +997,14 @@ class UR_AJAX {
 		$settings_data = $_POST['data']['setting_data'];
 
 		$output = array_combine(
-			array_column($settings_data, 'option'),
-			array_column($settings_data, 'value')
+			array_column( $settings_data, 'option' ),
+			array_column( $settings_data, 'value' )
 		);
 
 		do_action( 'user_registration_validation_before_login_form_save', $output );
 
-		if ( ur_string_to_bool( $output[ 'user_registration_login_options_enable_recaptcha' ] ) ) {
-			if ( "" === $output[ 'user_registration_login_options_configured_captcha_type' ] || ! $output[ 'user_registration_login_options_configured_captcha_type' ]  ) {
+		if ( ur_string_to_bool( $output['user_registration_login_options_enable_recaptcha'] ) ) {
+			if ( '' === $output['user_registration_login_options_configured_captcha_type'] || ! $output['user_registration_login_options_configured_captcha_type'] ) {
 				wp_send_json_error(
 					array(
 						'message' => esc_html__( "Seems like you haven't selected the reCAPTCHA type (Configured Captcha).", 'user-registration' ),
@@ -1027,7 +1029,7 @@ class UR_AJAX {
 			}
 		}
 
-		foreach( $output as $key => $settings ) {
+		foreach ( $output as $key => $settings ) {
 			update_option( $key, $settings );
 		}
 
@@ -1038,11 +1040,8 @@ class UR_AJAX {
 		do_action( 'user_registration_after_login_form_settings_save', wp_unslash( $settings_data ) ); //phpcs:ignore
 
 		wp_send_json_success(
-			array(
-
-			)
+			array()
 		);
-
 	}
 
 	/**

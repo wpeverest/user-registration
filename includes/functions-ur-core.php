@@ -2677,13 +2677,13 @@ if ( ! function_exists( 'user_registration_pro_get_conditional_fields_by_form_id
 									'file',
 								);
 
-								if ( in_array( $field_data->field_key, $strip_fields, true ) ) {
+								if ( isset( $field_data->field_key ) && in_array( $field_data->field_key, $strip_fields, true ) ) {
 									continue;
 								}
 
 								$fields[ $field_data->general_setting->field_name ] = array(
 									'label'     => $field_data->general_setting->label,
-									'field_key' => $field_data->field_key,
+									'field_key' => isset( $field_data->field_key ) ? $field_data->field_key : '',
 								);
 							}
 						}
