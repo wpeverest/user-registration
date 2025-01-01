@@ -2,7 +2,7 @@
 /**
  * Getting started controller class.
  *
- * @since xx.xx.xx
+ * @since 4.0
  *
  * @package  UserRegistration/Classes
  */
@@ -76,7 +76,7 @@ class UR_Plugin_Status {
 	/**
 	 * plugin Upgrade
 	 *
-	 * @since xx.xx.xx
+	 * @since 4.0
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -88,6 +88,11 @@ class UR_Plugin_Status {
 		$license_key      = get_option( 'user-registration_license_key' );
 		$plugin_status    = array();
 		$plugin_to_check  = 'user-registration-pro';
+
+		if ( ! empty( $required_plugins ) ) {
+			array_push( $required_plugins, 'user-registration-pro' );
+		}
+
 		if ( in_array( $plugin_to_check, $required_plugins ) ) {
 			if ( $license_key && is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
 				$plugin_status = true;
@@ -102,7 +107,7 @@ class UR_Plugin_Status {
 	/**
 	 * Get Plugin Status.
 	 *
-	 * @since xx.xx.xx
+	 * @since 4.0
 	 *
 	 * @return WP_REST_Response|WP_Error
 	 */
@@ -147,7 +152,7 @@ class UR_Plugin_Status {
 	/**
 	 * Retrieve addons data.
 	 *
-	 * @since xx.xx.xx
+	 * @since 4.0
 	 *
 	 * @return object
 	 */
@@ -195,7 +200,7 @@ class UR_Plugin_Status {
 	/**
 	 * Get License Plan.
 	 *
-	 * @since xx.xx.xx
+	 * @since 4.0
 	 *
 	 * @return WP_REST_Response
 	 */
@@ -212,201 +217,52 @@ class UR_Plugin_Status {
 	/**
 	 * Bulk Activate Addon.
 	 *
-	 * @since xx.xx.xx
+	 * @since 4.0
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public static function plugin_activate( $request ) {
-		$module_data = $request->get_param( 'addonData' );
+		$addon = $request->get_param( 'addonData' );
 
-		if ( is_string( $module_data ) ) {
-			$module_data = json_decode( $module_data, true );
-		}
-
-		if ( ! is_array( $module_data ) ) {
-			return new \WP_REST_Response(
-				array(
-					'success' => false,
-					'message' => __( 'Invalid module data format.', 'user-registration' ),
-				),
-				400
-			);
-		}
-
-		$addon_slugs   = array();
-		$feature_slugs = array();
-
-		foreach ( $module_data as $addon ) {
-			if ( isset( $addon['type'] ) && 'addon' === $addon['type'] ) {
-				array_push( $addon_slugs, $addon );
-			} else {
-				$slug                   = $addon['slug'];
-				$feature_slugs[ $slug ] = isset( $addon['name'] ) ? $addon['name'] : $slug;
-			}
-		}
-
-		$failed_modules = array();
-
-		if ( ! empty( $addon_slugs ) ) {
-			$failed_modules = array_merge( $failed_modules, self::bulk_install_addons( $addon_slugs ) );
-		}
-
-		if ( ! empty( $feature_slugs ) ) {
-			$failed_modules = array_merge( $failed_modules, self::bulk_enable_feature( $feature_slugs ) );
-		}
-
-		if ( count( $failed_modules ) > 0 ) {
-			return new \WP_REST_Response(
-				array(
-					'success' => false,
-					'message' => sprintf( __( '%1$s activation failed. Please try again later.', 'user-registration' ), implode( ', ', $failed_modules ) ),
-				),
-				400
-			);
-		} else {
-			return new \WP_REST_Response(
-				array(
-					'success' => true,
-					'message' => __( 'All of the selected modules have been activated successfully.', 'user-registration' ),
-				),
-				200
-			);
-		}
-	}
-
-		/**
-		 * Handler for installing bulk extension.
-		 *
-		 * @since 3.0.3
-		 *
-		 * @param array $addon_data Datas of addons to activate.
-		 *
-		 * @see Plugin_Upgrader
-		 *
-		 * @global WP_Filesystem_Base $wp_filesystem Subclass
-		 */
-	public static function bulk_install_addons( $addon_data ) {
-		$failed_addons = array();
-
-		foreach ( $addon_data as $addon ) {
-			$slug   = isset( $addon['slug'] ) ? sanitize_key( wp_unslash( $addon['slug'] ) ) : '';
-			$name   = isset( $addon['name'] ) ? sanitize_text_field( $addon['name'] ) : '';
-			$plugin = plugin_basename( WP_PLUGIN_DIR . '/' . $slug . '/' . $slug . '.php' );
-			if ( is_plugin_active( $plugin ) ) {
-				continue;
-			}
-			$status = array(
+		if ( isset( $addon['type'] ) && 'addon' === $addon['type'] ) {
+			$slug        = isset( $addon['name'] ) ? sanitize_key( wp_unslash( $addon['name'] ) ) : '';
+			$plugin_slug = wp_unslash( $addon['slug'] ) . '/' . wp_unslash( $addon['slug'] ) . '.php'; // phpcs:ignore
+			$name        = isset( $addon['name'] ) ? sanitize_text_field( $addon['name'] ) : '';
+			$plugin      = plugin_basename( sanitize_text_field( $plugin_slug ) );
+			$status      = array(
 				'install' => 'plugin',
 				'slug'    => $slug,
 			);
 
 			$status = UR_Modules::ur_install_individual_addon( $slug, $plugin, $name, $status );
-
-			if ( isset( $status['success'] ) && ! $status['success'] ) {
-				$failed_addons[] = array(
-					'name'    => $name,
-					'message' => $status['errorMessage'],
-				);
-			}
+		} else {
+			$slug   = $addon['slug'];
+			$status = UR_Modules::ur_enable_feature( $slug );
 		}
 
-		return $failed_addons;
-	}
+		if ( isset( $status['success'] ) && ! $status['success'] ) {
 
-		/**
-		 * Install individual addon.
-		 *
-		 * @since 3.0.3
-		 *
-		 * @param string $slug   Addon slug.
-		 * @param string $plugin Addon plugin path.
-		 * @param string $name   Addon name.
-		 * @param array  $status Status.
-		 *
-		 * @return array
-		 */
-	public static function install_individual_addon( $slug, $plugin, $name, $status ) {
-		require_once ABSPATH . '/wp-admin/includes/file.php';
-		include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
-		include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
-		if ( file_exists( WP_PLUGIN_DIR . '/' . $plugin ) ) {
-			$plugin_data          = get_plugin_data( WP_PLUGIN_DIR . '/' . $plugin );
-			$status['plugin']     = $plugin;
-			$status['pluginName'] = $plugin_data['Name'];
-
-			if ( is_plugin_inactive( $plugin ) ) {
-				$result = activate_plugin( $plugin );
-
-				if ( is_wp_error( $result ) ) {
-					$status['errorCode']    = $result->get_error_code();
-					$status['errorMessage'] = $result->get_error_message();
-					$status['success']      = false;
-					return $status;
-				}
-				$status['success'] = true;
-				$status['message'] = __( 'Addons activated successfully', 'user-registration' );
-				return $status;
-			}
-		}
-
-		$api = json_decode(
-			UR_Updater_Key_API::version(
+			return new \WP_REST_Response(
 				array(
-					'license'   => get_option( 'user-registration_license_key' ),
-					'item_name' => ! empty( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
-				)
-			)
-		);
-
-		if ( is_wp_error( $api ) ) {
-			$status['success']      = false;
-			$status['errorMessage'] = $api['msg'];
-			return $status;
+					'success' => false,
+					'message' => sprintf(
+						__( '%1$s cannot be activated at the moment. %2$s', 'user-registration' ),
+						$addon['name'],
+						$status['errorMessage']
+					),
+				),
+				400,
+			);
+		} else {
+			return new \WP_REST_Response(
+				array(
+					'success' => true,
+					'message' => sprintf( __( '%1$s activated successfully.', 'user-registration' ), $addon['name'] ),
+				),
+				200
+			);
 		}
-
-		$status['pluginName'] = $api->name;
-		$skin                 = new WP_Ajax_Upgrader_Skin();
-		$upgrader             = new Plugin_Upgrader( $skin );
-		$result               = $upgrader->install( $api->download_link );
-
-		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			$status['debug'] = $skin->get_upgrade_messages();
-		}
-
-		if ( is_wp_error( $result ) ) {
-			$status['success']      = false;
-			$status['errorCode']    = $result->get_error_code();
-			$status['errorMessage'] = $result->get_error_message();
-			return $status;
-		} elseif ( is_wp_error( $skin->result ) ) {
-			$status['success']      = false;
-			$status['errorCode']    = $skin->result->get_error_code();
-			$status['errorMessage'] = $skin->result->get_error_message();
-			return $status;
-		} elseif ( $skin->get_errors()->get_error_code() ) {
-			$status['success']      = false;
-			$status['errorMessage'] = $skin->get_error_messages();
-			return $status;
-		} elseif ( is_null( $result ) ) {
-			global $wp_filesystem;
-			$status['success']      = false;
-			$status['errorCode']    = 'unable_to_connect_to_filesystem';
-			$status['errorMessage'] = esc_html__( 'Unable to connect to the filesystem. Please confirm your credentials.', 'user-registration' );
-
-			// Pass through the error from WP_Filesystem if one was raised.
-			if ( $wp_filesystem instanceof WP_Filesystem_Base && is_wp_error( $wp_filesystem->errors ) && $wp_filesystem->errors->get_error_code() ) {
-				$status['errorMessage'] = esc_html( $wp_filesystem->errors->get_error_message() );
-			}
-			return $status;
-		}
-
-		$api->version   = isset( $api->new_version ) ? $api->new_version : '';
-		$install_status = install_plugin_install_status( $api );
-		activate_plugin( $plugin );
-		$status['success'] = true;
-		$status['message'] = __( 'Addon installed Successfully', 'user-registration' );
-		return $status;
 	}
 }

@@ -52,6 +52,7 @@ const TemplateList = ({ selectedCategory, templates }) => {
 	const [previewTemplate, setPreviewTemplate] = useState(null);
 	const [formTemplateName, setFormTemplateName] = useState("");
 	const [licenseDetail, setLicenseDetail] = useState([]);
+	const [userLicensePlan, setUserLicensePlan] = useState("");
 	const [selectedTemplateSlug, setSelectedTemplateSlug] = useState("");
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [hoverCardId, setHoverCardId] = useState(null);
@@ -59,11 +60,10 @@ const TemplateList = ({ selectedCategory, templates }) => {
 	const toast = useToast();
 	const queryClient = useQueryClient();
 	const [isPluginModalOpen, setIsPluginModalOpen] = useState(false);
+	const [upgradePlan, setUpgradePlan] = useState(false);
 
 	const openModal = () => onOpen();
 	const closeModal = () => onClose();
-	const openPluginModal = () => setIsPluginModalOpen(true);
-	const closePluginModal = () => setIsPluginModalOpen(false);
 
 	useEffect(() => {
 		const fetchLicenseStatus = async () => {
@@ -78,6 +78,7 @@ const TemplateList = ({ selectedCategory, templates }) => {
 
 				if (response.license_plan) {
 					setLicenseDetail(true);
+					setUserLicensePlan(response.license_plan);
 				}
 			} catch (error) {
 				// console.log(error);
@@ -91,6 +92,44 @@ const TemplateList = ({ selectedCategory, templates }) => {
 		const requiredPlugins = template.addons
 			? Object.keys(template.addons)
 			: [];
+
+		if (template.isPro) {
+			let activatedLicensePlan = userLicensePlan
+				.toLocaleLowerCase()
+				.replace("user registration", "")
+				.replace("lifetime", "")
+				.trim();
+
+			let requiredLicensePlan = {};
+			let setRequiredLicensePlan = template.plan[0];
+			switch (setRequiredLicensePlan) {
+				case "personal":
+					requiredLicensePlan = [
+						"personal",
+						"plus",
+						"professional",
+						"themegrill agency"
+					];
+					break;
+				case "plus":
+					requiredLicensePlan = [
+						"plus",
+						"professional",
+						"themegrill agency"
+					];
+					break;
+			}
+
+			if (requiredLicensePlan.indexOf(activatedLicensePlan) < 0) {
+				setUpgradePlan(true);
+				setIsPluginModalOpen(true);
+			} else {
+				setUpgradePlan(false);
+				setIsPluginModalOpen(false);
+			}
+		} else {
+			setUpgradePlan(false);
+		}
 
 		try {
 			const response = await apiFetch({
@@ -106,7 +145,7 @@ const TemplateList = ({ selectedCategory, templates }) => {
 			const { plugin_status } = response;
 			if (!plugin_status) {
 				setFormTemplateName(template.title);
-				openPluginModal();
+				setIsPluginModalOpen(true);
 				return;
 			}
 
@@ -535,7 +574,7 @@ const TemplateList = ({ selectedCategory, templates }) => {
 			<Modal
 				isCentered
 				isOpen={isPluginModalOpen}
-				onClose={closePluginModal}
+				onClose={() => setIsPluginModalOpen(false)}
 				size="lg"
 			>
 				<ModalOverlay />
@@ -555,13 +594,21 @@ const TemplateList = ({ selectedCategory, templates }) => {
 							lineHeight="28px"
 							fontWeight="bold"
 						>
-							{sprintf(
-								__(
-									"%s is a Premium Template",
-									"user-registration"
-								),
-								formTemplateName
-							)}
+							{upgradePlan
+								? sprintf(
+										__(
+											"%s Requires License Upgrade",
+											"user-registration"
+										),
+										formTemplateName
+								  )
+								: sprintf(
+										__(
+											"%s is a Premium Template",
+											"user-registration"
+										),
+										formTemplateName
+								  )}
 						</Heading>
 					</ModalHeader>
 					<ModalCloseButton top="12px" right="12px" />
@@ -576,18 +623,26 @@ const TemplateList = ({ selectedCategory, templates }) => {
 							lineHeight="24px"
 							mb="20px"
 						>
-							{__(
-								"This template requires premium addons. Please upgrade to the Premium to unlock all these awesome templates.",
-								"user-registration"
-							)}
+							{upgradePlan
+								? __(
+										"This template requires plus and above plan. Please upgrade to the Plus and above to unlock all these awesome templates.",
+										"user-registration"
+								  )
+								: __(
+										"This template requires premium addons. Please upgrade to the Premium to unlock all these awesome templates.",
+										"user-registration"
+								  )}
 						</Text>
 					</ModalBody>
 					<ModalFooter justifyContent="flex-end" padding="0px">
-						<Button variant="ghost" onClick={closePluginModal}>
+						<Button
+							variant="ghost"
+							onClick={() => setIsPluginModalOpen(false)}
+						>
 							{__("OK", "user-registration")}
 						</Button>
 						<a
-							href="https://everestforms.net/pricing/?utm_source=form-template&utm_medium=premium-form-templates-popup&utm_campaign=lite-version"
+							href="https://wpuserregistration.com/pricing/?utm_source=form-template&utm_medium=premium-form-templates-popup&utm_campaign=lite-version"
 							target="_blank"
 							rel="noopener noreferrer"
 							style={{ width: "inherit" }}
@@ -600,7 +655,12 @@ const TemplateList = ({ selectedCategory, templates }) => {
 				</ModalContent>
 			</Modal>
 
-			<Modal isCentered isOpen={isOpen} onClose={onClose} size="xl">
+			<Modal
+				isCentered
+				isOpen={isOpen && !upgradePlan}
+				onClose={onClose}
+				size="xl"
+			>
 				<ModalOverlay />
 				<ModalContent borderRadius="8px" padding="40px">
 					<ModalHeader

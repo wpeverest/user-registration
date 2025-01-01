@@ -67,7 +67,7 @@ class UR_Form_Templates {
 	/**
 	 * Get Template Lists.
 	 *
-	 * @since xx.xx.xx
+	 * @since 4.0
 	 *
 	 * @return WP_REST_Response|WP_Error
 	 */
@@ -246,7 +246,6 @@ class UR_Form_Templates {
 		}
 
 		update_option( 'user_registration_user_favorite_templates', $user_favorites );
-		// error_log( print_r( , true ) );
 
 		return new WP_REST_Response( 'Favorite updated successfully.', 200 );
 	}
