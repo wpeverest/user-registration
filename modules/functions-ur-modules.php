@@ -22,6 +22,7 @@ if ( ! function_exists( 'ur_check_module_activation' ) ) {
 	 */
 	function ur_check_module_activation( $module ) {
 		$enabled_features = get_option( 'user_registration_enabled_features', array() );
+
 		return in_array( 'user-registration-' . $module, $enabled_features, true ) ? true : false;
 	}
 }
@@ -426,3 +427,25 @@ if ( ! function_exists( 'check_membership_field_in_form' ) ) {
 		return $has_membership_field;
 	}
 }
+
+/**
+ * Deprecating function code start
+ * @deprecated
+ */
+$modules = [
+	'coupons'             => 'ur_pro_is_coupons_addon_activated',
+	'payments'            => 'ur_pro_is_paypal_activated',
+	'sms-integration'     => 'ur_pro_is_sms_integration_activated',
+	'content-restriction' => 'ur_pro_is_content_restriction_activated'
+];
+
+foreach ( $modules as $module_key => $function_name ) {
+	if ( ! function_exists( $function_name ) ) {
+		eval( "
+		        function $function_name() {
+		            return ur_check_module_activation('$module_key');
+		        }
+        " );
+	}
+}
+//deprecating function code ends
