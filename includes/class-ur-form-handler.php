@@ -892,13 +892,12 @@ class UR_Form_Handler {
 		}
 
 		$templates = UR_Admin_Form_Templates::get_template_data();
-
 		$templates = is_array( $templates ) ? $templates : array();
 
 		$form_data = array();
 
-		if ( ! empty( $templates ) ) {
-			foreach ( $templates as $template_data ) {
+		if ( ! empty( $templates ) && isset( $templates[0]->templates ) ) {
+			foreach ( $templates[0]->templates as $template_data ) {
 				if ( $template_data->slug === $template && 'blank' !== $template_data->slug ) {
 					$form_data                            = json_decode( base64_decode( $template_data->settings ), true );
 					$form_data['form_post']['post_title'] = $title;
@@ -907,7 +906,7 @@ class UR_Form_Handler {
 		}
 
 		// check for non empty post data array.
-		$form_data['form_post'] = isset( $form_data['form_post'] ) ? $form_data['form_post'] : array();
+		$form_data['form_post'] = isset( $form_data['forms'][0]['form_post'] ) ? $form_data['forms'][0]['form_post'] : array();
 		$form_data['form_post'] = (object) $form_data['form_post'];
 
 		$form_data = (object) $form_data;
