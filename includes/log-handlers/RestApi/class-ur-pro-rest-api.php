@@ -1,10 +1,10 @@
 <?php
 /**
- * UserRegistration UR_REST_API
+ * UserRegistration UR_PRO_REST_API
  *
  * API Handler
  *
- * @class    UR_REST_API
+ * @class    UR_PRO_REST_API
  * @version  1.0.0
  * @package  UserRegistration/Classes
  */
@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * UR_REST_API Class
+ * UR_PRO_REST_API Class
  */
-class UR_REST_API {
+class UR_PRO_REST_API {
 
 	/**
 	 * REST API classes and endpoints.
@@ -33,13 +33,7 @@ class UR_REST_API {
 	 * @since 1.0.0
 	 */
 	public static function init() {
-		include __DIR__ . '/controllers/version1/class-ur-getting-started.php';
-		include __DIR__ . '/controllers/version1/class-ur-modules.php';
-		include __DIR__ . '/controllers/version1/class-ur-changelog.php';
-		include __DIR__ . '/controllers/version1/class-ur-gutenberg-blocks.php';
-		include __DIR__ . '/controllers/version1/class-ur-form-templates.php';
-		include __DIR__ . '/controllers/version1/class-ur-plugin-status.php';
-
+		include __DIR__ . '/controllers/version1/class-ur-pro-gutenberg-blocks.php';
 		add_action( 'rest_api_init', array( __CLASS__, 'register_rest_routes' ) );
 	}
 
@@ -60,7 +54,7 @@ class UR_REST_API {
 	/**
 	 * Get API Classes - new classes should be registered here.
 	 *
-	 * @since 3.2.0
+	 * @since 3.1.6
 	 *
 	 * @return array List of Classes.
 	 */
@@ -73,15 +67,15 @@ class UR_REST_API {
 		 * @param array $rest_routes API namespace to API classes index array.
 		 */
 		return apply_filters(
-			'user_registration_rest_api_get_rest_namespaces',
+			'user_registration_pro_rest_api_get_rest_namespaces',
 			array(
-				'user-registration/v1' => self::get_v1_rest_classes(),
+				'user-registration-pro/v1' => self::get_v1_rest_classes(),
 			)
 		);
 	}
 
 	/**
-	 * List of classes in the user-registration/v1 namespace.
+	 * List of classes in the user-registration-pro/v1 namespace.
 	 *
 	 * @since 1.0.0
 	 * @static
@@ -90,14 +84,9 @@ class UR_REST_API {
 	 */
 	protected static function get_v1_rest_classes() {
 		return array(
-			'getting-started'  => 'UR_Getting_Started',
-			'modules'          => 'UR_Modules',
-			'changelog'        => 'UR_Changelog',
-			'gutenberg-blocks' => 'UR_Gutenberg_Blocks',
-			'form-templates'   => 'UR_Form_Templates',
-			'plugin'           => 'UR_Plugin_Status',
+			'pro-gutenberg-blocks' => 'UR_Pro_Gutenberg_Blocks',
 		);
 	}
 }
 
-UR_REST_API::init();
+UR_PRO_REST_API::init();

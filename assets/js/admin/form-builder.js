@@ -149,7 +149,9 @@
 					var urPage = urlParams.get("page");
 					var isEditPage = urlParams.get("edit-registration");
 					var formId = urlParams.get("form_id");
-					var isTemplatePage = $(".user-registration-setup").length;
+					var isTemplatePage = $(
+						"#user-registration-form-templates"
+					).length;
 
 					var previousPage = document.referrer.split("page=")[1];
 					var formUpdated =
@@ -5191,10 +5193,12 @@
 
 				if (
 					$(".ur-selected-item.ur-item-active .ur-general-setting")
-					.find("[name='ur_general_setting[required]']")
-					.filter(function () {
-					  return $(this).is(":checked") || $(this).val() === "1";
-					}).length
+						.find("[name='ur_general_setting[required]']")
+						.filter(function () {
+							return (
+								$(this).is(":checked") || $(this).val() === "1"
+							);
+						}).length
 				) {
 					wrapper
 						.find(".ur-label")
