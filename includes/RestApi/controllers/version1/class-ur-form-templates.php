@@ -62,6 +62,16 @@ class UR_Form_Templates {
 				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
 			)
 		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/favorite_forms',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( $this, 'handle_get_favorites' ),
+				'permission_callback' => array( $this, 'check_admin_permissions' ),
+			)
+		);
 	}
 
 	/**
@@ -217,7 +227,13 @@ class UR_Form_Templates {
 
 		$user_id = get_current_user_id();
 		if ( ! $user_id ) {
-			return new WP_REST_Response( 'User not logged in.', 401 );
+			return new WP_REST_Response(
+				array(
+					'success' => false,
+					'message' => __( 'User not logged in.', 'user-registration' ),
+				),
+				401
+			);
 		}
 
 		$action = $request->get_param( 'action' );
@@ -242,12 +258,57 @@ class UR_Form_Templates {
 				unset( $user_favorites[ $user_id ][ $key ] );
 			}
 		} else {
-			return new WP_REST_Response( 'Invalid action.', 400 );
+			return new WP_REST_Response(
+				array(
+					'success' => false,
+					'message' => __( 'Invalid action.', 'user-registration' ),
+				),
+				400
+			);
 		}
 
 		update_option( 'user_registration_user_favorite_templates', $user_favorites );
 
-		return new WP_REST_Response( 'Favorite updated successfully.', 200 );
+		return new WP_REST_Response(
+			array(
+				'success'   => true,
+				'favorites' => $user_favorites,
+			),
+			200
+		);
+	}
+
+	/**
+	 * Retrieves the favorite forms of user.
+	 *
+	 * @since 4.0
+	 *
+	 * @param  WP_REST_Request $request Full data about the request.
+	 * @return WP_REST_Request|WP_Error
+	 */
+	public function handle_get_favorites( WP_REST_Request $request ) {
+		$user_id = get_current_user_id();
+
+		if ( ! $user_id ) {
+			return new WP_REST_Response(
+				array(
+					'success' => false,
+					'message' => __( 'User not logged in.', 'user-registration' ),
+				),
+				401
+			);
+		}
+		$user_favorites = get_option( 'user_registration_user_favorite_templates' );
+		if ( ! is_array( $user_favorites ) || ! isset( $user_favorites[ $user_id ] ) ) {
+			return new WP_REST_Response( array(), 200 );
+		}
+		return new WP_REST_Response(
+			array(
+				'success'   => true,
+				'favorites' => $user_favorites[ $user_id ],
+			),
+			200
+		);
 	}
 
 	/**

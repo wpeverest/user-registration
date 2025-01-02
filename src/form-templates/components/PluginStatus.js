@@ -71,7 +71,7 @@ const PluginStatus = ({ requiredPlugins, onActivateAndContinue }) => {
 		};
 
 		fetchPluginStatus();
-	}, [toast, requiredPlugins]);
+	}, [toast, requiredPlugins, pluginStatuses]);
 
 	const updateButtonLabel = (statuses) => {
 		const allActive = requiredPlugins.every(
@@ -210,7 +210,6 @@ const PluginStatus = ({ requiredPlugins, onActivateAndContinue }) => {
 			}
 		}
 	};
-
 	return (
 		<VStack spacing={4} align="stretch">
 			{requiredPlugins?.length > 0 && (

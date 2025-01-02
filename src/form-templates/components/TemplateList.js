@@ -66,6 +66,28 @@ const TemplateList = ({ selectedCategory, templates }) => {
 	const closeModal = () => onClose();
 
 	useEffect(() => {
+		const fetchFavorites = async () => {
+			try {
+				const response = await apiFetch({
+					path: `${restURL}user-registration/v1/form-templates/favorite_forms`,
+					method: "GET",
+					headers: {
+						"X-WP-Nonce": security
+					}
+				});
+
+				if (response && response.success) {
+					let userfavourites = Object.keys(response.favorites).map(
+						(key) => response.favorites[key]
+					);
+					setFavorites(userfavourites);
+				}
+			} catch (error) {
+				console.error("Error fetching favorites:", error);
+			}
+		};
+		fetchFavorites();
+
 		const fetchLicenseStatus = async () => {
 			try {
 				const response = await apiFetch({
