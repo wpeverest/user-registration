@@ -359,12 +359,17 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 			textField.innerText = shortcode_id;
 			document.body.appendChild(textField);
 			textField.select();
-			document.execCommand("copy");
+			document.execCommand('copy');
 			textField.remove();
-			onCopy();
+
 			setShortcodeCopied({
 				...isShortcodeCopied,
 				[shortcode_id]: !isShortcodeCopied[shortcode_id]
+			});
+			toast({
+				description: `${shortcode_id} copied to clipboard`,
+				position: 'bottom-right',
+				duration: 1500
 			});
 			event.stopPropagation();
 		} catch (error) {
@@ -380,12 +385,16 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 			textField.select();
 			document.execCommand("copy");
 			textField.remove();
-			onCopy();
 			setIsExampleShortcodeCopied(example_name);
 			event.stopPropagation();
 			setTimeout(() => {
 				setIsExampleShortcodeCopied("");
 			}, 1000);
+			toast({
+				description: `${example_name} copied to clipboard`,
+				position: 'bottom-right',
+				duration: 1500
+			});
 		} catch (error) {
 			console.error("Error copying shortcode:", error);
 		}
@@ -447,28 +456,6 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 							</Box>
 							<Box textAlign="right">
 								<HStack>
-									{hasCopied &&
-									isShortcodeCopied[shortcode.id] ? (
-										<Tooltip
-											hasArrow={true}
-											closeDelay={2000}
-											label={__(
-												"Copied!",
-												"user-registration"
-											)}
-										>
-											<IconButton
-												size="md"
-												icon={<CopyIcon />}
-												onClick={(event) =>
-													handleCopyClick(
-														shortcode.id,
-														event
-													)
-												}
-											/>
-										</Tooltip>
-									) : (
 										<IconButton
 											size="md"
 											icon={<CopyIcon />}
@@ -479,7 +466,6 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 												)
 											}
 										/>
-									)}
 									{isAccordionOpen[shortcode.id] ? (
 										<Minus h="5" w="5" />
 									) : (
@@ -643,36 +629,6 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 														<Td>
 															{example_name && (
 																<Box>
-																	{isExampleShortcodeCopied ===
-																	example_name ? (
-																		<Tooltip
-																			hasArrow={
-																				true
-																			}
-																			closeDelay={
-																				1000
-																			}
-																			label={__(
-																				"Copied!",
-																				"user-registration"
-																			)}
-																		>
-																			<IconButton
-																				size="md"
-																				icon={
-																					<CopyIcon />
-																				}
-																				onClick={(
-																					event
-																				) =>
-																					handleExampleShortcodeCopy(
-																						example_name,
-																						event
-																					)
-																				}
-																			/>
-																		</Tooltip>
-																	) : (
 																		<IconButton
 																			size="md"
 																			icon={
@@ -687,7 +643,6 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 																				)
 																			}
 																		/>
-																	)}
 																</Box>
 															)}
 														</Td>
