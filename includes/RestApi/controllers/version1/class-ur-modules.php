@@ -135,9 +135,15 @@ class UR_Modules {
 			} else {
 				$feature->status = 'inactive';
 			}
-			$feature->link          = $feature->link . '&utm_campaign=' . UR()->utm_campaign;
-			$feature->type          = 'feature';
-			$feature->required_plan = __( 'Personal', 'user-registration' );
+			$feature->link = $feature->link . '&utm_campaign=' . UR()->utm_campaign;
+			$feature->type = 'feature';
+
+			if ( in_array( 'free', $feature->plan ) ) {
+				$feature->required_plan = __( 'Free', 'user-registration' );
+			} else {
+				$feature->required_plan = __( 'Personal', 'user-registration' );
+			}
+
 			$features_lists[ $key ] = $feature;
 		}
 
@@ -162,7 +168,9 @@ class UR_Modules {
 				$addon->status = 'not-installed';
 			}
 
-			if ( in_array( 'personal', $addon->plan ) ) {
+			if ( in_array( 'free', $addon->plan ) ) {
+				$addon->required_plan = __( 'Free', 'user-registration' );
+			} if ( in_array( 'personal', $addon->plan ) ) {
 				$addon->required_plan = __( 'Personal', 'user-registration' );
 			} elseif ( in_array( 'plus', $addon->plan ) ) {
 				$addon->required_plan = __( 'Plus', 'user-registration' );
@@ -282,8 +290,25 @@ class UR_Modules {
 
 		// Logic to enable Feature.
 		$enabled_features = get_option( 'user_registration_enabled_features', array() );
+
+		if ( 'user-registration-membership' === $slug ) {
+			if ( ! get_option( 'user_registration_membership_installed_flag', false ) ) {
+				array_push( $enabled_features, 'payment-history' );
+				array_push( $enabled_features, 'content-restriction' );
+				ur_membership_install_required_pages();
+				\WPEverest\URMembership\Admin\Database\Database::create_tables();
+			}
+		}
+
 		array_push( $enabled_features, $slug );
 		update_option( 'user_registration_enabled_features', $enabled_features );
+
+		/**
+		 * Track module installation.
+		 *
+		 * @since 4.0
+		 */
+		do_action('user_registration_feature_track_data_for_tg_user_tracking', $slug );
 
 		return array( 'success' => true );
 	}
@@ -488,6 +513,14 @@ class UR_Modules {
 
 		foreach ( $feature_data as $slug => $name ) {
 			array_push( $enabled_features, $slug );
+
+			if ( 'user-registration-membership' === $slug ) {
+				if ( ! get_option( 'user_registration_membership_installed_flag', false ) ) {
+					array_push( $enabled_features, 'payment-history' );
+					array_push( $enabled_features, 'content-restriction' );
+					ur_membership_install_required_pages();
+				}
+			}
 		}
 
 		update_option( 'user_registration_enabled_features', $enabled_features );

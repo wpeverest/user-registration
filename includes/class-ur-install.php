@@ -140,13 +140,18 @@ class UR_Install {
 		self::create_tables();
 		self::create_roles();
 		self::setup_environment();
-		self::create_form();
+
+		$hasposts = get_posts( 'post_type=user_registration' );
+
+		if ( 0 === count( $hasposts ) ) {
+			update_option( 'user_registration_first_time_activation_flag', true );
+
+		}
 		self::create_files();
 		self::update_ur_version();
 		self::maybe_update_db_version();
 		self::maybe_add_installation_date();
 		self::maybe_run_migrations();
-		self::create_pages();
 
 		$path = UR_UPLOAD_PATH . 'profile-pictures';
 
@@ -293,7 +298,7 @@ class UR_Install {
 			),
 		);
 
-		if ( defined( 'UR_PRO_ACTIVE' ) ) {
+		if ( defined( 'UR_PRO_ACTIVE' ) && UR_PRO_ACTIVE ) {
 			// Migrations for User Registration ( Pro ).
 			$migration_updates = array(
 				'4.0'   => array(
@@ -753,6 +758,64 @@ CREATE TABLE {$wpdb->prefix}user_registration_sessions (
 		}
 
 		return wp_kses_post( $upgrade_notice );
+	}
+
+	/**
+	 * create_membership_form
+	 *
+	 * @param $group_id
+	 *
+	 * @return int|void|WP_Error
+	 */
+	public static function create_membership_form( $group_id ) {
+		$membership_repository = new \WPEverest\URMembership\Admin\Repositories\MembershipRepository();
+		$has_posts = $membership_repository->get_membership_forms();
+
+
+		if ( 0 === count( $has_posts ) ) {
+			$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]],[[{"field_key":"membership","general_setting":{"membership_group":"' . $group_id . '","label":"Membership Field","description":"","field_name":"membership_field_1733727913","hide_label":"false"},"advance_setting":{},"icon":"ur-icon ur-icon-membership-field"}]]]';
+			// Insert default form.
+			$default_post_id = wp_insert_post(
+				array(
+					'post_type'      => 'user_registration',
+					'post_title'     => esc_html__( 'Default Membership Registration form', 'user-registration' ),
+					'post_content'   => $post_content,
+					'post_status'    => 'publish',
+					'comment_status' => 'closed',
+					'ping_status'    => 'closed',
+				)
+			);
+
+			update_option( 'user_registration_default_membership_form_id', $default_post_id );
+			return $default_post_id;
+		}
+	}
+
+	public static function create_default_membership_group( $memberships ) {
+		$membership_ids = array_column( $memberships, 'ID' );
+		$post_content   = '{"description":"","status":true}';
+		$membership_group_service = new \WPEverest\URMembership\Admin\Services\MembershipGroupService();
+		$default_post_id = $membership_group_service->get_default_group_id();
+
+		if( ! empty( $default_post_id ) ) {
+			return $default_post_id;
+		}
+		// Insert default form.
+		$default_post_id = wp_insert_post(
+			array(
+				'post_type'      => 'ur_membership_groups',
+				'post_title'     => esc_html__( 'Default Group', 'user-registration' ),
+				'post_content'   => $post_content,
+				'post_status'    => 'publish',
+				'comment_status' => 'closed',
+				'ping_status'    => 'closed',
+			)
+		);
+		add_post_meta( $default_post_id, 'urmg_memberships', json_encode( $membership_ids ) );
+		add_post_meta( $default_post_id, 'urmg_default_group', $default_post_id );
+		update_option( 'user_registration_default_membership_form_id', $default_post_id );
+
+		return $default_post_id;
 	}
 }
 

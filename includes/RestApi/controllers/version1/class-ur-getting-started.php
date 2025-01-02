@@ -7,6 +7,8 @@
  * @package  UserRegistration/Classes
  */
 
+use WPEverest\URMembership\Admin\Database\Database;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -50,6 +52,26 @@ class UR_Getting_Started {
 			array(
 				'methods'             => 'POST',
 				'callback'            => array( __CLASS__, 'ur_save_getting_started_settings' ),
+				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
+			)
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/save-allow-usage-data',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( __CLASS__, 'ur_save_allow_usage_data' ),
+				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
+			)
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/registration-type-selected',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( __CLASS__, 'ur_registration_type_install_pages' ),
 				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
 			)
 		);
@@ -117,6 +139,191 @@ class UR_Getting_Started {
 	}
 
 	/**
+	 * Save settings for allow usage data.
+	 *
+	 * @since 4.0
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return array settings.
+	 */
+	public static function ur_save_allow_usage_data( $request ) {
+
+		if ( ! isset( $request['settings'] ) ) {
+			return;
+		}
+
+		$settings_to_update = $request['settings'];
+
+		foreach ( $settings_to_update as $option => $value ) {
+
+			if ( 'yes' === $value || 'no' === $value ) {
+				$value = ur_string_to_bool( $value );
+			}
+
+			update_option( $option, $value );
+		}
+
+		return new \WP_REST_Response(
+			array(
+				'success' => true,
+				'message' => __( 'Settings submitted successfully', 'user-registration' ),
+			),
+			200
+		);
+	}
+
+	/**
+	 * Install required pages as per registration type selected.
+	 *
+	 * @since 4.0
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return array settings.
+	 */
+	public static function ur_registration_type_install_pages( $request ) {
+
+		if ( ! isset( $request['registrationType'] ) ) {
+			return;
+		}
+
+		update_option( 'users_can_register', true );
+
+		include_once untrailingslashit( plugin_dir_path( UR_PLUGIN_FILE ) ) . '/includes/admin/functions-ur-admin.php';
+
+		$page_details = array(
+			'anyone_can_register' => array(
+				'title'         => esc_html__( 'Guest Registration allowed through User Registration Form', 'user-registration' ),
+				'page_url'      => '',
+				'page_url_text' => '',
+				'page_slug'     => '',
+			),
+		);
+
+		$pages           = apply_filters( 'user_registration_create_pages', array() );
+		$default_post_id = 0;
+		$hasposts        = get_posts( 'post_type=user_registration' );
+
+		$post_content = '';
+
+		if ( 'user_registration_normal_registration' === $request['registrationType'] ) {
+			if ( 0 === count( $hasposts ) ) {
+				$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]]]';
+			}
+		} elseif ( 0 === count( $hasposts ) ) {
+			$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]],[[{"field_key":"membership","general_setting":{"label":"Membership Field","description":"","field_name":"membership_field_' . ur_get_random_number() . '","placeholder":"","required":"false","hide_label":"false","membership_group":"0"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-membership-field"}]]]';
+		}
+
+		if ( 0 === count( $hasposts ) ) {
+			// Insert default form.
+			$default_post_id = wp_insert_post(
+				array(
+					'post_type'      => 'user_registration',
+					'post_title'     => esc_html__( 'Default form', 'user-registration' ),
+					'post_content'   => $post_content,
+					'post_status'    => 'publish',
+					'comment_status' => 'closed',
+					'ping_status'    => 'closed',
+				)
+			);
+
+			update_option( 'user_registration_default_form_page_id', $default_post_id );
+		}
+
+		$default_form_page_id = get_option( 'user_registration_default_form_page_id', $default_post_id );
+
+		$page_details['default_form_id']    = array(
+			'page_url'      => admin_url( 'admin.php?page=add-new-registration&edit-registration=' . $default_form_page_id ),
+			'page_url_text' => esc_html__( 'View Form', 'user-registration' ),
+			'title'         => esc_html__( 'Default Registration Form', 'user-registration' ),
+			'page_slug'     => sprintf( esc_html__( 'Form Id: %s', 'user-registration' ), $default_form_page_id ),
+		);
+		$page_details['membership_details'] = array(
+			'page_url'      => admin_url( 'admin.php?page=user-registration-membership&action=add_new_membership' ),
+			'page_url_text' => esc_html__( 'Create Membership', 'user-registration' ),
+			'title'         => esc_html__( '+ Create Membership', 'user-registration' ),
+			'page_slug'     => '',
+		);
+		$pages['myaccount']                 = array(
+			'name'    => _x( 'my-account', 'Page slug', 'user-registration' ),
+			'title'   => _x( 'My Account', 'Page title', 'user-registration' ),
+			'content' => '[' . apply_filters( 'user_registration_my_account_shortcode_tag', 'user_registration_my_account' ) . ']',
+		);
+
+		$pages['login'] = array(
+			'name'    => _x( 'login', 'Page slug', 'user-registration' ),
+			'title'   => _x( 'Login', 'Page title', 'user-registration' ),
+			'content' => '[' . apply_filters( 'user_registration_login_shortcode_tag', 'user_registration_login' ) . ']',
+		);
+
+		$pages['lost_password'] = array(
+			'name'    => _x( 'lost-password', 'Page slug', 'user-registration' ),
+			'title'   => _x( 'Lost Password', 'Page title', 'user-registration' ),
+			'content' => '[user_registration_lost_password]',
+		);
+
+		if ( 'user_registration_normal_registration' === $request['registrationType'] ) {
+			if ( $default_form_page_id ) {
+				$pages['registration'] = array(
+					'name'    => _x( 'registration', 'Page slug', 'user-registration' ),
+					'title'   => _x( 'Registration', 'Page title', 'user-registration' ),
+					'content' => '[' . apply_filters( 'user_registration_form_shortcode_tag', 'user_registration_form' ) . ' id="' . esc_attr( $default_form_page_id ) . '"]',
+				);
+			}
+		} else {
+			$enabled_features = get_option( 'user_registration_enabled_features', array() );
+			array_push( $enabled_features, 'user-registration-membership' );
+			update_option( 'user_registration_enabled_features', $enabled_features );
+			update_option( 'user_registration_membership_installed_flag', true );
+			array_push( $enabled_features, 'payment-history' );
+			array_push( $enabled_features, 'content-restriction' );
+
+			if ( $default_form_page_id ) {
+				$pages['membership_registration'] = array(
+					'name'    => _x( 'membership-registration', 'Page slug', 'user-registration' ),
+					'title'   => _x( 'Membership Registration', 'Page title', 'user-registration' ),
+					'option'  => 'user_registration_member_registration_page_id',
+					'content' => '[' . apply_filters( 'user_registration_form_shortcode_tag', 'user_registration_form' ) . ' id="' . esc_attr( $default_form_page_id ) . '"]',
+				);
+			}
+
+			$pages['membership_pricing']  = array(
+				'name'    => _x( 'membership-pricing', 'Page slug', 'user-registration' ),
+				'title'   => _x( 'Membership Pricing', 'Page title', 'user-registration' ),
+				'option'  => '',
+				'content' => '[user_registration_membership_listing]',
+			);
+			$pages['membership_thankyou'] = array(
+				'name'    => _x( 'membership-thankyou', 'Page slug', 'user-registration' ),
+				'title'   => _x( 'Membership Thankyou', 'Page title', 'user-registration' ),
+				'option'  => 'user_registration_thank_you_page_id',
+				'content' => '[user_registration_membership_thank_you]',
+			);
+		}
+
+		foreach ( $pages as $key => $page ) {
+			$post_id = ur_create_page( esc_sql( $page['name'] ), 'user_registration_' . $key . '_page_id', wp_kses_post( ( $page['title'] ) ), wp_kses_post( $page['content'] ) );
+
+			if ( ! empty( $page['option'] ) ) {
+				update_option( $page['option'], $post_id );
+			}
+			$page_details[ get_post_field( 'post_name', $post_id ) ] = array(
+				'page_url'      => get_permalink( $post_id ),
+				'page_url_text' => esc_html__( 'View Page', 'user-registration' ),
+				'title'         => get_the_title( $post_id ) . esc_html__( ' Page', 'user-registration' ),
+				'page_slug'     => '/' . get_post_field( 'post_name', $post_id ),
+			);
+		}
+		Database::create_tables();
+		return new \WP_REST_Response(
+			array(
+				'success'      => true,
+				'page_details' => $page_details,
+			),
+			200
+		);
+	}
+
+	/**
 	 * Get settings for getting started page.
 	 *
 	 * @since 2.1.4
@@ -132,87 +339,56 @@ class UR_Getting_Started {
 		unset( $all_roles_except_admin['administrator'] );
 
 		$settings = array(
-			'general_settings'      => array(
+			'general_settings' => array(
 				'title'    => __( 'General', 'user-registration' ),
 				'settings' => array(
-					array(
-						'title'   => __( 'Anyone can register', 'user-registration' ),
-						'desc'    => __( 'Check to enable users to register', 'user-registration' ),
-						'id'      => 'users_can_register',
-						'type'    => 'checkbox',
-						'default' => 'yes',
-					),
-					array(
-						'title'   => __( 'User Approval And Login Option', 'user-registration' ),
-						'desc'    => __( 'This option lets you choose login option after user registration.', 'user-registration' ),
-						'id'      => 'user_registration_general_setting_login_options',
-						'type'    => 'select',
-						'default' => 0,
-						'options' => ur_login_option(),
-					),
-					array(
-						'title'   => __( 'Prevent WP Dashboard Access', 'user-registration' ),
-						'desc'    => __( 'Selected user roles will not be able to view and access the WP Dashboard area.', 'user-registration' ),
-						'id'      => 'user_registration_general_setting_disabled_user_roles',
-						'type'    => 'multiselect',
-						'default' => array( array_search( 'subscriber', array_keys( $all_roles_except_admin ) ) => 'subscriber' ),
-						'options' => $all_roles_except_admin,
-					),
-				),
-			),
-			'registration_settings' => array(
-				'title'    => __( 'Registration', 'user-registration' ),
-				'settings' => array(
-					array(
-						'title'   => __( 'Enable Strong Password', 'user-registration' ),
-						'desc'    => __( 'Enforce strong password.', 'user-registration' ),
-						'id'      => 'user_registration_form_setting_enable_strong_password',
-						'type'    => 'checkbox',
-						'default' => 'no',
-					),
-					array(
-						'title'   => __( 'Minimum Password Strength', 'user-registration' ),
-						'desc'    => __( 'Set minimum required password strength.', 'user-registration' ),
-						'id'      => 'user_registration_form_setting_minimum_password_strength',
-						'type'    => 'radio',
-						'default' => 3,
-						'options' => array(
-							'0' => __( 'Very Weak', 'user-registration' ),
-							'1' => __( 'Weak', 'user-registration' ),
-							'2' => __( 'Medium', 'user-registration' ),
-							'3' => __( 'Strong', 'user-registration' ),
+					'general'      => array(
+						array(
+							'title'   => __( 'User Approval And Login Option', 'user-registration' ),
+							'desc'    => __( 'This option lets you choose login option after user registration.', 'user-registration' ),
+							'id'      => 'user_registration_general_setting_login_options',
+							'type'    => 'select',
+							'default' => 0,
+							'options' => ur_login_option(),
+						),
+						array(
+							'title'   => __( 'Prevent WP Dashboard Access', 'user-registration' ),
+							'desc'    => __( 'Selected user roles will not be able to view and access the WP Dashboard area.', 'user-registration' ),
+							'id'      => 'user_registration_general_setting_disabled_user_roles',
+							'type'    => 'multiselect',
+							'default' => array( array_search( 'subscriber', array_keys( $all_roles_except_admin ) ) => 'subscriber' ),
+							'options' => $all_roles_except_admin,
 						),
 					),
-					array(
-						'title'   => __( 'Default User Role', 'user-registration' ),
-						'desc'    => __( 'Default role for the users registered through this form.', 'user-registration' ),
-						'id'      => 'user_registration_form_setting_default_user_role',
-						'type'    => 'select',
-						'default' => 'subscriber',
-						'options' => $all_roles,
-					),
-				),
-			),
-			'my_account_settings'   => array(
-				'title'    => __( 'My Account', 'user-registration' ),
-				'settings' => array(
-					array(
-						'title'   => __( 'My Account Page Layout', 'user-registration' ),
-						'desc'    => __( 'Select account page layout.', 'user-registration' ),
-						'id'      => 'user_registration_my_account_layout',
-						'type'    => 'radio',
-						'default' => 0,
-						'options' => array(
-							'horizontal' => __( 'Horizontal', 'user-registration' ),
-							'vertical'   => __( 'Vertical', 'user-registration' ),
+					'registration' => array(
+						array(
+							'title'   => __( 'Enable Strong Password', 'user-registration' ),
+							'desc'    => __( 'Enforce strong password.', 'user-registration' ),
+							'id'      => 'user_registration_form_setting_enable_strong_password',
+							'type'    => 'switch',
+							'default' => 'no',
 						),
-					),
-					array(
-						'title'   => __( 'Disable profile picture', 'user-registration' ),
-						'desc'    => __( 'Check to disable profile picture in edit profile page.', 'user-registration' ),
-						'id'      => 'user_registration_disable_profile_picture',
-						'type'    => 'checkbox',
-						'default' => 'no',
+						array(
+							'title'   => __( 'Minimum Password Strength', 'user-registration' ),
+							'desc'    => __( 'Set minimum required password strength.', 'user-registration' ),
+							'id'      => 'user_registration_form_setting_minimum_password_strength',
+							'type'    => 'radio',
+							'default' => 3,
+							'options' => array(
+								'0' => __( 'Very Weak', 'user-registration' ),
+								'1' => __( 'Weak', 'user-registration' ),
+								'2' => __( 'Medium', 'user-registration' ),
+								'3' => __( 'Strong', 'user-registration' ),
+							),
+						),
+						array(
+							'title'   => __( 'Default User Role', 'user-registration' ),
+							'desc'    => __( 'Default role for the users registered through this form.', 'user-registration' ),
+							'id'      => 'user_registration_form_setting_default_user_role',
+							'type'    => 'select',
+							'default' => 'subscriber',
+							'options' => $all_roles,
+						),
 					),
 				),
 			),

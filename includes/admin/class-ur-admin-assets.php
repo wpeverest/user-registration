@@ -91,7 +91,7 @@ class UR_Admin_Assets {
 			wp_enqueue_style( 'select2', UR()->plugin_url() . '/assets/css/select2/select2.css', array(), '4.0.6' );
 		}
 		// Enqueue flatpickr on user profile screen.
-		if ( 'user-edit' === $screen_id || 'profile' === $screen_id || 'user-registration_page_add-new-registration' === $screen_id ) {
+		if ( 'user-edit' === $screen_id || 'profile' === $screen_id || 'user-registration-membership_page_add-new-registration' === $screen_id ) {
 			wp_enqueue_style( 'flatpickr' );
 		}
 
@@ -299,7 +299,7 @@ class UR_Admin_Assets {
 			)
 		);
 
-		if ( 'user-registration_page_user-registration-modules' === $screen_id ) {
+		if ( 'user-registration-membership_page_user-registration-modules' === $screen_id ) {
 			wp_enqueue_style( 'user-registration-modules' );
 			wp_enqueue_script( 'user-registration-modules-script' );
 			wp_localize_script(
@@ -381,6 +381,7 @@ class UR_Admin_Assets {
 				'ur_remove_password_field_link'          => esc_url( 'https://docs.wpuserregistration.com/docs/remove-password-field/' ),
 				'ur_form_non_deletable_fields'           => ur_non_deletable_fields(),
 				'ur_assets_url'             => UR()->plugin_url() . '/assets/',
+				'i18n_prompt_no_membership_group_selected' => __( 'Membership Field requires a membership group to be selected.', 'user-registration' ),
 			);
 
 			wp_localize_script(
@@ -442,18 +443,18 @@ class UR_Admin_Assets {
 		}
 
 		// Enqueue flatpickr on user profile screen.
-		if ( 'user-edit' === $screen_id || 'profile' === $screen_id || 'user-registration_page_add-new-registration' === $screen_id ) {
+		if ( 'user-edit' === $screen_id || 'profile' === $screen_id || 'user-registration-membership_page_add-new-registration' === $screen_id ) {
 			wp_enqueue_script( 'flatpickr' );
 			wp_enqueue_media();
 			wp_enqueue_script( 'ur-my-account' );
 		}
 
-		if ( 'user-registration_page_user-registration-dashboard' === $screen_id ) {
+		if ( 'user-registration-membership_page_user-registration-dashboard' === $screen_id ) {
 			wp_enqueue_script( 'chartjs' );
 		}
 		// send test email.
 		$current_tab = ! empty( $_REQUEST['tab'] ) ? sanitize_title( wp_unslash( $_REQUEST['tab'] ) ) : ''; //phpcs:ignore WordPress.Security.NonceVerification
-		if ( 'user-registration_page_user-registration-settings' === $screen_id && 'email' === $current_tab ) {
+		if ( 'user-registration-membership_page_user-registration-settings' === $screen_id && 'email' === $current_tab ) {
 			wp_localize_script(
 				'user-registration-admin',
 				'user_registration_send_email',
@@ -465,7 +466,7 @@ class UR_Admin_Assets {
 		}
 
 		$current_tab = ! empty( $_REQUEST['tab'] ) ? sanitize_title( wp_unslash( $_REQUEST['tab'] ) ) : ''; //phpcs:ignore WordPress.Security.NonceVerification
-		if ( 'user-registration_page_user-registration-settings' === $screen_id && 'email' === $current_tab ) {
+		if ( 'user-registration-membership_page_user-registration-settings' === $screen_id && 'email' === $current_tab ) {
 			wp_localize_script(
 				'user-registration-admin',
 				'user_registration_email_setting_status',
@@ -634,6 +635,7 @@ class UR_Admin_Assets {
 			'activation_required_message'                 => __( 'Please activate <strong>%plugin%</strong> addon to use this integration.', 'user-registration' ),
 			'installation_required_title'                 => __( 'Addon Installation Required', 'user-registration' ),
 			'installation_required_message'               => __( 'Please install <strong>%plugin%</strong> addon to use this integration.', 'user-registration' ),
+			'i18n_prompt_no_membership_group_selected'    => __( 'Please select a membership group for the selected membership field.', 'user-registration' ),
 		);
 
 		return $i18n;

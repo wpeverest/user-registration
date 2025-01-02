@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - master
+      - UR-1901-user-registration-membership-shift-from-pro-to-free
     workflow_dispatch:
 jobs:
   sync:

@@ -288,35 +288,35 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 			)
 		},
 		{
-			id: "[user_registration_membership_member_registration_form]",
-			description: __(
-				"Displays a registration form for users to sign up for a membership.",
-				"user-registration"
-			),
-			requires: __(
-				"Requires User Registration Pro and User Registration Membership add-on to be activated.",
-				"user-registration"
-			)
-		},
-		{
 			id: "[user_registration_membership_listing]",
 			description: __(
 				"Shows a list of available membership options for users to browse.",
 				"user-registration"
 			),
-			requires: __(
-				"Requires User Registration Pro and User Registration Membership add-on to be activated.",
-				"user-registration"
-			)
+			params: [
+				{
+					param_name: "group_id",
+					param_description: __(
+						"ID of the membership group to display.",
+						"user-registration"
+					),
+					required: false
+				}
+			],
+			example: [
+				{
+					example_name: '[user_registration_membership_listing group_id="5"]',
+					example_description: __(
+						"Displays Membership listing attached to group with id 5",
+						"user-registration"
+					)
+				}
+			]
 		},
 		{
 			id: "[user_registration_membership_thank_you]",
 			description: __(
 				"Displays a thank you message to users after successfully registering for a membership.",
-				"user-registration"
-			),
-			requires: __(
-				"Requires User Registration Pro and User Registration Membership add-on to be activated.",
 				"user-registration"
 			)
 		}
