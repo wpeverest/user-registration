@@ -370,10 +370,11 @@ const TemplateList = ({ selectedCategory, templates }) => {
 								}
 							}}
 						>
-							<Center mb={0}>
+							<Center mb={0} height="207px">
 								<Box
 									position="relative"
 									width="100%"
+									height="100%"
 									display="flex"
 									justifyContent="center"
 									alignItems="center"
@@ -401,6 +402,7 @@ const TemplateList = ({ selectedCategory, templates }) => {
 										src={modifyImageUrl(template.imageUrl)}
 										alt={template.title}
 										objectFit="contain"
+										height="100%"
 									/>
 									{template.isPro ? (
 										!licenseDetail ? (
