@@ -20,6 +20,7 @@ export const actionTypes = {
 	GET_SETTINGS: "GET_SETTINGS",
 	GET_SETTINGS: "GET_ALLOW_USAGE",
 	GET_DEFAULT_REGISTRATION_PAGE: "GET_DEFAULT_REGISTRATION_PAGE",
+	GET_MEMBERSHIP_DETAILS: "GET_MEMBERSHIP_DETAILS",
 	GET_IS_PRO: "GET_IS_PRO",
 	GET_REGISTRATION_TYPE: "GET_REGISTRATION_TYPE",
 	GET_DEFAULT_FORM: "GET_DEFAULT_FORM",
@@ -43,6 +44,11 @@ const reducer = (state, action) => {
 			return {
 				...state,
 				registrationPageLink: action.registrationPageLink
+			};
+		case actionTypes.GET_MEMBERSHIP_DETAILS:
+			return {
+				...state,
+				membershipDetails: action.membershipDetails
 			};
 		case actionTypes.GET_IS_PRO:
 			return {

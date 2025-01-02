@@ -34,6 +34,7 @@ function App() {
 			registrationPageLink,
 			registrationType,
 			defaultFormURL,
+			membershipDetails,
 			installedPages
 		},
 		dispatch
@@ -201,8 +202,14 @@ function App() {
 						registrationPageUrl =
 							res.page_details["registration"]["page_url"];
 					} else {
+						var membershipRegistrationKey = Object.keys(
+							res.page_details
+						).filter(function (key) {
+							return key.indexOf("membership-registration") === 0;
+						});
+
 						registrationPageUrl =
-							res.page_details["membership-registration"][
+							res.page_details[membershipRegistrationKey[0]][
 								"page_url"
 							];
 					}
@@ -216,6 +223,12 @@ function App() {
 					dispatch({
 						type: actionTypes.GET_DEFAULT_REGISTRATION_PAGE,
 						registrationPageLink: registrationPageUrl
+					});
+
+					dispatch({
+						type: actionTypes.GET_MEMBERSHIP_DETAILS,
+						membershipDetails:
+							res.page_details["membership_details"]
 					});
 
 					setActiveStep(steps[index + 1]);
@@ -309,6 +322,16 @@ function App() {
 			}
 		});
 	};
+
+	const { title, page_url } = membershipDetails || {},
+		isMembershipRegistration =
+			registrationType === "user_registration_membership_registration",
+		rightFooterButtonText = isMembershipRegistration
+			? title
+			: "Edit Default Form",
+		rightFooterButtonLink = isMembershipRegistration
+			? page_url
+			: defaultFormURL;
 
 	return (
 		<ChakraProvider>
@@ -423,14 +446,14 @@ function App() {
 									onClick={() => {
 										setDisabledLink(true);
 										handleSaveSettings(
-											defaultFormURL +
+											rightFooterButtonLink +
 												"&end-setup-wizard=1"
 										);
 									}}
 									disabled={disabledLink}
 								>
 									{__(
-										"Edit Default Form",
+										rightFooterButtonText,
 										"user-registration"
 									)}
 								</Button>
