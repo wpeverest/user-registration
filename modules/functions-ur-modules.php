@@ -436,7 +436,8 @@ $modules = [
 	'coupons'             => 'ur_pro_is_coupons_addon_activated',
 	'payments'            => 'ur_pro_is_paypal_activated',
 	'sms-integration'     => 'ur_pro_is_sms_integration_activated',
-	'content-restriction' => 'ur_pro_is_content_restriction_activated'
+	'content-restriction' => 'ur_pro_is_content_restriction_activated',
+	'payment-history'     => 'ur_pro_is_payment_history_activated',
 ];
 
 foreach ( $modules as $module_key => $function_name ) {

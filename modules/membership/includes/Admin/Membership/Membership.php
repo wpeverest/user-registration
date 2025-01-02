@@ -409,7 +409,7 @@ class Membership {
 				'wp_roles'            => ur_membership_get_all_roles(),
 				'posts'               => $posts,
 				'labels'              => $this->get_i18_labels(),
-				'membership_page_url' => admin_url( 'admin.php?page=user-registration-membership&action=add_new_membership' ),
+				'membership_page_url' => admin_url( 'admin.php?page=user-registration-membership' ),
 				'delete_icon'         => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE )
 			)
 		);

@@ -6247,9 +6247,20 @@
  }
 #membership-group-list {
 	.wp-list-table.membership_groups  {
-		.user-registration-switch input[type=checkbox] {
-			border-radius: 10px !important;
-			border-color: #4cc741 !important;
+		.user-registration-switch {
+			input[type=checkbox] {
+				border-radius: 10px !important;
+				border: 0;
+				&:checked {
+					border-color: #475BB2;
+					background: #475BB2;
+				}
+				&::after {
+					width: 12px;
+					height: 12px;
+					margin: 4px;
+				}
+			}
 		}
 		tbody {
 			tr {

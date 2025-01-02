@@ -155,10 +155,10 @@
 									response.data.message
 								);
 
-								var current_url = $(location).attr('href');
-
-								current_url += '&post_id=' + urmg_data.membership_group_id;
-								$(location).attr('href', current_url);
+								// var current_url = $(location).attr('href');
+								//
+								// current_url += '&post_id=' + urmg_data.membership_group_id;
+								$(location).attr('href', urmg_data.membership_group_url);
 
 							} else {
 								membership_group_object.show_failure_message(
