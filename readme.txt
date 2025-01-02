@@ -254,7 +254,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * Feature   - Enforce default plugin form styles.
 * Feature   - Multi device registration form preview.
 * Enhance   - Setup wizard flow.
+* Enhance   - Added more form templates.
 * Enhance   - Registration form preview design.
+* Enhance   - Form templates selection page design.
 * Enhance   - Force user logout on password change.
 * Enhance   - Login and registration responsive form design.
 * Enhance   - Optimized modules loading and searching in Dashboard.

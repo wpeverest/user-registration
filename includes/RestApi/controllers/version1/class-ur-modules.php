@@ -677,6 +677,10 @@ class UR_Modules {
 			$status['success']      = false;
 			$status['errorMessage'] = $api['msg'];
 			return $status;
+		} elseif ( empty( $api ) ) {
+			$status['success']      = false;
+			$status['errorMessage'] = __( 'Couldn\'t fetch addon data at the moment. Please try again later', 'user-registration' );
+			return $status;
 		}
 
 		$status['pluginName'] = $api->name;

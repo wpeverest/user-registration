@@ -783,8 +783,6 @@ class UR_AJAX {
 		$form_id = isset( $_POST['id'] ) ? sanitize_text_field( $_POST['id'] ) : '';
 		$theme   = isset( $_POST['theme'] ) ? sanitize_text_field( $_POST['theme'] ) : '';
 
-		error_log( print_r( $_POST, true ) );
-
 		if ( empty( $form_id ) || empty( $theme ) ) {
 			wp_send_json_error( array( 'message' => __( 'Insufficient information', 'user-registration' ) ) );
 		}
