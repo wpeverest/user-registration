@@ -20,7 +20,7 @@ html {
 }
 
 // Membership Addon Frontend CSS
-.user-registration-page {
+.user-registration-page, .ur-multi-device-form-preview {
 	.ur-membership-list-container {
 		max-width: 100%!important;
 		display: flex;
@@ -123,7 +123,6 @@ html {
 
 	// Registration Form CSS
 	.ur_membership_registration_container {
-		max-width: 600px;
 		margin: 0 auto;
 		border-radius: 10px;
 
@@ -219,10 +218,9 @@ html {
 
         .message-section {
             display: block;
-
             p {
                 margin-bottom: 0;
-
+				margin-top: 0;
                 &:first-child {
                     font-size: 42px;
                     line-height: 56px;

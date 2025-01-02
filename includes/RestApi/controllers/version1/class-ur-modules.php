@@ -143,7 +143,9 @@ class UR_Modules {
 			} else {
 				$feature->required_plan = __( 'Personal', 'user-registration' );
 			}
-
+			if ( "user-registration-content-restriction" === $feature->slug && ! UR_PRO_ACTIVE ) {
+				$feature->setting_url = "admin.php?page=user-registration-settings&tab=content_restriction";
+			}
 			$features_lists[ $key ] = $feature;
 		}
 

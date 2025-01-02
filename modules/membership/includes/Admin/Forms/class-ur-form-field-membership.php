@@ -46,11 +46,14 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 			'label' => __( 'Membership Field', 'user-registration' ),
 			'icon'  => 'ur-icon ur-icon-membership-field',
 		);
+		$membership_group_service = new MembershipGroupService();
+		$default_group_id = $membership_group_service->get_default_group_id();
+		$default_membership_field_name = get_option('ur_membership_default_membership_field_name', true);
 
 		$this->field_defaults = array(
 			'default_label'      => __( 'Membership Field', 'user-registration' ),
-			'default_field_name' => 'membership_field_' . ur_get_random_number(),
-			'default_group'      => 0,
+			'default_field_name' => !empty($default_membership_field_name) ? $default_membership_field_name : ur_get_random_number() ,
+			'default_group'      => !empty($default_group_id) ? $default_group_id : 0 ,
 		);
 		//override the general settings to add membership group setting.
 		add_filter( "user_registration_field_options_general_settings", array( $this, 'settings_override' ), 10, 2 );

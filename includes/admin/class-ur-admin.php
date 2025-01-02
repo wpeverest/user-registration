@@ -50,12 +50,12 @@ class UR_Admin {
 	 * @return void
 	 */
 	public function run_membership_migration_script() {
-		if ( is_plugin_active( 'user-registration-membership/user-registration-membership.php' ) ) {
-			deactivate_plugins( 'user-registration-membership/user-registration-membership.php' );
+		if( is_plugin_active('user-registration-membership/user-registration-membership.php') ) {
+			deactivate_plugins('user-registration-membership/user-registration-membership.php');
 		}
 
 		$membership_service = new MembershipService();
-		$logger             = ur_get_logger();
+		$logger = ur_get_logger();
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
@@ -64,73 +64,59 @@ class UR_Admin {
 		if ( ( UR_VERSION <= '4.3.5.2' ) && ! get_option( 'membership_migration_finished', false ) ) {
 
 			$logger->notice( '---------- Begin Membership Migration. ----------', array( 'source' => 'migration-logger' ) );
-			$memberships = $membership_service->list_active_memberships();
+			$memberships        = $membership_service->list_active_memberships();
 
 			if ( count( $memberships ) === 0 ) {
-				$logger->error(
-					'! No memberships available....aborting migration.',
-					array(
-						'source' => 'migration-logger',
-					)
-				);
+				$logger->error( '! No memberships available....aborting migration.', array(
+					'source' => 'migration-logger'
+				) );
 
 				return;
 			}
 			$logger->notice( 'Begin Default Membership Group creation.', array( 'source' => 'migration-logger' ) );
 
-			// first create a default membership group and assign all the memberships to the group.
+			//first create a default membership group and assign all the memberships to the group.
 			$group_id = UR_Install::create_default_membership_group( $memberships );
 			if ( $group_id ) {
 				$logger->notice( 'Created Default Membership Group.', array( 'source' => 'migration-logger' ) );
 
-				// then use the group id to create a new registration form with membership field and the default group selected.
+				//then use the group id to create a new registration form with membership field and the default group selected.
 				$logger->notice( 'Begin Membership form creation.', array( 'source' => 'migration-logger' ) );
 
 				$form_id = UR_Install::create_membership_form( $group_id );
 				if ( $form_id ) {
 					$logger->notice( 'Membership form created successfully.', array( 'source' => 'migration-logger' ) );
-					// find and replace old shortcode with newly created form.
+					//find and replace old shortcode with newly created form.
 					$result = $membership_service->find_and_replace_membership_form_with_registration_form( $form_id );
-					// assign old members to new membership form
-					$membership_service->assign_users_to_new_form( $form_id );
-					if ( ! $result ) {
-						$logger->notice(
-							'Skipped old shortcode replace process.',
-							array(
-								'source' => 'migration-logger',
-							)
-						);
+					//assign old members to new membership form
+					$membership_service->assign_users_to_new_form($form_id);
+					if( !$result ) {
+						$logger->notice( 'Skipped old shortcode replace process.', array(
+							'source' => 'migration-logger'
+						) );
 					}
-					$logger->notice(
-						'---------- Membership Migration Completed ----------',
-						array(
-							'source' => 'migration-logger',
-						)
-					);
+					$logger->notice( '---------- Membership Migration Completed ----------', array(
+						'source' => 'migration-logger'
+					) );
 					add_option( 'membership_migration_finished', true ); // to check if migration runs just once
 					update_option( 'user_registration_membership_installed_flag', true ); // to check if membership has been installed
-					$enabled_features   = get_option( 'user_registration_enabled_features', array() );
+					$enabled_features = get_option( 'user_registration_enabled_features', array() );
 					$enabled_features[] = 'user-registration-membership';
-					update_option( 'user_registration_enabled_features', $enabled_features );
+					update_option( 'user_registration_enabled_features',$enabled_features );
 
 				} else {
-					wp_delete_post( $group_id );
-					$logger->error(
-						'! Membership form creation failed....aborting migration.',
-						array(
-							'source' => 'migration-logger',
-						)
-					);
+					wp_delete_post($group_id);
+					$logger->error( '! Membership form creation failed....aborting migration.', array(
+						'source' => 'migration-logger'
+					) );
 				}
 			} else {
-				$logger->error(
-					'! Group creation failed....aborting migration.',
-					array(
-						'source' => 'migration-logger',
-					)
-				);
+				$logger->error( '! Group creation failed....aborting migration.', array(
+					'source' => 'migration-logger'
+				) );
 			}
 		}
+
 	}
 
 	/**
@@ -255,7 +241,7 @@ class UR_Admin {
 	/**
 	 * Add Tag for My Account to know which page is current my account page.
 	 *
-	 * @param mixed  $post_states Tags.
+	 * @param mixed $post_states Tags.
 	 * @param object $post Post.
 	 */
 	public function ur_add_post_state( $post_states, $post ) {
@@ -297,8 +283,12 @@ class UR_Admin {
 				case 'user-registration-dashboard':
 					include_once __DIR__ . '/class-ur-admin-dashboard.php';
 					break;
+				case 'ur_form_preview':
+					include_once __DIR__ . '/class-ur-admin-form-preview.php';
+					break;
 			}
 		}
+
 	}
 
 	/**
@@ -361,6 +351,7 @@ class UR_Admin {
 	 *
 	 * @return string
 	 * @since  1.1.2
+	 *
 	 */
 	public function admin_footer_text( $footer_text ) {
 		if ( ! current_user_can( 'manage_user_registration' ) || ! function_exists( 'ur_get_screen_ids' ) ) {

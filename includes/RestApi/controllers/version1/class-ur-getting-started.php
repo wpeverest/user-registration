@@ -204,13 +204,13 @@ class UR_Getting_Started {
 		$hasposts        = get_posts( 'post_type=user_registration' );
 
 		$post_content = '';
-
+		$membership_field_name = 'membership_field_' . ur_get_random_number();
 		if ( 'user_registration_normal_registration' === $request['registrationType'] ) {
 			if ( 0 === count( $hasposts ) ) {
 				$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]]]';
 			}
 		} elseif ( 0 === count( $hasposts ) ) {
-			$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]],[[{"field_key":"membership","general_setting":{"label":"Membership Field","description":"","field_name":"membership_field_' . ur_get_random_number() . '","placeholder":"","required":"false","hide_label":"false","membership_group":"0"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-membership-field"}]]]';
+			$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]],[[{"field_key":"membership","general_setting":{"label":"Membership Field","description":"","field_name":"'.$membership_field_name.'","placeholder":"","required":"false","hide_label":"false","membership_group":"0"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-membership-field"}]]]';
 		}
 
 		if ( 0 === count( $hasposts ) ) {
@@ -270,6 +270,14 @@ class UR_Getting_Started {
 				);
 			}
 		} else {
+			update_option('ur_membership_default_membership_field_name' , $membership_field_name);
+			$membership_id = UR_Install::create_default_membership();
+			$membership_group_id = UR_Install::create_default_membership_group( array( array( 'ID' => "$membership_id" ) ));
+
+			wp_update_post( array(
+				'ID' => $default_post_id,
+				'post_content' => '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]],[[{"field_key":"membership","general_setting":{"membership_group":"'.$membership_group_id.'","label":"Membership Field","description":"","field_name":"'.$membership_field_name.'","hide_label":"false"},"advance_setting":{},"icon":"ur-icon ur-icon-membership-field"}]]]'
+			));
 			$enabled_features = get_option( 'user_registration_enabled_features', array() );
 			array_push( $enabled_features, 'user-registration-membership' );
 			update_option( 'user_registration_enabled_features', $enabled_features );
@@ -299,6 +307,8 @@ class UR_Getting_Started {
 				'option' => 'user_registration_thank_you_page_id',
 				'content' => '[user_registration_membership_thank_you]',
 			);
+
+			Database::create_tables();
 		}
 
 		foreach ( $pages as $key => $page ) {
@@ -314,7 +324,7 @@ class UR_Getting_Started {
 				'page_slug'     => '/' . get_post_field( 'post_name', $post_id ),
 			);
 		}
-		Database::create_tables();
+
 		return new \WP_REST_Response(
 			array(
 				'success'      => true,

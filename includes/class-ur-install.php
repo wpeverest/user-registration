@@ -791,8 +791,24 @@ CREATE TABLE {$wpdb->prefix}user_registration_sessions (
 		}
 	}
 
+	public static function create_default_membership(  ) {
+		$post_content = '{"description":"Default membership.","type":"free","status":true}';
+		$default_membership_id = wp_insert_post(
+			array(
+				'post_type'      => 'ur_membership',
+				'post_title'     => esc_html__( 'Default Membership', 'user-registration' ),
+				'post_content'   => $post_content,
+				'post_status'    => 'publish',
+				'comment_status' => 'closed',
+				'ping_status'    => 'closed',
+			)
+		);
+		update_post_meta( $default_membership_id , 'ur_membership' , '{"type":"free","cancel_subscription":"immediately","role":"subscriber","amount":0}' );
+		return $default_membership_id;
+	}
 	public static function create_default_membership_group( $memberships ) {
 		$membership_ids = array_column( $memberships, 'ID' );
+
 		$post_content   = '{"description":"","status":true}';
 		$membership_group_service = new \WPEverest\URMembership\Admin\Services\MembershipGroupService();
 		$default_post_id = $membership_group_service->get_default_group_id();
