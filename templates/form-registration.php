@@ -122,23 +122,10 @@ wp_enqueue_style( 'ur-frontend-small-screen' );
 		} else {
 			?>
 			<?php
-			if ( apply_filters( 'user_registration_show_registration_form_title', true ) ) {
-				$registration_title_label =
-				/**
-				 * Filter to modify the registration title.
-				 *
-				 * @param string.
-				 * @return array.
-				 */
-				apply_filters( 'ur_registration_title', 'Register' );
-				$registration_title_description =
-				/**
-				 * Filter to modify the registration title description.
-				 *
-				 * @param string.
-				 * @return array.
-				 */
-				apply_filters( 'ur_registration_title_description', 'Fill the form below to create an account.' );
+			$is_title_description_enabled = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_enable_form_title_description' , false ) );
+			if ( $is_title_description_enabled ) {
+				$registration_title_label = ur_get_single_post_meta( $form_id, 'user_registration_form_title' );
+				$registration_title_description = ur_get_single_post_meta( $form_id, 'user_registration_form_description' );
 				/* translators: %s - registration Title. */
 				echo wp_kses_post( sprintf( __( '<span class="user-registration-registration-title"> %s </span> </br>', 'user-registration' ), $registration_title_label ) );
 				echo wp_kses_post( sprintf( __( '<p class="user-registration-registration-description"> %s </p>', 'user-registration' ), $registration_title_description ) );
