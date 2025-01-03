@@ -184,7 +184,7 @@
 								ur_membership_members_utils.show_success_message(
 									response.data.message
 								);
-								location.reload();
+								$(location).attr('href', ur_member_data.members_page_url);
 							} else {
 								ur_membership_members_utils.show_failure_message(
 									response.data.message
