@@ -291,9 +291,10 @@ body {
 					font-weight: 500 !important;
 				}
 
-				input,
 				select,
-				textarea {
+				textarea,
+				input:not([type="range"])
+				 {
 					min-height: 38px;
 					border-radius: $border_radius_4;
 					padding: 0 12px;

@@ -158,7 +158,7 @@
 	margin-top: 10px;
 }
 
-input.ur-input-border-green,
+input.ur-input-border-green:not([type="range"]),
 textarea.ur-input-border-green {
 	border-color: #1ea71b !important;
 }
@@ -393,6 +393,10 @@ textarea.ur-input-border-red {
 				&::placeholder {
 					color: #ddd;
 				}
+			}
+
+			.ur-range-input  {
+				margin-bottom: 0px !important;
 			}
 
 			input[type="password"] {
