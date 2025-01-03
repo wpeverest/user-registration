@@ -809,7 +809,7 @@
   color: #ff030b;
   margin-top: 10px; }
 
-input.ur-input-border-green:not([type="range"]),
+input.ur-input-border-green,
 textarea.ur-input-border-green {
   border-color: #1ea71b !important; }
 
@@ -976,8 +976,6 @@ textarea.ur-input-border-red {
         .ur-frontend-form .ur-form-row .ur-form-grid select::placeholder,
         .ur-frontend-form .ur-form-row .ur-form-grid .__PrivateStripeElement::placeholder {
           color: #ddd; }
-      .ur-frontend-form .ur-form-row .ur-form-grid .ur-range-input {
-        margin-bottom: 0px !important; }
       .ur-frontend-form .ur-form-row .ur-form-grid input[type="password"] {
         display: inline;
         margin-bottom: 0px; }

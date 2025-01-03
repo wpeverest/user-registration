@@ -219,9 +219,9 @@ body.ur-multi-device-form-preview {
       border: none; }
       body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-preview-form label {
         font-weight: 500 !important; }
+      body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-preview-form input,
       body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-preview-form select,
-      body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-preview-form textarea,
-      body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-preview-form input:not([type="range"]) {
+      body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-preview-form textarea {
         min-height: 38px;
         border-radius: 4px;
         padding: 0 12px; }

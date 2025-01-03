@@ -52,7 +52,7 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 
 		$this->field_defaults = array(
 			'default_label'      => __( 'Membership Field', 'user-registration' ),
-			'default_field_name' => !empty($default_membership_field_name) ? $default_membership_field_name : ur_get_random_number() ,
+			'default_field_name' => !empty($default_membership_field_name) && str_contains($default_membership_field_name, 'membership_field_' ) ? $default_membership_field_name : 'membership_field_'.ur_get_random_number() ,
 			'default_group'      => !empty($default_group_id) ? $default_group_id : 0 ,
 		);
 		//override the general settings to add membership group setting.
