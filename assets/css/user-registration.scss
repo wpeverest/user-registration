@@ -942,7 +942,7 @@ textarea.ur-input-border-red {
 							width: max-content;
 						}
 					}
-				}	
+				}
 			}
 		}
 	}
@@ -1672,10 +1672,11 @@ body {
 					}
 				}
 			}
-		}		
+		}
 	}
 
     &.user-registration-page,
+	&.ur-multi-device-form-preview,
 	&.user-registration-membership_page_user-registration-login-forms {
 		.user-registration-error {
 			position: unset;
@@ -1756,6 +1757,10 @@ body {
 				display: block;
 			}
 		}
+	}
+
+	&.user-registration-page,
+	&.user-registration-membership_page_user-registration-login-forms {
 
 		#user-registration,
         .user-registration {
@@ -1846,7 +1851,7 @@ body {
 						}
 					}
 				}
-				
+
 
 				.user-registration-login,
 				.user-registration-registration {
