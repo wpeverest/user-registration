@@ -1036,6 +1036,13 @@ jQuery(function ($) {
 			custom_password_params.hide();
 		}
 	});
+	//Handel form title and description toggle
+	$(document).ready(function () {
+		hide_show_title_options();
+		$(document).on("change", "#user_registration_enable_form_title_description", function () {
+			hide_show_title_options();
+		});
+	});
 
 	$(document).ready(function () {
 		hide_show_redirection_options();
@@ -1045,6 +1052,32 @@ jQuery(function ($) {
 			hide_show_redirection_options
 		);
 	});
+
+	/**
+	 * Hide or Show Title settings.
+	 *
+	 */
+	var hide_show_title_options = function () {
+
+		var title = $(
+			"#user_registration_form_title"
+		).closest(".form-row");
+		var description = $(
+			"#user_registration_form_description"
+		).closest(".form-row");
+
+		var toggle_title = $(
+			"#user_registration_enable_form_title_description"
+		);
+
+		if (toggle_title.is(":checked")) {
+			title.show();
+			description.show();
+		} else {
+			title.hide();
+			description.hide();
+		}
+	}
 
 	/**
 	 * Hide or Show Redirection settings.
