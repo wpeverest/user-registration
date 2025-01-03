@@ -368,6 +368,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 			});
 			toast({
 				description: `${shortcode_id} copied to clipboard`,
+				status: 'success',
 				position: 'bottom-right',
 				duration: 1500
 			});
@@ -393,6 +394,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 			toast({
 				description: `${example_name} copied to clipboard`,
 				position: 'bottom-right',
+				status: 'success',
 				duration: 1500
 			});
 		} catch (error) {
