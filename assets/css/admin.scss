@@ -6683,7 +6683,6 @@ body {
 									}
 
 									.user-registration-login-form-global-settings {
-
 										.user-registration-login-form-toggle-option {
 											display: flex;
 											justify-content: space-between;
@@ -6712,9 +6711,9 @@ body {
 					}
 
 					&.collapsed {
-							max-width: 0px;
-						}
+						max-width: 0px;
 					}
+				
 
 					#ur-collapse {
 						background: #FAFAFC;
@@ -6728,6 +6727,13 @@ body {
 						}
 					}
 				}
+
+				&:has(.collapsed) {
+					.ur-login-form-shortcode {
+						max-width: 0px;
+					}
+				}
+			}
 
 				.ur-builder-wrapper {
 					.ur-selected-inputs {
