@@ -2306,7 +2306,8 @@
 				// Handle edit-profile form submit event.
 				$(
 					"input[name='save_account_details'], button[name='save_account_details']"
-				).on("click", function (event) {
+				).off('click').on("click", function (event) {
+					event.preventDefault();
 					// Check if the form is edit-profile form and check if ajax submission on edit profile is enabled.
 					if (
 						$(".ur-frontend-form")
