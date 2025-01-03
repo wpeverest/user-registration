@@ -429,7 +429,7 @@
 									response.data.message
 								);
 								// var current_url = $(location).attr('href');
-								// current_url += '&post_id=' + urmg_data.membership_group_id;
+								// current_url += '&post_id=' + ur_membership_data.membership_group_id;
 								$(location).attr('href', ur_membership_data.membership_page_url);
 							} else {
 								ur_membership_utils.show_failure_message(
