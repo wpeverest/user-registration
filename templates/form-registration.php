@@ -122,9 +122,9 @@ wp_enqueue_style( 'ur-frontend-small-screen' );
 		} else {
 			?>
 			<?php
-			$is_title_description_enabled = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_enable_form_title_description' , false ) );
+			$is_title_description_enabled = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_enable_form_title_description', false ) );
 			if ( $is_title_description_enabled ) {
-				$registration_title_label = ur_get_single_post_meta( $form_id, 'user_registration_form_title' );
+				$registration_title_label       = ur_get_single_post_meta( $form_id, 'user_registration_form_title' );
 				$registration_title_description = ur_get_single_post_meta( $form_id, 'user_registration_form_description' );
 				/* translators: %s - registration Title. */
 				echo wp_kses_post( sprintf( __( '<span class="user-registration-registration-title"> %s </span> </br>', 'user-registration' ), $registration_title_label ) );
@@ -327,7 +327,7 @@ wp_enqueue_style( 'ur-frontend-small-screen' );
 
 							$submit_btn_class = array_merge( $submit_btn_class, (array) ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_class' ) );
 							?>
-							<button type="submit" class="btn button ur-submit-button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" style="<?php echo $css; ?>" conditional_rules="<?php echo ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_submit_conditional_logic', true ) ) ? esc_attr( wp_json_encode( $condition_submit_settings ) ) : ''; ?>">
+							<button type="submit" class="btn button ur-submit-button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>"  conditional_rules="<?php echo ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_submit_conditional_logic', true ) ) ? esc_attr( wp_json_encode( $condition_submit_settings ) ) : ''; ?>">
 								<span></span>
 								<?php
 								$submit = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_form_submit_label' );
