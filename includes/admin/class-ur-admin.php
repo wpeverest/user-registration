@@ -67,17 +67,15 @@ class UR_Admin {
 			$memberships = $membership_service->list_active_memberships();
 
 			if ( count( $memberships ) === 0 ) {
-				$logger->error( '! No memberships available....aborting migration.', array(
+				$logger->error( '! No memberships available....creating a default membership.', array(
 					'source' => 'migration-logger'
 				) );
-
-				return;
-			}
-			$logger->notice( 'Begin Default Membership Group creation.', array( 'source' => 'migration-logger' ) );
-			if ( empty( $memberships ) ) {
 				$membership_id = UR_Install::create_default_membership();
 				$memberships   = array( array( "ID" => $membership_id ) );
 			}
+
+			$logger->notice( 'Begin Default Membership Group creation.', array( 'source' => 'migration-logger' ) );
+
 			//first create a default membership group and assign all the memberships to the group.
 			$group_id = UR_Install::create_default_membership_group( $memberships );
 			if ( $group_id ) {
