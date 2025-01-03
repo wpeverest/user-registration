@@ -493,52 +493,50 @@
     #user-registration.vertical .user-registration-MyAccount-content__body p a, #user-registration.horizontal .user-registration-MyAccount-content__body p a {
       font-weight: 500;
       color: #475bb2; }
-  #user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid {
-    padding: 0; }
-    #user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset {
-      padding: 0;
-      margin: 0;
-      border: 0; }
-      #user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row {
-        margin-bottom: 20px; }
-        #user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row:last-child, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row:last-child {
-          margin-bottom: 0; }
-        #user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row label, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row label {
-          margin-top: 0;
-          margin-bottom: 8px;
-          color: #222222;
-          font-size: 15px;
-          font-weight: 500;
-          line-height: 21px; }
-        #user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row .password-input-group, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row .password-input-group {
-          display: block; }
-          #user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row .password-input-group .input-text, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row .password-input-group .input-text {
-            height: 38px;
-            padding: 8px 14px 8px 10px;
-            border-radius: 4px;
-            border: 1px solid #E1E1E1;
-            background: #ffffff; }
-            #user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row .password-input-group .input-text:focus, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row .password-input-group .input-text:focus {
-              border-color: #475bb2; }
-    #user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid .user-registration-form-row .ur-privacy-button, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid .user-registration-form-row .ur-privacy-button {
-      margin-bottom: 0; }
-    #user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid > p, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid > p {
-      float: unset;
-      margin-top: 32px;
-      text-align: left; }
-      #user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid > p input[type="submit"], #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid > p input[type="submit"] {
-        float: unset;
-        border-radius: 4px;
-        background: #475bb2;
-        border: 1px solid #475bb2;
-        color: #ffffff;
+  #user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset {
+    padding: 0;
+    margin: 0;
+    border: 0; }
+    #user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row {
+      margin-bottom: 20px; }
+      #user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row:last-child, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row:last-child {
+        margin-bottom: 0; }
+      #user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row label, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row label {
+        margin-top: 0;
+        margin-bottom: 8px;
+        color: #222222;
         font-size: 15px;
-        line-height: 22px;
-        padding: 8px 16px;
-        transition: all .3s; }
-        #user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid > p input[type="submit"]:hover, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid > p input[type="submit"]:hover {
-          background: #38488e;
-          border-color: #38488e; }
+        font-weight: 500;
+        line-height: 21px; }
+      #user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row .password-input-group, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row .password-input-group {
+        display: block; }
+        #user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row .password-input-group .input-text, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row .password-input-group .input-text {
+          height: 38px;
+          padding: 8px 14px 8px 10px;
+          border-radius: 4px;
+          border: 1px solid #E1E1E1;
+          background: #ffffff; }
+          #user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row .password-input-group .input-text:focus, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row .password-input-group .input-text:focus {
+            border-color: #475bb2; }
+  #user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid .user-registration-form-row .ur-privacy-button, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid .user-registration-form-row .ur-privacy-button {
+    margin-bottom: 0; }
+  #user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid > p, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid > p {
+    float: unset;
+    margin-top: 32px;
+    text-align: left; }
+    #user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid > p input[type="submit"], #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid > p input[type="submit"] {
+      float: unset;
+      border-radius: 4px;
+      background: #475bb2;
+      border: 1px solid #475bb2;
+      color: #ffffff;
+      font-size: 15px;
+      line-height: 22px;
+      padding: 8px 16px;
+      transition: all .3s; }
+      #user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid > p input[type="submit"]:hover, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid > p input[type="submit"]:hover {
+        background: #38488e;
+        border-color: #38488e; }
   #user-registration.vertical .user-registration-MyAccount-content__body .user-registration-membership-content .membership-label, #user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-membership-content .membership-label {
     width: 40%;
     text-align: right; }

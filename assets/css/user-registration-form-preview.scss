@@ -150,7 +150,7 @@
 				padding:24px;
 				font-size: 20px;
 				font-style: normal;
-				font-weight: 600;
+				font-weight: $medium;
 				line-height: 150%;
 				color: #414141;
 
@@ -191,7 +191,7 @@
 				.ur-form-preview-save-title{
 					font-size: 14px;
 					font-style: normal;
-					font-weight: 500;
+					font-weight: $medium;
 					line-height: 150%;
 				}
 
@@ -205,7 +205,7 @@
 					color: #222;
 					font-size: 16px;
 					font-style: normal;
-					font-weight: 500;
+					font-weight: $medium;
 					line-height: 150%;
 				}
 
@@ -275,7 +275,7 @@
 // Form Preview Revamp CSS
 body {
 	&.ur-multi-device-form-preview {
-		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+		// font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 		margin: 0;
 
 		.ur-form-preview-main-content{
@@ -286,6 +286,19 @@ body {
 				background: none;
 				border-radius: 8px;
 				border: none;
+
+				label {
+					font-weight: 500 !important;
+				}
+
+				input,
+				select,
+				textarea {
+					min-height: 38px;
+					border-radius: $border_radius_4;
+					padding: 0 12px;
+				}
+
 				.ur-preview-content{
 					height: 100%;
 					background: #fff;
@@ -316,22 +329,25 @@ body {
 					}
 				}
 				.ur-form-preview-title{
-					width: calc(100% - 48px);
+					width: 100%;
 					padding: 24px;
 					border-top-left-radius: 8px;
 					border-top-right-radius: 8px;
 					display: block;
 					color: #222;
+					background: #FAFAFA;
 				}
 				.ur-frontend-form{
 					background: #fff;
 					border: none;
 					padding: 24px 30px 30px;
+					margin-bottom: 0;
+					box-shadow: none;
 
 					.user-registration-registration-title {
 						color: #1f1f1f;
 						font-size: 32px;
-						font-weight: 600;
+						font-weight: $semi_bold;
 						line-height: 48px;
 						letter-spacing: .15px;
 						display: block;
@@ -341,7 +357,7 @@ body {
 					.user-registration-registration-description {
 						color: #333;
 						font-size: 14px;
-						font-weight: 400;
+						font-weight: $regular;
 						line-height: 21px;
 						letter-spacing: .15px;
 						margin-bottom: 30px;
@@ -352,32 +368,42 @@ body {
 						display: block;
 					}
 					.ur-form-row{
-						gap: 24px;
+						gap: $spacing_24px;
 						margin-bottom: 28px;
 					}
 					.ur-button-container{
 						display: block;
-						margin-top: 36px;
+						margin-top: $spacing_36px;
+
+						.ur-submit-button {
+							width: max-content;
+
+							&:hover {
+								color: $white;
+							}
+						}
 					}
 					&:not(.ur-frontend-form-preview) {
 						.ur-form-row{
-							gap: 24px;
+							gap: $spacing_24px;
 							margin-bottom: 28px;
-							.form-row{
-								.ur-label{
-									font-weight: 500;
+
+							.form-row {
+								.ur-label {
+									font-weight: $medium;
 									font-size: 15px;
 									color: #383838;
 								}
-								.input-wrapper{
-									input{
-										padding: 8px 10px 8px 14px;
-										margin-bottom: 4px;
-										border: 1px solid #E9E9E9;
-										border-radius: 4px;
-										&::placeholder{
+								.input-wrapper {
+									input {
+										padding: $spacing_8px $spacing_10px $spacing_8px $spacing_14px;
+										margin-bottom: $spacing_4px;
+										border: $border_width solid #E9E9E9;
+										border-radius: $border_radius_4;
+
+										&::placeholder {
 											font-size: 14px;
-											font-weight: 400;
+											font-weight: $regular;
 											color: #bababa;
 											text-transform: capitalize;
 										}
@@ -393,7 +419,7 @@ body {
 							background: #475bb2;
 							color: #fff;
 							font-size: 14px;
-							font-weight: 500;
+							font-weight: $medium;
 						}
 						.ur-button-container{
 							display: block;
@@ -422,7 +448,7 @@ body {
 					padding-bottom: 12px;
 					margin:0 0 4px 0;
 					border-bottom: 1px solid #edeff7;
-					font-weight: 500;
+					font-weight: $medium;
 					font-size: 16px;
 					color: #222222;
 					line-height: 24px;
@@ -526,14 +552,12 @@ body {
 		}
 
 		.ur-form-preview-sidepanel-toggler{
-			left: calc(100% - 447px);
+			right: 380px;
+			left: unset;
 			border: 1px solid #EDEFF7;
 			border-right: 0px;
-			width: 10px;
+			width: 26px;
 			background: #fff;
-			border-top: 1px double #EDEFF7;
-			border-bottom: 1px double #EDEFF7;
-			border-left: 1px double #EDEFF7;
 			padding: 0px 8px;
 			fill: #9B9B9B;
 			border-top-left-radius: 4px;
@@ -541,9 +565,10 @@ body {
 			border-top-right-radius: 0px;
 			border-bottom-right-radius: 0px;
 			z-index: 1;
+			cursor: pointer;
+
 			&.inactive{
 				right: 0;
-				left: unset;
 				border-top-right-radius: 4px;
 				border-bottom-right-radius: 4px;
 				border-top-left-radius: 0px;
@@ -572,9 +597,9 @@ body {
 			.ur-form-title {
 				padding: 0;
 				color: $grey-500;
-				font-size: 16px;
-				font-weight: $semi_bold;
-				line-height: 24px;
+				font-size: 18px;
+				font-weight: $medium;
+				line-height: 26px;
 			}
 
 			.ur-form-preview-devices {
@@ -594,8 +619,8 @@ body {
 
 				svg {
 					padding: $spacing_8px;
-					width: 20px;
-					height: 20px;
+					width: auto;
+					height: auto;
 				}
 			}
 

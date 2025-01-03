@@ -125,7 +125,7 @@
       padding: 24px;
       font-size: 20px;
       font-style: normal;
-      font-weight: 600;
+      font-weight: 500;
       line-height: 150%;
       color: #414141; }
     .ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-preview-form .ur-form-preview-content {
@@ -208,7 +208,6 @@
   right: calc(100% - 27px); }
 
 body.ur-multi-device-form-preview {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   margin: 0; }
   body.ur-multi-device-form-preview .ur-form-preview-main-content {
     min-height: calc(100vh - 76px); }
@@ -218,6 +217,14 @@ body.ur-multi-device-form-preview {
       background: none;
       border-radius: 8px;
       border: none; }
+      body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-preview-form label {
+        font-weight: 500 !important; }
+      body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-preview-form input,
+      body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-preview-form select,
+      body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-preview-form textarea {
+        min-height: 38px;
+        border-radius: 4px;
+        padding: 0 12px; }
       body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-preview-form .ur-preview-content {
         height: 100%;
         background: #fff;
@@ -239,16 +246,19 @@ body.ur-multi-device-form-preview {
           body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-preview-form .ur-preview-mobile-wrapper .ur-frontend-form .ur-form-row .ur-form-grid:first-child {
             margin-bottom: 28px; }
       body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-preview-form .ur-form-preview-title {
-        width: calc(100% - 48px);
+        width: 100%;
         padding: 24px;
         border-top-right-radius: 8px;
         border-top-left-radius: 8px;
         display: block;
-        color: #222; }
+        color: #222;
+        background: #FAFAFA; }
       body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-preview-form .ur-frontend-form {
         background: #fff;
         border: none;
-        padding: 24px 30px 30px; }
+        padding: 24px 30px 30px;
+        margin-bottom: 0;
+        box-shadow: none; }
         body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-preview-form .ur-frontend-form .user-registration-registration-title {
           color: #1f1f1f;
           font-size: 32px;
@@ -274,6 +284,10 @@ body.ur-multi-device-form-preview {
         body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-preview-form .ur-frontend-form .ur-button-container {
           display: block;
           margin-top: 36px; }
+          body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-preview-form .ur-frontend-form .ur-button-container .ur-submit-button {
+            width: max-content; }
+            body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-preview-form .ur-frontend-form .ur-button-container .ur-submit-button:hover {
+              color: #ffffff; }
         body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-preview-form .ur-frontend-form:not(.ur-frontend-form-preview) .ur-form-row {
           gap: 24px;
           margin-bottom: 28px; }
@@ -385,24 +399,22 @@ body.ur-multi-device-form-preview {
         width: 100%;
         height: 100%; } }
   body.ur-multi-device-form-preview .ur-form-preview-sidepanel-toggler {
-    right: calc(100% - 447px);
+    left: 380px;
+    right: unset;
     border: 1px solid #EDEFF7;
     border-left: 0px;
-    width: 10px;
+    width: 26px;
     background: #fff;
-    border-top: 1px double #EDEFF7;
-    border-bottom: 1px double #EDEFF7;
-    border-right: 1px double #EDEFF7;
     padding: 0px 8px;
     fill: #9B9B9B;
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
-    z-index: 1; }
+    z-index: 1;
+    cursor: pointer; }
     body.ur-multi-device-form-preview .ur-form-preview-sidepanel-toggler.inactive {
       left: 0;
-      right: unset;
       border-top-left-radius: 4px;
       border-bottom-left-radius: 4px;
       border-top-right-radius: 0px;
@@ -423,9 +435,9 @@ body.ur-multi-device-form-preview {
     body.ur-multi-device-form-preview #nav-menu-header .ur-form-title {
       padding: 0;
       color: #222222;
-      font-size: 16px;
-      font-weight: 600;
-      line-height: 24px; }
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 26px; }
     body.ur-multi-device-form-preview #nav-menu-header .ur-form-preview-devices {
       border-radius: 8px;
       background: #EDEFF7;
@@ -438,8 +450,8 @@ body.ur-multi-device-form-preview {
         border-radius: 4px; }
       body.ur-multi-device-form-preview #nav-menu-header .ur-form-preview-devices svg {
         padding: 8px;
-        width: 20px;
-        height: 20px; }
+        width: auto;
+        height: auto; }
     body.ur-multi-device-form-preview #nav-menu-header .major-publishing-actions .publishing-action {
       position: relative; }
       body.ur-multi-device-form-preview #nav-menu-header .major-publishing-actions .publishing-action input[type="text"] {

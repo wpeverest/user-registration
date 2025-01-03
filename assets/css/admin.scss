@@ -412,27 +412,27 @@
 			 }
 		 }
 
-		 &::before,
-		 &::after {
-			 content: "";
-			 display: flex;
-			 position: absolute;
-			 left: 0;
-			 right: 0;
-			 bottom: 0;
-			 background: $white;
-		 }
+		//  &::before,
+		//  &::after {
+		// 	 content: "";
+		// 	 display: flex;
+		// 	 position: absolute;
+		// 	 left: 0;
+		// 	 right: 0;
+		// 	 bottom: 0;
+		// 	 background: $white;
+		//  }
 
-		 &::before {
-			 top: 0;
-			 z-index: -1;
-		 }
+		//  &::before {
+		// 	 top: 0;
+		// 	 z-index: -1;
+		//  }
 
-		 &::after {
-			 height: 10px;
-			 box-shadow: 0px 4px 8px transparentize($gray_base, 0.92);
-			 z-index: -2;
-		 }
+		//  &::after {
+		// 	 height: 10px;
+		// 	 box-shadow: 0px 4px 8px transparentize($gray_base, 0.92);
+		// 	 z-index: -2;
+		//  }
 	 }
 
 	 .major-publishing-actions {
@@ -3157,7 +3157,7 @@
 		 .user-registration-info {
 			 .swal2-actions{
 				 display: flex;
-				 padding: 10px !important ;
+				 padding: 10px;
 			 }
 			 .swal2-html-container{
 				 p{
@@ -5850,7 +5850,8 @@
 							 border-color: #bababa;
 							 height: 38px;
 							 width: 220px;
-							 padding-inline: 14px;
+							 padding-left: 14px;
+							 padding-right: 14px;
 							 color: #383838;
 						 }
 
@@ -6307,7 +6308,7 @@
 		.swal2 {
 			&-header {
 				padding: $spacing_32px $spacing_32px 0;
-				gap: $spacing_16px;
+				// gap: $spacing_16px;
 			}
 
 			&-icon {
@@ -6352,6 +6353,35 @@
                         outline: none;
                         box-shadow: none;
 						border-color: $primary_color;
+					}
+				}
+
+				p {
+					margin: 0;
+				}
+
+				.swal2-html-container {
+					.ur-embed-new-page-container {
+						padding-bottom: 0;
+						gap: $spacing_18px;
+					}
+
+					.ur-embed-select-existing-page-container {
+						select {
+							min-height: 38px;
+							padding-left: 14px;
+							margin-top: $spacing_8px;
+
+							&:hover {
+								color: $primary_color;
+							}
+
+							&:focus {
+								box-shadow: none;
+								outline: none;
+								border-color: $primary_color;
+							}
+						}
 					}
 				}
 			}

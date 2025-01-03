@@ -5513,25 +5513,6 @@
     .toplevel_page_user-registration #nav-menu-header .ur-brand-logo a:focus {
       outline: none;
       box-shadow: none; }
-  .user-registration-membership_page_add-new-registration #nav-menu-header::before, .user-registration-membership_page_add-new-registration #nav-menu-header::after,
-  .toplevel_page_user-registration #nav-menu-header::before,
-  .toplevel_page_user-registration #nav-menu-header::after {
-    content: "";
-    display: flex;
-    position: absolute;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    background: #ffffff; }
-  .user-registration-membership_page_add-new-registration #nav-menu-header::before,
-  .toplevel_page_user-registration #nav-menu-header::before {
-    top: 0;
-    z-index: -1; }
-  .user-registration-membership_page_add-new-registration #nav-menu-header::after,
-  .toplevel_page_user-registration #nav-menu-header::after {
-    height: 10px;
-    box-shadow: 0px 4px 8px rgba(45, 53, 89, 0.08);
-    z-index: -2; }
 
 .user-registration-membership_page_add-new-registration .major-publishing-actions,
 .toplevel_page_user-registration .major-publishing-actions {
@@ -7402,7 +7383,7 @@ body {
 
 .user-registration .swal2-container .user-registration-info .swal2-actions {
   display: flex;
-  padding: 10px !important; }
+  padding: 10px; }
 
 .user-registration .swal2-container .user-registration-info .swal2-html-container p {
   font-size: 1em; }
@@ -9091,7 +9072,8 @@ body.user-registration #wpbody-content {
             border-color: #bababa;
             height: 38px;
             width: 220px;
-            padding-inline: 14px;
+            padding-right: 14px;
+            padding-left: 14px;
             color: #383838; }
           .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .tablenav .bulkactions input[type="submit"],
           .user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .tablenav .bulkactions input[type="submit"] {
@@ -9375,8 +9357,7 @@ body.ur-settings-sidebar-hidden .user-registration-settings-sidebar-container {
         line-height: 24px; }
 
 .user-registration .swal2-container .swal2-header {
-  padding: 32px 32px 0;
-  gap: 16px; }
+  padding: 32px 32px 0; }
 
 .user-registration .swal2-container .swal2-icon {
   margin-block: 0;
@@ -9411,6 +9392,21 @@ body.ur-settings-sidebar-hidden .user-registration-settings-sidebar-container {
     .user-registration .swal2-container .swal2-content input[type="text"]:focus {
       outline: none;
       box-shadow: none;
+      border-color: #475bb2; }
+  .user-registration .swal2-container .swal2-content p {
+    margin: 0; }
+  .user-registration .swal2-container .swal2-content .swal2-html-container .ur-embed-new-page-container {
+    padding-bottom: 0;
+    gap: 18px; }
+  .user-registration .swal2-container .swal2-content .swal2-html-container .ur-embed-select-existing-page-container select {
+    min-height: 38px;
+    padding-right: 14px;
+    margin-top: 8px; }
+    .user-registration .swal2-container .swal2-content .swal2-html-container .ur-embed-select-existing-page-container select:hover {
+      color: #475bb2; }
+    .user-registration .swal2-container .swal2-content .swal2-html-container .ur-embed-select-existing-page-container select:focus {
+      box-shadow: none;
+      outline: none;
       border-color: #475bb2; }
 
 .user-registration .swal2-container .swal2-actions {
