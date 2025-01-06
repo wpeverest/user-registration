@@ -1016,9 +1016,7 @@
 										"user_registration_frontend_validate_before_form_submit",
 										[$this]
 									);
-									if($('.user-registration-error:visible').length) {
-										return;
-									}
+
 									if (
 										0 <
 										$this.find(".dz-error-message").length

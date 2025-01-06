@@ -5880,7 +5880,7 @@ if ( ! function_exists( 'ur_check_is_inactive' ) ) {
 	 * Check if user is denied.
 	 */
 	function ur_check_is_inactive() {
-		if ( ! ur_check_module_activation( 'membership' ) ) {
+		if ( ! ur_check_module_activation( 'membership' ) || ! user_can('manage_options')) {
 			return;
 		}
 		$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
