@@ -332,10 +332,16 @@ if ( ! function_exists( 'ur_membership_install_required_pages' ) ) {
 	function ur_membership_install_required_pages() {
 		include_once untrailingslashit( plugin_dir_path( UR_PLUGIN_FILE ) ) . '/includes/admin/functions-ur-admin.php';
 
+		WPEverest\URMembership\Admin\Database\Database::create_tables();
+		update_option( 'ur_membership_default_membership_field_name', $membership_field_name );
+		$membership_id       = UR_Install::create_default_membership();
+		$membership_group_id = UR_Install::create_default_membership_group( array( array( 'ID' => "$membership_id" ) ) );
+
 		$pages                = apply_filters( 'user_registration_create_pages', array() );
 		$default_form_page_id = 0;
 
-		$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]],[[{"field_key":"membership","general_setting":{"label":"Membership Field","description":"","field_name":"membership_field_' . ur_get_random_number() . '","placeholder":"","required":"false","hide_label":"false","membership_group":"0"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-membership-field"}]]]';
+		$membership_field_name = 'membership_field_' . ur_get_random_number();
+		$post_content          = '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]],[[{"field_key":"membership","general_setting":{"membership_group":"' . $membership_group_id . '","label":"Membership Field","description":"","field_name":"' . $membership_field_name . '","hide_label":"false"},"advance_setting":{},"icon":"ur-icon ur-icon-membership-field"}]]]';
 
 		// Insert default form.
 		$default_form_page_id = wp_insert_post(
@@ -419,7 +425,7 @@ if ( ! function_exists( 'check_membership_field_in_form' ) ) {
 		$payment_fields       = ur_get_form_fields( $form_id );
 		$has_membership_field = false;
 		foreach ( $payment_fields as $k => $field ) {
-			if ( "membership" === $field->field_key ) {
+			if ( 'membership' === $field->field_key ) {
 				$has_membership_field = true;
 			}
 		}
@@ -430,23 +436,26 @@ if ( ! function_exists( 'check_membership_field_in_form' ) ) {
 
 /**
  * Deprecating function code start
+ *
  * @deprecated
  */
-$modules = [
+$modules = array(
 	'coupons'             => 'ur_pro_is_coupons_addon_activated',
 	'payments'            => 'ur_pro_is_paypal_activated',
 	'sms-integration'     => 'ur_pro_is_sms_integration_activated',
 	'content-restriction' => 'ur_pro_is_content_restriction_activated',
 	'payment-history'     => 'ur_pro_is_payment_history_activated',
-];
+);
 
 foreach ( $modules as $module_key => $function_name ) {
 	if ( ! function_exists( $function_name ) ) {
-		eval( "
+		eval(
+			"
 		        function $function_name() {
 		            return ur_check_module_activation('$module_key');
 		        }
-        " );
+        "
+		);
 	}
 }
-//deprecating function code ends
+// deprecating function code ends

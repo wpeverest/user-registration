@@ -1846,11 +1846,14 @@ function ur_get_all_user_registration_form( $post_count = -1 ) {
  * @return string
  */
 function ur_get_recaptcha_node( $context, $recaptcha_enabled = false, $form_id = 0 ) {
-	$recaptcha_type      = get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' );
-	$invisible_recaptcha = ur_option_checked( 'user_registration_captcha_setting_invisible_recaptcha_v2', false );
-	$theme_mod           = '';
-	$enqueue_script      = '';
-	$recaptcha_site_key  = '';
+	$recaptcha_type         = get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' );
+	$invisible_recaptcha    = ur_option_checked( 'user_registration_captcha_setting_invisible_recaptcha_v2', false );
+	$theme_mod              = '';
+	$enqueue_script         = '';
+	$recaptcha_site_key     = '';
+	$recaptcha_site_secret  = '';
+	$empty_credentials      = false;
+	$global_captcha_enabled = false;
 
 	if ( 'login' === $context ) {
 		$recaptcha_type = get_option( 'user_registration_login_options_configured_captcha_type', $recaptcha_type );
@@ -1859,33 +1862,51 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false, $form_id =
 	} elseif ( 'test_captcha' === $context && false !== $recaptcha_enabled ) {
 		$recaptcha_type = $recaptcha_enabled;
 	} elseif ( 'lost_password' === $context ) {
+		//Same recaptcha type as login.
+		$recaptcha_type = get_option( 'user_registration_login_options_configured_captcha_type', $recaptcha_type );
 		$recaptcha_type = apply_filters( 'user_registration_lost_password_captcha_type', $recaptcha_type );
+
 	}
 
 	if ( 'v2' === $recaptcha_type && ! $invisible_recaptcha ) {
 		$recaptcha_site_key    = get_option( 'user_registration_captcha_setting_recaptcha_site_key' );
 		$recaptcha_site_secret = get_option( 'user_registration_captcha_setting_recaptcha_site_secret' );
+		$global_captcha_enabled = get_option( 'user_registration_captcha_setting_recaptcha_enable_v2', false );
 		$enqueue_script        = 'ur-google-recaptcha';
 	} elseif ( 'v2' === $recaptcha_type && $invisible_recaptcha ) {
 		$recaptcha_site_key    = get_option( 'user_registration_captcha_setting_recaptcha_invisible_site_key' );
 		$recaptcha_site_secret = get_option( 'user_registration_captcha_setting_recaptcha_invisible_site_secret' );
+		$global_captcha_enabled = get_option( 'user_registration_captcha_setting_recaptcha_enable_v2', false );
 		$enqueue_script        = 'ur-google-recaptcha';
 	} elseif ( 'v3' === $recaptcha_type ) {
 		$recaptcha_site_key    = get_option( 'user_registration_captcha_setting_recaptcha_site_key_v3' );
 		$recaptcha_site_secret = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_v3' );
+		$global_captcha_enabled = get_option( 'user_registration_captcha_setting_recaptcha_enable_v3', false );
 		$enqueue_script        = 'ur-google-recaptcha-v3';
 	} elseif ( 'hCaptcha' === $recaptcha_type ) {
 		$recaptcha_site_key    = get_option( 'user_registration_captcha_setting_recaptcha_site_key_hcaptcha' );
 		$recaptcha_site_secret = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_hcaptcha' );
+		$global_captcha_enabled = get_option( 'user_registration_captcha_setting_recaptcha_enable_hcaptcha', false );
 		$enqueue_script        = 'ur-recaptcha-hcaptcha';
 	} elseif ( 'cloudflare' === $recaptcha_type ) {
 		$recaptcha_site_key = get_option( 'user_registration_captcha_setting_recaptcha_site_key_cloudflare' );
+		$recaptcha_site_secret = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_cloudflare' );
 		$theme_mod          = get_option( 'user_registration_captcha_setting_recaptcha_cloudflare_theme' );
+		$global_captcha_enabled = get_option( 'user_registration_captcha_setting_recaptcha_enable_cloudflare', false );
 		$enqueue_script     = 'ur-recaptcha-cloudflare';
 	}
 	static $rc_counter = 0;
 
-	if ( $recaptcha_enabled ) {
+	if (  empty( $recaptcha_site_key ) &&  empty( $recaptcha_site_secret ) ) {
+		$empty_credentials = true;
+	}
+
+	//Exit early if recaptcha is not enabled in global settings or has messing credentials.
+	if ( ! $global_captcha_enabled ||  $empty_credentials  ) {
+		return '';
+	}
+
+	if ( $recaptcha_enabled  ) {
 
 		if ( 0 === $rc_counter || 'test_captcha' === $context ) {
 			wp_enqueue_script( 'ur-recaptcha' );
@@ -1973,6 +1994,7 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false, $form_id =
 
 	return $recaptcha_node;
 }
+
 
 /**
  * Get meta key label pair by form id
@@ -4120,15 +4142,21 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 					throw new Exception( '<strong>' . esc_html__( 'ERROR: ', 'user-registration' ) . '</strong>' . $messages['user_disabled'] );
 
 			} else {
+
 				if ( in_array( 'administrator', $user->roles, true ) && ur_option_checked( 'user_registration_login_options_prevent_core_login', true ) ) {
 					$redirect = admin_url();
 				} elseif ( ! empty( $post['redirect'] ) ) {
 					$redirect = esc_url_raw( wp_unslash( $post['redirect'] ) );
 				} elseif ( wp_get_raw_referer() ) {
-					$redirect = wp_get_raw_referer();
+					if( get_permalink( get_option( 'user_registration_login_page_id' ) ) === wp_get_raw_referer() || '/login/' === wp_get_raw_referer() ) {
+						$redirect = ur_get_my_account_url();
+					} else {
+						$redirect = wp_get_raw_referer();
+					}
 				} else {
 					$redirect = get_home_url();
 				}
+
 				/**
 				 * Filters the login redirection.
 				 *
@@ -5880,7 +5908,7 @@ if ( ! function_exists( 'ur_check_is_inactive' ) ) {
 	 * Check if user is denied.
 	 */
 	function ur_check_is_inactive() {
-		if ( ! ur_check_module_activation( 'membership' ) || ! user_can('manage_options')) {
+		if ( ! ur_check_module_activation( 'membership' ) || current_user_can( 'manage_options' ) ) {
 			return;
 		}
 		$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();

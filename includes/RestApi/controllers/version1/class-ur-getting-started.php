@@ -187,30 +187,44 @@ class UR_Getting_Started {
 		}
 
 		update_option( 'users_can_register', true );
+		update_option( 'user_registration_login_options_prevent_core_login', true );
 
 		include_once untrailingslashit( plugin_dir_path( UR_PLUGIN_FILE ) ) . '/includes/admin/functions-ur-admin.php';
 
 		$page_details = array(
 			'anyone_can_register' => array(
-				'title'         => esc_html__( 'Guest Registration allowed through User Registration Form', 'user-registration' ),
+				'title'         => esc_html__( 'Guest Registration', 'user-registration' ),
+				'desc'          => esc_html__( 'Users will be allowed to register through User Registration Form', 'user-registration' ),
 				'page_url'      => '',
 				'page_url_text' => '',
 				'page_slug'     => '',
+				'status'        => 'enabled',
+				'status_label'  => esc_html__( 'Enabled', 'user-registration' ),
 			),
+		);
+
+		$page_details['default_wordpress_login'] = array(
+			'title'         => esc_html__( 'Default WordPress Login/Registration', 'user-registration' ),
+			'desc'          => esc_html__( 'Default WordPress login page wp-login.php will be disabled.', 'user-registration' ),
+			'page_url'      => '',
+			'page_url_text' => '',
+			'page_slug'     => '',
+			'status'        => 'disabled',
+			'status_label'  => esc_html__( 'Disabled', 'user-registration' ),
 		);
 
 		$pages           = apply_filters( 'user_registration_create_pages', array() );
 		$default_post_id = 0;
 		$hasposts        = get_posts( 'post_type=user_registration' );
 
-		$post_content = '';
+		$post_content          = '';
 		$membership_field_name = 'membership_field_' . ur_get_random_number();
 		if ( 'user_registration_normal_registration' === $request['registrationType'] ) {
 			if ( 0 === count( $hasposts ) ) {
 				$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]]]';
 			}
 		} elseif ( 0 === count( $hasposts ) ) {
-			$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]],[[{"field_key":"membership","general_setting":{"label":"Membership Field","description":"","field_name":"'.$membership_field_name.'","placeholder":"","required":"false","hide_label":"false","membership_group":"0"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-membership-field"}]]]';
+			$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]],[[{"field_key":"membership","general_setting":{"label":"Membership Field","description":"","field_name":"' . $membership_field_name . '","placeholder":"","required":"false","hide_label":"false","membership_group":"0"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-membership-field"}]]]';
 		}
 
 		if ( 0 === count( $hasposts ) ) {
@@ -231,19 +245,16 @@ class UR_Getting_Started {
 
 		$default_form_page_id = get_option( 'user_registration_default_form_page_id', $default_post_id );
 
-		$page_details['default_form_id']    = array(
+		$page_details['default_form_id'] = array(
+			'title'         => esc_html__( 'Default Registration Form', 'user-registration' ),
 			'page_url'      => admin_url( 'admin.php?page=add-new-registration&edit-registration=' . $default_form_page_id ),
 			'page_url_text' => esc_html__( 'View Form', 'user-registration' ),
-			'title'         => esc_html__( 'Default Registration Form', 'user-registration' ),
 			'page_slug'     => sprintf( esc_html__( 'Form Id: %s', 'user-registration' ), $default_form_page_id ),
+			'status'        => 'enabled',
+			'status_label'  => esc_html__( 'Created', 'user-registration' ),
 		);
-		$page_details['membership_details'] = array(
-			'page_url'      => admin_url( 'admin.php?page=user-registration-membership&action=add_new_membership' ),
-			'page_url_text' => esc_html__( 'Create Membership', 'user-registration' ),
-			'title'         => esc_html__( '+ Create Membership', 'user-registration' ),
-			'page_slug'     => '',
-		);
-		$pages['myaccount']                 = array(
+
+		$pages['myaccount'] = array(
 			'name'    => _x( 'my-account', 'Page slug', 'user-registration' ),
 			'title'   => _x( 'My Account', 'Page title', 'user-registration' ),
 			'content' => '[' . apply_filters( 'user_registration_my_account_shortcode_tag', 'user_registration_my_account' ) . ']',
@@ -270,20 +281,24 @@ class UR_Getting_Started {
 				);
 			}
 		} else {
-			update_option('ur_membership_default_membership_field_name' , $membership_field_name);
-			$membership_id = UR_Install::create_default_membership();
-			$membership_group_id = UR_Install::create_default_membership_group( array( array( 'ID' => "$membership_id" ) ));
-
-			wp_update_post( array(
-				'ID' => $default_post_id,
-				'post_content' => '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]],[[{"field_key":"membership","general_setting":{"membership_group":"'.$membership_group_id.'","label":"Membership Field","description":"","field_name":"'.$membership_field_name.'","hide_label":"false"},"advance_setting":{},"icon":"ur-icon ur-icon-membership-field"}]]]'
-			));
 			$enabled_features = get_option( 'user_registration_enabled_features', array() );
 			array_push( $enabled_features, 'user-registration-membership' );
 			update_option( 'user_registration_enabled_features', $enabled_features );
 			update_option( 'user_registration_membership_installed_flag', true );
 			array_push( $enabled_features, 'payment-history' );
 			array_push( $enabled_features, 'content-restriction' );
+
+			Database::create_tables();
+			update_option( 'ur_membership_default_membership_field_name', $membership_field_name );
+			$membership_id       = UR_Install::create_default_membership();
+			$membership_group_id = UR_Install::create_default_membership_group( array( array( 'ID' => "$membership_id" ) ) );
+
+			wp_update_post(
+				array(
+					'ID'           => $default_post_id,
+					'post_content' => '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]],[[{"field_key":"membership","general_setting":{"membership_group":"' . $membership_group_id . '","label":"Membership Field","description":"","field_name":"' . $membership_field_name . '","hide_label":"false"},"advance_setting":{},"icon":"ur-icon ur-icon-membership-field"}]]]',
+				)
+			);
 
 			if ( $default_form_page_id ) {
 				$pages['membership_registration'] = array(
@@ -307,11 +322,20 @@ class UR_Getting_Started {
 				'content' => '[user_registration_membership_thank_you]',
 			);
 
-			Database::create_tables();
+			$page_details['membership_details'] = array(
+				'page_url'      => admin_url( 'admin.php?page=user-registration-membership&action=add_new_membership' ),
+				'page_url_text' => esc_html__( 'Create Membership', 'user-registration' ),
+				'title'         => esc_html__( '+ Create Membership', 'user-registration' ),
+				'page_slug'     => '',
+			);
 		}
 
 		foreach ( $pages as $key => $page ) {
 			$post_id = ur_create_page( esc_sql( $page['name'] ), 'user_registration_' . $key . '_page_id', wp_kses_post( ( $page['title'] ) ), wp_kses_post( $page['content'] ) );
+
+			if ( 'login' === $key ) {
+				update_option( 'user_registration_login_options_login_redirect_url', $post_id );
+			}
 
 			if ( ! empty( $page['option'] ) ) {
 				update_option( $page['option'], $post_id );

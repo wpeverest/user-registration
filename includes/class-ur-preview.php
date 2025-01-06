@@ -320,17 +320,34 @@ class UR_Preview {
 	 * @since 4.0
 	 */
 	public static function side_panel_content() {
-		$pro_features   = array(
-			esc_html__( 'Stripe & PayPal Integration', 'user-registration' ),
-			esc_html__( 'Style Export & Import', 'user-registration' ),
-			esc_html__( 'Conditional Email Routing', 'user-registration' ),
-			esc_html__( 'Advanced Form Fields', 'user-registration' ),
-			esc_html__( 'Quiz & Survey Forms', 'user-registration' ),
-			esc_html__( '40+ Integrations', 'user-registration' ),
-			esc_html__( 'Multi-Step Forms', 'user-registration' ),
-			esc_html__( 'SMS Notifications', 'user-registration' ),
-			esc_html__( 'Calculated Fields', 'user-registration' ),
-		);
+
+		$is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php' );
+		if ( ! $is_pro_active ) {
+			$heading = 'Upgrade to our Pro version for everything you need for advanced registration form building.';
+			$pro_features   = array(
+				esc_html__( '40+ unique addons', 'user-registration' ),
+				esc_html__( 'Advanced fields for registration forms', 'user-registration' ),
+				esc_html__( 'WooCommerce with billing and shipping fields', 'user-registration' ),
+				esc_html__( 'Supports 12 file types for uploads', 'user-registration' ),
+				esc_html__( 'Stylish forms with customizer', 'user-registration' ),
+				esc_html__( 'Conditional Logic for dynamic forms', 'user-registration' ),
+				esc_html__( 'Control content with restrictions', 'user-registration' ),
+				esc_html__( 'All form templates included', 'user-registration' ),
+
+			);
+		}else{
+			$heading = 'Our Top addons';
+			$pro_features = array(
+				esc_html__( 'Advanced Fields', 'user-registration' ),
+				esc_html__( 'woocommerce', 'user-registration' ),
+				esc_html__( 'Customize My Account', 'user-registration' ),
+				esc_html__( 'File Upload', 'user-registration' ),
+				esc_html__( 'Style Customizer', 'user-registration' ),
+				esc_html__( 'Multi-Part', 'user-registration' ),
+				esc_html__( 'Email Templates', 'user-registration' ),
+				esc_html__( 'Field Visibility', 'user-registration' ),
+			);
+		}
 		$is_theme_style = get_post_meta( $_GET['form_id'], 'user_registration_enable_theme_style', true );
 		if ( 'default' === $is_theme_style ) {
 			$checked    = '';
@@ -352,7 +369,7 @@ class UR_Preview {
 		$html .= '<div class="ur-form-preview-save-title">' . esc_html__( 'Save', 'user-registration' ) . '</div>';
 		$html .= '</div>';
 		$html .= '<div class="ur-form-preview-pro-features">';
-		$html .= '<p class="ur-form-preview-pro-features-title">' . esc_html__( 'Our Pro Features', 'user-registration' ) . '</p>';
+		$html .= '<p class="ur-form-preview-pro-features-title">' . esc_html__( $heading, 'user-registration' ) . '</p>';
 		foreach ( $pro_features as $list ) {
 			$html .= '<div class="ur-form-preview-sidebar__body--list-item">';
 
@@ -366,10 +383,12 @@ class UR_Preview {
 			$html .= '</div>';
 
 		}
-		$html .= '<div class="ur-form-preview-upgrade  id="ur-form-save" data-theme="default" ">';
-		$html .= '<img src="' . esc_url( UR()->plugin_url() . '/assets/images/upgrade-icon.svg' ) . '" alt="Save">';
-		$html .= '<div class="ur-form-preview-upgrade-title">Upgrade to Pro</div>';
-		$html .= '</div>';
+		if( ! $is_pro_active){
+			$html .= '<div class="ur-form-preview-upgrade  id="ur-form-save" data-theme="default" ">';
+			$html .= '<img src="' . esc_url( UR()->plugin_url() . '/assets/images/upgrade-icon.svg' ) . '" alt="Save">';
+			$html .= '<div class="ur-form-preview-upgrade-title">Upgrade to Pro</div>';
+			$html .= '</div>';
+		}
 
 		echo $html; // phpcs:ignore
 
