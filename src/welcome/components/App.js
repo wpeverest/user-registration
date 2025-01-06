@@ -60,12 +60,7 @@ function App() {
 		},
 		{
 			key: "install_pages",
-			label: __("Install Pages", "user-registration"),
-			title: __("Install Pages", "user-registration"),
-			description: __(
-				"The following pages have been created automatically.",
-				"user-registration"
-			),
+			label: __("Initial Setup Details", "user-registration"),
 			isDone: true,
 			component: <InstallPage />
 		},

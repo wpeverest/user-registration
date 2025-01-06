@@ -9,7 +9,10 @@ import {
 	Checkbox,
 	CircularProgress,
 	CircularProgressLabel,
-	Link
+	Link,
+	Heading,
+	FormLabel,
+	Tooltip
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 
@@ -20,6 +23,40 @@ const InstallPage = () => {
 	const { defaultFormId, registrationPageSlug, myAccountPageSlug } =
 		typeof _UR_WIZARD_ !== "undefined" && _UR_WIZARD_;
 	const [{ installedPages }, dispatch] = useStateValue();
+	const [installedPageDetails, setInstalledPageDetails] = useState({});
+	const [registrationBehaviourDetails, setRegistrationBehaviourDetails] =
+		useState({});
+
+	useEffect(() => {
+		let newInstalledPagesRef = { ...installedPages };
+		let newRegistrationBehaviourDetailsRef = {
+			...registrationBehaviourDetails
+		};
+
+		if (newInstalledPagesRef.default_form_id) {
+			newRegistrationBehaviourDetailsRef["default_form_id"] =
+				newInstalledPagesRef.default_form_id;
+			delete newInstalledPagesRef.default_form_id;
+		}
+
+		if (newInstalledPagesRef.anyone_can_register) {
+			newRegistrationBehaviourDetailsRef["anyone_can_register"] =
+				newInstalledPagesRef.anyone_can_register;
+			delete newInstalledPagesRef.anyone_can_register;
+		}
+		if (newInstalledPagesRef.default_wordpress_login) {
+			newRegistrationBehaviourDetailsRef["default_wordpress_login"] =
+				newInstalledPagesRef.default_wordpress_login;
+			delete newInstalledPagesRef.default_wordpress_login;
+		}
+
+		if (newInstalledPagesRef.membership_details) {
+			delete newInstalledPagesRef.membership_details;
+		}
+		setInstalledPageDetails(newInstalledPagesRef);
+		setRegistrationBehaviourDetails(newRegistrationBehaviourDetailsRef);
+	}, []);
+
 	/**
 	 * Create the HTML block for the pages to be installed.
 	 *
@@ -68,18 +105,113 @@ const InstallPage = () => {
 	};
 
 	return (
-		<Fragment>
-			<Flex gap="20px" flexDirection="column">
-				{Object.keys(installedPages).map((key) => {
-					return (
-						<CreateInstallPageBox
-							key={key}
-							pageDetails={installedPages[key]}
-						/>
-					);
-				})}
+		<Flex direction="column" justifyContent="space-between" gap={"40px"}>
+			<Flex
+				direction="column"
+				justifyContent="space-between"
+				alignItems="left"
+				gap="20px"
+			>
+				<Heading
+					as="h2"
+					size="lg"
+					fontSize="22px"
+					mb={4}
+					color="#383838"
+					fontWeight="600"
+				>
+					{__("Registration Behaviour", "user-registration")}
+				</Heading>
+				<Flex gap="20px" flexDirection="column">
+					{Object.keys(registrationBehaviourDetails).map((key) => {
+						return (
+							<Flex flexDirection="row">
+								<Flex align="center" flex="0 0 50%">
+									<FormLabel
+										sx={{
+											fontWeight: "500",
+											fontSize: "15px",
+											marginInlineEnd: "0.5rem"
+										}}
+									>
+										{
+											registrationBehaviourDetails[key]
+												.title
+										}
+									</FormLabel>
+									{registrationBehaviourDetails[key].desc && (
+										<Tooltip
+											label={
+												registrationBehaviourDetails[
+													key
+												].desc
+											}
+											hasArrow
+											fontSize="14px"
+											fontWeight="400px"
+											backgroundColor="#383838"
+										>
+											<span
+												className="ur-setup-wizard-tool-tip"
+												style={{
+													color: "#BABABA",
+													marginBottom: "5px"
+												}}
+											/>
+										</Tooltip>
+									)}
+								</Flex>
+								<FormLabel
+									sx={{
+										fontWeight: "500",
+										fontSize: "15px",
+										marginInlineEnd: "0.5rem"
+									}}
+									color={
+										registrationBehaviourDetails[key]
+											.status === "enabled"
+											? "green"
+											: "red"
+									}
+								>
+									{
+										registrationBehaviourDetails[key]
+											.status_label
+									}
+								</FormLabel>
+							</Flex>
+						);
+					})}
+				</Flex>
 			</Flex>
-		</Fragment>
+			<hr />
+			<Flex
+				direction="column"
+				justifyContent="space-between"
+				alignItems="left"
+			>
+				<Heading
+					as="h2"
+					size="lg"
+					fontSize="22px"
+					mb={4}
+					color="#383838"
+					fontWeight="600"
+				>
+					{__("Pages Installed", "user-registration")}
+				</Heading>
+				<Flex gap="20px" flexDirection="column">
+					{Object.keys(installedPageDetails).map((key) => {
+						return (
+							<CreateInstallPageBox
+								key={key}
+								pageDetails={installedPageDetails[key]}
+							/>
+						);
+					})}
+				</Flex>
+			</Flex>
+		</Flex>
 	);
 };
 
