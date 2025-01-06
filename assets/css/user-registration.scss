@@ -409,6 +409,9 @@ textarea.ur-input-border-red {
 				padding: 4px 8px;
 				border: 1px solid $border_color;
 
+				&.StripeElement--invalid {
+					border: 1px solid #ff4f55;
+				}
 				.__PrivateStripeElement {
 					iframe {
 						// height: 20px !important;
