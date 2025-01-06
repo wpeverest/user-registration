@@ -84,7 +84,7 @@ do_action( 'user_registration_before_customer_login_form' );
  * @return function.
  */
 ur_add_notice( apply_filters( 'user_registration_post_login_errors', '' ), 'error' );
-if ( ! $is_passwordless_enabled ) {
+if ( ! $is_passwordless_enabled || $is_passwordless_login_default_login_area_enabled ) {
 	ur_add_notice( apply_filters( 'user_registration_passwordless_login_notice', '' ), 'success' );
 }
 apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() );

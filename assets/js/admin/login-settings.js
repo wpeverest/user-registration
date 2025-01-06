@@ -268,11 +268,17 @@
 			),
 			form = $(".ur-login-form-wrapper").find(".ur-frontend-form.login");
 
-		if (value) {
-			form.find(".user-registration-passwordless-login").show();
-		} else {
-			form.find(".user-registration-passwordless-login").hide();
-		}
+			if (value) {
+				form.find(".user-registration-passwordless-login").show();
+				$("#user_registration_pro_passwordless_login_default_login_area")
+						.closest(".user-registration-login-form-global-settings")
+						.show();
+			} else {
+				form.find(".user-registration-passwordless-login").hide();
+				$("#user_registration_pro_passwordless_login_default_login_area")
+						.closest(".user-registration-login-form-global-settings")
+						.hide();
+			}
 	}
 
 	function hide_show_field_icon() {
