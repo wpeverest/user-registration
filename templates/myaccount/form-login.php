@@ -83,17 +83,19 @@ do_action( 'user_registration_before_customer_login_form' );
  * @param function Print notice function.
  * @return function.
  */
+ur_add_notice( apply_filters( 'user_registration_post_login_errors', '' ), 'error' );
 if ( ! $is_passwordless_enabled ) {
 	ur_add_notice( apply_filters( 'user_registration_passwordless_login_notice', '' ), 'success' );
 }
 apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() );
 ?>
+
 <div class="ur-frontend-form login <?php echo esc_attr( $template_class ); ?>" id="ur-frontend-form">
 <?php
-	if ( isset( $_GET['force-logout'] ) && 'true' === $_GET['force-logout'] ) {
-		ur_print_notice( __( 'Password changed successfully.', 'user-registration' ), 'success' );
-	}
-	?>
+if ( isset( $_GET['force-logout'] ) && 'true' === $_GET['force-logout'] ) {
+	ur_print_notice( __( 'Password changed successfully.', 'user-registration' ), 'success' );
+}
+?>
 	<form class="user-registration-form user-registration-form-login login" method="post">
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
