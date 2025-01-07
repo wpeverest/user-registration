@@ -359,21 +359,27 @@ if ( ! function_exists( 'ur_membership_install_required_pages' ) ) {
 			'name'    => _x( 'membership-registration', 'Page slug', 'user-registration' ),
 			'title'   => _x( 'Membership Registration', 'Page title', 'user-registration' ),
 			'content' => '[' . apply_filters( 'user_registration_form_shortcode_tag', 'user_registration_form' ) . ' id="' . esc_attr( $default_form_page_id ) . '"]',
+			'option'  => 'user_registration_member_registration_page_id',
 		);
 
 		$pages['membership_pricing']  = array(
 			'name'    => _x( 'membership-pricing', 'Page slug', 'user-registration' ),
 			'title'   => _x( 'Membership Pricing', 'Page title', 'user-registration' ),
 			'content' => '[user_registration_membership_listing]',
+			'option'  => ''
 		);
 		$pages['membership_thankyou'] = array(
 			'name'    => _x( 'membership-thankyou', 'Page slug', 'user-registration' ),
 			'title'   => _x( 'Membership Thankyou', 'Page title', 'user-registration' ),
 			'content' => '[user_registration_membership_thank_you]',
+			'option'  => 'user_registration_thank_you_page_id',
 		);
 
 		foreach ( $pages as $key => $page ) {
-			ur_create_page( esc_sql( $page['name'] ), 'user_registration_' . $key . '_page_id', wp_kses_post( ( $page['title'] ) ), wp_kses_post( $page['content'] ) );
+			$post_id = ur_create_page( esc_sql( $page['name'] ), 'user_registration_' . $key . '_page_id', wp_kses_post( ( $page['title'] ) ), wp_kses_post( $page['content'] ) );
+			if ( ! empty( $page['option'] ) ) {
+				update_option( $page['option'], $post_id );
+			}
 		}
 
 		update_option( 'user_registration_membership_installed_flag', true );
@@ -450,7 +456,7 @@ $modules = array(
 foreach ( $modules as $module_key => $function_name ) {
 	if ( ! function_exists( $function_name ) ) {
 		eval(
-			"
+		"
 		        function $function_name() {
 		            return ur_check_module_activation('$module_key');
 		        }
