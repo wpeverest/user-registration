@@ -160,6 +160,14 @@ class UR_Getting_Started {
 				$value = ur_string_to_bool( $value );
 			}
 
+			if ( 'user_registration_allow_email_updates' === $option && $value ) {
+				$admin_email = get_option( 'new_admin_email', '' );
+				if ( isset( $settings_to_update['user_registration_updates_admin_email'] ) && ! empty( $settings_to_update['user_registration_updates_admin_email'] ) ) {
+					$admin_email = $settings_to_update['user_registration_updates_admin_email'];
+				}
+
+				self::send_email_to_tracking_server( $admin_email );
+			}
 			update_option( $option, $value );
 		}
 
@@ -434,6 +442,38 @@ class UR_Getting_Started {
 				'options' => $settings,
 			),
 			200
+		);
+	}
+
+	/**
+	 * Send email to tracking server.
+	 *
+	 * @since 4.0
+	 *
+	 * @param string $email Email address.
+	 *
+	 * @return void
+	 */
+	private static function send_email_to_tracking_server( $email ) {
+		wp_remote_post(
+			'https://stats.wpeverest.com/wp-json/tgreporting/v1/process-email/',
+			array(
+				'method'      => 'POST',
+				'timeout'     => 10,
+				'redirection' => 5,
+				'httpversion' => '1.0',
+				'headers'     => array(
+					'user-agent' => 'UserRegistration/' . UR()->version . '; ' . get_bloginfo( 'url' ),
+				),
+				'body'        => array(
+					'data' => array(
+						'email'       => $email,
+						'website_url' => get_bloginfo( 'url' ),
+						'plugin_name' => UR_PRO_ACTIVE ? 'User Registration PRO' : 'User Registration',
+						'plugin_slug' => plugin_basename( UR_PLUGIN_FILE ),
+					),
+				),
+			)
 		);
 	}
 
