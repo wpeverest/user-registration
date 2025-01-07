@@ -58,7 +58,7 @@
 body {
   position: relative;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Poppins", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Poppins", sans-serif;
   font-size: 13px;
   line-height: 1.8;
   font-weight: 400;
@@ -456,6 +456,8 @@ body {
       height: 1px;
       background-color: #BABABA;
       margin: 0 10px; }
+      #user-registration-setup-wizard .user-registration-setup-wizard__header .center-line#center-line-step-2 {
+        flex-grow: 0.75; }
       #user-registration-setup-wizard .user-registration-setup-wizard__header .center-line.done {
         background-color: #475BB2; }
   #user-registration-setup-wizard .user-registration-setup-wizard__body {

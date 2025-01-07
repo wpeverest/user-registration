@@ -604,6 +604,9 @@
 				background-color: #BABABA;
 				margin: 0 10px;
 
+				&#center-line-step-2 {
+					flex-grow: 0.75;
+				}
 				&.done {
 					background-color: #475BB2;
 				}
