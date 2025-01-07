@@ -1662,7 +1662,19 @@ span.ur-shortcode-form-embed-dot {
 
 // Login Form Design ReVamped CSS
 body {
-	&.user-registration-page {
+	&.user-registration-page {		
+		.ur-frontend-form {
+			.ur-form-row {
+				.ur-form-grid {
+					.field-membership {
+						#ur-membership-registration {
+							max-width: 100%;
+						}
+					}
+				}
+			}
+		}
+		
 		.user-registration-MyAccount {
 			&-content {
 				&__body {
@@ -1836,6 +1848,12 @@ body {
 								.ur-form-grid {
 									.input-text {
 										height: auto;
+									}
+
+									.ur-submit-button {
+										&:disabled {
+											background: #eaeaea !important;
+										}
 									}
 								}
 							}
@@ -2124,7 +2142,7 @@ body {
 
 										&:disabled {
 											pointer-events: none;
-											border-color: #F6F7F7;
+											border-color: #F6F7F7 !important;
 										}
 
 										&:hover {
