@@ -86,7 +86,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 											<div class="ur-login-shortcode--wrapper">
 												<h2 class="ur-heading"><?php esc_html_e( 'Shortcode', 'user-registration' ); ?></h2>
 												<div class="ur-login-content">
-													<?php printf( '<p>%s</p>', esc_html( 'You can add the following shortcode in the pages where you want to show the login form.', 'user-registration' ) ); ?>
+													<?php printf( '<p>%s</p>', esc_html__( 'You can add the following shortcode in the pages where you want to show the login form.', 'user-registration' ) ); ?>
 													<div class="major-publishing-actions wp-clearfix">
 														<div class="login-forms-shortcode-action shortcode">
 															<input type="text" onfocus="this.select();" readonly="readonly"
@@ -98,7 +98,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 															</button>
 														</div>
 													</div>
-													<?php printf( '<p>%s</p>', esc_html( 'If you want to create a My Account page, you need to create a new page and add the following shortcode. This will show the My Account Login Form.', 'user-registration' ) ); ?>
+													<?php printf( '<p>%s</p>', esc_html__( 'If you want to create a My Account page, you need to create a new page and add the following shortcode. This will show the My Account Login Form.', 'user-registration' ) ); ?>
 													<div class="major-publishing-actions wp-clearfix">
 														<div class="login-forms-shortcode-action shortcode">
 															<input type="text" onfocus="this.select();" readonly="readonly"
