@@ -1316,7 +1316,7 @@ span.ur-shortcode-form-embed-dot {
 		background: #F7FDF8;
 		border-top : none;
 		margin : 20px 0px;
-		padding-left : 40px ;
+		padding-left : 40px;
 	}
 
 	svg{
@@ -1760,14 +1760,35 @@ body {
 				height: 24px;
 				display: block;
 			}
+
+			> ul {
+				padding-left: 0;
+				margin: 0;
+				list-style: none;
+			}
 		}
 	}
 
 	&.user-registration-page,
 	&.user-registration-membership_page_user-registration-login-forms {
+		.user-registration {
+			&.ur-frontend-form {
+				max-width: 100% !important;
 
+				form {
+					.ur-button-container  {
+						width: max-content;
+					}
+				}
+			}
+		}
+		
 		#user-registration,
         .user-registration {
+			&.user-registration-MyAccount {
+				max-width: 1280px;
+			}
+
 			&:not(.user-registration-MyAccount) {
 				max-width: 520px;
 				margin: 24px auto;
@@ -1897,10 +1918,10 @@ body {
 							align-items: center;
 							margin: 0 !important;
 							margin-bottom: 24px !important;
-							color: #F25656 !important;
-							font-size: 14px !important;
-							font-weight: 400 !important;
-							line-height: 24px !important;
+							// color: #F25656 !important;
+							// font-size: 14px !important;
+							// font-weight: 400 !important;
+							// line-height: 24px !important;
 							letter-spacing: 0.18px;
 
 							&::before {

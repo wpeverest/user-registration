@@ -163,13 +163,14 @@
 
 		.ur-form-side-panel{
 			display: flex;
-			min-width: 380px;
+			max-width: 380px;
 			padding: 20px;
 			flex-direction: column;
 			gap: 36px;
 			border: 1px solid $border_color;
 			margin-left: auto;
 			background: #fff;
+			box-sizing: border-box;
 
 			.hidden{
 				display:none !important;
@@ -305,6 +306,9 @@ body {
 					background: #fff;
 					border: 1px solid #e1e1e1;
 					border-radius: 8px;
+					transition: all .3s ease-in-out;
+					max-width: 100%;
+					margin: 0 auto;
 				}
 
 				.ur-preview-tablet-wrapper{
@@ -370,6 +374,23 @@ body {
 					.ur-form-row{
 						gap: $spacing_24px;
 						margin-bottom: 28px;
+
+						.ur-form-grid {
+							input,
+							textarea,
+							select {
+								border-color: #e9e9e9;
+							}
+
+							textarea {
+								padding-top: 6px;
+								padding-bottom: 6px;
+							}
+
+							ul {
+								padding-left: 0;
+							}
+						}
 					}
 					.ur-button-container{
 						display: block;
@@ -440,7 +461,7 @@ body {
 				}
 			}
 			.ur-form-side-panel{
-				border-left: 1px solid #EDEFF7; //----color change
+				border-left: 1px solid #EDEFF7;
 				border:none;
 				margin-left: unset;
 				z-index: 1;
