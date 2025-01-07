@@ -59,7 +59,7 @@ class UR_Admin_Settings {
 			$settings[] = include 'settings/class-ur-settings-misc.php';
 			$settings[] = include 'settings/class-ur-settings-integration.php';
 
-			if( ur_check_module_activation( 'membership' ) ) {
+			if( ur_check_module_activation( 'membership' ) || is_plugin_active( 'user-registration-stripe/user-registration-stripe.php' ) ) {
 				include_once UR_ABSPATH . 'modules/class-ur-payment-settings.php';
 				include_once UR_ABSPATH . 'modules/stripe/class-ur-stripe-module.php';
 			}

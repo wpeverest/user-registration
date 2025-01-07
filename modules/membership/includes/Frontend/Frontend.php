@@ -211,7 +211,7 @@ class Frontend {
 			'i18n_coupon_free_membership_error'            => _x( 'Invalid membership type (Free).', 'user registration membership', 'user-registration' ),
 			'i18n_incomplete_stripe_setup_error'           => _x( 'Stripe Payment stopped. Incomplete Stripe setup.', 'user registration membership', 'user-registration' ),
 			'i18n_error'                                   => _x( 'Error', 'user registration membership', 'user-registration' ),
-			'i18n_empty_card_details'                      => __( 'Your card number is empty.', 'user-registration' ),
+			'i18n_empty_card_details'                      => __( 'Your card number is incomplete.', 'user-registration' ),
 			'i18n_cancel_membership_text'                  => _x( 'Cancel membership.', 'user registration membership', 'user-registration' ),
 			'i18n_cancel_membership_subtitle'              => _x( 'Are you sure you want to cancel membership permanently?', 'user registration membership', 'user-registration' ),
 			'i18n_sending_text'                            => __( 'Sending ...', 'user-registration' ),

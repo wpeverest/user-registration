@@ -1016,7 +1016,7 @@
 										"user_registration_frontend_validate_before_form_submit",
 										[$this]
 									);
-									if($('.user-registration-error:visible').length) {
+									if($('#stripe-errors.user-registration-error:visible').length) {
 										return;
 									}
 									if (
