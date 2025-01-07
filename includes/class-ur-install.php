@@ -828,6 +828,7 @@ CREATE TABLE {$wpdb->prefix}user_registration_sessions (
 			)
 		);
 		add_post_meta( $default_post_id, 'urmg_memberships', json_encode( $membership_ids ) );
+		add_post_meta( $default_post_id, "urm_form_group_$default_post_id", json_encode( $membership_ids ) );
 		add_post_meta( $default_post_id, 'urmg_default_group', $default_post_id );
 		update_option( 'user_registration_default_membership_form_id', $default_post_id );
 

@@ -31,7 +31,7 @@ if ( ! empty( $selected_group_id ) ) {
 	</div>
 	<div class="ur-field" data-field-key="membership">
 		<?php
-		$style = ! empty( $selected_group_id ) &&  $group_status ? " style='display:none;'" : "";
+		$style = ! empty( $selected_group_id ) &&  $group_status && !empty ( $memberships ) ? " style='display:none;'" : "";
 
 		echo "<span class='empty-urmg-label' " . $style . " > " . __( "Please select a membership group." . "</span>", "user-registration" );
 		echo "<span class='urmg-loader'></span>";
