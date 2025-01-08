@@ -858,6 +858,7 @@ class URCR_Frontend {
 		}
 
 		$allowed_roles = get_option( 'user_registration_content_restriction_allow_to_roles', 'administrator' );
+		$allowed_memberships = get_option( 'user_registration_content_restriction_allow_to_memberships');
 
 		$current_user_role = is_user_logged_in() ? wp_get_current_user()->roles[0] : '';
 
@@ -868,6 +869,14 @@ class URCR_Frontend {
 		$get_meta_data_checkbox = get_post_meta( $post_id, 'urcr_meta_checkbox', $single = true );
 
 		$override_global_settings = get_post_meta( $post_id, 'urcr_meta_override_global_settings', $single = true );
+
+		$is_membership_active = ur_check_module_activation('membership');
+
+		if( $is_membership_active ) {
+			$members_subscription = new \WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository();
+			$subscription = $members_subscription->get_member_subscription( wp_get_current_user()->ID);
+			$current_user_membership = ( !empty ( $subscription ) ) ? $subscription['item_id'] : array();
+		}
 
 		if ( ur_string_to_bool( $get_meta_data_checkbox ) ) {
 
@@ -887,6 +896,12 @@ class URCR_Frontend {
 						$template = $this->urcr_restrict_contents_template( $template, $post );
 					}
 				}
+				elseif ( '3' === get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
+					if ( is_array( $allowed_memberships ) && in_array( $current_user_membership, $allowed_memberships ) ) {
+						return $template;
+					}
+					$template = $this->urcr_restrict_contents_template( $template, $post );
+				}
 			} elseif ( $get_meta_data_allow_to == '0' ) {
 
 				if ( ! is_user_logged_in() ) {
@@ -903,6 +918,12 @@ class URCR_Frontend {
 				if ( is_user_logged_in() ) {
 					$template = $this->urcr_restrict_contents_template( $template, $post );
 				}
+			}
+			elseif ( $get_meta_data_allow_to === '3' ) {
+				if ( is_array( $allowed_memberships ) && in_array( $current_user_membership, $allowed_memberships ) ) {
+					return $template;
+				}
+				return $this->urcr_restrict_contents_template( $template, $post );
 			}
 		}
 
