@@ -29,12 +29,11 @@ import PluginStatus from "./PluginStatus";
 import { FaHeart } from "react-icons/fa";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { __, sprintf } from "@wordpress/i18n";
-import notFoundImage from "../images/not-found-image.png";
 import { IoPlayOutline } from "react-icons/io5";
 import { FaRegHeart } from "react-icons/fa";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 
-const { restURL, security } = ur_templates_script;
+const { restURL, security, siteURL } = ur_templates_script;
 
 const LockIcon = (props) => (
 	<Icon viewBox="0 0 24 24" {...props}>
@@ -365,8 +364,20 @@ const TemplateList = ({ selectedCategory, templates }) => {
 							p={0}
 							transition="all .3s"
 							_hover={{
+								boxShadow:
+									"0px 5px 24px rgba(58, 34, 93, 0.12)",
+								"::before": {
+									content: '""',
+									position: "absolute",
+									top: 0,
+									left: 0,
+									width: "100%",
+									height: "207px",
+									bg: "rgba(0, 0, 0, 0.4)",
+									zIndex: 1
+								},
 								"& > div > .template-title": {
-									color: "#7545BB"
+									color: "#475bb2"
 								}
 							}}
 						>
@@ -382,20 +393,6 @@ const TemplateList = ({ selectedCategory, templates }) => {
 									borderRadius="4px 4px 0px 0px"
 									overflow="hidden"
 									transition="all .3s"
-									_hover={{
-										boxShadow:
-											"0px 5px 24px rgba(58, 34, 93, 0.12)",
-										"::before": {
-											content: '""',
-											position: "absolute",
-											top: 0,
-											left: 0,
-											width: "100%",
-											height: "100%",
-											bg: "rgba(0, 0, 0, 0.4)",
-											zIndex: 1
-										}
-									}}
 								>
 									<Image
 										boxShadow="0px 3px 12px rgba(58, 34, 93, 0.12)"
@@ -569,7 +566,10 @@ const TemplateList = ({ selectedCategory, templates }) => {
 					width="100%"
 				>
 					<Image
-						src={notFoundImage}
+						src={
+							siteURL +
+							"/wp-content/plugins/user-registration/assets/images/empty-table.png"
+						}
 						alt={__("Not Found", "user-registration")}
 						boxSize="300px"
 						objectFit="cover"
