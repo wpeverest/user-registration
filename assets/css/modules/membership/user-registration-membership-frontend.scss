@@ -166,7 +166,7 @@ html {
 					border: 1px solid #E9E9E9;
 					background: $color_2;
 					color: #383838;
-
+					margin-bottom: 0;
 					&::placeholder {
 						color: #b5b5b5;
 					}
@@ -208,32 +208,32 @@ html {
 	.thank-you-page-container {
 		display: flex;
 		flex-direction: column;
-        width: 770px;
-        margin: 60px auto;
-        padding: 40px;
-        border-radius: 12px;
-        background: var(--Grey-grey-0, #FFF);
-        box-shadow: 0px 6px 25px 0px rgba(10, 10, 10, 0.08);
-        gap: 12px;
+		width: 770px;
+		margin: 60px auto;
+		padding: 40px;
+		border-radius: 12px;
+		background: var(--Grey-grey-0, #FFF);
+		box-shadow: 0px 6px 25px 0px rgba(10, 10, 10, 0.08);
+		gap: 12px;
 
-        .message-section {
-            display: block;
-            p {
-                margin-bottom: 0;
+		.message-section {
+			display: block;
+			p {
+				margin-bottom: 0;
 				margin-top: 0;
-                &:first-child {
-                    font-size: 42px;
-                    line-height: 56px;
-                    font-weight: 700;
-                    text-align: center;
-                    margin-bottom: 12px;
-                }
-            }
-        }
+				&:first-child {
+					font-size: 42px;
+					line-height: 56px;
+					font-weight: 700;
+					text-align: center;
+					margin-bottom: 12px;
+				}
+			}
+		}
 
-        > p {
-            margin-bottom: 0;
-        }
+		> p {
+			margin-bottom: 0;
+		}
 
 		.thank-you-notice {
 			padding: 1em;
@@ -245,7 +245,7 @@ html {
 				border-left: 4px solid #b77f02;
 			}
 		}
-    }
+	}
 }
 
 
@@ -307,9 +307,9 @@ html {
 	justify-content: center;
 	gap: 10px;
 	padding: 8px 16px;
-    font-size: 15px;
-    font-weight: 500;
-    line-height: 25px;
+	font-size: 15px;
+	font-weight: 500;
+	line-height: 25px;
 	transition: all .3s;
 
 	&:hover {
@@ -450,3 +450,4 @@ label {
 	font-size: 15px;
 	font-weight: 500;
 }
+

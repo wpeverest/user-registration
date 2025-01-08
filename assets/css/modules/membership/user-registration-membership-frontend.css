@@ -109,7 +109,8 @@ html {
       border-radius: 4px;
       border: 1px solid #E9E9E9;
       background: white;
-      color: #383838; }
+      color: #383838;
+      margin-bottom: 0; }
       .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class::placeholder, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class::placeholder {
         color: #b5b5b5; }
       .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class:focus, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class:focus {
