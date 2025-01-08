@@ -131,7 +131,7 @@ class MembershipGroupsListTable extends \UR_List_Table {
 		return "
 				<div class='urmg-shortcode'>
 					<input type='text' onfocus='this.select();' readonly='readonly' value='$shortcode' class='widefat code'>
-					<button id='copy-shortcode-16' class='button ur-copy-shortcode tooltipstered' href='#' data-tip='Copy Shortcode ! ' data-copied='Copied ! '>
+					<button id='copy-shortcode-".$membership_group->ID."' class='button ur-copy-shortcode tooltipstered' href='#' data-tip='Copy Shortcode ! ' data-copied='Copied ! '>
 						<span class='dashicons dashicons-admin-page'></span>
 					</button>
 				</div>
