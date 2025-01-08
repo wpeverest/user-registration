@@ -24,7 +24,6 @@ class Frontend {
 	 */
 	public function __construct() {
 		$this->init_hooks();
-
 	}
 
 	/**
@@ -39,7 +38,7 @@ class Frontend {
 		add_filter( 'user_registration_account_menu_items', array( $this, 'ur_membership_tab' ), 10, 1 );
 
 		add_action(
-			'user_registration_account_membership_endpoint',
+			'user_registration_account_ur-membership_endpoint',
 			array(
 				$this,
 				'user_registration_membership_tab_endpoint_content',
@@ -59,9 +58,9 @@ class Frontend {
 		if ( 'membership' !== $user_source ) {
 			return $items;
 		}
-		$new_items               = array();
-		$new_items['membership'] = __( 'Membership', 'user-registration' );
-		$items                   = array_merge( $items, $new_items );
+		$new_items                  = array();
+		$new_items['ur-membership'] = __( 'Membership', 'user-registration' );
+		$items                      = array_merge( $items, $new_items );
 
 		return $this->delete_account_insert_before_helper( $items, $new_items, 'user-logout' );
 	}
@@ -79,7 +78,7 @@ class Frontend {
 		$position = array_search( $before, array_keys( $items ), true );
 
 		// Insert the new item.
-		$return_items = array_slice( $items, 0, $position, true );
+		$return_items  = array_slice( $items, 0, $position, true );
 		$return_items += $new_items;
 		$return_items += array_slice( $items, $position, count( $items ) - $position, true );
 
@@ -103,7 +102,6 @@ class Frontend {
 				'membership' => $membership,
 			)
 		);
-
 	}
 
 	/**
@@ -119,7 +117,7 @@ class Frontend {
 		}
 		$mask = Ur()->query->get_endpoints_mask();
 
-		add_rewrite_endpoint( 'membership', $mask );
+		add_rewrite_endpoint( 'ur-membership', $mask );
 		flush_rewrite_rules();
 	}
 
@@ -140,7 +138,6 @@ class Frontend {
 		wp_enqueue_style( 'user-registration-membership-frontend-style' );
 
 		wp_enqueue_script( 'user-registration-membership-stripe-v3', 'https://js.stripe.com/v3/', array() );
-
 
 		$this->localize_scripts();
 	}
@@ -217,6 +214,4 @@ class Frontend {
 			'i18n_sending_text'                            => __( 'Sending ...', 'user-registration' ),
 		);
 	}
-
-
 }

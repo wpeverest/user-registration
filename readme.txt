@@ -275,8 +275,10 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * Fix       - Username accepting some special characters.
 * Fix       - Profile detail update being triggered twice.
 * Fix       - Login preview styles not loaded in customizer.
+* Fix       - Latest release design issue in dashboard page.
 * Fix       - Status changed to pending mail on registration.
 * Fix       - Error handling when wp_insert_user throws error.
+* Fix       - Unknown email updated message not being displayed.
 * Fix       - Show invalid user/email message form message options.
 
 = 3.3.5.2   - 21/11/2024 =
