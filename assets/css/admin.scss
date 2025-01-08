@@ -3193,6 +3193,10 @@
 
 			 &.user-registration-settings-swal2 {
 				 width: auto;
+
+				 .swal2-cancel {
+					color: white;
+				 }
 			 }
 
 			 &.swal2-icon-error {

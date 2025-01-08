@@ -3871,6 +3871,7 @@ if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
 			}
 
 			if ( ! empty( $license_plan ) ) {
+				$license_plan = trim( str_replace('lifetime', '', strtolower( $license_plan ) ) );
 				if ( ! in_array( $license_plan, $detail['plan'], true ) ) {
 					if ( is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
 						continue;
