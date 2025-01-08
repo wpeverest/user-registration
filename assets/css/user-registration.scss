@@ -54,8 +54,14 @@
 	}
 }
 
-.wp-core-ui select {
-	max-width: 100% !important;
+.wp-core-ui {
+	.ur-submit-button {
+		color: white;
+	}
+
+	select {
+		max-width: 100% !important;
+	}
 }
 /**
 * Utility classes
@@ -1662,7 +1668,7 @@ span.ur-shortcode-form-embed-dot {
 
 // Login Form Design ReVamped CSS
 body {
-	&.user-registration-page {		
+	&.user-registration-page {
 		.ur-frontend-form {
 			.ur-form-row {
 				.ur-form-grid {
@@ -1674,7 +1680,7 @@ body {
 				}
 			}
 		}
-		
+
 		.user-registration-MyAccount {
 			&-content {
 				&__body {
@@ -1797,7 +1803,7 @@ body {
 				}
 			}
 		}
-		
+
 		#user-registration,
         .user-registration {
 			&.user-registration-MyAccount {

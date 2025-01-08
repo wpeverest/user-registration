@@ -6724,7 +6724,7 @@ body {
 					&.collapsed {
 						max-width: 0px;
 					}
-				
+
 
 					#ur-collapse {
 						background: #FAFAFC;
@@ -6752,6 +6752,13 @@ body {
 						position: -webkit-sticky;
 						top: 30px;
 						padding: 30px !important;
+
+						.button-style-customizer {
+							position: absolute;
+							top: 60px;
+							right: 60px;
+							margin-right: 10px;
+						}
 					}
 				}
 

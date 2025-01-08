@@ -379,8 +379,12 @@
 								single_form_field_name =
 									single_form_field_name.replace("[]", "");
 
-								if(single_form_field_name === "urm_membership") {
-									single_form_field_name = field.eq(0).attr('data-name');
+								if (
+									single_form_field_name === "urm_membership"
+								) {
+									single_form_field_name = field
+										.eq(0)
+										.attr("data-name");
 								}
 								var field_data = {
 									value: field_value_json,
@@ -1016,7 +1020,11 @@
 										"user_registration_frontend_validate_before_form_submit",
 										[$this]
 									);
-									if($('#stripe-errors.user-registration-error:visible').length) {
+									if (
+										$(
+											"#stripe-errors.user-registration-error:visible"
+										).length
+									) {
 										return;
 									}
 									if (
@@ -1041,8 +1049,6 @@
 									) {
 										return;
 									}
-
-
 
 									$this
 										.find(".ur-submit-button")
@@ -1364,7 +1370,9 @@
 												);
 											}
 											$(".ur-input-count").text("0");
-											if ( ! user_registration_params.ur_hold_data_before_redirection ) {
+											if (
+												!user_registration_params.ur_hold_data_before_redirection
+											) {
 												$this[0].reset();
 											}
 											if (
@@ -2306,20 +2314,22 @@
 				// Handle edit-profile form submit event.
 				$(
 					"input[name='save_account_details'], button[name='save_account_details']"
-				).off('click').on("click", function (event) {
-					event.preventDefault();
-					// Check if the form is edit-profile form and check if ajax submission on edit profile is enabled.
-					if (
-						$(".ur-frontend-form")
-							.find("form.edit-profile")
-							.hasClass("user-registration-EditProfileForm")
-					) {
-						$(
-							"form.user-registration-EditProfileForm"
-						).ur_form_submission();
-					}
-					$(this).submit();
-				});
+				)
+					.off("click")
+					.on("click", function (event) {
+						event.preventDefault();
+						// Check if the form is edit-profile form and check if ajax submission on edit profile is enabled.
+						if (
+							$(".ur-frontend-form")
+								.find("form.edit-profile")
+								.hasClass("user-registration-EditProfileForm")
+						) {
+							$(
+								"form.user-registration-EditProfileForm"
+							).ur_form_submission();
+						}
+						$(this).submit();
+					});
 				if ($(".ur-flatpickr-field").length) {
 					// create an array to store the flatpickr instances.
 					var flatpickrInstances = [];
@@ -2395,15 +2405,19 @@
 				}
 			});
 
-				// Handel WYSIWYG field client side validation.
-				$( document ).on( 'tinymce-editor-init', function( event, editor ) {
-					var $editorContainer = $(editor.getContainer());
-					var containerId = $editorContainer.attr('id');
-					var hiddenEditor = $("#"+containerId).parent().parent().parent().find("[data-label = 'WYSIWYG']");
-					editor.on('keyup', function(e) {
-						hiddenEditor.val(tinyMCE.activeEditor.getContent());
-					});
+			// Handel WYSIWYG field client side validation.
+			$(document).on("tinymce-editor-init", function (event, editor) {
+				var $editorContainer = $(editor.getContainer());
+				var containerId = $editorContainer.attr("id");
+
+				var hiddenEditor = $("#" + containerId)
+					.closest(".form-row")
+					.find("[data-label = 'WYSIWYG']");
+
+				editor.on("keyup", function (e) {
+					hiddenEditor.val(tinyMCE.activeEditor.getContent());
 				});
+			});
 
 			$(".ur-frontend-form").each(function () {
 				var $registration_form = $(this).find("form.register");
