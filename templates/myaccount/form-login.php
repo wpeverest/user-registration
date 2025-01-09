@@ -143,7 +143,7 @@ if ( isset( $_GET['force-logout'] ) && 'true' === $_GET['force-logout'] ) {
 						<?php } ?>
 						</span>
 					</p>
-					<?php if ( $is_passwordless_enabled && ! $is_passwordless_login_default_login_area_enabled ) : ?>
+					<?php if ( ( $is_passwordless_enabled && ! $is_passwordless_login_default_login_area_enabled ) || $is_login_settings ) : ?>
 					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide<?php echo ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) ? ' hide_show_password' : ''; ?>">
 						<?php
 						if ( ! $hide_labels || $is_login_settings ) {
@@ -212,12 +212,10 @@ if ( isset( $_GET['force-logout'] ) && 'true' === $_GET['force-logout'] ) {
 						<div>
 						<?php
 
-						if ( ! $is_passwordless_login_default_login_area_enabled ) {
 							/**
 							 * Action to fire before rendering of submit button for user registration login form.
 							 */
 							do_action( 'user_registration_login_form_before_submit_button' );
-						}
 						?>
 							<?php if ( $enable_ajax ) { ?>
 							<button type="submit" class="user-registration-Button button ur-submit-button" id="user_registration_ajax_login_submit" name="login" value="<?php echo esc_html( $labels['login'] ); ?>" <?php echo ( $is_login_settings || ( isset( $_GET['ur_login_preview'] ) && $_GET['ur_login_preview'] ) ) ? 'disabled' : ''; ?>/><?php echo esc_html( $labels['login'] ); ?><span></span></button>
