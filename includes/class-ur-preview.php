@@ -99,9 +99,54 @@ class UR_Preview {
 			return;
 		}
 
-		if ( isset( $_GET['form_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( isset( $_GET['form_id'] ) && isset( $_GET['ur-style-customizer'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			add_filter( 'the_title', array( $this, 'form_preview_title' ) );
+			add_filter( 'the_content', array( $this, 'form_preview_content' ) );
+			add_filter( 'get_the_excerpt', array( $this, 'form_preview_content' ) );
+			add_filter( 'post_thumbnail_html', '__return_empty_string' );
+		} else {
 			add_filter( 'template_include', array( $this, 'ur_form_preview_template' ), PHP_INT_MAX );
 		}
+	}
+
+	/**
+	 * Filter the title and insert form preview title.
+	 *
+	 * @param  string $title Existing title.
+	 * @return string
+	 */
+	public static function form_preview_title( $title ) {
+		$form_id   = isset( $_GET['form_id'] ) ? absint( $_GET['form_id'] ) : 0 ; // @codingStandardsIgnoreLine
+
+		if ( $form_id && in_the_loop() ) {
+			$form_data = UR()->form->get_form( $form_id );
+
+			if ( ! empty( $form_data ) ) {
+				/* translators: %s - Form name. */
+				return sprintf( esc_html__( '%s &ndash; Preview', 'user-registration' ), sanitize_text_field( $form_data->post_title ) );
+			}
+		}
+
+		return $title;
+	}
+
+	/**
+	 * Displays content of form preview.
+	 *
+	 * @param string $content Page/Post content.
+	 * @return string
+	 */
+	public function form_preview_content( $content ) {
+		$form_id = isset( $_GET['form_id'] ) ? absint( $_GET['form_id'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		remove_filter( 'the_content', array( $this, 'form_preview_content' ) );
+		if ( function_exists( 'apply_shortcodes' ) ) {
+			$content = apply_shortcodes( '[user_registration_form id="' . $form_id . '"]' );
+		} else {
+			$content = do_shortcode( '[user_registration_form id="' . $form_id . '"]' );
+		}
+
+		return $content;
 	}
 
 	/**
@@ -323,8 +368,8 @@ class UR_Preview {
 
 		$is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php' );
 		if ( ! $is_pro_active ) {
-			$heading = 'Upgrade to our Pro version for everything you need for advanced registration form building.';
-			$pro_features   = array(
+			$heading      = esc_html__( 'Upgrade to our Pro version for everything you need for advanced registration form building.', 'user-registration' );
+			$pro_features = array(
 				esc_html__( '40+ unique addons', 'user-registration' ),
 				esc_html__( 'Advanced fields for registration forms', 'user-registration' ),
 				esc_html__( 'WooCommerce with billing and shipping fields', 'user-registration' ),
@@ -335,8 +380,8 @@ class UR_Preview {
 				esc_html__( 'All form templates included', 'user-registration' ),
 
 			);
-		}else{
-			$heading = 'Our Top addons';
+		} else {
+			$heading      = esc_html__( 'Our Top Addons', 'user-registration' );
 			$pro_features = array(
 				esc_html__( 'Advanced Fields', 'user-registration' ),
 				esc_html__( 'woocommerce', 'user-registration' ),
@@ -383,7 +428,7 @@ class UR_Preview {
 			$html .= '</div>';
 
 		}
-		if( ! $is_pro_active){
+		if ( ! $is_pro_active ) {
 			$html .= '<div class="ur-form-preview-upgrade  id="ur-form-save" data-theme="default" ">';
 			$html .= '<img src="' . esc_url( UR()->plugin_url() . '/assets/images/upgrade-icon.svg' ) . '" alt="Save">';
 			$html .= '<div class="ur-form-preview-upgrade-title">Upgrade to Pro</div>';
