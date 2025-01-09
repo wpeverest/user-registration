@@ -6927,6 +6927,12 @@ body {
 // For RTL Options CSS
 .user-registration {
 	&.rtl {
+		input,
+		textarea,
+		select {
+			text-align: right;
+		}
+
 		.user-registration__wrap {
 			.ur-form-subcontainer {
 				#menu-management {
@@ -6984,6 +6990,14 @@ body {
 											}
 										}
 									}
+								}
+							}
+						}
+
+						.ur-builder-wrapper {
+							.ur-selected-inputs {
+								select {
+									padding-right: 8px;
 								}
 							}
 						}
