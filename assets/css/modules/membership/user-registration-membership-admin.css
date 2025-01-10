@@ -191,6 +191,7 @@
 }
 .user-registration #user-registration-list-table-page .user-registration-list-table-heading .ur-button-primary {
   border-radius: 3px;
+  border-color: #475BB2;
   background: #475BB2;
   color: #ffffff;
   padding: 8px 20px 8px 16px;

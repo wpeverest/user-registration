@@ -1410,27 +1410,15 @@
 				 background-position: center;
 				 background-size: 100%;
 				 float: right;
-				 transform: rotate(180deg);
+				//  transform: rotate(180deg);
 				 width: 18px;
 				 height: 18px;
 				 transition: all 0.3s ease-in-out;
-
-				 // content: "\f142";
-				 // cursor: pointer;
-				 // display: block;
-				 // font: 400 20px/1 Dashicons;
-				 // line-height: 0.5 !important;
-				 // padding: 4px;
-				 // position: relative;
-				 // right: 0;
-				 // top: 0;
-				 // float: right;
 			 }
 
 			 &.closed {
 				 &:before {
-					 // content: "\f140";
-					 transform: rotate(0deg);
+					 transform: rotate(180deg);
 				 }
 			 }
 		 }
@@ -3121,6 +3109,10 @@
 			 }
 		 }
 	 }
+ }
+
+ #user-registration-form-templates {
+	padding: 20px;
  }
 
  .user-registration {

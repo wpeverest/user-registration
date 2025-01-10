@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 
 const URIcon = (props) => (
-	<Icon viewBox="0 0 32 32" width="32px" height="32px">
+	<Icon viewBox="0 0 32 32" width="26px" height="26px">
 		<path
 			fill="#475BB2"
 			fillRule="evenodd"
@@ -45,12 +45,14 @@ const TabFilters = ({ onTabChange }) => {
 					<Tab
 						key={label}
 						_selected={{
-							color: "blue.500",
-							fontWeight: "500",
+							color: "#475bb2",
 							borderBottom: "2px solid",
-							borderColor: "blue.500"
+							borderColor: "#475bb2"
 						}}
+						color="#383838"
+						fontWeight="500"
 						fontSize="16px"
+						lineHeight="20px"
 						px={{ base: 1, md: 2 }} // Add horizontal padding to tabs
 					>
 						{label}
@@ -84,7 +86,7 @@ const App = () => {
 	};
 	return (
 		<ChakraProvider>
-			<Box padding="20px" boxShadow="md">
+			<Box boxShadow="md">
 				<Box
 					padding="0px 20px 50px"
 					backgroundColor="white"
@@ -99,8 +101,9 @@ const App = () => {
 						boxShadow="sm"
 						direction={{ base: "column", md: "row" }}
 						borderBottom="1px solid #CDD0D8"
+						padding="20px 10px"
 					>
-						<HStack padding="20px 10px" gap="24px">
+						<HStack gap="24px">
 							<HStack gap="16px">
 								<URIcon boxSize={{ base: 5, md: 6, lg: 7 }} />
 								<Divider
@@ -136,7 +139,7 @@ const App = () => {
 								className="chakra-link "
 								display={{ base: "none", md: "inline-flex" }} // Hide button on small screens
 								padding="8px 12px"
-								gap="8px"
+								gap="4px"
 								fontWeight="500"
 								fontSize="16px"
 							>
