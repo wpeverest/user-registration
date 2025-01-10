@@ -139,6 +139,13 @@ class UR_Admin_Settings {
 				)
 			);
 
+		}elseif( $flag && 'invalid_membership_pages' === $flag) {
+			self::add_error(
+				esc_html__(
+					'Your settings has not been saved. Please select valid pages for the fields.',
+					'user-registration'
+				)
+			);
 		}
 		// Flush rules.
 		wp_schedule_single_event( time(), 'user_registration_flush_rewrite_rules' );
@@ -209,6 +216,7 @@ class UR_Admin_Settings {
 				'user_registration_search_global_settings_nonce' => wp_create_nonce( 'user_registration_search_global_settings' ),
 				'user_registration_captcha_test_nonce' => wp_create_nonce( 'user_registration_captcha_test_nonce' ),
 				'user_registration_my_account_selection_validator_nonce' => wp_create_nonce( 'user_registration_my_account_selection_validator' ),
+				'user_registration_membership_pages_selection_validator_nonce' => wp_create_nonce( 'user_registration_validate_page_none' ),
 				'i18n_nav_warning'                     => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
 				'i18n'                                 => array(
 					'captcha_success'   => esc_html__( 'Captcha Test Successful !', 'user-registration' ),
