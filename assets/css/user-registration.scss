@@ -461,7 +461,7 @@ textarea.ur-input-border-red {
 			select {
 				-webkit-appearance: none;
 				background: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E")
-					no-repeat right 5px top 55%;
+				no-repeat right 5px top 55%;
 			}
 
 			legend,
@@ -550,13 +550,14 @@ textarea.ur-input-border-red {
 	input[type="submit"],
 	button[type="submit"] {
 		padding: 10px 20px;
-		line-height: 1.5;
+		line-height: 24px;
 		text-align: center;
 		word-break: break-word;
 		white-space: normal;
 		border: none;
 		cursor: pointer;
 		transition: 0.35s all ease-out;
+		border-radius: 4px
 	}
 
 	input[type="submit"] {
@@ -1311,8 +1312,8 @@ span.ur-shortcode-form-embed-dot {
 //Revamp design for message and error
 .ur-message-container {
 	border-radius: 8px;
-    box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
-    padding: 60px;
+	box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+	padding: 60px;
 
 	.user-registration-message{
 		position : relative;
@@ -1395,52 +1396,52 @@ span.ur-shortcode-form-embed-dot {
 	width: 100%;
 
 	ul {
-	  display: flex;
-	  list-style-type: none;
-	  margin: 0;
-	  padding: 0;
-	  width: 100%;
+		display: flex;
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+		width: 100%;
 
-	  li {
-		flex: 1;
-		text-align: center;
-		padding: 15px 0;
-		cursor: pointer;
-		transition: all 0.3s ease;
-		color: #C5C5C5;
-		font-weight: 500;
-		border-radius: 8px 0 0 0;
-		border-top: 1px solid #F1F1F1;
-		background: #F9F9F9;
-		box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
-		clip-path: inset(0px -1px -1px -1px);
-		&:first-child {
-		  border-radius: 8px 0px 0 0;
-		  border-top: 1px solid #F1F1F1;
-		 margin-left : 10px
+		li {
+			flex: 1;
+			text-align: center;
+			padding: 15px 0;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			color: #C5C5C5;
+			font-weight: 500;
+			border-radius: 8px 0 0 0;
+			border-top: 1px solid #F1F1F1;
+			background: #F9F9F9;
+			box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+			clip-path: inset(0px -1px -1px -1px);
+			&:first-child {
+				border-radius: 8px 0px 0 0;
+				border-top: 1px solid #F1F1F1;
+				margin-left : 10px
+			}
+
+			&:last-child {
+				border-radius: 0 8px 0px 0;
+				margin-right: 10px;
+			}
+
+			&.active {
+				background: #fff;
+				color : #1F1F1F;
+				border-top: 1px solid #F1F1F1;
+
+			}
+
 		}
-
-		&:last-child {
-		  border-radius: 0 8px 0px 0;
-		  margin-right: 10px;
-		}
-
-		&.active {
-		   background: #fff;
-		  color : #1F1F1F;
-		  border-top: 1px solid #F1F1F1;
-
-		}
-
-	  }
 	}
-  }
+}
 
 .login-registration{
 	.hidden {
 		display : none;
 	}
-  }
+}
 // Revamp error design for registration and login form
 .ur-field-item{
 
@@ -1480,12 +1481,12 @@ span.ur-shortcode-form-embed-dot {
 	}
 	#user_email {
 		&::before {
-		  content: "\f348";
-		 display: inline-block;
-		 vertical-align: middle;
-		 font-family: "Dashicon	s";
-		 font-size: calc(100% + 10px);
-		 margin-right: 0.875rem;
+			content: "\f348";
+			display: inline-block;
+			vertical-align: middle;
+			font-family: "Dashicon	s";
+			font-size: calc(100% + 10px);
+			margin-right: 0.875rem;
 		}
 	}
 }
@@ -1700,7 +1701,7 @@ body {
 		}
 	}
 
-    &.user-registration-page,
+	&.user-registration-page,
 	&.ur-multi-device-form-preview,
 	&.user-registration-membership_page_user-registration-login-forms {
 		.user-registration-error {
@@ -1805,7 +1806,7 @@ body {
 		}
 
 		#user-registration,
-        .user-registration {
+		.user-registration {
 			&.user-registration-MyAccount {
 				max-width: 1280px;
 			}
@@ -2066,7 +2067,6 @@ body {
 					padding: 0 10px;
 
 					.ur-submit-button {
-						width: 100%;
 						border: 0;
 						padding: 10px 24px;
 						color: #ffffff;
@@ -2144,7 +2144,6 @@ body {
 									flex-direction: row-reverse;
 
 									input[type="submit"] {
-										width: 100%;
 										border: 0;
 										padding: 10px 24px;
 										color: #ffffff;
@@ -2368,8 +2367,8 @@ body {
 					}
 				}
 			}
-        }
-    }
+		}
+	}
 }
 
 .user-registration-login-form-container {
