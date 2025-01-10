@@ -39,3 +39,6 @@ phpcs.xml
 phpunit.xml
 phpunit-watcher.yml
 .wp-env.override.json
+
+#Release
+/release/
