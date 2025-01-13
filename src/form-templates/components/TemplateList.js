@@ -389,13 +389,17 @@ const TemplateList = ({ selectedCategory, templates }) => {
 									display="flex"
 									justifyContent="center"
 									alignItems="center"
-									bg="#F9F8FC"
+									bg="#ECECF6"
 									borderRadius="4px 4px 0px 0px"
 									overflow="hidden"
 									transition="all .3s"
 								>
 									<Image
-										boxShadow="0px 3px 12px rgba(58, 34, 93, 0.12)"
+										boxShadow={
+											template.slug == "blank"
+												? "none"
+												: "0px 3px 12px rgba(58, 34, 93, 0.12)"
+										}
 										src={modifyImageUrl(template.imageUrl)}
 										alt={template.title}
 										objectFit="contain"
@@ -464,6 +468,7 @@ const TemplateList = ({ selectedCategory, templates }) => {
 												}
 												bg="#475bb2"
 												_hover={{ bg: "#4153A2" }}
+												width="100%"
 											>
 												{__(
 													"Get Started",
@@ -489,6 +494,7 @@ const TemplateList = ({ selectedCategory, templates }) => {
 														bg: "#EFEFEF"
 													}}
 													bg="#FFFFFF"
+													width="100%"
 												>
 													{__(
 														"Preview",

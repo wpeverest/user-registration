@@ -84,6 +84,7 @@ const Sidebar = React.memo(
 							p="12px"
 							_hover={{
 								bg: "#EDEFF7",
+								color: "#475bb2",
 								"& > .badge": {
 									bg:
 										selectedCategory === category.name
@@ -174,6 +175,10 @@ const Sidebar = React.memo(
 									borderRadius="4px"
 									width="inherit"
 									fontWeight="500"
+									_hover={{
+										backgroundColor: "#475BB2",
+										color: "white !important"
+									}}
 								>
 									{__(
 										"Request Template",
