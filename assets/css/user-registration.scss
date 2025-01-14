@@ -1843,6 +1843,11 @@ body {
 										background: transparent;
 										height: auto;
 									}
+
+									.ur-submit-button {
+										background: $primary_color;
+										border-radius: 4px;
+									}
 								}
 							}
 						}
@@ -1879,6 +1884,16 @@ body {
 									.input-text {
 										height: auto;
 									}
+								}
+							}
+						}
+					}
+
+					.user-registration-form-login {
+						.ur-form-row {
+							.ur-form-grid {
+								.ur-submit-button {
+									margin-right: 0;
 								}
 							}
 						}
