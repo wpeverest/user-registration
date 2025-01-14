@@ -133,7 +133,6 @@
 
 	}
 	.ur-form-preview-main-content{
-
 		display: flex;
 		background: #f2f2f2;
 
@@ -309,6 +308,12 @@ body {
 					transition: all .3s ease-in-out;
 					max-width: 100%;
 					margin: 0 auto;
+
+					.select2 {
+						&-container {
+							width: 100% !important;
+						}
+					}
 				}
 
 				.ur-preview-tablet-wrapper{
