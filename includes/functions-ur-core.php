@@ -3871,6 +3871,7 @@ if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
 			}
 
 			if ( ! empty( $license_plan ) ) {
+				$license_plan = trim( str_replace('lifetime', '', strtolower( $license_plan ) ) );
 				if ( ! in_array( $license_plan, $detail['plan'], true ) ) {
 					if ( is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
 						continue;
@@ -6689,6 +6690,26 @@ if ( ! function_exists( 'ur_prevent_default_login' ) ) {
 					return 'redirect_login_not_myaccount';
 				}
 			}
+		} elseif ( ur_check_module_activation( 'membership' ) && isset( $data['user_registration_member_registration_page_id'] ) && isset( $data['user_registration_thank_you_page_id'] ) ) {
+			if ( is_numeric( $data['user_registration_thank_you_page_id'] ) && is_numeric( $data['user_registration_member_registration_page_id'] ) ) {
+				$membership_service = new \WPEverest\URMembership\Admin\Services\MembershipService();
+				$pages              = array(
+					'user_registration_member_registration_page_id',
+					'user_registration_thank_you_page_id'
+				);
+				$has_invalid_page   = false;
+				foreach ( $pages as $k => $page ) {
+					$response = $membership_service->verify_page_content( $page, $data[ $page ] );
+					if ( ! $response['status'] ) {
+						$has_invalid_page = true;
+					}
+				}
+
+				if($has_invalid_page) {
+                    return 'invalid_membership_pages';
+                }
+			}
+
 		}
 		return true;
 	}

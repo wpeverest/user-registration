@@ -389,13 +389,17 @@ const TemplateList = ({ selectedCategory, templates }) => {
 									display="flex"
 									justifyContent="center"
 									alignItems="center"
-									bg="#F7F4FB"
+									bg="#ECECF6"
 									borderRadius="4px 4px 0px 0px"
 									overflow="hidden"
 									transition="all .3s"
 								>
 									<Image
-										boxShadow="0px 3px 12px rgba(58, 34, 93, 0.12)"
+										boxShadow={
+											template.slug == "blank"
+												? "none"
+												: "0px 3px 12px rgba(58, 34, 93, 0.12)"
+										}
 										src={modifyImageUrl(template.imageUrl)}
 										alt={template.title}
 										objectFit="contain"
@@ -414,12 +418,13 @@ const TemplateList = ({ selectedCategory, templates }) => {
 												p="2px 6px"
 												textTransform="capitalize"
 												zIndex="2"
+												fontWeight="500"
 											>
 												{__("Pro", "user-registration")}
 											</Badge>
 										) : (
 											<Badge
-												bg="#FF9800"
+												bg="#4BCE61"
 												color="white"
 												position="absolute"
 												bottom="12px"
@@ -429,6 +434,7 @@ const TemplateList = ({ selectedCategory, templates }) => {
 												p="2px 6px"
 												textTransform="capitalize"
 												zIndex="2"
+												fontWeight="500"
 											>
 												{template.plan?.[0] ||
 													__(
@@ -460,8 +466,9 @@ const TemplateList = ({ selectedCategory, templates }) => {
 														template
 													)
 												}
-												bg="blue.500"
-												_hover={{ bg: "blue.600" }}
+												bg="#475bb2"
+												_hover={{ bg: "#4153A2" }}
+												width="100%"
 											>
 												{__(
 													"Get Started",
@@ -474,7 +481,7 @@ const TemplateList = ({ selectedCategory, templates }) => {
 													leftIcon={
 														<MdOutlineRemoveRedEye />
 													}
-													color="white"
+													color="#4D4D4D"
 													variant="outline"
 													onClick={() =>
 														window.open(
@@ -483,9 +490,11 @@ const TemplateList = ({ selectedCategory, templates }) => {
 														)
 													}
 													_hover={{
-														color: "black",
-														bg: "white"
+														color: "#4D4D4D",
+														bg: "#EFEFEF"
 													}}
+													bg="#FFFFFF"
+													width="100%"
 												>
 													{__(
 														"Preview",
@@ -662,6 +671,7 @@ const TemplateList = ({ selectedCategory, templates }) => {
 						<Button
 							variant="ghost"
 							onClick={() => setIsPluginModalOpen(false)}
+							border="1px solid #DFDFDF"
 						>
 							{__("OK", "user-registration")}
 						</Button>

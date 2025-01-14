@@ -1191,7 +1191,7 @@
 									$this
 										.find(".ur-submit-button")
 										.find("span")
-										.addClass("ur-spinner");
+										.addClass("ur-front-spinner");
 
 									var hit_third_party_api =
 										events.wait_third_party_api($this);
@@ -1258,7 +1258,7 @@
 									$this
 										.find(".ur-submit-button")
 										.find("span")
-										.removeClass("ur-spinner");
+										.removeClass("ur-front-spinner");
 
 									var redirect_url = $this
 										.find('input[name="ur-redirect-url"]')
@@ -1945,7 +1945,7 @@
 								$this
 									.find(".user-registration-submit-Button")
 									.find("span")
-									.addClass("ur-spinner");
+									.addClass("ur-front-spinner");
 
 								$.ajax({
 									type: "POST",
@@ -1954,8 +1954,8 @@
 									data: data,
 									complete: function (ajax_response) {
 										$this
-											.find("span.ur-spinner")
-											.removeClass("ur-spinner");
+											.find("span.ur-front-spinner")
+											.removeClass("ur-front-spinner");
 										$this
 											.closest(".user-registration")
 											.find(".user-registration-error")

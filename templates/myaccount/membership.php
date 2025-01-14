@@ -66,7 +66,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</span>
 		</div>
 		<div class="membership-data">
-			<span id="ur-membership-type">
+
 			<?php
 			$status = 'inactive';
 			if ( isset( $membership['status'] ) ) {
@@ -78,23 +78,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 					}
 				}
 			}
-			echo esc_html__( ucfirst( $status ) ) ?>
-		</span>
+			?>
+			<span id="ur-membership-status" class="btn-<?php echo $status ?>"><?php echo esc_html__( ucfirst( $status ) ) ?></span>
 		</div>
 	</div>
 	<?php
 	if ( 'canceled' !== $membership['status'] ):
 		?>
 		<div class="membership-row-btn-container">
-			<div class="btn-div" style="width: 40%">
+			<div class="btn-div">
 				<button type="button" class="cancel-membership-button button"
 						data-id="<?php echo ( isset( $membership['subscription_id'] ) && ! empty( $membership['subscription_id'] ) ) ? esc_attr( $membership['subscription_id'] ) : ''; ?>"
-						>
+				>
+					<span class="dashicons dashicons-dismiss"></span>
 					<?php echo __( "Cancel Membership", "user-registration" ); ?>
 				</button>
 				<!-- <span class="ur-portal-tooltip tooltipstered"
 					  data-tip="<?php echo esc_html__( 'Cancellation will be according to the current membership cancellation type.', 'user-registration' ) ?>"> -->
-			</span>
+				</span>
 			</div>
 			<div id="membership-error-div" class="btn-error">
 			</div>
