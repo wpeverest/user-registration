@@ -50,13 +50,20 @@ const ModuleBody = ({
 	} = useLicenseActivation(() => window.location.reload());
 
 	const handleCheckedChange = (slug, checked, name, type) => {
-		setSelectedModuleData((prev) => {
-			const updated = { ...prev };
-			if (checked)
-				updated[slug] = { slug: `${slug}/${slug}.php`, name, type };
-			else delete updated[slug];
-			return updated;
-		});
+		var selectedModules = { ...selectedModuleData };
+
+		if (checked) {
+			selectedModules[slug] = {
+				slug: slug + "/" + slug + ".php",
+				name,
+				type
+			};
+		} else {
+			if (selectedModules.hasOwnProperty(slug)) {
+				delete selectedModules[slug];
+			}
+		}
+		setSelectedModuleData(selectedModules);
 	};
 
 	const closeModal = () => {

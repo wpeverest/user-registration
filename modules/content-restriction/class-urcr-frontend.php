@@ -43,7 +43,6 @@ class URCR_Frontend {
 	 * Perform content restriction task.
 	 */
 	public function include_run_content_restrictions( $template ) {
-
 		if ( is_embed() ) {
 			return $template;
 		}
@@ -119,14 +118,14 @@ class URCR_Frontend {
 
 		if ( UR_PRO_ACTIVE && ! ur_string_to_bool( $urcr_meta_override_global_settings ) ) {
 
-				$access_rule_posts         = get_posts(
-					array(
-						'numberposts' => -1,
-						'post_status' => 'publish',
-						'post_type'   => 'urcr_access_rule',
-					)
-				);
-				$is_whole_site_restriction = false;
+			$access_rule_posts         = get_posts(
+				array(
+					'numberposts' => -1,
+					'post_status' => 'publish',
+					'post_type'   => 'urcr_access_rule',
+				)
+			);
+			$is_whole_site_restriction = false;
 
 			foreach ( $access_rule_posts as $access_rule_post ) {
 				$access_rule = json_decode( $access_rule_post->post_content, true );
@@ -159,8 +158,8 @@ class URCR_Frontend {
 
 					if ( urcr_is_access_rule_enabled( $access_rule ) && urcr_is_action_specified( $access_rule ) ) {
 
-							$should_allow_access = urcr_is_allow_access( $access_rule['logic_map'], $post );
-							$access_control      = isset( $access_rule['actions'][0]['access_control'] ) && ! empty( $access_rule['actions'][0]['access_control'] ) ? $access_rule['actions'][0]['access_control'] : 'access';
+						$should_allow_access = urcr_is_allow_access( $access_rule['logic_map'], $post );
+						$access_control      = isset( $access_rule['actions'][0]['access_control'] ) && ! empty( $access_rule['actions'][0]['access_control'] ) ? $access_rule['actions'][0]['access_control'] : 'access';
 						if ( ( true === $should_allow_access && 'restrict' === $access_control ) || ( false == $should_allow_access && 'access' === $access_control ) ) {
 							do_action( 'urcr_pre_content_restriction_applied', $access_rule, $post );
 
@@ -471,7 +470,7 @@ class URCR_Frontend {
 				}
 			}
 		}
-			$tax_query = (array) $q->get( 'tax_query' );
+		$tax_query = (array) $q->get( 'tax_query' );
 
 		if ( ! empty( $cat_values ) ) {
 			$tax_query[] = array(
@@ -497,7 +496,7 @@ class URCR_Frontend {
 				'operator' => 'NOT IN',
 			);
 		}
-			$q->set( 'tax_query', $tax_query );
+		$q->set( 'tax_query', $tax_query );
 	}
 	/**
 	 * Restrict the WooCommerce Product Visibility
@@ -672,7 +671,7 @@ class URCR_Frontend {
 	}
 
 	public function compareTaxonomy( $array1, $array2 ) {
-			$result = array();
+		$result = array();
 
 		foreach ( $array1 as $key => $value ) {
 			if ( array_key_exists( $key, $array2 ) ) {
@@ -942,6 +941,7 @@ class URCR_Frontend {
 		if ( function_exists( 'is_shop' ) ) {
 			$post_id = is_shop() ? wc_get_page_id( 'shop' ) : $post_id;
 		}
+		$allowed_memberships = get_option( 'user_registration_content_restriction_allow_to_memberships');
 
 		$allowed_roles = get_option( 'user_registration_content_restriction_allow_to_roles', 'administrator' );
 
@@ -955,6 +955,13 @@ class URCR_Frontend {
 
 		$override_global_settings = get_post_meta( $post_id, 'urcr_meta_override_global_settings', $single = true );
 
+		$is_membership_active = ur_check_module_activation('membership');
+
+		if( $is_membership_active ) {
+			$members_subscription = new \WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository();
+			$subscription = $members_subscription->get_member_subscription( wp_get_current_user()->ID);
+			$current_user_membership = ( !empty ( $subscription ) ) ? $subscription['item_id'] : array();
+		}
 		if ( ur_string_to_bool( $get_meta_data_checkbox ) ) {
 
 			if ( ! ur_string_to_bool( $override_global_settings ) ) {
@@ -973,6 +980,11 @@ class URCR_Frontend {
 						$this->urcr_restrict_contents();
 					}
 					return $post;
+				} elseif ( '3' === get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
+					if ( is_array( $allowed_memberships ) && in_array( $current_user_membership, $allowed_memberships ) ) {
+						return ;
+					}
+					$this->urcr_restrict_contents();
 				}
 			} elseif ( $get_meta_data_allow_to == '0' ) {
 
@@ -993,6 +1005,11 @@ class URCR_Frontend {
 				}
 
 				return $post;
+			} elseif ( $get_meta_data_allow_to === '3' ) {
+				if ( is_array( $allowed_memberships ) && in_array( $current_user_membership, $allowed_memberships ) ) {
+					return $post;
+				}
+				$this->urcr_restrict_contents();
 			}
 		}
 	}
@@ -1051,6 +1068,7 @@ class URCR_Frontend {
 	 * @return string Content restriction message.
 	 */
 	public function message() {
+
 		$message = get_option( 'user_registration_content_restriction_message' );
 
 		$message = ( false === $message ) ? esc_html__( 'This content is restricted!', 'user-registration' ) : $message;

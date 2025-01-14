@@ -54,6 +54,7 @@ const TabFilters = ({ onTabChange }) => {
 						fontSize="16px"
 						lineHeight="20px"
 						px={{ base: 1, md: 2 }} // Add horizontal padding to tabs
+						boxShadow="none !important"
 					>
 						{label}
 					</Tab>
@@ -142,6 +143,10 @@ const App = () => {
 								gap="4px"
 								fontWeight="500"
 								fontSize="16px"
+								_hover={{
+									backgroundColor: "#475BB2",
+									color: "white !important"
+								}}
 							>
 								{__("Refresh Templates", "user-registration")}
 							</Button>
