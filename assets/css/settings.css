@@ -155,6 +155,9 @@
 .user-registration-settings-wrapper .user-registration-header.collapsed .user-registration-header--top .ur-search--top-toggle label {
   display: none;
 }
+.user-registration-settings-wrapper .user-registration-header.collapsed .user-registration-header--nav .ur-nav__link {
+  justify-content: center;
+}
 .user-registration-settings-wrapper .user-registration-header.collapsed .user-registration-header--nav .ur-nav__link-label {
   display: none;
 }

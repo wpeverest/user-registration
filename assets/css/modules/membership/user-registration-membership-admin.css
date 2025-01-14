@@ -1097,3 +1097,35 @@
   top: 8px;
   right: 8px;
 }
+
+.urmg-loader {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.urmg-shortcode {
+  display: flex;
+  line-height: 1;
+}
+
+.user-registration-membership_page_user-registration-membership table.membership_groups th#title {
+  width: 200px;
+}
+.user-registration-membership_page_user-registration-membership table.membership_groups th#shortcode {
+  width: 360px;
+}
+.user-registration-membership_page_user-registration-membership table.membership_groups th#status {
+  width: 100px;
+}
+.user-registration-membership_page_user-registration-membership table.membership_groups th#action {
+  width: 200px;
+}
+.user-registration-membership_page_user-registration-membership .user-registration-help-tip::after {
+  width: 8px;
+  height: 15px;
+}
+
+.tooltipster-base.tooltipster-bottom {
+  margin-top: -30px;
+}

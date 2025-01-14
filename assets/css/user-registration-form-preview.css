@@ -402,9 +402,7 @@ body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-side-pa
   z-index: 1;
 }
 body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-side-panel .ur-form-preview-pro-features-title {
-  padding-bottom: 12px;
   margin: 0 0 4px 0;
-  border-bottom: 1px solid #edeff7;
   font-weight: 500;
   font-size: 16px;
   color: #222222;
@@ -568,6 +566,35 @@ body.ur-multi-device-form-preview #nav-menu-header .major-publishing-actions .pu
   border-radius: 4px;
   padding: 0 12px;
   font-size: 14px;
+}
+
+html[dir=rtl] body.ur-multi-device-form-preview .ur-form-preview-sidepanel-toggler {
+  transform: rotate(180deg);
+  right: unset;
+  left: 380px;
+}
+html[dir=rtl] body.ur-multi-device-form-preview .ur-form-preview-sidepanel-toggler.inactive {
+  transform: rotate(0deg);
+  border: 1px solid #edeff7;
+  border-left: 0;
+  left: 0;
+}
+html[dir=rtl] body.ur-multi-device-form-preview #nav-menu-header .ur-brand-logo {
+  margin-right: 0;
+  margin-left: 30px;
+  border-right: 0;
+  border-left: 1px solid #e1e1e1;
+  padding-right: 0 !important;
+  padding-left: 30px !important;
+}
+html[dir=rtl] body.ur-multi-device-form-preview #nav-menu-header .ur-form-preview-devices,
+html[dir=rtl] body.ur-multi-device-form-preview #nav-menu-header .major-publishing-actions {
+  margin-left: unset;
+  margin-right: auto;
+}
+html[dir=rtl] body.ur-multi-device-form-preview aside.ur-form-side-panel .ur-form-preview-pro-features .ur-form-preview-sidebar__body--list-item svg {
+  margin-left: 8px;
+  margin-right: 0;
 }
 
 .tooltipster-base .tooltipster-box {

@@ -122,17 +122,19 @@ class MembershipGroupsListTable extends \UR_List_Table {
 		$status_class       = $enabled ? 'user-registration-badge user-registration-badge--success-subtle' : 'user-registration-badge user-registration-badge--secondary-subtle';
 		$status_label       = $enabled ? esc_html__( 'Active', 'user-registration-content-restriction' ) : esc_html__( 'Inactive', 'user-registration-content-restriction' );
 
-		return sprintf( '<span id="ur-membership-list-status-' . $membership_group->ID . '" class="%s">%s</span>', $status_class, $status_label );
+		return sprintf( '<span id="ur-membership-list-status-' . $membership_group->ID . '" class="%s" style="vertical-align: middle">%s</span>', $status_class, $status_label );
 	}
 
 	public function column_shortcode( $membership_group ) {
 
 		$shortcode = '[user_registration_membership_listing  group_id="' . $membership_group->ID . '"]';
 		return "
-				<div class='urmg-shortcode'>
+				<div class='urm-shortcode'>
 					<input type='text' onfocus='this.select();' readonly='readonly' value='$shortcode' class='widefat code'>
-					<button id='copy-shortcode-".$membership_group->ID."' class='button ur-copy-shortcode tooltipstered' href='#' data-tip='Copy Shortcode ! ' data-copied='Copied ! '>
-						<span class='dashicons dashicons-admin-page'></span>
+					<button id='copy-shortcode-" . $membership_group->ID . "' class='button ur-copy-shortcode tooltipstered' href='#' data-tip='Copy Shortcode ! ' data-copied='Copied ! '>
+						<svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'>
+											<path fill='#383838' fill-rule='evenodd' d='M3.116 3.116A1.25 1.25 0 0 1 4 2.75h9A1.25 1.25 0 0 1 14.25 4v1a.75.75 0 0 0 1.5 0V4A2.75 2.75 0 0 0 13 1.25H4A2.75 2.75 0 0 0 1.25 4v9A2.75 2.75 0 0 0 4 15.75h1a.75.75 0 0 0 0-1.5H4A1.25 1.25 0 0 1 2.75 13V4c0-.332.132-.65.366-.884ZM9.75 11c0-.69.56-1.25 1.25-1.25h9c.69 0 1.25.56 1.25 1.25v9c0 .69-.56 1.25-1.25 1.25h-9c-.69 0-1.25-.56-1.25-1.25v-9ZM11 8.25A2.75 2.75 0 0 0 8.25 11v9A2.75 2.75 0 0 0 11 22.75h9A2.75 2.75 0 0 0 22.75 20v-9A2.75 2.75 0 0 0 20 8.25h-9Z' clip-rule='evenodd'></path>
+									</svg>
 					</button>
 				</div>
 			";

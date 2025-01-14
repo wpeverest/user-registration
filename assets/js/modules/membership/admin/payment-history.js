@@ -63,26 +63,23 @@
 					allowOutsideClick: false
 				}).then(function (result) {
 					if (result.isConfirmed) {
-						var selected_orders = form.find('input[type=checkbox]:checked'),
+						var selected_orders = form.find('tbody input[type=checkbox]:checked'),
 							order_ids = [],
 							user_ids = [];
 
-						if (selected_orders.length <= 1) {
+						if (selected_orders.length < 1) {
 							handle_orders_utils.show_failure_message(
 								urmo_data.labels.i18n_prompt_no_order_selected
 							);
 							return;
 						}
 						//prepare orders data
-						selected_orders.each(function (index) {
-
-							if (index !== 0) {
+						selected_orders.each(function () {
 								if ($(this).val() !== '') {
 									order_ids.push($(this).val());
 								} else if ($(this).data('user-id') !== '') {
 									user_ids.push($(this).data('user-id'));
 								}
-							}
 						});
 
 						//send request

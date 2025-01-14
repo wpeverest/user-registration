@@ -1283,7 +1283,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'class'             => array( 'ur-enhanced-select custom-password-params' ),
 				'input_class'       => array(),
 				'custom_attributes' => array(),
-				'min'               => '3',
+				'min'               => '6',
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_pass_length', '6' ),
 				'tip'               => __( 'Set the minimum password length required for password strength.', 'user-registration' ),
 			),
@@ -4067,6 +4067,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 			$validation_error = apply_filters( 'user_registration_process_login_errors', $validation_error, sanitize_user( wp_unslash( $post['username'] ) ), sanitize_user( wp_unslash( $post['password'] ) ) );
 
 
+
 			if ( $validation_error->get_error_code() ) {
 				throw new Exception( '<strong>' . esc_html__( 'ERROR:', 'user-registration' ) . '</strong>' . $validation_error->get_error_message() );
 			}
@@ -4106,7 +4107,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 			// To check the specific login.
 			if ( 'email' === get_option( 'user_registration_general_setting_login_options_with', array() ) ) {
 				$user_data                = get_user_by( 'email', $username );
-				$login_data['user_login'] = isset( $user_data->user_email ) ? $user_data->user_email : is_email( $username );
+				$login_data['user_login'] = isset( $user_data->user_email ) ? $user_data->user_email : '1#45$$&*@ur.com'; //provided invalid email to show invalid email error instead of empty username which will show empty_username error regardless of the login option
 			} elseif ( 'username' === get_option( 'user_registration_general_setting_login_options_with', array() ) ) {
 				$user_data                = get_user_by( 'login', $username );
 				$login_data['user_login'] = isset( $user_data->user_login ) ? $user_data->user_login : ! is_email( $username );

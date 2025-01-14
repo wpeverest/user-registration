@@ -1263,7 +1263,6 @@
 									var redirect_url = $this
 										.find('input[name="ur-redirect-url"]')
 										.val();
-
 									var message = $('<ul class=""/>');
 									var type = "error";
 									var individual_field_message = false;

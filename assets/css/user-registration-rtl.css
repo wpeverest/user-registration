@@ -1292,13 +1292,14 @@ textarea.ur-input-border-red {
 .ur-frontend-form input[type=submit],
 .ur-frontend-form button[type=submit] {
   padding: 10px 20px;
-  line-height: 1.5;
+  line-height: 24px;
   text-align: center;
   word-break: break-word;
   white-space: normal;
   border: none;
   cursor: pointer;
   transition: 0.35s all ease-out;
+  border-radius: 4px;
 }
 .ur-frontend-form input[type=submit] {
   float: left;
@@ -2139,26 +2140,6 @@ span.ur-shortcode-form-embed-dot {
   font-size: 16px;
   margin: 20px auto;
 }
-.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-login-content .login-forms-shortcode-action {
-  display: flex;
-  padding: 6px 12px 6px 6px;
-  gap: 8px;
-  justify-content: space-between;
-  width: 100%;
-  background: #fff;
-  border: 1px solid #edeff7;
-  border-radius: 4px;
-}
-.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-login-content .login-forms-shortcode-action input {
-  background: transparent;
-  border: none;
-}
-.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-login-content .login-forms-shortcode-action .ur-copy-shortcode {
-  line-height: unset;
-  padding: 6px;
-  background: #edeff7;
-  border: none;
-}
 .user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents {
   padding: 16px 16px 0 16px;
 }
@@ -2555,7 +2536,6 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
 body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-button-container .ur-submit-button,
 body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-button-container .ur-submit-button, body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-button-container .ur-submit-button,
 body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-button-container .ur-submit-button {
-  width: 100%;
   border: 0;
   padding: 10px 24px;
   color: #ffffff;
@@ -2642,7 +2622,6 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
 body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div input[type=submit],
 body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div input[type=submit], body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div input[type=submit],
 body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div input[type=submit] {
-  width: 100%;
   border: 0;
   padding: 10px 24px;
   color: #ffffff;

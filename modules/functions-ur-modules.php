@@ -423,11 +423,8 @@ if ( ! function_exists( 'check_membership_field_in_form' ) ) {
 	 *
 	 * @return bool
 	 */
-	function check_membership_field_in_form() {
-		if ( ! isset( $_GET['edit-registration'] ) ) {
-			return false;
-		}
-		$form_id              = absint( $_GET['edit-registration'] );
+	function check_membership_field_in_form($form_id) {
+
 		$payment_fields       = ur_get_form_fields( $form_id );
 		$has_membership_field = false;
 		foreach ( $payment_fields as $k => $field ) {

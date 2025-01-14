@@ -189,7 +189,6 @@ class PaypalService {
 		}
 		$logger = ur_get_logger();
 		$logger->notice( 'Paypal IPN Payload: ' . wp_json_encode( $data ), array( 'source' => 'ur-membership-paypal' ) );
-		$paypal_standard_class = new \User_Registration_Pro_PayPal_Standard();
 
 		if ( ! class_exists( 'User_Registration_Pro_PayPal_Standard' ) ) {
 			$logger->notice( esc_html__( 'Class User_Registration_Pro_PayPal_Standard does not exist.', 'user-registration' ), array( 'source' => 'ur-membership-paypal' ) );
@@ -227,7 +226,7 @@ class PaypalService {
 			'member_id'        => $member_id,
 		);
 
-		if ( ! $paypal_standard_class->validate_ipn( $payment_mode ) ) {
+		if ( ! $this->validate_ipn( $payment_mode ) ) {
 			$logger->notice( esc_html__( 'Invalid response from paypal IPN for txn: ', 'user-registration' ) . $data['txn_id'], array( 'source' => 'ur-membership-paypal' ) );
 
 			return;
@@ -468,4 +467,49 @@ class PaypalService {
 			'message' => $message,
 		);
 	}
+
+	/**
+	 * validate_ipn
+	 *
+	 * @param $payment_mode
+	 *
+	 * @return bool
+	 */
+	public function validate_ipn( $payment_mode ) {
+	$logger = ur_get_logger();
+	$logger->notice( 'Checking IPN response is valid' );
+	// Get received values from post data.
+	$validate_ipn        = wp_unslash( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	$validate_ipn['cmd'] = '_notify-validate';
+	// Send back post vars to paypal.
+	$params = array(
+		'body'        => $validate_ipn,
+		'timeout'     => 60,
+		'httpversion' => '1.1',
+		'compress'    => false,
+		'decompress'  => false,
+		'user-agent'  => 'User Registration IPN Verification',
+	);
+
+	$remote_post_url = ( ! empty( $payment_mode ) && 'production' === $payment_mode ) ? 'https://ipnpb.paypal.com/cgi-bin/webscr' : 'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr';
+	// Post back to get a response.
+	$response = wp_safe_remote_post( $remote_post_url, $params );
+	$logger   = ur_get_logger();
+	$logger->notice( 'IPN Response: ' . print_r( $response, true ) );
+	// Check to see if the request was valid.
+	if ( ! is_wp_error( $response ) && $response['response']['code'] >= 200 && $response['response']['code'] < 300 && strstr( $response['body'], 'VERIFIED' ) ) {
+		$logger = ur_get_logger();
+		$logger->notice( 'Received valid response from PayPal IPN' );
+
+		return true;
+	}
+	$logger = ur_get_logger();
+	$logger->notice( 'Received invalid response from PayPal IPN' );
+	if ( is_wp_error( $response ) ) {
+		$logger = ur_get_logger();
+		$logger->notice( 'Error response: ' . $response->get_error_message() );
+	}
+
+	return false;
+}
 }

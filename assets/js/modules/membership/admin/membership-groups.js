@@ -282,6 +282,7 @@
 				paypal_settings.show();
 				stripe_settings.show();
 				if ($('.ur-selected-inputs').find('div[data-field-key="membership"]').length) {
+					user_registration_form_builder_data.form_has_membership_field = true;
 					paypal_settings.hide();
 					stripe_settings.hide();
 				}

@@ -463,6 +463,9 @@
 #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row #ur-membership-status.btn-canceled {
   background: #ea4335;
 }
+#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row #ur-membership-status.btn-trial {
+  background: #ff8300;
+}
 #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container {
   display: flex;
   align-items: center;

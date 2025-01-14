@@ -65,7 +65,7 @@ class UR_Emailer {
 	 * Apply filters to modify sender's details before email is sent.
 	 */
 	public static function ur_send_email_before() {
-		add_filter( 'wp_mail_from', array( __CLASS__, 'ur_sender_email' ) );
+		add_filter( 'wp_mail_from', array( __CLASS__, 'ur_sender_email' ), 100 );
 		add_filter( 'wp_mail_from_name', array( __CLASS__, 'ur_sender_name' ) );
 	}
 

@@ -707,11 +707,17 @@ class UR_AJAX {
 		 * Default value is get_option('user_registration_email_from_name').
 		 */
 		$from_name = apply_filters( 'wp_mail_from_name', get_option( 'user_registration_email_from_name', esc_attr( get_bloginfo( 'name', 'display' ) ) ) );
+		do_action( 'user_registration_email_send_before' );
+
 		/**
 		 * Filter to test mail from address.
 		 * Default value is get_option('user_registration_email_from_address').
 		 */
 		$sender_email = apply_filters( 'wp_mail_from', get_option( 'user_registration_email_from_address', get_option( 'admin_email' ) ) );
+		echo '<pre>';
+		print_r( $sender_email  );
+		echo '</pre>';
+		die();
 		$email        = sanitize_email( isset( $_POST['email'] ) ? wp_unslash( $_POST['email'] ) : '' ); // phpcs:ignore WordPress.Security.NonceVerification
 		/* translators: %s - WP mail from name */
 		$subject = 'User Registration: ' . sprintf( esc_html__( 'Test email from %s', 'user-registration' ), $from_name );
@@ -720,6 +726,10 @@ class UR_AJAX {
 			'Reply-To:' . $sender_email,
 			'Content-Type:text/html; charset=UTF-8',
 		);
+		echo '<pre>';
+		print_r( $header );
+		echo '</pre>';
+		die();
 		$message =
 		'Congratulations,<br>
 		Your test email has been received successfully.<br>
@@ -1065,29 +1075,36 @@ class UR_AJAX {
 	public static function embed_form_action() {
 		check_ajax_referer( 'ur_embed_action_nonce', 'security' );
 		$page_id = empty( $_POST['page_id'] ) ? 0 : sanitize_text_field( absint( $_POST['page_id'] ) );
-
+		$form_id = ! empty( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
 		if ( empty( $page_id ) ) {
 			$url  = add_query_arg( 'post_type', 'page', admin_url( 'post-new.php' ) );
 			$meta = array(
 				'embed_page'       => 0,
 				'embed_page_title' => ! empty( $_POST['page_title'] ) ? sanitize_text_field( wp_unslash( $_POST['page_title'] ) ) : '',
 			);
-		} else {
-			$url  = get_edit_post_link( $page_id, '' );
-			$meta = array(
-				'embed_page' => $page_id,
+			$page_url        = add_query_arg(
+				array(
+					'form' => 'user_registration',
+				),
+				esc_url_raw( $url )
 			);
-		}
-		$page_url        = add_query_arg(
-			array(
-				'form' => 'user_registration',
-			),
-			esc_url_raw( $url )
-		);
-		$meta['form_id'] = ! empty( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
-		UR_Admin_Embed_Wizard::set_meta( $meta );
+			$meta['form_id'] = $form_id;
+			UR_Admin_Embed_Wizard::set_meta( $meta );
 
-		wp_send_json_success( $page_url );
+			wp_send_json_success( $page_url );
+		} else {
+			UR_Admin_Embed_Wizard::delete_meta();
+			$url  = get_edit_post_link( $page_id, '' );
+			$post = get_post($page_id);
+			$pattern = '[user_registration_form id="%d"]';
+			$shortcode = sprintf( $pattern, absint( $form_id ) );
+			$updated_content = $post->post_content . "\n\n" . $shortcode;
+			wp_update_post([
+				'ID'           => $page_id,
+				'post_content' => $updated_content,
+			]);
+			wp_send_json_success( $url );
+		}
 	}
 	/**
 	 * Dashboard Widget data.

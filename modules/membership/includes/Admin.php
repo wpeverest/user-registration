@@ -142,7 +142,7 @@ if ( ! class_exists( 'Admin' ) ) :
 		}
 
 		public function add_memberships_in_urcr_settings( $settings ) {
-			$options = get_active_membership_id_name();
+			$options             = get_active_membership_id_name();
 			$additional_settings = array(
 				array(
 					'row_class' => 'urcr_content_restriction_allow_access_to_memberships',
@@ -165,8 +165,9 @@ if ( ! class_exists( 'Admin' ) ) :
 
 		public function update_success_params_for_membership( $success_params, $valid_form_data, $form_id, $user_id ) {
 			$keyFound = false;
+
 			foreach ( $valid_form_data as $key => $value ) {
-				if ( preg_match( '/^membership_field_.*/', $key ) ) {
+				if ( 'membership' === $value->extra_params['field_key'] ) {
 					$keyFound = true;
 					break;
 				}
@@ -186,7 +187,8 @@ if ( ! class_exists( 'Admin' ) ) :
 			$redirect_after_registration = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_redirect_after_registration' );
 
 			$form_data = ur_get_form_field_keys( $form_id );
-			$keyFound  = false;
+
+			$keyFound = false;
 			foreach ( $form_data as $value ) {
 				if ( preg_match( '/^membership_field_.*/', $value ) ) {
 					$keyFound = true;
@@ -197,10 +199,8 @@ if ( ! class_exists( 'Admin' ) ) :
 				return $redirect_url;
 			}
 
-			if ( "auto_login" === $login_option && "external-url" == $redirect_after_registration ) {
+			if ( in_array( $redirect_after_registration, array( 'external-url', 'internal-page', 'previous-page' ) ) ) {
 				return $redirect_url;
-			} else if ( "auto_login" === $login_option ) {
-				return get_permalink( $thank_you_page_id );
 			}
 		}
 

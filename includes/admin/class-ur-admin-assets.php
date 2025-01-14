@@ -381,7 +381,9 @@ class UR_Admin_Assets {
 				'ur_remove_password_field_link'          => esc_url( 'https://docs.wpuserregistration.com/docs/remove-password-field/' ),
 				'ur_form_non_deletable_fields'           => ur_non_deletable_fields(),
 				'ur_assets_url'             => UR()->plugin_url() . '/assets/',
-				'i18n_prompt_no_membership_group_selected' => __( 'Membership Field requires a membership group to be selected.', 'user-registration' )
+				'i18n_prompt_no_membership_group_selected' => __( 'Membership Field requires a membership group to be selected.', 'user-registration' ),
+				'i18n_default_redirection_notice_for_membership' => esc_html__( 'If the form includes a membership field, users will be redirected to the membership thank you page after submission.', 'user-registration' ),
+				'form_has_membership_field' => check_membership_field_in_form($form_id)
 			);
 
 			wp_localize_script(
@@ -404,7 +406,7 @@ class UR_Admin_Assets {
 					'no_file_selected'          => esc_html__( 'No file selected.', 'user-registration' ),
 					'export_error_message'      => esc_html__( 'Please choose at least one form to export.', 'user-registration' ),
 					'smart_tags_dropdown_title' => esc_html__( 'Smart Tags', 'user-registration' ),
-					'smart_tags_dropdown_search_placeholder' => esc_html__( 'Search Tags...', 'user-registration' ),
+					'smart_tags_dropdown_search_placeholder' => esc_html__( 'Search Tags...', 'user-registration' )
 				)
 			);
 			wp_localize_script( 'user-registration-form-builder', 'user_registration_form_builder_data', $params );
