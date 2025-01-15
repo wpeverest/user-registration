@@ -149,7 +149,7 @@ class UR_Admin_Welcome {
 									</a>
 								</div>
 								<div class="user-registration-welcome-container__header">
-									<h2><?php esc_html_e( 'Welcome to User Registration', 'user-registration' ); ?></h2>
+									<h2><?php esc_html_e( 'Welcome to User Registration & Membership', 'user-registration' ); ?></h2>
 									<p><?php esc_html_e( 'Thank you for choosing User Registration & Membership - the most powerful and easy drag & drop WordPress form builder in the market.', 'user-registration' ); ?></p>
 								</div>
 								<div class="user-registration-welcome-container__action">

@@ -222,8 +222,8 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 						<div class="user-registration-settings-sidebar">
 						<?php
 						$content = '<div class="user-registration-settings-sidebar__header"><h3>' . esc_html__( 'Premium Benefits', 'user-registration' ) . '</h3></div>
-										<div class="user-registration-settings-sidebar__body"><p>' . esc_html__( 'Get Even More from User Registration with the Premium Plan', 'user-registration' ) . '</p>
-										<div class="user-registration-settings-sidebar__body"><p>' . esc_html__( 'The free version of User Registration is just the start. Upgrade to our Pro version for everything you need for advanced form building.', 'user-registration' ) . '</p>
+										<div class="user-registration-settings-sidebar__body"><p>' . esc_html__( 'Get Even More from User Registration & Membership with the Premium Plan', 'user-registration' ) . '</p>
+										<div class="user-registration-settings-sidebar__body"><p>' . esc_html__( 'The free version of User Registration & Membership is just the start. Upgrade to our Pro version for everything you need for advanced form building.', 'user-registration' ) . '</p>
 										<div class="user-registration-settings-sidebar__body--list normal">';
 
 						$premium_benefits = array(
