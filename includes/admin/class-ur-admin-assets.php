@@ -432,7 +432,7 @@ class UR_Admin_Assets {
 					/* translators: %field%: Field Label %plan%: License Plan. */
 					'unlock_message'                      => __( '%field% field is locked. Upgrade to <strong>%plan%</strong> to unlock this field.', 'user-registration' ),
 					'license_activation_required_title'   => __( 'License Activation Required', 'user-registration' ),
-					'license_activation_required_message' => __( 'Please activate your <strong>User Registration License</strong> to use this field', 'user-registration' ),
+					'license_activation_required_message' => __( 'Please activate your <strong>User Registration & Membership License</strong> to use this field', 'user-registration' ),
 					'activation_required_title'           => __( 'Addon Activation Required', 'user-registration' ),
 					'activation_required_message'         => __( 'Please activate <strong>%plugin%</strong> addon to use this field.', 'user-registration' ),
 					'installation_required_title'         => __( 'Addon Installation Required', 'user-registration' ),
@@ -632,7 +632,7 @@ class UR_Admin_Assets {
 			'upgrade_link'                                => esc_url( 'https://wpuserregistration.com/pricing/?utm_source=integration-settings&utm_medium=premium-addon-popup&utm_campaign=' . urlencode( UR()->utm_campaign ) ),
 			'user_registration_locked_form_fields_notice_nonce' => wp_create_nonce( 'locked_form_fields_notice_nonce' ),
 			'license_activation_required_title'           => __( 'License Activation Required', 'user-registration' ),
-			'license_activation_required_message'         => __( 'Please activate your <strong>User Registration License</strong> to use this integration', 'user-registration' ),
+			'license_activation_required_message'         => __( 'Please activate your <strong>User Registration & Membership License</strong> to use this integration', 'user-registration' ),
 			'activation_required_title'                   => __( 'Addon Activation Required', 'user-registration' ),
 			'activation_required_message'                 => __( 'Please activate <strong>%plugin%</strong> addon to use this integration.', 'user-registration' ),
 			'installation_required_title'                 => __( 'Addon Installation Required', 'user-registration' ),

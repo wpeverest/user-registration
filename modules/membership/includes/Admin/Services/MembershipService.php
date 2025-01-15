@@ -327,7 +327,7 @@ class MembershipService {
 		$match = preg_match_all('/\[user_registration_form\s+id="(\d+)"\]/', $post->post_content, $matches);
 		if(!$match) {
 			$response['status']  = false;
-			$response['message'] = __( 'The selected page does not consist any User Registration and Membership Form.' );
+			$response['message'] = __( 'The selected page does not consist any User Registration & Membership Form.' );
 			return $response;
 		}
 		$fields = ur_get_form_fields($matches[1][0]);
@@ -337,7 +337,7 @@ class MembershipService {
 			}
 		}
 		$response['status'] = $membership_field_exists;
-		$response['message'] =  ! $membership_field_exists ? __( 'The selected page consist a User Registration and Membership Form but no membership field.' ) : '';
+		$response['message'] =  ! $membership_field_exists ? __( 'The selected page consist a User Registration & Membership Form but no membership field.' ) : '';
 		return $response;
 	}
 
@@ -355,7 +355,7 @@ class MembershipService {
 
 		if ( !preg_match( '/\[user_registration_membership_thank_you\]/', $content ) ) {
 			$response['status']  = false;
-			$response['message'] = __( 'The selected page does not consist the User Registration and Membership Thank you page Shortcode.' );
+			$response['message'] = __( 'The selected page does not consist the User Registration & Membership Thank you page Shortcode.' );
 			return $response;
 		}
 		return $response;

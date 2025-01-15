@@ -548,7 +548,7 @@ class UR_Emailer {
 		$admin_email = explode( ',', $admin_email );
 		$admin_email = array_map( 'trim', $admin_email );
 
-		$subject  = get_option( 'user_registration_approval_link_email_subject', __( 'Approval Link For New User Registration', 'user-registration' ) );
+		$subject  = get_option( 'user_registration_approval_link_email_subject', __( 'Approval Link For New User Registration & Membership', 'user-registration' ) );
 		$settings = new UR_Settings_Approval_Link_Email();
 
 		$form_id = ur_get_form_id_by_userid( $user_id );

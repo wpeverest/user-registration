@@ -253,7 +253,7 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 						$content .= '</div>';
 						$content .= '</div>';
 						$content .= '<div class="user-registration-settings-sidebar__footer">';
-						$content .= '<p>' . esc_html__( 'Thank you for choosing User Registration! 😊', 'user-registration' ) . '</p>';
+						$content .= '<p>' . esc_html__( 'Thank you for choosing User Registration & Membership! 😊', 'user-registration' ) . '</p>';
 						$content .= '<div class="user-registration-settings-sidebar__footer--card">';
 						$content .= '<svg xmlns="http://www.w3.org/2000/svg" width="62" height="62" viewBox="0 0 62 62" fill="none">
 											<rect x="3.00521" y="3.00521" width="55.9896" height="55.9896" rx="27.9948" fill="#7878E1" stroke="#7878E1" stroke-width="5.98958"/>

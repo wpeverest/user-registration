@@ -714,28 +714,20 @@ class UR_AJAX {
 		 * Default value is get_option('user_registration_email_from_address').
 		 */
 		$sender_email = apply_filters( 'wp_mail_from', get_option( 'user_registration_email_from_address', get_option( 'admin_email' ) ) );
-		echo '<pre>';
-		print_r( $sender_email  );
-		echo '</pre>';
-		die();
 		$email        = sanitize_email( isset( $_POST['email'] ) ? wp_unslash( $_POST['email'] ) : '' ); // phpcs:ignore WordPress.Security.NonceVerification
 		/* translators: %s - WP mail from name */
-		$subject = 'User Registration: ' . sprintf( esc_html__( 'Test email from %s', 'user-registration' ), $from_name );
+		$subject = 'User Registration & Membership: ' . sprintf( esc_html__( 'Test email from %s', 'user-registration' ), $from_name );
 		$header  = array(
 			'From:' . $from_name . ' <' . $sender_email . '>',
 			'Reply-To:' . $sender_email,
 			'Content-Type:text/html; charset=UTF-8',
 		);
-		echo '<pre>';
-		print_r( $header );
-		echo '</pre>';
-		die();
 		$message =
 		'Congratulations,<br>
 		Your test email has been received successfully.<br>
-		We thank you for trying out User Registration and joining our mission to make sure you get your emails delivered.<br>
+		We thank you for trying out User Registration & Membership and joining our mission to make sure you get your emails delivered.<br>
 		Regards,<br>
-		User Registration Team';
+		User Registration & Membership Team';
 
 		$status = wp_mail( $email, $subject, $message, $header );
 
@@ -1028,7 +1020,7 @@ class UR_AJAX {
 					wp_send_json_error(
 						array(
 							'message' => esc_html__(
-								'The selected page is not a User Registration Login or My Account page.',
+								'The selected page is not a User Registration & Membership Login or My Account page.',
 								'user-registration'
 							),
 						)
@@ -1885,7 +1877,7 @@ class UR_AJAX {
 					wp_send_json_error(
 						array(
 							'message' => esc_html__(
-								'The selected page is not a User Registration Login or My Account page.',
+								'The selected page is not a User Registration & Membership Login or My Account page.',
 								'user-registration'
 							),
 						)
