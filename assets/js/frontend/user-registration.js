@@ -2316,6 +2316,7 @@
 				)
 					.off("click")
 					.on("click", function (event) {
+
 						event.preventDefault();
 						// Check if the form is edit-profile form and check if ajax submission on edit profile is enabled.
 						if (
@@ -2327,7 +2328,7 @@
 								"form.user-registration-EditProfileForm"
 							).ur_form_submission();
 						}
-						$(this).submit();
+						$(this).closest('form')[0].submit();
 					});
 				if ($(".ur-flatpickr-field").length) {
 					// create an array to store the flatpickr instances.
