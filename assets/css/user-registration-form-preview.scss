@@ -162,7 +162,7 @@
 
 		.ur-form-side-panel{
 			display: flex;
-			max-width: 380px;
+			min-width: 380px;
 			padding: 20px;
 			flex-direction: column;
 			gap: 36px;
