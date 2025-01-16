@@ -3,7 +3,7 @@
  * Plugin Name: User Registration
  * Plugin URI: https://wpuserregistration.com/
  * Description: Drag and Drop user registration form and login form builder.
- * Version: 3.3.5.2
+ * Version: 4.0
  * Author: WPEverest
  * Author URI: https://wpuserregistration.com
  * Text Domain: user-registration
@@ -14,6 +14,10 @@
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
+}
+
+if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+	require_once __DIR__ . '/vendor/autoload.php';
 }
 
 if ( ! class_exists( 'UserRegistration' ) ) :
@@ -31,7 +35,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '3.3.5.2';
+		public $version = '4.0';
 
 		/**
 		 * Session instance.
@@ -164,6 +168,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			$this->define( 'UR_TEMPLATE_DEBUG_MODE', false );
 			$this->define( 'UR_FORM_PATH', UR_ABSPATH . 'includes' . UR_DS . 'form' . UR_DS );
 			$this->define( 'UR_SESSION_CACHE_GROUP', 'ur_session_id' );
+			$this->define( 'UR_PRO_ACTIVE', false );
 		}
 
 		/**
@@ -225,6 +230,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			 * Core classes.
 			 */
 			include_once UR_ABSPATH . 'includes/functions-ur-core.php';
+			include_once UR_ABSPATH . 'modules/functions-ur-modules.php';
 			include_once UR_ABSPATH . 'includes/functions-ur-form.php';
 			include_once UR_ABSPATH . 'includes/class-ur-install.php';
 			include_once UR_ABSPATH . 'includes/class-ur-post-types.php'; // Registers post types.
@@ -261,6 +267,20 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			 */
 			include_once UR_ABSPATH . 'includes/admin/class-ur-config.php';
 
+			if ( ur_check_module_activation( 'membership' ) ) {
+				/** include modules */
+				include_once UR_ABSPATH . 'modules/membership/user-registration-membership.php';
+			}
+
+			if ( ( ur_check_module_activation( 'membership' ) || ur_check_module_activation( 'payments' ) ) && ur_check_module_activation( 'payment-history' ) ) {
+				include_once UR_ABSPATH . 'modules/payment-history/Orders.php';
+			}
+
+			if ( ur_check_module_activation( 'content-restriction' ) ) {
+				include_once UR_ABSPATH . 'modules/content-restriction/user-registration-content-restriction.php';
+				include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-content-restriction.php';
+			}
+
 			/**
 			 * Elementor classes.
 			 */
@@ -282,6 +302,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			if ( $this->is_request( 'admin' ) ) {
 				include_once UR_ABSPATH . 'includes/admin/class-ur-admin.php';
 				include_once UR_ABSPATH . 'includes/abstracts/abstract-ur-meta-boxes.php';
+
 				include_once UR_ABSPATH . 'includes/admin/class-ur-admin-embed-wizard.php';
 			}
 
@@ -407,7 +428,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 */
 		public static function plugin_action_links( $actions ) {
 			$new_actions = array(
-				'settings' => '<a href="' . admin_url( 'admin.php?page=user-registration-settings' ) . '" aria-label="' . esc_attr__( 'View User Registration settings', 'user-registration' ) . '">' . esc_html__( 'Settings', 'user-registration' ) . '</a>',
+				'settings' => '<a href="' . admin_url( 'admin.php?page=user-registration-settings' ) . '" aria-label="' . esc_attr__( 'View User Registration & Membership settings', 'user-registration' ) . '">' . esc_html__( 'Settings', 'user-registration' ) . '</a>',
 			);
 
 			return array_merge( $new_actions, $actions );
@@ -423,7 +444,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		public static function plugin_row_meta( $plugin_meta, $plugin_file ) {
 			if ( UR_PLUGIN_BASENAME === $plugin_file ) {
 				$new_plugin_meta = array(
-					'docs'    => '<a href="' . esc_url( apply_filters( 'user_registration_docs_url', 'https://docs.wpuserregistration.com/' ) ) . '" area-label="' . esc_attr__( 'View User Registration documentation', 'user-registration' ) . '">' . esc_html__( 'Docs', 'user-registration' ) . '</a>',
+					'docs'    => '<a href="' . esc_url( apply_filters( 'user_registration_docs_url', 'https://docs.wpuserregistration.com/' ) ) . '" area-label="' . esc_attr__( 'View User Registration & Membership documentation', 'user-registration' ) . '">' . esc_html__( 'Docs', 'user-registration' ) . '</a>',
 					'support' => '<a href="' . esc_url( apply_filters( 'user_registration_support_url', 'https://wpuserregistration.com/support/' ) ) . '" area-label="' . esc_attr__( 'Visit free customer support', 'user-registration' ) . '">' . __( 'Free support', 'user-registration' ) . '</a>',
 				);
 
@@ -550,7 +571,7 @@ if ( ! function_exists( 'UR' ) ) {
 				return;
 			}
 
-			echo '<div class="notice-warning notice is-dismissible"><p>' . wp_kses_post( __( 'As <strong>User Registration Pro</strong> is active, <strong>User Registration Free</strong> is now not needed.', 'user-registration' ) ) . '</p></div>';
+			echo '<div class="notice-warning notice is-dismissible"><p>' . wp_kses_post( __( 'As <strong>User Registration & Membership Pro</strong> is active, <strong>User Registration Free</strong> is now not needed.', 'user-registration' ) ) . '</p></div>';
 
 			if ( isset( $_GET['activate'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				unset( $_GET['activate'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended

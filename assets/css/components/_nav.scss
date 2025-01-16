@@ -14,7 +14,7 @@
 		display: flex;
 		border-bottom: $border-width solid $border-color;
 
-		.user-registration_page_user-registration-settings & {
+		.user-registration-membership_page_user-registration-settings & {
 			padding: 0;
 			margin: 0 16px;
 			border-bottom: 0;
@@ -41,7 +41,7 @@
 		}
 
 		// Customize setting page nav.
-		.user-registration_page_user-registration-settings & {
+		.user-registration-membership_page_user-registration-settings & {
 			background-color: transparent;
 			color: $white;
 			margin: 0;

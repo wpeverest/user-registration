@@ -165,7 +165,6 @@ function ur_print_notices() {
 	 * @param array $types The original array of available message types.
 	 */
 	$notice_types = apply_filters( 'user_registration_types', array( 'notice', 'error', 'success' ) );
-
 	foreach ( $notice_types as $notice_type ) {
 		if ( ur_notice_count( $notice_type ) > 0 ) {
 

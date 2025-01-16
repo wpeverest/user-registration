@@ -1,31 +1,44 @@
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
-const isProd = process.env.NODE_ENV === 'production';
+const isProd = process.env.NODE_ENV === "production";
 
 module.exports = (env, argv) => {
-
 	return {
 		entry: {
 			welcome: "./src/welcome/index.js",
 			dashboard: "./src/dashboard/index.js",
 			formblock: "./assets/js/admin/gutenberg/form-block.js",
 			blocks: "./src/blocks/index.js",
+			form_templates: "./src/form-templates/index.js"
 		},
 		output: {
 			path: path.resolve(__dirname + "/chunks"),
 			publicPath: "/",
-			filename: "[name].js",
+			filename: "[name].js"
 		},
 		devtool: isProd ? false : "source-map",
 		resolve: {
-			extensions: [".js", ".jsx", ".json"],
+			extensions: [".js", ".jsx", ".json"]
 		},
 		module: {
 			rules: [
 				{
 					test: /\.(js|jsx)$/,
 					exclude: /node_modules/,
-					use: ["babel-loader", "eslint-loader"],
+					use: [
+						{
+							loader: "babel-loader",
+							options: {
+								presets: [
+									"@babel/preset-env",
+									"@babel/preset-react"
+								]
+							}
+						},
+						{
+							loader: "eslint-loader"
+						}
+					]
 				},
 				{
 					test: /\.s[ac]ss$/i,
@@ -35,22 +48,22 @@ module.exports = (env, argv) => {
 						// Translates CSS into CommonJS
 						"css-loader",
 						// Compiles Sass to CSS
-						"sass-loader",
-					],
+						"sass-loader"
+					]
 				},
 				{
 					test: /\.(gif|webp)$/i,
-					use: "url-loader",
+					use: "url-loader"
 				},
 				{
 					test: /\.(png|svg|jpg|jpeg)$/i,
 					use: [
 						{
-							loader: "file-loader",
-						},
-					],
-				},
-			],
+							loader: "file-loader"
+						}
+					]
+				}
+			]
 		},
 		plugins: [
 			new CopyPlugin({
@@ -62,19 +75,19 @@ module.exports = (env, argv) => {
 								__dirname,
 								"chunks",
 								path.basename(path.dirname(absoluteFilename)),
-								"block.json",
+								"block.json"
 							);
-						},
-					},
-				],
-			}),
+						}
+					}
+				]
+			})
 		],
 		externals: {
 			"@wordpress/blocks": ["wp", "blocks"],
 			"@wordpress/components": ["wp", "components"],
 			"@wordpress/block-editor": ["wp", "blockEditor"],
 			"@wordpress/server-side-render": ["wp", "serverSideRender"],
-			react: ["React"],
-		},
+			react: ["React"]
+		}
 	};
 };

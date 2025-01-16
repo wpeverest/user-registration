@@ -43,7 +43,7 @@ class UR_Shortcode_Login {
 		if ( isset( $atts['userState'] ) ) {
 			$check_state = 'logged_out' === $atts['userState'];
 		}
-		if ( ! is_user_logged_in() || $check_state  ) {
+		if ( ! is_user_logged_in() || $check_state || ( isset( $_GET['page'] ) && "user-registration-login-forms" === $_GET['page'] )  ) {
 			// After password reset, add confirmation message.
 			$is_password_resetted = get_transient( 'ur_password_resetted_flag' );
 			if ( ! empty( $is_password_resetted ) ) {

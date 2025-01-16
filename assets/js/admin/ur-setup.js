@@ -74,7 +74,7 @@
 	 * @param {string} response.activateUrl URL to activate the just installed plugin.
 	 */
 	wp.updates.installExtensionSuccess = function (response) {
-		if ("user-registration_page_add-new-registration" === pagenow) {
+		if ("user-registration-membership_page_add-new-registration" === pagenow) {
 			if (
 				!$(document).find(".user-registration-form-template-wrapper")
 					.length
@@ -113,7 +113,7 @@
 				$document.trigger("wp-plugin-bulk-install-success", response);
 			}
 		} else if (
-			"user-registration_page_user-registration-settings" === pagenow
+			"user-registration-membership_page_user-registration-settings" === pagenow
 		) {
 			wp.a11y.speak(__("Installation completed successfully."), "polite");
 
@@ -203,7 +203,7 @@
 	 * @param {string}  response.errorMessage The error that occurred.
 	 */
 	wp.updates.installExtensionError = function (response) {
-		if ("user-registration_page_add-new-registration" === pagenow) {
+		if ("user-registration-membership_page_add-new-registration" === pagenow) {
 			if (
 				!$(document).find(".user-registration-form-template-wrapper")
 					.length
@@ -271,7 +271,7 @@
 				$document.trigger("wp-plugin-bulk-install-error", response);
 			}
 		} else if (
-			"user-registration_page_user-registration-settings" === pagenow
+			"user-registration-membership_page_user-registration-settings" === pagenow
 		) {
 			if (!wp.updates.isValidResponse(response, "install")) {
 				return;
@@ -422,7 +422,7 @@ jQuery(function ($) {
 
 					if (
 						!$(this).closest(
-							"body.user-registration_page_add-new-registration"
+							"body.user-registration-membership_page_add-new-registration"
 						).length
 					) {
 						return;
@@ -437,7 +437,7 @@ jQuery(function ($) {
 
 				if (
 					!$(this).closest(
-						"body.user-registration_page_add-new-registration"
+						"body.user-registration-membership_page_add-new-registration"
 					).length
 				) {
 					return;

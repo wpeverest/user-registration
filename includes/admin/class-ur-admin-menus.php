@@ -478,7 +478,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			 */
 		public function admin_menu() {
 
-			$registration_page = add_menu_page( 'User Registration', 'User Registration', 'manage_user_registration', 'user-registration', array( $this, 'registration_page' ), $this->get_icon_svg(), '55.8' );
+			$registration_page = add_menu_page( 'User Registration', 'User Registration & Membership', 'manage_user_registration', 'user-registration', array( $this, 'registration_page' ), $this->get_icon_svg(), '55.8' );
 
 			add_action( 'load-' . $registration_page, array( $this, 'registration_page_init' ) );
 			add_submenu_page(
@@ -492,6 +492,10 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'registration_page',
 				)
 			);
+			if ( isset( $_GET['page'] ) && ( 'user-registration' === $_GET['page'] || 'user-registration-registration-forms' === $_GET['page'] || 'user-registration-login-forms' === $_GET['page'] ) ) {
+				add_submenu_page( 'user-registration', __( 'Registration Forms', 'user-registration' ), '<span style="margin-left:5px;">  ⤷ </span>' . __( 'Registration Forms', 'user-registration' ), 'manage_user_registration', 'user-registration', array( $this, 'registration_page' ) );
+				add_submenu_page( 'user-registration', __( 'Login Form', 'user-registration' ), '<span style="margin-left:5px;">  ⤷ </span>' . __( 'Login Form', 'user-registration' ), 'manage_user_registration', 'user-registration-login-forms', array( $this, 'registration_page' ) );
+			}
 		}
 
 			/**
@@ -637,12 +641,42 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			return $status;
 		}
 
-			/**
-			 * Init the settings page.
-			 */
+		/**
+		 * Init the settings page.
+		 */
 		public function registration_page() {
 			global $registration_table_list;
-			if ( isset( $_GET['tab'] ) && 'login-forms' === $_GET['tab'] ) { //phpcs:ignore WordPress.Security.NonceVerification
+			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+
+			if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page'] ) { //phpcs:ignore WordPress.Security.NonceVerification
+				wp_enqueue_script( 'user-registration-settings', UR()->plugin_url() . '/assets/js/admin/settings' . $suffix . '.js', array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-sortable', 'iris', 'tooltipster' ), UR_VERSION, true );
+				wp_enqueue_script( 'user-registration-login-settings', UR()->plugin_url() . '/assets/js/admin/login-settings' . $suffix . '.js', array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-sortable', 'iris', 'tooltipster' ), UR_VERSION, true );
+				wp_enqueue_style( 'user-registration-css', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR_VERSION );
+
+				$ur_login_form_params = array(
+					'ajax_url'               => admin_url( 'admin-ajax.php' ),
+					'ur_login_settings_save' => wp_create_nonce( 'ur_login_settings_save_nonce' ),
+					'login_settings'         => get_login_options_settings(),
+					'is_login_settings_page' => isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page'] ? true : false,
+					'i18n_admin'             => array(
+						'i18n_settings_successfully_saved' => _x( 'Settings successfully saved.', 'user registration admin', 'user-registration' ),
+						'i18n_success'                     => _x( 'Success', 'user registration admin', 'user-registration' ),
+						'i18n_error'                       => _x( 'Error', 'user registration admin', 'user-registration' ),
+					),
+				);
+				wp_localize_script(
+					'user-registration-login-settings',
+					'ur_login_form_params',
+					$ur_login_form_params
+				);
+				wp_localize_script(
+					'user-registration-settings',
+					'ur_login_form_params',
+					array(
+						'user_registration_my_account_selection_validator_nonce' => wp_create_nonce( 'user_registration_my_account_selection_validator' ),
+					)
+				);
+				$login_form_settings = get_login_options_settings();
 				include_once __DIR__ . '/views/html-login-page-forms.php';
 			} else {
 				$registration_table_list->display_page();
@@ -672,6 +706,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				update_option( 'user_registration_onboarding_skipped', true );
 			}
 			wp_enqueue_script( 'ur-setup' );
+
 			wp_localize_script(
 				'ur-setup',
 				'ur_setup_params',

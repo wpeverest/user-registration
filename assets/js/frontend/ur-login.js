@@ -55,9 +55,8 @@ jQuery(function ($) {
 
 					$this
 						.closest("form")
-						.find(".ur-submit-button")
-						.siblings("span")
-						.addClass("ur-front-spinner");
+						.find(".ur-submit-button span")
+						.addClass("ur-spinner");
 
 					var data = {
 						username: username,
@@ -82,9 +81,8 @@ jQuery(function ($) {
 						success: function (res) {
 							$this
 								.closest("form")
-								.find(".ur-submit-button")
-								.siblings("span")
-								.removeClass("ur-front-spinner");
+								.find(".ur-submit-button span")
+								.removeClass("ur-spinner");
 
 							// custom error message
 							if (res.success == false) {
@@ -99,12 +97,12 @@ jQuery(function ($) {
 									.remove();
 
 								$this
-									.closest("#user-registration")
+									.closest("")
 									.find(".user-registration-message")
 									.remove();
 
 								$this
-									.closest("#user-registration")
+									.closest(".ur-frontend-form")
 									.prepend(
 										'<ul class="user-registration-error">' +
 											res.data.message +
@@ -123,7 +121,7 @@ jQuery(function ($) {
 										.remove();
 
 									$this
-										.closest("#user-registration")
+										.closest(".ur-frontend-form")
 										.prepend(
 											'<ul class="user-registration-message">' +
 												res.data.message +
@@ -151,7 +149,7 @@ jQuery(function ($) {
 							.remove();
 
 						$this
-							.closest("#user-registration")
+							.closest(".ur-frontend-form")
 							.prepend(
 								'<ul class="user-registration-error">' +
 									ur_login_params.ajax_form_submit_error +

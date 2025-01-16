@@ -1,7 +1,7 @@
 /**
  * External Dependencies
  */
-import React from "react";
+import React, { useState } from "react";
 import {
 	Flex,
 	Image,
@@ -9,12 +9,65 @@ import {
 	Box,
 	Text,
 	Button,
-	Link,
+	Link
 } from "@chakra-ui/react";
 
 import { __ } from "@wordpress/i18n";
+import InputHandler from "../common/InputHandler";
+import { useStateValue } from "../../../context/StateProvider";
+import apiFetch from "@wordpress/api-fetch";
 
 function LastPage({ onBoardIconsURL }) {
+	/* global _UR_WIZARD_ */
+	const { restURL, adminEmail, urRestApiNonce } =
+		typeof _UR_WIZARD_ !== "undefined" && _UR_WIZARD_;
+	const [allowTracking, setAllowTracking] = useState(false);
+	const [{ allowUsageData }, dispatch] = useStateValue();
+
+	const consentSettings = [
+		{
+			title: __(
+				"Help us improve User Registration & Membership by sharing non-sensitive diagonistic and usage data with us.",
+				"user-registration"
+			),
+			id: "user_registration_allow_usage_tracking",
+			type: "checkbox",
+			default: "yes"
+		},
+		{
+			title: __(
+				"Receive security updates, feature updates, exclusive deals and other promotional offers right in your admin email.",
+				"user-registration"
+			),
+			id: "user_registration_allow_email_updates",
+			type: "switch",
+			default: "yes"
+		},
+		{
+			id: "user_registration_updates_admin_email",
+			type: "text",
+			default: adminEmail
+		}
+	];
+
+	const sendAllowUsage = () => {
+		// POST
+		apiFetch({
+			path:
+				restURL +
+				"user-registration/v1/getting-started/save-allow-usage-data",
+			method: "POST",
+			headers: {
+				"X-WP-Nonce": urRestApiNonce
+			},
+			data: { settings: allowUsageData }
+		}).then((res) => {
+			if (res.success) {
+				setAllowTracking(true);
+			}
+		});
+	};
+
 	return (
 		<Flex
 			direction="column"
@@ -37,13 +90,143 @@ function LastPage({ onBoardIconsURL }) {
 			>
 				{__("Congratulations, You’re all set! 🎉", "user-registration")}
 			</Heading>
-			<Box
-				w="100%"
-				p={4}
-				color="#2D3559"
-				mt={3}
-				borderTop="1px solid #DEE0E9"
-			>
+			{allowTracking ? (
+				<Box
+					w="100%"
+					p="32px 36px"
+					color="#2D3559"
+					border="1px solid #E1E1E1"
+					borderRadius="8px"
+					display="flex"
+					flexDirection="column"
+					gap="16px"
+				>
+					<Text fontSize="18px" fontWeight="500" color="#383838">
+						{__(
+							"Thank you for choosing to enhance your experience with User Registration & Membership!",
+							"user-registration"
+						)}
+					</Text>
+					<Text
+						fontSize="16px"
+						fontWeight="400"
+						color="#383838"
+						lineHeight="26px"
+					>
+						{__(
+							"By sharing diagnostic and usage data, you're helping us improve and provide better features. We're excited to keep you updated with security patches, new features, exclusive deals, and promotional offers directly to your admin email.",
+							"user-registration"
+						)}
+					</Text>
+					<Text
+						fontSize="16px"
+						fontWeight="400"
+						color="#383838"
+						lineHeight="26px"
+					>
+						{__(
+							"We appreciate your support! 😊",
+							"user-registration"
+						)}
+					</Text>
+				</Box>
+			) : (
+				<Box
+					w="100%"
+					p="32px 36px"
+					color="#2D3559"
+					border="1px solid #E1E1E1"
+					borderRadius="8px"
+					display="flex"
+					flexDirection="column"
+					gap="24px"
+				>
+					<Text fontSize="22px" fontWeight="600" color="#383838">
+						{__(
+							"Help Us Personalize Your Experience",
+							"user-registration"
+						)}
+					</Text>
+					<Flex justify="space-between" wrap="wrap" gap="20px">
+						{consentSettings.map((setting, key) => (
+							<InputHandler
+								key={key}
+								setting={setting}
+								customStyle={{
+									flexDirection: "row-reverse",
+									gap: "8px",
+									alignItems: "top",
+									width: "100%",
+
+									"> div, label": {
+										flex: "auto",
+										alignItems: "baseline"
+									},
+
+									"> div": {
+										label: {
+											fontSize: "16px",
+											lineHeight: "26px",
+											fontWeight: "400"
+										}
+									},
+
+									"> .chakra-input__group": {
+										marginTop: "4px",
+
+										input: {
+											borderColor: "#BDBDBD"
+										}
+									},
+
+									"> label": {
+										marginTop: "5px",
+
+										"> .chakra-switch__track": {
+											width: "1.6rem",
+											height: "0.8rem",
+
+											"> .chakra-switch__thumb": {
+												width: "0.8rem",
+												height: "0.8rem"
+											}
+										}
+									}
+								}}
+							/>
+						))}
+					</Flex>
+					<Text
+						fontSize="14px"
+						fontWeight="400"
+						color="#383838"
+						lineHeight="24px"
+						fontStyle="italic"
+					>
+						{__(
+							"We respect your privacy and will only use your data as outlined in our",
+							"user-registration"
+						)}{" "}
+						<Link
+							href="https://wpuserregistration.com/privacy-policy/"
+							isExternal
+							color="#475BB2"
+							textDecoration="underline"
+						>
+							{__("Privacy Policy.", "user-registration")}{" "}
+						</Link>
+					</Text>
+					<Button
+						colorScheme="blue"
+						backgroundColor="#475BB2 !important"
+						width="30%"
+						onClick={sendAllowUsage}
+					>
+						{__("Yes, I would love to help", "user-registration")}
+					</Button>
+				</Box>
+			)}
+			<Box w="100%" p={4} color="#2D3559" mt={3}>
 				<Text
 					fontSize="18px"
 					fontWeight="600"
@@ -64,7 +247,7 @@ function LastPage({ onBoardIconsURL }) {
 						height="125px"
 						borderRadius="7px"
 						_hover={{
-							boxShadow: "0px 6px 20px rgba(71, 91, 178, 0.08)",
+							boxShadow: "0px 6px 20px rgba(71, 91, 178, 0.08)"
 						}}
 						bg="#FAFAFA"
 					>
@@ -106,7 +289,7 @@ function LastPage({ onBoardIconsURL }) {
 						height="125px"
 						borderRadius="7px"
 						_hover={{
-							boxShadow: "0px 6px 20px rgba(71, 91, 178, 0.08)",
+							boxShadow: "0px 6px 20px rgba(71, 91, 178, 0.08)"
 						}}
 						bg="#FAFAFA"
 					>
@@ -147,7 +330,7 @@ function LastPage({ onBoardIconsURL }) {
 						height="125px"
 						borderRadius="7px"
 						_hover={{
-							boxShadow: "0px 6px 20px rgba(71, 91, 178, 0.08)",
+							boxShadow: "0px 6px 20px rgba(71, 91, 178, 0.08)"
 						}}
 						bg="#FAFAFA"
 						gap="10px"
@@ -189,7 +372,7 @@ function LastPage({ onBoardIconsURL }) {
 						height="125px"
 						borderRadius="7px"
 						_hover={{
-							boxShadow: "0px 6px 20px rgba(71, 91, 178, 0.08)",
+							boxShadow: "0px 6px 20px rgba(71, 91, 178, 0.08)"
 						}}
 						bg="#FAFAFA"
 						width="358px"

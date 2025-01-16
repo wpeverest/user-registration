@@ -15,7 +15,7 @@ import {
 	Box,
 	Text,
 	Button,
-	Link,
+	Link
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 
@@ -40,237 +40,237 @@ const FreeVsPro = () => {
 				{
 					title: __(
 						"Unlimited Registration Forms",
-						"user-registration",
+						"user-registration"
 					),
 					free: true,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __(
 						"Unlimited User Registrations",
-						"user-registration",
+						"user-registration"
 					),
 					free: true,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __("Built-in Login Forms", "user-registration"),
 					free: true,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __("Login Form Templates", "user-registration"),
 					free: true,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __("AJAX Login", "user-registration"),
 					free: true,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __(
 						"Replace Default WordPress Login",
-						"user-registration",
+						"user-registration"
 					),
 					free: true,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __("Logout Confirmation", "user-registration"),
 					free: true,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __(
 						"4 Registration Approval Methods",
-						"user-registration",
+						"user-registration"
 					),
 					free: true,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __("Individual User Profiles", "user-registration"),
 					free: true,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __("Account Page Layouts", "user-registration"),
 					free: true,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __(
 						"User Registration Analytics widget",
-						"user-registration",
+						"user-registration"
 					),
 					free: true,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __(
 						"Customizable Email Notifications",
-						"user-registration",
+						"user-registration"
 					),
 					free: true,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __(
 						"User Redirection After Registration",
-						"user-registration",
+						"user-registration"
 					),
 					free: true,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __(
 						"Google reCAPTCHA v2 and V3",
-						"user-registration",
+						"user-registration"
 					),
 					free: true,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __("HCaptcha", "user-registration"),
 					free: true,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __("Cloudflare Turnstile", "user-registration"),
 					free: true,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __("Import/Export Forms", "user-registration"),
 					free: true,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __("Export Users", "user-registration"),
 					free: true,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __(
 						"Erase Data After Uninstallation",
-						"user-registration",
+						"user-registration"
 					),
 					free: true,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __("Strong Password", "user-registration"),
 					free: true,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __("GDPR Compliance", "user-registration"),
 					free: true,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __("Dashboard Analytics", "user-registration"),
 					free: false,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __(
 						"Admin Approval after Email Confirmation",
-						"user-registration",
+						"user-registration"
 					),
 					free: false,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __("Login Form Field Icons", "user-registration"),
 					free: false,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __("Password-less Login", "user-registration"),
 					free: false,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __("Multiple Login Prevention", "user-registration"),
 					free: false,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __("Whitelisted Domains", "user-registration"),
 					free: false,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __(
 						"Registration And Login Popups",
-						"user-registration",
+						"user-registration"
 					),
 					free: false,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __("Role Based Redirection", "user-registration"),
 					free: false,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __("Keyboard Friendly Forms", "user-registration"),
 					free: false,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __("Form Reset Button", "user-registration"),
 					free: false,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __("Honeypot Spam Protection", "user-registration"),
 					free: false,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __(
 						"Field Mapping with External Plugins",
-						"user-registration",
+						"user-registration"
 					),
 					free: false,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __("Unique Field Validation", "user-registration"),
 					free: false,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __("Auto Populate Form Fields", "user-registration"),
 					free: false,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __(
 						"Auto Logout After Inactivity",
-						"user-registration",
+						"user-registration"
 					),
 					free: false,
-					pro: true,
+					pro: true
 				},
 				{
 					title: __(
 						"Send Form Data to External URL After Registration",
-						"user-registration",
+						"user-registration"
 					),
 					free: false,
-					pro: true,
-				},
-			],
+					pro: true
+				}
+			]
 		},
 		{
 			type: "addons",
 			title: __("Addons", "user-registration"),
-			contents: [],
-		},
+			contents: []
+		}
 	]);
 
 	useEffect(() => {
@@ -284,13 +284,21 @@ const FreeVsPro = () => {
 							if (tableContent.type === "features") {
 								data.modules_lists.map((module) => {
 									if (module.type == "feature") {
+										console.log(tableContent.contents);
+
 										tableContent.contents = [
 											...tableContent.contents,
 											{
 												title: module.title,
-												free: false,
-												pro: true,
-											},
+												free:
+													module.plan.indexOf(
+														"free"
+													) != -1,
+												pro:
+													module.plan.indexOf(
+														"free"
+													) == -1
+											}
 										];
 									}
 								});
@@ -304,8 +312,8 @@ const FreeVsPro = () => {
 											{
 												title: module.title,
 												free: false,
-												pro: true,
-											},
+												pro: true
+											}
 										];
 									}
 								});
@@ -319,7 +327,7 @@ const FreeVsPro = () => {
 					toast({
 						title: e.message,
 						status: "error",
-						duration: 3000,
+						duration: 3000
 					});
 				});
 			setContentsLoaded(true);
@@ -415,7 +423,7 @@ const FreeVsPro = () => {
 				>
 					{__(
 						"Access all premium addons, features and upcoming updates right away by upgrading to the Pro version.",
-						"user-registration",
+						"user-registration"
 					)}
 				</Text>
 				<Button

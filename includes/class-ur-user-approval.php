@@ -280,9 +280,10 @@ class UR_User_Approval {
 			$url      = (!empty($_SERVER['HTTPS'])) ? 'https://' . $_SERVER['SERVER_NAME'] : 'http://' . $_SERVER['SERVER_NAME']; //phpcs:ignore
 
 			if ( get_option( 'ur_login_ajax_submission' ) ) {
+				$url .= isset( $_SERVER['HTTP_REFERER' ] ) ? $_SERVER['HTTP_REFERER'] : ""; //phpcs:ignore
 				$url .= $_SERVER['HTTP_REFERER']; //phpcs:ignore
 			} else {
-				$url .= $_SERVER['REQUEST_URI']; //phpcs:ignore
+				$url .= isset( $_SERVER['REQUEST_URI' ] ) ? $_SERVER['REQUEST_URI'] : ""; //phpcs:ignore
 			}
 
 			$url = substr( $url, 0, strpos( $url, '?' ) );
@@ -338,7 +339,7 @@ class UR_User_Approval {
 	}
 
 	public function check_user_membership( $user ) {
-		$is_membership_active = is_plugin_active( 'user-registration-membership/user-registration-membership.php' );
+		$is_membership_active = ur_check_module_activation('membership');
 		if ( $is_membership_active ) {
 			$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
 			$membership         = $members_repository->get_member_membership_by_id( $user->ID );

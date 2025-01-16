@@ -175,8 +175,8 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 						?>
 						<div class="user-registration-settings-sidebar">
 							<?php
-							$content = '<div class="user-registration-settings-sidebar__header"><h3>' . esc_html( 'Setup Checklist', 'user-registration' ) . '</h3></div><div class="user-registration-settings-sidebar__body">
-										<p>' . esc_html( 'Follow these steps to start registering users on your website.', 'user-registration' ) . '</p>
+							$content = '<div class="user-registration-settings-sidebar__header"><h3>' . esc_html__( 'Setup Checklist', 'user-registration' ) . '</h3></div><div class="user-registration-settings-sidebar__body">
+										<p>' . esc_html__( 'Follow these steps to start registering users on your website.', 'user-registration' ) . '</p>
 										<div class="user-registration-settings-sidebar__body--list">';
 
 							foreach ( $setup_tab_lists as $list ) {
@@ -221,9 +221,9 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 						?>
 						<div class="user-registration-settings-sidebar">
 						<?php
-						$content = '<div class="user-registration-settings-sidebar__header"><h3>' . esc_html( 'Premium Benefits', 'user-registration' ) . '</h3></div>
-										<div class="user-registration-settings-sidebar__body"><p>' . esc_html( 'Get Even More from User Registration with the Premium Plan', 'user-registration' ) . '</p>
-										<div class="user-registration-settings-sidebar__body"><p>' . esc_html( 'The free version of User Registration is just the start. Upgrade to our Pro version for everything you need for advanced form building.', 'user-registration' ) . '</p>
+						$content = '<div class="user-registration-settings-sidebar__header"><h3>' . esc_html__( 'Premium Benefits', 'user-registration' ) . '</h3></div>
+										<div class="user-registration-settings-sidebar__body"><p>' . esc_html__( 'Get Even More from User Registration & Membership with the Premium Plan', 'user-registration' ) . '</p>
+										<div class="user-registration-settings-sidebar__body"><p>' . esc_html__( 'The free version of User Registration & Membership is just the start. Upgrade to our Pro version for everything you need for advanced form building.', 'user-registration' ) . '</p>
 										<div class="user-registration-settings-sidebar__body--list normal">';
 
 						$premium_benefits = array(
@@ -253,14 +253,14 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 						$content .= '</div>';
 						$content .= '</div>';
 						$content .= '<div class="user-registration-settings-sidebar__footer">';
-						$content .= '<p>' . esc_html( 'Thank you for choosing User Registration! 😊', 'user-registration' ) . '</p>';
+						$content .= '<p>' . esc_html__( 'Thank you for choosing User Registration & Membership! 😊', 'user-registration' ) . '</p>';
 						$content .= '<div class="user-registration-settings-sidebar__footer--card">';
 						$content .= '<svg xmlns="http://www.w3.org/2000/svg" width="62" height="62" viewBox="0 0 62 62" fill="none">
 											<rect x="3.00521" y="3.00521" width="55.9896" height="55.9896" rx="27.9948" fill="#7878E1" stroke="#7878E1" stroke-width="5.98958"/>
 											<path d="M31.0013 17.1074L39.3346 39.3296H22.668L31.0013 17.1074Z" fill="#EBEBEB"/>
 											<path fill-rule="evenodd" clip-rule="evenodd" d="M17.1055 22.666L19.0896 39.3327H42.8991L44.8833 22.666L30.9944 34.1243L17.1055 22.666ZM42.9037 40.9155H19.0942V44.8838H42.9037V40.9155Z" fill="white"/>
 										</svg>';
-						$content .= '<p>' . esc_html( 'Get More Features with Pro', 'user-registration' ) . '</p>';
+						$content .= '<p>' . esc_html__( 'Get More Features with Pro', 'user-registration' ) . '</p>';
 						$content .= '<a rel="noreferrer noopener" target="_blank" href="https://wpuserregistration.com/pricing/?utm_source=settings-sidebar-right&amp;utm_medium=premium-benefits-card&amp;utm_campaign=lite-version">Upgrade to Pro</a>';
 						$content .= '</div>';
 						$content .= '</div>';

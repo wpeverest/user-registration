@@ -44,6 +44,26 @@ class UR_Gutenberg_Blocks {
 				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
 			)
 		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/role-list',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( __CLASS__, 'ur_get_role_list_list' ),
+				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
+			)
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/cr-data',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( __CLASS__, 'ur_get_content_restriction_data' ),
+				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
+			)
+		);
 	}
 
 	/**
@@ -63,6 +83,52 @@ class UR_Gutenberg_Blocks {
 			200
 		);
 	}
+
+	/**
+	 * Get role Lists.
+	 *
+	 * @since 4.0
+	 *
+	 * @return array Role lists.
+	 */
+	public static function ur_get_role_list_list() {
+		$all_roles = wp_roles()->roles;
+		$role_list = array();
+		foreach ( $all_roles as $key => $role ) {
+			$role_list[ $key ] = $role['name'];
+		}
+		return new \WP_REST_Response(
+			array(
+				'success'    => true,
+				'role_lists' => $role_list,
+			),
+			200
+		);
+	}
+
+	/**
+	 * Return content restriction data
+	 *
+	 * @since 4.0
+	 *
+	 * @return WP_REST_Response
+	 */
+	public static function ur_get_content_restriction_data() {
+		$message = get_option( 'user_registration_content_restriction_message' );
+
+		$message = ( false === $message ) ? esc_html__( 'This content is restricted!', 'user-registration' ) : $message;
+
+		return new \WP_REST_Response(
+			array(
+				'success' => true,
+				'cr_data' => array(
+					'default_message' => $message,
+				),
+			),
+			200
+		);
+	}
+
 	/**
 	 * Check if a given request has access to update a setting
 	 *

@@ -536,12 +536,13 @@
 	align-content: center;
 
 	.user-registration-setup-wizard {
+
 		&__header {
 			flex: 0 0 25%;
 			margin-bottom: 25px;
 			display: flex;
 			flex-direction: column;
-			gap: 70px;
+			gap: 32px;
 
 			&--logo {
 				display: flex;
@@ -566,43 +567,23 @@
 				list-style-type: none;
 
 				.step {
-					width: 100%;
-					height: 2px;
+					height: 0px;
 					color: #BFBFBF;
-					position: relative;
 					display: flex;
 					flex-direction: column;
 					align-items: center;
-					justify-content: flex-end;
-					background-color: #BFBFBF;
+					justify-content: center;
+					align-items: center;
 
 					.step-label {
-						margin-bottom: 20px;
 						font-weight: 500;
-						font-size: 18px;
-					}
-
-					p.step-identifier {
-						display: inline-block;
-						vertical-align: middle;
-						background-color: #E5E5E5;
-						width: 14px;
-						height: 14px;
-						border: solid 4px #BFBFBF;
-						border-radius: 50%;
-						position: absolute;
-						top: -6px;
-						left: calc(50% - 5px);
+						font-size: 16px;
+						line-height: 26px;
 					}
 				}
 
 				.done,
 				.active {
-
-					p.step-identifier {
-						border-color: #475BB2 ;
-					}
-
 					.step-label {
 						color: #475BB2;
 					}
@@ -612,27 +593,53 @@
 					background-color: #475BB2;
 				}
 
-				.active:not(#step-6) {
-					background: linear-gradient(to right, #475BB2 50%, #bfbfbf 50%);
-				}
-
 				.active {
 					background-color: #475BB2;
+				}
+			}
 
-					p.step-identifier {
-						border: 3px solid #475BB2 ;
-					}
+			.center-line {
+				flex-grow: 1;
+				height: 1px;
+				background-color: #BABABA;
+				margin: 0 10px;
+
+				&#center-line-step-2 {
+					flex-grow: 0.75;
+				}
+				&.done {
+					background-color: #475BB2;
 				}
 			}
 		}
 
 		&__body {
 			flex: 0 0 50%;
-			padding: 32px 32px 46px 32px;
+			padding: 32px;
 			background-color: $white;
 			border-radius: 13px 13px 0px 0px;
 			color: #2D3559;
 			width: 796px;
+			margin-top: 42px;
+
+			.ur-setup-wizard-tool-tip{
+				margin-bottom: 8px !important;
+
+				&::after {
+					content: "";
+					background-image: url('../images/settings-icons/information.svg') !important;
+					background-repeat: no-repeat !important;
+					background-size: 100% !important;
+					background-position: center;
+					display: block;
+					width: 16px;
+					height: 16px;
+					cursor: pointer;
+					padding: $spacing_4px;
+					background: transparent;
+					border-radius: $border_radius_3;
+				}
+			}
 
 			&--select {
 				flex: 1 0 60%;
@@ -646,14 +653,16 @@
 				}
 			}
 
-			.chakra-checkbox__control {
-				border-radius: 50%;
-				height: 32px;
-				width: 32px;
-				margin-right: 10px;
+			&--checkbox {
+				.chakra-checkbox__control {
+					border-radius: 50%;
+					height: 28px;
+					width: 28px;
+					margin-right: 10px;
 
-				svg {
-					font-size: 15px;
+					svg {
+						font-size: 15px;
+					}
 				}
 			}
 		}

@@ -232,7 +232,7 @@ const SmartTagsLists = ({ setIsListViewerOpen }) => {
 				{
 					id: "{{auto_pass}}",
 					description: __(
-						"Auto generated password for the user. It works only if auto-generated password feature is enabled in User Registration Pro",
+						"Auto generated password for the user. It works only if auto-generated password feature is enabled in User Registration & Membership Pro",
 						"user-registration"
 					),
 				},

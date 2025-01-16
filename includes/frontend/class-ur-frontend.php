@@ -153,7 +153,6 @@ class UR_Frontend {
 	 * @param int   $form_id Form ID.
 	 */
 	public function user_registration_frontend_form( $field_object, $form_id ) {
-
 		$class_name = ur_load_form_field_class( $field_object->field_key );
 
 		if ( class_exists( $class_name ) ) {
@@ -163,10 +162,12 @@ class UR_Frontend {
 			$setting['icon']            = isset( $field_object->icon ) ? $field_object->icon : '';
 			$field_type                 = ur_get_field_type( $field_object->field_key );
 
+
 			// Force drop the custom class because it has been addressed in prior container.
 			if ( ! empty( $setting['advance_setting']->custom_class ) ) {
 				unset( $setting['advance_setting']->custom_class );
 			}
+
 			$instance->frontend_includes( $form_id, $field_type, $field_object->field_key, $setting );
 		}
 	}
@@ -182,7 +183,7 @@ class UR_Frontend {
 
 		if ( is_user_logged_in() ) {
 			$layout              = get_option( 'user_registration_my_account_layout', 'horizontal' );
-			$attributes['class'] = $attributes['class'] . ' ' . $layout;
+			$attributes['class'] = $attributes['class'] . ' user-registration-MyAccount ' . $layout;
 		}
 		return $attributes;
 	}

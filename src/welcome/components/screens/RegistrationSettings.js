@@ -13,13 +13,13 @@ import { useStateValue } from "../../../context/StateProvider";
 const RegistrationSettings = ({
 	sectionSettings,
 	siteURL,
-	onBoardIconsURL,
+	onBoardIconsURL
 }) => {
 	const [{ settings }] = useStateValue();
 	return (
 		<Stack direction="column" spacing="8" mt={5}>
 			{sectionSettings &&
-				sectionSettings.settings.map((setting, key) =>
+				sectionSettings.map((setting, key) =>
 					setting.id ===
 						"user_registration_form_setting_minimum_password_strength" &&
 					("undefined" ===

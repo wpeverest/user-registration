@@ -22,14 +22,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <?php
-/**
- * Filter to modify the notice before login registration form.
- *
- * @param string content for login registration form notice.
- *
- * @return string content for login registration form notice.
- */
-apply_filters( 'user_registration_login_registration_form_before_notice', ur_print_notices() );
+	/**
+	 * Filter to modify the notice before login registration form.
+	 *
+	 * @param string content for login registration form notice.
+	 *
+	 * @return string content for login registration form notice.
+	 */
+	ur_add_notice( apply_filters( 'user_registration_passwordless_login_notice', '' ), 'success' );
+	apply_filters( 'user_registration_login_registration_form_before_notice', ur_print_notices() );
 ?>
 
 <?php
@@ -38,15 +39,19 @@ apply_filters( 'user_registration_login_registration_form_before_notice', ur_pri
  */
 do_action( 'user_registration_before_customer_login_registration_form' );
 ?>
-
+<!-- Navigation for login and registration for  -->
+	<div class="ur-login-registration-nav">
+	<ul>
+		<li class="active" id="login-registration--login" data-action="login" ><?php echo esc_html__( 'Login', 'user-registration' ); ?></li>
+		<li class="" id="login-registration--registration" data-action="registration" ><?php echo esc_html__( 'Registration', 'user-registration' ); ?></li>
+	</ul>
+</div>
 <div class="ur-frontend-form login-registration">
 	<div class="ur-form-row">
-		<div class="ur-form-grid">
-			<h2 class="ur-form-title"><?php echo esc_html__( 'Login', 'user-registration' ); ?></h2>
+		<div class="ur-form-grid ur-login-form">
 			<?php echo $login_form;  //phpcs:ignore;?>
 		</div>
-		<div class="ur-form-grid">
-			<h2 class="ur-form-title"><?php echo esc_html__( get_the_title( $form_id ), 'user-registration' );  //phpcs:ignore;?></h2>
+		<div class="ur-form-grid ur-registration-form hidden">
 			<?php echo $registration_form;  //phpcs:ignore;?>
 		</div>
 	</div>

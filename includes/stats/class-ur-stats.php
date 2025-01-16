@@ -36,6 +36,13 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 			}
 			add_action( 'init', array( $this, 'init_usage' ), 4 );
 			add_action( 'update_option_user_registration_allow_usage_tracking', array( $this, 'run_on_save' ), 10, 3 );
+
+			/**
+			 * Enable module tracking.
+			 *
+			 * @since 4.0
+			 */
+			add_action( 'user_registration_feature_track_data_for_tg_user_tracking', array( $this, 'on_module_activate' ) ); // Hook on module activation ( Our UR module activation ).
 		}
 
 		/**
@@ -116,7 +123,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 
 			$base_product = $this->get_base_product();
 
-			$active_plugins = get_option( 'active_plugins', array() );
+			$active_plugins   = get_option( 'active_plugins', array() );
 
 			$base_product_name = $is_premium ? 'User Registration Pro' : 'User Registration';
 
@@ -154,6 +161,39 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 						'product_type'    => 'plugin',
 						'product_slug'    => $plugin,
 					);
+				}
+			}
+
+
+			/**
+			 * Format module data to track in TG Tracking.
+			 *
+			 * @since 4.0
+			 */
+			 $enabled_features = get_option( 'user_registration_enabled_features', array() );
+
+			 $addons_list_moved_into_module = array(
+                'user-registration-payments',
+                'user-registration-content-restriction',
+                'user-registration-frontend-listing',
+                'user-registration-membership',
+             );
+
+			if ( ! empty( $enabled_features ) ) {
+				$our_modules     = $this->get_modules();
+				$modules_by_slug = array_column( $our_modules, null, 'slug' );
+				foreach ( $enabled_features as $slug ) {
+					if ( isset( $modules_by_slug[ $slug ] ) ) {
+						$module                       = $modules_by_slug[ $slug ];
+						$product_slug 				  = in_array( $slug, $addons_list_moved_into_module ) ? $slug . '/' . $slug . '.php' : $slug;
+						$addons_data[ $product_slug ] = array(
+							'product_name'    => $module['name'],
+							'product_version' => UR()->version,
+							'product_type'    => in_array( $slug, $addons_list_moved_into_module ) ? 'plugin' : 'module',
+							'product_slug'    => $product_slug,
+							'is_premium'      => $is_premium
+						);
+					}
 				}
 			}
 
@@ -449,6 +489,39 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					array( 'user_registration_tfa_login_hold_period', '60' ) //phpcs:ignore
 				),
 			);
+		}
+
+		/**
+		 * Track module installation data.
+		 *
+		 * @since 4.0
+		 *
+		 * @param  string $slug Slug.
+		 */
+		public function on_module_activate( $slug ) {
+			$our_modules  = $this->get_modules();
+			$module_lists = wp_list_pluck( $our_modules, 'slug' );
+
+			if ( ! in_array( $slug, $module_lists, true ) ) {
+				return;
+			}
+
+			$this->call_api();
+		}
+
+		/**
+		 * Get all modules.
+		 *
+		 * @since 4.0
+		 */
+		public function get_modules(){
+			$all_modules  = file_get_contents( ur()->plugin_path() . '/assets/extensions-json/all-features.json' );
+
+			if ( ur_is_json( $all_modules ) ) {
+				$all_modules = json_decode( $all_modules, true );
+			}
+
+			return isset( $all_modules['features'] ) ? $all_modules['features'] : array();
 		}
 	}
 }

@@ -72,7 +72,7 @@ class UR_Setting_User_Login extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => 'yes',
 				'placeholder' => '',
-				'tip'         => __( 'Check this option to validate the Username for Special Character', 'user-registration' ),
+				'tip'         => __( 'Check this option to allow Special Character in Username', 'user-registration' ),
 			),
 		);
 

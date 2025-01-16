@@ -8,22 +8,27 @@ jQuery(function ($) {
 		 * Initiate copy shortcode process.
 		 */
 		init: function () {
+			ur_init_tooltips(".ur-copy-shortcode, .ur-portal-tooltip", {
+				keepAlive: false
+			});
 			$(".ur-copy-shortcode").each(function () {
 				var $this = $(this);
 
 				$this.on("click", function (evt) {
 					var res = $this.parent().find(".code").val();
 					URCopyShortcode.urSetClipboard(res, $this);
-
 					$this
-					.tooltipster( 'content', $( this ).attr( 'data-copied' ) )
-					.trigger( 'focus' )
-					.on( 'mouseleave', function() {
-						var $this = $( this );
-						setTimeout( function() {
-							$this.tooltipster( 'content', $this.attr( 'data-tip' ) );
-						}, 1000 );
-					} );
+						.tooltipster("content", $(this).attr("data-copied"))
+						.trigger("focus")
+						.on("mouseleave", function () {
+							var $this = $(this);
+							setTimeout(function () {
+								$this.tooltipster(
+									"content",
+									$this.attr("data-tip")
+								);
+							}, 1000);
+						});
 					evt.preventDefault();
 				});
 			});
@@ -58,11 +63,44 @@ jQuery(function ($) {
 		 */
 		urClearClipboard: function () {
 			URCopyShortcode.urSetClipboard("");
-		},
+		}
 	};
 
 	/**
 	 * Initiate copy shortcode process.
 	 */
 	URCopyShortcode.init();
+
+	function ur_init_tooltips($elements, options) {
+		if (undefined !== $elements && null !== $elements && "" !== $elements) {
+			var args = {
+				theme: "tooltipster-borderless",
+				maxWidth: 200,
+				multiple: true,
+				interactive: true,
+				position: "bottom",
+				contentAsHTML: true,
+				functionInit: function (instance, helper) {
+					var $origin = jQuery(helper.origin),
+						dataTip = $origin.attr("data-tip");
+
+					if (dataTip) {
+						instance.content(dataTip);
+					}
+				}
+			};
+
+			if (options && "object" === typeof options) {
+				Object.keys(options).forEach(function (key) {
+					args[key] = options[key];
+				});
+			}
+
+			if ("string" === typeof $elements) {
+				jQuery($elements).tooltipster(args);
+			} else {
+				$elements.tooltipster(args);
+			}
+		}
+	}
 });

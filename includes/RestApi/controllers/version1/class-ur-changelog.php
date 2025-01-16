@@ -91,7 +91,7 @@ class UR_Changelog {
 			return $raw_changelog;
 		}
 
-		$entries = preg_split( '/(?=\=\s\d+\.\d+\.\d+|\Z)/', $raw_changelog, -1, PREG_SPLIT_NO_EMPTY );
+		$entries = preg_split( '/(?=\=\s+\d+\.\d+\.\d+|\Z)/', $raw_changelog, -1, PREG_SPLIT_NO_EMPTY );
 
 		$parsed_changelog = array();
 
@@ -112,8 +112,9 @@ class UR_Changelog {
 				if ( is_array( $changes ) ) {
 					foreach ( $changes as $change ) {
 						$parts = explode( ' - ', $change );
+
 						$tag   = trim( $parts[0] ?? '' ); // phpcs:ignore
-						$data  = isset( $parts[1] ) ? trim( $parts[1] ) : '';
+						$data = isset( $parts[1] ) ? trim( $parts[1] ) : '';
 
 						if ( isset( $changes_arr[ $tag ] ) ) {
 							$changes_arr[ $tag ][] = $data;

@@ -58,10 +58,11 @@ class UR_Blocks {
 			'user-registration-blocks-editor',
 			'_UR_BLOCKS_',
 			array(
-				'logoUrl'        => UR()->plugin_url() . '/assets/images/logo.png',
-				'urRestApiNonce' => wp_create_nonce( 'wp_rest' ),
-				'restURL'        => rest_url(),
-				'isPro'          => is_plugin_active( 'user-registration-pro/user-registration.php' ),
+				'logoUrl'              => UR()->plugin_url() . '/assets/images/logo.png',
+				'urRestApiNonce'       => wp_create_nonce( 'wp_rest' ),
+				'restURL'              => rest_url(),
+				'isPro'                => is_plugin_active( 'user-registration-pro/user-registration.php' ),
+				'iscRestrictionActive' => ur_check_module_activation( 'content-restriction' ),
 			)
 		);
 		wp_register_script(
@@ -122,15 +123,21 @@ class UR_Blocks {
 	 * @return AbstractBlock[]
 	 */
 	private function get_block_types() {
+		$ur_blocks_classes = array(
+			UR_Block_Regstration_Form::class, //phpcs:ignore;
+			UR_Block_Login_Form::class, //phpcs:ignore;
+			UR_Block_Myaccount::class, //phpcs:ignore;
+			UR_Block_Edit_Profile::class, //phpcs:ignore;
+			UR_Block_Edit_Password::class, //phpcs:ignore;
+		);
+
+		if ( ur_check_module_activation( 'content-restriction' ) ) {
+			$ur_blocks_classes[] = UR_Block_Content_Restriction::class;
+		}
+
 		return apply_filters(
 			'user_registration_block_types',
-			array(
-				UR_Block_Regstration_Form::class, //phpcs:ignore;
-				UR_Block_Login_Form::class, //phpcs:ignore;
-				UR_Block_Myaccount::class, //phpcs:ignore;
-				UR_Block_Edit_Profile::class, //phpcs:ignore;
-				UR_Block_Edit_Password::class, //phpcs:ignore;
-			)
+			$ur_blocks_classes
 		);
 	}
 }

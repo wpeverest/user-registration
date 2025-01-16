@@ -6,6 +6,15 @@
   "license": "GPL-3.0-or-later",
   "minimum-stability": "dev",
   "prefer-stable": true,
+  "autoload": {
+    "files": [
+      "includes/Functions/CoreFunctions.php"
+    ],
+    "psr-4": {
+      "WPEverest\\URMembership\\": "modules/membership/includes/",
+      "WPEverest\\URMembership\\Payment\\": "modules/payment-history/"
+    }
+  },
   "authors": [
     {
       "name": "wpeverest",
@@ -27,7 +36,8 @@
   },
   "require": {
     "php": ">=5.6.20",
-    "composer/installers": "2.0.1"
+    "composer/installers": "2.0.1",
+    "stripe/stripe-php": "^15.8"
   },
   "require-dev": {
     "jolicode/jolinotif": "2.3.0",

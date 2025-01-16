@@ -117,6 +117,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 				array(
 					'ur_preview' => 'true',
 					'form_id'    => absint( $row->ID ),
+
 				),
 				home_url()
 			);
@@ -146,12 +147,20 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 	 * @return void
 	 */
 	public function column_shortcode( $registration ) {
+		?>
+		<div class='urm-shortcode'>
+		<?php
 		$shortcode = '[user_registration_form id="' . $registration->ID . '"]';
 		printf( '<input type="text" onfocus="this.select();" readonly="readonly" value=\'%s\' class="widefat code"></span>', esc_attr( $shortcode ) );
 		?>
-		<button id="copy-shortcode-<?php echo esc_attr( $registration->ID ); ?>" class="button ur-copy-shortcode " href="#" data-tip="<?php esc_attr_e( 'Copy Shortcode ! ', 'user-registration' ); ?>" data-copied="<?php esc_attr_e( 'Copied ! ', 'user-registration' ); ?>">
-			<span class="dashicons dashicons-admin-page"></span>
+
+		<button id='copy-shortcode-" . $membership_group->ID . "' class='button ur-copy-shortcode tooltipstered' href='#' data-tip='Copy Shortcode ! ' data-copied='Copied ! '>
+			<svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'>
+				<path fill='#383838' fill-rule='evenodd' d='M3.116 3.116A1.25 1.25 0 0 1 4 2.75h9A1.25 1.25 0 0 1 14.25 4v1a.75.75 0 0 0 1.5 0V4A2.75 2.75 0 0 0 13 1.25H4A2.75 2.75 0 0 0 1.25 4v9A2.75 2.75 0 0 0 4 15.75h1a.75.75 0 0 0 0-1.5H4A1.25 1.25 0 0 1 2.75 13V4c0-.332.132-.65.366-.884ZM9.75 11c0-.69.56-1.25 1.25-1.25h9c.69 0 1.25.56 1.25 1.25v9c0 .69-.56 1.25-1.25 1.25h-9c-.69 0-1.25-.56-1.25-1.25v-9ZM11 8.25A2.75 2.75 0 0 0 8.25 11v9A2.75 2.75 0 0 0 11 22.75h9A2.75 2.75 0 0 0 22.75 20v-9A2.75 2.75 0 0 0 20 8.25h-9Z' clip-rule='evenodd'></path>
+			</svg>
 		</button>
+
+		</div>
 		<?php
 	}
 
@@ -171,7 +180,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 						<div class="ur-page-title__wrapper-menu">
 							<ul class="ur-page-title__wrapper-menu__items">
 								<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration' ) ); ?>" class="current"><?php esc_html_e( 'Registration Forms', 'user-registration' ); ?></a></li>
-								<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration&tab=login-forms' ) ); ?>" class=""><?php esc_html_e( 'Login Forms', 'user-registration' ); ?></a></li>
+								<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-login-forms' ) ); ?>" class=""><?php esc_html_e( 'Login Form', 'user-registration' ); ?></a></li>
 							</ul>
 						</div>
 					</div>

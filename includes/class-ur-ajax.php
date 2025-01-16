@@ -65,6 +65,7 @@ class UR_AJAX {
 			'install_extension'              => false,
 			'profile_pic_remove'             => false,
 			'form_save_action'               => false,
+			'login_settings_save_action'     => false,
 			'embed_form_action'              => false,
 			'embed_page_list'                => false,
 			'allow_usage_dismiss'            => false,
@@ -74,6 +75,7 @@ class UR_AJAX {
 			'search_global_settings'         => false,
 			'php_notice_dismiss'             => false,
 			'locate_form_action'             => false,
+			'form_preview_save'              => false,
 			'captcha_test'                   => false,
 			'generate_row_settings'          => false,
 			'my_account_selection_validator' => false,
@@ -705,6 +707,8 @@ class UR_AJAX {
 		 * Default value is get_option('user_registration_email_from_name').
 		 */
 		$from_name = apply_filters( 'wp_mail_from_name', get_option( 'user_registration_email_from_name', esc_attr( get_bloginfo( 'name', 'display' ) ) ) );
+		do_action( 'user_registration_email_send_before' );
+
 		/**
 		 * Filter to test mail from address.
 		 * Default value is get_option('user_registration_email_from_address').
@@ -712,7 +716,7 @@ class UR_AJAX {
 		$sender_email = apply_filters( 'wp_mail_from', get_option( 'user_registration_email_from_address', get_option( 'admin_email' ) ) );
 		$email        = sanitize_email( isset( $_POST['email'] ) ? wp_unslash( $_POST['email'] ) : '' ); // phpcs:ignore WordPress.Security.NonceVerification
 		/* translators: %s - WP mail from name */
-		$subject = 'User Registration: ' . sprintf( esc_html__( 'Test email from %s', 'user-registration' ), $from_name );
+		$subject = 'User Registration & Membership: ' . sprintf( esc_html__( 'Test email from %s', 'user-registration' ), $from_name );
 		$header  = array(
 			'From:' . $from_name . ' <' . $sender_email . '>',
 			'Reply-To:' . $sender_email,
@@ -721,9 +725,9 @@ class UR_AJAX {
 		$message =
 		'Congratulations,<br>
 		Your test email has been received successfully.<br>
-		We thank you for trying out User Registration and joining our mission to make sure you get your emails delivered.<br>
+		We thank you for trying out User Registration & Membership and joining our mission to make sure you get your emails delivered.<br>
 		Regards,<br>
-		User Registration Team';
+		User Registration & Membership Team';
 
 		$status = wp_mail( $email, $subject, $message, $header );
 
@@ -766,6 +770,29 @@ class UR_AJAX {
 				)
 			);
 		}
+	}
+
+	/**
+	 * Get form settings theme styles
+	 */
+	public static function form_preview_save() {
+		check_ajax_referer( 'ur_form_preview_nonce', 'security' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission.', 'user-registration' ) ) );
+			wp_die( -1 );
+		}
+		$form_id = isset( $_POST['id'] ) ? sanitize_text_field( $_POST['id'] ) : '';
+		$theme   = isset( $_POST['theme'] ) ? sanitize_text_field( $_POST['theme'] ) : '';
+
+		if ( empty( $form_id ) || empty( $theme ) ) {
+			wp_send_json_error( array( 'message' => __( 'Insufficient information', 'user-registration' ) ) );
+		}
+
+		$default_theme = ( 'default' === $theme ) ? 'default' : 'theme';
+		update_post_meta( $form_id, 'user_registration_enable_theme_style', $default_theme );
+
+		wp_send_json_success( array( 'message' => __( 'Saved', 'user-registration' ) ) );
 	}
 
 	/**
@@ -946,7 +973,7 @@ class UR_AJAX {
 			 * Action after form setting save.
 			 * Default is the $_POST['data'].
 			 */
-         do_action( 'user_registration_after_form_settings_save', wp_unslash( $_POST['data'] ) ); //phpcs:ignore
+         	do_action( 'user_registration_after_form_settings_save', wp_unslash( $_POST['data'] ) ); //phpcs:ignore
 
 			wp_send_json_success(
 				array(
@@ -961,6 +988,60 @@ class UR_AJAX {
 				)
 			);
 		}// End try().
+	}
+
+	public static function login_settings_save_action() {
+
+		check_ajax_referer( 'ur_login_settings_save_nonce', 'security' );
+
+		$settings_data = $_POST['data']['setting_data'];
+
+		$output = array_combine(
+			array_column( $settings_data, 'option' ),
+			array_column( $settings_data, 'value' )
+		);
+
+		do_action( 'user_registration_validation_before_login_form_save', $output );
+
+		if ( ur_string_to_bool( $output['user_registration_login_options_enable_recaptcha'] ) ) {
+			if ( '' === $output['user_registration_login_options_configured_captcha_type'] || ! $output['user_registration_login_options_configured_captcha_type'] ) {
+				wp_send_json_error(
+					array(
+						'message' => esc_html__( "Seems like you haven't selected the reCAPTCHA type (Configured Captcha).", 'user-registration' ),
+					)
+				);
+			}
+		}
+
+		if ( ur_string_to_bool( $output['user_registration_login_options_prevent_core_login'] ) ) {
+			if ( is_numeric( $output['user_registration_login_options_login_redirect_url'] ) ) {
+				$is_page_my_account_page = ur_find_my_account_in_page( sanitize_text_field( wp_unslash( $output['user_registration_login_options_login_redirect_url'] ) ) );
+				if ( ! $is_page_my_account_page ) {
+					wp_send_json_error(
+						array(
+							'message' => esc_html__(
+								'The selected page is not a User Registration & Membership Login or My Account page.',
+								'user-registration'
+							),
+						)
+					);
+				}
+			}
+		}
+
+		foreach ( $output as $key => $settings ) {
+			update_option( $key, $settings );
+		}
+
+		/**
+		 * Action after form setting save.
+		 * Default is the $_POST['data'].
+		 */
+		do_action( 'user_registration_after_login_form_settings_save', wp_unslash( $settings_data ) ); //phpcs:ignore
+
+		wp_send_json_success(
+			array()
+		);
 	}
 
 	/**
@@ -986,29 +1067,36 @@ class UR_AJAX {
 	public static function embed_form_action() {
 		check_ajax_referer( 'ur_embed_action_nonce', 'security' );
 		$page_id = empty( $_POST['page_id'] ) ? 0 : sanitize_text_field( absint( $_POST['page_id'] ) );
-
+		$form_id = ! empty( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
 		if ( empty( $page_id ) ) {
 			$url  = add_query_arg( 'post_type', 'page', admin_url( 'post-new.php' ) );
 			$meta = array(
 				'embed_page'       => 0,
 				'embed_page_title' => ! empty( $_POST['page_title'] ) ? sanitize_text_field( wp_unslash( $_POST['page_title'] ) ) : '',
 			);
-		} else {
-			$url  = get_edit_post_link( $page_id, '' );
-			$meta = array(
-				'embed_page' => $page_id,
+			$page_url        = add_query_arg(
+				array(
+					'form' => 'user_registration',
+				),
+				esc_url_raw( $url )
 			);
-		}
-		$page_url        = add_query_arg(
-			array(
-				'form' => 'user_registration',
-			),
-			esc_url_raw( $url )
-		);
-		$meta['form_id'] = ! empty( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
-		UR_Admin_Embed_Wizard::set_meta( $meta );
+			$meta['form_id'] = $form_id;
+			UR_Admin_Embed_Wizard::set_meta( $meta );
 
-		wp_send_json_success( $page_url );
+			wp_send_json_success( $page_url );
+		} else {
+			UR_Admin_Embed_Wizard::delete_meta();
+			$url  = get_edit_post_link( $page_id, '' );
+			$post = get_post($page_id);
+			$pattern = '[user_registration_form id="%d"]';
+			$shortcode = sprintf( $pattern, absint( $form_id ) );
+			$updated_content = $post->post_content . "\n\n" . $shortcode;
+			wp_update_post([
+				'ID'           => $page_id,
+				'post_content' => $updated_content,
+			]);
+			wp_send_json_success( $url );
+		}
 	}
 	/**
 	 * Dashboard Widget data.
@@ -1481,7 +1569,7 @@ class UR_AJAX {
 		$install_status = install_plugin_install_status( $api );
 
 		if ( current_user_can( 'activate_plugin', $install_status['file'] ) && is_plugin_inactive( $install_status['file'] ) ) {
-			if ( isset( $_POST['page'] ) && 'user-registration_page_add-new-registration' === $_POST['page'] ) {
+			if ( isset( $_POST['page'] ) && 'user-registration-membership_page_add-new-registration' === $_POST['page'] ) {
 				activate_plugin( $install_status['file'] );
 			} else {
 				$status['activateUrl'] =
@@ -1789,7 +1877,7 @@ class UR_AJAX {
 					wp_send_json_error(
 						array(
 							'message' => esc_html__(
-								'The selected page is not a User Registration Login or My Account page.',
+								'The selected page is not a User Registration & Membership Login or My Account page.',
 								'user-registration'
 							),
 						)

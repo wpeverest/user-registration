@@ -48,7 +48,7 @@ if ( defined( 'UR_REMOVE_ALL_DATA' ) && true === UR_REMOVE_ALL_DATA || 'yes' == 
 		'order'         => 'ASC',
 		'numberposts'   => -1,
 		'status'        => 'publish',
-		'post_type'     => 'user_registration',
+		'post_type'     => array( 'user_registration', 'ur_membership', 'ur_membership_groups' ),
 		'orderby'       => 'ID',
 		'order'         => 'DESC',
 		'no_found_rows' => true,

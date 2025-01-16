@@ -542,21 +542,41 @@
 
 			.membership-row {
 				display: flex;
-				gap: 50px
+				.membership-label {
+					min-width: 300px;
+					text-align: left;
+				}
+				#ur-membership-status {
+					padding: 6px 18px;
+					color: white;
+					border-radius: 36px;
+					&.btn-active {
+						background: #4dc245;
+					}
+					&.btn-inactive {
+						background: gray;
+					}
+					&.btn-canceled {
+						background: #ea4335;
+					}
+					&.btn-trial {
+						background: #ff8300;
+					}
+				}
 			}
 
 			.membership-row-btn-container {
 				display: flex;
-				flex-direction: row-reverse;
 				align-items: center;
 
 				.cancel-membership-button {
 					border: none;
 					padding: 10px;
-					border-radius: 5px;
-					background: #db0000;
+					border-radius: 8px;
+					background: #ea4335;
 					color: white;
-					cursor: pointer
+					cursor: pointer;
+					line-height: 20px;
 				}
 
 				#membership-error-div {
@@ -762,7 +782,7 @@
 						&.login {
 							.ur-form-row {
 								.ur-form-grid {
-									padding: 0;
+									// padding: 0;
 
 									fieldset {
 										padding: 0;

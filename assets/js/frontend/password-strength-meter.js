@@ -1,7 +1,7 @@
-/* global wp, ur_password_strength_meter_params */
+/* global wp, ur_password_strength_meter_paramsm ur_frontend_params_with_form_id */
 jQuery(function ($) {
 	var pwsL10n = ur_password_strength_meter_params.pwsL10n;
-	var custom_password_params = ur_password_strength_meter_params.custom_password_params;
+	var custom_password_params = ur_frontend_params_with_form_id.custom_password_params;
 
 	/**
 	 * Password Strength Meter class.

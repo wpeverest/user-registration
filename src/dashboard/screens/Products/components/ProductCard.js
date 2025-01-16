@@ -18,7 +18,7 @@ import {
 	Link,
 	Stack,
 	Text,
-	useDisclosure,
+	useDisclosure
 } from "@chakra-ui/react";
 import { sprintf, __ } from "@wordpress/i18n";
 
@@ -57,6 +57,7 @@ const ProductCard = (props) => {
 				borderColor="gray.100"
 				display="flex"
 				flexDir="column"
+				backgroundColor="#ffffff"
 			>
 				<Box p="0" flex="1 1 0%">
 					<Image w="full" src={image} />
@@ -114,11 +115,11 @@ const ProductCard = (props) => {
 						fontWeight="semibold"
 						_hover={{
 							color: "white",
-							textDecoration: "none",
+							textDecoration: "none"
 						}}
 						_focus={{
 							color: "white",
-							textDecoration: "none",
+							textDecoration: "none"
 						}}
 						isDisabled={"active" === status}
 						as={"theme" === type ? Link : undefined}

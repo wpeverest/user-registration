@@ -1,0 +1,63 @@
+.user-registration{
+    &.ur-frontend-form{
+        background: #fff;
+        border: none;
+        padding: 24px 30px 30px;
+        .ur-button-container{
+            display: block;
+        }
+        .ur-form-row{
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+        .ur-button-container{
+            display: block;
+            margin-top: 36px;
+            .ur-submit-button br{
+                display: none;
+            }
+        }
+        &.ur-frontend-form--default {
+            .ur-form-row{
+                gap: 24px;
+                .form-row{
+                    .ur-label{
+                        font-weight: 500;
+                        font-size: 15px;
+                        color: #383838;
+                    }
+                    .input-wrapper{
+                        input{
+                            padding: 8px 10px 8px 14px;
+                            margin-bottom: 4px;
+                            border: 1px solid #E9E9E9;
+                            border-radius: 4px;
+                            &::placeholder{
+                                font-size: 14px;
+                                font-weight: 400;
+                                color: #bababa;
+                                text-transform: capitalize;
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            button[type=submit]{
+                padding: 10px 16px 8px;
+                border-radius: 4px;
+                background: #475bb2;
+                color: #fff;
+                font-size: 14px;
+                font-weight: 500;
+            }
+            .ur-button-container{
+                display: block;
+                margin-top: 36px;
+            }
+        }
+    }
+}
+
+

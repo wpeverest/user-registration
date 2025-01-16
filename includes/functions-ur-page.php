@@ -334,6 +334,35 @@ function ur_nav_menu_items( $items ) {
 			$item->url = wp_nonce_url( $item->url, 'user-logout' );
 		}
 	}
+	$login = true;
+	if ( $login ) {
+		$items[] = (object) array(
+			'title'            => 'Login',
+			'url'              => 'https://google.com',
+			'menu_order'       => 9999,
+			'ID'               => 9999,
+			'object_id'        => 9999,
+			'object'           => 'custom',
+			'type'             => 'custom',
+			'parent'           => 0,
+			'menu_item_parent' => 0,
+			'classes'          => array(),
+			'target'           => '',
+			'attr_title'       => '',
+			'description'      => '',
+			'xfn'              => '',
+			'status'           => '',
+			'db_id'            => 9999,
+			'current'          => false,
+			'classes'          => array(
+				'menu-item',
+				'menu-item-type-custom',
+				'menu-item-object-custom',
+
+			),
+
+		);
+	}
 
 	return $items;
 }

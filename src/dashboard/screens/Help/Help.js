@@ -197,7 +197,7 @@ const Help = () => {
 							</Heading>
 							<Text fontSize="13px" color="gray.700">
 								{__(
-									"Check our documentation for detailed information on User Registration features and how to use them.",
+									"Check our documentation for detailed information on User Registration & Membership features and how to use them.",
 									"user-registration",
 								)}
 							</Text>
@@ -244,7 +244,7 @@ const Help = () => {
 						</Heading>
 						<Text fontSize="13px" color="gray.700">
 							{__(
-								"Join our exclusive group and connect with fellow User Registration members. Ask questions, contribute to discussions, and share feedback!",
+								"Join our exclusive group and connect with fellow members. Ask questions, contribute to discussions, and share feedback!",
 								"user-registration",
 							)}
 						</Text>
@@ -286,7 +286,7 @@ const Help = () => {
 						</Heading>
 						<Text fontSize="13px" color="gray.700">
 							{__(
-								"Follow us on X to get the latest news and updates about User Registration and the team behind it.",
+								"Follow us on X to get the latest news and updates about User Registration & Membership.",
 								"user-registration",
 							)}
 						</Text>
@@ -328,7 +328,7 @@ const Help = () => {
 						</Heading>
 						<Text fontSize="13px" color="gray.700">
 							{__(
-								"Subscribe to our YouTube channel, where we guide you on using User Registration’s features and add-ons.",
+								"Subscribe to our YouTube channel, where we guide you on using User Registration & Membership features and add-ons.",
 								"user-registration",
 							)}
 						</Text>
@@ -367,7 +367,7 @@ const Help = () => {
 					</HStack>
 					<Text fontSize="13px" color="gray.700">
 						{__(
-							"Watch our step-by-step video tutorials that’ll help you get the best out of User Registration’s features.",
+							"Watch our step-by-step video tutorials that’ll help you get the best out of User Registration & Membership features.",
 							"user-registration",
 						)}
 					</Text>

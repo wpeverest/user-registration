@@ -44,7 +44,7 @@
 				$(this)
 					.parent()
 					.find(".colorpickpreview")
-					.css({ backgroundColor: ui.color.toString() });
+					.css({backgroundColor: ui.color.toString()});
 			},
 			hide: true,
 			border: true
@@ -103,15 +103,6 @@
 		$(this).closest("td").find("select").trigger("change");
 		return false;
 	});
-
-	handleRecaptchaLoginSettings();
-	$(".user-registration").on(
-		"change",
-		"#user_registration_login_options_enable_recaptcha",
-		function () {
-			handleRecaptchaLoginSettings();
-		}
-	);
 
 	// reCaptcha version selection
 	var recaptchav2_invisible_input_value = $(".user-registration")
@@ -198,21 +189,6 @@
 		}
 	}
 
-	function handleRecaptchaLoginSettings() {
-		var login_captcha_enabled = $(
-			"#user_registration_login_options_enable_recaptcha"
-		).is(":checked");
-		if (login_captcha_enabled) {
-			$("#user_registration_login_options_configured_captcha_type")
-				.closest(".user-registration-global-settings")
-				.show();
-		} else {
-			$("#user_registration_login_options_configured_captcha_type")
-				.closest(".user-registration-global-settings")
-				.hide();
-		}
-	}
-
 	var captchaSettingsChanged = false;
 
 	$(".user-registration-global-settings")
@@ -255,15 +231,15 @@
 				data: {
 					action: "user_registration_captcha_test",
 					security:
-						user_registration_settings_params.user_registration_captcha_test_nonce,
+					user_registration_settings_params.user_registration_captcha_test_nonce,
 					captcha_type: captcha_type,
 					invisible_recaptcha: invisible_recaptcha
 				},
 				beforeSend: function () {
 					var spinner = $(
 						"#user_registration_captcha_setting_" +
-							captcha_type +
-							"_captcha_test .spinner"
+						captcha_type +
+						"_captcha_test .spinner"
 					);
 					spinner.show();
 					setTimeout(function () {
@@ -273,8 +249,8 @@
 				success: function (response) {
 					var ur_recaptcha_node = $(
 							'.ur-captcha-test-container[data-captcha-type="' +
-								captcha_type +
-								'"] .ur-captcha-node'
+							captcha_type +
+							'"] .ur-captcha-node'
 						),
 						ur_recaptcha_code = response.data.ur_recaptcha_code;
 
@@ -373,12 +349,12 @@
 									try {
 										turnstile.render(
 											"#" +
-												ur_recaptcha_node
-													.find(".cf-turnstile")
-													.attr("id"),
+											ur_recaptcha_node
+												.find(".cf-turnstile")
+												.attr("id"),
 											{
 												sitekey:
-													ur_recaptcha_code.site_key,
+												ur_recaptcha_code.site_key,
 												theme: ur_recaptcha_code.theme_mode,
 												style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"
 											}
@@ -419,18 +395,18 @@
 		if (notice.length) {
 			var notice_container = $(
 				'.ur-captcha-test-container[data-captcha-type="' +
-					captcha_type +
-					'"]'
+				captcha_type +
+				'"]'
 			).find(".ur-captcha-notice");
 			var notice_icon = $(
 				'.ur-captcha-test-container[data-captcha-type="' +
-					captcha_type +
-					'"]'
+				captcha_type +
+				'"]'
 			).find(".ur-captcha-notice--icon");
 			var notice_text = $(
 				'.ur-captcha-test-container[data-captcha-type="' +
-					captcha_type +
-					'"]'
+				captcha_type +
+				'"]'
 			).find(".ur-captcha-notice--text");
 
 			if (notice_text.length) {
@@ -454,8 +430,8 @@
 
 		var spinner = $(
 			"#user_registration_captcha_setting_" +
-				captcha_type +
-				"_captcha_test .spinner"
+			captcha_type +
+			"_captcha_test .spinner"
 		);
 		spinner.hide();
 	}
@@ -661,13 +637,13 @@
 
 	// Display error when page with our my account or login shortcode is not selected
 	$(
-		"#user_registration_login_options_login_redirect_url, #user_registration_myaccount_page_id"
+		"#user_registration_myaccount_page_id"
 	).on("change", function () {
 		var $this = $(this),
 			data = {
 				action: "user_registration_my_account_selection_validator",
 				security:
-					user_registration_settings_params.user_registration_my_account_selection_validator_nonce
+				user_registration_settings_params.user_registration_my_account_selection_validator_nonce
 			};
 
 		data.user_registration_selected_my_account_page = $this.val();
@@ -692,8 +668,8 @@
 						.closest(".user-registration-global-settings--field")
 						.append(
 							"<div id='message' class='error inline' style='padding:10px;'>" +
-								response.responseJSON.data.message +
-								"</div>"
+							response.responseJSON.data.message +
+							"</div>"
 						);
 					$this.css("border", "1px solid red");
 					$this
@@ -822,6 +798,7 @@
 			wrapper_div.removeClass("ur-searched-settings-focus");
 		}, 2000);
 	}
+
 	/**
 	 * Get Query String.
 	 *
@@ -840,6 +817,7 @@
 		}
 		return vars;
 	}
+
 	/**
 	 * Display the upgrade message for the top addons.
 	 */
@@ -885,7 +863,7 @@
 			heightAuto: false,
 			width: "575px",
 			confirmButtonText:
-				user_registration_settings_params.i18n.upgrade_plan
+			user_registration_settings_params.i18n.upgrade_plan
 		}).then(function (result) {
 			if (result.isConfirmed) {
 				window.open(
@@ -955,6 +933,7 @@
 		disableFormChangeModal();
 		init_accordion_settings();
 	});
+
 	/**
 	 * Initialize accordion_settings elements.
 	 */
@@ -1030,4 +1009,71 @@
 	$(document)
 		.find(".wp-list-table")
 		.wrap("<div class='ur-list-table-wrapper'></div>");
+
+
+	$('#user_registration_member_registration_page_id, #user_registration_thank_you_page_id').on('change', function () {
+		var $this = $(this),
+			type = $this.attr('id'),
+			val = $(this).val();
+		// $this.prop("disabled", true);
+		$this.closest(".user-registration-global-settings--field").find('#select2-' + type + '-container').css('border', '1px solid #e1e1e1');
+
+		$this
+			.closest(".user-registration-global-settings--field")
+			.find(".error.inline")
+			.remove();
+		$this
+			.closest('.user-registration-global-settings')
+			.find('.ur-spinner')
+			.remove();
+		$this.closest('.user-registration-global-settings').append('<div class="ur-spinner is-active"></div>');
+
+		$.ajax({
+			url: user_registration_settings_params.ajax_url,
+			data: {
+				action: 'user_registration_membership_verify_pages',
+				type: type,
+				value: val,
+				security: user_registration_settings_params.user_registration_membership_pages_selection_validator_nonce
+			},
+			type: "POST",
+			complete: function (response) {
+				if (response.responseJSON.status === false) {
+
+					$this
+						.closest(".user-registration-global-settings--field")
+						.append(
+							"<div id='message' class='error inline' style='padding:10px;'>" +
+							response.responseJSON.message +
+							"</div>"
+						);
+					$this.closest(".user-registration-global-settings--field").find('#select2-' + type + '-container').css('border', '1px solid red');
+
+					$this
+						.closest("form")
+						.find("input[name='save']")
+						.prop("disabled", true);
+				} else {
+					if ($this.closest(".user-registration-options-container").find('.error.inline').length) {
+						$this
+							.closest("form")
+							.find("input[name='save']")
+							.prop("disabled", true);
+					} else {
+						$this
+							.closest("form")
+							.find("input[name='save']")
+							.prop("disabled", false);
+					}
+
+				}
+				$this.prop("disabled", false);
+
+				$this
+					.closest(".user-registration-global-settings")
+					.find(".ur-spinner")
+					.remove();
+			}
+		});
+	});
 })(jQuery);

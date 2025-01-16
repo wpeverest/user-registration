@@ -143,8 +143,12 @@ body {
 				}
 
 				.user-registration-header--nav {
-					.ur-nav__link-label {
-						display: none;
+					.ur-nav__link {
+						justify-content: center;
+
+						&-label {
+							display: none;
+						}
 					}
 
 					.ur-nav-icon {
@@ -370,6 +374,7 @@ body {
 							right: -200px;
 							z-index: 10;
 							transform: translateY(-50%);
+							border-color: #475bb2;
 
 							&::after {
 								content: "";

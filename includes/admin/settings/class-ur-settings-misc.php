@@ -79,7 +79,7 @@ if ( ! class_exists( 'UR_Settings_Misc' ) ) :
 							'desc'     => '',
 							'settings' => array(
 								array(
-									'title'    => __( 'Uninstall User Registration', 'user-registration' ),
+									'title'    => __( 'Uninstall User Registration & Membership', 'user-registration' ),
 									'desc'     => __( '<strong>Heads Up!</strong> Check this if you would like to remove ALL User Registration data upon plugin deletion.', 'user-registration' ),
 									'id'       => 'user_registration_general_setting_uninstall_option',
 									'type'     => 'toggle',

@@ -29,8 +29,8 @@ const Changelog = () => {
 				path: restURL + `user-registration/v1/changelog`,
 				method: "GET",
 				headers: {
-					"X-WP-Nonce": urRestApiNonce,
-				},
+					"X-WP-Nonce": urRestApiNonce
+				}
 			}).then((res) => {
 				if (res.success) {
 					setChangelogs(res.changelog);
@@ -71,7 +71,7 @@ const Changelog = () => {
 										left: "12px",
 										position: "absolute",
 										top: 0,
-										width: "2px",
+										width: "2px"
 									}}
 									mb="10"
 									mt="8"
@@ -112,7 +112,7 @@ const Changelog = () => {
 													top: "50%",
 													transform:
 														"translateY(-50%)",
-													left: "2px",
+													left: "2px"
 												}}
 												_before={{
 													color: CHANGELOG_TAG_COLORS?.[
@@ -126,7 +126,7 @@ const Changelog = () => {
 														"translateY(-50%)",
 													fontSize: "10px",
 													fontWeight: "bold",
-													zIndex: 1,
+													zIndex: 1
 												}}
 											>
 												{change}

@@ -21,7 +21,6 @@ class UR_Admin_Embed_Wizard {
 	 * @since 3.2.1.3
 	 */
 	public static function init() {
-
 		add_filter( 'default_title', array( __CLASS__, 'set_embed_page_title' ), 10, 2 );
 		add_filter( 'default_content', array( __CLASS__, 'set_embed_page_content' ), 10, 2 );
 	}
@@ -71,7 +70,8 @@ class UR_Admin_Embed_Wizard {
 	public static function set_meta( $data ) {
 		update_user_meta( get_current_user_id(), 'user-registration_form_embed', $data );
 		add_filter( 'default_title', array( __CLASS__, 'set_embed_page_title' ), 10, 2 );
-		add_filter( 'default_content', array( __CLASS__, 'set_embed_page_content' ), 10, 2 );
+
+		add_filter( 'the_content ', array( __CLASS__, 'set_embed_page_content' ), 10, 2 );
 	}
 
 

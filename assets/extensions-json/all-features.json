@@ -1,21 +1,18 @@
 {
   "features": [
     {
-      "title": "SMS Integration",
-      "slug" : "user-registration-sms-integration",
-      "name" : "User Registration - SMS Integration",
-      "image": "extensions-json/sections/images/sms-integration-addon.png",
-      "excerpt": "Send SMS verifications to users after each registration; registration will be automatically approved after successful verification.",
-      "link": "https://docs.wpuserregistration.com/docs/sms-notification/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
-      "released_date": "19/08/2024",
+      "title": "Membership",
+      "slug" : "user-registration-membership",
+      "name" : "User Registration Membership",
+      "image": "extensions-json/sections/images/membership.png",
+      "excerpt": "Create custom membership plans and deliver content accordingly with User Registration’s Membership module with specific website and content access.",
+      "link": "https://docs.wpuserregistration.com/docs/user-registration-membership/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan" : [
-        "personal",
-        "plus",
-        "professional",
-        "themegrill agency"
+        "free"
       ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=integration",
-      "demo_video_url": "-iUMcr03FP8"
+      "setting_url": "admin.php?page=user-registration-membership",
+      "demo_video_url": "3T6AILWb7OI",
+      "released_date": "01/08/2024"
     },
     {
       "title": "Payment History",
@@ -26,13 +23,29 @@
       "link": "https://docs.wpuserregistration.com/docs/user-registration-pro/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "released_date": "20/06/2024",
       "plan" : [
+        "free"
+      ],
+      "setting_url": "admin.php?page=member-payment-history",
+      "demo_video_url": "DuWX7i7eYsY",
+      "activation_requirements": [ "membership", "pro" ]
+    },
+    {
+      "title": "PayPal Payment",
+      "slug" : "user-registration-payments",
+      "name" : "User Registration Payments",
+      "image": "extensions-json/sections/images/payment-paypal.png",
+      "excerpt": "Want quick and secure payments during registration? User Registration has in-built support for the PayPal gateway.",
+      "link": "https://docs.wpuserregistration.com/docs/user-registration-payments-paypal/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "released_date": "14/08/2018",
+      "plan" : [
         "personal",
         "plus",
         "professional",
         "themegrill agency"
       ],
-      "setting_url": "admin.php?page=member-payment-history",
-      "demo_video_url": "DuWX7i7eYsY"
+      "setting_url": "admin.php?page=user-registration-settings&tab=payment",
+      "demo_video_url": "RKvdEN2xGo8",
+      "activation_requirements": [ "membership", "pro" ]
     },
     {
       "title": "Coupons",
@@ -60,30 +73,10 @@
       "link": "https://docs.wpuserregistration.com/docs/user-registration-content-restriction/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "released_date": "22/09/2017",
       "plan" : [
-        "personal",
-        "plus",
-        "professional",
-        "themegrill agency"
+        "free"
       ],
       "setting_url": "admin.php?page=user-registration-content-restriction",
       "demo_video_url": "pTGPvYvU_Ig"
-    },
-    {
-      "title": "PayPal Payment",
-      "slug" : "user-registration-payments",
-      "name" : "User Registration Payments",
-      "image": "extensions-json/sections/images/payment-paypal.png",
-      "excerpt": "Want quick and secure payments during registration? User Registration has in-built support for the PayPal gateway.",
-      "link": "https://docs.wpuserregistration.com/docs/user-registration-payments-paypal/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
-      "released_date": "14/08/2018",
-      "plan" : [
-        "personal",
-        "plus",
-        "professional",
-        "themegrill agency"
-      ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=payment",
-      "demo_video_url": "RKvdEN2xGo8"
     },
 	  {
       "title": "Frontend Listing",
@@ -101,6 +94,23 @@
       ],
       "setting_url": "admin.php?page=user-registration-frontend-list",
       "demo_video_url": "4xDCbsBZaTs"
-	  }
+	  },
+    {
+      "title": "SMS Integration",
+      "slug" : "user-registration-sms-integration",
+      "name" : "User Registration - SMS Integration",
+      "image": "extensions-json/sections/images/sms-integration-addon.png",
+      "excerpt": "Send SMS verifications to users after each registration; registration will be automatically approved after successful verification.",
+      "link": "https://docs.wpuserregistration.com/docs/sms-notification/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "released_date": "19/08/2024",
+      "plan" : [
+        "personal",
+        "plus",
+        "professional",
+        "themegrill agency"
+      ],
+      "setting_url": "admin.php?page=user-registration-settings&tab=integration",
+      "demo_video_url": "-iUMcr03FP8"
+    }
   ]
 }
