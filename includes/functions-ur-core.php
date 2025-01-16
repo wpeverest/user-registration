@@ -5345,8 +5345,8 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 						$field['max']  = isset( $advance_data['advance_setting']->max ) ? $advance_data['advance_setting']->max : '';
 						$field['step'] = isset( $advance_data['advance_setting']->step ) ? $advance_data['advance_setting']->step : '';
 					}
-
-					if ( 'text' === $single_item->field_key || 'textarea' === $single_item->field_key ) {
+					$length_validation_fields = array( 'text', 'textarea' , 'display_name', 'first_name','last_name','description','nickname');
+					if ( in_array( $single_item->field_key, $length_validation_fields, true ) ) {
 						if ( isset( $advance_data['advance_setting']->limit_length ) && $advance_data['advance_setting']->limit_length ) {
 							if ( isset( $advance_data['advance_setting']->limit_length_limit_count ) && isset( $advance_data['advance_setting']->limit_length_limit_mode ) ) {
 								if ( 'characters' === $advance_data['advance_setting']->limit_length_limit_mode ) {
