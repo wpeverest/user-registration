@@ -38,8 +38,9 @@ jobs:
 
             - name: NPM, Composer Install & NPM Build
               run: |
-                npm install --force
-                composer install --force
+                rm -rf node-modules
+                npm install 
+                composer install 
                 npm run build
                 composer install --no-dev
                 mkdir user-registration
