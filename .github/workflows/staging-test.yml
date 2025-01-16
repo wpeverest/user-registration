@@ -25,10 +25,10 @@ jobs:
                 git config --global user.email "$MY_EMAIL"
                 git config --global user.name "$MY_USERNAME"
 
-            - name: Use Node.js 12.x
+            - name: Use Node.js 16.x
               uses: actions/setup-node@v2
               with:
-                node-version: 12.x
+                node-version: 16.14.0
 
             - name: Setup PHP v7.4
               uses: shivammathur/setup-php@v2
@@ -38,8 +38,8 @@ jobs:
 
             - name: NPM, Composer Install & NPM Build
               run: |
-                npm install
-                composer install
+                npm install --force
+                composer install --force
                 npm run build
                 composer install --no-dev
                 mkdir user-registration
