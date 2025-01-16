@@ -381,7 +381,11 @@ if ( ! function_exists( 'ur_membership_install_required_pages' ) ) {
 				update_option( $page['option'], $post_id );
 			}
 		}
-
+		$enabled_features = get_option( 'user_registration_enabled_features', array() );
+		array_push( $enabled_features, 'user-registration-membership' );
+		array_push( $enabled_features, 'user-registration-payment-history' );
+		array_push( $enabled_features, 'user-registration-content-restriction' );
+		update_option( 'user_registration_enabled_features', $enabled_features );
 		update_option( 'user_registration_membership_installed_flag', true );
 	}
 }

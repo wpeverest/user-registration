@@ -291,11 +291,10 @@ class UR_Getting_Started {
 		} else {
 			$enabled_features = get_option( 'user_registration_enabled_features', array() );
 			array_push( $enabled_features, 'user-registration-membership' );
+			array_push( $enabled_features, 'user-registration-payment-history' );
+			array_push( $enabled_features, 'user-registration-content-restriction' );
 			update_option( 'user_registration_enabled_features', $enabled_features );
 			update_option( 'user_registration_membership_installed_flag', true );
-			array_push( $enabled_features, 'payment-history' );
-			array_push( $enabled_features, 'content-restriction' );
-
 			Database::create_tables();
 			update_option( 'ur_membership_default_membership_field_name', $membership_field_name );
 			$membership_id       = UR_Install::create_default_membership();
