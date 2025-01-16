@@ -634,6 +634,10 @@ class UR_Admin_Assets {
 			'activation_required_message'                 => __( 'Please activate <strong>%plugin%</strong> addon to use this integration.', 'user-registration' ),
 			'installation_required_title'                 => __( 'Addon Installation Required', 'user-registration' ),
 			'installation_required_message'               => __( 'Please install <strong>%plugin%</strong> addon to use this integration.', 'user-registration' ),
+			'min_length_less_than_max_length'             => esc_html__( 'Minimum length count should be less than maximum length count for', 'user-registration' ),
+			'invalid_max_length'                          => esc_html__( 'Invalid maximum length count for', 'user-registration' ),
+			'invalid_min_length'                          => esc_html__( 'Invalid minimum length count for', 'user-registration' ),
+
 		);
 
 		return $i18n;

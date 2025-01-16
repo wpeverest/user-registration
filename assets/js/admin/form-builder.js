@@ -828,6 +828,7 @@
 			 * Returns all the validation messages for the specific form in form builder.
 			 */
 			get_validation_status: function () {
+
 				var only_one_field_index = $.makeArray(
 					user_registration_form_builder_data.form_one_time_draggable_fields
 				);
@@ -1419,6 +1420,7 @@
 
 				// Validate min/max advance settings in form builder.
 				$.each($('.ur-advance-setting'), function(index, element) {
+
 					var maxLength = $(element)
 						.find('input[data-advance-field="limit_length"]');
 					var minLength = $(element)
@@ -1440,7 +1442,7 @@
 
 						if (minLengthCount === '' || isNaN(minLengthCount) || parseInt(minLengthCount, 10) < 1) {
 							response.validation_status = false;
-							response.message = 'Invalid minimum length count for' + ' ' + fieldName ;
+							response.message = user_registration_form_builder_data.i18n_admin.invalid_min_length + ' ' + toLowerCase(fieldName) ;
 						}
 					}
 
@@ -1452,11 +1454,11 @@
 
 						if (maxLengthCount === '' || isNaN(maxLengthCount) || parseInt(maxLengthCount, 10) < 1) {
 							response.validation_status = false;
-							response.message = 'Invalid maximum length count for' + ' ' + fieldName ;
+							response.message = user_registration_form_builder_data.i18n_admin.invalid_max_length + ' ' + toLowerCase(fieldName) ;
 						}
 					}
-
 					if (maxLength.is(':checked') && minLength.is(':checked')) {
+
 						var minLengthCount = $(element)
 							.next(".ur-advance-minimum_length_limit_count")
 							.find('input[data-advance-field="minimum_length_limit_count"]')
@@ -1478,7 +1480,7 @@
 						if (minLengthType === maxLengthType) {
 								if (parseInt(minLengthCount, 10) > parseInt(maxLengthCount, 10)) {
 									response.validation_status = false;
-									response.message = 'Minimum length count should be less than maximum length count for ' + fieldName;
+									response.message = user_registration_form_builder_data.i18n_admin.min_length_less_than_max_length +' ' + toLowerCase(fieldName);
 								}
 							}
 
