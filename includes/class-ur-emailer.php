@@ -54,7 +54,7 @@ class UR_Emailer {
 		global $pagenow;
 
 		// adds the hook if it is for reset password.
-		if ( ( is_admin() && 'users.php' === $pagenow ) || ( is_admin() && 'resetpassword' === isset( $_GET['action'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( ( is_admin() && 'users.php' === $pagenow ) || ( is_admin() && isset( $_GET['action'] ) && 'resetpassword' === $_GET['action'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			add_filter( 'retrieve_password_message', array( __CLASS__, 'ur_retrieve_password_message' ), 20, 4 );
 			add_filter( 'retrieve_password_title', array( __CLASS__, 'ur_retrieve_password_title' ), 20, 3 );
 			add_filter( 'wp_mail_content_type', array( __CLASS__, 'ur_get_content_type' ) );
