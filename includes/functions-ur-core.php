@@ -5692,7 +5692,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 					);
 
 					$field_key       = isset( $field['field_key'] ) ? $field['field_key'] : '';
-					$form_data_array = apply_filters( 'user_registration_' . $field_key . '_frontend_form_data', $filter_data );
+					$form_data_array = apply_filters( 'user_registration_' . $field_key . '_frontend_form_data', $filter_data, true );
 					$field           = isset( $form_data_array['form_data'] ) ? $form_data_array['form_data'] : $field;
 					$value           = ! empty( $_POST[ $key ] ) ? ur_clean( wp_unslash( $_POST[ $key ] ) ) : ( isset( $field['value'] ) ? $field['value'] : '' ); // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
