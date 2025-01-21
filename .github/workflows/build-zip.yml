@@ -1,4 +1,4 @@
-name: Build release and Deploy to wordpress.org
+name: Build beta release
 on:
   release:
     types: [published]
