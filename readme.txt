@@ -246,7 +246,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 4.0-beta  - 08/01/2025 =
+= 4.0-beta  - 21/01/2025 =
 * Feature   - Login form builder.
 * Feature   - Membership module in core.
 * Feature   - Basic restriction in core.
