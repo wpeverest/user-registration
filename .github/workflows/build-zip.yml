@@ -14,7 +14,7 @@ jobs:
         run: echo "tag=${GITHUB_REF:10}" >> $GITHUB_ENV
       - name: Build
         id: build
-        uses: wpeverest/action-build@3.0.0
+        uses: wpeverest/action-build@3.0.1
         with:
           generate-zip: true
       - name: Upload release asset
