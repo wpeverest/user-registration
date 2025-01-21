@@ -29,8 +29,8 @@ jobs:
       - name: WordPress Plugin Deploy
         uses: 10up/action-wordpress-plugin-deploy@master
         env:
-          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
-          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SVN_USERNAME: ${{ secrets.SVN_USERNAMEA }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORDA }}
       - name: Upload release asset
         uses: actions/upload-release-asset@v1
         env:
