@@ -190,12 +190,6 @@ class PaypalService {
 		$logger = ur_get_logger();
 		$logger->notice( 'Paypal IPN Payload: ' . wp_json_encode( $data ), array( 'source' => 'ur-membership-paypal' ) );
 
-		if ( ! class_exists( 'User_Registration_Pro_PayPal_Standard' ) ) {
-			$logger->notice( esc_html__( 'Class User_Registration_Pro_PayPal_Standard does not exist.', 'user-registration' ), array( 'source' => 'ur-membership-paypal' ) );
-
-			return;
-		}
-
 		$txn_type = $data['txn_type'];
 		if ( ! isset( $data['custom'] ) ) {
 			$logger->notice( esc_html__( 'Custom param not found for subscription.', 'user-registration' ), array( 'source' => 'ur-membership-paypal' ) );
