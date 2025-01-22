@@ -365,7 +365,7 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 				'amount'            => $membership['meta_value']['amount'] ?? 0,
 				'currency_symbol'   => $symbol,
 				'calculated_amount' => 'free' === $membership['meta_value']['type'] ? 0 : round( $membership['meta_value']['amount'] ),
-				'period'            => 'free' === $membership['meta_value']['type'] ? __( 'Free', 'user-registration' ) : ( 'subscription' === $membership['meta_value']['type'] ? $symbol . $membership['meta_value']['amount'] . ' / ' . number_format( $membership['meta_value']['subscription']['value'] ) . ' ' . ucfirst( $membership['meta_value']['subscription']['duration'] ) . ( $membership['meta_value']['subscription']['value'] > 1 ? '\'s' : '' ) : $symbol . round( $membership['meta_value']['amount'] ) . ' ' . __( 'Lifetime', 'user-registration' ) ),
+				'period'            => 'free' === $membership['meta_value']['type'] ? __( 'Free', 'user-registration' ) : ( 'subscription' === $membership['meta_value']['type'] ? $symbol . $membership['meta_value']['amount'] . ' / ' . number_format( $membership['meta_value']['subscription']['value'] ) . ' ' . ucfirst( $membership['meta_value']['subscription']['duration'] ) . ( $membership['meta_value']['subscription']['value'] > 1 ? '\'s' : '' ) : $symbol . round( $membership['meta_value']['amount'] )  ),
 			);
 			if ( isset( $membership['meta_value']['payment_gateways'] ) ) {
 				foreach ( $membership['meta_value']['payment_gateways'] as $key => $gateways ) {

@@ -638,6 +638,9 @@ class UR_Admin_Assets {
 			'installation_required_title'                 => __( 'Addon Installation Required', 'user-registration' ),
 			'installation_required_message'               => __( 'Please install <strong>%plugin%</strong> addon to use this integration.', 'user-registration' ),
 			'i18n_prompt_no_membership_group_selected'    => __( 'Please select a membership group for the selected membership field.', 'user-registration' ),
+			'i18n_prompt_no_membership_available'         => __( 'Please create at least one active membership to use a membership field.', 'user-registration' ),
+			'i18n_empty_membership_text'                  => __( 'No active membership\'s available', 'user-registration' ),
+			'i18n_empty_membership_group_text'            => __( 'Please select a membership group.', 'user-registration' ),
 			'i18n_prompt_payment_field_present'           => __( 'Membership Field does not require any additional payment fields. Please remove any/all payment\'s field to continue.', 'user-registration' ),
 		);
 
