@@ -365,13 +365,13 @@ if ( ! function_exists( 'ur_membership_install_required_pages' ) ) {
 		$pages['membership_pricing']  = array(
 			'name'    => _x( 'membership-pricing', 'Page slug', 'user-registration' ),
 			'title'   => _x( 'Membership Pricing', 'Page title', 'user-registration' ),
-			'content' => '[user_registration_membership_listing]',
+			'content' => '[urm_listing]',
 			'option'  => ''
 		);
 		$pages['membership_thankyou'] = array(
 			'name'    => _x( 'membership-thankyou', 'Page slug', 'user-registration' ),
 			'title'   => _x( 'Membership Thankyou', 'Page title', 'user-registration' ),
-			'content' => '[user_registration_membership_thank_you]',
+			'content' => '[urm_thank_you]',
 			'option'  => 'user_registration_thank_you_page_id',
 		);
 

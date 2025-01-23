@@ -288,7 +288,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 			)
 		},
 		{
-			id: "[user_registration_membership_listing]",
+			id: "[urm_listing]",
 			description: __(
 				"Shows a list of available membership options for users to browse.",
 				"user-registration"
@@ -305,7 +305,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 			],
 			example: [
 				{
-					example_name: '[user_registration_membership_listing group_id="5"]',
+					example_name: '[urm_listing group_id="5"]',
 					example_description: __(
 						"Displays Membership listing attached to group with id 5",
 						"user-registration"
@@ -314,7 +314,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 			]
 		},
 		{
-			id: "[user_registration_membership_thank_you]",
+			id: "[urm_thank_you]",
 			description: __(
 				"Displays a thank you message to users after successfully registering for a membership.",
 				"user-registration"

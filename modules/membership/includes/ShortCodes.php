@@ -22,8 +22,10 @@ class ShortCodes {
 	public static function init() {
 		$shortcodes = array(
 //			'user_registration_membership_member_registration_form' => __CLASS__ . '::member_registration_form',
-			'user_registration_membership_listing'   => __CLASS__ . '::membership_listing',
-			'user_registration_membership_thank_you' => __CLASS__ . '::thank_you',
+			'urm_listing'   => __CLASS__ . '::membership_listing',
+			'urm_thank_you' => __CLASS__ . '::thank_you',
+//			'user_registration_membership_listing'   => __CLASS__ . '::membership_listing',
+//			'user_registration_membership_thank_you' => __CLASS__ . '::thank_you',
 		);
 
 		foreach ( $shortcodes as $shortcode => $function ) {

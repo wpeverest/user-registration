@@ -862,13 +862,6 @@
 			ur_membership_ajax_utils.calculate_total(selected_membership);
 
 		});
-		//redirect to membership member registration form
-		$(document).on('click', '.membership-signup-button', function () {
-			var $this = $(this),
-				membership_id = $this.siblings('input').val(),
-				url = urmf_data.membership_registration_page_url + '?membership_id=' + membership_id;
-			window.location.replace(url);
-		});
 
 		//validate before submit
 		$(document).on('user_registration_frontend_validate_before_form_submit', function () {

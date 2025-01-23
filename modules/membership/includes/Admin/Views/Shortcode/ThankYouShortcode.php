@@ -33,7 +33,7 @@ class ThankYouShortcode {
 	public static function render_template( $attributes ) {
 		$membership_repository = new MembershipRepository();
 		$memberships           = $membership_repository->get_all_membership();
-		$template_file         = locate_template( 'membership-registration-form.php' );
+		$template_file         = locate_template( 'thank-you-page.php' );
 		if ( ! $template_file ) {
 			$template_file = UR_MEMBERSHIP_DIR . 'includes/Templates/thank-you-page.php';
 		}

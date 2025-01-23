@@ -353,7 +353,7 @@ class MembershipService {
 
 		$content = $post->post_content;
 
-		if ( !preg_match( '/\[user_registration_membership_thank_you\]/', $content ) ) {
+		if ( !preg_match( '/\[urm_thank_you\]/', $content ) ) {
 			$response['status']  = false;
 			$response['message'] = __( 'The selected page does not consist the User Registration & Membership Thank you page Shortcode.' );
 			return $response;
