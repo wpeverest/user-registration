@@ -47,6 +47,13 @@ jobs:
           mkdir user-registration
           rsync -rc --exclude-from="./.distignore" "./" "./user-registration" --delete --delete-excluded
 
+      # Step to Zip the Plugin Files
+      - name: Zip Plugin Files
+        run: |
+          cd user-registration
+          zip -r ../user-registration.zip ./*
+
+      # Upload and Install Plugin via WP-CLI
       - name: Upload and Install Plugin via WP-CLI
         env:
           Srv_IP: ${{ secrets.QA_AUTOMATION_SERVER_IP }}
@@ -55,15 +62,15 @@ jobs:
         run: |
           # Upload the plugin file
           sshpass -p "$Server_PASS" scp -o StrictHostKeyChecking=no user-registration.zip $Srv_UsrName@$Srv_IP:/tmp/
-
+  
           # SSH into the server and install/activate the plugin using WP-CLI
           sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP << EOF
           # Go to the WordPress directory (replace with the correct path)
           cd /home/master/applications/ycrdmckpsu/public_html/urqatestfinal/wordpress
-
+  
           # Install the plugin via WP-CLI
           wp plugin install /tmp/user-registration.zip --activate
-
+  
           # Clean up
           rm -f /tmp/user-registration.zip
           EOF
@@ -107,4 +114,4 @@ jobs:
           sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP 'rm -rf /home/master/applications/ycrdmckpsu/public_html/urqatestfinal/wordpress/wp-content/plugins/user-registration/reports/*'
           sshpass -p "$Server_PASS" scp -o StrictHostKeyChecking=no -r python-code/results/* $Srv_UsrName@$Srv_IP:/home/master/applications/ycrdmckpsu/public_html/urqatestfinal/wordpress/wp-content/plugins/user-registration/reports/
           echo "https://qatest.wptests.net/urqatestfinal/wordpress/wp-content/plugins/user-registration/reports/report.html"
-          
+          echo "https://qatest.wptests.net/urqatestfinal/wordpress/wp-content/plugins/user-registration/reports/test_report.html"
