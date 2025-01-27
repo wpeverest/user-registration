@@ -61,7 +61,7 @@ jobs:
           Server_PASS: ${{ secrets.QA_AUTOMATION_SERVER_PASS }}
         run: |
           # Upload the plugin file
-          sshpass -p "$Server_PASS" scp -o StrictHostKeyChecking=no user-registration.zip $Srv_UsrName@$Srv_IP:/tmp/
+          sshpass -p "$Server_PASS" scp -o StrictHostKeyChecking=no user-registration.zip $Srv_UsrName@$Srv_IP:/home/master/applications/ycrdmckpsu/public_html/urqatestfinal/
   
           # SSH into the server and install/activate the plugin using WP-CLI
           sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP << EOF
@@ -69,10 +69,10 @@ jobs:
           cd /home/master/applications/ycrdmckpsu/public_html/urqatestfinal/wordpress
   
           # Install the plugin via WP-CLI
-          wp plugin install /tmp/user-registration.zip --activate
+          wp plugin install /home/master/applications/ycrdmckpsu/public_html/urqatestfinal/user-registration.zip --activate
   
           # Clean up
-          rm -f /tmp/user-registration.zip
+          rm -f /home/master/applications/ycrdmckpsu/public_html/urqatestfinal/user-registration.zip
           EOF
 
       - name: Setup Chrome
