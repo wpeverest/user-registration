@@ -44,14 +44,12 @@ jobs:
           composer install 
           npm run build
           composer install --no-dev
-          mkdir user-registration
-          rsync -rc --exclude-from="./.distignore" "./" "./user-registration" --delete --delete-excluded
+          pwd
+          ls -la
+          cd dist
+          ls -la
 
-      # Step to Zip the Plugin Files
-      - name: Zip Plugin Files
-        run: |
-          cd user-registration
-          zip -r ../user-registration.zip ./*
+     
 
       # Upload and Install Plugin via WP-CLI
       - name: Upload and Install Plugin via WP-CLI
