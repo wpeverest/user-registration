@@ -320,13 +320,13 @@ class UR_Getting_Started {
 				'name'    => _x( 'membership-pricing', 'Page slug', 'user-registration' ),
 				'title'   => _x( 'Membership Pricing', 'Page title', 'user-registration' ),
 				'option'  => '',
-				'content' => '[urm_listing]',
+				'content' => '[user_registration_groups]',
 			);
 			$pages['membership_thankyou'] = array(
 				'name'    => _x( 'membership-thankyou', 'Page slug', 'user-registration' ),
 				'title'   => _x( 'Membership Thankyou', 'Page title', 'user-registration' ),
 				'option'  => 'user_registration_thank_you_page_id',
-				'content' => '[urm_thank_you]',
+				'content' => '[user_registration_membership_thank_you]',
 			);
 
 			$page_details['membership_details'] = array(

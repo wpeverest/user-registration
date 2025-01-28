@@ -22,10 +22,9 @@ class ShortCodes {
 	public static function init() {
 		$shortcodes = array(
 //			'user_registration_membership_member_registration_form' => __CLASS__ . '::member_registration_form',
-			'urm_listing'   => __CLASS__ . '::membership_listing',
-			'urm_thank_you' => __CLASS__ . '::thank_you',
-//			'user_registration_membership_listing'   => __CLASS__ . '::membership_listing',
-//			'user_registration_membership_thank_you' => __CLASS__ . '::thank_you',
+			'user_registration_groups'               => __CLASS__ . '::membership_listing',
+			'user_registration_membership_thank_you' => __CLASS__ . '::thank_you',
+			'user_registration_membership_listing'   => __CLASS__ . '::membership_listing',
 		);
 
 		foreach ( $shortcodes as $shortcode => $function ) {
@@ -38,7 +37,7 @@ class ShortCodes {
 	 * Shortcode Wrapper.
 	 *
 	 * @param string[] $function Callback function.
-	 * @param array    $attributes (default: array()) Extra attributes.
+	 * @param array $attributes (default: array()) Extra attributes.
 	 *
 	 * @return string
 	 */
@@ -92,6 +91,7 @@ class ShortCodes {
 			$attributes
 		);
 	}
+
 	/**
 	 * Shortcode initialization for thank you page.
 	 *

@@ -270,11 +270,20 @@ class MembershipService {
 
 			if ( empty( $secret_key ) || empty( $publishable_key ) ) {
 				$result['status']  = false;
-				$result['message'] = esc_html__( "Incomplete Stripe Gateway setup.", "user-registration" );
+				$result['message'] = esc_html__( "Incomplete Stripe setup, please update stripe payment settings before continuing.", "user-registration" );
 				return $result;
 			}
 		}
+		//		payment gateway validation:paypal
+		if ( isset( $data['post_meta_data']['payment_gateways']['paypal'] ) && "on" === $data['post_meta_data']['payment_gateways']['stripe']['paypal'] ) {
+			$paypal_email = get_option( 'user_registration_global_paypal_email_address');
 
+			if ( empty( $paypal_email ) ) {
+				$result['status']  = false;
+				$result['message'] = esc_html__( "Incomplete Paypal setup, please update paypal payment settings before continuing.", "user-registration" );
+				return $result;
+			}
+		}
 		return $result;
 	}
 
@@ -353,7 +362,7 @@ class MembershipService {
 
 		$content = $post->post_content;
 
-		if ( !preg_match( '/\[urm_thank_you\]/', $content ) ) {
+		if ( !preg_match( '/\[user_registration_membership_thank_you\]/', $content ) ) {
 			$response['status']  = false;
 			$response['message'] = __( 'The selected page does not consist the User Registration & Membership Thank you page Shortcode.' );
 			return $response;

@@ -414,6 +414,11 @@ if ( ! function_exists( 'get_membership_menus' ) ) {
 				'url'    => admin_url( 'admin.php?page=user-registration-members' ),
 				'active' => isset( $_GET['page'] ) && $_GET['page'] === 'user-registration-members',
 			),
+			'settings'           => array(
+				'label'  => __( 'Settings', 'user-registration' ),
+				'url'    => admin_url( 'admin.php?page=user-registration-settings&tab=membership' ),
+				'active' => false,
+			)
 		);
 	}
 }

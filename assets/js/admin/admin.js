@@ -1501,6 +1501,10 @@ jQuery(function ($) {
 					.closest(".ur-advance-setting")
 					.find("input");
 
+			if( inputElement.length === 0 ){
+				inputElement = ($(this).closest(".ur-general-setting").find("input"));
+			}
+
 			var advanceFieldData = inputElement.data("advance-field"),
 				fieldData = inputElement.data("field"),
 				field_name =

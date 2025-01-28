@@ -62,6 +62,7 @@ class UR_Admin_Settings {
 			if( ur_check_module_activation( 'membership' ) || is_plugin_active( 'user-registration-stripe/user-registration-stripe.php' ) ) {
 				include_once UR_ABSPATH . 'modules/class-ur-payment-settings.php';
 				include_once UR_ABSPATH . 'modules/stripe/class-ur-stripe-module.php';
+				include_once UR_ABSPATH . 'modules/paypal/class-ur-paypal-module.php';
 			}
 			else if ( UR_PRO_ACTIVE && ur_check_module_activation( 'payments' ) )
 			{

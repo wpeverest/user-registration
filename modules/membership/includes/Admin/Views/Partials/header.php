@@ -3,6 +3,7 @@
 		<img style="max-width: 30px"
 			 src="<?php echo UR()->plugin_url() . '/assets/images/logo.svg'; ?>" alt="">
 		<?php
+
 		// Render menu
 		foreach ( $menu_items as $item ) {
 			$class = $item['active'] ? 'row-title' : '';
@@ -14,11 +15,5 @@
 			);
 		}
 		?>
-	</div>
-	<div class="membership-menu-right ur-d-flex ur-p-3 ur-mr-0 ur-align-items-center">
-		<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=membership' ) ); ?>"
-		   class="chakra-link css-e6i1ju">
-			<span><?php esc_html_e( 'Settings', 'user-registration' ); ?></span>
-		</a>
 	</div>
 </div>
