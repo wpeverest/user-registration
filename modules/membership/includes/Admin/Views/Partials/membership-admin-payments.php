@@ -52,7 +52,7 @@ function render_payment_gateways( $membership_details ) {
 function render_paypal_settings( $membership_details ) {
 	$global_paypal_settings = array(
 		'paypal_mode'   => get_option( 'user_registration_global_paypal_mode', 'test' ),
-		'paypal_email'  => get_option( 'user_registration_global_paypal_email_address', '' ),
+		'paypal_email'  => get_option( 'user_registration_global_paypal_email_address', get_option( 'admin_email' ) ),
 		'cancel_url'    => get_option( 'user_registration_global_paypal_cancel_url', home_url() ),
 		'return_url'    => get_option( 'user_registration_global_paypal_return_url', wp_login_url() ),
 		'client_id'     => get_option( 'user_registration_global_paypal_client_id', '' ),

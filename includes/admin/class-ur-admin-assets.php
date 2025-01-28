@@ -383,7 +383,23 @@ class UR_Admin_Assets {
 				'ur_assets_url'             => UR()->plugin_url() . '/assets/',
 				'i18n_prompt_no_membership_group_selected' => __( 'Membership Field requires a membership group to be selected.', 'user-registration' ),
 				'i18n_default_redirection_notice_for_membership' => esc_html__( 'If the form includes a membership field, users will be redirected to the membership thank you page after submission.', 'user-registration' ),
-				'form_has_membership_field' => check_membership_field_in_form($form_id)
+				'form_has_membership_field' => check_membership_field_in_form($form_id),
+				'paypal_settings'                                => array(
+					'global'                    => array(
+						'paypal_mode'   => get_option( 'user_registration_global_paypal_mode', 'test' ),
+						'paypal_email'  => get_option( 'user_registration_global_paypal_email_address', get_option( 'admin_email' ) ),
+						'cancel_url'    => get_option( 'user_registration_global_paypal_cancel_url', home_url() ),
+						'return_url'    => get_option( 'user_registration_global_paypal_return_url', wp_login_url() ),
+						'client_id'     => get_option( 'user_registration_global_paypal_client_id', '' ),
+						'client_secret' => get_option( 'user_registration_global_paypal_client_secret', '' ),
+					),
+					'form' => array(
+						'paypal_mode'  => ur_get_single_post_meta( $form_id, 'user_registration_paypal_mode', 'test' ),
+						'paypal_email' => ur_get_single_post_meta( $form_id, 'user_registration_paypal_email_address', get_option( 'admin_email' ) ),
+						'cancel_url'   => ur_get_single_post_meta( $form_id, 'user_registration_paypal_cancel_url', home_url() ),
+						'return_url'   => ur_get_single_post_meta( $form_id, 'user_registration_paypal_return_url', wp_login_url() ),
+					)
+				),
 			);
 
 			wp_localize_script(

@@ -65,7 +65,6 @@ class UR_Admin {
 
 			$logger->notice( '---------- Begin Membership Migration. ----------', array( 'source' => 'migration-logger' ) );
 			$memberships = $membership_service->list_active_memberships();
-
 			if ( count( $memberships ) === 0 ) {
 				$logger->error(
 					'! No memberships available....creating a default membership.',
@@ -77,13 +76,27 @@ class UR_Admin {
 //				$memberships   = array( array( 'ID' => $membership_id ) );
 			}
 
-			$logger->notice( 'Begin Default Membership Group creation.', array( 'source' => 'migration-logger' ) );
+			if ( ur_check_module_activation( 'payments' ) ) {
+				$logger->notice( '---------- Enable override global settings for paypal standard start. ----------', array( 'source' => 'migration-logger' ) );
+				$get_all_forms = ur_get_all_user_registration_form();
+				foreach ( $get_all_forms as $key => $form ) {
+					$is_paypal_setting_used = get_post_meta( $key, 'user_registration_enable_paypal_standard', false );
+					if ( $is_paypal_setting_used ) {
+						$logger->notice( 'Updating for form: ' . $form, array( 'source' => 'migration-logger' ) );
+						add_post_meta( $key, 'user_registration_override_paypal_global_settings', true );
+					}
+				}
+				$logger->notice( '---------- Enable override global settings for paypal standard End. ----------', array( 'source' => 'migration-logger' ) );
+
+			}
+
+//			$logger->notice( 'Begin Default Membership Group creation.', array( 'source' => 'migration-logger' ) );
 
 			// first create a default membership group and assign all the memberships to the group.
 			// enable the commented codes to create a default group on migration
 //			$group_id = UR_Install::create_default_membership_group( $memberships );
 //			if ( $group_id ) {
-			$logger->notice( 'Created Default Membership Group.', array( 'source' => 'migration-logger' ) );
+//			$logger->notice( 'Created Default Membership Group.', array( 'source' => 'migration-logger' ) );
 
 			// then use the group id to create a new registration form with membership field and the default group selected.
 			$logger->notice( 'Begin Membership form creation.', array( 'source' => 'migration-logger' ) );

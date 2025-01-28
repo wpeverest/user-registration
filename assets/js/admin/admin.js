@@ -1518,6 +1518,31 @@ jQuery(function ($) {
 		});
 	});
 
+	function update_paypal_settings($this) {
+		var paypal_inputs = $('#paypal-standard-settings .paypal-setting-group');
+
+		paypal_inputs.hide();
+		if($this.is(':checked')) {
+			paypal_inputs.show();
+		}
+	}
+
+	$(document.body).on("click", "#user_registration_enable_paypal_standard", function() {
+		update_paypal_settings($(this));
+	});
+
+	update_paypal_settings($('#user_registration_enable_paypal_standard'));
+
+	$(document.body).on("click", "#user_registration_override_paypal_global_settings", function() {
+		var $this = $(this),
+			type = $(this).is(':checked') ? 'form' : 'global';
+
+		$('#user_registration_paypal_mode').val(user_registration_form_builder_data.paypal_settings[type].paypal_mode);
+		$('#user_registration_paypal_email_address').val(user_registration_form_builder_data.paypal_settings[type].paypal_email);
+		$('#user_registration_paypal_cancel_url').val(user_registration_form_builder_data.paypal_settings[type].cancel_url);
+		$('#user_registration_paypal_return_url').val(user_registration_form_builder_data.paypal_settings[type].return_url);
+
+	})
 	/**
 	 * For update the default value.
 	 */
