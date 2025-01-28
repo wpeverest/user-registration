@@ -1,4 +1,5 @@
 <?php
+$is_logged_in = is_user_logged_in();
 if('' === $list_type):
 ?>
 	<div class="ur-membership-list-container">
@@ -31,7 +32,7 @@ if('' === $list_type):
 						<span
 							class="membership-amount"><?php echo $symbol ?> <?php echo esc_html( sprintf( '%.2f', $membership['meta_value']['amount'] ) ); ?></span>
 						<button type="button"
-								class="membership-signup-button" <?php echo (empty($registration_page_id) ? 'disabled' : '') ?> ><?php echo esc_html__( 'Sign Up', 'user-registration' ); ?></button>
+								class="membership-signup-button" <?php echo (empty($registration_page_id) || $is_logged_in ? 'disabled' : '') ?> ><?php echo esc_html__( 'Sign Up', 'user-registration' ); ?></button>
 					</div>
 				</div>
 			<?php
@@ -69,7 +70,7 @@ elseif('radio' === $list_type):
 			endif;
 			?>
 			<div class="membership-footer">
-				<button type="submit" class="membership-signup-button" <?php echo( empty( $registration_page_id ) ? 'disabled' : '' ) ?>><?php echo $sign_up_text ?></button>
+				<button type="submit" class="membership-signup-button" <?php echo( empty( $registration_page_id ) || $is_logged_in ? 'disabled' : '' ) ?>><?php echo $sign_up_text ?></button>
 			</div>
 		</div>
 	</form>
