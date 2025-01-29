@@ -37,7 +37,7 @@ class MemberRegistrationFormShortcode {
 			$group_id = isset( $attributes['membership_group'] ) ? $attributes['membership_group'] : array();
 			$group_service = new MembershipGroupService();
 			$group = $group_service->get_membership_group_by_id($group_id);
-			$group_status = false;
+			$group_status = true;
 			if( ! empty( $group ) ) {
 				$content = json_decode( wp_unslash( $group['post_content'] ), true );
 				$group_status = ur_string_to_bool($content['status']);
