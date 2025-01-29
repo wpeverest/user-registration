@@ -126,9 +126,9 @@ class AJAX {
 				$members_service = new MembersService();
 				$members_service->login_member( $member_id );
 			}
-//			$email_service = new EmailService();
-//			$email_service->send_email( $data, 'user_register_user' );
-//			$email_service->send_email( $data, 'user_register_admin' );
+			$email_service = new EmailService();
+			$email_service->send_email( $data, 'user_register_user' );
+			$email_service->send_email( $data, 'user_register_admin' );
 
 			$response = apply_filters(
 				'user_registration_membership_after_register_member',
