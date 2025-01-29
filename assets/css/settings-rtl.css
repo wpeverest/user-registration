@@ -1151,7 +1151,8 @@
   color: #bababa;
 }
 .user-registration-settings-container .user-registration-options-container .user-registration-card__body table.ur_emails tbody tr .ur-email-settings-table .user-registration-help-tip::after {
-  content: url("../images/settings-icons/information.svg") !important;
+  content: "";
+  background-image: url("../images/settings-icons/information.svg") !important;
 }
 .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings {
   display: flex;

@@ -431,6 +431,10 @@ class UR_Emailer {
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
 			if ( ur_option_checked( 'user_registration_enable_successfully_registered_email', true ) ) {
+				$is_membership_form = check_membership_field_in_form($form_id);
+				if( $is_membership_form ) {
+					return;
+				}
 				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), $attachment, $template_id );
 			}
 		}
@@ -506,13 +510,13 @@ class UR_Emailer {
 
 		$message = self::parse_smart_tags( $message, $values, $name_value );
 		$subject = self::parse_smart_tags( $subject, $values, $name_value );
-		$is_membership_form = check_membership_field_in_form($form_id);
 
 		if ( ur_option_checked( 'user_registration_enable_admin_email', true ) ) {
+			$is_membership_form = check_membership_field_in_form($form_id);
+			if( $is_membership_form ) {
+				return;
+			}
 			foreach ( $admin_email as $email ) {
-				if( $is_membership_form ) {
-					return;
-				}
 				self::user_registration_process_and_send_email( $email, $subject, $message, $header, $attachment, $template_id );
 			}
 		}
