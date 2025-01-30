@@ -38,18 +38,17 @@ class User_Registration_Paypal_Module {
 			'desc'     => '',
 			'settings' => array(
 				array(
+					'id'                => 'user_registration_global_paypal_mode',
 					'type'              => 'select',
 					'title'             => __( 'Mode', 'user-registration' ),
+					'desc'               => __( 'Select a mode to run paypal.', 'user-registration' ),
 					'desc_tip'       => true,
-					'id'                => 'user_registration_global_paypal_mode',
 					'options'           => array(
 						'production' => __( 'Production', 'user-registration' ),
 						'test'       => __( 'Test/Sandbox', 'user-registration' ),
 					),
-					'class'             => array( 'ur-enhanced-select' ),
-					'custom_attributes' => array(),
+					'class'             => 'ur-enhanced-select',
 					'default'           => get_option( 'user_registration_global_paypal_mode', 'test' ),
-					'desc'               => __( 'Select a mode to run paypal.', 'user-registration' ),
 				),
 				array(
 					'type'     => 'text',
