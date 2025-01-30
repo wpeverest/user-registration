@@ -501,12 +501,13 @@ class UR_Smart_Tags {
 						$content = str_replace( '{{' . $tag . '}}', esc_html( $full_name ), $content );
 						break;
 					case 'profile_details_link':
-						$endpoint = ur_string_translation( 0, 'user_registration_edit-profile_slug', 'edit-profile' );
+						$endpoint = 'edit-profile';
 						$profile_details_link = '<a href="' . esc_url( ur_get_endpoint_url( $endpoint ) ) . '">' . esc_html__( 'profile details', 'user-registration' ) . '</a>';
 						$content              = str_replace( '{{' . $tag . '}}', wp_kses_post( $profile_details_link ), $content );
 						break;
 					case 'edit_password_link':
-						$endpoint = ur_string_translation( 0, 'user_registration_edit-password_slug', 'edit-password' );
+						$endpoint ='edit-password';
+						// $endpoint = ur_string_translation( 0, 'user_registration_edit-password_slug', 'edit-password' );
 						$edit_password_link = '<a href="' . esc_url( ur_get_endpoint_url( $endpoint ) ) . '">' . esc_html__( 'edit your password', 'user-registration' ) . '</a>';
 						$content            = str_replace( '{{' . $tag . '}}', wp_kses_post( $edit_password_link ), $content );
 						break;
