@@ -1519,15 +1519,16 @@ jQuery(function ($) {
 	});
 
 	function update_paypal_settings($this) {
-		var paypal_inputs = $('#paypal-standard-settings .paypal-setting-group');
+		var paypal_inputs = $('#paypal-standard-settings .paypal-setting-group'),
+			override_global_settings = $('#paypal-standard-settings #user_registration_override_paypal_global_settings');
 
 		paypal_inputs.hide();
-		if($this.is(':checked')) {
+		if($this.is(':checked') && override_global_settings.is(':checked')) {
 			paypal_inputs.show();
 		}
 	}
 
-	$(document.body).on("click", "#user_registration_enable_paypal_standard", function() {
+	$(document.body).on("click", "#user_registration_enable_paypal_standard , #user_registration_override_paypal_global_settings", function() {
 		update_paypal_settings($(this));
 	});
 

@@ -60,8 +60,21 @@ class UR_Admin {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
+		if ( ur_check_module_activation( 'payments' ) && ! get_option( 'global_paypal_setting_migration', false )  ) {
+			$logger->notice( '---------- Enable override global settings for paypal standard start. ----------', array( 'source' => 'migration-logger' ) );
+			$get_all_forms = ur_get_all_user_registration_form();
+			foreach ( $get_all_forms as $key => $form ) {
+				$is_paypal_setting_used = get_post_meta( $key, 'user_registration_enable_paypal_standard', false );
+				if ( $is_paypal_setting_used ) {
+					$logger->notice( 'Updating for form: ' . $form, array( 'source' => 'migration-logger' ) );
+					add_post_meta( $key, 'user_registration_override_paypal_global_settings', true );
+				}
+			}
+			$logger->notice( '---------- Enable override global settings for paypal standard End. ----------', array( 'source' => 'migration-logger' ) );
+			add_option( 'global_paypal_setting_migration', true );
+		}
 
-		if ( UR_PRO_ACTIVE && UR_VERSION <= '4.3.5.2' && ! get_option( 'membership_migration_finished', false ) ) {
+		if ( UR_PRO_ACTIVE && UR_VERSION <= '5.0' && ! get_option( 'membership_migration_finished', false ) ) {
 
 			$logger->notice( '---------- Begin Membership Migration. ----------', array( 'source' => 'migration-logger' ) );
 			$memberships = $membership_service->list_active_memberships();
@@ -76,19 +89,7 @@ class UR_Admin {
 //				$memberships   = array( array( 'ID' => $membership_id ) );
 			}
 
-			if ( ur_check_module_activation( 'payments' ) ) {
-				$logger->notice( '---------- Enable override global settings for paypal standard start. ----------', array( 'source' => 'migration-logger' ) );
-				$get_all_forms = ur_get_all_user_registration_form();
-				foreach ( $get_all_forms as $key => $form ) {
-					$is_paypal_setting_used = get_post_meta( $key, 'user_registration_enable_paypal_standard', false );
-					if ( $is_paypal_setting_used ) {
-						$logger->notice( 'Updating for form: ' . $form, array( 'source' => 'migration-logger' ) );
-						add_post_meta( $key, 'user_registration_override_paypal_global_settings', true );
-					}
-				}
-				$logger->notice( '---------- Enable override global settings for paypal standard End. ----------', array( 'source' => 'migration-logger' ) );
 
-			}
 
 //			$logger->notice( 'Begin Default Membership Group creation.', array( 'source' => 'migration-logger' ) );
 
