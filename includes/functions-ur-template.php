@@ -30,15 +30,18 @@ function ur_template_redirect() {
 		 *
 		 * @param string $redirect_url The redirect url.
 		 */
-		$redirect_url = apply_filters( 'user_registration_redirect_after_logout', $redirect_url );
+
 		// Check if external url is present in URL.
 		if ( isset( $_GET['redirect_to_on_logout'] ) ) {
 			wp_logout();
 			wp_redirect( esc_url_raw( wp_unslash( $_GET['redirect_to_on_logout'] ) ) );
 			exit;
 		}
-		wp_safe_redirect( str_replace( '&amp;', '&', wp_logout_url( urldecode ( $redirect_url ) ) ) );
+		$redirect_url = apply_filters( 'user_registration_redirect_after_logout', $redirect_url );
+		wp_logout();
+		wp_safe_redirect( ur_get_page_permalink( $redirect_url ) );
 		exit;
+		
 	} elseif ( isset( $wp->query_vars['user-logout'] ) && 'true' === $wp->query_vars['user-logout'] ) {
 		/**
 		 * Filter the redirect after logout url.
