@@ -59,6 +59,28 @@ class ShortCodes {
 	}
 
 	/**
+	 * Shortcode initialization for member registration form.
+	 *
+	 * @param mixed $attributes shortcode attributes.
+	 *
+	 * @return string
+	 */
+	public static function member_registration_form( $attributes ) {
+		do_action( 'wp_enqueue_membership_scripts' );
+		wp_enqueue_script( 'user-registration-membership-frontend-script' );
+		wp_enqueue_script( 'ur-snackbar' );
+		wp_enqueue_style( 'ur-snackbar' );
+
+		return self::shortcode_wrapper(
+			array(
+				'WPEverest\URMembership\Admin\Views\Shortcode\MemberRegistrationFormShortcode',
+				'display_form',
+			),
+			$attributes
+		);
+	}
+
+	/**
 	 * Shortcode initialization for membership listing.
 	 *
 	 * @param mixed $attributes shortcode attributes.
