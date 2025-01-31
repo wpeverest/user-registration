@@ -246,6 +246,14 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
+= 4.0.0-beta-1 - 31/01/2025 =
+* Enhance      - Separation of groups and plans.
+* Enhance      - Global Payment settings for membership and forms.
+* Enhance      - User status consistency.
+* Enhance      - Enhanced pricing/listing page.
+* Enhance      - Simplified Membership Group shortcode.
+* Enhance      - Enhanced Membership Emails
+
 = 4.0-beta  - 21/01/2025 =
 * Feature   - Login form builder.
 * Feature   - Membership module in core.
