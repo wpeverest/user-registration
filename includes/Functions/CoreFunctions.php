@@ -361,7 +361,7 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 			$new_mem[ $k ] = array(
 				'ID'                => $membership['ID'],
 				'title'             => $membership['post_title'],
-				'description'       => $membership['post-content']['description'],
+				'description'       => $membership['post_content']['description'],
 				'type'              => $membership['meta_value']['type'],
 				'amount'            => $membership['meta_value']['amount'] ?? 0,
 				'currency_symbol'   => $symbol,
