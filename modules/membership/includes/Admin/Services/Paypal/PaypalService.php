@@ -42,6 +42,10 @@ class PaypalService {
 	 */
 	public function build_url( $data, $membership, $member_email, $subscription_id, $member_id ) {
 		$paypal_options    = $data['payment_gateways']['paypal'];
+		$paypal_options['mode'] = get_option( 'user_registration_global_paypal_email_address', $paypal_options['mode'] );
+		$paypal_options['email'] = get_option( 'user_registration_global_paypal_mode', $paypal_options['email'] );
+		$paypal_options['cancel_url'] = get_option( 'user_registration_global_paypal_cancel_url', $paypal_options['cancel_url'] );
+		$paypal_options['return_url'] = get_option( 'user_registration_global_paypal_return_url', $paypal_options['return_url'] );
 		$redirect          = ( 'production' === $paypal_options['mode'] ) ? 'https://www.paypal.com/cgi-bin/webscr/?' : 'https://www.sandbox.paypal.com/cgi-bin/webscr/?';
 		$post              = get_post( $membership );
 		$membership_amount = number_format( $data['amount'] );
@@ -205,6 +209,12 @@ class PaypalService {
 		$membership                     = $this->membership_repository->get_single_membership_by_ID( $membership_id );
 		$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
 		$paypal_options                 = $membership_metas['payment_gateways']['paypal'];
+
+		$paypal_options['mode'] = get_option( 'user_registration_global_paypal_email_address', $paypal_options['mode'] );
+		$paypal_options['email'] = get_option( 'user_registration_global_paypal_mode', $paypal_options['email'] );
+		$paypal_options['cancel_url'] = get_option( 'user_registration_global_paypal_cancel_url', $paypal_options['cancel_url'] );
+		$paypal_options['return_url'] = get_option( 'user_registration_global_paypal_return_url', $paypal_options['return_url'] );
+
 		$membership_metas['post_title'] = $membership['post_title'];
 		$receiver_email                 = $paypal_options['email'];
 		$amount                         = $membership_metas['amount'];
@@ -397,6 +407,14 @@ class PaypalService {
 		$membership      = $this->membership_repository->get_single_membership_by_ID( $order['item_id'] );
 		$membership_meta = json_decode( $membership['meta_value'], true );
 		$paypal_options  = $membership_meta['payment_gateways']['paypal'];
+
+		$paypal_options['mode'] = get_option( 'user_registration_global_paypal_email_address', $paypal_options['mode'] );
+		$paypal_options['email'] = get_option( 'user_registration_global_paypal_mode', $paypal_options['email'] );
+		$paypal_options['cancel_url'] = get_option( 'user_registration_global_paypal_cancel_url', $paypal_options['cancel_url'] );
+		$paypal_options['return_url'] = get_option( 'user_registration_global_paypal_return_url', $paypal_options['return_url'] );
+		$paypal_options['client_id'] = get_option( 'user_registration_global_paypal_client_id', $paypal_options['client_id'] );
+		$paypal_options['client_secret'] = get_option( 'user_registration_global_paypal_client_secret', $paypal_options['client_secret'] );
+
 		$client_id       = $paypal_options['client_id'];
 		$client_secret   = $paypal_options['client_secret'];
 		$url             = ( 'production' === $paypal_options['mode'] ) ? 'https://api-m.paypal.com/' : 'https://api-m.sandbox.paypal.com/';

@@ -379,7 +379,7 @@ class OrdersListTable extends \UR_List_Table {
 		<div style="display: flex; gap: 10px">
 			<select name="payment_for" id="user-registration-pro-payment-type-filters">
 				<option
-					value="" selected><?php echo esc_html__( 'Select Module', 'user-registration' ); ?></option>
+					value="" selected><?php echo esc_html__( 'All Module', 'user-registration' ); ?></option>
 				<option
 					value="forms" <?php echo isset( $_REQUEST['payment_for'] ) && 'forms' == $_REQUEST['payment_for'] ? 'selected=selected' : ''; ?>><?php echo esc_html__( 'Forms', 'user-registration' ); ?></option>
 				<?php
@@ -397,7 +397,7 @@ class OrdersListTable extends \UR_List_Table {
 			style="display:<?php echo $show_membership ? 'flex' : 'none'; ?>; gap: 10px;">
 			<select name="membership_id" id="user-registration-pro-memberships-filter">
 				<option
-					value=""><?php echo esc_html__( 'Select Membership', 'user-registration' ); ?></option>
+					value=""><?php echo esc_html__( 'All Membership', 'user-registration' ); ?></option>
 				<?php
 				foreach ( $this->get_all_memberships() as $id => $form ) {
 					$selected = isset( $_REQUEST['membership_id'] ) && $id == $_REQUEST['membership_id'] ? 'selected=selected' : '';
@@ -414,7 +414,7 @@ class OrdersListTable extends \UR_List_Table {
 			style="display:<?php echo ! $show_membership && $_REQUEST['payment_for'] == 'forms' ? 'flex' : 'none'; ?>; gap: 10px;">
 			<select name="form_id" id="user-registration-pro-forms-filter">
 				<option
-					value=""><?php echo esc_html__( 'Select Forms', 'user-registration' ); ?></option>
+					value=""><?php echo esc_html__( 'All Forms', 'user-registration' ); ?></option>
 				<?php
 				foreach ( ur_get_all_user_registration_form() as $id => $form ) {
 					$selected = isset( $_REQUEST['form_id'] ) && $id == $_REQUEST['form_id'] ? 'selected=selected' : '';
@@ -430,7 +430,7 @@ class OrdersListTable extends \UR_List_Table {
 		<div class="" id="user-registration-pro-members-filters" style="display: flex; gap: 10px">
 			<select name="payment_method" id="user_registration_pro_users_form_filter">
 				<option
-					value=""><?php echo esc_html__( 'Select Gateway', 'user-registration' ); ?></option>
+					value=""><?php echo esc_html__( 'All Gateway', 'user-registration' ); ?></option>
 				<?php
 				$options = ( isset( $_REQUEST['payment_for'] ) && 'membership' == $_REQUEST['payment_for'] ) ? get_option( 'ur_membership_payment_gateways' ) : get_option( 'ur_payment_gateways' );
 
@@ -447,7 +447,7 @@ class OrdersListTable extends \UR_List_Table {
 		<div class="" id="user-registration-pro-members-filters" style="display: flex; gap: 10px">
 			<select name="status" id="user_registration_pro_users_form_filter">
 				<option
-					value=""><?php echo esc_html__( 'Select Status', 'user-registration' ); ?></option>
+					value=""><?php echo esc_html__( 'All Status', 'user-registration' ); ?></option>
 				<?php
 				foreach ( array( 'completed', 'pending', 'failed', 'refunded' ) as $id => $status ) {
 					$selected = isset( $_REQUEST['status'] ) && $status == $_REQUEST['status'] ? 'selected=selected' : '';

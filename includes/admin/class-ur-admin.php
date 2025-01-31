@@ -60,12 +60,24 @@ class UR_Admin {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
+		if ( ur_check_module_activation( 'payments' ) && ! get_option( 'global_paypal_setting_migration', false )  ) {
+			$logger->notice( '---------- Enable override global settings for paypal standard start. ----------', array( 'source' => 'migration-logger' ) );
+			$get_all_forms = ur_get_all_user_registration_form();
+			foreach ( $get_all_forms as $key => $form ) {
+				$is_paypal_setting_used = get_post_meta( $key, 'user_registration_enable_paypal_standard', false );
+				if ( $is_paypal_setting_used ) {
+					$logger->notice( 'Updating for form: ' . $form, array( 'source' => 'migration-logger' ) );
+					add_post_meta( $key, 'user_registration_override_paypal_global_settings', true );
+				}
+			}
+			$logger->notice( '---------- Enable override global settings for paypal standard End. ----------', array( 'source' => 'migration-logger' ) );
+			add_option( 'global_paypal_setting_migration', true );
+		}
 
-		if ( UR_PRO_ACTIVE && UR_VERSION <= '4.3.5.2' && ! get_option( 'membership_migration_finished', false ) ) {
+		if ( UR_PRO_ACTIVE && UR_VERSION <= '5.0' && ! get_option( 'membership_migration_finished', false ) ) {
 
 			$logger->notice( '---------- Begin Membership Migration. ----------', array( 'source' => 'migration-logger' ) );
 			$memberships = $membership_service->list_active_memberships();
-
 			if ( count( $memberships ) === 0 ) {
 				$logger->error(
 					'! No memberships available....creating a default membership.',
@@ -74,63 +86,66 @@ class UR_Admin {
 					)
 				);
 				$membership_id = UR_Install::create_default_membership();
-				$memberships   = array( array( 'ID' => $membership_id ) );
+//				$memberships   = array( array( 'ID' => $membership_id ) );
 			}
 
-			$logger->notice( 'Begin Default Membership Group creation.', array( 'source' => 'migration-logger' ) );
+
+
+//			$logger->notice( 'Begin Default Membership Group creation.', array( 'source' => 'migration-logger' ) );
 
 			// first create a default membership group and assign all the memberships to the group.
-			$group_id = UR_Install::create_default_membership_group( $memberships );
-			if ( $group_id ) {
-				$logger->notice( 'Created Default Membership Group.', array( 'source' => 'migration-logger' ) );
+			// enable the commented codes to create a default group on migration
+//			$group_id = UR_Install::create_default_membership_group( $memberships );
+//			if ( $group_id ) {
+//			$logger->notice( 'Created Default Membership Group.', array( 'source' => 'migration-logger' ) );
 
-				// then use the group id to create a new registration form with membership field and the default group selected.
-				$logger->notice( 'Begin Membership form creation.', array( 'source' => 'migration-logger' ) );
+			// then use the group id to create a new registration form with membership field and the default group selected.
+			$logger->notice( 'Begin Membership form creation.', array( 'source' => 'migration-logger' ) );
 
-				$form_id = UR_Install::create_membership_form( $group_id );
-				if ( $form_id ) {
-					$logger->notice( 'Membership form created successfully.', array( 'source' => 'migration-logger' ) );
-					// find and replace old shortcode with newly created form.
-					$result = $membership_service->find_and_replace_membership_form_with_registration_form( $form_id );
-					// assign old members to new membership form
-					$membership_service->assign_users_to_new_form( $form_id );
-					if ( ! $result ) {
-						$logger->notice(
-							'Skipped old shortcode replace process.',
-							array(
-								'source' => 'migration-logger',
-							)
-						);
-					}
+			$form_id = UR_Install::create_membership_form( 0 );
+			if ( $form_id ) {
+				$logger->notice( 'Membership form created successfully.', array( 'source' => 'migration-logger' ) );
+				// find and replace old shortcode with newly created form.
+				$result = $membership_service->find_and_replace_membership_form_with_registration_form( $form_id );
+				// assign old members to new membership form
+				$membership_service->assign_users_to_new_form( $form_id );
+				if ( ! $result ) {
 					$logger->notice(
-						'---------- Membership Migration Completed ----------',
-						array(
-							'source' => 'migration-logger',
-						)
-					);
-					add_option( 'membership_migration_finished', true ); // to check if migration runs just once
-					update_option( 'user_registration_membership_installed_flag', true ); // to check if membership has been installed
-					$enabled_features   = get_option( 'user_registration_enabled_features', array() );
-					$enabled_features[] = 'user-registration-membership';
-					update_option( 'user_registration_enabled_features', $enabled_features );
-
-				} else {
-					wp_delete_post( $group_id );
-					$logger->error(
-						'! Membership form creation failed....aborting migration.',
+						'Skipped old shortcode replace process.',
 						array(
 							'source' => 'migration-logger',
 						)
 					);
 				}
+				$logger->notice(
+					'---------- Membership Migration Completed ----------',
+					array(
+						'source' => 'migration-logger',
+					)
+				);
+				add_option( 'membership_migration_finished', true ); // to check if migration runs just once
+				update_option( 'user_registration_membership_installed_flag', true ); // to check if membership has been installed
+				$enabled_features   = get_option( 'user_registration_enabled_features', array() );
+				$enabled_features[] = 'user-registration-membership';
+				update_option( 'user_registration_enabled_features', $enabled_features );
+
 			} else {
+//					wp_delete_post( $group_id );
 				$logger->error(
-					'! Group creation failed....aborting migration.',
+					'! Membership form creation failed....aborting migration.',
 					array(
 						'source' => 'migration-logger',
 					)
 				);
 			}
+//			} else {
+//				$logger->error(
+//					'! Group creation failed....aborting migration.',
+//					array(
+//						'source' => 'migration-logger',
+//					)
+//				);
+//			}
 		}
 	}
 
@@ -256,7 +271,7 @@ class UR_Admin {
 	/**
 	 * Add Tag for My Account to know which page is current my account page.
 	 *
-	 * @param mixed  $post_states Tags.
+	 * @param mixed $post_states Tags.
 	 * @param object $post Post.
 	 */
 	public function ur_add_post_state( $post_states, $post ) {

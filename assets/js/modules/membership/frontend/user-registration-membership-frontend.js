@@ -863,7 +863,7 @@
 
 		});
 		//redirect to membership member registration form
-		$(document).on('click', '.membership-signup-button', function () {
+		$(document).on('click', '#membership-old-selection-form .membership-signup-button', function () {
 			var $this = $(this),
 				membership_id = $this.siblings('input').val(),
 				url = urmf_data.membership_registration_page_url + '?membership_id=' + membership_id;

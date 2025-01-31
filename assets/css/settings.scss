@@ -1361,7 +1361,8 @@ body {
 										color: $grey-100;
 
 										&::after {
-											content: url('../images/settings-icons/information.svg') !important;
+											content: "";
+											background-image: url('../images/settings-icons/information.svg') !important;
 										}
 									}
 								}

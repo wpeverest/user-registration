@@ -335,13 +335,13 @@ if ( ! function_exists( 'ur_membership_install_required_pages' ) ) {
 		WPEverest\URMembership\Admin\Database\Database::create_tables();
 		update_option( 'ur_membership_default_membership_field_name', $membership_field_name );
 		$membership_id       = UR_Install::create_default_membership();
-		$membership_group_id = UR_Install::create_default_membership_group( array( array( 'ID' => "$membership_id" ) ) );
+//		$membership_group_id = UR_Install::create_default_membership_group( array( array( 'ID' => "$membership_id" ) ) );
 
 		$pages                = apply_filters( 'user_registration_create_pages', array() );
 		$default_form_page_id = 0;
 
 		$membership_field_name = 'membership_field_' . ur_get_random_number();
-		$post_content          = '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]],[[{"field_key":"membership","general_setting":{"membership_group":"' . $membership_group_id . '","label":"Membership Field","description":"","field_name":"' . $membership_field_name . '","hide_label":"false"},"advance_setting":{},"icon":"ur-icon ur-icon-membership-field"}]]]';
+		$post_content          = '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]],[[{"field_key":"membership","general_setting":{"membership_group":"0","label":"Membership Field","description":"","field_name":"' . $membership_field_name . '","hide_label":"false","membership_listing_option":"all"},"advance_setting":{},"icon":"ur-icon ur-icon-membership-field"}]]]';
 
 		// Insert default form.
 		$default_form_page_id = wp_insert_post(
@@ -365,7 +365,7 @@ if ( ! function_exists( 'ur_membership_install_required_pages' ) ) {
 		$pages['membership_pricing']  = array(
 			'name'    => _x( 'membership-pricing', 'Page slug', 'user-registration' ),
 			'title'   => _x( 'Membership Pricing', 'Page title', 'user-registration' ),
-			'content' => '[user_registration_membership_listing]',
+			'content' => '[user_registration_groups]',
 			'option'  => ''
 		);
 		$pages['membership_thankyou'] = array(

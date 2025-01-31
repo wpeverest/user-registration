@@ -126,9 +126,9 @@ class AJAX {
 				$members_service = new MembersService();
 				$members_service->login_member( $member_id );
 			}
-//			$email_service = new EmailService();
-//			$email_service->send_email( $data, 'user_register_user' );
-//			$email_service->send_email( $data, 'user_register_admin' );
+			$email_service = new EmailService();
+			$email_service->send_email( $data, 'user_register_user' );
+			$email_service->send_email( $data, 'user_register_admin' );
 
 			$response = apply_filters(
 				'user_registration_membership_after_register_member',
@@ -659,9 +659,19 @@ class AJAX {
 		if ( ! isset( $_POST['group_id'] ) ) {
 			wp_send_json_error( __( 'Wrong request.', 'user-registration' ) );
 		}
+		if ( ! isset( $_POST['list_type'] ) ) {
+			wp_send_json_error( __( 'Field list type is required.', 'user-registration' ) );
+		}
+		$list_type                = sanitize_text_field( $_POST['list_type'] );
 		$group_id                 = absint( $_POST['group_id'] );
-		$membership_group_service = new MembershipGroupService();
-		$membership_plans         = $membership_group_service->get_group_memberships( $group_id );
+		if("group" == $list_type) {
+			$membership_group_service = new MembershipGroupService();
+			$membership_plans         = $membership_group_service->get_group_memberships( $group_id );
+		}
+		else {
+			$membership_service = new MembershipService();
+			$membership_plans = $membership_service->list_active_memberships();
+		}
 
 		if ( empty( $membership_plans ) ) {
 			wp_send_json_error(
@@ -739,10 +749,10 @@ class AJAX {
 			wp_send_json_error( __( 'Invalid post type', 'user-registration' ) );
 		}
 		$post_id = absint( $_POST['value'] );
-		$type = sanitize_text_field($_POST['type']);
+		$type    = sanitize_text_field( $_POST['type'] );
 
 		$membership_service = new MembershipService();
-		$response = $membership_service->verify_page_content($type, $post_id);
-		wp_send_json($response);
+		$response           = $membership_service->verify_page_content( $type, $post_id );
+		wp_send_json( $response );
 	}
 }

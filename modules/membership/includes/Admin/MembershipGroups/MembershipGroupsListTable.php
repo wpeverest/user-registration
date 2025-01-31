@@ -127,7 +127,7 @@ class MembershipGroupsListTable extends \UR_List_Table {
 
 	public function column_shortcode( $membership_group ) {
 
-		$shortcode = '[user_registration_membership_listing  group_id="' . $membership_group->ID . '"]';
+		$shortcode = '[user_registration_groups  id="' . $membership_group->ID . '"]';
 		return "
 				<div class='urm-shortcode'>
 					<input type='text' onfocus='this.select();' readonly='readonly' value='$shortcode' class='widefat code'>

@@ -36,6 +36,8 @@ if ( ! class_exists( 'UR_Settings_Membership ' ) ) :
 			add_filter( 'user_registration_settings_tabs_array', array( $this, 'add_settings_page' ), 20 );
 			add_action( 'user_registration_settings_' . $this->id, array( $this, 'output' ) );
 			add_action( 'user_registration_settings_save_' . $this->id, array( $this, 'save' ) );
+			add_filter( 'user_registration_payment_settings', array( $this, 'get_bank_settings' ) );
+
 		}
 
 		/**
@@ -62,7 +64,7 @@ if ( ! class_exists( 'UR_Settings_Membership ' ) ) :
 							'settings' => array(
 								array(
 									'title'    => __( 'Member Registration Form Page', 'user-registration' ),
-									'desc'     => sprintf( __( 'Select the redirection page which opens from the membership listing shortcode: [%s]', 'user-registration' ), apply_filters( 'user_registration_myaccount_shortcode_tag', 'user_registration_membership_listing' ) ), //phpcs:ignore
+									'desc'     => sprintf( __( 'Select the redirection page which opens from the membership listing shortcode: [%s]', 'user-registration' ), apply_filters( 'user_registration_myaccount_shortcode_tag', 'user_registration_groups' ) ), //phpcs:ignore
 									'id'       => 'user_registration_member_registration_page_id',
 									'type'     => 'single_select_page',
 									'default'  => '',
@@ -92,6 +94,35 @@ if ( ! class_exists( 'UR_Settings_Membership ' ) ) :
 			 * @param array $settings Membership Setting options to be enlisted.
 			 */
 			return apply_filters( 'user_registration_get_membership_settings_' . $this->id, $settings );
+		}
+
+		/**
+		 * Get Bank Global Settings.
+		 *
+		 * @param array $settings settings.
+		 */
+		public function get_bank_settings( $settings ) {
+			$default_text = '<p>Please transfer the amount to the following bank detail.</p><p>Bank Name: XYZ</p><p>Bank Acc.No: ##############</p>';
+			$bank_settings = array(
+				'title'    => __( 'Bank Transfer Settings', 'user-registration' ),
+				'type'     => 'card',
+				'desc'     => '',
+				'settings' => array(
+					array(
+						'title'    => __( 'Enter your details', 'user-registration' ),
+						'desc'     => __( 'Field to add necessary bank details which will be shown to users after successful payment using the bank option during checkout.', 'user-registration' ),
+						'id'       => 'user_registration_global_bank_details',
+						'type'     => 'tinymce',
+						'default'  => get_option( 'user_registration_global_bank_details', $default_text ),
+						'css'      => 'min-width: 350px;',
+						'desc_tip' => true,
+					),
+				),
+			);
+
+			$settings['sections']['bank_options'] = $bank_settings;
+
+			return $settings;
 		}
 
 		/**

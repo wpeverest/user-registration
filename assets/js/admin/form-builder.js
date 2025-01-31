@@ -6651,7 +6651,7 @@
 					);
 			},
 			check_membership_validation: function (data) {
-				var validations = ['empty_membership_group_status', 'payment_field_present_status'],
+				var validations = ['empty_membership_group_status', 'payment_field_present_status', 'empty_membership_status'],
 					is_valid = true;
 
 				for (var i = 0; i < validations.length; i++) {

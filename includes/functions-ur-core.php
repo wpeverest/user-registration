@@ -8,6 +8,8 @@
  * @version 1.0.0
  */
 
+use WPEverest\URMembership\Admin\Repositories\MembersOrderRepository;
+
 defined( 'ABSPATH' ) || exit;
 
 // Include core functions (available in both admin and frontend).
@@ -8071,5 +8073,21 @@ if ( ! function_exists( 'ur_find_my_account_in_custom_template' ) ) {
 		}
 
 		return $value;
+	}
+}
+
+add_filter( 'user_registration_check_user_order_status', 'get_user_order_status', 10, 1 );
+
+if ( ! function_exists( 'get_user_order_status' ) ) {
+
+	function get_user_order_status( $user_id ) {
+		$member_order_repository = new MembersOrderRepository();
+		$member_order            = $member_order_repository->get_member_orders( $user_id );
+		$status                  = '';
+		if ( ! empty( $member_order ) && isset( $member_order['status'] ) ) {
+			$status = $member_order['status'];
+		}
+
+		return $status;
 	}
 }
