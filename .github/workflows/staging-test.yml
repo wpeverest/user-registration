@@ -26,28 +26,11 @@ jobs:
           git config --global user.email "$MY_EMAIL"
           git config --global user.name "$MY_USERNAME"
 
-      - name: Use Node.js 16.x
-        uses: actions/setup-node@v2
+      - name: Build
+        id: build
+        uses: wpeverest/action-build@3.0.0
         with:
-          node-version: 16.14.0
-
-      - name: Setup PHP v7.4
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '7.4'
-          extensions: cli, dev, curl, mbstring, xmlrpc
-
-      - name: NPM, Composer Install & NPM Build
-        run: |
-          rm -rf node-modules
-          npm install 
-          composer install 
-          npm run build
-          composer install --no-dev
-          ls -la
-          cd dist
-          ls -la
-          pwd
+          generate-zip: true
           
 
       # Upload and Install Plugin via WP-CLI
