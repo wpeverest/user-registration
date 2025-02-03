@@ -79,38 +79,35 @@ function render_paypal_settings( $membership_details ) {
 					<?php echo isset( $membership_details['payment_gateways']['paypal'] ) && $membership_details['payment_gateways']['paypal']['status'] == 'on' ? 'checked' : ''; ?>
 					name="ur_membership_pg_paypal_status"
 				>
-				<svg class="ur-pg-arrow
-																<?php echo isset( $membership_details['payment_gateways']['paypal'] ) && $membership_details['payment_gateways']['paypal']['status'] == 'on' ? 'expand' : ''; ?>
-																" xmlns="http://www.w3.org/2000/svg" fill="none"
-					 viewBox="0 0 24 24">
-					<path stroke="#383838" stroke-linecap="round"
-						  stroke-linejoin="round" stroke-width="2"
-						  d="m9 18 6-6-6-6"></path>
-				</svg>
+				<!--				<svg class="ur-pg-arrow-->
+				<!--																--><?php //echo isset( $membership_details['payment_gateways']['paypal'] ) && $membership_details['payment_gateways']['paypal']['status'] == 'on' ? 'expand' : ''; ?>
+				<!--																" xmlns="http://www.w3.org/2000/svg" fill="none"-->
+				<!--					 viewBox="0 0 24 24">-->
+				<!--					<path stroke="#383838" stroke-linecap="round"-->
+				<!--						  stroke-linejoin="round" stroke-width="2"-->
+				<!--						  d="m9 18 6-6-6-6"></path>-->
+				<!--				</svg>-->
 			</div>
 		</div>
 		<div class="payment-option-body"
 			 data-target-id="ur-membership-paypal-toggle-container"
 			 style="<?php echo $is_incomplete ? '' : 'display:none'; ?>">
-
 			<?php
-			if ( $is_incomplete ):
-				?>
-				<?php
-				$message      = esc_html__( 'Your Paypal settings is incomplete. Please complete your Setup to continue.' );
-				$settings_url = get_admin_url() . 'admin.php?page=user-registration-settings&tab=payment#user_registration_global_paypal_mode';
-				?>
-				<div id="settings-section" class="ur-p-2 " style="background: #f8f8fa; border-radius:5px">
-					<p><?php echo "$message"; ?></p>
-					<a href="<?php echo esc_url( $settings_url ); ?>"
-					   target="_blank">
-						<?php echo esc_html__( 'Settings', 'user-registration' ); ?>
-						>
-						<?php echo esc_html__( 'Paypal Settings', 'user-registration' ); ?>
-					</a>
-				</div>
+			$message      = esc_html__( 'Your Paypal settings is incomplete. Please complete your Setup to continue.' );
+			$settings_url = get_admin_url() . 'admin.php?page=user-registration-settings&tab=payment#user_registration_global_paypal_email_address';
+			?>
+			<div id="settings-section" class="ur-p-2 "
+				 style="background: #f8f8fa; border-radius:5px; ">
+				<p><?php echo "$message"; ?></p>
+				<a href="<?php echo esc_url( $settings_url ); ?>"
+				   target="_blank">
+					<?php echo esc_html__( 'Settings', 'user-registration' ); ?>
+					>
+					<?php echo esc_html__( 'Paypal Settings', 'user-registration' ); ?>
+				</a>
+			</div>
 			<?php
-			else:
+			if ( false ):
 				?>
 				<!--														paypal mode-->
 
@@ -247,7 +244,7 @@ function render_paypal_settings( $membership_details ) {
 									   name="ur_membership_client_id"
 									   style="width: 100%"
 									   value="<?php echo $global_paypal_settings['client_id']; ?>"
-									   >
+								>
 							</div>
 						</div>
 
@@ -297,7 +294,7 @@ function render_paypal_settings( $membership_details ) {
  * @return void
  */
 function render_bank_settings( $membership_details ) {
-	$global_bank_details =  get_option( 'user_registration_global_bank_details', '' );
+	$global_bank_details = get_option( 'user_registration_global_bank_details', '' );
 
 	?>
 	<div id="bank-section"
@@ -318,49 +315,47 @@ function render_bank_settings( $membership_details ) {
 					<?php echo isset( $bank_details['status'] ) && $bank_details['status'] == 'on' ? 'checked' : ''; ?>
 					name="ur_membership_pg_bank_status"
 				>
-				<svg class="ur-pg-arrow
-																<?php echo isset( $bank_details['status'] ) && $bank_details['status'] == 'on' ? 'expand' : ''; ?>
-																" xmlns="http://www.w3.org/2000/svg" fill="none"
-					 viewBox="0 0 24 24">
-					<path stroke="#383838" stroke-linecap="round"
-						  stroke-linejoin="round" stroke-width="2"
-						  d="m9 18 6-6-6-6"></path>
-				</svg>
+				<!--				<svg class="ur-pg-arrow-->
+				<!--																--><?php //echo isset( $bank_details['status'] ) && $bank_details['status'] == 'on' ? 'expand' : ''; ?>
+				<!--																" xmlns="http://www.w3.org/2000/svg" fill="none"-->
+				<!--					 viewBox="0 0 24 24">-->
+				<!--					<path stroke="#383838" stroke-linecap="round"-->
+				<!--						  stroke-linejoin="round" stroke-width="2"-->
+				<!--						  d="m9 18 6-6-6-6"></path>-->
+				<!--				</svg>-->
 			</div>
 		</div>
 		<div class="payment-option-body"
 			 data-target-id="ur-membership-bank-toggle-container"
-			 style="<?php echo empty($global_bank_details) ? '' : 'display:none'; ?>"
+			 style="<?php echo empty( $global_bank_details ) ? '' : 'display:none'; ?>"
 		>
-			<?php
-			if(empty($global_bank_details)):
-			?>
-				<div class="bank-settings">
-					<?php
-					$settings_url = get_admin_url() . 'admin.php?page=user-registration-settings&tab=payment#user_registration_global_bank_details';
-					$message = esc_html__( 'Your Bank Setup is incomplete. Please complete your Setup to continue.' );
 
-					?>
-					<p><?php echo "$message"; ?></p>
-					<a href="<?php echo esc_url( $settings_url ); ?>"
-					   target="_blank">
-						<?php echo esc_html__( 'Settings', 'user-registration' ); ?>
-						>
-						<?php echo esc_html__( 'Bank Transfer Settings', 'user-registration' ); ?>
-					</a>
-				</div>
+			<div class="bank-settings">
+				<?php
+				$settings_url = get_admin_url() . 'admin.php?page=user-registration-settings&tab=payment#user_registration_global_bank_details';
+				$message      = esc_html__( 'Your Bank Setup is incomplete. Please complete your Setup to continue.' );
+
+				?>
+				<p><?php echo "$message"; ?></p>
+				<a href="<?php echo esc_url( $settings_url ); ?>"
+				   target="_blank">
+					<?php echo esc_html__( 'Settings', 'user-registration' ); ?>
+					>
+					<?php echo esc_html__( 'Bank Transfer Settings', 'user-registration' ); ?>
+				</a>
+			</div>
 			<?php
-			else:
-			?>
-			<?php
-			wp_editor(
-				$bank_details['content'] ?? '<p>Please transfer the amount to the following bank detail.</p><p>Bank Name: XYZ</p><p>Bank Acc.No: ##############</p>',
-				'bank_transfer_field',
-				array(
-					'textarea_name' => 'bank_transfer_field',
-					'textarea_rows' => 50,
-				)
-			);
+			if ( false ):
+				?>
+				<?php
+				wp_editor(
+					$bank_details['content'] ?? '<p>Please transfer the amount to the following bank detail.</p><p>Bank Name: XYZ</p><p>Bank Acc.No: ##############</p>',
+					'bank_transfer_field',
+					array(
+						'textarea_name' => 'bank_transfer_field',
+						'textarea_rows' => 50,
+					)
+				);
 			endif;
 			?>
 		</div>
@@ -394,39 +389,37 @@ function render_stripe_settings( $membership_details ) {
 					<?php echo isset( $stripe_details['status'] ) && $stripe_details['status'] == 'on' ? 'checked' : ''; ?>
 					name="ur_membership_pg_bank_status"
 				>
-				<svg class="ur-pg-arrow
-																<?php echo isset( $stripe_details['status'] ) && $stripe_details['status'] == 'on' ? 'expand' : ''; ?>
-																" xmlns="http://www.w3.org/2000/svg" fill="none"
-					 viewBox="0 0 24 24">
-					<path stroke="#383838" stroke-linecap="round"
-						  stroke-linejoin="round" stroke-width="2"
-						  d="m9 18 6-6-6-6"></path>
-				</svg>
+				<!--				<svg class="ur-pg-arrow-->
+				<!--																--><?php //echo isset( $stripe_details['status'] ) && $stripe_details['status'] == 'on' ? 'expand' : ''; ?>
+				<!--																" xmlns="http://www.w3.org/2000/svg" fill="none"-->
+				<!--					 viewBox="0 0 24 24">-->
+				<!--					<path stroke="#383838" stroke-linecap="round"-->
+				<!--						  stroke-linejoin="round" stroke-width="2"-->
+				<!--						  d="m9 18 6-6-6-6"></path>-->
+				<!--				</svg>-->
 			</div>
 		</div>
 		<div class="payment-option-body"
 			 data-target-id="ur-membership-stripe-toggle-container"
 			 style="<?php echo $setup_incomplete ? '' : 'display:none'; ?>">
-			<?php
-			if($setup_incomplete) :
-			?>
-				<div class="stripe-settings">
-					<?php
-					$settings_url = get_admin_url() . 'admin.php?page=user-registration-settings&tab=payment#user_registration_stripe_test_publishable_key';
-					$message = esc_html__( 'Your Stripe Setup is incomplete. Please complete your Setup to continue.' );
 
-					?>
-					<p><?php echo "$message"; ?></p>
-					<a href="<?php echo esc_url( $settings_url ); ?>"
-					   target="_blank">
-						<?php echo esc_html__( 'Settings', 'user-registration' ); ?>
-						>
-						<?php echo esc_html__( 'Stripe Settings', 'user-registration' ); ?>
-					</a>
-				</div>
+			<div class="stripe-settings">
+				<?php
+				$settings_url = get_admin_url() . 'admin.php?page=user-registration-settings&tab=payment#user_registration_stripe_test_publishable_key';
+				$message      = esc_html__( 'Your Stripe Setup is incomplete. Please complete your Setup to continue.' );
+
+				?>
+				<p><?php echo "$message"; ?></p>
+				<a href="<?php echo esc_url( $settings_url ); ?>"
+				   target="_blank">
+					<?php echo esc_html__( 'Settings', 'user-registration' ); ?>
+					>
+					<?php echo esc_html__( 'Stripe Settings', 'user-registration' ); ?>
+				</a>
+			</div>
 			<?php
-			else:
-			?>
+			if ( false ):
+				?>
 				<!--													stripe mode-->
 
 				<div

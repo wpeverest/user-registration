@@ -6,6 +6,8 @@ use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersRepository;
 use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
 use WPEverest\URMembership\Admin\Repositories\SubscriptionRepository;
+use WPEverest\URMembership\Admin\Services\Paypal\PaypalService;
+use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
 
 class MembershipService {
 	private $membership_repository, $members_repository, $members_service, $subscription_repository, $orders_repository, $logger;
@@ -29,6 +31,7 @@ class MembershipService {
 	public function assign_users_to_new_form( $form_id ) {
 		$this->membership_repository->assign_users_to_new_form( $form_id );
 	}
+
 	/**
 	 * Retrieves and filters the list of all active memberships.
 	 *
@@ -217,16 +220,16 @@ class MembershipService {
 				$data['trial_data']['duration'] = sanitize_text_field( $data['trial_data']['duration'] );
 			}
 		}
-		$data['cancel_subscription'] = sanitize_text_field( $data['cancel_subscription'] );
+		$data['cancel_subscription'] = sanitize_text_field( !empty($data['cancel_subscription']) ? $data['cancel_subscription'] : '' );
 
 		$data['amount'] = absint( $data['amount'] ?? 0 );
 		if ( isset( $data['payment_gateways'] ) ) {
 			if ( isset( $data['payment_gateways']['paypal'] ) && 'on' === $data['payment_gateways']['paypal']['status'] ) {
 				$data['payment_gateways']['paypal']['status']     = sanitize_text_field( $data['payment_gateways']['paypal']['status'] );
-				$data['payment_gateways']['paypal']['email']      = sanitize_email( $data['payment_gateways']['paypal']['email'] );
-				$data['payment_gateways']['paypal']['mode']       = sanitize_text_field( $data['payment_gateways']['paypal']['mode'] );
-				$data['payment_gateways']['paypal']['cancel_url'] = esc_url( $data['payment_gateways']['paypal']['cancel_url'] );
-				$data['payment_gateways']['paypal']['return_url'] = esc_url( $data['payment_gateways']['paypal']['return_url'] );
+				$data['payment_gateways']['paypal']['email']      = sanitize_email( !empty($data['payment_gateways']['paypal']['email']) ? $data['payment_gateways']['paypal']['email'] : '' );
+				$data['payment_gateways']['paypal']['mode']       = sanitize_text_field( !empty($data['payment_gateways']['paypal']['mode']) ? $data['payment_gateways']['paypal']['mode'] : 'sandbox' );
+				$data['payment_gateways']['paypal']['cancel_url'] = esc_url( !empty($data['payment_gateways']['paypal']['cancel_url']) ? $data['payment_gateways']['paypal']['cancel_url'] : ''  );
+				$data['payment_gateways']['paypal']['return_url'] = esc_url( !empty($data['payment_gateways']['paypal']['return_url']) ? $data['payment_gateways']['paypal']['return_url'] : '' );
 			}
 			if ( isset( $data['payment_gateways']['bank'] ) && 'on' === $data['payment_gateways']['bank']['status'] ) {
 				$data['payment_gateways']['bank']['status'] = sanitize_text_field( $data['payment_gateways']['bank']['status'] );
@@ -258,6 +261,7 @@ class MembershipService {
 		if ( isset( $data['post_meta_data']['type'] ) && "subscription" === $data['post_meta_data']['type'] && ! ( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) ) {
 			$result['status']  = false;
 			$result['message'] = esc_html__( "Subscription type is a paid feature.", "user-registration" );
+
 			return $result;
 		}
 
@@ -271,19 +275,23 @@ class MembershipService {
 			if ( empty( $secret_key ) || empty( $publishable_key ) ) {
 				$result['status']  = false;
 				$result['message'] = esc_html__( "Incomplete Stripe setup, please update stripe payment settings before continuing.", "user-registration" );
+
 				return $result;
 			}
 		}
+
 		//		payment gateway validation:paypal
-		if ( isset( $data['post_meta_data']['payment_gateways']['paypal'] ) && "on" === $data['post_meta_data']['payment_gateways']['stripe']['paypal'] ) {
-			$paypal_email = get_option( 'user_registration_global_paypal_email_address');
+		if ( isset( $data['post_meta_data']['payment_gateways']['paypal'] ) && "on" === $data['post_meta_data']['payment_gateways']['paypal']['status'] ) {
+			$paypal_email = get_option( 'user_registration_global_paypal_email_address' );
 
 			if ( empty( $paypal_email ) ) {
 				$result['status']  = false;
 				$result['message'] = esc_html__( "Incomplete Paypal setup, please update paypal payment settings before continuing.", "user-registration" );
+
 				return $result;
 			}
 		}
+
 		return $result;
 	}
 
@@ -307,10 +315,11 @@ class MembershipService {
 		$response = array(
 			'status' => true
 		);
-		$post = get_post( $post_id );
+		$post     = get_post( $post_id );
 		if ( empty( $post ) ) {
 			$response['status']  = false;
 			$response['message'] = __( 'Invalid post' );
+
 			return $response; //return since the post does not exist;
 		}
 		switch ( $type ) {
@@ -320,6 +329,7 @@ class MembershipService {
 			default:
 				$response = self::verify_thank_you_shortcode( $post, $response );
 		}
+
 		return $response;
 	}
 
@@ -333,20 +343,22 @@ class MembershipService {
 	 */
 	private static function verify_membership_registration_form_shortcode( $post, $response ) {
 		$membership_field_exists = false;
-		$match = preg_match_all('/\[user_registration_form\s+id="(\d+)"\]/', $post->post_content, $matches);
-		if(!$match) {
+		$match                   = preg_match_all( '/\[user_registration_form\s+id="(\d+)"\]/', $post->post_content, $matches );
+		if ( ! $match ) {
 			$response['status']  = false;
 			$response['message'] = __( 'The selected page does not consist any User Registration & Membership Form.' );
+
 			return $response;
 		}
-		$fields = ur_get_form_fields($matches[1][0]);
-		foreach ($fields as $k => $field) {
-			if('membership' === $field->field_key) {
+		$fields = ur_get_form_fields( $matches[1][0] );
+		foreach ( $fields as $k => $field ) {
+			if ( 'membership' === $field->field_key ) {
 				$membership_field_exists = true;
 			}
 		}
-		$response['status'] = $membership_field_exists;
-		$response['message'] =  ! $membership_field_exists ? __( 'The selected page consist a User Registration & Membership Form but no membership field.' ) : '';
+		$response['status']  = $membership_field_exists;
+		$response['message'] = ! $membership_field_exists ? __( 'The selected page consist a User Registration & Membership Form but no membership field.' ) : '';
+
 		return $response;
 	}
 
@@ -362,11 +374,47 @@ class MembershipService {
 
 		$content = $post->post_content;
 
-		if ( !preg_match( '/\[user_registration_membership_thank_you\]/', $content ) ) {
+		if ( ! preg_match( '/\[user_registration_membership_thank_you\]/', $content ) ) {
 			$response['status']  = false;
 			$response['message'] = __( 'The selected page does not consist the User Registration & Membership Thank you page Shortcode.' );
+
 			return $response;
 		}
+
+		return $response;
+	}
+
+	/**
+	 * validate_payment_gateway
+	 *
+	 * @param $data
+	 *
+	 * @return string[]
+	 */
+	public function validate_payment_gateway( $data ) {
+		$response = array(
+			'status' => 'true'
+		);
+
+		switch ( $data[0] ) {
+			case 'paypal';
+				$paypal_service = new PaypalService();
+				$result         = $paypal_service->validate_setup( $data[1] );
+				break;
+			case 'stripe';
+				$stripe_service = new StripeService();
+				$result         = $stripe_service->validate_setup();
+				break;
+			default:
+				$result = empty( get_option( 'user_registration_global_bank_details' ) );
+				break;
+		}
+
+		if ( $result ) {
+			$response['status']  = false;
+			$response['message'] = __('Incomplete ' . ucfirst( $data[0] ) . ' setup.', "user-registration");
+		}
+
 		return $response;
 	}
 }
