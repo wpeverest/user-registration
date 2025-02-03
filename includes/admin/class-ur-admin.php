@@ -50,9 +50,7 @@ class UR_Admin {
 	 * @return void
 	 */
 	public function run_membership_migration_script() {
-		if ( is_plugin_active( 'user-registration-membership/user-registration-membership.php' ) ) {
-			deactivate_plugins( 'user-registration-membership/user-registration-membership.php' );
-		}
+
 
 		$membership_service = new MembershipService();
 		$logger             = ur_get_logger();
@@ -60,7 +58,7 @@ class UR_Admin {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
-		if ( ur_check_module_activation( 'payments' ) && ! get_option( 'global_paypal_setting_migration', false )  ) {
+		if ( ur_check_module_activation( 'payments' ) && ! get_option( 'global_paypal_setting_migration', false ) ) {
 			$logger->notice( '---------- Enable override global settings for paypal standard start. ----------', array( 'source' => 'migration-logger' ) );
 			$get_all_forms = ur_get_all_user_registration_form();
 			foreach ( $get_all_forms as $key => $form ) {
@@ -74,7 +72,9 @@ class UR_Admin {
 			add_option( 'global_paypal_setting_migration', true );
 		}
 
-		if ( UR_PRO_ACTIVE && UR_VERSION <= '5.0' && ! get_option( 'membership_migration_finished', false ) ) {
+		if ( UR_PRO_ACTIVE && UR_VERSION <= '5.0' && is_plugin_active( 'user-registration-membership/user-registration-membership.php' ) && ! get_option( 'membership_migration_finished', false ) ) {
+
+			deactivate_plugins( 'user-registration-membership/user-registration-membership.php' );
 
 			$logger->notice( '---------- Begin Membership Migration. ----------', array( 'source' => 'migration-logger' ) );
 			$memberships = $membership_service->list_active_memberships();
@@ -88,7 +88,6 @@ class UR_Admin {
 				$membership_id = UR_Install::create_default_membership();
 //				$memberships   = array( array( 'ID' => $membership_id ) );
 			}
-
 
 
 //			$logger->notice( 'Begin Default Membership Group creation.', array( 'source' => 'migration-logger' ) );
