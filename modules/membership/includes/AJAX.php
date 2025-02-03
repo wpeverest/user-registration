@@ -63,6 +63,7 @@ class AJAX {
 			'create_membership_group'    => false,
 			'delete_membership_groups'   => false,
 			'verify_pages'               => false,
+			'validate_pg'                => false,
 		);
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
 			add_action( 'wp_ajax_user_registration_membership_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -662,15 +663,14 @@ class AJAX {
 		if ( ! isset( $_POST['list_type'] ) ) {
 			wp_send_json_error( __( 'Field list type is required.', 'user-registration' ) );
 		}
-		$list_type                = sanitize_text_field( $_POST['list_type'] );
-		$group_id                 = absint( $_POST['group_id'] );
-		if("group" == $list_type) {
+		$list_type = sanitize_text_field( $_POST['list_type'] );
+		$group_id  = absint( $_POST['group_id'] );
+		if ( "group" == $list_type ) {
 			$membership_group_service = new MembershipGroupService();
 			$membership_plans         = $membership_group_service->get_group_memberships( $group_id );
-		}
-		else {
+		} else {
 			$membership_service = new MembershipService();
-			$membership_plans = $membership_service->list_active_memberships();
+			$membership_plans   = $membership_service->list_active_memberships();
 		}
 
 		if ( empty( $membership_plans ) ) {
@@ -754,5 +754,23 @@ class AJAX {
 		$membership_service = new MembershipService();
 		$response           = $membership_service->verify_page_content( $type, $post_id );
 		wp_send_json( $response );
+	}
+
+	/**
+	 * validate individual payment gateway on click
+	 *
+	 * @return void
+	 */
+	public static function validate_pg() {
+		ur_membership_verify_nonce( 'ur_membership' );
+		if ( ! isset( $_POST['pg'] ) || ! isset( $_POST['membership_type'] ) ) {
+			wp_send_json_error( __( 'Wrong request.', 'user-registration' ) );
+		}
+		$pg                 = sanitize_text_field( $_POST['pg'] );
+		$subscription_type  = sanitize_text_field( $_POST['membership_type'] );
+		$membership_service = new MembershipService();
+		$result             = $membership_service->validate_payment_gateway( array( $pg, $subscription_type ) );
+
+		wp_send_json( $result );
 	}
 }

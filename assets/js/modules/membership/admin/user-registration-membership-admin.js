@@ -289,14 +289,8 @@
 
 				// check if bank transfer is selected
 				if (is_bank_selected) {
-					var bank_content = tinyMCE.get('bank_transfer_field').getContent(),
-						regex = /(<img[^>]*?)(")([^>]*?>)/g;
-					bank_content = bank_content.replace(regex, function (match, p1, p2, p3) {
-						return p1 + '\'' + p3.replace(/"/g, '\'');
-					});
 					post_meta_data.payment_gateways.bank = {
-						status: is_bank_selected,
-						content: bank_content
+						status: is_bank_selected
 					};
 				}
 
@@ -569,6 +563,47 @@
 			);
 		},
 
+		validate_payment_gateway: function ($this) {
+
+			var switch_container = $this.closest('.user-registration-switch'),
+				pg = $this.attr('id').split('ur-membership-pg-')[1],
+				membership_type = $('input:radio[name=ur_membership_type]:checked').val();
+			ur_membership_utils.prepend_spinner(switch_container);
+
+			this.send_data(
+				{
+					action: 'user_registration_membership_validate_pg',
+					pg: pg,
+					membership_type: membership_type
+				},
+				{
+					success: function (response) {
+						if (!response.status) {
+							ur_membership_utils.show_failure_message(
+								response.message
+							);
+							$this.prop('checked', false);
+							$this.closest('.user-registration-switch').closest('.ur-payment-option-header').siblings('.payment-option-body').show();
+						}else {
+							$this.closest('.user-registration-switch').closest('.ur-payment-option-header').siblings('.payment-option-body').hide();
+						}
+					},
+					failure: function (xhr, statusText) {
+						ur_membership_utils.show_failure_message(
+							ur_membership_data.labels.network_error +
+							'(' +
+							statusText +
+							')'
+						);
+					},
+					complete: function () {
+						ur_membership_utils.remove_spinner(switch_container);
+						ur_membership_utils.toggleSaveButtons(false);
+					}
+				}
+			);
+		},
+
 		/**
 		 * Send data to the backend API.
 		 *
@@ -704,24 +739,30 @@
 	//prevent status toggle
 	$(document).on('click', '.pg-switch', function (e) {
 		e.stopImmediatePropagation();
-		if ($(this).attr('id') === "ur-membership-pg-stripe" && $(this).is(":checked")) {
-			if ($('#ur-input-type-publishable-key').val() === "" || $('#ur-input-type-secret-key').val() === "" || $('#stripe-section .stripe-settings').length) {
-				ur_membership_utils.show_failure_message(ur_membership_data.labels.i18n_error + '! ' + ur_membership_data.labels.i18n_stripe_setup_error);
-				$(this).prop('checked', false);
-			}
+		if ($(this).is(':checked')) {
+			ur_membership_request_utils.validate_payment_gateway($(this));
 		}
-		if ($(this).attr('id') === "ur-membership-pg-paypal" && $(this).is(":checked")) {
-			if ($('#ur-input-type-paypal-email').val() === "" || $('#paypal-section #settings-section').length) {
-				ur_membership_utils.show_failure_message(ur_membership_data.labels.i18n_error + '! ' + ur_membership_data.labels.i18n_paypal_setup_error);
-				$(this).prop('checked', false);
-			}
-		}
-		if ($(this).attr('id') === "ur-membership-pg-bank" && $(this).is(":checked")) {
-			if ($('#bank-section .bank-settings').length) {
-				ur_membership_utils.show_failure_message(ur_membership_data.labels.i18n_error + '! ' + ur_membership_data.labels.i18n_bank_setup_error);
-				$(this).prop('checked', false);
-			}
-		}
+
+		// if ($(this).attr('id') === "ur-membership-pg-stripe" && $(this).is(":checked")) {
+		// 	if ($('#ur-input-type-publishable-key').val() === "" || $('#ur-input-type-secret-key').val() === "" || $('#stripe-section .stripe-settings').length) {
+		// 		ur_membership_utils.show_failure_message(ur_membership_data.labels.i18n_error + '! ' + ur_membership_data.labels.i18n_stripe_setup_error);
+		// 		$(this).prop('checked', false);
+		// 	}
+		// }
+		//
+		// if ($(this).attr('id') === "ur-membership-pg-paypal" && $(this).is(":checked")) {
+		// 	if ($('#ur-input-type-paypal-email').val() === "" || $('#paypal-section #settings-section').length) {
+		// 		ur_membership_utils.show_failure_message(ur_membership_data.labels.i18n_error + '! ' + ur_membership_data.labels.i18n_paypal_setup_error);
+		// 		$(this).prop('checked', false);
+		// 	}
+		//
+		// }
+		// if ($(this).attr('id') === "ur-membership-pg-bank" && $(this).is(":checked")) {
+		// 	if ($('#bank-section .bank-settings').length) {
+		// 		ur_membership_utils.show_failure_message(ur_membership_data.labels.i18n_error + '! ' + ur_membership_data.labels.i18n_bank_setup_error);
+		// 		$(this).prop('checked', false);
+		// 	}
+		// }
 	});
 
 	//delete membership

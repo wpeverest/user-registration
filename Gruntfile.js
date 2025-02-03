@@ -300,12 +300,12 @@ module.exports = function (grunt) {
 				},
 				files: filesToCompress
 			},
-			withoutVersion: {
-				options: {
-					archive: "release/<%= pkg.name %>.zip"
-				},
-				files: filesToCompress
-			}
+			// withoutVersion: {
+			// 	options: {
+			// 		archive: "release/<%= pkg.name %>.zip"
+			// 	},
+			// 	files: filesToCompress
+			// }
 		}
 	});
 
@@ -348,7 +348,7 @@ module.exports = function (grunt) {
 		"cssmin",
 		"concat",
 		"uglify",
-		"compress:withoutVersion",
+		// "compress:withoutVersion",
 		"compress:withVersion"
 	]);
 	grunt.registerTask("dev", ["watch"]);

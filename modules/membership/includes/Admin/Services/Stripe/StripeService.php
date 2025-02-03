@@ -574,4 +574,10 @@ class StripeService {
 			)
 		);
 	}
+
+	public function validate_setup(  ) {
+		$stripe_settings = self::get_stripe_settings();
+
+		return (empty($stripe_settings['publishable_key']) || empty($stripe_settings['secret_key']));
+	}
 }
