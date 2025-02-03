@@ -44,33 +44,23 @@ jobs:
           composer install 
           npm run build
           composer install --no-dev
-          pwd
-          ls -la
-          cd dist
-          ls -la
-
-     
+          
 
       # Upload and Install Plugin via WP-CLI
-      - name: Upload and Install Plugin via WP-CLI
+      - name: Upload Plugin ZIP to Server Temp Folder
         env:
           Srv_IP: ${{ secrets.QA_AUTOMATION_SERVER_IP }}
           Srv_UsrName: ${{ secrets.QA_AUTOMATION_SERVER_USERNAME }}
           Server_PASS: ${{ secrets.QA_AUTOMATION_SERVER_PASS }}
         run: |
-          # Upload the plugin file
-          sshpass -p "$Server_PASS" scp -o StrictHostKeyChecking=no user-registration.zip $Srv_UsrName@$Srv_IP:/home/master/applications/ycrdmckpsu/public_html/urqatestfinal/
-  
-          # SSH into the server and install/activate the plugin using WP-CLI
+          sshpass -p "$Server_PASS" scp -o StrictHostKeyChecking=no user-registration.zip $Srv_UsrName@$Srv_IP:/tmp/
+
+      - name: Install and Activate Plugin via WP-CLI
+        run: |
           sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP << EOF
-          # Go to the WordPress directory (replace with the correct path)
-          cd /home/master/applications/ycrdmckpsu/public_html/urqatestfinal/wordpress
-  
-          # Install the plugin via WP-CLI
-          wp plugin install /home/master/applications/ycrdmckpsu/public_html/urqatestfinal/user-registration.zip --activate
-  
-          # Clean up
-          rm -f /home/master/applications/ycrdmckpsu/public_html/urqatestfinal/user-registration.zip
+          cd /home/master/applications/ycrdmckpsu/public_html/urqatest/
+          wp plugin install /tmp/user-registration.zip --activate
+          rm -f /tmp/user-registration.zip
           EOF
 
       - name: Setup Chrome
@@ -109,7 +99,19 @@ jobs:
           Srv_UsrName: ${{ secrets.QA_AUTOMATION_SERVER_USERNAME }}
           Server_PASS: ${{ secrets.QA_AUTOMATION_SERVER_PASS }}
         run: |
-          sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP 'rm -rf /home/master/applications/ycrdmckpsu/public_html/urqatestfinal/wordpress/wp-content/plugins/user-registration/reports/*'
-          sshpass -p "$Server_PASS" scp -o StrictHostKeyChecking=no -r python-code/results/* $Srv_UsrName@$Srv_IP:/home/master/applications/ycrdmckpsu/public_html/urqatestfinal/wordpress/wp-content/plugins/user-registration/reports/
-          echo "https://qatest.wptests.net/urqatestfinal/wordpress/wp-content/plugins/user-registration/reports/report.html"
-          echo "https://qatest.wptests.net/urqatestfinal/wordpress/wp-content/plugins/user-registration/reports/test_report.html"
+          sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP 'rm -rf /home/master/applications/ycrdmckpsu/public_html/urqatest/wp-content/plugins/user-registration/reports/*'
+          sshpass -p "$Server_PASS" scp -o StrictHostKeyChecking=no -r python-code/results/* $Srv_UsrName@$Srv_IP:/home/master/applications/ycrdmckpsu/public_html/urqatest/wp-content/plugins/user-registration/reports/
+          echo "https://qatest.wptests.net/urqatest/wp-content/plugins/user-registration/reports/report.html"
+          
+
+      - name: Send Email Notification
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_SERVER }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: "Test Completed - UR Staging QA Report"
+          body: "Test completed. View the report here: https://qatest.wptests.net/urqatest/wp-content/plugins/user-registration/reports/report.html"
+          to: ${{ secrets.NOTIFICATION_EMAIL }}
+          from: "QA Automation <${{ secrets.SMTP_USERNAME }}>"
