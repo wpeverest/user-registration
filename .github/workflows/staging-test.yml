@@ -44,6 +44,10 @@ jobs:
           composer install 
           npm run build
           composer install --no-dev
+          ls -la
+          cd dist
+          ls -la
+          pwd
           
 
       # Upload and Install Plugin via WP-CLI
