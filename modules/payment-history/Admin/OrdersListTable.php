@@ -379,7 +379,7 @@ class OrdersListTable extends \UR_List_Table {
 		<div style="display: flex; gap: 10px">
 			<select name="payment_for" id="user-registration-pro-payment-type-filters">
 				<option
-					value="" selected><?php echo esc_html__( 'All Module', 'user-registration' ); ?></option>
+					value="" selected><?php echo esc_html__( 'Select Module', 'user-registration' ); ?></option>
 				<option
 					value="forms" <?php echo isset( $_REQUEST['payment_for'] ) && 'forms' == $_REQUEST['payment_for'] ? 'selected=selected' : ''; ?>><?php echo esc_html__( 'Forms', 'user-registration' ); ?></option>
 				<?php
