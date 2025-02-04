@@ -585,6 +585,7 @@
 							$this.prop('checked', false);
 							$this.closest('.user-registration-switch').closest('.ur-payment-option-header').siblings('.payment-option-body').show();
 						}else {
+							$this.prop('checked', true);
 							$this.closest('.user-registration-switch').closest('.ur-payment-option-header').siblings('.payment-option-body').hide();
 						}
 					},
@@ -739,7 +740,8 @@
 	//prevent status toggle
 	$(document).on('click', '.pg-switch', function (e) {
 		e.stopImmediatePropagation();
-		if ($(this).is(':checked')) {
+
+		if ($(this).is(':checked') && $(this).closest('.user-registration-switch').find('.ur-spinner.is-active').length < 1) {
 			ur_membership_request_utils.validate_payment_gateway($(this));
 		}
 

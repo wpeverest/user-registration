@@ -78,7 +78,7 @@ function render_paypal_settings( $membership_details ) {
 					data-key-name="Payment Gateway"
 					id="ur-membership-pg-paypal" type="checkbox"
 					class="user-registration-switch__control hide-show-check enabled pg-switch"
-					<?php echo isset( $membership_details['payment_gateways']['paypal'] ) && $membership_details['payment_gateways']['paypal']['status'] == 'on' ? 'checked' : ''; ?>
+					<?php echo isset( $membership_details['payment_gateways']['paypal'] ) && $membership_details['payment_gateways']['paypal']['status'] == 'on' && !$is_incomplete ? 'checked' : ''; ?>
 					name="ur_membership_pg_paypal_status"
 				>
 				<!--				<svg class="ur-pg-arrow-->
@@ -95,7 +95,7 @@ function render_paypal_settings( $membership_details ) {
 			 data-target-id="ur-membership-paypal-toggle-container"
 			 style="<?php echo $is_incomplete ? '' : 'display:none'; ?>">
 			<?php
-			$message      = esc_html__( 'Your Paypal settings is incomplete. Please complete your Setup to continue.' );
+			$message      = esc_html__( 'Your Paypal settings is incomplete, please complete your setup from the link below to continue (No need to refresh this page)' );
 			$settings_url = get_admin_url() . 'admin.php?page=user-registration-settings&tab=payment#user_registration_global_paypal_email_address';
 			?>
 			<div id="settings-section" class="ur-p-2 "
@@ -314,7 +314,7 @@ function render_bank_settings( $membership_details ) {
 					data-key-name="Payment Gateway"
 					id="ur-membership-pg-bank" type="checkbox"
 					class="user-registration-switch__control hide-show-check ur-payment-option-header enabled pg-switch"
-					<?php echo isset( $bank_details['status'] ) && $bank_details['status'] == 'on' ? 'checked' : ''; ?>
+					<?php echo isset( $bank_details['status'] ) && $bank_details['status'] == 'on' && !empty( $global_bank_details ) ? 'checked' : ''; ?>
 					name="ur_membership_pg_bank_status"
 				>
 				<!--				<svg class="ur-pg-arrow-->
@@ -335,7 +335,7 @@ function render_bank_settings( $membership_details ) {
 			<div class="bank-settings">
 				<?php
 				$settings_url = get_admin_url() . 'admin.php?page=user-registration-settings&tab=payment#user_registration_global_bank_details';
-				$message      = esc_html__( 'Your Bank Setup is incomplete. Please complete your Setup to continue.' );
+				$message      = esc_html__( 'Your Bank Setup is incomplete, please complete your setup from the link below to continue (No need to refresh this page)' );
 
 				?>
 				<p><?php echo "$message"; ?></p>
@@ -388,7 +388,7 @@ function render_stripe_settings( $membership_details ) {
 					data-key-name="Payment Gateway"
 					id="ur-membership-pg-stripe" type="checkbox"
 					class="user-registration-switch__control hide-show-check ur-payment-option-header enabled pg-switch"
-					<?php echo isset( $stripe_details['status'] ) && $stripe_details['status'] == 'on' ? 'checked' : ''; ?>
+					<?php echo isset( $stripe_details['status'] ) && $stripe_details['status'] == 'on' && !$setup_incomplete ? 'checked' : ''; ?>
 					name="ur_membership_pg_bank_status"
 				>
 				<!--				<svg class="ur-pg-arrow-->
@@ -408,7 +408,7 @@ function render_stripe_settings( $membership_details ) {
 			<div class="stripe-settings">
 				<?php
 				$settings_url = get_admin_url() . 'admin.php?page=user-registration-settings&tab=payment#user_registration_stripe_test_publishable_key';
-				$message      = esc_html__( 'Your Stripe Setup is incomplete. Please complete your Setup to continue.' );
+				$message      = esc_html__( 'Your Stripe Setup is incomplete, please complete your setup from the link below to continue (No need to refresh this page)' );
 
 				?>
 				<p><?php echo "$message"; ?></p>
