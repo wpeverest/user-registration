@@ -34,11 +34,13 @@
  */
 function render_payment_gateways( $membership_details ) {
 	$enabled_features = get_option( 'user_registration_enabled_features', array() );
-	if ( in_array( 'user-registration-payments', $enabled_features ) || ! UR_PRO_ACTIVE ) :
-		render_paypal_settings( $membership_details );
-	endif;
+	//render paypal settings
+	render_paypal_settings( $membership_details );
+
 	// render bank settings
 	render_bank_settings( $membership_details );
+
+	//render stripe settings
 	render_stripe_settings( $membership_details );
 }
 
