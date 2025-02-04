@@ -24,7 +24,7 @@ if ( '' === $type ):
 					</div>
 					<div class="membership-body">
 						<div class="membership-description">
-							<?php echo esc_html( $membership['post_content']['description'] ); ?>
+							<?php echo esc_html( $membership['description'] ); ?>
 						</div>
 					</div>
 					<div class="membership-footer">

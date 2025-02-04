@@ -2349,7 +2349,7 @@
 			 background-size: 100% !important;
 			 background-position: center;
 			 display: block;
-			 width: 15px;
+			 width: 8px;
 			 height: 15px;
 			 cursor: pointer;
 			 padding: 4px;
@@ -2357,7 +2357,11 @@
 		 }
 	 }
  }
-
+label[for="user_registration_login_options_prevent_core_login"] {
+	span {
+		height: 34px;
+	}
+}
  #smart-tags {
 	 text-align: center;
  }

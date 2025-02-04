@@ -57,7 +57,8 @@ class User_Registration_Paypal_Module {
 					'desc_tip' => true,
 					'required' => true,
 					'id'       => 'user_registration_global_paypal_email_address',
-					'default'  => get_option( 'user_registration_global_paypal_email_address', get_option( 'admin_email' ) ),
+					'default'  => get_option( 'user_registration_global_paypal_email_address' ),
+					'placeholder'  => get_option( 'admin_email' ),
 				),
 				array(
 					'type'     => 'text',
@@ -65,7 +66,8 @@ class User_Registration_Paypal_Module {
 					'desc'     =>  __("Endpoint set for handling paypal cancel api.", "user-registration"),
 					'desc_tip' => true,
 					'id'       => 'user_registration_global_paypal_cancel_url',
-					'default'  => get_option( 'user_registration_global_paypal_cancel_url', home_url() ),
+					'default'  => get_option( 'user_registration_global_paypal_cancel_url'),
+					'placeholder'  => esc_url(home_url()) ,
 				),
 				array(
 					'type'     => 'text',
@@ -73,7 +75,8 @@ class User_Registration_Paypal_Module {
 					'desc'     => __("Redirect url after the payment process, also used as notify_url for Paypal IPN.", "user-registration"),
 					'desc_tip' => true,
 					'id'       => 'user_registration_global_paypal_return_url',
-					'default'  => get_option( 'user_registration_global_paypal_return_url', wp_login_url() ),
+					'default'  => get_option( 'user_registration_global_paypal_return_url' ),
+					'placeholder'  => esc_url(wp_login_url())
 				),
 				array(
 					'type'     => 'text',

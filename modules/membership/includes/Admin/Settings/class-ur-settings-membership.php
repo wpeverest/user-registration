@@ -113,9 +113,9 @@ if ( ! class_exists( 'UR_Settings_Membership ' ) ) :
 						'desc'     => __( 'Field to add necessary bank details which will be shown to users after successful payment using the bank option during checkout.', 'user-registration' ),
 						'id'       => 'user_registration_global_bank_details',
 						'type'     => 'tinymce',
-						'default'  => get_option( 'user_registration_global_bank_details', $default_text ),
+						'default'  => get_option( 'user_registration_global_bank_details' ),
 						'css'      => 'min-width: 350px;',
-						'desc_tip' => true,
+						'desc_tip' => true
 					),
 				),
 			);

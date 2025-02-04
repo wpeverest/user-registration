@@ -317,7 +317,7 @@ class UR_Getting_Started {
 			);
 			$pages['membership_thankyou'] = array(
 				'name'    => _x( 'membership-thankyou', 'Page slug', 'user-registration' ),
-				'title'   => _x( 'Membership Thankyou', 'Page title', 'user-registration' ),
+				'title'   => _x( 'Membership ThankYou', 'Page title', 'user-registration' ),
 				'option'  => 'user_registration_thank_you_page_id',
 				'content' => '[user_registration_membership_thank_you]',
 			);

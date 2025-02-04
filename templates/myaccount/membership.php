@@ -29,9 +29,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<span style="font-weight: 500">
 			<?php echo esc_html__( 'Membership Title', 'user-registration' ) ?>
 				</span>
-			<span class="ur-portal-tooltip tooltipstered"
-				  data-tip="Name of the membership.">
-			</span>
 		</div>
 		<div class="membership-data">
 			<span>
@@ -45,9 +42,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<span style="font-weight: 500">
 			<?php echo esc_html__( 'Membership Type', 'user-registration' ) ?>
 				</span>
-			<span class="ur-portal-tooltip tooltipstered"
-				  data-tip="Type of Membership.">
-			</span>
 		</div>
 		<div class="membership-data">
 			<span id="ur-membership-type">
@@ -61,9 +55,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<span style="font-weight: 500">
 			<?php echo esc_html__( 'Membership Status', 'user-registration' ) ?>
 				</span>
-			<span class="ur-portal-tooltip tooltipstered"
-				  data-tip="Status of the user's current membership.">
-			</span>
 		</div>
 		<div class="membership-data">
 
