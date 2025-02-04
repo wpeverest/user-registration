@@ -2357,11 +2357,7 @@
 		 }
 	 }
  }
-label[for="user_registration_login_options_prevent_core_login"] {
-	span {
-		height: 34px;
-	}
-}
+
  #smart-tags {
 	 text-align: center;
  }
@@ -6703,6 +6699,17 @@ body {
 											}
 										}
 									}
+									.user-registration-help-tip,
+									.ur-portal-tooltip {
+										&::after {
+											width: 16px;
+										}
+									}
+									label[for="user_registration_login_options_prevent_core_login"] span {
+										bottom: 18px;
+										right: 20px;
+									}
+
 								}
 							}
 						}
