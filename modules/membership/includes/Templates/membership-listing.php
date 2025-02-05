@@ -71,7 +71,7 @@ elseif ( 'list' === $type ):
 			?>
 			<div class="membership-footer">
 				<button type="submit"
-						class="membership-signup-button" <?php echo( empty( $registration_page_id ) || $is_logged_in ? 'disabled' : '' ) ?>><?php echo $sign_up_text ?></button>
+						class="membership-signup-button" <?php echo( empty( $registration_page_id )  ? 'disabled' : '' ) ?>><?php echo $sign_up_text ?></button>
 			</div>
 		</div>
 	</form>
