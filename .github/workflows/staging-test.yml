@@ -50,7 +50,9 @@ jobs:
           mkdir user-registration
           rsync -rc --exclude-from="./.distignore" "./" "./user-registration" --delete --delete-excluded
 
-            
+      - name: Create ZIP Archive
+        run: zip -r user-registration.zip user-registration     
+        
       - name: Upload Plugin ZIP to Server Temp Folder
         env:
           Srv_IP: ${{ secrets.QA_AUTOMATION_SERVER_IP }}
