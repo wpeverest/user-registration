@@ -40,6 +40,7 @@ jobs:
       - name: NPM, Composer Install & NPM Build
         run: |
           npm cache clean --force
+          rm -rf user-registration.zip
           rm -rf node_modules
           rm -rf package-lock.json
           npm install --legacy-peer-deps --force
@@ -75,7 +76,7 @@ jobs:
         run: |
           pwd
           ls -la
-          sshpass -p "$Server_PASS" scp -r -o StrictHostKeyChecking=no user-registration $Srv_UsrName@$Srv_IP:/home/master/applications/ycrdmckpsu/public_html/temp/
+          sshpass -p "$Server_PASS" scp -r -o StrictHostKeyChecking=no user-registration.zip $Srv_UsrName@$Srv_IP:applications/ycrdmckpsu/public_html/temp/
 
       - name: Install and Activate Plugin via WP-CLI
         run: |
