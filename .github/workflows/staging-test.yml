@@ -57,6 +57,7 @@ jobs:
           Srv_UsrName: ${{ secrets.QA_AUTOMATION_SERVER_USERNAME }}
           Server_PASS: ${{ secrets.QA_AUTOMATION_SERVER_PASS }}
         run: |
+          pwd
           sshpass -p "$Server_PASS" scp -r -o StrictHostKeyChecking=no user-registration.zip $Srv_UsrName@$Srv_IP:/home/master/applications/ycrdmckpsu/public_html/temp/
 
       - name: Install and Activate Plugin via WP-CLI
@@ -65,6 +66,7 @@ jobs:
           Srv_UsrName: ${{ secrets.QA_AUTOMATION_SERVER_USERNAME }}
           Server_PASS: ${{ secrets.QA_AUTOMATION_SERVER_PASS }}
         run: |
+          pwd
           sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP << EOF
           cd applications/ycrdmckpsu/public_html/urqatest
           wp plugin install ../temp/user-registration.zip --activate
