@@ -66,7 +66,7 @@ jobs:
       - name: Install and Activate Plugin via WP-CLI
         run: |
           sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP << EOF
-          cd /home/master/applications/ycrdmckpsu/public_html/urqatest/
+          cd /home/master/applications/ycrdmckpsu/public_html/urqatest
           wp plugin install user-registration.zip --activate
           rm -f user-registration.zip
           EOF
