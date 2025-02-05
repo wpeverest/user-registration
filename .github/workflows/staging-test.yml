@@ -80,7 +80,12 @@ jobs:
 
       - name: Install and Activate Plugin via WP-CLI
         run: |
-          sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no  $Srv_UsrName@$Srv_IP 'cd applications/ycrdmckpsu/public_html/urqatest && wp plugin install ../temp/user-registration.zip --activate && rm -f ../temp/user-registration.zip'
+          sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP << EOF
+          echo "Checking SSH connection...Again"
+          pwd
+          cd /home/master/applications/ycrdmckpsu/public_html
+          pwd
+          EOF
 
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v1
