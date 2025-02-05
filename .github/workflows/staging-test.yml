@@ -75,7 +75,7 @@ jobs:
         run: |
           sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP "ls -ld /home/master/applications/ycrdmckpsu/public_html/temp"
           sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP "mkdir -p /home/master/applications/ycrdmckpsu/public_html/temp"
-          sshpass -p "$Server_PASS" scp -o StrictHostKeyChecking=no user-registration.zip $Srv_UsrName@$Srv_IP:/home/master/applications/ycrdmckpsu/public_html/temp
+          sshpass -p "$Server_PASS" scp -o StrictHostKeyChecking=no ./user-registration.zip $Srv_UsrName@$Srv_IP:/home/master/applications/ycrdmckpsu/public_html/temp/
 
       - name: Install and Activate Plugin via WP-CLI
         run: |
