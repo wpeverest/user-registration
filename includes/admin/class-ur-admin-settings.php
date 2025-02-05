@@ -59,13 +59,11 @@ class UR_Admin_Settings {
 			$settings[] = include 'settings/class-ur-settings-misc.php';
 			$settings[] = include 'settings/class-ur-settings-integration.php';
 
-			if( ur_check_module_activation( 'membership' ) || is_plugin_active( 'user-registration-stripe/user-registration-stripe.php' ) ) {
+			if ( ur_check_module_activation( 'membership' ) || is_plugin_active( 'user-registration-stripe/user-registration-stripe.php' ) ) {
 				include_once UR_ABSPATH . 'modules/class-ur-payment-settings.php';
 				include_once UR_ABSPATH . 'modules/stripe/class-ur-stripe-module.php';
 				include_once UR_ABSPATH . 'modules/paypal/class-ur-paypal-module.php';
-			}
-			else if ( UR_PRO_ACTIVE && ur_check_module_activation( 'payments' ) )
-			{
+			} elseif ( UR_PRO_ACTIVE && ur_check_module_activation( 'payments' ) ) {
 				include_once UR_ABSPATH . 'modules/class-ur-payment-settings.php';
 			}
 
@@ -140,7 +138,7 @@ class UR_Admin_Settings {
 				)
 			);
 
-		}elseif( $flag && 'invalid_membership_pages' === $flag) {
+		} elseif ( $flag && 'invalid_membership_pages' === $flag ) {
 			self::add_error(
 				esc_html__(
 					'Your settings has not been saved. Please select valid pages for the fields.',
@@ -352,6 +350,9 @@ class UR_Admin_Settings {
 			}
 			$settings .= '</h3>';
 
+			if ( ! empty( $options['desc'] ) ) {
+				$settings .= '<p class="ur-p-tag">' . wptexturize( wp_kses_post( $options['desc'] ) ) . '</p>';
+			}
 			if ( isset( $options['sections'] ) ) {
 
 				foreach ( $options['sections'] as $id => $section ) {

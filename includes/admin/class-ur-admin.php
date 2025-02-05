@@ -51,13 +51,13 @@ class UR_Admin {
 	 */
 	public function run_membership_migration_script() {
 
-
 		$membership_service = new MembershipService();
 		$logger             = ur_get_logger();
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
+		update_option( 'user_registration_content_restriction_enable', true );
 		if ( ur_check_module_activation( 'payments' ) && ! get_option( 'global_paypal_setting_migration', false ) ) {
 			$logger->notice( '---------- Enable override global settings for paypal standard start. ----------', array( 'source' => 'migration-logger' ) );
 			$get_all_forms = ur_get_all_user_registration_form();
@@ -86,17 +86,16 @@ class UR_Admin {
 					)
 				);
 				$membership_id = UR_Install::create_default_membership();
-//				$memberships   = array( array( 'ID' => $membership_id ) );
+				// $memberships   = array( array( 'ID' => $membership_id ) );
 			}
 
-
-//			$logger->notice( 'Begin Default Membership Group creation.', array( 'source' => 'migration-logger' ) );
+			// $logger->notice( 'Begin Default Membership Group creation.', array( 'source' => 'migration-logger' ) );
 
 			// first create a default membership group and assign all the memberships to the group.
 			// enable the commented codes to create a default group on migration
-//			$group_id = UR_Install::create_default_membership_group( $memberships );
-//			if ( $group_id ) {
-//			$logger->notice( 'Created Default Membership Group.', array( 'source' => 'migration-logger' ) );
+			// $group_id = UR_Install::create_default_membership_group( $memberships );
+			// if ( $group_id ) {
+			// $logger->notice( 'Created Default Membership Group.', array( 'source' => 'migration-logger' ) );
 
 			// then use the group id to create a new registration form with membership field and the default group selected.
 			$logger->notice( 'Begin Membership form creation.', array( 'source' => 'migration-logger' ) );
@@ -129,7 +128,7 @@ class UR_Admin {
 				update_option( 'user_registration_enabled_features', $enabled_features );
 
 			} else {
-//					wp_delete_post( $group_id );
+				// wp_delete_post( $group_id );
 				$logger->error(
 					'! Membership form creation failed....aborting migration.',
 					array(
@@ -137,14 +136,14 @@ class UR_Admin {
 					)
 				);
 			}
-//			} else {
-//				$logger->error(
-//					'! Group creation failed....aborting migration.',
-//					array(
-//						'source' => 'migration-logger',
-//					)
-//				);
-//			}
+			// } else {
+			// $logger->error(
+			// '! Group creation failed....aborting migration.',
+			// array(
+			// 'source' => 'migration-logger',
+			// )
+			// );
+			// }
 		}
 	}
 
@@ -270,7 +269,7 @@ class UR_Admin {
 	/**
 	 * Add Tag for My Account to know which page is current my account page.
 	 *
-	 * @param mixed $post_states Tags.
+	 * @param mixed  $post_states Tags.
 	 * @param object $post Post.
 	 */
 	public function ur_add_post_state( $post_states, $post ) {
