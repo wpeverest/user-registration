@@ -73,9 +73,13 @@ jobs:
           Srv_UsrName: ${{ secrets.QA_AUTOMATION_SERVER_USERNAME }}
           Server_PASS: ${{ secrets.QA_AUTOMATION_SERVER_PASS }}
         run: |
-          sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP "ls -ld /home/master/applications/ycrdmckpsu/public_html/temp"
+          sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP "ls -la"
+          sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP "cd user-registration"
+          sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP "ls -la"
+          pwd
+          ls -la
           sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP "mkdir -p /home/master/applications/ycrdmckpsu/public_html/temp"
-          sshpass -p "$Server_PASS" scp -o StrictHostKeyChecking=no ./user-registration $Srv_UsrName@$Srv_IP:/home/master/applications/ycrdmckpsu/public_html/temp
+          sshpass -p "$Server_PASS" scp -o StrictHostKeyChecking=no user-registration $Srv_UsrName@$Srv_IP:/home/master/applications/ycrdmckpsu/public_html/temp
 
       - name: Install and Activate Plugin via WP-CLI
         run: |
