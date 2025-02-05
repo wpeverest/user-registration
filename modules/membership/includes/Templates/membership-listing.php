@@ -1,5 +1,4 @@
 <?php
-$is_logged_in = is_user_logged_in();
 if ( '' === $type ):
 	?>
 	<div class="ur-membership-list-container">
@@ -32,7 +31,7 @@ if ( '' === $type ):
 						<span
 							class="membership-amount"><?php echo $symbol ?><?php echo esc_html( sprintf( '%.2f', $membership['amount'] ) ); ?></span>
 						<button type="button"
-								class="membership-signup-button" <?php echo( empty( $registration_page_id ) || $is_logged_in ? 'disabled' : '' ) ?> ><?php echo esc_html__( 'Sign Up', 'user-registration' ); ?></button>
+								class="membership-signup-button" <?php echo( empty( $registration_page_id )  ? 'disabled' : '' ) ?> ><?php echo esc_html__( 'Sign Up', 'user-registration' ); ?></button>
 					</div>
 				</div>
 			<?php
