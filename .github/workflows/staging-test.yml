@@ -114,11 +114,12 @@ jobs:
           pwd
           sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP 'rm -rf applications/ycrdmckpsu/public_html/urqatest/wp-content/plugins/user-registration/reports/*'
           sshpass -p "$Server_PASS" scp -o StrictHostKeyChecking=no -r python-code/results/* $Srv_UsrName@$Srv_IP:applications/ycrdmckpsu/public_html/urqatest/wp-content/plugins/user-registration/reports/
+          sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP 'chmod 755 -R applications/ycrdmckpsu/public_html/urqatest/wp-content/plugins/user-registration/reports/'
           echo "https://qatest.wptests.net/urqatest/wp-content/plugins/user-registration/reports/report.html"
           
 
       - name: Send Email Notification
-        uses: dawidd6/action-send-mail@v3
+        uses: wpeverest/python-send-email@v1.0.0
         with:
           server_address: ${{ secrets.SMTP_SERVER }}
           server_port: ${{ secrets.SMTP_PORT }}
