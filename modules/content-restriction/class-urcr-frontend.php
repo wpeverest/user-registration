@@ -135,7 +135,7 @@ class URCR_Frontend {
 				$access_rule = json_decode( $access_rule_post->post_content, true );
 
 				// Verify if required params are available.
-				if ( ! empty( $access_rule['target_contents'] ) ) {
+				if ( ur_string_to_bool( $access_rule['enabled'] ) && ! empty( $access_rule['target_contents'] ) ) {
 					$types = wp_list_pluck( $access_rule['target_contents'], 'type' );
 					if ( in_array( 'whole_site', $types, true ) ) {
 						$is_whole_site_restriction = true;
@@ -182,7 +182,7 @@ class URCR_Frontend {
 					}
 				}
 			} else {
-				$access_given = $this->check_access_with_with_access_rules();
+				$access_given = $this->check_access_with_access_rules();
 
 				if ( false === $access_given && $whole_site_access_restricted ) {
 					$template = $this->basic_restrictions_templates( $template, $post );
@@ -860,7 +860,7 @@ class URCR_Frontend {
 	/**
 	 * Check access with Access Rules.
 	 */
-	public function check_access_with_with_access_rules() {
+	public function check_access_with_access_rules() {
 		global $wp_query;
 		$access_rule_posts = get_posts(
 			array(
