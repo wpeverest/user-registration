@@ -71,7 +71,7 @@ jobs:
           pwd
           sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP << EOF
           cd applications/ycrdmckpsu/public_html/urqatest
-          wp plugin install ../temp/user-registration.zip --activate
+          wp plugin install ../temp/user-registration.zip --activate --debug
           rm -f ../temp/user-registration.zip
           EOF
 
@@ -111,8 +111,9 @@ jobs:
           Srv_UsrName: ${{ secrets.QA_AUTOMATION_SERVER_USERNAME }}
           Server_PASS: ${{ secrets.QA_AUTOMATION_SERVER_PASS }}
         run: |
-          sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP 'rm -rf /home/master/applications/ycrdmckpsu/public_html/urqatest/wp-content/plugins/user-registration/reports/*'
-          sshpass -p "$Server_PASS" scp -o StrictHostKeyChecking=no -r python-code/results/* $Srv_UsrName@$Srv_IP:/home/master/applications/ycrdmckpsu/public_html/urqatest/wp-content/plugins/user-registration/reports/
+          pwd
+          sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP 'rm -rf applications/ycrdmckpsu/public_html/urqatest/wp-content/plugins/user-registration/reports/*'
+          sshpass -p "$Server_PASS" scp -o StrictHostKeyChecking=no -r python-code/results/* $Srv_UsrName@$Srv_IP:applications/ycrdmckpsu/public_html/urqatest/wp-content/plugins/user-registration/reports/
           echo "https://qatest.wptests.net/urqatest/wp-content/plugins/user-registration/reports/report.html"
           
 
