@@ -10,6 +10,8 @@
 namespace WPEverest\URMembership\Admin\Members;
 
 use WPEverest\URMembership\Admin\Members\MembersListTable;
+use WPEverest\URMembership\Admin\Repositories\MembersOrderRepository;
+use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -47,7 +49,24 @@ if ( ! class_exists( 'Members' ) ) {
 			);
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+			add_action( 'manage_users_custom_column', array( $this, 'modify_user_status_column' ), 10, 3 );
 
+		}
+
+		function modify_user_status_column( $value, $column_name, $user_id ) {
+			if ( 'ur_user_user_status' === $column_name && 'approved' === strtolower( $value ) ) {
+				$user_source = get_user_meta( $user_id, 'ur_registration_source', true );
+
+				if ( $user_source !== 'membership' ) {
+					return $value;
+				}
+				$order_status = apply_filters( 'user_registration_check_user_order_status', $user_id );
+				if ( ! empty( $order_status ) && 'pending' === $order_status ) {
+					return '<span style="color: orange;">Payment Pending</span>';
+				}
+			}
+
+			return $value; // return the default value if no modification is needed
 		}
 
 		/**

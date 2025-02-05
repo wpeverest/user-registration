@@ -7,7 +7,6 @@ build/
 composer.*
 Gruntfile.js
 webpack.config.js
-vendor/
 node_modules/
 none
 package-lock.json

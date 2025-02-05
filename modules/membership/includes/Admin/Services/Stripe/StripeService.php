@@ -193,14 +193,6 @@ class StripeService {
 			$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
 			$membership_metas['post_title'] = $membership['post_title'];
 			$member_subscription            = $this->members_subscription_repository->get_member_subscription( $member_id );
-
-			if ( 'completed' === $member_order['status'] ) {
-				$response['message'] = __( 'New member has been successfully created with successful stripe payment.', 'user-registration' );
-				$response['status']  = true;
-
-				return $response;
-				// ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
-			}
 			$is_order_updated = $this->members_orders_repository->update(
 				$member_order['ID'],
 				array(
@@ -208,6 +200,15 @@ class StripeService {
 					'transaction_id' => $transaction_id,
 				)
 			);
+			if ( 'completed' === $member_order['status'] ) {
+				$logger->notice( '-------------------------------------------- Stripe Subscription process: Order status is already completed.' . $member_id . ' --------------------------------------------', array( 'source' => 'ur-membership-stripe' ) );
+				$response['message'] = __( 'New member has been successfully created with successful stripe payment.', 'user-registration' );
+				$response['status']  = true;
+
+				return $response;
+				// ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
+			}
+
 			if ( $is_order_updated && 'paid' === $member_order['order_type'] ) {
 				$this->members_subscription_repository->update( $member_subscription['ID'], array( 'status' => 'active' ) );
 				$logger->notice( 'Order and subscription status updated ', array( 'source' => 'ur-membership-stripe' ) );
@@ -572,5 +573,11 @@ class StripeService {
 				'status' => 'canceled',
 			)
 		);
+	}
+
+	public function validate_setup(  ) {
+		$stripe_settings = self::get_stripe_settings();
+
+		return (empty($stripe_settings['publishable_key']) || empty($stripe_settings['secret_key']));
 	}
 }

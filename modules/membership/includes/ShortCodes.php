@@ -22,29 +22,38 @@ class ShortCodes {
 	public static function init() {
 		$shortcodes = array(
 //			'user_registration_membership_member_registration_form' => __CLASS__ . '::member_registration_form',
-			'user_registration_membership_listing'   => __CLASS__ . '::membership_listing',
+			'user_registration_groups'               => __CLASS__ . '::membership_listing',
 			'user_registration_membership_thank_you' => __CLASS__ . '::thank_you',
+			'user_registration_membership_listing'   => __CLASS__ . '::membership_listing',
 		);
 
 		foreach ( $shortcodes as $shortcode => $function ) {
-
-			add_shortcode( apply_filters( "{$shortcode}_shortcode_tag", $shortcode ), $function );
+			add_shortcode( apply_filters( "{$shortcode}_shortcode_tag", $shortcode ),
+				self::get_shortcode_callback( $function, $shortcode )
+			);
 		}
+	}
+
+	private static function get_shortcode_callback( $function, $shortcode ) {
+		return function ( $atts = array() ) use ( $function, $shortcode ) {
+			return call_user_func( $function, $atts, $shortcode );
+		};
 	}
 
 	/**
 	 * Shortcode Wrapper.
 	 *
 	 * @param string[] $function Callback function.
-	 * @param array    $attributes (default: array()) Extra attributes.
+	 * @param array $attributes (default: array()) Extra attributes.
+	 * @param string $shortcode (default: ') Shortcode itself.
 	 *
 	 * @return string
 	 */
 	public static function shortcode_wrapper(
-		$function = array(), $attributes = array()
+		$function = array(), $attributes = array(), $shortcode = ''
 	) {
 		ob_start();
-		call_user_func( $function, $attributes );
+		call_user_func( $function, $attributes, $shortcode );
 
 		return ob_get_clean();
 	}
@@ -75,10 +84,11 @@ class ShortCodes {
 	 * Shortcode initialization for membership listing.
 	 *
 	 * @param mixed $attributes shortcode attributes.
+	 * @param string $shortcode shortcode itself.
 	 *
 	 * @return string
 	 */
-	public static function membership_listing( $attributes ) {
+	public static function membership_listing( $attributes, $shortcode ) {
 		do_action( 'wp_enqueue_membership_scripts' );
 		wp_enqueue_script( 'user-registration-membership-frontend-script' );
 
@@ -87,17 +97,21 @@ class ShortCodes {
 				'WPEverest\URMembership\Admin\Views\Shortcode\MembershipListingShortcode',
 				'render_template',
 			),
-			$attributes
+			$attributes,
+			$shortcode
 		);
 	}
+
 	/**
 	 * Shortcode initialization for thank you page.
 	 *
 	 * @param mixed $attributes shortcode attributes.
+	 * @param mixed $content shortcode itself.
+	 * @param mixed $shortcode shortcode itself.
 	 *
 	 * @return string
 	 */
-	public static function thank_you( $attributes ) {
+	public static function thank_you( $attributes, $shortcode ) {
 		do_action( 'wp_enqueue_membership_scripts' );
 		wp_enqueue_script( 'user-registration-membership-frontend-script' );
 
@@ -106,7 +120,8 @@ class ShortCodes {
 				'WPEverest\URMembership\Admin\Views\Shortcode\ThankYouShortcode',
 				'render_template',
 			),
-			$attributes
+			$attributes,
+			$shortcode
 		);
 	}
 }

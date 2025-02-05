@@ -2349,7 +2349,7 @@
 			 background-size: 100% !important;
 			 background-position: center;
 			 display: block;
-			 width: 15px;
+			 width: 8px;
 			 height: 15px;
 			 cursor: pointer;
 			 padding: 4px;
@@ -6699,6 +6699,17 @@ body {
 											}
 										}
 									}
+									.user-registration-help-tip,
+									.ur-portal-tooltip {
+										&::after {
+											width: 16px;
+										}
+									}
+									label[for="user_registration_login_options_prevent_core_login"] span {
+										bottom: 18px;
+										right: 20px;
+									}
+
 								}
 							}
 						}

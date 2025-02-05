@@ -288,16 +288,24 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 			)
 		},
 		{
-			id: "[user_registration_membership_listing]",
+			id: "[user_registration_groups]",
 			description: __(
 				"Shows a list of available membership options for users to browse.",
 				"user-registration"
 			),
 			params: [
 				{
-					param_name: "group_id",
+					param_name: "id",
 					param_description: __(
 						"ID of the membership group to display.",
+						"user-registration"
+					),
+					required: false
+				},
+				{
+					param_name: "button_text",
+					param_description: __(
+						"Override the signup button text.",
 						"user-registration"
 					),
 					required: false
@@ -305,7 +313,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 			],
 			example: [
 				{
-					example_name: '[user_registration_membership_listing group_id="5"]',
+					example_name: '[user_registration_groups id="5" button_text="Join Now"]',
 					example_description: __(
 						"Displays Membership listing attached to group with id 5",
 						"user-registration"

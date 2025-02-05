@@ -64,29 +64,36 @@ if ( ! class_exists( 'URCR_Settings_File ' ) ) :
 		public function urcr_settings() {
 
 			$access_rules_list_link = admin_url( 'admin.php?page=user-registration-content-restriction' );
-			$link_html              = sprintf( '<a href="%s">%s</a>', $access_rules_list_link, __( 'Go to Content Rules page for advanced restrictions', 'user-registration' ) );
+			$link_html              = sprintf( __( 'Go to <a href="%s">Content Rules page</a> for advanced restrictions', 'user-registration' ), $access_rules_list_link );
 
 			return apply_filters(
 				'user_registration_content_restriction_settings',
 				array(
 					'title'    => __( 'Content Restriction Settings', 'user-registration' ),
+					'desc'     => UR_PRO_ACTIVE ? $link_html : '',
 					'sections' => array(
-						'user_registration_content_restriction_settings' => array(
-							'title'    => __( 'General', 'user-registration' ),
+						'user_registration_site_restriction_settings' => array(
+							'title'    => __( 'Whole Site Restriction', 'user-registration' ),
 							'type'     => 'card',
-							'desc'     => UR_PRO_ACTIVE ? $link_html : '',
+							'desc'     => '',
 							'settings' => array(
 								array(
-									'row_class' => 'urcr_enable_disable urcr_content_restriction_enable',
-									'title'     => __( 'Enable Content Restriction', 'user-registration' ),
-									'desc'      => __( 'Check To Enable Content Restriction', 'user-registration' ),
-									'id'        => 'user_registration_content_restriction_enable',
-									'default'   => 'yes',
+									'row_class' => 'urcr_enable_disable urcr_whole_site_access_enable',
+									'title'     => __( 'Enable Whole Site Restriction', 'user-registration' ),
+									'desc'      => __( 'Check this option to restrict your whole site. ', 'user-registration' ),
+									'id'        => 'user_registration_content_restriction_whole_site_access',
+									'default'   => 'no',
 									'desc_tip'  => true,
 									'type'      => 'toggle',
 									'autoload'  => false,
 								),
-
+							),
+						),
+						'user_registration_content_restriction_settings' => array(
+							'title'    => __( 'Global Restriction Settings', 'user-registration' ),
+							'type'     => 'card',
+							'desc'     => sprintf( __( 'These settings affect whole site restriction as well as individual page/post restriction if enabled. <a href="%1$s" target="_blank" style="text-decoration: underline;" >Learn More.</a>', 'user-registration' ), esc_url_raw( 'https://docs.wpuserregistration.com/docs/content-restriction/' ) ),
+							'settings' => array(
 								array(
 									'row_class' => 'urcr_content_restriction_allow_access_to',
 									'title'     => __( 'Allow Access To', 'user-registration' ),

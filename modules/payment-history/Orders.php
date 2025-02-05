@@ -65,7 +65,7 @@ class Orders {
 				$this,
 				'render_payment_history_page',
 			),
-			6
+			5
 		);
 		add_action( 'load-' . $orders_page, array( $this, 'orders_initialization' ) );
 	}

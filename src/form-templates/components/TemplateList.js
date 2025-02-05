@@ -728,7 +728,7 @@ const TemplateList = ({ selectedCategory, templates }) => {
 								placeholder="Give it a name."
 								size="md"
 								_focus={{
-									borderColor: "#7545BB",
+									borderColor: "#475BB2",
 									outline: "none",
 									boxShadow: "none"
 								}}

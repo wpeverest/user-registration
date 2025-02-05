@@ -280,6 +280,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * Fix       - Error handling when wp_insert_user throws error.
 * Fix       - Unknown email updated message not being displayed.
 * Fix       - Show invalid user/email message form message options.
+* Fix       - Smart tag fix for hidden field.git status
 
 = 3.3.5.2   - 21/11/2024 =
 * Fix   	- Fatal error when replacing gravatar image.

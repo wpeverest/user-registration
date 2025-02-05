@@ -103,37 +103,7 @@
 	<?php
 	endif;
 	?>
-	<!--	coupon container-->
-	<?php
-	$is_coupon_addon_activated = function_exists( 'ur_pro_is_coupons_addon_activated' ) && ur_pro_is_coupons_addon_activated();
-	if ( $is_coupon_addon_activated ) :
-		?>
-		<div class="ur_membership_frontend_input_container urm_hidden_payment_container urm-d-none"
-			 id="ur_coupon_container">
 
-			<label class="ur_membership_input_label ur-label" for="ur-membership-coupon">
-				<?php echo esc_html__( 'Coupon', 'user-registration' ); ?>
-			</label>
-			<div class="coupon-input-area">
-				<div class="input_with_clear_btn">
-					<input class="ur_membership_input_class"
-						   data-key-name="<?php echo esc_html__( 'coupon', 'user-registration' ); ?>"
-						   id="ur-membership-coupon"
-						   type="text"
-						   placeholder="<?php echo esc_html__( 'Coupon', 'user-registration' ); ?>"
-						   name="urm_coupon"
-					>
-					<span class="ur_clear_coupon">x</span>
-				</div>
-
-				<button type="button"
-						class="urm_apply_coupon membership-primary-btn"><?php echo esc_html__( 'Apply Coupon', 'user-registration' ); ?></button>
-			</div>
-			<span id="coupon-validation-error" class="notice_red"></span>
-		</div>
-	<?php
-	endif;
-	?>
 	<!--	membership-->
 	<div class="ur_membership_frontend_input_container radio">
 
@@ -175,6 +145,38 @@
 		<span id="membership-input-notice">
 		</span>
 	</div>
+	<!--	coupon container-->
+	<?php
+	$is_coupon_addon_activated = ur_check_module_activation('coupon');
+
+	if ( $is_coupon_addon_activated ) :
+		?>
+		<div class="ur_membership_frontend_input_container urm_hidden_payment_container urm-d-none"
+			 id="ur_coupon_container">
+
+			<label class="ur_membership_input_label ur-label" for="ur-membership-coupon">
+				<?php echo esc_html__( 'Coupon', 'user-registration' ); ?>
+			</label>
+			<div class="coupon-input-area">
+				<div class="input_with_clear_btn">
+					<input class="ur_membership_input_class"
+						   data-key-name="<?php echo esc_html__( 'coupon', 'user-registration' ); ?>"
+						   id="ur-membership-coupon"
+						   type="text"
+						   placeholder="<?php echo esc_html__( 'Coupon', 'user-registration' ); ?>"
+						   name="urm_coupon"
+					>
+					<span class="ur_clear_coupon">x</span>
+				</div>
+
+				<button type="button"
+						class="urm_apply_coupon membership-primary-btn"><?php echo esc_html__( 'Apply Coupon', 'user-registration' ); ?></button>
+			</div>
+			<span id="coupon-validation-error" class="notice_red"></span>
+		</div>
+	<?php
+	endif;
+	?>
 
 	<!--	total container-->
 	<div id="urm-total_container"

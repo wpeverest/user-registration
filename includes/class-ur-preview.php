@@ -381,10 +381,10 @@ class UR_Preview {
 
 			);
 		} else {
-			$heading      = esc_html__( 'Our Top Addons', 'user-registration' );
+			$heading      = esc_html__( 'Unlock more functionality with these popular add-ons, loved by users like you.', 'user-registration' );
 			$pro_features = array(
 				esc_html__( 'Advanced Fields', 'user-registration' ),
-				esc_html__( 'woocommerce', 'user-registration' ),
+				esc_html__( 'WooCommerce', 'user-registration' ),
 				esc_html__( 'Customize My Account', 'user-registration' ),
 				esc_html__( 'File Upload', 'user-registration' ),
 				esc_html__( 'Style Customizer', 'user-registration' ),

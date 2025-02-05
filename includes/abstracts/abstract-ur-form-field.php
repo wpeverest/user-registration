@@ -509,7 +509,7 @@ abstract class UR_Form_Field {
 		 *
 		 * @param string $filter_data The filtered field data.
 		 */
-		$form_data_array = apply_filters( 'user_registration_' . $field_key . '_frontend_form_data', $filter_data );
+		$form_data_array = apply_filters( 'user_registration_' . $field_key . '_frontend_form_data', $filter_data, false );
 
 		$form_data = isset( $form_data_array['form_data'] ) ? $form_data_array['form_data'] : $form_data;
 

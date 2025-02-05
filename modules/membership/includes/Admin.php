@@ -133,8 +133,8 @@ if ( ! class_exists( 'Admin' ) ) :
 				'update_success_params_for_membership'
 			), 10, 4 );
 
-			register_deactivation_hook( UR_PLUGIN_FILE, array( $this, 'on_deactivation' ) );
-			register_activation_hook( UR_PLUGIN_FILE, array( $this, 'on_activation' ) );
+			register_deactivation_hook( UR_MEMBERSHIP_PLUGIN_FILE, array( $this, 'on_deactivation' ) );
+			register_activation_hook( UR_MEMBERSHIP_PLUGIN_FILE, array( $this, 'on_activation' ) );
 			add_filter( 'user_registration_content_restriction_settings', array(
 				$this,
 				'add_memberships_in_urcr_settings'
