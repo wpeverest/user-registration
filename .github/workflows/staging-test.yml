@@ -42,16 +42,14 @@ jobs:
           rm -rf node_modules
           npm install --legacy-peer-deps --force
           composer install
-          chmod +x ./bin/build-zip.sh
           npm run build --legacy-peer-deps --force
           composer install --no-dev
           mkdir user-registration
           rsync -rc --exclude-from="./.distignore" "./" "./user-registration" --delete --delete-excluded
 
 
-      - name: Generate ZIP file
-        run: ./bin/build-zip.sh
-
+      - name: Create ZIP Archive
+        run: zip -r user-registration.zip user-registration
           
 
       # Upload and Install Plugin via WP-CLI
