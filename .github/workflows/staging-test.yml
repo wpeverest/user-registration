@@ -26,11 +26,32 @@ jobs:
           git config --global user.email "$MY_EMAIL"
           git config --global user.name "$MY_USERNAME"
 
-      - name: Build
-        id: build
-        uses: wpeverest/action-build@3.0.0
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v2
         with:
-          generate-zip: true
+          node-version: 12.x
+
+      - name: Setup PHP v7.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          extensions: cli, dev, curl, mbstring, xmlrpc
+
+      - name: NPM, Composer Install & NPM Build
+        run: |
+          rm -rf node_modules
+          npm install --legacy-peer-deps --force
+          composer install
+          chmod +x ./bin/build-zip.sh
+          npm run build --legacy-peer-deps --force
+          composer install --no-dev
+          mkdir user-registration
+          rsync -rc --exclude-from="./.distignore" "./" "./user-registration" --delete --delete-excluded
+
+
+      - name: Generate ZIP file
+        run: ./bin/build-zip.sh
+
           
 
       # Upload and Install Plugin via WP-CLI
