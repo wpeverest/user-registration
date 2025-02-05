@@ -60,7 +60,7 @@ jobs:
           Server_PASS: ${{ secrets.QA_AUTOMATION_SERVER_PASS }}
         run: |
           pwd
-          sshpass -p "$Server_PASS" scp -r -o StrictHostKeyChecking=no user-registration.zip $Srv_UsrName@$Srv_IP:/home/master/applications/ycrdmckpsu/public_html/temp/
+          sshpass -p "$Server_PASS" scp -r -o StrictHostKeyChecking=no user-registration.zip $Srv_UsrName@$Srv_IP:applications/ycrdmckpsu/public_html/temp/
 
       - name: Install and Activate Plugin via WP-CLI
         env:
