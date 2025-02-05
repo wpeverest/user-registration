@@ -44,8 +44,8 @@ class PaypalService {
 		$paypal_options               = $data['payment_gateways']['paypal'];
 		$paypal_options['mode']       = get_option( 'user_registration_global_paypal_mode', $paypal_options['mode'] );
 		$paypal_options['email']      = get_option( 'user_registration_global_paypal_email_address', $paypal_options['email'] );
-		$paypal_options['cancel_url'] = get_option( 'user_registration_global_paypal_cancel_url', $paypal_options['cancel_url'] );
-		$paypal_options['return_url'] = get_option( 'user_registration_global_paypal_return_url', $paypal_options['return_url'] );
+		$paypal_options['cancel_url'] = get_option( 'user_registration_global_paypal_cancel_url', home_url() );
+		$paypal_options['return_url'] = get_option( 'user_registration_global_paypal_return_url', wp_login_url() );
 		$redirect                     = ( 'production' === $paypal_options['mode'] ) ? 'https://www.paypal.com/cgi-bin/webscr/?' : 'https://www.sandbox.paypal.com/cgi-bin/webscr/?';
 		$post                         = get_post( $membership );
 		$membership_amount            = number_format( $data['amount'] );
@@ -212,8 +212,8 @@ class PaypalService {
 
 		$paypal_options['mode']       = get_option( 'user_registration_global_paypal_mode', $paypal_options['mode'] );
 		$paypal_options['email']      = get_option( 'user_registration_global_paypal_email_address', $paypal_options['email'] );
-		$paypal_options['cancel_url'] = get_option( 'user_registration_global_paypal_cancel_url', $paypal_options['cancel_url'] );
-		$paypal_options['return_url'] = get_option( 'user_registration_global_paypal_return_url', $paypal_options['return_url'] );
+		$paypal_options['cancel_url'] = get_option( 'user_registration_global_paypal_cancel_url', home_url() );
+		$paypal_options['return_url'] = get_option( 'user_registration_global_paypal_return_url', wp_login_url() );
 
 		$membership_metas['post_title'] = $membership['post_title'];
 		$receiver_email                 = $paypal_options['email'];
@@ -410,8 +410,8 @@ class PaypalService {
 
 		$paypal_options['mode']          = get_option( 'user_registration_global_paypal_mode', $paypal_options['mode'] );
 		$paypal_options['email']         = get_option( 'user_registration_global_paypal_email_address', $paypal_options['email'] );
-		$paypal_options['cancel_url']    = get_option( 'user_registration_global_paypal_cancel_url', $paypal_options['cancel_url'] );
-		$paypal_options['return_url']    = get_option( 'user_registration_global_paypal_return_url', $paypal_options['return_url'] );
+		$paypal_options['cancel_url']    = get_option( 'user_registration_global_paypal_cancel_url', home_url() );
+		$paypal_options['return_url']    = get_option( 'user_registration_global_paypal_return_url', wp_login_url() );
 		$paypal_options['client_id']     = get_option( 'user_registration_global_paypal_client_id', $paypal_options['client_id'] );
 		$paypal_options['client_secret'] = get_option( 'user_registration_global_paypal_client_secret', $paypal_options['client_secret'] );
 
