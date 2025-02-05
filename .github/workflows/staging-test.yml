@@ -53,8 +53,20 @@ jobs:
       - name: Create ZIP Archive
         run: zip -r user-registration.zip user-registration
           
+      - name: Verify SSH Connection
+        env:
+          Srv_IP: ${{ secrets.QA_AUTOMATION_SERVER_IP }}
+          Srv_UsrName: ${{ secrets.QA_AUTOMATION_SERVER_USERNAME }}
+          Server_PASS: ${{ secrets.QA_AUTOMATION_SERVER_PASS }}
+        run: |
+          sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP << EOF
+          echo "Checking SSH connection..."
+          pwd
+          cd /home/master/applications/ycrdmckpsu/public_html
+          pwd
+          EOF
+            
 
-      # Upload and Install Plugin via WP-CLI
       - name: Upload Plugin ZIP to Server Temp Folder
         env:
           Srv_IP: ${{ secrets.QA_AUTOMATION_SERVER_IP }}
