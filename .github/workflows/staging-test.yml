@@ -61,7 +61,7 @@ jobs:
         run: |
           pwd
           sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP << EOF
-          cd applications/ycrdmckpsu/public_html/urqatest/
+          cd applications/ycrdmckpsu/public_html/urqatest/wp-content/plugins/
           rm -rf user-registration
           EOF
 
