@@ -131,15 +131,54 @@ jobs:
           
 
       
-      - name: Send Email Notification
-        uses: wpeverest/python-send-email@v4.1.0
-        with:
-          smtp_server: ${{ secrets.SMTP_SERVER }}
-          smtp_port: ${{ secrets.SMTP_PORT }}
-          smtp_username: ${{ secrets.SMTP_USERNAME }}
-          smtp_password: ${{ secrets.SMTP_PASSWORD }}
-          subject: "Test Completed - UR Staging QA Report"
-          body: "Test completed. View the report here: https://qatest.wptests.net/urqatest/reports/report.html"
-          to_email: ${{ secrets.NOTIFICATION_EMAIL }}
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install smtplib
+
+      - name: Send Email Notification (Custom Python Code)
+        run: |
+          # Write the Python script directly here to send email
+          python - <<EOF
+          import smtplib
+          from email.mime.multipart import MIMEMultipart
+          from email.mime.text import MIMEText
+          import os
+          
+          # Gather environment variables from GitHub Actions inputs
+          smtp_server = os.getenv('SMTP_SERVER')
+          smtp_port = os.getenv('SMTP_PORT')
+          smtp_username = os.getenv('SMTP_USERNAME')
+          smtp_password = os.getenv('SMTP_PASSWORD')
+          to_email = os.getenv('TO_EMAIL')
+          subject = os.getenv('SUBJECT')
+          body = os.getenv('BODY')
+          
+          # Create the email message
+          from_email = f"Automation <{smtp_username}>"
+          msg = MIMEMultipart()
+          msg['From'] = from_email
+          msg['To'] = to_email
+          msg['Subject'] = subject
+          msg.attach(MIMEText(body, 'plain'))
+          
+          try:
+              # Connect to the SMTP server and send the email
+              with smtplib.SMTP(smtp_server, smtp_port) as server:
+                  server.starttls()  # Secure the connection
+                  server.login(smtp_username, smtp_password)
+                  server.sendmail(from_email, to_email, msg.as_string())
+                  print("Email sent successfully.")
+          except Exception as e:
+              print(f"Error sending email: {e}")
+          EOF
+        env:
+          SMTP_SERVER: ${{ secrets.SMTP_SERVER }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          TO_EMAIL: ${{ secrets.NOTIFICATION_EMAIL }}
+          SUBJECT: "Test Completed - UR Staging QA Report"
+          BODY: "Test completed. View the report here: https://qatest.wptests.net/urqatest/reports/report.html"
       
                 
