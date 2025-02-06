@@ -1,8 +1,8 @@
 <?php //phpcs:ignore
 /**
- * Plugin Name: User Registration
+ * Plugin Name: User Registration & Membership
  * Plugin URI: https://wpuserregistration.com/
- * Description: Drag and Drop user registration form and login form builder.
+ * Description: The most flexible User Registration and Membership plugin for WordPress.
  * Version: 4.0
  * Author: WPEverest
  * Author URI: https://wpuserregistration.com
