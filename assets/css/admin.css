@@ -10249,6 +10249,10 @@ a.button.ur-smart-tags-list-button {
 .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .integration-lists-settings .user-registration-card__body [class*=ur-mailchimp-] {
   margin-bottom: 12px;
 }
+.ur-registered-from .user-registration-help-tip::after,
+.ur-registered-from .ur-portal-tooltip::after {
+  width: 16px;
+}
 
 #wpcontent .wp-heading-inline {
   font-weight: 600;
