@@ -1,4 +1,4 @@
-= 4.0       - 08/01/2025 =
+= 4.0       - 06/02/2025 =
 * Feature   - Login form builder.
 * Feature   - Membership module in core.
 * Feature   - Basic restriction in core.
@@ -32,6 +32,7 @@
 * Fix       - Error handling when wp_insert_user throws error.
 * Fix       - Unknown email updated message not being displayed.
 * Fix       - Show invalid user/email message form message options.
+* Fix       - Smart tag fix for hidden field.git status
 
 = 3.3.5.2   - 21/11/2024 =
 * Fix       - Fatal error when replacing gravatar image.
