@@ -171,6 +171,13 @@ jobs:
           TO_EMAIL: ${{ secrets.NOTIFICATION_EMAIL }}
           FROM_EMAIL: ${{ secrets.FROM_EMAIL }}
           SUBJECT: "Test Completed - UR Staging QA Report"
-          BODY: "Test completed. View the report here: https://qatest.wptests.net/urqatest/reports/report.html"
+          BODY: |
+            <p>Test completed. View the report here:</p>
+            <a href="https://qatest.wptests.net/urqatest/reports/report.html" 
+               style="display: inline-block; padding: 10px 20px; font-size: 16px; 
+                      color: #fff; background-color: #007BFF; text-decoration: none; 
+                      border-radius: 5px;">
+               View Report
+            </a>
       
                 
