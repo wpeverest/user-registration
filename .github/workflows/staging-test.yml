@@ -146,9 +146,7 @@ jobs:
           to_email = os.getenv('TO_EMAIL')
           subject = os.getenv('SUBJECT')
           body = os.getenv('BODY')
-          
-          # Create the email message
-          from_email = f"Automation <{smtp_username}>"
+          from_email = os.getenv('FROM_EMAIL')
           msg = MIMEMultipart()
           msg['From'] = from_email
           msg['To'] = to_email
@@ -171,6 +169,7 @@ jobs:
           SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
           TO_EMAIL: ${{ secrets.NOTIFICATION_EMAIL }}
+          FROM_EMAIL: ${{ secrets.FROM_EMAIL }}
           SUBJECT: "Test Completed - UR Staging QA Report"
           BODY: "Test completed. View the report here: https://qatest.wptests.net/urqatest/reports/report.html"
       
