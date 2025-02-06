@@ -130,14 +130,42 @@ jobs:
           echo "https://qatest.wptests.net/urqatest/reports/report.html"
           
 
-      - name: Send Email Notification
-        uses: wpeverest/python-send-email@v2.0.1
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          smtp_server: ${{ secrets.SMTP_SERVER }}
-          smtp_port: ${{ secrets.SMTP_PORT }}
-          smtp_username: ${{ secrets.SMTP_USERNAME }}
-          smtp_password: ${{ secrets.SMTP_PASSWORD }}
-          subject: "Test Completed - UR Staging QA Report"
-          body: "Test completed. View the report here: https://qatest.wptests.net/urqatest/reports/report.html"
-          to_email: ${{ secrets.NOTIFICATION_EMAIL }}
-          
+          python-version: '3.x'  
+      
+      - name: Install Dependencies
+        run: pip install smtplib email-validator  
+      
+      - name: Send Email via Python
+        run: |
+          python -c "
+          import smtplib
+          from email.mime.text import MIMEText
+      
+          smtp_server = '${{ secrets.SMTP_SERVER }}'
+          smtp_port = 587
+          smtp_username = '${{ secrets.SMTP_USERNAME }}'
+          smtp_password = '${{ secrets.SMTP_PASSWORD }}'
+          to_email = '${{ secrets.NOTIFICATION_EMAIL }}'
+          subject = 'Test Completed - UR Staging QA Report'
+          body = 'Test completed. View the report here: https://qatest.wptests.net/urqatest/reports/report.html'
+      
+          msg = MIMEText(body)
+          msg['Subject'] = subject
+          msg['From'] = smtp_username
+          msg['To'] = to_email
+      
+          with smtplib.SMTP(smtp_server, smtp_port) as server:
+              server.starttls()
+              server.login(smtp_username, smtp_password)
+              server.sendmail(smtp_username, to_email, msg.as_string())
+          print('Email Sent Successfully!')
+          "
+        env:
+          SMTP_SERVER: ${{ secrets.SMTP_SERVER }}
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+      
+                
