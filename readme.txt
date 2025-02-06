@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 5.5
 Requires PHP: 7.2
 Tested up to: 6.7.1
-Stable tag: 4.0
+Stable tag: 4.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -255,6 +255,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 21. User Account Page –  Vertical Layout
 
 == Changelog ==
+
+= 4.0.1     - 06/02/2025 =
+* Fix       - Login menu being automatically added after v4.0 update.
 
 = 4.0       - 06/02/2025 =
 * Feature   - Login form builder.
