@@ -132,7 +132,7 @@ jobs:
 
       
       - name: Send Email Notification
-        uses: wpeverest/python-send-email@v3.0.0
+        uses: wpeverest/python-send-email@v4.0.0
         with:
           smtp_server: ${{ secrets.SMTP_SERVER }}
           smtp_port: ${{ secrets.SMTP_PORT }}
