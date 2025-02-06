@@ -114,6 +114,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			$this->includes();
 			$this->init_hooks();
 			add_action( 'plugins_loaded', array( $this, 'objects' ), 1 );
+			add_action( 'in_plugin_update_message-' . UR_PLUGIN_BASENAME, array( __CLASS__, 'in_plugin_update_message' ) );
 
 			do_action( 'user_registration_loaded' );
 		}
@@ -474,6 +475,76 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 
 			$is_trigger_for_user_registration = $function_name === '_load_textdomain_just_in_time' && strpos( $message, '<code>user-registration' ) !== false;
 			return $is_trigger_for_user_registration ? false : $trigger;
+		}
+
+		/**
+		 * Update notice
+		 *
+		 * @param array $args Plugin args.
+		 */
+		public static function in_plugin_update_message( $args ) {
+			$transient_name = 'ur_upgrade_notice_' . $args['Version'];
+			$upgrade_notice = get_transient( $transient_name );
+
+			if ( false === $upgrade_notice ) {
+				$response = wp_safe_remote_get( 'https://plugins.svn.wordpress.org/user-registration/trunk/readme.txt' );
+
+				if ( ! is_wp_error( $response ) && ! empty( $response['body'] ) ) {
+					$upgrade_notice = self::parse_update_notice( $response['body'], $args['new_version'] );
+					set_transient( $transient_name, $upgrade_notice, DAY_IN_SECONDS );
+				}
+			}
+
+			echo wp_kses_post( $upgrade_notice );
+		}
+
+		/**
+		 * Parse update notice from readme.
+		 *
+		 * @param string $content Readme content.
+		 * @param string $new_version New version.
+		 */
+		private static function parse_update_notice( $content, $new_version ) {
+			// Output Upgrade Notice.
+			$matches        = null;
+			$regexp         = '~==\s*Upgrade Notice\s*==\s*=\s*(.*)\s*=(.*)(=\s*' . preg_quote( UR_VERSION ) . '\s*=|$)~Uis';
+			$upgrade_notice = '';
+
+			if ( preg_match( $regexp, $content, $matches ) ) {
+
+				$version = trim( $matches[1] );
+				$notices = (array) preg_split( '~[\r\n]+~', trim( $matches[2] ) );
+
+				// Check the latest stable version and ignore trunk.
+				if ( $version === $new_version && version_compare( UR_VERSION, $version, '<' ) ) {
+
+					$upgrade_notice .= '<div class="ur_plugin_upgrade_notice">';
+					$upgrade_notice .= '<div class="ur_plugin_upgrade_notice_body">';
+
+					foreach ( $notices as $line ) {
+
+						$line = trim( $line ); // Remove extra whitespace
+
+						if ( empty( $line ) ) {
+							continue; // Skip empty lines
+						}
+
+						$line = preg_replace( '~\[([^\]]*)\]\(([^\)]*)\)~', '<a href="$2">$1</a>', $line );
+
+						$line = preg_replace( '~^###\s*(.*)~', '<p class="upgrade-title" style="font-size: 14px;font-weight: 600" >$1</p>', $line );
+
+						if ( ! preg_match( '~^<h3>|<p>|<a |<ul>|<ol>|<li>~', $line ) ) {
+							$line = '<p style="font-size: 12px;>' . $line . '</p>';
+						}
+
+						$upgrade_notice .= wp_kses_post( trim( $line ) );
+					}
+
+					$upgrade_notice .= '</div> ';
+					$upgrade_notice .= '</div> ';
+				}
+			}
+			return wp_kses_post( $upgrade_notice );
 		}
 	}
 

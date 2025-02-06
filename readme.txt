@@ -8,23 +8,23 @@ Stable tag: 4.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-The best drag and drop user registration form and login form builder with a user profile page, email notification, user roles assignment, and more.
+The most flexible User Registration and Membership plugin for WordPress with a user profile page, email notification, user roles assignment, and more.
 
 == Description ==
 
 **The most flexible User Registration and Membership plugin for WordPress - URM**
 
-Are you a beginner with absolutely zero coding skills? No problem! User Registration & Membership lets you create awesome membership websites and dynamic registration forms in minutes. 
+Are you a beginner with absolutely zero coding skills? No problem! User Registration & Membership lets you create awesome membership websites and dynamic registration forms in minutes.
 
-You can seamlessly integrate members into your website with the comprehensive membership ecosystem, featuring registration forms, membership groups, login forms, user profiles, content restriction, and a variety of other powerful tools. 
+You can seamlessly integrate members into your website with the comprehensive membership ecosystem, featuring registration forms, membership groups, login forms, user profiles, content restriction, and a variety of other powerful tools.
 
-This free, lightweight, and fully responsive plugin also includes a beautifully designed login form ready to use. It automatically creates a user profile account for registered members. 
+This free, lightweight, and fully responsive plugin also includes a beautifully designed login form ready to use. It automatically creates a user profile account for registered members.
 
-And you can get started for FREE! The free plan provides you with all the core features to kick-start your own membership website. 
+And you can get started for FREE! The free plan provides you with all the core features to kick-start your own membership website.
 
-[youtube https://youtu.be/lrkXhZ7hS8g]
+[youtube https://youtu.be/lrkXhZ7hS8g ]
 
-[All Features](https://wpuserregistration.com/features/?utm_source=wporg&utm_medium=all-features-link&utm_campaign=ur-upgrade-to-pro) | [Documentation](https://docs.wpuserregistration.com/)
+[All Features](https://wpuserregistration.com/features/?utm_source=wporg&utm_medium=all-features-link&utm_campaign=ur-upgrade-to-pro) | [Documentation](https://docs.wpuserregistration.com/) | [Community](https://www.facebook.com/groups/userregistration/)
 
 [Test User Registration & Membership Premium for Free ](https://userregistration.demoswp.net/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)
 
@@ -74,8 +74,6 @@ And you can get started for FREE! The free plan provides you with all the core f
 * **[Premium] User Registration Data in Graphs & Charts:** Receive accurate stats on every user registration form through graphs & charts.
 
 * **[Premium] Passwordless Login:** Enable user authentication through a secure email link, eliminating the need for passwords.
-
-* **[Premium] Elementor Support:** Utilize the User Registration widget in your Elementor editor to quickly add registration forms to any page and customize their design.
 
 ### Add-ons & Integrations
 
@@ -153,7 +151,7 @@ And there’s more we haven’t listed here.
 * WooCommerce Registration
 * Multi-Step Registration
 * Course Registration
-And many more... 
+And many more...
 
 👉 [Explore all pre-built User Registration demos.](https://demo.wpeverest.com/user-registration/)
 
@@ -531,3 +529,10 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * Fix      – Lock on the one time draggable field not removed while removing the field.
 
 [See changelog for all versions](https://raw.githubusercontent.com/wpeverest/user-registration/master/CHANGELOG.txt).
+
+
+== Upgrade Notice ==
+
+= 4.0 =
+###Heads up, User Registration is now User Registration & Membership!
+This update introduces substantial changes to the plugin. We recommend backing up your site before updating and testing the update in a staging environment first.
