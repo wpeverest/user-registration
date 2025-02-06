@@ -130,15 +130,8 @@ jobs:
           echo "https://qatest.wptests.net/urqatest/reports/report.html"
           
 
-      
-      - name: Install Python dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install smtplib
-
       - name: Send Email Notification (Custom Python Code)
         run: |
-          # Write the Python script directly here to send email
           python - <<EOF
           import smtplib
           from email.mime.multipart import MIMEMultipart
