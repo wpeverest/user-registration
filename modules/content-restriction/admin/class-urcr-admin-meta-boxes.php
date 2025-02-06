@@ -104,7 +104,7 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 	public function render_metabox( $post ) {
 
 		echo '<p>' . esc_html__( 'Use shortcode [urcr_restrict]....[/urcr_restrict] to restrict partial contents.', 'user-registration' ) . '</p>';
-		$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', true ) );
+		$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
 
 		$this->ur_metabox_checkbox(
 			array(
@@ -176,7 +176,7 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 			return false;
 		}
 
-		$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', true ) );
+		$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
 
 		$checkbox = isset( $_POST['urcr_meta_checkbox'] ) ? $_POST['urcr_meta_checkbox'] : '';
 
