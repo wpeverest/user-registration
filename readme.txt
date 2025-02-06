@@ -232,22 +232,27 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Screenshots ==
 
-1. Form Fields
-2. Form Fields – Fullscreen Mode
+1. Setup Wizard
+2. Form Fields
 3. Field Options
 4. Form Settings
-5. General Options
-6. Login Options
-7. Frontend Messages
-8. Google reCaptcha
-9. General Email Settings
-10. Export Users
-11. Import/Export Forms
-12. Gutenberg Block
-13. Registration Form
-14. Login Form
-15. User Account Page –  Horizontal Layout
-16. User Account Page –  Vertical Layout
+5. Login Form Builder
+6. Membership Creation Page
+7. Payment Settings
+8. Payment History
+9. General Options
+10. Frontend Messages
+11. Google reCaptcha
+12. Basic Restriction Settings
+13. General Email Settings
+14. Export Users
+15. Import/Export Forms
+16. Gutenberg Block
+17. Registration Form
+18. Login Form
+19. Membership Registration Form
+20. User Account Page –  Horizontal Layout
+21. User Account Page –  Vertical Layout
 
 == Changelog ==
 
