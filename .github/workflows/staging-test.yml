@@ -151,7 +151,7 @@ jobs:
           msg['From'] = from_email
           msg['To'] = to_email
           msg['Subject'] = subject
-          msg.attach(MIMEText(body, 'plain'))
+          msg.attach(MIMEText(body, "html"))
           
           try:
               # Connect to the SMTP server and send the email
