@@ -130,10 +130,6 @@ jobs:
           echo "https://qatest.wptests.net/urqatest/reports/report.html"
           
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'  
       
       - name: Install Dependencies
         run: pip install smtplib email-validator  
