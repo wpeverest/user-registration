@@ -191,7 +191,7 @@
 					return $checked.length <= choiceLimit;
 				},
 
-				$.validator.format("Please select no more than {0} options.")
+				$.validator.format(user_registration_params.user_registration_checkbox_validation_message)
 			);
 		},
 		load_validation: function () {
