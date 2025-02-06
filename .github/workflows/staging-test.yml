@@ -112,10 +112,10 @@ jobs:
           Server_PASS: ${{ secrets.QA_AUTOMATION_SERVER_PASS }}
         run: |
           pwd
-          sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP 'rm -rf applications/ycrdmckpsu/public_html/urqatest/wp-content/plugins/user-registration/reports/*'
-          sshpass -p "$Server_PASS" scp -o StrictHostKeyChecking=no -r python-code/results/* $Srv_UsrName@$Srv_IP:applications/ycrdmckpsu/public_html/urqatest/wp-content/plugins/user-registration/reports/
-          sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP 'chmod 755 -R applications/ycrdmckpsu/public_html/urqatest/wp-content/plugins/user-registration/reports/'
-          echo "https://qatest.wptests.net/urqatest/wp-content/plugins/user-registration/reports/report.html"
+          sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP 'rm -rf applications/ycrdmckpsu/public_html/urqatest/reports/*'
+          sshpass -p "$Server_PASS" scp -o StrictHostKeyChecking=no -r python-code/results/* $Srv_UsrName@$Srv_IP:applications/ycrdmckpsu/public_html/urqatest/reports/
+          sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP 'chmod 755 -R applications/ycrdmckpsu/public_html/urqatest/reports/'
+          echo "https://qatest.wptests.net/urqatest/reports/report.html"
           
 
       - name: Send Email Notification
@@ -126,6 +126,6 @@ jobs:
           username: ${{ secrets.SMTP_USERNAME }}
           password: ${{ secrets.SMTP_PASSWORD }}
           subject: "Test Completed - UR Staging QA Report"
-          body: "Test completed. View the report here: https://qatest.wptests.net/urqatest/wp-content/plugins/user-registration/reports/report.html"
+          body: "Test completed. View the report here: https://qatest.wptests.net/urqatest/reports/report.html"
           to: ${{ secrets.NOTIFICATION_EMAIL }}
           from: "QA Automation <${{ secrets.SMTP_USERNAME }}>"
