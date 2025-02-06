@@ -140,4 +140,4 @@ jobs:
           subject: "Test Completed - UR Staging QA Report"
           body: "Test completed. View the report here: https://qatest.wptests.net/urqatest/reports/report.html"
           to_email: ${{ secrets.NOTIFICATION_EMAIL }}
-          from: "QA Automation <${{ secrets.SMTP_USERNAME }}>"
+          
