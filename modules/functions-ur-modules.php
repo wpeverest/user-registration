@@ -22,6 +22,7 @@ if ( ! function_exists( 'ur_check_module_activation' ) ) {
 	 */
 	function ur_check_module_activation( $module ) {
 		$enabled_features = get_option( 'user_registration_enabled_features', array() );
+
 		return in_array( 'user-registration-' . $module, $enabled_features, true ) ? true : false;
 	}
 }
@@ -331,10 +332,16 @@ if ( ! function_exists( 'ur_membership_install_required_pages' ) ) {
 	function ur_membership_install_required_pages() {
 		include_once untrailingslashit( plugin_dir_path( UR_PLUGIN_FILE ) ) . '/includes/admin/functions-ur-admin.php';
 
+		WPEverest\URMembership\Admin\Database\Database::create_tables();
+		update_option( 'ur_membership_default_membership_field_name', $membership_field_name );
+		$membership_id       = UR_Install::create_default_membership();
+//		$membership_group_id = UR_Install::create_default_membership_group( array( array( 'ID' => "$membership_id" ) ) );
+
 		$pages                = apply_filters( 'user_registration_create_pages', array() );
 		$default_form_page_id = 0;
 
-		$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]],[[{"field_key":"membership","general_setting":{"label":"Membership Field","description":"","field_name":"membership_field_' . ur_get_random_number() . '","placeholder":"","required":"false","hide_label":"false","membership_group":"0"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-membership-field"}]]]';
+		$membership_field_name = 'membership_field_' . ur_get_random_number();
+		$post_content          = '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]],[[{"field_key":"membership","general_setting":{"membership_group":"0","label":"Membership Field","description":"","field_name":"' . $membership_field_name . '","hide_label":"false","membership_listing_option":"all"},"advance_setting":{},"icon":"ur-icon ur-icon-membership-field"}]]]';
 
 		// Insert default form.
 		$default_form_page_id = wp_insert_post(
@@ -352,23 +359,33 @@ if ( ! function_exists( 'ur_membership_install_required_pages' ) ) {
 			'name'    => _x( 'membership-registration', 'Page slug', 'user-registration' ),
 			'title'   => _x( 'Membership Registration', 'Page title', 'user-registration' ),
 			'content' => '[' . apply_filters( 'user_registration_form_shortcode_tag', 'user_registration_form' ) . ' id="' . esc_attr( $default_form_page_id ) . '"]',
+			'option'  => 'user_registration_member_registration_page_id',
 		);
 
 		$pages['membership_pricing']  = array(
 			'name'    => _x( 'membership-pricing', 'Page slug', 'user-registration' ),
 			'title'   => _x( 'Membership Pricing', 'Page title', 'user-registration' ),
-			'content' => '[user_registration_membership_listing]',
+			'content' => '[user_registration_groups]',
+			'option'  => ''
 		);
 		$pages['membership_thankyou'] = array(
 			'name'    => _x( 'membership-thankyou', 'Page slug', 'user-registration' ),
-			'title'   => _x( 'Membership Thankyou', 'Page title', 'user-registration' ),
+			'title'   => _x( 'Membership ThankYou', 'Page title', 'user-registration' ),
 			'content' => '[user_registration_membership_thank_you]',
+			'option'  => 'user_registration_thank_you_page_id',
 		);
 
 		foreach ( $pages as $key => $page ) {
-			ur_create_page( esc_sql( $page['name'] ), 'user_registration_' . $key . '_page_id', wp_kses_post( ( $page['title'] ) ), wp_kses_post( $page['content'] ) );
+			$post_id = ur_create_page( esc_sql( $page['name'] ), 'user_registration_' . $key . '_page_id', wp_kses_post( ( $page['title'] ) ), wp_kses_post( $page['content'] ) );
+			if ( ! empty( $page['option'] ) ) {
+				update_option( $page['option'], $post_id );
+			}
 		}
-
+		$enabled_features = get_option( 'user_registration_enabled_features', array() );
+		array_push( $enabled_features, 'user-registration-membership' );
+		array_push( $enabled_features, 'user-registration-payment-history' );
+		array_push( $enabled_features, 'user-registration-content-restriction' );
+		update_option( 'user_registration_enabled_features', $enabled_features );
 		update_option( 'user_registration_membership_installed_flag', true );
 	}
 }
@@ -410,15 +427,12 @@ if ( ! function_exists( 'check_membership_field_in_form' ) ) {
 	 *
 	 * @return bool
 	 */
-	function check_membership_field_in_form() {
-		if ( ! isset( $_GET['edit-registration'] ) ) {
-			return false;
-		}
-		$form_id              = absint( $_GET['edit-registration'] );
+	function check_membership_field_in_form($form_id) {
+
 		$payment_fields       = ur_get_form_fields( $form_id );
 		$has_membership_field = false;
 		foreach ( $payment_fields as $k => $field ) {
-			if ( "membership" === $field->field_key ) {
+			if ( 'membership' === $field->field_key ) {
 				$has_membership_field = true;
 			}
 		}
@@ -426,3 +440,29 @@ if ( ! function_exists( 'check_membership_field_in_form' ) ) {
 		return $has_membership_field;
 	}
 }
+
+/**
+ * Deprecating function code start
+ *
+ * @deprecated
+ */
+$modules = array(
+	'coupons'             => 'ur_pro_is_coupons_addon_activated',
+	'payments'            => 'ur_pro_is_paypal_activated',
+	'sms-integration'     => 'ur_pro_is_sms_integration_activated',
+	'content-restriction' => 'ur_pro_is_content_restriction_activated',
+	'payment-history'     => 'ur_pro_is_payment_history_activated',
+);
+
+foreach ( $modules as $module_key => $function_name ) {
+	if ( ! function_exists( $function_name ) ) {
+		eval(
+		"
+		        function $function_name() {
+		            return ur_check_module_activation('$module_key');
+		        }
+        "
+		);
+	}
+}
+// deprecating function code ends

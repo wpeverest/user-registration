@@ -382,6 +382,24 @@ class UR_Admin_Assets {
 				'ur_form_non_deletable_fields'           => ur_non_deletable_fields(),
 				'ur_assets_url'             => UR()->plugin_url() . '/assets/',
 				'i18n_prompt_no_membership_group_selected' => __( 'Membership Field requires a membership group to be selected.', 'user-registration' ),
+				'i18n_default_redirection_notice_for_membership' => esc_html__( 'If the form includes a membership field, users will be redirected to the membership thank you page after submission.', 'user-registration' ),
+				'form_has_membership_field' => check_membership_field_in_form($form_id),
+				'paypal_settings'                                => array(
+					'global'                    => array(
+						'paypal_mode'   => get_option( 'user_registration_global_paypal_mode', 'test' ),
+						'paypal_email'  => get_option( 'user_registration_global_paypal_email_address', get_option( 'admin_email' ) ),
+						'cancel_url'    => get_option( 'user_registration_global_paypal_cancel_url', home_url() ),
+						'return_url'    => get_option( 'user_registration_global_paypal_return_url', wp_login_url() ),
+						'client_id'     => get_option( 'user_registration_global_paypal_client_id', '' ),
+						'client_secret' => get_option( 'user_registration_global_paypal_client_secret', '' ),
+					),
+					'form' => array(
+						'paypal_mode'  => ur_get_single_post_meta( $form_id, 'user_registration_paypal_mode', 'test' ),
+						'paypal_email' => ur_get_single_post_meta( $form_id, 'user_registration_paypal_email_address', get_option( 'admin_email' ) ),
+						'cancel_url'   => ur_get_single_post_meta( $form_id, 'user_registration_paypal_cancel_url', home_url() ),
+						'return_url'   => ur_get_single_post_meta( $form_id, 'user_registration_paypal_return_url', wp_login_url() ),
+					)
+				),
 			);
 
 			wp_localize_script(
@@ -404,7 +422,7 @@ class UR_Admin_Assets {
 					'no_file_selected'          => esc_html__( 'No file selected.', 'user-registration' ),
 					'export_error_message'      => esc_html__( 'Please choose at least one form to export.', 'user-registration' ),
 					'smart_tags_dropdown_title' => esc_html__( 'Smart Tags', 'user-registration' ),
-					'smart_tags_dropdown_search_placeholder' => esc_html__( 'Search Tags...', 'user-registration' ),
+					'smart_tags_dropdown_search_placeholder' => esc_html__( 'Search Tags...', 'user-registration' )
 				)
 			);
 			wp_localize_script( 'user-registration-form-builder', 'user_registration_form_builder_data', $params );
@@ -430,7 +448,7 @@ class UR_Admin_Assets {
 					/* translators: %field%: Field Label %plan%: License Plan. */
 					'unlock_message'                      => __( '%field% field is locked. Upgrade to <strong>%plan%</strong> to unlock this field.', 'user-registration' ),
 					'license_activation_required_title'   => __( 'License Activation Required', 'user-registration' ),
-					'license_activation_required_message' => __( 'Please activate your <strong>User Registration License</strong> to use this field', 'user-registration' ),
+					'license_activation_required_message' => __( 'Please activate your <strong>User Registration & Membership License</strong> to use this field', 'user-registration' ),
 					'activation_required_title'           => __( 'Addon Activation Required', 'user-registration' ),
 					'activation_required_message'         => __( 'Please activate <strong>%plugin%</strong> addon to use this field.', 'user-registration' ),
 					'installation_required_title'         => __( 'Addon Installation Required', 'user-registration' ),
@@ -630,12 +648,16 @@ class UR_Admin_Assets {
 			'upgrade_link'                                => esc_url( 'https://wpuserregistration.com/pricing/?utm_source=integration-settings&utm_medium=premium-addon-popup&utm_campaign=' . urlencode( UR()->utm_campaign ) ),
 			'user_registration_locked_form_fields_notice_nonce' => wp_create_nonce( 'locked_form_fields_notice_nonce' ),
 			'license_activation_required_title'           => __( 'License Activation Required', 'user-registration' ),
-			'license_activation_required_message'         => __( 'Please activate your <strong>User Registration License</strong> to use this integration', 'user-registration' ),
+			'license_activation_required_message'         => __( 'Please activate your <strong>User Registration & Membership License</strong> to use this integration', 'user-registration' ),
 			'activation_required_title'                   => __( 'Addon Activation Required', 'user-registration' ),
 			'activation_required_message'                 => __( 'Please activate <strong>%plugin%</strong> addon to use this integration.', 'user-registration' ),
 			'installation_required_title'                 => __( 'Addon Installation Required', 'user-registration' ),
 			'installation_required_message'               => __( 'Please install <strong>%plugin%</strong> addon to use this integration.', 'user-registration' ),
 			'i18n_prompt_no_membership_group_selected'    => __( 'Please select a membership group for the selected membership field.', 'user-registration' ),
+			'i18n_prompt_no_membership_available'         => __( 'Please create at least one active membership to use a membership field.', 'user-registration' ),
+			'i18n_empty_membership_text'                  => __( 'No active membership\'s available', 'user-registration' ),
+			'i18n_empty_membership_group_text'            => __( 'Please select a membership group.', 'user-registration' ),
+			'i18n_prompt_payment_field_present'           => __( 'Membership Field does not require any additional payment fields. Please remove any/all payment\'s field to continue.', 'user-registration' ),
 		);
 
 		return $i18n;

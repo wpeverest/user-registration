@@ -175,6 +175,19 @@ class MembershipGroupService {
 			if ( $group_content['status'] ) {
 				$updated_array[ $membership_group['ID'] ] = $membership_group['post_title'];
 			}
+			$memberships = json_decode( wp_unslash( $membership_group['meta_value'] ), true );
+
+			foreach ( $memberships as $k => $membership ) {
+				if ( ! post_exists( get_the_title( $membership ) ) ) {
+					unset( $memberships[ $k ] );
+				}
+			}
+
+			update_post_meta( $membership_group['ID'], 'urmg_memberships', wp_json_encode( array_values($memberships) ) );
+			if ( empty( $memberships ) ) {
+				unset( $updated_array[ $membership_group['ID'] ] );
+			}
+
 		}
 
 		return $updated_array;

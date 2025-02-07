@@ -54,8 +54,14 @@
 	}
 }
 
-.wp-core-ui select {
-	max-width: 100% !important;
+.wp-core-ui {
+	.ur-submit-button {
+		color: white;
+	}
+
+	select {
+		max-width: 100% !important;
+	}
 }
 /**
 * Utility classes
@@ -158,7 +164,7 @@
 	margin-top: 10px;
 }
 
-input.ur-input-border-green,
+input.ur-input-border-green:not([type="range"]),
 textarea.ur-input-border-green {
 	border-color: #1ea71b !important;
 }
@@ -178,7 +184,7 @@ textarea.ur-input-border-red {
 		padding: 60px;
 		border-radius:8px;
 		background: #fff;
-		box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+		// box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 
 		.ur-lost-password-content-container{
 			display: flex;
@@ -395,6 +401,10 @@ textarea.ur-input-border-red {
 				}
 			}
 
+			.ur-range-input  {
+				margin-bottom: 0px !important;
+			}
+
 			input[type="password"] {
 				display: inline;
 				margin-bottom: 0px;
@@ -405,6 +415,9 @@ textarea.ur-input-border-red {
 				padding: 4px 8px;
 				border: 1px solid $border_color;
 
+				&.StripeElement--invalid {
+					border: 1px solid #ff4f55;
+				}
 				.__PrivateStripeElement {
 					iframe {
 						// height: 20px !important;
@@ -448,7 +461,7 @@ textarea.ur-input-border-red {
 			select {
 				-webkit-appearance: none;
 				background: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E")
-					no-repeat right 5px top 55%;
+				no-repeat right 5px top 55%;
 			}
 
 			legend,
@@ -537,13 +550,14 @@ textarea.ur-input-border-red {
 	input[type="submit"],
 	button[type="submit"] {
 		padding: 10px 20px;
-		line-height: 1.5;
+		line-height: 24px;
 		text-align: center;
 		word-break: break-word;
 		white-space: normal;
 		border: none;
 		cursor: pointer;
 		transition: 0.35s all ease-out;
+		border-radius: 4px
 	}
 
 	input[type="submit"] {
@@ -932,6 +946,20 @@ textarea.ur-input-border-red {
 			}
 		}
 	}
+
+	&.user-registration-MyAccount {
+		&-content {
+			&__body {
+				.ur-form-grid {
+					.ur-privacy-button {
+						input[type="submit"] {
+							width: max-content;
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 /**
@@ -1248,10 +1276,6 @@ span.ur-shortcode-form-embed-dot {
 	}
 }
 
-#copy-shortcode{
-	cursor: pointer !important;
-}
-
 .wp-block-user-registration-content-restriction-enhanced {
 	.block-editor-inner-blocks {
 		margin-bottom: 25px;
@@ -1288,8 +1312,8 @@ span.ur-shortcode-form-embed-dot {
 //Revamp design for message and error
 .ur-message-container {
 	border-radius: 8px;
-    box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
-    padding: 60px;
+	box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+	padding: 60px;
 
 	.user-registration-message{
 		position : relative;
@@ -1302,7 +1326,7 @@ span.ur-shortcode-form-embed-dot {
 		background: #F7FDF8;
 		border-top : none;
 		margin : 20px 0px;
-		padding-left : 40px ;
+		padding-left : 40px;
 	}
 
 	svg{
@@ -1349,9 +1373,9 @@ span.ur-shortcode-form-embed-dot {
 .user-registration-Button,
 .ur-submit-button {
 	width : 100%;
-	background : #475BB2 !important;
-	border-radius: 4px !important;
-	border: 1px solid #475BB2 !important;
+	background : #475BB2;
+	border-radius: 4px;
+	border: 1px solid #475BB2;
 	color: #ffffff;
 
 	.ur-spinner{
@@ -1372,52 +1396,52 @@ span.ur-shortcode-form-embed-dot {
 	width: 100%;
 
 	ul {
-	  display: flex;
-	  list-style-type: none;
-	  margin: 0;
-	  padding: 0;
-	  width: 100%;
+		display: flex;
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+		width: 100%;
 
-	  li {
-		flex: 1;
-		text-align: center;
-		padding: 15px 0;
-		cursor: pointer;
-		transition: all 0.3s ease;
-		color: #C5C5C5;
-		font-weight: 500;
-		border-radius: 8px 0 0 0;
-		border-top: 1px solid #F1F1F1;
-		background: #F9F9F9;
-		box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
-		clip-path: inset(0px -1px -1px -1px);
-		&:first-child {
-		  border-radius: 8px 0px 0 0;
-		  border-top: 1px solid #F1F1F1;
-		 margin-left : 10px
+		li {
+			flex: 1;
+			text-align: center;
+			padding: 15px 0;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			color: #C5C5C5;
+			font-weight: 500;
+			border-radius: 8px 0 0 0;
+			border-top: 1px solid #F1F1F1;
+			background: #F9F9F9;
+			box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+			clip-path: inset(0px -1px -1px -1px);
+			&:first-child {
+				border-radius: 8px 0px 0 0;
+				border-top: 1px solid #F1F1F1;
+				margin-left : 10px
+			}
+
+			&:last-child {
+				border-radius: 0 8px 0px 0;
+				margin-right: 10px;
+			}
+
+			&.active {
+				background: #fff;
+				color : #1F1F1F;
+				border-top: 1px solid #F1F1F1;
+
+			}
+
 		}
-
-		&:last-child {
-		  border-radius: 0 8px 0px 0;
-		  margin-right: 10px;
-		}
-
-		&.active {
-		   background: #fff;
-		  color : #1F1F1F;
-		  border-top: 1px solid #F1F1F1;
-
-		}
-
-	  }
 	}
-  }
+}
 
 .login-registration{
 	.hidden {
 		display : none;
 	}
-  }
+}
 // Revamp error design for registration and login form
 .ur-field-item{
 
@@ -1457,12 +1481,12 @@ span.ur-shortcode-form-embed-dot {
 	}
 	#user_email {
 		&::before {
-		  content: "\f348";
-		 display: inline-block;
-		 vertical-align: middle;
-		 font-family: "Dashicon	s";
-		 font-size: calc(100% + 10px);
-		 margin-right: 0.875rem;
+			content: "\f348";
+			display: inline-block;
+			vertical-align: middle;
+			font-family: "Dashicon	s";
+			font-size: calc(100% + 10px);
+			margin-right: 0.875rem;
 		}
 	}
 }
@@ -1556,26 +1580,6 @@ span.ur-shortcode-form-embed-dot {
 									font-size: 16px;
 									margin: 20px auto;
 								}
-								.login-forms-shortcode-action {
-									display: flex;
-									padding: 6px 6px 6px 12px;
-									gap: 8px;
-									justify-content: space-between;
-									width: 100%;
-									background: #fff;
-									border: 1px solid #edeff7;
-									border-radius: 4px;
-									input {
-										background: transparent;
-										border: none;
-									}
-									.ur-copy-shortcode {
-										line-height: unset;
-										padding: 6px;
-										background: #edeff7;
-										border: none;
-									}
-								}
 							}
 						}
 
@@ -1645,7 +1649,40 @@ span.ur-shortcode-form-embed-dot {
 
 // Login Form Design ReVamped CSS
 body {
-    &.user-registration-page,
+	&.user-registration-page {
+		.ur-frontend-form {
+			.ur-form-row {
+				.ur-form-grid {
+					.field-membership {
+						#ur-membership-registration {
+							max-width: 100%;
+						}
+					}
+				}
+			}
+		}
+
+		.user-registration-MyAccount {
+			&-content {
+				&__body {
+					.ur-frontend-form {
+						margin-bottom: 0;
+
+						.ur-form-row {
+							.ur-form-grid {
+								input[type="submit"] {
+									width: max-content;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	&.user-registration-page,
+	&.ur-multi-device-form-preview,
 	&.user-registration-membership_page_user-registration-login-forms {
 		.user-registration-error {
 			position: unset;
@@ -1725,10 +1762,35 @@ body {
 				height: 24px;
 				display: block;
 			}
+
+			> ul {
+				padding-left: 0;
+				margin: 0;
+				list-style: none;
+			}
+		}
+	}
+
+	&.user-registration-page,
+	&.user-registration-membership_page_user-registration-login-forms {
+		.user-registration {
+			&.ur-frontend-form {
+				max-width: 100% !important;
+
+				form {
+					.ur-button-container  {
+						width: max-content;
+					}
+				}
+			}
 		}
 
 		#user-registration,
-        .user-registration {
+		.user-registration {
+			&.user-registration-MyAccount {
+				max-width: 1280px;
+			}
+
 			&:not(.user-registration-MyAccount) {
 				max-width: 520px;
 				margin: 24px auto;
@@ -1736,6 +1798,108 @@ body {
 				background: #FFF;
 				box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 				border: 0;
+
+				&:has(.ur-frontend-form--bordered) {
+					box-shadow: none;
+					border: 1px solid #e9e9e9;
+				}
+
+				&:has(.ur-frontend-form--flat) {
+					box-shadow: none;
+					background: #F7F7F7;
+				}
+
+				&:has(.ur-frontend-form--rounded-edge) {
+					border-radius: 30px;
+				}
+
+				.ur-frontend-form {
+					&.login {
+						.user-registration-error {
+							display: block;
+							color: #222222 !important;
+							font-size: 14px;
+							font-weight: 400;
+							line-height: 21px;
+							letter-spacing: .15px;
+							padding-left: 20px !important;
+							padding-right: 20px !important;
+
+							&::before {
+								content: none;
+							}
+						}
+					}
+
+					&--bordered {
+						.user-registration-form-login {
+							.ur-form-row {
+								.ur-form-grid {
+									label {
+										margin-left: 0;
+									}
+
+									.input-text {
+										background: transparent;
+										height: auto;
+									}
+
+									.ur-submit-button {
+										background: $primary_color;
+										border-radius: 4px;
+									}
+								}
+							}
+						}
+					}
+
+					&--flat {
+						background: transparent;
+
+						.user-registration-form-login {
+							.ur-form-row {
+								.ur-form-grid {
+									.input-text {
+										height: auto;
+									}
+
+									.ur-submit-button {
+										&:disabled {
+											background: #eaeaea !important;
+										}
+									}
+								}
+							}
+						}
+					}
+
+					&--rounded {
+						.user-registration-form-login {
+							.ur-form-row {
+								.ur-form-grid {
+									label {
+										margin-left: 0;
+									}
+
+									.input-text {
+										height: auto;
+									}
+								}
+							}
+						}
+					}
+
+					.user-registration-form-login {
+						.ur-form-row {
+							.ur-form-grid {
+								.ur-submit-button {
+									margin-right: 0;
+								}
+							}
+						}
+					}
+				}
+
 
 				.user-registration-login,
 				.user-registration-registration {
@@ -1777,10 +1941,10 @@ body {
 							align-items: center;
 							margin: 0 !important;
 							margin-bottom: 24px !important;
-							color: #F25656 !important;
-							font-size: 14px !important;
-							font-weight: 400 !important;
-							line-height: 24px !important;
+							// color: #F25656 !important;
+							// font-size: 14px !important;
+							// font-weight: 400 !important;
+							// line-height: 24px !important;
 							letter-spacing: 0.18px;
 
 							&::before {
@@ -1898,7 +2062,6 @@ body {
 					padding: 0 10px;
 
 					.ur-submit-button {
-						width: 100%;
 						border: 0;
 						padding: 10px 24px;
 						color: #ffffff;
@@ -1976,7 +2139,6 @@ body {
 									flex-direction: row-reverse;
 
 									input[type="submit"] {
-										width: 100%;
 										border: 0;
 										padding: 10px 24px;
 										color: #ffffff;
@@ -1997,10 +2159,11 @@ body {
 										padding: 10px 24px;
 										font-size: 15px;
 										line-height: 25px;
+										color: $white;
 
 										&:disabled {
 											pointer-events: none;
-											border-color: #F6F7F7;
+											border-color: #F6F7F7 !important;
 										}
 
 										&:hover {
@@ -2199,8 +2362,8 @@ body {
 					}
 				}
 			}
-        }
-    }
+		}
+	}
 }
 
 .user-registration-login-form-container {

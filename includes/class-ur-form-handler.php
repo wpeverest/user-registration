@@ -484,21 +484,21 @@ class UR_Form_Handler {
 		if ( ur_notice_count( 'error' ) === 0 ) {
 
 			wp_update_user( $user );
+			$force_logout = apply_filters( 'user_registration_force_logout_after_password_change', true );
 
-			ur_add_notice( __( 'Password changed successfully.', 'user-registration' ) );
 			/**
 			 * Fires an action hook after successfully saving user registration account details.
 			 *
 			 * @param string $hook_name The name of the action hook, 'user_registration_save_account_details'.
 			 * @param int    $user_id   The ID of the user whose account details have been successfully saved.
 			 */
-			$force_logout = apply_filters( 'user_registration_force_logout_after_password_change', true );
 			if ( $force_logout ) {
 				do_action( 'user_registration_force_logout_all_devices', $user->ID );
+			}else{
+				ur_add_notice( __( 'Password changed successfully.', 'user-registration' ) );
+				do_action( 'user_registration_save_account_details', $user->ID );
+				wp_safe_redirect( ur_get_page_permalink( 'myaccount' ) );
 			}
-			do_action( 'user_registration_save_account_details', $user->ID );
-
-			wp_safe_redirect( ur_get_page_permalink( 'myaccount' ) );
 			exit;
 		}
 	}
@@ -997,10 +997,17 @@ class UR_Form_Handler {
 	 * @param int $user_id The ID of the user.
 	 */
 	public static function ur_force_logout_all_devices( $user_id ) {
+
 		if ( class_exists( 'WP_Session_Tokens' ) ) {
 			$session_tokens = WP_Session_Tokens::get_instance( $user_id );
 			$session_tokens->destroy_all();
-			wp_safe_redirect( ur_get_page_permalink( 'myaccount' ) );
+			$url = ur_get_page_permalink( 'myaccount' );
+			$url = add_query_arg( array(
+				'force-logout' => 'true',
+
+			), $url );
+			wp_safe_redirect( esc_url( $url ) );
+
 		}
 	}
 }

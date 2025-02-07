@@ -270,8 +270,43 @@
 
 		if (value) {
 			form.find(".user-registration-passwordless-login").show();
+			$("#user_registration_pro_passwordless_login_default_login_area")
+				.closest(".user-registration-login-form-global-settings")
+				.show();
 		} else {
 			form.find(".user-registration-passwordless-login").hide();
+			$("#user_registration_pro_passwordless_login_default_login_area")
+				.closest(".user-registration-login-form-global-settings")
+				.hide();
+		}
+
+		handlePasswordlessLoginArea(
+			$("#user_registration_pro_passwordless_login_default_login_area")
+		);
+	}
+
+	function handlePasswordlessLoginArea($node) {
+		var value = $node.is(":checked"),
+			form = $(".ur-login-form-wrapper").find(".ur-frontend-form.login");
+
+		if (
+			$("#user_registration_pro_passwordless_login").is(":checked") &&
+			value
+		) {
+			form.find(".user-registration-passwordless-login").hide();
+			form.find(".password-input-group").closest(".form-row").hide();
+			form.find(".user-registration-before-login-btn").hide();
+		} else if (
+			$("#user_registration_pro_passwordless_login").is(":checked") &&
+			!value
+		) {
+			form.find(".user-registration-passwordless-login").show();
+			form.find(".password-input-group").closest(".form-row").show();
+			form.find(".user-registration-before-login-btn").show();
+		} else {
+			form.find(".user-registration-passwordless-login").hide();
+			form.find(".password-input-group").closest(".form-row").show();
+			form.find(".user-registration-before-login-btn").show();
 		}
 	}
 
@@ -322,6 +357,13 @@
 			"#user_registration_pro_passwordless_login",
 			function () {
 				handlePasswordlessLogin();
+			}
+		);
+		$(document).on(
+			"change",
+			"#user_registration_pro_passwordless_login_default_login_area",
+			function () {
+				handlePasswordlessLoginArea($(this));
 			}
 		);
 

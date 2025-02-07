@@ -700,14 +700,6 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					),
 					home_url()
 				);
-				$new_preview  = add_query_arg(
-					array(
-						'page' => 'ur_form_preview',
-						'form_id'    => $form_id,
-
-					),
-					admin_url('admin.php')
-				);
 			}
 
 			if ( isset( $_GET['onboarding-skipped'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended

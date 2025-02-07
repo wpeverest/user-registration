@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) || exit;
 	<div class="user-registration-welcome-container">
 		<div class="user-registration-welcome-container__header">
 			<h2><?php esc_html_e( 'Welcome to Everest Forms', 'user-registration' ); ?></h2>
-			<p><?php esc_html_e( 'Thank you for choosing Everest Forms, the most powerful and easy drag & drop WordPress form builder in the market.', 'user-registration' ); ?></p>
+			<p><?php esc_html_e( 'Thank you for choosing Everest Forms, the most flexible registration form builder and membership plugin for WordPress.', 'user-registration' ); ?></p>
 		</div>
 		<a class="user-registration-welcome-video welcome-video-play">
 			<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/welcome-video-thumb.png' ); ?>" alt="<?php esc_attr_e( 'Watch how to create your first form with Everest Forms', 'user-registration' ); ?>" class="everest-froms-welcome-thumb">

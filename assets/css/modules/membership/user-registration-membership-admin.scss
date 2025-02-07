@@ -224,6 +224,7 @@
 
 			.ur-button-primary {
 				border-radius: 3px;
+				border-color: #475BB2;
 				background: #475BB2;
 				color: #ffffff;
 				padding: 8px 20px 8px 16px;
@@ -882,7 +883,6 @@
 									}
 
 									.payment-option-body {
-										padding-top: 28px;
 										border-top: 1px solid #E1E1E1;
 										margin-top: 14px;
 										display: flex;
@@ -1077,10 +1077,12 @@
 
 .user-registration-switch {
 	gap: 10px;
+
 	.ur-pg-arrow {
 		width: 20px;
 		transform: rotate(90deg);
 		transition: transform 250ms ease-in-out 25ms;
+
 		&.expand {
 			transform: rotate(-90deg);
 		}
@@ -1090,10 +1092,12 @@
 #ur-membership-plan-and-price-section .upgradable-type {
 	position: relative;
 	color: #bababa;
+
 	.ur-membership-type-title,
 	.ur-membership-type-description {
 		opacity: 0.5;
 	}
+
 	&::before {
 		opacity: 1;
 		content: "";
@@ -1109,3 +1113,52 @@
 		right: 8px;
 	}
 }
+
+.urmg-loader {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+}
+
+.urmg-shortcode {
+	display: flex;
+	line-height: 1;
+}
+
+.user-registration-membership_page_user-registration-membership {
+	table {
+		&.membership_groups {
+			th {
+				&#title {
+					width: 200px;
+				}
+
+				&#shortcode {
+					width: 220px;
+				}
+
+				&#status {
+					width: 100px;
+				}
+
+				&#action {
+					width: 200px;
+				}
+			}
+		}
+	}
+
+	.user-registration-help-tip {
+		&::after {
+			width: 8px;
+			height: 15px;
+		}
+	}
+}
+.tooltipster-base.tooltipster-bottom {
+	margin-top: -30px /* Adjust gap for bottom-positioned tooltips */
+}
+
+
+
+

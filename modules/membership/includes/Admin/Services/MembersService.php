@@ -138,6 +138,7 @@ class MembersService {
 			'role'            => sanitize_text_field( $role ),
 			'membership_data' => $membership_data,
 			'coupon_data'     => $coupon_details,
+			'user_data'       => $user_data
 		);
 	}
 

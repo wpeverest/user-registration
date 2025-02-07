@@ -133,8 +133,8 @@ if ( ! class_exists( 'Admin' ) ) :
 				'update_success_params_for_membership'
 			), 10, 4 );
 
-			register_deactivation_hook( UR_PLUGIN_FILE, array( $this, 'on_deactivation' ) );
-			register_activation_hook( UR_PLUGIN_FILE, array( $this, 'on_activation' ) );
+			register_deactivation_hook( UR_MEMBERSHIP_PLUGIN_FILE, array( $this, 'on_deactivation' ) );
+			register_activation_hook( UR_MEMBERSHIP_PLUGIN_FILE, array( $this, 'on_activation' ) );
 			add_filter( 'user_registration_content_restriction_settings', array(
 				$this,
 				'add_memberships_in_urcr_settings'
@@ -142,7 +142,7 @@ if ( ! class_exists( 'Admin' ) ) :
 		}
 
 		public function add_memberships_in_urcr_settings( $settings ) {
-			$options = get_active_membership_id_name();
+			$options             = get_active_membership_id_name();
 			$additional_settings = array(
 				array(
 					'row_class' => 'urcr_content_restriction_allow_access_to_memberships',
@@ -157,7 +157,9 @@ if ( ! class_exists( 'Admin' ) ) :
 				)
 			);
 			$just_settings       = $settings['sections']['user_registration_content_restriction_settings']['settings'];
-			array_splice( $just_settings, 3, 0, $additional_settings );
+
+			array_splice( $just_settings, 2, 0, $additional_settings );
+
 			$settings['sections']['user_registration_content_restriction_settings']['settings'] = $just_settings;
 
 			return $settings;
@@ -165,8 +167,9 @@ if ( ! class_exists( 'Admin' ) ) :
 
 		public function update_success_params_for_membership( $success_params, $valid_form_data, $form_id, $user_id ) {
 			$keyFound = false;
+
 			foreach ( $valid_form_data as $key => $value ) {
-				if ( preg_match( '/^membership_field_.*/', $key ) ) {
+				if ( 'membership' === $value->extra_params['field_key'] ) {
 					$keyFound = true;
 					break;
 				}
@@ -186,7 +189,8 @@ if ( ! class_exists( 'Admin' ) ) :
 			$redirect_after_registration = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_redirect_after_registration' );
 
 			$form_data = ur_get_form_field_keys( $form_id );
-			$keyFound  = false;
+
+			$keyFound = false;
 			foreach ( $form_data as $value ) {
 				if ( preg_match( '/^membership_field_.*/', $value ) ) {
 					$keyFound = true;
@@ -197,10 +201,8 @@ if ( ! class_exists( 'Admin' ) ) :
 				return $redirect_url;
 			}
 
-			if ( "auto_login" === $login_option && "external-url" == $redirect_after_registration ) {
+			if ( in_array( $redirect_after_registration, array( 'external-url', 'internal-page', 'previous-page' ) ) ) {
 				return $redirect_url;
-			} else if ( "auto_login" === $login_option ) {
-				return get_permalink( $thank_you_page_id );
 			}
 		}
 
@@ -242,7 +244,7 @@ if ( ! class_exists( 'Admin' ) ) :
 		 */
 		public function plugin_action_links( $actions ) {
 			$new_actions = array(
-				'settings' => '<a href="' . admin_url( 'admin.php?page=user-registration-membership' ) . '" title="' . esc_attr( __( 'View User Registration Membership Settings', 'user-registration' ) ) . '">' . __( 'Settings', 'user-registration' ) . '</a>',
+				'settings' => '<a href="' . admin_url( 'admin.php?page=user-registration-membership' ) . '" title="' . esc_attr( __( 'View User Registration & Membership Settings', 'user-registration' ) ) . '">' . __( 'Settings', 'user-registration' ) . '</a>',
 			);
 
 			return array_merge( $new_actions, $actions );

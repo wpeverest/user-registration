@@ -41,11 +41,15 @@ class PaypalService {
 	 * @return array|string|string[]
 	 */
 	public function build_url( $data, $membership, $member_email, $subscription_id, $member_id ) {
-		$paypal_options    = $data['payment_gateways']['paypal'];
-		$redirect          = ( 'production' === $paypal_options['mode'] ) ? 'https://www.paypal.com/cgi-bin/webscr/?' : 'https://www.sandbox.paypal.com/cgi-bin/webscr/?';
-		$post              = get_post( $membership );
-		$membership_amount = number_format( $data['amount'] );
-		$discount_amount   = 0;
+		$paypal_options               = $data['payment_gateways']['paypal'];
+		$paypal_options['mode']       = get_option( 'user_registration_global_paypal_mode', $paypal_options['mode'] );
+		$paypal_options['email']      = get_option( 'user_registration_global_paypal_email_address', $paypal_options['email'] );
+		$paypal_options['cancel_url'] = get_option( 'user_registration_global_paypal_cancel_url', home_url() );
+		$paypal_options['return_url'] = get_option( 'user_registration_global_paypal_return_url', wp_login_url() );
+		$redirect                     = ( 'production' === $paypal_options['mode'] ) ? 'https://www.paypal.com/cgi-bin/webscr/?' : 'https://www.sandbox.paypal.com/cgi-bin/webscr/?';
+		$post                         = get_post( $membership );
+		$membership_amount            = number_format( $data['amount'] );
+		$discount_amount              = 0;
 		if ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
 			$coupon_details  = ur_get_coupon_details( $data['coupon'] );
 			$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $membership_amount * $coupon_details['coupon_discount'] / 100;
@@ -189,13 +193,6 @@ class PaypalService {
 		}
 		$logger = ur_get_logger();
 		$logger->notice( 'Paypal IPN Payload: ' . wp_json_encode( $data ), array( 'source' => 'ur-membership-paypal' ) );
-		$paypal_standard_class = new \User_Registration_Pro_PayPal_Standard();
-
-		if ( ! class_exists( 'User_Registration_Pro_PayPal_Standard' ) ) {
-			$logger->notice( esc_html__( 'Class User_Registration_Pro_PayPal_Standard does not exist.', 'user-registration' ), array( 'source' => 'ur-membership-paypal' ) );
-
-			return;
-		}
 
 		$txn_type = $data['txn_type'];
 		if ( ! isset( $data['custom'] ) ) {
@@ -204,14 +201,20 @@ class PaypalService {
 			return;
 		}
 
-		$custom                         = explode( '-', $data['custom'] );
-		$membership_id                  = $custom[0];
-		$member_id                      = $custom[1];
-		$subscription_id                = $custom[2];
-		$latest_order                   = $this->members_orders_repository->get_member_orders( $member_id );
-		$membership                     = $this->membership_repository->get_single_membership_by_ID( $membership_id );
-		$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
-		$paypal_options                 = $membership_metas['payment_gateways']['paypal'];
+		$custom           = explode( '-', $data['custom'] );
+		$membership_id    = $custom[0];
+		$member_id        = $custom[1];
+		$subscription_id  = $custom[2];
+		$latest_order     = $this->members_orders_repository->get_member_orders( $member_id );
+		$membership       = $this->membership_repository->get_single_membership_by_ID( $membership_id );
+		$membership_metas = wp_unslash( json_decode( $membership['meta_value'], true ) );
+		$paypal_options   = $membership_metas['payment_gateways']['paypal'];
+
+		$paypal_options['mode']       = get_option( 'user_registration_global_paypal_mode', $paypal_options['mode'] );
+		$paypal_options['email']      = get_option( 'user_registration_global_paypal_email_address', $paypal_options['email'] );
+		$paypal_options['cancel_url'] = get_option( 'user_registration_global_paypal_cancel_url', home_url() );
+		$paypal_options['return_url'] = get_option( 'user_registration_global_paypal_return_url', wp_login_url() );
+
 		$membership_metas['post_title'] = $membership['post_title'];
 		$receiver_email                 = $paypal_options['email'];
 		$amount                         = $membership_metas['amount'];
@@ -227,7 +230,7 @@ class PaypalService {
 			'member_id'        => $member_id,
 		);
 
-		if ( ! $paypal_standard_class->validate_ipn( $payment_mode ) ) {
+		if ( ! $this->validate_ipn( $payment_mode ) ) {
 			$logger->notice( esc_html__( 'Invalid response from paypal IPN for txn: ', 'user-registration' ) . $data['txn_id'], array( 'source' => 'ur-membership-paypal' ) );
 
 			return;
@@ -404,10 +407,18 @@ class PaypalService {
 		$membership      = $this->membership_repository->get_single_membership_by_ID( $order['item_id'] );
 		$membership_meta = json_decode( $membership['meta_value'], true );
 		$paypal_options  = $membership_meta['payment_gateways']['paypal'];
-		$client_id       = $paypal_options['client_id'];
-		$client_secret   = $paypal_options['client_secret'];
-		$url             = ( 'production' === $paypal_options['mode'] ) ? 'https://api-m.paypal.com/' : 'https://api-m.sandbox.paypal.com/';
-		$login_request   = self::login_paypal( $url, $client_id, $client_secret );
+
+		$paypal_options['mode']          = get_option( 'user_registration_global_paypal_mode', $paypal_options['mode'] );
+		$paypal_options['email']         = get_option( 'user_registration_global_paypal_email_address', $paypal_options['email'] );
+		$paypal_options['cancel_url']    = get_option( 'user_registration_global_paypal_cancel_url', home_url() );
+		$paypal_options['return_url']    = get_option( 'user_registration_global_paypal_return_url', wp_login_url() );
+		$paypal_options['client_id']     = get_option( 'user_registration_global_paypal_client_id', $paypal_options['client_id'] );
+		$paypal_options['client_secret'] = get_option( 'user_registration_global_paypal_client_secret', $paypal_options['client_secret'] );
+
+		$client_id     = $paypal_options['client_id'];
+		$client_secret = $paypal_options['client_secret'];
+		$url           = ( 'production' === $paypal_options['mode'] ) ? 'https://api-m.paypal.com/' : 'https://api-m.sandbox.paypal.com/';
+		$login_request = self::login_paypal( $url, $client_id, $client_secret );
 		if ( 200 !== $login_request['status_code'] ) {
 			$message = esc_html__( 'Invalid response from paypal, check Client ID or Secret.', 'user-registration' );
 			ur_get_logger()->notice( $message, array( 'source' => 'ur-membership-paypal' ) );
@@ -467,5 +478,66 @@ class PaypalService {
 			'status'  => false,
 			'message' => $message,
 		);
+	}
+
+	/**
+	 * validate_ipn
+	 *
+	 * @param $payment_mode
+	 *
+	 * @return bool
+	 */
+	public function validate_ipn( $payment_mode ) {
+		$logger = ur_get_logger();
+		$logger->notice( 'Checking IPN response is valid' );
+		// Get received values from post data.
+		$validate_ipn        = wp_unslash( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$validate_ipn['cmd'] = '_notify-validate';
+		// Send back post vars to paypal.
+		$params = array(
+			'body'        => $validate_ipn,
+			'timeout'     => 60,
+			'httpversion' => '1.1',
+			'compress'    => false,
+			'decompress'  => false,
+			'user-agent'  => 'User Registration IPN Verification',
+		);
+
+		$remote_post_url = ( ! empty( $payment_mode ) && 'production' === $payment_mode ) ? 'https://ipnpb.paypal.com/cgi-bin/webscr' : 'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr';
+		// Post back to get a response.
+		$response = wp_safe_remote_post( $remote_post_url, $params );
+		$logger   = ur_get_logger();
+		$logger->notice( 'IPN Response: ' . print_r( $response, true ) );
+		// Check to see if the request was valid.
+		if ( ! is_wp_error( $response ) && $response['response']['code'] >= 200 && $response['response']['code'] < 300 && strstr( $response['body'], 'VERIFIED' ) ) {
+			$logger = ur_get_logger();
+			$logger->notice( 'Received valid response from PayPal IPN' );
+
+			return true;
+		}
+		$logger = ur_get_logger();
+		$logger->notice( 'Received invalid response from PayPal IPN' );
+		if ( is_wp_error( $response ) ) {
+			$logger = ur_get_logger();
+			$logger->notice( 'Error response: ' . $response->get_error_message() );
+		}
+
+		return false;
+	}
+
+	public function validate_setup( $membership_type ) {
+		$paypal_options['email'] = get_option( 'user_registration_global_paypal_email_address' );
+		if ( "subscription" === $membership_type ) {
+			$paypal_options['client_id']     = get_option( 'user_registration_global_paypal_client_id' );
+			$paypal_options['client_secret'] = get_option( 'user_registration_global_paypal_client_secret' );
+		}
+
+		$is_incomplete = false;
+		foreach ( $paypal_options as $k => $option ) {
+			if ( empty( $option ) ) {
+				$is_incomplete = true;
+			}
+		}
+		return $is_incomplete;
 	}
 }

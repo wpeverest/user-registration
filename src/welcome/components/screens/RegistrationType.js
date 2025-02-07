@@ -35,7 +35,7 @@ const RegistrationType = () => {
 			user_registration_normal_registration: {
 				label: __("Normal registration", "user-registration"),
 				desc: __(
-					"Create normal registration system without membership.",
+					"Set up a standard registration form for general user sign-ups.",
 					"user-registration"
 				),
 				image: `${onBoardIconsURL}/without-membership.png`
@@ -43,7 +43,7 @@ const RegistrationType = () => {
 			user_registration_membership_registration: {
 				label: __("Membership registration", "user-registration"),
 				desc: __(
-					"Create normal registration system with membership.",
+					"Create a membership system with user sign-ups and exclusive access.",
 					"user-registration"
 				),
 				image: `${onBoardIconsURL}/with-membership.png`

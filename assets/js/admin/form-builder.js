@@ -661,7 +661,7 @@
 								'<div class="ur-embed-select-existing-page-container"><p>' +
 								user_registration_form_builder_data.i18n_admin
 									.i18n_embed_existing_page_description +
-								'</p><select name="ur-embed-select-existing-page-name" id="ur-embed-select-existing-page-name">';
+								'</p><select style="width:100%; line-height:30px;" name="ur-embed-select-existing-page-name" id="ur-embed-select-existing-page-name">';
 							var option =
 								"<option disabled selected>Select Page</option>";
 							response.data.forEach(function (page) {
@@ -730,7 +730,7 @@
 									.i18n_embed_new_page_description +
 								"</p>";
 							var page_name =
-								'<div style="min-width:400px; width:100%;"><input type="text" name="page_title" /></div>';
+								'<div style="width: 100%"><input style="width:100%" type="text" name="page_title" /></div>';
 
 							modelContent = description + page_name;
 							Swal.fire({
@@ -6651,7 +6651,7 @@
 					);
 			},
 			check_membership_validation: function (data) {
-				var validations = ['empty_membership_group_status', 'payment_field_present_status'],
+				var validations = ['empty_membership_group_status', 'payment_field_present_status', 'empty_membership_status'],
 					is_valid = true;
 
 				for (var i = 0; i < validations.length; i++) {

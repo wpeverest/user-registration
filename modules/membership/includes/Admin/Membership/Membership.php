@@ -82,9 +82,8 @@ class Membership {
 		}
 		if ( ! wp_style_is( 'ur-snackbar', 'registered' ) ) {
 			wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), '1.0.0' );
-			wp_enqueue_style( 'ur-snackbar' );
 		}
-
+		wp_enqueue_style( 'ur-snackbar' );
 		wp_enqueue_style( 'sweetalert2' );
 		wp_register_style( 'ur-membership-admin-style', UR_MEMBERSHIP_CSS_ASSETS_URL . '/user-registration-membership-admin.css', array(), UR_MEMBERSHIP_VERSION );
 		wp_register_style( 'ur-core-builder-style', UR()->plugin_url() . '/assets/css/admin.css', array(), UR_MEMBERSHIP_VERSION );
@@ -409,7 +408,7 @@ class Membership {
 				'wp_roles'            => ur_membership_get_all_roles(),
 				'posts'               => $posts,
 				'labels'              => $this->get_i18_labels(),
-				'membership_page_url' => admin_url( 'admin.php?page=user-registration-membership&action=add_new_membership' ),
+				'membership_page_url' => admin_url( 'admin.php?page=user-registration-membership' ),
 				'delete_icon'         => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE )
 			)
 		);
@@ -425,7 +424,7 @@ class Membership {
 		add_filter( 'wp_default_editor', function () {
 			return 'tinymce';
 		} );
-		if ( isset( $_GET['page'] ) && 'user-registration-membership' === $_GET['page'] ) {
+		if ( ( isset( $_GET['page'] ) && 'user-registration-settings' === $_GET['page'] ) && ( isset( $_GET["tab"] ) && "payment" === $_GET["tab"] ) ) {
 			$settings['media_buttons'] = false;
 		}
 
@@ -455,8 +454,13 @@ class Membership {
 			'i18n_pg_validation_error'                     => __( 'Please select at least one payment gateway.', 'user-registration' ),
 			'i18n_valid_min_trial_period_field_validation' => _x( 'Trial period must atleast be of 1 day.', 'user registration membership', 'user-registration' ),
 			'i18n_valid_min_subs_period_field_validation'  => _x( 'Subscription period must atleast be of 1 day.', 'user registration membership', 'user-registration' ),
-			'i18n_stripe_setup_error'                      => __( 'Incomplete Stripe Gateway setup.', 'user-registration' ),
-			'i18n_previous_save_action_ongoing'           => _x( 'Previous save action on going.', 'user registration admin', 'user-registration' ),
+			'i18n_paypal'                                  => __( 'Paypal ', 'user-registration' ),
+			'i18n_stripe'                                  => __( 'Stripe ', 'user-registration' ),
+			'i18n_stripe_setup_error'                      => __( 'Incomplete Stripe Gateway setup please update stripe payment settings before continuing.', 'user-registration' ),
+			'i18n_paypal_setup_error'                      => __( 'Incomplete Paypal Gateway setup please update paypal payment settings before continuing.', 'user-registration' ),
+			'i18n_bank_setup_error'                        => __( 'Incomplete Bank Transfer setup please update bank transfer payment settings before continuing.', 'user-registration' ),
+			'i18n_paypal_client_secret_id_error'           => __( 'Settings for client_id and client_secret is incomplete.', 'user-registration' ),
+			'i18n_previous_save_action_ongoing'            => _x( 'Previous save action on going.', 'user registration admin', 'user-registration' ),
 		);
 	}
 }

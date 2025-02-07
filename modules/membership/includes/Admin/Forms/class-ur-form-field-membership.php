@@ -5,7 +5,10 @@
  * @package  URMembership
  */
 
-use WPEverest\URMembership\Admin\Services\MembershipGroupService;
+use WPEverest\URMembership\Admin\Services\ {
+	MembershipGroupService,
+	MembershipService
+};
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -43,14 +46,18 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 		$this->id                       = 'user_registration_membership';
 		$this->form_id                  = 1;
 		$this->registered_fields_config = array(
-			'label' => __( 'Membership Field', 'user-registration' ),
+			'label' => __( 'Membership', 'user-registration' ),
 			'icon'  => 'ur-icon ur-icon-membership-field',
 		);
+		$membership_group_service       = new MembershipGroupService();
+		$default_group_id               = $membership_group_service->get_default_group_id();
+		$default_membership_field_name  = get_option( 'ur_membership_default_membership_field_name', true );
 
 		$this->field_defaults = array(
 			'default_label'      => __( 'Membership Field', 'user-registration' ),
-			'default_field_name' => 'membership_field_' . ur_get_random_number(),
-			'default_group'      => 0,
+			'default_field_name' => !empty($default_membership_field_name) && str_contains($default_membership_field_name, 'membership_field_' ) ? $default_membership_field_name : 'membership_field_'.ur_get_random_number() ,
+			'default_group'      => !empty($default_group_id) ? $default_group_id : 0 ,
+			'default_membership_listing_option'      => 'all' ,
 		);
 		//override the general settings to add membership group setting.
 		add_filter( "user_registration_field_options_general_settings", array( $this, 'settings_override' ), 10, 2 );
@@ -62,11 +69,24 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 		if ( "user_registration_membership" !== $id ) {
 			return $settings;
 		}
-
 		$membership_group_service = new MembershipGroupService();
 
-		$membership_settings      = array(
-			'membership_group' => array(
+		$membership_settings = array(
+			'membership_listing_option' => array(
+				'setting_id'  => 'membership_listing_option',
+				'name'        => 'membership_listing_option',
+				'type'        => 'select',
+				'label'       => __( 'Membership Listing Options', 'user-registration' ),
+				'placeholder' => __( 'Select an option', 'user-registration' ),
+				'required'    => 1,
+				'tip'         => __( "Select how you want to list memberships in the form.", 'user-registration' ),
+				'default'     => 'all',
+				'options'     => array(
+					'all'   => 'Show all Memberships.',
+					'group' => 'Select a group'
+				)
+			),
+			'membership_group'          => array(
 				'setting_id'  => 'membership_group',
 				'name'        => 'membership_group',
 				'type'        => 'select',
@@ -78,8 +98,7 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 			)
 		);
 
-		$settings = array_merge( $membership_settings, $settings );
-
+		$settings = $settings + $membership_settings;
 		unset( $settings['placeholder'] );
 		unset( $settings['required'] );
 
@@ -111,8 +130,14 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 	public function set_args_for_membership( $args, $key, $value ) {
 		if ( isset( $args['field_key'] ) && "membership" == $args['field_key'] ) {
 			$args['type']             = 'membership'; //maybe update this in future to be dynamic.
-			$membership_group_service = new MembershipGroupService();
-			$args['options']          = $membership_group_service->get_group_memberships( $args['membership_group'] );
+			if("group" === $args['membership_listing_option']) {
+				$membership_group_service = new MembershipGroupService();
+				$memberships= $membership_group_service->get_group_memberships( $args['membership_group'] );
+			}else {
+				$membership_service = new MembershipService();
+				$memberships= $membership_service->list_active_memberships();
+			}
+			$args['options']          = $memberships;
 		}
 
 		return $args;
@@ -135,7 +160,6 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 			'key'     => $key,
 			'value'   => $value
 		);
-
 		return \WPEverest\URMembership\ShortCodes::member_registration_form( $attributes + $args );
 	}
 }

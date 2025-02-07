@@ -464,14 +464,14 @@
 		var form_object = {
 			hide_loader: function (form_id) {
 				var $registration_form = $('#user-registration-form-' + form_id);
-				$registration_form.find('.ur-submit-button').find("span").removeClass('ur-front-spinner');
+				$registration_form.find('.ur-submit-button').find("span").removeClass('ur-spinner');
 				$registration_form.find('form').find('.ur-submit-button').prop('disabled', false);
 			}
 		};
 		var stripe_settings = {
 			show_stripe_error: function (message) {
 				if ($membership_registration_form.find("#stripe-errors").length > 0) {
-					$membership_registration_form.find("#stripe-errors").html(message);
+					$membership_registration_form.find("#stripe-errors").html(message).show();
 				} else {
 					var error_message = '<label id="stripe-errors" class="user-registration-error" role="alert">' + message + '</label>';
 					$membership_registration_form.find('.stripe-container').closest('.ur_membership_frontend_input_container').append(error_message);
@@ -577,9 +577,7 @@
 								});
 
 							} else {
-								ur_membership_frontend_utils.show_failure_message(
-									response.data.message
-								);
+								stripe_settings.show_stripe_error(response.data.message)
 								form_object.hide_loader(form_response.form_id);
 
 							}
@@ -865,7 +863,7 @@
 
 		});
 		//redirect to membership member registration form
-		$(document).on('click', '.membership-signup-button', function () {
+		$(document).on('click', '#membership-old-selection-form .membership-signup-button', function () {
 			var $this = $(this),
 				membership_id = $this.siblings('input').val(),
 				url = urmf_data.membership_registration_page_url + '?membership_id=' + membership_id;

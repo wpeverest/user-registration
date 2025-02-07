@@ -1036,6 +1036,13 @@ jQuery(function ($) {
 			custom_password_params.hide();
 		}
 	});
+	//Handel form title and description toggle
+	$(document).ready(function () {
+		hide_show_title_options();
+		$(document).on("change", "#user_registration_enable_form_title_description", function () {
+			hide_show_title_options();
+		});
+	});
 
 	$(document).ready(function () {
 		hide_show_redirection_options();
@@ -1045,6 +1052,32 @@ jQuery(function ($) {
 			hide_show_redirection_options
 		);
 	});
+
+	/**
+	 * Hide or Show Title settings.
+	 *
+	 */
+	var hide_show_title_options = function () {
+
+		var title = $(
+			"#user_registration_form_title"
+		).closest(".form-row");
+		var description = $(
+			"#user_registration_form_description"
+		).closest(".form-row");
+
+		var toggle_title = $(
+			"#user_registration_enable_form_title_description"
+		);
+
+		if (toggle_title.is(":checked")) {
+			title.show();
+			description.show();
+		} else {
+			title.hide();
+			description.hide();
+		}
+	}
 
 	/**
 	 * Hide or Show Redirection settings.
@@ -1063,6 +1096,8 @@ jQuery(function ($) {
 		var redirect_url = $("#user_registration_form_setting_redirect_options")
 			.closest(".form-row")
 			.slideUp(800);
+		var form_row = redirect_after_registration.closest('.form-row');
+		form_row.find('#ur-rar-url-notice').remove();
 
 		if (selected_redirection_option.length) {
 			switch (selected_redirection_option.val()) {
@@ -1082,6 +1117,9 @@ jQuery(function ($) {
 					$(
 						"#user_registration_form_setting_redirect_after_field"
 					).hide();
+					if(user_registration_form_builder_data.form_has_membership_field) {
+						show_membership_redirection_notice(form_row);
+					}
 					break;
 				case "previous-page":
 					$(
@@ -1093,7 +1131,10 @@ jQuery(function ($) {
 			}
 		}
 	};
-
+	var show_membership_redirection_notice = function(form_row) {
+		var notice = ' <div id="ur-rar-url-notice" style="padding:10px;  border: 1px solid #c3c4c7; border-left-color: #ffa900; border-left-width: 4px; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04)">' + user_registration_form_builder_data.i18n_default_redirection_notice_for_membership+'</div>';
+		form_row.append(notice);
+	};
 	/**
 	 * Prevent negative input for Waiting Period Before Redirection setting.
 	 */
@@ -1460,6 +1501,10 @@ jQuery(function ($) {
 					.closest(".ur-advance-setting")
 					.find("input");
 
+			if( inputElement.length === 0 ){
+				inputElement = ($(this).closest(".ur-general-setting").find("input"));
+			}
+
 			var advanceFieldData = inputElement.data("advance-field"),
 				fieldData = inputElement.data("field"),
 				field_name =
@@ -1473,6 +1518,32 @@ jQuery(function ($) {
 		});
 	});
 
+	function update_paypal_settings($this) {
+		var paypal_inputs = $('#paypal-standard-settings .paypal-setting-group'),
+			override_global_settings = $('#paypal-standard-settings #user_registration_override_paypal_global_settings');
+
+		paypal_inputs.hide();
+		if($this.is(':checked') && override_global_settings.is(':checked')) {
+			paypal_inputs.show();
+		}
+	}
+
+	$(document.body).on("click", "#user_registration_enable_paypal_standard , #user_registration_override_paypal_global_settings", function() {
+		update_paypal_settings($(this));
+	});
+
+	update_paypal_settings($('#user_registration_enable_paypal_standard'));
+
+	$(document.body).on("click", "#user_registration_override_paypal_global_settings", function() {
+		var $this = $(this),
+			type = $(this).is(':checked') ? 'form' : 'global';
+
+		$('#user_registration_paypal_mode').val(user_registration_form_builder_data.paypal_settings[type].paypal_mode);
+		$('#user_registration_paypal_email_address').val(user_registration_form_builder_data.paypal_settings[type].paypal_email);
+		$('#user_registration_paypal_cancel_url').val(user_registration_form_builder_data.paypal_settings[type].cancel_url);
+		$('#user_registration_paypal_return_url').val(user_registration_form_builder_data.paypal_settings[type].return_url);
+
+	})
 	/**
 	 * For update the default value.
 	 */

@@ -120,7 +120,7 @@ endif;
 		$currency   = get_option( 'user_registration_payment_currency', 'USD' );
 		$currencies = ur_payment_integration_get_currencies();
 		$symbol     = $currencies[ $currency ]['symbol'];
-		$amount     = $order_detail['product_amount'] ?? $order_detail['total_amount'];
+		$amount     = $order_detail['billing_amount'] ?? $order_detail['total_amount'];
 		echo $symbol . absint( $amount )
 		?>
 	</div>

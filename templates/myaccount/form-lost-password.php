@@ -65,7 +65,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				</div>
 
 				<p class="user-registration-form-row user-registration-form-row--first form-row form-row-first">
-					<label for="user_login"><?php esc_html_e( 'Username', 'user-registration' ); ?><abbr class="required" title="required">*</abbr></label>
+					<label for="user_login"><?php esc_html_e( 'Username or email', 'user-registration' ); ?><abbr class="required" title="required">*</abbr></label>
 
 					<div class="ur-input-with-icon">
 						<svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none" class="input-icon">

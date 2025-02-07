@@ -98,7 +98,8 @@ const Modules = () => {
 	// Bulk Actions
 	const handleBulkActions = () => {
 		const { selectedModuleData, bulkAction } = state;
-		if (!selectedModuleData.length) {
+
+		if (!Object.keys(selectedModuleData).length) {
 			showToast("Please select at least a feature", "error");
 			return;
 		}
@@ -362,7 +363,12 @@ const Modules = () => {
 									"Bulk Actions",
 									"user-registration"
 								)}
-								onChange={(e) => setBulkAction(e.target.value)}
+								onChange={(e) =>
+									setState((prev) => ({
+										...prev,
+										bulkAction: e.target.value
+									}))
+								}
 								icon=""
 								width="fit-content"
 								border="1px solid #DFDFE0 !important"

@@ -379,8 +379,12 @@
 								single_form_field_name =
 									single_form_field_name.replace("[]", "");
 
-								if(single_form_field_name === "urm_membership") {
-									single_form_field_name = field.eq(0).attr('data-name');
+								if (
+									single_form_field_name === "urm_membership"
+								) {
+									single_form_field_name = field
+										.eq(0)
+										.attr("data-name");
 								}
 								var field_data = {
 									value: field_value_json,
@@ -1016,7 +1020,11 @@
 										"user_registration_frontend_validate_before_form_submit",
 										[$this]
 									);
-									if($('.user-registration-error:visible').length) {
+									if (
+										$(
+											"#stripe-errors.user-registration-error:visible"
+										).length
+									) {
 										return;
 									}
 									if (
@@ -1041,8 +1049,6 @@
 									) {
 										return;
 									}
-
-
 
 									$this
 										.find(".ur-submit-button")
@@ -1185,7 +1191,7 @@
 									$this
 										.find(".ur-submit-button")
 										.find("span")
-										.addClass("ur-spinner");
+										.addClass("ur-front-spinner");
 
 									var hit_third_party_api =
 										events.wait_third_party_api($this);
@@ -1252,12 +1258,11 @@
 									$this
 										.find(".ur-submit-button")
 										.find("span")
-										.removeClass("ur-spinner");
+										.removeClass("ur-front-spinner");
 
 									var redirect_url = $this
 										.find('input[name="ur-redirect-url"]')
 										.val();
-
 									var message = $('<ul class=""/>');
 									var type = "error";
 									var individual_field_message = false;
@@ -1364,7 +1369,9 @@
 												);
 											}
 											$(".ur-input-count").text("0");
-											if ( ! user_registration_params.ur_hold_data_before_redirection ) {
+											if (
+												!user_registration_params.ur_hold_data_before_redirection
+											) {
 												$this[0].reset();
 											}
 											if (
@@ -1937,7 +1944,7 @@
 								$this
 									.find(".user-registration-submit-Button")
 									.find("span")
-									.addClass("ur-spinner");
+									.addClass("ur-front-spinner");
 
 								$.ajax({
 									type: "POST",
@@ -1946,8 +1953,8 @@
 									data: data,
 									complete: function (ajax_response) {
 										$this
-											.find("span.ur-spinner")
-											.removeClass("ur-spinner");
+											.find("span.ur-front-spinner")
+											.removeClass("ur-front-spinner");
 										$this
 											.closest(".user-registration")
 											.find(".user-registration-error")
@@ -2306,19 +2313,26 @@
 				// Handle edit-profile form submit event.
 				$(
 					"input[name='save_account_details'], button[name='save_account_details']"
-				).on("click", function (event) {
-					// Check if the form is edit-profile form and check if ajax submission on edit profile is enabled.
-					if (
-						$(".ur-frontend-form")
-							.find("form.edit-profile")
-							.hasClass("user-registration-EditProfileForm")
-					) {
-						$(
-							"form.user-registration-EditProfileForm"
-						).ur_form_submission();
-					}
-					$(this).submit();
-				});
+				)
+					.off("click")
+					.on("click", function (event) {
+						event.preventDefault();
+						// Check if the form is edit-profile form and check if ajax submission on edit profile is enabled.
+						if (
+							$(".ur-frontend-form")
+								.find("form.edit-profile")
+								.hasClass("user-registration-EditProfileForm")
+						) {
+							$(
+								"form.user-registration-EditProfileForm"
+							).ur_form_submission();
+						}
+						if(user_registration_params.ajax_submission_on_edit_profile) {
+							$(this).submit();
+						}else {
+							$(this).closest('form')[0].submit();
+						}
+					});
 				if ($(".ur-flatpickr-field").length) {
 					// create an array to store the flatpickr instances.
 					var flatpickrInstances = [];
@@ -2394,15 +2408,19 @@
 				}
 			});
 
-				// Handel WYSIWYG field client side validation.
-				$( document ).on( 'tinymce-editor-init', function( event, editor ) {
-					var $editorContainer = $(editor.getContainer());
-					var containerId = $editorContainer.attr('id');
-					var hiddenEditor = $("#"+containerId).parent().parent().parent().find("[data-label = 'WYSIWYG']");
-					editor.on('keyup', function(e) {
-						hiddenEditor.val(tinyMCE.activeEditor.getContent());
-					});
+			// Handel WYSIWYG field client side validation.
+			$(document).on("tinymce-editor-init", function (event, editor) {
+				var $editorContainer = $(editor.getContainer());
+				var containerId = $editorContainer.attr("id");
+
+				var hiddenEditor = $("#" + containerId)
+					.closest(".form-row")
+					.find("[data-label = 'WYSIWYG']");
+
+				editor.on("keyup", function (e) {
+					hiddenEditor.val(tinyMCE.activeEditor.getContent());
 				});
+			});
 
 			$(".ur-frontend-form").each(function () {
 				var $registration_form = $(this).find("form.register");
