@@ -18,6 +18,6 @@
 	</div>
 	<div class="membership-menu-right ur-d-flex ur-p-3 ur-mr-0 ur-align-items-center">
 		<img src="<?php echo UR_ASSETS_URL . '/images/left-arrow.png'; ?>" />
-		<a href="<?php echo esc_url_raw( 'https://youtu.be/tAyjVDypJkc' ); ?>" class="urm-membership-tutorial" target="_blank"><?php esc_html_e( 'Watch Tutorial', 'user-registration' ); ?></a>
+		<a href="<?php echo esc_url_raw( 'https://youtu.be/eNQSzJqSTt0' ); ?>" class="urm-membership-tutorial" target="_blank"><?php esc_html_e( 'Watch Tutorial', 'user-registration' ); ?></a>
 	</div>
 </div>
