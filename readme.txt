@@ -256,6 +256,10 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
+= 4.0.2     - 07/02/2025 =
+* Fix       - Critical error while updating plugin.
+* Fix       - Username label in lost password form.
+
 = 4.0.1     - 06/02/2025 =
 * Fix       - Login menu being automatically added after v4.0 update.
 

@@ -8055,7 +8055,14 @@ if ( ! function_exists( 'ur_find_my_account_in_custom_template' ) ) {
 			return $value;
 		}
 
-		$content = file_get_contents( get_page_template() );
+		$template_path = get_page_template();
+
+		if ( empty( $template_path ) ) {
+			return $value;
+		}
+
+		$content = ur_file_get_contents( $template_path );
+
 		if ( strpos( $content, '[user_registration_my_account' ) !== false ) {
 			return true;
 		}
