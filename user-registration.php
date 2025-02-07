@@ -163,6 +163,8 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			$this->define( 'UR_UPLOAD_URL', $upload_dir['baseurl'] . '/user_registration_uploads/' );
 			$this->define( 'UR_DS', DIRECTORY_SEPARATOR );
 			$this->define( 'UR_PLUGIN_FILE', __FILE__ );
+			$this->define( 'UR_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+			$this->define( 'UR_ASSETS_URL', UR_PLUGIN_URL . 'assets' );
 			$this->define( 'UR_ABSPATH', __DIR__ . UR_DS );
 			$this->define( 'UR_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 			$this->define( 'UR_VERSION', $this->version );
