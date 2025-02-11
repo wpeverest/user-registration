@@ -1015,6 +1015,7 @@ textarea.ur-input-border-red {
   font-size: 14px;
   letter-spacing: 0.15px;
   margin-top: 5px;
+  margin-bottom: 0;
 }
 .ur-frontend-form.login .ur-input-with-icon {
   position: relative;
@@ -1035,7 +1036,6 @@ textarea.ur-input-border-red {
 .ur-frontend-form.login #user_login {
   border-radius: 4px;
   border: 1px solid #E9E9E9;
-  margin-top: -24px;
 }
 .ur-frontend-form.login .ur-reset-password-btn {
   border: 1px solid #475BB2;
@@ -1043,6 +1043,11 @@ textarea.ur-input-border-red {
   width: 100%;
   color: #FFF;
   letter-spacing: 0.15px;
+  border: 0;
+}
+.ur-frontend-form.login .ur-reset-password-btn:hover {
+  background: #38488e;
+  border-color: #38488e;
 }
 .ur-frontend-form.login input[name=rememberme]#rememberme {
   vertical-align: middle;
@@ -1110,8 +1115,8 @@ textarea.ur-input-border-red {
   float: none;
 }
 .ur-frontend-form .ur-form-row .ur-form-grid #user-registration-tfa-footer .user-registration-Button:hover {
-  background: #38488e !important;
-  border-color: #38488e !important;
+  background: #38488e;
+  border-color: #38488e;
 }
 .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item {
   margin-bottom: 20px;
@@ -1352,22 +1357,9 @@ textarea.ur-input-border-red {
 .ur-frontend-form.ur-frontend-form--bordered form .ur-form-row .ur-form-grid .hide_show_password input[type=password] {
   padding-left: 50px;
 }
-.ur-frontend-form.ur-frontend-form--bordered form input[type=submit],
-.ur-frontend-form.ur-frontend-form--bordered form button[type=submit],
-.ur-frontend-form.ur-frontend-form--bordered form button.user-registration-multi-part-nav-prev,
-.ur-frontend-form.ur-frontend-form--bordered form button.user-registration-multi-part-nav-next {
-  background: rgb(240.4392835821, 241.3522713704, 245.4607164179);
-  border: 1px solid #e1e1e1;
-  color: rgb(102.6654179104, 109.1689023066, 138.4345820896);
-  border-radius: 0;
-}
-.ur-frontend-form.ur-frontend-form--bordered form input[type=submit]:hover,
-.ur-frontend-form.ur-frontend-form--bordered form button[type=submit]:hover,
-.ur-frontend-form.ur-frontend-form--bordered form button.user-registration-multi-part-nav-prev:hover,
-.ur-frontend-form.ur-frontend-form--bordered form button.user-registration-multi-part-nav-next:hover {
-  background: #475bb2;
-  color: #ffffff;
-  border-color: #475bb2;
+.ur-frontend-form.ur-frontend-form--bordered form .ur-form-row .ur-form-grid .user-registration-Button {
+  border: 0;
+  border-radius: 4px;
 }
 .ur-frontend-form.ur-frontend-form--flat {
   background: #f7f7f7;
@@ -1929,7 +1921,6 @@ span.ur-shortcode-form-embed-dot {
 
 .user-registration-error {
   padding: 10px !important;
-  z-index: 9999;
   display: flex;
   align-items: center;
   border-radius: 4px;
@@ -1938,7 +1929,7 @@ span.ur-shortcode-form-embed-dot {
   border-top: none;
 }
 .user-registration-error::before {
-  content: "";
+  content: none;
   display: "";
 }
 .user-registration-error svg {
@@ -1959,6 +1950,12 @@ span.ur-shortcode-form-embed-dot {
   background: #475BB2;
   border-radius: 4px;
   border: 1px solid #475BB2;
+  color: #ffffff;
+}
+.user-registration-Button:hover,
+.ur-submit-button:hover {
+  background: #38488e;
+  border-color: #38488e;
   color: #ffffff;
 }
 .user-registration-Button .ur-spinner,
@@ -2041,10 +2038,6 @@ span.ur-shortcode-form-embed-dot {
   border: none !important;
   background: transparent !important;
   margin-right: unset !important;
-}
-.ur-field-item .user-registration-error::before {
-  content: "\f534";
-  color: #FF0000;
 }
 
 .user-registration.ur-frontend-form {
@@ -2193,8 +2186,8 @@ body.user-registration-page .user-registration-MyAccount-content__body .ur-front
 body.user-registration-page .user-registration-error, body.ur-multi-device-form-preview .user-registration-error, body.user-registration-membership_page_user-registration-login-forms .user-registration-error {
   position: unset;
   width: 100%;
-  margin: 0 0 24px !important;
-  align-items: flex-start;
+  margin: 0 0 24px;
+  align-items: center;
 }
 body.user-registration-page .user-registration-error svg, body.ur-multi-device-form-preview .user-registration-error svg, body.user-registration-membership_page_user-registration-login-forms .user-registration-error svg {
   width: 28px;
@@ -2267,6 +2260,92 @@ body.user-registration-page .user-registration.ur-frontend-form, body.user-regis
 body.user-registration-page .user-registration.ur-frontend-form form .ur-button-container, body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form form .ur-button-container {
   width: max-content;
 }
+body.user-registration-page .user-registration.ur-frontend-form--bordered:not(.login), body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--bordered:not(.login) {
+  box-shadow: none;
+  border: 1px solid #e9e9e9;
+}
+body.user-registration-page .user-registration.ur-frontend-form--bordered:not(.login) form .ur-form-row .ur-form-grid input:not([type=radio]), body.user-registration-page .user-registration.ur-frontend-form--bordered:not(.login) form .ur-form-row .ur-form-grid input:not([type=checkbox]), body.user-registration-page .user-registration.ur-frontend-form--bordered:not(.login) form .ur-form-row .ur-form-grid input:not([type=file]),
+body.user-registration-page .user-registration.ur-frontend-form--bordered:not(.login) form .ur-form-row .ur-form-grid textarea:not([type=radio]),
+body.user-registration-page .user-registration.ur-frontend-form--bordered:not(.login) form .ur-form-row .ur-form-grid textarea:not([type=checkbox]),
+body.user-registration-page .user-registration.ur-frontend-form--bordered:not(.login) form .ur-form-row .ur-form-grid textarea:not([type=file]),
+body.user-registration-page .user-registration.ur-frontend-form--bordered:not(.login) form .ur-form-row .ur-form-grid select:not([type=radio]),
+body.user-registration-page .user-registration.ur-frontend-form--bordered:not(.login) form .ur-form-row .ur-form-grid select:not([type=checkbox]),
+body.user-registration-page .user-registration.ur-frontend-form--bordered:not(.login) form .ur-form-row .ur-form-grid select:not([type=file]), body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--bordered:not(.login) form .ur-form-row .ur-form-grid input:not([type=radio]), body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--bordered:not(.login) form .ur-form-row .ur-form-grid input:not([type=checkbox]), body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--bordered:not(.login) form .ur-form-row .ur-form-grid input:not([type=file]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--bordered:not(.login) form .ur-form-row .ur-form-grid textarea:not([type=radio]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--bordered:not(.login) form .ur-form-row .ur-form-grid textarea:not([type=checkbox]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--bordered:not(.login) form .ur-form-row .ur-form-grid textarea:not([type=file]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--bordered:not(.login) form .ur-form-row .ur-form-grid select:not([type=radio]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--bordered:not(.login) form .ur-form-row .ur-form-grid select:not([type=checkbox]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--bordered:not(.login) form .ur-form-row .ur-form-grid select:not([type=file]) {
+  background: transparent;
+  border-color: #e9e9e9;
+  box-shadow: none;
+}
+body.user-registration-page .user-registration.ur-frontend-form--flat:not(.login), body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--flat:not(.login) {
+  box-shadow: none;
+  border: 1px solid #e9e9e9;
+  border-radius: 0;
+}
+body.user-registration-page .user-registration.ur-frontend-form--flat:not(.login) form .ur-form-row .ur-form-grid .ur-field-item, body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--flat:not(.login) form .ur-form-row .ur-form-grid .ur-field-item {
+  margin-bottom: 20px;
+}
+body.user-registration-page .user-registration.ur-frontend-form--flat:not(.login) form .ur-form-row .ur-form-grid .ur-field-item:last-child, body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--flat:not(.login) form .ur-form-row .ur-form-grid .ur-field-item:last-child {
+  margin-bottom: 0;
+}
+body.user-registration-page .user-registration.ur-frontend-form--flat:not(.login) form .ur-form-row .ur-form-grid input:not([type=radio]), body.user-registration-page .user-registration.ur-frontend-form--flat:not(.login) form .ur-form-row .ur-form-grid input:not([type=checkbox]), body.user-registration-page .user-registration.ur-frontend-form--flat:not(.login) form .ur-form-row .ur-form-grid input:not([type=file]),
+body.user-registration-page .user-registration.ur-frontend-form--flat:not(.login) form .ur-form-row .ur-form-grid textarea:not([type=radio]),
+body.user-registration-page .user-registration.ur-frontend-form--flat:not(.login) form .ur-form-row .ur-form-grid textarea:not([type=checkbox]),
+body.user-registration-page .user-registration.ur-frontend-form--flat:not(.login) form .ur-form-row .ur-form-grid textarea:not([type=file]),
+body.user-registration-page .user-registration.ur-frontend-form--flat:not(.login) form .ur-form-row .ur-form-grid select:not([type=radio]),
+body.user-registration-page .user-registration.ur-frontend-form--flat:not(.login) form .ur-form-row .ur-form-grid select:not([type=checkbox]),
+body.user-registration-page .user-registration.ur-frontend-form--flat:not(.login) form .ur-form-row .ur-form-grid select:not([type=file]), body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--flat:not(.login) form .ur-form-row .ur-form-grid input:not([type=radio]), body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--flat:not(.login) form .ur-form-row .ur-form-grid input:not([type=checkbox]), body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--flat:not(.login) form .ur-form-row .ur-form-grid input:not([type=file]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--flat:not(.login) form .ur-form-row .ur-form-grid textarea:not([type=radio]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--flat:not(.login) form .ur-form-row .ur-form-grid textarea:not([type=checkbox]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--flat:not(.login) form .ur-form-row .ur-form-grid textarea:not([type=file]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--flat:not(.login) form .ur-form-row .ur-form-grid select:not([type=radio]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--flat:not(.login) form .ur-form-row .ur-form-grid select:not([type=checkbox]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--flat:not(.login) form .ur-form-row .ur-form-grid select:not([type=file]) {
+  background: #ffffff;
+  border-color: #e9e9e9;
+  box-shadow: none;
+  border-radius: 0 !important;
+}
+body.user-registration-page .user-registration.ur-frontend-form--flat:not(.login) form .ur-button-container .ur-submit-button, body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--flat:not(.login) form .ur-button-container .ur-submit-button {
+  border-radius: 0;
+}
+body.user-registration-page .user-registration.ur-frontend-form--rounded:not(.login) form .ur-form-row .ur-form-grid input:not([type=radio]), body.user-registration-page .user-registration.ur-frontend-form--rounded:not(.login) form .ur-form-row .ur-form-grid input:not([type=checkbox]), body.user-registration-page .user-registration.ur-frontend-form--rounded:not(.login) form .ur-form-row .ur-form-grid input:not([type=file]),
+body.user-registration-page .user-registration.ur-frontend-form--rounded:not(.login) form .ur-form-row .ur-form-grid textarea:not([type=radio]),
+body.user-registration-page .user-registration.ur-frontend-form--rounded:not(.login) form .ur-form-row .ur-form-grid textarea:not([type=checkbox]),
+body.user-registration-page .user-registration.ur-frontend-form--rounded:not(.login) form .ur-form-row .ur-form-grid textarea:not([type=file]),
+body.user-registration-page .user-registration.ur-frontend-form--rounded:not(.login) form .ur-form-row .ur-form-grid select:not([type=radio]),
+body.user-registration-page .user-registration.ur-frontend-form--rounded:not(.login) form .ur-form-row .ur-form-grid select:not([type=checkbox]),
+body.user-registration-page .user-registration.ur-frontend-form--rounded:not(.login) form .ur-form-row .ur-form-grid select:not([type=file]), body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--rounded:not(.login) form .ur-form-row .ur-form-grid input:not([type=radio]), body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--rounded:not(.login) form .ur-form-row .ur-form-grid input:not([type=checkbox]), body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--rounded:not(.login) form .ur-form-row .ur-form-grid input:not([type=file]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--rounded:not(.login) form .ur-form-row .ur-form-grid textarea:not([type=radio]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--rounded:not(.login) form .ur-form-row .ur-form-grid textarea:not([type=checkbox]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--rounded:not(.login) form .ur-form-row .ur-form-grid textarea:not([type=file]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--rounded:not(.login) form .ur-form-row .ur-form-grid select:not([type=radio]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--rounded:not(.login) form .ur-form-row .ur-form-grid select:not([type=checkbox]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--rounded:not(.login) form .ur-form-row .ur-form-grid select:not([type=file]) {
+  box-shadow: none;
+}
+body.user-registration-page .user-registration.ur-frontend-form--rounded-edge:not(.login), body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--rounded-edge:not(.login) {
+  border-radius: 30px;
+}
+body.user-registration-page .user-registration.ur-frontend-form--rounded-edge:not(.login) form .ur-form-row .ur-form-grid input:not([type=radio]), body.user-registration-page .user-registration.ur-frontend-form--rounded-edge:not(.login) form .ur-form-row .ur-form-grid input:not([type=checkbox]), body.user-registration-page .user-registration.ur-frontend-form--rounded-edge:not(.login) form .ur-form-row .ur-form-grid input:not([type=file]),
+body.user-registration-page .user-registration.ur-frontend-form--rounded-edge:not(.login) form .ur-form-row .ur-form-grid textarea:not([type=radio]),
+body.user-registration-page .user-registration.ur-frontend-form--rounded-edge:not(.login) form .ur-form-row .ur-form-grid textarea:not([type=checkbox]),
+body.user-registration-page .user-registration.ur-frontend-form--rounded-edge:not(.login) form .ur-form-row .ur-form-grid textarea:not([type=file]),
+body.user-registration-page .user-registration.ur-frontend-form--rounded-edge:not(.login) form .ur-form-row .ur-form-grid select:not([type=radio]),
+body.user-registration-page .user-registration.ur-frontend-form--rounded-edge:not(.login) form .ur-form-row .ur-form-grid select:not([type=checkbox]),
+body.user-registration-page .user-registration.ur-frontend-form--rounded-edge:not(.login) form .ur-form-row .ur-form-grid select:not([type=file]), body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--rounded-edge:not(.login) form .ur-form-row .ur-form-grid input:not([type=radio]), body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--rounded-edge:not(.login) form .ur-form-row .ur-form-grid input:not([type=checkbox]), body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--rounded-edge:not(.login) form .ur-form-row .ur-form-grid input:not([type=file]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--rounded-edge:not(.login) form .ur-form-row .ur-form-grid textarea:not([type=radio]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--rounded-edge:not(.login) form .ur-form-row .ur-form-grid textarea:not([type=checkbox]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--rounded-edge:not(.login) form .ur-form-row .ur-form-grid textarea:not([type=file]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--rounded-edge:not(.login) form .ur-form-row .ur-form-grid select:not([type=radio]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--rounded-edge:not(.login) form .ur-form-row .ur-form-grid select:not([type=checkbox]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form--rounded-edge:not(.login) form .ur-form-row .ur-form-grid select:not([type=file]) {
+  box-shadow: none;
+}
 body.user-registration-page #user-registration.user-registration-MyAccount,
 body.user-registration-page .user-registration.user-registration-MyAccount, body.user-registration-membership_page_user-registration-login-forms #user-registration.user-registration-MyAccount,
 body.user-registration-membership_page_user-registration-login-forms .user-registration.user-registration-MyAccount {
@@ -2282,6 +2361,13 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
   box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
   border: 0;
 }
+@media screen and (max-width: 575px) {
+  body.user-registration-page #user-registration:not(.user-registration-MyAccount),
+  body.user-registration-page .user-registration:not(.user-registration-MyAccount), body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount),
+  body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) {
+    padding: 40px 30px;
+  }
+}
 body.user-registration-page #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--bordered),
 body.user-registration-page .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--bordered), body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--bordered),
 body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--bordered) {
@@ -2292,7 +2378,49 @@ body.user-registration-page #user-registration:not(.user-registration-MyAccount)
 body.user-registration-page .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat), body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat),
 body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) {
   box-shadow: none;
-  background: #F7F7F7;
+  border: 1px solid #e9e9e9;
+  border-radius: 0;
+}
+body.user-registration-page #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid input:not([type=radio]), body.user-registration-page #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid input:not([type=checkbox]), body.user-registration-page #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid input:not([type=file]),
+body.user-registration-page #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid textarea:not([type=radio]),
+body.user-registration-page #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid textarea:not([type=checkbox]),
+body.user-registration-page #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid textarea:not([type=file]),
+body.user-registration-page #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid select:not([type=radio]),
+body.user-registration-page #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid select:not([type=checkbox]),
+body.user-registration-page #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid select:not([type=file]),
+body.user-registration-page .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid input:not([type=radio]),
+body.user-registration-page .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid input:not([type=checkbox]),
+body.user-registration-page .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid input:not([type=file]),
+body.user-registration-page .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid textarea:not([type=radio]),
+body.user-registration-page .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid textarea:not([type=checkbox]),
+body.user-registration-page .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid textarea:not([type=file]),
+body.user-registration-page .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid select:not([type=radio]),
+body.user-registration-page .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid select:not([type=checkbox]),
+body.user-registration-page .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid select:not([type=file]), body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid input:not([type=radio]), body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid input:not([type=checkbox]), body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid input:not([type=file]),
+body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid textarea:not([type=radio]),
+body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid textarea:not([type=checkbox]),
+body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid textarea:not([type=file]),
+body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid select:not([type=radio]),
+body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid select:not([type=checkbox]),
+body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid select:not([type=file]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid input:not([type=radio]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid input:not([type=checkbox]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid input:not([type=file]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid textarea:not([type=radio]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid textarea:not([type=checkbox]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid textarea:not([type=file]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid select:not([type=radio]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid select:not([type=checkbox]),
+body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid select:not([type=file]) {
+  background: #ffffff;
+  border-color: #e9e9e9;
+  box-shadow: none;
+  border-radius: 0 !important;
+}
+body.user-registration-page #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid .user-registration-Button,
+body.user-registration-page .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid .user-registration-Button, body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid .user-registration-Button,
+body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid .user-registration-Button {
+  border-radius: 0;
 }
 body.user-registration-page #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--rounded-edge),
 body.user-registration-page .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--rounded-edge), body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--rounded-edge),
@@ -2493,6 +2621,7 @@ body.user-registration-page #user-registration:not(.user-registration-MyAccount)
 body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-input-with-icon input, body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-input-with-icon input,
 body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-input-with-icon input {
   min-height: 38px;
+  max-height: 38px;
   margin-bottom: 0;
   padding: 0 36px 0 14px;
 }
@@ -2523,6 +2652,7 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
   border-radius: 4px;
   border: 1px solid #E9E9E9;
   min-height: 38px;
+  max-height: 38px;
   font-size: 14px;
   line-height: 20px;
   padding: 0 14px;
@@ -2554,16 +2684,8 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
   font-weight: 400;
   line-height: 24px;
   letter-spacing: 0.15px;
-  background: #475BB2;
-  border: 1px solid #475BB2;
   margin-left: 0;
   transition: all 0.3s;
-}
-body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-button-container .ur-submit-button:hover,
-body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-button-container .ur-submit-button:hover, body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-button-container .ur-submit-button:hover,
-body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-button-container .ur-submit-button:hover {
-  background: #38488e !important;
-  border-color: #38488e !important;
 }
 body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form,
 body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form, body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form,
@@ -2646,8 +2768,8 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
 body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div input[type=submit]:hover,
 body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div input[type=submit]:hover, body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div input[type=submit]:hover,
 body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div input[type=submit]:hover {
-  background: #38488e !important;
-  border-color: #38488e !important;
+  background: #38488e;
+  border-color: #38488e;
 }
 body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-Button,
 body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-Button, body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-Button,
@@ -2655,7 +2777,7 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
   padding: 10px 24px;
   font-size: 15px;
   line-height: 25px;
-  color: #ffffff;
+  background: #475bb2;
 }
 body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-Button:disabled,
 body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-Button:disabled, body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-Button:disabled,
@@ -2666,9 +2788,9 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
 body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-Button:hover,
 body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-Button:hover, body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-Button:hover,
 body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div .user-registration-Button:hover {
+  background: #38488e;
+  border-color: #38488e;
   color: #ffffff;
-  background: #38488e !important;
-  border-color: #38488e !important;
 }
 body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div:has(.user-registration-passwordless-login),
 body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div:has(.user-registration-passwordless-login), body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid > div:has(.user-registration-passwordless-login),
@@ -2711,9 +2833,11 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
   flex-direction: row;
   margin-top: -4px;
-  float: unset !important;
+  float: unset;
 }
 body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-before-login-btn label,
 body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-before-login-btn label, body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-before-login-btn label,
@@ -2728,12 +2852,12 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
   font-weight: 400;
   line-height: 21px;
   letter-spacing: 0.15px;
-  text-decoration-line: underline;
-  text-underline-position: from-font;
+  margin: 0;
 }
 body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-before-login-btn .user-registration-LostPassword a,
 body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-before-login-btn .user-registration-LostPassword a, body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-before-login-btn .user-registration-LostPassword a,
 body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-before-login-btn .user-registration-LostPassword a {
+  text-underline-offset: 4px;
   color: #475bb2;
 }
 body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-register,
@@ -2748,6 +2872,7 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
 body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-register a,
 body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-register a, body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-register a,
 body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-register a {
+  text-underline-offset: 4px;
   color: #475bb2;
 }
 body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form .user-registration-form .ur-form-row .ur-form-grid .user-registration-social-connect-networks,
