@@ -149,7 +149,9 @@
 					var urPage = urlParams.get("page");
 					var isEditPage = urlParams.get("edit-registration");
 					var formId = urlParams.get("form_id");
-					var isTemplatePage = $(".user-registration-setup").length;
+					var isTemplatePage = $(
+						"#user-registration-form-templates"
+					).length;
 
 					var previousPage = document.referrer.split("page=")[1];
 					var formUpdated =
@@ -393,7 +395,8 @@
 					"user_registration_admin_before_form_submit",
 					[data]
 				);
-
+				var check_membership_validations = URFormBuilder.check_membership_validation(data);
+				if(!check_membership_validations) return;
 				// validation for unsupported currency by paypal.
 				if (
 					typeof data.data.ur_payment_disabled !== "undefined" &&
@@ -658,7 +661,7 @@
 								'<div class="ur-embed-select-existing-page-container"><p>' +
 								user_registration_form_builder_data.i18n_admin
 									.i18n_embed_existing_page_description +
-								'</p><select name="ur-embed-select-existing-page-name" id="ur-embed-select-existing-page-name">';
+								'</p><select style="width:100%; line-height:30px;" name="ur-embed-select-existing-page-name" id="ur-embed-select-existing-page-name">';
 							var option =
 								"<option disabled selected>Select Page</option>";
 							response.data.forEach(function (page) {
@@ -727,7 +730,7 @@
 									.i18n_embed_new_page_description +
 								"</p>";
 							var page_name =
-								'<div style="min-width:400px; width:100%;"><input type="text" name="page_title" /></div>';
+								'<div style="width: 100%"><input style="width:100%" type="text" name="page_title" /></div>';
 
 							modelContent = description + page_name;
 							Swal.fire({
@@ -5262,10 +5265,12 @@
 
 				if (
 					$(".ur-selected-item.ur-item-active .ur-general-setting")
-					.find("[name='ur_general_setting[required]']")
-					.filter(function () {
-					  return $(this).is(":checked") || $(this).val() === "1";
-					}).length
+						.find("[name='ur_general_setting[required]']")
+						.filter(function () {
+							return (
+								$(this).is(":checked") || $(this).val() === "1"
+							);
+						}).length
 				) {
 					wrapper
 						.find(".ur-label")
@@ -6716,6 +6721,24 @@
 						"data-last-group",
 						parseInt(next_li_group.length) - 1
 					);
+			},
+			check_membership_validation: function (data) {
+				var validations = ['empty_membership_group_status', 'payment_field_present_status', 'empty_membership_status'],
+					is_valid = true;
+
+				for (var i = 0; i < validations.length; i++) {
+					var key = validations[i];
+					if (
+						typeof data.data[key] !== "undefined" &&
+						data.data[key][0].validation_status === false
+					) {
+
+						is_valid = false;
+						URFormBuilder.show_message(data.data[key][0].validation_message);
+						return is_valid;
+					}
+				}
+				return is_valid;
 			}
 		};
 

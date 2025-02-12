@@ -58,7 +58,7 @@ const Dashboard = () => {
 						fontWeight="semibold"
 					>
 						{__(
-							"Welcome to User Registration!",
+							"Welcome to User Registration & Membership!",
 							"user-registration",
 						)}
 					</Heading>
@@ -134,14 +134,14 @@ const Dashboard = () => {
 						<Icon.Team w="5" h="5" fill="primary.500" />
 						<Heading as="h3" size="sm" fontWeight="semibold">
 							{__(
-								"User Registration Community",
+								"User Registration & Membership Community",
 								"user-registration",
 							)}
 						</Heading>
 					</HStack>
 					<Text fontSize="13px" color="gray.700">
 						{__(
-							"Join our exclusive group and connect with fellow User Registration members. Ask questions, contribute to discussions, and share feedback!",
+							"Join our exclusive group and connect with fellow members. Ask questions, contribute to discussions, and share feedback!",
 							"user-registration",
 						)}
 					</Text>

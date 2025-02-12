@@ -14,13 +14,15 @@
   * Styling begins
   */
  .ur_plugin_upgrade_notice {
+	display: flex;
 	 font-weight: normal;
-	 color: #fff;
-	 background: #d54d21;
-	 padding: 1em;
+	 color: #000000;
+	 padding: 1em 0em;
 	 margin: 9px 0;
+	 border-top: 2px solid #dba617;
 
 	 &::before {
+		 color: #d54d21;
 		 content: '\f348';
 		 display: inline-block;
 		 font: 400 18px/1 dashicons;
@@ -29,7 +31,17 @@
 		 -webkit-font-smoothing: antialiased;
 		 -moz-osx-font-smoothing: grayscale;
 		 vertical-align: top;
+		 margin-top: 10px;
 	 }
+
+	 p::before{
+		content: none;
+	 }
+
+ }
+
+ .ur_plugin_upgrade_notice + p {
+	display: none;
  }
 
  /**

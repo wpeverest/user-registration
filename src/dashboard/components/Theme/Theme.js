@@ -20,7 +20,7 @@ const theme = extendTheme({
 			".wp-admin #user-registration": {
 				ms: "-20px"
 			},
-			".user-registration_page_user-registration-dashboard #wpwrap": {
+			".user-registration-membership_page_user-registration-dashboard #wpwrap": {
 				bgColor: "primary.50"
 			},
 			".ba-modal-open": {

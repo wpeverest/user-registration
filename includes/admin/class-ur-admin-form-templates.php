@@ -35,13 +35,14 @@ class UR_Admin_Form_Templates {
 	 * @return array
 	 */
 	public static function get_template_data() {
-		$template_data = get_transient( 'ur_template_section_list' );
+		$template_data = get_transient( 'user_registration_templates_data' );
 
 		$template_url = 'https://d13ue4sfmuf7fw.cloudfront.net/';
 
 		if ( false === $template_data ) {
 
-			$template_json_url = $template_url . 'templates.json';
+			$template_json_url = $template_url . 'templates1.json';
+
 			try {
 				$content       = wp_remote_get( $template_json_url );
 				$content_json  = wp_remote_retrieve_body( $content );
@@ -86,28 +87,17 @@ class UR_Admin_Form_Templates {
 	 * Load the template view.
 	 */
 	public static function load_template_view() {
-		$templates       = array();
-		$current_section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : '_all'; // phpcs:ignore WordPress.Security.NonceVerification
-		$category        = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'free'; // phpcs:ignore WordPress.Security.NonceVerification
-		$templates       = self::get_template_data();
-
-		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-
-		wp_enqueue_script( 'ur-form-templates' );
+		echo "<div id='user-registration-form-templates'></div>";
+		wp_register_script( 'ur-templates', UR()->plugin_url() . '/chunks/form_templates.js', array( 'wp-element', 'react', 'react-dom', 'wp-api-fetch', 'wp-i18n', 'wp-blocks' ), UR()->version, true );
 		wp_localize_script(
-			'ur-form-templates',
-			'ur_templates',
+			'ur-templates',
+			'ur_templates_script',
 			array(
-				'ur_template_all'  => self::get_template_data(),
-				'i18n_get_started' => esc_html__( 'Get Started', 'user-registration' ),
-				'i18n_get_preview' => esc_html__( 'Preview', 'user-registration' ),
-				'i18n_pro_feature' => esc_html__( 'Pro', 'user-registration' ),
-				'template_refresh' => esc_html__( 'Updating Templates', 'user-registration' ),
-				'ur_plugin_url'    => esc_url( UR()->plugin_url() ),
+				'security' => wp_create_nonce( 'wp_rest' ),
+				'restURL'  => rest_url(),
+				'siteURL'  => esc_url( home_url( '/' ) ),
 			)
 		);
-
-		// Forms template area.
-		include_once dirname( __FILE__ ) . '/views/html-admin-page-form-templates.php';
+		wp_enqueue_script( 'ur-templates' );
 	}
 }

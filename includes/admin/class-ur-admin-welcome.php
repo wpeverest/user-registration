@@ -56,26 +56,17 @@ class UR_Admin_Welcome {
 		wp_register_script( 'ur-setup-wizard-script', UR()->plugin_url() . '/chunks/welcome.js', array( 'wp-element', 'wp-blocks', 'wp-editor' ), UR()->version, true );
 		wp_enqueue_style( 'ur-setup-wizard-style', UR()->plugin_url() . '/assets/css/user-registration-setup-wizard.css', array(), UR()->version );
 		wp_enqueue_script( 'ur-setup-wizard-script' );
-		$default_form_page_id   = get_option( 'user_registration_default_form_page_id' );
-		$registration_page_id   = get_option( 'user_registration_registration_page_id' );
-		$my_account_page_id     = get_option( 'user_registration_myaccount_page_id' );
-		$registration_page_slug = $registration_page_id ? get_post_field( 'post_name', $registration_page_id ) : '';
-		$my_account_page_slug   = $my_account_page_id ? get_post_field( 'post_name', $my_account_page_id ) : '';
 
 		wp_localize_script(
 			'ur-setup-wizard-script',
 			'_UR_WIZARD_',
 			array(
-				'adminURL'             => esc_url( admin_url() ),
-				'siteURL'              => esc_url( home_url( '/' ) ),
-				'defaultFormId'        => $default_form_page_id,
-				'registrationPageSlug' => $registration_page_slug,
-				'myAccountPageSlug'    => $my_account_page_slug,
-				'defaultFormURL'       => esc_url( admin_url( '/admin.php?page=add-new-registration&edit-registration=' . $default_form_page_id ) ),
-				'urRestApiNonce'       => wp_create_nonce( 'wp_rest' ),
-				'onBoardIconsURL'      => esc_url( UR()->plugin_url() . '/assets/images/onboard-icons' ),
-				'restURL'              => rest_url(),
-				'registrationPageURL'  => get_permalink( get_option( 'user_registration_registration_page_id' ) ),
+				'adminURL'        => esc_url( admin_url() ),
+				'siteURL'         => esc_url( home_url( '/' ) ),
+				'urRestApiNonce'  => wp_create_nonce( 'wp_rest' ),
+				'onBoardIconsURL' => esc_url( UR()->plugin_url() . '/assets/images/onboard-icons' ),
+				'restURL'         => rest_url(),
+				'adminEmail'      => get_option( 'admin_email' ),
 			)
 		);
 
@@ -116,7 +107,7 @@ class UR_Admin_Welcome {
 								jQuery(this).find(".welcome-video-container").remove();
 
 								var video =
-									'<div class="welcome-video-container"><iframe width="560" height="315" src="https://www.youtube.com/embed/DYPg3x8OVe4?amprel=0&amp;showinfo=0&amp;autoplay=true" frameborder="0" allowfullscreen></iframe></div>';
+									'<div class="welcome-video-container"><iframe width="560" height="315" src="https://www.youtube.com/embed/lrkXhZ7hS8g?amprel=0&amp;showinfo=0&amp;autoplay=true" frameborder="0" allowfullscreen></iframe></div>';
 
 								event.preventDefault();
 
@@ -158,8 +149,8 @@ class UR_Admin_Welcome {
 									</a>
 								</div>
 								<div class="user-registration-welcome-container__header">
-									<h2><?php esc_html_e( 'Welcome to User Registration', 'user-registration' ); ?></h2>
-									<p><?php esc_html_e( 'Thank you for choosing User Registration - the most powerful and easy drag & drop WordPress form builder in the market.', 'user-registration' ); ?></p>
+									<h2><?php esc_html_e( 'Welcome to User Registration & Membership', 'user-registration' ); ?></h2>
+									<p><?php esc_html_e( 'Thank you for choosing User Registration & Membership - the most flexible registration form builder and membership plugin for WordPress.', 'user-registration' ); ?></p>
 								</div>
 								<div class="user-registration-welcome-container__action">
 									<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-welcome&tab=setup-wizard' ) ); ?>" class="button button-primary">
@@ -169,13 +160,13 @@ class UR_Admin_Welcome {
 							</div>
 						</div>
 
-						<div class="user-registration-skip-btn">
+						<!-- <div class="user-registration-skip-btn">
 							<a href="<?php echo esc_url_raw( admin_url() . 'admin.php?page=user-registration-dashboard&end-setup-wizard=' . true . '&activeStep=install_pages' ); ?>">
 								<p style="color: gray; font-style:italic;"><?php esc_html_e( 'Skip to Dashboard', 'user-registration' ); ?> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
 								<path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
 								</svg></p>
 							</a>
-						</div>
+						</div> -->
 					</div>
 					<?php
 				}

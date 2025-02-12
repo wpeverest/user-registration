@@ -84,10 +84,25 @@ class UR_Form_Field_User_Login extends UR_Form_Field {
 			);
 		}
 
+		$allow_special_character = $single_form_field->advance_setting->username_character;
+
 		if ( empty( $username ) ) {
 			$status = true;
-		} else {
+		} elseif ( ! $allow_special_character ) {
 			$status = validate_username( $username );
+
+			/**
+			 * Disallow certain special characters in the username.
+			 *
+			 * @since 4.0
+			 */
+			$username_disallow_character_patten = '/[@\.\-_]/';
+
+			if ( preg_match_all( $username_disallow_character_patten, $username ) ) {
+				$status = false;
+			}
+		} else {
+			$status = true;
 		}
 
 		if ( ! $status ) {

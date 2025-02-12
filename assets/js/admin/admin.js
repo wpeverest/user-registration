@@ -218,10 +218,10 @@ jQuery(function ($) {
 		.on("ur_adjust_builder_width", function () {
 			var adminMenuWidth = $("#adminmenuwrap").width(),
 				$builder = $(
-					".user-registration_page_add-new-registration .ur-form-subcontainer .menu-edit"
+					".user-registration-membership_page_add-new-registration .ur-form-subcontainer .menu-edit"
 				),
 				$loading = $(
-					".user-registration_page_add-new-registration .ur-form-subcontainer .ur-loading-container"
+					".user-registration-membership_page_add-new-registration .ur-form-subcontainer .ur-loading-container"
 				);
 
 			$builder.css({ left: adminMenuWidth + "px" });
@@ -756,6 +756,127 @@ jQuery(function ($) {
 		}
 	);
 
+
+	/**
+	 * Save form applying theme style.
+	 */
+		$(document.body).on("change", "#ur_toggle_form_preview_theme", function () {
+			$('.ur-frontend-form').toggleClass("ur-frontend-form-preview");
+			$('#ur-form-save').toggleClass("hidden");
+
+
+		})
+	/**
+	 * Toggle sidepanel.
+	 */
+	$(document.body).on("click", ".ur-form-preview-sidepanel-toggler", function () {
+		$(".ur-form-side-panel").toggleClass("hidden");
+		$(this).toggleClass("inactive");
+		$(".ur-form-preview-main-content").toggleClass("ur-form-preview-overlay");
+
+	})
+
+	/**
+	 * Change form preview based on device selected.
+	 */
+	$(document.body).on("click", ".ur-form-preview-device", function () {
+
+		var device = $(this).data("device");
+		var container_wrapper = $(".ur-frontend-form");
+		var preview_form = $(".ur-preview-content");
+		$(this).closest('.ur-form-preview-devices').find(".ur-form-preview-device").removeClass("active");
+		$(this).parent().find("svg path").css("fill", "#383838")
+		$(this).find("path").css("fill", "#475BB2");
+
+
+		if (device === "desktop") {
+			container_wrapper.addClass("ur-frontend-form-desktop-view");
+			container_wrapper.removeClass("ur-frontend-form-table-view");
+			container_wrapper.removeClass("ur-frontend-form-mobile-view");
+			preview_form.removeClass("ur-preview-tablet-wrapper");
+			preview_form.removeClass("ur-preview-mobile-wrapper");
+			$(this).addClass("active");
+
+
+    	} else if(device === "tablet") {
+			container_wrapper.addClass("ur-frontend-form-table-view");
+			container_wrapper.removeClass("ur-frontend-form-desktop-view");
+			container_wrapper.removeClass("ur-frontend-form-mobile-view");
+			preview_form.addClass("ur-preview-tablet-wrapper");
+			preview_form.removeClass("ur-preview-mobile-wrapper");
+			$(this).addClass("active");
+		}else if(device === "mobile") {
+			container_wrapper.addClass("ur-frontend-form-mobile-view");
+			container_wrapper.removeClass("ur-frontend-form-desktop-view");
+			container_wrapper.removeClass("ur-frontend-form-table-view");
+			preview_form.addClass("ur-preview-mobile-wrapper");
+			preview_form.removeClass("ur-preview-tablet-wrapper");
+
+			$(this).addClass("active");
+		}else{
+			container_wrapper.removeClass("ur-frontend-form-desktop-view");
+			container_wrapper.removeClass("ur-frontend-form-table-view");
+			container_wrapper.removeClass("ur-frontend-form-mobile-view");
+			$(this).addClass("active");
+		}
+
+
+
+
+	})
+
+	/**
+	 * Save form preview settings.
+	 */
+	$(document.body).on("click", "#ur-form-save", function () {
+		var form_id = $(this).data( "id" );
+		var is_enabled = $('#ur_toggle_form_preview_theme').is(":checked");
+		if(is_enabled){
+			form_theme = 'theme';
+		}else{
+			form_theme = 'default';
+		}
+
+		$.ajax({
+			url: user_registration_form_preview.ajax_url,
+			type: "POST",
+			data: {
+				action: "user_registration_form_preview_save",
+				id: form_id,
+				theme: form_theme,
+				security: user_registration_form_preview.form_preview_nonce,
+			},
+			beforeSend: function () {
+				var spinner =
+					'<span class="ur-spinner is-active" style="margin-left: 20px"></span>';
+				$(".ur-form-preview-save").append(spinner);
+			},
+			complete: function (response) {
+				$(".ur-spinner").remove();
+				$("#ur-form-save").addClass("hidden");
+				// $('.ur-form-preview-save').find('img').remove()
+				// if (response.responseJSON.success === true) {
+				// 	$(".ur-form-preview-save-title").html(  response.responseJSON.data.message);
+
+				// } else {
+				// 	$(".ur-form-preview-save-title").html(  response.responseJSON.data.message);
+				// }
+			}
+
+		})
+	})
+
+	$(document).ready(function () {
+		// $('#ur_toggle_form_preview_theme').is(":checked") ? $('link#ur-form-preview-theme-style-css').prop('disabled', true) : $('link#ur-form-preview-default-style-css').prop('disabled', false);
+			$('#ur_toggle_form_preview_theme').is(":checked") ? $('.ur-frontend-form').addClass("ur-frontend-form-preview") : $('.ur-frontend-form').removeClass("ur-frontend-form-preview");
+	})
+
+	$(document.body).on("click", ".ur-form-preview-upgrade", function () {
+		window.open(user_registration_form_preview.pro_upgrade_link, "_blank");
+	})
+
+
+
 	/**
 	 * Hide/Show minimum password strength field on the basis of enable strong password value.
 	 */
@@ -915,6 +1036,13 @@ jQuery(function ($) {
 			custom_password_params.hide();
 		}
 	});
+	//Handel form title and description toggle
+	$(document).ready(function () {
+		hide_show_title_options();
+		$(document).on("change", "#user_registration_enable_form_title_description", function () {
+			hide_show_title_options();
+		});
+	});
 
 	$(document).ready(function () {
 		hide_show_redirection_options();
@@ -924,6 +1052,32 @@ jQuery(function ($) {
 			hide_show_redirection_options
 		);
 	});
+
+	/**
+	 * Hide or Show Title settings.
+	 *
+	 */
+	var hide_show_title_options = function () {
+
+		var title = $(
+			"#user_registration_form_title"
+		).closest(".form-row");
+		var description = $(
+			"#user_registration_form_description"
+		).closest(".form-row");
+
+		var toggle_title = $(
+			"#user_registration_enable_form_title_description"
+		);
+
+		if (toggle_title.is(":checked")) {
+			title.show();
+			description.show();
+		} else {
+			title.hide();
+			description.hide();
+		}
+	}
 
 	/**
 	 * Hide or Show Redirection settings.
@@ -942,6 +1096,8 @@ jQuery(function ($) {
 		var redirect_url = $("#user_registration_form_setting_redirect_options")
 			.closest(".form-row")
 			.slideUp(800);
+		var form_row = redirect_after_registration.closest('.form-row');
+		form_row.find('#ur-rar-url-notice').remove();
 
 		if (selected_redirection_option.length) {
 			switch (selected_redirection_option.val()) {
@@ -961,6 +1117,9 @@ jQuery(function ($) {
 					$(
 						"#user_registration_form_setting_redirect_after_field"
 					).hide();
+					if(user_registration_form_builder_data.form_has_membership_field) {
+						show_membership_redirection_notice(form_row);
+					}
 					break;
 				case "previous-page":
 					$(
@@ -972,7 +1131,10 @@ jQuery(function ($) {
 			}
 		}
 	};
-
+	var show_membership_redirection_notice = function(form_row) {
+		var notice = ' <div id="ur-rar-url-notice" style="padding:10px;  border: 1px solid #c3c4c7; border-left-color: #ffa900; border-left-width: 4px; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04)">' + user_registration_form_builder_data.i18n_default_redirection_notice_for_membership+'</div>';
+		form_row.append(notice);
+	};
 	/**
 	 * Prevent negative input for Waiting Period Before Redirection setting.
 	 */
@@ -1131,7 +1293,7 @@ jQuery(function ($) {
 			complete: function (response) {
 				$(".ur-spinner").remove();
 				$(
-					".user-registration_page_user-registration-settings .notice"
+					".user-registration-membership_page_user-registration-settings .notice"
 				).remove();
 				if (response.responseJSON.success === true) {
 					message_string =
@@ -1151,7 +1313,7 @@ jQuery(function ($) {
 					);
 				}
 				$(
-					".user-registration_page_user-registration-settings .notice"
+					".user-registration-membership_page_user-registration-settings .notice"
 				).css("display", "block");
 				$(window).scrollTop($(".notice").position());
 			}
@@ -1339,6 +1501,10 @@ jQuery(function ($) {
 					.closest(".ur-advance-setting")
 					.find("input");
 
+			if( inputElement.length === 0 ){
+				inputElement = ($(this).closest(".ur-general-setting").find("input"));
+			}
+
 			var advanceFieldData = inputElement.data("advance-field"),
 				fieldData = inputElement.data("field"),
 				field_name =
@@ -1352,6 +1518,32 @@ jQuery(function ($) {
 		});
 	});
 
+	function update_paypal_settings($this) {
+		var paypal_inputs = $('#paypal-standard-settings .paypal-setting-group'),
+			override_global_settings = $('#paypal-standard-settings #user_registration_override_paypal_global_settings');
+
+		paypal_inputs.hide();
+		if($this.is(':checked') && override_global_settings.is(':checked')) {
+			paypal_inputs.show();
+		}
+	}
+
+	$(document.body).on("click", "#user_registration_enable_paypal_standard , #user_registration_override_paypal_global_settings", function() {
+		update_paypal_settings($(this));
+	});
+
+	update_paypal_settings($('#user_registration_enable_paypal_standard'));
+
+	$(document.body).on("click", "#user_registration_override_paypal_global_settings", function() {
+		var $this = $(this),
+			type = $(this).is(':checked') ? 'form' : 'global';
+
+		$('#user_registration_paypal_mode').val(user_registration_form_builder_data.paypal_settings[type].paypal_mode);
+		$('#user_registration_paypal_email_address').val(user_registration_form_builder_data.paypal_settings[type].paypal_email);
+		$('#user_registration_paypal_cancel_url').val(user_registration_form_builder_data.paypal_settings[type].cancel_url);
+		$('#user_registration_paypal_return_url').val(user_registration_form_builder_data.paypal_settings[type].return_url);
+
+	})
 	/**
 	 * For update the default value.
 	 */

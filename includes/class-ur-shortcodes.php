@@ -26,6 +26,7 @@ class UR_Shortcodes {
 			'user_registration_form'          => __CLASS__ . '::form', // change it to user_registration_form.
 			'user_registration_my_account'    => __CLASS__ . '::my_account',
 			'user_registration_login'         => __CLASS__ . '::login',
+			'user_registration_lost_password' => __CLASS__ . '::lost_password',
 			'user_registration_edit_profile'  => __CLASS__ . '::edit_profile',
 			'user_registration_edit_password' => __CLASS__ . '::edit_password',
 		);
@@ -62,8 +63,6 @@ class UR_Shortcodes {
 	) {
 		ob_start();
 		include_once UR_ABSPATH . 'includes/functions-ur-notice.php';
-		$notices = ur_get_notices();
-		ur_print_notices();
 		$wrap_before = empty( $wrapper['before'] ) ? '<div id="user-registration" class="' . esc_attr( $wrapper['class'] ) . '">' : $wrapper['before'];
 		echo wp_kses_post( $wrap_before );
 		call_user_func( $function, $atts );
@@ -151,6 +150,19 @@ class UR_Shortcodes {
 				)
 			)
 		);
+	}
+
+	/**
+	 * Lost password page shortcode.
+	 *
+	 * @param mixed $atts Extra attributes.
+	 *
+	 * @return string
+	 */
+	public static function lost_password( $atts ) {
+		do_action( 'user_registration_my_account_enqueue_scripts', array(), 0 );
+
+		return self::shortcode_wrapper( array( 'UR_Shortcode_My_Account', 'lost_password' ), $atts );
 	}
 
 	/**
@@ -254,9 +266,9 @@ class UR_Shortcodes {
 		 * @param bool $default_value Default value retrieved from the 'users_can_register' setting.
 		 */
 		$users_can_register = apply_filters( 'ur_register_setting_override', get_option( 'users_can_register' ) );
-		$check_user_state 		= isset( $atts['userState'] ) && 'logged_in' === $atts['userState'];
+		$check_user_state   = isset( $atts['userState'] ) && 'logged_in' === $atts['userState'];
 
-		if( $check_user_state ) {
+		if ( $check_user_state ) {
 			return wp_kses_post( apply_filters( 'user_registration_logged_in_message', sprintf( __( 'You are already logged in. <a href="%s">Log out?</a>', 'user-registration' ), ur_logout_url() ) ) );
 		}
 

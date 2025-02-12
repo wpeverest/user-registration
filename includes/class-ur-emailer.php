@@ -65,7 +65,7 @@ class UR_Emailer {
 	 * Apply filters to modify sender's details before email is sent.
 	 */
 	public static function ur_send_email_before() {
-		add_filter( 'wp_mail_from', array( __CLASS__, 'ur_sender_email' ) );
+		add_filter( 'wp_mail_from', array( __CLASS__, 'ur_sender_email' ), 100 );
 		add_filter( 'wp_mail_from_name', array( __CLASS__, 'ur_sender_name' ) );
 	}
 
@@ -431,6 +431,10 @@ class UR_Emailer {
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
 			if ( ur_option_checked( 'user_registration_enable_successfully_registered_email', true ) ) {
+				$is_membership_form = check_membership_field_in_form($form_id);
+				if( $is_membership_form ) {
+					return;
+				}
 				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), $attachment, $template_id );
 			}
 		}
@@ -508,6 +512,10 @@ class UR_Emailer {
 		$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
 		if ( ur_option_checked( 'user_registration_enable_admin_email', true ) ) {
+			$is_membership_form = check_membership_field_in_form($form_id);
+			if( $is_membership_form ) {
+				return;
+			}
 			foreach ( $admin_email as $email ) {
 				self::user_registration_process_and_send_email( $email, $subject, $message, $header, $attachment, $template_id );
 			}
@@ -548,7 +556,7 @@ class UR_Emailer {
 		$admin_email = explode( ',', $admin_email );
 		$admin_email = array_map( 'trim', $admin_email );
 
-		$subject  = get_option( 'user_registration_approval_link_email_subject', __( 'Approval Link For New User Registration', 'user-registration' ) );
+		$subject  = get_option( 'user_registration_approval_link_email_subject', __( 'Approval Link For New User Registration & Membership', 'user-registration' ) );
 		$settings = new UR_Settings_Approval_Link_Email();
 
 		$form_id = ur_get_form_id_by_userid( $user_id );
@@ -626,6 +634,7 @@ class UR_Emailer {
 
 		if ( 0 === intval( $status ) ) {
 
+			$user_action               = isset( $_POST['action'] ) ? $_POST['action'] : '';
 			$subject                   = get_option( 'user_registration_registration_pending_email_subject', __( 'Sorry! Registration changed to pending on {{blog_info}}', 'user-registration' ) );
 			$settings                  = new UR_Settings_Registration_Pending_Email();
 			$message                   = $settings->ur_get_registration_pending_email();
@@ -638,7 +647,9 @@ class UR_Emailer {
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
 			if ( ur_option_checked( 'user_registration_enable_registration_pending_email', true ) ) {
-				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), '', $template_id );
+				if ( "user_registration_user_form_submit" !== $user_action ) {
+					self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), '', $template_id );
+				}
 			}
 		} elseif ( -1 === intval( $status ) ) {
 

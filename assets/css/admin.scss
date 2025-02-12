@@ -39,7 +39,7 @@
  }
 
  .toplevel_page_user-registration,
- .user-registration_page_user-registration-frontend-list {
+ .user-registration-membership_page_user-registration-frontend-list {
 	 // Design customize for shortcode in list table
 	 .shortcode {
 		 .widefat {
@@ -53,7 +53,7 @@
 	 }
  }
 
- .user-registration_page_user-registration-dashboard {
+ .user-registration-membership_page_user-registration-dashboard {
 	 #wpcontent {
 		 margin-left: 140px;
 
@@ -63,7 +63,7 @@
 	 }
  }
 
- .user-registration_page_user-registration-settings {
+ .user-registration-membership_page_user-registration-settings {
 	 .notice {
 		 display: none;
 	 }
@@ -324,7 +324,7 @@
  /**
 	 * Form Builder Styles
 	 **/
- .user-registration_page_add-new-registration,
+ .user-registration-membership_page_add-new-registration,
  .toplevel_page_user-registration {
 	 #wpfooter {
 		 display: none; //Hide WP footer on form builder page
@@ -412,27 +412,27 @@
 			 }
 		 }
 
-		 &::before,
-		 &::after {
-			 content: "";
-			 display: flex;
-			 position: absolute;
-			 left: 0;
-			 right: 0;
-			 bottom: 0;
-			 background: $white;
-		 }
+		//  &::before,
+		//  &::after {
+		// 	 content: "";
+		// 	 display: flex;
+		// 	 position: absolute;
+		// 	 left: 0;
+		// 	 right: 0;
+		// 	 bottom: 0;
+		// 	 background: $white;
+		//  }
 
-		 &::before {
-			 top: 0;
-			 z-index: -1;
-		 }
+		//  &::before {
+		// 	 top: 0;
+		// 	 z-index: -1;
+		//  }
 
-		 &::after {
-			 height: 10px;
-			 box-shadow: 0px 4px 8px transparentize($gray_base, 0.92);
-			 z-index: -2;
-		 }
+		//  &::after {
+		// 	 height: 10px;
+		// 	 box-shadow: 0px 4px 8px transparentize($gray_base, 0.92);
+		// 	 z-index: -2;
+		//  }
 	 }
 
 	 .major-publishing-actions {
@@ -1410,27 +1410,15 @@
 				 background-position: center;
 				 background-size: 100%;
 				 float: right;
-				 transform: rotate(180deg);
+				//  transform: rotate(180deg);
 				 width: 18px;
 				 height: 18px;
 				 transition: all 0.3s ease-in-out;
-
-				 // content: "\f142";
-				 // cursor: pointer;
-				 // display: block;
-				 // font: 400 20px/1 Dashicons;
-				 // line-height: 0.5 !important;
-				 // padding: 4px;
-				 // position: relative;
-				 // right: 0;
-				 // top: 0;
-				 // float: right;
 			 }
 
 			 &.closed {
 				 &:before {
-					 // content: "\f140";
-					 transform: rotate(0deg);
+					 transform: rotate(180deg);
 				 }
 			 }
 		 }
@@ -2353,11 +2341,19 @@
 	 position: relative;
 	 vertical-align: baseline;
 	 width: 16px;
-
 	 &:not(.no-icon) {
 		 &::after {
-			 @include icon_dashicons("\f223");
-			 cursor: help;
+			 background-image: url(../images/settings-icons/information.svg) !important;
+			 content: "";
+			 background-repeat: no-repeat !important;
+			 background-size: 100% !important;
+			 background-position: center;
+			 display: block;
+			 width: 8px;
+			 height: 15px;
+			 cursor: pointer;
+			 padding: 4px;
+			 border-radius: 3px;
 		 }
 	 }
  }
@@ -2638,7 +2634,7 @@
  }
 
  @media screen and (max-width: 782px) {
-	 body.user-registration_page_add-new-registration {
+	 body.user-registration-membership_page_add-new-registration {
 		 min-width: 0 !important;
 	 }
 
@@ -2668,7 +2664,7 @@
  }
 
  @media screen and (max-width: 600px) {
-	 .user-registration_page_add-new-registration .major-publishing-actions {
+	 .user-registration-membership_page_add-new-registration .major-publishing-actions {
 		 clear: both;
 		 padding: 10px 0 19px;
 		 line-height: 28px;
@@ -3123,6 +3119,10 @@
 	 }
  }
 
+ #user-registration-form-templates {
+	padding: 20px;
+ }
+
  .user-registration {
 	 .swal2-container {
 		 h3 {
@@ -3157,7 +3157,7 @@
 		 .user-registration-info {
 			 .swal2-actions{
 				 display: flex;
-				 padding: 10px !important ;
+				 padding: 10px;
 			 }
 			 .swal2-html-container{
 				 p{
@@ -3193,6 +3193,10 @@
 
 			 &.user-registration-settings-swal2 {
 				 width: auto;
+
+				 .swal2-cancel {
+					color: white;
+				 }
 			 }
 
 			 &.swal2-icon-error {
@@ -3516,8 +3520,74 @@
 	 }
  }
 
- .user-registration_page_add-new-registration,
- .toplevel_page_user-registration {
+ .user-registration-membership_page_user-registration-login-forms {
+	.ur-admin-page-topnav {
+		.ur-editing-tag {
+			padding: $spacing_4px $spacing_10px;
+			background: $blue-50;
+			border-radius: $border_radius_50;
+			font-style: italic;
+			font-weight: $regular;
+			font-size: 12px;
+			line-height: 150%;
+			color: $grey-400;
+		}
+
+		.major-publishing-actions {
+			clear: both;
+			line-height: 28px;
+			margin-left: auto;
+
+			.publishing-action {
+				text-align: right;
+				float: right;
+
+				input {
+					&.code {
+						width: 280px;
+						height: 33px;
+						padding: 0 $spacing_6px;
+						margin: 0;
+						border-color: $grey-50;
+						background: $blue-25;
+						border-radius: 3px 0 0 3px;
+					}
+				}
+			}
+			.login-forms-shortcode-action {
+				input {
+					&.code {
+						font-size: large;
+						width: 320px;
+						height: 33px;
+						padding: 0 $spacing_6px;
+						margin: 0;
+						border-color: $grey-50;
+						background: $blue-25;
+						border-radius: 3px 0 0 3px;
+						display: inline;
+					}
+				}
+			}
+
+			#copy-shortcode {
+				margin-left: -5px;
+				border-radius: 0 4px 4px 0;
+				background: $blue-50 !important;
+				border-color: $grey-50 !important;
+
+				svg {
+					fill: $white;
+					margin-bottom: 5px;
+					vertical-align: middle;
+				}
+			}
+		}
+	}
+ }
+
+ .user-registration-membership_page_add-new-registration,
+  .toplevel_page_user-registration {
 	 #nav-menu-header {
 		 padding-right: $spacing_30px;
 
@@ -3647,7 +3717,7 @@
 				 label {
 					 font-weight: $regular;
 					 font-size: 14px;
-					 line-height: 140%;
+					 line-height: 1.3;
 					 color: $grey-400;
 					 display: flex;
 					 align-items: center;
@@ -4103,6 +4173,12 @@
 			 }
 		 }
 	 }
+	 .user-registration-help-tip,
+	 .ur-portal-tooltip {
+		 &::after {
+			 width: 16px;
+		 }
+	 }
  }
 
  #wpcontent {
@@ -4242,7 +4318,7 @@
 				 }
 				 #post-body {
 					 .ur-registered-from {
-						 display: block;
+						 display: flex;
 						 background-color: transparent;
 						 .ur-builder-wrapper {
 							 height: auto;
@@ -4357,7 +4433,7 @@
 		 padding-left: 0;
 	 }
 
-	 .user-registration_page_add-new-registration
+	 .user-registration-membership_page_add-new-registration
 		 .ur-form-container
 		 #menu-management
 		 .menu-edit {
@@ -4811,10 +4887,10 @@
 			 margin-left: 0;
 			 min-width: 100%;
 
-			 .ur-selected-inputs {
-				 padding-left: $spacing_20px !important;
-				 padding-right: $spacing_20px !important;
-			 }
+			//  .ur-selected-inputs {
+			// 	 padding-left: $spacing_20px !important;
+			// 	 padding-right: $spacing_20px !important;
+			//  }
 		 }
 	 }
  }
@@ -5784,7 +5860,8 @@
 							 border-color: #bababa;
 							 height: 38px;
 							 width: 220px;
-							 padding-inline: 14px;
+							 padding-left: 14px;
+							 padding-right: 14px;
 							 color: #383838;
 						 }
 
@@ -5997,7 +6074,7 @@
  }
 
  // Delete Popup CSS
- .user-registration_page {
+ .user-registration-membership_page {
 	 &_user-registration-membership,
 	 &_user-registration-coupons,
 	 &_user-registration-members,
@@ -6179,14 +6256,69 @@
 		 }
 	 }
  }
+#membership-group-list {
+	.wp-list-table.membership_groups  {
+		.user-registration-switch {
+			input[type=checkbox] {
+				border-radius: 10px !important;
+				border: 0;
+				&:checked {
+					border-color: #475BB2;
+					background: #475BB2;
+				}
+				&::after {
+					width: 12px;
+					height: 12px;
+					margin: 4px;
+				}
+			}
+		}
+		tbody {
+			tr {
+				&.no-items {
+					background: #ffffff;
 
+					td {
+						padding: 0;
+
+						.empty-list-table-container {
+							text-align: center;
+							margin-top: 30px;
+							margin-bottom: 30px;
+
+							img {
+								width: 300px;
+							}
+
+							h3 {
+								margin-top: 16px;
+								margin-bottom: 8px;
+								color: #222222;
+								font-size: 22px;
+								font-weight: 600;
+								line-height: 32px;
+							}
+
+							p {
+								color: #6B6B6B;
+								font-size: 14px;
+								font-weight: 400;
+								line-height: 24px;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
 
  .user-registration {
 	.swal2-container {
 		.swal2 {
 			&-header {
 				padding: $spacing_32px $spacing_32px 0;
-				gap: $spacing_16px;
+				// gap: $spacing_16px;
 			}
 
 			&-icon {
@@ -6231,6 +6363,35 @@
                         outline: none;
                         box-shadow: none;
 						border-color: $primary_color;
+					}
+				}
+
+				p {
+					margin: 0;
+				}
+
+				.swal2-html-container {
+					.ur-embed-new-page-container {
+						padding-bottom: 0;
+						gap: $spacing_18px;
+					}
+
+					.ur-embed-select-existing-page-container {
+						select {
+							min-height: 38px;
+							padding-left: 14px;
+							margin-top: $spacing_8px;
+
+							&:hover {
+								color: $primary_color;
+							}
+
+							&:focus {
+								box-shadow: none;
+								outline: none;
+								border-color: $primary_color;
+							}
+						}
 					}
 				}
 			}
@@ -6477,3 +6638,429 @@
 		 flex-direction: column;
 	 }
  }
+// Login Form Builder CSS
+body {
+	&.user-registration-membership_page_user-registration-login-forms {
+		overflow-x: hidden;
+
+		.user-registration-login-form-container {
+			.ur-registered-from {
+				.ur-login-form-settings {
+					max-width: 360px;
+					width: 100% !important;
+
+					.nav-tab-wrapper {
+						height: 100%;
+
+						.ur-tab-contents {
+							height: 100%;
+							border-right: 1px solid #e1e1e1;
+							padding-bottom: 16px !important;
+
+							#ur-login-form-setting {
+								.ur-toggle-content {
+									gap: 24px !important;
+
+									select {
+										min-height: 38px;
+										width: 100%;
+										min-width: unset !important;
+										margin: 0;
+									}
+
+									.select2 {
+										&-selection {
+											min-height: 38px;
+
+											&__rendered {
+												height: 100%;
+												padding: 2px 30px 2px 10px
+											}
+
+											&__arrow {
+												top: 5px;
+											}
+										}
+									}
+
+									.user-registration-login-form-global-settings {
+										.user-registration-login-form-toggle-option {
+											display: flex;
+											justify-content: space-between;
+											gap: 40px;
+										}
+										label {
+											font-weight: 500 !important;
+											align-items: end;
+										}
+
+										&--field {
+											input {
+												min-width: unset !important;
+												margin: 0;
+
+												&:focus {
+													border-color: #475BB2;
+												}
+											}
+										}
+									}
+									.user-registration-help-tip,
+									.ur-portal-tooltip {
+										&::after {
+											width: 16px;
+										}
+									}
+									label[for="user_registration_login_options_prevent_core_login"] span {
+										bottom: 18px;
+										right: 20px;
+									}
+
+								}
+							}
+						}
+					}
+
+					&.collapsed {
+						max-width: 0px;
+					}
+
+
+					#ur-collapse {
+						background: #FAFAFC;
+
+						&.close {
+							right: -21px;
+						}
+
+						&.open {
+							left: 0;
+						}
+					}
+				}
+
+				&:has(.collapsed) {
+					.ur-login-form-shortcode {
+						max-width: 0px;
+					}
+				}
+			}
+
+				.ur-builder-wrapper {
+					.ur-selected-inputs {
+						position: sticky;
+						position: -webkit-sticky;
+						top: 30px;
+						padding: 30px !important;
+
+						.button-style-customizer {
+							position: absolute;
+							top: 60px;
+							right: 60px;
+							margin-right: 10px;
+						}
+					}
+				}
+
+				.ur-registered-inputs {
+					&.ur-login-form-shortcode {
+						max-width: 350px;
+						width: 100% !important;
+
+						.nav-tab-wrapper {
+							height: 100%;
+
+							.ur-tab-contents {
+								border-left: 1px solid #e1e1e1;
+								height: 100%;
+								position: sticky;
+								position: -webkit-sticky;
+								top: 30px;
+							}
+
+							.ur-login-shortcode {
+								&--wrapper {
+									.ur-login-content {
+										.login-forms-shortcode-action {
+											input[type="text"] {
+												padding: 0;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+	}
+}
+
+
+
+
+//  ------------------------------skeleton load css------------------------------------
+
+.ur-registration--loading{
+	.loading-content{
+		display: flex;
+		justify-content: space-between;
+		align-items: end;
+		flex-wrap: wrap;
+		&.table--view{
+			display: grid;
+			grid-template-columns: repeat(7, 1fr);
+			grid-gap: 16px;
+			padding: 5px 24px 3px 24px;
+			&.header{
+				background: #f4f4f4;
+				padding: 24px;
+				margin-bottom: 20px;
+				.ur--loading--animate{
+					margin-bottom: 0;
+				}
+				.liner{
+					width: 60%;
+				}
+			}
+			.liner{
+				width: 30%;
+			}
+		}
+		.loading-text-container{
+			width: 70%;
+			.ur--loading--animate{
+				&.main-text{
+					height: 10px;
+					width: 65%;
+				}
+				&.sub-text{
+					height: 10px;
+					width: 50%;
+				}
+			}
+		}
+		.ur--loading--animate{
+			margin-bottom: 10px;
+			background: #ececec;
+			background-image: -webkit-linear-gradient(90deg, #ddd 0px, #e8e8e8 40px, #ddd 80px) ;
+			background-image: -o-linear-gradient(90deg, #ddd 0px, #e8e8e8 40px, #ddd 80px) ;
+			background-image: linear-gradient(90deg, #ddd 0px, #e8e8e8 40px, #ddd 80px) ;
+			background-size: 250px;
+			border-radius: 10px;
+			-webkit-animation: shine-loading-container-items 0.6s infinite ease-out;
+			animation: shine-loading-container-items 0.6s infinite ease-out;
+			&.loading-btn{
+				width: 40px;
+				height: 40px;
+			}
+			&.liner{
+				height: 10px;
+			}
+		}
+		.ur--loading--animate--long{
+			background: #f4f4f4;
+			background-image: -webkit-linear-gradient(90deg, #f4f4f4 0px, #f8f8f8 40px, #f8f8f8 70px, #f4f4f4 80px) ;
+			background-image: -o-linear-gradient(90deg, #f4f4f4 0px, #f8f8f8 40px, #f8f8f8 70px, #f4f4f4 80px) ;
+			background-image: linear-gradient(90deg, #f4f4f4 0px, #f8f8f8 40px, #f8f8f8 70px, #f4f4f4 80px) ;
+			background-size: 1400px;
+			border-radius: 10px;
+			-webkit-animation: shine-loading-container-items-long 1s infinite ease-out;
+			animation: shine-loading-container-items-long 1s infinite ease-out;
+			&.circular{
+				width: 300px;
+				height: 300px;
+				border-radius: 100%;
+				margin: 0 auto;
+			}
+			&.rectangular{
+				width: 100%;
+				height: 300px;
+			}
+			&.liner{
+				width: 100%;
+				height: 10px;
+				margin-bottom: 10px;
+				&.short{
+					width: 60%;
+				}
+			}
+		}
+
+		  @-webkit-keyframes shine-loading-container-items {
+			0% {
+			  background-position: -100px;
+			}
+			40%, 100% {
+			  background-position: 180px;
+			}
+		  }
+
+		  @keyframes shine-loading-container-items {
+			0% {
+			  background-position: -100px;
+			}
+			40%, 100% {
+			  background-position: 180px;
+			}
+		  }
+		  @-webkit-keyframes shine-loading-container-items-long {
+			0% {
+			  background-position: -100px;
+			}
+			100% {
+			  background-position: 1200px;
+			}
+		  }
+
+		  @keyframes shine-loading-container-items-long {
+			0% {
+			  background-position: -100px;
+			}
+			100% {
+			  background-position: 1200px;
+			}
+		  }
+	}
+}
+
+// For RTL Options CSS
+.user-registration {
+	&.rtl {
+		input,
+		textarea,
+		select {
+			text-align: right;
+		}
+
+		.user-registration__wrap {
+			.ur-form-subcontainer {
+				#menu-management {
+					.menu-edit {
+						left: 0 !important;
+						right: 160px;
+
+						#nav-menu-header {
+							padding-left: $spacing_30px;
+							padding-right: $spacing_12px;
+
+							.ur-brand-logo {
+								border-left: 1px solid #e1e1e1;
+								border-right: 0;
+
+								img {
+									margin-right: 0;
+									margin-left: 8px;
+								}
+							}
+
+							.ur-form-title {
+								padding-right: $spacing_18px;
+								padding-left: $spacing_8px;
+							}
+
+							.major-publishing-actions {
+								margin-right: auto;
+								margin-left: unset;
+							}
+						}
+
+						#post-body {
+							.ur-registered {
+								&-inputs {
+									.nav-tab-wrapper {
+										.ur-tab-content {
+											.ur-search-input {
+												input.ur-type-text {
+													padding-right: $spacing_40px;
+													color: $grey-400;
+												}
+											}
+										}
+									}
+								}
+
+								&-from {
+									.ur-builder-wrapper {
+										.ur-selected-inputs {
+											#ur-field-settings {
+												select {
+													padding-right: $spacing_30px;
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+
+						.ur-builder-wrapper {
+							.ur-selected-inputs {
+								select {
+									padding-right: 8px;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+.urm-shortcode  {
+	display: flex;
+	.ur-copy-shortcode {
+		width: 33px;
+		height: 33px;
+		box-shadow: none;
+		border-radius: 0 4px 4px 0;
+		background: #edeff7 !important;
+		border-color: #e9e9e9 !important;
+		min-height: 32px;
+		line-height: 2.30769231;
+		padding-left: 0;
+		padding-right: 0;
+	}
+	input[type=text] {
+		height: 33px;
+		padding: 0 6px;
+		margin: 0;
+		border-color: #e9e9e9;
+		background: #f8f8fa;
+		border-radius: 3px 0 0 3px;
+	}
+	svg {
+		fill: #fff;
+		width: 18px;
+		height: 18px;
+		margin-bottom: 3px;
+		vertical-align: middle;
+	}
+}
+
+.tooltipster-sidetip {
+	.tooltipster-box {
+		background-color: #fff !important;
+		max-width: 220px;
+		box-shadow: 0 6px 24px 0 rgba(10, 10, 10, .1);
+		padding: 16px 18px;
+
+		.tooltipster-content {
+			font-size: 14px;
+			line-height: 20px;
+			color: #222;
+			padding: 0;
+		}
+
+
+	}
+	&.tooltipster-borderless .tooltipster-arrow {
+		height: 8px;
+		margin-left: -8px;
+		width: 16px;
+	}
+	&.tooltipster-base .tooltipster-arrow .tooltipster-arrow-uncropped .tooltipster-arrow-border {
+		border-top-color: #fff !important;
+		border-bottom-color: #fff !important;
+	}
+}
