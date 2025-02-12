@@ -179,51 +179,54 @@ if ( isset( $_GET['force-logout'] ) && 'true' === $_GET['force-logout'] ) {
 					 * Action to fire after rendering of user registration login form.
 					 */
 					do_action( 'user_registration_login_form' );
-					?>
 
-					<p class="form-row">
-						<?php wp_nonce_field( 'user-registration-login', 'user-registration-login-nonce' ); ?>
-						<div class="user-registration-before-login-btn">
-							<?php
-								$remember_me_enabled = ur_option_checked( 'user_registration_login_options_remember_me', true );
-
-							if ( ( $remember_me_enabled && $is_passwordless_enabled && ! $is_passwordless_login_default_login_area_enabled ) || $is_login_settings ) {
-								?>
-									<label class="user-registration-form__label user-registration-form__label-for-checkbox inline">
-										<input class="user-registration-form__input user-registration-form__input-checkbox" name="rememberme" type="checkbox" id="rememberme" value="forever" /> <span><?php echo esc_html( $labels['remember_me'] ); ?></span>
-									</label>
-								<?php
-							}
-							?>
-					</p>
-
-							<?php
-								$lost_password_enabled = ur_option_checked( 'user_registration_login_options_lost_password', true );
-
-							if ( ( $lost_password_enabled && $is_passwordless_enabled && ! $is_passwordless_login_default_login_area_enabled ) || $is_login_settings ) {
-								?>
-										<p class="user-registration-LostPassword lost_password">
-											<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php echo esc_html( $labels['lost_your_password'] ); ?></a>
-										</p>
-								<?php
-							}
-							?>
-					</div>
-						<div>
-						<?php
-
-							/**
-							 * Action to fire before rendering of submit button for user registration login form.
-							 */
-							do_action( 'user_registration_login_form_before_submit_button' );
+					if ( ( $is_passwordless_enabled && ! $is_passwordless_login_default_login_area_enabled ) || $is_login_settings ) {
 						?>
-							<?php if ( $enable_ajax ) { ?>
-							<button type="submit" class="user-registration-Button button ur-submit-button" id="user_registration_ajax_login_submit" name="login" value="<?php echo esc_html( $labels['login'] ); ?>" <?php echo ( $is_login_settings || ( isset( $_GET['ur_login_preview'] ) && $_GET['ur_login_preview'] ) ) ? 'disabled' : ''; ?>/><?php echo esc_html( $labels['login'] ); ?><span></span></button>
-							<?php } else { ?>
-							<button type="submit" class="user-registration-Button button " name="login" value="<?php echo esc_html( $labels['login'] ); ?>"<?php echo ( $is_login_settings || ( isset( $_GET['ur_login_preview'] ) && $_GET['ur_login_preview'] ) ) ? 'disabled' : ''; ?> /><?php echo esc_html( $labels['login'] ); ?></button>
-							<?php } ?>
-						</div>
-						<input type="hidden" name="redirect" value="<?php echo isset( $redirect ) ? esc_attr( $redirect ) : esc_attr( the_permalink() ); ?>" />
+						<p class="form-row">
+							<?php wp_nonce_field( 'user-registration-login', 'user-registration-login-nonce' ); ?>
+							<div class="user-registration-before-login-btn">
+								<?php
+									$remember_me_enabled = ur_option_checked( 'user_registration_login_options_remember_me', true );
+
+								if ( ( $remember_me_enabled && $is_passwordless_enabled && ! $is_passwordless_login_default_login_area_enabled ) || $is_login_settings ) {
+									?>
+										<label class="user-registration-form__label user-registration-form__label-for-checkbox inline">
+											<input class="user-registration-form__input user-registration-form__input-checkbox" name="rememberme" type="checkbox" id="rememberme" value="forever" /> <span><?php echo esc_html( $labels['remember_me'] ); ?></span>
+										</label>
+									<?php
+								}
+								?>
+								<?php
+									$lost_password_enabled = ur_option_checked( 'user_registration_login_options_lost_password', true );
+
+								if ( ( $lost_password_enabled && $is_passwordless_enabled && ! $is_passwordless_login_default_login_area_enabled ) || $is_login_settings ) {
+									?>
+											<p class="user-registration-LostPassword lost_password">
+												<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php echo esc_html( $labels['lost_your_password'] ); ?></a>
+											</p>
+									<?php
+								}
+								?>
+							</div>
+						</p>
+						<?php
+					}
+					?>
+					<div>
+					<?php
+
+						/**
+						 * Action to fire before rendering of submit button for user registration login form.
+						 */
+						do_action( 'user_registration_login_form_before_submit_button' );
+					?>
+						<?php if ( $enable_ajax ) { ?>
+						<button type="submit" class="user-registration-Button button ur-submit-button" id="user_registration_ajax_login_submit" name="login" value="<?php echo esc_html( $labels['login'] ); ?>" <?php echo ( $is_login_settings || ( isset( $_GET['ur_login_preview'] ) && $_GET['ur_login_preview'] ) ) ? 'disabled' : ''; ?>/><?php echo esc_html( $labels['login'] ); ?><span></span></button>
+						<?php } else { ?>
+						<button type="submit" class="user-registration-Button button " name="login" value="<?php echo esc_html( $labels['login'] ); ?>"<?php echo ( $is_login_settings || ( isset( $_GET['ur_login_preview'] ) && $_GET['ur_login_preview'] ) ) ? 'disabled' : ''; ?> /><?php echo esc_html( $labels['login'] ); ?></button>
+						<?php } ?>
+					</div>
+					<input type="hidden" name="redirect" value="<?php echo isset( $redirect ) ? esc_attr( $redirect ) : esc_attr( the_permalink() ); ?>" />
 
 					<?php
 					$users_can_register = ur_option_checked( 'users_can_register', true );
