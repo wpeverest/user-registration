@@ -8062,20 +8062,22 @@ if ( ! function_exists( 'ur_find_my_account_in_custom_template' ) ) {
 
 		$content = ur_file_get_contents( $template_path );
 
-		if ( strpos( $content, '[user_registration_my_account' ) !== false ) {
-			return true;
-		}
-		if ( strpos( $content, '[user_registration_login' ) !== false ) {
-			return true;
-		}
-		if ( strpos( $content, '[woocommerce_my_account' ) !== false ) {
-			return true;
-		}
-		if ( strpos( $content, '<!-- wp:user-registration/myaccount' ) !== false ) {
-			return true;
-		}
-		if ( strpos( $content, '<!-- wp:user-registration/login' ) !== false ) {
-			return true;
+		if ( ! empty( $content ) ) {
+			if ( strpos( $content, '[user_registration_my_account' ) !== false ) {
+				return true;
+			}
+			if ( strpos( $content, '[user_registration_login' ) !== false ) {
+				return true;
+			}
+			if ( strpos( $content, '[woocommerce_my_account' ) !== false ) {
+				return true;
+			}
+			if ( strpos( $content, '<!-- wp:user-registration/myaccount' ) !== false ) {
+				return true;
+			}
+			if ( strpos( $content, '<!-- wp:user-registration/login' ) !== false ) {
+				return true;
+			}
 		}
 
 		return $value;
