@@ -96,10 +96,10 @@ class MembersRepository extends BaseRepository implements MembersInterface {
 			       wpu.user_registered,
 			       wums.expiry_date,
 			    	wumo.payment_method
-				FROM wp_users wpu
-		        JOIN wp_ur_membership_subscriptions wums ON wpu.ID = wums.user_id
-				JOIN wp_ur_membership_orders wumo ON wpu.ID = wumo.user_id
-		        JOIN wp_posts wpp ON wums.item_id = wpp.ID
+				FROM $this->table wpu
+		        JOIN $this->subscription_table wums ON wpu.ID = wums.user_id
+				JOIN $this->orders_table wumo ON wpu.ID = wumo.user_id
+		        JOIN $this->posts_table wpp ON wums.item_id = wpp.ID
 				WHERE wpp.post_status = 'publish'
 				AND 1 = 1
 		";

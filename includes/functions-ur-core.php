@@ -2402,17 +2402,16 @@ function ur_falls_in_date_range( $target_date, $start_date = null, $end_date = n
  * Get Post Content By Form ID.
  *
  * @param int $form_id Form Id.
+ * @param string $form_status The form status.
  *
  * @return array|mixed|null|object
  */
-function ur_get_post_content( $form_id ) {
+function ur_get_post_content( $form_id, $form_status='publish' ) {
 
 	$args      = array(
 		'post_type'   => 'user_registration',
-
-		'post_status' => 'publish',
-
-		'post__in'    => array( $form_id ),
+		'post_status' => $form_status,
+		'post__in' => array( $form_id ),
 	);
 	$post_data = get_posts( $args );
 

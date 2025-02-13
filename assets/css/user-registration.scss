@@ -153,6 +153,7 @@
 	border-top-color: $red !important;
 	background: rgba($red, 0.1) !important;
 	color: darken($red, 15%) !important;
+	
 	&::before {
 		content: "\f534";
 	}
