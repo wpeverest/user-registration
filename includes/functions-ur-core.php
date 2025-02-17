@@ -8062,6 +8062,10 @@ if ( ! function_exists( 'ur_find_my_account_in_custom_template' ) ) {
 
 		$content = ur_file_get_contents( $template_path );
 
+		if ( empty( $content ) || !is_string( $content ) ) {
+			return $value;
+		}
+
 		if ( strpos( $content, '[user_registration_my_account' ) !== false ) {
 			return true;
 		}
