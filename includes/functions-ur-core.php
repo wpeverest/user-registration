@@ -5547,7 +5547,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 						// For slot booking.
 						$field['enable_date_slot_booking'] = isset( $advance_data['advance_setting']->enable_date_slot_booking ) ? $advance_data['advance_setting']->enable_date_slot_booking : false;
 					}
-
+					$field['form_id'] = $form_id;
 					$filter_data = array(
 						'form_data' => $field,
 						'data'      => $advance_data,
