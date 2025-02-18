@@ -1,3 +1,10 @@
+= 4.0.3     - 11/02/2025 =
+* Enhance   - Apply template styles to lost password and reset password form.
+* Fix       - Login form render issue.
+* Fix       - Overriding form design with custom css not working.
+* Fix       - Special characters validation blocking email input in lost password.
+* Fix       - User not found error message not being displayed in lost password page.
+
 = 4.0.2     - 07/02/2025 =
 * Fix       - Critical error while updating plugin.
 * Fix       - Username label in lost password form.

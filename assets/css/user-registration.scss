@@ -205,12 +205,14 @@ textarea.ur-input-border-red {
 				font-size: 14px;
 				letter-spacing: 0.15px;
 				margin-top: 5px;
+				margin-bottom: 0;
 			}
 		}
 		.ur-input-with-icon{
 			position: relative;
 			display: flex;
 			align-items: center;
+
 			.input-icon{
 				position: absolute;
 				left: 10px;
@@ -226,7 +228,6 @@ textarea.ur-input-border-red {
 		#user_login{
 			border-radius: 4px;
 			border: 1px solid #E9E9E9;
-			margin-top: -24px;
 		}
 		.ur-reset-password-btn{
 			border: 1px solid #475BB2;
@@ -234,6 +235,12 @@ textarea.ur-input-border-red {
 			width: 100%;
 			color: #FFF;
 			letter-spacing: 0.15px;
+			border: 0;
+
+			&:hover {
+				background: #38488e;
+				border-color: #38488e;
+			}
 		}
 
 
@@ -321,14 +328,10 @@ textarea.ur-input-border-red {
 					float: none;
 
 					&:hover {
-						background: #38488e !important;
-						border-color: #38488e !important;
+						background: #38488e;
+						border-color: #38488e;
 					}
 				}
-
-				// .user-registration-tfa-submit-container {
-
-				// }
 			}
 
 			.ur-field-item {
@@ -628,24 +631,30 @@ textarea.ur-input-border-red {
 							padding-right: 50px;
 						}
 					}
+
+					.user-registration-Button {
+						// background: $primary_color;
+						border: 0;
+						border-radius: 4px;
+					}
 				}
 			}
 
-			input[type="submit"],
-			button[type="submit"],
-			button.user-registration-multi-part-nav-prev,
-			button.user-registration-multi-part-nav-next {
-				background: $input_background_color;
-				border: 1px solid $border_color;
-				color: $label_color;
-				border-radius: 0;
+			// input[type="submit"],
+			// button[type="submit"],
+			// button.user-registration-multi-part-nav-prev,
+			// button.user-registration-multi-part-nav-next {
+			// 	// background: $input_background_color;
+			// 	// border: 1px solid $border_color;
+			// 	// color: $label_color;
+			// 	border-radius: 0;
 
-				&:hover {
-					background: $primary_color;
-					color: $white;
-					border-color: $primary_color;
-				}
-			}
+			// 	// &:hover {
+			// 	// 	background: $primary_color;
+			// 	// 	color: $white;
+			// 	// 	border-color: $primary_color;
+			// 	// }
+			// }
 		}
 	}
 
@@ -1342,7 +1351,6 @@ span.ur-shortcode-form-embed-dot {
 
 .user-registration-error{
 	padding : 10px !important;
-	z-index : 9999;
 	display : flex;
 	align-items: center;
 	border-radius: 4px;
@@ -1351,7 +1359,8 @@ span.ur-shortcode-form-embed-dot {
 	border-top : none;
 
 	&::before {
-		content: '';
+		// content: '';
+		content: none;
 		display: '';
 	}
 
@@ -1377,6 +1386,12 @@ span.ur-shortcode-form-embed-dot {
 	border-radius: 4px;
 	border: 1px solid #475BB2;
 	color: #ffffff;
+
+	&:hover {
+		background: #38488e;
+		border-color: #38488e;
+		color: $white;
+	}
 
 	.ur-spinner{
 		width: 16px;
@@ -1460,11 +1475,11 @@ span.ur-shortcode-form-embed-dot {
 		background:  transparent !important; //Overriding global error background.
 		margin-left : unset !important; //Overriding global error margin.
 
-		&::before {
-			content: "\f534" ;
-			color : #FF0000 ;
+		// &::before {
+		// 	// content: "\f534" ;
+		// 	color : #FF0000 ;
 
-		}
+		// }
 	}
 
 }
@@ -1687,8 +1702,8 @@ body {
 		.user-registration-error {
 			position: unset;
 			width: 100%;
-			margin: 0 0 24px !important;
-			align-items: flex-start;
+			margin: 0 0 24px;
+			align-items: center;
 
 			svg {
 				width: 28px;
@@ -1782,6 +1797,114 @@ body {
 						width: max-content;
 					}
 				}
+
+				&--bordered {
+					&:not(.login) {
+						box-shadow: none;
+						border: 1px solid #e9e9e9;
+
+						form {
+							.ur-form-row {
+								.ur-form-grid {
+									input,
+									textarea,
+									select {
+										&:not([type="radio"]),
+										&:not([type="checkbox"]),
+										&:not([type="file"]) {
+											background: transparent;
+											border-color: #e9e9e9;
+											box-shadow: none;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+
+				&--flat {
+					&:not(.login) {
+						box-shadow: none;
+						border: 1px solid #e9e9e9;
+						border-radius: 0;
+
+						form {
+							.ur-form-row {
+								.ur-form-grid {
+									.ur-field-item {
+										margin-bottom: 20px;
+
+										&:last-child {
+											margin-bottom: 0;
+										}
+									}
+
+									input,
+									textarea,
+									select {
+										&:not([type="radio"]),
+										&:not([type="checkbox"]),
+										&:not([type="file"]) {
+											background: $white;
+											border-color: #e9e9e9;
+											box-shadow: none;
+											border-radius: 0 !important;
+										}
+									}
+								}
+							}
+
+							.ur-button-container {
+								.ur-submit-button {
+									border-radius: 0;
+								}
+							}
+						}
+					}
+				}
+
+				&--rounded {
+					&:not(.login) {
+						form {
+							.ur-form-row {
+								.ur-form-grid {
+									input,
+									textarea,
+									select {
+										&:not([type="radio"]),
+										&:not([type="checkbox"]),
+										&:not([type="file"]) {
+											box-shadow: none;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+
+				&--rounded-edge {
+					&:not(.login) {
+						border-radius: 30px;
+
+						form {
+							.ur-form-row {
+								.ur-form-grid {
+									input,
+									textarea,
+									select {
+										&:not([type="radio"]),
+										&:not([type="checkbox"]),
+										&:not([type="file"]) {
+											box-shadow: none;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 
@@ -1799,6 +1922,10 @@ body {
 				box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 				border: 0;
 
+				@media screen and (max-width: 575px) {
+					padding: 40px 30px;
+				}
+
 				&:has(.ur-frontend-form--bordered) {
 					box-shadow: none;
 					border: 1px solid #e9e9e9;
@@ -1806,7 +1933,31 @@ body {
 
 				&:has(.ur-frontend-form--flat) {
 					box-shadow: none;
-					background: #F7F7F7;
+					border: 1px solid #e9e9e9;
+					border-radius: 0;
+
+					.user-registration-form-login {
+						.ur-form-row {
+							.ur-form-grid {
+								input,
+								textarea,
+								select {
+									&:not([type="radio"]),
+									&:not([type="checkbox"]),
+									&:not([type="file"]) {
+										background: $white;
+										border-color: #e9e9e9;
+										box-shadow: none;
+										border-radius: 0 !important;
+									}
+								}
+
+								.user-registration-Button {
+									border-radius: 0;
+								}
+							}
+						}
+					}
 				}
 
 				&:has(.ur-frontend-form--rounded-edge) {
@@ -2012,6 +2163,7 @@ body {
 
 							input {
 								min-height: 38px;
+								max-height: 38px;
 								margin-bottom: 0;
 								padding: 0 14px 0 36px;
 
@@ -2039,6 +2191,7 @@ body {
 									border-radius: 4px;
 									border: 1px solid #E9E9E9;
 									min-height: 38px;
+									max-height: 38px;
 									font-size: 14px;
 									line-height: 20px;
 									padding: 0 14px;
@@ -2069,15 +2222,15 @@ body {
 						font-weight: 400;
 						line-height: 24px;
 						letter-spacing: 0.15px;
-						background: #475BB2;
-						border: 1px solid #475BB2;
+						// background: #475BB2;
+						// border: 1px solid #475BB2;
 						margin-right: 0;
 						transition: all .3s;
 
-						&:hover {
-							background: #38488e !important;
-							border-color: #38488e !important;
-						}
+						// &:hover {
+						// 	background: #38488e;
+						// 	border-color: #38488e;
+						// }
 					}
 				}
 
@@ -2150,8 +2303,8 @@ body {
 										border: 1px solid #475BB2;
 
 										&:hover {
-											background: #38488e !important;
-											border-color: #38488e !important;
+											background: #38488e;
+											border-color: #38488e;
 										}
 									}
 
@@ -2159,7 +2312,7 @@ body {
 										padding: 10px 24px;
 										font-size: 15px;
 										line-height: 25px;
-										color: $white;
+										background: $primary_color;
 
 										&:disabled {
 											pointer-events: none;
@@ -2167,9 +2320,9 @@ body {
 										}
 
 										&:hover {
-											color: #ffffff;
-											background: #38488e !important;
-											border-color: #38488e !important;
+											background: #38488e;
+											border-color: #38488e;
+											color: $white;
 										}
 									}
 
@@ -2209,9 +2362,11 @@ body {
 									display: flex;
 									align-items: center;
 									justify-content: space-between;
+									gap: 12px;
+									flex-wrap: wrap;
 									flex-direction: row;
 									margin-top: -4px;
-									float: unset !important;
+									float: unset;
 
 									label {
 										margin: 0;
@@ -2223,10 +2378,10 @@ body {
 										font-weight: 400;
 										line-height: 21px;
 										letter-spacing: 0.15px;
-										text-decoration-line: underline;
-										text-underline-position: from-font;
+										margin: 0;
 
 										a {
+											text-underline-offset: 4px;
 											color: $primary_color;
 										}
 									}
@@ -2240,7 +2395,8 @@ body {
 									margin-bottom: 0;
 
 									a {
-										color: #475bb2;
+										text-underline-offset: 4px;
+										color: $primary_color;
 									}
 								}
 
