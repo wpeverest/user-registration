@@ -1215,10 +1215,14 @@ jQuery(function ($) {
 		$("#user_registration_form_setting_default_phone_field")
 			.parent()
 			.show();
+
+		$("#user_registration_form_setting_sms_verification_msg_field").show();
 	} else {
 		$("#user_registration_form_setting_default_phone_field")
 			.parent()
 			.hide();
+			$("#user_registration_form_setting_sms_verification_msg_field").hide();
+
 	}
 
 	// Toggle display of enable email approval setting
@@ -1229,10 +1233,14 @@ jQuery(function ($) {
 				$("#user_registration_form_setting_default_phone_field")
 					.parent()
 					.show();
+					$("#user_registration_form_setting_sms_verification_msg_field").show();
+
 			} else {
 				$("#user_registration_form_setting_default_phone_field")
 					.parent()
 					.hide();
+					$("#user_registration_form_setting_sms_verification_msg_field").hide();
+
 			}
 		}
 	);

@@ -43,7 +43,7 @@ class UR_Shortcode_Login {
 		if ( isset( $atts['userState'] ) ) {
 			$check_state = 'logged_out' === $atts['userState'];
 		}
-		if ( ! is_user_logged_in() || $check_state || ( isset( $_GET['page'] ) && "user-registration-login-forms" === $_GET['page'] )  ) {
+		if ( ! is_user_logged_in() || $check_state || ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page'] ) ) {
 			// After password reset, add confirmation message.
 			$is_password_resetted = get_transient( 'ur_password_resetted_flag' );
 			if ( ! empty( $is_password_resetted ) ) {
@@ -58,6 +58,7 @@ class UR_Shortcode_Login {
 				wp_enqueue_script( 'user-registration' );
 				$recaptcha_node = ur_get_recaptcha_node( 'login', $recaptcha_enabled );
 
+				ob_start();
 				ur_get_template(
 					'myaccount/form-login.php',
 					array(
@@ -65,6 +66,9 @@ class UR_Shortcode_Login {
 						'redirect'       => esc_url_raw( $redirect_url ),
 					)
 				);
+				$login_form = ob_get_clean();
+
+				echo $login_form; //phpcs:ignore
 			}
 		} else {
 			/**

@@ -241,7 +241,7 @@ if ( isset( $_GET['force-logout'] ) && 'true' === $_GET['force-logout'] ) {
 
 							if ( ! empty( $label ) ) {
 								?>
-								<a href="<?php echo esc_url( $url_options ); ?>"> <?php echo esc_html( get_option( 'user_registration_general_setting_registration_label' ) ); ?>
+								<a href="<?php echo esc_url( $url_options ); ?>"> <?php echo stripslashes( esc_html( get_option( 'user_registration_general_setting_registration_label' ) ) ); ?>
 									</a>
 								<?php
 							} else {
