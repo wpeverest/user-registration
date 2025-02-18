@@ -861,18 +861,18 @@
   font-weight: 500;
   line-height: 22px;
   color: #4E4E4E;
-  border-bottom: 3px solid #ffffff !important;
+  border-bottom: 3px solid #ffffff;
   transition: all 0.3s;
 }
 #user-registration.horizontal .user-registration-MyAccount-navigation-link a:hover {
   color: #475bb2;
   background: #edeff7;
-  border-bottom-color: #edeff7 !important;
+  border-bottom-color: #edeff7;
 }
 #user-registration.horizontal .user-registration-MyAccount-navigation-link.is-active a {
-  border-bottom-color: #475bb2 !important;
+  border-bottom: 3px solid #475bb2;
   color: #475bb2;
-  background: #edeff7 !important;
+  background: #edeff7;
 }
 #user-registration.horizontal .user-registration-MyAccount-content {
   padding: 24px 36px 52px 36px;

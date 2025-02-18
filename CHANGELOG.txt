@@ -1,3 +1,8 @@
+= 4.0.4     - 13/02/2025 =
+* Security  - Vulnerability fix for post title in import forms.
+* Fix   	- Login and MyAccount form design inconsistencies.
+* Fix  		- Empty members table list.
+
 = 4.0.3     - 11/02/2025 =
 * Enhance   - Apply template styles to lost password and reset password form.
 * Fix       - Login form render issue.
