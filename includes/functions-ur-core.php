@@ -1194,6 +1194,18 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'tip'               => __( 'This option is to map phone field for sms verification.', 'user-registration' ),
 			),
 			array(
+				'label'             => __( 'SMS Verification message', 'user-registration' ),
+				'description'       => '',
+				'id'                => 'user_registration_form_setting_sms_verification_msg',
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_sms_verification_msg', ur_get_sms_verification_default_message_content() ),
+				'type'              => 'textarea',
+				'class'             => array(),
+				'custom_attributes' => array(),
+				'input_class'       => array(),
+				'required'          => false,
+				'tip'               => __( 'This is sms verification message content.', 'user-registration' ),
+			),
+			array(
 				'type'              => 'select',
 				'label'             => __( 'Default User Role', 'user-registration' ),
 				'description'       => '',
