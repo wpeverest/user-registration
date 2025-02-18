@@ -1239,9 +1239,6 @@
 							data: posted_data,
 							type: "POST",
 							async: true,
-							beforeSend: function () {
-								$(document.body).trigger('user_registration_before_form_submit_completion');
-							},
 							complete: function (ajax_response) {
 								$(document.body).trigger('user_registration_after_form_submit_completion');
 								var ajaxFlag = [];
@@ -1948,11 +1945,6 @@
 									url: user_registration_params.ajax_url,
 									dataType: "JSON",
 									data: data,
-									beforeSend: function () {
-										$(document).trigger(
-											"user_registration_process_after_edit_profile_submit_completion"
-										);
-									},
 									complete: function (ajax_response) {
 										$(document).trigger(
 											"user_registration_process_before_edit_profile_submit_completion"
