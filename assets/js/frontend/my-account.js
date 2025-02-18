@@ -189,7 +189,7 @@ jQuery(function ($) {
 		 * Displays Logout popup.
 		 */
 		handle_user_logout: function () {
-			$(document).on("click", ".ur-logout", function (e) {
+			$(document).on("click", ".ur-logout, .urcma-user-logout", function (e) {
 				e.preventDefault();
 				e.stopPropagation();
 				var $this = $(this);
