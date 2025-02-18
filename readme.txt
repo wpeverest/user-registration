@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 5.5
 Requires PHP: 7.2
-Tested up to: 6.7.1
-Stable tag: 4.0.1
+Tested up to: 6.7.2
+Stable tag: 4.0.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -29,29 +29,31 @@ And you can get started for FREE! The free plan provides you with all the core f
 [Test User Registration & Membership Premium for Free ](https://userregistration.demoswp.net/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)
 
 ### Create High-converting Registration Forms and Memberships websites with Our Feature-rich Plugin
-* **Versatile Membership Websites:** Use the User Registration & Membership plugin and create a full-fledged membership website. Create membership groups and plans with multiple tiers of content access and benefits, then, sell them to your website members for a recurring fee.
-
 * **Powerful Custom Registration Forms:** Designing WordPress custom registration forms has never been easier. Simply drag and drop fields and visually create user register forms.
 
-* **Create Easy Content Restriction Rules:** Enable content restriction for members in posts, pages, & categories. You can also create advanced custom content access rules based on memberships, roles, capabilities, user state, & more.
+* **In-built Login Form:** No need to make a separate login form for users as you get an in-built login form with User Registration & Membership.
 
 * **Easy Drag & Drop Builder:** Simply drag & drop the form fields into a blank slate & create a registration form in no time. Create membership forms or registration form as you wish. No code, no fuss.
 
+* **Quick Form Preview:** Enables form functionality checking before publishing, improving UX.
+
+[youtube https://youtu.be/jbiBJdowxG0 ]
+
+* **Versatile Membership Websites:** Use the User Registration & Membership plugin and create a full-fledged membership website. Create membership groups and plans with multiple tiers of content access and benefits, then, sell them to your website members for a recurring fee.
+
 * **Membership groups:** Combine related plans into a membership group and display them on the front end. The group helps you segment your members and deliver specialized content based on their interests.
 
-* **25 + Custom Form Fields Added to Default User Fields:** User Registration & Membership unlocks the limitations posed by the default WordPress fields while registering users. Use more than 25 custom form fields like Country, Privacy Policy, & Profile Picture to design any kind of form you need.
+* **Create Easy Content Restriction Rules:** Enable content restriction for members in posts, pages, & categories. You can also create advanced custom content access rules based on memberships, roles, capabilities, user state, & more.
 
-* **Quick Form Preview:** Enables form functionality checking before publishing, improving UX.
+[youtube https://youtu.be/eNQSzJqSTt0 ]
+
+* **25 + Custom Form Fields Added to Default User Fields:** User Registration & Membership unlocks the limitations posed by the default WordPress fields while registering users. Use more than 25 custom form fields like Country, Privacy Policy, & Profile Picture to design any kind of form you need.
 
 * **Email Notifications:** Send customized email notifications to your users & admin after registration. Additionally, you can send notifications regarding payments & changes made to profile details as well.
 
 * **User Profile Account Page:** User Registration & Membership automatically creates a WordPress user profile account for all your registered users. Even better is the fact that you’re still in complete control of the customization of this page.
 
 * **Global Search Settings:** Admins can search in the Global Settings to quickly access the required settings.
-
-* **In-built Login Form:** No need to make a separate login form for users as you get an in-built login form with User Registration & Membership.
-
-[youtube https://youtu.be/jbiBJdowxG0 ]
 
 * **Strong Spam Protection:** Block spam attacks like fake registrations & spam submissions with our Google reCaptcha, honeypot, Cloudflare, Turnstile and custom captcha features like image, math and Q&A captcha.
 
@@ -256,9 +258,22 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
+= 4.0.4     - 13/02/2025 =
+* Security  - Vulnerability fix for post title in import forms.
+* Fix   	- Login and MyAccount form design inconsistencies.
+* Fix  		- Empty members table list.
+
+= 4.0.3     - 11/02/2025 =
+* Enhance   - Apply template styles to lost password and reset password form.
+* Fix       - Login form render issue.
+* Fix       - Overriding form design with custom css not working.
+* Fix       - Special characters validation blocking email input in lost password.
+* Fix       - User not found error message not being displayed in lost password page.
+
 = 4.0.2     - 07/02/2025 =
 * Fix       - Critical error while updating plugin.
 * Fix       - Username label in lost password form.
+* Fix       - Premium icon alignment in membership creation page.
 
 = 4.0.1     - 06/02/2025 =
 * Fix       - Login menu being automatically added after v4.0 update.

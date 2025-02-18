@@ -216,7 +216,14 @@
 					ignore: function (index, element) {
 						// Return true to ignore the element, false to include it in validation
 						if (
-							$(element).closest(".ur-field-item").is(":hidden") || $(element).closest(".ur_membership_frontend_input_container").is(":hidden")
+							$(element)
+								.closest(".ur-field-item")
+								.is(":hidden") ||
+							$(element)
+								.closest(
+									".ur_membership_frontend_input_container"
+								)
+								.is(":hidden")
 						) {
 							return true;
 						}
@@ -530,7 +537,9 @@
 			}
 
 			if (
-				typeof user_login_div.data("username-character") === "undefined"
+				typeof user_login_div.data("username-character") ===
+					"undefined" &&
+				this_node.closest(".ur-frontend-form").find(".register").length
 			) {
 				username_validator.SpecialCharacterValidator = true;
 			}

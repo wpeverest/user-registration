@@ -58,9 +58,10 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 				$membership_id = sanitize_text_field( wp_unslash( $_REQUEST['membership_id'] ) );
 
 				if ( ! empty( $membership_id ) && in_array( $membership_id, array_keys( $this->get_all_memberships() ), false ) ) {
+					$subscription_table = TableList::subscriptions_table();
 					$valid_users     = $wpdb->get_results(
 						$wpdb->prepare(
-							'SELECT user_id FROM wp_ur_membership_subscriptions WHERE item_id = %d',
+							"SELECT user_id FROM $subscription_table WHERE item_id = %d",
 							$membership_id
 						),
 						ARRAY_A

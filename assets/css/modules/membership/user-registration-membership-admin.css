@@ -88,11 +88,46 @@
 }
 .ur-membership-header .membership-menu-left {
   gap: 20px;
+  flex: 1;
+}
+.ur-membership-header .membership-menu-right {
+  gap: 12px;
+}
+.ur-membership-header .membership-menu-right img {
+  all: unset;
+  height: 25px;
+  max-width: 100% !important;
+  animation: bounceAnimation 2s ease-in-out infinite;
+}
+.ur-membership-header .membership-menu-right .urm-membership-tutorial {
+  background: #269728;
+  padding: 8px 16px;
+  color: white !important;
+  font-size: 14px !important;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+.ur-membership-header .membership-menu-right .urm-membership-tutorial:hover {
+  background: #128b15;
+}
+.ur-membership-header .membership-menu-right .urm-membership-tutorial:after {
+  content: none;
 }
 .ur-membership-header a {
   text-decoration: none !important;
 }
 
+@keyframes bounceAnimation {
+  0% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  100% {
+    transform: translateX(-5px);
+  }
+}
 .field-amount {
   position: relative;
 }
@@ -527,7 +562,9 @@
   background-color: unset;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper #ur-membership-create-form {
-  width: 1280px !important;
+  max-width: 1280px;
+  width: 100% !important;
+  padding: 0 30px;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card {
   border: 0;
@@ -642,9 +679,10 @@
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .ur-input-type-select .ur-field {
   gap: 16px;
+  flex-wrap: wrap;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types {
-  max-width: 210px;
+  max-width: 230px;
   margin-bottom: 0;
   border-radius: 4px;
   border: 1px solid #E9E9E9;
