@@ -107,7 +107,7 @@ class UR_Admin_Welcome {
 								jQuery(this).find(".welcome-video-container").remove();
 
 								var video =
-									'<div class="welcome-video-container"><iframe width="560" height="315" src="https://www.youtube.com/embed/DYPg3x8OVe4?amprel=0&amp;showinfo=0&amp;autoplay=true" frameborder="0" allowfullscreen></iframe></div>';
+									'<div class="welcome-video-container"><iframe width="560" height="315" src="https://www.youtube.com/embed/lrkXhZ7hS8g?amprel=0&amp;showinfo=0&amp;autoplay=true" frameborder="0" allowfullscreen></iframe></div>';
 
 								event.preventDefault();
 
@@ -149,8 +149,8 @@ class UR_Admin_Welcome {
 									</a>
 								</div>
 								<div class="user-registration-welcome-container__header">
-									<h2><?php esc_html_e( 'Welcome to User Registration', 'user-registration' ); ?></h2>
-									<p><?php esc_html_e( 'Thank you for choosing User Registration - the most powerful and easy drag & drop WordPress form builder in the market.', 'user-registration' ); ?></p>
+									<h2><?php esc_html_e( 'Welcome to User Registration & Membership', 'user-registration' ); ?></h2>
+									<p><?php esc_html_e( 'Thank you for choosing User Registration & Membership - the most flexible registration form builder and membership plugin for WordPress.', 'user-registration' ); ?></p>
 								</div>
 								<div class="user-registration-welcome-container__action">
 									<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-welcome&tab=setup-wizard' ) ); ?>" class="button button-primary">

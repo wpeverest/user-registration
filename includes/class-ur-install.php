@@ -69,7 +69,6 @@ class UR_Install {
 		add_action( 'init', array( __CLASS__, 'check_version' ), 5 );
 		add_action( 'init', array( __CLASS__, 'init_background_updater' ), 5 );
 		add_action( 'admin_init', array( __CLASS__, 'install_actions' ) );
-		add_action( 'in_plugin_update_message-user-registration/user-registration.php', array( __CLASS__, 'in_plugin_update_message' ) );
 		add_filter( 'wpmu_drop_tables', array( __CLASS__, 'wpmu_drop_tables' ) );
 	}
 
@@ -706,61 +705,6 @@ CREATE TABLE {$wpdb->prefix}user_registration_sessions (
 	}
 
 	/**
-	 * Show plugin changes. Code adapted from W3 Total Cache.
-	 *
-	 * @param array $args Arguments.
-	 */
-	public static function in_plugin_update_message( $args ) {
-		$transient_name = 'ur_upgrade_notice_' . $args['Version'];
-		$upgrade_notice = get_transient( $transient_name );
-
-		if ( false === $upgrade_notice ) {
-			$response = wp_safe_remote_get( 'https://plugins.svn.wordpress.org/user-registration/trunk/readme.txt' );
-
-			if ( ! is_wp_error( $response ) && ! empty( $response['body'] ) ) {
-				$upgrade_notice = self::parse_update_notice( $response['body'], $args['new_version'] );
-				set_transient( $transient_name, $upgrade_notice, DAY_IN_SECONDS );
-			}
-		}
-
-		echo wp_kses_post( $upgrade_notice );
-	}
-
-	/**
-	 * Parse update notice from readme file
-	 *
-	 * @param  string $content Content of notice.
-	 * @param  string $new_version Version of plugin.
-	 *
-	 * @return string
-	 */
-	private static function parse_update_notice( $content, $new_version ) {
-		// Output Upgrade Notice.
-		$matches        = null;
-		$regexp         = '~==\s*Upgrade Notice\s*==\s*=\s*(.*)\s*=(.*)(=\s*' . preg_quote( UR_VERSION ) . '\s*=|$)~Uis';
-		$upgrade_notice = '';
-
-		if ( preg_match( $regexp, $content, $matches ) ) {
-			$version = trim( $matches[1] );
-			$notices = (array) preg_split( '~[\r\n]+~', trim( $matches[2] ) );
-
-			// Check the latest stable version and ignore trunk.
-			if ( $version === $new_version && version_compare( UR_VERSION, $version, '<' ) ) {
-
-				$upgrade_notice .= '<div class="ur_plugin_upgrade_notice">';
-
-				foreach ( $notices as $index => $line ) {
-					$upgrade_notice .= wp_kses_post( preg_replace( '~\[([^\]]*)\]\(([^\)]*)\)~', '<a href="${2}">${1}</a>', $line ) );
-				}
-
-				$upgrade_notice .= '</div> ';
-			}
-		}
-
-		return wp_kses_post( $upgrade_notice );
-	}
-
-	/**
 	 * create_membership_form
 	 *
 	 * @param $group_id
@@ -770,10 +714,12 @@ CREATE TABLE {$wpdb->prefix}user_registration_sessions (
 	public static function create_membership_form( $group_id ) {
 		$membership_repository = new \WPEverest\URMembership\Admin\Repositories\MembershipRepository();
 		$has_posts = $membership_repository->get_membership_forms();
+		$membership_field_name = 'membership_field_' . ur_get_random_number();
+		update_option( 'ur_membership_default_membership_field_name', $membership_field_name );
 
 
 		if ( 0 === count( $has_posts ) ) {
-			$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]],[[{"field_key":"membership","general_setting":{"membership_group":"' . $group_id . '","label":"Membership Field","description":"","field_name":"membership_field_1733727913","hide_label":"false"},"advance_setting":{},"icon":"ur-icon ur-icon-membership-field"}]]]';
+			$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]],[[{"field_key":"membership","general_setting":{"membership_group":"' . $group_id . '","label":"Membership Field","description":"","field_name":"'.$membership_field_name.'","hide_label":"false","membership_listing_option":"all"},"advance_setting":{},"icon":"ur-icon ur-icon-membership-field"}]]]';
 			// Insert default form.
 			$default_post_id = wp_insert_post(
 				array(
@@ -791,8 +737,24 @@ CREATE TABLE {$wpdb->prefix}user_registration_sessions (
 		}
 	}
 
+	public static function create_default_membership(  ) {
+		$post_content = '{"description":"Default membership.","type":"free","status":true}';
+		$default_membership_id = wp_insert_post(
+			array(
+				'post_type'      => 'ur_membership',
+				'post_title'     => esc_html__( 'Default Membership', 'user-registration' ),
+				'post_content'   => $post_content,
+				'post_status'    => 'publish',
+				'comment_status' => 'closed',
+				'ping_status'    => 'closed',
+			)
+		);
+		update_post_meta( $default_membership_id , 'ur_membership' , '{"type":"free","cancel_subscription":"immediately","role":"subscriber","amount":0}' );
+		return $default_membership_id;
+	}
 	public static function create_default_membership_group( $memberships ) {
 		$membership_ids = array_column( $memberships, 'ID' );
+
 		$post_content   = '{"description":"","status":true}';
 		$membership_group_service = new \WPEverest\URMembership\Admin\Services\MembershipGroupService();
 		$default_post_id = $membership_group_service->get_default_group_id();
@@ -812,6 +774,7 @@ CREATE TABLE {$wpdb->prefix}user_registration_sessions (
 			)
 		);
 		add_post_meta( $default_post_id, 'urmg_memberships', json_encode( $membership_ids ) );
+		add_post_meta( $default_post_id, "urm_form_group_$default_post_id", json_encode( $membership_ids ) );
 		add_post_meta( $default_post_id, 'urmg_default_group', $default_post_id );
 		update_option( 'user_registration_default_membership_form_id', $default_post_id );
 

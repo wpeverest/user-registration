@@ -104,13 +104,22 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 	public function render_metabox( $post ) {
 
 		echo '<p>' . esc_html__( 'Use shortcode [urcr_restrict]....[/urcr_restrict] to restrict partial contents.', 'user-registration' ) . '</p>';
+		$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
+
 		$this->ur_metabox_checkbox(
 			array(
-				'id'    => 'urcr_meta_checkbox',
-				'label' => 'Restrict Full Content: ',
-				'type'  => 'Checkbox',
+				'id'       => 'urcr_meta_checkbox',
+				'label'    => 'Restrict Access to This Page/Post',
+				'type'     => 'Checkbox',
+				'disabled' => $whole_site_access_restricted ? true : false,
 			)
 		);
+
+		if ( $whole_site_access_restricted ) {
+			echo '<p class="notice notice-info " style="padding: 10px; margin: -10px 0 0 0;">' . sprintf( __( 'Currently this setting is disabled and will not work because whole site restriction is enabled in <a href="%s" target="_blank" style="text-decoration:underline;" >global restriction settings</a>', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=content_restriction' ) ) . '</p>';
+		} else {
+			echo '<p style="margin: -10px 0 0 0;">' . sprintf( __( 'When enabled, the page/post will be restricted as per the <a href="%s" target="_blank" style="text-decoration:underline;" >global restriction settings</a>', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=content_restriction' ) ) . '</p>';
+		}
 
 		$this->ur_metabox_checkbox(
 			array(
@@ -119,6 +128,7 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 				'type'  => 'Checkbox',
 			)
 		);
+		echo '<p  style="margin: -10px 0 0 0;">' . sprintf( __( 'Set custom restriction setting for this page/post, overriding the <a href="%s" target="_blank" style="text-decoration:underline;" >global restriction settings</a>', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=content_restriction' ) ) . '</p>';
 
 		$this->ur_metabox_select(
 			array(
@@ -166,6 +176,8 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 			return false;
 		}
 
+		$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
+
 		$checkbox = isset( $_POST['urcr_meta_checkbox'] ) ? $_POST['urcr_meta_checkbox'] : '';
 
 		$override_global_settings = isset( $_POST['urcr_meta_override_global_settings'] ) ? $_POST['urcr_meta_override_global_settings'] : '';
@@ -176,7 +188,9 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 
 		$array_of_memberships = isset( $_POST['urcr_meta_memberships'] ) ? $_POST['urcr_meta_memberships'] : '';
 
-		update_post_meta( $post_id, 'urcr_meta_checkbox', $checkbox );
+		if ( ! $whole_site_access_restricted ) {
+			update_post_meta( $post_id, 'urcr_meta_checkbox', $checkbox );
+		}
 
 		update_post_meta( $post_id, 'urcr_meta_override_global_settings', $override_global_settings );
 

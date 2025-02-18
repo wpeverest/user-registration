@@ -917,7 +917,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 
 			case 'hidden':
-				$hidden_value = $args['hidden_value'] ?? '';
+				$hidden_value = $args['hidden_value'] ?? $args['default'];
 				$custom_class = $args['custom_class'] ?? '';
 				$input_type   = ! $is_edit ? 'type="hidden"' : 'type="text"';
 				if ( $is_edit ) {

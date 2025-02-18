@@ -29,12 +29,11 @@ import PluginStatus from "./PluginStatus";
 import { FaHeart } from "react-icons/fa";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { __, sprintf } from "@wordpress/i18n";
-import notFoundImage from "../images/not-found-image.png";
 import { IoPlayOutline } from "react-icons/io5";
 import { FaRegHeart } from "react-icons/fa";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 
-const { restURL, security } = ur_templates_script;
+const { restURL, security, siteURL } = ur_templates_script;
 
 const LockIcon = (props) => (
 	<Icon viewBox="0 0 24 24" {...props}>
@@ -365,8 +364,20 @@ const TemplateList = ({ selectedCategory, templates }) => {
 							p={0}
 							transition="all .3s"
 							_hover={{
+								boxShadow:
+									"0px 5px 24px rgba(58, 34, 93, 0.12)",
+								"::before": {
+									content: '""',
+									position: "absolute",
+									top: 0,
+									left: 0,
+									width: "100%",
+									height: "207px",
+									bg: "rgba(0, 0, 0, 0.4)",
+									zIndex: 1
+								},
 								"& > div > .template-title": {
-									color: "#7545BB"
+									color: "#475bb2"
 								}
 							}}
 						>
@@ -378,27 +389,17 @@ const TemplateList = ({ selectedCategory, templates }) => {
 									display="flex"
 									justifyContent="center"
 									alignItems="center"
-									bg="#F7F4FB"
+									bg="#ECECF6"
 									borderRadius="4px 4px 0px 0px"
 									overflow="hidden"
 									transition="all .3s"
-									_hover={{
-										boxShadow:
-											"0px 5px 24px rgba(58, 34, 93, 0.12)",
-										"::before": {
-											content: '""',
-											position: "absolute",
-											top: 0,
-											left: 0,
-											width: "100%",
-											height: "100%",
-											bg: "rgba(0, 0, 0, 0.4)",
-											zIndex: 1
-										}
-									}}
 								>
 									<Image
-										boxShadow="0px 3px 12px rgba(58, 34, 93, 0.12)"
+										boxShadow={
+											template.slug == "blank"
+												? "none"
+												: "0px 3px 12px rgba(58, 34, 93, 0.12)"
+										}
 										src={modifyImageUrl(template.imageUrl)}
 										alt={template.title}
 										objectFit="contain"
@@ -417,12 +418,13 @@ const TemplateList = ({ selectedCategory, templates }) => {
 												p="2px 6px"
 												textTransform="capitalize"
 												zIndex="2"
+												fontWeight="500"
 											>
 												{__("Pro", "user-registration")}
 											</Badge>
 										) : (
 											<Badge
-												bg="#FF9800"
+												bg="#4BCE61"
 												color="white"
 												position="absolute"
 												bottom="12px"
@@ -432,6 +434,7 @@ const TemplateList = ({ selectedCategory, templates }) => {
 												p="2px 6px"
 												textTransform="capitalize"
 												zIndex="2"
+												fontWeight="500"
 											>
 												{template.plan?.[0] ||
 													__(
@@ -463,8 +466,9 @@ const TemplateList = ({ selectedCategory, templates }) => {
 														template
 													)
 												}
-												bg="blue.500"
-												_hover={{ bg: "blue.600" }}
+												bg="#475bb2"
+												_hover={{ bg: "#4153A2" }}
+												width="100%"
 											>
 												{__(
 													"Get Started",
@@ -477,7 +481,7 @@ const TemplateList = ({ selectedCategory, templates }) => {
 													leftIcon={
 														<MdOutlineRemoveRedEye />
 													}
-													color="white"
+													color="#4D4D4D"
 													variant="outline"
 													onClick={() =>
 														window.open(
@@ -486,9 +490,11 @@ const TemplateList = ({ selectedCategory, templates }) => {
 														)
 													}
 													_hover={{
-														color: "black",
-														bg: "white"
+														color: "#4D4D4D",
+														bg: "#EFEFEF"
 													}}
+													bg="#FFFFFF"
+													width="100%"
 												>
 													{__(
 														"Preview",
@@ -569,7 +575,10 @@ const TemplateList = ({ selectedCategory, templates }) => {
 					width="100%"
 				>
 					<Image
-						src={notFoundImage}
+						src={
+							siteURL +
+							"/wp-content/plugins/user-registration/assets/images/empty-table.png"
+						}
 						alt={__("Not Found", "user-registration")}
 						boxSize="300px"
 						objectFit="cover"
@@ -662,6 +671,7 @@ const TemplateList = ({ selectedCategory, templates }) => {
 						<Button
 							variant="ghost"
 							onClick={() => setIsPluginModalOpen(false)}
+							border="1px solid #DFDFDF"
 						>
 							{__("OK", "user-registration")}
 						</Button>
@@ -718,7 +728,7 @@ const TemplateList = ({ selectedCategory, templates }) => {
 								placeholder="Give it a name."
 								size="md"
 								_focus={{
-									borderColor: "#7545BB",
+									borderColor: "#475BB2",
 									outline: "none",
 									boxShadow: "none"
 								}}

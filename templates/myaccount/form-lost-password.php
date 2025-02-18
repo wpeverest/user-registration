@@ -19,6 +19,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+$form_template  = get_option( 'user_registration_login_options_form_template', 'default' );
+$template_class = '';
+
+if ( 'bordered' === $form_template ) {
+	$template_class = 'ur-frontend-form--bordered';
+
+} elseif ( 'flat' === $form_template ) {
+	$template_class = 'ur-frontend-form--flat';
+
+} elseif ( 'rounded' === $form_template ) {
+	$template_class = 'ur-frontend-form--rounded';
+
+} elseif ( 'rounded_edge' === $form_template ) {
+	$template_class = 'ur-frontend-form--rounded ur-frontend-form--rounded-edge';
+}
 
 ?>
 
@@ -29,7 +44,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	?>
 </div>
 
-<div class="ur-frontend-form login" id="ur-frontend-form">
+<div class="ur-frontend-form login <?php echo esc_attr( $template_class ); ?>" id="ur-frontend-form">
 	<form method="post" class="user-registration-ResetPassword ur_lost_reset_password">
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
@@ -65,7 +80,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				</div>
 
 				<p class="user-registration-form-row user-registration-form-row--first form-row form-row-first">
-					<label for="user_login"><?php esc_html_e( 'Username', 'user-registration' ); ?><abbr class="required" title="required">*</abbr></label>
+					<label for="user_login"><?php esc_html_e( 'Username or email', 'user-registration' ); ?><abbr class="required" title="required">*</abbr></label>
 
 					<div class="ur-input-with-icon">
 						<svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none" class="input-icon">

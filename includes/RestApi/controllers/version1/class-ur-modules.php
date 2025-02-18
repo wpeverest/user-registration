@@ -143,7 +143,9 @@ class UR_Modules {
 			} else {
 				$feature->required_plan = __( 'Personal', 'user-registration' );
 			}
-
+			if ( 'user-registration-content-restriction' === $feature->slug && ! UR_PRO_ACTIVE ) {
+				$feature->setting_url = 'admin.php?page=user-registration-settings&tab=content_restriction';
+			}
 			$features_lists[ $key ] = $feature;
 		}
 
@@ -293,13 +295,16 @@ class UR_Modules {
 
 		if ( 'user-registration-membership' === $slug ) {
 			if ( ! get_option( 'user_registration_membership_installed_flag', false ) ) {
-				array_push( $enabled_features, 'payment-history' );
-				array_push( $enabled_features, 'content-restriction' );
+				array_push( $enabled_features, 'user-registration-payment-history' );
+				array_push( $enabled_features, 'user-registration-content-restriction' );
 				ur_membership_install_required_pages();
 				\WPEverest\URMembership\Admin\Database\Database::create_tables();
 			}
 		}
 
+		if ( 'user-registration-payments' === $slug && !in_array('user-registration-payment-history', $enabled_features)) {
+			$enabled_features[] = 'user-registration-payment-history';
+		}
 		array_push( $enabled_features, $slug );
 		update_option( 'user_registration_enabled_features', $enabled_features );
 
@@ -308,7 +313,7 @@ class UR_Modules {
 		 *
 		 * @since 4.0
 		 */
-		do_action('user_registration_feature_track_data_for_tg_user_tracking', $slug );
+		do_action( 'user_registration_feature_track_data_for_tg_user_tracking', $slug );
 
 		return array( 'success' => true );
 	}
@@ -444,14 +449,14 @@ class UR_Modules {
 		}
 
 		if ( count( $failed_modules ) > 0 ) {
-				return new \WP_REST_Response(
-					array(
-						'success' => false,
-						/* translators: 1: Failed Addon Names */
-						'message' => sprintf( __( '%1$s activation failed. Please try again sometime later.', 'user-registration' ), implode( ', ', $failed_modules ) ),
-					),
-					400
-				);
+			return new \WP_REST_Response(
+				array(
+					'success' => false,
+					/* translators: 1: Failed Addon Names */
+					'message' => sprintf( __( '%1$s activation failed. Please try again sometime later.', 'user-registration' ), implode( ', ', $failed_modules ) ),
+				),
+				400
+			);
 		} else {
 			return new \WP_REST_Response(
 				array(
@@ -656,6 +661,12 @@ class UR_Modules {
 					$status['success']      = false;
 					return $status;
 				}
+				$enabled_features = get_option( 'user_registration_enabled_features', array() );
+
+				if ( 'userregistrationstripe' === $slug && !in_array('user-registration-payment-history', $enabled_features)) {
+					$enabled_features[] = 'user-registration-payment-history';
+					update_option( 'user_registration_enabled_features', $enabled_features );
+				}
 				$status['success'] = true;
 				$status['message'] = __( 'Addons activated successfully', 'user-registration' );
 				return $status;
@@ -721,6 +732,13 @@ class UR_Modules {
 		$api->version   = isset( $api->new_version ) ? $api->new_version : '';
 		$install_status = install_plugin_install_status( $api );
 		activate_plugin( $plugin );
+		$enabled_features = get_option( 'user_registration_enabled_features', array() );
+
+		if ( 'userregistrationstripe' === $slug && !in_array('user-registration-payment-history', $enabled_features)) {
+			$enabled_features[] = 'user-registration-payment-history';
+			update_option( 'user_registration_enabled_features', $enabled_features );
+		}
+
 		$status['success'] = true;
 		$status['message'] = __( 'Addon installed Successfully', 'user-registration' );
 		return $status;
