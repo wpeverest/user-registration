@@ -196,7 +196,7 @@ class UR_Smart_Tags {
 							$user = wp_get_current_user();
 							$name = sanitize_text_field( $user->user_login );
 						} else {
-							$name = '';
+							$name = isset( $values['username'] ) ? $values['username'] : '';
 						}
 						$content = str_replace( '{{' . $other_tag . '}}', $name, $content );
 						break;
@@ -540,6 +540,12 @@ class UR_Smart_Tags {
 						}
 
 						$content = str_replace( '{{' . $other_tag . '}}', $reset_pass_slug, $content );
+						break;
+					case 'sms_otp' :
+						$content      = str_replace( '{{' . $tag . '}}', isset( $values['sms_otp'] ) ? $values['sms_otp'] : '' , $content );
+						break;
+					case 'sms_otp_validity':
+						$content      = str_replace( '{{' . $tag . '}}', isset( $values['sms_otp_validity'] ) ? $values['sms_otp_validity'] : '' , $content );
 						break;
 				}
 			}

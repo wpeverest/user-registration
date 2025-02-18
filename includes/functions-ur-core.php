@@ -1194,6 +1194,18 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'tip'               => __( 'This option is to map phone field for sms verification.', 'user-registration' ),
 			),
 			array(
+				'label'             => __( 'SMS Verification message', 'user-registration' ),
+				'description'       => '',
+				'id'                => 'user_registration_form_setting_sms_verification_msg',
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_sms_verification_msg', ur_get_sms_verification_default_message_content() ),
+				'type'              => 'textarea',
+				'class'             => array(),
+				'custom_attributes' => array(),
+				'input_class'       => array(),
+				'required'          => false,
+				'tip'               => __( 'This is sms verification message content.', 'user-registration' ),
+			),
+			array(
 				'type'              => 'select',
 				'label'             => __( 'Default User Role', 'user-registration' ),
 				'description'       => '',
@@ -5472,8 +5484,8 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 						$field['max']  = isset( $advance_data['advance_setting']->max ) ? $advance_data['advance_setting']->max : '';
 						$field['step'] = isset( $advance_data['advance_setting']->step ) ? $advance_data['advance_setting']->step : '';
 					}
-
-					if ( 'text' === $single_item->field_key || 'textarea' === $single_item->field_key ) {
+					$length_validation_fields = array( 'text', 'textarea' , 'display_name', 'first_name','last_name','description','nickname');
+					if ( in_array( $single_item->field_key, $length_validation_fields, true ) ) {
 						if ( isset( $advance_data['advance_setting']->limit_length ) && $advance_data['advance_setting']->limit_length ) {
 							if ( isset( $advance_data['advance_setting']->limit_length_limit_count ) && isset( $advance_data['advance_setting']->limit_length_limit_mode ) ) {
 								if ( 'characters' === $advance_data['advance_setting']->limit_length_limit_mode ) {
@@ -8061,6 +8073,10 @@ if ( ! function_exists( 'ur_find_my_account_in_custom_template' ) ) {
 		}
 
 		$content = ur_file_get_contents( $template_path );
+
+		if ( empty( $content ) || !is_string( $content ) ) {
+			return $value;
+		}
 
 		if ( strpos( $content, '[user_registration_my_account' ) !== false ) {
 			return true;
