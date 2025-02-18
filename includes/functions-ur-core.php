@@ -2418,8 +2418,8 @@ function ur_falls_in_date_range( $target_date, $start_date = null, $end_date = n
  *
  * @return array|mixed|null|object
  */
-function ur_get_post_content( $form_id, $form_status='publish' ) {
 
+function ur_get_post_content( $form_id, $form_status='publish' ) {
 	$args      = array(
 		'post_type'   => 'user_registration',
 		'post_status' => $form_status,
