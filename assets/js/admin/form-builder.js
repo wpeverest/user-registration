@@ -352,7 +352,8 @@
 					URFormBuilder.get_form_email_content_override_data();
 				var form_restriction_submit_data =
 					URFormBuilder.get_form_restriction_submit_data();
-
+				var calculation_settings =
+					URFormBuilder.get_form_calculation_data();
 				/** TODO:: Handle from multistep forms add-on if possible. */
 				var multipart_page_setting = $(
 					"#ur-multi-part-page-settings"
@@ -2263,6 +2264,28 @@
 					})
 					.get();
 				return JSON.stringify(form_data);
+			},
+			/**
+			 * Get all the data related to calculations
+			 */
+			get_form_calculation_data: function () {
+				var form_data = [];
+				var single_row = $(".urcal-container");
+				$.each(single_row, function () {
+					var field_name = $(this).attr('id').replace('urcal-container-',''),
+						enable_calculation_field = $(this).siblings('.ur-advance-enable_calculations').find('.ur-enable-calculations'),
+						decimal_places_field = $(this).find('input.ur-calculation-decimal-places'),
+						calculation_formula_field = $(this).find('[data-field-id="ur-calculation-field-' + field_name + '-editor"]');
+					var calculation_data = {
+						'field_name' : field_name,
+						'enable_calculations' : enable_calculation_field.is(':checked'),
+						'decimal_places_field' : decimal_places_field.val(),
+						'calculation_field' : calculation_formula_field.val()
+					}
+					form_data.push(calculation_data);
+				})
+
+				return form_data;
 			},
 			/**
 			 * Get all the conditions datas that the user has set in conditionally assign user role settings.
@@ -4228,7 +4251,7 @@
 						});
 				}
 
-				$(document.body).trigger("ur_rendered_field_options");
+				$(document.body).trigger("ur_rendered_field_options", [selected_item]);
 				$(document.body).trigger("init_tooltips");
 				$(document.body).trigger("init_field_options_toggle");
 			},
