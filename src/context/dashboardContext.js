@@ -8,6 +8,7 @@ export const initialState = {
 		moduleName: "",
 	},
 	allModules: [],
+	isMembershipActivated: false
 };
 
 export const actionTypes = {
@@ -15,6 +16,7 @@ export const actionTypes = {
 	GET_THEMES_STATUS: "GET_THEMES_STATUS",
 	GET_UPGRADE_MODAL: "GET_UPGRADE_MODAL",
 	GET_ALL_MODULES: "GET_ALL_MODULES",
+	GET_IS_MEMBERSHIP_ACTIVATED: "GET_IS_MEMBERSHIP_ACTIVATED"
 };
 
 const reducer = (state, action) => {
@@ -38,6 +40,11 @@ const reducer = (state, action) => {
 			return {
 				...state,
 				allModules: action.allModules,
+			};
+		case actionTypes.GET_IS_MEMBERSHIP_ACTIVATED:
+			return {
+				...state,
+				isMembershipActivated: action.isMembershipActivated
 			};
 		default:
 			return state;

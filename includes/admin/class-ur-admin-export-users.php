@@ -89,51 +89,61 @@ class UR_Admin_Export_Users {
 			return;
 		}
 
-		$columns   = $this->generate_columns( $form_id, $unchecked_fields, $checked_additional_fields );
-		$rows      = $this->generate_rows( $users, $form_id, $unchecked_fields, $checked_additional_fields, $from_date, $to_date );
+		// Batch size.
+		$batch_size = apply_filters( 'user_registration_export_users_batch_size', 500 );
+		$offset     = 0;
+
+		// Open the file for writing.
 		$form_name = str_replace( ' &#8211; ', '-', get_the_title( $form_id ) ); //phpcs:ignore;
 		$form_name = str_replace( '&#8211;', '-', $form_name );
 		$form_name = strtolower( str_replace( ' ', '-', $form_name ) );
+		$file_name = $form_name . '-' . current_time( 'Y-m-d_H:i:s' ) . '.csv';
 
-		if ( ob_get_contents() ) {
-			ob_clean();
-		}
-		if ( 'csv' === $export_format ) {
-			$file_name = $form_name . '-' . current_time( 'Y-m-d_H:i:s' ) . '.csv';
-			// Force download.
-			header( 'Content-Type: application/force-download' );
-			header( 'Content-Type: application/octet-stream' );
-			header( 'Content-Type: application/download' );
+		// Force download.
+		header( 'Content-Type: application/force-download' );
+		header( 'Content-Type: application/octet-stream' );
+		header( 'Content-Type: application/download' );
+		header( "Content-Disposition: attachment;filename=\"{$file_name}\";charset=utf-8" );
+		header( 'Content-Transfer-Encoding: binary' );
 
-			// Disposition / Encoding on response body.
-			header( "Content-Disposition: attachment;filename=\"{$file_name}\";charset=utf-8" );
-			header( 'Content-Transfer-Encoding: binary' );
+		// Open file handle.
+		$handle = fopen( 'php://output', 'w' );
 
-			$handle = fopen( 'php://output', 'w' );
+		// Handle UTF-8 chars conversion for CSV.
+		fprintf( $handle, chr( 0xEF ) . chr( 0xBB ) . chr( 0xBF ) );
 
-			// Handle UTF-8 chars conversion for CSV.
-			fprintf( $handle, chr( 0xEF ) . chr( 0xBB ) . chr( 0xBF ) );
+		// Get the columns.
+		$columns = $this->generate_columns( $form_id, $unchecked_fields, $checked_additional_fields );
+		fputcsv( $handle, array_values( $columns ) );
 
-			// Put the column headers.
-			fputcsv( $handle, array_values( $columns ) );
+		// Loop over users in batches.
+		while ( true ) {
+			// Fetch users in batches.
+			$users = get_users( array(
+				'ur_form_id' => $form_id,
+				'number'     => $batch_size,
+				'offset'     => $offset,
+			) );
 
-			// Put the row values.
+			// If no users are found, break the loop.
+			if ( empty( $users ) ) {
+				break;
+			}
+
+			// Generate rows for this batch.
+			$rows = $this->generate_rows( $users, $form_id, $unchecked_fields, $checked_additional_fields, $from_date, $to_date );
+
+			// Write the rows to the CSV.
 			foreach ( $rows as $row ) {
 				fputcsv( $handle, $row );
 			}
 
-			fclose( $handle );
-		} elseif ( 'json' === $export_format ) {
-			$file_name = $form_name . '-' . current_time( 'Y-m-d_H:i:s' ) . '.json';
-			// Force download.
-			header( 'Content-Type: application/force-download' );
-
-			// Disposition / Encoding on response body.
-			header( "Content-Disposition: attachment;filename=\"{$file_name}\";charset=utf-8" );
-			header( 'Content-type: application/json' );
-			echo wp_json_encode( $rows );
-
+			// Increase the offset for the next batch.
+			$offset += $batch_size;
 		}
+
+		// Close the file.
+		fclose( $handle );
 
 		exit;
 	}
@@ -261,7 +271,7 @@ class UR_Admin_Export_Users {
 						}
 						$user_extra_row[ $user_extra_data_key ] = $file_link;
 					} elseif ( isset( $field_data['field_key'] ) && ( 'checkbox' === $field_data['field_key'] || 'multi_select2' === $field_data['field_key'] ) ) {
-						$values = ( is_array( $user_extra_data ) && ! empty( $user_extra_data ) ) ? implode( ',', $user_extra_data ) : $user_extra_data; //phpcs:ignore
+						$values = ( is_array( $user_extra_data ) && ! empty( $user_extra_data ) ) ? implode( ',', $user_extra_data ) : ""; //phpcs:ignore
 						$user_extra_row[ $user_extra_data_key ] = $values;
 					}
 				}
@@ -294,7 +304,40 @@ class UR_Admin_Export_Users {
 			$user_extra_row = array_merge( $user_extra_row, $user_table_data_row );
 			$user_extra_row = array_merge( $user_extra_row, $user_meta_data_row );
 
-			// Get user additional ckecked row.
+			$profile = user_registration_form_data( $user->ID, $form_id );
+
+			foreach ( $user_extra_row as $key => $value ) {
+				if ( ! metadata_exists( 'user', $user->ID, 'user_registration_' . $key ) && empty( $value ) ) {
+					$profile_key = 'user_registration_' . $key;
+
+					if ( isset( $profile[ $profile_key ]['default'] ) ) {
+						$default_value = $profile[ $profile_key ]['default'];
+
+						// Handle array values properly.
+						if ( is_array( $default_value ) ) {
+							$default_value = implode( ', ', array_filter( $default_value, fn( $v ) => ! empty( $v ) ) );
+						} else {
+							$default_value = esc_html( $default_value );
+						}
+
+						// Only set non-empty default values.
+						if ( ! empty( $default_value ) ) {
+							$user_before_merge_value[ $key ] = $default_value;
+						}
+					}
+				}
+			}
+
+			// Merge only non-empty values from $user_before_merge_value.
+			if ( ! empty( $user_before_merge_value ) ) {
+				foreach ( $user_before_merge_value as $key => $value ) {
+					if ( ! empty( $value ) ) {
+						$user_extra_row[ $key ] = $value;
+					}
+				}
+			}
+
+			// Get user additional checked row.
 			$user_additional_checked_row = array();
 			foreach ( $checked_additional_fields as $key => $value ) {
 				if ( 'user_id' === $value ) {

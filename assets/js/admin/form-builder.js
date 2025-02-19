@@ -149,7 +149,9 @@
 					var urPage = urlParams.get("page");
 					var isEditPage = urlParams.get("edit-registration");
 					var formId = urlParams.get("form_id");
-					var isTemplatePage = $(".user-registration-setup").length;
+					var isTemplatePage = $(
+						"#user-registration-form-templates"
+					).length;
 
 					var previousPage = document.referrer.split("page=")[1];
 					var formUpdated =
@@ -350,7 +352,8 @@
 					URFormBuilder.get_form_email_content_override_data();
 				var form_restriction_submit_data =
 					URFormBuilder.get_form_restriction_submit_data();
-
+				var calculation_settings =
+					URFormBuilder.get_form_calculation_data();
 				/** TODO:: Handle from multistep forms add-on if possible. */
 				var multipart_page_setting = $(
 					"#ur-multi-part-page-settings"
@@ -393,7 +396,8 @@
 					"user_registration_admin_before_form_submit",
 					[data]
 				);
-
+				var check_membership_validations = URFormBuilder.check_membership_validation(data);
+				if(!check_membership_validations) return;
 				// validation for unsupported currency by paypal.
 				if (
 					typeof data.data.ur_payment_disabled !== "undefined" &&
@@ -658,7 +662,7 @@
 								'<div class="ur-embed-select-existing-page-container"><p>' +
 								user_registration_form_builder_data.i18n_admin
 									.i18n_embed_existing_page_description +
-								'</p><select name="ur-embed-select-existing-page-name" id="ur-embed-select-existing-page-name">';
+								'</p><select style="width:100%; line-height:30px;" name="ur-embed-select-existing-page-name" id="ur-embed-select-existing-page-name">';
 							var option =
 								"<option disabled selected>Select Page</option>";
 							response.data.forEach(function (page) {
@@ -727,7 +731,7 @@
 									.i18n_embed_new_page_description +
 								"</p>";
 							var page_name =
-								'<div style="min-width:400px; width:100%;"><input type="text" name="page_title" /></div>';
+								'<div style="width: 100%"><input style="width:100%" type="text" name="page_title" /></div>';
 
 							modelContent = description + page_name;
 							Swal.fire({
@@ -828,6 +832,7 @@
 			 * Returns all the validation messages for the specific form in form builder.
 			 */
 			get_validation_status: function () {
+
 				var only_one_field_index = $.makeArray(
 					user_registration_form_builder_data.form_one_time_draggable_fields
 				);
@@ -1416,6 +1421,77 @@
 						}
 					}
 				);
+
+				// Validate min/max advance settings in form builder.
+				$.each($('.ur-advance-setting'), function(index, element) {
+
+					var maxLength = $(element)
+						.find('input[data-advance-field="limit_length"]');
+					var minLength = $(element)
+						.find('input[data-advance-field="minimum_length"]');
+
+					var generalSettingWrapper = $(element)
+						.closest(".ur-advance-setting-block")
+						.prevAll(".ur-general-setting-block")
+						.first();
+					var fieldName = generalSettingWrapper
+						.find('.ur-general-setting.ur-general-setting-label input[name="ur_general_setting[label]"]')
+						.val();
+
+					if (minLength.is(':checked')) {
+						var minLengthCount = $(element)
+							.next(".ur-advance-minimum_length_limit_count")
+							.find('input[data-advance-field="minimum_length_limit_count"]')
+							.val();
+
+						if (minLengthCount === '' || isNaN(minLengthCount) || parseInt(minLengthCount, 10) < 1) {
+							response.validation_status = false;
+							response.message = user_registration_form_builder_data.i18n_admin.invalid_min_length + ' ' + toLowerCase(fieldName) ;
+						}
+					}
+
+					if (maxLength.is(':checked')) {
+						var maxLengthCount = $(element)
+							.next(".ur-advance-limit_length_limit_count")
+							.find('input[data-advance-field="limit_length_limit_count"]')
+							.val();
+
+						if (maxLengthCount === '' || isNaN(maxLengthCount) || parseInt(maxLengthCount, 10) < 1) {
+							response.validation_status = false;
+							response.message = user_registration_form_builder_data.i18n_admin.invalid_max_length + ' ' + toLowerCase(fieldName) ;
+						}
+					}
+					if (maxLength.is(':checked') && minLength.is(':checked')) {
+
+						var minLengthCount = $(element)
+							.next(".ur-advance-minimum_length_limit_count")
+							.find('input[data-advance-field="minimum_length_limit_count"]')
+							.val();
+						var maxLengthCount = $(element)
+							.next(".ur-advance-limit_length_limit_count")
+							.find('input[data-advance-field="limit_length_limit_count"]')
+							.val();
+
+						var minLengthType = $(element)
+							.next(".ur-settings-minimum-length-limit-mode")
+							.find('select[data-advance-field="minimum_length_limit_mode"]')
+							.val();
+						var maxLengthType = $(element)
+							.next(".ur-advance-limit_length_limit_mode")
+							.find('select[data-advance-field="limit_length_limit_mode"]')
+							.val();
+
+						if (minLengthType === maxLengthType) {
+								if (parseInt(minLengthCount, 10) > parseInt(maxLengthCount, 10)) {
+									response.validation_status = false;
+									response.message = user_registration_form_builder_data.i18n_admin.min_length_less_than_max_length +' ' + toLowerCase(fieldName);
+								}
+							}
+
+					}
+
+
+				});
 
 				if (
 					$("#urfr_enable_verification").is(":checked") &&
@@ -2188,6 +2264,28 @@
 					})
 					.get();
 				return JSON.stringify(form_data);
+			},
+			/**
+			 * Get all the data related to calculations
+			 */
+			get_form_calculation_data: function () {
+				var form_data = [];
+				var single_row = $(".urcal-container");
+				$.each(single_row, function () {
+					var field_name = $(this).attr('id').replace('urcal-container-',''),
+						enable_calculation_field = $(this).siblings('.ur-advance-enable_calculations').find('.ur-enable-calculations'),
+						decimal_places_field = $(this).find('input.ur-calculation-decimal-places'),
+						calculation_formula_field = $(this).find('[data-field-id="ur-calculation-field-' + field_name + '-editor"]');
+					var calculation_data = {
+						'field_name' : field_name,
+						'enable_calculations' : enable_calculation_field.is(':checked'),
+						'decimal_places_field' : decimal_places_field.val(),
+						'calculation_field' : calculation_formula_field.val()
+					}
+					form_data.push(calculation_data);
+				})
+
+				return form_data;
 			},
 			/**
 			 * Get all the conditions datas that the user has set in conditionally assign user role settings.
@@ -3941,12 +4039,14 @@
 										)
 											.parent()
 											.show();
+											$("#user_registration_form_setting_sms_verification_msg_field").show();
 									} else {
 										$(
 											"#user_registration_form_setting_default_phone_field"
 										)
 											.parent()
 											.hide();
+											$("#user_registration_form_setting_sms_verification_msg_field").hide();
 									}
 								} else {
 									$(
@@ -4151,7 +4251,7 @@
 						});
 				}
 
-				$(document.body).trigger("ur_rendered_field_options");
+				$(document.body).trigger("ur_rendered_field_options", [selected_item]);
 				$(document.body).trigger("init_tooltips");
 				$(document.body).trigger("init_field_options_toggle");
 			},
@@ -5190,10 +5290,12 @@
 
 				if (
 					$(".ur-selected-item.ur-item-active .ur-general-setting")
-					.find("[name='ur_general_setting[required]']")
-					.filter(function () {
-					  return $(this).is(":checked") || $(this).val() === "1";
-					}).length
+						.find("[name='ur_general_setting[required]']")
+						.filter(function () {
+							return (
+								$(this).is(":checked") || $(this).val() === "1"
+							);
+						}).length
 				) {
 					wrapper
 						.find(".ur-label")
@@ -6644,6 +6746,24 @@
 						"data-last-group",
 						parseInt(next_li_group.length) - 1
 					);
+			},
+			check_membership_validation: function (data) {
+				var validations = ['empty_membership_group_status', 'payment_field_present_status', 'empty_membership_status'],
+					is_valid = true;
+
+				for (var i = 0; i < validations.length; i++) {
+					var key = validations[i];
+					if (
+						typeof data.data[key] !== "undefined" &&
+						data.data[key][0].validation_status === false
+					) {
+
+						is_valid = false;
+						URFormBuilder.show_message(data.data[key][0].validation_message);
+						return is_valid;
+					}
+				}
+				return is_valid;
 			}
 		};
 

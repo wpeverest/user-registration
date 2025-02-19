@@ -1,9 +1,9 @@
 <?php //phpcs:ignore
 /**
- * Plugin Name: User Registration
+ * Plugin Name: User Registration & Membership
  * Plugin URI: https://wpuserregistration.com/
- * Description: Drag and Drop user registration form and login form builder.
- * Version: 3.3.5
+ * Description: The most flexible User Registration and Membership plugin for WordPress.
+ * Version: 4.0.4
  * Author: WPEverest
  * Author URI: https://wpuserregistration.com
  * Text Domain: user-registration
@@ -14,6 +14,10 @@
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
+}
+
+if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+	require_once __DIR__ . '/vendor/autoload.php';
 }
 
 if ( ! class_exists( 'UserRegistration' ) ) :
@@ -31,7 +35,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '3.3.5';
+		public $version = '4.0.4';
 
 		/**
 		 * Session instance.
@@ -104,10 +108,13 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 * UserRegistration Constructor.
 		 */
 		public function __construct() {
+			add_filter( 'doing_it_wrong_trigger_error', array( $this, 'ur_filter_doing_it_wrong_trigger_error' ), 10, 4 );
+
 			$this->define_constants();
 			$this->includes();
 			$this->init_hooks();
 			add_action( 'plugins_loaded', array( $this, 'objects' ), 1 );
+			add_action( 'in_plugin_update_message-' . UR_PLUGIN_BASENAME, array( __CLASS__, 'in_plugin_update_message' ) );
 
 			do_action( 'user_registration_loaded' );
 		}
@@ -156,12 +163,15 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			$this->define( 'UR_UPLOAD_URL', $upload_dir['baseurl'] . '/user_registration_uploads/' );
 			$this->define( 'UR_DS', DIRECTORY_SEPARATOR );
 			$this->define( 'UR_PLUGIN_FILE', __FILE__ );
+			$this->define( 'UR_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+			$this->define( 'UR_ASSETS_URL', UR_PLUGIN_URL . 'assets' );
 			$this->define( 'UR_ABSPATH', __DIR__ . UR_DS );
 			$this->define( 'UR_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 			$this->define( 'UR_VERSION', $this->version );
 			$this->define( 'UR_TEMPLATE_DEBUG_MODE', false );
 			$this->define( 'UR_FORM_PATH', UR_ABSPATH . 'includes' . UR_DS . 'form' . UR_DS );
 			$this->define( 'UR_SESSION_CACHE_GROUP', 'ur_session_id' );
+			$this->define( 'UR_PRO_ACTIVE', false );
 		}
 
 		/**
@@ -223,6 +233,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			 * Core classes.
 			 */
 			include_once UR_ABSPATH . 'includes/functions-ur-core.php';
+			include_once UR_ABSPATH . 'modules/functions-ur-modules.php';
 			include_once UR_ABSPATH . 'includes/functions-ur-form.php';
 			include_once UR_ABSPATH . 'includes/class-ur-install.php';
 			include_once UR_ABSPATH . 'includes/class-ur-post-types.php'; // Registers post types.
@@ -259,6 +270,20 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			 */
 			include_once UR_ABSPATH . 'includes/admin/class-ur-config.php';
 
+			if ( ur_check_module_activation( 'membership' ) ) {
+				/** include modules */
+				include_once UR_ABSPATH . 'modules/membership/user-registration-membership.php';
+			}
+
+			if ( ( ur_check_module_activation( 'membership' ) || ur_check_module_activation( 'payments' ) ) && ur_check_module_activation( 'payment-history' ) ) {
+				include_once UR_ABSPATH . 'modules/payment-history/Orders.php';
+			}
+
+			if ( ur_check_module_activation( 'content-restriction' ) ) {
+				include_once UR_ABSPATH . 'modules/content-restriction/user-registration-content-restriction.php';
+				include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-content-restriction.php';
+			}
+
 			/**
 			 * Elementor classes.
 			 */
@@ -280,6 +305,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			if ( $this->is_request( 'admin' ) ) {
 				include_once UR_ABSPATH . 'includes/admin/class-ur-admin.php';
 				include_once UR_ABSPATH . 'includes/abstracts/abstract-ur-meta-boxes.php';
+
 				include_once UR_ABSPATH . 'includes/admin/class-ur-admin-embed-wizard.php';
 			}
 
@@ -356,7 +382,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			$locale = is_admin() && function_exists( 'get_user_locale' ) ? get_user_locale() : get_locale();
 			$locale = apply_filters( 'plugin_locale', $locale, 'user-registration' );
 
-			unload_textdomain( 'user-registration' );
+			unload_textdomain( 'user-registration', true );
 			load_textdomain( 'user-registration', WP_LANG_DIR . '/user-registration/user-registration-' . $locale . '.mo' );
 			load_plugin_textdomain( 'user-registration', false, plugin_basename( __DIR__ ) . '/languages' );
 		}
@@ -405,7 +431,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 */
 		public static function plugin_action_links( $actions ) {
 			$new_actions = array(
-				'settings' => '<a href="' . admin_url( 'admin.php?page=user-registration-settings' ) . '" aria-label="' . esc_attr__( 'View User Registration settings', 'user-registration' ) . '">' . esc_html__( 'Settings', 'user-registration' ) . '</a>',
+				'settings' => '<a href="' . admin_url( 'admin.php?page=user-registration-settings' ) . '" aria-label="' . esc_attr__( 'View User Registration & Membership settings', 'user-registration' ) . '">' . esc_html__( 'Settings', 'user-registration' ) . '</a>',
 			);
 
 			return array_merge( $new_actions, $actions );
@@ -421,7 +447,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		public static function plugin_row_meta( $plugin_meta, $plugin_file ) {
 			if ( UR_PLUGIN_BASENAME === $plugin_file ) {
 				$new_plugin_meta = array(
-					'docs'    => '<a href="' . esc_url( apply_filters( 'user_registration_docs_url', 'https://docs.wpuserregistration.com/' ) ) . '" area-label="' . esc_attr__( 'View User Registration documentation', 'user-registration' ) . '">' . esc_html__( 'Docs', 'user-registration' ) . '</a>',
+					'docs'    => '<a href="' . esc_url( apply_filters( 'user_registration_docs_url', 'https://docs.wpuserregistration.com/' ) ) . '" area-label="' . esc_attr__( 'View User Registration & Membership documentation', 'user-registration' ) . '">' . esc_html__( 'Docs', 'user-registration' ) . '</a>',
 					'support' => '<a href="' . esc_url( apply_filters( 'user_registration_support_url', 'https://wpuserregistration.com/support/' ) ) . '" area-label="' . esc_attr__( 'Visit free customer support', 'user-registration' ) . '">' . __( 'Free support', 'user-registration' ) . '</a>',
 				);
 
@@ -429,6 +455,98 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			}
 
 			return (array) $plugin_meta;
+		}
+
+		/**
+		 * Filter for _doing_it_wrong() calls.
+		 *
+		 * @since 3.3.5.2
+		 *
+		 * @param bool|mixed $trigger       Whether to trigger the error for _doing_it_wrong() calls. Default true.
+		 * @param string     $function_name The function that was called.
+		 * @param string     $message       A message explaining what has been done incorrectly.
+		 * @param string     $version       The version of WordPress where the message was added.
+		 *
+		 * @return bool
+		 */
+		public function ur_filter_doing_it_wrong_trigger_error( $trigger, $function_name, $message, $version ) {
+
+			$trigger       = (bool) $trigger;
+			$function_name = (string) $function_name;
+			$message       = (string) $message;
+
+			$is_trigger_for_user_registration = $function_name === '_load_textdomain_just_in_time' && strpos( $message, '<code>user-registration' ) !== false;
+			return $is_trigger_for_user_registration ? false : $trigger;
+		}
+
+		/**
+		 * Update notice
+		 *
+		 * @param array $args Plugin args.
+		 */
+		public static function in_plugin_update_message( $args ) {
+			$transient_name = 'ur_upgrade_notice_' . $args['Version'];
+			$upgrade_notice = get_transient( $transient_name );
+
+			if ( false === $upgrade_notice ) {
+				$response = wp_safe_remote_get( 'https://plugins.svn.wordpress.org/user-registration/trunk/readme.txt' );
+
+				if ( ! is_wp_error( $response ) && ! empty( $response['body'] ) ) {
+					$upgrade_notice = self::parse_update_notice( $response['body'], $args['new_version'] );
+					set_transient( $transient_name, $upgrade_notice, DAY_IN_SECONDS );
+				}
+			}
+
+			echo wp_kses_post( $upgrade_notice );
+		}
+
+		/**
+		 * Parse update notice from readme.
+		 *
+		 * @param string $content Readme content.
+		 * @param string $new_version New version.
+		 */
+		private static function parse_update_notice( $content, $new_version ) {
+			// Output Upgrade Notice.
+			$matches        = null;
+			$regexp         = '~==\s*Upgrade Notice\s*==\s*=\s*(.*)\s*=(.*)(=\s*' . preg_quote( UR_VERSION ) . '\s*=|$)~Uis';
+			$upgrade_notice = '';
+
+			if ( preg_match( $regexp, $content, $matches ) ) {
+
+				$version = trim( $matches[1] );
+				$notices = (array) preg_split( '~[\r\n]+~', trim( $matches[2] ) );
+
+				// Check the latest stable version and ignore trunk.
+				if ( $version === $new_version && version_compare( UR_VERSION, $version, '<' ) ) {
+
+					$upgrade_notice .= '<div class="ur_plugin_upgrade_notice">';
+					$upgrade_notice .= '<div class="ur_plugin_upgrade_notice_body">';
+
+					foreach ( $notices as $line ) {
+
+						$line = trim( $line ); // Remove extra whitespace
+
+						if ( empty( $line ) ) {
+							continue; // Skip empty lines
+						}
+
+						$line = preg_replace( '~\[([^\]]*)\]\(([^\)]*)\)~', '<a href="$2">$1</a>', $line );
+
+						$line = preg_replace( '~^###\s*(.*)~', '<p class="upgrade-title" style="font-size: 14px;font-weight: 600" >$1</p>', $line );
+
+						if ( ! preg_match( '~^<h3>|<p>|<a |<ul>|<ol>|<li>~', $line ) ) {
+							$line = '<p style="font-size: 12px;>' . $line . '</p>';
+						}
+
+						$upgrade_notice .= wp_kses_post( trim( $line ) );
+					}
+
+					$upgrade_notice .= '</div> ';
+					$upgrade_notice .= '</div> ';
+				}
+			}
+			return wp_kses_post( $upgrade_notice );
 		}
 	}
 
@@ -526,7 +644,7 @@ if ( ! function_exists( 'UR' ) ) {
 				return;
 			}
 
-			echo '<div class="notice-warning notice is-dismissible"><p>' . wp_kses_post( __( 'As <strong>User Registration Pro</strong> is active, <strong>User Registration Free</strong> is now not needed.', 'user-registration' ) ) . '</p></div>';
+			echo '<div class="notice-warning notice is-dismissible"><p>' . wp_kses_post( __( 'As <strong>User Registration & Membership Pro</strong> is active, <strong>User Registration Free</strong> is now not needed.', 'user-registration' ) ) . '</p></div>';
 
 			if ( isset( $_GET['activate'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				unset( $_GET['activate'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended

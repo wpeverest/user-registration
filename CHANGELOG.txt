@@ -1,12 +1,76 @@
+= 4.0.4     - 13/02/2025 =
+* Security  - Vulnerability fix for post title in import forms.
+* Fix   	- Login and MyAccount form design inconsistencies.
+* Fix  		- Empty members table list.
+
+= 4.0.3     - 11/02/2025 =
+* Enhance   - Apply template styles to lost password and reset password form.
+* Fix       - Login form render issue.
+* Fix       - Overriding form design with custom css not working.
+* Fix       - Special characters validation blocking email input in lost password.
+* Fix       - User not found error message not being displayed in lost password page.
+
+= 4.0.2     - 07/02/2025 =
+* Fix       - Critical error while updating plugin.
+* Fix       - Username label in lost password form.
+* Fix       - Premium icon alignment in membership creation page.
+
+= 4.0.1     - 06/02/2025 =
+* Fix       - Login menu being automatically added after v4.0 update.
+
+= 4.0       - 06/02/2025 =
+* Feature   - Login form builder.
+* Feature   - Membership module in core.
+* Feature   - Basic restriction in core.
+* Feature   - Payment History module in core.
+* Feature   - Enforce default plugin form styles.
+* Feature   - Multi device registration form preview.
+* Enhance   - Setup wizard flow.
+* Enhance   - Added more form templates.
+* Enhance   - Registration form preview design.
+* Enhance   - Form templates selection page design.
+* Enhance   - Force user logout on password change.
+* Enhance   - Login and registration responsive form design.
+* Enhance   - Optimized modules loading and searching in Dashboard.
+* Enhance   - Check for UR my account and login in custom template
+* Enhance   - Login and Lost password page auto installation in first activation.
+* Dev       - Analytics refactor compatibility.
+* Dev       - Set passwordless login as default login Area.
+* Dev       - Added filter to change password reset success message.
+* Dev       - Hook before automatic user login after email confirmation.
+* Tweak     - Hold data before registration form submit redirection.
+* Fix       - Undefined issue on custom password.
+* Fix       - Issue while making WYSWYG required.
+* Fix       - Form Builder RTL layout design issue.
+* Fix       - Email Preview issue on Verified email.
+* Fix       - Slug translation issue on my account links.
+* Fix       - Username accepting some special characters.
+* Fix       - Profile detail update being triggered twice.
+* Fix       - Login preview styles not loaded in customizer.
+* Fix       - Latest release design issue in dashboard page.
+* Fix       - Status changed to pending mail on registration.
+* Fix       - Error handling when wp_insert_user throws error.
+* Fix       - Unknown email updated message not being displayed.
+* Fix       - Show invalid user/email message form message options.
+* Fix       - Smart tag fix for hidden field.git status
+
+= 3.3.5.2   - 21/11/2024 =
+* Fix       - Fatal error when replacing gravatar image.
+* Fix       - Translation not working properly after WordPress v6.7.
+* Fix       - WordPress _load_textdomain_just_in_time notice after v6.7.
+
+= 3.3.5.1   - 19/11/2024 =
+* Fix       - Edit profile form duplication.
+
 = 3.3.5     - 18/11/2024 =
-* Feature  	- All User Registration widgets for Oxygen builder.
-* Enhance	- My account page design.
+* Feature      - All User Registration widgets for Oxygen builder.
+* Enhance   - My account page design.
 * Enhance   - Most used integration list on integration settings in form builder.
 * Tweak     - Global settings design.
-* Fix		- Form save action not working for initial form publish captcha setting.
-* Fix		- Random order of form fields in email template during user registration.
-* Fix		- Hide Unapproved Users action run for users not from our source.
-* Dev		- Compatibility for convertKit.
+* Fix	    - Form save action not working for initial form publish captcha setting.
+* Fix	    - Random order of form fields in email template during user registration.
+* Fix	    - Hide Unapproved Users action run for users not from our source.
+* Dev	    - Compatibility for convertKit.
 
 = 3.3.4.1  - 16/10/2024 =
 * Fix      - Setup wizard going blank on registration settings step.
@@ -734,24 +798,24 @@
 * Fix 	  - Wpnonce in URL.
 
 = 1.9.6 - 06/04/2021
-* Enhance 	- Password strength meter in reset password page.
-* Enhance 	- Disallow special characters in username field.
-* Enhance 	- Review notice UI and contents.
-* Dev	  	- Frontend listing addon compatibility.
-* Dev	  	- iDEAL payment gateway compatibility.
-* Fix 		- Localization of password strength js params.
-* Fix 		- Disable logout confirmation issue with logout endpoint menu.
-* Fix 		- Reset password button not working.
-* Fix 		- Hide label in edit profile.
+* Enhance     - Password strength meter in reset password page.
+* Enhance     - Disallow special characters in username field.
+* Enhance     - Review notice UI and contents.
+* Dev	      - Frontend listing addon compatibility.
+* Dev	      - iDEAL payment gateway compatibility.
+* Fix 	    - Localization of password strength js params.
+* Fix 	    - Disable logout confirmation issue with logout endpoint menu.
+* Fix 	    - Reset password button not working.
+* Fix 	    - Hide label in edit profile.
 
 = 1.9.5 - 15/03/2021
-* Enhance 	- Setting page header UI.
-* Dev	  	- MailerLite add-on compatibility.
-* Tweak 	- WordPress 5.7 compatibility.
-* Fix 		- WYSIWYG field value save and sanitization in edit-profile.
-* Fix 		- Email overrider undefined index issue.
-* Fix 		- Form Duplication issue with anchor tag.
-* Fix 		- Token mismatch issue.
+* Enhance     - Setting page header UI.
+* Dev	      - MailerLite add-on compatibility.
+* Tweak     - WordPress 5.7 compatibility.
+* Fix 	    - WYSIWYG field value save and sanitization in edit-profile.
+* Fix 	    - Email overrider undefined index issue.
+* Fix 	    - Form Duplication issue with anchor tag.
+* Fix 	    - Token mismatch issue.
 
 = 1.9.4.1 - 12/02/2021
 * Fix - Login button not working on pages with both registration and login forms.
@@ -767,13 +831,13 @@
 * Fix - All In One SEO conflict with my account.
 
 = 1.9.3 - 12/01/2021
-* Feature 	- Success Message display position option.
-* Dev 		- Customizer compatibility in Customize My Account addon.
-* Dev 		- Add animation file.
-* Dev		- Add user-registration div in login form preview.
-* Fix 		- Radio, Select, and Checkbox option label and array index conflict.
-* Fix 		- Prevent core login option and save option conflict.
-* Fix 		- Email Header issue.
+* Feature     - Success Message display position option.
+* Dev 	    - Customizer compatibility in Customize My Account addon.
+* Dev 	    - Add animation file.
+* Dev	    - Add user-registration div in login form preview.
+* Fix 	    - Radio, Select, and Checkbox option label and array index conflict.
+* Fix 	    - Prevent core login option and save option conflict.
+* Fix 	    - Email Header issue.
 
 = 1.9.2.1 - 15/12/2020
 * Fix - Submit button is not working when strong password enabled.

@@ -1,34 +1,74 @@
 /* jshint node:true */
+const fs = require("fs");
+
 module.exports = function (grunt) {
-	"use strict";
+	const distIgnorePatterns = fs
+		.readFileSync(".distignore", "utf-8")
+		.split("\n")
+		.filter((line) => line.trim() && !line.startsWith("#"))
+		.map((line) => `!${line.trim()}`);
+
+	// Define the files to be included in the zip archive.
+	const filesToCompress = [
+		{
+			expand: true,
+			cwd: "./",
+			src: [
+				"**",
+				"!.*",
+				"!*.md",
+				"!*.zip",
+				"!.*/**",
+				"!sass/**",
+				"!phpcs.xml",
+				"!Gruntfile.js",
+				"!package.json",
+				"!renovate.json",
+				"!composer.lock",
+				"!node_modules/**",
+				"!package-lock.json",
+				"!webpack.config.js",
+				"!tests/**",
+				"!phpunit-watcher.yml.dist",
+				"!phpunit.xml.dist",
+				"!phpcs.xml.dist",
+				"!changelog.txt",
+				"!release/**",
+				...distIgnorePatterns
+			],
+			dest: "user-registration" // Ensure this ends with a slash
+		}
+	];
 
 	grunt.initConfig({
+		pkg: grunt.file.readJSON("package.json"),
+
 		// Setting folder templates.
 		dirs: {
 			js: "assets/js",
-			css: "assets/css",
+			css: "assets/css"
 		},
 
 		// JavaScript linting with JSHint.
 		jshint: {
 			options: {
-				jshintrc: ".jshintrc",
+				jshintrc: ".jshintrc"
 			},
 			all: [
 				"Gruntfile.js",
 				"<%= dirs.js %>/admin/*.js",
 				"!<%= dirs.js %>/admin/*.min.js",
 				"<%= dirs.js %>/frontend/*.js",
-				"!<%= dirs.js %>/frontend/*.min.js",
-			],
+				"!<%= dirs.js %>/frontend/*.min.js"
+			]
 		},
 
 		// Sass linting with Stylelint.
 		stylelint: {
 			options: {
-				stylelintrc: ".stylelintrc",
+				stylelintrc: ".stylelintrc"
 			},
-			all: ["<%= dirs.css %>/*.scss", "!<%= dirs.css %>/select2.scss"],
+			all: ["<%= dirs.css %>/*.scss", "!<%= dirs.css %>/select2.scss"]
 		},
 
 		// Minify all .js files.
@@ -36,11 +76,11 @@ module.exports = function (grunt) {
 			options: {
 				ie8: true,
 				parse: {
-					strict: false,
+					strict: false
 				},
 				output: {
-					comments: /@license|@preserve|^!/,
-				},
+					comments: /@license|@preserve|^!/
+				}
 			},
 			admin: {
 				files: [
@@ -49,9 +89,9 @@ module.exports = function (grunt) {
 						cwd: "<%= dirs.js %>/admin/",
 						src: ["*.js", "!*.min.js"],
 						dest: "<%= dirs.js %>/admin/",
-						ext: ".min.js",
-					},
-				],
+						ext: ".min.js"
+					}
+				]
 			},
 			frontend: {
 				files: [
@@ -60,9 +100,9 @@ module.exports = function (grunt) {
 						cwd: "<%= dirs.js %>/frontend/",
 						src: ["*.js", "!*.min.js"],
 						dest: "<%= dirs.js %>/frontend/",
-						ext: ".min.js",
-					},
-				],
+						ext: ".min.js"
+					}
+				]
 			},
 			urComponents: {
 				files: [
@@ -71,9 +111,20 @@ module.exports = function (grunt) {
 						cwd: "<%= dirs.js %>/ur-components/",
 						src: ["*.js", "!*.min.js"],
 						dest: "<%= dirs.js %>/ur-components/",
-						ext: ".min.js",
-					},
-				],
+						ext: ".min.js"
+					}
+				]
+			},
+			modules: {
+				files: [
+					{
+						expand: true,
+						cwd: "<%= dirs.js %>/modules/",
+						src: ["**/*.js", "!**/*.min.js"],
+						dest: "<%= dirs.js %>/modules/",
+						ext: ".min.js"
+					}
+				]
 			},
 			urSnackbar: {
 				files: [
@@ -82,56 +133,56 @@ module.exports = function (grunt) {
 						cwd: "<%= dirs.js %>/ur-snackbar/",
 						src: ["*.js", "!*.min.js"],
 						dest: "<%= dirs.js %>/ur-snackbar/",
-						ext: ".min.js",
-					},
-				],
+						ext: ".min.js"
+					}
+				]
 			},
 			vendor: {
 				files: {
 					"<%= dirs.js %>/inputmask/jquery.inputmask.bundle.min.js": [
-						"<%= dirs.js %>/inputmask/jquery.inputmask.bundle.js",
+						"<%= dirs.js %>/inputmask/jquery.inputmask.bundle.js"
 					],
 					"<%= dirs.js %>/jquery-blockui/jquery.jquery.blockUI.min.js":
 						[
-							"<%= dirs.js %>/jquery-blockui/jquery.jquery.blockUI.js",
+							"<%= dirs.js %>/jquery-blockui/jquery.jquery.blockUI.js"
 						],
 					"<%= dirs.js %>/tooltipster/tooltipster.bundle.min.js": [
-						"<%= dirs.js %>/tooltipster/tooltipster.bundle.js",
+						"<%= dirs.js %>/tooltipster/tooltipster.bundle.js"
 					],
 					"<%= dirs.js %>/perfect-scrollbar/perfect-scrollbar.min.js":
 						[
-							"<%= dirs.js %>/perfect-scrollbar/perfect-scrollbar.js",
+							"<%= dirs.js %>/perfect-scrollbar/perfect-scrollbar.js"
 						],
 					"<%= dirs.js %>/selectWoo/selectWoo.min.js": [
-						"<%= dirs.js %>/selectWoo/selectWoo.js",
+						"<%= dirs.js %>/selectWoo/selectWoo.js"
 					],
 					"<%= dirs.js %>/sweetalert2/sweetalert2.min.js": [
-						"<%= dirs.js %>/sweetalert2/sweetalert2.js",
+						"<%= dirs.js %>/sweetalert2/sweetalert2.js"
 					],
 					"<%= dirs.js %>/sweetalert2/sweetalert2.min.js": [
-						"<%= dirs.js %>/sweetalert2/sweetalert2.js",
-					],
-				},
-			},
+						"<%= dirs.js %>/sweetalert2/sweetalert2.js"
+					]
+				}
+			}
 		},
 
 		// Compile all .scss files.
 		sass: {
 			options: {
 				sourceMap: false,
-				implementation: require("node-sass"),
+				implementation: require("sass")
 			},
 			compile: {
 				files: [
 					{
 						expand: true,
 						cwd: "<%= dirs.css %>/",
-						src: ["*.scss"],
+						src: ["*.scss", "modules/**/*.scss"], // Include the modules directory
 						dest: "<%= dirs.css %>/",
-						ext: ".css",
-					},
-				],
-			},
+						ext: ".css"
+					}
+				]
+			}
 		},
 
 		// Generate all RTL .css files
@@ -141,8 +192,8 @@ module.exports = function (grunt) {
 				cwd: "<%= dirs.css %>",
 				src: ["*.css", "!select2.css", "!*-rtl.css"],
 				dest: "<%= dirs.css %>/",
-				ext: "-rtl.css",
-			},
+				ext: "-rtl.css"
+			}
 		},
 
 		// Minify all .css files.
@@ -152,8 +203,8 @@ module.exports = function (grunt) {
 				cwd: "<%= dirs.css %>/",
 				src: ["*.css"],
 				dest: "<%= dirs.css %>/",
-				ext: ".css",
-			},
+				ext: ".css"
+			}
 		},
 
 		// Concatenate select2.css onto the admin.css files.
@@ -162,48 +213,52 @@ module.exports = function (grunt) {
 				files: {
 					"<%= dirs.css %>/admin.css": [
 						"<%= dirs.css %>/select2.css",
-						"<%= dirs.css %>/admin.css",
+						"<%= dirs.css %>/admin.css"
 					],
 					"<%= dirs.css %>/admin-rtl.css": [
 						"<%= dirs.css %>/select2.css",
-						"<%= dirs.css %>/admin-rtl.css",
-					],
-				},
-			},
+						"<%= dirs.css %>/admin-rtl.css"
+					]
+				}
+			}
 		},
 
 		// Watch changes for assets.
 		watch: {
 			css: {
-				files: ["<%= dirs.css %>/*.scss"],
-				tasks: ["sass", "rtlcss", "cssmin", "concat"],
+				files: [
+					"<%= dirs.css %>/*.scss",
+					"<%= dirs.css %>/modules/**/*.scss"
+				],
+				tasks: ["sass", "rtlcss", "cssmin", "concat"]
 			},
 			js: {
 				files: [
 					"<%= dirs.js %>/admin/*js",
+					"<%= dirs.js %>/modules/**/**/*js",
 					"<%= dirs.js %>/frontend/*js",
 					"<%= dirs.js %>/ur-snackbar/*js",
 					"!<%= dirs.js %>/admin/*.min.js",
 					"!<%= dirs.js %>/frontend/*.min.js",
-					"!<%= dirs.js %>/ur-snackbar/*.min.js",
+					"!<%= dirs.js %>/ur-snackbar/*.min.js"
 				],
-				tasks: ["jshint", "uglify"],
-			},
+				tasks: ["jshint", "uglify"]
+			}
 		},
 
 		// PHP Code Sniffer.
 		phpcs: {
 			options: {
-				bin: "vendor/bin/phpcs",
+				bin: "vendor/bin/phpcs"
 			},
 			dist: {
 				src: [
 					"**/*.php", // Include all files
 					"!includes/libraries/**", // Exclude libraries/
 					"!node_modules/**", // Exclude node_modules/
-					"!vendor/**", // Exclude vendor/
-				],
-			},
+					"!vendor/**" // Exclude vendor/
+				]
+			}
 		},
 
 		// Autoprefixer.
@@ -211,41 +266,47 @@ module.exports = function (grunt) {
 			options: {
 				processors: [
 					require("autoprefixer")({
-						overrideBrowserslist: ["> 0.1%", "ie 8", "ie 9"],
-					}),
-				],
+						overrideBrowserslist: ["> 0.1%", "ie 8", "ie 9"]
+					})
+				]
 			},
 			dist: {
-				src: ["<%= dirs.css %>/*.css"],
-			},
+				src: ["<%= dirs.css %>/*.css"]
+			}
+		},
+
+		// Generate POT file for translations
+		makepot: {
+			target: {
+				options: {
+					domainPath: "/languages/",
+					mainFile: "user-registration.php",
+					potFilename: "user-registration.pot",
+					potHeaders: {
+						poedit: true,
+						"x-poedit-keywordslist": true
+					},
+					type: "wp-plugin",
+					exclude: ["node_modules/.*", "tests/.*", "vendor/.*"]
+				}
+			}
 		},
 
 		// Compress files and folders.
 		compress: {
-			options: {
-				archive: "user-registration.zip",
+			withVersion: {
+				options: {
+					archive: "release/<%= pkg.name %>-<%= pkg.version %>.zip"
+				},
+				files: filesToCompress
 			},
-			files: {
-				src: [
-					"**",
-					"!.*",
-					"!*.md",
-					"!*.zip",
-					"!.*/**",
-					"!sass/**",
-					// "!vendor/**",
-					"!tests/**",
-					"!Gruntfile.js",
-					"!package.json",
-					"!composer.json",
-					"!composer.lock",
-					"!node_modules/**",
-					"!phpcs.ruleset.xml",
-				],
-				dest: "user-registration",
-				expand: true,
-			},
-		},
+			// withoutVersion: {
+			// 	options: {
+			// 		archive: "release/<%= pkg.name %>.zip"
+			// 	},
+			// 	files: filesToCompress
+			// }
+		}
 	});
 
 	// Load NPM tasks to be used here
@@ -269,19 +330,26 @@ module.exports = function (grunt) {
 		"uglify:admin",
 		"uglify:frontend",
 		"uglify:urComponents",
-		"uglify:urSnackbar",
+		"uglify:modules",
+		"uglify:urSnackbar"
 	]);
-
 	grunt.registerTask("css", [
 		"sass",
 		"rtlcss",
 		"postcss",
 		"cssmin",
-		"concat",
+		"concat"
 	]);
 
-	// Only an alias to 'default' task.
-	grunt.registerTask("dev", ["default"]);
-
-	grunt.registerTask("zip", ["compress"]);
+	// Register tasks
+	grunt.registerTask("release", [
+		"sass",
+		"rtlcss",
+		"cssmin",
+		"concat",
+		"uglify",
+		// "compress:withoutVersion",
+		"compress:withVersion"
+	]);
+	grunt.registerTask("dev", ["watch"]);
 };

@@ -33,6 +33,7 @@ class UR_Form_Handler {
 		add_action( 'wp_loaded', array( __CLASS__, 'process_reset_password' ), 20 );
 		add_action( 'user_registration_before_customer_login_form', array( __CLASS__, 'export_confirmation_request' ) );
 		add_action( 'user_registration_save_profile_details', array( __CLASS__, 'ur_update_user_ip_after_profile_update' ), 10, 2 );
+		add_action( 'user_registration_force_logout_all_devices', array( __CLASS__, 'ur_force_logout_all_devices' ) );
 	}
 
 	/**
@@ -46,7 +47,10 @@ class UR_Form_Handler {
 		$page_id                     = ur_get_page_id( 'myaccount' );
 		$is_ur_login_or_account_page = ur_find_my_account_in_page( $page_id );
 
-		if ( $is_ur_login_or_account_page && ! empty( $_GET['key'] ) && ! empty( $_GET['login'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		$lost_password_page_id    = get_option( 'user_registration_lost_password_page_id', false );
+		$is_ur_lost_password_page = ur_find_lost_password_in_page( $lost_password_page_id );
+
+		if ( ( $is_ur_lost_password_page || $is_ur_login_or_account_page ) && ! empty( $_GET['key'] ) && ! empty( $_GET['login'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$value = sprintf( '%s:%s', sanitize_text_field( wp_unslash( $_GET['login'] ) ), sanitize_text_field( wp_unslash( $_GET['key'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
 			UR_Shortcode_My_Account::set_reset_password_cookie( $value );
 
@@ -480,17 +484,21 @@ class UR_Form_Handler {
 		if ( ur_notice_count( 'error' ) === 0 ) {
 
 			wp_update_user( $user );
+			$force_logout = apply_filters( 'user_registration_force_logout_after_password_change', true );
 
-			ur_add_notice( __( 'Password changed successfully.', 'user-registration' ) );
 			/**
 			 * Fires an action hook after successfully saving user registration account details.
 			 *
 			 * @param string $hook_name The name of the action hook, 'user_registration_save_account_details'.
 			 * @param int    $user_id   The ID of the user whose account details have been successfully saved.
 			 */
-			do_action( 'user_registration_save_account_details', $user->ID );
-
-			wp_safe_redirect( ur_get_page_permalink( 'myaccount' ) );
+			if ( $force_logout ) {
+				do_action( 'user_registration_force_logout_all_devices', $user->ID );
+			}else{
+				ur_add_notice( __( 'Password changed successfully.', 'user-registration' ) );
+				do_action( 'user_registration_save_account_details', $user->ID );
+				wp_safe_redirect( ur_get_page_permalink( 'myaccount' ) );
+			}
 			exit;
 		}
 	}
@@ -884,13 +892,12 @@ class UR_Form_Handler {
 		}
 
 		$templates = UR_Admin_Form_Templates::get_template_data();
-
 		$templates = is_array( $templates ) ? $templates : array();
 
 		$form_data = array();
 
-		if ( ! empty( $templates ) ) {
-			foreach ( $templates as $template_data ) {
+		if ( ! empty( $templates ) && isset( $templates[0]->templates ) ) {
+			foreach ( $templates[0]->templates as $template_data ) {
 				if ( $template_data->slug === $template && 'blank' !== $template_data->slug ) {
 					$form_data                            = json_decode( base64_decode( $template_data->settings ), true );
 					$form_data['form_post']['post_title'] = $title;
@@ -899,7 +906,7 @@ class UR_Form_Handler {
 		}
 
 		// check for non empty post data array.
-		$form_data['form_post'] = isset( $form_data['form_post'] ) ? $form_data['form_post'] : array();
+		$form_data['form_post'] = isset( $form_data['forms'][0]['form_post'] ) ? $form_data['forms'][0]['form_post'] : array();
 		$form_data['form_post'] = (object) $form_data['form_post'];
 
 		$form_data = (object) $form_data;
@@ -982,6 +989,26 @@ class UR_Form_Handler {
 	public static function ur_update_user_ip_after_profile_update( $user_id, $form_id ) {
 		$user_ip = ur_get_ip_address();
 		update_user_meta( $user_id, 'ur_user_ip', $user_ip );
+	}
+
+	/**
+	 * Force logout all devices for a user.
+	 *
+	 * @param int $user_id The ID of the user.
+	 */
+	public static function ur_force_logout_all_devices( $user_id ) {
+
+		if ( class_exists( 'WP_Session_Tokens' ) ) {
+			$session_tokens = WP_Session_Tokens::get_instance( $user_id );
+			$session_tokens->destroy_all();
+			$url = ur_get_page_permalink( 'myaccount' );
+			$url = add_query_arg( array(
+				'force-logout' => 'true',
+
+			), $url );
+			wp_safe_redirect( esc_url( $url ) );
+
+		}
 	}
 }
 
