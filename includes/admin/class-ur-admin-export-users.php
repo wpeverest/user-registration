@@ -89,51 +89,61 @@ class UR_Admin_Export_Users {
 			return;
 		}
 
-		$columns   = $this->generate_columns( $form_id, $unchecked_fields, $checked_additional_fields );
-		$rows      = $this->generate_rows( $users, $form_id, $unchecked_fields, $checked_additional_fields, $from_date, $to_date );
+		// Batch size.
+		$batch_size = apply_filters( 'user_registration_export_users_batch_size', 500 );
+		$offset     = 0;
+
+		// Open the file for writing.
 		$form_name = str_replace( ' &#8211; ', '-', get_the_title( $form_id ) ); //phpcs:ignore;
 		$form_name = str_replace( '&#8211;', '-', $form_name );
 		$form_name = strtolower( str_replace( ' ', '-', $form_name ) );
+		$file_name = $form_name . '-' . current_time( 'Y-m-d_H:i:s' ) . '.csv';
 
-		if ( ob_get_contents() ) {
-			ob_clean();
-		}
-		if ( 'csv' === $export_format ) {
-			$file_name = $form_name . '-' . current_time( 'Y-m-d_H:i:s' ) . '.csv';
-			// Force download.
-			header( 'Content-Type: application/force-download' );
-			header( 'Content-Type: application/octet-stream' );
-			header( 'Content-Type: application/download' );
+		// Force download.
+		header( 'Content-Type: application/force-download' );
+		header( 'Content-Type: application/octet-stream' );
+		header( 'Content-Type: application/download' );
+		header( "Content-Disposition: attachment;filename=\"{$file_name}\";charset=utf-8" );
+		header( 'Content-Transfer-Encoding: binary' );
 
-			// Disposition / Encoding on response body.
-			header( "Content-Disposition: attachment;filename=\"{$file_name}\";charset=utf-8" );
-			header( 'Content-Transfer-Encoding: binary' );
+		// Open file handle.
+		$handle = fopen( 'php://output', 'w' );
 
-			$handle = fopen( 'php://output', 'w' );
+		// Handle UTF-8 chars conversion for CSV.
+		fprintf( $handle, chr( 0xEF ) . chr( 0xBB ) . chr( 0xBF ) );
 
-			// Handle UTF-8 chars conversion for CSV.
-			fprintf( $handle, chr( 0xEF ) . chr( 0xBB ) . chr( 0xBF ) );
+		// Get the columns.
+		$columns = $this->generate_columns( $form_id, $unchecked_fields, $checked_additional_fields );
+		fputcsv( $handle, array_values( $columns ) );
 
-			// Put the column headers.
-			fputcsv( $handle, array_values( $columns ) );
+		// Loop over users in batches.
+		while ( true ) {
+			// Fetch users in batches.
+			$users = get_users( array(
+				'ur_form_id' => $form_id,
+				'number'     => $batch_size,
+				'offset'     => $offset,
+			) );
 
-			// Put the row values.
+			// If no users are found, break the loop.
+			if ( empty( $users ) ) {
+				break;
+			}
+
+			// Generate rows for this batch.
+			$rows = $this->generate_rows( $users, $form_id, $unchecked_fields, $checked_additional_fields, $from_date, $to_date );
+
+			// Write the rows to the CSV.
 			foreach ( $rows as $row ) {
 				fputcsv( $handle, $row );
 			}
 
-			fclose( $handle );
-		} elseif ( 'json' === $export_format ) {
-			$file_name = $form_name . '-' . current_time( 'Y-m-d_H:i:s' ) . '.json';
-			// Force download.
-			header( 'Content-Type: application/force-download' );
-
-			// Disposition / Encoding on response body.
-			header( "Content-Disposition: attachment;filename=\"{$file_name}\";charset=utf-8" );
-			header( 'Content-type: application/json' );
-			echo wp_json_encode( $rows );
-
+			// Increase the offset for the next batch.
+			$offset += $batch_size;
 		}
+
+		// Close the file.
+		fclose( $handle );
 
 		exit;
 	}
