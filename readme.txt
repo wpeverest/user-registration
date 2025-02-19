@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 5.5
 Requires PHP: 7.2
 Tested up to: 6.7.2
-Stable tag: 4.0.4
+Stable tag: 4.1.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -257,6 +257,23 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 21. User Account Page –  Vertical Layout
 
 == Changelog ==
+= 4.1.0     - 24/02/2025 =
+* Feature	- Min Max setting for default fields.
+* Tweak		- Hook to modify lost password page email label.
+* Dev		- Calculation field compatibility.
+* Dev		- Hook to modify checkbox validation message.
+* Dev		- Added after form submission trigger for registration and edit profile form.
+* Fix		- Strpos deprecated warning.
+* Fix		- Translation in textarea limit text.
+* Fix		- Removed password unslash during user login.
+* Fix		- WooCommerce disappearing Add to cart button. 
+* Fix		- Unable to override form design in Elementor widget.
+* Fix		- Popup for customize my account on logout confirmation.
+* Fix		- Critical issue while exporting large amount of users.
+* Fix		- File upload size correction in edit profile details.
+* Fix		- Email template for reset password from admin dashboard.
+* Fix		- Stripped slashes on the registration label for login forms.
+* Fix		- Hidden fields not shown on edit profile (Admin) and import/export users.
 
 = 4.0.4     - 13/02/2025 =
 * Security  - Vulnerability fix for post title in import forms.
