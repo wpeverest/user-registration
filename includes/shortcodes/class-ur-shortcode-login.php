@@ -50,9 +50,12 @@ class UR_Shortcode_Login {
 				ur_add_notice( __( 'Your password has been reset successfully.', 'user-registration' ) );
 				delete_transient( 'ur_password_resetted_flag' );
 			}
+
+			$render_default = apply_filters( 'user_registration_login_render_default', true, $atts );
+
 			if ( isset( $wp->query_vars['ur-lost-password'] ) ) {
 				UR_Shortcode_My_Account::lost_password();
-			} else {
+			} else if( $render_default ) {
 				$recaptcha_enabled = ur_option_checked( 'user_registration_login_options_enable_recaptcha', false );
 				wp_enqueue_script( 'ur-common' );
 				wp_enqueue_script( 'user-registration' );
@@ -66,9 +69,15 @@ class UR_Shortcode_Login {
 						'redirect'       => esc_url_raw( $redirect_url ),
 					)
 				);
+
 				$login_form = ob_get_clean();
 
 				echo $login_form; //phpcs:ignore
+			} else {
+				/**
+				 * Action to handles custom rendering logic for User Registration Login page.
+				 */
+				do_action( 'user_registration_login_custom_render' );
 			}
 		} else {
 			/**
