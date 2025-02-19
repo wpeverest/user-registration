@@ -95,6 +95,7 @@ if ( ! class_exists( 'UR_Settings_Misc' ) ) :
 									'css'     => 'min-width: 350px;',
 									'default' => 'no',
 								),
+								
 							),
 						),
 					),
