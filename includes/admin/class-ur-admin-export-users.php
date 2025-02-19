@@ -261,7 +261,7 @@ class UR_Admin_Export_Users {
 						}
 						$user_extra_row[ $user_extra_data_key ] = $file_link;
 					} elseif ( isset( $field_data['field_key'] ) && ( 'checkbox' === $field_data['field_key'] || 'multi_select2' === $field_data['field_key'] ) ) {
-						$values = ( is_array( $user_extra_data ) && ! empty( $user_extra_data ) ) ? implode( ',', $user_extra_data ) : $user_extra_data; //phpcs:ignore
+						$values = ( is_array( $user_extra_data ) && ! empty( $user_extra_data ) ) ? implode( ',', $user_extra_data ) : ""; //phpcs:ignore
 						$user_extra_row[ $user_extra_data_key ] = $values;
 					}
 				}
@@ -294,7 +294,40 @@ class UR_Admin_Export_Users {
 			$user_extra_row = array_merge( $user_extra_row, $user_table_data_row );
 			$user_extra_row = array_merge( $user_extra_row, $user_meta_data_row );
 
-			// Get user additional ckecked row.
+			$profile = user_registration_form_data( $user->ID, $form_id );
+
+			foreach ( $user_extra_row as $key => $value ) {
+				if ( ! metadata_exists( 'user', $user->ID, 'user_registration_' . $key ) && empty( $value ) ) {
+					$profile_key = 'user_registration_' . $key;
+
+					if ( isset( $profile[ $profile_key ]['default'] ) ) {
+						$default_value = $profile[ $profile_key ]['default'];
+
+						// Handle array values properly.
+						if ( is_array( $default_value ) ) {
+							$default_value = implode( ', ', array_filter( $default_value, fn( $v ) => ! empty( $v ) ) );
+						} else {
+							$default_value = esc_html( $default_value );
+						}
+
+						// Only set non-empty default values.
+						if ( ! empty( $default_value ) ) {
+							$user_before_merge_value[ $key ] = $default_value;
+						}
+					}
+				}
+			}
+
+			// Merge only non-empty values from $user_before_merge_value.
+			if ( ! empty( $user_before_merge_value ) ) {
+				foreach ( $user_before_merge_value as $key => $value ) {
+					if ( ! empty( $value ) ) {
+						$user_extra_row[ $key ] = $value;
+					}
+				}
+			}
+
+			// Get user additional checked row.
 			$user_additional_checked_row = array();
 			foreach ( $checked_additional_fields as $key => $value ) {
 				if ( 'user_id' === $value ) {

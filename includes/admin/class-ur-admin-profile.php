@@ -132,6 +132,8 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 			$show_fields    = $this->get_user_meta_by_form_fields( $user->ID );
 			$exclude_fields = $this->get_exclude_fields_for_admin_profile();
+			$form_id        = ur_get_form_id_by_userid( $user->ID );
+			$profile        = user_registration_form_data( $user->ID, $form_id );
 
 			foreach ( $show_fields as $fieldset_key => $fieldset ) :
 				?>
@@ -211,7 +213,12 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 												class="<?php echo esc_attr( $field['class'] ); ?>" style="width: 25em;">
 											<option><?php esc_html_e( 'Select', 'user-registration' ); ?></option>
 											<?php
-											$selected = get_user_meta( $user->ID, $key, true );
+											if ( ! metadata_exists( 'user', $user->ID, $key ) && isset( $profile[ $key ] ) && isset( $profile[ $key ]['type'] ) && 'select' === $profile[ $key ]['type'] ) {
+												$selected = isset( $profile[ $key ] ['default'] ) ? $profile[ $key ] ['default'] : '';
+											} else {
+												$selected = get_user_meta( $user->ID, $key, true );
+											}
+
 											foreach ( $field['options'] as $option_key => $option_value ) :
 												?>
 												<option value="<?php echo esc_attr( trim( $option_key ) ); ?>" <?php esc_attr( selected( $selected, trim( $option_key ), true ) ); ?>><?php echo esc_html( trim( $option_value ) ); ?></option>
@@ -223,7 +230,11 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 													class="<?php echo esc_attr( $field['class'] ); ?>" style="width: 25em;">
 												<option><?php esc_html_e( 'Select', 'user-registration' ); ?></option>
 												<?php
-												$selected = esc_attr( get_user_meta( $user->ID, $key, true ) );
+												if ( ! metadata_exists( 'user', $user->ID, $key ) && isset( $profile[ $key ] ) && isset( $profile[ $key ]['type'] ) && 'country' === $profile[ $key ]['type'] ) {
+													$selected = isset( $profile[ $key ] ['default'] ) ? $profile[ $key ] ['default'] : '';
+												} else {
+													$selected = esc_attr( get_user_meta( $user->ID, $key, true ) );
+												}
 												foreach ( $field['options'] as $option_key => $option_value ) :
 													?>
 													<option
@@ -233,7 +244,12 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 										<?php elseif ( ! empty( $field['type'] ) && 'radio' === $field['type'] ) : ?>
 											<?php
-											$db_value = get_user_meta( $user->ID, $key, true );
+
+											if ( ! metadata_exists( 'user', $user->ID, $key ) && isset( $profile[ $key ] ) && isset( $profile[ $key ]['type'] ) && 'radio' === $profile[ $key ]['type'] ) {
+												$db_value = isset( $profile[ $key ]['default'] ) ? $profile[ $key ]['default'] : '';
+											} else {
+												$db_value = get_user_meta( $user->ID, $key, true );
+											}
 											if ( isset( $field['image_choice'] ) && ur_string_to_bool( $field['image_choice'] ) ) {
 												if ( is_array( $field['image_options'] ) ) {
 													foreach ( $field['image_options'] as $option_key => $option_value ) {
@@ -275,7 +291,11 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 										<?php elseif ( ! empty( $field['type'] ) && 'checkbox' === $field['type'] ) : ?>
 											<?php
 
-											$value = get_user_meta( $user->ID, $key, true );
+											if ( ! metadata_exists( 'user', $user->ID, $key ) && isset( $profile[ $key ] ) && isset( $profile[ $key ]['type'] ) && 'checkbox' === $profile[ $key ]['type'] ) {
+												$value = isset( $profile[ $key ]['default'] ) ? $profile[ $key ]['default'] : '';
+											} else {
+												$value = get_user_meta( $user->ID, $key, true );
+											}
 
 											if ( isset( $field['image_choice'] ) && ur_string_to_bool( $field['image_choice'] ) && is_array( $field['image_options'] ) && array_filter( $field['image_options'] ) ) {
 												foreach ( $field['image_options'] as $choice_key => $choice_value ) {
@@ -355,7 +375,20 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 
 														<?php elseif ( ! empty( $field['type'] ) && 'date' === $field['type'] ) : ?>
 															<?php
-															$value        = $this->get_user_meta( $user->ID, $key );
+															if ( ! metadata_exists( 'user', $user->ID, $key ) && isset( $profile[ $key ] ) && isset( $profile[ $key ]['type'] ) && 'date' === $profile[ $key ]['type'] ) {
+																$value = isset( $profile[ $key ]['default'] ) ? $profile[ $key ]['default'] : '';
+
+																if ( empty( $value ) && isset( $profile[ $key ]['custom_attributes']['data-default-date'] ) ) {
+																	$date_format  = isset( $profile[ $key ]['custom_attributes']['data-date-format'] ) ? $profile[ $key ]['custom_attributes']['data-date-format'] : 'd/m/Y';
+																	$default_date = isset( $profile[ $key ]['custom_attributes']['data-default-date'] ) ? absint( $profile[ $key ]['custom_attributes']['data-default-date'] ) : 1;
+
+																	if ( 1 === $default_date ) {
+																		$value = date( $date_format, time() );
+																	}
+																}
+															} else {
+																$value = $this->get_user_meta( $user->ID, $key );
+															}
 															$actual_value = $value;
 															$value        = str_replace( '/', '-', $value );
 															if ( ! strpos( $value, 'to' ) ) {
@@ -401,10 +434,15 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 											$extra_params     = json_decode( get_user_meta( $user->ID, $extra_params_key, true ) );
 
 											if ( empty( $extra_params ) ) {
+												if ( ! metadata_exists( 'user', $user->ID, $key ) && isset( $profile[ $key ] ) ) {
+													$value = isset( $profile[ $key ]['default'] ) ? $profile[ $key ]['default'] : '';
+												} else {
+													$value = $this->get_user_meta( $user->ID, $key );
+												}
 												?>
 												<input type="text" name="<?php echo esc_attr( $key ); ?>"
 														id="<?php echo esc_attr( $key ); ?>"
-														value="<?php echo esc_attr( $this->get_user_meta( $user->ID, $key ) ); ?>"
+														value="<?php echo esc_attr( $value ); ?>"
 														class="<?php echo( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : 'regular-text' ); ?>"
 													<?php echo esc_attr( $attribute_string ); ?>
 												/>
