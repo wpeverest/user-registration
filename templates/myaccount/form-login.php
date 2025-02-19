@@ -180,10 +180,11 @@ if ( isset( $_GET['force-logout'] ) && 'true' === $_GET['force-logout'] ) {
 					 */
 					do_action( 'user_registration_login_form' );
 
-					if ( ( $is_passwordless_enabled && ! $is_passwordless_login_default_login_area_enabled ) || $is_login_settings ) {
-						?>
-						<p class="form-row">
-							<?php wp_nonce_field( 'user-registration-login', 'user-registration-login-nonce' ); ?>
+					?>
+					<p class="form-row">
+						<?php wp_nonce_field( 'user-registration-login', 'user-registration-login-nonce' );
+							if ( ( $is_passwordless_enabled && ! $is_passwordless_login_default_login_area_enabled ) || $is_login_settings ) {
+							?>
 							<div class="user-registration-before-login-btn">
 								<?php
 									$remember_me_enabled = ur_option_checked( 'user_registration_login_options_remember_me', true );
@@ -201,17 +202,17 @@ if ( isset( $_GET['force-logout'] ) && 'true' === $_GET['force-logout'] ) {
 
 								if ( ( $lost_password_enabled && $is_passwordless_enabled && ! $is_passwordless_login_default_login_area_enabled ) || $is_login_settings ) {
 									?>
-											<p class="user-registration-LostPassword lost_password">
-												<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php echo esc_html( $labels['lost_your_password'] ); ?></a>
-											</p>
+										<p class="user-registration-LostPassword lost_password">
+											<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php echo esc_html( $labels['lost_your_password'] ); ?></a>
+										</p>
 									<?php
 								}
 								?>
 							</div>
+							<?php
+							}
+							?>
 						</p>
-						<?php
-					}
-					?>
 					<div>
 					<?php
 

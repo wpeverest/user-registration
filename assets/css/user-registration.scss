@@ -2687,3 +2687,12 @@ body {
 		}
 	}
 }
+
+body.user-registration-page {
+	.elementor-widget-container {
+		.user-registration:not(.user-registration-MyAccount) {
+			background: transparent;
+			border-radius: 0;
+		}
+	}
+}

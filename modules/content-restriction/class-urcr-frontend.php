@@ -681,6 +681,8 @@ class URCR_Frontend {
 					}
 				}
 			}
+		} else {
+			return true;
 		}
 	}
 
