@@ -80,9 +80,10 @@ function ur_lostpassword_url( $default_url = '' ) {
 		return $default_url;
 	}
 
-	$lost_password_page = get_option( 'user_registration_lost_password_page_id', false );
+	$lost_password_page     = get_option( 'user_registration_lost_password_page_id', false );
+	$lost_password_page_url = get_option( 'user_registration_general_setting_lost_password_page', '' );
 
-	if ( $lost_password_page ) {
+	if ( $lost_password_page && ! empty( $lost_password_page ) ) {
 		return get_permalink( $lost_password_page );
 	} else {
 
@@ -90,6 +91,7 @@ function ur_lostpassword_url( $default_url = '' ) {
 
 		$ur_account_page_exists = ur_get_page_id( 'myaccount' ) > 0;
 		$lost_password_endpoint = get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' );
+		$lost_password_page     = get_option( 'user_registration_general_setting_lost_password_page', '' );
 
 		$ur_login_page_exists = ur_get_page_id( 'login' ) > 0;
 
@@ -97,7 +99,11 @@ function ur_lostpassword_url( $default_url = '' ) {
 			update_option( 'user_registration_login_page_id', ur_get_page_id( 'login' ) );
 		}
 
-		if ( $ur_account_page_exists && ! empty( $lost_password_endpoint ) ) {
+		$selected_lost_password_page = get_permalink( $lost_password_page_url );
+
+		if ( $ur_account_page_exists && ! empty( $lost_password_endpoint ) && ! empty( $lost_password_page_url ) ) {
+			return get_permalink( $lost_password_page_url );
+		} elseif ( $ur_account_page_exists && ! empty( $lost_password_endpoint ) ) {
 			return ur_get_endpoint_url( $lost_password_endpoint, '', $ur_account_page_url );
 		} elseif ( $ur_login_page_exists && ! empty( $lost_password_endpoint ) ) {
 			return ur_get_endpoint_url( $lost_password_endpoint, '', get_permalink( ur_get_page_id( 'login' ) ) );

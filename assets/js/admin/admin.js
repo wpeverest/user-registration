@@ -714,6 +714,27 @@ jQuery(function ($) {
 			});
 	});
 
+	/**
+	 * Enables disables the lost password page
+	 *
+	 */
+	$(document).ready(function() {
+		function ur_enable_lost_password_page() {
+			if ($('#user_registration_login_options_lost_password').prop('checked')) {
+				$('#user_registration_general_setting_lost_password_page').closest('.user-registration-login-form-global-settings').show();
+			} else {
+				$('#user_registration_general_setting_lost_password_page').closest('.user-registration-login-form-global-settings').hide();
+			}
+		}
+
+		ur_enable_lost_password_page();
+
+		$('#user_registration_login_options_lost_password').on('change click', function() {
+			ur_enable_lost_password_page();
+		});
+	});
+
+
 	$(document).on(
 		"click",
 		'.ur-tab-lists li[role="tab"] a.nav-tab',
