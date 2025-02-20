@@ -8113,3 +8113,17 @@ if ( ! function_exists( 'get_user_order_status' ) ) {
 		return $status;
 	}
 }
+
+if ( ! function_exists( 'ur_get_sms_verification_default_message_content' ) ) {
+	/**
+	 * Get sms verification message content .
+	 *
+	 * @since xx.xx.xx
+	 * @return array
+	 */
+	function ur_get_sms_verification_default_message_content() {
+		$message = sprintf(__("Hi {{username}}, <br> Your One  Time Password (OTP) is : {{sms_otp}} <br> Enter this code to login to your account. <br> Note: This code expires in {{sms_otp_validity}} minutes. <br> Thank You!", 'user-registration'));
+
+		return $message;
+	}
+}
