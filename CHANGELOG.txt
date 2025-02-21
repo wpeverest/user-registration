@@ -16,10 +16,10 @@
 * Fix      - File upload size correction in edit profile profile details.
 * Fix      - Hidden fields not shown on edit profile (Admin) and import/export users.
 
-= 4.0.4     - 13/02/2025 =
-* Security  - Vulnerability fix for post title in import forms.
-* Fix   	- Login and MyAccount form design inconsistencies.
-* Fix  		- Empty members table list.
+= 4.0.4    - 13/02/2025 =
+* Security - Vulnerability fix for post title in import forms.
+* Fix      - Login and MyAccount form design inconsistencies.
+* Fix      - Empty members table list.
 
 = 4.0.3     - 11/02/2025 =
 * Enhance   - Apply template styles to lost password and reset password form.
