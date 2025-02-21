@@ -388,7 +388,9 @@
 						form_restriction_extra_settings_data:
 							form_restriction_extra_settings_data,
 						form_restriction_submit_data:
-							form_restriction_submit_data
+							form_restriction_submit_data,
+						calculation_settings:
+						calculation_settings
 					}
 				};
 
