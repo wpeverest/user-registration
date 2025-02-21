@@ -663,6 +663,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						'i18n_success'                     => _x( 'Success', 'user registration admin', 'user-registration' ),
 						'i18n_error'                       => _x( 'Error', 'user registration admin', 'user-registration' ),
 					),
+					'user_registration_lost_password_selection_validator_nonce' => wp_create_nonce( 'user_registration_lost_password_selection_validator' ),
 				);
 				wp_localize_script(
 					'user-registration-login-settings',

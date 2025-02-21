@@ -132,35 +132,6 @@ if ( ! function_exists( 'is_ur_lost_password_page' ) ) {
 	}
 }
 
-if ( ! function_exists( 'ur_pages_selection_options' ) ) {
-
-	/**
-	 * Get pages for selection options.
-	 *
-	 * @since xx.xx.xx
-	 *
-	 * @return array List of pages with ID as the key and title as the value.
-	 */
-	function ur_pages_selection_options() {
-		$pages     = get_pages();
-		$page_list = array();
-
-		foreach ( $pages as $page ) {
-			$page_list[ $page->ID ] = $page->post_title;
-		}
-
-		/**
-		 * Filter to modify the settings selection pages.
-		 *
-		 * @since xx.xx.xx
-		 *
-		 * @return array $page_list List of pages.
-		 */
-		return apply_filters( 'user_registration_settings_page_selection_options', $page_list );
-	}
-}
-
-
 /**
  * Clean variables using sanitize_text_field. Arrays are cleaned recursively.
  * Non-scalar values are ignored.
@@ -7362,15 +7333,14 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'default'  => 'yes',
 							),
 							array(
-								'title'    => __( 'Select the Lost password page', 'user-registration' ),
-								'desc'     => __( 'Select the lost password page with the shortcode [user_registration_lost_password]', 'user-registration' ),
-								'id'       => 'user_registration_general_setting_lost_password_page',
-								'default'  => 'default',
-								'type'     => 'select',
-								'class'    => 'ur-enhanced-select',
-								'css'      => 'min-width: 350px;',
+								'title'    => __( 'Lost Password Page', 'user-registration' ),
+								'desc'     => sprintf( __( 'Select the page which contains your login form: [%s]', 'user-registration' ), apply_filters( 'user_registration_lost_password_shortcode_tag', 'user_registration_lost_password' ) ), //phpcs:ignore
+								'id'       => 'user_registration_lost_password_page_id',
+								'type'     => 'single_select_page',
+								'default'  => '',
+								'class'    => 'ur-enhanced-select-nostd',
+								'css'      => 'min-width:350px;',
 								'desc_tip' => true,
-								'options'  => ur_pages_selection_options(),
 							),
 							array(
 								'title'    => __( 'Hide Field Labels', 'user-registration' ),
