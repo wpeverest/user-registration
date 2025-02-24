@@ -7332,7 +7332,16 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'css'      => 'min-width: 350px;',
 								'default'  => 'yes',
 							),
-
+							array(
+								'title'    => __( 'Lost Password Page', 'user-registration' ),
+								'desc'     => sprintf( __( 'Select the page which contains your login form: [%s]', 'user-registration' ), apply_filters( 'user_registration_lost_password_shortcode_tag', 'user_registration_lost_password' ) ), //phpcs:ignore
+								'id'       => 'user_registration_lost_password_page_id',
+								'type'     => 'single_select_page',
+								'default'  => '',
+								'class'    => 'ur-enhanced-select-nostd',
+								'css'      => 'min-width:350px;',
+								'desc_tip' => true,
+							),
 							array(
 								'title'    => __( 'Hide Field Labels', 'user-registration' ),
 								'desc'     => '',

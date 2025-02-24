@@ -82,14 +82,14 @@ function ur_lostpassword_url( $default_url = '' ) {
 
 	$lost_password_page = get_option( 'user_registration_lost_password_page_id', false );
 
-	if ( $lost_password_page ) {
+	if ( $lost_password_page && ! empty( get_post( $lost_password_page ) ) ) {
 		return get_permalink( $lost_password_page );
 	} else {
-
 		$ur_account_page_url = ur_get_page_permalink( 'myaccount' );
 
 		$ur_account_page_exists = ur_get_page_id( 'myaccount' ) > 0;
 		$lost_password_endpoint = get_option( 'user_registration_myaccount_lost_password_endpoint', 'lost-password' );
+		$lost_password_page     = get_option( 'user_registration_general_setting_lost_password_page', '' );
 
 		$ur_login_page_exists = ur_get_page_id( 'login' ) > 0;
 
