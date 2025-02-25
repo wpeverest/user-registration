@@ -362,7 +362,8 @@ class UR_Admin_Settings {
 					}
 
 					if ( 'card' === $section['type'] ) {
-						$settings .= '<div class="user-registration-card ur-mt-4 ur-border-0">';
+						$section_id = isset( $section['id'] ) ? "id='". $section['id'] . "'"   : '';
+						$settings .= '<div class="user-registration-card ur-mt-4 ur-border-0" ' . esc_attr( $section_id ) . '>';
 
 						$header_css = '';
 						if ( isset( $section['preview_link'] ) ) {
