@@ -232,7 +232,7 @@ class MembershipGroupsListTable extends \UR_List_Table {
 			<p class="search-box">
 			</p>
 			<div>
-				<input type="search" id="<?php echo $search_id; ?>" name="s" value="<?php echo esc_attr( $_GET['s'] ) ?? ''; ?>"
+				<input type="search" id="<?php echo $search_id; ?>" name="s" value="<?php echo esc_attr( $_GET['s'] ?? '' ); ?>"
 					   placeholder="<?php echo esc_attr( 'Search Membership Groups',' user-registration' ); ?> ..."
 					   autocomplete="off">
 				<button type="submit" id="search-submit">
