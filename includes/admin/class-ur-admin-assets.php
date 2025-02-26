@@ -656,7 +656,8 @@ class UR_Admin_Assets {
 			'min_length_less_than_max_length'             => esc_html__( 'Minimum length count should be less than maximum length count for', 'user-registration' ),
 			'invalid_max_length'                          => esc_html__( 'Invalid maximum length count for', 'user-registration' ),
 			'invalid_min_length'                          => esc_html__( 'Invalid minimum length count for', 'user-registration' ),
-
+			'i18n_min_max_mode'                          => _x( 'The max and min length limit mode for %field% must be same.', 'user registration admin', 'user-registration' ),
+			'i18n_min_max_text_input'                          => _x( 'The max length limit for %field% must be greater than min length.', 'user registration admin', 'user-registration' ),
 			'i18n_prompt_no_membership_group_selected'    => __( 'Please select a membership group for the selected membership field.', 'user-registration' ),
 			'i18n_prompt_no_membership_available'         => __( 'Please create at least one active membership to use a membership field.', 'user-registration' ),
 			'i18n_empty_membership_text'                  => __( 'No active membership\'s available', 'user-registration' ),

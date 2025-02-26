@@ -388,7 +388,8 @@
 						form_restriction_extra_settings_data:
 							form_restriction_extra_settings_data,
 						form_restriction_submit_data:
-							form_restriction_submit_data
+							form_restriction_submit_data,
+						calculation_settings: calculation_settings
 					}
 				};
 
@@ -396,8 +397,9 @@
 					"user_registration_admin_before_form_submit",
 					[data]
 				);
-				var check_membership_validations = URFormBuilder.check_membership_validation(data);
-				if(!check_membership_validations) return;
+				var check_membership_validations =
+					URFormBuilder.check_membership_validation(data);
+				if (!check_membership_validations) return;
 				// validation for unsupported currency by paypal.
 				if (
 					typeof data.data.ur_payment_disabled !== "undefined" &&
@@ -832,7 +834,6 @@
 			 * Returns all the validation messages for the specific form in form builder.
 			 */
 			get_validation_status: function () {
-
 				var only_one_field_index = $.makeArray(
 					user_registration_form_builder_data.form_one_time_draggable_fields
 				);
@@ -1348,6 +1349,111 @@
 
 				$.each(
 					$(".ur-input-grids").find(
+						'.ur-field[data-field-key="text"], .ur-field[data-field-key="first_name"], .ur-field[data-field-key="description"],.ur-field[data-field-key="display_name"], .ur-field[data-field-key="last_name"]'
+					),
+					function () {
+						var max_length_enabled = $(this)
+								.closest(".ur-selected-item")
+								.find(
+									".ur-advance-setting-block .ur-settings-limit-length"
+								)
+								.is(":checked"),
+							min_length_enabled = $(this)
+								.closest(".ur-selected-item")
+								.find(
+									".ur-advance-setting-block .ur-settings-minimum-length"
+								)
+								.is(":checked"),
+							max_length_limit_length = $(this)
+								.closest(".ur-selected-item")
+								.find(
+									".ur-advance-setting-block .ur-settings-limit-length-limit-count"
+								)
+								.val(),
+							min_length_limit_length = $(this)
+								.closest(".ur-selected-item")
+								.find(
+									".ur-advance-setting-block .ur-settings-minimum-length-limit-count"
+								)
+								.val();
+
+						var label = $(this)
+							.closest(".ur-selected-item")
+							.find(".ur-label label")
+							.html();
+
+						if (min_length_enabled) {
+							if (
+								min_length_limit_length === "" ||
+								isNaN(min_length_limit_length) ||
+								parseInt(min_length_limit_length, 10) < 1
+							) {
+								response.validation_status = false;
+								response.message =
+									user_registration_form_builder_data
+										.i18n_admin.invalid_min_length +
+									" " +
+									label;
+							}
+						}
+						if (max_length_enabled) {
+							if (
+								max_length_limit_length === "" ||
+								isNaN(max_length_limit_length) ||
+								parseInt(max_length_limit_length, 10) < 1
+							) {
+								response.validation_status = false;
+								response.message =
+									user_registration_form_builder_data
+										.i18n_admin.invalid_max_length +
+									" " +
+									label;
+							}
+						}
+
+						if (max_length_enabled && min_length_enabled) {
+							var max_length_limit_mode = $(this)
+									.closest(".ur-selected-item")
+									.find(
+										".ur-advance-setting-block .ur-settings-limit-length-limit-mode"
+									)
+									.val(),
+								min_length_limit_mode = $(this)
+									.closest(".ur-selected-item")
+									.find(
+										".ur-advance-setting-block .ur-settings-minimum-length-limit-mode"
+									)
+									.val();
+
+							if (
+								max_length_limit_mode === min_length_limit_mode
+							) {
+								if (
+									parseInt(min_length_limit_length, 10) >
+									parseInt(max_length_limit_length, 10)
+								) {
+									response.validation_status = false;
+									response.message =
+										user_registration_form_builder_data
+											.i18n_admin
+											.min_length_less_than_max_length +
+										" " +
+										label;
+								}
+							} else {
+								response.validation_status = false;
+								response.message =
+									user_registration_form_builder_data.i18n_admin.i18n_min_max_mode.replace(
+										"%field%",
+										label
+									);
+							}
+						}
+					}
+				);
+
+				$.each(
+					$(".ur-input-grids").find(
 						'.ur-field[data-field-key="timepicker"]'
 					),
 					function () {
@@ -1421,77 +1527,6 @@
 						}
 					}
 				);
-
-				// Validate min/max advance settings in form builder.
-				$.each($('.ur-advance-setting'), function(index, element) {
-
-					var maxLength = $(element)
-						.find('input[data-advance-field="limit_length"]');
-					var minLength = $(element)
-						.find('input[data-advance-field="minimum_length"]');
-
-					var generalSettingWrapper = $(element)
-						.closest(".ur-advance-setting-block")
-						.prevAll(".ur-general-setting-block")
-						.first();
-					var fieldName = generalSettingWrapper
-						.find('.ur-general-setting.ur-general-setting-label input[name="ur_general_setting[label]"]')
-						.val();
-
-					if (minLength.is(':checked')) {
-						var minLengthCount = $(element)
-							.next(".ur-advance-minimum_length_limit_count")
-							.find('input[data-advance-field="minimum_length_limit_count"]')
-							.val();
-
-						if (minLengthCount === '' || isNaN(minLengthCount) || parseInt(minLengthCount, 10) < 1) {
-							response.validation_status = false;
-							response.message = user_registration_form_builder_data.i18n_admin.invalid_min_length + ' ' + toLowerCase(fieldName) ;
-						}
-					}
-
-					if (maxLength.is(':checked')) {
-						var maxLengthCount = $(element)
-							.next(".ur-advance-limit_length_limit_count")
-							.find('input[data-advance-field="limit_length_limit_count"]')
-							.val();
-
-						if (maxLengthCount === '' || isNaN(maxLengthCount) || parseInt(maxLengthCount, 10) < 1) {
-							response.validation_status = false;
-							response.message = user_registration_form_builder_data.i18n_admin.invalid_max_length + ' ' + toLowerCase(fieldName) ;
-						}
-					}
-					if (maxLength.is(':checked') && minLength.is(':checked')) {
-
-						var minLengthCount = $(element)
-							.next(".ur-advance-minimum_length_limit_count")
-							.find('input[data-advance-field="minimum_length_limit_count"]')
-							.val();
-						var maxLengthCount = $(element)
-							.next(".ur-advance-limit_length_limit_count")
-							.find('input[data-advance-field="limit_length_limit_count"]')
-							.val();
-
-						var minLengthType = $(element)
-							.next(".ur-settings-minimum-length-limit-mode")
-							.find('select[data-advance-field="minimum_length_limit_mode"]')
-							.val();
-						var maxLengthType = $(element)
-							.next(".ur-advance-limit_length_limit_mode")
-							.find('select[data-advance-field="limit_length_limit_mode"]')
-							.val();
-
-						if (minLengthType === maxLengthType) {
-								if (parseInt(minLengthCount, 10) > parseInt(maxLengthCount, 10)) {
-									response.validation_status = false;
-									response.message = user_registration_form_builder_data.i18n_admin.min_length_less_than_max_length +' ' + toLowerCase(fieldName);
-								}
-							}
-
-					}
-
-
-				});
 
 				if (
 					$("#urfr_enable_verification").is(":checked") &&
@@ -2272,18 +2307,29 @@
 				var form_data = [];
 				var single_row = $(".urcal-container");
 				$.each(single_row, function () {
-					var field_name = $(this).attr('id').replace('urcal-container-',''),
-						enable_calculation_field = $(this).siblings('.ur-advance-enable_calculations').find('.ur-enable-calculations'),
-						decimal_places_field = $(this).find('input.ur-calculation-decimal-places'),
-						calculation_formula_field = $(this).find('[data-field-id="ur-calculation-field-' + field_name + '-editor"]');
+					var field_name = $(this)
+							.attr("id")
+							.replace("urcal-container-", ""),
+						enable_calculation_field = $(this)
+							.siblings(".ur-advance-enable_calculations")
+							.find(".ur-enable-calculations"),
+						decimal_places_field = $(this).find(
+							"input.ur-calculation-decimal-places"
+						),
+						calculation_formula_field = $(this).find(
+							'[data-field-id="ur-calculation-field-' +
+								field_name +
+								'-editor"]'
+						);
 					var calculation_data = {
-						'field_name' : field_name,
-						'enable_calculations' : enable_calculation_field.is(':checked'),
-						'decimal_places_field' : decimal_places_field.val(),
-						'calculation_field' : calculation_formula_field.val()
-					}
+						field_name: field_name,
+						enable_calculations:
+							enable_calculation_field.is(":checked"),
+						decimal_places_field: decimal_places_field.val(),
+						calculation_field: calculation_formula_field.val()
+					};
 					form_data.push(calculation_data);
-				})
+				});
 
 				return form_data;
 			},
@@ -4039,14 +4085,18 @@
 										)
 											.parent()
 											.show();
-											$("#user_registration_form_setting_sms_verification_msg_field").show();
+										$(
+											"#user_registration_form_setting_sms_verification_msg_field"
+										).show();
 									} else {
 										$(
 											"#user_registration_form_setting_default_phone_field"
 										)
 											.parent()
 											.hide();
-											$("#user_registration_form_setting_sms_verification_msg_field").hide();
+										$(
+											"#user_registration_form_setting_sms_verification_msg_field"
+										).hide();
 									}
 								} else {
 									$(
@@ -4251,7 +4301,9 @@
 						});
 				}
 
-				$(document.body).trigger("ur_rendered_field_options", [selected_item]);
+				$(document.body).trigger("ur_rendered_field_options", [
+					selected_item
+				]);
 				$(document.body).trigger("init_tooltips");
 				$(document.body).trigger("init_field_options_toggle");
 			},
@@ -6748,7 +6800,11 @@
 					);
 			},
 			check_membership_validation: function (data) {
-				var validations = ['empty_membership_group_status', 'payment_field_present_status', 'empty_membership_status'],
+				var validations = [
+						"empty_membership_group_status",
+						"payment_field_present_status",
+						"empty_membership_status"
+					],
 					is_valid = true;
 
 				for (var i = 0; i < validations.length; i++) {
@@ -6757,9 +6813,10 @@
 						typeof data.data[key] !== "undefined" &&
 						data.data[key][0].validation_status === false
 					) {
-
 						is_valid = false;
-						URFormBuilder.show_message(data.data[key][0].validation_message);
+						URFormBuilder.show_message(
+							data.data[key][0].validation_message
+						);
 						return is_valid;
 					}
 				}
