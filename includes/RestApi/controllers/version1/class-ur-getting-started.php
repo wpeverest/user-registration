@@ -160,7 +160,7 @@ class UR_Getting_Started {
 				$value = ur_string_to_bool( $value );
 			}
 
-			if ( 'user_registration_allow_email_updates' === $option && $value ) {
+			if ( 'user_registration_allow_email_updates' === $option && $value && ! UR_PRO_ACTIVE) {
 				$admin_email = get_option( 'new_admin_email', '' );
 				if ( isset( $settings_to_update['user_registration_updates_admin_email'] ) && ! empty( $settings_to_update['user_registration_updates_admin_email'] ) ) {
 					$admin_email = $settings_to_update['user_registration_updates_admin_email'];

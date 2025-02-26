@@ -43,6 +43,7 @@ class URCR_Frontend {
 	 * Perform content restriction task.
 	 */
 	public function include_run_content_restrictions( $template ) {
+
 		if ( is_embed() ) {
 			return $template;
 		}
@@ -63,7 +64,7 @@ class URCR_Frontend {
 
 		if ( null !== $post_id ) {
 			$urcr_meta_override_global_settings = get_post_meta( $post_id, 'urcr_meta_override_global_settings', true );
-			$whole_site_access_restricted       = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', true ) );
+			$whole_site_access_restricted       = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
 
 			if ( UR_PRO_ACTIVE && ! ur_string_to_bool( $urcr_meta_override_global_settings ) ) {
 				$template = $this->advanced_restriction_wc_with_access_rule( $template, $post );
@@ -135,14 +136,14 @@ class URCR_Frontend {
 				$access_rule = json_decode( $access_rule_post->post_content, true );
 
 				// Verify if required params are available.
-				if ( ! empty( $access_rule['target_contents'] ) ) {
+				if ( ur_string_to_bool( $access_rule['enabled'] ) && ! empty( $access_rule['target_contents'] ) ) {
 					$types = wp_list_pluck( $access_rule['target_contents'], 'type' );
 					if ( in_array( 'whole_site', $types, true ) ) {
 						$is_whole_site_restriction = true;
 					}
 				}
 			}
-			$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', true ) );
+			$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
 
 			if ( $is_whole_site_restriction ) {
 				foreach ( $access_rule_posts as $access_rule_post ) {
@@ -182,7 +183,7 @@ class URCR_Frontend {
 					}
 				}
 			} else {
-				$access_given = $this->check_access_with_with_access_rules();
+				$access_given = $this->check_access_with_access_rules();
 
 				if ( false === $access_given && $whole_site_access_restricted ) {
 					$template = $this->basic_restrictions_templates( $template, $post );
@@ -680,6 +681,8 @@ class URCR_Frontend {
 					}
 				}
 			}
+		} else {
+			return true;
 		}
 	}
 
@@ -789,7 +792,7 @@ class URCR_Frontend {
 		}
 
 		if ( false === $restriction_applied ) {
-			$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', true ) );
+			$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
 
 			if ( ! $whole_site_access_restricted ) {
 				$this->basic_restrictions();
@@ -860,7 +863,7 @@ class URCR_Frontend {
 	/**
 	 * Check access with Access Rules.
 	 */
-	public function check_access_with_with_access_rules() {
+	public function check_access_with_access_rules() {
 		global $wp_query;
 		$access_rule_posts = get_posts(
 			array(
@@ -948,7 +951,7 @@ class URCR_Frontend {
 			$subscription            = $members_subscription->get_member_subscription( wp_get_current_user()->ID );
 			$current_user_membership = ( ! empty( $subscription ) ) ? $subscription['item_id'] : array();
 		}
-		$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', true ) );
+		$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
 
 		if ( $whole_site_access_restricted || $get_meta_data_checkbox ) {
 
@@ -1034,9 +1037,10 @@ class URCR_Frontend {
 			$members_subscription    = new \WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository();
 			$subscription            = $members_subscription->get_member_subscription( wp_get_current_user()->ID );
 			$current_user_membership = ( ! empty( $subscription ) ) ? $subscription['item_id'] : array();
+			$get_meta_data_memberships = get_post_meta( $post_id, 'urcr_meta_memberships', $single = true );
 		}
 
-		$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', true ) );
+		$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
 
 		if ( ur_string_to_bool( $get_meta_data_checkbox ) || $whole_site_access_restricted ) {
 
@@ -1083,7 +1087,7 @@ class URCR_Frontend {
 
 				return $post;
 			} elseif ( $get_meta_data_allow_to === '3' ) {
-				if ( is_array( $allowed_memberships ) && in_array( $current_user_membership, $allowed_memberships ) ) {
+				if ( is_array( $get_meta_data_memberships ) && in_array( $current_user_membership, $get_meta_data_memberships ) ) {
 					return $post;
 				}
 				$this->urcr_restrict_contents();

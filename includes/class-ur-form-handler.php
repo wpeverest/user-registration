@@ -428,9 +428,9 @@ class UR_Form_Handler {
 			return;
 		}
 
-		$pass_cur                = ! empty( $_POST['password_current'] ) ? wp_unslash( $_POST['password_current'] ) : '';//phpcs:ignore;
-		$pass1                   = ! empty( $_POST['password_1'] ) ? wp_unslash( $_POST['password_1'] ) : '';//phpcs:ignore;
-		$pass2                   = ! empty( $_POST['password_2'] ) ? wp_unslash( $_POST['password_2'] ) : '';//phpcs:ignore;
+		$pass_cur                = ! empty( $_POST['password_current'] ) ? $_POST['password_current'] : '';//phpcs:ignore;
+		$pass1                   = ! empty( $_POST['password_1'] ) ? $_POST['password_1'] : '';//phpcs:ignore;
+		$pass2                   = ! empty( $_POST['password_2'] ) ? $_POST['password_2'] : '';//phpcs:ignore;
 		$save_pass = true;
 		/**
 		 * Filter hook to modify the save account bypass currect passoword.

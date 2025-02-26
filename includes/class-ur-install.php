@@ -69,7 +69,6 @@ class UR_Install {
 		add_action( 'init', array( __CLASS__, 'check_version' ), 5 );
 		add_action( 'init', array( __CLASS__, 'init_background_updater' ), 5 );
 		add_action( 'admin_init', array( __CLASS__, 'install_actions' ) );
-		add_action( 'in_plugin_update_message-user-registration/user-registration.php', array( __CLASS__, 'in_plugin_update_message' ) );
 		add_filter( 'wpmu_drop_tables', array( __CLASS__, 'wpmu_drop_tables' ) );
 	}
 
@@ -703,61 +702,6 @@ CREATE TABLE {$wpdb->prefix}user_registration_sessions (
 				}
 			}
 		}
-	}
-
-	/**
-	 * Show plugin changes. Code adapted from W3 Total Cache.
-	 *
-	 * @param array $args Arguments.
-	 */
-	public static function in_plugin_update_message( $args ) {
-		$transient_name = 'ur_upgrade_notice_' . $args['Version'];
-		$upgrade_notice = get_transient( $transient_name );
-
-		if ( false === $upgrade_notice ) {
-			$response = wp_safe_remote_get( 'https://plugins.svn.wordpress.org/user-registration/trunk/readme.txt' );
-
-			if ( ! is_wp_error( $response ) && ! empty( $response['body'] ) ) {
-				$upgrade_notice = self::parse_update_notice( $response['body'], $args['new_version'] );
-				set_transient( $transient_name, $upgrade_notice, DAY_IN_SECONDS );
-			}
-		}
-
-		echo wp_kses_post( $upgrade_notice );
-	}
-
-	/**
-	 * Parse update notice from readme file
-	 *
-	 * @param  string $content Content of notice.
-	 * @param  string $new_version Version of plugin.
-	 *
-	 * @return string
-	 */
-	private static function parse_update_notice( $content, $new_version ) {
-		// Output Upgrade Notice.
-		$matches        = null;
-		$regexp         = '~==\s*Upgrade Notice\s*==\s*=\s*(.*)\s*=(.*)(=\s*' . preg_quote( UR_VERSION ) . '\s*=|$)~Uis';
-		$upgrade_notice = '';
-
-		if ( preg_match( $regexp, $content, $matches ) ) {
-			$version = trim( $matches[1] );
-			$notices = (array) preg_split( '~[\r\n]+~', trim( $matches[2] ) );
-
-			// Check the latest stable version and ignore trunk.
-			if ( $version === $new_version && version_compare( UR_VERSION, $version, '<' ) ) {
-
-				$upgrade_notice .= '<div class="ur_plugin_upgrade_notice">';
-
-				foreach ( $notices as $index => $line ) {
-					$upgrade_notice .= wp_kses_post( preg_replace( '~\[([^\]]*)\]\(([^\)]*)\)~', '<a href="${2}">${1}</a>', $line ) );
-				}
-
-				$upgrade_notice .= '</div> ';
-			}
-		}
-
-		return wp_kses_post( $upgrade_notice );
 	}
 
 	/**

@@ -714,6 +714,27 @@ jQuery(function ($) {
 			});
 	});
 
+	/**
+	 * Enables disables the lost password page
+	 *
+	 */
+	$(document).ready(function() {
+		function ur_enable_lost_password_page() {
+			if ($('#user_registration_login_options_lost_password').prop('checked')) {
+				$('#user_registration_lost_password_page_id').closest('.user-registration-login-form-global-settings').show();
+			} else {
+				$('#user_registration_lost_password_page_id').closest('.user-registration-login-form-global-settings').hide();
+			}
+		}
+
+		ur_enable_lost_password_page();
+
+		$('#user_registration_login_options_lost_password').on('change click', function() {
+			ur_enable_lost_password_page();
+		});
+	});
+
+
 	$(document).on(
 		"click",
 		'.ur-tab-lists li[role="tab"] a.nav-tab',
@@ -1215,10 +1236,14 @@ jQuery(function ($) {
 		$("#user_registration_form_setting_default_phone_field")
 			.parent()
 			.show();
+
+		$("#user_registration_form_setting_sms_verification_msg_field").show();
 	} else {
 		$("#user_registration_form_setting_default_phone_field")
 			.parent()
 			.hide();
+			$("#user_registration_form_setting_sms_verification_msg_field").hide();
+
 	}
 
 	// Toggle display of enable email approval setting
@@ -1229,10 +1254,14 @@ jQuery(function ($) {
 				$("#user_registration_form_setting_default_phone_field")
 					.parent()
 					.show();
+					$("#user_registration_form_setting_sms_verification_msg_field").show();
+
 			} else {
 				$("#user_registration_form_setting_default_phone_field")
 					.parent()
 					.hide();
+					$("#user_registration_form_setting_sms_verification_msg_field").hide();
+
 			}
 		}
 	);

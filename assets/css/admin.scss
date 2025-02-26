@@ -4173,6 +4173,12 @@
 			 }
 		 }
 	 }
+	 .user-registration-help-tip,
+	 .ur-portal-tooltip {
+		 &::after {
+			 width: 16px;
+		 }
+	 }
  }
 
  #wpcontent {

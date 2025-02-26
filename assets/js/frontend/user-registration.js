@@ -1246,6 +1246,7 @@
 							type: "POST",
 							async: true,
 							complete: function (ajax_response) {
+								$(document.body).trigger('user_registration_after_form_submit_completion');
 								var ajaxFlag = [];
 								ajaxFlag["status"] = true;
 
@@ -1952,6 +1953,9 @@
 									dataType: "JSON",
 									data: data,
 									complete: function (ajax_response) {
+										$(document).trigger(
+											"user_registration_process_before_edit_profile_submit_completion"
+										);
 										$this
 											.find("span.ur-front-spinner")
 											.removeClass("ur-front-spinner");

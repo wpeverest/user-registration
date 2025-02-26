@@ -157,7 +157,9 @@ if ( ! class_exists( 'Admin' ) ) :
 				)
 			);
 			$just_settings       = $settings['sections']['user_registration_content_restriction_settings']['settings'];
-			array_splice( $just_settings, 3, 0, $additional_settings );
+
+			array_splice( $just_settings, 2, 0, $additional_settings );
+
 			$settings['sections']['user_registration_content_restriction_settings']['settings'] = $just_settings;
 
 			return $settings;

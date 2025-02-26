@@ -243,7 +243,7 @@ class ListTable extends \UR_List_Table {
 			<p class="search-box">
 			</p>
 			<div>
-				<input type="search" id="<?php echo $search_id; ?>" name="s" value="<?php echo ($_GET['s']) ?? ''; ?>" placeholder="Search Membership ..."
+				<input type="search" id="<?php echo $search_id; ?>" name="s" value="<?php echo esc_attr($_GET['s'] ?? '' ); ?>" placeholder="<?php echo esc_attr( 'Search Membership',' user-registration' ); ?> ..."
 					   autocomplete="off">
 				<button type="submit" id="search-submit">
 					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

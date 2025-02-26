@@ -54,19 +54,19 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 		$default_membership_field_name  = get_option( 'ur_membership_default_membership_field_name', true );
 
 		$this->field_defaults = array(
-			'default_label'      => __( 'Membership Field', 'user-registration' ),
-			'default_field_name' => !empty($default_membership_field_name) && str_contains($default_membership_field_name, 'membership_field_' ) ? $default_membership_field_name : 'membership_field_'.ur_get_random_number() ,
-			'default_group'      => !empty($default_group_id) ? $default_group_id : 0 ,
-			'default_membership_listing_option'      => 'all' ,
+			'default_label'                     => __( 'Membership Field', 'user-registration' ),
+			'default_field_name'                => ! empty( $default_membership_field_name ) && str_contains( $default_membership_field_name, 'membership_field_' ) ? $default_membership_field_name : 'membership_field_' . ur_get_random_number(),
+			'default_group'                     => ! empty( $default_group_id ) ? $default_group_id : 0,
+			'default_membership_listing_option' => 'all',
 		);
-		//override the general settings to add membership group setting.
-		add_filter( "user_registration_field_options_general_settings", array( $this, 'settings_override' ), 10, 2 );
-		add_filter( "user_registration_form_field_args", array( $this, 'set_args_for_membership' ), 10, 3 );
-		add_filter( "user_registration_form_field_membership", array( $this, 'set_membership_field' ), 10, 5 );
+		// override the general settings to add membership group setting.
+		add_filter( 'user_registration_field_options_general_settings', array( $this, 'settings_override' ), 10, 2 );
+		add_filter( 'user_registration_form_field_args', array( $this, 'set_args_for_membership' ), 10, 3 );
+		add_filter( 'user_registration_form_field_membership', array( $this, 'set_membership_field' ), 10, 5 );
 	}
 
 	public function settings_override( $settings, $id ) {
-		if ( "user_registration_membership" !== $id ) {
+		if ( 'user_registration_membership' !== $id ) {
 			return $settings;
 		}
 		$membership_group_service = new MembershipGroupService();
@@ -79,12 +79,12 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 				'label'       => __( 'Membership Listing Options', 'user-registration' ),
 				'placeholder' => __( 'Select an option', 'user-registration' ),
 				'required'    => 1,
-				'tip'         => __( "Select how you want to list memberships in the form.", 'user-registration' ),
+				'tip'         => __( 'Select how you want to list memberships in the form.', 'user-registration' ),
 				'default'     => 'all',
 				'options'     => array(
 					'all'   => 'Show all Memberships.',
-					'group' => 'Select a group'
-				)
+					'group' => 'Select a group',
+				),
 			),
 			'membership_group'          => array(
 				'setting_id'  => 'membership_group',
@@ -94,8 +94,8 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 				'placeholder' => __( 'Select any membership group.', 'user-registration' ),
 				'required'    => 1,
 				'tip'         => __( "Select a membership group from the dropdown or create a new one from <a href='?page=user-registration-membership&action=add_groups'>here</a>.", 'user-registration' ),
-				'options'     => array( 0 => 'Select a Membership Group.' ) + $membership_group_service->get_membership_groups()
-			)
+				'options'     => array( 0 => 'Select a Membership Group.' ) + $membership_group_service->get_membership_groups(),
+			),
 		);
 
 		$settings = $settings + $membership_settings;
@@ -103,7 +103,6 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 		unset( $settings['required'] );
 
 		return $settings;
-
 	}
 
 
@@ -124,20 +123,19 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 	 * @param [int]    $form_id Form id.
 	 */
 	public function validation( $single_form_field, $form_data, $filter_hook, $form_id ) {
-
 	}
 
 	public function set_args_for_membership( $args, $key, $value ) {
-		if ( isset( $args['field_key'] ) && "membership" == $args['field_key'] ) {
-			$args['type']             = 'membership'; //maybe update this in future to be dynamic.
-			if("group" === $args['membership_listing_option']) {
+		if ( isset( $args['field_key'] ) && 'membership' == $args['field_key'] ) {
+			$args['type'] = 'membership'; // maybe update this in future to be dynamic.
+			if ( isset( $args['membership_listing_option'] ) && 'group' === $args['membership_listing_option'] ) {
 				$membership_group_service = new MembershipGroupService();
-				$memberships= $membership_group_service->get_group_memberships( $args['membership_group'] );
-			}else {
+				$memberships              = $membership_group_service->get_group_memberships( $args['membership_group'] );
+			} else {
 				$membership_service = new MembershipService();
-				$memberships= $membership_service->list_active_memberships();
+				$memberships        = $membership_service->list_active_memberships();
 			}
-			$args['options']          = $memberships;
+			$args['options'] = $memberships;
 		}
 
 		return $args;
@@ -158,7 +156,7 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 		$attributes = array(
 			'preview' => true,
 			'key'     => $key,
-			'value'   => $value
+			'value'   => $value,
 		);
 		return \WPEverest\URMembership\ShortCodes::member_registration_form( $attributes + $args );
 	}

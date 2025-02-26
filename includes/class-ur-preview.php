@@ -222,7 +222,7 @@ class UR_Preview {
 			$html  = '';
 			$html .= '<div class="ur-preview-content">';
 			$html .= '<span class="ur-form-preview-title">';
-			$html .= get_the_title( $form_id );
+			$html .= esc_html(get_the_title( $form_id ));
 			$html .= '</span>';
 
 			if ( function_exists( 'apply_shortcodes' ) ) {

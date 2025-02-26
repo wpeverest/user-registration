@@ -189,33 +189,37 @@ jQuery(function ($) {
 		 * Displays Logout popup.
 		 */
 		handle_user_logout: function () {
-			$(document).on("click", ".ur-logout", function (e) {
-				e.preventDefault();
-				e.stopPropagation();
-				var $this = $(this);
+			$(document).on(
+				"click",
+				".ur-logout, .urcma-user-logout",
+				function (e) {
+					e.preventDefault();
+					e.stopPropagation();
+					var $this = $(this);
 
-				swal.fire({
-					title: $this.text() + "?",
-					html: user_registration_params.logout_popup_text,
-					confirmButtonText: $this.text(),
-					confirmButtonColor: "#F25656",
-					showConfirmButton: true,
-					showCancelButton: true,
-					cancelButtonText: "Cancel",
-					cancelButtonColor: "#FFFFFF",
-					customClass: {
-						container:
-							"user-registration-swal2-container user-registration-logout-swal2-container",
-						title: "swal2-title-border"
-					},
-					focusConfirm: false,
-					showLoaderOnConfirm: true
-				}).then(function (result) {
-					if (result.isConfirmed) {
-						window.location.href = $this.attr("href");
-					}
-				});
-			});
+					swal.fire({
+						title: $this.text().trim() + "?",
+						html: user_registration_params.logout_popup_text,
+						confirmButtonText: $this.text(),
+						confirmButtonColor: "#F25656",
+						showConfirmButton: true,
+						showCancelButton: true,
+						cancelButtonText: "Cancel",
+						cancelButtonColor: "#FFFFFF",
+						customClass: {
+							container:
+								"user-registration-swal2-container user-registration-logout-swal2-container",
+							title: "swal2-title-border"
+						},
+						focusConfirm: false,
+						showLoaderOnConfirm: true
+					}).then(function (result) {
+						if (result.isConfirmed) {
+							window.location.href = $this.attr("href");
+						}
+					});
+				}
+			);
 		}
 	};
 

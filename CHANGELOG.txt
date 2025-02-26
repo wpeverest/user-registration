@@ -1,4 +1,42 @@
-= 4.0       - 08/01/2025 =
+= 4.1.0    - 26/02/2025 =
+* Feature  - Min Max setting for default fields.
+* Tweak	   - Hook to modify lost password page email label.
+* Dev      - Calculation field compatibility.
+* Dev      - Hook to modify checkbox validation message.
+* Dev      - Added after form submission trigger for registration and edit profile form.
+* Fix      - Strpos deprecated warning.
+* Fix      - Translation in textarea limit text.
+* Fix      - WooCommerce disappearing Add to cart button.
+* Fix      - Unable to override form design in Elementor widget.
+* Fix      - Popup for customize my account on logout confirmation.
+* Fix      - Critical issue while exporting large amount of users.
+* Fix      - Removed password unslash during user login.
+* Fix      - Email template for reset password from admin dashboard.
+* Fix      - Stripped slashes on the registration label for login forms.
+* Fix      - File upload size correction in edit profile profile details.
+* Fix      - Hidden fields not shown on edit profile (Admin) and import/export users.
+
+= 4.0.4    - 13/02/2025 =
+* Security - Vulnerability fix for post title in import forms.
+* Fix      - Login and MyAccount form design inconsistencies.
+* Fix      - Empty members table list.
+
+= 4.0.3     - 11/02/2025 =
+* Enhance   - Apply template styles to lost password and reset password form.
+* Fix       - Login form render issue.
+* Fix       - Overriding form design with custom css not working.
+* Fix       - Special characters validation blocking email input in lost password.
+* Fix       - User not found error message not being displayed in lost password page.
+
+= 4.0.2     - 07/02/2025 =
+* Fix       - Critical error while updating plugin.
+* Fix       - Username label in lost password form.
+* Fix       - Premium icon alignment in membership creation page.
+
+= 4.0.1     - 06/02/2025 =
+* Fix       - Login menu being automatically added after v4.0 update.
+
+= 4.0       - 06/02/2025 =
 * Feature   - Login form builder.
 * Feature   - Membership module in core.
 * Feature   - Basic restriction in core.
@@ -32,6 +70,7 @@
 * Fix       - Error handling when wp_insert_user throws error.
 * Fix       - Unknown email updated message not being displayed.
 * Fix       - Show invalid user/email message form message options.
+* Fix       - Smart tag fix for hidden field.git status
 
 = 3.3.5.2   - 21/11/2024 =
 * Fix       - Fatal error when replacing gravatar image.

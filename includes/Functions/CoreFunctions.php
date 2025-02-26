@@ -12,10 +12,6 @@
 
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
-}
-
 if ( ! function_exists( 'ur_membership_get_all_roles' ) ) {
 	/**
 	 * Retrieves all the roles available in the WordPress system.
@@ -333,7 +329,11 @@ if ( ! function_exists( 'ur_membership_redirect_to_thank_you_page' ) ) {
 		exit;
 	}
 }
-add_filter( 'build_membership_list_frontend', 'build_membership_list_frontend', 10, 1 );
+
+if ( function_exists( 'add_filter' ) ) {
+	add_filter( 'build_membership_list_frontend', 'build_membership_list_frontend', 10, 1 );
+}
+
 if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 	/**
 	 * Builds the frontend membership list.
@@ -366,7 +366,7 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 				'amount'            => $membership['meta_value']['amount'] ?? 0,
 				'currency_symbol'   => $symbol,
 				'calculated_amount' => 'free' === $membership['meta_value']['type'] ? 0 : round( $membership['meta_value']['amount'] ),
-				'period'            => 'free' === $membership['meta_value']['type'] ? __( 'Free', 'user-registration' ) : ( 'subscription' === $membership['meta_value']['type'] ? $symbol . $membership['meta_value']['amount'] . ' / ' . number_format( $membership['meta_value']['subscription']['value'] ) . ' ' . ucfirst( $membership['meta_value']['subscription']['duration'] ) . ( $membership['meta_value']['subscription']['value'] > 1 ? '(s)' : '' ) : $symbol . round( $membership['meta_value']['amount'] )  ),
+				'period'            => 'free' === $membership['meta_value']['type'] ? __( 'Free', 'user-registration' ) : ( 'subscription' === $membership['meta_value']['type'] ? $symbol . $membership['meta_value']['amount'] . ' / ' . number_format( $membership['meta_value']['subscription']['value'] ) . ' ' . ucfirst( $membership['meta_value']['subscription']['duration'] ) . ( $membership['meta_value']['subscription']['value'] > 1 ? '(s)' : '' ) : $symbol . round( $membership['meta_value']['amount'] ) ),
 			);
 			if ( isset( $membership['meta_value']['payment_gateways'] ) ) {
 				foreach ( $membership['meta_value']['payment_gateways'] as $key => $gateways ) {
@@ -415,7 +415,7 @@ if ( ! function_exists( 'get_membership_menus' ) ) {
 				'url'    => admin_url( 'admin.php?page=user-registration-members' ),
 				'active' => isset( $_GET['page'] ) && $_GET['page'] === 'user-registration-members',
 			),
-			'settings'           => array(
+			'settings'          => array(
 				'label'  => __( 'Settings', 'user-registration' ),
 				'url'    => admin_url( 'admin.php?page=user-registration-settings&tab=membership' ),
 				'active' => false,
@@ -437,6 +437,7 @@ if ( ! function_exists( 'get_active_membership_id_name' ) ) {
 		foreach ( $memberships as $membership ) {
 			$new_membership[ $membership['ID'] ] = $membership['post_title'];
 		}
+
 		return $new_membership;
 	}
 }

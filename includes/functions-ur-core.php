@@ -1194,6 +1194,18 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'tip'               => __( 'This option is to map phone field for sms verification.', 'user-registration' ),
 			),
 			array(
+				'label'             => __( 'SMS Verification message', 'user-registration' ),
+				'description'       => '',
+				'id'                => 'user_registration_form_setting_sms_verification_msg',
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_sms_verification_msg', ur_get_sms_verification_default_message_content() ),
+				'type'              => 'textarea',
+				'class'             => array(),
+				'custom_attributes' => array(),
+				'input_class'       => array(),
+				'required'          => false,
+				'tip'               => __( 'This is sms verification message content.', 'user-registration' ),
+			),
+			array(
 				'type'              => 'select',
 				'label'             => __( 'Default User Role', 'user-registration' ),
 				'description'       => '',
@@ -2402,17 +2414,16 @@ function ur_falls_in_date_range( $target_date, $start_date = null, $end_date = n
  * Get Post Content By Form ID.
  *
  * @param int $form_id Form Id.
+ * @param string $form_status The form status.
  *
  * @return array|mixed|null|object
  */
-function ur_get_post_content( $form_id ) {
 
+function ur_get_post_content( $form_id, $form_status='publish' ) {
 	$args      = array(
 		'post_type'   => 'user_registration',
-
-		'post_status' => 'publish',
-
-		'post__in'    => array( $form_id ),
+		'post_status' => $form_status,
+		'post__in' => array( $form_id ),
 	);
 	$post_data = get_posts( $args );
 
@@ -3976,7 +3987,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 			$invisible_recaptcha = ur_option_checked( 'user_registration_captcha_setting_invisible_recaptcha_v2', false );
 
 			$login_data = array(
-				'user_password' => isset( $post['password'] ) ? wp_unslash( $post['password'] ) : '', //phpcs:ignore.
+				'user_password' => isset( $post['password'] ) ? $post['password'] : '', //phpcs:ignore.
 				'remember'      => isset( $post['rememberme'] ),
 			);
 
@@ -4066,7 +4077,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 			 * @param string   $username         The sanitized username submitted during registration.
 			 * @param string   $password         The sanitized password submitted during registration.
 			 */
-			$validation_error = apply_filters( 'user_registration_process_login_errors', $validation_error, sanitize_user( wp_unslash( $post['username'] ) ), sanitize_user( wp_unslash( $post['password'] ) ) );
+			$validation_error = apply_filters( 'user_registration_process_login_errors', $validation_error, sanitize_user( wp_unslash( $post['username'] ) ), sanitize_user( $post['password'] ) );
 
 
 
@@ -5473,8 +5484,8 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 						$field['max']  = isset( $advance_data['advance_setting']->max ) ? $advance_data['advance_setting']->max : '';
 						$field['step'] = isset( $advance_data['advance_setting']->step ) ? $advance_data['advance_setting']->step : '';
 					}
-
-					if ( 'text' === $single_item->field_key || 'textarea' === $single_item->field_key ) {
+					$length_validation_fields = array( 'text', 'textarea' , 'display_name', 'first_name','last_name','description','nickname');
+					if ( in_array( $single_item->field_key, $length_validation_fields, true ) ) {
 						if ( isset( $advance_data['advance_setting']->limit_length ) && $advance_data['advance_setting']->limit_length ) {
 							if ( isset( $advance_data['advance_setting']->limit_length_limit_count ) && isset( $advance_data['advance_setting']->limit_length_limit_mode ) ) {
 								if ( 'characters' === $advance_data['advance_setting']->limit_length_limit_mode ) {
@@ -5687,7 +5698,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 						// For slot booking.
 						$field['enable_date_slot_booking'] = isset( $advance_data['advance_setting']->enable_date_slot_booking ) ? $advance_data['advance_setting']->enable_date_slot_booking : false;
 					}
-
+					$field['form_id'] = $form_id;
 					$filter_data = array(
 						'form_data' => $field,
 						'data'      => $advance_data,
@@ -7321,7 +7332,16 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'css'      => 'min-width: 350px;',
 								'default'  => 'yes',
 							),
-
+							array(
+								'title'    => __( 'Lost Password Page', 'user-registration' ),
+								'desc'     => sprintf( __( 'Select the page which contains your login form: [%s]', 'user-registration' ), apply_filters( 'user_registration_lost_password_shortcode_tag', 'user_registration_lost_password' ) ), //phpcs:ignore
+								'id'       => 'user_registration_lost_password_page_id',
+								'type'     => 'single_select_page',
+								'default'  => '',
+								'class'    => 'ur-enhanced-select-nostd',
+								'css'      => 'min-width:350px;',
+								'desc_tip' => true,
+							),
 							array(
 								'title'    => __( 'Hide Field Labels', 'user-registration' ),
 								'desc'     => '',
@@ -8055,7 +8075,18 @@ if ( ! function_exists( 'ur_find_my_account_in_custom_template' ) ) {
 			return $value;
 		}
 
-		$content = file_get_contents( get_page_template() );
+		$template_path = get_page_template();
+
+		if ( empty( $template_path ) ) {
+			return $value;
+		}
+
+		$content = ur_file_get_contents( $template_path );
+
+		if ( empty( $content ) || !is_string( $content ) ) {
+			return $value;
+		}
+
 		if ( strpos( $content, '[user_registration_my_account' ) !== false ) {
 			return true;
 		}
@@ -8089,5 +8120,19 @@ if ( ! function_exists( 'get_user_order_status' ) ) {
 		}
 
 		return $status;
+	}
+}
+
+if ( ! function_exists( 'ur_get_sms_verification_default_message_content' ) ) {
+	/**
+	 * Get sms verification message content .
+	 *
+	 * @since xx.xx.xx
+	 * @return array
+	 */
+	function ur_get_sms_verification_default_message_content() {
+		$message = sprintf(__("Hi {{username}}, <br> Your One  Time Password (OTP) is : {{sms_otp}} <br> Enter this code to login to your account. <br> Note: This code expires in {{sms_otp_validity}} minutes. <br> Thank You!", 'user-registration'));
+
+		return $message;
 	}
 }

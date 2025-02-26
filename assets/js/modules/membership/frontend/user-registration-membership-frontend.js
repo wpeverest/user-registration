@@ -184,8 +184,10 @@
 				form_inputs = ur_membership_frontend_utils.convert_to_array(form_inputs);
 				form_inputs.forEach(function (item) {
 					var $this = $(item);
-					name = $this.attr('name').toLowerCase().replace('urm_', '');
-					user_data[name] = $this.val();
+					if($this.attr('name') !== undefined) {
+						var name = $this.attr('name').toLowerCase().replace('urm_', '');
+						user_data[name] = $this.val();
+					}
 				});
 				var membership_input = $('input[name="urm_membership"]:checked');
 				user_data.membership = membership_input.val();

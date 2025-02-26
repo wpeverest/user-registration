@@ -352,7 +352,8 @@
 					URFormBuilder.get_form_email_content_override_data();
 				var form_restriction_submit_data =
 					URFormBuilder.get_form_restriction_submit_data();
-
+				var calculation_settings =
+					URFormBuilder.get_form_calculation_data();
 				/** TODO:: Handle from multistep forms add-on if possible. */
 				var multipart_page_setting = $(
 					"#ur-multi-part-page-settings"
@@ -387,7 +388,8 @@
 						form_restriction_extra_settings_data:
 							form_restriction_extra_settings_data,
 						form_restriction_submit_data:
-							form_restriction_submit_data
+							form_restriction_submit_data,
+						calculation_settings: calculation_settings
 					}
 				};
 
@@ -395,8 +397,9 @@
 					"user_registration_admin_before_form_submit",
 					[data]
 				);
-				var check_membership_validations = URFormBuilder.check_membership_validation(data);
-				if(!check_membership_validations) return;
+				var check_membership_validations =
+					URFormBuilder.check_membership_validation(data);
+				if (!check_membership_validations) return;
 				// validation for unsupported currency by paypal.
 				if (
 					typeof data.data.ur_payment_disabled !== "undefined" &&
@@ -1346,6 +1349,111 @@
 
 				$.each(
 					$(".ur-input-grids").find(
+						'.ur-field[data-field-key="text"], .ur-field[data-field-key="first_name"], .ur-field[data-field-key="description"],.ur-field[data-field-key="display_name"], .ur-field[data-field-key="last_name"]'
+					),
+					function () {
+						var max_length_enabled = $(this)
+								.closest(".ur-selected-item")
+								.find(
+									".ur-advance-setting-block .ur-settings-limit-length"
+								)
+								.is(":checked"),
+							min_length_enabled = $(this)
+								.closest(".ur-selected-item")
+								.find(
+									".ur-advance-setting-block .ur-settings-minimum-length"
+								)
+								.is(":checked"),
+							max_length_limit_length = $(this)
+								.closest(".ur-selected-item")
+								.find(
+									".ur-advance-setting-block .ur-settings-limit-length-limit-count"
+								)
+								.val(),
+							min_length_limit_length = $(this)
+								.closest(".ur-selected-item")
+								.find(
+									".ur-advance-setting-block .ur-settings-minimum-length-limit-count"
+								)
+								.val();
+
+						var label = $(this)
+							.closest(".ur-selected-item")
+							.find(".ur-label label")
+							.html();
+
+						if (min_length_enabled) {
+							if (
+								min_length_limit_length === "" ||
+								isNaN(min_length_limit_length) ||
+								parseInt(min_length_limit_length, 10) < 1
+							) {
+								response.validation_status = false;
+								response.message =
+									user_registration_form_builder_data
+										.i18n_admin.invalid_min_length +
+									" " +
+									label;
+							}
+						}
+						if (max_length_enabled) {
+							if (
+								max_length_limit_length === "" ||
+								isNaN(max_length_limit_length) ||
+								parseInt(max_length_limit_length, 10) < 1
+							) {
+								response.validation_status = false;
+								response.message =
+									user_registration_form_builder_data
+										.i18n_admin.invalid_max_length +
+									" " +
+									label;
+							}
+						}
+
+						if (max_length_enabled && min_length_enabled) {
+							var max_length_limit_mode = $(this)
+									.closest(".ur-selected-item")
+									.find(
+										".ur-advance-setting-block .ur-settings-limit-length-limit-mode"
+									)
+									.val(),
+								min_length_limit_mode = $(this)
+									.closest(".ur-selected-item")
+									.find(
+										".ur-advance-setting-block .ur-settings-minimum-length-limit-mode"
+									)
+									.val();
+
+							if (
+								max_length_limit_mode === min_length_limit_mode
+							) {
+								if (
+									parseInt(min_length_limit_length, 10) >
+									parseInt(max_length_limit_length, 10)
+								) {
+									response.validation_status = false;
+									response.message =
+										user_registration_form_builder_data
+											.i18n_admin
+											.min_length_less_than_max_length +
+										" " +
+										label;
+								}
+							} else {
+								response.validation_status = false;
+								response.message =
+									user_registration_form_builder_data.i18n_admin.i18n_min_max_mode.replace(
+										"%field%",
+										label
+									);
+							}
+						}
+					}
+				);
+
+				$.each(
+					$(".ur-input-grids").find(
 						'.ur-field[data-field-key="timepicker"]'
 					),
 					function () {
@@ -2191,6 +2299,39 @@
 					})
 					.get();
 				return JSON.stringify(form_data);
+			},
+			/**
+			 * Get all the data related to calculations
+			 */
+			get_form_calculation_data: function () {
+				var form_data = [];
+				var single_row = $(".urcal-container");
+				$.each(single_row, function () {
+					var field_name = $(this)
+							.attr("id")
+							.replace("urcal-container-", ""),
+						enable_calculation_field = $(this)
+							.siblings(".ur-advance-enable_calculations")
+							.find(".ur-enable-calculations"),
+						decimal_places_field = $(this).find(
+							"input.ur-calculation-decimal-places"
+						),
+						calculation_formula_field = $(this).find(
+							'[data-field-id="ur-calculation-field-' +
+								field_name +
+								'-editor"]'
+						);
+					var calculation_data = {
+						field_name: field_name,
+						enable_calculations:
+							enable_calculation_field.is(":checked"),
+						decimal_places_field: decimal_places_field.val(),
+						calculation_field: calculation_formula_field.val()
+					};
+					form_data.push(calculation_data);
+				});
+
+				return form_data;
 			},
 			/**
 			 * Get all the conditions datas that the user has set in conditionally assign user role settings.
@@ -3944,12 +4085,18 @@
 										)
 											.parent()
 											.show();
+										$(
+											"#user_registration_form_setting_sms_verification_msg_field"
+										).show();
 									} else {
 										$(
 											"#user_registration_form_setting_default_phone_field"
 										)
 											.parent()
 											.hide();
+										$(
+											"#user_registration_form_setting_sms_verification_msg_field"
+										).hide();
 									}
 								} else {
 									$(
@@ -4154,7 +4301,9 @@
 						});
 				}
 
-				$(document.body).trigger("ur_rendered_field_options");
+				$(document.body).trigger("ur_rendered_field_options", [
+					selected_item
+				]);
 				$(document.body).trigger("init_tooltips");
 				$(document.body).trigger("init_field_options_toggle");
 			},
@@ -6651,7 +6800,11 @@
 					);
 			},
 			check_membership_validation: function (data) {
-				var validations = ['empty_membership_group_status', 'payment_field_present_status', 'empty_membership_status'],
+				var validations = [
+						"empty_membership_group_status",
+						"payment_field_present_status",
+						"empty_membership_status"
+					],
 					is_valid = true;
 
 				for (var i = 0; i < validations.length; i++) {
@@ -6660,9 +6813,10 @@
 						typeof data.data[key] !== "undefined" &&
 						data.data[key][0].validation_status === false
 					) {
-
 						is_valid = false;
-						URFormBuilder.show_message(data.data[key][0].validation_message);
+						URFormBuilder.show_message(
+							data.data[key][0].validation_message
+						);
 						return is_valid;
 					}
 				}

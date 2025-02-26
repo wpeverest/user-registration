@@ -358,7 +358,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			case 'textarea':
 				$field .= '<textarea style="margin-bottom:0px;" data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" ' . ( empty( $args['custom_attributes']['rows'] ) ? ' rows="2"' : '' ) . ( empty( $args['custom_attributes']['cols'] ) ? ' cols="5"' : '' ) . implode( ' ', $custom_attributes ) . '>' . esc_textarea( $value ) . '</textarea>';
 				$field .= '<div style="text-align: right; font-size:14px; color:#737373; margin-top:0px;"> <div class="ur-input-count" data-count-type="' . ( isset( $args['max-words'] ) ? 'words' : 'characters' ) . '" style="display: inline-block; margin-right: 1px;">0</div>';
-				$field .= '<div style="display: inline-block;">' . ( isset( $args['max-words'] ) ? '/' . $args['max-words'] . ' words' : ( isset( $args['max-characters'] ) ? '/' . $args['max-characters'] . ' characters' : '&nbsp;characters' ) );
+				$field .= '<div style="display: inline-block;">' . ( isset( $args['max-words'] ) ? '/' . $args['max-words'] . ' ' . __('words', 'user-registration') : ( isset( $args['max-characters'] ) ? '/' . $args['max-characters'] . ' '. __('characters'. 'user-registration') : ' ' . __('characters', 'user-registration') ) );
 				$field .= '</div></div>';
 				break;
 
@@ -574,6 +574,9 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$username_character = isset( $args['username_character'] ) ? $args['username_character'] : '';
 				$time_slot_booking  = isset( $args['enable_time_slot_booking'] ) ? $args['enable_time_slot_booking'] : '';
 				$target_date_field  = isset( $args['target_date_field'] ) ? isset( $args['target_date_field'] ) : '';
+				$enable_calculations = $args['enable_calculations'] ?? '';
+				$calculation_formula = $args['calculation_formula'] ?? '';
+				$decimal_places = $args['decimal_places'] ?? '';
 				$attr               = '';
 
 				if ( '' !== $username_length ) {
@@ -607,7 +610,9 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				if ( $current_time ) {
 					$attr .= 'data-current-time="' . $current_time . '"';
 				}
-
+				if ( '' !== $enable_calculations && $enable_calculations ) {
+					$attr .= 'readonly data-decimal-places="' . esc_attr($decimal_places) . '" data-calculation-formula="' . esc_attr($calculation_formula) . '"';
+				}
 				if ( ur_string_to_bool( $time_slot_booking ) ) {
 					$target_date_field = isset( $args['target_date_field'] ) ? $args['target_date_field'] : '';
 
@@ -929,6 +934,33 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				}
 				$field .= '<input ' . $input_type . ' data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" class="input-hidden input-text ur-frontend-field ur-edit-profile-field' . esc_attr( $custom_class ) . '" id="' . esc_attr( $args['id'] ) . '"value="' . esc_attr( $hidden_value ) . '" data-field-type="hidden"/>';
 				$field .= ( $is_edit ) ? '</span>' : '';
+				break;
+				case 'tinymce':
+				$editor_settings = array(
+					'name'       => esc_attr( $args['id'] ),
+					'id'         => esc_attr( $args['id'] ),
+					'style'      => esc_attr( $args['css'] ),
+					'default'    => esc_attr( $args['default'] ),
+					'class'      => esc_attr( $args['class'] ),
+					'quicktags'  => array( 'buttons' => 'em,strong,link' ),
+					'tinymce'    => array(
+						'theme_advanced_buttons1' => 'bold,italic,strikethrough,separator,bullist,numlist,separator,blockquote,separator,justifyleft,justifycenter,justifyright,separator,link,unlink,separator,undo,redo,separator',
+						'theme_advanced_buttons2' => '',
+					),
+					'editor_css' => '<style>#wp-excerpt-editor-container .wp-editor-area{height:175px; width:100%;}</style>',
+				);
+
+				$value = ! empty( $value ) ? $value : $default_value;
+
+				$field .= '<div class="user-registration-tinymce-field '.$args['id'].'">';
+
+				// Output buffer for tinymce editor.
+				ob_start();
+				wp_editor( $value, $args['id'], $editor_settings );
+				$field .= ob_get_clean();
+
+				$field .= '</div>';
+
 				break;
 		}
 

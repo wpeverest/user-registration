@@ -19,9 +19,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+$form_template  = get_option( 'user_registration_login_options_form_template', 'default' );
+$template_class = '';
+
+if ( 'bordered' === $form_template ) {
+	$template_class = 'ur-frontend-form--bordered';
+
+} elseif ( 'flat' === $form_template ) {
+	$template_class = 'ur-frontend-form--flat';
+
+} elseif ( 'rounded' === $form_template ) {
+	$template_class = 'ur-frontend-form--rounded';
+
+} elseif ( 'rounded_edge' === $form_template ) {
+	$template_class = 'ur-frontend-form--rounded ur-frontend-form--rounded-edge';
+}
+
 ur_print_notices(); ?>
 
-<div class="ur-frontend-form login" id="ur-frontend-form">
+<div class="ur-frontend-form login <?php echo esc_attr( $template_class ); ?>" id="ur-frontend-form">
 <form method="post" class="user-registration-ResetPassword ur_lost_reset_password" data-enable-strength-password="<?php echo esc_attr( $enable_strong_password ); ?>" data-minimum-password-strength="<?php echo esc_attr( $minimum_password_strength ); ?>">
 		<div class="ur-form-row">
 			<div class="ur-form-grid">
