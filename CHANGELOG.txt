@@ -1,25 +1,25 @@
-= 4.1.0     - 24/02/2025 =
-* Feature	- Min Max setting for default fields.
-* Tweak		- Hook to modify lost password page email label.
-* Dev		- Calculation field compatibility.
-* Dev		- Hook to modify checkbox validation message.
-* Dev		- Added after form submission trigger for registration and edit profile form.
-* Fix		- Strpos deprecated warning.
-* Fix		- Translation in textarea limit text.
-* Fix		- WooCommerce disappearing Add to cart button. 
-* Fix		- Unable to override form design in Elementor widget.
-* Fix		- Popup for customize my account on logout confirmation.
-* Fix		- Critical issue while exporting large amount of users.
-* Fix		- Removed password unslash during user login.
-* Fix		- Email template for reset password from admin dashboard.
-* Fix		- Stripped slashes on the registration label for login forms.
-* Fix		- File upload size correction in edit profile profile details.
-* Fix		- Hidden fields not shown on edit profile (Admin) and import/export users.
+= 4.1.0    - 26/02/2025 =
+* Feature  - Min Max setting for default fields.
+* Tweak	   - Hook to modify lost password page email label.
+* Dev      - Calculation field compatibility.
+* Dev      - Hook to modify checkbox validation message.
+* Dev      - Added after form submission trigger for registration and edit profile form.
+* Fix      - Strpos deprecated warning.
+* Fix      - Translation in textarea limit text.
+* Fix      - WooCommerce disappearing Add to cart button.
+* Fix      - Unable to override form design in Elementor widget.
+* Fix      - Popup for customize my account on logout confirmation.
+* Fix      - Critical issue while exporting large amount of users.
+* Fix      - Removed password unslash during user login.
+* Fix      - Email template for reset password from admin dashboard.
+* Fix      - Stripped slashes on the registration label for login forms.
+* Fix      - File upload size correction in edit profile profile details.
+* Fix      - Hidden fields not shown on edit profile (Admin) and import/export users.
 
-= 4.0.4     - 13/02/2025 =
-* Security  - Vulnerability fix for post title in import forms.
-* Fix   	- Login and MyAccount form design inconsistencies.
-* Fix  		- Empty members table list.
+= 4.0.4    - 13/02/2025 =
+* Security - Vulnerability fix for post title in import forms.
+* Fix      - Login and MyAccount form design inconsistencies.
+* Fix      - Empty members table list.
 
 = 4.0.3     - 11/02/2025 =
 * Enhance   - Apply template styles to lost password and reset password form.

@@ -1,4 +1,4 @@
-/* global user_registration_settings_params */
+/* global user_registration_settings_params, ur_login_form_params */
 (function ($) {
 	// Allowed Screens
 	$("select#user_registration_allowed_screens")
@@ -681,6 +681,9 @@
 						.closest("form")
 						.find("input[name='save']")
 						.prop("disabled", false);
+						$this
+						.closest(".user-registration-global-settings").$find('.error inline')
+						.remove();
 				}
 				$this.prop("disabled", false);
 
@@ -691,6 +694,49 @@
 			}
 		});
 	});
+
+	// Display error when page with our lost password shortcode is not selected.
+	$("#user_registration_lost_password_page_id").on("change", function () {
+		var $this = $(this),
+			data = {
+				action: "user_registration_lost_password_selection_validator",
+				security: ur_login_form_params.user_registration_lost_password_selection_validator_nonce
+			};
+
+		data.user_registration_selected_lost_password_page = $this.val();
+
+		$this.prop("disabled", true);
+		$this.css("border", "1px solid #e1e1e1");
+
+		$this.closest(".user-registration-global-settings--field").find(".error.inline").remove();
+
+		$.ajax({
+			url: ur_login_form_params.ajax_url,
+			data: data,
+			type: "POST",
+			complete: function (response) {
+				if (response.responseJSON.success === false) {
+					if ($this.closest(".user-registration-login-form-global-settings").find(".error.inline").length === 0) {
+						$this.closest(".user-registration-login-form-global-settings").append(
+							"<div id='message' class='error inline' style='padding:10px;'>" +
+							response.responseJSON.data.message +
+							"</div>"
+						);
+					}
+					$this.css("border", "1px solid red");
+					var login_form = $this.closest('.user-registration-login-form-container');
+					$(login_form).closest('#wpbody-content').find('#ur-lists-page-topnav').find('button[name="save_login_form"]').prop("disabled", true);
+				} else {
+					var login_form = $this.closest('.user-registration-login-form-container');
+					$(login_form).closest('#wpbody-content').find('#ur-lists-page-topnav').find('button[name="save_login_form"]').prop("disabled", false);
+					$this.closest(".user-registration-login-form-global-settings").find(".error.inline").remove();
+				}
+
+				$this.prop("disabled", false);
+			}
+		});
+	});
+
 
 	// Set localStorage with expiry
 	function setStorageValue(key, value) {

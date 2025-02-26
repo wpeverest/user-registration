@@ -215,6 +215,7 @@ class UR_Admin_Settings {
 				'user_registration_search_global_settings_nonce' => wp_create_nonce( 'user_registration_search_global_settings' ),
 				'user_registration_captcha_test_nonce' => wp_create_nonce( 'user_registration_captcha_test_nonce' ),
 				'user_registration_my_account_selection_validator_nonce' => wp_create_nonce( 'user_registration_my_account_selection_validator' ),
+				'user_registration_lost_password_selection_validator_nonce' => wp_create_nonce( 'user_registration_lost_password_selection_validator' ),
 				'user_registration_membership_pages_selection_validator_nonce' => wp_create_nonce( 'user_registration_validate_page_none' ),
 				'i18n_nav_warning'                     => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
 				'i18n'                                 => array(
@@ -361,7 +362,8 @@ class UR_Admin_Settings {
 					}
 
 					if ( 'card' === $section['type'] ) {
-						$settings .= '<div class="user-registration-card ur-mt-4 ur-border-0">';
+						$section_id = isset( $section['id'] ) ? "id='". $section['id'] . "'"   : '';
+						$settings .= '<div class="user-registration-card ur-mt-4 ur-border-0" ' . esc_attr( $section_id ) . '>';
 
 						$header_css = '';
 						if ( isset( $section['preview_link'] ) ) {

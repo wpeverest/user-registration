@@ -257,7 +257,8 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 21. User Account Page –  Vertical Layout
 
 == Changelog ==
-= 4.1.0     - 24/02/2025 =
+
+= 4.1.0     - 26/02/2025 =
 * Feature	- Min Max setting for default fields.
 * Tweak		- Hook to modify lost password page email label.
 * Dev		- Calculation field compatibility.
@@ -266,7 +267,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * Fix		- Strpos deprecated warning.
 * Fix		- Translation in textarea limit text.
 * Fix		- Removed password unslash during user login.
-* Fix		- WooCommerce disappearing Add to cart button. 
+* Fix		- WooCommerce disappearing Add to cart button.
 * Fix		- Unable to override form design in Elementor widget.
 * Fix		- Popup for customize my account on logout confirmation.
 * Fix		- Critical issue while exporting large amount of users.
