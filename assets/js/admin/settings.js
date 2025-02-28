@@ -485,6 +485,33 @@
 		"change",
 		function () {
 			var $url = $("#user_registration_login_options_prevent_core_login");
+			var login_form_settings = $url.closest('.user-registration-login-form-container');
+			var wpbody_class = $(login_form_settings).closest('#wpbody-content');
+			var selected_page = $this.closest('.ur-login-form-setting-block').find('.ur-redirect-to-login-page').val();
+
+			if ($(this).is(':checked')) {
+				if ('' === selected_page) {
+					$(wpbody_class).find('#ur-lists-page-topnav').find('.ur_save_login_form_action_button').prop('disabled', true);
+					$this.closest('.ur-login-form-setting-block')
+						.find('.ur-redirect-to-login-page')
+						.closest('.user-registration-login-form-global-settings--field')
+						.append('<div class="error inline" style="padding:10px;">' + ur_login_form_params.user_registration_membership_redirect_default_page_message + '</div>');
+				} else {
+					$(wpbody_class).find('#ur-lists-page-topnav').find('.ur_save_login_form_action_button').prop('disabled', false);
+					$this.closest('.ur-login-form-setting-block')
+						.find('.ur-redirect-to-login-page')
+						.closest('.user-registration-login-form-global-settings--field')
+						.find('.error.inline').remove();
+				}
+			} else {
+				$(wpbody_class).find('#ur-lists-page-topnav').find('.ur_save_login_form_action_button').prop('disabled', false);
+					$this.closest('.ur-login-form-setting-block')
+						.find('.ur-redirect-to-login-page')
+						.closest('.user-registration-login-form-global-settings--field')
+						.find('.error.inline').remove();
+			}
+
+
 
 			$(".single_select_page").toggle();
 			$("#user_registration_login_options_login_redirect_url").prop(
