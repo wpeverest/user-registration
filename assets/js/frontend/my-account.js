@@ -204,7 +204,8 @@ jQuery(function ($) {
 						confirmButtonColor: "#F25656",
 						showConfirmButton: true,
 						showCancelButton: true,
-						cancelButtonText: "Cancel",
+						cancelButtonText:
+							user_registration_params.logout_popup_cancel_text,
 						cancelButtonColor: "#FFFFFF",
 						customClass: {
 							container:
