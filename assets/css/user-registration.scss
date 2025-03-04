@@ -165,6 +165,31 @@
 	margin-top: 10px;
 }
 
+.notice-container {
+	.notice_red {
+		padding: 10px;
+	}
+	.notice_blue {
+		padding: 20px;
+	}
+
+	position: fixed;
+	top: 20px;
+	right: 0px;
+	z-index: 1000;
+	transition: right 0.5s ease;
+}
+
+.close_notice {
+	color: red;
+	cursor: pointer;
+	font-weight: bold;
+}
+
+.notice-container.active {
+	right: 10px;
+}
+
 input.ur-input-border-green:not([type="range"]),
 textarea.ur-input-border-green {
 	border-color: #1ea71b !important;

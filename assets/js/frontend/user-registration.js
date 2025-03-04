@@ -2,6 +2,58 @@
 (function ($) {
 	var user_registration_form_init = function () {
 		var ursL10n = user_registration_params.ursL10n;
+
+		var user_registration_frontend_utils = {
+			/**
+			 * Function to show success message.
+			 *
+			 * @since xx.xx.xx
+			 */
+			show_success_message: function(message) {
+				$('.notice-container .notice_red').removeClass('notice_red').addClass('notice_blue');
+				$('.notice_message').text(message);
+				$('.notice-container').css('display', 'block');
+				this.toggleNotice();
+				this.ur_remove_cookie( 'approved_user_id' );
+				this.ur_remove_cookie( 'toast_content' );
+				this.ur_remove_cookie( 'toast_success_message' );
+			},
+
+			/**
+			 * Removes the notice after some time.
+			 *
+			 * @since xx.xx.xx
+			 */
+			toggleNotice: function() {
+				var noticeContainer = $('.notice-container');
+				setTimeout(() => {
+					noticeContainer.fadeOut(500);
+				}, 500);
+			},
+
+			/**
+			 * Retrieves the cookie values set.
+			 *
+			 * @since xx.xx.xx
+			 */
+			ur_get_cookie: function( cookie_key ) {
+				let matches = document.cookie.match(new RegExp(
+					"(?:^|; )" + cookie_key.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+				));
+				return matches ? decodeURIComponent(matches[1]) : undefined;
+			},
+
+			/**
+			 * Deletes the cookie values.
+			 *
+			 * @since xx.xx.xx
+			 */
+			ur_remove_cookie: function( cookie_key ) {
+				document.cookie = cookie_key + '=; Max-Age=-99999999; path=/';
+			}
+
+		}
+
 		$.fn.ur_form_submission = function () {
 			// traverse all nodes
 			return this.each(function () {
@@ -2312,6 +2364,22 @@
 				// Handle user registration form submit event.
 				$(".ur-submit-button").on("click", function () {
 					$(this).closest("form.register").ur_form_submission();
+				});
+
+				var toast_content = user_registration_frontend_utils.ur_get_cookie('toast_content');
+
+				if ($('.user-registration-page .notice-container').length === 0) {
+					// Adds the toast container on the top of page.
+					$(document).find('.user-registration-page').prepend(toast_content);
+				}
+
+				var success_message = user_registration_frontend_utils.ur_get_cookie('toast_success_message');
+
+				// Displays the toast message.
+				user_registration_frontend_utils.show_success_message(success_message);
+
+				$('.close_notice').on('click', function() {
+					user_registration_frontend_utils.toggleNotice();
 				});
 
 				// Handle edit-profile form submit event.

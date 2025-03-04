@@ -269,6 +269,20 @@ class UR_Email_Confirmation {
 						add_filter( 'user_registration_login_form_before_notice', array( $this, 'custom_email_confirmed_admin_await_message' ) );
 					} else {
 						$allow_automatic_user_login = apply_filters( 'user_registration_allow_automatic_user_login_email_confirmation', true );
+
+						// Sets the toast container and its value in the cookie.
+						$toast_success_message = esc_html__('User Registered successfully','user-registration');
+						$toast_success_message = apply_filters('user_registration_approval_confirmation_message', $toast_success_message);
+						$toast_content = '<div class="notice-container">
+									<div class="notice_red">
+										<span class="notice_message"></span>
+										<span class="close_notice">&times;</span>
+									</div>
+								</div>';
+
+						setcookie('toast_content', $toast_content, time() + 5, "/", "", false, false);
+						setcookie('toast_success_message', $toast_success_message, time() + 5, "/", "", false, false);
+
 						add_filter( 'login_message', array( $this, 'custom_registration_message' ) );
 						add_filter( 'user_registration_login_form_before_notice', array( $this, 'custom_registration_message' ) );
 						if ( $allow_automatic_user_login ) {
