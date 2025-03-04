@@ -165,14 +165,7 @@
 	margin-top: 10px;
 }
 
-.notice-container {
-	.notice_red {
-		padding: 10px;
-	}
-	.notice_blue {
-		padding: 20px;
-	}
-
+.user-registration-membership-notice__container {
 	position: fixed;
 	top: 20px;
 	right: 0px;
@@ -180,14 +173,18 @@
 	transition: right 0.5s ease;
 }
 
-.close_notice {
+.user-registration-membership-notice__red {
+	padding: 10px;
+}
+
+.user-registration-membership-notice__blue {
+	padding: 20px;
+}
+
+.user-registration-membership__close_notice {
 	color: red;
 	cursor: pointer;
 	font-weight: bold;
-}
-
-.notice-container.active {
-	right: 10px;
 }
 
 input.ur-input-border-green:not([type="range"]),

@@ -10,13 +10,12 @@
 			 * @since xx.xx.xx
 			 */
 			show_success_message: function(message) {
-				$('.notice-container .notice_red').removeClass('notice_red').addClass('notice_blue');
-				$('.notice_message').text(message);
-				$('.notice-container').css('display', 'block');
+				$('.user-registration-membership-notice__container .user-registration-membership-notice__red').removeClass('user-registration-membership-notice__red').addClass('user-registration-membership-notice__blue');
+				$('.user-registration-membership-notice__message').text(message);
+				$('.user-registration-membership-notice__container').css('display', 'block');
 				this.toggleNotice();
-				this.ur_remove_cookie( 'approved_user_id' );
-				this.ur_remove_cookie( 'toast_content' );
-				this.ur_remove_cookie( 'toast_success_message' );
+				this.ur_remove_cookie( 'urm_toast_content' );
+				this.ur_remove_cookie( 'urm_toast_success_message' );
 			},
 
 			/**
@@ -25,7 +24,7 @@
 			 * @since xx.xx.xx
 			 */
 			toggleNotice: function() {
-				var noticeContainer = $('.notice-container');
+				var noticeContainer = $('.user-registration-membership-notice__container');
 				setTimeout(() => {
 					noticeContainer.fadeOut(500);
 				}, 500);
@@ -2366,17 +2365,17 @@
 					$(this).closest("form.register").ur_form_submission();
 				});
 
-				var toast_content = user_registration_frontend_utils.ur_get_cookie('toast_content');
+				var urm_toast_content = user_registration_frontend_utils.ur_get_cookie('urm_toast_content');
 
 				if ($('.user-registration-page .notice-container').length === 0) {
 					// Adds the toast container on the top of page.
-					$(document).find('.user-registration-page').prepend(toast_content);
+					$(document).find('.user-registration-page').prepend(urm_toast_content);
 				}
 
-				var success_message = user_registration_frontend_utils.ur_get_cookie('toast_success_message');
+				var urm_toast_success_message = user_registration_frontend_utils.ur_get_cookie('urm_toast_success_message');
 
 				// Displays the toast message.
-				user_registration_frontend_utils.show_success_message(success_message);
+				user_registration_frontend_utils.show_success_message(urm_toast_success_message);
 
 				$('.close_notice').on('click', function() {
 					user_registration_frontend_utils.toggleNotice();
