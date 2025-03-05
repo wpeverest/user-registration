@@ -26,8 +26,8 @@
 			toggleNotice: function() {
 				var noticeContainer = $('.user-registration-membership-notice__container');
 				setTimeout(() => {
-					noticeContainer.fadeOut(500);
-				}, 500);
+					noticeContainer.fadeOut(4000);
+				}, 4000);
 			},
 
 			/**
@@ -2377,7 +2377,7 @@
 				// Displays the toast message.
 				user_registration_frontend_utils.show_success_message(urm_toast_success_message);
 
-				$('.close_notice').on('click', function() {
+				$('.user-registration-membership__close_notice').on('click', function() {
 					user_registration_frontend_utils.toggleNotice();
 				});
 
