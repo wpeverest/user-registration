@@ -682,7 +682,7 @@
 						.find("input[name='save']")
 						.prop("disabled", false);
 						$this
-						.closest(".user-registration-global-settings").$find('.error inline')
+						.closest(".user-registration-global-settings").find('.error inline')
 						.remove();
 				}
 				$this.prop("disabled", false);
