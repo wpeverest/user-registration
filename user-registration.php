@@ -296,6 +296,10 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			if ( in_array( 'oxygen/functions.php', get_option( 'active_plugins', array() ), true ) ) {
 				include_once UR_ABSPATH . 'includes/3rd-party/oxygen/class-ur-oxygen.php';
 			}
+			// Divi builder compatiblity.
+			if(class_exists('WPEverest\URMembership\DiviBuilder\Builder')) {
+				WPEverest\URMembership\DiviBuilder\Builder::init();
+			}
 
 			/**
 			 * Plugin/Addon Updater.
