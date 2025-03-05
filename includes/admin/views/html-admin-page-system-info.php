@@ -71,7 +71,7 @@ if ( ! class_exists( 'WP_Debug_Data' ) ) {
 			<th><?php esc_html_e( 'Edition', 'user-registration' ); ?></th>
 			<td>
 			<?php
-				$license_data = get_transient( 'evf_pro_license_plan' );
+				$license_data = get_transient( 'ur_pro_license_plan' );
 
 			if ( $license_key && $license_data ) {
 				$edition = isset( $license_data->item_plan ) ? esc_html__( 'PRO', 'user-registration' ) : '-';
@@ -86,7 +86,7 @@ if ( ! class_exists( 'WP_Debug_Data' ) ) {
 			<th><?php esc_html_e( 'License Key', 'user-registration' ); ?></th>
 			<td>
 			<?php
-				$license_data = get_transient( 'evf_pro_license_plan' );
+				$license_data = get_transient( 'ur_pro_license_plan' );
 
 			if ( $license_key && $license_data ) {
 				$license_key = isset( $license_data->license ) ? esc_html__( 'Licensed', 'user-registration' ) : '-';
@@ -101,7 +101,7 @@ if ( ! class_exists( 'WP_Debug_Data' ) ) {
 			<th><?php esc_html_e( 'License Activated', 'user-registration' ); ?></th>
 			<td>
 			<?php
-				$license_data = get_transient( 'evf_pro_license_plan' );
+				$license_data = get_transient( 'ur_pro_license_plan' );
 
 			if ( $license_key && $license_data ) {
 				$license_status = isset( $license_data->success ) ? esc_html__( 'Yes', 'user-registration' ) : '-';
@@ -116,7 +116,7 @@ if ( ! class_exists( 'WP_Debug_Data' ) ) {
 			<th><?php esc_html_e( 'License Expires', 'user-registration' ); ?></th>
 			<td>
 			<?php
-				$license_data = get_transient( 'evf_pro_license_plan' );
+				$license_data = get_transient( 'ur_pro_license_plan' );
 			if ( $license_key && $license_data ) {
 				$expires = isset( $license_data->expires ) ? esc_html( $license_data->expires ) : '-';
 				echo esc_html( $expires );
