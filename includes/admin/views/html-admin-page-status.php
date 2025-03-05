@@ -11,7 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $current_tab = ! empty( $_REQUEST['tab'] ) ? sanitize_title( wp_unslash( $_REQUEST['tab'] ) ) : 'logs'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 $page_tabs   = array(
-	'logs' => __( 'Logs', 'user-registration' ),
+	'logs'        => __( 'Logs', 'user-registration' ),
+	'system_info' => __( 'System Info', 'user-registration' ),
 );
 
 /**
@@ -35,6 +36,17 @@ $page_tabs = apply_filters( 'user_registration_admin_status_tabs', $page_tabs );
 	</nav>
 	<h1 class="screen-reader-text"><?php echo esc_html( $page_tabs[ $current_tab ] ); ?></h1>
 	<?php
-	UR_Admin_Status::status_logs();
+	error_log( print_r( $current_tab, true ) );
+	switch ( $current_tab ) {
+		case 'logs':
+			UR_Admin_Status::status_logs();
+			break;
+		case 'system_info':
+			UR_Admin_Status::system_info();
+			break;
+		default:
+			break;
+	}
+
 	?>
 </div>

@@ -8136,3 +8136,98 @@ if ( ! function_exists( 'ur_get_sms_verification_default_message_content' ) ) {
 		return $message;
 	}
 }
+
+if ( ! function_exists( 'ur_setting_keys' ) ) {
+	/**
+     * Returns an array of default settings for User Registration and its addons.
+     *
+     * This function provides default settings for different plugins related to
+     * user registration, including general settings, login options, file uploads,
+     * PDF submissions, social login, and two-factor authentication.
+     *
+     * @return array Default settings for various User Registration addons.
+     */
+    function ur_setting_keys() {
+        return array(
+            'user-registration/user-registration.php' => array(
+                array( 'user_registration_general_setting_disabled_user_roles', '["subscriber"]' ),
+                array( 'user_registration_login_option_hide_show_password', false ),
+                array( 'user_registration_myaccount_page_id', '' ),
+                array( 'user_registration_my_account_layout', 'horizontal' ),
+                array( 'user_registration_ajax_form_submission_on_edit_profile', false ),
+                array( 'user_registration_disable_profile_picture', false ),
+                array( 'user_registration_disable_logout_confirmation', false ),
+                array( 'user_registration_login_options_form_template', 'default' ),
+                array( 'user_registration_general_setting_login_options_with', 'default' ),
+                array( 'user_registration_login_title', false ),
+                array( 'ur_login_ajax_submission', false ),
+                array( 'user_registration_login_options_remember_me', true ),
+                array( 'user_registration_login_options_lost_password', true ),
+                array( 'user_registration_login_options_hide_labels', false ),
+                array( 'user_registration_login_options_enable_recaptcha', false ),
+                array( 'user_registration_general_setting_registration_url_options', '' ),
+                array( 'user_registration_login_options_prevent_core_login', false ),
+                array( 'user_registration_login_options_login_redirect_url', '' ),
+                array( 'user_registration_captcha_setting_recaptcha_version', 'v2' ),
+                array( 'user_registration_login_options_configured_captcha_type', 'v2' ),
+                array( 'user_registration_general_setting_uninstall_option', false ),
+                array( 'user_registration_allow_usage_tracking', false )
+            ),
+            'user-registration-pro/user-registration.php' => array(
+                array( 'user_registration_pro_general_setting_delete_account', 'disable' ),
+                array( 'user_registration_pro_general_setting_login_form', false ),
+                array( 'user_registration_pro_general_setting_prevent_active_login', false ),
+                array( 'user_registration_pro_general_setting_limited_login', '5' ),
+                array( 'user_registration_pro_general_setting_redirect_back_to_previous_page', false ),
+                array( 'user_registration_pro_general_post_submission_settings', '' ),
+                array( 'user_registration_pro_general_setting_post_submission', 'disable' ),
+                array( 'user_registration_pro_role_based_redirection', false ),
+                array( 'user_registration_payment_currency', 'USD' ),
+                array( 'user_registration_content_restriction_enable', true ),
+                array( 'user_registration_content_restriction_allow_to_roles', '["administrator"]' )
+            ),
+            'user-registration-file-upload/user-registration-file-upload.php' => array(
+                array( 'user_registration_file_upload_setting_valid_file_type', '["pdf"]' ),
+                array( 'user_registration_file_upload_setting_max_file_size', '1024' )
+            ),
+            'user-registration-pdf-submission/user-registration-pdf-submission.php' => array(
+                array( 'user_registration_pdf_template', 'default' ),
+                array( 'user_registration_pdf_logo_image', '' ),
+                array( 'user_registration_pdf_setting_header', '' ),
+                array( 'user_registration_pdf_custom_header_text', '' ),
+                array( 'user_registration_pdf_paper_size', '' ),
+                array( 'user_registration_pdf_orientation', 'portrait' ),
+                array( 'user_registration_pdf_font', '' ),
+                array( 'user_registration_pdf_font_size', '12' ),
+                array( 'user_registration_pdf_font_color', '#000000' ),
+                array( 'user_registration_pdf_background_color', '#ffffff' ),
+                array( 'user_registration_pdf_header_font_color', '#000000' ),
+                array( 'user_registration_pdf_header_background_color', '#ffffff' ),
+                array( 'user_registration_pdf_multiple_column', false ),
+                array( 'user_registration_pdf_rtl', false ),
+                array( 'user_registration_pdf_print_user_default_fields', false ),
+                array( 'user_registration_pdf_hide_empty_fields', false )
+            ),
+            'user-registration-social-connect/user-registration-social-connect.php' => array(
+                array( 'user_registration_social_setting_enable_facebook_connect', '' ),
+                array( 'user_registration_social_setting_enable_twitter_connect', '' ),
+                array( 'user_registration_social_setting_enable_google_connect', '' ),
+                array( 'user_registration_social_setting_enable_linkedin_connect', '' ),
+                array( 'user_registration_social_setting_enable_social_registration', false ),
+                array( 'user_registration_social_setting_display_social_buttons_in_registration', false ),
+                array( 'user_registration_social_setting_default_user_role', 'subscriber' ),
+                array( 'user_registration_social_login_position', 'bottom' ),
+                array( 'user_registration_social_login_template', 'ursc_theme_4' )
+            ),
+            'user-registration-two-factor-authentication/user-registration-two-factor-authentication.php' => array(
+                array( 'user_registration_tfa_enable_disable', false ),
+                array( 'user_registration_tfa_roles', '["subscriber"]' ),
+                array( 'user_registration_tfa_otp_length', '6' ),
+                array( 'user_registration_tfa_otp_expiry_time', '10' ),
+                array( 'user_registration_tfa_otp_resend_limit', '3' ),
+                array( 'user_registration_tfa_incorrect_otp_limit', '5' ),
+                array( 'user_registration_tfa_login_hold_period', '60' )
+            ),
+        );
+    }
+}
