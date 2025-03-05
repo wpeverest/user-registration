@@ -57,7 +57,7 @@ class RegistrationForm extends BuilderAbstract {
 		$forms        = $default_form + $forms;
 
 		$fields = array(
-			'form_id'              => array(
+			'form_id'                    => array(
 				'label'            => esc_html__( '-- Select Form --', 'user-registration' ),
 				'type'             => 'select',
 				'option_category'  => 'basic_option',
@@ -70,7 +70,7 @@ class RegistrationForm extends BuilderAbstract {
 			),
 			'__render_registration_form' => array(
 				'type'                => 'computed',
-				'computed_callback'   => $this->render_module(),
+				'computed_callback'   => 'WPEverest\URMembership\DiviBuilder\Modules\RegistrationForm::render_module',
 				'computed_depends_on' => array(
 					'form_id',
 				),
@@ -89,19 +89,22 @@ class RegistrationForm extends BuilderAbstract {
 	 * @param array $props The attributes values.
 	 * @return void
 	 */
-	public function render_module( $props = array() ) {
+	public static function render_module( $props = array() ) {
 		$form_id = isset( $props['form_id'] ) ? $props['form_id'] : '0';
 
 		// // Check if we are in the Divi Visual Builder
 		// if (et_fb_enabled() ) {
-		// 	return "<div class='user-registration-divi-preview'>" . esc_html__( 'Registration Form Preview', 'user-registration' ) . '</div>';
+		// return "<div class='user-registration-divi-preview'>" . esc_html__( 'Registration Form Preview', 'user-registration' ) . '</div>';
 		// }
 
 		if ( '0' === $form_id ) {
 			return esc_html__( 'Please Select the registration form', 'user-registration' );
 		}
 
-		$output = '';
+		// Render the form via shortcode in the frontend.
+		$divi_shortcode = sprintf( "[user_registration_form id='%s']", $form_id );
+
+		$output = do_shortcode( $divi_shortcode );
 
 		return $output;
 	}

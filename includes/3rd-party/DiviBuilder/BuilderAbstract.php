@@ -43,25 +43,6 @@ class BuilderAbstract extends \ET_Builder_Module {
 	protected $setting_controls = array();
 
 	/**
-	 * Settings for module
-	 *
-	 * @return void
-	 */
-	public function settings_init() {
-	}
-
-	/**
-	 * Render content.
-	 *
-	 * @param array $props The attributes values.
-	 * @return void
-	 */
-	public function render_module( $props = array() ) {
-
-		return '';
-	}
-
-	/**
 	 * Divi builder init function.
 	 *
 	 * @since xx.xx.xx
@@ -103,7 +84,7 @@ class BuilderAbstract extends \ET_Builder_Module {
 	 * @return string HTML content for rendering.
 	 */
 	public function render( $unprocessed_props, $content, $render_slug ) {
-		return $this->_render_module_wrapper( $this->render_module( $this->props ), $render_slug );
+		return $this->_render_module_wrapper( static::render_module( $this->props ), $render_slug );
 	}
 
 	/**
@@ -112,9 +93,6 @@ class BuilderAbstract extends \ET_Builder_Module {
 	 * @since xx.xx.xx
 	 */
 	public function load_scripts() {
-		if ( ! class_exists( 'UR' ) ) {
-			return;
-		}
 
 		if ( wp_script_is( 'urm-divi-builder', 'enqueued' ) ) {
 			return;
@@ -124,12 +102,15 @@ class BuilderAbstract extends \ET_Builder_Module {
 
 		wp_register_script(
 			'urm-divi-builder',
-			UR()->plugin_url() . '/chunks/divi-builder.min.js',
+			UR()->plugin_url() . '/chunks/divi-builder.js',
 			$enqueue_script,
 			UR()->version,
 			true
 		);
 
+		wp_register_style('urm-form-style', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR()->version );
+
+		wp_enqueue_style( 'urm-form-style' );
 		wp_enqueue_script( 'urm-divi-builder' );
 	}
 }
