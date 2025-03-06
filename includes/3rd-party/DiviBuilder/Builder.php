@@ -73,15 +73,18 @@ class Builder {
 			return;
 		}
 
-		$modules = array(
-			'registration-form' => RegistrationForm::class,
-			'login-form'        => LoginForm::class,
-			'myaccount'         => MyAccount::class,
-			'edit-profile'      => EditProfile::class,
-			'edit-password'     => EditPassword::class,
-			'membership-groups' => MembershipGroups::class,
-			'membership-thank-you'=>MembershipThankYou::class
-		);
+		$modules = apply_filters(
+			'urm_divi_modules',
+			array(
+				'registration-form'    => RegistrationForm::class,
+				'login-form'           => LoginForm::class,
+				'myaccount'            => MyAccount::class,
+				'edit-profile'         => EditProfile::class,
+				'edit-password'        => EditPassword::class,
+				'membership-groups'    => MembershipGroups::class,
+				'membership-thank-you' => MembershipThankYou::class,
+			)
+		)
 
 		foreach ( $modules as $module ) {
 			new $module();
