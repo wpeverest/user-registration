@@ -2,6 +2,7 @@
 namespace WPEverest\URMembership\DiviBuilder;
 
 use WPEverest\URMembership\DiviBuilder\Modules\RegistrationForm;
+use WPEverest\URMembership\DiviBuilder\Modules\LoginForm;
 
 if ( file_exists( UR()->plugin_path() . '/vendor/autoload.php' ) ) {
 	require_once UR()->plugin_path() . '/vendor/autoload.php';
@@ -67,10 +68,9 @@ class Builder {
 			return;
 		}
 
-		$modules = array( 'registration-form' => RegistrationForm::class );
+		$modules = array( 'registration-form' => RegistrationForm::class, 'login-form'=> LoginForm::class );
 
 		foreach ( $modules as $module ) {
-
 			new $module();
 		}
 	}

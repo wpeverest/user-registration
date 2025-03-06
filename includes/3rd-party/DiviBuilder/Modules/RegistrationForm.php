@@ -109,22 +109,17 @@ class RegistrationForm extends BuilderAbstract {
 		$form_id    = isset( $props['form_id'] ) ? absint( $props['form_id'] ) : '0';
 		$user_state = isset( $props['user_state'] ) ? sanitize_text_field( $props['user_state'] ) : '';
 
-		// // Check if we are in the Divi Visual Builder
-		// if (et_fb_enabled() ) {
-		// return "<div class='user-registration-divi-preview'>" . esc_html__( 'Registration Form Preview', 'user-registration' ) . '</div>';
-		// }
 		if ( '0' === $form_id ) {
 			return sprintf( '<div class="urm-divi-builder-form-wrapper">%s<p></p></div>', esc_html__( 'Please Select the registration form', 'user-registration' ) );
 		}
 
 		// Render the form via shortcode in the frontend.
-		if ( '' === $user_state ) {
-			$divi_shortcode = sprintf( "[user_registration_form id='%s']", $form_id );
-		} else {
-			$divi_shortcode = sprintf( "[user_registration_form id='%s' user_state='%s']", $form_id, $user_state );
-		}
-
-		$output = do_shortcode( $divi_shortcode );
+		$output = \UR_Shortcodes::form(
+			array(
+				'id' => $form_id,
+				'userState' => $user_state
+			)
+		);
 
 		return $output;
 	}

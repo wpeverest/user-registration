@@ -2690,13 +2690,35 @@ body.user-registration-page {
 		.et-l {
 			.et-fb-modules-list {
 				ul {
-					> li.urm-registration-form {
-						&:before {
-							content: "";
-							background-image: url("./../images/blocks/registration-form.svg");
-							height: 16px;
-							background-repeat: no-repeat;
-							background-position: center;
+					> li {
+						position: relative;
+
+						// Registration Form Icon
+						&.urm-registration-form {
+							&:before {
+								content: "";
+								display: inline-block;
+								width: 16px;
+								height: 16px;
+								background-repeat: no-repeat;
+								background-position: center;
+								background-size: contain;
+								background-image: url("./../images/blocks/registration-form.svg");
+							}
+						}
+
+						// Login Form Icon
+						&.urm-login-form {
+							&:before {
+								content: "";
+								display: inline-block;
+								width: 16px;
+								height: 16px;
+								background-repeat: no-repeat;
+								background-position: center;
+								background-size: contain;
+								background-image: url("./../images/blocks/login-form.svg");
+							}
 						}
 					}
 				}
