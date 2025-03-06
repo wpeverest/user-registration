@@ -6,6 +6,8 @@ use WPEverest\URMembership\DiviBuilder\Modules\LoginForm;
 use WPEverest\URMembership\DiviBuilder\Modules\MyAccount;
 use WPEverest\URMembership\DiviBuilder\Modules\EditPassword;
 use WPEverest\URMembership\DiviBuilder\Modules\EditProfile;
+use WPEverest\URMembership\DiviBuilder\Modules\MembershipGroups;
+use WPEverest\URMembership\DiviBuilder\Modules\MembershipThankYou;
 
 if ( file_exists( UR()->plugin_path() . '/vendor/autoload.php' ) ) {
 	require_once UR()->plugin_path() . '/vendor/autoload.php';
@@ -77,6 +79,8 @@ class Builder {
 			'myaccount'         => MyAccount::class,
 			'edit-profile'      => EditProfile::class,
 			'edit-password'     => EditPassword::class,
+			'membership-groups' => MembershipGroups::class,
+			'membership-thank-you'=>MembershipThankYou::class
 		);
 
 		foreach ( $modules as $module ) {
