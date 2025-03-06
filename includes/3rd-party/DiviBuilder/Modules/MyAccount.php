@@ -6,18 +6,18 @@ use WPEverest\URMembership\DiviBuilder\BuilderAbstract;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Login Form Module class.
+ * Myaccount Module class.
  *
  * @since xx.xx.xx
  */
-class LoginForm extends BuilderAbstract {
+class MyAccount extends BuilderAbstract {
 	/**
-	 * Login Form Module slug.
+	 * Myaccount Module slug.
 	 *
 	 * @since xx.xx.xx
 	 * @var string
 	 */
-	public $slug = 'urm-login-form';
+	public $slug = 'urm-myaccount';
 
 	/**
 	 * Module title.
@@ -25,7 +25,7 @@ class LoginForm extends BuilderAbstract {
 	 * @since xx.xx.xx
 	 * @var string
 	 */
-	public $title = 'URM Login Form';
+	public $title = 'URM Myaccount';
 
 	/**
 	 * Settings
@@ -38,7 +38,7 @@ class LoginForm extends BuilderAbstract {
 		$this->settings_modal_toggles = array(
 			'general' => array(
 				'toggles' => array(
-					'main_content' => esc_html__( 'Login Form', 'user-registration' ),
+					'main_content' => esc_html__( 'Myaccount', 'user-registration' ),
 				),
 			),
 		);
@@ -59,7 +59,7 @@ class LoginForm extends BuilderAbstract {
 				'description'      => esc_html__( 'This option lets you redirect the page URL after login.', 'myex-my-extension' ),
 				'toggle_slug'      => 'main_content',
 				'computed_affects' => array(
-					'__render_login_form',
+					'__render_myaccount',
 				),
 			),
 			'logout_redirect'     => array(
@@ -69,7 +69,7 @@ class LoginForm extends BuilderAbstract {
 				'description'      => esc_html__( 'This option lets you redirect the page URL after logout.', 'myex-my-extension' ),
 				'toggle_slug'      => 'main_content',
 				'computed_affects' => array(
-					'__render_login_form',
+					'__render_myaccount',
 				),
 			),
 			'user_state'          => array(
@@ -81,14 +81,14 @@ class LoginForm extends BuilderAbstract {
 					'logged_in'  => __( 'Logged In', 'user-registration' ),
 					'logged_out' => __( 'Logged Out', 'user-registration' ),
 				),
-				'default'          => 'logged_out',
+				'default'          => 'logged_in',
 				'computed_affects' => array(
-					'__render_login_form',
+					'__render_myaccount',
 				),
 			),
-			'__render_login_form' => array(
+			'__render_myaccount' => array(
 				'type'                => 'computed',
-				'computed_callback'   => 'WPEverest\URMembership\DiviBuilder\Modules\LoginForm::render_module',
+				'computed_callback'   => 'WPEverest\URMembership\DiviBuilder\Modules\MyAccount::render_module',
 				'computed_depends_on' => array(
 					'redirect_url',
 					'logout_redirect',
@@ -131,8 +131,14 @@ class LoginForm extends BuilderAbstract {
 			$parameters['userState'] = $user_state;
 		}
 
-		return \UR_Shortcodes::login(
-			$parameters
-		);
+		if ( ( empty( $parameters ) || ( isset( $parameters['userState'] ) && 'logged_in' === $parameters['userState'] ) ) || ( ! empty( $parameters ) && ! isset( $parameters['userState'] ) ) ) {
+			return \UR_Shortcodes::my_account(
+				$parameters
+			);
+		} elseif ( isset( $parameters['userState'] ) && 'logged_out' === $parameters['userState'] ) {
+			return \UR_Shortcodes::login(
+				$parameters
+			);
+		}
 	}
 }

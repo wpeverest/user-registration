@@ -62,7 +62,7 @@ class RegistrationForm extends BuilderAbstract {
 				'option_category'  => 'basic_option',
 				'toggle_slug'      => 'main_content',
 				'options'          => $forms,
-				'default'          => '5',
+				'default'          => '',
 				'computed_affects' => array(
 					'__render_registration_form',
 				),
@@ -87,11 +87,11 @@ class RegistrationForm extends BuilderAbstract {
 				'computed_callback'   => 'WPEverest\URMembership\DiviBuilder\Modules\RegistrationForm::render_module',
 				'computed_depends_on' => array(
 					'form_id',
-					'user_state'
+					'user_state',
 				),
 				'computed_minimum'    => array(
 					'form_id',
-					'user_state'
+					'user_state',
 				),
 			),
 
@@ -106,18 +106,18 @@ class RegistrationForm extends BuilderAbstract {
 	 * @return void
 	 */
 	public static function render_module( $props = array() ) {
-		$form_id    = isset( $props['form_id'] ) ? absint( $props['form_id'] ) : '0';
+		$form_id    = isset( $props['form_id'] ) ? absint( $props['form_id'] ) : 0;
 		$user_state = isset( $props['user_state'] ) ? sanitize_text_field( $props['user_state'] ) : '';
 
-		if ( '0' === $form_id ) {
-			return sprintf( '<div class="urm-divi-builder-form-wrapper">%s<p></p></div>', esc_html__( 'Please Select the registration form', 'user-registration' ) );
+		if ( 0 === $form_id || ! $form_id ) {
+			return sprintf( '<div class="user-registration ur-frontend-form"><div class="user-registration-info">%s</div></div>', esc_html__( 'Please Select the registration form', 'user-registration' ) );
 		}
 
 		// Render the form via shortcode in the frontend.
 		$output = \UR_Shortcodes::form(
 			array(
-				'id' => $form_id,
-				'userState' => $user_state
+				'id'        => $form_id,
+				'userState' => $user_state,
 			)
 		);
 
