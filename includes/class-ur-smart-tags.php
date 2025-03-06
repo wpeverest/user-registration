@@ -27,7 +27,13 @@ class UR_Smart_Tags {
 	 * @return array array of smart tags.
 	 */
 	public static function smart_tags_list() {
-		$smart_tags = array_merge( self::ur_unauthenticated_parsable_smart_tags_list(), self::ur_authenticated_parsable_smart_tags_list() );
+		if ( isset( $_GET['page'] ) && $_GET['page'] === 'yith_wpv_panel' &&
+		isset( $_GET['tab'] ) && $_GET['tab'] === 'vendors' &&
+		isset( $_GET['sub_tab'] ) && $_GET['sub_tab'] === 'vendors-list' ) {
+			$smart_tags = array();
+		} else {
+			$smart_tags = array_merge( self::ur_unauthenticated_parsable_smart_tags_list(), self::ur_authenticated_parsable_smart_tags_list() );
+		}
 		/**
 		 * The 'user_registration_smart_tags' filter allows developers to modify the list
 		 * of smart tags available in User Registration for customization.
@@ -501,12 +507,12 @@ class UR_Smart_Tags {
 						$content = str_replace( '{{' . $tag . '}}', esc_html( $full_name ), $content );
 						break;
 					case 'profile_details_link':
-						$endpoint = ur_string_translation( 0, 'user_registration_edit-profile_slug', 'edit-profile' );
+						$endpoint             = ur_string_translation( 0, 'user_registration_edit-profile_slug', 'edit-profile' );
 						$profile_details_link = '<a href="' . esc_url( ur_get_endpoint_url( $endpoint ) ) . '">' . esc_html__( 'profile details', 'user-registration' ) . '</a>';
 						$content              = str_replace( '{{' . $tag . '}}', wp_kses_post( $profile_details_link ), $content );
 						break;
 					case 'edit_password_link':
-						$endpoint = ur_string_translation( 0, 'user_registration_edit-password_slug', 'edit-password' );
+						$endpoint           = ur_string_translation( 0, 'user_registration_edit-password_slug', 'edit-password' );
 						$edit_password_link = '<a href="' . esc_url( ur_get_endpoint_url( $endpoint ) ) . '">' . esc_html__( 'edit your password', 'user-registration' ) . '</a>';
 						$content            = str_replace( '{{' . $tag . '}}', wp_kses_post( $edit_password_link ), $content );
 						break;
@@ -541,11 +547,11 @@ class UR_Smart_Tags {
 
 						$content = str_replace( '{{' . $other_tag . '}}', $reset_pass_slug, $content );
 						break;
-					case 'sms_otp' :
-						$content      = str_replace( '{{' . $tag . '}}', isset( $values['sms_otp'] ) ? $values['sms_otp'] : '' , $content );
+					case 'sms_otp':
+						$content = str_replace( '{{' . $tag . '}}', isset( $values['sms_otp'] ) ? $values['sms_otp'] : '', $content );
 						break;
 					case 'sms_otp_validity':
-						$content      = str_replace( '{{' . $tag . '}}', isset( $values['sms_otp_validity'] ) ? $values['sms_otp_validity'] : '' , $content );
+						$content = str_replace( '{{' . $tag . '}}', isset( $values['sms_otp_validity'] ) ? $values['sms_otp_validity'] : '', $content );
 						break;
 				}
 			}
