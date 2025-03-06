@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - master
+      - UR-2161-feature/divi-compatibility-with-all-shortcodes
     workflow_dispatch:
 jobs:
   sync:
