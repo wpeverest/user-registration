@@ -25,7 +25,7 @@ class RegistrationForm extends BuilderAbstract {
 	 * @since xx.xx.xx
 	 * @var string
 	 */
-	public $title = 'Registration Form';
+	public $title = 'URM Registration Form';
 
 	/**
 	 * Settings
@@ -43,7 +43,6 @@ class RegistrationForm extends BuilderAbstract {
 			),
 		);
 	}
-
 	/**
 	 * Displays the module setting fields.
 	 *
