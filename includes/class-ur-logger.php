@@ -307,4 +307,21 @@ class UR_Logger implements UR_Logger_Interface {
 
 		return $handler->clear( $handle );
 	}
+
+
+	/**
+	 * Clear all logs older than a defined number of days. Defaults to 30 days.
+	 *
+	 * @since x.x.x
+	 */
+	public function clear_expired_logs() {
+		$days      = absint( apply_filters( 'user_registration_logger_days_to_retain_logs', 15 ) );
+		$timestamp = strtotime( "-{$days} days" );
+
+		foreach ( $this->handlers as $handler ) {
+			if ( is_callable( array( $handler, 'delete_logs_before_timestamp' ) ) ) {
+				$handler->delete_logs_before_timestamp( $timestamp );
+			}
+		}
+	}
 }

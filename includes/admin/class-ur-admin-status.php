@@ -35,7 +35,6 @@ class UR_Admin_Status {
 	 * Show the log page contents for file log handler.
 	 */
 	public static function status_logs_file() {
-		self::remove_old_logs();
 
 		if ( ! empty( $_REQUEST['handle'] ) ) {
 			self::remove_log();
@@ -198,31 +197,6 @@ class UR_Admin_Status {
 		exit();
 	}
 
-	/**
-	 * Removes log files that are older than one week.
-	 *
-	 * This function retrieves all log files using the UR_Log_Handler_File class.
-	 * It then checks the modification time of each log file and deletes the file
-	 * if it is older than one week.
-	 *
-	 * @return void
-	 */
-	public static function remove_old_logs() {
-			$log_handler = new UR_Log_Handler_File();
-			$logs = $log_handler->get_log_files();
-
-			if( empty( $logs ) ) {
-				return;
-			}
-			$week_ago = time() - (7 * DAY_IN_SECONDS);
-			foreach ( $logs as $log ) {
-				$file = realpath( trailingslashit( UR_LOG_DIR ) . $log );
-			}
-			if ( is_file( $file ) && filemtime( $file ) < $week_ago ) {
-				$log_handler->close( $file );
-				unlink( $file );
-		}
-	}
 
 	/**
 	 * Displays the system information admin page.
