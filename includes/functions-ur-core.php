@@ -8231,3 +8231,16 @@ if ( ! function_exists( 'ur_setting_keys' ) ) {
         );
     }
 }
+/**
+ * Trigger logging cleanup using the logging class.
+ *
+ * @since x.x.x
+ */
+function ur_cleanup_logs() {
+	$logger = ur_get_logger();
+
+	if ( is_callable( array( $logger, 'clear_expired_logs' ) ) ) {
+		$logger->clear_expired_logs();
+	}
+}
+add_action( 'user_registration_cleanup_logs', 'ur_cleanup_logs' );

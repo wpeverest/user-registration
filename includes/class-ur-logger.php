@@ -146,6 +146,11 @@ class UR_Logger implements UR_Logger_Interface {
 	 * @param array  $context Optional. Additional information for log handlers.
 	 */
 	public function log( $level, $message, $context = array() ) {
+
+		if ( isset( $context['source'])  && $context['source'] !== 'fatal-errors' && ! ur_option_checked( 'user_registration_enable_log', false ) )  {
+			return false;
+		}
+
 		if ( ! UR_Log_Levels::is_valid_level( $level ) ) {
 			/* translators: %s - Log Level */
 			ur_doing_it_wrong( __METHOD__, sprintf( __( 'UR_Logger::log was called with an invalid level "%s".', 'user-registration' ), $level ), '3.0' );
