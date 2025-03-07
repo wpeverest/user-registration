@@ -2762,6 +2762,20 @@ body.user-registration-page {
 								background-image: url("./../images/blocks/edit-password.svg");
 							}
 						}
+
+						// Edit Password Icon
+						&.urm-content-restriction {
+							&:before {
+								content: "";
+								display: inline-block;
+								width: 16px;
+								height: 16px;
+								background-repeat: no-repeat;
+								background-position: center;
+								background-size: contain;
+								background-image: url("./../images/blocks/content-restriction.svg");
+							}
+						}
 					}
 				}
 			}

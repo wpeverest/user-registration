@@ -1,5 +1,5 @@
 <?php
-namespace WPEverest\URMembership\DiviBuilder;
+namespace WPEverest\URM\DiviBuilder;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -108,8 +108,14 @@ class BuilderAbstract extends \ET_Builder_Module {
 			true
 		);
 
-		wp_register_style('urm-form-style', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR()->version );
-
+		wp_register_style( 'urm-form-style', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR()->version );
+		wp_localize_script(
+			'urm-divi-builder',
+			'_URM_DIVI_',
+			array(
+				'isPro' => defined( 'UR_PRO_ACTIVE' ),
+			)
+		);
 		wp_enqueue_style( 'urm-form-style' );
 		wp_enqueue_script( 'urm-divi-builder' );
 	}

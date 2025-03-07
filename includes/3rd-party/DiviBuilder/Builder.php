@@ -1,13 +1,13 @@
 <?php
-namespace WPEverest\URMembership\DiviBuilder;
+namespace WPEverest\URM\DiviBuilder;
 
-use WPEverest\URMembership\DiviBuilder\Modules\RegistrationForm;
-use WPEverest\URMembership\DiviBuilder\Modules\LoginForm;
-use WPEverest\URMembership\DiviBuilder\Modules\MyAccount;
-use WPEverest\URMembership\DiviBuilder\Modules\EditPassword;
-use WPEverest\URMembership\DiviBuilder\Modules\EditProfile;
-use WPEverest\URMembership\DiviBuilder\Modules\MembershipGroups;
-use WPEverest\URMembership\DiviBuilder\Modules\MembershipThankYou;
+use WPEverest\URM\DiviBuilder\Modules\RegistrationForm;
+use WPEverest\URM\DiviBuilder\Modules\LoginForm;
+use WPEverest\URM\DiviBuilder\Modules\MyAccount;
+use WPEverest\URM\DiviBuilder\Modules\EditPassword;
+use WPEverest\URM\DiviBuilder\Modules\EditProfile;
+use WPEverest\URM\DiviBuilder\Modules\MembershipGroups;
+use WPEverest\URM\DiviBuilder\Modules\MembershipThankYou;
 
 if ( file_exists( UR()->plugin_path() . '/vendor/autoload.php' ) ) {
 	require_once UR()->plugin_path() . '/vendor/autoload.php';
@@ -84,7 +84,7 @@ class Builder {
 				'membership-groups'    => MembershipGroups::class,
 				'membership-thank-you' => MembershipThankYou::class,
 			)
-		)
+		);
 
 		foreach ( $modules as $module ) {
 			new $module();

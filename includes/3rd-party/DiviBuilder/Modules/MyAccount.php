@@ -1,7 +1,7 @@
 <?php
-namespace WPEverest\URMembership\DiviBuilder\Modules;
+namespace WPEverest\URM\DiviBuilder\Modules;
 
-use WPEverest\URMembership\DiviBuilder\BuilderAbstract;
+use WPEverest\URM\DiviBuilder\BuilderAbstract;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -52,27 +52,27 @@ class MyAccount extends BuilderAbstract {
 	public function get_fields() {
 
 		$fields = array(
-			'redirect_url'        => array(
+			'redirect_url'       => array(
 				'label'            => esc_html__( 'Redirect URL', 'user-registration' ),
 				'type'             => 'text',
 				'option_category'  => 'basic_option',
-				'description'      => esc_html__( 'This option lets you redirect the page URL after login.', 'myex-my-extension' ),
+				'description'      => esc_html__( 'This option lets you redirect the page URL after login.', 'user-registration' ),
 				'toggle_slug'      => 'main_content',
 				'computed_affects' => array(
 					'__render_myaccount',
 				),
 			),
-			'logout_redirect'     => array(
+			'logout_redirect'    => array(
 				'label'            => esc_html__( 'Logout Redirect URL', 'user-registration' ),
 				'type'             => 'text',
 				'option_category'  => 'basic_option',
-				'description'      => esc_html__( 'This option lets you redirect the page URL after logout.', 'myex-my-extension' ),
+				'description'      => esc_html__( 'This option lets you redirect the page URL after logout.', 'user-registration' ),
 				'toggle_slug'      => 'main_content',
 				'computed_affects' => array(
 					'__render_myaccount',
 				),
 			),
-			'user_state'          => array(
+			'user_state'         => array(
 				'label'            => esc_html__( 'User State', 'user-registration' ),
 				'type'             => 'select',
 				'option_category'  => 'basic_option',
@@ -88,7 +88,7 @@ class MyAccount extends BuilderAbstract {
 			),
 			'__render_myaccount' => array(
 				'type'                => 'computed',
-				'computed_callback'   => 'WPEverest\URMembership\DiviBuilder\Modules\MyAccount::render_module',
+				'computed_callback'   => 'WPEverest\URM\DiviBuilder\Modules\MyAccount::render_module',
 				'computed_depends_on' => array(
 					'redirect_url',
 					'logout_redirect',

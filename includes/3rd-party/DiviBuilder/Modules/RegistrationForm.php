@@ -1,7 +1,7 @@
 <?php
-namespace WPEverest\URMembership\DiviBuilder\Modules;
+namespace WPEverest\URM\DiviBuilder\Modules;
 
-use WPEverest\URMembership\DiviBuilder\BuilderAbstract;
+use WPEverest\URM\DiviBuilder\BuilderAbstract;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -84,7 +84,7 @@ class RegistrationForm extends BuilderAbstract {
 			),
 			'__render_registration_form' => array(
 				'type'                => 'computed',
-				'computed_callback'   => 'WPEverest\URMembership\DiviBuilder\Modules\RegistrationForm::render_module',
+				'computed_callback'   => 'WPEverest\URM\DiviBuilder\Modules\RegistrationForm::render_module',
 				'computed_depends_on' => array(
 					'form_id',
 					'user_state',

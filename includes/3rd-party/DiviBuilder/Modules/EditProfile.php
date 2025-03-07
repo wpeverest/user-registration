@@ -1,7 +1,7 @@
 <?php
-namespace WPEverest\URMembership\DiviBuilder\Modules;
+namespace WPEverest\URM\DiviBuilder\Modules;
 
-use WPEverest\URMembership\DiviBuilder\BuilderAbstract;
+use WPEverest\URM\DiviBuilder\BuilderAbstract;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -53,7 +53,7 @@ class EditProfile extends BuilderAbstract {
 	public function get_fields() {
 
 		$fields = array(
-			'preview_state'          => array(
+			'preview_state'         => array(
 				'label'            => esc_html__( 'Preview', 'user-registration' ),
 				'type'             => 'yes_no_button',
 				'option_category'  => 'basic_option',
@@ -69,7 +69,7 @@ class EditProfile extends BuilderAbstract {
 			),
 			'__render_edit_profile' => array(
 				'type'                => 'computed',
-				'computed_callback'   => 'WPEverest\URMembership\DiviBuilder\Modules\EditProfile::render_module',
+				'computed_callback'   => 'WPEverest\URM\DiviBuilder\Modules\EditProfile::render_module',
 				'computed_depends_on' => array(
 					'preview_state',
 				),

@@ -1,7 +1,7 @@
 <?php
-namespace WPEverest\URMembership\DiviBuilder\Modules;
+namespace WPEverest\URM\DiviBuilder\Modules;
 
-use WPEverest\URMembership\DiviBuilder\BuilderAbstract;
+use WPEverest\URM\DiviBuilder\BuilderAbstract;
 use WPEverest\URMembership\ShortCodes;
 
 defined( 'ABSPATH' ) || exit;
@@ -78,14 +78,14 @@ class MembershipGroups extends BuilderAbstract {
 				'type'             => 'text',
 				'option_category'  => 'basic_option',
 				'toggle_slug'      => 'main_content',
-				'default'          => esc_html__('Sign Up', 'user-registration'),
+				'default'          => esc_html__( 'Sign Up', 'user-registration' ),
 				'computed_affects' => array(
 					'__render_memebership_groups',
 				),
 			),
 			'__render_memebership_groups' => array(
 				'type'                => 'computed',
-				'computed_callback'   => 'WPEverest\URMembership\DiviBuilder\Modules\MembershipGroups::render_module',
+				'computed_callback'   => 'WPEverest\URM\DiviBuilder\Modules\MembershipGroups::render_module',
 				'computed_depends_on' => array(
 					'group_id',
 					'button_text',

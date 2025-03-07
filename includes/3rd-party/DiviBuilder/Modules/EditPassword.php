@@ -1,7 +1,7 @@
 <?php
-namespace WPEverest\URMembership\DiviBuilder\Modules;
+namespace WPEverest\URM\DiviBuilder\Modules;
 
-use WPEverest\URMembership\DiviBuilder\BuilderAbstract;
+use WPEverest\URM\DiviBuilder\BuilderAbstract;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -70,7 +70,7 @@ class EditPassword extends BuilderAbstract {
 			),
 			'__render_edit_password' => array(
 				'type'                => 'computed',
-				'computed_callback'   => 'WPEverest\URMembership\DiviBuilder\Modules\EditPassword::render_module',
+				'computed_callback'   => 'WPEverest\URM\DiviBuilder\Modules\EditPassword::render_module',
 				'computed_depends_on' => array(
 					'preview_state',
 				),
