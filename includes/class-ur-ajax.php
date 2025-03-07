@@ -901,7 +901,7 @@ class UR_AJAX {
 							"Could not save form. Duplicate field name <span>%s</span>. Context: %s",
 							self::$failed_key_value['value'],
 							'user_registration'
-						);
+						),
 						array( 'source' => 'form-save' )
 					);
 					throw new Exception( sprintf( "Could not save form. Duplicate field name <span style='color:red'>%s</span>", self::$failed_key_value['value'] ) );
