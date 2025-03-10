@@ -25,7 +25,7 @@
 			 */
 			toggleNotice: function() {
 				var noticeContainer = $('.user-registration-membership-notice__container');
-				setTimeout(() => {
+				setTimeout(function() {
 					noticeContainer.fadeOut(4000);
 				}, 4000);
 			},
@@ -36,7 +36,7 @@
 			 * @since xx.xx.xx
 			 */
 			ur_get_cookie: function( cookie_key ) {
-				let matches = document.cookie.match(new RegExp(
+				var matches = document.cookie.match(new RegExp(
 					"(?:^|; )" + cookie_key.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
 				));
 				return matches ? decodeURIComponent(matches[1]) : undefined;
