@@ -1,3 +1,4 @@
+import ContentRestriction from "./modules/ContentRestriction";
 import EditPassword from "./modules/EditPassword";
 import EditProfile from "./modules/EditProfile";
 import LoginForm from "./modules/LoginForm";
@@ -16,7 +17,8 @@ jQuery(window).on("et_builder_api_ready", (_, API) => {
 		EditPassword,
 		EditProfile,
 		MembershipGroups,
-		MembershipThankYou
+		MembershipThankYou,
+		ContentRestriction,
 	];
 
 	if (isPro) {

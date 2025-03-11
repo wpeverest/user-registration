@@ -297,8 +297,8 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 				include_once UR_ABSPATH . 'includes/3rd-party/oxygen/class-ur-oxygen.php';
 			}
 			// Divi builder compatiblity.
-			if(class_exists('WPEverest\URMembership\DiviBuilder\Builder')) {
-				WPEverest\URMembership\DiviBuilder\Builder::init();
+			if(class_exists('WPEverest\URM\DiviBuilder\Builder')) {
+				WPEverest\URM\DiviBuilder\Builder::init();
 			}
 
 			/**

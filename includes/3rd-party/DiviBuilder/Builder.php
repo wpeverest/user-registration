@@ -1,6 +1,7 @@
 <?php
 namespace WPEverest\URM\DiviBuilder;
 
+use WPEverest\URM\DiviBuilder\Modules\ContentRestriction;
 use WPEverest\URM\DiviBuilder\Modules\RegistrationForm;
 use WPEverest\URM\DiviBuilder\Modules\LoginForm;
 use WPEverest\URM\DiviBuilder\Modules\MyAccount;
@@ -83,6 +84,7 @@ class Builder {
 				'edit-password'        => EditPassword::class,
 				'membership-groups'    => MembershipGroups::class,
 				'membership-thank-you' => MembershipThankYou::class,
+				'content-restriction'  => ContentRestriction::class,
 			)
 		);
 

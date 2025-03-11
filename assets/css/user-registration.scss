@@ -2776,6 +2776,35 @@ body.user-registration-page {
 								background-image: url("./../images/blocks/content-restriction.svg");
 							}
 						}
+
+						// Membership Group Icon
+						&.urm-membership-groups {
+							&:before {
+								content: "";
+								display: inline-block;
+								width: 16px;
+								height: 16px;
+								background-repeat: no-repeat;
+								background-position: center;
+								background-size: contain;
+								background-image: url("./../images/blocks/membership-groups.svg");
+							}
+						}
+
+
+						// Membership thankyou Icon
+						&.urm-membership-thank-you {
+							&:before {
+								content: "";
+								display: inline-block;
+								width: 16px;
+								height: 16px;
+								background-repeat: no-repeat;
+								background-position: center;
+								background-size: contain;
+								background-image: url("./../images/blocks/thankyou.svg");
+							}
+						}
 					}
 				}
 			}
