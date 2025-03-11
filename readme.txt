@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 5.5
 Requires PHP: 7.2
 Tested up to: 6.7.2
-Stable tag: 4.1.0
+Stable tag: 4.1.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -257,6 +257,17 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 21. User Account Page –  Vertical Layout
 
 == Changelog ==
+
+= 4.1.1    - 11/03/2025 =
+* Tweak    - Logout popup cancellation text translation.
+* Enhance  - Compatibility for passwordless login with role based redirection.
+* Enhance  - Display success message after confirming registration through email.
+* Fix      - YITH multi vendor conflict.
+* Fix      - Design issue in success message.
+* Fix      - JS issue while assigning my account page in settings.
+* Fix      - Conflict while using analytics for UR and EVF at the same time.
+* Fix      - Conditional logic for row settings not working in profile details.
+* Fix      - Validation while disabling default wordpress page settings inside login form settings.
 
 = 4.1.0     - 26/02/2025 =
 * Feature	- Min Max setting for default fields.
