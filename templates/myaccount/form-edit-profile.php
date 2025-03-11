@@ -221,7 +221,7 @@ if ( 'vertical' === $layout ) {
 								}
 
 								ob_start();
-								echo '<div class="ur-form-row">';
+								echo '<div class="ur-form-row" data-row-id=' . $row_id . ' ' . $row_cl_props . '>';
 								user_registration_edit_profile_row_template( $data, $profile );
 								echo '</div>';
 								$row_template = ob_get_clean();
