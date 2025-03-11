@@ -3993,6 +3993,14 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 
 			$username = isset( $post['username'] ) ? trim( sanitize_user( wp_unslash( $post['username'] ) ) ) : '';
 
+			// Check if the entered value is a valid email address.
+			$user_details = null;
+			if ( is_email( $username ) ) {
+				$user_details = get_user_by( 'email', $username );
+			} else {
+				$user_details = get_user_by( 'login', $username );
+			}
+
 			if ( 'v2' === $recaptcha_type && ! $invisible_recaptcha ) {
 				$site_key   = get_option( 'user_registration_captcha_setting_recaptcha_site_key' );
 				$secret_key = get_option( 'user_registration_captcha_setting_recaptcha_site_secret' );
@@ -4051,6 +4059,22 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 					throw new Exception( '<strong>' . esc_html__( 'ERROR:', 'user-registration' ) . '</strong>' . get_option( 'user_registration_form_submission_error_message_recaptcha', esc_html__( 'Captcha code error, please try again.', 'user-registration' ) ) );
 				}
 			}
+
+			// Handles the role based redirection.
+			if ( ur_string_to_bool( get_option( 'user_registration_pro_role_based_redirection', false ) ) ) {
+				$registration_redirect = get_option( 'ur_pro_settings_redirection_after_login', array() );
+
+				foreach ( $registration_redirect as $role => $page_id ) {
+
+					$roles = isset( $user_details->roles ) ? (array) $user_details->roles : array();
+
+					if ( 0 !== $page_id && in_array( $role, $roles ) ) {
+						$redirect_url = get_permalink( $page_id );
+						$post['redirect'] = $redirect_url;
+					}
+				}
+			}
+
 			/**
 			 * Executes an action before validating the username during the login process.
 			 *
