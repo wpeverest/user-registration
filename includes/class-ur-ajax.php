@@ -1015,7 +1015,8 @@ class UR_AJAX {
 		}
 
 		if ( ur_string_to_bool( $output['user_registration_login_options_prevent_core_login'] ) ) {
-			if ( is_numeric( $output['user_registration_login_options_login_redirect_url'] ) ) {
+
+			if ( ( is_numeric( $output['user_registration_login_options_login_redirect_url'] ) ) && ! empty( $output['user_registration_login_options_login_redirect_url'] ) ) {
 				$is_page_my_account_page = ur_find_my_account_in_page( sanitize_text_field( wp_unslash( $output['user_registration_login_options_login_redirect_url'] ) ) );
 				if ( ! $is_page_my_account_page ) {
 					wp_send_json_error(
@@ -1027,6 +1028,15 @@ class UR_AJAX {
 						)
 					);
 				}
+			} else {
+				wp_send_json_error(
+					array(
+						'message' => esc_html__(
+							'Please select a login redirection page.',
+							'user-registration'
+						),
+					)
+				);
 			}
 		}
 
@@ -1070,8 +1080,8 @@ class UR_AJAX {
 		$page_id = empty( $_POST['page_id'] ) ? 0 : sanitize_text_field( absint( $_POST['page_id'] ) );
 		$form_id = ! empty( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
 		if ( empty( $page_id ) ) {
-			$url  = add_query_arg( 'post_type', 'page', admin_url( 'post-new.php' ) );
-			$meta = array(
+			$url             = add_query_arg( 'post_type', 'page', admin_url( 'post-new.php' ) );
+			$meta            = array(
 				'embed_page'       => 0,
 				'embed_page_title' => ! empty( $_POST['page_title'] ) ? sanitize_text_field( wp_unslash( $_POST['page_title'] ) ) : '',
 			);
@@ -1087,15 +1097,17 @@ class UR_AJAX {
 			wp_send_json_success( $page_url );
 		} else {
 			UR_Admin_Embed_Wizard::delete_meta();
-			$url  = get_edit_post_link( $page_id, '' );
-			$post = get_post($page_id);
-			$pattern = '[user_registration_form id="%d"]';
-			$shortcode = sprintf( $pattern, absint( $form_id ) );
+			$url             = get_edit_post_link( $page_id, '' );
+			$post            = get_post( $page_id );
+			$pattern         = '[user_registration_form id="%d"]';
+			$shortcode       = sprintf( $pattern, absint( $form_id ) );
 			$updated_content = $post->post_content . "\n\n" . $shortcode;
-			wp_update_post([
-				'ID'           => $page_id,
-				'post_content' => $updated_content,
-			]);
+			wp_update_post(
+				array(
+					'ID'           => $page_id,
+					'post_content' => $updated_content,
+				)
+			);
 			wp_send_json_success( $url );
 		}
 	}
