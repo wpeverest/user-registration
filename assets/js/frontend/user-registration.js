@@ -2378,7 +2378,7 @@
 				user_registration_frontend_utils.show_success_message(urm_toast_success_message);
 
 				$('.user-registration-membership__close_notice').on('click', function() {
-					user_registration_frontend_utils.toggleNotice();
+					$('.user-registration-membership-notice__container').hide();
 				});
 
 				// Handle edit-profile form submit event.
