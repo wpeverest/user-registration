@@ -335,7 +335,6 @@ const TemplateList = ({ selectedCategory, templates }) => {
 				as="h3"
 				fontSize="18px"
 				lineHeight="26px"
-				letterSpacing="0.5px"
 				fontWeight="semibold"
 				m="0px 0px 32px"
 				color="#26262E"
@@ -546,7 +545,6 @@ const TemplateList = ({ selectedCategory, templates }) => {
 									fontWeight="500"
 									fontSize="16px"
 									margin="0px"
-									letterSpacing="0.5px"
 									lineHeight="22px"
 								>
 									{template.title}
