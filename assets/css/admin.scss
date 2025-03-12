@@ -7123,7 +7123,13 @@ body {
 				border-radius: 4px;
 				background: #eee8f7;
 				margin-right: 16px;
+				svg {
+					width: 20px;
+					height: 20px;
+					fill: #475bb2;
+				}
 			}
+
 			h3 {
 				margin: 0;
 				color: #383838;
@@ -7134,9 +7140,8 @@ body {
 		}
 	}
 	&-copy {
-		background: #475bb2;
 		position: absolute;
-		top: 38px;
+		top: 25px;
 		right: 18px;
 		padding: 8px 14px;
 		border-radius: 4px;
