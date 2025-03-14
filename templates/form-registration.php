@@ -217,7 +217,7 @@ wp_enqueue_style( 'ur-frontend-small-screen' );
 									}
 								}
 								?>
-								<div <?php echo $cl_props; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> data-field-id="<?php echo esc_attr( $field_id ); ?>" class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?> <?php echo esc_attr( ! empty( $single_item->advance_setting->custom_class ) ? $single_item->advance_setting->custom_class : '' ); ?>" data-ref-id="<?php echo esc_attr( $field_id ); ?>">
+								<div <?php echo $cl_props; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> data-field-id="<?php echo esc_attr( $field_id ); ?>" class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?> <?php echo esc_attr( ! empty( $single_item->advance_setting->custom_class ) ? $single_item->advance_setting->custom_class : '' ); ?>" data-ref-id="<?php echo esc_attr( $field_id ); ?>" data-field-pattern-enabled="<?php echo esc_attr( ! empty( $single_item->advance_setting->enable_pattern ) ? $single_item->advance_setting->enable_pattern  : 0 ); ?>" data-field-pattern-value="<?php echo esc_attr( ! empty( $single_item->advance_setting->pattern_value ) ? $single_item->advance_setting->pattern_value  : " " ); ?>" data-field-pattern-message="<?php echo esc_attr( ! empty( $single_item->advance_setting->pattern_message ) ? $single_item->advance_setting->pattern_message  : " " ); ?>">
 									<?php
 									$grid_data =
 									/**
