@@ -33,6 +33,8 @@
 		<key name="user_registration_profile_details_changed_email" />
 		<key name="user_registration_profile_details_updated_email_subject" />
 		<key name="user_registration_profile_details_Updated_email" />
+		<key name="user_registration_pro_email_email_verified_admin_email_subject" />
+		<key name="user_registration_pro_email_verified_admin_email" />
 
 		<key name="user_registration_general_setting_registration_label" />
 		<key name="user_registration_general_setting_registration_url_options"/>
@@ -50,5 +52,18 @@
 		<key name="user_registration_message_unknown_email" />
 		<key name="user_registration_message_pending_approval" />
 		<key name="user_registration_message_denied_account" />
+
+
+		<key name="user_registration_invalid_email_error_message" />
+		<key name="user_registration_invalid_url_error_message" />
+		<key name="user_registration_invalid_date_error_message" />
+		<key name="user_registration_empty_field_error_message" />
+		<key name="user_registration_non_boolean_value_error_message" />
+		<key name="user_registration_non_numeric_data_error_message" />
+		<key name="user_registration_single_field_label" />
+		<key name="user_registration_pro_auto_password_generation_message" />
+		<key name="user_registration_pro_email_verified_admin_approval_await_message" />
+		<key name="user_registration_form_submission_error_message_disallow_username_character" />
+		<key name="user_registration_form_submission_email_suggestion" />
 	</admin-texts>
 </wpml-config>

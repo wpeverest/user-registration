@@ -5140,7 +5140,7 @@ if ( ! function_exists( 'user_registration_validate_form_field_data' ) ) {
 			$single_form_field  = $form_field_data[ $form_data_index ];
 			$general_setting    = isset( $single_form_field->general_setting ) ? $single_form_field->general_setting : new stdClass();
 			$single_field_key   = $single_form_field->field_key;
-			$single_field_label = isset( $general_setting->label ) ? $general_setting->label : '';
+			$single_field_label = isset( $general_setting->label ) ? ur_string_translation( $form_id, 'user_registration_single_field_label', $general_setting->label) : '';
 			$single_field_value = isset( $data->value ) ? $data->value : '';
 			$data->extra_params = array(
 				'field_key' => $single_field_key,
