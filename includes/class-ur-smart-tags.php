@@ -175,6 +175,14 @@ class UR_Smart_Tags {
 					}
 
 					$content = str_replace( '{{' . $key . '}}', $value, $content );
+				} else {
+					if ( empty( $value ) ) {
+						$value = '';
+					} else {
+						$value = implode( ', ', $value );
+					}
+
+					$content = str_replace( '{{' . $key . '}}', $value, $content );
 				}
 			}
 		}
