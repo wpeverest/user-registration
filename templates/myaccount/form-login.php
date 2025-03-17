@@ -222,9 +222,9 @@ if ( isset( $_GET['force-logout'] ) && 'true' === $_GET['force-logout'] ) {
 						do_action( 'user_registration_login_form_before_submit_button' );
 					?>
 						<?php if ( $enable_ajax ) { ?>
-						<button type="submit" class="user-registration-Button button ur-submit-button" id="user_registration_ajax_login_submit" name="login" value="<?php echo esc_html( $labels['login'] ); ?>" <?php echo ( $is_login_settings || ( isset( $_GET['ur_login_preview'] ) && $_GET['ur_login_preview'] ) ) ? 'disabled' : ''; ?>/><?php echo esc_html( $labels['login'] ); ?><span></span></button>
+						<button type="submit" class="user-registration-Button button ur-submit-button" id="user_registration_ajax_login_submit" name="login" value="<?php echo esc_html( $labels['login'] ); ?>" <?php echo ( $is_login_settings || ( isset( $_GET['ur_login_preview'] ) && $_GET['ur_login_preview'] ) ) ? 'disabled' : ''; ?>><?php echo esc_html( $labels['login'] ); ?><span></span></button>
 						<?php } else { ?>
-						<button type="submit" class="user-registration-Button button " name="login" value="<?php echo esc_html( $labels['login'] ); ?>"<?php echo ( $is_login_settings || ( isset( $_GET['ur_login_preview'] ) && $_GET['ur_login_preview'] ) ) ? 'disabled' : ''; ?> /><?php echo esc_html( $labels['login'] ); ?></button>
+						<button type="submit" class="user-registration-Button button " name="login" value="<?php echo esc_html( $labels['login'] ); ?>"<?php echo ( $is_login_settings || ( isset( $_GET['ur_login_preview'] ) && $_GET['ur_login_preview'] ) ) ? 'disabled' : ''; ?> ><?php echo esc_html( $labels['login'] ); ?></button>
 						<?php } ?>
 					</div>
 					<input type="hidden" name="redirect" value="<?php echo isset( $redirect ) ? esc_attr( $redirect ) : esc_attr( the_permalink() ); ?>" />
