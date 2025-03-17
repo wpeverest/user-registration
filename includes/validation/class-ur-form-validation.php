@@ -526,12 +526,12 @@ class UR_Form_Validation extends UR_Validation {
 	 */
 	public function get_error_message( $error_code = '', $field_label = '' ) {
 		$errors = array(
-			'invalid_email'     => 'Please enter a valid email for %s.',
-			'invalid_url'       => 'Please enter a valid url for %s.',
-			'invalid_date'      => 'Please enter a valid date for %s.',
-			'empty_field'       => '%s is a required field.',
-			'non_boolean_value' => 'Please enter a valid value for %s.',
-			'non_numeric_data'  => 'Please enter a numeric value for %s.',
+			'invalid_email'     => ur_string_translation( 0, 'user_registration_invalid_email_error_message', 'Please enter a valid email for %s.' ),
+			'invalid_url'       => ur_string_translation( 0, 'user_registration_invalid_url_error_message', 'Please enter a valid url for %s.' ),
+			'invalid_date'      => ur_string_translation( 0, 'user_registration_invalid_date_error_message', 'Please enter a valid date for %s.' ),
+			'empty_field'       => ur_string_translation( 0, 'user_registration_empty_field_error_message', '%s is a required field.' ),
+			'non_boolean_value' => ur_string_translation( 0, 'user_registration_non_boolean_value_error_message', 'Please enter a valid value for %s.' ),
+			'non_numeric_data'  => ur_string_translation( 0, 'user_registration_non_numeric_data_error_message', 'Please enter a numeric value for %s.' ),
 		);
 
 		$error_code = str_replace( 'user_registration_validation_', '', $error_code );
