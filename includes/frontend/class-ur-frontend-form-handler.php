@@ -139,6 +139,20 @@ class UR_Frontend_Form_Handler {
 
 			self::ur_update_user_meta( $user_id, $filtered_form_data, $form_id ); // Insert user data in usermeta table.
 
+			if ( class_exists( 'UserRegistrationWooCommerce' ) && class_exists( 'WooCommerce' ) && 'customer' === $user_role ) {
+				$customer   = new WC_Customer( $user_id );
+				$first_name = get_user_meta( $user_id, 'first_name', true );
+				$last_name  = get_user_meta( $user_id, 'last_name', true );
+				$user_meta  = get_user_meta( $user_id );
+				$customer->set_first_name( $first_name );
+				$customer->set_last_name( $last_name );
+				$customer->save();
+
+				if ( ! $customer ) {
+					return;
+				}
+			}
+
 			if ( $user_id > 0 ) {
 				do_action( 'user_registration_after_user_meta_update', self::$valid_form_data, $form_id, $user_id );
 
