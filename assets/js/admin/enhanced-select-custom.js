@@ -15,16 +15,14 @@ jQuery(function ($) {
 		// Custom options field starts
 		populateBlacklistOptions: function () {
 			var excludeIds = [];
-			var excludeFieldTypes = [
-				'section_title',
-				'html',
-				'wysiwyg',
-				'billing_address_title',
-				'shipping_address_title',
-				'stripe_gateway',
-				'authorize_net_gateway',
-				'profile_picture',
-				'file',
+			var includeFieldTypes = [
+				'text',
+				'textarea',
+				'description',
+				'nickname',
+				'user_login',
+				'last_name',
+				'first_name'
 			];
 
 			var optionValues = $("#user_registration_form_setting_blacklisted_words_field_settings");
@@ -32,11 +30,9 @@ jQuery(function ($) {
 				return;
 			}
 
-			let selectedOptionValues = optionValues.find("option:selected").map(function () {
+			var selectedOptionValues = optionValues.find("option:selected").map(function () {
 				return $(this).val();
 			}).get();
-
-			console.log('selected: ' + selectedOptionValues);
 
 			// Clear existing options
 			optionValues.empty();
@@ -54,7 +50,7 @@ jQuery(function ($) {
 				if (fieldType && fieldLabel && fieldId) {
 					if (
 						!excludeIds.includes(fieldId) &&
-						!excludeFieldTypes.includes(fieldType)
+						includeFieldTypes.includes(fieldType)
 					) {
 						var newOption = $('<option>', {
 							value: fieldType,
