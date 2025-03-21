@@ -106,7 +106,7 @@ class MembersService {
 	public function prepare_members_data( $data ) {
 		$membership_details = $this->membership_repository->get_single_membership_by_ID( absint( $data['membership'] ) );
 		$membership_meta    = json_decode( $membership_details['meta_value'], true );
-		$data['role']       = $membership_meta['role'] ?? 'subscriber';
+		$data['role']       = isset( $membership_meta['role'] ) ? $membership_meta['role'] : 'subscriber';
 		$coupon_details = array();
 		if ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
 			$coupon_details = ur_get_coupon_details( sanitize_text_field( $data['coupon'] ) );
