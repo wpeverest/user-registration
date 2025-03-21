@@ -104,14 +104,9 @@ class MembersService {
 	 * @return array
 	 */
 	public function prepare_members_data( $data ) {
-
-		if ( ! isset( $data['role'] ) ) {
-			$membership_details = $this->membership_repository->get_single_membership_by_ID( absint( $data['membership'] ) );
-			$membership_meta    = json_decode( $membership_details['meta_value'], true );
-			$data['role']       = $membership_meta['role'] ?? 'subscriber';
-		}
-		$role = $data['role'] ?? 'subscriber';
-
+		$membership_details = $this->membership_repository->get_single_membership_by_ID( absint( $data['membership'] ) );
+		$membership_meta    = json_decode( $membership_details['meta_value'], true );
+		$data['role']       = $membership_meta['role'] ?? 'subscriber';
 		$coupon_details = array();
 		if ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
 			$coupon_details = ur_get_coupon_details( sanitize_text_field( $data['coupon'] ) );
