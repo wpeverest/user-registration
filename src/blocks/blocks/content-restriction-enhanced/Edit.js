@@ -1,92 +1,105 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { __ } from "@wordpress/i18n";
 import apiFetch from "@wordpress/api-fetch";
-import { Box, Textarea } from "@chakra-ui/react";
+import { Box, ChakraProvider } from "@chakra-ui/react";
 import { SelectControl, PanelBody } from "@wordpress/components";
 import { InspectorControls, useBlockProps, InnerBlocks } from "@wordpress/block-editor";
-import { ChakraProvider } from "@chakra-ui/react";
+import Select from "react-select";
 
 /* global _UR_BLOCKS_ */
 const { urRestApiNonce, restURL } = typeof _UR_BLOCKS_ !== "undefined" && _UR_BLOCKS_;
 
-const Edit = (props) => {
-	const useProps = useBlockProps();
-	const { attributes: { accessRole, accessControl, content }, setAttributes } = props;
+const Edit = ({ attributes, setAttributes }) => {
+	const { accessAllRoles,accessRole, accessControl, content } = attributes;
+	const blockProps = useBlockProps();
+
 	const [roleOptions, setRoleOptions] = useState([]);
 	const [defaultMessage, setDefaultMessage] = useState("");
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const res = await apiFetch({
-					path: `${restURL}user-registration/v1/gutenberg-blocks/role-list`,
-					method: "GET",
-					headers: { "X-WP-Nonce": urRestApiNonce },
-				});
-				if (res.success) setRoleOptions(res.role_lists);
-			} catch (error) {
-				console.error("Error fetching roles:", error);
-			}
-		};
+				const [roleRes, messageRes] = await Promise.all([
+					apiFetch({
+						path: `${restURL}user-registration/v1/gutenberg-blocks/role-list`,
+						method: "GET",
+						headers: { "X-WP-Nonce": urRestApiNonce },
+					}),
+					apiFetch({
+						path: `${restURL}user-registration/v1/gutenberg-blocks/cr-data`,
+						method: "GET",
+						headers: { "X-WP-Nonce": urRestApiNonce },
+					}),
+				]);
 
-		const fetchContentRestrictionMessage = async () => {
-			try {
-				const res = await apiFetch({
-					path: `${restURL}user-registration/v1/gutenberg-blocks/cr-data`,
-					method: "GET",
-					headers: { "X-WP-Nonce": urRestApiNonce },
-				});
-				if (res.success) setDefaultMessage(res.cr_data.default_message);
+				if (roleRes.success) setRoleOptions(roleRes.role_lists);
+				if (messageRes.success) setDefaultMessage(messageRes.cr_data.default_message);
 			} catch (error) {
-				console.error("Error fetching restriction message:", error);
+				console.error("Error fetching data:", error);
 			}
 		};
 
 		fetchData();
-		fetchContentRestrictionMessage();
 	}, []);
 
-	const options = Object.keys(roleOptions).map((index) => ({
-		value: index,
-		label: roleOptions[index]
-	}));
+	const roleDropdownOptions = useMemo(() => {
+		return Object.keys(roleOptions).map((key) => ({
+			value: key,
+			label: roleOptions[key],
+		}));
+	}, [roleOptions]);
 
-	const setAccessRole = (role) => setAttributes({ accessRole: role });
-	const onChangeContent = (newContent) => setAttributes({ content: newContent });
-	const setAccessControl = (state) => setAttributes({ accessControl: state });
-
-	// Function to dynamically change label based on access control
-	const getAccessLabel = () => {
-		return accessControl === "access"
-			? __("Allow Access to", "user-registration")
-			: __("Restrict Access to", "user-registration");
+	const handleAccessControlChange = (value) => {
+		setAttributes({
+			accessControl: value,
+		});
 	};
+
+	const handleAccessAllRoleChange = (value) => setAttributes({ accessAllRoles: value });
+
+	const getAccessLabel = () =>
+		accessControl === "access" ? __("Allow Access to", "user-registration") : __("Restrict Access to", "user-registration");
 
 	return (
 		<ChakraProvider>
-			<Box {...useProps} borderWidth="1px" borderRadius="lg" p={5}>
-				<InspectorControls key="ur-gutenberg-popup-inspector-controls">
+			<Box {...blockProps} borderWidth="1px" borderRadius="lg" p={5}>
+				<InspectorControls>
 					<PanelBody title={__("Settings", "user-registration")}>
 						<SelectControl
 							label={__("Select Access Control", "user-registration")}
-							key="ur-gutenberg-cr-access-control"
 							value={accessControl}
 							options={[
 								{ label: __("Access", "user-registration"), value: "access" },
-								{ label: __("Restrict", "user-registration"), value: "restrict" }
+								{ label: __("Restrict", "user-registration"), value: "restrict" },
 							]}
-							onChange={setAccessControl}
+							onChange={handleAccessControlChange}
 						/>
-						{accessControl && (
-							<SelectControl
-								label={getAccessLabel()}
-								key="ur-gutenberg-access-role"
-								value={accessRole}
-								options={[
-									{ label: __(`Select ${getAccessLabel()}`, "user-registration"), value: "" },
-									...options
-								]}
-								onChange={setAccessRole}
+
+						<SelectControl
+							label={getAccessLabel()}
+							value={accessAllRoles}
+							options={[
+								{ label: __(`Select ${getAccessLabel()}`, "user-registration"), value: "" },
+								{ label: __("All Logged In Users", "user-registration"), value: "0" },
+								{ label: __("Choose Specific Roles", "user-registration"), value: "1" },
+								{ label: __("Guest Users", "user-registration"), value: "2" },
+								{ label: __("Memberships", "user-registration"), value: "3" },
+							]}
+							onChange={handleAccessAllRoleChange}
+						/>
+
+
+						{accessAllRoles === "1" && (
+							<Select
+								isMulti
+								options={roleDropdownOptions}
+								className="react-select-container"
+								classNamePrefix="react-select"
+								placeholder={__("Select specific roles...", "user-registration")}
+								value={roleDropdownOptions.filter((option) =>
+									Array.isArray(accessRole) ? accessRole.includes(option.value) : false
+								)}
+								onChange={(selected) => setAttributes({ accessRole: selected.map((option) => option.value) })}
 							/>
 						)}
 					</PanelBody>
@@ -94,7 +107,7 @@ const Edit = (props) => {
 
 				{accessControl === "access" ? (
 					<div>
-						<InnerBlocks value={content} onChange={onChangeContent} templateLock={false} />
+						<InnerBlocks value={content} templateLock={false} />
 						<div className="user-registration-content-restriction-block-note">
 							<span className="dashicon dashicons dashicons-lock"></span>
 							<p className="user-registration-content-restriction-block-note-text">

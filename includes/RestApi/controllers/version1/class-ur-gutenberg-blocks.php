@@ -45,6 +45,7 @@ class UR_Gutenberg_Blocks {
 			)
 		);
 
+
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/role-list',
@@ -112,7 +113,6 @@ class UR_Gutenberg_Blocks {
 			$all_roles[ $role_key ] = $role['name'];
 		}
 
-		error_log( print_r( $all_roles, true ) );
 
 		return new \WP_REST_Response(
 			array(
