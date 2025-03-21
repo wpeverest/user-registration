@@ -25,31 +25,38 @@ class URCR_Shortcodes {
 
 	public function urcr_restrict_shortcode( $atts, $content = null ) {
 		global $post;
+		/** For divi builder edit
+		 * global $post will be the empty on edit mode.
+		 *
+		 * @since xx.xx.xx
+		 */
+		if ( empty( $post ) && ( function_exists( 'urm_is_divi_active' ) && urm_is_divi_active() ) ) {
+			$post = isset( $atts['post_id'] ) ? get_post( absint( $atts['post_id'] ) ) : null;
+		}
 
 		if ( ! is_object( $post ) ) {
 			return;
 		}
 
 		$enable_disable = ur_string_to_bool( get_option( 'user_registration_content_restriction_enable', true ) );
-
 		if ( $enable_disable ) {
 			$override_global_settings = get_post_meta( $post->ID, 'urcr_meta_override_global_settings', $single = true );
 
-			$allowed_roles = get_option( 'user_registration_content_restriction_allow_to_roles', 'administrator' );
-			$allowed_memberships = get_option( 'user_registration_content_restriction_allow_to_memberships');
+			$allowed_roles       = get_option( 'user_registration_content_restriction_allow_to_roles', 'administrator' );
+			$allowed_memberships = get_option( 'user_registration_content_restriction_allow_to_memberships' );
 
-			$current_user_role = is_user_logged_in() ? wp_get_current_user()->roles[0] : 'guest';
-			$get_meta_data_roles = get_post_meta( $post->ID, 'urcr_meta_roles', $single = true );
+			$current_user_role         = is_user_logged_in() ? wp_get_current_user()->roles[0] : 'guest';
+			$get_meta_data_roles       = get_post_meta( $post->ID, 'urcr_meta_roles', $single = true );
 			$get_meta_data_memberships = get_post_meta( $post->ID, 'urcr_meta_memberships', true );
 
-			$roles = isset( $atts['access_role'] ) ? trim( $atts['access_role'] ) : '';
-			$is_membership_active = ur_check_module_activation('membership');
+			$roles                = isset( $atts['access_role'] ) ? trim( $atts['access_role'] ) : '';
+			$is_membership_active = ur_check_module_activation( 'membership' );
 
-			if( $is_membership_active ) {
+			if ( $is_membership_active ) {
 				$members_subscription = new \WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository();
-				$subscription = $members_subscription->get_member_subscription( wp_get_current_user()->ID);
+				$subscription         = $members_subscription->get_member_subscription( wp_get_current_user()->ID );
 
-				$current_user_membership = ( !empty ( $subscription ) ) ? $subscription['item_id'] : array();
+				$current_user_membership = ( ! empty( $subscription ) ) ? $subscription['item_id'] : array();
 			}
 
 			if ( empty( $roles ) ) {
@@ -68,8 +75,7 @@ class URCR_Shortcodes {
 						if ( ! is_user_logged_in() ) {
 							return do_shortcode( $content );
 						}
-					}
-					elseif ( '3' === get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
+					} elseif ( '3' === get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
 						if ( is_array( $allowed_memberships ) && in_array( $current_user_membership, $allowed_memberships ) ) {
 							return do_shortcode( $content );
 						}
