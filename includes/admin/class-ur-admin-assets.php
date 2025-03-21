@@ -527,6 +527,16 @@ class UR_Admin_Assets {
 			array(),
 			UR_VERSION
 		);
+
+		wp_register_script(
+			'ur-enhanced-select-custom',
+			UR()->plugin_url() . '/assets/js/admin/enhanced-select-custom' . $suffix . '.js',
+			array(
+				'jquery',
+			),
+			UR_VERSION,
+			false
+		);
 	}
 
 	/**

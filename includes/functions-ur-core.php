@@ -2734,7 +2734,7 @@ if ( ! function_exists( 'user_registration_pro_get_conditional_fields_by_form_id
 	function user_registration_pro_get_conditional_fields_by_form_id( $form_id, $selected_field_key ) {
 		$args      = array(
 			'post_type'   => 'user_registration',
-			'post_status' => 'publish',
+			'post_status' => array('publish', 'draft'),
 			'post__in'    => array( $form_id ),
 		);
 		$post_data = get_posts( $args );
