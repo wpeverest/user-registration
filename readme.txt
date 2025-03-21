@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 5.5
 Requires PHP: 7.2
 Tested up to: 6.7.2
-Stable tag: 4.1.1
+Stable tag: 4.1.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -257,6 +257,17 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 21. User Account Page –  Vertical Layout
 
 == Changelog ==
+
+= 4.1.2     - 21/03/2025 =
+* Security  - Privilege Escalation (Not Authenticated) vulnerability fix .
+* Tweak     - Removed extra spacing from form template titles.
+* Tweak     - Made the login page welcome message and description ready for translation.
+* Tweak     - Made the email input placeholder on the lost password page ready for translation.
+* Fix       - Error message design issue.
+* Fix       - Fixed login button text going outside the button.
+* Fix       - Fixed "All Fields" smart tag not working in admin verified email.
+* Fix       - Fixed design issue with lost password confirmation message.
+* Fix       - Updated lambda function for compatibility with PHP versions below 7.4.
 
 = 4.1.1    - 11/03/2025 =
 * Tweak    - Logout popup cancellation text translation.

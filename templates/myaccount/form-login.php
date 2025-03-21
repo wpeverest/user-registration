@@ -108,7 +108,7 @@ if ( isset( $_GET['force-logout'] ) && 'true' === $_GET['force-logout'] ) {
 					 * @param array $labels['login].
 					 * @return array.
 					 */
-					apply_filters( 'ur_login_title', 'Welcome' );
+					apply_filters( 'ur_login_title', __( 'Welcome', 'user-registration' ) );
 					$login_title_description =
 					/**
 					 * Filter to modify the login title description.
@@ -116,7 +116,7 @@ if ( isset( $_GET['force-logout'] ) && 'true' === $_GET['force-logout'] ) {
 					 * @param array $labels['login].
 					 * @return array.
 					 */
-					apply_filters( 'ur_login_title_description', 'Please enter your details to access your account.' );
+					apply_filters( 'ur_login_title_description', __( 'Please enter your details to access your account.', 'user-registration' ) );
 					/* translators: %s - Login Title. */
 					echo wp_kses_post( sprintf( __( '<span class="user-registration-login-title"> %s </span> </br>', 'user-registration' ), $login_title_label ) );
 					echo wp_kses_post( sprintf( __( '<p class="user-registration-login-description"> %s </p>', 'user-registration' ), $login_title_description ) );
@@ -222,9 +222,9 @@ if ( isset( $_GET['force-logout'] ) && 'true' === $_GET['force-logout'] ) {
 						do_action( 'user_registration_login_form_before_submit_button' );
 					?>
 						<?php if ( $enable_ajax ) { ?>
-						<button type="submit" class="user-registration-Button button ur-submit-button" id="user_registration_ajax_login_submit" name="login" value="<?php echo esc_html( $labels['login'] ); ?>" <?php echo ( $is_login_settings || ( isset( $_GET['ur_login_preview'] ) && $_GET['ur_login_preview'] ) ) ? 'disabled' : ''; ?>/><?php echo esc_html( $labels['login'] ); ?><span></span></button>
+						<button type="submit" class="user-registration-Button button ur-submit-button" id="user_registration_ajax_login_submit" name="login" value="<?php echo esc_html( $labels['login'] ); ?>" <?php echo ( $is_login_settings || ( isset( $_GET['ur_login_preview'] ) && $_GET['ur_login_preview'] ) ) ? 'disabled' : ''; ?>><?php echo esc_html( $labels['login'] ); ?><span></span></button>
 						<?php } else { ?>
-						<button type="submit" class="user-registration-Button button " name="login" value="<?php echo esc_html( $labels['login'] ); ?>"<?php echo ( $is_login_settings || ( isset( $_GET['ur_login_preview'] ) && $_GET['ur_login_preview'] ) ) ? 'disabled' : ''; ?> /><?php echo esc_html( $labels['login'] ); ?></button>
+						<button type="submit" class="user-registration-Button button " name="login" value="<?php echo esc_html( $labels['login'] ); ?>"<?php echo ( $is_login_settings || ( isset( $_GET['ur_login_preview'] ) && $_GET['ur_login_preview'] ) ) ? 'disabled' : ''; ?> ><?php echo esc_html( $labels['login'] ); ?></button>
 						<?php } ?>
 					</div>
 					<input type="hidden" name="redirect" value="<?php echo isset( $redirect ) ? esc_attr( $redirect ) : esc_attr( the_permalink() ); ?>" />

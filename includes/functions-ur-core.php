@@ -2617,9 +2617,25 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 		 */
 		$form_data = apply_filters( 'user_registration_parse_values_for_smart_tags', $form_data );
 
-		$label      = isset( $form_data->extra_params['label'] ) ? $form_data->extra_params['label'] : '';
-		$field_name = isset( $form_data->field_name ) ? $form_data->field_name : '';
-		$value      = isset( $form_data->value ) ? $form_data->value : '';
+		if( is_array ( $form_data ) ) {
+			$label = isset( $form_data['label']) ? $form_data['label'] : '';
+			$field_name = isset( $form_data['field_key'] ) ? $form_data['field_key'] : '';
+			$value      = isset( $form_data['default'] ) ? $form_data['default'] : '';
+			if( 'checkbox' === $field_name && !empty($value)) {
+				$unserialized_value = unserialize($form_data['default'] );
+
+				if (is_array($unserialized_value)) {
+					$value = implode(", ", $unserialized_value);
+				} else {
+					$value = (string) $unserialized_value;
+				}
+			}
+
+		} else{
+			$label      = isset( $form_data->extra_params['label'] ) ? $form_data->extra_params['label'] : '';
+			$field_name = isset( $form_data->field_name ) ? $form_data->field_name : '';
+			$value      = isset( $form_data->value ) ? $form_data->value : '';
+		}
 
 		if ( 'user_pass' === $field_meta ) {
 			$value = __( 'Chosen Password', 'user-registration' );

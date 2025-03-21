@@ -149,10 +149,10 @@
 	border-top-color: #1e85be;
 }
 
-.user-registration-error {
+.user-registration-error{
 	border-top-color: $red;
-	background: rgba($red, 0.1);
-	color: darken($red, 15%);
+ 	background: rgba($red, 0.1);
+ 	color: darken($red, 15%);
 
 	&::before {
 		content: "\f534";
@@ -1386,11 +1386,6 @@ span.ur-shortcode-form-embed-dot {
 	background: 4px solid #FDE8E8;
 	border-top : none;
 
-	&::before {
-		// content: '';
-		content: none;
-		display: '';
-	}
 
 	svg{
 		margin-right: 10px;
@@ -2119,7 +2114,6 @@ body {
 							width: 100%;
 							position: unset;
 							align-items: center;
-							margin: 0 !important;
 							margin-bottom: 24px !important;
 							// color: #F25656 !important;
 							// font-size: 14px !important;
@@ -2203,7 +2197,7 @@ body {
 						}
 
 						.ur-field-item {
-							label {
+							label:not(.user-registration-error) {
 								margin-top: 0;
 								margin-bottom: 12px;
 								color: #222;
