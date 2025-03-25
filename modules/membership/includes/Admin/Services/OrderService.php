@@ -29,7 +29,8 @@ class OrderService {
 		if ( 'bank' == $data['membership_data']['payment_method'] ) {
 			$transaction_id = str_replace( '-', '', wp_generate_uuid4() );
 		}
-		$total = number_format( $membership_meta['amount'], 2 );
+		$total = number_format( $membership_meta['amount'], 2 , '.' , '' );
+
 		if ( isset( $membership_meta['trial_status'] ) && 'on' == $membership_meta['trial_status'] ) {
 			$total = 0;
 		} else {

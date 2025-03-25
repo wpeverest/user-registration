@@ -97,20 +97,21 @@ class PaypalService {
 		if ( '_xclick-subscriptions' === $transaction ) {
 			$paypal_args['t3'] = ! empty( $data ['subscription'] ) ? strtoupper( substr( $data['subscription']['duration'], 0, 1 ) ) : '';
 			$paypal_args['p3'] = ! empty( $data ['subscription']['value'] ) ? $data ['subscription']['value'] : 1;
-			$paypal_args['a3'] = floatval( $membership_amount );
+			$paypal_args['a3'] = floatval( user_registration_sanitize_amount( $membership_amount ) );
+
 			if ( 'on' === $data['trial_status'] ) {
 				$paypal_args['t1'] = ! empty( $data ['trial_data'] ) ? strtoupper( substr( $data['trial_data']['duration'], 0, 1 ) ) : '';
 				$paypal_args['p1'] = ! empty( $data ['trial_data'] ) ? $data ['trial_data']['value'] : 1;
 				$paypal_args['a1'] = '0';
 			}
 			if ( ! empty( $coupon_details ) ) {
-				$amount            = $membership_amount - $discount_amount;
+				$amount            = user_registration_sanitize_amount( $membership_amount ) - $discount_amount;
 				$paypal_args['t2'] = ! empty( $data ['subscription'] ) ? strtoupper( substr( $data['subscription']['duration'], 0, 1 ) ) : '';
 				$paypal_args['p2'] = ! empty( $data ['subscription']['value'] ) ? $data ['subscription']['value'] : 1;
 				$paypal_args['a2'] = floatval( $amount );
 			}
 		} else {
-			$paypal_args['amount'] = floatval( $membership_amount - $discount_amount );
+			$paypal_args['amount'] = floatval( user_registration_sanitize_amount( $membership_amount ) - $discount_amount );
 		}
 
 		$redirect .= http_build_query( $paypal_args );
