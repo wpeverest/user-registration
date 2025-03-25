@@ -106,8 +106,8 @@ class MembersService {
 	public function prepare_members_data( $data ) {
 		$membership_details = $this->membership_repository->get_single_membership_by_ID( absint( $data['membership'] ) );
 		$membership_meta    = json_decode( $membership_details['meta_value'], true );
-		$role      = isset( $membership_meta['role'] ) ? $membership_meta['role'] : 'subscriber';
-		
+		$role               = isset( $membership_meta['role'] ) ? $membership_meta['role'] : 'subscriber';
+
 
 		$coupon_details = array();
 		if ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
@@ -115,13 +115,13 @@ class MembersService {
 		}
 
 		$user_data = array(
-			'user_login'    => !empty( $data['username']) ? sanitize_text_field( $data['username'] ) : '',
-			'user_email'    => !empty($data['email']) ?  sanitize_email( $data['email'] ) : '',
-			'user_pass'     => !empty($data['password']) ? $data['password'] : '',
-			'user_nicename' => (!empty($data['firstname']) && !empty($data['lastname'])) ? sanitize_text_field( $data['firstname'] ) . ' ' . sanitize_text_field( $data['lastname'] ) : '',
-			'display_name'  => !empty($data['username']) ? sanitize_text_field( $data['username'] ) : '',
-			'first_name'    => !empty($data['firstname']) ? sanitize_text_field( $data['firstname'] ) : '',
-			'last_name'     => !empty($data['lastname']) ? sanitize_text_field( $data['lastname'] ) : '',
+			'user_login'    => ! empty( $data['username'] ) ? sanitize_text_field( $data['username'] ) : '',
+			'user_email'    => ! empty( $data['email'] ) ? sanitize_email( $data['email'] ) : '',
+			'user_pass'     => ! empty( $data['password'] ) ? $data['password'] : '',
+			'user_nicename' => ( ! empty( $data['firstname'] ) && ! empty( $data['lastname'] ) ) ? sanitize_text_field( $data['firstname'] ) . ' ' . sanitize_text_field( $data['lastname'] ) : '',
+			'display_name'  => ! empty( $data['username'] ) ? sanitize_text_field( $data['username'] ) : '',
+			'first_name'    => ! empty( $data['firstname'] ) ? sanitize_text_field( $data['firstname'] ) : '',
+			'last_name'     => ! empty( $data['lastname'] ) ? sanitize_text_field( $data['lastname'] ) : '',
 			'user_status'   => isset( $data['member_status'] ) ? absint( $data['member_status'] ) : 1,
 		);
 
@@ -157,12 +157,25 @@ class MembersService {
 	 *
 	 * @param $user_id
 	 *
-	 * @return void
+	 * @return bool
 	 */
-	public function login_member( $user_id ) {
-		wp_clear_auth_cookie();
-		$remember = apply_filters( 'user_registration_autologin_remember_user', false );
-		wp_set_auth_cookie( $user_id, $remember );
+	public function login_member( $user_id, $check_just_created ) {
+		$is_just_created = 'no';
+		if ( $check_just_created ) {
+			$is_just_created = get_user_meta( $user_id, 'urm_user_just_created', true );
+		}
+
+		if ( "yes" === $is_just_created ) {
+			delete_user_meta( $user_id, 'urm_user_just_created');
+			wp_clear_auth_cookie();
+			$remember = apply_filters( 'user_registration_autologin_remember_user', false );
+			wp_set_auth_cookie( $user_id, $remember );
+
+			return true;
+		} else {
+			return false;
+		}
+
 	}
 
 }

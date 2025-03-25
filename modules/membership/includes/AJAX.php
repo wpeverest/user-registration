@@ -123,9 +123,17 @@ class AJAX {
 
 		if ( $response['status'] ) {
 			$form_response = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
+
 			if ( ! empty( $form_response ) && isset( $form_response["auto_login"] ) && $form_response["auto_login"] && 'free' == $data['payment_method'] ) {
 				$members_service = new MembersService();
-				$members_service->login_member( $member_id );
+				$logged_in       = $members_service->login_member( $member_id, true );
+				if ( ! $logged_in ) {
+					wp_send_json_error(
+						array(
+							'message' => __( "Invalid User", "user-registration" ),
+						)
+					);
+				}
 			}
 			$email_service = new EmailService();
 			$email_service->send_email( $data, 'user_register_user' );
@@ -556,14 +564,30 @@ class AJAX {
 				)
 			);
 		}
+		if ( empty( $_POST['form_response'] ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Field form_response is required', 'user-registration' ),
+				)
+			);
+		}
+
 		$stripe_service      = new StripeService();
 		$payment_status      = sanitize_text_field( $_POST['payment_status'] );
 		$update_stripe_order = $stripe_service->update_order( $_POST );
 		if ( $update_stripe_order['status'] ) {
 			$form_response = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
-			if ( ! empty( $form_response ) && $form_response["auto_login"] && $payment_status !== "failed" ) {
+			if ( ! empty( $form_response ) && isset( $form_response["auto_login"] ) && $payment_status !== "failed" ) {
 				$members_service = new MembersService();
-				$members_service->login_member( $_POST['member_id'] );
+				$logged_in       = $members_service->login_member( $_POST['member_id'], true );
+				if ( ! $logged_in ) {
+					wp_send_json_error(
+						array(
+							'message' => $update_stripe_order["message"] ?? __( "Something went wrong when updating users payment status" )
+						),
+						500
+					);
+				}
 			}
 			wp_send_json_success(
 				array(
@@ -574,7 +598,8 @@ class AJAX {
 		wp_send_json_error(
 			array(
 				'message' => $update_stripe_order["message"] ?? __( "Something went wrong when updating users payment status" )
-			)
+			),
+			500
 		);
 
 	}
@@ -589,11 +614,6 @@ class AJAX {
 		$stripe_subscription = $stripe_service->create_subscription( $customer_id, $payment_method_id, $member_id );
 
 		if ( $stripe_subscription['status'] ) {
-			$form_response = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
-			if ( ! empty( $form_response ) && $form_response["auto_login"] ) {
-				$members_service = new MembersService();
-				$members_service->login_member( $member_id );
-			}
 			wp_send_json_success( $stripe_subscription );
 		} else {
 			wp_delete_user( absint( $member_id ) );
