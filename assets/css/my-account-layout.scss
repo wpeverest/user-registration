@@ -664,21 +664,6 @@
 	}
 }
 
-
-@media screen and (max-width: 980px) {
-	#user-registration {
-		&.vertical {
-			.user-registration-MyAccount-navigation {
-				width: 30%;
-			}
-
-			.user-registration-MyAccount-content {
-				width: 70%;
-			}
-		}
-	}
-}
-
 @media screen and (max-width: 600px) {
 	#user-registration {
 		&.vertical {
@@ -1102,9 +1087,27 @@
 				}
 			}
 		}
+
+		&.user-registration-MyAccount {
+			@media screen and (max-width: 767px) {
+				flex-direction: column;
+
+				.user-registration-MyAccount {
+					&-navigation {
+						max-width: 100%;
+					}
+	
+					&-content {
+						padding: $spacing_24px;
+					}
+				}
+			}
+		}
 	}
 
 	&.horizontal {
+		overflow: hidden;
+		
 		.user-registration-MyAccount {
 			&-navigation {
 				&-link {
@@ -1137,6 +1140,16 @@
 
 			&-content {
 				padding: $spacing_24px 36px 52px 36px;
+			}
+		}
+
+		&.user-registration-MyAccount {
+			@media screen and (max-width: 600px) {
+				.user-registration-MyAccount {	
+					&-content {
+						padding: $spacing_24px;
+					}
+				}
 			}
 		}
 	}
