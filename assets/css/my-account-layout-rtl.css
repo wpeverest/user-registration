@@ -1,1 +1,937 @@
-#user-registration.vertical{display:flex;flex-wrap:wrap}#user-registration.vertical .user-registration-error,#user-registration.vertical .user-registration-message{float:none;width:100%}#user-registration.vertical .user-registration-MyAccount-navigation ul{flex-direction:column;flex-wrap:nowrap}#user-registration.vertical .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link.is-active a{border-color:#475bb2}#user-registration.vertical .user-registration-MyAccount-content{flex:1}#user-registration,#user-registration.horizontal{box-shadow:0 2px 20px rgba(45,53,89,.1)}#user-registration .user-registration-error,#user-registration .user-registration-info,#user-registration .user-registration-message,#user-registration.horizontal .user-registration-error,#user-registration.horizontal .user-registration-info,#user-registration.horizontal .user-registration-message{margin-bottom:0}#user-registration .user-registration-MyAccount-navigation,#user-registration.horizontal .user-registration-MyAccount-navigation{border-bottom:1px solid #e1e1e1}#user-registration .user-registration-MyAccount-navigation ul,#user-registration.horizontal .user-registration-MyAccount-navigation ul{justify-content:center}#user-registration .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link a,#user-registration.horizontal .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link a{padding:15px 20px;font-family:inherit;font-weight:500}#user-registration .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link.is-active a,#user-registration.horizontal .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link.is-active a{background-color:rgb(222.4984029851,224.3717109905,232.8015970149)}#user-registration .ur-edit-profile,#user-registration .user-registration-MyAccount-content,#user-registration.horizontal .ur-edit-profile,#user-registration.horizontal .user-registration-MyAccount-content{text-align:center}#user-registration .ur-edit-profile .user-registration-profile-header .user-registration-img-container,#user-registration .user-registration-MyAccount-content .user-registration-profile-header .user-registration-img-container,#user-registration.horizontal .ur-edit-profile .user-registration-profile-header .user-registration-img-container,#user-registration.horizontal .user-registration-MyAccount-content .user-registration-profile-header .user-registration-img-container{margin:0 auto;margin-bottom:15px}#user-registration .ur-edit-profile .user-registration-profile-header .user-registration-img-container img,#user-registration .user-registration-MyAccount-content .user-registration-profile-header .user-registration-img-container img,#user-registration.horizontal .ur-edit-profile .user-registration-profile-header .user-registration-img-container img,#user-registration.horizontal .user-registration-MyAccount-content .user-registration-profile-header .user-registration-img-container img{width:100px;height:100px;object-fit:cover;border-radius:50%;margin:0 auto}#user-registration .ur-edit-profile .edit-password,#user-registration .ur-edit-profile .edit-profile,#user-registration .user-registration-MyAccount-content .edit-password,#user-registration .user-registration-MyAccount-content .edit-profile,#user-registration.horizontal .ur-edit-profile .edit-password,#user-registration.horizontal .ur-edit-profile .edit-profile,#user-registration.horizontal .user-registration-MyAccount-content .edit-password,#user-registration.horizontal .user-registration-MyAccount-content .edit-profile{text-align:right}#user-registration .ur-edit-profile .edit-profile .user-registration-profile-header,#user-registration .ur-edit-profile .edit-profile h2,#user-registration .user-registration-MyAccount-content .edit-profile .user-registration-profile-header,#user-registration .user-registration-MyAccount-content .edit-profile h2,#user-registration.horizontal .ur-edit-profile .edit-profile .user-registration-profile-header,#user-registration.horizontal .ur-edit-profile .edit-profile h2,#user-registration.horizontal .user-registration-MyAccount-content .edit-profile .user-registration-profile-header,#user-registration.horizontal .user-registration-MyAccount-content .edit-profile h2{text-align:center}@media (max-width:991px){#user-registration .user-registration-MyAccount-content{padding:36px 30px}}#user-registration .user-registration-MyAccount-content>h2{margin-bottom:24px}#user-registration .user-registration-MyAccount-content .user-registration-profile-header{margin-bottom:20px;gap:16px}#user-registration .user-registration-MyAccount-content .user-registration-profile-header header h3{margin-bottom:0}#user-registration .user-registration-MyAccount-content>p{margin-bottom:8px}#user-registration .user-registration-MyAccount-content>p a{font-weight:500;color:#475bb2}#user-registration .user-registration-MyAccount-content .ur-frontend-form{padding:0!important}#user-registration .user-registration-MyAccount-content .ur-frontend-form:has(.user-registration-PrivacyTab) h2{text-align:right}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-EditProfileForm .user-registration-profile-fields h2{text-align:center}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-EditAccountForm .ur-form-grid>p{float:left;margin-top:24px;margin-bottom:0}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-EditProfileForm .user-registration-profile-fields>p{float:left;margin-top:24px;margin-bottom:0}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab{text-align:right}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-grid{padding-right:0;padding-left:0}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row{display:flex;flex-wrap:wrap;row-gap:10px;margin-bottom:30px}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row:last-child{margin-bottom:0}@media (max-width:991px){#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row{flex-direction:column;gap:12px}}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-field-label{width:40%;max-width:100%}@media (max-width:991px){#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-field-label{width:100%}}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-field-label label{font-size:15px;line-height:150%;font-weight:500;color:#383838;margin:0}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-field-label label .ur-portal-tooltip::after{color:#bababa}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-input{display:flex;align-items:center;gap:12px;width:60%;max-width:100%}@media (max-width:991px){#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-input{width:100%}}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-input--radio-box{position:relative;display:block}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-input--radio-box label{display:block;border-radius:3px;padding:8px 34px 8px 12px;border:1px solid #999;cursor:pointer;font-size:14px;font-weight:500;line-height:150%;color:#6b6b6b;margin:0}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-input--radio-box label::after,#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-input--radio-box label::before{content:"";position:absolute;right:12px;top:12px;width:16px;height:16px;border-radius:50%;border:1px solid #bdbdbd}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-input--radio-box label::before{z-index:2;overflow:hidden;background:0 0;width:0;height:0;border:none;transition:.1s width cubic-bezier(.075,.82,.165,1) 0s,.3s width cubic-bezier(.075,.82,.165,2) .1s}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-input--radio-box input[type=radio]{display:none;position:absolute;width:100%;-webkit-appearance:none;-moz-appearance:none;appearance:none;margin-left:0}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-input--radio-box input[type=radio]:checked+label{color:#475bb2;background:#edeff7;border-color:#475bb2}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-input--radio-box input[type=radio]:checked+label::after{background:#fff;border:1px solid #475bb2}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-input--radio-box input[type=radio]:checked+label::before{width:8px;height:8px;background:#475bb2;top:16px;right:16px}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row.ur-about-your-data{margin-bottom:40px}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input{width:60%;max-width:100%}@media (max-width:991px){#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input{width:100%}}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input h3{font-weight:600;font-size:18px;line-height:24px;color:#6b6b6b;margin-bottom:12px}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input p{font-weight:400;font-size:15px;line-height:23px;color:#6b6b6b;margin-bottom:0}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-privacy-action-btn{display:flex;flex-wrap:wrap;align-items:center;gap:20px;margin-top:20px}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-privacy-action-btn .ur-button{padding:10px 16px;background:#0170b9;border:1px solid #0170b9;border-radius:3px;font-weight:500;font-size:14px;line-height:150%;color:#fff;text-decoration:none;transition:all .3s ease-in-out;letter-spacing:.2px}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-privacy-action-btn .ur-button:hover{background:#004c7d;border-color:#004c7d}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-privacy-action-btn #ur-new-download-request{font-weight:500;font-size:14px;line-height:150%;text-decoration-line:underline;color:#6b6b6b;letter-spacing:.1px;transition:all .3s ease-in-out}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-privacy-action-btn #ur-new-download-request:hover{color:#0170b9}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-privacy-action-btn #ur-new-erase-request{font-weight:500;font-size:14px;line-height:150%;text-decoration-line:underline;color:#6b6b6b;letter-spacing:.1px;transition:all .3s ease-in-out}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-privacy-action-btn #ur-new-erase-request:hover{color:#0170b9}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-field{margin-bottom:32px}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-field:last-child{margin-bottom:0}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-field label{font-weight:400;font-size:15px;color:#6b6b6b;line-height:150%;margin-top:0;margin-bottom:16px}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-field .ur-field-area{margin-bottom:16px}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-field .ur-field-area input[type=password]{padding:8px 14px;background:#fff;border:1px solid #e1e1e1;border-radius:4px}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-field .ur-field-area input[type=password]::placeholder{color:#bababa}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-field .ur-field-area .ur-field-error{background:#fff4f4;padding:8px 16px 8px 12px;color:#f25656;font-weight:500;border-right:3px solid #f25656;margin-top:8px;font-size:14px;display:flex;align-items:center;gap:4px}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-field .ur-field-area .ur-field-error::before{content:"";background-image:url(../images/icons/alert-icon.svg);background-position:center;background-size:100%;background-repeat:no-repeat;display:block;width:18px;height:18px}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-field .ur-request-button{font-weight:500;font-size:14px;line-height:150%;color:#fff;padding:10px 16px;background:#0170b9;border:1px solid #0170b9;border-radius:3px;letter-spacing:.2px;transition:all .3s ease-in-out}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-field .ur-request-button:hover{background:#004c7d;border-color:#004c7d}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row.ur-privacy-button{padding-top:32px;border-top:1px solid #e1e1e1;justify-content:flex-end}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row.ur-privacy-button input[type=submit]{font-weight:500;font-size:14px;line-height:150%;color:#fff;padding:10px 16px;background:#0170b9;border:1px solid #0170b9;border-radius:3px;letter-spacing:.2px;transition:all .3s ease-in-out}#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row.ur-privacy-button input[type=submit]:hover{background:#004c7d;border-color:#004c7d}#user-registration .user-registration-MyAccount-content .ur-payments-container .ur-payment-invoices{padding-right:20px;padding-left:20px;overflow:hidden;overflow-x:auto;margin-top:15px}#user-registration .user-registration-MyAccount-content .ur-payments-container .ur-payment-invoices table{border-collapse:collapse;border:1px solid #f1f1f1}#user-registration .user-registration-MyAccount-content .ur-payments-container .ur-payment-invoices table tbody tr th{background:#f1f5f9;font-weight:600}#user-registration .user-registration-MyAccount-content .ur-payments-container .ur-payment-invoices table tbody tr td:last-child{color:#59b259;text-transform:capitalize}#user-registration .user-registration-MyAccount-content .ur-payments-container .ur-payment-invoices table tbody tr td a{background:#475bb2;color:#fff;padding:8px 12px;border-radius:3px}#user-registration .user-registration-MyAccount-content .ur-payments-container .ur-payment-invoices table tbody tr td a:hover{background:#38488e}#user-registration .user-registration-MyAccount-content .ur-payments-container .ur-payment-invoices table tbody tr:nth-child(odd) td{background:#fafafa}#user-registration .user-registration-MyAccount-content .user-registration-membership-content{display:flex;flex-direction:column;gap:20px}#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row{display:flex}#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row .membership-label{min-width:300px;text-align:right}#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row #ur-membership-status{padding:6px 18px;color:#fff;border-radius:36px}#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row #ur-membership-status.btn-active{background:#4dc245}#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row #ur-membership-status.btn-inactive{background:gray}#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row #ur-membership-status.btn-canceled{background:#ea4335}#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row #ur-membership-status.btn-trial{background:#ff8300}#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container{display:flex;align-items:center}#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .cancel-membership-button{border:none;padding:10px;border-radius:8px;background:#ea4335;color:#fff;cursor:pointer;line-height:20px}#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container #membership-error-div{width:70%;text-align:right;padding:8px 16px 8px 12px;font-size:14px;font-weight:500;display:none}#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container #membership-error-div.btn-error{background:#fff4f4;color:red;border-right:3px solid #f25656}#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container #membership-error-div.btn-success{background:#d7ede0;color:#554545;border-right:3px solid #00ff5a}.ur-toggle-section .user-registration-toggle-form{position:relative;display:inline-block;width:30px;height:16px}.ur-toggle-section .user-registration-toggle-form input{position:relative;z-index:99;opacity:0;height:16px;width:30px;cursor:pointer}.ur-toggle-section .user-registration-toggle-form input:checked+.slider{background-color:#475bb2}.ur-toggle-section .user-registration-toggle-form input:focus+.slider{box-shadow:0 0 1px #2196f3}.ur-toggle-section .user-registration-toggle-form input:checked+.slider::before{transform:translateX(-14px)}.ur-toggle-section .user-registration-toggle-form .slider{position:absolute;cursor:pointer;inset:0;background-color:#dfe1ea;transition:.4s}.ur-toggle-section .user-registration-toggle-form .slider.round{border-radius:30px}.ur-toggle-section .user-registration-toggle-form .slider.round::before{border-radius:50%}.ur-toggle-section .user-registration-toggle-form .slider::before{position:absolute;content:"";height:12px;width:12px;right:2px;bottom:2px;background-color:#fff;transition:.4s;border-radius:100%}@media screen and (max-width:980px){#user-registration.vertical .user-registration-MyAccount-navigation{width:30%}#user-registration.vertical .user-registration-MyAccount-content{width:70%}}@media screen and (max-width:600px){#user-registration.vertical .user-registration-MyAccount-navigation{width:100%}#user-registration.vertical .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link a{padding:15px 20px}#user-registration.vertical .user-registration-MyAccount-content{width:100%}#user-registration .user-registration-MyAccount-content{padding:15px}}.tooltipster-base .tooltipster-box{background:#383838!important;padding:4px 8px;border-radius:4px;border-color:#383838}#user-registration.horizontal,#user-registration.vertical{border-radius:16px;background:#fff;box-shadow:0 6px 26px 0 rgba(10,10,10,.08)}#user-registration.horizontal .user-registration-MyAccount-navigation-link,#user-registration.vertical .user-registration-MyAccount-navigation-link{border:0!important}#user-registration.horizontal .user-registration-MyAccount-navigation-link:last-child,#user-registration.vertical .user-registration-MyAccount-navigation-link:last-child{border:0!important}#user-registration.horizontal .user-registration-MyAccount-navigation-link>a,#user-registration.vertical .user-registration-MyAccount-navigation-link>a{display:flex;gap:8px}#user-registration.horizontal .user-registration-MyAccount-navigation-link>a i,#user-registration.vertical .user-registration-MyAccount-navigation-link>a i{width:20px;height:20px;display:flex;align-items:center;justify-content:center;margin-left:0!important}#user-registration.horizontal .user-registration-MyAccount-content__body h2,#user-registration.vertical .user-registration-MyAccount-content__body h2{margin-bottom:20px;color:#383838;font-size:22px;line-height:32px}#user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-profile-header,#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-profile-header{display:flex;flex-wrap:wrap;align-items:center;flex-direction:column;margin-bottom:20px}#user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-profile-header .user-registration-img-container,#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-profile-header .user-registration-img-container{margin:auto}#user-registration.horizontal .user-registration-MyAccount-content__body p,#user-registration.vertical .user-registration-MyAccount-content__body p{margin-bottom:8px}#user-registration.horizontal .user-registration-MyAccount-content__body p a,#user-registration.vertical .user-registration-MyAccount-content__body p a{font-weight:500;color:#475bb2}#user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset,#user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset{padding:0;margin:0;border:0}#user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row,#user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row{margin-bottom:20px}#user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row:last-child,#user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row:last-child{margin-bottom:0}#user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row label,#user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row label{margin-top:0;margin-bottom:8px;color:#222;font-size:15px;font-weight:500;line-height:21px}#user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row .password-input-group,#user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row .password-input-group{display:block}#user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row .password-input-group .input-text,#user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row .password-input-group .input-text{height:38px;padding:8px 14px 8px 10px;border-radius:4px;border:1px solid #e1e1e1;background:#fff}#user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row .password-input-group .input-text:focus,#user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row .password-input-group .input-text:focus{border-color:#475bb2}#user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid .user-registration-form-row .ur-privacy-button,#user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid .user-registration-form-row .ur-privacy-button{margin-bottom:0}#user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid>p,#user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid>p{float:unset;margin-top:32px;text-align:left}#user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid>p input[type=submit],#user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid>p input[type=submit]{float:unset;border-radius:4px;background:#475bb2;border:1px solid #475bb2;color:#fff;font-size:15px;line-height:22px;padding:8px 16px;transition:all .3s}#user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid>p input[type=submit]:hover,#user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid>p input[type=submit]:hover{background:rgb(56.4578313253,72.3614457831,141.5421686747);border-color:rgb(56.4578313253,72.3614457831,141.5421686747)}#user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-membership-content .membership-label,#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-membership-content .membership-label{width:40%;text-align:right}#user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-membership-content .membership-data,#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-membership-content .membership-data{flex:1;text-align:right}#user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-membership-content .membership-row,#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-membership-content .membership-row{gap:0}#user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-membership-content .membership-row-btn-container,#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-membership-content .membership-row-btn-container{margin-top:20px;justify-content:flex-start;flex-direction:unset}#user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-membership-content .membership-row-btn-container .btn-div,#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-membership-content .membership-row-btn-container .btn-div{width:100%}#user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-membership-content .membership-row-btn-container .btn-div .cancel-membership-button,#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-membership-content .membership-row-btn-container .btn-div .cancel-membership-button{background:#f25656;padding:8px 16px;display:flex;gap:6px;align-items:center}#user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-membership-content .membership-row-btn-container .btn-div .cancel-membership-button::before,#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-membership-content .membership-row-btn-container .btn-div .cancel-membership-button::before{content:"";background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 24 24'%3E%3Cpath fill-rule='evenodd' d='M12 3.818a8.182 8.182 0 1 0 0 16.364 8.182 8.182 0 0 0 0-16.364ZM2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm13.37-3.37a.91.91 0 0 1 0 1.286L13.286 12l2.084 2.084a.91.91 0 0 1-1.286 1.286L12 13.286 9.916 15.37a.91.91 0 0 1-1.286-1.286L10.714 12 8.63 9.916A.91.91 0 0 1 9.916 8.63L12 10.714l2.084-2.084a.91.91 0 0 1 1.286 0Z' clip-rule='evenodd'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:center;background-size:100%;width:18px;height:18px;display:block}#user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-pn-section .user-registration-pn-container .user-registration-pn-lists,#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-pn-section .user-registration-pn-container .user-registration-pn-lists{border-radius:0 8px 8px 0}#user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-pn-section .user-registration-pn-container .user-registration-pn-display-detail-area,#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-pn-section .user-registration-pn-container .user-registration-pn-display-detail-area{border-radius:8px 0 0 8px;border:1px solid #f1f1f1;background:#fff;border-right:0}#user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payments-details,#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payments-details{margin-bottom:40px}#user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payments-details .ur-payments-table,#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payments-details .ur-payments-table{margin-bottom:0}#user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payments-details .ur-payments-table tbody tr.ur-payment-table-row,#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payments-details .ur-payments-table tbody tr.ur-payment-table-row{padding:0;border-bottom:0}#user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payments-details .ur-payments-table tbody tr.ur-payment-table-row th,#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payments-details .ur-payments-table tbody tr.ur-payment-table-row th{padding:0;width:360px;padding:12px 0}#user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payments-details .ur-payments-table tbody tr.ur-payment-table-row td,#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payments-details .ur-payments-table tbody tr.ur-payment-table-row td{padding:12px 0}#user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices,#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices{margin-top:0!important;padding:0!important}#user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table,#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table{border-radius:6px!important;margin-bottom:0;border:0!important}#user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr:has(th),#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr:has(th){background:#edeff7!important;border-radius:6px!important}#user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr th,#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr th{padding:16px 20px;color:#222;font-size:15px;font-weight:500;line-height:21px;border-radius:0!important;background:0 0!important;border:0}#user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr th:first-child,#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr th:first-child{width:200px}#user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr th:nth-child(2),#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr th:nth-child(2){width:230px!important}#user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr td,#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr td{border:0;padding:16px 20px;color:#383838;font-size:14px;font-weight:400;line-height:20px}#user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr td a#ur_download_payment_invoice,#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr td a#ur_download_payment_invoice{padding:0;background:0 0;color:#475bb2;border-radius:0;position:relative}#user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr td a#ur_download_payment_invoice::after,#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr td a#ur_download_payment_invoice::after{content:"";background:rgb(56.4578313253,72.3614457831,141.5421686747);width:0;height:1.5px;position:absolute;bottom:-2px;right:0;transition:all .3s ease-in-out}#user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr td a#ur_download_payment_invoice:hover,#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr td a#ur_download_payment_invoice:hover{background:0 0;color:rgb(56.4578313253,72.3614457831,141.5421686747)}#user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr td a#ur_download_payment_invoice:hover::after,#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr td a#ur_download_payment_invoice:hover::after{width:100%}#user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr:nth-child(odd) td,#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr:nth-child(odd) td{background:#f8f8fa!important}#user-registration.vertical{padding:12px;border-radius:16px}#user-registration.vertical .user-registration-MyAccount-navigation{border-radius:10px;background:#f8f8fa;max-width:260px;width:100%;padding:26px 20px 16px;border:0}#user-registration.vertical .user-registration-MyAccount-navigation ul{gap:4px}#user-registration.vertical .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link{transition:all .3s}#user-registration.vertical .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link a{padding:12px 24px 12px 12px;border-radius:4px;border-right:3px solid transparent;color:#4e4e4e;font-size:14px;font-weight:500;line-height:22px}#user-registration.vertical .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link:hover a{background:#edeff7;color:#475bb2}#user-registration.vertical .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link.is-active a{color:#475bb2;background:#edeff7}#user-registration.vertical .user-registration-MyAccount-content{padding:24px 36px 52px 24px}#user-registration.vertical .user-registration-MyAccount-content__header{border-bottom:1px solid #f4f4f4;padding-bottom:16px;margin-bottom:32px}#user-registration.vertical .user-registration-MyAccount-content__header h1{margin-bottom:0;text-align:right;color:#222;font-size:24px;font-weight:500;line-height:36px}#user-registration.horizontal .user-registration-MyAccount-navigation-link a{border-right:0!important;padding:16px 24px;font-size:14px;font-weight:500;line-height:22px;color:#4e4e4e;border-bottom:3px solid #fff;transition:all .3s}#user-registration.horizontal .user-registration-MyAccount-navigation-link a:hover{color:#475bb2;background:#edeff7;border-bottom-color:#edeff7}#user-registration.horizontal .user-registration-MyAccount-navigation-link.is-active a{border-bottom:3px solid #475bb2;color:#475bb2;background:#edeff7}#user-registration.horizontal .user-registration-MyAccount-content{padding:24px 36px 52px 36px}.user-registration-logout-swal2-container .swal2-modal{padding:0!important}.user-registration-logout-swal2-container .swal2-modal .swal2-header{padding:20px;align-items:baseline}.user-registration-logout-swal2-container .swal2-modal .swal2-header h2{border-bottom:1px solid #d3d3d3;padding-bottom:16px;width:100%;text-align:right;margin-bottom:0;color:#222;font-size:16px;font-weight:500;line-height:24px}.user-registration-logout-swal2-container .swal2-modal .swal2-content{text-align:right;color:#383838;font-size:14px;font-weight:400;line-height:24px}.user-registration-logout-swal2-container .swal2-modal .swal2-actions{display:flex;flex-direction:row-reverse;justify-content:center;background-color:#f0f0f0;padding:18px 20px;gap:16px;margin-top:20px;border-radius:0 0 5px 5px;background:#f4f4f4}.user-registration-logout-swal2-container .swal2-modal .swal2-actions button{width:45%;color:#383838;font-size:14px;font-weight:400;line-height:24px;margin:0;padding:6px 12px}.user-registration-logout-swal2-container .swal2-modal .swal2-actions button:focus{border:0;outline:0;box-shadow:none}.user-registration-logout-swal2-container .swal2-modal .swal2-actions button.swal2-confirm{color:#fff}.user-registration-logout-swal2-container .swal2-modal .swal2-actions button.swal2-cancel{color:#383838;background:#fff!important}
+/**
+ * Variables
+ */
+/**
+ * Grid breakpoints
+ *
+ * Define the minimum dimensions at which your layout will change,
+ * adapting to different screen sizes, for use in media queries.
+ **/
+/**
+ * Grid containers
+ *
+ * Define the maximum width of `.ur-container` for different screen sizes.
+ * scss-docs-start container-max-widths
+ **/
+#user-registration.vertical {
+  display: flex;
+  flex-wrap: wrap;
+}
+#user-registration.vertical .user-registration-error, #user-registration.vertical .user-registration-message {
+  float: none;
+  width: 100%;
+}
+#user-registration.vertical .user-registration-MyAccount-navigation ul {
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+#user-registration.vertical .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link.is-active a {
+  border-color: #475bb2;
+}
+#user-registration.vertical .user-registration-MyAccount-content {
+  flex: 1;
+}
+#user-registration.horizontal, #user-registration {
+  box-shadow: 0 2px 20px rgba(45, 53, 89, 0.1);
+}
+#user-registration.horizontal .user-registration-message,
+#user-registration.horizontal .user-registration-error,
+#user-registration.horizontal .user-registration-info, #user-registration .user-registration-message,
+#user-registration .user-registration-error,
+#user-registration .user-registration-info {
+  margin-bottom: 0;
+}
+#user-registration.horizontal .user-registration-MyAccount-navigation, #user-registration .user-registration-MyAccount-navigation {
+  border-bottom: 1px solid #e1e1e1;
+}
+#user-registration.horizontal .user-registration-MyAccount-navigation ul, #user-registration .user-registration-MyAccount-navigation ul {
+  justify-content: center;
+}
+#user-registration.horizontal .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link a, #user-registration .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link a {
+  padding: 15px 20px;
+  font-family: inherit;
+  font-weight: 500;
+}
+#user-registration.horizontal .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link.is-active a, #user-registration .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link.is-active a {
+  background-color: rgb(222.4984029851, 224.3717109905, 232.8015970149);
+}
+#user-registration.horizontal .user-registration-MyAccount-content,
+#user-registration.horizontal .ur-edit-profile, #user-registration .user-registration-MyAccount-content,
+#user-registration .ur-edit-profile {
+  text-align: center;
+}
+#user-registration.horizontal .user-registration-MyAccount-content .user-registration-profile-header .user-registration-img-container,
+#user-registration.horizontal .ur-edit-profile .user-registration-profile-header .user-registration-img-container, #user-registration .user-registration-MyAccount-content .user-registration-profile-header .user-registration-img-container,
+#user-registration .ur-edit-profile .user-registration-profile-header .user-registration-img-container {
+  margin: 0 auto;
+  margin-bottom: 15px;
+}
+#user-registration.horizontal .user-registration-MyAccount-content .user-registration-profile-header .user-registration-img-container img,
+#user-registration.horizontal .ur-edit-profile .user-registration-profile-header .user-registration-img-container img, #user-registration .user-registration-MyAccount-content .user-registration-profile-header .user-registration-img-container img,
+#user-registration .ur-edit-profile .user-registration-profile-header .user-registration-img-container img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin: 0 auto;
+}
+#user-registration.horizontal .user-registration-MyAccount-content .edit-profile,
+#user-registration.horizontal .user-registration-MyAccount-content .edit-password,
+#user-registration.horizontal .ur-edit-profile .edit-profile,
+#user-registration.horizontal .ur-edit-profile .edit-password, #user-registration .user-registration-MyAccount-content .edit-profile,
+#user-registration .user-registration-MyAccount-content .edit-password,
+#user-registration .ur-edit-profile .edit-profile,
+#user-registration .ur-edit-profile .edit-password {
+  text-align: right;
+}
+#user-registration.horizontal .user-registration-MyAccount-content .edit-profile .user-registration-profile-header,
+#user-registration.horizontal .user-registration-MyAccount-content .edit-profile h2,
+#user-registration.horizontal .ur-edit-profile .edit-profile .user-registration-profile-header,
+#user-registration.horizontal .ur-edit-profile .edit-profile h2, #user-registration .user-registration-MyAccount-content .edit-profile .user-registration-profile-header,
+#user-registration .user-registration-MyAccount-content .edit-profile h2,
+#user-registration .ur-edit-profile .edit-profile .user-registration-profile-header,
+#user-registration .ur-edit-profile .edit-profile h2 {
+  text-align: center;
+}
+@media (max-width: 991px) {
+  #user-registration .user-registration-MyAccount-content {
+    padding: 36px 30px;
+  }
+}
+#user-registration .user-registration-MyAccount-content > h2 {
+  margin-bottom: 24px;
+}
+#user-registration .user-registration-MyAccount-content .user-registration-profile-header {
+  margin-bottom: 20px;
+  gap: 16px;
+}
+#user-registration .user-registration-MyAccount-content .user-registration-profile-header header h3 {
+  margin-bottom: 0;
+}
+#user-registration .user-registration-MyAccount-content > p {
+  margin-bottom: 8px;
+}
+#user-registration .user-registration-MyAccount-content > p a {
+  font-weight: 500;
+  color: #475bb2;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form {
+  padding: 0 !important;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form:has(.user-registration-PrivacyTab) h2 {
+  text-align: right;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-EditProfileForm .user-registration-profile-fields h2 {
+  text-align: center;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-EditAccountForm .ur-form-grid > p {
+  float: left;
+  margin-top: 24px;
+  margin-bottom: 0;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-EditProfileForm .user-registration-profile-fields > p {
+  float: left;
+  margin-top: 24px;
+  margin-bottom: 0;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab {
+  text-align: right;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-grid {
+  padding-right: 0;
+  padding-left: 0;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 10px;
+  margin-bottom: 30px;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row:last-child {
+  margin-bottom: 0;
+}
+@media (max-width: 991px) {
+  #user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-field-label {
+  width: 40%;
+  max-width: 100%;
+}
+@media (max-width: 991px) {
+  #user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-field-label {
+    width: 100%;
+  }
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-field-label label {
+  font-size: 15px;
+  line-height: 150%;
+  font-weight: 500;
+  color: #383838;
+  margin: 0;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-field-label label .ur-portal-tooltip::after {
+  color: #BABABA;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-input {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 60%;
+  max-width: 100%;
+}
+@media (max-width: 991px) {
+  #user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-input {
+    width: 100%;
+  }
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-input--radio-box {
+  position: relative;
+  display: block;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-input--radio-box label {
+  display: block;
+  border-radius: 3px;
+  padding: 8px 34px 8px 12px;
+  border: 1px solid #999999;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 150%;
+  color: #6B6B6B;
+  margin: 0;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-input--radio-box label::before, #user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-input--radio-box label::after {
+  content: "";
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid #bdbdbd;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-input--radio-box label::before {
+  z-index: 2;
+  overflow: hidden;
+  background: transparent;
+  width: 0;
+  height: 0;
+  border: none;
+  transition: 0.1s width cubic-bezier(0.075, 0.82, 0.165, 1) 0s, 0.3s width cubic-bezier(0.075, 0.82, 0.165, 2) 0.1s;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-input--radio-box input[type=radio] {
+  display: none;
+  position: absolute;
+  width: 100%;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin-left: 0;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-input--radio-box input[type=radio]:checked + label {
+  color: #475BB2;
+  background: #EDEFF7;
+  border-color: #475BB2;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-input--radio-box input[type=radio]:checked + label::after {
+  background: #fff;
+  border: 1px solid #475BB2;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-privacy-input--radio-box input[type=radio]:checked + label::before {
+  width: 8px;
+  height: 8px;
+  background: #475BB2;
+  top: 16px;
+  right: 16px;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row.ur-about-your-data {
+  margin-bottom: 40px;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input {
+  width: 60%;
+  max-width: 100%;
+}
+@media (max-width: 991px) {
+  #user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input {
+    width: 100%;
+  }
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input h3 {
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 24px;
+  color: #6B6B6B;
+  margin-bottom: 12px;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input p {
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 23px;
+  color: #6B6B6B;
+  margin-bottom: 0;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-privacy-action-btn {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-privacy-action-btn .ur-button {
+  padding: 10px 16px;
+  background: #0170B9;
+  border: 1px solid #0170B9;
+  border-radius: 3px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 150%;
+  color: #FFFFFF;
+  text-decoration: none;
+  transition: all 0.3s ease-in-out;
+  letter-spacing: 0.2px;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-privacy-action-btn .ur-button:hover {
+  background: #004c7d;
+  border-color: #004c7d;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-privacy-action-btn #ur-new-download-request {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 150%;
+  text-decoration-line: underline;
+  color: #6B6B6B;
+  letter-spacing: 0.1px;
+  transition: all 0.3s ease-in-out;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-privacy-action-btn #ur-new-download-request:hover {
+  color: #0170B9;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-privacy-action-btn #ur-new-erase-request {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 150%;
+  text-decoration-line: underline;
+  color: #6B6B6B;
+  letter-spacing: 0.1px;
+  transition: all 0.3s ease-in-out;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-privacy-action-btn #ur-new-erase-request:hover {
+  color: #0170B9;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-field {
+  margin-bottom: 32px;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-field:last-child {
+  margin-bottom: 0;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-field label {
+  font-weight: 400;
+  font-size: 15px;
+  color: #6B6B6B;
+  line-height: 150%;
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-field .ur-field-area {
+  margin-bottom: 16px;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-field .ur-field-area input[type=password] {
+  padding: 8px 14px;
+  background: #FFFFFF;
+  border: 1px solid #E1E1E1;
+  border-radius: 4px;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-field .ur-field-area input[type=password]::placeholder {
+  color: #BABABA;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-field .ur-field-area .ur-field-error {
+  background: #FFF4F4;
+  padding: 8px 16px 8px 12px;
+  color: #F25656;
+  font-weight: 500;
+  border-right: 3px solid #F25656;
+  margin-top: 8px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-field .ur-field-area .ur-field-error::before {
+  content: "";
+  background-image: url("../images/icons/alert-icon.svg");
+  background-position: center;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-field .ur-request-button {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 150%;
+  color: #FFFFFF;
+  padding: 10px 16px;
+  background: #0170B9;
+  border: 1px solid #0170B9;
+  border-radius: 3px;
+  letter-spacing: 0.2px;
+  transition: all 0.3s ease-in-out;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row .ur-about-your-data-input .ur-field .ur-request-button:hover {
+  background: #004C7D;
+  border-color: #004C7D;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row.ur-privacy-button {
+  padding-top: 32px;
+  border-top: 1px solid #e1e1e1;
+  justify-content: flex-end;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row.ur-privacy-button input[type=submit] {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 150%;
+  color: #FFFFFF;
+  padding: 10px 16px;
+  background: #0170B9;
+  border: 1px solid #0170B9;
+  border-radius: 3px;
+  letter-spacing: 0.2px;
+  transition: all 0.3s ease-in-out;
+}
+#user-registration .user-registration-MyAccount-content .ur-frontend-form .user-registration-PrivacyTab .ur-form-row .user-registration-form-row.ur-privacy-button input[type=submit]:hover {
+  background: #004C7D;
+  border-color: #004C7D;
+}
+#user-registration .user-registration-MyAccount-content .ur-payments-container .ur-payment-invoices {
+  padding-right: 20px;
+  padding-left: 20px;
+  overflow: hidden;
+  overflow-x: auto;
+  margin-top: 15px;
+}
+#user-registration .user-registration-MyAccount-content .ur-payments-container .ur-payment-invoices table {
+  border-collapse: collapse;
+  border: 1px solid #f1f1f1;
+}
+#user-registration .user-registration-MyAccount-content .ur-payments-container .ur-payment-invoices table tbody tr th {
+  background: #F1F5F9;
+  font-weight: 600;
+}
+#user-registration .user-registration-MyAccount-content .ur-payments-container .ur-payment-invoices table tbody tr td:last-child {
+  color: #59B259;
+  text-transform: capitalize;
+}
+#user-registration .user-registration-MyAccount-content .ur-payments-container .ur-payment-invoices table tbody tr td a {
+  background: #475bb2;
+  color: #ffffff;
+  padding: 8px 12px;
+  border-radius: 3px;
+}
+#user-registration .user-registration-MyAccount-content .ur-payments-container .ur-payment-invoices table tbody tr td a:hover {
+  background: #38488e;
+}
+#user-registration .user-registration-MyAccount-content .ur-payments-container .ur-payment-invoices table tbody tr:nth-child(odd) td {
+  background: #fafafa;
+}
+#user-registration .user-registration-MyAccount-content .user-registration-membership-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row {
+  display: flex;
+}
+#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row .membership-label {
+  min-width: 300px;
+  text-align: right;
+}
+#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row #ur-membership-status {
+  padding: 6px 18px;
+  color: white;
+  border-radius: 36px;
+}
+#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row #ur-membership-status.btn-active {
+  background: #4dc245;
+}
+#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row #ur-membership-status.btn-inactive {
+  background: gray;
+}
+#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row #ur-membership-status.btn-canceled {
+  background: #ea4335;
+}
+#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row #ur-membership-status.btn-trial {
+  background: #ff8300;
+}
+#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container {
+  display: flex;
+  align-items: center;
+}
+#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .cancel-membership-button {
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  background: #ea4335;
+  color: white;
+  cursor: pointer;
+  line-height: 20px;
+}
+#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container #membership-error-div {
+  width: 70%;
+  text-align: right;
+  padding: 8px 16px 8px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  display: none;
+}
+#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container #membership-error-div.btn-error {
+  background: #fff4f4;
+  color: red;
+  border-right: 3px solid #f25656;
+}
+#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container #membership-error-div.btn-success {
+  background: #d7ede0;
+  color: #554545;
+  border-right: 3px solid #00ff5a;
+}
+
+.ur-toggle-section .user-registration-toggle-form {
+  position: relative;
+  display: inline-block;
+  width: 30px;
+  height: 16px;
+}
+.ur-toggle-section .user-registration-toggle-form input {
+  position: relative;
+  z-index: 99;
+  opacity: 0;
+  height: 16px;
+  width: 30px;
+  cursor: pointer;
+}
+.ur-toggle-section .user-registration-toggle-form input:checked + .slider {
+  background-color: #475BB2;
+}
+.ur-toggle-section .user-registration-toggle-form input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+.ur-toggle-section .user-registration-toggle-form input:checked + .slider::before {
+  transform: translateX(-14px);
+}
+.ur-toggle-section .user-registration-toggle-form .slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: #DFE1EA;
+  transition: 0.4s;
+}
+.ur-toggle-section .user-registration-toggle-form .slider.round {
+  border-radius: 30px;
+}
+.ur-toggle-section .user-registration-toggle-form .slider.round::before {
+  border-radius: 50%;
+}
+.ur-toggle-section .user-registration-toggle-form .slider::before {
+  position: absolute;
+  content: "";
+  height: 12px;
+  width: 12px;
+  right: 2px;
+  bottom: 2px;
+  background-color: #fff;
+  transition: 0.4s;
+  border-radius: 100%;
+}
+
+@media screen and (max-width: 980px) {
+  #user-registration.vertical .user-registration-MyAccount-navigation {
+    width: 30%;
+  }
+  #user-registration.vertical .user-registration-MyAccount-content {
+    width: 70%;
+  }
+}
+@media screen and (max-width: 600px) {
+  #user-registration.vertical .user-registration-MyAccount-navigation {
+    width: 100%;
+  }
+  #user-registration.vertical .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link a {
+    padding: 15px 20px;
+  }
+  #user-registration.vertical .user-registration-MyAccount-content {
+    width: 100%;
+  }
+  #user-registration .user-registration-MyAccount-content {
+    padding: 15px;
+  }
+}
+.tooltipster-base .tooltipster-box {
+  background: #383838 !important;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border-color: #383838;
+}
+
+#user-registration.vertical, #user-registration.horizontal {
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0px 6px 26px 0px rgba(10, 10, 10, 0.08);
+}
+#user-registration.vertical .user-registration-MyAccount-navigation-link, #user-registration.horizontal .user-registration-MyAccount-navigation-link {
+  border: 0 !important;
+}
+#user-registration.vertical .user-registration-MyAccount-navigation-link:last-child, #user-registration.horizontal .user-registration-MyAccount-navigation-link:last-child {
+  border: 0 !important;
+}
+#user-registration.vertical .user-registration-MyAccount-navigation-link > a, #user-registration.horizontal .user-registration-MyAccount-navigation-link > a {
+  display: flex;
+  gap: 8px;
+}
+#user-registration.vertical .user-registration-MyAccount-navigation-link > a i, #user-registration.horizontal .user-registration-MyAccount-navigation-link > a i {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0 !important;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body h2, #user-registration.horizontal .user-registration-MyAccount-content__body h2 {
+  margin-bottom: 20px;
+  color: #383838;
+  font-size: 22px;
+  line-height: 32px;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-profile-header, #user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-profile-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-profile-header .user-registration-img-container, #user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-profile-header .user-registration-img-container {
+  margin: auto;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body p, #user-registration.horizontal .user-registration-MyAccount-content__body p {
+  margin-bottom: 8px;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body p a, #user-registration.horizontal .user-registration-MyAccount-content__body p a {
+  font-weight: 500;
+  color: #475bb2;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset {
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row {
+  margin-bottom: 20px;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row:last-child, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row:last-child {
+  margin-bottom: 0;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row label, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row label {
+  margin-top: 0;
+  margin-bottom: 8px;
+  color: #222222;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 21px;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row .password-input-group, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row .password-input-group {
+  display: block;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row .password-input-group .input-text, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row .password-input-group .input-text {
+  height: 38px;
+  padding: 8px 14px 8px 10px;
+  border-radius: 4px;
+  border: 1px solid #E1E1E1;
+  background: #ffffff;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row .password-input-group .input-text:focus, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid fieldset .user-registration-form-row .password-input-group .input-text:focus {
+  border-color: #475bb2;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid .user-registration-form-row .ur-privacy-button, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid .user-registration-form-row .ur-privacy-button {
+  margin-bottom: 0;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid > p, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid > p {
+  float: unset;
+  margin-top: 32px;
+  text-align: left;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid > p input[type=submit], #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid > p input[type=submit] {
+  float: unset;
+  border-radius: 4px;
+  background: #475bb2;
+  border: 1px solid #475bb2;
+  color: #ffffff;
+  font-size: 15px;
+  line-height: 22px;
+  padding: 8px 16px;
+  transition: all 0.3s;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid > p input[type=submit]:hover, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-frontend-form.login .ur-form-row .ur-form-grid > p input[type=submit]:hover {
+  background: rgb(56.4578313253, 72.3614457831, 141.5421686747);
+  border-color: rgb(56.4578313253, 72.3614457831, 141.5421686747);
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-membership-content .membership-label, #user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-membership-content .membership-label {
+  width: 40%;
+  text-align: right;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-membership-content .membership-data, #user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-membership-content .membership-data {
+  flex: 1;
+  text-align: right;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-membership-content .membership-row, #user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-membership-content .membership-row {
+  gap: 0;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-membership-content .membership-row-btn-container, #user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-membership-content .membership-row-btn-container {
+  margin-top: 20px;
+  justify-content: flex-start;
+  flex-direction: unset;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-membership-content .membership-row-btn-container .btn-div, #user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-membership-content .membership-row-btn-container .btn-div {
+  width: 100%;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-membership-content .membership-row-btn-container .btn-div .cancel-membership-button, #user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-membership-content .membership-row-btn-container .btn-div .cancel-membership-button {
+  background: #F25656;
+  padding: 8px 16px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-membership-content .membership-row-btn-container .btn-div .cancel-membership-button::before, #user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-membership-content .membership-row-btn-container .btn-div .cancel-membership-button::before {
+  content: "";
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 24 24'%3E%3Cpath fill-rule='evenodd' d='M12 3.818a8.182 8.182 0 1 0 0 16.364 8.182 8.182 0 0 0 0-16.364ZM2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm13.37-3.37a.91.91 0 0 1 0 1.286L13.286 12l2.084 2.084a.91.91 0 0 1-1.286 1.286L12 13.286 9.916 15.37a.91.91 0 0 1-1.286-1.286L10.714 12 8.63 9.916A.91.91 0 0 1 9.916 8.63L12 10.714l2.084-2.084a.91.91 0 0 1 1.286 0Z' clip-rule='evenodd'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-pn-section .user-registration-pn-container .user-registration-pn-lists, #user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-pn-section .user-registration-pn-container .user-registration-pn-lists {
+  border-radius: 0 8px 8px 0;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-pn-section .user-registration-pn-container .user-registration-pn-display-detail-area, #user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-pn-section .user-registration-pn-container .user-registration-pn-display-detail-area {
+  border-radius: 8px 0px 0px 8px;
+  border: 1px solid #F1F1F1;
+  background: #ffffff;
+  border-right: 0;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payments-details, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payments-details {
+  margin-bottom: 40px;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payments-details .ur-payments-table, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payments-details .ur-payments-table {
+  margin-bottom: 0;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payments-details .ur-payments-table tbody tr.ur-payment-table-row, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payments-details .ur-payments-table tbody tr.ur-payment-table-row {
+  padding: 0;
+  border-bottom: 0;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payments-details .ur-payments-table tbody tr.ur-payment-table-row th, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payments-details .ur-payments-table tbody tr.ur-payment-table-row th {
+  padding: 0;
+  width: 360px;
+  padding: 12px 0;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payments-details .ur-payments-table tbody tr.ur-payment-table-row td, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payments-details .ur-payments-table tbody tr.ur-payment-table-row td {
+  padding: 12px 0;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices {
+  margin-top: 0 !important;
+  padding: 0 !important;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table {
+  border-radius: 6px !important;
+  margin-bottom: 0;
+  border: 0 !important;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr:has(th), #user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr:has(th) {
+  background: #EDEFF7 !important;
+  border-radius: 6px !important;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr th, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr th {
+  padding: 16px 20px;
+  color: #222222;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 21px;
+  border-radius: 0 !important;
+  background: transparent !important;
+  border: 0;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr th:first-child, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr th:first-child {
+  width: 200px;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr th:nth-child(2), #user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr th:nth-child(2) {
+  width: 230px !important;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr td, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr td {
+  border: 0;
+  padding: 16px 20px;
+  color: #383838;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr td a#ur_download_payment_invoice, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr td a#ur_download_payment_invoice {
+  padding: 0;
+  background: none;
+  color: #475bb2;
+  border-radius: 0;
+  position: relative;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr td a#ur_download_payment_invoice::after, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr td a#ur_download_payment_invoice::after {
+  content: "";
+  background: rgb(56.4578313253, 72.3614457831, 141.5421686747);
+  width: 0px;
+  height: 1.5px;
+  position: absolute;
+  bottom: -2px;
+  right: 0;
+  transition: all 0.3s ease-in-out;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr td a#ur_download_payment_invoice:hover, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr td a#ur_download_payment_invoice:hover {
+  background: transparent;
+  color: rgb(56.4578313253, 72.3614457831, 141.5421686747);
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr td a#ur_download_payment_invoice:hover::after, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr td a#ur_download_payment_invoice:hover::after {
+  width: 100%;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr:nth-child(odd) td, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr:nth-child(odd) td {
+  background: #f8f8fa !important;
+}
+#user-registration.vertical {
+  padding: 12px;
+  border-radius: 16px;
+}
+#user-registration.vertical .user-registration-MyAccount-navigation {
+  border-radius: 10px;
+  background: #F8F8FA;
+  max-width: 260px;
+  width: 100%;
+  padding: 26px 20px 16px;
+  border: 0;
+}
+#user-registration.vertical .user-registration-MyAccount-navigation ul {
+  gap: 4px;
+}
+#user-registration.vertical .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link {
+  transition: all 0.3s;
+}
+#user-registration.vertical .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link a {
+  padding: 12px 24px 12px 12px;
+  border-radius: 4px;
+  border-right: 3px solid transparent;
+  color: #4E4E4E;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+}
+#user-registration.vertical .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link:hover a {
+  background: #edeff7;
+  color: #475bb2;
+}
+#user-registration.vertical .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link.is-active a {
+  color: #475bb2;
+  background: #edeff7;
+}
+#user-registration.vertical .user-registration-MyAccount-content {
+  padding: 24px 36px 52px 24px;
+}
+#user-registration.vertical .user-registration-MyAccount-content__header {
+  border-bottom: 1px solid #F4F4F4;
+  padding-bottom: 16px;
+  margin-bottom: 32px;
+}
+#user-registration.vertical .user-registration-MyAccount-content__header h1 {
+  margin-bottom: 0;
+  text-align: right;
+  color: #222222;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 36px;
+}
+#user-registration.horizontal .user-registration-MyAccount-navigation-link a {
+  border-right: 0 !important;
+  padding: 16px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: #4E4E4E;
+  border-bottom: 3px solid #ffffff;
+  transition: all 0.3s;
+}
+#user-registration.horizontal .user-registration-MyAccount-navigation-link a:hover {
+  color: #475bb2;
+  background: #edeff7;
+  border-bottom-color: #edeff7;
+}
+#user-registration.horizontal .user-registration-MyAccount-navigation-link.is-active a {
+  border-bottom: 3px solid #475bb2;
+  color: #475bb2;
+  background: #edeff7;
+}
+#user-registration.horizontal .user-registration-MyAccount-content {
+  padding: 24px 36px 52px 36px;
+}
+
+.user-registration-logout-swal2-container .swal2-modal {
+  padding: 0px !important;
+}
+.user-registration-logout-swal2-container .swal2-modal .swal2-header {
+  padding: 20px;
+  align-items: baseline;
+}
+.user-registration-logout-swal2-container .swal2-modal .swal2-header h2 {
+  border-bottom: 1px solid #D3D3D3;
+  padding-bottom: 16px;
+  width: 100%;
+  text-align: right;
+  margin-bottom: 0;
+  color: #222222;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+}
+.user-registration-logout-swal2-container .swal2-modal .swal2-content {
+  text-align: right;
+  color: #383838;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+}
+.user-registration-logout-swal2-container .swal2-modal .swal2-actions {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: center;
+  background-color: #F0F0F0;
+  padding: 18px 20px;
+  gap: 16px;
+  margin-top: 20px;
+  border-radius: 0 0 5px 5px;
+  background: #F4F4F4;
+}
+.user-registration-logout-swal2-container .swal2-modal .swal2-actions button {
+  width: 45%;
+  color: #383838;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  margin: 0;
+  padding: 6px 12px;
+}
+.user-registration-logout-swal2-container .swal2-modal .swal2-actions button:focus {
+  border: 0;
+  outline: none;
+  box-shadow: none;
+}
+.user-registration-logout-swal2-container .swal2-modal .swal2-actions button.swal2-confirm {
+  color: #ffffff;
+}
+.user-registration-logout-swal2-container .swal2-modal .swal2-actions button.swal2-cancel {
+  color: #383838;
+  background: #ffffff !important;
+}

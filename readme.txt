@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 5.5
 Requires PHP: 7.2
 Tested up to: 6.7.2
-Stable tag: 4.1.2
+Stable tag: 4.1.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -257,6 +257,8 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 21. User Account Page –  Vertical Layout
 
 == Changelog ==
+= 4.1.3    - 26/03/2025 =
+* Security - Vulnerability fix for auto_login after registration for membership forms.
 
 = 4.1.2     - 21/03/2025 =
 * Security  - Privilege Escalation (Not Authenticated) vulnerability fix .

@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the User Registration & Membership plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration & Membership 4.1.2\n"
+"Project-Id-Version: User Registration & Membership 4.1.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-registration\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-03-21T10:19:01+00:00\n"
+"POT-Creation-Date: 2025-03-26T09:51:02+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: user-registration\n"
@@ -8771,23 +8771,23 @@ msgstr ""
 msgid "Stripe Payment stopped, Incomplete Stripe setup."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:180
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:188
 msgid "Stripe Payment failed."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:205
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:213
 msgid "New member has been successfully created with successful stripe payment."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:239
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:253
 msgid "Stripe subscription failed, price or product not found"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:388
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:402
 msgid "New member has been successfully created with successful stripe subscription."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:517
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:531
 msgid "Generated with stripe webhook"
 msgstr ""
 
@@ -9028,140 +9028,148 @@ msgstr ""
 msgid "Field username is required."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:139
-msgid "New member has been successfully created."
+#: modules/membership/includes/AJAX.php:133
+msgid "Invalid User"
 msgstr ""
 
 #: modules/membership/includes/AJAX.php:147
+msgid "New member has been successfully created."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:155
 msgid "Sorry! There was an unexpected error while registering the user . "
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:165
+#: modules/membership/includes/AJAX.php:173
 msgid "Sorry, You do not have permission to create membership"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:210
+#: modules/membership/includes/AJAX.php:218
 msgid "Successfully created the membership . "
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:218
-#: modules/membership/includes/AJAX.php:307
-#: modules/membership/includes/AJAX.php:476
+#: modules/membership/includes/AJAX.php:226
+#: modules/membership/includes/AJAX.php:315
+#: modules/membership/includes/AJAX.php:484
 msgid "Sorry! There was an unexpected error while saving the membership data . "
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:233
+#: modules/membership/includes/AJAX.php:241
 msgid "Field membership_id is required."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:240
-#: modules/membership/includes/AJAX.php:453
+#: modules/membership/includes/AJAX.php:248
+#: modules/membership/includes/AJAX.php:461
 msgid "Sorry, You do not have permission to edit membership"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:290
+#: modules/membership/includes/AJAX.php:298
 msgid "Sorry! Could not create stripe product. "
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:299
+#: modules/membership/includes/AJAX.php:307
 msgid "Successfully updated the membership data."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:323
-#: modules/membership/includes/AJAX.php:365
-#: modules/membership/includes/AJAX.php:411
+#: modules/membership/includes/AJAX.php:331
+#: modules/membership/includes/AJAX.php:373
+#: modules/membership/includes/AJAX.php:419
 msgid "Permission not allowed."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:332
+#: modules/membership/includes/AJAX.php:340
 msgid "Field membership_ids is required."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:344
+#: modules/membership/includes/AJAX.php:352
 msgid "Memberships deleted successfully."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:350
+#: modules/membership/includes/AJAX.php:358
 msgid "Sorry! There was an unexpected error while deleting the memberships."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:374
+#: modules/membership/includes/AJAX.php:382
 msgid "Field membership_group_ids is required."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:391
+#: modules/membership/includes/AJAX.php:399
 msgid "Memberships Groups deleted successfully."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:397
+#: modules/membership/includes/AJAX.php:405
 msgid "Sorry! There was an unexpected error while deleting the membership groups."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:420
+#: modules/membership/includes/AJAX.php:428
 msgid "Field members_ids is required."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:432
+#: modules/membership/includes/AJAX.php:440
 msgid "Members deleted successfully."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:438
+#: modules/membership/includes/AJAX.php:446
 msgid "Sorry! There was an unexpected error while deleting the selected members."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:470
+#: modules/membership/includes/AJAX.php:478
 msgid "Successfully updated the membership status . "
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:492
+#: modules/membership/includes/AJAX.php:500
 msgid "Sorry, You do not have permission to create users"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:506
+#: modules/membership/includes/AJAX.php:514
 msgid "New member has been successfully created. "
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:510
+#: modules/membership/includes/AJAX.php:518
 msgid "Sorry! There was an unexpected error while saving the members data . "
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:555
+#: modules/membership/includes/AJAX.php:563
 msgid "Field member_id is required"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:623
-#: modules/membership/includes/AJAX.php:661
-#: modules/membership/includes/AJAX.php:740
-#: modules/membership/includes/AJAX.php:743
-#: modules/membership/includes/AJAX.php:767
+#: modules/membership/includes/AJAX.php:570
+msgid "Field form_response is required"
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:643
+#: modules/membership/includes/AJAX.php:681
+#: modules/membership/includes/AJAX.php:760
+#: modules/membership/includes/AJAX.php:763
+#: modules/membership/includes/AJAX.php:787
 msgid "Wrong request."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:641
+#: modules/membership/includes/AJAX.php:661
 msgid "Something went wrong while cancelling your subscription. Please contact support"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:664
+#: modules/membership/includes/AJAX.php:684
 msgid "Field list type is required."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:679
+#: modules/membership/includes/AJAX.php:699
 msgid "No membership is available for the selected group."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:700
+#: modules/membership/includes/AJAX.php:720
 msgid "Sorry, You do not have permission to create membership groups."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:707
+#: modules/membership/includes/AJAX.php:727
 msgid "Field membership_groups_data is required"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:725
+#: modules/membership/includes/AJAX.php:745
 msgid "Membership Groups saved successfully."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:749
+#: modules/membership/includes/AJAX.php:769
 msgid "Invalid post type"
 msgstr ""
 
@@ -9828,6 +9836,16 @@ msgstr ""
 
 #: user-registration.php:647
 msgid "As <strong>User Registration & Membership Pro</strong> is active, <strong>User Registration Free</strong> is now not needed."
+msgstr ""
+
+#: chunks/dashboard.js:281
+#: src/dashboard/screens/Modules/hooks/useLicenseActivation.js:15
+msgid "Invalid license key."
+msgstr ""
+
+#: chunks/dashboard.js:281
+#: src/dashboard/screens/Modules/hooks/useLicenseActivation.js:13
+msgid "Please enter a license key."
 msgstr ""
 
 #: src/blocks/blocks/content-restriction-enhanced/Edit.js:93
@@ -10631,14 +10649,6 @@ msgstr ""
 msgid "Play Video"
 msgstr ""
 
-#: src/dashboard/screens/Modules/hooks/useLicenseActivation.js:13
-msgid "Please enter a license key."
-msgstr ""
-
-#: src/dashboard/screens/Modules/hooks/useLicenseActivation.js:15
-msgid "Invalid license key."
-msgstr ""
-
 #: src/dashboard/screens/Modules/hooks/useUpgradeModal.js:16
 msgid "License key"
 msgstr ""
@@ -10976,121 +10986,145 @@ msgstr ""
 msgid "Create a membership system with user sign-ups and exclusive access."
 msgstr ""
 
+#: chunks/content-restriction-enhanced/block.json
 #: src/blocks/blocks/content-restriction-enhanced/block.json
 msgctxt "block title"
 msgid "Content Restriction"
 msgstr ""
 
+#: chunks/content-restriction-enhanced/block.json
 #: src/blocks/blocks/content-restriction-enhanced/block.json
 msgctxt "block description"
 msgid "The block restricts the content."
 msgstr ""
 
+#: chunks/content-restriction-enhanced/block.json
 #: src/blocks/blocks/content-restriction-enhanced/block.json
 msgctxt "block keyword"
 msgid "user registration content restriction"
 msgstr ""
 
+#: chunks/content-restriction-enhanced/block.json
 #: src/blocks/blocks/content-restriction-enhanced/block.json
 msgctxt "block keyword"
 msgid "content restriction"
 msgstr ""
 
+#: chunks/edit-password/block.json
 #: src/blocks/blocks/edit-password/block.json
 msgctxt "block title"
 msgid "Edit Password"
 msgstr ""
 
+#: chunks/edit-password/block.json
 #: src/blocks/blocks/edit-password/block.json
 msgctxt "block description"
 msgid "The block give the edit password interface."
 msgstr ""
 
+#: chunks/edit-password/block.json
 #: src/blocks/blocks/edit-password/block.json
 msgctxt "block keyword"
 msgid "user registration edit password"
 msgstr ""
 
+#: chunks/edit-password/block.json
 #: src/blocks/blocks/edit-password/block.json
 msgctxt "block keyword"
 msgid "edit password"
 msgstr ""
 
+#: chunks/edit-profile/block.json
 #: src/blocks/blocks/edit-profile/block.json
 msgctxt "block title"
 msgid "Edit Profile"
 msgstr ""
 
+#: chunks/edit-profile/block.json
 #: src/blocks/blocks/edit-profile/block.json
 msgctxt "block description"
 msgid "The block give edit profile interface."
 msgstr ""
 
+#: chunks/edit-profile/block.json
 #: src/blocks/blocks/edit-profile/block.json
 msgctxt "block keyword"
 msgid "user registration edit profile"
 msgstr ""
 
+#: chunks/edit-profile/block.json
 #: src/blocks/blocks/edit-profile/block.json
 msgctxt "block keyword"
 msgid "edit profile"
 msgstr ""
 
+#: chunks/login-form/block.json
 #: src/blocks/blocks/login-form/block.json
 msgctxt "block title"
 msgid "Login Form"
 msgstr ""
 
+#: chunks/login-form/block.json
 #: src/blocks/blocks/login-form/block.json
 msgctxt "block description"
 msgid "The block give the login form for registered users."
 msgstr ""
 
+#: chunks/login-form/block.json
 #: src/blocks/blocks/login-form/block.json
 msgctxt "block keyword"
 msgid "user registration login form"
 msgstr ""
 
+#: chunks/login-form/block.json
 #: src/blocks/blocks/login-form/block.json
 msgctxt "block keyword"
 msgid "login form"
 msgstr ""
 
+#: chunks/myaccount/block.json
 #: src/blocks/blocks/myaccount/block.json
 msgctxt "block title"
 msgid "Myaccount"
 msgstr ""
 
+#: chunks/myaccount/block.json
 #: src/blocks/blocks/myaccount/block.json
 msgctxt "block description"
 msgid "The block give the myaccount form for registered users."
 msgstr ""
 
+#: chunks/myaccount/block.json
 #: src/blocks/blocks/myaccount/block.json
 msgctxt "block keyword"
 msgid "user registration myaccount"
 msgstr ""
 
+#: chunks/myaccount/block.json
 #: src/blocks/blocks/myaccount/block.json
 msgctxt "block keyword"
 msgid "myaccount"
 msgstr ""
 
+#: chunks/registration-form/block.json
 #: src/blocks/blocks/registration-form/block.json
 msgctxt "block title"
 msgid "Registration Form"
 msgstr ""
 
+#: chunks/registration-form/block.json
 #: src/blocks/blocks/registration-form/block.json
 msgctxt "block description"
 msgid "The block lets the user choose the required user registration directly."
 msgstr ""
 
+#: chunks/registration-form/block.json
 #: src/blocks/blocks/registration-form/block.json
 msgctxt "block keyword"
 msgid "user registration form"
 msgstr ""
 
+#: chunks/registration-form/block.json
 #: src/blocks/blocks/registration-form/block.json
 msgctxt "block keyword"
 msgid "registration form"
