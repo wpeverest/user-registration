@@ -30,7 +30,7 @@ class UR_Block_Regstration_Form extends UR_Block_Abstract {
 		if ( empty( $form_id ) ) {
 			return $content;
 		}
-	
+
 		return UR_Shortcodes::form(
 			array(
 				'id' => $form_id,

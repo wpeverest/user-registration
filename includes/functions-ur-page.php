@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 add_filter( 'body_class', 'ur_body_class' );
+add_filter( 'admin_body_class', 'ur_admin_body_class' );
 
 // Hooks for my account section.
 add_action( 'user_registration_account_navigation', 'user_registration_account_navigation' );

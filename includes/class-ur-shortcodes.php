@@ -373,6 +373,8 @@ class UR_Shortcodes {
 		wp_enqueue_script( 'user-registration' );
 		wp_enqueue_script( 'ur-form-validator' );
 		wp_enqueue_script( 'ur-common' );
+
+
 		/**
 		 * Fires when enqueueing scripts for the User Registration plugin.
 		 *

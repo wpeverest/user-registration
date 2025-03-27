@@ -142,20 +142,29 @@ if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
  */
 function ur_body_class( $classes ) {
 	$classes   = (array) $classes;
+
 	$classes[] = 'user-registration-page';
 	if ( is_ur_account_page() ) {
 		$classes[] = 'user-registration-account';
 	}
-
 	foreach ( UR()->query->query_vars as $key => $value ) {
 		if ( is_ur_endpoint_url( $key ) ) {
 			$classes[] = 'user-registration-' . sanitize_html_class( $key );
 		}
 	}
-
 	return array_unique( $classes );
 }
 
+/**
+ * ur_admin_body_class
+ *
+ * @param $classes
+ *
+ * @return string
+ */
+function ur_admin_body_class( $classes ) {
+	return $classes . ' user-registration-page';
+}
 
 if ( ! function_exists( 'user_registration_form_field' ) ) {
 

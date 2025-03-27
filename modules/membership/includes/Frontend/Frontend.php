@@ -127,6 +127,7 @@ class Frontend {
 	 * @since 1.0.0
 	 */
 	public function load_scripts() {
+
 		// Enqueue frontend scripts here.
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 		wp_enqueue_script( 'sweetalert2' );
@@ -138,7 +139,6 @@ class Frontend {
 		wp_enqueue_style( 'user-registration-membership-frontend-style' );
 
 		wp_enqueue_script( 'user-registration-membership-stripe-v3', 'https://js.stripe.com/v3/', array() );
-
 		$this->localize_scripts();
 	}
 

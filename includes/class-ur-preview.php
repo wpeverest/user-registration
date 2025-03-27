@@ -98,7 +98,6 @@ class UR_Preview {
 		if ( ! is_user_logged_in() ) {
 			return;
 		}
-
 		if ( isset( $_GET['form_id'] ) && isset( $_GET['ur-style-customizer'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			add_filter( 'the_title', array( $this, 'form_preview_title' ) );
 			add_filter( 'the_content', array( $this, 'form_preview_content' ) );
@@ -157,9 +156,11 @@ class UR_Preview {
 	 * @since 4.0
 	 */
 	public function ur_form_preview_template( $template ) {
+
 		if ( is_embed() ) {
 			return $template;
 		}
+
 		wp_register_style( 'user-registration-form-preview-style', UR()->plugin_url() . '/assets/css/user-registration-form-preview.css', array(), UR()->version );
 		wp_register_style( 'ur-form-preview-tooltip', UR()->plugin_url() . '/assets/css/tooltipster/tooltipster-sideTip-borderless.min.css', array(), UR()->version );
 		wp_register_style( 'ur-form-preview-bundle-css', UR()->plugin_url() . '/assets/css/tooltipster/tooltipster.bundle.css', array(), UR()->version );
@@ -202,7 +203,6 @@ class UR_Preview {
 				'side_panel_content' => $side_panel_content,
 			)
 		);
-
 		return $template;
 	}
 
@@ -215,7 +215,6 @@ class UR_Preview {
 		if ( ! is_user_logged_in() ) {
 			return;
 		}
-
 		if ( isset( $_GET['form_id'] ) ) {
 			$form_id = $_GET['form_id'];// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
