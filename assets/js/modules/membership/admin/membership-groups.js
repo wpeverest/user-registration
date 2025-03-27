@@ -488,7 +488,7 @@
 			var membership_details = '',
 				urmg_container = $('.urmg-container');
 			$(data.plans).each(function (k, item) {
-				membership_details += '<label><input type="radio" value="' + item.ID + '" disabled/><span>' + item.title + '</span> - <span> ' + item.period + ' </span></label>';
+				membership_details += '<label><input type="radio" value="' + item.ID + '" disabled/><span class="urm-membership-title">' + item.title + '</span> - <span> ' + item.period + ' </span></label>';
 			});
 			urmg_container.append(membership_details);
 			$('.ur-selected-inputs .ur-general-setting-membership_group').find('select[data-field="membership_group"]  option[value="' + group_id + '"]').attr('selected', 'selected');
