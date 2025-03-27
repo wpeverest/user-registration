@@ -171,7 +171,7 @@ class PaypalService {
 		$login_option = ur_get_user_login_option( $member_id );
 		if ( "auto_login" === $login_option ) {
 			$member_service = new MembersService();
-			$member_service->login_member( $member_id );
+			$member_service->login_member( $member_id , true);
 		}
 		ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
 	}

@@ -1955,10 +1955,6 @@ span.ur-shortcode-form-embed-dot {
   background: 4px solid #FDE8E8;
   border-top: none;
 }
-.user-registration-error::before {
-  content: none;
-  display: "";
-}
 .user-registration-error svg {
   margin-right: 10px;
 }
@@ -2566,7 +2562,6 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
   width: 100%;
   position: unset;
   align-items: center;
-  margin: 0 !important;
   margin-bottom: 24px !important;
   letter-spacing: 0.18px;
 }
@@ -2658,9 +2653,9 @@ body.user-registration-page .user-registration:not(.user-registration-MyAccount)
 body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-input-with-icon input:focus {
   border-color: #027abb;
 }
-body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-field-item label,
-body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-field-item label, body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-field-item label,
-body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-field-item label {
+body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-field-item label:not(.user-registration-error),
+body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-field-item label:not(.user-registration-error), body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-field-item label:not(.user-registration-error),
+body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-form-row .ur-form-grid .ur-field-item label:not(.user-registration-error) {
   margin-top: 0;
   margin-bottom: 12px;
   color: #222;
