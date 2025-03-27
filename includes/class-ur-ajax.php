@@ -136,9 +136,12 @@ class UR_AJAX {
 		 * Filter to modify user capability.
 		 * Default value is 'create_users'.
 		 */
+		$logger = ur_get_logger();
+		$logger->info( __( 'Checking permissions.', 'user-registration' ), array( 'source' => 'form-submission' ) );
 		$current_user_capability = apply_filters( 'ur_registration_user_capability', 'create_users' );
 
 		if ( is_user_logged_in() && ! current_user_can( 'administrator' ) && ! current_user_can( $current_user_capability ) ) { //phpcs:ignore
+			$logger->warning( __( 'User is already logged in and lacks permission.', 'user-registration' ), array( 'source' => 'form-submission' ) );
 			wp_send_json_error(
 				array(
 					'message' => __( 'You are already logged in.', 'user-registration' ),
@@ -147,6 +150,7 @@ class UR_AJAX {
 		}
 
 		if ( ! check_ajax_referer( 'user_registration_form_data_save_nonce', 'security', false ) ) {
+			$logger->error( __( 'Nonce verification failed.', 'user-registration' ), array( 'source' => 'form-submission' ) );
 			wp_send_json_error(
 				array(
 					'message' => __( 'Nonce error, please reload.', 'user-registration' ),
@@ -155,6 +159,7 @@ class UR_AJAX {
 		}
 
 		$form_id             = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
+		$logger->info( __( 'Processing form submission.', 'user-registration' ), array( 'source' => 'form-submission', 'form_id' => $form_id ) );
 		$nonce               = isset( $_POST['ur_frontend_form_nonce'] ) ? wp_unslash( sanitize_key( $_POST['ur_frontend_form_nonce'] ) ) : '';
      	$captcha_response    = isset( $_POST['captchaResponse'] ) ? ur_clean( wp_unslash( $_POST['captchaResponse'] ) ) : ''; //phpcs:ignore
 		$flag                = wp_verify_nonce( $nonce, 'ur_frontend_form_id-' . $form_id );
@@ -189,6 +194,7 @@ class UR_AJAX {
 					 * Default value is 0.5
 					 */
 					if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_hcaptcha_threshold', 0.5 ) ) ) {
+						$logger->error( __( 'Error on hCaptcha.', 'user-registration' ), array( 'source' => 'form-submission' ) );
 						wp_send_json_error(
 							array(
 								'message' => __( 'Error on hCaptcha. Contact your site administrator.', 'user-registration' ),
@@ -207,6 +213,7 @@ class UR_AJAX {
 					$data   = wp_safe_remote_post( $url, $params );
 					$data   = json_decode( wp_remote_retrieve_body( $data ) );
 					if ( empty( $data->success ) ) {
+						$logger->error( __( 'Error on Cloudflare Turnstile', 'user-registration' ), array( 'source' => 'form-submission' ) );
 						wp_send_json_error(
 							array(
 								'message' => __( 'Error on Cloudflare Turnstile. Contact your site administrator.', 'user-registration' ),
@@ -221,6 +228,7 @@ class UR_AJAX {
 					 * Default value is 0.5
 					 */
 					if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_recaptcha_v3_threshold', 0.5 ) ) ) {
+						$logger->error( __( 'Error on google reCaptcha.', 'user-registration' ), array( 'source' => 'form-submission' ) );
 						wp_send_json_error(
 							array(
 								'message' => __( 'Error on google reCaptcha. Contact your site administrator.', 'user-registration' ),
@@ -229,6 +237,7 @@ class UR_AJAX {
 					}
 				}
 			} else {
+				$logger->error( __( 'Captcha code error.', 'user-registration' ), array( 'source' => 'form-submission' ) );
 				wp_send_json_error(
 					array(
 						'message' => get_option( 'user_registration_form_submission_error_message_recaptcha', __( 'Captcha code error, please try again.', 'user-registration' ) ),
@@ -238,6 +247,7 @@ class UR_AJAX {
 		}
 
 		if ( true != $flag || is_wp_error( $flag ) ) {
+			$logger->error( __( 'Nonce error, please reload.', 'user-registration' ), array( 'source' => 'form-submission' ) );
 			wp_send_json_error(
 				array(
 					'message' => __( 'Nonce error, please reload.', 'user-registration' ),
@@ -252,6 +262,7 @@ class UR_AJAX {
 
 		if ( ! is_user_logged_in() ) {
 			if ( ! $users_can_register ) {
+				$logger->error( __( 'Only administrators can add new users.', 'user-registration' ), array( 'source' => 'form-submission' ) );
 				wp_send_json_error(
 					array(
 						/**
@@ -295,12 +306,13 @@ class UR_AJAX {
 		}
 
 		$form_data = array();
-
+		$logger->info( __( 'Form data receiving', 'user-registration' ), array( 'source' => 'form-submission' ) );
 		if ( isset( $_POST['form_data'] ) ) {
 			$form_data = json_decode( wp_unslash( $_POST['form_data'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		}
-
+		$logger->info( __( 'Form data received', 'user-registration' ), array( 'source' => 'form-submission' ) );
 		UR_Frontend_Form_Handler::handle_form( $form_data, $form_id );
+		$logger->info( __( 'Form submission processed successfully.', 'user-registration' ), array( 'source' => 'form-submission' ) );
 	}
 
 
@@ -861,36 +873,61 @@ class UR_AJAX {
 	 * @throws Exception Throw if any issue while saving form data.
 	 */
 	public static function form_save_action() {
-
+		$logger = ur_get_logger();
 		try {
 			check_ajax_referer( 'ur_form_save_nonce', 'security' );
-
+			// Check permissions.
+			$logger->info(
+				__( 'Checking permissions.', 'user-registration' ),
+				array( 'source' => 'form-save' )
+			);
 			if ( ! current_user_can( 'manage_options' ) ) {
+				$logger->critical(
+					__( 'You do not have permission.', 'user-registration' ),
+					array( 'source' => 'form-save' )
+				);
 				throw new Exception( __( "You don't have enough permission to perform this task. Please contact the Administrator.", 'user-registration' ) );
 			}
+
+			$logger->info( 'Validating post data.', array( 'source' => 'form-save' ) );
 
          if ( ! isset( $_POST['data'] ) || ( isset( $_POST['data'] ) && gettype( wp_unslash( $_POST['data'] ) ) != 'array' ) ) { //phpcs:ignore
 				throw new Exception( __( 'post data not set', 'user-registration' ) );
 			} elseif ( ! isset( $_POST['data']['form_data'] )
 			|| ( isset( $_POST['data']['form_data'] )
          && gettype( wp_unslash( $_POST['data']['form_data'] ) ) != 'string' ) ) { //phpcs:ignore
-
+			$logger->critical(
+				__( 'post data not set', 'user-registration' ),
+				array( 'source' => 'form-save' )
+			);
 				throw new Exception( __( 'post data not set', 'user-registration' ) );
 			}
-
+			$logger->info( 'Decoding and processing form data.', array( 'source' => 'form-save' ) );
 			$post_data = json_decode( wp_unslash( $_POST['data']['form_data'] ) ); //phpcs:ignore
 			self::sweep_array( $post_data );
 
 			if ( isset( self::$failed_key_value['value'] ) && '' != self::$failed_key_value['value'] ) {
 				if ( in_array( self::$failed_key_value['value'], self::$field_key_aray ) ) {
+					$logger->critical(
+						sprintf(
+							"Could not save form. Duplicate field name <span>%s</span>. Context: %s",
+							self::$failed_key_value['value'],
+							'user_registration'
+						),
+						array( 'source' => 'form-save' )
+					);
 					throw new Exception( sprintf( "Could not save form. Duplicate field name <span style='color:red'>%s</span>", self::$failed_key_value['value'] ) );
 				}
 			}
 
 			if ( false === self::$is_field_key_pass ) {
+				$logger->critical(
+					__( 'Could not save form. Invalid field name. Please check all field name', 'user-registration' ),
+					array( 'source' => 'form-save' )
+				);
 				throw new Exception( __( 'Could not save form. Invalid field name. Please check all field name', 'user-registration' ) );
 			}
-
+			$logger->info( 'Validating required fields.', array( 'source' => 'form-save' ) );
 			$required_fields = array(
 				'user_email',
 				'user_pass',
@@ -900,6 +937,10 @@ class UR_AJAX {
 			if ( isset( $_POST['data']['form_setting_data'] ) ) {
 				foreach ( wp_unslash( $_POST['data']['form_setting_data'] )  as $setting_data ) { //phpcs:ignore
 					if ( 'user_registration_form_setting_enable_recaptcha_support' === $setting_data['name'] && ur_string_to_bool( $setting_data['value'] ) && ! ur_check_captch_keys( 'register', $_POST['data']['form_id'], true ) ) {
+						$logger->critical(
+							__( 'Captcha error', 'user-registration' ),
+							array( 'source' => 'form-save' )
+						);
 						throw new Exception(
 							sprintf(
 							/* translators: %s - Integration tab url */
@@ -917,9 +958,13 @@ class UR_AJAX {
 			$contains_search = count( array_intersect( $required_fields, self::$field_key_aray ) ) == count( $required_fields );
 
 			if ( false === $contains_search ) {
+				$logger->critical(
+					__( 'Required fields are required', 'user-registration' ),
+					array( 'source' => 'form-save' )
+				);
              throw  new Exception( __( 'Could not save form, ' . join( ', ', $required_fields ) . ' fields are required.! ', 'user-registration' ) ); //phpcs:ignore
 			}
-
+			$logger->info(__( 'Saving form data.', 'user-registration' ), array( 'source' => 'form-save' ) );
 			/**
 			 * Perform validation before form save from form builder.
 			 */
@@ -975,7 +1020,7 @@ class UR_AJAX {
 			 * Default is the $_POST['data'].
 			 */
          	do_action( 'user_registration_after_form_settings_save', wp_unslash( $_POST['data'] ) ); //phpcs:ignore
-
+			 $logger->info(__( 'Form successfully saved.', 'user-registration' ), array( 'source' => 'form-save' ) );
 			wp_send_json_success(
 				array(
 					'data'    => $post_data,
@@ -983,6 +1028,7 @@ class UR_AJAX {
 				)
 			);
 		} catch ( Exception $e ) {
+			$logger->error(__( 'Form save failed: ' . $e->getMessage(), 'user-registration' ), array( 'source' => 'form-save' ) );
 			wp_send_json_error(
 				array(
 					'message' => $e->getMessage(),

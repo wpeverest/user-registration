@@ -421,4 +421,27 @@ class UR_Log_Handler_File extends UR_Log_Handler {
 			$this->add( $log['entry'], $log['handle'] );
 		}
 	}
+
+
+	/**
+	 * Delete all logs older than a defined timestamp.
+	 *
+	 * @since 1.6.2
+	 * @param integer $timestamp Timestamp to delete logs before.
+	 */
+	public static function delete_logs_before_timestamp( $timestamp = 0 ) {
+		if ( ! $timestamp ) {
+			return;
+		}
+
+		$log_files = self::get_log_files();
+
+		foreach ( $log_files as $log_file ) {
+			$last_modified = filemtime( trailingslashit( UR_LOG_DIR ) . $log_file );
+
+			if ( $last_modified < $timestamp ) {
+				@unlink( trailingslashit( EVF_LOG_DIR ) . $log_file ); // @codingStandardsIgnoreLine.
+			}
+		}
+	}
 }
