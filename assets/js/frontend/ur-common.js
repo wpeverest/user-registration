@@ -63,4 +63,15 @@
 			}
 		}
 	});
+
+	$(document).ready(function() {
+		$("#user_url").on("focus", function() {
+			let url = $(this).val().trim();
+
+			// Only append "https://" if the field is empty
+			if (url === "") {
+				$(this).val("https://");
+			}
+		});
+	});
 })(jQuery);
