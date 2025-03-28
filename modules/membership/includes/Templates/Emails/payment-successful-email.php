@@ -40,7 +40,7 @@
 			</tr>
 			<tr style="background-color: #dddddd;">
 				<td style="border: 1px solid #dddddd; text-align: left; padding: 8px;"><?php echo esc_html__( 'Next Billing Date', 'user-registration' ); ?></td>
-				<td style="border: 1px solid #dddddd; text-align: left; padding: 8px;"><?php echo empty( $invoice_details['trial_start_date'] ) ? __( 'N/A', 'user-registration' ) : ( date_i18n( get_option( 'date_format' ), strtotime( $invoice_details['next_billing_date'] ) ) ); ?></td>
+				<td style="border: 1px solid #dddddd; text-align: left; padding: 8px;"><?php echo empty( $invoice_details['next_billing_date'] ) ? __( 'N/A', 'user-registration' ) : ( date_i18n( get_option( 'date_format' ), strtotime( $invoice_details['next_billing_date'] ) ) ); ?></td>
 			</tr>
 			<tr>
 				<td style="border: 1px solid #dddddd; text-align: left; padding: 8px;"><?php echo esc_html__( 'Payment Date', 'user-registration' ); ?></td>
@@ -59,14 +59,14 @@
 				<td style="border: 1px solid #dddddd; text-align: left; padding: 8px;"><?php echo $invoice_details['trial_amount']; ?></td>
 			</tr>
 			<?php if ( isset( $invoice_details['coupon'] ) && ! empty( $invoice_details['coupon'] ) ) : ?>
-			<tr>
-				<td style="border: 1px solid #dddddd; text-align: left; padding: 8px;"><?php echo esc_html__( 'Coupon', 'user-registration' ); ?></td>
-				<td style="border: 1px solid #dddddd; text-align: left; padding: 8px;"><?php echo $invoice_details['coupon']; ?></td>
-			</tr>
-			<tr style="background-color: #dddddd;">
-				<td style="border: 1px solid #dddddd; text-align: left; padding: 8px;"><?php echo esc_html__( 'Coupon Discount', 'user-registration' ); ?></td>
-				<td style="border: 1px solid #dddddd; text-align: left; padding: 8px;"><?php echo $invoice_details['coupon_discount']; ?></td>
-			</tr>
+				<tr>
+					<td style="border: 1px solid #dddddd; text-align: left; padding: 8px;"><?php echo esc_html__( 'Coupon', 'user-registration' ); ?></td>
+					<td style="border: 1px solid #dddddd; text-align: left; padding: 8px;"><?php echo $invoice_details['coupon']; ?></td>
+				</tr>
+				<tr style="background-color: #dddddd;">
+					<td style="border: 1px solid #dddddd; text-align: left; padding: 8px;"><?php echo esc_html__( 'Coupon Discount', 'user-registration' ); ?></td>
+					<td style="border: 1px solid #dddddd; text-align: left; padding: 8px;"><?php echo $invoice_details['coupon_discount']; ?></td>
+				</tr>
 			<?php endif; ?>
 			<tr>
 				<td style="border: 1px solid #dddddd; text-align: left; padding: 8px;"><?php echo esc_html__( 'Total', 'user-registration' ); ?></td>

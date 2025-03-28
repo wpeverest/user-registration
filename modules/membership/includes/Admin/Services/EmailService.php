@@ -181,6 +181,8 @@ class EmailService
 			$discount_amount = ( $order['coupon_discount_type'] === 'fixed' ) ? $order['coupon_discount'] : $order['total_amount'] * $order['coupon_discount'] / 100;
 			$total           = $order['total_amount'] - $discount_amount;
 		}
+		$billing_cycle = ("subscription" === $membership_metas['type']) ?  ('day' === $membership_metas['subscription']['duration']) ? esc_html('Daily', 'user-registration') : (esc_html(ucfirst($membership_metas['subscription']['duration'] . 'ly'))) : 'N/A';
+
 		$invoice_details  = array(
 			'membership_name'   => esc_html($membership_metas['post_title']),
 			'trial_status'      => esc_html($order['trial_status']),
@@ -188,7 +190,7 @@ class EmailService
 			'trial_end_date'    => esc_html($subscription['trial_end_date']),
 			'next_billing_date' => esc_html($subscription['next_billing_date']),
 			'payment_date'      => esc_html($order['created_at']),
-			'billing_cycle'     => ('day' === $subscription['billing_cycle']) ? esc_html('Daily', 'user-registration') : (esc_html(ucfirst($subscription['billing_cycle'] . 'ly'))),
+			'billing_cycle'     => esc_html($billing_cycle),
 			'amount'            => $symbol . number_format($membership_metas['amount'], 2),
 			'trial_amount'      => $symbol . number_format(('on' === $order['trial_status']) ? $order['total_amount'] : 0, 2),
 			'coupon_discount'   => isset( $order['coupon_discount'] ) ? ((isset( $order['coupon_discount_type'] ) && $order['coupon_discount_type'] == 'percent' ) ? $order['coupon_discount'] . '%' : $symbol . $order['coupon_discount']) : '',
