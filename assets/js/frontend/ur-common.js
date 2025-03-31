@@ -65,8 +65,8 @@
 	});
 
 	$(document).ready(function() {
-		$("#user_url").on("focus", function() {
-			let url = $(this).val().trim();
+		$("#user_url, #user_registration_user_url").on("focus", function() {
+			var url = $(this).val().trim();
 
 			// Only append "https://" if the field is empty
 			if (url === "") {
