@@ -175,9 +175,14 @@ class UR_Admin_Status {
 			$log_handler = new UR_Log_Handler_File();
 			$log_handler->remove( sanitize_text_field( wp_unslash( $_REQUEST['handle'] ) ) );
 		}
-
-		wp_safe_redirect( esc_url_raw( admin_url( 'admin.php?page=user-registration-status&tab=logs' ) ) );
-		exit();
+		?>
+		<script>
+		var redirect = '<?php echo esc_url( admin_url( 'admin.php?page=user-registration-status&tab=logs' ) ); ?>';
+		window.setTimeout( function () {
+			window.location.href = redirect;
+		})
+		</script>
+		<?php
 	}
 
 	/**
@@ -193,8 +198,14 @@ class UR_Admin_Status {
 			$log_handler->remove_all();
 		}
 
-		wp_safe_redirect( esc_url_raw( admin_url( 'admin.php?page=user-registration-status&tab=logs' ) ) );
-		exit();
+		?>
+		<script>
+		var redirect = '<?php echo esc_url( admin_url( 'admin.php?page=user-registration-status&tab=logs' ) ); ?>';
+		window.setTimeout( function () {
+			window.location.href = redirect;
+		})
+		</script>
+		<?php
 	}
 
 
