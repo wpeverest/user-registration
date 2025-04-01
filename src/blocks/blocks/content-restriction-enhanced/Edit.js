@@ -10,7 +10,7 @@ import Select from "react-select";
 const { urRestApiNonce, restURL } = typeof _UR_BLOCKS_ !== "undefined" && _UR_BLOCKS_;
 
 const Edit = ({ attributes, setAttributes }) => {
-	const { accessAllRoles,accessRole, accessControl, content } = attributes;
+	const { accessAllRoles,accessSpecificRoles, accessControl, content } = attributes;
 	const blockProps = useBlockProps();
 
 	const [roleOptions, setRoleOptions] = useState([]);
@@ -55,7 +55,10 @@ const Edit = ({ attributes, setAttributes }) => {
 		});
 	};
 
-	const handleAccessAllRoleChange = (value) => setAttributes({ accessAllRoles: value });
+	const handleAccessAllRoleChange = (value) => {
+		setAttributes({ accessAllRoles: value })
+	};
+
 
 	const getAccessLabel = () =>
 		accessControl === "access" ? __("Allow Access to", "user-registration") : __("Restrict Access to", "user-registration");
@@ -97,9 +100,9 @@ const Edit = ({ attributes, setAttributes }) => {
 								classNamePrefix="react-select"
 								placeholder={__("Select specific roles...", "user-registration")}
 								value={roleDropdownOptions.filter((option) =>
-									Array.isArray(accessRole) ? accessRole.includes(option.value) : false
+									Array.isArray(accessSpecificRoles) ? accessSpecificRoles.includes(option.value) : false
 								)}
-								onChange={(selected) => setAttributes({ accessRole: selected.map((option) => option.value) })}
+								onChange={(selected) => { console.log(selected,'selected'); setAttributes({ accessSpecificRoles: selected.map((option) => option.value) })}}
 							/>
 						)}
 					</PanelBody>
