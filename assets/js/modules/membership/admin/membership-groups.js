@@ -155,10 +155,10 @@
 									response.data.message
 								);
 
-								var current_url = $(location).attr('href');
-
-								current_url += '&post_id=' + urmg_data.membership_group_id;
-								$(location).attr('href', current_url);
+								// var current_url = $(location).attr('href');
+								//
+								// current_url += '&post_id=' + urmg_data.membership_group_id;
+								$(location).attr('href', urmg_data.membership_group_url);
 
 							} else {
 								membership_group_object.show_failure_message(
@@ -200,47 +200,29 @@
 		 *    triggers the bulk deletion of membership groups.
 		 */
 		bind_ui_actions: function () {
+			$(document).on('change', '#ur-setting-form .ur-general-setting-membership_listing_option select', function () {
+				var $this = $(this),
+					group_select_field = $('#ur-setting-form .ur-general-setting-membership_group');
+				group_select_field.hide();
+				$('.ur-general-setting-membership_listing_option select').val($this.val());
+
+				if($this.val() === 'group') {
+					group_select_field.show();
+				}
+				else {
+					membership_group_object.fetch_memberships(-1);
+				}
+			});
+
 			// listen for changes in the membership group select box
 			$(document).on('change', '#ur-setting-form .ur-general-setting-membership_group select', function () {
 
 				var $this = $(this),
-					group_id = Number($this.val()),
-					loader_container = $('.urmg-loader'),
-					urmg_container = $('.urmg-container'),
-					empty_urmg = $('.empty-urmg-label');
+					group_id = Number($this.val());
 
 				$('.ur-general-setting-membership_group select').val(group_id);
-				urmg_container.empty();
+				membership_group_object.fetch_memberships(group_id);
 
-				if (group_id === 0) {
-					empty_urmg.show();
-					return;
-				}
-
-				// hide memberships and label
-				empty_urmg.hide();
-				// append spinner
-				membership_group_object.append_spinner(loader_container);
-
-				membership_group_object.send_data({
-					action: 'user_registration_membership_get_group_memberships',
-					group_id: group_id
-				}, {
-					success: function (response) {
-						if (response.success) {
-							membership_group_object.handle_membership_by_group_success_response(response.data, group_id);
-						} else {
-
-						}
-					},
-					failure: function (xhr, statusText) {
-
-					},
-					complete: function () {
-						membership_group_object.remove_spinner(loader_container);
-
-					}
-				});
 			});
 			// listen for clicks on the membership group save button
 			$(document).on('click', '#ur-membership-group-create-form .ur-membership-group-save-btn', function (e) {
@@ -278,19 +260,38 @@
 			});
 			$(document).on('ur_new_field_created', function () {
 				var paypal_settings = $('#paypal-standard-settings'),
-					stripe_settings = $('#stripe-settings');
+					stripe_settings = $('#stripe-settings'),
+					group_select_field = $('#ur-setting-form .ur-general-setting-membership_group');
 				paypal_settings.show();
 				stripe_settings.show();
+				group_select_field.hide();
 				if ($('.ur-selected-inputs').find('div[data-field-key="membership"]').length) {
+					user_registration_form_builder_data.form_has_membership_field = true;
 					paypal_settings.hide();
 					stripe_settings.hide();
+				}
+			});
+			$(document).on('ur_rendered_field_options', function () {
+				var membership_listing_option_field = $('#ur-setting-form .ur-general-setting-membership_listing_option select'),
+					group_select_field = $('#ur-setting-form .ur-general-setting-membership_group');
+				group_select_field.show();
+				if (membership_listing_option_field.val() === 'all') {
+					group_select_field.hide();
 				}
 			});
 			$(document).on(
 				'user_registration_admin_before_form_submit',
 				function (event, data) {
+					if ($('[data-field="membership_listing_option"]').val() === "all" && $('.urmg-container input').length < 1) {
+						data.data['empty_membership_status'] = [
+							{
+								validation_status: false,
+								validation_message: user_registration_form_builder_data.i18n_admin.i18n_prompt_no_membership_available
+							}
+						];
+					}
 					// validation for empty membership group.
-					if($('[data-field="membership_group"]').length && $('[data-field="membership_group"]').val() == "0") {
+					if ($('[data-field="membership_group"]').length && $('[data-field="membership_group"]').val() == "0" && $('[data-field="membership_listing_option"]').val() === "group") {
 						data.data['empty_membership_group_status'] = [
 							{
 								validation_status: false,
@@ -298,7 +299,7 @@
 							}
 						];
 					}
-					if(data.data.payment_field_present && $('.ur-selected-inputs').find('div[data-field-key="membership"]').length) {
+					if (data.data.payment_field_present && $('.ur-selected-inputs').find('div[data-field-key="membership"]').length) {
 
 						data.data['payment_field_present_status'] = [
 							{
@@ -309,11 +310,11 @@
 					}
 				});
 		},
-		delete_single_membership_group : function ($this) {
+		delete_single_membership_group: function ($this) {
 			var urlParams = new URLSearchParams($this.attr('href'));
 			var form_title = urlParams.get('form');
 
-			if(form_title !== null) {
+			if (form_title !== null) {
 				Swal.fire({
 					title:
 						'<img src="' +
@@ -438,20 +439,59 @@
 				$(selected_memberships).parents('tr').remove();
 			}
 		},
+		fetch_memberships: function (group_id) {
+			var loader_container = $('.urmg-loader'),
+				urmg_container = $('.urmg-container'),
+				empty_urmg = $('.empty-urmg-label');
+			urmg_container.empty();
+
+			if (group_id === 0) {
+				empty_urmg.text(user_registration_form_builder_data.i18n_admin.i18n_empty_membership_group_text);
+				empty_urmg.show();
+				return;
+			}
+
+			// hide memberships and label
+			empty_urmg.hide();
+			// append spinner
+			membership_group_object.append_spinner(loader_container);
+
+			membership_group_object.send_data({
+				action: 'user_registration_membership_get_group_memberships',
+				group_id: group_id,
+				list_type: group_id === -1 ? 'all' : 'group'
+			}, {
+				success: function (response) {
+					if (response.success) {
+						membership_group_object.handle_membership_by_group_success_response(response.data, group_id);
+					} else {
+						empty_urmg.text(user_registration_form_builder_data.i18n_admin.i18n_prompt_no_membership_available);
+						empty_urmg.show();
+					}
+				},
+				failure: function (xhr, statusText) {
+
+				},
+				complete: function () {
+					membership_group_object.remove_spinner(loader_container);
+
+				}
+			});
+		},
 		/**
 		 * Handles the response after a successful ajax request of membership by group
 		 * @param {object} data - The response data
 		 * @param group_id - The response data
 		 * @return {void}
 		 */
-		handle_membership_by_group_success_response: function (data , group_id) {
+		handle_membership_by_group_success_response: function (data, group_id) {
 			var membership_details = '',
 				urmg_container = $('.urmg-container');
 			$(data.plans).each(function (k, item) {
 				membership_details += '<label><input type="radio" value="' + item.ID + '" disabled/><span>' + item.title + '</span> - <span> ' + item.period + ' </span></label>';
 			});
 			urmg_container.append(membership_details);
-			$('.ur-selected-inputs .ur-general-setting-membership_group').find('select[data-field="membership_group"]  option[value="'+group_id+'"]').attr('selected','selected');
+			$('.ur-selected-inputs .ur-general-setting-membership_group').find('select[data-field="membership_group"]  option[value="' + group_id + '"]').attr('selected', 'selected');
 		},
 		/**
 		 * Sends data to the backend API.

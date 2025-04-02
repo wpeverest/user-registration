@@ -52,8 +52,6 @@ const Sidebar = React.memo(
 					<InputLeftElement
 						pointerEvents="none"
 						padding="0px 0px 0px 8px"
-						borderRadius="8px"
-						borderColor="#B0B0B0"
 					>
 						<IoSearchOutline
 							style={{ width: "18px", height: "18px" }}
@@ -74,6 +72,8 @@ const Sidebar = React.memo(
 						}}
 						fontSize="16px"
 						fontWeight="400"
+						borderRadius="8px"
+						borderColor="#B0B0B0 !important"
 					/>
 				</InputGroup>
 
@@ -83,7 +83,8 @@ const Sidebar = React.memo(
 							key={category.name}
 							p="12px"
 							_hover={{
-								bg: "#F7F4FB",
+								bg: "#EDEFF7",
+								color: "#475bb2",
 								"& > .badge": {
 									bg:
 										selectedCategory === category.name
@@ -95,7 +96,7 @@ const Sidebar = React.memo(
 							cursor="pointer"
 							bg={
 								selectedCategory === category.name
-									? "#F7F4FB"
+									? "#EDEFF7"
 									: "transparent"
 							}
 							onClick={() => onCategorySelect(category.name)}
@@ -142,7 +143,7 @@ const Sidebar = React.memo(
 					))}
 					<Card
 						align="center"
-						bg="#6969DE"
+						background="linear-gradient(70deg, #475bb2, #94A7E7B2)"
 						padding="40px 24px"
 						marginTop="26px"
 					>
@@ -174,6 +175,10 @@ const Sidebar = React.memo(
 									borderRadius="4px"
 									width="inherit"
 									fontWeight="500"
+									_hover={{
+										backgroundColor: "#475BB2",
+										color: "white !important"
+									}}
 								>
 									{__(
 										"Request Template",

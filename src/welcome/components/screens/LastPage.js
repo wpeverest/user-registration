@@ -27,7 +27,7 @@ function LastPage({ onBoardIconsURL }) {
 	const consentSettings = [
 		{
 			title: __(
-				"Help us improve User Registration Membership by sharing non-sensitive diagonistic and usage data with us.",
+				"Help us improve User Registration & Membership by sharing non-sensitive diagonistic and usage data with us.",
 				"user-registration"
 			),
 			id: "user_registration_allow_usage_tracking",
@@ -103,7 +103,7 @@ function LastPage({ onBoardIconsURL }) {
 				>
 					<Text fontSize="18px" fontWeight="500" color="#383838">
 						{__(
-							"Thank you for choosing to enhance your experience with User Registration Membership!",
+							"Thank you for choosing to enhance your experience with User Registration & Membership!",
 							"user-registration"
 						)}
 					</Text>

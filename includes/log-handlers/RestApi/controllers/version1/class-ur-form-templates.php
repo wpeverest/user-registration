@@ -246,7 +246,6 @@ class UR_Form_Templates {
 		}
 
 		update_option( 'user_registration_user_favorite_templates', $user_favorites );
-		// error_log( print_r( , true ) );
 
 		return new WP_REST_Response( 'Favorite updated successfully.', 200 );
 	}

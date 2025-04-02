@@ -161,11 +161,13 @@ class UR_Admin_Import_Export_Forms {
 							$forms = get_posts( $args );
 							foreach ( $forms as $key => $form_obj ) {
 								if ( $form_data->form_post->post_title === $form_obj->post_title ) {
-									$form_data->form_post->post_title = $form_data->form_post->post_title . ' (Imported)';
+									$form_data->form_post->post_title = sanitize_text_field($form_data->form_post->post_title) . ' (Imported)';
 									break;
 								}
 							}
+							$form_data->form_post->post_title = sanitize_text_field($form_data->form_post->post_title);
 							$post_id = wp_insert_post( $form_data->form_post );
+
 							// Check for any error while inserting.
 							if ( is_wp_error( $post_id ) ) {
 								return $post_id;
@@ -188,7 +190,7 @@ class UR_Admin_Import_Export_Forms {
 											$meta_value = ur_maybe_unserialize( $meta_value );
 										}
 
-										add_post_meta( $post_id, $meta_key, $meta_value );
+										add_post_meta( $post_id, $meta_key, sanitize_text_field($meta_value) );
 									}
 								}
 							}

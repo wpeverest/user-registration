@@ -1,8 +1,9 @@
 <div class="ur-membership">
 	<?php
 	require __DIR__ . '/./Partials/header.php';
-	$is_pro = is_plugin_active( 'user-registration-pro/user-registration.php' );
+	$is_pro     = is_plugin_active( 'user-registration-pro/user-registration.php' );
 	$return_url = admin_url( 'admin.php?page=user-registration-membership' );
+	$is_editing = !empty($_GET['post_id']);
 	?>
 	<div
 		class="ur-membership-tab-contents-wrapper ur-registered-from ur-align-items-center ur-justify-content-center">
@@ -66,7 +67,7 @@
 							</div>
 						</div>
 						<!--					membership status-->
-						<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3" style="gap:20px">
+						<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3" style="gap:20px; <?php echo $is_editing ? '' : 'display:none !important'; ?> ">
 							<div class="ur-label" style="width: 30%">
 								<label class="ur-membership-enable-status"
 									   for="ur-membership-status"><?php esc_html_e( 'Membership Status', 'user-registration' ); ?>
@@ -81,12 +82,13 @@
 									data-key-name="Membership Status"
 									id="ur-membership-status" type="checkbox"
 									class="user-registration-switch__control hide-show-check enabled"
-									<?php echo isset( $membership_content ) && $membership_content['status'] == 'true' ? 'checked' : ''; ?>
+									<?php echo isset( $membership_content ) && $membership_content['status'] == 'true' ? 'checked' : ($is_editing ? '' : 'checked') ; ?>
 									name="ur_membership_status"
 									style="width: 100%; text-align: left">
 							</div>
 
 						</div>
+
 						<!--						role-->
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
 							<div class="ur-label" style="width: 30%">
@@ -94,7 +96,7 @@
 									for="ur-input-type-membership-role"><?php esc_html_e( 'Membership Role', 'user-registration' ); ?>
 									<span style="color:red">*</span>
 									<span class="user-registration-help-tip tooltipstered"
-										  data-tip="Assign members to the selected role upon registration."></span>
+										  data-tip="Assign members to the selected role upon registration.(Overrides role set through form)"></span>
 								</label>
 							</div>
 							<div class="ur-input-type-membership-name ur-admin-template" style="width: 100%">
@@ -105,9 +107,13 @@
 										class="user-membership-enhanced-select2">
 										<?php
 										foreach ( $roles as $k => $role ) :
+
+											$selected = ( isset( $membership_details['role'] ) && $k === $membership_details['role'] )
+												? 'selected="selected"'
+												: ( ( $k === 'subscriber' && ! isset( $membership_details['role'] ) ) ? 'selected="selected"' : '' );
 											?>
 											<option
-												<?php echo isset( $membership_details['role'] ) && $k == $membership_details['role'] ? 'selected="selected"' : ''; ?>
+												<?php echo $selected ?>
 												value="<?php echo esc_attr( $k ); ?>"><?php echo esc_html( $role ); ?></option>
 										<?php
 										endforeach;
@@ -190,7 +196,9 @@
 												</div>
 											</label>
 											<!--											subscription type-->
-											<label class="ur-membership-types <?php echo ! $is_pro ? 'upgradable-type' : '' ?>" for="ur-membership-subscription-type">
+											<label
+												class="ur-membership-types <?php echo ! $is_pro ? 'upgradable-type' : '' ?>"
+												for="ur-membership-subscription-type">
 												<div class="ur-membership-type-title ur-d-flex ur-align-items-center">
 													<input
 														data-key-name="Type"
@@ -220,41 +228,49 @@
 										</div>
 									</div>
 								</div>
-								<div
-									class="ur-membership-cancellation-container"
-								>
-									<!--								cancel subscription section-->
-									<div class="ur-membership-selection-container ur-d-flex ur-p-1 ur-mt-3"
-										 style="gap:20px;">
-										<div class="ur-label" style="width: 30%">
-											<label
-												for="ur-membership-cancel-sub-immediately"><?php esc_html_e( 'Cancel Membership', 'user - registration' ); ?></label>
-										</div>
-										<div class="ur-input-type-select ur-admin-template" style="width: 100%">
-											<div class="ur-field ur-d-flex ur-align-items-center" style="gap: 10px">
-												<!--												uncomment in future if finite subscription logic needs to be added-->
-												<!--												<input data-key-name="Cancel Subscription" type="radio"-->
-												<!--													   id="ur-membership-cancel-sub-on-expiry"-->
-												<!--													   name="ur_membership_cancel_on" style="margin: 0"-->
-												<!--													   value="expiry"-->
-												<!--													--><?php // echo isset( $membership_details['cancel_subscription'] ) && $membership_details['cancel_subscription'] == 'expiry' ? 'checked' : '' ?>
-												<!--												>-->
-												<!--												<label for="ur-membership-cancel-sub-on-expiry">-->
-												<?php // echo __("Do not cancel subscription until plan expired.", "user-registration") ?><!--</label>-->
-												<input data-key-name="Cancel Subscription" type="radio"
-													   id="ur-membership-cancel-sub-immediately"
-													   style="margin: 0"
-													   name="ur_membership_cancel_on"
-													   value="immediately"
-													<?php echo ! isset( $membership_details['cancel_subscription'] ) ? 'checked' : ''; ?>
-													<?php echo isset( $membership_details['cancel_subscription'] ) && $membership_details['cancel_subscription'] == 'immediately' ? 'checked' : ''; ?>
-												>
+								<?php
+								if ( false ):
+									?>
+									<div
+										class="ur-membership-cancellation-container"
+									>
+										<!--								cancel subscription section-->
+										<div class="ur-membership-selection-container ur-d-flex ur-p-1 ur-mt-3"
+											 style="gap:20px;">
+											<div class="ur-label" style="width: 30%">
 												<label
-													for="ur-membership-cancel-sub-immediately"><?php echo __( 'Cancel immediately.', 'user-registration' ); ?></label>
+													for="ur-membership-cancel-sub-immediately"><?php esc_html_e( 'Cancel Membership', 'user - registration' ); ?></label>
+											</div>
+											<div class="ur-input-type-select ur-admin-template" style="width: 100%">
+												<div class="ur-field ur-d-flex ur-align-items-center" style="gap: 10px">
+													<!--												uncomment in future if finite subscription logic needs to be added-->
+													<!--												<input data-key-name="Cancel Subscription" type="radio"-->
+													<!--													   id="ur-membership-cancel-sub-on-expiry"-->
+													<!--													   name="ur_membership_cancel_on" style="margin: 0"-->
+													<!--													   value="expiry"-->
+													<!--													--><?php // echo isset( $membership_details['cancel_subscription'] ) && $membership_details['cancel_subscription'] == 'expiry' ? 'checked' : ''
+													?>
+													<!--												>-->
+													<!--												<label for="ur-membership-cancel-sub-on-expiry">-->
+													<?php // echo __("Do not cancel subscription until plan expired.", "user-registration")
+													?><!--</label>-->
+													<input data-key-name="Cancel Subscription" type="radio"
+														   id="ur-membership-cancel-sub-immediately"
+														   style="margin: 0"
+														   name="ur_membership_cancel_on"
+														   value="immediately"
+														<?php echo ! isset( $membership_details['cancel_subscription'] ) ? 'checked' : ''; ?>
+														<?php echo isset( $membership_details['cancel_subscription'] ) && $membership_details['cancel_subscription'] == 'immediately' ? 'checked' : ''; ?>
+													>
+													<label
+														for="ur-membership-cancel-sub-immediately"><?php echo __( 'Cancel immediately.', 'user-registration' ); ?></label>
+												</div>
 											</div>
 										</div>
 									</div>
-								</div>
+								<?php
+								endif;
+								?>
 								<!-- paid plan fields including subscription wise membership fields-->
 								<div id="paid-plan-container"
 									 class="

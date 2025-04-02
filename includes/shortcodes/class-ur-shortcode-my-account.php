@@ -433,7 +433,12 @@ class UR_Shortcode_My_Account {
 		/**
 		 * Show same error message for invalid username or email as login form.
 		 */
-		$invalid_username_or_email_error_message = get_option('user_registration_message_invalid_username' , __( 'Invalid username or email.', 'user-registration' ) );
+		$invalid_username_or_email_error_message = get_option( 'user_registration_message_invalid_username', __( 'Invalid username or email.', 'user-registration' ) );
+
+		if ( '' === $invalid_username_or_email_error_message || ! $invalid_username_or_email_error_message ) {
+			$invalid_username_or_email_error_message = __( 'Invalid username or email.', 'user-registration' );
+		}
+
 		/**
 		 * Filter to modify invalid username or email error message.
 		 */

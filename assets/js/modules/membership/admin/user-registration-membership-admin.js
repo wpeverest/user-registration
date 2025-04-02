@@ -116,7 +116,7 @@
 		},
 
 		//regular required validation
-		regular_validation: function (inputs, no_errors) {
+		regular_validation: function (inputs, no_errors, from) {
 			inputs.every(function (item) {
 				var $this = $(item),
 					value = $this.val(),
@@ -125,7 +125,8 @@
 					name = $this.data('key-name');
 				if (is_required && value === '') {
 					no_errors = false;
-					ur_membership_utils.show_failure_message(ur_membership_data.labels.i18n_error + '! ' + name + ' ' + ur_membership_data.labels.i18n_field_is_required);
+					var message = ('paypal' === from ? ur_membership_data.labels.i18n_paypal : '') + ur_membership_data.labels.i18n_error + '! ' + name + ' ' + ur_membership_data.labels.i18n_field_is_required + ' ' + ('paypal' === from ? ur_membership_data.labels.i18n_paypal_setup_error : '');
+					ur_membership_utils.show_failure_message(message);
 					return false;
 				} else if (type === 'url') {
 					if (!ur_membership_utils.url_validations(value)) {
@@ -288,14 +289,8 @@
 
 				// check if bank transfer is selected
 				if (is_bank_selected) {
-					var bank_content = tinyMCE.get('bank_transfer_field').getContent(),
-						regex = /(<img[^>]*?)(")([^>]*?>)/g;
-					bank_content = bank_content.replace(regex, function (match, p1, p2, p3) {
-						return p1 + '\'' + p3.replace(/"/g, '\'');
-					});
 					post_meta_data.payment_gateways.bank = {
-						status: is_bank_selected,
-						content: bank_content
+						status: is_bank_selected
 					};
 				}
 
@@ -322,7 +317,7 @@
 				no_errors = true;
 			//main fields validation
 			main_fields = Object.values(main_fields).reverse().slice(2);
-			var result = ur_membership_utils.regular_validation(main_fields, true);
+			var result = ur_membership_utils.regular_validation(main_fields, true, 'form');
 
 			if (!result) {
 				return false;
@@ -391,14 +386,22 @@
 						paypal_inputs = paypal_section.find('input');
 					if (selectedPlanType !== 'subscription') {
 						paypal_inputs = paypal_section.find('input').not('[name^="ur_membership_client_"]');
+						paypal_inputs = Object.values(paypal_inputs).reverse().slice(2).reverse();
+						result = ur_membership_utils.regular_validation(paypal_inputs, true, 'paypal');
+						if (!result) {
+							no_errors = false;
+						}
+					} else {
+						var client_id = paypal_section.find('#ur-input-type-client-id').val(),
+							client_secret = paypal_section.find('#ur-input-type-client-secret').val();
+
+						if (client_id === '' || client_secret === '') {
+							no_errors = false;
+							ur_membership_utils.show_failure_message(ur_membership_data.labels.i18n_paypal + ' ' + ur_membership_data.labels.i18n_error + '! ' + ur_membership_data.labels.i18n_paypal_client_secret_id_error);
+						}
 					}
 
-					paypal_inputs = Object.values(paypal_inputs).reverse().slice(2).reverse();
 
-					result = ur_membership_utils.regular_validation(paypal_inputs, true);
-					if (!result) {
-						no_errors = false;
-					}
 				}
 
 			}
@@ -428,10 +431,9 @@
 								ur_membership_utils.show_success_message(
 									response.data.message
 								);
-								var current_url = $(location).attr('href');
-								current_url += '&post_id=' + ur_membership_data.membership_id;
-								$(location).attr('href', current_url);
-
+								// var current_url = $(location).attr('href');
+								// current_url += '&post_id=' + ur_membership_data.membership_group_id;
+								$(location).attr('href', ur_membership_data.membership_page_url);
 							} else {
 								ur_membership_utils.show_failure_message(
 									response.data.message
@@ -561,6 +563,48 @@
 			);
 		},
 
+		validate_payment_gateway: function ($this) {
+
+			var switch_container = $this.closest('.user-registration-switch'),
+				pg = $this.attr('id').split('ur-membership-pg-')[1],
+				membership_type = $('input:radio[name=ur_membership_type]:checked').val();
+			ur_membership_utils.prepend_spinner(switch_container);
+
+			this.send_data(
+				{
+					action: 'user_registration_membership_validate_pg',
+					pg: pg,
+					membership_type: membership_type
+				},
+				{
+					success: function (response) {
+						if (!response.status) {
+							ur_membership_utils.show_failure_message(
+								response.message
+							);
+							$this.prop('checked', false);
+							$this.closest('.user-registration-switch').closest('.ur-payment-option-header').siblings('.payment-option-body').show();
+						}else {
+							$this.prop('checked', true);
+							$this.closest('.user-registration-switch').closest('.ur-payment-option-header').siblings('.payment-option-body').hide();
+						}
+					},
+					failure: function (xhr, statusText) {
+						ur_membership_utils.show_failure_message(
+							ur_membership_data.labels.network_error +
+							'(' +
+							statusText +
+							')'
+						);
+					},
+					complete: function () {
+						ur_membership_utils.remove_spinner(switch_container);
+						ur_membership_utils.toggleSaveButtons(false);
+					}
+				}
+			);
+		},
+
 		/**
 		 * Send data to the backend API.
 		 *
@@ -649,7 +693,7 @@
 		e.preventDefault();
 		e.stopPropagation();
 		var $this = $(this);
-		if($(this).find('.ur-spinner.is-active').length) {
+		if ($(this).find('.ur-spinner.is-active').length) {
 			ur_membership_utils.show_failure_message(
 				ur_membership_data.labels.i18n_previous_save_action_ongoing
 			);
@@ -683,24 +727,44 @@
 	 * For toggling payment options.
 	 */
 	$(document).on('click', '.ur-payment-option-header', function () {
-		if ($(this).hasClass('closed')) {
-			$(this).removeClass('closed');
-		} else {
-			$(this).addClass('closed');
-		}
-		var data_id = $(this).attr('id');
-		$('div[data-target-id="' + data_id + '"]').slideToggle();
-		$(this).find('.ur-pg-arrow').toggleClass('expand');
+		$(this).find('input').trigger('click');
+		// if ($(this).hasClass('closed')) {
+		// 	$(this).removeClass('closed');
+		// } else {
+		// 	$(this).addClass('closed');
+		// }
+		// var data_id = $(this).attr('id');
+		// $('div[data-target-id="' + data_id + '"]').slideToggle();
+		// $(this).find('.ur-pg-arrow').toggleClass('expand');
 	});
 	//prevent status toggle
 	$(document).on('click', '.pg-switch', function (e) {
 		e.stopImmediatePropagation();
-		if ($(this).attr('id') === "ur-membership-pg-stripe" && $(this).is(":checked")) {
-			if ($('#ur-input-type-publishable-key').val() === "" || $('#ur-input-type-secret-key').val() === "") {
-				ur_membership_utils.show_failure_message(ur_membership_data.labels.i18n_stripe_setup_error);
-				$(this).prop('checked', false);
-			}
+
+		if ($(this).is(':checked') && $(this).closest('.user-registration-switch').find('.ur-spinner.is-active').length < 1) {
+			ur_membership_request_utils.validate_payment_gateway($(this));
 		}
+
+		// if ($(this).attr('id') === "ur-membership-pg-stripe" && $(this).is(":checked")) {
+		// 	if ($('#ur-input-type-publishable-key').val() === "" || $('#ur-input-type-secret-key').val() === "" || $('#stripe-section .stripe-settings').length) {
+		// 		ur_membership_utils.show_failure_message(ur_membership_data.labels.i18n_error + '! ' + ur_membership_data.labels.i18n_stripe_setup_error);
+		// 		$(this).prop('checked', false);
+		// 	}
+		// }
+		//
+		// if ($(this).attr('id') === "ur-membership-pg-paypal" && $(this).is(":checked")) {
+		// 	if ($('#ur-input-type-paypal-email').val() === "" || $('#paypal-section #settings-section').length) {
+		// 		ur_membership_utils.show_failure_message(ur_membership_data.labels.i18n_error + '! ' + ur_membership_data.labels.i18n_paypal_setup_error);
+		// 		$(this).prop('checked', false);
+		// 	}
+		//
+		// }
+		// if ($(this).attr('id') === "ur-membership-pg-bank" && $(this).is(":checked")) {
+		// 	if ($('#bank-section .bank-settings').length) {
+		// 		ur_membership_utils.show_failure_message(ur_membership_data.labels.i18n_error + '! ' + ur_membership_data.labels.i18n_bank_setup_error);
+		// 		$(this).prop('checked', false);
+		// 	}
+		// }
 	});
 
 	//delete membership

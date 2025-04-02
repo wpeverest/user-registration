@@ -95,6 +95,7 @@ class UR_Admin_Form_Templates {
 			array(
 				'security' => wp_create_nonce( 'wp_rest' ),
 				'restURL'  => rest_url(),
+				'siteURL'  => esc_url( home_url( '/' ) ),
 			)
 		);
 		wp_enqueue_script( 'ur-templates' );

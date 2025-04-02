@@ -52,7 +52,7 @@ function App() {
 			label: __("Registration Type", "user-registration"),
 			title: __("Registration Type", "user-registration"),
 			description: __(
-				"Select which registration page type you want to proceed with.",
+				"Welcome! Let's set up your registration system. Select the type of registration you’d like to proceed with:",
 				"user-registration"
 			),
 			isDone: true,
@@ -60,12 +60,7 @@ function App() {
 		},
 		{
 			key: "install_pages",
-			label: __("Install Pages", "user-registration"),
-			title: __("Install Pages", "user-registration"),
-			description: __(
-				"The following pages have been created automatically.",
-				"user-registration"
-			),
+			label: __("Initial Setup Details", "user-registration"),
 			isDone: true,
 			component: <InstallPage />
 		},

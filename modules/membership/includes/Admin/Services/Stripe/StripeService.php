@@ -172,10 +172,18 @@ class StripeService {
 		$payment_status = sanitize_text_field( $data['payment_status'] );
 		$member_id      = absint( $_POST['member_id'] );
 		$logger         = ur_get_logger();
-		$logger->notice( '-------------------------------------------- Stripe Payment Confirmation started for ' . $member_id . ' --------------------------------------------', array( 'source' => 'ur-membership-stripe' ) );
-		$response = array(
+		$response       = array(
 			'status' => true,
 		);
+		$latest_order   = $this->members_orders_repository->get_member_orders( $member_id );
+		if ( empty( $latest_order ) ) {
+			$logger->notice( '-------------------------------------------- Order not found for  ' . $member_id . ' --------------------------------------------', array( 'source' => 'ur-membership-stripe' ) );
+			$response['status'] = false;
+
+			return $response;
+		}
+		$logger->notice( '-------------------------------------------- Stripe Payment Confirmation started for ' . $member_id . ' --------------------------------------------', array( 'source' => 'ur-membership-stripe' ) );
+
 		if ( 'failed' === $payment_status ) {
 			$error_msg = __( 'Stripe Payment failed.', 'user-registration' );
 			$error_msg = $data['payment_result']['error']['message'] ?? $error_msg;
@@ -193,21 +201,22 @@ class StripeService {
 			$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
 			$membership_metas['post_title'] = $membership['post_title'];
 			$member_subscription            = $this->members_subscription_repository->get_member_subscription( $member_id );
-
-			if ( 'completed' === $member_order['status'] ) {
-				$response['message'] = __( 'New member has been successfully created with successful stripe payment.', 'user-registration' );
-				$response['status']  = true;
-
-				return $response;
-				// ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
-			}
-			$is_order_updated = $this->members_orders_repository->update(
+			$is_order_updated               = $this->members_orders_repository->update(
 				$member_order['ID'],
 				array(
 					'status'         => 'completed',
 					'transaction_id' => $transaction_id,
 				)
 			);
+			if ( 'completed' === $member_order['status'] ) {
+				$logger->notice( '-------------------------------------------- Stripe Subscription process: Order status is already completed.' . $member_id . ' --------------------------------------------', array( 'source' => 'ur-membership-stripe' ) );
+				$response['message'] = __( 'New member has been successfully created with successful stripe payment.', 'user-registration' );
+				$response['status']  = true;
+
+				return $response;
+				// ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
+			}
+
 			if ( $is_order_updated && 'paid' === $member_order['order_type'] ) {
 				$this->members_subscription_repository->update( $member_subscription['ID'], array( 'status' => 'active' ) );
 				$logger->notice( 'Order and subscription status updated ', array( 'source' => 'ur-membership-stripe' ) );
@@ -225,12 +234,18 @@ class StripeService {
 		$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
 		$membership_metas['post_title'] = $membership['post_title'];
 		$member_subscription            = $this->members_subscription_repository->get_member_subscription( $member_id );
-		$logger                         = ur_get_logger();
-
-		$logger->notice( '-------------------------------------------- Stripe Subscription started for ' . $member_id . ' --------------------------------------------', array( 'source' => 'ur-membership-stripe' ) );
 		$response               = array(
 			'status' => false,
 		);
+		if(empty($member_subscription)) {
+			$logger->notice( '-------------------------------------------- Stripe Subscription not found for ' . $member_id . ' --------------------------------------------', array( 'source' => 'ur-membership-stripe' ) );
+
+			return $response;
+		}
+		$logger                         = ur_get_logger();
+
+		$logger->notice( '-------------------------------------------- Stripe Subscription started for ' . $member_id . ' --------------------------------------------', array( 'source' => 'ur-membership-stripe' ) );
+
 		$stripe_product_details = $membership_metas['payment_gateways']['stripe'] ?? array();
 
 		if ( ! isset( $stripe_product_details['price_id'] ) || ! isset( $stripe_product_details['product_id'] ) ) {
@@ -572,5 +587,11 @@ class StripeService {
 				'status' => 'canceled',
 			)
 		);
+	}
+
+	public function validate_setup() {
+		$stripe_settings = self::get_stripe_settings();
+
+		return ( empty( $stripe_settings['publishable_key'] ) || empty( $stripe_settings['secret_key'] ) );
 	}
 }

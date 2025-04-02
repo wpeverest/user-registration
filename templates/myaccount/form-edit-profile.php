@@ -128,7 +128,7 @@ if ( 'vertical' === $layout ) {
 								?>
 									<img class="profile-preview" alt="profile-picture" src="<?php echo esc_url( $image ); ?>" style='max-width:96px; max-height:96px;' >
 
-									<p class="user-registration-tips"><?php echo esc_html__( 'Max size: ', 'user-registration' ) . esc_attr( size_format( $max_upload_size * 1024 ) ); ?></p>
+									<p class="user-registration-tips"><?php echo esc_html__( 'Max size: ', 'user-registration' ) . esc_attr( size_format( $max_upload_size ) ); ?></p>
 									</div>
 									<header>
 										<p><strong>
@@ -221,7 +221,7 @@ if ( 'vertical' === $layout ) {
 								}
 
 								ob_start();
-								echo '<div class="ur-form-row">';
+								echo '<div class="ur-form-row" data-row-id=' . $row_id . ' ' . $row_cl_props . '>';
 								user_registration_edit_profile_row_template( $data, $profile );
 								echo '</div>';
 								$row_template = ob_get_clean();

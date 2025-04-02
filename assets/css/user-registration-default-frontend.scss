@@ -20,7 +20,6 @@
         &.ur-frontend-form--default {
             .ur-form-row{
                 gap: 24px;
-                margin-bottom: 0;
                 .form-row{
                     .ur-label{
                         font-weight: 500;
@@ -40,15 +39,15 @@
                                 text-transform: capitalize;
                             }
                         }
-    
+
                     }
                 }
             }
-    
+
             button[type=submit]{
                 padding: 10px 16px 8px;
                 border-radius: 4px;
-                background: #475bb2;
+                // background: #475bb2;
                 color: #fff;
                 font-size: 14px;
                 font-weight: 500;

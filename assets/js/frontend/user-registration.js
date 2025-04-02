@@ -2,6 +2,57 @@
 (function ($) {
 	var user_registration_form_init = function () {
 		var ursL10n = user_registration_params.ursL10n;
+
+		var user_registration_frontend_utils = {
+			/**
+			 * Function to show success message.
+			 *
+			 * @since xx.xx.xx
+			 */
+			show_success_message: function(message) {
+				$('.user-registration-membership-notice__container .user-registration-membership-notice__red').removeClass('user-registration-membership-notice__red').addClass('user-registration-membership-notice__blue');
+				$('.user-registration-membership-notice__message').text(message);
+				$('.user-registration-membership-notice__container').css('display', 'block');
+				this.toggleNotice();
+				this.ur_remove_cookie( 'urm_toast_content' );
+				this.ur_remove_cookie( 'urm_toast_success_message' );
+			},
+
+			/**
+			 * Removes the notice after some time.
+			 *
+			 * @since xx.xx.xx
+			 */
+			toggleNotice: function() {
+				var noticeContainer = $('.user-registration-membership-notice__container');
+				setTimeout(function() {
+					noticeContainer.fadeOut(4000);
+				}, 4000);
+			},
+
+			/**
+			 * Retrieves the cookie values set.
+			 *
+			 * @since xx.xx.xx
+			 */
+			ur_get_cookie: function( cookie_key ) {
+				var matches = document.cookie.match(new RegExp(
+					"(?:^|; )" + cookie_key.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+				));
+				return matches ? decodeURIComponent(matches[1]) : undefined;
+			},
+
+			/**
+			 * Deletes the cookie values.
+			 *
+			 * @since xx.xx.xx
+			 */
+			ur_remove_cookie: function( cookie_key ) {
+				document.cookie = cookie_key + '=; Max-Age=-99999999; path=/';
+			}
+
+		}
+
 		$.fn.ur_form_submission = function () {
 			// traverse all nodes
 			return this.each(function () {
@@ -379,8 +430,12 @@
 								single_form_field_name =
 									single_form_field_name.replace("[]", "");
 
-								if(single_form_field_name === "urm_membership") {
-									single_form_field_name = field.eq(0).attr('data-name');
+								if (
+									single_form_field_name === "urm_membership"
+								) {
+									single_form_field_name = field
+										.eq(0)
+										.attr("data-name");
 								}
 								var field_data = {
 									value: field_value_json,
@@ -1016,7 +1071,11 @@
 										"user_registration_frontend_validate_before_form_submit",
 										[$this]
 									);
-									if($('.user-registration-error:visible').length) {
+									if (
+										$(
+											"#stripe-errors.user-registration-error:visible"
+										).length
+									) {
 										return;
 									}
 									if (
@@ -1041,8 +1100,6 @@
 									) {
 										return;
 									}
-
-
 
 									$this
 										.find(".ur-submit-button")
@@ -1185,7 +1242,7 @@
 									$this
 										.find(".ur-submit-button")
 										.find("span")
-										.addClass("ur-spinner");
+										.addClass("ur-front-spinner");
 
 									var hit_third_party_api =
 										events.wait_third_party_api($this);
@@ -1240,6 +1297,7 @@
 							type: "POST",
 							async: true,
 							complete: function (ajax_response) {
+								$(document.body).trigger('user_registration_after_form_submit_completion');
 								var ajaxFlag = [];
 								ajaxFlag["status"] = true;
 
@@ -1252,12 +1310,11 @@
 									$this
 										.find(".ur-submit-button")
 										.find("span")
-										.removeClass("ur-spinner");
+										.removeClass("ur-front-spinner");
 
 									var redirect_url = $this
 										.find('input[name="ur-redirect-url"]')
 										.val();
-
 									var message = $('<ul class=""/>');
 									var type = "error";
 									var individual_field_message = false;
@@ -1364,7 +1421,9 @@
 												);
 											}
 											$(".ur-input-count").text("0");
-											if ( ! user_registration_params.ur_hold_data_before_redirection ) {
+											if (
+												!user_registration_params.ur_hold_data_before_redirection
+											) {
 												$this[0].reset();
 											}
 											if (
@@ -1937,7 +1996,7 @@
 								$this
 									.find(".user-registration-submit-Button")
 									.find("span")
-									.addClass("ur-spinner");
+									.addClass("ur-front-spinner");
 
 								$.ajax({
 									type: "POST",
@@ -1945,9 +2004,12 @@
 									dataType: "JSON",
 									data: data,
 									complete: function (ajax_response) {
+										$(document).trigger(
+											"user_registration_process_before_edit_profile_submit_completion"
+										);
 										$this
-											.find("span.ur-spinner")
-											.removeClass("ur-spinner");
+											.find("span.ur-front-spinner")
+											.removeClass("ur-front-spinner");
 										$this
 											.closest(".user-registration")
 											.find(".user-registration-error")
@@ -2303,22 +2365,45 @@
 					$(this).closest("form.register").ur_form_submission();
 				});
 
+				var urm_toast_content = user_registration_frontend_utils.ur_get_cookie('urm_toast_content');
+
+				if ($('.user-registration-page .notice-container').length === 0) {
+					// Adds the toast container on the top of page.
+					$(document).find('.user-registration-page').prepend(urm_toast_content);
+				}
+
+				var urm_toast_success_message = user_registration_frontend_utils.ur_get_cookie('urm_toast_success_message');
+
+				// Displays the toast message.
+				user_registration_frontend_utils.show_success_message(urm_toast_success_message);
+
+				$('.user-registration-membership__close_notice').on('click', function() {
+					$('.user-registration-membership-notice__container').hide();
+				});
+
 				// Handle edit-profile form submit event.
 				$(
 					"input[name='save_account_details'], button[name='save_account_details']"
-				).on("click", function (event) {
-					// Check if the form is edit-profile form and check if ajax submission on edit profile is enabled.
-					if (
-						$(".ur-frontend-form")
-							.find("form.edit-profile")
-							.hasClass("user-registration-EditProfileForm")
-					) {
-						$(
-							"form.user-registration-EditProfileForm"
-						).ur_form_submission();
-					}
-					$(this).submit();
-				});
+				)
+					.off("click")
+					.on("click", function (event) {
+						event.preventDefault();
+						// Check if the form is edit-profile form and check if ajax submission on edit profile is enabled.
+						if (
+							$(".ur-frontend-form")
+								.find("form.edit-profile")
+								.hasClass("user-registration-EditProfileForm")
+						) {
+							$(
+								"form.user-registration-EditProfileForm"
+							).ur_form_submission();
+						}
+						if(user_registration_params.ajax_submission_on_edit_profile) {
+							$(this).submit();
+						}else {
+							$(this).closest('form')[0].submit();
+						}
+					});
 				if ($(".ur-flatpickr-field").length) {
 					// create an array to store the flatpickr instances.
 					var flatpickrInstances = [];
@@ -2394,15 +2479,19 @@
 				}
 			});
 
-				// Handel WYSIWYG field client side validation.
-				$( document ).on( 'tinymce-editor-init', function( event, editor ) {
-					var $editorContainer = $(editor.getContainer());
-					var containerId = $editorContainer.attr('id');
-					var hiddenEditor = $("#"+containerId).parent().parent().parent().find("[data-label = 'WYSIWYG']");
-					editor.on('keyup', function(e) {
-						hiddenEditor.val(tinyMCE.activeEditor.getContent());
-					});
+			// Handel WYSIWYG field client side validation.
+			$(document).on("tinymce-editor-init", function (event, editor) {
+				var $editorContainer = $(editor.getContainer());
+				var containerId = $editorContainer.attr("id");
+
+				var hiddenEditor = $("#" + containerId)
+					.closest(".form-row")
+					.find("[data-label = 'WYSIWYG']");
+
+				editor.on("keyup", function (e) {
+					hiddenEditor.val(tinyMCE.activeEditor.getContent());
 				});
+			});
 
 			$(".ur-frontend-form").each(function () {
 				var $registration_form = $(this).find("form.register");

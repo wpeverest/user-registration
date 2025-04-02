@@ -61,18 +61,25 @@
     display: -webkit-flex;
     display: flex;
     -webkit-flex-direction: column;
-    flex-direction: column; }
-    .ur-frontend-form .ur-form-row .ur-form-grid {
-      width: 100% !important;
-      margin-bottom: 20px; }
-      .ur-frontend-form .ur-form-row .ur-form-grid:nth-child(1n+2) {
-        border-left: 1px solid #e1e1e1; }
-      .ur-frontend-form .ur-form-row .ur-form-grid:last-child {
-        margin-bottom: 0;
-        border-left: 0 none; } }
-
+    flex-direction: column;
+  }
+  .ur-frontend-form .ur-form-row .ur-form-grid {
+    width: 100% !important;
+    margin-bottom: 20px;
+  }
+  .ur-frontend-form .ur-form-row .ur-form-grid:nth-child(1n+2) {
+    border-left: 1px solid #e1e1e1;
+  }
+  .ur-frontend-form .ur-form-row .ur-form-grid:last-child {
+    margin-bottom: 0;
+    border-left: 0 none;
+  }
+}
 @media screen and (max-width: 600px) {
   #user-registration .user-registration-MyAccount-navigation ul {
-    display: block; }
-    #user-registration .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link {
-      display: block; } }
+    display: block;
+  }
+  #user-registration .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link {
+    display: block;
+  }
+}

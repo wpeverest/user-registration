@@ -17,6 +17,7 @@ const Header = ({ steps, activeStep, siteURL }) => {
 								<>
 									{i > 1 && (
 										<li
+											id={`center-line-step-${i}`}
 											className={`center-line ${
 												activeStep.key === step.key ||
 												step.isDone
