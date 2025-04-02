@@ -8147,6 +8147,113 @@ if ( ! function_exists( 'ur_find_my_account_in_custom_template' ) ) {
 	}
 }
 
+add_filter( 'user_registration_get_endpoint_url', 'ur_filter_get_endpoint_url' , 10, 4 );
+
+if( ! function_exists( 'ur_filter_get_endpoint_url' ) ) {
+/**
+ * Filter the endpoint URL for WPML compatibility.
+ *
+ * This function modifies the endpoint URL when WPML is active to ensure proper translation
+ * and localization of URLs. It removes the filter temporarily to avoid infinite loops,
+ * translates the endpoint, converts the URL using WPML's convert_url method, and then
+ * re-adds the filter.
+ *
+ *
+ * @param string $url       The endpoint URL.
+ * @param string $endpoint  The endpoint slug.
+ * @param mixed  $value     The value to add to the URL.
+ * @param string $permalink The permalink URL.
+ *
+ * @return string Modified URL if WPML is active, original urk if WPML is not active.
+ */
+
+	 function ur_filter_get_endpoint_url( $url, $endpoint, $value, $permalink ) {
+		//Return early WPML is not active
+		if ( ! class_exists( 'SitePress' ) ) {
+			return ;
+		}
+		$site_press = new SitePress();
+		remove_filter( 'user_registration_get_endpoint_url', 'ur_filter_get_endpoint_url', 10 );
+
+		$translated_endpoint = ur_get_endpoint_translation( $endpoint );
+		$url = ur_get_endpoint_url( $translated_endpoint, $value, $site_press->convert_url( $permalink ) );
+		add_filter( 'user_registration_get_endpoint_url', 'ur_filter_get_endpoint_url', 10, 4 );
+		return $url;
+	}
+}
+
+if( ! function_exists( 'ur_get_endpoint_translation' ) ) {
+	/**
+	 * Get the translated endpoint
+	 *
+	 * @param $endpoint
+	 *
+	 * @return string
+	 */
+	 function ur_get_endpoint_translation( $endpoint ,$language = null ) {
+
+		return apply_filters( 'wpml_get_endpoint_translation', $endpoint, $endpoint, $language );
+	}
+}
+
+add_filter('user_registration_get_endpoint_url',  'ur_filter_get_endpoint_url', 10, 4);
+
+if( ! function_exists( 'ur_register_endpoints_translations') ) {
+
+	function ur_register_endpoints_translations(){
+		/**
+		 * Register the endpoint translations
+		 */
+    	 if(  is_admin() || ! defined('ICL_SITEPRESS_VERSION') || ICL_PLUGIN_INACTIVE){
+			return false;
+		 }
+
+		 $ur_vars = UR()->query->query_vars;
+
+		 if (! empty($ur_vars)) {
+			$query_vars = array(
+
+				// My account actions.
+				'edit-profile'       => get_endpoint_translation('edit-profile', $ur_vars['edit-profile'], $language),
+				'change-password'       => get_endpoint_translation('change-password', $ur_vars['change-password'], $language),
+				'lost-password'      => get_endpoint_translation('lost-password', $ur_vars['lost-password'], $language),
+				'user-logout'    => get_endpoint_translation('user-logout', $ur_vars['user-logout'], $language),
+			);
+			$query_vars = apply_filters('wcml_register_endpoints_query_vars', $query_vars, $ur_vars, $this);
+
+			$query_vars             = array_merge($ur_vars, $query_vars);
+			UR()->query->query_vars = $query_vars;
+		}
+
+		return UR()->query->query_vars;
+
+ 	}
+}
+
+if( ! function_exists( 'get_endpoint_translation' ) ) {
+	/**
+	 * Get the translated endpoint
+	 *
+	 * @param $endpoint
+	 *
+	 * @return string
+	 */
+	 function get_endpoint_translation( $endpoint, $value, $language = null ) {
+
+		if (function_exists('icl_t')) {
+			$trnsl = apply_filters('wpml_translate_single_string', $endpoint, 'UserRegistration Endpoints', $key, $language);
+
+			if (! empty($trnsl)) {
+				return $trnsl;
+			} else {
+				return $endpoint;
+			}
+		} else {
+			return $endpoint;
+		}
+	}
+}
+
 add_filter( 'user_registration_check_user_order_status', 'get_user_order_status', 10, 1 );
 
 if ( ! function_exists( 'get_user_order_status' ) ) {
