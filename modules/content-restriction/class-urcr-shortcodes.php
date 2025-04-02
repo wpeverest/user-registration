@@ -41,8 +41,21 @@ class URCR_Shortcodes {
 			$current_user_role = is_user_logged_in() ? wp_get_current_user()->roles[0] : 'guest';
 			$get_meta_data_roles = get_post_meta( $post->ID, 'urcr_meta_roles', $single = true );
 			$get_meta_data_memberships = get_post_meta( $post->ID, 'urcr_meta_memberships', true );
+			foreach ($atts as $key => $value) {
+				if (is_string($value)) {
+					$value = html_entity_decode($value, ENT_QUOTES);
+					$value = str_replace(['“', '”'], '"', $value);
+					$atts[$key] = trim($value, '"');
+				}
+			}
 
-			$roles = isset( $atts['access_role'] ) ? trim( $atts['access_role'] ) : '';
+			if (isset($atts['access_specific_role']) && !empty($atts['access_specific_role'])) {
+				$specific_roles = $atts['access_specific_role'];
+			}
+
+			$roles = isset( $atts['access_all_roles'] ) ? trim( $atts['access_all_roles'] ) : '';
+			$access_control = isset( $atts['access_control'] ) ? trim( $atts['access_control'] ) : '';
+
 			$is_membership_active = ur_check_module_activation('membership');
 
 			if( $is_membership_active ) {
@@ -106,11 +119,19 @@ class URCR_Shortcodes {
 				}
 			}
 
-			$roles = explode( ',', $roles );
+			$specific_roles = isset($specific_roles) ? explode( ',', $specific_roles ) : array();
+			$specific_roles = array_map( 'trim', $specific_roles );
 
-			$roles = array_map( 'trim', $roles );
+			if (isset($atts['message']) && !empty($atts['message'])) {
+				$message = '';
+				foreach ($atts as $key => $msg_value) {
+					if (is_int($key)) {
+						$message .= ' ' . $msg_value;
+					}
+				}
+			}
 
-			$message = get_option( 'user_registration_content_restriction_message' );
+			$message = isset( $atts['enable_content_restriction']) && $atts['enable_content_restriction'] === "true" ? $message :'';
 
 			$message = empty( $message ) ? __( 'This content is restricted!', 'user-registration' ) : $message;
 
@@ -118,19 +139,32 @@ class URCR_Shortcodes {
 
 			$message = do_shortcode( $message );
 
-			if ( in_array( 'all_logged_in_users', $roles ) ) {
-				if ( is_user_logged_in() ) {
-					return do_shortcode( $content );
-				}
-			} elseif ( in_array( 'guest', $roles ) ) {
-				if ( ! is_user_logged_in() ) {
-					return do_shortcode( $content );
-				}
-			} elseif ( in_array( $current_user_role, $roles ) ) {
-				return do_shortcode( $content );
-			}
+				switch ($roles) {
+					case 'all_logged_in_users':
+						if (is_user_logged_in()) {
+							return do_shortcode($content);
+						}
+						break;
+					case 'choose_specific_roles':
+						if (!empty($specific_roles) && in_array($current_user_role, $specific_roles, true)) {
+							return do_shortcode($content);
+						}
+						break;
 
-			return '<span class="urcr-restrict-message">' . $message . '</span>';
+					case 'guest_users':
+						if (! is_user_logged_in()) {
+							return do_shortcode($content);
+						}
+						break;
+
+					case 'memberships':
+						if (isset($current_user_membership) && is_array($roles) && in_array($current_user_membership, $roles, true)) {
+							return do_shortcode($content);
+						}
+						break;
+				}
+
+				return '<span class="urcr-restrict-message">' . $message . '</span>';
 		}
 			return do_shortcode( $content );
 	}

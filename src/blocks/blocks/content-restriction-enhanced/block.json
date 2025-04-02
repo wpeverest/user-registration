@@ -38,6 +38,14 @@
     "content": {
       "type": "string",
       "selector": "div"
+    },
+    "message": {
+      "type": "string",
+      "default": ""
+    },
+    "enableContentRestriction": {
+      "type": "boolean",
+      "default": false
     }
   },
   "editorScript": "user-registration-blocks-editor",
