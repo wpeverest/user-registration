@@ -131,12 +131,15 @@ class URCR_Shortcodes {
 				}
 			}
 
-			$message = isset( $atts['enable_content_restriction']) && $atts['enable_content_restriction'] === "true" ? $message :'';
+			$message = '';
+			if ( $override_global_settings === 'on' ) {
+				$message = ! empty(get_post_meta( $post->ID, 'urcr_meta_content', $single = true )); ? get_post_meta( $post->ID, 'urcr_meta_content', $single = true ) : '';
+			} elseif ( isset( $atts['enable_content_restriction']) && $atts['enable_content_restriction'] === "true" ) {
+				$message = isset( $atts['message'] ) ? $atts['message'] : get_option( 'user_registration_content_restriction_message' );
+			}
 
 			$message = empty( $message ) ? __( 'This content is restricted!', 'user-registration' ) : $message;
-
 			$message = apply_filters( 'user_registration_process_smart_tags', $message );
-
 			$message = do_shortcode( $message );
 
 				switch ($roles) {
