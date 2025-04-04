@@ -66,6 +66,7 @@ class ShortCodes {
 	 * @return string
 	 */
 	public static function member_registration_form( $attributes ) {
+		//for blocks refer to register_membership_admin_scripts function in Admin.php to load scripts and styles
 		do_action( 'wp_enqueue_membership_scripts' );
 		wp_enqueue_script( 'user-registration-membership-frontend-script' );
 		wp_enqueue_script( 'ur-snackbar' );

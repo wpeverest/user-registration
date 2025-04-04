@@ -53,7 +53,6 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 
 	public function register_scripts( $hook ) {
 		// enqueue scripts here.
-
 		$screen    = get_current_screen();
 		$screen_id = $screen ? $screen->id : '';
 		if ( in_array( $screen_id, ur_get_screen_ids(), true ) || $hook == 'post-new.php' || $hook == 'post.php' ) {
