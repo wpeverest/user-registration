@@ -3,7 +3,7 @@
  * Plugin Name: User Registration & Membership
  * Plugin URI: https://wpuserregistration.com/
  * Description: The most flexible User Registration and Membership plugin for WordPress.
- * Version: 4.1.1
+ * Version: 4.1.3
  * Author: WPEverest
  * Author URI: https://wpuserregistration.com
  * Text Domain: user-registration
@@ -35,7 +35,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '4.1.1';
+		public $version = '4.1.3';
 
 		/**
 		 * Session instance.
@@ -295,6 +295,10 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			 */
 			if ( in_array( 'oxygen/functions.php', get_option( 'active_plugins', array() ), true ) ) {
 				include_once UR_ABSPATH . 'includes/3rd-party/oxygen/class-ur-oxygen.php';
+			}
+			// Divi builder compatiblity.
+			if(class_exists('WPEverest\URM\DiviBuilder\Builder')) {
+				WPEverest\URM\DiviBuilder\Builder::init();
 			}
 
 			/**

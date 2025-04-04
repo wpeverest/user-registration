@@ -708,6 +708,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				update_option( 'user_registration_onboarding_skipped', true );
 			}
 			wp_enqueue_script( 'ur-setup' );
+			wp_enqueue_script( 'ur-enhanced-select-custom' );
 
 			wp_localize_script(
 				'ur-setup',

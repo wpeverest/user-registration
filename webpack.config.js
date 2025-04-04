@@ -1,6 +1,7 @@
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const isProd = process.env.NODE_ENV === "production";
+const WebpackBar = require("webpackbar");
 
 module.exports = (env, argv) => {
 	return {
@@ -9,7 +10,8 @@ module.exports = (env, argv) => {
 			dashboard: "./src/dashboard/index.js",
 			formblock: "./assets/js/admin/gutenberg/form-block.js",
 			blocks: "./src/blocks/index.js",
-			form_templates: "./src/form-templates/index.js"
+			form_templates: "./src/form-templates/index.js",
+			"divi-builder": "./src/widgets/divi-builder/index.js"
 		},
 		output: {
 			path: path.resolve(__dirname + "/chunks"),
@@ -52,11 +54,11 @@ module.exports = (env, argv) => {
 					]
 				},
 				{
-					test: /\.(gif|webp)$/i,
+					test: /\.(gif|webp|svg)$/i,
 					use: "url-loader"
 				},
 				{
-					test: /\.(png|svg|jpg|jpeg)$/i,
+					test: /\.(png|jpg|jpeg)$/i,
 					use: [
 						{
 							loader: "file-loader"
@@ -80,7 +82,10 @@ module.exports = (env, argv) => {
 						}
 					}
 				]
-			})
+			}),
+			new WebpackBar({
+				/* options */
+			}),
 		],
 		externals: {
 			"@wordpress/blocks": ["wp", "blocks"],

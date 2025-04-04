@@ -8,7 +8,8 @@ export const initialState = {
 		moduleName: "",
 	},
 	allModules: [],
-	isMembershipActivated: false
+	isMembershipActivated: false,
+	isPaymentAddonActivated: false,
 };
 
 export const actionTypes = {
@@ -16,7 +17,8 @@ export const actionTypes = {
 	GET_THEMES_STATUS: "GET_THEMES_STATUS",
 	GET_UPGRADE_MODAL: "GET_UPGRADE_MODAL",
 	GET_ALL_MODULES: "GET_ALL_MODULES",
-	GET_IS_MEMBERSHIP_ACTIVATED: "GET_IS_MEMBERSHIP_ACTIVATED"
+	GET_IS_MEMBERSHIP_ACTIVATED: "GET_IS_MEMBERSHIP_ACTIVATED",
+	GET_IS_PAYMENT_ADDON_ACTIVATED: "GET_IS_PAYMENT_ADDON_ACTIVATED",
 };
 
 const reducer = (state, action) => {
@@ -45,6 +47,11 @@ const reducer = (state, action) => {
 			return {
 				...state,
 				isMembershipActivated: action.isMembershipActivated
+			};
+		case actionTypes.GET_IS_PAYMENT_ADDON_ACTIVATED:
+			return {
+				...state,
+				isPaymentAddonActivated: action.isPaymentAddonActivated
 			};
 		default:
 			return state;

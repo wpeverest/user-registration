@@ -146,6 +146,11 @@ class UR_Logger implements UR_Logger_Interface {
 	 * @param array  $context Optional. Additional information for log handlers.
 	 */
 	public function log( $level, $message, $context = array() ) {
+
+		if ( isset( $context['source'])  && $context['source'] !== 'fatal-errors' && ! ur_option_checked( 'user_registration_enable_log', false ) )  {
+			return false;
+		}
+
 		if ( ! UR_Log_Levels::is_valid_level( $level ) ) {
 			/* translators: %s - Log Level */
 			ur_doing_it_wrong( __METHOD__, sprintf( __( 'UR_Logger::log was called with an invalid level "%s".', 'user-registration' ), $level ), '3.0' );
@@ -306,5 +311,22 @@ class UR_Logger implements UR_Logger_Interface {
 		$handler = new UR_Log_Handler_File();
 
 		return $handler->clear( $handle );
+	}
+
+
+	/**
+	 * Clear all logs older than a defined number of days. Defaults to 30 days.
+	 *
+	 * @since x.x.x
+	 */
+	public function clear_expired_logs() {
+		$days      = absint( apply_filters( 'user_registration_logger_days_to_retain_logs', 15 ) );
+		$timestamp = strtotime( "-{$days} days" );
+
+		foreach ( $this->handlers as $handler ) {
+			if ( is_callable( array( $handler, 'delete_logs_before_timestamp' ) ) ) {
+				$handler->delete_logs_before_timestamp( $timestamp );
+			}
+		}
 	}
 }
