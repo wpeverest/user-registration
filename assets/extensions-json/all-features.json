@@ -27,7 +27,7 @@
       ],
       "setting_url": "admin.php?page=member-payment-history",
       "demo_video_url": "DuWX7i7eYsY",
-      "activation_requirements": [ "membership", "pro" ]
+      "activation_requirements": [ "membership", "pro" , "stripe" , "authorize-net" , "payments" ]
     },
     {
       "title": "PayPal Payment",

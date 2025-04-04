@@ -36,7 +36,7 @@ import ModuleBody from "./components/ModuleBody";
 
 const Modules = () => {
 	const toast = useToast();
-	const [{ allModules }, dispatch] = useStateValue();
+	const [{ allModules , isMembershipActivated , isPaymentAddonActivated }, dispatch] = useStateValue();
 	const [state, setState] = useState({
 		modules: [],
 		originalModules: [],
@@ -80,6 +80,9 @@ const Modules = () => {
 		filterModules(state.originalModules, tabIndex);
 	}, [tabIndex]);
 
+	useEffect(() => {
+		fetchModules();
+	}, [isMembershipActivated, isPaymentAddonActivated]);
 	// Filter Modules by Tabs
 	const filterModules = (modules, index) => {
 		let filtered = modules;
