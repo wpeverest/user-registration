@@ -442,12 +442,39 @@
 			$redirect = $(
 				"#user_registration_login_options_login_redirect_url"
 			);
-
 		if (!$check.prop("checked")) {
 			$url.val("").closest(".single_select_page").css("display", "none");
 		} else {
+			var $selected_page = $check.closest('.ur-login-form-setting-block').find('.ur-redirect-to-login-page').val();
+			var login_form_settings = $check.closest('.user-registration-login-form-container');
+			var wpbody_class = $(login_form_settings).closest('#wpbody-content');
+
+			if ('' === $selected_page) {
+				$check.closest('.ur-login-form-setting-block')
+					.find('.ur-redirect-to-login-page')
+					.closest('.user-registration-login-form-global-settings--field')
+					.append('<div class="error inline" style="padding:10px;">' + ur_login_form_params.user_registration_membership_redirect_default_page_message + '</div>');
+			} else {
+				$(wpbody_class).find('#ur-lists-page-topnav').find('.ur_save_login_form_action_button').prop('disabled', false);
+				$check.closest('.ur-login-form-setting-block')
+					.find('.ur-redirect-to-login-page')
+					.closest('.user-registration-login-form-global-settings--field')
+					.find('.error.inline').remove();
+			}
+
 			$redirect.prop("required", true);
 		}
+
+		// Handling the "clear" button click event for Select2.
+		$('select[name="user_registration_login_options_login_redirect_url"]').on('select2:unselect', function() {
+
+			$check.closest('.ur-login-form-setting-block')
+				.find('.ur-redirect-to-login-page')
+				.closest('.user-registration-login-form-global-settings--field')
+				.append('<div class="error inline" style="padding:10px;">' + ur_login_form_params.user_registration_membership_redirect_default_page_message + '</div>');
+
+			$redirect.prop("required", true);
+		});
 	});
 
 	$("#user_registration_login_options_prevent_core_login").on(
@@ -682,7 +709,7 @@
 						.find("input[name='save']")
 						.prop("disabled", false);
 						$this
-						.closest(".user-registration-global-settings").$find('.error inline')
+						.closest(".user-registration-global-settings").find('.error inline')
 						.remove();
 				}
 				$this.prop("disabled", false);

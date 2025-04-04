@@ -70,6 +70,7 @@ class UR_Install {
 		add_action( 'init', array( __CLASS__, 'init_background_updater' ), 5 );
 		add_action( 'admin_init', array( __CLASS__, 'install_actions' ) );
 		add_filter( 'wpmu_drop_tables', array( __CLASS__, 'wpmu_drop_tables' ) );
+		add_filter( 'cron_schedules', array( __CLASS__, 'cron_schedules' ) );
 	}
 
 	/**
@@ -257,6 +258,33 @@ class UR_Install {
 			self::update_db_version();
 		}
 	}
+
+
+	/**
+	 * Add more cron schedules.
+	 *
+	 * @param  array $schedules List of WP scheduled cron jobs.
+	 * @return array
+	 */
+	public static function cron_schedules( $schedules ) {
+		$schedules['monthly'] = array(
+			'interval' => 2635200,
+			'display'  => __( 'Monthly', 'everest-forms' ),
+		);
+		return $schedules;
+	}
+
+		/**
+	 * Create cron jobs (clear them first).
+	 */
+	private static function create_cron_jobs() {
+		wp_clear_scheduled_hook( 'user_registration_cleanup_logs' );
+		wp_clear_scheduled_hook( 'user_registration_cleanup_sessions' );
+		wp_schedule_event( time() + ( 3 * HOUR_IN_SECONDS ), 'daily', 'user_registration_cleanup_logs' );
+		wp_schedule_event( time() + ( 6 * HOUR_IN_SECONDS ), 'twicedaily', 'user_registration_cleanup_sessions' );
+	}
+
+
 
 	/**
 	 * May be add installation date. Donot insert on every update.
