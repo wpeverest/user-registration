@@ -206,10 +206,9 @@
 				group_select_field.hide();
 				$('.ur-general-setting-membership_listing_option select').val($this.val());
 
-				if($this.val() === 'group') {
+				if ($this.val() === 'group') {
 					group_select_field.show();
-				}
-				else {
+				} else {
 					membership_group_object.fetch_memberships(-1);
 				}
 			});
