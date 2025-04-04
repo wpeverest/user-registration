@@ -77,6 +77,9 @@ const Main = ({ filter }) => {
 	}, [selectedCategory, searchTerm, templates, filter]);
 
 	const handleCategorySelect = useCallback((category) => {
+		if (typeof window !== "undefined") {
+			window.scrollTo(0, 0);
+		}
 		setState((prevState) => ({ ...prevState, selectedCategory: category }));
 	}, []);
 
