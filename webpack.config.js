@@ -53,11 +53,11 @@ module.exports = (env, argv) => {
 					]
 				},
 				{
-					test: /\.(gif|webp)$/i,
+					test: /\.(gif|webp|svg)$/i,
 					use: "url-loader"
 				},
 				{
-					test: /\.(png|svg|jpg|jpeg)$/i,
+					test: /\.(png|jpg|jpeg)$/i,
 					use: [
 						{
 							loader: "file-loader"
