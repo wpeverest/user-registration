@@ -12,16 +12,19 @@ jQuery(document).ready(function () {
 		$allowToField = jQuery('.urcr_allow_to_field'),
 		$rolesField = jQuery('.urcr_meta_roles_field'),
 		$membershipsField = jQuery('.urcr_meta_memberships_field');
+		$restrictedMessage = jQuery('.urcr_meta_content_field');
 
 	// Function to toggle visibility based on global override checkbox
 	function toggleGlobalOverride() {
 		if ($metaOverride.is(':checked')) {
 			$allowToField.show();
+			$restrictedMessage.show();
 			toggleFieldsBasedOnAllowTo();
 		} else {
 			$allowToField.hide();
 			$rolesField.hide();
 			$membershipsField.hide();
+			$restrictedMessage.hide();
 		}
 	}
 

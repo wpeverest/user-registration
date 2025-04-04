@@ -1,5 +1,6 @@
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
+const WebpackBar = require("webpackbar");
 const isProd = process.env.NODE_ENV === "production";
 
 module.exports = (env, argv) => {
@@ -66,6 +67,9 @@ module.exports = (env, argv) => {
 			]
 		},
 		plugins: [
+			new WebpackBar({
+
+			  }),
 			new CopyPlugin({
 				patterns: [
 					{

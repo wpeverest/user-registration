@@ -45,6 +45,7 @@ class UR_Gutenberg_Blocks {
 			)
 		);
 
+
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/role-list',
@@ -92,15 +93,31 @@ class UR_Gutenberg_Blocks {
 	 * @return array Role lists.
 	 */
 	public static function ur_get_role_list_list() {
-		$all_roles = wp_roles()->roles;
-		$role_list = array();
-		foreach ( $all_roles as $key => $role ) {
-			$role_list[ $key ] = $role['name'];
+
+		global $wp_roles;
+
+		if ( ! class_exists( 'WP_Roles' ) ) {
+			return;
 		}
+
+		$roles = array();
+		if ( ! isset( $wp_roles ) ) {
+			$wp_roles = new WP_Roles();
+		}
+		$roles = $wp_roles->roles;
+
+		$all_roles = array();
+
+		foreach ( $roles as $role_key => $role ) {
+
+			$all_roles[ $role_key ] = $role['name'];
+		}
+
+
 		return new \WP_REST_Response(
 			array(
 				'success'    => true,
-				'role_lists' => $role_list,
+				'role_lists' => $all_roles,
 			),
 			200
 		);
