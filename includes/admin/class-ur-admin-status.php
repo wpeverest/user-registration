@@ -19,7 +19,7 @@ class UR_Admin_Status {
 	 * Handles output of the reports page in admin.
 	 */
 	public static function output() {
-		include_once dirname( __FILE__ ) . '/views/html-admin-page-status.php';
+		include_once __DIR__ . '/views/html-admin-page-status.php';
 	}
 
 
@@ -29,6 +29,7 @@ class UR_Admin_Status {
 	public static function status_logs() {
 		self::status_logs_file();
 	}
+
 
 	/**
 	 * Show the log page contents for file log handler.
@@ -174,9 +175,14 @@ class UR_Admin_Status {
 			$log_handler = new UR_Log_Handler_File();
 			$log_handler->remove( sanitize_text_field( wp_unslash( $_REQUEST['handle'] ) ) );
 		}
-
-		wp_safe_redirect( esc_url_raw( admin_url( 'admin.php?page=user-registration-status&tab=logs' ) ) );
-		exit();
+		?>
+		<script>
+		var redirect = '<?php echo esc_url( admin_url( 'admin.php?page=user-registration-status&tab=logs' ) ); ?>';
+		window.setTimeout( function () {
+			window.location.href = redirect;
+		})
+		</script>
+		<?php
 	}
 
 	/**
@@ -192,7 +198,26 @@ class UR_Admin_Status {
 			$log_handler->remove_all();
 		}
 
-		wp_safe_redirect( esc_url_raw( admin_url( 'admin.php?page=user-registration-status&tab=logs' ) ) );
-		exit();
+		?>
+		<script>
+		var redirect = '<?php echo esc_url( admin_url( 'admin.php?page=user-registration-status&tab=logs' ) ); ?>';
+		window.setTimeout( function () {
+			window.location.href = redirect;
+		})
+		</script>
+		<?php
+	}
+
+
+	/**
+	 * Displays the system information admin page.
+	 *
+	 * This method includes the system info page template
+	 * to show relevant system details in the WordPress admin panel.
+	 *
+	 * @return void
+	 */
+	public static function system_info() {
+		include_once __DIR__ . '/views/html-admin-page-system-info.php';
 	}
 }

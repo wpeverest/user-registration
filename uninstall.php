@@ -11,7 +11,8 @@
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 
 global $wpdb;
-
+wp_clear_scheduled_hook( 'user_registration_cleanup_logs' );
+wp_clear_scheduled_hook( 'user_registration_cleanup_sessions' );
 /*
  * Only remove ALL product and page data if UR_REMOVE_ALL_DATA constant is set to true in user's
  * wp-config.php. This is to prevent data loss when deleting the plugin from the backend
