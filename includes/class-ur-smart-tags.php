@@ -188,36 +188,363 @@ class UR_Smart_Tags {
 					$content = str_replace( '{{' . $key . '}}', $value, $content );
 				}
 			}
+		}
 
-			preg_match_all( '/\{\{(.+?)\}\}/', $content, $other_tags );
-			if ( ! empty( $other_tags[1] ) ) {
-				foreach ( $other_tags[1] as $key => $tag ) {
-					$other_tag = explode( ' ', $tag )[0];
+		preg_match_all( '/\{\{(.+?)\}\}/', $content, $other_tags );
+		if ( ! empty( $other_tags[1] ) ) {
+			foreach ( $other_tags[1] as $key => $tag ) {
+				$other_tag = explode( ' ', $tag )[0];
 
-					switch ( $other_tag ) {
-						case 'updated_new_user_email':
-							if ( ! empty( $values['user_pending_email'] ) ) {
-								$new_email = $values['user_pending_email'];
-								$content   = str_replace( '{{' . $other_tag . '}}', $new_email, $content );
+				switch ( $other_tag ) {
+					case 'updated_new_user_email':
+						if ( ! empty( $values['user_pending_email'] ) ) {
+							$new_email = $values['user_pending_email'];
+							$content   = str_replace( '{{' . $other_tag . '}}', $new_email, $content );
+						}
+						break;
+
+					case 'user_id':
+						$user_id = ! empty( $values['user_id'] ) ? $values['user_id'] : get_current_user_id();
+						$content = str_replace( '{{' . $other_tag . '}}', $user_id, $content );
+						break;
+
+					case 'username':
+						if ( is_user_logged_in() ) {
+							$user = wp_get_current_user();
+							$name = sanitize_text_field( $user->user_login );
+						} else {
+							$name = isset( $values['username'] ) ? $values['username'] : '';
+						}
+						$content = str_replace( '{{' . $other_tag . '}}', $name, $content );
+						break;
+
+					case 'ur_login':
+						$ur_account_page_exists   = ur_get_page_id( 'myaccount' ) > 0;
+						$ur_login_or_account_page = ur_get_page_permalink( 'myaccount' );
+
+						if ( ! $ur_account_page_exists ) {
+							$ur_login_or_account_page = ur_get_page_permalink( 'login' );
+						}
+
+						$ur_login = ( get_home_url() !== $ur_login_or_account_page ) ? $ur_login_or_account_page : wp_login_url();
+						$ur_login = str_replace( get_home_url() . '/', '', $ur_login );
+						$content  = str_replace( '{{' . $other_tag . '}}', $ur_login, $content );
+						break;
+
+					case 'auto_pass':
+						/**
+						 * Applies a filter to customize the auto-generated password.
+						 *
+						 * @param string $default_password Default auto-generated password.
+						 */
+						$user_pass = apply_filters( 'user_registration_auto_generated_password', 'user_pass' );
+						$content   = str_replace( '{{' . $other_tag . '}}', $user_pass, $content );
+						break;
+
+					case 'user_roles':
+						if ( ! empty( $values['user_id'] ) ) {
+							$user_id    = $values['user_id'];
+							$user_roles = ur_get_user_roles( $user_id )[0];
+						} elseif ( is_user_logged_in() && empty( $values['user_id'] ) ) {
+							$user_id    = get_current_user_id();
+							$user_roles = ur_get_user_roles( $user_id )[0];
+						} else {
+							$user_roles = '';
+						}
+						$content = str_replace( '{{' . $other_tag . '}}', $user_roles, $content );
+						break;
+
+					case 'blog_info':
+						$blog_info = get_bloginfo();
+						$content   = str_replace( '{{' . $other_tag . '}}', $blog_info, $content );
+						break;
+
+					case 'home_url':
+						$home_url = get_home_url();
+						$content  = str_replace( '{{' . $other_tag . '}}', $home_url, $content );
+						break;
+
+					case 'email':
+						if ( ! empty( $values['email'] ) ) {
+							$email = $values['email'];
+						} elseif ( is_user_logged_in() && empty( $values['email'] ) ) {
+							$user  = wp_get_current_user();
+							$email = sanitize_text_field( $user->user_email );
+						} else {
+							$email = '';
+						}
+						$content = str_replace( '{{' . $other_tag . '}}', $email, $content );
+						break;
+
+					case 'email_token':
+						if ( ! empty( $values['email_token'] ) ) {
+							$email_token = $values['email_token'];
+						} else {
+							$email_token = '';
+						}
+						$content = str_replace( '{{' . $other_tag . '}}', $email_token, $content );
+						break;
+
+					case 'key':
+						if ( ! empty( $values['key'] ) ) {
+							$key = $values['key'];
+						} else {
+							$key = '';
+						}
+						$content = str_replace( '{{' . $other_tag . '}}', $key, $content );
+						break;
+
+					case 'all_fields':
+						if ( ! empty( $values['all_fields'] ) ) {
+							$all_fields = $values['all_fields'];
+						} else {
+							$all_fields = '';
+						}
+
+						$content = str_replace( '{{' . $other_tag . '}}', $all_fields, $content );
+						break;
+
+					case 'admin_email':
+						$admin_email = sanitize_email( get_option( 'admin_email' ) );
+						$content     = str_replace( '{{' . $other_tag . '}}', $admin_email, $content );
+						break;
+
+					case 'site_name':
+						$site_name = get_option( 'blogname' );
+						$content   = str_replace( '{{' . $other_tag . '}}', $site_name, $content );
+						break;
+
+					case 'site_url':
+						$site_url = get_option( 'siteurl' );
+						$content  = str_replace( '{{' . $other_tag . '}}', $site_url, $content );
+						break;
+
+					case 'page_title':
+						$id = get_the_ID();
+						if ( empty( get_the_ID() ) && isset( $_SERVER['HTTP_REFERER'] ) ) {
+							$id = url_to_postid( $_SERVER['HTTP_REFERER'] );
+						}
+
+						$page_title = get_the_title( $id );
+						$content    = str_replace( '{{' . $other_tag . '}}', $page_title, $content );
+						break;
+
+					case 'page_url':
+						$id = get_the_ID();
+						if ( empty( get_the_ID() ) && isset( $_SERVER['HTTP_REFERER'] ) ) {
+							$id       = url_to_postid( $_SERVER['HTTP_REFERER'] );
+							$page_url = esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) );
+						} else {
+							$page_url = get_permalink( $id );
+						}
+
+						$content = str_replace( '{{' . $other_tag . '}}', $page_url, $content );
+						break;
+
+					case 'page_id':
+						$id = get_the_ID();
+						if ( empty( get_the_ID() ) && isset( $_SERVER['HTTP_REFERER'] ) ) {
+							$id = url_to_postid( $_SERVER['HTTP_REFERER'] );
+						}
+
+						$page_id = $id;
+						$content = str_replace( '{{' . $other_tag . '}}', $page_id, $content );
+						break;
+
+					case 'form_id':
+						if ( is_user_logged_in() && empty( $values['form_id'] ) ) {
+							$user_id = get_current_user_id();
+							$form_id = ur_get_form_id_by_userid( $user_id );
+						} else {
+							$form_id = $values['form_id'];
+						}
+
+						$content = str_replace( '{{' . $other_tag . '}}', $form_id, $content );
+						break;
+
+					case 'form_name':
+						if ( isset( $values['form_id'] ) ) {
+							$form_name = ucfirst( get_the_title( $values['form_id'] ) );
+							$content   = str_replace( '{{' . $other_tag . '}}', $form_name, $content );
+						}
+						break;
+
+					case 'user_ip_address':
+						$user_ip_add = ur_get_ip_address();
+						$content     = str_replace( '{{' . $other_tag . '}}', $user_ip_add, $content );
+						break;
+
+					case 'referrer_url':
+						$referer = ! empty( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : ''; // @codingStandardsIgnoreLine
+						$content = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $referer ), $content );
+						break;
+
+					case 'current_date':
+						$current_date = date_i18n( get_option( 'date_format' ) );
+						$content      = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $current_date ), $content );
+						break;
+
+					case 'current_time':
+						$current_time = date_i18n( get_option( 'time_format' ) );
+						$content      = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $current_time ), $content );
+						break;
+
+					case 'current_language':
+						$current_language = ur_get_current_language();
+						$content          = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $current_language ), $content );
+						break;
+
+					case 'post_title':
+						$post_title = get_the_title();
+						$content    = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $post_title ), $content );
+						break;
+
+					case 'post_meta':
+						preg_match_all( '/key\=(.*?)$/', $tag, $meta );
+						if ( is_array( $meta ) && ! empty( $meta[1][0] ) ) {
+							$key     = $meta[1][0];
+							$value   = get_post_meta( get_the_ID(), $key, true );
+							$content = str_replace( '{' . $tag . '}', wp_kses_post( $value ), $content );
+						} else {
+							$content = str_replace( '{' . $tag . '}', '', $content );
+						}
+						break;
+
+					case 'author_email':
+						$author  = get_the_author_meta( 'user_email' );
+						$content = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $author ), $content );
+						break;
+
+					case 'author_name':
+						$author  = get_the_author_meta( 'display_name' );
+						$content = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $author ), $content );
+						break;
+					case 'unique_id':
+						/**
+						 * Applies a filter to determine whether more entropy should be added to the unique ID.
+						 *
+						 * The 'ur_unique_id_more_entropy' filter allows developers to customize
+						 * whether additional entropy is included in the unique ID.
+						 *
+						 * @param bool $default_entropy Default value indicating whether more entropy is added.
+						 */
+						$uni_entropy = apply_filters( 'ur_unique_id_more_entropy', true );
+						/**
+						 * Applies a filter to customize the prefix for the unique ID.
+						 *
+						 * The 'ur_unique_id_prefix' filter allows developers to modify the default prefix used
+						 * for the unique ID.
+						 *
+						 * @param string $default_prefix Default prefix for the unique ID.
+						 */
+						$prefix    = apply_filters( 'ur_unique_id_prefix', 'ur' );
+						$unique_id = uniqid( $prefix, $uni_entropy );
+						$unique_id = apply_filters( 'ur_modify_unique_id_smart_tag', $unique_id );
+						$content   = str_replace( '{{' . $tag . '}}', $unique_id, $content );
+						break;
+					case 'approval_link':
+						if ( isset( $values['email'] ) && '' !== $values['email'] ) {
+							$user    = get_user_by( 'email', $values['email'] );
+							$user_id = $user->ID;
+
+							$login_option = ur_get_user_login_option( $user_id );
+
+							// If enabled approval via email setting.
+							if ( ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
+								$approval_token = get_user_meta( $user_id, 'ur_confirm_approval_token', true );
+								$approval_link  = '<a href="' . admin_url( '/' ) . '?ur_approval_token=' . $approval_token . '">' . esc_html__( 'Approve Now', 'user-registration' ) . '</a><br />';
+								$content        = str_replace( '{{' . $tag . '}}', $approval_link, $content );
 							}
-							break;
+						}
+						break;
 
-						case 'user_id':
-							$user_id = ! empty( $values['user_id'] ) ? $values['user_id'] : get_current_user_id();
-							$content = str_replace( '{{' . $other_tag . '}}', $user_id, $content );
-							break;
+					case 'email_change_confirmation_link':
+						// Generate a confirmation key for the email change.
+						$confirm_key = wp_generate_password( 20, false );
 
-						case 'username':
-							if ( is_user_logged_in() ) {
-								$user = wp_get_current_user();
-								$name = sanitize_text_field( $user->user_login );
-							} else {
-								$name = isset( $values['username'] ) ? $values['username'] : '';
+						$user = get_current_user_id();
+
+						// Save the confirmation key.
+						update_user_meta( $user, 'user_registration_email_confirm_key', $confirm_key );
+
+						// Send an email to the new address with confirmation link.
+						$confirm_link = add_query_arg( 'confirm_email', $user, add_query_arg( 'confirm_key', $confirm_key, ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' ) ) );
+						$confirm_link = sprintf( '<a href="%s" rel="noreferrer noopener" target="_blank">%s</a>', $confirm_link, esc_html__( 'confirm link', 'user-registration' ) );
+
+						$content = str_replace( '{{' . $tag . '}}', $confirm_link, $content );
+						break;
+
+					case 'denial_link':
+						if ( isset( $values['email'] ) && '' !== $values['email'] ) {
+							$user    = get_user_by( 'email', $values['email'] );
+							$user_id = $user->ID;
+
+							$login_option = ur_get_user_login_option( $user_id );
+
+							// If enabled approval via email setting.
+							if ( ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
+								$denial_token = get_user_meta( $user_id, 'ur_confirm_denial_token', true );
+								$denial_link  = '<a href="' . admin_url( '/' ) . '?ur_denial_token=' . $denial_token . '">' . esc_html__( 'Deny Now', 'user-registration' ) . '</a><br />';
+								$content      = str_replace( '{{' . $tag . '}}', $denial_link, $content );
 							}
-							$content = str_replace( '{{' . $other_tag . '}}', $name, $content );
-							break;
+						}
+						break;
+					case 'display_name':
+						$user_id   = ! empty( $values['user_id'] ) ? $values['user_id'] : get_current_user_id();
+						$user_data = get_userdata( $user_id );
+						$content   = str_replace( '{{' . $tag . '}}', esc_html( $user_data->display_name ), $content );
+						break;
 
-						case 'ur_login':
+					case 'profile_pic_box':
+						$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
+						$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
+						$user_id             = ! empty( $values['user_id'] ) ? $values['user_id'] : get_current_user_id();
+						if ( is_numeric( $profile_picture_url ) ) {
+							$profile_picture_url = wp_get_attachment_url( $profile_picture_url );
+						}
+
+						$profile_picture_url = apply_filters( 'user_registration_profile_picture_url', $profile_picture_url, $user_id );
+						$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
+						$profile_pic_box     = '<img class="profile-preview" alt="profile-picture" src="' . esc_url( $image ) . '" />';
+						$content             = str_replace( '{{' . $tag . '}}', wp_kses_post( $profile_pic_box ), $content );
+						break;
+					case 'full_name':
+						$first_name = ucfirst( get_user_meta( get_current_user_id(), 'first_name', true ) );
+						$last_name  = ucfirst( get_user_meta( get_current_user_id(), 'last_name', true ) );
+						$full_name  = $first_name . ' ' . $last_name;
+						if ( empty( $first_name ) && empty( $last_name ) ) {
+							$full_name = get_userdata( get_current_user_id() )->display_name;
+						}
+						$content = str_replace( '{{' . $tag . '}}', esc_html( $full_name ), $content );
+						break;
+					case 'profile_details_link':
+						$endpoint             = ur_string_translation( 0, 'user_registration_edit-profile_slug', 'edit-profile' );
+						$profile_details_link = '<a href="' . esc_url( ur_get_endpoint_url( $endpoint ) ) . '">' . esc_html__( 'profile details', 'user-registration' ) . '</a>';
+						$content              = str_replace( '{{' . $tag . '}}', wp_kses_post( $profile_details_link ), $content );
+						break;
+					case 'edit_password_link':
+						$endpoint           = ur_string_translation( 0, 'user_registration_edit-password_slug', 'edit-password' );
+						$edit_password_link = '<a href="' . esc_url( ur_get_endpoint_url( $endpoint ) ) . '">' . esc_html__( 'edit your password', 'user-registration' ) . '</a>';
+						$content            = str_replace( '{{' . $tag . '}}', wp_kses_post( $edit_password_link ), $content );
+						break;
+					case 'sign_out_link':
+						$logout_confirmation = ur_option_checked( 'user_registration_disable_logout_confirmation', false );
+						$sign_out_link       = '<a href="' . esc_url( ur_logout_url( ur_get_page_permalink( 'myaccount' ) ) ) . '" ' . ( ! $logout_confirmation ? 'class="ur-logout"' : '' ) . '>' . esc_html__( 'Sign out', 'user-registration' ) . '</a>';
+						$content             = str_replace( '{{' . $tag . '}}', wp_kses_post( $sign_out_link ), $content );
+						break;
+					case 'passwordless_login_link':
+						$passwordless_login_link = isset( $values['passwordless_login_link'] ) ? '<a href="' . esc_url( $values['passwordless_login_link'] ) . '"></a>' : '';
+						$content                 = str_replace( '{{' . $tag . '}}', wp_kses_post( $passwordless_login_link ), $content );
+						break;
+					case 'ur_reset_pass_slug':
+						$lost_password_page = get_option( 'user_registration_lost_password_page_id', false );
+						$reset_pass_slug    = '';
+
+						if ( $lost_password_page ) {
+							$lost_password_url = get_permalink( $lost_password_page );
+							$ur_lost_pass      = ( get_home_url() !== $lost_password_url ) ? $lost_password_url : wp_login_url();
+							$reset_pass_slug   = str_replace( get_home_url() . '/', '', $ur_lost_pass );
+						} else {
 							$ur_account_page_exists   = ur_get_page_id( 'myaccount' ) > 0;
 							$ur_login_or_account_page = ur_get_page_permalink( 'myaccount' );
 
@@ -225,360 +552,33 @@ class UR_Smart_Tags {
 								$ur_login_or_account_page = ur_get_page_permalink( 'login' );
 							}
 
-							$ur_login = ( get_home_url() !== $ur_login_or_account_page ) ? $ur_login_or_account_page : wp_login_url();
-							$ur_login = str_replace( get_home_url() . '/', '', $ur_login );
-							$content  = str_replace( '{{' . $other_tag . '}}', $ur_login, $content );
-							break;
+							$ur_login        = ( get_home_url() !== $ur_login_or_account_page ) ? $ur_login_or_account_page : wp_login_url();
+							$reset_pass_slug = str_replace( get_home_url() . '/', '', $ur_login );
+						}
 
-						case 'auto_pass':
-							/**
-							 * Applies a filter to customize the auto-generated password.
-							 *
-							 * @param string $default_password Default auto-generated password.
-							 */
-							$user_pass = apply_filters( 'user_registration_auto_generated_password', 'user_pass' );
-							$content   = str_replace( '{{' . $other_tag . '}}', $user_pass, $content );
-							break;
-
-						case 'user_roles':
-							if ( ! empty( $values['user_id'] ) ) {
-								$user_id    = $values['user_id'];
-								$user_roles = ur_get_user_roles( $user_id )[0];
-							} elseif ( is_user_logged_in() && empty( $values['user_id'] ) ) {
-								$user_id    = get_current_user_id();
-								$user_roles = ur_get_user_roles( $user_id )[0];
-							} else {
-								$user_roles = '';
-							}
-							$content = str_replace( '{{' . $other_tag . '}}', $user_roles, $content );
-							break;
-
-						case 'blog_info':
-							$blog_info = get_bloginfo();
-							$content   = str_replace( '{{' . $other_tag . '}}', $blog_info, $content );
-							break;
-
-						case 'home_url':
-							$home_url = get_home_url();
-							$content  = str_replace( '{{' . $other_tag . '}}', $home_url, $content );
-							break;
-
-						case 'email':
-							if ( ! empty( $values['email'] ) ) {
-								$email = $values['email'];
-							} elseif ( is_user_logged_in() && empty( $values['email'] ) ) {
-								$user  = wp_get_current_user();
-								$email = sanitize_text_field( $user->user_email );
-							} else {
-								$email = '';
-							}
-							$content = str_replace( '{{' . $other_tag . '}}', $email, $content );
-							break;
-
-						case 'email_token':
-							if ( ! empty( $values['email_token'] ) ) {
-								$email_token = $values['email_token'];
-							} else {
-								$email_token = '';
-							}
-							$content = str_replace( '{{' . $other_tag . '}}', $email_token, $content );
-							break;
-
-						case 'key':
-							if ( ! empty( $values['key'] ) ) {
-								$key = $values['key'];
-							} else {
-								$key = '';
-							}
-							$content = str_replace( '{{' . $other_tag . '}}', $key, $content );
-							break;
-
-						case 'all_fields':
-							if ( ! empty( $values['all_fields'] ) ) {
-								$all_fields = $values['all_fields'];
-							} else {
-								$all_fields = '';
-							}
-
-							$content = str_replace( '{{' . $other_tag . '}}', $all_fields, $content );
-							break;
-
-						case 'admin_email':
-							$admin_email = sanitize_email( get_option( 'admin_email' ) );
-							$content     = str_replace( '{{' . $other_tag . '}}', $admin_email, $content );
-							break;
-
-						case 'site_name':
-							$site_name = get_option( 'blogname' );
-							$content   = str_replace( '{{' . $other_tag . '}}', $site_name, $content );
-							break;
-
-						case 'site_url':
-							$site_url = get_option( 'siteurl' );
-							$content  = str_replace( '{{' . $other_tag . '}}', $site_url, $content );
-							break;
-
-						case 'page_title':
-							$id = get_the_ID();
-							if ( empty( get_the_ID() ) && isset( $_SERVER['HTTP_REFERER'] ) ) {
-								$id = url_to_postid( $_SERVER['HTTP_REFERER'] );
-							}
-
-							$page_title = get_the_title( $id );
-							$content    = str_replace( '{{' . $other_tag . '}}', $page_title, $content );
-							break;
-
-						case 'page_url':
-							$id = get_the_ID();
-							if ( empty( get_the_ID() ) && isset( $_SERVER['HTTP_REFERER'] ) ) {
-								$id       = url_to_postid( $_SERVER['HTTP_REFERER'] );
-								$page_url = esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) );
-							} else {
-								$page_url = get_permalink( $id );
-							}
-
-							$content = str_replace( '{{' . $other_tag . '}}', $page_url, $content );
-							break;
-
-						case 'page_id':
-							$id = get_the_ID();
-							if ( empty( get_the_ID() ) && isset( $_SERVER['HTTP_REFERER'] ) ) {
-								$id = url_to_postid( $_SERVER['HTTP_REFERER'] );
-							}
-
-							$page_id = $id;
-							$content = str_replace( '{{' . $other_tag . '}}', $page_id, $content );
-							break;
-
-						case 'form_id':
-							if ( is_user_logged_in() && empty( $values['form_id'] ) ) {
-								$user_id = get_current_user_id();
-								$form_id = ur_get_form_id_by_userid( $user_id );
-							} else {
-								$form_id = $values['form_id'];
-							}
-
-							$content = str_replace( '{{' . $other_tag . '}}', $form_id, $content );
-							break;
-
-						case 'form_name':
-							if ( isset( $values['form_id'] ) ) {
-								$form_name = ucfirst( get_the_title( $values['form_id'] ) );
-								$content   = str_replace( '{{' . $other_tag . '}}', $form_name, $content );
-							}
-							break;
-
-						case 'user_ip_address':
-							$user_ip_add = ur_get_ip_address();
-							$content     = str_replace( '{{' . $other_tag . '}}', $user_ip_add, $content );
-							break;
-
-						case 'referrer_url':
-							$referer = ! empty( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : ''; // @codingStandardsIgnoreLine
-							$content = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $referer ), $content );
-							break;
-
-						case 'current_date':
-							$current_date = date_i18n( get_option( 'date_format' ) );
-							$content      = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $current_date ), $content );
-							break;
-
-						case 'current_time':
-							$current_time = date_i18n( get_option( 'time_format' ) );
-							$content      = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $current_time ), $content );
-							break;
-
-						case 'current_language':
-							$current_language = ur_get_current_language();
-							$content          = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $current_language ), $content );
-							break;
-
-						case 'post_title':
-							$post_title = get_the_title();
-							$content    = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $post_title ), $content );
-							break;
-
-						case 'post_meta':
-							preg_match_all( '/key\=(.*?)$/', $tag, $meta );
-							if ( is_array( $meta ) && ! empty( $meta[1][0] ) ) {
-								$key     = $meta[1][0];
-								$value   = get_post_meta( get_the_ID(), $key, true );
-								$content = str_replace( '{' . $tag . '}', wp_kses_post( $value ), $content );
-							} else {
-								$content = str_replace( '{' . $tag . '}', '', $content );
-							}
-							break;
-
-						case 'author_email':
-							$author  = get_the_author_meta( 'user_email' );
-							$content = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $author ), $content );
-							break;
-
-						case 'author_name':
-							$author  = get_the_author_meta( 'display_name' );
-							$content = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $author ), $content );
-							break;
-						case 'unique_id':
-							/**
-							 * Applies a filter to determine whether more entropy should be added to the unique ID.
-							 *
-							 * The 'ur_unique_id_more_entropy' filter allows developers to customize
-							 * whether additional entropy is included in the unique ID.
-							 *
-							 * @param bool $default_entropy Default value indicating whether more entropy is added.
-							 */
-							$uni_entropy = apply_filters( 'ur_unique_id_more_entropy', true );
-							/**
-							 * Applies a filter to customize the prefix for the unique ID.
-							 *
-							 * The 'ur_unique_id_prefix' filter allows developers to modify the default prefix used
-							 * for the unique ID.
-							 *
-							 * @param string $default_prefix Default prefix for the unique ID.
-							 */
-							$prefix    = apply_filters( 'ur_unique_id_prefix', 'ur' );
-							$unique_id = uniqid( $prefix, $uni_entropy );
-							$unique_id = apply_filters( 'ur_modify_unique_id_smart_tag', $unique_id );
-							$content   = str_replace( '{{' . $tag . '}}', $unique_id, $content );
-							break;
-						case 'approval_link':
-							if ( isset( $values['email'] ) && '' !== $values['email'] ) {
-								$user    = get_user_by( 'email', $values['email'] );
-								$user_id = $user->ID;
-
-								$login_option = ur_get_user_login_option( $user_id );
-
-								// If enabled approval via email setting.
-								if ( ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
-									$approval_token = get_user_meta( $user_id, 'ur_confirm_approval_token', true );
-									$approval_link  = '<a href="' . admin_url( '/' ) . '?ur_approval_token=' . $approval_token . '">' . esc_html__( 'Approve Now', 'user-registration' ) . '</a><br />';
-									$content        = str_replace( '{{' . $tag . '}}', $approval_link, $content );
-								}
-							}
-							break;
-
-						case 'email_change_confirmation_link':
-							// Generate a confirmation key for the email change.
-							$confirm_key = wp_generate_password( 20, false );
-
-							$user = get_current_user_id();
-
-							// Save the confirmation key.
-							update_user_meta( $user, 'user_registration_email_confirm_key', $confirm_key );
-
-							// Send an email to the new address with confirmation link.
-							$confirm_link = add_query_arg( 'confirm_email', $user, add_query_arg( 'confirm_key', $confirm_key, ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' ) ) );
-							$confirm_link = sprintf( '<a href="%s" rel="noreferrer noopener" target="_blank">%s</a>', $confirm_link, esc_html__( 'confirm link', 'user-registration' ) );
-
-							$content = str_replace( '{{' . $tag . '}}', $confirm_link, $content );
-							break;
-
-						case 'denial_link':
-							if ( isset( $values['email'] ) && '' !== $values['email'] ) {
-								$user    = get_user_by( 'email', $values['email'] );
-								$user_id = $user->ID;
-
-								$login_option = ur_get_user_login_option( $user_id );
-
-								// If enabled approval via email setting.
-								if ( ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
-									$denial_token = get_user_meta( $user_id, 'ur_confirm_denial_token', true );
-									$denial_link  = '<a href="' . admin_url( '/' ) . '?ur_denial_token=' . $denial_token . '">' . esc_html__( 'Deny Now', 'user-registration' ) . '</a><br />';
-									$content      = str_replace( '{{' . $tag . '}}', $denial_link, $content );
-								}
-							}
-							break;
-						case 'display_name':
-							$user_id   = ! empty( $values['user_id'] ) ? $values['user_id'] : get_current_user_id();
-							$user_data = get_userdata( $user_id );
-							$content   = str_replace( '{{' . $tag . '}}', esc_html( $user_data->display_name ), $content );
-							break;
-
-						case 'profile_pic_box':
-							$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
-							$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
-							$user_id             = ! empty( $values['user_id'] ) ? $values['user_id'] : get_current_user_id();
-							if ( is_numeric( $profile_picture_url ) ) {
-								$profile_picture_url = wp_get_attachment_url( $profile_picture_url );
-							}
-
-							$profile_picture_url = apply_filters( 'user_registration_profile_picture_url', $profile_picture_url, $user_id );
-							$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
-							$profile_pic_box     = '<img class="profile-preview" alt="profile-picture" src="' . esc_url( $image ) . '" />';
-							$content             = str_replace( '{{' . $tag . '}}', wp_kses_post( $profile_pic_box ), $content );
-							break;
-						case 'full_name':
-							$first_name = ucfirst( get_user_meta( get_current_user_id(), 'first_name', true ) );
-							$last_name  = ucfirst( get_user_meta( get_current_user_id(), 'last_name', true ) );
-							$full_name  = $first_name . ' ' . $last_name;
-							if ( empty( $first_name ) && empty( $last_name ) ) {
-								$full_name = get_userdata( get_current_user_id() )->display_name;
-							}
-							$content = str_replace( '{{' . $tag . '}}', esc_html( $full_name ), $content );
-							break;
-						case 'profile_details_link':
-							$endpoint             = ur_string_translation( 0, 'user_registration_edit-profile_slug', 'edit-profile' );
-							$profile_details_link = '<a href="' . esc_url( ur_get_endpoint_url( $endpoint ) ) . '">' . esc_html__( 'profile details', 'user-registration' ) . '</a>';
-							$content              = str_replace( '{{' . $tag . '}}', wp_kses_post( $profile_details_link ), $content );
-							break;
-						case 'edit_password_link':
-							$endpoint           = ur_string_translation( 0, 'user_registration_edit-password_slug', 'edit-password' );
-							$edit_password_link = '<a href="' . esc_url( ur_get_endpoint_url( $endpoint ) ) . '">' . esc_html__( 'edit your password', 'user-registration' ) . '</a>';
-							$content            = str_replace( '{{' . $tag . '}}', wp_kses_post( $edit_password_link ), $content );
-							break;
-						case 'sign_out_link':
-							$logout_confirmation = ur_option_checked( 'user_registration_disable_logout_confirmation', false );
-							$sign_out_link       = '<a href="' . esc_url( ur_logout_url( ur_get_page_permalink( 'myaccount' ) ) ) . '" ' . ( ! $logout_confirmation ? 'class="ur-logout"' : '' ) . '>' . esc_html__( 'Sign out', 'user-registration' ) . '</a>';
-							$content             = str_replace( '{{' . $tag . '}}', wp_kses_post( $sign_out_link ), $content );
-							break;
-						case 'passwordless_login_link':
-							$passwordless_login_link = isset( $values['passwordless_login_link'] ) ? '<a href="' . esc_url( $values['passwordless_login_link'] ) . '"></a>' : '';
-							$content                 = str_replace( '{{' . $tag . '}}', wp_kses_post( $passwordless_login_link ), $content );
-							break;
-						case 'ur_reset_pass_slug':
-							$lost_password_page = get_option( 'user_registration_lost_password_page_id', false );
-							$reset_pass_slug    = '';
-
-							if ( $lost_password_page ) {
-								$lost_password_url = get_permalink( $lost_password_page );
-								$ur_lost_pass      = ( get_home_url() !== $lost_password_url ) ? $lost_password_url : wp_login_url();
-								$reset_pass_slug   = str_replace( get_home_url() . '/', '', $ur_lost_pass );
-							} else {
-								$ur_account_page_exists   = ur_get_page_id( 'myaccount' ) > 0;
-								$ur_login_or_account_page = ur_get_page_permalink( 'myaccount' );
-
-								if ( ! $ur_account_page_exists ) {
-									$ur_login_or_account_page = ur_get_page_permalink( 'login' );
-								}
-
-								$ur_login        = ( get_home_url() !== $ur_login_or_account_page ) ? $ur_login_or_account_page : wp_login_url();
-								$reset_pass_slug = str_replace( get_home_url() . '/', '', $ur_login );
-							}
-
-							$content = str_replace( '{{' . $other_tag . '}}', $reset_pass_slug, $content );
-							break;
-						case 'sms_otp':
-							$content = str_replace( '{{' . $tag . '}}', isset( $values['sms_otp'] ) ? $values['sms_otp'] : '', $content );
-							break;
-						case 'sms_otp_validity':
-							$content = str_replace( '{{' . $tag . '}}', isset( $values['sms_otp_validity'] ) ? $values['sms_otp_validity'] : '', $content );
-							break;
-					}
+						$content = str_replace( '{{' . $other_tag . '}}', $reset_pass_slug, $content );
+						break;
+					case 'sms_otp':
+						$content = str_replace( '{{' . $tag . '}}', isset( $values['sms_otp'] ) ? $values['sms_otp'] : '', $content );
+						break;
+					case 'sms_otp_validity':
+						$content = str_replace( '{{' . $tag . '}}', isset( $values['sms_otp_validity'] ) ? $values['sms_otp_validity'] : '', $content );
+						break;
 				}
 			}
-			/**
-			 * Applies a filter to customize the content with smart tags.
-			 *
-			 * The 'user_registration_smart_tag_content' filter allows developers to modify
-			 * the content that includes smart tags based on the provided values.
-			 *
-			 * @param string $content Default content with smart tags.
-			 * @param array $values Values associated with the smart tags.
-			 */
-			$content = apply_filters( 'user_registration_smart_tag_content', $content, $values );
-
-			return $content;
 		}
+		/**
+		 * Applies a filter to customize the content with smart tags.
+		 *
+		 * The 'user_registration_smart_tag_content' filter allows developers to modify
+		 * the content that includes smart tags based on the provided values.
+		 *
+		 * @param string $content Default content with smart tags.
+		 * @param array $values Values associated with the smart tags.
+		 */
+		$content = apply_filters( 'user_registration_smart_tag_content', $content, $values );
+
+		return $content;
 	}
 
 	/**
@@ -586,7 +586,9 @@ class UR_Smart_Tags {
 	 *
 	 * @param string $smart_tags list of smart tags.
 	 */
-	public function select_smart_tags_in_general( $smart_tags ) {
+	public function select_smart_tags_in_general(
+		$smart_tags
+	) {
 		$smart_tags_list = self::ur_unauthenticated_parsable_smart_tags_list();
 
 		$selector = '<a id="ur-smart-tags-selector">';
@@ -667,7 +669,9 @@ class UR_Smart_Tags {
 	 *
 	 * @param string $pattern_lists Pattern Lists.
 	 */
-	public function select_pattern_validation( $pattern_lists ) {
+	public function select_pattern_validation(
+		$pattern_lists
+	) {
 		$pattern_validation_list = self::ur_pattern_validation_lists();
 		$pattern_lists           .= '<a href="#" class="button ur-smart-tags-list-button"><span class="dashicons dashicons-editor-code"></span></a>';
 		$pattern_lists           .= '<div class="ur-smart-tags-list" style="display: none">';
