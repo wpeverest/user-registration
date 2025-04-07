@@ -560,7 +560,7 @@
       "name": "User Registration MailPoet",
       "image": "extensions-json/sections/images/mailpoet.png",
       "excerpt": "Easily connect your User Registration forms with MailPoet. Seamlessly map user details to your MailPoet Subscriber Lists for more efficient and convenient email marketing efforts.",
-      "link": "https://wpuserregistration.com/features/mailpoet/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "link": "https://docs.wpuserregistration.com/docs/user-registration-mailpoet/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan": [
         "plus",
         "professional",
