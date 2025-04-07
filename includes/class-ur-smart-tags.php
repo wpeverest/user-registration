@@ -639,7 +639,7 @@ class UR_Smart_Tags {
 				'^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])\/\d{4}$'                                           => __( 'Date (dd/mm/yyyy)', 'user-registration' ),
 				'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'                                           => __( 'Email', 'user-registration' ),
 				'^(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$' => __( 'IP (Version 4)', 'user-registration' ),
-				'((^|:)([0-9a-fA-F]{0,4})){1,8}$'                                                            => __( 'IP (Version 6)', 'user-registration' ),
+				'^([0-9a-fA-F]{1,4}:){7}([0-9a-fA-F]{1,4})$|^([0-9a-fA-F]{1,4}:){1,7}:$|^::([0-9a-fA-F]{1,4}:){0,6}([0-9a-fA-F]{1,4})?$'                                                                       => __( 'IP (Version 6)', 'user-registration' ),
 				'^978(?:-[\d]+){3}-[\d]$'                                                                    => __( 'ISBN', 'user-registration' ),
 				'-?\d{1,3}\.\d+'                                                                             => __( 'Latitude or Longitude', 'user-registration' ),
 				'^[0-9]+$'                                                                                   => __( 'Numeric', 'user-registration' ),
