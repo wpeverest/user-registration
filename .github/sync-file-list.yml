@@ -1,6 +1,6 @@
 wpeverest/user-registration-pro@master:
       - assets
-      - includes
+      - includes branch
       - modules
       - src
       - templates

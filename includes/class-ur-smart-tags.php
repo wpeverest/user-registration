@@ -586,9 +586,7 @@ class UR_Smart_Tags {
 	 *
 	 * @param string $smart_tags list of smart tags.
 	 */
-	public function select_smart_tags_in_general(
-		$smart_tags
-	) {
+	public function select_smart_tags_in_general( $smart_tags ) {
 		$smart_tags_list = self::ur_unauthenticated_parsable_smart_tags_list();
 
 		$selector = '<a id="ur-smart-tags-selector">';
@@ -669,9 +667,7 @@ class UR_Smart_Tags {
 	 *
 	 * @param string $pattern_lists Pattern Lists.
 	 */
-	public function select_pattern_validation(
-		$pattern_lists
-	) {
+	public function select_pattern_validation( $pattern_lists ) {
 		$pattern_validation_list = self::ur_pattern_validation_lists();
 		$pattern_lists           .= '<a href="#" class="button ur-smart-tags-list-button"><span class="dashicons dashicons-editor-code"></span></a>';
 		$pattern_lists           .= '<div class="ur-smart-tags-list" style="display: none">';
