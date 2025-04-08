@@ -1577,7 +1577,7 @@ jQuery(function ($) {
 	$('.user-registration-system-info-setting-copy').tooltipster({
 		content: 'Copied',
 		trigger: 'click',
-		theme: 'tooltipster-noir',
+		theme: 'tooltipster-shadow',
 		interactive: true,
 		functionBefore: function(instance, helper) {
 			var table = $('.user-registration-system-info-setting table')[0];
