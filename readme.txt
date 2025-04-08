@@ -257,6 +257,10 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 21. User Account Page –  Vertical Layout
 
 == Changelog ==
+
+= 4.1.4    - 08/04/2025 =
+* Security - Fix for edit profile details and membership related vulnerabilities.
+
 = 4.1.3    - 26/03/2025 =
 * Security - Vulnerability fix for auto_login after registration for membership forms.
 

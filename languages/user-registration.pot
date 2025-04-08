@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the User Registration & Membership plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration & Membership 4.1.3\n"
+"Project-Id-Version: User Registration & Membership 4.1.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-registration\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-03-26T09:51:02+00:00\n"
+"POT-Creation-Date: 2025-04-08T05:03:11+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: user-registration\n"
@@ -393,7 +393,7 @@ msgstr ""
 #: includes/admin/class-ur-admin-assets.php:647
 #: includes/admin/class-ur-admin-menus.php:735
 #: includes/admin/class-ur-admin-settings.php:230
-#: includes/class-ur-ajax.php:1725
+#: includes/class-ur-ajax.php:1733
 #: includes/functions-ur-core.php:3911
 #: src/dashboard/screens/Modules/components/ModuleItem.js:506
 #: src/dashboard/screens/Modules/hooks/useUpgradeModal.js:82
@@ -2541,7 +2541,7 @@ msgid "Your license has been activated. Enjoy using <strong>User Registration</s
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-license.php:174
-#: includes/class-ur-ajax.php:1722
+#: includes/class-ur-ajax.php:1730
 #: includes/class-ur-plugin-updater.php:316
 #: src/dashboard/screens/Modules/hooks/useUpgradeModal.js:47
 msgid "Activate License"
@@ -3464,9 +3464,9 @@ msgstr ""
 #: includes/class-ur-ajax.php:152
 #: includes/class-ur-ajax.php:243
 #: includes/class-ur-ajax.php:317
-#: includes/class-ur-ajax.php:556
-#: includes/class-ur-ajax.php:687
-#: includes/class-ur-ajax.php:1338
+#: includes/class-ur-ajax.php:564
+#: includes/class-ur-ajax.php:695
+#: includes/class-ur-ajax.php:1346
 msgid "Nonce error, please reload."
 msgstr ""
 
@@ -3514,175 +3514,179 @@ msgstr ""
 msgid "Logout"
 msgstr ""
 
-#: includes/class-ur-ajax.php:470
+#: includes/class-ur-ajax.php:328
+msgid "You are not allowed to edit this user."
+msgstr ""
+
+#: includes/class-ur-ajax.php:478
 #: includes/class-ur-form-handler.php:212
 msgid "User profile updated successfully."
 msgstr ""
 
 #. translators: %s : user email
 #. translators: user_email
-#: includes/class-ur-ajax.php:490
+#: includes/class-ur-ajax.php:498
 #: includes/class-ur-form-handler.php:217
 msgid "Your email address has not been updated yet. Please check your inbox at <strong>%s</strong> for a confirmation email."
 msgstr ""
 
 #. translators: 1: Pending email message 2: Cancel Link
-#: includes/class-ur-ajax.php:507
+#: includes/class-ur-ajax.php:515
 #: includes/functions-ur-template.php:693
 msgid "There is a pending change of your email to <code>%1$s</code>. <a href=\"%2$s\">Cancel</a>"
 msgstr ""
 
-#: includes/class-ur-ajax.php:602
 #: includes/class-ur-ajax.php:610
+#: includes/class-ur-ajax.php:618
 msgid "Invalid file type, please contact with site administrator."
 msgstr ""
 
-#: includes/class-ur-ajax.php:621
+#: includes/class-ur-ajax.php:629
 msgid "Upload path permission deny."
 msgstr ""
 
-#: includes/class-ur-ajax.php:649
+#: includes/class-ur-ajax.php:657
 msgid "File cannot be uploaded."
 msgstr ""
 
-#: includes/class-ur-ajax.php:658
+#: includes/class-ur-ajax.php:666
 msgid "File size exceed, please check your file size."
 msgstr ""
 
-#: includes/class-ur-ajax.php:665
+#: includes/class-ur-ajax.php:673
 msgid "Something went wrong while uploading, please contact your site administrator."
 msgstr ""
 
-#: includes/class-ur-ajax.php:703
+#: includes/class-ur-ajax.php:711
 msgid "You do not have permission to send test email."
 msgstr ""
 
 #. translators: %s - WP mail from name
-#: includes/class-ur-ajax.php:720
+#: includes/class-ur-ajax.php:728
 msgid "Test email from %s"
 msgstr ""
 
-#: includes/class-ur-ajax.php:736
+#: includes/class-ur-ajax.php:744
 msgid "Test email was sent successfully! Please check your inbox to make sure it is delivered."
 msgstr ""
 
-#: includes/class-ur-ajax.php:739
+#: includes/class-ur-ajax.php:747
 msgid "Test email was unsuccessful!. %s"
 msgstr ""
 
-#: includes/class-ur-ajax.php:751
-#: includes/class-ur-ajax.php:783
-#: includes/class-ur-ajax.php:843
-#: includes/class-ur-ajax.php:1123
+#: includes/class-ur-ajax.php:759
+#: includes/class-ur-ajax.php:791
+#: includes/class-ur-ajax.php:851
+#: includes/class-ur-ajax.php:1131
 msgid "You do not have permission."
 msgstr ""
 
-#: includes/class-ur-ajax.php:790
+#: includes/class-ur-ajax.php:798
 msgid "Insufficient information"
 msgstr ""
 
-#: includes/class-ur-ajax.php:796
+#: includes/class-ur-ajax.php:804
 msgid "Saved"
 msgstr ""
 
-#: includes/class-ur-ajax.php:869
+#: includes/class-ur-ajax.php:877
 msgid "You don't have enough permission to perform this task. Please contact the Administrator."
 msgstr ""
 
-#: includes/class-ur-ajax.php:873
-#: includes/class-ur-ajax.php:878
+#: includes/class-ur-ajax.php:881
+#: includes/class-ur-ajax.php:886
 msgid "post data not set"
 msgstr ""
 
-#: includes/class-ur-ajax.php:891
+#: includes/class-ur-ajax.php:899
 msgid "Could not save form. Invalid field name. Please check all field name"
 msgstr ""
 
-#: includes/class-ur-ajax.php:907
+#: includes/class-ur-ajax.php:915
 msgid "Seems like you are trying to enable the captcha feature, but the captcha keys are empty. Please click"
 msgstr ""
 
-#: includes/class-ur-ajax.php:920
+#: includes/class-ur-ajax.php:928
 msgid "Could not save form, "
 msgstr ""
 
-#: includes/class-ur-ajax.php:1011
+#: includes/class-ur-ajax.php:1019
 msgid "Seems like you haven't selected the reCAPTCHA type (Configured Captcha)."
 msgstr ""
 
-#: includes/class-ur-ajax.php:1024
-#: includes/class-ur-ajax.php:1892
+#: includes/class-ur-ajax.php:1032
+#: includes/class-ur-ajax.php:1900
 msgid "The selected page is not a User Registration & Membership Login or My Account page."
 msgstr ""
 
-#: includes/class-ur-ajax.php:1034
+#: includes/class-ur-ajax.php:1042
 msgid "Please select a login redirection page."
 msgstr ""
 
-#: includes/class-ur-ajax.php:1354
 #: includes/class-ur-ajax.php:1362
-#: includes/class-ur-ajax.php:1369
+#: includes/class-ur-ajax.php:1370
+#: includes/class-ur-ajax.php:1377
 msgid "File cannot be removed"
 msgstr ""
 
-#: includes/class-ur-ajax.php:1377
+#: includes/class-ur-ajax.php:1385
 msgid "User profile picture removed successfully"
 msgstr ""
 
-#: includes/class-ur-ajax.php:1395
+#: includes/class-ur-ajax.php:1403
 msgid "No Plan specified."
 msgstr ""
 
-#: includes/class-ur-ajax.php:1412
+#: includes/class-ur-ajax.php:1420
 msgid "This form template requires the following addons."
 msgstr ""
 
-#: includes/class-ur-ajax.php:1414
+#: includes/class-ur-ajax.php:1422
 msgid "Required Addons"
 msgstr ""
 
 #. translators: %s - Integration tab url
-#: includes/class-ur-ajax.php:1469
+#: includes/class-ur-ajax.php:1477
 msgid "Seems like you haven't added the reCAPTCHA Keys. <a href=\"%s\" >Add Now.</a>"
 msgstr ""
 
-#: includes/class-ur-ajax.php:1493
+#: includes/class-ur-ajax.php:1501
 msgid "No plugin specified."
 msgstr ""
 
-#: includes/class-ur-ajax.php:1507
+#: includes/class-ur-ajax.php:1515
 #: includes/functions-ur-core.php:2956
 msgid "Sorry, you are not allowed to install plugins on this site."
 msgstr ""
 
-#: includes/class-ur-ajax.php:1571
+#: includes/class-ur-ajax.php:1579
 #: includes/functions-ur-core.php:3036
 #: includes/RestApi/controllers/version1/class-ur-modules.php:723
 msgid "Unable to connect to the filesystem. Please confirm your credentials."
 msgstr ""
 
-#: includes/class-ur-ajax.php:1613
+#: includes/class-ur-ajax.php:1621
 msgid "You do not have permission to create form."
 msgstr ""
 
-#: includes/class-ur-ajax.php:1617
+#: includes/class-ur-ajax.php:1625
 msgid "Blank Form"
 msgstr ""
 
-#: includes/class-ur-ajax.php:1639
+#: includes/class-ur-ajax.php:1647
 msgid "Something went wrong, please try again later"
 msgstr ""
 
-#: includes/class-ur-ajax.php:1663
+#: includes/class-ur-ajax.php:1671
 msgid "Changed email cancelled successfully."
 msgstr ""
 
-#: includes/class-ur-ajax.php:1881
-#: includes/class-ur-ajax.php:1912
+#: includes/class-ur-ajax.php:1889
+#: includes/class-ur-ajax.php:1920
 msgid "You do not have permission to edit settings form."
 msgstr ""
 
-#: includes/class-ur-ajax.php:1924
+#: includes/class-ur-ajax.php:1932
 msgid "The selected page is not a User Registration & Membership Lost Password page."
 msgstr ""
 
@@ -9028,148 +9032,157 @@ msgstr ""
 msgid "Field username is required."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:133
+#: modules/membership/includes/AJAX.php:116
+msgid "User already exists."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:142
 msgid "Invalid User"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:147
+#: modules/membership/includes/AJAX.php:156
 msgid "New member has been successfully created."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:155
+#: modules/membership/includes/AJAX.php:167
 msgid "Sorry! There was an unexpected error while registering the user . "
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:173
+#: modules/membership/includes/AJAX.php:185
 msgid "Sorry, You do not have permission to create membership"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:218
+#: modules/membership/includes/AJAX.php:230
 msgid "Successfully created the membership . "
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:226
-#: modules/membership/includes/AJAX.php:315
-#: modules/membership/includes/AJAX.php:484
+#: modules/membership/includes/AJAX.php:238
+#: modules/membership/includes/AJAX.php:327
+#: modules/membership/includes/AJAX.php:496
 msgid "Sorry! There was an unexpected error while saving the membership data . "
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:241
+#: modules/membership/includes/AJAX.php:253
 msgid "Field membership_id is required."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:248
-#: modules/membership/includes/AJAX.php:461
+#: modules/membership/includes/AJAX.php:260
+#: modules/membership/includes/AJAX.php:473
 msgid "Sorry, You do not have permission to edit membership"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:298
+#: modules/membership/includes/AJAX.php:310
 msgid "Sorry! Could not create stripe product. "
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:307
+#: modules/membership/includes/AJAX.php:319
 msgid "Successfully updated the membership data."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:331
-#: modules/membership/includes/AJAX.php:373
-#: modules/membership/includes/AJAX.php:419
+#: modules/membership/includes/AJAX.php:343
+#: modules/membership/includes/AJAX.php:385
+#: modules/membership/includes/AJAX.php:431
 msgid "Permission not allowed."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:340
+#: modules/membership/includes/AJAX.php:352
 msgid "Field membership_ids is required."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:352
+#: modules/membership/includes/AJAX.php:364
 msgid "Memberships deleted successfully."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:358
+#: modules/membership/includes/AJAX.php:370
 msgid "Sorry! There was an unexpected error while deleting the memberships."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:382
+#: modules/membership/includes/AJAX.php:394
 msgid "Field membership_group_ids is required."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:399
+#: modules/membership/includes/AJAX.php:411
 msgid "Memberships Groups deleted successfully."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:405
+#: modules/membership/includes/AJAX.php:417
 msgid "Sorry! There was an unexpected error while deleting the membership groups."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:428
+#: modules/membership/includes/AJAX.php:440
 msgid "Field members_ids is required."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:440
+#: modules/membership/includes/AJAX.php:452
 msgid "Members deleted successfully."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:446
+#: modules/membership/includes/AJAX.php:458
 msgid "Sorry! There was an unexpected error while deleting the selected members."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:478
+#: modules/membership/includes/AJAX.php:490
 msgid "Successfully updated the membership status . "
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:500
+#: modules/membership/includes/AJAX.php:512
 msgid "Sorry, You do not have permission to create users"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:514
+#: modules/membership/includes/AJAX.php:526
 msgid "New member has been successfully created. "
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:518
+#: modules/membership/includes/AJAX.php:530
 msgid "Sorry! There was an unexpected error while saving the members data . "
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:563
+#: modules/membership/includes/AJAX.php:575
 msgid "Field member_id is required"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:570
+#: modules/membership/includes/AJAX.php:582
 msgid "Field form_response is required"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:643
-#: modules/membership/includes/AJAX.php:681
-#: modules/membership/includes/AJAX.php:760
-#: modules/membership/includes/AJAX.php:763
-#: modules/membership/includes/AJAX.php:787
+#: modules/membership/includes/AJAX.php:591
+#: modules/membership/includes/AJAX.php:638
+msgid "Invalid Request."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:674
+#: modules/membership/includes/AJAX.php:712
+#: modules/membership/includes/AJAX.php:791
+#: modules/membership/includes/AJAX.php:794
+#: modules/membership/includes/AJAX.php:818
 msgid "Wrong request."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:661
+#: modules/membership/includes/AJAX.php:692
 msgid "Something went wrong while cancelling your subscription. Please contact support"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:684
+#: modules/membership/includes/AJAX.php:715
 msgid "Field list type is required."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:699
+#: modules/membership/includes/AJAX.php:730
 msgid "No membership is available for the selected group."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:720
+#: modules/membership/includes/AJAX.php:751
 msgid "Sorry, You do not have permission to create membership groups."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:727
+#: modules/membership/includes/AJAX.php:758
 msgid "Field membership_groups_data is required"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:745
+#: modules/membership/includes/AJAX.php:776
 msgid "Membership Groups saved successfully."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:769
+#: modules/membership/includes/AJAX.php:800
 msgid "Invalid post type"
 msgstr ""
 
@@ -9836,16 +9849,6 @@ msgstr ""
 
 #: user-registration.php:647
 msgid "As <strong>User Registration & Membership Pro</strong> is active, <strong>User Registration Free</strong> is now not needed."
-msgstr ""
-
-#: chunks/dashboard.js:281
-#: src/dashboard/screens/Modules/hooks/useLicenseActivation.js:15
-msgid "Invalid license key."
-msgstr ""
-
-#: chunks/dashboard.js:281
-#: src/dashboard/screens/Modules/hooks/useLicenseActivation.js:13
-msgid "Please enter a license key."
 msgstr ""
 
 #: src/blocks/blocks/content-restriction-enhanced/Edit.js:93
@@ -10649,6 +10652,14 @@ msgstr ""
 msgid "Play Video"
 msgstr ""
 
+#: src/dashboard/screens/Modules/hooks/useLicenseActivation.js:13
+msgid "Please enter a license key."
+msgstr ""
+
+#: src/dashboard/screens/Modules/hooks/useLicenseActivation.js:15
+msgid "Invalid license key."
+msgstr ""
+
 #: src/dashboard/screens/Modules/hooks/useUpgradeModal.js:16
 msgid "License key"
 msgstr ""
@@ -10986,145 +10997,121 @@ msgstr ""
 msgid "Create a membership system with user sign-ups and exclusive access."
 msgstr ""
 
-#: chunks/content-restriction-enhanced/block.json
 #: src/blocks/blocks/content-restriction-enhanced/block.json
 msgctxt "block title"
 msgid "Content Restriction"
 msgstr ""
 
-#: chunks/content-restriction-enhanced/block.json
 #: src/blocks/blocks/content-restriction-enhanced/block.json
 msgctxt "block description"
 msgid "The block restricts the content."
 msgstr ""
 
-#: chunks/content-restriction-enhanced/block.json
 #: src/blocks/blocks/content-restriction-enhanced/block.json
 msgctxt "block keyword"
 msgid "user registration content restriction"
 msgstr ""
 
-#: chunks/content-restriction-enhanced/block.json
 #: src/blocks/blocks/content-restriction-enhanced/block.json
 msgctxt "block keyword"
 msgid "content restriction"
 msgstr ""
 
-#: chunks/edit-password/block.json
 #: src/blocks/blocks/edit-password/block.json
 msgctxt "block title"
 msgid "Edit Password"
 msgstr ""
 
-#: chunks/edit-password/block.json
 #: src/blocks/blocks/edit-password/block.json
 msgctxt "block description"
 msgid "The block give the edit password interface."
 msgstr ""
 
-#: chunks/edit-password/block.json
 #: src/blocks/blocks/edit-password/block.json
 msgctxt "block keyword"
 msgid "user registration edit password"
 msgstr ""
 
-#: chunks/edit-password/block.json
 #: src/blocks/blocks/edit-password/block.json
 msgctxt "block keyword"
 msgid "edit password"
 msgstr ""
 
-#: chunks/edit-profile/block.json
 #: src/blocks/blocks/edit-profile/block.json
 msgctxt "block title"
 msgid "Edit Profile"
 msgstr ""
 
-#: chunks/edit-profile/block.json
 #: src/blocks/blocks/edit-profile/block.json
 msgctxt "block description"
 msgid "The block give edit profile interface."
 msgstr ""
 
-#: chunks/edit-profile/block.json
 #: src/blocks/blocks/edit-profile/block.json
 msgctxt "block keyword"
 msgid "user registration edit profile"
 msgstr ""
 
-#: chunks/edit-profile/block.json
 #: src/blocks/blocks/edit-profile/block.json
 msgctxt "block keyword"
 msgid "edit profile"
 msgstr ""
 
-#: chunks/login-form/block.json
 #: src/blocks/blocks/login-form/block.json
 msgctxt "block title"
 msgid "Login Form"
 msgstr ""
 
-#: chunks/login-form/block.json
 #: src/blocks/blocks/login-form/block.json
 msgctxt "block description"
 msgid "The block give the login form for registered users."
 msgstr ""
 
-#: chunks/login-form/block.json
 #: src/blocks/blocks/login-form/block.json
 msgctxt "block keyword"
 msgid "user registration login form"
 msgstr ""
 
-#: chunks/login-form/block.json
 #: src/blocks/blocks/login-form/block.json
 msgctxt "block keyword"
 msgid "login form"
 msgstr ""
 
-#: chunks/myaccount/block.json
 #: src/blocks/blocks/myaccount/block.json
 msgctxt "block title"
 msgid "Myaccount"
 msgstr ""
 
-#: chunks/myaccount/block.json
 #: src/blocks/blocks/myaccount/block.json
 msgctxt "block description"
 msgid "The block give the myaccount form for registered users."
 msgstr ""
 
-#: chunks/myaccount/block.json
 #: src/blocks/blocks/myaccount/block.json
 msgctxt "block keyword"
 msgid "user registration myaccount"
 msgstr ""
 
-#: chunks/myaccount/block.json
 #: src/blocks/blocks/myaccount/block.json
 msgctxt "block keyword"
 msgid "myaccount"
 msgstr ""
 
-#: chunks/registration-form/block.json
 #: src/blocks/blocks/registration-form/block.json
 msgctxt "block title"
 msgid "Registration Form"
 msgstr ""
 
-#: chunks/registration-form/block.json
 #: src/blocks/blocks/registration-form/block.json
 msgctxt "block description"
 msgid "The block lets the user choose the required user registration directly."
 msgstr ""
 
-#: chunks/registration-form/block.json
 #: src/blocks/blocks/registration-form/block.json
 msgctxt "block keyword"
 msgid "user registration form"
 msgstr ""
 
-#: chunks/registration-form/block.json
 #: src/blocks/blocks/registration-form/block.json
 msgctxt "block keyword"
 msgid "registration form"
