@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the User Registration & Membership plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration & Membership 4.1.4\n"
+"Project-Id-Version: User Registration & Membership 4.1.5\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-registration\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-04-08T05:03:11+00:00\n"
+"POT-Creation-Date: 2025-04-08T10:38:19+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: user-registration\n"
@@ -9851,6 +9851,16 @@ msgstr ""
 msgid "As <strong>User Registration & Membership Pro</strong> is active, <strong>User Registration Free</strong> is now not needed."
 msgstr ""
 
+#: chunks/dashboard.js:281
+#: src/dashboard/screens/Modules/hooks/useLicenseActivation.js:15
+msgid "Invalid license key."
+msgstr ""
+
+#: chunks/dashboard.js:281
+#: src/dashboard/screens/Modules/hooks/useLicenseActivation.js:13
+msgid "Please enter a license key."
+msgstr ""
+
 #: src/blocks/blocks/content-restriction-enhanced/Edit.js:93
 msgid "Select access role"
 msgstr ""
@@ -10652,14 +10662,6 @@ msgstr ""
 msgid "Play Video"
 msgstr ""
 
-#: src/dashboard/screens/Modules/hooks/useLicenseActivation.js:13
-msgid "Please enter a license key."
-msgstr ""
-
-#: src/dashboard/screens/Modules/hooks/useLicenseActivation.js:15
-msgid "Invalid license key."
-msgstr ""
-
 #: src/dashboard/screens/Modules/hooks/useUpgradeModal.js:16
 msgid "License key"
 msgstr ""
@@ -10997,121 +10999,145 @@ msgstr ""
 msgid "Create a membership system with user sign-ups and exclusive access."
 msgstr ""
 
+#: chunks/content-restriction-enhanced/block.json
 #: src/blocks/blocks/content-restriction-enhanced/block.json
 msgctxt "block title"
 msgid "Content Restriction"
 msgstr ""
 
+#: chunks/content-restriction-enhanced/block.json
 #: src/blocks/blocks/content-restriction-enhanced/block.json
 msgctxt "block description"
 msgid "The block restricts the content."
 msgstr ""
 
+#: chunks/content-restriction-enhanced/block.json
 #: src/blocks/blocks/content-restriction-enhanced/block.json
 msgctxt "block keyword"
 msgid "user registration content restriction"
 msgstr ""
 
+#: chunks/content-restriction-enhanced/block.json
 #: src/blocks/blocks/content-restriction-enhanced/block.json
 msgctxt "block keyword"
 msgid "content restriction"
 msgstr ""
 
+#: chunks/edit-password/block.json
 #: src/blocks/blocks/edit-password/block.json
 msgctxt "block title"
 msgid "Edit Password"
 msgstr ""
 
+#: chunks/edit-password/block.json
 #: src/blocks/blocks/edit-password/block.json
 msgctxt "block description"
 msgid "The block give the edit password interface."
 msgstr ""
 
+#: chunks/edit-password/block.json
 #: src/blocks/blocks/edit-password/block.json
 msgctxt "block keyword"
 msgid "user registration edit password"
 msgstr ""
 
+#: chunks/edit-password/block.json
 #: src/blocks/blocks/edit-password/block.json
 msgctxt "block keyword"
 msgid "edit password"
 msgstr ""
 
+#: chunks/edit-profile/block.json
 #: src/blocks/blocks/edit-profile/block.json
 msgctxt "block title"
 msgid "Edit Profile"
 msgstr ""
 
+#: chunks/edit-profile/block.json
 #: src/blocks/blocks/edit-profile/block.json
 msgctxt "block description"
 msgid "The block give edit profile interface."
 msgstr ""
 
+#: chunks/edit-profile/block.json
 #: src/blocks/blocks/edit-profile/block.json
 msgctxt "block keyword"
 msgid "user registration edit profile"
 msgstr ""
 
+#: chunks/edit-profile/block.json
 #: src/blocks/blocks/edit-profile/block.json
 msgctxt "block keyword"
 msgid "edit profile"
 msgstr ""
 
+#: chunks/login-form/block.json
 #: src/blocks/blocks/login-form/block.json
 msgctxt "block title"
 msgid "Login Form"
 msgstr ""
 
+#: chunks/login-form/block.json
 #: src/blocks/blocks/login-form/block.json
 msgctxt "block description"
 msgid "The block give the login form for registered users."
 msgstr ""
 
+#: chunks/login-form/block.json
 #: src/blocks/blocks/login-form/block.json
 msgctxt "block keyword"
 msgid "user registration login form"
 msgstr ""
 
+#: chunks/login-form/block.json
 #: src/blocks/blocks/login-form/block.json
 msgctxt "block keyword"
 msgid "login form"
 msgstr ""
 
+#: chunks/myaccount/block.json
 #: src/blocks/blocks/myaccount/block.json
 msgctxt "block title"
 msgid "Myaccount"
 msgstr ""
 
+#: chunks/myaccount/block.json
 #: src/blocks/blocks/myaccount/block.json
 msgctxt "block description"
 msgid "The block give the myaccount form for registered users."
 msgstr ""
 
+#: chunks/myaccount/block.json
 #: src/blocks/blocks/myaccount/block.json
 msgctxt "block keyword"
 msgid "user registration myaccount"
 msgstr ""
 
+#: chunks/myaccount/block.json
 #: src/blocks/blocks/myaccount/block.json
 msgctxt "block keyword"
 msgid "myaccount"
 msgstr ""
 
+#: chunks/registration-form/block.json
 #: src/blocks/blocks/registration-form/block.json
 msgctxt "block title"
 msgid "Registration Form"
 msgstr ""
 
+#: chunks/registration-form/block.json
 #: src/blocks/blocks/registration-form/block.json
 msgctxt "block description"
 msgid "The block lets the user choose the required user registration directly."
 msgstr ""
 
+#: chunks/registration-form/block.json
 #: src/blocks/blocks/registration-form/block.json
 msgctxt "block keyword"
 msgid "user registration form"
 msgstr ""
 
+#: chunks/registration-form/block.json
 #: src/blocks/blocks/registration-form/block.json
 msgctxt "block keyword"
 msgid "registration form"
