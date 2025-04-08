@@ -9,6 +9,7 @@
 if ( file_exists( UR()->plugin_path() . '/vendor/autoload.php' ) ) {
 	require_once UR()->plugin_path() . '/vendor/autoload.php';
 }
+
 defined( 'ABSPATH' ) || exit;
 
 
