@@ -8170,7 +8170,7 @@ if( ! function_exists( 'ur_filter_get_endpoint_url' ) ) {
 	 function ur_filter_get_endpoint_url( $url, $endpoint, $value, $permalink ) {
 		//Return early WPML is not active
 		if ( ! class_exists( 'SitePress' ) ) {
-			return ;
+			return $url;
 		}
 		$site_press = new SitePress();
 		remove_filter( 'user_registration_get_endpoint_url', 'ur_filter_get_endpoint_url', 10 );
