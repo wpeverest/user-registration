@@ -6723,6 +6723,7 @@ if ( ! function_exists( 'ur_prevent_default_login' ) ) {
 	 * @return @mixed
 	 */
 	function ur_prevent_default_login( $data ) {
+
 		// Return if default wp_login is disabled and no redirect url is set.
 		if ( isset( $data['user_registration_login_options_prevent_core_login'] ) && $data['user_registration_login_options_prevent_core_login'] ) {
 			if ( isset( $data['user_registration_login_options_login_redirect_url'] ) ) {
@@ -6763,7 +6764,14 @@ if ( ! function_exists( 'ur_prevent_default_login' ) ) {
                     return 'invalid_membership_pages';
                 }
 			}
-
+		}
+		elseif (isset($data['tab']) && "payment" === $data['tab'] && isset( $data['user_registration_global_paypal_cancel_url'] ) && isset( $data['user_registration_global_paypal_return_url'] )) {
+			if( empty($data['user_registration_global_paypal_cancel_url'] ) ) {
+				return 'user_registration_global_paypal_cancel_url';
+			}
+			if( empty( $data['user_registration_global_paypal_return_url'] ) ) {
+				return 'user_registration_global_paypal_return_url';
+			}
 		}
 		return true;
 	}

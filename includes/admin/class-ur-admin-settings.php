@@ -146,6 +146,22 @@ class UR_Admin_Settings {
 				)
 			);
 		}
+		elseif ( 'user_registration_global_paypal_return_url' === $flag ) {
+			self::add_error(
+				esc_html__(
+					'Your settings has not been saved. Paypal return url cannot be empty.',
+					'user-registration'
+				)
+			);
+		}
+		elseif ( 'user_registration_global_paypal_cancel_url' === $flag ) {
+			self::add_error(
+				esc_html__(
+					'Your settings has not been saved. Paypal cancel url cannot be empty.',
+					'user-registration'
+				)
+			);
+		}
 		// Flush rules.
 		wp_schedule_single_event( time(), 'user_registration_flush_rewrite_rules' );
 
