@@ -655,7 +655,7 @@ class UR_Smart_Tags {
 				'^[a-zA-Z0-9-]+$'                                                                            => __( 'Slug', 'user-registration' ),
 				'(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}'                                                     => __( 'Time (hh:mm:ss)', 'user-registration' ),
 				'^(https?|ftp):\/\/[^\s\/$.?#].[^\s]*$'                                                      => __( 'URL', 'user-registration' ),
-				'(\d{5}([\-]\d{4})?)'                                                                        => __( 'Zip Code', 'user-registration' ),
+				'^\d{5}(-\d{4})?$'                                                                        => __( 'Zip Code', 'user-registration' ),
 			)
 		);
 
