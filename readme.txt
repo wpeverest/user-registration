@@ -258,7 +258,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 4.2.0    - 14/04/2025 =
+= 4.2.0    - 15/04/2025 =
 * Feature  - Logs with system information.
 * Enhance  - Realtime frontend field pattern validation.
 * Tweak    - Logout endpoint translation issue.
