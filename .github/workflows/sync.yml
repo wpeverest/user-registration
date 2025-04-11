@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - UR-2276/shortcode-functionality
+      - master
     workflow_dispatch:
 jobs:
   sync:
