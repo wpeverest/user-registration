@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-04-09T02:43:29+00:00\n"
+"POT-Creation-Date: 2025-04-11T03:31:23+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: user-registration\n"
@@ -565,7 +565,7 @@ msgstr ""
 #: includes/admin/class-ur-admin-settings.php:246
 #: includes/class-ur-ajax.php:1779
 #: includes/functions-ur-core.php:3911
-#: src/dashboard/screens/Modules/components/ModuleItem.js:523
+#: src/dashboard/screens/Modules/components/ModuleItem.js:564
 #: src/dashboard/screens/Modules/hooks/useUpgradeModal.js:82
 #: src/form-templates/components/TemplateList.js:683
 msgid "Upgrade Plan"
@@ -3405,7 +3405,7 @@ msgstr ""
 
 #: includes/admin/views/html-admin-page-forms.php:174
 #: includes/functions-ur-core.php:4937
-#: src/dashboard/screens/Modules/components/ModuleItem.js:446
+#: src/dashboard/screens/Modules/components/ModuleItem.js:489
 msgid "Documentation"
 msgstr ""
 
@@ -4034,7 +4034,7 @@ msgstr ""
 
 #: includes/class-ur-ajax.php:1625
 #: includes/functions-ur-core.php:3036
-#: includes/RestApi/controllers/version1/class-ur-modules.php:723
+#: includes/RestApi/controllers/version1/class-ur-modules.php:724
 msgid "Unable to connect to the filesystem. Please confirm your credentials."
 msgstr ""
 
@@ -8038,23 +8038,23 @@ msgstr ""
 msgid "Some of the selected modules may not have been deactivated. Please try again later"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:671
+#: includes/RestApi/controllers/version1/class-ur-modules.php:672
 msgid "Addons activated successfully"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:691
+#: includes/RestApi/controllers/version1/class-ur-modules.php:692
 msgid "Couldn't fetch addon data at the moment. Please try again later"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:743
+#: includes/RestApi/controllers/version1/class-ur-modules.php:744
 msgid "Addon installed Successfully"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:786
+#: includes/RestApi/controllers/version1/class-ur-modules.php:787
 msgid "User Registration Pro activated successfully."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-modules.php:795
+#: includes/RestApi/controllers/version1/class-ur-modules.php:796
 msgid "Please enter the valid license key."
 msgstr ""
 
@@ -10319,7 +10319,7 @@ msgstr ""
 
 #: src/dashboard/components/common/UsePluginInstallActivate.js:180
 #: src/dashboard/screens/Dashboard/components/UsefulPlugins.js:78
-#: src/dashboard/screens/Modules/Modules.js:381
+#: src/dashboard/screens/Modules/Modules.js:399
 #: src/dashboard/screens/Products/components/ProductCard.js:143
 msgid "Activate"
 msgstr ""
@@ -10508,7 +10508,7 @@ msgid "Watch Videos"
 msgstr ""
 
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:43
-#: src/dashboard/screens/Modules/Modules.js:327
+#: src/dashboard/screens/Modules/Modules.js:345
 msgid "Features"
 msgstr ""
 
@@ -10653,7 +10653,7 @@ msgid "Send Form Data to External URL After Registration"
 msgstr ""
 
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:276
-#: src/dashboard/screens/Modules/Modules.js:355
+#: src/dashboard/screens/Modules/Modules.js:373
 msgid "Addons"
 msgstr ""
 
@@ -11055,7 +11055,7 @@ msgstr ""
 msgid "All Smart Tags"
 msgstr ""
 
-#: src/dashboard/screens/Modules/components/ModuleItem.js:359
+#: src/dashboard/screens/Modules/components/ModuleItem.js:402
 msgid "Play Video"
 msgstr ""
 
@@ -11103,51 +11103,51 @@ msgstr ""
 msgid "%s is only available in the plus plan and above."
 msgstr ""
 
-#: src/dashboard/screens/Modules/Modules.js:251
+#: src/dashboard/screens/Modules/Modules.js:269
 msgid "Popular"
 msgstr ""
 
-#: src/dashboard/screens/Modules/Modules.js:254
+#: src/dashboard/screens/Modules/Modules.js:272
 msgid "Newest"
 msgstr ""
 
-#: src/dashboard/screens/Modules/Modules.js:257
+#: src/dashboard/screens/Modules/Modules.js:275
 msgid "Oldest"
 msgstr ""
 
-#: src/dashboard/screens/Modules/Modules.js:260
+#: src/dashboard/screens/Modules/Modules.js:278
 msgid "Ascending"
 msgstr ""
 
-#: src/dashboard/screens/Modules/Modules.js:263
+#: src/dashboard/screens/Modules/Modules.js:281
 msgid "Descending"
 msgstr ""
 
-#: src/dashboard/screens/Modules/Modules.js:300
+#: src/dashboard/screens/Modules/Modules.js:318
 msgid "All Modules"
 msgstr ""
 
-#: src/dashboard/screens/Modules/Modules.js:365
+#: src/dashboard/screens/Modules/Modules.js:383
 msgid "Bulk Actions"
 msgstr ""
 
-#: src/dashboard/screens/Modules/Modules.js:384
+#: src/dashboard/screens/Modules/Modules.js:402
 msgid "Deactivate"
 msgstr ""
 
-#: src/dashboard/screens/Modules/Modules.js:400
+#: src/dashboard/screens/Modules/Modules.js:418
 msgid "Apply"
 msgstr ""
 
-#: src/dashboard/screens/Modules/Modules.js:415
+#: src/dashboard/screens/Modules/Modules.js:433
 msgid "Search..."
 msgstr ""
 
-#: src/dashboard/screens/Modules/Modules.js:442
+#: src/dashboard/screens/Modules/Modules.js:460
 msgid "Sorry, no result found."
 msgstr ""
 
-#: src/dashboard/screens/Modules/Modules.js:445
+#: src/dashboard/screens/Modules/Modules.js:463
 msgid "Please try another search"
 msgstr ""
 
