@@ -1077,6 +1077,7 @@ class UR_Emailer {
 					'error_message' => $error_message,
 				)
 			);
+			return $status;
 		} else{
 			$logger->info( __( 'Email Send Successfully', 'user-registration' ), array( 'source' => 'emails' ) );
 		}

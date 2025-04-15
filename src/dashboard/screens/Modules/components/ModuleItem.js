@@ -26,7 +26,7 @@ import {
 	Switch
 } from "@chakra-ui/react";
 import {__} from "@wordpress/i18n";
-import React, {useState, useEffect, useCallback} from "react";
+import React, {useState, useEffect, useCallback, useRef} from "react";
 import YouTubePlayer from "react-player/youtube";
 import {FaPlayCircle} from "react-icons/fa";
 import {SettingsIcon} from "@chakra-ui/icons";
@@ -52,9 +52,10 @@ const ModuleItem = (props) => {
 		isChecked,
 		onCheckedChange,
 		isPerformingBulkAction,
-		selectedModuleData
+		selectedModuleData,
+		IsStateUpdated,
+		resetIsStateUpdated
 	} = props;
-
 	const {
 		title,
 		name,
@@ -69,7 +70,6 @@ const ModuleItem = (props) => {
 		demo_video_url,
 		setting_url
 	} = data;
-
 	// States
 	const [moduleStatus, setModuleStatus] = useState(status);
 	const [isPerformingAction, setIsPerformingAction] = useState(false);
@@ -80,7 +80,9 @@ const ModuleItem = (props) => {
 	const [isFreeModuleEnabled, setIsFreeModuleEnabled] = useState(true);
 	const [requirementFulfilled, setRequirementFulfilled] = useState(false);
 	const [licenseActivated, setLicenseActivated] = useState(false);
-
+	const [toastMessage, setToastMessage] = useState(null);
+	const [toastStatus, setToastStatus] = useState(null);
+	const isPaymentAddon = ["user-registration-payments", "user-registration-stripe", "user-registration-authorize-net"].includes(slug);
 	// Helper for showing toast
 	const showToast = useCallback(
 		(message, status) => {
@@ -92,11 +94,17 @@ const ModuleItem = (props) => {
 		},
 		[toast]
 	);
-
+	useEffect(() => {
+		if (IsStateUpdated && toastMessage && toastStatus) {
+			showToast(toastMessage, toastStatus);
+			setToastMessage(null);
+			setToastStatus(null);
+			resetIsStateUpdated(false)
+		}
+	}, [IsStateUpdated, toastMessage, toastStatus]);
 	// Handle module activation/deactivation
 	const handleModuleAction = () => {
 		setIsPerformingAction(true);
-
 		if (moduleEnabled && isFreeModuleEnabled) {
 			if (
 				moduleStatus === "inactive" ||
@@ -105,37 +113,67 @@ const ModuleItem = (props) => {
 				activateModule(slug, name, type)
 					.then((data) => {
 						if (data.success) {
-							showToast(data.message, "success");
+							if (isPaymentAddon) {
+								setToastMessage(data.message);
+								setToastStatus("success");
+							} else {
+								showToast(data.message, "success");
+							}
 							setModuleStatus("active");
 						} else {
-							showToast(data.message, "error");
+							if (isPaymentAddon) {
+								setToastMessage(data.message);
+								setToastStatus("error");
+							} else {
+								showToast(data.message, "error");
+							}
 							setModuleStatus("not-installed");
 						}
 					})
 					.catch((e) => {
-						showToast(e.message, "error");
+						if (isPaymentAddon) {
+							setToastMessage(e.message);
+							setToastStatus("error");
+						} else {
+							showToast(data.message, "error");
+						}
 						setModuleStatus("not-installed");
 					})
 					.finally(() => {
-						setIsPerformingAction(false);
+						if (!isPaymentAddon) {
+							setIsPerformingAction(false);
+						}
 					});
 			} else {
 				deactivateModule(slug, type)
 					.then((data) => {
 						if (data.success) {
-							showToast(data.message, "success");
+							if (isPaymentAddon) {
+								setToastMessage(data.message);
+								setToastStatus("success");
+							} else {
+								showToast(data.message, "success");
+							}
 							setModuleStatus("inactive");
 						} else {
-							showToast(data.message, "error");
+							if (isPaymentAddon) {
+								setToastMessage(e.message);
+								setToastStatus("error");
+							} else {
+								showToast(data.message, "error");
+							}
 							setModuleStatus("active");
 						}
 					})
 					.finally(() => {
-						setIsPerformingAction(false);
+						if (!isPaymentAddon) {
+							setIsPerformingAction(false);
+						}
 					});
 			}
 		} else {
 			handleBoxClick();
+
 		}
 	};
 
@@ -149,11 +187,11 @@ const ModuleItem = (props) => {
 				let isActive = isMembershipActivated || isPaymentAddonActivated
 				setIsFreeModuleEnabled(isActive);
 			}
-
 		}
 	}, [isMembershipActivated, isPaymentAddonActivated]);
 
 	useEffect(() => {
+
 		setModuleStatus(data.status);
 
 		if (!upgradeModal.enable) {
@@ -165,14 +203,18 @@ const ModuleItem = (props) => {
 				data.activation_requirements &&
 				data.activation_requirements.includes("membership")
 			) {
-				let isActive = isMembershipActivated || isPaymentAddonActivated
-
-				setIsFreeModuleEnabled(isActive);
+				if (!isMembershipActivated && !isPaymentAddonActivated) {
+					setIsFreeModuleEnabled(true);
+				}
+				if (isMembershipActivated || isPaymentAddonActivated) {
+					let isActive = isMembershipActivated || isPaymentAddonActivated;
+					setIsFreeModuleEnabled(isActive);
+				}
 			}
-
 			setModuleEnabled(true);
 		} else if (isPro) {
 			setModuleEnabled(true);
+
 			if (licensePlan) {
 				const requiredPlan = licensePlan.item_plan.replace(
 					" lifetime",
@@ -203,17 +245,16 @@ const ModuleItem = (props) => {
 
 	useEffect(() => {
 		const status = moduleStatus === "active";
-		var count = 0;
 
-		if ("user-registration-membership" === slug) {
-			dispatch({
-				type: actionTypes.GET_IS_MEMBERSHIP_ACTIVATED,
-				isMembershipActivated: status
-			});
-		}
-
-		if (["user-registration-payments", "user-registration-stripe", "user-registration-authorize-net"].includes(slug)) {
-			if (status) {
+		if (data.status !== moduleStatus) {
+			if ("user-registration-membership" === slug) {
+				dispatch({
+					type: actionTypes.GET_IS_MEMBERSHIP_ACTIVATED,
+					isMembershipActivated: status
+				});
+			}
+			//on first load dispatch is not working
+			if (isPaymentAddon) {
 				dispatch({
 					type: actionTypes.GET_IS_PAYMENT_ADDON_ACTIVATED,
 					isPaymentAddonActivated: status
@@ -255,6 +296,8 @@ const ModuleItem = (props) => {
 			type: actionTypes.GET_UPGRADE_MODAL,
 			upgradeModal: upgradeModalRef
 		});
+		onInputDisable(false);
+
 	};
 
 	const renderThumbnail = () => (
@@ -465,22 +508,13 @@ const ModuleItem = (props) => {
 							</>
 						)}
 				</HStack>
-				{isPerformingAction ||
-				(selectedModuleData.hasOwnProperty(slug) &&
-					isPerformingBulkAction) ? (
-					<Spinner
-						speed="0.50s"
-						emptyColor="gray.200"
-						color="blue.500"
-						size="md"
-					/>
-				) : (
+				{(!isPerformingAction &&
+					(!selectedModuleData.hasOwnProperty(slug) || !isPerformingBulkAction)) ? (
 					(moduleEnabled || plan.includes("free")) && (
 						<Switch
 							isChecked={
 								"active" === moduleStatus
-									? plan.includes("free") &&
-									!isFreeModuleEnabled
+									? plan.includes("free") && !isFreeModuleEnabled
 										? false
 										: true
 									: false
@@ -493,6 +527,13 @@ const ModuleItem = (props) => {
 							colorScheme="green"
 						/>
 					)
+				) : (
+					<Spinner
+						speed="0.50s"
+						emptyColor="gray.200"
+						color="blue.500"
+						size="md"
+					/>
 				)}
 
 				{(!moduleEnabled ||

@@ -27,11 +27,13 @@ import AddonSkeleton from "../../../skeleton/AddonsSkeleton/AddonsSkeleton";
 import { isArray, isEmpty } from "../../../../utils/utils";
 
 const ModuleBody = ({
-	isPerformingBulkAction,
-	filteredAddons,
-	setSelectedModuleData,
-	selectedModuleData
-}) => {
+						isPerformingBulkAction,
+						filteredAddons,
+						setSelectedModuleData,
+						selectedModuleData,
+						IsStateUpdated,
+						resetIsStateUpdated
+					}) => {
 	/* global _UR_DASHBOARD_ */
 	const { upgradeURL, licenseActivationURL, isPro } = _UR_DASHBOARD_ || {};
 	const [{ upgradeModal }, dispatch] = useStateValue();
@@ -166,6 +168,8 @@ const ModuleBody = ({
 										isPerformingBulkAction
 									}
 									selectedModuleData={selectedModuleData}
+									IsStateUpdated={IsStateUpdated}
+									resetIsStateUpdated={resetIsStateUpdated}
 								/>
 							))}
 					</SimpleGrid>

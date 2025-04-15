@@ -216,7 +216,7 @@ class UR_Preview {
 			return;
 		}
 		if ( isset( $_GET['form_id'] ) ) {
-			$form_id = $_GET['form_id'];// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$form_id = absint( $_GET['form_id'] );// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 			$html  = '';
 			$html .= '<div class="ur-preview-content">';
