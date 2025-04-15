@@ -557,6 +557,12 @@ class UR_Smart_Tags {
 					case 'sms_otp_validity':
 						$content = str_replace( '{{' . $tag . '}}', isset( $values['sms_otp_validity'] ) ? $values['sms_otp_validity'] : '', $content );
 						break;
+					case 'otp_code':
+						$content = str_replace( '{{' . $tag . '}}', isset( $values['otp_code'] ) ? $values['otp_code'] : '', $content );
+						break;
+					case 'otp_expiry_time':
+						$content = str_replace( '{{' . $tag . '}}', isset( $values['otp_expiry_time'] ) ? $values['otp_expiry_time'] : '', $content );
+						break;
 				}
 			}
 		}
