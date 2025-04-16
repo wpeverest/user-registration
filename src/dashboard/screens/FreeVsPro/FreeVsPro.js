@@ -29,6 +29,11 @@ import { getAllModules } from "../Modules/components/modules-api";
 
 const FreeVsPro = () => {
 	const [contentsLoaded, setContentsLoaded] = useState(false);
+	const sharedFeatures = [
+		"user-registration-membership",
+		"user-registration-content-restriction",
+		"user-registration-payment-history"
+	];
 	/* global _UR_DASHBOARD_ */
 	const { upgradeURL } =
 		typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
@@ -279,27 +284,20 @@ const FreeVsPro = () => {
 
 			getAllModules()
 				.then((data) => {
+
 					if (data.success) {
 						tableContentsRef.map((tableContent, key) => {
 							if (tableContent.type === "features") {
 								data.modules_lists.map((module) => {
 									if (module.type == "feature") {
-										console.log(tableContent.contents);
+										let isFree = module.plan.includes('free');
+										let isPro = !isFree || sharedFeatures.includes(module.slug);
 
-										tableContent.contents = [
-											...tableContent.contents,
-											{
-												title: module.title,
-												free:
-													module.plan.indexOf(
-														"free"
-													) != -1,
-												pro:
-													module.plan.indexOf(
-														"free"
-													) == -1
-											}
-										];
+										tableContent.contents.push({
+											title: module.title,
+											free: isFree,
+											pro: isPro
+										});
 									}
 								});
 								tableContentsRef[key] = tableContent;

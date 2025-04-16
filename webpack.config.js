@@ -1,7 +1,7 @@
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const isProd = process.env.NODE_ENV === "production";
-const WebpackBar = require("webpackbar");
+const WebpackBar = !isProd ? require("webpackbar") : null;
 
 module.exports = (env, argv) => {
 	return {
@@ -83,9 +83,7 @@ module.exports = (env, argv) => {
 					}
 				]
 			}),
-			new WebpackBar({
-				/* options */
-			}),
+			...(!isProd && WebpackBar ? [new WebpackBar()] : [])
 		],
 		externals: {
 			"@wordpress/blocks": ["wp", "blocks"],

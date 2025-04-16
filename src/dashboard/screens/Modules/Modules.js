@@ -1,7 +1,7 @@
 /**
  *  External Dependencies
  */
-import React, { useState, useEffect, useCallback } from "react";
+import React, {useState, useEffect, useCallback, useRef} from "react";
 import {
 	Box,
 	Container,
@@ -20,23 +20,23 @@ import {
 	useToast,
 	Text
 } from "@chakra-ui/react";
-import { __ } from "@wordpress/i18n";
-import { debounce } from "lodash";
+import {__} from "@wordpress/i18n";
+import {debounce} from "lodash";
 
-import { Search, PageNotFound } from "../../components/Icon/Icon";
+import {Search, PageNotFound} from "../../components/Icon/Icon";
 import {
 	getAllModules,
 	bulkActivateModules,
 	bulkDeactivateModules
 } from "./components/modules-api";
 import AddonSkeleton from "../../skeleton/AddonsSkeleton/AddonsSkeleton";
-import { useStateValue } from "../../../context/StateProvider";
-import { actionTypes } from "../../../context/dashboardContext";
+import {useStateValue} from "../../../context/StateProvider";
+import {actionTypes} from "../../../context/dashboardContext";
 import ModuleBody from "./components/ModuleBody";
 
 const Modules = () => {
 	const toast = useToast();
-	const [{ allModules , isMembershipActivated , isPaymentAddonActivated }, dispatch] = useStateValue();
+	const [{allModules, isMembershipActivated, isPaymentAddonActivated}, dispatch] = useStateValue();
 	const [state, setState] = useState({
 		modules: [],
 		originalModules: [],
@@ -50,8 +50,14 @@ const Modules = () => {
 		error: null
 	});
 	const [tabIndex, setTabIndex] = useState(0);
+	const [IsStateUpdated, setIsStateUpdated] = useState(false);
+	const searchItemRef = useRef(state.searchItem);
+	const isFirstRender = useRef(true);
+	const resetIsStateUpdated = () => {
+		setIsStateUpdated(false);
+	};
 
-	const fetchModules = useCallback(() => {
+	const fetchModules = useCallback((for_payments = false) => {
 		getAllModules()
 			.then((data) => {
 				if (data.success) {
@@ -65,31 +71,44 @@ const Modules = () => {
 						modulesLoaded: true
 					}));
 					filterModules(data.modules_lists, tabIndex);
+					if (for_payments) {
+						setIsStateUpdated(true);
+					}
 				}
 			})
 			.catch((error) =>
-				setState((prev) => ({ ...prev, error: error.message }))
+				setState((prev) => ({...prev, error: error.message, modulesLoaded: true}))
 			);
-	}, [dispatch, tabIndex]);
+	}, [dispatch]);
 
 	useEffect(() => {
 		fetchModules();
 	}, [fetchModules]);
 
-	useEffect(() => {
-		filterModules(state.originalModules, tabIndex);
-	}, [tabIndex]);
 
 	useEffect(() => {
-		fetchModules();
+		if (isFirstRender.current) {
+			isFirstRender.current = false;
+			return;
+		}
+		fetchModules(true);
 	}, [isMembershipActivated, isPaymentAddonActivated]);
+
+
 	// Filter Modules by Tabs
 	const filterModules = (modules, index) => {
-		let filtered = modules;
-		if (index === 1)
-			filtered = modules.filter((mod) => mod.type === "feature");
-		else if (index === 2)
-			filtered = modules.filter((mod) => mod.type === "addon");
+		let filtered = modules
+
+		if (index === 1) {
+			filtered = filtered.filter((mod) => mod.type === "feature");
+		} else if (index === 2) {
+			filtered = filtered.filter((mod) => mod.type === "addon");
+		}
+
+		const searchValue = searchItemRef.current.toLowerCase();
+		filtered = filtered.filter((mod) =>
+			mod.title.toLowerCase().includes(searchValue)
+		);
 
 		setState((prev) => ({
 			...prev,
@@ -100,14 +119,14 @@ const Modules = () => {
 
 	// Bulk Actions
 	const handleBulkActions = () => {
-		const { selectedModuleData, bulkAction } = state;
+		const {selectedModuleData, bulkAction} = state;
 
 		if (!Object.keys(selectedModuleData).length) {
 			showToast("Please select at least a feature", "error");
 			return;
 		}
 
-		setState((prev) => ({ ...prev, isPerformingBulkAction: true }));
+		setState((prev) => ({...prev, isPerformingBulkAction: true}));
 		const actionFunc =
 			bulkAction === "activate"
 				? bulkActivateModules
@@ -146,20 +165,19 @@ const Modules = () => {
 					(tabIndex === 2 ? mod.type === "addon" : true) &&
 					mod.title.toLowerCase().includes(lowerVal)
 			);
-
 			setState((prev) => ({
 				...prev,
 				modules: filtered,
 				noItemFound: filtered.length === 0,
 				isSearching: false
 			}));
-		}, 800),
-		[state.originalModules, tabIndex]
+		}, 800)
 	);
 
 	const handleSearchInputChange = (e) => {
 		const val = e.target.value;
-		setState((prev) => ({ ...prev, searchItem: val, isSearching: true }));
+		setState((prev) => ({...prev, searchItem: val, isSearching: true}));
+		searchItemRef.current = val;
 		debounceSearch(val);
 	};
 
@@ -320,7 +338,7 @@ const Modules = () => {
 									transition="none !important"
 									onClick={() =>
 										handleSearchInputChange({
-											target: { value: state.searchItem }
+											target: {value: state.searchItem}
 										})
 									}
 								>
@@ -408,7 +426,7 @@ const Modules = () => {
 									pointerEvents="none"
 									top="2px"
 								>
-									<Search h="5" w="5" color="gray.300" />
+									<Search h="5" w="5" color="gray.300"/>
 								</InputLeftElement>
 								<Input
 									type="text"
@@ -427,7 +445,7 @@ const Modules = () => {
 			</Container>
 			<Container maxW="container.xl">
 				{state.isSearching ? (
-					<AddonSkeleton />
+					<AddonSkeleton/>
 				) : state.noItemFound && state.searchItem ? (
 					<Box
 						display="flex"
@@ -437,7 +455,7 @@ const Modules = () => {
 						gap="10px"
 						alignItems="center"
 					>
-						<PageNotFound color="gray.300" />
+						<PageNotFound color="gray.300"/>
 						<Text fontSize="20px" fontWeight="600">
 							{__("Sorry, no result found.", "user-registration")}
 						</Text>
@@ -467,6 +485,8 @@ const Modules = () => {
 										selectedModuleData={
 											state.selectedModuleData
 										}
+										IsStateUpdated={IsStateUpdated}
+										resetIsStateUpdated={resetIsStateUpdated}
 									/>
 								</TabPanel>
 								<TabPanel>
@@ -484,6 +504,8 @@ const Modules = () => {
 										selectedModuleData={
 											state.selectedModuleData
 										}
+										IsStateUpdated={IsStateUpdated}
+										resetIsStateUpdated={resetIsStateUpdated}
 									/>
 								</TabPanel>
 								<TabPanel>
@@ -501,6 +523,8 @@ const Modules = () => {
 										selectedModuleData={
 											state.selectedModuleData
 										}
+										IsStateUpdated={IsStateUpdated}
+										resetIsStateUpdated={resetIsStateUpdated}
 									/>
 								</TabPanel>
 							</TabPanels>

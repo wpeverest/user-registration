@@ -585,6 +585,22 @@
       "released_date": "07/10/2024",
       "setting_url": "admin.php?page=user-registration-settings&tab=integration",
       "demo_video_url": ""
+    },
+    {
+      "title": "Salesforce",
+      "slug": "user-registration-salesforce",
+      "name": "User Registration Salesforce",
+      "image": "extensions-json/sections/images/salesforce.png",
+      "excerpt": "Connect Forms to Salesforce account to manage your leads effectively",
+      "link": "https://docs.wpuserregistration.com/docs/salesforce/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "plan": [
+        "plus",
+        "professional",
+        "themegrill agency"
+      ],
+      "released_date": "14/08/2024",
+      "setting_url": "admin.php?page=user-registration-settings&tab=integration",
+      "demo_video_url": ""
     }
   ]
 }

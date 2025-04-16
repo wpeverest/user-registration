@@ -1486,6 +1486,9 @@ body {
 							width: 100%;
 							min-width: 100% !important;
 							height: 38px;
+							&::placeholder {
+								color: $grey-100;
+							}
 						}
 
 						textarea,

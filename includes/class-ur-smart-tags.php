@@ -533,7 +533,7 @@ class UR_Smart_Tags {
 						$content             = str_replace( '{{' . $tag . '}}', wp_kses_post( $sign_out_link ), $content );
 						break;
 					case 'passwordless_login_link':
-						$passwordless_login_link = isset( $values['passwordless_login_link'] ) ? '<a href="' . esc_url( $values['passwordless_login_link'] ) . '"></a>' : '';
+						$passwordless_login_link = isset( $values['passwordless_login_link'] ) ?  esc_url( $values['passwordless_login_link'] ) : '';
 						$content                 = str_replace( '{{' . $tag . '}}', wp_kses_post( $passwordless_login_link ), $content );
 						break;
 					case 'ur_reset_pass_slug':
@@ -563,6 +563,12 @@ class UR_Smart_Tags {
 						break;
 					case 'sms_otp_validity':
 						$content = str_replace( '{{' . $tag . '}}', isset( $values['sms_otp_validity'] ) ? $values['sms_otp_validity'] : '', $content );
+						break;
+					case 'otp_code':
+						$content = str_replace( '{{' . $tag . '}}', isset( $values['otp_code'] ) ? $values['otp_code'] : '', $content );
+						break;
+					case 'otp_expiry_time':
+						$content = str_replace( '{{' . $tag . '}}', isset( $values['otp_expiry_time'] ) ? $values['otp_expiry_time'] : '', $content );
 						break;
 				}
 			}
@@ -638,8 +644,8 @@ class UR_Smart_Tags {
 				'^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/\d{4}$'                                           => __( 'Date (mm/dd/yyyy)', 'user-registration' ),
 				'^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])\/\d{4}$'                                           => __( 'Date (dd/mm/yyyy)', 'user-registration' ),
 				'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'                                           => __( 'Email', 'user-registration' ),
-				'^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$' => __( 'IP (Version 4)', 'user-registration' ),
-				'((^|:)([0-9a-fA-F]{0,4})){1,8}$'                                                            => __( 'IP (Version 6)', 'user-registration' ),
+				'^(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$' => __( 'IP (Version 4)', 'user-registration' ),
+				'^((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}))|(([0-9A-Fa-f]{1,4}:){1,7}:)|(:{2})|(([0-9A-Fa-f]{1,4})?::([0-9A-Fa-f]{1,4}:?){0,6}([0-9A-Fa-f]{1,4})?))$'                                                            => __( 'IP (Version 6)', 'user-registration' ),
 				'^978(?:-[\d]+){3}-[\d]$'                                                                    => __( 'ISBN', 'user-registration' ),
 				'-?\d{1,3}\.\d+'                                                                             => __( 'Latitude or Longitude', 'user-registration' ),
 				'^[0-9]+$'                                                                                   => __( 'Numeric', 'user-registration' ),
@@ -655,7 +661,7 @@ class UR_Smart_Tags {
 				'^[a-zA-Z0-9-]+$'                                                                            => __( 'Slug', 'user-registration' ),
 				'(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}'                                                     => __( 'Time (hh:mm:ss)', 'user-registration' ),
 				'^(https?|ftp):\/\/[^\s\/$.?#].[^\s]*$'                                                      => __( 'URL', 'user-registration' ),
-				'(\d{5}([\-]\d{4})?)'                                                                        => __( 'Zip Code', 'user-registration' ),
+				'^\d{5}(-\d{4})?$'                                                                        => __( 'Zip Code', 'user-registration' ),
 			)
 		);
 

@@ -54,6 +54,8 @@ html {
 			grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
 			gap: 20px;
 			margin: 0;
+			justify-items: center !important; /* horizontally center items */
+			align-items: center !important ;
 
 			.membership-block {
 				display: flex;
@@ -268,7 +270,7 @@ html {
 	font-size: x-large;
 }
 .membership-signup-button {
-	width: 100%;
+	width: 200px;
 	cursor: pointer;
 	font-size: 14px;
 	background: #475bb2;
@@ -450,4 +452,3 @@ label {
 	font-size: 15px;
 	font-weight: 500;
 }
-
