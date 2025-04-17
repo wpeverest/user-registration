@@ -2733,6 +2733,21 @@
 		user_registration_form_init();
 	});
 
+	/**
+	 * Reinitializes the form again in the elementor popup.
+	 *
+	 * @since xx.xx.xx
+	 */
+	window.addEventListener('load', function() {
+		window.addEventListener('elementor/popup/show', function() {
+			var forms = document.querySelectorAll('.elementor-popup-modal form.register:not(.elementor)');
+			forms.forEach(function(form) {
+				user_registration_form_init();
+				form.classList.add('elementor');  // Add class to prevent reinitialization
+			});
+		});
+	});
+
 	$(document).on(
 		"click",
 		"#login-registration--login,#login-registration--registration",
