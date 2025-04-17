@@ -560,7 +560,7 @@
       "name": "User Registration MailPoet",
       "image": "extensions-json/sections/images/mailpoet.png",
       "excerpt": "Easily connect your User Registration forms with MailPoet. Seamlessly map user details to your MailPoet Subscriber Lists for more efficient and convenient email marketing efforts.",
-      "link": "https://wpuserregistration.com/features/mailpoet/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "link": "https://docs.wpuserregistration.com/docs/user-registration-mailpoet/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan": [
         "plus",
         "professional",
@@ -583,6 +583,22 @@
         "themegrill agency"
       ],
       "released_date": "07/10/2024",
+      "setting_url": "admin.php?page=user-registration-settings&tab=integration",
+      "demo_video_url": ""
+    },
+    {
+      "title": "Salesforce",
+      "slug": "user-registration-salesforce",
+      "name": "User Registration Salesforce",
+      "image": "extensions-json/sections/images/salesforce.png",
+      "excerpt": "Connect Forms to Salesforce account to manage your leads effectively",
+      "link": "https://docs.wpuserregistration.com/docs/salesforce/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "plan": [
+        "plus",
+        "professional",
+        "themegrill agency"
+      ],
+      "released_date": "14/08/2024",
       "setting_url": "admin.php?page=user-registration-settings&tab=integration",
       "demo_video_url": ""
     }

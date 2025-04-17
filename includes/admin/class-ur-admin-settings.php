@@ -59,12 +59,38 @@ class UR_Admin_Settings {
 			$settings[] = include 'settings/class-ur-settings-misc.php';
 			$settings[] = include 'settings/class-ur-settings-integration.php';
 
-			if ( ur_check_module_activation( 'membership' ) || is_plugin_active( 'user-registration-stripe/user-registration-stripe.php' ) ) {
-				include_once UR_ABSPATH . 'modules/class-ur-payment-settings.php';
-				include_once UR_ABSPATH . 'modules/stripe/class-ur-stripe-module.php';
-				include_once UR_ABSPATH . 'modules/paypal/class-ur-paypal-module.php';
-			} elseif ( UR_PRO_ACTIVE && ur_check_module_activation( 'payments' ) ) {
-				include_once UR_ABSPATH . 'modules/class-ur-payment-settings.php';
+			$modules = array();
+
+			if ( UR_PRO_ACTIVE ) {
+				if ( ur_check_module_activation( 'membership' ) ) {
+					$modules = array(
+						'class-ur-payment-settings.php',
+						'stripe/class-ur-stripe-module.php',
+						'paypal/class-ur-paypal-module.php',
+					);
+				} else {
+					if ( ur_check_module_activation( 'payments' ) ) {
+						$modules[] = 'class-ur-payment-settings.php';
+						$modules[] = 'paypal/class-ur-paypal-module.php';
+					}
+					if ( is_plugin_active( 'user-registration-stripe/user-registration-stripe.php' ) ) {
+						$modules[] = 'class-ur-payment-settings.php';
+						$modules[] = 'stripe/class-ur-stripe-module.php';
+					}
+					if ( is_plugin_active( 'user-registration-authorize-net/user-registration-authorize-net.php' ) ) {
+						$modules[] = 'class-ur-payment-settings.php';
+					}
+				}
+			} elseif ( ur_check_module_activation( 'membership' ) ) {
+				$modules = array(
+					'class-ur-payment-settings.php',
+					'stripe/class-ur-stripe-module.php',
+					'paypal/class-ur-paypal-module.php',
+				);
+			}
+
+			foreach ( $modules as $module ) {
+				include_once UR_ABSPATH . 'modules/' . $module;
 			}
 
 			if ( ! function_exists( 'is_plugin_active' ) ) {
@@ -142,6 +168,22 @@ class UR_Admin_Settings {
 			self::add_error(
 				esc_html__(
 					'Your settings has not been saved. Please select valid pages for the fields.',
+					'user-registration'
+				)
+			);
+		}
+		elseif ( 'user_registration_global_paypal_return_url' === $flag ) {
+			self::add_error(
+				esc_html__(
+					'Your settings has not been saved. Paypal return url cannot be empty.',
+					'user-registration'
+				)
+			);
+		}
+		elseif ( 'user_registration_global_paypal_cancel_url' === $flag ) {
+			self::add_error(
+				esc_html__(
+					'Your settings has not been saved. Paypal cancel url cannot be empty.',
 					'user-registration'
 				)
 			);

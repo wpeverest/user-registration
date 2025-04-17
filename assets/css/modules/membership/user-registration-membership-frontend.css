@@ -38,6 +38,8 @@ html {
   grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
   gap: 20px;
   margin: 0;
+  justify-items: center !important; /* horizontally center items */
+  align-items: center !important;
 }
 .user-registration-page .ur-membership-list-container .ur-membership-container .membership-block, .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block {
   display: flex;
@@ -215,7 +217,7 @@ html {
 }
 
 .membership-signup-button {
-  width: 100%;
+  width: 200px;
   cursor: pointer;
   font-size: 14px;
   background: #475bb2;
