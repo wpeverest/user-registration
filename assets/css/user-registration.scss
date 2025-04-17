@@ -1377,11 +1377,11 @@ span.ur-shortcode-form-embed-dot {
 	background: 4px solid #fde8e8;
 	border-top: none;
 
-	&::before {
-		// content: '';
-		content: none;
-		display: "";
-	}
+	// &::before {
+	// 	// content: '';
+	// 	content: none;
+	// 	display: "";
+	// }
 
 	svg {
 		margin-right: 10px;
@@ -2000,14 +2000,18 @@ body {
 							display: block;
 							color: #222222 !important;
 							font-size: 14px;
-							font-weight: 400;
 							line-height: 21px;
 							letter-spacing: 0.15px;
-							padding-left: 20px !important;
-							padding-right: 20px !important;
+							padding: 10px !important;
+							font-weight: 400;
 
 							&::before {
-								content: none;
+								font-weight: 500;
+								color: rgb(255,2.5,11.1079545455);
+							}
+
+							strong {
+								font-weight: 500;
 							}
 						}
 					}
