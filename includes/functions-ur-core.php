@@ -6467,11 +6467,11 @@ if ( ! function_exists( 'ur_email_send_failed_handler' ) ) {
 
 		if ( '' !== json_decode( $error_instance->get_error_message() ) ) {
 			/* translators: %s: Status Log URL*/
-			$error_message = wp_kses_post( sprintf( __( 'Please check the `ur_mail_errors` log under <a target="_blank" href= "%s"> Status Log </a> section.', 'user-registration' ), admin_url( 'admin.php?page=user-registration-status' ) ) );
-			ur_get_logger()->error( $error_instance->get_error_message(), array( 'source' => 'ur_mail_errors' ) );
+			$error_message = wp_kses_post( sprintf( __( 'Please check the `ur_mail_logs` log under <a target="_blank" href= "%s"> Status Log </a> section.', 'user-registration' ), admin_url( 'admin.php?page=user-registration-status' ) ) );
+			ur_get_logger()->error( $error_instance->get_error_message(), array( 'source' => 'ur_mail_logs' ) );
 		} else {
 			$error_message = $error_instance->get_error_message();
-			ur_get_logger()->error( $error_instance->get_error_message(), array( 'source' => 'ur_mail_errors' ) );
+			ur_get_logger()->error( $error_instance->get_error_message(), array( 'source' => 'ur_mail_logs' ) );
 		}
 
 		if ( '' !== $error_message ) {
@@ -6723,6 +6723,7 @@ if ( ! function_exists( 'ur_prevent_default_login' ) ) {
 	 * @return @mixed
 	 */
 	function ur_prevent_default_login( $data ) {
+
 		// Return if default wp_login is disabled and no redirect url is set.
 		if ( isset( $data['user_registration_login_options_prevent_core_login'] ) && $data['user_registration_login_options_prevent_core_login'] ) {
 			if ( isset( $data['user_registration_login_options_login_redirect_url'] ) ) {
@@ -6763,7 +6764,14 @@ if ( ! function_exists( 'ur_prevent_default_login' ) ) {
                     return 'invalid_membership_pages';
                 }
 			}
-
+		}
+		elseif (isset($data['tab']) && "payment" === $data['tab'] && isset( $data['user_registration_global_paypal_cancel_url'] ) && isset( $data['user_registration_global_paypal_return_url'] )) {
+			if( empty($data['user_registration_global_paypal_cancel_url'] ) ) {
+				return 'user_registration_global_paypal_cancel_url';
+			}
+			if( empty( $data['user_registration_global_paypal_return_url'] ) ) {
+				return 'user_registration_global_paypal_return_url';
+			}
 		}
 		return true;
 	}
@@ -7005,17 +7013,17 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 				'display'      => array( 'settings', 'form_settings' ),
 				'connected'    => is_plugin_active( 'user-registration-brevo/user-registration-brevo.php' ) && ur_string_to_bool( get_option( 'user_registration_integrations_brevo_connection', false ) ),
 			),
-			// 'User_Registration_Salesforce' => array(
-			// 'id'           => 'salesforce',
-			// 'type'         => 'accordian',
-			// 'title'        => 'Salesforce',
-			// 'desc'         => '',
-			// 'video_id'     => '',
-			// 'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
-			// 'activated'    => is_plugin_active( 'user-registration-salesforce/user-registration-salesforce.php' ),
-			// 'display'      => array( 'settings', 'form_settings' ),
-			// 'connected'    => is_plugin_active( 'user-registration-salesforce/user-registration-salesforce.php' ) && ur_string_to_bool( get_option( 'user_registration_integrations_salesforce_connection', false ) ),
-			// ),
+			'User_Registration_Salesforce' => array(
+				'id'           => 'salesforce',
+				'type'         => 'accordian',
+				'title'        => 'Salesforce',
+				'desc'         => '',
+				'video_id'     => '',
+				'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
+				'activated'    => is_plugin_active( 'user-registration-salesforce/user-registration-salesforce.php' ),
+				'display'      => array( 'settings', 'form_settings' ),
+				'connected'    => is_plugin_active( 'user-registration-salesforce/user-registration-salesforce.php' ) && ur_string_to_bool( get_option( 'user_registration_integrations_salesforce_connection', false ) ),
+			),
 		);
 
 		usort(
@@ -8170,7 +8178,7 @@ if( ! function_exists( 'ur_filter_get_endpoint_url' ) ) {
 	 function ur_filter_get_endpoint_url( $url, $endpoint, $value, $permalink ) {
 		//Return early WPML is not active
 		if ( ! class_exists( 'SitePress' ) ) {
-			return ;
+			return $url;
 		}
 		$site_press = new SitePress();
 		remove_filter( 'user_registration_get_endpoint_url', 'ur_filter_get_endpoint_url', 10 );

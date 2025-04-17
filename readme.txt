@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 5.5
 Requires PHP: 7.2
-Tested up to: 6.7.2
-Stable tag: 4.1.3
+Tested up to: 6.8
+Stable tag: 4.2.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -257,6 +257,28 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 21. User Account Page –  Vertical Layout
 
 == Changelog ==
+
+= 4.2.0    - 16/04/2025 =
+* Security - Unescaped form id query param vulnerability fixed.
+* Feature  - Logs with system information.
+* Enhance  - Realtime frontend field pattern validation.
+* Tweak    - Logout endpoint translation issue.
+* Tweak    - Updated urm dashboard help icons.
+* Tweak    - Added auto https for url field.
+* Dev      - Added wpml translation keys.
+* Fix      - Blocks design rendering issue
+* Fix      - Divi compatibility with all shortcodes.
+* Fix      - Updated blacklist field for unpublished form.
+* Fix      - Auto enable Payment history when enabling payment
+* Fix      - Membership paypal payment issue on return to merchant after successful payment.
+* Fix      - Checkbox smart tag not working for Email verified -awaiting admin approval email.
+
+= 4.1.5    - 08/04/2025 =
+* Security - Fix for edit profile details and membership related vulnerabilities.
+
+= 4.1.4    - 08/04/2025 =
+* Security - Fix for edit profile details and membership related vulnerabilities.
+
 = 4.1.3    - 26/03/2025 =
 * Security - Vulnerability fix for auto_login after registration for membership forms.
 

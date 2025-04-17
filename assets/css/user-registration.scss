@@ -1726,11 +1726,14 @@ body {
 			}
 
 			li {
-				flex: 1;
-				color: #222222;
-				font-size: 14px;
-				font-weight: 400;
-				line-height: 21px;
+				// color: #222222;
+				color: inherit;
+				// font-size: 14px;
+				font-size: inherit;
+				// font-weight: 400;
+				font-weight: inherit;
+				// line-height: 21px;
+				line-height: inherit;
 				letter-spacing: 0.15px;
 
 				strong {
@@ -1741,7 +1744,6 @@ body {
 
 		#user-registration {
 			&:not(.user-registration-MyAccount) {
-				padding: 60px 50px;
 
 				.user-registration-message {
 					align-items: flex-start;
@@ -1799,6 +1801,12 @@ body {
 				margin: 0;
 				list-style: none;
 			}
+		}
+	}
+
+	.user-registration-error {
+		> svg {
+			display: none;
 		}
 	}
 
@@ -1932,12 +1940,11 @@ body {
 
 			&:not(.user-registration-MyAccount) {
 				max-width: 520px;
-				//margin: 24px auto;
+				margin: 24px auto;
+				// margin: 0px auto;
 				border-radius: 8px;
-				background: #fff;
-				box-shadow:
-					0px 4px 16px 0px rgba(17, 17, 26, 0.05),
-					0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+				background: #FFF;
+				// box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 				border: 0;
 
 				@media screen and (max-width: 575px) {
@@ -1984,6 +1991,11 @@ body {
 
 				.ur-frontend-form {
 					&.login {
+						// max-width: 520px;
+						margin: 0px auto;
+						box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+						// padding: 60px 50px;
+
 						.user-registration-error {
 							display: block;
 							color: #222222 !important;
@@ -2127,9 +2139,9 @@ body {
 
 							li {
 								color: #222222;
-								font-size: 14px;
-								font-weight: 400;
-								line-height: 21px;
+ 								font-size: inherit;
+ 								font-weight: 400;
+ 								line-height: inherit;
 								letter-spacing: 0.15px;
 
 								strong {
@@ -2160,10 +2172,10 @@ body {
 						.user-registration-form-row {
 							margin-bottom: 12px;
 
-							label {
-								margin-top: 0;
-								margin-bottom: 12px;
-							}
+							// label {
+							// 	margin-top: 0;
+							// 	margin-bottom: 12px;
+							// }
 						}
 
 						.ur-input-with-icon {
@@ -2251,8 +2263,8 @@ body {
 				}
 
 				.ur-frontend-form {
-					border: 0;
-					padding: 0;
+					// border: 0;
+					// padding: 0;
 					box-shadow: none;
 					margin-bottom: 0;
 
@@ -2269,33 +2281,33 @@ body {
 									margin-bottom: 24px;
 
 									label {
-										margin-top: 0;
-										margin-bottom: 12px;
-										color: #222;
-										font-size: 15px;
-										font-weight: 500;
-										line-height: 19px;
+										// margin-top: 0;
+										// margin-bottom: 12px;
+										// color: #222;
+										// font-size: 15px;
+										// font-weight: 500;
+										// line-height: 19px;
 									}
 
 									.input-wrapper {
 										display: block;
 
 										input {
-											margin-bottom: 0;
-											border-radius: 4px;
-											border: 1px solid #e9e9e9;
+											// margin-bottom: 0;
+											// border-radius: 4px;
+											// border: 1px solid #e9e9e9;
 											min-height: 38px;
-											font-size: 14px;
-											line-height: 20px;
-											padding: 0 14px;
-											color: #383838;
+											// font-size: 14px;
+											// line-height: 20px;
+											// padding: 0 14px;
+											// color: #383838;
 
 											&:focus {
-												border-color: #027abb;
+												// border-color: #027abb;
 											}
 
 											&::placeholder {
-												color: #858585;
+												// color: #858585;
 											}
 										}
 									}
@@ -2387,7 +2399,7 @@ body {
 									float: unset;
 
 									label {
-										margin: 0;
+										// margin: 0;
 										width: auto;
 									}
 

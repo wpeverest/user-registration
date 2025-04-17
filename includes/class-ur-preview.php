@@ -216,7 +216,7 @@ class UR_Preview {
 			return;
 		}
 		if ( isset( $_GET['form_id'] ) ) {
-			$form_id = $_GET['form_id'];// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$form_id = absint( $_GET['form_id'] );// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 			$html  = '';
 			$html .= '<div class="ur-preview-content">';
@@ -392,7 +392,7 @@ class UR_Preview {
 				esc_html__( 'Field Visibility', 'user-registration' ),
 			);
 		}
-		$is_theme_style = get_post_meta( $_GET['form_id'], 'user_registration_enable_theme_style', true );
+		$is_theme_style = get_post_meta( absint( $_GET['form_id'] ), 'user_registration_enable_theme_style', true );
 		if ( 'default' === $is_theme_style ) {
 			$checked    = '';
 			$data_theme = 'default';
@@ -408,7 +408,7 @@ class UR_Preview {
 		$html .= '<span class="slider round"></span>';
 		$html .= '</span>';
 		$html .= '</div>';
-		$html .= '<div class="ur-form-preview-save hidden" id="ur-form-save" data-theme="' . $data_theme . '" data-id="' . $_GET['form_id'] . '">';
+		$html .= '<div class="ur-form-preview-save hidden" id="ur-form-save" data-theme="' . $data_theme . '" data-id="' . absint( $_GET['form_id'] ) . '">';
 		$html .= '<img src="' . esc_url( UR()->plugin_url() . '/assets/images/save-frame.svg' ) . '" alt="Save">';
 		$html .= '<div class="ur-form-preview-save-title">' . esc_html__( 'Save', 'user-registration' ) . '</div>';
 		$html .= '</div>';
