@@ -183,7 +183,7 @@
 													>
 													<label class="ur-p-2" for="ur-membership-paid-type">
 														<b
-															class="user-registration-image-label"><?php esc_html_e( 'Paid', 'user-registration' ); ?>
+															class="user-registration-image-label"><?php esc_html_e( 'One-Time Payment', 'user-registration' ); ?>
 														</b>
 													</label>
 												</div>
