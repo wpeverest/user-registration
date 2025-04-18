@@ -181,10 +181,10 @@ class UR_Admin_Welcome {
 	 * @since 1.0.0
 	 */
 	public static function setup_wizard_footer() {
+		wp_print_footer_scripts();
 		if ( function_exists( 'wp_print_media_templates' ) ) {
 			wp_print_media_templates();
 		}
-		wp_print_footer_scripts();
 		wp_print_scripts( 'ur-setup-wizard-script' );
 		?>
 		</html>
