@@ -1,3 +1,7 @@
+= 4.2.1    - 16/04/2025 =
+* Security - Checked user capability to edit user while cancelling subscription.
+* Fix      - Smart tag not working for input boxes.
+
 = 4.2.0    - 16/04/2025 =
 * Security - Unescaped form id query param vulnerability fixed.
 * Feature  - Logs with system information.
