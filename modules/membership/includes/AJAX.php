@@ -583,7 +583,7 @@ class AJAX {
 				)
 			);
 		}
-		$member_id = absint($_POST['member_id']);
+		$member_id       = absint( $_POST['member_id'] );
 		$is_user_created = get_user_meta( $member_id, 'urm_user_just_created' );
 		if ( ! $is_user_created ) {
 			wp_send_json_error(
@@ -627,9 +627,9 @@ class AJAX {
 
 	public static function create_stripe_subscription() {
 		ur_membership_verify_nonce( 'ur_membership_confirm_payment' );
-		$customer_id         = isset( $_POST['customer_id'] ) ? $_POST['customer_id'] : '';
-		$payment_method_id   = isset( $_POST['payment_method_id'] ) ? sanitize_text_field( $_POST['payment_method_id'] ) : '';
-		$member_id           = absint( wp_unslash( $_POST['member_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$customer_id       = isset( $_POST['customer_id'] ) ? $_POST['customer_id'] : '';
+		$payment_method_id = isset( $_POST['payment_method_id'] ) ? sanitize_text_field( $_POST['payment_method_id'] ) : '';
+		$member_id         = absint( wp_unslash( $_POST['member_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 
 		$is_user_created = get_user_meta( $member_id, 'urm_user_just_created' );
 		if ( ! $is_user_created ) {
@@ -677,7 +677,25 @@ class AJAX {
 		$subscription_id = absint( $_POST['subscription_id'] );
 
 		$subscription_repository = new SubscriptionRepository();
-		$cancel_status           = $subscription_repository->cancel_subscription_by_id( $subscription_id );
+		$user_subscription       = $subscription_repository->retrieve( $subscription_id );
+		if ( empty( $user_subscription ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( "User's subscription not found.", "user-registration" ),
+				)
+			);
+		}
+		$user_id = ! empty( $user_subscription['user_id'] ) ? $user_subscription['user_id'] : '';
+
+		if ( ! current_user_can( 'edit_user', $user_id ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'You are not allowed to edit this user.', 'user-registration' ),
+				)
+			);
+		}
+
+		$cancel_status = $subscription_repository->cancel_subscription_by_id( $subscription_id );
 
 		if ( $cancel_status['status'] ) {
 			wp_destroy_current_session();
