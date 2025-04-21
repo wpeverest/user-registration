@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - UR-2147/url-field-enhancement
+      - v4.2.1
     workflow_dispatch:
 jobs:
   sync:
