@@ -52,7 +52,7 @@ function App() {
 			label: __("Registration Type", "user-registration"),
 			title: __("Registration Type", "user-registration"),
 			description: __(
-				"Welcome! Let's set up your registration system. Select the type of registration you’d like to proceed with:",
+				"Get started by choosing the type of registration that best fits your website's needs. Whether you're creating a simple sign-up process or a full membership platform, we've got you covered!",
 				"user-registration"
 			),
 			isDone: true,
@@ -61,7 +61,7 @@ function App() {
 		{
 			key: "install_pages",
 			label: __("Initial Setup Details", "user-registration"),
-			isDone: true,
+			isDone: false,
 			component: <InstallPage />
 		},
 		{
@@ -358,7 +358,7 @@ function App() {
 									alignItems="left"
 									gap="12px"
 								>
-									{activeStep.title && (
+									{/* {activeStep.title && (
 										<Heading
 											as="h2"
 											size="lg"
@@ -368,7 +368,7 @@ function App() {
 										>
 											{activeStep.title}
 										</Heading>
-									)}
+									)} */}
 									{activeStep.description && (
 										<Text
 											fontSize="16px"
