@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the User Registration & Membership plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration & Membership 4.2.0\n"
+"Project-Id-Version: User Registration & Membership 4.2.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-registration\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-04-16T08:58:24+00:00\n"
+"POT-Creation-Date: 2025-04-22T04:50:42+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: user-registration\n"
@@ -406,7 +406,7 @@ msgid "Submit Button"
 msgstr ""
 
 #: includes/3rd-party/oxygen/widgets/class-ur-oxygen-widgets.php:300
-#: includes/class-ur-smart-tags.php:636
+#: includes/class-ur-smart-tags.php:637
 msgid "Color"
 msgstr ""
 
@@ -1321,7 +1321,7 @@ msgid "Add Form"
 msgstr ""
 
 #: includes/admin/class-ur-admin-form-modal.php:144
-#: includes/class-ur-smart-tags.php:604
+#: includes/class-ur-smart-tags.php:605
 msgid "Add Smart Tags"
 msgstr ""
 
@@ -2304,7 +2304,7 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-email.php:222
 #: includes/admin/settings/class-ur-settings-general.php:311
 #: includes/class-ur-smart-tags.php:59
-#: includes/class-ur-smart-tags.php:646
+#: includes/class-ur-smart-tags.php:647
 #: includes/functions-ur-core.php:1563
 #: modules/membership/includes/Admin/Members/Members.php:303
 #: modules/membership/includes/Admin/Views/member-create.php:89
@@ -3865,6 +3865,7 @@ msgid "Form submission processed successfully."
 msgstr ""
 
 #: includes/class-ur-ajax.php:340
+#: modules/membership/includes/AJAX.php:693
 msgid "You are not allowed to edit this user."
 msgstr ""
 
@@ -4173,13 +4174,13 @@ msgstr ""
 
 #: includes/class-ur-emailer.php:503
 #: includes/class-ur-emailer.php:586
-#: includes/class-ur-smart-tags.php:455
+#: includes/class-ur-smart-tags.php:456
 msgid "Approve Now"
 msgstr ""
 
 #: includes/class-ur-emailer.php:504
 #: includes/class-ur-emailer.php:587
-#: includes/class-ur-smart-tags.php:487
+#: includes/class-ur-smart-tags.php:488
 msgid "Deny Now"
 msgstr ""
 
@@ -4980,135 +4981,135 @@ msgstr ""
 msgid "Unique ID"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:472
+#: includes/class-ur-smart-tags.php:473
 msgid "confirm link"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:522
+#: includes/class-ur-smart-tags.php:523
 msgid "profile details"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:527
+#: includes/class-ur-smart-tags.php:528
 msgid "edit your password"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:532
+#: includes/class-ur-smart-tags.php:533
 msgid "Sign out"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:634
+#: includes/class-ur-smart-tags.php:635
 msgid "Alpha"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:635
+#: includes/class-ur-smart-tags.php:636
 msgid "Alphanumeric"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:637
+#: includes/class-ur-smart-tags.php:638
 msgid "Country Code (2 Character)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:638
+#: includes/class-ur-smart-tags.php:639
 msgid "Country Code (3 Character)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:639
+#: includes/class-ur-smart-tags.php:640
 msgid "Date (mm/dd)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:640
+#: includes/class-ur-smart-tags.php:641
 msgid "Date (dd/mm)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:641
+#: includes/class-ur-smart-tags.php:642
 msgid "Date (mm.dd.yyyy)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:642
+#: includes/class-ur-smart-tags.php:643
 msgid "Date (dd.mm.yyyy)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:643
+#: includes/class-ur-smart-tags.php:644
 msgid "Date (yyyy-mm-dd)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:644
+#: includes/class-ur-smart-tags.php:645
 msgid "Date (mm/dd/yyyy)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:645
+#: includes/class-ur-smart-tags.php:646
 msgid "Date (dd/mm/yyyy)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:647
+#: includes/class-ur-smart-tags.php:648
 msgid "IP (Version 4)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:648
+#: includes/class-ur-smart-tags.php:649
 msgid "IP (Version 6)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:649
+#: includes/class-ur-smart-tags.php:650
 msgid "ISBN"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:650
+#: includes/class-ur-smart-tags.php:651
 msgid "Latitude or Longitude"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:651
+#: includes/class-ur-smart-tags.php:652
 msgid "Numeric"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:652
+#: includes/class-ur-smart-tags.php:653
 msgid "Password (Numeric, lower, upper)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:653
+#: includes/class-ur-smart-tags.php:654
 msgid "Password (Numeric, lower, upper, min 8)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:654
+#: includes/class-ur-smart-tags.php:655
 msgid "Phone - General"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:655
+#: includes/class-ur-smart-tags.php:656
 msgid "Phone - UK"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:656
+#: includes/class-ur-smart-tags.php:657
 msgid "Phone - US: 123-456-7890"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:657
+#: includes/class-ur-smart-tags.php:658
 msgid "Phone - US: (123)456-7890"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:658
+#: includes/class-ur-smart-tags.php:659
 msgid "Phone - US: Flexible"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:659
+#: includes/class-ur-smart-tags.php:660
 msgid "Postal Code (UK)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:660
+#: includes/class-ur-smart-tags.php:661
 msgid "Price (1.23)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:661
+#: includes/class-ur-smart-tags.php:662
 msgid "Slug"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:662
+#: includes/class-ur-smart-tags.php:663
 msgid "Time (hh:mm:ss)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:663
+#: includes/class-ur-smart-tags.php:664
 msgid "URL"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:664
+#: includes/class-ur-smart-tags.php:665
 msgid "Zip Code"
 msgstr ""
 
@@ -7910,37 +7911,37 @@ msgid "Lost Password"
 msgstr ""
 
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:305
-#: modules/functions-ur-modules.php:359
+#: modules/functions-ur-modules.php:363
 msgctxt "Page slug"
 msgid "membership-registration"
 msgstr ""
 
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:306
-#: modules/functions-ur-modules.php:360
+#: modules/functions-ur-modules.php:364
 msgctxt "Page title"
 msgid "Membership Registration"
 msgstr ""
 
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:313
-#: modules/functions-ur-modules.php:366
+#: modules/functions-ur-modules.php:370
 msgctxt "Page slug"
 msgid "membership-pricing"
 msgstr ""
 
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:314
-#: modules/functions-ur-modules.php:367
+#: modules/functions-ur-modules.php:371
 msgctxt "Page title"
 msgid "Membership Pricing"
 msgstr ""
 
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:319
-#: modules/functions-ur-modules.php:372
+#: modules/functions-ur-modules.php:376
 msgctxt "Page slug"
 msgid "membership-thankyou"
 msgstr ""
 
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:320
-#: modules/functions-ur-modules.php:373
+#: modules/functions-ur-modules.php:377
 msgctxt "Page title"
 msgid "Membership ThankYou"
 msgstr ""
@@ -8392,103 +8393,103 @@ msgstr ""
 msgid "Parent content access rule"
 msgstr ""
 
-#: modules/functions-ur-modules.php:41
+#: modules/functions-ur-modules.php:45
 msgid "U.S. Dollar"
 msgstr ""
 
-#: modules/functions-ur-modules.php:49
+#: modules/functions-ur-modules.php:53
 msgid "Pound Sterling"
 msgstr ""
 
-#: modules/functions-ur-modules.php:57
+#: modules/functions-ur-modules.php:61
 msgid "Euro"
 msgstr ""
 
-#: modules/functions-ur-modules.php:65
+#: modules/functions-ur-modules.php:69
 msgid "Australian Dollar"
 msgstr ""
 
-#: modules/functions-ur-modules.php:73
+#: modules/functions-ur-modules.php:77
 msgid "Brazilian Real"
 msgstr ""
 
-#: modules/functions-ur-modules.php:81
+#: modules/functions-ur-modules.php:85
 msgid "Canadian Dollar"
 msgstr ""
 
-#: modules/functions-ur-modules.php:89
+#: modules/functions-ur-modules.php:93
 msgid "Czech Koruna"
 msgstr ""
 
-#: modules/functions-ur-modules.php:97
+#: modules/functions-ur-modules.php:101
 msgid "Danish Krone"
 msgstr ""
 
-#: modules/functions-ur-modules.php:105
+#: modules/functions-ur-modules.php:109
 msgid "Hong Kong Dollar"
 msgstr ""
 
-#: modules/functions-ur-modules.php:113
+#: modules/functions-ur-modules.php:117
 msgid "Hungarian Forint"
 msgstr ""
 
-#: modules/functions-ur-modules.php:121
+#: modules/functions-ur-modules.php:125
 msgid "Israeli New Sheqel"
 msgstr ""
 
-#: modules/functions-ur-modules.php:129
+#: modules/functions-ur-modules.php:133
 msgid "Malaysian Ringgit"
 msgstr ""
 
-#: modules/functions-ur-modules.php:137
+#: modules/functions-ur-modules.php:141
 msgid "Mexican Peso"
 msgstr ""
 
-#: modules/functions-ur-modules.php:145
+#: modules/functions-ur-modules.php:149
 msgid "Norwegian Krone"
 msgstr ""
 
-#: modules/functions-ur-modules.php:153
+#: modules/functions-ur-modules.php:157
 msgid "New Zealand Dollar"
 msgstr ""
 
-#: modules/functions-ur-modules.php:161
+#: modules/functions-ur-modules.php:165
 msgid "Philippine Peso"
 msgstr ""
 
-#: modules/functions-ur-modules.php:169
+#: modules/functions-ur-modules.php:173
 msgid "Polish Zloty"
 msgstr ""
 
-#: modules/functions-ur-modules.php:177
+#: modules/functions-ur-modules.php:181
 msgid "Russian Ruble"
 msgstr ""
 
-#: modules/functions-ur-modules.php:185
+#: modules/functions-ur-modules.php:189
 msgid "Singapore Dollar"
 msgstr ""
 
-#: modules/functions-ur-modules.php:193
+#: modules/functions-ur-modules.php:197
 msgid "South African Rand"
 msgstr ""
 
-#: modules/functions-ur-modules.php:201
+#: modules/functions-ur-modules.php:205
 msgid "Swedish Krona"
 msgstr ""
 
-#: modules/functions-ur-modules.php:209
+#: modules/functions-ur-modules.php:213
 msgid "Swiss Franc"
 msgstr ""
 
-#: modules/functions-ur-modules.php:217
+#: modules/functions-ur-modules.php:221
 msgid "Taiwan New Dollar"
 msgstr ""
 
-#: modules/functions-ur-modules.php:225
+#: modules/functions-ur-modules.php:229
 msgid "Thai Baht"
 msgstr ""
 
-#: modules/functions-ur-modules.php:350
+#: modules/functions-ur-modules.php:354
 msgid "Default Membership Registration Form"
 msgstr ""
 
@@ -8837,7 +8838,6 @@ msgid "All Plans"
 msgstr ""
 
 #: modules/membership/includes/Admin/Members/MembersListTable.php:321
-#: modules/membership/includes/Admin/Views/membership-create.php:186
 msgid "Paid"
 msgstr ""
 
@@ -9324,6 +9324,10 @@ msgid ""
 "\t\t\t\t\t\t\t\t\t\t\t\t\t\trequire any fees."
 msgstr ""
 
+#: modules/membership/includes/Admin/Views/membership-create.php:186
+msgid "One-Time Payment"
+msgstr ""
+
 #: modules/membership/includes/Admin/Views/membership-create.php:193
 msgid "This is a paid membership plan. It requires a certain amount to get you started."
 msgstr ""
@@ -9568,38 +9572,42 @@ msgid "Invalid Request."
 msgstr ""
 
 #: modules/membership/includes/AJAX.php:674
-#: modules/membership/includes/AJAX.php:712
-#: modules/membership/includes/AJAX.php:791
-#: modules/membership/includes/AJAX.php:794
-#: modules/membership/includes/AJAX.php:818
+#: modules/membership/includes/AJAX.php:730
+#: modules/membership/includes/AJAX.php:809
+#: modules/membership/includes/AJAX.php:812
+#: modules/membership/includes/AJAX.php:836
 msgid "Wrong request."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:692
+#: modules/membership/includes/AJAX.php:684
+msgid "User's subscription not found."
+msgstr ""
+
+#: modules/membership/includes/AJAX.php:710
 msgid "Something went wrong while cancelling your subscription. Please contact support"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:715
+#: modules/membership/includes/AJAX.php:733
 msgid "Field list type is required."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:730
+#: modules/membership/includes/AJAX.php:748
 msgid "No membership is available for the selected group."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:751
+#: modules/membership/includes/AJAX.php:769
 msgid "Sorry, You do not have permission to create membership groups."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:758
+#: modules/membership/includes/AJAX.php:776
 msgid "Field membership_groups_data is required"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:776
+#: modules/membership/includes/AJAX.php:794
 msgid "Membership Groups saved successfully."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:800
+#: modules/membership/includes/AJAX.php:818
 msgid "Invalid post type"
 msgstr ""
 
