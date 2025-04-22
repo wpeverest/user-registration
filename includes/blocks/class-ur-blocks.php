@@ -129,6 +129,7 @@ class UR_Blocks {
 			UR_Block_Myaccount::class, //phpcs:ignore;
 			UR_Block_Edit_Profile::class, //phpcs:ignore;
 			UR_Block_Edit_Password::class, //phpcs:ignore;
+			UR_Block_Login_Logout_Menu::class, //phpcs:ignore;
 		);
 
 		if ( ur_check_module_activation( 'content-restriction' ) ) {
