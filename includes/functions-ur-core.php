@@ -8282,7 +8282,7 @@ if ( ! function_exists( 'ur_get_sms_verification_default_message_content' ) ) {
 	/**
 	 * Get sms verification message content .
 	 *
-	 * @since xx.xx.xx
+	 * @since 4.2.1
 	 * @return array
 	 */
 	function ur_get_sms_verification_default_message_content() {

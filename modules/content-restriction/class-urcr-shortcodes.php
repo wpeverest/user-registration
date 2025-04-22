@@ -28,7 +28,7 @@ class URCR_Shortcodes {
 		/** For divi builder edit
 		 * global $post will be the empty on edit mode.
 		 *
-		 * @since xx.xx.xx
+		 * @since 4.2.1
 		 */
 		if ( empty( $post ) && ( function_exists( 'urm_is_divi_active' ) && urm_is_divi_active() ) ) {
 			$post = isset( $atts['post_id'] ) ? get_post( absint( $atts['post_id'] ) ) : null;
