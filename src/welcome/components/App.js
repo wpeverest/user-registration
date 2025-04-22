@@ -61,6 +61,10 @@ function App() {
 		{
 			key: "install_pages",
 			label: __("Initial Setup Details", "user-registration"),
+			description: __(
+				"To provide your users with a warm welcome, we've configured important settings and prepared essential pages.",
+				"user-registration"
+			),
 			isDone: false,
 			component: <InstallPage />
 		},

@@ -207,12 +207,12 @@ class UR_Getting_Started {
 				'page_url_text' => '',
 				'page_slug'     => '',
 				'status'        => 'enabled',
-				'status_label'  => esc_html__( 'Enabled', 'user-registration' ),
+				'status_label'  => esc_html__( 'Active', 'user-registration' ),
 			),
 		);
 
 		$page_details['default_wordpress_login'] = array(
-			'title'         => esc_html__( 'Default WordPress Login/Registration', 'user-registration' ),
+			'title'         => esc_html__( 'Disable Login/Registration from wp-login.php', 'user-registration' ),
 			'desc'          => esc_html__( 'Default WordPress login page wp-login.php will be disabled.', 'user-registration' ),
 			'page_url'      => '',
 			'page_url_text' => '',
@@ -259,7 +259,7 @@ class UR_Getting_Started {
 			'page_url_text' => esc_html__( 'View Form', 'user-registration' ),
 			'page_slug'     => sprintf( esc_html__( 'Form Id: %s', 'user-registration' ), $default_form_page_id ),
 			'status'        => 'enabled',
-			'status_label'  => esc_html__( 'Created', 'user-registration' ),
+			'status_label'  => esc_html__( 'Ready to use', 'user-registration' ),
 		);
 
 		$pages['myaccount'] = array(

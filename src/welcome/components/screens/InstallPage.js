@@ -12,7 +12,8 @@ import {
 	Link,
 	Heading,
 	FormLabel,
-	Tooltip
+	Tooltip,
+	Icon
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 
@@ -57,6 +58,38 @@ const InstallPage = () => {
 		setRegistrationBehaviourDetails(newRegistrationBehaviourDetailsRef);
 	}, []);
 
+	const ExternalLinkIcon = (props) => (
+		<Icon
+			viewBox="0 0 16 17"
+			{...props}
+			fill="none"
+			height="17px"
+			width="16px"
+		>
+			<path
+				d="M14 9.16667V13.1667C14 13.5203 13.8595 13.8594 13.6095 14.1095C13.3594 14.3595 13.0203 14.5 12.6667 14.5H3.33333C2.97971 14.5 2.64057 14.3595 2.39052 14.1095C2.14048 13.8594 2 13.5203 2 13.1667V3.83333C2 3.47971 2.14048 3.14057 2.39052 2.89052C2.64057 2.64048 2.97971 2.5 3.33333 2.5H7.33333"
+				stroke="#8C8C8C"
+				strokeWidth="1.33333"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+			/>
+			<path
+				d="M14 2.5L8 8.5"
+				stroke="#8C8C8C"
+				strokeWidth="1.33333"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+			/>
+			<path
+				d="M10 2.5H14V6.5"
+				stroke="#8C8C8C"
+				strokeWidth="1.33333"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+			/>
+		</Icon>
+	);
+
 	/**
 	 * Create the HTML block for the pages to be installed.
 	 *
@@ -68,24 +101,22 @@ const InstallPage = () => {
 			<Box
 				bg="#F8F9FC"
 				w="100%"
-				p="10px 16px"
+				p="14px 16px"
 				color="#383838"
 				border="1px solid #EDEFF7"
 				borderRadius="md"
-				height="75px"
 				display="flex"
+				flex="0 0 48%"
 			>
 				<Flex justify="space-between" align="center" width="100%">
 					<Checkbox
 						isChecked={true}
 						isReadOnly
 						className="user-registration-setup-wizard__body--checkbox"
+						color="#475BB2"
 					>
 						<Text fontSize="15px" fontWeight={600} color="#383838">
 							{pageDetails.title}
-						</Text>
-						<Text fontSize="14px" color="#6B6B6B">
-							{pageDetails.page_slug}
 						</Text>
 					</Checkbox>
 					{pageDetails.page_url !== "" && (
@@ -96,7 +127,7 @@ const InstallPage = () => {
 							fontSize="12px"
 							color="#475BB2"
 						>
-							{pageDetails.page_url_text}
+							<ExternalLinkIcon />
 						</Link>
 					)}
 				</Flex>
@@ -112,16 +143,6 @@ const InstallPage = () => {
 				alignItems="left"
 				gap="20px"
 			>
-				<Heading
-					as="h2"
-					size="lg"
-					fontSize="22px"
-					mb={4}
-					color="#383838"
-					fontWeight="600"
-				>
-					{__("Registration Behaviour", "user-registration")}
-				</Heading>
 				<Flex gap="20px" flexDirection="column">
 					{Object.keys(registrationBehaviourDetails).map((key) => {
 						return (
@@ -165,13 +186,23 @@ const InstallPage = () => {
 									sx={{
 										fontWeight: "500",
 										fontSize: "15px",
-										marginInlineEnd: "0.5rem"
+										marginInlineEnd: "0.5rem",
+										padding: "8px 12px",
+										display: "flex",
+										gap: "10px",
+										fontWeight: "500"
 									}}
 									color={
 										registrationBehaviourDetails[key]
 											.status === "enabled"
-											? "green"
-											: "red"
+											? "#008000"
+											: "#F25656"
+									}
+									bgColor={
+										registrationBehaviourDetails[key]
+											.status === "enabled"
+											? "#F0F8F0"
+											: "#FFF5F5"
 									}
 								>
 									{
@@ -183,32 +214,37 @@ const InstallPage = () => {
 						);
 					})}
 				</Flex>
-			</Flex>
-			<hr />
-			<Flex
-				direction="column"
-				justifyContent="space-between"
-				alignItems="left"
-			>
-				<Heading
-					as="h2"
-					size="lg"
-					fontSize="22px"
-					mb={4}
-					color="#383838"
-					fontWeight="600"
+				<Flex
+					align="center"
+					flexDirection="column"
+					justifyContent="flex-start"
+					alignItems="flex-start"
+					gap="20px"
 				>
-					{__("Pages Installed", "user-registration")}
-				</Heading>
-				<Flex gap="20px" flexDirection="column">
-					{Object.keys(installedPageDetails).map((key) => {
-						return (
-							<CreateInstallPageBox
-								key={key}
-								pageDetails={installedPageDetails[key]}
-							/>
-						);
-					})}
+					<FormLabel
+						sx={{
+							fontWeight: "500",
+							fontSize: "15px",
+							marginInlineEnd: "0.5rem"
+						}}
+					>
+						{__("Installed Pages", "user-registration")}
+					</FormLabel>
+					<Flex
+						align="center"
+						flexDirection="row"
+						gap="20px"
+						flexWrap="wrap"
+					>
+						{Object.keys(installedPageDetails).map((key) => {
+							return (
+								<CreateInstallPageBox
+									key={key}
+									pageDetails={installedPageDetails[key]}
+								/>
+							);
+						})}
+					</Flex>
 				</Flex>
 			</Flex>
 		</Flex>
