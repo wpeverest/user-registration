@@ -2,7 +2,7 @@
 /**
  * Abstract UR_Nav_Menu_Item Class
  *
- * @since v5.2.0
+ * @since 4.2.3
  * @package  UserRegistration
  */
 

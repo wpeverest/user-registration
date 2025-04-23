@@ -2,7 +2,7 @@
 /**
  * User registration login logout menu.
  *
- * @since 5.2.0
+ * @since 4.2.3
  * @package user-registration
  */
 
