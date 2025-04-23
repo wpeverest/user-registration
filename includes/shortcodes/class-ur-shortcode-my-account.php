@@ -273,10 +273,16 @@ class UR_Shortcode_My_Account {
 		$minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
 
 		wp_enqueue_script( 'ur-form-validator' );
-
 		if ( $enable_strong_password ) {
 			wp_dequeue_script( 'wc-password-strength-meter' );
 			wp_enqueue_script( 'ur-password-strength-meter' );
+			wp_localize_script(
+				'ur-password-strength-meter',
+				'ur_frontend_params_with_form_id',
+				array(
+					'custom_password_params' => UR_Frontend_Scripts::get_custom_password_params( $form_id ),
+				)
+			);
 		}
 
 		ur_get_template(
@@ -335,7 +341,7 @@ class UR_Shortcode_My_Account {
 
 			if ( isset( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ) && 0 < strpos( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ], ':' ) ) { // phpcs:ignore
 				list( $rp_login, $rp_key ) = array_map( 'ur_clean', explode( ':', wp_unslash( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ), 2 ) ); // phpcs:ignore
-				$user                      = get_user_by( 'id', $rp_login );
+				$user                      = get_user_by( 'login', $rp_login );
 				$rp_login                  = isset( $user->user_login ) ? $user->user_login : $rp_login;
 
 				$user = self::check_password_reset_key( $rp_key, $rp_login );
@@ -353,6 +359,19 @@ class UR_Shortcode_My_Account {
 
 					// reset key / login is correct, display reset password form with hidden key / login values.
 					if ( is_object( $user ) ) {
+						$enable_strong_password = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' ) );
+
+						if ( $enable_strong_password ) {
+							wp_dequeue_script( 'wc-password-strength-meter' );
+							wp_enqueue_script( 'ur-password-strength-meter' );
+							wp_localize_script(
+								'ur-password-strength-meter',
+								'ur_frontend_params_with_form_id',
+								array(
+									'custom_password_params' => UR_Frontend_Scripts::get_custom_password_params( $form_id ),
+								)
+							);
+						}
 						return ur_get_template(
 							'myaccount/form-reset-password.php',
 							array(
