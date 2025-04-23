@@ -1,12 +1,15 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
-  "apiVersion": 3,
+  "apiVersion": 2,
   "name": "user-registration/login-logout-menu",
-  "title": "Login/out",
-  "category": "navigation",
-  "description": "Show login & logout links.",
-  "keywords": [ "login", "logout", "form" ],
-  "textdomain": "user-registration",
+  "title": "URM Login/Logout",
+  "category": "user-registration",
+  "parent": ["core/navigation"] ,
+  "description": "A block that provides links for login and logout.",
+  "keywords": ["login", "logout", "authentication", "user"],
+  "supports": {
+    "html": false
+  },
   "attributes": {
     "loginLabel": {
       "type": "string",
@@ -17,46 +20,5 @@
       "default": "Logout"
     }
   },
-  "example": {
-    "viewportWidth": 350
-  },
-  "supports": {
-    "className": true,
-    "color": {
-      "background": true,
-      "text": true,
-      "gradients": true,
-      "link": true
-    },
-    "spacing": {
-      "margin": true,
-      "padding": true,
-      "__experimentalDefaultControls": {
-        "margin": false,
-        "padding": false
-      }
-    },
-    "typography": {
-      "fontSize": true,
-      "lineHeight": true,
-      "__experimentalFontFamily": true,
-      "__experimentalFontWeight": true,
-      "__experimentalFontStyle": true,
-      "__experimentalTextTransform": true,
-      "__experimentalTextDecoration": true,
-      "__experimentalLetterSpacing": true,
-      "__experimentalDefaultControls": {
-        "fontSize": true
-      }
-    },
-    "__experimentalBorder": {
-      "radius": true,
-      "color": true,
-      "width": true,
-      "style": true
-    },
-    "interactivity": {
-      "clientNavigation": true
-    }
-  }
+  "textdomain": "user-registration"
 }

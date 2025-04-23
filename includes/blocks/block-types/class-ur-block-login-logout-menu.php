@@ -29,14 +29,14 @@ class UR_Block_Login_Logout_Menu extends UR_Block_Abstract {
 
 		if ( is_user_logged_in() ) {
 			$itemUrl = esc_url( ur_logout_url() );
-			if ( isset( $attr[ 'logoutLabel' ] ) ) {
+			if ( ! empty( $attr[ 'logoutLabel' ] ) ) {
 				$itemLabel = esc_html( $attr[ 'logoutLabel' ] );
 			} else {
 				$itemLabel = esc_html__( 'Logout', 'user-registration' );
 			}
 		} else {
 			$itemUrl = esc_url( ur_get_login_url() );
-			if ( isset( $attr[ 'loginLabel' ] ) ) {
+			if ( ! empty( $attr[ 'loginLabel' ] ) ) {
 				$itemLabel = esc_html( $attr[ 'loginLabel' ] );
 			} else {
 				$itemLabel = esc_html__( 'Login', 'user-registration' );
