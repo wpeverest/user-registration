@@ -65,6 +65,26 @@ class UR_Gutenberg_Blocks {
 				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
 			)
 		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/access-role-list',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( __CLASS__, 'ur_get_access_role_list' ),
+				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
+			)
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/membership-role-list',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( __CLASS__, 'ur_get_membership_role_list' ),
+				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
+			)
+		);
 	}
 
 	/**
@@ -113,7 +133,6 @@ class UR_Gutenberg_Blocks {
 			$all_roles[ $role_key ] = $role['name'];
 		}
 
-
 		return new \WP_REST_Response(
 			array(
 				'success'    => true,
@@ -145,6 +164,49 @@ class UR_Gutenberg_Blocks {
 			200
 		);
 	}
+
+	/**
+	 * Get access role list.
+	 *
+	 *
+	 * @return array Role lists.
+	 */
+	public static function ur_get_access_role_list() {
+		$access_options = array(
+			'all_logged_in_users'    => 'All Logged In Users',
+			'choose_specific_roles'  => 'Choose Specific Roles',
+			'guest_users'            => 'Guest Users',
+		);
+
+		if ( ur_check_module_activation( 'membership' ) ) {
+			$access_options['memberships'] = 'Memberships';
+		}
+
+		return new \WP_REST_Response(
+			array(
+				'success'     => true,
+				'access_data' => array(
+					'access_role_list' => $access_options,
+				),
+			),
+			200
+		);
+
+	}
+
+	public static function ur_get_membership_role_list(){
+		$membership_roles_options = get_active_membership_id_name();
+	
+		return new \WP_REST_Response(
+			array(
+				'success'               => true,
+				'membership_roles_list' => $membership_roles_options,
+			),
+			200
+		);
+
+	}
+
 
 	/**
 	 * Check if a given request has access to update a setting

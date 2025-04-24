@@ -12,6 +12,16 @@ const Save = ({ attributes }) => {
         params += ` access_specific_role="${roles}"`;
     }
 
+	if (attributes.accessMembershipRoles){
+		const membershipRoles = Array.isArray(attributes.accessMembershipRoles)
+   	 ? attributes.accessMembershipRoles.map(r => r.trim()).join(',')
+    	: String(attributes.accessMembershipRoles).trim();
+		params += ` access_membership_role="${membershipRoles}"`;
+	}
+
+	console.log(params);
+
+
     if (attributes.accessControl !== "") {
         params += ` access_control="${attributes.accessControl}"`;
     }

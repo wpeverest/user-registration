@@ -19,8 +19,8 @@ const Edit = ({ attributes, setAttributes }) => {
 	const {
 		accessAllRoles,
 		accessSpecificRoles,
+		accessMembershipRoles,
 		accessControl,
-		content,
 		message,
 		enableContentRestriction
 	} = attributes;
@@ -28,11 +28,23 @@ const Edit = ({ attributes, setAttributes }) => {
 
 	const [roleOptions, setRoleOptions] = useState([]);
 	const [defaultMessage, setDefaultMessage] = useState("");
+	const [accessRolesOptions, setAccessRolesOptions] = useState([]);
+	const [membershipRolesOptions, setMembershipsRolesOptions] = useState([]);
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const [roleRes, messageRes] = await Promise.all([
+				const [membershipRoles,accessRoles, roleRes, messageRes] = await Promise.all([
+					apiFetch({
+						path: `${restURL}user-registration/v1/gutenberg-blocks/membership-role-list`,
+						method: "GET",
+						headers: { "X-WP-Nonce": urRestApiNonce }
+					}),
+					apiFetch({
+						path: `${restURL}user-registration/v1/gutenberg-blocks/access-role-list`,
+						method: "GET",
+						headers: { "X-WP-Nonce": urRestApiNonce }
+					}),
 					apiFetch({
 						path: `${restURL}user-registration/v1/gutenberg-blocks/role-list`,
 						method: "GET",
@@ -44,7 +56,11 @@ const Edit = ({ attributes, setAttributes }) => {
 						headers: { "X-WP-Nonce": urRestApiNonce }
 					})
 				]);
-
+				if (membershipRoles.success) setMembershipsRolesOptions(membershipRoles.membership_roles_list);
+				if (accessRoles.success)
+					setAccessRolesOptions(
+						accessRoles.access_data.access_role_list
+					);
 				if (roleRes.success) setRoleOptions(roleRes.role_lists);
 				if (messageRes.success)
 					setDefaultMessage(messageRes.cr_data.default_message);
@@ -62,6 +78,23 @@ const Edit = ({ attributes, setAttributes }) => {
 			label: roleOptions[key]
 		}));
 	}, [roleOptions]);
+
+	const accessRoleDropdownOptions = useMemo(() => {
+		return Object.keys(accessRolesOptions).map((key) => ({
+			value: key,
+			label: accessRolesOptions[key]
+		}));
+	}, [accessRolesOptions]);
+
+	const MembershipRoleDropdownOptions = useMemo(() => {
+		return Object.keys(membershipRolesOptions).map((key) => ({
+			value: key,
+			label: membershipRolesOptions[key]
+		}));
+	}, [membershipRolesOptions]);
+
+
+
 
 	const handleAccessControlChange = (value) => {
 		setAttributes({ accessControl: value });
@@ -135,34 +168,7 @@ const Edit = ({ attributes, setAttributes }) => {
 											),
 											value: ""
 										},
-										{
-											label: __(
-												"All Logged In Users",
-												"user-registration"
-											),
-											value: "all_logged_in_users"
-										},
-										{
-											label: __(
-												"Choose Specific Roles",
-												"user-registration"
-											),
-											value: "choose_specific_roles"
-										},
-										{
-											label: __(
-												"Guest Users",
-												"user-registration"
-											),
-											value: "guest_users"
-										},
-										{
-											label: __(
-												"Memberships",
-												"user-registration"
-											),
-											value: "memberships"
-										}
+										...accessRoleDropdownOptions
 									]}
 									onChange={handleAccessAllRoleChange}
 								/>
@@ -219,41 +225,97 @@ const Edit = ({ attributes, setAttributes }) => {
 										/>
 									</FormControl>
 								)}
-								
+
+
+								{accessAllRoles === "memberships" && (
+									<FormControl>
+										<FormLabel
+											sx={{
+												fontSize: "11px",
+												fontWeight: 500,
+												lineHeight: "1.4",
+												textTransform: "uppercase",
+												boxSizing: "border-box",
+												display: "block",
+												paddingTop: "0px",
+												paddingBottom: "0px",
+												maxWidth: "100%",
+												zIndex: 1,
+												overflow: "hidden",
+												textOverflow: "ellipsis",
+												whiteSpace: "nowrap"
+											}}
+										>
+											{__("Select Memberships")}
+										</FormLabel>
+										<Select
+											isMulti
+											options={MembershipRoleDropdownOptions}
+											className="react-select-container"
+											classNamePrefix="react-select"
+											placeholder={__(
+												"Select memberships roles...",
+												"user-registration"
+											)}
+											value={MembershipRoleDropdownOptions.filter(
+												(option) =>
+													Array.isArray(
+														accessMembershipRoles
+													)
+														? accessMembershipRoles.includes(
+																option.value
+														  )
+														: false
+											)}
+											onChange={(selected) =>
+												setAttributes({
+													accessMembershipRoles:
+														selected.map(
+															(option) =>
+																option.value
+														)
+												})
+											}
+										/>
+									</FormControl>
+								)}
+
+
+
 								<FormControl>
-								<FormLabel
-									sx={{
-										fontSize: "11px",
-										fontWeight: 500,
-										lineHeight: "1.4",
-										textTransform: "uppercase",
-										boxSizing: "border-box",
-										display: "block",
-										paddingTop: "0px",
-										paddingBottom: "0px",
-										maxWidth: "100%",
-										zIndex: 1,
-										overflow: "hidden",
-										textOverflow: "ellipsis",
-										whiteSpace: "nowrap"
-									}}
-								>
-									{__("Restricted Content Message")}
-								</FormLabel>
-								<Editor
-									value={message}
-									onEditorChange={handleContentChange}
-									initialValue={defaultMessage}
-									init={{
-										height: 200,
-										menubar: false,
-										plugins: "link lists",
-										toolbar:
-											"undo redo | bold italic | alignleft aligncenter alignright | bullist numlist",
-										content_style:
-											"body { font-family:Arial,sans-serif; font-size:14px }"
-									}}
-								/>
+									<FormLabel
+										sx={{
+											fontSize: "11px",
+											fontWeight: 500,
+											lineHeight: "1.4",
+											textTransform: "uppercase",
+											boxSizing: "border-box",
+											display: "block",
+											paddingTop: "0px",
+											paddingBottom: "0px",
+											maxWidth: "100%",
+											zIndex: 1,
+											overflow: "hidden",
+											textOverflow: "ellipsis",
+											whiteSpace: "nowrap"
+										}}
+									>
+										{__("Restricted Content Message")}
+									</FormLabel>
+									<Editor
+										value={message}
+										onEditorChange={handleContentChange}
+										initialValue={defaultMessage}
+										init={{
+											height: 200,
+											menubar: false,
+											plugins: "link lists",
+											toolbar:
+												"undo redo | bold italic | alignleft aligncenter alignright | bullist numlist",
+											content_style:
+												"body { font-family:Arial,sans-serif; font-size:14px }"
+										}}
+									/>
 								</FormControl>
 							</Box>
 						)}

@@ -49,8 +49,12 @@ class URCR_Shortcodes {
 				}
 			}
 
-			if (isset($atts['access_specific_role']) && !empty($atts['access_specific_role'])) {
+			if (isset($atts['access_specific_role']) && ! empty($atts['access_specific_role']) && 'choose_specific_roles' === $atts['access_all_roles']) {
 				$specific_roles = $atts['access_specific_role'];
+			}
+
+			if (isset($atts['access_membership_role']) && !empty($atts['access_membership_role']) && 'memberships' === $atts['access_all_roles']) {
+				$memberships_roles = $atts['access_membership_role'];
 			}
 
 			$roles = isset( $atts['access_all_roles'] ) ? trim( $atts['access_all_roles'] ) : '';
@@ -61,7 +65,6 @@ class URCR_Shortcodes {
 			if( $is_membership_active ) {
 				$members_subscription = new \WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository();
 				$subscription = $members_subscription->get_member_subscription( wp_get_current_user()->ID);
-
 				$current_user_membership = ( !empty ( $subscription ) ) ? $subscription['item_id'] : array();
 			}
 
@@ -122,26 +125,39 @@ class URCR_Shortcodes {
 			$specific_roles = isset($specific_roles) ? explode( ',', $specific_roles ) : array();
 			$specific_roles = array_map( 'trim', $specific_roles );
 
+			$memberships_roles = isset($memberships_roles) ? explode( ',', $memberships_roles ) : array();
+			$memberships_roles = array_map( fn($role) => trim(str_replace('″', '', $role)), $memberships_roles );
 			if (isset($atts['message']) && !empty($atts['message'])) {
-				$message = '';
+				// Start with the initial message part
+				$message = $atts['message'];
+
+				// Collect numeric-indexed parts
+				$numeric_parts = [];
 				foreach ($atts as $key => $msg_value) {
 					if (is_int($key)) {
-						$message .= ' ' . $msg_value;
+						$numeric_parts[$key] = $msg_value;
 					}
 				}
-			}
 
+				ksort($numeric_parts);
+				foreach ($numeric_parts as $part) {
+					$message .= ' ' . $part;
+				}
+
+				$message = trim($message);
+
+			}
 			$message = '';
 			if ( $override_global_settings === 'on' ) {
-				$message = ! empty(get_post_meta( $post->ID, 'urcr_meta_content', $single = true )); ? get_post_meta( $post->ID, 'urcr_meta_content', $single = true ) : '';
+				$message = ! empty(get_post_meta( $post->ID, 'urcr_meta_content', $single = true )) ? get_post_meta( $post->ID, 'urcr_meta_content', $single = true ) : '';
 			} elseif ( isset( $atts['enable_content_restriction']) && $atts['enable_content_restriction'] === "true" ) {
-				$message = isset( $atts['message'] ) ? $atts['message'] : get_option( 'user_registration_content_restriction_message' );
+				$message = isset($message  ) ? $message : get_option( 'user_registration_content_restriction_message' );
 			}
 
 			$message = empty( $message ) ? __( 'This content is restricted!', 'user-registration' ) : $message;
 			$message = apply_filters( 'user_registration_process_smart_tags', $message );
 			$message = do_shortcode( $message );
-
+			if ( isset( $atts['enable_content_restriction']) && $atts['enable_content_restriction'] === "true" ) {
 				switch ($roles) {
 					case 'all_logged_in_users':
 						if (is_user_logged_in()) {
@@ -161,12 +177,12 @@ class URCR_Shortcodes {
 						break;
 
 					case 'memberships':
-						if (isset($current_user_membership) && is_array($roles) && in_array($current_user_membership, $roles, true)) {
+						if ( ! empty( $memberships_roles ) && in_array($current_user_membership, $memberships_roles, true)) {
 							return do_shortcode($content);
 						}
 						break;
 				}
-
+			}
 				return '<span class="urcr-restrict-message">' . $message . '</span>';
 		}
 			return do_shortcode( $content );
