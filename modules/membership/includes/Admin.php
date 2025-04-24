@@ -387,13 +387,17 @@ if ( ! class_exists( 'Admin' ) ) :
 		 * @return void
 		 */
 		public function add_membership_options() {
+			/**
+			 * Filters that holds the list of payment gateways to be stored in ur_membership_payment_gateways option.
+			 */
+			$membership_payment_gateways = apply_filters( 'user_registration_membership_payment_gateways', array(
+				'paypal' => __( 'Paypal', 'user-registration' ),
+				'stripe' => __( 'Stripe', 'user-registration' ),
+				'bank'   => __( 'Bank', 'user-registration' ),
+			) );
 			add_option(
 				'ur_membership_payment_gateways',
-				array(
-					'paypal' => __( 'Paypal', 'user-registration' ),
-					'stripe' => __( 'Stripe', 'user-registration' ),
-					'bank'   => __( 'Bank', 'user-registration' ),
-				)
+				$membership_payment_gateways
 			);
 		}
 
