@@ -154,7 +154,10 @@ class UR_Form_Templates {
 		// Retrieve and sanitize parameters.
 		$title = sanitize_text_field( wp_unslash( $request->get_param( 'title' ) ) );
 		$slug  = sanitize_text_field( wp_unslash( $request->get_param( 'slug' ) ) );
-
+		echo '<pre>';
+		print_r( $slug );
+		echo '</pre>';
+		die();
 		// Check if the title parameter is empty.
 		if ( empty( $title ) ) {
 			return new WP_Error(

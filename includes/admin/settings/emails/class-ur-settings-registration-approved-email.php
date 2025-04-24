@@ -36,6 +36,12 @@ if ( ! class_exists( 'UR_Settings_Registration_Approved_Email', false ) ) :
 		 * @var string
 		 */
 		public $description;
+		/**
+		 * UR_Settings_Approval_Link_Email Receiver.
+		 *
+		 * @var string
+		 */
+		public $receiver;
 
 		/**
 		 * Constructor.
@@ -44,6 +50,7 @@ if ( ! class_exists( 'UR_Settings_Registration_Approved_Email', false ) ) :
 			$this->id          = 'registration_approved_email';
 			$this->title       = __( 'Registration Approved Email', 'user-registration' );
 			$this->description = __( 'Email sent to the user notifying the registration is approved by site admin', 'user-registration' );
+			$this->receiver    = __( 'User', 'user-registration' );
 		}
 
 		/**
