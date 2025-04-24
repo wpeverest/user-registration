@@ -34,29 +34,33 @@ const Edit = ({ attributes, setAttributes }) => {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const [membershipRoles,accessRoles, roleRes, messageRes] = await Promise.all([
-					apiFetch({
-						path: `${restURL}user-registration/v1/gutenberg-blocks/membership-role-list`,
-						method: "GET",
-						headers: { "X-WP-Nonce": urRestApiNonce }
-					}),
-					apiFetch({
-						path: `${restURL}user-registration/v1/gutenberg-blocks/access-role-list`,
-						method: "GET",
-						headers: { "X-WP-Nonce": urRestApiNonce }
-					}),
-					apiFetch({
-						path: `${restURL}user-registration/v1/gutenberg-blocks/role-list`,
-						method: "GET",
-						headers: { "X-WP-Nonce": urRestApiNonce }
-					}),
-					apiFetch({
-						path: `${restURL}user-registration/v1/gutenberg-blocks/cr-data`,
-						method: "GET",
-						headers: { "X-WP-Nonce": urRestApiNonce }
-					})
-				]);
-				if (membershipRoles.success) setMembershipsRolesOptions(membershipRoles.membership_roles_list);
+				const [membershipRoles, accessRoles, roleRes, messageRes] =
+					await Promise.all([
+						apiFetch({
+							path: `${restURL}user-registration/v1/gutenberg-blocks/membership-role-list`,
+							method: "GET",
+							headers: { "X-WP-Nonce": urRestApiNonce }
+						}),
+						apiFetch({
+							path: `${restURL}user-registration/v1/gutenberg-blocks/access-role-list`,
+							method: "GET",
+							headers: { "X-WP-Nonce": urRestApiNonce }
+						}),
+						apiFetch({
+							path: `${restURL}user-registration/v1/gutenberg-blocks/role-list`,
+							method: "GET",
+							headers: { "X-WP-Nonce": urRestApiNonce }
+						}),
+						apiFetch({
+							path: `${restURL}user-registration/v1/gutenberg-blocks/cr-data`,
+							method: "GET",
+							headers: { "X-WP-Nonce": urRestApiNonce }
+						})
+					]);
+				if (membershipRoles.success)
+					setMembershipsRolesOptions(
+						membershipRoles.membership_roles_list
+					);
 				if (accessRoles.success)
 					setAccessRolesOptions(
 						accessRoles.access_data.access_role_list
@@ -92,9 +96,6 @@ const Edit = ({ attributes, setAttributes }) => {
 			label: membershipRolesOptions[key]
 		}));
 	}, [membershipRolesOptions]);
-
-
-
 
 	const handleAccessControlChange = (value) => {
 		setAttributes({ accessControl: value });
@@ -226,7 +227,6 @@ const Edit = ({ attributes, setAttributes }) => {
 									</FormControl>
 								)}
 
-
 								{accessAllRoles === "memberships" && (
 									<FormControl>
 										<FormLabel
@@ -250,7 +250,9 @@ const Edit = ({ attributes, setAttributes }) => {
 										</FormLabel>
 										<Select
 											isMulti
-											options={MembershipRoleDropdownOptions}
+											options={
+												MembershipRoleDropdownOptions
+											}
 											className="react-select-container"
 											classNamePrefix="react-select"
 											placeholder={__(
@@ -280,8 +282,6 @@ const Edit = ({ attributes, setAttributes }) => {
 									</FormControl>
 								)}
 
-
-
 								<FormControl>
 									<FormLabel
 										sx={{
@@ -297,10 +297,11 @@ const Edit = ({ attributes, setAttributes }) => {
 											zIndex: 1,
 											overflow: "hidden",
 											textOverflow: "ellipsis",
-											whiteSpace: "nowrap"
+											whiteSpace: "nowrap",
+											my:6
 										}}
 									>
-										{__("Restricted Content Message")}
+										{__("Restricted Content Message",'user-registration')}
 									</FormLabel>
 									<Editor
 										value={message}
@@ -323,10 +324,10 @@ const Edit = ({ attributes, setAttributes }) => {
 				</InspectorControls>
 
 				{accessControl === "access" ? (
-					<div>
+					<Box mb={6}>
 						<InnerBlocks templateLock={false} />
 						<div className="user-registration-content-restriction-block-note">
-							<span className="dashicon dashicons dashicons-lock"></span>
+							<span className="dashicon dashicons dashicons-lock" />
 							<p className="user-registration-content-restriction-block-note-text">
 								{__(
 									"This block has global content restriction settings.",
@@ -334,7 +335,7 @@ const Edit = ({ attributes, setAttributes }) => {
 								)}
 							</p>
 						</div>
-					</div>
+					</Box>
 				) : (
 					<span
 						dangerouslySetInnerHTML={{ __html: attributes.message }}

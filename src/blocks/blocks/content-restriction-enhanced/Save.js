@@ -19,8 +19,7 @@ const Save = ({ attributes }) => {
 		params += ` access_membership_role="${membershipRoles}"`;
 	}
 
-	console.log(params);
-
+	
 
     if (attributes.accessControl !== "") {
         params += ` access_control="${attributes.accessControl}"`;
