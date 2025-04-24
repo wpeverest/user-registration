@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
 	Flex,
 	Switch,
@@ -21,7 +21,13 @@ import { Select } from "chakra-react-select";
 import { useStateValue } from "../../../context/StateProvider";
 import { actionTypes } from "../../../context/gettingStartedContext";
 
-function InputHandler({ setting, onBoardIconsURL, customStyle }) {
+function InputHandler({
+	setting,
+	onBoardIconsURL,
+	customStyle,
+	onModify,
+	hideElement
+}) {
 	const [{ settings, allowUsageData }, dispatch] = useStateValue();
 
 	const renderOptions = () => {
@@ -166,6 +172,18 @@ function InputHandler({ setting, onBoardIconsURL, customStyle }) {
 			}
 		});
 
+		if (
+			newChangedValueRef.user_registration_form_setting_enable_strong_password ===
+			"no"
+		) {
+			onModify({ value: true });
+		} else if (
+			newChangedValueRef.user_registration_form_setting_enable_strong_password ===
+			"yes"
+		) {
+			onModify({ value: false });
+		}
+
 		dispatch({
 			type: actionTypes.GET_SETTINGS,
 			settings: newChangedValueRef
@@ -237,7 +255,7 @@ function InputHandler({ setting, onBoardIconsURL, customStyle }) {
 							handleInputChange(setting.type, setting.id, e)
 						}
 						defaultChecked={setting.default === "yes"}
-						{...(settings[settings.id] === "yes" && {
+						{...(settings[setting.id] === "yes" && {
 							isChecked: true
 						})}
 					/>
@@ -307,6 +325,7 @@ function InputHandler({ setting, onBoardIconsURL, customStyle }) {
 					activeBackgroundColor: "#F9FAFC",
 					activeFontColor: "#475BB2"
 				};
+
 				if (
 					setting.id ===
 						"user_registration_form_setting_minimum_password_strength" &&
@@ -387,6 +406,13 @@ function InputHandler({ setting, onBoardIconsURL, customStyle }) {
 				);
 		}
 	};
+
+	if (
+		"undefined" !== typeof hideElement[setting.id] &&
+		hideElement[setting.id]
+	) {
+		return "";
+	}
 
 	return (
 		<Flex justify={"space-between"} align="center" sx={customStyle}>

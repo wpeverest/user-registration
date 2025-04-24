@@ -47,30 +47,34 @@ function App() {
 		typeof _UR_WIZARD_ !== "undefined" && _UR_WIZARD_;
 
 	const [steps, setSteps] = useState([
-		{
-			key: "registration_type",
-			label: __("Registration Type", "user-registration"),
-			title: __("Registration Type", "user-registration"),
-			description: __(
-				"Get started by choosing the type of registration that best fits your website's needs. Whether you're creating a simple sign-up process or a full membership platform, we've got you covered!",
-				"user-registration"
-			),
-			isDone: true,
-			component: <RegistrationType />
-		},
-		{
-			key: "install_pages",
-			label: __("Initial Setup Details", "user-registration"),
-			description: __(
-				"To provide your users with a warm welcome, we've configured important settings and prepared essential pages.",
-				"user-registration"
-			),
-			isDone: false,
-			component: <InstallPage />
-		},
+		// {
+		// 	key: "registration_type",
+		// 	label: __("Registration Type", "user-registration"),
+		// 	title: __("Registration Type", "user-registration"),
+		// 	description: __(
+		// 		"Get started by choosing the type of registration that best fits your website's needs. Whether you're creating a simple sign-up process or a full membership platform, we've got you covered!",
+		// 		"user-registration"
+		// 	),
+		// 	isDone: true,
+		// 	component: <RegistrationType />
+		// },
+		// {
+		// 	key: "install_pages",
+		// 	label: __("Initial Setup Details", "user-registration"),
+		// 	description: __(
+		// 		"To provide your users with a warm welcome, we've configured important settings and prepared essential pages.",
+		// 		"user-registration"
+		// 	),
+		// 	isDone: false,
+		// 	component: <InstallPage />
+		// },
 		{
 			key: "general_settings",
 			label: __("Settings", "user-registration"),
+			description: __(
+				"Configure how new users register, gain access, and maintain account security.",
+				"user-registration"
+			),
 			isDone: false,
 			component: <GeneralSettings />
 		},
@@ -104,15 +108,8 @@ function App() {
 
 				const newSettingsRef = {};
 				Object.keys(data.options).map((key) => {
-					var sectionSettings = data.options[key].settings.general;
+					var sectionSettings = data.options[key].settings;
 					sectionSettings.map((individualSettings) => {
-						newSettingsRef[individualSettings.id] =
-							individualSettings.default;
-					});
-
-					var registrationSectionSettings =
-						data.options[key].settings.registration;
-					registrationSectionSettings.map((individualSettings) => {
 						newSettingsRef[individualSettings.id] =
 							individualSettings.default;
 					});
