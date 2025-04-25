@@ -228,7 +228,7 @@ class PaypalService {
 			'subscription'     => $subscription,
 			'order'            => $latest_order,
 			'membership_metas' => $membership_metas,
-			'member_id'        => $member_id,
+			'member_id'        => absint($member_id),
 		);
 
 		if ( ! $this->validate_ipn( $payment_mode ) ) {

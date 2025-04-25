@@ -9,6 +9,7 @@
 namespace WPEverest\URMembership;
 
 use WPEverest\URMembership\Admin\Database\Database;
+use WPEverest\URMembership\Emails\EmailSettings;
 use WPEverest\URMembership\Admin\Forms\FormFields;
 use WPEverest\URMembership\Admin\Members\Members;
 use WPEverest\URMembership\Admin\Membership\Membership;
@@ -233,7 +234,7 @@ if ( ! class_exists( 'Admin' ) ) :
 				$this->frontend = new Frontend();
 			}
 			new FormFields();
-
+			new EmailSettings();
 		}
 
 		/**

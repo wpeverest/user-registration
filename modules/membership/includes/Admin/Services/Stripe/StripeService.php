@@ -477,9 +477,6 @@ class StripeService {
 			case 'invoice.payment_succeeded':
 				$this->handle_succeeded_invoice( $event, $subscription_id );
 				break;
-			case 'invoice.payment_failed':
-				$this->handle_failed_invoice( $event, $subscription_id );
-				break;
 			default:
 				break;
 		}
@@ -547,46 +544,6 @@ class StripeService {
 			)
 		);
 		$logger->notice( 'Subscription updated with new billing date', array( 'source' => 'user-registration-membership-stripe' ) );
-	}
-
-	public function handle_failed_invoice( $event, $subscription_id ) {
-		$logger        = ur_get_logger();
-		$email_service = new EmailService();
-		if ( null === $subscription_id ) {
-			$logger->error( 'Subscription ID is null', array( 'source' => 'user-registration-membership-stripe' ) );
-
-			return;
-		}
-
-		$logger->notice( 'Cancellation request for Subscription ID:' . $subscription_id . 'from Paypal received.', array( 'source' => 'ur-membership-paypal' ) );
-
-		$current_subscription = $this->members_subscription_repository->get_membership_by_subscription_id( $subscription_id, true );
-
-		$member_id = $current_subscription['user_id'];
-
-		$latest_order = $this->members_orders_repository->get_member_orders( $member_id );
-
-		$membership = $this->membership_repository->get_single_membership_by_ID( $current_subscription['item_id'] );
-
-		$membership_metas = wp_unslash( json_decode( $membership['meta_value'], true ) );
-
-		$subscription = $this->members_subscription_repository->get_member_subscription( $member_id );
-
-		$email_data = array(
-			'subscription'     => $subscription,
-			'order'            => $latest_order,
-			'membership_metas' => $membership_metas,
-			'member_id'        => $member_id,
-		);
-		$email_service->send_email( $email_data, 'membership_cancellation_email_user' );
-		$email_service->send_email( $email_data, 'membership_cancellation_email_admin' );
-		// updating the status to cancel it for sure
-		$this->members_subscription_repository->update(
-			$subscription_id,
-			array(
-				'status' => 'canceled',
-			)
-		);
 	}
 
 	public function validate_setup() {
