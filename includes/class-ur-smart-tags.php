@@ -634,16 +634,21 @@ class UR_Smart_Tags {
 						break;
 					case 'payment_invoice' :
 						$new_content = '';
-						if(!empty($values['membership'])) {
+						if ( ! empty( $values['membership'] ) ) {
 							$invoice_details = $values['membership_tags'];
-							$template_file = locate_template( 'payment-successful-email.php' );
-							if ( ! $template_file ) {
-								$template_file = UR_MEMBERSHIP_DIR . 'includes/Templates/Emails/payment-successful-email.php';
-							}
-							ob_start();
-							require $template_file;
-							$new_content = ob_get_clean();
+							$invoice_details['is_membership'] = true;
+						} else {
+							$invoice_details['is_membership'] = false;
+							$invoice_details['user_id'] = $values['user_id'];
+
 						}
+						$template_file   = locate_template( 'payment-successful-email.php' );
+						if ( ! $template_file ) {
+							$template_file = UR_MEMBERSHIP_DIR . 'includes/Templates/Emails/payment-successful-email.php';
+						}
+						ob_start();
+						require $template_file;
+						$new_content = ob_get_clean();
 						$content = str_replace( '{{' . $tag . '}}', $new_content, $content );
 						break;
 				}
