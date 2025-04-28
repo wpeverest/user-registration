@@ -264,23 +264,21 @@ class EmailService {
 	 * @return bool|mixed|void
 	 */
 	public function send_membership_cancellation_email_user( $data ) {
-
 		if ( ! $this->validate_email_fields( $data ) || ! self::is_membership_email_enabled( 'user_registration_enable_membership_cancellation_user_email' ) ) {
 			return false;
 		}
 		$subject = get_option( 'user_registration_membership_cancellation_user_email_subject', esc_html__( 'Membership Cancellation Confirmed – {{membership_plan}}', 'user-registration' ) );
 		$user    = get_userdata( $data['member_id'] );
 		$form_id = ur_get_form_id_by_userid( $data['member_id'] );
-
 		$settings = new UR_Settings_Membership_Cancellation_User_Email();
-
-		$message = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_cancellation_admin_email_message', $settings->user_registration_get_membership_cancellation_user_email() ), $data, $form_id );;
-
+		$values               = array(
+			'membership_plan_name' => esc_html__($data['membership_metas']['title'])
+		);
+		$message = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_cancellation_admin_email_message', $settings->user_registration_get_membership_cancellation_user_email() ), $values, $form_id );;
 		$message     = apply_filters( 'ur_membership_membership_cancellation_email_custom_template', $message, $subject );
 		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
-
+		$subject     = \UR_Emailer::parse_smart_tags( $subject, $values );
 		$headers = \UR_Emailer::ur_get_header();
-
 		return \UR_Emailer::user_registration_process_and_send_email( $user->user_email, $subject, $message, $headers, array(), $template_id );
 	}
 

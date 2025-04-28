@@ -85,7 +85,7 @@ class UR_Settings_Membership_Cancellation_User_Email {
 								'desc'     => __( 'Customize the email subject.', 'user-registration' ),
 								'id'       => 'user_registration_membership_cancellation_user_email_subject',
 								'type'     => 'text',
-								'default'  => __( 'Membership Cancellation Confirmed – {{membership_plan}}', 'user-registration' ),
+								'default'  => __( 'Membership Cancellation Confirmed – {{membership_plan_name}}', 'user-registration' ),
 								'css'      => 'min-width: 350px;',
 								'desc_tip' => true,
 							),
@@ -117,7 +117,7 @@ class UR_Settings_Membership_Cancellation_User_Email {
 			sprintf(
 				__( '
 					Hi {{username}}, <br>
-					We\'re sorry to see you go. Your request to cancel the {{membership_plan}} membership has been successfully processed. <br>
+					We\'re sorry to see you go. Your request to cancel the {{membership_plan_name}} membership has been successfully processed. <br>
 					If you change your mind in the future, we\'ll be here to welcome you back.<br>
 					Thank you for being a part of {{blog_info}}.<br><br>
 

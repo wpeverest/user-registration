@@ -571,8 +571,8 @@ class UR_Smart_Tags {
 					case 'otp_expiry_time':
 						$content = str_replace( '{{' . $tag . '}}', isset( $values['otp_expiry_time'] ) ? $values['otp_expiry_time'] : '', $content );
 						break;
-					case 'membership_plan':
-						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan'] ) ? $values['membership_plan'] : '', $content );
+					case 'membership_plan_name':
+						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_name'] ) ? $values['membership_plan_name'] : '', $content );
 						break;
 					case 'membership_plan_type':
 						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_type'] ) ? $values['membership_plan_type'] : '', $content );
@@ -598,11 +598,14 @@ class UR_Smart_Tags {
 					case 'membership_plan_status':
 						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_status'] ) ? $values['membership_plan_status'] : '', $content );
 						break;
+					case 'membership_plan_trial_period':
+						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_trial_period'] ) ? $values['membership_plan_trial_period'] : '', $content );
+						break;
 					case 'membership_plan_details':
 						if ( ! empty( $values['membership_tags'] ) ) {
 							$membership_tags = $values['membership_tags'];
 							$details = array(
-								'Plan Name'       => $membership_tags['membership_plan'] ?? '',
+								'Plan Name'       => $membership_tags['membership_plan_name'] ?? '',
 								'Membership Type' => $membership_tags['membership_plan_type'] ?? '',
 								'Payment Details' => array(
 									'Method' => $membership_tags['membership_plan_payment_method'] ?? '',

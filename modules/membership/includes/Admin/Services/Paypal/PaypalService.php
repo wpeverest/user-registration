@@ -250,10 +250,6 @@ class PaypalService {
 					'status' => 'canceled',
 				)
 			);
-
-			$email_service->send_email( $email_data, 'membership_cancellation_email_user' );
-			$email_service->send_email( $email_data, 'membership_cancellation_email_admin' );
-
 			return;
 		}
 		// return if first ipn received, change the status of order and subscription to complete and active respectively.

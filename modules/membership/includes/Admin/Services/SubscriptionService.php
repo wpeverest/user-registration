@@ -140,7 +140,9 @@ class SubscriptionService {
 
 		$membership = $this->membership_repository->get_single_membership_by_ID( $current_user_subscription['item_id'] );
 
-		$membership_metas = wp_unslash( json_decode( $membership['meta_value'], true ) );
+		$membership_metas          = wp_unslash( json_decode( $membership['meta_value'], true ) );
+		$membership_metas['title'] = $membership['post_title'];
+
 
 		$subscription = $this->members_subscription_repository->get_member_subscription( $member_id );
 
@@ -181,18 +183,18 @@ class SubscriptionService {
 		$billing_cycle = ( "subscription" === $membership_metas['type'] ) ? ( 'day' === $membership_metas['subscription']['duration'] ) ? esc_html( 'Daily', 'user-registration' ) : ( esc_html( ucfirst( $membership_metas['subscription']['duration'] . 'ly' ) ) ) : 'N/A';
 
 		return array(
-			'membership_plan'                   => esc_html( ucwords($membership_metas['post_title']) ),
-			'membership_plan_type'              => esc_html( ucwords($membership_metas['type']) ),
-			'membership_plan_payment_method'    => esc_html( ucwords($data['payment_method']) ),
-			'membership_plan_trial_status'      => esc_html( ucwords($order['trial_status']) ),
+			'membership_plan_name'              => esc_html( ucwords( $membership_metas['post_title'] ) ),
+			'membership_plan_type'              => esc_html( ucwords( $membership_metas['type'] ) ),
+			'membership_plan_payment_method'    => esc_html( ucwords( $data['payment_method'] ) ),
+			'membership_plan_trial_status'      => esc_html( ucwords( $order['trial_status'] ) ),
 			'membership_plan_trial_start_date'  => esc_html( $subscription['trial_start_date'] ),
 			'membership_plan_trial_end_date'    => esc_html( $subscription['trial_end_date'] ),
 			'membership_plan_next_billing_date' => esc_html( $subscription['next_billing_date'] ),
-			'membership_plan_status'            => esc_html( ucwords($subscription['status']) ),
+			'membership_plan_status'            => esc_html( ucwords( $subscription['status'] ) ),
 			'membership_plan_payment_date'      => esc_html( $order['created_at'] ),
-			'membership_plan_billing_cycle'     => esc_html( ucwords($billing_cycle) ),
+			'membership_plan_billing_cycle'     => esc_html( ucwords( $billing_cycle ) ),
 			'membership_plan_payment_amount'    => $symbol . number_format( $membership_metas['amount'], 2 ),
-			'membership_plan_payment_status'    => esc_html( ucwords($order['status']) ),
+			'membership_plan_payment_status'    => esc_html( ucwords( $order['status'] ) ),
 			'membership_plan_trial_amount'      => $symbol . number_format( ( 'on' === $order['trial_status'] ) ? $order['total_amount'] : 0, 2 ),
 			'membership_plan_coupon_discount'   => isset( $order['coupon_discount'] ) ? ( ( isset( $order['coupon_discount_type'] ) && $order['coupon_discount_type'] == 'percent' ) ? $order['coupon_discount'] . '%' : $symbol . $order['coupon_discount'] ) : '',
 			'membership_plan_coupon'            => esc_html( $order['coupon'] ?? '' ),
