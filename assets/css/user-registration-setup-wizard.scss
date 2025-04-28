@@ -34,6 +34,9 @@
 #user-registration-welcome {
 	// padding-bottom: 24px;
 	text-align: center;
+	margin: 0px 200px;
+	padding: 60px 0px;
+	max-width: 980px;
 
 	@media (max-width: 768px) {
 		padding-left: 15px;
@@ -41,16 +44,10 @@
 	}
 
 	> img {
-		// position: relative;
-		// top: 25px;
-		// left: 50%;
-		// transform: translateX(-50%);
 		border-radius: 50%;
 		border: 1px solid $border-color;
-		// width: 90px;
-		// height: 90px;
-		width: 84px;
-		height: 84px;
+		width: 70px;
+		height: 70px;
 	}
 
 	> a {
@@ -528,14 +525,15 @@
 }
 
 #user-registration-setup-wizard {
-	margin: 10px 200px;
-	min-width: 980px;
+	margin: 0px 200px;
+	max-width: 980px;
 	border-radius: 4px;
 	display: flex;
 	justify-content: center;
 	flex-direction: column;
 	flex-wrap: wrap;
 	align-content: center;
+	padding: 60px 0px;
 
 	.user-registration-setup-wizard {
 
@@ -618,7 +616,7 @@
 
 		&__body {
 			flex: 0 0 50%;
-			padding: 32px;
+			padding: 32px 32px 32px 40px;
 			background-color: $white;
 			border-radius: 13px 13px 0px 0px;
 			color: #2D3559;

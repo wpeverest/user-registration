@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
 	Flex,
 	Switch,
@@ -14,9 +14,12 @@ import {
 	Checkbox,
 	Input,
 	InputGroup,
-	InputLeftElement
+	InputLeftElement,
+	Link,
+	Button
 } from "@chakra-ui/react";
 import { Select } from "chakra-react-select";
+import { __ } from "@wordpress/i18n";
 
 import { useStateValue } from "../../../context/StateProvider";
 import { actionTypes } from "../../../context/gettingStartedContext";
@@ -29,7 +32,6 @@ function InputHandler({
 	hideElement
 }) {
 	const [{ settings, allowUsageData }, dispatch] = useStateValue();
-
 	const renderOptions = () => {
 		let newOptionsRef = [];
 
@@ -166,20 +168,27 @@ function InputHandler({
 		}
 
 		Object.keys(newChangedValueRef).map((key, value) => {
-			if (newAllowUsageDataChangedValueRef[key]) {
+			if (
+				newAllowUsageDataChangedValueRef[key] &&
+				key !== "user_registration_updates_admin_email"
+			) {
 				newAllowUsageDataChangedValueRef[key] = newChangedValueRef[key];
 				delete newChangedValueRef[key];
 			}
 		});
 
 		if (
+			setting.id ===
+				"user_registration_form_setting_enable_strong_password" &&
 			newChangedValueRef.user_registration_form_setting_enable_strong_password ===
-			"no"
+				"no"
 		) {
 			onModify({ value: true });
 		} else if (
+			setting.id ===
+				"user_registration_form_setting_enable_strong_password" &&
 			newChangedValueRef.user_registration_form_setting_enable_strong_password ===
-			"yes"
+				"yes"
 		) {
 			onModify({ value: false });
 		}
@@ -225,11 +234,30 @@ function InputHandler({
 		</Icon>
 	);
 
+	const updateAdminEmail = () => {
+		const newChangedValueRef = { ...settings };
+		const newAllowUsageDataChangedValueRef = { ...allowUsageData };
+		onModify({ value: !hideElement.user_registration_updates_admin_email });
+		Object.keys(newChangedValueRef).map((key, value) => {
+			if (
+				newAllowUsageDataChangedValueRef[key] &&
+				key === "user_registration_updates_admin_email"
+			) {
+				newAllowUsageDataChangedValueRef[key] = newChangedValueRef[key];
+				delete newChangedValueRef[key];
+			}
+		});
+		dispatch({
+			type: actionTypes.GET_ALLOW_USAGE,
+			allowUsageData: newAllowUsageDataChangedValueRef
+		});
+	};
+
 	const renderElement = () => {
 		switch (setting.type) {
 			case "text":
 				return (
-					<InputGroup flex="1">
+					<InputGroup flex="1" marginLeft="24px">
 						<InputLeftElement>
 							<MailIcon />
 						</InputLeftElement>
@@ -241,7 +269,20 @@ function InputHandler({
 								handleInputChange(setting.type, setting.id, e)
 							}
 							defaultValue={setting.default}
+							borderRadius="8px 0px 0px 8px"
 						/>
+						{setting.id ===
+							"user_registration_updates_admin_email" && (
+							<Button
+								colorScheme="blue"
+								backgroundColor="#475BB2 !important"
+								width="30%"
+								onClick={updateAdminEmail}
+								borderRadius="0px 8px 8px 0px"
+							>
+								{__("Update", "user-registration")}
+							</Button>
+						)}
 					</InputGroup>
 				);
 			case "checkbox":
@@ -414,6 +455,12 @@ function InputHandler({
 		return "";
 	}
 
+	const handleChangeEmail = () => {
+		onModify({
+			value: false
+		});
+	};
+
 	return (
 		<Flex justify={"space-between"} align="center" sx={customStyle}>
 			<Flex align="center" flex="0 0 40%">
@@ -425,6 +472,27 @@ function InputHandler({
 					}}
 				>
 					{setting.title}
+					{setting.email && <strong>{setting.email}</strong>}
+					{setting.link &&
+						(setting.link !== "change" ? (
+							<Link
+								href={setting.link}
+								isExternal
+								color="#475BB2"
+								textDecoration="underline"
+							>
+								{setting.linkLabel}
+							</Link>
+						) : (
+							<Link
+								href="#"
+								color="#475BB2"
+								textDecoration="underline"
+								onClick={handleChangeEmail}
+							>
+								{setting.linkLabel}
+							</Link>
+						))}
 				</FormLabel>
 				{setting.desc && (
 					<Tooltip
