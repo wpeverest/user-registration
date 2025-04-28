@@ -76,6 +76,14 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 				'UR_Settings_Confirm_Email_Address_Change_Email',
 			);
 
+			if ( ur_check_module_activation( 'membership' ) || ur_check_module_activation( 'payments' ) || is_plugin_active( 'user-registration-stripe/user-registration-stripe.php' ) || is_plugin_active( 'user-registration-authorize-net/user-registration-authorize-net.php' ) ) {
+				$email_classes = array_merge( $email_classes, array(
+					'UR_Settings_Payment_Success_Email',
+					'UR_Settings_Payment_Success_Admin_Email',
+				) );
+
+			}
+
 			foreach ( $email_classes as $class ) {
 				$this->emails[ $class ] = include 'emails/class-' . strtolower( str_replace( '_', '-', $class ) ) . '.php';
 			}

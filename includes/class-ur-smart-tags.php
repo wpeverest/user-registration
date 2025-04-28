@@ -598,10 +598,8 @@ class UR_Smart_Tags {
 					case 'membership_plan_status':
 						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_status'] ) ? $values['membership_plan_status'] : '', $content );
 						break;
-					case 'membership_plan_trial_period':
-						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_trial_period'] ) ? $values['membership_plan_trial_period'] : '', $content );
-						break;
 					case 'membership_plan_details':
+						$new_content = '';
 						if ( ! empty( $values['membership_tags'] ) ) {
 							$membership_tags = $values['membership_tags'];
 							$details = array(
@@ -618,22 +616,34 @@ class UR_Smart_Tags {
 							);
 
 							$new_content = '<ul>';
-							foreach ( $details as $key => $value ) {
+							foreach ( $details as $k => $value ) {
 								if ( is_array( $value ) ) {
-									$new_content .= sprintf( '<li><b>%s</b>:<ul>', esc_html__( $key, 'user-registration' ) );
+									$new_content .= sprintf( '<li><b>%s</b>:<ul>', esc_html__( $k, 'user-registration' ) );
 									foreach ( $value as $sub_key => $sub_value ) {
 										$new_content .= sprintf( '<li><b>%s</b> - %s</li>', esc_html__( $sub_key, 'user-registration' ), esc_html( $sub_value ) );
 									}
 									$new_content .= '</ul></li>';
 								} else {
-									$new_content .= sprintf( '<li><b>%s</b> - %s</li>', esc_html__( $key, 'user-registration' ), esc_html( $value ) );
+									$new_content .= sprintf( '<li><b>%s</b> - %s</li>', esc_html__( $k, 'user-registration' ), esc_html( $value ) );
 								}
 							}
 							$new_content .= '</ul>';
-						} else {
-							$new_content = '';
 						}
 
+						$content = str_replace( '{{' . $tag . '}}', $new_content, $content );
+						break;
+					case 'payment_invoice' :
+						$new_content = '';
+						if(!empty($values['membership'])) {
+							$invoice_details = $values['membership_tags'];
+							$template_file = locate_template( 'payment-successful-email.php' );
+							if ( ! $template_file ) {
+								$template_file = UR_MEMBERSHIP_DIR . 'includes/Templates/Emails/payment-successful-email.php';
+							}
+							ob_start();
+							require $template_file;
+							$new_content = ob_get_clean();
+						}
 						$content = str_replace( '{{' . $tag . '}}', $new_content, $content );
 						break;
 				}

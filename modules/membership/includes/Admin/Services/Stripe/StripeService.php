@@ -234,15 +234,15 @@ class StripeService {
 		$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
 		$membership_metas['post_title'] = $membership['post_title'];
 		$member_subscription            = $this->members_subscription_repository->get_member_subscription( $member_id );
-		$response               = array(
+		$response                       = array(
 			'status' => false,
 		);
-		if(empty($member_subscription)) {
+		$logger = ur_get_logger();
+		if ( empty( $member_subscription ) ) {
 			$logger->notice( '-------------------------------------------- Stripe Subscription not found for ' . $member_id . ' --------------------------------------------', array( 'source' => 'ur-membership-stripe' ) );
 
 			return $response;
 		}
-		$logger                         = ur_get_logger();
 
 		$logger->notice( '-------------------------------------------- Stripe Subscription started for ' . $member_id . ' --------------------------------------------', array( 'source' => 'ur-membership-stripe' ) );
 
@@ -390,6 +390,7 @@ class StripeService {
 			'order'            => $order_detail,
 			'membership_metas' => $membership_metas,
 			'member_id'        => $member_id,
+			'membership'       => $member_subscription['item_id'],
 		);
 
 		$mail_send = $email_service->send_email( $email_data, 'payment_successful' );
