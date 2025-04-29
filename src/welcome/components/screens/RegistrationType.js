@@ -73,7 +73,7 @@ const RegistrationType = () => {
 						p="20px"
 						border="1px solid #E1E1E1"
 						borderRadius="8px"
-						width="315px"
+						width="100%"
 						height="270px"
 					>
 						<Image

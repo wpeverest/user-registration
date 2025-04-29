@@ -18,8 +18,7 @@ const GeneralSettings = ({ sectionSettings, siteURL, onBoardIconsURL }) => {
 	const handleModification = (data) => {
 		setHideElement((prev) => ({
 			...prev,
-			user_registration_form_setting_minimum_password_strength:
-				data.value ?? false
+			user_registration_form_setting_minimum_password_strength: data
 		}));
 	};
 

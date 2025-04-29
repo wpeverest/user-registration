@@ -183,14 +183,14 @@ function InputHandler({
 			newChangedValueRef.user_registration_form_setting_enable_strong_password ===
 				"no"
 		) {
-			onModify({ value: true });
+			onModify(true);
 		} else if (
 			setting.id ===
 				"user_registration_form_setting_enable_strong_password" &&
 			newChangedValueRef.user_registration_form_setting_enable_strong_password ===
 				"yes"
 		) {
-			onModify({ value: false });
+			onModify(false);
 		}
 
 		dispatch({
@@ -234,30 +234,34 @@ function InputHandler({
 		</Icon>
 	);
 
-	const updateAdminEmail = () => {
-		const newChangedValueRef = { ...settings };
-		const newAllowUsageDataChangedValueRef = { ...allowUsageData };
-		onModify({ value: !hideElement.user_registration_updates_admin_email });
-		Object.keys(newChangedValueRef).map((key, value) => {
-			if (
-				newAllowUsageDataChangedValueRef[key] &&
-				key === "user_registration_updates_admin_email"
-			) {
-				newAllowUsageDataChangedValueRef[key] = newChangedValueRef[key];
-				delete newChangedValueRef[key];
-			}
-		});
-		dispatch({
-			type: actionTypes.GET_ALLOW_USAGE,
-			allowUsageData: newAllowUsageDataChangedValueRef
-		});
+	const updateAdminEmail = (bool) => {
+		onModify(true);
+
+		if (bool) {
+			const newChangedValueRef = { ...settings };
+			const newAllowUsageDataChangedValueRef = { ...allowUsageData };
+			Object.keys(newChangedValueRef).map((key, value) => {
+				if (
+					newAllowUsageDataChangedValueRef[key] &&
+					key === "user_registration_updates_admin_email"
+				) {
+					newAllowUsageDataChangedValueRef[key] =
+						newChangedValueRef[key];
+					delete newChangedValueRef[key];
+				}
+			});
+			dispatch({
+				type: actionTypes.GET_ALLOW_USAGE,
+				allowUsageData: newAllowUsageDataChangedValueRef
+			});
+		}
 	};
 
 	const renderElement = () => {
 		switch (setting.type) {
 			case "text":
 				return (
-					<InputGroup flex="1" marginLeft="24px">
+					<InputGroup flex="1" marginLeft="24px" gap={"10px"}>
 						<InputLeftElement>
 							<MailIcon />
 						</InputLeftElement>
@@ -269,19 +273,34 @@ function InputHandler({
 								handleInputChange(setting.type, setting.id, e)
 							}
 							defaultValue={setting.default}
-							borderRadius="8px 0px 0px 8px"
+							borderRadius="8px"
 						/>
 						{setting.id ===
 							"user_registration_updates_admin_email" && (
-							<Button
-								colorScheme="blue"
-								backgroundColor="#475BB2 !important"
-								width="30%"
-								onClick={updateAdminEmail}
-								borderRadius="0px 8px 8px 0px"
-							>
-								{__("Update", "user-registration")}
-							</Button>
+							<>
+								<Button
+									colorScheme="blue"
+									backgroundColor="#475BB2 !important"
+									width="30%"
+									onClick={() => {
+										updateAdminEmail(true);
+									}}
+									borderRadius="8px"
+								>
+									{__("Update", "user-registration")}
+								</Button>
+								<Button
+									colorScheme="red"
+									backgroundColor="red !important"
+									width="30%"
+									onClick={() => {
+										updateAdminEmail(false);
+									}}
+									borderRadius="8px"
+								>
+									{__("Cancel", "user-registration")}
+								</Button>
+							</>
 						)}
 					</InputGroup>
 				);
@@ -455,12 +474,6 @@ function InputHandler({
 		return "";
 	}
 
-	const handleChangeEmail = () => {
-		onModify({
-			value: false
-		});
-	};
-
 	return (
 		<Flex justify={"space-between"} align="center" sx={customStyle}>
 			<Flex align="center" flex="0 0 40%">
@@ -484,14 +497,18 @@ function InputHandler({
 								{setting.linkLabel}
 							</Link>
 						) : (
-							<Link
-								href="#"
-								color="#475BB2"
-								textDecoration="underline"
-								onClick={handleChangeEmail}
-							>
-								{setting.linkLabel}
-							</Link>
+							hideElement.user_registration_updates_admin_email && (
+								<Link
+									href="#"
+									color="#475BB2"
+									textDecoration="underline"
+									onClick={() => {
+										onModify(false);
+									}}
+								>
+									{setting.linkLabel}
+								</Link>
+							)
 						))}
 				</FormLabel>
 				{setting.desc && (

@@ -34,7 +34,7 @@
 #user-registration-welcome {
 	// padding-bottom: 24px;
 	text-align: center;
-	margin: 0px 200px;
+	margin: 0px auto;
 	padding: 60px 0px;
 	max-width: 980px;
 
@@ -184,6 +184,7 @@
 			flex-direction: column;
 			align-items: center;
 			gap: 36px;
+			width: 100%;
 
 			&__header {
 				display: flex;
@@ -235,10 +236,9 @@
 				border: 1px solid $border-color;
 				box-sizing: border-box;
 				position: relative;
-				width: 856px;
-				max-width: 95%;
 				height: 482px;
 				overflow: hidden;
+				width: 100%;
 
 				@media (max-width: 1600px) {
 					height: 350px;
@@ -525,25 +525,19 @@
 }
 
 #user-registration-setup-wizard {
-	margin: 0px 200px;
+	margin: 0px auto;
 	max-width: 980px;
 	border-radius: 4px;
-	display: flex;
-	justify-content: center;
-	flex-direction: column;
-	flex-wrap: wrap;
 	align-content: center;
 	padding: 60px 0px;
 
 	.user-registration-setup-wizard {
 
 		&__header {
-			flex: 0 0 25%;
 			margin-bottom: 25px;
 			display: flex;
 			flex-direction: column;
 			gap: 32px;
-			width: 920px;
 
 			&--logo {
 				display: flex;
@@ -563,12 +557,11 @@
 
 			&--nav {
 				display: flex;
-				flex-direction: row;
 				justify-content: space-between;
 				list-style-type: none;
+				align-items: center;
 
 				.step {
-					height: 0px;
 					color: #BFBFBF;
 					display: flex;
 					flex-direction: column;
@@ -589,14 +582,6 @@
 						color: #475BB2;
 					}
 				}
-
-				.done {
-					background-color: #475BB2;
-				}
-
-				.active {
-					background-color: #475BB2;
-				}
 			}
 
 			.center-line {
@@ -615,12 +600,10 @@
 		}
 
 		&__body {
-			flex: 0 0 50%;
 			padding: 32px 32px 32px 40px;
 			background-color: $white;
 			border-radius: 13px 13px 0px 0px;
 			color: #2D3559;
-			width: 920px;
 			margin-top: 42px;
 
 			.ur-setup-wizard-tool-tip{
@@ -669,7 +652,6 @@
 		}
 
 		&__footer {
-			flex: 0 0 25%;
 			display: flex;
 			flex-direction: row;
 			justify-content: space-between;
@@ -678,7 +660,6 @@
 			padding: 24px 32px;
 			border: 1px solid #E1E1E1;
 			border-radius: 0px 0px 13px 13px;
-			width: 920px;
 
 			&--left,
 			&--right {

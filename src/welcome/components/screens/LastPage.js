@@ -113,7 +113,7 @@ function LastPage({ onBoardIconsURL }) {
 	const handleModification = (data) => {
 		setHideElement((prev) => ({
 			...prev,
-			user_registration_updates_admin_email: data.value ?? false
+			user_registration_updates_admin_email: data
 		}));
 	};
 
@@ -234,7 +234,11 @@ function LastPage({ onBoardIconsURL }) {
 						<RightArrowIcon />
 					</Link>
 				</Text>
-				<Flex justify="space-between" wrap="wrap" gap="10px">
+				<Box
+					display="grid"
+					gridTemplateColumns="repeat(auto-fit, minmax( 220px, 1fr ))"
+					gap="10px"
+				>
 					{addonsDetails.map((addon, key) => {
 						return (
 							<Flex
@@ -279,6 +283,7 @@ function LastPage({ onBoardIconsURL }) {
 						href="https://wpuserregistration.com/features/"
 						isExternal
 						flex="0 0 32%"
+						display="flex"
 					>
 						<Flex
 							padding="20px"
@@ -312,7 +317,7 @@ function LastPage({ onBoardIconsURL }) {
 							</Flex>
 						</Flex>
 					</Link>
-				</Flex>
+				</Box>
 			</Box>
 		</Flex>
 	);
