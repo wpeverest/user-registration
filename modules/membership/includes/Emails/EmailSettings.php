@@ -4,6 +4,7 @@ namespace WPEverest\URMembership\Emails;
 
 use WPEverest\URMembership\Emails\Admin\UR_Settings_Membership_Cancellation_Admin_Email;
 use WPEverest\URMembership\Emails\User\UR_Settings_Membership_Cancellation_User_Email;
+use WPEverest\URMembership\Emails\User\UR_Settings_Membership_Renewal_Reminder_User_Email;
 
 /**
  * EmailSettings.php
@@ -17,11 +18,12 @@ class EmailSettings {
 	}
 
 	public function add_email_settings( $emails ) {
-		$new_emails = array (
-			'UR_Settings_Membership_Cancellation_Admin_Email' => new UR_Settings_Membership_Cancellation_Admin_Email(),
-			'UR_Settings_Membership_Cancellation_User_Email' => new UR_Settings_Membership_Cancellation_User_Email(),
+		$new_emails = array(
+			'UR_Settings_Membership_Cancellation_Admin_Email'    => new UR_Settings_Membership_Cancellation_Admin_Email(),
+			'UR_Settings_Membership_Cancellation_User_Email'     => new UR_Settings_Membership_Cancellation_User_Email(),
+			'UR_Settings_Membership_Renewal_Reminder_User_Email' => new UR_Settings_Membership_Renewal_Reminder_User_Email(),
 		);
 
-		return array_merge($emails, $new_emails);
+		return array_merge( $emails, $new_emails );
 	}
 }
