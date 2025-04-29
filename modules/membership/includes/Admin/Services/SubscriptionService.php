@@ -185,7 +185,7 @@ class SubscriptionService {
 		return array(
 			'membership_plan_name'              => esc_html( ucwords( $membership_metas['post_title'] ) ),
 			'membership_plan_type'              => esc_html( ucwords( $membership_metas['type'] ) ),
-			'membership_plan_payment_method'    => esc_html( ucwords( $data['payment_method'] ) ),
+			'membership_plan_payment_method'    => esc_html( ucwords( isset($data['order']['payment_method']) ? $data['order']['payment_method'] : $data['payment_method'] ) ),
 			'membership_plan_trial_status'      => esc_html( ucwords( $order['trial_status'] ) ),
 			'membership_plan_trial_start_date'  => esc_html( $subscription['trial_start_date'] ),
 			'membership_plan_trial_end_date'    => esc_html( $subscription['trial_end_date'] ),
