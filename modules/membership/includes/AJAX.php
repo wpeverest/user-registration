@@ -817,6 +817,13 @@ class AJAX {
 	 * @return void
 	 */
 	public static function verify_pages() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Sorry, You do not have permission to create membership groups.', 'user-registration' ),
+				)
+			);
+		}
 		ur_membership_verify_nonce( 'user_registration_validate_page_none' );
 		if ( ! isset( $_POST['value'] ) ) {
 			wp_send_json_error( __( 'Wrong request.', 'user-registration' ) );
@@ -844,6 +851,13 @@ class AJAX {
 	 * @return void
 	 */
 	public static function validate_pg() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Sorry, You do not have permission to create membership groups.', 'user-registration' ),
+				)
+			);
+		}
 		ur_membership_verify_nonce( 'ur_membership' );
 		if ( ! isset( $_POST['pg'] ) || ! isset( $_POST['membership_type'] ) ) {
 			wp_send_json_error( __( 'Wrong request.', 'user-registration' ) );
