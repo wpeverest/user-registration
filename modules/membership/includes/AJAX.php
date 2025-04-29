@@ -592,6 +592,13 @@ class AJAX {
 				)
 			);
 		}
+		if ( ! current_user_can( 'edit_user', $member_id ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'You are not allowed to edit this user.', 'user-registration' ),
+				)
+			);
+		}
 		$stripe_service      = new StripeService();
 		$payment_status      = sanitize_text_field( $_POST['payment_status'] );
 		$update_stripe_order = $stripe_service->update_order( $_POST );
@@ -639,7 +646,13 @@ class AJAX {
 				)
 			);
 		}
-
+		if ( ! current_user_can( 'edit_user', $member_id ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'You are not allowed to edit this user.', 'user-registration' ),
+				)
+			);
+		}
 		$stripe_service      = new StripeService();
 		$form_response       = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
 		$stripe_subscription = $stripe_service->create_subscription( $customer_id, $payment_method_id, $member_id );
