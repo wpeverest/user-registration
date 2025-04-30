@@ -290,8 +290,8 @@ function InputHandler({
 									{__("Update", "user-registration")}
 								</Button>
 								<Button
-									colorScheme="red"
-									backgroundColor="red !important"
+									color="white"
+									backgroundColor="#ff4f60 !important"
 									width="30%"
 									onClick={() => {
 										updateAdminEmail(false);
