@@ -1067,6 +1067,13 @@ class UR_Admin_Settings {
 		$is_wp_login_disabled_error = apply_filters( 'user_registration_settings_prevent_default_login', $_POST );
 		if ( $is_wp_login_disabled_error && 'redirect_login_error' === $is_wp_login_disabled_error ) {
 			return;
+		}elseif ( $is_wp_login_disabled_error && 'invalid_renewal_period' === $is_wp_login_disabled_error ) {
+			self::add_error(
+				esc_html__(
+					'Your settings has not been saved. Send Before days cannot be less than or equal to 0.',
+					'user-registration'
+				)
+			);
 		}
 
 		// Loop options and get values to save.

@@ -12,6 +12,8 @@
 
 namespace WPEverest\URMembership\Admin\Services;
 
+use WPEverest\URMembership\Emails\User\UR_Settings_Membership_Renewal_Reminder_User_Email;
+
 class EmailService
 {
 	protected $email_type, $logger;
@@ -51,6 +53,9 @@ class EmailService
 				return self::send_membership_cancellation_email_user($data);
 			case 'membership_cancellation_email_admin': // membership cancellation email to admin.
 				return self::send_membership_cancellation_email_admin($data);
+			case 'membership_renewal': // membership renewal
+				return self::send_membership_renewal_email($data);
+
 			default:
 				break;
 		}
@@ -311,6 +316,23 @@ class EmailService
 		return wp_mail(get_option('admin_email'), $subject, $message, $headers);
 	}
 
+	public function send_membership_renewal_email( $data ) {
+		$subject = get_option( 'user_registration_membership_renewal_reminder_user_email_subject', esc_html__( 'Reminder: Automatic Renewal for Your Membership is Coming Up', 'user-registration' ) );
+		$user    = get_userdata( $data['member_id'] );
+
+		$form_id  = ur_get_form_id_by_userid( $data['member_id'] );
+		$settings = new UR_Settings_Membership_Renewal_Reminder_User_Email();
+
+		$message = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_cancellation_admin_email_message', $settings->user_registration_get_membership_renewal_reminder_user_email() ), $data, $form_id );;
+
+		$message     = apply_filters( 'ur_membership_membership_cancellation_email_custom_template', $message, $subject );
+
+		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
+
+		$headers = \UR_Emailer::ur_get_header();
+
+		return \UR_Emailer::user_registration_process_and_send_email( $data['user_email'], $subject, $message, $headers, array(), $template_id );
+	}
 	/**
 	 * Validate email fields
 	 *

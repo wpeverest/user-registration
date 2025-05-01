@@ -571,6 +571,9 @@ class UR_Smart_Tags {
 					case 'otp_expiry_time':
 						$content = str_replace( '{{' . $tag . '}}', isset( $values['otp_expiry_time'] ) ? $values['otp_expiry_time'] : '', $content );
 						break;
+					case 'membership_plan_name':
+						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_name'] ) ? $values['membership_plan_name'] : '', $content );
+						break;
 				}
 			}
 		}
