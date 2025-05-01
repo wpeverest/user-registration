@@ -210,6 +210,9 @@ function ur_get_account_endpoint_url( $endpoint ) {
 	if ( 'user-logout' === $endpoint ) {
 		return ur_logout_url( ur_get_page_permalink( 'myaccount' ) );
 	}
+	if ( 'ur-login-logout' === $endpoint ) {
+		return '#ur_login_logout#';
+	}
 	return ur_get_endpoint_url( $endpoint, '', ur_get_page_permalink( 'myaccount' ) );
 }
 

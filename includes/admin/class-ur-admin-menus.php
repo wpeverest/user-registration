@@ -787,7 +787,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		public function add_nav_menu_meta_boxes() {
 			add_meta_box(
 				'user_registration_endpoints_nav_link',
-				__( 'User Registration endpoints', 'user-registration' ),
+				__( 'URM Menus', 'user-registration' ),
 				array(
 					$this,
 					'nav_menu_links',

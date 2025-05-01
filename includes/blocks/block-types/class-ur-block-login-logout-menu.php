@@ -35,7 +35,7 @@ class UR_Block_Login_Logout_Menu extends UR_Block_Abstract {
 				$itemLabel = esc_html__( 'Logout', 'user-registration' );
 			}
 		} else {
-			$itemUrl = esc_url( ur_get_login_url() );
+			$itemUrl = empty( $attr['loginPage'] ) ? esc_url( ur_get_login_url() ) : esc_url( get_page_link( $attr[ 'loginPage' ] ) );
 			if ( ! empty( $attr[ 'loginLabel' ] ) ) {
 				$itemLabel = esc_html( $attr[ 'loginLabel' ] );
 			} else {

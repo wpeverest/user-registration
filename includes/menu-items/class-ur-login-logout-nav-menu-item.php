@@ -15,8 +15,15 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class UR_Login_Logout_Nav_Menu_Item extends UR_Nav_Menu_Item {
 	protected $menu_item_prefix = 'ur_login_logout_';
+
+	public function __construct() {
+		parent::__construct();
+	}
 	protected function get_title() {
-		return __('Login|Logout', 'user-registration');
+		return __('Login | Logout', 'user-registration');
+	}
+	protected function get_key_identifier() {
+		return 'ur-login-logout';
 	}
 	/**
 	 * Get menu item field options to modify via menu editor UI.
@@ -25,6 +32,10 @@ class UR_Login_Logout_Nav_Menu_Item extends UR_Nav_Menu_Item {
 	protected function get_fields()
 	{
 		return array(
+			'login_page' => array(
+				'label' => 'Login Page',
+				'type' => 'page',
+			),
 			'login_label' => array(
 				'label' => 'Login Label',
 				'type' => 'text',

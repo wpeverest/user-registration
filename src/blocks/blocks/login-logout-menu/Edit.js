@@ -2,18 +2,26 @@ import {InspectorControls, useBlockProps} from "@wordpress/block-editor";
 import {PanelBody, SelectControl, TextControl} from "@wordpress/components";
 import { __ } from "@wordpress/i18n";
 import React, {useState} from "react";
+
+const { pages } =
+	typeof _UR_BLOCKS_ !== "undefined" && _UR_BLOCKS_;
 const Edit = (props) => {
     const blockProps = useBlockProps();
 
     const { attributes, setAttributes } = props;
-    const { loginLabel, logoutLabel } = attributes;
+    const { loginPage, loginLabel, logoutLabel } = attributes;
 
     const [userState, setUserState] = useState("logged_in");
-
     return (
     <>
         <InspectorControls key="ur-gutenberg-login-logout-menu-inspector-controls">
-            <PanelBody title="Login/Logout Menu Settings">
+            <PanelBody title="Login | Logout Menu Settings">
+                <SelectControl
+                    label={__("Login Page", "user-registration")}
+                    options={pages}
+                    value={loginPage}
+                    onChange={ value => setAttributes( { loginPage: value }) }
+                />
                 <TextControl
                     label={__("Login Label", "user-registration")}
                     value={loginLabel}
@@ -45,3 +53,9 @@ const Edit = (props) => {
     );
 }
 export default Edit;
+
+/*
+<LazySelect
+    hasResolved={ data.hasResolved } pages={ data.records } label={__("Login Page", "user-registration")} value={loginPage}
+/>
+*/

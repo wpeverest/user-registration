@@ -18,6 +18,7 @@ abstract class UR_Nav_Menu_Item {
 	protected $menu_item_group = '';
 	abstract protected function get_fields();
 	abstract protected function get_title();
+	abstract protected function get_key_identifier();
 	public function __construct() {
 		add_action( 'wp_nav_menu_item_custom_fields', array( $this, 'render_fields' ), 10, 4 );
 		add_action( 'wp_update_nav_menu_item', array( $this, 'update_fields' ), 10, 3 );
@@ -27,45 +28,64 @@ abstract class UR_Nav_Menu_Item {
 	}
 
 	/**
-	 * Adds a 'Login|Logout' menu item to the user registration navigation menu item list.
+	 * Adds a 'Login | Logout' menu item to the user registration navigation menu item list.
 	 *
 	 * @param array $endpoints An array of existing navigation menu items.
-	 * @return array Modified array with the 'Login|Logout' menu item added.
+	 * @return array Modified array with the 'Login | Logout' menu item added.
 	 */
 	public function add_to_ur_nav_menu_item_list( $endpoints ) {
-		$endpoints['ur-login-logout'] = __( $this->get_title(), 'user-registration' );
+		$endpoints[ $this->get_key_identifier() ] = __( $this->get_title(), 'user-registration' );
 		return $endpoints;
 	}
 	/**
 	 * Renders fields for a specific menu item within a menu structure.
 	 *
 	 * @param int $item_id The ID of the menu item being rendered.
-	 * @param array $item The menu item data.
+	 * @param object $item The menu item data.
 	 * @param int $depth Depth of the menu item in the hierarchy.
 	 * @param array $args Additional arguments for rendering the menu item.
 	 * @return void
 	 */
 	public function render_fields( $item_id, $item, $depth, $args ) {
+		if ( $item->post_title != $this->get_title() ) {
+			return;
+		}
 		foreach ( $this->get_fields() as $field_id => $field_data ) {
 			$meta_key = $this->menu_item_prefix . $field_id;
-			if (ur_get_single_post_meta($item_id, $meta_key)) {
-				$meta_value = ur_get_single_post_meta($item_id, $meta_key);
+			if ( ur_get_single_post_meta( $item_id, $meta_key ) ) {
+				$meta_value = ur_get_single_post_meta( $item_id, $meta_key );
 			} elseif ( ! empty( $field_data['default'] ) ) {
 				$meta_value = $field_data['default'];
 			} else {
 				$meta_value = '';
 			}
+			if( 'text' === $field_data[ 'type' ] ) {
 			?>
-			<p class="field-<?php echo esc_attr( $field_id ); ?> description description-wide">
-				<label for="edit-menu-item-<?php echo esc_attr( $field_id ); ?>">
-					<?php echo esc_html( $field_data[ 'label' ] ); ?><br />
-					<input type="<?php echo esc_attr( $field_data[ 'type' ] ?? 'text' ); ?>"
+				<p class="field-<?php echo esc_attr( $field_id ); ?> description description-wide">
+					<label for="edit-menu-item-<?php echo esc_attr( $field_id ); ?>">
+						<?php echo esc_html( $field_data[ 'label' ] ); ?><br />
+						<input type="<?php echo esc_attr( $field_data[ 'type' ] ?? 'text' ); ?>"
 							name="menu-item-<?php echo esc_attr( $field_id ); ?>[<?php echo esc_attr( $item_id ); ?>]"
 							id="edit-menu-item-<?php echo esc_attr( $field_id . '-' . $item_id ); ?>"
 							value="<?php echo esc_attr( $meta_value ); ?>" />
-				</label>
-			</p>
-		<?php
+					</label>
+				</p>
+			<?php
+			}
+			elseif( 'page' === $field_data[ 'type' ] ) {
+			?>
+				<p class="field-<?php echo esc_attr( $field_id ); ?> description description-wide">
+				<label for="edit-menu-item-<?php echo esc_attr( $field_id ); ?>">
+				<?php echo esc_html( $field_data[ 'label' ] ); ?><br />
+			<?php
+				$pages = get_pages();
+				echo '<select class="edit-menu-item-' . esc_attr( $field_id ) . 'name="menu-item-' . esc_attr( $field_id ) . '[' . esc_attr( $item_id ) . ']" ' . '>';
+				foreach( $pages as $page ) {
+					echo "<option value=" . ur_get_page_permalink( $page ) . ">" . $page->post_title . "</option>";
+				}
+				echo '</select>';
+				echo '</label>';
+			}
 		}
 		/**
 		 * Fires after rendering custom fields for a specific menu item.
@@ -78,7 +98,7 @@ abstract class UR_Nav_Menu_Item {
 		 * @param int $depth Depth level of the menu item in the menu hierarchy.
 		 * @param array $args Additional arguments provided to customize menu rendering.
 		 * @param string $menu_group Menu group identifier for the menu item.
-		 * @since v5.2.0
+		 * @since 4.2.3
 		 *
 		 */
 		do_action( 'ur_render_custom_menu_fields', $item_id, $item, $depth, $args, $this->menu_item_group );
