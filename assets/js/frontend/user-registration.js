@@ -1344,6 +1344,19 @@
 
 										if (
 											typeof response.success !==
+											"undefined" &&
+											response.success === true &&
+											typeof response.data
+												.mollie_redirect !== "undefined"
+										) {
+											window.setTimeout(function () {
+												window.location =
+													response.data.mollie_redirect;
+											}, timeout);
+										}
+
+										if (
+											typeof response.success !==
 												"undefined" &&
 											response.success === true
 										) {

@@ -1067,6 +1067,7 @@
 				var paypal = $("#user_registration_enable_paypal_standard");
 				var stripe = $("#user_registration_enable_stripe");
 				var anet = $("#user_registration_enable_authorize_net");
+				var mollie = $("#user_registration_enable_mollie");
 
 				if (paypal.is(":checked")) {
 					var payment_fields = ["payment_fields"];
