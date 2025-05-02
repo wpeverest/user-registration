@@ -7022,7 +7022,7 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 				'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
 				'activated'    => is_plugin_active( 'user-registration-salesforce/user-registration-salesforce.php' ),
 				'display'      => array( 'settings', 'form_settings' ),
-				'connected'    => is_plugin_active( 'user-registration-salesforce/user-registration-salesforce.php' ) && ur_string_to_bool( get_option( 'user_registration_integrations_salesforce_connection', false ) ),
+			    'connected'    => is_plugin_active( 'user-registration-salesforce/user-registration-salesforce.php' ) && ! empty( get_option( 'ur_salesforce_accounts', array() ) ) ? true : false,
 			),
 		);
 
