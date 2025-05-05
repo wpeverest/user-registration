@@ -1,18 +1,18 @@
 <?php
-if ( '' === $type ):
+if ( 'block' === $type ):
 	?>
 	<div class="ur-membership-list-container">
 
-		<div class="membership-list-notice-div">
-			<div class="membership-title">
-				<?php echo esc_html__( 'Available Memberships', 'user-registration' ); ?>
-			</div>
-			<div class="subscription-message">
-				<p>
-					<?php echo esc_html__( 'We have the following subscriptions available for our site. Please select one to continue.' ); ?>
-				</p>
-			</div>
-		</div>
+<!--		<div class="membership-list-notice-div">-->
+<!--			<div class="membership-title">-->
+<!--				--><?php //echo esc_html__( 'Available Memberships', 'user-registration' ); ?>
+<!--			</div>-->
+<!--			<div class="subscription-message">-->
+<!--				<p>-->
+<!--					--><?php //echo esc_html__( 'We have the following subscriptions available for our site. Please select one to continue.' ); ?>
+<!--				</p>-->
+<!--			</div>-->
+<!--		</div>-->
 		<form id="membership-old-selection-form" class="ur-membership-container"
 			  method="GET">
 			<?php foreach ( $memberships as $k => $membership ) : ?>

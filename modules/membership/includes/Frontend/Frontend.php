@@ -44,6 +44,8 @@ class Frontend {
 				'user_registration_membership_tab_endpoint_content',
 			)
 		);
+		add_action('wp_ajax_validate_save', 'ur_validate_membership_block');
+
 	}
 
 	/**
@@ -213,5 +215,12 @@ class Frontend {
 			'i18n_cancel_membership_subtitle'              => _x( 'Are you sure you want to cancel membership permanently?', 'user registration membership', 'user-registration' ),
 			'i18n_sending_text'                            => __( 'Sending ...', 'user-registration' ),
 		);
+	}
+
+	public function ur_validate_membership_block( $post_id , $post , $update ) {
+//		echo '<pre>';
+//		print_r( $update );
+//		echo '</pre>';
+//		die();
 	}
 }

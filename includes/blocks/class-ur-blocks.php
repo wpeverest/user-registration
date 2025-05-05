@@ -123,6 +123,7 @@ class UR_Blocks {
 	 * @return AbstractBlock[]
 	 */
 	private function get_block_types() {
+
 		$ur_blocks_classes = array(
 			UR_Block_Regstration_Form::class, //phpcs:ignore;
 			UR_Block_Login_Form::class, //phpcs:ignore;
@@ -133,6 +134,9 @@ class UR_Blocks {
 
 		if ( ur_check_module_activation( 'content-restriction' ) ) {
 			$ur_blocks_classes[] = UR_Block_Content_Restriction::class;
+		}
+		if ( ur_check_module_activation( 'membership' ) ) {
+			$ur_blocks_classes[] = UR_Block_Membership_Listing::class;
 		}
 
 		return apply_filters(

@@ -1,9 +1,41 @@
 jQuery(function ($) {
 
 	$( document.body ).ready( function( e ) {
+		var wrap = $( '#wp-auth-check-wrap' );
+		/**
+		 * Hides the authentication form popup.
+		 *
+		 * @since 3.6.0
+		 * @private
+		 */
+		function hide() {
+			var adminpage = window.adminpage,
+				wp        = window.wp;
+
+			$( window ).off( 'beforeunload.wp-auth-check' );
+
+			// When on the Edit Post screen, speed up heartbeat
+			// after the user logs in to quickly refresh nonces.
+			if ( ( adminpage === 'post-php' || adminpage === 'post-new-php' ) && wp && wp.heartbeat ) {
+				wp.heartbeat.connectNow();
+			}
+
+			wrap.fadeOut( 200, function() {
+				wrap.addClass( 'hidden' ).css( 'display', '' );
+				$( '#wp-auth-check-frame' ).remove();
+				$( 'body' ).removeClass( 'modal-open' );
+			});
+		}
 		$('.ur-today-users, .ur-last-week-users, .ur-last-month-users, .ur-total-users').html('').html('<i>'+ur_widget_params.loading+'</i>' );
 		$('#ur-dashboard-widget-forms').html('').append('<option>'+ur_widget_params.loading+'</option');
+		$($(document).on("heartbeat-tick.wp-auth-check", function (event, data) {
 
+			if ('wp-auth-check' in data) {
+				if (data['wp-auth-check'] && !wrap.hasClass('hidden')) {
+					hide();
+				}
+			}
+		}));
 		var data = {
 			action: 'user_registration_dashboard_widget',
 			security: ur_widget_params.widget_nonce

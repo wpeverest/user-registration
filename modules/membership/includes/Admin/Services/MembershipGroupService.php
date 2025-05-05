@@ -167,7 +167,9 @@ class MembershipGroupService {
 
 	public function structure_membership_group_data( $membership_groups ) {
 		$updated_array = array();
-
+		if ( ! function_exists( 'post_exists' ) ) {
+			require_once( ABSPATH . 'wp-admin/includes/post.php' );
+		}
 		foreach ( $membership_groups as $key => $membership_group ) {
 			$group_content = json_decode( wp_unslash( $membership_group['post_content'] ), true );
 

@@ -257,6 +257,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-myaccount.php';
 			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-edit-profile.php';
 			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-edit-password.php';
+			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-membership-listing.php';
 
 			// Validation classes.
 			include_once UR_ABSPATH . 'includes/validation/class-ur-validation.php';

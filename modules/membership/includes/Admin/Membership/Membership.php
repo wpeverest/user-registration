@@ -47,7 +47,6 @@ class Membership {
 		add_action( 'admin_init', array( $this, 'actions' ) );
 		add_action( 'in_admin_header', array( __CLASS__, 'hide_unrelated_notices' ) );
 		add_filter( 'wp_editor_settings', array( $this, 'remove_media_buttons' ) );
-
 	}
 
 	/**
@@ -463,4 +462,5 @@ class Membership {
 			'i18n_previous_save_action_ongoing'            => _x( 'Previous save action on going.', 'user registration admin', 'user-registration' ),
 		);
 	}
+
 }
