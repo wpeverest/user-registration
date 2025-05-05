@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the User Registration & Membership plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration & Membership 4.2.1\n"
+"Project-Id-Version: User Registration & Membership 4.2.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-registration\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-04-22T10:38:09+00:00\n"
+"POT-Creation-Date: 2025-05-05T07:47:34+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: user-registration\n"
@@ -434,12 +434,12 @@ msgstr ""
 msgid "Hover Box Shadow"
 msgstr ""
 
-#: includes/abstracts/abstract-ur-form-field.php:1034
+#: includes/abstracts/abstract-ur-form-field.php:1035
 #: src/welcome/components/screens/GeneralSettings.js:30
 msgid "General Settings"
 msgstr ""
 
-#: includes/abstracts/abstract-ur-form-field.php:1044
+#: includes/abstracts/abstract-ur-form-field.php:1045
 msgid "Advanced Settings"
 msgstr ""
 
@@ -3865,7 +3865,9 @@ msgid "Form submission processed successfully."
 msgstr ""
 
 #: includes/class-ur-ajax.php:340
-#: modules/membership/includes/AJAX.php:693
+#: modules/membership/includes/AJAX.php:598
+#: modules/membership/includes/AJAX.php:652
+#: modules/membership/includes/AJAX.php:706
 msgid "You are not allowed to edit this user."
 msgstr ""
 
@@ -9567,47 +9569,49 @@ msgid "Field form_response is required"
 msgstr ""
 
 #: modules/membership/includes/AJAX.php:591
-#: modules/membership/includes/AJAX.php:638
+#: modules/membership/includes/AJAX.php:645
 msgid "Invalid Request."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:674
-#: modules/membership/includes/AJAX.php:730
-#: modules/membership/includes/AJAX.php:809
-#: modules/membership/includes/AJAX.php:812
-#: modules/membership/includes/AJAX.php:836
+#: modules/membership/includes/AJAX.php:687
+#: modules/membership/includes/AJAX.php:743
+#: modules/membership/includes/AJAX.php:829
+#: modules/membership/includes/AJAX.php:832
+#: modules/membership/includes/AJAX.php:863
 msgid "Wrong request."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:684
+#: modules/membership/includes/AJAX.php:697
 msgid "User's subscription not found."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:710
+#: modules/membership/includes/AJAX.php:723
 msgid "Something went wrong while cancelling your subscription. Please contact support"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:733
+#: modules/membership/includes/AJAX.php:746
 msgid "Field list type is required."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:748
+#: modules/membership/includes/AJAX.php:761
 msgid "No membership is available for the selected group."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:769
+#: modules/membership/includes/AJAX.php:782
+#: modules/membership/includes/AJAX.php:823
+#: modules/membership/includes/AJAX.php:857
 msgid "Sorry, You do not have permission to create membership groups."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:776
+#: modules/membership/includes/AJAX.php:789
 msgid "Field membership_groups_data is required"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:794
+#: modules/membership/includes/AJAX.php:807
 msgid "Membership Groups saved successfully."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:818
+#: modules/membership/includes/AJAX.php:838
 msgid "Invalid post type"
 msgstr ""
 
