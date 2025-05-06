@@ -179,6 +179,14 @@
 			form.find(".user-registration-login-description").show();
 			loginTitle.closest(".user-registration-login-form-global-settings").show();
 			loginDesc.closest(".user-registration-login-form-global-settings").show();
+
+			$(document).on("change keyup keydown", "#user_registration_general_setting_login_form_title", function () {
+				form.find(".user-registration-login-title").text(loginTitle.val());
+			});
+
+			$(document).on("change keyup keydown", "#user_registration_general_setting_login_form_desc", function () {
+				form.find(".user-registration-login-description").text(loginDesc.val());
+			});
 		} else {
 			form.find(".user-registration-login-description").hide();
 			form.find(".user-registration-login-title").hide();
