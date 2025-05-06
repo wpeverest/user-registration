@@ -7353,6 +7353,22 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'default'  => 'no',
 							),
 							array(
+								'title'    => __( 'Login Form Title', 'user-registration' ),
+								'desc'     => __( 'This text will appear as the login form title', 'user-registration' ),
+								'id'       => 'user_registration_general_setting_login_form_title',
+								'type'     => 'text',
+								'desc_tip' => true,
+								'css'      => 'min-width: 350px;',
+							),
+							array(
+								'title'    => __( 'Login Form Description', 'user-registration' ),
+								'desc'     => __( 'This text will appear as the login form description', 'user-registration' ),
+								'id'       => 'user_registration_general_setting_login_form_desc',
+								'type'     => 'text',
+								'desc_tip' => true,
+								'css'      => 'min-width: 350px;',
+							),
+							array(
 								'title'    => __( 'Enable Ajax Login', 'user-registration' ),
 								'desc'     => '',
 								'id'       => 'ur_login_ajax_submission',
