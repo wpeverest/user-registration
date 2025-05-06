@@ -18,6 +18,14 @@ jQuery(
 
 			handleHeartbeatResponse: function () {
 				$(document).on("heartbeat-tick", function (event, data) {
+					wp.heartbeat.interval("fast");
+					if(data["wp-auth-check"] === true || (data["rest_nonce"] && "true" === data["nonces_expired"])) {
+						var wpAuthCheckWrap = $(document).find('#wp-auth-check-wrap');
+						wpAuthCheckWrap.addClass( 'hidden' ).css( 'display', '' );
+						$( '#wp-auth-check-frame' ).remove();
+						$( 'body' ).removeClass( 'modal-open' );
+					}
+
 					var $user_menu = $("#menu-users .wp-menu-name"),
 						$user_list = $("body.users-php .wp-list-table.users"),
 						columnsCount = $user_list.find(
