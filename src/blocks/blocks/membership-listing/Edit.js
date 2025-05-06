@@ -23,7 +23,7 @@ const mapOptions = (list) =>
  */
 const Edit = (props) => {
 	const {
-		attributes: {redirection_page_id, group_id, thank_you_page_id, type, button_text },
+		attributes: {redirection_page_id, group_id, thank_you_page_id, type, button_text},
 		setAttributes,
 	} = props;
 
@@ -133,10 +133,6 @@ const Edit = (props) => {
 	};
 	const onButtonTextChange = (val) => {
 		setAttributes({button_text: val});
-		const button = document.querySelector('.membership-signup-button');
-		if (button) {
-			button.textContent = button_text || __('Sign Up', 'user-registraiton');
-		}
 	};
 	// Handle block removal (cleanup)
 	useEffect(() => {
@@ -253,16 +249,15 @@ const Edit = (props) => {
 							__next40pxDefaultSize
 						/>
 					</PanelBody>
-					{isBlockList && (
-						<PanelBody title={__('Content Settings', 'user-registration')}>
-							<TextControl
-								key="ur-gutenberg-button-text"
-								label={__("Button Text", "user-registration")}
-								value={button_text}
-								onChange={onButtonTextChange}
-							/>
-						</PanelBody>
-					)}
+
+					<PanelBody title={__('Content Settings', 'user-registration')}>
+						<TextControl
+							key="ur-gutenberg-button-text"
+							label={__("Button Text", "user-registration")}
+							value={button_text}
+							onChange={onButtonTextChange}
+						/>
+					</PanelBody>
 
 				</InspectorControls>
 				<Disabled>

@@ -15,7 +15,8 @@ if ( 'block' === $type ):
 <!--		</div>-->
 		<form id="membership-old-selection-form" class="ur-membership-container"
 			  method="GET">
-			<?php foreach ( $memberships as $k => $membership ) : ?>
+			<?php
+			foreach ( $memberships as $k => $membership ) : ?>
 
 				<div class="membership-block">
 					<div class="membership-title">
@@ -23,15 +24,16 @@ if ( 'block' === $type ):
 					</div>
 					<div class="membership-body">
 						<div class="membership-description">
-							<?php echo esc_html( $membership['description'] ); ?>
+							<?php echo ( $membership['description'] ); ?>
 						</div>
 					</div>
 					<div class="membership-footer">
 						<input type="hidden" name="membership_id" value="<?php echo esc_html( $membership['ID'] ); ?>">
+						<input type="hidden" name="redirection_url" value="<?php echo esc_url( $redirect_page_url ); ?>">
 						<span
 							class="membership-amount"><?php echo $symbol ?><?php echo esc_html( sprintf( '%.2f', $membership['amount'] ) ); ?></span>
 						<button type="button"
-								class="membership-signup-button" <?php echo( empty( $registration_page_id )  ? 'disabled' : '' ) ?> ><?php echo esc_html__( 'Sign Up', 'user-registration' ); ?></button>
+								class="membership-signup-button" <?php echo( empty( $registration_page_id )  ? 'disabled' : '' ) ?> ><?php echo $sign_up_text ?></button>
 					</div>
 				</div>
 			<?php

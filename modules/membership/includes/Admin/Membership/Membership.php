@@ -317,7 +317,11 @@ class Membership {
 				if ( $post_id ) {
 					$membership         = get_post( $post_id );
 					$membership_details = json_decode( wp_unslash( get_post_meta( $post_id, 'ur_membership', true ) ), true );
+					$membership_description = get_post_meta( $post_id, 'ur_membership_description', true );
+
+					$membership_details['description'] = $membership_description;
 				}
+
 				$this->render_membership_creator( $membership, $membership_details, $menu_items );
 				break;
 			case 'list_groups':

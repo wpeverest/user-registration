@@ -137,6 +137,7 @@ class UR_Blocks {
 		}
 		if ( ur_check_module_activation( 'membership' ) ) {
 			$ur_blocks_classes[] = UR_Block_Membership_Listing::class;
+			$ur_blocks_classes[] = 	UR_Block_Thank_You::class;
 		}
 
 		return apply_filters(

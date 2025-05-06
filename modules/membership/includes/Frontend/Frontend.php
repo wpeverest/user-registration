@@ -161,6 +161,7 @@ class Frontend {
 		$currencies           = ur_payment_integration_get_currencies();
 		$symbol               = $currencies[ $currency ]['symbol'];
 		$registration_page_id = get_option( 'user_registration_member_registration_page_id' );
+
 		$redirect_page_url    = get_permalink( $registration_page_id );
 		$thank_you_page_id    = get_option( 'user_registration_thank_you_page_id' );
 		$thank_you_page       = get_permalink( $thank_you_page_id );

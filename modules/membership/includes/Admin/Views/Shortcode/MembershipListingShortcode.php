@@ -40,9 +40,10 @@ class MembershipListingShortcode {
 		$memberships        = $membership_service->list_active_memberships();
 
 
+
 		$type = "user_registration_groups" === $shortcode ? 'list' : '';
 
-		if ( !empty( $attributes['list_type'] ) ) {
+		if ( ! empty( $attributes['list_type'] ) ) {
 			$type = $attributes['list_type'];
 		}
 
@@ -59,7 +60,7 @@ class MembershipListingShortcode {
 		$currency             = get_option( 'user_registration_payment_currency', 'USD' );
 		$currencies           = ur_payment_integration_get_currencies();
 		$symbol               = $currencies[ $currency ]['symbol'];
-		$registration_page_id = get_option( 'user_registration_member_registration_page_id', false );
+		$registration_page_id = ! empty( $attributes['registration_page_id'] ) ? $attributes['registration_page_id'] : get_option( 'user_registration_member_registration_page_id', false );
 
 		$redirect_page_url = get_permalink( $registration_page_id );
 

@@ -6,12 +6,12 @@ const WebpackBar = !isProd ? require("webpackbar") : null;
 module.exports = (env, argv) => {
 	return {
 		entry: {
-			welcome: "./src/welcome/index.js",
-			dashboard: "./src/dashboard/index.js",
+			// welcome: "./src/welcome/index.js",
+			// dashboard: "./src/dashboard/index.js",
 			formblock: "./assets/js/admin/gutenberg/form-block.js",
 			blocks: "./src/blocks/index.js",
-			form_templates: "./src/form-templates/index.js",
-			"divi-builder": "./src/widgets/divi-builder/index.js"
+			// form_templates: "./src/form-templates/index.js",
+			// "divi-builder": "./src/widgets/divi-builder/index.js"
 		},
 		output: {
 			path: path.resolve(__dirname + "/chunks"),

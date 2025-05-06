@@ -74,7 +74,6 @@ class MembershipGroupService {
 
 	public function get_group_memberships( $group_id ) {
 		$memberships = $this->membership_group_repository->get_group_memberships_by_id( $group_id );
-
 		return apply_filters( 'build_membership_list_frontend', $memberships );
 
 	}

@@ -38,8 +38,6 @@ class UR_Block_Membership_Listing extends UR_Block_Abstract {
 
 		$group_id            = isset( $attr['group_id'] ) ? absint( $attr['group_id'] ) : 0;
 		$redirection_page_id = isset( $attr['redirection_page_id'] ) ? absint( $attr['redirection_page_id'] ) : 0;
-		$thank_you_page_id   = isset( $attr['thank_you_page_id'] ) ? absint( $attr['thank_you_page_id'] ) : 0;
-		$page_id             = isset( $attr['redirection_page_id'] ) ? absint( $attr['redirection_page_id'] ) : 0;
 		$type                = isset( $attr['type'] ) ? sanitize_text_field( $attr['type'] ) : 'list';
 
 //		if ( $redirection_page_id ) {
@@ -59,9 +57,10 @@ class UR_Block_Membership_Listing extends UR_Block_Abstract {
 
 		return ShortCodes::membership_listing(
 			array(
-				'id'          => $group_id,
-				'button_text' => $button_text,
-				'list_type'   => $type,
+				'id'                   => $group_id,
+				'button_text'          => $button_text,
+				'list_type'            => $type,
+				'registration_page_id' => $redirection_page_id,
 			),
 			'user_registration_groups'
 		);
