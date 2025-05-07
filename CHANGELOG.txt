@@ -1,3 +1,8 @@
+= 4.2.2    - 05/05/2025 =
+* Security - User capability check on multiple ajax requests .
+* Dev      - Hook to add date localization on flatpickr.
+* Fix      - Salesforce not showing connected.
+
 = 4.2.1    - 22/04/2025 =
 * Security - Checked user capability to edit user while cancelling subscription.
 * Enhance  - Move the scrollbar to top on category selection on form template page.
