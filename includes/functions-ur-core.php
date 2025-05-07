@@ -7359,6 +7359,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'type'     => 'text',
 								'desc_tip' => true,
 								'css'      => 'min-width: 350px;',
+								'default' => __( 'Welcome', 'user-registration' ),
 							),
 							array(
 								'title'    => __( 'Login Form Description', 'user-registration' ),
@@ -7367,6 +7368,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'type'     => 'text',
 								'desc_tip' => true,
 								'css'      => 'min-width: 350px;',
+								'default' => __( 'Please enter your details to access your account.', 'user-registration' ),
 							),
 							array(
 								'title'    => __( 'Enable Ajax Login', 'user-registration' ),
