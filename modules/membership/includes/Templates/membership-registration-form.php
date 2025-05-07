@@ -214,7 +214,9 @@
 						   value="<?php echo esc_attr( strtolower( $gateway ) ); ?>"
 						<?php echo 0 === $g ? 'checked' : ''; ?>
 					>
-					<span class="ur-membership-duration"><?php echo esc_html__( $gateway ); ?></span>
+					<span class="ur-membership-duration">
+						<?php echo esc_html( apply_filters( 'user_registration_membership_payment_gateway_selection_labels', __( $gateway, 'user-registration' ), $g ) ); ?>
+					</span>
 				</label>
 			<?php endforeach; ?>
 			<span id="payment-gateway-notice" class="notice_red"></span>
@@ -239,5 +241,3 @@
 
 </div>
 <!--user order successful section-->
-
-
