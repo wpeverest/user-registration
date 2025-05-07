@@ -36,7 +36,6 @@ class Frontend {
 		add_action( 'wp_enqueue_membership_scripts', array( $this, 'load_scripts' ), 10, 2 );
 		add_action( 'wp_loaded', array( $this, 'ur_add_membership_tab_endpoint' ) );
 		add_filter( 'user_registration_account_menu_items', array( $this, 'ur_membership_tab' ), 10, 1 );
-
 		add_action(
 			'user_registration_account_ur-membership_endpoint',
 			array(
@@ -44,8 +43,8 @@ class Frontend {
 				'user_registration_membership_tab_endpoint_content',
 			)
 		);
-		add_action('wp_ajax_validate_save', 'ur_validate_membership_block');
 
+		add_action( 'template_redirect', array( $this, 'set_thank_you_transient' ) );
 	}
 
 	/**
@@ -80,7 +79,7 @@ class Frontend {
 		$position = array_search( $before, array_keys( $items ), true );
 
 		// Insert the new item.
-		$return_items  = array_slice( $items, 0, $position, true );
+		$return_items = array_slice( $items, 0, $position, true );
 		$return_items += $new_items;
 		$return_items += array_slice( $items, $position, count( $items ) - $position, true );
 
@@ -162,10 +161,11 @@ class Frontend {
 		$symbol               = $currencies[ $currency ]['symbol'];
 		$registration_page_id = get_option( 'user_registration_member_registration_page_id' );
 
-		$redirect_page_url    = get_permalink( $registration_page_id );
-		$thank_you_page_id    = get_option( 'user_registration_thank_you_page_id' );
-		$thank_you_page       = get_permalink( $thank_you_page_id );
-		$stripe_settings      = \WPEverest\URMembership\Admin\Services\Stripe\StripeService::get_stripe_settings();
+		$redirect_page_url = get_permalink( $registration_page_id );
+
+		$thank_you_page = urm_get_thank_you_page();
+		$stripe_settings = \WPEverest\URMembership\Admin\Services\Stripe\StripeService::get_stripe_settings();
+
 
 		wp_localize_script(
 			'user-registration-membership-frontend-script',
@@ -218,10 +218,18 @@ class Frontend {
 		);
 	}
 
-	public function ur_validate_membership_block( $post_id , $post , $update ) {
-//		echo '<pre>';
-//		print_r( $update );
-//		echo '</pre>';
-//		die();
+	public function set_thank_you_transient() {
+		if ( ! isset( $_GET['urm_uuid'] ) || ! isset( $_GET['thank_you'] ) ) {
+			return;
+		}
+		delete_expired_transients();
+		$uuid             = $_GET['urm_uuid'] ? sanitize_text_field( $_GET['urm_uuid'] ) : ur_get_random_number();
+		$transient_id     = "uuid_{$uuid}_thank_you";
+		$transient_exists = get_transient( $transient_id );
+
+		if ( ! $transient_exists ) {
+			$thank_you_page = get_permalink( absint( $_GET['thank_you'] ) );
+			set_transient( $transient_id, $thank_you_page, 15 * MINUTE_IN_SECONDS );
+		}
 	}
 }

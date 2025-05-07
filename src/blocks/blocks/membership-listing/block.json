@@ -21,6 +21,9 @@
     "reusable": false
   },
   "attributes": {
+    "id": {
+      "type": "string"
+    },
     "redirection_page_id": {
       "type": "string",
       "default": ""

@@ -35,32 +35,20 @@ class UR_Block_Membership_Listing extends UR_Block_Abstract {
 
 
 		$button_text = isset( $attr['button_text'] ) ? sanitize_text_field( $attr['button_text'] ) : '';
-
 		$group_id            = isset( $attr['group_id'] ) ? absint( $attr['group_id'] ) : 0;
+		$uuid                = isset( $attr['id'] ) ? sanitize_text_field( $attr['id'] ) : ur_generate_random_key();
 		$redirection_page_id = isset( $attr['redirection_page_id'] ) ? absint( $attr['redirection_page_id'] ) : 0;
+		$thank_you_page_id   = isset( $attr['thank_you_page_id'] ) ? absint( $attr['thank_you_page_id'] ) : 0;
 		$type                = isset( $attr['type'] ) ? sanitize_text_field( $attr['type'] ) : 'list';
-
-//		if ( $redirection_page_id ) {
-//			$membership_service = new MembershipService();
-//			$response           = $membership_service->verify_page_content( 'user_registration_member_registration_page_id', $redirection_page_id );
-//			if ( ! $response['status'] ) {
-//				return $response['message'];
-//			}
-//		}
-//		if ( $thank_you_page_id ) {
-//			$membership_service = new MembershipService();
-//			$response           = $membership_service->verify_page_content( 'user_registration_member_thank_you_page_id', $thank_you_page_id );
-//			if ( ! $response['status'] ) {
-//				return $response['message'];
-//			}
-//		}
 
 		return ShortCodes::membership_listing(
 			array(
 				'id'                   => $group_id,
+				'uuid'                 => $uuid,
 				'button_text'          => $button_text,
 				'list_type'            => $type,
 				'registration_page_id' => $redirection_page_id,
+				'thank_you_page_id'    => $thank_you_page_id,
 			),
 			'user_registration_groups'
 		);

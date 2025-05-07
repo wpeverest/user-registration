@@ -315,8 +315,7 @@ if ( ! function_exists( 'ur_membership_redirect_to_thank_you_page' ) ) {
 	 */
 	function ur_membership_redirect_to_thank_you_page( $member_id, $member_order ) {
 
-		$thank_you_page_id = get_option( 'user_registration_thank_you_page_id' );
-		$thank_you_page    = get_permalink( $thank_you_page_id );
+		$thank_you_page = urm_get_thank_you_page();
 		$user              = get_userdata( $member_id );
 		$params            = array(
 			'username'       => $user->user_login,
@@ -453,5 +452,24 @@ if ( ! function_exists( 'urm_is_divi_active' ) ) {
 		$theme_name           = $active_theme_details->Name;
 
 		return 'Divi' === $theme_name;
+	}
+}
+
+if ( ! function_exists( 'urm_get_thank_you_page' ) ) {
+	/**
+	 * Get Thank Yu page url
+	 *
+	 * @return array
+	 */
+	function urm_get_thank_you_page() {
+		$thank_you_page_id = get_option( 'user_registration_thank_you_page_id' );
+		$thank_you_page    = get_permalink( $thank_you_page_id );
+		if ( ! empty( $_GET['urm_uuid'] ) ) {
+			$uuid           = sanitize_text_field( $_GET['urm_uuid'] );
+			$transient_id   = "uuid_{$uuid}_thank_you";
+			$thank_you_page = get_transient( $transient_id );
+
+		}
+		return $thank_you_page;
 	}
 }

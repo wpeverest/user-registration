@@ -23,7 +23,7 @@ const mapOptions = (list) =>
  */
 const Edit = (props) => {
 	const {
-		attributes: {redirection_page_id, group_id, thank_you_page_id, type, button_text},
+		attributes: {id, redirection_page_id, group_id, thank_you_page_id, type, button_text},
 		setAttributes,
 	} = props;
 
@@ -134,6 +134,14 @@ const Edit = (props) => {
 	const onButtonTextChange = (val) => {
 		setAttributes({button_text: val});
 	};
+	// generate a strong uuid
+	const generateUUID = () => {
+		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+			const r = (Math.random() * 16) | 0,
+				v = c === 'x' ? r : (r & 0x3) | 0x8;
+			return v.toString(16);
+		});
+	};
 	// Handle block removal (cleanup)
 	useEffect(() => {
 		return () => {
@@ -159,6 +167,13 @@ const Edit = (props) => {
 		verifyPagesOnLoad();
 	}, []);
 
+
+	useEffect(() => {
+		if (!id) {
+			const uid = generateUUID();
+			setAttributes({id: uid});
+		}
+	}, []);
 	// Render the component
 	return (
 		<>
