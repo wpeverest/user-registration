@@ -32,14 +32,14 @@ class UR_Login_Logout_Nav_Menu_Item extends UR_Nav_Menu_Item {
 	protected function get_fields()
 	{
 		return array(
-			'login_page' => array(
-				'label' => 'Login Page',
-				'type' => 'page',
-			),
 			'login_label' => array(
 				'label' => 'Login Label',
 				'type' => 'text',
 				'default' => 'Login',
+			),
+			'login_page' => array(
+				'label' => 'Login Page',
+				'type' => 'page',
 			),
 			'logout_label' => array(
 				'label' => 'Logout Label',
