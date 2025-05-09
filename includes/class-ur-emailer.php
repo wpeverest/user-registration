@@ -147,6 +147,7 @@ class UR_Emailer {
 	 */
 	public static function ur_after_register_mail( $valid_form_data, $form_id, $user_id ) {
 		$valid_form_data = ur_array_clone( $valid_form_data );
+
 		$login_option    = ur_get_user_login_option( $user_id );
 
 		if ( ( 'email_confirmation' !== $login_option || 'admin_approval_after_email_confirmation' !== $login_option ) && ur_option_checked( 'user_registration_email_setting_disable_email' ) ) {
@@ -354,6 +355,7 @@ class UR_Emailer {
 		$email_status = get_user_meta( $user_id, 'ur_confirm_email', true );
 		$email_status = ! metadata_exists( 'user', $user_id, 'ur_confirm_email' ) ? true : $email_status;
 		$email_token  = get_user_meta( $user_id, 'ur_confirm_email_token', true );
+
 		// Get User Status when admin approval after email confirmation login option enabled in form.
 		if ( 'admin_approval_after_email_confirmation' === $login_option ) {
 			$user_status = get_user_meta( $user_id, 'ur_admin_approval_after_email_confirmation', true );
@@ -371,6 +373,7 @@ class UR_Emailer {
 		if ( empty( $current_language ) ) {
 			$current_language = ur_get_current_language();
 		}
+		$is_membership_form = check_membership_field_in_form($form_id);
 
 		if ( '0' === $email_status ) {
 			$subject  = get_option( 'user_registration_email_confirmation_subject', __( 'Please confirm your registration on {{blog_info}}', 'user-registration' ) );
@@ -417,24 +420,20 @@ class UR_Emailer {
 			if ( ur_option_checked( 'user_registration_enable_registration_denied_email', true ) ) {
 				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), $attachment, $template_id );
 			}
-		} elseif ( 'default' === $login_option || 'auto_login' === $login_option || ur_string_to_bool( $email_status ) ) {
+		} elseif ( ('default' === $login_option || 'auto_login' === $login_option || ur_string_to_bool( $email_status )) && !$is_membership_form  ) {
 			$subject  = get_option( 'user_registration_successfully_registered_email_subject', __( 'Congratulations! Registration Complete on {{blog_info}}', 'user-registration' ) );
 			$settings = new UR_Settings_Successfully_Registered_Email();
 			$message  = $settings->ur_get_successfully_registered_email();
+
 			$message  = get_option( 'user_registration_successfully_registered_email', $message );
 
 			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
 			$message                   = ur_get_translated_string( 'admin_texts_user_registration_successfully_registered_email', $message, $current_language, 'user_registration_successfully_registered_email' );
 			$subject                   = ur_get_translated_string( 'admin_texts_user_registration_successfully_registered_email_subject', $subject, $current_language, 'user_registration_successfully_registered_email_subject' );
-
 			$message = self::parse_smart_tags( $message, $values, $name_value );
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
-			if ( ur_option_checked( 'user_registration_enable_successfully_registered_email', true ) ) {
-				$is_membership_form = check_membership_field_in_form($form_id);
-				if( $is_membership_form ) {
-					return;
-				}
+			if ( ur_option_checked( 'user_registration_enable_successfully_registered_email', true )) {
 				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), $attachment, $template_id );
 			}
 		}
@@ -475,6 +474,7 @@ class UR_Emailer {
 		$admin_email = array_map( 'trim', $admin_email );
 
 		$subject  = get_option( 'user_registration_admin_email_subject', __( 'A New User Registered', 'user-registration' ) );
+
 		$settings = new UR_Settings_Admin_Email();
 
 		$form_id = ur_get_form_id_by_userid( $user_id );
@@ -668,18 +668,20 @@ class UR_Emailer {
 			}
 		} else {
 
-			$subject                   = get_option( 'user_registration_registration_approved_email_subject', __( 'Congratulations! Registration approved on {{blog_info}}', 'user-registration' ) );
-			$settings                  = new UR_Settings_Registration_Approved_Email();
-			$message                   = $settings->ur_get_registration_approved_email();
-			$message                   = get_option( 'user_registration_registration_approved_email', $message );
-			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
-			$message                   = ur_get_translated_string( 'admin_texts_user_registration_registration_approved_email', $message, $current_language, 'user_registration_registration_approved_email' );
-			$subject                   = ur_get_translated_string( 'admin_texts_user_registration_registration_approved_email_subject', $subject, $current_language, 'user_registration_registration_approved_email_subject' );
-			$message                   = self::parse_smart_tags( $message, $values, $name_value );
-			$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
+			$subject  = get_option( 'user_registration_successfully_registered_email_subject', __( 'Congratulations! Registration Complete on {{blog_info}}', 'user-registration' ) );
+			$settings = new UR_Settings_Successfully_Registered_Email();
+			$message  = $settings->ur_get_successfully_registered_email();
 
-			if ( ur_option_checked( 'user_registration_enable_registration_approved_email', true ) ) {
-				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), '', $template_id );
+			$message  = get_option( 'user_registration_successfully_registered_email', $message );
+
+			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
+			$message                   = ur_get_translated_string( 'admin_texts_user_registration_successfully_registered_email', $message, $current_language, 'user_registration_successfully_registered_email' );
+			$subject                   = ur_get_translated_string( 'admin_texts_user_registration_successfully_registered_email_subject', $subject, $current_language, 'user_registration_successfully_registered_email_subject' );
+			$message = self::parse_smart_tags( $message, $values, $name_value );
+			$subject = self::parse_smart_tags( $subject, $values, $name_value );
+
+			if ( ur_option_checked( 'user_registration_enable_successfully_registered_email', true )) {
+				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), array(), $template_id );
 			}
 		}
 	}
@@ -988,7 +990,6 @@ class UR_Emailer {
 		}
 	}
 
-
 	/**
 	 * Process smart tags for status change emails.
 	 *
@@ -1046,7 +1047,7 @@ class UR_Emailer {
 	}
 
 	/**
-	 * Process and sends the user email.
+	 * user_registration_process_and_send_email
 	 *
 	 * @param  string $email Email of the user.
 	 * @param  string $subject Subject of the email.
@@ -1054,7 +1055,8 @@ class UR_Emailer {
 	 * @param  mixed  $header The header of the email.
 	 * @param  array  $attachment Email Attachment.
 	 * @param  int    $template_id Email Template Identifier.
-	 * @return void
+	 *
+	 * @return bool|mixed
 	 */
 	public static function user_registration_process_and_send_email( $email, $subject, $message, $header, $attachment, $template_id ) {
 

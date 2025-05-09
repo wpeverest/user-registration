@@ -49,8 +49,8 @@ if ( ! class_exists( 'UR_Settings_Approval_Link_Email', false ) ) :
 		 */
 		public function __construct() {
 			$this->id          = 'approval_link_email';
-			$this->title       = __( 'Admin Approval Request Email with Approval Link', 'user-registration' );
-			$this->description = __( 'Email sent to the admin with user approval link url when a new user registers', 'user-registration' );
+			$this->title       = __( 'Admin Approval Request', 'user-registration' );
+			$this->description = __( 'Requests admin approval for a user registration approval, with a direct link to approve or deny.', 'user-registration' );
 			$this->receiver    = __( 'Admin', 'user-registration' );
 		}
 
@@ -74,7 +74,7 @@ if ( ! class_exists( 'UR_Settings_Approval_Link_Email', false ) ) :
 							'title'        => __( 'Admin Approval Request Email with Approval Link', 'user-registration' ),
 							'type'         => 'card',
 							'desc'         => '',
-							'back_link'    => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
+							'back_link'    => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email&section=to-admin' ) ),
 							'preview_link' => ur_email_preview_link(
 								__( 'Preview', 'user-registration' ),
 								$this->id
@@ -103,7 +103,7 @@ if ( ! class_exists( 'UR_Settings_Approval_Link_Email', false ) ) :
 									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
 									'id'       => 'user_registration_approval_link_email_subject',
 									'type'     => 'text',
-									'default'  => __( 'Approval Link For New User Registration', 'user-registration' ),
+									'default'  => __( 'Action Required: Review & Approve New User Registration', 'user-registration' ),
 									'css'      => 'min-width: 350px;',
 									'desc_tip' => true,
 								),
@@ -142,10 +142,11 @@ if ( ! class_exists( 'UR_Settings_Approval_Link_Email', false ) ) :
 
 					A new user {{username}} - {{email}} has successfully registered to your site <a href="{{home_url}}">{{blog_info}}</a>. <br/>
 
-					Please review the user role and details at \'<b>Users</b>\' menu in your WP dashboard. <br/><br />
+					Please review their details and assigned role in the \'<b>Users</b>\' menu of your WordPress dashboard.  <br/>
 
-					Click on this link to approve this user directly :  {{approval_link}} <br />
-					Click on this link to deny this user directly :  {{denial_link}} <br /><br />
+					[Approve User: {{approval_link}}] - Link <br>
+					[Deny User: {{denial_link}}] - Link <br>
+
 					Thank You!',
 					'user-registration'
 				)

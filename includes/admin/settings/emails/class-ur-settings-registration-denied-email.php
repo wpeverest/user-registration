@@ -38,12 +38,20 @@ if ( ! class_exists( 'UR_Settings_Registration_Denied_Email', false ) ) :
 		public $description;
 
 		/**
+		 * UR_Settings_Approval_Link_Email Receiver.
+		 *
+		 * @var string
+		 */
+		public $receiver;
+
+		/**
 		 * Constructor.
 		 */
 		public function __construct() {
 			$this->id          = 'registration_denied_email';
-			$this->title       = __( 'Registration Denied Email', 'user-registration' );
-			$this->description = __( 'Email sent to the user notifying the registration is denied by the admin', 'user-registration' );
+			$this->title       = __( 'Registration Denied', 'user-registration' );
+			$this->description = __( 'Notifies the user their registration was denied.', 'user-registration' );
+			$this->receiver    = __( 'User', 'user-registration' );
 		}
 
 		/**
@@ -86,7 +94,7 @@ if ( ! class_exists( 'UR_Settings_Registration_Denied_Email', false ) ) :
 									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
 									'id'       => 'user_registration_registration_denied_email_subject',
 									'type'     => 'text',
-									'default'  => __( 'Sorry! Registration denied on {{blog_info}}', 'user-registration' ),
+									'default'  => __( 'Registration Denied – {{blog_info}}', 'user-registration' ),
 									'css'      => 'min-width: 350px;',
 									'desc_tip' => true,
 								),
@@ -130,12 +138,11 @@ if ( ! class_exists( 'UR_Settings_Registration_Denied_Email', false ) ) :
 				sprintf(
 					__(
 						'Hi {{username}}, <br/>
+We regret to inform you that your registration on <a href="{{home_url}}">{{blog_info}}</a> has been denied. <br />
 
-You have registered on <a href="{{home_url}}">{{blog_info}}</a>. <br/>
+We apologize for any inconvenience caused. <br/>
 
-Unfortunately your registration is denied. Sorry for the inconvenience. <br/>
-
-Thank You!',
+Thank you for your understanding.',
 						'user-registration'
 					)
 				)

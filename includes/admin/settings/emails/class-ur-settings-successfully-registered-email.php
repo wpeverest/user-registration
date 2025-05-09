@@ -37,14 +37,21 @@ if ( ! class_exists( 'UR_Settings_Successfully_Registered_Email', false ) ) :
 		 */
 		public $description;
 
+		/**
+		 * UR_Settings_Approval_Link_Email Receiver.
+		 *
+		 * @var string
+		 */
+		public $receiver;
 
 		/**
 		 * Constructor.
 		 */
 		public function __construct() {
 			$this->id          = 'successfully_registered_email';
-			$this->title       = __( 'Successfully Registered Email', 'user-registration' );
-			$this->description = __( 'Email sent to the user after successful registration', 'user-registration' );
+			$this->title       = __( 'Registration Success', 'user-registration' );
+			$this->description = __( 'Confirms successful registration to the user.', 'user-registration' );
+			$this->receiver    = __( 'User', 'user-registration' );
 		}
 
 		/**
@@ -65,10 +72,10 @@ if ( ! class_exists( 'UR_Settings_Successfully_Registered_Email', false ) ) :
 					'title'    => __( 'Emails', 'user-registration' ),
 					'sections' => array(
 						'successfully_registered_email' => array(
-							'title'        => __( 'Successfully Registered Email', 'user-registration' ),
+							'title'        => __( 'Registration Success', 'user-registration' ),
 							'type'         => 'card',
 							'desc'         => '',
-							'back_link'    => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
+							'back_link'    => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email&section=to-user' ) ),
 							'preview_link' => ur_email_preview_link(
 								__( 'Preview', 'user-registration' ),
 								$this->id
@@ -87,7 +94,7 @@ if ( ! class_exists( 'UR_Settings_Successfully_Registered_Email', false ) ) :
 									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
 									'id'       => 'user_registration_successfully_registered_email_subject',
 									'type'     => 'text',
-									'default'  => __( 'Congratulations! Registration Complete on {{blog_info}}', 'user-registration' ),
+									'default'  => __( 'Registration Successful – Welcome to {{blog_info}}!', 'user-registration' ),
 									'css'      => 'min-width: 350px;',
 									'desc_tip' => true,
 								),
@@ -131,12 +138,13 @@ if ( ! class_exists( 'UR_Settings_Successfully_Registered_Email', false ) ) :
 				sprintf(
 					__(
 						'Hi {{username}}, <br/>
+						Congratulations! You have successfully completed your registration on <a href="{{home_url}}">{{blog_info}}</a>. <br/>
 
-You have successfully completed user registration on <a href="{{home_url}}">{{blog_info}}</a>. <br/>
+						{{membership_plan_details}}
 
-Please visit \'<b>My Account</b>\' page to edit your account details and create your user profile on <a href="{{home_url}}">{{blog_info}}</a>. <br/>
+						Please visit \'<b>My Account</b>\' page to edit your account details and create your user profile. <br/>
 
-Thank You!',
+						Thank You!',
 						'user-registration'
 					)
 				)

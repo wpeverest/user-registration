@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - master
+      - UR-2145-email-segregration-and-design-improvement
     workflow_dispatch:
 jobs:
   sync:

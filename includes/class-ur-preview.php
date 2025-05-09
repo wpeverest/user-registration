@@ -333,7 +333,6 @@ class UR_Preview {
 			if ( ! method_exists( $class_instance, $default_content ) ) {
 				$default_content = 'user_registration_get_' . $option_name;
 			}
-
 			if ( 'passwordless_login_email' === $option_name ) {
 				$email_content = get_option( 'user_registration_' . $option_name . '_content', $class_instance->$default_content() );
 			} elseif ( 'email_verified_admin_email' === $option_name ) {

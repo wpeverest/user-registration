@@ -38,12 +38,20 @@ if ( ! class_exists( 'UR_Settings_Awaiting_Admin_Approval_Email', false ) ) :
 		public $description;
 
 		/**
+		 * UR_Settings_Approval_Link_Email Receiver.
+		 *
+		 * @var string
+		 */
+		public $receiver;
+
+		/**
 		 * Constructor.
 		 */
 		public function __construct() {
 			$this->id          = 'awaiting_admin_approval_email';
 			$this->title       = __( 'Awaiting Admin Approval', 'user-registration' );
-			$this->description = __( 'Email sent to the user notifying the registration is awaiting admin approval', 'user-registration' );
+			$this->description = __( 'Lets the user know their registration is pending and they must wait for admin approval.', 'user-registration' );
+			$this->receiver    = __( 'User', 'user-registration' );
 		}
 
 		/**
@@ -66,7 +74,7 @@ if ( ! class_exists( 'UR_Settings_Awaiting_Admin_Approval_Email', false ) ) :
 							'title'        => __( 'Awaiting Admin Approval Email', 'user-registration' ),
 							'type'         => 'card',
 							'desc'         => '',
-							'back_link'    => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
+							'back_link'    => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email&section=to-user' ) ),
 							'preview_link' => ur_email_preview_link(
 								__( 'Preview', 'user-registration' ),
 								$this->id
@@ -85,7 +93,7 @@ if ( ! class_exists( 'UR_Settings_Awaiting_Admin_Approval_Email', false ) ) :
 									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
 									'id'       => 'user_registration_awaiting_admin_approval_email_subject',
 									'type'     => 'text',
-									'default'  => __( 'Thank you for registration on {{blog_info}}', 'user-registration' ),
+									'default'  => __( 'Awaiting Admin Approval – Registration Pending on {{blog_info}}', 'user-registration' ),
 									'css'      => 'min-width: 350px;',
 									'desc_tip' => true,
 								),
@@ -130,11 +138,11 @@ if ( ! class_exists( 'UR_Settings_Awaiting_Admin_Approval_Email', false ) ) :
 					__(
 						'Hi {{username}}, <br/>
 
-You have registered on <a href="{{home_url}}">{{blog_info}}</a>. <br/>
+						Thank you for registering on <a href="{{home_url}}">{{blog_info}}</a>!. <br/>
 
-Please wait until the site admin approves your registration. You will be notified after it is approved. <br/>
+						Your registration is currently awaiting approval from the site admin. You will receive a notification once your account has been approved. <br/>
 
-Thank You!',
+						Thank You!',
 						'user-registration'
 					)
 				)

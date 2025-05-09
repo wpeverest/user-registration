@@ -145,7 +145,7 @@ class PaypalService {
 
 		$is_order_updated = $this->members_orders_repository->update( $member_order['ID'], array( 'status' => 'completed' ) );
 
-		if ( $is_order_updated && ('paid' === $member_order['order_type'] || 'subscription' === $member_order['order_type'] ) ) {
+		if ( $is_order_updated && ( 'paid' === $member_order['order_type'] || 'subscription' === $member_order['order_type'] ) ) {
 			$member_subscription = $this->members_subscription_repository->get_member_subscription( $member_id );
 			$this->members_subscription_repository->update( $member_subscription['ID'], array( 'status' => 'active' ) );
 			$logger->notice( 'Return to merchant log' . $member_subscription['ID'], array( 'source' => 'ur-membership-paypal' ) );
@@ -162,6 +162,7 @@ class PaypalService {
 			'order'            => $order_detail,
 			'membership_metas' => $membership_metas,
 			'member_id'        => $member_id,
+			'membership'       => $membership_id,
 		);
 
 		$mail_send = $email_service->send_email( $email_data, 'payment_successful' );
@@ -172,7 +173,7 @@ class PaypalService {
 		$login_option = ur_get_user_login_option( $member_id );
 		if ( "auto_login" === $login_option ) {
 			$member_service = new MembersService();
-			$member_service->login_member( $member_id , true);
+			$member_service->login_member( $member_id, true );
 		}
 		ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
 	}
@@ -228,7 +229,8 @@ class PaypalService {
 			'subscription'     => $subscription,
 			'order'            => $latest_order,
 			'membership_metas' => $membership_metas,
-			'member_id'        => $member_id,
+			'member_id'        => absint( $member_id ),
+			'membership'       => $membership_id
 		);
 
 		if ( ! $this->validate_ipn( $payment_mode ) ) {
@@ -250,9 +252,6 @@ class PaypalService {
 					'status' => 'canceled',
 				)
 			);
-
-			$email_service->send_email( $email_data, 'membership_cancellation_email_user' );
-			$email_service->send_email( $email_data, 'membership_cancellation_email_admin' );
 
 			return;
 		}
@@ -539,6 +538,7 @@ class PaypalService {
 				$is_incomplete = true;
 			}
 		}
+
 		return $is_incomplete;
 	}
 }

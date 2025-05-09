@@ -38,12 +38,20 @@ if ( ! class_exists( 'UR_Settings_Registration_Pending_Email', false ) ) :
 		public $description;
 
 		/**
+		 * UR_Settings_Approval_Link_Email Receiver.
+		 *
+		 * @var string
+		 */
+		public $receiver;
+
+		/**
 		 * Constructor.
 		 */
 		public function __construct() {
 			$this->id          = 'registration_pending_email';
-			$this->title       = __( 'Registration Pending Email', 'user-registration' );
-			$this->description = __( 'Email sent to the user notifying the registration is pending', 'user-registration' );
+			$this->title       = __( 'Account Status Changed: Pending Approval', 'user-registration' );
+			$this->description = __( 'Notifies the user that their existing registration status has been reverted to pending approval by an administrator.', 'user-registration' );
+			$this->receiver    = __( 'User', 'user-registration' );
 		}
 
 		/**
@@ -67,7 +75,7 @@ if ( ! class_exists( 'UR_Settings_Registration_Pending_Email', false ) ) :
 							'title'        => __( 'Registration Pending Email', 'user-registration' ),
 							'type'         => 'card',
 							'desc'         => '',
-							'back_link'    => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
+							'back_link'    => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email&section=to-user' ) ),
 							'preview_link' => ur_email_preview_link(
 								__( 'Preview', 'user-registration' ),
 								$this->id
@@ -87,7 +95,7 @@ if ( ! class_exists( 'UR_Settings_Registration_Pending_Email', false ) ) :
 									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
 									'id'       => 'user_registration_registration_pending_email_subject',
 									'type'     => 'text',
-									'default'  => __( 'Sorry! Registration changed to pending on {{blog_info}}', 'user-registration' ),
+									'default'  => __( 'Account Status Changed: Pending Approval on {{blog_info}}', 'user-registration' ),
 									'css'      => 'min-width: 350px;',
 									'desc_tip' => true,
 								),
@@ -133,13 +141,11 @@ if ( ! class_exists( 'UR_Settings_Registration_Pending_Email', false ) ) :
 					__(
 						'Hi {{username}}, <br/>
 
-Your registration on <a href="{{home_url}}">{{blog_info}}</a> has been changed to pending. <br/>
+Your registration on <a href="{{home_url}}">{{blog_info}}</a> is now marked as pending. <br/>
 
-Sorry for the inconvenience. <br/>
+We apologize for the inconvenience. You will be notified once your registration has been approved. <br/>
 
-You will be notified after it is approved. <br/>
-
-Thank You!',
+Thank you for your patience!',
 						'user-registration'
 					)
 				)
