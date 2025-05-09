@@ -344,7 +344,7 @@ function App() {
 			: "Visit Dashboard",
 		rightFooterButtonLink = isMembershipRegistration
 			? page_url
-			: defaultFormURL;
+			: adminURL + "admin.php?page=user-registration-dashboard";
 
 	return (
 		<ChakraProvider>

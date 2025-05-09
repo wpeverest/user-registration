@@ -299,13 +299,18 @@ module.exports = function (grunt) {
 					archive: "release/<%= pkg.name %>-<%= pkg.version %>.zip"
 				},
 				files: filesToCompress
-			},
+			}
 			// withoutVersion: {
 			// 	options: {
 			// 		archive: "release/<%= pkg.name %>.zip"
 			// 	},
 			// 	files: filesToCompress
 			// }
+		},
+		shell: {
+			composerProd: {
+				command: "composer install --no-dev --optimize-autoloader"
+			}
 		}
 	});
 
@@ -321,6 +326,7 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks("grunt-contrib-concat");
 	grunt.loadNpmTasks("grunt-contrib-watch");
 	grunt.loadNpmTasks("grunt-contrib-compress");
+	grunt.loadNpmTasks("grunt-shell");
 
 	// Register tasks.
 	grunt.registerTask("default", ["uglify"]);
@@ -343,6 +349,7 @@ module.exports = function (grunt) {
 
 	// Register tasks
 	grunt.registerTask("release", [
+		"shell:composerProd",
 		"sass",
 		"rtlcss",
 		"cssmin",

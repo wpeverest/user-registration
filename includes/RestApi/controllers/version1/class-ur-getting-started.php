@@ -262,24 +262,6 @@ class UR_Getting_Started {
 			'status_label'  => esc_html__( 'Ready to use', 'user-registration' ),
 		);
 
-		$pages['myaccount'] = array(
-			'name'    => _x( 'my-account', 'Page slug', 'user-registration' ),
-			'title'   => _x( 'My Account', 'Page title', 'user-registration' ),
-			'content' => '[' . apply_filters( 'user_registration_my_account_shortcode_tag', 'user_registration_my_account' ) . ']',
-		);
-
-		$pages['login'] = array(
-			'name'    => _x( 'login', 'Page slug', 'user-registration' ),
-			'title'   => _x( 'Login', 'Page title', 'user-registration' ),
-			'content' => '[' . apply_filters( 'user_registration_login_shortcode_tag', 'user_registration_login' ) . ']',
-		);
-
-		$pages['lost_password'] = array(
-			'name'    => _x( 'lost-password', 'Page slug', 'user-registration' ),
-			'title'   => _x( 'Lost Password', 'Page title', 'user-registration' ),
-			'content' => '[user_registration_lost_password]',
-		);
-
 		if ( 'user_registration_normal_registration' === $request['registrationType'] ) {
 			if ( $default_form_page_id ) {
 				$pages['registration'] = array(
@@ -308,7 +290,27 @@ class UR_Getting_Started {
 					'content' => '[' . apply_filters( 'user_registration_form_shortcode_tag', 'user_registration_form' ) . ' id="' . esc_attr( $default_form_page_id ) . '"]',
 				);
 			}
+		}
 
+		$pages['login'] = array(
+			'name'    => _x( 'login', 'Page slug', 'user-registration' ),
+			'title'   => _x( 'Login', 'Page title', 'user-registration' ),
+			'content' => '[' . apply_filters( 'user_registration_login_shortcode_tag', 'user_registration_login' ) . ']',
+		);
+
+		$pages['myaccount'] = array(
+			'name'    => _x( 'my-account', 'Page slug', 'user-registration' ),
+			'title'   => _x( 'My Account', 'Page title', 'user-registration' ),
+			'content' => '[' . apply_filters( 'user_registration_my_account_shortcode_tag', 'user_registration_my_account' ) . ']',
+		);
+
+		$pages['lost_password'] = array(
+			'name'    => _x( 'lost-password', 'Page slug', 'user-registration' ),
+			'title'   => _x( 'Lost Password', 'Page title', 'user-registration' ),
+			'content' => '[user_registration_lost_password]',
+		);
+
+		if ( 'user_registration_membership_registration' === $request['registrationType'] ) {
 			$pages['membership_pricing']  = array(
 				'name'    => _x( 'membership-pricing', 'Page slug', 'user-registration' ),
 				'title'   => _x( 'Membership Pricing', 'Page title', 'user-registration' ),
