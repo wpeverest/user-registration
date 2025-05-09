@@ -30,7 +30,7 @@ class URCR_Shortcodes {
 		 *
 		 * @since 4.2.1
 		 */
-	
+
 		if ( empty( $post ) && ( function_exists( 'urm_is_divi_active' ) && urm_is_divi_active() ) ) {
 			$post = isset( $atts['post_id'] ) ? get_post( absint( $atts['post_id'] ) ) : null;
 		}
@@ -65,10 +65,15 @@ class URCR_Shortcodes {
 				$memberships_roles = $atts['access_membership_role'];
 			}
 
-			$roles = isset( $atts['access_all_roles'] ) ? trim( $atts['access_all_roles'] ) : '';
+
 			$access_control = isset( $atts['access_control'] ) ? trim( $atts['access_control'] ) : '';
 
 			$roles                = isset( $atts['access_role'] ) ? trim( $atts['access_role'] ) : '';
+
+			if ( isset( $atts['access_all_roles'] ) && ! empty( $atts['access_all_roles'] ) ) {
+				$roles = trim( $atts['access_all_roles'] );
+			}
+
 			$is_membership_active = ur_check_module_activation( 'membership' );
 
 			if ( $is_membership_active ) {
@@ -149,10 +154,11 @@ class URCR_Shortcodes {
 			$message = empty( $message ) ? __( 'This content is restricted!', 'user-registration' ) : $message;
 			$message = apply_filters( 'user_registration_process_smart_tags', $message );
 			$message = do_shortcode( $message );
-			if ( isset( $atts['enable_content_restriction']) && $atts['enable_content_restriction'] === "true" ) {
+			if ( isset( $atts['enable_content_restriction']) && $atts['enable_content_restriction'] == true ) {
 				switch ($roles) {
 					case 'all_logged_in_users':
 						if (is_user_logged_in()) {
+							error_log( print_r( 'hhelo', true ) );
 							return do_shortcode($content);
 						}
 						break;
