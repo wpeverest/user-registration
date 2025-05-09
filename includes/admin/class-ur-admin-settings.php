@@ -568,6 +568,8 @@ class UR_Admin_Settings {
 											style="' . esc_attr( $value['css'] ) . '"
 											value="' . esc_attr( $option_value ) . '"
 											class="' . esc_attr( $value['class'] ) . '"
+											min="' . esc_attr( !empty($value['min'] ) ? $value['min'] : '' ) . '"
+											max="' . esc_attr( !empty($value['max'] ) ? $value['max'] : '' ) . '"
 											placeholder="' . esc_attr( $value['placeholder'] ) . '"
 											' . esc_attr( implode( ' ', $custom_attributes ) ) . ' ' . wp_kses_post( $description ) . '/>';
 									$settings .= '</div>';
@@ -623,7 +625,7 @@ class UR_Admin_Settings {
 											cols="' . esc_attr( $value['cols'] ) . '"
 											placeholder="' . esc_attr( $value['placeholder'] ) . '"
 											' . esc_html( implode( ' ', $custom_attributes ) ) . '>'
-											. esc_textarea( $option_value ) . '</textarea>';
+									             . esc_textarea( $option_value ) . '</textarea>';
 									$settings .= '</div>';
 									$settings .= '</div>';
 									break;
