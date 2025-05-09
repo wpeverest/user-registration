@@ -30,6 +30,7 @@ class URCR_Shortcodes {
 		 *
 		 * @since 4.2.1
 		 */
+		error_log( print_r( $atts, true ) );
 		if ( empty( $post ) && ( function_exists( 'urm_is_divi_active' ) && urm_is_divi_active() ) ) {
 			$post = isset( $atts['post_id'] ) ? get_post( absint( $atts['post_id'] ) ) : null;
 		}
@@ -135,27 +136,10 @@ class URCR_Shortcodes {
 
 			$memberships_roles = isset($memberships_roles) ? explode( ',', $memberships_roles ) : array();
 			$memberships_roles = array_map( fn($role) => trim(str_replace('″', '', $role)), $memberships_roles );
-			if (isset($atts['message']) && !empty($atts['message'])) {
-				// Start with the initial message part
-				$message = $atts['message'];
-
-				// Collect numeric-indexed parts
-				$numeric_parts = [];
-				foreach ($atts as $key => $msg_value) {
-					if (is_int($key)) {
-						$numeric_parts[$key] = $msg_value;
-					}
-				}
-
-				ksort($numeric_parts);
-				foreach ($numeric_parts as $part) {
-					$message .= ' ' . $part;
-				}
-
-				$message = trim($message);
-
-			}
 			$message = '';
+			if (isset($atts['message']) && !empty($atts['message'])) {
+				$message = wp_kses_post( html_entity_decode( $atts['message'] ) );
+			}
 			if ( $override_global_settings === 'on' ) {
 				$message = ! empty(get_post_meta( $post->ID, 'urcr_meta_content', $single = true )) ? get_post_meta( $post->ID, 'urcr_meta_content', $single = true ) : '';
 			} elseif ( isset( $atts['enable_content_restriction']) && $atts['enable_content_restriction'] === "true" ) {
