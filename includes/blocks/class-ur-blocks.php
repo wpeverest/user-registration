@@ -63,6 +63,7 @@ class UR_Blocks {
 				'restURL'              => rest_url(),
 				'isPro'                => is_plugin_active( 'user-registration-pro/user-registration.php' ),
 				'iscRestrictionActive' => ur_check_module_activation( 'content-restriction' ),
+				'pages' 			   => array_map( function( $page ) { return [ 'label' => $page->post_title, 'value' => $page->ID ]; }, get_pages() ),
 			)
 		);
 		wp_register_script(
@@ -129,6 +130,7 @@ class UR_Blocks {
 			UR_Block_Myaccount::class, //phpcs:ignore;
 			UR_Block_Edit_Profile::class, //phpcs:ignore;
 			UR_Block_Edit_Password::class, //phpcs:ignore;
+			UR_Block_Login_Logout_Menu::class, //phpcs:ignore;
 		);
 
 		if ( ur_check_module_activation( 'content-restriction' ) ) {

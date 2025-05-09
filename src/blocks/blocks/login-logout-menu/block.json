@@ -1,0 +1,28 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "user-registration/login-logout-menu",
+  "title": "URM Login | Logout",
+  "category": "user-registration",
+  "parent": ["core/navigation"] ,
+  "description": "A block that provides links for login and logout.",
+  "keywords": ["login", "logout", "authentication", "user"],
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "loginPage": {
+      "type": "string",
+      "default": ""
+    },
+    "loginLabel": {
+      "type": "string",
+      "default": "Login"
+    },
+    "logoutLabel": {
+      "type": "string",
+      "default": "Logout"
+    }
+  },
+  "textdomain": "user-registration"
+}
