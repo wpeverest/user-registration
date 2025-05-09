@@ -66,6 +66,12 @@ if ( ! class_exists( 'URCR_Settings_File ' ) ) :
 			$access_rules_list_link = admin_url( 'admin.php?page=user-registration-content-restriction' );
 			$link_html              = sprintf( __( 'Go to <a href="%s">Content Rules page</a> for advanced restrictions', 'user-registration' ), $access_rules_list_link );
 
+			$access_options = array( 'All Logged In Users', 'Choose Specific Roles', 'Guest Users' );
+
+			if ( ur_check_module_activation( 'membership' ) ) {
+				$access_options[] = 'Memberships';
+			}
+
 			return apply_filters(
 				'user_registration_content_restriction_settings',
 				array(
@@ -103,7 +109,7 @@ if ( ! class_exists( 'URCR_Settings_File ' ) ) :
 									'class'     => 'ur-enhanced-select',
 									'css'       => 'min-width: 350px;',
 									'desc_tip'  => true,
-									'options'   => array( 'All Logged In Users', 'Choose Specific Roles', 'Guest Users', 'Memberships' ),
+								    'options'   => $access_options,
 								),
 
 								array(
