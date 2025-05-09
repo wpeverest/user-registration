@@ -34,10 +34,7 @@ if ( $membership_list_options === 'group' ) {
 	$memberships        = $membership_service->list_active_memberships();
 	$style              = "style='display:none;'";
 }
-echo '<pre>';
-print_r( $memberships );
-echo '</pre>';
-die();
+
 ?>
 <div class="ur-input-type-select ur-admin-template">
 	<div class="ur-label">
