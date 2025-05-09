@@ -30,7 +30,7 @@ class URCR_Shortcodes {
 		 *
 		 * @since 4.2.1
 		 */
-		error_log( print_r( $atts, true ) );
+	
 		if ( empty( $post ) && ( function_exists( 'urm_is_divi_active' ) && urm_is_divi_active() ) ) {
 			$post = isset( $atts['post_id'] ) ? get_post( absint( $atts['post_id'] ) ) : null;
 		}
