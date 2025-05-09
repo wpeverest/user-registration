@@ -163,7 +163,6 @@ html {
 .user-registration-page .thank-you-page-container, .ur-multi-device-form-preview .thank-you-page-container {
   display: flex;
   flex-direction: column;
-  width: 770px;
   margin: 60px auto;
   padding: 40px;
   border-radius: 12px;
@@ -178,13 +177,6 @@ html {
   margin-bottom: 0;
   margin-top: 0;
 }
-.user-registration-page .thank-you-page-container .message-section p:first-child, .ur-multi-device-form-preview .thank-you-page-container .message-section p:first-child {
-  font-size: 42px;
-  line-height: 56px;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 12px;
-}
 .user-registration-page .thank-you-page-container > p, .ur-multi-device-form-preview .thank-you-page-container > p {
   margin-bottom: 0;
 }
@@ -196,6 +188,10 @@ html {
 .user-registration-page .thank-you-page-container .thank-you-notice.warning, .ur-multi-device-form-preview .thank-you-page-container .thank-you-notice.warning {
   background-color: #efc7a5;
   border-left: 4px solid #b77f02;
+}
+.user-registration-page .thank-you-page-container .thank-you-notice.info, .ur-multi-device-form-preview .thank-you-page-container .thank-you-notice.info {
+  background-color: #ffd105;
+  border-left: 4px solid #c4a20c;
 }
 
 .membership-body {

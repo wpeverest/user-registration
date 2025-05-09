@@ -31,6 +31,7 @@ class ThankYouShortcode {
 	 * @param array $attributes Shortcode attributes.
 	 */
 	public static function render_template( $attributes ) {
+		
 		$membership_repository = new MembershipRepository();
 		$memberships           = $membership_repository->get_all_membership();
 		$template_file         = locate_template( 'thank-you-page.php' );

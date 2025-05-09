@@ -210,7 +210,6 @@ html {
 	.thank-you-page-container {
 		display: flex;
 		flex-direction: column;
-		width: 770px;
 		margin: 60px auto;
 		padding: 40px;
 		border-radius: 12px;
@@ -223,13 +222,6 @@ html {
 			p {
 				margin-bottom: 0;
 				margin-top: 0;
-				&:first-child {
-					font-size: 42px;
-					line-height: 56px;
-					font-weight: 700;
-					text-align: center;
-					margin-bottom: 12px;
-				}
 			}
 		}
 
@@ -245,6 +237,10 @@ html {
 			&.warning {
 				background-color: #efc7a5;
 				border-left: 4px solid #b77f02;
+			}
+			&.info {
+				background-color: #ffd105;
+				border-left: 4px solid #c4a20c;
 			}
 		}
 	}

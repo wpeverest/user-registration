@@ -74,7 +74,6 @@ class MembershipGroupService {
 
 	public function get_group_memberships( $group_id ) {
 		$memberships = $this->membership_group_repository->get_group_memberships_by_id( $group_id );
-
 		return apply_filters( 'build_membership_list_frontend', $memberships );
 
 	}
@@ -167,7 +166,9 @@ class MembershipGroupService {
 
 	public function structure_membership_group_data( $membership_groups ) {
 		$updated_array = array();
-
+		if ( ! function_exists( 'post_exists' ) ) {
+			require_once( ABSPATH . 'wp-admin/includes/post.php' );
+		}
 		foreach ( $membership_groups as $key => $membership_group ) {
 			$group_content = json_decode( wp_unslash( $membership_group['post_content'] ), true );
 

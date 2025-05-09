@@ -7,6 +7,8 @@ import * as myaccount from "./myaccount";
 import * as editProfile from "./edit-profile";
 import * as editPassword from "./edit-password";
 import * as contentRestrictionEnhanced from "./content-restriction-enhanced";
+import * as membershipListing from "./membership-listing";
+import * as thankYou from "./thank-you";
 
 /* global _UR_BLOCKS_ */
 const { iscRestrictionActive } =
@@ -17,7 +19,9 @@ let blocks = [
 	loginForm,
 	myaccount,
 	editProfile,
-	editPassword
+	editPassword,
+	membershipListing,
+	thankYou
 ];
 
 if (iscRestrictionActive) {
