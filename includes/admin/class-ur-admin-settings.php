@@ -568,6 +568,8 @@ class UR_Admin_Settings {
 											style="' . esc_attr( $value['css'] ) . '"
 											value="' . esc_attr( $option_value ) . '"
 											class="' . esc_attr( $value['class'] ) . '"
+											min="' . esc_attr( !empty($value['min'] ) ? $value['min'] : '' ) . '"
+											max="' . esc_attr( !empty($value['max'] ) ? $value['max'] : '' ) . '"
 											placeholder="' . esc_attr( $value['placeholder'] ) . '"
 											' . esc_attr( implode( ' ', $custom_attributes ) ) . ' ' . wp_kses_post( $description ) . '/>';
 									$settings .= '</div>';
@@ -623,7 +625,7 @@ class UR_Admin_Settings {
 											cols="' . esc_attr( $value['cols'] ) . '"
 											placeholder="' . esc_attr( $value['placeholder'] ) . '"
 											' . esc_html( implode( ' ', $custom_attributes ) ) . '>'
-											. esc_textarea( $option_value ) . '</textarea>';
+									             . esc_textarea( $option_value ) . '</textarea>';
 									$settings .= '</div>';
 									$settings .= '</div>';
 									break;
@@ -1067,6 +1069,13 @@ class UR_Admin_Settings {
 		$is_wp_login_disabled_error = apply_filters( 'user_registration_settings_prevent_default_login', $_POST );
 		if ( $is_wp_login_disabled_error && 'redirect_login_error' === $is_wp_login_disabled_error ) {
 			return;
+		}elseif ( $is_wp_login_disabled_error && 'invalid_renewal_period' === $is_wp_login_disabled_error ) {
+			self::add_error(
+				esc_html__(
+					'Your settings has not been saved. Send Before days cannot be less than or equal to 0.',
+					'user-registration'
+				)
+			);
 		}
 
 		// Loop options and get values to save.
