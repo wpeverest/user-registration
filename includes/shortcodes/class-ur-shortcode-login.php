@@ -59,6 +59,8 @@ class UR_Shortcode_Login {
 				$recaptcha_enabled = ur_option_checked( 'user_registration_login_options_enable_recaptcha', false );
 				wp_enqueue_script( 'ur-common' );
 				wp_enqueue_script( 'user-registration' );
+				wp_enqueue_script( 'ur-form-validator' );
+
 				$recaptcha_node = ur_get_recaptcha_node( 'login', $recaptcha_enabled );
 
 				ob_start();

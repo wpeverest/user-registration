@@ -5,10 +5,10 @@ on:
 jobs:
   tag:
     name: New tag
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Check Release Type and Branch
         id: check_release
@@ -20,10 +20,11 @@ jobs:
       - name: Set env
         id: vars
         run: echo ::set-output name=tag::${GITHUB_REF:10}
-
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
       - name: Build
         id: build
-        uses: wpeverest/action-build@3.0.0
+        uses: wpeverest/action-build@4.0.0
         with:
           generate-zip: true
       - name: WordPress Plugin Deploy

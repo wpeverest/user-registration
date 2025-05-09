@@ -23,7 +23,11 @@ if ( ! function_exists( 'ur_check_module_activation' ) ) {
 	function ur_check_module_activation( $module ) {
 		$enabled_features = get_option( 'user_registration_enabled_features', array() );
 
-		return in_array( 'user-registration-' . $module, $enabled_features, true ) ? true : false;
+		if( is_array( $enabled_features ) ) {
+			return in_array( 'user-registration-' . $module, $enabled_features, true ) ? true : false;
+		} else {
+			return false;
+		}
 	}
 }
 

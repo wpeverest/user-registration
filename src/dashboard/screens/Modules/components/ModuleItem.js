@@ -23,38 +23,40 @@ import {
 	ModalHeader,
 	Spinner,
 	useDisclosure,
-	Switch
+	Switch,
 } from "@chakra-ui/react";
-import { __ } from "@wordpress/i18n";
-import React, { useState, useEffect, useCallback } from "react";
+import {__} from "@wordpress/i18n";
+import React, {useState, useEffect, useCallback, useRef} from "react";
 import YouTubePlayer from "react-player/youtube";
-import { FaPlayCircle } from "react-icons/fa";
-import { SettingsIcon } from "@chakra-ui/icons";
+import {FaPlayCircle} from "react-icons/fa";
+import {SettingsIcon} from "@chakra-ui/icons";
 
 /**
  * Internal Dependencies
  */
-import { activateModule, deactivateModule } from "./modules-api";
-import { useStateValue } from "../../../../context/StateProvider";
-import { actionTypes } from "../../../../context/dashboardContext";
+import {activateModule, deactivateModule} from "./modules-api";
+import {useStateValue} from "../../../../context/StateProvider";
+import {actionTypes} from "../../../../context/dashboardContext";
 
 const ModuleItem = (props) => {
 	/* global _UR_DASHBOARD_ */
-	const { assetsURL, isPro, licensePlan, adminURL, upgradeURL } =
-		typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
+	const {assetsURL, isPro, licensePlan, adminURL, upgradeURL} =
+	typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 
-	const [{ upgradeModal, isMembershipActivated }, dispatch] = useStateValue();
+	const [{upgradeModal, isMembershipActivated, isPaymentAddonActivated}, dispatch] = useStateValue();
 	const toast = useToast();
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const {isOpen, onOpen, onClose} = useDisclosure();
+	const isFirstRender = useRef(true);
 
 	const {
 		data,
 		isChecked,
 		onCheckedChange,
 		isPerformingBulkAction,
-		selectedModuleData
+		selectedModuleData,
+		IsStateUpdated,
+		resetIsStateUpdated
 	} = props;
-
 	const {
 		title,
 		name,
@@ -69,7 +71,6 @@ const ModuleItem = (props) => {
 		demo_video_url,
 		setting_url
 	} = data;
-
 	// States
 	const [moduleStatus, setModuleStatus] = useState(status);
 	const [isPerformingAction, setIsPerformingAction] = useState(false);
@@ -80,7 +81,9 @@ const ModuleItem = (props) => {
 	const [isFreeModuleEnabled, setIsFreeModuleEnabled] = useState(true);
 	const [requirementFulfilled, setRequirementFulfilled] = useState(false);
 	const [licenseActivated, setLicenseActivated] = useState(false);
-
+	const [toastMessage, setToastMessage] = useState(null);
+	const [toastStatus, setToastStatus] = useState(null);
+	const isPaymentAddon = ["user-registration-payments", "user-registration-stripe", "user-registration-authorize-net"].includes(slug);
 	// Helper for showing toast
 	const showToast = useCallback(
 		(message, status) => {
@@ -92,7 +95,15 @@ const ModuleItem = (props) => {
 		},
 		[toast]
 	);
+	useEffect(() => {
 
+		if (IsStateUpdated && toastMessage && toastStatus) {
+			showToast(toastMessage, toastStatus);
+			setToastMessage(null);
+			setToastStatus(null);
+			resetIsStateUpdated(false)
+		}
+	}, [IsStateUpdated, toastMessage, toastStatus]);
 	// Handle module activation/deactivation
 	const handleModuleAction = () => {
 		setIsPerformingAction(true);
@@ -104,34 +115,82 @@ const ModuleItem = (props) => {
 			) {
 				activateModule(slug, name, type)
 					.then((data) => {
+						if (isPaymentAddon) {
+							dispatch({
+								type: actionTypes.GET_IS_PAYMENT_ADDON_ACTIVATED,
+								isPaymentAddonActivated: moduleStatus
+							});
+						}
+						return data;
+					})
+					.then((data) => {
 						if (data.success) {
-							showToast(data.message, "success");
+							if (isPaymentAddon) {
+								setToastMessage(data.message);
+								setToastStatus("success");
+							} else {
+								showToast(data.message, "success");
+							}
+
 							setModuleStatus("active");
 						} else {
-							showToast(data.message, "error");
+							if (isPaymentAddon) {
+								setToastMessage(data.message);
+								setToastStatus("error");
+							} else {
+								showToast(data.message, "error");
+							}
 							setModuleStatus("not-installed");
 						}
 					})
 					.catch((e) => {
-						showToast(e.message, "error");
+						if (isPaymentAddon) {
+							setToastMessage(e.message);
+							setToastStatus("error");
+						} else {
+							showToast(data.message, "error");
+						}
 						setModuleStatus("not-installed");
 					})
 					.finally(() => {
-						setIsPerformingAction(false);
+						if (!isPaymentAddon) {
+							setIsPerformingAction(false);
+						}
 					});
 			} else {
 				deactivateModule(slug, type)
 					.then((data) => {
+						if (isPaymentAddon) {
+							dispatch({
+								type: actionTypes.GET_IS_PAYMENT_ADDON_ACTIVATED,
+								isPaymentAddonActivated: moduleStatus
+							});
+						}
+						return data;
+					})
+					.then((data) => {
 						if (data.success) {
-							showToast(data.message, "success");
+							if (isPaymentAddon) {
+								setToastMessage(data.message);
+								setToastStatus("success");
+							} else {
+								showToast(data.message, "success");
+							}
 							setModuleStatus("inactive");
 						} else {
-							showToast(data.message, "error");
+							if (isPaymentAddon) {
+								setToastMessage(data.message);
+								setToastStatus("error");
+							} else {
+								showToast(data.message, "error");
+							}
 							setModuleStatus("active");
 						}
 					})
 					.finally(() => {
-						setIsPerformingAction(false);
+						if (!isPaymentAddon) {
+							setIsPerformingAction(false);
+						}
 					});
 			}
 		} else {
@@ -143,14 +202,16 @@ const ModuleItem = (props) => {
 		if (data.plan.includes("free")) {
 			if (
 				data.activation_requirements &&
-				data.activation_requirements.includes("membership")
+				data.activation_requirements.includes("membership", "stripe", "payments", "authorize-net")
 			) {
-				setIsFreeModuleEnabled(isMembershipActivated);
+				let isActive = isMembershipActivated || isPaymentAddonActivated
+				setIsFreeModuleEnabled(isActive);
 			}
 		}
-	}, [isMembershipActivated]);
+	}, [isMembershipActivated, isPaymentAddonActivated]);
 
 	useEffect(() => {
+
 		setModuleStatus(data.status);
 
 		if (!upgradeModal.enable) {
@@ -162,12 +223,18 @@ const ModuleItem = (props) => {
 				data.activation_requirements &&
 				data.activation_requirements.includes("membership")
 			) {
-				setIsFreeModuleEnabled(isMembershipActivated);
+				if (!isMembershipActivated && !isPaymentAddonActivated) {
+					setIsFreeModuleEnabled(true);
+				}
+				if (isMembershipActivated || isPaymentAddonActivated) {
+					let isActive = isMembershipActivated || isPaymentAddonActivated;
+					setIsFreeModuleEnabled(isActive);
+				}
 			}
-
 			setModuleEnabled(true);
 		} else if (isPro) {
 			setModuleEnabled(true);
+
 			if (licensePlan) {
 				const requiredPlan = licensePlan.item_plan.replace(
 					" lifetime",
@@ -197,16 +264,28 @@ const ModuleItem = (props) => {
 	}, [thumbnailVideoPlaying]);
 
 	useEffect(() => {
-		if ("user-registration-membership" === slug) {
-			dispatch({
-				type: actionTypes.GET_IS_MEMBERSHIP_ACTIVATED,
-				isMembershipActivated: moduleStatus === "active"
-			});
+
+		const status = moduleStatus === "active";
+
+		if (data.status !== moduleStatus) {
+
+			if ("user-registration-membership" === slug) {
+				dispatch({
+					type: actionTypes.GET_IS_MEMBERSHIP_ACTIVATED,
+					isMembershipActivated: status
+				});
+			}
+			if (isPaymentAddon) {
+				dispatch({
+					type: actionTypes.GET_IS_PAYMENT_ADDON_ACTIVATED,
+					isPaymentAddonActivated: status
+				});
+			}
 		}
 	}, [moduleStatus, dispatch, slug]);
 
 	const handleBoxClick = () => {
-		const upgradeModalRef = { ...upgradeModal };
+		const upgradeModalRef = {...upgradeModal};
 		upgradeModalRef.moduleType = data.type;
 		upgradeModalRef.moduleName = data.name;
 
@@ -238,6 +317,8 @@ const ModuleItem = (props) => {
 			type: actionTypes.GET_UPGRADE_MODAL,
 			upgradeModal: upgradeModalRef
 		});
+		onInputDisable(false);
+
 	};
 
 	const renderThumbnail = () => (
@@ -279,7 +360,7 @@ const ModuleItem = (props) => {
 					}
 				>
 					{((demo_video_url && !thumbnailVideoPlaying) ||
-						!demo_video_url) &&
+							!demo_video_url) &&
 						renderThumbnail()}
 
 					{thumbnailVideoPlaying && (
@@ -288,12 +369,12 @@ const ModuleItem = (props) => {
 							onClose={() => setThumbnailVideoPlaying(false)}
 							size="3xl"
 						>
-							<ModalOverlay />
+							<ModalOverlay/>
 							<ModalContent px={4} pb={4}>
 								<ModalHeader textAlign="center">
 									{title}
 								</ModalHeader>
-								<ModalCloseButton />
+								<ModalCloseButton/>
 								<YouTubePlayer
 									url={
 										"https://www.youtube.com/embed/" +
@@ -316,7 +397,7 @@ const ModuleItem = (props) => {
 										left={"50%"}
 										transform={"translate(-50%, -50%)"}
 									>
-										<Spinner size={"lg"} />
+										<Spinner size={"lg"}/>
 									</Box>
 								)}
 							</ModalContent>
@@ -387,9 +468,9 @@ const ModuleItem = (props) => {
 									onChange={(e) => {
 										moduleEnabled
 											? onCheckedChange(
-													slug,
-													e.target.checked
-											  )
+												slug,
+												e.target.checked
+											)
 											: handleBoxClick();
 									}}
 								>
@@ -410,7 +491,7 @@ const ModuleItem = (props) => {
 				</Box>
 			</Box>
 
-			<Divider color="gray.300" />
+			<Divider color="gray.300"/>
 			<Box
 				px="4"
 				py="5"
@@ -437,7 +518,7 @@ const ModuleItem = (props) => {
 								</Text>
 								<IconButton
 									size="sm"
-									icon={<SettingsIcon />}
+									icon={<SettingsIcon/>}
 									onClick={() =>
 										window.open(
 											adminURL + setting_url,
@@ -448,22 +529,13 @@ const ModuleItem = (props) => {
 							</>
 						)}
 				</HStack>
-				{isPerformingAction ||
-				(selectedModuleData.hasOwnProperty(slug) &&
-					isPerformingBulkAction) ? (
-					<Spinner
-						speed="0.50s"
-						emptyColor="gray.200"
-						color="blue.500"
-						size="md"
-					/>
-				) : (
+				{(!isPerformingAction &&
+					(!selectedModuleData.hasOwnProperty(slug) || !isPerformingBulkAction)) ? (
 					(moduleEnabled || plan.includes("free")) && (
 						<Switch
 							isChecked={
 								"active" === moduleStatus
-									? plan.includes("free") &&
-									  !isFreeModuleEnabled
+									? plan.includes("free") && !isFreeModuleEnabled
 										? false
 										: true
 									: false
@@ -476,6 +548,13 @@ const ModuleItem = (props) => {
 							colorScheme="green"
 						/>
 					)
+				) : (
+					<Spinner
+						speed="0.50s"
+						emptyColor="gray.200"
+						color="blue.500"
+						size="md"
+					/>
 				)}
 
 				{(!moduleEnabled ||

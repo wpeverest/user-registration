@@ -1209,3 +1209,32 @@
 		}
 	}
 }
+
+
+// User Registration Toast Message design fixed
+body {
+	&.user-registration-page {
+		.user-registration-membership-notice {
+			&__blue {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				margin-right: 12px;
+				gap: 16px;
+				padding: 10px 20px;
+
+				.user-registration-membership__close_notice {
+					padding-left: 0;
+					color: #ff4859;
+					font-size: 20px;
+					line-height: 26px;
+				}
+			}
+
+			&__message {
+				font-size: 14px;
+				line-height: 24px;
+			}
+		}
+	}
+}

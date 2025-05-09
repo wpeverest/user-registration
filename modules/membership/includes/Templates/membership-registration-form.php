@@ -105,7 +105,7 @@
 	?>
 
 	<!--	membership-->
-	<div class="ur_membership_frontend_input_container radio">
+	<div id="urm-membership-list" class="ur_membership_frontend_input_container radio">
 
 		<label
 			class="ur-label ur_membership_input_label required"><?php echo esc_html__( esc_html( $attributes['label'] ), 'user-registration' ); ?>

@@ -7,7 +7,7 @@
 			/**
 			 * Function to show success message.
 			 *
-			 * @since xx.xx.xx
+			 * @since 4.2.1
 			 */
 			show_success_message: function(message) {
 				$('.user-registration-membership-notice__container .user-registration-membership-notice__red').removeClass('user-registration-membership-notice__red').addClass('user-registration-membership-notice__blue');
@@ -21,7 +21,7 @@
 			/**
 			 * Removes the notice after some time.
 			 *
-			 * @since xx.xx.xx
+			 * @since 4.2.1
 			 */
 			toggleNotice: function() {
 				var noticeContainer = $('.user-registration-membership-notice__container');
@@ -33,7 +33,7 @@
 			/**
 			 * Retrieves the cookie values set.
 			 *
-			 * @since xx.xx.xx
+			 * @since 4.2.1
 			 */
 			ur_get_cookie: function( cookie_key ) {
 				var matches = document.cookie.match(new RegExp(
@@ -45,7 +45,7 @@
 			/**
 			 * Deletes the cookie values.
 			 *
-			 * @since xx.xx.xx
+			 * @since 4.2.1
 			 */
 			ur_remove_cookie: function( cookie_key ) {
 				document.cookie = cookie_key + '=; Max-Age=-99999999; path=/';
@@ -2731,6 +2731,21 @@
 	});
 	$(window).on("user_registration_repeater_modified", function () {
 		user_registration_form_init();
+	});
+
+	/**
+	 * Reinitializes the form again in the elementor popup.
+	 *
+	 * @since 4.2.1
+	 */
+	window.addEventListener('load', function() {
+		window.addEventListener('elementor/popup/show', function() {
+			var forms = document.querySelectorAll('.elementor-popup-modal form.register:not(.elementor)');
+			forms.forEach(function(form) {
+				user_registration_form_init();
+				form.classList.add('elementor');  // Add class to prevent reinitialization
+			});
+		});
 	});
 
 	$(document).on(

@@ -30,7 +30,6 @@ function ur_template_redirect() {
 		 *
 		 * @param string $redirect_url The redirect url.
 		 */
-		$redirect_url = apply_filters( 'user_registration_redirect_after_logout', $redirect_url );
 
 		// Check if external url is present in URL.
 		if ( isset( $_GET['redirect_to_on_logout'] ) ) {
@@ -38,9 +37,11 @@ function ur_template_redirect() {
 			wp_redirect( esc_url_raw( wp_unslash( $_GET['redirect_to_on_logout'] ) ) );
 			exit;
 		}
-
-		wp_safe_redirect( str_replace( '&amp;', '&', wp_logout_url( $redirect_url ) ) );
+		$redirect_url = apply_filters( 'user_registration_redirect_after_logout', $redirect_url );
+		wp_logout();
+		wp_safe_redirect( ur_get_page_permalink( $redirect_url ) );
 		exit;
+		
 	} elseif ( isset( $wp->query_vars['user-logout'] ) && 'true' === $wp->query_vars['user-logout'] ) {
 		/**
 		 * Filter the redirect after logout url.
@@ -49,7 +50,7 @@ function ur_template_redirect() {
 		 */
 		$redirect_url = apply_filters( 'user_registration_redirect_after_logout', esc_url_raw( ur_get_page_permalink( 'user-logout' ) ) );
 		// Redirect to the correct logout endpoint.
-		wp_safe_redirect( $redirect_url );
+		wp_safe_redirect( urldecode ( $redirect_url ) );
 		exit;
 	}
 }
@@ -142,20 +143,29 @@ if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
  */
 function ur_body_class( $classes ) {
 	$classes   = (array) $classes;
+
 	$classes[] = 'user-registration-page';
 	if ( is_ur_account_page() ) {
 		$classes[] = 'user-registration-account';
 	}
-
 	foreach ( UR()->query->query_vars as $key => $value ) {
 		if ( is_ur_endpoint_url( $key ) ) {
 			$classes[] = 'user-registration-' . sanitize_html_class( $key );
 		}
 	}
-
 	return array_unique( $classes );
 }
 
+/**
+ * ur_admin_body_class
+ *
+ * @param $classes
+ *
+ * @return string
+ */
+function ur_admin_body_class( $classes ) {
+	return $classes . ' user-registration-page';
+}
 
 if ( ! function_exists( 'user_registration_form_field' ) ) {
 

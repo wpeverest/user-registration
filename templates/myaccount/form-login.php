@@ -108,7 +108,7 @@ if ( isset( $_GET['force-logout'] ) && 'true' === $_GET['force-logout'] ) {
 					 * @param array $labels['login].
 					 * @return array.
 					 */
-					apply_filters( 'ur_login_title', 'Welcome' );
+					apply_filters( 'ur_login_title', __( 'Welcome', 'user-registration' ) );
 					$login_title_description =
 					/**
 					 * Filter to modify the login title description.
@@ -116,7 +116,7 @@ if ( isset( $_GET['force-logout'] ) && 'true' === $_GET['force-logout'] ) {
 					 * @param array $labels['login].
 					 * @return array.
 					 */
-					apply_filters( 'ur_login_title_description', 'Please enter your details to access your account.' );
+					apply_filters( 'ur_login_title_description', __( 'Please enter your details to access your account.', 'user-registration' ) );
 					/* translators: %s - Login Title. */
 					echo wp_kses_post( sprintf( __( '<span class="user-registration-login-title"> %s </span> </br>', 'user-registration' ), $login_title_label ) );
 					echo wp_kses_post( sprintf( __( '<p class="user-registration-login-description"> %s </p>', 'user-registration' ), $login_title_description ) );

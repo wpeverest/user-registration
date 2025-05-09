@@ -49,7 +49,7 @@ if ( $membership_list_options === 'group' ) {
 		foreach ( $memberships as $k => $option ) {
 			echo "<label>
 					<input type = 'radio'  value='" . esc_attr( trim( $option['ID'] ) ) . "' disabled/>
-					<span class='user-registration-image-label'>" . esc_html( trim( $option['title'] ) ) . "</span>
+					<span class='urm-membership-title'>" . esc_html( trim( $option['title'] ) ) . "</span>
 				 	<span class='ur-membership-duration'> - " . esc_html__( $option["period"], "user-registration" ) . "</span>
 				 </label>";
 		}

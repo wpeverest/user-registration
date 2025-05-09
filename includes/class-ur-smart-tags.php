@@ -18,7 +18,10 @@ class UR_Smart_Tags {
 	public function __construct() {
 		add_filter( 'user_registration_process_smart_tags', array( $this, 'process' ), 10, 3 );
 		add_filter( 'ur_smart_tags_list_in_general', array( $this, 'select_smart_tags_in_general' ), 10, 1 );
-		add_filter( 'ur_pattern_validation_list_in_advanced_settings', array( $this, 'select_pattern_validation' ), 10, 1 );
+		add_filter( 'ur_pattern_validation_list_in_advanced_settings', array(
+			$this,
+			'select_pattern_validation'
+		), 10, 1 );
 	}
 
 	/**
@@ -28,17 +31,18 @@ class UR_Smart_Tags {
 	 */
 	public static function smart_tags_list() {
 		if ( isset( $_GET['page'] ) && $_GET['page'] === 'yith_wpv_panel' &&
-		isset( $_GET['tab'] ) && $_GET['tab'] === 'vendors' &&
-		isset( $_GET['sub_tab'] ) && $_GET['sub_tab'] === 'vendors-list' ) {
+		     isset( $_GET['tab'] ) && $_GET['tab'] === 'vendors' &&
+		     isset( $_GET['sub_tab'] ) && $_GET['sub_tab'] === 'vendors-list' ) {
 			$smart_tags = array();
 		} else {
 			$smart_tags = array_merge( self::ur_unauthenticated_parsable_smart_tags_list(), self::ur_authenticated_parsable_smart_tags_list() );
 		}
+
 		/**
 		 * The 'user_registration_smart_tags' filter allows developers to modify the list
 		 * of smart tags available in User Registration for customization.
 		 *
-		 * @param array  $smart_tags List of smart tags before applying the filter.
+		 * @param array $smart_tags List of smart tags before applying the filter.
 		 */
 		return apply_filters( 'user_registration_smart_tags', $smart_tags );
 	}
@@ -61,6 +65,7 @@ class UR_Smart_Tags {
 			'{{last_name}}'    => esc_html__( 'Last Name', 'user-registration' ),
 			'{{display_name}}' => esc_html__( 'User Display Name', 'user-registration' ),
 		);
+
 		/**
 		 * The 'user_registration_authenticated_smart_tags' filter allows developers to modify
 		 * the list of smart tags available for authenticated users in User Registration.
@@ -99,6 +104,7 @@ class UR_Smart_Tags {
 			'{{author_name}}'      => esc_html__( 'Author Name', 'user-registration' ),
 			'{{unique_id}}'        => esc_html__( 'Unique ID', 'user-registration' ),
 		);
+
 		/**
 		 * Applies a filter to modify the list of unauthenticated smart tags.
 		 *
@@ -114,8 +120,8 @@ class UR_Smart_Tags {
 	 * Process and parse smart tags.
 	 *
 	 * @param string $content Contents.
-	 * @param array  $values Data values.
-	 * @param array  $name_value  Extra values.
+	 * @param array $values Data values.
+	 * @param array $name_value Extra values.
 	 */
 	public function process( $content = '', $values = array(), $name_value = array() ) {
 		if ( ! empty( $values['email'] ) ) {
@@ -127,8 +133,8 @@ class UR_Smart_Tags {
 			 * The 'user_registration_add_smart_tags' filter allows developers to customize
 			 * the default values by adding or modifying smart tags based on the provided email.
 			 *
-			 * @param array  $default_values Default values before adding or modifying smart tags.
-			 * @param string $email          Email address associated with the values.
+			 * @param array $default_values Default values before adding or modifying smart tags.
+			 * @param string $email Email address associated with the values.
 			 */
 			$default_values = apply_filters( 'user_registration_add_smart_tags', $default_values, $values['email'] );
 
@@ -173,7 +179,13 @@ class UR_Smart_Tags {
 						$content = str_replace( '{{' . $key . '}}', '', $content );
 						continue;
 					}
-
+					$content = str_replace( '{{' . $key . '}}', $value, $content );
+				} else {
+					if ( empty( $value ) ) {
+						$value = '';
+					} else {
+						$value = implode( ', ', $value );
+					}
 					$content = str_replace( '{{' . $key . '}}', $value, $content );
 				}
 			}
@@ -522,7 +534,7 @@ class UR_Smart_Tags {
 						$content             = str_replace( '{{' . $tag . '}}', wp_kses_post( $sign_out_link ), $content );
 						break;
 					case 'passwordless_login_link':
-						$passwordless_login_link = isset( $values['passwordless_login_link'] ) ? '<a href="' . esc_url( $values['passwordless_login_link'] ) . '"></a>' : '';
+						$passwordless_login_link = isset( $values['passwordless_login_link'] ) ?  esc_url( $values['passwordless_login_link'] ) : '';
 						$content                 = str_replace( '{{' . $tag . '}}', wp_kses_post( $passwordless_login_link ), $content );
 						break;
 					case 'ur_reset_pass_slug':
@@ -553,6 +565,12 @@ class UR_Smart_Tags {
 					case 'sms_otp_validity':
 						$content = str_replace( '{{' . $tag . '}}', isset( $values['sms_otp_validity'] ) ? $values['sms_otp_validity'] : '', $content );
 						break;
+					case 'otp_code':
+						$content = str_replace( '{{' . $tag . '}}', isset( $values['otp_code'] ) ? $values['otp_code'] : '', $content );
+						break;
+					case 'otp_expiry_time':
+						$content = str_replace( '{{' . $tag . '}}', isset( $values['otp_expiry_time'] ) ? $values['otp_expiry_time'] : '', $content );
+						break;
 				}
 			}
 		}
@@ -563,7 +581,7 @@ class UR_Smart_Tags {
 		 * the content that includes smart tags based on the provided values.
 		 *
 		 * @param string $content Default content with smart tags.
-		 * @param array  $values  Values associated with the smart tags.
+		 * @param array $values Values associated with the smart tags.
 		 */
 		$content = apply_filters( 'user_registration_smart_tag_content', $content, $values );
 
@@ -578,7 +596,7 @@ class UR_Smart_Tags {
 	public function select_smart_tags_in_general( $smart_tags ) {
 		$smart_tags_list = self::ur_unauthenticated_parsable_smart_tags_list();
 
-		$selector  = '<a id="ur-smart-tags-selector">';
+		$selector = '<a id="ur-smart-tags-selector">';
 		$selector .= '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
 		<path d="M10 3.33203L14.2 7.53203C14.3492 7.68068 14.4675 7.85731 14.5483 8.05179C14.629 8.24627 14.6706 8.45478 14.6706 8.66536C14.6706 8.87595 14.629 9.08446 14.5483 9.27894C14.4675 9.47342 14.3492 9.65005 14.2 9.7987L11.3333 12.6654" stroke="#6B6B6B" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
 		<path d="M6.39132 3.7227C6.14133 3.47263 5.80224 3.33211 5.44865 3.33203H2.00065C1.82384 3.33203 1.65427 3.40227 1.52925 3.52729C1.40422 3.65232 1.33398 3.82189 1.33398 3.9987V7.4467C1.33406 7.80029 1.47459 8.13938 1.72465 8.38937L5.52732 12.192C5.83033 12.4931 6.24015 12.6621 6.66732 12.6621C7.09449 12.6621 7.50431 12.4931 7.80732 12.192L10.194 9.80537C10.4951 9.50236 10.6641 9.09253 10.6641 8.66537C10.6641 8.2382 10.4951 7.82837 10.194 7.52537L6.39132 3.7227Z" stroke="#6B6B6B" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
@@ -614,39 +632,40 @@ class UR_Smart_Tags {
 		$pattern_lists = apply_filters(
 			'user_registration_pattern_validation_lists',
 			array(
-				'^[a-zA-Z]+$'                             => __( 'Alpha', 'user-registration' ),
-				'^[a-zA-Z0-9]+$'                          => __( 'Alphanumeric', 'user-registration' ),
-				'^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$'     => __( 'Color', 'user-registration' ),
-				'^[A-Za-z]{2}$'                           => __( 'Country Code (2 Character)', 'user-registration' ),
-				'^[A-Za-z]{3}$'                           => __( 'Country Code (3 Character)', 'user-registration' ),
-				'^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])$' => __( 'Date (mm/dd)', 'user-registration' ),
-				'^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])$' => __( 'Date (dd/mm)', 'user-registration' ),
-				'^(0[1-9]|1[0-2])\.(0[1-9]|1\d|2\d|3[01])\.\d{4}$' => __( 'Date (mm.dd.yyyy)', 'user-registration' ),
-				'^(0[1-9]|1\d|2\d|3[01])\.(0[1-9]|1[0-2])\.\d{4}$' => __( 'Date (dd.mm.yyyy)', 'user-registration' ),
-				'^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|1\d|2\d|3[01])$' => __( 'Date (yyyy-mm-dd)', 'user-registration' ),
-				'^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/\d{4}$' => __( 'Date (mm/dd/yyyy)', 'user-registration' ),
-				'^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])\/\d{4}$' => __( 'Date (dd/mm/yyyy)', 'user-registration' ),
-				'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$' => __( 'Email', 'user-registration' ),
-				'^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$' => __( 'IP (Version 4)', 'user-registration' ),
-				'((^|:)([0-9a-fA-F]{0,4})){1,8}$'         => __( 'IP (Version 6)', 'user-registration' ),
-				'^978(?:-[\d]+){3}-[\d]$'                 => __( 'ISBN', 'user-registration' ),
-				'-?\d{1,3}\.\d+'                          => __( 'Latitude or Longitude', 'user-registration' ),
-				'^[0-9]+$'                                => __( 'Numeric', 'user-registration' ),
-				'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$' => __( 'Password (Numeric, lower, upper)', 'user-registration' ),
-				'(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}'     => __( 'Password (Numeric, lower, upper, min 8)', 'user-registration' ),
-				'[0-9+()-. ]+'                            => __( 'Phone - General', 'user-registration' ),
-				'^\+44\d{10}$'                            => __( 'Phone - UK', 'user-registration' ),
-				'\d{3}[\-]\d{3}[\-]\d{4}'                 => __( 'Phone - US: 123-456-7890', 'user-registration' ),
-				'\([0-9]{3}\)[0-9]{3}-[0-9]{4}'           => __( 'Phone - US: (123)456-7890', 'user-registration' ),
-				'(?:\(\d{3}\)|\d{3})[- ]?\d{3}[- ]?\d{4}' => __( 'Phone - US: Flexible', 'user-registration' ),
-				'^[A-Za-z]{1,2}\d{1,2}[A-Za-z]?\s?\d[A-Za-z]{2}$' => __( 'Postal Code (UK)', 'user-registration' ),
-				'\d+(\.\d{2})?$'                          => __( 'Price (1.23)', 'user-registration' ),
-				'^[a-zA-Z0-9-]+$'                         => __( 'Slug', 'user-registration' ),
-				'(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}'  => __( 'Time (hh:mm:ss)', 'user-registration' ),
-				'^(https?|ftp):\/\/[^\s\/$.?#].[^\s]*$'   => __( 'URL', 'user-registration' ),
-				'(\d{5}([\-]\d{4})?)'                     => __( 'Zip Code', 'user-registration' ),
+				'^[a-zA-Z]+$'                                                                                => __( 'Alpha', 'user-registration' ),
+				'^[a-zA-Z0-9]+$'                                                                             => __( 'Alphanumeric', 'user-registration' ),
+				'^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$'                                                        => __( 'Color', 'user-registration' ),
+				'^[A-Za-z]{2}$'                                                                              => __( 'Country Code (2 Character)', 'user-registration' ),
+				'^[A-Za-z]{3}$'                                                                              => __( 'Country Code (3 Character)', 'user-registration' ),
+				'^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])$'                                                  => __( 'Date (mm/dd)', 'user-registration' ),
+				'^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])$'                                                  => __( 'Date (dd/mm)', 'user-registration' ),
+				'^(0[1-9]|1[0-2])\.(0[1-9]|1\d|2\d|3[01])\.\d{4}$'                                           => __( 'Date (mm.dd.yyyy)', 'user-registration' ),
+				'^(0[1-9]|1\d|2\d|3[01])\.(0[1-9]|1[0-2])\.\d{4}$'                                           => __( 'Date (dd.mm.yyyy)', 'user-registration' ),
+				'^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|1\d|2\d|3[01])$'                                             => __( 'Date (yyyy-mm-dd)', 'user-registration' ),
+				'^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/\d{4}$'                                           => __( 'Date (mm/dd/yyyy)', 'user-registration' ),
+				'^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])\/\d{4}$'                                           => __( 'Date (dd/mm/yyyy)', 'user-registration' ),
+				'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'                                           => __( 'Email', 'user-registration' ),
+				'^(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$' => __( 'IP (Version 4)', 'user-registration' ),
+				'^((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}))|(([0-9A-Fa-f]{1,4}:){1,7}:)|(:{2})|(([0-9A-Fa-f]{1,4})?::([0-9A-Fa-f]{1,4}:?){0,6}([0-9A-Fa-f]{1,4})?))$'                                                            => __( 'IP (Version 6)', 'user-registration' ),
+				'^978(?:-[\d]+){3}-[\d]$'                                                                    => __( 'ISBN', 'user-registration' ),
+				'-?\d{1,3}\.\d+'                                                                             => __( 'Latitude or Longitude', 'user-registration' ),
+				'^[0-9]+$'                                                                                   => __( 'Numeric', 'user-registration' ),
+				'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$'                                                 => __( 'Password (Numeric, lower, upper)', 'user-registration' ),
+				'(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}'                                                        => __( 'Password (Numeric, lower, upper, min 8)', 'user-registration' ),
+				'[0-9+()-. ]+'                                                                               => __( 'Phone - General', 'user-registration' ),
+				'^\+44\d{10}$'                                                                               => __( 'Phone - UK', 'user-registration' ),
+				'\d{3}[\-]\d{3}[\-]\d{4}'                                                                    => __( 'Phone - US: 123-456-7890', 'user-registration' ),
+				'\([0-9]{3}\)[0-9]{3}-[0-9]{4}'                                                              => __( 'Phone - US: (123)456-7890', 'user-registration' ),
+				'(?:\(\d{3}\)|\d{3})[- ]?\d{3}[- ]?\d{4}'                                                    => __( 'Phone - US: Flexible', 'user-registration' ),
+				'^[A-Za-z]{1,2}\d{1,2}[A-Za-z]?\s?\d[A-Za-z]{2}$'                                            => __( 'Postal Code (UK)', 'user-registration' ),
+				'\d+(\.\d{2})?$'                                                                             => __( 'Price (1.23)', 'user-registration' ),
+				'^[a-zA-Z0-9-]+$'                                                                            => __( 'Slug', 'user-registration' ),
+				'(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}'                                                     => __( 'Time (hh:mm:ss)', 'user-registration' ),
+				'^(https?|ftp):\/\/[^\s\/$.?#].[^\s]*$'                                                      => __( 'URL', 'user-registration' ),
+				'^\d{5}(-\d{4})?$'                                                                        => __( 'Zip Code', 'user-registration' ),
 			)
 		);
+
 		return $pattern_lists;
 	}
 
@@ -657,13 +676,14 @@ class UR_Smart_Tags {
 	 */
 	public function select_pattern_validation( $pattern_lists ) {
 		$pattern_validation_list = self::ur_pattern_validation_lists();
-		$pattern_lists          .= '<a href="#" class="button ur-smart-tags-list-button"><span class="dashicons dashicons-editor-code"></span></a>';
-		$pattern_lists          .= '<div class="ur-smart-tags-list" style="display: none">';
-		$pattern_lists          .= '<div class="smart-tag-title ur-smart-tag-title">Regular Expression</div><ul class="ur-smart-tags">';
+		$pattern_lists           .= '<a href="#" class="button ur-smart-tags-list-button"><span class="dashicons dashicons-editor-code"></span></a>';
+		$pattern_lists           .= '<div class="ur-smart-tags-list" style="display: none">';
+		$pattern_lists           .= '<div class="smart-tag-title ur-smart-tag-title">Regular Expression</div><ul class="ur-smart-tags">';
 		foreach ( $pattern_validation_list as $key => $value ) {
 			$pattern_lists .= '<li class="ur-select-smart-tag" data-key = "' . esc_attr( $key ) . '">' . esc_html( $value ) . '</li>';
 		}
 		$pattern_lists .= '</ul></div>';
+
 		return $pattern_lists;
 	}
 }

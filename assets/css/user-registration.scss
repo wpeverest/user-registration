@@ -12,7 +12,6 @@
 @import "fonts";
 @import "animation";
 
-
 // Components
 @import "components/button", "components/modal";
 
@@ -149,10 +148,10 @@
 	border-top-color: #1e85be;
 }
 
-.user-registration-error {
+.user-registration-error{
 	border-top-color: $red;
-	background: rgba($red, 0.1);
-	color: darken($red, 15%);
+ 	background: rgba($red, 0.1);
+ 	color: darken($red, 15%);
 
 	&::before {
 		content: "\f534";
@@ -202,66 +201,66 @@ textarea.ur-input-border-red {
 }
 
 .ur-frontend-form {
-	margin-bottom: 30px;
+	//margin-bottom: 30px;
 	border: 1px solid $border_color;
 	padding: 20px;
 	box-sizing: border-box;
 
 	&.login {
-		border : none;
+		border: none;
 		padding: 60px;
-		border-radius:8px;
+		border-radius: 8px;
 		background: #fff;
 		// box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 
-		.ur-lost-password-content-container{
+		.ur-lost-password-content-container {
 			display: flex;
 			flex-direction: column;
 			align-items: center;
 
 			.ur-lost-password-title {
-				color: var(--Grey-grey-600, #1F1F1F);
+				color: var(--Grey-grey-600, #1f1f1f);
 				font-size: 32px;
 				font-style: normal;
 				font-weight: 700;
 				line-height: 48px;
 				letter-spacing: 0.15px;
-				margin : auto;
-				margin-top : 20px;
+				margin: auto;
+				margin-top: 20px;
 			}
-			.ur-lost-password-message{
+			.ur-lost-password-message {
 				font-size: 14px;
 				letter-spacing: 0.15px;
 				margin-top: 5px;
 				margin-bottom: 0;
 			}
 		}
-		.ur-input-with-icon{
+		.ur-input-with-icon {
 			position: relative;
 			display: flex;
 			align-items: center;
 
-			.input-icon{
+			.input-icon {
 				position: absolute;
 				left: 10px;
 				top: 50%;
 			}
-			input{
+			input {
 				padding-left: 40px;
 			}
 		}
-		.required{
+		.required {
 			margin-left: 5px;
 		}
-		#user_login{
+		#user_login {
 			border-radius: 4px;
-			border: 1px solid #E9E9E9;
+			border: 1px solid #e9e9e9;
 		}
-		.ur-reset-password-btn{
-			border: 1px solid #475BB2;
-			background: #475BB2;
+		.ur-reset-password-btn {
+			border: 1px solid #475bb2;
+			background: #475bb2;
 			width: 100%;
-			color: #FFF;
+			color: #fff;
 			letter-spacing: 0.15px;
 			border: 0;
 
@@ -271,13 +270,9 @@ textarea.ur-input-border-red {
 			}
 		}
 
-
-
-
 		input[name="rememberme"]#rememberme {
 			vertical-align: middle;
 		}
-
 	}
 
 	&.login-registration {
@@ -432,14 +427,13 @@ textarea.ur-input-border-red {
 				}
 			}
 
-			.ur-range-input  {
+			.ur-range-input {
 				margin-bottom: 0px !important;
 			}
 
 			input[type="password"] {
 				display: inline;
 				margin-bottom: 0px;
-
 			}
 
 			.StripeElement {
@@ -492,7 +486,7 @@ textarea.ur-input-border-red {
 			select {
 				-webkit-appearance: none;
 				background: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E")
-				no-repeat right 5px top 55%;
+					no-repeat right 5px top 55%;
 			}
 
 			legend,
@@ -588,7 +582,7 @@ textarea.ur-input-border-red {
 		border: none;
 		cursor: pointer;
 		transition: 0.35s all ease-out;
-		border-radius: 4px
+		border-radius: 4px;
 	}
 
 	input[type="submit"] {
@@ -844,10 +838,9 @@ textarea.ur-input-border-red {
 		margin: 20px 0 0 0;
 		//Revamp design for message and error
 		&.user-registration-error {
-			position : unset;
-			margin-bottom : 10px;
+			position: unset;
+			margin-bottom: 10px;
 			width: 100%;
-
 		}
 
 		&.ur-error {
@@ -1126,7 +1119,6 @@ textarea.ur-input-border-red {
 			left: 0;
 			transform: translateY(-50%);
 		}
-
 	}
 }
 /* For shortcode embed */
@@ -1349,70 +1341,68 @@ span.ur-shortcode-form-embed-dot {
 //Revamp design for message and error
 .ur-message-container {
 	border-radius: 8px;
-	box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+	box-shadow:
+		0px 4px 16px 0px rgba(17, 17, 26, 0.05),
+		0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 	padding: 60px;
 
-	.user-registration-message{
-		position : relative;
-		padding : 10px ;
-		z-index : 9999;
-		display : flex;
+	.user-registration-message {
+		position: relative;
+		padding: 10px;
+		z-index: 9999;
+		display: flex;
 		align-items: center;
 		border-radius: 4px;
-		border-left : 4px solid #49C85F;
-		background: #F7FDF8;
-		border-top : none;
-		margin : 20px 0px;
-		padding-left : 40px;
+		border-left: 4px solid #49c85f;
+		background: #f7fdf8;
+		border-top: none;
+		margin: 20px 0px;
+		padding-left: 40px;
 	}
 
-	svg{
+	svg {
 		position: absolute;
-		z-index : 999999;
-		margin-top : 33px;
-		margin-left : 10px;
+		z-index: 999999;
+		margin-top: 33px;
+		margin-left: 10px;
 	}
-
-
-
 }
 
-.user-registration-error{
-	padding : 10px !important;
-	display : flex;
+.user-registration-error {
+	padding: 10px !important;
+	display: flex;
 	align-items: center;
 	border-radius: 4px;
-	border-left : 4px solid $red;
-	background: 4px solid #FDE8E8;
-	border-top : none;
+	border-left: 4px solid $red;
+	background: 4px solid #fde8e8;
+	border-top: none;
 
-	&::before {
-		// content: '';
-		content: none;
-		display: '';
-	}
+	// &::before {
+	// 	// content: '';
+	// 	content: none;
+	// 	display: "";
+	// }
 
-	svg{
+	svg {
 		margin-right: 10px;
 	}
-
 }
 
-.user-registration-login-extra-section{
-	display : flex;
+.user-registration-login-extra-section {
+	display: flex;
 	justify-content: space-between;
 
-	.user-registration-LostPassword{
-		color: #475BB2;
+	.user-registration-LostPassword {
+		color: #475bb2;
 	}
 }
 // Spinner moved inside login and register button.
 .user-registration-Button,
 .ur-submit-button {
-	width : 100%;
-	background : #475BB2;
+	width: 100%;
+	background: #475bb2;
 	border-radius: 4px;
-	border: 1px solid #475BB2;
+	border: 1px solid #475bb2;
 	color: #ffffff;
 
 	&:hover {
@@ -1421,7 +1411,7 @@ span.ur-shortcode-form-embed-dot {
 		color: $white;
 	}
 
-	.ur-spinner{
+	.ur-spinner {
 		width: 16px;
 		height: 16px;
 		margin-left: 6px;
@@ -1429,9 +1419,8 @@ span.ur-shortcode-form-embed-dot {
 		display: inline-block;
 		vertical-align: middle;
 		@include loader();
-		margin-top : 5px;
-		float : right;
-
+		margin-top: 5px;
+		float: right;
 	}
 }
 // Login - Registration  shortcode design.
@@ -1451,17 +1440,19 @@ span.ur-shortcode-form-embed-dot {
 			padding: 15px 0;
 			cursor: pointer;
 			transition: all 0.3s ease;
-			color: #C5C5C5;
+			color: #c5c5c5;
 			font-weight: 500;
 			border-radius: 8px 0 0 0;
-			border-top: 1px solid #F1F1F1;
-			background: #F9F9F9;
-			box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+			border-top: 1px solid #f1f1f1;
+			background: #f9f9f9;
+			box-shadow:
+				0px 4px 16px 0px rgba(17, 17, 26, 0.05),
+				0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 			clip-path: inset(0px -1px -1px -1px);
 			&:first-child {
 				border-radius: 8px 0px 0 0;
-				border-top: 1px solid #F1F1F1;
-				margin-left : 10px
+				border-top: 1px solid #f1f1f1;
+				margin-left: 10px;
 			}
 
 			&:last-child {
@@ -1471,37 +1462,34 @@ span.ur-shortcode-form-embed-dot {
 
 			&.active {
 				background: #fff;
-				color : #1F1F1F;
-				border-top: 1px solid #F1F1F1;
-
+				color: #1f1f1f;
+				border-top: 1px solid #f1f1f1;
 			}
-
 		}
 	}
 }
 
-.login-registration{
+.login-registration {
 	.hidden {
-		display : none;
+		display: none;
 	}
 }
 // Revamp error design for registration and login form
-.ur-field-item{
-
-	input{
-		border-radius : 4px !important;
+.ur-field-item {
+	input {
+		border-radius: 4px !important;
 	}
-	.user-registration-error{
-		width : 100% ;
-		position: unset  ;
+	.user-registration-error {
+		width: 100%;
+		position: unset;
 		letter-spacing: 0.18px;
 		font-weight: 400;
 		font-size: 12px;
 		line-height: 19px;
-		padding : 0px !important; //Overriding global error padding.
+		padding: 0px !important; //Overriding global error padding.
 		border: none !important; //Overriding global error border.
-		background:  transparent !important; //Overriding global error background.
-		margin-left : unset !important; //Overriding global error margin.
+		background: transparent !important; //Overriding global error background.
+		margin-left: unset !important; //Overriding global error margin.
 
 		// &::before {
 		// 	// content: "\f534" ;
@@ -1509,18 +1497,18 @@ span.ur-shortcode-form-embed-dot {
 
 		// }
 	}
-
 }
 
-
 .user-registration.ur-frontend-form {
-	background: #FFF;
+	background: #fff;
 	border-radius: 8px;
-	box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
-	padding : 60px;
+	box-shadow:
+		0px 4px 16px 0px rgba(17, 17, 26, 0.05),
+		0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+	padding: 60px;
 
-	input{
-		border-radius : 4px;
+	input {
+		border-radius: 4px;
 	}
 	#user_email {
 		&::before {
@@ -1533,7 +1521,7 @@ span.ur-shortcode-form-embed-dot {
 		}
 	}
 }
-.ur-icon-user{
+.ur-icon-user {
 	margin-right: 0.875rem;
 	&::before {
 		content: "\f465";
@@ -1598,7 +1586,7 @@ span.ur-shortcode-form-embed-dot {
 									color: #ffffff;
 									display: block;
 									margin: 24px auto 0;
-									a{
+									a {
 										color: #fff;
 									}
 									&:disabled {
@@ -1640,24 +1628,24 @@ span.ur-shortcode-form-embed-dot {
 													}
 												}
 											}
-											.ur-toggle-content{
+											.ur-toggle-content {
 												margin-top: 24px;
 												display: flex;
 												flex-direction: column;
 												gap: 28px;
-												.user-registration-login-form-global-settings{
+												.user-registration-login-form-global-settings {
 													display: flex;
 													flex-direction: column;
 													gap: 12px;
-													label{
+													label {
 														font-weight: 600;
 														gap: 6px;
 														margin-bottom: 0;
-														.user-registration-help-tip{
+														.user-registration-help-tip {
 															font-size: 20px;
 														}
 													}
-													select{
+													select {
 														height: 38px;
 													}
 												}
@@ -1666,8 +1654,8 @@ span.ur-shortcode-form-embed-dot {
 									}
 								}
 							}
-							#ur-login-form-setting{
-								.ur-login-form-setting-block{
+							#ur-login-form-setting {
+								.ur-login-form-setting-block {
 									display: flex;
 									flex-direction: column;
 									gap: 24px;
@@ -1688,7 +1676,6 @@ span.ur-shortcode-form-embed-dot {
 		}
 	}
 }
-
 
 // Login Form Design ReVamped CSS
 body {
@@ -1739,11 +1726,14 @@ body {
 			}
 
 			li {
-				flex: 1;
-				color: #222222;
-				font-size: 14px;
-				font-weight: 400;
-				line-height: 21px;
+				// color: #222222;
+				color: inherit;
+				// font-size: 14px;
+				font-size: inherit;
+				// font-weight: 400;
+				font-weight: inherit;
+				// line-height: 21px;
+				line-height: inherit;
 				letter-spacing: 0.15px;
 
 				strong {
@@ -1754,7 +1744,6 @@ body {
 
 		#user-registration {
 			&:not(.user-registration-MyAccount) {
-				padding: 60px 50px;
 
 				.user-registration-message {
 					align-items: flex-start;
@@ -1783,10 +1772,10 @@ body {
 		}
 
 		.user-registration-message {
-			background: #F7FDF8;
+			background: #f7fdf8;
 			padding: 12px 12px 12px 16px;
 			border-radius: 4px;
-			border-left: 4px solid #49C85F;
+			border-left: 4px solid #49c85f;
 			display: flex;
 			align-items: center;
 			gap: 12px;
@@ -1815,6 +1804,12 @@ body {
 		}
 	}
 
+	.user-registration-error {
+		> svg {
+			display: none;
+		}
+	}
+
 	&.user-registration-page,
 	&.user-registration-membership_page_user-registration-login-forms {
 		.user-registration {
@@ -1822,7 +1817,7 @@ body {
 				max-width: 100% !important;
 
 				form {
-					.ur-button-container  {
+					.ur-button-container {
 						width: max-content;
 					}
 				}
@@ -1946,9 +1941,10 @@ body {
 			&:not(.user-registration-MyAccount) {
 				max-width: 520px;
 				margin: 24px auto;
+				// margin: 0px auto;
 				border-radius: 8px;
 				background: #FFF;
-				box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+				// box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 				border: 0;
 
 				@media screen and (max-width: 575px) {
@@ -1995,18 +1991,27 @@ body {
 
 				.ur-frontend-form {
 					&.login {
+						// max-width: 520px;
+						margin: 0px auto;
+						box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+						// padding: 60px 50px;
+
 						.user-registration-error {
 							display: block;
 							color: #222222 !important;
 							font-size: 14px;
-							font-weight: 400;
 							line-height: 21px;
-							letter-spacing: .15px;
-							padding-left: 20px !important;
-							padding-right: 20px !important;
+							letter-spacing: 0.15px;
+							padding: 10px !important;
+							font-weight: 400;
 
 							&::before {
-								content: none;
+								font-weight: 500;
+								color: rgb(255,2.5,11.1079545455);
+							}
+
+							strong {
+								font-weight: 500;
 							}
 						}
 					}
@@ -2080,7 +2085,6 @@ body {
 					}
 				}
 
-
 				.user-registration-login,
 				.user-registration-registration {
 					&-title {
@@ -2119,7 +2123,6 @@ body {
 							width: 100%;
 							position: unset;
 							align-items: center;
-							margin: 0 !important;
 							margin-bottom: 24px !important;
 							// color: #F25656 !important;
 							// font-size: 14px !important;
@@ -2130,7 +2133,7 @@ body {
 							&::before {
 								margin-right: 4px;
 								font-size: 16px;
-								color: #F25656;
+								color: #f25656;
 							}
 
 							svg {
@@ -2140,9 +2143,9 @@ body {
 
 							li {
 								color: #222222;
-								font-size: 14px;
-								font-weight: 400;
-								line-height: 21px;
+ 								font-size: inherit;
+ 								font-weight: 400;
+ 								line-height: inherit;
 								letter-spacing: 0.15px;
 
 								strong {
@@ -2173,10 +2176,10 @@ body {
 						.user-registration-form-row {
 							margin-bottom: 12px;
 
-							label {
-								margin-top: 0;
-								margin-bottom: 12px;
-							}
+							// label {
+							// 	margin-top: 0;
+							// 	margin-bottom: 12px;
+							// }
 						}
 
 						.ur-input-with-icon {
@@ -2203,7 +2206,7 @@ body {
 						}
 
 						.ur-field-item {
-							label {
+							label:not(.user-registration-error) {
 								margin-top: 0;
 								margin-bottom: 12px;
 								color: #222;
@@ -2218,7 +2221,7 @@ body {
 								input {
 									margin-bottom: 0;
 									border-radius: 4px;
-									border: 1px solid #E9E9E9;
+									border: 1px solid #e9e9e9;
 									min-height: 38px;
 									max-height: 38px;
 									font-size: 14px;
@@ -2227,7 +2230,7 @@ body {
 									color: #383838;
 
 									&:focus {
-										border-color: #027ABB;
+										border-color: #027abb;
 									}
 
 									&::placeholder {
@@ -2254,7 +2257,7 @@ body {
 						// background: #475BB2;
 						// border: 1px solid #475BB2;
 						margin-right: 0;
-						transition: all .3s;
+						transition: all 0.3s;
 
 						// &:hover {
 						// 	background: #38488e;
@@ -2264,8 +2267,8 @@ body {
 				}
 
 				.ur-frontend-form {
-					border: 0;
-					padding: 0;
+					// border: 0;
+					// padding: 0;
 					box-shadow: none;
 					margin-bottom: 0;
 
@@ -2282,33 +2285,33 @@ body {
 									margin-bottom: 24px;
 
 									label {
-										margin-top: 0;
-										margin-bottom: 12px;
-										color: #222;
-										font-size: 15px;
-										font-weight: 500;
-										line-height: 19px;
+										// margin-top: 0;
+										// margin-bottom: 12px;
+										// color: #222;
+										// font-size: 15px;
+										// font-weight: 500;
+										// line-height: 19px;
 									}
 
 									.input-wrapper {
 										display: block;
 
 										input {
-											margin-bottom: 0;
-											border-radius: 4px;
-											border: 1px solid #E9E9E9;
+											// margin-bottom: 0;
+											// border-radius: 4px;
+											// border: 1px solid #e9e9e9;
 											min-height: 38px;
-											font-size: 14px;
-											line-height: 20px;
-											padding: 0 14px;
-											color: #383838;
+											// font-size: 14px;
+											// line-height: 20px;
+											// padding: 0 14px;
+											// color: #383838;
 
 											&:focus {
-												border-color: #027ABB;
+												// border-color: #027abb;
 											}
 
 											&::placeholder {
-												color: #858585;
+												// color: #858585;
 											}
 										}
 									}
@@ -2328,8 +2331,8 @@ body {
 										font-weight: 400;
 										line-height: 24px;
 										letter-spacing: 0.15px;
-										background: #475BB2;
-										border: 1px solid #475BB2;
+										background: #475bb2;
+										border: 1px solid #475bb2;
 
 										&:hover {
 											background: #38488e;
@@ -2345,7 +2348,7 @@ body {
 
 										&:disabled {
 											pointer-events: none;
-											border-color: #F6F7F7 !important;
+											border-color: #f6f7f7 !important;
 										}
 
 										&:hover {
@@ -2355,7 +2358,9 @@ body {
 										}
 									}
 
-									&:has(.user-registration-passwordless-login) {
+									&:has(
+											.user-registration-passwordless-login
+										) {
 										display: flex;
 										flex-direction: column-reverse;
 										gap: 16px !important;
@@ -2376,11 +2381,11 @@ body {
 											display: block;
 											padding: 10px 24px;
 											border-radius: 4px;
-											transition: all .3s;
+											transition: all 0.3s;
 
 											&:hover {
-												background: #475BB2;
-												border-color: #475BB2;
+												background: #475bb2;
+												border-color: #475bb2;
 												color: #ffffff;
 											}
 										}
@@ -2398,7 +2403,7 @@ body {
 									float: unset;
 
 									label {
-										margin: 0;
+										// margin: 0;
 										width: auto;
 									}
 
@@ -2455,7 +2460,7 @@ body {
 										top: 12px;
 										left: 50%;
 										transform: translateX(-50%);
-										background: #D9D9D9;
+										background: #d9d9d9;
 										z-index: 0;
 									}
 
@@ -2502,13 +2507,12 @@ body {
 					}
 				}
 
-
 				.ur-login-registration-nav {
 					ul {
 						li {
 							margin: 0;
 							padding: 16px;
-							color: #C5C5C5;
+							color: #c5c5c5;
 							font-size: 16px;
 							font-weight: 500;
 							line-height: 21px;
@@ -2599,7 +2603,7 @@ body {
 									color: #ffffff;
 									display: block;
 									margin: 24px auto 0;
-									a{
+									a {
 										color: #fff;
 									}
 									&:disabled {
@@ -2660,24 +2664,24 @@ body {
 													}
 												}
 											}
-											.ur-toggle-content{
+											.ur-toggle-content {
 												margin-top: 24px;
 												display: flex;
 												flex-direction: column;
 												gap: 28px;
-												.user-registration-login-form-global-settings{
+												.user-registration-login-form-global-settings {
 													display: flex;
 													flex-direction: column;
 													gap: 12px;
-													label{
+													label {
 														font-weight: 600;
 														gap: 6px;
 														margin-bottom: 0;
-														.user-registration-help-tip{
+														.user-registration-help-tip {
 															font-size: 20px;
 														}
 													}
-													select{
+													select {
 														height: 38px;
 													}
 												}
@@ -2686,15 +2690,14 @@ body {
 									}
 								}
 							}
-							#ur-login-form-setting{
-								.ur-login-form-setting-block{
+							#ur-login-form-setting {
+								.ur-login-form-setting-block {
 									display: flex;
 									flex-direction: column;
 									gap: 24px;
 								}
 							}
 						}
-
 					}
 					#post-body {
 						.ur-builder-wrapper {
@@ -2721,6 +2724,133 @@ body.user-registration-page {
 		.user-registration:not(.user-registration-MyAccount) {
 			background: transparent;
 			border-radius: 0;
+		}
+	}
+}
+
+.et-db {
+	#et-boc {
+		.et-l {
+			.et-fb-modules-list {
+				ul {
+					> li {
+						position: relative;
+
+						// Registration Form Icon
+						&.urm-registration-form {
+							&:before {
+								content: "";
+								display: inline-block;
+								width: 16px;
+								height: 16px;
+								background-repeat: no-repeat;
+								background-position: center;
+								background-size: contain;
+								background-image: url("./../images/blocks/registration-form.svg");
+							}
+						}
+
+						// Login Form Icon
+						&.urm-login-form {
+							&:before {
+								content: "";
+								display: inline-block;
+								width: 16px;
+								height: 16px;
+								background-repeat: no-repeat;
+								background-position: center;
+								background-size: contain;
+								background-image: url("./../images/blocks/login-form.svg");
+							}
+						}
+
+						// Myaccount Icon
+						&.urm-myaccount {
+							&:before {
+								content: "";
+								display: inline-block;
+								width: 16px;
+								height: 16px;
+								background-repeat: no-repeat;
+								background-position: center;
+								background-size: contain;
+								background-image: url("./../images/blocks/my-account.svg");
+							}
+						}
+
+						// edit profile Icon
+						&.urm-edit-profile {
+							&:before {
+								content: "";
+								display: inline-block;
+								width: 16px;
+								height: 16px;
+								background-repeat: no-repeat;
+								background-position: center;
+								background-size: contain;
+								background-image: url("./../images/blocks/edit-profile.svg");
+							}
+						}
+
+						// Edit Password Icon
+						&.urm-edit-password {
+							&:before {
+								content: "";
+								display: inline-block;
+								width: 16px;
+								height: 16px;
+								background-repeat: no-repeat;
+								background-position: center;
+								background-size: contain;
+								background-image: url("./../images/blocks/edit-password.svg");
+							}
+						}
+
+						// Edit Password Icon
+						&.urm-content-restriction {
+							&:before {
+								content: "";
+								display: inline-block;
+								width: 16px;
+								height: 16px;
+								background-repeat: no-repeat;
+								background-position: center;
+								background-size: contain;
+								background-image: url("./../images/blocks/content-restriction.svg");
+							}
+						}
+
+						// Membership Group Icon
+						&.urm-membership-groups {
+							&:before {
+								content: "";
+								display: inline-block;
+								width: 16px;
+								height: 16px;
+								background-repeat: no-repeat;
+								background-position: center;
+								background-size: contain;
+								background-image: url("./../images/blocks/membership-groups.svg");
+							}
+						}
+
+
+						// Membership thankyou Icon
+						&.urm-membership-thank-you {
+							&:before {
+								content: "";
+								display: inline-block;
+								width: 16px;
+								height: 16px;
+								background-repeat: no-repeat;
+								background-position: center;
+								background-size: contain;
+								background-image: url("./../images/blocks/thankyou.svg");
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 }

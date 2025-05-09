@@ -230,7 +230,7 @@ class UR_Modules {
 		if ( 'addon' === $type ) {
 			$status = self::ur_install_addons( $slug, $name, $plugin );
 		} else {
-			$status = self::ur_enable_feature( $request['slug'] );
+			$status = self::ur_enable_feature( sanitize_text_field($request['slug']) );
 		}
 
 		if ( isset( $status['success'] ) && ! $status['success'] ) {
@@ -294,18 +294,18 @@ class UR_Modules {
 		$enabled_features = get_option( 'user_registration_enabled_features', array() );
 
 		if ( 'user-registration-membership' === $slug ) {
+			array_push( $enabled_features, 'user-registration-payment-history' );
+			array_push( $enabled_features, 'user-registration-content-restriction' );
 			if ( ! get_option( 'user_registration_membership_installed_flag', false ) ) {
-				array_push( $enabled_features, 'user-registration-payment-history' );
-				array_push( $enabled_features, 'user-registration-content-restriction' );
 				ur_membership_install_required_pages();
 				\WPEverest\URMembership\Admin\Database\Database::create_tables();
 			}
 		}
 
-		if ( 'user-registration-payments' === $slug && !in_array('user-registration-payment-history', $enabled_features)) {
+		if ( in_array($slug , ['user-registration-payments', 'user-registration-stripe', 'user-registration-authorize-net'])   && !in_array('user-registration-payment-history', $enabled_features)) {
 			$enabled_features[] = 'user-registration-payment-history';
 		}
-		array_push( $enabled_features, $slug );
+		$enabled_features[] = $slug;
 		update_option( 'user_registration_enabled_features', $enabled_features );
 
 		/**
@@ -653,6 +653,8 @@ class UR_Modules {
 			$status['pluginName'] = $plugin_data['Name'];
 
 			if ( is_plugin_inactive( $plugin ) ) {
+				$enabled_features = get_option( 'user_registration_enabled_features', array() );
+
 				$result = activate_plugin( $plugin );
 
 				if ( is_wp_error( $result ) ) {
@@ -661,11 +663,10 @@ class UR_Modules {
 					$status['success']      = false;
 					return $status;
 				}
-				$enabled_features = get_option( 'user_registration_enabled_features', array() );
 
-				if ( 'userregistrationstripe' === $slug && !in_array('user-registration-payment-history', $enabled_features)) {
+				if ( in_array( $slug , [ 'userregistrationstripe', 'userregistrationauthorizenet'] ) && !in_array('user-registration-payment-history', $enabled_features)) {
 					$enabled_features[] = 'user-registration-payment-history';
-					update_option( 'user_registration_enabled_features', $enabled_features );
+					update_option( 'user_registration_enabled_features', array_unique($enabled_features)  );
 				}
 				$status['success'] = true;
 				$status['message'] = __( 'Addons activated successfully', 'user-registration' );
@@ -734,7 +735,7 @@ class UR_Modules {
 		activate_plugin( $plugin );
 		$enabled_features = get_option( 'user_registration_enabled_features', array() );
 
-		if ( 'userregistrationstripe' === $slug && !in_array('user-registration-payment-history', $enabled_features)) {
+		if ( in_array( $slug , [ 'userregistrationstripe', 'userregistrationauthorizenet'] ) && !in_array('user-registration-payment-history', $enabled_features)) {
 			$enabled_features[] = 'user-registration-payment-history';
 			update_option( 'user_registration_enabled_features', $enabled_features );
 		}

@@ -313,12 +313,22 @@ class UR_Admin_Export_Users {
 					if ( isset( $profile[ $profile_key ]['default'] ) ) {
 						$default_value = $profile[ $profile_key ]['default'];
 
-						// Handle array values properly.
-						if ( is_array( $default_value ) ) {
-							$default_value = implode( ', ', array_filter( $default_value, fn( $v ) => ! empty( $v ) ) );
-						} else {
-							$default_value = esc_html( $default_value );
-						}
+					// Handle array values properly.
+					if ( is_array( $default_value ) ) {
+						// Filter out empty values and join the remaining values into a string.
+						$default_value = implode(
+							', ',
+							array_filter(
+								$default_value,
+								function ( $v ) {
+									return ! empty( $v );
+								}
+							)
+						);
+					} else {
+						// If it's not an array, sanitize the value.
+						$default_value = esc_html( $default_value );
+					}
 
 						// Only set non-empty default values.
 						if ( ! empty( $default_value ) ) {

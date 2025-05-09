@@ -935,3 +935,22 @@
   color: #383838;
   background: #ffffff !important;
 }
+
+body.user-registration-page .user-registration-membership-notice__blue {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: 12px;
+  gap: 16px;
+  padding: 10px 20px;
+}
+body.user-registration-page .user-registration-membership-notice__blue .user-registration-membership__close_notice {
+  padding-right: 0;
+  color: #ff4859;
+  font-size: 20px;
+  line-height: 26px;
+}
+body.user-registration-page .user-registration-membership-notice__message {
+  font-size: 14px;
+  line-height: 24px;
+}

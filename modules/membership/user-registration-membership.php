@@ -9,8 +9,8 @@
 if ( file_exists( UR()->plugin_path() . '/vendor/autoload.php' ) ) {
 	require_once UR()->plugin_path() . '/vendor/autoload.php';
 }
-defined( 'ABSPATH' ) || exit;
 
+defined( 'ABSPATH' ) || exit;
 
 if ( ! defined( 'UR_MEMBERSHIP_VERSION' ) ) {
 	define( 'UR_MEMBERSHIP_VERSION', '1.0.2' );

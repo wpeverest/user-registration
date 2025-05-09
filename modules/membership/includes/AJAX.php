@@ -106,13 +106,22 @@ class AJAX {
 				)
 			);
 		}
+		$member          = get_user_by( 'login', $data['username'] );
+		$member_id       = $member->ID;
+		$is_just_created = get_user_meta( $member_id, 'urm_user_just_created', true );
 
+		if ( ! $is_just_created ) {
+			wp_send_json_error(
+				array(
+					'message' => __( "User already exists.", "user-registration" ),
+				)
+			);
+		}
 		$membership_service      = new MembershipService();
 		$response                = $membership_service->create_membership_order_and_subscription( $data );
-		$member_id               = $response['member_id'];
-		$transaction_id          = $response['transaction_id'] ?? 0;
+		$transaction_id          = isset( $response['transaction_id'] ) ? $response['transaction_id'] : 0;
 		$data['member_id']       = $member_id;
-		$data['subscription_id'] = $response['subscription_id'] ?? 0;
+		$data['subscription_id'] = isset( $response['subscription_id'] ) ? $response['subscription_id'] : 0;
 		$data['email']           = $response['member_email'];
 
 		$pg_data = array();
@@ -123,9 +132,17 @@ class AJAX {
 
 		if ( $response['status'] ) {
 			$form_response = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
+
 			if ( ! empty( $form_response ) && isset( $form_response["auto_login"] ) && $form_response["auto_login"] && 'free' == $data['payment_method'] ) {
 				$members_service = new MembersService();
-				$members_service->login_member( $member_id );
+				$logged_in       = $members_service->login_member( $member_id, true );
+				if ( ! $logged_in ) {
+					wp_send_json_error(
+						array(
+							'message' => __( "Invalid User", "user-registration" ),
+						)
+					);
+				}
 			}
 			$email_service = new EmailService();
 			$email_service->send_email( $data, 'user_register_user' );
@@ -142,9 +159,12 @@ class AJAX {
 			if ( 'free' !== $data['payment_method'] ) {
 				$response['pg_data'] = $pg_data;
 			}
+			if ( in_array( $data['payment_method'], array( 'free', 'bank' ) ) ) {
+				delete_user_meta( $member_id, 'urm_user_just_created' );
+			}
 			wp_send_json_success( $response );
 		} else {
-			$message = $response['message'] ?? esc_html__( 'Sorry! There was an unexpected error while registering the user . ', 'user-registration' );
+			$message = isset( $response['message'] ) ? $response['message'] : esc_html__( 'Sorry! There was an unexpected error while registering the user . ', 'user-registration' );
 			wp_send_json_error(
 				array(
 					'message' => $message,
@@ -507,7 +527,7 @@ class AJAX {
 				)
 			);
 		} else {
-			$message = $response['message'] ?? esc_html__( 'Sorry! There was an unexpected error while saving the members data . ', 'user-registration' );
+			$message = isset( $response['message'] ) ? $response['message'] : esc_html__( 'Sorry! There was an unexpected error while saving the members data . ', 'user-registration' );
 			wp_send_json_error(
 				array(
 					'message' => $message,
@@ -556,15 +576,40 @@ class AJAX {
 				)
 			);
 		}
+		if ( empty( $_POST['form_response'] ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Field form_response is required', 'user-registration' ),
+				)
+			);
+		}
+		$member_id       = absint( $_POST['member_id'] );
+		$is_user_created = get_user_meta( $member_id, 'urm_user_just_created' );
+		if ( ! $is_user_created ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Invalid Request.', 'user-registration' ),
+				)
+			);
+		}
 		$stripe_service      = new StripeService();
 		$payment_status      = sanitize_text_field( $_POST['payment_status'] );
 		$update_stripe_order = $stripe_service->update_order( $_POST );
 		if ( $update_stripe_order['status'] ) {
 			$form_response = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
-			if ( ! empty( $form_response ) && $form_response["auto_login"] && $payment_status !== "failed" ) {
+			if ( ! empty( $form_response ) && isset( $form_response["auto_login"] ) && $payment_status !== "failed" ) {
 				$members_service = new MembersService();
-				$members_service->login_member( $_POST['member_id'] );
+				$logged_in       = $members_service->login_member( $member_id, true );
+				if ( ! $logged_in ) {
+					wp_send_json_error(
+						array(
+							'message' => isset( $update_stripe_order["message"] ) ? $update_stripe_order["message"] : __( "Something went wrong when updating users payment status" )
+						),
+						500
+					);
+				}
 			}
+			delete_user_meta( $member_id, 'urm_user_just_created' );
 			wp_send_json_success(
 				array(
 					'message' => $update_stripe_order["message"]
@@ -573,33 +618,39 @@ class AJAX {
 		}
 		wp_send_json_error(
 			array(
-				'message' => $update_stripe_order["message"] ?? __( "Something went wrong when updating users payment status" )
-			)
+				'message' => isset( $update_stripe_order["message"] ) ? $update_stripe_order["message"] : __( "Something went wrong when updating users payment status" )
+			),
+			500
 		);
 
 	}
 
 	public static function create_stripe_subscription() {
 		ur_membership_verify_nonce( 'ur_membership_confirm_payment' );
-		$customer_id         = isset( $_POST['customer_id'] ) ? $_POST['customer_id'] : '';
-		$payment_method_id   = isset( $_POST['payment_method_id'] ) ? sanitize_text_field( $_POST['payment_method_id'] ) : '';
-		$member_id           = absint( wp_unslash( $_POST['member_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$customer_id       = isset( $_POST['customer_id'] ) ? $_POST['customer_id'] : '';
+		$payment_method_id = isset( $_POST['payment_method_id'] ) ? sanitize_text_field( $_POST['payment_method_id'] ) : '';
+		$member_id         = absint( wp_unslash( $_POST['member_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+
+		$is_user_created = get_user_meta( $member_id, 'urm_user_just_created' );
+		if ( ! $is_user_created ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Invalid Request.', 'user-registration' ),
+				)
+			);
+		}
+
 		$stripe_service      = new StripeService();
 		$form_response       = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
 		$stripe_subscription = $stripe_service->create_subscription( $customer_id, $payment_method_id, $member_id );
 
 		if ( $stripe_subscription['status'] ) {
-			$form_response = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
-			if ( ! empty( $form_response ) && $form_response["auto_login"] ) {
-				$members_service = new MembersService();
-				$members_service->login_member( $member_id );
-			}
 			wp_send_json_success( $stripe_subscription );
 		} else {
 			wp_delete_user( absint( $member_id ) );
 			wp_send_json_error(
 				array(
-					'message' => $message ?? __( "Something went wrong when updating users payment status" )
+					'message' => __( "Something went wrong when updating users payment status" )
 				)
 			);
 		}
@@ -626,7 +677,25 @@ class AJAX {
 		$subscription_id = absint( $_POST['subscription_id'] );
 
 		$subscription_repository = new SubscriptionRepository();
-		$cancel_status           = $subscription_repository->cancel_subscription_by_id( $subscription_id );
+		$user_subscription       = $subscription_repository->retrieve( $subscription_id );
+		if ( empty( $user_subscription ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( "User's subscription not found.", "user-registration" ),
+				)
+			);
+		}
+		$user_id = ! empty( $user_subscription['user_id'] ) ? $user_subscription['user_id'] : '';
+
+		if ( ! current_user_can( 'edit_user', $user_id ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'You are not allowed to edit this user.', 'user-registration' ),
+				)
+			);
+		}
+
+		$cancel_status = $subscription_repository->cancel_subscription_by_id( $subscription_id );
 
 		if ( $cancel_status['status'] ) {
 			wp_destroy_current_session();
@@ -638,7 +707,7 @@ class AJAX {
 				)
 			);
 		} else {
-			$message = $cancel_status['message'] ?? esc_html__( 'Something went wrong while cancelling your subscription. Please contact support', 'user-registration' );
+			$message = isset( $cancel_status['message'] ) ? $cancel_status['message'] : esc_html__( 'Something went wrong while cancelling your subscription. Please contact support', 'user-registration' );
 			wp_send_json_error(
 				array(
 					'message' => $message,

@@ -1057,12 +1057,16 @@ class UR_Emailer {
 	 * @return void
 	 */
 	public static function user_registration_process_and_send_email( $email, $subject, $message, $header, $attachment, $template_id ) {
+
 		$message                     = user_registration_process_email_content( $message, $template_id );
 		$status                      = wp_mail( $email, $subject, $message, $header, $attachment, $template_id );
+
 		$mail_error_notice_dismissed = get_option( 'user_registration_info_ur_email_send_failed_notice_dismissed_temporarily', false );
 		$mail_error_notice_dismissed = ! $mail_error_notice_dismissed ? get_option( 'user_registration_info_ur_email_send_failed_notice_dismissed', false ) : $mail_error_notice_dismissed;
-
+		$logger = ur_get_logger();
+		$logger->info( __( 'Email Sending', 'user-registration' ), array( 'source' => 'ur_mail_logs' ) );
 		if ( ! $status && ! $mail_error_notice_dismissed ) {
+			$logger->info( __( 'Email Sending failed', 'user-registration' ), array( 'source' => 'ur_mail_logs' ) );
 			$error_message = apply_filters( 'user_registration_email_send_failed_message', '' );
 			$failed_data   = get_transient( 'user_registration_mail_send_failed_count' );
 			$failed_count  = $failed_data && isset( $failed_data['failed_count'] ) ? $failed_data['failed_count'] : 0;
@@ -1074,6 +1078,10 @@ class UR_Emailer {
 					'error_message' => $error_message,
 				)
 			);
+			return $status;
+		} else {
+			$logger->info( __( 'Email Send Successfully', 'user-registration' ), array( 'source' => 'ur_mail_logs' ) );
+			return $status;
 		}
 	}
 }

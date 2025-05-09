@@ -1573,6 +1573,25 @@ jQuery(function ($) {
 		$('#user_registration_paypal_return_url').val(user_registration_form_builder_data.paypal_settings[type].return_url);
 
 	})
+
+	$('.user-registration-system-info-setting-copy').tooltipster({
+		content: 'Copied',
+		trigger: 'click',
+		theme: 'tooltipster-shadow',
+		interactive: true,
+		functionBefore: function(instance, helper) {
+			var table = $('.user-registration-system-info-setting table')[0];
+			$('.user-registration-system-info-setting .ur-general-settings-hide').css('display', 'block');
+			var range = document.createRange();
+			range.selectNode(table);
+			window.getSelection().removeAllRanges();
+			window.getSelection().addRange(range);
+			document.execCommand('copy');
+			window.getSelection().removeAllRanges();
+			$('.user-registration-system-info-setting .ur-general-settings-hide').css('display', 'none');
+		}
+	});
+
 	/**
 	 * For update the default value.
 	 */

@@ -155,7 +155,7 @@ const Help = () => {
 							borderColor="gray.100"
 							textAlign="center"
 						>
-							<Icon.Chat w="8" h="8" fill="primary.500" />
+							<Icon.Support w="8" h="8" fill="primary.500"/>
 							<Heading as="h3" size="sm" fontWeight="semibold">
 								{__("Support", "user-registration")}
 							</Heading>

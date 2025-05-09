@@ -26,6 +26,7 @@ class SubscriptionService {
 			$expiry_date = self::get_expiry_date( $data['membership_data']['start_date'], $membership_meta['subscription']['duration'], $membership_meta['subscription']['value'] );
 			$status      = 'on' === $membership_meta['trial_status'] ? 'trial' : 'pending';
 		}
+
 		if ( $current_user->ID != 0 || 'free' == $membership_meta['type'] ) {
 			$status = 'active';
 		}

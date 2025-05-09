@@ -63,4 +63,18 @@
 			}
 		}
 	});
+	$(document).ready(function () {
+		$("form").on(
+			"focus",
+			"#user_url, #user_registration_user_url",
+			function () {
+				var url = $(this).val().trim();
+
+				// Only append "https://" if the field is empty
+				if (url === "") {
+					$(this).val("https://");
+				}
+			}
+		);
+	});
 })(jQuery);

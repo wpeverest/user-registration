@@ -441,3 +441,17 @@ if ( ! function_exists( 'get_active_membership_id_name' ) ) {
 		return $new_membership;
 	}
 }
+
+if ( ! function_exists( 'urm_is_divi_active' ) ) {
+	/**
+	 * Check divi is active or not.
+	 *
+	 * @return array
+	 */
+	function urm_is_divi_active() {
+		$active_theme_details = wp_get_theme();
+		$theme_name           = $active_theme_details->Name;
+
+		return 'Divi' === $theme_name;
+	}
+}
