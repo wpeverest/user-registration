@@ -323,7 +323,7 @@ class EmailService
 		$form_id  = ur_get_form_id_by_userid( $data['member_id'] );
 		$settings = new UR_Settings_Membership_Renewal_Reminder_User_Email();
 
-		$message = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_cancellation_admin_email_message', $settings->user_registration_get_membership_renewal_reminder_user_email() ), $data, $form_id );;
+		$message = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_renewal_reminder_user_email_message', $settings->user_registration_get_membership_renewal_reminder_user_email() ), $data, $form_id );;
 
 		$message     = apply_filters( 'ur_membership_membership_cancellation_email_custom_template', $message, $subject );
 
