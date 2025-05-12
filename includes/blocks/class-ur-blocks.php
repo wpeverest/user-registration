@@ -64,6 +64,7 @@ class UR_Blocks {
 				'isPro'                => is_plugin_active( 'user-registration-pro/user-registration.php' ),
 				'iscRestrictionActive' => ur_check_module_activation( 'content-restriction' ),
 				'pages' 			   => array_map( function( $page ) { return [ 'label' => $page->post_title, 'value' => $page->ID ]; }, get_pages() ),
+				'login_page_id'		   => get_option('user_registration_login_page_id')
 			)
 		);
 		wp_register_script(

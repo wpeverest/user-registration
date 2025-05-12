@@ -80,8 +80,11 @@ abstract class UR_Nav_Menu_Item {
 			<?php
 				$pages = get_pages();
 				echo '<select class="edit-menu-item-' . esc_attr( $field_id ) . 'name="menu-item-' . esc_attr( $field_id ) . '[' . esc_attr( $item_id ) . ']" ' . '>';
+				$login_page_id = get_option('user_registration_login_page_id');
+
 				foreach( $pages as $page ) {
-					echo "<option value=" . ur_get_page_permalink( $page ) . ">" . $page->post_title . "</option>";
+					$selected = ($page->ID == $login_page_id) ? 'selected' : '';
+					echo '<option value="' . esc_attr(ur_get_page_permalink($page)) . '" ' . esc_attr($selected)  . '>' . esc_html($page->post_title) . '</option>';
 				}
 				echo '</select>';
 				echo '</label>';
