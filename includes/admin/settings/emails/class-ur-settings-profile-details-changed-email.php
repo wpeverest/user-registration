@@ -148,15 +148,11 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Changed_Email', false ) ) :
 				sprintf(
 					__(
 						'
-						Hi Admin,
-
+						Hi Admin,<br/>
 						A user has updated their profile information for the following account:<br/>
-
-						SiteName: {{blog_info}} <br/><br/>
+						SiteName: {{blog_info}} <br/>
 						Username: {{username}} <br/>
-
-						{{all_fields}}
-						<br/>
+						{{all_fields}}<br/>
 						Thank You!',
 						'user-registration'
 					)

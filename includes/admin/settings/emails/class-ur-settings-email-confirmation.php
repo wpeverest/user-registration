@@ -131,12 +131,11 @@ if ( ! class_exists( 'UR_Settings_Email_Confirmation', false ) ) :
 				sprintf(
 					__(
 						'Hi {{username}}, <br/>
+						Thank you for registering on <a href="{{home_url}}">{{blog_info}}</a>!
+						Please click on the link below to confirm your registration: <br/>
+						Click here to confirm your registration: <a href="{{home_url}}/{{ur_login}}?ur_token={{email_token}}">Click Here</a><br/>
 
-You have registered on <a href="{{home_url}}">{{blog_info}}</a>!. <br/>
-Please click on the link below to confirm your registration: <br/>
-[Click here to confirm your registration: <a href="{{home_url}}/{{ur_login}}?ur_token={{email_token}}">Click Here</a> ] - Link <br/>
-
-Thank You!',
+						Thank You!',
 						'user-registration'
 					)
 				)

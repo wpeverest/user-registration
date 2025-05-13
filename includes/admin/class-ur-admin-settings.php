@@ -414,12 +414,12 @@ class UR_Admin_Settings {
 
 						$settings .= '<div class="user-registration-card__header ur-border-0" style="' . esc_attr( $header_css ) . '">';
 						if ( ! empty( $section['title'] ) ) {
-							$settings .= '<h3 class="user-registration-card__title">' . esc_html( strtoupper( $section['title'] ) );
+							$settings .= '<h3 class="user-registration-card__title">';
 
 							if ( isset( $section['back_link'] ) ) {
 								$settings .= wp_kses_post( $section['back_link'] );
 							}
-
+							$settings .= esc_html( strtoupper( $section['title'] ) );
 							$settings .= '</h3>';
 						}
 

@@ -121,12 +121,12 @@ if ( ! class_exists( 'UR_Settings_Confirm_Email_Address_Change_Email', false ) )
 				sprintf(
 					wp_kses_post(
 						__(
-							'Hi {{display_name}},
-							<p>You recently requested to change the email address associated with your account to {{updated_new_user_email}} . </p>
-							<p>To confirm this change, please click on the following link: {{email_change_confirmation_link}}
-							This link will remain active for 24 hours. If you did not request this change, please ignore this email or contact us for assistance.</p>
-				<p>Best regards,<br/>
-				 {{blog_info}}</p>',
+							'Hi {{display_name}},<br/><br/>
+							You recently requested to change the email address associated with your account to {{updated_new_user_email}} .<br/><br/>
+							To confirm this change, please click on the following link: {{email_change_confirmation_link}}<br/><br/>
+							This link will remain active for 24 hours. If you did not request this change, please ignore this email or contact us for assistance.<br/><br/>
+							Best regards,<br/>
+				 			{{blog_info}}',
 							'user-registration'
 						)
 					)
