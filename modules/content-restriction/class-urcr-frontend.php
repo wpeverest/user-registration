@@ -1156,7 +1156,16 @@ class URCR_Frontend {
 
 		$message = apply_filters( 'user_registration_process_smart_tags', $message );
 
-		return '<span class="urcr-restrict-msg">' . $message . '</span>';
+		$active_theme = wp_get_theme();
+
+		$active_theme = wp_get_theme();
+
+		if ( isset( $active_theme ) && 'Botiga' === $active_theme->get( 'Name' ) ) {
+			return '<span class="urcr-restrict-msg" style="display:none">' . $message . '</span>';
+		} else {
+			return '<span class="urcr-restrict-msg">' . $message . '</span>';
+		}
+
 	}
 
 	/**
