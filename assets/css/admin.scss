@@ -7205,3 +7205,7 @@ body {
 		}
 	}
 }
+.form-settings-tab.disabled[data-field-group="payments"]{
+	cursor: not-allowed;
+	opacity: 0.5;
+}
