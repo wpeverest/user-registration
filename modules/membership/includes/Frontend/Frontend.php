@@ -222,14 +222,11 @@ class Frontend {
 		if ( ! isset( $_GET['urm_uuid'] ) || ! isset( $_GET['thank_you'] ) ) {
 			return;
 		}
-		delete_expired_transients();
 		$uuid             = $_GET['urm_uuid'] ? sanitize_text_field( $_GET['urm_uuid'] ) : ur_get_random_number();
 		$transient_id     = "uuid_{$uuid}_thank_you";
-		$transient_exists = get_transient( $transient_id );
+		delete_transient( $transient_id );
+		$thank_you_page = get_permalink( absint( $_GET['thank_you'] ) );
+		set_transient( $transient_id, $thank_you_page, 15 * MINUTE_IN_SECONDS );
 
-		if ( ! $transient_exists ) {
-			$thank_you_page = get_permalink( absint( $_GET['thank_you'] ) );
-			set_transient( $transient_id, $thank_you_page, 15 * MINUTE_IN_SECONDS );
-		}
 	}
 }
