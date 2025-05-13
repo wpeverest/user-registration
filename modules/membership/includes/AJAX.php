@@ -208,9 +208,12 @@ class AJAX {
 		$new_membership_ID = wp_insert_post( $data['post_data'] );
 
 		if ( $new_membership_ID ) {
-			add_post_meta( $new_membership_ID, $data['post_meta_data']['meta_key'], $data['post_meta_data']['meta_value'] );
-			$meta_data = json_decode( $data["post_meta_data"]["meta_value"], true );
-
+			if(!empty($data['post_meta_data']) ) {
+				foreach ($data['post_meta_data'] as $datum) {
+					add_post_meta( $new_membership_ID, $datum['meta_key'], $datum['meta_value'] );
+				}
+			}
+			$meta_data = json_decode( $data["post_meta_data"]['ur_membership']["meta_value"], true );
 
 			if ( $is_stripe_enabled && "free" !== $meta_data["type"] ) {
 				$stripe_service           = new StripeService();
@@ -285,8 +288,13 @@ class AJAX {
 		$updated_ID = wp_insert_post( $data['post_data'] );
 
 		if ( $updated_ID ) {
-			update_post_meta( $updated_ID, $data['post_meta_data']['meta_key'], $data['post_meta_data']['meta_value'] );
-			$meta_data = json_decode( $data["post_meta_data"]["meta_value"], true );
+			if(!empty($data['post_meta_data']) ) {
+				foreach ($data['post_meta_data'] as $datum) {
+					update_post_meta( $updated_ID, $datum['meta_key'], $datum['meta_value'] );
+				}
+			}
+
+			$meta_data = json_decode( $data["post_meta_data"]['ur_membership']["meta_value"], true );
 
 			if ( $is_stripe_enabled && "free" !== $meta_data["type"] ) {
 
