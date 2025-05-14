@@ -465,8 +465,8 @@ if ( ! function_exists( 'convert_to_days' ) ) {
 	 *
 	 * @return float|int|mixed
 	 */
-	function convert_to_days($value, $unit) {
-		switch (strtolower($unit)) {
+	function convert_to_days( $value, $unit ) {
+		switch ( strtolower( $unit ) ) {
 			case 'year':
 			case 'years':
 				return $value * 365;
@@ -481,6 +481,8 @@ if ( ! function_exists( 'convert_to_days' ) ) {
 			default:
 				return $value;
 		}
+	}
+}
 
 if ( ! function_exists( 'urm_get_thank_you_page' ) ) {
 	/**
