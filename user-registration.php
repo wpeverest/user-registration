@@ -258,14 +258,14 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-edit-profile.php';
 			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-edit-password.php';
 			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-login-logout-menu.php';
-
+			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-membership-listing.php';
+			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-thank-you.php';
 			/**
 			 * Navigation menu item classes.
 			 */
 			include_once UR_ABSPATH . 'includes/menu-items/abstract-ur-nav-menu-item.php';
 			include_once UR_ABSPATH . 'includes/menu-items/class-ur-login-logout-nav-menu-item.php';
-			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-membership-listing.php';
-			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-thank-you.php';
+
 
 			// Validation classes.
 			include_once UR_ABSPATH . 'includes/validation/class-ur-validation.php';
