@@ -207,6 +207,27 @@ export const ContentRestriction = (props) => (
 		></path>
 	</chakra.svg>
 );
+export const LoginLogoutIcon = (props) => (
+	<chakra.svg
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox="0 0 24 24"
+		fill="#475BB2"
+		h="6"
+		w="6"
+		{...props}
+	>
+		<path
+			fillRule="evenodd"
+			d="M3 12a.9.9 0 0 1 .9-.9h9.3a.9.9 0 0 1 0 1.8H3.9A.9.9 0 0 1 3 12Zm10.23-5.32a.9.9 0 0 1 1.28 0l4.5 4.5a.9.9 0 0 1 0 1.28l-4.5 4.5a.9.9 0 1 1-1.28-1.28L16.72 12l-3.49-3.5a.9.9 0 0 1 0-1.28Z"
+			clipRule="evenodd"
+		/>
+		<path
+			fillRule="evenodd"
+			d="M5.1 3A2.1 2.1 0 0 0 3 5.1v13.8A2.1 2.1 0 0 0 5.1 21h8.1a.9.9 0 0 0 0-1.8H5.1a.3.3 0 0 1-.3-.3V5.1a.3.3 0 0 1 .3-.3h8.1a.9.9 0 0 0 0-1.8H5.1Z"
+			clipRule="evenodd"
+		/>
+	</chakra.svg>
+);
 export const ThankYou = (props) => (
 	<chakra.svg
 		xmlns="http://www.w3.org/2000/svg"
