@@ -70,7 +70,7 @@ class URCR_Shortcodes {
 
 			$roles                = isset( $atts['access_role'] ) ? trim( $atts['access_role'] ) : '';
 
-			if ( isset( $atts['access_all_roles'] ) && ! empty( $atts['access_all_roles'] ) ) {
+			if ( isset( $atts['access_all_roles'],$atts['enable_content_restriction'] ) && ! empty( $atts['access_all_roles']  ) &&  $atts['enable_content_restriction'] == true ) {
 				$roles = trim( $atts['access_all_roles'] );
 			}
 
@@ -87,6 +87,7 @@ class URCR_Shortcodes {
 				$override_global_settings = get_post_meta( $post->ID, 'urcr_meta_override_global_settings', $single = true );
 
 				if ( $override_global_settings !== 'on' ) {
+
 					if ( '0' == get_option( 'user_registration_content_restriction_allow_access_to', '0' ) ) {
 						if ( is_user_logged_in() ) {
 							return do_shortcode( $content );
@@ -142,13 +143,10 @@ class URCR_Shortcodes {
 			$memberships_roles = isset($memberships_roles) ? explode( ',', $memberships_roles ) : array();
 			$memberships_roles = array_map( fn($role) => trim(str_replace('″', '', $role)), $memberships_roles );
 			$message = '';
-			if (isset($atts['message']) && !empty($atts['message'])) {
-				$message = wp_kses_post( html_entity_decode( $atts['message'] ) );
-			}
 			if ( $override_global_settings === 'on' ) {
 				$message = ! empty(get_post_meta( $post->ID, 'urcr_meta_content', $single = true )) ? get_post_meta( $post->ID, 'urcr_meta_content', $single = true ) : '';
 			} elseif ( isset( $atts['enable_content_restriction']) && $atts['enable_content_restriction'] === "true" ) {
-				$message = isset($message  ) ? $message : get_option( 'user_registration_content_restriction_message' );
+				$message = isset($atts['message']) ? wp_kses_post( html_entity_decode( $atts['message'] ) ) : get_option( 'user_registration_content_restriction_message' );
 			}
 
 			$message = empty( $message ) ? __( 'This content is restricted!', 'user-registration' ) : $message;
