@@ -2,6 +2,7 @@
 
 namespace WPEverest\URMembership\Emails;
 
+use WPEverest\URMembership\Admin\Services\SubscriptionService;
 use WPEverest\URMembership\Emails\Admin\UR_Settings_Membership_Cancellation_Admin_Email;
 use WPEverest\URMembership\Emails\User\UR_Settings_Membership_Cancellation_User_Email;
 use WPEverest\URMembership\Emails\User\UR_Settings_Membership_Renewal_Reminder_User_Email;
@@ -15,6 +16,7 @@ use WPEverest\URMembership\Emails\User\UR_Settings_Membership_Renewal_Reminder_U
 class EmailSettings {
 	public function __construct() {
 		add_filter( 'user_registration_email_classes', array( $this, 'add_email_settings' ), 10, 1 );
+		add_action( 'urm_daily_membership_renewal_check', array( $this, 'membership_renewal_check' ), 10, 1 );
 	}
 
 	public function add_email_settings( $emails ) {
@@ -24,5 +26,22 @@ class EmailSettings {
 		);
 
 		return array_merge( $emails, $new_emails );
+
+		if ( UR_PRO_ACTIVE ) {
+			$new_emails = array(
+				'UR_Settings_Membership_Renewal_Reminder_User_Email' => new UR_Settings_Membership_Renewal_Reminder_User_Email(),
+			);
+			$new_emails = array_merge( $emails, $new_emails );
+		}
+
+		return array_merge( $emails, $new_emails );
+	}
+
+	public function membership_renewal_check() {
+		if ( ! ur_option_checked( 'user_registration_membership_renewal_reminder_user_email', false ) ) {
+			return;
+		}
+		$subscription_service = new SubscriptionService();
+		$subscription_service->daily_membership_renewal_check();
 	}
 }

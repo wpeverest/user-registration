@@ -6,7 +6,10 @@
   "title": "Content Restriction",
   "category": "user-registration",
   "description": "The block restricts the content.",
-  "keywords": ["user registration content restriction", "content restriction"],
+  "keywords": [
+    "user registration content restriction",
+    "content restriction"
+  ],
   "textdomain": "user-registration",
   "example": {
     "attributes": {}
@@ -17,9 +20,23 @@
     "reusable": false
   },
   "attributes": {
-    "accessRole": {
+    "accessAllRoles": {
       "type": "string",
       "default": ""
+    },
+    "accessSpecificRoles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "accessMembershipRoles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
     },
     "accessControl": {
       "type": "string",
@@ -27,7 +44,15 @@
     },
     "content": {
       "type": "string",
-      "selector":"div"
+      "selector": "div"
+    },
+    "message": {
+      "type": "string",
+      "default": ""
+    },
+    "enableContentRestriction": {
+      "type": "boolean",
+      "default": false
     }
   },
   "editorScript": "user-registration-blocks-editor",

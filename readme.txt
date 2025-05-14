@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: user registration, registration, user profile, registration form, login form,
 Requires at least: 5.5
 Requires PHP: 7.2
-Tested up to: 6.8
-Stable tag: 4.2.1
+Tested up to: 6.8.1
+Stable tag: 4.2.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -257,6 +257,11 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 21. User Account Page –  Vertical Layout
 
 == Changelog ==
+
+= 4.2.2    - 05/05/2025 =
+* Security - User capability check on multiple ajax requests .
+* Dev      - Hook to add date localization on flatpickr.
+* Fix      - Salesforce not showing connected.
 
 = 4.2.1    - 22/04/2025 =
 * Security - Checked user capability to edit user while cancelling subscription.

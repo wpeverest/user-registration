@@ -212,7 +212,7 @@ class UR_Smart_Tags {
 					case 'username':
 						if ( is_user_logged_in() ) {
 							$user = wp_get_current_user();
-							$name = sanitize_text_field( $user->user_login );
+							$name = isset( $values['username'] ) ? $values['username'] : sanitize_text_field( $user->user_login );
 						} else {
 							$name = isset( $values['username'] ) ? $values['username'] : '';
 						}

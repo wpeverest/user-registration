@@ -115,11 +115,39 @@ class SubscriptionService {
 				break;
 			case 'stripe';
 				$stripe_service = new StripeService();
-
 				return $stripe_service->cancel_subscription( $order, $subscription );
 				break;
 			default:
 				break;
+		}
+	}
+
+	public function daily_membership_renewal_check() {
+		$days_before_value = get_option( 'user_registration_membership_renewal_reminder_days_before', 7 );
+
+		if ( $days_before_value <= 0 ) {
+			return;
+		}
+		$period        = get_option( 'user_registration_membership_renewal_reminder_period', 'weeks' );
+		$value_in_days = convert_to_days( $days_before_value, $period );
+		$date          = new \DateTime( 'today' );
+		$check_date    = $date->modify( "+$value_in_days day" )->format( 'Y-m-d H:i:s' );
+
+
+		$subscriptions = $this->members_subscription_repository->get_about_to_expire_subscriptions( $check_date );
+		if ( empty( $subscriptions ) ) {
+			return;
+		}
+		$email_service = new EmailService();
+		foreach ( $subscriptions as $subscription ) {
+			$user_id      = $subscription['member_id'];
+			$checked_date = get_user_meta( $user_id, 'urm_billing_reminder_sent_for_date', true );
+			error_log($checked_date);
+			if ( $checked_date === $subscription['next_billing_date'] ) {
+				continue;
+			}
+			$email_service->send_email( $subscription, 'membership_renewal' );
+			update_user_meta( $subscription['member_id'], 'urm_billing_reminder_sent_for_date', $subscription['next_billing_date'] );
 		}
 	}
 

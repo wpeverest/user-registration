@@ -68,6 +68,9 @@ module.exports = (env, argv) => {
 			]
 		},
 		plugins: [
+			new WebpackBar({
+
+			  }),
 			new CopyPlugin({
 				patterns: [
 					{

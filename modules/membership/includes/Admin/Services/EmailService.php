@@ -15,8 +15,10 @@ namespace WPEverest\URMembership\Admin\Services;
 use UR_Settings_Admin_Email;
 use WPEverest\URMembership\Emails\User\UR_Settings_Membership_Cancellation_User_Email;
 use WPEverest\URMembership\Emails\Admin\UR_Settings_Membership_Cancellation_Admin_Email;
+use WPEverest\URMembership\Emails\User\UR_Settings_Membership_Renewal_Reminder_User_Email;
 
-class EmailService {
+class EmailService
+{
 	protected $email_type, $logger;
 
 	public function __construct() {
@@ -53,6 +55,9 @@ class EmailService {
 				return self::send_membership_cancellation_email_user( $data );
 			case 'membership_cancellation_email_admin': // membership cancellation email to admin.
 				return self::send_membership_cancellation_email_admin( $data );
+			case 'membership_renewal': // membership renewal
+				return self::send_membership_renewal_email($data);
+
 			default:
 				break;
 		}
@@ -354,6 +359,23 @@ class EmailService {
 
 	}
 
+	public function send_membership_renewal_email( $data ) {
+		$subject = get_option( 'user_registration_membership_renewal_reminder_user_email_subject', esc_html__( 'Reminder: Automatic Renewal for Your Membership is Coming Up', 'user-registration' ) );
+		$user    = get_userdata( $data['member_id'] );
+
+		$form_id  = ur_get_form_id_by_userid( $data['member_id'] );
+		$settings = new UR_Settings_Membership_Renewal_Reminder_User_Email();
+
+		$message = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_renewal_reminder_user_email_message', $settings->user_registration_get_membership_renewal_reminder_user_email() ), $data, $form_id );;
+
+		$message     = apply_filters( 'ur_membership_membership_cancellation_email_custom_template', $message, $subject );
+
+		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
+
+		$headers = \UR_Emailer::ur_get_header();
+
+		return \UR_Emailer::user_registration_process_and_send_email( $data['user_email'], $subject, $message, $headers, array(), $template_id );
+	}
 	/**
 	 * Validate email fields
 	 *
@@ -375,20 +397,6 @@ class EmailService {
 		if ( ! isset( $data['membership_metas'] ) ) {
 			$this->logger->notice( 'Send Email:Registration:Payment Membership Data not found.', array( 'source' => 'ur-membership-email-logs' ) );
 
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Checks if the 'is_membership_email_enabled' option is set to true or false.
-	 *
-	 * @return bool Returns true if the option is set to true, false otherwise.
-	 * @since 1.0.0
-	 */
-	public static function is_membership_email_enabled( $option ) {
-		if ( ! ur_string_to_bool( get_option( 'user_registration_enable_membership_cancellation_admin_email', true ) ) ) {
 			return false;
 		}
 

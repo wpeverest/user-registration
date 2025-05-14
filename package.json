@@ -1,7 +1,7 @@
 {
   "name": "user-registration",
   "title": "User Registration",
-  "version": "4.2.1",
+  "version": "4.2.2",
   "homepage": "https://wpuserregistration.com/",
   "repository": {
     "type": "git",
@@ -79,6 +79,9 @@
     "@chakra-ui/react": "2.8.2",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
+    "@tanstack/react-query": "4.36.1",
+    "@tanstack/react-query-devtools": "5.53.2",
+    "@tinymce/tinymce-react": "^6.1.0",
     "@wordpress/api-fetch": "^5.2.6",
     "@wordpress/data": "^9.22.0",
     "chakra-react-select": "^4.7.6",
@@ -96,10 +99,8 @@
     "react-icons": "5.2.1",
     "react-player": "2.16.0",
     "react-router-dom": "^6.22.1",
-    "style-loader": "^3.3.1",
-    "@tanstack/react-query": "4.36.1",
-    "@tanstack/react-query-devtools": "5.53.2"
-
+    "react-select": "^5.10.1",
+    "style-loader": "^3.3.1"
   },
   "lint-staged": {
     "*.php": [
