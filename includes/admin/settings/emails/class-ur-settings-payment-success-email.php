@@ -124,7 +124,7 @@ if ( ! class_exists( 'UR_Settings_Payment_Success_Email', false ) ) :
 					__(
 						'Hi {{username}}, <br>
 						Congratulations! Your payment for registration on <a href="{{home_url}}">{{blog_info}}</a> has been successfully completed. <br>
-						{{payment_invoice}}<br>
+						You can view your payment invoice here: {{payment_invoice}}<br>
 						Thank You!',
 						'user-registration'
 					)
