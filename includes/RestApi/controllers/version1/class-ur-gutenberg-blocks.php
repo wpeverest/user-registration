@@ -67,6 +67,27 @@ class UR_Gutenberg_Blocks {
 			)
 		);
 
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/access-role-list',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( __CLASS__, 'ur_get_access_role_list' ),
+				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
+			)
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/membership-role-list',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( __CLASS__, 'ur_get_membership_role_list' ),
+				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
+			)
+		);
+
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/groups',
@@ -186,16 +207,29 @@ class UR_Gutenberg_Blocks {
 	 *
 	 */
 	public static function ur_get_role_list_list() {
-		$all_roles = wp_roles()->roles;
-		$role_list = array();
-		foreach ( $all_roles as $key => $role ) {
-			$role_list[ $key ] = $role['name'];
+		global $wp_roles;
+
+		if ( ! class_exists( 'WP_Roles' ) ) {
+			return;
+		}
+
+		$roles = array();
+
+		if ( ! isset( $wp_roles ) ) {
+			$wp_roles = new WP_Roles();
+		}
+
+		$roles     = $wp_roles->roles;
+		$all_roles = array();
+
+		foreach ( $roles as $role_key => $role ) {
+			$all_roles[ $role_key ] = $role['name'];
 		}
 
 		return new \WP_REST_Response(
 			array(
-				'success'    => true,
-				'role_lists' => $role_list,
+				'success'     => true,
+				'role_lists'  => $all_roles,
 			),
 			200
 		);
@@ -219,6 +253,55 @@ class UR_Gutenberg_Blocks {
 				'cr_data' => array(
 					'default_message' => $message,
 				),
+			),
+			200
+		);
+	}
+
+	/**
+	 * Get access role list.
+	 *
+	 * @return array Role lists.
+	 */
+	public static function ur_get_access_role_list() {
+		$access_options = array(
+			'all_logged_in_users'  => 'All Logged In Users',
+			'choose_specific_roles' => 'Choose Specific Roles',
+			'guest_users'          => 'Guest Users',
+		);
+
+		if ( ur_check_module_activation( 'membership' ) ) {
+			$access_options['memberships'] = 'Memberships';
+		}
+
+		return new \WP_REST_Response(
+			array(
+				'success'     => true,
+				'access_data' => array(
+					'access_role_list' => $access_options,
+				),
+			),
+			200
+		);
+	}
+
+	/**
+	 * Retrieves the list of active membership roles.
+	 *
+	 * This method fetches the active membership roles using the `get_active_membership_id_name` function
+	 * and returns the data as a REST API response.
+	 *
+	 * @return \WP_REST_Response REST API response containing:
+	 *                            - 'success' (bool): Indicates the success of the operation.
+	 *                            - 'membership_roles_list' (array): List of active membership roles.
+	 */
+	public static function ur_get_membership_role_list() {
+		$membership_roles_options = get_active_membership_id_name();
+
+		return new \WP_REST_Response(
+			array(
+				'success'               => true,
+				'membership_roles_list' => $membership_roles_options,
 			),
 			200
 		);
