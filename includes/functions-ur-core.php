@@ -6773,6 +6773,11 @@ if ( ! function_exists( 'ur_prevent_default_login' ) ) {
 				return 'user_registration_global_paypal_return_url';
 			}
 		}
+		elseif(isset($data['user_registration_membership_renewal_reminder_days_before'])) {
+			if($data['user_registration_membership_renewal_reminder_days_before'] <= 0) {
+				return 'invalid_renewal_period';
+			}
+		}
 		return true;
 	}
 }

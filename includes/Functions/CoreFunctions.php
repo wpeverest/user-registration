@@ -455,6 +455,33 @@ if ( ! function_exists( 'urm_is_divi_active' ) ) {
 	}
 }
 
+
+if ( ! function_exists( 'convert_to_days' ) ) {
+	/**
+	 * convert_to_days
+	 *
+	 * @param $value
+	 * @param $unit
+	 *
+	 * @return float|int|mixed
+	 */
+	function convert_to_days($value, $unit) {
+		switch (strtolower($unit)) {
+			case 'year':
+			case 'years':
+				return $value * 365;
+			case 'month':
+			case 'months':
+				return $value * 30;
+			case 'week':
+			case 'weeks':
+				return $value * 7;
+			case 'day':
+			case 'days':
+			default:
+				return $value;
+		}
+
 if ( ! function_exists( 'urm_get_thank_you_page' ) ) {
 	/**
 	 * Get Thank Yu page url
