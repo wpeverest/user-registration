@@ -49,8 +49,8 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Changed_Email', false ) ) :
 		 */
 		public function __construct() {
 			$this->id          = 'profile_details_changed_email';
-			$this->title       = __( 'Profile Details Changed Admin Email', 'user-registration' );
-			$this->description = __( 'Email sent to the admin when a user changed profile information', 'user-registration' );
+			$this->title       = __( 'Profile Updated', 'user-registration' );
+			$this->description = __( 'Notifies admin that a user’s profile details have been updated or changed.', 'user-registration' );
 			$this->receiver    = __( 'Admin', 'user-registration' );
 		}
 
@@ -72,7 +72,7 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Changed_Email', false ) ) :
 					'title'    => __( 'Emails', 'user-registration' ),
 					'sections' => array(
 						'profile_details_changed_email' => array(
-							'title'        => __( 'Profile Details Changed Admin Email', 'user-registration' ),
+							'title'        => __( 'Profile Updated', 'user-registration' ),
 							'type'         => 'card',
 							'desc'         => '',
 							'back_link'    => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
@@ -104,7 +104,7 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Changed_Email', false ) ) :
 									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
 									'id'       => 'user_registration_profile_details_changed_email_subject',
 									'type'     => 'text',
-									'default'  => __( 'Profile Details Changed Email: {{blog_info}}', 'user-registration' ),
+									'default'  => __( 'Profile Updated – Changes Made to User Account', 'user-registration' ),
 									'css'      => 'min-width: 350px;',
 									'desc_tip' => true,
 								),
@@ -147,14 +147,13 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Changed_Email', false ) ) :
 				'user_registration_profile_details_changed_email_message',
 				sprintf(
 					__(
-						'User has changed profile information for the following account:<br/>
-
-SiteName: {{blog_info}} <br/>
-Username: {{username}} <br/>
-
-{{all_fields}}
-<br/>
-Thank You!',
+						'
+						Hi Admin,<br/>
+						A user has updated their profile information for the following account:<br/>
+						SiteName: {{blog_info}} <br/>
+						Username: {{username}} <br/>
+						{{all_fields}}<br/>
+						Thank You!',
 						'user-registration'
 					)
 				)

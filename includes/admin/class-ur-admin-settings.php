@@ -414,13 +414,15 @@ class UR_Admin_Settings {
 
 						$settings .= '<div class="user-registration-card__header ur-border-0" style="' . esc_attr( $header_css ) . '">';
 						if ( ! empty( $section['title'] ) ) {
-							$settings .= '<h3 class="user-registration-card__title">' . esc_html( strtoupper( $section['title'] ) );
-
+							$settings .= '<div class="user-registration-card__header-wrapper">';
 							if ( isset( $section['back_link'] ) ) {
-								$settings .= wp_kses_post( $section['back_link'] );
+								$settings .= $section['back_link']; //removed kses since the inputs are sanitized in the function ur_back_link itself
 							}
+							$settings .= '<h3 class="user-registration-card__title">';
 
+							$settings .= esc_html( strtoupper( $section['title'] ) );
 							$settings .= '</h3>';
+							$settings .= '</div>';
 						}
 
 						if ( isset( $section['preview_link'] ) ) {

@@ -36,14 +36,21 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Updated_Email', false ) ) :
 		 * @var string
 		 */
 		public $description;
+		/**
+		 * UR_Settings_Approval_Link_Email Receiver.
+		 *
+		 * @var string
+		 */
+		public $receiver;
 
 		/**
 		 * Constructor.
 		 */
 		public function __construct() {
 			$this->id          = 'profile_details_updated_email';
-			$this->title       = __( 'Profile Details Updated User Email', 'user-registration' );
-			$this->description = __( 'Email sent to the user when a user changed their profile information', 'user-registration' );
+			$this->title       = __( 'Profile Updated', 'user-registration' );
+			$this->description = __( 'Confirms to the user that their profile details were successfully updated.', 'user-registration' );
+			$this->receiver    = __( 'User', 'user-registration' );
 		}
 
 		/**
@@ -64,7 +71,7 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Updated_Email', false ) ) :
 					'title'    => __( 'Emails', 'user-registration' ),
 					'sections' => array(
 						'profile_details_updated_email' => array(
-							'title'        => __( 'Profile Details Updated Email', 'user-registration' ),
+							'title'        => __( 'Profile Updated Email', 'user-registration' ),
 							'type'         => 'card',
 							'desc'         => '',
 							'back_link'    => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
@@ -86,7 +93,7 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Updated_Email', false ) ) :
 									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
 									'id'       => 'user_registration_profile_details_updated_email_subject',
 									'type'     => 'text',
-									'default'  => __( 'Profile Details Updated Email: {{blog_info}}', 'user-registration' ),
+									'default'  => __( 'Profile Updated Successfully on {{blog_info}}', 'user-registration' ),
 									'css'      => 'min-width: 350px;',
 									'desc_tip' => true,
 								),
@@ -129,11 +136,9 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Updated_Email', false ) ) :
 				'user_registration_profile_details_updated_email_message',
 				sprintf(
 					__(
-						'Your profile details have been successfully updated on {{blog_info}}.<br/>
-
-
-					{{all_fields}}
-					<br/>
+					'Hi {{username}},<br/>
+					Your profile details have been successfully updated on {{blog_info}}.<br/>
+					{{all_fields}}<br/>
 					Thank You!',
 						'user-registration'
 					)

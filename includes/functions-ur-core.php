@@ -2104,7 +2104,11 @@ function ur_get_user_status( $user_status, $user_email_status ) {
  * @param  string $url URL.
  */
 function ur_back_link( $label, $url ) {
-	return '<small class="ur-admin-breadcrumb"><a href="' . esc_url( $url ) . '" aria-label="' . esc_attr( $label ) . '">&#x2934;</a></small>';
+	return '<a href="' . esc_url( $url ) . '" aria-label="' . esc_attr( $label ) . '">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="#000" viewBox="0 0 24 24">
+                  <path d="M15.653 2.418a1.339 1.339 0 0 1 1.944 0 1.468 1.468 0 0 1 0 2.02L10.32 12l7.278 7.562.094.108a1.47 1.47 0 0 1-.094 1.912c-.503.523-1.3.555-1.84.098l-.104-.098-8.25-8.572a1.468 1.468 0 0 1 0-2.02l8.25-8.572Z"/>
+                </svg>
+            </a>';
 }
 
 /**
@@ -8422,3 +8426,6 @@ function ur_cleanup_logs() {
 	}
 }
 add_action( 'user_registration_cleanup_logs', 'ur_cleanup_logs' );
+
+
+

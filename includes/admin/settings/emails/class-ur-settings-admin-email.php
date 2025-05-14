@@ -49,8 +49,8 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 		 */
 		public function __construct() {
 			$this->id          = 'admin_email';
-			$this->title       = __( 'New User Registered Email', 'user-registration' );
-			$this->description = __( 'Email sent to the admin when a new user registers', 'user-registration' );
+			$this->title       = __( 'New Member Registered', 'user-registration' );
+			$this->description = __( 'Notify admins about a new membership signup, including member details.', 'user-registration' );
 			$this->receiver    = __( 'Admin', 'user-registration' );
 		}
 
@@ -74,7 +74,7 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 							'title'        => __( 'New User Registered Email', 'user-registration' ),
 							'type'         => 'card',
 							'desc'         => '',
-							'back_link'    => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
+							'back_link'    => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email&section=to-admin' ) ),
 							'preview_link' => ur_email_preview_link(
 								__( 'Preview', 'user-registration' ),
 								$this->id
@@ -100,7 +100,7 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 								),
 								array(
 									'title'    => __( 'Email Subject', 'user-registration' ),
-									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
+									'desc'     => __( 'A New Member Registered.', 'user-registration' ),
 									'id'       => 'user_registration_admin_email_subject',
 									'type'     => 'text',
 									'default'  => __( 'A New User Registered', 'user-registration' ),
@@ -142,8 +142,8 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 					'Hi Admin, <br/>
 
 					A new user {{username}} - {{email}} has successfully registered to your site <a href="{{home_url}}">{{blog_info}}</a>. <br/>
-
-					Please review the user role and details at \'<b>Users</b>\' menu in your WP dashboard. <br/><br />
+					{{membership_plan_details}} <br/>
+					You can review their details and manage their role from the \'<b>Users</b>\' section in your WordPress dashboard.<br/><br />
 					Thank You!',
 					'user-registration'
 				)

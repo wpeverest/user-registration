@@ -75,7 +75,9 @@ class PaymentGatewaysWebhookActions {
 	 * @return void
 	 */
 	public function handle_stripe_webhook( \WP_REST_Request $request ) {
+
 		$stripe_signature = $request->get_header( 'stripe-signature' );
+
 		$body             = $request->get_body();
 
 		$event            = json_decode( $body, true );
