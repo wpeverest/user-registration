@@ -154,34 +154,43 @@ class URCR_Shortcodes {
 			$message = empty( $message ) ? __( 'This content is restricted!', 'user-registration' ) : $message;
 			$message = apply_filters( 'user_registration_process_smart_tags', $message );
 			$message = do_shortcode( $message );
+
 			if ( isset( $atts['enable_content_restriction']) && $atts['enable_content_restriction'] == true ) {
+				$control_type = $atts['access_control'] ?? 'access';
+				$matched = false;
+
 				switch ($roles) {
 					case 'all_logged_in_users':
-						if (is_user_logged_in()) {
-							error_log( print_r( 'hhelo', true ) );
-							return do_shortcode($content);
-						}
+						$matched = is_user_logged_in();
 						break;
+
 					case 'choose_specific_roles':
 						if (!empty($specific_roles) && in_array($current_user_role, $specific_roles, true)) {
-							return do_shortcode($content);
+							$matched = true;
 						}
 						break;
 
 					case 'guest_users':
-						if (! is_user_logged_in()) {
-							return do_shortcode($content);
-						}
+						$matched = !is_user_logged_in();
 						break;
 
 					case 'memberships':
-						if ( ! empty( $memberships_roles ) && in_array($current_user_membership, $memberships_roles, true)) {
-							return do_shortcode($content);
+						if (!empty($memberships_roles) && in_array($current_user_membership, $memberships_roles, true)) {
+							$matched = true;
 						}
 						break;
 				}
+
+				// Apply access_control logic
+				if (
+					($control_type === 'access' && $matched) ||
+					($control_type === 'restrict' && !$matched)
+				) {
+					return do_shortcode($content);
+				}
 			}
-				return '<span class="urcr-restrict-message">' . $message . '</span>';
+			return '<span class="urcr-restrict-message">' . $message . '</span>';
+
 		}
 			return do_shortcode( $content );
 	}
