@@ -250,10 +250,11 @@ abstract class UR_Form_Field {
 		}
 
 		if ( isset( $data['advance_setting']->date_localization ) ) {
-			if ( wp_script_is( 'flatpickr' ) && 'en' !== $data['advance_setting']->date_localization ) {
-				wp_enqueue_script( 'flatpickr-localization_' . $data['advance_setting']->date_localization, UR()->plugin_url() . '/assets/js/flatpickr/dist/I10n/' . $data['advance_setting']->date_localization . '.js', array(), UR_VERSION, true );
+			$date_localization = apply_filters( 'user_registration_date_localization', $data['advance_setting']->date_localization );
+			if ( wp_script_is( 'flatpickr' ) && 'en' !== $date_localization ) {
+				wp_enqueue_script( 'flatpickr-localization_' . $date_localization, UR()->plugin_url() . '/assets/js/flatpickr/dist/I10n/' . $date_localization . '.js', array(), UR_VERSION, true );
 			}
-			$form_data['custom_attributes']['data-locale'] = $data['advance_setting']->date_localization;
+			$form_data['custom_attributes']['data-locale'] = $date_localization;
 		}
 
 		$form_data['custom_attributes']['data-label'] = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_label', $data['general_setting']->label );

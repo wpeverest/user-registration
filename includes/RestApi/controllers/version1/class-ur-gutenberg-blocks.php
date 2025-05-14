@@ -9,6 +9,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use \WPEverest\URMembership\Admin\Services\MembershipGroupService;
+
 /**
  * UR_AddonsClass
  */
@@ -30,9 +32,9 @@ class UR_Gutenberg_Blocks {
 	/**
 	 * Register routes.
 	 *
+	 * @return void
 	 * @since 2.1.4
 	 *
-	 * @return void
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -72,6 +74,10 @@ class UR_Gutenberg_Blocks {
 			array(
 				'methods'             => 'GET',
 				'callback'            => array( __CLASS__, 'ur_get_access_role_list' ),
+			'/' . $this->rest_base . '/groups',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( __CLASS__, 'ur_get_active_groups' ),
 				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
 			)
 		);
@@ -85,17 +91,36 @@ class UR_Gutenberg_Blocks {
 				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
 			)
 		);
+			'/' . $this->rest_base . '/pages',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( __CLASS__, 'ur_get_pages' ),
+				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
+			)
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/verify-pages',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( __CLASS__, 'ur_verify_pages' ),
+				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
+			)
+		);
+
 	}
 
 	/**
 	 * Get Addons Lists.
 	 *
+	 * @return array Addon lists.
 	 * @since 3.2.0
 	 *
-	 * @return array Addon lists.
 	 */
 	public static function ur_get_form_list() {
 		$form_lists = ur_get_all_user_registration_form();
+
 		return new \WP_REST_Response(
 			array(
 				'success'    => true,
@@ -106,11 +131,71 @@ class UR_Gutenberg_Blocks {
 	}
 
 	/**
+	 * ur_get_pages
+	 *
+	 * @return WP_REST_Response
+	 */
+	public static function ur_get_pages() {
+		$page_lists = ur_get_all_pages();
+
+		return new \WP_REST_Response(
+			array(
+				'success'    => true,
+				'page_lists' => $page_lists,
+			),
+			200
+		);
+	}
+
+	/**
+	 * ur_get_pages
+	 *
+	 * @return WP_REST_Response
+	 */
+	public static function ur_verify_pages( WP_REST_Request $request ) {
+		$params = json_decode( $request->get_json_params() , true);
+
+		$membership_service = new \WPEverest\URMembership\Admin\Services\MembershipService();
+		$response           = $membership_service->verify_page_content( sanitize_text_field( $params['type'] ), absint( $params['page_id'] ) );
+		if ( ! $response['status'] ) {
+			return new \WP_REST_Response(
+				$response,
+				404
+			);
+		} else {
+			return new \WP_REST_Response(
+				$response,
+				200
+			);
+		}
+	}
+
+	/**
+	 * Get Groups Lists.
+	 *
+	 * @return WP_REST_Response Groups lists.
+	 * @since 4.2.1
+	 *
+	 */
+	public static function ur_get_active_groups() {
+		$group_service = new MembershipGroupService();
+		$group_lists   = $group_service->get_membership_groups();
+
+		return new \WP_REST_Response(
+			array(
+				'success'     => true,
+				'group_lists' => $group_lists,
+			),
+			200
+		);
+	}
+
+	/**
 	 * Get role Lists.
 	 *
+	 * @return array Role lists.
 	 * @since 4.0
 	 *
-	 * @return array Role lists.
 	 */
 	public static function ur_get_role_list_list() {
 
@@ -118,19 +203,6 @@ class UR_Gutenberg_Blocks {
 
 		if ( ! class_exists( 'WP_Roles' ) ) {
 			return;
-		}
-
-		$roles = array();
-		if ( ! isset( $wp_roles ) ) {
-			$wp_roles = new WP_Roles();
-		}
-		$roles = $wp_roles->roles;
-
-		$all_roles = array();
-
-		foreach ( $roles as $role_key => $role ) {
-
-			$all_roles[ $role_key ] = $role['name'];
 		}
 
 		return new \WP_REST_Response(
@@ -145,9 +217,9 @@ class UR_Gutenberg_Blocks {
 	/**
 	 * Return content restriction data
 	 *
+	 * @return WP_REST_Response
 	 * @since 4.0
 	 *
-	 * @return WP_REST_Response
 	 */
 	public static function ur_get_content_restriction_data() {
 		$message = get_option( 'user_registration_content_restriction_message' );
@@ -196,7 +268,7 @@ class UR_Gutenberg_Blocks {
 
 	public static function ur_get_membership_role_list(){
 		$membership_roles_options = get_active_membership_id_name();
-	
+
 		return new \WP_REST_Response(
 			array(
 				'success'               => true,
@@ -212,6 +284,7 @@ class UR_Gutenberg_Blocks {
 	 * Check if a given request has access to update a setting
 	 *
 	 * @param WP_REST_Request $request Full data about the request.
+	 *
 	 * @return WP_Error|bool
 	 */
 	public static function check_admin_permissions( $request ) {

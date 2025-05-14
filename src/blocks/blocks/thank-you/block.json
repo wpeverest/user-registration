@@ -1,0 +1,59 @@
+{
+  "$schema": "https://schemas.wp.org/block-json/1.1",
+  "apiVersion": 3,
+  "name": "user-registration/thank-you",
+  "version": "1.0.0",
+  "title": "Thank You",
+  "category": "user-registration",
+  "description": "This provides block for a thank you page.",
+  "keywords": [
+    "user registration thank you",
+    "urm thank you",
+    "thank you"
+  ],
+  "textdomain": "user-registration",
+  "example": {
+    "attributes": {}
+  },
+  "supports": {
+    "className": false,
+    "customClassName": false,
+    "reusable": false
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": ""
+    },
+    "header": {
+      "type": "string",
+      "default": "Thank You"
+    },
+    "footer": {
+      "type": "string",
+      "default": ""
+    },
+    "notice_message": {
+      "type": "string",
+      "default": "For paid memberships there might be a delay of few minutes for your subscription status to be updated by the payment gateways."
+    },
+    "transaction_info": {
+      "type": "string",
+      "default": "Please use this transaction/order id for support regarding payments if needed."
+    },
+    "is_preview": {
+      "type": "boolean",
+      "default": false
+    },
+    "show_notice_1": {
+      "type": "boolean",
+      "default": true
+    },
+    "show_notice_2": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "editorScript": "user-registration-blocks-editor",
+  "editorStyle": "user-registration-blocks-editor"
+}
