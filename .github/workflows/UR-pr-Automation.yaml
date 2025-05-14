@@ -1,0 +1,82 @@
+name: UR PR QA Test
+
+on:
+
+  push:
+    branches:
+      - develop
+      
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code From Current Branch
+        uses: actions/checkout@v2
+
+      - name: Add Private SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.TG_PRIVATE_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+      - name: Add GitHub Email & Username
+        env:
+          MY_EMAIL: ${{ secrets.TG_GITHUB_EMAIL }}
+          MY_USERNAME: ${{ secrets.TG_GITHUB_USERNAME }}
+        run: |
+          git config --global user.email "$MY_EMAIL"
+          git config --global user.name "$MY_USERNAME"
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 12.x
+
+      - name: Setup PHP v7.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          extensions: cli, dev, curl, mbstring, xmlrpc
+
+      - name: NPM, Composer Install & NPM Build
+        run: |
+          npm install
+          composer install
+          npm run build
+          composer install --no-dev
+          mkdir -p user-registration
+          rsync -rc --exclude-from="./.distignore" "./" "./user-registration" --delete --delete-excluded
+      - name: Create ZIP Archive
+        run: zip -r user-registration.zip user-registration 
+
+      - name: Remove the plugin file from server
+        env:
+          Srv_IP: ${{ secrets.QA_AUTOMATION_SERVER_IP }}
+          Srv_UsrName: ${{ secrets.QA_AUTOMATION_SERVER_USERNAME }}
+          Server_PASS: ${{ secrets.QA_AUTOMATION_SERVER_PASS }}
+        run: |
+          sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP << EOF
+          cd applications/ycrdmckpsu/public_html/urqatest/wp-content/plugins/
+          rm -rf user-registration
+          EOF
+      - name: Upload Plugin ZIP to Server Temp Folder
+        env:
+          Srv_IP: ${{ secrets.QA_AUTOMATION_SERVER_IP }}
+          Srv_UsrName: ${{ secrets.QA_AUTOMATION_SERVER_USERNAME }}
+          Server_PASS: ${{ secrets.QA_AUTOMATION_SERVER_PASS }}
+        run: |
+          sshpass -p "$Server_PASS" scp -r -o StrictHostKeyChecking=no user-registration.zip $Srv_UsrName@$Srv_IP:applications/ycrdmckpsu/public_html/temp/
+      - name: Install and Activate Plugin via WP-CLI
+        env:
+          Srv_IP: ${{ secrets.QA_AUTOMATION_SERVER_IP }}
+          Srv_UsrName: ${{ secrets.QA_AUTOMATION_SERVER_USERNAME }}
+          Server_PASS: ${{ secrets.QA_AUTOMATION_SERVER_PASS }}
+        run: |
+          sshpass -p "$Server_PASS" ssh -o StrictHostKeyChecking=no $Srv_UsrName@$Srv_IP << EOF
+          cd applications/ycrdmckpsu/public_html/urqatest
+          rm -rm /wp-content/plugins/user-registration
+          wp plugin install ../temp/user-registration.zip --activate --debug
+          rm -f ../temp/user-registration.zip
+          EOF

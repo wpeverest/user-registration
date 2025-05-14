@@ -8,6 +8,8 @@ import * as editProfile from "./edit-profile";
 import * as editPassword from "./edit-password";
 import * as loginLogoutMenu from "./login-logout-menu";
 import * as contentRestrictionEnhanced from "./content-restriction-enhanced";
+import * as membershipListing from "./membership-listing";
+import * as thankYou from "./thank-you";
 
 /* global _UR_BLOCKS_ */
 const { iscRestrictionActive } =
@@ -19,7 +21,9 @@ let blocks = [
 	myaccount,
 	editProfile,
 	editPassword,
-	loginLogoutMenu
+	loginLogoutMenu,
+	membershipListing,
+	thankYou
 ];
 
 if (iscRestrictionActive) {

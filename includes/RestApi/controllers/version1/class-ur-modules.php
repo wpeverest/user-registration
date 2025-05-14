@@ -302,7 +302,7 @@ class UR_Modules {
 			}
 		}
 
-		if (  'user-registration-payments' === $slug && !in_array('user-registration-payment-history', $enabled_features)) {
+		if ( in_array($slug , ['user-registration-payments', 'user-registration-stripe', 'user-registration-authorize-net'])   && !in_array('user-registration-payment-history', $enabled_features)) {
 			$enabled_features[] = 'user-registration-payment-history';
 		}
 		$enabled_features[] = $slug;

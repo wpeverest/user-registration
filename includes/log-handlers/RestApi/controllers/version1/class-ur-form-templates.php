@@ -67,7 +67,7 @@ class UR_Form_Templates {
 	/**
 	 * Get Template Lists.
 	 *
-	 * @since xx.xx.xx
+	 * @since 4.2.1
 	 *
 	 * @return WP_REST_Response|WP_Error
 	 */

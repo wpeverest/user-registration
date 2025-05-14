@@ -48,6 +48,7 @@ class Membership {
 		add_action( 'in_admin_header', array( __CLASS__, 'hide_unrelated_notices' ) );
 		add_filter( 'wp_editor_settings', array( $this, 'remove_media_buttons' ) );
 
+
 	}
 
 	/**
@@ -318,7 +319,11 @@ class Membership {
 				if ( $post_id ) {
 					$membership         = get_post( $post_id );
 					$membership_details = json_decode( wp_unslash( get_post_meta( $post_id, 'ur_membership', true ) ), true );
+					$membership_description = get_post_meta( $post_id, 'ur_membership_description', true );
+
+					$membership_details['description'] = $membership_description;
 				}
+
 				$this->render_membership_creator( $membership, $membership_details, $menu_items );
 				break;
 			case 'list_groups':
@@ -463,4 +468,5 @@ class Membership {
 			'i18n_previous_save_action_ongoing'            => _x( 'Previous save action on going.', 'user registration admin', 'user-registration' ),
 		);
 	}
+
 }
