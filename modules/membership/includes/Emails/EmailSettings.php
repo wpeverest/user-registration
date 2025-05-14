@@ -19,24 +19,33 @@ class EmailSettings {
 		add_action( 'urm_daily_membership_renewal_check', array( $this, 'membership_renewal_check' ), 10, 1 );
 	}
 
+	/**
+	 * Add email settings
+	 *
+	 * @param $emails
+	 *
+	 * @return array
+	 */
 	public function add_email_settings( $emails ) {
 		$new_emails = array(
 			'UR_Settings_Membership_Cancellation_Admin_Email'    => new UR_Settings_Membership_Cancellation_Admin_Email(),
 			'UR_Settings_Membership_Cancellation_User_Email'     => new UR_Settings_Membership_Cancellation_User_Email(),
 		);
 
-		return array_merge( $emails, $new_emails );
-
 		if ( UR_PRO_ACTIVE ) {
 			$new_emails = array(
 				'UR_Settings_Membership_Renewal_Reminder_User_Email' => new UR_Settings_Membership_Renewal_Reminder_User_Email(),
 			);
-			$new_emails = array_merge( $emails, $new_emails );
 		}
 
 		return array_merge( $emails, $new_emails );
 	}
 
+	/**
+	 * Send membership renewal email
+	 *
+	 * @return void
+	 */
 	public function membership_renewal_check() {
 		if ( ! ur_option_checked( 'user_registration_membership_renewal_reminder_user_email', false ) ) {
 			return;
