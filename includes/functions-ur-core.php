@@ -1846,7 +1846,7 @@ function ur_get_all_user_registration_form( $post_count = -1 ) {
 	$all_forms   = array();
 
 	foreach ( $posts_array as $post ) {
-		$all_forms[ $post->ID ] = $post->post_title;
+		$all_forms[ $post->ID ] = esc_html($post->post_title);
 	}
 
 	return $all_forms;
