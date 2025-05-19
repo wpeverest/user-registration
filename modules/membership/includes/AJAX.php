@@ -208,9 +208,12 @@ class AJAX {
 		$new_membership_ID = wp_insert_post( $data['post_data'] );
 
 		if ( $new_membership_ID ) {
-			add_post_meta( $new_membership_ID, $data['post_meta_data']['meta_key'], $data['post_meta_data']['meta_value'] );
-			$meta_data = json_decode( $data["post_meta_data"]["meta_value"], true );
-
+			if(!empty($data['post_meta_data']) ) {
+				foreach ($data['post_meta_data'] as $datum) {
+					add_post_meta( $new_membership_ID, $datum['meta_key'], $datum['meta_value'] );
+				}
+			}
+			$meta_data = json_decode( $data["post_meta_data"]['ur_membership']["meta_value"], true );
 
 			if ( $is_stripe_enabled && "free" !== $meta_data["type"] ) {
 				$stripe_service           = new StripeService();
@@ -285,8 +288,13 @@ class AJAX {
 		$updated_ID = wp_insert_post( $data['post_data'] );
 
 		if ( $updated_ID ) {
-			update_post_meta( $updated_ID, $data['post_meta_data']['meta_key'], $data['post_meta_data']['meta_value'] );
-			$meta_data = json_decode( $data["post_meta_data"]["meta_value"], true );
+			if(!empty($data['post_meta_data']) ) {
+				foreach ($data['post_meta_data'] as $datum) {
+					update_post_meta( $updated_ID, $datum['meta_key'], $datum['meta_value'] );
+				}
+			}
+
+			$meta_data = json_decode( $data["post_meta_data"]['ur_membership']["meta_value"], true );
 
 			if ( $is_stripe_enabled && "free" !== $meta_data["type"] ) {
 
@@ -592,6 +600,13 @@ class AJAX {
 				)
 			);
 		}
+		if ( ! current_user_can( 'edit_user', $member_id ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'You are not allowed to edit this user.', 'user-registration' ),
+				)
+			);
+		}
 		$stripe_service      = new StripeService();
 		$payment_status      = sanitize_text_field( $_POST['payment_status'] );
 		$update_stripe_order = $stripe_service->update_order( $_POST );
@@ -639,7 +654,13 @@ class AJAX {
 				)
 			);
 		}
-
+		if ( ! current_user_can( 'edit_user', $member_id ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'You are not allowed to edit this user.', 'user-registration' ),
+				)
+			);
+		}
 		$stripe_service      = new StripeService();
 		$form_response       = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
 		$stripe_subscription = $stripe_service->create_subscription( $customer_id, $payment_method_id, $member_id );
@@ -804,6 +825,13 @@ class AJAX {
 	 * @return void
 	 */
 	public static function verify_pages() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Sorry, You do not have permission to create membership groups.', 'user-registration' ),
+				)
+			);
+		}
 		ur_membership_verify_nonce( 'user_registration_validate_page_none' );
 		if ( ! isset( $_POST['value'] ) ) {
 			wp_send_json_error( __( 'Wrong request.', 'user-registration' ) );
@@ -831,6 +859,13 @@ class AJAX {
 	 * @return void
 	 */
 	public static function validate_pg() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Sorry, You do not have permission to create membership groups.', 'user-registration' ),
+				)
+			);
+		}
 		ur_membership_verify_nonce( 'ur_membership' );
 		if ( ! isset( $_POST['pg'] ) || ! isset( $_POST['membership_type'] ) ) {
 			wp_send_json_error( __( 'Wrong request.', 'user-registration' ) );

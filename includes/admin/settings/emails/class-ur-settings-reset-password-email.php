@@ -37,12 +37,20 @@ if ( ! class_exists( 'UR_Settings_Reset_Password_Email', false ) ) :
 		public $description;
 
 		/**
+		 * UR_Settings_Approval_Link_Email Receiver.
+		 *
+		 * @var string
+		 */
+
+		public $receiver;
+		/**
 		 * Constructor.
 		 */
 		public function __construct() {
 			$this->id          = 'reset_password_email';
-			$this->title       = __( 'Reset Password Email', 'user-registration' );
-			$this->description = __( 'Email sent to the user when a user requests for reset password', 'user-registration' );
+			$this->title       = __( 'Reset Password', 'user-registration' );
+			$this->description = __( 'Sends a secure password reset link to the user who requested a reset.', 'user-registration' );
+			$this->receiver    = __( 'User', 'user-registration' );
 		}
 
 		/**
@@ -66,7 +74,7 @@ if ( ! class_exists( 'UR_Settings_Reset_Password_Email', false ) ) :
 							'title'        => __( 'Reset Password Email', 'user-registration' ),
 							'type'         => 'card',
 							'desc'         => '',
-							'back_link'    => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
+							'back_link'    => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email&section=to-user' ) ),
 							'preview_link' => ur_email_preview_link(
 								__( 'Preview', 'user-registration' ),
 								$this->id
@@ -85,7 +93,7 @@ if ( ! class_exists( 'UR_Settings_Reset_Password_Email', false ) ) :
 									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
 									'id'       => 'user_registration_reset_password_email_subject',
 									'type'     => 'text',
-									'default'  => __( 'Password Reset Email: {{blog_info}}', 'user-registration' ),
+									'default'  => __( 'Password Reset Request – Reset Your Password for {{blog_info}}', 'user-registration' ),
 									'css'      => 'min-width: 350px;',
 									'desc_tip' => true,
 								),
@@ -128,17 +136,15 @@ if ( ! class_exists( 'UR_Settings_Reset_Password_Email', false ) ) :
 				'user_registration_reset_password_email_message',
 				sprintf(
 					__(
-						'Someone has requested a password reset for the following account: <br/>
+						'Hi {{username}},<br/>
+						We received a request to reset the password for your account on {{blog_info}}.<br/>
 
-SiteName: {{blog_info}} <br/>
-Username: {{username}} <br/>
+						If this was a mistake, simply ignore this email, and no changes will be made to your account. <br/>
 
-If this was a mistake, just ignore this email and nothing will happen. <br/>
+						To reset your password, please click the link below: <br/>
+						[<a href="{{home_url}}/{{ur_reset_pass_slug}}?action=rp&key={{key}}&login={{username}}" rel="noreferrer noopener" target="_blank">Click Here: </a><br/>] - Link
 
-To reset your password, visit the following address: <br/>
-<a href="{{home_url}}/{{ur_reset_pass_slug}}?action=rp&key={{key}}&login={{username}} " rel="noreferrer noopener" target="_blank">Click Here</a><br/>
-
-Thank You!',
+						Thank You!',
 						'user-registration'
 					)
 				)

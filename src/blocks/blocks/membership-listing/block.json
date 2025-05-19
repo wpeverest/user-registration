@@ -1,0 +1,50 @@
+{
+  "$schema": "https://schemas.wp.org/block-json/1.1",
+  "apiVersion": 3,
+  "name": "user-registration/membership-listing",
+  "version": "1.0.0",
+  "title": "Membership Listing",
+  "category": "user-registration",
+  "description": "This block provides block for membership listing.",
+  "keywords": [
+    "user registration membership listing",
+    "urm membership listing",
+    "membership listing"
+  ],
+  "textdomain": "user-registration",
+  "example": {
+    "attributes": {}
+  },
+  "supports": {
+    "className": false,
+    "customClassName": false,
+    "reusable": false
+  },
+  "attributes": {
+    "id": {
+      "type": "string"
+    },
+    "redirection_page_id": {
+      "type": "string",
+      "default": ""
+    },
+    "thank_you_page_id": {
+      "type": "string",
+      "default": ""
+    },
+    "group_id": {
+      "type": "string",
+      "default": ""
+    },
+    "type": {
+      "type": "string",
+      "default": "list"
+    },
+    "button_text": {
+      "type": "string",
+      "default": "Sign Up"
+    }
+  },
+  "editorScript": "user-registration-blocks-editor",
+  "editorStyle": "user-registration-blocks-editor"
+}

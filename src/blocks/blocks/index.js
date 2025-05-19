@@ -6,7 +6,10 @@ import * as loginForm from "./login-form";
 import * as myaccount from "./myaccount";
 import * as editProfile from "./edit-profile";
 import * as editPassword from "./edit-password";
+import * as loginLogoutMenu from "./login-logout-menu";
 import * as contentRestrictionEnhanced from "./content-restriction-enhanced";
+import * as membershipListing from "./membership-listing";
+import * as thankYou from "./thank-you";
 
 /* global _UR_BLOCKS_ */
 const { iscRestrictionActive } =
@@ -17,14 +20,16 @@ let blocks = [
 	loginForm,
 	myaccount,
 	editProfile,
-	editPassword
+	editPassword,
+	loginLogoutMenu,
+	membershipListing,
+	thankYou
 ];
 
 if (iscRestrictionActive) {
 	blocks.push(contentRestrictionEnhanced);
 }
 
-blocks = applyFilters("user-registration.blocks", blocks);
 /**
  * The function "registerBlocks" iterates over an array of blocks and calls the
  * "register" method on each block.

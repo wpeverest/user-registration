@@ -184,7 +184,7 @@
 				form_inputs = ur_membership_frontend_utils.convert_to_array(form_inputs);
 				form_inputs.forEach(function (item) {
 					var $this = $(item);
-					if($this.attr('name') !== undefined) {
+					if ($this.attr('name') !== undefined) {
 						var name = $this.attr('name').toLowerCase().replace('urm_', '');
 						user_data[name] = $this.val();
 					}
@@ -306,7 +306,7 @@
 			 * @param {Object} response - The response data from the server.
 			 * @param {Object} prepare_members_data - The data for preparing members.
 			 */
-			handle_response:  function (response, prepare_members_data, form_response) {
+			handle_response: function (response, prepare_members_data, form_response) {
 				switch (prepare_members_data.payment_method) {
 					case 'paypal': //for paypal response must contain `payment_url` field
 						ur_membership_frontend_utils.show_success_message(
@@ -873,8 +873,11 @@
 		//redirect to membership member registration form
 		$(document).on('click', '#membership-old-selection-form .membership-signup-button', function () {
 			var $this = $(this),
-				membership_id = $this.siblings('input').val(),
-				url = urmf_data.membership_registration_page_url + '?membership_id=' + membership_id;
+				membership_id = $this.siblings('input[name="membership_id"]').val(),
+				redirection_url = $this.siblings('input[name="redirection_url"]').val(),
+				thank_you_page_id = $this.siblings('input[name="thank_you_page_id"]').val(),
+				uuid = $this.siblings('input[name="urm_uuid"]').val(),
+				url = redirection_url + '?membership_id=' + membership_id + '&urm_uuid=' + uuid + '&thank_you=' + thank_you_page_id;
 			window.location.replace(url);
 		});
 
@@ -986,7 +989,7 @@
 			$('.field-membership').each(function (key, item) {
 				if ($(item).find('.no-membership')) {
 					var form_id = $(item).find('.no-membership').attr('data-form-id');
-					$('#user-registration-form-'+form_id).find('.ur-submit-button').prop('disabled', true);
+					$('#user-registration-form-' + form_id).find('.ur-submit-button').prop('disabled', true);
 				}
 			});
 		}

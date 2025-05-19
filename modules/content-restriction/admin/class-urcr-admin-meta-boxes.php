@@ -159,6 +159,16 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 			)
 		);
 
+		$this->ur_metabox_textarea(
+			array(
+				'id'      => 'urcr_meta_content',
+				'label'   => __( 'Restricted Content Message: ', 'user-registration' ),
+				'desc'    => __( 'Enter the message to show to users who do not have access to this content.', 'user-registration' ),
+				'type'   => 'tinymce',
+				'default' =>  __( 'This content is restricted!', 'user-registration' ),
+			)
+		);
+
 		do_action( 'render_metabox_complete' );
 	}
 
@@ -187,6 +197,8 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 
 		$array_of_memberships = isset( $_POST['urcr_meta_memberships'] ) ? $_POST['urcr_meta_memberships'] : '';
 
+		$restricted_message = isset( $_POST['urcr_meta_content'] ) ? $_POST['urcr_meta_content'] : '';
+
 		if ( ! $whole_site_access_restricted ) {
 			update_post_meta( $post_id, 'urcr_meta_checkbox', $checkbox );
 		}
@@ -198,6 +210,8 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 		update_post_meta( $post_id, 'urcr_meta_roles', $array_of_roles );
 
 		update_post_meta( $post_id, 'urcr_meta_memberships', $array_of_memberships );
+
+		update_post_meta( $post_id, 'urcr_meta_content', $restricted_message );
 
 		// Add nonce for security and authentication.
 		$nonce_name   = isset( $_POST['custom_nonce'] ) ? $_POST['custom_nonce'] : '';

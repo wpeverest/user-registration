@@ -92,7 +92,7 @@ class PaymentService {
 	 * @return array
 	 */
 	public function build_direct_bank_response( $payment_data, $response_data ) {
-		$bank_data = get_option( 'user_registration_global_bank_details',  $payment_data['payment_gateways']['bank']['content']);
+		$bank_data = get_option( 'user_registration_global_bank_details',  isset($payment_data['payment_gateways']['bank']['content']) ? $payment_data['payment_gateways']['bank']['content'] : '');
 		return array( 'data' => $bank_data );
 	}
 

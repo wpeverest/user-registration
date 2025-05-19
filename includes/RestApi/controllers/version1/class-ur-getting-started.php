@@ -207,12 +207,12 @@ class UR_Getting_Started {
 				'page_url_text' => '',
 				'page_slug'     => '',
 				'status'        => 'enabled',
-				'status_label'  => esc_html__( 'Enabled', 'user-registration' ),
+				'status_label'  => esc_html__( 'Active', 'user-registration' ),
 			),
 		);
 
 		$page_details['default_wordpress_login'] = array(
-			'title'         => esc_html__( 'Default WordPress Login/Registration', 'user-registration' ),
+			'title'         => esc_html__( 'Disable Login/Registration from wp-login.php', 'user-registration' ),
 			'desc'          => esc_html__( 'Default WordPress login page wp-login.php will be disabled.', 'user-registration' ),
 			'page_url'      => '',
 			'page_url_text' => '',
@@ -259,25 +259,7 @@ class UR_Getting_Started {
 			'page_url_text' => esc_html__( 'View Form', 'user-registration' ),
 			'page_slug'     => sprintf( esc_html__( 'Form Id: %s', 'user-registration' ), $default_form_page_id ),
 			'status'        => 'enabled',
-			'status_label'  => esc_html__( 'Created', 'user-registration' ),
-		);
-
-		$pages['myaccount'] = array(
-			'name'    => _x( 'my-account', 'Page slug', 'user-registration' ),
-			'title'   => _x( 'My Account', 'Page title', 'user-registration' ),
-			'content' => '[' . apply_filters( 'user_registration_my_account_shortcode_tag', 'user_registration_my_account' ) . ']',
-		);
-
-		$pages['login'] = array(
-			'name'    => _x( 'login', 'Page slug', 'user-registration' ),
-			'title'   => _x( 'Login', 'Page title', 'user-registration' ),
-			'content' => '[' . apply_filters( 'user_registration_login_shortcode_tag', 'user_registration_login' ) . ']',
-		);
-
-		$pages['lost_password'] = array(
-			'name'    => _x( 'lost-password', 'Page slug', 'user-registration' ),
-			'title'   => _x( 'Lost Password', 'Page title', 'user-registration' ),
-			'content' => '[user_registration_lost_password]',
+			'status_label'  => esc_html__( 'Ready to use', 'user-registration' ),
 		);
 
 		if ( 'user_registration_normal_registration' === $request['registrationType'] ) {
@@ -308,7 +290,27 @@ class UR_Getting_Started {
 					'content' => '[' . apply_filters( 'user_registration_form_shortcode_tag', 'user_registration_form' ) . ' id="' . esc_attr( $default_form_page_id ) . '"]',
 				);
 			}
+		}
 
+		$pages['login'] = array(
+			'name'    => _x( 'login', 'Page slug', 'user-registration' ),
+			'title'   => _x( 'Login', 'Page title', 'user-registration' ),
+			'content' => '[' . apply_filters( 'user_registration_login_shortcode_tag', 'user_registration_login' ) . ']',
+		);
+
+		$pages['myaccount'] = array(
+			'name'    => _x( 'my-account', 'Page slug', 'user-registration' ),
+			'title'   => _x( 'My Account', 'Page title', 'user-registration' ),
+			'content' => '[' . apply_filters( 'user_registration_my_account_shortcode_tag', 'user_registration_my_account' ) . ']',
+		);
+
+		$pages['lost_password'] = array(
+			'name'    => _x( 'lost-password', 'Page slug', 'user-registration' ),
+			'title'   => _x( 'Lost Password', 'Page title', 'user-registration' ),
+			'content' => '[user_registration_lost_password]',
+		);
+
+		if ( 'user_registration_membership_registration' === $request['registrationType'] ) {
 			$pages['membership_pricing']  = array(
 				'name'    => _x( 'membership-pricing', 'Page slug', 'user-registration' ),
 				'title'   => _x( 'Membership Pricing', 'Page title', 'user-registration' ),
@@ -376,53 +378,49 @@ class UR_Getting_Started {
 			'general_settings' => array(
 				'title'    => __( 'General', 'user-registration' ),
 				'settings' => array(
-					'general'      => array(
-						array(
-							'title'   => __( 'User Approval And Login Option', 'user-registration' ),
-							'desc'    => __( 'This option lets you choose login option after user registration.', 'user-registration' ),
-							'id'      => 'user_registration_general_setting_login_options',
-							'type'    => 'select',
-							'default' => 0,
-							'options' => ur_login_option(),
-						),
-						array(
-							'title'   => __( 'Prevent WP Dashboard Access', 'user-registration' ),
-							'desc'    => __( 'Selected user roles will not be able to view and access the WP Dashboard area.', 'user-registration' ),
-							'id'      => 'user_registration_general_setting_disabled_user_roles',
-							'type'    => 'multiselect',
-							'default' => array( array_search( 'subscriber', array_keys( $all_roles_except_admin ) ) => 'subscriber' ),
-							'options' => $all_roles_except_admin,
+					array(
+						'title'   => __( 'User Approval And Login Option', 'user-registration' ),
+						'desc'    => __( 'This option lets you choose login option after user registration.', 'user-registration' ),
+						'id'      => 'user_registration_general_setting_login_options',
+						'type'    => 'select',
+						'default' => 0,
+						'options' => ur_login_option(),
+					),
+					array(
+						'title'   => __( 'Assign Default User Role', 'user-registration' ),
+						'desc'    => __( 'Default role for the users registered through this form.', 'user-registration' ),
+						'id'      => 'user_registration_form_setting_default_user_role',
+						'type'    => 'select',
+						'default' => 'subscriber',
+						'options' => $all_roles,
+					),
+					array(
+						'title'   => __( 'Require Strong Password', 'user-registration' ),
+						'desc'    => __( 'Enforce strong password.', 'user-registration' ),
+						'id'      => 'user_registration_form_setting_enable_strong_password',
+						'type'    => 'switch',
+						'default' => 'no',
+					),
+					array(
+						'title'   => __( 'Minimum Password Strength', 'user-registration' ),
+						'desc'    => __( 'Set minimum required password strength.', 'user-registration' ),
+						'id'      => 'user_registration_form_setting_minimum_password_strength',
+						'type'    => 'radio',
+						'default' => 3,
+						'options' => array(
+							'0' => __( 'Very Weak', 'user-registration' ),
+							'1' => __( 'Weak', 'user-registration' ),
+							'2' => __( 'Medium', 'user-registration' ),
+							'3' => __( 'Strong', 'user-registration' ),
 						),
 					),
-					'registration' => array(
-						array(
-							'title'   => __( 'Enable Strong Password', 'user-registration' ),
-							'desc'    => __( 'Enforce strong password.', 'user-registration' ),
-							'id'      => 'user_registration_form_setting_enable_strong_password',
-							'type'    => 'switch',
-							'default' => 'no',
-						),
-						array(
-							'title'   => __( 'Minimum Password Strength', 'user-registration' ),
-							'desc'    => __( 'Set minimum required password strength.', 'user-registration' ),
-							'id'      => 'user_registration_form_setting_minimum_password_strength',
-							'type'    => 'radio',
-							'default' => 3,
-							'options' => array(
-								'0' => __( 'Very Weak', 'user-registration' ),
-								'1' => __( 'Weak', 'user-registration' ),
-								'2' => __( 'Medium', 'user-registration' ),
-								'3' => __( 'Strong', 'user-registration' ),
-							),
-						),
-						array(
-							'title'   => __( 'Default User Role', 'user-registration' ),
-							'desc'    => __( 'Default role for the users registered through this form.', 'user-registration' ),
-							'id'      => 'user_registration_form_setting_default_user_role',
-							'type'    => 'select',
-							'default' => 'subscriber',
-							'options' => $all_roles,
-						),
+					array(
+						'title'   => __( 'Restrict WordPress Dashboard Access', 'user-registration' ),
+						'desc'    => __( 'Selected user roles will not be able to view and access the WP Dashboard area.', 'user-registration' ),
+						'id'      => 'user_registration_general_setting_disabled_user_roles',
+						'type'    => 'multiselect',
+						'default' => array( array_search( 'subscriber', array_keys( $all_roles_except_admin ) ) => 'subscriber' ),
+						'options' => $all_roles_except_admin,
 					),
 				),
 			),

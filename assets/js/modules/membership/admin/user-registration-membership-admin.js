@@ -226,10 +226,18 @@
 		prepare_membership_data: function () {
 			var post_data = {},
 				post_meta_data = {},
-				form = $('#ur-membership-create-form');
+				form = $('#ur-membership-create-form'),
+			 	description = tinyMCE.get('ur-input-type-membership-description').getContent(),
+				regex = /(<img[^>]*?)(")([^>]*?>)/g;
+
+			description = description.replace(regex, function (match, p1, p2, p3) {
+				return p1 + '\'' + p3.replace(/"/g, '\'');
+			});
+
+
 			post_data = {
 				'name': form.find('#ur-input-type-membership-name').val(),
-				'description': form.find('#ur-input-type-membership-description').val(),
+				'description': description,
 				'status': form.find('#ur-membership-status').prop('checked')
 			};
 			if (ur_membership_data.membership_id) {

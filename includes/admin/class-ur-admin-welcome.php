@@ -104,15 +104,12 @@ class UR_Admin_Welcome {
 							"click",
 							"#user-registration-welcome .welcome-video-play",
 							function (event) {
-								jQuery(this).find(".welcome-video-container").remove();
+							    event.preventDefault();
 
-								var video =
-									'<div class="welcome-video-container"><iframe width="560" height="315" src="https://www.youtube.com/embed/lrkXhZ7hS8g?amprel=0&amp;showinfo=0&amp;autoplay=true" frameborder="0" allowfullscreen></iframe></div>';
+								jQuery(this).find(".user-registration-welcome-thumb, .user-registration-welcome-video__button").remove();
 
-								event.preventDefault();
+								var video = '<div class="welcome-video-container"><iframe width="560" height="315" src="https://www.youtube.com/embed/lrkXhZ7hS8g?autoplay=1&rel=0&showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>';
 
-								jQuery(this).find(".user-registration-welcome-thumb").remove();
-								jQuery(this).find(".user-registration-welcome-video__button").remove();
 								jQuery(this).append(video);
 							}
 						);
@@ -150,11 +147,12 @@ class UR_Admin_Welcome {
 								</div>
 								<div class="user-registration-welcome-container__header">
 									<h2><?php esc_html_e( 'Welcome to User Registration & Membership', 'user-registration' ); ?></h2>
-									<p><?php esc_html_e( 'Thank you for choosing User Registration & Membership - the most flexible registration form builder and membership plugin for WordPress.', 'user-registration' ); ?></p>
+									<p><?php esc_html_e( 'Easily create custom registration forms, manage member access, receive payments and streamline your WordPress user workflow — all without code.', 'user-registration' ); ?></p>
 								</div>
 								<div class="user-registration-welcome-container__action">
 									<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-welcome&tab=setup-wizard' ) ); ?>" class="button button-primary">
 										<h3 style="font-size: 18px; margin: 0px;"><?php esc_html_e( 'Get Started', 'user-registration' ); ?></h3>
+										<span class="dashicons dashicons-arrow-right-alt" ></span>
 									</a>
 								</div>
 							</div>
@@ -181,10 +179,10 @@ class UR_Admin_Welcome {
 	 * @since 1.0.0
 	 */
 	public static function setup_wizard_footer() {
+		wp_print_footer_scripts();
 		if ( function_exists( 'wp_print_media_templates' ) ) {
 			wp_print_media_templates();
 		}
-		wp_print_footer_scripts();
 		wp_print_scripts( 'ur-setup-wizard-script' );
 		?>
 		</html>

@@ -212,7 +212,7 @@ class UR_Smart_Tags {
 					case 'username':
 						if ( is_user_logged_in() ) {
 							$user = wp_get_current_user();
-							$name = sanitize_text_field( $user->user_login );
+							$name = isset( $values['username'] ) ? $values['username'] : sanitize_text_field( $user->user_login );
 						} else {
 							$name = isset( $values['username'] ) ? $values['username'] : '';
 						}
@@ -534,7 +534,7 @@ class UR_Smart_Tags {
 						$content             = str_replace( '{{' . $tag . '}}', wp_kses_post( $sign_out_link ), $content );
 						break;
 					case 'passwordless_login_link':
-						$passwordless_login_link = isset( $values['passwordless_login_link'] ) ?  esc_url( $values['passwordless_login_link'] ) : '';
+						$passwordless_login_link = isset( $values['passwordless_login_link'] ) ? esc_url( $values['passwordless_login_link'] ) : '';
 						$content                 = str_replace( '{{' . $tag . '}}', wp_kses_post( $passwordless_login_link ), $content );
 						break;
 					case 'ur_reset_pass_slug':
@@ -570,6 +570,86 @@ class UR_Smart_Tags {
 						break;
 					case 'otp_expiry_time':
 						$content = str_replace( '{{' . $tag . '}}', isset( $values['otp_expiry_time'] ) ? $values['otp_expiry_time'] : '', $content );
+						break;
+					case 'membership_plan_name':
+						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_name'] ) ? $values['membership_plan_name'] : '', $content );
+						break;
+					case 'membership_plan_type':
+						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_type'] ) ? $values['membership_plan_type'] : '', $content );
+						break;
+					case 'membership_plan_payment_method':
+						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_payment_method'] ) ? $values['membership_plan_payment_method'] : '', $content );
+						break;
+					case 'membership_plan_payment_amount':
+						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_payment_amount'] ) ? $values['membership_plan_payment_amount'] : '', $content );
+						break;
+					case 'membership_plan_payment_status':
+						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_payment_status'] ) ? $values['membership_plan_payment_status'] : '', $content );
+						break;
+					case 'membership_plan_billing_cycle':
+						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_billing_cycle'] ) ? $values['membership_plan_billing_cycle'] : '', $content );
+						break;
+					case 'membership_plan_trial_period':
+						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_trial_period'] ) ? $values['membership_plan_trial_period'] : '', $content );
+						break;
+					case 'membership_plan_next_billing_date':
+						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_next_billing_date'] ) ? $values['membership_plan_next_billing_date'] : '', $content );
+						break;
+					case 'membership_plan_status':
+						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_status'] ) ? $values['membership_plan_status'] : '', $content );
+						break;
+					case 'membership_plan_details':
+						$new_content = '';
+						if ( ! empty( $values['membership_tags'] ) ) {
+							$membership_tags = $values['membership_tags'];
+							$details = array(
+								'Plan Name'       => $membership_tags['membership_plan_name'] ?? '',
+								'Membership Type' => $membership_tags['membership_plan_type'] ?? '',
+								'Payment Details' => array(
+									'Method' => $membership_tags['membership_plan_payment_method'] ?? '',
+									'Amount' => $membership_tags['membership_plan_total'] ?? '',
+									'Status' => $membership_tags['membership_plan_payment_status'] ?? '',
+								),
+								'Billing Cycle'       => $membership_tags['membership_plan_billing_cycle'] ?? '',
+								'Next Billing Date'   => $membership_tags['membership_plan_next_billing_date'] ?? '',
+								'Membership Status'   => $membership_tags['membership_plan_status'] ?? '',
+							);
+
+							$new_content = '<ul>';
+							foreach ( $details as $k => $value ) {
+								if ( is_array( $value ) ) {
+									$new_content .= sprintf( '<li><b>%s</b>:<ul>', esc_html__( $k, 'user-registration' ) );
+									foreach ( $value as $sub_key => $sub_value ) {
+										$new_content .= sprintf( '<li><b>%s</b> - %s</li>', esc_html__( $sub_key, 'user-registration' ), esc_html( $sub_value ) );
+									}
+									$new_content .= '</ul></li>';
+								} else {
+									$new_content .= sprintf( '<li><b>%s</b> - %s</li>', esc_html__( $k, 'user-registration' ), esc_html( $value ) );
+								}
+							}
+							$new_content .= '</ul>';
+						}
+
+						$content = str_replace( '{{' . $tag . '}}', $new_content, $content );
+						break;
+					case 'payment_invoice' :
+						$new_content = '';
+						if ( ! empty( $values['membership'] ) ) {
+							$invoice_details = $values['membership_tags'];
+							$invoice_details['is_membership'] = true;
+						} else {
+							$invoice_details['is_membership'] = false;
+							$invoice_details['user_id'] = $values['user_id'];
+
+						}
+						$template_file   = locate_template( 'payment-successful-email.php' );
+						if ( ! $template_file ) {
+							$template_file = UR_MEMBERSHIP_DIR . 'includes/Templates/Emails/payment-successful-email.php';
+						}
+						ob_start();
+						require $template_file;
+						$new_content = ob_get_clean();
+						$content = str_replace( '{{' . $tag . '}}', $new_content, $content );
 						break;
 				}
 			}
@@ -632,37 +712,37 @@ class UR_Smart_Tags {
 		$pattern_lists = apply_filters(
 			'user_registration_pattern_validation_lists',
 			array(
-				'^[a-zA-Z]+$'                                                                                => __( 'Alpha', 'user-registration' ),
-				'^[a-zA-Z0-9]+$'                                                                             => __( 'Alphanumeric', 'user-registration' ),
-				'^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$'                                                        => __( 'Color', 'user-registration' ),
-				'^[A-Za-z]{2}$'                                                                              => __( 'Country Code (2 Character)', 'user-registration' ),
-				'^[A-Za-z]{3}$'                                                                              => __( 'Country Code (3 Character)', 'user-registration' ),
-				'^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])$'                                                  => __( 'Date (mm/dd)', 'user-registration' ),
-				'^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])$'                                                  => __( 'Date (dd/mm)', 'user-registration' ),
-				'^(0[1-9]|1[0-2])\.(0[1-9]|1\d|2\d|3[01])\.\d{4}$'                                           => __( 'Date (mm.dd.yyyy)', 'user-registration' ),
-				'^(0[1-9]|1\d|2\d|3[01])\.(0[1-9]|1[0-2])\.\d{4}$'                                           => __( 'Date (dd.mm.yyyy)', 'user-registration' ),
-				'^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|1\d|2\d|3[01])$'                                             => __( 'Date (yyyy-mm-dd)', 'user-registration' ),
-				'^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/\d{4}$'                                           => __( 'Date (mm/dd/yyyy)', 'user-registration' ),
-				'^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])\/\d{4}$'                                           => __( 'Date (dd/mm/yyyy)', 'user-registration' ),
-				'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'                                           => __( 'Email', 'user-registration' ),
+				'^[a-zA-Z]+$'                                                                                                                                                                                  => __( 'Alpha', 'user-registration' ),
+				'^[a-zA-Z0-9]+$'                                                                                                                                                                               => __( 'Alphanumeric', 'user-registration' ),
+				'^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$'                                                                                                                                                          => __( 'Color', 'user-registration' ),
+				'^[A-Za-z]{2}$'                                                                                                                                                                                => __( 'Country Code (2 Character)', 'user-registration' ),
+				'^[A-Za-z]{3}$'                                                                                                                                                                                => __( 'Country Code (3 Character)', 'user-registration' ),
+				'^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])$'                                                                                                                                                    => __( 'Date (mm/dd)', 'user-registration' ),
+				'^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])$'                                                                                                                                                    => __( 'Date (dd/mm)', 'user-registration' ),
+				'^(0[1-9]|1[0-2])\.(0[1-9]|1\d|2\d|3[01])\.\d{4}$'                                                                                                                                             => __( 'Date (mm.dd.yyyy)', 'user-registration' ),
+				'^(0[1-9]|1\d|2\d|3[01])\.(0[1-9]|1[0-2])\.\d{4}$'                                                                                                                                             => __( 'Date (dd.mm.yyyy)', 'user-registration' ),
+				'^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|1\d|2\d|3[01])$'                                                                                                                                               => __( 'Date (yyyy-mm-dd)', 'user-registration' ),
+				'^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/\d{4}$'                                                                                                                                             => __( 'Date (mm/dd/yyyy)', 'user-registration' ),
+				'^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])\/\d{4}$'                                                                                                                                             => __( 'Date (dd/mm/yyyy)', 'user-registration' ),
+				'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'                                                                                                                                             => __( 'Email', 'user-registration' ),
 				'^(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$' => __( 'IP (Version 4)', 'user-registration' ),
-				'^((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}))|(([0-9A-Fa-f]{1,4}:){1,7}:)|(:{2})|(([0-9A-Fa-f]{1,4})?::([0-9A-Fa-f]{1,4}:?){0,6}([0-9A-Fa-f]{1,4})?))$'                                                            => __( 'IP (Version 6)', 'user-registration' ),
-				'^978(?:-[\d]+){3}-[\d]$'                                                                    => __( 'ISBN', 'user-registration' ),
-				'-?\d{1,3}\.\d+'                                                                             => __( 'Latitude or Longitude', 'user-registration' ),
-				'^[0-9]+$'                                                                                   => __( 'Numeric', 'user-registration' ),
-				'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$'                                                 => __( 'Password (Numeric, lower, upper)', 'user-registration' ),
-				'(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}'                                                        => __( 'Password (Numeric, lower, upper, min 8)', 'user-registration' ),
-				'[0-9+()-. ]+'                                                                               => __( 'Phone - General', 'user-registration' ),
-				'^\+44\d{10}$'                                                                               => __( 'Phone - UK', 'user-registration' ),
-				'\d{3}[\-]\d{3}[\-]\d{4}'                                                                    => __( 'Phone - US: 123-456-7890', 'user-registration' ),
-				'\([0-9]{3}\)[0-9]{3}-[0-9]{4}'                                                              => __( 'Phone - US: (123)456-7890', 'user-registration' ),
-				'(?:\(\d{3}\)|\d{3})[- ]?\d{3}[- ]?\d{4}'                                                    => __( 'Phone - US: Flexible', 'user-registration' ),
-				'^[A-Za-z]{1,2}\d{1,2}[A-Za-z]?\s?\d[A-Za-z]{2}$'                                            => __( 'Postal Code (UK)', 'user-registration' ),
-				'\d+(\.\d{2})?$'                                                                             => __( 'Price (1.23)', 'user-registration' ),
-				'^[a-zA-Z0-9-]+$'                                                                            => __( 'Slug', 'user-registration' ),
-				'(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}'                                                     => __( 'Time (hh:mm:ss)', 'user-registration' ),
-				'^(https?|ftp):\/\/[^\s\/$.?#].[^\s]*$'                                                      => __( 'URL', 'user-registration' ),
-				'^\d{5}(-\d{4})?$'                                                                        => __( 'Zip Code', 'user-registration' ),
+				'^((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}))|(([0-9A-Fa-f]{1,4}:){1,7}:)|(:{2})|(([0-9A-Fa-f]{1,4})?::([0-9A-Fa-f]{1,4}:?){0,6}([0-9A-Fa-f]{1,4})?))$'                                        => __( 'IP (Version 6)', 'user-registration' ),
+				'^978(?:-[\d]+){3}-[\d]$'                                                                                                                                                                      => __( 'ISBN', 'user-registration' ),
+				'-?\d{1,3}\.\d+'                                                                                                                                                                               => __( 'Latitude or Longitude', 'user-registration' ),
+				'^[0-9]+$'                                                                                                                                                                                     => __( 'Numeric', 'user-registration' ),
+				'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$'                                                                                                                                                   => __( 'Password (Numeric, lower, upper)', 'user-registration' ),
+				'(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}'                                                                                                                                                          => __( 'Password (Numeric, lower, upper, min 8)', 'user-registration' ),
+				'[0-9+()-. ]+'                                                                                                                                                                                 => __( 'Phone - General', 'user-registration' ),
+				'^\+44\d{10}$'                                                                                                                                                                                 => __( 'Phone - UK', 'user-registration' ),
+				'\d{3}[\-]\d{3}[\-]\d{4}'                                                                                                                                                                      => __( 'Phone - US: 123-456-7890', 'user-registration' ),
+				'\([0-9]{3}\)[0-9]{3}-[0-9]{4}'                                                                                                                                                                => __( 'Phone - US: (123)456-7890', 'user-registration' ),
+				'(?:\(\d{3}\)|\d{3})[- ]?\d{3}[- ]?\d{4}'                                                                                                                                                      => __( 'Phone - US: Flexible', 'user-registration' ),
+				'^[A-Za-z]{1,2}\d{1,2}[A-Za-z]?\s?\d[A-Za-z]{2}$'                                                                                                                                              => __( 'Postal Code (UK)', 'user-registration' ),
+				'\d+(\.\d{2})?$'                                                                                                                                                                               => __( 'Price (1.23)', 'user-registration' ),
+				'^[a-zA-Z0-9-]+$'                                                                                                                                                                              => __( 'Slug', 'user-registration' ),
+				'(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}'                                                                                                                                                       => __( 'Time (hh:mm:ss)', 'user-registration' ),
+				'^(https?|ftp):\/\/[^\s\/$.?#].[^\s]*$'                                                                                                                                                        => __( 'URL', 'user-registration' ),
+				'^\d{5}(-\d{4})?$'                                                                                                                                                                             => __( 'Zip Code', 'user-registration' ),
 			)
 		);
 

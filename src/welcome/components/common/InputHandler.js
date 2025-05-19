@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import {
 	Flex,
 	Switch,
@@ -14,16 +14,24 @@ import {
 	Checkbox,
 	Input,
 	InputGroup,
-	InputLeftElement
+	InputLeftElement,
+	Link,
+	Button
 } from "@chakra-ui/react";
 import { Select } from "chakra-react-select";
+import { __ } from "@wordpress/i18n";
 
 import { useStateValue } from "../../../context/StateProvider";
 import { actionTypes } from "../../../context/gettingStartedContext";
 
-function InputHandler({ setting, onBoardIconsURL, customStyle }) {
+function InputHandler({
+	setting,
+	onBoardIconsURL,
+	customStyle,
+	onModify,
+	hideElement
+}) {
 	const [{ settings, allowUsageData }, dispatch] = useStateValue();
-
 	const renderOptions = () => {
 		let newOptionsRef = [];
 
@@ -160,11 +168,30 @@ function InputHandler({ setting, onBoardIconsURL, customStyle }) {
 		}
 
 		Object.keys(newChangedValueRef).map((key, value) => {
-			if (newAllowUsageDataChangedValueRef[key]) {
+			if (
+				newAllowUsageDataChangedValueRef[key] &&
+				key !== "user_registration_updates_admin_email"
+			) {
 				newAllowUsageDataChangedValueRef[key] = newChangedValueRef[key];
 				delete newChangedValueRef[key];
 			}
 		});
+
+		if (
+			setting.id ===
+				"user_registration_form_setting_enable_strong_password" &&
+			newChangedValueRef.user_registration_form_setting_enable_strong_password ===
+				"no"
+		) {
+			onModify(true);
+		} else if (
+			setting.id ===
+				"user_registration_form_setting_enable_strong_password" &&
+			newChangedValueRef.user_registration_form_setting_enable_strong_password ===
+				"yes"
+		) {
+			onModify(false);
+		}
 
 		dispatch({
 			type: actionTypes.GET_SETTINGS,
@@ -207,11 +234,34 @@ function InputHandler({ setting, onBoardIconsURL, customStyle }) {
 		</Icon>
 	);
 
+	const updateAdminEmail = (bool) => {
+		onModify(true);
+
+		if (bool) {
+			const newChangedValueRef = { ...settings };
+			const newAllowUsageDataChangedValueRef = { ...allowUsageData };
+			Object.keys(newChangedValueRef).map((key, value) => {
+				if (
+					newAllowUsageDataChangedValueRef[key] &&
+					key === "user_registration_updates_admin_email"
+				) {
+					newAllowUsageDataChangedValueRef[key] =
+						newChangedValueRef[key];
+					delete newChangedValueRef[key];
+				}
+			});
+			dispatch({
+				type: actionTypes.GET_ALLOW_USAGE,
+				allowUsageData: newAllowUsageDataChangedValueRef
+			});
+		}
+	};
+
 	const renderElement = () => {
 		switch (setting.type) {
 			case "text":
 				return (
-					<InputGroup flex="1">
+					<InputGroup flex="1" marginLeft="24px" gap={"10px"}>
 						<InputLeftElement>
 							<MailIcon />
 						</InputLeftElement>
@@ -223,7 +273,35 @@ function InputHandler({ setting, onBoardIconsURL, customStyle }) {
 								handleInputChange(setting.type, setting.id, e)
 							}
 							defaultValue={setting.default}
+							borderRadius="8px"
 						/>
+						{setting.id ===
+							"user_registration_updates_admin_email" && (
+							<>
+								<Button
+									colorScheme="blue"
+									backgroundColor="#475BB2 !important"
+									width="30%"
+									onClick={() => {
+										updateAdminEmail(true);
+									}}
+									borderRadius="8px"
+								>
+									{__("Update", "user-registration")}
+								</Button>
+								<Button
+									color="white"
+									backgroundColor="#ff4f60 !important"
+									width="30%"
+									onClick={() => {
+										updateAdminEmail(false);
+									}}
+									borderRadius="8px"
+								>
+									{__("Cancel", "user-registration")}
+								</Button>
+							</>
+						)}
 					</InputGroup>
 				);
 			case "checkbox":
@@ -237,7 +315,7 @@ function InputHandler({ setting, onBoardIconsURL, customStyle }) {
 							handleInputChange(setting.type, setting.id, e)
 						}
 						defaultChecked={setting.default === "yes"}
-						{...(settings[settings.id] === "yes" && {
+						{...(settings[setting.id] === "yes" && {
 							isChecked: true
 						})}
 					/>
@@ -307,6 +385,7 @@ function InputHandler({ setting, onBoardIconsURL, customStyle }) {
 					activeBackgroundColor: "#F9FAFC",
 					activeFontColor: "#475BB2"
 				};
+
 				if (
 					setting.id ===
 						"user_registration_form_setting_minimum_password_strength" &&
@@ -388,6 +467,13 @@ function InputHandler({ setting, onBoardIconsURL, customStyle }) {
 		}
 	};
 
+	if (
+		"undefined" !== typeof hideElement[setting.id] &&
+		hideElement[setting.id]
+	) {
+		return "";
+	}
+
 	return (
 		<Flex justify={"space-between"} align="center" sx={customStyle}>
 			<Flex align="center" flex="0 0 40%">
@@ -399,6 +485,31 @@ function InputHandler({ setting, onBoardIconsURL, customStyle }) {
 					}}
 				>
 					{setting.title}
+					{setting.email && <strong>{setting.email}</strong>}
+					{setting.link &&
+						(setting.link !== "change" ? (
+							<Link
+								href={setting.link}
+								isExternal
+								color="#475BB2"
+								textDecoration="underline"
+							>
+								{setting.linkLabel}
+							</Link>
+						) : (
+							hideElement.user_registration_updates_admin_email && (
+								<Link
+									href="#"
+									color="#475BB2"
+									textDecoration="underline"
+									onClick={() => {
+										onModify(false);
+									}}
+								>
+									{setting.linkLabel}
+								</Link>
+							)
+						))}
 				</FormLabel>
 				{setting.desc && (
 					<Tooltip
