@@ -3,7 +3,7 @@
  * Plugin Name: User Registration & Membership
  * Plugin URI: https://wpuserregistration.com/
  * Description: The most flexible User Registration and Membership plugin for WordPress.
- * Version: 4.2.0
+ * Version: 4.2.2
  * Author: WPEverest
  * Author URI: https://wpuserregistration.com
  * Text Domain: user-registration
@@ -35,7 +35,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '4.2.0';
+		public $version = '4.2.2';
 
 		/**
 		 * Session instance.
@@ -257,6 +257,15 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-myaccount.php';
 			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-edit-profile.php';
 			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-edit-password.php';
+			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-login-logout-menu.php';
+			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-membership-listing.php';
+			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-thank-you.php';
+			/**
+			 * Navigation menu item classes.
+			 */
+			include_once UR_ABSPATH . 'includes/menu-items/abstract-ur-nav-menu-item.php';
+			include_once UR_ABSPATH . 'includes/menu-items/class-ur-login-logout-nav-menu-item.php';
+
 
 			// Validation classes.
 			include_once UR_ABSPATH . 'includes/validation/class-ur-validation.php';

@@ -63,6 +63,8 @@ class UR_Blocks {
 				'restURL'              => rest_url(),
 				'isPro'                => is_plugin_active( 'user-registration-pro/user-registration.php' ),
 				'iscRestrictionActive' => ur_check_module_activation( 'content-restriction' ),
+				'pages' 			   => array_map( function( $page ) { return [ 'label' => $page->post_title, 'value' => $page->ID ]; }, get_pages() ),
+				'login_page_id'		   => get_option('user_registration_login_page_id')
 			)
 		);
 		wp_register_script(
@@ -123,16 +125,22 @@ class UR_Blocks {
 	 * @return AbstractBlock[]
 	 */
 	private function get_block_types() {
+
 		$ur_blocks_classes = array(
 			UR_Block_Regstration_Form::class, //phpcs:ignore;
 			UR_Block_Login_Form::class, //phpcs:ignore;
 			UR_Block_Myaccount::class, //phpcs:ignore;
 			UR_Block_Edit_Profile::class, //phpcs:ignore;
 			UR_Block_Edit_Password::class, //phpcs:ignore;
+			UR_Block_Login_Logout_Menu::class, //phpcs:ignore;
 		);
 
 		if ( ur_check_module_activation( 'content-restriction' ) ) {
 			$ur_blocks_classes[] = UR_Block_Content_Restriction::class;
+		}
+		if ( ur_check_module_activation( 'membership' ) ) {
+			$ur_blocks_classes[] = UR_Block_Membership_Listing::class;
+			$ur_blocks_classes[] = 	UR_Block_Thank_You::class;
 		}
 
 		return apply_filters(

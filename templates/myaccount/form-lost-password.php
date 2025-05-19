@@ -90,7 +90,7 @@ if ( 'bordered' === $form_template ) {
 								 * @param string Email username label.
 								 * @return string Email username label.
 								 *
-								 * @since xx.xx.xx
+								 * @since 4.2.1
 								 */
 								apply_filters( 'user_registration_forgot_password_email_label', esc_html__( 'Username or Email', 'user-registration' ) )
 							);

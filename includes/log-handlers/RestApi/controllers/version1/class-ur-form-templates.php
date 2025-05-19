@@ -67,7 +67,7 @@ class UR_Form_Templates {
 	/**
 	 * Get Template Lists.
 	 *
-	 * @since xx.xx.xx
+	 * @since 4.2.1
 	 *
 	 * @return WP_REST_Response|WP_Error
 	 */
@@ -154,7 +154,6 @@ class UR_Form_Templates {
 		// Retrieve and sanitize parameters.
 		$title = sanitize_text_field( wp_unslash( $request->get_param( 'title' ) ) );
 		$slug  = sanitize_text_field( wp_unslash( $request->get_param( 'slug' ) ) );
-
 		// Check if the title parameter is empty.
 		if ( empty( $title ) ) {
 			return new WP_Error(

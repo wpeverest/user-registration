@@ -89,6 +89,7 @@ class MembershipGroupRepository extends BaseRepository implements MembershipGrou
 
 		$memberships = get_post_meta( $id, 'urmg_memberships', true );
 		$memberships = str_replace( array( '[', ']' ), '', $memberships );
+
 		if ( empty( $memberships ) ) {
 			return array();
 		}

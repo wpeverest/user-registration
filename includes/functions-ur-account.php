@@ -12,7 +12,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-add_filter( 'login_errors', 'ur_login_error_message' );
 add_filter( 'get_avatar', 'ur_replace_gravatar_image', 99, 6 );
 add_filter( 'ajax_query_attachments_args', 'ur_show_current_user_attachments' );
 
@@ -33,32 +32,6 @@ function ur_show_current_user_attachments( $query ) {
 	}
 
 	return $query;
-}
-
-/**
- * Modify error message on invalid username or password.
- *
- * @param string $error Error Message.
- */
-function ur_login_error_message( $error ) {
-	// Don't change login error messages on admin site .
-	if ( isset( $_POST['redirect_to'] ) && false !== strpos( wp_unslash( $_POST['redirect_to'] ), network_admin_url() ) ) {  // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		return $error;
-	}
-
-	$pos  = strpos( $error, 'incorrect' );     // Check if the error contains incorrect string.
-	$pos2 = strpos( $error, 'Invalid' );       // Check if the error contains Invalid string.
-
-	// Its the correct username with incorrect password.
-	if ( is_int( $pos ) && isset( $_POST['username'] ) ) {  // phpcs:ignore WordPress.Security.NonceVerification
-		/* translators: %s - Username */
-		$error = sprintf( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . __( 'The password you entered for username %1$1s is incorrect. %2$2s', 'user-registration' ), sanitize_text_field( wp_unslash( $_POST['username'] ) ), "<a href='" . esc_url( wp_lostpassword_url() ) . "'>" . __( 'Lost Your Password?', 'user-registration' ) . '</a>' ); // phpcs:ignore WordPress.Security.NonceVerification
-	} elseif ( is_int( $pos2 ) && isset( $_POST['username'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-		/* translators: %s - Lost password URL */
-		$error = sprintf( '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong>' . __( 'Invalid username. %1s', 'user-registration' ), "<a href='" . esc_url( wp_lostpassword_url() ) . "'>" . __( 'Lost Your Password?', 'user-registration' ) . '</a>' ); // phpcs:ignore WordPress.Security.NonceVerification
-	}
-
-	return $error;
 }
 
 /**
@@ -209,6 +182,9 @@ function ur_get_account_endpoint_url( $endpoint ) {
 	}
 	if ( 'user-logout' === $endpoint ) {
 		return ur_logout_url( ur_get_page_permalink( 'myaccount' ) );
+	}
+	if ( 'ur-login-logout' === $endpoint ) {
+		return '#ur_login_logout#';
 	}
 	return ur_get_endpoint_url( $endpoint, '', ur_get_page_permalink( 'myaccount' ) );
 }
