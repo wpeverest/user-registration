@@ -345,7 +345,7 @@ const TemplateList = ({ selectedCategory, templates }) => {
 			</Heading>
 			{templates?.length ? (
 				<SimpleGrid
-					columns={{ base: 1, md: 2, lg: 3, xl: 4 }}
+					gridTemplateColumns={"repeat(auto-fit, minmax(200px, 1fr))"}
 					spacing={6}
 				>
 					{templates.map((template) => (

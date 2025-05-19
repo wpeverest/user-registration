@@ -52,7 +52,7 @@ function App() {
 			label: __("Registration Type", "user-registration"),
 			title: __("Registration Type", "user-registration"),
 			description: __(
-				"Welcome! Let's set up your registration system. Select the type of registration you’d like to proceed with:",
+				"Get started by choosing the type of registration that best fits your website's needs. Whether you're creating a simple sign-up process or a full membership platform, we've got you covered!",
 				"user-registration"
 			),
 			isDone: true,
@@ -61,12 +61,20 @@ function App() {
 		{
 			key: "install_pages",
 			label: __("Initial Setup Details", "user-registration"),
-			isDone: true,
+			description: __(
+				"To provide your users with a warm welcome, we've configured important settings and prepared essential pages.",
+				"user-registration"
+			),
+			isDone: false,
 			component: <InstallPage />
 		},
 		{
 			key: "general_settings",
 			label: __("Settings", "user-registration"),
+			description: __(
+				"Configure how new users register, gain access, and maintain account security.",
+				"user-registration"
+			),
 			isDone: false,
 			component: <GeneralSettings />
 		},
@@ -100,15 +108,8 @@ function App() {
 
 				const newSettingsRef = {};
 				Object.keys(data.options).map((key) => {
-					var sectionSettings = data.options[key].settings.general;
+					var sectionSettings = data.options[key].settings;
 					sectionSettings.map((individualSettings) => {
-						newSettingsRef[individualSettings.id] =
-							individualSettings.default;
-					});
-
-					var registrationSectionSettings =
-						data.options[key].settings.registration;
-					registrationSectionSettings.map((individualSettings) => {
 						newSettingsRef[individualSettings.id] =
 							individualSettings.default;
 					});
@@ -316,17 +317,34 @@ function App() {
 				}
 			}
 		});
+
+		if (newSettingsRef.user_registration_end_setup_wizard) {
+			apiFetch({
+				path:
+					restURL +
+					"user-registration/v1/getting-started/save-allow-usage-data",
+				method: "POST",
+				headers: {
+					"X-WP-Nonce": urRestApiNonce
+				},
+				data: { settings: allowUsageData }
+			}).then((res) => {
+				if (res.success) {
+					setAllowTracking(true);
+				}
+			});
+		}
 	};
 
 	const { title, page_url } = membershipDetails || {},
 		isMembershipRegistration =
 			registrationType === "user_registration_membership_registration",
 		rightFooterButtonText = isMembershipRegistration
-			? title
-			: "Edit Default Form",
+			? "Start Building Your Membership"
+			: "Visit Dashboard",
 		rightFooterButtonLink = isMembershipRegistration
 			? page_url
-			: defaultFormURL;
+			: adminURL + "admin.php?page=user-registration-dashboard";
 
 	return (
 		<ChakraProvider>
@@ -358,7 +376,7 @@ function App() {
 									alignItems="left"
 									gap="12px"
 								>
-									{activeStep.title && (
+									{/* {activeStep.title && (
 										<Heading
 											as="h2"
 											size="lg"
@@ -368,7 +386,7 @@ function App() {
 										>
 											{activeStep.title}
 										</Heading>
-									)}
+									)} */}
 									{activeStep.description && (
 										<Text
 											fontSize="16px"
@@ -390,31 +408,7 @@ function App() {
 					<div className="user-registration-setup-wizard__footer">
 						<div className="user-registration-setup-wizard__footer--left">
 							{steps[steps.length - 1].key === activeStep.key ? (
-								<Button
-									variant="outline"
-									colorScheme="gray"
-									onClick={() => {
-										setDisabledLink(true);
-										handleSaveSettings(
-											"undefined" ===
-												typeof registrationPageLink ||
-												"" === registrationPageLink
-												? ""
-												: registrationPageLink
-										);
-									}}
-									disabled={disabledLink}
-									style={{
-										backgroundColor: "#FAFAFA",
-										color: "#6B6B6B",
-										border: "1px solid #999999"
-									}}
-								>
-									{__(
-										"View Registration Page",
-										"user-registration"
-									)}
-								</Button>
+								""
 							) : steps[0].key !== activeStep.key &&
 							  steps[1].key !== activeStep.key ? (
 								<Button

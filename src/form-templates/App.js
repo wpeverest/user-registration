@@ -181,7 +181,7 @@ const App = () => {
 							</Text>
 						</VStack>
 					</Box>
-					<Box bg="white" rounded="md" boxShadow="sm" gap="24px">
+					<Box bg="white" rounded="md" gap="24px" boxShadow="none">
 						<Main filter={selectedTab} />
 					</Box>
 				</Box>
