@@ -61,7 +61,7 @@
 								?>
 								<?php
 								wp_editor(
-									! empty( $membership_content['description'] ) ? $membership_content['description'] : $membership_details['description'],
+									! empty( $membership_content['description'] ) ? $membership_content['description'] : (! empty( $membership_details['description'] ) ? $membership_details['description'] : ''),
 									'ur-input-type-membership-description',
 									array(
 										'textarea_name' => 'Membership Description',
