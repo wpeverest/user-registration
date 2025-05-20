@@ -297,7 +297,16 @@ class MembershipService {
 			}
 		}
 
-		return $result;
+		/**
+		 * Filters the membership data validation result
+		 *
+		 * This hook should be used by new payment gateway integrations add-on to validate the membership data.
+		 *
+		 * @since 4.2.3
+		 *
+		 * @param array $result Membership validation result data
+		 */
+		return apply_filters( 'user_registration_membership_validate_membership_data', $result );
 	}
 
 	/**
@@ -419,6 +428,15 @@ class MembershipService {
 				$result = empty( get_option( 'user_registration_global_bank_details' ) );
 				break;
 		}
+		/**
+		 * Filters whether the payment gateway setup is valid.
+		 *
+		 * @param bool $result Payment setup validation check, yield true for invalid setup.
+		 * @param array $data Payment data.
+		 *
+		 * @return bool $result
+		 */
+		$result = apply_filters( 'user_registration_membership_validate_payment_gateway', $result, $data );
 
 		if ( $result ) {
 			$response['status']  = false;

@@ -555,6 +555,22 @@
       "released_date": "01/08/2024"
     },
     {
+      "title": "Mollie Payment",
+      "slug": "user-registration-mollie",
+      "name": "User Registration Mollie payment",
+      "image": "extensions-json/sections/images/mollie.png",
+      "excerpt": "Want quick and secure payments during registration? User Registration has in-built support for the Mollie gateway.",
+      "link": "https://docs.wpuserregistration.com/docs/mollie/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "plan": [
+        "plus",
+        "professional",
+        "themegrill agency"
+      ],
+      "setting_url": "admin.php?page=user-registration-settings&tab=payment",
+      "demo_video_url": "",
+      "released_date": "19/05/2025"
+    },
+    {
       "title": "MailPoet",
       "slug": "user-registration-mailpoet",
       "name": "User Registration MailPoet",

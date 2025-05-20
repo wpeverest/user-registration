@@ -194,7 +194,7 @@
 		</span>
 	</div>
 
-	<!--	payment gateway container-->
+	<!--	payment gateway container -->
 	<div
 		class="ur_membership_frontend_input_container urm_hidden_payment_container ur_payment_gateway_container urm-d-none">
 		<hr class="ur_membership_divider">
@@ -229,6 +229,15 @@
 				</div>
 			</div>
 		</div>
+		<?php
+			/**
+			 * Fires when payment fields is rendered on membership registration form.
+			 *
+			 *  This action allows developers to output payment gateway fields
+			 *  within the registration form.
+			 */
+			do_action( 'user_registration_membership_render_payment_field', $form_id );
+		?>
 	</div>
 
 	<span class="description">

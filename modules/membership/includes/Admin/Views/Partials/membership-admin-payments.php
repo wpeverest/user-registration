@@ -42,6 +42,12 @@ function render_payment_gateways( $membership_details ) {
 
 	//render stripe settings
 	render_stripe_settings( $membership_details );
+	/**
+	 * Fires when payment gateway settings is rendered on the form settings.
+	 *
+	 * @param array $membership_details
+	 */
+	do_action( 'user_registration_membership_render_payment_gateway', $membership_details );
 }
 
 /**

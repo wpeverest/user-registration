@@ -266,6 +266,10 @@
 					is_bank_selected = form.find('#ur-membership-pg-bank:checked').val(),
 					is_stripe_selected = form.find('#ur-membership-pg-stripe:checked').val();
 
+								
+				var is_authorize_selected = form.find("#ur-membership-pg-authorize:checked").val();
+				var is_mollie_selected = form.find("#ur-membership-pg-mollie:checked").val();
+
 				//since all the pgs have different params , they must be handled differently.
 				post_meta_data.payment_gateways = {
 					paypal: {
@@ -276,7 +280,13 @@
 					}, // stripe section
 					bank: {
 						status: 'off'
-					} //direct bank transfer section
+					}, //direct bank transfer section
+					authorize: {
+						status: 'off'
+					},
+					mollie: {
+						status: 'off'
+					}
 				};
 
 				//check if paypal is selected
@@ -307,6 +317,19 @@
 					post_meta_data.payment_gateways.stripe = {
 						status: is_stripe_selected
 					};
+				}
+
+				if (is_authorize_selected) {
+					post_meta_data.payment_gateways.authorize = {
+						status: is_authorize_selected
+					};
+				}
+
+				//check if mollie is selected
+				if(is_mollie_selected) {
+					post_meta_data.payment_gateways.mollie = {
+						status: is_mollie_selected
+					}
 				}
 			}
 			return {
