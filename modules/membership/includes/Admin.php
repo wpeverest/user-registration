@@ -396,7 +396,7 @@ if ( ! class_exists( 'Admin' ) ) :
 				'stripe' => __( 'Stripe', 'user-registration' ),
 				'bank'   => __( 'Bank', 'user-registration' ),
 			) );
-			add_option(
+			update_option(
 				'ur_membership_payment_gateways',
 				$membership_payment_gateways
 			);

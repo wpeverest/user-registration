@@ -320,12 +320,17 @@
 					case 'stripe':
 						stripe_settings.handle_stripe_response(response, prepare_members_data, form_response);
 						break;
+					case 'authorize':
+						ur_membership_frontend_utils.show_success_message(
+							response.data.message
+						);
+						break;
 					case 'mollie':
 						ur_membership_frontend_utils.show_success_message(
 							response.data.message
 						);
 						window.location.replace(response.data.pg_data.payment_url);
-						break;
+						break;						
 					default:
 						ur_membership_frontend_utils.show_form_success_message(form_response, {
 							'username': prepare_members_data.username
@@ -792,9 +797,15 @@
 				stripe_container = $('.stripe-container'),
 				stripe_error_container = $('#stripe-errors');
 
+			var authorize_container = $('#authorize-net-container');
+			var authorize_error_container = $('#authorize-errors');
+
+			authorize_error_container.remove();
+			
 			stripe_error_container.remove();
 			$('input[name="urm_payment_method"]').prop('checked', false);
 			stripe_container.addClass('urm-d-none');
+			authorize_container.addClass('urm-d-none');
 			urm_hidden_pg_containers.addClass('urm-d-none');
 
 			$('.urm_apply_coupon').show();
@@ -916,8 +927,15 @@
 				stripe_container = $('.stripe-container'),
 				stripe_error_container = $('#stripe-errors');
 
+			var authorize_container = $('#authorize-net-container');
+			var authorize_error_container = $('#authorize-errors');
+
 			stripe_container.addClass('urm-d-none');
 			stripe_error_container.remove();
+
+			authorize_container.addClass('urm-d-none');
+			authorize_error_container.remove();
+
 			elements = {};
 			if (selected_method === 'stripe') {
 				if (urmf_data.stripe_publishable_key.length == 0) {
@@ -926,6 +944,9 @@
 				}
 				stripe_container.removeClass('urm-d-none');
 				stripe_settings.init();
+			}
+			if( selected_method === 'authorize') {
+				authorize_container.removeClass('urm-d-none');
 			}
 		});
 

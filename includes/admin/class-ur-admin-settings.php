@@ -80,6 +80,9 @@ class UR_Admin_Settings {
 					if ( is_plugin_active( 'user-registration-authorize-net/user-registration-authorize-net.php' ) ) {
 						$modules[] = 'class-ur-payment-settings.php';
 					}
+					if( is_plugin_active( 'user-registration-mollie/user-registration-mollie.php' ) ) {
+						$modules[] = 'class-ur-payment-settings.php';
+					}
 				}
 			} elseif ( ur_check_module_activation( 'membership' ) ) {
 				$modules = array(

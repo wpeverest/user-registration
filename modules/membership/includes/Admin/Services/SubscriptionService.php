@@ -8,7 +8,7 @@ use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
 use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
 use WPEverest\URMembership\Admin\Services\Paypal\PaypalService;
 use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
-
+use WPEverest\URM\Mollie\Services\PaymentService as MollieService;
 class SubscriptionService {
 
 	protected $members_subscription_repository, $members_orders_repository, $membership_repository, $orders_repository;
@@ -117,8 +117,12 @@ class SubscriptionService {
 				$stripe_service = new StripeService();
 				return $stripe_service->cancel_subscription( $order, $subscription );
 				break;
-			default:
+			case 'mollie':
+				$mollie_service = new MollieService();
+				return $mollie_service->cancel_subscription( $order, $subscription );
 				break;
+			default:
+				return apply_filters( 'user_registration_membership_cancel_subscription', array( 'status' =>  false ) , $order, $subscription );
 		}
 	}
 

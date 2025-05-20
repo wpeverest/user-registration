@@ -236,7 +236,7 @@
 			 *  This action allows developers to output payment gateway fields
 			 *  within the registration form.
 			 */
-			do_action( 'user_registration_membership_render_payment_field' );
+			do_action( 'user_registration_membership_render_payment_field', $form_id );
 		?>
 	</div>
 

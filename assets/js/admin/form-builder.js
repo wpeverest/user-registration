@@ -1089,6 +1089,13 @@
 
 						required_fields = required_fields.concat(anet_fields);
 					}
+					else if (mollie.is(":checked")) {
+						var mollie_fields = [
+							"payment_fields"
+						];
+
+						required_fields = required_fields.concat(mollie_fields);
+					}
 				}
 				for (
 					var required_index = 0;
