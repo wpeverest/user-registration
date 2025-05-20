@@ -35,7 +35,7 @@ const RegistrationType = () => {
 			user_registration_normal_registration: {
 				label: __("Normal registration", "user-registration"),
 				desc: __(
-					"Set up a standard registration form for general user sign-ups.",
+					"Suitable for simple websites requiring basic user sign-ups without membership tiers.",
 					"user-registration"
 				),
 				image: `${onBoardIconsURL}/without-membership.png`
@@ -43,7 +43,7 @@ const RegistrationType = () => {
 			user_registration_membership_registration: {
 				label: __("Membership registration", "user-registration"),
 				desc: __(
-					"Create a membership system with user sign-ups and exclusive access.",
+					"Best for sites offering premium content, subscriptions, or exclusive member access with multiple membership levels.",
 					"user-registration"
 				),
 				image: `${onBoardIconsURL}/with-membership.png`
@@ -64,6 +64,8 @@ const RegistrationType = () => {
 				border={`1px solid ${borderColor}`}
 				borderRadius="12px"
 				padding="20px"
+				flex="0 0 48%"
+				height="445px"
 			>
 				<input {...input} />
 				<Flex direction="column" align="center" gap="16px">
@@ -71,7 +73,7 @@ const RegistrationType = () => {
 						p="20px"
 						border="1px solid #E1E1E1"
 						borderRadius="8px"
-						width="315px"
+						width="100%"
 						height="270px"
 					>
 						<Image

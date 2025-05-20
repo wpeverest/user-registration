@@ -3,7 +3,7 @@
 	require __DIR__ . '/./Partials/header.php';
 	$is_pro     = is_plugin_active( 'user-registration-pro/user-registration.php' );
 	$return_url = admin_url( 'admin.php?page=user-registration-membership' );
-	$is_editing = !empty($_GET['post_id']);
+	$is_editing = ! empty( $_GET['post_id'] );
 	?>
 	<div
 		class="ur-membership-tab-contents-wrapper ur-registered-from ur-align-items-center ur-justify-content-center">
@@ -53,21 +53,27 @@
 							</div>
 							<div class="ur-field" data-field-key="textarea" style="width: 100%">
 								<?php
-								$membership_description = '';
+
 								if ( isset( $membership->post_content ) && ! empty( $membership->post_content ) ) {
-									$membership_content     = json_decode( wp_unslash( $membership->post_content ), true );
-									$membership_description = $membership_content['description'];
+									$membership_content = json_decode( wp_unslash( $membership->post_content ), true );
 								}
+
 								?>
-								<textarea data-key-name="Membership Description"
-										  id="ur-input-type-membership-description"
-										  name="ur_membership_description"
-										  style="width: 100%" rows="5"
-										  value=""><?php echo $membership_description; ?></textarea>
+								<?php
+								wp_editor(
+									! empty( $membership_content['description'] ) ? $membership_content['description'] : (! empty( $membership_details['description'] ) ? $membership_details['description'] : ''),
+									'ur-input-type-membership-description',
+									array(
+										'textarea_name' => 'Membership Description',
+										'textarea_rows' => 50,
+									)
+								);
+								?>
 							</div>
 						</div>
 						<!--					membership status-->
-						<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3" style="gap:20px; <?php echo $is_editing ? '' : 'display:none !important'; ?> ">
+						<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3"
+							 style="gap:20px; <?php echo $is_editing ? '' : 'display:none !important'; ?> ">
 							<div class="ur-label" style="width: 30%">
 								<label class="ur-membership-enable-status"
 									   for="ur-membership-status"><?php esc_html_e( 'Membership Status', 'user-registration' ); ?>
@@ -82,7 +88,7 @@
 									data-key-name="Membership Status"
 									id="ur-membership-status" type="checkbox"
 									class="user-registration-switch__control hide-show-check enabled"
-									<?php echo isset( $membership_content ) && $membership_content['status'] == 'true' ? 'checked' : ($is_editing ? '' : 'checked') ; ?>
+									<?php echo isset( $membership_content ) && $membership_content['status'] == 'true' ? 'checked' : ( $is_editing ? '' : 'checked' ); ?>
 									name="ur_membership_status"
 									style="width: 100%; text-align: left">
 							</div>

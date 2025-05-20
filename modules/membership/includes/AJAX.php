@@ -127,6 +127,12 @@ class AJAX {
 		$pg_data = array();
 		if ( 'free' !== $data['payment_method'] && $response['status'] ) {
 			$payment_service = new PaymentService( $data['payment_method'], $data['membership'], $data['email'] );
+			
+			$form_response    = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
+			$ur_authorize_net = array( 'ur_authorize_net' => ! empty ( $form_response['ur_authorize_net'] ) ? $form_response['ur_authorize_net'] : [] );
+			$data             = array_merge( $data, $ur_authorize_net );
+			$pg_data = $payment_service->build_response( $data );
+
 			$pg_data         = $payment_service->build_response( $data );
 		}
 
@@ -208,9 +214,12 @@ class AJAX {
 		$new_membership_ID = wp_insert_post( $data['post_data'] );
 
 		if ( $new_membership_ID ) {
-			add_post_meta( $new_membership_ID, $data['post_meta_data']['meta_key'], $data['post_meta_data']['meta_value'] );
-			$meta_data = json_decode( $data["post_meta_data"]["meta_value"], true );
-
+			if(!empty($data['post_meta_data']) ) {
+				foreach ($data['post_meta_data'] as $datum) {
+					add_post_meta( $new_membership_ID, $datum['meta_key'], $datum['meta_value'] );
+				}
+			}
+			$meta_data = json_decode( $data["post_meta_data"]['ur_membership']["meta_value"], true );
 
 			if ( $is_stripe_enabled && "free" !== $meta_data["type"] ) {
 				$stripe_service           = new StripeService();
@@ -285,8 +294,13 @@ class AJAX {
 		$updated_ID = wp_insert_post( $data['post_data'] );
 
 		if ( $updated_ID ) {
-			update_post_meta( $updated_ID, $data['post_meta_data']['meta_key'], $data['post_meta_data']['meta_value'] );
-			$meta_data = json_decode( $data["post_meta_data"]["meta_value"], true );
+			if(!empty($data['post_meta_data']) ) {
+				foreach ($data['post_meta_data'] as $datum) {
+					update_post_meta( $updated_ID, $datum['meta_key'], $datum['meta_value'] );
+				}
+			}
+
+			$meta_data = json_decode( $data["post_meta_data"]['ur_membership']["meta_value"], true );
 
 			if ( $is_stripe_enabled && "free" !== $meta_data["type"] ) {
 

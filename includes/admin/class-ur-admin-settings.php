@@ -80,6 +80,9 @@ class UR_Admin_Settings {
 					if ( is_plugin_active( 'user-registration-authorize-net/user-registration-authorize-net.php' ) ) {
 						$modules[] = 'class-ur-payment-settings.php';
 					}
+					if( is_plugin_active( 'user-registration-mollie/user-registration-mollie.php' ) ) {
+						$modules[] = 'class-ur-payment-settings.php';
+					}
 				}
 			} elseif ( ur_check_module_activation( 'membership' ) ) {
 				$modules = array(
@@ -414,13 +417,15 @@ class UR_Admin_Settings {
 
 						$settings .= '<div class="user-registration-card__header ur-border-0" style="' . esc_attr( $header_css ) . '">';
 						if ( ! empty( $section['title'] ) ) {
-							$settings .= '<h3 class="user-registration-card__title">' . esc_html( strtoupper( $section['title'] ) );
-
+							$settings .= '<div class="user-registration-card__header-wrapper">';
 							if ( isset( $section['back_link'] ) ) {
-								$settings .= wp_kses_post( $section['back_link'] );
+								$settings .= $section['back_link']; //removed kses since the inputs are sanitized in the function ur_back_link itself
 							}
+							$settings .= '<h3 class="user-registration-card__title">';
 
+							$settings .= esc_html( strtoupper( $section['title'] ) );
 							$settings .= '</h3>';
+							$settings .= '</div>';
 						}
 
 						if ( isset( $section['preview_link'] ) ) {
@@ -568,6 +573,8 @@ class UR_Admin_Settings {
 											style="' . esc_attr( $value['css'] ) . '"
 											value="' . esc_attr( $option_value ) . '"
 											class="' . esc_attr( $value['class'] ) . '"
+											min="' . esc_attr( !empty($value['min'] ) ? $value['min'] : '' ) . '"
+											max="' . esc_attr( !empty($value['max'] ) ? $value['max'] : '' ) . '"
 											placeholder="' . esc_attr( $value['placeholder'] ) . '"
 											' . esc_attr( implode( ' ', $custom_attributes ) ) . ' ' . wp_kses_post( $description ) . '/>';
 									$settings .= '</div>';
@@ -623,7 +630,7 @@ class UR_Admin_Settings {
 											cols="' . esc_attr( $value['cols'] ) . '"
 											placeholder="' . esc_attr( $value['placeholder'] ) . '"
 											' . esc_html( implode( ' ', $custom_attributes ) ) . '>'
-											. esc_textarea( $option_value ) . '</textarea>';
+									             . esc_textarea( $option_value ) . '</textarea>';
 									$settings .= '</div>';
 									$settings .= '</div>';
 									break;
@@ -1067,6 +1074,13 @@ class UR_Admin_Settings {
 		$is_wp_login_disabled_error = apply_filters( 'user_registration_settings_prevent_default_login', $_POST );
 		if ( $is_wp_login_disabled_error && 'redirect_login_error' === $is_wp_login_disabled_error ) {
 			return;
+		}elseif ( $is_wp_login_disabled_error && 'invalid_renewal_period' === $is_wp_login_disabled_error ) {
+			self::add_error(
+				esc_html__(
+					'Your settings has not been saved. Send Before days cannot be less than or equal to 0.',
+					'user-registration'
+				)
+			);
 		}
 
 		// Loop options and get values to save.

@@ -36,13 +36,22 @@ if ( ! class_exists( 'UR_Settings_Email_Confirmation', false ) ) :
 		 * @var string
 		 */
 		public $description;
+
+		/**
+		 * UR_Settings_Approval_Link_Email Receiver.
+		 *
+		 * @var string
+		 */
+		public $receiver;
+
 		/**
 		 * Constructor.
 		 */
 		public function __construct() {
 			$this->id          = 'email_confirmation';
-			$this->title       = __( 'Email Confirmation', 'user-registration' );
-			$this->description = __( 'Email sent to the user with a verification link when email confirmation to register option is choosen', 'user-registration' );
+			$this->title       = __( 'Email Address Confirmation', 'user-registration' );
+			$this->description = __( 'Requests the user to confirm their email address by clicking a verification link.', 'user-registration' );
+			$this->receiver    = __( 'User', 'user-registration' );
 		}
 
 		/**
@@ -63,10 +72,10 @@ if ( ! class_exists( 'UR_Settings_Email_Confirmation', false ) ) :
 					'title'    => __( 'Emails', 'user-registration' ),
 					'sections' => array(
 						'email_confirmation' => array(
-							'title'        => __( 'Confirmation Email', 'user-registration' ),
+							'title'        => __( 'Email Address Confirmation Email', 'user-registration' ),
 							'type'         => 'card',
 							'desc'         => '',
-							'back_link'    => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email' ) ),
+							'back_link'    => ur_back_link( __( 'Return to emails', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=email&section=to-user' ) ),
 							'preview_link' => ur_email_preview_link(
 								__( 'Preview', 'user-registration' ),
 								$this->id
@@ -77,7 +86,7 @@ if ( ! class_exists( 'UR_Settings_Email_Confirmation', false ) ) :
 									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
 									'id'       => 'user_registration_email_confirmation_subject',
 									'type'     => 'text',
-									'default'  => __( 'Please confirm your registration on {{blog_info}}', 'user-registration' ),
+									'default'  => __( 'Email Address Confirmation – Verify Your Registration on {{blog_info}}', 'user-registration' ),
 									'css'      => 'min-width: 350px;',
 									'desc_tip' => true,
 								),
@@ -122,12 +131,11 @@ if ( ! class_exists( 'UR_Settings_Email_Confirmation', false ) ) :
 				sprintf(
 					__(
 						'Hi {{username}}, <br/>
+						Thank you for registering on <a href="{{home_url}}">{{blog_info}}</a>!
+						Please click on the link below to confirm your registration: <br/>
+						Click here to confirm your registration: <a href="{{home_url}}/{{ur_login}}?ur_token={{email_token}}">Click Here</a><br/>
 
-You have registered on <a href="{{home_url}}">{{blog_info}}</a>. <br/>
-
-Please click on this verification link <a href="{{home_url}}/{{ur_login}}?ur_token={{email_token}}">Click here</a> to confirm registration. <br/>
-
-Thank You!',
+						Thank You!',
 						'user-registration'
 					)
 				)

@@ -5,7 +5,7 @@ namespace WPEverest\URMembership\Admin\Services;
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 use WPEverest\URMembership\Admin\Services\Paypal\PaypalService;
 use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
-
+use WPEverest\URM\Mollie\Services\PaymentService as MollieService;
 class PaymentService {
 	/**
 	 * @var
@@ -59,6 +59,10 @@ class PaymentService {
 				break;
 			case 'paypal':
 				return $this->build_paypal_response( $payment_data, $response_data['subscription_id'], $response_data['member_id'] );
+			case 'authorize':
+				return $this->build_authorize_response( $payment_data, $response_data );
+			case 'mollie':
+				return $this->build_mollie_response( $payment_data, $response_data['subscription_id'], $response_data['member_id'] );
 			default:
 				return $this->build_direct_bank_response( $payment_data, $response_data );
 				break;
@@ -92,7 +96,7 @@ class PaymentService {
 	 * @return array
 	 */
 	public function build_direct_bank_response( $payment_data, $response_data ) {
-		$bank_data = get_option( 'user_registration_global_bank_details',  $payment_data['payment_gateways']['bank']['content']);
+		$bank_data = get_option( 'user_registration_global_bank_details',  isset($payment_data['payment_gateways']['bank']['content']) ? $payment_data['payment_gateways']['bank']['content'] : '');
 		return array( 'data' => $bank_data );
 	}
 
@@ -103,7 +107,29 @@ class PaymentService {
 
 	}
 
+	public function build_mollie_response( $data, $subscription_id, $member_id ) {
+		$success_params = array();
+		$data['plan_name'] = 'membership';
+		$mollie            = new MollieService();
+		
+		
+		if ( "subscription" === $data['type'] ) {
+			$success_params = $mollie->mollie_process_subscription_payment( $data, $member_id, $success_params, true );
+		} else {
+			$success_params = $mollie->mollie_process_payment( $data, $member_id, $success_params, true );
+		}
 
-
+		if ( isset( $success_params['mollie_redirect'] ) ) {
+			return array(
+				'payment_url' => $success_params['mollie_redirect'],
+			);
+		}
+	}
+	
+	public function build_authorize_response( $payment_data, $response_data ) {
+		include_once UR_AUTHORIZE_NET_DIR . "includes/class-user-registration-authorize-net-service.php";
+		$authorize = new \User_Registration_Authorize_Net_Service();
+		$authorize->process_authorize_payment( $payment_data, $response_data );
+	}
 
 }

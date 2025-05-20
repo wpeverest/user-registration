@@ -1301,6 +1301,15 @@
 								var ajaxFlag = [];
 								ajaxFlag["status"] = true;
 
+								var response_text = JSON.parse(ajax_response.responseText);
+								if( response_text && response_text.success && posted_data && posted_data.ur_authorize_net ) {
+									var response_data = response_text.data;
+									var authorize_net_data = {'ur_authorize_net' : posted_data.ur_authorize_net};
+									response_data = $.extend({}, response_data, authorize_net_data);
+									response_text.data = response_data;
+								}
+								ajax_response.responseText = JSON.stringify(response_text);
+
 								$(document).trigger(
 									"user_registration_frontend_before_ajax_complete_success_message",
 									[ajax_response, ajaxFlag, $this]
@@ -1339,6 +1348,19 @@
 											window.setTimeout(function () {
 												window.location =
 													response.data.paypal_redirect;
+											}, timeout);
+										}
+
+										if (
+											typeof response.success !==
+											"undefined" &&
+											response.success === true &&
+											typeof response.data
+												.mollie_redirect !== "undefined"
+										) {
+											window.setTimeout(function () {
+												window.location =
+													response.data.mollie_redirect;
 											}, timeout);
 										}
 

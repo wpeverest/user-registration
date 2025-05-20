@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 5.5
 Requires PHP: 7.2
 Tested up to: 6.8.1
-Stable tag: 4.2.2
+Stable tag: 4.2.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -257,6 +257,17 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 21. User Account Page –  Vertical Layout
 
 == Changelog ==
+
+= 4.2.3    - 20/05/2025 =
+* Security - Dashboard widget form title html escaping.
+* Feature  - Customize login form title and description.
+* Feature  - Added Membership Listing and Thank You blocks.
+* Feature  - Adds support for Mollie Payment Gateway in User Registration & Membership.
+* Feature  - Add login/logout menu link for classical menu as well as block theme.
+* Enhance  - Setup Wizard Flow and Design.
+* Enhance  - Membership renewal reminder email.
+* Fix      - Remove lost your password link from login error messages
+* Fix      - Password strength not working on edit profile and lost password page.
 
 = 4.2.2    - 05/05/2025 =
 * Security - User capability check on multiple ajax requests .

@@ -11,7 +11,7 @@ import {
 	HStack,
 	Link,
 	Stack,
-	Text,
+	Text
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 import React from "react";
@@ -40,7 +40,7 @@ const Dashboard = () => {
 			gridGap="5"
 			gridTemplateColumns={{
 				sm: "1fr",
-				md: "3fr 1fr",
+				md: "3fr 1fr"
 			}}
 		>
 			<Stack gap="5">
@@ -59,7 +59,7 @@ const Dashboard = () => {
 					>
 						{__(
 							"Welcome to User Registration & Membership!",
-							"user-registration",
+							"user-registration"
 						)}
 					</Heading>
 					<AspectRatio ratio={16 / 9}>
@@ -69,7 +69,7 @@ const Dashboard = () => {
 							style={{
 								borderRadius: "11px",
 								border: "none",
-								overflow: "hidden",
+								overflow: "hidden"
 							}}
 							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 							allowFullScreen
@@ -90,7 +90,7 @@ const Dashboard = () => {
 						>
 							{__(
 								"Create a Registration Form",
-								"user-registration",
+								"user-registration"
 							)}
 						</Button>
 						<Button
@@ -132,17 +132,22 @@ const Dashboard = () => {
 				>
 					<HStack gap="2">
 						<Icon.Team w="5" h="5" fill="primary.500" />
-						<Heading as="h3" size="sm" fontWeight="semibold">
+						<Heading
+							as="h3"
+							size="sm"
+							fontWeight="semibold"
+							flex="1"
+						>
 							{__(
 								"User Registration & Membership Community",
-								"user-registration",
+								"user-registration"
 							)}
 						</Heading>
 					</HStack>
 					<Text fontSize="13px" color="gray.700">
 						{__(
 							"Join our exclusive group and connect with fellow members. Ask questions, contribute to discussions, and share feedback!",
-							"user-registration",
+							"user-registration"
 						)}
 					</Text>
 					<Link
@@ -171,7 +176,7 @@ const Dashboard = () => {
 					<Text fontSize="13px" color="gray.700">
 						{__(
 							"Check our documentation for detailed information on User Registration features and how to use them.",
-							"user-registration",
+							"user-registration"
 						)}
 					</Text>
 					<Link
@@ -200,7 +205,7 @@ const Dashboard = () => {
 					<Text fontSize="13px" color="gray.700">
 						{__(
 							"Submit a ticket for encountered issues and get help from our support team instantly.",
-							"user-registration",
+							"user-registration"
 						)}
 					</Text>
 					<Link
@@ -229,7 +234,7 @@ const Dashboard = () => {
 					<Text fontSize="13px" color="gray.700">
 						{__(
 							"Don’t find a feature you’re looking for? Suggest any features you think would enhance our product.",
-							"user-registration",
+							"user-registration"
 						)}
 					</Text>
 					<Link
@@ -258,7 +263,7 @@ const Dashboard = () => {
 					<Text fontSize="13px" color="gray.700">
 						{__(
 							"Please take a moment to give us a review. We appreciate honest feedback that’ll help us improve our plugin.",
-							"user-registration",
+							"user-registration"
 						)}
 					</Text>
 					<Link
@@ -287,7 +292,7 @@ const Dashboard = () => {
 					<Text fontSize="13px" color="gray.700">
 						{__(
 							"Watch our step-by-step video tutorials that’ll help you get the best out of User Registration’s features.",
-							"user-registration",
+							"user-registration"
 						)}
 					</Text>
 					<Link

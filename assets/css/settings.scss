@@ -1045,6 +1045,29 @@ body {
 						}
 					}
 				}
+				&-wrapper {
+					display: flex;
+					align-items: center;
+					gap: 8px;
+
+					a {
+						display: flex;
+						padding: 6px;
+						background: transparent;
+						border-radius: 3px;
+						transition: all .3s ease-in-out;
+
+						svg {
+							width: 16px;
+							height: 16px;
+							fill: #4e4e4e;
+						}
+
+						&:hover {
+							background: #f4f4f4;
+						}
+					}
+				}
 			}
 
 			// Integration Settings

@@ -226,10 +226,18 @@
 		prepare_membership_data: function () {
 			var post_data = {},
 				post_meta_data = {},
-				form = $('#ur-membership-create-form');
+				form = $('#ur-membership-create-form'),
+			 	description = tinyMCE.get('ur-input-type-membership-description').getContent(),
+				regex = /(<img[^>]*?)(")([^>]*?>)/g;
+
+			description = description.replace(regex, function (match, p1, p2, p3) {
+				return p1 + '\'' + p3.replace(/"/g, '\'');
+			});
+
+
 			post_data = {
 				'name': form.find('#ur-input-type-membership-name').val(),
-				'description': form.find('#ur-input-type-membership-description').val(),
+				'description': description,
 				'status': form.find('#ur-membership-status').prop('checked')
 			};
 			if (ur_membership_data.membership_id) {
@@ -258,6 +266,10 @@
 					is_bank_selected = form.find('#ur-membership-pg-bank:checked').val(),
 					is_stripe_selected = form.find('#ur-membership-pg-stripe:checked').val();
 
+								
+				var is_authorize_selected = form.find("#ur-membership-pg-authorize:checked").val();
+				var is_mollie_selected = form.find("#ur-membership-pg-mollie:checked").val();
+
 				//since all the pgs have different params , they must be handled differently.
 				post_meta_data.payment_gateways = {
 					paypal: {
@@ -268,7 +280,13 @@
 					}, // stripe section
 					bank: {
 						status: 'off'
-					} //direct bank transfer section
+					}, //direct bank transfer section
+					authorize: {
+						status: 'off'
+					},
+					mollie: {
+						status: 'off'
+					}
 				};
 
 				//check if paypal is selected
@@ -299,6 +317,19 @@
 					post_meta_data.payment_gateways.stripe = {
 						status: is_stripe_selected
 					};
+				}
+
+				if (is_authorize_selected) {
+					post_meta_data.payment_gateways.authorize = {
+						status: is_authorize_selected
+					};
+				}
+
+				//check if mollie is selected
+				if(is_mollie_selected) {
+					post_meta_data.payment_gateways.mollie = {
+						status: is_mollie_selected
+					}
 				}
 			}
 			return {

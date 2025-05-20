@@ -184,7 +184,7 @@
 				form_inputs = ur_membership_frontend_utils.convert_to_array(form_inputs);
 				form_inputs.forEach(function (item) {
 					var $this = $(item);
-					if($this.attr('name') !== undefined) {
+					if ($this.attr('name') !== undefined) {
 						var name = $this.attr('name').toLowerCase().replace('urm_', '');
 						user_data[name] = $this.val();
 					}
@@ -306,7 +306,7 @@
 			 * @param {Object} response - The response data from the server.
 			 * @param {Object} prepare_members_data - The data for preparing members.
 			 */
-			handle_response:  function (response, prepare_members_data, form_response) {
+			handle_response: function (response, prepare_members_data, form_response) {
 				switch (prepare_members_data.payment_method) {
 					case 'paypal': //for paypal response must contain `payment_url` field
 						ur_membership_frontend_utils.show_success_message(
@@ -320,6 +320,17 @@
 					case 'stripe':
 						stripe_settings.handle_stripe_response(response, prepare_members_data, form_response);
 						break;
+					case 'authorize':
+						ur_membership_frontend_utils.show_success_message(
+							response.data.message
+						);
+						break;
+					case 'mollie':
+						ur_membership_frontend_utils.show_success_message(
+							response.data.message
+						);
+						window.location.replace(response.data.pg_data.payment_url);
+						break;						
 					default:
 						ur_membership_frontend_utils.show_form_success_message(form_response, {
 							'username': prepare_members_data.username
@@ -786,9 +797,15 @@
 				stripe_container = $('.stripe-container'),
 				stripe_error_container = $('#stripe-errors');
 
+			var authorize_container = $('#authorize-net-container');
+			var authorize_error_container = $('#authorize-errors');
+
+			authorize_error_container.remove();
+			
 			stripe_error_container.remove();
 			$('input[name="urm_payment_method"]').prop('checked', false);
 			stripe_container.addClass('urm-d-none');
+			authorize_container.addClass('urm-d-none');
 			urm_hidden_pg_containers.addClass('urm-d-none');
 
 			$('.urm_apply_coupon').show();
@@ -867,8 +884,11 @@
 		//redirect to membership member registration form
 		$(document).on('click', '#membership-old-selection-form .membership-signup-button', function () {
 			var $this = $(this),
-				membership_id = $this.siblings('input').val(),
-				url = urmf_data.membership_registration_page_url + '?membership_id=' + membership_id;
+				membership_id = $this.siblings('input[name="membership_id"]').val(),
+				redirection_url = $this.siblings('input[name="redirection_url"]').val(),
+				thank_you_page_id = $this.siblings('input[name="thank_you_page_id"]').val(),
+				uuid = $this.siblings('input[name="urm_uuid"]').val(),
+				url = redirection_url + '?membership_id=' + membership_id + '&urm_uuid=' + uuid + '&thank_you=' + thank_you_page_id;
 			window.location.replace(url);
 		});
 
@@ -907,8 +927,15 @@
 				stripe_container = $('.stripe-container'),
 				stripe_error_container = $('#stripe-errors');
 
+			var authorize_container = $('#authorize-net-container');
+			var authorize_error_container = $('#authorize-errors');
+
 			stripe_container.addClass('urm-d-none');
 			stripe_error_container.remove();
+
+			authorize_container.addClass('urm-d-none');
+			authorize_error_container.remove();
+
 			elements = {};
 			if (selected_method === 'stripe') {
 				if (urmf_data.stripe_publishable_key.length == 0) {
@@ -917,6 +944,9 @@
 				}
 				stripe_container.removeClass('urm-d-none');
 				stripe_settings.init();
+			}
+			if( selected_method === 'authorize') {
+				authorize_container.removeClass('urm-d-none');
 			}
 		});
 
@@ -980,7 +1010,7 @@
 			$('.field-membership').each(function (key, item) {
 				if ($(item).find('.no-membership')) {
 					var form_id = $(item).find('.no-membership').attr('data-form-id');
-					$('#user-registration-form-'+form_id).find('.ur-submit-button').prop('disabled', true);
+					$('#user-registration-form-' + form_id).find('.ur-submit-button').prop('disabled', true);
 				}
 			});
 		}

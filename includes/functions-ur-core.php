@@ -1846,7 +1846,7 @@ function ur_get_all_user_registration_form( $post_count = -1 ) {
 	$all_forms   = array();
 
 	foreach ( $posts_array as $post ) {
-		$all_forms[ $post->ID ] = $post->post_title;
+		$all_forms[ $post->ID ] = esc_html($post->post_title);
 	}
 
 	return $all_forms;
@@ -2104,7 +2104,11 @@ function ur_get_user_status( $user_status, $user_email_status ) {
  * @param  string $url URL.
  */
 function ur_back_link( $label, $url ) {
-	return '<small class="ur-admin-breadcrumb"><a href="' . esc_url( $url ) . '" aria-label="' . esc_attr( $label ) . '">&#x2934;</a></small>';
+	return '<a href="' . esc_url( $url ) . '" aria-label="' . esc_attr( $label ) . '">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="#000" viewBox="0 0 24 24">
+                  <path d="M15.653 2.418a1.339 1.339 0 0 1 1.944 0 1.468 1.468 0 0 1 0 2.02L10.32 12l7.278 7.562.094.108a1.47 1.47 0 0 1-.094 1.912c-.503.523-1.3.555-1.84.098l-.104-.098-8.25-8.572a1.468 1.468 0 0 1 0-2.02l8.25-8.572Z"/>
+                </svg>
+            </a>';
 }
 
 /**
@@ -6773,6 +6777,11 @@ if ( ! function_exists( 'ur_prevent_default_login' ) ) {
 				return 'user_registration_global_paypal_return_url';
 			}
 		}
+		elseif(isset($data['user_registration_membership_renewal_reminder_days_before'])) {
+			if($data['user_registration_membership_renewal_reminder_days_before'] <= 0) {
+				return 'invalid_renewal_period';
+			}
+		}
 		return true;
 	}
 }
@@ -7351,6 +7360,24 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'desc_tip' => __( 'Check to enable login title in login form.', 'user-registration' ),
 								'css'      => 'min-width: 350px;',
 								'default'  => 'no',
+							),
+							array(
+								'title'    => __( 'Login Form Title', 'user-registration' ),
+								'desc'     => __( 'This text will appear as the login form title', 'user-registration' ),
+								'id'       => 'user_registration_general_setting_login_form_title',
+								'type'     => 'text',
+								'desc_tip' => true,
+								'css'      => 'min-width: 350px;',
+								'default' => __( 'Welcome', 'user-registration' ),
+							),
+							array(
+								'title'    => __( 'Login Form Description', 'user-registration' ),
+								'desc'     => __( 'This text will appear as the login form description', 'user-registration' ),
+								'id'       => 'user_registration_general_setting_login_form_desc',
+								'type'     => 'text',
+								'desc_tip' => true,
+								'css'      => 'min-width: 350px;',
+								'default' => __( 'Please enter your details to access your account.', 'user-registration' ),
 							),
 							array(
 								'title'    => __( 'Enable Ajax Login', 'user-registration' ),
@@ -8399,3 +8426,6 @@ function ur_cleanup_logs() {
 	}
 }
 add_action( 'user_registration_cleanup_logs', 'ur_cleanup_logs' );
+
+
+
