@@ -227,7 +227,7 @@
 			var post_data = {},
 				post_meta_data = {},
 				form = $('#ur-membership-create-form'),
-			 	description = tinyMCE.get('ur-input-type-membership-description').getContent(),
+				description = tinyMCE.get('ur-input-type-membership-description').getContent(),
 				regex = /(<img[^>]*?)(")([^>]*?>)/g;
 
 			description = description.replace(regex, function (match, p1, p2, p3) {
@@ -266,7 +266,7 @@
 					is_bank_selected = form.find('#ur-membership-pg-bank:checked').val(),
 					is_stripe_selected = form.find('#ur-membership-pg-stripe:checked').val();
 
-								
+
 				var is_authorize_selected = form.find("#ur-membership-pg-authorize:checked").val();
 				var is_mollie_selected = form.find("#ur-membership-pg-mollie:checked").val();
 
@@ -326,7 +326,7 @@
 				}
 
 				//check if mollie is selected
-				if(is_mollie_selected) {
+				if (is_mollie_selected) {
 					post_meta_data.payment_gateways.mollie = {
 						status: is_mollie_selected
 					}
@@ -615,7 +615,7 @@
 							);
 							$this.prop('checked', false);
 							$this.closest('.user-registration-switch').closest('.ur-payment-option-header').siblings('.payment-option-body').show();
-						}else {
+						} else {
 							$this.prop('checked', true);
 							$this.closest('.user-registration-switch').closest('.ur-payment-option-header').siblings('.payment-option-body').hide();
 						}
@@ -711,6 +711,11 @@
 
 		}
 	});
+
+	$(document).on('click', '#ur-membership-upgrade-action', function () {
+		$('#upgrade-settings-container').toggle();
+	});
+
 	$(document).on('keydown', function (e) {
 		if (e.ctrlKey && e.key === 's') {
 			e.preventDefault();

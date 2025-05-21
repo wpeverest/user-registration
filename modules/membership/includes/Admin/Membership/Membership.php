@@ -16,6 +16,7 @@ use WPEverest\URMembership\Admin\Membership\ListTable;
 use WPEverest\URMembership\Admin\MembershipGroups\MembershipGroups;
 use WPEverest\URMembership\Admin\Repositories\SubscriptionRepository;
 use WPEverest\URMembership\Admin\Services\MembershipGroupService;
+use WPEverest\URMembership\Admin\Services\MembershipService;
 use WPEverest\URMembership\Admin\Services\SubscriptionService;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -317,8 +318,8 @@ class Membership {
 		switch ( $action_page ) {
 			case 'add_new_membership':
 				if ( $post_id ) {
-					$membership         = get_post( $post_id );
-					$membership_details = json_decode( wp_unslash( get_post_meta( $post_id, 'ur_membership', true ) ), true );
+					$membership             = get_post( $post_id );
+					$membership_details     = json_decode( wp_unslash( get_post_meta( $post_id, 'ur_membership', true ) ), true );
 					$membership_description = get_post_meta( $post_id, 'ur_membership_description', true );
 
 					$membership_details['description'] = $membership_description;
@@ -364,6 +365,8 @@ class Membership {
 	public function render_membership_creator( $membership = null, $membership_details = null, $menu_items = null ) {
 		$enable_membership_button = false;
 		$roles                    = wp_roles()->role_names;
+		$membership_service       = new MembershipService();
+		$memberships = $membership_service->list_active_memberships();
 
 		include __DIR__ . '/../Views/membership-create.php';
 

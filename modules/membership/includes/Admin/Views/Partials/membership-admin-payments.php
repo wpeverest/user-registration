@@ -66,7 +66,6 @@ function render_paypal_settings( $membership_details ) {
 		'client_id'     => get_option( 'user_registration_global_paypal_client_id', '' ),
 		'client_secret' => get_option( 'user_registration_global_paypal_client_secret', '' ),
 	);
-	$is_sandbox             = $global_paypal_settings['paypal_mode'] == 'test';
 	$is_incomplete          = empty( $global_paypal_settings['paypal_email'] );
 	?>
 	<div id="paypal-section"
@@ -87,14 +86,6 @@ function render_paypal_settings( $membership_details ) {
 					<?php echo isset( $membership_details['payment_gateways']['paypal'] ) && $membership_details['payment_gateways']['paypal']['status'] == 'on' && !$is_incomplete ? 'checked' : ''; ?>
 					name="ur_membership_pg_paypal_status"
 				>
-				<!--				<svg class="ur-pg-arrow-->
-				<!--																--><?php //echo isset( $membership_details['payment_gateways']['paypal'] ) && $membership_details['payment_gateways']['paypal']['status'] == 'on' ? 'expand' : ''; ?>
-				<!--																" xmlns="http://www.w3.org/2000/svg" fill="none"-->
-				<!--					 viewBox="0 0 24 24">-->
-				<!--					<path stroke="#383838" stroke-linecap="round"-->
-				<!--						  stroke-linejoin="round" stroke-width="2"-->
-				<!--						  d="m9 18 6-6-6-6"></path>-->
-				<!--				</svg>-->
 			</div>
 		</div>
 		<div class="payment-option-body"
