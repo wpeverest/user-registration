@@ -1,13 +1,13 @@
 <?php
 
-$bank_data         = ( isset( $_GET['info'] ) && ! empty( $_GET['info'] ) ) ? wp_kses_post_deep( $_GET['info'] ) : '';
-$transaction_id    = ( isset( $_GET['transaction_id'] ) && ! empty( $_GET['transaction_id'] ) ) ? wp_kses_post( $_GET['transaction_id'] ) : '';
-$username          = ( isset( $_GET['username'] ) && ! empty( $_GET['username'] ) ) ? wp_kses_post( $_GET['username'] ) : '';
-$header            = ! empty( $attributes['header'] ) ? $attributes['header'] : "Hello <b><i>$username</i></b>, Your registration was completed successfully.";
-$footer            = ! empty( $attributes['footer'] ) ? $attributes['footer'] : "";
-$notice_message    = ! empty( $attributes['notice_message'] ) ? $attributes['notice_message'] : "For paid memberships there might be a delay of few minutes for your subscription status to be updated by the payment gateways.";
-$transaction_info  = ! empty( $attributes['transaction_info'] ) ? $attributes['transaction_info'] : "Please use this transaction/order id for support regarding payments if needed.";
-
+$bank_data        = ( isset( $_GET['info'] ) && ! empty( $_GET['info'] ) ) ? wp_kses_post_deep( $_GET['info'] ) : '';
+$transaction_id   = ( isset( $_GET['transaction_id'] ) && ! empty( $_GET['transaction_id'] ) ) ? wp_kses_post( $_GET['transaction_id'] ) : '';
+$username         = ( isset( $_GET['username'] ) && ! empty( $_GET['username'] ) ) ? wp_kses_post( $_GET['username'] ) : '';
+$header           = ! empty( $attributes['header'] ) ? $attributes['header'] : "Hello <b><i>$username</i></b>, Your registration was completed successfully.";
+$footer           = ! empty( $attributes['footer'] ) ? $attributes['footer'] : "";
+$notice_message   = ! empty( $attributes['notice_message'] ) ? $attributes['notice_message'] : "For paid memberships there might be a delay of few minutes for your subscription status to be updated by the payment gateways.";
+$transaction_info = ! empty( $attributes['transaction_info'] ) ? $attributes['transaction_info'] : "Please use this transaction/order id for support regarding payments if needed.";
+$is_preview       = ! empty( $attributes['is_preview'] ) ? $attributes['is_preview'] : false;
 ?>
 <!--order successful section-->
 <div id="order-complete-section" class="thank-you-page-container">
@@ -15,10 +15,10 @@ $transaction_info  = ! empty( $attributes['transaction_info'] ) ? $attributes['t
 		<p><?php echo __( $header, 'user-registration' ); ?></p>
 		<?php
 		$is_payment_done = ( isset( $_GET['payment_type'] ) && ! empty( $_GET['payment_type'] ) && 'paid' === $_GET['payment_type'] );
-		if ( $attributes['is_preview'] ||  $is_payment_done) :
+		if ( $is_preview || $is_payment_done ) :
 			?>
 			<?php
-			if ( $attributes['show_notice_1'] ||  $is_payment_done):
+			if ( $attributes['show_notice_1'] || $is_payment_done ):
 				?>
 				<p class="thank-you-notice warning"><?php echo __( $notice_message, 'user-registration' ); ?></p>
 			<?php
@@ -34,7 +34,7 @@ $transaction_info  = ! empty( $attributes['transaction_info'] ) ? $attributes['t
 		?>
 	</div>
 	<?php
-	if ( ! empty( $transaction_id ) || $attributes['is_preview'] ) :
+	if ( ! empty( $transaction_id ) || $is_preview ) :
 		?>
 		<?php
 		if ( $attributes['show_notice_2'] ):
@@ -44,7 +44,7 @@ $transaction_info  = ! empty( $attributes['transaction_info'] ) ? $attributes['t
 					<?php echo __( $transaction_info, 'user-registration' ); ?>
 				</p>
 				<?php
-				if ( ! $attributes['is_preview'] ):
+				if ( ! $is_preview ):
 					?>
 					<p>
 						<?php echo __( "Transaction ID : ", "user-registration" ) ?>
