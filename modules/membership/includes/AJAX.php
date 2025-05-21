@@ -127,12 +127,10 @@ class AJAX {
 		$pg_data = array();
 		if ( 'free' !== $data['payment_method'] && $response['status'] ) {
 			$payment_service = new PaymentService( $data['payment_method'], $data['membership'], $data['email'] );
-			
+
 			$form_response    = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
 			$ur_authorize_net = array( 'ur_authorize_net' => ! empty ( $form_response['ur_authorize_net'] ) ? $form_response['ur_authorize_net'] : [] );
 			$data             = array_merge( $data, $ur_authorize_net );
-			$pg_data = $payment_service->build_response( $data );
-
 			$pg_data         = $payment_service->build_response( $data );
 		}
 
