@@ -639,8 +639,7 @@ class UR_Smart_Tags {
 							$invoice_details['is_membership'] = true;
 						} else {
 							$invoice_details['is_membership'] = false;
-							$invoice_details['user_id'] = $values['user_id'];
-
+							$invoice_details['user_id'] = !empty( $values['user_id'] ) ? $values['user_id'] : get_current_user_id();
 						}
 						$template_file   = locate_template( 'payment-successful-email.php' );
 						if ( ! $template_file ) {
