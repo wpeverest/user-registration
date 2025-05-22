@@ -141,7 +141,7 @@ class URCR_Shortcodes {
 			$specific_roles = array_map( 'trim', $specific_roles );
 
 			$memberships_roles = isset($memberships_roles) ? explode( ',', $memberships_roles ) : array();
-			$memberships_roles = array_map( fn($role) => trim(str_replace('″', '', $role)), $memberships_roles );
+			$memberships_roles = array_map( function($role) { return trim(str_replace('″', '', $role)) ;}, $memberships_roles );
 			$message = '';
 			if ( $override_global_settings === 'on' ) {
 				$message = ! empty(get_post_meta( $post->ID, 'urcr_meta_content', $single = true )) ? get_post_meta( $post->ID, 'urcr_meta_content', $single = true ) : '';
