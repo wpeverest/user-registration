@@ -402,4 +402,17 @@ class EmailService
 
 		return true;
 	}
+	/**
+	 * Checks if the 'is_membership_email_enabled' option is set to true or false.
+	 *
+	 * @return bool Returns true if the option is set to true, false otherwise.
+	 * @since 1.0.0
+	 */
+	public static function is_membership_email_enabled( $option ) {
+		if ( ! ur_string_to_bool( get_option( 'user_registration_enable_membership_cancellation_admin_email', true ) ) ) {
+			return false;
+		}
+
+		return true;
+	}
 }
