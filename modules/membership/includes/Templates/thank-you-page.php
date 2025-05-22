@@ -3,7 +3,10 @@
 $bank_data        = ( isset( $_GET['info'] ) && ! empty( $_GET['info'] ) ) ? wp_kses_post_deep( $_GET['info'] ) : '';
 $transaction_id   = ( isset( $_GET['transaction_id'] ) && ! empty( $_GET['transaction_id'] ) ) ? wp_kses_post( $_GET['transaction_id'] ) : '';
 $username         = ( isset( $_GET['username'] ) && ! empty( $_GET['username'] ) ) ? wp_kses_post( $_GET['username'] ) : '';
-$header           = ! empty( $attributes['header'] ) ? $attributes['header'] : "Hello <b><i>$username</i></b>, Your registration was completed successfully.";
+$header            = ! empty( $attributes['header'] ) ? $attributes['header'] : sprintf(
+	__( 'Hello <b><i>%s</i></b>, Your registration was completed successfully.', 'user-registration' ),
+	esc_html( $username )
+);
 $footer           = ! empty( $attributes['footer'] ) ? $attributes['footer'] : "";
 $notice_message   = ! empty( $attributes['notice_message'] ) ? $attributes['notice_message'] : "For paid memberships there might be a delay of few minutes for your subscription status to be updated by the payment gateways.";
 $transaction_info = ! empty( $attributes['transaction_info'] ) ? $attributes['transaction_info'] : "Please use this transaction/order id for support regarding payments if needed.";
