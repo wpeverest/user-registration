@@ -308,6 +308,12 @@
 						];
 					}
 				});
+			//remove membership settings on field delete
+			$(document).on('ur_field_removed', function (event, data) {
+				if (data.fieldKey === 'membership') {
+					$('.ur-general-setting-membership_listing_option').remove();
+				}
+			});
 		},
 		delete_single_membership_group: function ($this) {
 			var urlParams = new URLSearchParams($this.attr('href'));
