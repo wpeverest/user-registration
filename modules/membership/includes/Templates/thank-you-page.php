@@ -8,6 +8,8 @@ $footer           = ! empty( $attributes['footer'] ) ? $attributes['footer'] : "
 $notice_message   = ! empty( $attributes['notice_message'] ) ? $attributes['notice_message'] : "For paid memberships there might be a delay of few minutes for your subscription status to be updated by the payment gateways.";
 $transaction_info = ! empty( $attributes['transaction_info'] ) ? $attributes['transaction_info'] : "Please use this transaction/order id for support regarding payments if needed.";
 $is_preview       = ! empty( $attributes['is_preview'] ) ? $attributes['is_preview'] : false;
+$show_notice_1    = ! empty( $attributes['show_notice_1'] ) ? $attributes['show_notice_1'] : false;
+$show_notice_2    = ! empty( $attributes['show_notice_2'] ) ? $attributes['show_notice_2'] : false;
 ?>
 <!--order successful section-->
 <div id="order-complete-section" class="thank-you-page-container">
@@ -18,7 +20,7 @@ $is_preview       = ! empty( $attributes['is_preview'] ) ? $attributes['is_previ
 		if ( $is_preview || $is_payment_done ) :
 			?>
 			<?php
-			if ( $attributes['show_notice_1'] || $is_payment_done ):
+			if ( $show_notice_1 || $is_payment_done ):
 				?>
 				<p class="thank-you-notice warning"><?php echo __( $notice_message, 'user-registration' ); ?></p>
 			<?php
@@ -37,7 +39,7 @@ $is_preview       = ! empty( $attributes['is_preview'] ) ? $attributes['is_previ
 	if ( ! empty( $transaction_id ) || $is_preview ) :
 		?>
 		<?php
-		if ( $attributes['show_notice_2'] ):
+		if ( $show_notice_2 ):
 			?>
 			<div class="thank-you-notice info">
 				<p>
