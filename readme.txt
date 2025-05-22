@@ -266,6 +266,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * Feature  - Add login/logout menu link for classical menu as well as block theme.
 * Enhance  - Setup Wizard Flow and Design.
 * Enhance  - Membership renewal reminder email.
+* Enhance  - Email segregation and design improvement.
 * Fix      - Membership Thank You header translation.
 * Fix      - Remove lost your password link from login error messages
 * Fix      - Password strength not working on edit profile and lost password page.
