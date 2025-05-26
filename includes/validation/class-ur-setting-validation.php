@@ -49,19 +49,27 @@ class UR_Setting_Validation {
 	 * Class Constructor.
 	 */
 	public function __construct() {
+		add_action( 'init', array( $this, 'initialize_settings' ) );
+	}
+
+	/**
+	 * Initialize all settings.
+	 *
+	 * @return void
+	 */
+	public function initialize_settings() {
 		$this->set_validations();
 		$this->set_custom_validations();
 		$this->set_error_messages();
-
 		add_filter( 'user_registration_admin_settings_sanitize_option', array( $this, 'validate_setting' ), 10, 3 );
 	}
-
 
 	/**
 	 * Validate setting based on setting type.
 	 *
 	 * @param [mixed] $value Value.
 	 * @param [array] $option Option.
+	 *
 	 * @return mixed
 	 */
 	public function validate_setting( $value, $option ) {
@@ -127,12 +135,14 @@ class UR_Setting_Validation {
 	 * Returns default setting validations for setting based on type.
 	 *
 	 * @param [stirng] $type Setting Type.
+	 *
 	 * @return array
 	 */
 	public function get_setting_validations( $type ) {
 		$setting_validations = $this->validations;
 
 		$validations = isset( $setting_validations[ $type ] ) ? $setting_validations[ $type ] : array();
+
 		/**
 		 * Filter validation settings.
 		 *
@@ -156,9 +166,9 @@ class UR_Setting_Validation {
 			'user_registration_custom_validations_settings',
 			array(
 				'user_registration_captcha_setting_recaptcha_threshold_score_v3' => array( 'is_numeric' ),
-				'user_registration_general_setting_registration_url_options' => array( 'is_url' ),
-				'user_registration_email_from_address' => array( 'is_email' ),
-				'user_registration_email_send_to'      => array( 'is_email' ),
+				'user_registration_general_setting_registration_url_options'     => array( 'is_url' ),
+				'user_registration_email_from_address'                           => array( 'is_email' ),
+				'user_registration_email_send_to'                                => array( 'is_email' ),
 			)
 		);
 	}
@@ -177,6 +187,7 @@ class UR_Setting_Validation {
 		if ( isset( $custom_validations[ $setting_key ] ) ) {
 			return $custom_validations[ $setting_key ];
 		}
+
 		return false;
 	}
 
@@ -226,6 +237,7 @@ class UR_Setting_Validation {
 		}
 
 		$message = sprintf( $message, $setting_label );
+
 		return $message;
 	}
 
@@ -235,6 +247,7 @@ class UR_Setting_Validation {
 	 *
 	 * @param [mixed]  $value Setting Value.
 	 * @param [string] $setting_type Setting Type.
+	 *
 	 * @return mixed
 	 */
 	private function sanitize( $value, $setting_type ) {
