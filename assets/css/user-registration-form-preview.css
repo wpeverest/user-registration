@@ -347,13 +347,29 @@ body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-preview
   padding-left: 0;
 }
 body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-preview-form .ur-frontend-form .ur-button-container {
-  display: block;
+  width: max-content;
   margin-top: 36px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-preview-form .ur-frontend-form .ur-button-container .ur-submit-button {
   width: max-content;
+  margin: 0;
+  font-weight: 500;
 }
 body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-preview-form .ur-frontend-form .ur-button-container .ur-submit-button:hover {
+  color: #ffffff;
+}
+body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-preview-form .ur-frontend-form .ur-button-container .user-registration-save-and-continue-button {
+  color: #475bb2;
+  border: 1px solid #475bb2;
+  background: transparent;
+  font-weight: 500;
+  margin-left: 0;
+}
+body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-preview-form .ur-frontend-form .ur-button-container .user-registration-save-and-continue-button:hover {
+  background: #475bb2;
   color: #ffffff;
 }
 body.ur-multi-device-form-preview .ur-form-preview-main-content .ur-form-preview-form .ur-frontend-form:not(.ur-frontend-form-preview) .ur-form-row {
