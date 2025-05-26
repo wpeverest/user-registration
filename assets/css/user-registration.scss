@@ -150,8 +150,8 @@
 
 .user-registration-error{
 	border-top-color: $red;
- 	background: rgba($red, 0.1);
- 	color: darken($red, 15%);
+	background: rgba($red, 0.1);
+	color: darken($red, 15%);
 
 	&::before {
 		content: "\f534";
@@ -486,7 +486,7 @@ textarea.ur-input-border-red {
 			select {
 				-webkit-appearance: none;
 				background: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E")
-					no-repeat right 5px top 55%;
+				no-repeat right 5px top 55%;
 			}
 
 			legend,
@@ -2144,9 +2144,9 @@ body {
 
 							li {
 								color: #222222;
- 								font-size: inherit;
- 								font-weight: 400;
- 								line-height: inherit;
+								font-size: inherit;
+								font-weight: 400;
+								line-height: inherit;
 								letter-spacing: 0.15px;
 
 								strong {
@@ -2244,32 +2244,43 @@ body {
 				}
 
 				.ur-button-container {
+					display: flex !important;
+					align-items: center;
+					gap: $spacing_4px;
 					margin-top: 32px;
 					padding: 0 10px;
 
 					.ur-submit-button {
+						width: max-content;
 						border: 0;
 						padding: 10px 24px;
 						color: #ffffff;
 						font-size: 15px;
-						font-weight: 400;
+						font-weight: $medium;
 						line-height: 24px;
 						letter-spacing: 0.15px;
-						// background: #475BB2;
-						// border: 1px solid #475BB2;
+						border: $border_width solid $primary_color;
 						margin-right: 0;
-						transition: all 0.3s;
 
-						// &:hover {
-						// 	background: #38488e;
-						// 	border-color: #38488e;
-						// }
+						&:hover {
+							border-color: #38488e;
+						}
+					}
+
+					.user-registration-save-and-continue-button {
+						margin-left: 0;
+						background: transparent;
+						color: $primary_color;
+						border: $border_width solid $primary_color;
+
+						&:hover {
+							background: $primary_color;
+							color: $white;
+						}
 					}
 				}
 
 				.ur-frontend-form {
-					// border: 0;
-					// padding: 0;
 					box-shadow: none;
 					margin-bottom: 0;
 
