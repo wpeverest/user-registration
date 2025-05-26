@@ -324,6 +324,7 @@
 						ur_membership_frontend_utils.show_success_message(
 							response.data.message
 						);
+						window.location.replace( response.data.redirect );
 						break;
 					case 'mollie':
 						ur_membership_frontend_utils.show_success_message(
@@ -927,7 +928,7 @@
 				stripe_container = $('.stripe-container'),
 				stripe_error_container = $('#stripe-errors');
 
-			var authorize_container = $('#authorize-net-container');
+			var authorize_container = $('.authorize-net-container');
 			var authorize_error_container = $('#authorize-errors');
 
 			stripe_container.addClass('urm-d-none');
@@ -935,6 +936,7 @@
 
 			authorize_container.addClass('urm-d-none');
 			authorize_error_container.remove();
+
 
 			elements = {};
 			if (selected_method === 'stripe') {

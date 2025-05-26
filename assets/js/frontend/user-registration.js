@@ -1279,7 +1279,7 @@
 						var flag = false;
 						if (
 							$form.find(
-								"#user_registration_authorize_net_gateway[data-gateway='authorize_net']"
+								"#user_registration_authorize_net_gateway[data-gateway='authorize_net']:visible"
 							).length > 0
 						) {
 							flag = true;
@@ -1291,6 +1291,7 @@
 					 *
 					 */
 					ajax_form_submit: function (posted_data) {
+
 						$.ajax({
 							url: user_registration_params.ajax_url,
 							data: posted_data,
