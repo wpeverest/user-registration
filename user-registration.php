@@ -108,7 +108,6 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 * UserRegistration Constructor.
 		 */
 		public function __construct() {
-
 			$this->define_constants();
 			$this->includes();
 			$this->init_hooks();
