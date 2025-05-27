@@ -258,7 +258,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 4.2.3    - 26/05/2025 =
+= 4.2.3    - 27/05/2025 =
 * Security - Dashboard widget form title html escaping.
 * Feature  - Customize login form title and description.
 * Feature  - Added Membership Listing and Thank You blocks.
