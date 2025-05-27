@@ -23,9 +23,9 @@ class UR_Admin_Welcome {
 		$onboard_skipped = get_option( 'user_registration_onboarding_skipped', false );
 
 		// If Wizard was ran already or user is an old user of plugin, then do not proceed to Wizard page again.
-		if ( ! $wizard_ran && ! $onboard_skipped ) {
-			return;
-		}
+//		if ( ! $wizard_ran && ! $onboard_skipped ) {
+//			return;
+//		}
 
 		add_action( 'admin_menu', array( __CLASS__, 'add_menu' ) );
 		add_action( 'admin_init', array( __CLASS__, 'welcome_page' ), 30 );
@@ -109,7 +109,7 @@ class UR_Admin_Welcome {
 
 								jQuery(this).find(".user-registration-welcome-thumb, .user-registration-welcome-video__button").remove();
 
-								var video = '<div class="welcome-video-container"><iframe width="560" height="315" src="https://www.youtube.com/embed/lrkXhZ7hS8g?autoplay=1&rel=0&showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>';
+								var video = '<div class="welcome-video-container"><iframe width="560" height="315" src="https://www.youtube.com/embed/SYL24nGCChI?autoplay=1&rel=0&showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>';
 
 								jQuery(this).append(video);
 							}

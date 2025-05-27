@@ -89,7 +89,7 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 									'autoload' => false,
 								),
 								array(
-									'title'    => __( 'Email Receipents', 'user-registration' ),
+									'title'    => __( 'Email Recipients', 'user-registration' ),
 									'desc'     => __( 'Use comma to send emails to multiple receipents.', 'user-registration' ),
 									'id'       => 'user_registration_admin_email_receipents',
 									'default'  => get_option( 'admin_email' ),

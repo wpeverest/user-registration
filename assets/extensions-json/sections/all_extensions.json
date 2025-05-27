@@ -560,7 +560,7 @@
       "name": "User Registration Mollie payment",
       "image": "extensions-json/sections/images/mollie.png",
       "excerpt": "Want quick and secure payments during registration? User Registration has in-built support for the Mollie gateway.",
-      "link": "https://docs.wpuserregistration.com/docs/mollie/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "link": "https://docs.wpuserregistration.com/docs/user-registration-mollie/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan": [
         "plus",
         "professional",
