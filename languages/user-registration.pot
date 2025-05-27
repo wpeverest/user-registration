@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-05-22T08:46:37+00:00\n"
+"POT-Creation-Date: 2025-05-27T03:48:30+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: user-registration\n"
@@ -1444,7 +1444,7 @@ msgstr ""
 #: modules/membership/includes/Admin/Views/Partials/membership-admin-payments.php:112
 #: modules/membership/includes/Admin/Views/Partials/membership-admin-payments.php:350
 #: modules/membership/includes/Admin/Views/Partials/membership-admin-payments.php:423
-#: user-registration.php:447
+#: user-registration.php:445
 #: src/blocks/blocks/content-restriction-enhanced/Edit.js:92
 #: src/dashboard/Constants/index.js:16
 #: src/welcome/components/App.js:73
@@ -1853,22 +1853,22 @@ msgstr ""
 msgid "User Registration - Setup Wizard"
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:149
+#: includes/admin/class-ur-admin-welcome.php:150
 msgid "Welcome to User Registration & Membership"
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:150
+#: includes/admin/class-ur-admin-welcome.php:151
 msgid "Easily create custom registration forms, manage member access, receive payments and streamline your WordPress user workflow — all without code."
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:154
+#: includes/admin/class-ur-admin-welcome.php:155
 #: includes/admin/views/html-admin-page-form-templates.php:106
 #: src/form-templates/components/TemplateList.js:472
 #: chunks/form_templates.js:99027
 msgid "Get Started"
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:163
+#: includes/admin/class-ur-admin-welcome.php:164
 msgid "Skip to Dashboard"
 msgstr ""
 
@@ -3274,7 +3274,7 @@ msgid ""
 "\t\t\t\t\t\tIf this was a mistake, simply ignore this email, and no changes will be made to your account. <br/>\r\n"
 "\r\n"
 "\t\t\t\t\t\tTo reset your password, please click the link below: <br/>\r\n"
-"\t\t\t\t\t\t[<a href=\"{{home_url}}/{{ur_reset_pass_slug}}?action=rp&key={{key}}&login={{username}}\" rel=\"noreferrer noopener\" target=\"_blank\">Click Here: </a><br/>] - Link\r\n"
+"\t\t\t\t\t\t<a href=\"{{home_url}}/{{ur_reset_pass_slug}}?action=rp&key={{key}}&login={{username}}\" rel=\"noreferrer noopener\" target=\"_blank\">Click Here: </a><br/>\r\n"
 "\r\n"
 "\t\t\t\t\t\tThank You!"
 msgstr ""
@@ -8326,28 +8326,28 @@ msgstr ""
 msgid "<strong>%s</strong> is a required field."
 msgstr ""
 
-#: includes/validation/class-ur-setting-validation.php:198
+#: includes/validation/class-ur-setting-validation.php:209
 msgid "Please enter a value greater than 0 for %s."
 msgstr ""
 
-#: includes/validation/class-ur-setting-validation.php:199
+#: includes/validation/class-ur-setting-validation.php:210
 msgid "Please enter an integer value for %s."
 msgstr ""
 
-#: includes/validation/class-ur-setting-validation.php:200
+#: includes/validation/class-ur-setting-validation.php:211
 msgid "Please enter a numeric value for %s."
 msgstr ""
 
-#: includes/validation/class-ur-setting-validation.php:201
+#: includes/validation/class-ur-setting-validation.php:212
 msgid "Please enter a valid url or path for %s."
 msgstr ""
 
-#: includes/validation/class-ur-setting-validation.php:202
+#: includes/validation/class-ur-setting-validation.php:213
 msgid "Please enter a valid email for %s."
 msgstr ""
 
 #. translators: %s: Field Label.
-#: includes/validation/class-ur-setting-validation.php:225
+#: includes/validation/class-ur-setting-validation.php:236
 msgid "Please enter a valid value for %s."
 msgstr ""
 
@@ -10123,8 +10123,7 @@ msgstr ""
 msgid "Hello <b><i>%s</i></b>, Your registration was completed successfully."
 msgstr ""
 
-#: modules/membership/includes/Templates/thank-you-page.php:55
-#: modules/membership/includes/Templates/thank-you-page.php:70
+#: modules/membership/includes/Templates/thank-you-page.php:54
 msgid "Transaction ID : "
 msgstr ""
 
@@ -10529,31 +10528,31 @@ msgid "Form Preview"
 msgstr ""
 
 #. translators: 1: error message 2: file name and path 3: line number
-#: user-registration.php:148
+#: user-registration.php:146
 msgid "%1$s in %2$s on line %3$s"
 msgstr ""
 
-#: user-registration.php:447
+#: user-registration.php:445
 msgid "View User Registration & Membership settings"
 msgstr ""
 
-#: user-registration.php:463
+#: user-registration.php:461
 msgid "View User Registration & Membership documentation"
 msgstr ""
 
-#: user-registration.php:463
+#: user-registration.php:461
 msgid "Docs"
 msgstr ""
 
-#: user-registration.php:464
+#: user-registration.php:462
 msgid "Visit free customer support"
 msgstr ""
 
-#: user-registration.php:464
+#: user-registration.php:462
 msgid "Free support"
 msgstr ""
 
-#: user-registration.php:660
+#: user-registration.php:637
 msgid "As <strong>User Registration & Membership Pro</strong> is active, <strong>User Registration Free</strong> is now not needed."
 msgstr ""
 
