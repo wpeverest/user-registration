@@ -65,37 +65,43 @@ if ( $invoice_details['is_membership'] ):
 <?php
 else:
 	$user_id = absint( $invoice_details['user_id'] );
+
 	$invoice_details = apply_filters( 'user_registration_get_payment_details', $user_id );
-	$currencies = ur_payment_integration_get_currencies();
-	$currency = get_user_meta( $user_id, 'ur_payment_currency', true );
-	$symbol = $currencies[ $currency ]['symbol'];
-	?>
-	<table style="font-family: arial, sans-serif; border-collapse: collapse; width: 100%;">
-		<tr>
-			<th style="border: 1px solid #dddddd; text-align: left; padding: 8px;"><?php echo esc_html__( 'Details', 'user-registration' ); ?></th>
-			<th style="border: 1px solid #dddddd; text-align: left; padding: 8px;"><?php echo esc_html__( 'Information', 'user-registration' ); ?></th>
-		</tr>
-		<?php
-		$count = 0;
-		foreach ( $invoice_details as $meta_key => $title ):
-			?>
-			<tr <?php echo $count % 2 == 0 ? 'style="background-color: #dddddd;"' : '' ?>>
-				<td style="border: 1px solid #dddddd; text-align: left; padding: 8px;"><?php echo $title; ?></td>
-				<td style="border: 1px solid #dddddd; text-align: left; padding: 8px;">
-					<?php
-					$value = get_user_meta( $user_id, $meta_key, true );
-					if ( 'ur_payment_total_amount' === $meta_key ) {
-						$value = $symbol . '' . $value;
-					}
-					echo $value;
-					?>
-				</td>
+
+	$currencies      = ur_payment_integration_get_currencies();
+	$currency        = get_user_meta( $user_id, 'ur_payment_currency', true );
+	$currency        = ! empty( $currency ) ? $currency : 'USD';
+	$symbol          = $currencies[ $currency ]['symbol'];
+
+	if ( is_array( $invoice_details ) ):
+		?>
+		<table style="font-family: arial, sans-serif; border-collapse: collapse; width: 100%;">
+			<tr>
+				<th style="border: 1px solid #dddddd; text-align: left; padding: 8px;"><?php echo esc_html__( 'Details', 'user-registration' ); ?></th>
+				<th style="border: 1px solid #dddddd; text-align: left; padding: 8px;"><?php echo esc_html__( 'Information', 'user-registration' ); ?></th>
 			</tr>
 			<?php
-			$count ++;
-		endforeach;
-		?>
-	</table>
-<?php
+			$count = 0;
+			foreach ( $invoice_details as $meta_key => $title ):
+				?>
+				<tr <?php echo $count % 2 == 0 ? 'style="background-color: #dddddd;"' : '' ?>>
+					<td style="border: 1px solid #dddddd; text-align: left; padding: 8px;"><?php echo $title; ?></td>
+					<td style="border: 1px solid #dddddd; text-align: left; padding: 8px;">
+						<?php
+						$value = get_user_meta( $user_id, $meta_key, true );
+						if ( 'ur_payment_total_amount' === $meta_key ) {
+							$value = $symbol . '' . $value;
+						}
+						echo $value;
+						?>
+					</td>
+				</tr>
+				<?php
+				$count ++;
+			endforeach;
+			?>
+		</table>
+	<?php
+	endif;
 endif;
 ?>
