@@ -23,9 +23,9 @@ class UR_Admin_Welcome {
 		$onboard_skipped = get_option( 'user_registration_onboarding_skipped', false );
 
 		// If Wizard was ran already or user is an old user of plugin, then do not proceed to Wizard page again.
-//		if ( ! $wizard_ran && ! $onboard_skipped ) {
-//			return;
-//		}
+		if ( ! $wizard_ran && ! $onboard_skipped ) {
+			return;
+		}
 
 		add_action( 'admin_menu', array( __CLASS__, 'add_menu' ) );
 		add_action( 'admin_init', array( __CLASS__, 'welcome_page' ), 30 );
