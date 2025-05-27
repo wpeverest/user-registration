@@ -97,6 +97,7 @@ class UR_Admin_Welcome {
 					</title>
 					<?php
 						wp_print_head_scripts();
+						wp_print_scripts( 'ur-setup-wizard-script' );
 					?>
 					<script>
 						// To play welcome video.
@@ -108,7 +109,7 @@ class UR_Admin_Welcome {
 
 								jQuery(this).find(".user-registration-welcome-thumb, .user-registration-welcome-video__button").remove();
 
-								var video = '<div class="welcome-video-container"><iframe width="560" height="315" src="https://www.youtube.com/embed/lrkXhZ7hS8g?autoplay=1&rel=0&showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>';
+								var video = '<div class="welcome-video-container"><iframe width="560" height="315" src="https://www.youtube.com/embed/SYL24nGCChI?autoplay=1&rel=0&showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>';
 
 								jQuery(this).append(video);
 							}
@@ -179,10 +180,10 @@ class UR_Admin_Welcome {
 	 * @since 1.0.0
 	 */
 	public static function setup_wizard_footer() {
-		wp_print_footer_scripts();
 		if ( function_exists( 'wp_print_media_templates' ) ) {
 			wp_print_media_templates();
 		}
+		wp_print_footer_scripts();
 		wp_print_scripts( 'ur-setup-wizard-script' );
 		?>
 		</html>

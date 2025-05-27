@@ -258,7 +258,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 4.2.3    - 26/05/2025 =
+= 4.2.3    - 27/05/2025 =
 * Security - Dashboard widget form title html escaping.
 * Feature  - Customize login form title and description.
 * Feature  - Added Membership Listing and Thank You blocks.
@@ -269,6 +269,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * Enhance  - Email segregation and design improvement.
 * Dev      - Added filter to change user registered date zone.
 * Fix      - Membership Thank You header translation.
+* Fix      - Text domain called earlier than initialization.
 * Fix      - Memory exhaustion error on membership list table.
 * Fix      - Remove lost your password link from login error messages
 * Fix      - Password strength not working on edit profile and lost password page.
