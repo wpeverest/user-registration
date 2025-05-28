@@ -55,7 +55,7 @@ class UR_Form_Validation extends UR_Validation {
 	public function __construct() {
 		add_action( 'user_registration_validate_form_data', array( $this, 'validate_form' ), 10, 6 );
 		add_action( 'user_registration_validate_profile_update', array( $this, 'validate_update_profile' ), 10, 4 );
-		add_filter( 'user_registration_reorganize_form_data', array( $this, 'reorganize_form_data' ), 10, 2 );
+		add_filter( 'user_registration_reorganize_form_data', array( $this, 'reorganize_form_data' ), 10, 3 );
 	}
 
 	/**
@@ -63,21 +63,42 @@ class UR_Form_Validation extends UR_Validation {
 	 *
 	 * @param $valid_form_data
 	 * @param $form_field_data
+	 * @param $form_id
 	 *
 	 * @return array
 	 */
-	public function reorganize_form_data( $valid_form_data, $form_field_data ) {
+	public function reorganize_form_data( $valid_form_data, $form_field_data, $form_id ) {
 		if ( empty( $form_field_data ) ) {
 			return $valid_form_data;
 		}
 		$new_form_data = array();
 
+		$form_row_data = get_post_meta( $form_id, 'user_registration_form_row_data', true );
+
+		$row_datas = ! empty( $form_row_data ) ? json_decode( $form_row_data ) : array();
+
+		$repeater_fields = array();
+		$repeater_field_data = array();
+		foreach ( $row_datas as $individual_row_data ) {
+
+			if ( isset( $individual_row_data->repeater_id ) && isset( $individual_row_data->field_name ) ) {
+				array_push( $repeater_fields, $individual_row_data->fields );
+
+				$repeater_field_data[$individual_row_data->field_name] = $valid_form_data[$individual_row_data->field_name] ?? array();
+			}
+		}
+
+
 		foreach ( $form_field_data as $key => $data ) {
 			$field_name = $data->general_setting->field_name;
-			if ( array_key_exists( $field_name, $valid_form_data ) ) {
+			if( in_array( $field_name, $repeater_fields ) ) {
+				continue;
+			} else if ( array_key_exists( $field_name, $valid_form_data ) ) {
 				$new_form_data[ $field_name ] = $valid_form_data[ $field_name ];
 			}
 		}
+
+		$new_form_data = array_merge( $new_form_data, $repeater_field_data );
 		return $new_form_data;
 	}
 
