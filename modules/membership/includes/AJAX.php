@@ -131,7 +131,7 @@ class AJAX {
 			$form_response    = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
 			$ur_authorize_net = array( 'ur_authorize_net' => ! empty ( $form_response['ur_authorize_net'] ) ? $form_response['ur_authorize_net'] : [] );
 			$data             = array_merge( $data, $ur_authorize_net );
-			$pg_data         = $payment_service->build_response( $data );
+			$pg_data          = $payment_service->build_response( $data );
 		}
 
 		if ( $response['status'] ) {
@@ -212,8 +212,8 @@ class AJAX {
 		$new_membership_ID = wp_insert_post( $data['post_data'] );
 
 		if ( $new_membership_ID ) {
-			if(!empty($data['post_meta_data']) ) {
-				foreach ($data['post_meta_data'] as $datum) {
+			if ( ! empty( $data['post_meta_data'] ) ) {
+				foreach ( $data['post_meta_data'] as $datum ) {
 					add_post_meta( $new_membership_ID, $datum['meta_key'], $datum['meta_value'] );
 				}
 			}
@@ -292,8 +292,8 @@ class AJAX {
 		$updated_ID = wp_insert_post( $data['post_data'] );
 
 		if ( $updated_ID ) {
-			if(!empty($data['post_meta_data']) ) {
-				foreach ($data['post_meta_data'] as $datum) {
+			if ( ! empty( $data['post_meta_data'] ) ) {
+				foreach ( $data['post_meta_data'] as $datum ) {
 					update_post_meta( $updated_ID, $datum['meta_key'], $datum['meta_value'] );
 				}
 			}
@@ -579,7 +579,7 @@ class AJAX {
 	}
 
 	public static function confirm_payment() {
-
+		$logger = ur_get_logger();
 		ur_membership_verify_nonce( 'ur_membership_confirm_payment' );
 		if ( empty( $_POST['member_id'] ) ) {
 			wp_send_json_error(
@@ -629,15 +629,20 @@ class AJAX {
 				}
 			}
 			delete_user_meta( $member_id, 'urm_user_just_created' );
+			$logger->notice( '-------------------------------------------- Stripe Payment Confirmation process ended for ' . $member_id . ' --------------------------------------------', array( 'source' => 'ur-membership-stripe' ) );
+
 			wp_send_json_success(
 				array(
 					'message' => $update_stripe_order["message"]
 				)
 			);
 		}
+		$message = isset( $update_stripe_order["message"] ) ? $update_stripe_order["message"] : __( "Something went wrong when updating users payment status" );
+		$logger->notice( $message, array( 'source' => 'ur-membership-stripe' ) );
+
 		wp_send_json_error(
 			array(
-				'message' => isset( $update_stripe_order["message"] ) ? $update_stripe_order["message"] : __( "Something went wrong when updating users payment status" )
+				'message' => $message
 			),
 			500
 		);
