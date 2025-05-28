@@ -106,7 +106,7 @@ class UR_Settings_Membership_Renewal_Reminder_User_Email {
 							array(
 								'title'    => __( 'Enable this email', 'user-registration' ),
 								'desc'     => __( 'Enable this email to notify the user about an upcoming subscription renewal.', 'user-registration' ),
-								'id'       => 'user_registration_membership_renewal_reminder_user_email',
+								'id'       => 'user_registration_membership_enable_renewal_reminder_user_email',
 								'default'  => 'yes',
 								'type'     => 'toggle',
 								'autoload' => false,

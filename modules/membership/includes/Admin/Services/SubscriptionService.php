@@ -201,7 +201,8 @@ class SubscriptionService {
 		$symbol     = $currencies[ $currency ]['symbol'];
 
 		$subscription                   = $this->members_subscription_repository->get_member_subscription( $data['member_id'] );
-		$membership                     = $this->membership_repository->get_single_membership_by_ID( absint( $data['membership'] ) );
+		$membership_id 					= isset( $data['membership'] ) ? $data['membership'] : $subscription['item_id'];
+		$membership                     = $this->membership_repository->get_single_membership_by_ID( $membership_id );
 		$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
 		$membership_metas['post_title'] = $membership['post_title'];
 		$member_order                   = $this->members_orders_repository->get_member_orders( $data['member_id'] );

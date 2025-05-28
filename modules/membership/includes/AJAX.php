@@ -604,7 +604,7 @@ class AJAX {
 				)
 			);
 		}
-		if ( ! current_user_can( 'edit_user', $member_id ) ) {
+		if ( is_user_logged_in() && ! current_user_can( 'edit_user', $member_id ) ) {
 			wp_send_json_error(
 				array(
 					'message' => __( 'You are not allowed to edit this user.', 'user-registration' ),
@@ -658,7 +658,7 @@ class AJAX {
 				)
 			);
 		}
-		if ( ! current_user_can( 'edit_user', $member_id ) ) {
+		if ( is_user_logged_in() && ! current_user_can( 'edit_user', $member_id ) ) {
 			wp_send_json_error(
 				array(
 					'message' => __( 'You are not allowed to edit this user.', 'user-registration' ),
