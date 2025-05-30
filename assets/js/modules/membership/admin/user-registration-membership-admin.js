@@ -332,6 +332,14 @@
 					}
 				}
 			}
+
+			//upgrade settings
+
+			post_meta_data.upgrade_settings = {
+				'upgrade_action': form.find('#ur-membership-upgrade-action').is(':checked'),
+				'upgrade_path': form.find('#ur-input-type-membership-upgrade-path').val(),
+				'upgrade_type': form.find('.urm-upgrade-path-type-container').find('input[name="ur_membership_upgrade_type"]:checked').val()
+			};
 			return {
 				'post_data': post_data,
 				'post_meta_data': post_meta_data
@@ -345,6 +353,7 @@
 			var plan_and_price_section = $('#ur-membership-plan-and-price-section'),
 				main_fields = $('#ur-membership-main-fields').find('input'),
 				form = $('#ur-membership-create-form'),
+				upgrade_action = $('#ur-membership-upgrade-action').is(':checked'),
 				no_errors = true;
 			//main fields validation
 			main_fields = Object.values(main_fields).reverse().slice(2);
@@ -436,7 +445,22 @@
 				}
 
 			}
+			//upgrade settings validation
+			if (upgrade_action) {
+				var upgrade_path = $('#ur-input-type-membership-upgrade-path'),
+					upgrade_type_container = $('.urm-upgrade-path-type-container'),
+					upgrade_type = upgrade_type_container.find('input[name="ur_membership_upgrade_type"]:checked').val();
+				if (upgrade_path.val().length < 1) {
+					no_errors = false;
+					ur_membership_utils.show_failure_message(ur_membership_data.labels.i18n_error + '! ' + upgrade_path.data("key-name") + ' ' + ur_membership_data.labels.i18n_field_is_required);
+				}
 
+				if (upgrade_type === undefined) {
+					no_errors = false;
+					ur_membership_utils.show_failure_message(ur_membership_data.labels.i18n_error + '! ' + upgrade_type_container.data("key-name") + ' ' + ur_membership_data.labels.i18n_field_is_required);
+
+				}
+			}
 			return no_errors;
 		},
 
@@ -501,7 +525,6 @@
 			ur_membership_utils.append_spinner($this);
 			if (this.validate_membership_form()) {
 				var prepare_membership_data = this.prepare_membership_data();
-
 				this.send_data(
 					{
 						action: 'user_registration_membership_update_membership',

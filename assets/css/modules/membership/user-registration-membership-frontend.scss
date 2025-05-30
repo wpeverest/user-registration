@@ -5,6 +5,8 @@ $color_4: #545050;
 $background-color_1: #e8e8e8;
 $border-top-color_1: #ffffff;
 $infoColor: #17A2B8;
+$grey-400: #383838;
+$grey-0: #ffffff;
 
 html {
 	scroll-behavior: smooth;
@@ -20,7 +22,7 @@ html {
 }
 
 // Membership Addon Frontend CSS
-.user-registration-page, .ur-multi-device-form-preview {
+.user-registration-page, .ur-multi-device-form-preview, #pg-container {
 	.ur-membership-list-container {
 		max-width: 100%!important;
 		display: flex;
@@ -147,11 +149,14 @@ html {
 			display: flex;
 			flex-direction: column;
 			margin-bottom: 12px;
+			gap: 5px;
 			&:last-child {
 				margin-bottom: 0;
 			}
 
 			.ur_membership_input_label {
+				display: flex;
+				align-items: center;
 				color: #383838;
 				font-size: 14px;
 				font-weight: 700;
@@ -447,4 +452,127 @@ label {
 	padding: 8px 16px;
 	font-size: 15px;
 	font-weight: 500;
+}
+
+.user-registration-upgrade-membership-swal2-container {
+
+	&.swal2-modal {
+		padding: 0px !important;
+		font-size: large;
+
+		.swal2-header {
+			padding: 20px;
+			align-items: baseline;
+
+			h2 {
+				border-bottom: 1px solid #D3D3D3;
+				padding-bottom: 16px;
+				width: 100%;
+				text-align: left;
+				margin-bottom: 0;
+				color: #3d3d3d;
+				font-size: 20px;
+				font-weight: 600;
+				line-height: 24px;
+				font-family: inherit;
+			}
+		}
+
+		.swal2-content {
+			text-align: left;
+			color: $grey-400;
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 24px;
+			.ur_membership_registration_container {
+				margin: 0;
+			}
+		}
+
+		.swal2-actions {
+			display: flex;
+			flex-direction: row-reverse;
+			justify-content: end;
+			padding: 18px 20px;
+			gap: 10px;
+			margin-top: 20px;
+			border-radius: 0 0 5px 5px;
+
+			button {
+				width: 20%;
+				color: $grey-400;
+				font-size: 14px;
+				font-weight: 400;
+				line-height: 24px;
+				margin: 0;
+				padding: 6px 12px;
+				box-shadow: 0 1px 2px 0 #00000029;
+
+				&:focus {
+					border: 0;
+					outline: none;
+					box-shadow: none;
+				}
+
+				&.swal2-confirm {
+					color: $grey-0;
+				}
+
+				&.swal2-cancel {
+					color: $grey-400;
+					background: $grey-0 !important;
+				}
+			}
+		}
+
+		.swal2-actions.swal2-loading {
+			display: flex;
+			justify-content: center;
+			margin-top: 0;
+		}
+	}
+}
+
+#pg-container {
+	display: none;
+}
+.membership-upgrade-container {
+	display: flex;
+	gap: 20px;
+	flex-direction: column;
+
+	.ur-upgrade-label {
+		font-weight: 700;
+	}
+	.StripeElement {
+		padding: 4px 8px;
+		border: 1px solid #e1e1e1;
+		.__PrivateStripeElement {
+			width: 100%;
+			padding: 4px 8px;
+			border-radius: 0;
+			min-height: 36px;
+			margin-bottom: 10px;
+			line-height: 1.5;
+			iframe {
+				position: absolute;
+				top: 50%;
+			}
+		}
+	}
+}
+
+.upgrade-plan-container {
+
+	#upgradable-plans {
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+		text-align: left;
+		.upgrade-membership-label {
+			display: flex;
+			gap: 5px;
+			align-items: center;
+		}
+	}
 }

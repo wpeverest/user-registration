@@ -330,7 +330,7 @@
 							response.data.message
 						);
 						window.location.replace(response.data.pg_data.payment_url);
-						break;						
+						break;
 					default:
 						ur_membership_frontend_utils.show_form_success_message(form_response, {
 							'username': prepare_members_data.username
@@ -472,7 +472,124 @@
 					discount_amount = $this.data('ur-discount-amount'),
 					total = (discount_amount !== undefined && discount_amount !== '') ? urm_calculated_total - discount_amount : urm_calculated_total;
 				total_input.val(urmf_data.currency_symbol + total);
+			},
+			upgrade_membership: function (selected_membership_id, current_subscription_id, selected_pg, btn) {
+				this.send_data(
+					{
+						_wpnonce: urmf_data.upgrade_membership_nonce,
+						action: 'user_registration_membership_upgrade_membership',
+						selected_membership_id: selected_membership_id,
+						current_subscription_id: current_subscription_id,
+						selected_pg: selected_pg
+					},
+					{
+						success: function (response) {
+							if (response.success) {
+								ur_membership_frontend_utils.show_success_message(
+									response.data.message
+								);
+								var prepare_members_data = {
+									payment_method: selected_pg,
+								};
+
+								ur_membership_ajax_utils.handle_upgrade_response(response, prepare_members_data);
+							} else {
+								ur_membership_frontend_utils.show_failure_message(
+									response.data.message
+								);
+							}
+						},
+						failure: function (xhr, statusText) {
+							ur_membership_frontend_utils.show_failure_message(
+								user_registration_pro_frontend_data.network_error +
+								'(' +
+								statusText +
+								')'
+							);
+						},
+						complete: function () {
+							ur_membership_frontend_utils.remove_spinner(btn);
+							ur_membership_frontend_utils.toggleSaveButtons(false, btn);
+						}
+					});
+			},
+			prepare_upgrade_membership_html: function (data) {
+				var membership_title = $('#membership-title').text() || '';
+				var options_html = '',
+					gateway_html = '',
+					gateways = urmf_data.membership_gateways || [];
+
+				//plans html
+				$.each(data, function (key, membership) {
+					var id = membership.ID || '',
+						title = membership.title || '',
+						type = membership.type || '',
+						period = membership.period || '',
+						calculated_amount = membership.calculated_amount || '',
+						active_pg = membership.active_payment_gateways || '{}';
+
+					options_html +=
+						'<label class="upgrade-membership-label" for="ur-membership-select-membership-' + id + '">' +
+						'<input class="ur_membership_input_class ur_membership_radio_input ur-frontend-field" ' +
+						'id="ur-membership-select-membership-' + id + '" ' +
+						'type="radio" ' +
+						'name="urm_membership" ' +
+						'data-label="' + title + '" ' +
+						'required="required" ' +
+						'value="' + id + '" ' +
+						'data-urm-pg=\'' + active_pg + '\' ' +
+						'data-urm-pg-type="' + type + '" ' +
+						'data-urm-pg-calculated-amount="' + calculated_amount + '">' +
+						'<span class="ur-membership-duration">' + title + '</span>' +
+						'<span class="ur-membership-duration"> - ' + period + '</span>' +
+						'</label>';
+				});
+
+				//pg html
+				$.each(gateways, function (index, gateway) {
+					var gateway_value = gateway.toLowerCase();
+					gateway_html +=
+						'<label class="ur_membership_input_label ur-label" for="ur-membership-' + gateway_value + '">' +
+						'<input class="ur_membership_input_class pg-list" ' +
+						'data-key-name="ur-payment-method" ' +
+						'id="ur-membership-' + gateway_value + '" ' +
+						'type="radio" ' +
+						'name="urm_payment_method" ' +
+						(index === 0 ? 'checked' : '') + ' ' +
+						'required ' +
+						'value="' + gateway_value + '">' +
+						'<span class="ur-membership-duration">' + gateway + '</span>' +
+						'</label>';
+				});
+
+				return '<div class="membership-upgrade-container">' +
+							'<span>Your current Plan is <b>' + membership_title + '</b></span>' +
+							'<div class="upgrade-plan-container">' +
+								'<span class="ur-upgrade-label">Select Plan</span>' +
+								'<div id="upgradable-plans">' +
+									options_html +
+									'</div>' +
+								'</div>' +
+
+								'<div class="ur_membership_registration_container">' +
+									'<div class="ur_membership_frontend_input_container urm_hidden_payment_container ur_payment_gateway_container urm-d-none">' +
+										'<span class="ur-upgrade-label ur-label required">Select Payment Gateway</span>' +
+										'<div id="payment-gateway-body" class="ur_membership_frontend_input_container">' +
+											gateway_html +
+											'<span id="payment-gateway-notice" class="notice_red"></span>' +
+										'</div>' +
+									'</div>' +
+									'<div class="ur_membership_frontend_input_container">' +
+										'<div class="stripe-container urm-d-none">' +
+											'<button type="button" class="stripe-card-indicator ur-stripe-element-selected" id="credit_card">Credit Card</button>' +
+											'<div class="stripe-input-container"><div id="card-element"></div></div>' +
+										'</div>' +
+									'</div>' +
+								'</div>' +
+								'<span id="upgrade-membership-notice"></span>' +
+						'</div>';
 			}
+
 		};
 		var form_object = {
 			hide_loader: function (form_id) {
@@ -785,8 +902,7 @@
 			}
 		};
 		//activate payment gateways
-		$('input[name="urm_membership"]').on('change', function () {
-			// clear coupon total notice
+		$(document).on('change', 'input[name="urm_membership"]', function () {			// clear coupon total notice
 			$('#total-input-notice').text('');
 
 			var urm_payment_gateways = $(this).data('urm-pg'),
@@ -795,14 +911,16 @@
 				urm_pg_inputs = urm_pg_container.find('input'),
 				urm_hidden_pg_containers = $('.urm_hidden_payment_container'),
 				stripe_container = $('.stripe-container'),
-				stripe_error_container = $('#stripe-errors');
+				stripe_error_container = $('#stripe-errors'),
+				upgrade_error_container = $('#upgrade-membership-notice');
 
-			var authorize_container = $('#authorize-net-container');
-			var authorize_error_container = $('#authorize-errors');
+			var authorize_container = $('#authorize-net-container'),
+				authorize_error_container = $('#authorize-errors');
 
 			authorize_error_container.remove();
-			
+
 			stripe_error_container.remove();
+			upgrade_error_container.text('');
 			$('input[name="urm_payment_method"]').prop('checked', false);
 			stripe_container.addClass('urm-d-none');
 			authorize_container.addClass('urm-d-none');
@@ -922,14 +1040,16 @@
 		});
 
 		//on toggle payment gatewaysw
-		$('input[name="urm_payment_method"]').on('change', function () {
+		$(document).on('change','input[name="urm_payment_method"]', function () {
 			var selected_method = $(this).val(),
 				stripe_container = $('.stripe-container'),
-				stripe_error_container = $('#stripe-errors');
+				stripe_error_container = $('#stripe-errors'),
+				upgrade_error_container = $('#upgrade-membership-notice');
 
 			var authorize_container = $('#authorize-net-container');
 			var authorize_error_container = $('#authorize-errors');
 
+			upgrade_error_container.text('');
 			stripe_container.addClass('urm-d-none');
 			stripe_error_container.remove();
 
@@ -945,7 +1065,7 @@
 				stripe_container.removeClass('urm-d-none');
 				stripe_settings.init();
 			}
-			if( selected_method === 'authorize') {
+			if (selected_method === 'authorize') {
 				authorize_container.removeClass('urm-d-none');
 			}
 		});
@@ -1005,6 +1125,70 @@
 			});
 		});
 
+		$(document).on("click", ".change-membership-button", function () {
+			var $this = $(this),
+				has_error = false;
+			$this.find('.ur-front-spinner').show();
+			$this.attr('disabled', true);
+
+			$.ajax({
+				url: urmf_data.ajax_url,
+				type: "POST",
+				data: {
+					action: "user_registration_membership_fetch_upgradable_memberships",
+					security: urmf_data._nonce,
+					membership_id: $this.data("id")
+				},
+				success: function (responseHtml) {
+					var html = ur_membership_ajax_utils.prepare_upgrade_membership_html(responseHtml.data);
+					Swal.fire({
+						title: 'Change Membership',
+						html: html,
+						customClass: "user-registration-upgrade-membership-swal2-container",
+						showConfirmButton: true,
+						showCancelButton: true,
+						confirmButtonText: 'Change',
+						confirmButtonColor: '#475BB2',
+						preConfirm:  function (result) {
+							var selected_plan  =  $('input[name="urm_membership"]:checked').val(),
+								selected_pg =  $('input[name="urm_payment_method"]:checked').val(),
+								error_notice = $('#upgrade-membership-notice');
+
+							if(selected_plan === undefined) {
+								has_error = true;
+								error_notice.text('At least one Plan must be selected');
+								return false;
+							}
+							if(selected_pg === undefined) {
+								has_error = true;
+								error_notice.text('Please select a payment gateway');
+								return false;
+							}
+							return false;
+						},
+						allowOutsideClick: false
+					}).then((result) => {
+						if(has_error) {
+							return false;
+						}
+						if (result.isConfirmed) {
+							console.log('Selected plans:', result.value);
+						}
+					});
+				},
+				error: function () {
+					Swal.fire({
+						type: 'error',
+						text: 'Failed to load membership plans',
+						customClass: "user-registration-upgrade-membership-swal2-container",
+					});
+				},
+				complete: function () {
+					$this.find('.ur-front-spinner').hide();
+					$this.attr('disabled', false);
+				}
+			});
+		});
 		//disable submit button if empty membership field
 		if ($('.field-membership').length) {
 			$('.field-membership').each(function (key, item) {

@@ -10,6 +10,8 @@
 
 namespace WPEverest\URMembership\Frontend;
 
+use WPEverest\URMembership\Admin\Services\MembershipService;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -95,12 +97,16 @@ class Frontend {
 		$membership_repositories    = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
 		$membership                 = $membership_repositories->get_member_membership_by_id( $user_id );
 		$membership['post_content'] = json_decode( $membership['post_content'], true );
+		$membership_service         = new MembershipService();
+		$upgradable_memberships     = $membership_service->get_upgradable_membership( $membership['post_id'] );
+
 
 		ur_get_template(
 			'myaccount/membership.php',
 			array(
-				'user'       => get_user_by( 'id', get_current_user_id() ),
-				'membership' => $membership,
+				'user'                   => get_user_by( 'id', get_current_user_id() ),
+				'membership'             => $membership,
+				'upgradable_memberships' => $upgradable_memberships
 			)
 		);
 	}
@@ -163,7 +169,7 @@ class Frontend {
 
 		$redirect_page_url = get_permalink( $registration_page_id );
 
-		$thank_you_page = urm_get_thank_you_page();
+		$thank_you_page  = urm_get_thank_you_page();
 		$stripe_settings = \WPEverest\URMembership\Admin\Services\Stripe\StripeService::get_stripe_settings();
 
 
@@ -180,6 +186,7 @@ class Frontend {
 				'membership_registration_page_url' => $redirect_page_url,
 				'thank_you_page_url'               => $thank_you_page,
 				'stripe_publishable_key'           => $stripe_settings['publishable_key'],
+				'membership_gateways'              => get_option( 'ur_membership_payment_gateways', array() )
 			)
 		);
 	}
@@ -222,8 +229,8 @@ class Frontend {
 		if ( ! isset( $_GET['urm_uuid'] ) || ! isset( $_GET['thank_you'] ) ) {
 			return;
 		}
-		$uuid             = $_GET['urm_uuid'] ? sanitize_text_field( $_GET['urm_uuid'] ) : ur_get_random_number();
-		$transient_id     = "uuid_{$uuid}_thank_you";
+		$uuid         = $_GET['urm_uuid'] ? sanitize_text_field( $_GET['urm_uuid'] ) : ur_get_random_number();
+		$transient_id = "uuid_{$uuid}_thank_you";
 		delete_transient( $transient_id );
 		$thank_you_page = get_permalink( absint( $_GET['thank_you'] ) );
 		set_transient( $transient_id, $thank_you_page, 15 * MINUTE_IN_SECONDS );

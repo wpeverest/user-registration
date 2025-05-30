@@ -10,30 +10,30 @@ html {
     transform: rotate(360deg);
   }
 }
-.user-registration-page .ur-membership-list-container, .ur-multi-device-form-preview .ur-membership-list-container {
+.user-registration-page .ur-membership-list-container, .ur-multi-device-form-preview .ur-membership-list-container, #pg-container .ur-membership-list-container {
   max-width: 100% !important;
   display: flex;
   flex-direction: column;
   gap: 40px;
 }
-.user-registration-page .ur-membership-list-container .membership-list-notice-div .membership-title, .ur-multi-device-form-preview .ur-membership-list-container .membership-list-notice-div .membership-title {
+.user-registration-page .ur-membership-list-container .membership-list-notice-div .membership-title, .ur-multi-device-form-preview .ur-membership-list-container .membership-list-notice-div .membership-title, #pg-container .ur-membership-list-container .membership-list-notice-div .membership-title {
   padding-top: 0;
   margin-bottom: 16px;
   color: #222222;
 }
-.user-registration-page .ur-membership-list-container .membership-list-notice-div .subscription-message, .ur-multi-device-form-preview .ur-membership-list-container .membership-list-notice-div .subscription-message {
+.user-registration-page .ur-membership-list-container .membership-list-notice-div .subscription-message, .ur-multi-device-form-preview .ur-membership-list-container .membership-list-notice-div .subscription-message, #pg-container .ur-membership-list-container .membership-list-notice-div .subscription-message {
   padding: 14px 24px;
   border-left: 3px solid #17A2B8;
   background: #f4fcfd;
 }
-.user-registration-page .ur-membership-list-container .membership-list-notice-div .subscription-message p, .ur-multi-device-form-preview .ur-membership-list-container .membership-list-notice-div .subscription-message p {
+.user-registration-page .ur-membership-list-container .membership-list-notice-div .subscription-message p, .ur-multi-device-form-preview .ur-membership-list-container .membership-list-notice-div .subscription-message p, #pg-container .ur-membership-list-container .membership-list-notice-div .subscription-message p {
   margin: 0;
   color: #17A2B8;
   font-size: 15px;
   font-weight: 400;
   line-height: 25px;
 }
-.user-registration-page .ur-membership-list-container .ur-membership-container, .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container {
+.user-registration-page .ur-membership-list-container .ur-membership-container, .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container, #pg-container .ur-membership-list-container .ur-membership-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
   gap: 20px;
@@ -41,7 +41,7 @@ html {
   justify-items: center !important; /* horizontally center items */
   align-items: center !important;
 }
-.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block, .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block {
+.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block, .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block, #pg-container .ur-membership-list-container .ur-membership-container .membership-block {
   display: flex;
   flex-direction: column;
   padding: 24px 20px;
@@ -51,35 +51,35 @@ html {
   text-align: center;
   transition: all 0.3s;
 }
-.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block:hover, .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block:hover {
+.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block:hover, .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block:hover, #pg-container .ur-membership-list-container .ur-membership-container .membership-block:hover {
   background: white;
   box-shadow: 0px 6px 18px 0px rgba(10, 10, 10, 0.06);
 }
-.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block .membership-title, .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block .membership-title {
+.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block .membership-title, .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block .membership-title, #pg-container .ur-membership-list-container .ur-membership-container .membership-block .membership-title {
   color: #383838;
   font-size: 24px;
   font-weight: 600;
   line-height: 36px;
   padding-top: 0;
 }
-.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block .membership-body, .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block .membership-body {
+.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block .membership-body, .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block .membership-body, #pg-container .ur-membership-list-container .ur-membership-container .membership-block .membership-body {
   padding: 0;
 }
-.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block .membership-description, .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block .membership-description {
+.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block .membership-description, .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block .membership-description, #pg-container .ur-membership-list-container .ur-membership-container .membership-block .membership-description {
   color: #6B6B6B;
   text-align: center;
   font-size: 15px;
   font-weight: 400;
   line-height: 25px;
 }
-.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block .membership-footer, .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block .membership-footer {
+.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block .membership-footer, .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block .membership-footer, #pg-container .ur-membership-list-container .ur-membership-container .membership-block .membership-footer {
   padding: 0;
   gap: 12px;
 }
-.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-amount, .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-amount {
+.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-amount, .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-amount, #pg-container .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-amount {
   line-height: 34px;
 }
-.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-signup-button, .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-signup-button {
+.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-signup-button, .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-signup-button, #pg-container .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-signup-button {
   padding: 10px 12px;
   border-radius: 4px;
   border: 1px solid #475bb2;
@@ -91,35 +91,38 @@ html {
   cursor: pointer;
   transition: all 0.3s;
 }
-.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-signup-button:hover, .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-signup-button:hover {
+.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-signup-button:hover, .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-signup-button:hover, #pg-container .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-signup-button:hover {
   background: #38488e;
 }
-.user-registration-page .ur_membership_registration_container, .ur-multi-device-form-preview .ur_membership_registration_container {
+.user-registration-page .ur_membership_registration_container, .ur-multi-device-form-preview .ur_membership_registration_container, #pg-container .ur_membership_registration_container {
   margin: 0 auto;
   border-radius: 10px;
 }
-.user-registration-page .ur_membership_registration_container .ur_membership_title, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_title {
+.user-registration-page .ur_membership_registration_container .ur_membership_title, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_title, #pg-container .ur_membership_registration_container .ur_membership_title {
   color: #222222;
   font-size: 22px;
   font-weight: 700;
   line-height: 32px;
   margin: 0;
 }
-.user-registration-page .ur_membership_registration_container .ur_membership_divider, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_divider {
+.user-registration-page .ur_membership_registration_container .ur_membership_divider, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_divider, #pg-container .ur_membership_registration_container .ur_membership_divider {
   margin: 16px 0 24px;
   background-color: #E1E1E1;
   border: 0;
   height: 1px;
 }
-.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container {
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container, #pg-container .ur_membership_registration_container .ur_membership_frontend_input_container {
   display: flex;
   flex-direction: column;
   margin-bottom: 12px;
+  gap: 5px;
 }
-.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container:last-child, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container:last-child {
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container:last-child, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container:last-child, #pg-container .ur_membership_registration_container .ur_membership_frontend_input_container:last-child {
   margin-bottom: 0;
 }
-.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label {
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label, #pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label {
+  display: flex;
+  align-items: center;
   color: #383838;
   font-size: 14px;
   font-weight: 700;
@@ -127,7 +130,7 @@ html {
   margin-bottom: 0;
   margin-top: 0;
 }
-.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list), .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list) {
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list), .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list), #pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list) {
   height: 38px;
   padding: 0 14px;
   border-radius: 4px;
@@ -136,31 +139,31 @@ html {
   color: #383838;
   margin-bottom: 0;
 }
-.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list)::placeholder, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list)::placeholder {
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list)::placeholder, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list)::placeholder, #pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list)::placeholder {
   color: #b5b5b5;
 }
-.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus {
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus, #pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus {
   border-color: #475bb2;
 }
-.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red, .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue {
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red, .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue, #pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red, #pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue {
   padding: 10px 12px;
   font-size: 14px;
   line-height: 22px;
 }
-.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red:empty, .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue:empty, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red:empty, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue:empty {
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red:empty, .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue:empty, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red:empty, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue:empty, #pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red:empty, #pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue:empty {
   padding: 0;
 }
-.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red {
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red, #pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red {
   background: #fdd9d9;
   border-left: 3px solid #dc3545;
   word-wrap: break-word;
 }
-.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue {
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue, #pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue {
   border-left: 3px solid #007bff;
   background: #e2e2fd;
   word-wrap: break-word;
 }
-.user-registration-page .thank-you-page-container, .ur-multi-device-form-preview .thank-you-page-container {
+.user-registration-page .thank-you-page-container, .ur-multi-device-form-preview .thank-you-page-container, #pg-container .thank-you-page-container {
   display: flex;
   flex-direction: column;
   margin: 60px auto;
@@ -170,26 +173,26 @@ html {
   box-shadow: 0px 6px 25px 0px rgba(10, 10, 10, 0.08);
   gap: 12px;
 }
-.user-registration-page .thank-you-page-container .message-section, .ur-multi-device-form-preview .thank-you-page-container .message-section {
+.user-registration-page .thank-you-page-container .message-section, .ur-multi-device-form-preview .thank-you-page-container .message-section, #pg-container .thank-you-page-container .message-section {
   display: block;
 }
-.user-registration-page .thank-you-page-container .message-section p, .ur-multi-device-form-preview .thank-you-page-container .message-section p {
+.user-registration-page .thank-you-page-container .message-section p, .ur-multi-device-form-preview .thank-you-page-container .message-section p, #pg-container .thank-you-page-container .message-section p {
   margin-bottom: 0;
   margin-top: 0;
 }
-.user-registration-page .thank-you-page-container > p, .ur-multi-device-form-preview .thank-you-page-container > p {
+.user-registration-page .thank-you-page-container > p, .ur-multi-device-form-preview .thank-you-page-container > p, #pg-container .thank-you-page-container > p {
   margin-bottom: 0;
 }
-.user-registration-page .thank-you-page-container .thank-you-notice, .ur-multi-device-form-preview .thank-you-page-container .thank-you-notice {
+.user-registration-page .thank-you-page-container .thank-you-notice, .ur-multi-device-form-preview .thank-you-page-container .thank-you-notice, #pg-container .thank-you-page-container .thank-you-notice {
   padding: 1em;
   font-size: small;
   font-style: italic;
 }
-.user-registration-page .thank-you-page-container .thank-you-notice.warning, .ur-multi-device-form-preview .thank-you-page-container .thank-you-notice.warning {
+.user-registration-page .thank-you-page-container .thank-you-notice.warning, .ur-multi-device-form-preview .thank-you-page-container .thank-you-notice.warning, #pg-container .thank-you-page-container .thank-you-notice.warning {
   background-color: #efc7a5;
   border-left: 4px solid #b77f02;
 }
-.user-registration-page .thank-you-page-container .thank-you-notice.info, .ur-multi-device-form-preview .thank-you-page-container .thank-you-notice.info {
+.user-registration-page .thank-you-page-container .thank-you-notice.info, .ur-multi-device-form-preview .thank-you-page-container .thank-you-notice.info, #pg-container .thank-you-page-container .thank-you-notice.info {
   background-color: #ffd105;
   border-left: 4px solid #c4a20c;
 }
@@ -382,4 +385,112 @@ label {
   padding: 8px 16px;
   font-size: 15px;
   font-weight: 500;
+}
+
+.user-registration-upgrade-membership-swal2-container.swal2-modal {
+  padding: 0px !important;
+  font-size: large;
+}
+.user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-header {
+  padding: 20px;
+  align-items: baseline;
+}
+.user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-header h2 {
+  border-bottom: 1px solid #D3D3D3;
+  padding-bottom: 16px;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 0;
+  color: #3d3d3d;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 24px;
+  font-family: inherit;
+}
+.user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-content {
+  text-align: left;
+  color: #383838;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+}
+.user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-content .ur_membership_registration_container {
+  margin: 0;
+}
+.user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: end;
+  padding: 18px 20px;
+  gap: 10px;
+  margin-top: 20px;
+  border-radius: 0 0 5px 5px;
+}
+.user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions button {
+  width: 20%;
+  color: #383838;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  margin: 0;
+  padding: 6px 12px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1607843137);
+}
+.user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions button:focus {
+  border: 0;
+  outline: none;
+  box-shadow: none;
+}
+.user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions button.swal2-confirm {
+  color: #ffffff;
+}
+.user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions button.swal2-cancel {
+  color: #383838;
+  background: #ffffff !important;
+}
+.user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions.swal2-loading {
+  display: flex;
+  justify-content: center;
+  margin-top: 0;
+}
+
+#pg-container {
+  display: none;
+}
+
+.membership-upgrade-container {
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+}
+.membership-upgrade-container .ur-upgrade-label {
+  font-weight: 700;
+}
+.membership-upgrade-container .StripeElement {
+  padding: 4px 8px;
+  border: 1px solid #e1e1e1;
+}
+.membership-upgrade-container .StripeElement .__PrivateStripeElement {
+  width: 100%;
+  padding: 4px 8px;
+  border-radius: 0;
+  min-height: 36px;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+.membership-upgrade-container .StripeElement .__PrivateStripeElement iframe {
+  position: absolute;
+  top: 50%;
+}
+
+.upgrade-plan-container #upgradable-plans {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-align: left;
+}
+.upgrade-plan-container #upgradable-plans .upgrade-membership-label {
+  display: flex;
+  gap: 5px;
+  align-items: center;
 }

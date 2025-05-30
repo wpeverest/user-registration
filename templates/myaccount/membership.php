@@ -31,9 +31,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 				</span>
 		</div>
 		<div class="membership-data">
-			<span>
 			<?php
-			echo isset( $membership['post_title'] ) && ! empty( $membership['post_title'] ) ? esc_html( $membership['post_title'] ) : __('N/A', 'user-registration') ?>
+			$membership_title = ! empty( $membership['post_title'] ) ? esc_html( $membership['post_title'] ) : __( 'N/A', 'user-registration' );
+			?>
+			<span id="membership-title">
+			<?php
+			echo $membership_title ?>
 		</span>
 		</div>
 	</div>
@@ -46,7 +49,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="membership-data">
 			<span id="ur-membership-type">
 			<?php
-			echo isset( $membership['post_content'] ) && ! empty( $membership['post_content'] ) ? esc_html( ucfirst( wp_unslash( $membership['post_content']['type'] ) ) ) : __('N/A', 'user-registration') ?>
+			echo isset( $membership['post_content'] ) && ! empty( $membership['post_content'] ) ? esc_html( ucfirst( wp_unslash( $membership['post_content']['type'] ) ) ) : __( 'N/A', 'user-registration' ) ?>
 		</span>
 		</div>
 	</div>
@@ -57,12 +60,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 				</span>
 		</div>
 		<div class="membership-data">
-
 			<?php
 			$status = 'inactive';
 			if ( isset( $membership['status'] ) ) {
 				$status = ( '' != $membership['status'] ) ? $membership['status'] : $status;
-				if ( 'inactive' !== $status && 'free' !== $membership['post_content']['type'] && 'paid' !== $membership['post_content']['type']) {
+				if ( 'inactive' !== $status && 'free' !== $membership['post_content']['type'] && 'paid' !== $membership['post_content']['type'] ) {
 					$expiry_date = new DateTime( $membership['expiry_date'] );
 					if ( date( 'Y-m-d' ) > $expiry_date->format( 'Y-m-d' ) ) {
 						$status = 'expired';
@@ -70,28 +72,39 @@ if ( ! defined( 'ABSPATH' ) ) {
 				}
 			}
 			?>
-			<span id="ur-membership-status" class="btn-<?php echo $status ?>"><?php echo esc_html__( ucfirst( $status ) ) ?></span>
+			<span id="ur-membership-status"
+				  class="btn-<?php echo $status ?>"><?php echo esc_html__( ucfirst( $status ) ) ?></span>
 		</div>
 	</div>
-	<?php
-	if ( 'canceled' !== $membership['status'] ):
-		?>
-		<div class="membership-row-btn-container">
-			<div class="btn-div">
-				<button type="button" class="cancel-membership-button button"
+
+	<div class="membership-row-btn-container">
+		<div class="btn-div">
+			<?php
+			if ( 'canceled' !== $membership['status'] ):
+				?>
+				<button type="button" class="membership-tab-btn cancel-membership-button"
 						data-id="<?php echo ( isset( $membership['subscription_id'] ) && ! empty( $membership['subscription_id'] ) ) ? esc_attr( $membership['subscription_id'] ) : ''; ?>"
 				>
-					<span class="dashicons dashicons-dismiss"></span>
 					<?php echo __( "Cancel Membership", "user-registration" ); ?>
 				</button>
-				<!-- <span class="ur-portal-tooltip tooltipstered"
-					  data-tip="<?php echo esc_html__( 'Cancellation will be according to the current membership cancellation type.', 'user-registration' ) ?>"> -->
-				</span>
-			</div>
-			<div id="membership-error-div" class="btn-error">
-			</div>
+			<?php
+			endif;
+			?>
+			<button type="button" class="membership-tab-btn change-membership-button"
+					data-id="<?php echo ( isset( $membership['post_id'] ) && ! empty( $membership['post_id'] ) ) ? esc_attr( $membership['post_id'] ) : ''; ?>"
+			>
+				<?php echo __( "Change Plan", "user-registration" ); ?>
+				<span class="ur-front-spinner"></span>
+			</button>
 		</div>
-	<?php
-	endif;
-	?>
+		<div id="membership-error-div" class="btn-success">
+
+		</div>
+	</div>
 </div>
+
+
+
+
+
+
