@@ -359,6 +359,11 @@ textarea.ur-input-border-red {
 
 			.ur-field-item {
 				margin-bottom: 20px;
+
+				.ur-frontend-field {
+					margin-bottom: 0;
+				}
+
 				&.field-multiple_choice,
 				&.field-subscription_plan,
 				&.field-checkbox,
