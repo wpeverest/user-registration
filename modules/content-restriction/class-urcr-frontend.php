@@ -1158,8 +1158,6 @@ class URCR_Frontend {
 
 		$active_theme = wp_get_theme();
 
-		$active_theme = wp_get_theme();
-
 		if ( isset( $active_theme ) && 'Botiga' === $active_theme->get( 'Name' ) ) {
 			return '<span class="urcr-restrict-msg" style="display:none">' . $message . '</span>';
 		} else {
