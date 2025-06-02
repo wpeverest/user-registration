@@ -16,6 +16,7 @@
 		<key name="user_registration_admin_email" />
 		<key name="user_registration_awaiting_admin_approval_email_subject" />
 		<key name="user_registration_awaiting_admin_approval_email" />
+		<key name="user_registration_approval_link_email" />
 		<key name="user_registration_email_confirmation_subject" />
 		<key name="user_registration_email_confirmation" />
 		<key name="user_registration_registration_denied_email_subject" />
