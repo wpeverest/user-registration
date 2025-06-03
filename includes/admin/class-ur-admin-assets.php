@@ -340,7 +340,7 @@ class UR_Admin_Assets {
 				'admin_url'                              => admin_url( 'admin.php?page=add-new-registration&edit-registration=' ),
 				'form_required_fields'                   => ur_get_required_fields(),
 				'form_one_time_draggable_fields'         => ur_get_one_time_draggable_fields(),
-				'form_payment_fields' 					 => user_registration_payment_fields(),
+				'form_payment_fields' 					 => function_exists( 'user_registration_payment_fields' ) ? user_registration_payment_fields() : array(),
 				'form_repeater_row_not_droppable_fields_lists' => function_exists( 'user_registration_repeater_row_not_droppable_fields_lists' ) ? user_registration_repeater_row_not_droppable_fields_lists() : array(),
 				'form_repeater_row_empty'                => esc_html__( 'Please add at least one field to Repeater Row', 'user-registration' ),
 				/* translators: %field%: Field Label */
