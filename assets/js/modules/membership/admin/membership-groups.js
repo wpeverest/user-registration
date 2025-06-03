@@ -212,7 +212,22 @@
 					membership_group_object.fetch_memberships(-1);
 				}
 			});
-
+			$(document).on('change', '[data-field-group="payments"] input[name^="user_registration_enable_"]', function () {
+				var $checkboxes = $("input[name^='user_registration_enable_']");
+				if( $checkboxes.is(':checked')) {
+					// disable membership field.
+					$membershipField = $(".ur-registered-list").find("li[data-field-id='user_registration_membership']");
+					$membershipField.draggable("disable");
+					$membershipField.addClass("ur-membership-field-disabled");
+					$membershipField.addClass("ur-locked-field");
+				} else {
+					// enable membership field.
+					$membershipField = $(".ur-registered-list").find("li[data-field-id='user_registration_membership']");
+					$membershipField.draggable("enable");
+					$membershipField.removeClass("ur-membership-field-disabled");
+					$membershipField.removeClass("ur-locked-field");
+				}
+			});
 			// listen for changes in the membership group select box
 			$(document).on('change', '#ur-setting-form .ur-general-setting-membership_group select', function () {
 
@@ -266,8 +281,40 @@
 				group_select_field.hide();
 				if ($('.ur-selected-inputs').find('div[data-field-key="membership"]').length) {
 					user_registration_form_builder_data.form_has_membership_field = true;
-					paypal_settings.hide();
-					stripe_settings.hide();
+					paypal_settings.addClass('disabled');
+					stripe_settings.addClass('disabled');
+					//➔ disable payment form settings on membership field added to the form.
+					var payment_form_settings = $("#ur-tab-field-settings").find(".form-settings-tab[data-field-group='payments']");
+					$.each(payment_form_settings, function() {
+						$(this).addClass("disabled");
+					});
+				}
+			});
+			$(document).on('ur_field_removed', function(event, data) {
+				if(data.fieldKey === 'membership') {
+					user_registration_form_builder_data.form_has_membership_field = false;
+
+					//➔ enable payment form settings on membership field removal.
+					var payment_form_settings = $("#ur-tab-field-settings").find(".form-settings-tab[data-field-group='payments']");
+					$.each(payment_form_settings, function() {
+						$(this).removeClass("disabled");
+					});
+
+					//➔ unlock payment fields on membership field removal.
+					var payment_nodes = [];
+					$.each(user_registration_form_builder_data.form_payment_fields, function(index, identifier) {
+						var selector = `#user_registration_${identifier}_list`;
+						payment_nodes.push($(selector));
+					});
+					$.each( payment_nodes, function() {
+						var $field = $(this);
+
+						if($field.hasClass('ur-locked-field')) {
+							$field.removeClass('ur-locked-field');
+						}
+						$field.removeClass('ur-membership-payment-field-disabled');
+						$field.draggable("enable");
+					});
 				}
 			});
 			$(document).on('ur_rendered_field_options', function () {
