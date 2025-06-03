@@ -212,7 +212,22 @@
 					membership_group_object.fetch_memberships(-1);
 				}
 			});
-
+			$(document).on('change', '[data-field-group="payments"] input[name^="user_registration_enable_"]', function () {
+				var $checkboxes = $("input[name^='user_registration_enable_']");
+				if( $checkboxes.is(':checked')) {
+					// disable membership field.
+					$membershipField = $(".ur-registered-list").find("li[data-field-id='user_registration_membership']");
+					$membershipField.draggable("disable");
+					$membershipField.addClass("ur-membership-field-disabled");
+					$membershipField.addClass("ur-locked-field");
+				} else {
+					// enable membership field.
+					$membershipField = $(".ur-registered-list").find("li[data-field-id='user_registration_membership']");
+					$membershipField.draggable("enable");
+					$membershipField.removeClass("ur-membership-field-disabled");
+					$membershipField.removeClass("ur-locked-field");
+				}
+			});
 			// listen for changes in the membership group select box
 			$(document).on('change', '#ur-setting-form .ur-general-setting-membership_group select', function () {
 
