@@ -280,11 +280,32 @@ html {
   animation: spin 1s cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
 }
 
+.user-registration-membership-content .urm-spinner {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  margin-left: 5px;
+}
+.user-registration-membership-content span.user-registration-help-tip::before {
+  content: "";
+  background-image: url(../../../images/settings-icons/information.svg) !important;
+  background-repeat: no-repeat !important;
+  background-size: 100% !important;
+  display: block;
+  width: 12px;
+  height: 12px;
+  cursor: pointer;
+  padding: 4px;
+  background: 0 0;
+  border-radius: 3px;
+  transform: rotate(26deg);
+}
+
 .notice-container {
   position: fixed;
   top: 20px;
   right: -700px;
-  z-index: 1000;
+  z-index: 9999;
   transition: right 0.5s ease;
 }
 .notice-container .notice_red, .notice-container .notice_blue {
@@ -443,6 +464,9 @@ label {
 }
 .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions button.swal2-confirm {
   color: #ffffff;
+  display: flex !important;
+  align-items: center;
+  gap: 5px;
 }
 .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions button.swal2-cancel {
   color: #383838;

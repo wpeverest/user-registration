@@ -4,6 +4,7 @@ namespace WPEverest\URMembership\Payment\Admin;
 
 use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
 use WPEverest\URMembership\Admin\Repositories\SubscriptionRepository;
+use WPEverest\URMembership\Admin\Services\SubscriptionService;
 
 class OrderService {
 	protected $response, $is_membership_active, $orders_repository, $subscription_repository;
@@ -138,6 +139,7 @@ class OrderService {
 				$total_items['coupon_discount']      = $coupon_discount;
 				$total_items['coupon_discount_type'] = $coupon_discount_type;
 			}
+
 			return $total_items;
 		}
 
@@ -184,22 +186,35 @@ class OrderService {
 	/**
 	 * approve_payment_status
 	 *
-	 * @param $order_id
+	 * @param $order
 	 *
 	 * @return bool[]
 	 */
-	public function approve_payment_status( $order_id, $subscription_id ) {
+	public function approve_payment_status( $order, $subscription_id ) {
 		try {
+			$order_id = $order['order_id'];
+			$user_id  = $order['user_id'];
 			$this->orders_repository->wpdb()->query( 'START TRANSACTION' ); // Start the transaction.
+
 			$approve_order = $this->orders_repository->update( $order_id, array( 'status' => 'completed' ) );
 
 			if ( $approve_order ) {
-
-				$subscription_activated = $this->subscription_repository->update( $subscription_id, array( 'status' => 'active' ) );
+				$subscription_data = array( 'status' => 'active' );
+				$is_upgrading      = ur_string_to_bool( get_user_meta( $user_id, 'urm_is_upgrading', true ) );
+				if ( $is_upgrading ) {
+					$subscription_service        = new SubscriptionService();
+					$next_subscription_data      = json_decode( get_user_meta( $user_id, 'urm_next_subscription_data', true ), true );
+					$subscription_data           = $subscription_service->prepare_upgrade_subscription_data( $next_subscription_data['membership'], $next_subscription_data['member_id'], $next_subscription_data );
+					$subscription_data['status'] = 'active';
+				}
+				$subscription_activated = $this->subscription_repository->update( $subscription_id, $subscription_data );
 
 				if ( $subscription_activated ) {
 					$this->orders_repository->wpdb()->query( 'COMMIT' );
 					$this->response['message'] = __( 'Order has been approved successfully.', 'user-registration' );
+					delete_user_meta( $user_id, 'urm_is_upgrading' );
+					delete_user_meta( $user_id, 'urm_next_subscription_data' );
+					delete_user_meta( $user_id, 'urm_is_upgrading_to' );
 
 					return $this->response;
 				}
@@ -209,10 +224,11 @@ class OrderService {
 
 			return $this->response;
 		} catch ( \Exception $e ) {
+
 			// Rollback the transaction if any operation fails.
 			$this->orders_repository->wpdb()->query( 'ROLLBACK' );
 			$this->response['status']  = false;
-			$this->response['message'] = __( 'Something went wrong while updating payment status', 'user-registration' );
+			$this->response['message'] = $e->getMessage();
 
 			return $this->response;
 		}

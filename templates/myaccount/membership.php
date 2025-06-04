@@ -18,6 +18,9 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
+$is_upgraded     = ! empty( $_GET['is_upgraded'] ) ? absint( ur_string_to_bool( $_GET['is_upgraded'] ) ) : false;
+$message         = ! empty( $_GET['message'] ) ? esc_html( $_GET['message'] ) : '';
+$membership_info = ( isset( $_GET['info'] ) && ! empty( $_GET['info'] ) ) ? wp_kses_post_deep( $_GET['info'] ) : wp_kses_post_deep( $bank_data['bank_data'] );
 
 
 ?>
@@ -90,16 +93,62 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<?php
 			endif;
 			?>
-			<button type="button" class="membership-tab-btn change-membership-button"
-					data-id="<?php echo ( isset( $membership['post_id'] ) && ! empty( $membership['post_id'] ) ) ? esc_attr( $membership['post_id'] ) : ''; ?>"
-			>
-				<?php echo __( "Change Plan", "user-registration" ); ?>
-				<span class="ur-front-spinner"></span>
-			</button>
-		</div>
-		<div id="membership-error-div" class="btn-success">
+			<?php
+			if ( $is_upgrading ):
+				?>
 
+			<?php
+			else:
+				?>
+				<button type="button" class="membership-tab-btn change-membership-button"
+						data-id="<?php echo ( isset( $membership['post_id'] ) && ! empty( $membership['post_id'] ) ) ? esc_attr( $membership['post_id'] ) : ''; ?>"
+				>
+					<?php echo __( "Change Plan", "user-registration" ); ?>
+				</button>
+			<?php
+			endif;
+			?>
 		</div>
+		<div id="membership-error-div" class="btn-success"
+			 style="<?php echo $is_upgraded ? 'display:flex' : 'display:none' ?>">
+			<span>
+				<?php
+				echo $message;
+				?>
+			</span>
+			<span class="cancel-notice">
+				x
+			</span>
+		</div>
+		<?php
+		if ( $is_upgrading ):
+			?>
+			<div id="bank-notice" class="btn-success">
+			<span class="notice-1 user-registration-help-tip ">
+				<?php
+				echo $bank_data['notice_1'];
+				?>
+			</span>
+				<span class="view-bank-data">
+				<?php
+				echo __( "View Bank Details", "user-registration" );
+				?>
+			</span>
+			</div>
+			<div class="upgrade-info urm-d-none">
+				<?php
+				echo $membership_info;
+				?>
+			</div>
+		<?php
+		endif;
+		?>
+	</div>
+</div>
+<div class="notice-container">
+	<div class="notice_red">
+		<span class="notice_message"></span>
+		<span class="close_notice">&times;</span>
 	</div>
 </div>
 

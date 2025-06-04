@@ -170,11 +170,22 @@ class PaypalService {
 		if ( ! $mail_send ) {
 			$logger->notice( 'Email not sent for member: ' . $member_id . 'and subscription: ' . $member_subscription['ID'], array( 'source' => 'ur-membership-paypal' ) );
 		}
+		$is_upgrading = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
+		if ( $is_upgrading ) {
+			delete_user_meta( $member_id, 'urm_is_upgrading' );
+			delete_user_meta( $member_id, 'urm_is_upgrading_to' );
+			ur_membership_redirect_now( ur_get_my_account_url() . '/ur-membership', array(
+				'is_upgraded' => 'true',
+				'message'      => __( 'Membership Upgraded successfully', 'user-registration' )
+			) );
+		}
+
 		$login_option = ur_get_user_login_option( $member_id );
 		if ( "auto_login" === $login_option ) {
 			$member_service = new MembersService();
 			$member_service->login_member( $member_id, true );
 		}
+		update_user_meta( $member_id, 'urm_user_just_created', true );
 		ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
 	}
 
@@ -355,7 +366,10 @@ class PaypalService {
 					'transaction_id' => $transaction_id,
 				)
 			);
-
+		}
+		$is_upgrading = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
+		if ( $is_upgrading ) {
+			delete_user_meta( $member_id, 'urm_is_upgrading' );
 		}
 	}
 

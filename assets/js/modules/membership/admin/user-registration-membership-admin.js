@@ -717,11 +717,13 @@
 		var val = $(this).val(),
 			plan_container = $('#paid-plan-container'),
 			sub_container = $('.ur-membership-subscription-field-container'),
-			payment_gateway_container = $('#payment-gateway-container');
+			payment_gateway_container = $('#payment-gateway-container'),
+		 	pro_rate_settings = $('label.ur-membership-upgrade-types.upgradable-type[for="ur-membership-upgrade-type-pro-rata"]');
+
 		plan_container.addClass('ur-d-none');
 		plan_container.addClass('ur-d-none');
 		payment_gateway_container.addClass('ur-d-none');
-
+		pro_rate_settings.addClass('ur-d-none');
 		sub_container.show();
 		if ('free' !== val) {
 			if ('paid' === val) {
@@ -729,14 +731,15 @@
 			} else {
 				sub_container.removeClass('ur-d-none');
 			}
+			pro_rate_settings.removeClass('ur-d-none');
 			payment_gateway_container.removeClass('ur-d-none');
 			plan_container.removeClass('ur-d-none');
-
 		}
 	});
 
 	$(document).on('click', '#ur-membership-upgrade-action', function () {
 		$('#upgrade-settings-container').toggle();
+		$('input:radio[name=ur_membership_type]:checked').trigger('click');
 	});
 
 	$(document).on('keydown', function (e) {

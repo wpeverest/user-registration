@@ -536,7 +536,7 @@
 												<!--											Pro rata type-->
 
 												<label
-													class="ur-membership-upgrade-types <?php echo ! $is_pro ? 'upgradable-type' : '' ?>"
+													class="ur-membership-upgrade-types <?php echo ! $is_pro ? 'upgradable-type' : '' ?>  <?php echo isset( $membership_details['type'] ) && $membership_details['type'] == 'free' ? 'ur-d-none' : ''; ?>"
 													for="ur-membership-upgrade-type-pro-rata">
 													<div
 														class="ur-membership-type-title ur-d-flex ur-align-items-center">

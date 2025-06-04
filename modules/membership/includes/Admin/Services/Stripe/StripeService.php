@@ -117,7 +117,9 @@ class StripeService {
 			$amount = abs( $amount ) * 100;
 		}
 		if ( $amount < 1 ) {
-			wp_delete_user( absint( $member_id ) );
+			if ( empty( $payment_data['upgrade'] ) ) {
+				wp_delete_user( absint( $member_id ) );
+			}
 			wp_send_json_error(
 				array(
 					'message' => __( 'Stripe Payment stopped, Total amount after discount cannot be less than One.', 'user-registration' ),
@@ -126,7 +128,9 @@ class StripeService {
 		}
 		// Return if invalid amount.
 		if ( ( empty( $amount ) || user_registration_sanitize_amount( 0, $currency ) == $amount ) ) {
-			wp_delete_user( absint( $member_id ) );
+			if ( empty( $payment_data['upgrade'] ) ) {
+				wp_delete_user( absint( $member_id ) );
+			}
 			wp_send_json_error(
 				array(
 					'message' => __( 'Stripe Payment stopped, Invalid/Empty amount', 'user-registration' ),
@@ -158,7 +162,10 @@ class StripeService {
 
 			return $response;
 		} catch ( ApiErrorException $e ) {
-			wp_delete_user( absint( $member_id ) );
+			if ( empty( $payment_data['upgrade'] ) ) {
+				wp_delete_user( absint( $member_id ) );
+			}
+
 			wp_send_json_error(
 				array(
 					'message' => __( 'Stripe Payment stopped, Incomplete Stripe setup.', 'user-registration' ),
@@ -168,27 +175,40 @@ class StripeService {
 	}
 
 	public function update_order( $data ) {
+
 		$transaction_id = $data['payment_result']['paymentIntent']['id'] ?? '';
 		$payment_status = sanitize_text_field( $data['payment_status'] );
 		$member_id      = absint( $_POST['member_id'] );
 		$logger         = ur_get_logger();
+		$is_upgrading = ur_string_to_bool(get_user_meta( $member_id, 'urm_is_upgrading', true ));
+
+
 		$response       = array(
 			'status' => true,
 		);
+
 		$latest_order   = $this->members_orders_repository->get_member_orders( $member_id );
+
 		if ( empty( $latest_order ) ) {
 			$logger->notice( '-------------------------------------------- Order not found for  ' . $member_id . ' --------------------------------------------', array( 'source' => 'ur-membership-stripe' ) );
-			$response['status'] = false;
+			$response['status']  = false;
+			$response['message'] = __( 'Order not found for  ' . $member_id, 'user-registration' );
 
 			return $response;
 		}
 		$logger->notice( '-------------------------------------------- Stripe Payment Confirmation started for ' . $member_id . ' --------------------------------------------', array( 'source' => 'ur-membership-stripe' ) );
 
 		if ( 'failed' === $payment_status ) {
+			if ( $is_upgrading ) {
+				$this->revert_subscription( $member_id );
+			} else {
+				wp_delete_user( absint( $member_id ) );
+				$this->members_orders_repository->delete_member_order( $member_id );
+			}
 			$error_msg = __( 'Stripe Payment failed.', 'user-registration' );
 			$error_msg = $data['payment_result']['error']['message'] ?? $error_msg;
-			wp_delete_user( absint( $member_id ) );
-			$this->members_orders_repository->delete_member_order( $member_id );
+
+
 			$logger->notice( $error_msg, array( 'source' => 'ur-membership-paypal' ) );
 			$response['message'] = $error_msg;
 			$response['status']  = false;
@@ -197,6 +217,15 @@ class StripeService {
 			return $response;
 		} elseif ( 'succeeded' === $payment_status ) {
 			$member_order                   = $this->members_orders_repository->get_member_orders( $member_id );
+
+			if ( 'completed' === $member_order['status'] ) {
+				$logger->notice( '-------------------------------------------- Stripe Subscription process: Order status is already completed.' . $member_id . ' --------------------------------------------', array( 'source' => 'ur-membership-stripe' ) );
+				$response['message'] = $is_upgrading ? __( 'Membership upgraded successfully.', 'user-registration' ) :__( 'New member has been successfully created with successful stripe payment.', 'user-registration' );
+				$response['status']  = true;
+
+				return $response;
+			}
+
 			$membership                     = $this->membership_repository->get_single_membership_by_ID( $member_order['item_id'] );
 			$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
 			$membership_metas['post_title'] = $membership['post_title'];
@@ -208,20 +237,13 @@ class StripeService {
 					'transaction_id' => $transaction_id,
 				)
 			);
-			if ( 'completed' === $member_order['status'] ) {
-				$logger->notice( '-------------------------------------------- Stripe Subscription process: Order status is already completed.' . $member_id . ' --------------------------------------------', array( 'source' => 'ur-membership-stripe' ) );
-				$response['message'] = __( 'New member has been successfully created with successful stripe payment.', 'user-registration' );
-				$response['status']  = true;
 
-				return $response;
-				// ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
-			}
 
 			if ( $is_order_updated && 'paid' === $member_order['order_type'] ) {
 				$this->members_subscription_repository->update( $member_subscription['ID'], array( 'status' => 'active' ) );
 				$logger->notice( 'Order and subscription status updated ', array( 'source' => 'ur-membership-stripe' ) );
 			}
-			$response = $this->sendEmail( $member_order['ID'], $member_subscription, $membership_metas, $member_id, $response );
+			$response = $this->sendEmail( $member_order['ID'], $member_subscription, $membership_metas, $member_id,  $response );
 		}
 		$logger->notice( '-------------------------------------------- Stripe Subscription process ended for ' . $member_id . ' --------------------------------------------', array( 'source' => 'ur-membership-stripe' ) );
 
@@ -237,7 +259,7 @@ class StripeService {
 		$response                       = array(
 			'status' => false,
 		);
-		$logger = ur_get_logger();
+		$logger                         = ur_get_logger();
 		if ( empty( $member_subscription ) ) {
 			$logger->notice( '-------------------------------------------- Stripe Subscription not found for ' . $member_id . ' --------------------------------------------', array( 'source' => 'ur-membership-stripe' ) );
 
@@ -376,7 +398,7 @@ class StripeService {
 	 *
 	 * @return array The result of the email operation.
 	 */
-	public function sendEmail( int $ID, $member_subscription, array $membership_metas, int $member_id, array $response ): array {
+	public function sendEmail( int $ID, $member_subscription, array $membership_metas, int $member_id, array $response , $is_upgrading = false ): array {
 		$email_service = new EmailService();
 		$order_detail  = $this->orders_repository->get_order_detail( $ID );
 		$logger        = ur_get_logger();
@@ -400,7 +422,7 @@ class StripeService {
 		}
 
 		return array(
-			'message' => __( 'New member has been successfully created with successful stripe subscription.', 'user-registration' ),
+			'message' => $is_upgrading ? __( 'Membership upgraded successfully.', 'user-registration' ) :__( 'New member has been successfully created with successful stripe payment.', 'user-registration' ),
 			'status'  => true,
 		);
 	}
@@ -551,5 +573,23 @@ class StripeService {
 		$stripe_settings = self::get_stripe_settings();
 
 		return ( empty( $stripe_settings['publishable_key'] ) || empty( $stripe_settings['secret_key'] ) );
+	}
+
+	/**
+	 * extracted
+	 *
+	 * @param int $member_id
+	 *
+	 * @return void
+	 */
+	public function revert_subscription( int $member_id ): void {
+		$last_subscription = json_decode( get_user_meta( $member_id, 'urm_previous_subscription_data', true ), true );
+		$subscription_id   = $last_subscription['ID'];
+		unset( $last_subscription['ID'] );
+		$this->members_subscription_repository->update( $subscription_id, $last_subscription );
+		$this->members_orders_repository->delete_member_order( $member_id, false );
+		delete_user_meta( $member_id, 'urm_previous_subscription_data' );
+
+
 	}
 }

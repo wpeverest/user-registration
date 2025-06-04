@@ -24,6 +24,7 @@ use WPEverest\URMembership\Admin\Services\MembershipService;
 use WPEverest\URMembership\Admin\Services\MembersService;
 use WPEverest\URMembership\Admin\Services\PaymentService;
 use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
+use WPEverest\URMembership\Admin\Services\SubscriptionService;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -65,6 +66,7 @@ class AJAX {
 			'delete_membership_groups'     => false,
 			'verify_pages'                 => false,
 			'validate_pg'                  => false,
+			'upgrade_membership'           => false,
 		);
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
 			add_action( 'wp_ajax_user_registration_membership_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -118,9 +120,9 @@ class AJAX {
 				)
 			);
 		}
-		$membership_service      = new MembershipService();
+		$membership_service = new MembershipService();
 
-		$response                = $membership_service->create_membership_order_and_subscription( $data );
+		$response = $membership_service->create_membership_order_and_subscription( $data );
 
 		$transaction_id          = isset( $response['transaction_id'] ) ? $response['transaction_id'] : 0;
 		$data['member_id']       = $member_id;
@@ -302,7 +304,12 @@ class AJAX {
 			}
 
 			$meta_data = json_decode( $data["post_meta_data"]['ur_membership']["meta_value"], true );
+			if ( ! empty( $meta_data['upgrade_settings'] ) && $meta_data['upgrade_settings']['upgrade_path'] !== $old_membership_data['upgrade_settings']['upgrade_path'] ) {
+				$transient_key          = 'urm_upgradable_memberships_for_' . $updated_ID;
+				$upgradable_memberships = $membership->get_upgradable_membership( $updated_ID );
+				set_transient( $transient_key, $upgradable_memberships, 5 * MINUTE_IN_SECONDS );
 
+			}
 			if ( $is_stripe_enabled && "free" !== $meta_data["type"] ) {
 
 				//check if any significant value has been changed  , trial not included since trial value change does not affect the type of product and price in stripe, instead handled during subscription
@@ -585,7 +592,8 @@ class AJAX {
 
 	public static function confirm_payment() {
 
-		ur_membership_verify_nonce( 'ur_membership_confirm_payment' );
+		ur_membership_verify_nonce( 'urm_confirm_payment' );
+
 		if ( empty( $_POST['member_id'] ) ) {
 			wp_send_json_error(
 				array(
@@ -602,7 +610,8 @@ class AJAX {
 		}
 		$member_id       = absint( $_POST['member_id'] );
 		$is_user_created = get_user_meta( $member_id, 'urm_user_just_created' );
-		if ( ! $is_user_created ) {
+		$is_upgrading    = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
+		if ( ! $is_user_created && ! $is_upgrading ) {
 			wp_send_json_error(
 				array(
 					'message' => __( 'Invalid Request.', 'user-registration' ),
@@ -616,9 +625,11 @@ class AJAX {
 				)
 			);
 		}
-		$stripe_service      = new StripeService();
-		$payment_status      = sanitize_text_field( $_POST['payment_status'] );
+		$stripe_service = new StripeService();
+		$payment_status = sanitize_text_field( $_POST['payment_status'] );
+
 		$update_stripe_order = $stripe_service->update_order( $_POST );
+
 		if ( $update_stripe_order['status'] ) {
 			$form_response = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
 			if ( ! empty( $form_response ) && isset( $form_response["auto_login"] ) && $payment_status !== "failed" ) {
@@ -634,10 +645,15 @@ class AJAX {
 				}
 			}
 			delete_user_meta( $member_id, 'urm_user_just_created' );
+			$response = array(
+				'message'      => $update_stripe_order["message"],
+				'is_upgrading' => ur_string_to_bool( $is_upgrading )
+			);
+
+			delete_user_meta( $member_id, 'urm_is_upgrading' );
+			delete_user_meta( $member_id, 'urm_is_upgrading_to' );
 			wp_send_json_success(
-				array(
-					'message' => $update_stripe_order["message"]
-				)
+				$response
 			);
 		}
 		wp_send_json_error(
@@ -905,7 +921,7 @@ class AJAX {
 				)
 			);
 		}
-		$membership_id          = absint( $_POST['membership_id'] );
+		$membership_id = absint( $_POST['membership_id'] );
 
 		$transient_key = 'urm_upgradable_memberships_for_' . $membership_id;
 		$cached_data   = get_transient( $transient_key );
@@ -928,6 +944,68 @@ class AJAX {
 		set_transient( $transient_key, $upgradable_memberships, 5 * MINUTE_IN_SECONDS );
 		wp_send_json_success(
 			$upgradable_memberships
+		);
+	}
+
+	public static function upgrade_membership() {
+
+		ur_membership_verify_nonce( 'urm_upgrade_membership' );
+
+		if ( empty( $_POST['current_subscription_id'] ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Field current_subscription_id is required', 'user-registration' ),
+				)
+			);
+		}
+		if ( empty( $_POST['selected_membership_id'] ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( "Field selected_membership_id is required", "user-registration" ),
+				)
+			);
+		}
+		$data = array(
+			'current_subscription_id' => absint( $_POST['current_subscription_id'] ),
+			'selected_membership_id'  => absint( $_POST['selected_membership_id'] ),
+			'current_membership_id'   => absint( $_POST['current_membership_id'] ),
+			'selected_pg'             => sanitize_text_field( $_POST['selected_pg'] ),
+		);
+
+		$subscription_service = new SubscriptionService();
+		if ( ! $subscription_service->can_upgrade( $data ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( "Sorry, you cannot upgrade to the selected plan.", "user-registration" ),
+				)
+			);
+		}
+		$upgrade_membership_response = $subscription_service->upgrade_membership( $data );
+		$response                    = $upgrade_membership_response['response'];
+
+		if ( $response['status'] ) {
+			update_user_meta( $upgrade_membership_response['extra']['member_id'], 'urm_user_just_created', true );
+			update_user_meta( $upgrade_membership_response['extra']['member_id'], 'urm_is_upgrading', true );
+			update_user_meta( $upgrade_membership_response['extra']['member_id'], 'urm_is_upgrading_to', $data['selected_membership_id'] );
+
+			$selected_pg = $data['selected_pg'];
+			$message     = "free" === $selected_pg ? __( "Membership upgraded successfully.", "user-registration-membership" ) : __( "New Order created, initializing payment...", "user-registration-membership" );
+			wp_send_json_success(
+				array(
+					'is_upgrading'             => true,
+					'pg_data'                  => $response,
+					'member_id'                => $upgrade_membership_response['extra']['member_id'],
+					'username'                 => $upgrade_membership_response['extra']['username'],
+					'transaction_id'           => $upgrade_membership_response['extra']['transaction_id'],
+					'updated_membership_title' => $upgrade_membership_response['extra']['updated_membership_title'],
+					'message'                  => $message,
+				)
+			);
+		}
+		wp_send_json_error(
+			array(
+				'message' => __( "Something went wrong while upgrading membership.", "user-registration" ),
+			)
 		);
 	}
 }

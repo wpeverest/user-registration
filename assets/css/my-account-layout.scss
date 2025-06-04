@@ -580,7 +580,7 @@
 				.btn-div {
 					display: flex;
 					gap: 10px;
-
+					align-items: center;
 					.membership-tab-btn {
 						padding: 10px 20px;
 						border-radius: 8px;
@@ -598,6 +598,7 @@
 							color: #475bb2;
 							display: flex;
 							align-items: center;
+
 							.ur-front-spinner {
 								background-size: 16px 16px;
 								opacity: .7;
@@ -625,7 +626,6 @@
 				#membership-error-div {
 					width: 100%;
 					text-align: left;
-
 					padding: 8px 12px 8px 16px;
 					font-size: 14px;
 					font-weight: 500;
@@ -638,9 +638,40 @@
 					}
 
 					&.btn-success {
-						background: #d7ede0;
-						color: #554545;
+						display: flex;
+						justify-content: space-between;
+						background: #ededed;
+						color: #11b84c;
 						border-left: 3px solid #00ff5a;
+
+						.cancel-notice {
+							cursor: pointer;
+							font-size: larger;
+						}
+
+						.cancel-notice:hover {
+							color: red;
+						}
+					}
+				}
+				#bank-notice {
+					display: flex;
+					font-size: medium;
+					justify-content: space-between;
+					.notice-1 {
+						display: flex;
+						align-items: center;
+						gap: 5px;
+						background: #eeebe5;
+						border-left: 3px solid #f7b10f;
+						font-style: italic;
+						border-radius: 5px;
+						padding: 4px;
+					}
+					.view-bank-data {
+						cursor: pointer;
+						font-style: italic;
+						text-decoration: underline;
 					}
 				}
 			}
