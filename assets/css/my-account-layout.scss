@@ -551,24 +551,26 @@
 				#ur-membership-status {
 					padding: 6px 18px;
 					color: white;
-					border-radius: 36px;
+					border-radius: 10px;
+					background: #f1f8f0;
 
 					&.btn-active {
-						background: #4dc245;
+						color: #00ab02;
 					}
 
 					&.btn-inactive {
-						background: gray;
+						color: #252725 ;
 					}
 
 					&.btn-canceled {
-						background: #ea4335;
+						color: #ea4335;
 					}
 
 					&.btn-trial {
 						background: #ff8300;
 					}
 				}
+
 			}
 
 			.membership-row-btn-container {

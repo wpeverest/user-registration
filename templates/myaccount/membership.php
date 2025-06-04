@@ -28,41 +28,30 @@ $membership_info = ( isset( $_GET['info'] ) && ! empty( $_GET['info'] ) ) ? wp_k
 <div class="user-registration-membership-content"
 	 style="">
 	<div class="membership-row">
+
 		<div class="membership-label">
 			<span style="font-weight: 500">
-			<?php echo esc_html__( 'Membership Title', 'user-registration' ) ?>
+			<?php echo esc_html__( 'Membership Title', 'user-registration' ) . ':'; ?>
 				</span>
 		</div>
 		<div class="membership-data">
+			<span>
 			<?php
-			$membership_title = ! empty( $membership['post_title'] ) ? esc_html( $membership['post_title'] ) : __( 'N/A', 'user-registration' );
-			?>
-			<span id="membership-title">
-			<?php
-			echo $membership_title ?>
+			echo isset( $membership['post_title'] ) && ! empty( $membership['post_title'] ) ? esc_html( $membership['post_title'] ) : __( 'N/A', 'user-registration' ) ?>
 		</span>
+
 		</div>
+
 	</div>
 	<div class="membership-row">
+
 		<div class="membership-label">
 			<span style="font-weight: 500">
-			<?php echo esc_html__( 'Membership Type', 'user-registration' ) ?>
+			<?php echo esc_html__( 'Membership Status', 'user-registration' ) . ':'; ?>
 				</span>
 		</div>
 		<div class="membership-data">
-			<span id="ur-membership-type">
-			<?php
-			echo isset( $membership['post_content'] ) && ! empty( $membership['post_content'] ) ? esc_html( ucfirst( wp_unslash( $membership['post_content']['type'] ) ) ) : __( 'N/A', 'user-registration' ) ?>
-		</span>
-		</div>
-	</div>
-	<div class="membership-row">
-		<div class="membership-label">
-			<span style="font-weight: 500">
-			<?php echo esc_html__( 'Membership Status', 'user-registration' ) ?>
-				</span>
-		</div>
-		<div class="membership-data">
+
 			<?php
 			$status = 'inactive';
 			if ( isset( $membership['status'] ) ) {
@@ -76,23 +65,89 @@ $membership_info = ( isset( $_GET['info'] ) && ! empty( $_GET['info'] ) ) ? wp_k
 			}
 			?>
 			<span id="ur-membership-status"
-				  class="btn-<?php echo $status ?>"><?php echo esc_html__( ucfirst( $status ) ) ?></span>
+				  class="btn-<?php echo $status ?>"><?php echo esc_html__( ucfirst( $status ) ); ?></span>
+
 		</div>
 	</div>
+	<?php
+	if ( $membership['status'] === 'trial' ):
+		?>
+		<div class="membership-row">
+			<div class="membership-item">
+				<div class="membership-label">
+			<span style="font-weight: 500">
+			<?php echo esc_html__( 'Trial Start Date', 'user-registration' ) . ':'; ?>
+				</span>
+				</div>
+				<div class="membership-data">
+			<span id="ur-membership-type">
+			<?php
+			echo ! empty( $membership['trial_start_date'] ) ? date( 'Y-m-d', strtotime( $membership['trial_start_date'] ) ) : __( 'N/A', 'user-registration' ) ?>
+		</span>
+				</div>
+			</div>
+			<div class="membership-item">
+				<div class="membership-label">
+			<span style="font-weight: 500">
+			<?php echo esc_html__( 'Trial End Date', 'user-registration' ) . ':'; ?>
+				</span>
+				</div>
+				<div class="membership-data">
+			<span id="ur-membership-type">
+			<?php
+			echo ! empty( $membership['trial_end_date'] ) ? date( 'Y-m-d', strtotime( $membership['trial_end_date'] ) ) : __( 'N/A', 'user-registration' ) ?>
+		</span>
+				</div>
+			</div>
+		</div>
+	<?php
+	endif;
+	?>
+	<div class="membership-row">
 
+		<div class="membership-label">
+			<span style="font-weight: 500">
+			<?php echo esc_html__( 'Renews On', 'user-registration' ) . ':'; ?>
+				</span>
+		</div>
+		<div class="membership-data">
+			<span id="ur-membership-type">
+			<?php
+			echo ! empty( $membership['next_billing_date'] ) && strtotime( $membership['next_billing_date'] ) > 0 ? date( 'Y-m-d', strtotime( $membership['next_billing_date'] ) ) : __( 'N/A', 'user-registration' ) ?>
+		</span>
+		</div>
+
+	</div>
+	<div class="membership-row">
+		<div class="membership-label">
+			<span style="font-weight: 500">
+			<?php echo esc_html__( 'Start Date', 'user-registration' ) . ':'; ?>
+				</span>
+		</div>
+		<div class="membership-data">
+			<span id="ur-membership-type">
+			<?php
+			echo ! empty( $membership['start_date'] ) ? date( 'Y-m-d', strtotime( $membership['start_date'] ) ) : __( 'N/A', 'user-registration' ) ?>
+		</span>
+		</div>
+	</div>
+	<div class="membership-row">
+
+			<div class="membership-label">
+			<span style="font-weight: 500">
+			<?php echo esc_html__( 'Membership Type', 'user-registration' ) . ':'; ?>
+				</span>
+			</div>
+			<div class="membership-data">
+			<span id="ur-membership-type">
+			<?php
+			echo isset( $membership['post_content'] ) && ! empty( $membership['post_content'] ) ? esc_html( ucfirst( wp_unslash( $membership['post_content']['type'] ) ) ) : __( 'N/A', 'user-registration' ) ?>
+		</span>
+			</div>
+
+	</div>
 	<div class="membership-row-btn-container">
 		<div class="btn-div">
-			<?php
-			if ( 'canceled' !== $membership['status'] ):
-				?>
-				<button type="button" class="membership-tab-btn cancel-membership-button"
-						data-id="<?php echo ( isset( $membership['subscription_id'] ) && ! empty( $membership['subscription_id'] ) ) ? esc_attr( $membership['subscription_id'] ) : ''; ?>"
-				>
-					<?php echo __( "Cancel Membership", "user-registration" ); ?>
-				</button>
-			<?php
-			endif;
-			?>
 			<?php
 			if ( $is_upgrading ):
 				?>
@@ -104,6 +159,17 @@ $membership_info = ( isset( $_GET['info'] ) && ! empty( $_GET['info'] ) ) ? wp_k
 						data-id="<?php echo ( isset( $membership['post_id'] ) && ! empty( $membership['post_id'] ) ) ? esc_attr( $membership['post_id'] ) : ''; ?>"
 				>
 					<?php echo __( "Change Plan", "user-registration" ); ?>
+				</button>
+			<?php
+			endif;
+			?>
+			<?php
+			if ( 'canceled' !== $membership['status'] ):
+				?>
+				<button type="button" class="membership-tab-btn cancel-membership-button"
+						data-id="<?php echo ( isset( $membership['subscription_id'] ) && ! empty( $membership['subscription_id'] ) ) ? esc_attr( $membership['subscription_id'] ) : ''; ?>"
+				>
+					<?php echo __( "Cancel Membership", "user-registration" ); ?>
 				</button>
 			<?php
 			endif;
