@@ -304,7 +304,7 @@ class AJAX {
 			}
 
 			$meta_data = json_decode( $data["post_meta_data"]['ur_membership']["meta_value"], true );
-			if ( ! empty( $meta_data['upgrade_settings'] ) && $meta_data['upgrade_settings']['upgrade_path'] !== $old_membership_data['upgrade_settings']['upgrade_path'] ) {
+			if ( ! empty( $meta_data['upgrade_settings'] ) &&  ! empty( $old_membership_data['upgrade_settings'] )  && $meta_data['upgrade_settings']['upgrade_path'] !== $old_membership_data['upgrade_settings']['upgrade_path'] ) {
 				$transient_key          = 'urm_upgradable_memberships_for_' . $updated_ID;
 				$upgradable_memberships = $membership->get_upgradable_membership( $updated_ID );
 				set_transient( $transient_key, $upgradable_memberships, 5 * MINUTE_IN_SECONDS );

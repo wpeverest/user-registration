@@ -718,7 +718,7 @@
 			plan_container = $('#paid-plan-container'),
 			sub_container = $('.ur-membership-subscription-field-container'),
 			payment_gateway_container = $('#payment-gateway-container'),
-		 	pro_rate_settings = $('label.ur-membership-upgrade-types.upgradable-type[for="ur-membership-upgrade-type-pro-rata"]');
+			pro_rate_settings = $('label.ur-membership-upgrade-types[for="ur-membership-upgrade-type-pro-rata"]');
 
 		plan_container.addClass('ur-d-none');
 		plan_container.addClass('ur-d-none');
