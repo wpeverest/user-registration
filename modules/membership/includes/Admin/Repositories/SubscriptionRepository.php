@@ -33,9 +33,14 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 	 *
 	 * @return array|bool[]|mixed|void
 	 */
-	public function cancel_subscription_by_id( $subscription_id ) {
+	public function cancel_subscription_by_id( $subscription_id , $send_email = true ) {
 		$subscription = $this->retrieve( $subscription_id );
+
 		$order        = $this->orders_repository->get_order_by_subscription( $subscription_id );
+		echo '<pre>';
+		print_r( $order );
+		echo '</pre>';
+		die();
 		$subscription_service = new SubscriptionService();
 		if ( 'canceled' === $subscription['status'] ) {
 			return array(
@@ -43,6 +48,7 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 				'message' => esc_html__( 'Subscription is already canceled.', 'user-registration' ),
 			);
 		}
+
 		if ( 'free' === $order['order_type'] || 'paid' === $order['order_type'] || empty( $order['payment_method'] ) ) {
 
 			$this->update(
@@ -51,17 +57,23 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 					'status' => 'canceled',
 				)
 			);
-			$subscription_service->send_cancel_emails($subscription_id);
-			return array(
-				'status'  => true,
-				'message' => esc_html__( 'Subscription Cancelled Successfully', 'user-registration' ),
-			);
+			if($send_email) {
+				$subscription_service->send_cancel_emails( $subscription_id );
+
+				return array(
+					'status'  => true,
+					'message' => esc_html__( 'Subscription Cancelled Successfully', 'user-registration' ),
+				);
+			}
 		} else {
+
 			$cancel_sub           = $subscription_service->cancel_subscription( $order, $subscription );
 
 			if ( $cancel_sub['status'] ) {
 				$this->update( $subscription_id, array( 'status' => 'canceled' ) );
-				$subscription_service->send_cancel_emails($subscription_id);
+				if($send_email) {
+					$subscription_service->send_cancel_emails( $subscription_id );
+				}
 				return array(
 					'status'  => true,
 					'message' => esc_html__( 'Subscription Cancelled Successfully', 'user-registration' ),

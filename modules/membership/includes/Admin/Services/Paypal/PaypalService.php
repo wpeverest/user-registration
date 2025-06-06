@@ -442,6 +442,7 @@ class PaypalService {
 				'message' => $message,
 			);
 		}
+
 		if ( empty( $subscription['subscription_id'] ) ) {
 			$message = esc_html__( 'Paypal Subscription ID not present, please contact your administrator.', 'user-registration' );
 			ur_get_logger()->notice( $message, array( 'source' => 'ur-membership-paypal' ) );

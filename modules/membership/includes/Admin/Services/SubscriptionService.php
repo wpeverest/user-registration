@@ -111,13 +111,14 @@ class SubscriptionService {
 	 * @return array|bool[]|void
 	 */
 	public function cancel_subscription( $order, $subscription ) {
+
 		switch ( $order['payment_method'] ) {
 			case 'paypal';
 				$paypal_service = new PaypalService();
-
 				return $paypal_service->cancel_subscription( $order, $subscription );
 				break;
 			case 'stripe';
+
 				$stripe_service = new StripeService();
 
 				return $stripe_service->cancel_subscription( $order, $subscription );
@@ -273,6 +274,7 @@ class SubscriptionService {
 
 		$upgrade_details = $this->calculate_membership_upgrade_cost( $current_membership_details, $selected_membership_details, $subscription );
 
+
 		if ( isset( $upgrade_details['status'] ) && ! $upgrade_details['status'] ) {
 			ur_get_logger()->notice( __( 'Calculation Failed', 'user-registration-membership' ), array( 'source' => 'urm-upgrade-subscription' ) );
 
@@ -288,6 +290,27 @@ class SubscriptionService {
 		$members_data = array(
 			'membership_data' => $selected_membership_details,
 		);
+
+		if ( isset( $data['upgrade'] ) && $data["upgrade"] && "subscription" === $selected_membership_details['type'] && "bank" !== $payment_method && "off" === $selected_membership_details['trial_status'] && "free" !== $current_membership_details['type'] ) {
+
+			ur_get_logger()->notice( __( 'Cancelling previous subscription.', 'user-registration-membership' ), array( 'source' => 'urm-upgrade-subscription' ) );
+
+			$cancel_subscription = $this->subscription_repository->cancel_subscription_by_id( $current_subscription_id );
+
+			ur_get_logger()->notice( print_r( $cancel_subscription, true ), array( 'source' => 'urm-upgrade-subscription' ) );
+
+			if ( ! $cancel_subscription['status'] ) {
+
+				ur_get_logger()->notice( __( 'Cancelling subscription failed', 'user-registration-membership' ), array( 'source' => 'urm-upgrade-subscription' ) );
+
+				$response["status"] = false;
+
+				return $response;
+			} else {
+				$this->subscription_repository->cancel_subscription_by_id( $current_subscription_id );
+			}
+		}
+
 
 		$orders_data = $order_service->prepare_orders_data( $members_data, $user->ID, $subscription ); // prepare data for orders table.
 
@@ -307,29 +330,6 @@ class SubscriptionService {
 			'subscription_data' => $subscription
 		);
 		$data            = $data + $upgrade_details;
-
-
-		if ( isset( $data['upgrade'] ) && $data["upgrade"] && "subscription" === $selected_membership_details['type'] && "bank" !== $payment_method ) {
-			ur_get_logger()->notice( __( 'Cancelling previous subscription.', 'user-registration-membership' ), array( 'source' => 'urm-upgrade-subscription' ) );
-
-			$cancel_subscription = $this->subscription_repository->cancel_subscription_by_id( $current_subscription_id );
-
-			ur_get_logger()->notice( print_r( $cancel_subscription, true ), array( 'source' => 'urm-upgrade-subscription' ) );
-
-			if ( ! $cancel_subscription['status'] ) {
-
-				ur_get_logger()->notice( __( 'Cancelling subscription failed', 'user-registration-membership' ), array( 'source' => 'urm-upgrade-subscription' ) );
-				ur_get_logger()->notice( __( 'Deleting order' . $order['ID'], 'user-registration-membership' ), array( 'source' => 'urm-upgrade-subscription' ) );
-				$this->orders_repository->delete( $order['ID'] );
-
-				$response["status"] = false;
-
-				return $response;
-			} else {
-				$this->subscription_repository->cancel_subscription_by_id( $current_subscription_id );
-
-			}
-		}
 
 
 		$response = $payment_service->build_response( $data );
@@ -387,9 +387,14 @@ class SubscriptionService {
 			case 'paid->paid':
 				$result = $upgrade_membership_service->handle_paid_to_paid_membership_upgrade( $current_membership_details, $selected_membership_details, $subscription );
 				break;
-			case 'paid->subscription':
-			case 'subscription->paid':
 			case 'subscription->subscription':
+				$result = $upgrade_membership_service->handle_subscription_to_subscription_membership_upgrade( $current_membership_details, $selected_membership_details, $subscription );
+				break;
+			case 'paid->subscription':
+				$result = $upgrade_membership_service->handle_paid_to_subscription_membership_upgrade( $current_membership_details, $selected_membership_details, $subscription );
+				break;
+			case 'subscription->paid':
+				$result = $upgrade_membership_service->handle_subscription_to_paid_membership_upgrade( $current_membership_details, $selected_membership_details, $subscription );
 				break;
 		}
 
@@ -426,6 +431,7 @@ class SubscriptionService {
 		$remaining_subscription_days = $extra_data["remaining_subscription_days"];
 		$membership                  = get_post( $membership_id, ARRAY_A );
 		$membership_meta             = json_decode( wp_unslash( get_post_meta( $membership['ID'], 'ur_membership', true ) ), true );
+		$expiry_date                 = '';
 		if ( 'subscription' == $membership_meta['type'] ) { // TODO: calculate with trial date
 			$expiry_date = self::get_expiry_date( date( 'Y-m-d' ), $membership_meta['subscription']['duration'], $remaining_subscription_days );
 			$status      = 'on' === $membership_meta['trial_status'] ? 'trial' : 'pending';
@@ -435,13 +441,13 @@ class SubscriptionService {
 			'user_id'           => $member_id,
 			'item_id'           => $membership['ID'],
 			'start_date'        => date( 'Y-m-d' ),
-			'expiry_date'       => $expiry_date ?? '',
-			'next_billing_date' => $expiry_date ?? '',
+			'expiry_date'       => $expiry_date,
+			'next_billing_date' => $expiry_date,
 			'billing_amount'    => $membership_meta['amount'] ?? 0,
 			'status'            => 'free' === $membership_meta['type'] ? 'active' : 'pending',
 		);
 
-		if ( isset($membership_meta['trial_status']) && "on" === $membership_meta['trial_status'] ) {
+		if ( isset( $membership_meta['trial_status'] ) && "on" === $membership_meta['trial_status'] ) {
 			$remaining_trial_days = $membership_meta['trial_data']['value'] > $extra_data['total_used_trial_days'] ? $membership_meta['trial_data']['value'] - $extra_data['total_used_trial_days'] : $membership_meta['trial_data']['value'];
 			$trial_data           = array(
 				'trial_start_date' => date( 'Y-m-d' ),

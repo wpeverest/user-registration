@@ -349,7 +349,7 @@ html {
 		margin-left: 5px;
 	}
 
-	span.user-registration-help-tip::before {
+	span.urm-help-tip::before {
 		content: "";
 		background-image: url(../../../images/settings-icons/information.svg) !important;
 		background-repeat: no-repeat !important;
@@ -552,6 +552,7 @@ label {
 					display: flex !important;
 					align-items: center;
 					gap: 5px;
+					justify-content: center;
 				}
 
 				&.swal2-cancel {

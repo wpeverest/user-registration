@@ -286,7 +286,7 @@ html {
   border-radius: 50%;
   margin-left: 5px;
 }
-.user-registration-membership-content span.user-registration-help-tip::before {
+.user-registration-membership-content span.urm-help-tip::before {
   content: "";
   background-image: url(../../../images/settings-icons/information.svg) !important;
   background-repeat: no-repeat !important;
@@ -467,6 +467,7 @@ label {
   display: flex !important;
   align-items: center;
   gap: 5px;
+  justify-content: center;
 }
 .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions button.swal2-cancel {
   color: #383838;

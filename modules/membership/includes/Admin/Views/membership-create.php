@@ -1,7 +1,6 @@
 <div class="ur-membership">
 	<?php
 	require __DIR__ . '/./Partials/header.php';
-	$is_pro     = is_plugin_active( 'user-registration-pro/user-registration.php' );
 	$return_url = admin_url( 'admin.php?page=user-registration-membership' );
 	$is_editing = ! empty( $_GET['post_id'] );
 
@@ -203,7 +202,7 @@
 											</label>
 											<!--											subscription type-->
 											<label
-												class="ur-membership-types <?php echo ! $is_pro ? 'upgradable-type' : '' ?>"
+												class="ur-membership-types <?php echo ! UR_PRO_ACTIVE ? 'upgradable-type' : '' ?>"
 												for="ur-membership-subscription-type">
 												<div class="ur-membership-type-title ur-d-flex ur-align-items-center">
 													<input
@@ -214,7 +213,7 @@
 														name="ur_membership_type"
 														class="ur_membership_paid_type"
 														<?php echo isset( $membership_details['type'] ) && $membership_details['type'] == 'subscription' ? 'checked' : ''; ?>
-														<?php echo ! $is_pro ? 'disabled' : '' ?>
+														<?php echo ! UR_PRO_ACTIVE ? 'disabled' : '' ?>
 													>
 													<label class="ur-p-2" for="ur-membership-subscription-type">
 														<b
@@ -536,7 +535,7 @@
 												<!--											Pro rata type-->
 
 												<label
-													class="ur-membership-upgrade-types <?php echo ! $is_pro ? 'upgradable-type' : '' ?>  <?php echo isset( $membership_details['type'] ) && $membership_details['type'] == 'free' ? 'ur-d-none' : ''; ?>"
+													class="ur-membership-upgrade-types <?php echo ! UR_PRO_ACTIVE ? 'upgradable-type' : '' ?>  <?php echo isset( $membership_details['type'] ) && $membership_details['type'] == 'free' ? 'ur-d-none' : ''; ?>"
 													for="ur-membership-upgrade-type-pro-rata">
 													<div
 														class="ur-membership-type-title ur-d-flex ur-align-items-center">
@@ -548,7 +547,7 @@
 															name="ur_membership_upgrade_type"
 															style="margin: 0"
 															<?php echo ( ( isset( $membership_details['upgrade_settings']['upgrade_type'] ) && $membership_details['upgrade_settings']['upgrade_type'] == 'pro-rata' ) ) ? 'checked' : ""; ?>
-															<?php echo ! $is_pro ? 'disabled' : '' ?>
+															<?php echo ! UR_PRO_ACTIVE ? 'disabled' : '' ?>
 															required>
 														<label class="ur-p-2" for="ur-membership-upgrade-type-pro-rata">
 															<b

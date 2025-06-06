@@ -152,6 +152,7 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 				"
 				SELECT * from $this->table
 				WHERE subscription_id = %d
+				ORDER BY ID DESC LIMIT 1
 		",
 				$subscription_id
 			),

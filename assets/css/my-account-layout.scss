@@ -660,12 +660,13 @@
 					display: flex;
 					font-size: medium;
 					justify-content: space-between;
+
 					.notice-1 {
+						width: auto;
 						display: flex;
-						align-items: center;
 						gap: 5px;
 						background: #eeebe5;
-						border-left: 3px solid #f7b10f;
+						border-left: 5px solid #f7b10f;
 						font-style: italic;
 						border-radius: 5px;
 						padding: 4px;

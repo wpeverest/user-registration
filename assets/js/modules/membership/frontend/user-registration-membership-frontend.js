@@ -731,6 +731,7 @@
 					});
 			},
 			update_order_status: function (result, response, prepare_members_data, form_response) {
+
 				ur_membership_ajax_utils.send_data(
 					{
 						_wpnonce: urmf_data._confirm_payment_nonce,
@@ -745,9 +746,9 @@
 						success: function (response) {
 							if (response.success) {
 								if (response.data.is_upgrading) {
+
 									ur_membership_ajax_utils.show_default_response(window.location.href, {
 										'username': prepare_members_data.username,
-										'transaction_id': result.paymentIntent.id,
 										'is_upgraded': true,
 										'message': response.data.message !== undefined ? 'Membership upgrade successfully.' : response.data.message
 									});
@@ -766,6 +767,7 @@
 							}
 						},
 						failure: function (xhr, statusText) {
+
 							ur_membership_frontend_utils.show_failure_message(
 								urmf_data.labels.i18n_error +
 								'(' +
@@ -792,6 +794,9 @@
 					.then(stripe_settings.handleCustomerActionRequired)
 					.then(stripe_settings.handleOnComplete)
 					.catch(function (message, error) {
+						console.log(error)
+						console.log(message);
+
 						stripe_settings.update_order_status({error: {}}, response, data.prepare_members_data, data.form_response);
 					});
 			},
@@ -857,6 +862,7 @@
 										reject(response, message);
 									}
 								}
+
 								resolve(
 									$.extend({}, data, {
 										subscription: response.data.subscription,
@@ -946,16 +952,24 @@
 			 * @param {object} data  Contains stripe, card, formid, paymentItems, form_selector, customerId, paymentMethodId and subscription.
 			 */
 			handleOnComplete: function (data) {
+				var is_upgrading = data.response_data.data.is_upgrading !== undefined ? data.response_data.data.is_upgrading : false;
+
+				if (is_upgrading) {
+					stripe_settings.update_order_status(data.subscription, data.response_data, data.prepare_members_data, data.form_response);
+				}
 				if (
 					data.subscription &&
 					(data.subscription.status === "active" ||
-						data.subscription.status === "trialing")
+						data.subscription.status === "trialing") &&
+					!is_upgrading
 				) {
+					console.log('not here')
 					ur_membership_frontend_utils.show_form_success_message(data.form_response, {
 						'username': data.prepare_members_data.username,
 						'transaction_id': data.subscription.id
 					});
 				}
+
 			}
 		};
 		var register_events = {
@@ -1168,7 +1182,7 @@
 						title: urmf_data.labels.i18n_cancel_membership_text,
 						text: urmf_data.labels.i18n_cancel_membership_subtitle,
 						customClass:
-							"user-registration-swal2-modal user-registration-swal2-modal--center",
+							"user-registration-upgrade-membership-swal2-container",
 						showConfirmButton: true,
 						showCancelButton: true,
 					}).then(function (result) {
@@ -1308,7 +1322,7 @@
 					});
 				}
 
-				$('.view-bank-data').on('click', function() {
+				$('.view-bank-data').on('click', function () {
 					Swal.fire({
 						title: urmf_data.labels.i18n_bank_details_title,
 						html: $('.upgrade-info').html(),

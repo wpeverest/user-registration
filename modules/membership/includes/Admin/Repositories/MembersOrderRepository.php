@@ -52,6 +52,7 @@ class MembersOrderRepository extends BaseRepository implements MembersOrderInter
 			);
 		} else {
 			// Delete only the latest order for the member
+
 			$deleted = $this->wpdb()->query(
 				$this->wpdb()->prepare(
 					"DELETE FROM $this->table

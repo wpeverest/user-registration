@@ -65,10 +65,13 @@ class PaymentService {
 		$payment_data = $this->get_payment_data( $response_data );
 
 		if ( isset( $payment_data['upgrade'] ) && $payment_data["upgrade"] ) {
-			$subscription_service       = new SubscriptionService();
-			$subscription_repository    = new SubscriptionRepository();
-			$previous_subscription_data = $response_data['subscription_data'];
-			update_user_meta( $response_data['member_id'], 'urm_previous_subscription_data', json_encode( $previous_subscription_data ) );
+			$subscription_service    = new SubscriptionService();
+			$subscription_repository = new SubscriptionRepository();
+
+			if ( "free" !== $this->payment_method ) {
+				$previous_subscription_data = $response_data['subscription_data'];
+				update_user_meta( $response_data['member_id'], 'urm_previous_subscription_data', json_encode( $previous_subscription_data ) );
+			}
 			unset( $response_data['subscription_data'] );
 			$subscription_data = $subscription_service->prepare_upgrade_subscription_data( $response_data['membership'], $response_data['member_id'], $response_data );
 
@@ -78,6 +81,7 @@ class PaymentService {
 				$subscription_repository->update( $response_data['subscription_id'], $subscription_data );
 			}
 		}
+
 		switch ( $this->payment_method ) {
 			case 'stripe':
 				return $this->build_stripe_response( $payment_data, $response_data );

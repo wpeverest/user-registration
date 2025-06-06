@@ -207,6 +207,9 @@ class OrderService {
 					$subscription_data           = $subscription_service->prepare_upgrade_subscription_data( $next_subscription_data['membership'], $next_subscription_data['member_id'], $next_subscription_data );
 					$subscription_data['status'] = 'active';
 				}
+				if ( "on" === $approve_order['trial_status'] ) {
+					$subscription_data['status'] = 'trial';
+				}
 				$subscription_activated = $this->subscription_repository->update( $subscription_id, $subscription_data );
 
 				if ( $subscription_activated ) {

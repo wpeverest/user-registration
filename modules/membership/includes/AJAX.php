@@ -304,7 +304,7 @@ class AJAX {
 			}
 
 			$meta_data = json_decode( $data["post_meta_data"]['ur_membership']["meta_value"], true );
-			if ( ! empty( $meta_data['upgrade_settings'] ) &&  ! empty( $old_membership_data['upgrade_settings'] )  && $meta_data['upgrade_settings']['upgrade_path'] !== $old_membership_data['upgrade_settings']['upgrade_path'] ) {
+			if ( ! empty( $meta_data['upgrade_settings'] ) && ! empty( $old_membership_data['upgrade_settings'] ) && $meta_data['upgrade_settings']['upgrade_path'] !== $old_membership_data['upgrade_settings']['upgrade_path'] ) {
 				$transient_key          = 'urm_upgradable_memberships_for_' . $updated_ID;
 				$upgradable_memberships = $membership->get_upgradable_membership( $updated_ID );
 				set_transient( $transient_key, $upgradable_memberships, 5 * MINUTE_IN_SECONDS );
@@ -315,7 +315,7 @@ class AJAX {
 				//check if any significant value has been changed  , trial not included since trial value change does not affect the type of product and price in stripe, instead handled during subscription
 				$should_create_new_product = ( $old_membership_data['amount'] !== $meta_data['amount'] || ( isset( $old_membership_data["subscription"] ) && $old_membership_data["subscription"]["value"] !== $meta_data["subscription"]["value"] ) || ( isset( $old_membership_data["subscription"] ) && $old_membership_data["subscription"]["duration"] !== $meta_data["subscription"]["duration"] ) );
 
-				$meta_data = isset( $data["post_meta_data"]["meta_value"] ) ? json_decode( $data["post_meta_data"]["meta_value"], true ) : array();
+				$meta_data = isset( $data["post_meta_data"]["ur_membership"]["meta_value"] ) ? json_decode( $data["post_meta_data"]["ur_membership"]["meta_value"], true ) : array();
 
 				if ( $should_create_new_product || empty( $meta_data["payment_gateways"]["stripe"]["product_id"] ) ) {
 					$stripe_service           = new StripeService();
@@ -325,8 +325,8 @@ class AJAX {
 					if ( ! empty( $stripe_price_and_product ) ) {
 						$meta_data["payment_gateways"]["stripe"]["product_id"] = $stripe_price_and_product->product;
 						$meta_data["payment_gateways"]["stripe"]["price_id"]   = $stripe_price_and_product->id;
-						if ( ! empty( $data['post_meta_data']['meta_key'] ) ) {
-							update_post_meta( $updated_ID, $data['post_meta_data']['meta_key'], wp_json_encode( $meta_data ) );
+						if ( ! empty( $data['post_meta_data']["ur_membership"]['meta_key'] ) ) {
+							update_post_meta( $updated_ID, $data['post_meta_data']["ur_membership"]['meta_key'], wp_json_encode( $meta_data ) );
 						}
 					} else {
 						wp_send_json_error(
@@ -656,6 +656,9 @@ class AJAX {
 				$response
 			);
 		}
+		if ( $is_upgrading ) {
+			$stripe_service->revert_subscription( $member_id );
+		}
 		wp_send_json_error(
 			array(
 				'message' => isset( $update_stripe_order["message"] ) ? $update_stripe_order["message"] : __( "Something went wrong when updating users payment status" )
@@ -666,13 +669,13 @@ class AJAX {
 	}
 
 	public static function create_stripe_subscription() {
-		ur_membership_verify_nonce( 'ur_membership_confirm_payment' );
+		ur_membership_verify_nonce( 'urm_confirm_payment' );
 		$customer_id       = isset( $_POST['customer_id'] ) ? $_POST['customer_id'] : '';
 		$payment_method_id = isset( $_POST['payment_method_id'] ) ? sanitize_text_field( $_POST['payment_method_id'] ) : '';
 		$member_id         = absint( wp_unslash( $_POST['member_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
-
-		$is_user_created = get_user_meta( $member_id, 'urm_user_just_created' );
-		if ( ! $is_user_created ) {
+		$is_upgrading      = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
+		$is_user_created   = get_user_meta( $member_id, 'urm_user_just_created' );
+		if ( ! $is_user_created && ! $is_upgrading ) {
 			wp_send_json_error(
 				array(
 					'message' => __( 'Invalid Request.', 'user-registration' ),
@@ -688,7 +691,7 @@ class AJAX {
 		}
 		$stripe_service      = new StripeService();
 		$form_response       = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
-		$stripe_subscription = $stripe_service->create_subscription( $customer_id, $payment_method_id, $member_id );
+		$stripe_subscription = $stripe_service->create_subscription( $customer_id, $payment_method_id, $member_id, $is_upgrading );
 
 		if ( $stripe_subscription['status'] ) {
 			wp_send_json_success( $stripe_subscription );
@@ -947,6 +950,11 @@ class AJAX {
 		);
 	}
 
+	/**
+	 * Upgrade membership ajax request
+	 *
+	 * @return void
+	 */
 	public static function upgrade_membership() {
 
 		ur_membership_verify_nonce( 'urm_upgrade_membership' );
@@ -984,12 +992,13 @@ class AJAX {
 		$response                    = $upgrade_membership_response['response'];
 
 		if ( $response['status'] ) {
-			update_user_meta( $upgrade_membership_response['extra']['member_id'], 'urm_user_just_created', true );
-			update_user_meta( $upgrade_membership_response['extra']['member_id'], 'urm_is_upgrading', true );
-			update_user_meta( $upgrade_membership_response['extra']['member_id'], 'urm_is_upgrading_to', $data['selected_membership_id'] );
-
 			$selected_pg = $data['selected_pg'];
-			$message     = "free" === $selected_pg ? __( "Membership upgraded successfully.", "user-registration-membership" ) : __( "New Order created, initializing payment...", "user-registration-membership" );
+
+			if ( $selected_pg !== 'free' ) {
+				update_user_meta( $upgrade_membership_response['extra']['member_id'], 'urm_is_upgrading', true );
+				update_user_meta( $upgrade_membership_response['extra']['member_id'], 'urm_is_upgrading_to', $data['selected_membership_id'] );
+			}
+			$message = "free" === $selected_pg ? __( "Membership upgraded successfully.", "user-registration-membership" ) : __( "New Order created, initializing payment...", "user-registration-membership" );
 			wp_send_json_success(
 				array(
 					'is_upgrading'             => true,

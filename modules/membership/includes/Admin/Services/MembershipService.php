@@ -268,7 +268,7 @@ class MembershipService {
 			'status' => true,
 		);
 
-		if ( isset( $data['post_meta_data']['type'] ) && "subscription" === $data['post_meta_data']['type'] && ! ( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) ) {
+		if ( isset( $data['post_meta_data']['type'] ) && "subscription" === $data['post_meta_data']['type'] && ! ( UR_PRO_ACTIVE ) ) {
 			$result['status']  = false;
 			$result['message'] = esc_html__( "Subscription type is a paid feature.", "user-registration" );
 
