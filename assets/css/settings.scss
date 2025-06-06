@@ -60,7 +60,7 @@ body {
 	.wrap {
 		margin: 0;
 		padding: $spacing_24px;
-		background: #EFF2F6;
+		background: #FAFAFA;
 
 		.user-registration-header {
 			margin: 0;
@@ -713,11 +713,11 @@ body {
 	flex-direction: column;
 	padding: $spacing_24px;
 	padding-top: 0;
-	background: #FAFAFC;
+	background: #FAFAFA;
 	margin-top: 0 !important;
 
 	.user-registration-options-header {
-		background: #fafafc;
+		background: #fafafa;
 		padding-top: $spacing_24px;
 
 		&--top {
@@ -865,7 +865,7 @@ body {
 
 		.user-registration-integrations {
 			border-radius: $border_radius_3;
-			background: #fafafc;
+			background: #fafafa;
 			border: $border_width solid #ced4da;
 			padding: $spacing_10px $spacing_20px;
 			display: flex;
@@ -1712,9 +1712,14 @@ body {
 							text-align: center;
 						}
 
+						.user_registration_send_email_test {
+							color: #475bb2;
+							border-color: #475bb2;
+						}
+
 						#select-smart-tags {
-							color: #2271B1;
-							border-color: #2271B1;
+							color: #475bb2;
+							border-color: #475bb2;
 							height: 30px;
 							text-align: center;
 							line-height: 18px;
@@ -1786,7 +1791,7 @@ body {
 					border: $border_width solid $grey-50;
 					border-radius: $border_radius_7;
 					margin-bottom: $spacing_28px;
-					background: #fafafc;
+					background: #ffffff;
 					border: $border_width solid $grey-50;
 					box-shadow: none;
 
@@ -1848,6 +1853,12 @@ body {
 							}
 						}
 					}
+				}
+			}
+
+			#selected-export-user-form {
+				&::hover {
+					background-color: #475BB2;
 				}
 			}
 		}

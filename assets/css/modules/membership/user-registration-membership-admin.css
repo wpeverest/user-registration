@@ -209,7 +209,7 @@
   color: #475BB2;
 }
 .user-registration #user-registration-list-table-page {
-  margin: 60px auto;
+  margin: 32px auto;
   padding: 28px 32px;
   box-sizing: border-box;
 }
@@ -935,7 +935,7 @@
 
 .ur-membership-tab-contents-wrapper {
   max-width: 1280px;
-  margin: 60px auto;
+  margin: 32px auto;
   display: block;
   padding: 0;
 }
@@ -1146,6 +1146,13 @@
   line-height: 1;
 }
 
+.user-registration-membership_page_user-registration-members {
+  background-color: #fafafa;
+}
+
+.user-registration-membership_page_user-registration-membership {
+  background-color: #fafafa;
+}
 .user-registration-membership_page_user-registration-membership table.membership_groups th#title {
   width: 200px;
 }
@@ -1165,4 +1172,14 @@
 
 .tooltipster-base.tooltipster-bottom {
   margin-top: -30px;
+}
+
+.wp-list-table.memberships tfoot tr th, .wp-list-table.memberships tfoot tr td {
+  border-top: none;
+}
+.wp-list-table.users td {
+  vertical-align: middle;
+}
+.wp-list-table.users td p {
+  margin: 7px 0 5px;
 }

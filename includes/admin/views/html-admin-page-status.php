@@ -44,6 +44,7 @@ $page_tabs = apply_filters( 'user_registration_admin_status_tabs', $page_tabs );
 		</div>
 	</div>
 </div>
+<hr class="wp-header-end">
 
 	<?php
 	switch ( $current_tab ) {

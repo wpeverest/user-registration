@@ -97,12 +97,11 @@ const App = () => {
 				>
 					<HStack
 						align="center"
-						mb={5}
 						bg="white"
-						boxShadow="sm"
 						direction={{ base: "column", md: "row" }}
 						borderBottom="1px solid #CDD0D8"
 						padding="20px 10px"
+						boxShadow="none"
 					>
 						<HStack gap="24px">
 							<HStack gap="16px">

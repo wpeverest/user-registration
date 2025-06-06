@@ -86,17 +86,17 @@ const Header = () => {
 										fontSize="sm"
 										fontWeight="semibold"
 										lineHeight="150%"
-										color="#64748B"
+										color="#383838"
 										_hover={{
-											color: "primary.500"
+											color: "#475bb2"
 										}}
 										_focus={{
 											boxShadow: "none"
 										}}
 										_activeLink={{
-											color: "primary.500",
+											color: "#475bb2",
 											borderBottom: "3px solid",
-											borderColor: "primary.500",
+											borderColor: "#475bb2",
 											marginBottom: "-2px"
 										}}
 										display="inline-flex"
@@ -142,7 +142,7 @@ const Header = () => {
 							</Center>
 							{!isPro && (
 								<Link
-									color="#2563EB"
+									color="475bb2"
 									fontSize="12px"
 									height="18px"
 									w="85px"

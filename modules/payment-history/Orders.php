@@ -102,7 +102,7 @@ class Orders {
 			wp_enqueue_script( 'ur-snackbar' );
 		}
 		wp_enqueue_script( 'sweetalert2' );
-		wp_register_script( 'payment-history', UR()->plugin_url() . '/assets/js/modules/membership/admin/payment-history' . $suffix . '.js', array( 'jquery' ), '1.0.0', true );
+		wp_register_script( 'payment-history', UR()->plugin_url() . '/assets/js/modules/membership/admin/payment-history' . $suffix . '.js', array( 'jquery', 'ur-enhanced-select' ), '1.0.0', true );
 		wp_enqueue_script( 'payment-history' );
 
 		$this->localize_scripts();
@@ -126,6 +126,7 @@ class Orders {
 		wp_enqueue_style( 'payment-history-css' );
 		wp_enqueue_style( 'sweetalert2' );
 		wp_enqueue_style( 'ur-snackbar' );
+		wp_enqueue_style( 'select2', UR()->plugin_url() . '/assets/css/select2/select2.css', array(), UR_VERSION );
 	}
 
 	/**
