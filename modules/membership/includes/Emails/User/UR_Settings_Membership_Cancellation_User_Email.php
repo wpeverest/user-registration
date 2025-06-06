@@ -1,6 +1,7 @@
 <?php
 
 namespace WPEverest\URMembership\Emails\User;
+
 /**
  * Membership_Cancellation_Email.php
  *
@@ -45,7 +46,7 @@ class UR_Settings_Membership_Cancellation_User_Email {
 		$this->id          = 'membership_cancellation_user_email';
 		$this->title       = __( 'Membership Cancellation Confirmation', 'user-registration' );
 		$this->description = __( 'Confirms membership cancellation to the user, providing any relevant account status or next steps.', 'user-registration' );
-		$this->receiver    = __( 'User', 'user-registration-profile-completeness' );
+		$this->receiver    = 'User';
 	}
 
 	/**
@@ -53,7 +54,6 @@ class UR_Settings_Membership_Cancellation_User_Email {
 	 *
 	 * @return array
 	 * @since 1.0.0
-	 *
 	 */
 	public function get_settings() {
 
@@ -109,20 +109,21 @@ class UR_Settings_Membership_Cancellation_User_Email {
 
 	/**
 	 * Notification sent to admin when member cancel their membership.
-	 *
 	 */
 	public function user_registration_get_membership_cancellation_user_email() {
 		$message = apply_filters(
 			'user_registration_membership_cancellation_user_email_message',
 			sprintf(
-				__( '
+				__(
+					'
 					Hi {{username}}, <br>
 					We\'re sorry to see you go. Your request to cancel the {{membership_plan_name}} membership has been successfully processed. <br>
 					If you change your mind in the future, we\'ll be here to welcome you back.<br>
 					Thank you for being a part of {{blog_info}}.<br><br>
 
 					Goodbye and take care!',
-					'user-registration' )
+					'user-registration'
+				)
 			)
 		);
 

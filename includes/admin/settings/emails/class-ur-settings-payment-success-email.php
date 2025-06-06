@@ -53,7 +53,7 @@ if ( ! class_exists( 'UR_Settings_Payment_Success_Email', false ) ) :
 			$this->id          = 'payment_success_email';
 			$this->title       = esc_html__( 'Payment Success', 'user-registration' );
 			$this->description = esc_html__( 'Confirms successful payment for the user\'s registration', 'user-registration' );
-			$this->receiver    = __( 'User', 'user-registration' );
+			$this->receiver    = 'User';
 		}
 
 		/**

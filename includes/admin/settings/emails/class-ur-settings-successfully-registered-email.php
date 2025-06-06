@@ -51,7 +51,7 @@ if ( ! class_exists( 'UR_Settings_Successfully_Registered_Email', false ) ) :
 			$this->id          = 'successfully_registered_email';
 			$this->title       = __( 'Registration Success', 'user-registration' );
 			$this->description = __( 'Confirms successful registration to the user.', 'user-registration' );
-			$this->receiver    = __( 'User', 'user-registration' );
+			$this->receiver    = 'User';
 		}
 
 		/**

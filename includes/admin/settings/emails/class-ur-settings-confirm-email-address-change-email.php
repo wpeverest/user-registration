@@ -51,7 +51,7 @@ if ( ! class_exists( 'UR_Settings_Confirm_Email_Address_Change_Email', false ) )
 			$this->id          = 'confirm_email_address_change_email';
 			$this->title       = __( 'Email Address Change Confirmation', 'user-registration' );
 			$this->description = __( 'Asks the user to verify a newly requested email address change with a confirmation link.', 'user-registration' );
-			$this->receiver    = __( 'User', 'user-registration' );
+			$this->receiver    = 'User';
 		}
 
 		/**

@@ -51,7 +51,7 @@ if ( ! class_exists( 'UR_Settings_Email_Confirmation', false ) ) :
 			$this->id          = 'email_confirmation';
 			$this->title       = __( 'Email Address Confirmation', 'user-registration' );
 			$this->description = __( 'Requests the user to confirm their email address by clicking a verification link.', 'user-registration' );
-			$this->receiver    = __( 'User', 'user-registration' );
+			$this->receiver    = 'User';
 		}
 
 		/**

@@ -1,6 +1,7 @@
 <?php
 
 namespace WPEverest\URMembership\Emails\Admin;
+
 /**
  * Membership_Cancellation_Email.php
  *
@@ -45,7 +46,7 @@ class UR_Settings_Membership_Cancellation_Admin_Email {
 		$this->id          = 'membership_cancellation_admin_email';
 		$this->title       = __( 'Membership Cancellation Notification', 'user-registration' );
 		$this->description = __( 'Notifies membership cancellation to the admin.', 'user-registration' );
-		$this->receiver    = __( 'Admin', 'user-registration-profile-completeness' );
+		$this->receiver    = 'Admin';
 	}
 
 	/**
@@ -53,7 +54,6 @@ class UR_Settings_Membership_Cancellation_Admin_Email {
 	 *
 	 * @return array
 	 * @since 1.0.0
-	 *
 	 */
 	public function get_settings() {
 
@@ -109,18 +109,19 @@ class UR_Settings_Membership_Cancellation_Admin_Email {
 
 	/**
 	 * Notification sent to admin when member cancel their membership.
-	 *
 	 */
 	public function user_registration_get_membership_cancellation_admin_email() {
 		$message = apply_filters(
 			'user_registration_membership_cancellation_admin_email_message',
 			sprintf(
-				__( '
+				__(
+					'
 					Hi Admin, <br>
 					The user {{username}} has cancelled their membership on {{blog_info}}. <br>
 
 					Thank you!',
-					'user-registration' )
+					'user-registration'
+				)
 			)
 		);
 

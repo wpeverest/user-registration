@@ -1,6 +1,7 @@
 <?php
 
 namespace WPEverest\URMembership\Emails\User;
+
 /**
  * Membership_Renewal_Reminder_Email.php
  *
@@ -45,7 +46,7 @@ class UR_Settings_Membership_Renewal_Reminder_User_Email {
 		$this->id          = 'membership_renewal_reminder_user_email';
 		$this->title       = __( 'Membership Renewal Reminder', 'user-registration' );
 		$this->description = __( 'An email sent to notify users about an upcoming subscription renewal', 'user-registration' );
-		$this->receiver    = __( 'User', 'user-registration-profile-completeness' );
+		$this->receiver    = 'User';
 	}
 
 	/**
@@ -53,7 +54,6 @@ class UR_Settings_Membership_Renewal_Reminder_User_Email {
 	 *
 	 * @return array
 	 * @since 1.0.0
-	 *
 	 */
 	public function get_settings() {
 
@@ -90,7 +90,7 @@ class UR_Settings_Membership_Renewal_Reminder_User_Email {
 								'default'  => 7,
 								'css'      => 'min-width: 350px;',
 								'desc_tip' => true,
-							)
+							),
 						),
 					),
 					'renewal_email'    => array(
@@ -130,7 +130,7 @@ class UR_Settings_Membership_Renewal_Reminder_User_Email {
 								'desc_tip' => true,
 							),
 						),
-					)
+					),
 				),
 			)
 		);
@@ -140,13 +140,13 @@ class UR_Settings_Membership_Renewal_Reminder_User_Email {
 
 	/**
 	 * Notification sent to admin when member cancel their membership.
-	 *
 	 */
 	public function user_registration_get_membership_renewal_reminder_user_email() {
 		$message = apply_filters(
 			'user_registration_membership_renewal_reminder_user_email_message',
 			sprintf(
-				__( '
+				__(
+					'
 					Hi {{username}}, <br><br>
 					This is a friendly reminder that your {{membership_plan_name}} membership on {{blog_info}} is due for renewal soon. <br>
 					Don\'t worry – your membership will be automatically renewed, and the payment will be processed shortly. <br>
@@ -154,7 +154,8 @@ class UR_Settings_Membership_Renewal_Reminder_User_Email {
 					Thank you for being a valued member!<br><br>
 					Best regards,<br>
 					{{blog_info}}',
-					'user-registration' )
+					'user-registration'
+				)
 			)
 		);
 
