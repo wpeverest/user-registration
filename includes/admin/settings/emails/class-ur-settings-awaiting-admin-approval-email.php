@@ -51,7 +51,7 @@ if ( ! class_exists( 'UR_Settings_Awaiting_Admin_Approval_Email', false ) ) :
 			$this->id          = 'awaiting_admin_approval_email';
 			$this->title       = __( 'Awaiting Admin Approval', 'user-registration' );
 			$this->description = __( 'Lets the user know their registration is pending and they must wait for admin approval.', 'user-registration' );
-			$this->receiver    = __( 'User', 'user-registration' );
+			$this->receiver    = 'User';
 		}
 
 		/**
