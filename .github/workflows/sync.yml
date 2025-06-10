@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - master
+      - UR-2519-fix-form-design-issue
     workflow_dispatch:
 jobs:
   sync:
