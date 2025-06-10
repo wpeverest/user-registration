@@ -52,8 +52,7 @@ jQuery(function ($) {
 		var icon =
 			'<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>';
 
-		if ($(this).hasClass("ur-one-time-draggable-disabled") || $(this).hasClass("ur-membership-payment-field-disabled")) {
-			var title =
+		if ($(this).hasClass("ur-one-time-draggable-disabled") || $(this).hasClass("ur-membership-payment-field-disabled") || $(this).hasClass("ur-membership-field-disabled")) {			var title =
 					icon +
 					'<span class="user-registration-swal2-modal__title">' +
 					user_registration_form_builder_data.form_one_time_draggable_fields_locked_title.replace(
@@ -64,6 +63,9 @@ jQuery(function ($) {
 			var message = '';
 			if($(this).hasClass("ur-membership-payment-field-disabled")){
 				message = user_registration_form_builder_data.form_membership_payment_fields_disabled_message;
+			}
+			else if($(this).hasClass("ur-membership-field-disabled")){
+				message = user_registration_form_builder_data.form_membership_field_disabled_message;				
 			}
 			else{
 				message = user_registration_form_builder_data.form_one_time_draggable_fields_locked_message.replace(
