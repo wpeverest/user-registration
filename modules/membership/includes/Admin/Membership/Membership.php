@@ -472,7 +472,6 @@ class Membership {
 	}
 
 	public function run_daily_delayed_membership_subscriptions(  ) {
-
 		$subscription_service = new SubscriptionService();
 		$subscription_service->run_daily_delayed_membership_subscriptions();
 	}

@@ -487,11 +487,13 @@ class SubscriptionService {
 	}
 
 	public function run_daily_delayed_membership_subscriptions() {
-		$all_delayed_orders = $this->orders_repository->get_all_delayed_orders( '2025-07-10 00:00:00' );
+		$all_delayed_orders = $this->orders_repository->get_all_delayed_orders( date( 'Y-m-d H:i:s' ) );
+		ur_get_logger()->notice( __( 'Scheduled Subscriptions job started for : ('.date( 'd F Y h:i:s' ).')', 'user-registration' ), array( 'source' => 'urm_membership_crons' ) );
 
 		if ( empty( $all_delayed_orders ) ) {
 			return;
 		}
+		$updated_subscription_for_users = array();
 		foreach ( $all_delayed_orders as $data ) {
 			$decoded_data = json_decode( $data['sub_data'], true );
 			if ( ! isset( $decoded_data['subscription_id'] ) ) {
@@ -500,12 +502,13 @@ class SubscriptionService {
 			$subscription_id = $decoded_data['subscription_id'];
 			$user            = get_userdata( $decoded_data['member_id'] );
 			if ( $user ) {
-				$subscription_data           = $this->prepare_upgrade_subscription_data( $decoded_data['membership'], $decoded_data['member_id'], $decoded_data );
-				$subscription_data['status'] = 'active';
+				$updated_subscription_for_users[] = $user->user_login;
+				$subscription_data                = $this->prepare_upgrade_subscription_data( $decoded_data['membership'], $decoded_data['member_id'], $decoded_data );
+				$subscription_data['status']      = 'active';
 				$this->subscription_repository->update( $subscription_id, $subscription_data );
 			}
-
 		}
+		ur_get_logger()->notice( __( 'Subscription updated for ' . implode( ',', $updated_subscription_for_users ), 'user-registration' ), array( 'source' => 'urm_membership_crons' ) );
 
 	}
 
