@@ -4155,6 +4155,9 @@ a.button.ur-smart-tags-list-button {
 
 					.user-registration-card {
 						margin: $spacing_4px 0 $spacing_16px !important;
+						border-radius: $border_radius_4;
+						border: 1px solid #EDF2F7;
+						background-color: #ffffff;
 
 						&:last-child {
 							margin-bottom: $spacing_12px !important;
@@ -4217,9 +4220,17 @@ a.button.ur-smart-tags-list-button {
 	.wp-heading-inline {
 		font-weight: $semi_bold;
 		padding: 0;
-		margin: $spacing_20px 0 0;
 		font-size: 24px;
 		line-height: 120%;
+
+		&:not(.urm-analytics-heading)
+		{
+			margin: $spacing_20px 0 0 0;
+		}
+		.urm-analytics-heading
+		{
+			margin: $spacing_10px 0 0 0;
+		}
 	}
 
 	.user-registration-settings-container {
@@ -4778,9 +4789,6 @@ body.user-registration {
 		}
 
 		&-menu {
-			h2 {
-				padding: $spacing_24px 0px;
-			}
 
 			&__items {
 				display: flex;
@@ -4932,8 +4940,10 @@ body.user-registration {
 	max-width: 1280px;
 	margin: 25px auto;
 	padding: $spacing_24px;
-	border-radius: $border_radius_7;
+	border-radius: $border_radius_4;
 	background: $grey-0;
+	border: 1px solid #EDF2F7;
+
 
 	.user-registration-list-table-header {
 		display: flex;
@@ -5438,6 +5448,9 @@ body.user-registration {
 			.user-registration-card {
 				border: 0;
 				padding: 28px;
+				border-radius: $border_radius_4;
+				border: 1px solid #EDF2F7;
+				background-color: #ffffff;
 
 				#ur-coupon-form-container {
 					padding: 0 !important;
@@ -5692,10 +5705,10 @@ body.user-registration {
 	}
 
 	#user-registration-list-table-page {
-		margin: 32px auto;
+		margin: 32px 32px !important;
 		padding: 28px 32px;
 		box-sizing: border-box;
-		max-width: 1280px !important;
+		max-width: 100%;
 
 		.user-registration-list-table-heading {
 			display: flex;

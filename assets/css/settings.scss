@@ -72,6 +72,8 @@ body {
 	display: flex;
     gap: $spacing_24px;
 	overflow-x: hidden;
+	border: 1px solid #EDF2F7;
+	border-radius: $border_radius_4;
 
 	@media screen and (max-width: 1180px) {
 		flex-direction: column;
@@ -713,7 +715,7 @@ body {
 	flex-direction: column;
 	padding: $spacing_24px;
 	padding-top: 0;
-	background: #FAFAFA;
+	background: #FAFAFC;
 	margin-top: 0 !important;
 
 	.user-registration-options-header {
@@ -970,8 +972,9 @@ body {
 		.user-registration-card {
 			padding: $spacing_16px $spacing_20px $spacing_22px;
 			background: $grey-0;
-			border: $border_width solid #EBEBEB !important;
-			border-radius: $border_radius_7;
+			border: $border_width solid #EDF2F7 !important;
+			border-radius: $border_radius_4;
+			background-color: #ffffff;
 			margin-top: 0 !important;
 			margin-bottom: $spacing_28px;
 			max-width: 680px;

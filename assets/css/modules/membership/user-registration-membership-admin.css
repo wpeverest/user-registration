@@ -1,3 +1,18 @@
+/**
+ * Variables
+ */
+/**
+ * Grid breakpoints
+ *
+ * Define the minimum dimensions at which your layout will change,
+ * adapting to different screen sizes, for use in media queries.
+ **/
+/**
+ * Grid containers
+ *
+ * Define the maximum width of `.ur-container` for different screen sizes.
+ * scss-docs-start container-max-widths
+ **/
 #payment-detail-modal h2 {
   font-size: 1.6em;
   font-weight: 700;
@@ -569,6 +584,9 @@
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card {
   border: 0;
   padding: 28px;
+  border: 1px solid #EDF2F7;
+  border-radius: 4px;
+  background-color: #ffffff;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__header {
   padding: 0;
@@ -663,10 +681,10 @@
   padding: 0 !important;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card {
-  border-radius: 6px;
-  border: 1px solid #EDEFF7;
-  background: #F8F8FA;
   padding: 24px;
+  border: 1px solid #EDF2F7;
+  border-radius: 4px;
+  background-color: #ffffff;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container {
   padding: 0 !important;
@@ -821,7 +839,9 @@
   margin-top: 28px !important;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #payment-gateway-container .user-registration-card {
-  background: #ffffff;
+  border: 1px solid #EDF2F7;
+  border-radius: 4px;
+  background-color: #ffffff;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #payment-gateway-container .user-registration-card__header h3 {
   font-size: 20px;
@@ -941,8 +961,10 @@
 }
 
 #ur-membership-create-form .user-registration-card {
-  border: 0;
   padding: 28px;
+  border: 1px solid #EDF2F7;
+  border-radius: 4px;
+  background-color: #ffffff;
 }
 #ur-membership-create-form .user-registration-card #ur-membership-form-container {
   gap: 32px;
