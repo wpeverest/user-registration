@@ -41,15 +41,20 @@ class PaypalService {
 	 * @return array|string|string[]
 	 */
 	public function build_url( $data, $membership, $member_email, $subscription_id, $member_id ) {
+		$is_upgrading                 = ! empty( $data['upgrade'] ) ? $data['upgrade'] : false;
 		$paypal_options               = $data['payment_gateways']['paypal'];
 		$paypal_options['mode']       = get_option( 'user_registration_global_paypal_mode', $paypal_options['mode'] );
 		$paypal_options['email']      = get_option( 'user_registration_global_paypal_email_address', $paypal_options['email'] );
 		$paypal_options['cancel_url'] = get_option( 'user_registration_global_paypal_cancel_url', home_url() );
 		$paypal_options['return_url'] = get_option( 'user_registration_global_paypal_return_url', wp_login_url() );
 		$redirect                     = ( 'production' === $paypal_options['mode'] ) ? 'https://www.paypal.com/cgi-bin/webscr/?' : 'https://www.sandbox.paypal.com/cgi-bin/webscr/?';
-		$post                         = get_post( $membership );
-		$membership_amount            = number_format( $data['amount'] );
-		$discount_amount              = 0;
+		$membership_data              = $this->membership_repository->get_single_membership_by_ID( $membership );
+		$membership_metas             = wp_unslash( json_decode( $membership_data['meta_value'], true ) );
+		$membership_amount            = number_format( $membership_metas['amount'] );
+
+		$discount_amount = 0;
+
+
 		if ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
 			$coupon_details  = ur_get_coupon_details( $data['coupon'] );
 			$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $membership_amount * $coupon_details['coupon_discount'] / 100;
@@ -76,7 +81,7 @@ class PaypalService {
 			'business'      => sanitize_email( $paypal_options['email'] ),
 			'cancel_return' => $paypal_options['cancel_url'],
 			'notify_url'    => add_query_arg( 'ur-membership-listener', 'IPN', home_url( 'index.php' ) ),
-			'cbt'           => $post->post_title,
+			'cbt'           => $membership_data['post_title'],
 			'charset'       => get_bloginfo( 'charset' ),
 			'cmd'           => $transaction,
 			'currency_code' => get_option( 'user_registration_payment_currency', 'USD' ),
@@ -90,7 +95,7 @@ class PaypalService {
 			'no_note'       => '1',
 			'no_shipping'   => '1',
 			'shipping'      => '0',
-			'item_name'     => $post->post_title,
+			'item_name'     => $membership_data['post_title'],
 			'email'         => sanitize_email( $member_email ),
 		);
 
@@ -104,8 +109,10 @@ class PaypalService {
 				$paypal_args['p1'] = ! empty( $data ['trial_data'] ) ? $data ['trial_data']['value'] : 1;
 				$paypal_args['a1'] = '0';
 			}
-			if ( ! empty( $coupon_details ) ) {
-				$amount            = user_registration_sanitize_amount( $membership_amount ) - $discount_amount;
+			if ( ! empty( $coupon_details ) || ( $is_upgrading ) ) {
+				$membership_amount = ( $is_upgrading ) ? absint( $data['amount'] ) : $membership_amount;
+				$amount          = user_registration_sanitize_amount( $membership_amount ) - $discount_amount;
+
 				$paypal_args['t2'] = ! empty( $data ['subscription'] ) ? strtoupper( substr( $data['subscription']['duration'], 0, 1 ) ) : '';
 				$paypal_args['p2'] = ! empty( $data ['subscription']['value'] ) ? $data ['subscription']['value'] : 1;
 				$paypal_args['a2'] = floatval( $amount );
@@ -113,7 +120,7 @@ class PaypalService {
 		} else {
 			$paypal_args['amount'] = floatval( user_registration_sanitize_amount( $membership_amount ) - $discount_amount );
 		}
-
+		error_log( print_r( $paypal_args, true ) );
 		$redirect .= http_build_query( $paypal_args );
 
 		return str_replace( ' & amp;', ' & ', $redirect );
@@ -174,9 +181,10 @@ class PaypalService {
 		if ( $is_upgrading ) {
 			delete_user_meta( $member_id, 'urm_is_upgrading' );
 			delete_user_meta( $member_id, 'urm_is_upgrading_to' );
+			update_user_meta( $member_id, 'urm_is_user_upgraded', 1 );
 			ur_membership_redirect_now( ur_get_my_account_url() . '/ur-membership', array(
 				'is_upgraded' => 'true',
-				'message'      => __( 'Membership Upgraded successfully', 'user-registration' )
+				'message'     => __( 'Membership Upgraded successfully', 'user-registration' )
 			) );
 		}
 

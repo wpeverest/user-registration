@@ -48,8 +48,7 @@ class Membership {
 		add_action( 'admin_init', array( $this, 'actions' ) );
 		add_action( 'in_admin_header', array( __CLASS__, 'hide_unrelated_notices' ) );
 		add_filter( 'wp_editor_settings', array( $this, 'remove_media_buttons' ) );
-
-
+		add_action( 'urm_run_delayed_subscription', array( $this, 'run_daily_delayed_membership_subscriptions' ), 10, 1 );
 	}
 
 	/**
@@ -470,6 +469,12 @@ class Membership {
 			'i18n_paypal_client_secret_id_error'           => __( 'Settings for client_id and client_secret is incomplete.', 'user-registration' ),
 			'i18n_previous_save_action_ongoing'            => _x( 'Previous save action on going.', 'user registration admin', 'user-registration' ),
 		);
+	}
+
+	public function run_daily_delayed_membership_subscriptions(  ) {
+
+		$subscription_service = new SubscriptionService();
+		$subscription_service->run_daily_delayed_membership_subscriptions();
 	}
 
 }

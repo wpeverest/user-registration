@@ -21,6 +21,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 $is_upgraded     = ! empty( $_GET['is_upgraded'] ) ? absint( ur_string_to_bool( $_GET['is_upgraded'] ) ) : false;
 $message         = ! empty( $_GET['message'] ) ? esc_html( $_GET['message'] ) : '';
 $membership_info = ( isset( $_GET['info'] ) && ! empty( $_GET['info'] ) ) ? wp_kses_post_deep( $_GET['info'] ) : ( ! empty( $bank_data['bank_data'] ) ? wp_kses_post_deep( $bank_data['bank_data'] ) : '' );
+$is_delayed      = ! empty( $delayed_until );
+
 ?>
 
 <div class="user-registration-membership-content"

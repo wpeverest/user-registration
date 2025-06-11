@@ -117,6 +117,7 @@ class StripeService {
 		} else {
 			$amount = abs( $amount ) * 100;
 		}
+
 		if ( $amount < 1 ) {
 			if ( empty( $payment_data['upgrade'] ) ) {
 				wp_delete_user( absint( $member_id ) );
@@ -251,6 +252,7 @@ class StripeService {
 	}
 
 	public function create_subscription( $customer_id, $payment_method_id, $member_id, $is_upgrading ) {
+
 		$member_order                   = $this->members_orders_repository->get_member_orders( $member_id );
 		$membership                     = $this->membership_repository->get_single_membership_by_ID( $member_order['item_id'] );
 		$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
@@ -319,9 +321,42 @@ class StripeService {
 				$coupon_details = ur_get_coupon_details( $order_detail['coupon'] );
 				if ( ! empty( $coupon_details['stripe_coupon_id'] ) ) {
 					$subscription_details['coupon'] = $coupon_details['stripe_coupon_id'];
-
 				}
 			}
+
+			if ( $is_upgrading ) {
+
+				$previous_subscription = json_decode( get_user_meta( $member_id, 'urm_previous_subscription_data', true ), true );
+
+				if ( $previous_subscription ) {
+					$previous_membership       = $this->membership_repository->get_single_membership_by_ID( $previous_subscription['item_id'] );
+					$previous_membership_metas = wp_unslash( json_decode( $previous_membership['meta_value'], true ) );
+					$new_price                 = $membership_metas['amount'];
+					$current_price     = $previous_membership_metas['amount'];
+					$first_month_price = $new_price - $current_price;
+
+					if ( $new_price > $current_price ) {
+						$discount_amount = ( $new_price - $first_month_price );
+						$currency = get_option( 'user_registration_payment_currency', 'USD' );
+						if ( 'JPY' === $currency ) {
+							$amount = $discount_amount;
+						} else {
+							$amount = $discount_amount * 100;
+						}
+
+						$coupon = \Stripe\Coupon::create( array(
+							'amount_off' => $amount,
+							'currency'   => $currency,
+							'duration'   => 'once',
+							'name'       => 'UpgradeCoupon',
+						) );
+
+						$subscription_details['coupon'] = $coupon->id;
+
+					}
+				}
+			}
+
 			$subscription        = \Stripe\Subscription::create( $subscription_details );
 			$subscription_status = $subscription->status ?? '';
 
@@ -356,7 +391,8 @@ class StripeService {
 			$logger->notice( '-------------------------------------------- Stripe Subscription process ended for ' . $member_id . ' --------------------------------------------', array( 'source' => 'ur-membership-stripe' ) );
 
 			return $response;
-		} catch ( \Exception $e ) {
+		} catch
+		( \Exception $e ) {
 			if ( ! $is_upgrading ) {
 				wp_delete_user( absint( $member_id ) );
 				$this->members_orders_repository->delete_member_order( $member_id );
@@ -611,9 +647,9 @@ class StripeService {
 
 			$cancel_result = null;
 			if ( $cancel_subscription ) {
-				\Stripe\Subscription::update($subscription_id, [
+				\Stripe\Subscription::update( $subscription_id, [
 					'cancel_at_period_end' => $cancel_at_end_period,
-				]);
+				] );
 
 
 				if ( ! $cancel_at_end_period ) {

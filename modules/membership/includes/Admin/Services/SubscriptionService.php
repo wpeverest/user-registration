@@ -115,6 +115,7 @@ class SubscriptionService {
 		switch ( $order['payment_method'] ) {
 			case 'paypal';
 				$paypal_service = new PaypalService();
+
 				return $paypal_service->cancel_subscription( $order, $subscription );
 				break;
 			case 'stripe';
@@ -312,7 +313,7 @@ class SubscriptionService {
 		}
 
 
-		$orders_data = $order_service->prepare_orders_data( $members_data, $user->ID, $subscription ); // prepare data for orders table.
+		$orders_data = $order_service->prepare_orders_data( $members_data, $user->ID, $subscription, $upgrade_details ); // prepare data for orders table.
 
 		$order = $this->orders_repository->create( $orders_data );
 
@@ -376,13 +377,15 @@ class SubscriptionService {
 		switch ( $upgrade_type ) {
 			case 'free->free':
 			case 'paid->free':
+			case 'subscription->free':
 				$result['chargeable_amount'] = 0;
 				break;
 			case 'free->paid':
 				$result['chargeable_amount'] = $selected_membership_details['amount'];
 				break;
 			case 'free->subscription':
-				$result = $upgrade_membership_service->handle_free_to_subscription_membership_upgrade( $current_membership_details, $selected_membership_details, $subscription );
+				$result['chargeable_amount']           = $selected_membership_details['amount'];
+				$result['remaining_subscription_days'] = $selected_membership_details['subscription']['value'];
 				break;
 			case 'paid->paid':
 				$result = $upgrade_membership_service->handle_paid_to_paid_membership_upgrade( $current_membership_details, $selected_membership_details, $subscription );
@@ -406,7 +409,8 @@ class SubscriptionService {
 			'is_trial'                    => ! empty( $result['is_trial'] ) ? $result['is_trial'] : $is_trial,
 			'total_used_trial_days'       => ! empty( $result['total_used_trial_days'] ) ? absint( $total_used_trial_days ) : $total_used_trial_days,
 			'chargeable_amount'           => ! empty( $result['chargeable_amount'] ) ? $result['chargeable_amount'] : 0,
-			'remaining_subscription_days' => ! empty( $result['remaining_subscription_days'] ) ? $result['remaining_subscription_days'] : 0
+			'remaining_subscription_days' => ! empty( $result['remaining_subscription_days'] ) ? $result['remaining_subscription_days'] : 0,
+			'delayed_until'               => ! empty( $result['delayed_until'] ) ? $result['delayed_until'] : ''
 		);
 
 	}
@@ -482,5 +486,27 @@ class SubscriptionService {
 
 	}
 
+	public function run_daily_delayed_membership_subscriptions() {
+		$all_delayed_orders = $this->orders_repository->get_all_delayed_orders( '2025-07-10 00:00:00' );
+
+		if ( empty( $all_delayed_orders ) ) {
+			return;
+		}
+		foreach ( $all_delayed_orders as $data ) {
+			$decoded_data = json_decode( $data['sub_data'], true );
+			if ( ! isset( $decoded_data['subscription_id'] ) ) {
+				continue;
+			}
+			$subscription_id = $decoded_data['subscription_id'];
+			$user            = get_userdata( $decoded_data['member_id'] );
+			if ( $user ) {
+				$subscription_data           = $this->prepare_upgrade_subscription_data( $decoded_data['membership'], $decoded_data['member_id'], $decoded_data );
+				$subscription_data['status'] = 'active';
+				$this->subscription_repository->update( $subscription_id, $subscription_data );
+			}
+
+		}
+
+	}
 
 }

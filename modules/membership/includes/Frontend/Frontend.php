@@ -96,6 +96,7 @@ class Frontend {
 		$this->load_scripts();
 		$membership_repositories    = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
 		$members_order_repository   = new \WPEverest\URMembership\Admin\Repositories\MembersOrderRepository();
+		$orders_repository          = new \WPEverest\URMembership\Admin\Repositories\OrdersRepository();
 		$membership                 = $membership_repositories->get_member_membership_by_id( $user_id );
 		$membership['post_content'] = json_decode( $membership['post_content'], true );
 		$membership_service         = new MembershipService();
@@ -110,15 +111,22 @@ class Frontend {
 			);
 		}
 
+		$membership_data = array(
+			'user'         => get_user_by( 'id', get_current_user_id() ),
+			'membership'   => $membership,
+			'is_upgrading' => $is_upgrading,
+			'bank_data'    => $bank_data,
+		);
+		if ( ! empty( $last_order ) ) {
+			$order_meta = $orders_repository->get_order_metas( $last_order['ID'] );
+			if ( ! empty( $order_meta ) ) {
+				$membership_data['delayed_until'] = $order_meta['meta_value'];
+			}
+		}
 
 		ur_get_template(
 			'myaccount/membership.php',
-			array(
-				'user'         => get_user_by( 'id', get_current_user_id() ),
-				'membership'   => $membership,
-				'is_upgrading' => $is_upgrading,
-				'bank_data'    => $bank_data
-			)
+			$membership_data
 		);
 	}
 
@@ -231,11 +239,12 @@ class Frontend {
 			'i18n_incomplete_stripe_setup_error'           => __( 'Stripe Payment stopped. Incomplete Stripe setup.', 'user-registration' ),
 			'i18n_bank_details_title'                      => __( 'Bank Details.', 'user-registration' ),
 			'i18n_change_membership_title'                 => __( 'Change Membership', 'user-registration' ),
-			'i18n_change_plan_required'                 => __( 'At least one Plan must be selected', 'user-registration' ),
+			'i18n_change_plan_required'                    => __( 'At least one Plan must be selected', 'user-registration' ),
 			'i18n_error'                                   => __( 'Error', 'user-registration' ),
 			'i18n_empty_card_details'                      => __( 'Your card number is incomplete.', 'user-registration' ),
-			'i18n_cancel_membership_text'                  => __( 'Cancel membership.', 'user-registration' ),
-			'i18n_cancel_membership_subtitle'              => __( 'Are you sure you want to cancel membership permanently?', 'user-registration' ),
+			'i18n_cancel_membership_text'                  => __( 'Cancel Membership', 'user-registration' ),
+			'i18n_close'                                   => __( 'Close', 'user-registration' ),
+			'i18n_cancel_membership_subtitle'              => __( 'Are you sure you want to cancel this membership permanently?', 'user-registration' ),
 			'i18n_sending_text'                            => __( 'Sending ...', 'user-registration' ),
 		);
 	}

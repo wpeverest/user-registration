@@ -14,6 +14,7 @@ namespace WPEverest\URMembership;
 
 use WPEverest\URMembership\Admin\Controllers\MembersController;
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
+use WPEverest\URMembership\Admin\Repositories\MembersOrderRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersRepository;
 use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
 use WPEverest\URMembership\Admin\Repositories\SubscriptionRepository;
@@ -60,6 +61,7 @@ class AJAX {
 			'register_member'              => true,
 			'validate_coupon'              => true,
 			'cancel_subscription'          => false,
+			'cancel_upcoming_subscription' => false,
 			'fetch_upgradable_memberships' => false,
 			'get_group_memberships'        => false,
 			'create_membership_group'      => false,
@@ -235,7 +237,6 @@ class AJAX {
 					update_post_meta( $new_membership_ID, $data['post_meta_data']['meta_key'], wp_json_encode( $meta_data ) );
 				}
 			}
-
 
 			$response = array(
 				'membership_id' => $new_membership_ID,
@@ -652,6 +653,7 @@ class AJAX {
 
 			delete_user_meta( $member_id, 'urm_is_upgrading' );
 			delete_user_meta( $member_id, 'urm_is_upgrading_to' );
+			update_user_meta( $member_id, 'urm_is_user_upgraded', 1 );
 			wp_send_json_success(
 				$response
 			);
@@ -924,8 +926,26 @@ class AJAX {
 				)
 			);
 		}
-		$membership_id = absint( $_POST['membership_id'] );
+		$membership_id            = absint( $_POST['membership_id'] );
+		$member_id                = get_current_user_id();
+		$members_order_repository = new MembersOrderRepository();
+		$orders_repository        = new OrdersRepository();
+		$last_order               = $members_order_repository->get_member_orders( $member_id );
 
+		if ( ! empty( $last_order ) ) {
+
+			$order_meta = $orders_repository->get_order_metas( $last_order['ID'] );
+
+			$upcoming_subscription = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
+			$membership            = get_post( $upcoming_subscription['membership'] );
+			if ( ! empty( $order_meta ) ) {
+				wp_send_json_error(
+					array(
+						'message' => apply_filters( 'urm_delayed_plan_exist_notice', __( sprintf( 'You already have a scheduled upgrade to the <b>%s</b> plan at the end of your current subscription cycle (<i><b>%s</b></i>) <br> If you\'d like to cancel this upcoming change, click the <b>Cancel Membership</b> button to proceed.', $membership->post_title, date( 'M d, Y', strtotime( $order_meta['meta_value'] ) ) ), "user-registration" ), $membership->post_title, $order_meta['meta_value'] ),
+					)
+				);
+			}
+		}
 		$transient_key = 'urm_upgradable_memberships_for_' . $membership_id;
 		$cached_data   = get_transient( $transient_key );
 
@@ -1014,6 +1034,32 @@ class AJAX {
 		wp_send_json_error(
 			array(
 				'message' => __( "Something went wrong while upgrading membership.", "user-registration" ),
+			)
+		);
+	}
+
+	public static function cancel_upcoming_subscription() {
+		ur_membership_verify_nonce( 'urm_upgrade_membership' );
+		$member_id = get_current_user_id();
+		$user      = get_userdata( $member_id );
+		ur_get_logger()->notice( __( 'Cancel Upcoming Membership Triggered for :' . $user->user_login ), array( 'source' => 'urm-upgrade-subscription' ) );
+		$members_order_repository = new MembersOrderRepository();
+		$order_repository         = new OrdersRepository();
+		$last_order               = $members_order_repository->get_member_orders( $member_id );
+		$order_detail             = $order_repository->get_order_metas( $last_order['ID'] );
+		if ( ! empty( $order_detail ) ) {
+			$order_repository->delete( $last_order['ID'] );
+			delete_user_meta( $member_id, 'urm_next_subscription_data' );
+			delete_user_meta( $member_id, 'urm_previous_subscription_data' );
+			wp_send_json_success(
+				array(
+					'message' => __( "Scheduled membership has been cancelled successfully.", "user-registration" ),
+				)
+			);
+		}
+		wp_send_json_error(
+			array(
+				'message' => __( "Something went wrong while cancelling membership.", "user-registration" ),
 			)
 		);
 	}

@@ -75,7 +75,7 @@ class PaymentService {
 			unset( $response_data['subscription_data'] );
 			$subscription_data = $subscription_service->prepare_upgrade_subscription_data( $response_data['membership'], $response_data['member_id'], $response_data );
 
-			if ( "bank" === $this->payment_method ) {
+			if ( "bank" === $this->payment_method || !empty($response_data['delayed_until'])) {
 				update_user_meta( $response_data['member_id'], 'urm_next_subscription_data', json_encode( $response_data ) );
 			} else {
 				$subscription_repository->update( $response_data['subscription_id'], $subscription_data );
