@@ -471,6 +471,11 @@ class Membership {
 		);
 	}
 
+	/**
+	 * Run daily subscription updated for all delayed subscriptions.
+	 *
+	 * @return void
+	 */
 	public function run_daily_delayed_membership_subscriptions(  ) {
 		$subscription_service = new SubscriptionService();
 		$subscription_service->run_daily_delayed_membership_subscriptions();
