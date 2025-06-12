@@ -59,6 +59,7 @@ class StripeService {
 				)
 			);
 		}
+		$price = new \stdClass();
 		try {
 
 			$prices = \Stripe\Price::all(
@@ -80,6 +81,7 @@ class StripeService {
 					'currency'    => strtolower( $currency ),
 					'product'     => $product->id,
 				);
+
 				if ( 'subscription' === $meta_data['type'] ) {
 					$price_details['recurring'] = array(
 						'interval'       => $meta_data['subscription']['duration'],
@@ -88,12 +90,25 @@ class StripeService {
 				}
 
 				$price = \Stripe\Price::create( $price_details );
+
+				return array(
+					'success' => true,
+					'price'   => $price
+				);
 			}
 		} catch ( ApiErrorException $e ) {
 			ur_get_logger()->debug( 'Error creating price: ' . $e->getMessage(), array( 'source' => 'user-registration-membership-stripe' ) );
+
+			return array(
+				'success' => false,
+				'message' => $e->getMessage()
+			);
 		}
 
-		return $price;
+		return array(
+			'success' => true,
+			'price'   => $price
+		);
 	}
 
 	public function process_stripe_payment( $payment_data, $response_data ) {
@@ -237,7 +252,7 @@ class StripeService {
 		$response                       = array(
 			'status' => false,
 		);
-		$logger = ur_get_logger();
+		$logger                         = ur_get_logger();
 		if ( empty( $member_subscription ) ) {
 			$logger->notice( '-------------------------------------------- Stripe Subscription not found for ' . $member_id . ' --------------------------------------------', array( 'source' => 'ur-membership-stripe' ) );
 
