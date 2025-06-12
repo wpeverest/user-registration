@@ -227,7 +227,7 @@ class AJAX {
 				if ( ! empty( $stripe_price_and_product ) ) {
 					$meta_data["payment_gateways"]["stripe"]["product_id"] = $stripe_price_and_product->product;
 					$meta_data["payment_gateways"]["stripe"]["price_id"]   = $stripe_price_and_product->id;
-					update_post_meta( $new_membership_ID, $data['post_meta_data']['meta_key'], wp_json_encode( $meta_data ) );
+					update_post_meta( $new_membership_ID, $data['post_meta_data']['ur_membership']['meta_key'], wp_json_encode( $meta_data ) );
 				}
 			}
 
@@ -305,7 +305,7 @@ class AJAX {
 				//check if any significant value has been changed  , trial not included since trial value change does not affect the type of product and price in stripe, instead handled during subscription
 				$should_create_new_product = ( $old_membership_data['amount'] !== $meta_data['amount'] || ( isset( $old_membership_data["subscription"] ) && $old_membership_data["subscription"]["value"] !== $meta_data["subscription"]["value"] ) || ( isset( $old_membership_data["subscription"] ) && $old_membership_data["subscription"]["duration"] !== $meta_data["subscription"]["duration"] ) );
 
-				$meta_data = json_decode( $data["post_meta_data"]["meta_value"], true );
+				$meta_data = json_decode( $data["post_meta_data"]['ur_membership']["meta_value"], true );
 
 				if ( $should_create_new_product || empty( $meta_data["payment_gateways"]["stripe"]["product_id"] ) ) {
 					$stripe_service           = new StripeService();
@@ -315,7 +315,7 @@ class AJAX {
 					if ( ! empty( $stripe_price_and_product ) ) {
 						$meta_data["payment_gateways"]["stripe"]["product_id"] = $stripe_price_and_product->product;
 						$meta_data["payment_gateways"]["stripe"]["price_id"]   = $stripe_price_and_product->id;
-						update_post_meta( $updated_ID, $data['post_meta_data']['meta_key'], wp_json_encode( $meta_data ) );
+						update_post_meta( $updated_ID, $data['post_meta_data']['ur_membership']['meta_key'], wp_json_encode( $meta_data ) );
 					} else {
 						wp_send_json_error(
 							array(
