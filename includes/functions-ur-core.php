@@ -7332,6 +7332,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'type'     => 'select',
 								'desc_tip' => true,
 								'css'      => 'min-width: 350px;',
+								'class'    => 'ur-enhanced-select',
 								'default'  => 'default',
 								'options'  => array(
 									'default'      => __( 'Default', 'user-registration' ),
@@ -8426,6 +8427,3 @@ function ur_cleanup_logs() {
 	}
 }
 add_action( 'user_registration_cleanup_logs', 'ur_cleanup_logs' );
-
-
-

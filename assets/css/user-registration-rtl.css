@@ -2379,8 +2379,8 @@ body.user-registration-page .user-registration:not(.user-registration-MyAccount)
 body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) {
   max-width: 520px;
   margin: 24px auto;
-  border-radius: 8px;
-  background: #FFF;
+  border-radius: 4px;
+  background: #FAFAFC;
   border: 0;
 }
 @media screen and (max-width: 575px) {
@@ -3025,7 +3025,7 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
 }
 .user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-tab-contents {
   padding: 24px;
-  background-color: #fafafa;
+  background-color: #ffffff;
 }
 .user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-tab-contents .ur-login-view-doc {
   border-radius: 3px;
@@ -3125,6 +3125,12 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
 .user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer #post-body .ur-builder-wrapper .ur-selected-inputs {
   background: transparent;
   padding: 24px;
+}
+.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .user-registration-login-settings-form {
+  border-radius: 4px;
+}
+.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .user-registration-login-settings-form#ur-frontend-form {
+  border: 1px solid #EDF2F7;
 }
 .user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .user-registration-login-settings-form a {
   pointer-events: none;

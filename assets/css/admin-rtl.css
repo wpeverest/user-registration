@@ -1274,6 +1274,7 @@
   display: flex;
   align-items: center;
   position: relative;
+  margin-bottom: 8px;
 }
 .user-registration-custom-file input {
   position: absolute;
@@ -1295,7 +1296,7 @@
 .user-registration-custom-file__button {
   margin-right: auto;
   display: inline-block;
-  background: rgb(102.6654179104, 109.1689023066, 138.4345820896);
+  background: #475bb2;
   color: #ffffff;
   padding: 6px 15px;
   border-radius: 4px;
@@ -1315,8 +1316,8 @@
   position: relative;
 }
 .user-registration-editable-title .user-registration-editable-title__icon {
-  background: rgb(222.4984029851, 224.3717109905, 232.8015970149);
-  color: rgb(76.288238806, 84.0379701493, 118.911761194);
+  background: #edeff7;
+  color: #475bb2;
   width: 32px;
   height: 32px;
   flex: 0 0 32px;
@@ -1461,7 +1462,7 @@
 .user-registration .select2-container .select2-selection--single {
   height: 38px;
   padding: 2px 6px;
-  border-color: #999;
+  border: 1px solid #e1e1e1;
 }
 .user-registration .select2-container .select2-selection--single .select2-selection__rendered {
   display: block;
@@ -1471,6 +1472,10 @@
 .user-registration .select2-container .select2-selection--single .select2-selection__arrow {
   left: 3px;
   height: 30px;
+}
+.user-registration .select2-container .select2-selection--single .select2-selection__arrow b {
+  margin-top: -2px;
+  margin-right: -8px;
 }
 .user-registration .select2-container .select2-selection--multiple {
   min-height: 28px;
@@ -8003,7 +8008,7 @@
   background-color: #ffffff;
 }
 .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-content h2 {
-  margin: 16px 0 20px;
+  margin: 16px 0 16px;
   font-size: 15px;
   line-height: 150%;
   font-weight: 500;
@@ -8147,7 +8152,7 @@
   position: relative;
   flex: 1;
   height: calc(100vh - 89px);
-  background: #f1f4f8;
+  background: #fafafc;
   border-right: 1px solid #e1e1e1;
   overflow-y: auto;
 }
@@ -9211,6 +9216,7 @@ body .ur-p-tag {
 .user-registration-setup .page-title-action:active {
   top: 0;
   margin-right: 16px;
+  font-weight: 500;
 }
 .user-registration-setup .user-registration-setup-header {
   display: flex;
@@ -10027,7 +10033,7 @@ a.button.ur-smart-tags-list-button {
 }
 .ur-registered-from .ur-builder-wrapper .ur-selected-inputs {
   padding: 30px;
-  background: #F1F4F8;
+  background: #fafafc;
 }
 .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-login-form-wrapper {
   display: flex;
@@ -10080,9 +10086,12 @@ a.button.ur-smart-tags-list-button {
 }
 .ur-registered-from .ur-builder-wrapper .ur-builder-wrapper-content {
   background: #ffffff;
-  border-radius: 13px;
-  padding: 18px 32px;
-  border: 1px solid #e1e1e1;
+  border-radius: 4px;
+  padding: 32px 32px;
+  border: 1px solid #EDF2F7;
+}
+.ur-registered-from .ur-builder-wrapper .ur-builder-wrapper-content.ur-login-form-wrapper {
+  background-color: #fafafc;
 }
 .ur-registered-from .ur-builder-wrapper .ur-builder-wrapper-content .ur-single-row .ur-grid-lists .ur-grid-list-item {
   padding: 20px;
@@ -10092,14 +10101,14 @@ a.button.ur-smart-tags-list-button {
 }
 .ur-registered-from .ur-builder-wrapper .ur-builder-wrapper-content .ur-single-row:hover .ur-grid-lists {
   background: #fcfcfc;
-  border-radius: 7px;
+  border-radius: 4px;
   border-color: #e7e7e7;
   border-right: 0;
 }
 .ur-registered-from .ur-builder-wrapper .ur-builder-wrapper-content .ur-single-row:hover .ur-grid-lists .ur-selected-item:hover {
   background: #f8f8fa;
   border: 1px dashed #475bb2;
-  border-radius: 7px;
+  border-radius: 4px;
 }
 .ur-registered-from .ur-builder-wrapper .ur-builder-wrapper-content .ur-single-row:hover .ur-grid-lists .ur-grid-list-item {
   border-right: 1px solid #e7e7e7;
@@ -10418,7 +10427,7 @@ a.button.ur-smart-tags-list-button {
 }
 #wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content {
   padding: 20px 30px 60px;
-  border-radius: 7px;
+  border-radius: 4px;
 }
 #wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .ur-login-shortcode {
   margin-top: 0;
@@ -10457,7 +10466,7 @@ a.button.ur-smart-tags-list-button {
   margin-left: 0;
   padding: 24px;
   background: #f6f6f6;
-  border-radius: 7px;
+  border-radius: 4px;
   flex: 1;
 }
 #wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .ur-login-shortcode--wrapper .ur-login-content p:first-child {
@@ -10811,8 +10820,9 @@ body.user-registration #wpbody-content #screen-meta-links {
 
 .user-registration-list-table-container #user-registration-list-table-page {
   max-width: 100%;
-  margin-right: 20px;
-  margin-left: 20px;
+  margin-right: 32px;
+  margin-left: 32px;
+  margin-top: 32px;
 }
 
 .user-registration-login-form-container .ur-form-container #menu-management-liquid {
@@ -10976,6 +10986,10 @@ body.user-registration #wpbody-content #screen-meta-links {
 #user-registration-list-table-page #user-registration-list-filters-row #user-registration-list-search-form {
   width: 275px;
   position: relative;
+}
+#user-registration-list-table-page #user-registration-list-filters-row #user-registration-list-search-form #user-registration-users-search-input {
+  width: 100%;
+  min-height: 35px;
 }
 #user-registration-list-table-page #user-registration-list-filters-row #user-registration-list-search-form #user-registration-list-table-search-input {
   border-radius: 4px;
@@ -11330,6 +11344,13 @@ body.user-registration #wpbody-content #screen-meta-links {
 }
 .user-registration .ur-coupon-tab-contents-wrapper form .user-registration-card #ur-coupon-form-container #left-body .ur-coupon-input-container .ur-admin-template .ur-field .select2-selection__arrow {
   height: 36px;
+}
+.user-registration .ur-coupon-tab-contents-wrapper form .user-registration-card #ur-coupon-form-container #left-body .ur-coupon-input-container .ur-admin-template .ur-field .select2-selection__arrow b {
+  margin-top: -2px;
+  margin-right: -8px;
+}
+.user-registration .ur-coupon-tab-contents-wrapper form .user-registration-card #ur-coupon-form-container #left-body .ur-coupon-input-container .ur-admin-template .ur-field .select2-selection--single {
+  border: 1px solid #e1e1e1;
 }
 .user-registration .ur-coupon-tab-contents-wrapper form .user-registration-card #ur-coupon-form-container #left-body .ur-coupon-input-container .ur-admin-template .ur-field .select2-selection--single .select2-selection__rendered {
   padding-right: 14px;
@@ -12240,6 +12261,10 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
 body.user-registration-membership_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-from .ur-login-form-settings .nav-tab-wrapper .ur-tab-contents #ur-login-form-setting .ur-toggle-content .select2-selection__arrow {
   top: 5px;
 }
+body.user-registration-membership_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-from .ur-login-form-settings .nav-tab-wrapper .ur-tab-contents #ur-login-form-setting .ur-toggle-content .select2-selection__arrow b {
+  margin-top: -2px;
+  margin-right: -8px;
+}
 body.user-registration-membership_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-from .ur-login-form-settings .nav-tab-wrapper .ur-tab-contents #ur-login-form-setting .ur-toggle-content .user-registration-login-form-global-settings .user-registration-login-form-toggle-option {
   display: flex;
   justify-content: space-between;
@@ -12296,6 +12321,7 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
 }
 body.user-registration-membership_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-inputs.ur-login-form-shortcode .nav-tab-wrapper {
   height: 100%;
+  background-color: #ffffff;
 }
 body.user-registration-membership_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-inputs.ur-login-form-shortcode .nav-tab-wrapper .ur-tab-contents {
   border-right: 1px solid #e1e1e1;
@@ -12303,6 +12329,7 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
   position: sticky;
   position: -webkit-sticky;
   top: 30px;
+  background-color: #ffffff;
 }
 body.user-registration-membership_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-inputs.ur-login-form-shortcode .nav-tab-wrapper .ur-login-shortcode--wrapper .ur-login-content .login-forms-shortcode-action input[type=text] {
   padding: 0;
@@ -12617,4 +12644,15 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
 
 #react-select-2-input, #react-select-3-input {
   display: none;
+}
+
+#user-registration-users-action-form .widefat td {
+  vertical-align: middle;
+}
+#user-registration-users-action-form .widefat td.column-username {
+  display: flex;
+  align-items: center;
+}
+#user-registration-users-action-form .widefat th.column-email {
+  width: 220px;
 }

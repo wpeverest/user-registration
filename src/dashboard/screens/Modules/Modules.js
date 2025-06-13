@@ -263,7 +263,8 @@ const Modules = () => {
 		<Box
 			top="var(--wp-admin--admin-bar--height, 0)"
 			zIndex={1}
-			marginTop="32px"
+			my="4"
+			mx="6"
 		>
 			<Container maxW="container.xl">
 				<Stack

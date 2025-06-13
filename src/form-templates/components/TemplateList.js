@@ -344,10 +344,7 @@ const TemplateList = ({ selectedCategory, templates }) => {
 				{selectedCategory.toUpperCase()}
 			</Heading>
 			{templates?.length ? (
-				<SimpleGrid
-					gridTemplateColumns={"repeat(auto-fit, minmax(200px, 1fr))"}
-					spacing={6}
-				>
+				<SimpleGrid columns={{ base: 4, "2xl": 5 }} spacing={6}>
 					{templates.map((template) => (
 						<Box
 							key={template.slug}

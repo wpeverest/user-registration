@@ -87,7 +87,7 @@ const App = () => {
 	};
 	return (
 		<ChakraProvider>
-			<Box boxShadow="md">
+			<Box border={"1px solid #EDF2F7"} borderRadius={"4px"}>
 				<Box
 					padding="0px 20px 50px"
 					backgroundColor="white"
