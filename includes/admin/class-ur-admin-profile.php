@@ -354,7 +354,9 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 																							echo 'checked="checked"';
 																						}
 																						?>
-														><?php echo wp_kses_post( trim( $choice ) ); ?></label><br/>
+														><?php if ( trim( $choice ) !== '1' ) : ?>
+															<?php echo wp_kses_post( trim( $choice ) ); ?>
+														<?php endif; ?></label><br/>
 														<?php
 												}
 											} else {
