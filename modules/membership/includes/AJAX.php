@@ -933,12 +933,10 @@ class AJAX {
 		$last_order               = $members_order_repository->get_member_orders( $member_id );
 
 		if ( ! empty( $last_order ) ) {
-
 			$order_meta = $orders_repository->get_order_metas( $last_order['ID'] );
-
-			$upcoming_subscription = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
-			$membership            = get_post( $upcoming_subscription['membership'] );
 			if ( ! empty( $order_meta ) ) {
+				$upcoming_subscription = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
+				$membership = get_post( $upcoming_subscription['membership'] );
 				wp_send_json_error(
 					array(
 						'message' => apply_filters( 'urm_delayed_plan_exist_notice', __( sprintf( 'You already have a scheduled upgrade to the <b>%s</b> plan at the end of your current subscription cycle (<i><b>%s</b></i>) <br> If you\'d like to cancel this upcoming change, click the <b>Cancel Membership</b> button to proceed.', $membership->post_title, date( 'M d, Y', strtotime( $order_meta['meta_value'] ) ) ), "user-registration" ), $membership->post_title, $order_meta['meta_value'] ),
@@ -1001,13 +999,16 @@ class AJAX {
 		);
 
 		$subscription_service = new SubscriptionService();
-		if ( ! $subscription_service->can_upgrade( $data ) ) {
+		$status = $subscription_service->can_upgrade( $data );
+
+		if ( !$status['status']  ) {
 			wp_send_json_error(
 				array(
-					'message' => __( "Sorry, you cannot upgrade to the selected plan.", "user-registration" ),
+					'message' => $status['message'],
 				)
 			);
 		}
+
 		$upgrade_membership_response = $subscription_service->upgrade_membership( $data );
 		$response                    = $upgrade_membership_response['response'];
 

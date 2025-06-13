@@ -248,7 +248,7 @@ class MembershipService {
 		if ( isset( $data['upgrade_settings'] ) ) {
 			$data['upgrade_settings']['upgrade_action'] = absint( $data['upgrade_settings']['upgrade_action'] );
 			$data['upgrade_settings']['upgrade_path']   = sanitize_text_field( implode( ',', $data['upgrade_settings']['upgrade_path'] ) );
-			$data['upgrade_settings']['upgrade_type']   = !empty($data['upgrade_settings']['upgrade_type']) ? sanitize_text_field( $data['upgrade_settings']['upgrade_type'] ) : 'full';
+			$data['upgrade_settings']['upgrade_type']   = ! empty( $data['upgrade_settings']['upgrade_type'] ) ? sanitize_text_field( $data['upgrade_settings']['upgrade_type'] ) : 'full';
 		}
 
 		return $data;
@@ -456,7 +456,8 @@ class MembershipService {
 	public function get_upgradable_membership( $membership_id ) {
 		$membership_details = $this->get_membership_details( $membership_id );
 		if ( ! empty( $membership_details['upgrade_settings'] ) && $membership_details['upgrade_settings']['upgrade_action'] ) {
-			$memberships = $this->membership_repository->get_multiple_membership_by_ID($membership_details['upgrade_settings']['upgrade_path'] );
+			$memberships = $this->membership_repository->get_multiple_membership_by_ID( $membership_details['upgrade_settings']['upgrade_path'] );
+
 			return apply_filters( 'build_membership_list_frontend', $memberships );
 		}
 

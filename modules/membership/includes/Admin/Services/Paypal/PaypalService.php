@@ -120,7 +120,7 @@ class PaypalService {
 		} else {
 			$paypal_args['amount'] = floatval( user_registration_sanitize_amount( $membership_amount ) - $discount_amount );
 		}
-		error_log( print_r( $paypal_args, true ) );
+
 		$redirect .= http_build_query( $paypal_args );
 
 		return str_replace( ' & amp;', ' & ', $redirect );

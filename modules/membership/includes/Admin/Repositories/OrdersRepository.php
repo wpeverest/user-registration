@@ -194,11 +194,15 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 					  AND wpom.meta_value = '%s'
 					  AND wpum.meta_key = 'urm_next_subscription_data'
 				", $date );
-
+		error_log($sql);
 		$result = $this->wpdb()->get_results( $sql, ARRAY_A );
 
 		return ! $result ? array() : $result;
 	}
 
+	public function delete_order_meta( $conditions ) {
+		$result = $this->wpdb()->delete( $this->orders_meta_table , $conditions );
+		return ! $result ? array() : $result;
+	}
 
 }

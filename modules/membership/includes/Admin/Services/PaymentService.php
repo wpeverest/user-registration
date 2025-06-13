@@ -72,9 +72,9 @@ class PaymentService {
 				$previous_subscription_data = $response_data['subscription_data'];
 				update_user_meta( $response_data['member_id'], 'urm_previous_subscription_data', json_encode( $previous_subscription_data ) );
 			}
-			unset( $response_data['subscription_data'] );
-			$subscription_data = $subscription_service->prepare_upgrade_subscription_data( $response_data['membership'], $response_data['member_id'], $response_data );
 
+			$subscription_data = $subscription_service->prepare_upgrade_subscription_data( $response_data['membership'], $response_data['member_id'], $response_data );
+			unset( $response_data['subscription_data'] );
 			if ( "bank" === $this->payment_method || !empty($response_data['delayed_until'])) {
 				update_user_meta( $response_data['member_id'], 'urm_next_subscription_data', json_encode( $response_data ) );
 			} else {

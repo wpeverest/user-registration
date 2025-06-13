@@ -32,6 +32,7 @@ class Membership {
 	public function __construct() {
 
 		$this->init_hooks();
+
 	}
 
 	/**
@@ -48,7 +49,7 @@ class Membership {
 		add_action( 'admin_init', array( $this, 'actions' ) );
 		add_action( 'in_admin_header', array( __CLASS__, 'hide_unrelated_notices' ) );
 		add_filter( 'wp_editor_settings', array( $this, 'remove_media_buttons' ) );
-		add_action( 'urm_run_delayed_subscription', array( $this, 'run_daily_delayed_membership_subscriptions' ), 10, 1 );
+
 	}
 
 	/**
@@ -471,14 +472,5 @@ class Membership {
 		);
 	}
 
-	/**
-	 * Run daily subscription updated for all delayed subscriptions.
-	 *
-	 * @return void
-	 */
-	public function run_daily_delayed_membership_subscriptions(  ) {
-		$subscription_service = new SubscriptionService();
-		$subscription_service->run_daily_delayed_membership_subscriptions();
-	}
 
 }

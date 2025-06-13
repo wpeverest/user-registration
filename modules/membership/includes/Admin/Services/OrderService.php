@@ -51,7 +51,7 @@ class OrderService {
 			'total_amount'    => ! empty( $upgrade_details ) ? $upgrade_details['chargeable_amount'] : $total,
 			'status'          => ( 'free' === $membership_meta['type'] || $is_admin ) ? 'completed' : 'pending',
 			'order_type'      => sanitize_text_field( $membership_meta['type'] ),
-			'trial_status'    => isset( $membership_meta['trial_status'] ) ? sanitize_text_field( $membership_meta['trial_status'] ) : 'off',
+			'trial_status'    => (!empty($upgrade_details) && $upgrade_details['is_trial']) ? 'on': (isset( $membership_meta['trial_status'] ) ? sanitize_text_field( $membership_meta['trial_status'] ) : 'off'),
 			'notes'           => $is_admin ? 'admin created order for ' . $membership['post_title'] : 'subscriber created order for ' . $membership['post_title'],
 		);
 

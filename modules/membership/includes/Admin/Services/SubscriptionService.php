@@ -154,7 +154,6 @@ class SubscriptionService {
 		foreach ( $subscriptions as $subscription ) {
 			$user_id      = $subscription['member_id'];
 			$checked_date = get_user_meta( $user_id, 'urm_billing_reminder_sent_for_date', true );
-			error_log( $checked_date );
 			if ( $checked_date === $subscription['next_billing_date'] ) {
 				continue;
 			}
@@ -371,14 +370,18 @@ class SubscriptionService {
 	public function calculate_membership_upgrade_cost( $current_membership_details, $selected_membership_details, $subscription ) {
 		$upgrade_type               = $current_membership_details['type'] . '->' . $selected_membership_details['type'];
 		$upgrade_membership_service = new UpgradeMembershipService();
-		$total_used_trial_days      = 0;
-		$is_trial                   = 'trial' === $subscription['status'];
+		$is_trial                   = false;
 		$result['status']           = true;
+
+		if ( isset( $selected_membership_details['trial_status'] ) && 'on' === $selected_membership_details['trial_status'] ) {
+			$is_trial = $subscription['trial_end_date']  > date('Y-m-d H:i:s');
+		}
 		switch ( $upgrade_type ) {
 			case 'free->free':
 			case 'paid->free':
 			case 'subscription->free':
 				$result['chargeable_amount'] = 0;
+				$result['delayed_until']     = $subscription['expiry_date'];
 				break;
 			case 'free->paid':
 				$result['chargeable_amount'] = $selected_membership_details['amount'];
@@ -390,14 +393,12 @@ class SubscriptionService {
 			case 'paid->paid':
 				$result = $upgrade_membership_service->handle_paid_to_paid_membership_upgrade( $current_membership_details, $selected_membership_details, $subscription );
 				break;
-			case 'subscription->subscription':
-				$result = $upgrade_membership_service->handle_subscription_to_subscription_membership_upgrade( $current_membership_details, $selected_membership_details, $subscription );
-				break;
 			case 'paid->subscription':
 				$result = $upgrade_membership_service->handle_paid_to_subscription_membership_upgrade( $current_membership_details, $selected_membership_details, $subscription );
 				break;
+			case 'subscription->subscription':
 			case 'subscription->paid':
-				$result = $upgrade_membership_service->handle_subscription_to_paid_membership_upgrade( $current_membership_details, $selected_membership_details, $subscription );
+				$result = $upgrade_membership_service->handle_subscription_to_paid_or_subscription_membership_upgrade( $current_membership_details, $selected_membership_details, $subscription );
 				break;
 		}
 
@@ -406,8 +407,7 @@ class SubscriptionService {
 		}
 
 		return array(
-			'is_trial'                    => ! empty( $result['is_trial'] ) ? $result['is_trial'] : $is_trial,
-			'total_used_trial_days'       => ! empty( $result['total_used_trial_days'] ) ? absint( $total_used_trial_days ) : $total_used_trial_days,
+			'is_trial'                    => $is_trial,
 			'chargeable_amount'           => ! empty( $result['chargeable_amount'] ) ? $result['chargeable_amount'] : 0,
 			'remaining_subscription_days' => ! empty( $result['remaining_subscription_days'] ) ? $result['remaining_subscription_days'] : 0,
 			'delayed_until'               => ! empty( $result['delayed_until'] ) ? $result['delayed_until'] : ''
@@ -431,7 +431,7 @@ class SubscriptionService {
 	 * @return array The prepared subscription data including trial information if applicable.
 	 */
 	public function prepare_upgrade_subscription_data( $membership_id, $member_id, $extra_data ) {
-
+		$current_subscription = $extra_data['subscription_data'];
 		$remaining_subscription_days = $extra_data["remaining_subscription_days"];
 		$membership                  = get_post( $membership_id, ARRAY_A );
 		$membership_meta             = json_decode( wp_unslash( get_post_meta( $membership['ID'], 'ur_membership', true ) ), true );
@@ -455,7 +455,7 @@ class SubscriptionService {
 			$remaining_trial_days = $membership_meta['trial_data']['value'] > $extra_data['total_used_trial_days'] ? $membership_meta['trial_data']['value'] - $extra_data['total_used_trial_days'] : $membership_meta['trial_data']['value'];
 			$trial_data           = array(
 				'trial_start_date' => date( 'Y-m-d' ),
-				'trial_end_date'   => self::get_expiry_date( date( 'Y-m-d' ), $membership_meta['trial_data']['duration'], $remaining_trial_days ),
+				'trial_end_date'   => $extra_data['is_trial'] ? self::get_expiry_date( date( 'Y-m-d' ), $membership_meta['trial_data']['duration'], $remaining_trial_days ) : $current_subscription['trial_end_date'],
 			);
 
 			$subscription_data                      = array_merge( $subscription_data, $trial_data );
@@ -472,25 +472,53 @@ class SubscriptionService {
 	 *
 	 * @param $data
 	 *
-	 * @return bool
+	 * @return array
 	 */
 	public function can_upgrade( $data ) {
 		$membership_service = new MembershipService();
 		$membership_details = $membership_service->get_membership_details( $data['current_membership_id'] );
+		$status             = true;
 		if ( empty( $membership_details['upgrade_settings']['upgrade_path'] ) ) {
-			return false;
+			return array(
+				'status'  => false,
+				'message' => __( "Sorry, you cannot upgrade to the selected plan.", "user-registration" )
+			);
 		}
 		$upgradable_memberships = explode( ',', $membership_details['upgrade_settings']['upgrade_path'] );
 
-		return in_array( $data['selected_membership_id'], $upgradable_memberships );
+		$status = in_array( $data['selected_membership_id'], $upgradable_memberships );
+		if ( ! $status ) {
+			return array(
+				'status'  => false,
+				'message' => __( "Sorry, you cannot upgrade to the selected plan.", "user-registration" )
+			);
+		}
+
+		$subscription                = $this->subscription_repository->retrieve( $data['current_subscription_id'] );
+		$membership                  = $this->membership_repository->get_single_membership_by_ID( $data['selected_membership_id'] );
+		$selected_membership_details = wp_unslash( json_decode( $membership['meta_value'], true ) );
+
+		if ( isset( $selected_membership_details['trial_status'] ) && "on" === $selected_membership_details['trial_status'] && $subscription['trial_end_date'] < date( 'Y-m-d H:i:s' ) ) {
+			return array(
+				'status'  => false,
+				'message' => __( "Sorry, You’re not eligible for another trial. Please choose a regular membership plan.", "user-registration" )
+			);
+		}
+
+		return array(
+			'status' => true,
+		);
 
 	}
 
 	public function run_daily_delayed_membership_subscriptions() {
-		$all_delayed_orders = $this->orders_repository->get_all_delayed_orders( date( 'Y-m-d H:i:s' ) );
-		ur_get_logger()->notice( __( 'Scheduled Subscriptions job started for : ('.date( 'd F Y h:i:s' ).')', 'user-registration' ), array( 'source' => 'urm_membership_crons' ) );
+		$all_delayed_orders = $this->orders_repository->get_all_delayed_orders( date( 'Y-m-d 00:00:00' ) );
+
+		ur_get_logger()->notice( __( 'Scheduled Subscriptions job started for the date: (' . date( 'd F,Y' ) . ')', 'user-registration' ), array( 'source' => 'urm-membership-crons' ) );
 
 		if ( empty( $all_delayed_orders ) ) {
+			ur_get_logger()->notice( __( 'No delayed orders found.', 'user-registration' ), array( 'source' => 'urm-membership-crons' ) );
+
 			return;
 		}
 		$updated_subscription_for_users = array();
@@ -506,9 +534,18 @@ class SubscriptionService {
 				$subscription_data                = $this->prepare_upgrade_subscription_data( $decoded_data['membership'], $decoded_data['member_id'], $decoded_data );
 				$subscription_data['status']      = 'active';
 				$this->subscription_repository->update( $subscription_id, $subscription_data );
+				$last_order = $this->members_orders_repository->get_member_orders( $user->ID );
+				$this->orders_repository->delete_order_meta( array(
+					'order_id' => $last_order['ID'],
+					'meta_key' => 'delayed_until'
+				) );
+				delete_user_meta( $user->ID, 'urm_next_subscription_data' );
+				delete_user_meta( $user->ID, 'urm_previous_subscription_data' );
 			}
 		}
-		ur_get_logger()->notice( __( 'Subscription updated for ' . implode( ',', $updated_subscription_for_users ), 'user-registration' ), array( 'source' => 'urm_membership_crons' ) );
+
+		ur_get_logger()->notice( __( 'Subscription updated for ' . implode( ',', $updated_subscription_for_users ), 'user-registration' ), array( 'source' => 'urm-membership-crons' ) );
+
 
 	}
 

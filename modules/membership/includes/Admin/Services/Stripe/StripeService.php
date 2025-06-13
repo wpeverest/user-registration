@@ -331,28 +331,30 @@ class StripeService {
 				if ( $previous_subscription ) {
 					$previous_membership       = $this->membership_repository->get_single_membership_by_ID( $previous_subscription['item_id'] );
 					$previous_membership_metas = wp_unslash( json_decode( $previous_membership['meta_value'], true ) );
-					$new_price                 = $membership_metas['amount'];
-					$current_price     = $previous_membership_metas['amount'];
-					$first_month_price = $new_price - $current_price;
+					if ( $previous_membership_metas['type'] !== 'free' ) {
+						$new_price         = $membership_metas['amount'];
+						$current_price     = $previous_membership_metas['amount'];
+						$first_month_price = $new_price - $current_price;
 
-					if ( $new_price > $current_price ) {
-						$discount_amount = ( $new_price - $first_month_price );
-						$currency = get_option( 'user_registration_payment_currency', 'USD' );
-						if ( 'JPY' === $currency ) {
-							$amount = $discount_amount;
-						} else {
-							$amount = $discount_amount * 100;
+						if ( $new_price > $current_price ) {
+							$discount_amount = ( $new_price - $first_month_price );
+							$currency        = get_option( 'user_registration_payment_currency', 'USD' );
+							if ( 'JPY' === $currency ) {
+								$amount = $discount_amount;
+							} else {
+								$amount = $discount_amount * 100;
+							}
+
+							$coupon = \Stripe\Coupon::create( array(
+								'amount_off' => $amount,
+								'currency'   => $currency,
+								'duration'   => 'once',
+								'name'       => 'UpgradeCoupon',
+							) );
+
+							$subscription_details['coupon'] = $coupon->id;
+
 						}
-
-						$coupon = \Stripe\Coupon::create( array(
-							'amount_off' => $amount,
-							'currency'   => $currency,
-							'duration'   => 'once',
-							'name'       => 'UpgradeCoupon',
-						) );
-
-						$subscription_details['coupon'] = $coupon->id;
-
 					}
 				}
 			}
@@ -399,6 +401,7 @@ class StripeService {
 				$customer = \Stripe\Customer::retrieve( $customer_id );
 				$customer->delete();
 			}
+			$logger->notice( print_r( $e, true ), array( 'source' => 'ur-membership-stripe' ) );
 
 			wp_send_json_error( $e->getMessage() );
 		}
