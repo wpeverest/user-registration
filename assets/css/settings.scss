@@ -60,7 +60,7 @@ body {
 	.wrap {
 		margin: 0;
 		padding: $spacing_24px;
-		background: #EFF2F6;
+		background: #FAFAFA;
 
 		.user-registration-header {
 			margin: 0;
@@ -72,6 +72,8 @@ body {
 	display: flex;
     gap: $spacing_24px;
 	overflow-x: hidden;
+	border: 1px solid #EDF2F7;
+	border-radius: $border_radius_4;
 
 	@media screen and (max-width: 1180px) {
 		flex-direction: column;
@@ -471,7 +473,7 @@ body {
 
 					&:hover,
 					&.is-active {
-						background: #F8F8FA;
+						background: #fafafc;
 						border-radius: 0;
 						color: $primary_color;
 
@@ -483,7 +485,7 @@ body {
 					&.is-active {
 						&:not(#ur-settings-collapse)::after {
 							opacity: 1;
-							background: #F8F8FA;
+							background: #fafafc;
 						}
 					}
 
@@ -717,7 +719,7 @@ body {
 	margin-top: 0 !important;
 
 	.user-registration-options-header {
-		background: #fafafc;
+		background: #fafafa;
 		padding-top: $spacing_24px;
 
 		&--top {
@@ -865,7 +867,7 @@ body {
 
 		.user-registration-integrations {
 			border-radius: $border_radius_3;
-			background: #fafafc;
+			background: #fafafa;
 			border: $border_width solid #ced4da;
 			padding: $spacing_10px $spacing_20px;
 			display: flex;
@@ -970,8 +972,9 @@ body {
 		.user-registration-card {
 			padding: $spacing_16px $spacing_20px $spacing_22px;
 			background: $grey-0;
-			border: $border_width solid #EBEBEB !important;
-			border-radius: $border_radius_7;
+			border: $border_width solid #EDF2F7 !important;
+			border-radius: $border_radius_4;
+			background-color: #ffffff;
 			margin-top: 0 !important;
 			margin-bottom: $spacing_28px;
 			max-width: 680px;
@@ -1024,6 +1027,18 @@ body {
 				padding: 0 0 $spacing_16px;
 				position: relative;
 				border-bottom: $border_width solid #EBEBEB !important;
+
+				&-wrapper {
+					display: flex;
+					justify-content: space-between;
+				}
+
+				.user_registration_smart_tags_used {
+					color: #475bb2;
+					border-color: #475bb2;
+					background-color: #f6f7f7;
+					padding: 0px 6px;
+				}
 
 				// Integration Settings
 				&.integration-header-info {
@@ -1557,6 +1572,8 @@ body {
 											width: 12px;
 											border-color: transparent transparent #888 transparent;
 											border-width: 0 6px 7px 6px;
+											margin-top: -2px;
+											margin-left: -8px;
 										}
 									}
 
@@ -1629,6 +1646,7 @@ body {
 
 							&--single {
 								height: 38px;
+								border: 1px solid #e1e1e1;
 
 								.select2-selection__rendered {
 									line-height: 36px;
@@ -1657,6 +1675,8 @@ body {
 									width: 12px;
 									border-color: #888 transparent transparent transparent;
 									border-width: 7px 6px 0 6px;
+									margin-top: -2px;
+									margin-left: -8px;
 								}
 							}
 						}
@@ -1712,9 +1732,14 @@ body {
 							text-align: center;
 						}
 
+						.user_registration_send_email_test {
+							color: #475bb2;
+							border-color: #475bb2;
+						}
+
 						#select-smart-tags {
-							color: #2271B1;
-							border-color: #2271B1;
+							color: #475bb2;
+							border-color: #475bb2;
 							height: 30px;
 							text-align: center;
 							line-height: 18px;
@@ -1724,6 +1749,11 @@ body {
 
 					.ur-captcha-test-button{
 						flex: 0 0 38%;
+
+						button {
+							color: #475bb2;
+							font-weight: 500;
+						}
 
 						.user_registration_captcha_setting_captcha_test {
 							margin-bottom: 10px;
@@ -1773,6 +1803,14 @@ body {
 		// Import/Export Settings
 		.ur-settings-section-header {
 			margin: 0;
+
+			a {
+				color: #475bb2;
+				border: 1px solid #475bb2;
+				font-weight: 500;
+				height: 38px;
+				align-content: center;
+			}
 		}
 
 		.ur-export-users-page {
@@ -1783,11 +1821,10 @@ body {
 					width: 100%;
 					max-width: 680px;
 					padding: $spacing_16px $spacing_20px $spacing_22px;
-					border: $border_width solid $grey-50;
-					border-radius: $border_radius_7;
+					border: $border_width solid #EDF2F7;
+					border-radius: $border_radius_4;
 					margin-bottom: $spacing_28px;
-					background: #fafafc;
-					border: $border_width solid $grey-50;
+					background: #ffffff;
 					box-shadow: none;
 
 					&:last-child {
@@ -1801,7 +1838,7 @@ body {
 						color: $grey-500;
 						margin: 0;
 						padding-bottom: $spacing_16px;
-						margin-bottom: $spacing_28px;
+						margin-bottom: $spacing_16px;
 						border-color: $grey-50;
 					}
 
@@ -1811,7 +1848,7 @@ body {
 
 						p {
 							margin: 0;
-							margin-bottom: $spacing_12px;
+							margin-bottom: $spacing_20px;
 							font-weight: $regular;
 							font-size: 14px;
 							line-height: 150%;
@@ -1850,25 +1887,39 @@ body {
 					}
 				}
 			}
+
+			#selected-export-user-form {
+				&::hover {
+					background-color: #475BB2;
+				}
+			}
 		}
 
-		#popups-list {
-			.ur-list-table-wrapper {
-				width: 100%;
-				overflow-x: auto;
+		#urm-popup-table, #urm-invite-codes-list-table {
+			background-color: #ffffff;
+			border: 1px solid #EDF2F7;
+			border-radius: $border_radius_4;
 
-				.wp-list-table {
+			#popups-list {
+				margin-top: 16px;
+
+				.ur-list-table-wrapper {
 					width: 100%;
-    				border-collapse: collapse;
+					overflow-x: auto;
 
-					thead {
-						tr {
-							th {
-								&.column {
-									&-shortcode,
-									&-author,
-									&-date {
-										width: auto;
+					.wp-list-table {
+						width: 100%;
+						border-collapse: collapse;
+
+						thead {
+							tr {
+								th {
+									&.column {
+										&-shortcode,
+										&-author,
+										&-date {
+											width: auto;
+										}
 									}
 								}
 							}
@@ -1912,10 +1963,16 @@ body {
 	.select2-container {
 		.selection {
 			.select2-selection--single {
+				border: 1px solid #e1e1e1;
 				height: 38px;
 
 				.select2-selection__arrow {
 					top: $spacing_4px;
+
+					b {
+						margin-top: -2px;
+						margin-left: -8px;
+					}
 				}
 			}
 		}
@@ -1988,4 +2045,33 @@ body {
 .user-registration-inactive-addon{
 	opacity: 0.7;
 	pointer-events: pointer;
+}
+
+#popups-select {
+	display: flex;
+	gap: 10px;
+	width: 15%;
+
+	.button {
+		color: #475bb2;
+		font-weight: 500;
+	}
+}
+
+#urm-invite-codes-list-table {
+	.button {
+		color: #475bb2;
+		font-weight: 500;
+		height: 38px;
+		margin-left: 5px;
+	}
+
+	.select2-container {
+		width: 10% !important;
+		margin-right: 5px;
+	}
+
+	#codes-filter {
+		margin-top: 16px;
+	}
 }

@@ -13,7 +13,7 @@ const index = () => {
 				.map((_, i) => (
 					<Col
 						style={{ marginBottom: 30 }}
-						md={4}
+						md={3}
 						key={Date.now() + Math.random()}
 					>
 						<Box

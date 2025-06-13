@@ -27,13 +27,13 @@ import AddonSkeleton from "../../../skeleton/AddonsSkeleton/AddonsSkeleton";
 import { isArray, isEmpty } from "../../../../utils/utils";
 
 const ModuleBody = ({
-						isPerformingBulkAction,
-						filteredAddons,
-						setSelectedModuleData,
-						selectedModuleData,
-						IsStateUpdated,
-						resetIsStateUpdated
-					}) => {
+	isPerformingBulkAction,
+	filteredAddons,
+	setSelectedModuleData,
+	selectedModuleData,
+	IsStateUpdated,
+	resetIsStateUpdated
+}) => {
 	/* global _UR_DASHBOARD_ */
 	const { upgradeURL, licenseActivationURL, isPro } = _UR_DASHBOARD_ || {};
 	const [{ upgradeModal }, dispatch] = useStateValue();
@@ -139,11 +139,11 @@ const ModuleBody = ({
 					</ModalContent>
 				</Modal>
 			)}
-			<Container maxW="container.xl">
+			<Container maxWidth="2000px !important">
 				{isEmpty(filteredAddons) ? (
 					<AddonSkeleton />
 				) : (
-					<SimpleGrid columns={3} spacing="5">
+					<SimpleGrid columns={4} spacing="30px">
 						{isArray(filteredAddons) &&
 							filteredAddons.map((data) => (
 								<ModuleItem

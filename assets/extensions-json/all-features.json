@@ -5,7 +5,7 @@
       "slug" : "user-registration-membership",
       "name" : "User Registration Membership",
       "image": "extensions-json/sections/images/membership.png",
-      "excerpt": "Create custom membership plans and deliver content accordingly with User Registration’s Membership module with specific website and content access.",
+      "excerpt": "Create custom membership plans and control website content access using User Registration’s Membership module.",
       "link": "https://docs.wpuserregistration.com/docs/user-registration-membership/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan" : [
         "free"
@@ -19,7 +19,7 @@
       "slug" : "user-registration-payment-history",
       "name" : "User Registration Membership - Payment History",
       "image": "extensions-json/sections/images/payment-history-addon.png",
-      "excerpt": "The Payment Histories Overview feature provides users with a detailed and searchable list of all past orders and transactions, enabling easy tracking and management of their payment activities.",
+      "excerpt": "The Payment Histories Overview feature provides a searchable, detailed list to easily track, view, and manage all past transactions.",
       "link": "https://docs.wpuserregistration.com/docs/user-registration-pro/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "released_date": "20/06/2024",
       "plan" : [
@@ -68,7 +68,7 @@
       "slug" : "user-registration-coupon",
       "name" : "User Registration - Coupons",
       "image": "extensions-json/sections/images/coupon-addon.png",
-      "excerpt": "Enhance user registration with a seamless coupon add-on, offering personalized discounts and boosting engagement from day one.",
+      "excerpt": "Enhance user registration with a coupon add-on, offering personalized discounts and boosting engagement.",
       "link": "https://docs.wpuserregistration.com/docs/user-registration-pro/?utm_source=dashboard-all-features&utm_medium=card-documentation-link#42-toc-title",
       "released_date": "20/06/2024",
       "plan" : [

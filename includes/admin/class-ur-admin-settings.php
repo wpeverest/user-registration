@@ -425,6 +425,10 @@ class UR_Admin_Settings {
 
 							$settings .= esc_html( strtoupper( $section['title'] ) );
 							$settings .= '</h3>';
+
+							if( !empty( $section['button'] ) ) {
+								$settings .= '<a href="' . ( isset( $section['button']['button_link'] ) ? $section['button']['button_link'] : '#' ) . '" class="button button user_registration_smart_tags_used" style="min-width:90px;" target="_blank">' . ( isset( $section['button']['button_text'] ) ? $section['button']['button_text'] : '' ) . '</a>';
+							}
 							$settings .= '</div>';
 						}
 

@@ -9,7 +9,7 @@ import {
 	Image,
 	Link,
 	Stack,
-	Text,
+	Text
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 import React, { useState, useEffect } from "react";
@@ -50,7 +50,7 @@ const Help = () => {
 			gridGap="5"
 			gridTemplateColumns={{
 				sm: "1fr",
-				md: "3fr 1fr",
+				md: "3fr 1fr"
 			}}
 		>
 			<Stack gap="5">
@@ -68,7 +68,7 @@ const Help = () => {
 					<Grid
 						gridTemplateColumns={{
 							sm: "1fr",
-							md: "1fr 1fr",
+							md: "1fr 1fr"
 						}}
 						gridGap="5"
 					>
@@ -90,7 +90,7 @@ const Help = () => {
 							<Text fontSize="13px" color="gray.700">
 								{__(
 									"Find the complete list of shortcodes with their usage information and parameter details.",
-									"user-registration",
+									"user-registration"
 								)}
 							</Text>
 							<Button
@@ -126,7 +126,7 @@ const Help = () => {
 							<Text fontSize="13px" color="gray.700">
 								{__(
 									"Find the complete list of smart tags with their usage information and parameter details.",
-									"user-registration",
+									"user-registration"
 								)}
 							</Text>
 							<Button
@@ -155,14 +155,14 @@ const Help = () => {
 							borderColor="gray.100"
 							textAlign="center"
 						>
-							<Icon.Support w="8" h="8" fill="primary.500"/>
+							<Icon.Support w="8" h="8" fill="primary.500" />
 							<Heading as="h3" size="sm" fontWeight="semibold">
 								{__("Support", "user-registration")}
 							</Heading>
 							<Text fontSize="13px" color="gray.700">
 								{__(
 									"If you have any issues or questions, our team is on standby to help you instantly.",
-									"user-registration",
+									"user-registration"
 								)}
 							</Text>
 							<Button
@@ -198,7 +198,7 @@ const Help = () => {
 							<Text fontSize="13px" color="gray.700">
 								{__(
 									"Check our documentation for detailed information on User Registration & Membership features and how to use them.",
-									"user-registration",
+									"user-registration"
 								)}
 							</Text>
 							<Button
@@ -218,7 +218,7 @@ const Help = () => {
 						</Stack>
 					</Grid>
 				)}
-				<Stack>
+				<Stack marginTop="25px">
 					<Heading as="h3" fontSize="lg" fontWeight="semibold">
 						{__("Join Our Community", "user-registration")}
 					</Heading>
@@ -245,7 +245,7 @@ const Help = () => {
 						<Text fontSize="13px" color="gray.700">
 							{__(
 								"Join our exclusive group and connect with fellow members. Ask questions, contribute to discussions, and share feedback!",
-								"user-registration",
+								"user-registration"
 							)}
 						</Text>
 						<Button
@@ -287,7 +287,7 @@ const Help = () => {
 						<Text fontSize="13px" color="gray.700">
 							{__(
 								"Follow us on X to get the latest news and updates about User Registration & Membership.",
-								"user-registration",
+								"user-registration"
 							)}
 						</Text>
 						<Button
@@ -329,7 +329,7 @@ const Help = () => {
 						<Text fontSize="13px" color="gray.700">
 							{__(
 								"Subscribe to our YouTube channel, where we guide you on using User Registration & Membership features and add-ons.",
-								"user-registration",
+								"user-registration"
 							)}
 						</Text>
 						<Button
@@ -368,7 +368,7 @@ const Help = () => {
 					<Text fontSize="13px" color="gray.700">
 						{__(
 							"Watch our step-by-step video tutorials that’ll help you get the best out of User Registration & Membership features.",
-							"user-registration",
+							"user-registration"
 						)}
 					</Text>
 					<Link
@@ -397,7 +397,7 @@ const Help = () => {
 					<Text fontSize="13px" color="gray.700">
 						{__(
 							"Don’t find a feature you’re looking for? Suggest any features you think would enhance our product.",
-							"user-registration",
+							"user-registration"
 						)}
 					</Text>
 					<Link
@@ -426,7 +426,7 @@ const Help = () => {
 					<Text fontSize="13px" color="gray.700">
 						{__(
 							"Please take a moment to give us a review. We appreciate honest feedback that’ll help us improve our plugin.",
-							"user-registration",
+							"user-registration"
 						)}
 					</Text>
 					<Link

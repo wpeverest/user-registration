@@ -170,7 +170,9 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 	public function display_page() {
 		$this->prepare_items();
 		?>
+				<hr class="wp-header-end">
 				<div class="ur-admin-page-topnav" id="ur-lists-page-topnav">
+
 					<div class="ur-page-title__wrapper">
 						<div class="ur-page-title__wrapper-logo">
 							<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
@@ -194,7 +196,6 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 						</button>
 					</div>
 				</div>
-				<hr class="wp-header-end">
 				<div class="user-registration-list-table-container">
 					<div id="user-registration-list-table-page">
 						<div class="user-registration-list-table-header">

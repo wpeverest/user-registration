@@ -284,14 +284,18 @@ const FreeVsPro = () => {
 
 			getAllModules()
 				.then((data) => {
-
 					if (data.success) {
 						tableContentsRef.map((tableContent, key) => {
 							if (tableContent.type === "features") {
 								data.modules_lists.map((module) => {
 									if (module.type == "feature") {
-										let isFree = module.plan.includes('free');
-										let isPro = !isFree || sharedFeatures.includes(module.slug);
+										let isFree =
+											module.plan.includes("free");
+										let isPro =
+											!isFree ||
+											sharedFeatures.includes(
+												module.slug
+											);
 
 										tableContent.contents.push({
 											title: module.title,
@@ -341,8 +345,8 @@ const FreeVsPro = () => {
 						fontSize="14px"
 						key={tableContent.type}
 					>
-						<Thead bgColor="#2563EB">
-							<Tr border="1px solid #F4F4F4" alignItems="center">
+						<Thead bgColor="#475bb2">
+							<Tr border="1px solid #EDF2F7" alignItems="center">
 								<Th w="50%" color="white">
 									{tableContent.title}
 								</Th>
@@ -357,7 +361,7 @@ const FreeVsPro = () => {
 						<Tbody>
 							{tableContent.contents.map((rowContent) => (
 								<Tr
-									border="1px solid #F4F4F4"
+									border="1px solid #EDF2F7"
 									alignItems="center"
 									key={rowContent.title}
 								>

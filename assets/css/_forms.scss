@@ -30,6 +30,7 @@
 	display: flex;
 	align-items: center;
 	position: relative;
+	margin-bottom: 8px;
 
 	input {
 		position: absolute;
@@ -53,7 +54,7 @@
 	&__button {
 		margin-left: auto;
 		display: inline-block;
-		background: $color_gray_two;
+		background: #475bb2;
 		color: $white;
 		padding: 6px 15px;
 		border-radius: 4px;
@@ -76,8 +77,8 @@
 	position: relative;
 
 	.user-registration-editable-title__icon {
-		background: $color_gray_four;
-		color: $color_gray_one;
+		background: #edeff7;
+		color: $primary_color;
 		width: 32px;
 		height: 32px;
 		flex: 0 0 32px;
@@ -253,7 +254,9 @@
 		}
 
 		.select2-selection--single {
-			height: 32px;
+			height: 38px;
+			padding: 2px 6px;
+			border: 1px solid #e1e1e1;
 
 			.select2-selection__rendered {
 				display: block;
@@ -264,6 +267,11 @@
 			.select2-selection__arrow {
 				right: 3px;
 				height: 30px;
+
+				b {
+					margin-top: -2px;
+					margin-left: -8px;
+				}
 			}
 		}
 

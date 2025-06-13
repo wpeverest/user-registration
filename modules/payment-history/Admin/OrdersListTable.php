@@ -377,7 +377,7 @@ class OrdersListTable extends \UR_List_Table {
 			</button>
 		</div>
 		<div style="display: flex; gap: 10px">
-			<select name="payment_for" id="user-registration-pro-payment-type-filters">
+			<select name="payment_for" id="user-registration-pro-payment-type-filters" class="ur-enhanced-select">
 				<option
 					value="" selected><?php echo esc_html__( 'Select Module', 'user-registration' ); ?></option>
 				<option
@@ -395,7 +395,7 @@ class OrdersListTable extends \UR_List_Table {
 		<!--		membership dropdown-->
 		<div class="module-box" id="user-registration-pro-memberships-filters-container"
 			style="display:<?php echo $show_membership ? 'flex' : 'none'; ?>; gap: 10px;">
-			<select name="membership_id" id="user-registration-pro-memberships-filter">
+			<select name="membership_id" id="user-registration-pro-memberships-filter" class="ur-enhanced-select">
 				<option
 					value=""><?php echo esc_html__( 'All Membership', 'user-registration' ); ?></option>
 				<?php
@@ -412,7 +412,7 @@ class OrdersListTable extends \UR_List_Table {
 
 		<div class="module-box" id="user-registration-pro-forms-filters-container"
 			style="display:<?php echo ! $show_membership && $_REQUEST['payment_for'] == 'forms' ? 'flex' : 'none'; ?>; gap: 10px;">
-			<select name="form_id" id="user-registration-pro-forms-filter">
+			<select name="form_id" id="user-registration-pro-forms-filter" class="ur-enhanced-select">
 				<option
 					value=""><?php echo esc_html__( 'All Forms', 'user-registration' ); ?></option>
 				<?php
@@ -428,7 +428,7 @@ class OrdersListTable extends \UR_List_Table {
 		</div>
 
 		<div class="" id="user-registration-pro-members-filters" style="display: flex; gap: 10px">
-			<select name="payment_method" id="user_registration_pro_users_form_filter">
+			<select name="payment_method" id="user_registration_pro_users_form_filter" class="ur-enhanced-select">
 				<option
 					value=""><?php echo esc_html__( 'All Gateway', 'user-registration' ); ?></option>
 				<?php
@@ -445,7 +445,7 @@ class OrdersListTable extends \UR_List_Table {
 			</select>
 		</div>
 		<div class="" id="user-registration-pro-members-filters" style="display: flex; gap: 10px">
-			<select name="status" id="user_registration_pro_users_form_filter">
+			<select name="status" id="user_registration_pro_users_form_filter" class="ur-enhanced-select">
 				<option
 					value=""><?php echo esc_html__( 'All Status', 'user-registration' ); ?></option>
 				<?php
@@ -543,7 +543,7 @@ class OrdersListTable extends \UR_List_Table {
 		}
 
 		echo '<label for="bulk-action-selector-' . esc_attr( $which ) . '" class="screen-reader-text">' . __( 'Select bulk action' ) . '</label>';
-		echo '<select name="action' . $two . '" id="bulk-action-selector-' . esc_attr( $which ) . "\">\n";
+		echo '<select name="action' . $two . '" class="ur-enhanced-select" id="bulk-action-selector-' . esc_attr( $which ) . "\">\n";
 		echo '<option value="-1">' . __( 'Bulk actions' ) . "</option>\n";
 
 		foreach ( $this->_actions as $key => $value ) {

@@ -23,29 +23,32 @@ import {
 	ModalHeader,
 	Spinner,
 	useDisclosure,
-	Switch,
+	Switch
 } from "@chakra-ui/react";
-import {__} from "@wordpress/i18n";
-import React, {useState, useEffect, useCallback, useRef} from "react";
+import { __ } from "@wordpress/i18n";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import YouTubePlayer from "react-player/youtube";
-import {FaPlayCircle} from "react-icons/fa";
-import {SettingsIcon} from "@chakra-ui/icons";
+import { FaPlayCircle } from "react-icons/fa";
+import { SettingsIcon } from "@chakra-ui/icons";
 
 /**
  * Internal Dependencies
  */
-import {activateModule, deactivateModule} from "./modules-api";
-import {useStateValue} from "../../../../context/StateProvider";
-import {actionTypes} from "../../../../context/dashboardContext";
+import { activateModule, deactivateModule } from "./modules-api";
+import { useStateValue } from "../../../../context/StateProvider";
+import { actionTypes } from "../../../../context/dashboardContext";
 
 const ModuleItem = (props) => {
 	/* global _UR_DASHBOARD_ */
-	const {assetsURL, isPro, licensePlan, adminURL, upgradeURL} =
-	typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
+	const { assetsURL, isPro, licensePlan, adminURL, upgradeURL } =
+		typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 
-	const [{upgradeModal, isMembershipActivated, isPaymentAddonActivated}, dispatch] = useStateValue();
+	const [
+		{ upgradeModal, isMembershipActivated, isPaymentAddonActivated },
+		dispatch
+	] = useStateValue();
 	const toast = useToast();
-	const {isOpen, onOpen, onClose} = useDisclosure();
+	const { isOpen, onOpen, onClose } = useDisclosure();
 	const isFirstRender = useRef(true);
 
 	const {
@@ -83,7 +86,11 @@ const ModuleItem = (props) => {
 	const [licenseActivated, setLicenseActivated] = useState(false);
 	const [toastMessage, setToastMessage] = useState(null);
 	const [toastStatus, setToastStatus] = useState(null);
-	const isPaymentAddon = ["user-registration-payments", "user-registration-stripe", "user-registration-authorize-net"].includes(slug);
+	const isPaymentAddon = [
+		"user-registration-payments",
+		"user-registration-stripe",
+		"user-registration-authorize-net"
+	].includes(slug);
 	// Helper for showing toast
 	const showToast = useCallback(
 		(message, status) => {
@@ -96,12 +103,11 @@ const ModuleItem = (props) => {
 		[toast]
 	);
 	useEffect(() => {
-
 		if (IsStateUpdated && toastMessage && toastStatus) {
 			showToast(toastMessage, toastStatus);
 			setToastMessage(null);
 			setToastStatus(null);
-			resetIsStateUpdated(false)
+			resetIsStateUpdated(false);
 		}
 	}, [IsStateUpdated, toastMessage, toastStatus]);
 	// Handle module activation/deactivation
@@ -202,16 +208,20 @@ const ModuleItem = (props) => {
 		if (data.plan.includes("free")) {
 			if (
 				data.activation_requirements &&
-				data.activation_requirements.includes("membership", "stripe", "payments", "authorize-net")
+				data.activation_requirements.includes(
+					"membership",
+					"stripe",
+					"payments",
+					"authorize-net"
+				)
 			) {
-				let isActive = isMembershipActivated || isPaymentAddonActivated
+				let isActive = isMembershipActivated || isPaymentAddonActivated;
 				setIsFreeModuleEnabled(isActive);
 			}
 		}
 	}, [isMembershipActivated, isPaymentAddonActivated]);
 
 	useEffect(() => {
-
 		setModuleStatus(data.status);
 
 		if (!upgradeModal.enable) {
@@ -227,7 +237,8 @@ const ModuleItem = (props) => {
 					setIsFreeModuleEnabled(true);
 				}
 				if (isMembershipActivated || isPaymentAddonActivated) {
-					let isActive = isMembershipActivated || isPaymentAddonActivated;
+					let isActive =
+						isMembershipActivated || isPaymentAddonActivated;
 					setIsFreeModuleEnabled(isActive);
 				}
 			}
@@ -264,11 +275,9 @@ const ModuleItem = (props) => {
 	}, [thumbnailVideoPlaying]);
 
 	useEffect(() => {
-
 		const status = moduleStatus === "active";
 
 		if (data.status !== moduleStatus) {
-
 			if ("user-registration-membership" === slug) {
 				dispatch({
 					type: actionTypes.GET_IS_MEMBERSHIP_ACTIVATED,
@@ -285,7 +294,7 @@ const ModuleItem = (props) => {
 	}, [moduleStatus, dispatch, slug]);
 
 	const handleBoxClick = () => {
-		const upgradeModalRef = {...upgradeModal};
+		const upgradeModalRef = { ...upgradeModal };
 		upgradeModalRef.moduleType = data.type;
 		upgradeModalRef.moduleName = data.name;
 
@@ -318,7 +327,6 @@ const ModuleItem = (props) => {
 			upgradeModal: upgradeModalRef
 		});
 		onInputDisable(false);
-
 	};
 
 	const renderThumbnail = () => (
@@ -360,7 +368,7 @@ const ModuleItem = (props) => {
 					}
 				>
 					{((demo_video_url && !thumbnailVideoPlaying) ||
-							!demo_video_url) &&
+						!demo_video_url) &&
 						renderThumbnail()}
 
 					{thumbnailVideoPlaying && (
@@ -369,12 +377,12 @@ const ModuleItem = (props) => {
 							onClose={() => setThumbnailVideoPlaying(false)}
 							size="3xl"
 						>
-							<ModalOverlay/>
+							<ModalOverlay />
 							<ModalContent px={4} pb={4}>
 								<ModalHeader textAlign="center">
 									{title}
 								</ModalHeader>
-								<ModalCloseButton/>
+								<ModalCloseButton />
 								<YouTubePlayer
 									url={
 										"https://www.youtube.com/embed/" +
@@ -397,7 +405,7 @@ const ModuleItem = (props) => {
 										left={"50%"}
 										transform={"translate(-50%, -50%)"}
 									>
-										<Spinner size={"lg"}/>
+										<Spinner size={"lg"} />
 									</Box>
 								)}
 							</ModalContent>
@@ -468,9 +476,9 @@ const ModuleItem = (props) => {
 									onChange={(e) => {
 										moduleEnabled
 											? onCheckedChange(
-												slug,
-												e.target.checked
-											)
+													slug,
+													e.target.checked
+											  )
 											: handleBoxClick();
 									}}
 								>
@@ -491,7 +499,7 @@ const ModuleItem = (props) => {
 				</Box>
 			</Box>
 
-			<Divider color="gray.300"/>
+			<Divider color="gray.300" />
 			<Box
 				px="4"
 				py="5"
@@ -518,7 +526,7 @@ const ModuleItem = (props) => {
 								</Text>
 								<IconButton
 									size="sm"
-									icon={<SettingsIcon/>}
+									icon={<SettingsIcon />}
 									onClick={() =>
 										window.open(
 											adminURL + setting_url,
@@ -529,13 +537,15 @@ const ModuleItem = (props) => {
 							</>
 						)}
 				</HStack>
-				{(!isPerformingAction &&
-					(!selectedModuleData.hasOwnProperty(slug) || !isPerformingBulkAction)) ? (
+				{!isPerformingAction &&
+				(!selectedModuleData.hasOwnProperty(slug) ||
+					!isPerformingBulkAction) ? (
 					(moduleEnabled || plan.includes("free")) && (
 						<Switch
 							isChecked={
 								"active" === moduleStatus
-									? plan.includes("free") && !isFreeModuleEnabled
+									? plan.includes("free") &&
+									  !isFreeModuleEnabled
 										? false
 										: true
 									: false
@@ -560,17 +570,16 @@ const ModuleItem = (props) => {
 				{(!moduleEnabled ||
 					(!moduleEnabled && !plan.includes("free"))) && (
 					<Button
-						colorScheme={"primary"}
+						backgroundColor={"#475BB2"}
+						color="white"
 						size="sm"
 						fontSize="xs"
 						borderRadius="base"
 						fontWeight="semibold"
 						_hover={{
-							color: "white",
 							textDecoration: "none"
 						}}
 						_focus={{
-							color: "white",
 							textDecoration: "none"
 						}}
 						onClick={
