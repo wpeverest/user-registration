@@ -2834,6 +2834,37 @@
 									"#ur-tab-registered-fields"
 								).find("ul.ur-registered-list");
 
+								//-> Disable payment fields from dragging when membership field is present.
+								var payment_nodes = [];
+								$.each(user_registration_form_builder_data.form_payment_fields, function(index, identifier) {
+									var selector = `#user_registration_${identifier}_list`;
+									payment_nodes.push($(selector));
+								});
+								$.each(payment_nodes, function() {
+									var $this = $(this);
+									var has_membership_field = $(".ur-input-grids").find('.ur-field[data-field-key="membership"]').length > 0;
+									if(has_membership_field) {
+										$this.draggable("disable");
+										$this.addClass("ur-locked-field");
+										$this.addClass("ur-membership-payment-field-disabled");
+									}
+								});
+																// Disable membership field from dragging when payment setting is enabled already.
+								var $checkboxes = $("input[name^='user_registration_enable_']");
+								if( $checkboxes.is(':checked')) {
+									// disable membership field.
+									$membershipField = $(".ur-registered-list").find("li[data-field-id='user_registration_membership']");
+									$membershipField.draggable("disable");
+									$membershipField.addClass("ur-membership-field-disabled");
+									$membershipField.addClass("ur-locked-field");
+								} else {
+									// enable membership field.
+									$membershipField = $(".ur-registered-list").find("li[data-field-id='user_registration_membership']");
+									$membershipField.draggable("enable");
+									$membershipField.removeClass("ur-membership-field-disabled");
+									$membershipField.removeClass("ur-locked-field");
+								}
+								
 								$.each(ul_node.find("li"), function () {
 									var $this = $(this);
 

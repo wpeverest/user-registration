@@ -52,21 +52,27 @@ jQuery(function ($) {
 		var icon =
 			'<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>';
 
-		if ($(this).hasClass("ur-one-time-draggable-disabled")) {
-			var title =
+		if ($(this).hasClass("ur-one-time-draggable-disabled") || $(this).hasClass("ur-membership-payment-field-disabled") || $(this).hasClass("ur-membership-field-disabled")) {			var title =
 					icon +
 					'<span class="user-registration-swal2-modal__title">' +
 					user_registration_form_builder_data.form_one_time_draggable_fields_locked_title.replace(
 						"%field%",
 						$(this).text()
 					) +
-					"</span>",
-				message =
-					user_registration_form_builder_data.form_one_time_draggable_fields_locked_message.replace(
-						"%field%",
-						$(this).text()
-					);
-
+					"</span>";
+			var message = '';
+			if($(this).hasClass("ur-membership-payment-field-disabled")){
+				message = user_registration_form_builder_data.form_membership_payment_fields_disabled_message;
+			}
+			else if($(this).hasClass("ur-membership-field-disabled")){
+				message = user_registration_form_builder_data.form_membership_field_disabled_message;				
+			}
+			else{
+				message = user_registration_form_builder_data.form_one_time_draggable_fields_locked_message.replace(
+					"%field%",
+					$(this).text()
+				);
+			}
 			Swal.fire({
 				title: title,
 				html: message,
@@ -361,6 +367,12 @@ jQuery(function ($) {
 			.each(function (index, el) {
 				var appending_text = $(el).find("h3").text();
 				var appending_id = $(el).attr("id");
+				var dataAttributes = "";
+				$.each( el.attributes, function() {
+					if(this.name.startsWith('data-')) {
+						dataAttributes += " " + this.name + "='" + this.value + "' ";
+					}
+				});
 				if ("integration-settings" === appending_id) {
 					var appending_text = $(el).find(".ur-integration").text();
 					form_settings_section.append(
@@ -420,6 +432,12 @@ jQuery(function ($) {
 					)
 						? "integration-lists-settings"
 						: "";
+
+					if( !$(el).hasClass("integration-lists-settings") && $(el).is('[data-field-group*="payments"]')) {
+						if(user_registration_form_builder_data.form_has_membership_field) {
+							classToAdd += " disabled";
+						}
+					}
 					var divToAppend = "";
 
 					if ($(el).hasClass("integration-lists-settings")) {
@@ -472,6 +490,7 @@ jQuery(function ($) {
 								'" class="form-settings-tab ' +
 								classToAdd +
 								'" ' +
+								dataAttributes + 
 								style +
 								" >" +
 								appending_text +
@@ -667,6 +686,26 @@ jQuery(function ($) {
 							});
 						}
 					}
+				} else if($(this).hasClass('disabled') && $(this).data('field-group') === 'payments') {
+					var icon = '<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>';
+					var title =
+					icon +
+					'<span class="user-registration-swal2-modal__title">' +
+					user_registration_form_builder_data.form_membership_payment_settings_disabled_title.replace(
+						"%field%",
+						$(this).text()
+					) +
+					"</span>";
+					var message = user_registration_form_builder_data.form_membership_payment_settings_disabled_message;
+					Swal.fire({
+						title: title,
+						html: message,
+						showCloseButton: true,
+						customClass:
+							"user-registration-swal2-modal user-registration-swal2-modal--center user-registration-locked-field"
+					}).then(function (result) {
+						// Do Nothing here.
+					});
 				} else {
 					this_id = $(this).attr("id");
 					// Remove all active classes initially.
