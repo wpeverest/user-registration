@@ -405,7 +405,7 @@
   color: #222;
 }
 .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link:hover, .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link.is-active {
-  background: #F8F8FA;
+  background: #fafafc;
   border-radius: 0;
   color: #475bb2;
 }
@@ -414,7 +414,7 @@
 }
 .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link.is-active:not(#ur-settings-collapse)::after {
   opacity: 1;
-  background: #F8F8FA;
+  background: #fafafc;
 }
 .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link:last-child {
   border-bottom: 1px solid #e1e1e1;
@@ -1505,6 +1505,8 @@
   color: #475bb2;
   border: 1px solid #475bb2;
   font-weight: 500;
+  height: 38px;
+  align-content: center;
 }
 .user-registration-settings-container .user-registration-options-container .ur-export-users-page {
   margin-top: 0;
@@ -1570,20 +1572,23 @@
 .user-registration-settings-container .user-registration-options-container .ur-export-users-page #selected-export-user-form::hover {
   background-color: #475BB2;
 }
-.user-registration-settings-container .user-registration-options-container #urm-popup-table {
+.user-registration-settings-container .user-registration-options-container #urm-popup-table, .user-registration-settings-container .user-registration-options-container #urm-invite-codes-list-table {
   background-color: #ffffff;
   border: 1px solid #EDF2F7;
   border-radius: 4px;
 }
-.user-registration-settings-container .user-registration-options-container #urm-popup-table #popups-list .ur-list-table-wrapper {
+.user-registration-settings-container .user-registration-options-container #urm-popup-table #popups-list, .user-registration-settings-container .user-registration-options-container #urm-invite-codes-list-table #popups-list {
+  margin-top: 16px;
+}
+.user-registration-settings-container .user-registration-options-container #urm-popup-table #popups-list .ur-list-table-wrapper, .user-registration-settings-container .user-registration-options-container #urm-invite-codes-list-table #popups-list .ur-list-table-wrapper {
   width: 100%;
   overflow-x: auto;
 }
-.user-registration-settings-container .user-registration-options-container #urm-popup-table #popups-list .ur-list-table-wrapper .wp-list-table {
+.user-registration-settings-container .user-registration-options-container #urm-popup-table #popups-list .ur-list-table-wrapper .wp-list-table, .user-registration-settings-container .user-registration-options-container #urm-invite-codes-list-table #popups-list .ur-list-table-wrapper .wp-list-table {
   width: 100%;
   border-collapse: collapse;
 }
-.user-registration-settings-container .user-registration-options-container #urm-popup-table #popups-list .ur-list-table-wrapper .wp-list-table thead tr th.column-shortcode, .user-registration-settings-container .user-registration-options-container #urm-popup-table #popups-list .ur-list-table-wrapper .wp-list-table thead tr th.column-author, .user-registration-settings-container .user-registration-options-container #urm-popup-table #popups-list .ur-list-table-wrapper .wp-list-table thead tr th.column-date {
+.user-registration-settings-container .user-registration-options-container #urm-popup-table #popups-list .ur-list-table-wrapper .wp-list-table thead tr th.column-shortcode, .user-registration-settings-container .user-registration-options-container #urm-popup-table #popups-list .ur-list-table-wrapper .wp-list-table thead tr th.column-author, .user-registration-settings-container .user-registration-options-container #urm-popup-table #popups-list .ur-list-table-wrapper .wp-list-table thead tr th.column-date, .user-registration-settings-container .user-registration-options-container #urm-invite-codes-list-table #popups-list .ur-list-table-wrapper .wp-list-table thead tr th.column-shortcode, .user-registration-settings-container .user-registration-options-container #urm-invite-codes-list-table #popups-list .ur-list-table-wrapper .wp-list-table thead tr th.column-author, .user-registration-settings-container .user-registration-options-container #urm-invite-codes-list-table #popups-list .ur-list-table-wrapper .wp-list-table thead tr th.column-date {
   width: auto;
 }
 .user-registration-settings-container p.submit {
@@ -1675,6 +1680,18 @@
 #popups-select .button {
   color: #475bb2;
   font-weight: 500;
-  max-height: 30px;
-  margin-top: 3px;
+}
+
+#urm-invite-codes-list-table .button {
+  color: #475bb2;
+  font-weight: 500;
+  height: 38px;
+  margin-right: 5px;
+}
+#urm-invite-codes-list-table .select2-container {
+  width: 10% !important;
+  margin-left: 5px;
+}
+#urm-invite-codes-list-table #codes-filter {
+  margin-top: 16px;
 }

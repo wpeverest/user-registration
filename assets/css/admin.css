@@ -10068,7 +10068,6 @@ a.button.ur-smart-tags-list-button {
   text-decoration: underline;
 }
 .ur-registered-from .ur-builder-wrapper .ur-builder-header {
-  padding-top: 10px;
   padding-bottom: 24px;
   border-bottom: 1px solid #e1e1e1;
   margin-bottom: 32px;
@@ -12293,7 +12292,7 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
   max-width: 0px;
 }
 body.user-registration-membership_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-from .ur-login-form-settings #ur-collapse {
-  background: #fafafa;
+  background: #ffffff;
 }
 body.user-registration-membership_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-from .ur-login-form-settings #ur-collapse.close {
   right: -21px;
@@ -12546,10 +12545,11 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
 
 .user-registration-system-info-setting {
   position: relative;
-  margin: 40px;
+  margin: 32px;
   padding: 32px 20px 52px 32px;
-  box-shadow: 0px 6px 26px 0px rgba(10, 10, 10, 0.08);
   background: #ffffff;
+  border: 1px solid #edf2f7;
+  border-radius: 4px;
 }
 .user-registration-system-info-setting .user-registration-settings-header {
   margin-bottom: 32px;
@@ -12611,6 +12611,7 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 26px;
 }
 .user-registration-system-info-setting table th {
   font-weight: 500;

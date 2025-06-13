@@ -3882,7 +3882,6 @@ a.button.ur-smart-tags-list-button {
 
 		.ur-builder {
 			&-header {
-				padding-top: $spacing_10px;
 				padding-bottom: $spacing_24px;
 				border-bottom: $border_width solid $border-color;
 				margin-bottom: $spacing_32px;
@@ -6795,7 +6794,7 @@ body {
 					}
 
 					#ur-collapse {
-						background: #fafafa;
+						background: #ffffff;
 
 						&.close {
 							right: -21px;
@@ -7172,10 +7171,12 @@ body {
 // System infor settings
 .user-registration-system-info-setting {
 	position: relative;
-	margin: 40px;
+	margin: 32px;
 	padding: 32px 20px 52px 32px;
-	box-shadow: 0px 6px 26px 0px rgba(10, 10, 10, 0.08);
 	background: #ffffff;
+	border: 1px solid #edf2f7;
+	border-radius: $border_radius_4;
+
 	.user-registration-settings-header {
 		margin-bottom: 32px;
 		.user-registration-options-header--top__left {
@@ -7238,6 +7239,7 @@ body {
 			white-space: nowrap;
 			overflow: hidden;
 			text-overflow: ellipsis;
+			line-height: 26px;
 		}
 
 		th {

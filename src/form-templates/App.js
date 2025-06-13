@@ -87,10 +87,13 @@ const App = () => {
 	};
 	return (
 		<ChakraProvider>
-			<Box border={"1px solid #EDF2F7"} borderRadius={"4px"}>
+			<Box
+				border={"1px solid #EDF2F7"}
+				borderRadius={"4px"}
+				backgroundColor="white"
+			>
 				<Box
 					padding="0px 20px 50px"
-					backgroundColor="white"
 					gap="24px"
 					display="flex"
 					flexDirection="column"

@@ -473,7 +473,7 @@ body {
 
 					&:hover,
 					&.is-active {
-						background: #F8F8FA;
+						background: #fafafc;
 						border-radius: 0;
 						color: $primary_color;
 
@@ -485,7 +485,7 @@ body {
 					&.is-active {
 						&:not(#ur-settings-collapse)::after {
 							opacity: 1;
-							background: #F8F8FA;
+							background: #fafafc;
 						}
 					}
 
@@ -1808,6 +1808,8 @@ body {
 				color: #475bb2;
 				border: 1px solid #475bb2;
 				font-weight: 500;
+				height: 38px;
+				align-content: center;
 			}
 		}
 
@@ -1893,12 +1895,14 @@ body {
 			}
 		}
 
-		#urm-popup-table {
+		#urm-popup-table, #urm-invite-codes-list-table {
 			background-color: #ffffff;
 			border: 1px solid #EDF2F7;
 			border-radius: $border_radius_4;
 
 			#popups-list {
+				margin-top: 16px;
+
 				.ur-list-table-wrapper {
 					width: 100%;
 					overflow-x: auto;
@@ -2051,7 +2055,23 @@ body {
 	.button {
 		color: #475bb2;
 		font-weight: 500;
-		max-height: 30px;
-		margin-top: 3px;
+	}
+}
+
+#urm-invite-codes-list-table {
+	.button {
+		color: #475bb2;
+		font-weight: 500;
+		height: 38px;
+		margin-left: 5px;
+	}
+
+	.select2-container {
+		width: 10% !important;
+		margin-right: 5px;
+	}
+
+	#codes-filter {
+		margin-top: 16px;
 	}
 }
