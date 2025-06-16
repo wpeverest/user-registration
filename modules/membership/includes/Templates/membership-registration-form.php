@@ -200,7 +200,7 @@
 		class="ur_membership_frontend_input_container urm_hidden_payment_container ur_payment_gateway_container urm-d-none">
 		<hr class="ur_membership_divider">
 		<span
-			class="ur_membership_input_label ur-label required"><?php echo esc_html__( 'Select Payment Gateway', 'user-registration' ); ?>
+			class="ur_membership_input_label ur-label required"><?php echo apply_filters( 'user_registration_membership_subscription_payment_gateway_title', esc_html__( 'Select Payment Gateway', 'user-registration' ) ); ?>
 		</span>
 		<div id="payment-gateway-body" class="ur_membership_frontend_input_container">
 			<?php foreach ( get_option( 'ur_membership_payment_gateways' ) as $g => $gateway ) : ?>
@@ -215,7 +215,9 @@
 							value="<?php echo esc_attr( strtolower( $gateway ) ); ?>"
 						<?php echo 0 === $g ? 'checked' : ''; ?>
 					>
-					<span class="ur-membership-duration"><?php echo esc_html__( $gateway ); ?></span>
+					<span class="ur-membership-duration">
+						<?php echo esc_html( apply_filters( 'user_registration_membership_payment_gateway_selection_labels', __( $gateway, 'user-registration' ), $g ) ); ?>
+					</span>
 				</label>
 			<?php endforeach; ?>
 			<span id="payment-gateway-notice" class="notice_red"></span>
@@ -249,5 +251,3 @@
 
 </div>
 <!--user order successful section-->
-
-
