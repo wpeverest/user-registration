@@ -81,7 +81,7 @@
 }
 
 .ur-text-muted {
-  color: rgb(182.4993283582, 186.8632089552, 206.5006716418);
+  color: #383838;
 }
 
 @font-face {
@@ -1132,13 +1132,10 @@ textarea.ur-input-border-red {
   gap: 2px;
 }
 .ur-frontend-form .ur-form-row .ur-form-grid #user-registration-tfa-footer .user-registration-Button {
-  flex: 1;
-  color: #ffffff;
   padding: 10px 20px;
   font-size: 14px;
   line-height: 24px;
   box-shadow: none;
-  float: none;
 }
 .ur-frontend-form .ur-form-row .ur-form-grid #user-registration-tfa-footer .user-registration-Button:hover {
   background: #38488e;
@@ -1147,8 +1144,12 @@ textarea.ur-input-border-red {
 .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item {
   margin-bottom: 20px;
 }
+.ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item .ur-frontend-field {
+  margin-bottom: 0;
+}
 .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-multiple_choice ul, .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-subscription_plan ul, .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-checkbox ul, .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-radio ul {
   margin: 0;
+  padding: 0;
   list-style: none;
 }
 .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-multiple_choice ul li, .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-subscription_plan ul li, .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-checkbox ul li, .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item.field-radio ul li {
@@ -2114,7 +2115,7 @@ span.ur-shortcode-form-embed-dot {
 }
 .user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-tab-contents {
   padding: 24px;
-  background-color: #fafafc;
+  background-color: #fafafa;
 }
 .user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-tab-contents .ur-login-view-doc {
   border-radius: 3px;
@@ -2278,7 +2279,7 @@ body .user-registration-error > svg {
   display: none;
 }
 body.user-registration-page .user-registration.ur-frontend-form, body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form {
-  max-width: 100% !important;
+  max-width: 100%;
 }
 body.user-registration-page .user-registration.ur-frontend-form form .ur-button-container, body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form form .ur-button-container {
   width: max-content;
@@ -2378,9 +2379,8 @@ body.user-registration-page #user-registration:not(.user-registration-MyAccount)
 body.user-registration-page .user-registration:not(.user-registration-MyAccount), body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount),
 body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) {
   max-width: 520px;
-  margin: 24px auto;
-  border-radius: 8px;
-  background: #FFF;
+  border-radius: 4px;
+  background: #ffffff;
   border: 0;
 }
 @media screen and (max-width: 575px) {
@@ -2389,6 +2389,13 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
   body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) {
     padding: 40px 30px;
   }
+}
+body.user-registration-page #user-registration:not(.user-registration-MyAccount):has(.ur-grid-2), body.user-registration-page #user-registration:not(.user-registration-MyAccount):has(.ur-grid-3),
+body.user-registration-page .user-registration:not(.user-registration-MyAccount):has(.ur-grid-2),
+body.user-registration-page .user-registration:not(.user-registration-MyAccount):has(.ur-grid-3), body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount):has(.ur-grid-2), body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount):has(.ur-grid-3),
+body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount):has(.ur-grid-2),
+body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount):has(.ur-grid-3) {
+  max-width: 940px;
 }
 body.user-registration-page #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--bordered),
 body.user-registration-page .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--bordered), body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--bordered),
@@ -2716,6 +2723,7 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
   letter-spacing: 0.15px;
   border: 1px solid #475bb2;
   margin-left: 0;
+  background: #475bb2;
 }
 body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-button-container .ur-submit-button:hover,
 body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-button-container .ur-submit-button:hover, body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-button-container .ur-submit-button:hover,
@@ -3009,6 +3017,34 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
   box-shadow: none;
   margin-bottom: 0;
 }
+body.woocommerce-checkout .user-registration.urwc-form {
+  all: unset;
+}
+body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-grid {
+  margin: 0 -10px;
+}
+body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-grid .ur-field-item ul,
+body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-grid .ur-field-item ol {
+  padding-right: 4px;
+}
+body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-grid .ur-field-item .input-wrapper input:not([type=checkbox]), body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-grid .ur-field-item .input-wrapper input:not([type=radio]) {
+  min-height: 50px;
+  max-height: 50px;
+  border: 1px solid;
+  border-color: inherit;
+}
+body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-grid .ur-field-item select {
+  min-height: 50px;
+  max-height: 50px;
+  border: 1px solid;
+  border-color: inherit;
+  border-radius: 4px;
+}
+body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-grid .ur-field-item textarea {
+  border: 1px solid;
+  border-color: inherit;
+  border-radius: 4px;
+}
 
 .user-registration-login-form-container .ur-registered-from .ur-login-form-wrapper #user-registration {
   width: 100%;
@@ -3025,7 +3061,7 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
 }
 .user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-tab-contents {
   padding: 24px;
-  background-color: #fafafc;
+  background-color: #ffffff;
 }
 .user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-tab-contents .ur-login-view-doc {
   border-radius: 3px;
@@ -3125,6 +3161,12 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
 .user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer #post-body .ur-builder-wrapper .ur-selected-inputs {
   background: transparent;
   padding: 24px;
+}
+.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .user-registration-login-settings-form {
+  border-radius: 4px;
+}
+.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .user-registration-login-settings-form#ur-frontend-form {
+  border: 1px solid #EDF2F7;
 }
 .user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .user-registration-login-settings-form a {
   pointer-events: none;

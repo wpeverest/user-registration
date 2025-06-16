@@ -156,7 +156,7 @@ $return_url = admin_url( 'admin.php?page=user-registration-members' );
 									<select
 										data-key-name="<?php echo esc_html__( 'Role', 'user-registration' ); ?>"
 										id="ur-input-type-membership-member-role"
-										class="user-membership-enhanced-select2 ur-membership-members-input">
+										class="user-membership-enhanced-select2 ur-membership-members-input ur-enhanced-select">
 										<?php
 										foreach ( $roles as $k => $role ) :
 											?>
@@ -202,10 +202,10 @@ $return_url = admin_url( 'admin.php?page=user-registration-members' );
 								<?php echo esc_html__( 'Membership', 'user-registration' ); ?>
 							</label>
 							<select
-								class="ur-membership-members-input"
+								class="ur-membership-members-input  ur-enhanced-select user-membership-enhanced-select2"
 								data-key-name="<?php echo esc_html__( 'Membership', 'user-registration' ); ?>"
 								name="ur-membership-select"
-								id="ur-membership-select" class="user-membership-enhanced-select2"
+								id="ur-membership-select"
 								style="width: 100%"
 							>
 								<?php

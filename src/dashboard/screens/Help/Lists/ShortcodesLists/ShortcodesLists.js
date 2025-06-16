@@ -313,7 +313,8 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 			],
 			example: [
 				{
-					example_name: '[user_registration_groups id="5" button_text="Join Now"]',
+					example_name:
+						'[user_registration_groups id="5" button_text="Join Now"]',
 					example_description: __(
 						"Displays Membership listing attached to group with id 5",
 						"user-registration"
@@ -367,7 +368,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 			textField.innerText = shortcode_id;
 			document.body.appendChild(textField);
 			textField.select();
-			document.execCommand('copy');
+			document.execCommand("copy");
 			textField.remove();
 
 			setShortcodeCopied({
@@ -376,8 +377,8 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 			});
 			toast({
 				description: `${shortcode_id} copied to clipboard`,
-				status: 'success',
-				position: 'bottom-right',
+				status: "success",
+				position: "bottom-right",
 				duration: 1500
 			});
 			event.stopPropagation();
@@ -401,8 +402,8 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 			}, 1000);
 			toast({
 				description: `${example_name} copied to clipboard`,
-				position: 'bottom-right',
-				status: 'success',
+				position: "bottom-right",
+				status: "success",
 				duration: 1500
 			});
 		} catch (error) {
@@ -456,7 +457,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 								flex="1"
 								textAlign="left"
 								bgColor="#EDEFF7"
-								color="#2563EB"
+								color="#475bb2"
 								maxWidth="fit-content"
 								p="4px 8px"
 								fontWeight="600"
@@ -466,16 +467,13 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 							</Box>
 							<Box textAlign="right">
 								<HStack>
-										<IconButton
-											size="md"
-											icon={<CopyIcon />}
-											onClick={(event) =>
-												handleCopyClick(
-													shortcode.id,
-													event
-												)
-											}
-										/>
+									<IconButton
+										size="md"
+										icon={<CopyIcon />}
+										onClick={(event) =>
+											handleCopyClick(shortcode.id, event)
+										}
+									/>
 									{isAccordionOpen[shortcode.id] ? (
 										<Minus h="5" w="5" />
 									) : (
@@ -547,7 +545,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 															flex="1"
 															textAlign="left"
 															bgColor="#EDEFF7"
-															color="#2563EB"
+															color="#475bb2"
 															maxWidth="fit-content"
 															p="4px 8px"
 															fontWeight="600"
@@ -628,7 +626,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 																flex="1"
 																textAlign="left"
 																bgColor="#EDEFF7"
-																color="#2563EB"
+																color="#475bb2"
 																maxWidth="fit-content"
 																p="4px 8px"
 																fontWeight="600"
@@ -639,20 +637,20 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 														<Td>
 															{example_name && (
 																<Box>
-																		<IconButton
-																			size="md"
-																			icon={
-																				<CopyIcon />
-																			}
-																			onClick={(
+																	<IconButton
+																		size="md"
+																		icon={
+																			<CopyIcon />
+																		}
+																		onClick={(
+																			event
+																		) =>
+																			handleExampleShortcodeCopy(
+																				example_name,
 																				event
-																			) =>
-																				handleExampleShortcodeCopy(
-																					example_name,
-																					event
-																				)
-																			}
-																		/>
+																			)
+																		}
+																	/>
 																</Box>
 															)}
 														</Td>

@@ -505,7 +505,7 @@
 				);
 
 			form.find(
-				".user-registration-form-row[data-field='password'] label"
+				".user-registration-form-row label[for='password']"
 			).html(value + '<span class="required">*</span>');
 		});
 

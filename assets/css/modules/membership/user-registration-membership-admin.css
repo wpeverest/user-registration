@@ -1,3 +1,18 @@
+/**
+ * Variables
+ */
+/**
+ * Grid breakpoints
+ *
+ * Define the minimum dimensions at which your layout will change,
+ * adapting to different screen sizes, for use in media queries.
+ **/
+/**
+ * Grid containers
+ *
+ * Define the maximum width of `.ur-container` for different screen sizes.
+ * scss-docs-start container-max-widths
+ **/
 #payment-detail-modal h2 {
   font-size: 1.6em;
   font-weight: 700;
@@ -209,7 +224,7 @@
   color: #475BB2;
 }
 .user-registration #user-registration-list-table-page {
-  margin: 60px auto;
+  margin: 32px auto;
   padding: 28px 32px;
   box-sizing: border-box;
 }
@@ -569,6 +584,9 @@
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card {
   border: 0;
   padding: 28px;
+  border: 1px solid #EDF2F7;
+  border-radius: 4px;
+  background-color: #ffffff;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__header {
   padding: 0;
@@ -663,10 +681,10 @@
   padding: 0 !important;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card {
-  border-radius: 6px;
-  border: 1px solid #EDEFF7;
-  background: #F8F8FA;
   padding: 24px;
+  border: 1px solid #EDF2F7;
+  border-radius: 4px;
+  background-color: #ffffff;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container {
   padding: 0 !important;
@@ -821,7 +839,9 @@
   margin-top: 28px !important;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #payment-gateway-container .user-registration-card {
-  background: #ffffff;
+  border: 1px solid #EDF2F7;
+  border-radius: 4px;
+  background-color: #ffffff;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #payment-gateway-container .user-registration-card__header h3 {
   font-size: 20px;
@@ -935,14 +955,16 @@
 
 .ur-membership-tab-contents-wrapper {
   max-width: 1280px;
-  margin: 60px auto;
+  margin: 32px auto;
   display: block;
   padding: 0;
 }
 
 #ur-membership-create-form .user-registration-card {
-  border: 0;
   padding: 28px;
+  border: 1px solid #EDF2F7;
+  border-radius: 4px;
+  background-color: #ffffff;
 }
 #ur-membership-create-form .user-registration-card #ur-membership-form-container {
   gap: 32px;
@@ -1146,6 +1168,13 @@
   line-height: 1;
 }
 
+.user-registration-membership_page_user-registration-members {
+  background-color: #fafafa;
+}
+
+.user-registration-membership_page_user-registration-membership {
+  background-color: #fafafa;
+}
 .user-registration-membership_page_user-registration-membership table.membership_groups th#title {
   width: 200px;
 }
@@ -1165,4 +1194,14 @@
 
 .tooltipster-base.tooltipster-bottom {
   margin-top: -30px;
+}
+
+.wp-list-table.memberships tfoot tr th, .wp-list-table.memberships tfoot tr td {
+  border-top: none;
+}
+.wp-list-table.users td {
+  vertical-align: middle;
+}
+.wp-list-table.users td p {
+  margin: 7px 0 5px;
 }

@@ -340,12 +340,18 @@ class UR_Admin_Assets {
 				'admin_url'                              => admin_url( 'admin.php?page=add-new-registration&edit-registration=' ),
 				'form_required_fields'                   => ur_get_required_fields(),
 				'form_one_time_draggable_fields'         => ur_get_one_time_draggable_fields(),
+				'form_payment_fields' 					 => function_exists( 'user_registration_payment_fields' ) ? user_registration_payment_fields() : array(),
 				'form_repeater_row_not_droppable_fields_lists' => function_exists( 'user_registration_repeater_row_not_droppable_fields_lists' ) ? user_registration_repeater_row_not_droppable_fields_lists() : array(),
 				'form_repeater_row_empty'                => esc_html__( 'Please add at least one field to Repeater Row', 'user-registration' ),
 				/* translators: %field%: Field Label */
 				'form_one_time_draggable_fields_locked_title' => esc_html__( '%field% field is Locked.', 'user-registration' ),
 				/* translators: %field%: Field Label */
 				'form_one_time_draggable_fields_locked_message' => esc_html__( '%field% field can be used only one time in the form.', 'user-registration' ),
+				'form_membership_payment_fields_disabled_message' => esc_html__( 'Payment fields cannot be used alongside the membership field.', 'user-registration' ),
+				'form_membership_field_disabled_message' => esc_html__( 'Membership field cannot be used alongside the payment fields.', 'user-registration' ),
+				/* translators: %field%: Field Text */
+				'form_membership_payment_settings_disabled_title' => esc_html__( '%field% setting is disabled.', 'user-registration' ),
+				'form_membership_payment_settings_disabled_message' => esc_html__( 'Payment setting is not available when membership field is present in the form.', 'user-registration' ),
 				'i18n_admin'                             => self::get_i18n_admin_data(),
 				'i18n_shortcut_key_title'                => esc_html__( 'Keyboard Shortcut Keys', 'user-registration' ),
 				'i18n_publish_form_button_text'          => esc_html__( 'Publish form', 'user-registration' ),
