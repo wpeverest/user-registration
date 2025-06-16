@@ -40,6 +40,7 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 
 		$order = $this->orders_repository->get_order_by_subscription( $subscription_id );
 
+
 		$subscription_service = new SubscriptionService();
 		if ( 'canceled' === $subscription['status'] ) {
 			return array(
@@ -48,7 +49,7 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 			);
 		}
 
-		if ( ! $is_upgrade && ('free' === $order['order_type'] || 'paid' === $order['order_type'] || empty( $order['payment_method'] ) ) ) {
+		if ( ! $is_upgrade && ( 'free' === $order['order_type'] || 'paid' === $order['order_type'] || empty( $order['payment_method'] ) ) ) {
 			$this->update(
 				$subscription_id,
 				array(
@@ -65,9 +66,18 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 				'message' => esc_html__( 'Subscription Cancelled Successfully', 'user-registration' ),
 			);
 		} else {
-
+			$get_user_old_subscription = json_decode( get_user_meta( $subscription['user_id'], 'urm_previous_subscription_data', true ), true );
+			if ( ! empty( $get_user_old_subscription ) ) {
+				$subscription = $get_user_old_subscription;
+			}
+			if ( empty( $subscription['subscription_id'] ) ) {
+				return array(
+					'status'  => false,
+					'message' => esc_html__( 'Subscription id not present.', 'user-registration' ),
+				);
+			}
 			$cancel_sub = $subscription_service->cancel_subscription( $order, $subscription );
-			ur_get_logger()->notice( print_r($cancel_sub, true), array( 'source' => 'urm-cancellation-log' ) );
+			ur_get_logger()->notice( print_r( $cancel_sub, true ), array( 'source' => 'urm-cancellation-log' ) );
 
 			if ( $cancel_sub['status'] ) {
 				$this->update( $subscription_id, array( 'status' => 'canceled', 'subscription_id' => '' ) );

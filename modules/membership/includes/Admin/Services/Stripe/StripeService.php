@@ -48,7 +48,7 @@ class StripeService {
 		);
 
 		if ( count( $product_exists ) > 0 ) { // product already exists, don't create new
-			$product = $product_exists[0];
+			$product = array_values( $product_exists );
 		} else {
 			$product = \Stripe\Product::create(
 				array(
@@ -60,6 +60,8 @@ class StripeService {
 				)
 			);
 		}
+		$price = new \stdClass();
+
 		try {
 
 			$prices = \Stripe\Price::all(
@@ -89,12 +91,25 @@ class StripeService {
 				}
 
 				$price = \Stripe\Price::create( $price_details );
+
+				return array(
+					'success' => true,
+					'price'   => $price
+				);
 			}
 		} catch ( ApiErrorException $e ) {
 			ur_get_logger()->debug( 'Error creating price: ' . $e->getMessage(), array( 'source' => 'user-registration-membership-stripe' ) );
+
+			return array(
+				'success' => false,
+				'message' => $e->getMessage()
+			);
 		}
 
-		return $price;
+		return array(
+			'success' => true,
+			'price'   => $price
+		);
 	}
 
 	public function process_stripe_payment( $payment_data, $response_data ) {
@@ -258,10 +273,11 @@ class StripeService {
 		$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
 		$membership_metas['post_title'] = $membership['post_title'];
 		$member_subscription            = $this->members_subscription_repository->get_member_subscription( $member_id );
-		$response                       = array(
+
+		$response = array(
 			'status' => false,
 		);
-		$logger                         = ur_get_logger();
+		$logger   = ur_get_logger();
 		if ( empty( $member_subscription ) ) {
 			$logger->notice( '-------------------------------------------- Stripe Subscription not found for ' . $member_id . ' --------------------------------------------', array( 'source' => 'ur-membership-stripe' ) );
 
@@ -306,13 +322,15 @@ class StripeService {
 			);
 
 			// handle trial period
-			$trail_period = strtotime( date( 'Y-m-d H:i:s', strtotime( '+' . $membership_metas['trial_data']['value'] . ' ' . $membership_metas['trial_data']['duration'] ) ) );
-
+			error_log( print_r( $membership_metas, true ) );
 			if ( isset( $membership_metas['trial_status'] ) && 'on' === $membership_metas['trial_status'] ) {
+				$trail_period                      = strtotime( date( 'Y-m-d H:i:s', strtotime( '+' . $membership_metas['trial_data']['value'] . ' ' . $membership_metas['trial_data']['duration'] ) ) );
 				$subscription_details['trial_end'] = $trail_period;
+				error_log( 'me first' );
+				error_log( print_r( $subscription_details, true ) );
+
 			} else {
 				$subscription_details['expand'] = array( 'latest_invoice.payment_intent' );
-
 			}
 
 			// handle coupon section
@@ -329,38 +347,50 @@ class StripeService {
 				$previous_subscription = json_decode( get_user_meta( $member_id, 'urm_previous_subscription_data', true ), true );
 
 				if ( $previous_subscription ) {
-					$previous_membership       = $this->membership_repository->get_single_membership_by_ID( $previous_subscription['item_id'] );
-					$previous_membership_metas = wp_unslash( json_decode( $previous_membership['meta_value'], true ) );
-					if ( $previous_membership_metas['type'] !== 'free' ) {
-						$new_price         = $membership_metas['amount'];
-						$current_price     = $previous_membership_metas['amount'];
-						$first_month_price = $new_price - $current_price;
+					$previous_membership = $this->membership_repository->get_single_membership_by_ID( $previous_subscription['item_id'] );
 
-						if ( $new_price > $current_price ) {
-							$discount_amount = ( $new_price - $first_month_price );
-							$currency        = get_option( 'user_registration_payment_currency', 'USD' );
-							if ( 'JPY' === $currency ) {
-								$amount = $discount_amount;
-							} else {
-								$amount = $discount_amount * 100;
+					if ( ! empty( $previous_membership['meta_value'] ) ) {
+						$previous_membership_metas = json_decode( wp_unslash( $previous_membership['meta_value'] ), true );
+
+						if ( isset( $previous_membership_metas['type'], $previous_membership_metas['amount'] ) && $previous_membership_metas['type'] !== 'free' ) {
+							$new_price         = isset( $membership_metas['amount'] ) ? $membership_metas['amount'] : 0;
+							$current_price     = $previous_membership_metas['amount'];
+							$first_month_price = $new_price - $current_price;
+
+							if ( $new_price > $current_price ) {
+								$discount_amount = $new_price - $first_month_price;
+								$currency        = get_option( 'user_registration_payment_currency', 'USD' );
+								$amount          = ( 'JPY' === $currency ) ? $discount_amount : $discount_amount * 100;
+
+								$coupon = \Stripe\Coupon::create( [
+									'amount_off' => $amount,
+									'currency'   => $currency,
+									'duration'   => 'once',
+									'name'       => 'UpgradeCoupon',
+								] );
+
+								$subscription_details['coupon'] = $coupon->id;
 							}
-
-							$coupon = \Stripe\Coupon::create( array(
-								'amount_off' => $amount,
-								'currency'   => $currency,
-								'duration'   => 'once',
-								'name'       => 'UpgradeCoupon',
-							) );
-
-							$subscription_details['coupon'] = $coupon->id;
-
 						}
 					}
 				}
-				if ( ! empty( $previous_subscription['trial_end_date'] ) ) {
+
+				$next_subscription = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
+
+				if ( ! empty( $next_subscription['delayed_until'] ) ) {
+					$subscription_details['trial_end'] = strtotime( $next_subscription['delayed_until'] );
+				} elseif (
+					! empty( $previous_subscription['trial_end_date'] ) &&
+					isset( $membership_metas['type'], $membership_metas['trial_status'] ) &&
+					$membership_metas['type'] === 'subscription' &&
+					$membership_metas['trial_status'] === 'on'
+				) {
 					$subscription_details['trial_end'] = strtotime( $previous_subscription['trial_end_date'] );
 				}
+
+
 			}
+			$logger->notice( print_r( $subscription_details, true ), array( 'source' => 'ur-membership-stripe' ) );
 
 			$subscription        = \Stripe\Subscription::create( $subscription_details );
 			$subscription_status = $subscription->status ?? '';
@@ -388,6 +418,7 @@ class StripeService {
 						'status'          => $subscription_status,
 					)
 				);
+
 				$this->sendEmail( $member_order['ID'], $member_subscription, $membership_metas, $member_id, $response );
 				$response['subscription'] = $subscription;
 				$response['message']      = __( 'New member has been successfully created with successful stripe subscription.' );
@@ -535,8 +566,8 @@ class StripeService {
 		if ( '' !== $deleted_sub['canceled_at'] ) {
 			$response['status'] = true;
 		}
-		ur_get_logger()->notice( '----------------- Stripe cancellation response for subscription id '.$subscription['subscription_id'] . ' -----------------', array( 'source' => 'urm-cancellation-log' ) );
-		ur_get_logger()->notice( print_r($deleted_sub, true), array( 'source' => 'urm-cancellation-log' ) );
+		ur_get_logger()->notice( '----------------- Stripe cancellation response for subscription id ' . $subscription['subscription_id'] . ' -----------------', array( 'source' => 'urm-cancellation-log' ) );
+		ur_get_logger()->notice( print_r( $deleted_sub, true ), array( 'source' => 'urm-cancellation-log' ) );
 
 		return $response;
 	}
