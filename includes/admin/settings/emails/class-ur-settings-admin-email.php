@@ -51,7 +51,7 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 			$this->id          = 'admin_email';
 			$this->title       = __( 'New Member Registered', 'user-registration' );
 			$this->description = __( 'Notify admins about a new membership signup, including member details.', 'user-registration' );
-			$this->receiver    = __( 'Admin', 'user-registration' );
+			$this->receiver    = 'Admin';
 		}
 
 		/**
