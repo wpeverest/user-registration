@@ -1333,6 +1333,7 @@ span.ur-shortcode-form-embed-dot {
 		justify-content: center;
 		padding: 50px;
 	}
+
 }
 //Individual oxygen widgets styles.
 .oxygen-add-section-accordion-contents[ng-if*="user-registration"] {
@@ -1572,7 +1573,7 @@ span.ur-shortcode-form-embed-dot {
 						.ui-widget-content {
 							.ur-tab-contents {
 								padding: 24px;
-								background-color: #fafafc;
+								background-color: #fafafa;
 								.ur-login-view-doc {
 									border-radius: 3px;
 									cursor: pointer;
@@ -1945,8 +1946,10 @@ body {
 			&:not(.user-registration-MyAccount) {
 				max-width: 520px;
 				margin: 24px auto;
-				border-radius: 8px;
-				background: #FFFFFF;
+				// margin: 0px auto;
+				border-radius: 4px;
+				background: #FAFAFC;
+				// box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 				border: 0;
 
 				@media screen and (max-width: 575px) {
@@ -2604,7 +2607,7 @@ body {
 						.ui-widget-content {
 							.ur-tab-contents {
 								padding: 24px;
-								background-color: #fafafc;
+								background-color: #ffffff;
 								.ur-login-view-doc {
 									border-radius: 3px;
 									cursor: pointer;
@@ -2729,6 +2732,12 @@ body {
 				}
 
 				.user-registration-login-settings-form {
+					border-radius: $border_radius_4;
+
+					&#ur-frontend-form {
+						border: 1px solid #EDF2F7;
+					}
+
 					a {
 						pointer-events: none;
 					}

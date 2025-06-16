@@ -1,8 +1,8 @@
 .user-registration-card {
-	background: $white;
-	border-radius: 4px;
 	display: block;
-	border: 1px solid $border-color;
+	border: 1px solid #EDF2F7;
+	border-radius: $border_radius_4;
+	background-color: #ffffff;
 
 	a {
 		text-decoration: none;

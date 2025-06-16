@@ -22,6 +22,7 @@ $page_tabs   = array(
  */
 $page_tabs = apply_filters( 'user_registration_admin_status_tabs', $page_tabs );
 ?>
+<hr class="wp-header-end">
 <div class="ur-admin-page-topnav" id="ur-lists-page-topnav">
 	<div class="ur-page-title__wrapper">
 		<div class="ur-page-title__wrapper-logo">
@@ -44,7 +45,6 @@ $page_tabs = apply_filters( 'user_registration_admin_status_tabs', $page_tabs );
 		</div>
 	</div>
 </div>
-
 	<?php
 	switch ( $current_tab ) {
 		case 'logs':
