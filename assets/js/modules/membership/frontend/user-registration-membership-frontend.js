@@ -1313,7 +1313,7 @@
 
 											if (selected_pg === undefined || selected_pg === 'free') {
 												has_error = true;
-												error_notice.text(urmf_data.label.i18n_field_payment_gateway_field_validation);
+												error_notice.text(urmf_data.labels.i18n_field_payment_gateway_field_validation);
 												return false;
 											}
 										}

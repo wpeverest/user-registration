@@ -632,6 +632,19 @@ class AJAX {
 		$update_stripe_order = $stripe_service->update_order( $_POST );
 
 		if ( $update_stripe_order['status'] ) {
+			if ( $is_upgrading ) {
+				$next_subscription     = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
+				$previous_subscription = get_user_meta( $member_id, 'urm_previous_subscription_data', true );
+				$is_delayed            = !empty( $next_subscription['delayed_until'] );
+				if ( ! empty( $previous_subscription ) && !$is_delayed ) {
+					$previous_subscription = json_decode( $previous_subscription, true );
+					$stripe_service        = new StripeService();
+					$stripe_service->cancel_subscription( array(), $previous_subscription );
+					delete_user_meta( $member_id, 'urm_next_subscription_data' );
+					delete_user_meta( $member_id, 'urm_previous_subscription_data' );
+				}
+			}
+
 			$form_response = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
 			if ( ! empty( $form_response ) && isset( $form_response["auto_login"] ) && $payment_status !== "failed" ) {
 				$members_service = new MembersService();
@@ -645,15 +658,18 @@ class AJAX {
 					);
 				}
 			}
+
 			delete_user_meta( $member_id, 'urm_user_just_created' );
 			$response = array(
 				'message'      => $update_stripe_order["message"],
 				'is_upgrading' => ur_string_to_bool( $is_upgrading )
 			);
+			if ( $is_upgrading ) {
+				delete_user_meta( $member_id, 'urm_is_upgrading' );
+				delete_user_meta( $member_id, 'urm_is_upgrading_to' );
+				update_user_meta( $member_id, 'urm_is_user_upgraded', 1 );
+			}
 
-			delete_user_meta( $member_id, 'urm_is_upgrading' );
-			delete_user_meta( $member_id, 'urm_is_upgrading_to' );
-			update_user_meta( $member_id, 'urm_is_user_upgraded', 1 );
 			wp_send_json_success(
 				$response
 			);
@@ -936,7 +952,7 @@ class AJAX {
 			$order_meta = $orders_repository->get_order_metas( $last_order['ID'] );
 			if ( ! empty( $order_meta ) ) {
 				$upcoming_subscription = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
-				$membership = get_post( $upcoming_subscription['membership'] );
+				$membership            = get_post( $upcoming_subscription['membership'] );
 				wp_send_json_error(
 					array(
 						'message' => apply_filters( 'urm_delayed_plan_exist_notice', __( sprintf( 'You already have a scheduled upgrade to the <b>%s</b> plan at the end of your current subscription cycle (<i><b>%s</b></i>) <br> If you\'d like to cancel this upcoming change, click the <b>Cancel Membership</b> button to proceed.', $membership->post_title, date( 'M d, Y', strtotime( $order_meta['meta_value'] ) ) ), "user-registration" ), $membership->post_title, $order_meta['meta_value'] ),
@@ -999,9 +1015,9 @@ class AJAX {
 		);
 
 		$subscription_service = new SubscriptionService();
-		$status = $subscription_service->can_upgrade( $data );
+		$status               = $subscription_service->can_upgrade( $data );
 
-		if ( !$status['status']  ) {
+		if ( ! $status['status'] ) {
 			wp_send_json_error(
 				array(
 					'message' => $status['message'],

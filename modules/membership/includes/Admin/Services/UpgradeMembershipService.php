@@ -63,8 +63,7 @@ class UpgradeMembershipService {
 		$selected_membership_amount  = $selected_membership_details['amount'];
 		$current_membership_amount   = $current_membership_details['amount'];
 		$upgrade_type                = $current_membership_details['upgrade_settings']['upgrade_type'];
-		$chargeable_amount           = 0;
-		$remaining_subscription_days = $selected_membership_details['subscription']['value'];
+		$remaining_subscription_value = $selected_membership_details['subscription']['value'];
 		$delayed_until               = '';
 
 		$chargeable_amount = $this->calculate_chargeable_amount(
@@ -80,7 +79,7 @@ class UpgradeMembershipService {
 		return array(
 			'status'                      => true,
 			'chargeable_amount'           => $chargeable_amount,
-			'remaining_subscription_days' => $remaining_subscription_days,
+			'remaining_subscription_value' => $remaining_subscription_value,
 			'delayed_until'               => $delayed_until
 		);
 	}
@@ -90,7 +89,7 @@ class UpgradeMembershipService {
 		$current_membership_amount   = $current_membership_details['amount'];
 		$upgrade_type                = $current_membership_details['upgrade_settings']['upgrade_type'];
 		$chargeable_amount           = 0;
-		$remaining_subscription_days = $selected_membership_details['subscription']['value'];
+		$remaining_subscription_value = $selected_membership_details['subscription']['value'];
 		$delayed_until               = '';
 
 		if ( "full" === $upgrade_type ) {
@@ -118,7 +117,7 @@ class UpgradeMembershipService {
 		return array(
 			'status'                      => true,
 			'chargeable_amount'           => $chargeable_amount,
-			'remaining_subscription_days' => $remaining_subscription_days,
+			'remaining_subscription_value' => $remaining_subscription_value,
 			'delayed_until'               => $delayed_until
 		);
 	}

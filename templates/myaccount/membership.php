@@ -195,7 +195,7 @@ $is_delayed      = ! empty( $delayed_until );
 			<div id="bank-notice" class="btn-success">
 				<span class="notice-1">
 					<?php
-					echo $bank_data['notice_1'];
+					echo isset($bank_data['notice_1']) ? $bank_data['notice_1'] : '';
 					?>
 				</span>
 				<span class="view-bank-data">

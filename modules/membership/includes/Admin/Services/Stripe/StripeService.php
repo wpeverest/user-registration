@@ -357,6 +357,9 @@ class StripeService {
 						}
 					}
 				}
+				if ( ! empty( $previous_subscription['trial_end_date'] ) ) {
+					$subscription_details['trial_end'] = strtotime( $previous_subscription['trial_end_date'] );
+				}
 			}
 
 			$subscription        = \Stripe\Subscription::create( $subscription_details );
@@ -522,6 +525,8 @@ class StripeService {
 			'status' => false,
 		);
 		if ( ! isset( $subscription['subscription_id'] ) ) {
+			ur_get_logger()->notice( 'Stripe subscription_id not found.', array( 'source' => 'urm-cancellation-log' ) );
+
 			return $response;
 		}
 
@@ -530,6 +535,8 @@ class StripeService {
 		if ( '' !== $deleted_sub['canceled_at'] ) {
 			$response['status'] = true;
 		}
+		ur_get_logger()->notice( '----------------- Stripe cancellation response for subscription id '.$subscription['subscription_id'] . ' -----------------', array( 'source' => 'urm-cancellation-log' ) );
+		ur_get_logger()->notice( print_r($deleted_sub, true), array( 'source' => 'urm-cancellation-log' ) );
 
 		return $response;
 	}

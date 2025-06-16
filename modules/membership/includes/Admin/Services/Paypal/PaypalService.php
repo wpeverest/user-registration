@@ -111,7 +111,7 @@ class PaypalService {
 			}
 			if ( ! empty( $coupon_details ) || ( $is_upgrading ) ) {
 				$membership_amount = ( $is_upgrading ) ? absint( $data['amount'] ) : $membership_amount;
-				$amount          = user_registration_sanitize_amount( $membership_amount ) - $discount_amount;
+				$amount            = user_registration_sanitize_amount( $membership_amount ) - $discount_amount;
 
 				$paypal_args['t2'] = ! empty( $data ['subscription'] ) ? strtoupper( substr( $data['subscription']['duration'], 0, 1 ) ) : '';
 				$paypal_args['p2'] = ! empty( $data ['subscription']['value'] ) ? $data ['subscription']['value'] : 1;
@@ -154,7 +154,8 @@ class PaypalService {
 
 		if ( $is_order_updated && ( 'paid' === $member_order['order_type'] || 'subscription' === $member_order['order_type'] ) ) {
 			$member_subscription = $this->members_subscription_repository->get_member_subscription( $member_id );
-			$this->members_subscription_repository->update( $member_subscription['ID'], array( 'status' => 'active' ) );
+			$status              = "on" === $member_order['trial_status'] ? 'trial' : 'active';
+			$this->members_subscription_repository->update( $member_subscription['ID'], array( 'status' => $status ) );
 			$logger->notice( 'Return to merchant log' . $member_subscription['ID'], array( 'source' => 'ur-membership-paypal' ) );
 		}
 		$email_service = new EmailService();

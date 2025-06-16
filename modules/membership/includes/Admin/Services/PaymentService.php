@@ -33,6 +33,7 @@ class PaymentService {
 	 * @return mixed
 	 */
 	public function get_payment_data( $data ) {
+
 		$member_repo = new MembershipRepository();
 		$membership  = $member_repo->get_single_membership_by_ID( $data['membership'] );
 
@@ -43,12 +44,9 @@ class PaymentService {
 		if ( isset( $data["upgrade"] ) && $data["upgrade"] ) {
 			$membership_meta['amount']                      = $data["chargeable_amount"];
 			$membership_meta['upgrade']                     = true;
-			$membership_meta['remaining_subscription_days'] = $data['remaining_subscription_days'];
+			$membership_meta['remaining_subscription_value'] = $data['remaining_subscription_value'];
 		}
 
-		if ( isset( $membership_meta['trial_status'] ) && "on" === $membership_meta["trial_status"] && ! empty( $data["total_used_trial_days"] ) ) {
-			$membership_meta['trial_status'] = ( absint( $data["total_used_trial_days"] ) <= ur_membership_convert_to_days( $membership_meta["trial_data"]["value"], $membership_meta["trial_data"]["duration"] ) ) ? "on" : "off";
-		}
 
 		return $membership_meta;
 
@@ -67,13 +65,10 @@ class PaymentService {
 		if ( isset( $payment_data['upgrade'] ) && $payment_data["upgrade"] ) {
 			$subscription_service    = new SubscriptionService();
 			$subscription_repository = new SubscriptionRepository();
-
-			if ( "free" !== $this->payment_method ) {
-				$previous_subscription_data = $response_data['subscription_data'];
-				update_user_meta( $response_data['member_id'], 'urm_previous_subscription_data', json_encode( $previous_subscription_data ) );
-			}
-
+			$previous_subscription_data = $response_data['subscription_data'];
+			update_user_meta( $response_data['member_id'], 'urm_previous_subscription_data', json_encode( $previous_subscription_data ) );
 			$subscription_data = $subscription_service->prepare_upgrade_subscription_data( $response_data['membership'], $response_data['member_id'], $response_data );
+
 			unset( $response_data['subscription_data'] );
 			if ( "bank" === $this->payment_method || !empty($response_data['delayed_until'])) {
 				update_user_meta( $response_data['member_id'], 'urm_next_subscription_data', json_encode( $response_data ) );
