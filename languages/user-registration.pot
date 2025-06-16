@@ -9,7 +9,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+<<<<<<< Updated upstream
 "POT-Creation-Date: 2025-05-27T12:08:59+00:00\n"
+=======
+"POT-Creation-Date: 2025-06-16T15:44:00+02:00\n"
+>>>>>>> Stashed changes
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: user-registration\n"
@@ -10560,6 +10564,7 @@ msgstr ""
 msgid "As <strong>User Registration & Membership Pro</strong> is active, <strong>User Registration Free</strong> is now not needed."
 msgstr ""
 
+<<<<<<< Updated upstream
 #: chunks/dashboard.js:281
 #: src/dashboard/screens/Modules/hooks/useLicenseActivation.js:15
 #: chunks/dashboard.js:114677
@@ -10572,6 +10577,8 @@ msgstr ""
 msgid "Please enter a license key."
 msgstr ""
 
+=======
+>>>>>>> Stashed changes
 #: src/blocks/blocks/content-restriction-enhanced/Edit.js:85
 #: chunks/blocks.js:70016
 msgid "Allow Access to"
@@ -11707,6 +11714,14 @@ msgstr ""
 msgid "Play Video"
 msgstr ""
 
+#: src/dashboard/screens/Modules/hooks/useLicenseActivation.js:13
+msgid "Please enter a license key."
+msgstr ""
+
+#: src/dashboard/screens/Modules/hooks/useLicenseActivation.js:15
+msgid "Invalid license key."
+msgstr ""
+
 #: src/dashboard/screens/Modules/hooks/useUpgradeModal.js:16
 #: chunks/dashboard.js:114728
 msgid "License key"
@@ -12106,241 +12121,201 @@ msgstr ""
 msgid "Best for sites offering premium content, subscriptions, or exclusive member access with multiple membership levels."
 msgstr ""
 
-#: chunks/content-restriction-enhanced/block.json
 #: src/blocks/blocks/content-restriction-enhanced/block.json
 msgctxt "block title"
 msgid "Content Restriction"
 msgstr ""
 
-#: chunks/content-restriction-enhanced/block.json
 #: src/blocks/blocks/content-restriction-enhanced/block.json
 msgctxt "block description"
 msgid "The block restricts the content."
 msgstr ""
 
-#: chunks/content-restriction-enhanced/block.json
 #: src/blocks/blocks/content-restriction-enhanced/block.json
 msgctxt "block keyword"
 msgid "user registration content restriction"
 msgstr ""
 
-#: chunks/content-restriction-enhanced/block.json
 #: src/blocks/blocks/content-restriction-enhanced/block.json
 msgctxt "block keyword"
 msgid "content restriction"
 msgstr ""
 
-#: chunks/edit-password/block.json
 #: src/blocks/blocks/edit-password/block.json
 msgctxt "block title"
 msgid "Edit Password"
 msgstr ""
 
-#: chunks/edit-password/block.json
 #: src/blocks/blocks/edit-password/block.json
 msgctxt "block description"
 msgid "The block give the edit password interface."
 msgstr ""
 
-#: chunks/edit-password/block.json
 #: src/blocks/blocks/edit-password/block.json
 msgctxt "block keyword"
 msgid "user registration edit password"
 msgstr ""
 
-#: chunks/edit-password/block.json
 #: src/blocks/blocks/edit-password/block.json
 msgctxt "block keyword"
 msgid "edit password"
 msgstr ""
 
-#: chunks/edit-profile/block.json
 #: src/blocks/blocks/edit-profile/block.json
 msgctxt "block title"
 msgid "Edit Profile"
 msgstr ""
 
-#: chunks/edit-profile/block.json
 #: src/blocks/blocks/edit-profile/block.json
 msgctxt "block description"
 msgid "The block give edit profile interface."
 msgstr ""
 
-#: chunks/edit-profile/block.json
 #: src/blocks/blocks/edit-profile/block.json
 msgctxt "block keyword"
 msgid "user registration edit profile"
 msgstr ""
 
-#: chunks/edit-profile/block.json
 #: src/blocks/blocks/edit-profile/block.json
 msgctxt "block keyword"
 msgid "edit profile"
 msgstr ""
 
-#: chunks/login-form/block.json
 #: src/blocks/blocks/login-form/block.json
 msgctxt "block title"
 msgid "Login Form"
 msgstr ""
 
-#: chunks/login-form/block.json
 #: src/blocks/blocks/login-form/block.json
 msgctxt "block description"
 msgid "The block give the login form for registered users."
 msgstr ""
 
-#: chunks/login-form/block.json
 #: src/blocks/blocks/login-form/block.json
 msgctxt "block keyword"
 msgid "user registration login form"
 msgstr ""
 
-#: chunks/login-form/block.json
 #: src/blocks/blocks/login-form/block.json
 msgctxt "block keyword"
 msgid "login form"
 msgstr ""
 
-#: chunks/login-logout-menu/block.json
 #: src/blocks/blocks/login-logout-menu/block.json
 msgctxt "block title"
 msgid "URM Login | Logout"
 msgstr ""
 
-#: chunks/login-logout-menu/block.json
 #: src/blocks/blocks/login-logout-menu/block.json
 msgctxt "block description"
 msgid "A block that provides links for login and logout."
 msgstr ""
 
-#: chunks/login-logout-menu/block.json
 #: src/blocks/blocks/login-logout-menu/block.json
 msgctxt "block keyword"
 msgid "login"
 msgstr ""
 
-#: chunks/login-logout-menu/block.json
 #: src/blocks/blocks/login-logout-menu/block.json
 msgctxt "block keyword"
 msgid "logout"
 msgstr ""
 
-#: chunks/login-logout-menu/block.json
 #: src/blocks/blocks/login-logout-menu/block.json
 msgctxt "block keyword"
 msgid "authentication"
 msgstr ""
 
-#: chunks/login-logout-menu/block.json
 #: src/blocks/blocks/login-logout-menu/block.json
 msgctxt "block keyword"
 msgid "user"
 msgstr ""
 
-#: chunks/membership-listing/block.json
 #: src/blocks/blocks/membership-listing/block.json
 msgctxt "block title"
 msgid "Membership Listing"
 msgstr ""
 
-#: chunks/membership-listing/block.json
 #: src/blocks/blocks/membership-listing/block.json
 msgctxt "block description"
 msgid "This block provides block for membership listing."
 msgstr ""
 
-#: chunks/membership-listing/block.json
 #: src/blocks/blocks/membership-listing/block.json
 msgctxt "block keyword"
 msgid "user registration membership listing"
 msgstr ""
 
-#: chunks/membership-listing/block.json
 #: src/blocks/blocks/membership-listing/block.json
 msgctxt "block keyword"
 msgid "urm membership listing"
 msgstr ""
 
-#: chunks/membership-listing/block.json
 #: src/blocks/blocks/membership-listing/block.json
 msgctxt "block keyword"
 msgid "membership listing"
 msgstr ""
 
-#: chunks/myaccount/block.json
 #: src/blocks/blocks/myaccount/block.json
 msgctxt "block title"
 msgid "Myaccount"
 msgstr ""
 
-#: chunks/myaccount/block.json
 #: src/blocks/blocks/myaccount/block.json
 msgctxt "block description"
 msgid "The block give the myaccount form for registered users."
 msgstr ""
 
-#: chunks/myaccount/block.json
 #: src/blocks/blocks/myaccount/block.json
 msgctxt "block keyword"
 msgid "user registration myaccount"
 msgstr ""
 
-#: chunks/myaccount/block.json
 #: src/blocks/blocks/myaccount/block.json
 msgctxt "block keyword"
 msgid "myaccount"
 msgstr ""
 
-#: chunks/registration-form/block.json
 #: src/blocks/blocks/registration-form/block.json
 msgctxt "block title"
 msgid "Registration Form"
 msgstr ""
 
-#: chunks/registration-form/block.json
 #: src/blocks/blocks/registration-form/block.json
 msgctxt "block description"
 msgid "The block lets the user choose the required user registration directly."
 msgstr ""
 
-#: chunks/registration-form/block.json
 #: src/blocks/blocks/registration-form/block.json
 msgctxt "block keyword"
 msgid "user registration form"
 msgstr ""
 
-#: chunks/registration-form/block.json
 #: src/blocks/blocks/registration-form/block.json
 msgctxt "block keyword"
 msgid "registration form"
 msgstr ""
 
-#: chunks/thank-you/block.json
 #: src/blocks/blocks/thank-you/block.json
 msgctxt "block title"
 msgid "Thank You"
 msgstr ""
 
-#: chunks/thank-you/block.json
 #: src/blocks/blocks/thank-you/block.json
 msgctxt "block description"
 msgid "This provides block for a thank you page."
 msgstr ""
 
-#: chunks/thank-you/block.json
 #: src/blocks/blocks/thank-you/block.json
 msgctxt "block keyword"
 msgid "user registration thank you"
 msgstr ""
 
-#: chunks/thank-you/block.json
 #: src/blocks/blocks/thank-you/block.json
 msgctxt "block keyword"
 msgid "urm thank you"
 msgstr ""
 
-#: chunks/thank-you/block.json
 #: src/blocks/blocks/thank-you/block.json
 msgctxt "block keyword"
 msgid "thank you"
