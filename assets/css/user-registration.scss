@@ -342,13 +342,10 @@ textarea.ur-input-border-red {
 				gap: 2px;
 
 				.user-registration-Button {
-					flex: 1;
-					color: #ffffff;
 					padding: 10px 20px;
 					font-size: 14px;
 					line-height: 24px;
 					box-shadow: none;
-					float: none;
 
 					&:hover {
 						background: #38488e;
@@ -359,12 +356,18 @@ textarea.ur-input-border-red {
 
 			.ur-field-item {
 				margin-bottom: 20px;
+
+				.ur-frontend-field {
+					margin-bottom: 0;
+				}
+
 				&.field-multiple_choice,
 				&.field-subscription_plan,
 				&.field-checkbox,
 				&.field-radio {
 					ul {
 						margin: 0;
+						padding: 0;
 						list-style: none;
 
 						li {
@@ -1816,7 +1819,7 @@ body {
 	&.user-registration-membership_page_user-registration-login-forms {
 		.user-registration {
 			&.ur-frontend-form {
-				max-width: 100% !important;
+				max-width: 100%;
 
 				form {
 					.ur-button-container {
@@ -1951,6 +1954,11 @@ body {
 
 				@media screen and (max-width: 575px) {
 					padding: 40px 30px;
+				}
+
+				&:has(.ur-grid-2),
+				&:has(.ur-grid-3) {
+					max-width: 940px;
 				}
 
 				&:has(.ur-frontend-form--bordered) {
@@ -2262,6 +2270,7 @@ body {
 						letter-spacing: 0.15px;
 						border: $border_width solid $primary_color;
 						margin-right: 0;
+						background: $primary_color;
 
 						&:hover {
 							border-color: #38488e;

@@ -51,7 +51,7 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Changed_Email', false ) ) :
 			$this->id          = 'profile_details_changed_email';
 			$this->title       = __( 'Profile Updated', 'user-registration' );
 			$this->description = __( 'Notifies admin that a user’s profile details have been updated or changed.', 'user-registration' );
-			$this->receiver    = __( 'Admin', 'user-registration' );
+			$this->receiver    = 'Admin';
 		}
 
 		/**

@@ -444,6 +444,7 @@
 }
 #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row {
   display: flex;
+  gap: 20px;
 }
 #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row .membership-label {
   min-width: 300px;
@@ -953,4 +954,13 @@ body.user-registration-page .user-registration-membership-notice__blue .user-reg
 body.user-registration-page .user-registration-membership-notice__message {
   font-size: 14px;
   line-height: 24px;
+}
+
+.rtl #user-registration.vertical .user-registration-MyAccount-content__header h1,
+.rtl .ur-frontend-form.login .ur-form-row .ur-form-grid .user-registration-form-row label,
+.rtl .ur-frontend-form .ur-form-row .ur-form-grid label.ur-label,
+.rtl .ur-frontend-form .ur-form-row .ur-form-grid legend.ur-label,
+.rtl .user-registration-logout-swal2-container .swal2-header .swal2-title,
+.rtl .user-registration-logout-swal2-container .swal2-header .swal2-content .swal2-content {
+  text-align: left;
 }

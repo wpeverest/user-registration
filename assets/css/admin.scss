@@ -7276,7 +7276,10 @@ body {
 		}
 	}
 }
-
+.form-settings-tab.disabled[data-field-group="payments"]{
+	cursor: not-allowed;
+	opacity: 0.5;
+}
 .select2-results__option--highlighted[aria-selected="true"] {
 	background-color: #475bb2 !important;
 	color: #fff !important;
