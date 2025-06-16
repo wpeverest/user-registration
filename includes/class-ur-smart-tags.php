@@ -305,13 +305,13 @@ class UR_Smart_Tags {
 
 							if ( isset( $user_data[ $new_key ] ) ) {
 								$valid_form_data[ $new_key ] = (object) array(
-									'field_type'   => $value['type'],
-									'label'        => $value['label'],
-									'field_name'   => $value['field_key'],
+									'field_type'   => isset( $value['type'] ) ? $value['type'] : '',
+									'label'        => isset( $value['label'] ) ? $value['label'] : '',
+									'field_name'   => isset( $value['field_key'] ) ? $value['field_key'] : '',
 									'value'        => $user_data[ $new_key ],
 									'extra_params' => array(
-										'label'     => $value['label'],
-										'field_key' => $value['field_key'],
+										'label'     => isset( $value['label'] ) ? $value['label'] : '',
+										'field_key' => isset( $value['field_key'] ) ? $value['field_key'] : '',
 									),
 								);
 							}
