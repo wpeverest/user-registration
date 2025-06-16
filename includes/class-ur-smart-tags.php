@@ -296,8 +296,30 @@ class UR_Smart_Tags {
 						break;
 
 					case 'all_fields':
-						if ( ! empty( $values['all_fields'] ) ) {
-							$all_fields = $values['all_fields'];
+						$user_id         = (int) get_current_user_id();
+						$form_id         = ur_get_form_id_by_userid( $user_id );
+						$form_data       = user_registration_form_data( $user_id, $form_id );
+						$valid_form_data = array();
+						foreach ( $form_data as $key => $value ) {
+							$new_key = trim( str_replace( 'user_registration_', '', $key ) );
+
+							if ( isset( $user_data[ $new_key ] ) ) {
+								$valid_form_data[ $new_key ] = (object) array(
+									'field_type'   => isset( $value['type'] ) ? $value['type'] : '',
+									'label'        => isset( $value['label'] ) ? $value['label'] : '',
+									'field_name'   => isset( $value['field_key'] ) ? $value['field_key'] : '',
+									'value'        => $user_data[ $new_key ],
+									'extra_params' => array(
+										'label'     => isset( $value['label'] ) ? $value['label'] : '',
+										'field_key' => isset( $value['field_key'] ) ? $value['field_key'] : '',
+									),
+								);
+							}
+						}
+						$all_fields_data = ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_data );
+
+						if ( ! empty( $all_fields_data ) ) {
+							$all_fields = isset( $all_fields_data[1] ) ? $all_fields_data[1] : '';
 						} else {
 							$all_fields = '';
 						}
