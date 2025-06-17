@@ -11,6 +11,7 @@
 * Dev      - Hook to modify user registration membership payment option label.
 * Fix      - Design for resend otp.
 * Fix      - Conflict with Botiga theme.
+* Fix      - Undefined index field_name.
 * Fix      - RTL fix for my account page.
 * Fix      - Stripe subscription invalid request.
 * Fix      - Repeater fields values not being saved.
