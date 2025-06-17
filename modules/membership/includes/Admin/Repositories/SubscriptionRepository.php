@@ -66,16 +66,26 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 				'message' => esc_html__( 'Subscription Cancelled Successfully', 'user-registration' ),
 			);
 		} else {
-			$get_user_old_subscription = json_decode( get_user_meta( $subscription['user_id'], 'urm_previous_subscription_data', true ), true );
-			if ( ! empty( $get_user_old_subscription ) ) {
-				$subscription = $get_user_old_subscription;
+			if($is_upgrade) {
+				$get_user_old_subscription = json_decode( get_user_meta( $subscription['user_id'], 'urm_previous_subscription_data', true ), true );
+
+				if ( ! empty( $get_user_old_subscription ) ) {
+					$subscription = $get_user_old_subscription;
+				}
+
+				if ( empty( $subscription['subscription_id'] ) ) {
+					return array(
+						'status'  => false,
+						'message' => esc_html__( 'Subscription id not present.', 'user-registration' ),
+					);
+				}
+				$get_user_old_order = json_decode( get_user_meta( $subscription['user_id'], 'urm_previous_order_data', true ), true );
+
+				if ( ! empty( $get_user_old_order ) ) {
+					$order = $get_user_old_order;
+				}
 			}
-			if ( empty( $subscription['subscription_id'] ) ) {
-				return array(
-					'status'  => false,
-					'message' => esc_html__( 'Subscription id not present.', 'user-registration' ),
-				);
-			}
+
 			$cancel_sub = $subscription_service->cancel_subscription( $order, $subscription );
 			ur_get_logger()->notice( print_r( $cancel_sub, true ), array( 'source' => 'urm-cancellation-log' ) );
 

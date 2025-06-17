@@ -280,6 +280,7 @@ class SubscriptionService {
 		$upgrade_details = $this->calculate_membership_upgrade_cost( $current_membership_details, $selected_membership_details, $subscription );
 
 
+
 		if ( isset( $upgrade_details['status'] ) && ! $upgrade_details['status'] ) {
 			ur_get_logger()->notice( __( 'Calculation Failed', 'user-registration-membership' ), array( 'source' => 'urm-upgrade-subscription' ) );
 
@@ -316,6 +317,9 @@ class SubscriptionService {
 			}
 		}
 
+		//save previous order
+		$latest_order = $this->members_orders_repository->get_member_orders( $user->ID );
+		update_user_meta( $user->ID, 'urm_previous_order_data', json_encode( $latest_order ) );
 
 		$orders_data = $order_service->prepare_orders_data( $members_data, $user->ID, $subscription, $upgrade_details ); // prepare data for orders table.
 
@@ -386,6 +390,8 @@ class SubscriptionService {
 		switch ( $upgrade_type ) {
 			case 'free->free':
 			case 'paid->free':
+				$result['chargeable_amount'] = 0;
+				break;
 			case 'subscription->free':
 				$result['chargeable_amount'] = 0;
 				$result['delayed_until']     = $subscription['expiry_date'];
@@ -459,11 +465,11 @@ class SubscriptionService {
 		);
 
 		if ( isset( $membership_meta['trial_status'] ) && "on" === $membership_meta['trial_status'] ) {
-			$remaining_trial_days     = $membership_meta['trial_data']['value'];
+			$remaining_trial_days          = $membership_meta['trial_data']['value'];
 			$dont_calculate_trial_end_date = ! empty( $current_subscription['trial_end_date'] ) && $current_subscription['trial_end_date'] > date( 'Y-m-d 00:00:00' );
-			$trial_data               = array(
+			$trial_data                    = array(
 				'trial_start_date' => date( 'Y-m-d' ),
-				'trial_end_date'   => !$dont_calculate_trial_end_date ? self::get_expiry_date( date( 'Y-m-d' ), $membership_meta['trial_data']['duration'], $remaining_trial_days ) : $current_subscription['trial_end_date'],
+				'trial_end_date'   => ! $dont_calculate_trial_end_date ? self::get_expiry_date( date( 'Y-m-d' ), $membership_meta['trial_data']['duration'], $remaining_trial_days ) : $current_subscription['trial_end_date'],
 			);
 
 			$subscription_data                      = array_merge( $subscription_data, $trial_data );
@@ -531,6 +537,7 @@ class SubscriptionService {
 			return;
 		}
 		$updated_subscription_for_users = array();
+
 		foreach ( $all_delayed_orders as $data ) {
 			$decoded_data = json_decode( $data['sub_data'], true );
 			if ( ! isset( $decoded_data['subscription_id'] ) ) {
@@ -539,20 +546,13 @@ class SubscriptionService {
 			$subscription_id = $decoded_data['subscription_id'];
 			$user            = get_userdata( $decoded_data['member_id'] );
 			if ( $user ) {
-				$previous_subscription = get_user_meta( $user->ID, 'urm_previous_subscription_data', true );
-
-				if ( ! empty( $previous_subscription ) ) {
-					$previous_subscription = json_decode( $previous_subscription, true );
-
-					$cancel_subscription   = $this->subscription_repository->cancel_subscription_by_id( $previous_subscription['ID'], false, true );
-
-					ur_get_logger()->notice( $cancel_subscription['message'], array( 'source' => 'urm-membership-crons' ) );
-				}
-
-				$updated_subscription_for_users[] = $user->user_login;
+				$cancel_subscription = $this->subscription_repository->cancel_subscription_by_id( $subscription_id, false, true );
+				ur_get_logger()->notice( $cancel_subscription['message'], array( 'source' => 'urm-membership-crons' ) );
+				$previous_subscription = json_decode(get_user_meta( $user->ID, 'urm_previous_subscription_data', true ));
+				$updated_subscription_for_users[]  = $user->user_login;
 				$decoded_data['subscription_data'] = $previous_subscription;
-				$subscription_data                = $this->prepare_upgrade_subscription_data( $decoded_data['membership'], $decoded_data['member_id'], $decoded_data );
-				$subscription_data['status']      = 'active';
+				$subscription_data                 = $this->prepare_upgrade_subscription_data( $decoded_data['membership'], $decoded_data['member_id'], $decoded_data );
+				$subscription_data['status']       = 'active';
 				$this->subscription_repository->update( $subscription_id, $subscription_data );
 				$last_order = $this->members_orders_repository->get_member_orders( $user->ID );
 				$this->orders_repository->delete_order_meta( array(
@@ -561,6 +561,7 @@ class SubscriptionService {
 				) );
 				delete_user_meta( $user->ID, 'urm_next_subscription_data' );
 				delete_user_meta( $user->ID, 'urm_previous_subscription_data' );
+				delete_user_meta( $user->ID, 'urm_previous_order_data' );
 			}
 		}
 

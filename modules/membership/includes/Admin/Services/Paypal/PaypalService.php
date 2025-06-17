@@ -41,6 +41,7 @@ class PaypalService {
 	 * @return array|string|string[]
 	 */
 	public function build_url( $data, $membership, $member_email, $subscription_id, $member_id ) {
+
 		$is_upgrading                 = ! empty( $data['upgrade'] ) ? $data['upgrade'] : false;
 		$paypal_options               = $data['payment_gateways']['paypal'];
 		$paypal_options['mode']       = get_option( 'user_registration_global_paypal_mode', $paypal_options['mode'] );
@@ -58,7 +59,6 @@ class PaypalService {
 		if ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
 			$coupon_details  = ur_get_coupon_details( $data['coupon'] );
 			$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $membership_amount * $coupon_details['coupon_discount'] / 100;
-			$amount          = $membership_amount - $discount_amount;
 		}
 
 		if ( 'subscription' === ( $data['type'] ) ) {
@@ -109,6 +109,8 @@ class PaypalService {
 				$paypal_args['p1'] = ! empty( $data ['trial_data'] ) ? $data ['trial_data']['value'] : 1;
 				$paypal_args['a1'] = '0';
 			}
+
+
 			if ( ! empty( $coupon_details ) || ( $is_upgrading ) ) {
 				$membership_amount = ( $is_upgrading ) ? absint( $data['amount'] ) : $membership_amount;
 				$amount            = user_registration_sanitize_amount( $membership_amount ) - $discount_amount;
@@ -120,7 +122,7 @@ class PaypalService {
 		} else {
 			$paypal_args['amount'] = floatval( user_registration_sanitize_amount( $membership_amount ) - $discount_amount );
 		}
-
+		error_log(print_r($paypal_args, true));
 		$redirect .= http_build_query( $paypal_args );
 
 		return str_replace( ' & amp;', ' & ', $redirect );

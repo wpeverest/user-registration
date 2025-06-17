@@ -42,8 +42,8 @@ class PaymentService {
 			$membership_meta['coupon'] = $data['coupon'];
 		}
 		if ( isset( $data["upgrade"] ) && $data["upgrade"] ) {
-			$membership_meta['amount']                      = $data["chargeable_amount"];
-			$membership_meta['upgrade']                     = true;
+			$membership_meta['amount']                       = $data["chargeable_amount"];
+			$membership_meta['upgrade']                      = true;
 			$membership_meta['remaining_subscription_value'] = $data['remaining_subscription_value'];
 		}
 
@@ -63,14 +63,17 @@ class PaymentService {
 		$payment_data = $this->get_payment_data( $response_data );
 
 		if ( isset( $payment_data['upgrade'] ) && $payment_data["upgrade"] ) {
-			$subscription_service    = new SubscriptionService();
-			$subscription_repository = new SubscriptionRepository();
+			$subscription_service       = new SubscriptionService();
+			$subscription_repository    = new SubscriptionRepository();
 			$previous_subscription_data = $response_data['subscription_data'];
 			update_user_meta( $response_data['member_id'], 'urm_previous_subscription_data', json_encode( $previous_subscription_data ) );
 			$subscription_data = $subscription_service->prepare_upgrade_subscription_data( $response_data['membership'], $response_data['member_id'], $response_data );
 
 			unset( $response_data['subscription_data'] );
-			if ( "bank" === $this->payment_method || !empty($response_data['delayed_until'])) {
+			if ( in_array( $this->payment_method, array(
+					"bank",
+					"paypal"
+				) ) || ! empty( $response_data['delayed_until'] ) ) {
 				update_user_meta( $response_data['member_id'], 'urm_next_subscription_data', json_encode( $response_data ) );
 			} else {
 				$subscription_repository->update( $response_data['subscription_id'], $subscription_data );

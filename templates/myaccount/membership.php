@@ -152,12 +152,9 @@ $is_delayed      = ! empty( $delayed_until );
 	<div class="membership-row-btn-container">
 		<div class="btn-div">
 			<?php
-			if ( $is_upgrading ):
+			if ( !$is_upgrading ):
 				?>
 
-			<?php
-			else:
-				?>
 				<button type="button" class="membership-tab-btn change-membership-button"
 						data-id="<?php echo ( isset( $membership['post_id'] ) && ! empty( $membership['post_id'] ) ) ? esc_attr( $membership['post_id'] ) : ''; ?>"
 				>
@@ -191,6 +188,7 @@ $is_delayed      = ! empty( $delayed_until );
 		</div>
 		<?php
 		if ( $is_upgrading ):
+			if(!empty($bank_data['notice_1'])):
 			?>
 			<div id="bank-notice" class="btn-success">
 				<span class="notice-1">
@@ -204,6 +202,9 @@ $is_delayed      = ! empty( $delayed_until );
 					?>
 				</span>
 			</div>
+			<?php
+			endif;
+			?>
 			<div class="upgrade-info urm-d-none">
 				<?php
 				echo $membership_info;

@@ -322,13 +322,10 @@ class StripeService {
 			);
 
 			// handle trial period
-			error_log( print_r( $membership_metas, true ) );
+
 			if ( isset( $membership_metas['trial_status'] ) && 'on' === $membership_metas['trial_status'] ) {
 				$trail_period                      = strtotime( date( 'Y-m-d H:i:s', strtotime( '+' . $membership_metas['trial_data']['value'] . ' ' . $membership_metas['trial_data']['duration'] ) ) );
 				$subscription_details['trial_end'] = $trail_period;
-				error_log( 'me first' );
-				error_log( print_r( $subscription_details, true ) );
-
 			} else {
 				$subscription_details['expand'] = array( 'latest_invoice.payment_intent' );
 			}
@@ -376,7 +373,6 @@ class StripeService {
 				}
 
 				$next_subscription = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
-
 				if ( ! empty( $next_subscription['delayed_until'] ) ) {
 					$subscription_details['trial_end'] = strtotime( $next_subscription['delayed_until'] );
 				} elseif (
@@ -387,8 +383,6 @@ class StripeService {
 				) {
 					$subscription_details['trial_end'] = strtotime( $previous_subscription['trial_end_date'] );
 				}
-
-
 			}
 			$logger->notice( print_r( $subscription_details, true ), array( 'source' => 'ur-membership-stripe' ) );
 
@@ -405,7 +399,7 @@ class StripeService {
 				);
 				switch ( $subscription_status ) {
 					case 'trialing':
-						$subscription_status = 'trial';
+						$subscription_status = ($is_upgrading && ! empty( $next_subscription['delayed_until'] )) ? 'active' : 'trial';
 						break;
 					default:
 						break;
@@ -555,6 +549,7 @@ class StripeService {
 		$response = array(
 			'status' => false,
 		);
+
 		if ( ! isset( $subscription['subscription_id'] ) ) {
 			ur_get_logger()->notice( 'Stripe subscription_id not found.', array( 'source' => 'urm-cancellation-log' ) );
 

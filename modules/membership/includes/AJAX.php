@@ -608,6 +608,7 @@ class AJAX {
 				)
 			);
 		}
+
 		$member_id       = absint( $_POST['member_id'] );
 		$is_user_created = get_user_meta( $member_id, 'urm_user_just_created' );
 		$is_upgrading    = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
@@ -642,6 +643,8 @@ class AJAX {
 					$stripe_service->cancel_subscription( array(), $previous_subscription );
 					delete_user_meta( $member_id, 'urm_next_subscription_data' );
 					delete_user_meta( $member_id, 'urm_previous_subscription_data' );
+					delete_user_meta( $member_id, 'urm_previous_order_data' );
+
 				}
 			}
 
@@ -1068,6 +1071,8 @@ class AJAX {
 			$order_repository->delete( $last_order['ID'] );
 			delete_user_meta( $member_id, 'urm_next_subscription_data' );
 			delete_user_meta( $member_id, 'urm_previous_subscription_data' );
+			delete_user_meta( $member_id, 'urm_next_subscription_data' );
+
 			wp_send_json_success(
 				array(
 					'message' => __( "Scheduled membership has been cancelled successfully.", "user-registration" ),

@@ -17,7 +17,7 @@ class Crons {
 		$this->init();
 	}
 
-	public function init(  ) {
+	public function init() {
 		if ( ur_check_module_activation( 'membership' ) ) {
 			add_action( 'urm_run_delayed_subscription', array( $this, 'run_daily_delayed_membership_subscriptions' ) );
 			add_action( 'urm_daily_membership_renewal_check', array( $this, 'membership_renewal_check' ), 10, 1 );
