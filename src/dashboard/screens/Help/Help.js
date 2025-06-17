@@ -83,7 +83,7 @@ const Help = () => {
 							borderColor="gray.100"
 							textAlign="center"
 						>
-							<Icon.Shortcode w="8" h="8" fill="primary.500" />
+							<Icon.Shortcode w="8" h="8" fill="#475bb2" />
 							<Heading as="h3" size="sm" fontWeight="semibold">
 								{__("Shortcodes", "user-registration")}
 							</Heading>
@@ -96,7 +96,8 @@ const Help = () => {
 							<Button
 								mt="10"
 								variant="outline"
-								colorScheme="primary"
+								color="#475bb2"
+								borderColor="#475bb2"
 								borderRadius="base"
 								fontSize="14px"
 								fontWeight="normal"
@@ -119,7 +120,7 @@ const Help = () => {
 							borderColor="gray.100"
 							textAlign="center"
 						>
-							<Icon.SmartTag w="8" h="8" fill="primary.500" />
+							<Icon.SmartTag w="8" h="8" fill="#475bb2" />
 							<Heading as="h3" size="sm" fontWeight="semibold">
 								{__("Smart Tags", "user-registration")}
 							</Heading>
@@ -132,7 +133,8 @@ const Help = () => {
 							<Button
 								mt="10"
 								variant="outline"
-								colorScheme="primary"
+								color="#475bb2"
+								borderColor="#475bb2"
 								borderRadius="base"
 								fontSize="14px"
 								fontWeight="normal"
@@ -155,7 +157,7 @@ const Help = () => {
 							borderColor="gray.100"
 							textAlign="center"
 						>
-							<Icon.Support w="8" h="8" fill="primary.500" />
+							<Icon.Support w="8" h="8" fill="#475bb2" />
 							<Heading as="h3" size="sm" fontWeight="semibold">
 								{__("Support", "user-registration")}
 							</Heading>
@@ -169,7 +171,8 @@ const Help = () => {
 								mt="10"
 								as={Link}
 								variant="outline"
-								colorScheme="primary"
+								color="#475bb2"
+								borderColor="#475bb2"
 								borderRadius="base"
 								fontSize="14px"
 								fontWeight="normal"
@@ -191,7 +194,7 @@ const Help = () => {
 							borderColor="gray.100"
 							textAlign="center"
 						>
-							<Icon.DocsLines w="8" h="8" fill="primary.500" />
+							<Icon.DocsLines w="8" h="8" fill="#475bb2" />
 							<Heading as="h3" size="sm" fontWeight="semibold">
 								{__("Need Some Help?", "user-registration")}
 							</Heading>
@@ -204,7 +207,8 @@ const Help = () => {
 							<Button
 								mt="10"
 								as={Link}
-								colorScheme="primary"
+								color="#475bb2"
+								borderColor="#475bb2"
 								borderRadius="base"
 								fontSize="14px"
 								fontWeight="normal"
@@ -360,7 +364,7 @@ const Help = () => {
 					borderColor="gray.100"
 				>
 					<HStack gap="2">
-						<Icon.Video w="5" h="5" fill="primary.500" />
+						<Icon.Video w="5" h="5" fill="#475bb2" />
 						<Heading as="h3" size="sm" fontWeight="semibold">
 							{__("Video Tutorials", "user-registration")}
 						</Heading>
@@ -373,7 +377,7 @@ const Help = () => {
 					</Text>
 					<Link
 						isExternal
-						color="var(--chakra-colors-primary-500) !important"
+						color="#475bb2 !important"
 						textDecor="underline"
 						href="https://www.youtube.com/@UserRegistration"
 					>
@@ -389,7 +393,7 @@ const Help = () => {
 					borderColor="gray.100"
 				>
 					<HStack gap="2">
-						<Icon.Bulb w="5" h="5" fill="primary.500" />
+						<Icon.Bulb w="5" h="5" fill="#475bb2" />
 						<Heading as="h3" size="sm" fontWeight="semibold">
 							{__("Feature Request", "user-registration")}
 						</Heading>
@@ -402,7 +406,7 @@ const Help = () => {
 					</Text>
 					<Link
 						href={featureRequestURL}
-						color="var(--chakra-colors-primary-500) !important"
+						color="#475bb2 !important"
 						textDecor="underline"
 						isExternal
 					>
@@ -418,7 +422,7 @@ const Help = () => {
 					borderColor="gray.100"
 				>
 					<HStack gap="2">
-						<Icon.Star w="5" h="5" fill="primary.500" />
+						<Icon.Star w="5" h="5" fill="#475bb2" />
 						<Heading as="h3" size="sm" fontWeight="semibold">
 							{__("Submit a Review", "user-registration")}
 						</Heading>
@@ -431,7 +435,7 @@ const Help = () => {
 					</Text>
 					<Link
 						href="https://wordpress.org/support/plugin/user-registration/reviews/?rate=5#new-post"
-						color="var(--chakra-colors-primary-500) !important"
+						color="#475bb2 !important"
 						textDecor="underline"
 						isExternal
 					>

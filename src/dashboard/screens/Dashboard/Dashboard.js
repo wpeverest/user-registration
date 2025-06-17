@@ -78,7 +78,7 @@ const Dashboard = () => {
 					<ButtonGroup mt="5" spacing="6">
 						<Button
 							as={Link}
-							colorScheme="primary"
+							backgroundColor="#475bb2"
 							fontSize="14px"
 							fontWeight="normal"
 							borderRadius="base"
@@ -96,7 +96,8 @@ const Dashboard = () => {
 						<Button
 							as={Link}
 							variant="outline"
-							colorScheme="primary"
+							borderColor="#475bb2"
+							color="#475bb2"
 							borderRadius="base"
 							fontSize="14px"
 							fontWeight="normal"
@@ -131,7 +132,7 @@ const Dashboard = () => {
 					borderColor="gray.100"
 				>
 					<HStack gap="2">
-						<Icon.Team w="5" h="5" fill="primary.500" />
+						<Icon.Team w="5" h="5" fill="#475bb2" />
 						<Heading
 							as="h3"
 							size="sm"
@@ -151,7 +152,7 @@ const Dashboard = () => {
 						)}
 					</Text>
 					<Link
-						color="var(--chakra-colors-primary-500) !important"
+						color="#475bb2 !important"
 						textDecor="underline"
 						href="https://www.facebook.com/groups/userregistration"
 						isExternal
@@ -168,7 +169,7 @@ const Dashboard = () => {
 					borderColor="gray.100"
 				>
 					<HStack gap="2">
-						<Icon.DocsLines w="5" h="5" fill="primary.500" />
+						<Icon.DocsLines w="5" h="5" fill="#475bb2" />
 						<Heading as="h3" size="sm" fontWeight="semibold">
 							{__("Getting Started", "user-registration")}
 						</Heading>
@@ -180,7 +181,7 @@ const Dashboard = () => {
 						)}
 					</Text>
 					<Link
-						color="var(--chakra-colors-primary-500) !important"
+						color="#475bb2 !important"
 						textDecor="underline"
 						href={helpURL}
 						isExternal
@@ -197,7 +198,7 @@ const Dashboard = () => {
 					borderColor="gray.100"
 				>
 					<HStack gap="2">
-						<Icon.Headphones w="5" h="5" fill="primary.500" />
+						<Icon.Headphones w="5" h="5" fill="#475bb2" />
 						<Heading as="h3" size="sm" fontWeight="semibold">
 							{__("Support", "user-registration")}
 						</Heading>
@@ -209,7 +210,7 @@ const Dashboard = () => {
 						)}
 					</Text>
 					<Link
-						color="var(--chakra-colors-primary-500) !important"
+						color="#475bb2 !important"
 						textDecor="underline"
 						href="https://wordpress.org/support/plugin/user-registration/#new-topic-0"
 						isExternal
@@ -226,7 +227,7 @@ const Dashboard = () => {
 					borderColor="gray.100"
 				>
 					<HStack gap="2">
-						<Icon.Bulb w="5" h="5" fill="primary.500" />
+						<Icon.Bulb w="5" h="5" fill="#475bb2" />
 						<Heading as="h3" size="sm" fontWeight="semibold">
 							{__("Feature Request", "user-registration")}
 						</Heading>
@@ -238,7 +239,7 @@ const Dashboard = () => {
 						)}
 					</Text>
 					<Link
-						color="var(--chakra-colors-primary-500) !important"
+						color="#475bb2 !important"
 						textDecor="underline"
 						href={featureRequestURL}
 						isExternal
@@ -255,7 +256,7 @@ const Dashboard = () => {
 					borderColor="gray.100"
 				>
 					<HStack gap="2">
-						<Icon.Star w="5" h="5" fill="primary.500" />
+						<Icon.Star w="5" h="5" fill="#475bb2" />
 						<Heading as="h3" size="sm" fontWeight="semibold">
 							{__("Submit a Review", "user-registration")}
 						</Heading>
@@ -267,7 +268,7 @@ const Dashboard = () => {
 						)}
 					</Text>
 					<Link
-						color="var(--chakra-colors-primary-500) !important"
+						color="#475bb2 !important"
 						textDecor="underline"
 						href="https://wordpress.org/support/plugin/user-registration/reviews/?rate=5#new-post"
 						isExternal
@@ -284,7 +285,7 @@ const Dashboard = () => {
 					borderColor="gray.100"
 				>
 					<HStack gap="2">
-						<Icon.Video w="5" h="5" fill="primary.500" />
+						<Icon.Video w="5" h="5" fill="#475bb2" />
 						<Heading as="h3" size="sm" fontWeight="semibold">
 							{__("Video Tutorials", "user-registration")}
 						</Heading>
@@ -296,7 +297,7 @@ const Dashboard = () => {
 						)}
 					</Text>
 					<Link
-						color="var(--chakra-colors-primary-500) !important"
+						color="#475bb2 !important"
 						textDecor="underline"
 						isExternal
 						href="https://www.youtube.com/@UserRegistration"
