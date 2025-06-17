@@ -180,7 +180,7 @@ class Orders {
 				</div>
 			</div>
 		</div>
-		<div id="user-registration-list-table-page" style="max-width: 1100px;">
+		<div id="user-registration-list-table-page">
 			<div class="user-registration-list-table-heading" id="ur-users-page-topnav">
 				<div class="ur-page-title__wrapper">
 					<h1>
