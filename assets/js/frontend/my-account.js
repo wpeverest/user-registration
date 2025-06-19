@@ -319,4 +319,6 @@ jQuery(function ($) {
 	$("input.flatpickr-input").each(function () {
 		$(this).val($(this).attr("value"));
 	});
+	$('.user-registration-MyAccount-content table.user-registration-email__entries td').css('text-align', 'left');
+	$('.rtl .user-registration-MyAccount-content table.user-registration-email__entries td').css('text-align', 'right');
 });
