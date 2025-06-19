@@ -255,7 +255,7 @@ const Modules = () => {
 		{ label: __("Descending", "user-registration"), value: "desc" }
 	];
 	const bulkOptions = [
-		{ label: __("Active", "user-registration"), value: "active" },
+		{ label: __("Activate", "user-registration"), value: "activate" },
 		{ label: __("Deactivate", "user-registration"), value: "deactivate" }
 	];
 
@@ -413,7 +413,7 @@ const Modules = () => {
 								onChange={(e) =>
 									setState((prev) => ({
 										...prev,
-										bulkAction: e.target.value
+										bulkAction: e.value
 									}))
 								}
 								chakraStyles={{
