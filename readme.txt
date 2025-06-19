@@ -271,13 +271,14 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * Dev      - Hook to modify user registration membership payment option label.
 * Fix      - Design for resend otp.
 * Fix      - Conflict with Botiga theme.
+* Fix      - Undefined index field_name.
 * Fix      - RTL fix for my account page.
 * Fix      - Stripe subscription invalid request.
 * Fix      - Repeater fields values not being saved.
 * Fix      - Undefined index for the image captcha option.
 * Fix 	   - Issue while mapping checkbox value in WP users table.
 * Fix      - Multiple Salesforce Connections Failing to Save Properly.
-* Fix      - Email marketing addons not being installed from form builder.
+* Fix      - Email marketing addons not being installed from form builder.s
 * Fix      - Password label not changing dynamically in Login form setting.
 * Fix      - All Fields smart tag not working on customize my account pages.
 * Fix      - Icon in state fields of WooCommerce billing and shipping fields.

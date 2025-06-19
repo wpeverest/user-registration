@@ -117,7 +117,12 @@ const Header = () => {
 								))}
 							</IntersectObserver>
 						</Stack>
-						<Stack direction="row" align="center" spacing="12px">
+						<Stack
+							direction="row"
+							align="center"
+							spacing="12px"
+							borderColor="#475bb2"
+						>
 							<Tooltip
 								label={sprintf(
 									__(
@@ -129,7 +134,7 @@ const Header = () => {
 							>
 								<Tag
 									variant="outline"
-									colorScheme="primary"
+									color="#475bb2"
 									borderRadius="xl"
 									bgColor="#F8FAFF"
 									fontSize="xs"

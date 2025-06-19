@@ -6914,10 +6914,6 @@
   background-size: cover;
 }
 
-.toplevel_page_user-registration,
-.user-registration-membership_page_user-registration-frontend-list {
-  background-color: #FAFAFA;
-}
 .toplevel_page_user-registration #screen-meta,
 .user-registration-membership_page_user-registration-frontend-list #screen-meta {
   background-color: #FAFAFA;
@@ -7165,10 +7161,6 @@
 /**
 	 * Form Builder Styles
 	 **/
-.user-registration-membership_page_add-new-registration,
-.toplevel_page_user-registration {
-  background-color: #FAFAFA;
-}
 .user-registration-membership_page_add-new-registration #wpfooter,
 .toplevel_page_user-registration #wpfooter {
   display: none;
@@ -9853,10 +9845,6 @@ a.button.ur-smart-tags-list-button {
   vertical-align: middle;
 }
 
-.user-registration-membership_page_add-new-registration,
-.toplevel_page_user-registration {
-  background-color: #FAFAFA;
-}
 .user-registration-membership_page_add-new-registration #nav-menu-header,
 .toplevel_page_user-registration #nav-menu-header {
   padding-left: 30px;
@@ -10683,10 +10671,6 @@ a.button.ur-smart-tags-list-button {
   color: #999;
 }
 
-.toplevel_page_user-registration,
-body.user-registration {
-  background: #FAFAFA;
-}
 .toplevel_page_user-registration #wpcontent,
 body.user-registration #wpcontent {
   padding-right: 0;

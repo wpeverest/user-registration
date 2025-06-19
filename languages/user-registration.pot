@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-06-16T10:08:05+00:00\n"
+"POT-Creation-Date: 2025-06-19T10:00:23+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: user-registration\n"
@@ -824,7 +824,7 @@ msgid "Please choose at least one form to export."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:430
-#: src/dashboard/screens/Help/Help.js:124
+#: src/dashboard/screens/Help/Help.js:125
 msgid "Smart Tags"
 msgstr ""
 
@@ -3303,7 +3303,7 @@ msgid "Error"
 msgstr ""
 
 #: includes/admin/views/html-admin-page-builder-setup.php:20
-#: src/dashboard/screens/Dashboard/Dashboard.js:173
+#: src/dashboard/screens/Dashboard/Dashboard.js:174
 msgid "Getting Started"
 msgstr ""
 
@@ -3802,7 +3802,7 @@ msgid "If you want to create a My Account page, you need to create a new page an
 msgstr ""
 
 #: includes/admin/views/html-login-page-forms.php:116
-#: src/dashboard/screens/Dashboard/Dashboard.js:188
+#: src/dashboard/screens/Dashboard/Dashboard.js:189
 msgid "View Documentation"
 msgstr ""
 
@@ -7394,6 +7394,7 @@ msgstr ""
 #: includes/functions-ur-core.php:1561
 #: includes/functions-ur-core.php:7507
 #: includes/functions-ur-core.php:7513
+#: templates/myaccount/form-login.php:39
 #: templates/myaccount/form-lost-password.php:95
 msgid "Username or Email"
 msgstr ""
@@ -8066,8 +8067,7 @@ msgstr ""
 
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:210
 #: src/dashboard/screens/Dashboard/components/UsefulPlugins.js:76
-#: src/dashboard/screens/Modules/Modules.js:258
-#: src/dashboard/screens/Products/components/ProductCard.js:141
+#: src/dashboard/screens/Products/components/ProductCard.js:142
 msgid "Active"
 msgstr ""
 
@@ -10133,10 +10133,18 @@ msgid "Credit Card"
 msgstr ""
 
 #: modules/membership/includes/Templates/thank-you-page.php:7
-msgid "Hello <b><i>%s</i></b>, Your registration was completed successfully."
+msgid "Thank You! Your registration was completed successfully."
 msgstr ""
 
-#: modules/membership/includes/Templates/thank-you-page.php:54
+#: modules/membership/includes/Templates/thank-you-page.php:11
+msgid "For paid memberships there might be a delay of few minutes for your subscription status to be updated by the payment gateways."
+msgstr ""
+
+#: modules/membership/includes/Templates/thank-you-page.php:12
+msgid "Please use this transaction/order id for support regarding payments if needed."
+msgstr ""
+
+#: modules/membership/includes/Templates/thank-you-page.php:79
 msgid "Transaction ID : "
 msgstr ""
 
@@ -10475,10 +10483,6 @@ msgstr ""
 msgid "Gravatar"
 msgstr ""
 
-#: templates/myaccount/form-login.php:39
-msgid "Username or Email Address"
-msgstr ""
-
 #. translators: %s - Login Title.
 #: templates/myaccount/form-login.php:130
 msgid "<span class=\"user-registration-login-title\"> %s </span> </br>"
@@ -10734,26 +10738,27 @@ msgstr ""
 
 #: src/dashboard/components/common/UsePluginInstallActivate.js:180
 #: src/dashboard/screens/Dashboard/components/UsefulPlugins.js:78
-#: src/dashboard/screens/Products/components/ProductCard.js:143
+#: src/dashboard/screens/Modules/Modules.js:258
+#: src/dashboard/screens/Products/components/ProductCard.js:144
 msgid "Activate"
 msgstr ""
 
 #: src/dashboard/components/common/UsePluginInstallActivate.js:181
 #: src/dashboard/screens/Dashboard/components/UsefulPlugins.js:79
-#: src/dashboard/screens/Products/components/ProductCard.js:144
+#: src/dashboard/screens/Products/components/ProductCard.js:145
 msgid "Install"
 msgstr ""
 
-#: src/dashboard/components/Header/Header.js:123
+#: src/dashboard/components/Header/Header.js:128
 msgid "You are currently using User Registration %s"
 msgstr ""
 
-#: src/dashboard/components/Header/Header.js:155
+#: src/dashboard/components/Header/Header.js:160
 msgid "Upgrade To Pro"
 msgstr ""
 
-#: src/dashboard/components/Header/Header.js:169
-#: src/dashboard/components/Header/Header.js:207
+#: src/dashboard/components/Header/Header.js:174
+#: src/dashboard/components/Header/Header.js:212
 msgid "Latest Updates"
 msgstr ""
 
@@ -10814,22 +10819,22 @@ msgid "Elevate your website's style with Colormag, the go-to choice for news, bl
 msgstr ""
 
 #: src/dashboard/screens/Dashboard/components/UsefulPlugins.js:91
-#: src/dashboard/screens/Products/components/ProductCard.js:162
+#: src/dashboard/screens/Products/components/ProductCard.js:163
 msgid "Activate Plugin"
 msgstr ""
 
 #: src/dashboard/screens/Dashboard/components/UsefulPlugins.js:92
-#: src/dashboard/screens/Products/components/ProductCard.js:163
+#: src/dashboard/screens/Products/components/ProductCard.js:164
 msgid "Install Plugin"
 msgstr ""
 
 #: src/dashboard/screens/Dashboard/components/UsefulPlugins.js:97
-#: src/dashboard/screens/Products/components/ProductCard.js:168
+#: src/dashboard/screens/Products/components/ProductCard.js:169
 msgid "Are you sure? You want to activate %s plugin."
 msgstr ""
 
 #: src/dashboard/screens/Dashboard/components/UsefulPlugins.js:104
-#: src/dashboard/screens/Products/components/ProductCard.js:175
+#: src/dashboard/screens/Products/components/ProductCard.js:176
 msgid "Are you sure? You want to install and activate %s plugin."
 msgstr ""
 
@@ -10841,78 +10846,78 @@ msgstr ""
 msgid "Create a Registration Form"
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:107
+#: src/dashboard/screens/Dashboard/Dashboard.js:108
 msgid "View all forms"
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:141
+#: src/dashboard/screens/Dashboard/Dashboard.js:142
 msgid "User Registration & Membership Community"
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:148
-#: src/dashboard/screens/Help/Help.js:246
+#: src/dashboard/screens/Dashboard/Dashboard.js:149
+#: src/dashboard/screens/Help/Help.js:250
 msgid "Join our exclusive group and connect with fellow members. Ask questions, contribute to discussions, and share feedback!"
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:159
+#: src/dashboard/screens/Dashboard/Dashboard.js:160
 msgid "Join our Facebook Group"
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:177
+#: src/dashboard/screens/Dashboard/Dashboard.js:178
 msgid "Check our documentation for detailed information on User Registration features and how to use them."
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:202
-#: src/dashboard/screens/Help/Help.js:160
+#: src/dashboard/screens/Dashboard/Dashboard.js:203
+#: src/dashboard/screens/Help/Help.js:162
 msgid "Support"
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:206
+#: src/dashboard/screens/Dashboard/Dashboard.js:207
 msgid "Submit a ticket for encountered issues and get help from our support team instantly."
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:217
+#: src/dashboard/screens/Dashboard/Dashboard.js:218
 msgid "Create a Ticket"
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:231
-#: src/dashboard/screens/Help/Help.js:394
+#: src/dashboard/screens/Dashboard/Dashboard.js:232
+#: src/dashboard/screens/Help/Help.js:398
 msgid "Feature Request"
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:235
-#: src/dashboard/screens/Help/Help.js:398
+#: src/dashboard/screens/Dashboard/Dashboard.js:236
+#: src/dashboard/screens/Help/Help.js:402
 msgid "Don’t find a feature you’re looking for? Suggest any features you think would enhance our product."
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:246
-#: src/dashboard/screens/Help/Help.js:409
+#: src/dashboard/screens/Dashboard/Dashboard.js:247
+#: src/dashboard/screens/Help/Help.js:413
 msgid "Request a Feature"
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:260
-#: src/dashboard/screens/Dashboard/Dashboard.js:275
-#: src/dashboard/screens/Help/Help.js:423
-#: src/dashboard/screens/Help/Help.js:438
+#: src/dashboard/screens/Dashboard/Dashboard.js:261
+#: src/dashboard/screens/Dashboard/Dashboard.js:276
+#: src/dashboard/screens/Help/Help.js:427
+#: src/dashboard/screens/Help/Help.js:442
 msgid "Submit a Review"
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:264
-#: src/dashboard/screens/Help/Help.js:427
+#: src/dashboard/screens/Dashboard/Dashboard.js:265
+#: src/dashboard/screens/Help/Help.js:431
 msgid "Please take a moment to give us a review. We appreciate honest feedback that’ll help us improve our plugin."
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:289
-#: src/dashboard/screens/Help/Help.js:365
+#: src/dashboard/screens/Dashboard/Dashboard.js:290
+#: src/dashboard/screens/Help/Help.js:369
 msgid "Video Tutorials"
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:293
+#: src/dashboard/screens/Dashboard/Dashboard.js:294
 msgid "Watch our step-by-step video tutorials that’ll help you get the best out of User Registration’s features."
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:304
-#: src/dashboard/screens/Help/Help.js:380
+#: src/dashboard/screens/Dashboard/Dashboard.js:305
+#: src/dashboard/screens/Help/Help.js:384
 msgid "Watch Videos"
 msgstr ""
 
@@ -11092,75 +11097,75 @@ msgstr ""
 msgid "Find the complete list of shortcodes with their usage information and parameter details."
 msgstr ""
 
-#: src/dashboard/screens/Help/Help.js:108
+#: src/dashboard/screens/Help/Help.js:109
 msgid "View all Shortcodes"
 msgstr ""
 
-#: src/dashboard/screens/Help/Help.js:127
+#: src/dashboard/screens/Help/Help.js:128
 msgid "Find the complete list of smart tags with their usage information and parameter details."
 msgstr ""
 
-#: src/dashboard/screens/Help/Help.js:144
+#: src/dashboard/screens/Help/Help.js:146
 msgid "View Tags"
 msgstr ""
 
-#: src/dashboard/screens/Help/Help.js:163
+#: src/dashboard/screens/Help/Help.js:165
 msgid "If you have any issues or questions, our team is on standby to help you instantly."
 msgstr ""
 
-#: src/dashboard/screens/Help/Help.js:180
+#: src/dashboard/screens/Help/Help.js:183
 msgid "Contact Support"
 msgstr ""
 
-#: src/dashboard/screens/Help/Help.js:196
+#: src/dashboard/screens/Help/Help.js:199
 msgid "Need Some Help?"
 msgstr ""
 
-#: src/dashboard/screens/Help/Help.js:199
+#: src/dashboard/screens/Help/Help.js:202
 msgid "Check our documentation for detailed information on User Registration & Membership features and how to use them."
 msgstr ""
 
-#: src/dashboard/screens/Help/Help.js:216
+#: src/dashboard/screens/Help/Help.js:220
 msgid "View Now"
 msgstr ""
 
-#: src/dashboard/screens/Help/Help.js:223
+#: src/dashboard/screens/Help/Help.js:227
 msgid "Join Our Community"
 msgstr ""
 
-#: src/dashboard/screens/Help/Help.js:243
+#: src/dashboard/screens/Help/Help.js:247
 msgid "Facebook Community"
 msgstr ""
 
-#: src/dashboard/screens/Help/Help.js:264
+#: src/dashboard/screens/Help/Help.js:268
 msgid "Join Group"
 msgstr ""
 
-#: src/dashboard/screens/Help/Help.js:285
+#: src/dashboard/screens/Help/Help.js:289
 msgid "X ( Twitter )"
 msgstr ""
 
-#: src/dashboard/screens/Help/Help.js:288
+#: src/dashboard/screens/Help/Help.js:292
 msgid "Follow us on X to get the latest news and updates about User Registration & Membership."
 msgstr ""
 
-#: src/dashboard/screens/Help/Help.js:306
+#: src/dashboard/screens/Help/Help.js:310
 msgid "Follow"
 msgstr ""
 
-#: src/dashboard/screens/Help/Help.js:327
+#: src/dashboard/screens/Help/Help.js:331
 msgid "YouTube"
 msgstr ""
 
-#: src/dashboard/screens/Help/Help.js:330
+#: src/dashboard/screens/Help/Help.js:334
 msgid "Subscribe to our YouTube channel, where we guide you on using User Registration & Membership features and add-ons."
 msgstr ""
 
-#: src/dashboard/screens/Help/Help.js:348
+#: src/dashboard/screens/Help/Help.js:352
 msgid "Subscribe"
 msgstr ""
 
-#: src/dashboard/screens/Help/Help.js:369
+#: src/dashboard/screens/Help/Help.js:373
 msgid "Watch our step-by-step video tutorials that’ll help you get the best out of User Registration & Membership features."
 msgstr ""
 
