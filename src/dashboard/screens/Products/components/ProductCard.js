@@ -108,7 +108,8 @@ const ProductCard = (props) => {
 						</Link>
 					</HStack>
 					<Button
-						colorScheme="primary"
+						backgroundColor="#475bb2"
+						color="white"
 						size="sm"
 						fontSize="xs"
 						borderRadius="base"

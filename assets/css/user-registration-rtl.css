@@ -2379,9 +2379,8 @@ body.user-registration-page #user-registration:not(.user-registration-MyAccount)
 body.user-registration-page .user-registration:not(.user-registration-MyAccount), body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount),
 body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) {
   max-width: 520px;
-  margin: 24px auto;
   border-radius: 4px;
-  background: #FAFAFC;
+  background: #ffffff;
   border: 0;
 }
 @media screen and (max-width: 575px) {
@@ -3017,6 +3016,34 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
   padding: 0;
   box-shadow: none;
   margin-bottom: 0;
+}
+body.woocommerce-checkout .user-registration.urwc-form {
+  all: unset;
+}
+body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-grid {
+  margin: 0 -10px;
+}
+body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-grid .ur-field-item ul,
+body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-grid .ur-field-item ol {
+  padding-right: 4px;
+}
+body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-grid .ur-field-item .input-wrapper input:not([type=checkbox]), body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-grid .ur-field-item .input-wrapper input:not([type=radio]) {
+  min-height: 50px;
+  max-height: 50px;
+  border: 1px solid;
+  border-color: inherit;
+}
+body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-grid .ur-field-item select {
+  min-height: 50px;
+  max-height: 50px;
+  border: 1px solid;
+  border-color: inherit;
+  border-radius: 4px;
+}
+body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-grid .ur-field-item textarea {
+  border: 1px solid;
+  border-color: inherit;
+  border-radius: 4px;
 }
 
 .user-registration-login-form-container .ur-registered-from .ur-login-form-wrapper #user-registration {

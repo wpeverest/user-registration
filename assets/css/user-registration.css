@@ -3017,6 +3017,34 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
   box-shadow: none;
   margin-bottom: 0;
 }
+body.woocommerce-checkout .user-registration.urwc-form {
+  all: unset;
+}
+body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-grid {
+  margin: 0 -10px;
+}
+body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-grid .ur-field-item ul,
+body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-grid .ur-field-item ol {
+  padding-left: 4px;
+}
+body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-grid .ur-field-item .input-wrapper input:not([type=checkbox]), body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-grid .ur-field-item .input-wrapper input:not([type=radio]) {
+  min-height: 50px;
+  max-height: 50px;
+  border: 1px solid;
+  border-color: inherit;
+}
+body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-grid .ur-field-item select {
+  min-height: 50px;
+  max-height: 50px;
+  border: 1px solid;
+  border-color: inherit;
+  border-radius: 4px;
+}
+body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-grid .ur-field-item textarea {
+  border: 1px solid;
+  border-color: inherit;
+  border-radius: 4px;
+}
 
 .user-registration-login-form-container .ur-registered-from .ur-login-form-wrapper #user-registration {
   width: 100%;

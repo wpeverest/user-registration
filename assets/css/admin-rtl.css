@@ -6914,10 +6914,6 @@
   background-size: cover;
 }
 
-.toplevel_page_user-registration,
-.user-registration-membership_page_user-registration-frontend-list {
-  background-color: #FAFAFA;
-}
 .toplevel_page_user-registration #screen-meta,
 .user-registration-membership_page_user-registration-frontend-list #screen-meta {
   background-color: #FAFAFA;
