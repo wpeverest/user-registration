@@ -49,6 +49,7 @@ class Membership {
 		add_action( 'admin_init', array( $this, 'actions' ) );
 		add_action( 'in_admin_header', array( __CLASS__, 'hide_unrelated_notices' ) );
 		add_filter( 'wp_editor_settings', array( $this, 'remove_media_buttons' ) );
+		add_filter( 'user_registration_login_options', array( $this, 'add_payment_login_option' ) );
 
 	}
 
@@ -472,5 +473,19 @@ class Membership {
 		);
 	}
 
+	/**
+	 * Add Payment Before Registration option.
+	 *
+	 * @param array $options Other login options.
+	 *
+	 * @return  array
+	 */
+	public function add_payment_login_option( $options ) {
 
+		if ( ! array_key_exists( 'payment', $options ) ) {
+			$options['payment'] = esc_html__( 'Payment before login', 'user-registration' );
+		}
+
+		return $options;
+	}
 }

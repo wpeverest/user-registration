@@ -45,11 +45,9 @@ class PaymentService {
 			$membership_meta['amount']                       = $data["chargeable_amount"];
 			$membership_meta['upgrade']                      = true;
 			$membership_meta['remaining_subscription_value'] = $data['remaining_subscription_value'];
+			$membership_meta['trial_status']                 = ( isset( $data["trial_status"] ) && "on" == ( $data['trial_status'] ) ) ? $data['trial_status'] : ( isset( $membership_meta['trial_status'] ) ? $membership_meta['trial_status'] : '' );
 		}
-
-
 		return $membership_meta;
-
 	}
 
 	/**
@@ -69,15 +67,15 @@ class PaymentService {
 			update_user_meta( $response_data['member_id'], 'urm_previous_subscription_data', json_encode( $previous_subscription_data ) );
 			$subscription_data = $subscription_service->prepare_upgrade_subscription_data( $response_data['membership'], $response_data['member_id'], $response_data );
 
-			unset( $response_data['subscription_data'] );
-			if ( in_array( $this->payment_method, array(
-					"bank",
-					"paypal"
-				) ) || ! empty( $response_data['delayed_until'] ) ) {
+			if ( "bank" === $this->payment_method || ! empty( $response_data['delayed_until'] ) ) {
 				update_user_meta( $response_data['member_id'], 'urm_next_subscription_data', json_encode( $response_data ) );
+			} else if ( "paypal" === $this->payment_method ) {
+				update_user_meta( $response_data['member_id'], 'urm_next_subscription_data', json_encode( $response_data ) );
+				$subscription_repository->update( $response_data['subscription_id'], $subscription_data );
 			} else {
 				$subscription_repository->update( $response_data['subscription_id'], $subscription_data );
 			}
+			unset( $response_data['subscription_data'] );
 		}
 
 		switch ( $this->payment_method ) {

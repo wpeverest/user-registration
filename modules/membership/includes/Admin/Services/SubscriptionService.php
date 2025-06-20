@@ -48,6 +48,8 @@ class SubscriptionService {
 		if ( $current_user->ID != 0 || 'free' == $membership_meta['type'] ) {
 			$status = 'active';
 		}
+		$billing_cycle = ( "subscription" === $membership_meta['type'] ) ? $membership_meta['subscription']['duration'] :  '';
+
 		$subscription_data = array(
 			'user_id'           => $member->ID,
 			'item_id'           => $membership['ID'],
@@ -57,6 +59,7 @@ class SubscriptionService {
 			'billing_amount'    => $membership_meta['amount'] ?? 0,
 			'status'            => $status,
 			'cancel_sub'        => $membership_meta['cancel_subscription'] ?? 'immediately',
+			'billing_cycle'     => $billing_cycle
 		);
 
 		if ( isset( $data['coupon_data'] ) && ! empty( $data['coupon_data'] ) ) {
@@ -279,8 +282,6 @@ class SubscriptionService {
 
 		$upgrade_details = $this->calculate_membership_upgrade_cost( $current_membership_details, $selected_membership_details, $subscription );
 
-
-
 		if ( isset( $upgrade_details['status'] ) && ! $upgrade_details['status'] ) {
 			ur_get_logger()->notice( __( 'Calculation Failed', 'user-registration-membership' ), array( 'source' => 'urm-upgrade-subscription' ) );
 
@@ -387,6 +388,7 @@ class SubscriptionService {
 		} else {
 			$is_trial = isset( $selected_membership_details['trial_status'] ) && 'on' === $selected_membership_details['trial_status'];
 		}
+
 		switch ( $upgrade_type ) {
 			case 'free->free':
 			case 'paid->free':
@@ -411,7 +413,7 @@ class SubscriptionService {
 				break;
 			case 'subscription->subscription':
 			case 'subscription->paid':
-				$result = $upgrade_membership_service->handle_subscription_to_paid_or_subscription_membership_upgrade( $current_membership_details, $selected_membership_details, $subscription );
+				$result = $upgrade_membership_service->handle_subscription_to_paid_or_subscription_membership_upgrade( $current_membership_details, $selected_membership_details, $subscription, $is_trial );
 				break;
 		}
 
@@ -420,7 +422,7 @@ class SubscriptionService {
 		}
 
 		return array(
-			'is_trial'                     => $is_trial,
+			'trial_status'                 => $is_trial ? "on" : "off",
 			'chargeable_amount'            => ! empty( $result['chargeable_amount'] ) ? $result['chargeable_amount'] : 0,
 			'remaining_subscription_value' => ! empty( $result['remaining_subscription_value'] ) ? $result['remaining_subscription_value'] : 0,
 			'delayed_until'                => ! empty( $result['delayed_until'] ) ? $result['delayed_until'] : ''
@@ -453,6 +455,7 @@ class SubscriptionService {
 		if ( 'subscription' == $membership_meta['type'] ) { // TODO: calculate with trial date
 			$expiry_date = self::get_expiry_date( date( 'Y-m-d' ), $membership_meta['subscription']['duration'], $remaining_subscription_value );
 		}
+		$billing_cycle = ( "subscription" === $membership_meta['type'] ) ? $membership_meta['subscription']['duration'] :  '';
 
 		$subscription_data = array(
 			'user_id'           => $member_id,
@@ -462,6 +465,7 @@ class SubscriptionService {
 			'next_billing_date' => $expiry_date,
 			'billing_amount'    => $membership_meta['amount'] ?? 0,
 			'status'            => 'free' === $membership_meta['type'] ? 'active' : 'pending',
+			'billing_cycle'     => $billing_cycle
 		);
 
 		if ( isset( $membership_meta['trial_status'] ) && "on" === $membership_meta['trial_status'] ) {
@@ -548,7 +552,7 @@ class SubscriptionService {
 			if ( $user ) {
 				$cancel_subscription = $this->subscription_repository->cancel_subscription_by_id( $subscription_id, false, true );
 				ur_get_logger()->notice( $cancel_subscription['message'], array( 'source' => 'urm-membership-crons' ) );
-				$previous_subscription = json_decode(get_user_meta( $user->ID, 'urm_previous_subscription_data', true ));
+				$previous_subscription             = json_decode( get_user_meta( $user->ID, 'urm_previous_subscription_data', true ), true );
 				$updated_subscription_for_users[]  = $user->user_login;
 				$decoded_data['subscription_data'] = $previous_subscription;
 				$subscription_data                 = $this->prepare_upgrade_subscription_data( $decoded_data['membership'], $decoded_data['member_id'], $decoded_data );

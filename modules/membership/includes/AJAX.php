@@ -219,8 +219,8 @@ class AJAX {
 		$new_membership_ID = wp_insert_post( $data['post_data'] );
 
 		if ( $new_membership_ID ) {
-			if(!empty($data['post_meta_data']) ) {
-				foreach ($data['post_meta_data'] as $datum) {
+			if ( ! empty( $data['post_meta_data'] ) ) {
+				foreach ( $data['post_meta_data'] as $datum ) {
 					add_post_meta( $new_membership_ID, $datum['meta_key'], $datum['meta_value'] );
 				}
 			}
@@ -231,7 +231,7 @@ class AJAX {
 				$data["membership_id"]    = $new_membership_ID;
 				$stripe_price_and_product = $stripe_service->create_stripe_product_and_price( $data["post_data"], $meta_data, false );
 
-				if (  $stripe_price_and_product['success'] ) {
+				if ( $stripe_price_and_product['success'] ) {
 					$meta_data["payment_gateways"]["stripe"]["product_id"] = $stripe_price_and_product['price']->product;
 					$meta_data["payment_gateways"]["stripe"]["price_id"]   = $stripe_price_and_product['price']->id;
 					update_post_meta( $new_membership_ID, $data['post_meta_data']['ur_membership']['meta_key'], wp_json_encode( $meta_data ) );
@@ -299,8 +299,8 @@ class AJAX {
 		$updated_ID = wp_insert_post( $data['post_data'] );
 
 		if ( $updated_ID ) {
-			if(!empty($data['post_meta_data']) ) {
-				foreach ($data['post_meta_data'] as $datum) {
+			if ( ! empty( $data['post_meta_data'] ) ) {
+				foreach ( $data['post_meta_data'] as $datum ) {
 					update_post_meta( $updated_ID, $datum['meta_key'], $datum['meta_value'] );
 				}
 			}
@@ -324,7 +324,7 @@ class AJAX {
 					$data["membership_id"]    = $updated_ID;
 					$stripe_price_and_product = $stripe_service->create_stripe_product_and_price( $data["post_data"], $meta_data, $should_create_new_product );
 
-					if (  ur_string_to_bool($stripe_price_and_product['success']) ) {
+					if ( ur_string_to_bool( $stripe_price_and_product['success'] ) ) {
 						$meta_data["payment_gateways"]["stripe"]["product_id"] = $stripe_price_and_product['price']->product;
 						$meta_data["payment_gateways"]["stripe"]["price_id"]   = $stripe_price_and_product['price']->id;
 						update_post_meta( $updated_ID, $data['post_meta_data']['ur_membership']['meta_key'], wp_json_encode( $meta_data ) );
@@ -635,8 +635,8 @@ class AJAX {
 			if ( $is_upgrading ) {
 				$next_subscription     = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
 				$previous_subscription = get_user_meta( $member_id, 'urm_previous_subscription_data', true );
-				$is_delayed            = !empty( $next_subscription['delayed_until'] );
-				if ( ! empty( $previous_subscription ) && !$is_delayed ) {
+				$is_delayed            = ! empty( $next_subscription['delayed_until'] );
+				if ( ! empty( $previous_subscription ) && ! $is_delayed ) {
 
 					$previous_subscription = json_decode( $previous_subscription, true );
 					$stripe_service        = new StripeService();
@@ -1033,7 +1033,6 @@ class AJAX {
 
 		if ( $response['status'] ) {
 			$selected_pg = $data['selected_pg'];
-
 			if ( $selected_pg !== 'free' ) {
 				update_user_meta( $upgrade_membership_response['extra']['member_id'], 'urm_is_upgrading', true );
 				update_user_meta( $upgrade_membership_response['extra']['member_id'], 'urm_is_upgrading_to', $data['selected_membership_id'] );

@@ -2,12 +2,13 @@
 
 namespace WPEverest\URMembership\Admin\Services\Paypal;
 
-use Google\Service\Walletobjects\DateTime;
+use DateTime;
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersOrderRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
 use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
+use WPEverest\URMembership\Admin\Repositories\SubscriptionRepository;
 use WPEverest\URMembership\Admin\Services\EmailService;
 use WPEverest\URMembership\Admin\Services\MembersService;
 use WPEverest\URMembership\Admin\Services\OrderService;
@@ -17,7 +18,7 @@ class PaypalService {
 	/**
 	 * @var MembersOrderRepository
 	 */
-	protected $members_orders_repository, $members_subscription_repository, $membership_repository, $orders_repository;
+	protected $members_orders_repository, $members_subscription_repository, $membership_repository, $orders_repository, $subscription_repository;
 
 	/**
 	 * Constructor of this class.
@@ -27,6 +28,7 @@ class PaypalService {
 		$this->members_subscription_repository = new MembersSubscriptionRepository();
 		$this->membership_repository           = new MembershipRepository();
 		$this->orders_repository               = new OrdersRepository();
+		$this->subscription_repository         = new SubscriptionRepository();
 	}
 
 	/**
@@ -51,7 +53,7 @@ class PaypalService {
 		$redirect                     = ( 'production' === $paypal_options['mode'] ) ? 'https://www.paypal.com/cgi-bin/webscr/?' : 'https://www.sandbox.paypal.com/cgi-bin/webscr/?';
 		$membership_data              = $this->membership_repository->get_single_membership_by_ID( $membership );
 		$membership_metas             = wp_unslash( json_decode( $membership_data['meta_value'], true ) );
-		$membership_amount            = number_format( $membership_metas['amount'] );
+		$membership_amount            = number_format( $is_upgrading ? $data['amount'] : $membership_metas['amount'] );
 
 		$discount_amount = 0;
 
@@ -100,29 +102,42 @@ class PaypalService {
 		);
 
 		if ( '_xclick-subscriptions' === $transaction ) {
-			$paypal_args['t3'] = ! empty( $data ['subscription'] ) ? strtoupper( substr( $data['subscription']['duration'], 0, 1 ) ) : '';
-			$paypal_args['p3'] = ! empty( $data ['subscription']['value'] ) ? $data ['subscription']['value'] : 1;
-			$paypal_args['a3'] = floatval( user_registration_sanitize_amount( $membership_amount ) );
+			$paypal_args['t3']          = ! empty( $data ['subscription'] ) ? strtoupper( substr( $data['subscription']['duration'], 0, 1 ) ) : '';
+			$paypal_args['p3']          = ! empty( $data ['subscription']['value'] ) ? $data ['subscription']['value'] : 1;
+			$paypal_args['a3']          = floatval( user_registration_sanitize_amount( $membership_amount ) );
+			$new_subscription_data      = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
+			$previous_subscription_data = json_decode( get_user_meta( $member_id, 'urm_previous_subscription_data', true ), true );
 
 			if ( 'on' === $data['trial_status'] ) {
+
 				$paypal_args['t1'] = ! empty( $data ['trial_data'] ) ? strtoupper( substr( $data['trial_data']['duration'], 0, 1 ) ) : '';
 				$paypal_args['p1'] = ! empty( $data ['trial_data'] ) ? $data ['trial_data']['value'] : 1;
+
+				if ( $is_upgrading && empty( $new_subscription_data['delayed_until'] ) && ! empty( $previous_subscription_data['trial_end_date'] ) ) {
+
+					$date1             = new DateTime( $previous_subscription_data['trial_end_date'] );
+					$date2             = new DateTime( 'today' );
+					$interval          = $date1->diff( $date2 );
+					$paypal_args['t1'] = 'D';
+					$paypal_args['p1'] = $interval->days;
+				}
+
 				$paypal_args['a1'] = '0';
 			}
 
 
-			if ( ! empty( $coupon_details ) || ( $is_upgrading ) ) {
-				$membership_amount = ( $is_upgrading ) ? absint( $data['amount'] ) : $membership_amount;
-				$amount            = user_registration_sanitize_amount( $membership_amount ) - $discount_amount;
+			if ( ! empty( $coupon_details ) || ( $is_upgrading && ! empty( $new_subscription_data ) && ! empty( $new_subscription_data['delayed_until'] ) ) ) {
+				$amount = $is_upgrading ? '0' : ( user_registration_sanitize_amount( $membership_amount ) - $discount_amount );
 
 				$paypal_args['t2'] = ! empty( $data ['subscription'] ) ? strtoupper( substr( $data['subscription']['duration'], 0, 1 ) ) : '';
 				$paypal_args['p2'] = ! empty( $data ['subscription']['value'] ) ? $data ['subscription']['value'] : 1;
 				$paypal_args['a2'] = floatval( $amount );
 			}
+
 		} else {
 			$paypal_args['amount'] = floatval( user_registration_sanitize_amount( $membership_amount ) - $discount_amount );
 		}
-		error_log(print_r($paypal_args, true));
+
 		$redirect .= http_build_query( $paypal_args );
 
 		return str_replace( ' & amp;', ' & ', $redirect );
@@ -182,13 +197,7 @@ class PaypalService {
 		}
 		$is_upgrading = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
 		if ( $is_upgrading ) {
-			delete_user_meta( $member_id, 'urm_is_upgrading' );
-			delete_user_meta( $member_id, 'urm_is_upgrading_to' );
-			update_user_meta( $member_id, 'urm_is_user_upgraded', 1 );
-			ur_membership_redirect_now( ur_get_my_account_url() . '/ur-membership', array(
-				'is_upgraded' => 'true',
-				'message'     => __( 'Membership Upgraded successfully', 'user-registration' )
-			) );
+			$this->handle_upgrade_for_paypal( $member_id );
 		}
 
 		$login_option = ur_get_user_login_option( $member_id );
@@ -196,10 +205,42 @@ class PaypalService {
 			$member_service = new MembersService();
 			$member_service->login_member( $member_id, true );
 		}
+
 		update_user_meta( $member_id, 'urm_user_just_created', true );
 		ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
 	}
 
+	/**
+	 * handle_upgrade_for_paypal
+	 *
+	 * @param $member_id
+	 *
+	 * @return void
+	 */
+	public function handle_upgrade_for_paypal( $member_id ) {
+
+		$get_user_old_subscription = json_decode( get_user_meta( $member_id, 'urm_previous_subscription_data', true ), true );
+		$get_user_old_order        = json_decode( get_user_meta( $member_id, 'urm_previous_order_data', true ), true );
+		$new_subscription_data     = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
+
+		if ( ! empty( $new_subscription_data ) ) {
+			if ( empty( $new_subscription_data['delayed_until'] ) ) {
+				$cancel_subscription = $this->cancel_subscription( $get_user_old_order, $get_user_old_subscription );
+				$message             = ! empty( $cancel_subscription['message'] ) ? $cancel_subscription['message'] : __( 'Paypal subscription cancellation failed', 'user-registration' );
+				ur_get_logger()->notice( $message, array( 'source' => 'ur-membership-paypal' ) );
+				delete_user_meta( $member_id, 'urm_previous_order_data' );
+				delete_user_meta( $member_id, 'urm_previous_subscription_data' );
+				delete_user_meta( $member_id, 'urm_next_subscription_data' );
+			}
+		}
+		delete_user_meta( $member_id, 'urm_is_upgrading' );
+		delete_user_meta( $member_id, 'urm_is_upgrading_to' );
+		update_user_meta( $member_id, 'urm_is_user_upgraded', 1 );
+		ur_membership_redirect_now( ur_get_my_account_url() . '/ur-membership', array(
+			'is_upgraded' => 'true',
+			'message'     => __( 'Membership Upgraded successfully', 'user-registration' )
+		) );
+	}
 
 	/**
 	 * Handle membership paypal ipn
@@ -380,7 +421,7 @@ class PaypalService {
 		}
 		$is_upgrading = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
 		if ( $is_upgrading ) {
-			delete_user_meta( $member_id, 'urm_is_upgrading' );
+			$this->handle_upgrade_for_paypal( $member_id );
 		}
 	}
 
@@ -429,16 +470,9 @@ class PaypalService {
 	 * @return array|bool[]
 	 */
 	public function cancel_subscription( $order, $subscription ) {
-		$membership      = $this->membership_repository->get_single_membership_by_ID( $order['item_id'] );
-		$membership_meta = json_decode( $membership['meta_value'], true );
-		$paypal_options  = $membership_meta['payment_gateways']['paypal'];
-
-		$paypal_options['mode']          = get_option( 'user_registration_global_paypal_mode', $paypal_options['mode'] );
-		$paypal_options['email']         = get_option( 'user_registration_global_paypal_email_address', $paypal_options['email'] );
-		$paypal_options['cancel_url']    = get_option( 'user_registration_global_paypal_cancel_url', home_url() );
-		$paypal_options['return_url']    = get_option( 'user_registration_global_paypal_return_url', wp_login_url() );
-		$paypal_options['client_id']     = get_option( 'user_registration_global_paypal_client_id', $paypal_options['client_id'] );
-		$paypal_options['client_secret'] = get_option( 'user_registration_global_paypal_client_secret', $paypal_options['client_secret'] );
+		$paypal_options['mode']          = get_option( 'user_registration_global_paypal_mode', 'test' );
+		$paypal_options['client_id']     = get_option( 'user_registration_global_paypal_client_id', '' );
+		$paypal_options['client_secret'] = get_option( 'user_registration_global_paypal_client_secret', '' );
 
 		$client_id     = $paypal_options['client_id'];
 		$client_secret = $paypal_options['client_secret'];

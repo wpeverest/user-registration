@@ -90,6 +90,7 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 			ur_get_logger()->notice( print_r( $cancel_sub, true ), array( 'source' => 'urm-cancellation-log' ) );
 
 			if ( $cancel_sub['status'] ) {
+
 				$this->update( $subscription_id, array( 'status' => 'canceled', 'subscription_id' => '' ) );
 				if ( $send_email ) {
 					$subscription_service->send_cancel_emails( $subscription_id );
