@@ -142,7 +142,9 @@ class URCR_Shortcodes {
 
 			$memberships_roles = isset($memberships_roles) ? explode( ',', $memberships_roles ) : array();
 			$memberships_roles = array_map( function($role) { return trim(str_replace('″', '', $role)) ;}, $memberships_roles );
-			$message = '';
+
+			$message = get_option( 'user_registration_content_restriction_message', '' );
+			
 			if ( $override_global_settings === 'on' ) {
 				$message = ! empty(get_post_meta( $post->ID, 'urcr_meta_content', $single = true )) ? get_post_meta( $post->ID, 'urcr_meta_content', $single = true ) : '';
 			} elseif ( isset( $atts['enable_content_restriction']) && $atts['enable_content_restriction'] === "true" ) {
