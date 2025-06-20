@@ -120,9 +120,9 @@ class UR_Admin_Export_Users {
 		while ( true ) {
 			// Fetch users in batches.
 			$users = get_users( array(
-				'ur_form_id' => $form_id,
-				'number'     => $batch_size,
-				'offset'     => $offset,
+					'ur_form_id' => $form_id,
+					'number'     => $batch_size,
+					'offset'     => $offset,
 			) );
 
 			// If no users are found, break the loop.
@@ -313,22 +313,22 @@ class UR_Admin_Export_Users {
 					if ( isset( $profile[ $profile_key ]['default'] ) ) {
 						$default_value = $profile[ $profile_key ]['default'];
 
-					// Handle array values properly.
-					if ( is_array( $default_value ) ) {
-						// Filter out empty values and join the remaining values into a string.
-						$default_value = implode(
-							', ',
-							array_filter(
-								$default_value,
-								function ( $v ) {
-									return ! empty( $v );
-								}
-							)
-						);
-					} else {
-						// If it's not an array, sanitize the value.
-						$default_value = esc_html( $default_value );
-					}
+						// Handle array values properly.
+						if ( is_array( $default_value ) ) {
+							// Filter out empty values and join the remaining values into a string.
+							$default_value = implode(
+								', ',
+								array_filter(
+									$default_value,
+									function ( $v ) {
+										return ! empty( $v );
+									}
+								)
+							);
+						} else {
+							// If it's not an array, sanitize the value.
+							$default_value = esc_html( $default_value );
+						}
 
 						// Only set non-empty default values.
 						if ( ! empty( $default_value ) ) {
@@ -341,7 +341,9 @@ class UR_Admin_Export_Users {
 			// Merge only non-empty values from $user_before_merge_value.
 			if ( ! empty( $user_before_merge_value ) ) {
 				foreach ( $user_before_merge_value as $key => $value ) {
-					if ( ! empty( $value ) ) {
+					if (
+						! isset( $user_extra_row[ $key ] ) || '' === $user_extra_row[ $key ] || ( is_array( $user_extra_row[ $key ] ) && empty( $user_extra_row[ $key ] ) )
+					) {
 						$user_extra_row[ $key ] = $value;
 					}
 				}
