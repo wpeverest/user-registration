@@ -724,6 +724,13 @@
   font-size: 16px;
   line-height: 24px;
 }
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .ur-label {
+  width: 100% !important;
+  max-width: 260px;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .ur-input-type-membership-upgrade-path .select2-selection__rendered {
+  flex-wrap: wrap;
+}
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-upgrade-action:checked {
   background: #475BB2;
   border-color: #475BB2;

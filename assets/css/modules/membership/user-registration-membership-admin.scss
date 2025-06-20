@@ -790,6 +790,21 @@
 											}
 										}
 									}
+
+									.ur-label {
+										width: 100% !important;
+										max-width: 260px;
+									}
+
+									.ur-input-type-membership-upgrade-path {
+										.select2 {
+											&-selection {
+												&__rendered {
+													flex-wrap: wrap;
+												}
+											}
+										}
+									}
 								}
 							}
 						}
