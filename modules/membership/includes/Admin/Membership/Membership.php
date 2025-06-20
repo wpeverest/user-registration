@@ -98,7 +98,6 @@ class Membership {
 	 * Membership Listing admin actions.
 	 */
 	public function actions() {
-
 		if ( isset( $_GET['page'] ) && 'user-registration-membership' === $_GET['page'] ) {
 
 			// Bulk actions.
