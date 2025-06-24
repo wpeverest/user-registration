@@ -367,7 +367,7 @@
 										</div>
 										<!--								trial section-->
 										<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3"
-											 style="gap:20px">
+											 style="gap:30px">
 											<div class="ur-label" style="width: 30%">
 												<label class="ur-membership-trial-status"
 													   for="ur-membership-trial-status"><?php esc_html_e( 'Trial Period', 'user - registration' ); ?></label>
@@ -385,8 +385,7 @@
 												>
 											</div>
 										</div>
-										<div
-											class="trial-container <?php echo isset( $membership_details['trial_status'] ) && $membership_details['trial_status'] == 'on' ? '' : 'ur-d-none'; ?>">
+										<div class="trial-container <?php echo isset( $membership_details['trial_status'] ) && $membership_details['trial_status'] == 'on' ? '' : 'ur-d-none'; ?>">
 											<div
 												class="trial-container--wrapper ur-d-flex ur-p-3 ur-ml-2 ur-align-items-center">
 												<div class="ur-label">
