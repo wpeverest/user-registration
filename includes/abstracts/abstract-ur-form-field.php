@@ -306,6 +306,10 @@ abstract class UR_Form_Field {
 			}
 		}
 
+		if ( 'html' === $field_key ) {
+			$form_data['html'] = isset( $data['general_setting']->html ) ? ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name, $data['general_setting']->html ) : '';
+		}
+
 		if ( 'radio' === $field_key ) {
 
 			if ( isset( $data['general_setting']->image_choice ) && ur_string_to_bool( $data['general_setting']->image_choice ) ) {
