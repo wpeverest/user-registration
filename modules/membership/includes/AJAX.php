@@ -670,6 +670,17 @@ class AJAX {
 		$stripe_subscription = $stripe_service->create_subscription( $customer_id, $payment_method_id, $member_id );
 
 		if ( $stripe_subscription['status'] ) {
+			if ( ! empty( $form_response ) && isset( $form_response['auto_login'] ) && $form_response['auto_login'] && $payment_status !== 'failed' ) {
+				$members_service = new MembersService();
+				$logged_in       = $members_service->login_member( $member_id, true );
+				if ( ! $logged_in ) {
+					wp_send_json_error(
+						array(
+							'message' => __( 'Invalid User', 'user-registration' ),
+						)
+					);
+				}
+			}
 			wp_send_json_success( $stripe_subscription );
 		} else {
 			wp_delete_user( absint( $member_id ) );
