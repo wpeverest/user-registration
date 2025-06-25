@@ -54,10 +54,13 @@ if ( ! class_exists( 'UR_Payment_Setting' ) ) :
 				'title'    => __( 'Payments', 'user-registration' ),
 				'sections' => array(
 					'payment_settings' => array(
-						'title'    => esc_html__( 'Payment Settings', 'user-registration' ),
-						'type'     => 'card',
-						'desc'     => '',
-						'settings' => array(
+						'id'          => 'payment-settings',
+						'title'       => esc_html__( 'Payment Settings', 'user-registration' ),
+						'type'        => 'card',
+						'desc'        => '',
+						'show_status' => false,
+						'show_logo'   => false,
+						'settings'    => array(
 							array(
 								'title'    => __( 'Currency', 'user-registration' ),
 								'desc'     => __( 'This option lets you choose currency for payments.', 'user-registration' ),
@@ -84,14 +87,17 @@ if ( ! class_exists( 'UR_Payment_Setting' ) ) :
 
 			global $current_section;
 
-			$settings       = $this->get_settings( $current_section );
+			$settings = $this->get_settings( $current_section );
+
 			$saved_currency = get_option( 'user_registration_payment_currency', 'USD' );
 
 			if ( ! in_array( $saved_currency, paypal_supported_currencies_list() ) ) {
 				$currency_url = 'https://developer.paypal.com/docs/reports/reference/paypal-supported-currencies/';
 				echo '<div id="ur-currency-error" class="notice notice-warning is-dismissible"><p><strong>' . esc_html__( 'CURRENCY_NOT_SUPPORTED Currency Code :', 'user-registration' ) . '</strong> ' . esc_html( $saved_currency ) . esc_html__( ' is not currently supported by Paypal. Please Refer', 'user-registration' ) . ' <a href="' . esc_url( $currency_url ) . '" rel="noreferrer noopener" target="_blank">' . esc_html__( 'Paypal supported currencies', 'user-registration' ) . '</a></p></div>';
 			}
+
 			UR_Admin_Settings::output_fields( $settings );
+			$GLOBALS['hide_save_button'] = true;
 		}
 
 		/**
