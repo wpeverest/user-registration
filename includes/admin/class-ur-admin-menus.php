@@ -407,7 +407,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						$fields[ $i ]['name'] = $name;
 					}
 
-					echo '<h2 class="ur-toggle-heading">' . esc_html( $section['section_title'] ) . '</h2><hr/>';
+					echo '<h2 class="ur-toggle-heading closed">' . esc_html( $section['section_title'] ) . '</h2><hr/>';
 					echo '<ul id = "ur-upgradables" class="ur-registered-list" > ';
 					$this->render_upgradable_fields( $fields );
 					echo '</ul >';
