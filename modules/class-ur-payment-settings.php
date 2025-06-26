@@ -80,6 +80,7 @@ if ( ! class_exists( 'UR_Payment_Setting' ) ) :
 					),
 				),
 			);
+
 			return apply_filters( 'user_registration_payment_settings', $settings );
 		}
 
@@ -110,9 +111,9 @@ if ( ! class_exists( 'UR_Payment_Setting' ) ) :
 		 *
 		 * @return void
 		 */
-		public function save_section_settings($form_data) {
+		public function save_section_settings( $form_data ) {
 			$settings = $this->get_settings();
-			ur_save_settings_options($settings['sections']['payment_settings'], $form_data);
+			ur_save_settings_options( $settings['sections']['payment_settings'], $form_data );
 		}
 	}
 
