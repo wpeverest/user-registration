@@ -34,14 +34,13 @@ if ( ! class_exists( 'UR_Payment_Setting' ) ) :
 			$this->label = esc_html__( 'Payments', 'user-registration' );
 			add_filter( 'user_registration_settings_tabs_array', array( $this, 'add_settings_page' ), 20 );
 			add_action( 'user_registration_settings_' . $this->id, array( $this, 'output' ) );
-			add_action( 'user_registration_settings_save_' . $this->id, array( $this, 'save' ) );
+			add_action( 'urm_save_payment-settings_payment_section', array( $this, 'save_section_settings' ), 10, 1 );
 		}
 
 		/**
 		 * Function to get Global Settings
 		 */
 		public function get_settings() {
-
 			$currencies      = ur_payment_integration_get_currencies();
 			$currencies_list = array();
 
@@ -72,11 +71,15 @@ if ( ! class_exists( 'UR_Payment_Setting' ) ) :
 								'desc_tip' => true,
 								'options'  => $currencies_list,
 							),
+							array(
+								'title' => __( 'Save', 'user-registration' ),
+								'id'    => 'user_registration_payment_save_settings',
+								'type'  => 'button',
+							),
 						),
 					),
 				),
 			);
-
 			return apply_filters( 'user_registration_payment_settings', $settings );
 		}
 
@@ -101,15 +104,15 @@ if ( ! class_exists( 'UR_Payment_Setting' ) ) :
 		}
 
 		/**
-		 * Save global payment settings.
+		 * save_section_settings
+		 *
+		 * @param $form_data
+		 *
+		 * @return void
 		 */
-		public function save() {
-
-			global $current_section;
-
-			$settings = $this->get_settings( $current_section );
-
-			UR_Admin_Settings::save_fields( $settings );
+		public function save_section_settings($form_data) {
+			$settings = $this->get_settings();
+			ur_save_settings_options($settings['sections']['payment_settings'], $form_data);
 		}
 	}
 

@@ -258,7 +258,7 @@ class UR_Admin_Settings {
 				'user_registration_my_account_selection_validator_nonce'       => wp_create_nonce( 'user_registration_my_account_selection_validator' ),
 				'user_registration_lost_password_selection_validator_nonce'    => wp_create_nonce( 'user_registration_lost_password_selection_validator' ),
 				'user_registration_membership_pages_selection_validator_nonce' => wp_create_nonce( 'user_registration_validate_page_none' ),
-				'user_registration_membership_payment_settings_nonce' => wp_create_nonce( 'user_registration_validate_payment_settings_none' ),
+				'user_registration_membership_payment_settings_nonce'          => wp_create_nonce( 'user_registration_validate_payment_settings_none' ),
 				'i18n_nav_warning'                                             => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
 				'i18n'                                                         => array(
 					'captcha_success'   => esc_html__( 'Captcha Test Successful !', 'user-registration' ),
@@ -457,13 +457,13 @@ class UR_Admin_Settings {
 					}
 
 					if ( 'accordian' === $section['type'] ) {
-						$section_id = isset( $section['id'] ) ? 'id=' . $section['id']  : "";
+						$section_id = isset( $section['id'] ) ? 'id=' . $section['id'] : "";
 
 						$available_in      = isset( $section['available_in'] ) ? sanitize_text_field( wp_unslash( $section['available_in'] ) ) : '';
 						$is_captcha        = isset( $section['settings_type'] ) ? ' ur-captcha-settings' : '';
 						$is_captcha_header = isset( $section['settings_type'] ) ? $is_captcha . '-header' : '';
 						$is_captcha_body   = isset( $section['settings_type'] ) ? $is_captcha . '-body' : '';
-						$is_connected   = isset( $section['is_connected'] ) ? $section['is_connected'] : false;
+						$is_connected      = isset( $section['is_connected'] ) ? $section['is_connected'] : false;
 
 						if ( isset( $section['video_id'] ) ) {
 							$inactive_class = 'user-registration-inactive-addon';
@@ -477,7 +477,7 @@ class UR_Admin_Settings {
 						}
 						$settings .= '<div class="user-registration-card__header ur-d-flex ur-align-items-center ur-p-3 integration-header-info accordion' . $is_captcha_header . '">';
 						$settings .= '<div class="integration-detail">';
-						$settings .= '<span class="integration-status ' . ($is_connected ? 'ur-integration-account-connected' : '') .'">';
+						$settings .= '<span class="integration-status ' . ( $is_connected ? 'ur-integration-account-connected' : '' ) . '">';
 						$settings .= '</span>';
 						$settings .= '<figure class="logo">';
 						$settings .= '<img src="' . UR()->plugin_url() . '/assets/images/settings-icons/' . $section['id'] . '.png" alt="' . $section['title'] . '">';
@@ -589,7 +589,7 @@ class UR_Admin_Settings {
 											min="' . esc_attr( ! empty( $value['min'] ) ? $value['min'] : '' ) . '"
 											max="' . esc_attr( ! empty( $value['max'] ) ? $value['max'] : '' ) . '"
 											placeholder="' . esc_attr( $value['placeholder'] ) . '"
-											' . esc_attr( implode( ' ', $custom_attributes ) ) .  '/>';
+											' . esc_attr( implode( ' ', $custom_attributes ) ) . '/>';
 									$settings .= wp_kses_post( $description );
 									$settings .= '</div>';
 									$settings .= '</div>';
@@ -974,12 +974,20 @@ class UR_Admin_Settings {
 									}
 									break;
 								case 'button':
-
-									if ( "stripe" === $section['id'] ) {
-										$css = 'ur-flex-row-reverse';
+									$css       = '';
+									$field_css = '';
+									if ( in_array( $section['id'], array(
+										"stripe",
+										"paypal",
+										"bank",
+										"payment-settings"
+									) ) ) {
+										$css       = 'ur-flex-row-reverse';
+										$field_css = 'ur-align-items-end';
 									}
+
 									$settings .= '<div class="user-registration-global-settings ' . $css . '">';
-									$settings .= '<div class="user-registration-global-settings--field">';
+									$settings .= '<div class="user-registration-global-settings--field ' . $field_css . '">';
 									$settings .= '<button
 											id="' . esc_attr( $value['id'] ) . '"
 											type="button"
@@ -1136,7 +1144,7 @@ class UR_Admin_Settings {
 					}
 				}
 				// Get posted value.
-				$value = ur_sanitize_value_by_type($option, $raw_value);
+				$value = ur_sanitize_value_by_type( $option, $raw_value );
 
 				/**
 				 * Filter to Sanitize the value of an option.
@@ -1353,6 +1361,7 @@ class UR_Admin_Settings {
 				}
 			}
 		}
+
 		return $result;
 	}
 

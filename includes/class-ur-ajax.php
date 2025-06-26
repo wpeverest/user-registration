@@ -2025,22 +2025,20 @@ class UR_AJAX {
 		UR_Admin_Settings::load_payment_modules();
 
 		$validate_before_save = apply_filters( 'urm_validate_' . $setting_id . '_payment_section_before_update', $form_data );
-		if ( ! $validate_before_save['status'] ) {
-			update_option('urm_'.$setting_id.'_connection_status', false);
+
+		if ( isset($validate_before_save['status']) && ! $validate_before_save['status'] ) {
 			wp_send_json_error(
 				array(
 					'message' => __( $validate_before_save['message'], "user_registration" )
 				)
 			);
-		} else {
-			error_log('urm_'.$setting_id.'_connection_status');
-			update_option('urm_'.$setting_id.'_connection_status', true);
 		}
+		update_option('urm_'.$setting_id.'_connection_status', true);
 
 		do_action( 'urm_save_' . $setting_id . '_payment_section', $form_data );
-
+		$message = "payment-settings" === $setting_id ? "Settings has been saved successfully" : sprintf( __( "Payment Setting for %s has been saved successfully.", 'user-registration' ), $setting_id );
 		wp_send_json_success( array(
-				'message' => sprintf( __( "Payment Setting for %s has been saved successfully.", 'user-registration' ), $setting_id )
+				'message' => $message
 			)
 		);
 	}

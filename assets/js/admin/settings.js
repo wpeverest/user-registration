@@ -1186,14 +1186,10 @@
 			type: "POST",
 			complete: function (response) {
 				$this.find('.ur-spinner').remove();
-
 				if (response.responseJSON.success) {
 					show_success_message(response.responseJSON.data.message);
 					settings_container.find('.integration-status').addClass('ur-integration-account-connected');
-
 				} else {
-					settings_container.find('.integration-status').removeClass('ur-integration-account-connected');
-
 					show_failure_message(response.responseJSON.data.message);
 				}
 
@@ -1284,7 +1280,7 @@
 		});
 	});
 
-	$('#user_registration_stripe_save_settings, #user_registration_paypal_save_settings , #user_registration_bank_save_settings').on('click', function () {
+	$('#user_registration_stripe_save_settings, #user_registration_paypal_save_settings , #user_registration_bank_save_settings ,  #user_registration_payment_save_settings').on('click', function () {
 		var $this = $(this),
 			setting_id = $(this).data('id'),
 			settings_container = $this.closest('#' + setting_id);

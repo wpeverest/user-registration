@@ -121,6 +121,7 @@ class User_Registration_Stripe_Module {
 		$changed  = false;
 		$response = array(
 			'status' => true,
+			'connected' => true,
 		);
 
 		foreach ( $form_data as $k => $data ) {
@@ -143,6 +144,7 @@ class User_Registration_Stripe_Module {
 				$customers = \Stripe\Customer::all( [ 'limit' => 1 ] );
 			} catch ( \Stripe\Exception\AuthenticationException $e ) {
 				$response['status']  = false;
+				$response['connected']  = false;
 				$response['message'] = 'Invalid stripe credentials';
 			}
 		}
