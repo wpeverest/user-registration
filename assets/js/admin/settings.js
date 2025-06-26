@@ -1280,28 +1280,32 @@
 		});
 	});
 
-	$('#user_registration_stripe_save_settings, #user_registration_paypal_save_settings , #user_registration_bank_save_settings ,  #user_registration_payment_save_settings').on('click', function () {
+	$('.payment-settings-btn').on('click', function () {
 		var $this = $(this),
-			setting_id = $(this).data('id'),
+			setting_id = $this.data('id'),
 			settings_container = $this.closest('#' + setting_id);
+
 		if ($this.find('.ur-spinner').length > 0) {
 			return;
 		}
 		$this.append("<span class='ur-spinner'></span>");
+
 		var section_data = {};
 
-		$(settings_container.find('input, select, textarea')).each(function (key, item) {
-			if ($(item).attr('name') !== undefined) {
-				if($(item).attr('type') === 'checkbox') {
-					section_data[$(item).attr('name')] = $(item).is(":checked");
-				} else if (setting_id === 'bank') {
-					var editor = tinymce.get($(item).attr('name'));
-					section_data[$(item).attr('name')] =  editor.getContent();
-				} else {
-					section_data[$(item).attr('name')] = $(item).val();
+		settings_container.find('input, select, textarea').each(function (key, item) {
+			var $item = $(item);
+			var name = $item.attr('name');
+			if (!name) return;
 
-				}
+			var value;
+			if ($item.attr('type') === 'checkbox') {
+				value = $item.is(":checked");
+			} else if ($item.is('textarea') && typeof tinymce !== 'undefined' && tinymce.get(name)) {
+				value = tinymce.get(name).getContent();
+			} else {
+				value = $item.val();
 			}
+			section_data[name] = value;
 		});
 
 		update_payment_section_settings(setting_id, section_data, $this, settings_container);

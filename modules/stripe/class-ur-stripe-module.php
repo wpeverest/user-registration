@@ -92,6 +92,7 @@ class User_Registration_Stripe_Module {
 					'title' => __( 'Save', 'user-registration' ),
 					'id'    => 'user_registration_stripe_save_settings',
 					'type'  => 'button',
+					'class' => 'payment-settings-btn'
 				),
 			),
 		);

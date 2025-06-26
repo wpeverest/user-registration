@@ -66,6 +66,7 @@ if ( ! class_exists( 'UR_Settings_Membership ' ) ) :
 						'title' => __( 'Save', 'user-registration' ),
 						'id'    => 'user_registration_bank_save_settings',
 						'type'  => 'button',
+						'class' => 'payment-settings-btn'
 					),
 				),
 			);

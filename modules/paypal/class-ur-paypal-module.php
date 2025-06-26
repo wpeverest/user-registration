@@ -104,6 +104,7 @@ class User_Registration_Paypal_Module {
 					'title' => __( 'Save', 'user-registration' ),
 					'id'    => 'user_registration_paypal_save_settings',
 					'type'  => 'button',
+					'class' => 'payment-settings-btn'
 				),
 			),
 		);

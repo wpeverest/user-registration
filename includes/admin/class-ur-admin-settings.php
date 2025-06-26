@@ -405,10 +405,10 @@ class UR_Admin_Settings {
 					}
 
 					if ( 'card' === $section['type'] ) {
-						$section_id      = isset( $section['id'] ) ? 'id=' . $section['id'] . '' : '';
+						$section_id      = isset( $section['id'] ) ? 'id=' . $section['id'] : '';
 						$card_header_css = '';
 
-						if ( 'payment-settings' === $section['id'] ) {
+						if ( isset( $section['id'] ) && 'payment-settings' === $section['id'] ) {
 							$card_header_css .= 'max-width: 100%';
 						}
 
@@ -976,11 +976,14 @@ class UR_Admin_Settings {
 								case 'button':
 									$css       = '';
 									$field_css = '';
+									$btn_css = !empty($value['class']) ? $value['class'] : '';
 									if ( in_array( $section['id'], array(
 										"stripe",
 										"paypal",
 										"bank",
-										"payment-settings"
+										"payment-settings",
+										"mollie",
+										"authorize-net"
 									) ) ) {
 										$css       = 'ur-flex-row-reverse';
 										$field_css = 'ur-align-items-end';
@@ -991,7 +994,7 @@ class UR_Admin_Settings {
 									$settings .= '<button
 											id="' . esc_attr( $value['id'] ) . '"
 											type="button"
-											class="button button-primary"
+											class="button button-primary '.esc_attr($btn_css).'"
 											type="button"
 											data-id="' . esc_attr( $section['id'] ) . '"
 											/>' . $value['title'] . '</button>';
