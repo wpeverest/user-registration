@@ -75,6 +75,7 @@ if ( ! class_exists( 'UR_Payment_Setting' ) ) :
 								'title' => __( 'Save', 'user-registration' ),
 								'id'    => 'user_registration_payment_save_settings',
 								'type'  => 'button',
+								'class' => 'payment-settings-btn'
 							),
 						),
 					),
