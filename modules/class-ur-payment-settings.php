@@ -34,14 +34,13 @@ if ( ! class_exists( 'UR_Payment_Setting' ) ) :
 			$this->label = esc_html__( 'Payments', 'user-registration' );
 			add_filter( 'user_registration_settings_tabs_array', array( $this, 'add_settings_page' ), 20 );
 			add_action( 'user_registration_settings_' . $this->id, array( $this, 'output' ) );
-			add_action( 'user_registration_settings_save_' . $this->id, array( $this, 'save' ) );
+			add_action( 'urm_save_payment-settings_payment_section', array( $this, 'save_section_settings' ), 10, 1 );
 		}
 
 		/**
 		 * Function to get Global Settings
 		 */
 		public function get_settings() {
-
 			$currencies      = ur_payment_integration_get_currencies();
 			$currencies_list = array();
 
@@ -54,10 +53,13 @@ if ( ! class_exists( 'UR_Payment_Setting' ) ) :
 				'title'    => __( 'Payments', 'user-registration' ),
 				'sections' => array(
 					'payment_settings' => array(
-						'title'    => esc_html__( 'Payment Settings', 'user-registration' ),
-						'type'     => 'card',
-						'desc'     => '',
-						'settings' => array(
+						'id'          => 'payment-settings',
+						'title'       => esc_html__( 'Payment Settings', 'user-registration' ),
+						'type'        => 'card',
+						'desc'        => '',
+						'show_status' => false,
+						'show_logo'   => false,
+						'settings'    => array(
 							array(
 								'title'    => __( 'Currency', 'user-registration' ),
 								'desc'     => __( 'This option lets you choose currency for payments.', 'user-registration' ),
@@ -68,6 +70,12 @@ if ( ! class_exists( 'UR_Payment_Setting' ) ) :
 								'css'      => 'min-width: 350px;',
 								'desc_tip' => true,
 								'options'  => $currencies_list,
+							),
+							array(
+								'title' => __( 'Save', 'user-registration' ),
+								'id'    => 'user_registration_payment_save_settings',
+								'type'  => 'button',
+								'class' => 'payment-settings-btn'
 							),
 						),
 					),
@@ -84,26 +92,29 @@ if ( ! class_exists( 'UR_Payment_Setting' ) ) :
 
 			global $current_section;
 
-			$settings       = $this->get_settings( $current_section );
+			$settings = $this->get_settings( $current_section );
+
 			$saved_currency = get_option( 'user_registration_payment_currency', 'USD' );
 
 			if ( ! in_array( $saved_currency, paypal_supported_currencies_list() ) ) {
 				$currency_url = 'https://developer.paypal.com/docs/reports/reference/paypal-supported-currencies/';
 				echo '<div id="ur-currency-error" class="notice notice-warning is-dismissible"><p><strong>' . esc_html__( 'CURRENCY_NOT_SUPPORTED Currency Code :', 'user-registration' ) . '</strong> ' . esc_html( $saved_currency ) . esc_html__( ' is not currently supported by Paypal. Please Refer', 'user-registration' ) . ' <a href="' . esc_url( $currency_url ) . '" rel="noreferrer noopener" target="_blank">' . esc_html__( 'Paypal supported currencies', 'user-registration' ) . '</a></p></div>';
 			}
+
 			UR_Admin_Settings::output_fields( $settings );
+			$GLOBALS['hide_save_button'] = true;
 		}
 
 		/**
-		 * Save global payment settings.
+		 * save_section_settings
+		 *
+		 * @param $form_data
+		 *
+		 * @return void
 		 */
-		public function save() {
-
-			global $current_section;
-
-			$settings = $this->get_settings( $current_section );
-
-			UR_Admin_Settings::save_fields( $settings );
+		public function save_section_settings( $form_data ) {
+			$settings = $this->get_settings();
+			ur_save_settings_options( $settings['sections']['payment_settings'], $form_data );
 		}
 	}
 
