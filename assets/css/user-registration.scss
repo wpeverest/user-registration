@@ -302,7 +302,9 @@ textarea.ur-input-border-red {
 	}
 
 	.ur-form-row {
-		display: flex;
+		@media screen and (min-width: 600px) {
+			display: flex;
+		}
 
 		&:last-child {
 			margin-bottom: 0;
@@ -540,6 +542,22 @@ textarea.ur-input-border-red {
 									opacity: 1;
 								}
 							}
+						}
+					}
+				}
+			}
+
+			#ur-recaptcha-node {
+				@media screen and (max-width: 420px) {
+					.g-recaptcha {
+						max-width: 304px;
+						margin: 0 auto;
+
+						iframe {
+							max-width: 100%;
+							width: 100%;
+							transform: scale(0.8);
+							transform-origin: 0 0;
 						}
 					}
 				}
@@ -1672,7 +1690,7 @@ span.ur-shortcode-form-embed-dot {
 						.ur-builder-wrapper {
 							.ur-selected-inputs {
 								background: transparent;
-								padding: 24px;
+								padding: $spacing_30px;
 							}
 						}
 					}
@@ -1945,14 +1963,16 @@ body {
 
 			&:not(.user-registration-MyAccount) {
 				max-width: 520px;
-				// margin: 0px auto;
 				border-radius: 4px;
 				background: #ffffff;
-				// box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
-				border: 0;
+				border: 0;				
 
-				@media screen and (max-width: 575px) {
-					padding: 40px 30px;
+				@media screen and (max-width: 600px) {
+					padding: 40px 20px;
+				}
+
+				&:has(.ur-frontend-form.login) {
+					padding: 0;
 				}
 
 				&:has(.ur-grid-2),
@@ -2000,10 +2020,12 @@ body {
 
 				.ur-frontend-form {
 					&.login {
-						// max-width: 520px;
 						margin: 0px auto;
 						box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
-						// padding: 60px 50px;
+
+						@media screen and (max-width: 600px) {
+							padding: 40px 20px;
+						}
 
 						.user-registration-error {
 							display: block;
@@ -2768,7 +2790,7 @@ body {
 						.ur-builder-wrapper {
 							.ur-selected-inputs {
 								background: transparent;
-								padding: 24px;
+								padding: $spacing_30px;
 							}
 						}
 					}

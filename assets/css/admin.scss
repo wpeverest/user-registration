@@ -4372,8 +4372,7 @@ a.button.ur-smart-tags-list-button {
 								background: #f0f0f1;
 
 								.ur-builder-wrapper-content {
-									padding: $spacing_20px $spacing_30px
-										$spacing_60px;
+									padding: $spacing_30px $spacing_30px $spacing_40px;
 									border-radius: $border_radius_4;
 
 									.ur-login {
@@ -4786,7 +4785,6 @@ body.user-registration {
 		}
 
 		&-menu {
-
 			&__items {
 				display: flex;
 				gap: 4px;
@@ -4794,13 +4792,13 @@ body.user-registration {
 
 				li {
 					font-size: 15px;
-					margin-bottom: -5px;
+					margin-bottom: 0;
 					padding: $spacing_24px 0;
 
 					a {
 						text-decoration: none;
 						color: #1f1f1f;
-						padding: $spacing_24px $spacing_16px;
+						padding: $spacing_26px $spacing_16px;
 						position: relative;
 						transition: all 0.3s;
 

@@ -731,8 +731,9 @@
 		border-radius: $border_radius_16;
 		background: $grey-0;
 		box-shadow: 0px 6px 26px 0px rgba(10, 10, 10, 0.08);
+		overflow: hidden;
 
-		.user-registration-MyAccount {
+		.user-registration-MyAccount {			
 			&-navigation {
 				&-link {
 					border: 0 !important;
