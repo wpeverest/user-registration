@@ -150,8 +150,8 @@ class User_Registration_Paypal_Module {
 		}
 
 
-		preg_match( '(' . site_url() . ')', $form_data['user_registration_global_paypal_cancel_url'], $cancel_url_matches );
-		preg_match( '(' . site_url() . ')', $form_data['user_registration_global_paypal_return_url'], $return_url_matches );
+		preg_match( '#^' . preg_quote(site_url(), '#') . '#', $form_data['user_registration_global_paypal_cancel_url'], $cancel_url_matches );
+		preg_match( '#^' . preg_quote(site_url(), '#') . '#', $form_data['user_registration_global_paypal_return_url'], $return_url_matches );
 
 		if ( count( $cancel_url_matches ) < 1 || count( $return_url_matches ) < 1 ) {
 			$response['status']  = false;
