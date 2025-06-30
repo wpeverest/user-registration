@@ -542,23 +542,30 @@
 
 			.membership-row {
 				display: flex;
+				gap: 20px;
+
 				.membership-label {
 					min-width: 300px;
 					text-align: left;
 				}
+
 				#ur-membership-status {
 					padding: 6px 18px;
 					color: white;
 					border-radius: 36px;
+
 					&.btn-active {
 						background: #4dc245;
 					}
+
 					&.btn-inactive {
 						background: gray;
 					}
+
 					&.btn-canceled {
 						background: #ea4335;
 					}
+
 					&.btn-trial {
 						background: #ff8300;
 					}
@@ -587,11 +594,13 @@
 					font-size: 14px;
 					font-weight: 500;
 					display: none;
+
 					&.btn-error {
 						background: #fff4f4;
 						color: red;
 						border-left: 3px solid #f25656;
 					}
+
 					&.btn-success {
 						background: #d7ede0;
 						color: #554545;
@@ -1237,4 +1246,21 @@ body {
 			}
 		}
 	}
+}
+.user-registration-MyAccount-content table.user-registration-email__entries td {
+	text-align: left;
+}
+
+.rtl #user-registration.vertical .user-registration-MyAccount-content__header h1,
+.rtl .ur-frontend-form.login .ur-form-row .ur-form-grid .user-registration-form-row label,
+.rtl .ur-frontend-form .ur-form-row .ur-form-grid label.ur-label,
+.rtl .ur-frontend-form .ur-form-row .ur-form-grid legend.ur-label,
+.rtl .user-registration-logout-swal2-container .swal2-header .swal2-title,
+.rtl .user-registration-logout-swal2-container .swal2-header .swal2-content .swal2-content,
+.rtl .user-registration-MyAccount-content table.user-registration-email__entries td
+{
+	text-align: right;
+}
+.rtl #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row .membership-label {
+	min-width: 0px;
 }

@@ -163,12 +163,12 @@ html {
 .user-registration-page .thank-you-page-container, .ur-multi-device-form-preview .thank-you-page-container {
   display: flex;
   flex-direction: column;
-  margin: 60px auto;
+  margin: 32px auto;
   padding: 40px;
   border-radius: 12px;
   background: var(--Grey-grey-0, #FFF);
   box-shadow: 0px 6px 25px 0px rgba(10, 10, 10, 0.08);
-  gap: 12px;
+  gap: 20px;
 }
 .user-registration-page .thank-you-page-container .message-section, .ur-multi-device-form-preview .thank-you-page-container .message-section {
   display: block;
@@ -176,6 +176,15 @@ html {
 .user-registration-page .thank-you-page-container .message-section p, .ur-multi-device-form-preview .thank-you-page-container .message-section p {
   margin-bottom: 0;
   margin-top: 0;
+}
+.user-registration-page .thank-you-page-container .message-section .header-section, .ur-multi-device-form-preview .thank-you-page-container .message-section .header-section {
+  text-align: center;
+  font-weight: 600;
+  font-size: 20px;
+  margin-bottom: 30px;
+  padding-right: 40px;
+  padding-left: 40px;
+  line-height: 30px;
 }
 .user-registration-page .thank-you-page-container > p, .ur-multi-device-form-preview .thank-you-page-container > p {
   margin-bottom: 0;
@@ -185,13 +194,23 @@ html {
   font-size: small;
   font-style: italic;
 }
-.user-registration-page .thank-you-page-container .thank-you-notice.warning, .ur-multi-device-form-preview .thank-you-page-container .thank-you-notice.warning {
-  background-color: #efc7a5;
-  border-left: 4px solid #b77f02;
-}
 .user-registration-page .thank-you-page-container .thank-you-notice.info, .ur-multi-device-form-preview .thank-you-page-container .thank-you-notice.info {
-  background-color: #ffd105;
-  border-left: 4px solid #c4a20c;
+  background-color: #f7fbff;
+  border: 1px solid #475bb2;
+  padding: 12px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 150%;
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  align-items: start;
+}
+.user-registration-page .thank-you-page-container .thank-you-notice.info svg, .ur-multi-device-form-preview .thank-you-page-container .thank-you-notice.info svg {
+  flex: 0 0 5%;
+}
+.user-registration-page .thank-you-page-container .footer-section, .ur-multi-device-form-preview .thank-you-page-container .footer-section {
+  margin-bottom: 20px;
 }
 
 .membership-body {

@@ -51,7 +51,7 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 			$this->id          = 'admin_email';
 			$this->title       = __( 'New Member Registered', 'user-registration' );
 			$this->description = __( 'Notify admins about a new membership signup, including member details.', 'user-registration' );
-			$this->receiver    = __( 'Admin', 'user-registration' );
+			$this->receiver    = 'Admin';
 		}
 
 		/**
@@ -89,7 +89,7 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 									'autoload' => false,
 								),
 								array(
-									'title'    => __( 'Email Receipents', 'user-registration' ),
+									'title'    => __( 'Email Recipients', 'user-registration' ),
 									'desc'     => __( 'Use comma to send emails to multiple receipents.', 'user-registration' ),
 									'id'       => 'user_registration_admin_email_receipents',
 									'default'  => get_option( 'admin_email' ),

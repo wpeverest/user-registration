@@ -398,7 +398,7 @@ class Membership {
 		$posts = get_posts(
 			array(
 				'post_status' => 'publish',
-				'numberposts' => - 1,
+				'numberposts' => 100,
 			)
 		);
 		$posts = wp_list_pluck( $posts, 'post_title', 'ID' );

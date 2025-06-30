@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						</p>
 
 						<p>
-							<select name="export_users" id="selected-export-user-form" class="ur-input forms-list">
+							<select name="export_users" id="selected-export-user-form" class="ur-input forms-list ur-enhanced-select">
 								<option value="" ><?php esc_html_e( 'Select Form', 'user-registration' ); ?></option>
 								<?php
 								foreach ( $all_forms as $form_id => $form ) {

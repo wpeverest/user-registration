@@ -4,7 +4,7 @@ Tags: user registration, registration, user profile, registration form, login fo
 Requires at least: 5.5
 Requires PHP: 7.2
 Tested up to: 6.8.1
-Stable tag: 4.2.2
+Stable tag: 4.2.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -257,6 +257,48 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 21. User Account Page –  Vertical Layout
 
 == Changelog ==
+
+= 4.2.4    - 19/06/2025 =
+* Enhance  - Lock/Unlock payment form setting.
+* Tweak    - Color for error message for custom url field.
+* Tweak    - Spacing for the error message on custom url field.
+* Tweak    - Positioning of OTP code verification button positioning.
+* Dev      - Hook to sort membership field.
+* Dev      - Approval link email wpml translation key name.
+* Dev 	   - Modify the image resolution for cropped image.
+* Dev      - Hook to modify the template for repeater field.
+* Dev      - Updated database query insert and delete to support all engines.
+* Dev      - Hook to modify user registration membership payment option label.
+* Fix      - Design for resend otp.
+* Fix      - Conflict with Botiga theme.
+* Fix      - Undefined index field_name.
+* Fix      - RTL fix for my account page.
+* Fix      - Stripe subscription invalid request.
+* Fix      - Repeater fields values not being saved.
+* Fix      - Undefined index for the image captcha option.
+* Fix 	   - Issue while mapping checkbox value in WP users table.
+* Fix      - Multiple Salesforce Connections Failing to Save Properly.
+* Fix      - Email marketing addons not being installed from form builder.s
+* Fix      - Password label not changing dynamically in Login form setting.
+* Fix      - All Fields smart tag not working on customize my account pages.
+* Fix      - Icon in state fields of WooCommerce billing and shipping fields.
+* Fix      - Opening the lightbox for longe duration after login in admin dashboard.
+
+= 4.2.3    - 27/05/2025 =
+* Security - Dashboard widget form title html escaping.
+* Feature  - Customize login form title and description.
+* Feature  - Added Membership Listing and Thank You blocks.
+* Feature  - Adds support for Mollie Payment Gateway in User Registration & Membership.
+* Feature  - Add login/logout menu link for classical menu as well as block theme.
+* Enhance  - Setup Wizard Flow and Design.
+* Enhance  - Membership renewal reminder email.
+* Enhance  - Email segregation and design improvement.
+* Dev      - Added filter to change user registered date zone.
+* Fix      - Membership Thank You header translation.
+* Fix      - Text domain called earlier than initialization.
+* Fix      - Memory exhaustion error on membership list table.
+* Fix      - Remove lost your password link from login error messages
+* Fix      - Password strength not working on edit profile and lost password page.
 
 = 4.2.2    - 05/05/2025 =
 * Security - User capability check on multiple ajax requests .

@@ -127,12 +127,10 @@ class AJAX {
 
 		if ( 'free' !== $data['payment_method'] && $response['status'] ) {
 			$payment_service = new PaymentService( $data['payment_method'], $data['membership'], $data['email'] );
-			
+
 			$form_response    = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
 			$ur_authorize_net = array( 'ur_authorize_net' => ! empty ( $form_response['ur_authorize_net'] ) ? $form_response['ur_authorize_net'] : [] );
 			$data             = array_merge( $data, $ur_authorize_net );
-			$pg_data = $payment_service->build_response( $data );
-
 			$pg_data         = $payment_service->build_response( $data );
 		}
 
@@ -226,10 +224,10 @@ class AJAX {
 				$data["membership_id"]    = $new_membership_ID;
 				$stripe_price_and_product = $stripe_service->create_stripe_product_and_price( $data["post_data"], $meta_data, false );
 
-				if ( ! empty( $stripe_price_and_product ) ) {
-					$meta_data["payment_gateways"]["stripe"]["product_id"] = $stripe_price_and_product->product;
-					$meta_data["payment_gateways"]["stripe"]["price_id"]   = $stripe_price_and_product->id;
-					update_post_meta( $new_membership_ID, $data['post_meta_data']['meta_key'], wp_json_encode( $meta_data ) );
+				if (  $stripe_price_and_product['success'] ) {
+					$meta_data["payment_gateways"]["stripe"]["product_id"] = $stripe_price_and_product['price']->product;
+					$meta_data["payment_gateways"]["stripe"]["price_id"]   = $stripe_price_and_product['price']->id;
+					update_post_meta( $new_membership_ID, $data['post_meta_data']['ur_membership']['meta_key'], wp_json_encode( $meta_data ) );
 				}
 			}
 
@@ -307,21 +305,21 @@ class AJAX {
 				//check if any significant value has been changed  , trial not included since trial value change does not affect the type of product and price in stripe, instead handled during subscription
 				$should_create_new_product = ( $old_membership_data['amount'] !== $meta_data['amount'] || ( isset( $old_membership_data["subscription"] ) && $old_membership_data["subscription"]["value"] !== $meta_data["subscription"]["value"] ) || ( isset( $old_membership_data["subscription"] ) && $old_membership_data["subscription"]["duration"] !== $meta_data["subscription"]["duration"] ) );
 
-				$meta_data = json_decode( $data["post_meta_data"]["meta_value"], true );
+				$meta_data = json_decode( $data["post_meta_data"]['ur_membership']["meta_value"], true );
 
 				if ( $should_create_new_product || empty( $meta_data["payment_gateways"]["stripe"]["product_id"] ) ) {
 					$stripe_service           = new StripeService();
 					$data["membership_id"]    = $updated_ID;
 					$stripe_price_and_product = $stripe_service->create_stripe_product_and_price( $data["post_data"], $meta_data, $should_create_new_product );
 
-					if ( ! empty( $stripe_price_and_product ) ) {
-						$meta_data["payment_gateways"]["stripe"]["product_id"] = $stripe_price_and_product->product;
-						$meta_data["payment_gateways"]["stripe"]["price_id"]   = $stripe_price_and_product->id;
-						update_post_meta( $updated_ID, $data['post_meta_data']['meta_key'], wp_json_encode( $meta_data ) );
+					if (  ur_string_to_bool($stripe_price_and_product['success']) ) {
+						$meta_data["payment_gateways"]["stripe"]["product_id"] = $stripe_price_and_product['price']->product;
+						$meta_data["payment_gateways"]["stripe"]["price_id"]   = $stripe_price_and_product['price']->id;
+						update_post_meta( $updated_ID, $data['post_meta_data']['ur_membership']['meta_key'], wp_json_encode( $meta_data ) );
 					} else {
 						wp_send_json_error(
 							array(
-								'message' => esc_html__( 'Sorry! Could not create stripe product. ', 'user-registration' ),
+								'message' => $stripe_price_and_product['message'],
 							)
 						);
 					}
@@ -606,7 +604,7 @@ class AJAX {
 				)
 			);
 		}
-		if ( ! current_user_can( 'edit_user', $member_id ) ) {
+		if ( is_user_logged_in() && ! current_user_can( 'edit_user', $member_id ) ) {
 			wp_send_json_error(
 				array(
 					'message' => __( 'You are not allowed to edit this user.', 'user-registration' ),
@@ -660,7 +658,7 @@ class AJAX {
 				)
 			);
 		}
-		if ( ! current_user_can( 'edit_user', $member_id ) ) {
+		if ( is_user_logged_in() && ! current_user_can( 'edit_user', $member_id ) ) {
 			wp_send_json_error(
 				array(
 					'message' => __( 'You are not allowed to edit this user.', 'user-registration' ),

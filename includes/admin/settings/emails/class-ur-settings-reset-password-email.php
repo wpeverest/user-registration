@@ -50,7 +50,7 @@ if ( ! class_exists( 'UR_Settings_Reset_Password_Email', false ) ) :
 			$this->id          = 'reset_password_email';
 			$this->title       = __( 'Reset Password', 'user-registration' );
 			$this->description = __( 'Sends a secure password reset link to the user who requested a reset.', 'user-registration' );
-			$this->receiver    = __( 'User', 'user-registration' );
+			$this->receiver    = 'User';
 		}
 
 		/**
@@ -142,7 +142,7 @@ if ( ! class_exists( 'UR_Settings_Reset_Password_Email', false ) ) :
 						If this was a mistake, simply ignore this email, and no changes will be made to your account. <br/>
 
 						To reset your password, please click the link below: <br/>
-						[<a href="{{home_url}}/{{ur_reset_pass_slug}}?action=rp&key={{key}}&login={{username}}" rel="noreferrer noopener" target="_blank">Click Here: </a><br/>] - Link
+						<a href="{{home_url}}/{{ur_reset_pass_slug}}?action=rp&key={{key}}&login={{username}}" rel="noreferrer noopener" target="_blank">Click Here: </a><br/>
 
 						Thank You!',
 						'user-registration'

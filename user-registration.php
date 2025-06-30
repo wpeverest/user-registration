@@ -3,7 +3,7 @@
  * Plugin Name: User Registration & Membership
  * Plugin URI: https://wpuserregistration.com/
  * Description: The most flexible User Registration and Membership plugin for WordPress.
- * Version: 4.2.2
+ * Version: 4.2.4
  * Author: WPEverest
  * Author URI: https://wpuserregistration.com
  * Text Domain: user-registration
@@ -35,7 +35,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '4.2.2';
+		public $version = '4.2.4';
 
 		/**
 		 * Session instance.
@@ -108,8 +108,6 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 * UserRegistration Constructor.
 		 */
 		public function __construct() {
-			add_filter( 'doing_it_wrong_trigger_error', array( $this, 'ur_filter_doing_it_wrong_trigger_error' ), 10, 4 );
-
 			$this->define_constants();
 			$this->includes();
 			$this->init_hooks();
@@ -470,27 +468,6 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			return (array) $plugin_meta;
 		}
 
-		/**
-		 * Filter for _doing_it_wrong() calls.
-		 *
-		 * @since 3.3.5.2
-		 *
-		 * @param bool|mixed $trigger       Whether to trigger the error for _doing_it_wrong() calls. Default true.
-		 * @param string     $function_name The function that was called.
-		 * @param string     $message       A message explaining what has been done incorrectly.
-		 * @param string     $version       The version of WordPress where the message was added.
-		 *
-		 * @return bool
-		 */
-		public function ur_filter_doing_it_wrong_trigger_error( $trigger, $function_name, $message, $version ) {
-
-			$trigger       = (bool) $trigger;
-			$function_name = (string) $function_name;
-			$message       = (string) $message;
-
-			$is_trigger_for_user_registration = $function_name === '_load_textdomain_just_in_time' && strpos( $message, '<code>user-registration' ) !== false;
-			return $is_trigger_for_user_registration ? false : $trigger;
-		}
 
 		/**
 		 * Update notice
