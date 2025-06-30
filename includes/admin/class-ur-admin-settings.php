@@ -80,7 +80,7 @@ class UR_Admin_Settings {
 					if ( is_plugin_active( 'user-registration-authorize-net/user-registration-authorize-net.php' ) ) {
 						$modules[] = 'class-ur-payment-settings.php';
 					}
-					if( is_plugin_active( 'user-registration-mollie/user-registration-mollie.php' ) ) {
+					if ( is_plugin_active( 'user-registration-mollie/user-registration-mollie.php' ) ) {
 						$modules[] = 'class-ur-payment-settings.php';
 					}
 				}
@@ -175,22 +175,6 @@ class UR_Admin_Settings {
 				)
 			);
 		}
-		elseif ( 'user_registration_global_paypal_return_url' === $flag ) {
-			self::add_error(
-				esc_html__(
-					'Your settings has not been saved. Paypal return url cannot be empty.',
-					'user-registration'
-				)
-			);
-		}
-		elseif ( 'user_registration_global_paypal_cancel_url' === $flag ) {
-			self::add_error(
-				esc_html__(
-					'Your settings has not been saved. Paypal cancel url cannot be empty.',
-					'user-registration'
-				)
-			);
-		}
 		// Flush rules.
 		wp_schedule_single_event( time(), 'user_registration_flush_rewrite_rules' );
 
@@ -249,21 +233,34 @@ class UR_Admin_Settings {
 		 * Action to output start settings
 		 */
 		do_action( 'user_registration_settings_start' );
+		wp_register_script( 'ur-snackbar', UR()->plugin_url() . '/assets/js/ur-snackbar/ur-snackbar' . $suffix . '.js', array(), '1.0.0', true );
 
-		wp_enqueue_script( 'user-registration-settings', UR()->plugin_url() . '/assets/js/admin/settings' . $suffix . '.js', array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-sortable', 'iris', 'tooltipster' ), UR_VERSION, true );
+		wp_enqueue_script( 'user-registration-settings', UR()->plugin_url() . '/assets/js/admin/settings' . $suffix . '.js', array(
+			'jquery',
+			'jquery-ui-datepicker',
+			'jquery-ui-sortable',
+			'iris',
+			'tooltipster',
+			'ur-snackbar'
+		), UR_VERSION, true );
 		wp_enqueue_script( 'ur-setup' );
+		if ( ! wp_style_is( 'ur-snackbar', 'registered' ) ) {
+			wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), '1.0.0' );
+		}
+		wp_enqueue_style( 'ur-snackbar' );
 		wp_localize_script(
 			'user-registration-settings',
 			'user_registration_settings_params',
 			array(
-				'ajax_url'                             => admin_url( 'admin-ajax.php' ),
-				'user_registration_search_global_settings_nonce' => wp_create_nonce( 'user_registration_search_global_settings' ),
-				'user_registration_captcha_test_nonce' => wp_create_nonce( 'user_registration_captcha_test_nonce' ),
-				'user_registration_my_account_selection_validator_nonce' => wp_create_nonce( 'user_registration_my_account_selection_validator' ),
-				'user_registration_lost_password_selection_validator_nonce' => wp_create_nonce( 'user_registration_lost_password_selection_validator' ),
+				'ajax_url'                                                     => admin_url( 'admin-ajax.php' ),
+				'user_registration_search_global_settings_nonce'               => wp_create_nonce( 'user_registration_search_global_settings' ),
+				'user_registration_captcha_test_nonce'                         => wp_create_nonce( 'user_registration_captcha_test_nonce' ),
+				'user_registration_my_account_selection_validator_nonce'       => wp_create_nonce( 'user_registration_my_account_selection_validator' ),
+				'user_registration_lost_password_selection_validator_nonce'    => wp_create_nonce( 'user_registration_lost_password_selection_validator' ),
 				'user_registration_membership_pages_selection_validator_nonce' => wp_create_nonce( 'user_registration_validate_page_none' ),
-				'i18n_nav_warning'                     => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
-				'i18n'                                 => array(
+				'user_registration_membership_payment_settings_nonce'          => wp_create_nonce( 'user_registration_validate_payment_settings_none' ),
+				'i18n_nav_warning'                                             => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
+				'i18n'                                                         => array(
 					'captcha_success'   => esc_html__( 'Captcha Test Successful !', 'user-registration' ),
 					'captcha_failed'    => esc_html__( 'Some error occured. Please verify that the keys you entered are valid.', 'user-registration' ),
 					'unsaved_changes'   => esc_html__( 'You have some unsaved changes. Please save and try again.', 'user-registration' ),
@@ -275,7 +272,7 @@ class UR_Admin_Settings {
 					'upgrade_plan'      => esc_html__( 'Upgrade Plan', 'user-registration' ),
 					'upgrade_link'      => esc_url( 'https://wpuserregistration.com/pricing/?utm_source=integration-settings&utm_medium=premium-addon-popup&utm_campaign=' . urlencode( UR()->utm_campaign ) ),
 				),
-				'is_advanced_field_active'             => is_plugin_active( 'user-registration-advanced-fields/user-registration-advanced-fields.php' ),
+				'is_advanced_field_active'                                     => is_plugin_active( 'user-registration-advanced-fields/user-registration-advanced-fields.php' ),
 
 			)
 		);
@@ -402,18 +399,26 @@ class UR_Admin_Settings {
 			if ( isset( $options['sections'] ) ) {
 
 				foreach ( $options['sections'] as $id => $section ) {
+
 					if ( ! isset( $section['type'] ) ) {
 						continue;
 					}
 
 					if ( 'card' === $section['type'] ) {
-						$section_id = isset( $section['id'] ) ? "id='". $section['id'] . "'"   : '';
-						$settings .= '<div class="user-registration-card ur-mt-4 ur-border-0" ' . esc_attr( $section_id ) . '>';
+						$section_id      = isset( $section['id'] ) ? 'id=' . $section['id'] : '';
+						$card_header_css = '';
+
+						if ( isset( $section['id'] ) && 'payment-settings' === $section['id'] ) {
+							$card_header_css .= 'max-width: 100%';
+						}
+
+						$settings .= '<div class="user-registration-card ur-mt-4 ur-border-0" ' . esc_attr( $section_id ) . ' style="' . esc_attr( $card_header_css ) . '">';
 
 						$header_css = '';
 						if ( isset( $section['preview_link'] ) ) {
 							$header_css = 'display:flex; justify-content: space-between;';
 						}
+
 
 						$settings .= '<div class="user-registration-card__header ur-border-0" style="' . esc_attr( $header_css ) . '">';
 						if ( ! empty( $section['title'] ) ) {
@@ -426,7 +431,7 @@ class UR_Admin_Settings {
 							$settings .= esc_html( strtoupper( $section['title'] ) );
 							$settings .= '</h3>';
 
-							if( !empty( $section['button'] ) ) {
+							if ( ! empty( $section['button'] ) ) {
 								$settings .= '<a href="' . ( isset( $section['button']['button_link'] ) ? $section['button']['button_link'] : '#' ) . '" class="button button user_registration_smart_tags_used" style="min-width:90px;" target="_blank">' . ( isset( $section['button']['button_text'] ) ? $section['button']['button_text'] : '' ) . '</a>';
 							}
 							$settings .= '</div>';
@@ -452,23 +457,27 @@ class UR_Admin_Settings {
 					}
 
 					if ( 'accordian' === $section['type'] ) {
+						$section_id = isset( $section['id'] ) ? 'id=' . $section['id'] : "";
+
 						$available_in      = isset( $section['available_in'] ) ? sanitize_text_field( wp_unslash( $section['available_in'] ) ) : '';
 						$is_captcha        = isset( $section['settings_type'] ) ? ' ur-captcha-settings' : '';
 						$is_captcha_header = isset( $section['settings_type'] ) ? $is_captcha . '-header' : '';
 						$is_captcha_body   = isset( $section['settings_type'] ) ? $is_captcha . '-body' : '';
+						$is_connected      = isset( $section['is_connected'] ) ? $section['is_connected'] : false;
+
 						if ( isset( $section['video_id'] ) ) {
 							$inactive_class = 'user-registration-inactive-addon';
 							$extras         = 'data-title="' . esc_attr( $section['title'] ) . '"';
-							$extras        .= 'data-id="' . esc_attr( $section['id'] ) . '"';
-							$extras        .= 'data-video="' . esc_attr( $section['video_id'] ) . '"';
-							$extras        .= 'data-available-in="' . esc_attr( $available_in ) . '"';
-							$settings      .= '<div class="user-registration-card ur-mb-2 ' . esc_attr( $inactive_class ) . '" ' . $extras . '>';
+							$extras         .= 'data-id="' . esc_attr( $section['id'] ) . '"';
+							$extras         .= 'data-video="' . esc_attr( $section['video_id'] ) . '"';
+							$extras         .= 'data-available-in="' . esc_attr( $available_in ) . '"';
+							$settings       .= '<div class="user-registration-card ur-mb-2 ' . esc_attr( $section_id ) . esc_attr( $inactive_class ) . '" ' . $extras . '>';
 						} else {
-							$settings .= '<div class="user-registration-card ur-mb-2' . $is_captcha . '">';
+							$settings .= '<div class="user-registration-card ur-mb-2' . $is_captcha . '" ' . esc_attr( $section_id ) . '>';
 						}
 						$settings .= '<div class="user-registration-card__header ur-d-flex ur-align-items-center ur-p-3 integration-header-info accordion' . $is_captcha_header . '">';
 						$settings .= '<div class="integration-detail">';
-						$settings .= '<span class="integration-status">';
+						$settings .= '<span class="integration-status ' . ( $is_connected ? 'ur-integration-account-connected' : '' ) . '">';
 						$settings .= '</span>';
 						$settings .= '<figure class="logo">';
 						$settings .= '<img src="' . UR()->plugin_url() . '/assets/images/settings-icons/' . $section['id'] . '.png" alt="' . $section['title'] . '">';
@@ -577,10 +586,11 @@ class UR_Admin_Settings {
 											style="' . esc_attr( $value['css'] ) . '"
 											value="' . esc_attr( $option_value ) . '"
 											class="' . esc_attr( $value['class'] ) . '"
-											min="' . esc_attr( !empty($value['min'] ) ? $value['min'] : '' ) . '"
-											max="' . esc_attr( !empty($value['max'] ) ? $value['max'] : '' ) . '"
+											min="' . esc_attr( ! empty( $value['min'] ) ? $value['min'] : '' ) . '"
+											max="' . esc_attr( ! empty( $value['max'] ) ? $value['max'] : '' ) . '"
 											placeholder="' . esc_attr( $value['placeholder'] ) . '"
-											' . esc_attr( implode( ' ', $custom_attributes ) ) . ' ' . wp_kses_post( $description ) . '/>';
+											' . esc_attr( implode( ' ', $custom_attributes ) ) . '/>';
+									$settings .= wp_kses_post( $description );
 									$settings .= '</div>';
 									$settings .= '</div>';
 									break;
@@ -600,10 +610,10 @@ class UR_Admin_Settings {
 								// Color picker.
 								case 'color':
 									$option_value = self::get_option( $value['id'], $value['default'] );
-									$settings    .= '<div class="user-registration-global-settings">';
-									$settings    .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
-									$settings    .= '<div class="user-registration-global-settings--field">';
-									$settings    .= '<input
+									$settings     .= '<div class="user-registration-global-settings">';
+									$settings     .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+									$settings     .= '<div class="user-registration-global-settings--field">';
+									$settings     .= '<input
 											name="' . esc_attr( $value['id'] ) . '"
 											id="' . esc_attr( $value['id'] ) . '"
 											type="text"
@@ -613,8 +623,8 @@ class UR_Admin_Settings {
 											class="' . esc_attr( $value['class'] ) . 'colorpick"
 											placeholder="' . esc_attr( $value['placeholder'] ) . '"
 											' . esc_attr( implode( ' ', $custom_attributes ) ) . '/>&lrm;' . wp_kses_post( $description );
-									$settings    .= '<div id="colorPickerDiv_' . esc_attr( $value['id'] ) . '" class="colorpickdiv" style="z-index: 100;background:#eee;border:1px solid #ccc;position:absolute;display:none;"></div></div>';
-									$settings    .= '</div>';
+									$settings     .= '<div id="colorPickerDiv_' . esc_attr( $value['id'] ) . '" class="colorpickdiv" style="z-index: 100;background:#eee;border:1px solid #ccc;position:absolute;display:none;"></div></div>';
+									$settings     .= '</div>';
 									break;
 
 								// Textarea.
@@ -647,8 +657,8 @@ class UR_Admin_Settings {
 									$settings .= '<div class="user-registration-global-settings">';
 									$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 									$settings .= '<div class="user-registration-global-settings--field">';
-									$multiple  = '';
-									$type      = '';
+									$multiple = '';
+									$type     = '';
 									if ( 'multiselect' == $value['type'] ) {
 										$type     = '[]';
 										$multiple = 'multiple="multiple"';
@@ -684,12 +694,12 @@ class UR_Admin_Settings {
 								// Radio inputs.
 								case 'radio':
 									$option_value = self::get_option( $value['id'], $value['default'] );
-									$settings    .= '<div class="user-registration-global-settings">';
-									$settings    .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
-									$settings    .= '<div class="user-registration-global-settings--field">';
-									$settings    .= '<fieldset>';
-									$settings    .= wp_kses_post( $description );
-									$settings    .= '<ul>';
+									$settings     .= '<div class="user-registration-global-settings">';
+									$settings     .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+									$settings     .= '<div class="user-registration-global-settings--field">';
+									$settings     .= '<fieldset>';
+									$settings     .= wp_kses_post( $description );
+									$settings     .= '<ul>';
 
 									foreach ( $value['options'] as $key => $val ) {
 										$settings .= '<li>';
@@ -926,7 +936,7 @@ class UR_Admin_Settings {
 
 										$settings .= '<ul class="ur-radio-group-list">';
 										foreach ( $options as $option_index => $option_text ) {
-											$class     = str_replace( ' ', '-', strtolower( $option_text ) );
+											$class    = str_replace( ' ', '-', strtolower( $option_text ) );
 											$settings .= '<li class="ur-radio-group-list--item  ' . $class . ( trim( $option_index ) === $option_value ? ' active' : '' ) . '">';
 
 											$checked = '';
@@ -945,7 +955,7 @@ class UR_Admin_Settings {
 												trim( $option_text ),
 												array(
 													'a'    => array(
-														'href' => array(),
+														'href'  => array(),
 														'title' => array(),
 													),
 													'span' => array(),
@@ -962,6 +972,34 @@ class UR_Admin_Settings {
 										$settings .= '</div>';
 
 									}
+									break;
+								case 'button':
+									$css       = '';
+									$field_css = '';
+									$btn_css = !empty($value['class']) ? $value['class'] : '';
+									if ( in_array( $section['id'], array(
+										"stripe",
+										"paypal",
+										"bank",
+										"payment-settings",
+										"mollie",
+										"authorize-net"
+									) ) ) {
+										$css       = 'ur-flex-row-reverse';
+										$field_css = 'ur-align-items-end';
+									}
+
+									$settings .= '<div class="user-registration-global-settings ' . $css . '">';
+									$settings .= '<div class="user-registration-global-settings--field ' . $field_css . '">';
+									$settings .= '<button
+											id="' . esc_attr( $value['id'] ) . '"
+											type="button"
+											class="button button-primary '.esc_attr($btn_css).'"
+											type="button"
+											data-id="' . esc_attr( $section['id'] ) . '"
+											/>' . $value['title'] . '</button>';
+									$settings .= '</div>';
+									$settings .= '</div>';
 									break;
 								// Default: run an action.
 								default:
@@ -1007,7 +1045,7 @@ class UR_Admin_Settings {
 	 * given form field. Plugins can call this when implementing their own custom
 	 * settings types.
 	 *
-	 * @param  array $value The form field value array.
+	 * @param array $value The form field value array.
 	 *
 	 * @return array The description and tip as a 2 element array
 	 */
@@ -1059,7 +1097,7 @@ class UR_Admin_Settings {
 	 *
 	 * Loops though the user registration options array and outputs each field.
 	 *
-	 * @param  array $options Options array to output.
+	 * @param array $options Options array to output.
 	 *
 	 * @return bool
 	 */
@@ -1078,7 +1116,7 @@ class UR_Admin_Settings {
 		$is_wp_login_disabled_error = apply_filters( 'user_registration_settings_prevent_default_login', $_POST );
 		if ( $is_wp_login_disabled_error && 'redirect_login_error' === $is_wp_login_disabled_error ) {
 			return;
-		}elseif ( $is_wp_login_disabled_error && 'invalid_renewal_period' === $is_wp_login_disabled_error ) {
+		} elseif ( $is_wp_login_disabled_error && 'invalid_renewal_period' === $is_wp_login_disabled_error ) {
 			self::add_error(
 				esc_html__(
 					'Your settings has not been saved. Send Before days cannot be less than or equal to 0.',
@@ -1108,37 +1146,8 @@ class UR_Admin_Settings {
 						$raw_value    = isset( $_POST[ $option['id'] ] ) ? wp_unslash( $_POST[ $option['id'] ] ) : null; // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 					}
 				}
-
-				// Format the value based on option type.
-				switch ( $option['type'] ) {
-
-					case 'checkbox':
-					case 'toggle':
-						$value = ur_string_to_bool( $raw_value );
-						break;
-					case 'textarea':
-						$value = wp_kses_post( trim( $raw_value ) );
-						break;
-					case 'multiselect':
-						$value = array_filter( array_map( 'ur_clean', (array) $raw_value ) );
-						break;
-					case 'select':
-						$allowed_values = empty( $option['options'] ) ? array() : array_keys( $option['options'] );
-						if ( empty( $option['default'] ) && empty( $allowed_values ) ) {
-							$value = null;
-							break;
-						}
-						$default = ( empty( $option['default'] ) ? $allowed_values[0] : $option['default'] );
-						$value   = in_array( $raw_value, $allowed_values ) ? sanitize_text_field( $raw_value ) : sanitize_text_field( $default );
-						break;
-					case 'tinymce':
-						$value = wpautop( $raw_value );
-						break;
-
-					default:
-						$value = ur_clean( $raw_value );
-						break;
-				}
+				// Get posted value.
+				$value = ur_sanitize_value_by_type( $option, $raw_value );
 
 				/**
 				 * Filter to Sanitize the value of an option.
@@ -1292,7 +1301,7 @@ class UR_Admin_Settings {
 										} else {
 											$autocomplete_results[ $index ]['value'] = admin_url( 'admin.php?page=user-registration-settings&tab=' . $section->id . '&searched_option=' . $value['id'] );
 										}
-										++$index;
+										++ $index;
 									}
 								}
 								continue;
@@ -1326,7 +1335,7 @@ class UR_Admin_Settings {
 	 * Search String in Array.
 	 *
 	 * @param string $string_to_search String to Search.
-	 * @param array  $array Search Array.
+	 * @param array $array Search Array.
 	 */
 	public static function search_string_in_array( $string_to_search, $array ) {
 		$result = array();
@@ -1348,13 +1357,14 @@ class UR_Admin_Settings {
 							$desc_tip                  = isset( $value['desc_tip'] ) && true !== $value['desc_tip'] ? $value['desc_tip'] : '';
 							$desc                      = isset( $value['desc'] ) && true !== $value['desc'] ? $value['desc'] : '';
 							$result[ $index ]['desc']  = ! empty( $desc_tip ) ? $desc_tip : $desc;
-							++$index;
+							++ $index;
 							break;
 						}
 					}
 				}
 			}
 		}
+
 		return $result;
 	}
 
@@ -1393,4 +1403,53 @@ class UR_Admin_Settings {
 
 		return $settings_array;
 	}
+
+	/**
+	 * Load payment modules for AJAX and other requests.
+	 */
+	public static function load_payment_modules() {
+		$modules = array();
+		include_once __DIR__ . '/settings/class-ur-settings-page.php';
+
+		if ( UR_PRO_ACTIVE ) {
+			if ( ur_check_module_activation( 'membership' ) ) {
+				$modules = array(
+					'class-ur-payment-settings.php',
+					'stripe/class-ur-stripe-module.php',
+					'paypal/class-ur-paypal-module.php',
+					'membership/includes/Admin/Settings/class-ur-settings-membership.php',
+				);
+			} else {
+				if ( ur_check_module_activation( 'payments' ) ) {
+					$modules[] = 'class-ur-payment-settings.php';
+					$modules[] = 'paypal/class-ur-paypal-module.php';
+				}
+				if ( is_plugin_active( 'user-registration-stripe/user-registration-stripe.php' ) ) {
+					$modules[] = 'class-ur-payment-settings.php';
+					$modules[] = 'stripe/class-ur-stripe-module.php';
+				}
+				if ( is_plugin_active( 'user-registration-authorize-net/user-registration-authorize-net.php' ) ) {
+					$modules[] = 'class-ur-payment-settings.php';
+				}
+				if ( is_plugin_active( 'user-registration-mollie/user-registration-mollie.php' ) ) {
+					$modules[] = 'class-ur-payment-settings.php';
+				}
+			}
+		} elseif ( ur_check_module_activation( 'membership' ) ) {
+			$modules = array(
+				'class-ur-payment-settings.php',
+				'stripe/class-ur-stripe-module.php',
+				'paypal/class-ur-paypal-module.php',
+				'membership/includes/Admin/Settings/class-ur-settings-membership.php',
+			);
+		}
+
+		foreach ( $modules as $module ) {
+			$module_path = UR_ABSPATH . 'modules/' . $module;
+			if ( file_exists( $module_path ) ) {
+				include_once $module_path;
+			}
+		}
+	}
+
 }
