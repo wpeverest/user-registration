@@ -247,6 +247,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 												} else {
 													$selected = esc_attr( get_user_meta( $user->ID, $key, true ) );
 												}
+												$field['options'] = apply_filters( 'override_options_for_select_field', $field['options'], $key );
 												foreach ( $field['options'] as $option_key => $option_value ) :
 													?>
 													<option
