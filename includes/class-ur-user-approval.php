@@ -197,6 +197,7 @@ class UR_User_Approval {
 			$last_order               = $members_order_repository->get_member_orders( $user->ID );
 			if ( ! empty( $membership ) ) {
 				$check_membership = $this->check_user_membership( $membership, $user, $last_order );
+
 				if ( $check_membership instanceof WP_Error ) {
 					return $check_membership;
 				}
@@ -342,13 +343,13 @@ class UR_User_Approval {
 
 				$payment_method = $is_member ? $membership_payment_method : get_user_meta( $user->ID, 'ur_payment_method', true );
 
-				if ( 'paypal_standard' === $payment_method || "paypal" === $payment_method ) {
+				if ( 'paypal_standard' === $payment_method || "paypal" === $payment_method || "mollie" === $payment_method ) {
 
 					$user_id      = $user->ID;
 					$redirect_url = paypal_generate_redirect_url( $user_id );
 
 					if ( $is_member && ! empty( $membership_id ) ) {
-						$payment_service = new \WPEverest\URMembership\Admin\Services\PaymentService( 'paypal', $membership_id, $user->user_email );
+						$payment_service = new \WPEverest\URMembership\Admin\Services\PaymentService( $payment_method, $membership_id, $user->user_email );
 						$response_data   = array(
 							'membership'      => $membership_id,
 							'subscription_id' => $membership['subscription_id'],
@@ -386,7 +387,7 @@ class UR_User_Approval {
 	public function check_user_membership( $membership, $user, $last_order ) {
 		switch ( $membership['status'] ) {
 			case 'pending':
-				if ( $last_order['payment_method'] === "paypal" && $last_order["status"] === "pending" ) {
+				if ( ( $last_order['payment_method'] === "paypal" || $last_order['payment_method'] === "mollie" ) && $last_order["status"] === "pending" ) {
 					break;
 				}
 				$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your subscription is not active. Please contact administrator.', 'user-registration' );

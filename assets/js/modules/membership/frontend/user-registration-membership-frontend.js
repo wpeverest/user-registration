@@ -621,6 +621,12 @@
 					case 'stripe':
 						stripe_settings.handle_stripe_response(response, prepare_members_data, {data: {}});
 						break;
+					case 'mollie':
+						ur_membership_frontend_utils.show_success_message(
+							response.data.message
+						);
+						window.location.replace(response.data.pg_data.payment_url);
+						break;
 					case 'free':
 						location.reload();
 						break;
