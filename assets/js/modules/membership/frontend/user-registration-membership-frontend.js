@@ -797,7 +797,7 @@
 			stripe_container = $('.stripe-container'),
 			stripe_error_container = $('#stripe-errors');
 
-		var authorize_container = $('#authorize-net-container');
+		var authorize_container = $('.authorize-net-container');
 		var authorize_error_container = $('#authorize-errors');
 
 		authorize_error_container.remove();
@@ -921,14 +921,14 @@
 
 	});
 
-	//on toggle payment gatewaysw
+	//on toggle payment gateways
 	$('input[name="urm_payment_method"]').on('change', function () {
 		var selected_method = $(this).val(),
 			stripe_container = $('.stripe-container'),
 			stripe_error_container = $('#stripe-errors');
 
-			var authorize_container = $('.authorize-net-container');
-			var authorize_error_container = $('#authorize-errors');
+		var authorize_container = $('.authorize-net-container');
+		var authorize_error_container = $('#authorize-errors');
 
 		stripe_container.addClass('urm-d-none');
 		stripe_error_container.remove();

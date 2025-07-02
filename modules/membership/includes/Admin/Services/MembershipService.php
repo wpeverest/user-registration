@@ -307,6 +307,16 @@ class MembershipService {
 		 * @param array $result Membership validation result data
 		 */
 		return apply_filters( 'user_registration_membership_validate_membership_data', $result );
+		/**
+		 * Filters the membership data validation result
+		 *
+		 * This hook should be used by new payment gateway integrations add-on to validate the membership data.
+		 *
+		 * @since 4.2.3
+		 *
+		 * @param array $result Membership validation result data
+		 */
+		return apply_filters( 'user_registration_membership_validate_membership_data', $result );
 	}
 
 	/**

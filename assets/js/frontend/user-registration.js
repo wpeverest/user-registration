@@ -920,7 +920,6 @@
 									) {
 										return false;
 									}
-
 									var $this = $(this);
 
 									// Validator messages.
@@ -1315,7 +1314,6 @@
 									"user_registration_frontend_before_ajax_complete_success_message",
 									[ajax_response, ajaxFlag, $this]
 								);
-
 								if (ajaxFlag["status"]) {
 									$this
 										.find(".ur-submit-button")

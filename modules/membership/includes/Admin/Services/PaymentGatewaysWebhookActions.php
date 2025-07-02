@@ -51,7 +51,6 @@ class PaymentGatewaysWebhookActions {
 		$payer_id = $_GET['PayerID'] ?? '';
 		$this->paypal_service->handle_paypal_redirect_response( $get_params, $payer_id );
 	}
-
 	/**
 	 * Handle Membership PayPal ipn
 	 *
