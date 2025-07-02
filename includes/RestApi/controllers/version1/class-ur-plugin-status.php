@@ -50,7 +50,7 @@ class UR_Plugin_Status {
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array( $this, 'get_plugin_status' ),
-				'permission_callback' => array( $this, 'check_admin_permissions' ),
+				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
 			)
 		);
 		register_rest_route(
@@ -59,7 +59,7 @@ class UR_Plugin_Status {
 			array(
 				'methods'             => 'GET',
 				'callback'            => array( $this, 'get_license_plan' ),
-				'permission_callback' => array( $this, 'check_admin_permissions' ),
+				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
 			)
 		);
 		register_rest_route(
@@ -68,7 +68,7 @@ class UR_Plugin_Status {
 			array(
 				'methods'             => 'POST',
 				'callback'            => array( $this, 'plugin_activate' ),
-				'permission_callback' => array( $this, 'check_admin_permissions' ),
+				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
 			)
 		);
 	}
@@ -121,7 +121,8 @@ class UR_Plugin_Status {
 			$installed_plugin_slugs = array_keys( get_plugins() );
 
 		foreach ( $addons_lists as $addon ) {
-			$addon_file = $addon->slug . '/' . $addon->slug . '.php';
+			$addon_main_file = "user-registration-pro" === $addon->slug ? "user-registration" : $addon->slug;
+			$addon_file = $addon->slug . '/' . $addon_main_file . '.php';
 			if ( in_array( $addon_file, $installed_plugin_slugs, true ) ) {
 				$plugin_statuses[ $addon->slug ] = is_plugin_active( $addon_file ) ? 'active' : 'inactive';
 			} else {
