@@ -34,7 +34,7 @@ class User_Registration_Paypal_Module {
 		$paypal_settings = array(
 			'title'    => __( 'Paypal Settings', 'user-registration' ),
 			'type'     => 'card',
-			'id' =>     'paypal_settings_id',
+			'id'       => 'paypal',
 			'desc'     => '',
 			'settings' => array(
 				array(

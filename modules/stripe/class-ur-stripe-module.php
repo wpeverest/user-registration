@@ -35,6 +35,7 @@ class User_Registration_Stripe_Module {
 			'title'    => __( 'Stripe Settings', 'user-registration' ),
 			'type'     => 'card',
 			'desc'     => '',
+			'id'       => 'stripe',
 			'settings' => array(
 				array(
 					'title'    => __( 'Test Publishable key', 'user-registration' ),
