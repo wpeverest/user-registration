@@ -649,6 +649,7 @@ class AJAX {
 		$customer_id       = isset( $_POST['customer_id'] ) ? $_POST['customer_id'] : '';
 		$payment_method_id = isset( $_POST['payment_method_id'] ) ? sanitize_text_field( $_POST['payment_method_id'] ) : '';
 		$member_id         = absint( wp_unslash( $_POST['member_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$payment_status    = sanitize_text_field( $_POST['payment_status'] );
 
 		$is_user_created = get_user_meta( $member_id, 'urm_user_just_created' );
 		if ( ! $is_user_created ) {
@@ -855,7 +856,7 @@ class AJAX {
 			wp_send_json_error( __( 'Wrong request.', 'user-registration' ) );
 		}
 		if ( ! in_array( $_POST['type'], array(
-			'user_registration_member_registration_page_id',
+				'user_registration_member_registration_page_id',
 			'user_registration_thank_you_page_id'
 		) ) ) {
 			wp_send_json_error( __( 'Invalid post type', 'user-registration' ) );
