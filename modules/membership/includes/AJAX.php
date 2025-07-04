@@ -649,7 +649,6 @@ class AJAX {
 		$customer_id       = isset( $_POST['customer_id'] ) ? $_POST['customer_id'] : '';
 		$payment_method_id = isset( $_POST['payment_method_id'] ) ? sanitize_text_field( $_POST['payment_method_id'] ) : '';
 		$member_id         = absint( wp_unslash( $_POST['member_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
-		$payment_status    = sanitize_text_field( $_POST['payment_status'] );
 
 		$is_user_created = get_user_meta( $member_id, 'urm_user_just_created' );
 		if ( ! $is_user_created ) {
@@ -671,7 +670,7 @@ class AJAX {
 		$stripe_subscription = $stripe_service->create_subscription( $customer_id, $payment_method_id, $member_id );
 
 		if ( $stripe_subscription['status'] ) {
-			if ( ! empty( $form_response ) && isset( $form_response['auto_login'] ) && $form_response['auto_login'] && $payment_status !== 'failed' ) {
+			if ( ! empty( $form_response ) && isset( $form_response['auto_login'] ) && $form_response['auto_login'] ) {
 				$members_service = new MembersService();
 				$logged_in       = $members_service->login_member( $member_id, true );
 				if ( ! $logged_in ) {
