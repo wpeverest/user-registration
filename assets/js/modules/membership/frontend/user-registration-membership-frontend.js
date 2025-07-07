@@ -209,7 +209,10 @@
 			 * validate membership form before submit
 			 * @returns {boolean}
 			 */
-			validate_membership_form: function (is_upgrade = false) {
+			validate_membership_form: function (is_upgrade) {
+				if (typeof is_upgrade === 'undefined') {
+					is_upgrade = false;
+				}
 				var no_errors = true,
 					pg_inputs = $('input[name="urm_payment_method"]:visible');
 
