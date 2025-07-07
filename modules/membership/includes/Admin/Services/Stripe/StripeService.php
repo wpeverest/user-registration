@@ -48,7 +48,8 @@ class StripeService {
 		);
 
 		if ( count( $product_exists ) > 0 ) { // product already exists, don't create new
-			$product = array_values( $product_exists );
+			$product = array_values($product_exists);
+			$product = $product_exists[0];
 		} else {
 			$product = \Stripe\Product::create(
 				array(
@@ -192,7 +193,6 @@ class StripeService {
 	}
 
 	public function update_order( $data ) {
-
 		$transaction_id = $data['payment_result']['paymentIntent']['id'] ?? '';
 		$payment_status = sanitize_text_field( $data['payment_status'] );
 		$member_id      = absint( $_POST['member_id'] );
@@ -273,11 +273,10 @@ class StripeService {
 		$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
 		$membership_metas['post_title'] = $membership['post_title'];
 		$member_subscription            = $this->members_subscription_repository->get_member_subscription( $member_id );
-
-		$response = array(
+		$response                       = array(
 			'status' => false,
 		);
-		$logger   = ur_get_logger();
+		$logger                         = ur_get_logger();
 		if ( empty( $member_subscription ) ) {
 			$logger->notice( '-------------------------------------------- Stripe Subscription not found for ' . $member_id . ' --------------------------------------------', array( 'source' => 'ur-membership-stripe' ) );
 
@@ -320,7 +319,6 @@ class StripeService {
 					),
 				),
 			);
-
 			// handle trial period
 
 			if ( isset( $membership_metas['trial_status'] ) && 'on' === $membership_metas['trial_status'] ) {

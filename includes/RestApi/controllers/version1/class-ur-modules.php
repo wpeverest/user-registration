@@ -235,13 +235,24 @@ class UR_Modules {
 
 		if ( isset( $status['success'] ) && ! $status['success'] ) {
 
-			return new \WP_REST_Response(
-				array(
-					'success' => false,
-					'message' => __( "Module couldn't be activated at the moment. Please try again later.", 'user-registration' ),
-				),
-				400
-			);
+			if( isset( $status['errorMessage'] ) && ! empty( $status['errorMessage'] ) ) {
+				return new \WP_REST_Response(
+					array(
+						'success' => false,
+						'message' => $status['errorMessage'],
+					),
+					400
+				);
+			} else {
+
+				return new \WP_REST_Response(
+					array(
+						'success' => false,
+						'message' => __( "Module couldn't be activated at the moment. Please try again later.", 'user-registration' ),
+					),
+					400
+				);
+			}
 		} else {
 			return new \WP_REST_Response(
 				array(

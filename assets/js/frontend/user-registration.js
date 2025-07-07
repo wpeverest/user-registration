@@ -2926,3 +2926,11 @@ function customPasswordChecks(password) {
 	}
 	return 4;
 }
+
+//Shows the content restriction message if botiga theme is used.
+jQuery(document).ready(function($) {
+	var urcrContentRestrictMsg = $(document).find('.urcr-restrict-msg');
+	if (urcrContentRestrictMsg.length > 0) {
+		urcrContentRestrictMsg.first().css('display', 'block');
+	}
+});

@@ -50,7 +50,7 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Updated_Email', false ) ) :
 			$this->id          = 'profile_details_updated_email';
 			$this->title       = __( 'Profile Updated', 'user-registration' );
 			$this->description = __( 'Confirms to the user that their profile details were successfully updated.', 'user-registration' );
-			$this->receiver    = __( 'User', 'user-registration' );
+			$this->receiver    = 'User';
 		}
 
 		/**
@@ -136,7 +136,7 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Updated_Email', false ) ) :
 				'user_registration_profile_details_updated_email_message',
 				sprintf(
 					__(
-					'Hi {{username}},<br/>
+						'Hi {{username}},<br/>
 					Your profile details have been successfully updated on {{blog_info}}.<br/>
 					{{all_fields}}<br/>
 					Thank You!',

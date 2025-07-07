@@ -342,13 +342,10 @@ textarea.ur-input-border-red {
 				gap: 2px;
 
 				.user-registration-Button {
-					flex: 1;
-					color: #ffffff;
 					padding: 10px 20px;
 					font-size: 14px;
 					line-height: 24px;
 					box-shadow: none;
-					float: none;
 
 					&:hover {
 						background: #38488e;
@@ -359,12 +356,18 @@ textarea.ur-input-border-red {
 
 			.ur-field-item {
 				margin-bottom: 20px;
+
+				.ur-frontend-field {
+					margin-bottom: 0;
+				}
+
 				&.field-multiple_choice,
 				&.field-subscription_plan,
 				&.field-checkbox,
 				&.field-radio {
 					ul {
 						margin: 0;
+						padding: 0;
 						list-style: none;
 
 						li {
@@ -1330,6 +1333,7 @@ span.ur-shortcode-form-embed-dot {
 		justify-content: center;
 		padding: 50px;
 	}
+
 }
 //Individual oxygen widgets styles.
 .oxygen-add-section-accordion-contents[ng-if*="user-registration"] {
@@ -1569,7 +1573,7 @@ span.ur-shortcode-form-embed-dot {
 						.ui-widget-content {
 							.ur-tab-contents {
 								padding: 24px;
-								background-color: #fafafc;
+								background-color: #fafafa;
 								.ur-login-view-doc {
 									border-radius: 3px;
 									cursor: pointer;
@@ -1815,7 +1819,7 @@ body {
 	&.user-registration-membership_page_user-registration-login-forms {
 		.user-registration {
 			&.ur-frontend-form {
-				max-width: 100% !important;
+				max-width: 100%;
 
 				form {
 					.ur-button-container {
@@ -1941,15 +1945,19 @@ body {
 
 			&:not(.user-registration-MyAccount) {
 				max-width: 520px;
-				margin: 24px auto;
 				// margin: 0px auto;
-				border-radius: 8px;
-				background: #FFF;
+				border-radius: 4px;
+				background: #ffffff;
 				// box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 				border: 0;
 
 				@media screen and (max-width: 575px) {
 					padding: 40px 30px;
+				}
+
+				&:has(.ur-grid-2),
+				&:has(.ur-grid-3) {
+					max-width: 940px;
 				}
 
 				&:has(.ur-frontend-form--bordered) {
@@ -2261,6 +2269,7 @@ body {
 						letter-spacing: 0.15px;
 						border: $border_width solid $primary_color;
 						margin-right: 0;
+						background: $primary_color;
 
 						&:hover {
 							border-color: #38488e;
@@ -2565,6 +2574,50 @@ body {
 			}
 		}
 	}
+	&.woocommerce-checkout {
+		.user-registration.urwc-form {
+			all: unset;
+
+			.ur-form-row {
+				.ur-form-grid {
+					margin: 0 -10px;
+
+					.ur-field-item {
+						ul,
+						ol {
+							padding-left: 4px;
+						}
+
+						.input-wrapper {
+							input {
+								&:not([type="checkbox"]),
+								&:not([type="radio"]) {
+									min-height: 50px;
+									max-height: 50px;
+									border: 1px solid;
+									border-color: inherit;
+								}
+							}
+						}
+
+						select {
+							min-height: 50px;
+							max-height: 50px;
+							border: 1px solid;
+							border-color: inherit;
+							border-radius: 4px;
+						}
+
+						textarea {
+							border: 1px solid;
+							border-color: inherit;
+							border-radius: 4px;
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 .user-registration-login-form-container {
@@ -2597,7 +2650,7 @@ body {
 						.ui-widget-content {
 							.ur-tab-contents {
 								padding: 24px;
-								background-color: #fafafc;
+								background-color: #ffffff;
 								.ur-login-view-doc {
 									border-radius: 3px;
 									cursor: pointer;
@@ -2722,6 +2775,12 @@ body {
 				}
 
 				.user-registration-login-settings-form {
+					border-radius: $border_radius_4;
+
+					&#ur-frontend-form {
+						border: 1px solid #EDF2F7;
+					}
+
 					a {
 						pointer-events: none;
 					}

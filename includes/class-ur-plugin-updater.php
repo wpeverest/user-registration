@@ -222,6 +222,12 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * @param string $type    Type of error message.
 	 */
 	public function add_error( $message, $type = '' ) {
+		foreach( $this->errors as $key => $errors ) {
+			if( 'Error code: 403' === $errors) {
+				unset( $this->errors[$key] );
+			}
+		}
+
 		if ( $type ) {
 			$this->errors[ $type ] = $message;
 		} else {

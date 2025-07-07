@@ -9,7 +9,7 @@ import {
 	Image,
 	Link,
 	Stack,
-	Text,
+	Text
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 import React, { useState, useEffect } from "react";
@@ -50,7 +50,7 @@ const Help = () => {
 			gridGap="5"
 			gridTemplateColumns={{
 				sm: "1fr",
-				md: "3fr 1fr",
+				md: "3fr 1fr"
 			}}
 		>
 			<Stack gap="5">
@@ -68,7 +68,7 @@ const Help = () => {
 					<Grid
 						gridTemplateColumns={{
 							sm: "1fr",
-							md: "1fr 1fr",
+							md: "1fr 1fr"
 						}}
 						gridGap="5"
 					>
@@ -83,20 +83,21 @@ const Help = () => {
 							borderColor="gray.100"
 							textAlign="center"
 						>
-							<Icon.Shortcode w="8" h="8" fill="primary.500" />
+							<Icon.Shortcode w="8" h="8" fill="#475bb2" />
 							<Heading as="h3" size="sm" fontWeight="semibold">
 								{__("Shortcodes", "user-registration")}
 							</Heading>
 							<Text fontSize="13px" color="gray.700">
 								{__(
 									"Find the complete list of shortcodes with their usage information and parameter details.",
-									"user-registration",
+									"user-registration"
 								)}
 							</Text>
 							<Button
 								mt="10"
 								variant="outline"
-								colorScheme="primary"
+								color="#475bb2"
+								borderColor="#475bb2"
 								borderRadius="base"
 								fontSize="14px"
 								fontWeight="normal"
@@ -119,20 +120,21 @@ const Help = () => {
 							borderColor="gray.100"
 							textAlign="center"
 						>
-							<Icon.SmartTag w="8" h="8" fill="primary.500" />
+							<Icon.SmartTag w="8" h="8" fill="#475bb2" />
 							<Heading as="h3" size="sm" fontWeight="semibold">
 								{__("Smart Tags", "user-registration")}
 							</Heading>
 							<Text fontSize="13px" color="gray.700">
 								{__(
 									"Find the complete list of smart tags with their usage information and parameter details.",
-									"user-registration",
+									"user-registration"
 								)}
 							</Text>
 							<Button
 								mt="10"
 								variant="outline"
-								colorScheme="primary"
+								color="#475bb2"
+								borderColor="#475bb2"
 								borderRadius="base"
 								fontSize="14px"
 								fontWeight="normal"
@@ -155,21 +157,22 @@ const Help = () => {
 							borderColor="gray.100"
 							textAlign="center"
 						>
-							<Icon.Support w="8" h="8" fill="primary.500"/>
+							<Icon.Support w="8" h="8" fill="#475bb2" />
 							<Heading as="h3" size="sm" fontWeight="semibold">
 								{__("Support", "user-registration")}
 							</Heading>
 							<Text fontSize="13px" color="gray.700">
 								{__(
 									"If you have any issues or questions, our team is on standby to help you instantly.",
-									"user-registration",
+									"user-registration"
 								)}
 							</Text>
 							<Button
 								mt="10"
 								as={Link}
 								variant="outline"
-								colorScheme="primary"
+								color="#475bb2"
+								borderColor="#475bb2"
 								borderRadius="base"
 								fontSize="14px"
 								fontWeight="normal"
@@ -191,20 +194,21 @@ const Help = () => {
 							borderColor="gray.100"
 							textAlign="center"
 						>
-							<Icon.DocsLines w="8" h="8" fill="primary.500" />
+							<Icon.DocsLines w="8" h="8" fill="#475bb2" />
 							<Heading as="h3" size="sm" fontWeight="semibold">
 								{__("Need Some Help?", "user-registration")}
 							</Heading>
 							<Text fontSize="13px" color="gray.700">
 								{__(
 									"Check our documentation for detailed information on User Registration & Membership features and how to use them.",
-									"user-registration",
+									"user-registration"
 								)}
 							</Text>
 							<Button
 								mt="10"
 								as={Link}
-								colorScheme="primary"
+								color="#475bb2"
+								borderColor="#475bb2"
 								borderRadius="base"
 								fontSize="14px"
 								fontWeight="normal"
@@ -218,7 +222,7 @@ const Help = () => {
 						</Stack>
 					</Grid>
 				)}
-				<Stack>
+				<Stack marginTop="25px">
 					<Heading as="h3" fontSize="lg" fontWeight="semibold">
 						{__("Join Our Community", "user-registration")}
 					</Heading>
@@ -245,7 +249,7 @@ const Help = () => {
 						<Text fontSize="13px" color="gray.700">
 							{__(
 								"Join our exclusive group and connect with fellow members. Ask questions, contribute to discussions, and share feedback!",
-								"user-registration",
+								"user-registration"
 							)}
 						</Text>
 						<Button
@@ -287,7 +291,7 @@ const Help = () => {
 						<Text fontSize="13px" color="gray.700">
 							{__(
 								"Follow us on X to get the latest news and updates about User Registration & Membership.",
-								"user-registration",
+								"user-registration"
 							)}
 						</Text>
 						<Button
@@ -329,7 +333,7 @@ const Help = () => {
 						<Text fontSize="13px" color="gray.700">
 							{__(
 								"Subscribe to our YouTube channel, where we guide you on using User Registration & Membership features and add-ons.",
-								"user-registration",
+								"user-registration"
 							)}
 						</Text>
 						<Button
@@ -360,7 +364,7 @@ const Help = () => {
 					borderColor="gray.100"
 				>
 					<HStack gap="2">
-						<Icon.Video w="5" h="5" fill="primary.500" />
+						<Icon.Video w="5" h="5" fill="#475bb2" />
 						<Heading as="h3" size="sm" fontWeight="semibold">
 							{__("Video Tutorials", "user-registration")}
 						</Heading>
@@ -368,12 +372,12 @@ const Help = () => {
 					<Text fontSize="13px" color="gray.700">
 						{__(
 							"Watch our step-by-step video tutorials that’ll help you get the best out of User Registration & Membership features.",
-							"user-registration",
+							"user-registration"
 						)}
 					</Text>
 					<Link
 						isExternal
-						color="var(--chakra-colors-primary-500) !important"
+						color="#475bb2 !important"
 						textDecor="underline"
 						href="https://www.youtube.com/@UserRegistration"
 					>
@@ -389,7 +393,7 @@ const Help = () => {
 					borderColor="gray.100"
 				>
 					<HStack gap="2">
-						<Icon.Bulb w="5" h="5" fill="primary.500" />
+						<Icon.Bulb w="5" h="5" fill="#475bb2" />
 						<Heading as="h3" size="sm" fontWeight="semibold">
 							{__("Feature Request", "user-registration")}
 						</Heading>
@@ -397,12 +401,12 @@ const Help = () => {
 					<Text fontSize="13px" color="gray.700">
 						{__(
 							"Don’t find a feature you’re looking for? Suggest any features you think would enhance our product.",
-							"user-registration",
+							"user-registration"
 						)}
 					</Text>
 					<Link
 						href={featureRequestURL}
-						color="var(--chakra-colors-primary-500) !important"
+						color="#475bb2 !important"
 						textDecor="underline"
 						isExternal
 					>
@@ -418,7 +422,7 @@ const Help = () => {
 					borderColor="gray.100"
 				>
 					<HStack gap="2">
-						<Icon.Star w="5" h="5" fill="primary.500" />
+						<Icon.Star w="5" h="5" fill="#475bb2" />
 						<Heading as="h3" size="sm" fontWeight="semibold">
 							{__("Submit a Review", "user-registration")}
 						</Heading>
@@ -426,12 +430,12 @@ const Help = () => {
 					<Text fontSize="13px" color="gray.700">
 						{__(
 							"Please take a moment to give us a review. We appreciate honest feedback that’ll help us improve our plugin.",
-							"user-registration",
+							"user-registration"
 						)}
 					</Text>
 					<Link
 						href="https://wordpress.org/support/plugin/user-registration/reviews/?rate=5#new-post"
-						color="var(--chakra-colors-primary-500) !important"
+						color="#475bb2 !important"
 						textDecor="underline"
 						isExternal
 					>

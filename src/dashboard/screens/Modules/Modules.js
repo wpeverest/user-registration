@@ -1,12 +1,11 @@
 /**
  *  External Dependencies
  */
-import React, {useState, useEffect, useCallback, useRef} from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
 	Box,
 	Container,
 	Stack,
-	Select,
 	Tabs,
 	Tab,
 	TabList,
@@ -20,23 +19,27 @@ import {
 	useToast,
 	Text
 } from "@chakra-ui/react";
-import {__} from "@wordpress/i18n";
-import {debounce} from "lodash";
+import { __ } from "@wordpress/i18n";
+import { debounce } from "lodash";
+import { Select } from "chakra-react-select";
 
-import {Search, PageNotFound} from "../../components/Icon/Icon";
+import { Search, PageNotFound } from "../../components/Icon/Icon";
 import {
 	getAllModules,
 	bulkActivateModules,
 	bulkDeactivateModules
 } from "./components/modules-api";
 import AddonSkeleton from "../../skeleton/AddonsSkeleton/AddonsSkeleton";
-import {useStateValue} from "../../../context/StateProvider";
-import {actionTypes} from "../../../context/dashboardContext";
+import { useStateValue } from "../../../context/StateProvider";
+import { actionTypes } from "../../../context/dashboardContext";
 import ModuleBody from "./components/ModuleBody";
 
 const Modules = () => {
 	const toast = useToast();
-	const [{allModules, isMembershipActivated, isPaymentAddonActivated}, dispatch] = useStateValue();
+	const [
+		{ allModules, isMembershipActivated, isPaymentAddonActivated },
+		dispatch
+	] = useStateValue();
 	const [state, setState] = useState({
 		modules: [],
 		originalModules: [],
@@ -57,34 +60,40 @@ const Modules = () => {
 		setIsStateUpdated(false);
 	};
 
-	const fetchModules = useCallback((for_payments = false) => {
-		getAllModules()
-			.then((data) => {
-				if (data.success) {
-					dispatch({
-						type: actionTypes.GET_ALL_MODULES,
-						allModules: data.modules_lists
-					});
+	const fetchModules = useCallback(
+		(for_payments = false) => {
+			getAllModules()
+				.then((data) => {
+					if (data.success) {
+						dispatch({
+							type: actionTypes.GET_ALL_MODULES,
+							allModules: data.modules_lists
+						});
+						setState((prev) => ({
+							...prev,
+							originalModules: data.modules_lists,
+							modulesLoaded: true
+						}));
+						filterModules(data.modules_lists, tabIndex);
+						if (for_payments) {
+							setIsStateUpdated(true);
+						}
+					}
+				})
+				.catch((error) =>
 					setState((prev) => ({
 						...prev,
-						originalModules: data.modules_lists,
+						error: error.message,
 						modulesLoaded: true
-					}));
-					filterModules(data.modules_lists, tabIndex);
-					if (for_payments) {
-						setIsStateUpdated(true);
-					}
-				}
-			})
-			.catch((error) =>
-				setState((prev) => ({...prev, error: error.message, modulesLoaded: true}))
-			);
-	}, [dispatch]);
+					}))
+				);
+		},
+		[dispatch]
+	);
 
 	useEffect(() => {
 		fetchModules();
 	}, [fetchModules]);
-
 
 	useEffect(() => {
 		if (isFirstRender.current) {
@@ -94,10 +103,9 @@ const Modules = () => {
 		fetchModules(true);
 	}, [isMembershipActivated, isPaymentAddonActivated]);
 
-
 	// Filter Modules by Tabs
 	const filterModules = (modules, index) => {
-		let filtered = modules
+		let filtered = modules;
 
 		if (index === 1) {
 			filtered = filtered.filter((mod) => mod.type === "feature");
@@ -119,14 +127,14 @@ const Modules = () => {
 
 	// Bulk Actions
 	const handleBulkActions = () => {
-		const {selectedModuleData, bulkAction} = state;
+		const { selectedModuleData, bulkAction } = state;
 
 		if (!Object.keys(selectedModuleData).length) {
 			showToast("Please select at least a feature", "error");
 			return;
 		}
 
-		setState((prev) => ({...prev, isPerformingBulkAction: true}));
+		setState((prev) => ({ ...prev, isPerformingBulkAction: true }));
 		const actionFunc =
 			bulkAction === "activate"
 				? bulkActivateModules
@@ -176,7 +184,7 @@ const Modules = () => {
 
 	const handleSearchInputChange = (e) => {
 		const val = e.target.value;
-		setState((prev) => ({...prev, searchItem: val, isSearching: true}));
+		setState((prev) => ({ ...prev, searchItem: val, isSearching: true }));
 		searchItemRef.current = val;
 		debounceSearch(val);
 	};
@@ -239,8 +247,25 @@ const Modules = () => {
 		}
 	};
 
+	const sortOptions = [
+		{ label: __("Popular", "user-registration"), value: "default" },
+		{ label: __("Newest", "user-registration"), value: "newest" },
+		{ label: __("Oldest", "user-registration"), value: "oldest" },
+		{ label: __("Ascending", "user-registration"), value: "asc" },
+		{ label: __("Descending", "user-registration"), value: "desc" }
+	];
+	const bulkOptions = [
+		{ label: __("Activate", "user-registration"), value: "activate" },
+		{ label: __("Deactivate", "user-registration"), value: "deactivate" }
+	];
+
 	return (
-		<Box top="var(--wp-admin--admin-bar--height, 0)" zIndex={1}>
+		<Box
+			top="var(--wp-admin--admin-bar--height, 0)"
+			zIndex={1}
+			my="4"
+			mx="6"
+		>
 			<Container maxW="container.xl">
 				<Stack
 					direction="row"
@@ -250,37 +275,41 @@ const Modules = () => {
 				>
 					<Stack direction="row" align="center" gap="5">
 						<Select
-							display="inline-flex"
-							alignItems="center"
-							size="md"
-							bg="#DFDFE0"
-							onChange={(e) => {
+							options={sortOptions}
+							onChange={(selectedOption) => {
 								handleSorterChange(
-									e.target.value,
+									selectedOption?.value,
 									state.modules
 								);
 							}}
-							border="1px solid #DFDFE0 !important"
-							borderRadius="4px !important"
-							icon=""
-							width="fit-content"
-						>
-							<option value="default">
-								{__("Popular", "user-registration")}
-							</option>
-							<option value="newest">
-								{__("Newest", "user-registration")}
-							</option>
-							<option value="oldest">
-								{__("Oldest", "user-registration")}
-							</option>
-							<option value="asc">
-								{__("Ascending", "user-registration")}
-							</option>
-							<option value="desc">
-								{__("Descending", "user-registration")}
-							</option>
-						</Select>
+							chakraStyles={{
+								control: (base) => ({
+									...base,
+									backgroundColor: "white",
+									borderColor: "#DFDFE0",
+									width: "fit-content"
+								}),
+								option: (base, state) => ({
+									...base,
+									backgroundColor: state.isFocused
+										? "#475bb2"
+										: "white",
+									color: state.isFocused ? "white" : "black"
+								}),
+								dropdownIndicator: (base) => ({
+									...base,
+									backgroundColor: "transparent",
+									paddingRight: "10px",
+									color: "black",
+									":hover": {
+										backgroundColor: "transparent"
+									}
+								}),
+								indicatorSeparator: () => ({
+									display: "none"
+								})
+							}}
+						/>
 						<Tabs
 							index={tabIndex}
 							onChange={(index) => setTabIndex(index)}
@@ -301,7 +330,7 @@ const Modules = () => {
 									}}
 									_selected={{
 										color: "white",
-										bg: "#2563EB",
+										bg: "#475bb2",
 										marginBottom: "0px",
 										boxShadow: "none"
 									}}
@@ -327,7 +356,7 @@ const Modules = () => {
 									}}
 									_selected={{
 										color: "white",
-										bg: "#2563EB",
+										bg: "#475bb2",
 										marginBottom: "0px",
 										boxShadow: "none"
 									}}
@@ -338,7 +367,7 @@ const Modules = () => {
 									transition="none !important"
 									onClick={() =>
 										handleSearchInputChange({
-											target: {value: state.searchItem}
+											target: { value: state.searchItem }
 										})
 									}
 								>
@@ -355,7 +384,7 @@ const Modules = () => {
 									}}
 									_selected={{
 										color: "white",
-										bg: "#2563EB",
+										bg: "#475bb2",
 										marginBottom: "0px",
 										boxShadow: "none"
 									}}
@@ -376,33 +405,47 @@ const Modules = () => {
 						</Tabs>
 						<Box display="flex" gap="8px">
 							<Select
-								display="inline-flex"
-								alignItems="center"
-								size="md"
-								bg="#DFDFE0"
 								placeholder={__(
 									"Bulk Actions",
 									"user-registration"
 								)}
+								options={bulkOptions}
 								onChange={(e) =>
 									setState((prev) => ({
 										...prev,
-										bulkAction: e.target.value
+										bulkAction: e.value
 									}))
 								}
-								icon=""
-								width="fit-content"
-								border="1px solid #DFDFE0 !important"
-								borderRadius="4px !important"
-							>
-								<option value="activate">
-									{__("Activate", "user-registration")}
-								</option>
-								<option value="deactivate">
-									{__("Deactivate", "user-registration")}
-								</option>
-							</Select>
-
+								chakraStyles={{
+									control: (base) => ({
+										...base,
+										backgroundColor: "white",
+										borderColor: "#DFDFE0",
+										width: "fit-content"
+									}),
+									option: (base, state) => ({
+										...base,
+										backgroundColor: state.isFocused
+											? "#475bb2"
+											: "white",
+										color: state.isFocused
+											? "white"
+											: "black"
+									}),
+									dropdownIndicator: (base) => ({
+										...base,
+										backgroundColor: "transparent",
+										paddingRight: "10px",
+										color: "black",
+										":hover": {
+											backgroundColor: "transparent"
+										}
+									}),
+									indicatorSeparator: () => ({
+										display: "none"
+									})
+								}}
+							/>
 							<Button
 								fontSize="14px"
 								variant="outline"
@@ -426,7 +469,7 @@ const Modules = () => {
 									pointerEvents="none"
 									top="2px"
 								>
-									<Search h="5" w="5" color="gray.300"/>
+									<Search h="5" w="5" color="gray.300" />
 								</InputLeftElement>
 								<Input
 									type="text"
@@ -437,6 +480,9 @@ const Modules = () => {
 									paddingLeft="32px !important"
 									value={state.searchItem}
 									onChange={handleSearchInputChange}
+									_focus={{
+										borderColor: "#475BB2 !important"
+									}}
 								/>
 							</InputGroup>
 						</FormControl>
@@ -445,7 +491,7 @@ const Modules = () => {
 			</Container>
 			<Container maxW="container.xl">
 				{state.isSearching ? (
-					<AddonSkeleton/>
+					<AddonSkeleton />
 				) : state.noItemFound && state.searchItem ? (
 					<Box
 						display="flex"
@@ -455,7 +501,7 @@ const Modules = () => {
 						gap="10px"
 						alignItems="center"
 					>
-						<PageNotFound color="gray.300"/>
+						<PageNotFound color="gray.300" />
 						<Text fontSize="20px" fontWeight="600">
 							{__("Sorry, no result found.", "user-registration")}
 						</Text>
@@ -486,7 +532,9 @@ const Modules = () => {
 											state.selectedModuleData
 										}
 										IsStateUpdated={IsStateUpdated}
-										resetIsStateUpdated={resetIsStateUpdated}
+										resetIsStateUpdated={
+											resetIsStateUpdated
+										}
 									/>
 								</TabPanel>
 								<TabPanel>
@@ -505,7 +553,9 @@ const Modules = () => {
 											state.selectedModuleData
 										}
 										IsStateUpdated={IsStateUpdated}
-										resetIsStateUpdated={resetIsStateUpdated}
+										resetIsStateUpdated={
+											resetIsStateUpdated
+										}
 									/>
 								</TabPanel>
 								<TabPanel>
@@ -524,7 +574,9 @@ const Modules = () => {
 											state.selectedModuleData
 										}
 										IsStateUpdated={IsStateUpdated}
-										resetIsStateUpdated={resetIsStateUpdated}
+										resetIsStateUpdated={
+											resetIsStateUpdated
+										}
 									/>
 								</TabPanel>
 							</TabPanels>

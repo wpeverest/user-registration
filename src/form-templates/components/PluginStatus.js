@@ -259,10 +259,13 @@ const PluginStatus = ({ requiredPlugins, onActivateAndContinue }) => {
 				<Button
 					marginLeft={"auto"}
 					onClick={handleButtonClick}
-					colorScheme="blue"
 					size="md"
 					isLoading={loading}
 					isDisabled={installInProgress}
+					style={{
+						backgroundColor: "#475BB2",
+						color: "#FFFFFF"
+					}}
 				>
 					{buttonLabel}
 				</Button>

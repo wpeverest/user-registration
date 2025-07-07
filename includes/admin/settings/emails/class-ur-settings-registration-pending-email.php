@@ -51,7 +51,7 @@ if ( ! class_exists( 'UR_Settings_Registration_Pending_Email', false ) ) :
 			$this->id          = 'registration_pending_email';
 			$this->title       = __( 'Account Status Changed: Pending Approval', 'user-registration' );
 			$this->description = __( 'Notifies the user that their existing registration status has been reverted to pending approval by an administrator.', 'user-registration' );
-			$this->receiver    = __( 'User', 'user-registration' );
+			$this->receiver    = 'User';
 		}
 
 		/**
