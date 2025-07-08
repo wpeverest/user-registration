@@ -90,47 +90,47 @@ if ( ! $is_passwordless_enabled || $is_passwordless_login_default_login_area_ena
 apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() );
 ?>
 
-<div class="ur-frontend-form login <?php echo esc_attr( $template_class ); ?>" id="ur-frontend-form">
-<?php
-if ( isset( $_GET['force-logout'] ) && 'true' === $_GET['force-logout'] ) {
-	ur_print_notice( __( 'Password changed successfully.', 'user-registration' ), 'success' );
-}
-?>
-	<form class="user-registration-form user-registration-form-login login" method="post">
-		<div class="ur-form-row">
-			<div class="ur-form-grid">
-				<?php
-				if ( $login_title || $is_login_settings ) {
-					$login_title_label =
-					/**
-					 * Filter to modify the login title.
-					 *
-					 * @param array $labels['login].
-					 * @return array.
-					 */
-					apply_filters(
-						'ur_login_title',
-						get_option( 'user_registration_general_setting_login_form_title', __( 'Welcome', 'user-registration' ) )
-					);
-					$login_title_description =
-					/**
-					 * Filter to modify the login title description.
-					 *
-					 * @param array $labels['login].
-					 * @return array.
-					 */
-					apply_filters(
-						'ur_login_title_description',
-						get_option(
-							'user_registration_general_setting_login_form_desc',
-							__( 'Please enter your details to access your account.', 'user-registration' )
-						)
-					);
-					/* translators: %s - Login Title. */
-					echo wp_kses_post( sprintf( __( '<span class="user-registration-login-title"> %s </span> </br>', 'user-registration' ), $login_title_label ) );
-					echo wp_kses_post( sprintf( __( '<p class="user-registration-login-description"> %s </p>', 'user-registration' ), $login_title_description ) );
-				}
-				?>
+	<div class="ur-frontend-form login <?php echo esc_attr( $template_class ); ?>" id="ur-frontend-form">
+		<?php
+		if ( isset( $_GET['force-logout'] ) && 'true' === $_GET['force-logout'] ) {
+			ur_print_notice( __( 'Password changed successfully.', 'user-registration' ), 'success' );
+		}
+		?>
+		<form class="user-registration-form user-registration-form-login login" method="post">
+			<div class="ur-form-row">
+				<div class="ur-form-grid">
+					<?php
+					if ( $login_title || $is_login_settings ) {
+						$login_title_label =
+							/**
+							 * Filter to modify the login title.
+							 *
+							 * @param array $labels['login].
+							 * @return array.
+							 */
+							apply_filters(
+								'ur_login_title',
+								get_option( 'user_registration_general_setting_login_form_title', __( 'Welcome', 'user-registration' ) )
+							);
+						$login_title_description =
+							/**
+							 * Filter to modify the login title description.
+							 *
+							 * @param array $labels['login].
+							 * @return array.
+							 */
+							apply_filters(
+								'ur_login_title_description',
+								get_option(
+									'user_registration_general_setting_login_form_desc',
+									__( 'Please enter your details to access your account.', 'user-registration' )
+								)
+							);
+						/* translators: %s - Login Title. */
+						echo wp_kses_post( sprintf( __( '<span class="user-registration-login-title"> %s </span> </br>', 'user-registration' ), $login_title_label ) );
+						echo wp_kses_post( sprintf( __( '<p class="user-registration-login-description"> %s </p>', 'user-registration' ), $login_title_description ) );
+					}
+					?>
 					<?php
 					/**
 					 * Action to fire at the start of rendering the login form.
@@ -146,36 +146,36 @@ if ( isset( $_GET['force-logout'] ) && 'true' === $_GET['force-logout'] ) {
 						<span class="input-wrapper">
 						<input placeholder="<?php echo esc_attr( $placeholders['username'] ); ?>" type="text" class="user-registration-Input user-registration-Input--text input-text" name="username" id="username" value="<?php echo ( ! empty( $_POST['username'] ) ) ? esc_attr( wp_unslash( sanitize_text_field( $_POST['username'] ) ) ) : ''; // phpcs:ignore ?>" style="<?php echo ($enable_field_icon || $is_login_settings && is_plugin_active( 'user-registration-pro/user-registration.php' )) ? "padding-left: 32px !important" : '' ?>"/>
 						<?php if ( $enable_field_icon || $is_login_settings && is_plugin_active( 'user-registration-pro/user-registration.php' ) ) { ?>
-						<span class="ur-icon ur-icon-user">
+							<span class="ur-icon ur-icon-user">
 
 						</span>
 						<?php } ?>
 						</span>
 					</p>
 					<?php if ( ( $is_passwordless_enabled && ! $is_passwordless_login_default_login_area_enabled ) || $is_login_settings ) : ?>
-					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide<?php echo ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) ? ' hide_show_password' : ''; ?>">
-						<?php
-						if ( ! $hide_labels || $is_login_settings ) {
-							printf( '<label for="password">%s <span class="required">*</span></label>', esc_html( $labels['password'] ) );
-						}
-						?>
-						<span class="input-wrapper">
+						<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide<?php echo ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) ? ' hide_show_password' : ''; ?>">
+							<?php
+							if ( ! $hide_labels || $is_login_settings ) {
+								printf( '<label for="password">%s <span class="required">*</span></label>', esc_html( $labels['password'] ) );
+							}
+							?>
+							<span class="input-wrapper">
 						<span class="password-input-group">
 						<input placeholder="<?php echo esc_attr( $placeholders['password'] ); ?>" class="user-registration-Input user-registration-Input--text input-text" type="password" name="password" id="password" style="<?php echo ( $enable_field_icon || $is_login_settings && is_plugin_active( 'user-registration-pro/user-registration.php' ) ) ? 'padding-left: 32px !important' : ''; ?>" />
 
 						<?php
 						if ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) {
-							?>
+						?>
 						<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="<?php echo esc_attr__( 'Show password', 'user-registration' ); ?>"></a>
 						</span>
 							<?php
-						}
-						?>
-						<?php if ( $enable_field_icon || $is_login_settings && is_plugin_active( 'user-registration-pro/user-registration.php' ) ) { ?>
-						<span class="ur-icon ur-icon-password"></span>
-						<?php } ?>
+							}
+							?>
+								<?php if ( $enable_field_icon || $is_login_settings && is_plugin_active( 'user-registration-pro/user-registration.php' ) ) { ?>
+									<span class="ur-icon ur-icon-password"></span>
+								<?php } ?>
 						</span>
-					</p>
+						</p>
 					<?php endif; ?>
 					<?php
 					if ( ! empty( $recaptcha_node ) ) {
@@ -192,48 +192,48 @@ if ( isset( $_GET['force-logout'] ) && 'true' === $_GET['force-logout'] ) {
 					?>
 					<p class="form-row">
 						<?php wp_nonce_field( 'user-registration-login', 'user-registration-login-nonce' );
-							if ( ( $is_passwordless_enabled && ! $is_passwordless_login_default_login_area_enabled ) || $is_login_settings ) {
+						if ( ( $is_passwordless_enabled && ! $is_passwordless_login_default_login_area_enabled ) || $is_login_settings ) {
+						?>
+					<div class="user-registration-before-login-btn">
+						<?php
+						$remember_me_enabled = ur_option_checked( 'user_registration_login_options_remember_me', true );
+
+						if ( ( $remember_me_enabled && $is_passwordless_enabled && ! $is_passwordless_login_default_login_area_enabled ) || $is_login_settings ) {
 							?>
-							<div class="user-registration-before-login-btn">
-								<?php
-									$remember_me_enabled = ur_option_checked( 'user_registration_login_options_remember_me', true );
-
-								if ( ( $remember_me_enabled && $is_passwordless_enabled && ! $is_passwordless_login_default_login_area_enabled ) || $is_login_settings ) {
-									?>
-										<label class="user-registration-form__label user-registration-form__label-for-checkbox inline">
-											<input class="user-registration-form__input user-registration-form__input-checkbox" name="rememberme" type="checkbox" id="rememberme" value="forever" /> <span><?php echo esc_html( $labels['remember_me'] ); ?></span>
-										</label>
-									<?php
-								}
-								?>
-								<?php
-									$lost_password_enabled = ur_option_checked( 'user_registration_login_options_lost_password', true );
-
-								if ( ( $lost_password_enabled && $is_passwordless_enabled && ! $is_passwordless_login_default_login_area_enabled ) || $is_login_settings ) {
-									?>
-										<p class="user-registration-LostPassword lost_password">
-											<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php echo esc_html( $labels['lost_your_password'] ); ?></a>
-										</p>
-									<?php
-								}
-								?>
-							</div>
+							<label class="user-registration-form__label user-registration-form__label-for-checkbox inline">
+								<input class="user-registration-form__input user-registration-form__input-checkbox" name="rememberme" type="checkbox" id="rememberme" value="forever" /> <span><?php echo esc_html( $labels['remember_me'] ); ?></span>
+							</label>
 							<?php
-							}
+						}
+						?>
+						<?php
+						$lost_password_enabled = ur_option_checked( 'user_registration_login_options_lost_password', true );
+
+						if ( ( $lost_password_enabled && $is_passwordless_enabled && ! $is_passwordless_login_default_login_area_enabled ) || $is_login_settings ) {
 							?>
-						</p>
+							<p class="user-registration-LostPassword lost_password">
+								<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php echo esc_html( $labels['lost_your_password'] ); ?></a>
+							</p>
+							<?php
+						}
+						?>
+					</div>
+				<?php
+				}
+				?>
+					</p>
 					<div>
-					<?php
+						<?php
 
 						/**
 						 * Action to fire before rendering of submit button for user registration login form.
 						 */
 						do_action( 'user_registration_login_form_before_submit_button' );
-					?>
+						?>
 						<?php if ( $enable_ajax ) { ?>
-						<button type="submit" class="user-registration-Button button ur-submit-button" id="user_registration_ajax_login_submit" name="login" value="<?php echo esc_html( $labels['login'] ); ?>" <?php echo ( $is_login_settings || ( isset( $_GET['ur_login_preview'] ) && $_GET['ur_login_preview'] ) ) ? 'disabled' : ''; ?>><?php echo esc_html( $labels['login'] ); ?><span></span></button>
+							<button type="submit" class="user-registration-Button button ur-submit-button <?php echo ($is_login_settings || ( isset( $_GET['ur_login_preview'] ) && $_GET['ur_login_preview'] ) ) ? 'ur-disabled-btn' : '';?>" id="user_registration_ajax_login_submit" name="login" value="<?php echo esc_html( $labels['login'] ); ?>" ><?php echo esc_html( $labels['login'] ); ?><span></span></button>
 						<?php } else { ?>
-						<button type="submit" class="user-registration-Button button " name="login" value="<?php echo esc_html( $labels['login'] ); ?>"<?php echo ( $is_login_settings || ( isset( $_GET['ur_login_preview'] ) && $_GET['ur_login_preview'] ) ) ? 'disabled' : ''; ?> ><?php echo esc_html( $labels['login'] ); ?></button>
+							<button type="submit" class="user-registration-Button button  <?php echo  ($is_login_settings || ( isset( $_GET['ur_login_preview'] ) && $_GET['ur_login_preview'] ) ); ?> " name="login" value="<?php echo esc_html( $labels['login'] ); ?>"><?php echo esc_html( $labels['login'] ); ?></button>
 						<?php } ?>
 					</div>
 					<input type="hidden" name="redirect" value="<?php echo isset( $redirect ) ? esc_attr( $redirect ) : esc_attr( the_permalink() ); ?>" />
@@ -255,13 +255,13 @@ if ( isset( $_GET['force-logout'] ) && 'true' === $_GET['force-logout'] ) {
 							if ( ! empty( $label ) ) {
 								?>
 								<a href="<?php echo esc_url( $url_options ); ?>"> <?php echo stripslashes( esc_html( get_option( 'user_registration_general_setting_registration_label' ) ) ); ?>
-									</a>
+								</a>
 								<?php
 							} else {
 								update_option( 'user_registration_general_setting_registration_label', __( 'Not a member yet? Register now.', 'user-registration' ) );
 								?>
-									<a href="<?php echo esc_url( $url_options ); ?>"> <?php echo esc_html( get_option( 'user_registration_general_setting_registration_label' ) ); ?>
-									</a>
+								<a href="<?php echo esc_url( $url_options ); ?>"> <?php echo esc_html( get_option( 'user_registration_general_setting_registration_label' ) ); ?>
+								</a>
 								<?php
 							}
 							echo '</p>';
@@ -274,11 +274,11 @@ if ( isset( $_GET['force-logout'] ) && 'true' === $_GET['force-logout'] ) {
 					 */
 					do_action( 'user_registration_login_form_end' );
 					?>
+				</div>
 			</div>
-		</div>
-	</form>
+		</form>
 
-</div>
+	</div>
 
 <?php
 /**
