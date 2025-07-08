@@ -245,6 +245,30 @@ class UR_Admin_Export_Users {
 			}
 			$user_id_row    = array();
 			$user_extra_row = ur_get_user_extra_fields( $user->data->ID );
+			$user_form_fields             = ur_get_form_fields( $form_id );
+			$urm_form_has_profile_picture = false;
+			$user_profile_picture_key     = '';
+
+			foreach ( $user_form_fields as $field_key => $field_data ) {
+				if ( isset( $field_data->field_key ) && 'profile_picture' === $field_data->field_key ) {
+					$urm_form_has_profile_picture = true;
+					$user_profile_picture_key     = $field_key;
+					break;
+				}
+			}
+
+			if ( $urm_form_has_profile_picture && ! empty( $user_profile_picture_key ) ) {
+				$profile_picture_id = get_user_meta( $user->data->ID, 'user_registration_profile_pic_url', true );
+
+				if ( is_numeric( $profile_picture_id ) ) {
+					$profile_picture_url = wp_get_attachment_url( $profile_picture_id );
+				} else {
+					$profile_picture_url = '';
+				}
+
+				// Assign profile picture URL to user extra row.
+				$user_extra_row[ $user_profile_picture_key ] = $profile_picture_url;
+			}
 
 			$columns = $this->generate_columns( $form_id, $unchecked_fields );
 
