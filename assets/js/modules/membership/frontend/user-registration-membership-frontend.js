@@ -611,32 +611,38 @@
 		 */
 		handle_upgrade_response: function (response, prepare_members_data) {
 
-			switch (prepare_members_data.payment_method) {
-				case 'paypal':
-					ur_membership_frontend_utils.show_success_message(
-						response.data.message
-					);
-					window.location.replace(response.data.pg_data.payment_url);
-					break;
-				case 'stripe':
-					stripe_settings.handle_stripe_response(response, prepare_members_data, {data: {}});
-					break;
-				case 'free':
-					location.reload();
-					break;
-				default:
-					ur_membership_ajax_utils.show_bank_response(response, {
-						'username': prepare_members_data.username,
-						'payment_method': prepare_members_data.payment_method
-					}, {
-						data: {}
-					});
-					break;
-			}
-		},
-		cancel_delayed_subscription: function (btn) {
-			ur_membership_frontend_utils.toggleSaveButtons(true, btn);
-			ur_membership_frontend_utils.append_spinner(btn);
+				switch (prepare_members_data.payment_method) {
+					case 'paypal':
+						ur_membership_frontend_utils.show_success_message(
+							response.data.message
+						);
+						window.location.replace(response.data.pg_data.payment_url);
+						break;
+					case 'stripe':
+						stripe_settings.handle_stripe_response(response, prepare_members_data, {data: {}});
+						break;
+					case 'mollie':
+						ur_membership_frontend_utils.show_success_message(
+							response.data.message
+						);
+						window.location.replace(response.data.pg_data.payment_url);
+						break;
+					case 'free':
+						location.reload();
+						break;
+					default:
+						ur_membership_ajax_utils.show_bank_response(response, {
+							'username': prepare_members_data.username,
+							'payment_method': prepare_members_data.payment_method
+						}, {
+							data: {}
+						});
+						break;
+				}
+			},
+			cancel_delayed_subscription: function (btn) {
+				ur_membership_frontend_utils.toggleSaveButtons(true, btn);
+				ur_membership_frontend_utils.append_spinner(btn);
 
 			this.send_data(
 				{

@@ -117,7 +117,7 @@ class UpgradeMembershipService {
 					$trial_end_date = !empty($subscription['trial_end_date']) ? $subscription['trial_end_date'] : date('Y-m-d 00:00:00', strtotime("+$trial_in_days days"));
 					$trial_end_date_obj = new \DateTime($trial_end_date, $tz);
 					$remaining_trial_days = $dateTime->diff( $trial_end_date_obj )->format( '%a' );
-					$delayed_until = $expiry_date->modify("+$$remaining_trial_days days")->format('Y-m-d');
+					$delayed_until = $expiry_date->modify("+$remaining_trial_days days")->format('Y-m-d');
 				}
 
 			}
