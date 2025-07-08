@@ -135,7 +135,14 @@ class User_Registration_Paypal_Module {
 		$response = array(
 			'status' => true,
 		);
-		//these value should not be empty
+
+		foreach ( $form_data as $k => $data ) {
+			$last_data = get_option( $k );
+			if ( $last_data !== $data ) {
+				$changed = true;
+				break;
+			}
+		}
 		if ( empty( $form_data['user_registration_global_paypal_cancel_url'] ) ) {
 			$response['status']  = false;
 			$response['message'] = 'Field Cancel Url is required.';
@@ -149,40 +156,16 @@ class User_Registration_Paypal_Module {
 			return $response;
 		}
 
-
-		preg_match( '#^' . preg_quote(site_url(), '#') . '#', $form_data['user_registration_global_paypal_cancel_url'], $cancel_url_matches );
-		preg_match( '#^' . preg_quote(site_url(), '#') . '#', $form_data['user_registration_global_paypal_return_url'], $return_url_matches );
-
-		if ( count( $cancel_url_matches ) < 1 || count( $return_url_matches ) < 1 ) {
-			$response['status']  = false;
-			$response['message'] = 'Cancel/Return url cannot be an external url.';
-			return $response;
-		}
-
-		//check if any value has changed
-		foreach ( $form_data as $k => $data ) {
-			$last_data = get_option( $k );
-			if ( $last_data !== $data ) {
-				$changed = true;
-				break;
-			}
-		}
-
-//		if client secret is filled then client id is required and vice versa
 		if ( ! empty( $form_data['user_registration_global_paypal_client_id'] ) && empty( $form_data['user_registration_global_paypal_client_secret'] ) ) {
 			$response['status']  = false;
 			$response['message'] = 'Field client secret is required with client id';
-
 			return $response;
 		}
 		if ( ! empty( $form_data['user_registration_global_paypal_client_secret'] ) && empty( $form_data['user_registration_global_paypal_client_id'] ) ) {
 			$response['status']  = false;
 			$response['message'] = 'Field client id is required with client secret';
-
 			return $response;
 		}
-
-		//if client secret and client id is available than verify is credentials are available
 		if ( ! empty( $form_data['user_registration_global_paypal_client_id'] ) && ! empty( $form_data['user_registration_global_paypal_client_secret'] ) && $changed ) {
 			$client_id      = $form_data['user_registration_global_paypal_client_id'];
 			$client_secret  = $form_data['user_registration_global_paypal_client_secret'];
@@ -196,7 +179,10 @@ class User_Registration_Paypal_Module {
 				return $response;
 			}
 		}
+
 		return $response;
+
+
 	}
 
 	/**
