@@ -1032,7 +1032,7 @@ abstract class UR_Form_Field {
 		$class        = 'ur-general-setting-' . $strip_prefix;
 
 		$settings  = "<div class='ur-general-setting-block " . esc_attr( $class ) . "'>";
-		$settings .= '<h2 class="ur-toggle-heading">' . esc_html__( 'General Settings', 'user-registration' ) . '</h2><hr>';
+		$settings .= '<h2 class="ur-toggle-heading closed">' . esc_html__( 'General Settings', 'user-registration' ) . '</h2><hr>';
 		$settings .= '<div class="ur-toggle-content">';
 		$settings .= $this->get_field_general_settings();
 		$settings .= '</div>';
