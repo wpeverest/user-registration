@@ -29,15 +29,13 @@ const PluginStatus = ({ requiredPlugins, onActivateAndContinue }) => {
 	useEffect(() => {
 		const fetchPluginStatus = async () => {
 			try {
-				const response = await apiFetch({
-					path: `${restURL}user-registration/v1/plugin/status`,
+				const response = await fetch(restURL + 'user-registration/v1/plugin/status',{
 					method: "GET",
 					headers: {
 						"X-WP-Nonce": security
 					}
 				});
-
-				if (response.success) {
+				if (response.ok) {
 					setPluginStatuses(response.plugin_status);
 					updateButtonLabel(response.plugin_status);
 				} else {
