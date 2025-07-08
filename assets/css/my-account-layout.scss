@@ -542,30 +542,23 @@
 
 			.membership-row {
 				display: flex;
-				gap: 20px;
-
 				.membership-label {
 					min-width: 300px;
 					text-align: left;
 				}
-
 				#ur-membership-status {
 					padding: 6px 18px;
 					color: white;
 					border-radius: 36px;
-
 					&.btn-active {
 						background: #4dc245;
 					}
-
 					&.btn-inactive {
 						background: gray;
 					}
-
 					&.btn-canceled {
 						background: #ea4335;
 					}
-
 					&.btn-trial {
 						background: #ff8300;
 					}
@@ -594,13 +587,11 @@
 					font-size: 14px;
 					font-weight: 500;
 					display: none;
-
 					&.btn-error {
 						background: #fff4f4;
 						color: red;
 						border-left: 3px solid #f25656;
 					}
-
 					&.btn-success {
 						background: #d7ede0;
 						color: #554545;
@@ -668,21 +659,6 @@
 				background-color: #fff;
 				transition: .4s;
 				border-radius: 100%;
-			}
-		}
-	}
-}
-
-
-@media screen and (max-width: 980px) {
-	#user-registration {
-		&.vertical {
-			.user-registration-MyAccount-navigation {
-				width: 30%;
-			}
-
-			.user-registration-MyAccount-content {
-				width: 70%;
 			}
 		}
 	}
@@ -1111,9 +1087,27 @@
 				}
 			}
 		}
+
+		&.user-registration-MyAccount {
+			@media screen and (max-width: 767px) {
+				flex-direction: column;
+
+				.user-registration-MyAccount {
+					&-navigation {
+						max-width: 100%;
+					}
+	
+					&-content {
+						padding: $spacing_24px $spacing_12px;
+					}
+				}
+			}
+		}
 	}
 
 	&.horizontal {
+		overflow: hidden;
+		
 		.user-registration-MyAccount {
 			&-navigation {
 				&-link {
@@ -1146,6 +1140,16 @@
 
 			&-content {
 				padding: $spacing_24px 36px 52px 36px;
+			}
+		}
+
+		&.user-registration-MyAccount {
+			@media screen and (max-width: 600px) {
+				.user-registration-MyAccount {	
+					&-content {
+						padding: $spacing_24px;
+					}
+				}
 			}
 		}
 	}
@@ -1217,50 +1221,4 @@
 			}
 		}
 	}
-}
-
-
-// User Registration Toast Message design fixed
-body {
-	&.user-registration-page {
-		.user-registration-membership-notice {
-			&__blue {
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				margin-right: 12px;
-				gap: 16px;
-				padding: 10px 20px;
-
-				.user-registration-membership__close_notice {
-					padding-left: 0;
-					color: #ff4859;
-					font-size: 20px;
-					line-height: 26px;
-				}
-			}
-
-			&__message {
-				font-size: 14px;
-				line-height: 24px;
-			}
-		}
-	}
-}
-.user-registration-MyAccount-content table.user-registration-email__entries td {
-	text-align: left;
-}
-
-.rtl #user-registration.vertical .user-registration-MyAccount-content__header h1,
-.rtl .ur-frontend-form.login .ur-form-row .ur-form-grid .user-registration-form-row label,
-.rtl .ur-frontend-form .ur-form-row .ur-form-grid label.ur-label,
-.rtl .ur-frontend-form .ur-form-row .ur-form-grid legend.ur-label,
-.rtl .user-registration-logout-swal2-container .swal2-header .swal2-title,
-.rtl .user-registration-logout-swal2-container .swal2-header .swal2-content .swal2-content,
-.rtl .user-registration-MyAccount-content table.user-registration-email__entries td
-{
-	text-align: right;
-}
-.rtl #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row .membership-label {
-	min-width: 0px;
 }
