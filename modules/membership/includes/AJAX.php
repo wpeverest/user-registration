@@ -670,6 +670,17 @@ class AJAX {
 		$stripe_subscription = $stripe_service->create_subscription( $customer_id, $payment_method_id, $member_id );
 
 		if ( $stripe_subscription['status'] ) {
+			if ( ! empty( $form_response ) && isset( $form_response['auto_login'] ) && $form_response['auto_login'] ) {
+				$members_service = new MembersService();
+				$logged_in       = $members_service->login_member( $member_id, true );
+				if ( ! $logged_in ) {
+					wp_send_json_error(
+						array(
+							'message' => __( 'Invalid User', 'user-registration' ),
+						)
+					);
+				}
+			}
 			wp_send_json_success( $stripe_subscription );
 		} else {
 			wp_delete_user( absint( $member_id ) );
@@ -844,7 +855,7 @@ class AJAX {
 			wp_send_json_error( __( 'Wrong request.', 'user-registration' ) );
 		}
 		if ( ! in_array( $_POST['type'], array(
-			'user_registration_member_registration_page_id',
+				'user_registration_member_registration_page_id',
 			'user_registration_thank_you_page_id'
 		) ) ) {
 			wp_send_json_error( __( 'Invalid post type', 'user-registration' ) );
