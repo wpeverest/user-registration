@@ -783,6 +783,35 @@
 			}
 		}
 	};
+
+	//on toggle payment gatewaysw
+	$('input[name="urm_payment_method"]').on('change', function () {
+		var selected_method = $(this).val(),
+			stripe_container = $('.stripe-container'),
+			stripe_error_container = $('#stripe-errors');
+
+		var authorize_container = $('#authorize-net-container');
+		var authorize_error_container = $('#authorize-errors');
+
+		stripe_container.addClass('urm-d-none');
+		stripe_error_container.remove();
+
+		authorize_container.addClass('urm-d-none');
+		authorize_error_container.remove();
+
+		elements = {};
+		if (selected_method === 'stripe') {
+			if (urmf_data.stripe_publishable_key.length == 0) {
+				ur_membership_frontend_utils.show_failure_message(urmf_data.labels.i18n_incomplete_stripe_setup_error);
+				return;
+			}
+			stripe_container.removeClass('urm-d-none');
+			stripe_settings.init();
+		}
+		if (selected_method === 'authorize') {
+			authorize_container.removeClass('urm-d-none');
+		}
+	});
 	//activate payment gateways
 	$('input[name="urm_membership"]').on('change', function () {
 		// clear coupon total notice
@@ -819,15 +848,25 @@
 					input_container.addClass('urm-d-none');
 				}
 			});
+
+			if (urm_pg_container.find('input:visible').length === 1) {
+				var lone_pg = urm_pg_container.find('input:visible');
+				$(lone_pg[0]).prop("checked", true);
+				lone_pg.trigger("change");
+			}
 			ur_membership_ajax_utils.calculate_total($(this));
 		}
 	});
 	// membership input change trigger for page with membership id as params.
-	var searchParams = new URLSearchParams(window.location.search);
+	var searchParams = new URLSearchParams(window.location.search),
+		visible_memberships = $('input[name="urm_membership"]');
+
 	if (searchParams.has('membership_id')) {
 		$('input[name="urm_membership"]:checked').change();
 	}
-
+	if (visible_memberships !== undefined && visible_memberships.length === 1) {
+		$(visible_memberships[0]).prop("checked", true).change();
+	}
 	$('.close_notice').on('click', ur_membership_frontend_utils.toggleNotice);
 
 	$('#ur-membership-password').on('keyup change', function () {
@@ -920,34 +959,6 @@
 
 	});
 
-	//on toggle payment gatewaysw
-	$('input[name="urm_payment_method"]').on('change', function () {
-		var selected_method = $(this).val(),
-			stripe_container = $('.stripe-container'),
-			stripe_error_container = $('#stripe-errors');
-
-		var authorize_container = $('#authorize-net-container');
-		var authorize_error_container = $('#authorize-errors');
-
-		stripe_container.addClass('urm-d-none');
-		stripe_error_container.remove();
-
-		authorize_container.addClass('urm-d-none');
-		authorize_error_container.remove();
-
-		elements = {};
-		if (selected_method === 'stripe') {
-			if (urmf_data.stripe_publishable_key.length == 0) {
-				ur_membership_frontend_utils.show_failure_message(urmf_data.labels.i18n_incomplete_stripe_setup_error);
-				return;
-			}
-			stripe_container.removeClass('urm-d-none');
-			stripe_settings.init();
-		}
-		if (selected_method === 'authorize') {
-			authorize_container.removeClass('urm-d-none');
-		}
-	});
 
 	//cancel membership button
 	$(document).on("click", ".cancel-membership-button", function () {
