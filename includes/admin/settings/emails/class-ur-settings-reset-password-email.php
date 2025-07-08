@@ -50,7 +50,7 @@ if ( ! class_exists( 'UR_Settings_Reset_Password_Email', false ) ) :
 			$this->id          = 'reset_password_email';
 			$this->title       = __( 'Reset Password', 'user-registration' );
 			$this->description = __( 'Sends a secure password reset link to the user who requested a reset.', 'user-registration' );
-			$this->receiver    = __( 'User', 'user-registration' );
+			$this->receiver    = 'User';
 		}
 
 		/**

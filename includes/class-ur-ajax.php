@@ -375,7 +375,7 @@ class UR_AJAX {
 				$field['type'] = 'text';
 			}
 			// Unset hidden field value.
-			if ( 'hidden' === $field['field_key'] || ( 'range' === $field['type'] && ur_string_to_bool( $field['enable_payment_slider'] ) ) ) {
+			if ( ( isset( $field['field_key'] ) && 'hidden' === $field['field_key'] ) || ( 'range' === $field['type'] && ur_string_to_bool( $field['enable_payment_slider'] ) ) ) {
 				self::unset_field( $field, $profile );
 			}
 			if ( ! $is_admin_user && 'hidden' === $field['type'] ) {

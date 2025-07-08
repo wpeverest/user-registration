@@ -22,7 +22,7 @@
       "slug": "user-registration-woocommerce",
       "name": "User Registration - WooCommerce",
       "image": "extensions-json/sections/images/woo-extension.png",
-      "excerpt": "Add shipping/billing fields to registration forms and sync form data with the checkout page for a pleasant customer experience.",
+      "excerpt": "Add shipping and billing fields to registration forms and sync data with checkout for a smooth experience.",
       "link": "https://docs.wpuserregistration.com/docs/user-registration-woocommerce/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan": [
         "personal",
@@ -71,7 +71,7 @@
       "slug": "user-registration-file-upload",
       "name": "User Registration - File Upload",
       "image": "extensions-json/sections/images/file.png",
-      "excerpt": "Users can upload single or multiple files during registration. Several file types are available along with customizable file size limits.",
+      "excerpt": "Allow users to upload single or multiple files during registration with customizable types and file size limits.",
       "link": "https://docs.wpuserregistration.com/docs/user-registration-file-upload/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan": [
         "personal",
@@ -88,7 +88,7 @@
       "slug": "user-registration-style-customizer",
       "name": "User Registration Style Customizer",
       "image": "extensions-json/sections/images/style-customizer.png",
-      "excerpt": "Leverage the power of the User Registration Style Customizer add-on to personalize the look and feel of your registration and login forms.",
+      "excerpt": "Use the User Registration Style Customizer add-on to personalize your registration and login form appearance.",
       "link": "https://docs.wpuserregistration.com/docs/user-registration-style-customizer/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan": [
         "plus",
@@ -185,7 +185,7 @@
       "slug": "user-registration-profile-connect",
       "name": "User Registration Profile Connect",
       "image": "extensions-json/sections/images/profile-connect.png",
-      "excerpt": "Need to connect users registered via other plugins to User Registration forms? Try the Profile Connect add-on for seamless connection.",
+      "excerpt": "Connect users from other plugins to User Registration forms seamlessly using the Profile Connect add-on.",
       "link": "https://docs.wpuserregistration.com/docs/user-registration-profile-connect/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan": [
         "personal",
@@ -269,7 +269,7 @@
       "slug": "user-registration-import-users",
       "name": "User Registration Import Users",
       "image": "extensions-json/sections/images/import-users.png",
-      "excerpt": "Quickly import users to a registration form. You’ll need a user data file in CSV format to map the fields and import them correctly.",
+      "excerpt": "Quickly import users to a registration form using a CSV file to map and match fields accurately.",
       "link": "https://docs.wpuserregistration.com/docs/user-registration-import-users/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan": [
         "plus",
@@ -350,7 +350,7 @@
       "slug": "user-registration-private-notes",
       "name": "User Registration Private Notes",
       "image": "extensions-json/sections/images/private-notes.png",
-      "excerpt": "Share important updates, personalized messages, etc., with users. Provide a platform for users to ask questions and receive answers.",
+      "excerpt": "Share updates and personalized messages, and let users ask questions and receive answers through an interactive platform.",
       "link": "https://docs.wpuserregistration.com/docs/user-registration-private-notes/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan": [
         "plus",
@@ -398,7 +398,7 @@
       "slug": "user-registration-activecampaign",
       "name": "User Registration ActiveCampaign",
       "image": "extensions-json/sections/images/activecampaign.png",
-      "excerpt": "Effortlessly link your ActiveCampaign account to User Registration forms using the ActiveCampaign add-on and enable seamless subscriber collection.",
+      "excerpt": "Effortlessly connect ActiveCampaign to User Registration forms with the add-on for subscriber collection.",
       "link": "https://docs.wpuserregistration.com/docs/user-registration-activecampaign/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan": [
         "plus",
@@ -494,7 +494,7 @@
       "slug": "user-registration-convertkit",
       "name": "User Registration convertkit",
       "image": "extensions-json/sections/images/convertkit.png",
-      "excerpt": "Allows you to efficiently grow your business by generating more leads with ConvertKit. It also helps increase automated emails for better lead generation.",
+      "excerpt": "Efficiently grow your business by generating leads and automating emails using ConvertKit integration.",
       "link": "https://docs.wpuserregistration.com/docs/user-registration-convertkit/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan": [
         "plus",
@@ -557,7 +557,7 @@
     {
       "title": "Mollie Payment",
       "slug": "user-registration-mollie",
-      "name": "User Registration Mollie payment",
+      "name": "User Registration Mollie",
       "image": "extensions-json/sections/images/mollie.png",
       "excerpt": "Want quick and secure payments during registration? User Registration has in-built support for the Mollie gateway.",
       "link": "https://docs.wpuserregistration.com/docs/user-registration-mollie/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
@@ -575,7 +575,7 @@
       "slug": "user-registration-mailpoet",
       "name": "User Registration MailPoet",
       "image": "extensions-json/sections/images/mailpoet.png",
-      "excerpt": "Easily connect your User Registration forms with MailPoet. Seamlessly map user details to your MailPoet Subscriber Lists for more efficient and convenient email marketing efforts.",
+      "excerpt": "Easily connect User Registration forms to MailPoet and map user details for efficient email marketing.",
       "link": "https://docs.wpuserregistration.com/docs/user-registration-mailpoet/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan": [
         "plus",
@@ -591,7 +591,7 @@
       "slug": "user-registration-brevo",
       "name": "User Registration Brevo",
       "image": "extensions-json/sections/images/brevo.png",
-      "excerpt": "Effortlessly integrate WordPress registration forms with Brevo to collect client info and automatically sync it to your Brevo email list.",
+      "excerpt": "Effortlessly integrate WordPress registration forms with Brevo to sync client info to your email list automatically.",
       "link": "https://docs.wpuserregistration.com/docs/user-registration-brevo-sendinblue/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan": [
         "plus",
@@ -607,7 +607,7 @@
       "slug": "user-registration-salesforce",
       "name": "User Registration Salesforce",
       "image": "extensions-json/sections/images/salesforce.png",
-      "excerpt": "Connect Forms to Salesforce account to manage your leads effectively",
+      "excerpt": "Connect Forms to Salesforce account to manage your leads effectively.",
       "link": "https://docs.wpuserregistration.com/docs/salesforce/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan": [
         "plus",

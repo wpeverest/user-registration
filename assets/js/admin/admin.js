@@ -52,21 +52,27 @@ jQuery(function ($) {
 		var icon =
 			'<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>';
 
-		if ($(this).hasClass("ur-one-time-draggable-disabled")) {
-			var title =
+		if ($(this).hasClass("ur-one-time-draggable-disabled") || $(this).hasClass("ur-membership-payment-field-disabled") || $(this).hasClass("ur-membership-field-disabled")) {			var title =
 					icon +
 					'<span class="user-registration-swal2-modal__title">' +
 					user_registration_form_builder_data.form_one_time_draggable_fields_locked_title.replace(
 						"%field%",
 						$(this).text()
 					) +
-					"</span>",
-				message =
-					user_registration_form_builder_data.form_one_time_draggable_fields_locked_message.replace(
-						"%field%",
-						$(this).text()
-					);
-
+					"</span>";
+			var message = '';
+			if($(this).hasClass("ur-membership-payment-field-disabled")){
+				message = user_registration_form_builder_data.form_membership_payment_fields_disabled_message;
+			}
+			else if($(this).hasClass("ur-membership-field-disabled")){
+				message = user_registration_form_builder_data.form_membership_field_disabled_message;				
+			}
+			else{
+				message = user_registration_form_builder_data.form_one_time_draggable_fields_locked_message.replace(
+					"%field%",
+					$(this).text()
+				);
+			}
 			Swal.fire({
 				title: title,
 				html: message,
@@ -361,6 +367,12 @@ jQuery(function ($) {
 			.each(function (index, el) {
 				var appending_text = $(el).find("h3").text();
 				var appending_id = $(el).attr("id");
+				var dataAttributes = "";
+				$.each( el.attributes, function() {
+					if(this.name.startsWith('data-')) {
+						dataAttributes += " " + this.name + "='" + this.value + "' ";
+					}
+				});
 				if ("integration-settings" === appending_id) {
 					var appending_text = $(el).find(".ur-integration").text();
 					form_settings_section.append(
@@ -420,6 +432,12 @@ jQuery(function ($) {
 					)
 						? "integration-lists-settings"
 						: "";
+
+					if( !$(el).hasClass("integration-lists-settings") && $(el).is('[data-field-group*="payments"]')) {
+						if(user_registration_form_builder_data.form_has_membership_field) {
+							classToAdd += " disabled";
+						}
+					}
 					var divToAppend = "";
 
 					if ($(el).hasClass("integration-lists-settings")) {
@@ -472,6 +490,7 @@ jQuery(function ($) {
 								'" class="form-settings-tab ' +
 								classToAdd +
 								'" ' +
+								dataAttributes + 
 								style +
 								" >" +
 								appending_text +
@@ -667,6 +686,26 @@ jQuery(function ($) {
 							});
 						}
 					}
+				} else if($(this).hasClass('disabled') && $(this).data('field-group') === 'payments') {
+					var icon = '<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>';
+					var title =
+					icon +
+					'<span class="user-registration-swal2-modal__title">' +
+					user_registration_form_builder_data.form_membership_payment_settings_disabled_title.replace(
+						"%field%",
+						$(this).text()
+					) +
+					"</span>";
+					var message = user_registration_form_builder_data.form_membership_payment_settings_disabled_message;
+					Swal.fire({
+						title: title,
+						html: message,
+						showCloseButton: true,
+						customClass:
+							"user-registration-swal2-modal user-registration-swal2-modal--center user-registration-locked-field"
+					}).then(function (result) {
+						// Do Nothing here.
+					});
 				} else {
 					this_id = $(this).attr("id");
 					// Remove all active classes initially.
@@ -718,22 +757,32 @@ jQuery(function ($) {
 	 * Enables disables the lost password page
 	 *
 	 */
-	$(document).ready(function() {
+	$(document).ready(function () {
 		function ur_enable_lost_password_page() {
-			if ($('#user_registration_login_options_lost_password').prop('checked')) {
-				$('#user_registration_lost_password_page_id').closest('.user-registration-login-form-global-settings').show();
+			if (
+				$("#user_registration_login_options_lost_password").prop(
+					"checked"
+				)
+			) {
+				$("#user_registration_lost_password_page_id")
+					.closest(".user-registration-login-form-global-settings")
+					.show();
 			} else {
-				$('#user_registration_lost_password_page_id').closest('.user-registration-login-form-global-settings').hide();
+				$("#user_registration_lost_password_page_id")
+					.closest(".user-registration-login-form-global-settings")
+					.hide();
 			}
 		}
 
 		ur_enable_lost_password_page();
 
-		$('#user_registration_login_options_lost_password').on('change click', function() {
-			ur_enable_lost_password_page();
-		});
+		$("#user_registration_login_options_lost_password").on(
+			"change click",
+			function () {
+				ur_enable_lost_password_page();
+			}
+		);
 	});
-
 
 	$(document).on(
 		"click",
@@ -777,38 +826,41 @@ jQuery(function ($) {
 		}
 	);
 
-
 	/**
 	 * Save form applying theme style.
 	 */
-		$(document.body).on("change", "#ur_toggle_form_preview_theme", function () {
-			$('.ur-frontend-form').toggleClass("ur-frontend-form-preview");
-			$('#ur-form-save').toggleClass("hidden");
-
-
-		})
+	$(document.body).on("change", "#ur_toggle_form_preview_theme", function () {
+		$(".ur-frontend-form").toggleClass("ur-frontend-form-preview");
+		$("#ur-form-save").toggleClass("hidden");
+	});
 	/**
 	 * Toggle sidepanel.
 	 */
-	$(document.body).on("click", ".ur-form-preview-sidepanel-toggler", function () {
-		$(".ur-form-side-panel").toggleClass("hidden");
-		$(this).toggleClass("inactive");
-		$(".ur-form-preview-main-content").toggleClass("ur-form-preview-overlay");
-
-	})
+	$(document.body).on(
+		"click",
+		".ur-form-preview-sidepanel-toggler",
+		function () {
+			$(".ur-form-side-panel").toggleClass("hidden");
+			$(this).toggleClass("inactive");
+			$(".ur-form-preview-main-content").toggleClass(
+				"ur-form-preview-overlay"
+			);
+		}
+	);
 
 	/**
 	 * Change form preview based on device selected.
 	 */
 	$(document.body).on("click", ".ur-form-preview-device", function () {
-
 		var device = $(this).data("device");
 		var container_wrapper = $(".ur-frontend-form");
 		var preview_form = $(".ur-preview-content");
-		$(this).closest('.ur-form-preview-devices').find(".ur-form-preview-device").removeClass("active");
-		$(this).parent().find("svg path").css("fill", "#383838")
+		$(this)
+			.closest(".ur-form-preview-devices")
+			.find(".ur-form-preview-device")
+			.removeClass("active");
+		$(this).parent().find("svg path").css("fill", "#383838");
 		$(this).find("path").css("fill", "#475BB2");
-
 
 		if (device === "desktop") {
 			container_wrapper.addClass("ur-frontend-form-desktop-view");
@@ -817,16 +869,14 @@ jQuery(function ($) {
 			preview_form.removeClass("ur-preview-tablet-wrapper");
 			preview_form.removeClass("ur-preview-mobile-wrapper");
 			$(this).addClass("active");
-
-
-    	} else if(device === "tablet") {
+		} else if (device === "tablet") {
 			container_wrapper.addClass("ur-frontend-form-table-view");
 			container_wrapper.removeClass("ur-frontend-form-desktop-view");
 			container_wrapper.removeClass("ur-frontend-form-mobile-view");
 			preview_form.addClass("ur-preview-tablet-wrapper");
 			preview_form.removeClass("ur-preview-mobile-wrapper");
 			$(this).addClass("active");
-		}else if(device === "mobile") {
+		} else if (device === "mobile") {
 			container_wrapper.addClass("ur-frontend-form-mobile-view");
 			container_wrapper.removeClass("ur-frontend-form-desktop-view");
 			container_wrapper.removeClass("ur-frontend-form-table-view");
@@ -834,28 +884,24 @@ jQuery(function ($) {
 			preview_form.removeClass("ur-preview-tablet-wrapper");
 
 			$(this).addClass("active");
-		}else{
+		} else {
 			container_wrapper.removeClass("ur-frontend-form-desktop-view");
 			container_wrapper.removeClass("ur-frontend-form-table-view");
 			container_wrapper.removeClass("ur-frontend-form-mobile-view");
 			$(this).addClass("active");
 		}
-
-
-
-
-	})
+	});
 
 	/**
 	 * Save form preview settings.
 	 */
 	$(document.body).on("click", "#ur-form-save", function () {
-		var form_id = $(this).data( "id" );
-		var is_enabled = $('#ur_toggle_form_preview_theme').is(":checked");
-		if(is_enabled){
-			form_theme = 'theme';
-		}else{
-			form_theme = 'default';
+		var form_id = $(this).data("id");
+		var is_enabled = $("#ur_toggle_form_preview_theme").is(":checked");
+		if (is_enabled) {
+			form_theme = "theme";
+		} else {
+			form_theme = "default";
 		}
 
 		$.ajax({
@@ -865,7 +911,7 @@ jQuery(function ($) {
 				action: "user_registration_form_preview_save",
 				id: form_id,
 				theme: form_theme,
-				security: user_registration_form_preview.form_preview_nonce,
+				security: user_registration_form_preview.form_preview_nonce
 			},
 			beforeSend: function () {
 				var spinner =
@@ -883,20 +929,19 @@ jQuery(function ($) {
 				// 	$(".ur-form-preview-save-title").html(  response.responseJSON.data.message);
 				// }
 			}
-
-		})
-	})
+		});
+	});
 
 	$(document).ready(function () {
 		// $('#ur_toggle_form_preview_theme').is(":checked") ? $('link#ur-form-preview-theme-style-css').prop('disabled', true) : $('link#ur-form-preview-default-style-css').prop('disabled', false);
-			$('#ur_toggle_form_preview_theme').is(":checked") ? $('.ur-frontend-form').addClass("ur-frontend-form-preview") : $('.ur-frontend-form').removeClass("ur-frontend-form-preview");
-	})
+		$("#ur_toggle_form_preview_theme").is(":checked")
+			? $(".ur-frontend-form").addClass("ur-frontend-form-preview")
+			: $(".ur-frontend-form").removeClass("ur-frontend-form-preview");
+	});
 
 	$(document.body).on("click", ".ur-form-preview-upgrade", function () {
 		window.open(user_registration_form_preview.pro_upgrade_link, "_blank");
-	})
-
-
+	});
 
 	/**
 	 * Hide/Show minimum password strength field on the basis of enable strong password value.
@@ -1060,9 +1105,13 @@ jQuery(function ($) {
 	//Handel form title and description toggle
 	$(document).ready(function () {
 		hide_show_title_options();
-		$(document).on("change", "#user_registration_enable_form_title_description", function () {
-			hide_show_title_options();
-		});
+		$(document).on(
+			"change",
+			"#user_registration_enable_form_title_description",
+			function () {
+				hide_show_title_options();
+			}
+		);
 	});
 
 	$(document).ready(function () {
@@ -1079,13 +1128,10 @@ jQuery(function ($) {
 	 *
 	 */
 	var hide_show_title_options = function () {
-
-		var title = $(
-			"#user_registration_form_title"
-		).closest(".form-row");
-		var description = $(
-			"#user_registration_form_description"
-		).closest(".form-row");
+		var title = $("#user_registration_form_title").closest(".form-row");
+		var description = $("#user_registration_form_description").closest(
+			".form-row"
+		);
 
 		var toggle_title = $(
 			"#user_registration_enable_form_title_description"
@@ -1098,7 +1144,7 @@ jQuery(function ($) {
 			title.hide();
 			description.hide();
 		}
-	}
+	};
 
 	/**
 	 * Hide or Show Redirection settings.
@@ -1117,8 +1163,8 @@ jQuery(function ($) {
 		var redirect_url = $("#user_registration_form_setting_redirect_options")
 			.closest(".form-row")
 			.slideUp(800);
-		var form_row = redirect_after_registration.closest('.form-row');
-		form_row.find('#ur-rar-url-notice').remove();
+		var form_row = redirect_after_registration.closest(".form-row");
+		form_row.find("#ur-rar-url-notice").remove();
 
 		if (selected_redirection_option.length) {
 			switch (selected_redirection_option.val()) {
@@ -1138,7 +1184,9 @@ jQuery(function ($) {
 					$(
 						"#user_registration_form_setting_redirect_after_field"
 					).hide();
-					if(user_registration_form_builder_data.form_has_membership_field) {
+					if (
+						user_registration_form_builder_data.form_has_membership_field
+					) {
 						show_membership_redirection_notice(form_row);
 					}
 					break;
@@ -1152,8 +1200,11 @@ jQuery(function ($) {
 			}
 		}
 	};
-	var show_membership_redirection_notice = function(form_row) {
-		var notice = ' <div id="ur-rar-url-notice" style="padding:10px;  border: 1px solid #c3c4c7; border-left-color: #ffa900; border-left-width: 4px; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04)">' + user_registration_form_builder_data.i18n_default_redirection_notice_for_membership+'</div>';
+	var show_membership_redirection_notice = function (form_row) {
+		var notice =
+			' <div id="ur-rar-url-notice" style="padding:10px;  border: 1px solid #c3c4c7; border-left-color: #ffa900; border-left-width: 4px; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04)">' +
+			user_registration_form_builder_data.i18n_default_redirection_notice_for_membership +
+			"</div>";
 		form_row.append(notice);
 	};
 	/**
@@ -1242,8 +1293,7 @@ jQuery(function ($) {
 		$("#user_registration_form_setting_default_phone_field")
 			.parent()
 			.hide();
-			$("#user_registration_form_setting_sms_verification_msg_field").hide();
-
+		$("#user_registration_form_setting_sms_verification_msg_field").hide();
 	}
 
 	// Toggle display of enable email approval setting
@@ -1254,14 +1304,16 @@ jQuery(function ($) {
 				$("#user_registration_form_setting_default_phone_field")
 					.parent()
 					.show();
-					$("#user_registration_form_setting_sms_verification_msg_field").show();
-
+				$(
+					"#user_registration_form_setting_sms_verification_msg_field"
+				).show();
 			} else {
 				$("#user_registration_form_setting_default_phone_field")
 					.parent()
 					.hide();
-					$("#user_registration_form_setting_sms_verification_msg_field").hide();
-
+				$(
+					"#user_registration_form_setting_sms_verification_msg_field"
+				).hide();
 			}
 		}
 	);
@@ -1530,8 +1582,10 @@ jQuery(function ($) {
 					.closest(".ur-advance-setting")
 					.find("input");
 
-			if( inputElement.length === 0 ){
-				inputElement = ($(this).closest(".ur-general-setting").find("input"));
+			if (inputElement.length === 0) {
+				inputElement = $(this)
+					.closest(".ur-general-setting")
+					.find("input");
 			}
 
 			var advanceFieldData = inputElement.data("advance-field"),
@@ -1548,47 +1602,74 @@ jQuery(function ($) {
 	});
 
 	function update_paypal_settings($this) {
-		var paypal_inputs = $('#paypal-standard-settings .paypal-setting-group'),
-			override_global_settings = $('#paypal-standard-settings #user_registration_override_paypal_global_settings');
+		var paypal_inputs = $(
+				"#paypal-standard-settings .paypal-setting-group"
+			),
+			override_global_settings = $(
+				"#paypal-standard-settings #user_registration_override_paypal_global_settings"
+			);
 
 		paypal_inputs.hide();
-		if($this.is(':checked') && override_global_settings.is(':checked')) {
+		if ($this.is(":checked") && override_global_settings.is(":checked")) {
 			paypal_inputs.show();
 		}
 	}
 
-	$(document.body).on("click", "#user_registration_enable_paypal_standard , #user_registration_override_paypal_global_settings", function() {
-		update_paypal_settings($(this));
-	});
+	$(document.body).on(
+		"click",
+		"#user_registration_enable_paypal_standard , #user_registration_override_paypal_global_settings",
+		function () {
+			update_paypal_settings($(this));
+		}
+	);
 
-	update_paypal_settings($('#user_registration_enable_paypal_standard'));
+	update_paypal_settings($("#user_registration_enable_paypal_standard"));
 
-	$(document.body).on("click", "#user_registration_override_paypal_global_settings", function() {
-		var $this = $(this),
-			type = $(this).is(':checked') ? 'form' : 'global';
+	$(document.body).on(
+		"click",
+		"#user_registration_override_paypal_global_settings",
+		function () {
+			var $this = $(this),
+				type = $(this).is(":checked") ? "form" : "global";
 
-		$('#user_registration_paypal_mode').val(user_registration_form_builder_data.paypal_settings[type].paypal_mode);
-		$('#user_registration_paypal_email_address').val(user_registration_form_builder_data.paypal_settings[type].paypal_email);
-		$('#user_registration_paypal_cancel_url').val(user_registration_form_builder_data.paypal_settings[type].cancel_url);
-		$('#user_registration_paypal_return_url').val(user_registration_form_builder_data.paypal_settings[type].return_url);
+			$("#user_registration_paypal_mode").val(
+				user_registration_form_builder_data.paypal_settings[type]
+					.paypal_mode
+			);
+			$("#user_registration_paypal_email_address").val(
+				user_registration_form_builder_data.paypal_settings[type]
+					.paypal_email
+			);
+			$("#user_registration_paypal_cancel_url").val(
+				user_registration_form_builder_data.paypal_settings[type]
+					.cancel_url
+			);
+			$("#user_registration_paypal_return_url").val(
+				user_registration_form_builder_data.paypal_settings[type]
+					.return_url
+			);
+		}
+	);
 
-	})
-
-	$('.user-registration-system-info-setting-copy').tooltipster({
-		content: 'Copied',
-		trigger: 'click',
-		theme: 'tooltipster-shadow',
+	$(".user-registration-system-info-setting-copy").tooltipster({
+		content: "Copied",
+		trigger: "click",
+		theme: "tooltipster-shadow",
 		interactive: true,
-		functionBefore: function(instance, helper) {
-			var table = $('.user-registration-system-info-setting table')[0];
-			$('.user-registration-system-info-setting .ur-general-settings-hide').css('display', 'block');
+		functionBefore: function (instance, helper) {
+			var table = $(".user-registration-system-info-setting table")[0];
+			$(
+				".user-registration-system-info-setting .ur-general-settings-hide"
+			).css("display", "block");
 			var range = document.createRange();
 			range.selectNode(table);
 			window.getSelection().removeAllRanges();
 			window.getSelection().addRange(range);
-			document.execCommand('copy');
+			document.execCommand("copy");
 			window.getSelection().removeAllRanges();
-			$('.user-registration-system-info-setting .ur-general-settings-hide').css('display', 'none');
+			$(
+				".user-registration-system-info-setting .ur-general-settings-hide"
+			).css("display", "none");
 		}
 	});
 
@@ -1717,6 +1798,11 @@ jQuery(function ($) {
 				$(".ur_export_user_action_button").attr("type", "submit");
 			}
 		});
+
+		$("#user-registration-form-templates")
+			.closest("#wpbody-content")
+			.find(".ur-builder-wrapper-footer")
+			.remove();
 	});
 })(jQuery, window.user_registration_admin_data);
 

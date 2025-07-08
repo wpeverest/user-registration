@@ -51,7 +51,7 @@ if ( ! class_exists( 'UR_Settings_Registration_Denied_Email', false ) ) :
 			$this->id          = 'registration_denied_email';
 			$this->title       = __( 'Registration Denied', 'user-registration' );
 			$this->description = __( 'Notifies the user their registration was denied.', 'user-registration' );
-			$this->receiver    = __( 'User', 'user-registration' );
+			$this->receiver    = 'User';
 		}
 
 		/**
