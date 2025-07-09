@@ -618,3 +618,37 @@ label {
 		}
 	}
 }
+
+.membership-only.authorize-net-container {
+	width: max(50%, 240px);
+	.ur-error {
+		color: #d63638;
+	}
+	.user-registration-one-half {
+		float: left;
+		width: 49%;
+		margin-right: 2%;
+	}
+
+	.user-registration-one-half:nth-child(2) {
+		margin-right: 0;
+	}
+	.user-registration-membership_page_user-registration-frontend-list .shortcode .widefat {
+		width: calc(100% - 40px);
+	}
+	.clearfix::before,
+	.clearfix::after {
+	content: ' ';
+		display: table;
+	}
+	.clearfix::after {
+		clear: both;
+	}
+	.user-registration .ur-form-row .ur-field-item .user-registration-sub-label {
+		font-size: 12px;
+		font-weight: 400;
+		margin-bottom: 0;
+		color: #494d50;
+		margin-top: -10px;
+	}
+}
