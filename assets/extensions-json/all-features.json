@@ -43,7 +43,7 @@
         "professional",
         "themegrill agency"
       ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=payment",
+      "setting_url": "admin.php?page=user-registration-settings&tab=payment#'paypal'",
       "demo_video_url": "RKvdEN2xGo8",
       "activation_requirements": [ "membership", "pro" ]
     },

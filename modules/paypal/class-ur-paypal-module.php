@@ -22,10 +22,13 @@ class User_Registration_Paypal_Module {
 		if ( is_admin() ) {
 			// Filter for global settings.
 			add_filter( 'user_registration_payment_settings', array( $this, 'get_paypal_settings' ) );
-			add_filter( 'urm_validate_paypal_payment_section_before_update', array(
-				$this,
-				'validate_paypal_section'
-			) );
+			add_filter(
+				'urm_validate_paypal_payment_section_before_update',
+				array(
+					$this,
+					'validate_paypal_section',
+				)
+			);
 			add_action( 'urm_save_paypal_payment_section', array( $this, 'save_section_settings' ), 10, 1 );
 		}
 	}
@@ -69,7 +72,7 @@ class User_Registration_Paypal_Module {
 				array(
 					'type'        => 'text',
 					'title'       => __( 'Cancel Url', 'user-registration' ),
-					'desc'        => __( "Endpoint set for handling paypal cancel api.", "user-registration" ),
+					'desc'        => __( 'Endpoint set for handling paypal cancel api.', 'user-registration' ),
 					'desc_tip'    => true,
 					'id'          => 'user_registration_global_paypal_cancel_url',
 					'default'     => get_option( 'user_registration_global_paypal_cancel_url' ),
@@ -78,16 +81,16 @@ class User_Registration_Paypal_Module {
 				array(
 					'type'        => 'text',
 					'title'       => __( 'Return Url', 'user-registration' ),
-					'desc'        => __( "Redirect url after the payment process, also used as notify_url for Paypal IPN.", "user-registration" ),
+					'desc'        => __( 'Redirect url after the payment process, also used as notify_url for Paypal IPN.', 'user-registration' ),
 					'desc_tip'    => true,
 					'id'          => 'user_registration_global_paypal_return_url',
 					'default'     => get_option( 'user_registration_global_paypal_return_url' ),
-					'placeholder' => esc_url( wp_login_url() )
+					'placeholder' => esc_url( wp_login_url() ),
 				),
 				array(
 					'type'     => 'text',
 					'title'    => __( 'Client ID', 'user-registration' ),
-					'desc'     => __( "Your client_id, Required for subscription related operations.", "user-registration" ),
+					'desc'     => __( 'Your client_id, Required for subscription related operations.', 'user-registration' ),
 					'desc_tip' => true,
 					'id'       => 'user_registration_global_paypal_client_id',
 					'default'  => get_option( 'user_registration_global_paypal_client_id' ),
@@ -95,7 +98,7 @@ class User_Registration_Paypal_Module {
 				array(
 					'type'     => 'text',
 					'title'    => __( 'Client Secret', 'user-registration' ),
-					'desc'     => __( "Your client_secret, Required for subscription related operations.", "user-registration" ),
+					'desc'     => __( 'Your client_secret, Required for subscription related operations.', 'user-registration' ),
 					'desc_tip' => true,
 					'id'       => 'user_registration_global_paypal_client_secret',
 					'default'  => get_option( 'user_registration_global_paypal_client_secret' ),
@@ -104,7 +107,7 @@ class User_Registration_Paypal_Module {
 					'title' => __( 'Save', 'user-registration' ),
 					'id'    => 'user_registration_paypal_save_settings',
 					'type'  => 'button',
-					'class' => 'payment-settings-btn'
+					'class' => 'payment-settings-btn',
 				),
 			),
 		);
@@ -181,8 +184,6 @@ class User_Registration_Paypal_Module {
 		}
 
 		return $response;
-
-
 	}
 
 	/**
