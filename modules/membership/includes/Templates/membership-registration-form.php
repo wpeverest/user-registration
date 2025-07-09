@@ -233,13 +233,13 @@
 			</div>
 		</div>
 		<?php
-			/**
-			 * Fires when payment fields is rendered on membership registration form.
-			 *
-			 *  This action allows developers to output payment gateway fields
-			 *  within the registration form.
-			 */
-			do_action( 'user_registration_membership_render_payment_field', $form_id );
+		/**
+		 * Fires when payment fields is rendered on membership registration form.
+		 *
+		 *  This action allows developers to output payment gateway fields
+		 *  within the registration form.
+		 */
+		do_action( 'user_registration_membership_render_payment_field', $form_id );
 		?>
 	</div>
 

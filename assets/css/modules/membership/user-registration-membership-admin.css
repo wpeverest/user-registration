@@ -724,6 +724,36 @@
   line-height: 20px;
   margin: 0;
 }
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-upgrade-types {
+  max-width: 230px;
+  margin-bottom: 0;
+  border-radius: 4px;
+  border: 1px solid #E9E9E9;
+  background: #FFF;
+  padding: 12px 30px;
+  cursor: pointer;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-upgrade-types .ur-membership-upgrade-type-title {
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-upgrade-types .ur-membership-upgrade-type-title label {
+  padding: 0 !important;
+  font-size: 16px;
+  line-height: 24px;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .ur-label {
+  width: 100% !important;
+  max-width: 260px;
+  margin-bottom: 0 !important;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .ur-input-type-membership-upgrade-path .select2-selection__rendered {
+  flex-wrap: wrap;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-upgrade-action:checked {
+  background: #475BB2;
+  border-color: #475BB2;
+}
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #paid-plan-container {
   display: flex;
   flex-direction: column;
@@ -812,7 +842,7 @@
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #paid-plan-container .ur-membership-subscription-field-container .trial-container--wrapper .ur-label {
   margin-bottom: 0;
-  width: 265px !important;
+  width: 260px !important;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #paid-plan-container .ur-membership-subscription-field-container .trial-container--wrapper .ur-label label {
   margin-bottom: 0;

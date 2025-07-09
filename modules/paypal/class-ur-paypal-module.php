@@ -17,7 +17,6 @@ class User_Registration_Paypal_Module {
 	 * User_Registration_Paypal_Module Constructor
 	 */
 	public function __construct() {
-
 		// Paypal Settings Hooks.
 		if ( is_admin() ) {
 			// Filter for global settings.
@@ -32,6 +31,7 @@ class User_Registration_Paypal_Module {
 			add_action( 'urm_save_paypal_payment_section', array( $this, 'save_section_settings' ), 10, 1 );
 		}
 	}
+
 
 	/**
 	 * raw_settings

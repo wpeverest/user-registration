@@ -286,12 +286,21 @@ class Orders {
 	 * @return void
 	 */
 	public function add_payment_gateway_options() {
+
 		$payment_gateways = array(
 				'paypal'      => __( 'Paypal', 'user-registration' ),
 				'stripe'      => __( 'Stripe', 'user-registration' ),
 				'credit_card' => __( 'Stripe (Credit Card)', 'user-registration' ),
 				'bank'        => __( 'Bank', 'user-registration' ),
 		);
+		/**
+		 * Filters that hold the list of payment gateway for payment orders.
+		 *
+		 *@param array $payment_gateways
+   		*/
+		$payment_gateways = apply_filters( 'user_registration_payment_gateways', $payment_gateways );
+
+		update_option( 'ur_payment_gateways', $payment_gateways );
 		/**
 		 * Filters that hold the list of payment gateway for payment orders.
 		 *

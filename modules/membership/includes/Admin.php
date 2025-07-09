@@ -9,6 +9,7 @@
 namespace WPEverest\URMembership;
 
 use WPEverest\URMembership\Admin\Database\Database;
+use WPEverest\URMembership\Admin\Services\SubscriptionService;
 use WPEverest\URMembership\Emails\EmailSettings;
 use WPEverest\URMembership\Admin\Forms\FormFields;
 use WPEverest\URMembership\Admin\Members\Members;
@@ -141,6 +142,7 @@ if ( ! class_exists( 'Admin' ) ) :
 				'add_memberships_in_urcr_settings'
 			), 10, 1 );
 			add_action( 'admin_enqueue_scripts', array( $this, 'register_membership_admin_scripts' ) );
+
 		}
 
 		public function register_membership_admin_scripts() {
@@ -235,6 +237,7 @@ if ( ! class_exists( 'Admin' ) ) :
 			}
 			new FormFields();
 			new EmailSettings();
+			new Crons();
 		}
 
 		/**
@@ -450,5 +453,7 @@ if ( ! class_exists( 'Admin' ) ) :
 
 			return $settings;
 		}
+
+
 	}
 endif;
