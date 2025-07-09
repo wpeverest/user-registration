@@ -130,8 +130,7 @@ class AJAX {
 		$data['member_id']       = $member_id;
 		$data['subscription_id'] = isset( $response['subscription_id'] ) ? $response['subscription_id'] : 0;
 		$data['email']           = $response['member_email'];
-
-		$pg_data = array();
+		$pg_data                 = array();
 		if ( 'free' !== $data['payment_method'] && $response['status'] ) {
 			$payment_service = new PaymentService( $data['payment_method'], $data['membership'], $data['email'] );
 
@@ -1021,11 +1020,13 @@ class AJAX {
 				)
 			);
 		}
+		$ur_authorize_data = isset( $_POST['ur_authorize_data'] ) ? $_POST['ur_authorize_data'] : [];
 		$data = array(
 			'current_subscription_id' => absint( $_POST['current_subscription_id'] ),
 			'selected_membership_id'  => absint( $_POST['selected_membership_id'] ),
 			'current_membership_id'   => absint( $_POST['current_membership_id'] ),
 			'selected_pg'             => sanitize_text_field( $_POST['selected_pg'] ),
+			'ur_authorize_net'       => $ur_authorize_data,
 		);
 
 		$subscription_service = new SubscriptionService();

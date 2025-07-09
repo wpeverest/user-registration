@@ -920,7 +920,6 @@
 									) {
 										return false;
 									}
-
 									var $this = $(this);
 
 									// Validator messages.
@@ -1279,7 +1278,7 @@
 						var flag = false;
 						if (
 							$form.find(
-								"#user_registration_authorize_net_gateway[data-gateway='authorize_net']"
+								"#user_registration_authorize_net_gateway[data-gateway='authorize_net']:visible"
 							).length > 0
 						) {
 							flag = true;
@@ -1291,6 +1290,7 @@
 					 *
 					 */
 					ajax_form_submit: function (posted_data) {
+
 						$.ajax({
 							url: user_registration_params.ajax_url,
 							data: posted_data,
@@ -1314,7 +1314,6 @@
 									"user_registration_frontend_before_ajax_complete_success_message",
 									[ajax_response, ajaxFlag, $this]
 								);
-
 								if (ajaxFlag["status"]) {
 									$this
 										.find(".ur-submit-button")

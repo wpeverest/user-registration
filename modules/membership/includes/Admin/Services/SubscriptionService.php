@@ -330,6 +330,7 @@ class SubscriptionService {
 		ur_get_logger()->notice( __( 'Order created ' . $order['ID'], 'user-registration-membership' ), array( 'source' => 'urm-upgrade-subscription' ) );
 
 		$payment_service = new PaymentService( $payment_method, $data['selected_membership_id'], $user->data->user_email );
+		$ur_authorize_net_data = isset( $data[ 'ur_authorize_net' ] ) ? $data[ 'ur_authorize_net' ] : [];
 		$data            = array(
 			'membership'        => $data['selected_membership_id'],
 			'subscription_id'   => $subscription['ID'],
@@ -337,7 +338,8 @@ class SubscriptionService {
 			'email'             => $user->user_email,
 			'transaction_id'    => $orders_data['orders_data']['transaction_id'],
 			'upgrade'           => true,
-			'subscription_data' => $subscription
+			'subscription_data' => $subscription,
+			'ur_authorize_net'  => $ur_authorize_net_data,
 		);
 		$data            = $data + $upgrade_details;
 
