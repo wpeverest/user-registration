@@ -65,6 +65,6 @@
 		<key name="user_registration_pro_auto_password_generation_message" />
 		<key name="user_registration_pro_email_verified_admin_approval_await_message" />
 		<key name="user_registration_form_submission_error_message_disallow_username_character" />
-		<key name="user_registration_form_submission_email_suggestion" />
+		<key name="user_registration_form_setting_form_submit_label" />
 	</admin-texts>
 </wpml-config>
