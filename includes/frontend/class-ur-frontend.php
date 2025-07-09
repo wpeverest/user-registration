@@ -20,7 +20,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class UR_Frontend {
 
-
 	/**
 	 * Instance of the class.
 	 *

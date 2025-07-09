@@ -46,9 +46,9 @@
 						if (event.ctrlKey || event.metaKey) {
 							if (
 								"s" ===
-									String.fromCharCode(
-										event.which
-									).toLowerCase() ||
+								String.fromCharCode(
+									event.which
+								).toLowerCase() ||
 								83 === event.which
 							) {
 								event.preventDefault();
@@ -62,9 +62,9 @@
 						if (e.ctrlKey || e.metaKey) {
 							if (
 								"p" ===
-									String.fromCharCode(
-										e.which
-									).toLowerCase() ||
+								String.fromCharCode(
+									e.which
+								).toLowerCase() ||
 								80 === e.which
 							) {
 								e.preventDefault();
@@ -79,9 +79,9 @@
 						if (e.ctrlKey || e.metaKey) {
 							if (
 								"u" ===
-									String.fromCharCode(
-										e.which
-									).toLowerCase() ||
+								String.fromCharCode(
+									e.which
+								).toLowerCase() ||
 								85 === e.which
 							) {
 								e.preventDefault();
@@ -96,9 +96,9 @@
 						if (e.ctrlKey || e.metaKey) {
 							if (
 								"h" ===
-									String.fromCharCode(
-										e.which
-									).toLowerCase() ||
+								String.fromCharCode(
+									e.which
+								).toLowerCase() ||
 								85 === e.which
 							) {
 								e.preventDefault();
@@ -340,8 +340,8 @@
 
 				var form_setting_data = $(
 					"#ur-field-settings :not(" +
-						exclude_serialize_setting_classes +
-						")"
+					exclude_serialize_setting_classes +
+					")"
 				).serializeArray();
 
 				var conditional_roles_settings_data =
@@ -414,7 +414,7 @@
 				// validation for unsupported currency by paypal.
 				if (
 					typeof data.data.ur_invalid_currency_status !==
-						"undefined" &&
+					"undefined" &&
 					data.data.ur_invalid_currency_status[0]
 						.validation_status === false
 				) {
@@ -498,7 +498,7 @@
 						function (index, field) {
 							if (
 								field.name ==
-									"user_registration_profile_completeness_custom_percentage_field[]" &&
+								"user_registration_profile_completeness_custom_percentage_field[]" &&
 								field.value !== ""
 							) {
 								sum += parseFloat(
@@ -973,8 +973,8 @@
 								".ur-input-grids .ur-general-setting-block"
 							).find(
 								'input[data-field="field_name"][value="' +
-									field_value +
-									'"]'
+								field_value +
+								'"]'
 							).length;
 							if (length > 1) {
 								throw user_registration_form_builder_data
@@ -1015,16 +1015,16 @@
 							$("#ur-setting-form")
 								.find(
 									'input[data-field="' +
-										field_attribute +
-										'"]'
+									field_attribute +
+									'"]'
 								)
 								.css({ border: "1px solid red" });
 							setTimeout(function () {
 								$("#ur-setting-form")
 									.find(
 										'input[data-field="' +
-											field_attribute +
-											'"]'
+										field_attribute +
+										'"]'
 									)
 									.removeAttr("style");
 							}, 2000);
@@ -1043,8 +1043,8 @@
 					if (
 						$(".ur-input-grids").find(
 							'.ur-field[data-field-key="' +
-								only_one_field_index[single_field] +
-								'"]'
+							only_one_field_index[single_field] +
+							'"]'
 						).length > 1
 					) {
 						response.validation_status = false;
@@ -1068,7 +1068,6 @@
 				var stripe = $("#user_registration_enable_stripe");
 				var anet = $("#user_registration_enable_authorize_net");
 				var mollie = $("#user_registration_enable_mollie");
-
 				if (paypal.is(":checked")) {
 					var payment_fields = ["payment_fields"];
 
@@ -1088,11 +1087,8 @@
 						];
 
 						required_fields = required_fields.concat(anet_fields);
-					}
-					else if (mollie.is(":checked")) {
-						var mollie_fields = [
-							"payment_fields"
-						];
+					} else if (mollie.is(":checked")) {
+						var mollie_fields = ["payment_fields"];
 
 						required_fields = required_fields.concat(mollie_fields);
 					}
@@ -1178,8 +1174,8 @@
 						if (
 							$(".ur-input-grids").find(
 								'.ur-field[data-field-key="' +
-									required_fields[required_index] +
-									'"]'
+								required_fields[required_index] +
+								'"]'
 							).length === 0
 						) {
 							response.validation_status = false;
@@ -1193,6 +1189,7 @@
 									user_registration_form_builder_data
 										.i18n_admin.i18n_user_password;
 							} else {
+
 								if (
 									"authorize_net_gateway" ===
 									required_fields[required_index]
@@ -1200,7 +1197,9 @@
 									var field =
 										user_registration_form_builder_data
 											.i18n_admin.i18n_anet_field;
-								} else {
+								}
+
+								else {
 									var field =
 										user_registration_form_builder_data
 											.i18n_admin.i18n_stripe_field;
@@ -1361,11 +1360,11 @@
 					),
 					function () {
 						var max_length_enabled = $(this)
-								.closest(".ur-selected-item")
-								.find(
-									".ur-advance-setting-block .ur-settings-limit-length"
-								)
-								.is(":checked"),
+							.closest(".ur-selected-item")
+							.find(
+								".ur-advance-setting-block .ur-settings-limit-length"
+							)
+							.is(":checked"),
 							min_length_enabled = $(this)
 								.closest(".ur-selected-item")
 								.find(
@@ -1421,11 +1420,11 @@
 
 						if (max_length_enabled && min_length_enabled) {
 							var max_length_limit_mode = $(this)
-									.closest(".ur-selected-item")
-									.find(
-										".ur-advance-setting-block .ur-settings-limit-length-limit-mode"
-									)
-									.val(),
+								.closest(".ur-selected-item")
+								.find(
+									".ur-advance-setting-block .ur-settings-limit-length-limit-mode"
+								)
+								.val(),
 								min_length_limit_mode = $(this)
 									.closest(".ur-selected-item")
 									.find(
@@ -1571,8 +1570,8 @@
 			 */
 			show_message: function (message, type) {
 				var $message_container = $(".ur-form-container").find(
-						".ur-builder-message-container"
-					),
+					".ur-builder-message-container"
+				),
 					$admin_bar = $("#wpadminbar"),
 					message_string = "";
 
@@ -1665,17 +1664,17 @@
 					if (
 						$(
 							".ur-individual-row-settings[data-row-id='" +
-								row_id +
-								"']"
+							row_id +
+							"']"
 						).length
 					) {
 						single_row_data.row_id = $(this).attr("data-row-id");
 
 						var element = $(document).find(
-								".ur-individual-row-settings[data-row-id='" +
-									row_id +
-									"']"
-							),
+							".ur-individual-row-settings[data-row-id='" +
+							row_id +
+							"']"
+						),
 							conditional_logic_enabled = element
 								.find(
 									"#user_registration_row_setting_enable_conditional_logic"
@@ -1688,8 +1687,8 @@
 								conditional_logic_enabled;
 
 							var $mapCreator = element.find(
-									".urcl-row-logic-wrap"
-								),
+								".urcl-row-logic-wrap"
+							),
 								rule = {
 									action: $mapCreator
 										.find(".urcl-row-field")
@@ -1717,10 +1716,10 @@
 										.find(".urcl-logic-gate")
 										.hasClass("is-active")
 										? $(this)
-												.find(
-													".urcl-logic-gate.is-active"
-												)
-												.data("value")
+											.find(
+												".urcl-logic-gate.is-active"
+											)
+											.data("value")
 										: "OR";
 
 									$(this)
@@ -1773,40 +1772,40 @@
 								.find(".ur-repeater-row-option")
 								.find(
 									"input[name='user_registration_repeater_row_title_" +
-										repeater_id +
-										"']"
+									repeater_id +
+									"']"
 								)
 								.val();
 							single_row_data["field_name"] = element
 								.find(".ur-repeater-row-option")
 								.find(
 									"input[name='user_registration_repeater_row_field_name_" +
-										repeater_id +
-										"']"
+									repeater_id +
+									"']"
 								)
 								.val();
 							single_row_data["add_new_label"] = element
 								.find(".ur-repeater-row-option")
 								.find(
 									"input[name='user_registration_repeater_row_add_new_label_" +
-										repeater_id +
-										"']"
+									repeater_id +
+									"']"
 								)
 								.val();
 							single_row_data["remove_label"] = element
 								.find(".ur-repeater-row-option")
 								.find(
 									"input[name='user_registration_repeater_row_remove_label_" +
-										repeater_id +
-										"']"
+									repeater_id +
+									"']"
 								)
 								.val();
 							single_row_data["repeat_limit"] = element
 								.find(".ur-repeater-row-option")
 								.find(
 									"input[name='user_registration_repeater_row_repeat_limit_" +
-										repeater_id +
-										"']"
+									repeater_id +
+									"']"
 								)
 								.val();
 
@@ -2109,19 +2108,19 @@
 								function (li_index, li_element) {
 									if (
 										typeof image_captcha_options[
-											li_index
+										li_index
 										] !== "undefined" &&
 										typeof image_captcha_options[li_index][
-											"icon_tag"
+										"icon_tag"
 										] !== "undefined" &&
 										typeof image_captcha_options[li_index][
-											"icon-2"
+										"icon-2"
 										] !== "undefined" &&
 										typeof image_captcha_options[li_index][
-											"icon-1"
+										"icon-1"
 										] !== "undefined" &&
 										typeof image_captcha_options[li_index][
-											"icon-3"
+										"icon-3"
 										] !== "undefined"
 									) {
 										return;
@@ -2135,10 +2134,10 @@
 									)
 										.find(
 											'input[name="ur_general_setting[captcha_image][' +
-												li_index +
-												"][correct_icon][" +
-												captcha_unique +
-												']"]:checked'
+											li_index +
+											"][correct_icon][" +
+											captcha_unique +
+											']"]:checked'
 										)
 										.val();
 									image_captcha_value["icon_tag"] = $(
@@ -2146,8 +2145,8 @@
 									)
 										.find(
 											'input[name="ur_general_setting[captcha_image][' +
-												li_index +
-												'][icon_tag]"]'
+											li_index +
+											'][icon_tag]"]'
 										)
 										.val();
 
@@ -2162,10 +2161,10 @@
 											] = $(icon_wrap)
 												.find(
 													'input:hidden[name="ur_general_setting[captcha_image][' +
-														li_index +
-														"][icon-" +
-														next_icon_index +
-														']"]'
+													li_index +
+													"][icon-" +
+													next_icon_index +
+													']"]'
 												)
 												.val();
 										}
@@ -2316,8 +2315,8 @@
 				var single_row = $(".urcal-container");
 				$.each(single_row, function () {
 					var field_name = $(this)
-							.attr("id")
-							.replace("urcal-container-", ""),
+						.attr("id")
+						.replace("urcal-container-", ""),
 						enable_calculation_field = $(this)
 							.siblings(".ur-advance-enable_calculations")
 							.find(".ur-enable-calculations"),
@@ -2326,8 +2325,8 @@
 						),
 						calculation_formula_field = $(this).find(
 							'[data-field-id="ur-calculation-field-' +
-								field_name +
-								'-editor"]'
+							field_name +
+							'-editor"]'
 						);
 					var calculation_data = {
 						field_name: field_name,
@@ -2520,8 +2519,8 @@
 						content: email_body_item
 							.find(
 								"#user_registration_" +
-									$(this).prop("id") +
-									"_content"
+								$(this).prop("id") +
+								"_content"
 							)
 							.val()
 					};
@@ -2570,8 +2569,8 @@
 										.find(".ur-grids")
 										.find(
 											'span[data-id="' +
-												loaded_params.active_grid +
-												'"]'
+											loaded_params.active_grid +
+											'"]'
 										)
 										.addClass("ur-active-grid");
 									var grid_list = this.get_grid_lists(
@@ -2608,8 +2607,8 @@
 								if ($this.find(".ur-add-new-row").length == 0) {
 									$this.append(
 										'<button type="button" class="button button-primary dashicons dashicons-plus-alt ur-add-new-row ui-sortable-handle">' +
-											user_registration_form_builder_data.add_new +
-											"</button>"
+										user_registration_form_builder_data.add_new +
+										"</button>"
 									);
 									var total_rows = $this
 										.find(".ur-add-new-row")
@@ -2671,8 +2670,8 @@
 								for (var i = 1; i <= number_of_grid; i++) {
 									var grid_list_item = $(
 										"<div ur-grid-id='" +
-											i +
-											"' class='ur-grid-list-item'></div>"
+										i +
+										"' class='ur-grid-list-item'></div>"
 									);
 									var width =
 										Math.floor(100 / number_of_grid) -
@@ -2758,8 +2757,8 @@
 									) {
 										var field_node = selected_inputs.find(
 											'.ur-field[data-field-key="' +
-												required_fields[i] +
-												'"]'
+											required_fields[i] +
+											'"]'
 										);
 
 										field_node
@@ -2834,6 +2833,66 @@
 									"#ur-tab-registered-fields"
 								).find("ul.ur-registered-list");
 
+								//-> Disable payment fields from dragging when membership field is present.
+								var payment_nodes = [];
+								$.each(
+									user_registration_form_builder_data.form_payment_fields,
+									function (index, identifier) {
+										var selector =
+											"#user_registration_" +
+											identifier +
+											"_list";
+										payment_nodes.push($(selector));
+									}
+								);
+								$.each(payment_nodes, function () {
+									var $this = $(this);
+									var has_membership_field =
+										$(".ur-input-grids").find(
+											'.ur-field[data-field-key="membership"]'
+										).length > 0;
+									if (has_membership_field) {
+										$this.draggable("disable");
+										$this.addClass("ur-locked-field");
+										$this.addClass(
+											"ur-membership-payment-field-disabled"
+										);
+									}
+								});
+								// Disable membership field from dragging when payment setting is enabled already.
+								var $checkboxes = $(
+									"input[name^='user_registration_enable_']"
+								);
+								if ($checkboxes.is(":checked")) {
+									// disable membership field.
+									$membershipField = $(
+										".ur-registered-list"
+									).find(
+										"li[data-field-id='user_registration_membership']"
+									);
+									$membershipField.draggable("disable");
+									$membershipField.addClass(
+										"ur-membership-field-disabled"
+									);
+									$membershipField.addClass(
+										"ur-locked-field"
+									);
+								} else {
+									// enable membership field.
+									$membershipField = $(
+										".ur-registered-list"
+									).find(
+										"li[data-field-id='user_registration_membership']"
+									);
+									$membershipField.draggable("enable");
+									$membershipField.removeClass(
+										"ur-membership-field-disabled"
+									);
+									$membershipField.removeClass(
+										"ur-locked-field"
+									);
+								}
+
 								$.each(ul_node.find("li"), function () {
 									var $this = $(this);
 
@@ -2857,8 +2916,8 @@
 										if (
 											$(".ur-input-grids").find(
 												'.ur-field[data-field-key="' +
-													data_field_id +
-													'"]'
+												data_field_id +
+												'"]'
 											).length > 0
 										) {
 											$this.draggable("disable");
@@ -2996,8 +3055,8 @@
 										var visibleTo = $template
 											.find(
 												'select.ur_advance_setting.ur-settings-field-visibility[name="' +
-													fieldKey +
-													'_advance_setting[field_visibility]"]'
+												fieldKey +
+												'_advance_setting[field_visibility]"]'
 											)
 											.val();
 
@@ -3070,8 +3129,8 @@
 											.find(".ur-grids")
 											.find(
 												'span[data-id="' +
-													loaded_params.active_grid +
-													'"]'
+												loaded_params.active_grid +
+												'"]'
 											)
 											.addClass("ur-active-grid");
 										var grid_list = builder.get_grid_lists(
@@ -3097,10 +3156,10 @@
 											);
 
 											var repeater_count = $(this)
-													.closest(".ur-input-grids")
-													.find(
-														".ur-repeater-row"
-													).length,
+												.closest(".ur-input-grids")
+												.find(
+													".ur-repeater-row"
+												).length,
 												repeater_div =
 													'<div class="ur-repeater-label"  id="user_registration_repeater_row_title_' +
 													repeater_count +
@@ -3336,15 +3395,15 @@
 																	//strip certain fields
 																	if (
 																		"section_title" ==
-																			field_key ||
+																		field_key ||
 																		"html" ==
-																			field_key ||
+																		field_key ||
 																		"wysiwyg" ==
-																			field_key ||
+																		field_key ||
 																		"billing_address_title" ==
-																			field_key ||
+																		field_key ||
 																		"shipping_address_title" ==
-																			field_key
+																		field_key
 																	) {
 																		return;
 																	}
@@ -3363,22 +3422,22 @@
 																		// Remove item from conditional logic options
 																		$(
 																			'[class*="urcl-settings-rules_field_"] option[value="' +
-																				field_name +
-																				'"]'
+																			field_name +
+																			'"]'
 																		).remove();
 
 																		// Remove Field from Form Setting Conditionally Assign User Role.
 																		$(
 																			'[class*="urcl-field-conditional-field-select"] option[value="' +
-																				field_name +
-																				'"]'
+																			field_name +
+																			'"]'
 																		).remove();
 
 																		// Remove Field from Form Setting Default Phone field for SMS Verification.
 																		$(
 																			'[id="user_registration_form_setting_default_phone_field"] option[value="' +
-																				field_name +
-																				'"]'
+																			field_name +
+																			'"]'
 																		).remove();
 																	}
 																}
@@ -3442,9 +3501,9 @@
 									".ur-grids .ur-toggle-grid-content .ur-grid-selector",
 									function () {
 										var $this_single_row =
-												$(this).closest(
-													".ur-single-row"
-												),
+											$(this).closest(
+												".ur-single-row"
+											),
 											grid_num =
 												$(this).attr("data-grid"),
 											grid_comp = $this_single_row.find(
@@ -3489,21 +3548,21 @@
 														// In case the fields have to be redistributed into 2 columns - prioritizes left column first, if 3rd column is going away.
 														if (
 															3 ===
-																parseInt(
-																	$(this)
-																		.parent()
-																		.attr(
-																			"ur-grid-id"
-																		)
-																) &&
+															parseInt(
+																$(this)
+																	.parent()
+																	.attr(
+																		"ur-grid-id"
+																	)
+															) &&
 															3 ===
-																parseInt(
-																	grid_comp
-																) &&
+															parseInt(
+																grid_comp
+															) &&
 															2 ===
-																parseInt(
-																	grid_num
-																)
+															parseInt(
+																grid_num
+															)
 														) {
 															iterator = Math.abs(
 																--iterator
@@ -3515,14 +3574,14 @@
 												// If so, it simply resets the index to 0 to disallow elements from removed rows.
 												if (
 													parseInt(grid_num) >
-														grid_comp ||
+													grid_comp ||
 													($(this).children("*")
 														.length &&
 														2 <= parseInt(grid_num))
 												) {
 													iterator =
 														parseInt(grid_num) <=
-														++iterator
+															++iterator
 															? 0
 															: iterator;
 												}
@@ -3620,8 +3679,8 @@
 												".ur-input-grids"
 											).find(
 												'.ur-field[data-field-key="' +
-													data_field_id +
-													'"]'
+												data_field_id +
+												'"]'
 											).length;
 
 											var only_one_field_index =
@@ -3662,8 +3721,8 @@
 														"%field%",
 														$(
 															"li[data-field-id='user_registration_" +
-																data_field_id +
-																"']:first"
+															data_field_id +
+															"']:first"
 														).text()
 													)
 												);
@@ -3684,10 +3743,10 @@
 													)
 													.find(
 														'li[data-field-id="' +
-															$(this).attr(
-																"data-field-id"
-															) +
-															'"]'
+														$(this).attr(
+															"data-field-id"
+														) +
+														'"]'
 													);
 												builder.populate_dropped_node(
 													this_clone,
@@ -3705,11 +3764,11 @@
 									".ur-selected-item .ur-action-buttons .ur-trash",
 									function (e) {
 										var removed_item = $(this)
-												.closest(".ur-selected-item ")
-												.find(
-													"[data-field='field_name']"
-												)
-												.val(),
+											.closest(".ur-selected-item ")
+											.find(
+												"[data-field='field_name']"
+											)
+											.val(),
 											ele = $this,
 											$ele = $(this),
 											delete_item = true;
@@ -3809,21 +3868,21 @@
 														// Remove item from conditional logic options
 														$(
 															'[class*="urcl-settings-rules_field_"] option[value="' +
-																removed_item +
-																'"]'
+															removed_item +
+															'"]'
 														).remove();
 
 														// Remove Field from Form Setting Conditionally Assign User Role.
 														$(
 															'[class*="urcl-field-conditional-field-select"] option[value="' +
-																removed_item +
-																'"]'
+															removed_item +
+															'"]'
 														).remove();
 
 														$(
 															'[id="user_registration_form_setting_default_phone_field"] option[value="' +
-																removed_item +
-																'"]'
+															removed_item +
+															'"]'
 														).remove();
 
 														$(
@@ -3867,8 +3926,8 @@
 											".ur-input-grids"
 										).find(
 											'.ur-field[data-field-key="' +
-												data_field_key +
-												'"]'
+											data_field_key +
+											'"]'
 										);
 										var length_of_required =
 											selected_node.length;
@@ -3910,7 +3969,7 @@
 											.attr(
 												"value",
 												label_string +
-													new Date().getTime()
+												new Date().getTime()
 											);
 										$(this)
 											.closest(".ur-grid-list-item")
@@ -3986,8 +4045,8 @@
 							var select_value_for_user_role =
 								$(
 									".urcl-field-conditional-field-select option[value='" +
-										field_name +
-										"']"
+									field_name +
+									"']"
 								).length > 0;
 							if (select_value_for_user_role === false) {
 								// Append Field in Form Setting Conditionally Assign User Role.
@@ -3995,20 +4054,20 @@
 									'[class*="urcl-field-conditional-field-select"]'
 								).append(
 									'<option value ="' +
-										field_name +
-										'" data-type="' +
-										field_key +
-										'">' +
-										field_label +
-										" </option>"
+									field_name +
+									'" data-type="' +
+									field_key +
+									'">' +
+									field_label +
+									" </option>"
 								);
 							}
 							//check if option exist in the given select
 							var select_value =
 								$(
 									".urcl-rules select.ur_advance_setting.urcl-settings-rules_field_1 option[value='" +
-										field_name +
-										"']"
+									field_name +
+									"']"
 								).length > 0;
 							if (select_value === false) {
 								// Append Field in Field Options
@@ -6641,10 +6700,10 @@
 							.attr(
 								"name",
 								"ur_general_setting[captcha_image][" +
-									next_index +
-									"][icon-" +
-									next_icon_index +
-									"]"
+								next_index +
+								"][icon-" +
+								next_icon_index +
+								"]"
 							);
 						$(icon_element).find(".captcha-icon").val("");
 						$(icon_element)
@@ -6668,8 +6727,8 @@
 				$wrapper
 					.find(
 						".ur-general-setting-image-captcha-options .ur-options-list > li:nth( " +
-							this_index +
-							" )"
+						this_index +
+						" )"
 					)
 					.after(cloning_element.clone(true, true));
 				$wrapper
@@ -6687,14 +6746,14 @@
 				$wrapper
 					.find(
 						".ur-general-setting-image-captcha-options .ur-options-list > li:nth( " +
-							this_index +
-							" )"
+						this_index +
+						" )"
 					)
 					.remove();
 
 				var next_li_group = $wrapper.find(
-						".ur-general-setting-image-captcha-options .ur-options-list li.ur-custom-captcha"
-					),
+					".ur-general-setting-image-captcha-options .ur-options-list li.ur-custom-captcha"
+				),
 					settings_li_group = $this
 						.closest("li")
 						.siblings(".ur-custom-captcha");
@@ -6718,8 +6777,8 @@
 						.attr(
 							"name",
 							"ur_general_setting[captcha_image][" +
-								li_index +
-								"][icon_tag]"
+							li_index +
+							"][icon_tag]"
 						);
 
 					var icon_wrap = $(li_group).find(".icon-wrap");
@@ -6731,20 +6790,20 @@
 							.attr(
 								"name",
 								"ur_general_setting[captcha_image][" +
-									li_index +
-									"][icon-" +
-									next_icon_index +
-									"]"
+								li_index +
+								"][icon-" +
+								next_icon_index +
+								"]"
 							);
 						$(icon_element)
 							.find(".ur-captcha-icon-radio")
 							.attr(
 								"name",
 								"ur_general_setting[captcha_image][" +
-									li_index +
-									"][correct_icon][" +
-									captcha_unique +
-									"]"
+								li_index +
+								"][correct_icon][" +
+								captcha_unique +
+								"]"
 							);
 						$(icon_element)
 							.find(".dashicons-picker")
@@ -6761,8 +6820,8 @@
 						.attr(
 							"name",
 							"ur_general_setting[captcha_image][" +
-								li_index +
-								"][icon_tag]"
+							li_index +
+							"][icon_tag]"
 						);
 
 					var icon_wrap = $(li_group).find(".icon-wrap");
@@ -6774,20 +6833,20 @@
 							.attr(
 								"name",
 								"ur_general_setting[captcha_image][" +
-									li_index +
-									"][icon-" +
-									next_icon_index +
-									"]"
+								li_index +
+								"][icon-" +
+								next_icon_index +
+								"]"
 							);
 						$(icon_element)
 							.find(".ur-captcha-icon-radio")
 							.attr(
 								"name",
 								"ur_general_setting[captcha_image][" +
-									li_index +
-									"][correct_icon][" +
-									captcha_unique +
-									"]"
+								li_index +
+								"][correct_icon][" +
+								captcha_unique +
+								"]"
 							);
 						$(icon_element)
 							.find(".dashicons-picker")
@@ -6809,10 +6868,10 @@
 			},
 			check_membership_validation: function (data) {
 				var validations = [
-						"empty_membership_group_status",
-						"payment_field_present_status",
-						"empty_membership_status"
-					],
+					"empty_membership_group_status",
+					"payment_field_present_status",
+					"empty_membership_status"
+				],
 					is_valid = true;
 
 				for (var i = 0; i < validations.length; i++) {
@@ -7209,7 +7268,7 @@
 				 *
 				 * Ref: http://jsbin.com/seqonozasu/1/edit?html,js,output
 				 */
-				function UnselectAll() {}
+				function UnselectAll() { }
 				UnselectAll.prototype.render = function (decorated) {
 					var self = this;
 					var $rendered = decorated.call(this);

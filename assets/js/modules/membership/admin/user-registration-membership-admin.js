@@ -227,7 +227,7 @@
 			var post_data = {},
 				post_meta_data = {},
 				form = $('#ur-membership-create-form'),
-			 	description = tinyMCE.get('ur-input-type-membership-description').getContent(),
+				description = tinyMCE.get('ur-input-type-membership-description').getContent(),
 				regex = /(<img[^>]*?)(")([^>]*?>)/g;
 
 			description = description.replace(regex, function (match, p1, p2, p3) {
@@ -266,7 +266,7 @@
 					is_bank_selected = form.find('#ur-membership-pg-bank:checked').val(),
 					is_stripe_selected = form.find('#ur-membership-pg-stripe:checked').val();
 
-								
+
 				var is_authorize_selected = form.find("#ur-membership-pg-authorize:checked").val();
 				var is_mollie_selected = form.find("#ur-membership-pg-mollie:checked").val();
 
@@ -326,12 +326,20 @@
 				}
 
 				//check if mollie is selected
-				if(is_mollie_selected) {
+				if (is_mollie_selected) {
 					post_meta_data.payment_gateways.mollie = {
 						status: is_mollie_selected
 					}
 				}
 			}
+
+			//upgrade settings
+
+			post_meta_data.upgrade_settings = {
+				'upgrade_action': form.find('#ur-membership-upgrade-action').is(':checked'),
+				'upgrade_path': form.find('#ur-input-type-membership-upgrade-path').val(),
+				'upgrade_type': form.find('.urm-upgrade-path-type-container').find('input[name="ur_membership_upgrade_type"]:checked').val()
+			};
 			return {
 				'post_data': post_data,
 				'post_meta_data': post_meta_data
@@ -345,6 +353,7 @@
 			var plan_and_price_section = $('#ur-membership-plan-and-price-section'),
 				main_fields = $('#ur-membership-main-fields').find('input'),
 				form = $('#ur-membership-create-form'),
+				upgrade_action = $('#ur-membership-upgrade-action').is(':checked'),
 				no_errors = true;
 			//main fields validation
 			main_fields = Object.values(main_fields).reverse().slice(2);
@@ -436,7 +445,22 @@
 				}
 
 			}
+			//upgrade settings validation
+			if (upgrade_action) {
+				var upgrade_path = $('#ur-input-type-membership-upgrade-path'),
+					upgrade_type_container = $('.urm-upgrade-path-type-container'),
+					upgrade_type = upgrade_type_container.find('input[name="ur_membership_upgrade_type"]:checked').val();
+				if (upgrade_path.val().length < 1) {
+					no_errors = false;
+					ur_membership_utils.show_failure_message(ur_membership_data.labels.i18n_error + '! ' + upgrade_path.data("key-name") + ' ' + ur_membership_data.labels.i18n_field_is_required);
+				}
 
+				if (upgrade_type === undefined) {
+					no_errors = false;
+					ur_membership_utils.show_failure_message(ur_membership_data.labels.i18n_error + '! ' + upgrade_type_container.data("key-name") + ' ' + ur_membership_data.labels.i18n_field_is_required);
+
+				}
+			}
 			return no_errors;
 		},
 
@@ -501,7 +525,6 @@
 			ur_membership_utils.append_spinner($this);
 			if (this.validate_membership_form()) {
 				var prepare_membership_data = this.prepare_membership_data();
-
 				this.send_data(
 					{
 						action: 'user_registration_membership_update_membership',
@@ -615,7 +638,7 @@
 							);
 							$this.prop('checked', false);
 							$this.closest('.user-registration-switch').closest('.ur-payment-option-header').siblings('.payment-option-body').show();
-						}else {
+						} else {
 							$this.prop('checked', true);
 							$this.closest('.user-registration-switch').closest('.ur-payment-option-header').siblings('.payment-option-body').hide();
 						}
@@ -694,11 +717,13 @@
 		var val = $(this).val(),
 			plan_container = $('#paid-plan-container'),
 			sub_container = $('.ur-membership-subscription-field-container'),
-			payment_gateway_container = $('#payment-gateway-container');
+			payment_gateway_container = $('#payment-gateway-container'),
+			pro_rate_settings = $('label.ur-membership-upgrade-types[for="ur-membership-upgrade-type-pro-rata"]');
+
 		plan_container.addClass('ur-d-none');
 		plan_container.addClass('ur-d-none');
 		payment_gateway_container.addClass('ur-d-none');
-
+		pro_rate_settings.addClass('ur-d-none');
 		sub_container.show();
 		if ('free' !== val) {
 			if ('paid' === val) {
@@ -706,11 +731,17 @@
 			} else {
 				sub_container.removeClass('ur-d-none');
 			}
+			pro_rate_settings.removeClass('ur-d-none');
 			payment_gateway_container.removeClass('ur-d-none');
 			plan_container.removeClass('ur-d-none');
-
 		}
 	});
+
+	$(document).on('click', '#ur-membership-upgrade-action', function () {
+		$('#upgrade-settings-container').toggle();
+		$('input:radio[name=ur_membership_type]:checked').trigger('click');
+	});
+
 	$(document).on('keydown', function (e) {
 		if (e.ctrlKey && e.key === 's') {
 			e.preventDefault();

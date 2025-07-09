@@ -51,7 +51,7 @@ if ( ! class_exists( 'UR_Settings_Approval_Link_Email', false ) ) :
 			$this->id          = 'approval_link_email';
 			$this->title       = __( 'Admin Approval Request', 'user-registration' );
 			$this->description = __( 'Requests admin approval for a user registration approval, with a direct link to approve or deny.', 'user-registration' );
-			$this->receiver    = __( 'Admin', 'user-registration' );
+			$this->receiver    = 'Admin';
 		}
 
 		/**

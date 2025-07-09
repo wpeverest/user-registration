@@ -9,7 +9,7 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 	/**
 	 * @var string
 	 */
-	protected $table, $posts_table, $users_table, $subscriptions_table;
+	protected $table, $posts_table, $users_table, $subscriptions_table, $orders_meta_table;
 
 	/**
 	 * Constructor of this class
@@ -19,6 +19,7 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 		$this->posts_table         = TableList::posts_table();
 		$this->users_table         = TableList::users_table();
 		$this->subscriptions_table = TableList::subscriptions_table();
+		$this->orders_meta_table   = TableList::order_meta_table();
 	}
 
 	/**
@@ -73,17 +74,19 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 	 * @return array|false|mixed|object|\stdClass|void
 	 */
 	public function create( $data ) {
-		$result                               = $this->wpdb()->insert(
+		$result   = $this->wpdb()->insert(
 			$this->table,
 			$data['orders_data']
 		);
-		$order_id                             = $this->wpdb()->insert_id;
-		$data['orders_meta_data']['order_id'] = $order_id;
+		$order_id = $this->wpdb()->insert_id;
 		if ( isset( $data['orders_meta_data'] ) && ! empty( $data['orders_meta_data'] ) ) {
-			$this->wpdb()->insert(
-				TableList::order_meta_table(),
-				$data['orders_meta_data']
-			);
+			foreach ( $data['orders_meta_data'] as $order_meta ) {
+				$order_meta['order_id'] = $order_id;
+				$this->wpdb()->insert(
+					TableList::order_meta_table(),
+					$order_meta
+				);
+			}
 		}
 
 		return $this->retrieve( $order_id );
@@ -139,6 +142,24 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 		return ! $result ? array() : $result;
 	}
 
+	public function get_order_metas( $order_id ) {
+		$result = $this->wpdb()->get_row(
+			$this->wpdb()->prepare(
+				"
+				SELECT wpom.*
+				FROM $this->table urmo
+					 JOIN wp_ur_membership_ordermeta wpom ON urmo.ID = wpom.order_id
+				WHERE urmo.ID = %d and wpom.meta_key = 'delayed_until' and wpom.meta_value > NOW()
+				ORDER BY urmo.ID DESC
+		",
+				$order_id
+			),
+			ARRAY_A
+		);
+
+		return ! $result ? array() : $result;
+	}
+
 	/**
 	 * Get specific order by their subscription ID
 	 *
@@ -152,12 +173,35 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 				"
 				SELECT * from $this->table
 				WHERE subscription_id = %d
+				ORDER BY ID DESC LIMIT 1
 		",
 				$subscription_id
 			),
 			ARRAY_A
 		);
 
+		return ! $result ? array() : $result;
+	}
+
+	public function get_all_delayed_orders( $date ) {
+		$sql = sprintf( "
+					SELECT
+					       wpum.meta_value as sub_data
+					FROM wp_ur_membership_orders urmo
+					         JOIN wp_ur_membership_ordermeta wpom ON urmo.ID = wpom.order_id
+					         JOIN wp_usermeta wpum ON urmo.user_id = wpum.user_id
+					WHERE wpom.meta_key = 'delayed_until'
+					  AND wpom.meta_value = '%s'
+					  AND wpum.meta_key = 'urm_next_subscription_data'
+				", $date );
+
+		$result = $this->wpdb()->get_results( $sql, ARRAY_A );
+
+		return ! $result ? array() : $result;
+	}
+
+	public function delete_order_meta( $conditions ) {
+		$result = $this->wpdb()->delete( $this->orders_meta_table , $conditions );
 		return ! $result ? array() : $result;
 	}
 

@@ -221,6 +221,10 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 							'title'    => __( 'To Admin', 'user-registration' ),
 							'type'     => 'card',
 //							'desc'     => __( 'Email notifications sent from user registration to the admin are listed below. Click on an email to configure it.', 'user-registration' ),
+							'button'   => array (
+								'button_link' => 'https://docs.wpuserregistration.com/docs/smart-tags/',
+								'button_text' => __( 'Smart Tags Used', 'user-registration' ),
+							),
 							'settings' => array(
 								array(
 									'type' => 'to_admin_email_notification',
@@ -255,6 +259,10 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 							'title'    => __( 'To User', 'user-registration' ),
 							'type'     => 'card',
 //							'desc'     => __( 'Email notifications sent from user registration to the admin are listed below. Click on an email to configure it.', 'user-registration' ),
+							'button'   => array (
+								'button_link' => 'https://docs.wpuserregistration.com/docs/smart-tags/',
+								'button_text' => __( 'Smart Tags Used', 'user-registration' ),
+							),
 							'settings' => array(
 								array(
 									'type' => 'to_user_email_notification',
@@ -458,15 +466,6 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 
 
 			UR_Admin_Settings::output_fields( $settings );
-
-			if ( ! empty( $current_section ) ) {
-				?>
-				<div id="smart-tags">
-					<a href="https://docs.wpuserregistration.com/docs/smart-tags/" rel="noreferrer noopener"
-					   target="_blank"><?php echo esc_html__( 'Smart Tags Used', 'user-registration' ); ?></a>
-				</div>
-				<?php
-			}
 		}
 	}
 

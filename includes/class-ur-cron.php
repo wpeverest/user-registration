@@ -71,8 +71,11 @@ class UR_Cron {
 		if ( ! wp_next_scheduled( 'user_registration_usage_stats_scheduled_events' ) && ur_option_checked( 'user_registration_allow_usage_tracking', false ) ) {
 			wp_schedule_event( time(), 'biweekly', 'user_registration_usage_stats_scheduled_events' );
 		}
-		if ( UR_PRO_ACTIVE && ! wp_next_scheduled( 'urm_daily_membership_renewal_check' ) && ur_option_checked( 'user_registration_membership_renewal_reminder_user_email', false ) ) {
+		if ( UR_PRO_ACTIVE && ! wp_next_scheduled( 'urm_daily_membership_renewal_check' ) && ur_option_checked( 'user_registration_membership_enable_renewal_reminder_user_email', false ) ) {
 			wp_schedule_event( time(), 'daily', 'urm_daily_membership_renewal_check' );
+		}
+		if ( UR_PRO_ACTIVE && ! wp_next_scheduled( 'urm_run_delayed_subscription' ) ) {
+			wp_schedule_event( time(), 'daily', 'urm_run_delayed_subscription' );
 		}
 	}
 

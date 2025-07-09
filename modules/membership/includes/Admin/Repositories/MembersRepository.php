@@ -95,10 +95,15 @@ class MembersRepository extends BaseRepository implements MembersInterface {
 			       wums.status,
 			       wpu.user_registered,
 			       wums.expiry_date,
-			    	wumo.payment_method
+		           wumo_latest.payment_method
 				FROM $this->table wpu
 		        JOIN $this->subscription_table wums ON wpu.ID = wums.user_id
-				JOIN $this->orders_table wumo ON wpu.ID = wumo.user_id
+				JOIN (
+					    SELECT user_id, MAX(created_at) AS latest_order_date
+					    FROM  $this->orders_table
+					    GROUP BY user_id
+					) latest_orders ON wpu.ID = latest_orders.user_id
+				JOIN $this->orders_table wumo_latest ON wumo_latest.user_id = latest_orders.user_id AND wumo_latest.created_at = latest_orders.latest_order_date
 		        JOIN $this->posts_table wpp ON wums.item_id = wpp.ID
 				WHERE wpp.post_status = 'publish'
 				AND 1 = 1
@@ -114,12 +119,13 @@ class MembersRepository extends BaseRepository implements MembersInterface {
 			$sql .= " AND wpu.ID IN " . "(".implode("," , $args['include']) . ")";
 		}
 
-		if(isset($args['orderby'] )) {
-			$sql .= sprintf( ' ORDER BY %s %s', $args['orderby'], $args['order'] );
-		}
+		$order_by = !empty($args['orderby']) ? $args['orderby'] : 'user_registered';
+		$order = !empty($args['order']) ? $args['order'] : 'DESC';
+
+		$sql .= sprintf( ' ORDER BY %s %s', $order_by, $order );
+
 
 		$result = $this->wpdb()->get_results( $sql, ARRAY_A );
-
 		return ! $result ? array() : $result;
 	}
 

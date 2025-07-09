@@ -102,7 +102,7 @@ class Orders {
 			wp_enqueue_script( 'ur-snackbar' );
 		}
 		wp_enqueue_script( 'sweetalert2' );
-		wp_register_script( 'payment-history', UR()->plugin_url() . '/assets/js/modules/membership/admin/payment-history' . $suffix . '.js', array( 'jquery' ), '1.0.0', true );
+		wp_register_script( 'payment-history', UR()->plugin_url() . '/assets/js/modules/membership/admin/payment-history' . $suffix . '.js', array( 'jquery', 'ur-enhanced-select' ), '1.0.0', true );
 		wp_enqueue_script( 'payment-history' );
 
 		$this->localize_scripts();
@@ -126,6 +126,7 @@ class Orders {
 		wp_enqueue_style( 'payment-history-css' );
 		wp_enqueue_style( 'sweetalert2' );
 		wp_enqueue_style( 'ur-snackbar' );
+		wp_enqueue_style( 'select2', UR()->plugin_url() . '/assets/css/select2/select2.css', array(), UR_VERSION );
 	}
 
 	/**
@@ -179,7 +180,7 @@ class Orders {
 				</div>
 			</div>
 		</div>
-		<div id="user-registration-list-table-page" style="max-width: 1100px;">
+		<div id="user-registration-list-table-page">
 			<div class="user-registration-list-table-heading" id="ur-users-page-topnav">
 				<div class="ur-page-title__wrapper">
 					<h1>
@@ -285,12 +286,21 @@ class Orders {
 	 * @return void
 	 */
 	public function add_payment_gateway_options() {
+
 		$payment_gateways = array(
 				'paypal'      => __( 'Paypal', 'user-registration' ),
 				'stripe'      => __( 'Stripe', 'user-registration' ),
 				'credit_card' => __( 'Stripe (Credit Card)', 'user-registration' ),
 				'bank'        => __( 'Bank', 'user-registration' ),
 		);
+		/**
+		 * Filters that hold the list of payment gateway for payment orders.
+		 *
+		 *@param array $payment_gateways
+   		*/
+		$payment_gateways = apply_filters( 'user_registration_payment_gateways', $payment_gateways );
+
+		update_option( 'ur_payment_gateways', $payment_gateways );
 		/**
 		 * Filters that hold the list of payment gateway for payment orders.
 		 *

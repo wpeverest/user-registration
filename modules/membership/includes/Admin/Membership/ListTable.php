@@ -7,6 +7,7 @@
 
 namespace WPEverest\URMembership\Admin\Membership;
 
+use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 use WPEverest\URMembership\TableList;
 
 if ( ! class_exists( 'UR_List_Table' ) ) {
@@ -63,6 +64,7 @@ class ListTable extends \UR_List_Table {
 		return array(
 			'cb'              => '<input type="checkbox" />',
 			'title'           => __( 'Membership Name', 'user-registration' ),
+			'membership_price' => __( 'Membership Price', 'user-registration' ),
 			'membership_type' => __( 'Membership Plan Type', 'user-registration' ),
 			'members'         => __( 'Members', 'user-registration' ),
 			'status'          => __( 'Status', 'user-registration' ),
@@ -80,10 +82,12 @@ class ListTable extends \UR_List_Table {
 	public function get_edit_links( $row ) {
 		return admin_url( 'admin.php?post_id=' . $row->ID . '&action=' . $this->addnew_action . '&page=' . $this->page );
 	}
+
 	public function get_delete_links( $row ) {
 
 		return admin_url( 'admin.php?membership=' . $row->ID . '&action=delete&page=' . $this->page );
 	}
+
 	/**
 	 * Post Duplicate Link.
 	 *
@@ -105,6 +109,23 @@ class ListTable extends \UR_List_Table {
 		return array();
 	}
 
+	/**
+	 * @param $membership
+	 *
+	 * @return string
+	 */
+	public function column_membership_price( $membership ) {
+		$membership_repository = new MembershipRepository();
+		$membership = $membership_repository->get_single_membership_by_ID($membership->ID);
+		$membership['post_content'] = json_decode($membership['post_content'], true);
+		$membership['meta_value'] = json_decode($membership['meta_value'], true);
+		$membership = apply_filters('build_membership_list_frontend', array( (array) $membership));
+		$price = 0;
+		if(!empty($membership)) {
+			$price = $membership[0]['period'];
+		}
+		return $price;
+	}
 	/**
 	 * @param $membership
 	 *
@@ -149,7 +170,8 @@ class ListTable extends \UR_List_Table {
 			ARRAY_A
 		);
 
-		return $result[0]['total'];
+		return sprintf( '<a target="_blank" href="%s"> %d </a>',  admin_url( "admin.php?page=user-registration-members&membership_id=$membership->ID" ), $result[0]['total'] );
+
 	}
 
 	/**
@@ -160,7 +182,7 @@ class ListTable extends \UR_List_Table {
 	public function column_action( $membership ) {
 
 		$edit_link          = $this->get_edit_links( $membership );
-		$delete_link = $this->get_delete_links($membership);
+		$delete_link        = $this->get_delete_links( $membership );
 		$membership_content = json_decode( $membership->post_content, true );
 		$checked            = ( $membership_content['status'] == 'true' ) ? 'checked' : '';
 		$actions            = '
@@ -243,7 +265,9 @@ class ListTable extends \UR_List_Table {
 			<p class="search-box">
 			</p>
 			<div>
-				<input type="search" id="<?php echo $search_id; ?>" name="s" value="<?php echo esc_attr($_GET['s'] ?? '' ); ?>" placeholder="<?php echo esc_attr( 'Search Membership',' user-registration' ); ?> ..."
+				<input type="search" id="<?php echo $search_id; ?>" name="s"
+					   value="<?php echo esc_attr( $_GET['s'] ?? '' ); ?>"
+					   placeholder="<?php echo esc_attr( 'Search Membership', ' user-registration' ); ?> ..."
 					   autocomplete="off">
 				<button type="submit" id="search-submit">
 					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

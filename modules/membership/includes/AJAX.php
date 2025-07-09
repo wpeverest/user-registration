@@ -14,6 +14,7 @@ namespace WPEverest\URMembership;
 
 use WPEverest\URMembership\Admin\Controllers\MembersController;
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
+use WPEverest\URMembership\Admin\Repositories\MembersOrderRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersRepository;
 use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
 use WPEverest\URMembership\Admin\Repositories\SubscriptionRepository;
@@ -24,6 +25,7 @@ use WPEverest\URMembership\Admin\Services\MembershipService;
 use WPEverest\URMembership\Admin\Services\MembersService;
 use WPEverest\URMembership\Admin\Services\PaymentService;
 use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
+use WPEverest\URMembership\Admin\Services\SubscriptionService;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -47,23 +49,26 @@ class AJAX {
 	public static function add_ajax_events() {
 
 		$ajax_events = array(
-			'create_membership'          => false,
-			'update_membership'          => false,
-			'delete_memberships'         => false,
-			'update_membership_status'   => false,
-			'create_member'              => false,
-			'update_member'              => false,
-			'delete_members'             => false,
-			'confirm_payment'            => true,
-			'create_stripe_subscription' => true,
-			'register_member'            => true,
-			'validate_coupon'            => true,
-			'cancel_subscription'        => false,
-			'get_group_memberships'      => false,
-			'create_membership_group'    => false,
-			'delete_membership_groups'   => false,
-			'verify_pages'               => false,
-			'validate_pg'                => false,
+			'create_membership'            => false,
+			'update_membership'            => false,
+			'delete_memberships'           => false,
+			'update_membership_status'     => false,
+			'create_member'                => false,
+			'update_member'                => false,
+			'delete_members'               => false,
+			'confirm_payment'              => true,
+			'create_stripe_subscription'   => true,
+			'register_member'              => true,
+			'validate_coupon'              => true,
+			'cancel_subscription'          => false,
+			'cancel_upcoming_subscription' => false,
+			'fetch_upgradable_memberships' => false,
+			'get_group_memberships'        => false,
+			'create_membership_group'      => false,
+			'delete_membership_groups'     => false,
+			'verify_pages'                 => false,
+			'validate_pg'                  => false,
+			'upgrade_membership'           => false,
 		);
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
 			add_action( 'wp_ajax_user_registration_membership_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -117,21 +122,22 @@ class AJAX {
 				)
 			);
 		}
-		$membership_service      = new MembershipService();
-		$response                = $membership_service->create_membership_order_and_subscription( $data );
+		$membership_service = new MembershipService();
+
+		$response = $membership_service->create_membership_order_and_subscription( $data );
+
 		$transaction_id          = isset( $response['transaction_id'] ) ? $response['transaction_id'] : 0;
 		$data['member_id']       = $member_id;
 		$data['subscription_id'] = isset( $response['subscription_id'] ) ? $response['subscription_id'] : 0;
 		$data['email']           = $response['member_email'];
-
-		$pg_data = array();
+		$pg_data                 = array();
 		if ( 'free' !== $data['payment_method'] && $response['status'] ) {
 			$payment_service = new PaymentService( $data['payment_method'], $data['membership'], $data['email'] );
 
 			$form_response    = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
 			$ur_authorize_net = array( 'ur_authorize_net' => ! empty ( $form_response['ur_authorize_net'] ) ? $form_response['ur_authorize_net'] : [] );
 			$data             = array_merge( $data, $ur_authorize_net );
-			$pg_data         = $payment_service->build_response( $data );
+			$pg_data          = $payment_service->build_response( $data );
 		}
 
 		if ( $response['status'] ) {
@@ -212,8 +218,8 @@ class AJAX {
 		$new_membership_ID = wp_insert_post( $data['post_data'] );
 
 		if ( $new_membership_ID ) {
-			if(!empty($data['post_meta_data']) ) {
-				foreach ($data['post_meta_data'] as $datum) {
+			if ( ! empty( $data['post_meta_data'] ) ) {
+				foreach ( $data['post_meta_data'] as $datum ) {
 					add_post_meta( $new_membership_ID, $datum['meta_key'], $datum['meta_value'] );
 				}
 			}
@@ -224,10 +230,10 @@ class AJAX {
 				$data["membership_id"]    = $new_membership_ID;
 				$stripe_price_and_product = $stripe_service->create_stripe_product_and_price( $data["post_data"], $meta_data, false );
 
-				if ( ! empty( $stripe_price_and_product ) ) {
-					$meta_data["payment_gateways"]["stripe"]["product_id"] = $stripe_price_and_product->product;
-					$meta_data["payment_gateways"]["stripe"]["price_id"]   = $stripe_price_and_product->id;
-					update_post_meta( $new_membership_ID, $data['post_meta_data']['meta_key'], wp_json_encode( $meta_data ) );
+				if (  $stripe_price_and_product['success'] ) {
+					$meta_data["payment_gateways"]["stripe"]["product_id"] = $stripe_price_and_product['price']->product;
+					$meta_data["payment_gateways"]["stripe"]["price_id"]   = $stripe_price_and_product['price']->id;
+					update_post_meta( $new_membership_ID, $data['post_meta_data']['ur_membership']['meta_key'], wp_json_encode( $meta_data ) );
 				}
 			}
 
@@ -292,34 +298,39 @@ class AJAX {
 		$updated_ID = wp_insert_post( $data['post_data'] );
 
 		if ( $updated_ID ) {
-			if(!empty($data['post_meta_data']) ) {
-				foreach ($data['post_meta_data'] as $datum) {
+			if ( ! empty( $data['post_meta_data'] ) ) {
+				foreach ( $data['post_meta_data'] as $datum ) {
 					update_post_meta( $updated_ID, $datum['meta_key'], $datum['meta_value'] );
 				}
 			}
 
 			$meta_data = json_decode( $data["post_meta_data"]['ur_membership']["meta_value"], true );
+			if ( ! empty( $meta_data['upgrade_settings'] ) && ! empty( $old_membership_data['upgrade_settings'] ) && $meta_data['upgrade_settings']['upgrade_path'] !== $old_membership_data['upgrade_settings']['upgrade_path'] ) {
+				$transient_key          = 'urm_upgradable_memberships_for_' . $updated_ID;
+				$upgradable_memberships = $membership->get_upgradable_membership( $updated_ID );
+				set_transient( $transient_key, $upgradable_memberships, 5 * MINUTE_IN_SECONDS );
+			}
 
 			if ( $is_stripe_enabled && "free" !== $meta_data["type"] ) {
 
 				//check if any significant value has been changed  , trial not included since trial value change does not affect the type of product and price in stripe, instead handled during subscription
 				$should_create_new_product = ( $old_membership_data['amount'] !== $meta_data['amount'] || ( isset( $old_membership_data["subscription"] ) && $old_membership_data["subscription"]["value"] !== $meta_data["subscription"]["value"] ) || ( isset( $old_membership_data["subscription"] ) && $old_membership_data["subscription"]["duration"] !== $meta_data["subscription"]["duration"] ) );
 
-				$meta_data = json_decode( $data["post_meta_data"]["meta_value"], true );
+				$meta_data = json_decode( $data["post_meta_data"]['ur_membership']["meta_value"], true );
 
 				if ( $should_create_new_product || empty( $meta_data["payment_gateways"]["stripe"]["product_id"] ) ) {
 					$stripe_service           = new StripeService();
 					$data["membership_id"]    = $updated_ID;
 					$stripe_price_and_product = $stripe_service->create_stripe_product_and_price( $data["post_data"], $meta_data, $should_create_new_product );
 
-					if ( ! empty( $stripe_price_and_product ) ) {
-						$meta_data["payment_gateways"]["stripe"]["product_id"] = $stripe_price_and_product->product;
-						$meta_data["payment_gateways"]["stripe"]["price_id"]   = $stripe_price_and_product->id;
-						update_post_meta( $updated_ID, $data['post_meta_data']['meta_key'], wp_json_encode( $meta_data ) );
+					if (  ur_string_to_bool($stripe_price_and_product['success']) ) {
+						$meta_data["payment_gateways"]["stripe"]["product_id"] = $stripe_price_and_product['price']->product;
+						$meta_data["payment_gateways"]["stripe"]["price_id"]   = $stripe_price_and_product['price']->id;
+						update_post_meta( $updated_ID, $data['post_meta_data']['ur_membership']['meta_key'], wp_json_encode( $meta_data ) );
 					} else {
 						wp_send_json_error(
 							array(
-								'message' => esc_html__( 'Sorry! Could not create stripe product. ', 'user-registration' ),
+								'message' => $stripe_price_and_product['message'],
 							)
 						);
 					}
@@ -580,7 +591,8 @@ class AJAX {
 
 	public static function confirm_payment() {
 
-		ur_membership_verify_nonce( 'ur_membership_confirm_payment' );
+		ur_membership_verify_nonce( 'urm_confirm_payment' );
+
 		if ( empty( $_POST['member_id'] ) ) {
 			wp_send_json_error(
 				array(
@@ -595,9 +607,11 @@ class AJAX {
 				)
 			);
 		}
+
 		$member_id       = absint( $_POST['member_id'] );
 		$is_user_created = get_user_meta( $member_id, 'urm_user_just_created' );
-		if ( ! $is_user_created ) {
+		$is_upgrading    = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
+		if ( ! $is_user_created && ! $is_upgrading ) {
 			wp_send_json_error(
 				array(
 					'message' => __( 'Invalid Request.', 'user-registration' ),
@@ -611,10 +625,28 @@ class AJAX {
 				)
 			);
 		}
-		$stripe_service      = new StripeService();
-		$payment_status      = sanitize_text_field( $_POST['payment_status'] );
+		$stripe_service = new StripeService();
+		$payment_status = sanitize_text_field( $_POST['payment_status'] );
+
 		$update_stripe_order = $stripe_service->update_order( $_POST );
+
 		if ( $update_stripe_order['status'] ) {
+			if ( $is_upgrading ) {
+				$next_subscription     = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
+				$previous_subscription = get_user_meta( $member_id, 'urm_previous_subscription_data', true );
+				$is_delayed            = ! empty( $next_subscription['delayed_until'] );
+				if ( ! empty( $previous_subscription ) && ! $is_delayed ) {
+
+					$previous_subscription = json_decode( $previous_subscription, true );
+					$stripe_service        = new StripeService();
+					$stripe_service->cancel_subscription( array(), $previous_subscription );
+					delete_user_meta( $member_id, 'urm_next_subscription_data' );
+					delete_user_meta( $member_id, 'urm_previous_subscription_data' );
+					delete_user_meta( $member_id, 'urm_previous_order_data' );
+
+				}
+			}
+
 			$form_response = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
 			if ( ! empty( $form_response ) && isset( $form_response["auto_login"] ) && $payment_status !== "failed" ) {
 				$members_service = new MembersService();
@@ -628,12 +660,24 @@ class AJAX {
 					);
 				}
 			}
+
 			delete_user_meta( $member_id, 'urm_user_just_created' );
-			wp_send_json_success(
-				array(
-					'message' => $update_stripe_order["message"]
-				)
+			$response = array(
+				'message'      => $update_stripe_order["message"],
+				'is_upgrading' => ur_string_to_bool( $is_upgrading )
 			);
+			if ( $is_upgrading ) {
+				delete_user_meta( $member_id, 'urm_is_upgrading' );
+				delete_user_meta( $member_id, 'urm_is_upgrading_to' );
+				update_user_meta( $member_id, 'urm_is_user_upgraded', 1 );
+			}
+
+			wp_send_json_success(
+				$response
+			);
+		}
+		if ( $is_upgrading ) {
+			$stripe_service->revert_subscription( $member_id );
 		}
 		wp_send_json_error(
 			array(
@@ -645,13 +689,13 @@ class AJAX {
 	}
 
 	public static function create_stripe_subscription() {
-		ur_membership_verify_nonce( 'ur_membership_confirm_payment' );
+		ur_membership_verify_nonce( 'urm_confirm_payment' );
 		$customer_id       = isset( $_POST['customer_id'] ) ? $_POST['customer_id'] : '';
 		$payment_method_id = isset( $_POST['payment_method_id'] ) ? sanitize_text_field( $_POST['payment_method_id'] ) : '';
 		$member_id         = absint( wp_unslash( $_POST['member_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
-
-		$is_user_created = get_user_meta( $member_id, 'urm_user_just_created' );
-		if ( ! $is_user_created ) {
+		$is_upgrading      = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
+		$is_user_created   = get_user_meta( $member_id, 'urm_user_just_created' );
+		if ( ! $is_user_created && ! $is_upgrading ) {
 			wp_send_json_error(
 				array(
 					'message' => __( 'Invalid Request.', 'user-registration' ),
@@ -667,9 +711,20 @@ class AJAX {
 		}
 		$stripe_service      = new StripeService();
 		$form_response       = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
-		$stripe_subscription = $stripe_service->create_subscription( $customer_id, $payment_method_id, $member_id );
+		$stripe_subscription = $stripe_service->create_subscription( $customer_id, $payment_method_id, $member_id, $is_upgrading );
 
 		if ( $stripe_subscription['status'] ) {
+			if ( ! empty( $form_response ) && isset( $form_response['auto_login'] ) && $form_response['auto_login'] ) {
+				$members_service = new MembersService();
+				$logged_in       = $members_service->login_member( $member_id, true );
+				if ( ! $logged_in ) {
+					wp_send_json_error(
+						array(
+							'message' => __( 'Invalid User', 'user-registration' ),
+						)
+					);
+				}
+			}
 			wp_send_json_success( $stripe_subscription );
 		} else {
 			wp_delete_user( absint( $member_id ) );
@@ -844,7 +899,7 @@ class AJAX {
 			wp_send_json_error( __( 'Wrong request.', 'user-registration' ) );
 		}
 		if ( ! in_array( $_POST['type'], array(
-			'user_registration_member_registration_page_id',
+				'user_registration_member_registration_page_id',
 			'user_registration_thank_you_page_id'
 		) ) ) {
 			wp_send_json_error( __( 'Invalid post type', 'user-registration' ) );
@@ -880,5 +935,165 @@ class AJAX {
 		$result             = $membership_service->validate_payment_gateway( array( $pg, $subscription_type ) );
 
 		wp_send_json( $result );
+	}
+
+	/**
+	 * fetch_upgradable_membership
+	 *
+	 * @return void
+	 */
+	public static function fetch_upgradable_memberships() {
+
+		$security = isset( $_POST['security'] ) ? sanitize_text_field( wp_unslash( $_POST['security'] ) ) : '';
+		if ( '' === $security || ! wp_verify_nonce( $security, 'ur_members_frontend' ) ) {
+			wp_send_json_error( 'Nonce verification failed' );
+		}
+		if ( ! isset( $_POST['membership_id'] ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( "Membership does not exist", "user-registration" ),
+				)
+			);
+		}
+		$membership_id            = absint( $_POST['membership_id'] );
+		$member_id                = get_current_user_id();
+		$members_order_repository = new MembersOrderRepository();
+		$orders_repository        = new OrdersRepository();
+		$last_order               = $members_order_repository->get_member_orders( $member_id );
+
+		if ( ! empty( $last_order ) ) {
+			$order_meta = $orders_repository->get_order_metas( $last_order['ID'] );
+			if ( ! empty( $order_meta ) ) {
+				$upcoming_subscription = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
+				$membership            = get_post( $upcoming_subscription['membership'] );
+				wp_send_json_error(
+					array(
+						'message' => apply_filters( 'urm_delayed_plan_exist_notice', __( sprintf( 'You already have a scheduled upgrade to the <b>%s</b> plan at the end of your current subscription cycle (<i><b>%s</b></i>) <br> If you\'d like to cancel this upcoming change, click the <b>Cancel Membership</b> button to proceed.', $membership->post_title, date( 'M d, Y', strtotime( $order_meta['meta_value'] ) ) ), "user-registration" ), $membership->post_title, $order_meta['meta_value'] ),
+					)
+				);
+			}
+		}
+		$transient_key = 'urm_upgradable_memberships_for_' . $membership_id;
+		$cached_data   = get_transient( $transient_key );
+
+		if ( false !== $cached_data ) {
+			wp_send_json_success( $cached_data );
+		}
+
+		$membership_service     = new MembershipService();
+		$upgradable_memberships = $membership_service->get_upgradable_membership( $membership_id );
+
+		if ( empty( $upgradable_memberships ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( "No upgradable Memberships.", "user-registration" ),
+				),
+				404
+			);
+		}
+		set_transient( $transient_key, $upgradable_memberships, 5 * MINUTE_IN_SECONDS );
+		wp_send_json_success(
+			$upgradable_memberships
+		);
+	}
+
+	/**
+	 * Upgrade membership ajax request
+	 *
+	 * @return void
+	 */
+	public static function upgrade_membership() {
+
+		ur_membership_verify_nonce( 'urm_upgrade_membership' );
+
+		if ( empty( $_POST['current_subscription_id'] ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Field current_subscription_id is required', 'user-registration' ),
+				)
+			);
+		}
+		if ( empty( $_POST['selected_membership_id'] ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( "Field selected_membership_id is required", "user-registration" ),
+				)
+			);
+		}
+		$ur_authorize_data = isset( $_POST['ur_authorize_data'] ) ? $_POST['ur_authorize_data'] : [];
+		$data = array(
+			'current_subscription_id' => absint( $_POST['current_subscription_id'] ),
+			'selected_membership_id'  => absint( $_POST['selected_membership_id'] ),
+			'current_membership_id'   => absint( $_POST['current_membership_id'] ),
+			'selected_pg'             => sanitize_text_field( $_POST['selected_pg'] ),
+			'ur_authorize_net'       => $ur_authorize_data,
+		);
+
+		$subscription_service = new SubscriptionService();
+		$status               = $subscription_service->can_upgrade( $data );
+
+		if ( ! $status['status'] ) {
+			wp_send_json_error(
+				array(
+					'message' => $status['message'],
+				)
+			);
+		}
+
+		$upgrade_membership_response = $subscription_service->upgrade_membership( $data );
+		$response                    = $upgrade_membership_response['response'];
+
+		if ( $response['status'] ) {
+			$selected_pg = $data['selected_pg'];
+			if ( $selected_pg !== 'free' ) {
+				update_user_meta( $upgrade_membership_response['extra']['member_id'], 'urm_is_upgrading', true );
+				update_user_meta( $upgrade_membership_response['extra']['member_id'], 'urm_is_upgrading_to', $data['selected_membership_id'] );
+			}
+			$message = "free" === $selected_pg ? __( "Membership upgraded successfully.", "user-registration-membership" ) : __( "New Order created, initializing payment...", "user-registration-membership" );
+			wp_send_json_success(
+				array(
+					'is_upgrading'             => true,
+					'pg_data'                  => $response,
+					'member_id'                => $upgrade_membership_response['extra']['member_id'],
+					'username'                 => $upgrade_membership_response['extra']['username'],
+					'transaction_id'           => $upgrade_membership_response['extra']['transaction_id'],
+					'updated_membership_title' => $upgrade_membership_response['extra']['updated_membership_title'],
+					'message'                  => $message,
+				)
+			);
+		}
+		wp_send_json_error(
+			array(
+				'message' => __( "Something went wrong while upgrading membership.", "user-registration" ),
+			)
+		);
+	}
+
+	public static function cancel_upcoming_subscription() {
+		ur_membership_verify_nonce( 'urm_upgrade_membership' );
+		$member_id = get_current_user_id();
+		$user      = get_userdata( $member_id );
+		ur_get_logger()->notice( __( 'Cancel Upcoming Membership Triggered for :' . $user->user_login ), array( 'source' => 'urm-upgrade-subscription' ) );
+		$members_order_repository = new MembersOrderRepository();
+		$order_repository         = new OrdersRepository();
+		$last_order               = $members_order_repository->get_member_orders( $member_id );
+		$order_detail             = $order_repository->get_order_metas( $last_order['ID'] );
+		if ( ! empty( $order_detail ) ) {
+			$order_repository->delete( $last_order['ID'] );
+			delete_user_meta( $member_id, 'urm_next_subscription_data' );
+			delete_user_meta( $member_id, 'urm_previous_subscription_data' );
+			delete_user_meta( $member_id, 'urm_next_subscription_data' );
+
+			wp_send_json_success(
+				array(
+					'message' => __( "Scheduled membership has been cancelled successfully.", "user-registration" ),
+				)
+			);
+		}
+		wp_send_json_error(
+			array(
+				'message' => __( "Something went wrong while cancelling membership.", "user-registration" ),
+			)
+		);
 	}
 }

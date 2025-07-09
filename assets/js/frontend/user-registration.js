@@ -920,7 +920,6 @@
 									) {
 										return false;
 									}
-
 									var $this = $(this);
 
 									// Validator messages.
@@ -1279,7 +1278,7 @@
 						var flag = false;
 						if (
 							$form.find(
-								"#user_registration_authorize_net_gateway[data-gateway='authorize_net']"
+								"#user_registration_authorize_net_gateway[data-gateway='authorize_net']:visible"
 							).length > 0
 						) {
 							flag = true;
@@ -1291,6 +1290,7 @@
 					 *
 					 */
 					ajax_form_submit: function (posted_data) {
+
 						$.ajax({
 							url: user_registration_params.ajax_url,
 							data: posted_data,
@@ -1314,7 +1314,6 @@
 									"user_registration_frontend_before_ajax_complete_success_message",
 									[ajax_response, ajaxFlag, $this]
 								);
-
 								if (ajaxFlag["status"]) {
 									$this
 										.find(".ur-submit-button")
@@ -2926,3 +2925,33 @@ function customPasswordChecks(password) {
 	}
 	return 4;
 }
+
+//Shows the content restriction message if botiga theme is used.
+jQuery(document).ready(function($) {
+	var urcrContentRestrictMsg = $(document).find('.urcr-restrict-msg');
+	if (urcrContentRestrictMsg.length > 0) {
+		urcrContentRestrictMsg.first().css('display', 'block');
+	}
+});
+
+/**
+ * Check if hello elementor theme is active or not teo resolve flatpickr design issue.
+ *
+ */
+jQuery(document).ready(function($) {
+
+	//Check the hello elemtor theme is active or not through its stylesheet.
+	$isHelloElementorActive = $('link#hello-elementor-css[href*="themes/hello-elementor"]').length > 0;
+
+	if(!$isHelloElementorActive) {
+		return;
+	}
+
+	$(document).on('focus', '.ur-flatpickr-field', function () {
+		var $input = $(this);
+
+		setTimeout(function () {
+			$('.flatpickr-calendar:visible .flatpickr-current-month').css('display', 'flex');
+		}, 50);
+	});
+});

@@ -120,9 +120,9 @@ class UR_Admin_Export_Users {
 		while ( true ) {
 			// Fetch users in batches.
 			$users = get_users( array(
-				'ur_form_id' => $form_id,
-				'number'     => $batch_size,
-				'offset'     => $offset,
+					'ur_form_id' => $form_id,
+					'number'     => $batch_size,
+					'offset'     => $offset,
 			) );
 
 			// If no users are found, break the loop.
@@ -245,6 +245,30 @@ class UR_Admin_Export_Users {
 			}
 			$user_id_row    = array();
 			$user_extra_row = ur_get_user_extra_fields( $user->data->ID );
+			$user_form_fields             = ur_get_form_fields( $form_id );
+			$urm_form_has_profile_picture = false;
+			$user_profile_picture_key     = '';
+
+			foreach ( $user_form_fields as $field_key => $field_data ) {
+				if ( isset( $field_data->field_key ) && 'profile_picture' === $field_data->field_key ) {
+					$urm_form_has_profile_picture = true;
+					$user_profile_picture_key     = $field_key;
+					break;
+				}
+			}
+
+			if ( $urm_form_has_profile_picture && ! empty( $user_profile_picture_key ) ) {
+				$profile_picture_id = get_user_meta( $user->data->ID, 'user_registration_profile_pic_url', true );
+
+				if ( is_numeric( $profile_picture_id ) ) {
+					$profile_picture_url = wp_get_attachment_url( $profile_picture_id );
+				} else {
+					$profile_picture_url = '';
+				}
+
+				// Assign profile picture URL to user extra row.
+				$user_extra_row[ $user_profile_picture_key ] = $profile_picture_url;
+			}
 
 			$columns = $this->generate_columns( $form_id, $unchecked_fields );
 
@@ -313,22 +337,22 @@ class UR_Admin_Export_Users {
 					if ( isset( $profile[ $profile_key ]['default'] ) ) {
 						$default_value = $profile[ $profile_key ]['default'];
 
-					// Handle array values properly.
-					if ( is_array( $default_value ) ) {
-						// Filter out empty values and join the remaining values into a string.
-						$default_value = implode(
-							', ',
-							array_filter(
-								$default_value,
-								function ( $v ) {
-									return ! empty( $v );
-								}
-							)
-						);
-					} else {
-						// If it's not an array, sanitize the value.
-						$default_value = esc_html( $default_value );
-					}
+						// Handle array values properly.
+						if ( is_array( $default_value ) ) {
+							// Filter out empty values and join the remaining values into a string.
+							$default_value = implode(
+								', ',
+								array_filter(
+									$default_value,
+									function ( $v ) {
+										return ! empty( $v );
+									}
+								)
+							);
+						} else {
+							// If it's not an array, sanitize the value.
+							$default_value = esc_html( $default_value );
+						}
 
 						// Only set non-empty default values.
 						if ( ! empty( $default_value ) ) {
@@ -341,7 +365,9 @@ class UR_Admin_Export_Users {
 			// Merge only non-empty values from $user_before_merge_value.
 			if ( ! empty( $user_before_merge_value ) ) {
 				foreach ( $user_before_merge_value as $key => $value ) {
-					if ( ! empty( $value ) ) {
+					if (
+						! isset( $user_extra_row[ $key ] ) || '' === $user_extra_row[ $key ] || ( is_array( $user_extra_row[ $key ] ) && empty( $user_extra_row[ $key ] ) )
+					) {
 						$user_extra_row[ $key ] = $value;
 					}
 				}

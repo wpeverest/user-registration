@@ -202,7 +202,7 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 					$row .= "<td $attributes>";
 					switch ( $column_name ) {
 						case 'username':
-							$row .= "$avatar " . $user_object['user_login'];
+							$row .= "$avatar " . '<p>' . $user_object['user_login'] . '</p>';
 							break;
 						case 'email':
 							$row .= "<a href='" . esc_url( "mailto:$email" ) . "'>$email</a>";
@@ -286,7 +286,7 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 			</div>
 
 			<div class="" id="user-registration-pro-members-filters" style="display: flex; gap: 10px">
-				<select name="membership_id" id="user_registration_pro_users_form_filter">
+				<select name="membership_id" id="user_registration_pro_users_form_filter" class="ur-enhanced-select">
 					<option
 						value=""><?php echo esc_html__( 'All Membership', 'user-registration' ); ?></option>
 					<?php

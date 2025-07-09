@@ -33,6 +33,9 @@
 		$(".ur_save_login_form_action_button").on("click", function () {
 			ur_save_login_form_settings();
 		});
+		$('.ur-submit-button.ur-disabled-btn').on("click", function(e) {
+			e.preventDefault();
+		});
 	});
 
 	function ur_save_login_form_settings() {
@@ -505,7 +508,7 @@
 				);
 
 			form.find(
-				".user-registration-form-row[data-field='password'] label"
+				".user-registration-form-row label[for='password']"
 			).html(value + '<span class="required">*</span>');
 		});
 
