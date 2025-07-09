@@ -21,22 +21,28 @@ class User_Registration_Paypal_Module {
 		if ( is_admin() ) {
 			// Filter for global settings.
 			add_filter( 'user_registration_payment_settings', array( $this, 'get_paypal_settings' ) );
+			add_filter( 'urm_validate_paypal_payment_section_before_update', array(
+				$this,
+				'validate_paypal_section'
+			) );
+			add_action( 'urm_save_paypal_payment_section', array( $this, 'save_section_settings' ), 10, 1 );
 		}
 	}
 
 
 	/**
-	 * Get Stripe Global Settings.
+	 * raw_settings
 	 *
-	 * @param array $settings settings.
+	 * @return array
 	 */
-	public function get_paypal_settings( $settings ) {
-		$paypal_settings = array(
-			'title'    => __( 'Paypal Settings', 'user-registration' ),
-			'type'     => 'card',
-			'id'       => 'paypal_settings_id',
-			'desc'     => '',
-			'settings' => array(
+	public function raw_settings() {
+		return array(
+			'title'        => __( 'Paypal Settings', 'user-registration' ),
+			'type'         => 'accordian',
+			'id'           => 'paypal',
+			'desc'         => '',
+			'is_connected' => get_option( 'urm_paypal_connection_status', false ),
+			'settings'     => array(
 				array(
 					'id'       => 'user_registration_global_paypal_mode',
 					'type'     => 'select',
@@ -81,7 +87,7 @@ class User_Registration_Paypal_Module {
 				array(
 					'type'     => 'text',
 					'title'    => __( 'Client ID', 'user-registration' ),
-					'desc'     => __( "Your client_id, Required for one click subscription cancellation.", "user-registration" ),
+					'desc'     => __( "Your client_id, Required for subscription related operations.", "user-registration" ),
 					'desc_tip' => true,
 					'id'       => 'user_registration_global_paypal_client_id',
 					'default'  => get_option( 'user_registration_global_paypal_client_id' ),
@@ -89,17 +95,106 @@ class User_Registration_Paypal_Module {
 				array(
 					'type'     => 'text',
 					'title'    => __( 'Client Secret', 'user-registration' ),
-					'desc'     => __( "Your client_secret, Required for one click subscription cancellation.", "user-registration" ),
+					'desc'     => __( "Your client_secret, Required for subscription related operations.", "user-registration" ),
 					'desc_tip' => true,
 					'id'       => 'user_registration_global_paypal_client_secret',
 					'default'  => get_option( 'user_registration_global_paypal_client_secret' ),
 				),
+				array(
+					'title' => __( 'Save', 'user-registration' ),
+					'id'    => 'user_registration_paypal_save_settings',
+					'type'  => 'button',
+					'class' => 'payment-settings-btn'
+				),
 			),
 		);
+	}
 
-		$settings['sections']['paypal_options'] = $paypal_settings;
+	/**
+	 * Get Stripe Global Settings.
+	 *
+	 * @param array $settings settings.
+	 */
+	public function get_paypal_settings( $settings ) {
+		$stripe_settings                        = $this->raw_settings();
+		$settings['sections']['paypal_options'] = $stripe_settings;
 
 		return $settings;
+	}
+
+	/**
+	 * validate_stripe_section
+	 *
+	 * @param $form_data
+	 *
+	 * @return true[]
+	 * @throws \Stripe\Exception\ApiErrorException
+	 */
+	public function validate_paypal_section( $form_data ) {
+		$changed  = false;
+		$response = array(
+			'status' => true,
+		);
+
+		foreach ( $form_data as $k => $data ) {
+			$last_data = get_option( $k );
+			if ( $last_data !== $data ) {
+				$changed = true;
+				break;
+			}
+		}
+		if ( empty( $form_data['user_registration_global_paypal_cancel_url'] ) ) {
+			$response['status']  = false;
+			$response['message'] = 'Field Cancel Url is required.';
+
+			return $response;
+		}
+		if ( empty( $form_data['user_registration_global_paypal_return_url'] ) ) {
+			$response['status']  = false;
+			$response['message'] = 'Field Return Url is required.';
+
+			return $response;
+		}
+
+		if ( ! empty( $form_data['user_registration_global_paypal_client_id'] ) && empty( $form_data['user_registration_global_paypal_client_secret'] ) ) {
+			$response['status']  = false;
+			$response['message'] = 'Field client secret is required with client id';
+			return $response;
+		}
+		if ( ! empty( $form_data['user_registration_global_paypal_client_secret'] ) && empty( $form_data['user_registration_global_paypal_client_id'] ) ) {
+			$response['status']  = false;
+			$response['message'] = 'Field client id is required with client secret';
+			return $response;
+		}
+		if ( ! empty( $form_data['user_registration_global_paypal_client_id'] ) && ! empty( $form_data['user_registration_global_paypal_client_secret'] ) && $changed ) {
+			$client_id      = $form_data['user_registration_global_paypal_client_id'];
+			$client_secret  = $form_data['user_registration_global_paypal_client_secret'];
+			$url            = ( 'production' === $form_data['user_registration_global_paypal_mode'] ) ? 'https://api-m.paypal.com/' : 'https://api-m.sandbox.paypal.com/';
+			$paypal_service = new \WPEverest\URMembership\Admin\Services\Paypal\PaypalService();
+			$request        = $paypal_service->login_paypal( $url, $client_id, $client_secret );
+			if ( 200 !== $request['status_code'] ) {
+				$response['status']  = false;
+				$response['message'] = 'Invalid Paypal Credentials';
+
+				return $response;
+			}
+		}
+
+		return $response;
+
+
+	}
+
+	/**
+	 * save_section_settings
+	 *
+	 * @param $form_data
+	 *
+	 * @return void
+	 */
+	public function save_section_settings( $form_data ) {
+		$section = $this->raw_settings();
+		ur_save_settings_options( $section, $form_data );
 	}
 }
 

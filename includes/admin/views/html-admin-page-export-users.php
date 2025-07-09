@@ -23,7 +23,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 						<p>
 							<select name="export_users" id="selected-export-user-form" class="ur-input forms-list ur-enhanced-select">
-								<option value="" ><?php esc_html_e( 'Select Form', 'user-registration' ); ?></option>
+								<option value="" >
+								<?php
+								if ( ! empty( $all_forms ) ) {
+									esc_html_e( 'Select Form', 'user-registration' );
+								} else {
+									esc_html_e( 'No Forms Available, please create one.', 'user-registration' );
+								}
+								?>
+								</option>
 								<?php
 								foreach ( $all_forms as $form_id => $form ) {
 									echo '<option value ="' . esc_attr( $form_id ) . '">' . esc_html( $form ) . '</option>';
@@ -31,7 +39,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 								?>
 							</select>
 						</p>
-						<?php do_action( 'user_registration_custom_export_template', array_keys( $all_forms )[0] ); ?>
+
+						<?php
+						if ( ! empty( $all_forms ) ) {
+							do_action( 'user_registration_custom_export_template', array_keys( $all_forms )[0] );
+						}
+						?>
 
 						<input type="button"  class="button button-primary ur_export_user_action_button " name="user_registration_export_users" value="<?php esc_attr_e( 'Export Users', 'user-registration' ); ?>">
 
