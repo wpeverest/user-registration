@@ -27,7 +27,7 @@
     },
     "header": {
       "type": "string",
-      "default": "Thank You"
+      "default": "Thank You! Your registration was completed successfully."
     },
     "footer": {
       "type": "string",

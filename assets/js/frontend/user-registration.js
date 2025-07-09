@@ -2929,8 +2929,30 @@ function customPasswordChecks(password) {
 
 //Shows the content restriction message if botiga theme is used.
 jQuery(document).ready(function($) {
-	var urcrContentRestrictMsg = $document.find('.urcr-restrict-msg');
+	var urcrContentRestrictMsg = $(document).find('.urcr-restrict-msg');
 	if (urcrContentRestrictMsg.length > 0) {
 		urcrContentRestrictMsg.first().css('display', 'block');
 	}
+});
+
+/**
+ * Check if hello elementor theme is active or not teo resolve flatpickr design issue.
+ *
+ */
+jQuery(document).ready(function($) {
+
+	//Check the hello elemtor theme is active or not through its stylesheet.
+	$isHelloElementorActive = $('link#hello-elementor-css[href*="themes/hello-elementor"]').length > 0;
+
+	if(!$isHelloElementorActive) {
+		return;
+	}
+
+	$(document).on('focus', '.ur-flatpickr-field', function () {
+		var $input = $(this);
+
+		setTimeout(function () {
+			$('.flatpickr-calendar:visible .flatpickr-current-month').css('display', 'flex');
+		}, 50);
+	});
 });

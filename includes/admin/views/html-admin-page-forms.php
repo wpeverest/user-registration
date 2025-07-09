@@ -96,10 +96,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 											<h3 class="ur-fields-not-found-title"><?php esc_html_e( 'Whoops!', 'user-registration' ); ?></h3>
 											<span><?php esc_html_e( 'There is not any field that you were searching for.', 'user-registration' ); ?></span>
 										</div>
-										<h2 class='ur-toggle-heading'><?php esc_html_e( 'Default User Fields', 'user-registration' ); ?></h2>
+										<h2 class='ur-toggle-heading closed'><?php esc_html_e( 'Default User Fields', 'user-registration' ); ?></h2>
 										<hr/>
 										<?php $this->get_registered_user_form_fields(); ?>
-										<h2 class='ur-toggle-heading'><?php esc_html_e( 'Extra Fields', 'user-registration' ); ?></h2>
+										<h2 class='ur-toggle-heading closed'><?php esc_html_e( 'Extra Fields', 'user-registration' ); ?></h2>
 										<hr/>
 										<?php $this->get_registered_other_form_fields(); ?>
 										<?php do_action( 'user_registration_extra_fields' ); ?>

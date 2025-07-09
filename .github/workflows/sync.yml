@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - UR-2519-fix-form-design-issue
+      - UR-2379-enhancement-request-separate-payment-settings-save-mechanism-for-each-payment-module
     workflow_dispatch:
 jobs:
   sync:
