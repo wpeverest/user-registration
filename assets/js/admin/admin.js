@@ -65,7 +65,7 @@ jQuery(function ($) {
 				message = user_registration_form_builder_data.form_membership_payment_fields_disabled_message;
 			}
 			else if($(this).hasClass("ur-membership-field-disabled")){
-				message = user_registration_form_builder_data.form_membership_field_disabled_message;				
+				message = user_registration_form_builder_data.form_membership_field_disabled_message;
 			}
 			else{
 				message = user_registration_form_builder_data.form_one_time_draggable_fields_locked_message.replace(
@@ -490,7 +490,7 @@ jQuery(function ($) {
 								'" class="form-settings-tab ' +
 								classToAdd +
 								'" ' +
-								dataAttributes + 
+								dataAttributes +
 								style +
 								" >" +
 								appending_text +
@@ -1617,7 +1617,7 @@ jQuery(function ($) {
 
 	$(document.body).on(
 		"click",
-		"#user_registration_enable_paypal_standard , #user_registration_override_paypal_global_settings",
+		"#user_registration_override_paypal_global_settings",
 		function () {
 			update_paypal_settings($(this));
 		}
