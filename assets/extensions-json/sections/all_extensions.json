@@ -341,7 +341,7 @@
         "professional",
         "themegrill agency"
       ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=payment",
+      "setting_url": "admin.php?page=user-registration-settings&tab=payment#'stripe'",
       "demo_video_url": "IhAuojzys8k",
       "released_date": "16/07/2020"
     },
@@ -550,7 +550,7 @@
         "professional",
         "themegrill agency"
       ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=payment",
+      "setting_url": "admin.php?page=user-registration-settings&tab=payment#'authorize_net'",
       "demo_video_url": "tNj6yg9okMQ",
       "released_date": "01/08/2024"
     },
@@ -566,7 +566,7 @@
         "professional",
         "themegrill agency"
       ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=payment",
+      "setting_url": "admin.php?page=user-registration-settings&tab=payment#'mollie'",
       "demo_video_url": "",
       "released_date": "19/05/2025"
     },
