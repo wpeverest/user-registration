@@ -567,7 +567,10 @@
 					}
 
 					&.btn-trial {
-						background: #ff8300;
+						color: #ff8300;
+					}
+					&.btn-expired {
+						background: #000000;
 					}
 				}
 
