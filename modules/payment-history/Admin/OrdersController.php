@@ -57,6 +57,6 @@ class OrdersController {
 			return $validate_approval_request;
 		}
 
-		return $this->order_service->approve_payment_status( $order_id, $order['subscription_id'] );
+		return $this->order_service->approve_payment_status( $order, $order['subscription_id'] );
 	}
 }

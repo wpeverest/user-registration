@@ -5969,15 +5969,23 @@ if ( ! function_exists( 'ur_check_is_inactive' ) ) {
 	 * Check if user is denied.
 	 */
 	function ur_check_is_inactive() {
-		if ( ! ur_check_module_activation( 'membership' ) || current_user_can( 'manage_options' ) ) {
+		if ( ! ur_check_module_activation( 'membership' ) ||
+			 current_user_can( 'manage_options' ) ||
+			 ( ! empty( $_POST['action'] ) && in_array( $_POST['action'], array(
+					"user_registration_membership_confirm_payment",
+					"user_registration_membership_create_stripe_subscription"
+				) ) )
+		) {
 			return;
 		}
 		$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
-		$membership         = $members_repository->get_member_membership_by_id( get_current_user_id() );
+
+		$membership = $members_repository->get_member_membership_by_id( get_current_user_id() );
 
 		if ( empty( $membership ) ) {
 			return;
 		}
+
 		if ( in_array( $membership['status'], array( 'pending', 'canceled', 'inactive' ) ) ) {
 			wp_logout();
 		}

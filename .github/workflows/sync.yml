@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - master
+      - UR-2025-membership-upgrade-feature
     workflow_dispatch:
 jobs:
   sync:

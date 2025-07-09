@@ -41,17 +41,35 @@ class MembersOrderRepository extends BaseRepository implements MembersOrderInter
 		return ! $result ? false : $result;
 	}
 
-	public function delete_member_order( $member_id ) {
-		$result = $this->wpdb()->get_row(
-			$this->wpdb()->prepare(
-				"DELETE FROM $this->table wmo
-		         WHERE wmo.user_id = %d",
-				$member_id
-			),
-			ARRAY_A
-		);
+	public function delete_member_order( $member_id, $delete_all = true ) {
+		if ( $delete_all ) {
+			// Delete all orders for the member
+			$deleted = $this->wpdb()->query(
+				$this->wpdb()->prepare(
+					"DELETE FROM $this->table WHERE user_id = %d",
+					$member_id
+				)
+			);
+		} else {
+			// Delete only the latest order for the member
 
-		return ! $result ? false : $result;
+			$deleted = $this->wpdb()->query(
+				$this->wpdb()->prepare(
+					"DELETE FROM $this->table
+                 WHERE id = (
+                     SELECT id FROM (
+                         SELECT id FROM $this->table
+                         WHERE user_id = %d
+                         ORDER BY id DESC
+                         LIMIT 1
+                     ) AS latest
+                 )",
+					$member_id
+				)
+			);
+		}
+
+		return $deleted !== false && $deleted > 0;
 	}
 
 }
