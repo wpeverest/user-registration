@@ -299,6 +299,10 @@
 						},
 						complete: function () {
 							$form = $('#user-registration-form-' + form_response.form_id);
+							$form
+								.find ('.ur-submit-button')
+								.find('span')
+								.removeClass('ur-front-spinner');
 							ur_membership_frontend_utils.remove_spinner($form);
 							ur_membership_frontend_utils.toggleSaveButtons(false, $this);
 						}
