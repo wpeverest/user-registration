@@ -10,7 +10,7 @@
 			 */
 			append_spinner: function ($element) {
 				if ($element && $element.append) {
-					var spinner = '<span class="ur-front-spinner is-active"></span>';
+					var spinner = '<span class="urm-spinner is-active"></span>';
 					$element.append(spinner);
 					return true;
 				}
@@ -23,7 +23,7 @@
 			 */
 			remove_spinner: function ($element) {
 				if ($element && $element.remove) {
-					$element.find('.ur-front-spinner').remove();
+					$element.find('.urm-spinner').remove();
 					return true;
 				}
 				return false;
@@ -1442,6 +1442,9 @@
 											error_notice = $('#upgrade-membership-notice'),
 											btn = $('.swal2-confirm');
 										//append spinner
+										if( btn.find('span.urm-spinner').length > 0 ) {
+											return false;
+										}
 										ur_membership_frontend_utils.append_spinner(btn);
 
 										//validation before request start
@@ -1452,13 +1455,15 @@
 
 											if (selected_plan === undefined) {
 												has_error = true;
-												error_notice.text(urmf_data.label.i18n_change_plan_required);
+												error_notice.text(urmf_data.labels.i18n_change_plan_required);
+												ur_membership_frontend_utils.remove_spinner(btn);
 												return false;
 											}
 
 											if (selected_pg === undefined || selected_pg === 'free') {
 												has_error = true;
 												error_notice.text(urmf_data.labels.i18n_field_payment_gateway_field_validation);
+												ur_membership_frontend_utils.remove_spinner(btn);
 												return false;
 											}
 										}
