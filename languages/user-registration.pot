@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-07-09T11:37:52+00:00\n"
+"POT-Creation-Date: 2025-07-10T10:57:05+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: user-registration\n"
@@ -546,7 +546,7 @@ msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:231
 #: includes/admin/class-ur-admin-menus.php:726
-#: src/form-templates/components/PluginStatus.js:89
+#: src/form-templates/components/PluginStatus.js:90
 msgid "Install & Activate"
 msgstr ""
 
@@ -586,8 +586,8 @@ msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:244
 #: includes/admin/class-ur-admin-menus.php:739
-#: src/form-templates/components/PluginStatus.js:86
-#: src/form-templates/components/PluginStatus.js:95
+#: src/form-templates/components/PluginStatus.js:87
+#: src/form-templates/components/PluginStatus.js:96
 msgid "Continue"
 msgstr ""
 
@@ -3286,10 +3286,10 @@ msgstr ""
 
 #: includes/admin/updater/class-ur-addon-updater.php:591
 #: modules/membership/includes/Frontend/Frontend.php:243
-#: src/form-templates/components/PluginStatus.js:43
-#: src/form-templates/components/PluginStatus.js:57
-#: src/form-templates/components/PluginStatus.js:169
-#: src/form-templates/components/PluginStatus.js:187
+#: src/form-templates/components/PluginStatus.js:44
+#: src/form-templates/components/PluginStatus.js:58
+#: src/form-templates/components/PluginStatus.js:170
+#: src/form-templates/components/PluginStatus.js:188
 #: src/form-templates/components/TemplateList.js:180
 #: src/form-templates/components/TemplateList.js:229
 #: src/form-templates/components/TemplateList.js:245
@@ -10153,7 +10153,7 @@ msgid "Trial Status"
 msgstr ""
 
 #: modules/membership/includes/Templates/Emails/payment-successful-email.php:19
-#: modules/payment-history/Views/payment-details.php:141
+#: modules/payment-history/Views/payment-details.php:142
 #: templates/myaccount/membership.php:78
 msgid "Trial Start Date"
 msgstr ""
@@ -10162,10 +10162,10 @@ msgstr ""
 #: modules/membership/includes/Templates/Emails/payment-successful-email.php:24
 #: modules/membership/includes/Templates/Emails/payment-successful-email.php:28
 #: modules/payment-history/Views/payment-details.php:10
-#: modules/payment-history/Views/payment-details.php:144
-#: modules/payment-history/Views/payment-details.php:152
-#: modules/payment-history/Views/payment-details.php:160
-#: modules/payment-history/Views/payment-details.php:177
+#: modules/payment-history/Views/payment-details.php:145
+#: modules/payment-history/Views/payment-details.php:153
+#: modules/payment-history/Views/payment-details.php:161
+#: modules/payment-history/Views/payment-details.php:178
 #: templates/myaccount/membership.php:40
 #: templates/myaccount/membership.php:84
 #: templates/myaccount/membership.php:97
@@ -10176,7 +10176,7 @@ msgid "N/A"
 msgstr ""
 
 #: modules/membership/includes/Templates/Emails/payment-successful-email.php:23
-#: modules/payment-history/Views/payment-details.php:149
+#: modules/payment-history/Views/payment-details.php:150
 #: templates/myaccount/membership.php:91
 msgid "Trial End Date"
 msgstr ""
@@ -10206,19 +10206,19 @@ msgstr ""
 #: modules/membership/includes/Templates/Emails/payment-successful-email.php:52
 #: modules/membership/includes/Templates/membership-registration-form.php:159
 #: modules/membership/includes/Templates/membership-registration-form.php:167
-#: modules/payment-history/Views/payment-details.php:157
+#: modules/payment-history/Views/payment-details.php:158
 msgid "Coupon"
 msgstr ""
 
 #: modules/membership/includes/Templates/Emails/payment-successful-email.php:56
-#: modules/payment-history/Views/payment-details.php:165
+#: modules/payment-history/Views/payment-details.php:166
 msgid "Coupon Discount"
 msgstr ""
 
 #: modules/membership/includes/Templates/Emails/payment-successful-email.php:61
 #: modules/membership/includes/Templates/membership-registration-form.php:186
 #: modules/membership/includes/Templates/membership-registration-form.php:189
-#: modules/payment-history/Views/payment-details.php:182
+#: modules/payment-history/Views/payment-details.php:183
 #: templates/dashboard-widget.php:57
 msgid "Total"
 msgstr ""
@@ -10416,15 +10416,15 @@ msgstr ""
 msgid "Product Amount"
 msgstr ""
 
-#: modules/payment-history/Views/payment-details.php:132
+#: modules/payment-history/Views/payment-details.php:133
 msgid "Trial Order"
 msgstr ""
 
-#: modules/payment-history/Views/payment-details.php:136
+#: modules/payment-history/Views/payment-details.php:137
 msgid "✓"
 msgstr ""
 
-#: modules/payment-history/Views/payment-details.php:136
+#: modules/payment-history/Views/payment-details.php:137
 msgid "x"
 msgstr ""
 
@@ -11699,31 +11699,31 @@ msgstr ""
 msgid "Unexpected response format."
 msgstr ""
 
-#: src/form-templates/components/PluginStatus.js:44
+#: src/form-templates/components/PluginStatus.js:45
 msgid "Invalid response format."
 msgstr ""
 
-#: src/form-templates/components/PluginStatus.js:58
+#: src/form-templates/components/PluginStatus.js:59
 msgid "Unable to check plugin status."
 msgstr ""
 
-#: src/form-templates/components/PluginStatus.js:92
+#: src/form-templates/components/PluginStatus.js:93
 msgid "Activate and Continue"
 msgstr ""
 
-#: src/form-templates/components/PluginStatus.js:148
+#: src/form-templates/components/PluginStatus.js:149
 msgid "Plugin activated successfully."
 msgstr ""
 
-#: src/form-templates/components/PluginStatus.js:152
+#: src/form-templates/components/PluginStatus.js:153
 msgid "Success"
 msgstr ""
 
-#: src/form-templates/components/PluginStatus.js:163
+#: src/form-templates/components/PluginStatus.js:164
 msgid "Failed to activate plugin: %s."
 msgstr ""
 
-#: src/form-templates/components/PluginStatus.js:181
+#: src/form-templates/components/PluginStatus.js:182
 msgid "Unable to activate %s."
 msgstr ""
 
