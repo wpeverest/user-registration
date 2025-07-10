@@ -170,6 +170,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			$this->define( 'UR_FORM_PATH', UR_ABSPATH . 'includes' . UR_DS . 'form' . UR_DS );
 			$this->define( 'UR_SESSION_CACHE_GROUP', 'ur_session_id' );
 			$this->define( 'UR_PRO_ACTIVE', false );
+			$this->define( 'UR_DEV', false );
 		}
 
 		/**
@@ -304,7 +305,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 				include_once UR_ABSPATH . 'includes/3rd-party/oxygen/class-ur-oxygen.php';
 			}
 			// Divi builder compatiblity.
-			if(class_exists('WPEverest\URM\DiviBuilder\Builder')) {
+			if ( class_exists( 'WPEverest\URM\DiviBuilder\Builder' ) ) {
 				WPEverest\URM\DiviBuilder\Builder::init();
 			}
 

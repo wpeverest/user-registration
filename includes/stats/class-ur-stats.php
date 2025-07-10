@@ -123,7 +123,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 
 			$base_product = $this->get_base_product();
 
-			$active_plugins   = get_option( 'active_plugins', array() );
+			$active_plugins = get_option( 'active_plugins', array() );
 
 			$base_product_name = $is_premium ? 'User Registration Pro' : 'User Registration';
 
@@ -164,20 +164,19 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 				}
 			}
 
-
 			/**
 			 * Format module data to track in TG Tracking.
 			 *
 			 * @since 4.0
 			 */
-			 $enabled_features = get_option( 'user_registration_enabled_features', array() );
+			$enabled_features = get_option( 'user_registration_enabled_features', array() );
 
-			 $addons_list_moved_into_module = array(
-                'user-registration-payments',
-                'user-registration-content-restriction',
-                'user-registration-frontend-listing',
-                'user-registration-membership',
-             );
+			$addons_list_moved_into_module = array(
+				'user-registration-payments',
+				'user-registration-content-restriction',
+				'user-registration-frontend-listing',
+				'user-registration-membership',
+			);
 
 			if ( ! empty( $enabled_features ) ) {
 				$our_modules     = $this->get_modules();
@@ -185,13 +184,13 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 				foreach ( $enabled_features as $slug ) {
 					if ( isset( $modules_by_slug[ $slug ] ) ) {
 						$module                       = $modules_by_slug[ $slug ];
-						$product_slug 				  = in_array( $slug, $addons_list_moved_into_module ) ? $slug . '/' . $slug . '.php' : $slug;
+						$product_slug                 = in_array( $slug, $addons_list_moved_into_module ) ? $slug . '/' . $slug . '.php' : $slug;
 						$addons_data[ $product_slug ] = array(
 							'product_name'    => $module['name'],
 							'product_version' => UR()->version,
 							'product_type'    => in_array( $slug, $addons_list_moved_into_module ) ? 'plugin' : 'module',
 							'product_slug'    => $product_slug,
-							'is_premium'      => $is_premium
+							'is_premium'      => $is_premium,
 						);
 					}
 				}
@@ -303,12 +302,36 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		}
 
 		/**
+		 * Get api stats url.
+		 *
+		 * @return string
+		 */
+		private function get_stats_api_url() {
+			$url = '';
+			// Ingore for development mode.
+			if ( defined( 'UR_DEV' ) && UR_DEV ) {
+				if ( defined( 'TG_USERS_TRACKING_VERSION' ) ) {
+					$url = rest_url() . 'tgreporting/v1/process-premium/';
+				}
+			} else {
+				$url = self::REMOTE_URL;
+			}
+
+			return $url;
+		}
+		/**
 		 * Call API.
 		 *
 		 * @return void
 		 */
 		public function call_api() {
 			global $wpdb;
+			$stats_api_url = $this->get_stats_api_url();
+
+			if ( '' === $stats_api_url ) {
+				return;
+			}
+
 			$theme                        = wp_get_theme();
 			$data                         = array();
 			$data['product_data']         = $this->get_plugin_lists();
@@ -331,7 +354,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 			$data['base_product']         = $this->get_base_product();
 			$data['global_settings']      = $this->get_global_settings();
 
-			$this->send_request( apply_filters( 'user_registration_tg_tracking_remote_url' , self::REMOTE_URL ), $data );
+			$this->send_request( apply_filters( 'user_registration_tg_tracking_remote_url', $stats_api_url ), $data );
 		}
 
 		/**
@@ -514,8 +537,8 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		 *
 		 * @since 4.0
 		 */
-		public function get_modules(){
-			$all_modules  = file_get_contents( ur()->plugin_path() . '/assets/extensions-json/all-features.json' );
+		public function get_modules() {
+			$all_modules = file_get_contents( ur()->plugin_path() . '/assets/extensions-json/all-features.json' );
 
 			if ( ur_is_json( $all_modules ) ) {
 				$all_modules = json_decode( $all_modules, true );
