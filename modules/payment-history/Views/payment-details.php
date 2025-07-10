@@ -120,8 +120,9 @@ endif;
 		$currency   = get_option( 'user_registration_payment_currency', 'USD' );
 		$currencies = ur_payment_integration_get_currencies();
 		$symbol     = $currencies[ $currency ]['symbol'];
-		$amount     = $order_detail['billing_amount'] ?? $order_detail['total_amount'];
-		echo $symbol . absint( $amount )
+		$amount     = ("pending" === $order_detail['status']) ?  $order_detail['total_amount'] : ( $order_detail['billing_amount'] ?? $order_detail['total_amount']);
+		echo $symbol . number_format( $amount, 2 )
+
 		?>
 	</div>
 </div>
