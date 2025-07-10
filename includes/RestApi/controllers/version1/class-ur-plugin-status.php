@@ -122,20 +122,20 @@ class UR_Plugin_Status {
 
 		$plugin_statuses = array();
 
-		if ( ur_check_module_activation( 'payments' ) ) {
-			$plugin_statuses['user-registration-payments'] = 'active';
-		} else {
-			$plugin_statuses['user-registration-payments'] = 'not-installed';
-		}
-
 		foreach ( $addons_lists as $addon ) {
-			$addon_main_file = "user-registration-pro" === $addon->slug ? "user-registration" : $addon->slug;
-			$addon_file = $addon->slug . '/' . $addon_main_file . '.php';
+			$addon_main_file = 'user-registration-pro' === $addon->slug ? 'user-registration' : $addon->slug;
+			$addon_file      = $addon->slug . '/' . $addon_main_file . '.php';
 			if ( in_array( $addon_file, $installed_plugin_slugs, true ) ) {
 				$plugin_statuses[ $addon->slug ] = is_plugin_active( $addon_file ) ? 'active' : 'inactive';
 			} elseif ( ! isset( $plugin_statuses[ $addon->slug ] ) ) {
 					$plugin_statuses[ $addon->slug ] = 'not-installed';
 			}
+		}
+
+		if ( ur_check_module_activation( 'payments' ) ) {
+			$plugin_statuses['user-registration-payments'] = 'active';
+		} else {
+			$plugin_statuses['user-registration-payments'] = 'not-installed';
 		}
 
 		return new WP_REST_Response(
