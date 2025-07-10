@@ -705,6 +705,7 @@
 					'<div class="stripe-input-container"><div id="card-element"></div></div>' +
 					'</div>' +
 					'</div>' +
+					ur_membership_ajax_utils.authorize_net_container_html(),
 					'</div>' +
 					'<span id="upgrade-membership-notice"></span>' +
 					'</div>';

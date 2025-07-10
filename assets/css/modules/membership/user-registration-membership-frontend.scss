@@ -601,6 +601,51 @@ label {
 			}
 		}
 	}
+
+	.authorize-net-container {
+		width: max(50%, 240px);
+		.ur-error {
+		color: #d63638;
+		}
+		.user-registration-one-half {
+			float: left;
+			width: 49%;
+			margin-right: 2%;
+		}
+
+		.user-registration-one-half:nth-child(2) {
+			margin-right: 0;
+		}
+		.user-registration-membership_page_user-registration-frontend-list .shortcode .widefat {
+			width: calc(100% - 40px);
+		}
+		.clearfix::before,
+		.clearfix::after {
+			content: ' ';
+			display: table;
+		}
+		.clearfix::after {
+			clear: both;
+		}
+		.user-registration-sub-label {
+			font-size: 10px;
+			font-weight: 400;
+			margin-bottom: 0;
+			color: #494d50;
+			margin-top: -10px;
+		}
+		abbr.required {
+			color: red;
+		}
+		abbr[title] {
+			text-decoration: none;
+		}
+		.ur-field-row input, .ur-field-row select {
+			width: 100%;
+			padding: 4px 8px;
+			line-height: 1.5;
+		}
+	}
 }
 
 .upgrade-plan-container {
@@ -616,39 +661,5 @@ label {
 			gap: 5px;
 			align-items: center;
 		}
-	}
-}
-
-.membership-only.authorize-net-container {
-	width: max(50%, 240px);
-	.ur-error {
-		color: #d63638;
-	}
-	.user-registration-one-half {
-		float: left;
-		width: 49%;
-		margin-right: 2%;
-	}
-
-	.user-registration-one-half:nth-child(2) {
-		margin-right: 0;
-	}
-	.user-registration-membership_page_user-registration-frontend-list .shortcode .widefat {
-		width: calc(100% - 40px);
-	}
-	.clearfix::before,
-	.clearfix::after {
-	content: ' ';
-		display: table;
-	}
-	.clearfix::after {
-		clear: both;
-	}
-	.user-registration .ur-form-row .ur-field-item .user-registration-sub-label {
-		font-size: 12px;
-		font-weight: 400;
-		margin-bottom: 0;
-		color: #494d50;
-		margin-top: -10px;
 	}
 }
