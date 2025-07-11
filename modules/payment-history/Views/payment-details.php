@@ -117,12 +117,18 @@ endif;
 	</div>
 	<div class="payment-detail-data">
 		<?php
+
 		$currency   = get_option( 'user_registration_payment_currency', 'USD' );
 		$currencies = ur_payment_integration_get_currencies();
 		$symbol     = $currencies[ $currency ]['symbol'];
-		$amount     = ("pending" === $order_detail['status']) ?  $order_detail['total_amount'] : ( $order_detail['billing_amount'] ?? $order_detail['total_amount']);
+		$amount     = $order_detail["payment_method"] === "free"
+			? 0
+			: (
+			( "pending" === $order_detail['status'] )
+				? $order_detail['total_amount']
+				: ( $order_detail['billing_amount'] ?? $order_detail['total_amount'] )
+			);
 		echo $symbol . number_format( $amount, 2 )
-
 		?>
 	</div>
 </div>
@@ -188,7 +194,7 @@ endif;
 		$amount = ( $order_detail['product_amount'] ) ?? $order_detail['total_amount'];
 
 		if ( 'bank' !== $order_detail['payment_method'] && isset( $post_content ) && ( 'paid' === $post_content['type'] || ( 'subscription' === $post_content['type'] && 'off' === $order_detail['trial_status'] ) ) ) {
-			$discount_amount = ( isset( $order_detail['coupon_discount_type'] ) && $order_detail['coupon_discount_type'] === 'fixed' ) ? ( ! empty( $order_detail['coupon_discount'] ) ? $order_detail['coupon_discount'] : 0 ) : ( ! empty( $order_detail['coupon_discount'] ) ? ($amount * $order_detail['coupon_discount'])/100 : 0 );
+			$discount_amount = ( isset( $order_detail['coupon_discount_type'] ) && $order_detail['coupon_discount_type'] === 'fixed' ) ? ( ! empty( $order_detail['coupon_discount'] ) ? $order_detail['coupon_discount'] : 0 ) : ( ! empty( $order_detail['coupon_discount'] ) ? ( $amount * $order_detail['coupon_discount'] ) / 100 : 0 );
 			$total           = $amount - $discount_amount;
 		}
 

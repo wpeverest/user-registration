@@ -1460,14 +1460,14 @@
 
 											if (selected_plan === undefined) {
 												has_error = true;
-												error_notice.text(urmf_data.labels.i18n_change_plan_required);
+												ur_membership_frontend_utils.show_failure_message(urmf_data.labels.i18n_change_plan_required);
 												ur_membership_frontend_utils.remove_spinner(btn);
 												return false;
 											}
 
 											if (selected_pg === undefined || selected_pg === 'free') {
 												has_error = true;
-												error_notice.text(urmf_data.labels.i18n_field_payment_gateway_field_validation);
+												ur_membership_frontend_utils.show_failure_message(urmf_data.labels.i18n_field_payment_gateway_field_validation);
 												ur_membership_frontend_utils.remove_spinner(btn);
 												return false;
 											}
@@ -1502,7 +1502,6 @@
 							}
 						},
 						error: function (e) {
-							console.log(e);
 							Swal.fire({
 								type: 'error',
 								text: e.responseJSON.data.message,
