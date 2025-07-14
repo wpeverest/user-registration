@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-07-11T06:35:08+00:00\n"
+"POT-Creation-Date: 2025-07-14T03:48:21+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: user-registration\n"
@@ -10153,7 +10153,7 @@ msgid "Trial Status"
 msgstr ""
 
 #: modules/membership/includes/Templates/Emails/payment-successful-email.php:19
-#: modules/payment-history/Views/payment-details.php:142
+#: modules/payment-history/Views/payment-details.php:148
 #: templates/myaccount/membership.php:78
 msgid "Trial Start Date"
 msgstr ""
@@ -10162,10 +10162,10 @@ msgstr ""
 #: modules/membership/includes/Templates/Emails/payment-successful-email.php:24
 #: modules/membership/includes/Templates/Emails/payment-successful-email.php:28
 #: modules/payment-history/Views/payment-details.php:10
-#: modules/payment-history/Views/payment-details.php:145
-#: modules/payment-history/Views/payment-details.php:153
-#: modules/payment-history/Views/payment-details.php:161
-#: modules/payment-history/Views/payment-details.php:178
+#: modules/payment-history/Views/payment-details.php:151
+#: modules/payment-history/Views/payment-details.php:159
+#: modules/payment-history/Views/payment-details.php:167
+#: modules/payment-history/Views/payment-details.php:184
 #: templates/myaccount/membership.php:40
 #: templates/myaccount/membership.php:84
 #: templates/myaccount/membership.php:97
@@ -10176,7 +10176,7 @@ msgid "N/A"
 msgstr ""
 
 #: modules/membership/includes/Templates/Emails/payment-successful-email.php:23
-#: modules/payment-history/Views/payment-details.php:150
+#: modules/payment-history/Views/payment-details.php:156
 #: templates/myaccount/membership.php:91
 msgid "Trial End Date"
 msgstr ""
@@ -10206,19 +10206,19 @@ msgstr ""
 #: modules/membership/includes/Templates/Emails/payment-successful-email.php:52
 #: modules/membership/includes/Templates/membership-registration-form.php:159
 #: modules/membership/includes/Templates/membership-registration-form.php:167
-#: modules/payment-history/Views/payment-details.php:158
+#: modules/payment-history/Views/payment-details.php:164
 msgid "Coupon"
 msgstr ""
 
 #: modules/membership/includes/Templates/Emails/payment-successful-email.php:56
-#: modules/payment-history/Views/payment-details.php:166
+#: modules/payment-history/Views/payment-details.php:172
 msgid "Coupon Discount"
 msgstr ""
 
 #: modules/membership/includes/Templates/Emails/payment-successful-email.php:61
 #: modules/membership/includes/Templates/membership-registration-form.php:186
 #: modules/membership/includes/Templates/membership-registration-form.php:189
-#: modules/payment-history/Views/payment-details.php:183
+#: modules/payment-history/Views/payment-details.php:189
 #: templates/dashboard-widget.php:57
 msgid "Total"
 msgstr ""
@@ -10416,15 +10416,15 @@ msgstr ""
 msgid "Product Amount"
 msgstr ""
 
-#: modules/payment-history/Views/payment-details.php:133
+#: modules/payment-history/Views/payment-details.php:139
 msgid "Trial Order"
 msgstr ""
 
-#: modules/payment-history/Views/payment-details.php:137
+#: modules/payment-history/Views/payment-details.php:143
 msgid "✓"
 msgstr ""
 
-#: modules/payment-history/Views/payment-details.php:137
+#: modules/payment-history/Views/payment-details.php:143
 msgid "x"
 msgstr ""
 
