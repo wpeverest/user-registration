@@ -64,6 +64,22 @@ UR_Snackbar.prototype.add = function (options) {
 	label.appendChild(text);
 	container.appendChild(label);
 
+	// Add close button if dismissible
+	if (options.dismissible) {
+		var closeBtn = document.createElement('button');
+		closeBtn.classList.add('snackbar-close');
+		closeBtn.setAttribute('aria-label', 'Dismiss');
+		closeBtn.textContent = 'Dismiss';
+		closeBtn.onclick = function(e) {
+			e.stopPropagation();
+			container.style.right = '-600px';
+			setTimeout(function () {
+				container.remove();
+				instance.removeListItem(ID);
+			}, 500);
+		};
+		container.appendChild(closeBtn);
+	}
 	// Add the snackbar to the 'body' tag.
 	this.body.appendChild(container);
 
