@@ -201,7 +201,7 @@ class AJAX {
 		$membership        = new MembershipService();
 		$data              = isset( $_POST['membership_data'] ) ? (array) json_decode( wp_unslash( $_POST['membership_data'] ), true ) : array();
 		$is_stripe_enabled = isset( $data['post_meta_data']['payment_gateways']['stripe'] ) && "on" === $data['post_meta_data']['payment_gateways']['stripe']["status"];
-
+		$is_mollie_enabled = isset( $data['post_meta_data']['payment_gateways']['mollie'] ) && "on" === $data['post_meta_data']['payment_gateways']['mollie']["status"];
 
 		$data = $membership->prepare_membership_post_data( $data );
 
@@ -214,6 +214,10 @@ class AJAX {
 		}
 
 		$data = apply_filters( 'ur_membership_after_create_membership_data_prepare', $data );
+
+		if ( $is_mollie_enabled ) {
+			self::validate_mollie_duration_limit( $data );
+		}
 
 		$new_membership_ID = wp_insert_post( $data['post_data'] );
 
@@ -236,7 +240,6 @@ class AJAX {
 					update_post_meta( $new_membership_ID, $data['post_meta_data']['ur_membership']['meta_key'], wp_json_encode( $meta_data ) );
 				}
 			}
-
 
 			$response = array(
 				'membership_id' => $new_membership_ID,
@@ -279,6 +282,7 @@ class AJAX {
 		$membership        = new MembershipService();
 		$data              = isset( $_POST['membership_data'] ) ? (array) json_decode( wp_unslash( $_POST['membership_data'] ), true ) : array();
 		$is_stripe_enabled = isset( $data['post_meta_data']['payment_gateways']['stripe'] ) && "on" === $data['post_meta_data']['payment_gateways']['stripe']["status"];
+		$is_mollie_enabled = isset( $data['post_meta_data']['payment_gateways']['mollie'] ) && "on" === $data['post_meta_data']['payment_gateways']['mollie']['status'];
 
 
 		$data = $membership->prepare_membership_post_data( $data );
@@ -294,6 +298,10 @@ class AJAX {
 		$data = apply_filters( 'ur_membership_after_create_membership_data_prepare', $data );
 
 		$old_membership_data = $membership->get_membership_details( $_POST['membership_id'] );
+
+		if ( $is_mollie_enabled ) {
+			self::validate_mollie_duration_limit( $data );
+		}
 
 		$updated_ID = wp_insert_post( $data['post_data'] );
 
@@ -1095,5 +1103,39 @@ class AJAX {
 				'message' => __( "Something went wrong while cancelling membership.", "user-registration" ),
 			)
 		);
+	}
+	private static function validate_mollie_duration_limit( $data ) {
+		$meta_data = json_decode( $data["post_meta_data"]['ur_membership']["meta_value"], true );
+		if( isset( $meta_data['type'] ) &&  "subscription" === $meta_data['type'] ) {
+			$interval_length = $meta_data['subscription']['value'];
+			$interval_unit = $meta_data['subscription']['duration'];
+			switch( $interval_unit ) {
+				case 'year':
+					$has_exceeded_mollie_limit = $interval_length > 1;
+					$max_duration = 1;
+					break;
+				case 'month':
+					$has_exceeded_mollie_limit = $interval_length > 12;
+					$max_duration = 12;
+					break;
+				case 'week':
+					$has_exceeded_mollie_limit = $interval_length > 52;
+					$max_duration = 52;
+					break;
+				case 'day':
+					$has_exceeded_mollie_limit = $interval_length > 365;
+					$max_duration = 365;
+					break;
+				default:
+					$has_exceeded_mollie_limit = false;
+			}
+			if( $has_exceeded_mollie_limit ) {
+				wp_send_json_error(
+					array(
+						'message' => esc_html__( sprintf( 'Duration greater than %d %s(s) is not supported for Mollie.', $max_duration, $interval_unit ), 'user-registration' )
+					)
+				);
+			}
+		}
 	}
 }
