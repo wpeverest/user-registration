@@ -298,13 +298,7 @@
 							);
 						},
 						complete: function () {
-							$form = $('#user-registration-form-' + form_response.form_id);
-							$form
-								.find ('.ur-submit-button')
-								.find('span')
-								.removeClass('ur-front-spinner');
-							ur_membership_frontend_utils.remove_spinner($form);
-							ur_membership_frontend_utils.toggleSaveButtons(false, $this);
+							form_object.hide_loader(form_response.form_id);
 						}
 					}
 				);
@@ -788,7 +782,7 @@
 		var form_object = {
 			hide_loader: function (form_id) {
 				var $registration_form = $('#user-registration-form-' + form_id);
-				$registration_form.find('.ur-submit-button').find("span").removeClass('ur-spinner');
+				$registration_form.find('.ur-submit-button').find("span").removeClass('ur-front-spinner');
 				$registration_form.find('form').find('.ur-submit-button').prop('disabled', false);
 			}
 		};
