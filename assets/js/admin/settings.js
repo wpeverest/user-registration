@@ -1166,7 +1166,7 @@
 			snackbar.add({
 				type: 'failure',
 				message: message,
-				duration: 6,
+				duration: 3000,
 				dismissible: true
 			});
 			return true;

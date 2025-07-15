@@ -41,7 +41,6 @@ body {
 	&.failure {
 		background-color: rgb(244, 67, 54);
 	}
-
 	.snackbar-close {
 		background: transparent;
 		border: none;
@@ -58,4 +57,5 @@ body {
 	.snackbar-close:focus {
 		color: #ffd6d6;
 	}
+
 }

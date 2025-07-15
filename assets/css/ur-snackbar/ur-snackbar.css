@@ -1,1 +1,58 @@
-@charset "UTF-8";body{position:relative}.snackbar{display:-webkit-box;display:-webkit-flex;display:flex;position:fixed;right:-600px;bottom:30px;z-index:99999;color:#fff;background-color:#323232;padding:10px 16px;border-radius:4px;box-shadow:rgba(0,0,0,.2) 0 3px 5px -1px,rgba(0,0,0,.14) 0 6px 10px 0,rgba(0,0,0,.12) 0 1px 18px 0;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:14px;letter-spacing:.14994px;font-weight:400;-webkit-transition:.5s cubic-bezier(.68,-.55,.27,1.55) 0s;transition:.5s cubic-bezier(.68,-.55,.27,1.55) 0s;max-width:450px;min-width:100px}.snackbar .icon{margin-right:10px;font-weight:700;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.snackbar.success .icon::before{content:"✓"}.snackbar.failure .icon::before{content:"⤫"}.snackbar.success{background-color:#323232}.snackbar.failure{background-color:#f44336}
+@charset "UTF-8";
+body {
+  position: relative;
+}
+
+.snackbar {
+  display: flex;
+  position: fixed;
+  right: -600px;
+  bottom: 30px;
+  z-index: 99999;
+  color: white;
+  background-color: rgb(50, 50, 50);
+  padding: 10px 16px;
+  border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 5px -1px, rgba(0, 0, 0, 0.14) 0px 6px 10px 0px, rgba(0, 0, 0, 0.12) 0px 1px 18px 0px;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.14994px;
+  font-weight: 400;
+  transition: 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) 0s;
+  max-width: 450px;
+  min-width: 100px;
+  align-items: center;
+}
+.snackbar .icon {
+  margin-right: 10px;
+  font-weight: bold;
+  user-select: none;
+}
+.snackbar.success .icon::before {
+  content: "✓";
+}
+.snackbar.failure .icon::before {
+  content: "⚠";
+}
+.snackbar.success {
+  background-color: rgb(50, 50, 50);
+}
+.snackbar.failure {
+  background-color: rgb(244, 67, 54);
+}
+.snackbar .snackbar-close {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  margin-left: 12px;
+  cursor: pointer;
+  outline: none;
+  align-self: flex-start;
+  transition: color 0.2s;
+  text-decoration: underline;
+}
+.snackbar .snackbar-close:hover,
+.snackbar .snackbar-close:focus {
+  color: #ffd6d6;
+}
