@@ -259,8 +259,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 == Changelog ==
 
 = 4.3.0    - 16/07/2025 =
+* Security - Cross Site Scripting Vulnerability with urcr_restrict shortcode
 * Feature  - Membership upgrade.
-* Enhance  - Prevent use of external url's in paypal settings.
+* Enhance  - Prevent use of external url's in Paypal settings.
 * Enhance  - Auto select membership and pg if only one membership.
 * Enhance  - Separate payment settings save mechanism for each payment module
 * Tweak    - Redirection to respective payment settings.
