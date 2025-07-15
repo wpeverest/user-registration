@@ -303,12 +303,38 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		}
 
 		/**
+		 * Get api stats url.
+		 *
+		 * @since 4.3.0
+		 * @return string
+		 */
+		private function get_stats_api_url() {
+			$url = '';
+			// Ingore for development mode.
+			if ( defined( 'UR_DEV' ) && UR_DEV ) {
+				if ( defined( 'TG_USERS_TRACKING_VERSION' ) ) {
+					$url = rest_url() . 'tgreporting/v1/process-premium/';
+				}
+			} else {
+				$url = self::REMOTE_URL;
+			}
+
+			return $url;
+		}
+
+		/**
 		 * Call API.
 		 *
 		 * @return void
 		 */
 		public function call_api() {
 			global $wpdb;
+			$stats_api_url = $this->get_stats_api_url();
+
+			if ( '' === $stats_api_url ) {
+				return;
+			}
+
 			$theme                        = wp_get_theme();
 			$data                         = array();
 			$data['product_data']         = $this->get_plugin_lists();
@@ -331,7 +357,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 			$data['base_product']         = $this->get_base_product();
 			$data['global_settings']      = $this->get_global_settings();
 
-			$this->send_request( apply_filters( 'user_registration_tg_tracking_remote_url' , self::REMOTE_URL ), $data );
+			$this->send_request( apply_filters( 'user_registration_tg_tracking_remote_url', $stats_api_url ), $data );
 		}
 
 		/**
@@ -514,8 +540,8 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		 *
 		 * @since 4.0
 		 */
-		public function get_modules(){
-			$all_modules  = file_get_contents( ur()->plugin_path() . '/assets/extensions-json/all-features.json' );
+		public function get_modules() {
+			$all_modules = file_get_contents( ur()->plugin_path() . '/assets/extensions-json/all-features.json' );
 
 			if ( ur_is_json( $all_modules ) ) {
 				$all_modules = json_decode( $all_modules, true );
