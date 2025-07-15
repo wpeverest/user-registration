@@ -274,6 +274,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * Fix      - Partial content restriction message Modification.
 * Fix      - Auto login not working for stripe paid membership.
 * Fix      - Datetime field conflict with hello elementor theme.
+* Fix      - Avoid the API request to stats for development mode.
 * Fix      - Default value exported instead of selected value in CSV.
 * Fix      - Submit button label and html content not translatable in WPML.
 * Fix      - Enable Paypal in form setting triggers override global paypal settings.

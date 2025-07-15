@@ -926,11 +926,8 @@
 							);
 						},
 						complete: function () {
-							var button = $('.membership_register_button'),
-								swal_btn = $('.swal2-confirm ');
-
-							ur_membership_frontend_utils.toggleSaveButtons(false, button);
-							ur_membership_frontend_utils.remove_spinner(button);
+							var swal_btn = $('.swal2-confirm ');
+							form_object.hide_loader(form_response.form_id);
 							ur_membership_frontend_utils.toggleSaveButtons(false, swal_btn);
 							ur_membership_frontend_utils.remove_spinner(swal_btn);
 						}
@@ -1110,7 +1107,6 @@
 						data.subscription.status === "trialing") &&
 					!is_upgrading
 				) {
-					console.log('not here')
 					ur_membership_frontend_utils.show_form_success_message(data.form_response, {
 						'username': data.prepare_members_data.username,
 						'transaction_id': data.subscription.id
