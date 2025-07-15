@@ -1045,7 +1045,7 @@ abstract class UR_Form_Field {
 		$advance_settings = $this->get_field_advance_settings();
 
 		if ( ! empty( $advance_settings ) ) {
-			$settings .= "<div class='user-registration-field-option-group ur-advance-setting-block closed'>";
+			$settings .= "<div class='user-registration-field-option-group ur-advance-setting-block'>";
 			$settings .= '<h2 class="ur-toggle-heading closed">' . __( 'Advanced Settings', 'user-registration' ) . '</h2><hr>';
 			$settings .= '<div class="ur-toggle-content">';
 			$settings .= $advance_settings;
