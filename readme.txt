@@ -1,6 +1,6 @@
-=== User Registration & Membership – Custom Registration Form, Login Form, and User Profile  ===
+=== User Registration & Membership – Custom Registration Form Builder, Custom Login Form, User Profile, Content Restriction & Membership Plugin  ===
 Contributors: WPEverest
-Tags: user registration, registration, user profile, registration form, login form,
+Tags: user registration, membership, user profile, registration form, login form,
 Requires at least: 5.5
 Requires PHP: 7.2
 Tested up to: 6.8.1
@@ -8,11 +8,11 @@ Stable tag: 4.2.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-The most flexible User Registration and Membership plugin for WordPress with a user profile page, email notification, user roles assignment, and more.
+Easily create membership sites, custom user registration form, custom login form & beautiful user profile page. Restrict content based on login status & user roles.
 
 == Description ==
 
-**The most flexible User Registration and Membership plugin for WordPress - URM**
+**Easily create membership sites, custom user registration form, custom login form & beautiful user profile page. Restrict content based on login status & user roles.**
 
 Are you a beginner with absolutely zero coding skills? No problem! User Registration & Membership lets you create awesome membership websites and dynamic registration forms in minutes.
 
