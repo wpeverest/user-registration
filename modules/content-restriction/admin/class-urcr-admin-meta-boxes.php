@@ -197,7 +197,7 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 
 		$array_of_memberships = isset( $_POST['urcr_meta_memberships'] ) ? $_POST['urcr_meta_memberships'] : '';
 
-		$restricted_message = isset( $_POST['urcr_meta_content'] ) ? $_POST['urcr_meta_content'] : '';
+		$restricted_message = isset( $_POST['urcr_meta_content'] ) ? wp_kses_post( $_POST['urcr_meta_content'] ) : '';
 
 		if ( ! $whole_site_access_restricted ) {
 			update_post_meta( $post_id, 'urcr_meta_checkbox', $checkbox );

@@ -183,7 +183,7 @@ class MembershipService {
 				),
 				'ur_membership_description' => array(
 					'meta_key'   => 'ur_membership_description',
-					'meta_value' => $data['post_data']['description'],
+					'meta_value' => wp_kses_post($data['post_data']['description']),
 				)
 			),
 
