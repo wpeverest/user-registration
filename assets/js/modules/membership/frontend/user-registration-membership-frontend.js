@@ -610,7 +610,7 @@
 					'<div id="user_registration_authorize_net_gateway" data-gateway="authorize_net" class="input-text" conditional_rules="">' +
 					'<div class="ur-field-row">' +
 					'<div class="user-registration-authorize-net-card-number">' +
-					'<input type="text" id="user_registration_authorize_net_card_number" name="user_registration_authorize_net_card_number" placeholder="411111111111111" class="widefat ur-anet-sub-field user_registration_authorize_net_card_number"><br>' +
+					'<input type="text" id="user_registration_authorize_net_card_number" name="user_registration_authorize_net_card_number" maxlength="16" placeholder="411111111111111" class="widefat ur-anet-sub-field user_registration_authorize_net_card_number"><br>' +
 					'<label class="user-registration-sub-label">Card Number</label></div>' +
 					'</div>' +
 					'<div class="ur-field-row clearfix">' +
@@ -619,7 +619,7 @@
 					'<div class="user-registration-authorize-net-expiration-year user-registration-one-half last"><select class="widefat ur-anet-sub-field user_registration_authorize_net_expiration_year" id="user_registration_authorize_net_expiration_year" name="user_registration_authorize_net_expiration_year"><option> YY </option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option><option value="32">32</option><option value="33">33</option><option value="34">34</option><option value="35">35</option></select></div>' +
 					'</div>' +
 					'<div class="user-registration-authorize-net-cvc user-registration-one-half last">' +
-					'<input type="text" id="user_registration_authorize_net_card_code" name="user_registration_authorize_net_card_code" placeholder="900" class="widefat ur-anet-sub-field user_registration_authorize_net_card_code"><br>' +
+					'<input type="text" id="user_registration_authorize_net_card_code" name="user_registration_authorize_net_card_code" placeholder="900" maxlength="4" class="widefat ur-anet-sub-field user_registration_authorize_net_card_code"><br>' +
 					'<label class="user-registration-sub-label">CVC</label>' +
 					'</div>' +
 					'</div>' +
