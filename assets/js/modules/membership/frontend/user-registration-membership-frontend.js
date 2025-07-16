@@ -487,7 +487,7 @@
 				//handle differently in case of Authorize.NET
 				//gets the nonce token from ANET and send it via the AJAX request.
 				if ('authorize' === selected_pg) {
-					this.handle_authorize_upgrade();
+					this.handle_authorize_upgrade(current_plan, selected_membership_id, current_subscription_id, selected_pg, btn);
 				} else {
 					this.send_data(
 						{
@@ -534,7 +534,7 @@
 						});
 				}
 			},
-			handle_authorize_upgrade: function () {
+			handle_authorize_upgrade: function (current_plan, selected_membership_id, current_subscription_id, selected_pg, btn) {
 				var data = {
 					current_plan: current_plan,
 					selected_membership_id: selected_membership_id,
