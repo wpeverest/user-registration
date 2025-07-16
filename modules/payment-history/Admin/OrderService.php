@@ -84,7 +84,9 @@ class OrderService {
 	public function create_view_template( $order_id, $user_id ) {
 		if ( $order_id ) {
 			$order_detail = $this->orders_repository->get_order_detail( $order_id );
-
+			if( !empty($order_detail['plan_details'])) {
+				$order_detail['plan_details'] = json_decode($order_detail['plan_details'], true);
+			}
 			if ( ! empty( $order_detail['coupon'] ) ) {
 				$order_detail['coupon_discount']      = get_user_meta( $order_detail['user_id'], 'ur_coupon_discount', true );
 				$order_detail['coupon_discount_type'] = get_user_meta( $order_detail['user_id'], 'ur_coupon_discount_type', true );

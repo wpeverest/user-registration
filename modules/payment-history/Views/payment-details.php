@@ -7,7 +7,7 @@ $symbol       = $currencies[ $currency ]['symbol'] ?? '$';
 $post_content = isset( $order_detail['post_content'] ) ? json_decode( wp_unslash( $order_detail['post_content'] ), true ) : [];
 $trial_status = $order_detail['trial_status'] ?? 'off';
 $default_na   = esc_html__( 'N/A', 'user-registration' );
-
+$product_amount = isset($order_detail['plan_details']['amount']) ? $order_detail['plan_details']['amount'] : 0;
 //all fields
 $fields = [
 	'transaction_id'   => 'Transaction ID',
@@ -82,13 +82,8 @@ foreach ( $fields as $key => $label ):
 					break;
 
 				case 'product_amount':
-					if ($trial_status === 'on') {
-						$amount = 0;
-					} else {
-						$amount = ($order_detail['payment_method'] === 'free') ? 0 :
-							(($order_detail['status'] === 'pending') ? $order_detail['total_amount'] : ($order_detail['billing_amount'] ?? $order_detail['total_amount']));
-					}
-					echo $symbol . number_format($amount, 2);
+
+					echo $symbol . number_format($product_amount, 2);
 					break;
 
 				case 'trial_order':
