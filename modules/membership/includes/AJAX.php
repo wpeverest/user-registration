@@ -1085,6 +1085,11 @@ class AJAX {
 		);
 	}
 
+	/**
+	 * cancel_upcoming_subscription
+	 *
+	 * @return void
+	 */
 	public static function cancel_upcoming_subscription() {
 		ur_membership_verify_nonce( 'urm_upgrade_membership' );
 		$member_id = get_current_user_id();
@@ -1112,6 +1117,14 @@ class AJAX {
 			)
 		);
 	}
+
+	/**
+	 * validate_mollie_duration_limit
+	 *
+	 * @param $data
+	 *
+	 * @return void
+	 */
 	private static function validate_mollie_duration_limit( $data ) {
 		$meta_data = json_decode( $data["post_meta_data"]['ur_membership']["meta_value"], true );
 		if( isset( $meta_data['type'] ) &&  "subscription" === $meta_data['type'] ) {

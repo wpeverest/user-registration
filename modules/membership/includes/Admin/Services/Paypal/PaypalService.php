@@ -53,7 +53,7 @@ class PaypalService {
 		$redirect                     = ( 'production' === $paypal_options['mode'] ) ? 'https://www.paypal.com/cgi-bin/webscr/?' : 'https://www.sandbox.paypal.com/cgi-bin/webscr/?';
 		$membership_data              = $this->membership_repository->get_single_membership_by_ID( $membership );
 		$membership_metas             = wp_unslash( json_decode( $membership_data['meta_value'], true ) );
-		$membership_amount            = number_format( $is_upgrading ? $data['amount'] : $membership_metas['amount'] );
+		$membership_amount            = number_format(  $membership_metas['amount'] );
 
 		$discount_amount = 0;
 
@@ -126,8 +126,8 @@ class PaypalService {
 			}
 
 
-			if ( ! empty( $coupon_details ) || ( $is_upgrading && ! empty( $new_subscription_data ) && ! empty( $new_subscription_data['delayed_until'] ) ) ) {
-				$amount = $is_upgrading ? '0' : ( user_registration_sanitize_amount( $membership_amount ) - $discount_amount );
+			if ( ! empty( $coupon_details ) || ( $is_upgrading && ! empty( $new_subscription_data ) && ! empty( $new_subscription_data['delayed_until'] ) ) || ($is_upgrading && $data["amount"] < $membership_amount) ) {
+				$amount = $is_upgrading ? user_registration_sanitize_amount($data['amount']) : ( user_registration_sanitize_amount( $membership_amount ) - $discount_amount );
 
 				$paypal_args['t2'] = ! empty( $data ['subscription'] ) ? strtoupper( substr( $data['subscription']['duration'], 0, 1 ) ) : '';
 				$paypal_args['p2'] = ! empty( $data ['subscription']['value'] ) ? $data ['subscription']['value'] : 1;
@@ -197,7 +197,7 @@ class PaypalService {
 		}
 		$is_upgrading = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
 		if ( $is_upgrading ) {
-			$this->handle_upgrade_for_paypal( $member_id );
+			$this->handle_upgrade_for_paypal( $member_id, $member_subscription['ID'] );
 		}
 
 		$login_option = ur_get_user_login_option( $member_id );
@@ -217,12 +217,12 @@ class PaypalService {
 	 *
 	 * @return void
 	 */
-	public function handle_upgrade_for_paypal( $member_id ) {
+	public function handle_upgrade_for_paypal( $member_id , $subscription_id) {
 
 		$get_user_old_subscription = json_decode( get_user_meta( $member_id, 'urm_previous_subscription_data', true ), true );
 		$get_user_old_order        = json_decode( get_user_meta( $member_id, 'urm_previous_order_data', true ), true );
 		$new_subscription_data     = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
-
+		$subscription_service = new SubscriptionService();
 		if ( ! empty( $new_subscription_data ) ) {
 			if ( empty( $new_subscription_data['delayed_until'] ) ) {
 				$cancel_subscription = $this->cancel_subscription( $get_user_old_order, $get_user_old_subscription );
@@ -232,7 +232,11 @@ class PaypalService {
 				delete_user_meta( $member_id, 'urm_previous_subscription_data' );
 				delete_user_meta( $member_id, 'urm_next_subscription_data' );
 			}
+			$subscription_data = $subscription_service->prepare_upgrade_subscription_data( $new_subscription_data['membership'], $new_subscription_data['member_id'], $new_subscription_data );
+			$subscription_data['status'] = 'active';
+			$this->subscription_repository->update( $subscription_id, $subscription_data );
 		}
+
 		delete_user_meta( $member_id, 'urm_is_upgrading' );
 		delete_user_meta( $member_id, 'urm_is_upgrading_to' );
 		update_user_meta( $member_id, 'urm_is_user_upgraded', 1 );

@@ -190,7 +190,7 @@
 				user_data.membership = membership_input.val();
 				user_data.payment_method = 'free';
 				if (membership_input.data('urm-pg-type') !== 'free') {
-					user_data.payment_method = $('input[name="urm_payment_method"]:checked').val();
+					user_data.payment_method = $('input[name="urm_payment_method"]:checked:visible').val();
 				}
 				var date = new Date();
 				user_data.start_date = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();

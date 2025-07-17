@@ -71,7 +71,6 @@ class PaymentService {
 				update_user_meta( $response_data['member_id'], 'urm_next_subscription_data', json_encode( $response_data ) );
 			} else if ( "paypal" === $this->payment_method ) {
 				update_user_meta( $response_data['member_id'], 'urm_next_subscription_data', json_encode( $response_data ) );
-				$subscription_repository->update( $response_data['subscription_id'], $subscription_data );
 			} else {
 				$subscription_repository->update( $response_data['subscription_id'], $subscription_data );
 			}
