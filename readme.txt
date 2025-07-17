@@ -257,7 +257,6 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 21. User Account Page –  Vertical Layout
 
 == Changelog ==
-
 = 4.3.0    - 17/07/2025 =
 * Security - Cross Site Scripting Vulnerability with urcr_restrict shortcode
 * Feature  - Membership upgrade.
