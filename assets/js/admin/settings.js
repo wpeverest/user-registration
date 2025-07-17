@@ -1166,7 +1166,8 @@
 			snackbar.add({
 				type: 'failure',
 				message: message,
-				duration: 6
+				duration: 6,
+				dismissible: true
 			});
 			return true;
 		}
@@ -1310,4 +1311,12 @@
 
 		update_payment_section_settings(setting_id, section_data, $this, settings_container);
 	});
+
+	var searchParams = new URLSearchParams(window.location.search);
+	if (searchParams.has('method') && searchParams.get('method') !== "" && $('.user-registration-settings-container').find('#' + searchParams.get('method')).length > 0) {
+		var container = $('.user-registration-settings-container').find('#' + searchParams.get('method'));
+		setTimeout(function () {
+			container.find('.integration-header-info').trigger('click')
+		}, 400);
+	}
 })(jQuery);

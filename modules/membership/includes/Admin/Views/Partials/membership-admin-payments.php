@@ -93,7 +93,7 @@ function render_paypal_settings( $membership_details ) {
 			 style="<?php echo $is_incomplete ? '' : 'display:none'; ?>">
 			<?php
 			$message      = esc_html__( 'Your Paypal settings is incomplete, please complete your setup from the link below to continue (No need to refresh this page)' );
-			$settings_url = get_admin_url() . 'admin.php?page=user-registration-settings&tab=payment#user_registration_global_paypal_email_address';
+			$settings_url = get_admin_url() . 'admin.php?page=user-registration-settings&tab=payment&method=paypal';
 			?>
 			<div id="settings-section" class="ur-p-2 "
 				 style="background: #f8f8fa; border-radius:5px; ">
@@ -331,7 +331,7 @@ function render_bank_settings( $membership_details ) {
 
 			<div class="bank-settings">
 				<?php
-				$settings_url = get_admin_url() . 'admin.php?page=user-registration-settings&tab=payment#user_registration_global_bank_details';
+				$settings_url = get_admin_url() . 'admin.php?page=user-registration-settings&tab=payment&method=bank';
 				$message      = esc_html__( 'Your Bank Setup is incomplete, please complete your setup from the link below to continue (No need to refresh this page)' );
 
 				?>
@@ -404,7 +404,7 @@ function render_stripe_settings( $membership_details ) {
 
 			<div class="stripe-settings">
 				<?php
-				$settings_url = get_admin_url() . 'admin.php?page=user-registration-settings&tab=payment#user_registration_stripe_test_publishable_key';
+				$settings_url = get_admin_url() . 'admin.php?page=user-registration-settings&tab=payment&method=stripe';
 				$message      = esc_html__( 'Your Stripe Setup is incomplete, please complete your setup from the link below to continue (No need to refresh this page)' );
 
 				?>

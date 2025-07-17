@@ -559,7 +559,7 @@ textarea.ur-input-border-red {
 						}
 					}
 				}
-
+				height: inherit;
 				.select2-selection__choice {
 					margin: 5px;
 				}
@@ -2800,7 +2800,13 @@ body.user-registration-page {
 		}
 	}
 }
-
+.ur-metabox-field .ur-metabox-field-detail{
+	.select2-container {
+		.select2-selection--single {
+			height: auto;
+		}
+	}
+}
 .et-db {
 	#et-boc {
 		.et-l {

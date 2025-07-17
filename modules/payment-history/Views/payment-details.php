@@ -1,197 +1,150 @@
 <?php
 ob_start();
-?>
-<div class="payment-detail-box">
-	<div class="payment-detail-label">
-		<?php echo esc_html__( 'Transaction ID', 'user-registration' ); ?>
-	</div>
-	<div class="payment-detail-data">
-		<?php
-		$transaction_id = esc_html__( 'N/A', 'user-registration' );
-		if ( isset( $order_detail['order_id'] ) ) {
-			$transaction_id = $order_detail['transaction_id'] ? esc_html( $order_detail['transaction_id'] ) : absint( $order_detail['order_id'] );
-		} else {
-			$transaction_id = $order_detail['transaction_id'] ? esc_html( $order_detail['transaction_id'] ) : $transaction_id;
-		}
-		echo $transaction_id;
-		?>
-	</div>
-</div>
-<div class="payment-detail-box">
-	<div class="payment-detail-label">
-		<?php echo esc_html__( 'Full Name', 'user-registration' ); ?>
-	</div>
-	<div class="payment-detail-data">
-		<?php echo esc_html( ucwords( str_replace( '-', ' ', $order_detail['user_nicename'] ) ) ); ?>
-	</div>
-</div>
-<div class="payment-detail-box">
-	<div class="payment-detail-label">
-		<?php echo esc_html__( 'User Name', 'user-registration' ); ?>
-	</div>
-	<div class="payment-detail-data">
-		<?php echo esc_html( $order_detail['display_name'] ); ?>
-	</div>
-</div>
-<div class="payment-detail-box">
-	<div class="payment-detail-label">
-		<?php echo esc_html__( 'Payer Email', 'user-registration' ); ?>
-	</div>
-	<div class="payment-detail-data">
-		<?php echo esc_html( $order_detail['user_email'] ); ?>
 
-	</div>
-</div>
-<?php
-if ( isset( $order_detail['order_id'] ) ) :
+$currency     = get_option( 'user_registration_payment_currency', 'USD' );
+$currencies   = ur_payment_integration_get_currencies();
+$symbol       = $currencies[ $currency ]['symbol'] ?? '$';
+$post_content = isset( $order_detail['post_content'] ) ? json_decode( wp_unslash( $order_detail['post_content'] ), true ) : [];
+$trial_status = $order_detail['trial_status'] ?? 'off';
+$default_na   = esc_html__( 'N/A', 'user-registration' );
+$product_amount = isset($order_detail['plan_details']['amount']) ? $order_detail['plan_details']['amount'] : 0;
+//all fields
+$fields = [
+	'transaction_id'   => 'Transaction ID',
+	'full_name'        => 'Full Name',
+	'user_name'        => 'User Name',
+	'user_email'       => 'Payer Email',
+	'membership'       => 'Membership',
+	'membership_type'  => 'Membership Type',
+	'payment_method'   => 'Payment Gateway',
+	'created_at'       => 'Payment Date',
+	'notes'            => 'Order Note',
+	'status'           => 'Transaction Status',
+	'product_amount'   => 'Product Amount',
+	'trial_order'      => 'Trial Order',
+	'trial_start_date' => 'Trial Start Date',
+	'trial_end_date'   => 'Trial End Date',
+	'coupon'           => 'Coupon',
+	'coupon_discount'  => 'Coupon Discount',
+	'total'            => 'Total',
+];
+
+foreach ( $fields as $key => $label ):
 	?>
 	<div class="payment-detail-box">
-		<div class="payment-detail-label">
-			<?php echo esc_html__( 'Membership', 'user-registration' ); ?>
-		</div>
-		<div class="payment-detail-data">
-			<?php echo esc_html( $order_detail['post_title'] ); ?>
-		</div>
-	</div>
-	<div class="payment-detail-box">
-		<div class="payment-detail-label">
-			<?php echo esc_html__( 'Membership Type', 'user-registration' ); ?>
-		</div>
+		<div class="payment-detail-label"><?php echo esc_html__( $label, 'user-registration' ); ?></div>
 		<div class="payment-detail-data">
 			<?php
-			$post_content = json_decode( wp_unslash( $order_detail['post_content'] ), true );
-			echo esc_html( ucfirst( $post_content['type'] ) );
+			switch ( $key ) {
+				case 'transaction_id':
+					$value = $order_detail['transaction_id'] ?? ( $order_detail['order_id'] ?? $default_na );
+					echo esc_html( $value );
+					break;
+
+				case 'full_name':
+					echo esc_html( ucwords( str_replace( '-', ' ', $order_detail['user_nicename'] ) ) );
+					break;
+
+				case 'user_name':
+					echo esc_html( $order_detail['display_name'] );
+					break;
+
+				case 'user_email':
+					echo esc_html( $order_detail['user_email'] );
+					break;
+
+				case 'membership':
+					echo isset( $order_detail['order_id'] ) ? esc_html( $order_detail['post_title'] ) : $default_na;
+					break;
+
+				case 'membership_type':
+					echo isset( $order_detail['order_id'] ) ? esc_html( ucfirst( $post_content['type'] ?? '' ) ) : $default_na;
+					break;
+
+				case 'payment_method':
+					echo esc_html( ucfirst( $order_detail['payment_method'] ) );
+					break;
+
+				case 'created_at':
+					echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $order_detail['created_at'] ) ) );
+					break;
+
+				case 'notes':
+					echo '<i>' . esc_html( ucfirst( $order_detail['notes'] ?? '' ) ) . '</i>';
+					break;
+
+				case 'status':
+					$status = $order_detail['status'];
+					echo '<span class="payment-status-btn ' . esc_attr( $status ) . '">' . esc_html( ucfirst( $status ) ) . '</span>';
+					if ( $status === 'pending' && $order_detail['payment_method'] === 'bank' ) {
+						echo ' <a href="javascript:void(0)" class="approve-payment" data-order-id="' . absint( $order_detail['order_id'] ) . '">' . esc_html__( 'Approve', 'user-registration' ) . '</a>';
+					}
+					break;
+
+				case 'product_amount':
+
+					echo $symbol . number_format($product_amount, 2);
+					break;
+
+				case 'trial_order':
+					$completed = ( $trial_status === 'on' );
+					echo '<span class="payment-status-btn ' . esc_attr( $completed ? 'completed' : 'pending' ) . '">' .
+						 esc_html__( $completed ? '✓' : 'x', 'user-registration' ) . '</span>';
+					break;
+
+				case 'trial_start_date':
+				case 'trial_end_date':
+					$value = $order_detail[ $key ] ?? '';
+					echo ! empty( $value ) ? esc_html( date_i18n( get_option( 'date_format' ), strtotime( $value ) ) ) : $default_na;
+					break;
+
+				case 'coupon':
+					echo ! empty( $order_detail['coupon'] ) ? esc_html( $order_detail['coupon'] ) : $default_na;
+					break;
+
+				case 'coupon_discount':
+					$coupon_discount = $order_detail['coupon_discount'] ?? '';
+					$type            = $order_detail['coupon_discount_type'] ?? '';
+					if ( $type === 'percent' ) {
+						echo esc_html( $coupon_discount . '%' );
+					} elseif ( $type === 'fixed' ) {
+						echo esc_html( $symbol . $coupon_discount );
+					} else {
+						echo $default_na;
+					}
+					break;
+
+				case 'total':
+					if ($trial_status === 'on') {
+						$total = 0;
+					} else {
+						$total = $order_detail['total_amount'];
+						$amount = $order_detail['product_amount'] ?? $total;
+
+						if (
+							$order_detail['payment_method'] !== 'bank' &&
+							isset($post_content['type']) &&
+							(
+								$post_content['type'] === 'paid' ||
+								($post_content['type'] === 'subscription' && $trial_status === 'off')
+							)
+						) {
+							$discount_amount = ($coupon_discount_type === 'fixed')
+								? ($coupon_discount ?: 0)
+								: ($coupon_discount ? ($amount * $coupon_discount / 100) : 0);
+							$total = $amount - $discount_amount;
+						}
+					}
+					echo $symbol . number_format($total, 2);
+					break;
+
+				default:
+					echo $default_na;
+					break;
+			}
 			?>
 		</div>
 	</div>
 <?php
-endif;
+endforeach;
 ?>
-<div class="payment-detail-box">
-	<div class="payment-detail-label">
-		<?php echo esc_html__( 'Payment Gateway', 'user-registration' ); ?>
-	</div>
-	<div class="payment-detail-data">
-		<?php echo esc_html( ucfirst( $order_detail['payment_method'] ) ); ?>
-	</div>
-</div>
-<div class="payment-detail-box">
-	<div class="payment-detail-label">
-		<?php echo esc_html__( 'Payment Date', 'user-registration' ); ?>
-	</div>
-	<div class="payment-detail-data">
-		<?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $order_detail['created_at'] ) ) ); ?>
-	</div>
-</div>
-<div class="payment-detail-box">
-	<div class="payment-detail-label">
-		<?php echo esc_html__( 'Order Note', 'user-registration' ); ?>
-	</div>
-	<div class="payment-detail-data">
-		<i><?php echo esc_html( ucfirst( $order_detail['notes'] ?? '' ) ); ?></i>
-	</div>
-</div>
-<div class="payment-detail-box">
-	<div class="payment-detail-label">
-		<?php echo esc_html__( 'Transaction Status', 'user-registration' ); ?>
-	</div>
-	<div class="payment-detail-data">
-		<?php
-		$status = $order_detail['status'];
-		?>
-		<span
-			class="payment-status-btn <?php echo esc_attr( $status ); ?>"><?php echo esc_html( ucfirst( $status ) ); ?></span>
-		<?php
-		if ( 'pending' === $status && 'bank' === $order_detail['payment_method'] ) :
-			?>
-			<a href="javascript:void(0)" class="approve-payment"
-			   data-order-id="<?php echo absint( $order_detail['order_id'] ); ?>"><?php echo __( 'Approve', 'user-registration' ); ?></a>
-		<?php
-		endif;
-		?>
-	</div>
-</div>
-<div class="payment-detail-box">
-	<div class="payment-detail-label">
-		<?php echo esc_html__( 'Product Amount', 'user-registration' ); ?>
-	</div>
-	<div class="payment-detail-data">
-		<?php
-		$currency   = get_option( 'user_registration_payment_currency', 'USD' );
-		$currencies = ur_payment_integration_get_currencies();
-		$symbol     = $currencies[ $currency ]['symbol'];
-		$amount     = $order_detail['billing_amount'] ?? $order_detail['total_amount'];
-		echo $symbol . absint( $amount )
-		?>
-	</div>
-</div>
-
-
-<div class="payment-detail-box">
-	<div class="payment-detail-label">
-		<?php echo esc_html__( 'Trial Order', 'user-registration' ); ?>
-	</div>
-	<div class="payment-detail-data">
-		<span
-			class="payment-status-btn <?php echo isset( $order_detail['trial_status'] ) && 'on' === $order_detail['trial_status'] ? esc_attr( 'completed' ) : esc_attr( 'pending' ); ?>"><?php echo ( isset( $order_detail['trial_status'] ) && 'on' === $order_detail['trial_status'] ) ? esc_html( esc_html__( '✓', 'user-registration' ) ) : esc_html( esc_html__( 'x', 'user-registration' ) ); ?></span>
-	</div>
-</div>
-<div class="payment-detail-box">
-	<div class="payment-detail-label">
-		<?php echo esc_html__( 'Trial Start Date', 'user-registration' ); ?>
-	</div>
-	<div class="payment-detail-data">
-		<?php echo ( isset( $order_detail['trial_start_date'] ) && ! empty( $order_detail['trial_start_date'] ) ) ? date_i18n( get_option( 'date_format' ), strtotime( $order_detail['trial_start_date'] ) ) : esc_html__( 'N/A', 'user-registration' ); ?>
-	</div>
-</div>
-<div class="payment-detail-box">
-	<div class="payment-detail-label">
-		<?php echo esc_html__( 'Trial End Date', 'user-registration' ); ?>
-	</div>
-	<div class="payment-detail-data">
-		<?php echo ( isset( $order_detail['trial_end_date'] ) && ! empty( $order_detail['trial_end_date'] ) ) ? date_i18n( get_option( 'date_format' ), strtotime( $order_detail['trial_end_date'] ) ) : esc_html__( 'N/A', 'user-registration' ); ?>
-	</div>
-</div>
-<div class="payment-detail-box">
-	<div class="payment-detail-label">
-		<?php echo esc_html__( 'Coupon', 'user-registration' ); ?>
-	</div>
-	<div class="payment-detail-data">
-		<?php echo isset( $order_detail['coupon'] ) && $order_detail['coupon'] ? esc_html( $order_detail['coupon'] ) : esc_html__( 'N/A', 'user-registration' ); ?>
-	</div>
-</div>
-<div class="payment-detail-box">
-	<div class="payment-detail-label">
-		<?php echo esc_html__( 'Coupon Discount', 'user-registration' ); ?>
-	</div>
-	<div class="payment-detail-data">
-		<?php
-		$currency             = get_option( 'user_registration_payment_currency', 'USD' );
-		$currencies           = ur_payment_integration_get_currencies();
-		$symbol               = $currencies[ $currency ]['symbol'];
-		$coupon_discount      = $order_detail['coupon_discount'] ?? '';
-		$coupon_discount_type = $order_detail['coupon_discount_type'] ?? '';
-		$discount             = ( isset( $order_detail['coupon_discount_type'] ) && $order_detail['coupon_discount_type'] == 'percent' ) ? $coupon_discount . '%' : $symbol . $coupon_discount;
-
-		?>
-		<?php echo $coupon_discount_type ? esc_html( $discount ) : esc_html__( 'N/A', 'user-registration' ); ?>
-	</div>
-</div>
-<div class="payment-detail-box">
-	<div class="payment-detail-label">
-		<?php echo esc_html__( 'Total', 'user-registration' ); ?>
-	</div>
-	<div class="payment-detail-data">
-		<?php
-		$total  = $order_detail['total_amount'];
-		$amount = ( $order_detail['product_amount'] ) ?? $order_detail['total_amount'];
-
-		if ( 'bank' !== $order_detail['payment_method'] && isset( $post_content ) && ( 'paid' === $post_content['type'] || ( 'subscription' === $post_content['type'] && 'off' === $order_detail['trial_status'] ) ) ) {
-			$discount_amount = ( isset( $order_detail['coupon_discount_type'] ) && $order_detail['coupon_discount_type'] === 'fixed' ) ? ( ! empty( $order_detail['coupon_discount'] ) ? $order_detail['coupon_discount'] : 0 ) : ( ! empty( $order_detail['coupon_discount'] ) ? ($amount * $order_detail['coupon_discount'])/100 : 0 );
-			$total           = $amount - $discount_amount;
-		}
-
-		echo $symbol . number_format( $total, 2 )
-		?>
-	</div>
-</div>

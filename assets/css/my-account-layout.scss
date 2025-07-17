@@ -562,6 +562,10 @@
 						color: #252725 ;
 					}
 
+					&.btn-pending {
+						color: #252725 ;
+					}
+
 					&.btn-canceled {
 						color: #ea4335;
 					}
@@ -667,12 +671,13 @@
 					.notice-1 {
 						width: auto;
 						display: flex;
-						gap: 5px;
-						background: #eeebe5;
-						border-left: 5px solid #f7b10f;
+						gap: 12px;
+						background: #f7fbff;
+						border: 1px solid #475bb2;
 						font-style: italic;
 						border-radius: 5px;
-						padding: 4px;
+						padding: 12px 16px;
+						align-items: center;
 					}
 					.view-bank-data {
 						cursor: pointer;

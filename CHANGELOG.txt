@@ -1,4 +1,5 @@
-= 4.3.0    - 16/07/2025 =
+= 4.3.0    - 17/07/2025 =
+* Security - Cross Site Scripting Vulnerability with urcr_restrict shortcode
 * Feature  - Membership upgrade.
 * Enhance  - Prevent use of external url's in paypal settings.
 * Enhance  - Auto select membership and pg if only one membership.

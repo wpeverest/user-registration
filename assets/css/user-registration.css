@@ -1306,6 +1306,7 @@ textarea.ur-input-border-red {
 }
 .ur-frontend-form .ur-form-row .select2-container .select2-selection--multiple {
   border: 1px solid rgb(240.4392835821, 241.3522713704, 245.4607164179);
+  height: inherit;
 }
 .ur-frontend-form .ur-form-row .select2-container .select2-selection--multiple .select2-selection__rendered {
   display: block;
@@ -3180,6 +3181,10 @@ body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-gri
 body.user-registration-page .elementor-widget-container .user-registration:not(.user-registration-MyAccount) {
   background: transparent;
   border-radius: 0;
+}
+
+.ur-metabox-field .ur-metabox-field-detail .select2-container .select2-selection--single {
+  height: auto;
 }
 
 .et-db #et-boc .et-l .et-fb-modules-list ul > li {

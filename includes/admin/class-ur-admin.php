@@ -289,7 +289,7 @@ class UR_Admin {
 	public function includes() {
 		include_once __DIR__ . '/functions-ur-admin.php';
 
-		if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'manage_user_registration' ) ) {
+		if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'manage_user_registration' ) && ! current_user_can( 'edit_posts' ) ) {
 			return false;
 		}
 		include_once __DIR__ . '/notifications/class-ur-admin-notices.php';
@@ -322,7 +322,7 @@ class UR_Admin {
 	 * Include admin files conditionally.
 	 */
 	public function conditional_includes() {
-		if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'manage_user_registration' ) ) {
+		if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'manage_user_registration' ) && ! current_user_can( 'edit_posts' ) ) {
 			return false;
 		}
 		$screen = get_current_screen();

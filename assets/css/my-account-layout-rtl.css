@@ -461,6 +461,9 @@
 #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row #ur-membership-status.btn-inactive {
   color: #252725;
 }
+#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row #ur-membership-status.btn-pending {
+  color: #252725;
+}
 #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row #ur-membership-status.btn-canceled {
   color: #ea4335;
 }
@@ -549,12 +552,13 @@
 #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container #bank-notice .notice-1 {
   width: auto;
   display: flex;
-  gap: 5px;
-  background: #eeebe5;
-  border-right: 5px solid #f7b10f;
+  gap: 12px;
+  background: #f7fbff;
+  border: 1px solid #475bb2;
   font-style: italic;
   border-radius: 5px;
-  padding: 4px;
+  padding: 12px 16px;
+  align-items: center;
 }
 #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container #bank-notice .view-bank-data {
   cursor: pointer;

@@ -64,6 +64,7 @@ class PaymentService {
 			$subscription_service       = new SubscriptionService();
 			$subscription_repository    = new SubscriptionRepository();
 			$previous_subscription_data = $response_data['subscription_data'];
+			$response_data['payment_method'] = $this->payment_method;
 			update_user_meta( $response_data['member_id'], 'urm_previous_subscription_data', json_encode( $previous_subscription_data ) );
 			$subscription_data = $subscription_service->prepare_upgrade_subscription_data( $response_data['membership'], $response_data['member_id'], $response_data );
 
@@ -71,7 +72,6 @@ class PaymentService {
 				update_user_meta( $response_data['member_id'], 'urm_next_subscription_data', json_encode( $response_data ) );
 			} else if ( "paypal" === $this->payment_method ) {
 				update_user_meta( $response_data['member_id'], 'urm_next_subscription_data', json_encode( $response_data ) );
-				$subscription_repository->update( $response_data['subscription_id'], $subscription_data );
 			} else {
 				$subscription_repository->update( $response_data['subscription_id'], $subscription_data );
 			}

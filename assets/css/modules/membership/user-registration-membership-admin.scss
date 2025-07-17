@@ -139,13 +139,13 @@
 @keyframes bounceAnimation {
 	0% {
 		transform: translateX(-5px);
-	  }
-	  50% {
+	}
+	50% {
 		transform: translateX(5px);
-	  }
-	  100% {
+	}
+	100% {
 		transform: translateX(-5px);
-	  }
+	}
 }
 
 .field-amount {
@@ -810,6 +810,9 @@
 											}
 										}
 									}
+									.user-registration-switch {
+										@include form-toggle;
+									}
 								}
 							}
 						}
@@ -1011,6 +1014,9 @@
 													line-height: 20px;
 													color: #383838;
 												}
+											}
+											.user-registration-switch {
+												@include form-toggle;
 											}
 										}
 									}

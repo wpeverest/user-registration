@@ -10,7 +10,7 @@
 			 */
 			append_spinner: function ($element) {
 				if ($element && $element.append) {
-					var spinner = '<span class="ur-front-spinner is-active"></span>';
+					var spinner = '<span class="urm-spinner is-active"></span>';
 					$element.append(spinner);
 					return true;
 				}
@@ -23,7 +23,7 @@
 			 */
 			remove_spinner: function ($element) {
 				if ($element && $element.remove) {
-					$element.find('.ur-front-spinner').remove();
+					$element.find('.urm-spinner').remove();
 					return true;
 				}
 				return false;
@@ -190,7 +190,7 @@
 				user_data.membership = membership_input.val();
 				user_data.payment_method = 'free';
 				if (membership_input.data('urm-pg-type') !== 'free') {
-					user_data.payment_method = $('input[name="urm_payment_method"]:checked').val();
+					user_data.payment_method = $('input[name="urm_payment_method"]:checked:visible').val();
 				}
 				var date = new Date();
 				user_data.start_date = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
@@ -298,9 +298,7 @@
 							);
 						},
 						complete: function () {
-							$form = $('#user-registration-form-' + form_response.form_id);
-							ur_membership_frontend_utils.remove_spinner($form);
-							ur_membership_frontend_utils.toggleSaveButtons(false, $this);
+							form_object.hide_loader(form_response.form_id);
 						}
 					}
 				);
@@ -489,7 +487,7 @@
 				//handle differently in case of Authorize.NET
 				//gets the nonce token from ANET and send it via the AJAX request.
 				if ('authorize' === selected_pg) {
-					this.handle_authorize_upgrade();
+					this.handle_authorize_upgrade(current_plan, selected_membership_id, current_subscription_id, selected_pg, btn);
 				} else {
 					this.send_data(
 						{
@@ -536,7 +534,7 @@
 						});
 				}
 			},
-			handle_authorize_upgrade: function () {
+			handle_authorize_upgrade: function (current_plan, selected_membership_id, current_subscription_id, selected_pg, btn) {
 				var data = {
 					current_plan: current_plan,
 					selected_membership_id: selected_membership_id,
@@ -612,7 +610,7 @@
 					'<div id="user_registration_authorize_net_gateway" data-gateway="authorize_net" class="input-text" conditional_rules="">' +
 					'<div class="ur-field-row">' +
 					'<div class="user-registration-authorize-net-card-number">' +
-					'<input type="text" id="user_registration_authorize_net_card_number" name="user_registration_authorize_net_card_number" placeholder="411111111111111" class="widefat ur-anet-sub-field user_registration_authorize_net_card_number"><br>' +
+					'<input type="text" id="user_registration_authorize_net_card_number" name="user_registration_authorize_net_card_number" maxlength="16" placeholder="411111111111111" class="widefat ur-anet-sub-field user_registration_authorize_net_card_number"><br>' +
 					'<label class="user-registration-sub-label">Card Number</label></div>' +
 					'</div>' +
 					'<div class="ur-field-row clearfix">' +
@@ -621,7 +619,7 @@
 					'<div class="user-registration-authorize-net-expiration-year user-registration-one-half last"><select class="widefat ur-anet-sub-field user_registration_authorize_net_expiration_year" id="user_registration_authorize_net_expiration_year" name="user_registration_authorize_net_expiration_year"><option> YY </option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option><option value="32">32</option><option value="33">33</option><option value="34">34</option><option value="35">35</option></select></div>' +
 					'</div>' +
 					'<div class="user-registration-authorize-net-cvc user-registration-one-half last">' +
-					'<input type="text" id="user_registration_authorize_net_card_code" name="user_registration_authorize_net_card_code" placeholder="900" class="widefat ur-anet-sub-field user_registration_authorize_net_card_code"><br>' +
+					'<input type="text" id="user_registration_authorize_net_card_code" name="user_registration_authorize_net_card_code" placeholder="900" maxlength="4" class="widefat ur-anet-sub-field user_registration_authorize_net_card_code"><br>' +
 					'<label class="user-registration-sub-label">CVC</label>' +
 					'</div>' +
 					'</div>' +
@@ -701,6 +699,7 @@
 					'<div class="stripe-input-container"><div id="card-element"></div></div>' +
 					'</div>' +
 					'</div>' +
+					ur_membership_ajax_utils.authorize_net_container_html() +
 					'</div>' +
 					'<span id="upgrade-membership-notice"></span>' +
 					'</div>';
@@ -783,7 +782,7 @@
 		var form_object = {
 			hide_loader: function (form_id) {
 				var $registration_form = $('#user-registration-form-' + form_id);
-				$registration_form.find('.ur-submit-button').find("span").removeClass('ur-spinner');
+				$registration_form.find('.ur-submit-button').find("span").removeClass('ur-front-spinner');
 				$registration_form.find('form').find('.ur-submit-button').prop('disabled', false);
 			}
 		};
@@ -921,11 +920,8 @@
 							);
 						},
 						complete: function () {
-							var button = $('.membership_register_button'),
-								swal_btn = $('.swal2-confirm ');
-
-							ur_membership_frontend_utils.toggleSaveButtons(false, button);
-							ur_membership_frontend_utils.remove_spinner(button);
+							var swal_btn = $('.swal2-confirm ');
+							form_object.hide_loader(form_response.form_id);
 							ur_membership_frontend_utils.toggleSaveButtons(false, swal_btn);
 							ur_membership_frontend_utils.remove_spinner(swal_btn);
 						}
@@ -1105,7 +1101,6 @@
 						data.subscription.status === "trialing") &&
 					!is_upgrading
 				) {
-					console.log('not here')
 					ur_membership_frontend_utils.show_form_success_message(data.form_response, {
 						'username': data.prepare_members_data.username,
 						'transaction_id': data.subscription.id
@@ -1442,6 +1437,9 @@
 											error_notice = $('#upgrade-membership-notice'),
 											btn = $('.swal2-confirm');
 										//append spinner
+										if( btn.find('span.urm-spinner').length > 0 ) {
+											return false;
+										}
 										ur_membership_frontend_utils.append_spinner(btn);
 
 										//validation before request start
@@ -1452,13 +1450,15 @@
 
 											if (selected_plan === undefined) {
 												has_error = true;
-												error_notice.text(urmf_data.label.i18n_change_plan_required);
+												ur_membership_frontend_utils.show_failure_message(urmf_data.labels.i18n_change_plan_required);
+												ur_membership_frontend_utils.remove_spinner(btn);
 												return false;
 											}
 
 											if (selected_pg === undefined || selected_pg === 'free') {
 												has_error = true;
-												error_notice.text(urmf_data.labels.i18n_field_payment_gateway_field_validation);
+												ur_membership_frontend_utils.show_failure_message(urmf_data.labels.i18n_field_payment_gateway_field_validation);
+												ur_membership_frontend_utils.remove_spinner(btn);
 												return false;
 											}
 										}
@@ -1492,7 +1492,6 @@
 							}
 						},
 						error: function (e) {
-							console.log(e);
 							Swal.fire({
 								type: 'error',
 								text: e.responseJSON.data.message,

@@ -750,6 +750,26 @@
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .ur-input-type-membership-upgrade-path .select2-selection__rendered {
   flex-wrap: wrap;
 }
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .user-registration-switch input[type=checkbox] {
+  border-radius: 20px;
+  border: 0;
+  width: 30px;
+  flex: 0 0 30px;
+  background: #d5d5d5;
+  box-shadow: none;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .user-registration-switch input[type=checkbox]::after {
+  width: 12px;
+  height: 12px;
+  transform: translateX(3px);
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .user-registration-switch input[type=checkbox]:checked {
+  background: #475BB2;
+  border-color: #475BB2;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .user-registration-switch input[type=checkbox]:checked::after {
+  transform: translateX(15px);
+}
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-upgrade-action:checked {
   background: #475BB2;
   border-color: #475BB2;
@@ -943,6 +963,26 @@
   font-size: 14px;
   line-height: 20px;
   color: #383838;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #payment-gateway-container .user-registration-card__body > div .payment-option-body .ur-membership-selection-container .user-registration-switch input[type=checkbox] {
+  border-radius: 20px;
+  border: 0;
+  width: 30px;
+  flex: 0 0 30px;
+  background: #d5d5d5;
+  box-shadow: none;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #payment-gateway-container .user-registration-card__body > div .payment-option-body .ur-membership-selection-container .user-registration-switch input[type=checkbox]::after {
+  width: 12px;
+  height: 12px;
+  transform: translateX(3px);
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #payment-gateway-container .user-registration-card__body > div .payment-option-body .ur-membership-selection-container .user-registration-switch input[type=checkbox]:checked {
+  background: #475BB2;
+  border-color: #475BB2;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #payment-gateway-container .user-registration-card__body > div .payment-option-body .ur-membership-selection-container .user-registration-switch input[type=checkbox]:checked::after {
+  transform: translateX(15px);
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #payment-gateway-container .user-registration-card__body .payment-option-body {
   margin-top: 20px;
