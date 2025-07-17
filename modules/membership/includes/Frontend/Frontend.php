@@ -264,6 +264,11 @@ class Frontend {
 
 	}
 
+	/**
+	 * clear_upgrade_data
+	 * If Paypal payment fails then clear meta's so user can try again
+	 * @return void
+	 */
 	public function clear_upgrade_data() {
 		$user_id              = get_current_user_id();
 		$subscription_service = new MembersSubscriptionRepository();
@@ -273,7 +278,7 @@ class Frontend {
 		}
 		$next_subscription_data = json_decode( get_user_meta( $user_id, 'urm_next_subscription_data', true ), true );
 
-		if ( ! empty( $next_subscription_data ) && empty( $next_subscription_data['delayed_until'] ) ) {
+		if ( ! empty( $next_subscription_data ) && empty( $next_subscription_data['delayed_until'] ) && !empty($next_subscription_data['payment_method']) && ("paypal" === $next_subscription_data['payment_method']) ) {
 			if ( $user_subscription['status'] === 'active' ) {
 				delete_user_meta( $user_id, 'urm_is_upgrading' );
 				delete_user_meta( $user_id, 'urm_is_upgrading_to' );
