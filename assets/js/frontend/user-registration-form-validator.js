@@ -239,12 +239,21 @@
 						if ($(element).hasClass("ur-flatpickr-field")) {
 							return true;
 						}
-						return (
+
+						// return (
+						// 	element.id &&
+						// 	(element.id.startsWith("billing_") ||
+						// 		element.id.startsWith("shipping_") ||
+						// 		element.id.startsWith("quantity_"))
+						// );
+
+						if (
 							element.id &&
-							(element.id.startsWith("billing_") ||
-								element.id.startsWith("shipping_") ||
-								element.id.startsWith("quantity_"))
-						);
+							element.id.startsWith("shipping_") &&
+							$(element).closest(".form-row").is(":hidden")
+						) {
+							return true;
+						}
 					},
 					rules: validator_params.rules,
 					messages: validator_params.messages,
