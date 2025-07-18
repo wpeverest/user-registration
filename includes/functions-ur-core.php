@@ -515,6 +515,9 @@ function ur_get_field_type( $field_key ) {
 			case 'country':
 				$field_type = 'select';
 				break;
+			case 'address':
+				$field_type = 'composite';
+				break;
 			case 'file':
 				$field_type = 'file';
 				break;
@@ -2654,13 +2657,19 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 
 		if ( isset( $form_data->field_type ) && 'repeater' === $form_data->field_type ) {
 			$data_html .= '<td>' . $value . '</td></tr>';
-		} elseif ( isset( $form_data->extra_params['field_key'] ) && 'signature' === $form_data->extra_params['field_key'] ) {
+		} elseif ( isset( $form_data->field_type ) && 'address' === $form_data->field_type ) {
+			$data_html .= '<td>' . json_encode( $value ) . '</td></tr>';
+		}
+		elseif ( isset( $form_data->extra_params['field_key'] ) && 'signature' === $form_data->extra_params['field_key'] ) {
 				$data_html .= '<tr><td>' . $label . ' : </td><td><img class="profile-preview" alt="Signature" width="50px" height="50px" src="' . ( is_numeric( $value ) ? esc_url( wp_get_attachment_url( $value ) ) : esc_url( $value ) ) . '" /></td></tr>';
 		} else {
 			$data_html .= '<tr><td>' . $label . ' : </td><td>' . $value . '</td></tr>';
 		}
-
-		$name_value[ $field_name ] = $value;
+		if( isset( $form_data->field_type ) && 'address' === $form_data->field_type ) {
+			$name_value[ $field_name ] = json_encode( $value );
+		} else {
+			$name_value[ $field_name ] = $value;
+		}
 	}
 
 	$data_html .= '</tbody></table>';
