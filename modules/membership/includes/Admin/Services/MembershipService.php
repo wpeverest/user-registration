@@ -183,7 +183,7 @@ class MembershipService {
 				),
 				'ur_membership_description' => array(
 					'meta_key'   => 'ur_membership_description',
-					'meta_value' => $data['post_data']['description'],
+					'meta_value' => wp_kses_post($data['post_data']['description']),
 				)
 			),
 
@@ -308,21 +308,12 @@ class MembershipService {
 		 * This hook should be used by new payment gateway integrations add-on to validate the membership data.
 		 *
 		 * @param array $result Membership validation result data
+		 * @param array $data Membership data.
 		 *
 		 * @since 4.2.3
 		 *
 		 */
-		return apply_filters( 'user_registration_membership_validate_membership_data', $result );
-		/**
-		 * Filters the membership data validation result
-		 *
-		 * This hook should be used by new payment gateway integrations add-on to validate the membership data.
-		 *
-		 * @since 4.2.3
-		 *
-		 * @param array $result Membership validation result data
-		 */
-		return apply_filters( 'user_registration_membership_validate_membership_data', $result );
+		return apply_filters( 'user_registration_membership_validate_membership_data', $result, $data );
 	}
 
 	/**

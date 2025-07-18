@@ -256,7 +256,6 @@ class UR_Frontend_Form_Handler {
 				}
 			}
 		}
-
 		return ( $form_field_data_array );
 	}
 

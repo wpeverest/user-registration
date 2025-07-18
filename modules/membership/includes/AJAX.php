@@ -122,6 +122,14 @@ class AJAX {
 				)
 			);
 		}
+		if( empty($data['payment_method']) ) {
+			wp_delete_user($member_id);
+			wp_send_json_error(
+				array(
+					'message' => __( "Payment method is required.", "user-registration" ),
+				)
+			);
+		}
 		$membership_service = new MembershipService();
 
 		$response = $membership_service->create_membership_order_and_subscription( $data );
@@ -201,8 +209,6 @@ class AJAX {
 		$membership        = new MembershipService();
 		$data              = isset( $_POST['membership_data'] ) ? (array) json_decode( wp_unslash( $_POST['membership_data'] ), true ) : array();
 		$is_stripe_enabled = isset( $data['post_meta_data']['payment_gateways']['stripe'] ) && "on" === $data['post_meta_data']['payment_gateways']['stripe']["status"];
-
-
 		$data = $membership->prepare_membership_post_data( $data );
 
 		if ( isset( $data['status'] ) && ! $data['status'] ) {
@@ -236,7 +242,6 @@ class AJAX {
 					update_post_meta( $new_membership_ID, $data['post_meta_data']['ur_membership']['meta_key'], wp_json_encode( $meta_data ) );
 				}
 			}
-
 
 			$response = array(
 				'membership_id' => $new_membership_ID,
@@ -279,6 +284,7 @@ class AJAX {
 		$membership        = new MembershipService();
 		$data              = isset( $_POST['membership_data'] ) ? (array) json_decode( wp_unslash( $_POST['membership_data'] ), true ) : array();
 		$is_stripe_enabled = isset( $data['post_meta_data']['payment_gateways']['stripe'] ) && "on" === $data['post_meta_data']['payment_gateways']['stripe']["status"];
+		$is_mollie_enabled = isset( $data['post_meta_data']['payment_gateways']['mollie'] ) && "on" === $data['post_meta_data']['payment_gateways']['mollie']['status'];
 
 
 		$data = $membership->prepare_membership_post_data( $data );
@@ -1069,6 +1075,11 @@ class AJAX {
 		);
 	}
 
+	/**
+	 * cancel_upcoming_subscription
+	 *
+	 * @return void
+	 */
 	public static function cancel_upcoming_subscription() {
 		ur_membership_verify_nonce( 'urm_upgrade_membership' );
 		$member_id = get_current_user_id();
@@ -1097,3 +1108,4 @@ class AJAX {
 		);
 	}
 }
+

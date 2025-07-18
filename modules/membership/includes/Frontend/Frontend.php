@@ -10,7 +10,9 @@
 
 namespace WPEverest\URMembership\Frontend;
 
+use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
 use WPEverest\URMembership\Admin\Services\MembershipService;
+use WPEverest\URMembership\Admin\Services\SubscriptionService;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -47,6 +49,7 @@ class Frontend {
 		);
 
 		add_action( 'template_redirect', array( $this, 'set_thank_you_transient' ) );
+		add_action( 'wp_loaded', array( $this, 'clear_upgrade_data' ) );
 	}
 
 	/**
@@ -259,5 +262,27 @@ class Frontend {
 		$thank_you_page = get_permalink( absint( $_GET['thank_you'] ) );
 		set_transient( $transient_id, $thank_you_page, 15 * MINUTE_IN_SECONDS );
 
+	}
+
+	/**
+	 * clear_upgrade_data
+	 * If Paypal payment fails then clear meta's so user can try again
+	 * @return void
+	 */
+	public function clear_upgrade_data() {
+		$user_id              = get_current_user_id();
+		$subscription_service = new MembersSubscriptionRepository();
+		$user_subscription    = $subscription_service->get_member_subscription( $user_id );
+		if ( empty( $user_subscription ) ) {
+			return;
+		}
+		$next_subscription_data = json_decode( get_user_meta( $user_id, 'urm_next_subscription_data', true ), true );
+
+		if ( ! empty( $next_subscription_data ) && empty( $next_subscription_data['delayed_until'] ) && !empty($next_subscription_data['payment_method']) && ("paypal" === $next_subscription_data['payment_method']) ) {
+			if ( $user_subscription['status'] === 'active' ) {
+				delete_user_meta( $user_id, 'urm_is_upgrading' );
+				delete_user_meta( $user_id, 'urm_is_upgrading_to' );
+			}
+		}
 	}
 }
