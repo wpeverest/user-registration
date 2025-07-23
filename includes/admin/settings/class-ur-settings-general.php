@@ -168,15 +168,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'css'      => 'min-width: 350px;',
 									'default'  => '',
 								),
-								array(
-									'title'    => __( 'Disable Logout Confirmation', 'user-registration' ),
-									'desc'     => __( 'Check to disable logout confirmation.', 'user-registration' ),
-									'id'       => 'user_registration_disable_logout_confirmation',
-									'type'     => 'toggle',
-									'desc_tip' => true,
-									'css'      => 'min-width: 350px;',
-									'default'  => 'no',
-								),
 							),
 						),
 						'endpoint_options'   => array(

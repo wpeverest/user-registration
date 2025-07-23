@@ -34,7 +34,7 @@ $logout_confirmation = ur_option_checked( 'user_registration_disable_logout_conf
 
 			?>
 			<li class="<?php echo esc_attr( ur_get_account_menu_item_classes( $endpoint ) ); ?>">
-				<a href="<?php echo esc_url( ur_get_account_endpoint_url( $endpoint ) ); ?>" <?php echo 'user-logout' === $actual_endpoint && ! $logout_confirmation ? esc_attr( 'class=ur-logout' ) : ''; ?> ><?php echo esc_html( $label ); ?></a>
+				<a href="<?php echo esc_url( ur_get_account_endpoint_url( $endpoint ) ); ?>" <?php echo 'user-logout' === $actual_endpoint ? esc_attr( 'class=ur-logout' ) : ''; ?> ><?php echo esc_html( $label ); ?></a>
 			</li>
 		<?php endforeach; ?>
 
