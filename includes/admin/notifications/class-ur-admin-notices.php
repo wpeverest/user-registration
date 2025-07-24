@@ -37,7 +37,6 @@ class UR_Admin_Notices {
 	private static $core_notices = array(
 		'update'                => 'update_notice',
 		'install'               => 'install_notice',
-		'register'              => 'register_notice',
 		'continue_setup_wizard' => 'continue_setup_wizard_notice',
 	);
 
@@ -624,12 +623,11 @@ class UR_Admin_Notices {
 	public static function remove_all_notices() {
 		self::$notices = array();
 	}
-
-	/**
-	 * Reset notices for themes when switched or a new version of UR is installed.
-	 */
+    /**
+	* Reset notices for themes when switched or a new version of UR is installed.
+	*/
 	public static function reset_admin_notices() {
-		self::add_notice( 'register' );
+			self::add_notice( 'register' );
 	}
 
 	/**
@@ -834,23 +832,6 @@ class UR_Admin_Notices {
 	 */
 	public static function install_notice() {
 		include 'views/html-notice-install.php';
-	}
-
-	/**
-	 * If we have just installed, and allow registration option not enable
-	 */
-	public static function register_notice() {
-		/**
-		 * Filter to override the Register Setting
-		 *
-		 * @param boolean
-		*/
-		$users_can_register = apply_filters( 'ur_register_setting_override', get_option( 'users_can_register' ) );
-		if ( ! $users_can_register && is_admin() && ! defined( 'DOING_AJAX' ) ) {
-			include 'views/html-notice-registration.php';
-		} else {
-			self::remove_notice( 'register' );
-		}
 	}
 
 	/**

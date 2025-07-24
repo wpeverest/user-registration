@@ -239,11 +239,7 @@ apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() 
 					<input type="hidden" name="redirect" value="<?php echo isset( $redirect ) ? esc_attr( $redirect ) : esc_attr( the_permalink() ); ?>" />
 
 					<?php
-					$users_can_register = ur_option_checked( 'users_can_register', true );
-
-					if ( $users_can_register ) {
 						$url_options = get_option( 'user_registration_general_setting_registration_url_options' );
-
 						if ( ! empty( $url_options ) || $is_login_settings ) {
 							$url_pattern = "/^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}(\\.[a-zA-Z0-9()]{1,6})?\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$/";
 							if ( ! filter_var( $url_options, FILTER_VALIDATE_URL ) || ! preg_match( $url_pattern, $url_options ) ) {
@@ -266,7 +262,6 @@ apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() 
 							}
 							echo '</p>';
 						}
-					}
 					?>
 					<?php
 					/**

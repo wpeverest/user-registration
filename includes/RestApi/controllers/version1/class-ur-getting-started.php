@@ -122,10 +122,6 @@ class UR_Getting_Started {
 		}
 
 		foreach ( $settings_to_update as $option => $value ) {
-
-			if ( 'users_can_register' === $option ) {
-				$value = ur_string_to_bool( $value );
-			}
 			update_option( $option, $value );
 		}
 
