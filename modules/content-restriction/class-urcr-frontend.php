@@ -1032,18 +1032,24 @@ class URCR_Frontend {
 		$override_global_settings = get_post_meta( $post_id, 'urcr_meta_override_global_settings', $single = true );
 
 		$is_membership_active = ur_check_module_activation( 'membership' );
+		$is_elementor_used    = get_post_meta( $post_id, '_elementor_edit_mode', true ) === 'builder';
+
+		if ( $is_elementor_used ) {
+			$elementor_settings      = get_post_meta( $post_id, '_elementor_data', true );
+			$elementor_settings_data = ! empty( $elementor_settings ) ? json_decode( $elementor_settings, true ) : array();
+			$is_section_restricted   = ! empty( $elementor_settings_data[0]['settings']['urcr_restrict_section'] ) ? $elementor_settings_data[0]['settings']['urcr_restrict_section'] : '';
+		}
 
 		if ( $is_membership_active ) {
-			$members_subscription    = new \WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository();
-			$subscription            = $members_subscription->get_member_subscription( wp_get_current_user()->ID );
-			$current_user_membership = ( ! empty( $subscription ) ) ? $subscription['item_id'] : array();
+			$members_subscription      = new \WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository();
+			$subscription              = $members_subscription->get_member_subscription( wp_get_current_user()->ID );
+			$current_user_membership   = ( ! empty( $subscription ) ) ? $subscription['item_id'] : array();
 			$get_meta_data_memberships = get_post_meta( $post_id, 'urcr_meta_memberships', $single = true );
 		}
 
 		$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
 
-		if ( ur_string_to_bool( $get_meta_data_checkbox ) || $whole_site_access_restricted ) {
-
+		if ( ur_string_to_bool( $get_meta_data_checkbox ) || $whole_site_access_restricted || ( ! empty( $is_section_restricted ) && 'yes' === $is_section_restricted ) ) {
 			if ( ! ur_string_to_bool( $override_global_settings ) ) {
 				if ( '0' == get_option( 'user_registration_content_restriction_allow_access_to', '0' ) ) {
 
