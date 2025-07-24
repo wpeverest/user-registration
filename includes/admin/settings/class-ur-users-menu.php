@@ -1719,7 +1719,7 @@ if (! class_exists('User_Registration_Users_Menu')) {
 						add_action(
 							'admin_notices',
 							function () use ($error) {
-								echo '<div class="notice ur-users-notice notice-error is-dismissible"><p>' . esc_html( $error->get_error_message() ) . '</p></div>';
+								echo '<div class="notice ur-toaster ur-users-notice notice-error is-dismissible"><p>' . esc_html( $error->get_error_message() ) . '</p></div>';
 							}
 						);
 					}
@@ -1791,7 +1791,7 @@ if (! class_exists('User_Registration_Users_Menu')) {
 
 			ob_start();
 		?>
-			<div class='updated notice ur-users-notice is-dismissible'>
+			<div class='updated notice ur-toaster ur-users-notice is-dismissible'>
 				<p>
 					<?php
 					echo esc_html($message);
