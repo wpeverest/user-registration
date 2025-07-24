@@ -2933,3 +2933,36 @@ body.user-registration-page {
 		}
 	}
 }
+@keyframes toaster {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  10% {
+	transform: translateX(-50%);
+    opacity: 1;
+  }
+  90% {
+    transform: translateX(-50%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.ur-toaster {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translate(-50%, -100%);
+  background: #1ea71b;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  display: inline-flex;
+  white-space: nowrap;
+  z-index: 9999;
+  animation: toaster 5s ease-in-out forwards;
+}
