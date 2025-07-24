@@ -1498,6 +1498,12 @@ if (! class_exists('User_Registration_Users_Menu')) {
 									);
 								}
 
+								// User cannot self-update their own role.
+								if ( $id === get_current_user_id() ) {
+									$this->errors[] = new WP_Error( 'edit_users', 'Sorry, you are not allowed to change your own role.' );
+									continue;
+								}
+
 								$user->set_role($role);
 								++$role_change_count;
 							}
@@ -1665,6 +1671,10 @@ if (! class_exists('User_Registration_Users_Menu')) {
 									$form_id      = ur_get_form_id_by_userid($user_id);
 									$login_option = ur_get_single_post_meta($form_id, 'user_registration_form_setting_login_options', get_option('user_registration_general_setting_login_options', 'default'));
 
+									if ( current_user_can( 'manage_options' ) && $user_id === get_current_user_id() ) {
+										$this->errors[] = new WP_Error( 'edit_users', __( 'Sorry, Admin cannot deny themselves.', 'user_registration' ) );
+										continue;
+									}
 									$user_manager->deny();
 
 									if ('email_confirmation' === $login_option || 'admin_approval_after_email_confirmation' === $login_option) {
@@ -1709,7 +1719,7 @@ if (! class_exists('User_Registration_Users_Menu')) {
 						add_action(
 							'admin_notices',
 							function () use ($error) {
-								echo esc_html('<div class="notice ur-users-notice notice-error"><p>' . $error->get_error_message() . '</p></div>');
+								echo '<div class="notice ur-users-notice notice-error is-dismissible"><p>' . esc_html( $error->get_error_message() ) . '</p></div>';
 							}
 						);
 					}
