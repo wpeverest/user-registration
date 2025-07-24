@@ -6551,7 +6551,7 @@ if ( ! function_exists( 'ur_email_send_failed_notice' ) ) {
 				'conditions_to_display' => array(
 					array(
 						'operator'    => 'AND',
-						'show_notice' => $failed_count > 5 ? true : false,
+						'show_notice' => $failed_count > 3 ? true : false,
 					),
 				),
 			),
