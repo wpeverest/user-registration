@@ -46,8 +46,6 @@ class UR_Admin_Notices {
 	public static function init() {
 		self::$notices = get_option( 'user_registration_admin_notices', array() );
 
-		add_action( 'switch_theme', array( __CLASS__, 'reset_admin_notices' ) );
-		add_action( 'user_registration_installed', array( __CLASS__, 'reset_admin_notices' ) );
 		add_action( 'wp_loaded', array( __CLASS__, 'hide_notices' ) );
 		add_action( 'shutdown', array( __CLASS__, 'store_notices' ) );
 
@@ -622,12 +620,6 @@ class UR_Admin_Notices {
 	 */
 	public static function remove_all_notices() {
 		self::$notices = array();
-	}
-    /**
-	* Reset notices for themes when switched or a new version of UR is installed.
-	*/
-	public static function reset_admin_notices() {
-			self::add_notice( 'register' );
 	}
 
 	/**
