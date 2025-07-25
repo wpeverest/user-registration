@@ -1034,10 +1034,15 @@ body {
 				}
 
 				.user_registration_smart_tags_used {
-					color: #475bb2;
-					border-color: #475bb2;
-					background-color: #f6f7f7;
-					padding: 0px 6px;
+					color: #4e4e4e;
+					padding: 0;
+					background-color: transparent;
+					display: flex;
+					align-items: center;
+				}
+				.user_registration_smart_tags_used:hover {
+					background-color: transparent;
+					color: #222222;
 				}
 
 				// Integration Settings
