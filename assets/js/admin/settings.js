@@ -1209,10 +1209,7 @@
 			type = $this.attr("id"),
 			val = $(this).val();
 		// $this.prop("disabled", true);
-		$this
-			.closest(".user-registration-global-settings--field")
-			.find("#select2-" + type + "-container")
-			.css("border", "1px solid #e1e1e1");
+
 
 		$this
 			.closest(".user-registration-global-settings--field")
@@ -1245,10 +1242,6 @@
 							response.responseJSON.message +
 							"</div>"
 						);
-					$this
-						.closest(".user-registration-global-settings--field")
-						.find("#select2-" + type + "-container")
-						.css("border", "1px solid red");
 
 					$this
 						.closest("form")
