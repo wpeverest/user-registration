@@ -120,7 +120,6 @@ class UR_Getting_Started {
 			}
 			update_post_meta( absint( $default_form_page_id ), 'user_registration_form_setting_default_user_role', $role_to_update );
 		}
-
 		foreach ( $settings_to_update as $option => $value ) {
 
 			if ( 'users_can_register' === $option ) {
@@ -270,6 +269,17 @@ class UR_Getting_Started {
 					'content' => '[' . apply_filters( 'user_registration_form_shortcode_tag', 'user_registration_form' ) . ' id="' . esc_attr( $default_form_page_id ) . '"]',
 				);
 			}
+			$enabled_features = get_option( 'user_registration_enabled_features', array() );
+			$enabled_features = array_diff(
+				$enabled_features,
+				array(
+					'user-registration-membership',
+					'user-registration-payment-history',
+					'user-registration-content-restriction'
+				),
+			);
+			update_option( 'user_registration_enabled_features', $enabled_features );
+			update_option( 'user_registration_membership_installed_flag', false );
 		} else {
 			$enabled_features = get_option( 'user_registration_enabled_features', array() );
 			array_push( $enabled_features, 'user-registration-membership' );
