@@ -3216,8 +3216,7 @@ body {
 		}
 
 		.swal2-popup {
-			width: 400px;
-
+			width: 500px;
 			&.user-registration-settings-swal2 {
 				width: auto;
 
@@ -3287,6 +3286,11 @@ body {
 						font-size: 16px;
 						font-weight: 600;
 					}
+				}
+				ul {
+					list-style: disc;
+					font-size: medium;
+					margin-left: 40px;
 				}
 			}
 

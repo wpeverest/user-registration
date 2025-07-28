@@ -182,7 +182,7 @@ class ListTable extends \UR_List_Table {
 	public function column_action( $membership ) {
 
 		$edit_link          = $this->get_edit_links( $membership );
-		$delete_link        = $this->get_delete_links( $membership );
+//		$delete_link        = $this->get_delete_links( $membership );
 		$membership_content = json_decode( $membership->post_content, true );
 		$checked            = ( $membership_content['status'] == 'true' ) ? 'checked' : '';
 		$actions            = '
@@ -201,8 +201,8 @@ class ListTable extends \UR_List_Table {
 						<a href="' . esc_url( $edit_link ) . '">' . __( 'Edit', 'user-registration' ) . '</a>
 					</span>
 					&nbsp | &nbsp
-					<span class="delete">
-						<a class="delete-membership" aria-label="' . esc_attr__( 'Delete this item', 'user-registration' ) . '" href="' . $delete_link . '">' . esc_html__( 'Delete', 'user-registration' ) . '</a>
+					<span class="delete ur-d-flex ur-align-items-center">
+						<a class="delete-membership" data-membership-id="'.esc_attr($membership->ID).'"  aria-label="' . esc_attr__( 'Delete this item', 'user-registration' ) . '" href="#">' . esc_html__( 'Delete', 'user-registration' ) . '</a>
 					</span>
 					</div>
 
@@ -291,7 +291,7 @@ class ListTable extends \UR_List_Table {
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
-			'delete' => __( 'Delete permanently' )
+//			'delete' => __( 'Delete permanently' )
 		);
 
 		return $actions;
