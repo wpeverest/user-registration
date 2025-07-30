@@ -289,7 +289,11 @@ class UR_Getting_Started {
 			update_option( 'user_registration_membership_installed_flag', true );
 			Database::create_tables();
 			update_option( 'ur_membership_default_membership_field_name', $membership_field_name );
-			UR_Install::create_default_membership();
+
+			$ur_memberships = get_posts( 'post_type=ur_membership' );
+			if( 0 === count( $ur_memberships ) ) {
+				UR_Install::create_default_membership();
+			}
 //			$membership_group_id = UR_Install::create_default_membership_group( array( array( 'ID' => "$membership_id" ) ) ); //removed currently since we decided not go forward with a required group.
 
 			if ( $default_form_page_id ) {

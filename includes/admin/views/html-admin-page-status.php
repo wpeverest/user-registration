@@ -40,6 +40,9 @@ $page_tabs = apply_filters('user_registration_admin_status_tabs', $page_tabs);
 					if ($current_tab === $name) {
 						echo 'current';
 					}
+					if( 'setup_wizard' === $name ) {
+						echo ' ur_setup_wizard';
+					}
 					echo '">' . esc_html($label) . '</a>';
 				}
 				?>
@@ -57,7 +60,7 @@ switch ($current_tab) {
 		break;
 	case 'setup_wizard':
 		echo '<script type="text/javascript">' .
-			'window.location.href ="' . admin_url('admin.php?page=user-registration-welcome&tab=setup_wizard') .
+			'window.location.href ="' . admin_url('admin.php?page=user-registration-welcome&tab=setup-wizard') .
 			'"</script>';
 		break;
 	default:

@@ -7185,7 +7185,7 @@ if ( ! function_exists( 'ur_end_setup_wizard' ) ) {
 				update_option( 'user_registration_onboarding_skipped_step', sanitize_text_field( wp_unslash( $_REQUEST['activeStep'] ) ) );
 			} else {
 				delete_option( 'user_registration_onboarding_skipped_step' );
-				update_option( 'user_registration_onboarding_skipped', true );
+				update_option( 'user_registration_onboarding_skipped', false );
 			}
 		}
 	}
