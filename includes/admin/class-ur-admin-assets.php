@@ -462,6 +462,21 @@ class UR_Admin_Assets {
 
 				)
 			);
+
+			// Only run this if we are on the email settings page.
+			if( is_admin() 
+				&& isset( $_GET[ 'tab' ] ) 
+				&& 'email' === $_GET['tab']  
+				&& isset( $_GET['section'] ) 
+				&& ! empty( $_GET['section'] ) 
+			) {
+				wp_localize_script(
+					'user-registration-form-modal-js',
+					'user_registration_form_modal_params',
+					$this->get_i18n_email_content_default_values(),
+				);
+			}
+
 			wp_enqueue_script( 'user-registration-form-modal-js' );
 			wp_enqueue_script( 'ur-enhanced-select' );
 		}
@@ -544,7 +559,22 @@ class UR_Admin_Assets {
 			false
 		);
 	}
-
+	/**
+	 * Get localized email content default values.
+	 */
+	public function get_i18n_email_content_default_values() {
+		$section = isset( $_GET['section'] ) ? $_GET[ 'section' ] : '';
+		$user_registration_form_modal_params = [];
+		$path = UR()->plugin_path() . '/includes/admin/settings/emails/class-' . strtolower( str_replace( '_', '-', $section ) ) . '.php';
+		if( is_file( $path ) ) {
+			$setting = include_once $path;
+			$method = property_exists( $setting, 'id' ) ? 'ur_get_' . $setting->id : '';
+			if( is_object( $setting ) && method_exists( $setting, $method ) ) {
+				$user_registration_form_modal_params[ $section . '_default_content' ] = $setting->$method();
+			}
+		}
+		return $user_registration_form_modal_params;
+	}
 	/**
 	 * Get Form Required HTML.
 	 *

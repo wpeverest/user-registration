@@ -7303,3 +7303,16 @@ body {
 		}
 	}
 }
+a.button.ur-reset-content-button {
+  border-color: #fa5252;
+  color: #fa5252;
+
+  &:hover,
+  &:focus,
+  &:active,
+  &:visited,
+  &:link {
+    border-color: #fa5252;
+    color: #fa5252;
+  }
+}
