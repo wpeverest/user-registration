@@ -124,7 +124,7 @@ class EmailService
 
 		$headers = \UR_Emailer::ur_get_header();
 
-		if ( ur_string_to_bool( get_option( 'user_registration_enable_successfully_registered_email', true ) ) ) {
+		if ( ( ( 'default' === $login_option || 'auto_login' === $login_option || ur_string_to_bool( $email_status ) ) && ! $is_membership_form ) && ur_string_to_bool( get_option( 'user_registration_enable_successfully_registered_email', true ) ) ) {
 			return \UR_Emailer::user_registration_process_and_send_email( sanitize_email( $data['email'] ), $subject, $message, $headers, array(), $template_id );
 		}
 	}
