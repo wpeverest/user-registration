@@ -34,11 +34,11 @@
 						var selector = section.replace(/^ur_settings_/, 'user_registration_');
 						var editor = typeof tinymce !== "undefined" ? tinymce.get(selector) : null;
 						if (editor) {
-							editor.setContent(user_registration_form_modal_params[section + "_default_content"]);
+							editor.setContent(user_registration_email_settings[section]);
 						} else {
 							var $textarea = $("textarea#" + selector);
 							if ($textarea.length) {
-								$textarea.val(user_registration_form_modal_params[section + "_default_content"]);
+								$textarea.val(user_registration_email_settings[section]);
 							}
 						}
 					}

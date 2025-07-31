@@ -565,6 +565,7 @@ class UR_Admin_Assets {
 	public function get_i18n_email_content_default_values() {
 		$section = isset( $_GET['section'] ) ? $_GET[ 'section' ] : '';
 		$user_registration_form_modal_params = [];
+
 		$path = UR()->plugin_path() . '/includes/admin/settings/emails/class-' . strtolower( str_replace( '_', '-', $section ) ) . '.php';
 		if( is_file( $path ) ) {
 			$setting = include_once $path;
