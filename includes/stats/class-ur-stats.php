@@ -336,8 +336,8 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 
 			if ( ! empty( $forms ) ) {
 				foreach ( $forms as $form_id => $form ) {
-					$form_specific_settings = $this->get_form_specific_settings( $form_id );
-					$form_settings[ $form_id ] =  $form_specific_settings;
+					$form_specific_settings    = $this->get_form_specific_settings( $form_id );
+					$form_settings[ $form_id ] = $form_specific_settings;
 				}
 			}
 
@@ -359,11 +359,12 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 			if ( ! empty( $form_settings ) ) {
 				foreach ( $form_settings as $setting ) {
 					$setting_id             = $setting['id'];
-					$product             = $setting['product'];
-					$settings_value         = empty(get_post_meta( $form_id, $setting_id, true ) ) ? 'NOT_SET' :  get_post_meta( $form_id, $setting_id, true );
-					$settings_default_value = is_bool($setting['default_value']) ? ur_bool_to_string($setting['default_value']) :$setting['default_value']  ;
+					$product                = $setting['product'];
+					$value = get_post_meta( $form_id, $setting_id, true );
+					$settings_value         = empty( $value )  ? 'NOT_SET' : get_post_meta( $form_id, $setting_id, true );
+					$settings_default_value = is_bool( $setting['default_value'] ) ? ur_bool_to_string( $setting['default_value'] ) : $setting['default_value'];
 
-					$settings[$product][ $setting_id ] = array(
+					$settings[ $product ][ $setting_id ] = array(
 						'settings_value' => $settings_value,
 						'default_value'  => $settings_default_value
 					);
