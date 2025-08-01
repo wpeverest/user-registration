@@ -1,0 +1,62 @@
+.user-registration,
+.user-registration-page {
+    .ur-admin-page-topnav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: $white;
+        padding: 0 $spacing_24px;
+        border-bottom: $border-width solid $border_color;
+        margin-bottom: $spacing_24px;
+        height: 70px;
+
+        .ur-page-title__wrapper {
+            display: flex;
+            align-items: center;
+            gap: $spacing_24px;
+            height: 100%;
+
+            &-logo {
+                padding: 0 $spacing_24px 0 0;
+                border-right: $border-width solid $border_color;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            &-menu {
+                height: 100%;
+
+                &__items {
+                    display: flex;
+                    gap: $spacing_16px;
+                    margin: 0;
+                    height: 100%;
+
+                    li {
+                        display: flex;
+                        align-items: center;
+                        gap: $spacing_4px;
+                        margin-bottom: 0;
+                        padding: 0;
+
+                        a {
+                            text-decoration: none;
+                            color: $grey-400;
+                            padding: 0 $spacing_8px;
+                            position: relative;
+                            font-size: 15px;
+                            line-height: 24px;
+                            transition: all .3s;
+                            font-weight: $medium;
+                            height: 100%;
+                            display: block;
+                            align-content: center;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

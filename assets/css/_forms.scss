@@ -246,85 +246,75 @@
 		}
 
 		.select2-selection {
-			border-color: $color_gray_four;
+			// border-color: $color_gray_four;
 		}
 
 		.select2-search__field {
-			min-width: 20px;
+			// min-width: 20px;
 		}
 
-		.select2-selection--single {
-			height: 38px;
-			padding: 2px 6px;
-			border: 1px solid #e1e1e1;
+		// .select2-selection--single {
+		// 	height: 38px;
+		// 	padding: 2px 6px;
+		// 	border: 1px solid #e1e1e1;
 
-			.select2-selection__rendered {
-				display: block;
-				line-height: 32px;
-				padding-right: 24px;
-			}
-
-			.select2-selection__arrow {
-				right: 3px;
-				height: 30px;
-
-				b {
-					margin-top: -2px;
-					margin-left: -8px;
-				}
-			}
-		}
+		// 	.select2-selection__rendered {
+		// 		display: block;
+		// 		line-height: 32px;
+		// 		padding-right: 24px;
+		// 	}
+		// }
 
 		.select2-selection--multiple {
-			min-height: 28px;
-			border-radius: 4px;
-			line-height: 1.5;
-			border: 1px solid #ddd !important;
-			padding-left: 4px;
+			// min-height: 28px;
+			// border-radius: 4px;
+			// line-height: 1.5;
+			// border: 1px solid #ddd !important;
+			// padding-left: 4px;
 
 			li {
-				margin: 0;
+				// margin: 0;
 			}
 
 			.select2-selection__choice {
-				padding: 2px 6px;
+				// padding: 2px 6px;
 			}
 
 			.select2-selection__rendered {
 				// display: block;
-				display: flex;
-				margin: 0px;
+				// display: flex;
+				// margin: 0px;
 
-				.select2-selection__choice {
-					margin: 4px;
-					line-height: 1.4;
-					display: flex;
-					align-items: center;
-					justify-content: center;
+				// .select2-selection__choice {
+				// 	margin: 4px;
+				// 	line-height: 1.4;
+				// 	display: flex;
+				// 	align-items: center;
+				// 	justify-content: center;
 
-					.select2-selection__choice__remove {
-						bottom: 0px;
-					}
-				}
+				// 	.select2-selection__choice__remove {
+				// 		bottom: 0px;
+				// 	}
+				// }
 			}
 		}
 
-		.select2-selection__clear {
-			color: #999;
-			margin-top: -1px;
-		}
+		// .select2-selection__clear {
+		// 	color: #999;
+		// 	margin-top: -1px;
+		// }
 
-		.select2-search--inline {
-			.select2-search__field {
-				font-family: inherit;
-				font-size: inherit;
-				font-weight: inherit;
-				padding: 3px 0;
-				margin: 0;
-				line-height: 1;
-				min-height: 26px;
-				height: 32px;
-			}
-		}
+		// .select2-search--inline {
+		// 	.select2-search__field {
+		// 		font-family: inherit;
+		// 		font-size: inherit;
+		// 		font-weight: inherit;
+		// 		padding: 3px 0;
+		// 		margin: 0;
+		// 		line-height: 1;
+		// 		min-height: 26px;
+		// 		height: 32px;
+		// 	}
+		// }
 	}
 }
