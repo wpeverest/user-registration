@@ -1,4 +1,29 @@
 .user-registration,
+.user-registration-page {
+	.button-primary {
+		background: $primary_color;
+		border: $border_width solid $border_color;
+		padding: $spacing_4px $spacing_12px;
+		font-size: 14px;
+		line-height: 24px;
+		border-radius: $border_radius_4;
+		color: $white;
+		transition: all .3s ease-in-out;
+
+		&:hover {
+			background: $primary_dark;
+			border-color: $primary_dark;
+		}
+
+		&:focus {
+			outline: none;
+			box-shadow: none;
+			border-color: $primary_color;
+		}
+	}
+}
+
+.user-registration,
 .ur-form-container {
 	button,
 	.button {

@@ -15,7 +15,7 @@
 
 // Components
 @import "components/badge", "components/button", "components/card",
-	"components/list-group", "components/modal", "components/nav",
+	"components/list-group", "components/modal", "components/nav", "components/search",
 	"components/scroll-ui", "components/dropdown", "components/input", "components/toggle", "components/navigation";
 
 @import "border";
@@ -1112,7 +1112,7 @@ body {
 						border-bottom: $border_width solid #ececec;
 						background: transparent;
 						font-size: 15px;
-						font-weight: $regular;
+						font-weight: $medium;
 						line-height: 150%;
 						display: flex;
 						align-items: center;
@@ -1132,7 +1132,6 @@ body {
 						&.active {
 							background: #fafafa;
 							color: $primary_color;
-							font-weight: $semi_bold;
 							position: relative;
 
 							&::before {
@@ -1295,7 +1294,6 @@ body {
 						&.active {
 							background-color: $white;
 							color: $primary_color;
-							line-height: 24px;
 						}
 					}
 
@@ -1312,7 +1310,7 @@ body {
 							&::before {
 								content: "";
 								position: absolute;
-								border-bottom: 15px solid #383838;
+								border-bottom: 15px solid $white;
 								border-left: 12px solid transparent;
 								border-right: 12px solid transparent;
 								bottom: 0;
@@ -1332,18 +1330,20 @@ body {
 								bottom: -80px;
 								left: 50%;
 								transform: translateX(-50%);
-								background: #383838;
-								color: #fff;
-								font-size: 14px;
-								line-height: 150%;
-								border-radius: $border_radius_5;
-								padding: $spacing_10px $spacing_12px;
+								// background: #383838;
+								background: $white;
+								// color: #fff;
+								color: #383838;
+								font-size: 13px;
+								line-height: 18px;
+								border-radius: $border_radius_4;
+								padding: $spacing_16px $spacing_18px;
+								box-shadow: 0 6px 24px 0 rgba(10,10,10,.1);
 							}
 						}
 
 						a {
-							// cursor: not-allowed;
-							opacity: 0.25;
+							color: #b8b8b8;
 						}
 					}
 				}
@@ -1357,35 +1357,6 @@ body {
 
 			.ur-tab-content {
 				padding: $spacing_32px $spacing_12px $spacing_12px;
-
-				.ur-search-fields {
-					display: flex;
-					align-items: center;
-					position: relative;
-					margin-bottom: 26px;
-
-					input.ur-type-text {
-						height: 40px;
-						font-size: 14px;
-						background: transparent;
-						border-color: $grey-100;
-						border-radius: $border_radius_4;
-						padding: $spacing_10px $spacing_16px;
-						color: $grey-200;
-
-						&::placeholder {
-							color: $grey-200;
-						}
-					}
-
-					svg {
-						position: absolute;
-						right: 16px;
-						width: 18px;
-						height: 18px;
-						fill: $grey-200;
-					}
-				}
 
 				.ur-fields-not-found {
 					text-align: center;
@@ -1525,7 +1496,8 @@ body {
 		position: relative;
 		flex: 1;
 		height: calc(100vh - 89px);
-		background: #fafafc;
+		// background: #fafafc;
+		background: #F4F4F4;
 		border-left: 1px solid $border_color;
 		overflow-y: auto;
 
@@ -3837,7 +3809,7 @@ a.button.ur-smart-tags-list-button {
 	.ur-builder-wrapper {
 		.ur-selected-inputs {
 			padding: $spacing_30px;
-			background: #fafafc;
+			background: #F4F4F4;
 
 			.ur-login-form-wrapper {
 				display: flex;
@@ -3877,7 +3849,7 @@ a.button.ur-smart-tags-list-button {
 
 		.ur-builder {
 			&-header {
-				padding-bottom: $spacing_24px;
+				padding-bottom: $spacing_16px;
 				border-bottom: $border_width solid $border-color;
 				margin-bottom: $spacing_32px;
 
@@ -3898,9 +3870,9 @@ a.button.ur-smart-tags-list-button {
 
 			&-wrapper-content {
 				background: $grey-0;
-				border-radius: $border_radius_4;
-				padding: $spacing_32px $spacing_32px;
-				border: $border_width solid #EDF2F7;
+				border-radius: $border_radius_13;
+				padding: $spacing_32px;
+				border: $border_width solid $border_color;
 
 				// &.ur-login-form-wrapper {
 				// 	background-color: #fafafc;
@@ -3948,7 +3920,7 @@ a.button.ur-smart-tags-list-button {
 			background: $grey-0;
 			border: $border_width solid $border-color;
 			border-radius: $border_radius_13;
-			padding: $spacing_18px $spacing_32px;
+			padding: $spacing_28px $spacing_32px $spacing_32px;
 
 			#ur-field-all-settings {
 				h3 {
@@ -3957,8 +3929,8 @@ a.button.ur-smart-tags-list-button {
 					line-height: 130%;
 					font-weight: $semi_bold;
 					color: $grey-800;
-					border-bottom: $border_width solid $border-color;
-					padding: $spacing_10px 0 $spacing_24px;
+					border-bottom: $border_width solid $border_color;
+					padding: 0 0 $spacing_16px;
 				}
 
 				.form-row {
@@ -4004,23 +3976,23 @@ a.button.ur-smart-tags-list-button {
 					// 	color: $grey-300;
 					// }
 
-					select {
-						background-image: linear-gradient(
-								45deg,
-								transparent 50%,
-								gray 50%
-							),
-							linear-gradient(135deg, gray 50%, transparent 50%);
-						background-position:
-							calc(100% - 15px) calc(1em + 2px),
-							calc(100% - 10px) calc(1em + 2px),
-							calc(100% - 2.5em) 0.5em;
-						background-size:
-							5px 5px,
-							5px 5px,
-							1px 1.5em;
-						background-repeat: no-repeat;
-					}
+					// select {
+					// 	background-image: linear-gradient(
+					// 			45deg,
+					// 			transparent 50%,
+					// 			gray 50%
+					// 		),
+					// 		linear-gradient(135deg, gray 50%, transparent 50%);
+					// 	background-position:
+					// 		calc(100% - 15px) calc(1em + 2px),
+					// 		calc(100% - 10px) calc(1em + 2px),
+					// 		calc(100% - 2.5em) 0.5em;
+					// 	background-size:
+					// 		5px 5px,
+					// 		5px 5px,
+					// 		1px 1.5em;
+					// 	background-repeat: no-repeat;
+					// }
 
 					.ur-radio-group-list {
 						display: flex;
@@ -4366,11 +4338,12 @@ a.button.ur-smart-tags-list-button {
 							height: calc(100vh - 89px);
 							// background: #fafafc;
 							border-left: $border_width solid $border_color;
-							background: #F0F0F1;
+							// background: #F0F0F1;
+							background: #F4F4F4;
 							// overflow-y: auto;
 
 							.ur-selected-inputs {
-								background: #f0f0f1;
+								background: transparent;
 								// height: 100%;
 
 								.ur-builder-wrapper-content {

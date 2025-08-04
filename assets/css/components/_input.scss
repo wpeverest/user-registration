@@ -1,5 +1,16 @@
 .user-registration,
 .user-registration-page {
+    textarea {
+        width: 100%;
+        padding: $spacing_8px $spacing_12px;
+        border: $border_width solid $border_color;
+        border-radius: $border_radius_4;
+        color: $grey-400;
+        font-size: 14px;
+        line-height: 24px;
+        font-weight: $regular;
+    }
+
     input {
         &[type="text"],
         &[type="password"],

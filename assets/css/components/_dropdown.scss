@@ -3,7 +3,8 @@
     select {
         min-height: 38px;
         width: 100%;
-        min-width: 100% !important;
+        min-width: auto !important;
+        max-width: unset;
         padding: 0 $spacing_12px;
         -webkit-appearance: none;
         -moz-appearance: none;
