@@ -1311,7 +1311,52 @@
 
 		update_payment_section_settings(setting_id, section_data, $this, settings_container);
 	});
-
+	$('#user_registration_payment_currency').on('change', function () {
+		var $this = $(this);
+		var currency = $this.val();
+		$this
+			.closest(".user-registration-global-settings--field")
+			.find(".error.inline")
+			.remove();
+		$this
+			.closest(".user-registration-global-settings")
+			.append('<div class="ur-spinner is-active"></div>');
+		
+		$.ajax({
+			url: user_registration_settings_params.ajax_url,
+			data: {
+				action: "user_registration_validate_payment_currency",
+				security: user_registration_settings_params.user_registration_membership_validate_payment_currency_nonce,
+				currency: currency,
+			},
+			type: "POST",
+			complete: function (response) {
+				if (response.responseJSON.success === false) {
+					$this
+						.closest('.user-registration-global-settings')
+						.find('.warning')
+						.remove();
+					$this
+						.closest(".user-registration-global-settings--field")
+						.append(
+							"<div id='message' class='warning inline' style='padding:10px;'>" +
+							response.responseJSON.data.message +
+							"</div>"
+						);
+				} else {
+					$this
+						.closest(".user-registration-global-settings")
+						.find(".warning")
+						.remove();
+				}
+				$this.prop("disabled", false);
+				$this
+					.closest(".user-registration-global-settings")
+					.find(".ur-spinner")
+					.remove();
+			}
+		});
+	});
 	var searchParams = new URLSearchParams(window.location.search);
 	if (searchParams.has('method') && searchParams.get('method') !== "" && $('.user-registration-settings-container').find('#' + searchParams.get('method')).length > 0) {
 		var container = $('.user-registration-settings-container').find('#' + searchParams.get('method'));

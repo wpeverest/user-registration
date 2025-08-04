@@ -80,7 +80,8 @@ class UR_AJAX {
 			'generate_row_settings'             => false,
 			'my_account_selection_validator'    => false,
 			'lost_password_selection_validator' => false,
-			'save_payment_settings'             => false
+			'save_payment_settings'             => false,
+			'validate_payment_currency'			=> false,
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -2039,6 +2040,46 @@ class UR_AJAX {
 		$message = "payment-settings" === $setting_id ? "Settings has been saved successfully" : sprintf( __( "Payment Setting for %s has been saved successfully.", 'user-registration' ), $setting_id );
 		wp_send_json_success( array(
 				'message' => $message
+			)
+		);
+	}
+
+	public static function validate_payment_currency() {
+		check_ajax_referer( 'user_registration_validate_payment_currency', 'security' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to edit payment settings.', 'user-registration' ) ) );
+		}
+
+		if ( empty( $_POST['currency'] ) ) {
+			wp_send_json_error( array( 'message' => __( 'Insufficient Data', 'user-registration' ) ) );
+		}
+
+		$currency = sanitize_text_field( wp_unslash( $_POST['currency'] ) );
+
+
+		$currency_not_supported_payment_gateways = array();
+		
+		// if the currency is not supported by Paypal.
+		if( ! in_array( $currency, paypal_supported_currencies_list() ) ) {
+			$currency_not_supported_payment_gateways[] = 'Paypal';
+		}
+
+		$currency_not_supported_payment_gateways = apply_filters( 'urm_currency_not_supported_payment_gateways', $currency_not_supported_payment_gateways, $currency );
+		if ( ! empty( $currency_not_supported_payment_gateways ) ) {
+			wp_send_json_error(
+				array(
+					'message' => sprintf(
+						__( '%s is not currently supported by %s.', 'user-registration' ),
+						$currency,
+						implode(', ', $currency_not_supported_payment_gateways ),
+					),
+				)
+			);
+		}
+
+		wp_send_json_success(
+			array(
+				'message' => __( 'Currency is valid.', 'user-registration' ),
 			)
 		);
 	}

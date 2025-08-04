@@ -7303,3 +7303,7 @@ body {
 		}
 	}
 }
+div#message.warning.inline {
+    border-left: 4px solid #ffba00;
+    background-color: #f0f0f0;
+}
