@@ -86,7 +86,7 @@ class UR_Settings_Membership_Cancellation_Admin_Email {
 								'id'       => 'user_registration_membership_cancellation_admin_email_subject',
 								'type'     => 'text',
 								'default'  => __( 'Membership Cancelled!', 'user-registration' ),
-								'css'      => 'min-width: 350px;',
+								'css'      => '',
 								'desc_tip' => true,
 							),
 							array(
@@ -95,7 +95,7 @@ class UR_Settings_Membership_Cancellation_Admin_Email {
 								'id'       => 'user_registration_membership_cancellation_admin_email_message',
 								'type'     => 'tinymce',
 								'default'  => $this->user_registration_get_membership_cancellation_admin_email(),
-								'css'      => 'min-width: 350px;',
+								'css'      => '',
 								'desc_tip' => true,
 							),
 						),

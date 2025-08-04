@@ -95,7 +95,7 @@ if ( ! class_exists( 'UR_Settings_Successfully_Registered_Email', false ) ) :
 									'id'       => 'user_registration_successfully_registered_email_subject',
 									'type'     => 'text',
 									'default'  => __( 'Registration Successful – Welcome to {{blog_info}}!', 'user-registration' ),
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'desc_tip' => true,
 								),
 								array(
@@ -104,7 +104,7 @@ if ( ! class_exists( 'UR_Settings_Successfully_Registered_Email', false ) ) :
 									'id'       => 'user_registration_successfully_registered_email',
 									'type'     => 'tinymce',
 									'default'  => $this->ur_get_successfully_registered_email(),
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'desc_tip' => true,
 								),
 							),

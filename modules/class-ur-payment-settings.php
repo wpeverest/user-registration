@@ -67,7 +67,7 @@ if ( ! class_exists( 'UR_Payment_Setting' ) ) :
 								'default'  => 'USD',
 								'type'     => 'select',
 								'class'    => 'ur-enhanced-select',
-								'css'      => 'min-width: 350px;',
+								'css'      => '',
 								'desc_tip' => true,
 								'options'  => $currencies_list,
 							),
