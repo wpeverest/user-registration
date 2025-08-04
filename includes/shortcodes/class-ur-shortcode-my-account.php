@@ -259,7 +259,12 @@ class UR_Shortcode_My_Account {
 				)
 			);
 		} else {
-			echo '<h1>' . esc_html__( 'No profile details found.', 'user-registration' ) . '</h1>';
+			ur_get_template(
+				'myaccount/form-edit-profile-non-urm-user.php',
+				array(
+					// 'endpoint_label' => ur_get_account_menu_items()['edit-profile'],
+				)
+			);
 		}
 	}
 
