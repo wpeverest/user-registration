@@ -59,7 +59,7 @@ if ( ! class_exists( 'UR_Settings_Membership ' ) ) :
 						'id'       => 'user_registration_global_bank_details',
 						'type'     => 'tinymce',
 						'default'  => get_option( 'user_registration_global_bank_details' ),
-						'css'      => 'min-width: 350px;',
+						'css'      => '',
 						'desc_tip' => true
 					),
 					array(

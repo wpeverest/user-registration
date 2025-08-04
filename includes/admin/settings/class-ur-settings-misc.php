@@ -84,7 +84,7 @@ if ( ! class_exists( 'UR_Settings_Misc' ) ) :
 									'id'       => 'user_registration_general_setting_uninstall_option',
 									'type'     => 'toggle',
 									'desc_tip' => 'All user registration forms, settings and users metadata will be deleted upon plugin uninstallation.',
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'default'  => 'false',
 								),
 								array(
@@ -92,7 +92,7 @@ if ( ! class_exists( 'UR_Settings_Misc' ) ) :
 									'desc'    => __( 'Help us improve the plugin\'s features by sharing <a href="https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title" rel="noreferrer noopener" target="_blank">non-sensitive plugin data</a> with us.', 'user-registration' ),
 									'id'      => 'user_registration_allow_usage_tracking',
 									'type'    => 'toggle',
-									'css'     => 'min-width: 350px;',
+									'css'     => '',
 									'default' => 'no',
 								),
 								array(
@@ -100,7 +100,7 @@ if ( ! class_exists( 'UR_Settings_Misc' ) ) :
 									'desc'    => __( 'Enable this to capture the user registration logs', 'user-registration' ),
 									'id'      => 'user_registration_enable_log',
 									'type'    => 'toggle',
-									'css'     => 'min-width: 350px;',
+									'css'     => '',
 									'default' => 'no',
 								),
 							),
