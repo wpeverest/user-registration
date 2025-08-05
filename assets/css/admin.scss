@@ -7304,6 +7304,7 @@ body {
 	}
 }
 div#message.warning.inline {
-    border-left: 4px solid #ffba00;
-    background-color: #f0f0f0;
+	border: 1px solid #c3c4c7;
+    border-left-width: 4px;
+	border-left-color: #ffc700;
 }
