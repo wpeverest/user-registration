@@ -1357,6 +1357,7 @@
 			}
 		});
 	});
+	$('#user_registration_payment_currency').trigger('change');
 	var searchParams = new URLSearchParams(window.location.search);
 	if (searchParams.has('method') && searchParams.get('method') !== "" && $('.user-registration-settings-container').find('#' + searchParams.get('method')).length > 0) {
 		var container = $('.user-registration-settings-container').find('#' + searchParams.get('method'));
