@@ -39,7 +39,10 @@ class URCR_Frontend {
 		add_action( 'elementor/frontend/before_render', array( $this, 'urcr_elementor_before_section_render' ) );
 		add_action( 'elementor/frontend/after_render', array( $this, 'urcr_elementor_after_section_render' ) );
 
-		add_action( 'init', array( $this, 'disable_elementor_element_cache' ) );
+
+		if ( shortcode_exists( 'urcr_restrict' ) ) {
+			$this->disable_elementor_element_cache();
+		}
 	}
 
 	/**
@@ -1044,13 +1047,6 @@ class URCR_Frontend {
 		$override_global_settings = get_post_meta( $post_id, 'urcr_meta_override_global_settings', $single = true );
 
 		$is_membership_active = ur_check_module_activation( 'membership' );
-		$is_elementor_used    = get_post_meta( $post_id, '_elementor_edit_mode', true ) === 'builder';
-
-		if ( $is_elementor_used ) {
-			$elementor_settings      = get_post_meta( $post_id, '_elementor_data', true );
-			$elementor_settings_data = ! empty( $elementor_settings ) ? json_decode( $elementor_settings, true ) : array();
-			$is_section_restricted   = ! empty( $elementor_settings_data[0]['settings']['urcr_restrict_section'] ) ? $elementor_settings_data[0]['settings']['urcr_restrict_section'] : '';
-		}
 
 		if ( $is_membership_active ) {
 			$members_subscription      = new \WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository();
@@ -1061,7 +1057,7 @@ class URCR_Frontend {
 
 		$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
 
-		if ( ur_string_to_bool( $get_meta_data_checkbox ) || $whole_site_access_restricted || ( ! empty( $is_section_restricted ) && 'yes' === $is_section_restricted ) ) {
+		if ( ur_string_to_bool( $get_meta_data_checkbox ) || $whole_site_access_restricted ) {
 			if ( ! ur_string_to_bool( $override_global_settings ) ) {
 				if ( '0' == get_option( 'user_registration_content_restriction_allow_access_to', '0' ) ) {
 
