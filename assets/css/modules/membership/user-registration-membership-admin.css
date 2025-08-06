@@ -310,15 +310,6 @@
   transform: translateY(-50%);
   right: 14px !important;
 }
-.user-registration #user-registration-list-table-page #user-registration-list-filters-row form button[type=submit] {
-  padding: 8px 14px;
-  font-size: 14px;
-  line-height: 20px;
-  color: #475BB2;
-  border-color: #475BB2;
-  background: #F6F7F7;
-  font-weight: 500;
-}
 .user-registration #user-registration-list-table-page #user-registration-users-action-form .tablenav {
   margin: 0;
   padding: 0;
@@ -432,16 +423,6 @@
   box-shadow: none;
   outline: none;
   border-color: #475BB2;
-}
-.user-registration #user-registration-list-table-page #membership-list .tablenav .actions.bulkactions input[type=submit] {
-  margin: 0;
-  padding: 8px 14px;
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 500;
-  color: #475BB2;
-  border-color: #475BB2;
-  background: #F6F7F7;
 }
 .user-registration #user-registration-list-table-page #membership-list .wp-list-table.memberships thead tr td {
   width: 40px;

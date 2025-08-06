@@ -26,12 +26,13 @@
                         font-size: 15px;
                         color: #383838;
                     }
-                    .input-wrapper{
+                    .input-wrapper {
                         input{
                             padding: 8px 10px 8px 14px;
                             margin-bottom: 4px;
-                            border: 1px solid #E9E9E9;
+                            border: 1px solid #e1e1e1;
                             border-radius: 4px;
+
                             &::placeholder{
                                 font-size: 14px;
                                 font-weight: 400;

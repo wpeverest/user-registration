@@ -619,6 +619,53 @@ textarea.ur-input-border-red {
 		}
 	}
 
+	&.ur-frontend-form--default {
+		form {
+			.ur-form-row {
+				.ur-form-grid {
+					input[type="text"],
+					input[type="email"],
+					input[type="url"],
+					input[type="password"],
+					input[type="date"],
+					input[type="number"],
+					textarea,
+					select {
+						border: 1px solid $border_color;
+						outline: none;
+						transition: all 0.35s;
+						padding: 10px 15px;
+						background: $white;
+						color: $label_color;
+						height: 45px;
+						border-radius: $border_radius_4;
+					}
+
+					legend,
+					label {
+						margin-left: 5px;
+						color: $label_color;
+					}
+
+					textarea {
+						height: 100px;
+					}
+
+					.hide_show_password {
+						input[type="password"] {
+							padding-right: 50px;
+						}
+					}
+
+					.user-registration-Button {
+						border: 0;
+						border-radius: 4px;
+					}
+				}
+			}
+		}
+	}
+
 	&.ur-frontend-form--bordered {
 		form {
 			.ur-form-row {
@@ -631,8 +678,7 @@ textarea.ur-input-border-red {
 					input[type="number"],
 					textarea,
 					select {
-						border: none;
-						border-bottom: 1px solid $border_color_input;
+						border: 1px solid $border_color;
 						outline: none;
 						transition: all 0.35s;
 						padding: 10px 15px;
@@ -1851,7 +1897,7 @@ body {
 				&--bordered {
 					&:not(.login) {
 						box-shadow: none;
-						border: 1px solid #e9e9e9;
+						// border: 1px solid #e9e9e9;
 
 						form {
 							.ur-form-row {
@@ -1876,7 +1922,7 @@ body {
 				&--flat {
 					&:not(.login) {
 						box-shadow: none;
-						border: 1px solid #e9e9e9;
+						// border: 1px solid #e9e9e9;
 						border-radius: 0;
 
 						form {
@@ -1897,7 +1943,7 @@ body {
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
 											background: $white;
-											border-color: #e9e9e9;
+											border: 1px solid #e1e1e1;
 											box-shadow: none;
 											border-radius: 0 !important;
 										}
@@ -1926,6 +1972,8 @@ body {
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
 											box-shadow: none;
+											border: 1px solid #e1e1e1;
+											background: transparent;
 										}
 									}
 								}
@@ -2251,7 +2299,7 @@ body {
 								input {
 									margin-bottom: 0;
 									border-radius: 4px;
-									border: 1px solid #e9e9e9;
+									// border: 1px solid #e9e9e9;
 									min-height: 38px;
 									max-height: 38px;
 									font-size: 14px;
@@ -2595,6 +2643,13 @@ body {
 					}
 				}
 			}
+
+			&.ur-frontend-form {
+				max-width: 100%;
+				padding: 0;
+				background: transparent;
+				box-shadow: none;
+			}
 		}
 	}
 	&.woocommerce-checkout {
@@ -2778,8 +2833,22 @@ body {
 												}
 											}
 
+											// h2 {
+											// 	&.ur-toggle-heading {
+											// 		&.closed {
+											// 			color: $primary_color;
+
+											// 			&::before {
+											// 				filter: brightness(0) saturate(100%) invert(35%) sepia(30%) saturate(1444%) hue-rotate(193deg) brightness(93%) contrast(85%);
+											// 			}
+											// 		}
+											// 	}
+											// }
+
 											.ur-toggle-content {
 												margin-top: $spacing_24px;
+												padding-bottom: $spacing_28px;
+												border-bottom: $border_width solid $border_color;
 												display: flex;
 												flex-direction: column;
 												gap: 28px;

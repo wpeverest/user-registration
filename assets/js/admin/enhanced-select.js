@@ -272,12 +272,12 @@ jQuery(function ($) {
 	}
 
 	$(document).ready(function () {
-		const $selection = $(".select2-container").find(
+		var $selection = $(".select2-container").find(
 			".select2-selection--multiple"
 		);
 
 		if ($selection.length > 0) {
-			setTimeout(() => {
+			setTimeout(function() {
 				$selection.each(function () {
 					if (
 						$(this).find(".select2-selection__arrow").length === 0

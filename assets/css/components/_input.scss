@@ -1,7 +1,9 @@
 .user-registration,
-.user-registration-page {
+.user-registration-page,
+.ur-multi-device-form-preview {
     textarea {
         width: 100%;
+        min-height: 80px;
         padding: $spacing_8px $spacing_12px;
         border: $border_width solid $border_color;
         border-radius: $border_radius_4;
@@ -9,6 +11,12 @@
         font-size: 14px;
         line-height: 24px;
         font-weight: $regular;
+
+        &:focus {
+            outline: none;
+            box-shadow: none;
+            border-color: $primary_color;
+        }
     }
 
     input {
