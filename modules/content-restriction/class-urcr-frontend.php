@@ -38,6 +38,18 @@ class URCR_Frontend {
 
 		add_action( 'elementor/frontend/before_render', array( $this, 'urcr_elementor_before_section_render' ) );
 		add_action( 'elementor/frontend/after_render', array( $this, 'urcr_elementor_after_section_render' ) );
+
+		add_action( 'init', array( $this, 'disable_elementor_element_cache' ) );
+	}
+
+	/**
+	 * Disable Elementor element caching to ensure dynamic content works
+	 */
+	public function disable_elementor_element_cache() {
+		update_option( 'elementor_element_cache_ttl', 'disable' );
+		if ( class_exists( '\Elementor\Plugin' ) && method_exists( '\Elementor\Plugin::$instance->files_manager', 'clear_cache' ) ) {
+			\Elementor\Plugin::$instance->files_manager->clear_cache();
+		}
 	}
 	/**
 	 * Perform content restriction task.
