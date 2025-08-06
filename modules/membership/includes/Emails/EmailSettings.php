@@ -32,7 +32,7 @@ class EmailSettings {
 		);
 
 		if ( UR_PRO_ACTIVE ) {
-			$new_emails = array(
+			$new_emails[] = array(
 				'UR_Settings_Membership_Renewal_Reminder_User_Email' => new UR_Settings_Membership_Renewal_Reminder_User_Email(),
 			);
 		}

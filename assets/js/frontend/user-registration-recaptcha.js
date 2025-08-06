@@ -129,124 +129,104 @@
 var google_recaptcha_user_registration;
 var google_recaptcha_login;
 var onloadURCallback = function () {
-	jQuery(".ur-frontend-form")
-		.find("form.register")
-		.each(function (i) {
-			$this = jQuery(this);
-			var form_id = $this.closest(".ur-frontend-form").attr("id");
+	setTimeout(function() {
+		jQuery(".ur-frontend-form")
+			.find("form.register")
+			.each(function (i) {
+				$this = jQuery(this);
+				var form_id = $this.closest(".ur-frontend-form").attr("id");
 
-			var node_recaptcha_register = $this.find(
-				"#ur-recaptcha-node #node_recaptcha_register"
-			).length;
+				var node_recaptcha_register = $this.find(
+					"#ur-recaptcha-node #node_recaptcha_register"
+				).length;
 
-			if (
-				"undefined" !== typeof ur_recaptcha_code &&
-				ur_recaptcha_code.site_key.length
-			) {
-				if (node_recaptcha_register !== 0) {
-					if ("hCaptcha" === ur_recaptcha_code.version) {
-						$this
-							.find("#ur-recaptcha-node .g-recaptcha-hcaptcha")
-							.attr("id", "node_recaptcha_register_" + form_id);
-						google_recaptcha_user_registration = hcaptcha.render(
-							"node_recaptcha_register_" + form_id,
-							{
-								sitekey: ur_recaptcha_code.site_key,
-								theme: "light",
-								style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
-							}
-						);
-					} else if ("cloudflare" === ur_recaptcha_code.version) {
-						$this
-							.find("#ur-recaptcha-node .cf-turnstile")
-							.attr("id", "node_recaptcha_register_" + form_id);
-						google_recaptcha_user_registration = turnstile.render(
-							"#node_recaptcha_register_" + form_id,
-							{
-								sitekey: ur_recaptcha_code.site_key,
-								theme: ur_recaptcha_code.theme_mode,
-								style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
-							}
-						);
-					} else {
-						$this
-							.find("#ur-recaptcha-node .g-recaptcha")
-							.attr("id", "node_recaptcha_register_" + form_id);
-						google_recaptcha_user_registration = grecaptcha.render(
-							"node_recaptcha_register_" + form_id,
-							{
-								sitekey: ur_recaptcha_code.site_key,
-								theme: "light",
-								style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
-							}
-						);
-					}
-					if (ur_recaptcha_code.is_invisible) {
-						grecaptcha.execute(google_recaptcha_user_registration);
+
+				if ($this.find(
+					"#ur-recaptcha-node #node_recaptcha_register"
+				).hasClass('g-recaptcha')) {
+					var captcha_type = 'v2',
+						recaptcha_code = ur_recaptcha_code;
+				} else if ($this.find(
+					"#ur-recaptcha-node #node_recaptcha_register"
+				).hasClass('g-recaptcha-v3')) {
+					var captcha_type = 'v3',
+						recaptcha_code = ur_v3_recaptcha_code;
+				} else if ($this.find(
+					"#ur-recaptcha-node #node_recaptcha_register"
+				).hasClass('g-recaptcha-hcaptcha')) {
+					var captcha_type = 'hCaptcha',
+						recaptcha_code = ur_hcaptcha_recaptcha_code;
+				} else if ($this.find(
+					"#ur-recaptcha-node #node_recaptcha_register"
+				).hasClass('cf-turnstile')) {
+					var captcha_type = 'cloudflare',
+						recaptcha_code = ur_cloudflare_recaptcha_code;
+				}
+
+
+				if (
+					"undefined" !== typeof recaptcha_code &&
+					recaptcha_code.site_key &&
+					recaptcha_code.site_key.length
+				) {
+					if (node_recaptcha_register !== 0) {
+						if ("hCaptcha" === captcha_type) {
+							$this
+								.find("#ur-recaptcha-node .g-recaptcha-hcaptcha")
+								.attr("id", "node_recaptcha_register_" + form_id);
+							google_recaptcha_user_registration = hcaptcha.render(
+								"node_recaptcha_register_" + form_id,
+								{
+									sitekey: recaptcha_code.site_key,
+									theme: "light",
+									style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
+								}
+							);
+						} else if ("cloudflare" === recaptcha_code.version) {
+							console.log(recaptcha_code);
+							$this
+								.find("#ur-recaptcha-node .cf-turnstile")
+								.attr("id", "node_recaptcha_register_" + form_id);
+							google_recaptcha_user_registration = turnstile.render(
+								"#node_recaptcha_register_" + form_id,
+								{
+									sitekey: recaptcha_code.site_key,
+									theme: recaptcha_code.theme_mode,
+									style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
+								}
+							);
+						} else {
+							$this
+								.find("#ur-recaptcha-node .g-recaptcha")
+								.attr("id", "node_recaptcha_register_" + form_id);
+							google_recaptcha_user_registration = grecaptcha.render(
+								"node_recaptcha_register_" + form_id,
+								{
+									sitekey: recaptcha_code.site_key,
+									theme: "light",
+									style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
+								}
+							);
+						}
+						if (recaptcha_code.is_invisible) {
+							grecaptcha.execute(google_recaptcha_user_registration);
+						}
 					}
 				}
-			}
-		});
+			});
 
-	jQuery(".ur-frontend-form")
-		.find("form.login")
-		.each(function (i) {
-			$this = jQuery(this);
-			var ur_recaptcha_node = $this.find("#ur-recaptcha-node");
-			if (
-				"undefined" !== typeof ur_recaptcha_code &&
-				ur_recaptcha_code.site_key.length
-			) {
-				if (ur_recaptcha_node.length !== 0) {
-					if ("hCaptcha" === ur_recaptcha_code.version) {
-						google_recaptcha_login = hcaptcha.render(
-							ur_recaptcha_node
-								.find(".g-recaptcha-hcaptcha")
-								.attr("id"),
-							{
-								sitekey: ur_recaptcha_code.site_key,
-								theme: "light",
-								style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
-							}
-						);
-					} else if ("cloudflare" === ur_recaptcha_code.version) {
-						google_recaptcha_login = turnstile.render(
-							"#"+ur_recaptcha_node
-								.find(".cf-turnstile")
-								.attr("id"),
-							{
-								sitekey: ur_recaptcha_code.site_key,
-								theme: ur_recaptcha_code.theme_mode,
-								style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
-							}
-						);
-					} else {
-						google_recaptcha_login = grecaptcha.render(
-							ur_recaptcha_node.find(".g-recaptcha").attr("id"),
-							{
-								sitekey: ur_recaptcha_code.site_key,
-								theme: "light",
-								style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
-							}
-						);
-					}
-					if (ur_recaptcha_code.is_invisible) {
-						grecaptcha.execute(google_recaptcha_login);
-					}
-				}
-			}
-		});
-
-	jQuery(".ur-frontend-form")
-		.find("form.ur_lost_reset_password")
-		.each(function (i) {
-			$this = jQuery(this);
-			var ur_recaptcha_node = $this.find("#ur-recaptcha-node");
-			if ("undefined" !== typeof ur_recaptcha_code) {
-				if (ur_recaptcha_node.length !== 0) {
-					if ("hCaptcha" === ur_recaptcha_code.version) {
-						google_recaptcha_ur_lost_reset_password =
-							hcaptcha.render(
+		jQuery(".ur-frontend-form")
+			.find("form.login")
+			.each(function (i) {
+				$this = jQuery(this);
+				var ur_recaptcha_node = $this.find("#ur-recaptcha-node");
+				if (
+					"undefined" !== typeof ur_recaptcha_code &&
+					ur_recaptcha_code.site_key.length
+				) {
+					if (ur_recaptcha_node.length !== 0) {
+						if ("hCaptcha" === ur_recaptcha_code.version) {
+							google_recaptcha_login = hcaptcha.render(
 								ur_recaptcha_node
 									.find(".g-recaptcha-hcaptcha")
 									.attr("id"),
@@ -256,10 +236,9 @@ var onloadURCallback = function () {
 									style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
 								}
 							);
-					} else if ("cloudflare" === ur_recaptcha_code.version) {
-						google_recaptcha_ur_lost_reset_password =
-							turnstile.render(
-								"#"+ur_recaptcha_node
+						} else if ("cloudflare" === ur_recaptcha_code.version) {
+							google_recaptcha_login = turnstile.render(
+								"#" + ur_recaptcha_node
 									.find(".cf-turnstile")
 									.attr("id"),
 								{
@@ -268,28 +247,79 @@ var onloadURCallback = function () {
 									style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
 								}
 							);
-					} else {
-						google_recaptcha_ur_lost_reset_password =
-							grecaptcha.render(
-								ur_recaptcha_node
-									.find(".g-recaptcha")
-									.attr("id"),
+						} else {
+							google_recaptcha_login = grecaptcha.render(
+								ur_recaptcha_node.find(".g-recaptcha").attr("id"),
 								{
 									sitekey: ur_recaptcha_code.site_key,
 									theme: "light",
 									style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
 								}
 							);
-					}
-					if (ur_recaptcha_code.is_invisible) {
-						grecaptcha.execute(
-							google_recaptcha_ur_lost_reset_password
-						);
+						}
+						if (ur_recaptcha_code.is_invisible) {
+							grecaptcha.execute(google_recaptcha_login);
+						}
 					}
 				}
-			}
-		});
+			});
+
+		jQuery(".ur-frontend-form")
+			.find("form.ur_lost_reset_password")
+			.each(function (i) {
+				$this = jQuery(this);
+				var ur_recaptcha_node = $this.find("#ur-recaptcha-node");
+				if ("undefined" !== typeof ur_recaptcha_code) {
+					if (ur_recaptcha_node.length !== 0) {
+						if ("hCaptcha" === ur_recaptcha_code.version) {
+							google_recaptcha_ur_lost_reset_password =
+								hcaptcha.render(
+									ur_recaptcha_node
+										.find(".g-recaptcha-hcaptcha")
+										.attr("id"),
+									{
+										sitekey: ur_recaptcha_code.site_key,
+										theme: "light",
+										style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
+									}
+								);
+						} else if ("cloudflare" === ur_recaptcha_code.version) {
+							google_recaptcha_ur_lost_reset_password =
+								turnstile.render(
+									"#" + ur_recaptcha_node
+										.find(".cf-turnstile")
+										.attr("id"),
+									{
+										sitekey: ur_recaptcha_code.site_key,
+										theme: ur_recaptcha_code.theme_mode,
+										style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
+									}
+								);
+						} else {
+							google_recaptcha_ur_lost_reset_password =
+								grecaptcha.render(
+									ur_recaptcha_node
+										.find(".g-recaptcha")
+										.attr("id"),
+									{
+										sitekey: ur_recaptcha_code.site_key,
+										theme: "light",
+										style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;",
+									}
+								);
+						}
+						if (ur_recaptcha_code.is_invisible) {
+							grecaptcha.execute(
+								google_recaptcha_ur_lost_reset_password
+							);
+						}
+					}
+				}
+			});
+	}, 1000);
+
 };
+
 
 function request_recaptcha_token() {
 	var node_recaptcha_register = jQuery(".ur-frontend-form").find(

@@ -259,6 +259,7 @@ class UR_Admin_Settings {
 				'user_registration_lost_password_selection_validator_nonce'    => wp_create_nonce( 'user_registration_lost_password_selection_validator' ),
 				'user_registration_membership_pages_selection_validator_nonce' => wp_create_nonce( 'user_registration_validate_page_none' ),
 				'user_registration_membership_payment_settings_nonce'          => wp_create_nonce( 'user_registration_validate_payment_settings_none' ),
+				'user_registration_membership_captcha_settings_nonce'          => wp_create_nonce( 'user_registration_validate_captcha_settings_nonce' ),
 				'i18n_nav_warning'                                             => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
 				'i18n'                                                         => array(
 					'captcha_success'   => esc_html__( 'Captcha Test Successful !', 'user-registration' ),
@@ -983,7 +984,11 @@ class UR_Admin_Settings {
 										"bank",
 										"payment-settings",
 										"mollie",
-										"authorize-net"
+										"authorize-net",
+										"v2",
+										"v3",
+										"hCaptcha",
+										"cloudflare"
 									) ) ) {
 										$css       = 'ur-flex-row-reverse';
 										$field_css = 'ur-align-items-end';
@@ -1023,7 +1028,7 @@ class UR_Admin_Settings {
 					 * @param string $settings Settings.
 					 * @param mixed $options Section options.
 					 */
-					$settings = apply_filters( 'user_registration_admin_after_global_settings', $settings, $options );
+					$settings = apply_filters( 'user_registration_admin_after_global_settings', $settings, $options ,$section );
 
 					$settings .= ' </div> ';
 					$settings .= ' </div> ';

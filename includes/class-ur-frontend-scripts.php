@@ -288,7 +288,7 @@ class UR_Frontend_Scripts {
 				'version' => '3.0.0',
 			),
 			'ur-recaptcha-hcaptcha'      => array(
-				'src'     => 'https://hcaptcha.com/1/api.js?onload=onloadURCallback&render=explicit',
+				'src'     => 'https://hcaptcha.com/1/api.js?onload=onloadURHcaptchaCallback&render=explicit',
 				'deps'    => array(),
 				'version' => UR_VERSION,
 			),
