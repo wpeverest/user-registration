@@ -534,6 +534,48 @@
 						});
 				}
 			},
+			renew_membership: function (selected_pg, btn) {
+				this.send_data(
+					{
+						_wpnonce: urmf_data.renew_membership_nonce,
+						action: 'user_registration_membership_renew_membership',
+						selected_pg: selected_pg
+					},
+					{
+						success: function (response) {
+
+							if (response.success) {
+								ur_membership_frontend_utils.show_success_message(
+									response.data.message
+								);
+								var prepare_members_data = {
+									payment_method: selected_pg,
+									username: response.data.username
+								};
+
+								ur_membership_ajax_utils.handle_renewal_response(response, prepare_members_data);
+							} else {
+								ur_membership_frontend_utils.show_failure_message(
+									response.data.message
+								);
+							}
+						},
+						failure: function (xhr, statusText) {
+							ur_membership_frontend_utils.show_failure_message(
+								user_registration_pro_frontend_data.network_error +
+								'(' +
+								statusText +
+								')'
+							);
+						},
+						complete: function () {
+							if (selected_pg !== "stripe") {
+								ur_membership_frontend_utils.remove_spinner(btn);
+							}
+							ur_membership_frontend_utils.toggleSaveButtons(false, btn);
+						}
+					});
+			},
 			handle_authorize_upgrade: function (current_plan, selected_membership_id, current_subscription_id, selected_pg, btn) {
 				var data = {
 					current_plan: current_plan,
@@ -627,10 +669,48 @@
 					'</div></div></div>'
 					;
 			},
+			prepare_pg_html: function (gateways) {
+				var gateway_html = '';
+				$.each(gateways, function (index, gateway) {
+					var gateway_value = gateway.toLowerCase();
+					gateway_html +=
+						'<label class="ur_membership_input_label ur-label" for="ur-membership-' + gateway_value + '">' +
+						'<input class="ur_membership_input_class pg-list" ' +
+						'data-key-name="ur-payment-method" ' +
+						'id="ur-membership-' + gateway_value + '" ' +
+						'type="radio" ' +
+						'name="urm_payment_method" ' +
+						(index === 0 ? 'checked' : '') + ' ' +
+						'required ' +
+						'value="' + gateway_value + '">' +
+						'<span class="ur-membership-duration">' + gateway_value.charAt(0).toUpperCase() + gateway_value.slice(1) + '</span>' +
+						'</label>';
+				});
+				return gateway_html;
+			},
+			prepare_renew_membership_html: function (gateways) {
+				return '<div class="membership-upgrade-container">' +
+					'<div class="ur_membership_registration_container">' +
+					'<div class="ur_membership_frontend_input_container urm_hidden_payment_container ur_payment_gateway_container">' +
+					'<div id="payment-gateway-body" class="ur_membership_frontend_input_container">' +
+					ur_membership_ajax_utils.prepare_pg_html(gateways) +
+					'<span id="payment-gateway-notice" class="notice_red"></span>' +
+					'</div>' +
+					'</div>' +
+					'<div class="ur_membership_frontend_input_container">' +
+					'<div class="stripe-container urm-d-none">' +
+					'<button type="button" class="stripe-card-indicator ur-stripe-element-selected" id="credit_card">Credit Card</button>' +
+					'<div class="stripe-input-container"><div id="card-element"></div></div>' +
+					'</div>' +
+					'</div>' +
+					ur_membership_ajax_utils.authorize_net_container_html() +
+					'</div>' +
+					'<span id="upgrade-membership-notice"></span>' +
+					'</div>';
+			},
 			prepare_upgrade_membership_html: function (data) {
 				var membership_title = $('#membership-title').text() || '';
 				var options_html = '',
-					gateway_html = '',
 					gateways = urmf_data.membership_gateways || [];
 
 				//plans html
@@ -659,22 +739,6 @@
 						'</label>';
 				});
 
-				//pg html
-				$.each(gateways, function (index, gateway) {
-					var gateway_value = gateway.toLowerCase();
-					gateway_html +=
-						'<label class="ur_membership_input_label ur-label" for="ur-membership-' + gateway_value + '">' +
-						'<input class="ur_membership_input_class pg-list" ' +
-						'data-key-name="ur-payment-method" ' +
-						'id="ur-membership-' + gateway_value + '" ' +
-						'type="radio" ' +
-						'name="urm_payment_method" ' +
-						(index === 0 ? 'checked' : '') + ' ' +
-						'required ' +
-						'value="' + gateway_value + '">' +
-						'<span class="ur-membership-duration">' + gateway + '</span>' +
-						'</label>';
-				});
 
 				return '<div class="membership-upgrade-container">' +
 					'<span>Your current Plan is <b>' + membership_title + '</b></span>' +
@@ -689,7 +753,7 @@
 					'<div class="ur_membership_frontend_input_container urm_hidden_payment_container ur_payment_gateway_container urm-d-none">' +
 					'<span class="ur-upgrade-label ur-label required">Select Payment Gateway</span>' +
 					'<div id="payment-gateway-body" class="ur_membership_frontend_input_container">' +
-					gateway_html +
+					ur_membership_ajax_utils.prepare_pg_html(gateways) +
 					'<span id="payment-gateway-notice" class="notice_red"></span>' +
 					'</div>' +
 					'</div>' +
@@ -1437,7 +1501,7 @@
 											error_notice = $('#upgrade-membership-notice'),
 											btn = $('.swal2-confirm');
 										//append spinner
-										if( btn.find('span.urm-spinner').length > 0 ) {
+										if (btn.find('span.urm-spinner').length > 0) {
 											return false;
 										}
 										ur_membership_frontend_utils.append_spinner(btn);
@@ -1501,6 +1565,52 @@
 						complete: function () {
 							ur_membership_frontend_utils.remove_spinner($this);
 							$this.attr('disabled', false);
+						}
+					});
+				});
+
+				$(document).on("click", ".renew-membership-button", function () {
+					var $this = $(this),
+						has_error = false,
+						selected_pg = 'free',
+						pg_gateways = $this.data('pg-gateways').split(','),
+						html = ur_membership_ajax_utils.prepare_renew_membership_html(pg_gateways);
+
+
+					$this.attr('disabled', true);
+					ur_membership_frontend_utils.append_spinner($this);
+
+					Swal.fire({
+						title: urmf_data.labels.i18n_field_select_payment_gateway,
+						html: html,
+						customClass: "user-registration-upgrade-membership-swal2-container",
+						showConfirmButton: true,
+						showCancelButton: true,
+						confirmButtonText: 'Change',
+						confirmButtonColor: '#475BB2',
+						preConfirm: function (result) {
+							var pg_type = $('input[name="urm_membership"]:checked').data('urm-pg-type'),
+								error_notice = $('#upgrade-membership-notice'),
+								btn = $('.swal2-confirm');
+							//append spinner
+							if (btn.find('span.urm-spinner').length > 0) {
+								return false;
+							}
+							ur_membership_frontend_utils.append_spinner(btn);
+
+							//validation before request start
+							selected_pg = $('input[name="urm_payment_method"]:checked').val() === undefined ? selected_pg : $('input[name="urm_payment_method"]:checked').val();
+
+							//validation end
+							ur_membership_ajax_utils.renew_membership(selected_pg, btn);
+							return false;
+
+						},
+						allowOutsideClick: false
+					}).then(function (result) {
+						if (!result.isConfirmed) {
+							$this.attr('disabled', false);
+							ur_membership_frontend_utils.remove_spinner($this);
 						}
 					});
 				});

@@ -271,8 +271,11 @@ class StripeService {
 		$member_order                   = $this->members_orders_repository->get_member_orders( $member_id );
 		$membership                     = $this->membership_repository->get_single_membership_by_ID( $member_order['item_id'] );
 		$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
+
 		$membership_metas['post_title'] = $membership['post_title'];
 		$member_subscription            = $this->members_subscription_repository->get_member_subscription( $member_id );
+		$is_automatic                   = "automatic" === get_option( 'user_registration_renewal_behaviour', 'automatic' );
+
 		$response                       = array(
 			'status' => false,
 		);
@@ -383,6 +386,11 @@ class StripeService {
 				}
 			}
 			$logger->notice( print_r( $subscription_details, true ), array( 'source' => 'ur-membership-stripe' ) );
+			if(!$is_automatic && !$is_upgrading) {
+				$value = $membership_metas['subscription']['value'];
+				$duration = $membership_metas['subscription']['duration'];
+				$subscription_details["cancel_at"] = (new \DateTime("+ $value $duration"))->getTimestamp();
+			}
 
 			$subscription        = \Stripe\Subscription::create( $subscription_details );
 			$subscription_status = $subscription->status ?? '';

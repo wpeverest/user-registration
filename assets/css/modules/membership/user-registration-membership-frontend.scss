@@ -548,11 +548,11 @@ label {
 			justify-content: end;
 			padding: 18px 20px;
 			gap: 10px;
-			margin-top: 20px;
+			margin-top: 10px;
 			border-radius: 0 0 5px 5px;
 
 			button {
-				width: 40%;
+				width: 30%;
 				color: $grey-400;
 				font-size: 14px;
 				font-weight: 400;
@@ -596,7 +596,7 @@ label {
 
 .membership-upgrade-container {
 	display: flex;
-	gap: 20px;
+	gap: 10px;
 	flex-direction: column;
 
 	.ur-upgrade-label {
@@ -614,7 +614,6 @@ label {
 			min-height: 36px;
 			margin-bottom: 10px;
 			line-height: 1.5;
-
 			iframe {
 				position: absolute;
 				top: 50%;

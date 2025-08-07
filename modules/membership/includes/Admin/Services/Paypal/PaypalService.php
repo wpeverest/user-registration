@@ -53,8 +53,8 @@ class PaypalService {
 		$redirect                     = ( 'production' === $paypal_options['mode'] ) ? 'https://www.paypal.com/cgi-bin/webscr/?' : 'https://www.sandbox.paypal.com/cgi-bin/webscr/?';
 		$membership_data              = $this->membership_repository->get_single_membership_by_ID( $membership );
 		$membership_metas             = wp_unslash( json_decode( $membership_data['meta_value'], true ) );
-		$membership_amount            = number_format(  $membership_metas['amount'] );
-
+		$membership_amount            = number_format( $membership_metas['amount'] );
+		$is_automatic = "automatic" === get_option( 'user_registration_renewal_behaviour', 'automatic' );
 		$discount_amount = 0;
 
 
@@ -63,7 +63,7 @@ class PaypalService {
 			$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $membership_amount * $coupon_details['coupon_discount'] / 100;
 		}
 
-		if ( 'subscription' === ( $data['type'] ) ) {
+		if ( 'subscription' === ( $data['type'] ) && $is_automatic) {
 			$transaction = '_xclick-subscriptions';
 		} else {
 			$transaction = '_xclick';
@@ -78,6 +78,16 @@ class PaypalService {
 				apply_filters( 'user_registration_paypal_return_url', $return_url, array() )
 			)
 		);
+		$final_amount = floatval( user_registration_sanitize_amount( $membership_amount ) - $discount_amount );
+
+		// Build item name with pricing information
+		$item_name = $membership_data['post_title'];
+		if ( ! empty( $data['subscription'] ) ) {
+			$subscription_value = $data['subscription']['value'];
+			$subscription_duration = $data['subscription']['duration'];
+			$currency_symbol = get_option( 'user_registration_payment_currency', 'USD' ) === 'USD' ? '$' : get_option( 'user_registration_payment_currency', 'USD' );
+			$item_name .= ' - ' . $currency_symbol . $final_amount . ' for ' . $subscription_value . ' ' . $subscription_duration;
+		}
 
 		$paypal_args = array(
 			'business'      => sanitize_email( $paypal_options['email'] ),
@@ -97,11 +107,10 @@ class PaypalService {
 			'no_note'       => '1',
 			'no_shipping'   => '1',
 			'shipping'      => '0',
-			'item_name'     => $membership_data['post_title'],
+			'item_name'     => $item_name,
 			'email'         => sanitize_email( $member_email ),
 		);
-
-		if ( '_xclick-subscriptions' === $transaction ) {
+		if ( '_xclick-subscriptions' === $transaction && $is_automatic) {
 			$paypal_args['t3']          = ! empty( $data ['subscription'] ) ? strtoupper( substr( $data['subscription']['duration'], 0, 1 ) ) : '';
 			$paypal_args['p3']          = ! empty( $data ['subscription']['value'] ) ? $data ['subscription']['value'] : 1;
 			$paypal_args['a3']          = floatval( user_registration_sanitize_amount( $membership_amount ) );
@@ -126,8 +135,8 @@ class PaypalService {
 			}
 
 
-			if ( ! empty( $coupon_details ) || ( $is_upgrading && ! empty( $new_subscription_data ) && ! empty( $new_subscription_data['delayed_until'] ) ) || ($is_upgrading && $data["amount"] < $membership_amount) ) {
-				$amount = $is_upgrading ? user_registration_sanitize_amount($data['amount']) : ( user_registration_sanitize_amount( $membership_amount ) - $discount_amount );
+			if ( ! empty( $coupon_details ) || ( $is_upgrading && ! empty( $new_subscription_data ) && ! empty( $new_subscription_data['delayed_until'] ) ) || ( $is_upgrading && $data["amount"] < $membership_amount ) ) {
+				$amount = $is_upgrading ? user_registration_sanitize_amount( $data['amount'] ) : ( user_registration_sanitize_amount( $membership_amount ) - $discount_amount );
 
 				$paypal_args['t2'] = ! empty( $data ['subscription'] ) ? strtoupper( substr( $data['subscription']['duration'], 0, 1 ) ) : '';
 				$paypal_args['p2'] = ! empty( $data ['subscription']['value'] ) ? $data ['subscription']['value'] : 1;
@@ -135,7 +144,7 @@ class PaypalService {
 			}
 
 		} else {
-			$paypal_args['amount'] = floatval( user_registration_sanitize_amount( $membership_amount ) - $discount_amount );
+			$paypal_args['amount'] = $final_amount;
 		}
 
 		$redirect .= http_build_query( $paypal_args );
@@ -217,12 +226,12 @@ class PaypalService {
 	 *
 	 * @return void
 	 */
-	public function handle_upgrade_for_paypal( $member_id , $subscription_id) {
+	public function handle_upgrade_for_paypal( $member_id, $subscription_id ) {
 
 		$get_user_old_subscription = json_decode( get_user_meta( $member_id, 'urm_previous_subscription_data', true ), true );
 		$get_user_old_order        = json_decode( get_user_meta( $member_id, 'urm_previous_order_data', true ), true );
 		$new_subscription_data     = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
-		$subscription_service = new SubscriptionService();
+		$subscription_service      = new SubscriptionService();
 		if ( ! empty( $new_subscription_data ) ) {
 			if ( empty( $new_subscription_data['delayed_until'] ) ) {
 				$cancel_subscription = $this->cancel_subscription( $get_user_old_order, $get_user_old_subscription );
@@ -232,7 +241,7 @@ class PaypalService {
 				delete_user_meta( $member_id, 'urm_previous_subscription_data' );
 				delete_user_meta( $member_id, 'urm_next_subscription_data' );
 			}
-			$subscription_data = $subscription_service->prepare_upgrade_subscription_data( $new_subscription_data['membership'], $new_subscription_data['member_id'], $new_subscription_data );
+			$subscription_data           = $subscription_service->prepare_upgrade_subscription_data( $new_subscription_data['membership'], $new_subscription_data['member_id'], $new_subscription_data );
 			$subscription_data['status'] = 'active';
 			$this->subscription_repository->update( $subscription_id, $subscription_data );
 		}

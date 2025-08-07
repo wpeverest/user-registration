@@ -48,7 +48,7 @@ class SubscriptionService {
 		if ( $current_user->ID != 0 || 'free' == $membership_meta['type'] ) {
 			$status = 'active';
 		}
-		$billing_cycle = ( "subscription" === $membership_meta['type'] ) ? $membership_meta['subscription']['duration'] :  '';
+		$billing_cycle = ( "subscription" === $membership_meta['type'] ) ? $membership_meta['subscription']['duration'] : '';
 
 		$subscription_data = array(
 			'user_id'           => $member->ID,
@@ -329,9 +329,9 @@ class SubscriptionService {
 
 		ur_get_logger()->notice( __( 'Order created ' . $order['ID'], 'user-registration-membership' ), array( 'source' => 'urm-upgrade-subscription' ) );
 
-		$payment_service = new PaymentService( $payment_method, $data['selected_membership_id'], $user->data->user_email );
-		$ur_authorize_net_data = isset( $data[ 'ur_authorize_net' ] ) ? $data[ 'ur_authorize_net' ] : [];
-		$data            = array(
+		$payment_service       = new PaymentService( $payment_method, $data['selected_membership_id'], $user->data->user_email );
+		$ur_authorize_net_data = isset( $data['ur_authorize_net'] ) ? $data['ur_authorize_net'] : [];
+		$data                  = array(
 			'membership'        => $data['selected_membership_id'],
 			'subscription_id'   => $subscription['ID'],
 			'member_id'         => $user->ID,
@@ -341,7 +341,7 @@ class SubscriptionService {
 			'subscription_data' => $subscription,
 			'ur_authorize_net'  => $ur_authorize_net_data,
 		);
-		$data            = $data + $upgrade_details;
+		$data                  = $data + $upgrade_details;
 
 
 		$response = $payment_service->build_response( $data );
@@ -457,7 +457,7 @@ class SubscriptionService {
 		if ( 'subscription' == $membership_meta['type'] ) { // TODO: calculate with trial date
 			$expiry_date = self::get_expiry_date( date( 'Y-m-d' ), $membership_meta['subscription']['duration'], $remaining_subscription_value );
 		}
-		$billing_cycle = ( "subscription" === $membership_meta['type'] ) ? $membership_meta['subscription']['duration'] :  '';
+		$billing_cycle = ( "subscription" === $membership_meta['type'] ) ? $membership_meta['subscription']['duration'] : '';
 
 		$subscription_data = array(
 			'user_id'           => $member_id,
@@ -573,6 +573,59 @@ class SubscriptionService {
 
 		ur_get_logger()->notice( __( 'Subscription updated for ' . implode( ',', $updated_subscription_for_users ), 'user-registration' ), array( 'source' => 'urm-membership-crons' ) );
 
+
+	}
+
+	public function renew_membership( $user, $selected_pg ) {
+		$member_id                            = $user->ID;
+		$username                             = $user->user_login;
+		$member_subscription                  = $this->members_subscription_repository->get_member_subscription( $member_id );
+		$membership                           = $this->membership_repository->get_single_membership_by_ID( $member_subscription['item_id'] );
+		$membership_id                        = $membership['ID'];
+		$membership_details                   = wp_unslash( json_decode( $membership['meta_value'], true ) );
+		$membership_details['payment_method'] = $selected_pg;
+		$membership_details['post_title']     = $membership['post_title'];
+		$membership_details['membership']     = $membership_id;
+		$order_service                        = new OrderService();
+//		$current_membership =
+		$members_data = array(
+			'membership_data' => $membership_details,
+		);
+
+		$orders_data = $order_service->prepare_orders_data( $members_data, $member_id, $member_subscription, [] ); // prepare data for orders table.
+
+		$order = $this->orders_repository->create( $orders_data );
+		ur_get_logger()->notice( __( 'Order created for ' . $username . ' Order ID: ' . $order['ID'], 'user-registration-membership' ), array( 'source' => 'urm-renew-subscription' ) );
+		$payment_service = new PaymentService( $selected_pg, $membership['ID'], $user->data->user_email );
+		$data            = array(
+			'membership'        => $membership_id,
+			'subscription_id'   => $member_subscription['ID'],
+			'member_id'         => $member_id,
+			'email'             => $user->user_email,
+			'transaction_id'    => $orders_data['orders_data']['transaction_id'],
+			'upgrade'           => false,
+			'subscription_data' => $member_subscription,
+		);
+
+		$renew_response           = $payment_service->build_response( $data );
+		$renew_response["status"] = false;
+
+		if ( isset( $renew_response["payment_url"] ) || isset( $renew_response["data"] ) || "stripe" === $selected_pg ) {
+			$renew_response['status'] = true;
+
+		} else {
+			$this->orders_repository->delete( $order['ID'] );
+		}
+
+		return array(
+			'extra'    => array(
+				'member_id'                => $member_id,
+				'username'                 => $username,
+				'transaction_id'           => $orders_data['orders_data']['transaction_id'],
+				'updated_membership_title' => $membership['post_title']
+			),
+			'response' => $renew_response
+		);
 
 	}
 
