@@ -33,7 +33,7 @@
 		$(".ur_save_login_form_action_button").on("click", function () {
 			ur_save_login_form_settings();
 		});
-		$('.ur-submit-button.ur-disabled-btn').on("click", function(e) {
+		$(".ur-submit-button.ur-disabled-btn").on("click", function (e) {
 			e.preventDefault();
 		});
 	});
@@ -172,29 +172,41 @@
 	}
 
 	function hide_show_login_title() {
-		var value      = $("#user_registration_login_title").is(":checked"),
-			form       = $(".ur-login-form-wrapper").find(".ur-frontend-form.login"),
-			loginTitle = $("#ur-login-form-setting").find("#user_registration_general_setting_login_form_title"),
-			loginDesc  = $("#ur-login-form-setting").find("#user_registration_general_setting_login_form_desc");
+		var value = $("#user_registration_login_title").is(":checked"),
+			form = $(".ur-login-form-wrapper").find(".ur-frontend-form.login"),
+			loginTitle = $("#ur-login-form-setting").find(
+				"#user_registration_general_setting_login_form_title"
+			),
+			loginDesc = $("#ur-login-form-setting").find(
+				"#user_registration_general_setting_login_form_desc"
+			);
 
 		if (value) {
 			form.find(".user-registration-login-title").show();
 			form.find(".user-registration-login-description").show();
-			loginTitle.closest(".user-registration-login-form-global-settings").show();
-			loginDesc.closest(".user-registration-login-form-global-settings").show();
+			loginTitle.closest(".user-registration-sub-settings").show();
 
-			$(document).on("change keyup keydown", "#user_registration_general_setting_login_form_title", function () {
-				form.find(".user-registration-login-title").text(loginTitle.val());
-			});
+			$(document).on(
+				"change keyup keydown",
+				"#user_registration_general_setting_login_form_title",
+				function () {
+					form.find(".user-registration-login-title").text(
+						loginTitle.val()
+					);
+				}
+			);
 
-			$(document).on("change keyup keydown", "#user_registration_general_setting_login_form_desc", function () {
-				form.find(".user-registration-login-description").text(loginDesc.val());
-			});
+			$(document).on(
+				"change keyup keydown",
+				"#user_registration_general_setting_login_form_desc",
+				function () {
+					form.find(".user-registration-login-description").text(
+						loginDesc.val()
+					);
+				}
+			);
 		} else {
-			form.find(".user-registration-login-description").hide();
-			form.find(".user-registration-login-title").hide();
-			loginTitle.closest(".user-registration-login-form-global-settings").hide();
-			loginDesc.closest(".user-registration-login-form-global-settings").hide();
+			loginTitle.closest(".user-registration-sub-settings").hide();
 		}
 	}
 
@@ -256,11 +268,11 @@
 		).is(":checked");
 		if (login_captcha_enabled) {
 			$("#user_registration_login_options_configured_captcha_type")
-				.closest(".user-registration-login-form-global-settings")
+				.closest(".user-registration-sub-settings")
 				.show();
 		} else {
 			$("#user_registration_login_options_configured_captcha_type")
-				.closest(".user-registration-login-form-global-settings")
+				.closest(".user-registration-sub-settings")
 				.hide();
 		}
 	}
@@ -271,11 +283,11 @@
 		).is(":checked");
 		if (login_captcha_enabled) {
 			$("#user_registration_pro_general_setting_limited_login")
-				.closest(".user-registration-login-form-global-settings")
+				.closest(".user-registration-sub-settings")
 				.show();
 		} else {
 			$("#user_registration_pro_general_setting_limited_login")
-				.closest(".user-registration-login-form-global-settings")
+				.closest(".user-registration-sub-settings")
 				.hide();
 		}
 	}
@@ -289,12 +301,12 @@
 		if (value) {
 			form.find(".user-registration-passwordless-login").show();
 			$("#user_registration_pro_passwordless_login_default_login_area")
-				.closest(".user-registration-login-form-global-settings")
+				.closest(".user-registration-sub-settings")
 				.show();
 		} else {
 			form.find(".user-registration-passwordless-login").hide();
 			$("#user_registration_pro_passwordless_login_default_login_area")
-				.closest(".user-registration-login-form-global-settings")
+				.closest(".user-registration-sub-settings")
 				.hide();
 		}
 
@@ -507,9 +519,9 @@
 					".ur-frontend-form.login"
 				);
 
-			form.find(
-				".user-registration-form-row label[for='password']"
-			).html(value + '<span class="required">*</span>');
+			form.find(".user-registration-form-row label[for='password']").html(
+				value + '<span class="required">*</span>'
+			);
 		});
 
 		$("#user_registration_label_username_or_email").on(

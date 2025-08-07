@@ -649,7 +649,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 			if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page'] ) { //phpcs:ignore WordPress.Security.NonceVerification
-				wp_enqueue_script( 'user-registration-settings', UR()->plugin_url() . '/assets/js/admin/settings' . $suffix . '.js', array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-sortable', 'iris', 'tooltipster' ), UR_VERSION, true );
+				wp_register_script( 'ur-snackbar', UR()->plugin_url() . '/assets/js/ur-snackbar/ur-snackbar' . $suffix . '.js', array(), '1.0.0', true );
+				wp_enqueue_script( 'user-registration-settings', UR()->plugin_url() . '/assets/js/admin/settings' . $suffix . '.js', array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-sortable', 'iris', 'tooltipster', 'ur-snackbar' ), UR_VERSION, true );
 				wp_enqueue_script( 'user-registration-login-settings', UR()->plugin_url() . '/assets/js/admin/login-settings' . $suffix . '.js', array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-sortable', 'iris', 'tooltipster' ), UR_VERSION, true );
 				wp_enqueue_style( 'user-registration-css', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR_VERSION );
 

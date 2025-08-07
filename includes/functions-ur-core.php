@@ -7335,8 +7335,8 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 						'desc'     => '',
 						'settings' => array(
 							array(
-								'title'    => __( 'Form Template', 'user-registration' ),
-								'desc'     => __( 'Choose the login form template.', 'user-registration' ),
+								'title'    => __( 'Form Style', 'user-registration' ),
+								'desc'     => __( 'Choose how your login form looks.', 'user-registration' ),
 								'id'       => 'user_registration_login_options_form_template',
 								'type'     => 'select',
 								'desc_tip' => true,
@@ -7352,8 +7352,8 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								),
 							),
 							array(
-								'title'    => __( 'Allow Users to Login With', 'user-registration' ),
-								'desc'     => __( 'Allow users to login with Username, Email or both.', 'user-registration' ),
+								'title'    => __( 'Login Methods', 'user-registration' ),
+								'desc'     => __( 'Let users log in with email, username, or both.', 'user-registration' ),
 								'id'       => 'user_registration_general_setting_login_options_with',
 								'default'  => 'default',
 								'type'     => 'select',
@@ -7363,6 +7363,61 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'options'  => ur_login_option_with(),
 							),
 							array(
+								'title'    => __( 'Enable Remember Me', 'user-registration' ),
+								'desc'     => '',
+								'id'       => 'user_registration_login_options_remember_me',
+								'type'     => 'toggle',
+								'desc_tip' => __( 'Keep users logged in on their browser.', 'user-registration' ),
+								'css'      => '',
+								'default'  => 'yes',
+							),
+							array(
+								'title'    => __( 'Enable Password Reset Link', 'user-registration' ),
+								'desc'     => '',
+								'id'       => 'user_registration_login_options_lost_password',
+								'type'     => 'toggle',
+								'desc_tip' => __( 'Allow users to reset their password if they forget it.', 'user-registration' ),
+								'css'      => '',
+								'default'  => 'yes',
+								'sub_settings' => array(
+									array(
+										'title'    => __( 'Lost Password Page', 'user-registration' ),
+										'desc'     => __( 'Select the page where your password reset form is placed.', 'user-registration' ),
+										'id'       => 'user_registration_lost_password_page_id',
+										'type'     => 'single_select_page',
+										'default'  => '',
+										'class'    => 'ur-enhanced-select-nostd',
+										'css'      => 'min-width:350px;',
+										'desc_tip' => true,
+									),
+								)
+							),
+							array(
+								'title'    => __( 'Registration URL', 'user-registration' ),
+								'desc'     => __( 'Set the URL of the registration page users should be sent to.', 'user-registration' ),
+								'id'       => 'user_registration_general_setting_registration_url_options',
+								'type'     => 'text',
+								'desc_tip' => true,
+								'css'      => '',
+							),
+
+							array(
+								'title'    => __( 'Registration URL Label', 'user-registration' ),
+								'desc'     => __( 'Customize the label shown for your registration link.', 'user-registration' ),
+								'id'       => 'user_registration_general_setting_registration_label',
+								'type'     => 'text',
+								'desc_tip' => true,
+								'css'      => '',
+								'default'  => __( 'Not a member yet? Register now.', 'user-registration' ),
+							),
+						),
+					),
+					'login_options_advanced_settings'           => array(
+						'title'    => __( 'Advanced', 'user-registration' ),
+						'type'     => 'card',
+						'desc'     => '',
+						'settings' => array(
+							array(
 								'title'    => __( 'Enable Login Title', 'user-registration' ),
 								'desc'     => '',
 								'id'       => 'user_registration_login_title',
@@ -7370,24 +7425,26 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'desc_tip' => __( 'Check to enable login title in login form.', 'user-registration' ),
 								'css'      => '',
 								'default'  => 'no',
-							),
-							array(
-								'title'    => __( 'Login Form Title', 'user-registration' ),
-								'desc'     => __( 'This text will appear as the login form title', 'user-registration' ),
-								'id'       => 'user_registration_general_setting_login_form_title',
-								'type'     => 'text',
-								'desc_tip' => true,
-								'css'      => '',
-								'default' => __( 'Welcome', 'user-registration' ),
-							),
-							array(
-								'title'    => __( 'Login Form Description', 'user-registration' ),
-								'desc'     => __( 'This text will appear as the login form description', 'user-registration' ),
-								'id'       => 'user_registration_general_setting_login_form_desc',
-								'type'     => 'textarea',
-								'desc_tip' => true,
-								'css'      => '',
-								'default' => __( 'Please enter your details to access your account.', 'user-registration' ),
+								'sub_settings' => array(
+									array(
+										'title'    => __( 'Login Form Title', 'user-registration' ),
+										'desc'     => __( 'This text will appear as the login form title', 'user-registration' ),
+										'id'       => 'user_registration_general_setting_login_form_title',
+										'type'     => 'text',
+										'desc_tip' => true,
+										'css'      => '',
+										'default' => __( 'Welcome', 'user-registration' ),
+									),
+									array(
+										'title'    => __( 'Login Form Description', 'user-registration' ),
+										'desc'     => __( 'This text will appear as the login form description', 'user-registration' ),
+										'id'       => 'user_registration_general_setting_login_form_desc',
+										'type'     => 'textarea',
+										'desc_tip' => true,
+										'css'      => '',
+										'default' => __( 'Please enter your details to access your account.', 'user-registration' ),
+									),
+								),
 							),
 							array(
 								'title'    => __( 'Enable Ajax Login', 'user-registration' ),
@@ -7399,40 +7456,11 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'default'  => 'no',
 							),
 							array(
-								'title'    => __( 'Enable Remember Me', 'user-registration' ),
-								'desc'     => '',
-								'id'       => 'user_registration_login_options_remember_me',
-								'type'     => 'toggle',
-								'desc_tip' => __( 'Check to enable/disable Remember Me.', 'user-registration' ),
-								'css'      => '',
-								'default'  => 'yes',
-							),
-
-							array(
-								'title'    => __( 'Enable Lost Password', 'user-registration' ),
-								'desc'     => '',
-								'id'       => 'user_registration_login_options_lost_password',
-								'type'     => 'toggle',
-								'desc_tip' => __( 'Check to enable/disable lost password.', 'user-registration' ),
-								'css'      => '',
-								'default'  => 'yes',
-							),
-							array(
-								'title'    => __( 'Lost Password Page', 'user-registration' ),
-								'desc'     => sprintf( __( 'Select the page which contains your login form: [%s]', 'user-registration' ), apply_filters( 'user_registration_lost_password_shortcode_tag', 'user_registration_lost_password' ) ), //phpcs:ignore
-								'id'       => 'user_registration_lost_password_page_id',
-								'type'     => 'single_select_page',
-								'default'  => '',
-								'class'    => 'ur-enhanced-select-nostd',
-								'css'      => 'min-width:350px;',
-								'desc_tip' => true,
-							),
-							array(
 								'title'    => __( 'Hide Field Labels', 'user-registration' ),
 								'desc'     => '',
 								'id'       => 'user_registration_login_options_hide_labels',
 								'type'     => 'toggle',
-								'desc_tip' => __( 'Check to hide field labels.', 'user-registration' ),
+								'desc_tip' => __( 'Hide input labels for a cleaner, minimal login form.', 'user-registration' ),
 								'css'      => '',
 								'default'  => 'no',
 							),
@@ -7442,100 +7470,107 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'desc'     => '',
 								'id'       => 'user_registration_login_options_enable_recaptcha',
 								'type'     => 'toggle',
-								'desc_tip' => sprintf( __( 'Enable %1$s %2$s Captcha %3$s support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=captcha" rel="noreferrer noopener" target="_blank" style="color: #9ef01a;text-decoration:none;">', '</a>' ), //phpcs:ignore
+								'desc_tip' => sprintf( __( 'Turn on %1$s %2$s Captcha %3$s to prevent spam login attempts.', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=captcha" rel="noreferrer noopener" target="_blank" style="color: #9ef01a;text-decoration:none;">', '</a>' ), //phpcs:ignore
 								'css'      => '',
 								'default'  => 'no',
+								'sub_settings' => array(
+									array(
+										'title'    => __( 'Select Captcha Type', 'user-registration' ),
+										'desc'     => __( 'Choose which Captcha type to show on the login form.', 'user-registration' ),
+										'id'       => 'user_registration_login_options_configured_captcha_type',
+										'type'     => 'select',
+										'desc_tip' => true,
+										'css'      => '',
+										'default'  => 'default',
+										'options'  => $ur_enabled_captchas,
+									),
+								),
 							),
 							array(
-								'title'    => __( 'Select Configured Captcha', 'user-registration' ),
-								'desc'     => __( 'Choose the captcha type for Login Form.', 'user-registration' ),
-								'id'       => 'user_registration_login_options_configured_captcha_type',
-								'type'     => 'select',
-								'desc_tip' => true,
-								'css'      => '',
-								'default'  => 'default',
-								'options'  => $ur_enabled_captchas,
-							),
-							array(
-								'title'    => __( 'Registration URL', 'user-registration' ),
-								'desc'     => __( 'This option lets you display the registration page URL in the login form.', 'user-registration' ),
-								'id'       => 'user_registration_general_setting_registration_url_options',
-								'type'     => 'text',
-								'desc_tip' => true,
-								'css'      => '',
-							),
-
-							array(
-								'title'    => __( 'Registration URL Label', 'user-registration' ),
-								'desc'     => __( 'This option lets you enter the label to registration url in login form.', 'user-registration' ),
-								'id'       => 'user_registration_general_setting_registration_label',
-								'type'     => 'text',
-								'desc_tip' => true,
-								'css'      => '',
-								'default'  => __( 'Not a member yet? Register now.', 'user-registration' ),
-							),
-
-							array(
-								'title'      => __( 'Disable Default WordPress Login Screen', 'user-registration' ),
-								'desc'       => '',
+								'title'      => __( 'Disable Default WordPress Login Page', 'user-registration' ),
+								'desc'       => false,
 								'id'         => 'user_registration_login_options_prevent_core_login',
 								'type'       => 'toggle',
-								'desc_tip'   => __( 'Default WordPress login page wp-login.php will  be disabled.', 'user-registration' ),
+								'desc_tip'   => __( 'Block access to wp-login.php and require using your custom login form.', 'user-registration' ),
 								'css'        => '',
 								'default'    => 'no',
-								'desc_field' => __( 'Please make sure that you have created a login or my-account page which has a login form before enabling this option. Learn how to create a login form <a href="https://docs.wpuserregistration.com/docs/how-to-show-login-form/" rel="noreferrer noopener" target="_blank">here</a>.', 'user-registration' ),
+								'sub_settings' => array(
+									array(
+										'title'    => __( 'Redirect Default WordPress Login URL', 'user-registration' ),
+										'desc'     => __( 'Select the custom page users are redirected to instead of wp-login.php.', 'user-registration' ),
+										'id'       => 'user_registration_login_options_login_redirect_url',
+										'type'     => 'single_select_page',
+										'desc_tip' => true,
+										'css'      => '',
+										'class'    => 'ur-redirect-to-login-page ur-enhanced-select-nostd',
+										'default'  => get_option( 'user_registration_myaccount_page_id', '' ),
+									),
+								),
 							),
-
-							array(
-								'title'    => __( 'Redirect Default WordPress Login To', 'user-registration' ),
-								'desc'     => __( 'Select the login page where you want to redirect the wp-admin or wp-login.php page.', 'user-registration' ),
-								'id'       => 'user_registration_login_options_login_redirect_url',
-								'type'     => 'single_select_page',
-								'desc_tip' => true,
-								'css'      => '',
-								'class'    => 'ur-redirect-to-login-page ur-enhanced-select-nostd',
-								'default'  => get_option( 'user_registration_myaccount_page_id', '' ),
-							),
-						),
+						)
 					),
-					'login_form_labels_settings'       => array(
-						'title'    => __( 'Labels', 'user-registration' ),
+					'login_form_text_and_labels_settings'       => array(
+						'title'    => __( 'Text & Labels', 'user-registration' ),
 						'type'     => 'card',
 						'desc'     => '',
 						'settings' => array(
 							array(
-								'title'    => __( 'Username or Email', 'user-registration' ),
-								'desc'     => __( 'This option lets you edit the "Username or Email" field label.', 'user-registration' ),
+								'title'    => __( 'Username / Email Label', 'user-registration' ),
+								'desc'     => __( 'Customize the label for the Username or Email field.', 'user-registration' ),
 								'id'       => 'user_registration_label_username_or_email',
 								'type'     => 'text',
 								'desc_tip' => true,
 								'css'      => '',
 								'default'  => __( 'Username or Email', 'user-registration' ),
 							),
-
 							array(
-								'title'    => __( 'Password', 'user-registration' ),
-								'desc'     => __( 'This option lets you edit the "Password" field label.', 'user-registration' ),
+								'title'    => __( 'Username / Email Placeholder	', 'user-registration' ),
+								'desc'     => __( 'Placeholder inside the Username or Email input.', 'user-registration' ),
+								'id'       => 'user_registration_placeholder_username_or_email',
+								'type'     => 'text',
+								'desc_tip' => true,
+								'css'      => '',
+								'default'  => '',
+							),
+							array(
+								'title'    => __( 'Password Label', 'user-registration' ),
+								'desc'     => __( 'Customize the label for the Password field.', 'user-registration' ),
 								'id'       => 'user_registration_label_password',
 								'type'     => 'text',
 								'desc_tip' => true,
 								'css'      => '',
 								'default'  => __( 'Password', 'user-registration' ),
 							),
-
 							array(
-								'title'    => __( 'Remember Me', 'user-registration' ),
-								'desc'     => __( 'This option lets you edit the "Remember Me" option label.', 'user-registration' ),
+								'title'    => __( 'Password Placeholder', 'user-registration' ),
+								'desc'     => __( 'Placeholder inside the Password input.', 'user-registration' ),
+								'id'       => 'user_registration_placeholder_password',
+								'type'     => 'text',
+								'desc_tip' => true,
+								'css'      => '',
+								'default'  => '',
+							),
+							array(
+								'title'    => __( 'Remember Me Label', 'user-registration' ),
+								'desc'     => __( 'Customize the label for the “Remember Me” checkbox.', 'user-registration' ),
 								'id'       => 'user_registration_label_remember_me',
 								'type'     => 'text',
 								'desc_tip' => true,
 								'css'      => '',
 								'default'  => __( 'Remember Me', 'user-registration' ),
 							),
-
 							array(
-								'title'    => __( 'Login', 'user-registration' ),
-								'desc'     => __( 'This option lets you edit the "Login" button label.', 'user-registration' ),
+								'title'    => __( 'Lost Password Label', 'user-registration' ),
+								'desc'     => __( 'Change the text for the “Lost your password?” link.', 'user-registration' ),
+								'id'       => 'user_registration_label_lost_your_password',
+								'type'     => 'text',
+								'desc_tip' => true,
+								'css'      => '',
+								'default'  => __( 'Lost your password?', 'user-registration' ),
+							),
+							array(
+								'title'    => __( 'Login Button Text', 'user-registration' ),
+								'desc'     => __( 'Change the text on the Login button.', 'user-registration' ),
 								'id'       => 'user_registration_label_login',
 								'type'     => 'text',
 								'desc_tip' => true,
@@ -7543,51 +7578,16 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'default'  => __( 'Login', 'user-registration' ),
 							),
 
-							array(
-								'title'    => __( 'Lost Your Password?', 'user-registration' ),
-								'desc'     => __( 'This option lets you edit the "Lost your password?" option label.', 'user-registration' ),
-								'id'       => 'user_registration_label_lost_your_password',
-								'type'     => 'text',
-								'desc_tip' => true,
-								'css'      => '',
-								'default'  => __( 'Lost your password?', 'user-registration' ),
-							),
-						),
-					),
-					'login_form_placeholders_settings' => array(
-						'title'    => __( 'Placeholders', 'user-registration' ),
-						'type'     => 'card',
-						'desc'     => '',
-						'settings' => array(
-							array(
-								'title'    => __( 'Username or Email Field', 'user-registration' ),
-								'desc'     => __( 'This option lets you set placeholder for the "Username or Email" field.', 'user-registration' ),
-								'id'       => 'user_registration_placeholder_username_or_email',
-								'type'     => 'text',
-								'desc_tip' => true,
-								'css'      => '',
-								'default'  => '',
-							),
-
-							array(
-								'title'    => __( 'Password Field', 'user-registration' ),
-								'desc'     => __( 'This option lets you set placeholder for the "Password" field.', 'user-registration' ),
-								'id'       => 'user_registration_placeholder_password',
-								'type'     => 'text',
-								'desc_tip' => true,
-								'css'      => '',
-								'default'  => '',
-							),
 						),
 					),
 					'login_form_messages_settings'     => array(
-						'title'    => __( 'Messages', 'user-registration' ),
+						'title'    => __( 'Error & Status Messages', 'user-registration' ),
 						'type'     => 'card',
 						'desc'     => '',
 						'settings' => array(
 							array(
-								'title'    => __( 'Username Required', 'user-registration' ),
-								'desc'     => __( 'Show this message when username is empty.', 'user-registration' ),
+								'title'    => __( 'Username / Email Required', 'user-registration' ),
+								'desc'     => __( 'Message shown when username or email is missing.', 'user-registration' ),
 								'id'       => 'user_registration_message_username_required',
 								'type'     => 'text',
 								'desc_tip' => true,
@@ -7596,8 +7596,8 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 							),
 
 							array(
-								'title'       => __( 'Empty Password', 'user-registration' ),
-								'desc'        => __( 'Show this message when password is empty.', 'user-registration' ),
+								'title'       => __( 'Password Required', 'user-registration' ),
+								'desc'        => __( 'Message shown when password is not entered.', 'user-registration' ),
 								'id'          => 'user_registration_message_empty_password',
 								'type'        => 'text',
 								'desc_tip'    => true,
@@ -7607,8 +7607,8 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 							),
 
 							array(
-								'title'       => __( 'Invalid/Unknown Username', 'user-registration' ),
-								'desc'        => __( 'Show this message when username is unknown or invalid.', 'user-registration' ),
+								'title'       => __( 'Invalid Username', 'user-registration' ),
+								'desc'        => __( 'Message shown when the username is incorrect or unknown.', 'user-registration' ),
 								'id'          => 'user_registration_message_invalid_username',
 								'type'        => 'text',
 								'desc_tip'    => true,
@@ -7618,18 +7618,17 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 							),
 
 							array(
-								'title'    => __( 'Unknown Email', 'user-registration' ),
-								'desc'     => __( 'Show this message when email is unknown.', 'user-registration' ),
+								'title'    => __( 'Invalid Email', 'user-registration' ),
+								'desc'     => __( 'Message shown when the email address is not found.', 'user-registration' ),
 								'id'       => 'user_registration_message_unknown_email',
 								'type'     => 'text',
 								'desc_tip' => true,
 								'css'      => '',
 								'default'  => 'A user could not be found with this email address.',
 							),
-
 							array(
-								'title'       => __( 'Pending Approval', 'user-registration' ),
-								'desc'        => __( 'Show this message when an account is pending approval.', 'user-registration' ),
+								'title'       => __( 'Account Pending Approval', 'user-registration' ),
+								'desc'        => __( 'Message shown when the account is waiting for approval.', 'user-registration' ),
 								'id'          => 'user_registration_message_pending_approval',
 								'type'        => 'text',
 								'desc_tip'    => true,
@@ -7637,10 +7636,9 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'default'     => '',
 								'placeholder' => 'Default message from WordPress',
 							),
-
 							array(
-								'title'       => __( 'Denied Account', 'user-registration' ),
-								'desc'        => __( 'Show this message when an account is denied.', 'user-registration' ),
+								'title'       => __( 'Account Denied', 'user-registration' ),
+								'desc'        => __( 'Message shown if the user’s account has been denied.', 'user-registration' ),
 								'id'          => 'user_registration_message_denied_account',
 								'type'        => 'text',
 								'desc_tip'    => true,
@@ -7660,10 +7658,8 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 
 if ( ! function_exists( 'render_login_option_settings' ) ) {
 
-	function render_login_option_settings( $section ) {
-		$settings = '';
-		foreach ( $section['settings'] as $key => $value ) {
-
+	function render_login_option_settings( $section_settings, $settings ) {
+		foreach ( $section_settings as $key => $value ) {
 			if ( ! isset( $value['type'] ) ) {
 				continue;
 			}
@@ -7731,7 +7727,7 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 				case 'date':
 					$option_value = UR_Admin_Settings::get_option( $value['id'], $value['default'] );
 
-					$settings .= '<div class="user-registration-login-form-global-settings">';
+					$settings .= '<div class="user-registration-login-form-global-settings ur-input-settings">';
 					$settings .= '<label class="ur-label" for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 					$settings .= '<div class="user-registration-login-form-global-settings--field">';
 					$settings .= '<input
@@ -7783,7 +7779,7 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 				case 'textarea':
 					$option_value = UR_Admin_Settings::get_option( $value['id'], $value['default'] );
 
-					$settings .= '<div class="user-registration-login-form-global-settings">';
+					$settings .= '<div class="user-registration-login-form-global-settings ur-input-settings">';
 					$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 					$settings .= '<div class="user-registration-login-form-global-settings--field">';
 					$settings .= wp_kses_post( $description );
@@ -7806,7 +7802,7 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 				case 'multiselect':
 					$option_value = UR_Admin_Settings::get_option( $value['id'], $value['default'] );
 
-					$settings .= '<div class="user-registration-login-form-global-settings">';
+					$settings .= '<div class="user-registration-login-form-global-settings ur-input-settings">';
 					$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 					$settings .= '<div class="user-registration-login-form-global-settings--field">';
 					$multiple  = '';
@@ -7938,7 +7934,7 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 						$args = wp_parse_args( $value['args'], $args );
 					}
 
-					$settings .= '<div class="user-registration-login-form-global-settings single_select_page" ' . ( ( isset( $value['display'] ) && 'none' === $value['display'] ) ? 'style="display:none"' : '' ) . '>';
+					$settings .= '<div class="user-registration-login-form-global-settings ur-input-settings single_select_page" ' . ( ( isset( $value['display'] ) && 'none' === $value['display'] ) ? 'style="display:none"' : '' ) . '>';
 					$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 					$settings .= '<div class="user-registration-login-form-global-settings--field">';
 					$settings .= str_replace( ' id=', " data-placeholder='" . esc_attr__( 'Select a page&hellip;', 'user-registration' ) . "' style='" . esc_attr( $value['css'] ) . "' class='" . esc_attr( $value['class'] ) . "' id=", wp_dropdown_pages( $args ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -8077,6 +8073,15 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 					$settings .= '</div>';
 					$settings .= wp_kses_post( $description );
 					$settings .= wp_kses_post( $desc_field );
+
+					if ( isset( $value['sub_settings'] ) ) {
+						$settings .= "<div class='user-registration-sub-settings'>";
+						ob_start();
+						render_login_option_settings( $value['sub_settings'], '', true );
+						$settings .= ob_get_clean();
+						$settings .="</div>";
+					}
+
 					$settings .= '</div>';
 					break;
 				case 'radio-group':
