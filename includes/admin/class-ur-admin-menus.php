@@ -30,6 +30,10 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			add_action( 'admin_menu', array( $this, 'dashboard_menu' ), 10 );
 			add_action( 'admin_menu', array( $this, 'add_registration_menu' ), 50 );
 
+			if( is_plugin_active( 'user-registration-pro/user-registration.php' ) && empty( get_option('user-registration_license_key', '' ) ) ) {
+				add_action( 'admin_menu', array( $this, 'activate_license_menu' ), 100 );
+			}
+
 			/**
 			 * Filter to show the Addons Page
 			 *
@@ -39,7 +43,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				add_action( 'admin_menu', array( $this, 'addons_menu' ), 70 );
 			}
 
-			if ( ! ur_get_license_plan() ) {
+			if ( ! is_plugin_active( 'user-registration-pro/user-registration.php' ) && ! ur_get_license_plan() ) {
 				add_action( 'admin_menu', array( $this, 'user_registration_upgrade_to_pro_menu' ), 80 );
 			}
 
@@ -623,6 +627,38 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 */
 		public function redirect_to_addons_page() {
 			wp_safe_redirect( esc_url_raw( admin_url( 'admin.php?page=user-registration-dashboard#features' ) ) );
+			exit;
+		}
+		/**
+		 * Add license menu item.
+		 */
+		public function activate_license_menu() {
+			add_submenu_page(
+				'user-registration',
+				__( 'Activate License', 'user-registration' ),
+				sprintf(
+					'<span style="color: #FF8C39; display: flex;">
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" style="fill: currentColor; vertical-align: middle;">
+							<circle cx="6" cy="12" r="4" stroke="currentColor" stroke-width="2"/>
+							<circle cx="6" cy="12" r="1.5" stroke="currentColor" stroke-width="1"/>
+							<line x1="10" y1="12" x2="20" y2="12" stroke="currentColor" stroke-width="2"/>
+							<line x1="17" y1="12" x2="17" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+							<line x1="19" y1="12" x2="19" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+						</svg>
+						<span style="margin-left: 5px;">%s</span>
+					</span>',
+					esc_html__( 'Activate License', 'user-registration' )
+				),
+				'manage_options',
+				'user-registration-activate-license',
+				array( $this, 'redirect_to_license_tab' ),
+			);
+		}
+		/**
+		 * License page redirection.
+		 */
+		public function redirect_to_license_tab() {
+			wp_safe_redirect( esc_url_raw( admin_url( 'admin.php?page=user-registration-settings&tab=license' ) ) );
 			exit;
 		}
 
