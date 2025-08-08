@@ -16,6 +16,7 @@ use WPEverest\URMembership\Admin\Controllers\MembersController;
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersOrderRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersRepository;
+use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
 use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
 use WPEverest\URMembership\Admin\Repositories\SubscriptionRepository;
 use WPEverest\URMembership\Admin\Services\CouponService;
@@ -618,7 +619,8 @@ class AJAX {
 		$member_id       = absint( $_POST['member_id'] );
 		$is_user_created = get_user_meta( $member_id, 'urm_user_just_created' );
 		$is_upgrading    = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
-		if ( ! $is_user_created && ! $is_upgrading ) {
+		$is_renewing     = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
+		if ( ! $is_user_created && ! $is_upgrading && ! $is_renewing ) {
 			wp_send_json_error(
 				array(
 					'message' => __( 'Invalid Request.', 'user-registration' ),
@@ -632,25 +634,25 @@ class AJAX {
 				)
 			);
 		}
-		$stripe_service = new StripeService();
-		$payment_status = sanitize_text_field( $_POST['payment_status'] );
+		$stripe_service      = new StripeService();
+		$payment_status      = sanitize_text_field( $_POST['payment_status'] );
+		$is_renewing         = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
 
 		$update_stripe_order = $stripe_service->update_order( $_POST );
 
 		if ( $update_stripe_order['status'] ) {
+
 			if ( $is_upgrading ) {
 				$next_subscription     = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
 				$previous_subscription = get_user_meta( $member_id, 'urm_previous_subscription_data', true );
 				$is_delayed            = ! empty( $next_subscription['delayed_until'] );
 				if ( ! empty( $previous_subscription ) && ! $is_delayed ) {
-
 					$previous_subscription = json_decode( $previous_subscription, true );
 					$stripe_service        = new StripeService();
 					$stripe_service->cancel_subscription( array(), $previous_subscription );
 					delete_user_meta( $member_id, 'urm_next_subscription_data' );
 					delete_user_meta( $member_id, 'urm_previous_subscription_data' );
 					delete_user_meta( $member_id, 'urm_previous_order_data' );
-
 				}
 			}
 
@@ -671,14 +673,26 @@ class AJAX {
 			delete_user_meta( $member_id, 'urm_user_just_created' );
 			$response = array(
 				'message'      => $update_stripe_order["message"],
-				'is_upgrading' => ur_string_to_bool( $is_upgrading )
+				'is_upgrading' => ur_string_to_bool( $is_upgrading ),
+				'is_renewing'  => ur_string_to_bool( $is_renewing )
 			);
 			if ( $is_upgrading ) {
+				$response['message'] = __( "Membership upgraded successfully", "user-registration" );
 				delete_user_meta( $member_id, 'urm_is_upgrading' );
 				delete_user_meta( $member_id, 'urm_is_upgrading_to' );
 				update_user_meta( $member_id, 'urm_is_user_upgraded', 1 );
 			}
-
+			if ( $is_renewing ) {
+				$response['message']            = __( "Membership has been successfully renewed.", "user-registration" );
+				$subscription_service           = new SubscriptionService();
+				$members_subscription_repo      = new MembersSubscriptionRepository();
+				$membership_repository          = new MembershipRepository();
+				$member_subscription            = $members_subscription_repo->get_member_subscription( $member_id );
+				$membership                     = $membership_repository->get_single_membership_by_ID( $member_subscription['item_id'] );
+				$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
+				$membership_metas['post_title'] = $membership['post_title'];
+				$subscription_service->update_subscription_data_for_renewal( $member_subscription, $membership_metas );
+			}
 			wp_send_json_success(
 				$response
 			);
@@ -701,8 +715,9 @@ class AJAX {
 		$payment_method_id = isset( $_POST['payment_method_id'] ) ? sanitize_text_field( $_POST['payment_method_id'] ) : '';
 		$member_id         = absint( wp_unslash( $_POST['member_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 		$is_upgrading      = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
+		$is_renewing       = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
 		$is_user_created   = get_user_meta( $member_id, 'urm_user_just_created' );
-		if ( ! $is_user_created && ! $is_upgrading ) {
+		if ( ! $is_user_created && ! $is_upgrading && ! $is_renewing ) {
 			wp_send_json_error(
 				array(
 					'message' => __( 'Invalid Request.', 'user-registration' ),
@@ -1123,16 +1138,17 @@ class AJAX {
 		$selected_pg          = $_POST["selected_pg"];
 		$renew_membership     = $subscription_service->renew_membership( $user, $selected_pg );
 
-		$response             = $renew_membership['response'];
+		$response = $renew_membership['response'];
 		if ( $response['status'] ) {
-			$message =  __( "New Order created, initializing payment...", "user-registration-membership" );
+			$message = __( "New Order created, initializing payment...", "user-registration-membership" );
 			wp_send_json_success(
 				array(
-					'pg_data'                  => $response,
-					'member_id'                => $renew_membership['extra']['member_id'],
-					'username'                 => $renew_membership['extra']['username'],
-					'transaction_id'           => $renew_membership['extra']['transaction_id'],
-					'message'                  => $message,
+					'pg_data'        => $response,
+					'member_id'      => $renew_membership['extra']['member_id'],
+					'username'       => $renew_membership['extra']['username'],
+					'transaction_id' => $renew_membership['extra']['transaction_id'],
+					'message'        => $message,
+					'is_renewing'    => true
 				)
 			);
 		}

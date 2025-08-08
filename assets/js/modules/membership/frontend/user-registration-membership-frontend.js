@@ -351,7 +351,7 @@
 			 * @return {void} No return value.
 			 */
 			show_bank_response: function (response, prepare_members_data, form_response) {
-				if (response.data.is_upgrading) {
+				if (response.data.is_upgrading || response.data.is_renewing) {
 					location.reload();
 				} else {
 					var bank_data = {
@@ -806,6 +806,28 @@
 						break;
 				}
 			},
+			handle_renewal_response: function (response, prepare_members_data) {
+
+				switch (prepare_members_data.payment_method) {
+					case 'paypal':
+						ur_membership_frontend_utils.show_success_message(
+							response.data.message
+						);
+						window.location.replace(response.data.pg_data.payment_url);
+						break;
+					case 'stripe':
+						stripe_settings.handle_stripe_response(response, prepare_members_data, {data: {}});
+						break;
+					default:
+						ur_membership_ajax_utils.show_bank_response(response, {
+							'username': prepare_members_data.username,
+							'payment_method': prepare_members_data.payment_method
+						}, {
+							data: {}
+						});
+						break;
+				}
+			},
 			cancel_delayed_subscription: function (btn) {
 				ur_membership_frontend_utils.toggleSaveButtons(true, btn);
 				ur_membership_frontend_utils.append_spinner(btn);
@@ -953,13 +975,17 @@
 					{
 						success: function (response) {
 							if (response.success) {
-								if (response.data.is_upgrading) {
-
-									ur_membership_ajax_utils.show_default_response(window.location.href, {
+								if (response.data.is_upgrading || response.data.is_renewing) {
+									var thank_you_data = {
 										'username': prepare_members_data.username,
-										'is_upgraded': true,
-										'message': response.data.message !== undefined ? 'Membership upgrade successfully.' : response.data.message
-									});
+										'message': response.data.message
+									};
+									if (response.data.is_upgrading) {
+										thank_you_data.is_upgrading = response.data.is_upgrading;
+									} else if (response.data.is_renewing) {
+										thank_you_data.is_renewing = response.data.is_renewing;
+									}
+									ur_membership_ajax_utils.show_default_response(window.location.href,thank_you_data);
 								} else {
 									ur_membership_ajax_utils.show_default_response(urmf_data.thank_you_page_url, {
 										'username': prepare_members_data.username,
@@ -1096,7 +1122,6 @@
 			 *
 			 */
 			handleCustomerActionRequired: function (data) {
-
 				return new Promise(function (resolve, reject) {
 					if (
 						data.subscription &&
@@ -1154,16 +1179,20 @@
 			 * @param {object} data  Contains stripe, card, formid, paymentItems, form_selector, customerId, paymentMethodId and subscription.
 			 */
 			handleOnComplete: function (data) {
-				var is_upgrading = data.response_data.data.is_upgrading !== undefined ? data.response_data.data.is_upgrading : false;
 
-				if (is_upgrading) {
+				var is_upgrading = data.response_data.data.is_upgrading !== undefined ? data.response_data.data.is_upgrading : false,
+					is_renewing = data.response_data.data.is_renewing !== undefined ? data.response_data.data.is_renewing : false;
+
+				if (is_upgrading || is_renewing) {
 					stripe_settings.update_order_status(data.subscription, data.response_data, data.prepare_members_data, data.form_response);
 				}
+
 				if (
 					data.subscription &&
 					(data.subscription.status === "active" ||
 						data.subscription.status === "trialing") &&
-					!is_upgrading
+					!is_upgrading &&
+					!is_renewing
 				) {
 					ur_membership_frontend_utils.show_form_success_message(data.form_response, {
 						'username': data.prepare_members_data.username,

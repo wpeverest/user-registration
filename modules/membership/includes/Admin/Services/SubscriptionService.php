@@ -462,7 +462,7 @@ class SubscriptionService {
 		$subscription_data = array(
 			'user_id'           => $member_id,
 			'item_id'           => $membership['ID'],
-			'start_date'        => date( 'Y-m-d' ),
+			'start_date'        => date( 'Y-m-d 00:00:00' ),
 			'expiry_date'       => $expiry_date,
 			'next_billing_date' => $expiry_date,
 			'billing_amount'    => $membership_meta['amount'] ?? 0,
@@ -587,12 +587,12 @@ class SubscriptionService {
 		$membership_details['post_title']     = $membership['post_title'];
 		$membership_details['membership']     = $membership_id;
 		$order_service                        = new OrderService();
-//		$current_membership =
-		$members_data = array(
+		$members_data                         = array(
 			'membership_data' => $membership_details,
 		);
+		$this->update_membership_renewal_metas( $member_id );
 
-		$orders_data = $order_service->prepare_orders_data( $members_data, $member_id, $member_subscription, [] ); // prepare data for orders table.
+		$orders_data = $order_service->prepare_orders_data( $members_data, $member_id, $member_subscription, [], $is_renewal ); // prepare data for orders table.
 
 		$order = $this->orders_repository->create( $orders_data );
 		ur_get_logger()->notice( __( 'Order created for ' . $username . ' Order ID: ' . $order['ID'], 'user-registration-membership' ), array( 'source' => 'urm-renew-subscription' ) );
@@ -627,6 +627,33 @@ class SubscriptionService {
 			'response' => $renew_response
 		);
 
+	}
+
+	/**
+	 * update_membership_renewal_metas
+	 *
+	 * @param $member_id
+	 *
+	 * @return void
+	 */
+	public function update_membership_renewal_metas( $member_id ) {
+		update_user_meta( $member_id, 'urm_is_member_renewing', true );
+	}
+
+	public function update_subscription_data_for_renewal( $member_subscription, $membership_metas ) {
+
+		$subscription_value    = $membership_metas['subscription']['value'];
+		$subscription_duration = $membership_metas['subscription']['duration'];
+		$next_billing_date     = new \DateTime( $member_subscription['next_billing_date'] );
+		$next_billing_date     = $next_billing_date->modify( "+ $subscription_value $subscription_duration" )->format( 'Y-m-d 00:00:00' );
+
+		$this->members_subscription_repository->update( $member_subscription['ID'], array(
+			'start_date'        => date( 'Y-m-d 00:00:00' ),
+			'next_billing_date' => $next_billing_date,
+			'expiry_date'       => $next_billing_date,
+		) );
+		update_user_meta( $member_subscription['user_id'], 'urm_last_renewed_on', date( 'Y-m-d 00:00:00' ) );
+		delete_user_meta( $member_subscription['user_id'], 'urm_is_member_renewing' );
 	}
 
 }

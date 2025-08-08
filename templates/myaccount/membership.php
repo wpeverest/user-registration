@@ -22,13 +22,15 @@ $is_upgraded     = ! empty( $_GET['is_upgraded'] ) ? absint( ur_string_to_bool( 
 $message         = ! empty( $_GET['message'] ) ? esc_html( $_GET['message'] ) : '';
 $membership_info = ( isset( $_GET['info'] ) && ! empty( $_GET['info'] ) ) ? wp_kses_post_deep( $_GET['info'] ) : ( ! empty( $bank_data['bank_data'] ) ? wp_kses_post_deep( $bank_data['bank_data'] ) : '' );
 $is_delayed      = ! empty( $delayed_until );
-$can_renew       = isset( $membership['post_content']['type'] ) && "automatic" !== $renewal_behaviour && "subscription" == $membership['post_content']['type'];
+$is_renewing     = ur_string_to_bool( get_user_meta( $user->ID, 'urm_is_member_renewing', true ) );
+
+$can_renew       = !$is_renewing && isset( $membership['post_content']['type'] ) && "automatic" !== $renewal_behaviour && "subscription" == $membership['post_content']['type'];
 $date_to_renew   = "";
 
 if ( "subscription" == $membership['post_content']['type'] ) {
 	$start_date    = $subscription_data["start_date"];
 	$expiry_date   = $subscription_data["expiry_date"];
-	$date_to_renew = urm_get_date_at_percent_interval( $start_date, $expiry_date, 50 ); //keeping this static for now can be changed to a setting in future
+	$date_to_renew = urm_get_date_at_percent_interval( $start_date, $expiry_date, 1 ); //keeping this static for now can be changed to a setting in future
 }
 
 ?>
@@ -206,7 +208,7 @@ if ( "subscription" == $membership['post_content']['type'] ) {
 				</span>
 		</div>
 		<?php
-		if ( $is_upgrading ):
+		if ( $is_upgrading || $is_renewing ):
 			if ( ! empty( $bank_data['notice_1'] ) ):
 				?>
 				<div id="bank-notice" class="btn-success">
@@ -229,12 +231,16 @@ if ( "subscription" == $membership['post_content']['type'] ) {
 						</defs>
 					</svg>
 					<?php
-					echo isset( $bank_data['notice_1'] ) ? $bank_data['notice_1'] : '';
+					if ( $is_upgrading ) {
+						echo $bank_data['notice_1'];
+					} else if ( $is_renewing ) {
+						echo $bank_data['notice_2'];
+					}
 					?>
 				</span>
 					<span class="view-bank-data">
 					<?php
-					echo __( "Pay now", "user-registration" );
+					echo __( "Bank Info", "user-registration" );
 					?>
 				</span>
 				</div>
