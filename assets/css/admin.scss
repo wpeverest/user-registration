@@ -1484,7 +1484,7 @@ body {
 	label {
 		display: block;
 		width: 100%;
-		margin-bottom: 8px;
+		margin-bottom: 0px;
 		color: $color_gray_one;
 		font-size: 13px;
 		font-weight: $medium;
@@ -6623,7 +6623,7 @@ body {
 										&.ur-input-settings {
 											display: flex;
 											flex-direction: column;
-											gap: 8px;
+											gap: 12px;
 										}
 
 										.user-registration-login-form-toggle-option {
