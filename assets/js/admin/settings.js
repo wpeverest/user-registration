@@ -1313,6 +1313,87 @@
 	});
 
 	var searchParams = new URLSearchParams(window.location.search);
+	
+	if (searchParams.get('activated_license') == 'user-registration') {
+		var urmProInstallHtml = '<div style="display: flex; align-items: center; width: 60%;margin: 20px auto; position: relative;">' +
+    '<img src="/wp-content/plugins/user-registration/assets/images/logo.png" alt="URM Logo" width="50" style="margin: 0 20px;" />' +
+    '<div class="dotted-line-wrapper">' +
+        '<div class="flow-line"></div>' +
+    '</div>' +
+    '<img src="https://upload.wikimedia.org/wikipedia/commons/9/98/WordPress_blue_logo.svg" ' +
+        'alt="WordPress Logo" width="50" style="margin: 0 10px 0 30px;" />' +
+    '</div>' +
+    '<p style="margin-bottom: 20px;font-size:0.9rem;">' +
+        'You\'ve activated your license, great! To get all the Pro Features, we just need to install the URM Pro plugin on your website. Don’t worry, it’s quick and safe!' +
+    '</p>' +
+    '<form method="post">' +
+        '<input type="hidden" name="download_user_registration_pro" value="1" />' +
+        '<input type="hidden" name="ur_license_nonce" value="' + user_registration_settings_params.ur_license_nonce + '" />' +
+        '<button id="install-urm-pro-btn" class="swal2-confirm button-primary" style="margin-bottom: 20px;">' +
+            'Install URM Pro Now' +
+        '</button>' +
+    '</form>' +
+    '<div class="user-registration-settings-container">' +
+        '<div class="user-registration-options-container">' +
+            '<p class="ur-p-tag" style="font-size:0.9rem;">' +
+                'This will automatically install and activate the URM Pro Plugin for you.' +
+            '</p>' +
+        '</div>' +
+    '</div>';
+		Swal.fire({
+			title: 'Install URM Pro to Unlock All Features',
+			html: $urmProInstallHtml,
+			showConfirmButton: false,
+			showCloseButton: true,
+			customClass: {
+				title: 'install-urm-pro-title',
+			},
+			width: 600,
+			didOpen: () => {
+				$('#install-urm-pro-btn').on('click', function () {					
+					$(this)
+						.prop('disabled', true)
+						.text('Installing Plugin')
+						.prepend('<div class="ur-spinner is-active" style="margin-right: 8px;"></div>');
+					$(this)
+						.closest('form')
+						.submit();
+				});
+			}
+		});				
+	}
+	if (searchParams.get('activated_license') == 'user-registration-pro') {
+		$successModalHtml = '<p style="margin: 10px 0 20px;">' +
+        	'URM Pro has been successfully installed and activated. You now have access to all premium features!' +
+			'</p>' +
+			'<button id="dashboard-redirect-btn" style="' +
+				'background: transparent;' +
+				'border: 1px solid #475bb2;' +
+				'color: #475bb2;' +
+				'padding: 8px 16px;' +
+				'border-radius: 6px;' +
+				'font-size: 14px;' +
+				'cursor: pointer;' +
+			'">' +
+				'Continue to Dashboard' +
+			'</button>';
+		Swal.fire({
+			icon: 'success',
+			title: 'Success!',
+			html: $successModalHtml,
+			showConfirmButton: false,
+			showCloseButton: true,
+			customClass: "user-registration-swal2-modal user-registration user-registration-swal2-modal--center user-registration-info swal2-show",
+			width: 400,
+			didOpen: () => {
+				$("#dashboard-redirect-btn").on('click', function () {
+					window.location.href = '/wp-admin/admin.php?page=user-registration-dashboard';
+				});
+			}
+		});
+	}
+
+	var searchParams = new URLSearchParams(window.location.search);
 	if (searchParams.has('method') && searchParams.get('method') !== "" && $('.user-registration-settings-container').find('#' + searchParams.get('method')).length > 0) {
 		var container = $('.user-registration-settings-container').find('#' + searchParams.get('method'));
 		setTimeout(function () {

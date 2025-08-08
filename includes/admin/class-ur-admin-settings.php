@@ -100,9 +100,9 @@ class UR_Admin_Settings {
 				include_once ABSPATH . 'wp-admin/includes/plugin.php';
 			}
 
-			if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
+			// if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
 				$settings[] = include 'settings/class-ur-settings-license.php';
-			}
+			// }
 
 			/**
 			 * Filter to retrieve settings pages
@@ -253,6 +253,7 @@ class UR_Admin_Settings {
 			'user_registration_settings_params',
 			array(
 				'ajax_url'                                                     => admin_url( 'admin-ajax.php' ),
+				'ur_license_nonce'											   => wp_create_nonce( '_ur_license_nonce' ),
 				'user_registration_search_global_settings_nonce'               => wp_create_nonce( 'user_registration_search_global_settings' ),
 				'user_registration_captcha_test_nonce'                         => wp_create_nonce( 'user_registration_captcha_test_nonce' ),
 				'user_registration_my_account_selection_validator_nonce'       => wp_create_nonce( 'user_registration_my_account_selection_validator' ),
@@ -442,6 +443,10 @@ class UR_Admin_Settings {
 						}
 
 						$settings .= '</div>';
+
+						if( ! empty( $section['before_desc'] ) ) {
+							$settings .= '<p style="font-size: 14px;">' . wptexturize( wp_kses_post( $section['before_desc'] ) ) . '</p>';
+						}
 
 						if ( ! empty( $section['desc'] ) ) {
 							$settings .= '<p class="ur-p-tag">' . wptexturize( wp_kses_post( $section['desc'] ) ) . '</p>';

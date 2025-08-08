@@ -103,13 +103,12 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 		$this->api_key     = get_option( $this->plugin_slug . '_license_key' );
 		$this->plugin_data = get_plugin_data( $this->plugin_file );
 
+		$this->plugin_requests();
 		// Check if pro is activated to display license notices.
 		if ( ( file_exists( WP_PLUGIN_DIR . '/user-registration-pro/user-registration.php' ) && is_plugin_active( 'user-registration-pro/user-registration.php' ) ) && current_user_can( 'update_plugins' ) ) {
-
-			$this->plugin_requests();
 			add_action( 'in_admin_header', array( $this, 'user_registration_upgrade_to_pro_notice' ) );
-			$this->plugin_license_view();
 		}
+		$this->plugin_license_view();
 
 		$message = get_option( 'user_registration_failed_installing_extensions_message', '' );
 
@@ -138,7 +137,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 				wp_redirect( remove_query_arg( array( 'deactivated_license', $this->plugin_slug . '_deactivate_license' ), add_query_arg( 'activated_license', $this->plugin_slug ) ) );
 				exit;
 			}
-		}
+		}	
 		if ( isset( $_GET['_wpnonce'] ) ) {
 			if ( ! wp_verify_nonce( $_GET['_wpnonce'], '_ur_license_nonce' ) ) {
 				return;
@@ -162,7 +161,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 		$license_key = sanitize_text_field( $_POST[ $this->plugin_slug . '_license_key' ] ); // phpcs:ignore
 
 		if ( $this->activate_license( $license_key ) ) {
-			$this->install_extension();
+			// $this->install_extension();
 			wp_redirect( remove_query_arg( array( 'deactivated_license', $this->plugin_slug . '_deactivate_license' ), add_query_arg( 'activated_license', $this->plugin_slug ) ) );
 			exit;
 		} else {
@@ -176,7 +175,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 */
 	public function install_extension() {
 
-		$status = ur_install_extensions( 'User Registration PRO', 'user-registration-pro' );
+		$status = ur_install_extensions( 'User Registration &amp; Membership (Pro)', 'user-registration-pro' );
 
 		if ( $status['success'] ) {
 			add_action( 'admin_notices', array( $this, 'user_registration_extension_download_success_notice' ) );
@@ -430,7 +429,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 				throw new Exception( 'Connection failed to the License Key API server - possible server issue.' );
 			}
 		} catch ( Exception $e ) {
-			$this->add_error( $e->getMessage() );
+			$this->add_error( $e->getMessage(), 'activation_error' );
 			return false;
 		}
 	}
