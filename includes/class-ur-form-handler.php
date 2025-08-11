@@ -58,7 +58,6 @@ class UR_Form_Handler {
 			exit;
 		}
 	}
-
 	/**
 	 * Save and update a profie fields if the form was submitted through the user account page.
 	 *

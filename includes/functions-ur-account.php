@@ -85,6 +85,54 @@ function ur_lostpassword_url( $default_url = '' ) {
 add_filter( 'lostpassword_url', 'ur_lostpassword_url', 20, 1 );
 
 /**
+ * Returns the URL to the reset password endpoint.
+ *
+ * @param  string $default_url Default reset password URL.
+ *
+ * @return string
+ */
+function ur_resetpassword_url( $default_url = '' ) {
+
+	// Don't redirect to the user registration endpoint on global network admin resets.
+	if ( is_multisite() && isset( $_GET['redirect_to'] ) && false !== strpos( wp_unslash( $_GET['redirect_to'] ), network_admin_url() ) ) { // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		return $default_url;
+	}
+
+	// Don't change default URL if admin side reset form is being used.
+	if ( 'wp-login.php' === $GLOBALS['pagenow'] ) {
+		return $default_url;
+	}
+
+	// Get reset password page from plugin option.
+	$reset_password_page = get_option( 'user_registration_reset_password_page_id', false );
+
+	if ( $reset_password_page && ! empty( get_post( $reset_password_page ) ) ) {
+		return get_permalink( $reset_password_page );
+	} else {
+		$ur_account_page_url = ur_get_page_permalink( 'myaccount' );
+
+		$ur_account_page_exists   = ur_get_page_id( 'myaccount' ) > 0;
+		$reset_password_endpoint  = get_option( 'user_registration_myaccount_reset_password_endpoint', 'reset-password' );
+		$ur_login_page_exists     = ur_get_page_id( 'login' ) > 0;
+
+		if ( ! $ur_account_page_exists && $ur_login_page_exists ) {
+			update_option( 'user_registration_login_page_id', ur_get_page_id( 'login' ) );
+		}
+
+		if ( $ur_account_page_exists && ! empty( $reset_password_endpoint ) ) {
+			return ur_get_endpoint_url( $reset_password_endpoint, '', $ur_account_page_url );
+		} elseif ( $ur_login_page_exists && ! empty( $reset_password_endpoint ) ) {
+			return ur_get_endpoint_url( $reset_password_endpoint, '', get_permalink( ur_get_page_id( 'login' ) ) );
+		} elseif ( ! empty( $reset_password_endpoint ) && 'reset-password' !== $reset_password_endpoint ) {
+			return str_replace( 'reset-password', $reset_password_endpoint, $default_url );
+		} else {
+			return $default_url;
+		}
+	}
+}
+
+
+/**
  * Get My Account menu items.
  *
  * @return array

@@ -309,6 +309,11 @@ class UR_Getting_Started {
 			'title'   => _x( 'Lost Password', 'Page title', 'user-registration' ),
 			'content' => '[user_registration_lost_password]',
 		);
+		$pages['reset_password'] = array(
+			'name'    => _x( 'reset-password', 'Page slug', 'user-registration' ),
+			'title'   => _x( 'Reset Password', 'Page title', 'user-registration' ),
+			'content' => '[user_registration_reset_password]',
+		);
 
 		if ( 'user_registration_membership_registration' === $request['registrationType'] ) {
 			$pages['membership_pricing']  = array(
