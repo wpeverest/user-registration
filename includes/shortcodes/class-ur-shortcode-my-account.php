@@ -514,7 +514,8 @@ class UR_Shortcode_My_Account {
                 );
             } else {
                 UR_Shortcode_My_Account::set_reset_password_cookie();
-            }
+				ur_clear_notices();
+			}
         }
 		
 		wp_safe_redirect( ur_get_my_account_url() );
