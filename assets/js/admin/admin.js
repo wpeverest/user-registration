@@ -1159,7 +1159,6 @@ jQuery(function ($) {
 
 			var form_row = login_options.closest(".form-row");
 			form_row.find("#ur-rar-url-notice").remove();
-			console.log(login_options.val());
 			if (login_options.length == 1 && login_options.val() == "email_confirmation") {
 				show_email_confirmation_disabled_notice(form_row);
 			}
