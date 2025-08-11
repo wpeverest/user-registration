@@ -484,7 +484,7 @@ class UR_Shortcode_My_Account {
             $user = get_user_by( 'login', $rp_login );
             $rp_login = isset( $user->user_login ) ? $user->user_login : $rp_login;
 
-            $user = UR_Shortcode_My_Account::check_password_reset_key( $rp_key, $rp_login );
+            $user = self::check_password_reset_key( $rp_key, $rp_login );
 
             if ( ! empty( $user ) ) {
                 $form_id = ur_get_form_id_by_userid( $user->ID );
@@ -516,7 +516,9 @@ class UR_Shortcode_My_Account {
                 UR_Shortcode_My_Account::set_reset_password_cookie();
             }
         }
-		return '<p>Reset password link is invalid or expired.</p>';
+		
+		wp_safe_redirect( ur_get_my_account_url() );
+		exit;
 	}
 
 
