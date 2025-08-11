@@ -52,26 +52,32 @@ jQuery(function ($) {
 		var icon =
 			'<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>';
 
-		if ($(this).hasClass("ur-one-time-draggable-disabled") || $(this).hasClass("ur-membership-payment-field-disabled") || $(this).hasClass("ur-membership-field-disabled")) {			var title =
-					icon +
-					'<span class="user-registration-swal2-modal__title">' +
-					user_registration_form_builder_data.form_one_time_draggable_fields_locked_title.replace(
-						"%field%",
-						$(this).text()
-					) +
-					"</span>";
-			var message = '';
-			if($(this).hasClass("ur-membership-payment-field-disabled")){
-				message = user_registration_form_builder_data.form_membership_payment_fields_disabled_message;
-			}
-			else if($(this).hasClass("ur-membership-field-disabled")){
-				message = user_registration_form_builder_data.form_membership_field_disabled_message;
-			}
-			else{
-				message = user_registration_form_builder_data.form_one_time_draggable_fields_locked_message.replace(
+		if (
+			$(this).hasClass("ur-one-time-draggable-disabled") ||
+			$(this).hasClass("ur-membership-payment-field-disabled") ||
+			$(this).hasClass("ur-membership-field-disabled")
+		) {
+			var title =
+				icon +
+				'<span class="user-registration-swal2-modal__title">' +
+				user_registration_form_builder_data.form_one_time_draggable_fields_locked_title.replace(
 					"%field%",
 					$(this).text()
-				);
+				) +
+				"</span>";
+			var message = "";
+			if ($(this).hasClass("ur-membership-payment-field-disabled")) {
+				message =
+					user_registration_form_builder_data.form_membership_payment_fields_disabled_message;
+			} else if ($(this).hasClass("ur-membership-field-disabled")) {
+				message =
+					user_registration_form_builder_data.form_membership_field_disabled_message;
+			} else {
+				message =
+					user_registration_form_builder_data.form_one_time_draggable_fields_locked_message.replace(
+						"%field%",
+						$(this).text()
+					);
 			}
 			Swal.fire({
 				title: title,
@@ -368,9 +374,10 @@ jQuery(function ($) {
 				var appending_text = $(el).find("h3").text();
 				var appending_id = $(el).attr("id");
 				var dataAttributes = "";
-				$.each( el.attributes, function() {
-					if(this.name.startsWith('data-')) {
-						dataAttributes += " " + this.name + "='" + this.value + "' ";
+				$.each(el.attributes, function () {
+					if (this.name.startsWith("data-")) {
+						dataAttributes +=
+							" " + this.name + "='" + this.value + "' ";
 					}
 				});
 				if ("integration-settings" === appending_id) {
@@ -433,8 +440,13 @@ jQuery(function ($) {
 						? "integration-lists-settings"
 						: "";
 
-					if( !$(el).hasClass("integration-lists-settings") && $(el).is('[data-field-group*="payments"]')) {
-						if(user_registration_form_builder_data.form_has_membership_field) {
+					if (
+						!$(el).hasClass("integration-lists-settings") &&
+						$(el).is('[data-field-group*="payments"]')
+					) {
+						if (
+							user_registration_form_builder_data.form_has_membership_field
+						) {
 							classToAdd += " disabled";
 						}
 					}
@@ -686,17 +698,22 @@ jQuery(function ($) {
 							});
 						}
 					}
-				} else if($(this).hasClass('disabled') && $(this).data('field-group') === 'payments') {
-					var icon = '<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>';
+				} else if (
+					$(this).hasClass("disabled") &&
+					$(this).data("field-group") === "payments"
+				) {
+					var icon =
+						'<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>';
 					var title =
-					icon +
-					'<span class="user-registration-swal2-modal__title">' +
-					user_registration_form_builder_data.form_membership_payment_settings_disabled_title.replace(
-						"%field%",
-						$(this).text()
-					) +
-					"</span>";
-					var message = user_registration_form_builder_data.form_membership_payment_settings_disabled_message;
+						icon +
+						'<span class="user-registration-swal2-modal__title">' +
+						user_registration_form_builder_data.form_membership_payment_settings_disabled_title.replace(
+							"%field%",
+							$(this).text()
+						) +
+						"</span>";
+					var message =
+						user_registration_form_builder_data.form_membership_payment_settings_disabled_message;
 					Swal.fire({
 						title: title,
 						html: message,
@@ -1712,6 +1729,37 @@ jQuery(function ($) {
 		target_hidden_input.val(input_value);
 		target_pattern_input.val(input_value);
 	}
+
+	$(".ur-admin-page-topnav")
+		.find(".has-sub-menu")
+		.each(function () {
+			var link = $(this).find("a");
+			var hideTimeout;
+
+			$(this).on("mouseenter", function () {
+				clearTimeout(hideTimeout);
+				$(this).find(".ur-sub-menu-dropdown").addClass("active");
+			});
+			$(this).on("mouseleave", function () {
+				hideTimeout = setTimeout(() => {
+					$(this).find(".ur-sub-menu-dropdown").removeClass("active");
+				}, 200);
+			});
+			$(this)
+				.find(".ur-sub-menu-dropdown")
+				.on("mouseenter", function () {
+					clearTimeout(hideTimeout);
+				});
+			$(this)
+				.find(".ur-sub-menu-dropdown")
+				.on("mouseleave", function () {
+					hideTimeout = setTimeout(() => {
+						$(this)
+							.find(".ur-sub-menu-dropdown")
+							.removeClass("active");
+					}, 200);
+				});
+		});
 });
 
 (function ($, user_registration_admin_data) {

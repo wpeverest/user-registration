@@ -41,7 +41,7 @@ function ur_template_redirect() {
 		wp_logout();
 		wp_safe_redirect( ur_get_page_permalink( $redirect_url ) );
 		exit;
-		
+
 	} elseif ( isset( $wp->query_vars['user-logout'] ) && 'true' === $wp->query_vars['user-logout'] ) {
 		/**
 		 * Filter the redirect after logout url.
