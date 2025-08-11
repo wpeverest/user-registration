@@ -1115,12 +1115,17 @@ jQuery(function ($) {
 	});
 
 	$(document).ready(function () {
+		check_email_confirmation_disabled();
 		hide_show_redirection_options();
 
 		$("#user_registration_form_setting_redirect_after_registration").on(
 			"change",
 			hide_show_redirection_options
 		);
+		$("#user_registration_form_setting_login_options").on(
+			"change",
+			check_email_confirmation_disabled
+		)
 	});
 
 	/**
@@ -1143,6 +1148,21 @@ jQuery(function ($) {
 		} else {
 			title.hide();
 			description.hide();
+		}
+	};
+	
+	var check_email_confirmation_disabled = function() {
+		
+		var email_confirmation_disabled = user_registration_form_builder_data.email_confirmation_disabled;
+		if( email_confirmation_disabled  === 'yes' ) {
+			var login_options = $("#user_registration_form_setting_login_options").find(":selected");
+
+			var form_row = login_options.closest(".form-row");
+			form_row.find("#ur-rar-url-notice").remove();
+			console.log(login_options.val());
+			if (login_options.length == 1 && login_options.val() == "email_confirmation") {
+				show_email_confirmation_disabled_notice(form_row);
+			}
 		}
 	};
 
@@ -1204,6 +1224,13 @@ jQuery(function ($) {
 		var notice =
 			' <div id="ur-rar-url-notice" style="padding:10px;  border: 1px solid #c3c4c7; border-left-color: #ffa900; border-left-width: 4px; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04)">' +
 			user_registration_form_builder_data.i18n_default_redirection_notice_for_membership +
+			"</div>";
+		form_row.append(notice);
+	};
+	var show_email_confirmation_disabled_notice = function (form_row) {
+		var notice =
+			' <div id="ur-rar-url-notice" style="padding:10px;  border: 1px solid #c3c4c7; border-left-color: #ffa900; border-left-width: 4px; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04)">' +
+			user_registration_form_builder_data.i18n_email_confirmation_disabled_notice +
 			"</div>";
 		form_row.append(notice);
 	};
