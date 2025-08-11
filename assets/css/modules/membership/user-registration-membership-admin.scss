@@ -297,14 +297,14 @@
 
 					select {
 						width: 200px;
-						border-color: #BABABA;
-						color: #383838;
+						// border-color: #BABABA;
+						// color: #383838;
 
-						&:focus {
-							box-shadow: none;
-							outline: none;
-							border-color: #475BB2;
-						}
+						// &:focus {
+						// 	box-shadow: none;
+						// 	outline: none;
+						// 	border-color: #475BB2;
+						// }
 					}
 
 					input[type="search"] {
@@ -346,10 +346,6 @@
 		}
 
 		#user-registration-users-action-form {
-			.tablenav {
-				@include bulk-action;
-			}
-
 			.wp-list-table {
 				thead {
 					tr {
@@ -408,46 +404,9 @@
 
 		#membership-list {
 			.tablenav {
-				@include bulk-action;
-
 				&-pages {
 					margin-top: 5px;
 					margin-bottom: 0;
-				}
-
-				.actions {
-					&.bulkactions {
-						padding: 0;
-						display: flex;
-						align-items: center;
-						gap: 10px;
-
-						select {
-							height: 38px;
-							width: 220px;
-							padding: 0 12px;
-							border-radius: 4px;
-							border: 1px solid #BABABA;
-							margin-right: 0;
-
-							&:focus {
-								box-shadow: none;
-								outline: none;
-								border-color: #475BB2;
-							}
-						}
-
-						// input[type="submit"] {
-						// 	margin: 0;
-						// 	padding: 8px 14px;
-						// 	font-size: 14px;
-						// 	line-height: 20px;
-						// 	font-weight: 500;
-						// 	color: #475BB2;
-						// 	border-color: #475BB2;
-						// 	background: #F6F7F7;
-						// }
-					}
 				}
 			}
 
@@ -854,26 +813,26 @@
 						.ur-membership-subscription-field-container {
 							.ur-membership-selection-container {
 								.ur-field {
-									gap: 12px;
+									gap: $spacing_12px;
 
-									input[type="number"] {
-										width: 100px;
-										padding-left: 12px !important;
-										padding-right: 8px;
-									}
+									// input[type="number"] {
+									// 	width: 100px;
+									// 	padding-left: 12px !important;
+									// 	padding-right: 8px;
+									// }
 
-									select {
-										width: 100%;
-										height: 38px;
-										padding: 0 12px;
-										margin: 0 !important;
+									// select {
+									// 	width: 100%;
+									// 	height: 38px;
+									// 	padding: 0 12px;
+									// 	margin: 0 !important;
 
-										&:focus {
-											box-shadow: none;
-											outline: none;
-											border-color: #475BB2;
-										}
-									}
+									// 	&:focus {
+									// 		box-shadow: none;
+									// 		outline: none;
+									// 		border-color: #475BB2;
+									// 	}
+									// }
 								}
 							}
 
@@ -921,7 +880,7 @@
 
 									.ur-field {
 										flex: 1;
-										gap: 12px;
+										gap: $spacing_12px;
 
 										input[type="number"] {
 											width: 100px;
@@ -929,12 +888,6 @@
 
 										select {
 											flex: 1;
-
-											&:focus {
-												box-shadow: none;
-												outline: none;
-												border-color: #475BB2;
-											}
 										}
 									}
 								}
@@ -1106,13 +1059,13 @@
 										border-color: #E9E9E9;
 									}
 
-									select {
-										height: 38px;
-										border-radius: 4px;
-										border: 1px solid #E9E9E9;
-										max-width: 100%;
-										width: 100%;
-									}
+									// select {
+									// 	height: 38px;
+									// 	border-radius: 4px;
+									// 	border: 1px solid #E9E9E9;
+									// 	max-width: 100%;
+									// 	width: 100%;
+									// }
 								}
 							}
 

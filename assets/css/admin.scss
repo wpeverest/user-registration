@@ -14,7 +14,7 @@
 @import "forms";
 
 // Components
-@import "components/badge", "components/button", "components/card",
+@import "components/badge", "components/button", "components/card", "components/bulkactions",
 	"components/list-group", "components/modal", "components/nav", "components/search", "components/typography",
 	"components/scroll-ui", "components/dropdown", "components/input", "components/toggle", "components/navigation";
 
@@ -978,11 +978,12 @@ body {
 		width: calc(33.3333% - 16px);
 		background: #fbfbfd;
 		border: $border_width solid $blue-50;
-		height: 100px;
+		// height: 100px;
+		padding: 24px 0;
+		gap: $spacing_6px;
 
 		.ur-icon {
 			font-size: 26px;
-			margin-bottom: $spacing_4px;
 		}
 
 		&:hover {
@@ -3145,72 +3146,72 @@ body {
 			font-weight: $regular;
 		}
 
-		.user-registration-trashed {
-			button {
-				margin: 0;
-				transition: all 0.3s ease-in-out;
+		// .user-registration-trashed {
+		// 	button {
+		// 		margin: 0;
+		// 		transition: all 0.3s ease-in-out;
 
-				&.swal2-confirm {
-					background-color: #f75259 !important;
-					border: $border_width solid #f75259;
-					border-radius: $border_radius_3;
-					transition: all 0.3s ease-in-out;
-				}
+		// 		&.swal2-confirm {
+		// 			background-color: #f75259 !important;
+		// 			border: $border_width solid #f75259;
+		// 			border-radius: $border_radius_3;
+		// 			transition: all 0.3s ease-in-out;
+		// 		}
 
-				&.swal2-cancel {
-					background: transparent;
-					border: $border_width solid $grey-200;
-					color: $grey-200;
+		// 		&.swal2-cancel {
+		// 			background: transparent;
+		// 			border: $border_width solid $grey-200;
+		// 			color: $grey-200;
 
-					&:hover {
-						border-color: $grey-500;
-						color: $grey-500;
-					}
-				}
-			}
-		}
+		// 			&:hover {
+		// 				border-color: $grey-500;
+		// 				color: $grey-500;
+		// 			}
+		// 		}
+		// 	}
+		// }
 		.user-registration-info {
-			.swal2-actions {
-				display: flex;
-				padding: 10px;
-			}
+			// .swal2-actions {
+			// 	display: flex;
+			// 	padding: 10px;
+			// }
 			.swal2-html-container {
 				p {
 					font-size: 1em;
 				}
 			}
-			button {
-				transition: all 0.3s ease-in-out;
+			// button {
+			// 	transition: all 0.3s ease-in-out;
 
-				&.swal2-confirm {
-					background-color: #475bb2 !important;
-					border: $border_width solid #475bb2;
-					border-radius: $border_radius_3;
-					transition: all 0.3s ease-in-out;
-				}
+			// 	&.swal2-confirm {
+			// 		background-color: #475bb2 !important;
+			// 		border: $border_width solid #475bb2;
+			// 		border-radius: $border_radius_3;
+			// 		transition: all 0.3s ease-in-out;
+			// 	}
 
-				&.swal2-cancel {
-					background: transparent;
-					border: $border_width solid $grey-200;
-					color: $grey-200;
+			// 	&.swal2-cancel {
+			// 		background: transparent;
+			// 		border: $border_width solid $grey-200;
+			// 		color: $grey-200;
 
-					&:hover {
-						border-color: $grey-500;
-						color: $grey-500;
-					}
-				}
-			}
+			// 		&:hover {
+			// 			border-color: $grey-500;
+			// 			color: $grey-500;
+			// 		}
+			// 	}
+			// }
 		}
 
 		.swal2-popup {
-			width: 400px;
+			// width: 400px;
 
 			&.user-registration-settings-swal2 {
 				width: auto;
 
-				.swal2-cancel {
-					color: white;
-				}
+				// .swal2-cancel {
+				// 	color: white;
+				// }
 			}
 
 			&.swal2-icon-error {
@@ -3221,7 +3222,7 @@ body {
 			padding: 0;
 
 			&.user-registration-locked-field {
-				border-top: 6px solid #475BB2;
+				// border-top: 6px solid #475BB2;
 
 				&.swal2-icon-success {
 					border-top: 6px solid #a5dc86;
@@ -3232,28 +3233,28 @@ body {
 				}
 			}
 
-			.swal2-header {
-				padding: $spacing_34px $spacing_40px 0 $spacing_40px;
+			// .swal2-header {
+			// 	padding: $spacing_34px $spacing_40px 0 $spacing_40px;
 
-				.swal2-title {
-					margin-bottom: $spacing_4px;
+			// 	.swal2-title {
+			// 		margin-bottom: $spacing_4px;
 
-					i {
-						margin-bottom: $spacing_16px;
-					}
-				}
+			// 		i {
+			// 			margin-bottom: $spacing_16px;
+			// 		}
+			// 	}
 
-				.swal2-close {
-					box-shadow: none;
-					top: $spacing_2px;
-				}
-			}
+			// 	.swal2-close {
+			// 		box-shadow: none;
+			// 		top: $spacing_2px;
+			// 	}
+			// }
 
-			&.user-registration-swal2-no-button {
-				.swal2-header {
-					padding-bottom: $spacing_34px;
-				}
-			}
+			// &.user-registration-swal2-no-button {
+			// 	.swal2-header {
+			// 		padding-bottom: $spacing_34px;
+			// 	}
+			// }
 
 			.swal2-content {
 				.swal2-validation-message {
@@ -3265,79 +3266,79 @@ body {
 						$spacing_6px;
 				}
 
-				.action-buttons {
-					a {
-						background-color: #475bb2;
-						border: none;
-						text-decoration: none;
-						color: white;
-						font-size: 16px;
-						font-weight: 600;
-					}
-				}
+				// .action-buttons {
+				// 	a {
+				// 		background-color: #475bb2;
+				// 		border: none;
+				// 		text-decoration: none;
+				// 		color: white;
+				// 		font-size: 16px;
+				// 		font-weight: 600;
+				// 	}
+				// }
 			}
 
-			.swal2-actions {
-				margin-top: $spacing_30px;
-				background: #fcfcfc;
-				border-top: $border_width solid $border_color;
-				padding: $spacing_20px $spacing_16px;
-				border-radius: 0 0 $border_radius_13 $border_radius_13;
-				justify-content: center;
-				flex-direction: row-reverse;
-				gap: $spacing_16px;
+			// .swal2-actions {
+			// 	margin-top: $spacing_30px;
+			// 	background: #fcfcfc;
+			// 	border-top: $border_width solid $border_color;
+			// 	padding: $spacing_20px $spacing_16px;
+			// 	border-radius: 0 0 $border_radius_13 $border_radius_13;
+			// 	justify-content: center;
+			// 	flex-direction: row-reverse;
+			// 	gap: $spacing_16px;
 
-				.swal2-confirm {
-					background: #475bb2;
-					transition: all 0.3s ease-in-out;
+			// 	.swal2-confirm {
+			// 		background: #475bb2;
+			// 		transition: all 0.3s ease-in-out;
 
-					&:hover {
-						background: #4b68ec;
-					}
-				}
-			}
+			// 		&:hover {
+			// 			background: #4b68ec;
+			// 		}
+			// 	}
+			// }
 
 			&.user-registration-locked-field {
 				.swal2-header {
-					padding-bottom: $spacing_4px;
+					// padding-bottom: $spacing_4px;
 
 					.swal2-close {
 						box-shadow: none;
 					}
 				}
 
-				.swal2-content {
-					padding-left: 0;
-					padding-right: 0;
+				// .swal2-content {
+				// 	padding-left: 0;
+				// 	padding-right: 0;
 
-					.swal2-html-container {
-						padding-left: $spacing_20px;
-						padding-right: $spacing_20px;
+				// 	.swal2-html-container {
+				// 		padding-left: $spacing_20px;
+				// 		padding-right: $spacing_20px;
 
-						.action-buttons {
-							margin-left: -$spacing_20px;
-							margin-right: -$spacing_20px;
-							border-radius: 0 0 $border_radius_10 $border_radius_10;
-							padding: $spacing_16px;
-							text-align: right;
-							background: #fcfcfc;
-							border-top: $border_width solid $border-color;
-						}
-					}
-				}
+				// 		.action-buttons {
+				// 			margin-left: -$spacing_20px;
+				// 			margin-right: -$spacing_20px;
+				// 			border-radius: 0 0 $border_radius_10 $border_radius_10;
+				// 			padding: $spacing_16px;
+				// 			text-align: right;
+				// 			background: #fcfcfc;
+				// 			border-top: $border_width solid $border-color;
+				// 		}
+				// 	}
+				// }
 			}
 
-			.swal2-actions {
-				button {
-					&:focus {
-						box-shadow: none;
-					}
+			// .swal2-actions {
+			// 	button {
+			// 		&:focus {
+			// 			box-shadow: none;
+			// 		}
 
-					&:focus-visible {
-						outline: none;
-					}
-				}
-			}
+			// 		&:focus-visible {
+			// 			outline: none;
+			// 		}
+			// 	}
+			// }
 		}
 
 		.user-registration-recommend-addons {
@@ -4650,73 +4651,72 @@ body.user-registration {
 }
 
 .ur-admin-page-topnav {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	background: $grey-0;
-	padding: 0px $spacing_24px;
-	border-bottom: $border_width solid #e1e1e1;
-	margin-bottom: 25px;
+	// display: flex;
+	// align-items: center;
+	// justify-content: space-between;
+	// background: $grey-0;
+	// padding: 0px $spacing_24px;
+	// border-bottom: $border_width solid #e1e1e1;
+	// margin-bottom: 25px;
 
-	.ur-page-title__wrapper {
-		display: flex;
-		align-items: center;
-		gap: $spacing_20px;
+	// .ur-page-title__wrapper {
+	// 	display: flex;
+	// 	align-items: center;
+	// 	gap: $spacing_20px;
 
-		&-logo {
-			padding: 18px 24px 18px 0;
-			border-right: 1px solid #e1e1e1;
-		}
+	// 	&-logo {
+	// 		padding: 18px 24px 18px 0;
+	// 		border-right: 1px solid #e1e1e1;
+	// 	}
 
-		&-menu {
+	// 	// &-menu {
+	// 	// 	&__items {
+	// 	// 		// display: flex;
+	// 	// 		// gap: 4px;
+	// 	// 		// margin: 0;
 
-			&__items {
-				display: flex;
-				gap: 4px;
-				margin: 0;
+	// 	// 		li {
+	// 	// 			// font-size: 15px;
+	// 	// 			// margin-bottom: -5px;
+	// 	// 			// padding: $spacing_24px 0;
 
-				li {
-					font-size: 15px;
-					margin-bottom: -5px;
-					padding: $spacing_24px 0;
+	// 	// 			a {
+	// 	// 				// text-decoration: none;
+	// 	// 				// color: #1f1f1f;
+	// 	// 				// padding: $spacing_24px $spacing_16px;
+	// 	// 				// position: relative;
+	// 	// 				// transition: all 0.3s;
+	// 	// 				// font-weight: $medium;
 
-					a {
-						text-decoration: none;
-						color: #1f1f1f;
-						padding: $spacing_24px $spacing_16px;
-						position: relative;
-						transition: all 0.3s;
-						font-weight: $medium;
+	// 	// 				// &:focus {
+	// 	// 				// 	outline: none;
+	// 	// 				// 	box-shadow: none;
+	// 	// 				// }
 
-						&:focus {
-							outline: none;
-							box-shadow: none;
-						}
+	// 	// 				// &::after {
+	// 	// 				// 	content: "";
+	// 	// 				// 	background: #475bb2;
+	// 	// 				// 	width: 0px;
+	// 	// 				// 	height: 3px;
+	// 	// 				// 	position: absolute;
+	// 	// 				// 	bottom: 0;
+	// 	// 				// 	left: 0;
+	// 	// 				// 	transition: all 0.3s;
+	// 	// 				// }
 
-						&::after {
-							content: "";
-							background: #475bb2;
-							width: 0px;
-							height: 3px;
-							position: absolute;
-							bottom: 0;
-							left: 0;
-							transition: all 0.3s;
-						}
+	// 	// 				// &:hover,
+	// 	// 				// &.current {
+	// 	// 				// 	color: #475bb2;
 
-						&:hover,
-						&.current {
-							color: #475bb2;
-
-							&::after {
-								width: 100%;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+	// 	// 				// 	&::after {
+	// 	// 				// 		width: 100%;
+	// 	// 				// 	}
+	// 	// 				// }
+	// 	// 			}
+	// 	// 		}
+	// 	// 	}
+	// 	// }
+	// }
 
 	.ur-back-button {
 		border-right: $border_width solid $grey-100;
@@ -4792,36 +4792,22 @@ body.user-registration {
 	}
 }
 
-.user-registration-list-table-container {
-	#user-registration-list-table-page {
-		max-width: 100%;
-		margin-left: $spacing_32px;
-		margin-right: $spacing_32px;
-		margin-top: $spacing_32px;
-	}
-}
-
 .user-registration-login-form-container {
 	.ur-form-container {
 		#menu-management-liquid {
 			margin-left: 0;
 			min-width: 100%;
-
-			//  .ur-selected-inputs {
-			// 	 padding-left: $spacing_20px !important;
-			// 	 padding-right: $spacing_20px !important;
-			//  }
 		}
 	}
 }
 
 #user-registration-list-table-page {
-	max-width: 1280px;
-	margin: $spacing_24px auto;
+	max-width: 100%;
+	margin: $spacing_32px;
 	padding: $spacing_24px;
 	border-radius: $border_radius_4;
 	background: $grey-0;
-	border: $border_width solid #EDF2F7;
+	border: $border_width solid $border_color;
 
 
 	.user-registration-list-table-header {
@@ -5065,36 +5051,28 @@ body.user-registration {
 
 	.user-registration-list-table-action-form {
 		.tablenav {
-			padding: 0;
-			margin: 0 0 $spacing_16px;
-			height: auto;
+			// .actions {
+				// display: flex;
+				// align-items: center;
+				// gap: $spacing_12px;
+				// padding-right: $spacing_12px;
 
-			&.bottom {
-				margin-bottom: 0;
-			}
+				// select {
+				// 	height: 36px;
+				// 	margin: 0;
+				// 	border-color: $border_color;
+				// 	width: 160px;
 
-			.actions {
-				display: flex;
-				align-items: center;
-				gap: $spacing_12px;
-				padding-right: $spacing_12px;
+				// 	&:hover {
+				// 		color: $primary_color;
+				// 	}
 
-				select {
-					height: 36px;
-					margin: 0;
-					border-color: $border_color;
-					width: 160px;
-
-					&:hover {
-						color: $primary_color;
-					}
-
-					&:focus {
-						outline: none;
-						box-shadow: none;
-						border-color: $primary_color;
-					}
-				}
+				// 	&:focus {
+				// 		outline: none;
+				// 		box-shadow: none;
+				// 		border-color: $primary_color;
+				// 	}
+				// }
 
 				// input {
 				// 	&[type="submit"] {
@@ -5113,7 +5091,7 @@ body.user-registration {
 				// 		}
 				// 	}
 				// }
-			}
+			// }
 
 			&-pages {
 				margin-bottom: 0;
@@ -5782,45 +5760,6 @@ body.user-registration {
 			.wrap {
 				margin: 0;
 
-				.tablenav {
-					margin: 0;
-					padding: 0;
-					height: auto;
-
-					.bulkactions {
-						padding-right: 0;
-						display: flex;
-						align-items: center;
-						gap: 10px;
-
-						// select,
-						// input {
-						// 	margin-right: 0;
-						// }
-
-						// select {
-						// 	border-color: #bababa;
-						// 	height: 38px;
-						// 	width: 220px;
-						// 	padding-left: 14px;
-						// 	padding-right: 14px;
-						// 	color: #383838;
-
-						// }
-
-						// input[type="submit"] {
-						// 	border-radius: 3px;
-						// 	border: 1px solid #475bb2;
-						// 	background: #f6f7f7;
-						// 	padding: 8px 14px;
-						// 	color: #475bb2;
-						// 	font-size: 13px;
-						// 	font-weight: 500;
-						// 	line-height: 20px;
-						// }
-					}
-				}
-
 				.wp-list-table {
 					&.coupons {
 						margin-top: 20px;
@@ -6017,67 +5956,67 @@ body.user-registration {
 }
 
 // Delete Popup CSS
-.user-registration-membership_page {
-	&_user-registration-membership,
-	&_user-registration-coupons,
-	&_user-registration-members,
-	&_member-payment-history {
-		.swal2-container {
-			.swal2-header {
-				padding: 24px !important;
-				padding-bottom: 16px !important;
+// .user-registration-membership_page {
+// 	&_user-registration-membership,
+// 	&_user-registration-coupons,
+// 	&_user-registration-members,
+// 	&_member-payment-history {
+// 		.swal2-container {
+// 			.swal2-header {
+// 				padding: 24px !important;
+// 				padding-bottom: 16px !important;
 
-				.swal2-title {
-					display: flex !important;
-					align-items: center;
-					gap: 8px;
-					font-size: 18px;
-					line-height: 26px;
-					margin-bottom: 0;
-					width: 100%;
-					border-bottom: 1px solid #e9e9e9;
-					padding-bottom: 16px;
-					color: #222;
-					margin-bottom: 0;
+// 				.swal2-title {
+// 					display: flex !important;
+// 					align-items: center;
+// 					gap: 8px;
+// 					font-size: 18px;
+// 					line-height: 26px;
+// 					margin-bottom: 0;
+// 					width: 100%;
+// 					border-bottom: 1px solid #e9e9e9;
+// 					padding-bottom: 16px;
+// 					color: #222;
+// 					margin-bottom: 0;
 
-					img {
-						width: 20px;
-						height: 20px;
-					}
-				}
-			}
+// 					img {
+// 						width: 20px;
+// 						height: 20px;
+// 					}
+// 				}
+// 			}
 
-			.swal2-content {
-				padding: 0 24px;
+// 			.swal2-content {
+// 				padding: 0 24px;
 
-				.swal2-html-container {
-					text-align: left;
+// 				.swal2-html-container {
+// 					text-align: left;
 
-					p {
-						font-size: 15px;
-						line-height: 23px;
-						color: #383838;
-						margin: 0;
-					}
-				}
-			}
+// 					p {
+// 						font-size: 15px;
+// 						line-height: 23px;
+// 						color: #383838;
+// 						margin: 0;
+// 					}
+// 				}
+// 			}
 
-			.swal2-actions {
-				button {
-					margin: 0;
+// 			.swal2-actions {
+// 				button {
+// 					margin: 0;
 
-					&.swal2-confirm {
-						background: #f25656 !important;
+// 					&.swal2-confirm {
+// 						background: #f25656 !important;
 
-						&:hover {
-							background: #e34747 !important;
-						}
-					}
-				}
-			}
-		}
-	}
-}
+// 						&:hover {
+// 							background: #e34747 !important;
+// 						}
+// 					}
+// 				}
+// 			}
+// 		}
+// 	}
+// }
 
 // Custom CAPTCHA Form Builder Field Options CSS
 .ur-registered-from {
@@ -6256,127 +6195,127 @@ body {
 	}
 }
 
-.user-registration {
-	.swal2-container {
-		.swal2 {
-			&-header {
-				padding: $spacing_32px $spacing_32px 0;
-				// gap: $spacing_16px;
-			}
+// .user-registration {
+// 	.swal2-container {
+// 		.swal2 {
+// 			&-header {
+// 				padding: $spacing_32px $spacing_32px 0;
+// 				// gap: $spacing_16px;
+// 			}
 
-			&-icon {
-				margin-block: 0;
-				border-color: #41c4ee;
-				color: #41c4ee;
-				width: 60px;
-				height: 60px;
+// 			&-icon {
+// 				margin-block: 0;
+// 				border-color: #41c4ee;
+// 				color: #41c4ee;
+// 				width: 60px;
+// 				height: 60px;
 
-				&-content {
-					font-size: 50px;
-				}
-			}
+// 				&-content {
+// 					font-size: 50px;
+// 				}
+// 			}
 
-			&-title {
-				color: #131313;
-				text-align: center;
-				font-size: 22px;
-				font-weight: $semi_bold;
-				line-height: 30px;
-				margin-bottom: 0 !important;
-			}
+// 			&-title {
+// 				color: #131313;
+// 				text-align: center;
+// 				font-size: 22px;
+// 				font-weight: $semi_bold;
+// 				line-height: 30px;
+// 				margin-bottom: 0 !important;
+// 			}
 
-			&-content {
-				padding: 0 $spacing_32px;
-				margin-top: $spacing_20px;
+// 			&-content {
+// 				padding: 0 $spacing_32px;
+// 				margin-top: $spacing_20px;
 
-				input[type="text"] {
-					margin: 0;
-					height: 38px;
-					font-size: 15px;
-					line-height: 25px;
-					padding: 0 $spacing_12px;
-					color: $grey-400;
-					border-radius: $border_radius_4;
+// 				input[type="text"] {
+// 					margin: 0;
+// 					height: 38px;
+// 					font-size: 15px;
+// 					line-height: 25px;
+// 					padding: 0 $spacing_12px;
+// 					color: $grey-400;
+// 					border-radius: $border_radius_4;
 
-					&::placeholder {
-						color: #999999;
-					}
+// 					&::placeholder {
+// 						color: #999999;
+// 					}
 
-					&:focus {
-						outline: none;
-						box-shadow: none;
-						border-color: $primary_color;
-					}
-				}
+// 					&:focus {
+// 						outline: none;
+// 						box-shadow: none;
+// 						border-color: $primary_color;
+// 					}
+// 				}
 
-				p {
-					margin: 0;
-				}
+// 				p {
+// 					margin: 0;
+// 				}
 
-				.swal2-html-container {
-					.ur-embed-new-page-container {
-						padding-bottom: 0;
-						gap: $spacing_18px;
-					}
+// 				.swal2-html-container {
+// 					.ur-embed-new-page-container {
+// 						padding-bottom: 0;
+// 						gap: $spacing_18px;
+// 					}
 
-					.ur-embed-select-existing-page-container {
-						// select {
-						// 	min-height: 38px;
-						// 	padding-left: 14px;
-						// 	margin-top: $spacing_8px;
+// 					.ur-embed-select-existing-page-container {
+// 						// select {
+// 						// 	min-height: 38px;
+// 						// 	padding-left: 14px;
+// 						// 	margin-top: $spacing_8px;
 
-						// 	&:hover {
-						// 		color: $primary_color;
-						// 	}
+// 						// 	&:hover {
+// 						// 		color: $primary_color;
+// 						// 	}
 
-						// 	&:focus {
-						// 		box-shadow: none;
-						// 		outline: none;
-						// 		border-color: $primary_color;
-						// 	}
-						// }
-					}
-				}
-			}
+// 						// 	&:focus {
+// 						// 		box-shadow: none;
+// 						// 		outline: none;
+// 						// 		border-color: $primary_color;
+// 						// 	}
+// 						// }
+// 					}
+// 				}
+// 			}
 
-			&-actions {
-				button {
-					margin: 0;
-					text-transform: capitalize;
-					padding: $spacing_10px $spacing_14px;
-					border-radius: $border_radius_3;
-					font-size: 14px;
-					font-weight: 400;
-					line-height: 16px;
-					border: $border_width solid transparent;
-					transition: all 0.3s;
+// 			&-actions {
+// 				button {
+// 					margin: 0;
+// 					text-transform: capitalize;
+// 					padding: $spacing_10px $spacing_14px;
+// 					border-radius: $border_radius_3;
+// 					font-size: 14px;
+// 					font-weight: 400;
+// 					line-height: 16px;
+// 					border: $border_width solid transparent;
+// 					transition: all 0.3s;
 
-					&.swal2-confirm {
-						width: 48%;
-						background: $primary_color !important;
-						color: $grey-0;
-						border-color: $primary_color;
+// 					&.swal2-confirm {
+// 						width: 48%;
+// 						background: $primary_color !important;
+// 						color: $grey-0;
+// 						border-color: $primary_color;
 
-						&:hover {
-							background: darken($primary_color, 10%);
-						}
-					}
+// 						&:hover {
+// 							background: darken($primary_color, 10%);
+// 						}
+// 					}
 
-					&.swal2-cancel {
-						width: 45%;
-						background: transparent;
-						border-color: #6b6b6b;
-						color: #6b6b6b;
+// 					&.swal2-cancel {
+// 						width: 45%;
+// 						background: transparent;
+// 						border-color: #6b6b6b;
+// 						color: #6b6b6b;
 
-						&:hover {
-							background: #f0f0f0;
-						}
-					}
-				}
-			}
-		}
-	}
-}
+// 						&:hover {
+// 							background: #f0f0f0;
+// 						}
+// 					}
+// 				}
+// 			}
+// 		}
+// 	}
+// }
 
 // .ur-embed-form-button {
 // 	background: #edeff7 !important;

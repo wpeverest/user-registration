@@ -267,13 +267,6 @@
 }
 .user-registration #user-registration-list-table-page #user-registration-list-filters-row form > div select {
   width: 200px;
-  border-color: #BABABA;
-  color: #383838;
-}
-.user-registration #user-registration-list-table-page #user-registration-list-filters-row form > div select:focus {
-  box-shadow: none;
-  outline: none;
-  border-color: #475BB2;
 }
 .user-registration #user-registration-list-table-page #user-registration-list-filters-row form > div input[type=search] {
   height: 38px;
@@ -310,35 +303,6 @@
   transform: translateY(-50%);
   right: 14px !important;
 }
-.user-registration #user-registration-list-table-page #user-registration-users-action-form .tablenav {
-  margin: 0;
-  padding: 0;
-  height: auto;
-  margin-bottom: 20px;
-}
-.user-registration #user-registration-list-table-page #user-registration-users-action-form .tablenav .bulkactions select {
-  min-height: 38px;
-  padding: 0 12px;
-  width: 220px;
-  margin-right: 10px;
-  border-color: #BABABA;
-  color: #383838;
-}
-.user-registration #user-registration-list-table-page #user-registration-users-action-form .tablenav .bulkactions select:focus {
-  box-shadow: none;
-  outline: none;
-  border-color: #475BB2;
-}
-.user-registration #user-registration-list-table-page #user-registration-users-action-form .tablenav .bulkactions input[type=submit] {
-  padding: 8px 14px;
-  font-size: 14px;
-  line-height: 20px;
-  margin-right: 0;
-  color: #475BB2;
-  border-color: #475BB2;
-  background: #F6F7F7;
-  font-weight: 500;
-}
 .user-registration #user-registration-list-table-page #user-registration-users-action-form .wp-list-table thead tr td {
   width: 40px;
 }
@@ -372,57 +336,9 @@
 .user-registration #user-registration-list-table-page #user-registration-users-action-form .wp-list-table tbody tr td.username img {
   margin: 0;
 }
-.user-registration #user-registration-list-table-page #membership-list .tablenav {
-  margin: 0;
-  padding: 0;
-  height: auto;
-  margin-bottom: 20px;
-}
-.user-registration #user-registration-list-table-page #membership-list .tablenav .bulkactions select {
-  min-height: 38px;
-  padding: 0 12px;
-  width: 220px;
-  margin-right: 10px;
-  border-color: #BABABA;
-  color: #383838;
-}
-.user-registration #user-registration-list-table-page #membership-list .tablenav .bulkactions select:focus {
-  box-shadow: none;
-  outline: none;
-  border-color: #475BB2;
-}
-.user-registration #user-registration-list-table-page #membership-list .tablenav .bulkactions input[type=submit] {
-  padding: 8px 14px;
-  font-size: 14px;
-  line-height: 20px;
-  margin-right: 0;
-  color: #475BB2;
-  border-color: #475BB2;
-  background: #F6F7F7;
-  font-weight: 500;
-}
 .user-registration #user-registration-list-table-page #membership-list .tablenav-pages {
   margin-top: 5px;
   margin-bottom: 0;
-}
-.user-registration #user-registration-list-table-page #membership-list .tablenav .actions.bulkactions {
-  padding: 0;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.user-registration #user-registration-list-table-page #membership-list .tablenav .actions.bulkactions select {
-  height: 38px;
-  width: 220px;
-  padding: 0 12px;
-  border-radius: 4px;
-  border: 1px solid #BABABA;
-  margin-right: 0;
-}
-.user-registration #user-registration-list-table-page #membership-list .tablenav .actions.bulkactions select:focus {
-  box-shadow: none;
-  outline: none;
-  border-color: #475BB2;
 }
 .user-registration #user-registration-list-table-page #membership-list .wp-list-table.memberships thead tr td {
   width: 40px;
@@ -782,22 +698,6 @@
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #paid-plan-container .ur-membership-subscription-field-container .ur-membership-selection-container .ur-field {
   gap: 12px;
 }
-.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #paid-plan-container .ur-membership-subscription-field-container .ur-membership-selection-container .ur-field input[type=number] {
-  width: 100px;
-  padding-left: 12px !important;
-  padding-right: 8px;
-}
-.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #paid-plan-container .ur-membership-subscription-field-container .ur-membership-selection-container .ur-field select {
-  width: 100%;
-  height: 38px;
-  padding: 0 12px;
-  margin: 0 !important;
-}
-.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #paid-plan-container .ur-membership-subscription-field-container .ur-membership-selection-container .ur-field select:focus {
-  box-shadow: none;
-  outline: none;
-  border-color: #475BB2;
-}
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #paid-plan-container .ur-membership-subscription-field-container .ur-membership-input-container {
   margin-top: 24px !important;
   padding: 0 !important;
@@ -860,11 +760,6 @@
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #paid-plan-container .ur-membership-subscription-field-container .trial-container--wrapper .ur-field select {
   flex: 1;
-}
-.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #paid-plan-container .ur-membership-subscription-field-container .trial-container--wrapper .ur-field select:focus {
-  box-shadow: none;
-  outline: none;
-  border-color: #475BB2;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #payment-gateway-container {
   margin-top: 28px !important;
@@ -1074,13 +969,6 @@
 #ur-membership-create-form .user-registration-card #ur-membership-form-container #ur-member-form-left #left-body .ur-membership-input-container .ur-admin-template .ur-field input {
   height: 38px;
   border-color: #E9E9E9;
-}
-#ur-membership-create-form .user-registration-card #ur-membership-form-container #ur-member-form-left #left-body .ur-membership-input-container .ur-admin-template .ur-field select {
-  height: 38px;
-  border-radius: 4px;
-  border: 1px solid #E9E9E9;
-  max-width: 100%;
-  width: 100%;
 }
 #ur-membership-create-form .user-registration-card #ur-membership-form-container #ur-member-form-left #left-body .ur-membership-input-container .user-registration-switch input[type=checkbox] {
   border-radius: 20px;

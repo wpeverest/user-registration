@@ -39,9 +39,10 @@
                     li {
                         display: flex;
                         align-items: center;
-                        gap: $spacing_4px;
+                        // gap: $spacing_4px;
                         margin-bottom: 0;
                         padding: 0;
+                        font-size: 15px;
 
                         a {
                             text-decoration: none;
@@ -55,6 +56,31 @@
                             height: 100%;
                             display: block;
                             align-content: center;
+
+                            &:focus {
+                                outline: none;
+                                box-shadow: none;
+                            }
+
+                            &::after {
+                                content: "";
+                                background: $primary_color;
+                                width: 0px;
+                                height: 3px;
+                                position: absolute;
+                                bottom: 0;
+                                left: 0;
+                                transition: all 0.3s;
+                            }
+
+                            &:hover,
+                            &.current {
+                                color: $primary_color;
+
+                                &::after {
+                                    width: 100%;
+                                }
+                            }
                         }
                     }
                 }
