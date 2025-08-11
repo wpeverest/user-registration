@@ -372,6 +372,7 @@ function InputHandler({
 							handleInputChange(setting.type, setting.id, e)
 						}
 						defaultValue={defaultSelectedOption}
+						isClearable={false}
 					/>
 				);
 
