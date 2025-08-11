@@ -312,7 +312,7 @@ class UR_Getting_Started {
 		$pages['reset_password'] = array(
 			'name'    => _x( 'reset-password', 'Page slug', 'user-registration' ),
 			'title'   => _x( 'Reset Password', 'Page title', 'user-registration' ),
-			'content' => '[user_registration_reset_password]',
+			'content' => '[user_registration_reset_password_form]',
 		);
 
 		if ( 'user_registration_membership_registration' === $request['registrationType'] ) {

@@ -109,28 +109,22 @@ function ur_resetpassword_url( $default_url = '' ) {
 	if ( $reset_password_page && ! empty( get_post( $reset_password_page ) ) ) {
 		return get_permalink( $reset_password_page );
 	} else {
-		$ur_account_page_url = ur_get_page_permalink( 'myaccount' );
-
-		$ur_account_page_exists   = ur_get_page_id( 'myaccount' ) > 0;
-		$reset_password_endpoint  = get_option( 'user_registration_myaccount_reset_password_endpoint', 'reset-password' );
-		$ur_login_page_exists     = ur_get_page_id( 'login' ) > 0;
-
-		if ( ! $ur_account_page_exists && $ur_login_page_exists ) {
-			update_option( 'user_registration_login_page_id', ur_get_page_id( 'login' ) );
+		// Instead of using endpoint my-account/reset-password, create a reset password page on the fly.
+		$page_data = array(
+			'post_title'   => __( 'Reset Password', 'user-registration' ),
+			'post_content' => '[user_registration_reset_password_form]',
+			'post_status'  => 'publish',
+			'post_type'    => 'page',
+		);
+		$reset_password_page_id = wp_insert_post( $page_data );
+		if( ! is_wp_error( $reset_password_page_id ) ) {
+			update_option( 'user_registration_reset_password_page_id', $reset_password_page_id );
+			return get_permalink( $reset_password_page_id );
 		}
-
-		if ( $ur_account_page_exists && ! empty( $reset_password_endpoint ) ) {
-			return ur_get_endpoint_url( $reset_password_endpoint, '', $ur_account_page_url );
-		} elseif ( $ur_login_page_exists && ! empty( $reset_password_endpoint ) ) {
-			return ur_get_endpoint_url( $reset_password_endpoint, '', get_permalink( ur_get_page_id( 'login' ) ) );
-		} elseif ( ! empty( $reset_password_endpoint ) && 'reset-password' !== $reset_password_endpoint ) {
-			return str_replace( 'reset-password', $reset_password_endpoint, $default_url );
-		} else {
-			return $default_url;
-		}
+		return $default_url;
 	}
 }
-
+add_filter( 'retrieve_password_url', 'ur_resetpassword_url', 20, 1 );
 
 /**
  * Get My Account menu items.

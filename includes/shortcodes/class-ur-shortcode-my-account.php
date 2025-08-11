@@ -477,6 +477,49 @@ class UR_Shortcode_My_Account {
 		return true;
 	}
 
+	public static function reset_password_form( $atts ) {
+		
+        if ( isset( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ) && 0 < strpos( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ], ':' ) ) {
+            list( $rp_login, $rp_key ) = array_map( 'ur_clean', explode( ':', wp_unslash( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ), 2 ) );
+            $user = get_user_by( 'login', $rp_login );
+            $rp_login = isset( $user->user_login ) ? $user->user_login : $rp_login;
+
+            $user = UR_Shortcode_My_Account::check_password_reset_key( $rp_key, $rp_login );
+
+            if ( ! empty( $user ) ) {
+                $form_id = ur_get_form_id_by_userid( $user->ID );
+                $enable_strong_password = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' ) );
+                $minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
+
+                if ( $enable_strong_password ) {
+                    wp_enqueue_script( 'ur-password-strength-meter' );
+                    wp_dequeue_script( 'wc-password-strength-meter' );
+                    wp_localize_script(
+                        'ur-password-strength-meter',
+                        'ur_frontend_params_with_form_id',
+                        array(
+                            'custom_password_params' => UR_Frontend_Scripts::get_custom_password_params( $form_id ),
+                        )
+                    );
+                }
+
+                return ur_get_template(
+                    'myaccount/form-reset-password.php',
+                    array(
+                        'key' => $rp_key,
+                        'login' => $rp_login,
+                        'enable_strong_password' => $enable_strong_password,
+                        'minimum_password_strength' => $minimum_password_strength,
+                    )
+                );
+            } else {
+                UR_Shortcode_My_Account::set_reset_password_cookie();
+            }
+        }
+		return '<p>Reset password link is invalid or expired.</p>';
+	}
+
+
 	/**
 	 * Retrieves a user row based on password reset key and login.
 	 *
