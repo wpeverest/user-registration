@@ -487,6 +487,7 @@ body {
 				}
 			}
 		}
+
 		.login-forms-shortcode-action {
 			input {
 				&.code {
@@ -1255,6 +1256,10 @@ body {
 				border-top: 0 none;
 				border-right: 0 none;
 				border-left: 0 none;
+
+				@media screen and (max-width: 782px) {
+					flex-direction: column;
+				}
 
 				li {
 					background-color: transparent;
@@ -2653,10 +2658,10 @@ body {
 	}
 
 	.ur-registered-from {
-		flex-direction: column;
+		// flex-direction: column;
 
 		.ur-registered-inputs {
-			width: 100%;
+			width: 300px !important;
 			margin-bottom: $spacing_10px;
 
 			.ur-tabs {
@@ -2664,7 +2669,8 @@ body {
 					.ur-registered-list {
 						.ur-registered-item {
 							float: left;
-							width: 48%;
+							// width: 48%;
+							width: 44%;
 						}
 					}
 				}
@@ -3558,6 +3564,10 @@ a.button.ur-smart-tags-list-button {
 				text-align: right;
 				float: right;
 
+				.button-primary {
+					margin-bottom: 0;
+				}
+
 				input {
 					&.code {
 						// width: 280px;
@@ -3774,6 +3784,10 @@ a.button.ur-smart-tags-list-button {
 				padding: $spacing_32px;
 				border: $border_width solid $border_color;
 
+				@media screen and (max-width: 600px) {
+					padding: $spacing_20px;
+				}
+
 				&.ur-login-form-wrapper {
 					background: transparent;
 					border: 0;
@@ -3783,6 +3797,10 @@ a.button.ur-smart-tags-list-button {
 					.ur-grid-lists {
 						.ur-grid-list-item {
 							padding: $spacing_20px;
+
+							@media screen and (max-width: 600px) {
+								padding: 0;
+							}
 						}
 
 						.ur-selected-item {
@@ -4373,6 +4391,12 @@ a.button.ur-smart-tags-list-button {
 	}
 }
 
+@media screen and (max-width: 782px) {
+	.user-registration-membership_page_add-new-registration	.ur-form-container #menu-management .menu-edit {
+		left: 0 !important;
+	}
+}
+
 // Subscription Plan Field > Field Options Design Fix
 .ur-registered-from {
 	.nav-tab-wrapper {
@@ -4804,8 +4828,8 @@ body.user-registration {
 #user-registration-list-table-page {
 	max-width: 100%;
 	margin: $spacing_32px;
-	padding: $spacing_24px;
-	border-radius: $border_radius_4;
+	padding: $spacing_24px $spacing_28px;
+	border-radius: $border_radius_13;
 	background: $grey-0;
 	border: $border_width solid $border_color;
 
@@ -4816,6 +4840,50 @@ body.user-registration {
 		align-items: center;
 		margin-bottom: $spacing_16px;
 		justify-content: space-between;
+
+		h2 {
+			margin: 0;
+			color: $grey-500;
+			font-size: 22px;
+			font-weight: $semi_bold;
+			line-height: 32px;
+		}
+
+		.page-title-action {
+			min-height: 36px;
+			border: $border_width solid $primary_color;
+			// color: $primary_color;
+			color: $white;
+			background: $primary_color;
+			padding: 0 $spacing_14px 0 $spacing_12px;
+			font-size: 14px;
+			line-height: 20px;
+			border-radius: $border_radius_4;
+			font-weight: $medium;
+			text-decoration: none;
+			transition: all .3s ease-in-out;
+			box-sizing: border-box;
+			display: flex;
+			align-items: center;
+			gap: $spacing_6px;
+
+			&:hover {
+				background: $primary_color;
+				color: $white;
+				border-color: $primary_color;
+			}
+
+			&::before {
+				content: "";
+				width: 14px;
+				height: 14px;
+				display: block;
+				background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 24 24'%3E%3Cpath d='M20.75 10.75a1.25 1.25 0 1 1 0 2.5H3.25a1.25 1.25 0 1 1 0-2.5h17.5Z'/%3E%3Cpath d='M10.75 20.75V3.25a1.25 1.25 0 1 1 2.5 0v17.5a1.25 1.25 0 1 1-2.5 0Z'/%3E%3C/svg%3E");
+				background-repeat: no-repeat;
+				background-position: center;
+				background-size: 100%;
+			}
+		}
 
 		// a {
 		// 	padding: 6px 14px;
@@ -5000,22 +5068,22 @@ body.user-registration {
 				min-height: 35px;
 			}
 
-			#user-registration-list-table-search-input {
-				border-radius: $border_radius_4;
-				border: $border_width solid $grey-100;
-				background: $grey-0;
-				padding: 3px 42px 3px $spacing_12px;
-				width: 100%;
+			// #user-registration-list-table-search-input {
+			// 	border-radius: $border_radius_4;
+			// 	border: $border_width solid $grey-100;
+			// 	background: $grey-0;
+			// 	padding: 3px 42px 3px $spacing_12px;
+			// 	width: 100%;
 
-				&::placeholder {
-					color: $grey-200;
-				}
+			// 	&::placeholder {
+			// 		color: $grey-200;
+			// 	}
 
-				&:focus {
-					box-shadow: none;
-					border: $border_width solid $primary_color;
-				}
-			}
+			// 	&:focus {
+			// 		box-shadow: none;
+			// 		border: $border_width solid $primary_color;
+			// 	}
+			// }
 
 			button {
 				&#search-submit {
@@ -5028,12 +5096,13 @@ body.user-registration {
 					display: flex;
 					align-items: center;
 					justify-content: center;
+					top: 50%;
 					right: $spacing_12px;
-					top: $spacing_8px;
+					transform: translateY(-50%);
 
 					svg {
 						path {
-							fill: $grey-200;
+							fill: #a1a4b9;
 						}
 					}
 				}

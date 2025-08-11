@@ -307,24 +307,24 @@
 						// }
 					}
 
-					input[type="search"] {
-						@include form-field-style;
-						width: 100%;
-						padding: 10px 40px 10px 14px;
+					// input[type="search"] {
+					// 	@include form-field-style;
+					// 	width: 100%;
+					// 	padding: 10px 40px 10px 14px;
 
-						&::placeholder {
-							color: #999;
-							font-size: 14px;
-							font-weight: 400;
-							line-height: 24px;
-						}
+					// 	&::placeholder {
+					// 		color: #999;
+					// 		font-size: 14px;
+					// 		font-weight: 400;
+					// 		line-height: 24px;
+					// 	}
 
-						&:focus {
-							box-shadow: none;
-							outline: none;
-							border-color: #475BB2;
-						}
-					}
+					// 	&:focus {
+					// 		box-shadow: none;
+					// 		outline: none;
+					// 		border-color: #475BB2;
+					// 	}
+					// }
 
 					#search-submit {
 						top: 50% !important;

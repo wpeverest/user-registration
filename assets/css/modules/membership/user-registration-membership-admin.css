@@ -268,36 +268,6 @@
 .user-registration #user-registration-list-table-page #user-registration-list-filters-row form > div select {
   width: 200px;
 }
-.user-registration #user-registration-list-table-page #user-registration-list-filters-row form > div input[type=search] {
-  height: 38px;
-  border-color: #BABABA;
-  color: #383838;
-  padding: 8px 12px;
-  font-size: 14px;
-  line-height: 24px;
-  border-radius: 4px;
-  width: 100%;
-  padding: 10px 40px 10px 14px;
-}
-.user-registration #user-registration-list-table-page #user-registration-list-filters-row form > div input[type=search]::placeholder {
-  color: #999999;
-}
-.user-registration #user-registration-list-table-page #user-registration-list-filters-row form > div input[type=search]:focus {
-  box-shadow: none;
-  outline: none;
-  border-color: #475BB2;
-}
-.user-registration #user-registration-list-table-page #user-registration-list-filters-row form > div input[type=search]::placeholder {
-  color: #999;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 24px;
-}
-.user-registration #user-registration-list-table-page #user-registration-list-filters-row form > div input[type=search]:focus {
-  box-shadow: none;
-  outline: none;
-  border-color: #475BB2;
-}
 .user-registration #user-registration-list-table-page #user-registration-list-filters-row form > div #search-submit {
   top: 50% !important;
   transform: translateY(-50%);
