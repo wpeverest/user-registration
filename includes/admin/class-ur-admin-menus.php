@@ -25,8 +25,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 
 			// Add menus.
 			add_action( 'admin_menu', array( $this, 'admin_menu' ), 9 );
-			add_action( 'admin_menu', array( $this, 'settings_menu' ), 60 );
-			add_action( 'admin_menu', array( $this, 'status_menu' ), 61 );
+			add_action( 'admin_menu', array( $this, 'settings_menu' ), 70 );
+			add_action( 'admin_menu', array( $this, 'status_menu' ), 74 );
 			add_action( 'admin_menu', array( $this, 'dashboard_menu' ), 10 );
 			add_action( 'admin_menu', array( $this, 'add_registration_menu' ), 50 );
 
@@ -36,7 +36,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			 * @param boolean
 			 */
 			if ( apply_filters( 'user_registration_show_addons_page', true ) ) {
-				add_action( 'admin_menu', array( $this, 'addons_menu' ), 70 );
+				add_action( 'admin_menu', array( $this, 'addons_menu' ), 75 );
 			}
 
 			if ( ! ur_get_license_plan() ) {
@@ -493,8 +493,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				)
 			);
 			if ( isset( $_GET['page'] ) && ( 'user-registration' === $_GET['page'] || 'user-registration-registration-forms' === $_GET['page'] || 'user-registration-login-forms' === $_GET['page'] ) ) {
-				add_submenu_page( 'user-registration', __( 'Registration Forms', 'user-registration' ), '<span style="margin-left:5px;">  ⤷ </span>' . __( 'Registration Forms', 'user-registration' ), 'manage_user_registration', 'user-registration', array( $this, 'registration_page' ) );
-				add_submenu_page( 'user-registration', __( 'Login Form', 'user-registration' ), '<span style="margin-left:5px;">  ⤷ </span>' . __( 'Login Form', 'user-registration' ), 'manage_user_registration', 'user-registration-login-forms', array( $this, 'registration_page' ) );
+				add_submenu_page( 'user-registration', __( 'Registration Forms', 'user-registration' ), '↳ ' . __( 'Registration Forms', 'user-registration' ), 'manage_user_registration', 'user-registration#', array( $this, 'registration_page' ) );
+				add_submenu_page( 'user-registration', __( 'Login Form', 'user-registration' ), '↳ ' . __( 'Login Form', 'user-registration' ), 'manage_user_registration', 'user-registration-login-forms', array( $this, 'registration_page' ) );
 			}
 		}
 
@@ -546,6 +546,30 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				__( 'Tools', 'user-registration' ),
 				'manage_user_registration',
 				'user-registration-status',
+				array(
+					$this,
+					'status_page',
+				)
+			);
+
+			add_submenu_page(
+				'user-registration',
+				__( 'Logs', 'user-registration' ),
+				'↳ ' . __( 'Logs', 'user-registration' ),
+				'manage_user_registration',
+				'user-registration-status&tab=logs',
+				array(
+					$this,
+					'status_page',
+				)
+			);
+
+			add_submenu_page(
+				'user-registration',
+				__( 'System Info', 'user-registration' ),
+				'↳ ' . __( 'System Info', 'user-registration' ),
+				'manage_user_registration',
+				'user-registration-status&tab=system_info',
 				array(
 					$this,
 					'status_page',

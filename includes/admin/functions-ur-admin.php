@@ -113,6 +113,7 @@ function ur_get_screen_ids() {
 		$ur_screen_id . '_page_user-registration-email-templates',
 		$ur_screen_id . '_page_user-registration-content-restriction',
 		$ur_screen_id . '_page_user-registration-coupons',
+		$ur_screen_id . '_page_member-payment-history',
 		'profile',
 		'user-edit',
 	);

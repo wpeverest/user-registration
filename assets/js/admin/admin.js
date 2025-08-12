@@ -1760,6 +1760,14 @@ jQuery(function ($) {
 					}, 200);
 				});
 		});
+
+	$("#toplevel_page_user-registration")
+		.find("li > a")
+		.each(function () {
+			if ($(this).text().trim().startsWith("↳")) {
+				$(this).parent().addClass("is-sub-menu");
+			}
+		});
 });
 
 (function ($, user_registration_admin_data) {

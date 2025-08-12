@@ -38,7 +38,6 @@ if ( ! class_exists( 'Members' ) ) {
 		 */
 		public function __construct() {
 			$this->page = 'user-registration-members';
-			add_action( 'admin_menu', array( $this, 'ur_membership_members_menu' ), 60 );
 			add_action( 'in_admin_header', array( __CLASS__, 'hide_unrelated_notices' ) );
 			add_filter(
 				'manage_user-registration-membership_page_user-registration-members_columns',
@@ -108,7 +107,6 @@ if ( ! class_exists( 'Members' ) ) {
 			wp_enqueue_style( 'ur-core-builder-style' );
 			wp_enqueue_style( 'ur-snackbar' );
 			wp_enqueue_style( 'select2', UR()->plugin_url() . '/assets/css/select2/select2.css', array(), '4.0.6' );
-
 		}
 
 		/**
@@ -185,25 +183,6 @@ if ( ! class_exists( 'Members' ) ) {
 			}
 		}
 
-		/**
-		 * Hook to display the page content.
-		 *
-		 * @return void
-		 */
-		public function ur_membership_members_menu() {
-			add_submenu_page(
-				'user-registration',
-				__( 'Membership Members', 'user-registration' ), // page title.
-				__( 'Members', 'user-registration' ), // menu title.
-				'manage_user_registration', // Capability required to access.
-				'user-registration-members', // Menu slug.
-				array(
-					$this,
-					'render_members_page',
-				),
-				7
-			);
-		}
 
 		/**
 		 * Renders the members create or add new page.

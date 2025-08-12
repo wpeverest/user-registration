@@ -63,9 +63,7 @@ class UR_Admin_Assets {
 
 		wp_enqueue_style( 'ur-notice' );
 		wp_register_style( 'user-registration-menu', UR()->plugin_url() . '/assets/css/menu.css', array(), UR_VERSION );
-		if ( 'plugins' === $screen_id ) {
-			wp_enqueue_style( 'user-registration-menu' );
-		}
+		wp_enqueue_style( 'user-registration-menu' );
 
 		wp_register_style( 'user-registration-admin', UR()->plugin_url() . '/assets/css/admin.css', array( 'nav-menus', 'wp-color-picker' ), UR_VERSION );
 
