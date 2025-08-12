@@ -14,7 +14,7 @@
 @import "forms";
 
 // Components
-@import "components/badge", "components/button", "components/card", "components/bulkactions",
+@import "components/badge", "components/button", "components/card", "components/bulkactions", "components/tags",
 	"components/list-group", "components/modal", "components/nav", "components/search", "components/typography",
 	"components/scroll-ui", "components/dropdown", "components/input", "components/toggle", "components/navigation";
 
@@ -4903,6 +4903,7 @@ body.user-registration {
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: space-between;
+		align-items: center;
 		gap: $spacing_20px;
 		border-bottom: $border_width solid #dcdcdc;
 		padding-bottom: $spacing_24px;
@@ -4910,6 +4911,22 @@ body.user-registration {
 
 		ul.subsubsub {
 			font-size: 15px;
+			margin-top: 0;
+
+			li {
+				a {
+					// padding: 0;
+					font-size: 14px;
+					line-height: 24px;
+					font-weight: $regular;
+					color: $grey-400;
+					text-decoration: none;
+
+					&.current {
+						color: $primary_color;
+					}
+				}
+			}
 		}
 
 		#user-registration-pro-users-filters {
@@ -5169,10 +5186,11 @@ body.user-registration {
 	}
 
 	table.wp-list-table {
-		border-color: #dcdcdc;
+		border-color: $border_color;
 		border-radius: $border_radius_5;
 		margin-bottom: $spacing-16px;
 		overflow: hidden;
+		box-shadow: none;
 
 		a {
 			color: $grey-400;
@@ -5188,7 +5206,7 @@ body.user-registration {
 			tr {
 				td,
 				th {
-					border-bottom-color: #dcdcdc;
+					border-bottom-color: $border_color;
 				}
 
 				th {
@@ -5312,6 +5330,15 @@ body.user-registration {
 							}
 						}
 					}
+				}
+			}
+		}
+
+		tfoot {
+			tr {
+				td,
+				th {
+					border-top-color: $border_color;
 				}
 			}
 		}
@@ -5648,8 +5675,8 @@ body.user-registration {
 	}
 
 	#user-registration-list-table-page {
-		margin: 32px 32px !important;
-		padding: 28px 32px;
+		// margin: 32px 32px !important;
+		// padding: 28px 32px;
 		box-sizing: border-box;
 		max-width: 100%;
 
@@ -5908,33 +5935,33 @@ body.user-registration {
 										}
 									}
 
-									&.status {
-										.payment-status-btn {
-											display: block;
-											width: max-content;
-											border-radius: 3px;
-											color: #383838;
-											font-size: 14px;
-											font-weight: 400;
-											line-height: 16px;
-											padding: 4px 8px;
+									// &.status {
+									// 	.payment-status-btn {
+									// 		display: block;
+									// 		width: max-content;
+									// 		border-radius: 3px;
+									// 		color: #383838;
+									// 		font-size: 14px;
+									// 		font-weight: 400;
+									// 		line-height: 16px;
+									// 		padding: 4px 8px;
 
-											&.completed {
-												border: 1px solid #4cc741;
-												background: #f5fff4;
-											}
+									// 		&.completed {
+									// 			border: 1px solid #4cc741;
+									// 			background: #f5fff4;
+									// 		}
 
-											&.pending {
-												border: 1px solid #ee9936;
-												background: #fffaf5;
-											}
+									// 		&.pending {
+									// 			border: 1px solid #ee9936;
+									// 			background: #fffaf5;
+									// 		}
 
-											&.failed {
-												border: 1px solid #f25656;
-												background: #fff4f4;
-											}
-										}
-									}
+									// 		&.failed {
+									// 			border: 1px solid #f25656;
+									// 			background: #fff4f4;
+									// 		}
+									// 	}
+									// }
 								}
 							}
 						}
@@ -6978,21 +7005,34 @@ body {
 	display: flex;
 
 	input[type="text"] {
+		min-height: 36px;
 		font-size: 13px;
+		line-height: 20px;
+		width: 280px;
+		background: #fafafa;
+		padding: 0 12px;
+		border: 1px solid #e1e1e1;
+		border-radius: 4px;
+		color: #383838;
+		font-weight: 400;
+		margin: 0;
+		box-shadow: none;
 	}
 
 	.ur-copy-shortcode {
 		width: 38px;
-		height: 38px;
 		box-shadow: none;
-		border-radius: 0 4px 4px 0;
-		background: #edeff7 !important;
-		border-color: #e9e9e9 !important;
-		min-height: 32px;
-		line-height: 2.30769231;
 		padding-left: 0;
 		padding-right: 0;
+		margin: 0;
+		margin-left: -5px;
+		border-radius: 0 4px 4px 0;
+		background: #f4f4f4 !important;
+		border-color: #e1e1e1 !important;
+		min-height: 36px;
+		line-height: 20px;
 	}
+
 	input[type="text"] {
 		margin: 0;
 		border-color: #e9e9e9;

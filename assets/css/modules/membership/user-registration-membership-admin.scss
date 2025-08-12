@@ -250,8 +250,8 @@
 	}
 
 	#user-registration-list-table-page {
-		margin: 32px auto;
-		padding: 28px 32px;
+		margin: 32px;
+		padding: 24px 28px;
 		box-sizing: border-box;
 
 		.user-registration-list-table-heading {
@@ -267,21 +267,8 @@
 			}
 
 			.ur-button-primary {
-				border-radius: 3px;
-				border-color: #475BB2;
-				background: #475BB2;
-				color: #ffffff;
-				padding: 8px 20px 8px 16px;
-				color: #ffffff;
-				font-size: 14px;
-				font-weight: 400;
-				line-height: 24px;
-				transition: all .3s;
-
-				&:hover {
-					background: #38488e;
-					border-color: #38488e;
-				}
+				background: $primary_color;
+				color: $white;
 			}
 		}
 
