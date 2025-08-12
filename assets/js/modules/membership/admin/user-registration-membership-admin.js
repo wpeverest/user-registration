@@ -565,57 +565,41 @@
 		},
 
 		update_membership_status: function ($this) {
-			ur_membership_utils.prepend_spinner($this.parents('.row-actions'));
-			$this.attr('disabled', true);
-			var status = $this.prop('checked'),
+			ur_membership_utils.prepend_spinner($this.closest('.row-actions'));
+			$this.prop('disabled', true);
+
+			var status = $this.is(':checked'),
 				ID = $this.data('ur-membership-id');
+
 			this.send_data(
 				{
 					action: 'user_registration_membership_update_membership_status',
 					membership_data: JSON.stringify({
-						'status': status,
-						'ID': ID
+						status: status,
+						ID: ID
 					})
 				},
 				{
 					success: function (response) {
 						if (response.success) {
-							ur_membership_utils.show_success_message(
-								response.data.message
-							);
+							ur_membership_utils.show_success_message(response.data.message);
 						} else {
-							ur_membership_utils.show_failure_message(
-								response.data.message
-							);
+							ur_membership_utils.show_failure_message(response.data.message);
+							$this.prop('checked', !status);
 						}
 					},
-					failure: function (xhr, statusText) {
-						ur_membership_utils.show_failure_message(
-							ur_membership_data.labels.network_error +
-							'(' +
-							statusText +
-							')'
-						);
+					failure: function () {
+						ur_membership_utils.show_failure_message(ur_membership_data.labels.network_error);
+						$this.prop('checked', !status);
 					},
 					complete: function () {
-						//update UI after successful update
-						ur_membership_utils.remove_spinner($this.parents('.row-actions'));
-						$this.attr('disabled', false);
-						var state = status ? 'Active' : 'Inactive',
-							status_span = $('#ur-membership-list-status-' + ID);
-						status_span.text(state);
-						if (state === 'Inactive') {
-							status_span.removeClass('user-registration-badge--success-subtle');
-							status_span.addClass('user-registration-badge--secondary-subtle');
-						} else {
-							status_span.removeClass('user-registration-badge--secondary-subtle');
-							status_span.addClass('user-registration-badge--success-subtle');
-						}
-
+						ur_membership_utils.remove_spinner($this.closest('.row-actions'));
+						$this.prop('disabled', false);
 					}
 				}
 			);
 		},
+
 
 		validate_payment_gateway: function ($this) {
 

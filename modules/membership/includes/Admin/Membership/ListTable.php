@@ -186,28 +186,32 @@ class ListTable extends \UR_List_Table {
 		$membership_content = json_decode( $membership->post_content, true );
 		$checked            = ( $membership_content['status'] == 'true' ) ? 'checked' : '';
 		$actions            = '
-				<div class="row-actions ur-d-flex ur-align-items-center visible" style="gap: 5px">
+			<div class="row-actions ur-d-flex ur-align-items-center visible" style="gap: 5px">
 
-					<div class="user-registration-switch">
+				<div class="ur-toggle-section">
+					<span class="user-registration-toggle-form">
 						<input
-						 		type="checkbox"
-						 		' . $checked . '
-							   	class="ur-membership-change-status user-registration-switch__control hide-show-check enabled"
-							   	data-ur-membership-id = ' . $membership->ID . '
+							type="checkbox"
+							name="ur_membership_change_status"
+							' . $checked . '
+							class="ur-membership-change-status hide-show-check enabled"
+							data-ur-membership-id="' . esc_attr( $membership->ID ) . '"
 						>
-					</div>
-					&nbsp | &nbsp
-					<span class="edit">
-						<a href="' . esc_url( $edit_link ) . '">' . __( 'Edit', 'user-registration' ) . '</a>
+						<span class="slider round"></span>
 					</span>
-					&nbsp | &nbsp
-					<span class="delete">
-						<a class="delete-membership" aria-label="' . esc_attr__( 'Delete this item', 'user-registration' ) . '" href="' . $delete_link . '">' . esc_html__( 'Delete', 'user-registration' ) . '</a>
-					</span>
-					</div>
+				</div>
 
-					';
+				&nbsp; | &nbsp;
+				<span class="edit">
+					<a href="' . esc_url( $edit_link ) . '">' . __( 'Edit', 'user-registration' ) . '</a>
+				</span>
+				&nbsp; | &nbsp;
+				<span class="delete">
+					<a class="delete-membership" aria-label="' . esc_attr__( 'Delete this item', 'user-registration' ) . '" href="' . esc_url( $delete_link ) . '">' . esc_html__( 'Delete', 'user-registration' ) . '</a>
+				</span>
 
+			</div>
+		';
 		return $actions;
 	}
 
@@ -224,7 +228,7 @@ class ListTable extends \UR_List_Table {
 						<?php esc_html_e( 'All Membership', 'user-registration' ); ?>
 					</h1>
 					<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $this->page . '&action=add_new_membership' ) ); ?>"
-					   class="button ur-button-primary">
+						class="button ur-button-primary">
 						+
 						<?php
 						echo __( 'Create new Membership', 'user-registration' )
@@ -266,14 +270,14 @@ class ListTable extends \UR_List_Table {
 			</p>
 			<div>
 				<input type="search" id="<?php echo $search_id; ?>" name="s"
-					   value="<?php echo esc_attr( $_GET['s'] ?? '' ); ?>"
-					   placeholder="<?php echo esc_attr( 'Search Membership', ' user-registration' ); ?> ..."
-					   autocomplete="off">
+						value="<?php echo esc_attr( $_GET['s'] ?? '' ); ?>"
+						placeholder="<?php echo esc_attr( 'Search Membership', ' user-registration' ); ?> ..."
+						autocomplete="off">
 				<button type="submit" id="search-submit">
 					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
 						<path fill="#000" fill-rule="evenodd"
-							  d="M4 11a7 7 0 1 1 12.042 4.856 1.012 1.012 0 0 0-.186.186A7 7 0 0 1 4 11Zm12.618 7.032a9 9 0 1 1 1.414-1.414l3.675 3.675a1 1 0 0 1-1.414 1.414l-3.675-3.675Z"
-							  clip-rule="evenodd"></path>
+								d="M4 11a7 7 0 1 1 12.042 4.856 1.012 1.012 0 0 0-.186.186A7 7 0 0 1 4 11Zm12.618 7.032a9 9 0 1 1 1.414-1.414l3.675 3.675a1 1 0 0 1-1.414 1.414l-3.675-3.675Z"
+								clip-rule="evenodd"></path>
 					</svg>
 				</button>
 			</div>
