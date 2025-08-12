@@ -478,7 +478,7 @@ class UR_Shortcode_My_Account {
 	}
 
 	public static function reset_password_form( $atts ) {
-		
+
         if ( isset( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ) && 0 < strpos( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ], ':' ) ) {
             list( $rp_login, $rp_key ) = array_map( 'ur_clean', explode( ':', wp_unslash( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ), 2 ) );
             $user = get_user_by( 'login', $rp_login );
@@ -517,7 +517,10 @@ class UR_Shortcode_My_Account {
 				ur_clear_notices();
 			}
         }
-		
+
+		if( is_admin() ) {
+			return '[user_registration_reset_password_form]';
+		}
 		wp_safe_redirect( ur_get_my_account_url() );
 		exit;
 	}
