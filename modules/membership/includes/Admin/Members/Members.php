@@ -79,7 +79,7 @@ if ( ! class_exists( 'Members' ) ) {
 			}
 			$suffix = defined( 'SCRIPT_DEBUG' ) ? '' : '.min';
 			wp_register_script( 'ur-snackbar', UR()->plugin_url() . '/assets/js/ur-snackbar/ur-snackbar' . $suffix . '.js', array(), '1.0.0', true );
-			wp_register_script( 'user-registration-members', UR_MEMBERSHIP_JS_ASSETS_URL . '/admin/user-registration-members-admin' . $suffix . '.js', array( 'jquery', 'ur-enhanced-select' ), '1.0.0', true );
+			wp_register_script( 'user-registration-members', UR_MEMBERSHIP_JS_ASSETS_URL . '/admin/user-registration-members-admin' . $suffix . '.js', array( 'jquery', 'ur-enhanced-select', 'user-registration-admin' ), '1.0.0', true );
 			wp_enqueue_script( 'ur-snackbar' );
 			wp_enqueue_script( 'user-registration-members' );
 			wp_enqueue_script( 'sweetalert2' );

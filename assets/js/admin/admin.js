@@ -1741,7 +1741,7 @@ jQuery(function ($) {
 				$(this).find(".ur-sub-menu-dropdown").addClass("active");
 			});
 			$(this).on("mouseleave", function () {
-				hideTimeout = setTimeout(() => {
+				hideTimeout = setTimeout(function () {
 					$(this).find(".ur-sub-menu-dropdown").removeClass("active");
 				}, 200);
 			});
@@ -1753,7 +1753,7 @@ jQuery(function ($) {
 			$(this)
 				.find(".ur-sub-menu-dropdown")
 				.on("mouseleave", function () {
-					hideTimeout = setTimeout(() => {
+					hideTimeout = setTimeout(function () {
 						$(this)
 							.find(".ur-sub-menu-dropdown")
 							.removeClass("active");
@@ -1766,6 +1766,35 @@ jQuery(function ($) {
 		.each(function () {
 			if ($(this).text().trim().startsWith("↳")) {
 				$(this).parent().addClass("is-sub-menu");
+			}
+
+			var currentParams = new URLSearchParams(window.location.search),
+				linkParams = new URL(
+					$(this).attr("href"),
+					window.location.origin
+				).searchParams,
+				allMatch = true;
+
+			if (currentParams.toString() !== linkParams.toString()) {
+				allMatch = false;
+			} else {
+				var entries = currentParams.entries();
+				var entry;
+				while (!(entry = entries.next()).done) {
+					var key = entry.value[0];
+					var value = entry.value[1];
+					if (linkParams.get(key) !== value) {
+						allMatch = false;
+						break;
+					}
+				}
+			}
+
+			if (allMatch) {
+				$(".is-sub-menu").removeClass("current");
+				$(".is-sub-menu").parent().removeClass("current");
+				$(this).addClass("current");
+				$(this).parent().addClass("current");
 			}
 		});
 });

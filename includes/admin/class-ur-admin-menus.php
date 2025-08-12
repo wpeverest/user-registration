@@ -492,8 +492,9 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'registration_page',
 				)
 			);
-			if ( isset( $_GET['page'] ) && ( 'user-registration' === $_GET['page'] || 'user-registration-registration-forms' === $_GET['page'] || 'user-registration-login-forms' === $_GET['page'] ) ) {
-				add_submenu_page( 'user-registration', __( 'Registration Forms', 'user-registration' ), '↳ ' . __( 'Registration Forms', 'user-registration' ), 'manage_user_registration', 'user-registration#', array( $this, 'registration_page' ) );
+
+			if ( isset( $_GET['page'] ) && in_array( $_GET['page'], ['user-registration', 'user-registration-login-forms'] ) ) {
+				add_submenu_page( 'user-registration', __( 'Registration Forms', 'user-registration' ), '↳ ' . __( 'Registration Forms', 'user-registration' ), 'manage_user_registration', 'user-registration', array( $this, 'registration_page' ) );
 				add_submenu_page( 'user-registration', __( 'Login Form', 'user-registration' ), '↳ ' . __( 'Login Form', 'user-registration' ), 'manage_user_registration', 'user-registration-login-forms', array( $this, 'registration_page' ) );
 			}
 		}
@@ -552,29 +553,32 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				)
 			);
 
-			add_submenu_page(
-				'user-registration',
-				__( 'Logs', 'user-registration' ),
-				'↳ ' . __( 'Logs', 'user-registration' ),
-				'manage_user_registration',
-				'user-registration-status&tab=logs',
-				array(
-					$this,
-					'status_page',
-				)
-			);
+			if ( isset( $_GET['page'] ) && in_array( $_GET['page'], ['user-registration-status', 'user-registration-status&tab=logs', 'user-registration-status&tab=system_info'] ) ) {
 
-			add_submenu_page(
-				'user-registration',
-				__( 'System Info', 'user-registration' ),
-				'↳ ' . __( 'System Info', 'user-registration' ),
-				'manage_user_registration',
-				'user-registration-status&tab=system_info',
-				array(
-					$this,
-					'status_page',
-				)
-			);
+				add_submenu_page(
+					'user-registration',
+					__( 'Logs', 'user-registration' ),
+					'↳ ' . __( 'Logs', 'user-registration' ),
+					'manage_user_registration',
+					'user-registration-status&tab=logs',
+					array(
+						$this,
+						'status_page',
+					)
+				);
+
+				add_submenu_page(
+					'user-registration',
+					__( 'System Info', 'user-registration' ),
+					'↳ ' . __( 'System Info', 'user-registration' ),
+					'manage_user_registration',
+					'user-registration-status&tab=system_info',
+					array(
+						$this,
+						'status_page',
+					)
+				);
+			}
 		}
 
 		/**

@@ -273,42 +273,45 @@ class Membership {
 		);
 		add_action( 'load-' . $rules_page, array( $this, 'membership_initialization' ) );
 
-		add_submenu_page(
-			'user-registration',
-			__( 'All Plans', 'user-registration' ),
-			'↳ ' . __( 'All Plans', 'user-registration' ),
-			'edit_posts',
-			'user-registration-membership#',
-			array(
-				$this,
-				'render_membership_page',
-			),
-			6
-		);
+		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], ['user-registration-membership', 'user-registration-membership-groups', 'user-registration-members'] ) ) {
 
-		add_submenu_page(
-			'user-registration',
-			__( 'Membership Groups', 'user-registration' ),
-			'↳ ' . __( 'Membership Groups', 'user-registration' ),
-			'manage_user_registration',
-			'user-registration-membership&action=list_groups',
-			array(
-				$this,
-				'render_membership_page',
-			),
-			7
-		);
+			add_submenu_page(
+				'user-registration',
+				__( 'All Plans', 'user-registration' ),
+				'↳ ' . __( 'All Plans', 'user-registration' ),
+				'edit_posts',
+				'user-registration-membership',
+				array(
+					$this,
+					'render_membership_page',
+				),
+				6
+			);
 
-		$members = new Members();
-		add_submenu_page(
-			'user-registration',
-			__( 'Membership Members', 'user-registration' ),
-			'↳ ' . __( 'Members', 'user-registration' ),
-			'manage_user_registration',
-			'user-registration-members',
-			array( $members, 'render_members_page'),
-			8
-		);
+			add_submenu_page(
+				'user-registration',
+				__( 'Membership Groups', 'user-registration' ),
+				'↳ ' . __( 'Groups', 'user-registration' ),
+				'manage_user_registration',
+				'user-registration-membership&action=list_groups',
+				array(
+					$this,
+					'render_membership_page',
+				),
+				7
+			);
+
+			$members = new Members();
+			add_submenu_page(
+				'user-registration',
+				__( 'Membership Members', 'user-registration' ),
+				'↳ ' . __( 'Members', 'user-registration' ),
+				'manage_user_registration',
+				'user-registration-members',
+				array( $members, 'render_members_page'),
+				8
+			);
+		}
 	}
 
 	/**

@@ -4680,6 +4680,13 @@ body.user-registration {
 					margin: 0;
 					align-items: center;
 
+					p {
+						padding: $spacing_24px $spacing_16px;
+						font-weight: $medium;
+						color: #1f1f1f;
+						font-size: 15px;
+					}
+
 					li {
 						font-size: 15px;
 						margin-bottom: -5px;
@@ -4688,10 +4695,10 @@ body.user-registration {
 						a {
 							text-decoration: none;
 							color: #1f1f1f;
-							padding: $spacing_24px $spacing_16px;
 							position: relative;
 							transition: all 0.3s;
 							font-weight: $medium;
+							padding: $spacing_24px $spacing_16px;
 
 							&:focus {
 								outline: none;

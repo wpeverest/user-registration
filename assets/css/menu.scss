@@ -137,38 +137,22 @@
    }
 
 #toplevel_page_user-registration ul li {
-	a[href="admin.php?page=user-registration#"],
-	a[href="admin.php?page=user-registration-login-forms"],
-	a[href="admin.php?page=user-registration-membership#"],
-	a[href="admin.php?page=user-registration-membership&action=list_groups"],
-	a[href="admin.php?page=user-registration-members"],
-	a[href="admin.php?page=user-registration-status&tab=logs"],
-	a[href="admin.php?page=user-registration-status&tab=system_info"] {
-		font-size: 90%;
-		margin-left: 8px;
+	&.is-sub-menu {
+		a {
+			font-size: 90%;
+			margin-left: 8px;
+		}
 	}
 }
 
 #toplevel_page_user-registration ul li {
-	a[href="admin.php?page=user-registration"],
-	a[href="admin.php?page=user-registration-membership"],
-	a[href="admin.php?page=user-registration-settings"] {
-		border-top: 2px solid rgba(240, 246, 252, .2);
-		margin-top: 5px;
-		padding-top: 8px;
+	&:not(.is-sub-menu ) {
+		a[href="admin.php?page=user-registration"],
+		a[href="admin.php?page=user-registration-membership"],
+		a[href="admin.php?page=user-registration-settings"] {
+			border-top: 2px solid rgba(240, 246, 252, .2);
+			margin-top: 5px;
+			padding-top: 8px;
+		}
 	}
-}
-
-#toplevel_page_user-registration ul li.is-sub-menu {
-  display: none;
-}
-
-#toplevel_page_user-registration ul li:has(> a.current) {
-   & ~ li.is-sub-menu {
-      display: list-item;
-    }
-
-    & ~ li:not(.is-sub-menu) ~ li.is-sub-menu {
-      display: none;
-    }
 }
