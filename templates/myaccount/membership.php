@@ -24,13 +24,13 @@ $membership_info = ( isset( $_GET['info'] ) && ! empty( $_GET['info'] ) ) ? wp_k
 $is_delayed      = ! empty( $delayed_until );
 $is_renewing     = ur_string_to_bool( get_user_meta( $user->ID, 'urm_is_member_renewing', true ) );
 
-$can_renew       = !$is_renewing && isset( $membership['post_content']['type'] ) && "automatic" !== $renewal_behaviour && "subscription" == $membership['post_content']['type'];
-$date_to_renew   = "";
+$can_renew     = ! $is_renewing && isset( $membership['post_content']['type'] ) && "automatic" !== $renewal_behaviour && "subscription" == $membership['post_content']['type'];
+$date_to_renew = "";
 
 if ( "subscription" == $membership['post_content']['type'] ) {
 	$start_date    = $subscription_data["start_date"];
 	$expiry_date   = $subscription_data["expiry_date"];
-	$date_to_renew = urm_get_date_at_percent_interval( $start_date, $expiry_date, 1 ); //keeping this static for now can be changed to a setting in future
+	$date_to_renew = urm_get_date_at_percent_interval( $start_date, $expiry_date, apply_filters( 'urm_show_membership_renewal_btn_in_percent', 80 ) ); //keeping this static for now can be changed to a setting in future
 }
 
 ?>
