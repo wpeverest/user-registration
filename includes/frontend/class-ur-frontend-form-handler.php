@@ -178,7 +178,7 @@ class UR_Frontend_Form_Handler {
 					$success_params['auto_login'] = true;
 				}
 				$success_params['success_message_positon'] = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_success_message_position', '1' );
-				$success_params['form_login_option']       = $login_option;
+				$success_params['form_login_option']       = ! ur_string_to_bool( get_option( 'user_registration_enable_email_confirmation', true ) ) && 'email_confirmation' === $login_option ?  'default' : $login_option;
 
 				$redirect_timeout = (int) ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after', '2' ) * 1000;
 
