@@ -4683,8 +4683,10 @@ body.user-registration {
 					p {
 						padding: $spacing_24px $spacing_16px;
 						font-weight: $medium;
-						color: #1f1f1f;
-						font-size: 15px;
+						font-weight: 500;
+						font-size: 16px;
+						line-height: 26px;
+						color: #383838;
 					}
 
 					li {
