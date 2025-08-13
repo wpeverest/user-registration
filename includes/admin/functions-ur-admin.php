@@ -911,18 +911,24 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 					'dashboard' => array(
 						'page_slug' => 'user-registration-dashboard',
 						'label'     => esc_html( 'Dashboard', 'user-registration' ),
-						'sub_menu' => array(
-							'help' => array(
-								'page_slug' => 'user-registration-dashboard#help',
-								'label'     => esc_html( 'Help', 'user-registration' ),
+						'sub_menu' => array_merge(
+							array(
+								'help' => array(
+									'page_slug' => 'user-registration-dashboard#help',
+									'label'     => esc_html( 'Help', 'user-registration' ),
+								),
 							),
-							'free-vs-pro' => array(
-								'page_slug' => 'user-registration-dashboard#free-vs-pro',
-								'label'     => esc_html( 'Free vs Pro', 'user-registration' ),
+							UR_PRO_ACTIVE ? array() : array(
+								'free-vs-pro' => array(
+									'page_slug' => 'user-registration-dashboard#free-vs-pro',
+									'label'     => esc_html( 'Free vs Pro', 'user-registration' ),
+								),
 							),
-							'products' => array(
-								'page_slug' => 'user-registration-dashboard#products',
-								'label'     => esc_html( 'Other Products', 'user-registration' ),
+							array(
+								'products' => array(
+									'page_slug' => 'user-registration-dashboard#products',
+									'label'     => esc_html( 'Other Products', 'user-registration' ),
+								)
 							)
 						)
 					),
@@ -966,7 +972,7 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 							),
 							'groups' => array(
 								'page_slug' => 'user-registration-membership&action=list_groups',
-								'label'     => esc_html( 'Membership Groups', 'user-registration' ),
+								'label'     => esc_html( 'Groups', 'user-registration' ),
 							),
 							'members' => array(
 								'page_slug' => 'user-registration-members',
