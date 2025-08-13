@@ -142,20 +142,26 @@ jQuery(function ($) {
 							.closest("#user-registration")
 							.find(".user-registration-error")
 							.remove();
-
 						$this
-							.closest("#user-registration")
-							.find(".user-registration-message")
-							.remove();
+							.closest("form")
+							.find(".ur-submit-button span")
+							.removeClass("ur-spinner");
 
-						$this
-							.closest(".ur-frontend-form")
-							.prepend(
-								'<ul class="user-registration-error">' +
-									ur_login_params.ajax_form_submit_error +
-									"</ul>"
-							);
-						return;
+						// Add a hidden input to ensure $_POST['login'] is present
+						var loginValue = 'Login',
+							$hiddenLogin = $('<input>', {
+								type: 'hidden',
+								name: 'login',
+								value: loginValue
+							}),
+							$resubmitted = $('<input>', {
+								type: 'hidden',
+								name: 'resubmitted',
+								value: true
+							});
+						$ur_login_ajax_form.append($hiddenLogin);
+						$ur_login_ajax_form.append($resubmitted);
+						$ur_login_ajax_form[0].submit();
 					});
 				});
 		});

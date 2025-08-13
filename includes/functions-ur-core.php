@@ -4039,7 +4039,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				$secret_key      = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_cloudflare' );
 			}
 
-			if ( ur_is_ajax_login_enabled() ) {
+			if ( ur_is_ajax_login_enabled() && !empty( $_POST['resubmitted'] ) ) {
 				$recaptcha_value = $captcha_response;
 			}
 
@@ -4129,7 +4129,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 			}
 
 			if ( empty( $username ) ) {
-				throw new Exception( '<strong>' . esc_html__( 'ERROR:', 'user-registration' ) . '</strong>' . $messages['empty_username'] );
+				throw new Exception( '<strong>' . esc_html__( 'ERROR:', domain: 'user-registration' ) . '</strong>' . $messages['empty_username'] );
 			}
 
 			if ( is_email( $username ) && apply_filters( 'user_registration_get_username_from_email', true ) ) {
@@ -4226,7 +4226,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				 */
 				$redirect = apply_filters( 'user_registration_login_redirect', $redirect, $user );
 
-				if ( ur_is_ajax_login_enabled() ) {
+				if ( ur_is_ajax_login_enabled() && empty( $_POST['resubmitted'] ) ) {
 					wp_send_json_success( array( 'message' => $redirect ) );
 					wp_send_json( $user );
 				} else {
@@ -4234,7 +4234,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 					exit;
 				}
 
-				if ( ur_is_ajax_login_enabled() ) {
+				if ( ur_is_ajax_login_enabled() && empty( $_POST['resubmitted'] ) ) {
 					wp_send_json( $user );
 				}
 			}
@@ -4243,7 +4243,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 			$message     = $e->getMessage();
 
 			if ( $status_code >= 200 && $status_code < 300 ) {
-				if ( ur_is_ajax_login_enabled() ) {
+				if ( ur_is_ajax_login_enabled() && empty( $_POST['resubmitted'] ) ) {
 					wp_send_json_success(
 						array(
 							'message' => $message,
@@ -4262,8 +4262,8 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				}, 10, 1 );
 			} else {
 
-				if ( ur_is_ajax_login_enabled() ) {
-					wp_send_json_error(
+				if ( ur_is_ajax_login_enabled() && empty( $_POST['resubmitted'] ) ) {
+                    wp_send_json_error(
 						array(
 							'message' => apply_filters( 'login_errors', $message ),
 						)
@@ -4283,6 +4283,196 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				do_action( 'user_registration_login_failed' );
 			}
 		}
+	}
+}
+
+if ( ! function_exists( 'ur_process_registration' ) ) {
+	function ur_process_registration($nonce_value) {
+		/**
+		 * Filter to modify user capability.
+		 * Default value is 'create_users'.
+		 */
+		$logger = ur_get_logger();
+		$logger->info( __( 'Checking permissions.', 'user-registration' ), array( 'source' => 'form-submission' ) );
+		$current_user_capability = apply_filters( 'ur_registration_user_capability', 'create_users' );
+
+		if ( is_user_logged_in() && ! current_user_can( 'administrator' ) && ! current_user_can( $current_user_capability ) ) { //phpcs:ignore
+			$logger->warning( __( 'User is already logged in and lacks permission.', 'user-registration' ), array( 'source' => 'form-submission' ) );
+			wp_send_json_error(
+				array(
+					'message' => __( 'You are already logged in.', 'user-registration' ),
+				)
+			);
+		}
+
+		if ( ! check_ajax_referer( 'user_registration_form_data_save_nonce', 'security', false ) && empty($_POST['ur_fallback_submit']) ) {
+			$logger->error( __( 'Nonce verification failed.', 'user-registration' ), array( 'source' => 'form-submission' ) );
+            wp_send_json_error(
+				array(
+					'message' => __( 'Nonce error, please reload.', 'user-registration' ),
+				)
+			);
+		}
+
+		$form_id = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
+		$logger->info( __( 'Processing form submission.', 'user-registration' ), array(
+			'source'  => 'form-submission',
+			'form_id' => $form_id
+		) );
+		$nonce               = $nonce_value;
+		$captcha_response    = isset( $_POST['captchaResponse'] ) ? ur_clean( wp_unslash( $_POST['captchaResponse'] ) ) : ''; //phpcs:ignore
+		$flag                = wp_verify_nonce( $nonce, 'ur_frontend_form_id-' . $form_id );
+
+		$recaptcha_enabled   = ur_string_to_bool( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support', false ) );
+		$recaptcha_type      = get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' );
+		$recaptcha_type      = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_configured_captcha_type', $recaptcha_type );
+		$invisible_recaptcha = ur_option_checked( 'user_registration_captcha_setting_invisible_recaptcha_v2', false );
+
+		if ( 'v2' === $recaptcha_type && ! $invisible_recaptcha ) {
+			$site_key   = get_option( 'user_registration_captcha_setting_recaptcha_site_key' );
+			$secret_key = get_option( 'user_registration_captcha_setting_recaptcha_site_secret' );
+		} elseif ( 'v2' === $recaptcha_type && $invisible_recaptcha ) {
+			$site_key   = get_option( 'user_registration_captcha_setting_recaptcha_invisible_site_key' );
+			$secret_key = get_option( 'user_registration_captcha_setting_recaptcha_invisible_site_secret' );
+		} elseif ( 'v3' === $recaptcha_type ) {
+			$site_key   = get_option( 'user_registration_captcha_setting_recaptcha_site_key_v3' );
+			$secret_key = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_v3' );
+		} elseif ( 'hCaptcha' === $recaptcha_type ) {
+			$site_key   = get_option( 'user_registration_captcha_setting_recaptcha_site_key_hcaptcha' );
+			$secret_key = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_hcaptcha' );
+		} elseif ( 'cloudflare' === $recaptcha_type ) {
+			$site_key   = get_option( 'user_registration_captcha_setting_recaptcha_site_key_cloudflare' );
+			$secret_key = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_cloudflare' );
+		}
+		if ( $recaptcha_enabled && ! empty( $site_key ) && ! empty( $secret_key ) ) {
+			if ( ! empty( $captcha_response ) ) {
+				if ( 'hCaptcha' === $recaptcha_type ) {
+					$data = wp_safe_remote_get( 'https://hcaptcha.com/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
+					$data = json_decode( wp_remote_retrieve_body( $data ) );
+					/**
+					 * Filter to modify hcaptcha threshold.
+					 * Default value is 0.5
+					 */
+					if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_hcaptcha_threshold', 0.5 ) ) ) {
+						$logger->error( __( 'Error on hCaptcha.', 'user-registration' ), array( 'source' => 'form-submission' ) );
+						wp_send_json_error(
+							array(
+								'message' => __( 'Error on hCaptcha. Contact your site administrator.', 'user-registration' ),
+							)
+						);
+					}
+				} elseif ( 'cloudflare' === $recaptcha_type ) {
+					$url    = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+					$params = array(
+						'method' => 'POST',
+						'body'   => array(
+							'secret'   => $secret_key,
+							'response' => $captcha_response,
+						),
+					);
+					$data   = wp_safe_remote_post( $url, $params );
+					$data   = json_decode( wp_remote_retrieve_body( $data ) );
+					if ( empty( $data->success ) ) {
+						$logger->error( __( 'Error on Cloudflare Turnstile', 'user-registration' ), array( 'source' => 'form-submission' ) );
+						wp_send_json_error(
+							array(
+								'message' => __( 'Error on Cloudflare Turnstile. Contact your site administrator.', 'user-registration' ),
+							)
+						);
+					}
+				} else {
+					$data = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $captcha_response );
+					$data = json_decode( wp_remote_retrieve_body( $data ) );
+					/**
+					 * Filter to modify V3 recaptcha threshold.
+					 * Default value is 0.5
+					 */
+					if ( empty( $data->success ) || ( isset( $data->score ) && $data->score < apply_filters( 'user_registration_recaptcha_v3_threshold', 0.5 ) ) ) {
+						$logger->error( __( 'Error on google reCaptcha.', 'user-registration' ), array( 'source' => 'form-submission' ) );
+						wp_send_json_error(
+							array(
+								'message' => __( 'Error on google reCaptcha. Contact your site administrator.', 'user-registration' ),
+							)
+						);
+					}
+				}
+			} else {
+				$logger->error( __( 'Captcha code error.', 'user-registration' ), array( 'source' => 'form-submission' ) );
+				wp_send_json_error(
+					array(
+						'message' => get_option( 'user_registration_form_submission_error_message_recaptcha', __( 'Captcha code error, please try again.', 'user-registration' ) ),
+					)
+				);
+			}
+		}
+
+		if ( true != $flag || is_wp_error( $flag ) ) {
+			$logger->error( __( 'Nonce error, please reload.', 'user-registration' ), array( 'source' => 'form-submission' ) );
+			wp_send_json_error(
+				array(
+					'message' => __( 'Nonce error, please reload.', 'user-registration' ),
+				)
+			);
+		}
+		/**
+		 * Filter to override the register settings.
+		 * Default value is the get_option('users_can_register')
+		 */
+		$users_can_register = apply_filters( 'ur_register_setting_override', get_option( 'users_can_register' ) );
+
+		if ( ! is_user_logged_in() ) {
+			if ( ! $users_can_register ) {
+				$logger->error( __( 'Only administrators can add new users.', 'user-registration' ), array( 'source' => 'form-submission' ) );
+				wp_send_json_error(
+					array(
+						/**
+						 * Filter to modify register pre form message.
+						 * Default value is the 'Only administrators can add new users'.
+						 */
+						'message' => apply_filters( 'ur_register_pre_form_message', __( 'Only administrators can add new users.', 'user-registration' ) ),
+					)
+				);
+			}
+		} else {
+			/**
+			 * Filter to modify user capability.
+			 * Default value is 'create_users'.
+			 */
+			$current_user_capability = apply_filters( 'ur_registration_user_capability', 'create_users' );
+
+			if ( ! current_user_can( $current_user_capability ) ) {
+				global $wp;
+
+				$user_ID      = get_current_user_id();
+				$user         = get_user_by( 'ID', $user_ID );
+				$current_url  = home_url( add_query_arg( array(), $wp->request ) );
+				$display_name = ! empty( $user->data->display_name ) ? $user->data->display_name : $user->data->user_email;
+
+				wp_send_json_error(
+					array(
+						/**
+						 * Filter to modify register pre form message.
+						 */
+						'message' => apply_filters(
+							'ur_register_pre_form_message',
+							'<p class="alert" id="ur_register_pre_form_message">' .
+							/* translators: %1$1s - Link to logout. */
+							sprintf( __( 'You are currently logged in as %1$1s. %2$2s', 'user-registration' ), '<a href="#" title="' . $display_name . '">' . $display_name . '</a>', '<a href="' . wp_logout_url( $current_url ) . '" title="' . __( 'Log out of this account.', 'user-registration' ) . '">' . __( 'Logout', 'user-registration' ) . '  &raquo;</a>' ) . '</p>',
+							$user_ID
+						),
+					)
+				);
+			}
+		}
+
+		$form_data = array();
+		$logger->info( __( 'Form data receiving', 'user-registration' ), array( 'source' => 'form-submission' ) );
+		if ( isset( $_POST['form_data'] ) ) {
+			$form_data = json_decode( wp_unslash( $_POST['form_data'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		}
+		$logger->info( __( 'Form data received', 'user-registration' ), array( 'source' => 'form-submission' ) );
+		UR_Frontend_Form_Handler::handle_form( $form_data, $form_id );
+		$logger->info( __( 'Form submission processed successfully.', 'user-registration' ), array( 'source' => 'form-submission' ) );
 	}
 }
 

@@ -1286,16 +1286,87 @@
 						return flag;
 					},
 					/**
+					 * Handles AJAX error responses for form submission.
+					 *
+					 * @param {Object} xhr - The XMLHttpRequest object
+					 * @param {string} status - The status of the request
+					 * @param {string} error - The error message
+					 * @param {Object} $form - The jQuery form object
+					 * @param {Object} posted_data - The data that was posted
+					 */
+					handle_ajax_error: function(xhr, status, error, $form, posted_data) {
+						// Re-enable submit button
+						$form.find(".ur-submit-button").prop("disabled", false);
+
+						if($form.find('.field-membership').length > 0 || $form.find('.field-stripe_gateway').length > 0  || $form.find('.field-authorize_net_gateway').length > 0) {
+							$form.find(".ur-submit-button").find("span").removeClass("ur-front-spinner");
+							// Show fallback message
+							form.show_message(
+								user_registration_params.ajax_form_submit_error,
+								"error",
+								$form,
+								"1"
+							);
+						} else {
+							// Add all necessary hidden fields for fallback submission
+							if ($form.find('input[name="ur_fallback_submit"]').length === 0) {
+								$form.append('<input type="hidden" name="ur_fallback_submit" value="1" />');
+							}
+
+							// Add action field
+							if ($form.find('input[name="action"]').length === 0) {
+								$form.append('<input type="hidden" name="action" value="user_registration_user_form_submit" />');
+							}
+
+							// Add security nonce
+							if ($form.find('input[name="security"]').length === 0) {
+								$form.append('<input type="hidden" name="security" value="' + user_registration_params.user_registration_form_data_save + '" />');
+							}
+
+							// Add form data
+							if ($form.find('input[name="form_data"]').length === 0) {
+								$form.append('<input type="hidden" name="form_data" value="' + encodeURIComponent(posted_data.form_data) + '" />');
+							}
+
+							// Add captcha response
+							if (posted_data.captchaResponse && $form.find('input[name="captchaResponse"]').length === 0) {
+								$form.append('<input type="hidden" name="captchaResponse" value="' + posted_data.captchaResponse + '" />');
+							}
+
+							// Add form ID
+							if (posted_data.form_id && $form.find('input[name="form_id"]').length === 0) {
+								$form.append('<input type="hidden" name="form_id" value="' + posted_data.form_id + '" />');
+							}
+
+							// Add registration language
+							if (posted_data.registration_language && $form.find('input[name="registration_language"]').length === 0) {
+								$form.append('<input type="hidden" name="registration_language" value="' + posted_data.registration_language + '" />');
+							}
+
+							// Add form nonce
+							if (posted_data.ur_frontend_form_nonce && $form.find('input[name="ur_frontend_form_nonce"]').length === 0) {
+								$form.append('<input type="hidden" name="ur_frontend_form_nonce" value="' + posted_data.ur_frontend_form_nonce + '" />');
+							}
+
+							// Submit the form traditionally
+							$form[0].submit();
+						}
+					},
+					/**
 					 * Ajax form submission event.
 					 *
 					 */
 					ajax_form_submit: function (posted_data) {
+						var $form = $this;
 
 						$.ajax({
 							url: user_registration_params.ajax_url,
 							data: posted_data,
 							type: "POST",
 							async: true,
+							error: function(xhr, status, error) {
+								events.handle_ajax_error(xhr, status, error, $form, posted_data);
+							},
 							complete: function (ajax_response) {
 								$(document.body).trigger('user_registration_after_form_submit_completion');
 								var ajaxFlag = [];
@@ -1853,19 +1924,6 @@
 									display: "none"
 								});
 							}
-						}).fail(function () {
-							form.show_message(
-								"<p>" +
-									user_registration_params.ajax_form_submit_error +
-									"</p>",
-								"error",
-								$this,
-								"1"
-							);
-							$this
-								.find(".ur-submit-button")
-								.prop("disabled", false);
-							return;
 						});
 					},
 					/**
@@ -2935,13 +2993,13 @@ jQuery(document).ready(function($) {
 });
 
 /**
- * Check if hello elementor theme is active or not teo resolve flatpickr design issue.
+ * Check if hello elementor theme is active or not to resolve flatpickr design issue.
  *
  */
 jQuery(document).ready(function($) {
 
-	//Check the hello elemtor theme is active or not through its stylesheet.
-	$isHelloElementorActive = $('link#hello-elementor-css[href*="themes/hello-elementor"]').length > 0;
+	//Check the hello elementor theme is active or not through its stylesheet.
+	var $isHelloElementorActive = $('link#hello-elementor-css[href*="themes/hello-elementor"]').length > 0;
 
 	if(!$isHelloElementorActive) {
 		return;
