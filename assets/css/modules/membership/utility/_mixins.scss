@@ -24,35 +24,6 @@
     margin: 0;
     padding: 0;
     height: auto;
-    margin-bottom: 20px;
-
-    .bulkactions {
-        select {
-            min-height: 38px;
-            padding: 0 12px;
-            width: 220px;
-            margin-right: 10px;
-            border-color: #BABABA;
-            color: #383838;
-
-            &:focus {
-                box-shadow: none;
-                outline: none;
-                border-color: #475BB2;
-            }
-        }
-
-        input[type="submit"] {
-            padding: 8px 14px;
-            font-size: 14px;
-            line-height: 20px;
-            margin-right: 0;
-            color: #475BB2;
-            border-color: #475BB2;
-            background: #F6F7F7;
-            font-weight: 500;
-        }
-    }
 }
 
 // Form Toggle Button

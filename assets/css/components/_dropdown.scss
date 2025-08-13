@@ -29,6 +29,11 @@
             box-shadow: none;
             border-color: $primary_color;
         }
+
+        &#bulk-action-selector-top,
+        &#bulk-action-selector-bottom {
+            width: 220px;
+        }
     }
 
     .select2 {

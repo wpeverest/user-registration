@@ -1233,12 +1233,18 @@
 	.swal2-modal {
 		padding: 0px !important;
 
+		&:has(.swal2-confirm),
+		&:has(.swal2-deny) {
+			width: 400px;
+		}
+
 		.swal2-header {
 			padding: 20px;
 			align-items: baseline;
 
 			h2 {
-				border-bottom: 1px solid #D3D3D3;
+				font-family: inherit;
+				border-bottom: $border_width solid #D3D3D3;
 				padding-bottom: $spacing_16px;
 				width: 100%;
 				text-align: left;
@@ -1269,6 +1275,7 @@
 			background: #F4F4F4;
 
 			button {
+				font-family: inherit;
 				width: 45%;
 				color: $grey-400;
 				font-size: 14px;

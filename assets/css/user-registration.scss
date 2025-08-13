@@ -213,6 +213,10 @@ textarea.ur-input-border-red {
 		background: #fff;
 		// box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 
+		@media screen and (max-width: 600px) {
+			padding: $spacing_40px $spacing_30px;
+		}
+
 		.ur-lost-password-content-container {
 			display: flex;
 			flex-direction: column;
@@ -282,6 +286,8 @@ textarea.ur-input-border-red {
 	}
 
 	.register {
+		text-align: center;
+
 		#node_recaptcha_register {
 			padding: 0 10px;
 		}
@@ -289,6 +295,12 @@ textarea.ur-input-border-red {
 
 	#ur-recaptcha-node {
 		margin-top: 10px;
+
+		@media screen and (max-width: 460px) {
+			position: relative;
+			left: -$spacing_30px;
+			transform: scale(0.8);
+		}
 	}
 
 	* {
@@ -385,7 +397,7 @@ textarea.ur-input-border-red {
 							input {
 								&[type="checkbox"],
 								&[type="radio"] {
-									margin-top: 2px;
+									margin-top: 0px;
 								}
 							}
 
@@ -506,7 +518,7 @@ textarea.ur-input-border-red {
 				}
 
 				&.ur-label {
-					font-weight: bold;
+					font-weight: $semi_bold;
 				}
 			}
 
@@ -515,6 +527,10 @@ textarea.ur-input-border-red {
 				height: 100px;
 				resize: none;
 				padding: 5px 20px;
+
+				&:focus {
+					border-color: $primary_color !important;
+				}
 			}
 
 			.hide_show_password {
@@ -694,7 +710,7 @@ textarea.ur-input-border-red {
 					}
 
 					textarea {
-						height: 100px;
+						height: 100px;						
 					}
 
 					.hide_show_password {
@@ -2016,18 +2032,19 @@ body {
 				max-width: 520px;
 				// margin: 0px auto;
 				border-radius: 4px;
-				background: #ffffff;
+				// background: #ffffff;
+				background: transparent;
 				// box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 				border: 0;
 
-				@media screen and (max-width: 575px) {
-					padding: 40px 30px;
-				}
+				// @media screen and (max-width: 575px) {
+				// 	padding: 40px 30px;
+				// }
 
-				&:has(.ur-grid-2),
-				&:has(.ur-grid-3) {
-					max-width: 940px;
-				}
+				// &:has(.ur-grid-2),
+				// &:has(.ur-grid-3) {
+				// 	max-width: 940px;
+				// }
 
 				&:has(.ur-frontend-form--bordered) {
 					box-shadow: none;
@@ -2157,6 +2174,7 @@ body {
 							.ur-form-grid {
 								.ur-submit-button {
 									margin-right: 0;
+									color: $white;
 								}
 							}
 						}
@@ -2278,7 +2296,7 @@ body {
 								padding: 0 14px 0 36px;
 
 								&:focus {
-									border-color: #027abb;
+									border-color: $primary_color;
 								}
 							}
 						}
@@ -2308,7 +2326,7 @@ body {
 									color: #383838;
 
 									&:focus {
-										border-color: #027abb;
+										border-color: $primary_color;
 									}
 
 									&::placeholder {
@@ -2497,6 +2515,13 @@ body {
 									label {
 										// margin: 0;
 										width: auto;
+										display: flex;
+										align-items: center;
+										gap: $spacing_8px;
+
+										input[type="checkbox"] {
+											margin: 0;
+										}
 									}
 
 									.user-registration-LostPassword {
