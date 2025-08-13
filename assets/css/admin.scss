@@ -4657,6 +4657,10 @@ body.user-registration {
 	border-bottom: $border_width solid #e1e1e1;
 	margin-bottom: 25px;
 
+	&.ur-dashboard-page-topnav {
+		margin-left: 20px;
+	}
+
 	.ur-page-title__wrapper {
 		display: flex;
 		align-items: center;
@@ -4666,6 +4670,15 @@ body.user-registration {
 		&--left {
 			display: flex;
     		align-items: center;
+
+			a {
+				outline: none;
+
+				&:focus {
+					outline: none;
+					box-shadow: 0 0 0 2px white;
+				}
+			}
 
 			&-logo {
 				padding: 18px 24px 18px 0;
@@ -4842,6 +4855,24 @@ body.user-registration {
 					opacity: 0.6;
 					border-right: 1px solid #e1e1e1;
 					height: 100%;
+				}
+			}
+
+			.ur-announcement-button {
+				position: relative;
+				width: 40px;
+				height: 40px;
+				border: 2px solid #E2E8F0;
+				border-radius: 100%;
+				background: white;
+
+				img {
+					width: 35px;
+					height: 35px;
+					position: absolute;
+					top: 50%;
+					left: 50%;
+					transform: translate(-40%, -50%);
 				}
 			}
 

@@ -1973,3 +1973,26 @@ function ur_confirmation(message, options) {
 		}
 	});
 }
+
+jQuery(function ($) {
+	function updateActive() {
+		var current = window.location.href;
+
+		var $links = $(".ur-admin-page-topnav .ur-nav-link");
+		$links.removeClass("current");
+
+		$links.each(function () {
+			var link = $(this).prop("href");
+			if (current === link) {
+				$(this).addClass("current");
+			}
+		});
+	}
+
+	updateActive();
+	$(window).on("hashchange popstate", updateActive);
+
+	$(".ur-admin-page-topnav").on("click", ".ur-nav-link", function () {
+		setTimeout(updateActive, 0);
+	});
+});

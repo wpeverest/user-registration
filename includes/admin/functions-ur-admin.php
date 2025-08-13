@@ -983,7 +983,7 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 				),
 				array(
 					'addons' => array(
-						'page_slug' => 'user-registration-dashboard#/features',
+						'page_slug' => 'user-registration-dashboard#features',
 						'label'     => esc_html( 'Addons', 'user-registration' ),
 					),
 				),
@@ -992,7 +992,7 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 
 		ob_start();
 		?>
-		<div class="ur-admin-page-topnav" id="ur-lists-page-topnav">
+		<div class="ur-admin-page-topnav <?php echo isset( $_GET['page'] ) && 'user-registration-dashboard' === $_GET['page'] ? 'ur-dashboard-page-topnav' : '' ?>" id="ur-lists-page-topnav">
 			<div class="ur-page-title__wrapper">
 				<div class="ur-page-title__wrapper--left">
 					<div class="ur-page-title__wrapper--left-logo">
@@ -1011,7 +1011,7 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 								}
 								?>
 								<li class="<?php echo $has_sub_menu ? 'has-sub-menu' : ''; ?>">
-									<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . esc_attr( $item['page_slug']) ) ); ?>" class="<?php echo isset( $_GET['page'] ) && $item['page_slug'] === $_GET['page'] ? "current" : ''; ?>">
+									<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . esc_attr( $item['page_slug']) ) ); ?>" class="ur-nav-link">
 										<?php echo esc_html( $item['label'] ); ?>
 									</a>
 									<?php
@@ -1054,6 +1054,14 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 							</a>
 						<?php
 					 }
+					?>
+					<?php
+					if( isset( $_GET['page'] ) && 'user-registration-dashboard' === $_GET['page'] ) {
+					?>
+						<div class="ur-version-tag-separator" bis_skin_checked="1"><hr></div>
+						<button type="button" class="ur-announcement-button"><img alt="announcement" src="<?php echo esc_url_raw( UR()->plugin_url() . '/assets/images/announcement.gif' ); ?>" /></button>
+					<?php
+					}
 					?>
 				</div>
 			</div>

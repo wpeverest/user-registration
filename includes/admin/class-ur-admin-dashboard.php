@@ -102,6 +102,8 @@ class UR_Admin_Dashboard {
 	public static function dashboard_page_body() {
 		?>
 			<body class="user-registration-dashboard notranslate" translate="no">
+				<hr class="wp-header-end">
+				<?php echo user_registration_plugin_main_header(); ?>
 				<div id="user-registration-dashboard"></div>
 			</body>
 		<?php
