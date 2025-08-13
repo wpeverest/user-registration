@@ -1342,14 +1342,14 @@
     '</div>';
 		Swal.fire({
 			title: 'Install URM Pro to Unlock All Features',
-			html: $urmProInstallHtml,
+			html: urmProInstallHtml,
 			showConfirmButton: false,
 			showCloseButton: true,
 			customClass: {
 				title: 'install-urm-pro-title',
 			},
 			width: 600,
-			didOpen: () => {
+			didOpen: function() {
 				$('#install-urm-pro-btn').on('click', function () {					
 					$(this)
 						.prop('disabled', true)
@@ -1360,7 +1360,7 @@
 						.submit();
 				});
 			}
-		});				
+		});
 	}
 	if (searchParams.get('activated_license') == 'user-registration-pro') {
 		$successModalHtml = '<p style="margin: 10px 0 20px;">' +
