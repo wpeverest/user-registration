@@ -517,8 +517,8 @@ class UR_Shortcode_My_Account {
 				ur_clear_notices();
 			}
         }
-
-		if( is_admin() ) {
+		// If the user is in admin context, or user is trying to save the page.
+		if( is_admin() || ( defined('REST_REQUEST') && REST_REQUEST ) ) {
 			return '[user_registration_reset_password_form]';
 		}
 		wp_safe_redirect( ur_get_my_account_url() );
