@@ -48,6 +48,10 @@ class UR_AJAX {
 	 * Hook in methods - uses WordPress ajax handlers (admin-ajax)
 	 */
 	public static function add_ajax_events() {
+		// Add nocache headers to all AJAX requests
+		add_action( 'wp_ajax_user_registration_nocache_headers', array( __CLASS__, 'add_nocache_headers' ) );
+		add_action( 'wp_ajax_nopriv_user_registration_nocache_headers', array( __CLASS__, 'add_nocache_headers' ) );
+
 		$ajax_events = array(
 			'user_input_dropped'                => true,
 			'user_form_submit'                  => true,
@@ -84,12 +88,27 @@ class UR_AJAX {
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
+			// Add nocache headers before each AJAX method
+			add_action( 'wp_ajax_user_registration_' . $ajax_event, array( __CLASS__, 'add_nocache_headers' ), 5 );
+			
+			if ( $nopriv ) {
+				add_action( 'wp_ajax_nopriv_user_registration_' . $ajax_event, array( __CLASS__, 'add_nocache_headers' ), 5 );
+			}
+			
+			// Add the actual AJAX method
 			add_action( 'wp_ajax_user_registration_' . $ajax_event, array( __CLASS__, $ajax_event ) );
 
 			if ( $nopriv ) {
 				add_action( 'wp_ajax_nopriv_user_registration_' . $ajax_event, array( __CLASS__, $ajax_event ) );
 			}
 		}
+	}
+
+	/**
+	 * Add nocache headers to prevent caching interference with AJAX requests
+	 */
+	public static function add_nocache_headers() {
+		nocache_headers();
 	}
 
 	/**
@@ -949,9 +968,9 @@ class UR_AJAX {
 	}
 
 	/**
-	 * Embed form action.
+	 * Embed form action ajax.
 	 *
-	 * @since 4.3.0
+	 * @return void
 	 */
 	public static function embed_form_action() {
 		check_ajax_referer( 'ur_embed_action_nonce', 'security' );
