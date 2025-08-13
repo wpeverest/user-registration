@@ -1314,7 +1314,9 @@
 
 	var searchParams = new URLSearchParams(window.location.search);
 	
-	if (searchParams.get('activated_license') == 'user-registration') {
+	var license_activation_status = ur_get_cookie('urm_license_status');
+	if (searchParams.get('activated_license') == 'user-registration' && license_activation_status === 'license_activated' ) {
+		ur_remove_cookie('urm_license_status');
 		var urmProInstallHtml = '<div style="display: flex; align-items: center; width: 60%;margin: 20px auto; position: relative;">' +
     '<img src="/wp-content/plugins/user-registration/assets/images/logo.png" alt="URM Logo" width="50" style="margin: 0 20px;" />' +
     '<div class="dotted-line-wrapper">' +
@@ -1362,7 +1364,8 @@
 			}
 		});
 	}
-	if (searchParams.get('activated_license') == 'user-registration-pro') {
+	if (searchParams.get('activated_license') == 'user-registration' && license_activation_status === 'pro_activated' ) {
+		ur_remove_cookie('urm_license_status');
 		$successModalHtml = '<p style="margin: 10px 0 20px;">' +
         	'URM Pro has been successfully installed and activated. You now have access to all premium features!' +
 			'</p>' +
@@ -1385,7 +1388,7 @@
 			showCloseButton: true,
 			customClass: "user-registration-swal2-modal user-registration user-registration-swal2-modal--center user-registration-info swal2-show",
 			width: 400,
-			didOpen: () => {
+			didOpen: function() {
 				$("#dashboard-redirect-btn").on('click', function () {
 					window.location.href = '/wp-admin/admin.php?page=user-registration-dashboard';
 				});
@@ -1399,5 +1402,22 @@
 		setTimeout(function () {
 			container.find('.integration-header-info').trigger('click')
 		}, 400);
+	}
+
+	/**
+	 * Retrieves the cookie values set.
+	 */
+	function ur_get_cookie( cookie_key ) {
+		var matches = document.cookie.match(new RegExp(
+			"(?:^|; )" + cookie_key.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+		));
+		return matches ? decodeURIComponent(matches[1]) : undefined;
+	}
+
+	/**
+	 * Deletes the cookie values.
+	 */
+	function ur_remove_cookie( cookie_key ) {
+		document.cookie = cookie_key + '=; Max-Age=-99999999; path=/';
 	}
 })(jQuery);

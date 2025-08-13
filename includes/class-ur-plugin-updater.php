@@ -161,7 +161,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 		$license_key = sanitize_text_field( $_POST[ $this->plugin_slug . '_license_key' ] ); // phpcs:ignore
 
 		if ( $this->activate_license( $license_key ) ) {
-			// $this->install_extension();
+			setcookie('urm_license_status', 'license_activated', time() + 300, '/', '', false, false);
 			wp_redirect( remove_query_arg( array( 'deactivated_license', $this->plugin_slug . '_deactivate_license' ), add_query_arg( 'activated_license', $this->plugin_slug ) ) );
 			exit;
 		} else {
