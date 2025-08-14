@@ -1437,7 +1437,7 @@ body {
 				width: 18px;
 				height: 18px;
 				transition: all 0.3s ease-in-out;
-			}			
+			}
 		}
 	}
 
@@ -3856,9 +3856,14 @@ a.button.ur-smart-tags-list-button {
 					// width: 620px;
 					width: 100%;
 					max-width: 100%;
-					margin-bottom: $spacing_20px;
+					margin-bottom: $spacing_24px;
 					// display: flex;
 					// align-items: center;
+
+					&.ur-enhanced-select, &.ur-input-field {
+						display: flex;
+						align-items: baseline;
+					}
 
 					&#user_registration_form_setting_minimum_password_strength_field {
 						margin-bottom: 0;
@@ -3873,11 +3878,12 @@ a.button.ur-smart-tags-list-button {
 						// width: max-content;
 						gap: $spacing_4px;
 						// margin-bottom: 0;
+						flex: 0 0 40%;
 
 						&.checkbox {
 							font-size: 14px;
 							line-height: 150%;
-							font-weight: $regular;
+							font-weight: $medium;
 							margin-bottom: 0;
 						}
 
@@ -3916,6 +3922,13 @@ a.button.ur-smart-tags-list-button {
 					// 		1px 1.5em;
 					// 	background-repeat: no-repeat;
 					// }
+
+					.ur-settings-field {
+						display: flex;
+						flex-direction: column;
+						gap: $spacing_4px;
+						width: 100%;
+					}
 
 					.ur-radio-group-list {
 						display: flex;
