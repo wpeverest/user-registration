@@ -3,6 +3,8 @@
 namespace WPEverest\URMembership\Payment;
 
 use WPEverest\URMembership\Payment\Admin\OrdersListTable;
+use WPEverest\URMembership\Admin\Services\MembershipService;
+
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -137,6 +139,7 @@ class Orders {
 
 		switch ( $action ) {
 			case 'add_new_payment':
+				$this->render_add_new_payment_history();
 				break;
 			default:
 				$this->render_payment_history_list();
@@ -144,6 +147,70 @@ class Orders {
 		}
 	}
 
+	/**
+	 * Renders add new payment history form.
+	 * @return void
+	 */
+	public function render_add_new_payment_history_scratch() {
+		global $orders_list_table;
+
+		if ( ! $orders_list_table ) {
+		return;
+		}
+		$enable_members_button = true;
+		?>
+		<style>
+			.navigator{
+				padding: 8px 14px;
+				background-color: #f0f0f0;
+				border-radius: 4px;
+				cursor: pointer;
+			}
+		</style>
+		<div class="ur-membership-header ur-d-flex ur-mr-0 ur-p-3 ur-align-items-center" id=""
+			 style="margin-left: -20px; background:white; gap: 20px; position: sticky; top: 32px; z-index: 700">
+			<img style="max-width: 30px"
+				 src="<?php echo UR()->plugin_url() . '/assets/images/logo.svg'; ?>" alt="">
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $this->page ) ); ?>"
+			   class="<?php echo esc_attr( ( $_GET['page'] == $this->page ) ? 'row-title' : '' ); ?>"
+			   style="text-decoration: none"
+			>
+				<?php esc_html_e( 'Payment History', 'user-registration' ); ?>
+			</a>
+		</div>
+
+		<div id="user-registration-list-table-page">
+			<div class="user-registration-list-table-heading" id="ur-users-page-topnav" style="gap: 14px;">
+				<div class="navigator navigator-prev" onclick="window.history.back();"><span class="dashicons dashicons-arrow-left-alt2"></span></div>
+				<div class="ur-page-title__wrapper">
+					<h1>
+						<?php esc_html_e( 'Add Manual Payment', 'user-registration' ); ?>
+					</h1>
+				</div>
+			</div>
+			<hr>
+			<form method="get" id="ur-membership-payment-history-form">
+				<input type="hidden" name="page" value="<?php echo $this->page; ?>"/>
+				<input type="hidden" name="action" value="<?php echo $_GET['action']; ?>" />
+				<div>
+					<strong>Important Note:</strong>
+					This form is intended only to record missed payments for tracking purposes. Adding a payment here does not renew the next billing cycle or assign any new plan to the user.
+				</div>
+
+			</form>
+		</div>
+		<?php
+	}
+	public function render_add_new_payment_history() {
+		$roles = ur_get_all_roles();
+		$memberships = new MembershipService();
+		$membership_plans = $memberships->list_active_memberships();
+		
+		include __DIR__ . '/Views/orders-create.php';
+	}
+	public function get_all_membership_plan() {
+
+	}
 	/**
 	 * render_payment_history_list
 	 *
@@ -186,6 +253,12 @@ class Orders {
 					<h1>
 						<?php esc_html_e( 'Payment History', 'user-registration' ); ?>
 					</h1>
+				</div>
+				<div class="button manual-payment-button button-primary" style="display:flex;align-items:end;padding: 6px 14px;">
+					<i class="dashicons dashicons-plus-alt2" style="font-size:0.9rem;"></i>
+					<span>
+						Add Manual Payment
+					</span>
 				</div>
 			</div>
 			<div id="user-registration-pro-filters-row" style="align-items: center;">
@@ -254,6 +327,7 @@ class Orders {
 				'ur_forms'            => ur_get_all_user_registration_form(),
 				'memberships'         => $memberships,
 				'delete_icon'         => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE ),
+				'add_manual_payment_url' => admin_url( 'admin.php?page=member-payment-history&action=add_new_payment' ),
 			)
 		);
 	}

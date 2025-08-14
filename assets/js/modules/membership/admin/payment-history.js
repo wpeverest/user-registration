@@ -400,7 +400,123 @@
 
 			});
 		});
+		$(document).ready(function () {
+			$('.manual-payment-button').on('click', function() {
+				window.location.href = urmo_data.add_manual_payment_url;
+			});
 
+			// Datalist: map selected member label to hidden user ID
+			var $memberInput = $('#ur-member-search-input');
+			var $memberHidden = $('#ur-member-id-hidden');
+			var $form = $('#ur-membership-payment-history-form');
+			function updateHiddenFromDatalist() {
+				var val = $memberInput.val();
+				var selectedId = '';
+				if (val) {
+					$('#ur-members-datalist option').each(function () {
+						if ($(this).val() === val) {
+							selectedId = $(this).data('id') || '';
+							return false;
+						}
+					});
+				}
+				$memberHidden.val(selectedId);
+			}
+			$(document).on('input change', '#ur-member-search-input', updateHiddenFromDatalist);
+
+			// Validate on submit: ensure a valid member was selected
+			$form.on('submit', function (e) {
+				updateHiddenFromDatalist();
+				if ($memberInput.length && $memberInput.prop('required')) {
+					if (!$memberHidden.val()) {
+						e.preventDefault();
+						handle_orders_utils.show_failure_message(
+							urmo_data.labels && urmo_data.labels.i18n_prompt_no_order_selected ? 'Please select a valid member from suggestions.' : 'Please select a valid member from suggestions.'
+						);
+						$memberInput.focus();
+						return false;
+					}
+				}
+				return true;
+			});
+		});
+
+		$(document).ready(function () {
+			$('#ur-input-type-member').select2({
+				placeholder: "Select a member",
+				allowClear: true,
+				width: '100%'
+			});
+
+			// Initialize Select2 for membership plan select
+			$('select[name="ur_membership_plan"]').select2({
+				placeholder: "Select a membership plan",
+				allowClear: true,
+				width: '100%'
+			});
+
+			// Initialize Select2 for transaction status
+			$('#ur-input-type-transaction-status').select2({
+				placeholder: "Select status",
+				minimumResultsForSearch: Infinity, // Disable search for small lists
+				width: '100%'
+			});
+		});
+		$(document).ready(function($) {
+			$('#ur-membership-order-create-form').on('submit', function(e) {
+				e.preventDefault();
+
+				// Get the form button and show loading state
+				const $submitButton = $('.ur-add-new-payment');
+				$submitButton.prop('disabled', true).prepend('<span class="ur-spinner"></span>');
+
+				// Prepare form data
+				const formData = {
+					ur_member: $('#ur-input-type-member').val(),
+					ur_membership_plan: $('#ur-input-type-membership-plan').val(),
+					ur_membership_amount: $('#ur-input-type-membership-amount').val(),
+					ur_payment_date: $('#ur-input-type-payment-date').val(),
+					ur_transaction_status: $('#ur-input-type-transaction-status').val()
+				};
+
+				$.ajax({
+					url: urmo_data.ajax_url,
+					type: 'POST',
+					data: {
+						action: 'user_registration_membership_create_membership_order',
+						security: $('#ur_membership_order_nonce').val(),
+						order_data: JSON.stringify(formData)
+					},
+					success: function(response) {
+						if (response.success) {
+							// Show success message
+							handle_orders_utils.show_success_message(response.data.message || 'Payment created successfully');
+							window.location.href = urmo_data.payment_history_url;
+						} else {
+							handle_orders_utils.show_failure_message(response.data.message || 'Error creating payment', 'error');
+							$submitButton.prop('disabled', false).find('.ur-spinner').remove();
+						}
+					},
+					error: function(xhr, status, error) {
+						handle_orders_utils.show_failure_message('Server error occurred. Please try again.', 'error');
+						$submitButton.prop('disabled', false).find('.ur-spinner').remove();
+					}
+				});
+			});
+
+			$('#ur-input-type-membership-plan').on('change', function() {
+				const selectedOption = $(this).find('option:selected');
+				const amount = selectedOption.data('amount');
+				
+				if (amount) {
+					$('#ur-input-type-membership-amount').val(amount);
+					$('#ur-input-type-membership-amount').prop('disabled', false);
+				} else {
+					$('#ur-input-type-membership-amount').val(0);
+					$('#ur-input-type-membership-amount').prop('disabled', true);
+				}
+			});
+		});
 	}
 )
 (jQuery, window.urm_orders_localized_data);
