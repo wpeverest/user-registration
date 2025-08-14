@@ -1341,3 +1341,73 @@ body {
 .rtl #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row .membership-label {
 	min-width: 0px;
 }
+.notice-box {
+	background-color: #f4f6ff;
+	border: 1px solid #d6e0ff;
+	border-radius: 8px;
+	padding: 1.5rem 2rem;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+	position: relative;
+	border-left: 4px solid #6669f1;
+	text-align: left;
+}
+
+.notice-box h2 {
+	margin-top: 0;
+	font-size: 1.25rem;
+	color: #2d2d2d;
+}
+
+.notice-box p {
+	margin: 0.75rem 0;
+	color: #444;
+	font-size: 1rem;
+	line-height: 1.5;
+}
+
+.pro-tip::before {
+	content: "💡";
+	margin-right: 0.5rem;
+}
+
+.existing-users::before {
+	content: "👤";
+	margin-right: 0.5rem;
+}
+.notice-box h2{
+	font-weight: 600 !important;
+	font-size: 1.5rem !important;
+	color: #333 !important;
+	margin-bottom: 0.5rem !important;
+}
+.notice-box strong, .notice-box b {
+	font-weight: 600 !important;;
+}
+
+.close {
+	position: absolute;
+	top: 1rem;
+	right: 1rem;
+	color: #888;
+	cursor: pointer;
+	font-size: 1.2rem;
+}
+
+.close:hover {
+	color: #333;
+}
+
+.highlight {
+	font-weight: bold;
+}
+
+.notice-box .addon-link {
+	color: #000000 !important;
+	font-weight: 600 !important;
+	text-decoration: none !important;
+}
+
+.notice-box .addon-link:hover {
+	text-decoration: underline !important;
+}
+
