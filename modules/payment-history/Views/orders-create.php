@@ -5,8 +5,8 @@ $return_url = admin_url( 'admin.php?page=member-payment-history' );
 
 <form method="post" id="ur-membership-order-create-form" style="width: 80%">
 <div class="user-registration-card">
-	<div class="user-registration-card__header ur-d-flex ur-align-items-center">
-		<a class="ur-text-muted ur-d-flex"
+	<div class="user-registration-card__header ur-d-flex ur-align-items-center" style="gap: 8px;">
+		<a style="margin-right: 0; padding-right: 0; border-right: 0; width: 40px; height: 40px; background: #f4f4f4; display: flex; align-items: center; justify-content: center; border-radius: 6px;" class="ur-text-muted ur-d-flex"
 			href="<?php echo $return_url ?>">
 			<svg viewBox="0 0 24 24" widths="24" height="24" stroke="currentColor" stroke-width="2"
 					fill="none"
@@ -22,24 +22,10 @@ $return_url = admin_url( 'admin.php?page=member-payment-history' );
 	<div class="user_registration-card__body" style="margin: 14px 22px;">
 		<div id="ur-membership-orders-create-form" class="user-registration-card">
 			<div class="user-registration-card__body">
-				<div style="font-size:0.75rem;background-color: #f7fbff; border: 1px solid #475bb2; padding: 12px 16px; border-radius: 4px; font-size: 14px; line-height: 150%; display: flex; flex-direction: row; gap: 12px; align-items: start;">
-					<strong>Important Note:</strong>
-					This form is intended only to record missed payments for tracking purposes. Adding a payment here does not renew the next billing cycle or assign any new plan to the user.
+				<div style="font-size:0.8rem;background-color: #f7fbff; border: 1px solid #475bb2; padding: 12px 16px; border-radius: 4px; line-height: 150%; display: flex; flex-direction: row; gap: 12px; align-items: start;">
+					<strong> <?php _e('Important Note:', 'user-registration' ) ?></strong>
+					<?php _e('This form is intended only to record missed payments for tracking purposes. Adding a payment here does not renew the next billing cycle or assign any new plan to the user.' , 'user-registration' ) ?>
 				</div>
-
-				<?php
-				// Ensure we have a list of users to populate the select field.
-				if ( ! isset( $users ) || empty( $users ) ) {
-					$users = get_users(
-						array(
-							'number' => -1,
-							'orderby' => 'display_name',
-							'order'   => 'ASC',
-						)
-					);
-				}
-
-				?>
 
 				<!-- Member -->
 				<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
@@ -65,8 +51,8 @@ $return_url = admin_url( 'admin.php?page=member-payment-history' );
 									foreach ( $users as $user ) :
 										?>
 										<option
-											value="<?php echo esc_attr( $user->ID ) ?>">
-											<?php echo esc_html( $user->user_login ) ?> (<?php echo esc_html( $user->user_email) ?>)
+											value="<?php echo esc_attr( $user[ 'user_id' ] ) ?>">
+											<?php echo esc_html( $user[ 'user_login' ] ) ?> (<?php echo esc_html( $user[ 'user_email' ] ) ?>)
 										</option>
 										<?php
 									endforeach;

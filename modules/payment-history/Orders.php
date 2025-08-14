@@ -202,14 +202,19 @@ class Orders {
 		<?php
 	}
 	public function render_add_new_payment_history() {
-		$roles = ur_get_all_roles();
-		$memberships = new MembershipService();
-		$membership_plans = $memberships->list_active_memberships();
-		
-		include __DIR__ . '/Views/orders-create.php';
-	}
-	public function get_all_membership_plan() {
+		global $wpdb;
+		$subscription_table = \WPEverest\URMembership\TableList::subscriptions_table();
+		$users = $wpdb->get_results(
+			"
+						SELECT s.user_id, u.user_login, u.user_email
+						FROM $subscription_table AS s
+						INNER JOIN {$wpdb->users} AS u
+							ON s.user_id = u.ID
+						",
+			ARRAY_A
+		);
 
+		include __DIR__ . '/Views/orders-create.php';
 	}
 	/**
 	 * render_payment_history_list
@@ -328,6 +333,7 @@ class Orders {
 				'memberships'         => $memberships,
 				'delete_icon'         => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE ),
 				'add_manual_payment_url' => admin_url( 'admin.php?page=member-payment-history&action=add_new_payment' ),
+				'payment_history_url' => admin_url( 'admin.php?page=member-payment-history' ),
 			)
 		);
 	}

@@ -13,8 +13,11 @@
 
 namespace WPEverest\URMembership\Payment;
 
+use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
+use WPEverest\URMembership\Admin\Repositories\SubscriptionRepository;
 use WPEverest\URMembership\Admin\Services\EmailService;
 use WPEverest\URMembership\Payment\Admin\OrdersController;
+use WPEverest\URMembership\TableList;
 
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -231,37 +234,31 @@ class AJAX {
 
 		$order_data = isset( $_POST['order_data'] ) ? (array) json_decode( wp_unslash( $_POST['order_data'] ), true ) : array();
 
+		global $wpdb;
+		$subscription_table = TableList::subscriptions_table();
+		$subscription_id = $wpdb->get_var(
+			$wpdb->prepare(
+				"
+					SELECT s.ID FROM $subscription_table  AS s
+					WHERE s.user_id = %d LIMIT 1
+				",
+				$order_data[ 'ur_member_id' ]
+			)
+		);
 		$order_data = array(
 			'user_id' => absint( $order_data[ 'ur_member_id' ] ),
 			'item_id' => absint( $order_data[ 'ur_membership_plan' ] ),
+			'subscription_id' => $subscription_id,
 			'total_amount'  => floatval( $order_data[ 'ur_membership_amount' ] ),
 			'status'  => sanitize_text_field( $order_data[ 'ur_transaction_status' ] ),
 			'payment_method' => 'manual',
 			'created_by' => get_current_user_id(),
 			'created_at' => date( 'Y-m-d H:i:s', strtotime( $order_data[ 'ur_payment_date' ] ) ),
 		);
-		$subscription_data = array(
-			'user_id' => absint( $order_data[ 'ur_member_id' ] ),
-			'item_id' => absint( $order_data[ 'ur_membership_plan' ] ),
-			'start_date' => date( 'Y-m-d H:i:s', strtotime( $order_data[ 'ur_payment_date' ] ) ),
-			'billing_amount' => floatval( $order_data[ 'ur_membership_amount' ] ),
-		);
 		$members_order_repository = new OrdersRepository();
-		$subscription_repository = new SubscriptionRepository();
-		try {
-			$subscription = $subscription_repository->create(
-				$subscription_data
-			);
-			$order = $members_order_repository->create( array(
-				'orders_data' => $order_data
-			) );
-		} catch( \Exception $e ) {
-			wp_send_json_error(
-				array(
-					'message' => __( sprintf( '%s', $e->getMessage() ), 'user-registration' ),
-				)
-			);
-		}
+		$order = $members_order_repository->create( array(
+			'orders_data' => $order_data
+		) );
 
 		if( false === $order ) {
 			wp_send_json_error(

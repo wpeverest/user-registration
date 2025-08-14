@@ -470,9 +470,8 @@
 				const $submitButton = $('.ur-add-new-payment');
 				$submitButton.prop('disabled', true).prepend('<span class="ur-spinner"></span>');
 
-				// Prepare form data
 				const formData = {
-					ur_member: $('#ur-input-type-member').val(),
+					ur_member_id: $('#ur-input-type-member').val(),
 					ur_membership_plan: $('#ur-input-type-membership-plan').val(),
 					ur_membership_amount: $('#ur-input-type-membership-amount').val(),
 					ur_payment_date: $('#ur-input-type-payment-date').val(),
@@ -489,15 +488,19 @@
 					},
 					success: function(response) {
 						if (response.success) {
-							// Show success message
+							$submitButton.prop('disabled', false).find('.ur-spinner').remove();
+
 							handle_orders_utils.show_success_message(response.data.message || 'Payment created successfully');
-							window.location.href = urmo_data.payment_history_url;
+							setTimeout(
+								function() {
+								window.location.href = urmo_data.payment_history_url;
+							}, 1000);
 						} else {
 							handle_orders_utils.show_failure_message(response.data.message || 'Error creating payment', 'error');
 							$submitButton.prop('disabled', false).find('.ur-spinner').remove();
 						}
 					},
-					error: function(xhr, status, error) {
+					error: function() {
 						handle_orders_utils.show_failure_message('Server error occurred. Please try again.', 'error');
 						$submitButton.prop('disabled', false).find('.ur-spinner').remove();
 					}
@@ -507,7 +510,7 @@
 			$('#ur-input-type-membership-plan').on('change', function() {
 				const selectedOption = $(this).find('option:selected');
 				const amount = selectedOption.data('amount');
-				
+
 				if (amount) {
 					$('#ur-input-type-membership-amount').val(amount);
 					$('#ur-input-type-membership-amount').prop('disabled', false);
