@@ -1,8 +1,28 @@
 jQuery(function ($) {
+	var login_nonce = ur_login_params.ur_login_form_save_nonce;
+	var update_login_nonce = function() {
+		$.ajax({
+			url: user_registration_params.ajax_url,
+			data: {
+				action: 'user_registration_get_recent_nonce',
+				nonce_for: 'login'
+			},
+			type: "POST",
+			async: true,
+			complete: function (ajax_response) {
+				var response = JSON.parse(ajax_response.responseText);
+				if(response.success) {
+					login_nonce = response.data;
+				}
+			}
+		});
+	};
+	update_login_nonce();
 	$(".ur-frontend-form")
 		.find("form.login")
 		.each(function () {
 			var $ur_login_ajax_form = $(this);
+
 			$ur_login_ajax_form
 				.find("#user_registration_ajax_login_submit")
 				.on("click", function (e) {
@@ -46,7 +66,7 @@ jQuery(function ($) {
 					var url =
 						ur_login_params.ajax_url +
 						"?action=user_registration_ajax_login_submit&security=" +
-						ur_login_params.ur_login_form_save_nonce;
+						login_nonce;
 
 					if (window.location.href.indexOf("pl=true") > -1) {
 						// "pl=true" is present in the URL.
@@ -165,4 +185,5 @@ jQuery(function ($) {
 					});
 				});
 		});
+
 });

@@ -55,6 +55,7 @@ class UR_AJAX {
 		$ajax_events = array(
 			'user_input_dropped'                => true,
 			'user_form_submit'                  => true,
+			'get_recent_nonce'                  => true,
 			'update_profile_details'            => true,
 			'profile_pic_upload'                => true,
 			'ajax_login_submit'                 => true,
@@ -90,11 +91,11 @@ class UR_AJAX {
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
 			// Add nocache headers before each AJAX method
 			add_action( 'wp_ajax_user_registration_' . $ajax_event, array( __CLASS__, 'add_nocache_headers' ), 5 );
-			
+
 			if ( $nopriv ) {
 				add_action( 'wp_ajax_nopriv_user_registration_' . $ajax_event, array( __CLASS__, 'add_nocache_headers' ), 5 );
 			}
-			
+
 			// Add the actual AJAX method
 			add_action( 'wp_ajax_user_registration_' . $ajax_event, array( __CLASS__, $ajax_event ) );
 
@@ -1877,6 +1878,62 @@ class UR_AJAX {
 				'message' => $message
 			)
 		);
+	}
+
+	public static function get_recent_nonce(  ) {
+		$form_ids = isset( $_POST['form_ids'] ) ? array_filter(explode(',',sanitize_text_field( $_POST['form_ids'] ))) : array();
+		$for = isset($_POST['nonce_for']) ? sanitize_text_field($_POST['nonce_for']) : 'registration';
+
+		if("registration" === $for) {
+
+			if ( empty( $form_ids ) ) {
+				wp_send_json_error( array(
+						__( 'Form ID is missing!', 'user-registration' )
+					)
+				);
+			}
+			foreach ($form_ids as $form_id) {
+				$form =ur_get_form_fields( $form_id );
+				if ( empty( $form ) ) {
+					wp_send_json_error( array(
+							__( 'Form not found!', 'user-registration' )
+						)
+					);
+				}
+			}
+
+		}
+
+		// Strict referer verification
+		$referer      = wp_get_referer();
+		$allowed_host = parse_url( home_url(), PHP_URL_HOST );
+		$referer_host = parse_url( $referer, PHP_URL_HOST );
+
+		if ( ! $referer || $referer_host !== $allowed_host ) {
+			wp_send_json_error( array(
+					__( 'Invalid form submission source.', 'user-registration' )
+				)
+			);
+		}
+		$updated_nonce_array = array();
+		switch ($for) {
+			case 'registration':
+				foreach ($form_ids as $form_id) {
+					$updated_nonce_array[$form_id] = wp_create_nonce( 'ur_frontend_form_id-'.$form_id );
+				}
+				break;
+			default:
+				$updated_nonce_array = wp_create_nonce( 'ur_login_form_save_nonce' );
+				break;
+		}
+
+		if(empty($updated_nonce_array)) {
+			wp_send_json_error( array(
+					__( 'Nonce could not be updated', 'user-registration' )
+				)
+			);
+		}
+		wp_send_json_success( $updated_nonce_array );
 	}
 }
 
