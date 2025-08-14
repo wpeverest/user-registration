@@ -71,7 +71,6 @@ class AJAX {
 			'verify_pages'                 => false,
 			'validate_pg'                  => false,
 			'upgrade_membership'           => false,
-			'create_membership_order'      => false,
 		);
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
 			add_action( 'wp_ajax_user_registration_membership_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -193,68 +192,6 @@ class AJAX {
 			);
 		}
 	}
-
-	/**
-	 * Create membership orders from backend.
-	 */
-	public static function create_membership_order() {
-		if( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error(
-				array(
-					'message' => __( 'Sorry, you do not have permission to create membership order', 'user-registration' ),
-				)
-			);
-		}
-
-		ur_membership_verify_nonce( 'ur_membership_order' );
-
-		$order_data = isset( $_POST['order_data'] ) ? (array) json_decode( wp_unslash( $_POST['order_data'] ), true ) : array();
-
-		$order_data = array(
-			'user_id' => absint( $order_data[ 'ur_member_id' ] ),
-			'item_id' => absint( $order_data[ 'ur_membership_plan' ] ),
-			'total_amount'  => floatval( $order_data[ 'ur_membership_amount' ] ),
-			'status'  => sanitize_text_field( $order_data[ 'ur_transaction_status' ] ),
-			'payment_method' => 'manual',
-			'created_by' => get_current_user_id(),
-			'created_at' => date( 'Y-m-d H:i:s', strtotime( $order_data[ 'ur_payment_date' ] ) ),
-		);
-		$subscription_data = array(
-
-		);
-		$members_order_repository = new OrdersRepository();
-		$subscription_repository = new SubscriptionRepository();
-		try {
-			$subscription = $subscription_repository->create(
-				$subscription_data
-			);
-			$order = $members_order_repository->create( array(
-				'orders_data' => $order_data
-			) );
-		} catch( \Exception $e ) {
-			wp_send_json_error(
-				array(
-					'message' => __( sprintf( '%s', $e->getMessage() ), 'user-registration' ),
-				)
-			);
-		}
-
-		if( false === $order ) {
-			wp_send_json_error(
-				array(
-					'message' => __( 'Failed to create order.', 'user-registration' ),
-				)
-			);
-		} else {
-			wp_send_json_success(
-				array(
-					'data' => $order,
-					'message' => __( 'Order created succcessfully.', 'user-registration' ),
-				)
-			);
-		}
-	}
-
 
 	/**
 	 * Create membership from backend

@@ -59,7 +59,7 @@ $return_url = admin_url( 'admin.php?page=member-payment-history' );
 								class="user-membership-member-enhanced-select2"
 								style="width: 100%"
 								required>
-								<option value="" disabled selected><?php esc_html_e( 'Select a member', 'user-registration' ); ?></option>
+								<option value="" disabled selected><?php esc_html_e( 'Search by username or email...', 'user-registration' ); ?></option>
 								<?php
 								if ( ! empty( $users ) ) {
 									foreach ( $users as $user ) :
