@@ -46,7 +46,7 @@ class AJAX {
 			'delete_order'              => false,
 			'show_order_detail'         => false,
 			'approve_payment'           => false,
-			'create_membership_order'   => false,
+			'create_order'   => false,
 		);
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
 			add_action( 'wp_ajax_user_registration_membership_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -221,7 +221,7 @@ class AJAX {
 	/**
 	 * Create membership orders from backend.
 	 */
-	public static function create_membership_order() {
+	public static function create_order() {
 		if( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error(
 				array(
@@ -245,19 +245,26 @@ class AJAX {
 				$order_data[ 'ur_member_id' ]
 			)
 		);
+		$order_meta_data = array(
+			'meta_key' => 'payment_date',
+			'meta_value' => (new \DateTime( $order_data['ur_payment_date'] ))->format('Y-m-d H:i:s'),
+		);
+
 		$order_data = array(
 			'user_id' => absint( $order_data[ 'ur_member_id' ] ),
 			'item_id' => absint( $order_data[ 'ur_membership_plan' ] ),
 			'subscription_id' => $subscription_id,
 			'total_amount'  => floatval( $order_data[ 'ur_membership_amount' ] ),
 			'status'  => sanitize_text_field( $order_data[ 'ur_transaction_status' ] ),
-			'payment_method' => 'manual',
+			'payment_method' => isset( $order_data[ 'ur_payment_method' ] ) ? sanitize_text_field( $order_data[ 'ur_payment_method' ] ): 'Manual',
+			'notes' => isset( $order_data[ 'ur_payment_notes' ] ) ? sanitize_text_field( $order_data[ 'ur_payment_notes' ] ) : '',
 			'created_by' => get_current_user_id(),
-			'created_at' => date( 'Y-m-d H:i:s', strtotime( $order_data[ 'ur_payment_date' ] ) ),
 		);
+
 		$members_order_repository = new OrdersRepository();
 		$order = $members_order_repository->create( array(
-			'orders_data' => $order_data
+			'orders_data' => $order_data,
+			'orders_meta_data' => array( $order_meta_data ),
 		) );
 
 		if( false === $order ) {
@@ -269,11 +276,12 @@ class AJAX {
 		} else {
 			wp_send_json_success(
 				array(
-					'data' => $order,
-					'message' => __( 'Order created succcessfully.', 'user-registration' ),
+					'id' => $order['ID'],
+					'message' => __( 'Order created successfully.', 'user-registration' ),
 				)
 			);
 		}
+		wp_die();
 	}
 
 }

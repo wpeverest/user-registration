@@ -406,40 +406,12 @@
 			});
 
 			// Datalist: map selected member label to hidden user ID
-			var $memberInput = $('#ur-member-search-input');
+
 			var $memberHidden = $('#ur-member-id-hidden');
 			var $form = $('#ur-membership-payment-history-form');
-			function updateHiddenFromDatalist() {
-				var val = $memberInput.val();
-				var selectedId = '';
-				if (val) {
-					$('#ur-members-datalist option').each(function () {
-						if ($(this).val() === val) {
-							selectedId = $(this).data('id') || '';
-							return false;
-						}
-					});
-				}
-				$memberHidden.val(selectedId);
-			}
-			$(document).on('input change', '#ur-member-search-input', updateHiddenFromDatalist);
 
-			// Validate on submit: ensure a valid member was selected
-			$form.on('submit', function (e) {
-				updateHiddenFromDatalist();
-				if ($memberInput.length && $memberInput.prop('required')) {
-					if (!$memberHidden.val()) {
-						e.preventDefault();
-						handle_orders_utils.show_failure_message(
-							urmo_data.labels && urmo_data.labels.i18n_prompt_no_order_selected ? 'Please select a valid member from suggestions.' : 'Please select a valid member from suggestions.'
-						);
-						$memberInput.focus();
-						return false;
-					}
-				}
-				return true;
-			});
 		});
+		var $memberInput = $('#ur-member-search-input'); //
 
 		$(document).ready(function () {
 			$('#ur-input-type-member').select2({
@@ -447,44 +419,46 @@
 				allowClear: true,
 				width: '100%'
 			});
-
-			// Initialize Select2 for membership plan select
-			$('select[name="ur_membership_plan"]').select2({
-				placeholder: "Select a membership plan",
+			$('#ur-input-type-payment-method').select2({
+				placeholder: "Select Payment Method",
 				allowClear: true,
+				minimumResultsForSearch: Infinity,
 				width: '100%'
 			});
+			
 
-			// Initialize Select2 for transaction status
 			$('#ur-input-type-transaction-status').select2({
 				placeholder: "Select status",
-				minimumResultsForSearch: Infinity, // Disable search for small lists
+				minimumResultsForSearch: Infinity,
 				width: '100%'
 			});
 		});
+
 		$(document).ready(function($) {
 			$('#ur-membership-order-create-form').on('submit', function(e) {
 				e.preventDefault();
 
-				// Get the form button and show loading state
-				const $submitButton = $('.ur-add-new-payment');
+				// Get the form button and show spinner.
+				var $submitButton = $('.ur-add-new-payment');
 				$submitButton.prop('disabled', true).prepend('<span class="ur-spinner"></span>');
 
-				const formData = {
+				var formData = {
 					ur_member_id: $('#ur-input-type-member').val(),
 					ur_membership_plan: $('#ur-input-type-membership-plan').val(),
 					ur_membership_amount: $('#ur-input-type-membership-amount').val(),
 					ur_payment_date: $('#ur-input-type-payment-date').val(),
-					ur_transaction_status: $('#ur-input-type-transaction-status').val()
+					ur_transaction_status: $('#ur-input-type-transaction-status').val(),
+					ur_payment_notes: $('#ur-input-type-payment-notes').val(),
+					ur_payment_method: $('#ur-input-type-payment-method').val(),
 				};
-
+				
 				$.ajax({
 					url: urmo_data.ajax_url,
 					type: 'POST',
 					data: {
-						action: 'user_registration_membership_create_membership_order',
+						action: 'user_registration_membership_create_order',
 						security: $('#ur_membership_order_nonce').val(),
-						order_data: JSON.stringify(formData)
+						order_data: JSON.stringify(formData),
 					},
 					success: function(response) {
 						if (response.success) {
@@ -500,7 +474,7 @@
 							$submitButton.prop('disabled', false).find('.ur-spinner').remove();
 						}
 					},
-					error: function() {
+					error: function(xhr, status, error) {
 						handle_orders_utils.show_failure_message('Server error occurred. Please try again.', 'error');
 						$submitButton.prop('disabled', false).find('.ur-spinner').remove();
 					}
@@ -508,9 +482,8 @@
 			});
 
 			$('#ur-input-type-membership-plan').on('change', function() {
-				const selectedOption = $(this).find('option:selected');
-				const amount = selectedOption.data('amount');
-
+				var selectedOption = $(this).find('option:selected');
+				var amount = selectedOption.data('amount');
 				if (amount) {
 					$('#ur-input-type-membership-amount').val(amount);
 					$('#ur-input-type-membership-amount').prop('disabled', false);
@@ -518,6 +491,14 @@
 					$('#ur-input-type-membership-amount').val(0);
 					$('#ur-input-type-membership-amount').prop('disabled', true);
 				}
+				$('.ur-membership-plan-name').html(selectedOption.text());
+			});
+
+			$('#ur-input-type-member').on ('change', function() {
+				var selectedOption = $(this).find('option:selected');
+				var membership_plan_id = selectedOption.data('membership-plan-id');
+
+				$('#ur-input-type-membership-plan').val(membership_plan_id).trigger('change');
 			});
 		});
 	}

@@ -2,9 +2,10 @@
 
 namespace WPEverest\URMembership\Payment;
 
+use WPEverest\URMembership\Admin\Members\MembersListTable;
 use WPEverest\URMembership\Payment\Admin\OrdersListTable;
 use WPEverest\URMembership\Admin\Services\MembershipService;
-
+use WPEverest\URMembership\TableList;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -206,14 +207,27 @@ class Orders {
 		$subscription_table = \WPEverest\URMembership\TableList::subscriptions_table();
 		$users = $wpdb->get_results(
 			"
-						SELECT s.user_id, u.user_login, u.user_email
+						SELECT s.user_id, s.item_id, u.user_login, u.user_email
 						FROM $subscription_table AS s
 						INNER JOIN {$wpdb->users} AS u
 							ON s.user_id = u.ID
 						",
 			ARRAY_A
 		);
-
+		$memberships = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT ID, post_title as title FROM {$wpdb->posts} WHERE post_type = %s AND post_status=%s",
+				'ur_membership',
+				'publish',
+			),
+			ARRAY_A
+		);
+		$membership_plans = array();
+		foreach( $memberships as $membership ) {
+			$membership_details = json_decode( wp_unslash( ur_get_single_post_meta( $membership['ID'], 'ur_membership' ) ), true );
+			$membership_plans[] = array_merge( $membership, array( 'amount' => $membership_details[ 'amount' ] ) );
+		}
+		$payment_methods = get_option( 'ur_membership_payment_gateways', array() );
 		include __DIR__ . '/Views/orders-create.php';
 	}
 	/**

@@ -30,16 +30,16 @@ $return_url = admin_url( 'admin.php?page=member-payment-history' );
 				<!-- Member -->
 				<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
 					<div class="ur-label" style="width: 30%">
-						<label for="ur-input-type-membership-plan"><?php esc_html_e( 'Member', 'user-registration' ); ?>
+						<label for="ur-input-type-member"><?php esc_html_e( 'Member', 'user-registration' ); ?>
 							<span style="color:red">*</span>
 							<span class="user-registration-help-tip tooltipstered"
 								  data-tip="<?php echo esc_attr__( "Select the user to assign the order to." ) ?>"></span>
 						</label>
 					</div>
-					<div class="ur-input-type-membership-group-name ur-admin-template" style="width: 100%">
+					<div class="ur-input-type-member-name ur-admin-template" style="width: 100%">
 						<div class="ur-field">
 							<select
-								data-key-name="<?php echo esc_html__( 'Membership Plan', 'user-registration' ); ?>"
+								data-key-name="<?php echo esc_html__( 'Member', 'user-registration' ); ?>"
 								id="ur-input-type-member"
 								name="ur_member"
 								class="user-membership-member-enhanced-select2"
@@ -51,10 +51,11 @@ $return_url = admin_url( 'admin.php?page=member-payment-history' );
 									foreach ( $users as $user ) :
 										?>
 										<option
+											data-membership-plan-id="<?php echo esc_attr( $user[ 'item_id' ] ) ?>"
 											value="<?php echo esc_attr( $user[ 'user_id' ] ) ?>">
 											<?php echo esc_html( $user[ 'user_login' ] ) ?> (<?php echo esc_html( $user[ 'user_email' ] ) ?>)
 										</option>
-										<?php
+									<?php
 									endforeach;
 								}
 								?>
@@ -63,42 +64,43 @@ $return_url = admin_url( 'admin.php?page=member-payment-history' );
 					</div>
 				</div>
 
-
 				<!-- Membership Plan -->
 				<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
 					<div class="ur-label" style="width: 30%">
-						<label for="ur-input-type-membership-plan"><?php esc_html_e( 'Select Membership Plan', 'user-registration' ); ?>
-							<span style="color:red">*</span>
-							<span class="user-registration-help-tip tooltipstered"
-								  data-tip="<?php echo esc_attr__( "Select the membership plan to assign the user to." ) ?>"></span>
+						<label for="ur-input-type-membership-plan"><?php esc_html_e( 'Membership Plan', 'user-registration' ); ?>
 						</label>
 					</div>
-					<div class="ur-input-type-membership-group-name ur-admin-template" style="width: 100%">
-						<div class="ur-field">
-							<select
-								data-key-name="<?php echo esc_html__( 'Membership Plan', 'user-registration' ); ?>"
-								id="ur-input-type-membership-plan"
-								name="ur_membership_plan"
-								class="user-membership-group-enhanced-select2 urmg-input"
-								style="width: 100%"
-								required>
-								<option value="" disabled selected><?php esc_html_e( 'Select a membership plan', 'user-registration' ); ?></option>
-								<?php
-								if ( ! empty( $membership_plans ) ) {
-									foreach ( $membership_plans as $plan ) :
-										?>
-										<option
-											value="<?php echo esc_attr( $plan['ID'] ); ?>"
-											data-amount="<?php echo esc_attr( $plan['amount'] ); ?>">
-											<?php echo esc_html( $plan['title'] ); ?>
-										</option>
-										<?php
-									endforeach;
-								}
-								?>
-							</select>
-						</div>
+					<div class="ur-text-muted ur-membership-plan-name ur-admin-template" style="width: 100%">
+						Select a member to view their membership plan.
+						<style>
+							.ur-text-muted {
+								width: 100%;
+								color: #383838;
+							}
+						</style>
 					</div>
+					<select
+						data-key-name="<?php echo esc_html__( 'Membership Plan', 'user-registration' ); ?>"
+						id="ur-input-type-membership-plan"
+						name="ur_membership_plan"
+						class="user-membership-group-enhanced-select2 urmg-input"
+						style="width: 100%;"
+						hidden
+						required>
+						<option value="" disabled selected><?php esc_html_e( 'Select a membership plan', 'user-registration' ); ?></option>
+						<?php
+						if ( ! empty( $membership_plans ) ) {
+							foreach ( $membership_plans as $plan ) :
+								?>
+								<option
+									value="<?php echo esc_attr( $plan['ID'] ); ?>"
+									data-amount="<?php echo esc_attr( $plan['amount'] ); ?>">
+									<?php echo esc_html( $plan['title'] ); ?>
+								</option>
+							<?php
+							endforeach;
+						} ?>
+					</select>
 				</div>
 
 				<!-- Amount -->
@@ -118,8 +120,34 @@ $return_url = admin_url( 'admin.php?page=member-payment-history' );
 								   data-key-name="<?php echo esc_html__( 'Amount', 'user-registration' ); ?>"
 								   id="ur-input-type-membership-amount"
 								   name="ur_membership_amount"
-								   style="width: 100%"
+								   style="width: 100%; padding: 8px; border: 1px solid #e1e1e1; border-radius: 4px; height: 38px;"
 								   required>
+						</div>
+					</div>
+				</div>
+				<!-- Payment Method -->
+				<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
+					<div class="ur-label" style="width: 30%">
+						<label for="ur-input-type-transaction-status"><?php esc_html_e( 'Payment Method', 'user-registration' ); ?>
+							<span style="color:red">*</span>
+							<span class="user-registration-help-tip tooltipstered"
+								  data-tip="<?php echo esc_attr__( "Select the payment method." ) ?>"></span>
+						</label>
+					</div>
+					<div class="ur-input-type-membership-name ur-admin-template" style="width: 100%">
+						<div class="ur-field">
+							<select
+								data-key-name="<?php echo esc_html__( 'Payment Method', 'user-registration' ); ?>"
+								id="ur-input-type-payment-method"
+								name="ur_payment_method"
+								class="urmg-input"
+								style="width: 100%"
+								required>
+								<option value=""><?php esc_html_e( 'Select Payment Method', 'user-registration' ); ?></option>
+								<?php foreach( $payment_methods as $payment_method): ?>
+									<option value="<?php echo $payment_method ?>"><?php echo ucfirst($payment_method) ?></option>
+								<?php endforeach; ?>
+							</select>
 						</div>
 					</div>
 				</div>
@@ -141,7 +169,7 @@ $return_url = admin_url( 'admin.php?page=member-payment-history' );
 								   data-key-name="<?php echo esc_html__( 'Payment Date', 'user-registration' ); ?>"
 								   id="ur-input-type-payment-date"
 								   name="ur_payment_date"
-								   style="width: 100%"
+								   style="width: 100%; padding: 8px; border: 1px solid #e1e1e1; border-radius: 4px; height: 38px;"
 								   required>
 						</div>
 					</div>
@@ -165,19 +193,36 @@ $return_url = admin_url( 'admin.php?page=member-payment-history' );
 								class="urmg-input"
 								style="width: 100%"
 								required>
-								<option value=""><?php esc_html_e( 'Select status', 'user-registration' ); ?></option>
-								<option
-									value=""><?php echo esc_html__( 'All Status', 'user-registration' ); ?></option>
+								<option value="" disabled selected><?php esc_html_e( 'Select status', 'user-registration' ); ?></option>
 								<?php
 								foreach ( array( 'completed', 'pending', 'failed', 'refunded' ) as $id => $status ) {
-									$selected = isset( $_REQUEST['status'] ) && $status == $_REQUEST['status'] ? 'selected=selected' : '';
 									?>
 									<option
-										value='<?php echo esc_attr( $status ); ?>' <?php echo esc_attr( $selected ); ?>><?php echo esc_html( ucfirst( $status ) ); ?></option>
+										value='<?php echo esc_attr( $status ); ?>' ><?php echo esc_html( ucfirst( $status ) ); ?></option>
 									<?php
 								}
 								?>
 							</select>
+						</div>
+					</div>
+				</div>
+				<!-- Payment Notes -->
+				<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
+					<div class="ur-label" style="width: 30%">
+						<label for="ur-input-type-payment-notes"><?php esc_html_e( 'Payment Notes', 'user-registration' ); ?>
+							<span class="user-registration-help-tip tooltipstered"
+								data-tip="<?php echo esc_attr__( "Add any additional notes about this payment." ) ?>"></span>
+						</label>
+					</div>
+					<div class="ur-input-type-membership-name ur-admin-template" style="width: 100%">
+						<div class="ur-field">
+							<textarea
+								class="ur-payment-notes"
+								data-key-name="<?php echo esc_html__( 'Payment Notes', 'user-registration' ); ?>"
+								id="ur-input-type-payment-notes"
+								name="ur_payment_notes"
+								style="width: 100%; min-height: 100px; padding: 8px;border: 1px solid #e1e1e1;resize:none;"
+							></textarea>
 						</div>
 					</div>
 				</div>

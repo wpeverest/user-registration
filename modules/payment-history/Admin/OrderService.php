@@ -103,6 +103,7 @@ class OrderService {
 				'message' => __( 'Order detail not found', 'user-registration' ),
 			);
 		}
+		
 
 		include __DIR__ . '/../Views/payment-details.php';
 		$html = ob_get_clean();
