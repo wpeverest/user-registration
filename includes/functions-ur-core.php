@@ -2804,7 +2804,6 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 		$checked = '';
 
 		if ( isset( $connection['enable_conditional_logic'] ) && ur_string_to_bool( $connection['enable_conditional_logic'] ) ) {
-
 			$checked = 'checked=checked';
 		}
 		$output .= '<div class="ur-toggle-section ur-form-builder-toggle">';
