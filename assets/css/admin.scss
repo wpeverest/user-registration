@@ -4711,7 +4711,6 @@ body.user-registration {
 			}
 
 			&-menu {
-
 				&__items {
 					display: flex;
 					gap: 4px;
@@ -4800,117 +4799,6 @@ body.user-registration {
 
 						}
 					}
-
-					&-sub{
-						position: absolute;
-						top: calc(100% - 20px);
-						left: 0;
-						background: #ffffff;
-						border: 1px solid #d1d5db;
-						box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-						opacity: 0;
-						visibility: hidden;
-						transform: translateY(-8px);
-						transition: all 0.15s ease;
-						z-index: 999;
-						min-width: 180px;
-						border-radius: 8px;
-
-						&__items {
-							list-style: none;
-							margin: 0;
-							padding: $spacing-12px 0;
-						}
-
-						li {
-							margin: 0 !important;
-							padding: 8px !important;
-
-							a {
-								display: block;
-								padding: 0px $spacing-16px;
-								color: #4b5563;
-								text-decoration: none;
-								transition: all 0.15s ease;
-								font-size: 14px;
-								line-height: 20px;
-								font-weight: 400;
-								height: auto !important;
-
-								&:hover {
-									background: #f9fafb;
-									color: #475bb2;
-								}
-
-								&::after {
-									display: none;
-									width: 100% !important;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
-		&--right {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			gap: 12px;
-			border-color: rgb(71, 91, 178);
-
-			.ur-version-tag {
-				padding: 2px 6px;
-				border: 1px solid #475bb2;
-				color: #475bb2;
-				font-weight: 500;
-				border-radius: $spacing-12px;
-				font-size: $spacing-12px;
-				background-color: #f8faff;
-			}
-
-			.ur-version-tag-separator {
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				height: 18px;
-
-				hr {
-					opacity: 0.6;
-					border-right: 1px solid #e1e1e1;
-					height: 100%;
-				}
-			}
-
-			.ur-announcement-button {
-				position: relative;
-				width: 40px;
-				height: 40px;
-				border: 2px solid #E2E8F0;
-				border-radius: 100%;
-				background: white;
-
-				img {
-					width: 35px;
-					height: 35px;
-					position: absolute;
-					top: 50%;
-					left: 50%;
-					transform: translate(-40%, -50%);
-				}
-			}
-
-			a {
-				cursor: pointer;
-				text-decoration: none;
-				outline: transparent solid 2px;
-				outline-offset: 2px;
-				font-size: 12px;
-				height: 18px;
-
-				&:hover {
-					text-decoration: underline;
 				}
 			}
 		}
@@ -5010,9 +4898,8 @@ body.user-registration {
 
 	.user-registration-list-table-header {
 		display: flex;
-		gap: $spacing_16px;
 		align-items: center;
-		margin-bottom: $spacing_16px;
+		margin-bottom: $spacing_24px;
 		justify-content: space-between;
 
 		h2 {
