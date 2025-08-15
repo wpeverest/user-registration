@@ -5080,10 +5080,10 @@ body.user-registration {
 			width: 275px;
 			position: relative;
 
-			#user-registration-users-search-input {
-				width: 100%;
-				min-height: 35px;
-			}
+			// #user-registration-users-search-input {
+			// 	width: 100%;
+			// 	min-height: 35px;
+			// }
 
 			// #user-registration-list-table-search-input {
 			// 	border-radius: $border_radius_4;
@@ -5777,22 +5777,22 @@ body.user-registration {
 				// 	}
 				// }
 
-				#user-registration-users-filter-btn {
-					border-radius: 3px;
-					border: 1px solid #475bb2;
-					background: #475bb2;
-					color: #ffffff;
-					padding: 8px 14px;
-					color: #ffffff;
-					font-size: 13px;
-					font-weight: 400;
-					line-height: 20px;
+				// #user-registration-users-filter-btn {
+				// 	border-radius: 3px;
+				// 	border: 1px solid #475bb2;
+				// 	background: #475bb2;
+				// 	color: #ffffff;
+				// 	padding: 8px 14px;
+				// 	color: #ffffff;
+				// 	font-size: 13px;
+				// 	font-weight: 400;
+				// 	line-height: 20px;
 
-					&:hover {
-						background: #38488e;
-						border-color: #38488e;
-					}
-				}
+				// 	&:hover {
+				// 		background: #38488e;
+				// 		border-color: #38488e;
+				// 	}
+				// }
 			}
 		}
 

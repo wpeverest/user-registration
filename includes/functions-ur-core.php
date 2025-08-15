@@ -6534,14 +6534,14 @@ if ( ! function_exists( 'ur_email_send_failed_notice' ) ) {
 						'title'  => __( 'I have a query', 'user-registration' ),
 						'icon'   => 'dashicons-testimonial',
 						'link'   => 'https://wpuserregistration.com/support',
-						'class'  => 'button-secondary notice-have-query',
+						'class'  => 'button button-secondary notice-have-query',
 						'target' => '_blank',
 					),
 					array(
 						'title'  => __( 'Visit Documentation', 'user-registration' ),
 						'icon'   => 'dashicons-media-document',
 						'link'   => 'https://docs.wpuserregistration.com/docs/emails-are-not-being-delivered/',
-						'class'  => 'button-secondary notice-have-query',
+						'class'  => 'button button-secondary notice-have-query',
 						'target' => '_blank',
 					),
 				),
@@ -6650,14 +6650,14 @@ if ( ! function_exists( 'ur_spam_users_detected' ) ) {
 						'title'  => __( 'I have a query', 'user-registration' ),
 						'icon'   => 'dashicons-testimonial',
 						'link'   => 'https://wpuserregistration.com/support',
-						'class'  => 'button-secondary notice-have-query',
+						'class'  => 'button button-secondary notice-have-query',
 						'target' => '_blank',
 					),
 					array(
 						'title'  => __( 'Visit Documentation', 'user-registration' ),
 						'icon'   => 'dashicons-media-document',
 						'link'   => 'https://docs.wpuserregistration.com/docs/how-to-integrate-google-recaptcha/',
-						'class'  => 'button-secondary',
+						'class'  => 'button button-secondary',
 						'target' => '_blank',
 					),
 				),
@@ -8005,8 +8005,8 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 					$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_attr( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 					$settings .= '<div class="user-registration-login-form-global-settings--field">';
 					$settings .= '<img src="' . esc_attr( $option_value ) . '" alt="' . esc_attr__( 'Header Logo', 'user-registration' ) . '" class="ur-image-uploader" height="auto" width="20%">';
-					$settings .= '<button type="button" class="ur-image-uploader ur-button button-secondary" ' . ( empty( $option_value ) ? '' : 'style = "display:none"' ) . '>' . esc_html__( 'Upload Image', 'user-registration' ) . '</button>';
-					$settings .= '<button type="button" class="ur-image-remover ur-button button-secondary" ' . ( ! empty( $option_value ) ? '' : 'style = "display:none"' ) . '>' . esc_html__( 'Remove Image', 'user-registration' ) . '</button>';
+					$settings .= '<button type="button" class="ur-image-uploader ur-button button button-secondary" ' . ( empty( $option_value ) ? '' : 'style = "display:none"' ) . '>' . esc_html__( 'Upload Image', 'user-registration' ) . '</button>';
+					$settings .= '<button type="button" class="ur-image-remover ur-button button button-secondary" ' . ( ! empty( $option_value ) ? '' : 'style = "display:none"' ) . '>' . esc_html__( 'Remove Image', 'user-registration' ) . '</button>';
 
 					$settings .= '	<input
 							name="' . esc_attr( $value['id'] ) . '"

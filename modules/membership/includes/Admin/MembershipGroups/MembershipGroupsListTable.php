@@ -190,7 +190,7 @@ class MembershipGroupsListTable extends \UR_List_Table {
 						<?php esc_html_e( 'All Membership Groups', 'user-registration' ); ?>
 					</h1>
 					<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $this->page . '&action=add_groups' ) ); ?>"
-					   class="button ur-button-primary">
+					   class="button button-primary ur-button-primary">
 						+
 						<?php
 						echo __( 'Create new Membership Groups', 'user-registration' )
