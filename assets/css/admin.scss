@@ -76,7 +76,8 @@ body {
 
 		#wpbody-content {
 			float: none;
-			background-color: #FAFAFA;
+			// background-color: #FAFAFA;
+			// background: #f4f4f4;
 		}
 	}
 }
@@ -4667,6 +4668,7 @@ body.user-registration {
 
 	#wpbody-content {
 		padding-bottom: $spacing_30px;
+		background: #f4f4f4;
 
 		#screen-meta-links {
 			display: none;

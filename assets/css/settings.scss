@@ -59,9 +59,9 @@ body {
 	}
 
 	.wrap {
-		margin: 0;
-		padding: $spacing_24px;
-		background: #FAFAFA;
+		&.user-registration {
+			margin: -$spacing_24px 0 0;
+		}
 
 		.user-registration-header {
 			margin: 0;
@@ -71,10 +71,10 @@ body {
 
 .user-registration-settings {
 	display: flex;
-    gap: $spacing_24px;
 	overflow-x: hidden;
-	border: 1px solid #EDF2F7;
+	border-bottom: $border_width solid $border_color;
 	border-radius: $border_radius_4;
+	margin-bottom: $spacing_12px;
 
 	@media screen and (max-width: 1180px) {
 		flex-direction: column;
@@ -82,9 +82,9 @@ body {
 
 	&-wrapper {
 		display: flex;
-		flex-direction: row;
-		background: $grey-0;
-		filter: drop-shadow(-4px 4px 20px rgba(89, 89, 89, 0.1));
+		// flex-direction: row;
+		// background: $grey-0;
+		// filter: drop-shadow(-4px 4px 20px rgba(89, 89, 89, 0.1));
 		flex: 1;
 
 		.user-registration-header {
@@ -259,7 +259,7 @@ body {
 					font-weight: $regular;
 					line-height: 150%;
 					color: $grey-400;
-					padding: $spacing-16px $spacing_20px;
+					padding: $spacing_14px $spacing_20px;
 					background: transparent;
 					border: 0;
 					border-top: $border_width solid $border-color;
@@ -476,7 +476,7 @@ body {
 
 					&:hover,
 					&.is-active {
-						background: #fafafc;
+						background: #f4f4f4;
 						border-radius: 0;
 						color: $primary_color;
 
@@ -488,7 +488,7 @@ body {
 					&.is-active {
 						&:not(#ur-settings-collapse)::after {
 							opacity: 1;
-							background: #fafafc;
+							background: #f4f4f4;
 						}
 					}
 
@@ -504,10 +504,11 @@ body {
 		display: flex;
 		gap: $spacing_32px;
 		flex-direction: column;
-		padding: $spacing_24px $spacing_8px $spacing_26px $spacing_8px;
+		padding: $spacing_24px 0 $spacing_26px 0;
 		transition: all .3s;
-		width: 320px;
+		width: 340px;
 		max-width: 100%;
+		border-left: $border_width solid $border_color;
 
 		@media screen and (max-width: 1180px) {
 			width: 100%;
@@ -517,6 +518,7 @@ body {
 			display: flex;
 			flex-direction: column;
 			gap: $spacing_20px;
+			padding: 0 $spacing_24px;
 
 			h2 {
 				color: #222222;
@@ -717,18 +719,19 @@ body {
 	flex-direction: column;
 	padding: $spacing_24px;
 	padding-top: 0;
-	background: #FAFAFC;
+	// background: #FAFAFC;
+	background: #f4f4f4;
 	margin-top: 0 !important;
 
 	.user-registration-options-header {
-		background: #fafafa;
+		// background: #fafafa;
 		padding-top: $spacing_24px;
 
 		&--top {
 			display: flex;
 			align-items: center;
 			padding-bottom: $spacing_24px;
-            border-bottom: $border_width solid #EBEBEB;
+            border-bottom: $border_width solid $border_color;
 
 			h3 {
 				margin: 0;
@@ -751,7 +754,6 @@ body {
 				display: flex;
 				align-items: center;
 				gap: $spacing_32px;
-				border-bottom: $border_width solid #EBEBEB !important;
 				width: 100%;
 
 				li {

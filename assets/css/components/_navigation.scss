@@ -203,17 +203,17 @@
 
                 .ur-version-tag {
                     padding: $spacing_2px $spacing_6px;
-                    // border: $border_width solid $primary_color;
-                    // color: $primary_color;
+                    border: $border_width solid $primary_color;
+                    color: $primary_color;
                     font-weight: $medium;
-                    // border-radius: 12px;
-                    border-radius: $border_radius_4;
+                    border-radius: 12px;
+                    // border-radius: $border_radius_4;
                     font-size: 12px;
-                    // background-color: #f8faff;
+                    background-color: #f8faff;
                     order: 2;
-                    color: #8f8f8f;
-                    background: #f3f3f3;
-                    border: $border_width solid $border_color;
+                    // color: #8f8f8f;
+                    // background: #f3f3f3;
+                    // border: $border_width solid $border_color;
                 }
 
                 a {
