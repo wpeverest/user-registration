@@ -247,7 +247,6 @@
   padding-bottom: 28px;
 }
 .user-registration #user-registration-list-table-page #user-registration-list-filters-row form {
-  height: 38px;
   gap: 16px;
 }
 .user-registration #user-registration-list-table-page #user-registration-list-filters-row form > div {
@@ -260,6 +259,13 @@
   top: 50% !important;
   transform: translateY(-50%);
   right: 14px !important;
+}
+.user-registration #user-registration-list-table-page #user-registration-list-filters-row form .button-secondary {
+  color: #475bb2;
+  border: 1px solid #475bb2;
+  background: #F0F0F1;
+  font-weight: 500;
+  height: 36px;
 }
 .user-registration #user-registration-list-table-page #user-registration-users-action-form .wp-list-table thead tr td {
   width: 40px;

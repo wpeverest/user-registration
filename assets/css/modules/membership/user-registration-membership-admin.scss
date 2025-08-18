@@ -273,11 +273,10 @@
 		}
 
 		#user-registration-list-filters-row {
-			padding-bottom: 28px;
+			padding-bottom: $spacing_28px;
 
 			form {
-				height: 38px;
-				gap: 16px;
+				gap: $spacing_16px;
 
 				> div {
 					position: relative;
@@ -318,6 +317,14 @@
 						transform: translateY(-50%);
 						right: 14px !important;
 					}
+				}
+
+				.button-secondary {
+					color: $primary_color;
+					border: $border_width solid $primary_color;
+					background: #F0F0F1;
+					font-weight: $medium;
+					height: 36px;
 				}
 
 				// button[type="submit"] {
