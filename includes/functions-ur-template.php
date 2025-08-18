@@ -1652,6 +1652,13 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 		}
 
 		$field           = '';
+
+		if( 'section' === $args['type'] ) {
+			$field = '<div class="ur-form-settings-section">';
+			$field .= '<h4>' . esc_html( $args['title'] ) . '</h4>';
+			$field .= '</div>';
+		}
+
 		$label_id        = $args['id'];
 		$sort            = $args['priority'] ? $args['priority'] : '';
 		$field_container = '<div class="form-row %1$s" id="%2$s" data-priority="' . esc_attr( $sort ) . '" ' . $cl_html . '>%3$s</div>';
