@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - URM-729-phase-1-design-fixes
+      - UR-2914/registration-form-settings
     workflow_dispatch:
 jobs:
   sync:
