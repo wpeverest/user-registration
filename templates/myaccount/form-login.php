@@ -231,9 +231,9 @@ apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() 
 						do_action( 'user_registration_login_form_before_submit_button' );
 						?>
 						<?php if ( $enable_ajax ) { ?>
-							<button type="submit" class="user-registration-Button button ur-submit-button <?php echo ($is_login_settings || ( isset( $_GET['ur_login_preview'] ) && $_GET['ur_login_preview'] ) ) ? 'ur-disabled-btn' : '';?>" id="user_registration_ajax_login_submit" name="login" value="<?php echo esc_html( $labels['login'] ); ?>" ><?php echo esc_html( $labels['login'] ); ?><span></span></button>
+							<button type="submit" class="user-registration-Button button button-primary ur-submit-button <?php echo ($is_login_settings || ( isset( $_GET['ur_login_preview'] ) && $_GET['ur_login_preview'] ) ) ? 'ur-disabled-btn' : '';?>" id="user_registration_ajax_login_submit" name="login" value="<?php echo esc_html( $labels['login'] ); ?>" ><?php echo esc_html( $labels['login'] ); ?><span></span></button>
 						<?php } else { ?>
-							<button type="submit" class="user-registration-Button button ur-submit-button <?php echo  ($is_login_settings || ( isset( $_GET['ur_login_preview'] ) && $_GET['ur_login_preview'] ) )  ? 'ur-disabled-btn' : ''; ?> " name="login" value="<?php echo esc_html( $labels['login'] ); ?>"  ><?php echo esc_html( $labels['login'] ); ?></button>
+							<button type="submit" class="user-registration-Button button button-primary ur-submit-button <?php echo  ($is_login_settings || ( isset( $_GET['ur_login_preview'] ) && $_GET['ur_login_preview'] ) )  ? 'ur-disabled-btn' : ''; ?> " name="login" value="<?php echo esc_html( $labels['login'] ); ?>"  ><?php echo esc_html( $labels['login'] ); ?></button>
 						<?php } ?>
 					</div>
 					<input type="hidden" name="redirect" value="<?php echo isset( $redirect ) ? esc_attr( $redirect ) : esc_attr( the_permalink() ); ?>" />

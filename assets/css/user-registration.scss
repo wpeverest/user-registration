@@ -286,7 +286,7 @@ textarea.ur-input-border-red {
 	}
 
 	.register {
-		text-align: center;
+		// text-align: center;
 
 		#node_recaptcha_register {
 			padding: 0 10px;
@@ -415,10 +415,49 @@ textarea.ur-input-border-red {
 				.form-row {
 					display: block;
 				}
+
+				.stripe-container {
+					.stripe-card-indicator {
+						font-size: 14px;
+						line-height: 20px;
+						font-weight: $medium;
+						background: #ebedf7;
+						color: $primary_color;
+						border-radius: $border_radius_4 $border_radius_4 0 0;
+						pointer-events: none;
+						padding: $spacing_8px $spacing_16px;
+					}
+
+					.stripe-input-container {
+						border: 0;
+
+						.StripeElement {
+							min-height: 38px;
+							height: 38px;
+							padding: 0 $spacing_12px;
+							border-radius: 0 $border_radius_4 $border_radius_4 $border_radius_4;
+
+							&--focus {
+								border-color: $primary_color;
+								border-radius: $border_radius_4;
+							}
+
+							.__PrivateStripeElement {
+								height: 38px;
+
+								iframe {
+									top: $spacing_12px;
+								}
+							}
+						}
+					}
+				}
 			}
+
 			input {
 				border-style: solid;
 			}
+
 			input[type="text"],
 			input[type="email"],
 			input[type="url"],
@@ -590,23 +629,23 @@ textarea.ur-input-border-red {
 		}
 	}
 
-	button,
-	input[type="submit"],
-	button[type="submit"] {
-		padding: 10px 20px;
-		line-height: 24px;
-		text-align: center;
-		word-break: break-word;
-		white-space: normal;
-		border: none;
-		cursor: pointer;
-		transition: 0.35s all ease-out;
-		border-radius: 4px;
-	}
+	// button,
+	// input[type="submit"],
+	// button[type="submit"] {
+	// 	padding: 10px 20px;
+	// 	line-height: 24px;
+	// 	text-align: center;
+	// 	word-break: break-word;
+	// 	white-space: normal;
+	// 	border: none;
+	// 	cursor: pointer;
+	// 	transition: 0.35s all ease-out;
+	// 	border-radius: 4px;
+	// }
 
-	input[type="submit"] {
-		float: right;
-	}
+	// input[type="submit"] {
+	// 	float: right;
+	// }
 
 	.ur-button-container {
 		display: flex;
@@ -2030,8 +2069,9 @@ body {
 
 			&:not(.user-registration-MyAccount) {
 				max-width: 520px;
+				margin: $spacing_30px auto;
 				// margin: 0px auto;
-				border-radius: 4px;
+				border-radius: $border_radius_4;
 				// background: #ffffff;
 				background: transparent;
 				// box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
@@ -2345,23 +2385,23 @@ body {
 					margin-top: 32px;
 					padding: 0 10px;
 
-					.ur-submit-button {
-						width: max-content;
-						border: 0;
-						padding: 10px 24px;
-						color: #ffffff;
-						font-size: 15px;
-						font-weight: $medium;
-						line-height: 24px;
-						letter-spacing: 0.15px;
-						border: $border_width solid $primary_color;
-						margin-right: 0;
-						background: $primary_color;
+					// .ur-submit-button {
+					// 	width: max-content;
+					// 	border: 0;
+					// 	padding: 10px 24px;
+					// 	color: #ffffff;
+					// 	font-size: 15px;
+					// 	font-weight: $medium;
+					// 	line-height: 24px;
+					// 	letter-spacing: 0.15px;
+					// 	border: $border_width solid $primary_color;
+					// 	margin-right: 0;
+					// 	background: $primary_color;
 
-						&:hover {
-							border-color: #38488e;
-						}
-					}
+					// 	&:hover {
+					// 		border-color: #38488e;
+					// 	}
+					// }
 
 					.user-registration-save-and-continue-button {
 						margin-left: 0;

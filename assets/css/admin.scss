@@ -355,7 +355,7 @@ body {
 	 **/
 .user-registration-membership_page_add-new-registration,
 .toplevel_page_user-registration {
-	background-color: #FAFAFA;
+	background: #f4f4f4;
 
 	#wpfooter {
 		display: none; //Hide WP footer on form builder page
@@ -4661,7 +4661,8 @@ a.button.ur-smart-tags-list-button {
 
 .toplevel_page_user-registration,
 body.user-registration {
-	background: #FAFAFA;
+	background: #f4f4f4;
+
 	#wpcontent {
 		padding-left: 0;
 	}
@@ -7144,32 +7145,35 @@ body {
 // System infor settings
 .user-registration-system-info-setting {
 	position: relative;
-	margin: 32px;
-	padding: 32px 20px 52px 32px;
-	background: #ffffff;
-	border: 1px solid #edf2f7;
+	margin: $spacing_32px;
+	padding: $spacing_32px $spacing_20px 52px $spacing_32px;
+	background: $white;
+	border: $border_width solid $border_color;
 	border-radius: $border_radius_4;
 
 	.user-registration-settings-header {
-		margin-bottom: 32px;
+		margin-bottom: $spacing_32px;
+
 		.user-registration-options-header--top__left {
 			display: flex;
 			align-items: center;
-			padding-bottom: 24px;
-			border-bottom: 1px solid #fafafa;
+			padding-bottom: $spacing_24px;
+			border-bottom: $border_width solid $border_color;
+			
 			&--icon {
 				display: flex;
 				align-items: center;
 				justify-content: center;
 				width: 40px;
 				height: 40px;
-				border-radius: 4px;
+				border-radius: $border_radius_4;
 				background: #fafafa;
-				margin-right: 16px;
+				margin-right: $spacing_16px;
+
 				svg {
 					width: 20px;
 					height: 20px;
-					fill: #475bb2;
+					fill: $primary_color;
 				}
 			}
 
@@ -7177,24 +7181,26 @@ body {
 				margin: 0;
 				color: #383838;
 				font-size: 24px;
-				font-weight: 600;
+				font-weight: $semi-bold;
 				line-height: 34px;
 			}
 		}
 	}
+
 	&-copy {
 		position: absolute;
 		top: 25px;
 		right: 18px;
-		padding: 10px 12px;
-		border-radius: 4px;
+		padding: $spacing_10px $spacing_12px;
+		border-radius: $border_radius_4;
 		border: 0;
 		font-size: 22px;
 		line-height: 14px;
-		font-weight: 500;
+		font-weight: $medium;
 		cursor: pointer;
-		color: #ffffff;
+		color: $white;
 	}
+
 	.ur-general-settings-hide {
 		display: none;
 	}

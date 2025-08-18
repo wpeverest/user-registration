@@ -1,4 +1,5 @@
 @import 'variables/variables';
+@import 'components/button', 'components/tags', 'components/input';
 
 #user-registration {
 	&.vertical {
@@ -153,7 +154,7 @@
 				.ur-form-grid {
 					> p {
 						float: right;
-						margin-top: $spacing_24px;
+						// margin-top: $spacing_24px;
 						margin-bottom: 0;
 					}
 				}
@@ -464,15 +465,15 @@
 							justify-content: flex-end;
 
 							input[type="submit"] {
+								min-height: 36px;
 								font-weight: 500;
 								font-size: 14px;
-								line-height: 150%;
-								color: #FFFFFF;
-								padding: 10px 16px;
+								line-height: 24px;
+								color: $white;
+								padding: 0 $spacing_12px;
 								background: #0170B9;
 								border: 1px solid #0170B9;
-								border-radius: 3px;
-								letter-spacing: 0.2px;
+								border-radius: $border_radius_4;
 								transition: all .3s ease-in-out;
 
 								&:hover {
@@ -548,65 +549,52 @@
 					text-align: left;
 				}
 
-				#ur-membership-status {
-					padding: 6px 18px;
-					color: white;
-					background: #f1f8f0;
-					border-radius: 36px;
-
-					&.btn-active {
-						color: #00ab02;
-					}
-
-					&.btn-inactive {
-						color: #252725 ;
-					}
-
-					&.btn-pending {
-						color: #252725 ;
-					}
-
-					&.btn-canceled {
-						color: #ea4335;
-					}
-
-					&.btn-trial {
-						color: #ff8300;
-					}
-					&.btn-expired {
-						background: #000000;
+				.membership-data {
+					#ur-membership-status {
+						font-size: 14px;
+						line-height: 24px;
 					}
 				}
-
 			}
 
 			.membership-row-btn-container {
 				display: flex;
 				flex-direction: column;
-				gap: 20px;
+				gap: $spacing_20px;
 				text-align: left;
 
 				.btn-div {
 					display: flex;
-					gap: 10px;
+					gap: $spacing_12px;
 					align-items: center;
+
 					.membership-tab-btn {
-						padding: 10px 20px;
-						border-radius: 8px;
+						min-height: 36px;
+						padding: 0 $spacing_12px;
+						border-radius: $border_radius_4;
 						cursor: pointer;
-						line-height: 20px;
+						font-size: 14px;
+						line-height: 24px;
 						background: transparent;
 
 						&.cancel-membership-button {
-							border: 1px solid #ea4335;
-							color: #ea4335;
+							border: $border_width solid #f25656;
+							color: #f25656;
+
+							&:hover {
+								color: $white;
+								background: #f25656;
+							}
 						}
 
 						&.change-membership-button {
-							border: 1px solid #475bb2;
-							color: #475bb2;
-							display: flex;
-							align-items: center;
+							border: $border_width solid $primary_color;
+							color: $primary_color;
+
+							&:hover {
+								color: $white;
+								background: $primary_color;
+							}
 
 							.ur-front-spinner {
 								background-size: 16px 16px;
@@ -615,13 +603,9 @@
 								height: 16px;
 								margin-left: 7px;
 								float: right;
-								color: #475bb2;
+								color: $primary_color;
 								display: none;
 							}
-						}
-
-						&.cancel-membership-button:hover, &.change-membership-button:hover {
-							background: #80808021;
 						}
 
 						&.cancel-membership-button:focus, &.change-membership-button:focus {
@@ -635,14 +619,14 @@
 				#membership-error-div {
 					width: 100%;
 					text-align: left;
-					padding: 8px 12px 8px 16px;
+					padding: $spacing_8px $spacing_12px $spacing_8px $spacing_16px;
 					font-size: 14px;
-					font-weight: 500;
+					font-weight: $medium;
 					display: none;
 
 					&.btn-error {
 						background: #fff4f4;
-						color: red;
+						color: #f25656;
 						border-left: 3px solid #f25656;
 					}
 
@@ -659,24 +643,24 @@
 						}
 
 						.cancel-notice:hover {
-							color: red;
+							color: #f25656;
 						}
 					}
 				}
 				#bank-notice {
 					display: flex;
-					font-size: medium;
+					font-size: $medium;
 					justify-content: space-between;
 
 					.notice-1 {
 						width: auto;
 						display: flex;
-						gap: 12px;
+						gap: $spacing_12px;
 						background: #f7fbff;
-						border: 1px solid #475bb2;
+						border: $border_width solid $primary_color;
 						font-style: italic;
-						border-radius: 5px;
-						padding: 12px 16px;
+						border-radius: $border_radius_5;
+						padding: $spacing_12px $spacing_16px;
 						align-items: center;
 					}
 					.view-bank-data {
@@ -709,7 +693,7 @@
 			cursor: pointer;
 
 			&:checked + .slider {
-				background-color: #475BB2;
+				background: $primary_color;
 			}
 
 			&:focus + .slider {
@@ -725,7 +709,7 @@
 			position: absolute;
 			cursor: pointer;
 			inset: 0;
-			background-color: #DFE1EA;
+			background: #DFE1EA;
 			transition: .4s;
 
 			&.round {
@@ -922,22 +906,22 @@
 										margin-top: $spacing_32px;
 										text-align: right;
 
-										input[type="submit"] {
-											float: unset;
-											border-radius: $border_radius_4;
-											background: $primary_color;
-											border: $border_width solid $primary_color;
-											color: $grey-0;
-											font-size: 15px;
-											line-height: 22px;
-											padding: $spacing_8px $spacing_16px;
-											transition: all .3s;
+										// input[type="submit"] {
+										// 	float: unset;
+										// 	border-radius: $border_radius_4;
+										// 	background: $primary_color;
+										// 	border: $border_width solid $primary_color;
+										// 	color: $grey-0;
+										// 	font-size: 15px;
+										// 	line-height: 22px;
+										// 	padding: $spacing_8px $spacing_16px;
+										// 	transition: all .3s;
 
-											&:hover {
-												background: darken($primary_color, 10%);
-												border-color: darken($primary_color, 10%);
-											}
-										}
+										// 	&:hover {
+										// 		background: darken($primary_color, 10%);
+										// 		border-color: darken($primary_color, 10%);
+										// 	}
+										// }
 									}
 								}
 							}

@@ -511,6 +511,15 @@
   line-height: 24px;
   color: #383838;
 }
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-input-container .ur-field .wp-editor-wrap .wp-editor-container .mce-container {
+  border-bottom: 0;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-input-container .ur-field .wp-editor-wrap .wp-editor-container .mce-container-body iframe {
+  height: 200px !important;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-input-container .ur-field .wp-editor-wrap .wp-editor-container textarea {
+  border: 0;
+}
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-input-container .user-registration-switch input[type=checkbox] {
   border-radius: 20px;
   border: 0;
@@ -572,12 +581,18 @@
   font-size: 16px;
   line-height: 24px;
 }
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types .ur-membership-type-title input[type=radio]:checked::before {
+  background: #475bb2;
+}
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types .ur-membership-type-description p {
   color: #383838;
   font-size: 14px !important;
   font-weight: 400;
   line-height: 20px;
   margin: 0;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types:has(input[type=radio]:checked) {
+  border-color: #475bb2;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-upgrade-types {
   max-width: 230px;

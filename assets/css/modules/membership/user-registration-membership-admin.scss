@@ -649,6 +649,26 @@
 								}
 							}
 
+							.ur-field {
+								.wp-editor-wrap {
+									.wp-editor-container {
+										.mce-container {
+											border-bottom: 0;
+										}
+
+										.mce-container-body {
+											iframe {
+												height: 200px !important;
+											}
+										}
+
+										textarea {
+											border: 0;
+										}
+									}
+								}
+							}
+
 							.user-registration-switch {
 								@include form-toggle;
 							}
@@ -702,6 +722,10 @@
 															font-size: 16px;
 															line-height: 24px;
 														}
+
+														input[type="radio"]:checked::before {
+															background: $primary_color;
+														}
 													}
 
 													&-description {
@@ -714,7 +738,12 @@
 														}
 													}
 												}
+
+												&:has(input[type="radio"]:checked) {
+													border-color: $primary_color;
+												}
 											}
+
 											.ur-membership-upgrade-types {
 												max-width: 230px;
 												margin-bottom: 0;
