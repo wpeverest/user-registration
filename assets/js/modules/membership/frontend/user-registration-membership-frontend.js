@@ -1617,6 +1617,9 @@
 						showCancelButton: true,
 						confirmButtonText: 'Change',
 						confirmButtonColor: '#475BB2',
+						didOpen: function() {
+							$('.membership-upgrade-container input[name="urm_payment_method"]').trigger('change');
+						},
 						preConfirm: function (result) {
 							var pg_type = $('input[name="urm_membership"]:checked').data('urm-pg-type'),
 								error_notice = $('#upgrade-membership-notice'),
