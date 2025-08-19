@@ -1797,6 +1797,56 @@ jQuery(function ($) {
 				$(this).parent().addClass("current");
 			}
 		});
+
+	$(document).ready(function () {
+		function initHamburgerMenu() {
+			$(".ur-hamburger-menu-open").on("click", function () {
+				$(this)
+					.closest(".user-registration-hamburger-menu")
+					.addClass("is-open");
+			});
+
+			$(".ur-hamburger-menu-close").on("click", function () {
+				$(this)
+					.closest(".user-registration-hamburger-menu")
+					.removeClass("is-open");
+			});
+
+			$(document).on("click", function (e) {
+				if (
+					!$(e.target).closest(".user-registration-hamburger-menu")
+						.length
+				) {
+					$(".user-registration-hamburger-menu").removeClass(
+						"is-open"
+					);
+				}
+			});
+
+			$(".user-registration-hamburger-menu")
+				.find(".has-sub-menu")
+				.each(function () {
+					$(this).on("click", function (e) {
+						if (
+							$(e.target).is(this) ||
+							$(e.target).closest(".has-sub-menu > a").length
+						) {
+							e.preventDefault();
+							$(".has-sub-menu")
+								.find(".ur-sub-menu-dropdown")
+								.hide();
+							$(this).find(".ur-sub-menu-dropdown").show();
+						}
+					});
+				});
+		}
+
+		initHamburgerMenu();
+
+		$(window).on("resize", function () {
+			initHamburgerMenu();
+		});
+	});
 });
 
 (function ($, user_registration_admin_data) {

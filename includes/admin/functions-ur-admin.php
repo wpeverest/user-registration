@@ -1002,6 +1002,7 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 			<div class="ur-page-title__wrapper">
 				<div class="ur-page-title__wrapper--left">
 					<div class="ur-page-title__wrapper--left-logo">
+						<?php echo user_registration_plugin_responsive_main_header( $menu_items ); ?>
 						<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
 							<path d="M29.2401 2.25439C27.1109 3.50683 25.107 5.13503 23.3536 6.88846C21.6002 8.64188 19.972 10.6458 18.7195 12.6497C19.5962 14.4031 20.3477 16.1566 20.9739 18.0352C22.1011 15.6556 23.4788 13.5264 25.2323 11.6477V18.4109C25.2323 22.544 22.4769 26.1761 18.4691 27.3033H18.2185C17.9681 24.047 17.2166 20.9158 16.0894 17.91C14.4612 13.7769 11.9563 10.0196 8.69995 6.88846C6.94652 5.13503 4.94263 3.63208 2.81347 2.25439L2.3125 2.00388V18.2857C2.3125 24.9237 7.07177 30.6849 13.7097 31.8121H13.835C15.3379 32.0626 16.8409 32.0626 18.2185 31.8121H18.3438C24.9818 30.6849 29.7411 24.9237 29.7411 18.2857V2.00388L29.2401 2.25439ZM6.82128 18.2857V11.6477C10.7039 16.0313 13.0835 21.4168 13.5845 27.1781C9.57669 26.0509 6.82128 22.4188 6.82128 18.2857ZM15.9642 0C14.0855 0 12.5825 1.50291 12.5825 3.38158C12.5825 5.26025 14.0855 6.7632 15.9642 6.7632C17.8428 6.7632 19.3457 5.26025 19.3457 3.38158C19.3457 1.50291 17.8428 0 15.9642 0Z" fill="#475BB2"/>
 						</svg>
@@ -1070,6 +1071,79 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 					}
 					?>
 				</div>
+			</div>
+		</div>
+		<?php
+
+		return ob_get_clean();
+	}
+}
+if ( ! function_exists( 'user_registration_plugin_responsive_main_header' ) ) {
+	/**
+	 * Generate the top nav header for small screen devices.
+	 *
+	 * @since 3.3.1
+	 *
+	 * @param string $notice_type Notice Type.
+	 */
+	function user_registration_plugin_responsive_main_header( $menu_items ) {
+
+		ob_start();
+		?>
+		<div class="user-registration-hamburger-menu">
+			<div class="user-registration-hamburger-menu--logo ur-hamburger-menu-open">
+				<svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
+					<path d="M4 18L20 18" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
+					<path d="M4 12L20 12" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
+					<path d="M4 6L20 6" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
+				</svg>
+			</div>
+			<div class="user-registration-hamburger-menu--body">
+				<div class="ur-hamburger-menu-close">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
+						<path fill-rule="evenodd" clip-rule="evenodd" d="M10.9393 12L6.9696 15.9697L8.03026 17.0304L12 13.0607L15.9697 17.0304L17.0304 15.9697L13.0607 12L17.0303 8.03039L15.9696 6.96973L12 10.9393L8.03038 6.96973L6.96972 8.03039L10.9393 12Z" fill="#080341"/>
+					</svg>
+				</div>
+				<ul class="user-registration-hamburger-menu--body__items">
+					<?php
+					foreach( $menu_items as $key => $item ) {
+						$has_sub_menu = false;
+
+						if( isset( $item['sub_menu'] ) ) {
+							$has_sub_menu = true;
+						}
+						?>
+						<li class="<?php echo $has_sub_menu ? 'has-sub-menu' : ''; ?>">
+							<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . esc_attr( $item['page_slug']) ) ); ?>" class="ur-nav-link">
+								<?php echo esc_html( $item['label'] ); ?>
+							</a>
+							<?php
+								if( $has_sub_menu ) {
+									?>
+									<div class="ur-page-title__wrapper--left-menu__items-sub ur-sub-menu-dropdown">
+										<ul class="ur-page-title__wrapper--left-menu__items-sub__items">
+										<?php
+
+										foreach( $item['sub_menu'] as $key => $sub_items ) {
+											?>
+											<li>
+												<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . esc_attr( $sub_items['page_slug']) ) ); ?>" >
+													<?php echo esc_html( $sub_items['label'] ); ?>
+												</a>
+											</li>
+											<?php
+										}
+										?>
+										</ul>
+									</div>
+									<?php
+								}
+							?>
+						</li>
+						<?php
+					}
+					?>
+				</ul>
 			</div>
 		</div>
 		<?php

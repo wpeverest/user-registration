@@ -21,18 +21,18 @@
             &--left {
                 gap: $spacing_20px;
                 height: 100%;
-                
+
                 &-logo {
                     padding: 0;
                     border-right: 0;
                     display: flex;
-                    
+
                     svg {
                         width: 28px;
                         height: 28px;
                     }
                 }
-                
+
                 &-menu {
                     height: 100%;
                     align-content: center;
@@ -52,18 +52,18 @@
                             line-height: 24px;
                             color: $grey-400;
                         }
-                        
+
                         li {
                             padding: 0;
                             margin: 0;
                             font-size: unset;
                             height: 100%;
                             align-content: center;
-                            
+
                             &.has-sub-menu {
                                 .ur-nav-link {
                                     gap: $spacing_8px;
-                                    
+
                                     &::before {
                                         content: "";
                                         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23737373' viewBox='0 0 24 24'%3E%3Cpath d='M19.561 7.403a1.468 1.468 0 0 1 2.02 0 1.339 1.339 0 0 1 0 1.944l-8.57 8.25a1.468 1.468 0 0 1-2.021 0l-8.572-8.25a1.339 1.339 0 0 1 0-1.944 1.468 1.468 0 0 1 2.02 0L12 14.68l7.561-7.278Z'/%3E%3C/svg%3E");
@@ -76,7 +76,7 @@
                                         margin-left: 0;
                                     }
                                 }
-                                
+
                                 .ur-page-title__wrapper--left-menu__items-sub {
                                     position: absolute;
                                     left: 0;
@@ -90,15 +90,15 @@
                                     min-width: 180px;
                                     border-radius: $border_radius_4;
                                     top: 55px;
-                                    
+
                                     &__items {
                                         list-style: none;
 							            margin: 0;
                                         padding: $spacing_8px;
-                                        
+
                                         li {
                                             padding: 0;
-                                            
+
                                             a {
                                                 display: block;
                                                 color: #4b5563;
@@ -123,7 +123,7 @@
                                     }
                                 }
                             }
-                            
+
                             .ur-nav-link {
                                 display: flex;
                                 // padding: $spacing_20px $spacing_4px;
@@ -194,8 +194,8 @@
                         position: relative;
                     }
                 }
-            }     
-            
+            }
+
             &--right {
                 display: flex;
                 align-items: center;
@@ -402,7 +402,7 @@
                         &::before {
                             background-image: url("../images/icons/minimize.svg");
                         }
-                    }                    
+                    }
                 }
             }
         }
@@ -412,6 +412,147 @@
         margin-bottom: 0;
         // gap: $spacing_24px;
     }
+}
+
+@media (min-width: 1200px) {
+  .user-registration-hamburger-menu { display: none; }
+}
+
+@media (max-width: 1199px) {
+	.user-registration-hamburger-menu {
+		display: flex;
+		align-items: center;
+		gap: $spacing_8px;
+		cursor: pointer;
+
+		&--body {
+			display: none;
+			position: absolute;
+			top: 0px;
+			left: 0;
+			right: 0;
+			background: #fff;
+			border: 1px solid #e1e1e1;
+			box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+			padding: $spacing_12px;
+			z-index: 99;
+			width: 20rem;
+
+			&__items {
+				padding-top: 0.5rem;
+				padding-bottom: 1.25rem;
+				padding-right: 1.25rem;
+				gap: 10px;
+				display: flex;
+				flex-direction: column;
+				justify-content: flex-start;
+				align-items: flex-start;
+				width: 100%;
+				position: relative;
+				position: relative;
+				box-sizing: border-box;
+
+				p {
+					padding: 0;
+					margin: 0;
+					font-weight: $medium;
+					font-size: 15px;
+					line-height: 24px;
+					color: $grey-400;
+				}
+
+				li {
+					padding: 10px 10px 10px 0px;
+					margin: 0;
+					font-size: unset;
+					height: 100%;
+					align-content: center;
+
+					&.has-sub-menu {
+						.ur-nav-link {
+							gap: $spacing_8px;
+
+							&::after {
+								content: "";
+								background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23737373' viewBox='0 0 24 24'%3E%3Cpath d='M19.561 7.403a1.468 1.468 0 0 1 2.02 0 1.339 1.339 0 0 1 0 1.944l-8.57 8.25a1.468 1.468 0 0 1-2.021 0l-8.572-8.25a1.339 1.339 0 0 1 0-1.944 1.468 1.468 0 0 1 2.02 0L12 14.68l7.561-7.278Z'/%3E%3C/svg%3E");
+								background-repeat: no-repeat;
+								background-position: center;
+								background-size: 100%;
+								width: 14px;
+								height: 14px;
+								display: block;
+								margin-left: 0;
+							}
+						}
+
+						.ur-page-title__wrapper--left-menu__items-sub {
+							position: relative;
+							background: $white;
+							transition: all 0.15s ease;
+							display: none;
+
+							&__items {
+								list-style: none;
+								margin: 0;
+								padding: $spacing_8px;
+
+								li {
+									padding: 0;
+
+									a {
+										display: block;
+										color: #4b5563;
+										text-decoration: none;
+										transition: all 0.15s ease;
+										font-size: 14px;
+										line-height: 20px;
+										font-weight: $regular;
+										padding: $spacing_8px $spacing_12px;
+
+										&:hover {
+											background: #f9fafb;
+											color: $primary_color;
+										}
+
+										&::after {
+											display: none;
+											width: 100%;
+										}
+									}
+								}
+							}
+						}
+					}
+
+					.ur-nav-link {
+						display: flex;
+						padding: 0 $spacing_4px;
+						font-size: 14px;
+						text-decoration: none;
+						color: $grey-400;
+						position: relative;
+						transition: all .3s;
+						font-weight: $medium;
+						height: 100%;
+						align-items: center;
+
+						&:hover,
+						&.current {
+							color: $primary_color;
+						}
+					}
+				}
+			}
+		}
+
+		&.is-open {
+		.user-registration-hamburger-menu--body { display: block; }
+		}
+  	}
+
+	.ur-page-title__wrapper--left-menu {
+		display: none;
+	}
 }
 
 body {

@@ -4711,6 +4711,7 @@ body.user-registration {
 			&-logo {
 				padding: 18px 24px 18px 0;
 				border-right: 1px solid #e1e1e1;
+				gap: 20px;
 			}
 
 			&-menu {
@@ -7158,7 +7159,7 @@ body {
 			align-items: center;
 			padding-bottom: $spacing_24px;
 			border-bottom: $border_width solid $border_color;
-			
+
 			&--icon {
 				display: flex;
 				align-items: center;
