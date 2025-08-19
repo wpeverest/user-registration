@@ -1495,6 +1495,47 @@
 						}
 					});
 				});
+				$(document).on("click", ".reactivate-membership-button", function () {
+					var $this = $(this),
+						error_div = $("#membership-error-div"),
+						button_text = $this.text(),
+						membership_title = $('#membership-title').text();
+						$.ajax({
+							url: urmf_data.ajax_url,
+							type: "POST",
+							data: {
+								action: "user_registration_membership_reactivate_membership",
+								security: urmf_data._nonce,
+								subscription_id: $this.data("id")
+							},
+							beforeSend: function () {
+								$this.text(
+									urmf_data.labels.i18n_sending_text
+								);
+							},
+							success: function (response) {
+								if (response.success) {
+									if (error_div.hasClass("btn-error")) {
+										error_div.removeClass("btn-error");
+										error_div.addClass("btn-success");
+									}
+									error_div.text(response.data.message);
+									error_div.show();
+									location.reload();
+								} else {
+									if (error_div.hasClass("btn-success")) {
+										error_div.removeClass("btn-success");
+										error_div.addClass("btn-error");
+									}
+									error_div.text(response.data.message);
+									error_div.show();
+								}
+							},
+							complete: function () {
+								$this.text(button_text);
+							}
+						});
+				});
 
 				$(document).on("click", ".change-membership-button", function () {
 					var $this = $(this),
