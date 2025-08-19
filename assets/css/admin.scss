@@ -52,7 +52,7 @@ body {
 		margin: 10px;
 
 		input.button {
-			background-color: #475bb2;
+			background-color: $primary_color;
 		}
 	}
 
@@ -168,10 +168,10 @@ body {
 }
 
 .jconfirm-box {
-	border-color: #475bb2 !important;
+	border-color: $primary_color !important;
 
 	.dashicons-info {
-		color: #475bb2;
+		color: $primary_color;
 	}
 
 	.jconfirm-content-pane {
@@ -191,10 +191,10 @@ body {
 				display: flex;
 				flex: 2;
 				column-gap: 8px;
-				color: #475BB2;
+				color: $primary_color;
 
 				span {
-					border: 1px solid #475BB2;
+					border: 1px solid $primary_color;
 					background-color: #3498db13;
 					padding: 5px 15px;
 					border-radius: 2px;
@@ -281,12 +281,12 @@ body {
 
 					.install-now:hover {
 						border-radius: 2px;
-						background-color: #475bb2;
+						background-color: $primary_color;
 						color: #fff;
 					}
 
 					.upgrade-now {
-						background: #475bb2 !important;
+						background: $primary_color !important;
 						color: #fff;
 						font-weight: $medium;
 					}
@@ -355,7 +355,7 @@ body {
 	 **/
 .user-registration-membership_page_add-new-registration,
 .toplevel_page_user-registration {
-	background-color: #FAFAFA;
+	background: #f4f4f4;
 
 	#wpfooter {
 		display: none; //Hide WP footer on form builder page
@@ -821,9 +821,9 @@ body {
 							padding: 8px 16px;
 
 							&.selected {
-								border-color: #475bb2;
-								background-color: #475bb230;
-								color: #475bb2;
+								border-color: $primary_color;
+								background-color: $primary_color;
+								color: $primary_color;
 								font-weight: $semi_bold;
 							}
 
@@ -2477,7 +2477,7 @@ body {
 			width: 60px;
 			height: 60px;
 			border-radius: 50%;
-			background: #475bb2;
+			background: $primary_color;
 		}
 
 		&::after {
@@ -2759,7 +2759,7 @@ body {
 			width: 40px;
 
 			&:checked + .slider {
-				background-color: #475bb2;
+				background-color: $primary_color;
 			}
 
 			&:focus + .slider {
@@ -2836,7 +2836,7 @@ body {
 	.page-title-action:active {
 		top: 0;
 		margin-left: $spacing_16px;
-		font-weight: 500;
+		font-weight: $medium;
 	}
 
 	.user-registration-setup-header {
@@ -3191,8 +3191,8 @@ body {
 			// 	transition: all 0.3s ease-in-out;
 
 			// 	&.swal2-confirm {
-			// 		background-color: #475bb2 !important;
-			// 		border: $border_width solid #475bb2;
+			// 		background-color: $primary_color !important;
+			// 		border: $border_width solid $primary_color;
 			// 		border-radius: $border_radius_3;
 			// 		transition: all 0.3s ease-in-out;
 			// 	}
@@ -3229,7 +3229,7 @@ body {
 			padding: 0;
 
 			&.user-registration-locked-field {
-				// border-top: 6px solid #475BB2;
+				// border-top: 6px solid $primary_color;
 
 				&.swal2-icon-success {
 					border-top: 6px solid #a5dc86;
@@ -3269,18 +3269,17 @@ body {
 					margin-right: 0;
 					border-left: 3px solid #f27474;
 					justify-content: flex-start;
-					padding: $spacing_12px $spacing_6px $spacing_12px
-						$spacing_6px;
+					padding: $spacing_12px $spacing_6px $spacing_12px $spacing_6px;
 				}
 
 				// .action-buttons {
 				// 	a {
-				// 		background-color: #475bb2;
+				// 		background-color: $primary_color;
 				// 		border: none;
 				// 		text-decoration: none;
 				// 		color: white;
 				// 		font-size: 16px;
-				// 		font-weight: 600;
+				// 		font-weight: $semi_bold;
 				// 	}
 				// }
 			}
@@ -3296,7 +3295,7 @@ body {
 			// 	gap: $spacing_16px;
 
 			// 	.swal2-confirm {
-			// 		background: #475bb2;
+			// 		background: $primary_color;
 			// 		transition: all 0.3s ease-in-out;
 
 			// 		&:hover {
@@ -3523,7 +3522,7 @@ a.button.ur-smart-tags-list-button {
 		box-shadow: 1px 3px 20px 0 rgba(35, 40, 45, 0.2);
 
 		& .ur-smart-tag-title {
-			font-weight: 600;
+			font-weight: $semi_bold;
 			background: #f6f7f9;
 			border-bottom: 1px solid #cdd0d8;
 			font-size: 12px;
@@ -3925,7 +3924,7 @@ a.button.ur-smart-tags-list-button {
 						&--item {
 							label {
 								font-size: 14px;
-								font-weight: 600;
+								font-weight: $semi_bold;
 								color: $grey-300;
 								margin-bottom: 0;
 								border: $border_width solid $grey-300;
@@ -4016,7 +4015,7 @@ a.button.ur-smart-tags-list-button {
 						h3 {
 							font-size: 22px;
 							line-height: 28px;
-							font-weight: 600;
+							font-weight: $semi_bold;
 							margin: 0px;
 							border: none;
 							padding: 0px;
@@ -4153,18 +4152,19 @@ a.button.ur-smart-tags-list-button {
 					&--icon {
 						width: 40px;
 						height: 40px;
-						background: #edeff7;
+						// background: #edeff7;
+						background: #ebebeb;
 						display: flex;
 						justify-content: center;
 						align-items: center;
-						border-radius: 3.75px;
+						border-radius: $border_radius_3;
 
 						svg {
 							width: 20px;
 							height: 20px;
 
 							path {
-								fill: #475bb2;
+								fill: $primary_color;
 							}
 						}
 					}
@@ -4185,56 +4185,56 @@ a.button.ur-smart-tags-list-button {
 				}
 			}
 
-			&--bottom {
-				ul {
-					display: flex;
-					align-items: center;
-					gap: $spacing_32px;
-					border-bottom: $border_width solid $border-color;
-					width: 100%;
+			// &--bottom {
+			// 	ul {
+			// 		display: flex;
+			// 		align-items: center;
+			// 		gap: $spacing_12px;
+			// 		border-bottom: $border_width solid $border_color;
+			// 		width: 100%;
 
-					li {
-						a {
-							font-weight: $medium;
-							font-size: 15px;
-							line-height: 140%;
-							color: $grey-400;
-							padding: 0;
-							position: relative;
-							padding-bottom: $spacing_16px;
-							transition: all 0.3s ease-in-out;
+			// 		li {
+			// 			a {
+			// 				font-weight: $medium;
+			// 				font-size: 14px;
+			// 				line-height: 18px;
+			// 				color: $grey-400;
+			// 				padding: 0 $spacing_4px;
+			// 				position: relative;
+			// 				padding-bottom: $spacing_16px;
+			// 				transition: all 0.3s ease-in-out;
 
-							&::before {
-								content: "";
-								background: $primary_color;
-								position: absolute;
-								width: 100%;
-								height: 3px;
-								border-radius: $border_radius_11;
-								bottom: 0;
-								left: 0;
-								opacity: 0;
-								transition: all 0.3s ease-in-out;
-							}
+			// 				&::before {
+			// 					content: "";
+			// 					background: $primary_color;
+			// 					position: absolute;
+			// 					width: 100%;
+			// 					height: 2px;
+			// 					border-radius: $border_radius_11;
+			// 					bottom: 0;
+			// 					left: 0;
+			// 					opacity: 0;
+			// 					transition: all 0.3s ease-in-out;
+			// 				}
 
-							&:focus {
-								outline: none;
-								box-shadow: none;
-							}
+			// 				&:focus {
+			// 					outline: none;
+			// 					box-shadow: none;
+			// 				}
 
-							&:hover,
-							&.current,
-							&.active {
-								color: $primary_color;
+			// 				&:hover,
+			// 				&.current,
+			// 				&.active {
+			// 					color: $primary_color;
 
-								&::before {
-									opacity: 1;
-								}
-							}
-						}
-					}
-				}
-			}
+			// 					&::before {
+			// 						opacity: 1;
+			// 					}
+			// 				}
+			// 			}
+			// 		}
+			// 	}
+			// }
 		}
 	}
 
@@ -4607,7 +4607,7 @@ a.button.ur-smart-tags-list-button {
 						padding: 6px 8px;
 						background-color: #f4f4f4;
 						font-size: 13px;
-						font-weight: 600;
+						font-weight: $semi_bold;
 						margin: 0px;
 					}
 				}
@@ -4631,7 +4631,7 @@ a.button.ur-smart-tags-list-button {
 							&.select2-results__option--highlighted,
 							&[data-selected="true"] {
 								background: #f8f8fa;
-								color: #475bb2;
+								color: $primary_color;
 								border: none;
 							}
 						}
@@ -4661,7 +4661,8 @@ a.button.ur-smart-tags-list-button {
 
 .toplevel_page_user-registration,
 body.user-registration {
-	background: #FAFAFA;
+	background: #f4f4f4;
+
 	#wpcontent {
 		padding-left: 0;
 	}
@@ -4722,7 +4723,7 @@ body.user-registration {
 					p {
 						padding: $spacing_24px $spacing_16px;
 						font-weight: $medium;
-						font-weight: 500;
+						font-weight: $medium;
 						font-size: 16px;
 						line-height: 26px;
 						color: #383838;
@@ -4748,7 +4749,7 @@ body.user-registration {
 
 							&::after {
 								content: "";
-								background: #475bb2;
+								background: $primary_color;
 								width: 0px;
 								height: 3px;
 								position: absolute;
@@ -4759,7 +4760,7 @@ body.user-registration {
 
 							&:hover,
 							&.current {
-								color: #475bb2;
+								color: $primary_color;
 
 								&::after {
 									width: 100%;
@@ -4951,11 +4952,11 @@ body.user-registration {
 		// a {
 		// 	padding: 6px 14px;
 		// 	border-radius: 3px;
-		// 	border: 1px solid #475bb2;
+		// 	border: 1px solid $primary_color;
 		// 	background: #f6f7f7;
-		// 	color: #475bb2;
+		// 	color: $primary_color;
 		// 	font-size: 14px;
-		// 	font-weight: 500;
+		// 	font-weight: $medium;
 		// 	line-height: 150%;
 		// 	transition: all 0.3s ease-in-out;
 		// 	text-decoration: none;
@@ -5145,7 +5146,6 @@ body.user-registration {
 
 			#user-registration-users-search-input {
 				width: 100%;
-				min-height: 35px;
 			}
 
 			// #user-registration-list-table-search-input {
@@ -5442,7 +5442,7 @@ body.user-registration {
 
 			&::after {
 				content: "";
-				background: #475bb2;
+				background: $primary_color;
 				width: 0px;
 				height: 3px;
 				position: absolute;
@@ -5452,7 +5452,7 @@ body.user-registration {
 			}
 
 			&.row-title {
-				color: #475bb2;
+				color: $primary_color;
 
 				&:after {
 					width: 100%;
@@ -5483,9 +5483,9 @@ body.user-registration {
 			.user-registration-card {
 				border: 0;
 				padding: 28px;
-				border-radius: $border_radius_4;
+				border-radius: $border_radius_8;
 				border: 1px solid #EDF2F7;
-				background-color: #ffffff;
+				background: $white;
 
 				#ur-coupon-form-container {
 					padding: 0 !important;
@@ -5514,7 +5514,7 @@ body.user-registration {
 								&:focus {
 									box-shadow: none;
 									outline: none;
-									border-color: #475bb2;
+									border-color: $primary_color;
 								}
 
 								svg {
@@ -5527,7 +5527,7 @@ body.user-registration {
 								margin: 0;
 								color: #222222;
 								font-size: 22px;
-								font-weight: 600;
+								font-weight: $semi_bold;
 								line-height: 32px;
 							}
 						}
@@ -5547,7 +5547,7 @@ body.user-registration {
 										margin-bottom: 0;
 										color: #383838;
 										font-size: 15px;
-										font-weight: 500;
+										font-weight: $medium;
 										line-height: 21px;
 									}
 								}
@@ -5576,7 +5576,7 @@ body.user-registration {
 										// 	&:focus {
 										// 		box-shadow: none;
 										// 		outline: none;
-										// 		border-color: #475bb2;
+										// 		border-color: $primary_color;
 										// 	}
 										// }
 
@@ -5682,8 +5682,8 @@ body.user-registration {
 										}
 
 										&:checked {
-											background: #475bb2;
-											border-color: #475bb2;
+											background: $primary_color;
+											border-color: $primary_color;
 
 											&::after {
 												transform: translateX(15px);
@@ -5755,7 +5755,7 @@ body.user-registration {
 					margin: 0;
 					color: #222;
 					font-size: 22px;
-					font-weight: 600;
+					font-weight: $semi_bold;
 					line-height: 32px;
 				}
 			}
@@ -5763,7 +5763,7 @@ body.user-registration {
 			#ur-coupon-add-btn {
 				box-shadow: none;
 				border-radius: 3px;
-				background: #475bb2;
+				background: $primary_color;
 				padding: 8px 20px 8px 16px;
 				color: #fff;
 				font-size: 14px;
@@ -5798,7 +5798,7 @@ body.user-registration {
 					// 		&:focus {
 					// 			box-shadow: none;
 					// 			outline: none;
-					// 			border-color: #475bb2;
+					// 			border-color: $primary_color;
 					// 		}
 					// 	}
 					// }
@@ -5836,14 +5836,14 @@ body.user-registration {
 				// 	&:focus {
 				// 		box-shadow: none;
 				// 		outline: none;
-				// 		border-color: #475bb2;
+				// 		border-color: $primary_color;
 				// 	}
 				// }
 
 				#user-registration-users-filter-btn {
 					border-radius: 3px;
-					border: 1px solid #475bb2;
-					background: #475bb2;
+					border: 1px solid $primary_color;
+					background: $primary_color;
 					color: #ffffff;
 					padding: 8px 14px;
 					color: #ffffff;
@@ -5891,7 +5891,7 @@ body.user-registration {
 											margin-bottom: 8px;
 											color: #222222;
 											font-size: 22px;
-											font-weight: 600;
+											font-weight: $semi_bold;
 											line-height: 32px;
 										}
 
@@ -5965,16 +5965,16 @@ body.user-registration {
 							}
 
 							.coupon-active {
-								font-weight: 500;
+								font-weight: $medium;
 								color: #4cc741;
 							}
 							.coupon-inactive {
-								font-weight: 500;
+								font-weight: $medium;
 								color: #f25656;
 							}
 
 							.coupon-expired {
-								font-weight: 500;
+								font-weight: $medium;
 								color: #636363;
 							}
 						}
@@ -5994,7 +5994,7 @@ body.user-registration {
 											background: none;
 											padding: 0;
 											color: #383838;
-											font-weight: 500;
+											font-weight: $medium;
 										}
 									}
 
@@ -6232,7 +6232,7 @@ body.user-registration {
 
 									&:hover {
 										background: rgba(240, 242, 249, 1%);
-										border-color: #475bb2;
+										border-color: $primary_color;
 									}
 								}
 
@@ -6242,7 +6242,7 @@ body.user-registration {
 
 										&:checked ~ .dashicons {
 											background: rgba(240, 242, 249, 1%);
-											border-color: #475bb2;
+											border-color: $primary_color;
 										}
 									}
 								}
@@ -6304,8 +6304,8 @@ body {
 				border-radius: 10px !important;
 				border: 0;
 				&:checked {
-					border-color: #475bb2;
-					background: #475bb2;
+					border-color: $primary_color;
+					background: $primary_color;
 				}
 				&::after {
 					width: 12px;
@@ -6336,7 +6336,7 @@ body {
 								margin-bottom: 8px;
 								color: #222222;
 								font-size: 22px;
-								font-weight: 600;
+								font-weight: $semi_bold;
 								line-height: 32px;
 							}
 
@@ -7144,32 +7144,35 @@ body {
 // System infor settings
 .user-registration-system-info-setting {
 	position: relative;
-	margin: 32px;
-	padding: 32px 20px 52px 32px;
-	background: #ffffff;
-	border: 1px solid #edf2f7;
+	margin: $spacing_32px;
+	padding: $spacing_32px $spacing_20px 52px $spacing_32px;
+	background: $white;
+	border: $border_width solid $border_color;
 	border-radius: $border_radius_4;
 
 	.user-registration-settings-header {
-		margin-bottom: 32px;
+		margin-bottom: $spacing_32px;
+
 		.user-registration-options-header--top__left {
 			display: flex;
 			align-items: center;
-			padding-bottom: 24px;
-			border-bottom: 1px solid #fafafa;
+			padding-bottom: $spacing_24px;
+			border-bottom: $border_width solid $border_color;
+			
 			&--icon {
 				display: flex;
 				align-items: center;
 				justify-content: center;
 				width: 40px;
 				height: 40px;
-				border-radius: 4px;
+				border-radius: $border_radius_4;
 				background: #fafafa;
-				margin-right: 16px;
+				margin-right: $spacing_16px;
+
 				svg {
 					width: 20px;
 					height: 20px;
-					fill: #475bb2;
+					fill: $primary_color;
 				}
 			}
 
@@ -7177,24 +7180,26 @@ body {
 				margin: 0;
 				color: #383838;
 				font-size: 24px;
-				font-weight: 600;
+				font-weight: $semi-bold;
 				line-height: 34px;
 			}
 		}
 	}
+
 	&-copy {
 		position: absolute;
 		top: 25px;
 		right: 18px;
-		padding: 10px 12px;
-		border-radius: 4px;
+		padding: $spacing_10px $spacing_12px;
+		border-radius: $border_radius_4;
 		border: 0;
 		font-size: 22px;
 		line-height: 14px;
-		font-weight: 500;
+		font-weight: $medium;
 		cursor: pointer;
-		color: #ffffff;
+		color: $white;
 	}
+
 	.ur-general-settings-hide {
 		display: none;
 	}
@@ -7216,7 +7221,7 @@ body {
 		}
 
 		th {
-			font-weight: 500;
+			font-weight: $medium;
 			vertical-align: top;
 		}
 
@@ -7242,7 +7247,7 @@ body {
 					color: #222222;
 					font-size: 15px;
 					line-height: 23px;
-					font-weight: 500;
+					font-weight: $medium;
 					letter-spacing: 0.2px;
 				}
 			}
@@ -7254,7 +7259,7 @@ body {
 	opacity: 0.5;
 }
 .select2-results__option--highlighted[aria-selected="true"] {
-	background-color: #475bb2 !important;
+	background-color: $primary_color !important;
 	color: #fff !important;
 }
 

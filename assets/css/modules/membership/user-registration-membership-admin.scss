@@ -273,11 +273,10 @@
 		}
 
 		#user-registration-list-filters-row {
-			padding-bottom: 28px;
+			padding-bottom: $spacing_28px;
 
 			form {
-				height: 38px;
-				gap: 16px;
+				gap: $spacing_16px;
 
 				> div {
 					position: relative;
@@ -318,6 +317,14 @@
 						transform: translateY(-50%);
 						right: 14px !important;
 					}
+				}
+
+				.button-secondary {
+					color: $primary_color;
+					border: $border_width solid $primary_color;
+					background: #F0F0F1;
+					font-weight: $medium;
+					height: 36px;
 				}
 
 				// button[type="submit"] {
@@ -649,6 +656,26 @@
 								}
 							}
 
+							.ur-field {
+								.wp-editor-wrap {
+									.wp-editor-container {
+										.mce-container {
+											border-bottom: 0;
+										}
+
+										.mce-container-body {
+											iframe {
+												height: 200px !important;
+											}
+										}
+
+										textarea {
+											border: 0;
+										}
+									}
+								}
+							}
+
 							.user-registration-switch {
 								@include form-toggle;
 							}
@@ -702,6 +729,10 @@
 															font-size: 16px;
 															line-height: 24px;
 														}
+
+														input[type="radio"]:checked::before {
+															background: $primary_color;
+														}
 													}
 
 													&-description {
@@ -714,7 +745,12 @@
 														}
 													}
 												}
+
+												&:has(input[type="radio"]:checked) {
+													border-color: $primary_color;
+												}
 											}
+
 											.ur-membership-upgrade-types {
 												max-width: 230px;
 												margin-bottom: 0;
