@@ -160,3 +160,9 @@
 #adminmenu .wp-not-current-submenu .wp-submenu {
 	border-left-width: 0px;
 }
+
+#adminmenumain {
+	#adminmenuback {
+		z-index: 999;
+	}
+}

@@ -41,7 +41,7 @@
 body {
 	&.user-registration,
 	&.user-registration-page {
-		font-family: "Inter";
+		font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 	}
 }
 
@@ -4711,7 +4711,7 @@ body.user-registration {
 			&-logo {
 				padding: 18px 24px 18px 0;
 				border-right: 1px solid #e1e1e1;
-				gap: 20px;
+				gap: $spacing_16px;
 			}
 
 			&-menu {

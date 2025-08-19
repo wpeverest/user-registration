@@ -87,6 +87,10 @@ body {
 		// filter: drop-shadow(-4px 4px 20px rgba(89, 89, 89, 0.1));
 		flex: 1;
 
+		@media screen and (max-width: 1180px) {
+			border-bottom: $border_width solid $border_color;
+		}
+
 		.user-registration-header {
 			width: 100%;
 			max-width: 300px;
@@ -95,9 +99,11 @@ body {
 			border-right: $border_width solid $border-color;
 
 			&.collapsed {
-				max-width: 70px;
+				max-width: 60px;
 
 				.user-registration-header--top {
+					padding: 0 $spacing_12px;
+
 					&-logo {
 						img {
 							width: 40px;
@@ -105,8 +111,8 @@ body {
 					}
 
 					.ur-search--top-settings {
-						padding-left: $spacing_15px;
-						padding-right: $spacing_15px;
+						// padding-left: $spacing_15px;
+						// padding-right: $spacing_15px;
 						cursor: pointer;
 
 						input {
@@ -121,6 +127,9 @@ body {
 
 						.user-registration-search-icon {
 							svg {
+								right: unset;
+								left: 50%;
+								transform: translate(-50%, -50%);
 								transition: all .3s ease-in-out;
 							}
 						}
@@ -148,6 +157,8 @@ body {
 				.user-registration-header--nav {
 					.ur-nav__link {
 						justify-content: center;
+						min-height: 50px;
+						padding: 0;
 
 						&-label {
 							display: none;
@@ -161,7 +172,7 @@ body {
 			}
 
 			&--top {
-				padding: 0 $spacing_20px;
+				padding: 0 $spacing_16px;
 				
 				&-logo {
 					text-align: center;
@@ -509,6 +520,12 @@ body {
 		width: 340px;
 		max-width: 100%;
 		border-left: $border_width solid $border_color;
+
+		// position: fixed;
+		// right: 0;
+		// width: 340px;
+		// height: calc(100vh - 64px);
+		// overflow-y: auto;
 
 		@media screen and (max-width: 1180px) {
 			width: 100%;
@@ -1035,7 +1052,7 @@ body {
 		}
 		// General Settings
 		.user-registration-card {
-			padding: $spacing_16px $spacing_20px $spacing_22px;
+			padding: $spacing_20px $spacing_20px $spacing_22px;
 			background: $grey-0;
 			border: $border_width solid #EDF2F7 !important;
 			border-radius: $border_radius_7;
@@ -1512,6 +1529,7 @@ body {
 					@media (max-width: 1199px) {
 						flex-direction: column;
 						gap: $spacing_10px;
+						align-items: flex-start;
 					}
 
 					&.urcr_content_restriction_enable {
