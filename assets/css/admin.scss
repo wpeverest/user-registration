@@ -1076,31 +1076,53 @@ body {
 					.form-settings-tab-back {
 						margin-bottom: 0;
 						border-radius: 0;
-						padding: $spacing_18px $spacing_24px;
-						border-bottom: $border_width solid #ececec;
+						padding: $spacing_14px $spacing_22px;
+						border-bottom: $border_width solid $border_color;
 						background: transparent;
 						font-size: 15px;
-						font-weight: $semi_bold;
-						gap: $spacing_16px;
+						font-weight: $medium;
+						gap: $spacing_20px;
 						line-height: 150%;
 						display: flex;
 						align-items: center;
+						flex-direction: row-reverse;
+						justify-content: flex-end;
 						color: $grey-400;
-						transition: all 0.3s;
+						position: relative;
+						transition: all 0.3s ease-in-out;
 
 						&::before {
 							content: "";
-							background-image: url("../images/icons/ur-right-arrow.svg");
+							background: #f4f4f4;
+							position: absolute;
+							width: 32px;
+							height: 32px;
+							top: 50%;
+							left: $spacing_16px;
+							border-radius: $border_radius_4;
+							z-index: 0;
+							transform: translateY(-50%);
+							opacity: 0;
+							transition: all .3s ease-in-out;
+						}
+
+						&::after {
+							content: "";
+							background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24' stroke='currentColor' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round' class='css-i6dzq1'%3E%3Cline x1='19' y1='12' x2='5' y2='12'%3E%3C/line%3E%3Cpolyline points='12 19 5 12 12 5'%3E%3C/polyline%3E%3C/svg%3E");
 							background-repeat: no-repeat;
 							background-size: 100%;
 							background-position: center;
 							width: 18px;
 							height: 18px;
-							transform: rotate(180deg);
+							z-index: 1;
 						}
 
 						&:hover {
 							&::before {
+								opacity: 1;
+							}
+							
+							&::after {
 								filter: brightness(0) saturate(100%) invert(35%)
 									sepia(13%) saturate(3079%)
 									hue-rotate(194deg) brightness(96%)
@@ -1112,8 +1134,8 @@ body {
 					.form-settings-tab {
 						margin-bottom: 0;
 						border-radius: 0;
-						padding: $spacing_18px $spacing_24px;
-						border-bottom: $border_width solid #ececec;
+						padding: $spacing_14px $spacing_24px;
+						border-bottom: $border_width solid $border_color;
 						background: transparent;
 						font-size: 15px;
 						font-weight: $medium;
