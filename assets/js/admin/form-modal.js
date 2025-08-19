@@ -26,7 +26,7 @@
 				cancelButtonColor: '#fafafa',
 				confirmButtonText: 'Yes, Reset',
 				cancelButtonText: 'Cancel',
-			}).then((result) => {
+			}).then(function (result) {
 				if (result.isConfirmed) {
 					var params = new URLSearchParams(window.location.search);
 					var section = params.get('section');
@@ -34,7 +34,8 @@
 						var selector = section.replace(/^ur_settings_/, 'user_registration_');
 						var editor = typeof tinymce !== "undefined" ? tinymce.get(selector) : null;
 						if (editor) {
-							editor.setContent(user_registration_email_settings[section]);
+							var content = user_registration_email_settings[section].replace(/\n\n/g, '<br>');
+							editor.setContent(content);
 						} else {
 							var $textarea = $("textarea#" + selector);
 							if ($textarea.length) {
