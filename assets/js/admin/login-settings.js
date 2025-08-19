@@ -1,5 +1,78 @@
 /* global user_registration_settings_params */
 (function ($) {
+
+	var LoginBuilderSettings = {
+		init: function () {
+			LoginBuilderSettings.init_form_builder();
+			$(document).on(
+				'click',
+				'.clickable-login-fields',
+				function () {
+					LoginBuilderSettings.handle_selected_item($(this));
+				}
+			);
+			$(document).on("click", ".ur-toggle-heading", function () {
+				$(this).toggleClass('closed');
+				$(this)
+					.parent(".user-registration-field-option-group")
+					.toggleClass("closed")
+					.toggleClass("open");
+				var field_list = $(this).find(" ~ .ur-registered-list")[0];
+				$(field_list).slideToggle();
+				// For `Field Options` section
+				$(this).siblings(".ur-toggle-content").stop().slideToggle();
+			});
+			$(document).on(
+				"click",
+				'ul.ur-tab-lists li[aria-controls="ur-tab-field-options"]',
+				function () {
+					$('form#ur-field-settings').hide();
+					$('.ur-login-form-wrapper').show();
+				}
+			);
+			$(document).on(
+				"click",
+				'ul.ur-tab-lists li[aria-controls="ur-tab-login-form-settings"]',
+				function () {
+					$('.ur-login-form-wrapper').hide();
+					$('form#ur-field-settings').show();
+				}
+			);
+			$('.clickable-login-fields[data-field="username"]').trigger('click');
+		},
+		init_form_builder: function () {
+			$(".ur-tabs .ur-tab-lists").on(
+				"click",
+				"a.nav-tab",
+				function () {
+					$(".ur-tabs .ur-tab-lists")
+						.find("a.nav-tab")
+						.removeClass("active");
+					$(this).addClass("active");
+				}
+			);
+			$(".ur-tabs").tabs();
+			$(".ur-tabs")
+				.find("a")
+				.eq(0)
+				.trigger("click", ["triggered_click"]);
+		},
+		handle_selected_item: function (selected_item) {
+			var clickable_fields = $('.clickable-login-fields'),
+				all_settings = $('#ur-tab-field-options div[data-field-key]'),
+				selected_field = selected_item.data("field");
+			clickable_fields.removeClass('active');
+
+			selected_item.addClass('active');
+			all_settings.each(function() {
+				$(this).addClass('ur-d-none');
+				if($(this).data('field-key') === selected_field) {
+					$(this).removeClass('ur-d-none');
+				}
+			});
+		},
+	};
+	LoginBuilderSettings.init();
 	// Function to handle changes in the premium sidebar.
 	$(document).ready(function () {
 		init_login_form_settings();
@@ -9,7 +82,7 @@
 				if (event.ctrlKey || event.metaKey) {
 					if (
 						"s" ===
-							String.fromCharCode(event.which).toLowerCase() ||
+						String.fromCharCode(event.which).toLowerCase() ||
 						83 === event.which
 					) {
 						event.preventDefault();
@@ -33,13 +106,14 @@
 		$(".ur_save_login_form_action_button").on("click", function () {
 			ur_save_login_form_settings();
 		});
-		$('.ur-submit-button.ur-disabled-btn').on("click", function(e) {
+
+		$('.ur-submit-button.ur-disabled-btn').on("click", function (e) {
 			e.preventDefault();
 		});
 	});
 
 	function ur_save_login_form_settings() {
-		var settings = get_login_form_settings(ur_login_form_params),
+		var settings = get_login_form_settings(ur_login_form_params.login_settings),
 			form_values = [];
 
 		$.each(settings, function (index, setting) {
@@ -108,7 +182,7 @@
 			$message_container = $(".ur-form-container").find(
 				".ur-builder-message-container"
 			);
-			$message_container.css({ top: $admin_bar.height() + "px" });
+			$message_container.css({top: $admin_bar.height() + "px"});
 		}
 
 		if ("success" === type) {
@@ -157,25 +231,22 @@
 		}, 120);
 	}
 
-	function get_login_form_settings(all_settings) {
-		var login_settings = all_settings.login_settings,
-			settings = [];
-		$.each(login_settings.sections, function (index, section) {
-			$.each(section.settings, function (index, setting) {
+	function get_login_form_settings(login_settings) {
+		var settings = [];
+			$.each(login_settings, function (index, setting) {
 				settings.push({
 					option: setting.id,
 					type: setting.type
 				});
 			});
-		});
 		return settings;
 	}
 
 	function hide_show_login_title() {
-		var value      = $("#user_registration_login_title").is(":checked"),
-			form       = $(".ur-login-form-wrapper").find(".ur-frontend-form.login"),
+		var value = $("#user_registration_login_title").is(":checked"),
+			form = $(".ur-login-form-wrapper").find(".ur-frontend-form.login"),
 			loginTitle = $("#ur-login-form-setting").find("#user_registration_general_setting_login_form_title"),
-			loginDesc  = $("#ur-login-form-setting").find("#user_registration_general_setting_login_form_desc");
+			loginDesc = $("#ur-login-form-setting").find("#user_registration_general_setting_login_form_desc");
 
 		if (value) {
 			form.find(".user-registration-login-title").show();
@@ -203,12 +274,7 @@
 				":checked"
 			),
 			form = $(".ur-login-form-wrapper").find(".ur-frontend-form.login");
-
-		if (value) {
-			form.find("#rememberme").parent("label").show();
-		} else {
-			form.find("#rememberme").parent("label").hide();
-		}
+			form.find("#rememberme").parent("label").css({opacity: (value) ? 1 : .5});
 	}
 
 	function hide_show_lost_password() {
@@ -216,12 +282,8 @@
 				":checked"
 			),
 			form = $(".ur-login-form-wrapper").find(".ur-frontend-form.login");
+			form.find(".user-registration-LostPassword").css({opacity: (value) ? 1 : .5});
 
-		if (value) {
-			form.find(".user-registration-LostPassword").show();
-		} else {
-			form.find(".user-registration-LostPassword").hide();
-		}
 	}
 
 	function hide_show_labels() {
@@ -237,18 +299,6 @@
 		}
 	}
 
-	function hide_show_registration_url() {
-		var value = $(
-				"#user_registration_general_setting_registration_url_options"
-			).val(),
-			form = $(".ur-login-form-wrapper").find(".ur-frontend-form.login");
-
-		if ("" === value.trim()) {
-			form.find(".user-registration-register").hide();
-		} else {
-			form.find(".user-registration-register").show();
-		}
-	}
 
 	function handleRecaptchaLoginSettings() {
 		var login_captcha_enabled = $(
@@ -445,13 +495,7 @@
 		);
 		hide_show_labels();
 
-		$("#user_registration_general_setting_registration_url_options").on(
-			"keyup",
-			function () {
-				hide_show_registration_url();
-			}
-		);
-		hide_show_registration_url();
+
 
 		$("#user_registration_general_setting_registration_label").on(
 			"keyup",

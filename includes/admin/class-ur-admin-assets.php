@@ -110,7 +110,7 @@ class UR_Admin_Assets {
 		$screen_id = $screen ? $screen->id : '';
 		$suffix    = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-		// Register Scripts.
+// Register Scripts.
 		wp_register_script(
 			'user-registration-admin',
 			UR()->plugin_url() . '/assets/js/admin/admin' . $suffix . '.js',
@@ -136,41 +136,45 @@ class UR_Admin_Assets {
 			false
 		);
 
-		wp_register_script(
-			'user-registration-form-builder',
-			UR()->plugin_url() . '/assets/js/admin/form-builder' . $suffix . '.js',
-			array(
-				'jquery',
-				'selectWoo',
-				'wp-color-picker',
-				'jquery-blockui',
-				'jquery-ui-sortable',
-				'jquery-ui-widget',
-				'jquery-ui-core',
-				'jquery-ui-tabs',
-				'jquery-ui-draggable',
-				'jquery-ui-droppable',
-				'ur-backbone-modal',
-				'ur-enhanced-select',
-				'perfect-scrollbar',
-				'sweetalert2',
-				'tooltipster',
-				'user-registration-scroll-ui-js',
-			),
-			UR_VERSION,
-			false
-		);
+		if("user-registration-membership_page_user-registration-login-forms" !== $screen_id) {
 
-		wp_register_script(
-			'user-registration-form-settings',
-			UR()->plugin_url() . '/assets/js/admin/form-settings' . $suffix . '.js',
-			array(
-				'user-registration-admin',
+			wp_register_script(
 				'user-registration-form-builder',
-			),
-			UR_VERSION,
-			false
-		);
+				UR()->plugin_url() . '/assets/js/admin/form-builder' . $suffix . '.js',
+				array(
+					'jquery',
+					'selectWoo',
+					'wp-color-picker',
+					'jquery-blockui',
+					'jquery-ui-sortable',
+					'jquery-ui-widget',
+					'jquery-ui-core',
+					'jquery-ui-tabs',
+					'jquery-ui-draggable',
+					'jquery-ui-droppable',
+					'ur-backbone-modal',
+					'ur-enhanced-select',
+					'perfect-scrollbar',
+					'sweetalert2',
+					'tooltipster',
+					'user-registration-scroll-ui-js',
+				),
+				UR_VERSION,
+				false
+			);
+			wp_register_script(
+				'user-registration-form-settings',
+				UR()->plugin_url() . '/assets/js/admin/form-settings' . $suffix . '.js',
+				array(
+					'user-registration-admin',
+					'user-registration-form-builder',
+				),
+				UR_VERSION,
+				false
+			);
+		}
+
+
 
 		wp_register_script( 'jquery-blockui', UR()->plugin_url() . '/assets/js/jquery-blockui/jquery.blockUI' . $suffix . '.js', array( 'jquery' ), '2.70', true );
 		wp_register_script( 'tooltipster', UR()->plugin_url() . '/assets/js/tooltipster/tooltipster.bundle' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );

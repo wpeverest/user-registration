@@ -4379,79 +4379,81 @@ a.button.ur-smart-tags-list-button {
 									padding: $spacing_20px $spacing_30px
 										$spacing_60px;
 									border-radius: $border_radius_4;
+									#user-registration {
+										max-width: 60%;
+										.ur-login {
+											&-shortcode {
+												margin-top: 0;
+												display: block;
 
-									.ur-login {
-										&-shortcode {
-											margin-top: 0;
-											display: block;
+												h1 {
+													margin-bottom: $spacing_12px;
+												}
 
-											h1 {
-												margin-bottom: $spacing_12px;
-											}
-
-											&--wrapper {
-												// width: 45%;
-												display: flex;
-												align-items: center;
-												gap: $spacing_30px;
-												// flex-wrap: nowrap;
-												flex-wrap: wrap;
-
-												@media (max-width: 1400px) {
+												&--wrapper {
+													// width: 45%;
+													display: flex;
+													align-items: center;
+													gap: $spacing_30px;
+													// flex-wrap: nowrap;
 													flex-wrap: wrap;
-													justify-content: center;
-												}
 
-												img {
-													margin-left: -$spacing_24px;
+													@media (max-width: 1400px) {
+														flex-wrap: wrap;
+														justify-content: center;
+													}
 
-													@media (max-width: 1000px) {
+													img {
+														margin-left: -$spacing_24px;
+
+														@media (max-width: 1000px) {
+															margin-left: 0;
+														}
+
+														@media (max-width: 768px) {
+															width: 100%;
+														}
+													}
+
+													.ur-login-content {
+														// width: 55%;
 														margin-left: 0;
-													}
+														margin-right: 0;
+														padding: $spacing_24px;
+														background: #f6f6f6;
+														border-radius: $border_radius_4;
+														flex: 1;
 
-													@media (max-width: 768px) {
-														width: 100%;
-													}
-												}
-												.ur-login-content {
-													// width: 55%;
-													margin-left: 0;
-													margin-right: 0;
-													padding: $spacing_24px;
-													background: #f6f6f6;
-													border-radius: $border_radius_4;
-													flex: 1;
-													p {
-														&:first-child {
-															margin-top: 0;
-														}
-													}
-													.login-forms-shortcode-action {
-														input {
-															height: 32px;
-															font-size: 15px;
+														p {
+															&:first-child {
+																margin-top: 0;
+															}
 														}
 
-														.ur-copy-shortcode {
-															box-shadow: none;
-															transition: all 0.3s
-																ease-in-out;
-
-															svg {
-																path {
-																	fill: $primary_color;
-																	transition: all
-																		0.3s
-																		ease-in-out;
-																}
+														.login-forms-shortcode-action {
+															input {
+																height: 32px;
+																font-size: 15px;
 															}
 
-															&:hover {
-																background: $primary_color !important;
+															.ur-copy-shortcode {
+																box-shadow: none;
+																transition: all 0.3s ease-in-out;
 
 																svg {
 																	path {
-																		fill: $grey-0;
+																		fill: $primary_color;
+																		transition: all 0.3s ease-in-out;
+																	}
+																}
+
+																&:hover {
+																	background: $primary_color !important;
+
+																	svg {
+																		path {
+																			fill: $grey-0;
+																		}
 																	}
 																}
 															}
@@ -4459,9 +4461,25 @@ a.button.ur-smart-tags-list-button {
 													}
 												}
 											}
+
+											&-view-doc {
+												margin-top: $spacing_32px;
+											}
 										}
-										&-view-doc {
-											margin-top: $spacing_32px;
+
+										.clickable-login-fields {
+											padding: 15px;
+											border-radius: 5px;
+											margin: 0 0 5px 0;
+											&.active {
+												border: 1px solid #475bb2;
+												&:hover {
+													border: 1px solid #475bb2;
+												}
+											}
+											&:hover {
+												border: 1px dashed #475bb2;
+											}
 										}
 									}
 								}
@@ -6780,7 +6798,6 @@ body {
 									label[for="user_registration_login_options_prevent_core_login"]
 										span {
 										bottom: 18px;
-										right: 20px;
 									}
 								}
 							}

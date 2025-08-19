@@ -1572,7 +1572,6 @@ span.ur-shortcode-form-embed-dot {
 					.ur-registered-inputs {
 						.ui-widget-content {
 							.ur-tab-contents {
-								padding: 24px;
 								background-color: #fafafa;
 								.ur-login-view-doc {
 									border-radius: 3px;
@@ -1621,7 +1620,6 @@ span.ur-shortcode-form-embed-dot {
 
 						&.ur-login-form-settings {
 							.ur-tab-contents {
-								padding: 16px 16px 0 16px;
 								.ur-tab-content {
 									padding: 0;
 									form {
@@ -2648,10 +2646,12 @@ body {
 					.menu-edit {
 						border: none;
 					}
+					#post-body {
+						margin-top: 20px;
+					}
 					.ur-registered-inputs {
 						.ui-widget-content {
 							.ur-tab-contents {
-								padding: 24px;
 								background-color: #ffffff;
 								.ur-login-view-doc {
 									border-radius: 3px;
@@ -2719,9 +2719,9 @@ body {
 
 						&.ur-login-form-settings {
 							.ur-tab-contents {
-								padding: 16px 16px 0 16px;
+								padding: 12px 12px 12px;
 								.ur-tab-content {
-									padding: 0;
+									padding: 12px 0px;
 									form {
 										.ur-login-form-setting-block {
 											&:first-child {

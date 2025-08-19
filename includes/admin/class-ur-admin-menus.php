@@ -649,14 +649,14 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 			if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page'] ) { //phpcs:ignore WordPress.Security.NonceVerification
-				wp_enqueue_script( 'user-registration-settings', UR()->plugin_url() . '/assets/js/admin/settings' . $suffix . '.js', array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-sortable', 'iris', 'tooltipster' ), UR_VERSION, true );
-				wp_enqueue_script( 'user-registration-login-settings', UR()->plugin_url() . '/assets/js/admin/login-settings' . $suffix . '.js', array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-sortable', 'iris', 'tooltipster' ), UR_VERSION, true );
+				wp_enqueue_script( 'user-registration-login-settings', UR()->plugin_url() . '/assets/js/admin/login-settings' . $suffix . '.js', array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-sortable', 'iris', 'tooltipster', 'jquery-ui-tabs' ), UR_VERSION, true );
 				wp_enqueue_style( 'user-registration-css', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR_VERSION );
+				$login_settings =  array_merge(get_login_form_settings()['sections']['login_options_settings']['settings'] , get_login_field_settings()['sections']['login_options_settings']['settings']);
 
 				$ur_login_form_params = array(
 					'ajax_url'               => admin_url( 'admin-ajax.php' ),
 					'ur_login_settings_save' => wp_create_nonce( 'ur_login_settings_save_nonce' ),
-					'login_settings'         => get_login_options_settings(),
+					'login_settings'         => $login_settings,
 					'is_login_settings_page' => isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page'] ? true : false,
 					'i18n_admin'             => array(
 						'i18n_settings_successfully_saved' => _x( 'Settings successfully saved.', 'user registration admin', 'user-registration' ),
@@ -678,7 +678,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						'user_registration_my_account_selection_validator_nonce' => wp_create_nonce( 'user_registration_my_account_selection_validator' ),
 					)
 				);
-				$login_form_settings = get_login_options_settings();
+				$login_option_settings = get_login_field_settings();
+				$login_form_settings = get_login_form_settings();
 				include_once __DIR__ . '/views/html-login-page-forms.php';
 			} else {
 				$registration_table_list->display_page();
