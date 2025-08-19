@@ -201,18 +201,17 @@ class OrderService {
 			$this->orders_repository->wpdb()->query( 'START TRANSACTION' ); // Start the transaction.
 			$subscription_service        = new SubscriptionService();
 			$approve_order = $this->orders_repository->update( $order_id, array( 'status' => 'completed' ) );
-
 			if ( $approve_order ) {
 				$subscription_data = array( 'status' => 'active' );
 				$is_upgrading      = ur_string_to_bool( get_user_meta( $user_id, 'urm_is_upgrading', true ) );
 				$is_renewing       = ur_string_to_bool( get_user_meta( $user_id, 'urm_is_member_renewing', true ) );
 
 				if ( $is_upgrading ) {
-
 					$next_subscription_data      = json_decode( get_user_meta( $user_id, 'urm_next_subscription_data', true ), true );
 					$subscription_data           = $subscription_service->prepare_upgrade_subscription_data( $next_subscription_data['membership'], $next_subscription_data['member_id'], $next_subscription_data );
 					$subscription_data['status'] = 'active';
 				}
+				$approve_order = $this->orders_repository->get_order_detail($order_id);
 				if ( "on" === $approve_order['trial_status'] ) {
 					$subscription_data['status'] = 'trial';
 				}
