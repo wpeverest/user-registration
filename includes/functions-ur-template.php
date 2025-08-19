@@ -1654,7 +1654,7 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 		$field           = '';
 
 		if( 'section' === $args['type'] ) {
-			$field = '<div class="ur-form-settings-section">';
+			$field = '<div class="ur-form-settings-section--field">';
 			$field .= '<h4>' . esc_html( $args['title'] ) . '</h4>';
 			$field .= '</div>';
 		}
@@ -1688,9 +1688,8 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 			case 'textarea':
 				$field .= '<div class="ur-settings-field">';
 				$field .= '<textarea style="margin-bottom:0px;" data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" ' . ( empty( $args['custom_attributes']['rows'] ) ? ' rows="2"' : '' ) . ( empty( $args['custom_attributes']['cols'] ) ? ' cols="5"' : '' ) . implode( ' ', $custom_attributes ) . '>' . esc_textarea( $value ) . '</textarea>';
-				$field .= '<div style="text-align: right; font-size:14px; color:#737373; margin-top:0px;"> <div class="ur-input-count" data-count-type="' . ( isset( $args['max-words'] ) ? 'words' : 'characters' ) . '" style="display: inline-block; margin-right: 1px;">0</div>';
-				$field .= '<div style="display: inline-block;">' . ( isset( $args['max-words'] ) ? '/' . $args['max-words'] . ' ' . __( 'words', 'user-registration' ) : ( isset( $args['max-characters'] ) ? '/' . $args['max-characters'] . ' ' . __( 'characters', 'user-registration' ) : ' ' . __( 'characters', 'user-registration' ) ) );
-				$field .= '</div></div>';
+				$field .= '<div style="text-align: right; font-size:14px; color:#737373; margin-top:0px;">';
+				$field .= '</div>';
 				if ( $args['description'] ) {
 					$field .= '<span class="description">' . $args['description'] . '</span>';
 				}
@@ -2011,12 +2010,12 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 				break;
 
 			case 'select':
-				$field .= '<div class="ur-settings-field">';
 
 				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : ''; // Backward compatibility. Modified since 1.5.7.
 
 				$value           = ! empty( $value ) ? $value : $default_value;
 				$options         = $field .= '';
+				$field 			.= '<div class="ur-settings-field">';
 				$backtrace       = debug_backtrace();
 				$parent_function = isset( $backtrace[1] ) ? $backtrace[1]['function'] : '';
 				$args['options'] = ( $parent_function === 'frontend_includes' ) ? apply_filters( 'override_options_for_select_field', $args['options'], $args['id'] ) : $args['options'];
@@ -2053,8 +2052,8 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 				break;
 
 			case 'multiselect':
-				$field .= '<div class="ur-settings-field">';
 				$options = $field .= '';
+				$field .= '<div class="ur-settings-field">';
 
 				if ( is_serialized( $value ) ) {
 					$default_value = unserialize( $value, array( 'allowed_classes' => false ) ); //phpcs:ignore;

@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - UR-2914/registration-form-settings
+      - master
     workflow_dispatch:
 jobs:
   sync:

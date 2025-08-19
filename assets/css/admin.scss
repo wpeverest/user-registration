@@ -2720,6 +2720,7 @@ body {
 		display: flex;
 		gap: 5px;
 		align-items: center;
+		width: 100%;
 
 		input[type="checkbox"] {
 			width: 30px !important;
@@ -4010,7 +4011,7 @@ a.button.ur-smart-tags-list-button {
 						}
 					}
 
-					&#user_registration_form_setting_general_advanced_field {
+					&.ur-form-settings-section {
 						border-top: 1px solid #e1e1e1;
 						padding-top: 20px;
 

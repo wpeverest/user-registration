@@ -1240,6 +1240,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'type'              => 'section',
 				'title'             => __( 'Advanced', 'user-registration' ),
 				'id'                => 'user_registration_form_setting_general_advanced',
+				'class'				=> array( 'ur-form-settings-section')
 			),
 			array(
 				'type'              => 'toggle',
@@ -2802,27 +2803,30 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 	 * @return string
 	 */
 	function user_registration_pro_render_conditional_logic( $connection, $integration, $form_id ) {
-		$output  = '<div class="ur_conditional_logic_container">';
+		$output = '<div class="form-row ur-form-settings-section">';
+		$output .= '<div class="ur-form-settings-section--field">';
 		$output .= '<h4>' . esc_html__( 'Conditional Logic', 'user-registration' ) . '</h4>';
-		$output .= '<div class="ur_use_conditional_logic_wrapper ur-check">';
+		$output .= '</div>';
+		$output .= '</div>';
 		$checked = '';
 
 		if ( isset( $connection['enable_conditional_logic'] ) && ur_string_to_bool( $connection['enable_conditional_logic'] ) ) {
 
 			$checked = 'checked=checked';
 		}
-		$output .= '<div class="ur-toggle-section ur-form-builder-toggle">';
+		$output .= '<div class="form-row ur-toggle-section ur-form-builder-toggle">';
+		$output .= '<label class="ur-label checkbox">' . esc_html__( 'Use Conditional Logics', 'user-registration' ) . '</label>';
+		$output .= '<div class="ur-settings-field">';
 		$output .= '<span class="user-registration-toggle-form">';
 		$output .= '<input class="ur-use-conditional-logic" type="checkbox" name="ur_use_conditional_logic" id="ur_use_conditional_logic" ' . $checked . '>';
 		$output .= '<span class="slider round">';
 		$output .= '</span>';
 		$output .= '</span>';
-		$output .= '<label>' . esc_html__( 'Use Conditional Logics', 'user-registration' ) . '</label>';
 		$output .= '</div>';
 		$output .= '</div>';
 
-		$output                .= '<div class="ur_conditional_logic_wrapper" data-source="' . esc_attr( $integration ) . '">';
-		$output                .= '<h4>' . esc_html__( 'Conditional Rules', 'user-registration' ) . '</h4>';
+		$output                .= '<div class="form-row ur_conditional_logic_wrapper" data-source="' . esc_attr( $integration ) . '">';
+		$output .= '<label class="ur-label checkbox">' . esc_html__( 'Conditional Rules', 'user-registration' ) . '</label>';
 		$output                .= '<div class="ur-logic"><p>' . esc_html__( 'Send data only if the following matches.', 'user-registration' ) . '</p></div>';
 		$output                .= '<div class="ur-conditional-wrapper">';
 		$output                .= '<select class="ur_conditional_field" name="ur_conditional_field">';
@@ -2868,7 +2872,6 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 			$value   = isset( $connection['conditional_logic_data']['conditional_value'] ) ? $connection['conditional_logic_data']['conditional_value'] : '';
 			$output .= '<input class="ur-conditional-input" type="text" name="ur-conditional-input" value="' . esc_attr( $value ) . '">';
 		}
-		$output .= '</div>';
 		$output .= '</div>';
 		$output .= '</div>';
 		return $output;
