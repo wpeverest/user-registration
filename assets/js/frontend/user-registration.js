@@ -908,7 +908,7 @@
 
 									// Prevent the form submission if submit button is hidden or disabled.
 									if (
-										get_form_nonce
+										$registration_form
 											.find(
 												"form.register button.ur-submit-button"
 											)

@@ -4129,7 +4129,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 			}
 
 			if ( empty( $username ) ) {
-				throw new Exception( '<strong>' . esc_html__( 'ERROR:', domain: 'user-registration' ) . '</strong>' . $messages['empty_username'] );
+				throw new Exception( '<strong>' . esc_html__( 'ERROR:',  'user-registration' ) . '</strong>' . $messages['empty_username'] );
 			}
 
 			if ( is_email( $username ) && apply_filters( 'user_registration_get_username_from_email', true ) ) {
