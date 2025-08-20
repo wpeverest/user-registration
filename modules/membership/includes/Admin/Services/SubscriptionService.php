@@ -134,7 +134,8 @@ class SubscriptionService {
 				$mollie_service = new MollieService();
 
 				return $mollie_service->cancel_subscription( $order, $subscription );
-
+			case 'bank':
+				return array( 'status' => true );
 			default:
 				$logger->notice( 'Default cancellation Reached', array( 'source' => 'urm-cancellation-log' ) );
 
