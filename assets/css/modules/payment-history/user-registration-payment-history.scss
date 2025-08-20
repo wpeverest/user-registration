@@ -108,3 +108,23 @@ $background-color_2: #fefefe;
 		padding: 2px 6px;
 	}
 }
+
+body.user-registration {
+	#user-registration-pro-filters-row {
+		.search-box {
+			width: 275px;
+		}
+	}
+	
+	#ur-membership-payment-history-form {
+		.tablenav {
+			.bulkactions {
+				.select2 {
+					&-container {
+						width: 220px !important;
+					}
+				}
+			}
+		}
+	}
+}
