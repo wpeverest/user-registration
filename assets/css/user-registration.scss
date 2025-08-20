@@ -722,6 +722,9 @@ textarea.ur-input-border-red {
 	}
 
 	&.ur-frontend-form--bordered {
+		box-shadow: none !important;
+		border: 0 !important;
+
 		form {
 			.ur-form-row {
 				.ur-form-grid {
@@ -736,10 +739,10 @@ textarea.ur-input-border-red {
 						border: 1px solid $border_color;
 						outline: none;
 						transition: all 0.35s;
-						padding: 10px 15px;
+						padding: 0 12px;
 						background: $input_background_color;
 						color: $label_color;
-						height: 45px;
+						height: 38px;
 					}
 
 					legend,
@@ -785,8 +788,8 @@ textarea.ur-input-border-red {
 	}
 
 	&.ur-frontend-form--flat {
-		background: $color_sortable_background;
 		border: none transparent;
+		box-shadow: none !important;
 
 		form {
 			.ur-form-row {
@@ -804,13 +807,13 @@ textarea.ur-input-border-red {
 					input[type="number"],
 					textarea,
 					select {
-						border: none;
+						// border: none;
 						outline: none;
-						padding: 10px 15px;
+						padding: 0 12px;
 						background: $white;
 						color: $label_color;
 						margin-bottom: 10px;
-						height: 45px;
+						height: 38px;
 
 						&:focus {
 							box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.05);
@@ -852,14 +855,14 @@ textarea.ur-input-border-red {
 					input[type="number"],
 					textarea,
 					select {
-						border: 1px solid $rounded-color;
+						border: $border_width solid $border_color;
 						border-radius: 25px !important;
 						outline: none;
 						transition: all 0.35s;
-						padding: 10px 15px;
+						padding: 0 12px;
 						background: $white;
 						color: $label_color;
-						height: 45px;
+						height: 38px;
 					}
 
 					button[type="button"] {
@@ -902,6 +905,8 @@ textarea.ur-input-border-red {
 		}
 
 		&.ur-frontend-form--rounded-edge {
+			border-radius: 30px !important;
+
 			form {
 				.ur-form-row {
 					.ur-form-grid {
@@ -914,6 +919,7 @@ textarea.ur-input-border-red {
 						textarea,
 						select {
 							border-radius: 2px;
+							border-color: $border_color;
 						}
 
 						.hide_show_password {
@@ -2088,12 +2094,12 @@ body {
 
 				&:has(.ur-frontend-form--bordered) {
 					box-shadow: none;
-					border: 1px solid #e9e9e9;
+					border: $border_width solid $border_color;
 				}
 
 				&:has(.ur-frontend-form--flat) {
 					box-shadow: none;
-					border: 1px solid #e9e9e9;
+					border: $border_width solid $border_color;
 					border-radius: 0;
 
 					.user-registration-form-login {
@@ -2174,7 +2180,7 @@ body {
 					}
 
 					&--flat {
-						background: transparent;
+						background: $white;
 
 						.user-registration-form-login {
 							.ur-form-row {
@@ -2935,10 +2941,6 @@ body {
 
 				.user-registration-login-settings-form {
 					border-radius: $border_radius_4;
-
-					&#ur-frontend-form {
-						border: 1px solid #EDF2F7;
-					}
 
 					a {
 						pointer-events: none;

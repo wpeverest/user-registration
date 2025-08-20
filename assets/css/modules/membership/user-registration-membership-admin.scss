@@ -512,6 +512,11 @@
 
 				tfoot {
 					tr {
+						td,
+						th {
+							border-top: $border_width solid $border_color;
+						}
+
 						th {
 							font-size: 14px;
 							font-weight: 600;
