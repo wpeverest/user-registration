@@ -19,6 +19,7 @@
         margin: 0;
         border: $border_width solid $border_color;
         border-radius: $border_radius_4;
+		background-color: $white;
 
         &:hover {
             color: $grey-400;

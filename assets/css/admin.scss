@@ -1121,7 +1121,7 @@ body {
 							&::before {
 								opacity: 1;
 							}
-							
+
 							&::after {
 								filter: brightness(0) saturate(100%) invert(35%)
 									sepia(13%) saturate(3079%)
@@ -3876,12 +3876,9 @@ a.button.ur-smart-tags-list-button {
 				}
 
 				.form-row {
-					// width: 620px;
 					width: 100%;
 					max-width: 100%;
 					margin-bottom: $spacing_20px;
-					// display: flex;
-					// align-items: center;
 
 					&#user_registration_form_setting_minimum_password_strength_field {
 						margin-bottom: 0;
@@ -3893,9 +3890,7 @@ a.button.ur-smart-tags-list-button {
 						color: $grey-400;
 						display: flex;
 						align-items: center;
-						// width: max-content;
 						gap: $spacing_4px;
-						// margin-bottom: 0;
 
 						&.checkbox {
 							font-size: 14px;
@@ -4011,8 +4006,8 @@ a.button.ur-smart-tags-list-button {
 								&:hover,
 								&.active {
 									label {
-										color: #475bb3;
-										border-color: #475bb3;
+										color: $primary_color;
+										border-color: $primary_color;
 										background-color: #ebecf1;
 									}
 								}
@@ -7345,7 +7340,7 @@ body.user-registration {
 
 		&-select {
 			padding: 0 $spacing_32px;
-	
+
 			.alignleft {
 				h2 {
 					padding: 0;
@@ -7354,7 +7349,7 @@ body.user-registration {
 					gap: $spacing_12px;
 				}
 			}
-	
+
 			.alignright {
 				form {
 					display: flex;

@@ -173,7 +173,7 @@ body {
 
 			&--top {
 				padding: 0 $spacing_16px;
-				
+
 				&-logo {
 					text-align: center;
 					margin-bottom: $spacing_28px;
@@ -1515,7 +1515,7 @@ body {
 					align-items: center;
 					margin-bottom: $spacing_28px;
 
-					&:has(.description),					
+					&:has(.description),
 					&:has(.error),
 					&:has(textarea) {
 						align-items: baseline;
@@ -1839,16 +1839,20 @@ body {
 						.button, .ur-button {
 							width: fit-content;
 							text-align: center;
+
+							&.user_registration-deactivate-license-key {
+								background: #f25656 !important;
+							}
 						}
 
 						.user_registration_send_email_test {
-							color: #475bb2;
-							border-color: #475bb2;
+							color: $primary_color;
+							border-color: $primary_color;
 						}
 
 						#select-smart-tags {
-							color: #475bb2;
-							border-color: #475bb2;
+							color: $primary_color;
+							border-color: $primary_color;
 							height: 30px;
 							text-align: center;
 							line-height: 18px;
