@@ -4471,13 +4471,16 @@ a.button.ur-smart-tags-list-button {
 											padding: 15px;
 											border-radius: 5px;
 											margin: 0 0 5px 0;
+											border: 1px solid transparent;
 											&.active {
 												border: 1px solid #475bb2;
+												background-color: #f8f8fa;
 												&:hover {
 													border: 1px solid #475bb2;
 												}
 											}
 											&:hover {
+												background-color: #f8f8fa;
 												border: 1px dashed #475bb2;
 											}
 										}

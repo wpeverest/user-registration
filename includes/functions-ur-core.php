@@ -7373,7 +7373,7 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'field-key'=> 'registration-setting'
 							),
 							array(
-								'title'    => __( 'Username/Email', 'user-registration' ),
+								'title'    => __( 'Label', 'user-registration' ),
 								'desc'     => __( 'Customize the label for the Username or Email field.', 'user-registration' ),
 								'id'       => 'user_registration_label_username_or_email',
 								'type'     => 'text',
@@ -7383,7 +7383,7 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'field-key'=> 'username'
 							),
 							array(
-								'title'    => __( 'Password', 'user-registration' ),
+								'title'    => __( 'Label', 'user-registration' ),
 								'desc'     => __( 'Customize the label for the Password field.', 'user-registration' ),
 								'id'       => 'user_registration_label_password',
 								'type'     => 'text',
@@ -7393,7 +7393,7 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'field-key'=> 'password'
 							),
 							array(
-								'title'    => __( 'Remember Me', 'user-registration' ),
+								'title'    => __( 'Label', 'user-registration' ),
 								'desc'     => __( 'Customize the label for the “Remember Me” checkbox.', 'user-registration' ),
 								'id'       => 'user_registration_label_remember_me',
 								'type'     => 'text',
@@ -7403,7 +7403,7 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'field-key'=> 'remember-me'
 							),
 							array(
-								'title'    => __( 'Login Button', 'user-registration' ),
+								'title'    => __( 'Button Text', 'user-registration' ),
 								'desc'     => __( 'Change the text on the Login button.', 'user-registration' ),
 								'id'       => 'user_registration_label_login',
 								'type'     => 'text',
@@ -7413,7 +7413,7 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'field-key'=> 'login-button'
 							),
 							array(
-								'title'    => __( 'Lost Password', 'user-registration' ),
+								'title'    => __( 'Label', 'user-registration' ),
 								'desc'     => __( 'Change the text for the “Lost your password?” link.', 'user-registration' ),
 								'id'       => 'user_registration_label_lost_your_password',
 								'type'     => 'text',
@@ -7423,7 +7423,7 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'field-key'=> 'lost-password'
 							),
 							array(
-								'title'    => __( 'Username / Email', 'user-registration' ),
+								'title'    => __( 'Placeholder', 'user-registration' ),
 								'desc'     => __( 'Placeholder inside the Username or Email input.', 'user-registration' ),
 								'id'       => 'user_registration_placeholder_username_or_email',
 								'type'     => 'text',
@@ -7433,7 +7433,7 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'field-key'=> 'username'
 							),
 							array(
-								'title'    => __( 'Password', 'user-registration' ),
+								'title'    => __( 'Placeholder', 'user-registration' ),
 								'desc'     => __( 'Placeholder inside the Password input.', 'user-registration' ),
 								'id'       => 'user_registration_placeholder_password',
 								'type'     => 'text',
@@ -7443,7 +7443,7 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'field-key'=> 'password'
 							),
 							array(
-								'title'    => __( 'Username / Email Required', 'user-registration' ),
+								'title'    => __( 'Required Message', 'user-registration' ),
 								'desc'     => __( 'Message shown when username or email is missing.', 'user-registration' ),
 								'id'       => 'user_registration_message_username_required',
 								'type'     => 'text',
@@ -7453,7 +7453,7 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'field-key'=> 'username'
 							),
 							array(
-								'title'       => __( 'Password Required', 'user-registration' ),
+								'title'       => __( 'Required Message', 'user-registration' ),
 								'desc'        => __( 'Message shown when password is not entered.', 'user-registration' ),
 								'id'          => 'user_registration_message_empty_password',
 								'type'        => 'text',
@@ -7464,7 +7464,7 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'field-key'   => 'password'
 							),
 							array(
-								'title'       => __( 'Invalid Username', 'user-registration' ),
+								'title'       => __( 'Invalid Username Message', 'user-registration' ),
 								'desc'        => __( 'Message shown when the username is incorrect or unknown.', 'user-registration' ),
 								'id'          => 'user_registration_message_invalid_username',
 								'type'        => 'text',
@@ -7475,7 +7475,7 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'field-key'   => 'username'
 							),
 							array(
-								'title'    => __( 'Invalid Email', 'user-registration' ),
+								'title'    => __( 'Invalid Email Message', 'user-registration' ),
 								'desc'     => __( 'Message shown when the email address is not found.', 'user-registration' ),
 								'id'       => 'user_registration_message_unknown_email',
 								'type'     => 'text',
