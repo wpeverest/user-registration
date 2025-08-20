@@ -1502,7 +1502,6 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_enable_akismet', false ),
 				'tip'               => __( 'Stop spam sign-ups using the Akismet plugin.', 'user-registration' ),
-
 			),
 			array(
 				'type'        => 'label',
@@ -6372,7 +6371,9 @@ if ( ! function_exists( 'ur_settings_text_format' ) ) {
 			}
 
 			if ( isset( $arg['label'] ) ) {
-				$arg['label'] = ur_get_capitalized_words( $arg['label'] );
+				if( strpos($arg['label'], 'CSS') < 0 ) {
+					$arg['label'] = ur_get_capitalized_words( $arg['label'] );
+				}
 			}
 
 			if ( isset( $arg['desc_tip'] ) && ( $arg['desc_tip'] != 1 || $arg['desc_tip'] !== true ) ) {
@@ -6416,7 +6417,9 @@ if ( ! function_exists( 'ur_format_sentence_case' ) ) {
 	function ur_format_sentence_case( $string ) {
 		$sentences = preg_split( '/(\.\s+)/', $string, -1, PREG_SPLIT_DELIM_CAPTURE );
 		foreach ( $sentences as &$sentence ) {
-			$sentence = ucfirst( trim( $sentence ) );
+			if (trim($sentence) !== '' && $sentence !== '.' && !preg_match('/^\.\s*$/', $sentence)) {
+				$sentence = ucfirst(ltrim($sentence));
+			}
 		}
 		return implode( '', $sentences );
 	}

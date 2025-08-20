@@ -1721,6 +1721,11 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 				$field .= '</div>';
 				break;
 
+			case 'label':
+				$field = '<div class="' . esc_attr($args['id']) . '">';
+				$field .= '<span class="description">' . $args['description'] . '</span>';
+				$field .= '</div>';
+				break;
 			case 'radio-group':
 				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : '';    // Backward compatibility. Modified since 1.5.7.
 				$default       = ! empty( $value ) ? $value : $default_value;
