@@ -54,7 +54,7 @@ class UR_Form_Handler {
 			$value = sprintf( '%s:%s', sanitize_text_field( wp_unslash( $_GET['login'] ) ), sanitize_text_field( wp_unslash( $_GET['key'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
 			UR_Shortcode_My_Account::set_reset_password_cookie( $value );
 
-			wp_safe_redirect( ur_resetpassword_url() );
+			wp_safe_redirect( add_query_arg( 'show-reset-form', 'true', ur_resetpassword_url() ) );
 			exit;
 		}
 	}
