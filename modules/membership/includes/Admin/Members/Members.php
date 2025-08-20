@@ -230,7 +230,7 @@ if ( ! class_exists( 'Members' ) ) {
 					</div>
 					<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $this->page . '&action=add_new_member' ) ); ?>"
 					   id="user-registration-members-add-btn" class="button button-primary ur-button-primary">
-						+ <?php esc_html_e( 'Add new Member', 'user-registration' ); ?>
+						+ <?php esc_html_e( 'Add New', 'user-registration' ); ?>
 					</a>
 				</div>
 				<div id="user-registration-list-filters-row" style="align-items: center;">

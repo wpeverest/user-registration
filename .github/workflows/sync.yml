@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - enhance/unified-header
+      - master
     workflow_dispatch:
 jobs:
   sync:

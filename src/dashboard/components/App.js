@@ -104,7 +104,7 @@ const App = () => {
 						</DrawerBody>
 					</DrawerContent>
 				</Drawer>
-				<Container maxW="container.xl">
+				<Container maxW="100%">
 					<Router />
 				</Container>
 			</ChakraProvider>

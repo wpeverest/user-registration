@@ -65,7 +65,7 @@ const Header = () => {
 				borderBottom="1px solid #E9E9E9"
 				width="100%"
 			>
-				<Container maxW="container.xl">
+				<Container maxW="100%">
 					<Stack
 						direction="row"
 						minH="70px"
