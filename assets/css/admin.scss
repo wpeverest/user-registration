@@ -1499,8 +1499,8 @@
 		display: block;
 		width: 100%;
 		margin-bottom: 8px;
-		color: $color_gray_one;
-		font-size: 13px;
+		color: '#383838';
+		font-size: 15px;
 		font-weight: $medium;
 		line-height: 1.25;
 	}
@@ -3968,7 +3968,7 @@ a.button.ur-smart-tags-list-button {
 					// width: 620px;
 					width: 100%;
 					max-width: 100%;
-					margin-bottom: $spacing_20px;
+					margin-bottom: $spacing_24px;
 
 					&#user_registration_form_setting_minimum_password_strength_field {
 						margin-bottom: 0;
@@ -4380,7 +4380,7 @@ a.button.ur-smart-tags-list-button {
 										$spacing_60px;
 									border-radius: $border_radius_4;
 									#user-registration {
-										max-width: 60%;
+
 										.ur-login {
 											&-shortcode {
 												margin-top: 0;
@@ -6725,7 +6725,7 @@ body {
 		.user-registration-login-form-container {
 			.ur-registered-from {
 				.ur-login-form-settings {
-					max-width: 360px;
+					max-width: 412px;
 					width: 100% !important;
 
 					.nav-tab-wrapper {

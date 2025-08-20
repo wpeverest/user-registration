@@ -4,7 +4,6 @@
 		var snackbar = new UR_Snackbar();
 	}
 
-
 	// Allowed Screens
 	$("select#user_registration_allowed_screens")
 		.on("change", function () {
@@ -49,7 +48,7 @@
 				$(this)
 					.parent()
 					.find(".colorpickpreview")
-					.css({backgroundColor: ui.color.toString()});
+					.css({ backgroundColor: ui.color.toString() });
 			},
 			hide: true,
 			border: true
@@ -236,15 +235,15 @@
 				data: {
 					action: "user_registration_captcha_test",
 					security:
-					user_registration_settings_params.user_registration_captcha_test_nonce,
+						user_registration_settings_params.user_registration_captcha_test_nonce,
 					captcha_type: captcha_type,
 					invisible_recaptcha: invisible_recaptcha
 				},
 				beforeSend: function () {
 					var spinner = $(
 						"#user_registration_captcha_setting_" +
-						captcha_type +
-						"_captcha_test .spinner"
+							captcha_type +
+							"_captcha_test .spinner"
 					);
 					spinner.show();
 					setTimeout(function () {
@@ -254,8 +253,8 @@
 				success: function (response) {
 					var ur_recaptcha_node = $(
 							'.ur-captcha-test-container[data-captcha-type="' +
-							captcha_type +
-							'"] .ur-captcha-node'
+								captcha_type +
+								'"] .ur-captcha-node'
 						),
 						ur_recaptcha_code = response.data.ur_recaptcha_code;
 
@@ -354,12 +353,12 @@
 									try {
 										turnstile.render(
 											"#" +
-											ur_recaptcha_node
-												.find(".cf-turnstile")
-												.attr("id"),
+												ur_recaptcha_node
+													.find(".cf-turnstile")
+													.attr("id"),
 											{
 												sitekey:
-												ur_recaptcha_code.site_key,
+													ur_recaptcha_code.site_key,
 												theme: ur_recaptcha_code.theme_mode,
 												style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"
 											}
@@ -400,18 +399,18 @@
 		if (notice.length) {
 			var notice_container = $(
 				'.ur-captcha-test-container[data-captcha-type="' +
-				captcha_type +
-				'"]'
+					captcha_type +
+					'"]'
 			).find(".ur-captcha-notice");
 			var notice_icon = $(
 				'.ur-captcha-test-container[data-captcha-type="' +
-				captcha_type +
-				'"]'
+					captcha_type +
+					'"]'
 			).find(".ur-captcha-notice--icon");
 			var notice_text = $(
 				'.ur-captcha-test-container[data-captcha-type="' +
-				captcha_type +
-				'"]'
+					captcha_type +
+					'"]'
 			).find(".ur-captcha-notice--text");
 
 			if (notice_text.length) {
@@ -435,93 +434,12 @@
 
 		var spinner = $(
 			"#user_registration_captcha_setting_" +
-			captcha_type +
-			"_captcha_test .spinner"
+				captcha_type +
+				"_captcha_test .spinner"
 		);
 		spinner.hide();
 	}
 
-	$(".ur-redirect-to-login-page").ready(function () {
-		var $url = $(".ur-redirect-to-login-page"),
-			$check = $("#user_registration_login_options_prevent_core_login"),
-			$redirect = $(
-				"#user_registration_login_options_login_redirect_url"
-			);
-		if (!$check.prop("checked")) {
-			$url.val("").closest(".single_select_page").css("display", "none");
-		} else {
-			var $selected_page = $check
-				.closest(".ur-login-form-setting-block")
-				.find(".ur-redirect-to-login-page")
-				.val();
-			var login_form_settings = $check.closest(
-				".user-registration-login-form-container"
-			);
-			var wpbody_class =
-				$(login_form_settings).closest("#wpbody-content");
-
-			if ("" === $selected_page) {
-				$check
-					.closest(".ur-login-form-setting-block")
-					.find(".ur-redirect-to-login-page")
-					.closest(
-						".user-registration-login-form-global-settings--field"
-					)
-					.append(
-						'<div class="error inline" style="padding:10px;">' +
-						ur_login_form_params.user_registration_membership_redirect_default_page_message +
-						"</div>"
-					);
-			} else {
-				$(wpbody_class)
-					.find("#ur-lists-page-topnav")
-					.find(".ur_save_login_form_action_button")
-					.prop("disabled", false);
-				$check
-					.closest(".ur-login-form-setting-block")
-					.find(".ur-redirect-to-login-page")
-					.closest(
-						".user-registration-login-form-global-settings--field"
-					)
-					.find(".error.inline")
-					.remove();
-			}
-
-			$redirect.prop("required", true);
-		}
-
-		// Handling the "clear" button click event for Select2.
-		$(
-			'select[name="user_registration_login_options_login_redirect_url"]'
-		).on("select2:unselect", function () {
-			$check
-				.closest(".ur-login-form-setting-block")
-				.find(".ur-redirect-to-login-page")
-				.closest(".user-registration-login-form-global-settings--field")
-				.append(
-					'<div class="error inline" style="padding:10px;">' +
-					ur_login_form_params.user_registration_membership_redirect_default_page_message +
-					"</div>"
-				);
-
-			$redirect.prop("required", true);
-		});
-	});
-
-	$("#user_registration_login_options_prevent_core_login").on(
-		"change",
-		function () {
-			var $url = $("#user_registration_login_options_prevent_core_login");
-
-			$(".single_select_page").toggle();
-			$("#user_registration_login_options_login_redirect_url").prop(
-				"required",
-				function () {
-					return "checked" === $url.prop("checked") ? true : false;
-				}
-			);
-		}
-	);
 	// Display the sync profile picture settings when the disable profile picture is checked and advanced fields is active.
 	$("#user_registration_disable_profile_picture").on("change", function () {
 		var is_advanced_fields_active = parseInt(
@@ -699,7 +617,7 @@
 			data = {
 				action: "user_registration_my_account_selection_validator",
 				security:
-				user_registration_settings_params.user_registration_my_account_selection_validator_nonce
+					user_registration_settings_params.user_registration_my_account_selection_validator_nonce
 			};
 
 		data.user_registration_selected_my_account_page = $this.val();
@@ -724,8 +642,8 @@
 						.closest(".user-registration-global-settings--field")
 						.append(
 							"<div id='message' class='error inline' style='padding:10px;'>" +
-							response.responseJSON.data.message +
-							"</div>"
+								response.responseJSON.data.message +
+								"</div>"
 						);
 					$this.css("border", "1px solid red");
 					$this
@@ -758,7 +676,7 @@
 			data = {
 				action: "user_registration_lost_password_selection_validator",
 				security:
-				ur_login_form_params.user_registration_lost_password_selection_validator_nonce
+					ur_login_form_params.user_registration_lost_password_selection_validator_nonce
 			};
 
 		data.user_registration_selected_lost_password_page = $this.val();
@@ -790,8 +708,8 @@
 							)
 							.append(
 								"<div id='message' class='error inline' style='padding:10px;'>" +
-								response.responseJSON.data.message +
-								"</div>"
+									response.responseJSON.data.message +
+									"</div>"
 							);
 					}
 					$this.css("border", "1px solid red");
@@ -996,7 +914,7 @@
 			heightAuto: false,
 			width: "575px",
 			confirmButtonText:
-			user_registration_settings_params.i18n.upgrade_plan
+				user_registration_settings_params.i18n.upgrade_plan
 		}).then(function (result) {
 			if (result.isConfirmed) {
 				window.open(
@@ -1147,7 +1065,7 @@
 	function show_success_message(message) {
 		if (snackbar) {
 			snackbar.add({
-				type: 'success',
+				type: "success",
 				message: message,
 				duration: 5
 			});
@@ -1164,7 +1082,7 @@
 	function show_failure_message(message) {
 		if (snackbar) {
 			snackbar.add({
-				type: 'failure',
+				type: "failure",
 				message: message,
 				duration: 6,
 				dismissible: true
@@ -1174,26 +1092,32 @@
 		return false;
 	}
 
-	function update_payment_section_settings(setting_id, section_data, $this, settings_container) {
-
+	function update_payment_section_settings(
+		setting_id,
+		section_data,
+		$this,
+		settings_container
+	) {
 		$.ajax({
 			url: user_registration_settings_params.ajax_url,
 			data: {
 				action: "user_registration_save_payment_settings",
-				security: user_registration_settings_params.user_registration_membership_payment_settings_nonce,
+				security:
+					user_registration_settings_params.user_registration_membership_payment_settings_nonce,
 				setting_id: setting_id,
 				section_data: JSON.stringify(section_data)
 			},
 			type: "POST",
 			complete: function (response) {
-				$this.find('.ur-spinner').remove();
+				$this.find(".ur-spinner").remove();
 				if (response.responseJSON.success) {
 					show_success_message(response.responseJSON.data.message);
-					settings_container.find('.integration-status').addClass('ur-integration-account-connected');
+					settings_container
+						.find(".integration-status")
+						.addClass("ur-integration-account-connected");
 				} else {
 					show_failure_message(response.responseJSON.data.message);
 				}
-
 			}
 		});
 	}
@@ -1233,7 +1157,7 @@
 				type: type,
 				value: val,
 				security:
-				user_registration_settings_params.user_registration_membership_pages_selection_validator_nonce
+					user_registration_settings_params.user_registration_membership_pages_selection_validator_nonce
 			},
 			type: "POST",
 			complete: function (response) {
@@ -1242,8 +1166,8 @@
 						.closest(".user-registration-global-settings--field")
 						.append(
 							"<div id='message' class='error inline' style='padding:10px;'>" +
-							response.responseJSON.message +
-							"</div>"
+								response.responseJSON.message +
+								"</div>"
 						);
 					$this
 						.closest(".user-registration-global-settings--field")
@@ -1281,42 +1205,61 @@
 		});
 	});
 
-	$('.payment-settings-btn').on('click', function () {
+	$(".payment-settings-btn").on("click", function () {
 		var $this = $(this),
-			setting_id = $this.data('id'),
-			settings_container = $this.closest('#' + setting_id);
+			setting_id = $this.data("id"),
+			settings_container = $this.closest("#" + setting_id);
 
-		if ($this.find('.ur-spinner').length > 0) {
+		if ($this.find(".ur-spinner").length > 0) {
 			return;
 		}
 		$this.append("<span class='ur-spinner'></span>");
 
 		var section_data = {};
 
-		settings_container.find('input, select, textarea').each(function (key, item) {
-			var $item = $(item);
-			var name = $item.attr('name');
-			if (!name) return;
+		settings_container
+			.find("input, select, textarea")
+			.each(function (key, item) {
+				var $item = $(item);
+				var name = $item.attr("name");
+				if (!name) return;
 
-			var value;
-			if ($item.attr('type') === 'checkbox') {
-				value = $item.is(":checked");
-			} else if ($item.is('textarea') && typeof tinymce !== 'undefined' && tinymce.get(name)) {
-				value = tinymce.get(name).getContent();
-			} else {
-				value = $item.val();
-			}
-			section_data[name] = value;
-		});
+				var value;
+				if ($item.attr("type") === "checkbox") {
+					value = $item.is(":checked");
+				} else if (
+					$item.is("textarea") &&
+					typeof tinymce !== "undefined" &&
+					tinymce.get(name)
+				) {
+					value = tinymce.get(name).getContent();
+				} else {
+					value = $item.val();
+				}
+				section_data[name] = value;
+			});
 
-		update_payment_section_settings(setting_id, section_data, $this, settings_container);
+		update_payment_section_settings(
+			setting_id,
+			section_data,
+			$this,
+			settings_container
+		);
 	});
 
 	var searchParams = new URLSearchParams(window.location.search);
-	if (searchParams.has('method') && searchParams.get('method') !== "" && $('.user-registration-settings-container').find('#' + searchParams.get('method')).length > 0) {
-		var container = $('.user-registration-settings-container').find('#' + searchParams.get('method'));
+	if (
+		searchParams.has("method") &&
+		searchParams.get("method") !== "" &&
+		$(".user-registration-settings-container").find(
+			"#" + searchParams.get("method")
+		).length > 0
+	) {
+		var container = $(".user-registration-settings-container").find(
+			"#" + searchParams.get("method")
+		);
 		setTimeout(function () {
-			container.find('.integration-header-info').trigger('click')
+			container.find(".integration-header-info").trigger("click");
 		}, 400);
 	}
 })(jQuery);

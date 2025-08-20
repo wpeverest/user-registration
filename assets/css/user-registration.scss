@@ -1640,6 +1640,7 @@ span.ur-shortcode-form-embed-dot {
 													display: flex;
 													flex-direction: column;
 													gap: 12px;
+
 													label {
 														font-weight: 600;
 														gap: 6px;
@@ -2646,9 +2647,7 @@ body {
 					.menu-edit {
 						border: none;
 					}
-					#post-body {
-						margin-top: 20px;
-					}
+
 					.ur-registered-inputs {
 						.ui-widget-content {
 							.ur-tab-contents {
@@ -2719,11 +2718,10 @@ body {
 
 						&.ur-login-form-settings {
 							.ur-tab-contents {
-								padding: 12px 12px 12px;
 								.ur-tab-content {
-									padding: 12px 0px;
 									form {
 										.ur-login-form-setting-block {
+											padding: 32px 12px 12px;
 											&:first-child {
 												h2 {
 													&.ur-toggle-heading {
@@ -2738,8 +2736,9 @@ body {
 												gap: 28px;
 												.user-registration-login-form-global-settings {
 													display: flex;
-													flex-direction: column;
+													// flex-direction: column;
 													gap: 12px;
+
 													label {
 														font-weight: 600;
 														gap: 6px;
@@ -2929,6 +2928,57 @@ body.user-registration-page {
 						}
 					}
 				}
+			}
+		}
+	}
+}
+
+#ur-field-all-settings {
+
+	.user-registration-login-form-global-settings:not(.ur-toggle-setting) {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.ur-toggle-setting {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.user-registration-login-form-global-settings{
+
+		.user-registration-login-form-toggle-option {
+			display: flex;
+		}
+
+		label {
+			font-size: 14px;
+			flex: 0 0 40%;
+			color: #383838;
+		}
+
+		&--field {
+			width: 100%;
+		}
+
+		.user-registration-help-tip {
+			top: 3px;
+		}
+
+		.description {
+			width: 60%;
+			margin-left: auto;
+		}
+
+		&.ur-form-settings-section {
+			border-top: 1px solid #e1e1e1;
+			padding-top: 20px;
+
+			h4 {
+				color: #131313;
+				font-weight: 600;
+				margin: 0;
 			}
 		}
 	}
