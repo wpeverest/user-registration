@@ -442,7 +442,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					array( 'user_registration_my_account_layout', 'horizontal' ),
 					array( 'user_registration_ajax_form_submission_on_edit_profile', false ),
 					array( 'user_registration_disable_profile_picture', false ),
-					array( 'user_registration_disable_logout_confirmation', false ),
+					array( 'user_registration_disable_logout_confirmation', true ),
 					array( 'user_registration_login_options_form_template', 'default' ),
 					array( 'user_registration_general_setting_login_options_with', 'default' ),
 					array( 'user_registration_login_title', false ),

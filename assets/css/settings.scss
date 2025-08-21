@@ -1034,10 +1034,41 @@ body {
 				}
 
 				.user_registration_smart_tags_used {
-					color: #475bb2;
-					border-color: #475bb2;
-					background-color: #f6f7f7;
-					padding: 0px 6px;
+					display: inline-flex;
+					align-items: center;
+					gap: 6px;
+					padding: 4px 10px;
+					min-width: 90px;
+					border: 1px solid transparent;
+					border-radius: 6px;
+					text-decoration: none;
+					transition: all 0.2s ease;
+					color: #383838;
+
+					span:first-child {
+						text-decoration: underline;
+						font-weight: 500;
+						opacity: 0.8;
+						transition: color 0.2s ease, opacity 0.2s ease;
+					}
+
+					&:focus, &:hover {
+						background-color: transparent;
+						color: #222222;
+						box-shadow: none;
+						outline: none;
+
+						span:first-child {
+							color: $primary_color;
+							opacity: 1;
+						}
+
+						.dashicons {
+							color: $primary_color;
+							opacity: 1;
+							transform: translateY(-1px);
+						}
+					}
 				}
 
 				// Integration Settings
