@@ -218,7 +218,7 @@ class UR_Emailer {
 		$username     = $user_data->user_login;
 		$single_field = array();
 
-		if ( ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
+		if ( ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) || current_user_can( 'manage_options' ) ) {
 
 			if ( isset( $_POST['form_data'] ) ) { //PHPCS:ignore
 				$form_data = json_decode( stripslashes( $_POST['form_data'] ) ); //PHPCS:ignore
