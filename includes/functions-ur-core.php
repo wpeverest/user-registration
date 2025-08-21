@@ -4296,18 +4296,22 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 						)
 					);
 				}
-				/**
-				 * Filters the error messages displayed on the login screen.
-				 *
-				 * @param string $message The original error message displayed on the login screen.
-				 */
-				add_filter( "user_registration_post_login_errors", function( $err_msg ) use ($message) {
-						return apply_filters( 'login_errors', $message );
-				}, 10, 1 );
+
+				// Store error message in session for PRG pattern
+				if ( ! session_id() ) {
+					session_start();
+				}
+				$_SESSION['ur_login_error'] = apply_filters( 'login_errors', $message );
+
 				/**
 				 * Triggered when a user fails to log in during the user registration process.
 				 */
 				do_action( 'user_registration_login_failed' );
+
+				// Redirect to prevent form resubmission
+				$redirect_url = wp_get_raw_referer() ? wp_get_raw_referer() : ur_get_my_account_url();
+				wp_redirect( $redirect_url );
+				exit;
 			}
 		}
 	}
