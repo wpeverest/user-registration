@@ -905,52 +905,34 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 	 * @param string $notice_type Notice Type.
 	 */
 	function user_registration_plugin_main_header() {
+		$all_forms = ur_get_all_user_registration_form();
+		$postfix = count($all_forms ) > 1 ? 'Forms' : 'Form';
 
 		$menu_items = apply_filters( 'user_registration_plugin_main_header_items', array_merge(
 				array(
 					'dashboard' => array(
 						'page_slug' => 'user-registration-dashboard',
-						'label'     => esc_html( 'Dashboard', 'user-registration' ),
-						'sub_menu' => array_merge(
-							array(
-								'help' => array(
-									'page_slug' => 'user-registration-dashboard#help',
-									'label'     => esc_html( 'Help', 'user-registration' ),
-								),
-							),
-							UR_PRO_ACTIVE ? array() : array(
-								'free-vs-pro' => array(
-									'page_slug' => 'user-registration-dashboard#free-vs-pro',
-									'label'     => esc_html( 'Free vs Pro', 'user-registration' ),
-								),
-							),
-							array(
-								'products' => array(
-									'page_slug' => 'user-registration-dashboard#products',
-									'label'     => esc_html( 'Other Products', 'user-registration' ),
-								)
-							)
-						)
+						'label'     => esc_html__( 'Dashboard', 'user-registration' ),
 					),
 				),
 				UR_PRO_ACTIVE ? array(
 					'analytics' => array(
 						'page_slug' => 'user-registration-analytics',
-						'label'     => esc_html( 'Analytics', 'user-registration' ),
+						'label'     => esc_html__( 'Analytics', 'user-registration' ),
 					)
 				) : array(),
 				array(
 					'all-forms' => array(
 						'page_slug' => 'user-registration',
-						'label'     => esc_html( 'All Forms', 'user-registration' ),
+						'label'     => esc_html__( 'All Forms', 'user-registration' ),
 						'sub_menu' => array(
 							'registration-form' => array(
 								'page_slug' => 'user-registration',
-								'label'     => esc_html( 'Registration Form', 'user-registration' ),
+								'label'     => sprintf( esc_html__( 'Registration %s', 'user-registration' ), $postfix ),
 							),
 							'login-form' => array(
 								'page_slug' => 'user-registration-login-forms',
-								'label'     => esc_html( 'Login Form', 'user-registration' ),
+								'label'     => esc_html__( 'Login Form', 'user-registration' ),
 							)
 						)
 					),
@@ -958,25 +940,25 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 				UR_PRO_ACTIVE ? array(
 					'users' => array(
 						'page_slug' => 'user-registration-users',
-						'label'     => esc_html( 'Users', 'user-registration' ),
+						'label'     => esc_html__( 'Users', 'user-registration' ),
 					)
 				) : array(),
 				ur_check_module_activation('membership') ? array(
 					'membership' => array(
 						'page_slug' => 'user-registration-membership',
-						'label'     => esc_html( 'Membership', 'user-registration' ),
+						'label'     => esc_html__( 'Membership', 'user-registration' ),
 						'sub_menu' => array(
 							'all-plans' => array(
 								'page_slug' => 'user-registration-membership',
-								'label'     => esc_html( 'All Plans', 'user-registration' ),
+								'label'     => esc_html__( 'All Plans', 'user-registration' ),
 							),
 							'groups' => array(
 								'page_slug' => 'user-registration-membership&action=list_groups',
-								'label'     => esc_html( 'Groups', 'user-registration' ),
+								'label'     => esc_html__( 'Groups', 'user-registration' ),
 							),
 							'members' => array(
 								'page_slug' => 'user-registration-members',
-								'label'     => esc_html( 'Members', 'user-registration' ),
+								'label'     => esc_html__( 'Members', 'user-registration' ),
 							)
 						)
 					),
@@ -984,15 +966,33 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 				array(
 					'settings' => array(
 						'page_slug' => 'user-registration-settings',
-						'label'     => esc_html( 'Settings', 'user-registration' ),
+						'label'     => esc_html__( 'Settings', 'user-registration' ),
 					),
 				),
 				array(
 					'addons' => array(
 						'page_slug' => 'user-registration-dashboard#features',
-						'label'     => esc_html( 'Addons', 'user-registration' ),
+						'label'     => esc_html__( 'Addons', 'user-registration' ),
 					),
 				),
+				array(
+					'help' => array(
+						'page_slug' => 'user-registration-dashboard#help',
+						'label'     => esc_html__( 'Help', 'user-registration' ),
+					),
+				),
+				UR_PRO_ACTIVE ? array() : array(
+					'free-vs-pro' => array(
+						'page_slug' => 'user-registration-dashboard#free-vs-pro',
+						'label'     => esc_html__( 'Free vs Pro', 'user-registration' ),
+					),
+				),
+				array(
+					'products' => array(
+						'page_slug' => 'user-registration-dashboard#products',
+						'label'     => esc_html__( 'Other Products', 'user-registration' ),
+					)
+				)
 			)
 		);
 

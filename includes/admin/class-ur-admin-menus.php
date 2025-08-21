@@ -495,7 +495,10 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			);
 
 			if ( isset( $_GET['page'] ) && in_array( $_GET['page'], ['user-registration', 'user-registration-login-forms'] ) ) {
-				add_submenu_page( 'user-registration', __( 'Registration Forms', 'user-registration' ), '↳ ' . __( 'Registration Forms', 'user-registration' ), 'manage_user_registration', 'user-registration', array( $this, 'registration_page' ), 6 );
+				$all_forms = ur_get_all_user_registration_form();
+				$postfix = count($all_forms ) > 1 ? 'Forms' : 'Form';
+
+				add_submenu_page( 'user-registration', __( 'Registration Forms', 'user-registration' ), '↳ ' . sprintf( __( 'Registration %s', 'user-registration' ), $postfix ), 'manage_user_registration', 'user-registration', array( $this, 'registration_page' ), 6 );
 				add_submenu_page( 'user-registration', __( 'Login Form', 'user-registration' ), '↳ ' . __( 'Login Form', 'user-registration' ), 'manage_user_registration', 'user-registration-login-forms', array( $this, 'registration_page' ), 7 );
 			}
 		}
