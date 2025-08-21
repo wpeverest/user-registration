@@ -177,7 +177,7 @@ module.exports = function (grunt) {
 					{
 						expand: true,
 						cwd: "<%= dirs.css %>/",
-						src: ["*.scss", "modules/**/*.scss"], // Include the modules directory
+						src: ["*.scss", "modules/**/*.scss", "ur-snackbar/*.scss"], // Include the modules and ur-snackbar directories
 						dest: "<%= dirs.css %>/",
 						ext: ".css"
 					}
@@ -227,8 +227,9 @@ module.exports = function (grunt) {
 		watch: {
 			css: {
 				files: [
-					"<%= dirs.css %>/*.scss",
-					"<%= dirs.css %>/modules/**/*.scss"
+					"<%= dirs.css %>/**/*.scss",
+					"<%= dirs.css %>/modules/**/*.scss",
+					"<%= dirs.css %>/ur-snackbar/*.scss"
 				],
 				tasks: ["sass", "rtlcss", "cssmin", "concat"]
 			},

@@ -316,19 +316,33 @@ if ( ! function_exists( 'ur_membership_redirect_to_thank_you_page' ) ) {
 	function ur_membership_redirect_to_thank_you_page( $member_id, $member_order ) {
 
 		$thank_you_page = urm_get_thank_you_page();
-		$user              = get_userdata( $member_id );
-		$params            = array(
+		$user           = get_userdata( $member_id );
+		$params         = array(
 			'username'       => $user->user_login,
 			'transaction_id' => empty( $member_order['transaction_id'] ) ? $member_order['ID'] : $member_order['transaction_id'],
 			'payment_type'   => 'paid',
 		);
-		$url               = $thank_you_page . '?' . http_build_query( $params );
+		$url            = $thank_you_page . '?' . http_build_query( $params );
 
 		wp_redirect( $url );
 		exit;
 	}
 }
-
+if ( ! function_exists( 'ur_membership_redirect_now' ) ) {
+	/**
+	 * Redirect to thank you page
+	 *
+	 * @param $member_id
+	 * @param $member_order
+	 *
+	 * @return void
+	 */
+	function ur_membership_redirect_now( $url, $params ) {
+		$url               = $url . '?' . http_build_query( $params );
+		wp_redirect( $url );
+		exit;
+	}
+}
 if ( function_exists( 'add_filter' ) ) {
 	add_filter( 'build_membership_list_frontend', 'build_membership_list_frontend', 10, 1 );
 }
@@ -360,7 +374,7 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 			$new_mem[ $k ] = array(
 				'ID'                => $membership['ID'],
 				'title'             => $membership['post_title'],
-				'description'       => !empty($membership['post_content']['description']) ?  $membership['post_content']['description'] : get_post_meta($membership['ID'] , 'ur_membership_description' ,true),
+				'description'       => ! empty( $membership['post_content']['description'] ) ? $membership['post_content']['description'] : get_post_meta( $membership['ID'], 'ur_membership_description', true ),
 				'type'              => $membership['meta_value']['type'],
 				'amount'            => $membership['meta_value']['amount'] ?? 0,
 				'currency_symbol'   => $symbol,
@@ -499,6 +513,7 @@ if ( ! function_exists( 'urm_get_thank_you_page' ) ) {
 			$thank_you_page = get_transient( $transient_id );
 
 		}
+
 		return $thank_you_page;
 	}
 }

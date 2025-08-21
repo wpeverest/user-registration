@@ -60,6 +60,7 @@ class UR_User_Approval {
 	 * Display a message the provide instruction after the use regsitration and remove the login form from there
 	 *
 	 * @param array $errors Errors.
+	 *
 	 * @return mixed
 	 */
 	public function registration_completed_message( $errors ) {
@@ -74,8 +75,8 @@ class UR_User_Approval {
 	/**
 	 * Save a flag that ensure if an user has ever loggedin while the plugin is activated
 	 *
-	 * @param  mixed $user_login Username.
-	 * @param  mixed $user Users Object.
+	 * @param mixed $user_login Username.
+	 * @param mixed $user Users Object.
 	 */
 	public function track_first_login( $user_login, $user ) {
 
@@ -92,7 +93,7 @@ class UR_User_Approval {
 	 * If the request is approved and the user needs to receive the password, a new password will be generated and sent
 	 *
 	 * @param mixed $status Status.
-	 * @param int   $user_id User ID.
+	 * @param int $user_id User ID.
 	 * @param mixed $alert_user Alert User.
 	 */
 	public function send_notification_to_user_about_status_changing( $status, $user_id, $alert_user ) {
@@ -137,8 +138,8 @@ class UR_User_Approval {
 	 * Set the status of the user right after the registration.
 	 *
 	 * @param mixed $form_data Form Data.
-	 * @param int   $form_id Form ID.
-	 * @param int   $user_id User ID.
+	 * @param int $form_id Form ID.
+	 * @param int $user_id User ID.
 	 */
 	public function set_user_status( $form_data, $form_id, $user_id ) {
 
@@ -168,7 +169,7 @@ class UR_User_Approval {
 	/**
 	 * Check the status of an user on login.
 	 *
-	 * @param mixed  $user Users.
+	 * @param mixed $user Users.
 	 * @param string $password Password.
 	 *
 	 * @return \WP_Error
@@ -187,14 +188,27 @@ class UR_User_Approval {
 
 		$status = $user_manager->get_user_status();
 
-		$check_membership = $this->check_user_membership( $user );
-		if ( $check_membership instanceof WP_Error ) {
-			return $check_membership;
+		$membership           = array();
+		$is_membership_active = ur_check_module_activation( 'membership' );
+		if ( $is_membership_active ) {
+			$members_repository       = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
+			$membership               = $members_repository->get_member_membership_by_id( $user->ID );
+			$members_order_repository = new \WPEverest\URMembership\Admin\Repositories\MembersOrderRepository();
+			$last_order               = $members_order_repository->get_member_orders( $user->ID );
+			if ( ! empty( $membership ) ) {
+				$check_membership = $this->check_user_membership( $membership, $user, $last_order, $login_option );
+
+				if ( $check_membership instanceof WP_Error ) {
+					return $check_membership;
+				}
+			}
+
 		}
 		$is_disabled = get_user_meta( $user->ID, 'ur_disable_users', true );
 
 		if ( $is_disabled ) {
 			$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . apply_filters( 'user_registration_user_disabled_message', __( 'Sorry! You are disabled. Please Contact Your Administrator.', 'user-registration' ) );
+
 			return new WP_Error( 'disable_user', $message );
 		} elseif ( ( 'admin_approval' === $login_option || 'admin_approval' === $status['login_option'] ) ) {
 			/**
@@ -243,9 +257,10 @@ class UR_User_Approval {
 					$user_email_status = get_user_meta( $user->ID, 'ur_confirm_email', true );
 					if ( ur_string_to_bool( $user_email_status ) ) {
 						$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account is still pending approval.', 'user-registration' );
+
 						return new WP_Error( 'pending_approval', $message );
 					} else {
-						$url      = (!empty($_SERVER['HTTPS'])) ? 'https://' . $_SERVER['SERVER_NAME'] : 'http://' . $_SERVER['SERVER_NAME']; //phpcs:ignore
+						$url = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $_SERVER['SERVER_NAME'] : 'http://' . $_SERVER['SERVER_NAME']; //phpcs:ignore
 
 						if ( get_option( 'ur_login_ajax_submission' ) ) {
 							$url .= $_SERVER['HTTP_REFERER']; //phpcs:ignore
@@ -256,6 +271,7 @@ class UR_User_Approval {
 						$url = wp_nonce_url( $url . '?ur_resend_id=' . crypt_the_string( $user->ID . '_' . time(), 'e' ) . '&ur_resend_token=true', 'ur_resend_token' );
 						/* translators: %s - Resend Verification Link. */
 						$message = '<strong>' . esc_html__( 'ERROR:', 'user-registration' ) . '</strong> ' . sprintf( __( 'Your account is still pending approval. Verify your email by clicking on the link sent to your email. %s', 'user-registration' ), '<a id="resend-email" href="' . esc_url( $url ) . '">' . __( 'Resend Verification Link', 'user-registration' ) . '</a>' );
+
 						return new WP_Error( 'user_email_not_verified', $message );
 					}
 					break;
@@ -277,13 +293,13 @@ class UR_User_Approval {
 			 */
 			do_action( 'ur_user_before_check_email_status_on_login', $status['user_status'], $user );
 
-			$url      = (!empty($_SERVER['HTTPS'])) ? 'https://' . $_SERVER['SERVER_NAME'] : 'http://' . $_SERVER['SERVER_NAME']; //phpcs:ignore
+			$url = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $_SERVER['SERVER_NAME'] : 'http://' . $_SERVER['SERVER_NAME']; //phpcs:ignore
 
 			if ( get_option( 'ur_login_ajax_submission' ) ) {
-				$url .= isset( $_SERVER['HTTP_REFERER' ] ) ? $_SERVER['HTTP_REFERER'] : ""; //phpcs:ignore
+				$url .= isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : ""; //phpcs:ignore
 				$url .= $_SERVER['HTTP_REFERER']; //phpcs:ignore
 			} else {
-				$url .= isset( $_SERVER['REQUEST_URI' ] ) ? $_SERVER['REQUEST_URI'] : ""; //phpcs:ignore
+				$url .= isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : ""; //phpcs:ignore
 			}
 
 			$url = substr( $url, 0, strpos( $url, '?' ) );
@@ -299,11 +315,21 @@ class UR_User_Approval {
 			if ( '0' === $status['user_status'] ) {
 				/* translators: %s - Resend Verification Link. */
 				$message = '<strong>' . esc_html__( 'ERROR:', 'user-registration' ) . '</strong> ' . sprintf( __( 'Your account is still pending approval. Verify your email by clicking on the link sent to your email. %s', 'user-registration' ), '<a id="resend-email" href="' . esc_url( $url ) . '">' . __( 'Resend Verification Link', 'user-registration' ) . '</a>' );
+
 				return new WP_Error( 'user_email_not_verified', $message );
 			}
+
 			return $user;
 		} elseif ( 'payment' === $login_option ) {
+
 			$payment_status = get_user_meta( $user->ID, 'ur_payment_status', true );
+			$is_member      = $is_membership_active && ! empty( $membership );
+			if ( $is_member ) {
+				$payment_status            = $last_order['status'];
+				$membership_payment_method = $last_order['payment_method'];
+				$membership_id             = $last_order['item_id'];
+			}
+
 			/**
 			 * Executes an action before checking the payment status on user login.
 			 *
@@ -315,10 +341,29 @@ class UR_User_Approval {
 			if ( ! empty( $payment_status ) && 'completed' !== $payment_status ) {
 				$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your account is still pending payment.', 'user-registration' );
 
-				$payment_method = get_user_meta( $user->ID, 'ur_payment_method', true );
-				if ( 'paypal_standard' === $payment_method ) {
+				$payment_method = $is_member ? $membership_payment_method : get_user_meta( $user->ID, 'ur_payment_method', true );
+
+				if ( 'paypal_standard' === $payment_method || "paypal" === $payment_method || "mollie" === $payment_method ) {
+
 					$user_id      = $user->ID;
 					$redirect_url = paypal_generate_redirect_url( $user_id );
+
+					if ( $is_member && ! empty( $membership_id ) ) {
+						$payment_service = new \WPEverest\URMembership\Admin\Services\PaymentService( $payment_method, $membership_id, $user->user_email );
+						$response_data   = array(
+							'membership'      => $membership_id,
+							'subscription_id' => $membership['subscription_id'],
+							'member_id'       => $user_id
+						);
+						$is_upgrading    = get_user_meta( $user_id, 'urm_is_user_upgraded', true );
+						if ( $is_upgrading ) {
+							$next_sub_data = json_decode( get_user_meta( $user_id, 'urm_next_subscription_data', true ), true );
+							$response_data = $next_sub_data;
+						}
+						$response     = $payment_service->build_response( $response_data );
+						$redirect_url = $response['payment_url'];
+					}
+
 					/* translators: %s - Redirect URL. */
 					$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . sprintf( get_option( 'user_registration_pro_pending_payment_error_message', __( 'Your account is still pending payment. Process the payment by clicking on this: <a id="payment-link" href="%s">link</a>', 'user-registration' ) ), esc_url( $redirect_url ) );
 				}
@@ -335,35 +380,36 @@ class UR_User_Approval {
 
 			return $user;
 		}
+
 		return $user;
 	}
 
-	public function check_user_membership( $user ) {
-		$is_membership_active = ur_check_module_activation('membership');
-		if ( $is_membership_active ) {
-			$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
-			$membership         = $members_repository->get_member_membership_by_id( $user->ID );
-			if ( empty( $membership ) ) {
+	public function check_user_membership( $membership, $user, $last_order , $login_option) {
+		switch ( $membership['status'] ) {
+			case 'pending':
+
+				if ( ( $last_order['payment_method'] === "paypal" || $last_order['payment_method'] === "mollie" ) && $last_order["status"] === "pending" && 'payment' === $login_option ) {
+					break;
+				}
+				$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your subscription is not active. Please contact administrator.', 'user-registration' );
+
+				return new WP_Error( 'denied_access', $message );
+				break;
+			case 'canceled':
+				$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your subscription has been cancelled. Please contact administrator.', 'user-registration' );
+
+				return new WP_Error( 'denied_access', $message );
+				break;
+			default:
 				return $user;
-			}
-			switch ( $membership['status'] ) {
-				case 'pending':
-					$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your subscription is not active. Please contact administrator.', 'user-registration' );
-
-					return new WP_Error( 'denied_access', $message );
-					break;
-				case 'canceled':
-					$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your subscription has been cancelled. Please contact administrator.', 'user-registration' );
-
-					return new WP_Error( 'denied_access', $message );
-					break;
-				default:
-					return $user;
-					break;
-			}
+				break;
 		}
-		return $user;
 	}
+
+	public function check_membership_payment_status( $user ) {
+
+	}
+
 	/**
 	 * Check on every page if the current user is actual approved, otherwise logout him
 	 * This is an additional protection against that themes or plugins that login users automatically after sign up
@@ -440,7 +486,7 @@ class UR_User_Approval {
 	 * If the user is not approved, disalow to reset the password fom Lost Passwod form and display an error message
 	 *
 	 * @param mixed $result Result.
-	 * @param int   $user_id User ID.
+	 * @param int $user_id User ID.
 	 *
 	 * @return \WP_Error
 	 */
@@ -452,6 +498,7 @@ class UR_User_Approval {
 			$error_message = __( 'Your account is still pending approval. Reset Password is not allowed.', 'user-registration' );
 			$result        = new WP_Error( 'user_not_approved', $error_message );
 		}
+
 		return $result;
 	}
 

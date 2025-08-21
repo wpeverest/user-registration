@@ -182,8 +182,8 @@ class MembershipService {
 					'meta_value' => wp_json_encode( $post_meta_data ),
 				),
 				'ur_membership_description' => array(
-					'meta_key'    => 'ur_membership_description',
-					'meta_value' => $data['post_data']['description'],
+					'meta_key'   => 'ur_membership_description',
+					'meta_value' => wp_kses_post($data['post_data']['description']),
 				)
 			),
 
@@ -245,6 +245,11 @@ class MembershipService {
 				$data['payment_gateways']['stripe']['price_id']   = sanitize_text_field( $price_id );
 			}
 		}
+		if ( isset( $data['upgrade_settings'] ) ) {
+			$data['upgrade_settings']['upgrade_action'] = absint( $data['upgrade_settings']['upgrade_action'] );
+			$data['upgrade_settings']['upgrade_path']   = sanitize_text_field( implode( ',', $data['upgrade_settings']['upgrade_path'] ) );
+			$data['upgrade_settings']['upgrade_type']   = ! empty( $data['upgrade_settings']['upgrade_type'] ) ? sanitize_text_field( $data['upgrade_settings']['upgrade_type'] ) : 'full';
+		}
 
 		return $data;
 	}
@@ -263,7 +268,7 @@ class MembershipService {
 			'status' => true,
 		);
 
-		if ( isset( $data['post_meta_data']['type'] ) && "subscription" === $data['post_meta_data']['type'] && ! ( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) ) {
+		if ( isset( $data['post_meta_data']['type'] ) && "subscription" === $data['post_meta_data']['type'] && ! ( UR_PRO_ACTIVE ) ) {
 			$result['status']  = false;
 			$result['message'] = esc_html__( "Subscription type is a paid feature.", "user-registration" );
 
@@ -302,11 +307,13 @@ class MembershipService {
 		 *
 		 * This hook should be used by new payment gateway integrations add-on to validate the membership data.
 		 *
+		 * @param array $result Membership validation result data
+		 * @param array $data Membership data.
+		 *
 		 * @since 4.2.3
 		 *
-		 * @param array $result Membership validation result data
 		 */
-		return apply_filters( 'user_registration_membership_validate_membership_data', $result );
+		return apply_filters( 'user_registration_membership_validate_membership_data', $result, $data );
 	}
 
 	/**
@@ -359,8 +366,8 @@ class MembershipService {
 		$membership_field_exists = false;
 		$match                   = preg_match_all( '/\[user_registration_form\s+id="(\d+)"\]/', $post->post_content, $matches );
 		if ( ! $match ) {
-			$match =  preg_match_all( '<!-- /wp:user-registration/membership-listing -->', $post->post_content, $matches );
-			if(!$match) {
+			$match = preg_match_all( '<!-- /wp:user-registration/membership-listing -->', $post->post_content, $matches );
+			if ( ! $match ) {
 				$response['status']  = false;
 				$response['message'] = __( 'The selected page does not consist any User Registration & Membership Form.' );
 
@@ -390,12 +397,13 @@ class MembershipService {
 	private static function verify_thank_you_shortcode( $post, $response ) {
 
 		$content = $post->post_content;
-		$match =  preg_match( '/\[user_registration_membership_thank_you\]/', $content );
-		if ( !$match ) {
+		$match   = preg_match( '/\[user_registration_membership_thank_you\]/', $content );
+		if ( ! $match ) {
 			$match = preg_match( '<!-- /wp:user-registration/thank-you -->', $content );
-			if(!$match) {
+			if ( ! $match ) {
 				$response['status']  = false;
 				$response['message'] = __( 'The selected page does not consist the User Registration & Membership Thank you page Shortcode.' );
+
 				return $response;
 			}
 		}
@@ -444,5 +452,16 @@ class MembershipService {
 		}
 
 		return $response;
+	}
+
+	public function get_upgradable_membership( $membership_id ) {
+		$membership_details = $this->get_membership_details( $membership_id );
+		if ( ! empty( $membership_details['upgrade_settings'] ) && $membership_details['upgrade_settings']['upgrade_action'] ) {
+			$memberships = $this->membership_repository->get_multiple_membership_by_ID( $membership_details['upgrade_settings']['upgrade_path'] );
+
+			return apply_filters( 'build_membership_list_frontend', $memberships );
+		}
+
+		return array();
 	}
 }

@@ -141,7 +141,7 @@ class UR_Validation {
 	 * @return boolean or WP_Error.
 	 */
 	public static function validate_length( $value, $size ) {
-		if ( strlen( $value ) > $size ) {
+		if ( mb_strlen( $value ) > $size ) {
 			return new WP_Error(
 				'user_registration_validation_max_size_exceeded',
 				/* translators: %d - Size */

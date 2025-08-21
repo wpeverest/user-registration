@@ -2949,7 +2949,6 @@ if ( ! function_exists( 'ur_install_extensions' ) ) {
 	 */
 	function ur_install_extensions( $name, $slug ) {
 		try {
-
 			$plugin = 'user-registration-pro' === $slug ? plugin_basename( sanitize_text_field( wp_unslash( $slug . '/user-registration.php' ) ) ) : plugin_basename( sanitize_text_field( wp_unslash( $slug . '/' . $slug . '.php' ) ) );
 			$status = array(
 				'install' => 'plugin',
@@ -5970,15 +5969,23 @@ if ( ! function_exists( 'ur_check_is_inactive' ) ) {
 	 * Check if user is denied.
 	 */
 	function ur_check_is_inactive() {
-		if ( ! ur_check_module_activation( 'membership' ) || current_user_can( 'manage_options' ) ) {
+		if ( ! ur_check_module_activation( 'membership' ) ||
+			 current_user_can( 'manage_options' ) ||
+			 ( ! empty( $_POST['action'] ) && in_array( $_POST['action'], array(
+					"user_registration_membership_confirm_payment",
+					"user_registration_membership_create_stripe_subscription"
+				) ) )
+		) {
 			return;
 		}
 		$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
-		$membership         = $members_repository->get_member_membership_by_id( get_current_user_id() );
+
+		$membership = $members_repository->get_member_membership_by_id( get_current_user_id() );
 
 		if ( empty( $membership ) ) {
 			return;
 		}
+
 		if ( in_array( $membership['status'], array( 'pending', 'canceled', 'inactive' ) ) ) {
 			wp_logout();
 		}
@@ -6769,14 +6776,6 @@ if ( ! function_exists( 'ur_prevent_default_login' ) ) {
                 }
 			}
 		}
-		elseif (isset($data['tab']) && "payment" === $data['tab'] && isset( $data['user_registration_global_paypal_cancel_url'] ) && isset( $data['user_registration_global_paypal_return_url'] )) {
-			if( empty($data['user_registration_global_paypal_cancel_url'] ) ) {
-				return 'user_registration_global_paypal_cancel_url';
-			}
-			if( empty( $data['user_registration_global_paypal_return_url'] ) ) {
-				return 'user_registration_global_paypal_return_url';
-			}
-		}
 		elseif(isset($data['user_registration_membership_renewal_reminder_days_before'])) {
 			if($data['user_registration_membership_renewal_reminder_days_before'] <= 0) {
 				return 'invalid_renewal_period';
@@ -6927,111 +6926,121 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 			'UR_Settings_SMS_Integration' => array(
 				'id'           => 'sms_integration',
 				'type'         => 'accordian',
-				'title'        => 'Twilio',
+				'title'        => esc_html__( 'Twilio', 'user-registration' ),
 				'video_id'     => '-iUMcr03FP8',
 				'available_in' => 'Personal Plan',
 				'activated'    => ur_check_module_activation( 'sms-integration' ),
 				'display'      => array( 'settings' ),
 				'connected'    => ! empty( get_option( 'ur_sms_integration_accounts', array() ) ) ? true : false,
+				'plugin_name' => esc_html__( 'Twilio', 'user-registration' ),
 			),
 			$integration['UR_Settings_ActiveCampaign'] = array(
 				'id'           => 'activecampaign',
 				'type'         => 'accordian',
-				'title'        => 'ActiveCampaign',
+				'title'        => esc_html__( 'ActiveCampaign', 'user-registration' ),
 				'desc'         => '',
 				'video_id'     => 'AfapJxM9klk',
 				'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
 				'activated'    => is_plugin_active( 'user-registration-activecampaign/user-registration-activecampaign.php' ),
 				'display'      => array( 'settings', 'form_settings' ),
 				'connected'    => ! empty( get_option( 'ur_activecampaign_accounts', array() ) ) ? true : false,
+				'plugin_name' => esc_html__( 'User Registration ActiveCampaign', 'user-registration' ),
 			),
 			$integration['UR_Settings_MailerLite'] = array(
 				'id'           => 'mailerlite',
 				'type'         => 'accordian',
-				'title'        => 'MailerLite',
+				'title'        => esc_html__( 'MailerLite', 'user-registration' ),
 				'desc'         => '',
 				'video_id'     => '4f1lGgFuJx4',
 				'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
 				'activated'    => is_plugin_active( 'user-registration-mailerlite/user-registration-mailerlite.php' ),
 				'display'      => array( 'settings', 'form_settings' ),
 				'connected'    => ! empty( get_option( 'ur_mailerlite_accounts', array() ) ) ? true : false,
+				'plugin_name' => esc_html__( 'User Registration MailerLite', 'user-registration' ),
 			),
 			$integration['UR_Settings_klaviyo'] = array(
 				'id'           => 'klaviyo',
 				'type'         => 'accordian',
-				'title'        => 'Klaviyo',
+				'title'        => esc_html__( 'Klaviyo', 'user-registration' ),
 				'desc'         => '',
 				'video_id'     => 'nKOMqrkNK3Y',
 				'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
 				'activated'    => is_plugin_active( 'user-registration-klaviyo/user-registration-klaviyo.php' ),
 				'display'      => array( 'settings', 'form_settings' ),
 				'connected'    => ! empty( get_option( 'ur_klaviyo_accounts', array() ) ) ? true : false,
+				'plugin_name' => esc_html__( 'User Registration Klaviyo', 'user-registration' ),
 			),
 			$integration['UR_Settings_Mailchimp'] = array(
 				'id'           => 'mailchimp',
 				'type'         => 'accordian',
-				'title'        => 'Mailchimp',
+				'title'        => esc_html__( 'Mailchimp', 'user-registration' ),
 				'desc'         => '',
 				'video_id'     => 'iyCByez_7U8',
 				'available_in' => 'Personal Plan',
 				'activated'    => is_plugin_active( 'user-registration-mailchimp/user-registration-mailchimp.php' ),
 				'display'      => array( 'settings', 'form_settings' ),
 				'connected'    => ! empty( get_option( 'ur_mailchimp_accounts', array() ) ) ? true : false,
+				'plugin_name' => esc_html__( 'User Registration - Mailchimp', 'user-registration' ),
 			),
 			'User_Registration_Zapier'    => array(
 				'id'           => 'zapier',
 				'type'         => 'accordian',
-				'title'        => 'Zapier',
+				'title'        => esc_html__( 'Zapier', 'user-registration' ),
 				'desc'         => '',
 				'video_id'     => 'zxl2nsXyOmw',
 				'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
 				'activated'    => is_plugin_active( 'user-registration-zapier/user-registration-zapier.php' ),
 				'display'      => array( 'form_settings' ),
 				'connected'    => ! empty( get_option( 'ur_zapier_accounts', array() ) ) ? true : false,
+				'plugin_name' => esc_html__( 'User Registration Zapier', 'user-registration' ),
 			),
 			'WPEverest\URMailPoet'        => array(
 				'id'           => 'mailpoet',
 				'type'         => 'accordian',
-				'title'        => 'MailPoet',
+				'title'        => esc_html__( 'MailPoet', 'user-registration' ),
 				'desc'         => '',
 				'video_id'     => '4uFlZoXlye4',
 				'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
 				'activated'    => is_plugin_active( 'user-registration-mailpoet/user-registration-mailpoet.php' ),
 				'display'      => array( 'settings', 'form_settings' ),
 				'connected'    => ur_string_to_bool( get_option( 'user_registration_integrations_mailpoet_connection', false ) ),
+				'plugin_name' => esc_html__( 'User Registration MailPoet', 'user-registration' ),
 			),
 			'WPEverest\URConvertKit'      => array(
 				'id'           => 'convertkit',
 				'type'         => 'accordian',
-				'title'        => 'ConvertKit',
+				'title'        => esc_html__( 'ConvertKit', 'user-registration' ),
 				'desc'         => '',
 				'video_id'     => '',
 				'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
 				'activated'    => is_plugin_active( 'user-registration-convertkit/user-registration-convertkit.php' ),
 				'display'      => array( 'settings', 'form_settings' ),
 				'connected'    => is_plugin_active( 'user-registration-convertkit/user-registration-convertkit.php' ) && ! empty( get_option( 'ur_convertkit_accounts', array() ) ) ? true : false,
+				'plugin_name' => esc_html__( 'User Registration ConvertKit', 'user-registration' ),
 			),
 			'User_Registration_Brevo'     => array(
 				'id'           => 'brevo',
 				'type'         => 'accordian',
-				'title'        => 'Brevo',
+				'title'        => esc_html__( 'Brevo', 'user-registration' ),
 				'desc'         => '',
 				'video_id'     => '',
 				'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
 				'activated'    => is_plugin_active( 'user-registration-brevo/user-registration-brevo.php' ),
 				'display'      => array( 'settings', 'form_settings' ),
 				'connected'    => is_plugin_active( 'user-registration-brevo/user-registration-brevo.php' ) && ur_string_to_bool( get_option( 'user_registration_integrations_brevo_connection', false ) ),
+				'plugin_name' => esc_html__( 'User Registration Brevo', 'user-registration' ),
 			),
 			'User_Registration_Salesforce' => array(
 				'id'           => 'salesforce',
 				'type'         => 'accordian',
-				'title'        => 'Salesforce',
+				'title'        => esc_html__( 'Salesforce', 'user-registration' ),
 				'desc'         => '',
 				'video_id'     => '',
 				'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
 				'activated'    => is_plugin_active( 'user-registration-salesforce/user-registration-salesforce.php' ),
 				'display'      => array( 'settings', 'form_settings' ),
 			    'connected'    => is_plugin_active( 'user-registration-salesforce/user-registration-salesforce.php' ) && ! empty( get_option( 'ur_salesforce_accounts', array() ) ) ? true : false,
+				'plugin_name' => esc_html__( 'User Registration Salesforce', 'user-registration' ),
 			),
 		);
 
@@ -7332,6 +7341,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'type'     => 'select',
 								'desc_tip' => true,
 								'css'      => 'min-width: 350px;',
+								'class'    => 'ur-enhanced-select',
 								'default'  => 'default',
 								'options'  => array(
 									'default'      => __( 'Default', 'user-registration' ),
@@ -8427,5 +8437,99 @@ function ur_cleanup_logs() {
 }
 add_action( 'user_registration_cleanup_logs', 'ur_cleanup_logs' );
 
+if ( ! function_exists( 'ur_sanitize_value_by_type' ) ) {
+	/**
+	 * Get sms verification message content .
+	 *
+	 * @since 4.2.1
+	 * @return array
+	 */
+	function ur_sanitize_value_by_type($option, $raw_value) {
 
+		// Format the value based on option type.
+		switch ( $option['type'] ) {
+
+			case 'checkbox':
+			case 'toggle':
+				$value = ur_string_to_bool( $raw_value );
+				break;
+			case 'textarea':
+				$value = wp_kses_post( trim( $raw_value ) );
+				break;
+			case 'multiselect':
+				$value = array_filter( array_map( 'ur_clean', (array) $raw_value ) );
+				break;
+			case 'select':
+				$allowed_values = empty( $option['options'] ) ? array() : array_keys( $option['options'] );
+				if ( empty( $option['default'] ) && empty( $allowed_values ) ) {
+					$value = null;
+					break;
+				}
+				$default = ( empty( $option['default'] ) ? $allowed_values[0] : $option['default'] );
+				$value   = in_array( $raw_value, $allowed_values ) ? sanitize_text_field( $raw_value ) : sanitize_text_field( $default );
+				break;
+			case 'tinymce':
+				$value = wpautop( $raw_value );
+				break;
+
+			default:
+				$value = ur_clean( $raw_value );
+				break;
+		}
+		return $value;
+	}
+};
+
+
+if ( ! function_exists( 'ur_save_settings_options' ) ) {
+
+	/**
+	 * ur_save_settings_options
+	 *
+	 * @param $option
+	 * @param $raw_value
+	 *
+	 * @return void
+	 */
+	function ur_save_settings_options($section, $form_data) {
+		$update_options = array();
+
+		foreach ( $section['settings'] as $option ) {
+			if ( empty( $option['id'] ) ) {
+				continue;
+			}
+
+			$option_id = $option['id'];
+			$option_name  = '';
+			$setting_name = '';
+
+			// Parse array notation (e.g., option_name[setting_name])
+			if ( str_contains( $option_id, '[' ) && str_contains( $option_id, ']' ) ) {
+				if ( preg_match( '/^([^[\]]+)\[([^[\]]+)\]$/', $option_id, $matches ) ) {
+					$option_name  = sanitize_text_field( $matches[1] );
+					$setting_name = sanitize_text_field( $matches[2] );
+				}
+			} else {
+				$option_name = sanitize_text_field( $option_id );
+			}
+
+			if ( isset( $form_data[ $option_id ] ) ) {
+				$value = ur_sanitize_value_by_type( $option, $form_data[ $option_id ] );
+				if ( $option_name && $setting_name ) {
+					if ( ! isset( $update_options[ $option_name ] ) || ! is_array( $update_options[ $option_name ] ) ) {
+						$existing = get_option( $option_name, array() );
+						$update_options[ $option_name ] = is_array( $existing ) ? $existing : array();
+					}
+					$update_options[ $option_name ][ $setting_name ] = $value;
+				} elseif ( $option_name ) {
+					$update_options[ $option_name ] = $value;
+				}
+			}
+		}
+
+		foreach ( $update_options as $name => $value ) {
+			update_option( $name, $value );
+		}
+	}
+};
 

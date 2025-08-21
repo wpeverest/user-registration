@@ -53,7 +53,7 @@ if ( ! class_exists( 'UR_Settings_Payment_Success_Admin_Email', false ) ) :
 			$this->id          = 'payment_success_admin_email';
 			$this->title       = esc_html__( 'Payment Success', 'user-registration' );
 			$this->description = esc_html__( 'Notifies admins that a user’s payment was successful.', 'user-registration' );
-			$this->receiver    = __( 'Admin', 'user-registration' );
+			$this->receiver    = 'Admin';
 		}
 
 		/**

@@ -339,13 +339,13 @@ const TemplateList = ({ selectedCategory, templates }) => {
 				m="0px 0px 32px"
 				color="#26262E"
 				borderBottom="1px solid #CDD0D8"
-				paddingBottom="12px"
+				paddingBottom="20px"
 			>
 				{selectedCategory.toUpperCase()}
 			</Heading>
 			{templates?.length ? (
 				<SimpleGrid
-					gridTemplateColumns={"repeat(auto-fit, minmax(200px, 1fr))"}
+					columns={{ base: 1, md: 2, lg: 2, xl: 3, "2xl": 4 }}
 					spacing={6}
 				>
 					{templates.map((template) => (
@@ -677,9 +677,17 @@ const TemplateList = ({ selectedCategory, templates }) => {
 							href="https://wpuserregistration.com/pricing/?utm_source=form-template&utm_medium=premium-form-templates-popup&utm_campaign=lite-version"
 							target="_blank"
 							rel="noopener noreferrer"
-							style={{ width: "inherit" }}
+							style={{
+								width: "inherit"
+							}}
 						>
-							<Button colorScheme="blue" ml={3}>
+							<Button
+								style={{
+									backgroundColor: "#475BB2",
+									color: "#FFFFFF"
+								}}
+								ml={3}
+							>
 								{__("Upgrade Plan", "user-registration")}
 							</Button>
 						</a>

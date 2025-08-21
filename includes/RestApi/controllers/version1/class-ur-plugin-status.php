@@ -50,7 +50,7 @@ class UR_Plugin_Status {
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array( $this, 'get_plugin_status' ),
-				'permission_callback' => array( $this, 'check_admin_permissions' ),
+				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
 			)
 		);
 		register_rest_route(
@@ -59,7 +59,7 @@ class UR_Plugin_Status {
 			array(
 				'methods'             => 'GET',
 				'callback'            => array( $this, 'get_license_plan' ),
-				'permission_callback' => array( $this, 'check_admin_permissions' ),
+				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
 			)
 		);
 		register_rest_route(
@@ -68,7 +68,7 @@ class UR_Plugin_Status {
 			array(
 				'methods'             => 'POST',
 				'callback'            => array( $this, 'plugin_activate' ),
-				'permission_callback' => array( $this, 'check_admin_permissions' ),
+				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
 			)
 		);
 	}
@@ -112,30 +112,39 @@ class UR_Plugin_Status {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function get_plugin_status() {
-			$extension_data = self::get_addons_data();
+		$extension_data = self::get_addons_data();
+		$addons_lists   = $extension_data->products;
 
-			$addons_lists = $extension_data->products;
 		if ( ! function_exists( 'get_plugins' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
-			$installed_plugin_slugs = array_keys( get_plugins() );
+		$installed_plugin_slugs = array_keys( get_plugins() );
+
+		$plugin_statuses = array();
 
 		foreach ( $addons_lists as $addon ) {
-			$addon_file = $addon->slug . '/' . $addon->slug . '.php';
+			$addon_main_file = 'user-registration-pro' === $addon->slug ? 'user-registration' : $addon->slug;
+			$addon_file      = $addon->slug . '/' . $addon_main_file . '.php';
 			if ( in_array( $addon_file, $installed_plugin_slugs, true ) ) {
 				$plugin_statuses[ $addon->slug ] = is_plugin_active( $addon_file ) ? 'active' : 'inactive';
-			} else {
-				$plugin_statuses[ $addon->slug ] = 'not-installed';
+			} elseif ( ! isset( $plugin_statuses[ $addon->slug ] ) ) {
+					$plugin_statuses[ $addon->slug ] = 'not-installed';
 			}
 		}
 
-			return new WP_REST_Response(
-				array(
-					'success'       => true,
-					'plugin_status' => $plugin_statuses,
-				),
-				200
-			);
+		if ( ur_check_module_activation( 'payments' ) ) {
+			$plugin_statuses['user-registration-payments'] = 'active';
+		} else {
+			$plugin_statuses['user-registration-payments'] = 'not-installed';
+		}
+
+		return new WP_REST_Response(
+			array(
+				'success'       => true,
+				'plugin_status' => $plugin_statuses,
+			),
+			200
+		);
 	}
 
 
@@ -157,7 +166,16 @@ class UR_Plugin_Status {
 	 * @return object
 	 */
 	public static function get_addons_data() {
-		$addons_data = ur_get_json_file_contents( 'assets/extensions-json/sections/all_extensions.json' );
+		$addons_data          = ur_get_json_file_contents( 'assets/extensions-json/sections/all_extensions.json' );
+		$module_features_data = ur_get_json_file_contents( 'assets/extensions-json/all-features.json' );
+
+		$features_data = isset( $module_features_data->features ) ? $module_features_data->features : array();
+
+		$addons_data_array = isset( $addons_data->products ) ? $addons_data->products : array();
+
+		$addons_data_array = array_merge( $addons_data_array, $features_data );
+
+		$addons_data->products = $addons_data_array;
 
 		$new_product = (object) array(
 			'products' => array(
@@ -225,6 +243,10 @@ class UR_Plugin_Status {
 	 */
 	public static function plugin_activate( $request ) {
 		$addon = $request->get_param( 'addonData' );
+
+		if ( isset( $addon['slug'] ) && 'user-registration-payments' === $addon['slug'] ) {
+			$addon['type'] = 'feature';
+		}
 
 		if ( isset( $addon['type'] ) && 'addon' === $addon['type'] ) {
 			$slug        = isset( $addon['name'] ) ? sanitize_key( wp_unslash( $addon['name'] ) ) : '';

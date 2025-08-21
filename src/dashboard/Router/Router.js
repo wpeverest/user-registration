@@ -13,7 +13,7 @@ import {
 	Products,
 	Settings,
 	Modules,
-	FreeVsPro,
+	FreeVsPro
 } from "../screens";
 
 const Router = () => {

@@ -120,7 +120,7 @@ class Database {
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
 		foreach ( $sqls as $sql ) {
-			dbDelta( $sql );
+			$wpdb->query( $sql );
 		}
 	}
 
@@ -136,7 +136,7 @@ class Database {
 	public static function drop_tables() {
 		global $wpdb;
 		foreach ( self::get_tables() as $table ) {
-			$wpdb->query( "DROP TABLE IF EXISTS {$table}" ); // phpcs:ignore
+			$wpdb->query( "DROP TABLE {$table}" ); // phpcs:ignore
 		}
 	}
 }

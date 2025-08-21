@@ -306,6 +306,10 @@ abstract class UR_Form_Field {
 			}
 		}
 
+		if ( 'html' === $field_key ) {
+			$form_data['html'] = isset( $data['general_setting']->html ) ? ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name, $data['general_setting']->html ) : '';
+		}
+
 		if ( 'radio' === $field_key ) {
 
 			if ( isset( $data['general_setting']->image_choice ) && ur_string_to_bool( $data['general_setting']->image_choice ) ) {
@@ -1032,7 +1036,7 @@ abstract class UR_Form_Field {
 		$class        = 'ur-general-setting-' . $strip_prefix;
 
 		$settings  = "<div class='ur-general-setting-block " . esc_attr( $class ) . "'>";
-		$settings .= '<h2 class="ur-toggle-heading">' . esc_html__( 'General Settings', 'user-registration' ) . '</h2><hr>';
+		$settings .= '<h2 class="ur-toggle-heading closed">' . esc_html__( 'General Settings', 'user-registration' ) . '</h2><hr>';
 		$settings .= '<div class="ur-toggle-content">';
 		$settings .= $this->get_field_general_settings();
 		$settings .= '</div>';
@@ -1041,7 +1045,7 @@ abstract class UR_Form_Field {
 		$advance_settings = $this->get_field_advance_settings();
 
 		if ( ! empty( $advance_settings ) ) {
-			$settings .= "<div class='user-registration-field-option-group ur-advance-setting-block closed'>";
+			$settings .= "<div class='user-registration-field-option-group ur-advance-setting-block'>";
 			$settings .= '<h2 class="ur-toggle-heading closed">' . __( 'Advanced Settings', 'user-registration' ) . '</h2><hr>';
 			$settings .= '<div class="ur-toggle-content">';
 			$settings .= $advance_settings;

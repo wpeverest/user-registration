@@ -1,5 +1,10 @@
-/* global user_registration_settings_params, ur_login_form_params */
+/* global user_registration_settings_params, ur_login_form_params, UR_Snackbar */
 (function ($) {
+	if (UR_Snackbar) {
+		var snackbar = new UR_Snackbar();
+	}
+
+
 	// Allowed Screens
 	$("select#user_registration_allowed_screens")
 		.on("change", function () {
@@ -445,33 +450,59 @@
 		if (!$check.prop("checked")) {
 			$url.val("").closest(".single_select_page").css("display", "none");
 		} else {
-			var $selected_page = $check.closest('.ur-login-form-setting-block').find('.ur-redirect-to-login-page').val();
-			var login_form_settings = $check.closest('.user-registration-login-form-container');
-			var wpbody_class = $(login_form_settings).closest('#wpbody-content');
+			var $selected_page = $check
+				.closest(".ur-login-form-setting-block")
+				.find(".ur-redirect-to-login-page")
+				.val();
+			var login_form_settings = $check.closest(
+				".user-registration-login-form-container"
+			);
+			var wpbody_class =
+				$(login_form_settings).closest("#wpbody-content");
 
-			if ('' === $selected_page) {
-				$check.closest('.ur-login-form-setting-block')
-					.find('.ur-redirect-to-login-page')
-					.closest('.user-registration-login-form-global-settings--field')
-					.append('<div class="error inline" style="padding:10px;">' + ur_login_form_params.user_registration_membership_redirect_default_page_message + '</div>');
+			if ("" === $selected_page) {
+				$check
+					.closest(".ur-login-form-setting-block")
+					.find(".ur-redirect-to-login-page")
+					.closest(
+						".user-registration-login-form-global-settings--field"
+					)
+					.append(
+						'<div class="error inline" style="padding:10px;">' +
+						ur_login_form_params.user_registration_membership_redirect_default_page_message +
+						"</div>"
+					);
 			} else {
-				$(wpbody_class).find('#ur-lists-page-topnav').find('.ur_save_login_form_action_button').prop('disabled', false);
-				$check.closest('.ur-login-form-setting-block')
-					.find('.ur-redirect-to-login-page')
-					.closest('.user-registration-login-form-global-settings--field')
-					.find('.error.inline').remove();
+				$(wpbody_class)
+					.find("#ur-lists-page-topnav")
+					.find(".ur_save_login_form_action_button")
+					.prop("disabled", false);
+				$check
+					.closest(".ur-login-form-setting-block")
+					.find(".ur-redirect-to-login-page")
+					.closest(
+						".user-registration-login-form-global-settings--field"
+					)
+					.find(".error.inline")
+					.remove();
 			}
 
 			$redirect.prop("required", true);
 		}
 
 		// Handling the "clear" button click event for Select2.
-		$('select[name="user_registration_login_options_login_redirect_url"]').on('select2:unselect', function() {
-
-			$check.closest('.ur-login-form-setting-block')
-				.find('.ur-redirect-to-login-page')
-				.closest('.user-registration-login-form-global-settings--field')
-				.append('<div class="error inline" style="padding:10px;">' + ur_login_form_params.user_registration_membership_redirect_default_page_message + '</div>');
+		$(
+			'select[name="user_registration_login_options_login_redirect_url"]'
+		).on("select2:unselect", function () {
+			$check
+				.closest(".ur-login-form-setting-block")
+				.find(".ur-redirect-to-login-page")
+				.closest(".user-registration-login-form-global-settings--field")
+				.append(
+					'<div class="error inline" style="padding:10px;">' +
+					ur_login_form_params.user_registration_membership_redirect_default_page_message +
+					"</div>"
+				);
 
 			$redirect.prop("required", true);
 		});
@@ -663,9 +694,7 @@
 	});
 
 	// Display error when page with our my account or login shortcode is not selected
-	$(
-		"#user_registration_myaccount_page_id"
-	).on("change", function () {
+	$("#user_registration_myaccount_page_id").on("change", function () {
 		var $this = $(this),
 			data = {
 				action: "user_registration_my_account_selection_validator",
@@ -708,8 +737,9 @@
 						.closest("form")
 						.find("input[name='save']")
 						.prop("disabled", false);
-						$this
-						.closest(".user-registration-global-settings").find('.error inline')
+					$this
+						.closest(".user-registration-global-settings")
+						.find(".error inline")
 						.remove();
 				}
 				$this.prop("disabled", false);
@@ -727,7 +757,8 @@
 		var $this = $(this),
 			data = {
 				action: "user_registration_lost_password_selection_validator",
-				security: ur_login_form_params.user_registration_lost_password_selection_validator_nonce
+				security:
+				ur_login_form_params.user_registration_lost_password_selection_validator_nonce
 			};
 
 		data.user_registration_selected_lost_password_page = $this.val();
@@ -735,7 +766,10 @@
 		$this.prop("disabled", true);
 		$this.css("border", "1px solid #e1e1e1");
 
-		$this.closest(".user-registration-global-settings--field").find(".error.inline").remove();
+		$this
+			.closest(".user-registration-global-settings--field")
+			.find(".error.inline")
+			.remove();
 
 		$.ajax({
 			url: ur_login_form_params.ajax_url,
@@ -743,27 +777,53 @@
 			type: "POST",
 			complete: function (response) {
 				if (response.responseJSON.success === false) {
-					if ($this.closest(".user-registration-login-form-global-settings").find(".error.inline").length === 0) {
-						$this.closest(".user-registration-login-form-global-settings").append(
-							"<div id='message' class='error inline' style='padding:10px;'>" +
-							response.responseJSON.data.message +
-							"</div>"
-						);
+					if (
+						$this
+							.closest(
+								".user-registration-login-form-global-settings"
+							)
+							.find(".error.inline").length === 0
+					) {
+						$this
+							.closest(
+								".user-registration-login-form-global-settings"
+							)
+							.append(
+								"<div id='message' class='error inline' style='padding:10px;'>" +
+								response.responseJSON.data.message +
+								"</div>"
+							);
 					}
 					$this.css("border", "1px solid red");
-					var login_form = $this.closest('.user-registration-login-form-container');
-					$(login_form).closest('#wpbody-content').find('#ur-lists-page-topnav').find('button[name="save_login_form"]').prop("disabled", true);
+					var login_form = $this.closest(
+						".user-registration-login-form-container"
+					);
+					$(login_form)
+						.closest("#wpbody-content")
+						.find("#ur-lists-page-topnav")
+						.find('button[name="save_login_form"]')
+						.prop("disabled", true);
 				} else {
-					var login_form = $this.closest('.user-registration-login-form-container');
-					$(login_form).closest('#wpbody-content').find('#ur-lists-page-topnav').find('button[name="save_login_form"]').prop("disabled", false);
-					$this.closest(".user-registration-login-form-global-settings").find(".error.inline").remove();
+					var login_form = $this.closest(
+						".user-registration-login-form-container"
+					);
+					$(login_form)
+						.closest("#wpbody-content")
+						.find("#ur-lists-page-topnav")
+						.find('button[name="save_login_form"]')
+						.prop("disabled", false);
+					$this
+						.closest(
+							".user-registration-login-form-global-settings"
+						)
+						.find(".error.inline")
+						.remove();
 				}
 
 				$this.prop("disabled", false);
 			}
 		});
 	});
-
 
 	// Set localStorage with expiry
 	function setStorageValue(key, value) {
@@ -909,7 +969,7 @@
 				'" rel="1" allowfullscreen></iframe></div><br>';
 		}
 		var icon =
-			'<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>';
+			'<i class="dashicons dashicons-lock" style="color:#475bb2; border-color: #475bb2;"></i>';
 
 		var message =
 			video + user_registration_settings_params.i18n.upgrade_message;
@@ -1079,40 +1139,105 @@
 		});
 	}
 
+	/**
+	 * Show success message using snackbar.
+	 *
+	 * @param {String} message Message to show.
+	 */
+	function show_success_message(message) {
+		if (snackbar) {
+			snackbar.add({
+				type: 'success',
+				message: message,
+				duration: 5
+			});
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Show failure message using snackbar.
+	 *
+	 * @param {String} message Message to show.
+	 */
+	function show_failure_message(message) {
+		if (snackbar) {
+			snackbar.add({
+				type: 'failure',
+				message: message,
+				duration: 6,
+				dismissible: true
+			});
+			return true;
+		}
+		return false;
+	}
+
+	function update_payment_section_settings(setting_id, section_data, $this, settings_container) {
+
+		$.ajax({
+			url: user_registration_settings_params.ajax_url,
+			data: {
+				action: "user_registration_save_payment_settings",
+				security: user_registration_settings_params.user_registration_membership_payment_settings_nonce,
+				setting_id: setting_id,
+				section_data: JSON.stringify(section_data)
+			},
+			type: "POST",
+			complete: function (response) {
+				$this.find('.ur-spinner').remove();
+				if (response.responseJSON.success) {
+					show_success_message(response.responseJSON.data.message);
+					settings_container.find('.integration-status').addClass('ur-integration-account-connected');
+				} else {
+					show_failure_message(response.responseJSON.data.message);
+				}
+
+			}
+		});
+	}
+
 	$(document)
 		.find(".wp-list-table")
 		.wrap("<div class='ur-list-table-wrapper'></div>");
 
-
-	$('#user_registration_member_registration_page_id, #user_registration_thank_you_page_id').on('change', function () {
+	$(
+		"#user_registration_member_registration_page_id, #user_registration_thank_you_page_id"
+	).on("change", function () {
 		var $this = $(this),
-			type = $this.attr('id'),
+			type = $this.attr("id"),
 			val = $(this).val();
 		// $this.prop("disabled", true);
-		$this.closest(".user-registration-global-settings--field").find('#select2-' + type + '-container').css('border', '1px solid #e1e1e1');
+		$this
+			.closest(".user-registration-global-settings--field")
+			.find("#select2-" + type + "-container")
+			.css("border", "1px solid #e1e1e1");
 
 		$this
 			.closest(".user-registration-global-settings--field")
 			.find(".error.inline")
 			.remove();
 		$this
-			.closest('.user-registration-global-settings')
-			.find('.ur-spinner')
+			.closest(".user-registration-global-settings")
+			.find(".ur-spinner")
 			.remove();
-		$this.closest('.user-registration-global-settings').append('<div class="ur-spinner is-active"></div>');
+		$this
+			.closest(".user-registration-global-settings")
+			.append('<div class="ur-spinner is-active"></div>');
 
 		$.ajax({
 			url: user_registration_settings_params.ajax_url,
 			data: {
-				action: 'user_registration_membership_verify_pages',
+				action: "user_registration_membership_verify_pages",
 				type: type,
 				value: val,
-				security: user_registration_settings_params.user_registration_membership_pages_selection_validator_nonce
+				security:
+				user_registration_settings_params.user_registration_membership_pages_selection_validator_nonce
 			},
 			type: "POST",
 			complete: function (response) {
 				if (response.responseJSON.status === false) {
-
 					$this
 						.closest(".user-registration-global-settings--field")
 						.append(
@@ -1120,14 +1245,21 @@
 							response.responseJSON.message +
 							"</div>"
 						);
-					$this.closest(".user-registration-global-settings--field").find('#select2-' + type + '-container').css('border', '1px solid red');
+					$this
+						.closest(".user-registration-global-settings--field")
+						.find("#select2-" + type + "-container")
+						.css("border", "1px solid red");
 
 					$this
 						.closest("form")
 						.find("input[name='save']")
 						.prop("disabled", true);
 				} else {
-					if ($this.closest(".user-registration-options-container").find('.error.inline').length) {
+					if (
+						$this
+							.closest(".user-registration-options-container")
+							.find(".error.inline").length
+					) {
 						$this
 							.closest("form")
 							.find("input[name='save']")
@@ -1138,7 +1270,6 @@
 							.find("input[name='save']")
 							.prop("disabled", false);
 					}
-
 				}
 				$this.prop("disabled", false);
 
@@ -1149,4 +1280,43 @@
 			}
 		});
 	});
+
+	$('.payment-settings-btn').on('click', function () {
+		var $this = $(this),
+			setting_id = $this.data('id'),
+			settings_container = $this.closest('#' + setting_id);
+
+		if ($this.find('.ur-spinner').length > 0) {
+			return;
+		}
+		$this.append("<span class='ur-spinner'></span>");
+
+		var section_data = {};
+
+		settings_container.find('input, select, textarea').each(function (key, item) {
+			var $item = $(item);
+			var name = $item.attr('name');
+			if (!name) return;
+
+			var value;
+			if ($item.attr('type') === 'checkbox') {
+				value = $item.is(":checked");
+			} else if ($item.is('textarea') && typeof tinymce !== 'undefined' && tinymce.get(name)) {
+				value = tinymce.get(name).getContent();
+			} else {
+				value = $item.val();
+			}
+			section_data[name] = value;
+		});
+
+		update_payment_section_settings(setting_id, section_data, $this, settings_container);
+	});
+
+	var searchParams = new URLSearchParams(window.location.search);
+	if (searchParams.has('method') && searchParams.get('method') !== "" && $('.user-registration-settings-container').find('#' + searchParams.get('method')).length > 0) {
+		var container = $('.user-registration-settings-container').find('#' + searchParams.get('method'));
+		setTimeout(function () {
+			container.find('.integration-header-info').trigger('click')
+		}, 400);
+	}
 })(jQuery);

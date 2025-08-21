@@ -10,6 +10,10 @@
 
 namespace WPEverest\URMembership\Frontend;
 
+use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
+use WPEverest\URMembership\Admin\Services\MembershipService;
+use WPEverest\URMembership\Admin\Services\SubscriptionService;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -45,6 +49,7 @@ class Frontend {
 		);
 
 		add_action( 'template_redirect', array( $this, 'set_thank_you_transient' ) );
+		add_action( 'wp_loaded', array( $this, 'clear_upgrade_data' ) );
 	}
 
 	/**
@@ -93,15 +98,38 @@ class Frontend {
 		$user_id = get_current_user_id();
 		$this->load_scripts();
 		$membership_repositories    = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
+		$members_order_repository   = new \WPEverest\URMembership\Admin\Repositories\MembersOrderRepository();
+		$orders_repository          = new \WPEverest\URMembership\Admin\Repositories\OrdersRepository();
 		$membership                 = $membership_repositories->get_member_membership_by_id( $user_id );
 		$membership['post_content'] = json_decode( $membership['post_content'], true );
+		$membership_service         = new MembershipService();
+		$is_upgrading               = ur_string_to_bool( get_user_meta( $user_id, 'urm_is_upgrading', true ) );
+		$last_order                 = $members_order_repository->get_member_orders( $user_id );
+		$bank_data                  = array();
+		if ( ! empty( $last_order ) && $last_order['status'] == 'pending' && $last_order['payment_method'] === 'bank' ) {
+			$bank_data = array(
+				'show_bank_notice' => true,
+				'bank_data'        => get_option( 'user_registration_global_bank_details', '' ),
+				'notice_1'         => apply_filters( 'urm_bank_info_notice_1_filter', __( 'Please complete the payment using the bank details provided by the admin. <br> Once the payment is verified, your upgraded membership will be activated. Kindly wait for the admin\'s confirmation.', 'user-registration' ) )
+			);
+		}
+
+		$membership_data = array(
+			'user'         => get_user_by( 'id', get_current_user_id() ),
+			'membership'   => $membership,
+			'is_upgrading' => $is_upgrading,
+			'bank_data'    => $bank_data,
+		);
+		if ( ! empty( $last_order ) ) {
+			$order_meta = $orders_repository->get_order_metas( $last_order['ID'] );
+			if ( ! empty( $order_meta ) ) {
+				$membership_data['delayed_until'] = $order_meta['meta_value'];
+			}
+		}
 
 		ur_get_template(
 			'myaccount/membership.php',
-			array(
-				'user'       => get_user_by( 'id', get_current_user_id() ),
-				'membership' => $membership,
-			)
+			$membership_data
 		);
 	}
 
@@ -163,7 +191,7 @@ class Frontend {
 
 		$redirect_page_url = get_permalink( $registration_page_id );
 
-		$thank_you_page = urm_get_thank_you_page();
+		$thank_you_page  = urm_get_thank_you_page();
 		$stripe_settings = \WPEverest\URMembership\Admin\Services\Stripe\StripeService::get_stripe_settings();
 
 
@@ -172,7 +200,8 @@ class Frontend {
 			'ur_membership_frontend_localized_data',
 			array(
 				'_nonce'                           => wp_create_nonce( 'ur_members_frontend' ),
-				'_confirm_payment_nonce'           => wp_create_nonce( 'ur_membership_confirm_payment' ),
+				'upgrade_membership_nonce'         => wp_create_nonce( 'urm_upgrade_membership' ),
+				'_confirm_payment_nonce'           => wp_create_nonce( 'urm_confirm_payment' ),
 				'ajax_url'                         => admin_url( 'admin-ajax.php' ),
 				'login_url'                        => wp_login_url(),
 				'labels'                           => $this->get_i18_labels(),
@@ -180,6 +209,7 @@ class Frontend {
 				'membership_registration_page_url' => $redirect_page_url,
 				'thank_you_page_url'               => $thank_you_page,
 				'stripe_publishable_key'           => $stripe_settings['publishable_key'],
+				'membership_gateways'              => get_option( 'ur_membership_payment_gateways', array() )
 			)
 		);
 	}
@@ -192,28 +222,32 @@ class Frontend {
 	public function get_i18_labels() {
 
 		return array(
-			'network_error'                                => esc_html__( 'Network error', 'user-registration' ),
-			'i18n_field_is_required'                       => _x( 'field is required.', 'user registration membership.', 'user-registration' ),
-			'i18n_field_password_empty_validation'         => _x( 'Password cannot be empty', 'user registration membership.', 'user-registration' ),
-			'i18n_field_email_field_validation'            => _x( 'Please enter a valid email address.', 'user registration membership.', 'user-registration' ),
-			'i18n_field_confirm_password_field_validation' => _x( 'Password does not match with confirm password.', 'user registration membership.', 'user-registration' ),
-			'i18n_field_password_field_length_validation'  => _x( 'Password must be at least 8 characters long', 'user registration membership.', 'user-registration' ),
-			'i18n_field_password_field_regex_validation'   => _x( 'Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character.', 'user registration membership', 'user-registration' ),
-			'i18n_field_payment_gateway_field_validation'  => _x( 'Please select a Payment Gateway.', 'user registration membership', 'user-registration' ),
-			'i18n_thank_you'                               => _x( 'Thank You', 'user registration membership', 'user-registration' ),
-			'i18n_sign_in'                                 => _x( 'Sign In', 'user registration membership', 'user-registration' ),
-			'i18n_order_successful'                        => _x( 'Your order has been successfully placed.', 'user registration membership', 'user-registration' ),
-			'i18n_transaction_id'                          => _x( 'Please use this transaction ID for future references.', 'user registration membership', 'user-registration' ),
-			'i18n_membership_required'                     => _x( 'Membership field is required.', 'user registration membership', 'user-registration' ),
-			'i18n_coupon_invalid_error'                    => _x( 'Coupon is Invalid.', 'user registration membership', 'user-registration' ),
-			'i18n_coupon_discount_message'                 => _x( 'discount on membership has been applied.', 'user registration membership', 'user-registration' ),
-			'i18n_coupon_empty_error'                      => _x( 'Coupon Field is empty.', 'user registration membership', 'user-registration' ),
-			'i18n_coupon_free_membership_error'            => _x( 'Invalid membership type (Free).', 'user registration membership', 'user-registration' ),
-			'i18n_incomplete_stripe_setup_error'           => _x( 'Stripe Payment stopped. Incomplete Stripe setup.', 'user registration membership', 'user-registration' ),
-			'i18n_error'                                   => _x( 'Error', 'user registration membership', 'user-registration' ),
+			'network_error'                                => __( 'Network error', 'user-registration' ),
+			'i18n_field_is_required'                       => __( 'field is required.', 'user-registration' ),
+			'i18n_field_password_empty_validation'         => __( 'Password cannot be empty', 'user-registration' ),
+			'i18n_field_email_field_validation'            => __( 'Please enter a valid email address.', 'user-registration' ),
+			'i18n_field_confirm_password_field_validation' => __( 'Password does not match with confirm password.', 'user-registration' ),
+			'i18n_field_password_field_length_validation'  => __( 'Password must be at least 8 characters long', 'user-registration' ),
+			'i18n_field_password_field_regex_validation'   => __( 'Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character.', 'user-registration' ),
+			'i18n_field_payment_gateway_field_validation'  => __( 'Please select a Payment Gateway.', 'user-registration' ),
+			'i18n_thank_you'                               => __( 'Thank You', 'user-registration' ),
+			'i18n_sign_in'                                 => __( 'Sign In', 'user-registration' ),
+			'i18n_order_successful'                        => __( 'Your order has been successfully placed.', 'user-registration' ),
+			'i18n_transaction_id'                          => __( 'Please use this transaction ID for future references.', 'user-registration' ),
+			'i18n_membership_required'                     => __( 'Membership field is required.', 'user-registration' ),
+			'i18n_coupon_invalid_error'                    => __( 'Coupon is Invalid.', 'user-registration' ),
+			'i18n_coupon_discount_message'                 => __( 'discount on membership has been applied.', 'user-registration' ),
+			'i18n_coupon_empty_error'                      => __( 'Coupon Field is empty.', 'user-registration' ),
+			'i18n_coupon_free_membership_error'            => __( 'Invalid membership type (Free).', 'user-registration' ),
+			'i18n_incomplete_stripe_setup_error'           => __( 'Stripe Payment stopped. Incomplete Stripe setup.', 'user-registration' ),
+			'i18n_bank_details_title'                      => __( 'Bank Details.', 'user-registration' ),
+			'i18n_change_membership_title'                 => __( 'Change Membership', 'user-registration' ),
+			'i18n_change_plan_required'                    => __( 'At least one Plan must be selected', 'user-registration' ),
+			'i18n_error'                                   => __( 'Error', 'user-registration' ),
 			'i18n_empty_card_details'                      => __( 'Your card number is incomplete.', 'user-registration' ),
-			'i18n_cancel_membership_text'                  => _x( 'Cancel membership.', 'user registration membership', 'user-registration' ),
-			'i18n_cancel_membership_subtitle'              => _x( 'Are you sure you want to cancel membership permanently?', 'user registration membership', 'user-registration' ),
+			'i18n_cancel_membership_text'                  => __( 'Cancel Membership', 'user-registration' ),
+			'i18n_close'                                   => __( 'Close', 'user-registration' ),
+			'i18n_cancel_membership_subtitle'              => __( 'Are you sure you want to cancel this membership permanently?', 'user-registration' ),
 			'i18n_sending_text'                            => __( 'Sending ...', 'user-registration' ),
 		);
 	}
@@ -222,11 +256,33 @@ class Frontend {
 		if ( ! isset( $_GET['urm_uuid'] ) || ! isset( $_GET['thank_you'] ) ) {
 			return;
 		}
-		$uuid             = $_GET['urm_uuid'] ? sanitize_text_field( $_GET['urm_uuid'] ) : ur_get_random_number();
-		$transient_id     = "uuid_{$uuid}_thank_you";
+		$uuid         = $_GET['urm_uuid'] ? sanitize_text_field( $_GET['urm_uuid'] ) : ur_get_random_number();
+		$transient_id = "uuid_{$uuid}_thank_you";
 		delete_transient( $transient_id );
 		$thank_you_page = get_permalink( absint( $_GET['thank_you'] ) );
 		set_transient( $transient_id, $thank_you_page, 15 * MINUTE_IN_SECONDS );
 
+	}
+
+	/**
+	 * clear_upgrade_data
+	 * If Paypal payment fails then clear meta's so user can try again
+	 * @return void
+	 */
+	public function clear_upgrade_data() {
+		$user_id              = get_current_user_id();
+		$subscription_service = new MembersSubscriptionRepository();
+		$user_subscription    = $subscription_service->get_member_subscription( $user_id );
+		if ( empty( $user_subscription ) ) {
+			return;
+		}
+		$next_subscription_data = json_decode( get_user_meta( $user_id, 'urm_next_subscription_data', true ), true );
+
+		if ( ! empty( $next_subscription_data ) && empty( $next_subscription_data['delayed_until'] ) && !empty($next_subscription_data['payment_method']) && ("paypal" === $next_subscription_data['payment_method']) ) {
+			if ( $user_subscription['status'] === 'active' ) {
+				delete_user_meta( $user_id, 'urm_is_upgrading' );
+				delete_user_meta( $user_id, 'urm_is_upgrading_to' );
+			}
+		}
 	}
 }

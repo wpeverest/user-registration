@@ -83,7 +83,7 @@ class UR_Frontend_Form_Handler {
 		);
 
 		$logger->info( __( 'Organizing the form data.', 'user-registration' ), array( 'source' => 'form-submission' ) );
-		self::$valid_form_data = apply_filters( 'user_registration_reorganize_form_data', self::$valid_form_data, $form_field_data );
+		self::$valid_form_data = apply_filters( 'user_registration_reorganize_form_data', self::$valid_form_data, $form_field_data, $form_id );
 		$logger->info( __( 'Form data organized.', 'user-registration' ), array( 'source' => 'form-submission' ) );
 
 		$logger->info( __( 'Getting response', 'user-registration' ), array( 'source' => 'form-submission' ) );
@@ -256,7 +256,6 @@ class UR_Frontend_Form_Handler {
 				}
 			}
 		}
-
 		return ( $form_field_data_array );
 	}
 
