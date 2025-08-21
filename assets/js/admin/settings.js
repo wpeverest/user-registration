@@ -1319,14 +1319,12 @@
 		ur_remove_cookie('urm_license_status');
 		var urmProInstallHtml = '<div style="display: flex; align-items: center; width: 60%;margin: 20px auto; position: relative;">' +
     '<img src="/wp-content/plugins/user-registration/assets/images/logo.png" alt="URM Logo" width="50" style="margin: 0 20px;" />' +
-    '<div class="dotted-line-wrapper">' +
-        '<div class="flow-line"></div>' +
-    '</div>' +
+    '<img src="/wp-content/plugins/user-registration/assets/images/connect.gif" alt="Connect gif" >'+
     '<img src="https://upload.wikimedia.org/wikipedia/commons/9/98/WordPress_blue_logo.svg" ' +
         'alt="WordPress Logo" width="50" style="margin: 0 10px 0 30px;" />' +
     '</div>' +
     '<p style="margin-bottom: 20px;font-size:0.9rem;">' +
-        'You\'ve activated your license, great! To get all the Pro Features, we just need to install the URM Pro plugin on your website. Don’t worry, it’s quick and safe!' +
+		user_registration_settings_params.i18n.license_activated_text + 
     '</p>' +
     '<form method="post">' +
         '<input type="hidden" name="download_user_registration_pro" value="1" />' +
@@ -1338,15 +1336,16 @@
     '<div class="user-registration-settings-container">' +
         '<div class="user-registration-options-container">' +
             '<p class="ur-p-tag" style="font-size:0.9rem;">' +
-                'This will automatically install and activate the URM Pro Plugin for you.' +
+				user_registration_settings_params.i18n.will_install_and_activate_pro_text +
             '</p>' +
         '</div>' +
     '</div>';
 		Swal.fire({
-			title: 'Install URM Pro to Unlock All Features',
+			title: user_registration_settings_params.i18n.pro_install_popup_title,
 			html: urmProInstallHtml,
 			showConfirmButton: false,
-			showCloseButton: true,
+			showCloseButton: false,
+			allowOutsideClick: false,
 			customClass: {
 				title: 'install-urm-pro-title',
 			},
@@ -1355,7 +1354,7 @@
 				$('#install-urm-pro-btn').on('click', function () {					
 					$(this)
 						.prop('disabled', true)
-						.text('Installing Plugin')
+						.text(user_registration_settings_params.i18n.installing_plugin_text)
 						.prepend('<div class="ur-spinner is-active" style="margin-right: 8px;"></div>');
 					$(this)
 						.closest('form')
@@ -1367,7 +1366,7 @@
 	if (searchParams.get('activated_license') == 'user-registration' && license_activation_status === 'pro_activated' ) {
 		ur_remove_cookie('urm_license_status');
 		$successModalHtml = '<p style="margin: 10px 0 20px;">' +
-        	'URM Pro has been successfully installed and activated. You now have access to all premium features!' +
+        	user_registration_settings_params.i18n.pro_activated_success_text +
 			'</p>' +
 			'<button id="dashboard-redirect-btn" style="' +
 				'background: transparent;' +
@@ -1378,11 +1377,11 @@
 				'font-size: 14px;' +
 				'cursor: pointer;' +
 			'">' +
-				'Continue to Dashboard' +
+				user_registration_settings_params.i18n.continue_to_dashboard_text +
 			'</button>';
 		Swal.fire({
 			icon: 'success',
-			title: 'Success!',
+			title: user_registration_settings_params.i18n.pro_activated_success_title,
 			html: $successModalHtml,
 			showConfirmButton: false,
 			showCloseButton: true,

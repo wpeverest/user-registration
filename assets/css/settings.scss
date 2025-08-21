@@ -2075,60 +2075,6 @@ body {
 		margin-top: 16px;
 	}
 }
-.dotted-line-wrapper {
-	flex: 1;
-	height: 3px;
-	position: relative;
-	background: repeating-linear-gradient(
-		to right,
-		gray 0,
-		gray 5px,
-		transparent 5px,
-		transparent 10px
-	);
-	overflow: hidden;
-}
-
-.flow-line {
-	position: absolute;
-	top: 0;
-	left: 0;
-	height: 100%;
-	width: 100%;
-	background: linear-gradient(to right, transparent, #475bb2, transparent);
-	animation: solidMove 5s ease-in-out infinite;
-	opacity: 0;
-}
-
-@keyframes solidMove {
-	0% {
-		left: -100%;
-		opacity: 0;
-	}
-	10% {
-		opacity: 1;
-	}
-	25% {
-		left: 100%;
-		opacity: 0;
-	}
-	50% {
-		left: 100%;
-		opacity: 0;
-	}
-	60% {
-		left: 100%;
-		opacity: 1;
-	}
-	75% {
-		left: -100%;
-		opacity: 0;
-	}
-	100% {
-		left: -100%;
-		opacity: 0;
-	}
-}
 
 .install-urm-pro-title {
   font-size: 1.25rem !important;  
