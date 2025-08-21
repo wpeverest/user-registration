@@ -1373,6 +1373,7 @@
 				'border: 1px solid #475bb2;' +
 				'color: #475bb2;' +
 				'padding: 8px 16px;' +
+				'margin-bottom: 16px;' +
 				'border-radius: 6px;' +
 				'font-size: 14px;' +
 				'cursor: pointer;' +
