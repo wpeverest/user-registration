@@ -50,7 +50,19 @@ class Membership {
 		add_action( 'in_admin_header', array( __CLASS__, 'hide_unrelated_notices' ) );
 		add_filter( 'wp_editor_settings', array( $this, 'remove_media_buttons' ) );
 		add_filter( 'user_registration_login_options', array( $this, 'add_payment_login_option' ) );
+		add_action( 'admin_head', array( $this, 'fix_menu_highlighting' ) );
+	}
 
+	/**
+	 * Fix menu highlighting for frontend listing edit pages.
+	 */
+	public function fix_menu_highlighting() {
+		global $submenu_file, $parent_file;
+
+		if ( isset( $_GET['page'] ) && 'user-registration-members' === $_GET['page'] ) {
+			$parent_file  = 'user-registration';
+			$submenu_file = 'user-registration-membership';
+		}
 	}
 
 	/**
@@ -430,7 +442,7 @@ class Membership {
 	public function remove_media_buttons( $settings ) {
 		//return tinymce as default
 		add_filter( 'wp_default_editor', function () {
-			return 'tinymce';
+				return 'tinymce';
 		} );
 		if ( ( isset( $_GET['page'] ) && 'user-registration-settings' === $_GET['page'] ) && ( isset( $_GET["tab"] ) && "payment" === $_GET["tab"] ) ) {
 			$settings['media_buttons'] = false;
