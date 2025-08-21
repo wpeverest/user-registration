@@ -432,7 +432,7 @@ class UR_Admin_Settings {
 							$settings .= '</h3>';
 
 							if ( ! empty( $section['button'] ) ) {
-								$settings .= '<a href="' . ( isset( $section['button']['button_link'] ) ? $section['button']['button_link'] : '#' ) . '" class="button button user_registration_smart_tags_used" style="min-width:90px;" target="_blank">' . ( isset( $section['button']['button_text'] ) ? $section['button']['button_text'] : '' ) . '</a>';
+								$settings .= '<a href="' . ( isset( $section['button']['button_link'] ) ? $section['button']['button_link'] : '#' ) . '" class="user_registration_smart_tags_used" style="min-width:90px;" target="_blank">' . '<span style="text-decoration: underline;">' . ( isset( $section['button']['button_text'] ) ? $section['button']['button_text'] : '' ) . '</span>' . '<span class="dashicons dashicons-external"></span>' . '</a>';
 							}
 							$settings .= '</div>';
 						}
