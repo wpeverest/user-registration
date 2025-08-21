@@ -48,7 +48,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			$sections = array(
 				''                  => __( 'General Options', 'user-registration' ),
 				'login-options'     => __( 'Login Options', 'user-registration' ),
-				'frontend-messages' => __( 'Frontend Messages', 'user-registration' ),
+				'frontend-messages' => __( 'Form Messages', 'user-registration' ),
 			);
 
 			/**
@@ -167,15 +167,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'desc_tip' => true,
 									'css'      => 'min-width: 350px;',
 									'default'  => '',
-								),
-								array(
-									'title'    => __( 'Disable Logout Confirmation', 'user-registration' ),
-									'desc'     => __( 'Check to disable logout confirmation.', 'user-registration' ),
-									'id'       => 'user_registration_disable_logout_confirmation',
-									'type'     => 'toggle',
-									'desc_tip' => true,
-									'css'      => 'min-width: 350px;',
-									'default'  => 'no',
 								),
 							),
 						),

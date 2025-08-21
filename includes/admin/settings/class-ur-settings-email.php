@@ -223,7 +223,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 //							'desc'     => __( 'Email notifications sent from user registration to the admin are listed below. Click on an email to configure it.', 'user-registration' ),
 							'button'   => array (
 								'button_link' => 'https://docs.wpuserregistration.com/docs/smart-tags/',
-								'button_text' => __( 'Smart Tags Used', 'user-registration' ),
+								'button_text' => __( 'Smart Tags Reference', 'user-registration' ),
 							),
 							'settings' => array(
 								array(
@@ -261,7 +261,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 //							'desc'     => __( 'Email notifications sent from user registration to the admin are listed below. Click on an email to configure it.', 'user-registration' ),
 							'button'   => array (
 								'button_link' => 'https://docs.wpuserregistration.com/docs/smart-tags/',
-								'button_text' => __( 'Smart Tags Used', 'user-registration' ),
+								'button_text' => __( 'Smart Tags Reference', 'user-registration' ),
 							),
 							'settings' => array(
 								array(

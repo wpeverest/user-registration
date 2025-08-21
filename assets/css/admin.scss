@@ -3736,7 +3736,7 @@ a.button.ur-smart-tags-list-button {
 		.ur-tab-contents {
 			#ur-setting-form {
 				.ur-general-setting-block {
-					margin-bottom: $spacing_36px;
+					// margin-bottom: $spacing_36px;
 
 					&:has(.closed) {
 						margin-bottom: 0;
@@ -7302,4 +7302,9 @@ body {
 			width: 220px;
 		}
 	}
+}
+div#message.warning.inline {
+	border: 1px solid #c3c4c7;
+    border-left-width: 4px;
+	border-left-color: #ffc700;
 }

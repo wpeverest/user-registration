@@ -259,6 +259,7 @@ class UR_Admin_Settings {
 				'user_registration_lost_password_selection_validator_nonce'    => wp_create_nonce( 'user_registration_lost_password_selection_validator' ),
 				'user_registration_membership_pages_selection_validator_nonce' => wp_create_nonce( 'user_registration_validate_page_none' ),
 				'user_registration_membership_payment_settings_nonce'          => wp_create_nonce( 'user_registration_validate_payment_settings_none' ),
+				'user_registration_membership_validate_payment_currency_nonce' => wp_create_nonce( 'user_registration_validate_payment_currency' ),
 				'i18n_nav_warning'                                             => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
 				'i18n'                                                         => array(
 					'captcha_success'   => esc_html__( 'Captcha Test Successful !', 'user-registration' ),
@@ -432,7 +433,7 @@ class UR_Admin_Settings {
 							$settings .= '</h3>';
 
 							if ( ! empty( $section['button'] ) ) {
-								$settings .= '<a href="' . ( isset( $section['button']['button_link'] ) ? $section['button']['button_link'] : '#' ) . '" class="button button user_registration_smart_tags_used" style="min-width:90px;" target="_blank">' . ( isset( $section['button']['button_text'] ) ? $section['button']['button_text'] : '' ) . '</a>';
+								$settings .= '<a href="' . ( isset( $section['button']['button_link'] ) ? $section['button']['button_link'] : '#' ) . '" class="user_registration_smart_tags_used" style="min-width:90px;" target="_blank">' . '<span style="text-decoration: underline;">' . ( isset( $section['button']['button_text'] ) ? $section['button']['button_text'] : '' ) . '</span>' . '<span class="dashicons dashicons-external"></span>' . '</a>';
 							}
 							$settings .= '</div>';
 						}
