@@ -123,6 +123,24 @@ const Header = () => {
 							spacing="12px"
 							borderColor="#475bb2"
 						>
+							{!isPro && (
+								<Link
+									color="475bb2"
+									fontSize="12px"
+									height="18px"
+									w="85px"
+									href={
+										upgradeURL +
+										"&utm_source=dashboard-header&utm_medium=top-menu-link"
+									}
+									isExternal
+								>
+									{__("Upgrade To Pro", "user-registration")}
+								</Link>
+							)}
+							<Center height="18px">
+								<Divider orientation="vertical" />
+							</Center>
 							<Tooltip
 								label={sprintf(
 									__(
@@ -142,24 +160,6 @@ const Header = () => {
 									{"v" + version}
 								</Tag>
 							</Tooltip>
-							<Center height="18px">
-								<Divider orientation="vertical" />
-							</Center>
-							{!isPro && (
-								<Link
-									color="475bb2"
-									fontSize="12px"
-									height="18px"
-									w="85px"
-									href={
-										upgradeURL +
-										"&utm_source=dashboard-header&utm_medium=top-menu-link"
-									}
-									isExternal
-								>
-									{__("Upgrade To Pro", "user-registration")}
-								</Link>
-							)}
 							<Button
 								onClick={onOpen}
 								variant="unstyled"
