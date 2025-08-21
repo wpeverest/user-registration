@@ -3994,6 +3994,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				'pending_approval' => get_option( 'user_registration_message_pending_approval', null ),
 				'denied_access'    => get_option( 'user_registration_message_denied_account', null ),
 				'user_disabled'    => esc_html__( 'Sorry! You are disabled.Please Contact Your Administrator.', 'user-registration' ),
+				'incorrect_password' => get_option( 'user_registration_message_incorrect_password', esc_html__( 'The password you entered for the email address %email% is incorrect.', 'user-registration' ) ),
 			);
 
 			$post = $_POST; // phpcs:ignore.
@@ -4122,8 +4123,6 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 			 */
 			$validation_error = apply_filters( 'user_registration_process_login_errors', $validation_error, sanitize_user( wp_unslash( $post['username'] ) ), sanitize_user( $post['password'] ) );
 
-
-
 			if ( $validation_error->get_error_code() ) {
 				throw new Exception( '<strong>' . esc_html__( 'ERROR:', 'user-registration' ) . '</strong>' . $validation_error->get_error_message() );
 			}
@@ -4193,6 +4192,9 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				}
 				if ( ! empty( $user->errors['denied_access'] ) && ! empty( $messages['denied_access'] ) ) {
 					$user->errors['denied_access'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['denied_access'] );
+				}
+				if ( ! empty( $user->errors['incorrect_password'] ) && ! empty( $messages['incorrect_password'] ) ) {
+					$user->errors['incorrect_password'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), str_replace( "%email%", $login_data['user_login'], $messages['incorrect_password'] ) );
 				}
 
 				$message = $user->get_error_message();
@@ -7374,7 +7376,7 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 							),
 							array(
 								'title'    => __( 'Label', 'user-registration' ),
-								'desc'     => __( 'Customize the label for the Username or Email field.', 'user-registration' ),
+								'desc'     => '',
 								'id'       => 'user_registration_label_username_or_email',
 								'type'     => 'text',
 								'desc_tip' => true,
@@ -7384,7 +7386,7 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 							),
 							array(
 								'title'    => __( 'Label', 'user-registration' ),
-								'desc'     => __( 'Customize the label for the Password field.', 'user-registration' ),
+								'desc'     => '',
 								'id'       => 'user_registration_label_password',
 								'type'     => 'text',
 								'desc_tip' => true,
@@ -7394,7 +7396,7 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 							),
 							array(
 								'title'    => __( 'Label', 'user-registration' ),
-								'desc'     => __( 'Customize the label for the “Remember Me” checkbox.', 'user-registration' ),
+								'desc'     => '',
 								'id'       => 'user_registration_label_remember_me',
 								'type'     => 'text',
 								'desc_tip' => true,
@@ -7404,7 +7406,7 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 							),
 							array(
 								'title'    => __( 'Button Text', 'user-registration' ),
-								'desc'     => __( 'Change the text on the Login button.', 'user-registration' ),
+								'desc'     => '',
 								'id'       => 'user_registration_label_login',
 								'type'     => 'text',
 								'desc_tip' => true,
@@ -7414,7 +7416,7 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 							),
 							array(
 								'title'    => __( 'Label', 'user-registration' ),
-								'desc'     => __( 'Change the text for the “Lost your password?” link.', 'user-registration' ),
+								'desc'     => '',
 								'id'       => 'user_registration_label_lost_your_password',
 								'type'     => 'text',
 								'desc_tip' => true,
@@ -7424,7 +7426,7 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 							),
 							array(
 								'title'    => __( 'Placeholder', 'user-registration' ),
-								'desc'     => __( 'Placeholder inside the Username or Email input.', 'user-registration' ),
+								'desc'     => '',
 								'id'       => 'user_registration_placeholder_username_or_email',
 								'type'     => 'text',
 								'desc_tip' => true,
@@ -7434,7 +7436,7 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 							),
 							array(
 								'title'    => __( 'Placeholder', 'user-registration' ),
-								'desc'     => __( 'Placeholder inside the Password input.', 'user-registration' ),
+								'desc'     => '',
 								'id'       => 'user_registration_placeholder_password',
 								'type'     => 'text',
 								'desc_tip' => true,
@@ -7444,39 +7446,50 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 							),
 							array(
 								'title'    => __( 'Required Message', 'user-registration' ),
-								'desc'     => __( 'Message shown when username or email is missing.', 'user-registration' ),
+								'desc'     => '',
 								'id'       => 'user_registration_message_username_required',
 								'type'     => 'text',
 								'desc_tip' => true,
 								'css'      => '',
-								'default'  => 'Username is required.',
+								'default'  => esc_html__( 'Username is required.', 'user-registration' ),
 								'field-key'=> 'username'
 							),
 							array(
 								'title'       => __( 'Required Message', 'user-registration' ),
-								'desc'        => __( 'Message shown when password is not entered.', 'user-registration' ),
+								'desc'        => '',
 								'id'          => 'user_registration_message_empty_password',
 								'type'        => 'text',
 								'desc_tip'    => true,
 								'css'         => '',
-								'default'     => '',
+								'default'     => esc_html__( 'The password field is empty.', 'user-registration'),
+								'placeholder' => 'Default message from WordPress',
+								'field-key'   => 'password'
+							),
+							array(
+								'title'       => __( 'Invalid Password', 'user-registration' ),
+								'desc'        => '',
+								'id'          => 'user_registration_message_incorrect_password',
+								'type'        => 'text',
+								'desc_tip'    => true,
+								'css'         => '',
+								'default'     => esc_html__( 'The password you entered for the email address %email% is incorrect.', 'user-registration' ),
 								'placeholder' => 'Default message from WordPress',
 								'field-key'   => 'password'
 							),
 							array(
 								'title'       => __( 'Invalid Username Message', 'user-registration' ),
-								'desc'        => __( 'Message shown when the username is incorrect or unknown.', 'user-registration' ),
+								'desc'        => '',
 								'id'          => 'user_registration_message_invalid_username',
 								'type'        => 'text',
 								'desc_tip'    => true,
 								'css'         => '',
-								'default'     => '',
+								'default'     => __( 'Invalid username or email.', 'user-registration' ),
 								'placeholder' => 'Default message from WordPress',
 								'field-key'   => 'username'
 							),
 							array(
 								'title'    => __( 'Invalid Email Message', 'user-registration' ),
-								'desc'     => __( 'Message shown when the email address is not found.', 'user-registration' ),
+								'desc'     => '',
 								'id'       => 'user_registration_message_unknown_email',
 								'type'     => 'text',
 								'desc_tip' => true,

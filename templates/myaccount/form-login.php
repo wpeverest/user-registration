@@ -89,6 +89,12 @@ if ( ! $is_passwordless_enabled || $is_passwordless_login_default_login_area_ena
 	ur_add_notice( apply_filters( 'user_registration_passwordless_login_notice', '' ), 'success' );
 }
 apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() );
+
+$admin_class = '';
+
+if( isset($_GET['page']) && 'user-registration-login-forms' === $_GET['page'] ) {
+	$admin_class = "clickable-login-fields ";
+}
 ?>
 
 <div class="ur-frontend-form login <?php echo esc_attr( $template_class ); ?>" id="ur-frontend-form">
@@ -132,7 +138,7 @@ apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() 
 					?>
 
 					<?php
-					echo '<div class="clickable-login-fields" data-field="login-title">';
+					echo '<div class="' . esc_attr( $admin_class ) . '" data-field="login-title">';
 					/* translators: %s - Login Title. */
 					echo wp_kses_post( sprintf( __( '<span class="user-registration-login-title"> %s </span> </br>', 'user-registration' ), $login_title_label ) );
 					echo wp_kses_post( sprintf( __( '<p class="user-registration-login-description"> %s </p>', 'user-registration' ), $login_title_description ) );
@@ -146,7 +152,7 @@ apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() 
 				do_action( 'user_registration_login_form_start' );
 				?>
 				<div
-					class="clickable-login-fields user-registration-form-row user-registration-form-row--wide form-row form-row-wide"
+					class="<?php echo esc_attr( $admin_class ); ?> user-registration-form-row user-registration-form-row--wide form-row form-row-wide"
 					data-field="username">
 					<?php
 					if ( ! $hide_labels || $is_login_settings ) {
@@ -170,7 +176,7 @@ apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() 
 				</div>
 				<?php if ( ( $is_passwordless_enabled && ! $is_passwordless_login_default_login_area_enabled ) || $is_login_settings ) : ?>
 					<div
-						class="clickable-login-fields user-registration-form-row user-registration-form-row--wide form-row form-row-wide<?php echo ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) ? ' hide_show_password' : ''; ?>"
+						class="<?php echo esc_attr( $admin_class ); ?> user-registration-form-row user-registration-form-row--wide form-row form-row-wide<?php echo ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) ? ' hide_show_password' : ''; ?>"
 						data-field="password">
 						<?php
 						if ( ! $hide_labels || $is_login_settings ) {
@@ -204,7 +210,7 @@ apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() 
 				<?php endif; ?>
 				<?php
 				if ( ! empty( $recaptcha_node ) ) {
-					echo '<div data-field="recaptcha" id="ur-recaptcha-node" class="clickable-login-fields"> ' . $recaptcha_node . '</div>';  //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo '<div data-field="recaptcha" id="ur-recaptcha-node" class="' . esc_attr( $admin_class ) . '"> ' . $recaptcha_node . '</div>';  //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				}
 				?>
 
@@ -225,7 +231,7 @@ apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() 
 
 							if ( ( $remember_me_enabled && $is_passwordless_enabled && ! $is_passwordless_login_default_login_area_enabled ) || $is_login_settings ) {
 								?>
-								<div class="clickable-login-fields" data-field="remember-me">
+								<div class="<?php echo esc_attr( $admin_class ); ?>" data-field="remember-me">
 									<label
 										class="user-registration-form__label user-registration-form__label-for-checkbox inline">
 										<input
@@ -245,7 +251,7 @@ apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() 
 							if ( ( $lost_password_enabled && $is_passwordless_enabled && ! $is_passwordless_login_default_login_area_enabled ) || $is_login_settings ) {
 								?>
 								<div data-field="lost-password"
-									 class="user-registration-LostPassword lost_password clickable-login-fields">
+									 class="user-registration-LostPassword lost_password <?php echo esc_attr( $admin_class ); ?>">
 									<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php echo esc_html( $labels['lost_your_password'] ); ?></a>
 								</div>
 								<?php
@@ -256,7 +262,7 @@ apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() 
 					}
 					?>
 				</div>
-				<div data-field="login-button" class="clickable-login-fields">
+				<div data-field="login-button" class="<?php echo esc_attr( $admin_class ); ?>">
 					<?php
 
 					/**
@@ -291,7 +297,7 @@ apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() 
 						if ( ! filter_var( $url_options, FILTER_VALIDATE_URL ) || ! preg_match( $url_pattern, $url_options ) ) {
 							$url_options = home_url( $url_options );
 						}
-						echo '<div class="user-registration-register register clickable-login-fields" data-field="registration-setting">';
+						echo '<div class="user-registration-register register ' . esc_attr( $admin_class ) . '" data-field="registration-setting">';
 						$label = get_option( 'user_registration_general_setting_registration_label' );
 
 						if ( ! empty( $label ) ) {

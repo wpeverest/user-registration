@@ -78,7 +78,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 												echo '<form id="ur-login-form-setting">';
 												foreach ( $login_option_settings['sections'] as $section ) {
 													echo '<div class="ur-login-form-setting-block" style="display:block;">';
-													echo '<h2 class="ur-toggle-heading">' . __( $section['title'], 'user-registration' ) . '</h2>';
+													echo '<h2>' . __( $section['title'], 'user-registration' ) . '</h2>';
 													echo '<hr/>';
 													echo '<div class="ur-toggle-content">';
 													render_login_option_settings( $section );
@@ -139,5 +139,3 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</div>
 	</div>
 </div>
-
-

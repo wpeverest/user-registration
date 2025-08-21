@@ -293,6 +293,17 @@
 		form.find("#rememberme")
 			.parent("label")
 			.css({ opacity: value ? 1 : 0.5 });
+
+		if (value) {
+			$("#user_registration_label_remember_me")
+				.closest(".user-registration-login-form-global-settings")
+				.show()
+				.css("display", "flex");
+		} else {
+			$("#user_registration_label_remember_me")
+				.closest(".user-registration-login-form-global-settings")
+				.hide();
+		}
 	}
 
 	function hide_show_lost_password() {
