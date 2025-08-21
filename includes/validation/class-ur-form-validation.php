@@ -734,8 +734,21 @@ class UR_Form_Validation extends UR_Validation {
 			}
 		);
 
-		$form_skippable_fields = wp_list_pluck( wp_list_pluck( $form_skippable_fields, 'general_setting' ), 'field_name' );
-		$skippable_fields      = $form_skippable_fields;
+		// Retrieves the hidden fields in profile update form.
+		$field_visibility_skip_fields = array_filter(
+			$form_data,
+			function ( $field ) {
+				if ( ! empty( $field->advance_setting->field_visibility ) && 'reg_form' === $field->advance_setting->field_visibility ) {
+					return true;
+				}
+
+				return false;
+			}
+		);
+
+		$field_visibility_skippable_fields = wp_list_pluck( wp_list_pluck( $field_visibility_skip_fields, 'general_setting' ), 'field_name' );
+		$form_skippable_fields             = wp_list_pluck( wp_list_pluck( $form_skippable_fields, 'general_setting' ), 'field_name' );
+		$skippable_fields                  = array_merge( $form_skippable_fields, $field_visibility_skippable_fields );
 
 		/**
 		 * Add fields to skip validation on update profile.
