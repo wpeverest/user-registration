@@ -2329,14 +2329,36 @@ add_action( 'user_registration_installed', 'ur_delete_expired_transients' );
  * @param mixed  $variable To be translated for WPML compatibility.
  */
 function ur_string_translation( $form_id, $field_id, $variable ) {
-	if ( function_exists( 'icl_register_string' ) ) {
-		icl_register_string( isset( $form_id ) && 0 !== $form_id ? 'user_registration_' . absint( $form_id ) : 'user-registration', isset( $field_id ) ? $field_id : '', $variable );
-	}
-	if ( function_exists( 'icl_t' ) ) {
-		$variable = icl_t( isset( $form_id ) && 0 !== $form_id ? 'user_registration_' . absint( $form_id ) : 'user-registration', isset( $field_id ) ? $field_id : '', $variable );
-	}
-	return $variable;
+    $context = ( isset( $form_id ) && 0 !== $form_id )
+        ? 'user_registration_' . absint( $form_id )
+        : 'user-registration';
+    $name    = isset( $field_id ) ? $field_id : '';
+
+    // For handling translation in WPML.
+    if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+		if ( function_exists( 'icl_register_string' ) ) {
+			icl_register_string( $context, $name, $variable );
+			if ( function_exists( 'icl_t' ) ) {
+				ur_get_logger()->debug(print_r('icl_t', true));
+				$variable = icl_t( $context, $name, $variable );
+			}
+
+		}
+    }
+
+    // For handling translation in Polylang.
+    elseif ( defined( 'POLYLANG_VERSION' ) ) {
+		if ( function_exists( 'pll_register_string' ) ) {
+			pll_register_string( $name, $variable, $context );
+			if ( function_exists( 'pll__' ) ) {
+				$variable = pll__( $variable );
+			}
+		}
+    }
+
+    return $variable;
 }
+
 
 /**
  * Get Form ID from User ID.
@@ -8537,4 +8559,3 @@ if ( ! function_exists( 'ur_save_settings_options' ) ) {
 		}
 	}
 };
-
