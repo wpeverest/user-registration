@@ -52,6 +52,7 @@ class AJAX {
 			'create_membership'            => false,
 			'update_membership'            => false,
 			'delete_memberships'           => false,
+			'delete_membership'            => false,
 			'update_membership_status'     => false,
 			'create_member'                => false,
 			'update_member'                => false,
@@ -365,6 +366,49 @@ class AJAX {
 	 *
 	 * @return void
 	 */
+	public static function delete_membership() {
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Permission not allowed.', 'user-registration' ),
+				),
+				403
+			);
+		}
+
+		ur_membership_verify_nonce( 'ur_membership' );
+		if ( empty( $_POST['membership_id'] ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Field membership_id is required.', 'user-registration' ),
+				),
+				422
+			);
+		}
+		$membership_id = absint( $_POST['membership_id'] );
+
+		$membership_service = new MembershipService();
+		$deleted               = $membership_service->delete_membership( $membership_id );
+		if ( $deleted["status"] ) {
+			wp_send_json_success(
+				array(
+					'message' => esc_html__( 'Membership deleted successfully.', 'user-registration' ),
+				)
+			);
+		}
+		wp_send_json_error(
+			array(
+				'message' =>  $deleted["message"] ,
+			)
+		);
+	}
+
+	/**
+	 * Delete multiple Memberships
+	 *
+	 * @return void
+	 */
 	public static function delete_memberships() {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error(
@@ -383,8 +427,9 @@ class AJAX {
 				422
 			);
 		}
-		$membership_ids        = wp_unslash( $_POST['membership_ids'] );
-		$membership_ids        = implode( ",", json_decode( $membership_ids, true ) );
+		$membership_ids = wp_unslash( $_POST['membership_ids'] );
+		$membership_ids = implode( ",", json_decode( $membership_ids, true ) );
+
 		$membership_repository = new MembershipRepository();
 		$deleted               = $membership_repository->delete_multiple( $membership_ids );
 		if ( $deleted ) {

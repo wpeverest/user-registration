@@ -147,13 +147,13 @@ class Membership {
 
 		switch ( $action ) {
 			case 'trash':
-				$this->bulk_trash( $delete_list );
+//				$this->bulk_trash( $delete_list );
 				break;
 			case 'untrash':
-				$this->bulk_untrash( $membership_list );
+//				$this->bulk_untrash( $membership_list );
 				break;
 			case 'delete':
-				$this->bulk_trash( $delete_list, true, $delete_membership );
+//				$this->bulk_trash( $delete_list, true, $delete_membership );
 				break;
 			default:
 				break;
@@ -465,9 +465,10 @@ class Membership {
 			'i18n_valid_trial_period_field_validation'     => _x( 'Trial period must be less than subscription period.', 'user registration membership', 'user-registration' ),
 			'i18n_error'                                   => _x( 'Error', 'user registration membership', 'user-registration' ),
 			'i18n_save'                                    => _x( 'Save', 'user registration membership', 'user-registration' ),
-			'i18n_prompt_title'                            => __( 'Delete Membership', 'user-registration' ),
+			'i18n_prompt_title'                            => __( 'Delete Membership Plan', 'user-registration' ),
 			'i18n_prompt_bulk_subtitle'                    => __( 'Are you sure you want to delete these memberships permanently?', 'user-registration' ),
 			'i18n_prompt_single_subtitle'                  => __( 'Are you sure you want to delete this membership permanently?', 'user-registration' ),
+			'i18n_prompt_ok'                               => __( 'Ok', 'user-registration' ),
 			'i18n_prompt_delete'                           => __( 'Delete', 'user-registration' ),
 			'i18n_prompt_cancel'                           => __( 'Cancel', 'user-registration' ),
 			'i18n_prompt_no_membership_selected'           => __( 'Please select at least one membership.', 'user-registration' ),
