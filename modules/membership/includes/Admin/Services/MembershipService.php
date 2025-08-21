@@ -339,7 +339,7 @@ class MembershipService {
 		$post     = get_post( $post_id );
 		if ( empty( $post ) ) {
 			$response['status']  = false;
-			$response['message'] = __( 'Invalid post' );
+			$response['message'] =  __( 'No page selected.', 'user-registration' );
 
 			return $response; //return since the post does not exist;
 		}
