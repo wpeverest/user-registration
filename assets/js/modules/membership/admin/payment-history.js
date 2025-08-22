@@ -400,7 +400,107 @@
 
 			});
 		});
+		$(document).ready(function () {
+			$('.manual-payment-button').on('click', function() {
+				window.location.href = urmo_data.add_manual_payment_url;
+			});
 
+			// Datalist: map selected member label to hidden user ID
+
+			var $memberHidden = $('#ur-member-id-hidden');
+			var $form = $('#ur-membership-payment-history-form');
+
+		});
+		var $memberInput = $('#ur-member-search-input'); //
+
+		$(document).ready(function () {
+			$('#ur-input-type-member').select2({
+				placeholder: "Select a member",
+				allowClear: true,
+				width: '100%'
+			});
+			$('#ur-input-type-payment-method').select2({
+				placeholder: "Select Payment Method",
+				allowClear: true,
+				minimumResultsForSearch: Infinity,
+				width: '100%'
+			});
+			
+
+			$('#ur-input-type-transaction-status').select2({
+				placeholder: "Select status",
+				minimumResultsForSearch: Infinity,
+				width: '100%'
+			});
+		});
+
+		$(document).ready(function($) {
+			$('#ur-membership-order-create-form').on('submit', function(e) {
+				e.preventDefault();
+
+				// Get the form button and show spinner.
+				var $submitButton = $('.ur-add-new-payment');
+				$submitButton.prop('disabled', true).prepend('<span class="ur-spinner"></span>');
+
+				var formData = {
+					ur_member_id: $('#ur-input-type-member').val(),
+					ur_membership_plan: $('#ur-input-type-membership-plan').val(),
+					ur_membership_amount: $('#ur-input-type-membership-amount').val(),
+					ur_payment_date: $('#ur-input-type-payment-date').val(),
+					ur_transaction_status: $('#ur-input-type-transaction-status').val(),
+					ur_payment_notes: $('#ur-input-type-payment-notes').val(),
+					ur_payment_method: $('#ur-input-type-payment-method').val(),
+				};
+				
+				$.ajax({
+					url: urmo_data.ajax_url,
+					type: 'POST',
+					data: {
+						action: 'user_registration_membership_create_order',
+						security: $('#ur_membership_order_nonce').val(),
+						order_data: JSON.stringify(formData),
+					},
+					success: function(response) {
+						if (response.success) {
+							$submitButton.prop('disabled', false).find('.ur-spinner').remove();
+
+							handle_orders_utils.show_success_message(response.data.message || 'Payment created successfully');
+							setTimeout(
+								function() {
+								window.location.href = urmo_data.payment_history_url;
+							}, 1000);
+						} else {
+							handle_orders_utils.show_failure_message(response.data.message || 'Error creating payment', 'error');
+							$submitButton.prop('disabled', false).find('.ur-spinner').remove();
+						}
+					},
+					error: function(xhr, status, error) {
+						handle_orders_utils.show_failure_message('Server error occurred. Please try again.', 'error');
+						$submitButton.prop('disabled', false).find('.ur-spinner').remove();
+					}
+				});
+			});
+
+			$('#ur-input-type-membership-plan').on('change', function() {
+				var selectedOption = $(this).find('option:selected');
+				var amount = selectedOption.data('amount');
+				if (amount) {
+					$('#ur-input-type-membership-amount').val(amount);
+					$('#ur-input-type-membership-amount').prop('disabled', false);
+				} else {
+					$('#ur-input-type-membership-amount').val(0);
+					$('#ur-input-type-membership-amount').prop('disabled', true);
+				}
+				$('.ur-membership-plan-name').html(selectedOption.text());
+			});
+
+			$('#ur-input-type-member').on ('change', function() {
+				var selectedOption = $(this).find('option:selected');
+				var membership_plan_id = selectedOption.data('membership-plan-id');
+
+				$('#ur-input-type-membership-plan').val(membership_plan_id).trigger('change');
+			});
+		});
 	}
 )
 (jQuery, window.urm_orders_localized_data);

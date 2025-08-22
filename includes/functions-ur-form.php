@@ -19,14 +19,15 @@ function ur_get_form_fields( $form_id ) {
 
 	if ( ! empty( $form_id ) ) {
 		$post_content_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
+		if( is_iterable( $post_content_array ) ) {
+			foreach ( $post_content_array as $row_index => $row ) {
+				foreach ( $row as $grid_index => $grid ) {
+					foreach ( $grid as $field_index => $field ) {
+						$field_name = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
 
-		foreach ( $post_content_array as $row_index => $row ) {
-			foreach ( $row as $grid_index => $grid ) {
-				foreach ( $grid as $field_index => $field ) {
-					$field_name = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
-
-					if ( $field_name ) {
-						$form_fields[ $field_name ] = $field;
+						if ( $field_name ) {
+							$form_fields[ $field_name ] = $field;
+						}
 					}
 				}
 			}
