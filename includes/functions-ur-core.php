@@ -1128,7 +1128,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 	}
 
 	$arguments = array(
-		'form_id'      => $form_id,
+		'form_id' => $form_id,
 
 		'setting_data' => array(
 			array(
@@ -1141,7 +1141,9 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'input_class'       => array(),
 				'custom_attributes' => array(),
 				'default'           => ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_enable_form_title_description', false ) ),
+				'default_value'     => false,
 				'tip'               => __( 'Enable to show form title and description on form', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'text',
@@ -1152,8 +1154,10 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'class'             => array( 'ur-enhanced-select' ),
 				'input_class'       => array(),
 				'custom_attributes' => array(),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_title', __('Register' , 'user-registration') ),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_title', __( 'Register', 'user-registration' ) ),
+				'default_value'     => __( 'Register', 'user-registration' ),
 				'tip'               => __( 'Enter the title of the form.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'textarea',
@@ -1164,14 +1168,17 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'class'             => array( 'ur-enhanced-select' ),
 				'input_class'       => array(),
 				'custom_attributes' => array(),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_description', __('Fill the form below to create an account.' , 'user-registration') ),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_description', __( 'Fill the form below to create an account.', 'user-registration' ) ),
+				'default_value'     => __( 'Fill the form below to create an account.', 'user-registration' ),
 				'tip'               => __( 'Enter the description of the form.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'label'             => __( 'User Approval And Login Option', 'user-registration' ),
 				'description'       => __( 'This option lets you choose login option after user registration.', 'user-registration' ),
 				'id'                => 'user_registration_form_setting_login_options',
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options' ) ),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', 'default' ),
+				'default_value'     => 'default',
 				'type'              => 'select',
 				'class'             => array( 'ur-enhanced-select' ),
 				'custom_attributes' => array(),
@@ -1179,12 +1186,14 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'required'          => false,
 				'options'           => ur_login_option(),
 				'tip'               => __( 'Login method that should be used by the users registered through this form.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'label'             => __( 'Select Phone Fields for SMS Verification', 'user-registration' ),
 				'description'       => '',
 				'id'                => 'user_registration_form_setting_default_phone_field',
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_default_phone_field', '' ),
+				'default_value'     => '',
 				'type'              => 'select',
 				'class'             => array( 'ur-enhanced-select' ),
 				'custom_attributes' => array(),
@@ -1192,18 +1201,21 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'required'          => false,
 				'options'           => user_registration_get_form_fields_for_dropdown( $form_id ),
 				'tip'               => __( 'This option is to map phone field for sms verification.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'label'             => __( 'SMS Verification message', 'user-registration' ),
 				'description'       => '',
 				'id'                => 'user_registration_form_setting_sms_verification_msg',
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_sms_verification_msg', ur_get_sms_verification_default_message_content() ),
+				'default_value'     => ur_get_sms_verification_default_message_content(),
 				'type'              => 'textarea',
 				'class'             => array(),
 				'custom_attributes' => array(),
 				'input_class'       => array(),
 				'required'          => false,
 				'tip'               => __( 'This is sms verification message content.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'select',
@@ -1216,7 +1228,9 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'options'           => $all_roles,
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_default_user_role', get_option( 'user_registration_form_setting_default_user_role', 'subscriber' ) ),
+				'default_value'     => get_option( 'user_registration_form_setting_default_user_role', 'subscriber' ),
 				'tip'               => __( 'Default role for the users registered through this form.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'toggle',
@@ -1228,7 +1242,9 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'input_class'       => array(),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password', ur_string_to_bool( get_option( 'user_registration_form_setting_enable_strong_password', 1 ) ) ),
+				'default_value'     => ur_string_to_bool( get_option( 'user_registration_form_setting_enable_strong_password', 1 ) ),
 				'tip'               => __( 'Make strong password compulsary.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'radio-group',
@@ -1247,7 +1263,9 @@ function ur_admin_form_settings_fields( $form_id ) {
 				),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength', get_option( 'user_registration_form_setting_minimum_password_strength', '3' ) ),
+				'default_value'     => get_option( 'user_registration_form_setting_minimum_password_strength', '3' ),
 				'tip'               => __( 'Set minimum required password strength.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'number',
@@ -1260,7 +1278,9 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'custom_attributes' => array(),
 				'min'               => '0',
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_uppercase', '0' ),
+				'default_value'     => '0',
 				'tip'               => __( 'Enter the minimum amount of uppercase you want to allow for password strength.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'number',
@@ -1273,7 +1293,9 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'custom_attributes' => array(),
 				'min'               => '0',
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_digits', '0' ),
+				'default_value'     => '0',
 				'tip'               => __( 'Set the minimum number of digits/numbers required for password strength.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'number',
@@ -1286,7 +1308,9 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'custom_attributes' => array(),
 				'min'               => '0',
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_special_chars', '0' ),
+				'default_value'     => '0',
 				'tip'               => __( 'Set the minimum number of special characters required for password strength.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'number',
@@ -1299,7 +1323,9 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'custom_attributes' => array(),
 				'min'               => '6',
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_pass_length', '6' ),
+				'default_value'     => '6',
 				'tip'               => __( 'Set the minimum password length required for password strength.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'toggle',
@@ -1311,7 +1337,9 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'input_class'       => array(),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_no_repeat_chars', ur_string_to_bool( get_option( 'user_registration_form_setting_no_repeat_chars', 0 ) ) ),
+				'default_value'     => ur_string_to_bool( get_option( 'user_registration_form_setting_no_repeat_chars', 0 ) ),
 				'tip'               => __( 'Check repetitive letters.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'number',
@@ -1324,7 +1352,9 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'custom_attributes' => array(),
 				'min'               => '1',
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_max_char_repeat_length', '' ),
+				'default_value'     => '',
 				'tip'               => __( 'Set the Maximum repeat amount for letters in a password.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'text',
@@ -1336,7 +1366,9 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'input_class'       => array(),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_submit_class', '' ),
+				'default_value'     => '',
 				'tip'               => __( 'Enter CSS class names for the Submit Button. Multiple class names should be separated with spaces.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'text',
@@ -1347,8 +1379,10 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'class'             => array( 'ur-enhanced-select' ),
 				'input_class'       => array(),
 				'custom_attributes' => array(),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_submit_label', 'Submit' ),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_submit_label', __( 'Submit', 'user-registration' ) ),
+				'default_value'     => __( 'Submit', 'user-registration' ),
 				'tip'               => __( 'Enter desired text for the Submit Button.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'select',
@@ -1365,7 +1399,9 @@ function ur_admin_form_settings_fields( $form_id ) {
 				),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_success_message_position', '1' ),
+				'default_value'     => '1',
 				'tip'               => __( 'Display success message either at the top or bottom after successful registration.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'toggle',
@@ -1379,7 +1415,9 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'input_class'       => array(),
 				'custom_attributes' => array(),
 				'default'           => ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_recaptcha_support', false ) ),
+				'default_value'     => false,
 				'tip'               => __( 'Enable Captcha for strong security from spams and bots.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'select',
@@ -1392,7 +1430,9 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'options'           => $ur_enabled_captchas,
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_configured_captcha_type', '1' ),
+				'default_value'     => '1',
 				'tip'               => __( 'Select the type of Captcha you want in this form.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'select',
@@ -1411,7 +1451,9 @@ function ur_admin_form_settings_fields( $form_id ) {
 				),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_template', ucwords( str_replace( '_', ' ', get_option( 'user_registration_form_template', 'default' ) ) ) ),
+				'default_value'     => ucwords( str_replace( '_', ' ', get_option( 'user_registration_form_template', 'default' ) ) ),
 				'tip'               => __( 'Choose form template to use.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'text',
@@ -1422,8 +1464,10 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'class'             => array( 'ur-enhanced-select' ),
 				'input_class'       => array(),
 				'custom_attributes' => array(),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_custom_class' ),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_custom_class', '' ),
+				'default_value'     => '',
 				'tip'               => __( 'Enter CSS class names for the Form Wrapper. Multiple class names should be separated with spaces.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'select',
@@ -1450,8 +1494,10 @@ function ur_admin_form_settings_fields( $form_id ) {
 					)
 				),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', 'no-redirection' ),
+				'default_value'     => 'no-redirection',
 				'tip'               => __( 'Choose where to redirect the user after successful registration.', 'user-registration' ),
 				'custom_attributes' => array(),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'select',
@@ -1463,8 +1509,10 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'input_class'       => array(),
 				'options'           => ur_get_all_pages(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_page', '' ),
+				'default_value'     => '',
 				'tip'               => __( 'Choose the custom page to redirect after registration', 'user-registration' ),
 				'custom_attributes' => array(),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'text',
@@ -1473,8 +1521,11 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'class'             => array( 'ur-enhanced-select' ),
 				'input_class'       => array(),
 				'custom_attributes' => array(),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_options', get_option( 'user_registration_general_setting_redirect_options', '' ) ),  // Getting redirect options from global settings for backward compatibility.
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_options', get_option( 'user_registration_general_setting_redirect_options', '' ) ),
+				// Getting redirect options from global settings for backward compatibility.
+				'default_value'     => get_option( 'user_registration_general_setting_redirect_options', '' ),
 				'tip'               => __( 'This option lets you enter redirect path after successful user registration.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'number',
@@ -1487,7 +1538,9 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'custom_attributes' => array(),
 				'min'               => '0',
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after', '2' ),
+				'default_value'     => '2',
 				'tip'               => __( 'Time to wait after registration before redirecting user to another page.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'toggle',
@@ -1497,13 +1550,15 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'class'             => array( 'ur-enhanced-select' ),
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_enable_akismet', false ),
+				'default_value'     => false,
 				'tip'               => __( 'Enable anti-spam for this form with akismet.', 'user-registration' ),
-
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'        => 'label',
 				'id'          => 'user_registration_akismet_warning',
 				'description' => ur_check_akismet_installation(),
+				'product'     => 'user-registration/user-registration.php',
 			),
 		),
 	);
