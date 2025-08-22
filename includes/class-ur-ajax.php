@@ -1580,12 +1580,18 @@ class UR_AJAX {
 			}
 		}
 
+		$api_params = array(
+			'license'   => get_option( 'user-registration_license_key' ),
+			'item_name' => ! empty( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
+		);
+
+		if( 'user-registration-pro' == $slug ) {
+			$api_params['item_id'] = 167196;
+		}
+
 		$api = json_decode(
 			UR_Updater_Key_API::version(
-				array(
-					'license'   => get_option( 'user-registration_license_key' ),
-					'item_name' => ! empty( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
-				)
+				$api_params
 			)
 		);
 

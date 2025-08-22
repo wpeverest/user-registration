@@ -3020,6 +3020,7 @@ if ( ! function_exists( 'ur_install_extensions' ) ) {
 					array(
 						'license'   => get_option( 'user-registration_license_key' ),
 						'item_name' => $name,
+						'item_id'  => 167196,
 					)
 				)
 			);
@@ -3078,6 +3079,11 @@ if ( ! function_exists( 'ur_install_extensions' ) ) {
 
 			if ( current_user_can( 'activate_plugin', $install_status['file'] ) ) {
 				if ( is_plugin_inactive( $install_status['file'] ) ) {
+					if( $install_status['file'] === 'user-registration-pro/user-registration.php' ) {
+						$status['plugin'] = 'user-registration-pro/user-registration.php';
+						setcookie('urm_license_status', 'pro_activated', time() + 300, '/', '', false, false);
+						activate_plugin( $install_status['file'] );
+					}
 					$status['activateUrl'] =
 						esc_url_raw(
 							add_query_arg(
@@ -3439,7 +3445,7 @@ if ( ! function_exists( 'ur_get_license_plan' ) ) {
 			include_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
-		if ( $license_key && is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
+		if ( $license_key /*&& is_plugin_active( 'user-registration-pro/user-registration.php' ) */ ) {
 			$license_data = get_transient( 'ur_pro_license_plan' );
 
 			if ( false === $license_data ) {
