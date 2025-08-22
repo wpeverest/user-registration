@@ -96,14 +96,6 @@
 		}
 	}
 
-	// Privacy Tab Design Fixes
-
-	&.horizontal {
-		.user-registration-MyAccount-content {
-			// text-align: left;
-		}
-	}
-
 	.user-registration-MyAccount-content {
 		@media (max-width: 991px) {
 			padding: 36px 30px;
@@ -154,7 +146,6 @@
 				.ur-form-grid {
 					> p {
 						float: right;
-						// margin-top: $spacing_24px;
 						margin-bottom: 0;
 					}
 				}
@@ -184,7 +175,6 @@
 						display: flex;
 						flex-wrap: wrap;
 						row-gap: $spacing_10px;
-						// justify-content: flex-end;
 						margin-bottom: 30px;
 
 						&:last-child {
@@ -421,7 +411,6 @@
 										border-left: 3px solid #F25656;
 										margin-top: 8px;
 										font-size: 14px;
-										// border-top: 2px solid #F25656;
 										display: flex;
 										align-items: center;
 										gap: 4px;
@@ -853,8 +842,6 @@
 						&.login {
 							.ur-form-row {
 								.ur-form-grid {
-									// padding: 0;
-
 									fieldset {
 										padding: 0;
 										margin: 0;
@@ -905,23 +892,6 @@
 										float: unset;
 										margin-top: $spacing_32px;
 										text-align: right;
-
-										// input[type="submit"] {
-										// 	float: unset;
-										// 	border-radius: $border_radius_4;
-										// 	background: $primary_color;
-										// 	border: $border_width solid $primary_color;
-										// 	color: $grey-0;
-										// 	font-size: 15px;
-										// 	line-height: 22px;
-										// 	padding: $spacing_8px $spacing_16px;
-										// 	transition: all .3s;
-
-										// 	&:hover {
-										// 		background: darken($primary_color, 10%);
-										// 		border-color: darken($primary_color, 10%);
-										// 	}
-										// }
 									}
 								}
 							}

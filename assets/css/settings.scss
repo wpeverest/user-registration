@@ -82,9 +82,6 @@ body {
 
 	&-wrapper {
 		display: flex;
-		// flex-direction: row;
-		// background: $grey-0;
-		// filter: drop-shadow(-4px 4px 20px rgba(89, 89, 89, 0.1));
 		flex: 1;
 
 		@media screen and (max-width: 1180px) {
@@ -111,8 +108,6 @@ body {
 					}
 
 					.ur-search--top-settings {
-						// padding-left: $spacing_15px;
-						// padding-right: $spacing_15px;
 						cursor: pointer;
 
 						input {
@@ -184,40 +179,6 @@ body {
 						border-radius: 50%;
 					}
 				}
-
-				// .ur-search--top-settings {
-					// padding-left: $spacing_12px;
-					// padding-right: $spacing_12px;
-					// position: relative;
-					// margin-bottom: $spacing_24px;
-
-					// input {
-					// 	width: 100%;
-					// 	height: 38px;
-					// 	padding: $spacing_8px $spacing_40px $spacing_8px $spacing_12px;
-					// 	color: $grey-400;
-
-					// 	&::placeholder {
-					// 		color: $grey-100;
-					// 		font-weight: $regular;
-					// 	}
-
-					// 	&.ui-autocomplete-loading {
-					// 		background-position: 95% center;
-					// 	}
-					// }
-
-					// .user-registration-search-icon {
-					// 	position: absolute;
-					// 	top: 11px;
-					// 	right: $spacing_26px;
-
-					// 	svg {
-					// 		width: 18px;
-					// 		height: 18px;
-					// 	}
-					// }
-				// }
 
 				.ur-search--top-toggle {
 					display: flex;
@@ -467,10 +428,17 @@ body {
 						flex-direction: row;
 						width: 100%;
 						align-items: center;
+						font-size: 15px;
+						font-weight: $medium;
 					}
 
 					.ur-nav-icon {
 						display: flex;
+
+						img {
+							width: 20px;
+							height: 20px;
+						}
 					}
 
 					&:hover {
@@ -521,12 +489,6 @@ body {
 		max-width: 100%;
 		border-left: $border_width solid $border_color;
 
-		// position: fixed;
-		// right: 0;
-		// width: 340px;
-		// height: calc(100vh - 64px);
-		// overflow-y: auto;
-
 		@media screen and (max-width: 1180px) {
 			width: 100%;
 		}
@@ -538,14 +500,14 @@ body {
 			padding: 0 $spacing_24px;
 
 			h2 {
-				color: #222222;
+				color: $grey-400;
 				font-size: 18px;
 				font-weight: $semi-bold;
 				line-height: 140%;
 				margin: 0;
 				padding-bottom: $spacing-16px;
 				margin-bottom: $spacing_20px;
-				border-bottom: $border_width solid #EEE8F7;
+				border-bottom: $border_width solid $border-color;
 			}
 
 			p {
@@ -738,12 +700,10 @@ body {
 	flex-direction: column;
 	padding: $spacing_24px;
 	padding-top: 0;
-	// background: #FAFAFC;
 	background: #f4f4f4;
 	margin-top: 0 !important;
 
 	.user-registration-options-header {
-		// background: #fafafa;
 		padding-top: $spacing_24px;
 
 		&--top {
@@ -766,74 +726,13 @@ body {
 			}
 		}
 
-		// &--bottom {
-		// 	max-width: 900px;
-		// 	margin-top: $spacing_32px;
-
-		// 	ul {
-		// 		display: flex;
-		// 		align-items: center;
-		// 		gap: $spacing_32px;
-		// 		width: 100%;
-
-		// 		li {
-		// 			a {
-		// 				font-weight: $medium;
-		// 				font-size: 15px;
-		// 				line-height: 140%;
-		// 				color: $grey-400;
-		// 				padding: 0;
-		// 				position: relative;
-		// 				padding-bottom: $spacing_16px;
-		// 				transition: all .3s ease-in-out;
-
-		// 				&::after {
-		// 					content: "";
-		// 					background: $primary_color;
-		// 					position: absolute;
-		// 					width: 0;
-		// 					height: 2px;
-		// 					border-radius: $border_radius_11;
-		// 					bottom: 0;
-		// 					left: 0;
-		// 					opacity: 0;
-		// 					transition: all .3s ease-in-out;
-		// 				}
-
-		// 				&:focus {
-		// 					outline: none;
-		// 					box-shadow: none;
-		// 				}
-
-		// 				&:hover,
-		// 				&.current {
-		// 					color: $primary_color;
-
-		// 					&::after {
-		// 						width: 100%;
-		// 						opacity: 1;
-		// 					}
-		// 				}
-		// 			}
-		// 		}
-		// 	}
-
-		// 	.ur-scroll-ui {
-		// 		&__scroll-nav {
-		// 			padding-bottom: $spacing_28px;
-		// 		}
-		// 	}
-		// }
-
 		&--bottom {
-			max-width: 900px;
-			margin-top: $spacing_32px;
+			margin-top: $spacing_28px;
 
 			ul {
 				display: flex;
 				align-items: center;
 				gap: $spacing_12px;
-				border-bottom: $border_width solid $border_color;
 				width: 100%;
 
 				li {
@@ -851,7 +750,7 @@ body {
 							content: "";
 							background: $primary_color;
 							position: absolute;
-							width: 0px;
+							width: 100%;
 							height: 2px;
 							border-radius: $border_radius_11;
 							bottom: 0;
@@ -869,9 +768,11 @@ body {
 						&.current,
 						&.active {
 							color: $primary_color;
+						}
 
+						&.current,
+						&.active {
 							&::after {
-								width: 100%;
 								opacity: 1;
 							}
 						}
@@ -888,6 +789,10 @@ body {
 	}
 
 	.user-registration-options-container {
+		display: flex;
+		flex-direction: column;
+		gap: $spacing_24px;
+
 		p.ur-p-tag {
 			margin-bottom: $spacing_24px;
 			padding: $spacing_10px $spacing_12px $spacing_10px $spacing_16px;
@@ -903,13 +808,19 @@ body {
 			strong {
 				font-weight: $semi_bold;
 			}
+
+			a {
+				color: $primary_color;
+				font-weight: $medium;
+			}
 		}
 
 		.ur-searched-settings-focus {
-			border: 2px solid #475bb2;
-			border-radius: 5px;
-			padding: 10px;
+			border: 2px solid $primary_color;
+			border-radius: $border_radius_5;
+			padding: $spacing_10px;
 		}
+		
 		// Success Message CSS
 		.notice {
 			max-width: 680px;
@@ -1013,7 +924,7 @@ body {
 			margin: 0;
 			border-radius: $border_radius_4;
 			align-items: center;
-			border: $border_width solid #ced4da;
+			border: $border_width solid $border_color;
 
 			img {
 				width: 100%;
@@ -1050,35 +961,50 @@ body {
 				transition: all .3s ease-in-out;
 			}
 		}
+
 		// General Settings
 		.user-registration-card {
 			padding: $spacing_20px $spacing_20px $spacing_22px;
 			background: $grey-0;
-			border: $border_width solid #EDF2F7 !important;
+			border: $border_width solid $border_color !important;
 			border-radius: $border_radius_7;
-			background-color: #ffffff;
+			background: $white;
 			margin-top: 0 !important;
-			margin-bottom: $spacing_28px;
-			max-width: 680px;
+			max-width: 100%;
 			position: relative;
-
-			@media (min-width: 1440px) {
-				max-width: 900px;
-			}
 
 			&:last-child {
 				margin-bottom: 0;
 			}
 
+			&.ur-captcha-settings,
+			&.ur-integration-settings {
+				&:has(.active) {
+					border-color: $primary_color;
+				}
+
+				.user-registration-card__header {
+					&:not(.active) {
+						border-bottom: 0 !important;
+					}
+				}
+			}
+
 			&:has(.integration-header-info) {
 				max-width: 100%;
 				padding: 0 $spacing_20px 0 $spacing_20px;
-				margin-bottom: $spacing_12px !important;
+				margin-bottom: 0 !important;
 
 				&.active {
 					@media (max-width: 767px) {
 						padding-bottom: $spacing_20px;
 					}
+				}
+			}
+
+			.integration-header-info {
+				&:not(.active) {
+					border-bottom: 0 !important;
 				}
 			}
 
@@ -1108,18 +1034,11 @@ body {
 				margin-bottom: $spacing_24px;
 				padding: 0 0 $spacing_16px;
 				position: relative;
-				border-bottom: $border_width solid #EBEBEB !important;
+				border-bottom: $border_width solid $border_color !important;
 
 				&-wrapper {
 					display: flex;
 					justify-content: space-between;
-				}
-
-				.user_registration_smart_tags_used {
-					color: #475bb2;
-					border-color: #475bb2;
-					background-color: #f6f7f7;
-					padding: 0px 6px;
 				}
 
 				// Integration Settings
@@ -1130,11 +1049,12 @@ body {
 					cursor: pointer;
 
 					&.active {
-						border-bottom: $border_width solid #dee0e9;
+						border-bottom: $border_width solid $border_color;
 						padding-bottom: $spacing_18px;
 
 						.integration-action {
 							border-color: $primary_color;
+
 							svg {
 								stroke: $primary_color;
 								transform: rotate(-180deg);
@@ -1148,12 +1068,6 @@ body {
 					gap: 8px;
 
 					a {
-						display: flex;
-						padding: 6px;
-						background: transparent;
-						border-radius: 3px;
-						transition: all .3s ease-in-out;
-
 						svg {
 							width: 16px;
 							height: 16px;
@@ -1511,7 +1425,6 @@ body {
 				.user-registration-global-settings {
 					display: flex;
 					justify-content: space-between;
-					// align-items: baseline;
 					align-items: center;
 					margin-bottom: $spacing_28px;
 
@@ -1546,13 +1459,6 @@ body {
 						border-color: $border-color;
 						padding: $spacing_8px $spacing_10px;
 					}
-
-					// input[type="text"],
-					// input[type="email"],
-					// select {
-					// 	height: 38px;
-					// 	border-color: $border-color;
-					// }
 
 					&:last-child {
 						margin-bottom: 0;
@@ -1613,17 +1519,6 @@ body {
 							width: 100%;
 						}
 
-						// input[type='text'],
-						// input[type='number'] {
-						// 	width: 100%;
-						// 	min-width: 100% !important;
-						// 	height: 38px;
-
-						// 	&::placeholder {
-						// 		color: $grey-100;
-						// 	}
-						// }
-
 						textarea,
 						select {
 							min-width: 100% !important;
@@ -1631,51 +1526,6 @@ body {
 
 						.user_registration_send_email_test {
 							width: 10%;
-						}
-
-						// select {
-						// 	width: 100%;
-						// 	height: 38px;
-						// 	padding: $spacing_4px $spacing_10px;
-						// 	border: $border_width solid $border-color;
-						// 	border-radius: $border_radius_5;
-
-						// 	&:focus,
-						// 	&:focus-visible {
-						// 		border-width: $border_width;
-						// 		border-color: $primary_color;
-						// 		box-shadow: none;
-						// 	}
-
-						// 	&:hover {
-						// 		color: $grey-400;
-						// 	}
-						// }
-
-						span.select2-container {
-							// width: 100% !important;
-
-							// @media (max-width: 1199px) {
-							// 	width: 100% !important;
-							// }
-
-							// &--open {
-							// 	.select2-selection {
-							// 		&--multiple {
-							// 			&:before {
-							// 				content: "";
-							// 				position: absolute;
-							// 				right: 7px;
-							// 				top: 42%;
-							// 				border-bottom: 7px solid #888;
-							// 				border-left: 6px solid transparent;
-							// 				border-right: 6px solid transparent;
-							// 				border-top: 0px;
-							// 			}
-							// 		}
-							// 	}
-
-							// }
 						}
 
 						.error {
@@ -1713,78 +1563,6 @@ body {
 
 							.select2-selection__rendered {
 								border: 0 !important;
-							}
-						}
-
-						.select2-selection {
-							// padding-left: 0;
-							// padding-right: 0;
-
-							ul {
-								// flex-wrap: wrap;
-							}
-
-							&__choice {
-								// background: $grey-50;
-								// border-radius: $border_radius_5;
-								// border: 0;
-								// flex-direction: row-reverse;
-								// gap: $spacing_6px;
-								// padding: $spacing_4px $spacing_10px;
-								// font-weight: $regular;
-								// font-size: 14px;
-								// line-height: 150%;
-								// color: $grey-400;
-								// margin: $spacing_4px;
-								// margin-right: 0;
-
-								// &__remove {
-								// 	font-size: 18px;
-								// 	font-weight: $regular;
-								// 	color: $grey-400;
-
-								// 	&:hover {
-								// 		color: #f11d1d;
-								// 	}
-								// }
-							}
-
-							&--multiple {
-								// .select2-selection__rendered {
-								// 	padding-left: 0;
-								// 	padding-right: 0;
-								// }
-
-								// &:before {
-								// 	content: "";
-								// 	position: absolute;
-								// 	right: 7px;
-								// 	top: 42%;
-								// 	border-top: 7px solid #888;
-								// 	border-left: 6px solid transparent;
-								// 	border-right: 6px solid transparent;
-								// }
-							}
-
-							&--single {
-								// height: 38px;
-								// border: 1px solid #e1e1e1;
-
-								.select2-selection__rendered {
-									// line-height: 36px;
-									// padding-left: $spacing_10px;
-									// padding-right: $spacing_30px;
-
-									// .select2-selection__clear {
-									// 	font-size: 18px;
-									// 	font-weight: $regular;
-									// 	color: $grey-400;
-
-									// 	&:hover {
-									// 		color: $primary_color;
-									// 	}
-									// }
-								}
 							}
 						}
 
@@ -1857,6 +1635,14 @@ body {
 							text-align: center;
 							line-height: 18px;
 							width: 30%;
+						}
+
+						.wp-editor-wrap {
+							.wp-editor-container {
+								iframe {
+									height: 200px !important;
+								}
+							}
 						}
 					}
 
@@ -1932,10 +1718,9 @@ body {
 			.nav-tab-inside {
 				.postbox {
 					width: 100%;
-					max-width: 680px;
-					padding: $spacing_16px $spacing_20px $spacing_22px;
-					border: $border_width solid #EDF2F7;
-					border-radius: $border_radius_4;
+					padding: $spacing_20px $spacing_20px $spacing_22px;
+					border: $border_width solid $border_color;
+					border-radius: $border_radius_7;
 					margin-bottom: $spacing_28px;
 					background: #ffffff;
 					box-shadow: none;
@@ -1948,16 +1733,18 @@ body {
 						font-weight: $semi-bold;
 						font-size: 16px;
 						line-height: 150%;
-						color: $grey-500;
+						color: $grey-400;
 						margin: 0;
 						padding-bottom: $spacing_16px;
 						margin-bottom: $spacing_16px;
-						border-color: $grey-50;
+						border-color: $border_color;
+						cursor: unset;
 					}
 
 					.inside {
 						margin: 0;
 						padding: 0;
+						text-align: right;
 
 						p {
 							margin: 0;
@@ -1966,6 +1753,7 @@ body {
 							font-size: 14px;
 							line-height: 150%;
 							color: $grey-400;
+							text-align: left;
 
 							.forms-list {
 								height: 38px;
@@ -2072,21 +1860,10 @@ body {
 	}
 }
 
-.user-registration {
-	.select2-container {
-		.selection {
-			.select2-selection--single {
-				// border: 1px solid #e1e1e1;
-				// height: 38px;
-			}
-		}
-	}
-}
-
 .select2-results {
 	.select2-results__option {
 		&--highlighted[data-selected] {
-			background: #475bb2;
+			background: $primary_color;
 		}
 
 		.wrap {
@@ -2105,28 +1882,6 @@ body {
 	color: rgba(57, 57, 57, 0.35);
 }
 
-// .user-registration {
-// 	select {
-// 		background-image:
-// 			linear-gradient(45deg, transparent 50%, gray 50%),
-// 			linear-gradient(135deg, gray 50%, transparent 50%);
-// 		background-position:
-// 			calc(100% - 15px) calc(1em + 2px),
-// 			calc(100% - 10px) calc(1em + 2px),
-// 			calc(100% - 2.5em) 0.5em;
-// 		background-size:
-// 			5px 5px,
-// 			5px 5px,
-// 			1px 1.5em;
-// 		background-repeat: no-repeat;
-
-// 		&:focus {
-// 			outline: none;
-// 			box-shadow: none;
-// 			border: $border_width solid $primary_color !important;
-// 		}
-// 	}
-// }
 
 // Radio Image Setting
 .user-registration-global-settings.radio-image {
@@ -2168,11 +1923,6 @@ body {
 		font-weight: 500;
 		height: 38px;
 		margin-left: 5px;
-	}
-
-	.select2-container {
-		// width: 10% !important;
-		// margin-right: 5px;
 	}
 
 	#codes-filter {

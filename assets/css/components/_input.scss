@@ -59,5 +59,9 @@
                 background: $color_gray_five;
             }
         }
+
+        &[type="search"] {
+            padding-right: $spacing_32px;
+        }
     }
 }

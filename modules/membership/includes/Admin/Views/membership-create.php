@@ -19,7 +19,7 @@ $is_editing = ! empty( $_GET['post_id'] );
 <div class="ur-membership">
 	<div
 		class="ur-membership-tab-contents-wrapper ur-registered-from ur-align-items-center ur-justify-content-center">
-		<form id="ur-membership-create-form" method="post" style="width: 80%">
+		<form id="ur-membership-create-form" method="post">
 			<div class="user-registration-card">
 				<div class="user-registration-card__body">
 					<div id="ur-membership-main-fields">
@@ -128,7 +128,7 @@ $is_editing = ! empty( $_GET['post_id'] );
 					</div>
 					<!--					membership plan type and pricing section-->
 					<div id="ur-membership-plan-and-price-section" class="ur-p-2 ur-mt-2">
-						<div class="user-registration-card" style="background: #f8f8fa">
+						<div class="user-registration-card">
 							<!--							membership type and price header-->
 
 							<div class="user-registration-card__header ur-d-flex ur-align-items-center">

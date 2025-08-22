@@ -51,9 +51,8 @@
                     &--single,
                     &--multiple {
                         min-height: 38px;
-                        // padding: $spacing_4px 0 $spacing_4px;
                         padding: 0;
-                        border: $border_width solid #e1e1e1;
+                        border: $border_width solid $border-color;
 
                         .select2-selection__rendered {
                             padding: 0 $spacing_32px 0 $spacing_12px;
@@ -123,8 +122,26 @@
 
                             &__field {
                                 margin: 0;
+                                width: 100% !important;
                             }
                         }
+                    }
+                }
+            }
+
+            .select2-dropdown {
+                position: relative;
+                padding-top: $spacing_4px;
+
+                > .button {
+                    &.ur-select-all-countries-button {
+                        float: right;
+                        margin-left: $spacing_4px;
+                        margin-right: $spacing_4px;
+                    }
+
+                    &.ur-unselect-all-countries-button {
+                        margin-left: auto;
                     }
                 }
             }

@@ -68,10 +68,7 @@ function render_paypal_settings( $membership_details ) {
 	);
 	$is_incomplete          = empty( $global_paypal_settings['paypal_email'] );
 	?>
-	<div id="paypal-section"
-		 class="ur-p-2 "
-		 style="background: #f8f8fa; border-radius:5px"
-	>
+	<div id="paypal-section" class="user-registration-payment__items">
 		<div
 			id="ur-membership-paypal-toggle-container"
 			class="ur-d-flex ur-justify-content-between ur-payment-option-header"
@@ -95,8 +92,7 @@ function render_paypal_settings( $membership_details ) {
 			$message      = esc_html__( 'Your Paypal settings is incomplete, please complete your setup from the link below to continue (No need to refresh this page)' );
 			$settings_url = get_admin_url() . 'admin.php?page=user-registration-settings&tab=payment&method=paypal';
 			?>
-			<div id="settings-section" class="ur-p-2 "
-				 style="background: #f8f8fa; border-radius:5px; ">
+			<div id="settings-section" class="user-registration-payment__settings">
 				<p><?php echo "$message"; ?></p>
 				<a href="<?php echo esc_url( $settings_url ); ?>"
 				   target="_blank">
@@ -296,9 +292,7 @@ function render_bank_settings( $membership_details ) {
 	$global_bank_details = get_option( 'user_registration_global_bank_details', '' );
 
 	?>
-	<div id="bank-section"
-		 class="ur-p-2 "
-		 style="background: #f8f8fa; border-radius:5px">
+	<div id="bank-section" class="user-registration-payment__items">
 		<?php
 		$bank_details = $membership_details['payment_gateways']['bank'] ?? '';
 		?>
@@ -373,9 +367,7 @@ function render_stripe_settings( $membership_details ) {
 	$stripe_details   = $membership_details['payment_gateways']['stripe'] ?? array();
 
 	?>
-	<div id="stripe-section"
-		 class="ur-p-2 "
-		 style="background: #f8f8fa; border-radius:5px">
+	<div id="stripe-section" class="user-registration-payment__items">
 		<div
 			id="ur-membership-stripe-toggle-container"
 			class="ur-d-flex ur-justify-content-between ur-payment-option-header">

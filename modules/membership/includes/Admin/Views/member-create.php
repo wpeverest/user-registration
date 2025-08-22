@@ -189,7 +189,7 @@ $return_url = admin_url( 'admin.php?page=user-registration-members' );
 <!--						</div>-->
 					</div>
 				</div>
-				<div id="ur-member-form-right" class="ur-p-4">
+				<div id="ur-member-form-right">
 					<div class="right-title">
 						<h3 class="ur-mt-2">
 							<?php esc_html_e( 'Select Plan', 'user-registration' ); ?>

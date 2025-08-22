@@ -11,59 +11,6 @@
 
 
 .ur-multi-device-form-preview {
-	#nav-menu-header {
-		// .ur-form-title {
-		// 	font-weight: $semi_bold;
-		// 	font-size: 16px;
-		// 	line-height: 150%;
-		// 	color: #414141;
-		// 	padding-left: $spacing_18px;
-		// 	padding-right: $spacing_8px;
-		// }
-
-
-		// .ur-brand-logo {
-		// 	border-right: 1px solid $border_color;
-
-		// 	img {
-		// 		width: 32px;
-		// 		height: 32px;
-		// 		margin-right: 8px;
-		// 		display: flex;
-		// 	}
-		// 	a {
-		// 		text-decoration: none;
-		// 		border: none;
-		// 	}
-		// 	a:focus {
-		// 		outline: none;
-		// 		box-shadow: none;
-		// 	}
-		// }
-
-		// &::before,
-		// &::after {
-		// 	content: "";
-		// 	display: flex;
-		// 	position: absolute;
-		// 	left: 0;
-		// 	right: 0;
-		// 	bottom: 0;
-		// 	background: $white;
-		// }
-
-		// &::before {
-		// 	top: 0;
-		// 	z-index: -1;
-		// }
-
-		// &::after {
-		// 	height: 10px;
-		// 	box-shadow: 0px 4px 8px transparentize($gray_base, 0.92);
-		// 	z-index: -2;
-		// }
-
-	}
 	.major-publishing-actions {
 		clear: both;
 		line-height: 28px;
@@ -72,18 +19,6 @@
 		.publishing-action {
 			text-align: right;
 			float: right;
-
-			// input {
-			// 	&.code {
-			// 		width: 280px;
-			// 		height: 33px;
-			// 		padding: 0 $spacing_6px;
-			// 		margin: 0;
-			// 		border-color: $grey-50;
-			// 		background: $blue-25;
-			// 		border-radius: 3px 0 0 3px;
-			// 	}
-			// }
 		}
 
 
@@ -268,7 +203,6 @@
 // Form Preview Revamp CSS
 body {
 	&.ur-multi-device-form-preview {
-		// font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 		margin: 0;
 
 		.ur-form-preview-main-content{
@@ -301,12 +235,6 @@ body {
 					transition: all .3s ease-in-out;
 					max-width: 100%;
 					margin: 0 auto;
-
-					.select2 {
-						&-container {
-							// width: 100% !important;
-						}
-					}
 				}
 
 				.ur-preview-tablet-wrapper{
@@ -619,28 +547,6 @@ body {
 		}
 
 		#nav-menu-header {
-			// .ur-brand-logo {
-			// 	padding-left: 0 !important;
-			// 	padding-right: $spacing_30px !important;
-			// 	padding-top: $spacing_20px;
-			// 	padding-bottom: $spacing_20px;
-			// 	margin-right: $spacing_30px;
-
-			// 	img {
-			// 		width: 36px;
-			// 		height: 36px;
-			// 		margin-right: 0;
-			// 	}
-			// }
-
-			// .ur-form-title {
-			// 	padding: 0;
-			// 	color: $grey-500;
-			// 	font-size: 18px;
-			// 	font-weight: $medium;
-			// 	line-height: 26px;
-			// }
-
 			.ur-form-preview-devices {
 				border-radius: $border_radius_8;
 				background: #EDEFF7;
@@ -666,17 +572,6 @@ body {
 			.major-publishing-actions {
 				.publishing-action {
 					position: relative;
-
-					// input[type="text"] {
-					// 	all: unset;
-					// 	height: 38px;
-					// 	background: #EDEFF7;
-					// 	border: $border_width solid #EDEFF7;
-					// 	text-align: left;
-					// 	border-radius: $border_radius_4;
-					// 	padding: 0 $spacing_12px;
-					// 	font-size: 14px;
-					// }
 				}
 			}
 		}
@@ -736,7 +631,6 @@ html[dir="rtl"] {
 
 .tooltipster-base {
 	.tooltipster-box {
-		// background-color: #4c5477 !important;
 		background: $grey-800 !important;
 		padding: $spacing_4px $spacing_8px;
 		border-radius: $border_radius_2;

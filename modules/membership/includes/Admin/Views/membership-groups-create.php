@@ -21,7 +21,7 @@ $return_url = admin_url( 'admin.php?page=user-registration-membership&action=lis
 <div class="ur-membership">
 	<div
 		class="ur-membership-tab-contents-wrapper ur-registered-from ur-align-items-center ur-justify-content-center">
-		<form id="ur-membership-create-form" method="post" style="width: 80%">
+		<form id="ur-membership-create-form" method="post">
 			<div id="ur-membership-group-create-form" class="user-registration-card">
 				<div class="user-registration-card__body">
 					<div id="ur-membership-main-fields">
