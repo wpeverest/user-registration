@@ -162,3 +162,24 @@
 #toplevel_page_user-registration ul li a[href*=ur-upgrade-to-pro] {
   color: #FF8C39 !important;
 }
+
+#toplevel_page_user-registration ul li.is-sub-menu a {
+  font-size: 90%;
+  margin-left: 8px;
+}
+
+#toplevel_page_user-registration ul li:not(.is-sub-menu) a[href="admin.php?page=user-registration"],
+#toplevel_page_user-registration ul li:not(.is-sub-menu) a[href="admin.php?page=user-registration-membership"],
+#toplevel_page_user-registration ul li:not(.is-sub-menu) a[href="admin.php?page=user-registration-settings"] {
+  border-top: 1px solid hsla(0, 0%, 100%, 0.2);
+  margin-top: 5px;
+  padding-top: 8px;
+}
+
+#adminmenu .wp-not-current-submenu .wp-submenu {
+  border-left-width: 0px;
+}
+
+#adminmenumain #adminmenuback {
+  z-index: 999;
+}

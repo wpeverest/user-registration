@@ -45,7 +45,7 @@ class Membership {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 		add_filter( 'user_registration_screen_ids', array( $this, 'ur_membership_add_screen_id' ) );
-		add_action( 'admin_menu', array( $this, 'add_urm_menu' ), 70 );
+		add_action( 'admin_menu', array( $this, 'add_urm_menu' ), 15 );
 		add_action( 'admin_init', array( $this, 'actions' ) );
 		add_action( 'in_admin_header', array( __CLASS__, 'hide_unrelated_notices' ) );
 		add_filter( 'wp_editor_settings', array( $this, 'remove_media_buttons' ) );
@@ -280,10 +280,49 @@ class Membership {
 			array(
 				$this,
 				'render_membership_page',
-			),
-			5
+			)
 		);
 		add_action( 'load-' . $rules_page, array( $this, 'membership_initialization' ) );
+
+		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], ['user-registration-membership', 'user-registration-membership-groups', 'user-registration-members'] ) ) {
+
+			add_submenu_page(
+				'user-registration',
+				__( 'All Plans', 'user-registration' ),
+				'↳ ' . __( 'All Plans', 'user-registration' ),
+				'edit_posts',
+				'user-registration-membership',
+				array(
+					$this,
+					'render_membership_page',
+				),
+				16
+			);
+
+			add_submenu_page(
+				'user-registration',
+				__( 'Membership Groups', 'user-registration' ),
+				'↳ ' . __( 'Groups', 'user-registration' ),
+				'manage_user_registration',
+				'user-registration-membership&action=list_groups',
+				array(
+					$this,
+					'render_membership_page',
+				),
+				17
+			);
+
+			$members = new Members();
+			add_submenu_page(
+				'user-registration',
+				__( 'Membership Members', 'user-registration' ),
+				'↳ ' . __( 'Members', 'user-registration' ),
+				'manage_user_registration',
+				'user-registration-members',
+				array( $members, 'render_members_page'),
+				18
+			);
+		}
 	}
 
 	/**

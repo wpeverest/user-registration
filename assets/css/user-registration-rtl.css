@@ -680,7 +680,7 @@
 .swal2-container .user-registration-swal2-modal .swal2-animate-success-icon [class^=swal2-success-line], .swal2-container .user-registration-swal2-modal .swal2-animate-success-icon [class^=swal2-success-circular-line] {
   animation: none;
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-icon {
+.swal2-container .swal2-header .swal2-icon {
   width: 56px;
   height: 56px;
   line-height: 56px;
@@ -688,7 +688,7 @@
   border-width: 2px;
   border-radius: 50%;
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-icon .swal2-x-mark [class^=swal2-x-mark-line] {
+.swal2-container .swal2-header .swal2-icon .swal2-x-mark [class^=swal2-x-mark-line] {
   height: 3px;
   width: 28px;
   top: 50%;
@@ -696,43 +696,43 @@
   left: 0;
   margin: 0 auto;
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-icon .swal2-x-mark [class^=swal2-x-mark-line][class$=left] {
+.swal2-container .swal2-header .swal2-icon .swal2-x-mark [class^=swal2-x-mark-line][class$=left] {
   transform: translateY(-50%) rotate(-45deg);
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-icon .swal2-x-mark [class^=swal2-x-mark-line][class$=right] {
+.swal2-container .swal2-header .swal2-icon .swal2-x-mark [class^=swal2-x-mark-line][class$=right] {
   transform: translateY(-50%) rotate(45deg);
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-icon.swal2-success [class^=swal2-success-line] {
+.swal2-container .swal2-header .swal2-icon.swal2-success [class^=swal2-success-line] {
   height: 3px;
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-icon.swal2-success [class^=swal2-success-line][class$=tip] {
+.swal2-container .swal2-header .swal2-icon.swal2-success [class^=swal2-success-line][class$=tip] {
   width: 16px;
   top: 56%;
   right: 10px;
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-icon.swal2-success [class^=swal2-success-line][class$=long] {
+.swal2-container .swal2-header .swal2-icon.swal2-success [class^=swal2-success-line][class$=long] {
   top: 47%;
   width: 32px;
   left: 6px;
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-icon.swal2-success [class^=swal2-success-circular-line] {
+.swal2-container .swal2-header .swal2-icon.swal2-success [class^=swal2-success-circular-line] {
   height: 64px;
   width: 32px;
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-icon.swal2-success [class^=swal2-success-circular-line][class$=left] {
+.swal2-container .swal2-header .swal2-icon.swal2-success [class^=swal2-success-circular-line][class$=left] {
   top: -75px;
   right: 27px;
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-icon.swal2-success [class^=swal2-success-circular-line][class$=right] {
+.swal2-container .swal2-header .swal2-icon.swal2-success [class^=swal2-success-circular-line][class$=right] {
   top: -26px;
   right: 82px;
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-icon.swal2-success .swal2-success-ring {
+.swal2-container .swal2-header .swal2-icon.swal2-success .swal2-success-ring {
   top: -3px;
   right: -2px;
   border-width: 2px;
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-icon.swal2-success .swal2-success-fix {
+.swal2-container .swal2-header .swal2-icon.swal2-success .swal2-success-fix {
   height: 64px;
   right: 2px;
   left: 0px;
@@ -741,16 +741,22 @@
   bottom: 0;
   width: 6px;
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-icon::before {
+.swal2-container .swal2-header .swal2-icon::before {
   font-size: 40px;
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-title {
+.swal2-container .swal2-header .swal2-title {
   color: #2d3559;
-  font-size: 24px;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
   flex-wrap: wrap;
   margin-bottom: 16px;
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-title .dashicons {
+.swal2-container .swal2-header .swal2-title img {
+  width: 20px;
+  height: 20px;
+}
+.swal2-container .swal2-header .swal2-title .dashicons {
   color: #ff4f55;
   font-size: 28px;
   width: 56px;
@@ -760,20 +766,20 @@
   border: 2px solid #ff4f55;
   border-radius: 50%;
 }
-.swal2-container .user-registration-swal2-modal__title {
+.swal2-container__title {
   line-height: 1.35;
   display: block;
 }
-.swal2-container .user-registration-swal2-modal .swal2-content {
+.swal2-container .swal2-content {
   color: rgb(76.288238806, 84.0379701493, 118.911761194);
   font-size: 1em;
   line-height: 1.5;
 }
-.swal2-container .user-registration-swal2-modal .swal2-actions button {
+.swal2-container .swal2-actions button {
   margin-top: 0;
   margin-bottom: 0;
 }
-.swal2-container .user-registration-swal2-modal--centered .swal2-title {
+.swal2-container--centered .swal2-title {
   flex-direction: column;
 }
 
@@ -843,6 +849,10 @@
   padding: 16px;
   text-align: left;
   background: #F4F4F4;
+}
+.user-registration .swal2-container .swal2-popup .swal2-content .swal2-html-container p,
+.user-registration-page .swal2-container .swal2-popup .swal2-content .swal2-html-container p {
+  margin: 0;
 }
 .user-registration .swal2-container .swal2-popup .swal2-content .swal2-validation-message,
 .user-registration-page .swal2-container .swal2-popup .swal2-content .swal2-validation-message {
@@ -1116,6 +1126,11 @@ textarea.ur-input-border-red {
     padding: 40px 30px;
   }
 }
+@media screen and (max-width: 600px) {
+  .ur-frontend-form.login {
+    padding: 40px 30px;
+  }
+}
 .ur-frontend-form.login .ur-lost-password-content-container {
   display: flex;
   flex-direction: column;
@@ -1282,6 +1297,35 @@ textarea.ur-input-border-red {
 .ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item .form-row {
   display: block;
 }
+.ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item .stripe-container .stripe-card-indicator {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  background: #ebedf7;
+  color: #475bb2;
+  border-radius: 4px 4px 0 0;
+  pointer-events: none;
+  padding: 8px 16px;
+}
+.ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item .stripe-container .stripe-input-container {
+  border: 0;
+}
+.ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item .stripe-container .stripe-input-container .StripeElement {
+  min-height: 38px;
+  height: 38px;
+  padding: 0 12px;
+  border-radius: 4px 0 4px 4px;
+}
+.ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item .stripe-container .stripe-input-container .StripeElement--focus {
+  border-color: #475bb2;
+  border-radius: 4px;
+}
+.ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item .stripe-container .stripe-input-container .StripeElement .__PrivateStripeElement {
+  height: 38px;
+}
+.ur-frontend-form .ur-form-row .ur-form-grid .ur-field-item .stripe-container .stripe-input-container .StripeElement .__PrivateStripeElement iframe {
+  top: 12px;
+}
 .ur-frontend-form .ur-form-row .ur-form-grid input {
   border-style: solid;
 }
@@ -1411,22 +1455,6 @@ textarea.ur-input-border-red {
 .ur-frontend-form .ur-form-row .ur-form-grid .hide_show_password .password-input-group .password_preview.dashicons.dashicons-hidden:hover {
   opacity: 1;
 }
-.ur-frontend-form button,
-.ur-frontend-form input[type=submit],
-.ur-frontend-form button[type=submit] {
-  padding: 10px 20px;
-  line-height: 24px;
-  text-align: center;
-  word-break: break-word;
-  white-space: normal;
-  border: none;
-  cursor: pointer;
-  transition: 0.35s all ease-out;
-  border-radius: 4px;
-}
-.ur-frontend-form input[type=submit] {
-  float: left;
-}
 .ur-frontend-form .ur-button-container {
   display: flex;
   margin-top: 10px;
@@ -1479,6 +1507,10 @@ textarea.ur-input-border-red {
   border: 0;
   border-radius: 4px;
 }
+.ur-frontend-form.ur-frontend-form--bordered {
+  box-shadow: none !important;
+  border: 0 !important;
+}
 .ur-frontend-form.ur-frontend-form--bordered form .ur-form-row .ur-form-grid input[type=text],
 .ur-frontend-form.ur-frontend-form--bordered form .ur-form-row .ur-form-grid input[type=email],
 .ur-frontend-form.ur-frontend-form--bordered form .ur-form-row .ur-form-grid input[type=url],
@@ -1490,10 +1522,10 @@ textarea.ur-input-border-red {
   border: 1px solid #e1e1e1;
   outline: none;
   transition: all 0.35s;
-  padding: 10px 15px;
+  padding: 0 12px;
   background: rgb(240.4392835821, 241.3522713704, 245.4607164179);
   color: rgb(102.6654179104, 109.1689023066, 138.4345820896);
-  height: 45px;
+  height: 38px;
 }
 .ur-frontend-form.ur-frontend-form--bordered form .ur-form-row .ur-form-grid legend,
 .ur-frontend-form.ur-frontend-form--bordered form .ur-form-row .ur-form-grid label {
@@ -1511,8 +1543,8 @@ textarea.ur-input-border-red {
   border-radius: 4px;
 }
 .ur-frontend-form.ur-frontend-form--flat {
-  background: #f7f7f7;
   border: none transparent;
+  box-shadow: none !important;
 }
 .ur-frontend-form.ur-frontend-form--flat form .ur-form-row .ur-form-grid .ur-field-item,
 .ur-frontend-form.ur-frontend-form--flat form .ur-form-row .ur-form-grid .form-row {
@@ -1526,13 +1558,12 @@ textarea.ur-input-border-red {
 .ur-frontend-form.ur-frontend-form--flat form .ur-form-row .ur-form-grid input[type=number],
 .ur-frontend-form.ur-frontend-form--flat form .ur-form-row .ur-form-grid textarea,
 .ur-frontend-form.ur-frontend-form--flat form .ur-form-row .ur-form-grid select {
-  border: none;
   outline: none;
-  padding: 10px 15px;
+  padding: 0 12px;
   background: #ffffff;
   color: rgb(102.6654179104, 109.1689023066, 138.4345820896);
   margin-bottom: 10px;
-  height: 45px;
+  height: 38px;
 }
 .ur-frontend-form.ur-frontend-form--flat form .ur-form-row .ur-form-grid input[type=text]:focus,
 .ur-frontend-form.ur-frontend-form--flat form .ur-form-row .ur-form-grid input[type=email]:focus,
@@ -1565,14 +1596,14 @@ textarea.ur-input-border-red {
 .ur-frontend-form.ur-frontend-form--rounded form .ur-form-row .ur-form-grid input[type=number],
 .ur-frontend-form.ur-frontend-form--rounded form .ur-form-row .ur-form-grid textarea,
 .ur-frontend-form.ur-frontend-form--rounded form .ur-form-row .ur-form-grid select {
-  border: 1px solid rgb(192.1952686567, 195.8151709634, 212.1047313433);
+  border: 1px solid #e1e1e1;
   border-radius: 25px !important;
   outline: none;
   transition: all 0.35s;
-  padding: 10px 15px;
+  padding: 0 12px;
   background: #ffffff;
   color: rgb(102.6654179104, 109.1689023066, 138.4345820896);
-  height: 45px;
+  height: 38px;
 }
 .ur-frontend-form.ur-frontend-form--rounded form .ur-form-row .ur-form-grid button[type=button] {
   border-radius: 25px !important;
@@ -1602,6 +1633,9 @@ textarea.ur-input-border-red {
   display: block;
   padding: 15px 25px;
 }
+.ur-frontend-form.ur-frontend-form--rounded.ur-frontend-form--rounded-edge {
+  border-radius: 30px !important;
+}
 .ur-frontend-form.ur-frontend-form--rounded.ur-frontend-form--rounded-edge form .ur-form-row .ur-form-grid input[type=text],
 .ur-frontend-form.ur-frontend-form--rounded.ur-frontend-form--rounded-edge form .ur-form-row .ur-form-grid input[type=email],
 .ur-frontend-form.ur-frontend-form--rounded.ur-frontend-form--rounded-edge form .ur-form-row .ur-form-grid input[type=url],
@@ -1611,6 +1645,7 @@ textarea.ur-input-border-red {
 .ur-frontend-form.ur-frontend-form--rounded.ur-frontend-form--rounded-edge form .ur-form-row .ur-form-grid textarea,
 .ur-frontend-form.ur-frontend-form--rounded.ur-frontend-form--rounded-edge form .ur-form-row .ur-form-grid select {
   border-radius: 2px;
+  border-color: #e1e1e1;
 }
 .ur-frontend-form.ur-frontend-form--rounded.ur-frontend-form--rounded-edge form .ur-form-row .ur-form-grid .hide_show_password input[type=password] {
   padding-left: 50px;
@@ -2401,6 +2436,7 @@ body.user-registration-page #user-registration:not(.user-registration-MyAccount)
 body.user-registration-page .user-registration:not(.user-registration-MyAccount), body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount),
 body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) {
   max-width: 520px;
+  margin: 30px auto;
   border-radius: 4px;
   background: transparent;
   border: 0;
@@ -2409,13 +2445,13 @@ body.user-registration-page #user-registration:not(.user-registration-MyAccount)
 body.user-registration-page .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--bordered), body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--bordered),
 body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--bordered) {
   box-shadow: none;
-  border: 1px solid #e9e9e9;
+  border: 1px solid #e1e1e1;
 }
 body.user-registration-page #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat),
 body.user-registration-page .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat), body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat),
 body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) {
   box-shadow: none;
-  border: 1px solid #e9e9e9;
+  border: 1px solid #e1e1e1;
   border-radius: 0;
 }
 body.user-registration-page #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid input:not([type=radio]), body.user-registration-page #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid input:not([type=checkbox]), body.user-registration-page #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--flat) .user-registration-form-login .ur-form-row .ur-form-grid input:not([type=file]),
@@ -2512,7 +2548,7 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
 body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form--flat,
 body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form--flat, body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form--flat,
 body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-frontend-form--flat {
-  background: transparent;
+  background: #ffffff;
 }
 body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-frontend-form--flat .user-registration-form-login .ur-form-row .ur-form-grid .input-text,
 body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-frontend-form--flat .user-registration-form-login .ur-form-row .ur-form-grid .input-text, body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-frontend-form--flat .user-registration-form-login .ur-form-row .ur-form-grid .input-text,
@@ -2717,26 +2753,6 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
   gap: 4px;
   margin-top: 32px;
   padding: 0 10px;
-}
-body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-button-container .ur-submit-button,
-body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-button-container .ur-submit-button, body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-button-container .ur-submit-button,
-body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-button-container .ur-submit-button {
-  width: max-content;
-  border: 0;
-  padding: 10px 24px;
-  color: #ffffff;
-  font-size: 15px;
-  font-weight: 500;
-  line-height: 24px;
-  letter-spacing: 0.15px;
-  border: 1px solid #475bb2;
-  margin-left: 0;
-  background: #475bb2;
-}
-body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-button-container .ur-submit-button:hover,
-body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-button-container .ur-submit-button:hover, body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-button-container .ur-submit-button:hover,
-body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) .ur-button-container .ur-submit-button:hover {
-  border-color: #38488e;
 }
 body.user-registration-page #user-registration:not(.user-registration-MyAccount) .ur-button-container .user-registration-save-and-continue-button,
 body.user-registration-page .user-registration:not(.user-registration-MyAccount) .ur-button-container .user-registration-save-and-continue-button, body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount) .ur-button-container .user-registration-save-and-continue-button,
@@ -3088,7 +3104,8 @@ body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-gri
   border: none;
 }
 .user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-tab-contents {
-  background-color: #ffffff;
+  padding: 24px;
+  background: #ffffff;
 }
 .user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-tab-contents .ur-login-view-doc a {
   border-radius: 4px;
@@ -3155,16 +3172,19 @@ body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-gri
   background: #edeff7;
   border: none;
 }
-.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content .ur-tab-content {
+.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents {
+  padding: 16px 16px 0 16px;
+}
+.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content {
   padding: 0;
 }
-.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content .ur-tab-content form .ur-login-form-setting-block {
+.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content form .ur-login-form-setting-block {
   padding: 32px 12px 12px;
 }
-.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content .ur-tab-content form .ur-login-form-setting-block:first-child h2.ur-toggle-heading {
+.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content form .ur-login-form-setting-block:first-child h2.ur-toggle-heading {
   margin-top: 0;
 }
-.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content .ur-tab-content form .ur-login-form-setting-block .ur-toggle-content {
+.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content form .ur-login-form-setting-block .ur-toggle-content {
   margin-top: 24px;
   padding-bottom: 28px;
   border-bottom: 1px solid #e1e1e1;
@@ -3172,33 +3192,15 @@ body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-gri
   flex-direction: column;
   gap: 28px;
 }
-.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content .ur-tab-content form .ur-login-form-setting-block .ur-toggle-content .user-registration-login-form-global-settings {
-  display: flex;
-  gap: 12px;
-}
-.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content .ur-tab-content form .ur-login-form-setting-block .ur-toggle-content .user-registration-login-form-global-settings label {
-  font-weight: 600;
-  gap: 6px;
-  margin-bottom: 0;
-}
-.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content .ur-tab-content form .ur-login-form-setting-block .ur-toggle-content .user-registration-login-form-global-settings label .user-registration-help-tip {
-  font-size: 20px;
-}
-.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content .ur-tab-content form .ur-login-form-setting-block .ur-toggle-content .user-registration-login-form-global-settings select {
-  height: 38px;
-}
-.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents #ur-login-form-setting .ur-login-form-setting-block {
+.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings #ur-login-form-setting .ur-login-form-setting-block {
   display: flex;
   flex-direction: column;
   gap: 24px;
 }
-.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .user-registration-login-settings-form {
+.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .user-registration-login-settings-form {
   border-radius: 4px;
 }
-.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .user-registration-login-settings-form#ur-frontend-form {
-  border: 1px solid #EDF2F7;
-}
-.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .user-registration-login-settings-form a {
+.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .user-registration-login-settings-form a {
   pointer-events: none;
 }
 

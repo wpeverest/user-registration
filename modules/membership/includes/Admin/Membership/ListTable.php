@@ -235,7 +235,7 @@ class ListTable extends \UR_List_Table {
 					   class="button button-primary ur-button-primary">
 						+
 						<?php
-						echo __( 'Create new Membership', 'user-registration' )
+						echo __( 'Add New', 'user-registration' )
 						?>
 					</a>
 				</div>

@@ -194,7 +194,7 @@ class MembershipGroupsListTable extends \UR_List_Table {
 					   class="button button-primary ur-button-primary">
 						+
 						<?php
-						echo __( 'Create new Membership Groups', 'user-registration' )
+						echo __( 'Add New', 'user-registration' )
 						?>
 					</a>
 				</div>

@@ -91,3 +91,10 @@
 .ur-membership-filter-container .select2-selection__rendered {
   width: 120px;
 }
+
+body.user-registration #user-registration-pro-filters-row .search-box {
+  width: 275px;
+}
+body.user-registration #ur-membership-payment-history-form .tablenav .bulkactions .select2-container {
+  width: 220px !important;
+}

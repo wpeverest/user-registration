@@ -53,15 +53,14 @@
 
 	&__button {
 		margin-left: auto;
-		display: inline-block;
-		background: #475bb2;
-		color: $white;
-		padding: 6px 15px;
-		border-radius: 4px;
+		background: #edeff7;
+		color: $primary_color;
+		padding: $spacing_6px $spacing_16px;
+		border-radius: $border_radius_4;
 	}
 
 	&+.help {
-		margin-top: 4px;
+		margin-top: $spacing_4px;
 	}
 }
 

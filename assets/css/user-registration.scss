@@ -137,12 +137,6 @@
 	}
 }
 
-// .user-registration-message {
-// 	border-top-color: #8fae1b;
-// 	background: rgba(#8fae1b, 0.1);
-// 	color: darken(#8fae1b, 15%);
-// }
-
 .user-registration-info {
 	color: #1e85be;
 	border-top-color: #1e85be;
@@ -201,7 +195,6 @@ textarea.ur-input-border-red {
 }
 
 .ur-frontend-form {
-	//margin-bottom: 30px;
 	border: 1px solid $border_color;
 	padding: 20px;
 	box-sizing: border-box;
@@ -211,7 +204,10 @@ textarea.ur-input-border-red {
 		padding: 60px;
 		border-radius: 8px;
 		background: #fff;
-		// box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+
+		@media screen and (max-width: 600px) {
+			padding: $spacing_40px $spacing_30px;
+		}
 
 		@media screen and (max-width: 600px) {
 			padding: $spacing_40px $spacing_30px;
@@ -415,10 +411,49 @@ textarea.ur-input-border-red {
 				.form-row {
 					display: block;
 				}
+
+				.stripe-container {
+					.stripe-card-indicator {
+						font-size: 14px;
+						line-height: 20px;
+						font-weight: $medium;
+						background: #ebedf7;
+						color: $primary_color;
+						border-radius: $border_radius_4 $border_radius_4 0 0;
+						pointer-events: none;
+						padding: $spacing_8px $spacing_16px;
+					}
+
+					.stripe-input-container {
+						border: 0;
+
+						.StripeElement {
+							min-height: 38px;
+							height: 38px;
+							padding: 0 $spacing_12px;
+							border-radius: 0 $border_radius_4 $border_radius_4 $border_radius_4;
+
+							&--focus {
+								border-color: $primary_color;
+								border-radius: $border_radius_4;
+							}
+
+							.__PrivateStripeElement {
+								height: 38px;
+
+								iframe {
+									top: $spacing_12px;
+								}
+							}
+						}
+					}
+				}
 			}
+
 			input {
 				border-style: solid;
 			}
+
 			input[type="text"],
 			input[type="email"],
 			input[type="url"],
@@ -460,7 +495,6 @@ textarea.ur-input-border-red {
 				}
 				.__PrivateStripeElement {
 					iframe {
-						// height: 20px !important;
 						position: absolute;
 						top: 50%;
 						transform: translateY(-50%);
@@ -561,51 +595,6 @@ textarea.ur-input-border-red {
 				}
 			}
 		}
-
-		.select2-container {
-			.select2-selection--multiple {
-				// border: 1px solid $color_gray_five;
-
-				.select2-selection__rendered {
-					// display: block;
-
-					li {
-						&:last-child {
-							// margin-left: 0;
-						}
-					}
-				}
-				// height: inherit;
-				.select2-selection__choice {
-					// margin: 5px;
-				}
-
-				// .select2-search--inline {
-				// 	input[type="text"] {
-				// 		margin: 5px;
-				// 		height: inherit;
-				// 	}
-				// }
-			}
-		}
-	}
-
-	button,
-	input[type="submit"],
-	button[type="submit"] {
-		padding: 10px 20px;
-		line-height: 24px;
-		text-align: center;
-		word-break: break-word;
-		white-space: normal;
-		border: none;
-		cursor: pointer;
-		transition: 0.35s all ease-out;
-		border-radius: 4px;
-	}
-
-	input[type="submit"] {
-		float: right;
 	}
 
 	.ur-button-container {
@@ -683,6 +672,9 @@ textarea.ur-input-border-red {
 	}
 
 	&.ur-frontend-form--bordered {
+		box-shadow: none !important;
+		border: 0 !important;
+
 		form {
 			.ur-form-row {
 				.ur-form-grid {
@@ -697,10 +689,10 @@ textarea.ur-input-border-red {
 						border: 1px solid $border_color;
 						outline: none;
 						transition: all 0.35s;
-						padding: 10px 15px;
+						padding: 0 12px;
 						background: $input_background_color;
 						color: $label_color;
-						height: 45px;
+						height: 38px;
 					}
 
 					legend,
@@ -720,34 +712,17 @@ textarea.ur-input-border-red {
 					}
 
 					.user-registration-Button {
-						// background: $primary_color;
 						border: 0;
 						border-radius: 4px;
 					}
 				}
 			}
-
-			// input[type="submit"],
-			// button[type="submit"],
-			// button.user-registration-multi-part-nav-prev,
-			// button.user-registration-multi-part-nav-next {
-			// 	// background: $input_background_color;
-			// 	// border: 1px solid $border_color;
-			// 	// color: $label_color;
-			// 	border-radius: 0;
-
-			// 	// &:hover {
-			// 	// 	background: $primary_color;
-			// 	// 	color: $white;
-			// 	// 	border-color: $primary_color;
-			// 	// }
-			// }
 		}
 	}
 
 	&.ur-frontend-form--flat {
-		background: $color_sortable_background;
 		border: none transparent;
+		box-shadow: none !important;
 
 		form {
 			.ur-form-row {
@@ -765,13 +740,12 @@ textarea.ur-input-border-red {
 					input[type="number"],
 					textarea,
 					select {
-						border: none;
 						outline: none;
-						padding: 10px 15px;
+						padding: 0 12px;
 						background: $white;
 						color: $label_color;
 						margin-bottom: 10px;
-						height: 45px;
+						height: 38px;
 
 						&:focus {
 							box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.05);
@@ -813,14 +787,14 @@ textarea.ur-input-border-red {
 					input[type="number"],
 					textarea,
 					select {
-						border: 1px solid $rounded-color;
+						border: $border_width solid $border_color;
 						border-radius: 25px !important;
 						outline: none;
 						transition: all 0.35s;
-						padding: 10px 15px;
+						padding: 0 12px;
 						background: $white;
 						color: $label_color;
-						height: 45px;
+						height: 38px;
 					}
 
 					button[type="button"] {
@@ -863,6 +837,8 @@ textarea.ur-input-border-red {
 		}
 
 		&.ur-frontend-form--rounded-edge {
+			border-radius: 30px !important;
+
 			form {
 				.ur-form-row {
 					.ur-form-grid {
@@ -875,6 +851,7 @@ textarea.ur-input-border-red {
 						textarea,
 						select {
 							border-radius: 2px;
+							border-color: $border_color;
 						}
 
 						.hide_show_password {
@@ -1444,12 +1421,6 @@ span.ur-shortcode-form-embed-dot {
 	background: 4px solid #fde8e8;
 	border-top: none;
 
-	// &::before {
-	// 	// content: '';
-	// 	content: none;
-	// 	display: "";
-	// }
-
 	svg {
 		margin-right: 10px;
 	}
@@ -1467,10 +1438,10 @@ span.ur-shortcode-form-embed-dot {
 .user-registration-Button,
 .ur-submit-button {
 	width: 100%;
-	background: #475bb2;
-	border-radius: 4px;
-	border: 1px solid #475bb2;
-	color: #ffffff;
+	background: $primary_color;
+	border-radius: $border_radius_4;
+	border: 1px solid $primary_color;
+	color: $white;
 
 	// &:hover {
 	// 	background: #38488e;
@@ -1481,12 +1452,12 @@ span.ur-shortcode-form-embed-dot {
 	.ur-spinner {
 		width: 16px;
 		height: 16px;
-		margin-left: 6px;
-		margin-bottom: 2px;
+		margin-left: $spacing_6px;
+		margin-bottom: $spacing_2px;
 		display: inline-block;
 		vertical-align: middle;
 		@include loader();
-		margin-top: 5px;
+		margin-top: $spacing_5px;
 		float: right;
 	}
 }
@@ -1557,12 +1528,6 @@ span.ur-shortcode-form-embed-dot {
 		border: none !important; //Overriding global error border.
 		background: transparent !important; //Overriding global error background.
 		margin-left: unset !important; //Overriding global error margin.
-
-		// &::before {
-		// 	// content: "\f534" ;
-		// 	color : #FF0000 ;
-
-		// }
 	}
 }
 
@@ -1615,155 +1580,6 @@ span.ur-shortcode-form-embed-dot {
 	}
 }
 
-// --------------login form design css fixes------------------------------------
-
-// .user-registration-membership_page_user-registration-login-forms {
-// 	#wpcontent {
-// 		.ur-admin-page-topnav {
-// 			margin-bottom: 0;
-// 		}
-// 		.user-registration-login-form-container {
-// 			.user-registration__wrap {
-// 				&.wrap {
-// 					margin: 0 auto;
-// 				}
-
-// 				.ur-form-subcontainer {
-// 					.menu-edit {
-// 						border: none;
-// 					}
-
-// 					.ur-registered-inputs {
-// 						.ui-widget-content {
-// 							.ur-tab-contents {
-// 								padding: 24px;
-// 								background-color: #fafafa;
-
-// 								.ur-login-view-doc {
-// 									border-radius: 3px;
-// 									cursor: pointer;
-// 									text-decoration: none;
-// 									text-align: center;
-// 									vertical-align: middle;
-// 									white-space: nowrap;
-// 									box-shadow: none;
-// 									font-size: 14px;
-// 									font-weight: 600;
-// 									letter-spacing: 0px;
-// 									padding: 10px 24px;
-// 									border: none;
-// 									// background: #475bb2;
-// 									background: #edeff7;
-// 									color: $primary_color;
-// 									// color: #ffffff;
-// 									display: block;
-// 									margin: 24px auto 0;
-
-// 									a {
-// 										color: #fff;
-// 									}
-
-// 									&:disabled {
-// 										cursor: default;
-// 										opacity: 0.5;
-
-// 										&:hover {
-// 											background-color: #475bb2;
-// 										}
-// 									}
-// 								}
-// 							}
-
-// 							.ur-heading {
-// 								margin-top: 0;
-// 								padding-bottom: $spacing_16px;
-// 								border-bottom: $border_width solid #e9e9e9;
-// 								text-transform: uppercase;
-// 								font-size: 16px;
-// 								font-weight: $medium;
-// 							}
-// 							.ur-login-content {
-// 								p {
-// 									font-size: 16px;
-// 									margin: $spacing_20px auto;
-// 								}
-// 							}
-// 						}
-
-// 						&.ur-login-form-settings {
-// 							.ur-tab-contents {
-// 								padding: $spacing_16px $spacing_16px 0 $spacing_16px;
-
-// 								.ur-tab-content {
-// 									padding: 0;
-
-// 									form {
-// 										.ur-login-form-setting-block {
-// 											&:first-child {
-// 												h2 {
-// 													&.ur-toggle-heading {
-// 														margin-top: 0;
-// 													}
-// 												}
-// 											}
-
-// 											.ur-toggle-content {
-// 												margin-top: $spacing_24px;
-// 												display: flex;
-// 												flex-direction: column;
-// 												gap: 28px;
-
-// 												.user-registration-login-form-global-settings {
-// 													display: flex;
-// 													flex-direction: column;
-// 													gap: $spacing_8px;
-
-// 													label {
-// 														font-weight: $semi_bold;
-// 														gap: $spacing_6px;
-// 														margin-bottom: 0;
-
-// 														.user-registration-help-tip {
-// 															font-size: 20px;
-// 														}
-// 													}
-
-// 													select {
-// 														height: 38px;
-// 													}
-
-// 													span.description {
-// 														display: none;
-// 													}
-// 												}
-// 											}
-// 										}
-// 									}
-// 								}
-// 							}
-// 							#ur-login-form-setting {
-// 								.ur-login-form-setting-block {
-// 									display: flex;
-// 									flex-direction: column;
-// 									gap: 24px;
-// 								}
-// 							}
-// 						}
-// 					}
-// 					#post-body {
-// 						.ur-builder-wrapper {
-// 							.ur-selected-inputs {
-// 								background: #F9FAFB;
-// 								padding: $spacing_30px;
-// 								height: 100%;
-// 							}
-// 						}
-// 					}
-// 				}
-// 			}
-// 		}
-// 	}
-// }
 
 // Login Form Design ReVamped CSS
 body {
@@ -1814,13 +1630,9 @@ body {
 			}
 
 			li {
-				// color: #222222;
 				color: inherit;
-				// font-size: 14px;
 				font-size: inherit;
-				// font-weight: 400;
 				font-weight: inherit;
-				// line-height: 21px;
 				line-height: inherit;
 				letter-spacing: 0.15px;
 
@@ -1913,7 +1725,6 @@ body {
 				&--bordered {
 					&:not(.login) {
 						box-shadow: none;
-						// border: 1px solid #e9e9e9;
 
 						form {
 							.ur-form-row {
@@ -1938,7 +1749,6 @@ body {
 				&--flat {
 					&:not(.login) {
 						box-shadow: none;
-						// border: 1px solid #e9e9e9;
 						border-radius: 0;
 
 						form {
@@ -2030,30 +1840,19 @@ body {
 
 			&:not(.user-registration-MyAccount) {
 				max-width: 520px;
-				// margin: 0px auto;
-				border-radius: 4px;
-				// background: #ffffff;
+				margin: $spacing_30px auto;
+				border-radius: $border_radius_4;
 				background: transparent;
-				// box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 				border: 0;
-
-				// @media screen and (max-width: 575px) {
-				// 	padding: 40px 30px;
-				// }
-
-				// &:has(.ur-grid-2),
-				// &:has(.ur-grid-3) {
-				// 	max-width: 940px;
-				// }
 
 				&:has(.ur-frontend-form--bordered) {
 					box-shadow: none;
-					border: 1px solid #e9e9e9;
+					border: $border_width solid $border_color;
 				}
 
 				&:has(.ur-frontend-form--flat) {
 					box-shadow: none;
-					border: 1px solid #e9e9e9;
+					border: $border_width solid $border_color;
 					border-radius: 0;
 
 					.user-registration-form-login {
@@ -2086,10 +1885,8 @@ body {
 
 				.ur-frontend-form {
 					&.login {
-						// max-width: 520px;
 						margin: 0px auto;
 						box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
-						// padding: 60px 50px;
 
 						.user-registration-error {
 							display: block;
@@ -2134,7 +1931,7 @@ body {
 					}
 
 					&--flat {
-						background: transparent;
+						background: $white;
 
 						.user-registration-form-login {
 							.ur-form-row {
@@ -2220,10 +2017,6 @@ body {
 							position: unset;
 							align-items: center;
 							margin-bottom: 24px !important;
-							// color: #F25656 !important;
-							// font-size: 14px !important;
-							// font-weight: 400 !important;
-							// line-height: 24px !important;
 							letter-spacing: 0.18px;
 
 							&::before {
@@ -2270,12 +2063,7 @@ body {
 						}
 
 						.user-registration-form-row {
-							margin-bottom: 12px;
-
-							// label {
-							// 	margin-top: 0;
-							// 	margin-bottom: 12px;
-							// }
+							margin-bottom: $spacing_12px;
 						}
 
 						.ur-input-with-icon {
@@ -2317,7 +2105,6 @@ body {
 								input {
 									margin-bottom: 0;
 									border-radius: 4px;
-									// border: 1px solid #e9e9e9;
 									min-height: 38px;
 									max-height: 38px;
 									font-size: 14px;
@@ -2344,24 +2131,6 @@ body {
 					gap: $spacing_4px;
 					margin-top: 32px;
 					padding: 0 10px;
-
-					.ur-submit-button {
-						width: max-content;
-						border: 0;
-						padding: 10px 24px;
-						color: #ffffff;
-						font-size: 15px;
-						font-weight: $medium;
-						line-height: 24px;
-						letter-spacing: 0.15px;
-						border: $border_width solid $primary_color;
-						margin-right: 0;
-						background: $primary_color;
-
-						&:hover {
-							border-color: #38488e;
-						}
-					}
 
 					.user-registration-save-and-continue-button {
 						margin-left: 0;
@@ -2390,37 +2159,13 @@ body {
 								}
 
 								.user-registration-form-row {
-									margin-bottom: 24px;
-
-									label {
-										// margin-top: 0;
-										// margin-bottom: 12px;
-										// color: #222;
-										// font-size: 15px;
-										// font-weight: 500;
-										// line-height: 19px;
-									}
+									margin-bottom: $spacing_24px;
 
 									.input-wrapper {
 										display: block;
 
 										input {
-											// margin-bottom: 0;
-											// border-radius: 4px;
-											// border: 1px solid #e9e9e9;
 											min-height: 38px;
-											// font-size: 14px;
-											// line-height: 20px;
-											// padding: 0 14px;
-											// color: #383838;
-
-											&:focus {
-												// border-color: #027abb;
-											}
-
-											&::placeholder {
-												// color: #858585;
-											}
 										}
 									}
 								}
@@ -2512,7 +2257,6 @@ body {
 									float: unset;
 
 									label {
-										// margin: 0;
 										width: auto;
 										display: flex;
 										align-items: center;
@@ -2754,7 +2498,9 @@ body {
 					.ur-registered-inputs {
 						.ui-widget-content {
 							.ur-tab-contents {
-								background-color: #ffffff;
+								padding: 24px;
+								background: #ffffff;
+
 								.ur-login-view-doc {
 									a {
 										border-radius: $border_radius_4;
@@ -2769,9 +2515,7 @@ body {
 										letter-spacing: 0px;
 										padding: $spacing_10px $spacing_24px;
 										border: none;
-										// background: #475bb2;
 										background: #edeff7;
-										// color: #ffffff;
 										color: $primary_color;
 										display: block;
 										margin: $spacing_32px 0 0;
@@ -2840,7 +2584,7 @@ body {
 
 						&.ur-login-form-settings {
 							.ur-tab-contents {
-								.ur-tab-content {
+								padding: 16px 16px 0 16px;
 
 								.ur-tab-content {
 									padding: 0;
@@ -2856,18 +2600,6 @@ body {
 												}
 											}
 
-											// h2 {
-											// 	&.ur-toggle-heading {
-											// 		&.closed {
-											// 			color: $primary_color;
-
-											// 			&::before {
-											// 				filter: brightness(0) saturate(100%) invert(35%) sepia(30%) saturate(1444%) hue-rotate(193deg) brightness(93%) contrast(85%);
-											// 			}
-											// 		}
-											// 	}
-											// }
-
 											.ur-toggle-content {
 												margin-top: $spacing_24px;
 												padding-bottom: $spacing_28px;
@@ -2875,23 +2607,6 @@ body {
 												display: flex;
 												flex-direction: column;
 												gap: 28px;
-												.user-registration-login-form-global-settings {
-													display: flex;
-													// flex-direction: column;
-													gap: 12px;
-
-													label {
-														font-weight: 600;
-														gap: 6px;
-														margin-bottom: 0;
-														.user-registration-help-tip {
-															font-size: 20px;
-														}
-													}
-													select {
-														height: 38px;
-													}
-												}
 											}
 										}
 									}
@@ -2911,10 +2626,6 @@ body {
 				.user-registration-login-settings-form {
 					border-radius: $border_radius_4;
 
-					&#ur-frontend-form {
-						border: 1px solid #EDF2F7;
-					}
-
 					a {
 						pointer-events: none;
 					}
@@ -2922,21 +2633,14 @@ body {
 			}
 		}
 	}
-	}
 }
+
 
 body.user-registration-page {
 	.elementor-widget-container {
 		.user-registration:not(.user-registration-MyAccount) {
 			background: transparent;
 			border-radius: 0;
-		}
-	}
-}
-.ur-metabox-field .ur-metabox-field-detail{
-	.select2-container {
-		.select2-selection--single {
-			// height: auto;
 		}
 	}
 }

@@ -26,7 +26,7 @@ class Orders {
 	 * @since 1.0.0
 	 */
 	private function init_hooks() {
-		add_action( 'admin_menu', array( $this, 'add_orders_menu' ), 70 );
+		add_action( 'admin_menu', array( $this, 'add_orders_menu' ), 40 );
 		add_action( 'in_admin_header', array( __CLASS__, 'hide_unrelated_notices' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
@@ -67,8 +67,7 @@ class Orders {
 			array(
 				$this,
 				'render_payment_history_page',
-			),
-			5
+			)
 		);
 		add_action( 'load-' . $orders_page, array( $this, 'orders_initialization' ) );
 	}
@@ -254,18 +253,8 @@ class Orders {
 		}
 		$enable_members_button = true;
 		?>
-		<div class="ur-membership-header ur-d-flex ur-mr-0 ur-p-3 ur-align-items-center" id=""
-			style="margin-left: -20px; background:white; gap: 20px; position: sticky; top: 32px; z-index: 700">
-			<img style="max-width: 30px"
-				src="<?php echo UR()->plugin_url() . '/assets/images/logo.svg'; ?>" alt="">
-			<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $this->page ) ); ?>"
-				class="<?php echo esc_attr( ( $_GET['page'] == $this->page ) ? 'row-title' : '' ); ?>"
-				style="text-decoration: none"
-			>
-				<?php esc_html_e( 'Payment History', 'user-registration' ); ?>
-			</a>
-		</div>
-
+		<hr class="wp-header-end">
+		<?php echo user_registration_plugin_main_header(); ?>
 		<div id="payment-detail-modal" class="modal">
 			<div class="modal-content">
 				<div class="modal-header">

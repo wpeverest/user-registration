@@ -13,6 +13,28 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 ?>
 <hr class="wp-header-end">
+
+<div class="ur-admin-page-topnav" id="ur-lists-page-topnav">
+	<div class="ur-page-title__wrapper">
+		<div class="ur-page-title__wrapper--left">
+			<a class="ur-text-muted ur-border-right ur-d-flex ur-mr-2 ur-pl-2 ur-pr-2" href="<?php echo esc_attr( admin_url('admin.php?page=user-registration') ); ?>">
+				<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+			</a>
+			<div class="ur-page-title__wrapper--left-menu">
+				<div class="ur-page-title__wrapper--left-menu__items">
+					<p><?php esc_html_e( 'Login Form', 'user-registration' ); ?><span class="ur-editing-tag"><?php esc_html_e( 'Now Editing', 'user-registration' ); ?></span></p>
+				</div>
+			</div>
+		</div>
+		<div class="ur-page-title__wrapper--right">
+			<div class="major-publishing-actions wp-clearfix">
+				<div class="publishing-action">
+					<button type="button" name="save_login_form" id="save_form_footer" class="button button-primary button-large menu-form ur_save_login_form_action_button"> <?php echo __( 'Update Form', 'user-registration' ); ?> </button>
+				</div><!-- END .publishing-action -->
+			</div>
+		</div>
+	</div>
+</div>
 <div class="user-registration-login-form-container">
 	<div class="wrap user-registration__wrap ur-form-container">
 		<h1 style="display:none"></h1> <!-- To manage notices -->

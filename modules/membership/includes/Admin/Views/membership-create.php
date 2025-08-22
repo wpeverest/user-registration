@@ -1,28 +1,26 @@
+<?php
+$return_url = admin_url( 'admin.php?page=user-registration-membership' );
+$is_editing = ! empty( $_GET['post_id'] );
+?>
+<div class="ur-admin-page-topnav" id="ur-lists-page-topnav">
+	<div class="ur-page-title__wrapper">
+		<div class="ur-page-title__wrapper--left">
+			<a class="ur-text-muted ur-border-right ur-d-flex ur-mr-2 ur-pl-2 ur-pr-2" href="<?php echo esc_attr( $return_url ); ?>">
+				<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+			</a>
+			<div class="ur-page-title__wrapper--left-menu">
+				<div class="ur-page-title__wrapper--left-menu__items">
+					<p><?php echo isset( $_GET['post_id'] ) ? esc_html_e( 'Edit Membership', 'user-registration' ) : esc_html_e( 'Create New Membership', 'user-registration' ); ?></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 <div class="ur-membership">
-	<?php
-	require __DIR__ . '/./Partials/header.php';
-	$return_url = admin_url( 'admin.php?page=user-registration-membership' );
-	$is_editing = ! empty( $_GET['post_id'] );
-
-	?>
 	<div
 		class="ur-membership-tab-contents-wrapper ur-registered-from ur-align-items-center ur-justify-content-center">
-		<form id="ur-membership-create-form" method="post" style="width: 80%">
+		<form id="ur-membership-create-form" method="post">
 			<div class="user-registration-card">
-				<div class="user-registration-card__header ur-d-flex ur-align-items-center">
-					<a class="ur-text-muted ur-d-flex"
-					   href="<?php echo $return_url; ?>">
-						<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
-							 fill="none"
-							 stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-							<line x1="19" y1="12" x2="5" y2="12"></line>
-							<polyline points="12 19 5 12 12 5"></polyline>
-						</svg>
-					</a>
-					<h3>
-						<?php echo isset( $_GET['post_id'] ) ? esc_html_e( 'Edit Membership', 'user-registration' ) : esc_html_e( 'Create New Membership', 'user-registration' ); ?>
-					</h3>
-				</div>
 				<div class="user-registration-card__body">
 					<div id="ur-membership-main-fields">
 						<!--					membership name-->
@@ -129,7 +127,7 @@
 					</div>
 					<!--					membership plan type and pricing section-->
 					<div id="ur-membership-plan-and-price-section" class="ur-p-2 ur-mt-2">
-						<div class="user-registration-card" style="background: #f8f8fa">
+						<div class="user-registration-card">
 							<!--							membership type and price header-->
 
 							<div class="user-registration-card__header ur-d-flex ur-align-items-center">

@@ -24,11 +24,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		public function __construct() {
 
 			// Add menus.
-			add_action( 'admin_menu', array( $this, 'admin_menu' ), 9 );
-			add_action( 'admin_menu', array( $this, 'settings_menu' ), 60 );
-			add_action( 'admin_menu', array( $this, 'status_menu' ), 61 );
-			add_action( 'admin_menu', array( $this, 'dashboard_menu' ), 10 );
-			add_action( 'admin_menu', array( $this, 'add_registration_menu' ), 50 );
+			add_action( 'admin_menu', array( $this, 'dashboard_menu' ), 2 );
+			add_action( 'admin_menu', array( $this, 'admin_menu' ), 1 );
+			add_action( 'admin_menu', array( $this, 'settings_menu' ), 20 );
+			add_action( 'admin_menu', array( $this, 'add_registration_menu' ), 8 );
+			add_action( 'admin_menu', array( $this, 'status_menu' ), 75 );
 
 			if( is_plugin_active( 'user-registration-pro/user-registration.php' ) && empty( get_option('user-registration_license_key', '' ) ) ) {
 				add_action( 'admin_menu', array( $this, 'activate_license_menu' ), 100 );
@@ -40,11 +40,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			 * @param boolean
 			 */
 			if ( apply_filters( 'user_registration_show_addons_page', true ) ) {
-				add_action( 'admin_menu', array( $this, 'addons_menu' ), 70 );
+				add_action( 'admin_menu', array( $this, 'addons_menu' ), 80 );
 			}
 
 			if ( ! is_plugin_active( 'user-registration-pro/user-registration.php' ) && ! ur_get_license_plan() ) {
-				add_action( 'admin_menu', array( $this, 'user_registration_upgrade_to_pro_menu' ), 80 );
+				add_action( 'admin_menu', array( $this, 'user_registration_upgrade_to_pro_menu' ), 81 );
 			}
 
 			// Set screens.
@@ -494,11 +494,16 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				array(
 					$this,
 					'registration_page',
-				)
+				),
+				5
 			);
-			if ( isset( $_GET['page'] ) && ( 'user-registration' === $_GET['page'] || 'user-registration-registration-forms' === $_GET['page'] || 'user-registration-login-forms' === $_GET['page'] ) ) {
-				add_submenu_page( 'user-registration', __( 'Registration Forms', 'user-registration' ), '<span style="margin-left:5px;">  ⤷ </span>' . __( 'Registration Forms', 'user-registration' ), 'manage_user_registration', 'user-registration', array( $this, 'registration_page' ) );
-				add_submenu_page( 'user-registration', __( 'Login Form', 'user-registration' ), '<span style="margin-left:5px;">  ⤷ </span>' . __( 'Login Form', 'user-registration' ), 'manage_user_registration', 'user-registration-login-forms', array( $this, 'registration_page' ) );
+
+			if ( isset( $_GET['page'] ) && in_array( $_GET['page'], ['user-registration', 'user-registration-login-forms'] ) ) {
+				$all_forms = ur_get_all_user_registration_form();
+				$postfix = count($all_forms ) > 1 ? 'Forms' : 'Form';
+
+				add_submenu_page( 'user-registration', __( 'Registration Forms', 'user-registration' ), '↳ ' . sprintf( __( 'Registration %s', 'user-registration' ), $postfix ), 'manage_user_registration', 'user-registration', array( $this, 'registration_page' ), 6 );
+				add_submenu_page( 'user-registration', __( 'Login Form', 'user-registration' ), '↳ ' . __( 'Login Form', 'user-registration' ), 'manage_user_registration', 'user-registration-login-forms', array( $this, 'registration_page' ), 7 );
 			}
 		}
 
@@ -555,6 +560,35 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'status_page',
 				)
 			);
+
+			if ( isset( $_GET['page'] ) && in_array( $_GET['page'], ['user-registration-status', 'user-registration-status&tab=logs', 'user-registration-status&tab=system_info'] ) ) {
+
+				add_submenu_page(
+					'user-registration',
+					__( 'Logs', 'user-registration' ),
+					'↳ ' . __( 'Logs', 'user-registration' ),
+					'manage_user_registration',
+					'user-registration-status&tab=logs',
+					array(
+						$this,
+						'status_page',
+					),
+					76
+				);
+
+				add_submenu_page(
+					'user-registration',
+					__( 'System Info', 'user-registration' ),
+					'↳ ' . __( 'System Info', 'user-registration' ),
+					'manage_user_registration',
+					'user-registration-status&tab=system_info',
+					array(
+						$this,
+						'status_page',
+					),
+					77
+				);
+			}
 		}
 
 		/**
@@ -615,9 +649,9 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			add_submenu_page(
 				'user-registration',
 				__( 'User Registration extensions', 'user-registration' ),
-				sprintf( '<span style="color: rgb(158, 240, 26);display: flex;"><svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 2 30 30" style="fill: rgb(158, 240, 26);transform: ;msFilter:;vertical-align:middle;"><path d="M11.8,15.24l1.71-1,.57-.33a2.14,2.14,0,0,0,1-1.85V6.76a2,2,0,0,0-.28-1,2.08,2.08,0,0,0-.76-.77l-.56-.33-1.73-1L9.56,2.29a2,2,0,0,0-1-.29,2,2,0,0,0-1,.29L5.26,3.59,3.42,4.68,3,4.94a2.08,2.08,0,0,0-.76.77,2.13,2.13,0,0,0-.27,1v5.3a2,2,0,0,0,.27,1.06,2.13,2.13,0,0,0,.76.79l.45.26,1.84,1.07,2.23,1.3a2,2,0,0,0,1,.28,2.22,2.22,0,0,0,1-.26Z"/><path d="M29.78,5.71A2.16,2.16,0,0,0,29,4.94l-.56-.33-1.74-1L24.5,2.29a2,2,0,0,0-1-.29,2,2,0,0,0-1,.29l-2.23,1.3L18.37,4.68l-.45.26a2.08,2.08,0,0,0-.76.77,2.13,2.13,0,0,0-.27,1v5.3a1.89,1.89,0,0,0,.27,1.06,2.13,2.13,0,0,0,.76.79l.45.26,1.84,1.07,2.23,1.3a2,2,0,0,0,1,.28,2.16,2.16,0,0,0,1-.26l2.25-1.32,1.71-1,.57-.33a2.3,2.3,0,0,0,.76-.79,2.2,2.2,0,0,0,.27-1.06V6.76A2,2,0,0,0,29.78,5.71Z"/><path d="M21.64,18.12l-.56-.33-1.74-1-2.22-1.3a2,2,0,0,0-1-.29,2,2,0,0,0-1,.29l-2.23,1.3L11,17.85l-.45.27a2.08,2.08,0,0,0-.76.77,2.14,2.14,0,0,0-.28,1.05v5.3a1.93,1.93,0,0,0,.28,1.05,2.06,2.06,0,0,0,.76.79l.45.27,1.84,1.07,2.23,1.29a2,2,0,0,0,1,.29,2.28,2.28,0,0,0,1-.26l2.25-1.32,1.71-1,.57-.34a2.21,2.21,0,0,0,.76-.79,2.13,2.13,0,0,0,.27-1.05v-5.3a2,2,0,0,0-.28-1.05A2.16,2.16,0,0,0,21.64,18.12Z"/></svg><span style="margin-left:5px;">%s</span></span>', esc_html__( 'Extensions', 'user-registration' ) ),
+				sprintf( '<span style="color: rgb(158, 240, 26);display: flex;"><svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 2 30 30" style="fill: rgb(158, 240, 26);transform: ;msFilter:;vertical-align:middle;"><path d="M11.8,15.24l1.71-1,.57-.33a2.14,2.14,0,0,0,1-1.85V6.76a2,2,0,0,0-.28-1,2.08,2.08,0,0,0-.76-.77l-.56-.33-1.73-1L9.56,2.29a2,2,0,0,0-1-.29,2,2,0,0,0-1,.29L5.26,3.59,3.42,4.68,3,4.94a2.08,2.08,0,0,0-.76.77,2.13,2.13,0,0,0-.27,1v5.3a2,2,0,0,0,.27,1.06,2.13,2.13,0,0,0,.76.79l.45.26,1.84,1.07,2.23,1.3a2,2,0,0,0,1,.28,2.22,2.22,0,0,0,1-.26Z"/><path d="M29.78,5.71A2.16,2.16,0,0,0,29,4.94l-.56-.33-1.74-1L24.5,2.29a2,2,0,0,0-1-.29,2,2,0,0,0-1,.29l-2.23,1.3L18.37,4.68l-.45.26a2.08,2.08,0,0,0-.76.77,2.13,2.13,0,0,0-.27,1v5.3a1.89,1.89,0,0,0,.27,1.06,2.13,2.13,0,0,0,.76.79l.45.26,1.84,1.07,2.23,1.3a2,2,0,0,0,1,.28,2.16,2.16,0,0,0,1-.26l2.25-1.32,1.71-1,.57-.33a2.3,2.3,0,0,0,.76-.79,2.2,2.2,0,0,0,.27-1.06V6.76A2,2,0,0,0,29.78,5.71Z"/><path d="M21.64,18.12l-.56-.33-1.74-1-2.22-1.3a2,2,0,0,0-1-.29,2,2,0,0,0-1,.29l-2.23,1.3L11,17.85l-.45.27a2.08,2.08,0,0,0-.76.77,2.14,2.14,0,0,0-.28,1.05v5.3a1.93,1.93,0,0,0,.28,1.05,2.06,2.06,0,0,0,.76.79l.45.27,1.84,1.07,2.23,1.29a2,2,0,0,0,1,.29,2.28,2.28,0,0,0,1-.26l2.25-1.32,1.71-1,.57-.34a2.21,2.21,0,0,0,.76-.79,2.13,2.13,0,0,0,.27-1.05v-5.3a2,2,0,0,0-.28-1.05A2.16,2.16,0,0,0,21.64,18.12Z"/></svg><span style="margin-left:5px;">%s</span></span>', esc_html__( 'Addons', 'user-registration' ) ),
 				'manage_options',
-				'user-registration-addons',
+				'user-registration-dashboard#features',
 				array( $this, 'redirect_to_addons_page' )
 			);
 		}

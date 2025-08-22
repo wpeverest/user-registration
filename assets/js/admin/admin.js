@@ -1152,7 +1152,7 @@ jQuery(function ($) {
 		$("#user_registration_form_setting_login_options").on(
 			"change",
 			check_email_confirmation_disabled
-		)
+		);
 	});
 
 	/**
@@ -1177,16 +1177,21 @@ jQuery(function ($) {
 			description.hide();
 		}
 	};
-	
-	var check_email_confirmation_disabled = function() {
-		
-		var email_confirmation_disabled = user_registration_form_builder_data.email_confirmation_disabled;
-		if( email_confirmation_disabled  === 'yes' ) {
-			var login_options = $("#user_registration_form_setting_login_options").find(":selected");
+
+	var check_email_confirmation_disabled = function () {
+		var email_confirmation_disabled =
+			user_registration_form_builder_data.email_confirmation_disabled;
+		if (email_confirmation_disabled === "yes") {
+			var login_options = $(
+				"#user_registration_form_setting_login_options"
+			).find(":selected");
 
 			var form_row = login_options.closest(".form-row");
 			form_row.find("#ur-rar-url-notice").remove();
-			if (login_options.length == 1 && login_options.val() == "email_confirmation") {
+			if (
+				login_options.length == 1 &&
+				login_options.val() == "email_confirmation"
+			) {
 				show_email_confirmation_disabled_notice(form_row);
 			}
 		}
@@ -1761,22 +1766,141 @@ jQuery(function ($) {
 		target_hidden_input.val(input_value);
 		target_pattern_input.val(input_value);
 	}
-	$(".ur_setup_wizard").on("click", function(event) {
+
+	$(".ur-admin-page-topnav")
+		.find(".has-sub-menu")
+		.each(function () {
+			var link = $(this).find("a");
+			var hideTimeout;
+
+			$(this).on("mouseenter", function () {
+				clearTimeout(hideTimeout);
+				$(this).find(".ur-sub-menu-dropdown").addClass("active");
+			});
+			$(this).on("mouseleave", function () {
+				hideTimeout = setTimeout(function () {
+					$(this).find(".ur-sub-menu-dropdown").removeClass("active");
+				}, 200);
+			});
+			$(this)
+				.find(".ur-sub-menu-dropdown")
+				.on("mouseenter", function () {
+					clearTimeout(hideTimeout);
+				});
+			$(this)
+				.find(".ur-sub-menu-dropdown")
+				.on("mouseleave", function () {
+					hideTimeout = setTimeout(function () {
+						$(this)
+							.find(".ur-sub-menu-dropdown")
+							.removeClass("active");
+					}, 200);
+				});
+		});
+
+	$("#toplevel_page_user-registration")
+		.find("li > a")
+		.each(function () {
+			if ($(this).text().trim().startsWith("↳")) {
+				$(this).parent().addClass("is-sub-menu");
+			}
+
+			var currentParams = new URLSearchParams(window.location.search),
+				linkParams = new URL(
+					$(this).attr("href"),
+					window.location.origin
+				).searchParams,
+				allMatch = true;
+
+			if (currentParams.toString() !== linkParams.toString()) {
+				allMatch = false;
+			} else {
+				var entries = currentParams.entries();
+				var entry;
+				while (!(entry = entries.next()).done) {
+					var key = entry.value[0];
+					var value = entry.value[1];
+					if (linkParams.get(key) !== value) {
+						allMatch = false;
+						break;
+					}
+				}
+			}
+
+			if (allMatch) {
+				$(".is-sub-menu").removeClass("current");
+				$(".is-sub-menu").parent().removeClass("current");
+				$(this).addClass("current");
+				$(this).parent().addClass("current");
+			}
+		});
+
+	$(document).ready(function () {
+		function initHamburgerMenu() {
+			$(".ur-hamburger-menu-open").on("click", function () {
+				$(this)
+					.closest(".user-registration-hamburger-menu")
+					.addClass("is-open");
+			});
+
+			$(".ur-hamburger-menu-close").on("click", function () {
+				$(this)
+					.closest(".user-registration-hamburger-menu")
+					.removeClass("is-open");
+			});
+
+			$(document).on("click", function (e) {
+				if (
+					!$(e.target).closest(".user-registration-hamburger-menu")
+						.length
+				) {
+					$(".user-registration-hamburger-menu").removeClass(
+						"is-open"
+					);
+				}
+			});
+
+			$(".user-registration-hamburger-menu")
+				.find(".has-sub-menu")
+				.each(function () {
+					$(this).on("click", function (e) {
+						if (
+							$(e.target).is(this) ||
+							$(e.target).closest(".has-sub-menu > a").length
+						) {
+							e.preventDefault();
+							$(".has-sub-menu")
+								.find(".ur-sub-menu-dropdown")
+								.hide();
+							$(this).find(".ur-sub-menu-dropdown").show();
+						}
+					});
+				});
+		}
+
+		initHamburgerMenu();
+
+		$(window).on("resize", function () {
+			initHamburgerMenu();
+		});
+	});
+
+	$(".ur_setup_wizard").on("click", function (event) {
 		event.preventDefault();
 		Swal.fire({
-			title: 'Re-run Setup Wizard?',
-			text: 'You can revisit your initial setup and update your registration configuration as needed.',
-			icon: 'warning',
+			title: "Re-run Setup Wizard?",
+			text: "You can revisit your initial setup and update your registration configuration as needed.",
+			icon: "warning",
 			showCancelButton: true,
-			confirmButtonText: 'Yes, Re-run Wizard',
-			cancelButtonText: 'Cancel',
+			confirmButtonText: "Yes, Re-run Wizard",
+			cancelButtonText: "Cancel",
 			customClass: {
-				confirmButton: 'button-confirm',
-				cancelButton: 'button-cancel'
+				confirmButton: "button-confirm",
+				cancelButton: "button-cancel"
 			}
-		}).then( function(result) {
+		}).then(function (result) {
 			if (result.isConfirmed) {
-				window.location.href = $(event.target).attr('href');
+				window.location.href = $(event.target).attr("href");
 			}
 		});
 	});
@@ -1956,3 +2080,26 @@ function ur_confirmation(message, options) {
 		}
 	});
 }
+
+jQuery(function ($) {
+	function updateActive() {
+		var current = window.location.href;
+
+		var $links = $(".ur-admin-page-topnav .ur-nav-link");
+		$links.removeClass("current");
+
+		$links.each(function () {
+			var link = $(this).prop("href");
+			if (current === link) {
+				$(this).addClass("current");
+			}
+		});
+	}
+
+	updateActive();
+	$(window).on("hashchange popstate", updateActive);
+
+	$(".ur-admin-page-topnav").on("click", ".ur-nav-link", function () {
+		setTimeout(updateActive, 0);
+	});
+});
