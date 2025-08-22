@@ -32,8 +32,6 @@ $return_url = admin_url( 'admin.php?page=member-payment-history' );
 					<div class="ur-label" style="width: 30%">
 						<label for="ur-input-type-member"><?php esc_html_e( 'Member', 'user-registration' ); ?>
 							<span style="color:red">*</span>
-							<span class="user-registration-help-tip tooltipstered"
-								  data-tip="<?php echo esc_attr__( "Select the user to assign the order to." ) ?>"></span>
 						</label>
 					</div>
 					<div class="ur-input-type-member-name ur-admin-template" style="width: 100%">
@@ -108,8 +106,6 @@ $return_url = admin_url( 'admin.php?page=member-payment-history' );
 					<div class="ur-label" style="width: 30%">
 						<label for="ur-input-type-membership-amount"><?php esc_html_e( 'Amount', 'user-registration' ); ?>
 							<span style="color:red">*</span>
-							<span class="user-registration-help-tip tooltipstered"
-								  data-tip="<?php echo esc_attr__( "Payment amount. Automatically fetched from membership plan but can be edited." ) ?>"></span>
 						</label>
 					</div>
 					<div class="ur-input-type-membership-name ur-admin-template" style="width: 100%">
@@ -130,8 +126,6 @@ $return_url = admin_url( 'admin.php?page=member-payment-history' );
 					<div class="ur-label" style="width: 30%">
 						<label for="ur-input-type-transaction-status"><?php esc_html_e( 'Payment Method', 'user-registration' ); ?>
 							<span style="color:red">*</span>
-							<span class="user-registration-help-tip tooltipstered"
-								  data-tip="<?php echo esc_attr__( "Select the payment method." ) ?>"></span>
 						</label>
 					</div>
 					<div class="ur-input-type-membership-name ur-admin-template" style="width: 100%">
@@ -157,8 +151,6 @@ $return_url = admin_url( 'admin.php?page=member-payment-history' );
 					<div class="ur-label" style="width: 30%">
 						<label for="ur-input-type-payment-date"><?php esc_html_e( 'Payment Date', 'user-registration' ); ?>
 							<span style="color:red">*</span>
-							<span class="user-registration-help-tip tooltipstered"
-								  data-tip="<?php echo esc_attr__( "Select the payment date." ) ?>"></span>
 						</label>
 					</div>
 					<div class="ur-input-type-membership-name ur-admin-template" style="width: 100%">
@@ -180,8 +172,6 @@ $return_url = admin_url( 'admin.php?page=member-payment-history' );
 					<div class="ur-label" style="width: 30%">
 						<label for="ur-input-type-transaction-status"><?php esc_html_e( 'Transaction Status', 'user-registration' ); ?>
 							<span style="color:red">*</span>
-							<span class="user-registration-help-tip tooltipstered"
-								  data-tip="<?php echo esc_attr__( "Select the transaction status." ) ?>"></span>
 						</label>
 					</div>
 					<div class="ur-input-type-membership-name ur-admin-template" style="width: 100%">
@@ -210,8 +200,6 @@ $return_url = admin_url( 'admin.php?page=member-payment-history' );
 				<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
 					<div class="ur-label" style="width: 30%">
 						<label for="ur-input-type-payment-notes"><?php esc_html_e( 'Payment Notes', 'user-registration' ); ?>
-							<span class="user-registration-help-tip tooltipstered"
-								data-tip="<?php echo esc_attr__( "Add any additional notes about this payment." ) ?>"></span>
 						</label>
 					</div>
 					<div class="ur-input-type-membership-name ur-admin-template" style="width: 100%">
