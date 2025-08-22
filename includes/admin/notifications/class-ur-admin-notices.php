@@ -102,13 +102,17 @@ class UR_Admin_Notices {
 
 		if ( 0 === $matched ) {
 			$my_account_setting_link = admin_url() . 'admin.php?page=user-registration-settings#user_registration_myaccount_page_id';
-
-			$message = sprintf(
-				/* translators: %1$s - My account Link. */
-				__( 'Please choose a <strong title="A page with [user_registration_my_account] shortcode">My Account</strong> page in <a href="%1$s" style="text-decoration:none;">General Settings</a>. <br/><strong>Got Stuck? Read</strong> <a href="https://docs.wpuserregistration.com/docs/how-to-show-account-profile/" style="text-decoration:none;" rel="noreferrer noopener" target="_blank">How to setup My Account page</a>.', 'user-registration' ),
-				$my_account_setting_link
-			);
-			self::add_custom_notice( 'select_my_account', $message );
+			$urm_show_message        = apply_filters( 'user_registration_membership_show_my_account_notice', true );
+			if ( $urm_show_message ) {
+				$message = sprintf(
+					/* translators: %1$s - My account Link. */
+					__( 'Please choose a <strong title="A page with [user_registration_my_account] shortcode">My Account</strong> page in <a href="%1$s" style="text-decoration:none;">General Settings</a>. <br/><strong>Got Stuck? Read</strong> <a href="https://docs.wpuserregistration.com/docs/how-to-show-account-profile/" style="text-decoration:none;" rel="noreferrer noopener" target="_blank">How to setup My Account page</a>.', 'user-registration' ),
+					$my_account_setting_link
+				);
+				self::add_custom_notice( 'select_my_account', $message );
+			} else {
+				self::remove_notice( 'select_my_account' );
+			}
 		} else {
 			self::remove_notice( 'select_my_account' );
 		}
