@@ -9,28 +9,33 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-07-30T06:07:26+00:00\n"
+"POT-Creation-Date: 2025-08-19T16:04:30+05:45\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.12.0\n"
+"X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: user-registration\n"
 
 #. Plugin Name of the plugin
+#: user-registration.php
 msgid "User Registration & Membership"
 msgstr ""
 
 #. Plugin URI of the plugin
+#: user-registration.php
 msgid "https://wpuserregistration.com/"
 msgstr ""
 
 #. Description of the plugin
+#: user-registration.php
 msgid "The most flexible User Registration and Membership plugin for WordPress."
 msgstr ""
 
 #. Author of the plugin
+#: user-registration.php
 msgid "WPEverest"
 msgstr ""
 
 #. Author URI of the plugin
+#: user-registration.php
 msgid "https://wpuserregistration.com"
 msgstr ""
 
@@ -93,7 +98,7 @@ msgstr ""
 #: modules/membership/includes/Emails/Admin/UR_Settings_Membership_Cancellation_Admin_Email.php:71
 #: modules/membership/includes/Emails/User/UR_Settings_Membership_Cancellation_User_Email.php:71
 #: modules/membership/includes/Emails/User/UR_Settings_Membership_Renewal_Reminder_User_Email.php:102
-#: src/form-templates/components/TemplateList.js:495
+#: src/form-templates/components/TemplateList.js:498
 msgid "Preview"
 msgstr ""
 
@@ -558,7 +563,7 @@ msgstr ""
 #: includes/admin/class-ur-admin-assets.php:233
 #: includes/admin/class-ur-admin-assets.php:654
 #: includes/admin/class-ur-admin-menus.php:728
-#: src/form-templates/components/TemplateList.js:671
+#: src/form-templates/components/TemplateList.js:674
 msgid "OK"
 msgstr ""
 
@@ -570,7 +575,7 @@ msgstr ""
 #: includes/functions-ur-core.php:3914
 #: src/dashboard/screens/Modules/components/ModuleItem.js:594
 #: src/dashboard/screens/Modules/hooks/useUpgradeModal.js:82
-#: src/form-templates/components/TemplateList.js:688
+#: src/form-templates/components/TemplateList.js:691
 msgid "Upgrade Plan"
 msgstr ""
 
@@ -598,7 +603,7 @@ msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:246
 #: includes/admin/class-ur-admin-menus.php:741
-#: src/form-templates/components/TemplateList.js:710
+#: src/form-templates/components/TemplateList.js:713
 msgid "Uplift your form experience to the next level."
 msgstr ""
 
@@ -837,7 +842,7 @@ msgid "Enabled"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:444
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:220
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:221
 msgid "Disabled"
 msgstr ""
 
@@ -1356,7 +1361,7 @@ msgid "Imported Successfully."
 msgstr ""
 
 #: includes/admin/class-ur-admin-import-export-forms.php:201
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:258
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:259
 msgid "View Form"
 msgstr ""
 
@@ -1811,30 +1816,30 @@ msgstr ""
 msgid "denied"
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:32
+#: includes/admin/class-ur-admin-welcome.php:39
 msgid "Welcome to User Registration"
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:90
+#: includes/admin/class-ur-admin-welcome.php:96
 #: templates/ur-form-preview-template.php:11
 msgid "User Registration - Setup Wizard"
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:144
+#: includes/admin/class-ur-admin-welcome.php:150
 msgid "Welcome to User Registration & Membership"
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:145
+#: includes/admin/class-ur-admin-welcome.php:151
 msgid "Easily create custom registration forms, manage member access, receive payments and streamline your WordPress user workflow — all without code."
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:149
+#: includes/admin/class-ur-admin-welcome.php:155
 #: includes/admin/views/html-admin-page-form-templates.php:106
-#: src/form-templates/components/TemplateList.js:469
+#: src/form-templates/components/TemplateList.js:472
 msgid "Get Started"
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:158
+#: includes/admin/class-ur-admin-welcome.php:164
 msgid "Skip to Dashboard"
 msgstr ""
 
@@ -1893,7 +1898,7 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-general.php:34
 #: includes/admin/settings/class-ur-settings-general.php:86
 #: includes/functions-ur-core.php:7333
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:393
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:379
 msgid "General"
 msgstr ""
 
@@ -2366,7 +2371,7 @@ msgid "Login Options"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:51
-msgid "Frontend Messages"
+msgid "Form Messages"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:91
@@ -2374,7 +2379,7 @@ msgid "Prevent WP Dashboard Access"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:92
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:433
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:419
 msgid "Selected user roles will not be able to view and access the WP Dashboard area."
 msgstr ""
 
@@ -3517,17 +3522,13 @@ msgstr ""
 msgid "There are currently no logs to view."
 msgstr ""
 
-#: includes/admin/views/html-admin-page-status.php:15
+#: includes/admin/views/html-admin-page-status.php:14
 msgid "Logs"
 msgstr ""
 
-#: includes/admin/views/html-admin-page-status.php:16
+#: includes/admin/views/html-admin-page-status.php:15
 #: includes/admin/views/html-admin-page-system-info.php:30
 msgid "System Info"
-msgstr ""
-
-#: includes/admin/views/html-admin-page-status.php:17
-msgid "Setup Wizard"
 msgstr ""
 
 #: includes/admin/views/html-admin-page-system-info.php:56
@@ -4472,25 +4473,25 @@ msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:501
 #: includes/functions-ur-core.php:1242
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:425
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:411
 msgid "Very Weak"
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:502
 #: includes/functions-ur-core.php:1243
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:426
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:412
 msgid "Weak"
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:503
 #: includes/functions-ur-core.php:1244
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:427
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:413
 msgid "Medium"
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:504
 #: includes/functions-ur-core.php:1245
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:428
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:414
 msgid "Strong"
 msgstr ""
 
@@ -4515,31 +4516,31 @@ msgid "Hint: Minimum one uppercase letter, a number, a special character, must b
 msgstr ""
 
 #: includes/class-ur-install.php:444
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:316
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:302
 msgctxt "Page slug"
 msgid "my-account"
 msgstr ""
 
 #: includes/class-ur-install.php:445
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:317
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:303
 msgctxt "Page title"
 msgid "My Account"
 msgstr ""
 
 #: includes/class-ur-install.php:455
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:267
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:268
 msgctxt "Page slug"
 msgid "registration"
 msgstr ""
 
 #: includes/class-ur-install.php:456
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:268
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:269
 msgctxt "Page title"
 msgid "Registration"
 msgstr ""
 
 #: includes/class-ur-install.php:519
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:242
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:243
 msgid "Default form"
 msgstr ""
 
@@ -7138,12 +7139,12 @@ msgid "Enter the description of the form."
 msgstr ""
 
 #: includes/functions-ur-core.php:1171
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:396
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:382
 msgid "User Approval And Login Option"
 msgstr ""
 
 #: includes/functions-ur-core.php:1172
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:397
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:383
 msgid "This option lets you choose login option after user registration."
 msgstr ""
 
@@ -7172,7 +7173,7 @@ msgid "Default User Role"
 msgstr ""
 
 #: includes/functions-ur-core.php:1219
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:405
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:391
 msgid "Default role for the users registered through this form."
 msgstr ""
 
@@ -7185,7 +7186,7 @@ msgid "Make strong password compulsary."
 msgstr ""
 
 #: includes/functions-ur-core.php:1235
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:419
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:405
 msgid "Minimum Password Strength"
 msgstr ""
 
@@ -7194,7 +7195,7 @@ msgid "Custom"
 msgstr ""
 
 #: includes/functions-ur-core.php:1250
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:420
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:406
 msgid "Set minimum required password strength."
 msgstr ""
 
@@ -8068,134 +8069,134 @@ msgstr ""
 msgid "Invalid action."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:134
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:135
 msgid "OnBoarding completed successfully"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:176
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:177
 msgid "Settings submitted successfully"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:203
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:204
 msgid "Guest Registration"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:204
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:205
 msgid "Users will be allowed to register through User Registration Form"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:209
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:210
 #: src/dashboard/screens/Dashboard/components/UsefulPlugins.js:76
 #: src/dashboard/screens/Products/components/ProductCard.js:142
 msgid "Active"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:214
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:215
 msgid "Disable Login/Registration from wp-login.php"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:215
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:216
 msgid "Default WordPress login page wp-login.php will be disabled."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:256
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:257
 msgid "Default Registration Form"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:259
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:260
 msgid "Form Id: %s"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:261
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:262
 msgid "Ready to use"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:301
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:287
 #: modules/functions-ur-modules.php:363
 msgctxt "Page slug"
 msgid "membership-registration"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:302
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:288
 #: modules/functions-ur-modules.php:364
 msgctxt "Page title"
 msgid "Membership Registration"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:310
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:296
 msgctxt "Page slug"
 msgid "login"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:311
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:297
 msgctxt "Page title"
 msgid "Login"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:322
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:308
 msgctxt "Page slug"
 msgid "lost-password"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:323
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:309
 msgctxt "Page title"
 msgid "Lost Password"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:329
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:315
 #: modules/functions-ur-modules.php:370
 msgctxt "Page slug"
 msgid "membership-pricing"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:330
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:316
 #: modules/functions-ur-modules.php:371
 msgctxt "Page title"
 msgid "Membership Pricing"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:335
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:321
 #: modules/functions-ur-modules.php:376
 msgctxt "Page slug"
 msgid "membership-thankyou"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:336
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:322
 #: modules/functions-ur-modules.php:377
 msgctxt "Page title"
 msgid "Membership ThankYou"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:343
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:329
 #: modules/membership/includes/Admin/Views/membership-create.php:573
 msgid "Create Membership"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:344
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:330
 msgid "+ Create Membership"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:361
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:347
 msgid "View Page"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:362
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:348
 msgid " Page"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:404
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:390
 msgid "Assign Default User Role"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:412
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:398
 msgid "Require Strong Password"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:413
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:399
 msgid "Enforce strong password."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:432
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:418
 msgid "Restrict WordPress Dashboard Access"
 msgstr ""
 
@@ -11146,8 +11147,8 @@ msgid "Addons"
 msgstr ""
 
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:357
-#: src/form-templates/components/TemplateList.js:419
-#: src/form-templates/components/TemplateList.js:436
+#: src/form-templates/components/TemplateList.js:422
+#: src/form-templates/components/TemplateList.js:439
 msgid "Pro"
 msgstr ""
 
@@ -11727,35 +11728,35 @@ msgstr ""
 msgid "An error occurred while updating favorites."
 msgstr ""
 
-#: src/form-templates/components/TemplateList.js:577
+#: src/form-templates/components/TemplateList.js:580
 msgid "Not Found"
 msgstr ""
 
-#: src/form-templates/components/TemplateList.js:587
+#: src/form-templates/components/TemplateList.js:590
 msgid "No Templates Found"
 msgstr ""
 
-#: src/form-templates/components/TemplateList.js:595
+#: src/form-templates/components/TemplateList.js:598
 msgid "Sorry, we didn't find any templates that match your criteria"
 msgstr ""
 
-#: src/form-templates/components/TemplateList.js:627
+#: src/form-templates/components/TemplateList.js:630
 msgid "%s Requires License Upgrade"
 msgstr ""
 
-#: src/form-templates/components/TemplateList.js:634
+#: src/form-templates/components/TemplateList.js:637
 msgid "%s is a Premium Template"
 msgstr ""
 
-#: src/form-templates/components/TemplateList.js:655
+#: src/form-templates/components/TemplateList.js:658
 msgid "This template requires plus and above plan. Please upgrade to the Plus and above to unlock all these awesome templates."
 msgstr ""
 
-#: src/form-templates/components/TemplateList.js:659
+#: src/form-templates/components/TemplateList.js:662
 msgid "This template requires premium addons. Please upgrade to the Premium to unlock all these awesome templates."
 msgstr ""
 
-#: src/form-templates/components/TemplateList.js:723
+#: src/form-templates/components/TemplateList.js:726
 msgid "Give it a name"
 msgstr ""
 
@@ -11784,11 +11785,11 @@ msgstr ""
 msgid "Final Step"
 msgstr ""
 
-#: src/welcome/components/App.js:429
+#: src/welcome/components/App.js:423
 msgid "Back"
 msgstr ""
 
-#: src/welcome/components/App.js:490
+#: src/welcome/components/App.js:484
 msgid "Next"
 msgstr ""
 
