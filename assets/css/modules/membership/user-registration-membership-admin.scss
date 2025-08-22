@@ -266,6 +266,11 @@
 				font-weight: 600;
 				line-height: 32px;
 			}
+
+			.ur-button-primary {
+				background: $primary_color;
+				color: $white;
+			}
 		}
 
 		#user-registration-list-filters-row {

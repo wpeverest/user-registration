@@ -174,3 +174,10 @@
 #toplevel_page_user-registration ul li a[href="admin.php?page=user-registration-members"] {
 	display: none;
 }
+
+#ur-field-all-settings {
+	.user-registration-notice {
+		padding: 10px;
+		gap: 5px;
+	}
+}

@@ -1707,7 +1707,7 @@
   padding: 0;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 10px;
 }
 .user-registration .tablenav .actions.bulkactions select,
 .user-registration-page .tablenav .actions.bulkactions select {
@@ -2640,6 +2640,7 @@
   background-color: #dfe1ea;
   width: 30px;
   height: 16px;
+  padding: 8px;
   transition: 0.4s;
 }
 .user-registration .ur-toggle-section .user-registration-toggle-form .slider.round,
@@ -7822,7 +7823,7 @@ body.ur-multi-device-form-preview #nav-menu-header .major-publishing-actions .pu
 }
 
 body.user-registration, body.user-registration-page {
-  font-family: "Inter";
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 }
 
 .toplevel_page_user-registration #screen-meta,
@@ -9861,6 +9862,7 @@ body .ur-p-tag {
   display: flex;
   gap: 5px;
   align-items: center;
+  width: 100%;
 }
 .ur-toggle-section.ur-form-builder-toggle input[type=checkbox] {
   width: 30px !important;
@@ -10660,7 +10662,11 @@ a.button.ur-smart-tags-list-button {
 .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row {
   width: 100%;
   max-width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+}
+.ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row.ur-enhanced-select, .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row.ur-input-field {
+  display: flex;
+  align-items: baseline;
 }
 .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row#user_registration_form_setting_minimum_password_strength_field {
   margin-bottom: 0;
@@ -10672,17 +10678,24 @@ a.button.ur-smart-tags-list-button {
   display: flex;
   align-items: center;
   gap: 4px;
+  flex: 0 0 40%;
 }
 .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row .ur-label.checkbox {
   font-size: 14px;
   line-height: 150%;
-  font-weight: 400;
+  font-weight: 500;
   margin-bottom: 0;
 }
 .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row .ur-label .user-registration-help-tip::after {
   font-size: 18px;
   line-height: unset;
   color: #bababa;
+}
+.ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row .ur-settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
 }
 .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row .ur-radio-group-list {
   display: flex;
@@ -10728,6 +10741,14 @@ a.button.ur-smart-tags-list-button {
   color: #475bb3;
   border-color: #475bb3;
   background-color: #ebecf1;
+}
+.ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row.ur-form-settings-section {
+  border-top: 1px solid #e1e1e1;
+  padding-top: 20px;
+}
+.ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .form-row.ur-form-settings-section h4 {
+  font-weight: 600;
+  color: #131313;
 }
 .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings #integration-selection-settings {
   display: flex;

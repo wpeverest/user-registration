@@ -41,7 +41,7 @@
 body {
 	&.user-registration,
 	&.user-registration-page {
-		font-family: "Inter";
+		font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 	}
 }
 
@@ -2720,6 +2720,7 @@ body {
 		display: flex;
 		gap: 5px;
 		align-items: center;
+		width: 100%;
 
 		input[type="checkbox"] {
 			width: 30px !important;
@@ -3862,9 +3863,14 @@ a.button.ur-smart-tags-list-button {
 					// width: 620px;
 					width: 100%;
 					max-width: 100%;
-					margin-bottom: $spacing_20px;
+					margin-bottom: $spacing_24px;
 					// display: flex;
 					// align-items: center;
+
+					&.ur-enhanced-select, &.ur-input-field {
+						display: flex;
+						align-items: baseline;
+					}
 
 					&#user_registration_form_setting_minimum_password_strength_field {
 						margin-bottom: 0;
@@ -3879,11 +3885,12 @@ a.button.ur-smart-tags-list-button {
 						// width: max-content;
 						gap: $spacing_4px;
 						// margin-bottom: 0;
+						flex: 0 0 40%;
 
 						&.checkbox {
 							font-size: 14px;
 							line-height: 150%;
-							font-weight: $regular;
+							font-weight: $medium;
 							margin-bottom: 0;
 						}
 
@@ -3922,6 +3929,13 @@ a.button.ur-smart-tags-list-button {
 					// 		1px 1.5em;
 					// 	background-repeat: no-repeat;
 					// }
+
+					.ur-settings-field {
+						display: flex;
+						flex-direction: column;
+						gap: $spacing_4px;
+						width: 100%;
+					}
 
 					.ur-radio-group-list {
 						display: flex;
@@ -4000,6 +4014,16 @@ a.button.ur-smart-tags-list-button {
 									}
 								}
 							}
+						}
+					}
+
+					&.ur-form-settings-section {
+						border-top: 1px solid #e1e1e1;
+						padding-top: 20px;
+
+						h4 {
+							font-weight: 600;
+							color: #131313;
 						}
 					}
 				}

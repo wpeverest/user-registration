@@ -945,6 +945,7 @@ body.ur-multi-device-form-preview #nav-menu-header .major-publishing-actions .pu
   background-color: #dfe1ea;
   width: 30px;
   height: 16px;
+  padding: 8px;
   transition: 0.4s;
 }
 .user-registration .ur-toggle-section .user-registration-toggle-form .slider.round,

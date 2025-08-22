@@ -398,6 +398,10 @@
   font-weight: 600;
   line-height: 32px;
 }
+.user-registration #user-registration-list-table-page .user-registration-list-table-heading .ur-button-primary {
+  background: #475bb2;
+  color: #ffffff;
+}
 .user-registration #user-registration-list-table-page #user-registration-list-filters-row {
   padding-bottom: 28px;
 }

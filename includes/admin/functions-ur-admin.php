@@ -427,7 +427,7 @@ function ur_admin_form_settings( $form_id = 0 ) {
 	$arguments = ur_admin_form_settings_fields( $form_id );
 
 	foreach ( $arguments as $args ) {
-		user_registration_form_field( $args['id'], $args );
+		user_registration_form_settings_field( $args['id'], $args );
 	}
 
 	echo '</div>';
