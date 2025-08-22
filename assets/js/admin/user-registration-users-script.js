@@ -33,26 +33,45 @@ jQuery(function ($) {
 				"click",
 				URUsers.handleSingleUserDelete
 			);
-			$("#doaction.button.action").on(
-				"click",
-				URUsers.handleBulkDelete
-			);
+			$("#doaction.button.action").on("click", URUsers.handleBulkDelete);
 
-			$(".hide-column-tog").on(
-				"click",
-				URUsers.handleColumnStateChange
-			);
+			$(".hide-column-tog").on("click", URUsers.handleColumnStateChange);
 
-            //disable users.
-            $('body').on('click', '.disable-user-link', function () {
-				var $user_id = $(this).attr('id').split('-').pop();
-				var nonce = $(this).data('nonce');
+			$("textarea").each(function () {
+				/**
+				 * show the character and word count in textarea field.
+				 */
+				$(this).on("input", user_registration_count);
+				var input_count;
+				var selected_area_field = $(this).closest(".ur-field-item");
+				if (selected_area_field.find(".ur-input-count").length > 0) {
+					var selected_area_text = $(this).val().trim();
+					if (
+						selected_area_field
+							.find(".ur-input-count")
+							.data("count-type") === "characters"
+					) {
+						input_count = selected_area_text.length;
+					} else {
+						input_count =
+							selected_area_text === ""
+								? 0
+								: selected_area_text.split(/\s+/).length;
+					}
+				}
+				selected_area_field.find(".ur-input-count").text(input_count);
+			});
+
+			//disable users.
+			$("body").on("click", ".disable-user-link", function () {
+				var $user_id = $(this).attr("id").split("-").pop();
+				var nonce = $(this).data("nonce");
 				var icon = '<i class="dashicons dashicons-warning"></i>';
 
 				var disable_user_content =
-					'<span>' +
+					"<span>" +
 					user_registration_pro_admin_script_data.disable_user_popup_content +
-					'</span>';
+					"</span>";
 				disable_user_content +=
 					'<form id="disable-user-form-' +
 					$user_id +
@@ -60,34 +79,40 @@ jQuery(function ($) {
 				disable_user_content +=
 					'<input type="hidden" name="action" value="user_registration_disable_user">';
 				disable_user_content +=
-					'<input type="hidden" name="user_id" value="' + $user_id + '">';
+					'<input type="hidden" name="user_id" value="' +
+					$user_id +
+					'">';
 				disable_user_content +=
-					'<input type="hidden" name="_wpnonce" value="' + nonce + '">';
+					'<input type="hidden" name="_wpnonce" value="' +
+					nonce +
+					'">';
 				disable_user_content +=
 					'<input type="number" name="duration_value" min="1" placeholder="' +
 					user_registration_pro_admin_script_data.disable_user_placeholder +
 					'" style="margin-right:10px;">';
 				disable_user_content +=
 					'<select name="duration_unit" style="margin-right:10px;"><option value="days">Day(s)</option><option value="weeks">Week(s)</option><option value="months">Month(s)</option><option value="years">Year(s)</option></select>';
-				disable_user_content += '</form>';
+				disable_user_content += "</form>";
 
 				swal.fire({
 					title:
 						icon +
 						'<span class="user-registration-swal2-modal__title" >' +
 						user_registration_pro_admin_script_data.disable_user_title +
-						'</span>',
+						"</span>",
 					html: disable_user_content,
-					confirmButtonText: user_registration_pro_admin_script_data.disable,
-					confirmButtonColor: '#3085d6',
+					confirmButtonText:
+						user_registration_pro_admin_script_data.disable,
+					confirmButtonColor: "#3085d6",
 					showConfirmButton: true,
 					showCancelButton: true,
-					cancelButtonText: user_registration_pro_admin_script_data.cancel,
+					cancelButtonText:
+						user_registration_pro_admin_script_data.cancel,
 					customClass: {
-						container: 'user-registration-swal2-container'
+						container: "user-registration-swal2-container"
 					},
 					customClass:
-						'user-registration-swal2-modal user-registration-swal2-modal--centered',
+						"user-registration-swal2-modal user-registration-swal2-modal--centered",
 					focusConfirm: false,
 					showLoaderOnConfirm: true,
 					preConfirm: function () {
@@ -101,16 +126,18 @@ jQuery(function ($) {
 
 							if (!duration_value || !duration_unit) {
 								Swal.showValidationMessage(
-									'Please enter duration value and unit.'
+									"Please enter duration value and unit."
 								);
 								Swal.hideLoading();
-								$('.swal2-actions').find('button').prop('disabled', false);
+								$(".swal2-actions")
+									.find("button")
+									.prop("disabled", false);
 							} else {
 								$.ajax({
-									type: 'get',
+									type: "get",
 									url: user_registration_pro_admin_script_data.ajax_url,
 									data: {
-										action: 'user_registration_disable_user',
+										action: "user_registration_disable_user",
 										user_id: $user_id,
 										nonce: nonce,
 										duration_value: duration_value,
@@ -119,45 +146,46 @@ jQuery(function ($) {
 									success: function (response) {
 										if (response.success) {
 											Swal.fire({
-												icon: 'success',
+												icon: "success",
 												title:
 													'<span class="user-registration-swal2-modal__title" >' +
 													user_registration_pro_admin_script_data.disable_user_success_message_title +
-													'</span>',
+													"</span>",
 												customClass:
-													'user-registration-swal2-modal user-registration-swal2-modal--centered',
+													"user-registration-swal2-modal user-registration-swal2-modal--centered",
 												html: user_registration_pro_admin_script_data.disable_user_success_message
 											}).then(function () {
-												window.location.href = user_registration_pro_admin_script_data.after_disable_redirect_url;
+												window.location.href =
+													user_registration_pro_admin_script_data.after_disable_redirect_url;
 											});
 										} else {
 											Swal.fire({
-												icon: 'error',
+												icon: "error",
 												title:
 													'<span class="user-registration-swal2-modal__title" >' +
 													user_registration_pro_admin_script_data.disable_user_error_message_title +
-													'</span>',
+													"</span>",
 												customClass:
-													'user-registration-swal2-modal user-registration-swal2-modal--centered',
+													"user-registration-swal2-modal user-registration-swal2-modal--centered",
 												html:
 													response.data.message +
-													' ' +
+													" " +
 													user_registration_pro_admin_script_data.disable_user_error_message
 											});
 										}
 									},
 									error: function (response) {
 										Swal.fire({
-											icon: 'error',
+											icon: "error",
 											title:
 												'<span class="user-registration-swal2-modal__title" >' +
 												user_registration_pro_admin_script_data.disable_user_error_message_title +
-												'</span>',
+												"</span>",
 											customClass:
-												'user-registration-swal2-modal user-registration-swal2-modal--centered',
+												"user-registration-swal2-modal user-registration-swal2-modal--centered",
 											html:
 												response.data.message +
-												' ' +
+												" " +
 												user_registration_pro_admin_script_data.disable_user_error_message
 										});
 									}
@@ -347,7 +375,7 @@ jQuery(function ($) {
 					}
 				}
 			});
-		},
+		}
 	};
 
 	$(document).ready(function () {
@@ -359,4 +387,27 @@ jQuery(function ($) {
 			URUsers.init();
 		}
 	});
+
+	function user_registration_count() {
+		$("textarea").each(function () {
+			var input_count;
+			var selected_area_field = $(this).closest(".ur-field-item");
+			if (selected_area_field.find(".ur-input-count").length > 0) {
+				var selected_area_text = $(this).val().trim();
+				if (
+					selected_area_field
+						.find(".ur-input-count")
+						.data("count-type") === "characters"
+				) {
+					input_count = selected_area_text.length;
+				} else {
+					input_count =
+						selected_area_text === ""
+							? 0
+							: selected_area_text.split(/\s+/).length;
+				}
+			}
+			selected_area_field.find(".ur-input-count").text(input_count);
+		});
+	}
 });
