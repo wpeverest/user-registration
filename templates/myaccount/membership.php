@@ -177,7 +177,7 @@ if ( "subscription" == $membership['post_content']['type'] ) {
 				>
 					<?php echo __( "Change Plan", "user-registration" ); ?>
 				</button>
-				<?php if( 'canceled' === $membership[ 'status' ] ) : ?>
+				<?php if( 'canceled' === $membership[ 'status' ] && $date_to_renew > date( 'Y-m-d 00:00:00' ) ) : ?>
 					<button type="button" class="membership-tab-btn reactivate-membership-button"
 						data-id="<?php echo ( isset( $membership['subscription_id'] ) && ! empty( $membership['subscription_id'] ) ) ? esc_attr( $membership['subscription_id'] ) : ''; ?>"
 					>
