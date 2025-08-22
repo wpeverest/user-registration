@@ -105,9 +105,9 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 			//only show the content on free version.
 			if( is_plugin_active( 'user-registration/user-registration.php' ) ) {
 				$img = UR()->plugin_url() . '/assets/images/rocket.gif';
-				$license_message = false !== ur_get_license_plan() ? '' : '<br>No license is required. Enjoy!'; 
-				$settings['sections']['license_options_settings']['before_desc'] = __( 'You\'re currently using the free version of User Registration & Membership.' . $license_message. '<br><br>To unlock advanced features and extended functionality, consider <a href="' . esc_url( 'https://wpuserregistration.com/pricing/?utm_source=ur-license-setting&utm_medium=upgrade-link&utm_campaign=' . UR()->utm_campaign ) . '">Upgrading to Pro.</a>', 'user-registration' );
-				$settings['sections']['license_options_settings']['desc'] = wp_kses_post( __('<img style="width:20px;height:20px;" src="' . $img . '" /> <span>Already purchased a license? Enter your license key below to activate PRO features.</span>', 'user-registration' ) ); 
+				$license_message = false !== ur_get_license_plan() ? '' : '<br>No license is required. Enjoy!';
+				$settings['sections']['license_options_settings']['before_desc'] = __( 'You\'re currently using the free version of User Registration & Membership.' . $license_message. '<br><br>To unlock advanced features and extended functionality, consider <a target="_blank" href="' . esc_url( 'https://wpuserregistration.com/pricing/?utm_source=ur-license-setting&utm_medium=upgrade-link&utm_campaign=' . UR()->utm_campaign ) . '">Upgrading to Pro.</a>', 'user-registration' );
+				$settings['sections']['license_options_settings']['desc'] = wp_kses_post( __('<img style="width:20px;height:20px;" src="' . $img . '" /> <span>Already purchased a license? Enter your license key below to activate PRO features.</span>', 'user-registration' ) );
 			}
 
 			// Replace license input box and display deactivate license button when license is activated.
@@ -133,7 +133,7 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 						'id'   => 'user_registration_license_section_settings',
 					),
 				);
-				
+
 				/* translators: %1$s - WPeverest My Account url */
 				$settings['sections']['license_options_settings']['desc'] = sprintf( __( 'Your license has been activated. Enjoy using <strong>User Registration</strong>. Please go to %1$sMy Account Page%2$s for more details ', 'user-registration' ), '<a href="https://wpeverest.com/login/" rel="noreferrer noopener" target="_blank">', '</a>' );
 

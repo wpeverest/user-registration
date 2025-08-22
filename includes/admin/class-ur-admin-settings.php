@@ -272,6 +272,7 @@ class UR_Admin_Settings {
 					),
 
 					'license_activated_text' => esc_html__( 'You\'ve activated your license, great! To get all the Pro Features, we just need to install the URM Pro plugin on your website. Don\'t worry, it\'s quick and safe!', 'user-registration' ),
+					'pro_install_popup_button' => esc_html__( 'Install URM Pro Now', 'user-registration' ),
 					'pro_install_popup_title' => esc_html__( 'Install URM Pro to Unlock All Features', 'user-registration' ),
 					'will_install_and_activate_pro_text' => esc_html__( 'This will automatically install and activate the URM Pro Plugin for you.', 'user-registration' ),
 					'installing_plugin_text' => esc_html__( 'Installing Plugin', 'user-registration' ),
