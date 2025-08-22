@@ -171,14 +171,13 @@ if ( "subscription" == $membership['post_content']['type'] ) {
 		<div class="btn-div">
 			<?php
 			if ( ! $is_upgrading && !empty( $membership ) ):
-				if( 'canceled' !== $membership['status'] ) :
 				?>
 				<button type="button" class="membership-tab-btn change-membership-button"
 						data-id="<?php echo ( isset( $membership['post_id'] ) && ! empty( $membership['post_id'] ) ) ? esc_attr( $membership['post_id'] ) : ''; ?>"
 				>
 					<?php echo __( "Change Plan", "user-registration" ); ?>
 				</button>
-				<?php else : ?>
+				<?php if( 'canceled' === $membership[ 'status' ] ) : ?>
 					<button type="button" class="membership-tab-btn reactivate-membership-button"
 						data-id="<?php echo ( isset( $membership['subscription_id'] ) && ! empty( $membership['subscription_id'] ) ) ? esc_attr( $membership['subscription_id'] ) : ''; ?>"
 					>
