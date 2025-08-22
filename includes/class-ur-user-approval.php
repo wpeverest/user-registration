@@ -395,11 +395,6 @@ class UR_User_Approval {
 
 				return new WP_Error( 'denied_access', $message );
 				break;
-			case 'canceled':
-				$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your subscription has been cancelled. Please contact administrator.', 'user-registration' );
-
-				return new WP_Error( 'denied_access', $message );
-				break;
 			default:
 				return $user;
 				break;

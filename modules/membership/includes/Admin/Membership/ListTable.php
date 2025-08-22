@@ -299,7 +299,7 @@ class ListTable extends \UR_List_Table {
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
-			'delete' => __( 'Delete permanently' )
+//			'delete' => __( 'Delete permanently' )
 		);
 
 		return $actions;

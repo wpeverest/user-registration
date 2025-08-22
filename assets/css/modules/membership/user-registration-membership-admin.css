@@ -466,7 +466,7 @@
   width: 100px;
 }
 .user-registration #user-registration-list-table-page #membership-list .wp-list-table.memberships thead tr th#action {
-  width: 160px;
+  width: 180px;
 }
 .user-registration #user-registration-list-table-page #membership-list .wp-list-table.memberships tbody tr:nth-child(odd) {
   background: #F8F8FA;

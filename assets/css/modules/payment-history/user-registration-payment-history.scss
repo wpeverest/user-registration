@@ -83,6 +83,13 @@ $background-color_2: #fefefe;
 // 	border-radius: 3px;
 // 	background: #fff4f4;
 // }
+
+.payment-status-btn.refunded {
+	border: 1px solid #6C8CA1;
+	border-radius: 3px;
+	background-color: #f4f4ff;
+}
+
 .no-items {
 	td {
 		background: white;

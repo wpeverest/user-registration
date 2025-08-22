@@ -178,7 +178,7 @@ class UR_Frontend_Form_Handler {
 					$success_params['auto_login'] = true;
 				}
 				$success_params['success_message_positon'] = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_success_message_position', '1' );
-				$success_params['form_login_option']       = $login_option;
+				$success_params['form_login_option']       = ! ur_string_to_bool( get_option( 'user_registration_enable_email_confirmation', true ) ) && 'email_confirmation' === $login_option ?  'email_confirmation' : $login_option;
 
 				$redirect_timeout = (int) ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after', '2' ) * 1000;
 
@@ -221,20 +221,38 @@ class UR_Frontend_Form_Handler {
 				}
 				$logger->info( __( 'User registration process completed.', 'user-registration' ), array( 'source' => 'form-submission' ) );
 				$success_params = apply_filters( 'user_registration_success_params_before_send_json', $success_params, self::$valid_form_data, $form_id, $user_id );
-				wp_send_json_success( $success_params );
+
+				if( empty( $_POST['ur_fallback_submit'] ) ) {
+					wp_send_json_success( $success_params );
+				} else {
+					apply_filters( 'user_registration_post_success_message', __( 'User successfully registered.', 'user-registration' ) );
+				}
+
 			}
 			$logger->error( __( 'Something went wrong! please try again.', 'user-registration' ), array( 'source' => 'form-submission' ) );
-			wp_send_json_error(
-				array(
-					'message' => __( 'Something went wrong! please try again', 'user-registration' ),
-				)
-			);
+			if( empty( $_POST['ur_fallback_submit'] ) ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'Something went wrong! please try again', 'user-registration' ),
+					)
+				);
+			}
 		} else {
-			wp_send_json_error(
-				array(
-					'message' => array_unique( self::$response_array, SORT_REGULAR ),
-				)
-			);
+			apply_filters( 'user_registration_post_registration_errors', self::$response_array );
+
+			if( empty( $_POST['ur_fallback_submit'] ) ) {
+				wp_send_json_error(
+					array(
+						'message' => array_unique( self::$response_array, SORT_REGULAR ),
+					)
+				);
+			} else {
+				// Store errors in transient for traditional form submission display
+				if ( ! empty( self::$response_array ) ) {
+					$form_errors_key = 'ur_form_errors_' . $form_id . '_' . wp_create_nonce( 'ur_form_errors' );
+					set_transient( $form_errors_key, self::$response_array, 60 );
+				}
+			}
 		}// End if().
 	}
 
@@ -313,5 +331,34 @@ class UR_Frontend_Form_Handler {
 		update_user_meta( $user_id, 'urm_user_just_created', 'yes' );
 	}
 }
+
+// Add filter to populate user_registration_post_registration_errors with actual errors
+add_filter( 'user_registration_post_registration_errors', function( $errors ) {
+	// Check if we're in a traditional form submission context
+	if ( ! empty( $_POST['ur_fallback_submit'] ) ) {
+		// Get the current form ID
+		$form_id = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
+		if ( $form_id > 0 ) {
+			// Check for stored errors in transient
+			$form_errors_key = 'ur_form_errors_' . $form_id . '_' . wp_create_nonce( 'ur_form_errors' );
+			$stored_errors = get_transient( $form_errors_key );
+			if ( $stored_errors ) {
+				$errors = $stored_errors;
+				// Delete the transient after retrieving
+				delete_transient( $form_errors_key );
+			}
+		}
+	}
+	return $errors;
+} );
+
+// Add filter to provide success message
+add_filter( 'user_registration_post_success_message', function( $success_message ) {
+	// Check if we're in a traditional form submission context
+	if ( ! empty( $_POST['ur_fallback_submit'] ) ) {
+		$success_message = __( 'User successfully registered.', 'user-registration' );
+	}
+	return $success_message;
+} );
 
 return new UR_Frontend_Form_Handler();

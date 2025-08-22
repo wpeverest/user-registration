@@ -5,6 +5,8 @@ namespace WPEverest\URMembership\Emails;
 use WPEverest\URMembership\Admin\Services\SubscriptionService;
 use WPEverest\URMembership\Emails\Admin\UR_Settings_Membership_Cancellation_Admin_Email;
 use WPEverest\URMembership\Emails\User\UR_Settings_Membership_Cancellation_User_Email;
+use WPEverest\URMembership\Emails\User\UR_Settings_Membership_Ended_User_Email;
+use WPEverest\URMembership\Emails\User\UR_Settings_Membership_Expiring_Soon_User_Email;
 use WPEverest\URMembership\Emails\User\UR_Settings_Membership_Renewal_Reminder_User_Email;
 
 /**
@@ -32,9 +34,9 @@ class EmailSettings {
 		);
 
 		if ( UR_PRO_ACTIVE ) {
-			$new_emails = array(
-				'UR_Settings_Membership_Renewal_Reminder_User_Email' => new UR_Settings_Membership_Renewal_Reminder_User_Email(),
-			);
+			$new_emails['UR_Settings_Membership_Renewal_Reminder_User_Email'] = new UR_Settings_Membership_Renewal_Reminder_User_Email();
+			$new_emails['UR_Settings_Membership_Expiring_Soon_User_Email'] = new UR_Settings_Membership_Expiring_Soon_User_Email();
+			$new_emails['UR_Settings_Membership_Ended_User_Email'] = new UR_Settings_Membership_Ended_User_Email();
 		}
 
 		return array_merge( $emails, $new_emails );

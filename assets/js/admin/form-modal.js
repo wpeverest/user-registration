@@ -14,6 +14,39 @@
 			$("#ur-modal-backdrop, #ur-modal-wrap").css("display", "block");
 			$(document.body).addClass("modal-open");
 		});
+
+		// Sweetalert modal popup on reset content clicked.
+		$(document).on('click', '.ur-reset-content-button', function (event) {
+			event.preventDefault();
+			Swal.fire({
+				title: 'Reset to Default',
+				text: 'Are you sure you want to reset the email content to the default?',
+				icon: 'warning',
+				showCancelButton: true,
+				cancelButtonColor: '#fafafa',
+				confirmButtonText: 'Yes, Reset',
+				cancelButtonText: 'Cancel',
+			}).then(function (result) {
+				if (result.isConfirmed) {
+					var params = new URLSearchParams(window.location.search);
+					var section = params.get('section');
+					if (section) {
+						var selector = section.replace(/^ur_settings_/, 'user_registration_');
+						var editor = typeof tinymce !== "undefined" ? tinymce.get(selector) : null;
+						if (editor) {
+							var content = user_registration_email_settings[section].replace(/\n\n/g, '<br>');
+							editor.setContent(content);
+						} else {
+							var $textarea = $("textarea#" + selector);
+							if ($textarea.length) {
+								$textarea.val(user_registration_email_settings[section]);
+							}
+						}
+					}
+				}
+			});
+		});
+
 		// Close modal on close or cancel links
 		$(document).on(
 			"click",

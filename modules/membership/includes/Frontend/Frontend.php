@@ -10,7 +10,10 @@
 
 namespace WPEverest\URMembership\Frontend;
 
+use WPEverest\URMembership\Admin\Repositories\MembersOrderRepository;
+use WPEverest\URMembership\Admin\Repositories\MembersRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
+use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
 use WPEverest\URMembership\Admin\Services\MembershipService;
 use WPEverest\URMembership\Admin\Services\SubscriptionService;
 
@@ -97,29 +100,47 @@ class Frontend {
 	public function user_registration_membership_tab_endpoint_content() {
 		$user_id = get_current_user_id();
 		$this->load_scripts();
-		$membership_repositories    = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
-		$members_order_repository   = new \WPEverest\URMembership\Admin\Repositories\MembersOrderRepository();
-		$orders_repository          = new \WPEverest\URMembership\Admin\Repositories\OrdersRepository();
-		$membership                 = $membership_repositories->get_member_membership_by_id( $user_id );
-		$membership['post_content'] = json_decode( $membership['post_content'], true );
-		$membership_service         = new MembershipService();
-		$is_upgrading               = ur_string_to_bool( get_user_meta( $user_id, 'urm_is_upgrading', true ) );
-		$last_order                 = $members_order_repository->get_member_orders( $user_id );
-		$bank_data                  = array();
+		$membership_repositories         = new MembersRepository();
+		$members_order_repository        = new MembersOrderRepository();
+		$members_subscription_repository = new MembersSubscriptionRepository();
+		$orders_repository               = new OrdersRepository();
+		$membership                      = $membership_repositories->get_member_membership_by_id( $user_id );
+		if( ! empty( $membership['post_content'] ) ) {
+			$membership['post_content'] = json_decode( $membership['post_content'], true );
+		}
+		$membership_service              = new MembershipService();
+		$membership_details              = $membership_service->get_membership_details( $membership['post_id'] );
+		$active_gateways                 = array();
+
+		if ( ! empty( $membership_details['payment_gateways'] ) ) {
+			$active_gateways = array_filter( $membership_details['payment_gateways'], function ( $item, $key ) {
+				return "on" == $item["status"] && in_array($key, array('paypal', 'stripe', 'bank'));
+			}, ARRAY_FILTER_USE_BOTH );
+		}
+
+		$membership['active_gateways'] = $active_gateways;
+		$is_upgrading                  = ur_string_to_bool( get_user_meta( $user_id, 'urm_is_upgrading', true ) );
+		$last_order                    = $members_order_repository->get_member_orders( $user_id );
+		$bank_data                     = array();
 		if ( ! empty( $last_order ) && $last_order['status'] == 'pending' && $last_order['payment_method'] === 'bank' ) {
 			$bank_data = array(
 				'show_bank_notice' => true,
 				'bank_data'        => get_option( 'user_registration_global_bank_details', '' ),
-				'notice_1'         => apply_filters( 'urm_bank_info_notice_1_filter', __( 'Please complete the payment using the bank details provided by the admin. <br> Once the payment is verified, your upgraded membership will be activated. Kindly wait for the admin\'s confirmation.', 'user-registration' ) )
+				'notice_1'         => apply_filters( 'urm_bank_info_notice_1_filter', __( 'Please complete the payment using the bank details provided by the admin. <br> Once the payment is verified, your upgraded membership will be activated. Kindly wait for the admin\'s confirmation.', 'user-registration' ) ),
+				'notice_2'         => apply_filters( 'urm_bank_info_notice_2_filter', __( 'Please complete the payment using the bank details provided by the admin. <br> Your membership will be renewed once the payment is verified. Kindly wait for the admin\'s confirmation.', 'user-registration' ) )
 			);
 		}
+		$subscription_data = $members_subscription_repository->get_member_subscription( $user_id );
 
 		$membership_data = array(
-			'user'         => get_user_by( 'id', get_current_user_id() ),
-			'membership'   => $membership,
-			'is_upgrading' => $is_upgrading,
-			'bank_data'    => $bank_data,
+			'user'              => get_user_by( 'id', get_current_user_id() ),
+			'membership'        => $membership,
+			'is_upgrading'      => $is_upgrading,
+			'bank_data'         => $bank_data,
+			'renewal_behaviour' => get_option( 'user_registration_renewal_behaviour', 'automatic' ),
+			'subscription_data' => $subscription_data
 		);
+
 		if ( ! empty( $last_order ) ) {
 			$order_meta = $orders_repository->get_order_metas( $last_order['ID'] );
 			if ( ! empty( $order_meta ) ) {
@@ -201,6 +222,7 @@ class Frontend {
 			array(
 				'_nonce'                           => wp_create_nonce( 'ur_members_frontend' ),
 				'upgrade_membership_nonce'         => wp_create_nonce( 'urm_upgrade_membership' ),
+				'renew_membership_nonce'           => wp_create_nonce( 'urm_renew_membership' ),
 				'_confirm_payment_nonce'           => wp_create_nonce( 'urm_confirm_payment' ),
 				'ajax_url'                         => admin_url( 'admin-ajax.php' ),
 				'login_url'                        => wp_login_url(),
@@ -230,6 +252,7 @@ class Frontend {
 			'i18n_field_password_field_length_validation'  => __( 'Password must be at least 8 characters long', 'user-registration' ),
 			'i18n_field_password_field_regex_validation'   => __( 'Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character.', 'user-registration' ),
 			'i18n_field_payment_gateway_field_validation'  => __( 'Please select a Payment Gateway.', 'user-registration' ),
+			'i18n_field_select_payment_gateway'            => __( 'Select a Payment Gateway.', 'user-registration' ),
 			'i18n_thank_you'                               => __( 'Thank You', 'user-registration' ),
 			'i18n_sign_in'                                 => __( 'Sign In', 'user-registration' ),
 			'i18n_order_successful'                        => __( 'Your order has been successfully placed.', 'user-registration' ),
@@ -242,6 +265,7 @@ class Frontend {
 			'i18n_incomplete_stripe_setup_error'           => __( 'Stripe Payment stopped. Incomplete Stripe setup.', 'user-registration' ),
 			'i18n_bank_details_title'                      => __( 'Bank Details.', 'user-registration' ),
 			'i18n_change_membership_title'                 => __( 'Change Membership', 'user-registration' ),
+			'i18n_change_renew_title'                      => __( 'Renew Membership', 'user-registration' ),
 			'i18n_change_plan_required'                    => __( 'At least one Plan must be selected', 'user-registration' ),
 			'i18n_error'                                   => __( 'Error', 'user-registration' ),
 			'i18n_empty_card_details'                      => __( 'Your card number is incomplete.', 'user-registration' ),
@@ -278,7 +302,7 @@ class Frontend {
 		}
 		$next_subscription_data = json_decode( get_user_meta( $user_id, 'urm_next_subscription_data', true ), true );
 
-		if ( ! empty( $next_subscription_data ) && empty( $next_subscription_data['delayed_until'] ) && !empty($next_subscription_data['payment_method']) && ("paypal" === $next_subscription_data['payment_method']) ) {
+		if ( ! empty( $next_subscription_data ) && empty( $next_subscription_data['delayed_until'] ) && ! empty( $next_subscription_data['payment_method'] ) && ( "paypal" === $next_subscription_data['payment_method'] ) ) {
 			if ( $user_subscription['status'] === 'active' ) {
 				delete_user_meta( $user_id, 'urm_is_upgrading' );
 				delete_user_meta( $user_id, 'urm_is_upgrading_to' );
