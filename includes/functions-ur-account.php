@@ -138,9 +138,9 @@ function ur_get_account_menu_items() {
 
 	$profile = user_registration_form_data( $user_id, $form_id );
 
-	if ( count( $profile ) < 1 ) {
-		unset( $items['edit-profile'] );
-	}
+	// if ( count( $profile ) < 1 ) {
+	// 	unset( $items['edit-profile'] );
+	// }
 
 	// Remove missing endpoints.
 	foreach ( $endpoints as $endpoint_id => $endpoint ) {

@@ -1343,3 +1343,86 @@ body {
 .rtl #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row .membership-label {
 	min-width: 0px;
 }
+
+.user-registration-myaccount-notice-box {
+  background-color: #f4f6ff;
+  border: 1px solid #d6e0ff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 32px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  position: relative;
+  border-left: 4px solid #6669f1;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  &--title {
+    display: flex;
+    align-items: center;
+
+    &-icon {
+      margin-right: 0.75rem;
+
+      .notice-icon {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+		color: #6366f1;
+      }
+    }
+
+    &-text {
+      h2 {
+        margin-top: 0;
+        margin-bottom: 0.5rem !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        color: #333 !important;
+      }
+    }
+  }
+
+  p {
+    color: #444;
+    font-size: 13px;
+    line-height: 1.5;
+
+	&.pro-tip,
+	&.existing-users {
+		strong {
+			font-weight: bolder !important;
+		}
+	}
+
+    &.pro-tip::before {
+      content: "💡";
+      margin-right: 0.5rem;
+    }
+
+    &.existing-users::before {
+      content: "👤";
+      margin-right: 0.5rem;
+    }
+  }
+
+  strong,
+  b {
+    font-weight: 600 !important;
+  }
+
+  .addon-link {
+    color: #475bb2 !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+
+    &:hover {
+      text-decoration: underline !important;
+    }
+  }
+
+  .highlight {
+    font-weight: bold;
+  }
+}
