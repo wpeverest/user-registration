@@ -365,7 +365,7 @@ class UR_Admin_Settings {
 						$option_value = null;
 					}
 				} else {
-					$option_value = get_option( $option_name, null );
+					$option_value = get_option( $option_name, $default );
 				}
 			}
 

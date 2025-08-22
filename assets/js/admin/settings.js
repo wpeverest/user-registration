@@ -1215,7 +1215,6 @@
 			val = $(this).val();
 		// $this.prop("disabled", true);
 
-
 		$this
 			.closest(".user-registration-global-settings--field")
 			.find(".error.inline")
@@ -1320,7 +1319,7 @@
 			settings_container
 		);
 	});
-	$('#user_registration_payment_currency').on('change', function () {
+	$("#user_registration_payment_currency").on("change", function () {
 		var $this = $(this);
 		var currency = $this.val();
 		$this
@@ -1330,27 +1329,28 @@
 		$this
 			.closest(".user-registration-global-settings")
 			.append('<div class="ur-spinner is-active"></div>');
-		
+
 		$.ajax({
 			url: user_registration_settings_params.ajax_url,
 			data: {
 				action: "user_registration_validate_payment_currency",
-				security: user_registration_settings_params.user_registration_membership_validate_payment_currency_nonce,
-				currency: currency,
+				security:
+					user_registration_settings_params.user_registration_membership_validate_payment_currency_nonce,
+				currency: currency
 			},
 			type: "POST",
 			complete: function (response) {
 				if (response.responseJSON.success === false) {
 					$this
-						.closest('.user-registration-global-settings')
-						.find('.warning')
+						.closest(".user-registration-global-settings")
+						.find(".warning")
 						.remove();
 					$this
 						.closest(".user-registration-global-settings--field")
 						.append(
 							"<div id='message' class='warning inline' style='padding:10px;'>" +
-							response.responseJSON.data.message +
-							"</div>"
+								response.responseJSON.data.message +
+								"</div>"
 						);
 				} else {
 					$this
@@ -1366,7 +1366,7 @@
 			}
 		});
 	});
-	$('#user_registration_payment_currency').trigger('change');
+	$("#user_registration_payment_currency").trigger("change");
 	var searchParams = new URLSearchParams(window.location.search);
 
 	var license_activation_status = ur_get_cookie("urm_license_status");

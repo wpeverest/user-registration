@@ -1381,7 +1381,7 @@ body {
 				}
 
 				h2 {
-					margin: $spacing_16px 0 $spacing_16px;
+					margin: 0 0 $spacing_16px 0;
 					font-size: 15px;
 					line-height: 150%;
 					font-weight: $semi-bold;
@@ -1491,8 +1491,8 @@ body {
 		display: block;
 		width: 100%;
 		margin-bottom: 8px;
-		color: $color_gray_one;
-		font-size: 13px;
+		color: '#383838';
+		font-size: 15px;
 		font-weight: $medium;
 		line-height: 1.25;
 	}
@@ -4305,34 +4305,48 @@ a.button.ur-smart-tags-list-button {
 									// background: transparent;
 									// height: 100%;
 
-									.ur-login {
-										&-shortcode {
-											margin-top: 0;
-											display: block;
+										.ur-login {
+											&-shortcode {
+												margin-top: 0;
+												display: block;
 
-											h1 {
-												margin-bottom: $spacing_12px;
-											}
-
-											&--wrapper {
-												// width: 45%;
-												display: flex;
-												align-items: center;
-												gap: $spacing_30px;
-												// flex-wrap: nowrap;
-												flex-wrap: wrap;
-
-												@media (max-width: 1400px) {
-													flex-wrap: wrap;
-													justify-content: center;
+												h1 {
+													margin-bottom: $spacing_12px;
 												}
 
-												img {
-													margin-left: -$spacing_24px;
+												&--wrapper {
+													// width: 45%;
+													display: flex;
+													align-items: center;
+													gap: $spacing_30px;
+													// flex-wrap: nowrap;
+													flex-wrap: wrap;
 
-													@media (max-width: 1000px) {
-														margin-left: 0;
+													@media (max-width: 1400px) {
+														flex-wrap: wrap;
+														justify-content: center;
 													}
+
+													img {
+														margin-left: -$spacing_24px;
+
+														@media (max-width: 1000px) {
+															margin-left: 0;
+														}
+
+														@media (max-width: 768px) {
+															width: 100%;
+														}
+													}
+
+													.ur-login-content {
+														// width: 55%;
+														margin-left: 0;
+														margin-right: 0;
+														padding: $spacing_24px;
+														background: #f6f6f6;
+														border-radius: $border_radius_4;
+														flex: 1;
 
 													@media (max-width: 768px) {
 														width: 100%;
@@ -4359,26 +4373,30 @@ a.button.ur-smart-tags-list-button {
 															font-size: 15px;
 														}
 
-														.ur-copy-shortcode {
-															box-shadow: none;
-															transition: all 0.3s
-																ease-in-out;
-
-															svg {
-																path {
-																	fill: $primary_color;
-																	transition: all
-																		0.3s
-																		ease-in-out;
-																}
+														.login-forms-shortcode-action {
+															input {
+																height: 32px;
+																font-size: 15px;
 															}
 
-															&:hover {
-																background: $primary_color !important;
+															.ur-copy-shortcode {
+																box-shadow: none;
+																transition: all 0.3s ease-in-out;
 
 																svg {
 																	path {
-																		fill: $grey-0;
+																		fill: $primary_color;
+																		transition: all 0.3s ease-in-out;
+																	}
+																}
+
+																&:hover {
+																	background: $primary_color !important;
+
+																	svg {
+																		path {
+																			fill: $grey-0;
+																		}
 																	}
 																}
 															}
@@ -4386,9 +4404,41 @@ a.button.ur-smart-tags-list-button {
 													}
 												}
 											}
+
+											&-view-doc {
+												margin-top: $spacing_32px;
+											}
 										}
-										&-view-doc {
-											margin-top: $spacing_32px;
+
+										.clickable-login-fields {
+											padding: 15px;
+											border-radius: 5px;
+											margin: 0 0 10px 0;
+											border: 1px solid transparent;
+											line-height: 21px;
+
+											label {
+												line-height: 21px;
+											}
+
+											&[data-field="username"],
+											&[data-field="password"] {
+												label {
+													margin-bottom: 10px;
+												}
+											}
+
+											&.active {
+												border: 1px solid #475bb2;
+												background-color: #f8f8fa;
+												&:hover {
+													border: 1px solid #475bb2;
+												}
+											}
+											&:hover {
+												background-color: #f8f8fa;
+												border: 1px dashed #475bb2;
+											}
 										}
 									}
 								}
@@ -6649,7 +6699,7 @@ body {
 		.user-registration-login-form-container {
 			.ur-registered-from {
 				.ur-login-form-settings {
-					max-width: 360px;
+					max-width: 412px;
 					width: 100% !important;
 
 					.nav-tab-wrapper {
@@ -6704,7 +6754,6 @@ body {
 									label[for="user_registration_login_options_prevent_core_login"]
 										span {
 										bottom: 18px;
-										right: 20px;
 									}
 								}
 							}

@@ -363,7 +363,7 @@ jQuery(function ($) {
 
 		var fields_panel = $(".ur-selected-inputs");
 		var form_settings_section = $(".ur-registered-inputs nav").find(
-			"#ur-tab-field-settings"
+			"#ur-tab-field-settings , #ur-tab-login-form-settings"
 		);
 		var form_settings = form_settings_section.find("form");
 
@@ -730,7 +730,6 @@ jQuery(function ($) {
 
 					// Add active class on clicked tab.
 					$(this).addClass("active");
-
 					// Hide other settings and show respective id's settings.
 					fields_panel
 						.find("form #ur-field-all-settings > div")
@@ -783,9 +782,17 @@ jQuery(function ($) {
 			) {
 				$("#user_registration_lost_password_page_id")
 					.closest(".user-registration-login-form-global-settings")
-					.show();
+					.show()
+					.css("display", "flex");
+				$("#user_registration_label_lost_your_password")
+					.closest(".user-registration-login-form-global-settings")
+					.show()
+					.css("display", "flex");
 			} else {
 				$("#user_registration_lost_password_page_id")
+					.closest(".user-registration-login-form-global-settings")
+					.hide();
+				$("#user_registration_label_lost_your_password")
 					.closest(".user-registration-login-form-global-settings")
 					.hide();
 			}
@@ -820,6 +827,7 @@ jQuery(function ($) {
 		'.ur-tab-lists li[aria-controls="ur-tab-field-settings"]',
 		function () {
 			// Empty fields panels.
+			$(".ur-builder-wrapper-content").hide();
 			$(".ur-builder-wrapper-content").hide();
 			$(".ur-builder-wrapper-footer").hide();
 			// Show only the form settings in fields panel.

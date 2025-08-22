@@ -8847,7 +8847,7 @@ body.user-registration, body.user-registration-page {
   background-color: #ffffff;
 }
 .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-content h2 {
-  margin: 16px 0 16px;
+  margin: 0 0 16px 0;
   font-size: 15px;
   line-height: 150%;
   font-weight: 600;
@@ -8899,8 +8899,8 @@ body.user-registration, body.user-registration-page {
   display: block;
   width: 100%;
   margin-bottom: 8px;
-  color: rgb(76.288238806, 84.0379701493, 118.911761194);
-  font-size: 13px;
+  color: "#383838";
+  font-size: 15px;
   font-weight: 500;
   line-height: 1.25;
 }
@@ -10999,6 +10999,19 @@ a.button.ur-smart-tags-list-button {
   border-radius: 4px;
   flex: 1;
 }
+@media (max-width: 768px) {
+  #wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .ur-login-shortcode--wrapper .ur-login-content {
+    width: 100%;
+  }
+}
+#wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .ur-login-shortcode--wrapper .ur-login-content {
+  margin-right: 0;
+  margin-left: 0;
+  padding: 24px;
+  background: #f6f6f6;
+  border-radius: 4px;
+  flex: 1;
+}
 #wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .ur-login-shortcode--wrapper .ur-login-content p:first-child {
   margin-top: 0;
 }
@@ -11006,22 +11019,50 @@ a.button.ur-smart-tags-list-button {
   height: 32px;
   font-size: 15px;
 }
-#wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .ur-login-shortcode--wrapper .ur-login-content .login-forms-shortcode-action .ur-copy-shortcode {
+#wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .ur-login-shortcode--wrapper .ur-login-content .login-forms-shortcode-action .login-forms-shortcode-action input {
+  height: 32px;
+  font-size: 15px;
+}
+#wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .ur-login-shortcode--wrapper .ur-login-content .login-forms-shortcode-action .login-forms-shortcode-action .ur-copy-shortcode {
   box-shadow: none;
   transition: all 0.3s ease-in-out;
 }
-#wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .ur-login-shortcode--wrapper .ur-login-content .login-forms-shortcode-action .ur-copy-shortcode svg path {
+#wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .ur-login-shortcode--wrapper .ur-login-content .login-forms-shortcode-action .login-forms-shortcode-action .ur-copy-shortcode svg path {
   fill: #475bb2;
   transition: all 0.3s ease-in-out;
 }
-#wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .ur-login-shortcode--wrapper .ur-login-content .login-forms-shortcode-action .ur-copy-shortcode:hover {
+#wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .ur-login-shortcode--wrapper .ur-login-content .login-forms-shortcode-action .login-forms-shortcode-action .ur-copy-shortcode:hover {
   background: #475bb2 !important;
 }
-#wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .ur-login-shortcode--wrapper .ur-login-content .login-forms-shortcode-action .ur-copy-shortcode:hover svg path {
+#wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .ur-login-shortcode--wrapper .ur-login-content .login-forms-shortcode-action .login-forms-shortcode-action .ur-copy-shortcode:hover svg path {
   fill: #ffffff;
 }
-#wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .ur-login-view-doc {
+#wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .ur-login-shortcode-view-doc {
   margin-top: 32px;
+}
+#wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .ur-login .clickable-login-fields {
+  padding: 15px;
+  border-radius: 5px;
+  margin: 0 0 10px 0;
+  border: 1px solid transparent;
+  line-height: 21px;
+}
+#wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .ur-login .clickable-login-fields label {
+  line-height: 21px;
+}
+#wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .ur-login .clickable-login-fields[data-field=username] label, #wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .ur-login .clickable-login-fields[data-field=password] label {
+  margin-bottom: 10px;
+}
+#wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .ur-login .clickable-login-fields.active {
+  border: 1px solid #475bb2;
+  background-color: #f8f8fa;
+}
+#wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .ur-login .clickable-login-fields.active:hover {
+  border: 1px solid #475bb2;
+}
+#wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .ur-login .clickable-login-fields:hover {
+  background-color: #f8f8fa;
+  border: 1px dashed #475bb2;
 }
 
 @media (max-width: 960px) {
@@ -12333,7 +12374,7 @@ body.user-registration-membership_page_user-registration-login-forms {
   background-color: #F9FAFB;
 }
 body.user-registration-membership_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-from .ur-login-form-settings {
-  max-width: 360px;
+  max-width: 412px;
   width: 100% !important;
 }
 body.user-registration-membership_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-from .ur-login-form-settings .nav-tab-wrapper {
@@ -12363,7 +12404,6 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
 }
 body.user-registration-membership_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-from .ur-login-form-settings .nav-tab-wrapper .ur-tab-contents #ur-login-form-setting .ur-toggle-content label[for=user_registration_login_options_prevent_core_login] span {
   bottom: 18px;
-  left: 20px;
 }
 body.user-registration-membership_page_user-registration-login-forms .user-registration-login-form-container .ur-registered-from .ur-login-form-settings.collapsed {
   max-width: 0px;

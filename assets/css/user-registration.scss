@@ -710,7 +710,7 @@ textarea.ur-input-border-red {
 					}
 
 					textarea {
-						height: 100px;						
+						height: 100px;
 					}
 
 					.hide_show_password {
@@ -2427,7 +2427,6 @@ body {
 
 								> div {
 									display: block;
-									margin-top: 32px;
 									float: unset !important;
 									flex-direction: row-reverse;
 
@@ -2755,9 +2754,7 @@ body {
 					.ur-registered-inputs {
 						.ui-widget-content {
 							.ur-tab-contents {
-								padding: 24px;
-								background: #ffffff;
-
+								background-color: #ffffff;
 								.ur-login-view-doc {
 									a {
 										border-radius: $border_radius_4;
@@ -2843,13 +2840,14 @@ body {
 
 						&.ur-login-form-settings {
 							.ur-tab-contents {
-								padding: 16px 16px 0 16px;
+								.ur-tab-content {
 
 								.ur-tab-content {
 									padding: 0;
 
 									form {
 										.ur-login-form-setting-block {
+											padding: 32px 12px 12px;
 											&:first-child {
 												h2 {
 													&.ur-toggle-heading {
@@ -2877,6 +2875,23 @@ body {
 												display: flex;
 												flex-direction: column;
 												gap: 28px;
+												.user-registration-login-form-global-settings {
+													display: flex;
+													// flex-direction: column;
+													gap: 12px;
+
+													label {
+														font-weight: 600;
+														gap: 6px;
+														margin-bottom: 0;
+														.user-registration-help-tip {
+															font-size: 20px;
+														}
+													}
+													select {
+														height: 38px;
+													}
+												}
 											}
 										}
 									}
@@ -2906,6 +2921,7 @@ body {
 				}
 			}
 		}
+	}
 	}
 }
 
@@ -3050,6 +3066,69 @@ body.user-registration-page {
 		}
 	}
 }
+
+#ur-field-all-settings {
+
+	.user-registration-login-form-global-settings:not(.ur-toggle-setting) {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.ur-toggle-setting {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.user-registration-login-form-global-settings{
+
+		.user-registration-login-form-toggle-option {
+			display: flex;
+		}
+
+		label {
+			font-size: 14px;
+			flex: 0 0 40%;
+			color: #383838;
+		}
+
+		&--field {
+			width: 100%;
+		}
+
+		.user-registration-help-tip {
+			top: 3px;
+		}
+
+		.description {
+			width: 60%;
+			margin-left: auto;
+		}
+
+		&.ur-form-settings-section {
+			border-top: 1px solid #e1e1e1;
+			padding-top: 20px;
+
+			h4 {
+				color: #131313;
+				font-weight: 600;
+				margin: 0;
+			}
+		}
+	}
+}
+
+.user-registration-login-settings-form {
+	.ur-form-row{
+		.ur-form-grid {
+			label {
+				margin-top: 0;
+				margin-bottom: 0;
+			}
+		}
+	}
+}
+
 @keyframes toaster {
   0% {
     opacity: 0;

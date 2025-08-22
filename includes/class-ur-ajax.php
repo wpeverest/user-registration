@@ -948,6 +948,10 @@ class UR_AJAX {
 
 		$settings_data = $_POST['data']['setting_data'];
 
+		$settings_data = array_values(array_filter($settings_data, function ($item) {
+			return $item['option'] !== 'user_registration_form_setting_general_advanced';
+		}));
+
 		$output = array_combine(
 			array_column( $settings_data, 'option' ),
 			array_column( $settings_data, 'value' )
