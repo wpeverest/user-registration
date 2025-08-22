@@ -7,12 +7,13 @@ use WPEverest\URMembership\Admin\Services\MembershipService;
 use WPEverest\URMembership\TableList;
 
 class MembershipRepository extends BaseRepository implements MembershipInterface {
-	protected $table, $members_meta, $posts_meta_table;
+	protected $table, $members_meta, $posts_meta_table, $subscription_table;
 
 	public function __construct() {
 		$this->table            = TableList::posts_table();
 		$this->members_meta     = TableList::users_meta_table();
 		$this->posts_meta_table = TableList::posts_meta_table();
+		$this->subscription_table = TableList::subscriptions_table();
 	}
 
 	/**
@@ -190,5 +191,39 @@ class MembershipRepository extends BaseRepository implements MembershipInterface
 				update_user_meta( $user['user_id'], 'ur_form_id', $form_id );
 			}
 		}
+	}
+
+	/**
+	 * check_deletable_membership
+	 *
+	 * @param $id
+	 * @param $statuses
+	 *
+	 * @return array|false|object|\stdClass|null
+	 */
+	public function check_deletable_membership( $id, $statuses ) {
+		if (!is_array($statuses)) {
+			return false;
+		}
+
+		$placeholders = array();
+		$values = array();
+
+		foreach ($statuses as $status) {
+			$placeholders[] = '%s';
+			$values[] = trim($status);
+		}
+
+		$placeholders_string = implode(',', $placeholders);
+		$values = array_merge(array($id), $values);
+
+		return $this->wpdb()->get_row(
+			$this->wpdb()->prepare(
+				"SELECT COUNT(DISTINCT user_id) total from $this->subscription_table
+        		WHERE item_id = %d AND status IN  ($placeholders_string)",
+				$values
+			),
+			ARRAY_A
+		);
 	}
 }

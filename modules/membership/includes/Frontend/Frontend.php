@@ -101,8 +101,10 @@ class Frontend {
 		$members_order_repository   = new \WPEverest\URMembership\Admin\Repositories\MembersOrderRepository();
 		$orders_repository          = new \WPEverest\URMembership\Admin\Repositories\OrdersRepository();
 		$membership                 = $membership_repositories->get_member_membership_by_id( $user_id );
-		$membership['post_content'] = json_decode( $membership['post_content'], true );
-		$membership_service         = new MembershipService();
+		if( ! empty( $membership['post_content'] ) ) {
+			$membership['post_content'] = json_decode( $membership['post_content'], true );
+		}
+
 		$is_upgrading               = ur_string_to_bool( get_user_meta( $user_id, 'urm_is_upgrading', true ) );
 		$last_order                 = $members_order_repository->get_member_orders( $user_id );
 		$bank_data                  = array();
@@ -278,7 +280,7 @@ class Frontend {
 		}
 		$next_subscription_data = json_decode( get_user_meta( $user_id, 'urm_next_subscription_data', true ), true );
 
-		if ( ! empty( $next_subscription_data ) && empty( $next_subscription_data['delayed_until'] ) && !empty($next_subscription_data['payment_method']) && ("paypal" === $next_subscription_data['payment_method']) ) {
+		if ( ! empty( $next_subscription_data ) && empty( $next_subscription_data['delayed_until'] ) && ! empty( $next_subscription_data['payment_method'] ) && ( "paypal" === $next_subscription_data['payment_method'] ) ) {
 			if ( $user_subscription['status'] === 'active' ) {
 				delete_user_meta( $user_id, 'urm_is_upgrading' );
 				delete_user_meta( $user_id, 'urm_is_upgrading_to' );

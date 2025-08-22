@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Action to fire before the rendering of user registration account navigation.
  */
 do_action( 'user_registration_before_account_navigation' );
-$logout_confirmation = ur_option_checked( 'user_registration_disable_logout_confirmation', false );
+$logout_confirmation = ur_option_checked( 'user_registration_disable_logout_confirmation', true );
 ?>
 
 <nav class="user-registration-MyAccount-navigation">

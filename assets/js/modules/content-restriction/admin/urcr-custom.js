@@ -46,7 +46,8 @@ jQuery(document).ready(function () {
 	$allowTo.on('change', toggleFieldsBasedOnAllowTo);
 
 	// Initial Setup on Page Load
-	jQuery(window).on('load', toggleGlobalOverride);
+	// jQuery(window).on('load', toggleGlobalOverride);
+	toggleGlobalOverride();
 
 	// Content Restriction Section
 	var $allowAccessTo = jQuery('#user_registration_content_restriction_allow_access_to');
