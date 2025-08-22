@@ -105,7 +105,7 @@ class UR_Admin_Notices {
 
 		if ( 0 === $matched ) {
 			$my_account_setting_link = admin_url() . 'admin.php?page=user-registration-settings#user_registration_myaccount_page_id';
-
+			$urm_show_message        = apply_filters( 'user_registration_membership_show_my_account_notice', true );
 			if ( $urm_show_message ) {
 				$message = sprintf(
 					/* translators: %1$s - My account Link. */
