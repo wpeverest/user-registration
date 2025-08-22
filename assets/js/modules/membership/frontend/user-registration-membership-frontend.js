@@ -680,7 +680,7 @@
 						'id="ur-membership-' + gateway_value + '" ' +
 						'type="radio" ' +
 						'name="urm_payment_method" ' +
-						(index === 0 ? 'checked' : '') + ' ' +
+						(index === 0 && gateways && gateways.length === 1 ? 'checked' : '') + ' ' +
 						'required ' +
 						'value="' + gateway_value + '">' +
 						'<span class="ur-membership-duration">' + gateway_value.charAt(0).toUpperCase() + gateway_value.slice(1) + '</span>' +
