@@ -334,6 +334,21 @@ function InputHandler({
 						{...(settings[settings.id] === "yes" && {
 							isChecked: true
 						})}
+						sx={{
+							".chakra-switch__track": {
+							width: "80px",
+							height: "40px",
+
+							},
+							".chakra-switch__thumb": {
+							width: "36px",
+							height: "36px",
+							transition: "transform 0.25s",
+							},
+							"&[data-checked] .chakra-switch__thumb": {
+							transform: "translateX(calc(80px - 36px))",
+							},
+						}}
 					/>
 				);
 			case "select":
@@ -351,6 +366,33 @@ function InputHandler({
 						}
 						defaultValue={renderOptions()[renderOptions().default]}
 						variant="outline"
+						chakraStyles={{
+							indicatorSeparator: (provided) => ({
+								...provided,
+								display: "none",
+							}),
+
+							dropdownIndicator: (provided) => ({
+								...provided,
+								background: "transparent",
+								border: "none",
+							}),
+							valueContainer: (provided) => ({
+								...provided,
+								paddingInlineStart: "0.5rem"
+							}),
+							option: (provided, state) => ({
+								...provided,
+								backgroundColor: state.isSelected
+									? "#2B77D2"
+									: state.isFocused
+									? "#EAF3FC"
+									: "white",
+								color: state.isSelected ? "white" : "#383838",
+								fontWeight: "400",
+								cursor: "pointer",
+							}),
+						}}
 					/>
 				);
 			case "multiselect":
@@ -373,6 +415,23 @@ function InputHandler({
 						}
 						defaultValue={defaultSelectedOption}
 						isClearable={false}
+						chakraStyles={{
+							valueContainer: (provided) => ({
+								...provided,
+								paddingInlineStart: "0.5rem"
+							}),
+							option: (provided, state) => ({
+								...provided,
+								backgroundColor: state.isSelected
+									? "#2B77D2"
+									: state.isFocused
+									? "#EAF3FC"
+									: "white",
+								color: state.isSelected ? "white" : "#383838",
+								fontWeight: "400",
+								cursor: "pointer",
+							}),
+						}}
 					/>
 				);
 
