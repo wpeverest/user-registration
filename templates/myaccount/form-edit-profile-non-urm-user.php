@@ -36,22 +36,17 @@ if ('vertical' === $layout) {
 <div class="user-registration-MyAccount-content__body">
 	<div class="ur-frontend-form login ur-edit-profile" id="ur-frontend-form">
 	<?php if ( current_user_can( 'manage_options' ) ): ?>
-			  <div class="notice-box">
-				<div class="close" onclick="this.parentElement.style.display='none';">&times;</div>
-				<div style="display: flex; align-items: start; gap: 10px;">
-					<div style="width: 20px;height: 20px;">
-						<svg class="notice-icon" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-							<circle cx="10" cy="10" r="9" fill="#6366f1" opacity="0.1"/>
-							<circle cx="10" cy="10" r="8" fill="none" stroke="#6366f1" stroke-width="1.5"/>
-							<circle cx="10" cy="7" r="1.5" fill="#6366f1"/>
-							<path d="M10 9 L10 14 M8.5 14 L11.5 14" stroke="#6366f1" stroke-width="1.5" stroke-linecap="round"/>
-						</svg>
+			  <div class="user-registration-myaccount-notice-box">
+				<div class="user-registration-myaccount-notice-box--title">
+					<div class="user-registration-myaccount-notice-box--title-icon">
+						<span class="dashicons dashicons-info-outline notice-icon"></span>
 					</div>
-					<h2>Hey! Your users see a different account page</h2>
+					<div class="user-registration-myaccount-notice-box--title-text">
+						<h2><?php echo esc_html__( "Hey! Your users see a different account page", "user-registration"); ?></h2>
+					</div>
 				</div>
-				<p>What you're seeing isn't the full user experience. Users who register through your form get more profile features and a better interface.</p>
-
-				<p class="pro-tip"><strong>Pro tip:</strong> Create a test user with your registration form to see how the account page really looks!</p>
+				<p><?php echo esc_html__( "What you're seeing isn't the full user experience. Users who register through your form get more profile features and a better interface.", "user-registration"); ?></p>
+				<p class="pro-tip"><?php echo wp_kses_post(__( "<strong>Pro tip:</strong> Create a test user with your registration form to see how the account page really looks!", "user-registration") ); ?></p>
 				<?php
 					$user_args = array(
 						'meta_query'  => array(
@@ -67,11 +62,11 @@ if ('vertical' === $layout) {
 					$existing_non_urm_user = $user_query->get_total();
 				?>
 				<?php if ( $existing_non_urm_user >= 5 ): ?>
-				<p class="existing-users">
-				<strong>URM:</strong> Your site has <span class="highlight"><?php echo $existing_non_urm_user; ?> users</span> registered before this plugin.
-				Want them to enjoy the new profile features too? Use the
-				<a class="addon-link" href="https://wpuserregistration.com/features/profile-connect/?utm_source=my-account&utm_medium=profile-connect-addon-link&utm_campaign=<?php echo UR()->utm_campaign ?>" rel="noreferrer noopener" target="_blank">Profile Connect addon</a> to link these existing users to your new registration form.
-				</p>
+					<p class="existing-users">
+					<strong>Existing users:</strong> Your site has <span class="highlight"><?php echo $existing_non_urm_user; ?> users</span> registered before this plugin.
+					Want them to enjoy the new profile features too? Use the
+					<a class="addon-link" href="https://wpuserregistration.com/features/profile-connect/?utm_source=my-account&utm_medium=profile-connect-addon-link&utm_campaign=<?php echo UR()->utm_campaign ?>" rel="noreferrer noopener" target="_blank">Profile Connect addon</a> to link these existing users to your new registration form.
+					</p>
 				<?php endif; ?>
 			</div>
 		<?php endif; ?>

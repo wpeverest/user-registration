@@ -1341,73 +1341,86 @@ body {
 .rtl #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row .membership-label {
 	min-width: 0px;
 }
-.notice-box {
-	background-color: #f4f6ff;
-	border: 1px solid #d6e0ff;
-	border-radius: 8px;
-	padding: 1.5rem 2rem;
-	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-	position: relative;
-	border-left: 4px solid #6669f1;
-	text-align: left;
-}
 
-.notice-box h2 {
-	margin-top: 0;
-	font-size: 1.25rem;
-	color: #2d2d2d;
-}
+.user-registration-myaccount-notice-box {
+  background-color: #f4f6ff;
+  border: 1px solid #d6e0ff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 32px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  position: relative;
+  border-left: 4px solid #6669f1;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 
-.notice-box p {
-	margin: 0.75rem 0;
-	color: #444;
-	font-size: 1rem;
-	line-height: 1.5;
-}
+  &--title {
+    display: flex;
+    align-items: center;
 
-.pro-tip::before {
-	content: "💡";
-	margin-right: 0.5rem;
-}
+    &-icon {
+      margin-right: 0.75rem;
 
-.existing-users::before {
-	content: "👤";
-	margin-right: 0.5rem;
-}
-.notice-box h2{
-	font-weight: 600 !important;
-	font-size: 1.5rem !important;
-	color: #333 !important;
-	margin-bottom: 0.5rem !important;
-}
-.notice-box strong, .notice-box b {
-	font-weight: 600 !important;;
-}
+      .notice-icon {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+		color: #6366f1;
+      }
+    }
 
-.close {
-	position: absolute;
-	top: 1rem;
-	right: 1rem;
-	color: #888;
-	cursor: pointer;
-	font-size: 1.2rem;
-}
+    &-text {
+      h2 {
+        margin-top: 0;
+        margin-bottom: 0.5rem !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        color: #333 !important;
+      }
+    }
+  }
 
-.close:hover {
-	color: #333;
-}
+  p {
+    color: #444;
+    font-size: 13px;
+    line-height: 1.5;
 
-.highlight {
-	font-weight: bold;
-}
+	&.pro-tip,
+	&.existing-users {
+		strong {
+			font-weight: bolder !important;
+		}
+	}
 
-.notice-box .addon-link {
-	color: #000000 !important;
-	font-weight: 600 !important;
-	text-decoration: none !important;
-}
+    &.pro-tip::before {
+      content: "💡";
+      margin-right: 0.5rem;
+    }
 
-.notice-box .addon-link:hover {
-	text-decoration: underline !important;
-}
+    &.existing-users::before {
+      content: "👤";
+      margin-right: 0.5rem;
+    }
+  }
 
+  strong,
+  b {
+    font-weight: 600 !important;
+  }
+
+  .addon-link {
+    color: #475bb2 !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+
+    &:hover {
+      text-decoration: underline !important;
+    }
+  }
+
+  .highlight {
+    font-weight: bold;
+  }
+}
