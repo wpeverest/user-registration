@@ -501,7 +501,7 @@ if (! class_exists('User_Registration_Users_Menu')) {
 			<div id="user-registration-pro-single-user-view">
 				<div id="user-registration-user-sidebar">
 					<?php $this->render_user_profile($user_id); ?>
-					<?php $this->render_user_actions($user_id); //phpcs:ignore 
+					<?php $this->render_user_actions($user_id); //phpcs:ignore
 					?>
 					<?php $this->render_user_extra_details($user_id); ?>
 					<?php
@@ -980,6 +980,9 @@ if (! class_exists('User_Registration_Users_Menu')) {
 									} elseif ('signature' === $field_key) {
 										$value = get_user_meta($user->ID, 'user_registration_' . $field_name, true);
 										$value = wp_get_attachment_url($value);
+									} elseif('membership' === $field_key){
+										$membership_id = get_user_meta($user->ID, 'user_registration_' . $field_name, true);
+										$value = get_the_title($membership_id);
 									} else {
 										$value = get_user_meta($user->ID, 'user_registration_' . $field_name, true);
 
@@ -1716,7 +1719,7 @@ if (! class_exists('User_Registration_Users_Menu')) {
 					}
 				}
 			}
-		} 
+		}
 
 		/**
 		 * Display Notices for actions that require redirections.
