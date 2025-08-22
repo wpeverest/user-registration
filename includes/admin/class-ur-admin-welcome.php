@@ -19,13 +19,6 @@ class UR_Admin_Welcome {
 	 * Hook in methods.
 	 */
 	public static function init() {
-		$wizard_ran      = get_option( 'user_registration_first_time_activation_flag', false );
-		$onboard_skipped = get_option( 'user_registration_onboarding_skipped', false );
-
-		// If Wizard was ran already or user is an old user of plugin, then do not proceed to Wizard page again.
-		if ( ! $wizard_ran && ! $onboard_skipped ) {
-			return;
-		}
 
 		add_action( 'admin_menu', array( __CLASS__, 'add_menu' ) );
 		add_action( 'admin_init', array( __CLASS__, 'welcome_page' ), 30 );
@@ -51,6 +44,7 @@ class UR_Admin_Welcome {
 
 		if ( isset( $_GET['tab'] ) && 'setup-wizard' === $_GET['tab'] ) { //phpcs:ignore WordPress.Security.NonceVerification
 			update_option( 'user_registration_first_time_activation_flag', false );
+			update_option( 'user_registration_onboarding_skipped', true );
 		}
 
 		wp_register_script( 'ur-setup-wizard-script', UR()->plugin_url() . '/chunks/welcome.js', array( 'wp-element', 'wp-blocks', 'wp-editor' ), UR()->version, true );

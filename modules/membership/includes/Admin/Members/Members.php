@@ -147,6 +147,7 @@ if ( ! class_exists( 'Members' ) ) {
 		public function get_i18_labels() {
 			return array(
 				'network_error'                                 => esc_html__( 'Network error', 'user-registration' ),
+				'i18n_error'									=> __( 'Error', 'user-registration' ),
 				'i18n_field_is_required'                        => _x( 'field is required.', 'user registration membership', 'user-registration' ),
 				'i18n_field_email_field_validation'             => _x( 'Please enter a valid email address.', 'user registration membership', 'user-registration' ),
 				'i18n_field_password_field_validation'          => _x( 'Password does not match with confirm password.', 'user registration membership', 'user-registration' ),

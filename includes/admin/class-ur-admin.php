@@ -39,6 +39,18 @@ class UR_Admin {
 		add_filter( 'display_post_states', array( $this, 'ur_add_post_state' ), 10, 2 );
 		add_action( 'user_registration_after_form_settings', array( $this, 'render_integration_section' ) );
 		add_action( 'user_registration_after_form_settings', array( $this, 'render_integration_List_section' ) );
+		add_action( 'init', array( $this, 'init_users_menu' ) );
+	}
+	/**
+	 * Initialize Users Menu.
+	 *
+	 * @return void
+	 */
+	public function init_users_menu() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+		require_once UR_ABSPATH . 'includes/admin/settings/class-ur-users-menu.php';
 	}
 
 	/**
