@@ -1,27 +1,28 @@
-<div class="ur-membership">
-	<?php
-	require __DIR__ . '/./Partials/header.php';
-	$return_url = admin_url( 'admin.php?page=user-registration-membership&action=list_groups' );
+<?php
+$return_url = admin_url( 'admin.php?page=user-registration-membership&action=list_groups' );
 
-	?>
+?>
+<div class="ur-admin-page-topnav" id="ur-lists-page-topnav">
+	<div class="ur-page-title__wrapper">
+		<div class="ur-page-title__wrapper--left">
+			<a class="ur-text-muted ur-border-right ur-d-flex ur-mr-2 ur-pl-2 ur-pr-2" href="<?php echo esc_attr( $return_url ); ?>">
+				<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+			</a>
+			<div class="ur-page-title__wrapper--left-menu">
+				<div class="ur-page-title__wrapper--left-menu__items">
+					<p>
+						<?php echo isset( $_GET['post_id'] ) ? esc_html_e( 'Edit Membership Group', 'user-registration' ) : esc_html_e( 'Create New Membership Group', 'user-registration' ); ?>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="ur-membership">
 	<div
 		class="ur-membership-tab-contents-wrapper ur-registered-from ur-align-items-center ur-justify-content-center">
-		<form id="ur-membership-create-form" method="post" style="width: 80%">
+		<form id="ur-membership-create-form" method="post">
 			<div id="ur-membership-group-create-form" class="user-registration-card">
-				<div class="user-registration-card__header ur-d-flex ur-align-items-center">
-					<a class="ur-text-muted ur-d-flex"
-					   href="<?php echo admin_url( 'admin.php?page=user-registration-membership&action=list_groups' ); ?>">
-						<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
-							 fill="none"
-							 stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-							<line x1="19" y1="12" x2="5" y2="12"></line>
-							<polyline points="12 19 5 12 12 5"></polyline>
-						</svg>
-					</a>
-					<h3>
-						<?php echo isset( $_GET['post_id'] ) ? esc_html_e( 'Edit Membership Group', 'user-registration' ) : esc_html_e( 'Create New Membership Group', 'user-registration' ); ?>
-					</h3>
-				</div>
 				<div class="user-registration-card__body">
 					<div id="ur-membership-main-fields">
 						<!--					membership group name-->
@@ -85,16 +86,18 @@
 										  data-tip="<?php echo esc_attr__( "Only active groups will be visible in the frontend." ) ?>"></span>
 								</label>
 							</div>
-							<div class="user-registration-switch ur-ml-auto" style="width: 100%">
-								<input
-									data-key-name="Membership Status"
-									id="ur-membership-group-status" type="checkbox"
-									class="user-registration-switch__control hide-show-check enabled urmg-input"
-									<?php echo isset( $membership_content ) && $membership_content['status'] == 'true' ? 'checked' : ''; ?>
-									name="ur_membership_status"
-									style="width: 100%; text-align: left">
+							<div class="ur-toggle-section m1-auto" style="width:100%">
+								<span class="user-registration-toggle-form">
+									<input
+										data-key-name="Membership Status"
+										id="ur-membership-group-status" type="checkbox"
+										class="user-registration-switch__control hide-show-check enabled urmg-input"
+										<?php echo isset( $membership_content ) && $membership_content['status'] == 'true' ? 'checked' : ''; ?>
+										name="ur_membership_status"
+										style="width: 100%; text-align: left">
+									<span class="slider round"></span>
+								</span>
 							</div>
-
 						</div>
 						<!--						role-->
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">

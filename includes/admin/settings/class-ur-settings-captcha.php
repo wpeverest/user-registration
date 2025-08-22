@@ -242,7 +242,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 							'default'  => '',
 							'type'     => 'toggle',
 							'class'    => 'ur-captcha-enable',
-							'css'      => 'min-width: 350px;',
+							'css'      => '',
 							'desc_tip' => true,
 						),
 						array(
@@ -254,7 +254,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 							'type'       => 'text',
 							// 'is_visible' => 'v2' === $recaptcha_type && 'no' === $invisible,
 							'class'      => '',
-							'css'        => 'min-width: 350px;',
+							'css'        => '',
 							'desc_tip'   => true,
 						),
 						array(
@@ -265,7 +265,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 							'default'    => '',
 							'type'       => 'text',
 							'class'      => '',
-							'css'        => 'min-width: 350px;',
+							'css'        => '',
 							'desc_tip'   => true,
 						),
 						array(
@@ -276,7 +276,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 							'default'    => '',
 							'type'       => 'text',
 							'class'      => '',
-							'css'        => 'min-width: 350px;',
+							'css'        => '',
 							'desc_tip'   => true,
 
 						),
@@ -288,7 +288,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 							'default'    => '',
 							'type'       => 'text',
 							'class'      => '',
-							'css'        => 'min-width: 350px;',
+							'css'        => '',
 							'desc_tip'   => true,
 						),
 						array(
@@ -298,7 +298,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 							'id'         => 'user_registration_captcha_setting_invisible_recaptcha_v2',
 							'default'    => 'no',
 							'type'       => 'toggle',
-							'css'        => 'min-width: 350px;',
+							'css'        => '',
 							'desc_tip'   => true,
 						),
 						array(
@@ -324,7 +324,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 							'default'  => '',
 							'type'     => 'toggle',
 							'class'    => 'ur-captcha-enable',
-							'css'      => 'min-width: 350px;',
+							'css'      => '',
 							'desc_tip' => true,
 						),
 						array(
@@ -335,7 +335,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 							'default'    => '',
 							'type'       => 'text',
 							'class'      => '',
-							'css'        => 'min-width: 350px;',
+							'css'        => '',
 							'desc_tip'   => true,
 
 						),
@@ -347,7 +347,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 							'default'    => '',
 							'type'       => 'text',
 							'class'      => '',
-							'css'        => 'min-width: 350px;',
+							'css'        => '',
 							'desc_tip'   => true,
 						),
 						array(
@@ -361,7 +361,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 								'max'  => '1.0',
 							),
 							'default'           => '0.4',
-							'css'               => 'min-width: 350px;',
+							'css'               => '',
 							'desc_tip'          => true,
 						),
 						array(
@@ -386,7 +386,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 							'default'  => '',
 							'type'     => 'toggle',
 							'class'    => 'ur-captcha-enable',
-							'css'      => 'min-width: 350px;',
+							'css'      => '',
 							'desc_tip' => true,
 						),
 						array(
@@ -397,7 +397,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 							'default'  => '',
 							'type'     => 'text',
 							'class'    => '',
-							'css'      => 'min-width: 350px;',
+							'css'      => '',
 							'desc_tip' => true,
 						),
 						array(
@@ -408,7 +408,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 							'default'  => '',
 							'type'     => 'text',
 							'class'    => '',
-							'css'      => 'min-width: 350px;',
+							'css'      => '',
 							'desc_tip' => true,
 						),
 						array(
@@ -433,7 +433,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 							'default'  => '',
 							'type'     => 'toggle',
 							'class'    => 'ur-captcha-enable',
-							'css'      => 'min-width: 350px;',
+							'css'      => '',
 							'desc_tip' => true,
 						),
 						array(
@@ -444,7 +444,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 							'default'  => '',
 							'type'     => 'text',
 							'class'    => '',
-							'css'      => 'min-width: 350px;',
+							'css'      => '',
 							'desc_tip' => true,
 
 						),
@@ -456,7 +456,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 							'default'  => '',
 							'type'     => 'text',
 							'class'    => '',
-							'css'      => 'min-width: 350px;',
+							'css'      => '',
 							'desc_tip' => true,
 						),
 						array(
@@ -471,7 +471,7 @@ if ( ! class_exists( 'UR_Settings_Captcha ' ) ) :
 							),
 							'type'     => 'select',
 							'class'    => '',
-							'css'      => 'min-width: 350px;',
+							'css'      => '',
 							'desc_tip' => true,
 						),
 						array(

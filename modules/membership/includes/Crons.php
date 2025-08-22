@@ -21,6 +21,8 @@ class Crons {
 		if ( ur_check_module_activation( 'membership' ) ) {
 			add_action( 'urm_run_delayed_subscription', array( $this, 'run_daily_delayed_membership_subscriptions' ) );
 			add_action( 'urm_daily_membership_renewal_check', array( $this, 'membership_renewal_check' ), 10, 1 );
+			add_action( 'urm_daily_membership_expiring_soon_check', array( $this, 'membership_expiring_soon_check' ), 10, 1 );
+			add_action( 'urm_daily_membership_ended_check', array( $this, 'membership_ended_check' ), 10, 1 );
 		}
 	}
 
@@ -40,10 +42,35 @@ class Crons {
 	 * @return void
 	 */
 	public function membership_renewal_check() {
-		if ( ! ur_option_checked( 'user_registration_membership_renewal_reminder_user_email', false ) ) {
+		if ( ! ur_option_checked( 'user_registration_membership_enable_renewal_reminder_user_email', false ) && "automatic" !== get_option("user_registration_renewal_behaviour", "automatic") ) {
 			return;
 		}
 		$subscription_service = new SubscriptionService();
 		$subscription_service->daily_membership_renewal_check();
+	}
+
+	/**
+	 * membership_expiring_soon_check
+	 *
+	 * @return void
+	 */
+	public function membership_expiring_soon_check() {
+
+		if ( ! ur_option_checked( 'user_registration_membership_enable_expiring_soon_user_email', false ) && "manual" !== get_option("user_registration_renewal_behaviour", "automatic")) {
+			return;
+		}
+
+		$subscription_service = new SubscriptionService();
+		$subscription_service->daily_membership_expiring_soon_check();
+	}
+
+	public function membership_ended_check(  ) {
+
+		if ( ! ur_option_checked( 'user_registration_membership_enable_membership_ended_user_email', false ) && "manual" !== get_option("user_registration_renewal_behaviour", "automatic")) {
+			return;
+		}
+
+		$subscription_service = new SubscriptionService();
+		$subscription_service->daily_membership_ended_check();
 	}
 }

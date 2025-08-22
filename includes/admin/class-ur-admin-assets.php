@@ -63,9 +63,7 @@ class UR_Admin_Assets {
 
 		wp_enqueue_style( 'ur-notice' );
 		wp_register_style( 'user-registration-menu', UR()->plugin_url() . '/assets/css/menu.css', array(), UR_VERSION );
-		if ( 'plugins' === $screen_id ) {
-			wp_enqueue_style( 'user-registration-menu' );
-		}
+		wp_enqueue_style( 'user-registration-menu' );
 
 		wp_register_style( 'user-registration-admin', UR()->plugin_url() . '/assets/css/admin.css', array( 'nav-menus', 'wp-color-picker' ), UR_VERSION );
 
@@ -110,7 +108,7 @@ class UR_Admin_Assets {
 		$screen_id = $screen ? $screen->id : '';
 		$suffix    = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-		// Register Scripts.
+// Register Scripts.
 		wp_register_script(
 			'user-registration-admin',
 			UR()->plugin_url() . '/assets/js/admin/admin' . $suffix . '.js',
@@ -136,41 +134,45 @@ class UR_Admin_Assets {
 			false
 		);
 
-		wp_register_script(
-			'user-registration-form-builder',
-			UR()->plugin_url() . '/assets/js/admin/form-builder' . $suffix . '.js',
-			array(
-				'jquery',
-				'selectWoo',
-				'wp-color-picker',
-				'jquery-blockui',
-				'jquery-ui-sortable',
-				'jquery-ui-widget',
-				'jquery-ui-core',
-				'jquery-ui-tabs',
-				'jquery-ui-draggable',
-				'jquery-ui-droppable',
-				'ur-backbone-modal',
-				'ur-enhanced-select',
-				'perfect-scrollbar',
-				'sweetalert2',
-				'tooltipster',
-				'user-registration-scroll-ui-js',
-			),
-			UR_VERSION,
-			false
-		);
+		if("user-registration-membership_page_user-registration-login-forms" !== $screen_id) {
 
-		wp_register_script(
-			'user-registration-form-settings',
-			UR()->plugin_url() . '/assets/js/admin/form-settings' . $suffix . '.js',
-			array(
-				'user-registration-admin',
+			wp_register_script(
 				'user-registration-form-builder',
-			),
-			UR_VERSION,
-			false
-		);
+				UR()->plugin_url() . '/assets/js/admin/form-builder' . $suffix . '.js',
+				array(
+					'jquery',
+					'selectWoo',
+					'wp-color-picker',
+					'jquery-blockui',
+					'jquery-ui-sortable',
+					'jquery-ui-widget',
+					'jquery-ui-core',
+					'jquery-ui-tabs',
+					'jquery-ui-draggable',
+					'jquery-ui-droppable',
+					'ur-backbone-modal',
+					'ur-enhanced-select',
+					'perfect-scrollbar',
+					'sweetalert2',
+					'tooltipster',
+					'user-registration-scroll-ui-js',
+				),
+				UR_VERSION,
+				false
+			);
+			wp_register_script(
+				'user-registration-form-settings',
+				UR()->plugin_url() . '/assets/js/admin/form-settings' . $suffix . '.js',
+				array(
+					'user-registration-admin',
+					'user-registration-form-builder',
+				),
+				UR_VERSION,
+				false
+			);
+		}
+
+
 
 		wp_register_script( 'jquery-blockui', UR()->plugin_url() . '/assets/js/jquery-blockui/jquery.blockUI' . $suffix . '.js', array( 'jquery' ), '2.70', true );
 		wp_register_script( 'tooltipster', UR()->plugin_url() . '/assets/js/tooltipster/tooltipster.bundle' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
@@ -389,6 +391,8 @@ class UR_Admin_Assets {
 				'ur_assets_url'             => UR()->plugin_url() . '/assets/',
 				'i18n_prompt_no_membership_group_selected' => __( 'Membership Field requires a membership group to be selected.', 'user-registration' ),
 				'i18n_default_redirection_notice_for_membership' => esc_html__( 'If the form includes a membership field, users will be redirected to the membership thank you page after submission.', 'user-registration' ),
+				'i18n_email_confirmation_disabled_notice' => esc_html__( 'If email confirmation is not enabled in email settings, users will not receive a confirmation email when this login option is selected.', 'user_registration' ),
+				'email_confirmation_disabled' => ur_string_to_bool( get_option( 'user_registration_enable_email_confirmation', false ) ) ? 'no' : 'yes',
 				'form_has_membership_field' => check_membership_field_in_form($form_id),
 				'paypal_settings'                                => array(
 					'global'                    => array(

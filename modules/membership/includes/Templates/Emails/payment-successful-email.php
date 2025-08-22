@@ -1,5 +1,5 @@
 <?php
-$user_id = absint( $invoice_details['user_id'] );
+$user_id = absint( !empty($invoice_details['user_id']) ? $invoice_details['user_id'] : get_current_user_id() );
 $currencies = ur_payment_integration_get_currencies();
 $currency   = get_user_meta( $user_id, 'ur_payment_currency', true );
 $currency   = ! empty( $currency ) ? $currency : 'USD';

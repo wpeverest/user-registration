@@ -19,12 +19,11 @@
 			display: flex;
 			-webkit-flex-direction: column;
 			flex-direction: column;
+
 			.ur-form-grid{
 				width: 100% !important;
 				margin-bottom: 20px;
-				&:nth-child(1n+2) {
-					border-left: 1px solid $border_color;
-				}
+
 				&:last-child {
 					margin-bottom: 0;
 					border-left: 0 none;

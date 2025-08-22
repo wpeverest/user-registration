@@ -9,21 +9,11 @@
 #user_registration_frontend_listing_view_profile,
 #user_registration_frontend_listing_pagination,
 #user_registration_frontend_listing_shortcode {
-	.select2-container {
-		width: 100% !important;
-		.select2-selection--multiple {
-			border-color: #dee0e9 !important;
-		}
-	}
 	.meta-box-sortables {
 		select,
 		input[type="text"],
 		input[type="email"] {
 			width: 100%;
-		}
-		select,
-		input {
-			border-color: #dee0e9;
 		}
 	}
 	p.description {

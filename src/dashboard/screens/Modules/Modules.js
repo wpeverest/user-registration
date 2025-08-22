@@ -266,7 +266,7 @@ const Modules = () => {
 			my="4"
 			mx="6"
 		>
-			<Container maxW="container.xl">
+			<Container maxW="100%">
 				<Stack
 					direction="row"
 					minH="70px"
@@ -489,7 +489,7 @@ const Modules = () => {
 					</Stack>
 				</Stack>
 			</Container>
-			<Container maxW="container.xl">
+			<Container maxW="100%">
 				{state.isSearching ? (
 					<AddonSkeleton />
 				) : state.noItemFound && state.searchItem ? (

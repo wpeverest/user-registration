@@ -38,7 +38,6 @@ if ( ! class_exists( 'Members' ) ) {
 		 */
 		public function __construct() {
 			$this->page = 'user-registration-members';
-			add_action( 'admin_menu', array( $this, 'ur_membership_members_menu' ), 60 );
 			add_action( 'in_admin_header', array( __CLASS__, 'hide_unrelated_notices' ) );
 			add_filter(
 				'manage_user-registration-membership_page_user-registration-members_columns',
@@ -80,7 +79,7 @@ if ( ! class_exists( 'Members' ) ) {
 			}
 			$suffix = defined( 'SCRIPT_DEBUG' ) ? '' : '.min';
 			wp_register_script( 'ur-snackbar', UR()->plugin_url() . '/assets/js/ur-snackbar/ur-snackbar' . $suffix . '.js', array(), '1.0.0', true );
-			wp_register_script( 'user-registration-members', UR_MEMBERSHIP_JS_ASSETS_URL . '/admin/user-registration-members-admin' . $suffix . '.js', array( 'jquery', 'ur-enhanced-select' ), '1.0.0', true );
+			wp_register_script( 'user-registration-members', UR_MEMBERSHIP_JS_ASSETS_URL . '/admin/user-registration-members-admin' . $suffix . '.js', array( 'jquery', 'ur-enhanced-select', 'user-registration-admin' ), '1.0.0', true );
 			wp_enqueue_script( 'ur-snackbar' );
 			wp_enqueue_script( 'user-registration-members' );
 			wp_enqueue_script( 'sweetalert2' );
@@ -108,7 +107,6 @@ if ( ! class_exists( 'Members' ) ) {
 			wp_enqueue_style( 'ur-core-builder-style' );
 			wp_enqueue_style( 'ur-snackbar' );
 			wp_enqueue_style( 'select2', UR()->plugin_url() . '/assets/css/select2/select2.css', array(), '4.0.6' );
-
 		}
 
 		/**
@@ -147,6 +145,7 @@ if ( ! class_exists( 'Members' ) ) {
 		public function get_i18_labels() {
 			return array(
 				'network_error'                                 => esc_html__( 'Network error', 'user-registration' ),
+				'i18n_error'									=> __( 'Error', 'user-registration' ),
 				'i18n_field_is_required'                        => _x( 'field is required.', 'user registration membership', 'user-registration' ),
 				'i18n_field_email_field_validation'             => _x( 'Please enter a valid email address.', 'user registration membership', 'user-registration' ),
 				'i18n_field_password_field_validation'          => _x( 'Password does not match with confirm password.', 'user registration membership', 'user-registration' ),
@@ -185,25 +184,6 @@ if ( ! class_exists( 'Members' ) ) {
 			}
 		}
 
-		/**
-		 * Hook to display the page content.
-		 *
-		 * @return void
-		 */
-		public function ur_membership_members_menu() {
-			add_submenu_page(
-				'user-registration',
-				__( 'Membership Members', 'user-registration' ), // page title.
-				__( 'Members', 'user-registration' ), // menu title.
-				'manage_user_registration', // Capability required to access.
-				'user-registration-members', // Menu slug.
-				array(
-					$this,
-					'render_members_page',
-				),
-				7
-			);
-		}
 
 		/**
 		 * Renders the members create or add new page.
@@ -250,8 +230,8 @@ if ( ! class_exists( 'Members' ) ) {
 						</h1>
 					</div>
 					<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $this->page . '&action=add_new_member' ) ); ?>"
-					   id="user-registration-members-add-btn" class="button ur-button-primary">
-						+ <?php esc_html_e( 'Add new Member', 'user-registration' ); ?>
+					   id="user-registration-members-add-btn" class="button button-primary ur-button-primary">
+						+ <?php esc_html_e( 'Add New', 'user-registration' ); ?>
 					</a>
 				</div>
 				<div id="user-registration-list-filters-row" style="align-items: center;">
@@ -285,7 +265,6 @@ if ( ! class_exists( 'Members' ) ) {
 			$members_list_table = new MembersListTable();
 			$roles              = $members_list_table->get_roles();
 			$memberships        = $members_list_table->get_all_memberships();
-			include __DIR__ . '/../Views/member-create.php';
 		}
 
 		/**

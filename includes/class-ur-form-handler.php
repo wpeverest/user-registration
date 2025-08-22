@@ -29,6 +29,7 @@ class UR_Form_Handler {
 
 		add_action( 'template_redirect', array( __CLASS__, 'save_change_password' ) );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_login' ), 20 );
+		add_action( 'wp_loaded', array( __CLASS__, 'process_registration' ), 20 );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_lost_password' ), 20 );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_reset_password' ), 20 );
 		add_action( 'user_registration_before_customer_login_form', array( __CLASS__, 'export_confirmation_request' ) );
@@ -54,11 +55,10 @@ class UR_Form_Handler {
 			$value = sprintf( '%s:%s', sanitize_text_field( wp_unslash( $_GET['login'] ) ), sanitize_text_field( wp_unslash( $_GET['key'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
 			UR_Shortcode_My_Account::set_reset_password_cookie( $value );
 
-			wp_safe_redirect( add_query_arg( 'show-reset-form', 'true', ur_lostpassword_url() ) );
+			wp_safe_redirect( add_query_arg( 'show-reset-form', 'true', ur_resetpassword_url() ) );
 			exit;
 		}
 	}
-
 	/**
 	 * Save and update a profie fields if the form was submitted through the user account page.
 	 *
@@ -86,125 +86,175 @@ class UR_Form_Handler {
 		if ( isset( $form_id_array[0] ) ) {
 			$form_id = $form_id_array[0];
 		}
+		// save profile details in case of non URM user.
+		if ( $form_id === 0 ) {
 
-		$profile = user_registration_form_data( $user_id, $form_id );
+			$user = wp_get_current_user();
 
-		$form_field_data = ur_get_form_field_data( $form_id );
-		$fields          = array();
 
-		foreach ( $form_field_data as $field ) {
-			$field_name = $field->general_setting->field_name;
-			$key        = 'user_registration_' . $field_name;
+			// upload the profile picture if it is set.
+			$profile_pic_url = isset( $_POST['profile-pic-url'] ) ? sanitize_text_field( wp_unslash( $_POST['profile-pic-url'] ) ) : '';
+			$valid_form_data = array();
+			$valid_form_data['profile_pic_url'] = new stdClass();
+			$valid_form_data['profile_pic_url']->value = $profile_pic_url;
 
-			$field_obj             = new StdClass();
-			$field_obj->field_name = $field_name;
-			$fields[ $field_name ] = user_registration_sanitize_profile_update( $_POST, $field->field_key, $key );
+			ur_upload_profile_pic( $valid_form_data, $user_id );
 
-			$field_obj->value = ur_clean( $fields[ $field_name ] );
+			$fields_to_update = array(
+				'first_name',
+				'last_name',
+			);
 
-			if ( isset( $field->field_key ) ) {
-				$field_obj->field_type = $field->field_key;
+			$userdata = array_combine( $fields_to_update, array_map(
+				function( $field ) {
+					return sanitize_text_field( $_POST[ 'user_registration_' . $field ] );
+				},
+				$fields_to_update
+			) );
+
+			wp_update_user( array_merge( array( 'ID' => $user->ID ), $userdata ) );
+
+			$new_email = sanitize_email( $_POST[ 'user_registration_user_email' ] );
+			if( $user->user_email !== $new_email ) {
+				update_user_meta( $user->ID, '__pending_email', $new_email );
+				$email_updated = true;
 			}
 
-			if ( isset( $field->general_setting->label ) ) {
-				$field_obj->label = $field->general_setting->label;
-			}
-
-			$fields[ $field_name ] = $field_obj;
-		}
-
-		list( $form_data, $_POST ) = apply_filters( 'user_registration_profile_update_data', array( $fields, $_POST ) );
-
-		/**
-		 * Action validate profile on update.
-		 *
-		 * @param array $profile The user profile data.
-		 * @param array $form_data The form data.
-		 * @param int $form_id The form ID.
-		 * @param int $user_id The user id.
-		 */
-		do_action( 'user_registration_validate_profile_update', $profile, $form_data, $form_id, $user_id );
-
-		/**
-		 * Action validate profile on update.
-		 *
-		 * @param array $profile The user profile data.
-		 * @param array $form_data The form data.
-		 * @param int $form_id The form ID.
-		 */
-		do_action( 'user_registration_after_save_profile_validation', $user_id, $profile );
-
-		if ( 0 === ur_notice_count( 'error' ) ) {
-			$user_data = array();
 			/**
-			 * Hook to modify profile details before save.
+			 * Filter to modify the profile update success message.
+			 */
+			$message = apply_filters( 'user_registration_profile_update_success_message', __( 'User profile updated successfully.', 'user-registration' ) );
+
+			if ( $email_updated ) {
+				self::send_confirmation_email( $user, $new_email, $form_id );
+				/* translators: user_email */
+				$user_email_update_message = sprintf( __( 'Your email address has not been updated yet. Please check your inbox at <strong>%s</strong> for a confirmation email.', 'user-registration' ), $pending_email );
+				ur_add_notice( $user_email_update_message, 'notice' );
+			}
+
+			ur_add_notice( $message );
+
+			wp_safe_redirect( ur_get_account_endpoint_url( $profile_endpoint ) );
+			exit;
+		} else {
+			$profile = user_registration_form_data( $user_id, $form_id );
+			$form_field_data = ur_get_form_field_data( $form_id );
+			$fields          = array();
+
+			foreach ( $form_field_data as $field ) {
+				$field_name = $field->general_setting->field_name;
+				$key        = 'user_registration_' . $field_name;
+
+				$field_obj             = new StdClass();
+				$field_obj->field_name = $field_name;
+				$fields[ $field_name ] = user_registration_sanitize_profile_update( $_POST, $field->field_key, $key );
+
+				$field_obj->value = ur_clean( $fields[ $field_name ] );
+
+				if ( isset( $field->field_key ) ) {
+					$field_obj->field_type = $field->field_key;
+				}
+
+				if ( isset( $field->general_setting->label ) ) {
+					$field_obj->label = $field->general_setting->label;
+				}
+
+				$fields[ $field_name ] = $field_obj;
+			}
+
+			list( $form_data, $_POST ) = apply_filters( 'user_registration_profile_update_data', array( $fields, $_POST ) );
+
+			/**
+			 * Action validate profile on update.
 			 *
-			 * @param array $profile The profile data.
-			 * @param int $user_id The user ID.
+			 * @param array $profile The user profile data.
+			 * @param array $form_data The form data.
 			 * @param int $form_id The form ID.
-			 *
-			 * @return array $profile
+			 * @param int $user_id The user id.
 			 */
-			$profile = apply_filters( 'user_registration_before_save_profile_details', $profile, $user_id, $form_id );
+			do_action( 'user_registration_validate_profile_update', $profile, $form_data, $form_id, $user_id );
 
 			/**
-			 * Hook to modify confirmation email.
-			 * Default value is true.
+			 * Action validate profile on update.
+			 *
+			 * @param array $profile The user profile data.
+			 * @param array $form_data The form data.
+			 * @param int $form_id The form ID.
 			 */
-			$is_email_change_confirmation = (bool) apply_filters( 'user_registration_email_change_confirmation', true );
-			$email_updated                = false;
-			$pending_email                = '';
-			$user                         = wp_get_current_user();
-			foreach ( $profile as $key => $field ) {
+			do_action( 'user_registration_after_save_profile_validation', $user_id, $profile );
 
-				$new_key = str_replace( 'user_registration_', '', $key );
+			if ( 0 === ur_notice_count( 'error' ) ) {
+				$user_data = array();
+				/**
+				 * Hook to modify profile details before save.
+				 *
+				 * @param array $profile The profile data.
+				 * @param int $user_id The user ID.
+				 * @param int $form_id The form ID.
+				 *
+				 * @return array $profile
+				 */
+				$profile = apply_filters( 'user_registration_before_save_profile_details', $profile, $user_id, $form_id );
 
-				if ( $is_email_change_confirmation && 'user_email' === $new_key ) {
+				/**
+				 * Hook to modify confirmation email.
+				 * Default value is true.
+				 */
+				$is_email_change_confirmation = (bool) apply_filters( 'user_registration_email_change_confirmation', true );
+				$email_updated                = false;
+				$pending_email                = '';
+				$user                         = wp_get_current_user();
+				foreach ( $profile as $key => $field ) {
 
-					if ( $user ) {
-						if ( sanitize_email( wp_unslash( $_POST[ $key ] ) ) !== $user->user_email ) { // phpcs:ignore
-							$email_updated = true;
-							$pending_email = sanitize_email( wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore
-						}
-						continue;
-					}
-				}
+					$new_key = str_replace( 'user_registration_', '', $key );
 
-				if ( in_array( $new_key, ur_get_user_table_fields() ) ) {
+					if ( $is_email_change_confirmation && 'user_email' === $new_key ) {
 
-					if ( 'display_name' === $new_key ) {
-						$user_data['display_name'] = isset( $_POST[ $key ] ) ? sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) : '';
-					} else {
-						$user_data[ $new_key ] = isset( $_POST[ $key ] ) ? wp_unslash( $_POST[ $key ] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-					}
-				} else {
-					$update_key = $key;
-
-					if ( in_array( $new_key, ur_get_registered_user_meta_fields(), true ) ) {
-						$update_key = str_replace( 'user_', '', $new_key );
-					}
-					$disabled = isset( $field['custom_attributes']['disabled'] ) ? $field['custom_attributes']['disabled'] : '';
-					if ( 'disabled' !== $disabled ) {
-						if ( isset( $_POST[ $key ] ) ) {
-							if ( isset( $field['field_key'] ) && 'file' !== $field['field_key'] ) {
-								if ( 'signature' === $field['field_key'] ) {
-									update_user_meta( $user_id, $update_key, apply_filters( 'user_registration_process_signature_field_data', $_POST[ $key ] ) );
-								} else {
-									update_user_meta( $user_id, $update_key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-								}
-							} elseif ( isset( $field['type'] ) && 'repeater' === $field['type'] ) {
-								update_user_meta( $user_id, $update_key, $form_data[ $key ]->value ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+						if ( $user ) {
+							if ( sanitize_email( wp_unslash( $_POST[ $key ] ) ) !== $user->user_email ) { // phpcs:ignore
+								$email_updated = true;
+								$pending_email = sanitize_email( wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore
 							}
-						} elseif ( 'checkbox' === $field['field_key'] ) {
-							update_user_meta( $user_id, $update_key, '' );
+							continue;
+						}
+					}
+
+					if ( in_array( $new_key, ur_get_user_table_fields() ) ) {
+
+						if ( 'display_name' === $new_key ) {
+							$user_data['display_name'] = isset( $_POST[ $key ] ) ? sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) : '';
+						} else {
+							$user_data[ $new_key ] = isset( $_POST[ $key ] ) ? wp_unslash( $_POST[ $key ] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+						}
+					} else {
+						$update_key = $key;
+
+						if ( in_array( $new_key, ur_get_registered_user_meta_fields(), true ) ) {
+							$update_key = str_replace( 'user_', '', $new_key );
+						}
+						$disabled = isset( $field['custom_attributes']['disabled'] ) ? $field['custom_attributes']['disabled'] : '';
+						if ( 'disabled' !== $disabled ) {
+							if ( isset( $_POST[ $key ] ) ) {
+								if ( isset( $field['field_key'] ) && 'file' !== $field['field_key'] ) {
+									if ( 'signature' === $field['field_key'] ) {
+										update_user_meta( $user_id, $update_key, apply_filters( 'user_registration_process_signature_field_data', $_POST[ $key ] ) );
+									} else {
+										update_user_meta( $user_id, $update_key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+									}
+								} elseif ( isset( $field['type'] ) && 'repeater' === $field['type'] ) {
+									update_user_meta( $user_id, $update_key, $form_data[ $key ]->value ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+								}
+							} elseif ( 'checkbox' === $field['field_key'] ) {
+								update_user_meta( $user_id, $update_key, '' );
+							}
 						}
 					}
 				}
-			}
 
-			if ( count( $user_data ) > 0 ) {
-				$user_data['ID'] = get_current_user_id();
-				wp_update_user( $user_data );
+				if ( count( $user_data ) > 0 ) {
+					$user_data['ID'] = get_current_user_id();
+					wp_update_user( $user_data );
+				}
 			}
 			/**
 			 * Filter to modify the profile update success message.
@@ -516,7 +566,21 @@ class UR_Form_Handler {
 			ur_process_login( $nonce_value );
 		}
 	}
+	/**
+	 * Process the login form.
+	 *
+	 * @throws Exception Login errors.
+	 */
+	public static function process_registration() {
+		$nonce_value = isset( $_POST['_wpnonce'] ) ? sanitize_key( $_POST['_wpnonce'] ) : '';
 
+		$nonce_value = isset( $_POST['ur_frontend_form_nonce'] ) ? sanitize_key( $_POST['ur_frontend_form_nonce'] ) : $nonce_value;
+
+		if ( ! empty( $_POST['ur_fallback_submit'] ) ) {
+			$_POST['form_data'] = urldecode($_POST['form_data']);
+			ur_process_registration( $nonce_value );
+		}
+	}
 	/**
 	 * Handle lost password form.
 	 */

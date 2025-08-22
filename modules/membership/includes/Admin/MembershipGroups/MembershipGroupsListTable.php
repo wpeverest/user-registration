@@ -152,27 +152,28 @@ class MembershipGroupsListTable extends \UR_List_Table {
 		$membership_content = json_decode( $membership_group->post_content, true );
 		$checked            = ( $membership_content['status'] == 'true' ) ? 'checked' : '';
 		$actions            = '
-				<div class="row-actions ur-d-flex ur-align-items-center visible" style="gap: 5px">
-
-					<div class="user-registration-switch">
-						<input
-						 		type="checkbox"
-						 		' . $checked . '
-							   	class="ur-membership-change-status user-registration-switch__control hide-show-check enabled"
-							   	data-ur-membership-id = ' . $membership_group->ID . '
-						>
-					</div>
-					&nbsp | &nbsp
-					<span class="edit">
-						<a href="' . esc_url( $edit_link ) . '">' . __( 'Edit', 'user-registration' ) . '</a>
-					</span>
-					&nbsp | &nbsp
-					<span class="delete">
-						<a class="delete-membership-groups" aria-label="' . esc_attr__( 'Delete this item', 'user-registration' ) . '" href="' . $delete_link . '">' . esc_html__( 'Delete', 'user-registration' ) . '</a>
-					</span>
-					</div>
-
-					';
+		<div class="row-actions ur-d-flex ur-align-items-center visible" style="gap: 5px">
+			<div class="ur-toggle-section m1-auto">
+				<span class="user-registration-toggle-form">
+					<input
+						type="checkbox"
+						' . $checked . '
+						class="ur-membership-change-status user-registration-switch__control hide-show-check enabled"
+						data-ur-membership-id = ' . $membership_group->ID . '
+					>
+					<span class="slider round"></span>
+				</span>
+			</div>
+			&nbsp | &nbsp
+			<span class="edit">
+				<a href="' . esc_url( $edit_link ) . '">' . __( 'Edit', 'user-registration' ) . '</a>
+			</span>
+			&nbsp | &nbsp
+			<span class="delete">
+				<a class="delete-membership-groups" aria-label="' . esc_attr__( 'Delete this item', 'user-registration' ) . '" href="' . $delete_link . '">' . esc_html__( 'Delete', 'user-registration' ) . '</a>
+			</span>
+			</div>
+			';
 
 		return $actions;
 	}
@@ -190,10 +191,10 @@ class MembershipGroupsListTable extends \UR_List_Table {
 						<?php esc_html_e( 'All Membership Groups', 'user-registration' ); ?>
 					</h1>
 					<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $this->page . '&action=add_groups' ) ); ?>"
-					   class="button ur-button-primary">
+					   class="button button-primary ur-button-primary">
 						+
 						<?php
-						echo __( 'Create new Membership Groups', 'user-registration' )
+						echo __( 'Add New', 'user-registration' )
 						?>
 					</a>
 				</div>

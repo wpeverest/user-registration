@@ -311,6 +311,20 @@ class OrdersListTable extends \UR_List_Table {
 					';
 	}
 
+	public function column_created_at( $item ) {
+		global $wpdb;
+		$orders_meta_table = TableList::order_meta_table();
+		$payment_date = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT meta_value FROM {$orders_meta_table} WHERE meta_key=%s AND order_id=%d LIMIT 1",
+				'payment_date',
+				$item[ 'order_id' ]
+			)
+		);
+		$payment_date = ! empty( $payment_date ) ? $payment_date : $item[ 'created_at' ];
+		return (new \DateTime( $payment_date ) )->format( 'F j, Y' );
+	}
+
 	/**
 	 * Render the list table page, including header, notices, status filters and table.
 	 */
@@ -460,7 +474,7 @@ class OrdersListTable extends \UR_List_Table {
 			</select>
 		</div>
 		<button type="submit" name="ur_users_filter" id="user-registration-users-filter-btn"
-				class="button ur-button-primary">
+				class="button">
 			<?php esc_html_e( 'Filter', 'user-registration' ); ?>
 		</button>
 		<?php

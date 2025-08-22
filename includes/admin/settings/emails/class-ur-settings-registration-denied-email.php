@@ -95,7 +95,7 @@ if ( ! class_exists( 'UR_Settings_Registration_Denied_Email', false ) ) :
 									'id'       => 'user_registration_registration_denied_email_subject',
 									'type'     => 'text',
 									'default'  => __( 'Registration Denied – {{blog_info}}', 'user-registration' ),
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'desc_tip' => true,
 								),
 								array(
@@ -104,7 +104,7 @@ if ( ! class_exists( 'UR_Settings_Registration_Denied_Email', false ) ) :
 									'id'       => 'user_registration_registration_denied_email',
 									'type'     => 'tinymce',
 									'default'  => $this->ur_get_registration_denied_email(),
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'desc_tip' => true,
 								),
 							),

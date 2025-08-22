@@ -186,53 +186,10 @@ input.ur-input-border-red, textarea.ur-input-border-red{
 				border-left: 0 none;
 			}
 
-			// .ur-field-item {
-			// 	margin-bottom: 20px;
-			// 	&.field-multiple_choice,
-			// 	&.field-subscription_plan,
-			// 	&.field-checkbox,
-			// 	&.field-radio {
-			// 		ul {
-			// 			margin: 0;
-			// 			list-style: none;
-
-			// 			li {
-			// 				margin-left: 0;
-			// 				line-height: 1.3;
-			// 				vertical-align: middle;
-			// 				margin-bottom: 10px;
-
-			// 				input,
-			// 				label {
-			// 					display: inline-block;
-			// 					vertical-align: inherit;
-			// 				}
-
-			// 				input {
-			// 					&[type="checkbox"],
-			// 					&[type="radio"] {
-			// 						margin-top: 2px;
-			// 					}
-			// 				}
-
-			// 				label {
-			// 					display: inline;
-			// 				}
-			// 			}
-			// 		}
-			// 	}
-
-			// 	&:last-child {
-			// 		margin-bottom: 0;
-			// 	}
-
-			// 	.form-row {
-			// 		display: block;
-			// 	}
-			// }
-			input{
+			input {
 				border-style: solid;
 			}
+
 			input[type="text"],
 			input[type="email"],
 			input[type="url"],
@@ -243,7 +200,6 @@ input.ur-input-border-red, textarea.ur-input-border-red{
 			input[type="phone"],
 			textarea,
 			select,
-
 			.__PrivateStripeElement {
 				width: 100%;
 				padding: 4px 8px;
@@ -268,7 +224,6 @@ input.ur-input-border-red, textarea.ur-input-border-red{
 
 				.__PrivateStripeElement {
 					iframe {
-						// height: 20px !important;
 						position: absolute;
 						top: 50%;
 						transform: translateY(-50%);
@@ -361,33 +316,6 @@ input.ur-input-border-red, textarea.ur-input-border-red{
 								}
 							}
 						}
-					}
-				}
-			}
-		}
-
-		.select2-container {
-			.select2-selection--multiple {
-				border: 1px solid $color_gray_five;
-
-				.select2-selection__rendered {
-					display: block;
-
-					li {
-						&:last-child {
-							margin-left: 0;
-						}
-					}
-				}
-
-				.select2-selection__choice {
-					margin: 5px;
-				}
-
-				.select2-search--inline {
-					input[type="text"] {
-						margin: 5px;
-						height: inherit;
 					}
 				}
 			}

@@ -24,35 +24,6 @@
     margin: 0;
     padding: 0;
     height: auto;
-    margin-bottom: 20px;
-
-    .bulkactions {
-        select {
-            min-height: 38px;
-            padding: 0 12px;
-            width: 220px;
-            margin-right: 10px;
-            border-color: #BABABA;
-            color: #383838;
-
-            &:focus {
-                box-shadow: none;
-                outline: none;
-                border-color: #475BB2;
-            }
-        }
-
-        input[type="submit"] {
-            padding: 8px 14px;
-            font-size: 14px;
-            line-height: 20px;
-            margin-right: 0;
-            color: #475BB2;
-            border-color: #475BB2;
-            background: #F6F7F7;
-            font-weight: 500;
-        }
-    }
 }
 
 // Form Toggle Button
@@ -87,39 +58,39 @@
 @mixin form-footer-button {
     margin-bottom: 0;
     padding: 0 !important;
-    padding-top: 28px !important;
-    border-top: 1px solid #e1e1e1;
-    margin-top: 30px;
+    padding-top: $spacing_28px !important;
+    border-top: $border_width solid $border_color;
+    margin-top: $spacing_28px;
 
-    .button {
-        &-secondary {
-            border-radius: 4px;
-            box-shadow: none;
-            padding: 8px 16px;
-            color: #ffffff;
-            font-size: 14px;
-            font-weight: 400;
-            line-height: 24px;
-            border: 0;
-            background: transparent;
-            border: 1px solid #bababa;
+    // .button {
+    //     &-secondary {
+    //         border-radius: 4px;
+    //         box-shadow: none;
+    //         padding: 8px 16px;
+    //         color: #ffffff;
+    //         font-size: 14px;
+    //         font-weight: 400;
+    //         line-height: 24px;
+    //         border: 0;
+    //         background: transparent;
+    //         border: 1px solid #bababa;
 
-            a {
-                color: #6B6B6B;
-            }
-        }
+    //         a {
+    //             color: #6B6B6B;
+    //         }
+    //     }
 
-        &-primary {
-            border-radius: 4px;
-            box-shadow: none;
-            padding: 8px 16px;
-            color: #ffffff;
-            font-size: 14px;
-            font-weight: 400;
-            line-height: 24px;
-            border: 0;
-        }
-    }
+    //     // &-primary {
+    //     //     border-radius: 4px;
+    //     //     box-shadow: none;
+    //     //     padding: 8px 16px;
+    //     //     color: #ffffff;
+    //     //     font-size: 14px;
+    //     //     font-weight: 400;
+    //     //     line-height: 24px;
+    //     //     border: 0;
+    //     // }
+    // }
 }
 
 // Back Button CSS
