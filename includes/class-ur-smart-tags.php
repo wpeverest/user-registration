@@ -617,8 +617,14 @@ class UR_Smart_Tags {
 					case 'membership_plan_next_billing_date':
 						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_next_billing_date'] ) ? $values['membership_plan_next_billing_date'] : '', $content );
 						break;
+					case 'membership_plan_expiry_date':
+						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_expiry_date'] ) ? $values['membership_plan_expiry_date'] : '', $content );
+						break;
 					case 'membership_plan_status':
 						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_status'] ) ? $values['membership_plan_status'] : '', $content );
+						break;
+					case 'membership_renewal_link':
+						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_renewal_link'] ) ? $values['membership_renewal_link'] : '', $content );
 						break;
 					case 'membership_plan_details':
 						$new_content = '';

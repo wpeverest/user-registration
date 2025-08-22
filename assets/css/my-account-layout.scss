@@ -600,8 +600,15 @@
 						&.cancel-membership-button {
 							border: 1px solid #ea4335;
 							color: #ea4335;
+							display: flex;
+							align-items: center;
 						}
-
+						&.renew-membership-button {
+							border: 1px solid #00ab02;
+							color: #00ab02;
+							display: flex;
+							align-items: center;
+						}
 						&.change-membership-button {
 							border: 1px solid #475bb2;
 							color: #475bb2;
@@ -620,11 +627,11 @@
 							}
 						}
 
-						&.cancel-membership-button:hover, &.change-membership-button:hover {
+						&.cancel-membership-button:hover, &.change-membership-button:hover, &.renew-membership-button:hover {
 							background: #80808021;
 						}
 
-						&.cancel-membership-button:focus, &.change-membership-button:focus {
+						&.cancel-membership-button:focus, &.change-membership-button:focus, &.renew-membership-button:focus {
 							outline-style: none;
 						}
 					}

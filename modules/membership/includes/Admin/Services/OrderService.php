@@ -17,7 +17,7 @@ class OrderService {
 		);
 	}
 
-	public function prepare_orders_data( $data, $member_id, $subscription, $upgrade_details = null ) {
+	public function prepare_orders_data( $data, $member_id, $subscription, $upgrade_details = null, $is_renewal = false ) {
 
 		$current_user = wp_get_current_user();
 		$is_admin     = ( isset( $current_user->roles ) && ! empty( $current_user->roles ) && $current_user->roles[0] == 'administrator' );
@@ -40,6 +40,9 @@ class OrderService {
 				$total           = $total - $discount_amount;
 			}
 		}
+		$creator = $is_admin ? 'admin' : 'member';
+		$type = $is_renewal ? 'Renewal' : (!empty($upgrade_details) ? 'Upgrade' : '');
+		$note = sprintf(__('%s created order for %s of %s', 'user-registration'), $creator , $type , $membership['post_title']);
 
 		$orders_data = array(
 			'item_id'         => absint( $data['membership_data']['membership'] ),
@@ -52,7 +55,7 @@ class OrderService {
 			'status'          => ( 'free' === $membership_meta['type'] || $is_admin ) ? 'completed' : 'pending',
 			'order_type'      => sanitize_text_field( $membership_meta['type'] ),
 			'trial_status'    => ( ! empty( $upgrade_details ) && ( "on" === $upgrade_details['trial_status'] ) ) ? 'on' : ( isset( $membership_meta['trial_status'] ) ? sanitize_text_field( $membership_meta['trial_status'] ) : 'off' ),
-			'notes'           => $is_admin ? 'admin created order for ' . $membership['post_title'] : 'subscriber created order for ' . $membership['post_title'],
+			'notes'           => $note,
 		);
 
 		$orders_meta = array(

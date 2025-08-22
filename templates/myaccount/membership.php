@@ -22,6 +22,16 @@ $is_upgraded     = ! empty( $_GET['is_upgraded'] ) ? absint( ur_string_to_bool( 
 $message         = ! empty( $_GET['message'] ) ? esc_html( $_GET['message'] ) : '';
 $membership_info = ( isset( $_GET['info'] ) && ! empty( $_GET['info'] ) ) ? wp_kses_post_deep( $_GET['info'] ) : ( ! empty( $bank_data['bank_data'] ) ? wp_kses_post_deep( $bank_data['bank_data'] ) : '' );
 $is_delayed      = ! empty( $delayed_until );
+$is_renewing     = ur_string_to_bool( get_user_meta( $user->ID, 'urm_is_member_renewing', true ) );
+
+$can_renew     = ! $is_renewing && isset( $membership['post_content']['type'] ) && "automatic" !== $renewal_behaviour && "subscription" == $membership['post_content']['type'];
+$date_to_renew = "";
+
+if ( "subscription" == $membership['post_content']['type'] ) {
+	$start_date    = $subscription_data["start_date"];
+	$expiry_date   = $subscription_data["expiry_date"];
+	$date_to_renew = urm_get_date_at_percent_interval( $start_date, $expiry_date, apply_filters( 'urm_show_membership_renewal_btn_in_percent', 80 ) ); //keeping this static for now can be changed to a setting in future
+}
 
 ?>
 
@@ -39,7 +49,6 @@ $is_delayed      = ! empty( $delayed_until );
 				<?php
 				echo isset( $membership['post_title'] ) && ! empty( $membership['post_title'] ) ? esc_html( $membership['post_title'] ) : __( 'N/A', 'user-registration' ) ?>
 			</span>
-
 		</div>
 
 	</div>
@@ -127,7 +136,7 @@ $is_delayed      = ! empty( $delayed_until );
 
 		<div class="membership-label">
 				<span style="font-weight: 500">
-				<?php echo esc_html__( 'Renews On', 'user-registration' ) . ':'; ?>
+				<?php echo esc_html__( 'Next Billing Date', 'user-registration' ) . ':'; ?>
 					</span>
 		</div>
 		<div class="membership-data">
@@ -174,13 +183,24 @@ $is_delayed      = ! empty( $delayed_until );
 			?>
 			<?php
 
-			if ( !empty( $membership ) && 'canceled' !== $membership['status'] ):
+			if ( $can_renew && $date_to_renew <= date( 'Y-m-d 00:00:00' ) ):
+				?>
+				<button type="button" class="membership-tab-btn renew-membership-button"
+						data-pg-gateways= <?php echo isset( $membership['active_gateways'] ) ? implode( ',', array_keys( $membership['active_gateways'] ) ) : "" ?>
+						data-id="<?php echo ( isset( $membership['post_id'] ) && ! empty( $membership['post_id'] ) ) ? esc_attr( $membership['post_id'] ) : ''; ?>">
+					<?php echo __( "Renew Membership", "user-registration" ); ?>
+				</button>
+			<?php
+			endif;
 			?>
-			<button type="button" class="membership-tab-btn cancel-membership-button"
-					data-id="<?php echo ( isset( $membership['subscription_id'] ) && ! empty( $membership['subscription_id'] ) ) ? esc_attr( $membership['subscription_id'] ) : ''; ?>"
-			>
-				<?php echo __( "Cancel Membership", "user-registration" ); ?>
-			</button>
+			<?php
+			if ( 'canceled' !== $membership['status'] ):
+				?>
+				<button type="button" class="membership-tab-btn cancel-membership-button"
+						data-id="<?php echo ( isset( $membership['subscription_id'] ) && ! empty( $membership['subscription_id'] ) ) ? esc_attr( $membership['subscription_id'] ) : ''; ?>"
+				>
+					<?php echo __( "Cancel Membership", "user-registration" ); ?>
+				</button>
 			<?php
 			endif;
 			?>
@@ -197,13 +217,21 @@ $is_delayed      = ! empty( $delayed_until );
 				</span>
 		</div>
 		<?php
-		if ( $is_upgrading ):
-		if ( !empty( $bank_data['notice_1'] ) ):
-		?>
-		<div id="bank-notice" class="btn-success">
+		if ( $is_upgrading || $is_renewing ):
+			if ( ! empty( $bank_data['notice_1'] ) ):
+				?>
+				<div id="bank-notice" class="btn-success">
 				<span class="notice-1">
 					<svg xmlns="http://www.w3.org/2000/svg" width="18" height="22" viewBox="0 0 18 22" fill="none">
 						<g clip-path="url(#clip0_4801_13369)">
+							<path
+								d="M9 20.5C13.1421 20.5 16.5 17.1421 16.5 13C16.5 8.85786 13.1421 5.5 9 5.5C4.85786 5.5 1.5 8.85786 1.5 13C1.5 17.1421 4.85786 20.5 9 20.5Z"
+								stroke="#475BB2" stroke-width="1.5" stroke-linecap="round"
+								stroke-linejoin="round"></path>
+							<path d="M9 13V16" stroke="#475BB2" stroke-width="1.5" stroke-linecap="round"
+								  stroke-linejoin="round"></path>
+							<path d="M9 10H9.00875" stroke="#475BB2" stroke-width="1.5" stroke-linecap="round"
+								  stroke-linejoin="round"></path>
 							<path
 								d="M9 20.5C13.1421 20.5 16.5 17.1421 16.5 13C16.5 8.85786 13.1421 5.5 9 5.5C4.85786 5.5 1.5 8.85786 1.5 13C1.5 17.1421 4.85786 20.5 9 20.5Z"
 								stroke="#475BB2" stroke-width="1.5" stroke-linecap="round"
@@ -220,23 +248,27 @@ $is_delayed      = ! empty( $delayed_until );
 						</defs>
 					</svg>
 					<?php
-					echo isset( $bank_data['notice_1'] ) ? $bank_data['notice_1'] : '';
+					if ( $is_upgrading ) {
+						echo isset( $bank_data['notice_1'] ) ? $bank_data['notice_1'] : '';
+					} else if ( $is_renewing ) {
+						echo isset( $bank_data['notice_2'] ) ? $bank_data['notice_2'] : '';
+					}
 					?>
 				</span>
-			<span class="view-bank-data">
+					<span class="view-bank-data">
 					<?php
-					echo __( "Pay now", "user-registration" );
+					echo __( "Bank Info", "user-registration" );
 					?>
 				</span>
-		</div>
-		<?php
-		endif;
-		?>
-		<div class="upgrade-info urm-d-none">
+				</div>
 			<?php
-			echo $membership_info;
+			endif;
 			?>
-		</div>
+			<div class="upgrade-info urm-d-none">
+				<?php
+				echo $membership_info;
+				?>
+			</div>
 		<?php
 		endif;
 		?>
