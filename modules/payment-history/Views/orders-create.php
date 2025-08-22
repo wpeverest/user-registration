@@ -28,7 +28,7 @@ $return_url = admin_url( 'admin.php?page=member-payment-history' );
 				</div>
 
 				<!-- Member -->
-				<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
+				<div class="ur-member-input-container ur-d-flex ur-p-3" style="gap:20px;">
 					<div class="ur-label" style="width: 30%">
 						<label for="ur-input-type-member"><?php esc_html_e( 'Member', 'user-registration' ); ?>
 							<span style="color:red">*</span>

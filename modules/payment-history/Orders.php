@@ -214,6 +214,17 @@ class Orders {
 						",
 			ARRAY_A
 		);
+		$users = array_filter( $users, function( $user ) {
+			 $post = get_post( $user[ 'item_id' ], array(
+				'post_type' => 'ur_memberships',
+				'post_status' => 'publish'
+			));
+			if( $post && ! empty( $post->post_content ) ) {
+				$membership = json_decode( wp_unslash( $post->post_content ), true );
+				return isset( $membership[ 'type' ] ) && $membership[ 'type' ] !== 'free';
+			}
+			return false;
+		});
 		$memberships = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT ID, post_title as title FROM {$wpdb->posts} WHERE post_type = %s AND post_status=%s",
