@@ -13,6 +13,10 @@
 				$('.user-registration-membership-notice__container .user-registration-membership-notice__red').removeClass('user-registration-membership-notice__red').addClass('user-registration-membership-notice__blue');
 				$('.user-registration-membership-notice__message').text(message);
 				$('.user-registration-membership-notice__container').css('display', 'block');
+				//attach near my account title.
+				if ($(document).find('.user-registration-MyAccount').length === 1) {
+					$('.user-registration-membership-notice__container .ur-toaster').css('top', '15%');
+				}
 				this.toggleNotice();
 				this.ur_remove_cookie('urm_toast_content');
 				this.ur_remove_cookie('urm_toast_success_message');

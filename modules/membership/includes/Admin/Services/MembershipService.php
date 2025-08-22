@@ -183,7 +183,7 @@ class MembershipService {
 				),
 				'ur_membership_description' => array(
 					'meta_key'   => 'ur_membership_description',
-					'meta_value' => wp_kses_post($data['post_data']['description']),
+					'meta_value' => wp_kses_post( $data['post_data']['description'] ),
 				)
 			),
 
@@ -339,7 +339,7 @@ class MembershipService {
 		$post     = get_post( $post_id );
 		if ( empty( $post ) ) {
 			$response['status']  = false;
-			$response['message'] = __( 'Invalid post' );
+			$response['message'] =  __( 'No page selected.', 'user-registration' );
 
 			return $response; //return since the post does not exist;
 		}
@@ -463,5 +463,36 @@ class MembershipService {
 		}
 
 		return array();
+	}
+
+	public function delete_membership( $membership_id ) {
+		$response                  = array(
+			'status' => true,
+		);
+		$valid_membership_statuses = apply_filters( "urm_valid_membership_statuses", array(
+				__( "active", "user-registration" ),
+				__( "pending", "user-registration" ),
+				__( "trial", "user-registration" )
+			)
+		);
+		$active_members            = $this->membership_repository->check_deletable_membership( $membership_id, $valid_membership_statuses );
+		if ( $active_members['total'] > 0 ) {
+			$html = "<p>" . __( "You cannot delete a membership plan if it has active users assigned to it with any of the following statuses:", "user-registration" ) . "</p>";
+			$html .= "<ul>";
+			foreach ( $valid_membership_statuses as $status ) {
+				$html .= "<li>" . ucfirst($status). "</li>";
+			}
+			$html .= "</ul >";
+			$html .= "<p >" . __( "To proceed, update all memberships to Expired or Cancelled, or assign users to a different plan . Once no active users remain, the plan can be deleted", "user-registration" ) . "</p > ";
+
+			$response = array(
+				'status'  => false,
+				'message' => $html
+			);
+		} else {
+			$this->membership_repository->delete( $membership_id );
+		}
+
+		return $response;
 	}
 }

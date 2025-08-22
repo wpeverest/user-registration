@@ -2861,7 +2861,7 @@
 								});
 								// Disable membership field from dragging when payment setting is enabled already.
 								var $checkboxes = $(
-									"input[name^='user_registration_enable_']"
+									"[data-field-group='payments'] input[name^='user_registration_enable_']"
 								);
 								if ($checkboxes.is(":checked")) {
 									// disable membership field.
