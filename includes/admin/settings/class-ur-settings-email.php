@@ -54,6 +54,22 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 				'email_notification_setting'
 			), 10, 2 );
 			$this->initialize_email_classes();
+
+			$email_content_default_values = [];
+			foreach( $this->emails as $key => $email) {
+				$method_name = 'ur_get_' . $email->id;
+				//for membership, the naming convention is different.
+				if( ! method_exists( $email, $method_name ) ) {
+					$method_name = 'user_registration_get_' . $email->id;
+				}
+				$key = strtolower( $key );
+				$email_content_default_values[ $key ] = method_exists($email, $method_name) ? $email->$method_name() : '';
+			}
+			wp_localize_script(
+				'user-registration-settings',
+				'user_registration_email_settings',
+				$email_content_default_values,
+			);
 		}
 
 		/**
