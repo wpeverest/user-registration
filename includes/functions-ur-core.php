@@ -6318,7 +6318,6 @@ if ( ! function_exists( 'ur_quick_settings_tab_content' ) ) {
 		$my_account_page_id        = get_option( 'user_registration_myaccount_page_id', false );
 		$prevent_core_login        = get_option( 'user_registration_login_options_prevent_core_login', false );
 		$captcha_setup             = get_option( 'user_registration_captcha_setting_recaptcha_version', false );
-		$anyone_can_register       = get_option( 'users_can_register', false );
 
 		$lists = array(
 			array(
@@ -6330,10 +6329,6 @@ if ( ! function_exists( 'ur_quick_settings_tab_content' ) ) {
 				'text'          => esc_html__( 'Create registration and my account page.', 'user-registration' ),
 				'completed'     => $registration_form_page_id || $my_account_page_id ? true : false,
 				'documentation' => esc_url_raw( "https://docs.wpuserregistration.com/docs/how-to-show-account-profile/?utm_source=settings-sidebar-right&utm_medium=quick-setup-card&utm_campaign='" . UR()->utm_campaign . "'" ),
-			),
-			array(
-				'text'      => esc_html__( 'Enable anyone can register.', 'user-registration' ),
-				'completed' => ur_string_to_bool( $anyone_can_register ),
 			),
 			array(
 				'text'          => esc_html__( 'Disable WordPress default registration and login page.', 'user-registration' ),
