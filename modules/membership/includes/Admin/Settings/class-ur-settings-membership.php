@@ -59,7 +59,7 @@ if ( ! class_exists( 'UR_Settings_Membership ' ) ) :
 						'id'       => 'user_registration_global_bank_details',
 						'type'     => 'tinymce',
 						'default'  => get_option( 'user_registration_global_bank_details' ),
-						'css'      => 'min-width: 350px;',
+						'css'      => '',
 						'desc_tip' => true
 					),
 					array(
@@ -113,6 +113,20 @@ if ( ! class_exists( 'UR_Settings_Membership ' ) ) :
 									'default'  => '',
 									'class'    => 'ur-enhanced-select-nostd',
 									'css'      => 'min-width:350px;',
+									'desc_tip' => true,
+								),
+								array(
+									'title'    => __( 'Renewal Behaviour', 'user-registration' ),
+									'desc'     => __( 'Choose how membership subscriptions are renewed, automatically through the payment provider or manually by the user', 'user-registration' ),
+									'id'       => 'user_registration_renewal_behaviour',
+									'type'     => 'select',
+									'default'  => 'automatic',
+									'class'    => 'ur-enhanced-select',
+									'css'      => 'min-width:350px;',
+									'options'  => array(
+										'automatic' => __('Renew Automatically', 'user-registration'),
+										'manual' => __('Renew Manually', 'user-registration')
+									),
 									'desc_tip' => true,
 								),
 							),

@@ -84,7 +84,18 @@ do_action( 'user_registration_before_customer_login_form' );
  *
  * @return function.
  */
-ur_add_notice( apply_filters( 'user_registration_post_login_errors', '' ), 'error' );
+
+// Check for session error message (PRG pattern)
+if ( ! session_id() ) {
+	session_start();
+}
+if ( isset( $_SESSION['ur_login_error'] ) ) {
+	ur_add_notice( $_SESSION['ur_login_error'], 'error' );
+	unset( $_SESSION['ur_login_error'] );
+} else {
+	ur_add_notice( apply_filters( 'user_registration_post_login_errors', '' ), 'error' );
+}
+
 if ( ! $is_passwordless_enabled || $is_passwordless_login_default_login_area_enabled ) {
 	ur_add_notice( apply_filters( 'user_registration_passwordless_login_notice', '' ), 'success' );
 }
@@ -159,14 +170,20 @@ if( isset($_GET['page']) && 'user-registration-login-forms' === $_GET['page'] ) 
 						printf( '<label for="username">%s <span class="required">*</span></label>', esc_html( $labels['username'] ) );
 					}
 					?>
-					<span class="input-wrapper">
-						<input placeholder="<?php echo esc_attr( $placeholders['username'] ); ?>" type="text"
-							   class="user-registration-Input user-registration-Input--text input-text" name="username"
-							   id="username"
-							   value="<?php echo ( ! empty( $_POST['username'] ) ) ? esc_attr( wp_unslash( sanitize_text_field( $_POST['username'] ) ) ) : ''; // phpcs:ignore ?>"
-							   style="<?php echo ( $enable_field_icon || $is_login_settings && is_plugin_active( 'user-registration-pro/user-registration.php' ) ) ? "padding-left: 32px !important" : '' ?>"
-							   <?php echo $is_login_settings ? "disabled" : '' ?>
-						/>
+					<?php
+					/**
+					 * Action to fire at the start of rendering the login form.
+					 */
+					do_action( 'user_registration_login_form_start' );
+					?>
+					<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide" data-field="username">
+						<?php
+						if ( ! $hide_labels || $is_login_settings ) {
+							printf( '<label for="username">%s <span class="required">*</span></label>', esc_html( $labels['username'] ) );
+						}
+						?>
+						<span class="input-wrapper">
+						<input placeholder="<?php echo esc_attr( $placeholders['username'] ); ?>" type="text" class="user-registration-Input user-registration-Input--text input-text" name="username" id="username" value="" style="<?php echo ($enable_field_icon || $is_login_settings && is_plugin_active( 'user-registration-pro/user-registration.php' )) ? "padding-left: 32px !important" : '' ?>"/>
 						<?php if ( $enable_field_icon || $is_login_settings && is_plugin_active( 'user-registration-pro/user-registration.php' ) ) { ?>
 							<span class="ur-icon ur-icon-user">
 

@@ -143,6 +143,19 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 			ARRAY_A
 		);
 
+		$orders_meta_table = TableList::order_meta_table();
+		$payment_date = $this->wpdb()->get_var(
+			$this->wpdb()->prepare(
+				"SELECT meta_value FROM {$orders_meta_table} WHERE meta_key=%s AND order_id=%d LIMIT 1",
+				'payment_date',
+				$order_id
+			)
+		);
+
+		if( ! empty( $payment_date ) ) {
+			$result[ 'created_at' ] = $payment_date;
+		}
+
 		return ! $result ? array() : $result;
 	}
 

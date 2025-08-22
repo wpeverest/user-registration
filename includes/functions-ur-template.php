@@ -41,7 +41,7 @@ function ur_template_redirect() {
 		wp_logout();
 		wp_safe_redirect( ur_get_page_permalink( $redirect_url ) );
 		exit;
-		
+
 	} elseif ( isset( $wp->query_vars['user-logout'] ) && 'true' === $wp->query_vars['user-logout'] ) {
 		/**
 		 * Filter the redirect after logout url.
@@ -367,7 +367,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 			case 'textarea':
 				$field .= '<textarea style="margin-bottom:0px;" data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" ' . ( empty( $args['custom_attributes']['rows'] ) ? ' rows="2"' : '' ) . ( empty( $args['custom_attributes']['cols'] ) ? ' cols="5"' : '' ) . implode( ' ', $custom_attributes ) . '>' . esc_textarea( $value ) . '</textarea>';
-				$field .= '<div style="text-align: right; font-size:14px; color:#737373; margin-top:0px;"> <div class="ur-input-count" data-count-type="' . ( isset( $args['max-words'] ) ? 'words' : 'characters' ) . '" style="display: inline-block; margin-right: 1px;">0</div>';
+				$field .= '<div style="text-align: right; font-size:14px; color:#737373; margin-top:0px;"> <div class="ur-input-count" data-count-type="' . ( isset( $args['max-words'] ) ? 'words' : 'characters' ) . '" style="display: inline-block; margin-right: 1px;">0</div>&nbsp;';
 				$field .= '<div style="display: inline-block;">' . ( isset( $args['max-words'] ) ? '/' . $args['max-words'] . ' ' . __( 'words', 'user-registration' ) : ( isset( $args['max-characters'] ) ? '/' . $args['max-characters'] . ' ' . __( 'characters', 'user-registration' ) : ' ' . __( 'characters', 'user-registration' ) ) );
 				$field .= '</div></div>';
 				break;
@@ -1479,3 +1479,773 @@ function ur_check_external_url( $url ) {
 
 	return $redirect_url;
 }
+
+if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
+
+	/**
+	 * Outputs a form fields on registration form settings.
+	 *
+	 * @param string $key Key.
+	 * @param mixed $args Arguments.
+	 * @param string $value (default: null).
+	 * @param string $current_row (default: empty).
+	 *
+	 * @return string
+	 */
+	function user_registration_form_settings_field( $key, $args, $value = null, $current_row = '', $is_edit = false ) {
+		/* Conditional Logic codes */
+		$rules                      = array();
+		$rules['conditional_rules'] = isset( $args['conditional_rules'] ) ? $args['conditional_rules'] : '';
+		$rules['logic_gate']        = isset( $args['logic_gate'] ) ? $args['logic_gate'] : '';
+		$rules['rules']             = isset( $args['rules'] ) ? $args['rules'] : array();
+		$rules['required']          = isset( $args['required'] ) ? $args['required'] : '';
+
+		foreach ( $rules['rules'] as $rules_key => $rule ) {
+			if ( empty( $rule['field'] ) ) {
+				unset( $rules['rules'][ $rules_key ] );
+			}
+		}
+
+		$required = '';
+
+		$rules['rules'] = array_values( $rules['rules'] );
+
+		$rules = ( ! empty( $rules['rules'] ) && isset( $args['enable_conditional_logic'] ) ) ? wp_json_encode( $rules ) : '';
+		/*Conditonal Logic codes end*/
+
+		$defaults = array(
+			'type'              => 'text',
+			'label'             => '',
+			'description'       => '',
+			'placeholder'       => '',
+			'size'              => false,
+			'min'               => false,
+			'max'               => false,
+			'required'          => false,
+			'autocomplete'      => false,
+			'id'                => $key,
+			'class'             => array(),
+			'input_class'       => array(),
+			'return'            => false,
+			'options'           => array(),
+			'custom_attributes' => array(),
+			'validate'          => array(),
+			'default'           => '',
+			'autofocus'         => '',
+			'priority'          => '',
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+		/**
+		 * Filters the arguments for a user registration form field.
+		 *
+		 * The 'user_registration_form_field_args' filter allows developers to modify
+		 * the arguments (args) for a specific form field during the user registration
+		 * process. It provides an opportunity to customize the field arguments based on
+		 * the original args, field key, and field value.
+		 *
+		 * @param array $args The original arguments for the form field.
+		 * @param string $key The key identifying the form field.
+		 * @param mixed $value The value of the form field.
+		 */
+		$args = apply_filters( 'user_registration_form_field_args', $args, $key, $value );
+
+
+		if ( true === ur_string_to_bool( $args['required'] ) ) {
+			$args['class'][]                       = 'validate-required';
+			$args['custom_attributes']['required'] = 'required';
+			$required                              = ' <abbr class="required" title="' . esc_attr__( 'required', 'user-registration' ) . '">*</abbr>';
+		} else {
+			$args['required'] = '';
+		}
+
+		if ( ( is_null( $value ) || empty( $value ) ) && ! is_numeric( $value ) ) {
+			$value = $args['default'];
+		}
+
+		// Custom attribute handling.
+		$custom_attributes         = array();
+		$args['custom_attributes'] = array_filter( (array) $args['custom_attributes'] );
+
+		if ( $args['size'] ) {
+			$args['custom_attributes']['maxlength'] = absint( $args['size'] );
+		}
+
+		if ( ! empty( $args['min'] ) || '0' === $args['min'] ) {
+			$args['custom_attributes']['min'] = $args['min'];
+		}
+
+		if ( isset( $args['min-characters'] ) ) {
+			if ( ! empty( $args['min-characters'] ) || '0' === $args['min-characters'] ) {
+				$args['custom_attributes']['minlength'] = $args['min-characters'];
+			}
+		}
+
+		if ( isset( $args['max-characters'] ) ) {
+			if ( ! empty( $args['max-characters'] ) || '0' === $args['max-characters'] ) {
+				$args['custom_attributes']['maxlength'] = $args['max-characters'];
+			}
+		}
+
+		if ( isset( $args['min-words'] ) ) {
+			if ( ! empty( $args['min-words'] ) || '0' === $args['min-words'] ) {
+				$args['custom_attributes']['data-min-words'] = $args['min-words'];
+			}
+		}
+
+		if ( isset( $args['max-words'] ) ) {
+			if ( ! empty( $args['max-words'] ) || '0' === $args['max-words'] ) {
+				$args['custom_attributes']['max-words'] = $args['max-words'];
+			}
+		}
+
+		if ( ! empty( $args['max'] ) || '0' === $args['max'] ) {
+			$args['custom_attributes']['max'] = $args['max'];
+		}
+
+		if ( ! empty( $args['step'] ) ) {
+			$args['custom_attributes']['step'] = $args['step'];
+		}
+
+		if ( ! empty( $args['autocomplete'] ) ) {
+			$args['custom_attributes']['autocomplete'] = $args['autocomplete'];
+		}
+
+		if ( true === $args['autofocus'] ) {
+			$args['custom_attributes']['autofocus'] = 'autofocus';
+		}
+
+		if ( isset( $args['default_value'] ) && ! empty( $args['default_value'] ) ) {
+			$args['custom_attributes']['data-default'] = is_array( $args['default_value'] ) ? implode( ', ', $args['default_value'] ) : $args['default_value'];
+		}
+
+		if ( isset( $args['default'] ) && ! empty( $args['default'] ) ) {
+			$args['custom_attributes']['data-default'] = $args['default'];
+		}
+
+		if ( ! empty( $args['custom_attributes'] ) && is_array( $args['custom_attributes'] ) ) {
+			foreach ( $args['custom_attributes'] as $attribute => $attribute_value ) {
+				$attribute_value     = is_array( $attribute_value ) ? json_encode( $attribute_value ) : $attribute_value;
+				$custom_attributes[] = esc_attr( $attribute ) . '="' . esc_attr( $attribute_value ) . '"';
+			}
+		}
+
+		if ( ! empty( $args['validate'] ) ) {
+			foreach ( $args['validate'] as $validate ) {
+				$args['class'][] = 'validate-' . $validate;
+			}
+		}
+
+		$tooltip_html = '';
+
+		if ( isset( $args['tooltip'] ) && ur_string_to_bool( $args['tooltip'] ) ) {
+			$tooltip_html = ur_help_tip( $args['tooltip_message'], false, 'ur-portal-tooltip' );
+		} elseif ( isset( $args['tip'] ) ) {
+			$tooltip_html = ur_help_tip( $args['tip'], false, 'user-registration-help-tip tooltipstered' );
+		}
+
+		$cl_html = '';
+
+		if ( isset( $args['enable_conditional_logic'] ) && true === $args['enable_conditional_logic'] ) {
+			$cl_map  = isset( $args['cl_map'] ) ? $args['cl_map'] : '';
+			$cl_html = sprintf( 'data-conditional-logic-enabled="1" data-conditional-logic-map="%s"', esc_attr( $cl_map ) );
+		}
+
+		$field           = '';
+
+		if( 'section' === $args['type'] ) {
+			$field = '<div class="ur-form-settings-section--field">';
+			$field .= '<h4>' . esc_html( $args['title'] ) . '</h4>';
+			$field .= '</div>';
+		}
+
+		$label_id        = $args['id'];
+		$sort            = $args['priority'] ? $args['priority'] : '';
+		$field_container = '<div class="form-row %1$s" id="%2$s" data-priority="' . esc_attr( $sort ) . '" ' . $cl_html . '>%3$s</div>';
+		$class           = '';
+		if ( ! is_admin() ) {
+			$form_id = isset( $args['form_id'] ) ? $args['form_id'] : '';
+			/**
+			 * Filters the enabled class for the icon associated with a user registration form field.
+			 *
+			 * The 'user_registration_field_icon_enabled_class' filter allows developers to modify
+			 * the class name representing the enabled state of the icon associated with a form field.
+			 * It provides an opportunity to customize the enabled class based on the original class
+			 * and the form ID.
+			 *
+			 * @param string $class The original class representing the enabled state of the icon.
+			 * @param int $form_id The ID of the user registration form.
+			 */
+			$class = apply_filters( 'user_registration_field_icon_enabled_class', $class, $form_id );
+		}
+
+		switch ( $args['type'] ) {
+
+			case 'title':
+				$field .= '<h4>' . esc_html( $args['title'] ) . '</h4>';
+				break;
+
+			case 'textarea':
+				$field .= '<div class="ur-settings-field">';
+				$field .= '<textarea style="margin-bottom:0px;" data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" ' . ( empty( $args['custom_attributes']['rows'] ) ? ' rows="2"' : '' ) . ( empty( $args['custom_attributes']['cols'] ) ? ' cols="5"' : '' ) . implode( ' ', $custom_attributes ) . '>' . esc_textarea( $value ) . '</textarea>';
+				$field .= '<div style="text-align: right; font-size:14px; color:#737373; margin-top:0px;">';
+				$field .= '</div>';
+				if ( $args['description'] ) {
+					$field .= '<span class="description">' . $args['description'] . '</span>';
+				}
+
+				$field .= '</div>';
+				break;
+
+			case 'toggle':
+				$default_value     = isset( $args['default_value'] ) ? $args['default_value'] : '';    // Backward compatibility. Modified since 1.5.7.
+				$value             = ! empty( $value ) ? $value : $default_value;
+				$select_all        = isset( $args['select_all'] ) ? ur_string_to_bool( $args['select_all'] ) : false;
+				$options           = isset( $args['options'] ) ? $args['options'] : ( $args['choices'] ? $args['choices'] : array() ); // $args['choices'] for backward compatibility. Modified since 1.5.7.
+				$choice_limit      = isset( $args['choice_limit'] ) ? $args['choice_limit'] : '';
+				$choice_limit_attr = '';
+
+				$field = '<div class="ur-toggle-section ur-form-builder-toggle">';
+				$field .= '<label class="ur-label checkbox" for="' . esc_attr( $key ) . '">' . $args['label'] . wp_kses_post( $tooltip_html ) . '</label>';
+				$field .= '<div class="ur-settings-field">';
+				$field .= '<span class="user-registration-toggle-form">';
+				$field .= '<input data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . ur_string_to_bool( $value ) . '" type="checkbox" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( ur_string_to_bool( $value ), 1, false ) . ' />';
+				$field .= '<span class="slider round"></span>';
+				$field .= '</span>';
+
+				if ( $args['description'] ) {
+					$field .= '<span class="description">' . $args['description'] . '</span>';
+				}
+
+				$field .= '</div>';
+				$field .= '</div>';
+				break;
+
+			case 'label':
+				$field = '<div class="' . esc_attr($args['id']) . '">';
+				$field .= '<span class="description">' . $args['description'] . '</span>';
+				$field .= '</div>';
+				break;
+			case 'radio-group':
+				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : '';    // Backward compatibility. Modified since 1.5.7.
+				$default       = ! empty( $value ) ? $value : $default_value;
+				$select_all    = isset( $args['select_all'] ) ? ur_string_to_bool( $args['select_all'] ) : false;
+				$options       = isset( $args['options'] ) ? $args['options'] : ( $args['choices'] ? $args['choices'] : array() ); // $args['choices'] for backward compatibility. Modified since 1.5.7.
+				$choice_limit  = isset( $args['choice_limit'] ) ? $args['choice_limit'] : '';
+
+				$field .= '<div class="ur-settings-field">';
+				if ( ! empty( $args['options'] ) ) {
+					$field .= '<ul class="ur-radio-group-list">';
+					foreach ( $args['options'] as $option_index => $option_text ) {
+						$class = str_replace( ' ', '-', strtolower( $option_text ) );
+
+						$field .= '<li class="ur-radio-group-list--item  ' . $class . ( trim( $option_index ) === $value ? ' active' : '' ) . '">';
+
+						$checked = '';
+
+						if ( '' !== $value ) {
+							$checked = checked( $value, trim( $option_index ), false );
+						}
+
+						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" class="radio">';
+
+						$field .= wp_kses(
+							trim( $option_text ),
+							array(
+								'a'    => array(
+									'href'  => array(),
+									'title' => array(),
+								),
+								'span' => array(),
+							)
+						);
+
+						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( trim( $option_index ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" ' . implode( ' ', $custom_attributes ) . ' / ' . $checked . ' /> ';
+						$field .= '</label>';
+
+						$field .= '</li>';
+					}
+					$field .= '</ul>';
+				}
+				if ( $args['description'] ) {
+					$field .= '<span class="description">' . $args['description'] . '</span>';
+				}
+
+				$field .= '</div>';
+				break;
+
+			case 'text':
+			case 'email':
+			case 'tel':
+			case 'number':
+			case 'url':
+			case 'file':
+			case 'timepicker':
+				$extra_params_key   = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
+				$extra_params       = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
+				$current_time       = isset( $args['current_time'] ) ? $args['current_time'] : '';
+				$time_interval      = isset( $args['time_interval'] ) ? $args['time_interval'] : '';
+				$time_format        = isset( $args['time_format'] ) ? $args['time_format'] : '';
+				$time_range         = isset( $args['time_range'] ) ? $args['time_range'] : '';
+				$time_min           = isset( $args['time_min'] ) ? $args['time_min'] : '';
+				$time_max           = isset( $args['time_max'] ) ? $args['time_max'] : '';
+				$username_length    = isset( $args['username_length'] ) ? $args['username_length'] : '';
+				$username_character = isset( $args['username_character'] ) ? $args['username_character'] : '';
+				$time_slot_booking  = isset( $args['enable_time_slot_booking'] ) ? $args['enable_time_slot_booking'] : '';
+				$target_date_field  = isset( $args['target_date_field'] ) ? isset( $args['target_date_field'] ) : '';
+				$enable_calculations = $args['enable_calculations'] ?? '';
+				$calculation_formula = $args['calculation_formula'] ?? '';
+				$decimal_places = $args['decimal_places'] ?? '';
+				$attr               = '';
+
+				$field .= '<div class="ur-settings-field">';
+
+				if ( '' !== $username_length ) {
+					$attr .= 'data-username-length="' . $username_length . '"';
+				}
+
+				if ( $username_character ) {
+					$attr .= 'data-username-character="' . $username_character . '"';
+				}
+
+				if ( '' !== $time_interval ) {
+					$attr .= 'data-time-interval="' . $time_interval . '"';
+				}
+
+				if ( '' !== $time_format ) {
+					$attr .= 'data-time-format="' . $time_format . '"';
+				}
+
+				if ( '' !== $time_min ) {
+					$attr .= 'data-time-min="' . $time_min . '"';
+				}
+
+				if ( '' !== $time_max ) {
+					$attr .= 'data-time-max="' . $time_max . '"';
+				}
+
+				if ( $time_range ) {
+					$attr .= 'data-time-range="' . $time_range . '"';
+				}
+
+				if ( $current_time ) {
+					$attr .= 'data-current-time="' . $current_time . '"';
+				}
+				if ( '' !== $enable_calculations && $enable_calculations ) {
+					$attr .= 'readonly data-decimal-places="' . esc_attr($decimal_places) . '" data-calculation-formula="' . esc_attr($calculation_formula) . '"';
+				}
+				if ( ur_string_to_bool( $time_slot_booking ) ) {
+					$target_date_field = isset( $args['target_date_field'] ) ? $args['target_date_field'] : '';
+
+					$attr  .= 'data-enable-time-slot-booking="' . $time_slot_booking . '"';
+					$attr  .= 'data-target-date-field="' . $target_date_field . '"';
+					$class .= ' time-slot-booking ';
+				}
+
+				$field .= ' <span class="input-wrapper"> ';
+				if ( isset( $args['autocomplete_address'] ) && ur_string_to_bool( $args['autocomplete_address'] ) ) {
+					$attr .= 'data-autocomplete-address="' . ur_string_to_bool( $args['autocomplete_address'] ) . '"';
+					$attr .= 'data-address-style="' . $args['address_style'] . '"';
+					$attr .= 'data-current-location="' . ur_option_checked( 'user_registration_google_map_current_location', false ) . '"';
+					if ( 'map' == $args['address_style'] ) {
+						$field .= '<div id="ur-geolocation-map" class="ur-geolocation-map"></div>';
+					}
+				}
+
+				$timpicker_class = '';
+				if ( 'timepicker' === $args['type'] ) {
+					$timpicker_class = 'ur-timepicker';
+				}
+
+				if ( empty( $extra_params ) ) {
+					if ( $time_range ) {
+						// Extract the start and end time if the time is given in range.
+						$pattern = '/^(\d{1,2}:\d{2}(?:\s?[APap][Mm])?)\s+to\s+(\d{1,2}:\d{2}(?:\s?[APap][Mm])?)$/';
+
+						$start_time = '';
+						$end_time   = '';
+
+						if ( preg_match( $pattern, $value, $times ) ) {
+							$start_time = $times[1];
+							$end_time   = $times[2];
+						}
+						$field .= '<div class = "ur-timepicker-range">';
+						$field .= '<input data-range-type="start" data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '-start" type="' . esc_attr( $args['type'] ) . '" class="input-text timepicker-start ' . esc_attr( $timpicker_class ) . ' ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '-start" id="' . esc_attr( $args['id'] ) . '" placeholder="Start Time "  value="' . esc_attr( $start_time ? $start_time : $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
+						$field .= '<input data-range-type="end" data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '-end" class="input-text timepicker-end ' . esc_attr( $timpicker_class ) . ' ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '-end" id="' . esc_attr( $args['id'] ) . '-end" placeholder="End Time"  value="' . esc_attr( $end_time ? $end_time : $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
+						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="hidden" class="input-text timepicker-time ' . esc_attr( $timpicker_class ) . ' ' . $class . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" />';
+						$field .= '</div>';
+					} else {
+
+						$disabled = ( ( ( isset( $_REQUEST['page'] ) && isset( $args['field_key'] ) && 'user-registration-users' == $_REQUEST['page'] ) && 'user_email' === $args['field_key'] ) || ( isset( $args['repeater_field'] ) && $args['repeater_field'] ) ) ? ' readonly="readonly"' : '';
+
+						$field .= '<input ' . $disabled . ' data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( $timpicker_class ) . ' ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
+					}
+				} elseif ( ! empty( $extra_params ) ) {
+					if ( $time_range ) {
+						$field .= '<input data-range-type="start" data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '-start-test" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( $timpicker_class ) . ' ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '-start" id="' . esc_attr( $args['id'] ) . '-start" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
+						$field .= '<input data-range-type="end" data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '-end" class="input-text timepicker-end ' . esc_attr( $timpicker_class ) . ' ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '-end" id="' . esc_attr( $args['id'] ) . '-end" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
+						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="hidden" class="input-text timepicker-time ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" />';
+					} else {
+						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( $timpicker_class ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . ' />';
+					}
+				}
+
+				if ( isset( $args['field_key'] ) && 'user_email' === $args['field_key'] ) {
+
+					$user_id       = ! empty( $_REQUEST['user_id'] ) ? absint( $_REQUEST['user_id'] ) : get_current_user_id();
+					$pending_email = get_user_meta( $user_id, 'user_registration_pending_email', true );
+					$expiration    = get_user_meta( $user_id, 'user_registration_pending_email_expiration', true );
+					$cancel_url    = esc_url(
+						add_query_arg(
+							array(
+								'cancel_email_change' => $user_id,
+								'_wpnonce'            => wp_create_nonce( 'cancel_email_change_nonce' ),
+							),
+							ur_get_my_account_url() . get_option( 'user_registration_myaccount_edit_profile_endpoint', 'edit-profile' )
+						)
+					);
+
+					if ( ! empty( $pending_email ) && time() <= $expiration ) {
+						$field .= sprintf(
+						/* translators: %s - Email Change Pending Message. */
+							'<div class="email-updated inline"><p>%s</p></div>',
+							sprintf(
+							/* translators: 1: Pending email message 2: Cancel Link */
+								__( 'There is a pending change of your email to <code>%1$s</code>. <a href="%2$s">Cancel</a>', 'user-registration' ),
+								$pending_email,
+								$cancel_url
+							)
+						);
+
+					} else {
+						// Remove the confirmation key, pending email and expiry date.
+						UR_Form_Handler::delete_pending_email_change( $user_id );
+					}
+				}
+
+				if ( ! is_admin() ) {
+					/**
+					 * Filters the icon markup for a user registration form field.
+					 *
+					 * The 'user_registration_field_icon' filter allows developers to modify
+					 * the icon markup associated with a specific form field during the user
+					 * registration process. It provides an opportunity to customize the icon
+					 * based on the original icon markup, form ID, and field arguments.
+					 *
+					 * @param string $field The original icon markup associated with the form field.
+					 * @param int $form_id The ID of the user registration form.
+					 * @param array $args The arguments for the form field.
+					 */
+					$field = apply_filters( 'user_registration_field_icon', $field, $form_id, $args );
+					$field .= ' </span> ';
+				}
+
+				if ( $args['description'] ) {
+					$field .= '<span class="description">' . $args['description'] . '</span>';
+				}
+
+				$field .= '</div>';
+				break;
+
+			case 'date':
+				$field .= '<div class="ur-settings-field">';
+
+				$extra_params_key  = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
+				$extra_params      = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
+				$date_slot_booking = isset( $args['enable_date_slot_booking'] ) ? $args['enable_date_slot_booking'] : '';
+				if ( ur_string_to_bool( $date_slot_booking ) ) {
+
+					$custom_attributes[] = 'data-enable-date-slot-booking="' . $date_slot_booking . '"';
+					$class               .= ' date-slot-booking';
+				}
+
+				$actual_value = $value;
+				if ( isset( $args['custom_attributes']['data-date-format'] ) ) {
+					$date_format  = $args['custom_attributes']['data-date-format'];
+					$default_date = isset( $args['custom_attributes']['data-default-date'] ) ? $args['custom_attributes']['data-default-date'] : '';
+					if ( empty( $value ) && ur_string_to_bool( $default_date ) ) {
+						$value        = date_i18n( $date_format );
+						$actual_value = date_i18n( $date_format );
+					}
+				}
+
+				$field .= ' <span class="input-wrapper"> ';
+
+				if ( empty( $extra_params ) ) {
+					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . ( '' !== $current_row ? '_' . $current_row : '' ) . '" type="text" value="' . esc_attr( $actual_value ) . '" class="ur-flatpickr-field regular-text ' . esc_attr( $class ) . '" readonly placeholder="' . esc_attr( $args['placeholder'] ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+					$field .= '<input type="hidden" id="formated_date" value="' . esc_attr( $value ) . '"/>';
+					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . ( '' !== $current_row ? '_' . $current_row : '' ) . '" type="text" data-field-type="' . esc_attr( $args['type'] ) . '" value="' . esc_attr( $actual_value ) . '" class="input-text input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  ' . implode( ' ', $custom_attributes ) . ' style="display:none"/>';
+				} else {
+					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . ( '' !== $current_row ? '_' . $current_row : '' ) . '" type="text" value="' . esc_attr( $actual_value ) . '"  class="ur-flatpickr-field regular-text ' . $class . '" readonly placeholder="' . esc_attr( $args['placeholder'] ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+					$field .= '<input type="hidden" id="formated_date" value="' . esc_attr( $value ) . '"/>';
+					$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . ( '' !== $current_row ? '_' . $current_row : '' ) . '" type="text" data-field-type="' . esc_attr( $args['type'] ) . '" value="' . esc_attr( $actual_value ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  ' . implode( ' ', $custom_attributes ) . ' style="display:none" />';
+				}
+
+				if ( ! is_admin() ) {
+					/**
+					 * Filters the icon markup for a user registration form field.
+					 *
+					 * The 'user_registration_field_icon' filter allows developers to modify
+					 * the icon markup associated with a specific form field during the user
+					 * registration process. It provides an opportunity to customize the icon
+					 * based on the original icon markup, form ID, and field arguments.
+					 *
+					 * @param string $field The original icon markup associated with the form field.
+					 * @param int $form_id The ID of the user registration form.
+					 * @param array $args The arguments for the form field.
+					 */
+					$field = apply_filters( 'user_registration_field_icon', $field, $form_id, $args );
+				}
+				$field .= '</span> ';
+				if ( $args['description'] ) {
+					$field .= '<span class="description">' . $args['description'] . '</span>';
+				}
+
+				$field .= '</div>';
+				break;
+
+			case 'color':
+				$field .= '<div class="ur-settings-field">';
+				$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="text" class="input-text input-color ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" data-default-color="' . esc_attr( $args['default'] ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+				if ( $args['description'] ) {
+					$field .= '<span class="description">' . $args['description'] . '</span>';
+				}
+
+				$field .= '</div>';
+				break;
+
+			case 'select':
+
+				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : ''; // Backward compatibility. Modified since 1.5.7.
+
+				$value           = ! empty( $value ) ? $value : $default_value;
+				$options         = $field .= '';
+				$field 			.= '<div class="ur-settings-field">';
+				$backtrace       = debug_backtrace();
+				$parent_function = isset( $backtrace[1] ) ? $backtrace[1]['function'] : '';
+				$args['options'] = ( $parent_function === 'frontend_includes' ) ? apply_filters( 'override_options_for_select_field', $args['options'], $args['id'] ) : $args['options'];
+
+				if ( ! empty( $args['options'] ) ) {
+					// If we have a blank option, select2 needs a placeholder.
+					if ( '' === $value && ! empty( $args['placeholder'] ) ) {
+						$options .= '<option value="" selected disabled>' . esc_html( $args['placeholder'] ) . '</option>';
+					}
+
+					if ( isset( $args['field_key'] ) && 'country' === $args['field_key'] && empty( $args['placeholder'] ) && empty( $value ) ) {
+						$options .= '<option value="" selected >' . esc_html__( 'Select a country', 'user-registration' ) . '</option>';
+					}
+
+					$custom_attributes[] = 'data-allow_clear="true"';
+					foreach ( $args['options'] as $option_key => $option_text ) {
+						$selected_attribute = '';
+
+						if ( '' !== $value ) {
+							$selected_attribute = selected( $value, trim( $option_key ), false );
+						}
+						$options .= '<option value="' . esc_attr( trim( $option_key ) ) . '" ' . $selected_attribute . '>' . esc_attr( trim( $option_text ) ) . '</option>';
+					}
+
+					$field .= '<select data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" class="select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '">
+							' . $options . '
+						</select>';
+				}
+				if ( $args['description'] ) {
+					$field .= '<span class="description">' . $args['description'] . '</span>';
+				}
+
+				$field .= '</div>';
+				break;
+
+			case 'multiselect':
+				$options = $field .= '';
+				$field .= '<div class="ur-settings-field">';
+
+				if ( is_serialized( $value ) ) {
+					$default_value = unserialize( $value, array( 'allowed_classes' => false ) ); //phpcs:ignore;
+				} else {
+					$default_value = $value;
+				}
+
+				$args['options'] = apply_filters( 'override_options_for_select_field', $args['options'] );
+
+				if ( ! empty( $args['options'] ) ) {
+					foreach ( $args['options'] as $option_key => $option_text ) {
+
+						if ( '' === $option_key ) {
+							// If we have a blank option, select2 needs a placeholder.
+							if ( empty( $args['placeholder'] ) ) {
+								$args['placeholder'] = $option_text ? $option_text : __( 'Choose an option', 'user-registration' );
+							}
+							$custom_attributes[] = 'data-allow_clear="true"';
+						}
+
+						if ( is_array( $default_value ) ) {
+							$options .= '<option value="' . esc_attr( trim( $option_key ) ) . '" ' . selected( in_array( trim( $option_key ), $default_value ), true, false ) . '>' . esc_attr( trim( $option_text ) ) . '</option>';
+						} else {
+							$options .= '<option value="' . esc_attr( trim( $option_key ) ) . '" ' . selected( $default_value, trim( $option_key ), false ) . '>' . esc_attr( trim( $option_text ) ) . '</option>';
+						}
+					}
+
+					$field .= '<select multiple data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $args['id'] ) . '" class="select ur-enhanced-select' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '">
+							' . $options . '
+						</select>';
+				}
+				if ( $args['description'] ) {
+					$field .= '<span class="description">' . $args['description'] . '</span>';
+				}
+
+				$field .= '</div>';
+				break;
+
+			case 'radio':
+				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : ''; // Backward compatibility. Modified since 1.5.7.
+				$value         = ! empty( $value ) ? $value : $default_value;
+				$label_id      = current( array_keys( $args['options'] ) );
+
+				if ( empty( $args['options'] ) ) {
+					return;
+				}
+
+				$field .= '<div class="ur-settings-field">';
+
+				if ( isset( $args['image_choice'] ) && ur_string_to_bool( $args['image_choice'] ) ) {
+					$field .= '<ul class="user-registration-image-options">';
+					foreach ( $args['image_options'] as $option_index => $option_text ) {
+						$option_label = is_array( $option_text ) ? $option_text['label'] : $option_text->label;
+						$option_image = is_array( $option_text ) ? $option_text['image'] : $option_text->image;
+
+						$field   .= '<li class="ur-radio-list">';
+						$checked = '';
+						if ( ! empty( $value ) ) {
+							$checked = checked( $value, trim( $option_index ), false );
+						}
+
+						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( trim( $option_index ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_label ) . '" ' . implode( ' ', $custom_attributes ) . ' / ' . $checked . ' /> ';
+						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_label ) . '" class="radio">';
+
+						if ( ! empty( $option_image ) ) {
+							$field .= '<span class="user-registration-image-choice">';
+							$field .= '<img src="' . esc_url( $option_image ) . '" alt="' . esc_attr( trim( $option_label ) ) . '" width="200px">';
+							$field .= '</span>';
+						}
+
+						$field .= wp_kses(
+							          trim( $option_label ),
+							          array(
+								          'a'    => array(
+									          'href'  => array(),
+									          'title' => array(),
+								          ),
+								          'span' => array(),
+							          )
+						          ) . '</label></li>';
+					}
+					$field .= '</ul>';
+				} else {
+					$field .= '<ul>';
+					foreach ( $args['options'] as $option_index => $option_text ) {
+
+						$field .= '<li class="ur-radio-list">';
+
+						$checked = '';
+						if ( ! empty( $value ) ) {
+							$checked = checked( $value, trim( $option_index ), false );
+						}
+
+						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( trim( $option_index ) ) . '"  name="' . esc_attr( $key ) . ( '' !== $current_row ? '_' . $current_row : '' ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" ' . implode( ' ', $custom_attributes ) . ' / ' . $checked . ' /> ';
+						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" class="radio">';
+
+						$field .= wp_kses(
+							          trim( $option_text ),
+							          array(
+								          'a'    => array(
+									          'href'  => array(),
+									          'title' => array(),
+								          ),
+								          'span' => array(),
+							          )
+						          ) . '</label></li>';
+					}
+					$field .= '</ul>';
+				}
+				if ( $args['description'] ) {
+					$field .= '<span class="description">' . $args['description'] . '</span>';
+				}
+
+				$field .= '</div>';
+				break;
+
+			case 'tinymce':
+				$editor_settings = array(
+					'name'       => esc_attr( $args['id'] ),
+					'id'         => esc_attr( $args['id'] ),
+					'style'      => esc_attr( $args['css'] ),
+					'default'    => esc_attr( $args['default'] ),
+					'class'      => esc_attr( $args['class'] ),
+					'quicktags'  => array( 'buttons' => 'em,strong,link' ),
+					'tinymce'    => array(
+						'theme_advanced_buttons1' => 'bold,italic,strikethrough,separator,bullist,numlist,separator,blockquote,separator,justifyleft,justifycenter,justifyright,separator,link,unlink,separator,undo,redo,separator',
+						'theme_advanced_buttons2' => '',
+					),
+					'editor_css' => '<style>#wp-excerpt-editor-container .wp-editor-area{height:175px; width:100%;}</style>',
+				);
+
+				$value = ! empty( $value ) ? $value : $default_value;
+
+				$field .= '<div class="user-registration-tinymce-field '.$args['id'].'">';
+
+				// Output buffer for tinymce editor.
+				ob_start();
+				wp_editor( $value, $args['id'], $editor_settings );
+				$field .= ob_get_clean();
+
+				$field .= '</div>';
+
+				break;
+		}
+
+
+		if ( ! empty( $field ) ) {
+
+			$field_html = '';
+			if ( $args['label'] && 'checkbox' != $args['type'] && 'toggle' != $args['type'] && 'hidden' !== $args['type'] ) {
+				$field_html .= '<label for="' . esc_attr( $label_id ) . '" class="ur-label">' . wp_kses(
+						$args['label'],
+						array(
+							'a'    => array(
+								'href'  => array(),
+								'title' => array(),
+							),
+							'span' => array(),
+						)
+					) . $required . $tooltip_html . '</label>';
+			}
+
+			$field_html      .= $field;
+			$container_class = esc_attr( implode( ' ', $args['class'] ) );
+			$container_id    = esc_attr( $args['id'] ) . '_field';
+			$field           = sprintf( $field_container, $container_class, $container_id, $field_html );
+		}
+
+		/**
+		 * Filters the form field based on its type.
+		 *
+		 * The dynamic 'user_registration_form_field_{type}' filter allows developers to modify
+		 * the form field for a specific type during the user registration process. The {type}
+		 * placeholder is replaced with the actual field type, providing a flexible way to customize
+		 * the form field based on its type, field key, arguments, and value.
+		 *
+		 * @param string $field The original form field markup for the specific type.
+		 * @param string $key The key identifying the form field.
+		 * @param array $args The arguments for the form field.
+		 * @param mixed $value The value of the form field.
+		 */
+		$field = apply_filters( 'user_registration_form_field_' . $args['type'], $field, $key, $args, $value, $current_row );
+
+		if ( $args['return'] ) {
+			return $field;
+		} else {
+			echo $field; //PHPCS:ignore;
+		}
+	}
+} // End if().

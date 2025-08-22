@@ -94,7 +94,7 @@ if ( ! class_exists( 'UR_Settings_Awaiting_Admin_Approval_Email', false ) ) :
 									'id'       => 'user_registration_awaiting_admin_approval_email_subject',
 									'type'     => 'text',
 									'default'  => __( 'Awaiting Admin Approval – Registration Pending on {{blog_info}}', 'user-registration' ),
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'desc_tip' => true,
 								),
 								array(
@@ -103,7 +103,7 @@ if ( ! class_exists( 'UR_Settings_Awaiting_Admin_Approval_Email', false ) ) :
 									'id'       => 'user_registration_awaiting_admin_approval_email',
 									'type'     => 'tinymce',
 									'default'  => $this->ur_get_awaiting_admin_approval_email(),
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'desc_tip' => true,
 								),
 							),

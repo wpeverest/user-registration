@@ -286,3 +286,137 @@
 	}
 }
 
+// Swal2 Popup CSS
+.user-registration,
+.user-registration-page {
+	.swal2-container {
+		.swal2-popup {
+			width: 400px;
+			border-radius: $spacing_10px;
+			padding: 0;
+			margin: auto;
+
+			.swal2-header {
+				padding: $spacing_20px;
+
+				.swal2-title {
+					display: flex !important;
+					align-items: center;
+					flex-direction: row;
+					gap: $spacing_12px;
+					border-bottom: $border_width solid #e1e1e1;
+					padding-bottom: $spacing_16px;
+					width: 100%;
+					margin-bottom: 0;
+
+					.dashicons {
+						font-size: 18px;
+						width: 28px;
+						height: 28px;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						margin: 0;
+					}
+
+					.user-registration-swal2-modal__title {
+						font-size: 16px;
+						line-height: 24px;
+						font-weight: $medium;
+						color: $grey-500;
+					}
+				}
+			}
+
+			.swal2-content {
+				padding-left: $spacing_20px;
+				padding-right: $spacing_20px;
+				margin-top: 0;
+				text-align: left;
+				font-size: 14px;
+				line-height: 24px;
+				color: $grey-400;
+
+				.swal2-html-container {
+					> div {
+						border-radius: $spacing_8px;
+						overflow: hidden;
+					}
+
+					.action-buttons {
+						margin-left: -$spacing_20px;
+						margin-right: -$spacing_20px;
+						border-radius: 0 0 $border_radius_10 $border_radius_10;
+						padding: $spacing_16px;
+						text-align: right;
+						background: #F4F4F4;
+
+						a {
+
+						}
+					}
+				}	
+				
+				.swal2-validation-message {
+					margin-left: 0;
+					margin-right: 0;
+					border-left: 3px solid #f27474;
+					justify-content: flex-start;
+					padding: $spacing_12px $spacing_6px $spacing_12px $spacing_6px;
+				}
+
+				.action-buttons {
+					padding: $spacing_18px $spacing_20px;
+
+					a {
+						background: #FF8C39;
+						border: #FF8C39;
+						text-decoration: none;
+						color: $white;
+					}
+				}
+			}
+
+			.swal2-actions {
+				padding: $spacing_18px $spacing_20px;
+				gap: $spacing_16px;
+				margin-top: $spacing_20px;
+				border-radius: 0 0 $border_radius_5 $border_radius_5;
+				background: #f4f4f4;
+				border-top: 0;
+				flex-direction: row-reverse;
+
+				.swal2-confirm,
+				.swal2-cancel {
+					min-height: 36px;
+					font-size: 14px;
+					line-height: 20px;
+					font-weight: $regular;
+					padding: 0 $spacing_12px;
+					width: 45%;
+				}
+
+				.swal2-confirm {
+					background: #ff4149;
+					border-color: #ff4149;
+				}
+
+				.swal2-cancel {
+					background: $white;
+					color: $grey-400;
+				}
+
+				button {
+					&:focus {
+						box-shadow: none;
+					}
+
+					&:focus-visible {
+						outline: none;
+					}
+				}
+				
+			}
+		}
+	}
+}

@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /**
  * Variables
  */
@@ -491,9 +492,23 @@
   line-height: 20px;
   background: transparent;
 }
+#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.reactivate-membership-button {
+  border: 1px solid #0067ab;
+  color: #0067ab;
+  display: flex;
+  align-items: center;
+}
 #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.cancel-membership-button {
   border: 1px solid #ea4335;
   color: #ea4335;
+  display: flex;
+  align-items: center;
+}
+#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.renew-membership-button {
+  border: 1px solid #00ab02;
+  color: #00ab02;
+  display: flex;
+  align-items: center;
 }
 #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.change-membership-button {
   border: 1px solid #475bb2;
@@ -511,10 +526,10 @@
   color: #475bb2;
   display: none;
 }
-#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.cancel-membership-button:hover, #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.change-membership-button:hover {
+#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.cancel-membership-button:hover, #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.change-membership-button:hover, #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.renew-membership-button:hover, #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.reactivate-membership-button:hover {
   background: rgba(128, 128, 128, 0.1294117647);
 }
-#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.cancel-membership-button:focus, #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.change-membership-button:focus {
+#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.cancel-membership-button:focus, #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.change-membership-button:focus, #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.renew-membership-button:focus, #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.reactivate-membership-button:focus {
   outline-style: none;
 }
 #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container #membership-error-div {
@@ -564,6 +579,9 @@
   cursor: pointer;
   font-style: italic;
   text-decoration: underline;
+}
+#user-registration .user-registration-MyAccount-content table.user-registration-email__entries {
+  display: inline-block !important;
 }
 
 .ur-toggle-section .user-registration-toggle-form {
@@ -949,11 +967,15 @@
 .user-registration-logout-swal2-container .swal2-modal {
   padding: 0px !important;
 }
+.user-registration-logout-swal2-container .swal2-modal:has(.swal2-confirm), .user-registration-logout-swal2-container .swal2-modal:has(.swal2-deny) {
+  width: 400px;
+}
 .user-registration-logout-swal2-container .swal2-modal .swal2-header {
   padding: 20px;
   align-items: baseline;
 }
 .user-registration-logout-swal2-container .swal2-modal .swal2-header h2 {
+  font-family: inherit;
   border-bottom: 1px solid #D3D3D3;
   padding-bottom: 16px;
   width: 100%;
@@ -982,6 +1004,7 @@
   background: #F4F4F4;
 }
 .user-registration-logout-swal2-container .swal2-modal .swal2-actions button {
+  font-family: inherit;
   width: 45%;
   color: #383838;
   font-size: 14px;
@@ -1038,4 +1061,70 @@ body.user-registration-page .user-registration-membership-notice__message {
 
 .rtl #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row .membership-label {
   min-width: 0px;
+}
+
+.user-registration-myaccount-notice-box {
+  background-color: #f4f6ff;
+  border: 1px solid #d6e0ff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 32px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  position: relative;
+  border-left: 4px solid #6669f1;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.user-registration-myaccount-notice-box--title {
+  display: flex;
+  align-items: center;
+}
+.user-registration-myaccount-notice-box--title-icon {
+  margin-right: 0.75rem;
+}
+.user-registration-myaccount-notice-box--title-icon .notice-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: #6366f1;
+}
+.user-registration-myaccount-notice-box--title-text h2 {
+  margin-top: 0;
+  margin-bottom: 0.5rem !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  color: #333 !important;
+}
+.user-registration-myaccount-notice-box p {
+  color: #444;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.user-registration-myaccount-notice-box p.pro-tip strong, .user-registration-myaccount-notice-box p.existing-users strong {
+  font-weight: bolder !important;
+}
+.user-registration-myaccount-notice-box p.pro-tip::before {
+  content: "💡";
+  margin-right: 0.5rem;
+}
+.user-registration-myaccount-notice-box p.existing-users::before {
+  content: "👤";
+  margin-right: 0.5rem;
+}
+.user-registration-myaccount-notice-box strong,
+.user-registration-myaccount-notice-box b {
+  font-weight: 600 !important;
+}
+.user-registration-myaccount-notice-box .addon-link {
+  color: #475bb2 !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+}
+.user-registration-myaccount-notice-box .addon-link:hover {
+  text-decoration: underline !important;
+}
+.user-registration-myaccount-notice-box .highlight {
+  font-weight: bold;
 }

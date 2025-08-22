@@ -203,12 +203,14 @@
 			class="ur_membership_input_label ur-label required"><?php echo apply_filters( 'user_registration_membership_subscription_payment_gateway_title', esc_html__( 'Select Payment Gateway', 'user-registration' ) ); ?>
 		</span>
 		<div id="payment-gateway-body" class="ur_membership_frontend_input_container">
-			<?php foreach ( get_option( 'ur_membership_payment_gateways' ) as $g => $gateway ) : ?>
+			<?php
+			foreach ( get_option( 'ur_membership_payment_gateways' ) as $g => $gateway ) :
+				?>
 				<label class="ur_membership_input_label ur-label"
-						for="ur-membership-<?php echo esc_attr( strtolower( $gateway ) ); ?>">
+						for="ur-membership-<?php echo esc_attr( strtolower( $g ) ); ?>">
 					<input class="ur_membership_input_class pg-list"
 							data-key-name="ur-payment-method"
-							id="ur-membership-<?php echo esc_attr( strtolower( $gateway ) ); ?>"
+							id="ur-membership-<?php echo esc_attr( strtolower( $g ) ); ?>"
 							type="radio"
 							name="urm_payment_method"
 							required

@@ -147,6 +147,7 @@ if ( ! class_exists( 'Members' ) ) {
 		public function get_i18_labels() {
 			return array(
 				'network_error'                                 => esc_html__( 'Network error', 'user-registration' ),
+				'i18n_error'									=> __( 'Error', 'user-registration' ),
 				'i18n_field_is_required'                        => _x( 'field is required.', 'user registration membership', 'user-registration' ),
 				'i18n_field_email_field_validation'             => _x( 'Please enter a valid email address.', 'user registration membership', 'user-registration' ),
 				'i18n_field_password_field_validation'          => _x( 'Password does not match with confirm password.', 'user registration membership', 'user-registration' ),
@@ -250,7 +251,7 @@ if ( ! class_exists( 'Members' ) ) {
 						</h1>
 					</div>
 					<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $this->page . '&action=add_new_member' ) ); ?>"
-					   id="user-registration-members-add-btn" class="button ur-button-primary">
+					   id="user-registration-members-add-btn" class="button button-primary ur-button-primary">
 						+ <?php esc_html_e( 'Add new Member', 'user-registration' ); ?>
 					</a>
 				</div>
@@ -285,7 +286,6 @@ if ( ! class_exists( 'Members' ) ) {
 			$members_list_table = new MembersListTable();
 			$roles              = $members_list_table->get_roles();
 			$memberships        = $members_list_table->get_all_memberships();
-			include __DIR__ . '/../Views/member-create.php';
 		}
 
 		/**

@@ -393,6 +393,8 @@ class UR_Admin_Assets {
 				'ur_assets_url'             => UR()->plugin_url() . '/assets/',
 				'i18n_prompt_no_membership_group_selected' => __( 'Membership Field requires a membership group to be selected.', 'user-registration' ),
 				'i18n_default_redirection_notice_for_membership' => esc_html__( 'If the form includes a membership field, users will be redirected to the membership thank you page after submission.', 'user-registration' ),
+				'i18n_email_confirmation_disabled_notice' => esc_html__( 'If email confirmation is not enabled in email settings, users will not receive a confirmation email when this login option is selected.', 'user_registration' ),
+				'email_confirmation_disabled' => ur_string_to_bool( get_option( 'user_registration_enable_email_confirmation', false ) ) ? 'no' : 'yes',
 				'form_has_membership_field' => check_membership_field_in_form($form_id),
 				'paypal_settings'                                => array(
 					'global'                    => array(

@@ -7,8 +7,15 @@
 }
 
 .user-registration-notice {
-  padding: 15px 0 15px 15px;
-  background-color: #fff;
+  display: flex;
+  gap: 30px;
+  padding: 24px;
+  background: #ffffff;
+  margin: 15px;
+  box-shadow: none;
+  border: 1px solid #e1e1e1;
+  border-right-width: 4px;
+  border-right-color: #475bb2;
 }
 .user-registration-notice .notice-dismiss {
   margin-right: 2px;
@@ -20,10 +27,10 @@
   display: block;
 }
 .user-registration-notice .user-registration-notice-thumbnail {
-  float: right;
-  text-align: center;
-  margin: 5px 25px;
-  width: 80px;
+  margin: 0;
+  max-width: 80px;
+  width: 100%;
+  position: relative;
 }
 .user-registration-notice .user-registration-notice-thumbnail img {
   border-radius: 5px;
@@ -31,11 +38,16 @@
   width: 100%;
 }
 .user-registration-notice .user-registration-notice-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   overflow: hidden;
 }
 .user-registration-notice .user-registration-notice-text .user-registration-notice-header {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 0;
 }
 .user-registration-notice .user-registration-notice-text .user-registration-notice-header h3 {
   font-size: 18px;
@@ -47,7 +59,11 @@
   color: darkgray;
   cursor: pointer;
   text-decoration: none;
-  position: relative;
+  position: absolute;
+  top: 24px;
+  left: 36px;
+  padding: 0;
+  margin: 0;
 }
 .user-registration-notice .user-registration-notice-text .ur-error {
   color: #d63638;
@@ -55,49 +71,60 @@
 .user-registration-notice .user-registration-notice-text p {
   font-size: 14px;
   margin: 0;
-  padding: 0 0 10px 0;
+  padding: 0;
 }
 .user-registration-notice .extra-pad {
   padding-bottom: 20px;
 }
 .user-registration-notice .user-registration-notice-links {
   display: flex;
+  align-items: center;
   justify-content: space-between;
+  margin-top: 12px;
 }
 .user-registration-notice .user-registration-notice-links a {
   position: relative;
   text-decoration: none;
 }
 .user-registration-notice .user-registration-notice-links .user-registration-notice-ul {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   margin: 0;
   padding: 0;
 }
 .user-registration-notice .user-registration-notice-links .user-registration-notice-ul li {
   display: inline-block;
-  margin-left: 10px;
+  margin: 0px;
 }
 .user-registration-notice .user-registration-notice-links .user-registration-notice-ul li a {
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  gap: 6px;
   text-decoration: none;
   position: relative;
 }
 .user-registration-notice .user-registration-notice-links .user-registration-notice-ul li a span {
-  margin-left: 5px;
-  margin-top: 4px;
+  margin: 0;
 }
 .user-registration-notice .user-registration-notice-links .user-registration-notice-ul .button-primary {
   background: #475bb2;
   border-color: #475bb2;
 }
-.user-registration-notice .user-registration-notice-links .user-registration-notice-ul .button-primary:focus,
-.user-registration-notice .user-registration-notice-links .user-registration-notice-ul .button-primary:hover {
+.user-registration-notice .user-registration-notice-links .user-registration-notice-ul .button-primary:focus, .user-registration-notice .user-registration-notice-links .user-registration-notice-ul .button-primary:hover {
   background: #2e44a1;
   border-color: #2e44a1;
+  color: #ffffff;
 }
-.user-registration-notice .user-registration-notice-links .user-registration-notice-ul .button.button-secondary {
+.user-registration-notice .user-registration-notice-links .user-registration-notice-ul .button-secondary {
   border-color: #475bb2;
   color: #475bb2;
   box-shadow: none;
+}
+.user-registration-notice .user-registration-notice-links .user-registration-notice-ul .button-secondary:focus, .user-registration-notice .user-registration-notice-links .user-registration-notice-ul .button-secondary:hover {
+  background: #2e44a1;
+  border-color: #2e44a1;
+  color: #ffffff;
 }
 .user-registration-notice #user-registration-notice .user-registration-notice-ul li a span {
   padding: 4px 0px;
@@ -113,4 +140,9 @@
 
 #toplevel_page_user-registration ul li a[href="admin.php?page=user-registration-members"] {
   display: none;
+}
+
+#ur-field-all-settings .user-registration-notice {
+  padding: 10px;
+  gap: 5px;
 }

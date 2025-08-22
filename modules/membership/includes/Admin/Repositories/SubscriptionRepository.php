@@ -107,5 +107,35 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 		}
 
 	}
+	public function reactivate_subscription( $subscription_id, $send_email = true ) {
+		$subscription = $this->retrieve( $subscription_id );
+		
+		if( 'active' === $subscription[ 'status' ] ) {
+			return array(
+				'status' => false,
+				'message' => esc_html__( 'Subscription is already active.', 'user-registration' ),
+			);
+		}
 
+		if( 'expired' !== $subscription[ 'status' ] ) {
+			$result = $this->update(
+				$subscription_id,
+				array(
+					'status' => 'active',
+				)
+			);
+			if( ! $result ) {
+				return array(
+					'status' => false,
+					'message' => __( 'Failed to update subscription.', 'user-registration' ),
+				);
+			}
+			return array(
+				'status' => true,
+			);
+		}
+		return array(
+			'status' => false,
+		);
+	}
 }

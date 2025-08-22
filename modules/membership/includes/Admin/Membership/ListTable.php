@@ -181,35 +181,43 @@ class ListTable extends \UR_List_Table {
 	 */
 	public function column_action( $membership ) {
 
-		$edit_link          = $this->get_edit_links( $membership );
-		$delete_link        = $this->get_delete_links( $membership );
-		$membership_content = json_decode( $membership->post_content, true );
-		$checked            = ( $membership_content['status'] == 'true' ) ? 'checked' : '';
-		$actions            = '
-				<div class="row-actions ur-d-flex ur-align-items-center visible" style="gap: 5px">
+		$edit_link   = $this->get_edit_links( $membership );
+		$delete_link = $this->get_delete_links( $membership );
+		$content     = json_decode( $membership->post_content, true );
 
-					<div class="user-registration-switch">
-						<input
-						 		type="checkbox"
-						 		' . $checked . '
-							   	class="ur-membership-change-status user-registration-switch__control hide-show-check enabled"
-							   	data-ur-membership-id = ' . $membership->ID . '
-						>
-					</div>
-					&nbsp | &nbsp
-					<span class="edit">
-						<a href="' . esc_url( $edit_link ) . '">' . __( 'Edit', 'user-registration' ) . '</a>
-					</span>
-					&nbsp | &nbsp
-					<span class="delete">
-						<a class="delete-membership" aria-label="' . esc_attr__( 'Delete this item', 'user-registration' ) . '" href="' . $delete_link . '">' . esc_html__( 'Delete', 'user-registration' ) . '</a>
-					</span>
-					</div>
+		$checked = isset( $content['status'] ) ? $content['status'] : false ;
 
-					';
+		$actions  = '<div class="row-actions ur-d-flex ur-align-items-center visible" style="gap: 5px">';
+		$actions .= '<div class="ur-toggle-section">';
+		$actions .= '<span class="user-registration-toggle-form">';
+		$actions .=  '<input
+						id="ur-membership-change-status"
+						class="ur-membership-change-status user-registration-switch__control hide-show-check enabled"
+						type="checkbox"
+						value="1"
+						' . esc_attr( checked( true, ur_string_to_bool( $checked ), false ) ). '
+						data-ur-membership-id="' . esc_attr( $membership->ID ) . '">';
+		$actions .= '<span class="slider round"></span>';
+		$actions .= '</span>';
+		$actions .= '</div>';
+		$actions .= '&nbsp; | &nbsp;';
+		$actions .= '<span class="edit">';
+		$actions .= '<a href="' . esc_url( $edit_link ) . '">' . esc_html__( 'Edit', 'user-registration' ) . '</a>';
+		$actions .=  '</span>';
+		$actions .= '&nbsp; | &nbsp;';
+		$actions .= '<span class="delete">';
+		$actions .= '<a
+						class="delete-membership"
+						aria-label="' . esc_attr__( 'Delete this item', 'user-registration' ) . '"
+						href="' . esc_url( $delete_link ) . '"
+					>' . esc_html__( 'Delete', 'user-registration' ) . '</a>';
+		$actions .= '</span>';
+
+		$actions .= '</div>';
 
 		return $actions;
 	}
+
 
 	/**
 	 * Render the list table page, including header, notices, status filters and table.
@@ -224,7 +232,7 @@ class ListTable extends \UR_List_Table {
 						<?php esc_html_e( 'All Membership', 'user-registration' ); ?>
 					</h1>
 					<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $this->page . '&action=add_new_membership' ) ); ?>"
-					   class="button ur-button-primary">
+					   class="button button-primary ur-button-primary">
 						+
 						<?php
 						echo __( 'Create new Membership', 'user-registration' )
@@ -291,7 +299,7 @@ class ListTable extends \UR_List_Table {
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
-			'delete' => __( 'Delete permanently' )
+//			'delete' => __( 'Delete permanently' )
 		);
 
 		return $actions;

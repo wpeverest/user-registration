@@ -94,7 +94,7 @@ if ( ! class_exists( 'UR_Settings_Reset_Password_Email', false ) ) :
 									'id'       => 'user_registration_reset_password_email_subject',
 									'type'     => 'text',
 									'default'  => __( 'Password Reset Request – Reset Your Password for {{blog_info}}', 'user-registration' ),
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'desc_tip' => true,
 								),
 								array(
@@ -103,7 +103,7 @@ if ( ! class_exists( 'UR_Settings_Reset_Password_Email', false ) ) :
 									'id'       => 'user_registration_reset_password_email',
 									'type'     => 'tinymce',
 									'default'  => $this->ur_get_reset_password_email(),
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'desc_tip' => true,
 								),
 							),

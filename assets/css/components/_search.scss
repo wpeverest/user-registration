@@ -1,0 +1,46 @@
+.user-registration,
+.user-registration-page,
+.ur-multi-device-form-preview {
+    .ur-search-input {
+        position: relative;
+        margin-bottom: $spacing_24px;
+
+        input.ur-type-text {
+            min-height: 38px;
+            background: transparent;
+            border: $border-width solid $border_color;
+            color: $grey-400;
+            padding: 0 $spacing_40px 0 $spacing_12px;
+            font-size: 14px;
+            line-height: 24px;
+            font-weight: $regular;
+            border-radius: $border_radius_4;
+            margin: 0;
+            box-shadow: none;
+
+            &::placeholder {
+                color: #bababa;
+                font-weight: $regular;
+            }
+
+            &:focus {
+                outline: none;
+                box-shadow: none;
+                border-color: $primary_color;
+            }
+
+            &.ui-autocomplete-loading {
+                background-position: 95% center;
+            }
+        }
+
+        svg {
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            width: 18px;
+            height: 18px;
+            transform: translateY(-50%);
+        }
+    }
+}
