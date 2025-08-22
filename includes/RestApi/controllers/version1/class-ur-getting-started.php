@@ -222,6 +222,7 @@ class UR_Getting_Started {
 
 		$pages           = apply_filters( 'user_registration_create_pages', array() );
 		$default_post_id = 0;
+		$default_form_page_id = 0;
 		$hasposts        = get_posts( 'post_type=user_registration' );
 
 		$post_content          = '';
@@ -233,6 +234,8 @@ class UR_Getting_Started {
 		} elseif ( 0 === count( $hasposts ) ) {
 			$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]],[[{"field_key":"membership","general_setting":{"label":"Membership Field","description":"","field_name":"' . $membership_field_name . '","placeholder":"","required":"false","hide_label":"false","membership_listing_option":"all"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-membership-field"}]]]';
 		}
+
+		$default_form = get_option( 'user_registration_default_form_page_id', 0 );
 
 		if ( 0 === count( $hasposts ) ) {
 			// Insert default form.
@@ -248,9 +251,33 @@ class UR_Getting_Started {
 			);
 
 			update_option( 'user_registration_default_form_page_id', $default_post_id );
-		}
+			$default_form_page_id = $default_post_id;
+		} else if ( count( $hasposts ) > 0 &&  ! $default_form ) {
+			$page_exists = false;
 
-		$default_form_page_id = get_option( 'user_registration_default_form_page_id', $default_post_id );
+			if ( 'user_registration_normal_registration' === $request['registrationType'] ) {
+				$page_exists = get_page_by_path( 'default-form', OBJECT, 'user_registration' );
+			} else {
+				$page_exists = get_page_by_path( 'default-membership-registration-form', OBJECT, 'user_registration' );
+			}
+
+			if( ! $page_exists ) {
+				$default_post_id = wp_insert_post(
+					array(
+						'post_type'      => 'user_registration',
+						'post_title'     => esc_html__( 'Default form', 'user-registration' ),
+						'post_content'   => $post_content,
+						'post_status'    => 'publish',
+						'comment_status' => 'closed',
+						'ping_status'    => 'closed',
+					)
+				);
+				update_option( 'user_registration_default_form_page_id', $default_post_id );
+				$default_form_page_id = $default_post_id;
+			} else {
+				$default_form_page_id = $page_exists->ID;
+			}
+		}
 
 		$page_details['default_form_id'] = array(
 			'title'         => esc_html__( 'Default Registration Form', 'user-registration' ),

@@ -205,6 +205,10 @@ function App() {
 						});
 
 						registrationPageUrl =
+							"undefined" !==
+								typeof res.page_details[
+									membershipRegistrationKey[0]
+								] &&
 							res.page_details[membershipRegistrationKey[0]][
 								"page_url"
 							];
