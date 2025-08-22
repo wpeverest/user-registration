@@ -331,7 +331,7 @@ function InputHandler({
 							handleInputChange(setting.type, setting.id, e)
 						}
 						defaultChecked={setting.default === "yes"}
-						{...(settings[setting.id] === "yes" && {
+						{...(settings[settings.id] === "yes" && {
 							isChecked: true
 						})}
 						sx={{
