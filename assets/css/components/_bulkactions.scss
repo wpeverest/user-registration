@@ -23,6 +23,14 @@
                 max-width: 220px;
                 margin-right: 0;
             }
+
+            .select2 {
+                &-selection {
+                    &__rendered {
+                        width: 120px;
+                    }
+                }
+            }
         }
     }
 }

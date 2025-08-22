@@ -22,8 +22,8 @@ if ( $membership_list_options === 'group' ) {
 	$group_status             = false;
 	if ( ! empty( $selected_group_id ) ) {
 		$group        = $membership_group_service->get_membership_group_by_id( $selected_group_id );
-		$content      = json_decode( wp_unslash( $group['post_content'] ), true );
-		$group_status = ur_string_to_bool( $content['status'] );
+		$content      = isset( $group['post_content'] ) ? json_decode( wp_unslash( $group['post_content'] ), true ) : array();
+		$group_status = isset( $content['status'] ) ? ur_string_to_bool( $content['status'] ) : false;
 		if ( $group_status ) {
 			$memberships = $membership_group_service->get_group_memberships( $selected_group_id );
 		}

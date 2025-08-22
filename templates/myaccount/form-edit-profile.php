@@ -131,7 +131,7 @@ if ( 'vertical' === $layout ) {
 									<p class="user-registration-tips"><?php echo esc_html__( 'Max size: ', 'user-registration' ) . esc_attr( size_format( $max_upload_size ) ); ?></p>
 									</div>
 									<header>
-										<p><strong>
+										<p class="ur-new-profile-image-message"><strong>
 										<?php
 										echo esc_html(
 											/**
@@ -144,6 +144,7 @@ if ( 'vertical' === $layout ) {
 										);
 										?>
 											</strong></p>
+										<p class="ur-profile-image-updated-message" style="display:none;"><strong> <?php echo esc_html( 'You\'ve uploaded a profile image. You can change or remove it below.', 'user-registration' ); ?></strong></p>
 										<div class="button-group">
 											<?php
 
@@ -172,7 +173,7 @@ if ( 'vertical' === $layout ) {
 												?>
 												<input type="hidden" name="profile-pic-url" id="profile_pic_url" value="<?php echo esc_attr( $profile_picture_url ); ?>" />
 												<input type="hidden" name="profile-default-image" value="<?php echo esc_url( $gravatar_image ); ?>" />
-												<button class="button profile-pic-remove" data-attachment-id="<?php echo esc_attr( get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true ) ); ?>" style="<?php echo esc_attr( ( $gravatar_image === $image ) ? 'display:none;' : '' ); ?>"><?php echo esc_html__( 'Remove', 'user-registration' ); ?></php></button>
+												<button class="button profile-pic-remove" data-attachment-id="<?php echo esc_attr( get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true ) ); ?>" style="<?php echo esc_attr( ( $gravatar_image === $image ) ? 'display:none;' : '' ); ?>"><?php echo esc_html__( 'Change', 'user-registration' ); ?></php></button>
 
 												<button type="button" class="button user_registration_profile_picture_upload hide-if-no-js" style="<?php echo esc_attr( ( $gravatar_image !== $image ) ? 'display:none;' : '' ); ?>" ><?php echo esc_html__( 'Upload Picture', 'user-registration' ); ?></button>
 												<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg,image/gif,image/png" style="display:none" />

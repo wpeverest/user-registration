@@ -48,7 +48,7 @@ class StripeService {
 		);
 
 		if ( count( $product_exists ) > 0 ) { // product already exists, don't create new
-			$product = array_values($product_exists);
+			$product = array_values( $product_exists );
 			$product = $product_exists[0];
 		} else {
 			$product = \Stripe\Product::create(
@@ -216,10 +216,13 @@ class StripeService {
 		$logger->notice( '-------------------------------------------- Stripe Payment Confirmation started for ' . $member_id . ' --------------------------------------------', array( 'source' => 'ur-membership-stripe' ) );
 
 		if ( 'failed' === $payment_status ) {
-			if ( ! $is_upgrading ) {
+			$is_renewing = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
+			if ( ! $is_upgrading && ! $is_renewing ) {
 				wp_delete_user( absint( $member_id ) );
 				$this->members_orders_repository->delete_member_order( $member_id );
-
+			}
+			if( $is_renewing ) {
+				update_user_meta( $member_id, 'urm_is_member_renewing', false );
 			}
 			$error_msg = __( 'Stripe Payment failed.', 'user-registration' );
 			$error_msg = $data['payment_result']['error']['message'] ?? $error_msg;
@@ -254,9 +257,8 @@ class StripeService {
 				)
 			);
 
-
 			if ( $is_order_updated && 'paid' === $member_order['order_type'] ) {
-				$this->members_subscription_repository->update( $member_subscription['ID'], array( 'status' => 'active' ) );
+				$this->members_subscription_repository->update( $member_subscription['ID'], array( 'status' => 'active', 'start_date' => date('Y-m-d 00:00:00') ) );
 				$logger->notice( 'Order and subscription status updated ', array( 'source' => 'ur-membership-stripe' ) );
 			}
 			$response = $this->sendEmail( $member_order['ID'], $member_subscription, $membership_metas, $member_id, $response );
@@ -268,15 +270,19 @@ class StripeService {
 
 	public function create_subscription( $customer_id, $payment_method_id, $member_id, $is_upgrading ) {
 
-		$member_order                   = $this->members_orders_repository->get_member_orders( $member_id );
-		$membership                     = $this->membership_repository->get_single_membership_by_ID( $member_order['item_id'] );
-		$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
+		$member_order     = $this->members_orders_repository->get_member_orders( $member_id );
+		$membership       = $this->membership_repository->get_single_membership_by_ID( $member_order['item_id'] );
+		$membership_metas = wp_unslash( json_decode( $membership['meta_value'], true ) );
+
 		$membership_metas['post_title'] = $membership['post_title'];
 		$member_subscription            = $this->members_subscription_repository->get_member_subscription( $member_id );
-		$response                       = array(
+		$is_automatic                   = "automatic" === get_option( 'user_registration_renewal_behaviour', 'automatic' );
+		$is_renewing                    = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
+
+		$response = array(
 			'status' => false,
 		);
-		$logger                         = ur_get_logger();
+		$logger   = ur_get_logger();
 		if ( empty( $member_subscription ) ) {
 			$logger->notice( '-------------------------------------------- Stripe Subscription not found for ' . $member_id . ' --------------------------------------------', array( 'source' => 'ur-membership-stripe' ) );
 
@@ -383,6 +389,24 @@ class StripeService {
 				}
 			}
 			$logger->notice( print_r( $subscription_details, true ), array( 'source' => 'ur-membership-stripe' ) );
+			if ( ( ! $is_automatic && ! $is_upgrading ) || $is_renewing ) {
+				$value    = $membership_metas['subscription']['value'];
+				$duration = $membership_metas['subscription']['duration'];
+
+				$subscription_details["cancel_at"] = ( new \DateTime( "+ $value $duration" ) )->getTimestamp();
+				if ( $is_renewing ) {
+					$next_billing_date                 = new \DateTime( $member_subscription['next_billing_date'] );
+
+					//reset next billing date to today if it is in the past.
+					$today = new \DateTime( 'today' );
+					if( $next_billing_date < $today ) {
+						$next_billing_date = $today;
+					}
+
+					$next_billing_date                 = $next_billing_date->modify( "+ $value $duration" )->getTimestamp();
+					$subscription_details["cancel_at"] = $next_billing_date;
+				}
+			}
 
 			$subscription        = \Stripe\Subscription::create( $subscription_details );
 			$subscription_status = $subscription->status ?? '';
@@ -397,7 +421,7 @@ class StripeService {
 				);
 				switch ( $subscription_status ) {
 					case 'trialing':
-						$subscription_status = ($is_upgrading && ! empty( $next_subscription['delayed_until'] )) ? 'active' : 'trial';
+						$subscription_status = ( $is_upgrading && ! empty( $next_subscription['delayed_until'] ) ) ? 'active' : 'trial';
 						break;
 					default:
 						break;
@@ -421,7 +445,8 @@ class StripeService {
 			return $response;
 		} catch
 		( \Exception $e ) {
-			if ( ! $is_upgrading ) {
+
+			if ( ! $is_upgrading && ! $is_renewing ) {
 				wp_delete_user( absint( $member_id ) );
 				$this->members_orders_repository->delete_member_order( $member_id );
 				$customer = \Stripe\Customer::retrieve( $customer_id );
@@ -628,14 +653,22 @@ class StripeService {
 		$logger->notice( "New order ID $order_id created: " . json_encode( $order_data ), array( 'source' => 'user-registration-membership-stripe' ) );
 
 		$next_billing_date = SubscriptionService::get_expiry_date( date( 'Y-m-d' ), $membership_metas['subscription']['duration'], $membership_metas['subscription']['value'] );
+
 		$this->members_subscription_repository->update(
 			$current_subscription['sub_id'],
 			array(
+				'start_date'        => date( 'Y-m-d 00:00:00' ),
 				'next_billing_date' => $next_billing_date,
 				'expiry_date'       => $next_billing_date,
 				'status'            => $subscription_status,
 			)
 		);
+		$is_renewing = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
+
+		if ( $is_renewing ) {
+			$subscription_service = new SubscriptionService();
+			$subscription_service->update_subscription_data_for_renewal( $current_subscription, $membership_metas );
+		}
 		$logger->notice( 'Subscription updated with new billing date', array( 'source' => 'user-registration-membership-stripe' ) );
 	}
 
