@@ -122,9 +122,11 @@ class EmailService
 		$subject     = \UR_Emailer::parse_smart_tags( $subject, $values );
 		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
 
-		$headers = \UR_Emailer::ur_get_header();
+		$headers      = \UR_Emailer::ur_get_header();
+		$login_option = ur_get_user_login_option( $user_id );
+		$email_status = get_user_meta( $user_id, 'ur_confirm_email', true );
 
-		if ( ( ( 'default' === $login_option || 'auto_login' === $login_option || ur_string_to_bool( $email_status ) ) && ! $is_membership_form ) && ur_string_to_bool( get_option( 'user_registration_enable_successfully_registered_email', true ) ) ) {
+		if ( ( ( 'default' === $login_option || 'auto_login' === $login_option || ur_string_to_bool( $email_status ) ) && ur_string_to_bool( get_option( 'user_registration_enable_successfully_registered_email', true ) ) ) ) {
 			return \UR_Emailer::user_registration_process_and_send_email( sanitize_email( $data['email'] ), $subject, $message, $headers, array(), $template_id );
 		}
 	}
