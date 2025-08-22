@@ -75,8 +75,9 @@ const Dashboard = () => {
 							allowFullScreen
 						></iframe>
 					</AspectRatio>
-					<ButtonGroup mt="5" spacing="6">
+					<ButtonGroup mt="5" spacing="6" gap="12px">
 						<Button
+							className="button-primary"
 							as={Link}
 							backgroundColor="#475bb2"
 							fontSize="14px"
@@ -88,12 +89,16 @@ const Dashboard = () => {
 							px="6"
 							href={newFormURL}
 						>
-							{__(
-								"Create a Registration Form",
-								"user-registration"
-							)}
+							<Text
+							  sx={{
+								lineHeight: "2.5rem",
+							  }}
+							>
+								{__("Create a Registration Form", "user-registration")}
+							</Text>
 						</Button>
 						<Button
+							className="button-secondary"
 							as={Link}
 							variant="outline"
 							borderColor="#475bb2"
@@ -105,7 +110,13 @@ const Dashboard = () => {
 							textDecor="none !important"
 							isExternal
 						>
-							{__("View all forms", "user-registration")}
+							<Text
+							  sx={{
+								lineHeight: "2.5rem",
+							  }}
+							>
+							  {__("View all forms", "user-registration")}
+							</Text>
 						</Button>
 					</ButtonGroup>
 				</Box>

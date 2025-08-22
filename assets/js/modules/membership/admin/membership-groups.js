@@ -213,7 +213,7 @@
 				}
 			});
 			$(document).on('change', '[data-field-group="payments"] input[name^="user_registration_enable_"]', function () {
-				var $checkboxes = $("input[name^='user_registration_enable_']");
+				var $checkboxes = $("[data-field-group='payments'] input[name^='user_registration_enable_']");
 				if( $checkboxes.is(':checked')) {
 					// disable membership field.
 					$membershipField = $(".ur-registered-list").find("li[data-field-id='user_registration_membership']");

@@ -272,16 +272,7 @@ class UR_Shortcodes {
 			return wp_kses_post( apply_filters( 'user_registration_logged_in_message', sprintf( __( 'You are already logged in. <a href="%s">Log out?</a>', 'user-registration' ), ur_logout_url() ) ) );
 		}
 
-		if ( ! is_user_logged_in() ) {
-			if ( ! $users_can_register ) {
-				/**
-				 * Applies a filter to customize the pre-form message for user registration.
-				 *
-				 * @param string $default_message Default pre-form message.
-				 */
-				return apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . __( 'Only administrators can add new users.', 'user-registration' ) . '</p>' );
-			}
-		} else {
+		if ( is_user_logged_in() ) {
 			/**
 			 * Applies a filter to customize the capability required for user registration.
 			 *
