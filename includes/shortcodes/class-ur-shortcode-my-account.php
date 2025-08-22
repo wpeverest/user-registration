@@ -581,7 +581,7 @@ class UR_Shortcode_My_Account {
 		$rp_path   = isset( $_SERVER['REQUEST_URI'] ) ? current( explode( '?', wp_unslash( $_SERVER['REQUEST_URI'] ) ) ) : ''; // phpcs:ignore
 
 
-		$reset_password_page_id = get_option( 'user_registration_reset_password_page_id', 21 );
+		$reset_password_page_id = get_option( 'user_registration_reset_password_page_id', false );
 		$reset_url = get_permalink( $reset_password_page_id );
 		$rp_path = wp_parse_url( $reset_url, PHP_URL_PATH );
 
