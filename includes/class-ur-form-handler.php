@@ -29,6 +29,7 @@ class UR_Form_Handler {
 
 		add_action( 'template_redirect', array( __CLASS__, 'save_change_password' ) );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_login' ), 20 );
+		add_action( 'wp_loaded', array( __CLASS__, 'process_registration' ), 20 );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_lost_password' ), 20 );
 		add_action( 'wp_loaded', array( __CLASS__, 'process_reset_password' ), 20 );
 		add_action( 'user_registration_before_customer_login_form', array( __CLASS__, 'export_confirmation_request' ) );
@@ -565,7 +566,21 @@ class UR_Form_Handler {
 			ur_process_login( $nonce_value );
 		}
 	}
+	/**
+	 * Process the login form.
+	 *
+	 * @throws Exception Login errors.
+	 */
+	public static function process_registration() {
+		$nonce_value = isset( $_POST['_wpnonce'] ) ? sanitize_key( $_POST['_wpnonce'] ) : '';
 
+		$nonce_value = isset( $_POST['ur_frontend_form_nonce'] ) ? sanitize_key( $_POST['ur_frontend_form_nonce'] ) : $nonce_value;
+
+		if ( ! empty( $_POST['ur_fallback_submit'] ) ) {
+			$_POST['form_data'] = urldecode($_POST['form_data']);
+			ur_process_registration( $nonce_value );
+		}
+	}
 	/**
 	 * Handle lost password form.
 	 */
