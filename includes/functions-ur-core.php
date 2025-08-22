@@ -8564,3 +8564,112 @@ if ( ! function_exists( 'ur_save_settings_options' ) ) {
 		}
 	}
 };
+
+if ( ! function_exists( 'user_registration_profile_details_form_fields' ) ) {
+
+	/**
+	 * Get the user registration form fields to include in view profile.
+	 *
+	 * @param int   $form_id Id of the form through which user was registered.
+	 * @param array $fields_to_include Fields to include.
+	 * @return array
+	 */
+	function user_registration_profile_details_form_fields( $form_id, $fields_to_include = array() ) {
+
+		$post_content_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
+
+		$form_field_data_array = array();
+		foreach ( $post_content_array as $row_index => $row ) {
+			foreach ( $row as $grid_index => $grid ) {
+				foreach ( $grid as $field_index => $field ) {
+					if ( isset( $field->general_setting->field_name ) ) {
+						$field->field_key = isset( $field->field_key ) ? $field->field_key : '';
+						$form_field_data_array[ $field->general_setting->field_name ] = array(
+							'field_key' => $field->field_key,
+							'label'     => $field->general_setting->label,
+						);
+						if ( in_array( $field->field_key, $fields_to_include ) ) {
+							$form_field_data_array[ $field->general_setting->field_name ] = array(
+								'field_key' => $field->field_key,
+								'label'     => $field->general_setting->label,
+							);
+						}
+					}
+				}
+			}
+		}
+
+		return $form_field_data_array;
+	}
+}
+if ( ! function_exists( 'user_registration_profile_details_form_field_datas' ) ) {
+	/**
+	 * Get the user registration form fields data for fields included in view profile.
+	 *
+	 * @param int   $form_id Id of the form through which user was registered.
+	 * @param array $user_data All the datas of the user.
+	 * @param array $form_field_data_array All the fields to be included in profile details page.
+	 * @param array $field_to_include Field to include.
+	 * @return array
+	 */
+	function user_registration_profile_details_form_field_datas( $form_id, $user_data, $form_field_data_array, $field_to_include = array() ) {
+
+		$user_data_to_show = array();
+		foreach ( $user_data as $key => $value ) {
+
+			if ( ! empty( $field_to_include ) && ! in_array( $key, $field_to_include ) ) {
+				continue;
+			}
+
+			if ( isset( $form_field_data_array[ $key ] ) && '' !== $value ) {
+
+				$user_data_to_show[ $key ] = array(
+					'field_key' => $form_field_data_array[ $key ]['field_key'],
+					'label'     => $form_field_data_array[ $key ]['label'],
+					'value'     => $value,
+				);
+
+			}
+
+			$fields_to_exclude = array_merge( ur_exclude_profile_details_fields(), apply_filters( 'user_registration_pro_excluded_fields_in_view_details_page', array( 'profile_picture', 'privacy_policy', 'password' ) ) );
+
+			if ( isset( $user_data_to_show[ $key ]['field_key'] ) ) {
+				if ( 'file' === $user_data_to_show[ $key ]['field_key'] && '' !== $user_data_to_show[ $key ]['value'] ) {
+					$upload_data = array();
+					$file_data   = is_string( $value ) ? explode( ',', $value ) : $value;
+
+					foreach ( $file_data as $attachment_key => $attachment_id ) {
+						$file      = isset( $attachment_id ) ? wp_get_attachment_url( $attachment_id ) : '';
+						$file_link = '<a href="' . esc_url( $file ) . '" rel="noreferrer noopener" target="_blank" >' . esc_html( basename( get_attached_file( $attachment_id ) ) ) . '</a>';
+						$file_link = apply_filters('user_registration_membership_frontend_listing_file_link', $file_link, $attachment_id);
+						array_push( $upload_data, $file_link );
+					}
+					// Check if value contains array.
+					if ( is_array( $upload_data ) ) {
+						$value = implode( ',', $upload_data );
+					}
+
+					$user_data_to_show[ $key ]['value'] = $value;
+				}
+
+				// For Country Field.
+				if ( 'country' === $user_data_to_show[ $key ]['field_key'] && '' !== $user_data_to_show[ $key ]['value'] ) {
+					$country_class                      = ur_load_form_field_class( $user_data_to_show[ $key ]['field_key'] );
+					$countries                          = $country_class::get_instance()->get_country();
+					$user_data_to_show[ $key ]['value'] = isset( $countries[ $value ] ) ? $countries[ $value ] : $value;
+				}
+
+				// For checkbox and multiselect field.
+				if ( ( 'checkbox' === $user_data_to_show[ $key ]['field_key'] || 'multi_select2' === $user_data_to_show[ $key ]['field_key'] ) && '' !== $user_data_to_show[ $key ]['value'] ) {
+					$user_data_to_show[ $key ]['value'] = is_array( $user_data_to_show[ $key ]['value'] ) ? implode( ',', $user_data_to_show[ $key ]['value'] ) : $user_data_to_show[ $key ]['value'];
+				}
+
+				if ( in_array( $key, $fields_to_exclude ) ) {
+					unset( $user_data_to_show[ $key ] );
+				}
+			}
+		}
+
+		return $user_data_to_show;
+	}
+}

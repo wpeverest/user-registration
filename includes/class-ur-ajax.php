@@ -81,6 +81,7 @@ class UR_AJAX {
 			'my_account_selection_validator'    => false,
 			'lost_password_selection_validator' => false,
 			'save_payment_settings'             => false,
+			'disable_user'						=> false,
 			'validate_payment_currency'			=> false,
 		);
 
@@ -90,6 +91,57 @@ class UR_AJAX {
 			if ( $nopriv ) {
 				add_action( 'wp_ajax_nopriv_user_registration_' . $ajax_event, array( __CLASS__, $ajax_event ) );
 			}
+		}
+	}
+
+	/**
+	 * Handle disable user ajax request.
+	 *
+	 * @since 4.3.0
+	 */
+	public static function disable_user() {
+		if ( ! current_user_can( 'edit_users' ) ) {
+			wp_send_json_error( array( 'message' => 'Sorry, you are not allowed to delete users.' ) );
+		}
+
+		if ( ! isset( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'bulk-users' ) ) { // phpcs:ignore
+			wp_send_json_error( array( 'message' => 'Invalid nonce or unauthorized request.' ) );
+		}
+		$user_id        = isset( $_GET['user_id'] ) ? intval( $_GET['user_id'] ) : 0;
+		$duration_value = isset( $_GET['duration_value'] ) ? intval( $_GET['duration_value'] ) : 0;
+		$duration_unit  = isset( $_GET['duration_unit'] ) ? sanitize_text_field( wp_unslash( $_GET['duration_unit'] ) ) : '';
+
+		if ( 0 === $user_id || 0 === $duration_value || '' === $duration_unit ) {
+			wp_send_json_error( array( 'message' => 'Invalid time duration.' ) );
+		}
+		if ( isset( $_GET['action'] ) && 'user_registration_disable_user' === $_GET['action'] ) {
+
+			switch ( $duration_unit ) {
+				case 'days':
+					$auto_enable_time = gmdate( 'Y-m-d H:i:s', strtotime( "+$duration_value days" ) );
+					break;
+
+				case 'weeks':
+					$auto_enable_time = gmdate( 'Y-m-d H:i:s', strtotime( "+$duration_value weeks" ) );
+					break;
+
+				case 'months':
+					$auto_enable_time = gmdate( 'Y-m-d H:i:s', strtotime( "+$duration_value months" ) );
+					break;
+
+				case 'years':
+					$auto_enable_time = gmdate( 'Y-m-d H:i:s', strtotime( "+$duration_value years" ) );
+					break;
+
+				default:
+					wp_send_json_error( array( 'message' => 'Invalid duration unit.' ) );
+
+			}
+			update_user_meta( $user_id, 'ur_disable_users', true );
+			update_user_meta( $user_id, 'ur_auto_enable_time', $auto_enable_time );
+			wp_send_json_success( array( 'message' => 'User disabled successfully.' ) );
+		} else {
+			wp_send_json_error( array( 'message' => 'Invalid request.' ) );
 		}
 	}
 
@@ -2051,7 +2103,7 @@ class UR_AJAX {
 
 
 		$currency_not_supported_payment_gateways = array();
-		
+
 		// if the currency is not supported by Paypal.
 		if( ! in_array( $currency, paypal_supported_currencies_list() ) ) {
 			$currency_not_supported_payment_gateways[] = 'Paypal';
