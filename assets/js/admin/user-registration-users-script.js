@@ -4,6 +4,7 @@ jQuery(function ($) {
 	var URUsers = {
 		init: function () {
 			URUsers.initUIBindings();
+			URUsers.handle_users_filter_reset();
 		},
 		/**
 		 * Bind UI changes.
@@ -375,6 +376,31 @@ jQuery(function ($) {
 					}
 				}
 			});
+		},
+		/**
+		 * Resets the set filter in users table.
+		 */
+		handle_users_filter_reset: function () {
+			$("#user-registration-users-filter-reset-btn").on(
+				"click",
+				function (e) {
+					e.preventDefault();
+					var url = window.location.href;
+
+					var form = $(this).closest("form")[0];
+					form.reset();
+
+					$(form).find('input[type="hidden"]').val("");
+
+					$(form)
+						.find("select")
+						.each(function () {
+							$(this).prop("selectedIndex", 0);
+						});
+
+					window.location.href = url.split("&")[0];
+				}
+			);
 		}
 	};
 
