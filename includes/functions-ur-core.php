@@ -2062,7 +2062,12 @@ function ur_get_user_extra_fields( $user_id ) {
 
 			if ( is_serialized( $value ) ) {
 				$value = unserialize( $value, array( 'allowed_classes' => false ) ); //phpcs:ignore.
-				$value = implode( ',', $value );
+
+				if ( is_array( $value ) ) {
+					$value = implode( ',', $value );
+				} else {
+					$value = (string) $value;
+				}
 			}
 
 			$name_value[ $field_key ] = $value;
@@ -2324,14 +2329,36 @@ add_action( 'user_registration_installed', 'ur_delete_expired_transients' );
  * @param mixed  $variable To be translated for WPML compatibility.
  */
 function ur_string_translation( $form_id, $field_id, $variable ) {
-	if ( function_exists( 'icl_register_string' ) ) {
-		icl_register_string( isset( $form_id ) && 0 !== $form_id ? 'user_registration_' . absint( $form_id ) : 'user-registration', isset( $field_id ) ? $field_id : '', $variable );
-	}
-	if ( function_exists( 'icl_t' ) ) {
-		$variable = icl_t( isset( $form_id ) && 0 !== $form_id ? 'user_registration_' . absint( $form_id ) : 'user-registration', isset( $field_id ) ? $field_id : '', $variable );
-	}
-	return $variable;
+    $context = ( isset( $form_id ) && 0 !== $form_id )
+        ? 'user_registration_' . absint( $form_id )
+        : 'user-registration';
+    $name    = isset( $field_id ) ? $field_id : '';
+
+    // For handling translation in WPML.
+    if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+		if ( function_exists( 'icl_register_string' ) ) {
+			icl_register_string( $context, $name, $variable );
+			if ( function_exists( 'icl_t' ) ) {
+				ur_get_logger()->debug(print_r('icl_t', true));
+				$variable = icl_t( $context, $name, $variable );
+			}
+
+		}
+    }
+
+    // For handling translation in Polylang.
+    elseif ( defined( 'POLYLANG_VERSION' ) ) {
+		if ( function_exists( 'pll_register_string' ) ) {
+			pll_register_string( $name, $variable, $context );
+			if ( function_exists( 'pll__' ) ) {
+				$variable = pll__( $variable );
+			}
+		}
+    }
+
+    return $variable;
 }
+
 
 /**
  * Get Form ID from User ID.
@@ -2993,6 +3020,7 @@ if ( ! function_exists( 'ur_install_extensions' ) ) {
 					array(
 						'license'   => get_option( 'user-registration_license_key' ),
 						'item_name' => $name,
+						'item_id'  => 167196,
 					)
 				)
 			);
@@ -3051,6 +3079,11 @@ if ( ! function_exists( 'ur_install_extensions' ) ) {
 
 			if ( current_user_can( 'activate_plugin', $install_status['file'] ) ) {
 				if ( is_plugin_inactive( $install_status['file'] ) ) {
+					if( $install_status['file'] === 'user-registration-pro/user-registration.php' ) {
+						$status['plugin'] = 'user-registration-pro/user-registration.php';
+						setcookie('urm_license_status', 'pro_activated', time() + 300, '/', '', false, false);
+						activate_plugin( $install_status['file'] );
+					}
 					$status['activateUrl'] =
 						esc_url_raw(
 							add_query_arg(
@@ -3412,7 +3445,7 @@ if ( ! function_exists( 'ur_get_license_plan' ) ) {
 			include_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
-		if ( $license_key && is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
+		if ( $license_key /*&& is_plugin_active( 'user-registration-pro/user-registration.php' ) */ ) {
 			$license_data = get_transient( 'ur_pro_license_plan' );
 
 			if ( false === $license_data ) {
@@ -4258,7 +4291,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				 * @param string $message The original error message displayed on the login screen.
 				 */
 				add_filter( "user_registration_passwordless_login_notice", function( $err_msg ) use ($message) {
-					return $message;
+						return $message;
 				}, 10, 1 );
 			} else {
 
@@ -4269,18 +4302,22 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 						)
 					);
 				}
-				/**
-				 * Filters the error messages displayed on the login screen.
-				 *
-				 * @param string $message The original error message displayed on the login screen.
-				 */
-				add_filter( "user_registration_post_login_errors", function( $err_msg ) use ($message) {
-					return apply_filters( 'login_errors', $message );
-				}, 10, 1 );
+
+				// Store error message in session for PRG pattern
+				if ( ! session_id() ) {
+					session_start();
+				}
+				$_SESSION['ur_login_error'] = apply_filters( 'login_errors', $message );
+
 				/**
 				 * Triggered when a user fails to log in during the user registration process.
 				 */
 				do_action( 'user_registration_login_failed' );
+
+				// Redirect to prevent form resubmission
+				$redirect_url = wp_get_raw_referer() ? wp_get_raw_referer() : ur_get_my_account_url();
+				wp_redirect( $redirect_url );
+				exit;
 			}
 		}
 	}
@@ -5970,7 +6007,7 @@ if ( ! function_exists( 'ur_check_is_inactive' ) ) {
 	 */
 	function ur_check_is_inactive() {
 		if ( ! ur_check_module_activation( 'membership' ) ||
-			 current_user_can( 'manage_options' ) ||
+			current_user_can( 'manage_options' ) ||
 			 ( ! empty( $_POST['action'] ) && in_array( $_POST['action'], array(
 					"user_registration_membership_confirm_payment",
 					"user_registration_membership_create_stripe_subscription"
@@ -6287,7 +6324,6 @@ if ( ! function_exists( 'ur_quick_settings_tab_content' ) ) {
 		$my_account_page_id        = get_option( 'user_registration_myaccount_page_id', false );
 		$prevent_core_login        = get_option( 'user_registration_login_options_prevent_core_login', false );
 		$captcha_setup             = get_option( 'user_registration_captcha_setting_recaptcha_version', false );
-		$anyone_can_register       = get_option( 'users_can_register', false );
 
 		$lists = array(
 			array(
@@ -6299,10 +6335,6 @@ if ( ! function_exists( 'ur_quick_settings_tab_content' ) ) {
 				'text'          => esc_html__( 'Create registration and my account page.', 'user-registration' ),
 				'completed'     => $registration_form_page_id || $my_account_page_id ? true : false,
 				'documentation' => esc_url_raw( "https://docs.wpuserregistration.com/docs/how-to-show-account-profile/?utm_source=settings-sidebar-right&utm_medium=quick-setup-card&utm_campaign='" . UR()->utm_campaign . "'" ),
-			),
-			array(
-				'text'      => esc_html__( 'Enable anyone can register.', 'user-registration' ),
-				'completed' => ur_string_to_bool( $anyone_can_register ),
 			),
 			array(
 				'text'          => esc_html__( 'Disable WordPress default registration and login page.', 'user-registration' ),
@@ -6551,7 +6583,7 @@ if ( ! function_exists( 'ur_email_send_failed_notice' ) ) {
 				'conditions_to_display' => array(
 					array(
 						'operator'    => 'AND',
-						'show_notice' => $failed_count > 5 ? true : false,
+						'show_notice' => $failed_count > 3 ? true : false,
 					),
 				),
 			),
@@ -6772,8 +6804,8 @@ if ( ! function_exists( 'ur_prevent_default_login' ) ) {
 				}
 
 				if($has_invalid_page) {
-                    return 'invalid_membership_pages';
-                }
+					return 'invalid_membership_pages';
+				}
 			}
 		}
 		elseif(isset($data['user_registration_membership_renewal_reminder_days_before'])) {
@@ -7039,7 +7071,7 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 				'available_in' => 'Themegrill Agency Plan or Professional Plan or Plus Plan',
 				'activated'    => is_plugin_active( 'user-registration-salesforce/user-registration-salesforce.php' ),
 				'display'      => array( 'settings', 'form_settings' ),
-			    'connected'    => is_plugin_active( 'user-registration-salesforce/user-registration-salesforce.php' ) && ! empty( get_option( 'ur_salesforce_accounts', array() ) ) ? true : false,
+				'connected'    => is_plugin_active( 'user-registration-salesforce/user-registration-salesforce.php' ) && ! empty( get_option( 'ur_salesforce_accounts', array() ) ) ? true : false,
 				'plugin_name' => esc_html__( 'User Registration Salesforce', 'user-registration' ),
 			),
 		);
@@ -8195,24 +8227,24 @@ if ( ! function_exists( 'ur_find_my_account_in_custom_template' ) ) {
 add_filter( 'user_registration_get_endpoint_url', 'ur_filter_get_endpoint_url' , 10, 4 );
 
 if( ! function_exists( 'ur_filter_get_endpoint_url' ) ) {
-/**
- * Filter the endpoint URL for WPML compatibility.
+	/**
+	 * Filter the endpoint URL for WPML compatibility.
+	 *
+	 * This function modifies the endpoint URL when WPML is active to ensure proper translation
+	 * and localization of URLs. It removes the filter temporarily to avoid infinite loops,
+	 * translates the endpoint, converts the URL using WPML's convert_url method, and then
+	 * re-adds the filter.
  *
- * This function modifies the endpoint URL when WPML is active to ensure proper translation
- * and localization of URLs. It removes the filter temporarily to avoid infinite loops,
- * translates the endpoint, converts the URL using WPML's convert_url method, and then
- * re-adds the filter.
- *
- *
- * @param string $url       The endpoint URL.
- * @param string $endpoint  The endpoint slug.
- * @param mixed  $value     The value to add to the URL.
- * @param string $permalink The permalink URL.
- *
- * @return string Modified URL if WPML is active, original urk if WPML is not active.
- */
+	 *
+	 * @param string $url       The endpoint URL.
+	 * @param string $endpoint  The endpoint slug.
+	 * @param mixed  $value     The value to add to the URL.
+	 * @param string $permalink The permalink URL.
+	 *
+	 * @return string Modified URL if WPML is active, original urk if WPML is not active.
+	 */
 
-	 function ur_filter_get_endpoint_url( $url, $endpoint, $value, $permalink ) {
+	function ur_filter_get_endpoint_url( $url, $endpoint, $value, $permalink ) {
 		//Return early WPML is not active
 		if ( ! class_exists( 'SitePress' ) ) {
 			return $url;
@@ -8251,9 +8283,9 @@ if( ! function_exists( 'ur_register_endpoints_translations') ) {
 		 */
     	 if(  is_admin() || ! defined('ICL_SITEPRESS_VERSION') || ICL_PLUGIN_INACTIVE){
 			return false;
-		 }
+		}
 
-		 $ur_vars = UR()->query->query_vars;
+		$ur_vars = UR()->query->query_vars;
 
 		 if (! empty($ur_vars)) {
 			$query_vars = array(
@@ -8272,7 +8304,7 @@ if( ! function_exists( 'ur_register_endpoints_translations') ) {
 
 		return UR()->query->query_vars;
 
- 	}
+	}
 }
 
 if( ! function_exists( 'get_endpoint_translation' ) ) {
@@ -8283,7 +8315,7 @@ if( ! function_exists( 'get_endpoint_translation' ) ) {
 	 *
 	 * @return string
 	 */
-	 function get_endpoint_translation( $endpoint, $value, $language = null ) {
+	function get_endpoint_translation( $endpoint, $value, $language = null ) {
 
 		if (function_exists('icl_t')) {
 			$trnsl = apply_filters('wpml_translate_single_string', $endpoint, 'UserRegistration Endpoints', $key, $language);
@@ -8331,16 +8363,16 @@ if ( ! function_exists( 'ur_get_sms_verification_default_message_content' ) ) {
 
 if ( ! function_exists( 'ur_setting_keys' ) ) {
 	/**
-     * Returns an array of default settings for User Registration and its addons.
-     *
-     * This function provides default settings for different plugins related to
-     * user registration, including general settings, login options, file uploads,
-     * PDF submissions, social login, and two-factor authentication.
-     *
-     * @return array Default settings for various User Registration addons.
-     */
-    function ur_setting_keys() {
-        return array(
+	 * Returns an array of default settings for User Registration and its addons.
+	 *
+	 * This function provides default settings for different plugins related to
+	 * user registration, including general settings, login options, file uploads,
+	 * PDF submissions, social login, and two-factor authentication.
+	 *
+	 * @return array Default settings for various User Registration addons.
+	 */
+	function ur_setting_keys() {
+		return array(
             'user-registration/user-registration.php' => array(
                 array( 'user_registration_general_setting_disabled_user_roles', '["subscriber"]' ),
                 array( 'user_registration_login_option_hide_show_password', false ),
@@ -8348,7 +8380,7 @@ if ( ! function_exists( 'ur_setting_keys' ) ) {
                 array( 'user_registration_my_account_layout', 'horizontal' ),
                 array( 'user_registration_ajax_form_submission_on_edit_profile', false ),
                 array( 'user_registration_disable_profile_picture', false ),
-                array( 'user_registration_disable_logout_confirmation', false ),
+                array( 'user_registration_disable_logout_confirmation', true ),
                 array( 'user_registration_login_options_form_template', 'default' ),
                 array( 'user_registration_general_setting_login_options_with', 'default' ),
                 array( 'user_registration_login_title', false ),
@@ -8364,64 +8396,64 @@ if ( ! function_exists( 'ur_setting_keys' ) ) {
                 array( 'user_registration_login_options_configured_captcha_type', 'v2' ),
                 array( 'user_registration_general_setting_uninstall_option', false ),
                 array( 'user_registration_allow_usage_tracking', false )
-            ),
-            'user-registration-pro/user-registration.php' => array(
-                array( 'user_registration_pro_general_setting_delete_account', 'disable' ),
-                array( 'user_registration_pro_general_setting_login_form', false ),
-                array( 'user_registration_pro_general_setting_prevent_active_login', false ),
-                array( 'user_registration_pro_general_setting_limited_login', '5' ),
-                array( 'user_registration_pro_general_setting_redirect_back_to_previous_page', false ),
-                array( 'user_registration_pro_general_post_submission_settings', '' ),
-                array( 'user_registration_pro_general_setting_post_submission', 'disable' ),
-                array( 'user_registration_pro_role_based_redirection', false ),
-                array( 'user_registration_payment_currency', 'USD' ),
-                array( 'user_registration_content_restriction_enable', true ),
+			),
+			'user-registration-pro/user-registration.php' => array(
+				array( 'user_registration_pro_general_setting_delete_account', 'disable' ),
+				array( 'user_registration_pro_general_setting_login_form', false ),
+				array( 'user_registration_pro_general_setting_prevent_active_login', false ),
+				array( 'user_registration_pro_general_setting_limited_login', '5' ),
+				array( 'user_registration_pro_general_setting_redirect_back_to_previous_page', false ),
+				array( 'user_registration_pro_general_post_submission_settings', '' ),
+				array( 'user_registration_pro_general_setting_post_submission', 'disable' ),
+				array( 'user_registration_pro_role_based_redirection', false ),
+				array( 'user_registration_payment_currency', 'USD' ),
+				array( 'user_registration_content_restriction_enable', true ),
                 array( 'user_registration_content_restriction_allow_to_roles', '["administrator"]' )
-            ),
-            'user-registration-file-upload/user-registration-file-upload.php' => array(
-                array( 'user_registration_file_upload_setting_valid_file_type', '["pdf"]' ),
+			),
+			'user-registration-file-upload/user-registration-file-upload.php' => array(
+				array( 'user_registration_file_upload_setting_valid_file_type', '["pdf"]' ),
                 array( 'user_registration_file_upload_setting_max_file_size', '1024' )
-            ),
-            'user-registration-pdf-submission/user-registration-pdf-submission.php' => array(
-                array( 'user_registration_pdf_template', 'default' ),
-                array( 'user_registration_pdf_logo_image', '' ),
-                array( 'user_registration_pdf_setting_header', '' ),
-                array( 'user_registration_pdf_custom_header_text', '' ),
-                array( 'user_registration_pdf_paper_size', '' ),
-                array( 'user_registration_pdf_orientation', 'portrait' ),
-                array( 'user_registration_pdf_font', '' ),
-                array( 'user_registration_pdf_font_size', '12' ),
-                array( 'user_registration_pdf_font_color', '#000000' ),
-                array( 'user_registration_pdf_background_color', '#ffffff' ),
-                array( 'user_registration_pdf_header_font_color', '#000000' ),
-                array( 'user_registration_pdf_header_background_color', '#ffffff' ),
-                array( 'user_registration_pdf_multiple_column', false ),
-                array( 'user_registration_pdf_rtl', false ),
-                array( 'user_registration_pdf_print_user_default_fields', false ),
+			),
+			'user-registration-pdf-submission/user-registration-pdf-submission.php' => array(
+				array( 'user_registration_pdf_template', 'default' ),
+				array( 'user_registration_pdf_logo_image', '' ),
+				array( 'user_registration_pdf_setting_header', '' ),
+				array( 'user_registration_pdf_custom_header_text', '' ),
+				array( 'user_registration_pdf_paper_size', '' ),
+				array( 'user_registration_pdf_orientation', 'portrait' ),
+				array( 'user_registration_pdf_font', '' ),
+				array( 'user_registration_pdf_font_size', '12' ),
+				array( 'user_registration_pdf_font_color', '#000000' ),
+				array( 'user_registration_pdf_background_color', '#ffffff' ),
+				array( 'user_registration_pdf_header_font_color', '#000000' ),
+				array( 'user_registration_pdf_header_background_color', '#ffffff' ),
+				array( 'user_registration_pdf_multiple_column', false ),
+				array( 'user_registration_pdf_rtl', false ),
+				array( 'user_registration_pdf_print_user_default_fields', false ),
                 array( 'user_registration_pdf_hide_empty_fields', false )
-            ),
-            'user-registration-social-connect/user-registration-social-connect.php' => array(
-                array( 'user_registration_social_setting_enable_facebook_connect', '' ),
-                array( 'user_registration_social_setting_enable_twitter_connect', '' ),
-                array( 'user_registration_social_setting_enable_google_connect', '' ),
-                array( 'user_registration_social_setting_enable_linkedin_connect', '' ),
-                array( 'user_registration_social_setting_enable_social_registration', false ),
-                array( 'user_registration_social_setting_display_social_buttons_in_registration', false ),
-                array( 'user_registration_social_setting_default_user_role', 'subscriber' ),
-                array( 'user_registration_social_login_position', 'bottom' ),
+			),
+			'user-registration-social-connect/user-registration-social-connect.php' => array(
+				array( 'user_registration_social_setting_enable_facebook_connect', '' ),
+				array( 'user_registration_social_setting_enable_twitter_connect', '' ),
+				array( 'user_registration_social_setting_enable_google_connect', '' ),
+				array( 'user_registration_social_setting_enable_linkedin_connect', '' ),
+				array( 'user_registration_social_setting_enable_social_registration', false ),
+				array( 'user_registration_social_setting_display_social_buttons_in_registration', false ),
+				array( 'user_registration_social_setting_default_user_role', 'subscriber' ),
+				array( 'user_registration_social_login_position', 'bottom' ),
                 array( 'user_registration_social_login_template', 'ursc_theme_4' )
-            ),
-            'user-registration-two-factor-authentication/user-registration-two-factor-authentication.php' => array(
-                array( 'user_registration_tfa_enable_disable', false ),
-                array( 'user_registration_tfa_roles', '["subscriber"]' ),
-                array( 'user_registration_tfa_otp_length', '6' ),
-                array( 'user_registration_tfa_otp_expiry_time', '10' ),
-                array( 'user_registration_tfa_otp_resend_limit', '3' ),
-                array( 'user_registration_tfa_incorrect_otp_limit', '5' ),
+			),
+			'user-registration-two-factor-authentication/user-registration-two-factor-authentication.php' => array(
+				array( 'user_registration_tfa_enable_disable', false ),
+				array( 'user_registration_tfa_roles', '["subscriber"]' ),
+				array( 'user_registration_tfa_otp_length', '6' ),
+				array( 'user_registration_tfa_otp_expiry_time', '10' ),
+				array( 'user_registration_tfa_otp_resend_limit', '3' ),
+				array( 'user_registration_tfa_incorrect_otp_limit', '5' ),
                 array( 'user_registration_tfa_login_hold_period', '60' )
-            ),
-        );
-    }
+			),
+		);
+	}
 }
 /**
  * Trigger logging cleanup using the logging class.
@@ -8478,7 +8510,7 @@ if ( ! function_exists( 'ur_sanitize_value_by_type' ) ) {
 		}
 		return $value;
 	}
-};
+}
 
 
 if ( ! function_exists( 'ur_save_settings_options' ) ) {
@@ -8532,7 +8564,6 @@ if ( ! function_exists( 'ur_save_settings_options' ) ) {
 		}
 	}
 };
-
 
 if ( ! function_exists( 'user_registration_profile_details_form_fields' ) ) {
 

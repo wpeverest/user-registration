@@ -3216,8 +3216,7 @@ body {
 		}
 
 		.swal2-popup {
-			width: 400px;
-
+			width: 500px;
 			&.user-registration-settings-swal2 {
 				width: auto;
 
@@ -3287,6 +3286,11 @@ body {
 						font-size: 16px;
 						font-weight: 600;
 					}
+				}
+				ul {
+					list-style: disc;
+					font-size: medium;
+					margin-left: 40px;
 				}
 			}
 
@@ -3736,7 +3740,7 @@ a.button.ur-smart-tags-list-button {
 		.ur-tab-contents {
 			#ur-setting-form {
 				.ur-general-setting-block {
-					margin-bottom: $spacing_36px;
+					// margin-bottom: $spacing_36px;
 
 					&:has(.closed) {
 						margin-bottom: 0;
@@ -8074,4 +8078,10 @@ $border-top-color_1: #ff4f55;
   justify-content: center;
   z-index: 9999;
   animation: toaster 5s ease-in-out forwards;
+}
+
+div#message.warning.inline {
+	border: 1px solid #c3c4c7;
+    border-left-width: 4px;
+	border-left-color: #ffc700;
 }

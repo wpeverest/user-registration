@@ -331,7 +331,7 @@ function ur_nav_menu_items( $items ) {
 
 	foreach ( $items as $item ) {
 
-		if ( 0 === strpos( $item->post_name, 'logout' ) && ! empty( $customer_logout ) && ur_option_checked( 'user_registration_disable_logout_confirmation', false ) ) {
+		if ( 0 === strpos( $item->post_name, 'logout' ) && ! empty( $customer_logout ) && ur_option_checked( 'user_registration_disable_logout_confirmation', true ) ) {
 			$item->url = wp_nonce_url( $item->url, 'user-logout' );
 		}
 	}

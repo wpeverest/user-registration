@@ -82,6 +82,7 @@ class UR_AJAX {
 			'lost_password_selection_validator' => false,
 			'save_payment_settings'             => false,
 			'disable_user'						=> false,
+			'validate_payment_currency'			=> false,
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -316,20 +317,7 @@ class UR_AJAX {
 		 */
 		$users_can_register = apply_filters( 'ur_register_setting_override', get_option( 'users_can_register' ) );
 
-		if ( ! is_user_logged_in() ) {
-			if ( ! $users_can_register ) {
-				$logger->error( __( 'Only administrators can add new users.', 'user-registration' ), array( 'source' => 'form-submission' ) );
-				wp_send_json_error(
-					array(
-						/**
-						 * Filter to modify register pre form message.
-						 * Default value is the 'Only administrators can add new users'.
-						 */
-						'message' => apply_filters( 'ur_register_pre_form_message', __( 'Only administrators can add new users.', 'user-registration' ) ),
-					)
-				);
-			}
-		} else {
+		if ( is_user_logged_in() ) {
 			/**
 			 * Filter to modify user capability.
 			 * Default value is 'create_users'.
@@ -1644,12 +1632,18 @@ class UR_AJAX {
 			}
 		}
 
+		$api_params = array(
+			'license'   => get_option( 'user-registration_license_key' ),
+			'item_name' => ! empty( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
+		);
+
+		if( 'user-registration-pro' == $slug ) {
+			$api_params['item_id'] = 167196;
+		}
+
 		$api = json_decode(
 			UR_Updater_Key_API::version(
-				array(
-					'license'   => get_option( 'user-registration_license_key' ),
-					'item_name' => ! empty( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
-				)
+				$api_params
 			)
 		);
 
@@ -2091,6 +2085,46 @@ class UR_AJAX {
 		$message = "payment-settings" === $setting_id ? "Settings has been saved successfully" : sprintf( __( "Payment Setting for %s has been saved successfully.", 'user-registration' ), $setting_id );
 		wp_send_json_success( array(
 				'message' => $message
+			)
+		);
+	}
+
+	public static function validate_payment_currency() {
+		check_ajax_referer( 'user_registration_validate_payment_currency', 'security' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to edit payment settings.', 'user-registration' ) ) );
+		}
+
+		if ( empty( $_POST['currency'] ) ) {
+			wp_send_json_error( array( 'message' => __( 'Insufficient Data', 'user-registration' ) ) );
+		}
+
+		$currency = sanitize_text_field( wp_unslash( $_POST['currency'] ) );
+
+
+		$currency_not_supported_payment_gateways = array();
+
+		// if the currency is not supported by Paypal.
+		if( ! in_array( $currency, paypal_supported_currencies_list() ) ) {
+			$currency_not_supported_payment_gateways[] = 'Paypal';
+		}
+
+		$currency_not_supported_payment_gateways = apply_filters( 'urm_currency_not_supported_payment_gateways', $currency_not_supported_payment_gateways, $currency );
+		if ( ! empty( $currency_not_supported_payment_gateways ) ) {
+			wp_send_json_error(
+				array(
+					'message' => sprintf(
+						__( '%s is not currently supported by %s.', 'user-registration' ),
+						$currency,
+						implode(', ', $currency_not_supported_payment_gateways ),
+					),
+				)
+			);
+		}
+
+		wp_send_json_success(
+			array(
+				'message' => __( 'Currency is valid.', 'user-registration' ),
 			)
 		);
 	}
