@@ -2886,7 +2886,6 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 		$checked = '';
 
 		if ( isset( $connection['enable_conditional_logic'] ) && ur_string_to_bool( $connection['enable_conditional_logic'] ) ) {
-
 			$checked = 'checked=checked';
 		}
 		$output .= '<div class="ur-toggle-section ur-form-builder-toggle">';
@@ -6811,14 +6810,14 @@ if ( ! function_exists( 'ur_email_send_failed_notice' ) ) {
 						'title'  => __( 'I have a query', 'user-registration' ),
 						'icon'   => 'dashicons-testimonial',
 						'link'   => 'https://wpuserregistration.com/support',
-						'class'  => 'button-secondary notice-have-query',
+						'class'  => 'button button-secondary notice-have-query',
 						'target' => '_blank',
 					),
 					array(
 						'title'  => __( 'Visit Documentation', 'user-registration' ),
 						'icon'   => 'dashicons-media-document',
 						'link'   => 'https://docs.wpuserregistration.com/docs/emails-are-not-being-delivered/',
-						'class'  => 'button-secondary notice-have-query',
+						'class'  => 'button button-secondary notice-have-query',
 						'target' => '_blank',
 					),
 				),
@@ -6927,14 +6926,14 @@ if ( ! function_exists( 'ur_spam_users_detected' ) ) {
 						'title'  => __( 'I have a query', 'user-registration' ),
 						'icon'   => 'dashicons-testimonial',
 						'link'   => 'https://wpuserregistration.com/support',
-						'class'  => 'button-secondary notice-have-query',
+						'class'  => 'button button-secondary notice-have-query',
 						'target' => '_blank',
 					),
 					array(
 						'title'  => __( 'Visit Documentation', 'user-registration' ),
 						'icon'   => 'dashicons-media-document',
 						'link'   => 'https://docs.wpuserregistration.com/docs/how-to-integrate-google-recaptcha/',
-						'class'  => 'button-secondary',
+						'class'  => 'button button-secondary',
 						'target' => '_blank',
 					),
 				),
@@ -7617,7 +7616,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'id'       => 'user_registration_login_options_form_template',
 								'type'     => 'select',
 								'desc_tip' => true,
-								'css'      => 'min-width: 350px;',
+								'css'      => '',
 								'class'    => 'ur-enhanced-select',
 								'default'  => 'default',
 								'options'  => array(
@@ -7635,7 +7634,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'default'  => 'default',
 								'type'     => 'select',
 								'class'    => 'ur-enhanced-select',
-								'css'      => 'min-width: 350px;',
+								'css'      => '',
 								'desc_tip' => true,
 								'options'  => ur_login_option_with(),
 							),
@@ -7645,7 +7644,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'id'       => 'user_registration_login_title',
 								'type'     => 'toggle',
 								'desc_tip' => __( 'Check to enable login title in login form.', 'user-registration' ),
-								'css'      => 'min-width: 350px;',
+								'css'      => '',
 								'default'  => 'no',
 							),
 							array(
@@ -7654,16 +7653,16 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'id'       => 'user_registration_general_setting_login_form_title',
 								'type'     => 'text',
 								'desc_tip' => true,
-								'css'      => 'min-width: 350px;',
+								'css'      => '',
 								'default' => __( 'Welcome', 'user-registration' ),
 							),
 							array(
 								'title'    => __( 'Login Form Description', 'user-registration' ),
 								'desc'     => __( 'This text will appear as the login form description', 'user-registration' ),
 								'id'       => 'user_registration_general_setting_login_form_desc',
-								'type'     => 'text',
+								'type'     => 'textarea',
 								'desc_tip' => true,
-								'css'      => 'min-width: 350px;',
+								'css'      => '',
 								'default' => __( 'Please enter your details to access your account.', 'user-registration' ),
 							),
 							array(
@@ -7672,7 +7671,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'id'       => 'ur_login_ajax_submission',
 								'type'     => 'toggle',
 								'desc_tip' => __( 'Check to enable Ajax login i.e login without page reload on submission.', 'user-registration' ),
-								'css'      => 'min-width: 350px;',
+								'css'      => '',
 								'default'  => 'no',
 							),
 							array(
@@ -7681,7 +7680,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'id'       => 'user_registration_login_options_remember_me',
 								'type'     => 'toggle',
 								'desc_tip' => __( 'Check to enable/disable Remember Me.', 'user-registration' ),
-								'css'      => 'min-width: 350px;',
+								'css'      => '',
 								'default'  => 'yes',
 							),
 
@@ -7691,7 +7690,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'id'       => 'user_registration_login_options_lost_password',
 								'type'     => 'toggle',
 								'desc_tip' => __( 'Check to enable/disable lost password.', 'user-registration' ),
-								'css'      => 'min-width: 350px;',
+								'css'      => '',
 								'default'  => 'yes',
 							),
 							array(
@@ -7710,7 +7709,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'id'       => 'user_registration_login_options_hide_labels',
 								'type'     => 'toggle',
 								'desc_tip' => __( 'Check to hide field labels.', 'user-registration' ),
-								'css'      => 'min-width: 350px;',
+								'css'      => '',
 								'default'  => 'no',
 							),
 
@@ -7720,7 +7719,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'id'       => 'user_registration_login_options_enable_recaptcha',
 								'type'     => 'toggle',
 								'desc_tip' => sprintf( __( 'Enable %1$s %2$s Captcha %3$s support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=captcha" rel="noreferrer noopener" target="_blank" style="color: #9ef01a;text-decoration:none;">', '</a>' ), //phpcs:ignore
-								'css'      => 'min-width: 350px;',
+								'css'      => '',
 								'default'  => 'no',
 							),
 							array(
@@ -7729,7 +7728,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'id'       => 'user_registration_login_options_configured_captcha_type',
 								'type'     => 'select',
 								'desc_tip' => true,
-								'css'      => 'min-width: 350px;',
+								'css'      => '',
 								'default'  => 'default',
 								'options'  => $ur_enabled_captchas,
 							),
@@ -7739,7 +7738,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'id'       => 'user_registration_general_setting_registration_url_options',
 								'type'     => 'text',
 								'desc_tip' => true,
-								'css'      => 'min-width: 350px;',
+								'css'      => '',
 							),
 
 							array(
@@ -7748,7 +7747,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'id'       => 'user_registration_general_setting_registration_label',
 								'type'     => 'text',
 								'desc_tip' => true,
-								'css'      => 'min-width: 350px;',
+								'css'      => '',
 								'default'  => __( 'Not a member yet? Register now.', 'user-registration' ),
 							),
 
@@ -7758,7 +7757,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'id'         => 'user_registration_login_options_prevent_core_login',
 								'type'       => 'toggle',
 								'desc_tip'   => __( 'Default WordPress login page wp-login.php will  be disabled.', 'user-registration' ),
-								'css'        => 'min-width: 350px;',
+								'css'        => '',
 								'default'    => 'no',
 								'desc_field' => __( 'Please make sure that you have created a login or my-account page which has a login form before enabling this option. Learn how to create a login form <a href="https://docs.wpuserregistration.com/docs/how-to-show-login-form/" rel="noreferrer noopener" target="_blank">here</a>.', 'user-registration' ),
 							),
@@ -7769,7 +7768,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'id'       => 'user_registration_login_options_login_redirect_url',
 								'type'     => 'single_select_page',
 								'desc_tip' => true,
-								'css'      => 'min-width: 350px;',
+								'css'      => '',
 								'class'    => 'ur-redirect-to-login-page ur-enhanced-select-nostd',
 								'default'  => get_option( 'user_registration_myaccount_page_id', '' ),
 							),
@@ -7786,7 +7785,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'id'       => 'user_registration_label_username_or_email',
 								'type'     => 'text',
 								'desc_tip' => true,
-								'css'      => 'min-width: 350px;',
+								'css'      => '',
 								'default'  => __( 'Username or Email', 'user-registration' ),
 							),
 
@@ -7796,7 +7795,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'id'       => 'user_registration_label_password',
 								'type'     => 'text',
 								'desc_tip' => true,
-								'css'      => 'min-width: 350px;',
+								'css'      => '',
 								'default'  => __( 'Password', 'user-registration' ),
 							),
 
@@ -7806,7 +7805,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'id'       => 'user_registration_label_remember_me',
 								'type'     => 'text',
 								'desc_tip' => true,
-								'css'      => 'min-width: 350px;',
+								'css'      => '',
 								'default'  => __( 'Remember Me', 'user-registration' ),
 							),
 
@@ -7816,7 +7815,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'id'       => 'user_registration_label_login',
 								'type'     => 'text',
 								'desc_tip' => true,
-								'css'      => 'min-width: 350px;',
+								'css'      => '',
 								'default'  => __( 'Login', 'user-registration' ),
 							),
 
@@ -7826,7 +7825,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'id'       => 'user_registration_label_lost_your_password',
 								'type'     => 'text',
 								'desc_tip' => true,
-								'css'      => 'min-width: 350px;',
+								'css'      => '',
 								'default'  => __( 'Lost your password?', 'user-registration' ),
 							),
 						),
@@ -7842,7 +7841,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'id'       => 'user_registration_placeholder_username_or_email',
 								'type'     => 'text',
 								'desc_tip' => true,
-								'css'      => 'min-width: 350px;',
+								'css'      => '',
 								'default'  => '',
 							),
 
@@ -7852,7 +7851,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'id'       => 'user_registration_placeholder_password',
 								'type'     => 'text',
 								'desc_tip' => true,
-								'css'      => 'min-width: 350px;',
+								'css'      => '',
 								'default'  => '',
 							),
 						),
@@ -7868,7 +7867,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'id'       => 'user_registration_message_username_required',
 								'type'     => 'text',
 								'desc_tip' => true,
-								'css'      => 'min-width: 350px;',
+								'css'      => '',
 								'default'  => 'Username is required.',
 							),
 
@@ -7878,7 +7877,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'id'          => 'user_registration_message_empty_password',
 								'type'        => 'text',
 								'desc_tip'    => true,
-								'css'         => 'min-width: 350px;',
+								'css'         => '',
 								'default'     => '',
 								'placeholder' => 'Default message from WordPress',
 							),
@@ -7889,7 +7888,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'id'          => 'user_registration_message_invalid_username',
 								'type'        => 'text',
 								'desc_tip'    => true,
-								'css'         => 'min-width: 350px;',
+								'css'         => '',
 								'default'     => '',
 								'placeholder' => 'Default message from WordPress',
 							),
@@ -7900,7 +7899,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'id'       => 'user_registration_message_unknown_email',
 								'type'     => 'text',
 								'desc_tip' => true,
-								'css'      => 'min-width: 350px;',
+								'css'      => '',
 								'default'  => 'A user could not be found with this email address.',
 							),
 
@@ -7910,7 +7909,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'id'          => 'user_registration_message_pending_approval',
 								'type'        => 'text',
 								'desc_tip'    => true,
-								'css'         => 'min-width: 350px;',
+								'css'         => '',
 								'default'     => '',
 								'placeholder' => 'Default message from WordPress',
 							),
@@ -7921,7 +7920,7 @@ if ( ! function_exists( 'get_login_options_settings' ) ) {
 								'id'          => 'user_registration_message_denied_account',
 								'type'        => 'text',
 								'desc_tip'    => true,
-								'css'         => 'min-width: 350px;',
+								'css'         => '',
 								'default'     => '',
 								'placeholder' => 'Default message from WordPress',
 							),
@@ -8282,8 +8281,8 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 					$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_attr( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 					$settings .= '<div class="user-registration-login-form-global-settings--field">';
 					$settings .= '<img src="' . esc_attr( $option_value ) . '" alt="' . esc_attr__( 'Header Logo', 'user-registration' ) . '" class="ur-image-uploader" height="auto" width="20%">';
-					$settings .= '<button type="button" class="ur-image-uploader ur-button button-secondary" ' . ( empty( $option_value ) ? '' : 'style = "display:none"' ) . '>' . esc_html__( 'Upload Image', 'user-registration' ) . '</button>';
-					$settings .= '<button type="button" class="ur-image-remover ur-button button-secondary" ' . ( ! empty( $option_value ) ? '' : 'style = "display:none"' ) . '>' . esc_html__( 'Remove Image', 'user-registration' ) . '</button>';
+					$settings .= '<button type="button" class="ur-image-uploader ur-button button button-secondary" ' . ( empty( $option_value ) ? '' : 'style = "display:none"' ) . '>' . esc_html__( 'Upload Image', 'user-registration' ) . '</button>';
+					$settings .= '<button type="button" class="ur-image-remover ur-button button button-secondary" ' . ( ! empty( $option_value ) ? '' : 'style = "display:none"' ) . '>' . esc_html__( 'Remove Image', 'user-registration' ) . '</button>';
 
 					$settings .= '	<input
 							name="' . esc_attr( $value['id'] ) . '"

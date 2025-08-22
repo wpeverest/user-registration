@@ -492,9 +492,23 @@
   line-height: 20px;
   background: transparent;
 }
+#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.reactivate-membership-button {
+  border: 1px solid #0067ab;
+  color: #0067ab;
+  display: flex;
+  align-items: center;
+}
 #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.cancel-membership-button {
   border: 1px solid #ea4335;
   color: #ea4335;
+  display: flex;
+  align-items: center;
+}
+#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.renew-membership-button {
+  border: 1px solid #00ab02;
+  color: #00ab02;
+  display: flex;
+  align-items: center;
 }
 #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.change-membership-button {
   border: 1px solid #475bb2;
@@ -512,10 +526,10 @@
   color: #475bb2;
   display: none;
 }
-#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.cancel-membership-button:hover, #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.change-membership-button:hover {
+#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.cancel-membership-button:hover, #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.change-membership-button:hover, #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.renew-membership-button:hover, #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.reactivate-membership-button:hover {
   background: rgba(128, 128, 128, 0.1294117647);
 }
-#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.cancel-membership-button:focus, #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.change-membership-button:focus {
+#user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.cancel-membership-button:focus, #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.change-membership-button:focus, #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.renew-membership-button:focus, #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container .btn-div .membership-tab-btn.reactivate-membership-button:focus {
   outline-style: none;
 }
 #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row-btn-container #membership-error-div {
@@ -953,11 +967,15 @@
 .user-registration-logout-swal2-container .swal2-modal {
   padding: 0px !important;
 }
+.user-registration-logout-swal2-container .swal2-modal:has(.swal2-confirm), .user-registration-logout-swal2-container .swal2-modal:has(.swal2-deny) {
+  width: 400px;
+}
 .user-registration-logout-swal2-container .swal2-modal .swal2-header {
   padding: 20px;
   align-items: baseline;
 }
 .user-registration-logout-swal2-container .swal2-modal .swal2-header h2 {
+  font-family: inherit;
   border-bottom: 1px solid #D3D3D3;
   padding-bottom: 16px;
   width: 100%;
@@ -986,6 +1004,7 @@
   background: #F4F4F4;
 }
 .user-registration-logout-swal2-container .swal2-modal .swal2-actions button {
+  font-family: inherit;
   width: 45%;
   color: #383838;
   font-size: 14px;

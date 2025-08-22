@@ -90,7 +90,7 @@ if ( ! class_exists( 'UR_Settings_Confirm_Email_Address_Change_Email', false ) )
 									'id'       => 'user_registration_confirm_email_address_change_email_subject',
 									'type'     => 'text',
 									'default'  => __( 'Action Required: Verify Your New Email Address on {{blog_info}}', 'user-registration' ),
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'desc_tip' => true,
 								),
 								array(
@@ -99,7 +99,7 @@ if ( ! class_exists( 'UR_Settings_Confirm_Email_Address_Change_Email', false ) )
 									'id'       => 'user_registration_confirm_email_address_change_email',
 									'type'     => 'tinymce',
 									'default'  => $this->ur_get_confirm_email_address_change_email(),
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'desc_tip' => true,
 								),
 							),

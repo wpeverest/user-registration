@@ -74,24 +74,23 @@
 						<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3"
 							 style="gap:20px; <?php echo $is_editing ? '' : 'display:none !important'; ?> ">
 							<div class="ur-label" style="width: 30%">
-								<label class="ur-membership-enable-status"
-									   for="ur-membership-status"><?php esc_html_e( 'Membership Status', 'user-registration' ); ?>
-									<span class="user-registration-help-tip tooltipstered"
-										  data-tip="<?php echo esc_attr__( "Active or Inactive state of a membership." ) ?>"></span>
-
+								<label for="ur-membership-status"><?php esc_html_e( 'Membership Status', 'user-registration' ); ?>
+									<span class="user-registration-help-tip tooltipstered" data-tip="<?php echo esc_attr__( "Active or Inactive state of a membership." ) ?>"></span>
 								</label>
 							</div>
-							<div class="user-registration-switch ur-ml-auto" style="width: 100%">
 
+							<div class="ur-toggle-section m1-auto" style="width: 100%">
+								<span class="user-registration-toggle-form">
 								<input
-									data-key-name="Membership Status"
-									id="ur-membership-status" type="checkbox"
-									class="user-registration-switch__control hide-show-check enabled"
-									<?php echo isset( $membership_content ) && $membership_content['status'] == 'true' ? 'checked' : ( $is_editing ? '' : 'checked' ); ?>
-									name="ur_membership_status"
-									style="width: 100%; text-align: left">
+										data-key-name="Membership Status"
+										id="ur-membership-status" type="checkbox"
+										class="user-registration-switch__control hide-show-check enabled"
+										<?php echo isset( $membership_content ) && $membership_content['status'] == 'true' ? 'checked' : ( $is_editing ? '' : 'checked' ); ?>
+										name="ur_membership_status"
+										style="width: 100%; text-align: left">
+								<span class="slider round"></span>
+								</span>
 							</div>
-
 						</div>
 
 						<!--						role-->
@@ -372,17 +371,20 @@
 												<label class="ur-membership-trial-status"
 													   for="ur-membership-trial-status"><?php esc_html_e( 'Trial Period', 'user - registration' ); ?></label>
 											</div>
-											<div class="user-registration-switch ur-ml-auto" style="width: 100%">
-												<input
-													data-key-name="Trial Period"
-													id="ur-membership-trial-status"
-													type="checkbox"
-													class="user-registration-switch__control hide-show-check enabled"
-													name="ur_membership[trial]_status"
-													style="width: 100%;"
-													value="<?php echo isset( $membership_details['trial_status'] ) && $membership_details['trial_status'] == 'on' ? 'on' : 'off'; ?>"
-													<?php echo isset( $membership_details['trial_status'] ) && $membership_details['trial_status'] == 'on' ? 'checked' : ''; ?>
-												>
+											<div class="ur-toggle-section m1-auto" style="width: 100%">
+												<span class="user-registration-toggle-form">
+													<input
+														data-key-name="Trial Period"
+														id="ur-membership-trial-status"
+														type="checkbox"
+														class="user-registration-switch__control hide-show-check enabled"
+														name="ur_membership[trial]_status"
+														style="width: 100%;"
+														value="<?php echo isset( $membership_details['trial_status'] ) && $membership_details['trial_status'] == 'on' ? 'on' : 'off'; ?>"
+														<?php echo isset( $membership_details['trial_status'] ) && $membership_details['trial_status'] == 'on' ? 'checked' : ''; ?>
+													>
+													<span class="slider round"></span>
+												</span>
 											</div>
 										</div>
 										<div class="trial-container <?php echo isset( $membership_details['trial_status'] ) && $membership_details['trial_status'] == 'on' ? '' : 'ur-d-none'; ?>">
@@ -442,15 +444,17 @@
 											   for="ur-membership-upgrade-action"><?php esc_html_e( 'Upgrade Action', 'user-registration' ); ?>
 										</label>
 									</div>
-									<div class="user-registration-switch ur-ml-auto" style="width: 100%">
-
-										<input
-											data-key-name="Upgrade Action"
-											id="ur-membership-upgrade-action" type="checkbox"
-											class="user-registration-switch__control hide-show-check enabled"
-											<?php echo $is_upgrade_enabled ? 'checked' : ''; ?>
-											name="ur_membership_upgrade_action"
-											style="width: 100%; text-align: left">
+									<div class="ur-toggle-section m1-auto" style="width: 100%">
+										<span class="user-registration-toggle-form">
+											<input
+												data-key-name="Upgrade Action"
+												id="ur-membership-upgrade-action" type="checkbox"
+												class="user-registration-switch__control hide-show-check enabled"
+												<?php echo $is_upgrade_enabled ? 'checked' : ''; ?>
+												name="ur_membership_upgrade_action"
+												style="width: 100%; text-align: left">
+											<span class="slider round"></span>
+										</span>
 									</div>
 								</div>
 

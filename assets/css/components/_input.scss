@@ -1,0 +1,100 @@
+.user-registration,
+.user-registration-page,
+.ur-multi-device-form-preview {
+    textarea {
+        width: 100%;
+        min-height: 80px;
+        padding: $spacing_8px $spacing_12px;
+        border: $border_width solid $border_color;
+        border-radius: $border_radius_4;
+        color: $grey-400;
+        font-size: 14px;
+        line-height: 24px;
+        font-weight: $regular;
+
+        &:focus {
+            outline: none;
+            box-shadow: none;
+            border-color: $primary_color;
+        }
+    }
+
+    input {
+        &[type="text"],
+        &[type="password"],
+        &[type="email"],
+        &[type="number"],
+        &[type="date"],
+        &[type="phone"],
+        &[type="tel"],
+        &[type="time"],
+        &[type="timepicker"],
+        &[type="url"],
+        &[type="search"] {
+            min-width: unset !important;
+            width: 100%;
+            padding: 0 $spacing_12px;
+            min-height: 38px;
+            border: $border_width solid $border_color;
+            border-radius: $border_radius_4;
+            font-size: 14px;
+            line-height: 24px;
+            color: #383838;
+            font-weight: $regular;
+            margin: 0;
+            box-shadow: none;
+
+            &::placeholder {
+                color: #bababa;
+            }
+
+            &:focus {
+                outline: none;
+                box-shadow: none;
+                border-color: $primary_color;
+            }
+
+            &:disabled {
+                color: $color_gray_three;
+                background: $color_gray_five;
+            }
+        }
+    }
+
+    .ur-field {
+        &:has(span) {
+            input[data-key-name="Amount"] {
+                padding-left: $spacing_24px !important;
+            }
+        }
+    }
+
+    // .ur-field {
+    //     &:has(input[type="number"]) {
+    //         position: relative;
+
+    //         &::before,
+    //         &::after {
+    //             content: "";
+    //             position: absolute;
+    //             right: 8px;
+    //             width: 22px;
+    //             height: 22px;
+    //             background-repeat: no-repeat;
+    //             background-size: contain;
+    //             background-position: center;
+    //             cursor: pointer;
+    //         }
+            
+    //         &::before {
+    //             top: 2px;
+    //             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23737373' viewBox='0 0 24 24'%3E%3Cpath d='M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z'/%3E%3C/svg%3E");
+    //         }
+            
+    //         &::after {
+    //             bottom: 2px;
+    //             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23737373' viewBox='0 0 24 24'%3E%3Cpath d='M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z'/%3E%3C/svg%3E");
+    //         }
+    //     }        
+    // }
+}

@@ -213,6 +213,10 @@ textarea.ur-input-border-red {
 		background: #fff;
 		// box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 
+		@media screen and (max-width: 600px) {
+			padding: $spacing_40px $spacing_30px;
+		}
+
 		.ur-lost-password-content-container {
 			display: flex;
 			flex-direction: column;
@@ -282,6 +286,8 @@ textarea.ur-input-border-red {
 	}
 
 	.register {
+		text-align: center;
+
 		#node_recaptcha_register {
 			padding: 0 10px;
 		}
@@ -289,6 +295,12 @@ textarea.ur-input-border-red {
 
 	#ur-recaptcha-node {
 		margin-top: 10px;
+
+		@media screen and (max-width: 460px) {
+			position: relative;
+			left: -$spacing_30px;
+			transform: scale(0.8);
+		}
 	}
 
 	* {
@@ -385,7 +397,7 @@ textarea.ur-input-border-red {
 							input {
 								&[type="checkbox"],
 								&[type="radio"] {
-									margin-top: 2px;
+									margin-top: 0px;
 								}
 							}
 
@@ -506,7 +518,7 @@ textarea.ur-input-border-red {
 				}
 
 				&.ur-label {
-					font-weight: bold;
+					font-weight: $semi_bold;
 				}
 			}
 
@@ -515,6 +527,10 @@ textarea.ur-input-border-red {
 				height: 100px;
 				resize: none;
 				padding: 5px 20px;
+
+				&:focus {
+					border-color: $primary_color !important;
+				}
 			}
 
 			.hide_show_password {
@@ -548,28 +564,28 @@ textarea.ur-input-border-red {
 
 		.select2-container {
 			.select2-selection--multiple {
-				border: 1px solid $color_gray_five;
+				// border: 1px solid $color_gray_five;
 
 				.select2-selection__rendered {
-					display: block;
+					// display: block;
 
 					li {
 						&:last-child {
-							margin-left: 0;
+							// margin-left: 0;
 						}
 					}
 				}
-				height: inherit;
+				// height: inherit;
 				.select2-selection__choice {
-					margin: 5px;
+					// margin: 5px;
 				}
 
-				.select2-search--inline {
-					input[type="text"] {
-						margin: 5px;
-						height: inherit;
-					}
-				}
+				// .select2-search--inline {
+				// 	input[type="text"] {
+				// 		margin: 5px;
+				// 		height: inherit;
+				// 	}
+				// }
 			}
 		}
 	}
@@ -619,6 +635,53 @@ textarea.ur-input-border-red {
 		}
 	}
 
+	&.ur-frontend-form--default {
+		form {
+			.ur-form-row {
+				.ur-form-grid {
+					input[type="text"],
+					input[type="email"],
+					input[type="url"],
+					input[type="password"],
+					input[type="date"],
+					input[type="number"],
+					textarea,
+					select {
+						border: 1px solid $border_color;
+						outline: none;
+						transition: all 0.35s;
+						padding: 10px 15px;
+						background: $white;
+						color: $label_color;
+						height: 45px;
+						border-radius: $border_radius_4;
+					}
+
+					legend,
+					label {
+						margin-left: 5px;
+						color: $label_color;
+					}
+
+					textarea {
+						height: 100px;
+					}
+
+					.hide_show_password {
+						input[type="password"] {
+							padding-right: 50px;
+						}
+					}
+
+					.user-registration-Button {
+						border: 0;
+						border-radius: 4px;
+					}
+				}
+			}
+		}
+	}
+
 	&.ur-frontend-form--bordered {
 		form {
 			.ur-form-row {
@@ -631,8 +694,7 @@ textarea.ur-input-border-red {
 					input[type="number"],
 					textarea,
 					select {
-						border: none;
-						border-bottom: 1px solid $border_color_input;
+						border: 1px solid $border_color;
 						outline: none;
 						transition: all 0.35s;
 						padding: 10px 15px;
@@ -648,7 +710,7 @@ textarea.ur-input-border-red {
 					}
 
 					textarea {
-						height: 100px;
+						height: 100px;						
 					}
 
 					.hide_show_password {
@@ -1555,132 +1617,153 @@ span.ur-shortcode-form-embed-dot {
 
 // --------------login form design css fixes------------------------------------
 
-.user-registration-membership_page_user-registration-login-forms {
-	#wpcontent {
-		.ur-admin-page-topnav {
-			margin-bottom: 0;
-		}
-		.user-registration-login-form-container {
-			.user-registration__wrap {
-				&.wrap {
-					margin: 0 auto;
-				}
-				.ur-form-subcontainer {
-					.menu-edit {
-						border: none;
-					}
-					.ur-registered-inputs {
-						.ui-widget-content {
-							.ur-tab-contents {
-								padding: 24px;
-								background-color: #fafafa;
-								.ur-login-view-doc {
-									border-radius: 3px;
-									cursor: pointer;
-									text-decoration: none;
-									text-align: center;
-									vertical-align: middle;
-									white-space: nowrap;
-									box-shadow: none;
-									font-size: 14px;
-									font-weight: 600;
-									letter-spacing: 0px;
-									padding: 10px 24px;
-									border: none;
-									background-color: #475bb2;
-									color: #ffffff;
-									display: block;
-									margin: 24px auto 0;
-									a {
-										color: #fff;
-									}
-									&:disabled {
-										cursor: default;
-										opacity: 0.5;
-										&:hover {
-											background-color: #475bb2;
-										}
-									}
-								}
-							}
-							.ur-heading {
-								margin-top: 0;
-								padding-bottom: 16px;
-								border-bottom: 1px solid #e9e9e9;
-								text-transform: uppercase;
-								font-size: 16px;
-								font-weight: 500;
-							}
-							.ur-login-content {
-								p {
-									font-size: 16px;
-									margin: 20px auto;
-								}
-							}
-						}
+// .user-registration-membership_page_user-registration-login-forms {
+// 	#wpcontent {
+// 		.ur-admin-page-topnav {
+// 			margin-bottom: 0;
+// 		}
+// 		.user-registration-login-form-container {
+// 			.user-registration__wrap {
+// 				&.wrap {
+// 					margin: 0 auto;
+// 				}
 
-						&.ur-login-form-settings {
-							.ur-tab-contents {
-								padding: 16px 16px 0 16px;
-								.ur-tab-content {
-									padding: 0;
-									form {
-										.ur-login-form-setting-block {
-											&:first-child {
-												h2 {
-													&.ur-toggle-heading {
-														margin-top: 0;
-													}
-												}
-											}
-											.ur-toggle-content {
-												margin-top: 24px;
-												display: flex;
-												flex-direction: column;
-												gap: 28px;
-												.user-registration-login-form-global-settings {
-													display: flex;
-													flex-direction: column;
-													gap: 12px;
-													label {
-														font-weight: 600;
-														gap: 6px;
-														margin-bottom: 0;
-														.user-registration-help-tip {
-															font-size: 20px;
-														}
-													}
-													select {
-														height: 38px;
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-							#ur-login-form-setting {
-								.ur-login-form-setting-block {
-									display: flex;
-									flex-direction: column;
-									gap: 24px;
-								}
-							}
-						}
-					}
-					#post-body {
-						.ur-builder-wrapper {
-							.ur-selected-inputs {
-								background: transparent;
-								padding: 24px;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
+// 				.ur-form-subcontainer {
+// 					.menu-edit {
+// 						border: none;
+// 					}
+
+// 					.ur-registered-inputs {
+// 						.ui-widget-content {
+// 							.ur-tab-contents {
+// 								padding: 24px;
+// 								background-color: #fafafa;
+
+// 								.ur-login-view-doc {
+// 									border-radius: 3px;
+// 									cursor: pointer;
+// 									text-decoration: none;
+// 									text-align: center;
+// 									vertical-align: middle;
+// 									white-space: nowrap;
+// 									box-shadow: none;
+// 									font-size: 14px;
+// 									font-weight: 600;
+// 									letter-spacing: 0px;
+// 									padding: 10px 24px;
+// 									border: none;
+// 									// background: #475bb2;
+// 									background: #edeff7;
+// 									color: $primary_color;
+// 									// color: #ffffff;
+// 									display: block;
+// 									margin: 24px auto 0;
+
+// 									a {
+// 										color: #fff;
+// 									}
+
+// 									&:disabled {
+// 										cursor: default;
+// 										opacity: 0.5;
+
+// 										&:hover {
+// 											background-color: #475bb2;
+// 										}
+// 									}
+// 								}
+// 							}
+
+// 							.ur-heading {
+// 								margin-top: 0;
+// 								padding-bottom: $spacing_16px;
+// 								border-bottom: $border_width solid #e9e9e9;
+// 								text-transform: uppercase;
+// 								font-size: 16px;
+// 								font-weight: $medium;
+// 							}
+// 							.ur-login-content {
+// 								p {
+// 									font-size: 16px;
+// 									margin: $spacing_20px auto;
+// 								}
+// 							}
+// 						}
+
+// 						&.ur-login-form-settings {
+// 							.ur-tab-contents {
+// 								padding: $spacing_16px $spacing_16px 0 $spacing_16px;
+
+// 								.ur-tab-content {
+// 									padding: 0;
+
+// 									form {
+// 										.ur-login-form-setting-block {
+// 											&:first-child {
+// 												h2 {
+// 													&.ur-toggle-heading {
+// 														margin-top: 0;
+// 													}
+// 												}
+// 											}
+
+// 											.ur-toggle-content {
+// 												margin-top: $spacing_24px;
+// 												display: flex;
+// 												flex-direction: column;
+// 												gap: 28px;
+
+// 												.user-registration-login-form-global-settings {
+// 													display: flex;
+// 													flex-direction: column;
+// 													gap: $spacing_8px;
+
+// 													label {
+// 														font-weight: $semi_bold;
+// 														gap: $spacing_6px;
+// 														margin-bottom: 0;
+
+// 														.user-registration-help-tip {
+// 															font-size: 20px;
+// 														}
+// 													}
+
+// 													select {
+// 														height: 38px;
+// 													}
+
+// 													span.description {
+// 														display: none;
+// 													}
+// 												}
+// 											}
+// 										}
+// 									}
+// 								}
+// 							}
+// 							#ur-login-form-setting {
+// 								.ur-login-form-setting-block {
+// 									display: flex;
+// 									flex-direction: column;
+// 									gap: 24px;
+// 								}
+// 							}
+// 						}
+// 					}
+// 					#post-body {
+// 						.ur-builder-wrapper {
+// 							.ur-selected-inputs {
+// 								background: #F9FAFB;
+// 								padding: $spacing_30px;
+// 								height: 100%;
+// 							}
+// 						}
+// 					}
+// 				}
+// 			}
+// 		}
+// 	}
+// }
 
 // Login Form Design ReVamped CSS
 body {
@@ -1830,7 +1913,7 @@ body {
 				&--bordered {
 					&:not(.login) {
 						box-shadow: none;
-						border: 1px solid #e9e9e9;
+						// border: 1px solid #e9e9e9;
 
 						form {
 							.ur-form-row {
@@ -1855,7 +1938,7 @@ body {
 				&--flat {
 					&:not(.login) {
 						box-shadow: none;
-						border: 1px solid #e9e9e9;
+						// border: 1px solid #e9e9e9;
 						border-radius: 0;
 
 						form {
@@ -1876,7 +1959,7 @@ body {
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
 											background: $white;
-											border-color: #e9e9e9;
+											border: 1px solid #e1e1e1;
 											box-shadow: none;
 											border-radius: 0 !important;
 										}
@@ -1905,6 +1988,8 @@ body {
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
 											box-shadow: none;
+											border: 1px solid #e1e1e1;
+											background: transparent;
 										}
 									}
 								}
@@ -1947,18 +2032,19 @@ body {
 				max-width: 520px;
 				// margin: 0px auto;
 				border-radius: 4px;
-				background: #ffffff;
+				// background: #ffffff;
+				background: transparent;
 				// box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 				border: 0;
 
-				@media screen and (max-width: 575px) {
-					padding: 40px 30px;
-				}
+				// @media screen and (max-width: 575px) {
+				// 	padding: 40px 30px;
+				// }
 
-				&:has(.ur-grid-2),
-				&:has(.ur-grid-3) {
-					max-width: 940px;
-				}
+				// &:has(.ur-grid-2),
+				// &:has(.ur-grid-3) {
+				// 	max-width: 940px;
+				// }
 
 				&:has(.ur-frontend-form--bordered) {
 					box-shadow: none;
@@ -2088,6 +2174,7 @@ body {
 							.ur-form-grid {
 								.ur-submit-button {
 									margin-right: 0;
+									color: $white;
 								}
 							}
 						}
@@ -2209,7 +2296,7 @@ body {
 								padding: 0 14px 0 36px;
 
 								&:focus {
-									border-color: #027abb;
+									border-color: $primary_color;
 								}
 							}
 						}
@@ -2230,7 +2317,7 @@ body {
 								input {
 									margin-bottom: 0;
 									border-radius: 4px;
-									border: 1px solid #e9e9e9;
+									// border: 1px solid #e9e9e9;
 									min-height: 38px;
 									max-height: 38px;
 									font-size: 14px;
@@ -2239,7 +2326,7 @@ body {
 									color: #383838;
 
 									&:focus {
-										border-color: #027abb;
+										border-color: $primary_color;
 									}
 
 									&::placeholder {
@@ -2428,6 +2515,13 @@ body {
 									label {
 										// margin: 0;
 										width: auto;
+										display: flex;
+										align-items: center;
+										gap: $spacing_8px;
+
+										input[type="checkbox"] {
+											margin: 0;
+										}
 									}
 
 									.user-registration-LostPassword {
@@ -2574,6 +2668,13 @@ body {
 					}
 				}
 			}
+
+			&.ur-frontend-form {
+				max-width: 100%;
+				padding: 0;
+				background: transparent;
+				box-shadow: none;
+			}
 		}
 	}
 	&.woocommerce-checkout {
@@ -2639,49 +2740,63 @@ body {
 		.ur-admin-page-topnav {
 			margin-bottom: 0;
 		}
+
 		.user-registration-login-form-container {
 			.user-registration__wrap {
 				&.wrap {
 					margin: 0 auto;
 				}
+
 				.ur-form-subcontainer {
 					.menu-edit {
 						border: none;
 					}
+
 					.ur-registered-inputs {
 						.ui-widget-content {
 							.ur-tab-contents {
 								padding: 24px;
-								background-color: #ffffff;
+								background: #ffffff;
+
 								.ur-login-view-doc {
-									border-radius: 3px;
-									cursor: pointer;
-									text-decoration: none;
-									text-align: center;
-									vertical-align: middle;
-									white-space: nowrap;
-									box-shadow: none;
-									font-size: 14px;
-									font-weight: 600;
-									letter-spacing: 0px;
-									padding: 10px 24px;
-									border: none;
-									background-color: #475bb2;
-									color: #ffffff;
-									display: block;
-									margin: 24px auto 0;
 									a {
-										color: #fff;
+										border-radius: $border_radius_4;
+										cursor: pointer;
+										text-decoration: none;
+										text-align: center;
+										vertical-align: middle;
+										white-space: nowrap;
+										box-shadow: none;
+										font-size: 14px;
+										font-weight: $medium;
+										letter-spacing: 0px;
+										padding: $spacing_10px $spacing_24px;
+										border: none;
+										// background: #475bb2;
+										background: #edeff7;
+										// color: #ffffff;
+										color: $primary_color;
+										display: block;
+										margin: $spacing_32px 0 0;
+										transition: all .3s ease-in-out;
+
+										&:hover {
+											background: $primary_color;
+											color: $white;
+										}
 									}
+
 									&:disabled {
 										cursor: default;
 										opacity: 0.5;
+
 										&:hover {
 											background-color: #475bb2;
 										}
 									}
 								}
 							}
+
 							.ur-heading {
 								margin-top: 0;
 								padding-bottom: 16px;
@@ -2689,11 +2804,18 @@ body {
 								text-transform: uppercase;
 								font-size: 16px;
 							}
+
 							.ur-login-content {
 								p {
-									font-size: 16px;
-									margin: 20px auto;
+									font-size: 15px;
+									line-height: 26px;
+									margin: $spacing_12px 0;
+
+									&:nth-child(3) {
+										margin-top: $spacing_24px;
+									}
 								}
+
 								.login-forms-shortcode-action {
 									display: flex;
 									padding: 6px 6px 6px 12px;
@@ -2703,10 +2825,12 @@ body {
 									background: #fff;
 									border: 1px solid #edeff7;
 									border-radius: 4px;
+
 									input {
 										background: transparent;
 										border: none;
 									}
+
 									.ur-copy-shortcode {
 										line-height: unset;
 										padding: 6px;
@@ -2720,8 +2844,10 @@ body {
 						&.ur-login-form-settings {
 							.ur-tab-contents {
 								padding: 16px 16px 0 16px;
+
 								.ur-tab-content {
 									padding: 0;
+
 									form {
 										.ur-login-form-setting-block {
 											&:first-child {
@@ -2731,27 +2857,26 @@ body {
 													}
 												}
 											}
+
+											// h2 {
+											// 	&.ur-toggle-heading {
+											// 		&.closed {
+											// 			color: $primary_color;
+
+											// 			&::before {
+											// 				filter: brightness(0) saturate(100%) invert(35%) sepia(30%) saturate(1444%) hue-rotate(193deg) brightness(93%) contrast(85%);
+											// 			}
+											// 		}
+											// 	}
+											// }
+
 											.ur-toggle-content {
-												margin-top: 24px;
+												margin-top: $spacing_24px;
+												padding-bottom: $spacing_28px;
+												border-bottom: $border_width solid $border_color;
 												display: flex;
 												flex-direction: column;
 												gap: 28px;
-												.user-registration-login-form-global-settings {
-													display: flex;
-													flex-direction: column;
-													gap: 12px;
-													label {
-														font-weight: 600;
-														gap: 6px;
-														margin-bottom: 0;
-														.user-registration-help-tip {
-															font-size: 20px;
-														}
-													}
-													select {
-														height: 38px;
-													}
-												}
 											}
 										}
 									}
@@ -2763,14 +2888,6 @@ body {
 									flex-direction: column;
 									gap: 24px;
 								}
-							}
-						}
-					}
-					#post-body {
-						.ur-builder-wrapper {
-							.ur-selected-inputs {
-								background: transparent;
-								padding: 24px;
 							}
 						}
 					}
@@ -2803,7 +2920,7 @@ body.user-registration-page {
 .ur-metabox-field .ur-metabox-field-detail{
 	.select2-container {
 		.select2-selection--single {
-			height: auto;
+			// height: auto;
 		}
 	}
 }

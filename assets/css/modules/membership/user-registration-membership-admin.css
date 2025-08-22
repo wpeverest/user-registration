@@ -13,6 +13,165 @@
  * Define the maximum width of `.ur-container` for different screen sizes.
  * scss-docs-start container-max-widths
  **/
+.user-registration .button,
+.user-registration .page-title-action,
+.user-registration-page .button,
+.user-registration-page .page-title-action,
+.ur-multi-device-form-preview .button,
+.ur-multi-device-form-preview .page-title-action,
+.user-registration-welcome .button,
+.user-registration-welcome .page-title-action {
+  min-width: unset !important;
+  align-content: center;
+  min-height: 36px;
+  border: 1px solid #475bb2;
+  padding: 0px 12px;
+  font-size: 14px;
+  line-height: 20px;
+  border-radius: 4px;
+  transition: all 0.3s ease-in-out;
+  background: #F6F7F7;
+  color: #475bb2;
+  font-weight: 500;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+.user-registration .button:disabled,
+.user-registration .page-title-action:disabled,
+.user-registration-page .button:disabled,
+.user-registration-page .page-title-action:disabled,
+.ur-multi-device-form-preview .button:disabled,
+.ur-multi-device-form-preview .page-title-action:disabled,
+.user-registration-welcome .button:disabled,
+.user-registration-welcome .page-title-action:disabled {
+  color: #a7aaad !important;
+  border-color: #ebebeb !important;
+  background: #f6f7f7 !important;
+  cursor: not-allowed;
+}
+.user-registration .button:focus,
+.user-registration .page-title-action:focus,
+.user-registration-page .button:focus,
+.user-registration-page .page-title-action:focus,
+.ur-multi-device-form-preview .button:focus,
+.ur-multi-device-form-preview .page-title-action:focus,
+.user-registration-welcome .button:focus,
+.user-registration-welcome .page-title-action:focus {
+  outline: none;
+  box-shadow: none;
+  border-color: transparent;
+}
+.user-registration .button.ur-copy-shortcode,
+.user-registration .page-title-action.ur-copy-shortcode,
+.user-registration-page .button.ur-copy-shortcode,
+.user-registration-page .page-title-action.ur-copy-shortcode,
+.ur-multi-device-form-preview .button.ur-copy-shortcode,
+.ur-multi-device-form-preview .page-title-action.ur-copy-shortcode,
+.user-registration-welcome .button.ur-copy-shortcode,
+.user-registration-welcome .page-title-action.ur-copy-shortcode {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 !important;
+}
+.user-registration .button.ur-copy-shortcode svg,
+.user-registration .page-title-action.ur-copy-shortcode svg,
+.user-registration-page .button.ur-copy-shortcode svg,
+.user-registration-page .page-title-action.ur-copy-shortcode svg,
+.ur-multi-device-form-preview .button.ur-copy-shortcode svg,
+.ur-multi-device-form-preview .page-title-action.ur-copy-shortcode svg,
+.user-registration-welcome .button.ur-copy-shortcode svg,
+.user-registration-welcome .page-title-action.ur-copy-shortcode svg {
+  width: 18px;
+  height: 18px;
+  margin-bottom: 0;
+}
+.user-registration .button-primary,
+.user-registration .page-title-action-primary,
+.user-registration-page .button-primary,
+.user-registration-page .page-title-action-primary,
+.ur-multi-device-form-preview .button-primary,
+.ur-multi-device-form-preview .page-title-action-primary,
+.user-registration-welcome .button-primary,
+.user-registration-welcome .page-title-action-primary {
+  background: #475bb2;
+  border-color: #475bb2;
+  color: #ffffff;
+}
+.user-registration .button-primary:hover, .user-registration .button-primary:focus, .user-registration .button-primary:active,
+.user-registration .page-title-action-primary:hover,
+.user-registration .page-title-action-primary:focus,
+.user-registration .page-title-action-primary:active,
+.user-registration-page .button-primary:hover,
+.user-registration-page .button-primary:focus,
+.user-registration-page .button-primary:active,
+.user-registration-page .page-title-action-primary:hover,
+.user-registration-page .page-title-action-primary:focus,
+.user-registration-page .page-title-action-primary:active,
+.ur-multi-device-form-preview .button-primary:hover,
+.ur-multi-device-form-preview .button-primary:focus,
+.ur-multi-device-form-preview .button-primary:active,
+.ur-multi-device-form-preview .page-title-action-primary:hover,
+.ur-multi-device-form-preview .page-title-action-primary:focus,
+.ur-multi-device-form-preview .page-title-action-primary:active,
+.user-registration-welcome .button-primary:hover,
+.user-registration-welcome .button-primary:focus,
+.user-registration-welcome .button-primary:active,
+.user-registration-welcome .page-title-action-primary:hover,
+.user-registration-welcome .page-title-action-primary:focus,
+.user-registration-welcome .page-title-action-primary:active {
+  background: rgb(56.4578313253, 72.3614457831, 141.5421686747);
+  border-color: rgb(56.4578313253, 72.3614457831, 141.5421686747);
+}
+.user-registration .button-secondary, .user-registration .button.ur-embed-form-button,
+.user-registration .page-title-action-secondary,
+.user-registration .page-title-action.ur-embed-form-button,
+.user-registration-page .button-secondary,
+.user-registration-page .button.ur-embed-form-button,
+.user-registration-page .page-title-action-secondary,
+.user-registration-page .page-title-action.ur-embed-form-button,
+.ur-multi-device-form-preview .button-secondary,
+.ur-multi-device-form-preview .button.ur-embed-form-button,
+.ur-multi-device-form-preview .page-title-action-secondary,
+.ur-multi-device-form-preview .page-title-action.ur-embed-form-button,
+.user-registration-welcome .button-secondary,
+.user-registration-welcome .button.ur-embed-form-button,
+.user-registration-welcome .page-title-action-secondary,
+.user-registration-welcome .page-title-action.ur-embed-form-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #d1d5db;
+  background: transparent;
+  color: #374151;
+  font-weight: 400;
+}
+.user-registration .button-secondary:hover, .user-registration .button.ur-embed-form-button:hover,
+.user-registration .page-title-action-secondary:hover,
+.user-registration .page-title-action.ur-embed-form-button:hover,
+.user-registration-page .button-secondary:hover,
+.user-registration-page .button.ur-embed-form-button:hover,
+.user-registration-page .page-title-action-secondary:hover,
+.user-registration-page .page-title-action.ur-embed-form-button:hover,
+.ur-multi-device-form-preview .button-secondary:hover,
+.ur-multi-device-form-preview .button.ur-embed-form-button:hover,
+.ur-multi-device-form-preview .page-title-action-secondary:hover,
+.ur-multi-device-form-preview .page-title-action.ur-embed-form-button:hover,
+.user-registration-welcome .button-secondary:hover,
+.user-registration-welcome .button.ur-embed-form-button:hover,
+.user-registration-welcome .page-title-action-secondary:hover,
+.user-registration-welcome .page-title-action.ur-embed-form-button:hover {
+  background: #475bb2;
+  border-color: #475bb2;
+  color: #ffffff;
+}
+
+.wp-core-ui .button.button-large, .wp-core-ui .button-group.button-large .button {
+  min-height: 36px;
+  line-height: 20px;
+  padding: 0 12px;
+}
+
 #payment-detail-modal h2 {
   font-size: 1.6em;
   font-weight: 700;
@@ -224,8 +383,8 @@
   color: #475BB2;
 }
 .user-registration #user-registration-list-table-page {
-  margin: 32px auto;
-  padding: 28px 32px;
+  margin: 32px;
+  padding: 24px 28px;
   box-sizing: border-box;
 }
 .user-registration #user-registration-list-table-page .user-registration-list-table-heading {
@@ -239,22 +398,6 @@
   font-weight: 600;
   line-height: 32px;
 }
-.user-registration #user-registration-list-table-page .user-registration-list-table-heading .ur-button-primary {
-  border-radius: 3px;
-  border-color: #475BB2;
-  background: #475BB2;
-  color: #ffffff;
-  padding: 8px 20px 8px 16px;
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 24px;
-  transition: all 0.3s;
-}
-.user-registration #user-registration-list-table-page .user-registration-list-table-heading .ur-button-primary:hover {
-  background: #38488e;
-  border-color: #38488e;
-}
 .user-registration #user-registration-list-table-page #user-registration-list-filters-row {
   padding-bottom: 28px;
 }
@@ -267,86 +410,11 @@
 }
 .user-registration #user-registration-list-table-page #user-registration-list-filters-row form > div select {
   width: 200px;
-  border-color: #BABABA;
-  color: #383838;
-}
-.user-registration #user-registration-list-table-page #user-registration-list-filters-row form > div select:focus {
-  box-shadow: none;
-  outline: none;
-  border-color: #475BB2;
-}
-.user-registration #user-registration-list-table-page #user-registration-list-filters-row form > div input[type=search] {
-  height: 38px;
-  border-color: #BABABA;
-  color: #383838;
-  padding: 8px 12px;
-  font-size: 14px;
-  line-height: 24px;
-  border-radius: 4px;
-  width: 100%;
-  padding: 10px 40px 10px 14px;
-}
-.user-registration #user-registration-list-table-page #user-registration-list-filters-row form > div input[type=search]::placeholder {
-  color: #999999;
-}
-.user-registration #user-registration-list-table-page #user-registration-list-filters-row form > div input[type=search]:focus {
-  box-shadow: none;
-  outline: none;
-  border-color: #475BB2;
-}
-.user-registration #user-registration-list-table-page #user-registration-list-filters-row form > div input[type=search]::placeholder {
-  color: #999;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 24px;
-}
-.user-registration #user-registration-list-table-page #user-registration-list-filters-row form > div input[type=search]:focus {
-  box-shadow: none;
-  outline: none;
-  border-color: #475BB2;
 }
 .user-registration #user-registration-list-table-page #user-registration-list-filters-row form > div #search-submit {
   top: 50% !important;
   transform: translateY(-50%);
   right: 14px !important;
-}
-.user-registration #user-registration-list-table-page #user-registration-list-filters-row form button[type=submit] {
-  padding: 8px 14px;
-  font-size: 14px;
-  line-height: 20px;
-  color: #475BB2;
-  border-color: #475BB2;
-  background: #F6F7F7;
-  font-weight: 500;
-}
-.user-registration #user-registration-list-table-page #user-registration-users-action-form .tablenav {
-  margin: 0;
-  padding: 0;
-  height: auto;
-  margin-bottom: 20px;
-}
-.user-registration #user-registration-list-table-page #user-registration-users-action-form .tablenav .bulkactions select {
-  min-height: 38px;
-  padding: 0 12px;
-  width: 220px;
-  margin-right: 10px;
-  border-color: #BABABA;
-  color: #383838;
-}
-.user-registration #user-registration-list-table-page #user-registration-users-action-form .tablenav .bulkactions select:focus {
-  box-shadow: none;
-  outline: none;
-  border-color: #475BB2;
-}
-.user-registration #user-registration-list-table-page #user-registration-users-action-form .tablenav .bulkactions input[type=submit] {
-  padding: 8px 14px;
-  font-size: 14px;
-  line-height: 20px;
-  margin-right: 0;
-  color: #475BB2;
-  border-color: #475BB2;
-  background: #F6F7F7;
-  font-weight: 500;
 }
 .user-registration #user-registration-list-table-page #user-registration-users-action-form .wp-list-table thead tr td {
   width: 40px;
@@ -381,67 +449,9 @@
 .user-registration #user-registration-list-table-page #user-registration-users-action-form .wp-list-table tbody tr td.username img {
   margin: 0;
 }
-.user-registration #user-registration-list-table-page #membership-list .tablenav {
-  margin: 0;
-  padding: 0;
-  height: auto;
-  margin-bottom: 20px;
-}
-.user-registration #user-registration-list-table-page #membership-list .tablenav .bulkactions select {
-  min-height: 38px;
-  padding: 0 12px;
-  width: 220px;
-  margin-right: 10px;
-  border-color: #BABABA;
-  color: #383838;
-}
-.user-registration #user-registration-list-table-page #membership-list .tablenav .bulkactions select:focus {
-  box-shadow: none;
-  outline: none;
-  border-color: #475BB2;
-}
-.user-registration #user-registration-list-table-page #membership-list .tablenav .bulkactions input[type=submit] {
-  padding: 8px 14px;
-  font-size: 14px;
-  line-height: 20px;
-  margin-right: 0;
-  color: #475BB2;
-  border-color: #475BB2;
-  background: #F6F7F7;
-  font-weight: 500;
-}
 .user-registration #user-registration-list-table-page #membership-list .tablenav-pages {
   margin-top: 5px;
   margin-bottom: 0;
-}
-.user-registration #user-registration-list-table-page #membership-list .tablenav .actions.bulkactions {
-  padding: 0;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.user-registration #user-registration-list-table-page #membership-list .tablenav .actions.bulkactions select {
-  height: 38px;
-  width: 220px;
-  padding: 0 12px;
-  border-radius: 4px;
-  border: 1px solid #BABABA;
-  margin-right: 0;
-}
-.user-registration #user-registration-list-table-page #membership-list .tablenav .actions.bulkactions select:focus {
-  box-shadow: none;
-  outline: none;
-  border-color: #475BB2;
-}
-.user-registration #user-registration-list-table-page #membership-list .tablenav .actions.bulkactions input[type=submit] {
-  margin: 0;
-  padding: 8px 14px;
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 500;
-  color: #475BB2;
-  border-color: #475BB2;
-  background: #F6F7F7;
 }
 .user-registration #user-registration-list-table-page #membership-list .wp-list-table.memberships thead tr td {
   width: 40px;
@@ -639,6 +649,37 @@
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-input-container:has(.ur-field[data-field-key=textarea]) {
   align-items: unset;
 }
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-input-container:has(.ur-field[data-field-key=textarea]) .wp-editor-wrap .wp-media-buttons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-input-container:has(.ur-field[data-field-key=textarea]) .wp-editor-wrap .wp-media-buttons .button {
+  display: flex;
+  align-items: center;
+  padding: 0 12px 0 10px;
+  gap: 4px;
+  margin-right: 0;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-input-container:has(.ur-field[data-field-key=textarea]) .wp-editor-wrap .wp-media-buttons .button span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 1px;
+  margin: 0;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-input-container:has(.ur-field[data-field-key=textarea]) .wp-editor-wrap .wp-media-buttons .button span.dashicons::before {
+  line-height: 18px;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-input-container:has(.ur-field[data-field-key=textarea]) .wp-editor-wrap .wp-media-buttons #ur-smart-tags-selector {
+  margin-left: auto;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-input-container:has(.ur-field[data-field-key=textarea]) .wp-editor-wrap .wp-editor-container .mce-top-part::before {
+  box-shadow: none;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-input-container:has(.ur-field[data-field-key=textarea]) .wp-editor-wrap .wp-editor-container .mce-container-body iframe {
+  height: 200px !important;
+}
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-input-container .ur-label {
   margin-bottom: 0;
 }
@@ -648,13 +689,6 @@
   font-size: 15px;
   font-weight: 500;
   line-height: 21px;
-}
-.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-input-container .ur-admin-template .ur-field input {
-  height: 38px;
-  padding: 8px 12px 8px 12px;
-  font-size: 14px;
-  line-height: 24px;
-  color: #383838;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-input-container .user-registration-switch input[type=checkbox] {
   border-radius: 20px;
@@ -716,6 +750,7 @@
   padding: 0 !important;
   font-size: 16px;
   line-height: 24px;
+  cursor: pointer;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types .ur-membership-type-description p {
   color: #383838;
@@ -792,30 +827,8 @@
   transform: translateY(-50%);
   font-size: 16px;
 }
-.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #paid-plan-container .ur-membership-selection-container .ur-field input[type=number] {
-  height: 38px;
-  font-size: 14px;
-  line-height: 24px;
-  padding-left: 24px !important;
-}
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #paid-plan-container .ur-membership-subscription-field-container .ur-membership-selection-container .ur-field {
   gap: 12px;
-}
-.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #paid-plan-container .ur-membership-subscription-field-container .ur-membership-selection-container .ur-field input[type=number] {
-  width: 100px;
-  padding-left: 12px !important;
-  padding-right: 8px;
-}
-.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #paid-plan-container .ur-membership-subscription-field-container .ur-membership-selection-container .ur-field select {
-  width: 100%;
-  height: 38px;
-  padding: 0 12px;
-  margin: 0 !important;
-}
-.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #paid-plan-container .ur-membership-subscription-field-container .ur-membership-selection-container .ur-field select:focus {
-  box-shadow: none;
-  outline: none;
-  border-color: #475BB2;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #paid-plan-container .ur-membership-subscription-field-container .ur-membership-input-container {
   margin-top: 24px !important;
@@ -879,11 +892,6 @@
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #paid-plan-container .ur-membership-subscription-field-container .trial-container--wrapper .ur-field select {
   flex: 1;
-}
-.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #paid-plan-container .ur-membership-subscription-field-container .trial-container--wrapper .ur-field select:focus {
-  box-shadow: none;
-  outline: none;
-  border-color: #475BB2;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #payment-gateway-container {
   margin-top: 28px !important;
@@ -995,32 +1003,7 @@
   padding: 0 !important;
   padding-top: 28px !important;
   border-top: 1px solid #e1e1e1;
-  margin-top: 30px;
-}
-.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card .submit .button-secondary {
-  border-radius: 4px;
-  box-shadow: none;
-  padding: 8px 16px;
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 24px;
-  border: 0;
-  background: transparent;
-  border: 1px solid #bababa;
-}
-.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card .submit .button-secondary a {
-  color: #6B6B6B;
-}
-.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card .submit .button-primary {
-  border-radius: 4px;
-  box-shadow: none;
-  padding: 8px 16px;
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 24px;
-  border: 0;
+  margin-top: 28px;
 }
 
 .ur-membership-tab-contents-wrapper {
@@ -1090,17 +1073,6 @@
   font-weight: 500;
   line-height: 21px;
 }
-#ur-membership-create-form .user-registration-card #ur-membership-form-container #ur-member-form-left #left-body .ur-membership-input-container .ur-admin-template .ur-field input {
-  height: 38px;
-  border-color: #E9E9E9;
-}
-#ur-membership-create-form .user-registration-card #ur-membership-form-container #ur-member-form-left #left-body .ur-membership-input-container .ur-admin-template .ur-field select {
-  height: 38px;
-  border-radius: 4px;
-  border: 1px solid #E9E9E9;
-  max-width: 100%;
-  width: 100%;
-}
 #ur-membership-create-form .user-registration-card #ur-membership-form-container #ur-member-form-left #left-body .ur-membership-input-container .user-registration-switch input[type=checkbox] {
   border-radius: 20px;
   border: 0;
@@ -1128,6 +1100,8 @@
   background: #F8F8FA;
   border: 1px solid #EDEFF7;
   padding: 24px !important;
+  margin-top: -12px;
+  margin-right: -12px;
 }
 #ur-membership-create-form .user-registration-card #ur-membership-form-container #ur-member-form-right .right-title {
   padding-bottom: 16px;
@@ -1153,43 +1127,18 @@
   font-weight: 500;
   line-height: 21px;
 }
-#ur-membership-create-form .user-registration-card #ur-membership-form-container #ur-member-form-right .right-body .form-row .ur-membership-members-input {
-  height: 38px;
-  border-radius: 4px;
-  border: 1px solid #E9E9E9;
-  background: #fff;
-}
 #ur-membership-create-form .user-registration-card .submit {
   margin-bottom: 0;
   padding: 0 !important;
   padding-top: 28px !important;
   border-top: 1px solid #e1e1e1;
-  margin-top: 30px;
-}
-#ur-membership-create-form .user-registration-card .submit .button-secondary {
-  border-radius: 4px;
-  box-shadow: none;
-  padding: 8px 16px;
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 24px;
-  border: 0;
-  background: transparent;
-  border: 1px solid #bababa;
+  margin-top: 28px;
 }
 #ur-membership-create-form .user-registration-card .submit .button-secondary a {
-  color: #6B6B6B;
+  color: #374151;
 }
-#ur-membership-create-form .user-registration-card .submit .button-primary {
-  border-radius: 4px;
-  box-shadow: none;
-  padding: 8px 16px;
+#ur-membership-create-form .user-registration-card .submit .button-secondary:hover a {
   color: #ffffff;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 24px;
-  border: 0;
 }
 
 .user-registration-switch {

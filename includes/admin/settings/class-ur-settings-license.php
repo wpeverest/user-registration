@@ -88,7 +88,7 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 									'id'       => 'user-registration_license_key',
 									'default'  => '',
 									'type'     => 'text',
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'desc_tip' => true,
 								),
 								array(

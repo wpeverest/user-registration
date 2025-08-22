@@ -1,0 +1,36 @@
+.user-registration,
+.user-registration-page {
+    .tablenav {
+        margin: 0;
+        padding: 0;
+        height: auto;
+
+        &.top {
+            margin-bottom: $spacing_24px;
+        }
+
+        &.bottom {
+            margin-top: $spacing_24px;
+        }
+
+        .actions.bulkactions {
+            padding: 0;
+            display: flex;
+            align-items: center;
+            gap: $spacing_16px;
+
+            select {
+                max-width: 220px;
+                margin-right: 0;
+            }
+
+            .select2 {
+                &-selection {
+                    &__rendered {
+                        width: 120px;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -96,7 +96,7 @@ if ( ! class_exists( 'UR_Settings_Registration_Pending_Email', false ) ) :
 									'id'       => 'user_registration_registration_pending_email_subject',
 									'type'     => 'text',
 									'default'  => __( 'Account Status Changed: Pending Approval on {{blog_info}}', 'user-registration' ),
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'desc_tip' => true,
 								),
 
@@ -106,7 +106,7 @@ if ( ! class_exists( 'UR_Settings_Registration_Pending_Email', false ) ) :
 									'id'       => 'user_registration_registration_pending_email',
 									'type'     => 'tinymce',
 									'default'  => $this->ur_get_registration_pending_email(),
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'desc_tip' => true,
 								),
 							),

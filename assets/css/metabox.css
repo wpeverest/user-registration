@@ -1,24 +1,6 @@
 /**
  * MetaBox styling begins.
  */
-#urcr-meta-box .select2-container,
-#user_registration_frontend_listing_filter .select2-container,
-#user_registration_frontend_listing_general .select2-container,
-#user_registration_frontend_listing_search .select2-container,
-#user_registration_frontend_listing_view_profile .select2-container,
-#user_registration_frontend_listing_pagination .select2-container,
-#user_registration_frontend_listing_shortcode .select2-container {
-  width: 100% !important;
-}
-#urcr-meta-box .select2-container .select2-selection--multiple,
-#user_registration_frontend_listing_filter .select2-container .select2-selection--multiple,
-#user_registration_frontend_listing_general .select2-container .select2-selection--multiple,
-#user_registration_frontend_listing_search .select2-container .select2-selection--multiple,
-#user_registration_frontend_listing_view_profile .select2-container .select2-selection--multiple,
-#user_registration_frontend_listing_pagination .select2-container .select2-selection--multiple,
-#user_registration_frontend_listing_shortcode .select2-container .select2-selection--multiple {
-  border-color: #dee0e9 !important;
-}
 #urcr-meta-box .meta-box-sortables select,
 #urcr-meta-box .meta-box-sortables input[type=text],
 #urcr-meta-box .meta-box-sortables input[type=email],
@@ -41,22 +23,6 @@
 #user_registration_frontend_listing_shortcode .meta-box-sortables input[type=text],
 #user_registration_frontend_listing_shortcode .meta-box-sortables input[type=email] {
   width: 100%;
-}
-#urcr-meta-box .meta-box-sortables select,
-#urcr-meta-box .meta-box-sortables input,
-#user_registration_frontend_listing_filter .meta-box-sortables select,
-#user_registration_frontend_listing_filter .meta-box-sortables input,
-#user_registration_frontend_listing_general .meta-box-sortables select,
-#user_registration_frontend_listing_general .meta-box-sortables input,
-#user_registration_frontend_listing_search .meta-box-sortables select,
-#user_registration_frontend_listing_search .meta-box-sortables input,
-#user_registration_frontend_listing_view_profile .meta-box-sortables select,
-#user_registration_frontend_listing_view_profile .meta-box-sortables input,
-#user_registration_frontend_listing_pagination .meta-box-sortables select,
-#user_registration_frontend_listing_pagination .meta-box-sortables input,
-#user_registration_frontend_listing_shortcode .meta-box-sortables select,
-#user_registration_frontend_listing_shortcode .meta-box-sortables input {
-  border-color: #dee0e9;
 }
 #urcr-meta-box p.description,
 #user_registration_frontend_listing_filter p.description,

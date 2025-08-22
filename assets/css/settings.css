@@ -46,6 +46,268 @@
  * _mixins.scss
  * User Registration Mixins
  */
+.user-registration .button,
+.user-registration .page-title-action,
+.user-registration-page .button,
+.user-registration-page .page-title-action,
+.ur-multi-device-form-preview .button,
+.ur-multi-device-form-preview .page-title-action,
+.user-registration-welcome .button,
+.user-registration-welcome .page-title-action {
+  min-width: unset !important;
+  align-content: center;
+  min-height: 36px;
+  border: 1px solid #475bb2;
+  padding: 0px 12px;
+  font-size: 14px;
+  line-height: 20px;
+  border-radius: 4px;
+  transition: all 0.3s ease-in-out;
+  background: #F6F7F7;
+  color: #475bb2;
+  font-weight: 500;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+.user-registration .button:disabled,
+.user-registration .page-title-action:disabled,
+.user-registration-page .button:disabled,
+.user-registration-page .page-title-action:disabled,
+.ur-multi-device-form-preview .button:disabled,
+.ur-multi-device-form-preview .page-title-action:disabled,
+.user-registration-welcome .button:disabled,
+.user-registration-welcome .page-title-action:disabled {
+  color: #a7aaad !important;
+  border-color: #ebebeb !important;
+  background: #f6f7f7 !important;
+  cursor: not-allowed;
+}
+.user-registration .button:focus,
+.user-registration .page-title-action:focus,
+.user-registration-page .button:focus,
+.user-registration-page .page-title-action:focus,
+.ur-multi-device-form-preview .button:focus,
+.ur-multi-device-form-preview .page-title-action:focus,
+.user-registration-welcome .button:focus,
+.user-registration-welcome .page-title-action:focus {
+  outline: none;
+  box-shadow: none;
+  border-color: transparent;
+}
+.user-registration .button.ur-copy-shortcode,
+.user-registration .page-title-action.ur-copy-shortcode,
+.user-registration-page .button.ur-copy-shortcode,
+.user-registration-page .page-title-action.ur-copy-shortcode,
+.ur-multi-device-form-preview .button.ur-copy-shortcode,
+.ur-multi-device-form-preview .page-title-action.ur-copy-shortcode,
+.user-registration-welcome .button.ur-copy-shortcode,
+.user-registration-welcome .page-title-action.ur-copy-shortcode {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 !important;
+}
+.user-registration .button.ur-copy-shortcode svg,
+.user-registration .page-title-action.ur-copy-shortcode svg,
+.user-registration-page .button.ur-copy-shortcode svg,
+.user-registration-page .page-title-action.ur-copy-shortcode svg,
+.ur-multi-device-form-preview .button.ur-copy-shortcode svg,
+.ur-multi-device-form-preview .page-title-action.ur-copy-shortcode svg,
+.user-registration-welcome .button.ur-copy-shortcode svg,
+.user-registration-welcome .page-title-action.ur-copy-shortcode svg {
+  width: 18px;
+  height: 18px;
+  margin-bottom: 0;
+}
+.user-registration .button-primary,
+.user-registration .page-title-action-primary,
+.user-registration-page .button-primary,
+.user-registration-page .page-title-action-primary,
+.ur-multi-device-form-preview .button-primary,
+.ur-multi-device-form-preview .page-title-action-primary,
+.user-registration-welcome .button-primary,
+.user-registration-welcome .page-title-action-primary {
+  background: #475bb2;
+  border-color: #475bb2;
+  color: #ffffff;
+}
+.user-registration .button-primary:hover, .user-registration .button-primary:focus, .user-registration .button-primary:active,
+.user-registration .page-title-action-primary:hover,
+.user-registration .page-title-action-primary:focus,
+.user-registration .page-title-action-primary:active,
+.user-registration-page .button-primary:hover,
+.user-registration-page .button-primary:focus,
+.user-registration-page .button-primary:active,
+.user-registration-page .page-title-action-primary:hover,
+.user-registration-page .page-title-action-primary:focus,
+.user-registration-page .page-title-action-primary:active,
+.ur-multi-device-form-preview .button-primary:hover,
+.ur-multi-device-form-preview .button-primary:focus,
+.ur-multi-device-form-preview .button-primary:active,
+.ur-multi-device-form-preview .page-title-action-primary:hover,
+.ur-multi-device-form-preview .page-title-action-primary:focus,
+.ur-multi-device-form-preview .page-title-action-primary:active,
+.user-registration-welcome .button-primary:hover,
+.user-registration-welcome .button-primary:focus,
+.user-registration-welcome .button-primary:active,
+.user-registration-welcome .page-title-action-primary:hover,
+.user-registration-welcome .page-title-action-primary:focus,
+.user-registration-welcome .page-title-action-primary:active {
+  background: rgb(56.4578313253, 72.3614457831, 141.5421686747);
+  border-color: rgb(56.4578313253, 72.3614457831, 141.5421686747);
+}
+.user-registration .button-secondary, .user-registration .button.ur-embed-form-button,
+.user-registration .page-title-action-secondary,
+.user-registration .page-title-action.ur-embed-form-button,
+.user-registration-page .button-secondary,
+.user-registration-page .button.ur-embed-form-button,
+.user-registration-page .page-title-action-secondary,
+.user-registration-page .page-title-action.ur-embed-form-button,
+.ur-multi-device-form-preview .button-secondary,
+.ur-multi-device-form-preview .button.ur-embed-form-button,
+.ur-multi-device-form-preview .page-title-action-secondary,
+.ur-multi-device-form-preview .page-title-action.ur-embed-form-button,
+.user-registration-welcome .button-secondary,
+.user-registration-welcome .button.ur-embed-form-button,
+.user-registration-welcome .page-title-action-secondary,
+.user-registration-welcome .page-title-action.ur-embed-form-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #d1d5db;
+  background: transparent;
+  color: #374151;
+  font-weight: 400;
+}
+.user-registration .button-secondary:hover, .user-registration .button.ur-embed-form-button:hover,
+.user-registration .page-title-action-secondary:hover,
+.user-registration .page-title-action.ur-embed-form-button:hover,
+.user-registration-page .button-secondary:hover,
+.user-registration-page .button.ur-embed-form-button:hover,
+.user-registration-page .page-title-action-secondary:hover,
+.user-registration-page .page-title-action.ur-embed-form-button:hover,
+.ur-multi-device-form-preview .button-secondary:hover,
+.ur-multi-device-form-preview .button.ur-embed-form-button:hover,
+.ur-multi-device-form-preview .page-title-action-secondary:hover,
+.ur-multi-device-form-preview .page-title-action.ur-embed-form-button:hover,
+.user-registration-welcome .button-secondary:hover,
+.user-registration-welcome .button.ur-embed-form-button:hover,
+.user-registration-welcome .page-title-action-secondary:hover,
+.user-registration-welcome .page-title-action.ur-embed-form-button:hover {
+  background: #475bb2;
+  border-color: #475bb2;
+  color: #ffffff;
+}
+
+.wp-core-ui .button.button-large, .wp-core-ui .button-group.button-large .button {
+  min-height: 36px;
+  line-height: 20px;
+  padding: 0 12px;
+}
+
+.user-registration a,
+.user-registration-page a,
+.ur-multi-device-form-preview a {
+  text-decoration: none;
+}
+.user-registration h1, .user-registration h2, .user-registration h3, .user-registration h4, .user-registration h5, .user-registration h6,
+.user-registration-page h1,
+.user-registration-page h2,
+.user-registration-page h3,
+.user-registration-page h4,
+.user-registration-page h5,
+.user-registration-page h6,
+.ur-multi-device-form-preview h1,
+.ur-multi-device-form-preview h2,
+.ur-multi-device-form-preview h3,
+.ur-multi-device-form-preview h4,
+.ur-multi-device-form-preview h5,
+.ur-multi-device-form-preview h6 {
+  color: #222222;
+  margin: 0;
+  font-weight: 600;
+}
+.user-registration p,
+.user-registration-page p,
+.ur-multi-device-form-preview p {
+  font-size: 14px;
+  line-height: 24px;
+  color: #383838;
+  font-weight: 400;
+}
+
+.user-registration .ur-toggle-section,
+.user-registration-page .ur-toggle-section,
+.ur-multi-device-form-preview .ur-toggle-section {
+  line-height: 1.3;
+}
+.user-registration .ur-toggle-section .ur-label[for=ur-type-toggle],
+.user-registration-page .ur-toggle-section .ur-label[for=ur-type-toggle],
+.ur-multi-device-form-preview .ur-toggle-section .ur-label[for=ur-type-toggle] {
+  margin-bottom: 0;
+}
+.user-registration .ur-toggle-section .user-registration-toggle-form,
+.user-registration-page .ur-toggle-section .user-registration-toggle-form,
+.ur-multi-device-form-preview .ur-toggle-section .user-registration-toggle-form {
+  position: relative;
+  display: inline-block;
+  width: 32px;
+  height: 16px;
+}
+.user-registration .ur-toggle-section .user-registration-toggle-form input[type=checkbox],
+.user-registration-page .ur-toggle-section .user-registration-toggle-form input[type=checkbox],
+.ur-multi-device-form-preview .ur-toggle-section .user-registration-toggle-form input[type=checkbox] {
+  width: 32px;
+  height: 16px;
+  min-width: 100% !important;
+}
+.user-registration .ur-toggle-section .user-registration-toggle-form input[type=checkbox]:focus,
+.user-registration-page .ur-toggle-section .user-registration-toggle-form input[type=checkbox]:focus,
+.ur-multi-device-form-preview .ur-toggle-section .user-registration-toggle-form input[type=checkbox]:focus {
+  outline: none;
+  box-shadow: none;
+  border-color: transparent;
+}
+.user-registration .ur-toggle-section .user-registration-toggle-form input[type=checkbox]:checked + .slider,
+.user-registration-page .ur-toggle-section .user-registration-toggle-form input[type=checkbox]:checked + .slider,
+.ur-multi-device-form-preview .ur-toggle-section .user-registration-toggle-form input[type=checkbox]:checked + .slider {
+  background: #475bb2;
+}
+.user-registration .ur-toggle-section .user-registration-toggle-form input[type=checkbox]:checked + .slider::before,
+.user-registration-page .ur-toggle-section .user-registration-toggle-form input[type=checkbox]:checked + .slider::before,
+.ur-multi-device-form-preview .ur-toggle-section .user-registration-toggle-form input[type=checkbox]:checked + .slider::before {
+  transform: translateX(14px);
+}
+.user-registration .ur-toggle-section .user-registration-toggle-form .slider,
+.user-registration-page .ur-toggle-section .user-registration-toggle-form .slider,
+.ur-multi-device-form-preview .ur-toggle-section .user-registration-toggle-form .slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: #dfe1ea;
+  width: 30px;
+  height: 16px;
+  transition: 0.4s;
+}
+.user-registration .ur-toggle-section .user-registration-toggle-form .slider.round,
+.user-registration-page .ur-toggle-section .user-registration-toggle-form .slider.round,
+.ur-multi-device-form-preview .ur-toggle-section .user-registration-toggle-form .slider.round {
+  border-radius: 30px;
+}
+.user-registration .ur-toggle-section .user-registration-toggle-form .slider::before,
+.user-registration-page .ur-toggle-section .user-registration-toggle-form .slider::before,
+.ur-multi-device-form-preview .ur-toggle-section .user-registration-toggle-form .slider::before {
+  content: "";
+  position: absolute;
+  height: 12px;
+  width: 12px;
+  left: 2px;
+  bottom: 2px;
+  background-color: #fff;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -166,6 +428,9 @@
 .user-registration-settings-wrapper .user-registration-header.collapsed .user-registration-header--nav .ur-nav-icon {
   transform: rotate(180deg);
 }
+.user-registration-settings-wrapper .user-registration-header--top {
+  padding: 0 12px;
+}
 .user-registration-settings-wrapper .user-registration-header--top-logo {
   text-align: center;
   margin-bottom: 28px;
@@ -174,34 +439,6 @@
   border: 1px solid #e1e1e1;
   width: 70px;
   border-radius: 50%;
-}
-.user-registration-settings-wrapper .user-registration-header--top .ur-search--top-settings {
-  padding-left: 12px;
-  padding-right: 12px;
-  position: relative;
-  margin-bottom: 24px;
-}
-.user-registration-settings-wrapper .user-registration-header--top .ur-search--top-settings input {
-  width: 100%;
-  height: 38px;
-  padding: 8px 40px 8px 12px;
-  color: #383838;
-}
-.user-registration-settings-wrapper .user-registration-header--top .ur-search--top-settings input::placeholder {
-  color: #bababa;
-  font-weight: 400;
-}
-.user-registration-settings-wrapper .user-registration-header--top .ur-search--top-settings input.ui-autocomplete-loading {
-  background-position: 95% center;
-}
-.user-registration-settings-wrapper .user-registration-header--top .ur-search--top-settings .user-registration-search-icon {
-  position: absolute;
-  top: 11px;
-  right: 26px;
-}
-.user-registration-settings-wrapper .user-registration-header--top .ur-search--top-settings .user-registration-search-icon svg {
-  width: 18px;
-  height: 18px;
 }
 .user-registration-settings-wrapper .user-registration-header--top .ur-search--top-toggle {
   display: flex;
@@ -451,8 +688,7 @@
 .user-registration-settings-sidebar-container .user-registration-settings-sidebar p {
   margin: 0;
   color: #383838;
-  font-size: 16px;
-  font-style: normal;
+  font-size: 15px;
   font-weight: 400;
   line-height: 24px;
 }
@@ -484,7 +720,7 @@
 .user-registration-settings-sidebar-container .user-registration-settings-sidebar__body--list-item {
   display: flex;
   color: #383838;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 400;
   line-height: 24px;
   margin-bottom: 0;
@@ -648,10 +884,10 @@
   width: 100%;
 }
 .user-registration-settings-container .user-registration-options-header--bottom ul li a {
-  font-weight: 400;
+  font-weight: 500;
   font-size: 15px;
   line-height: 140%;
-  color: #1f1f1f;
+  color: #383838;
   padding: 0;
   position: relative;
   padding-bottom: 16px;
@@ -672,9 +908,6 @@
 .user-registration-settings-container .user-registration-options-header--bottom ul li a:focus {
   outline: none;
   box-shadow: none;
-}
-.user-registration-settings-container .user-registration-options-header--bottom ul li a.current {
-  font-weight: 600;
 }
 .user-registration-settings-container .user-registration-options-header--bottom ul li a:hover, .user-registration-settings-container .user-registration-options-header--bottom ul li a.current {
   color: #475bb2;
@@ -1232,8 +1465,14 @@
 .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
   margin-bottom: 28px;
+}
+.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings:has(.description), .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings:has(.error), .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings:has(textarea) {
+  align-items: baseline;
+}
+.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings:has(.ur-radio-group-list), .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings:has(.wp-editor-wrap) {
+  align-items: flex-start;
 }
 @media (max-width: 1199px) {
   .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings {
@@ -1253,20 +1492,13 @@
   border-color: #e1e1e1;
   padding: 8px 10px;
 }
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings input[type=text],
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings input[type=email],
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings select {
-  height: 38px;
-  border-color: #e1e1e1;
-}
 .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings:last-child {
   margin-bottom: 0;
 }
 .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings label {
   position: relative;
   vertical-align: top;
-  text-align: left;
-  line-height: 1.3;
+  line-height: 24px;
   font-weight: 500;
   color: #383838;
   font-size: 14px;
@@ -1312,16 +1544,6 @@
     width: 100%;
   }
 }
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field input[type=text],
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field input[type=number] {
-  width: 100%;
-  min-width: 100% !important;
-  height: 38px;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field input[type=text]::placeholder,
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field input[type=number]::placeholder {
-  color: #bababa;
-}
 .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field textarea,
 .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field select {
   min-width: 100% !important;
@@ -1329,113 +1551,35 @@
 .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .user_registration_send_email_test {
   width: 10%;
 }
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field select {
-  width: 100%;
-  height: 38px;
-  padding: 4px 10px;
-  border: 1px solid #e1e1e1;
-  border-radius: 5px;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field select:focus, .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field select:focus-visible {
-  border-width: 1px;
-  border-color: #475bb2;
+.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .error {
   box-shadow: none;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field select:hover {
-  color: #383838;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field span.select2-container {
-  width: 100% !important;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field span.select2-container--open .select2-selection__arrow {
-  height: 30px;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field span.select2-container--open .select2-selection__arrow b {
-  width: 12px;
-  border-color: transparent transparent #888 transparent;
-  border-width: 0 6px 7px 6px;
-  margin-top: -2px;
-  margin-left: -8px;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field span.select2-container--open .select2-selection--multiple:before {
-  content: "";
-  position: absolute;
-  right: 7px;
-  top: 42%;
-  border-bottom: 7px solid #888;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 0px;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection {
-  padding-left: 0;
-  padding-right: 0;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection ul {
-  flex-wrap: wrap;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection__choice {
-  background: #e9e9e9;
-  border-radius: 5px;
+  padding: 0 !important;
+  color: #f34c4c;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
   border: 0;
-  flex-direction: row-reverse;
-  gap: 6px;
-  padding: 4px 10px;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 150%;
-  color: #383838;
-  margin: 4px;
-  margin-right: 0;
 }
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection__choice__remove {
-  font-size: 18px;
-  font-weight: 400;
-  color: #383838;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection__choice__remove:hover {
-  color: #f11d1d;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection--multiple .select2-selection__rendered {
-  padding-left: 0;
-  padding-right: 0;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection--multiple:before {
+.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .error::before {
   content: "";
-  position: absolute;
-  right: 7px;
-  top: 42%;
-  border-top: 7px solid #888;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23F34C4C' viewBox='0 0 24 24'%3E%3Cpath d='M20.182 12a8.182 8.182 0 1 0-16.364 0 8.182 8.182 0 0 0 16.364 0ZM22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10Z'/%3E%3Cpath d='M11.091 12V8.363a.91.91 0 1 1 1.818 0V12a.91.91 0 1 1-1.818 0Zm.917 2.727.092.005a.91.91 0 0 1 0 1.809l-.092.004H12a.91.91 0 1 1 0-1.818h.008Z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position: center;
+  width: 18px;
+  height: 18px;
+  position: relative;
+  top: 1px;
 }
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection--single {
-  height: 38px;
-  border: 1px solid #e1e1e1;
+.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field:has(.error) .select2-container--focus .select2-selection {
+  border-color: #f34c4c !important;
 }
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection--single .select2-selection__rendered {
-  line-height: 36px;
-  padding-left: 10px;
-  padding-right: 30px;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection--single .select2-selection__rendered .select2-selection__clear {
-  font-size: 18px;
-  font-weight: 400;
-  color: #383838;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection--single .select2-selection__rendered .select2-selection__clear:hover {
-  color: #475bb2;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection--single .select2-selection__arrow {
-  height: 30px;
-  right: 8px;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection__arrow b {
-  width: 12px;
-  border-color: #888 transparent transparent transparent;
-  border-width: 7px 6px 0 6px;
-  margin-top: -2px;
-  margin-left: -8px;
+.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field:has(.error) .select2-selection__rendered {
+  border: 0 !important;
 }
 .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .ur-toggle-section .user-registration-toggle-form input[type=checkbox] {
   min-width: 100% !important;
@@ -1444,6 +1588,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
+  margin: 0;
 }
 .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .ur-radio-group-list--item {
   max-width: 120px;
@@ -1454,6 +1599,7 @@
   padding: 6px;
   align-items: center;
   display: flex;
+  margin-bottom: 0;
 }
 .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .ur-radio-group-list--item.active {
   border-color: #475BB2;
@@ -1641,18 +1787,6 @@
   background: #0073aa;
 }
 
-.user-registration .select2-container .selection .select2-selection--single {
-  border: 1px solid #e1e1e1;
-  height: 38px;
-}
-.user-registration .select2-container .selection .select2-selection--single .select2-selection__arrow {
-  top: 4px;
-}
-.user-registration .select2-container .selection .select2-selection--single .select2-selection__arrow b {
-  margin-top: -2px;
-  margin-left: -8px;
-}
-
 .select2-results .select2-results__option--highlighted[data-selected] {
   background: #475bb2;
 }
@@ -1667,18 +1801,6 @@
 .flatpickr-day.flatpickr-disabled,
 .flatpickr-day.flatpickr-disabled:hover {
   color: rgba(57, 57, 57, 0.35);
-}
-
-.user-registration select {
-  background-image: linear-gradient(45deg, transparent 50%, gray 50%), linear-gradient(135deg, gray 50%, transparent 50%);
-  background-position: calc(100% - 15px) calc(1em + 2px), calc(100% - 10px) calc(1em + 2px), calc(100% - 2.5em) 0.5em;
-  background-size: 5px 5px, 5px 5px, 1px 1.5em;
-  background-repeat: no-repeat;
-}
-.user-registration select:focus {
-  outline: none;
-  box-shadow: none;
-  border: 1px solid #475bb2 !important;
 }
 
 .user-registration-global-settings.radio-image ul {
@@ -1714,10 +1836,6 @@
   font-weight: 500;
   height: 38px;
   margin-left: 5px;
-}
-#urm-invite-codes-list-table .select2-container {
-  width: 10% !important;
-  margin-right: 5px;
 }
 #urm-invite-codes-list-table #codes-filter {
   margin-top: 16px;
