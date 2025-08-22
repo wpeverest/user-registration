@@ -110,13 +110,18 @@ class Frontend {
 		}
 		$membership_service              = new MembershipService();
 		$membership_details              = $membership_service->get_membership_details( $membership['post_id'] );
-		$active_gateways                 = array_filter( $membership_details['payment_gateways'], function ( $item ) {
-			return "on" == $item["status"];
-		} );
-		$membership['active_gateways']   = $active_gateways;
-		$is_upgrading                    = ur_string_to_bool( get_user_meta( $user_id, 'urm_is_upgrading', true ) );
-		$last_order                      = $members_order_repository->get_member_orders( $user_id );
-		$bank_data                       = array();
+		$active_gateways                 = array();
+
+		if ( ! empty( $membership_details['payment_gateways'] ) ) {
+			$active_gateways = array_filter( $membership_details['payment_gateways'], function ( $item, $key ) {
+				return "on" == $item["status"] && in_array($key, array('paypal', 'stripe', 'bank'));
+			}, ARRAY_FILTER_USE_BOTH );
+		}
+
+		$membership['active_gateways'] = $active_gateways;
+		$is_upgrading                  = ur_string_to_bool( get_user_meta( $user_id, 'urm_is_upgrading', true ) );
+		$last_order                    = $members_order_repository->get_member_orders( $user_id );
+		$bank_data                     = array();
 		if ( ! empty( $last_order ) && $last_order['status'] == 'pending' && $last_order['payment_method'] === 'bank' ) {
 			$bank_data = array(
 				'show_bank_notice' => true,

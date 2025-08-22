@@ -129,6 +129,7 @@ foreach ( $fields as $key => $label ):
 								($post_content['type'] === 'subscription' && $trial_status === 'off')
 							)
 						) {
+							$coupon_discount_type = isset( $order_detail[ 'coupon_discount_type' ] ) ? $order_detail[ 'coupon_discount_type' ] : '';
 							$discount_amount = ($coupon_discount_type === 'fixed')
 								? ($coupon_discount ?: 0)
 								: ($coupon_discount ? ($amount * $coupon_discount / 100) : 0);

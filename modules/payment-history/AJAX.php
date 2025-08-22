@@ -13,8 +13,11 @@
 
 namespace WPEverest\URMembership\Payment;
 
+use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
+use WPEverest\URMembership\Admin\Repositories\SubscriptionRepository;
 use WPEverest\URMembership\Admin\Services\EmailService;
 use WPEverest\URMembership\Payment\Admin\OrdersController;
+use WPEverest\URMembership\TableList;
 
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -39,10 +42,11 @@ class AJAX {
 	public static function add_ajax_events() {
 
 		$ajax_events = array(
-			'delete_orders'     => false,
-			'delete_order'      => false,
-			'show_order_detail' => false,
-			'approve_payment'   => false,
+			'delete_orders'             => false,
+			'delete_order'              => false,
+			'show_order_detail'         => false,
+			'approve_payment'           => false,
+			'create_order'   => false,
 		);
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
 			add_action( 'wp_ajax_user_registration_membership_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -214,4 +218,70 @@ class AJAX {
 			wp_json_encode( $response )
 		);
 	}
+	/**
+	 * Create membership orders from backend.
+	 */
+	public static function create_order() {
+		if( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Sorry, you do not have permission to create membership order', 'user-registration' ),
+				)
+			);
+		}
+
+		ur_membership_verify_nonce( 'ur_membership_order' );
+
+		$order_data = isset( $_POST['order_data'] ) ? (array) json_decode( wp_unslash( $_POST['order_data'] ), true ) : array();
+
+		global $wpdb;
+		$subscription_table = TableList::subscriptions_table();
+		$subscription_id = $wpdb->get_var(
+			$wpdb->prepare(
+				"
+					SELECT s.ID FROM $subscription_table  AS s
+					WHERE s.user_id = %d LIMIT 1
+				",
+				$order_data[ 'ur_member_id' ]
+			)
+		);
+		$order_meta_data = array(
+			'meta_key' => 'payment_date',
+			'meta_value' => (new \DateTime( $order_data['ur_payment_date'] ))->format('Y-m-d H:i:s'),
+		);
+
+		$order_data = array(
+			'user_id' => absint( $order_data[ 'ur_member_id' ] ),
+			'item_id' => absint( $order_data[ 'ur_membership_plan' ] ),
+			'subscription_id' => $subscription_id,
+			'total_amount'  => floatval( $order_data[ 'ur_membership_amount' ] ),
+			'status'  => sanitize_text_field( $order_data[ 'ur_transaction_status' ] ),
+			'payment_method' => isset( $order_data[ 'ur_payment_method' ] ) ? sanitize_text_field( $order_data[ 'ur_payment_method' ] ): 'Manual',
+			'notes' => isset( $order_data[ 'ur_payment_notes' ] ) ? sanitize_text_field( $order_data[ 'ur_payment_notes' ] ) : '',
+			'created_by' => get_current_user_id(),
+		);
+
+		$members_order_repository = new OrdersRepository();
+		$order = $members_order_repository->create( array(
+			'orders_data' => $order_data,
+			'orders_meta_data' => array( $order_meta_data ),
+		) );
+
+		if( false === $order ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Failed to create order.', 'user-registration' ),
+				)
+			);
+		} else {
+			wp_send_json_success(
+				array(
+					'id' => $order['ID'],
+					'message' => __( 'Order created successfully.', 'user-registration' ),
+				)
+			);
+		}
+		wp_die();
+	}
+
 }

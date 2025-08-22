@@ -7307,6 +7307,21 @@ body {
 		}
 	}
 }
+
+a.button.ur-reset-content-button {
+  border-color: #fa5252;
+  color: #fa5252;
+
+  &:hover,
+  &:focus,
+  &:active,
+  &:visited,
+  &:link {
+    border-color: #fa5252;
+    color: #fa5252;
+  }
+}
+
 #user-registration-pro-single-user-view {
 	display: flex;
 	max-width: 1280px;

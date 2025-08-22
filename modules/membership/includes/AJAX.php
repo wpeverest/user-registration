@@ -27,6 +27,7 @@ use WPEverest\URMembership\Admin\Services\MembersService;
 use WPEverest\URMembership\Admin\Services\PaymentService;
 use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
 use WPEverest\URMembership\Admin\Services\SubscriptionService;
+use WPEverest\URMembership\Admin\Services\OrderService;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -884,7 +885,7 @@ class AJAX {
 
 		$subscription_repository = new SubscriptionRepository();
 		$user_subscription       = $subscription_repository->retrieve( $subscription_id );
-		
+
 		$user_id = ! empty( $user_subscription['user_id'] ) ? $user_subscription['user_id'] : '';
 
 		if ( ! current_user_can( 'edit_user', $user_id ) ) {
@@ -1250,4 +1251,3 @@ class AJAX {
 		);
 	}
 }
-

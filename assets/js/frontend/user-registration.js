@@ -9,7 +9,7 @@
 			 *
 			 * @since 4.2.1
 			 */
-			show_success_message: function(message) {
+			show_success_message: function (message) {
 				$('.user-registration-membership-notice__container .user-registration-membership-notice__red').removeClass('user-registration-membership-notice__red').addClass('user-registration-membership-notice__blue');
 				$('.user-registration-membership-notice__message').text(message);
 				$('.user-registration-membership-notice__container').css('display', 'block');
@@ -18,8 +18,8 @@
 					$('.user-registration-membership-notice__container .ur-toaster').css('top', '15%');
 				}
 				this.toggleNotice();
-				this.ur_remove_cookie( 'urm_toast_content' );
-				this.ur_remove_cookie( 'urm_toast_success_message' );
+				this.ur_remove_cookie('urm_toast_content');
+				this.ur_remove_cookie('urm_toast_success_message');
 			},
 
 			/**
@@ -27,9 +27,9 @@
 			 *
 			 * @since 4.2.1
 			 */
-			toggleNotice: function() {
+			toggleNotice: function () {
 				var noticeContainer = $('.user-registration-membership-notice__container');
-				setTimeout(function() {
+				setTimeout(function () {
 					noticeContainer.fadeOut(4000);
 				}, 4000);
 			},
@@ -39,7 +39,7 @@
 			 *
 			 * @since 4.2.1
 			 */
-			ur_get_cookie: function( cookie_key ) {
+			ur_get_cookie: function (cookie_key) {
 				var matches = document.cookie.match(new RegExp(
 					"(?:^|; )" + cookie_key.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
 				));
@@ -51,7 +51,7 @@
 			 *
 			 * @since 4.2.1
 			 */
-			ur_remove_cookie: function( cookie_key ) {
+			ur_remove_cookie: function (cookie_key) {
 				document.cookie = cookie_key + '=; Max-Age=-99999999; path=/';
 			}
 
@@ -66,11 +66,12 @@
 				var required_fields =
 					user_registration_params.form_required_fields;
 				var form = {
-					init: function () {},
+					init: function () {
+					},
 					get_form_data: function (form_id) {
 						if (
 							form_id ===
-								$this.closest(".ur-frontend-form").attr("id") ||
+							$this.closest(".ur-frontend-form").attr("id") ||
 							$(".ur-frontend-form")
 								.find("form.edit-profile")
 								.hasClass("user-registration-EditProfileForm")
@@ -126,11 +127,11 @@
 									if (
 										!repeater_field_data[fieldName][
 											"value"
-										][rowName]
+											][rowName]
 									) {
 										repeater_field_data[fieldName]["value"][
 											rowName
-										] = [];
+											] = [];
 									}
 								});
 
@@ -199,30 +200,30 @@
 													.closest(".form-row")
 													.find(
 														"*[name='" +
-															$(this).attr(
-																"name"
-															) +
-															"']"
+														$(this).attr(
+															"name"
+														) +
+														"']"
 													).length < 2 ||
 												"range" ===
-													$(this).attr("type") ||
+												$(this).attr("type") ||
 												$(this).hasClass(
 													"ur-smart-phone-field"
 												)
 											) {
 												repeater_field_data[fieldName][
 													"value"
-												][rowName].push(single_data);
+													][rowName].push(single_data);
 											} else {
 												if (
 													multi_value_field.indexOf(
 														single_data.field_name +
-															"[]"
+														"[]"
 													) === -1
 												) {
 													multi_value_field.push(
 														single_data.field_name +
-															"[]"
+														"[]"
 													);
 												}
 											}
@@ -249,8 +250,8 @@
 							) {
 								var field = form.separate_form_handler(
 									'[name="' +
-										multi_value_field[multi_start] +
-										'"]'
+									multi_value_field[multi_start] +
+									'"]'
 								);
 								var node_type = field
 									.get(0)
@@ -271,7 +272,7 @@
 
 									switch (
 										this_field.get(0).tagName.toLowerCase()
-									) {
+										) {
 										case "input":
 											switch (field_type) {
 												case "checkbox":
@@ -310,7 +311,7 @@
 											) {
 												repeater_field_value[
 													this_field.attr("data-id")
-												] = this_field_value;
+													] = this_field_value;
 											} else {
 												if (
 													"undefined" ===
@@ -318,17 +319,17 @@
 														this_field.attr(
 															"data-id"
 														)
-													]
+														]
 												) {
 													repeater_field_value[
 														this_field.attr(
 															"data-id"
 														)
-													] = new Array();
+														] = new Array();
 												}
 												repeater_field_value[
 													this_field.attr("data-id")
-												].push(this_field_value);
+													].push(this_field_value);
 											}
 										} else {
 											field_value.push(this_field_value);
@@ -414,8 +415,8 @@
 												var field_value_json =
 													JSON.stringify(
 														dataValue +
-															":" +
-															selectedSubscriptionPlan.val()
+														":" +
+														selectedSubscriptionPlan.val()
 													);
 											}
 										} else {
@@ -493,25 +494,25 @@
 														.data(
 															"repeater-field-name"
 														)
-												]
+													]
 													? "user_registration_" +
-													  $("[name='" + key + "']")
-															.closest(
-																".ur-repeater-row"
-															)
-															.data(
-																"repeater-field-name"
-															)
+													$("[name='" + key + "']")
+														.closest(
+															".ur-repeater-row"
+														)
+														.data(
+															"repeater-field-name"
+														)
 													: $("[name='" + key + "']")
-															.closest(
-																".ur-repeater-row"
-															)
-															.data(
-																"repeater-field-name"
-															);
+														.closest(
+															".ur-repeater-row"
+														)
+														.data(
+															"repeater-field-name"
+														);
 											repeater_field_data[
 												current_repeater_field_name
-											]["value"]["row_" + row_id].push(
+												]["value"]["row_" + row_id].push(
 												repeater_value
 											);
 										}
@@ -716,7 +717,7 @@
 						} else if (
 							field.prev().length &&
 							field.prev().get(0).tagName.toLowerCase() ===
-								"label"
+							"label"
 						) {
 							formwise_data.label = field.prev().text();
 						} else {
@@ -768,8 +769,8 @@
 						} else {
 							var wrapper = $(
 								'<div class="ur-message user-registration-' +
-									type +
-									'" id="ur-submit-message-node"/>'
+								type +
+								'" id="ur-submit-message-node"/>'
 							);
 							if (type === "error") {
 								var svgIcon =
@@ -929,12 +930,12 @@
 									// Validator messages.
 									$.extend($.validator.messages, {
 										required:
-											user_registration_params.message_required_fields,
+										user_registration_params.message_required_fields,
 										url: user_registration_params.message_url_fields,
 										email: user_registration_params.message_email_fields,
 										number: user_registration_params.message_number_fields,
 										confirmpassword:
-											user_registration_params.message_confirm_password_fields
+										user_registration_params.message_confirm_password_fields
 									});
 
 									if (
@@ -1042,8 +1043,8 @@
 										wrapper
 											.find(
 												"#" +
-													profile.attr("name") +
-													"-error"
+												profile.attr("name") +
+												"-error"
 											)
 											.remove();
 										wrapper
@@ -1135,7 +1136,6 @@
 											)
 											.val();
 									}
-
 									try {
 										form_data = JSON.stringify(
 											form.get_form_data(
@@ -1197,12 +1197,12 @@
 									var data = {
 										action: "user_registration_user_form_submit",
 										security:
-											user_registration_params.user_registration_form_data_save,
+										user_registration_params.user_registration_form_data_save,
 										form_data: form_data,
 										captchaResponse: captchaResponse,
 										form_id: form_id,
 										registration_language:
-											registration_language,
+										registration_language,
 										ur_frontend_form_nonce: form_nonce
 									};
 
@@ -1214,13 +1214,13 @@
 
 									if (
 										"undefined" !==
-											typeof $error_message.message &&
+										typeof $error_message.message &&
 										"" !== $error_message.message
 									) {
 										form.show_message(
 											"<p>" +
-												$error_message.message +
-												"</p>",
+											$error_message.message +
+											"</p>",
 											"error",
 											$this,
 											"1"
@@ -1290,25 +1290,96 @@
 						return flag;
 					},
 					/**
+					 * Handles AJAX error responses for form submission.
+					 *
+					 * @param {Object} xhr - The XMLHttpRequest object
+					 * @param {string} status - The status of the request
+					 * @param {string} error - The error message
+					 * @param {Object} $form - The jQuery form object
+					 * @param {Object} posted_data - The data that was posted
+					 */
+					handle_ajax_error: function (xhr, status, error, $form, posted_data) {
+						// Re-enable submit button
+						$form.find(".ur-submit-button").prop("disabled", false);
+
+						if ($form.find('.field-membership').length > 0 || $form.find('.field-stripe_gateway').length > 0 || $form.find('.field-authorize_net_gateway').length > 0) {
+							$form.find(".ur-submit-button").find("span").removeClass("ur-front-spinner");
+							// Show fallback message
+							form.show_message(
+								user_registration_params.ajax_form_submit_error,
+								"error",
+								$form,
+								"1"
+							);
+						} else {
+							// Add all necessary hidden fields for fallback submission
+							if ($form.find('input[name="ur_fallback_submit"]').length === 0) {
+								$form.append('<input type="hidden" name="ur_fallback_submit" value="1" />');
+							}
+
+							// Add action field
+							if ($form.find('input[name="action"]').length === 0) {
+								$form.append('<input type="hidden" name="action" value="user_registration_user_form_submit" />');
+							}
+
+							// Add security nonce
+							if ($form.find('input[name="security"]').length === 0) {
+								$form.append('<input type="hidden" name="security" value="' + user_registration_params.user_registration_form_data_save + '" />');
+							}
+
+							// Add form data
+							if ($form.find('input[name="form_data"]').length === 0) {
+								$form.append('<input type="hidden" name="form_data" value="' + encodeURIComponent(posted_data.form_data) + '" />');
+							}
+
+							// Add captcha response
+							if (posted_data.captchaResponse && $form.find('input[name="captchaResponse"]').length === 0) {
+								$form.append('<input type="hidden" name="captchaResponse" value="' + posted_data.captchaResponse + '" />');
+							}
+
+							// Add form ID
+							if (posted_data.form_id && $form.find('input[name="form_id"]').length === 0) {
+								$form.append('<input type="hidden" name="form_id" value="' + posted_data.form_id + '" />');
+							}
+
+							// Add registration language
+							if (posted_data.registration_language && $form.find('input[name="registration_language"]').length === 0) {
+								$form.append('<input type="hidden" name="registration_language" value="' + posted_data.registration_language + '" />');
+							}
+
+							// Add form nonce
+							if (posted_data.ur_frontend_form_nonce && $form.find('input[name="ur_frontend_form_nonce"]').length === 0) {
+								$form.append('<input type="hidden" name="ur_frontend_form_nonce" value="' + posted_data.ur_frontend_form_nonce + '" />');
+							}
+
+							// Submit the form traditionally
+							$form[0].submit();
+						}
+					},
+					/**
 					 * Ajax form submission event.
 					 *
 					 */
 					ajax_form_submit: function (posted_data) {
+						var $form = $this;
 
 						$.ajax({
 							url: user_registration_params.ajax_url,
 							data: posted_data,
 							type: "POST",
 							async: true,
+							error: function (xhr, status, error) {
+								events.handle_ajax_error(xhr, status, error, $form, posted_data);
+							},
 							complete: function (ajax_response) {
 								$(document.body).trigger('user_registration_after_form_submit_completion');
 								var ajaxFlag = [];
 								ajaxFlag["status"] = true;
 
 								var response_text = JSON.parse(ajax_response.responseText);
-								if( response_text && response_text.success && posted_data && posted_data.ur_authorize_net ) {
+								if (response_text && response_text.success && posted_data && posted_data.ur_authorize_net) {
 									var response_data = response_text.data;
-									var authorize_net_data = {'ur_authorize_net' : posted_data.ur_authorize_net};
+									var authorize_net_data = {'ur_authorize_net': posted_data.ur_authorize_net};
 									response_data = $.extend({}, response_data, authorize_net_data);
 									response_text.data = response_data;
 								}
@@ -1343,7 +1414,7 @@
 
 										if (
 											typeof response.success !==
-												"undefined" &&
+											"undefined" &&
 											response.success === true &&
 											typeof response.data
 												.paypal_redirect !== "undefined"
@@ -1369,7 +1440,7 @@
 
 										if (
 											typeof response.success !==
-												"undefined" &&
+											"undefined" &&
 											response.success === true
 										) {
 											type = "message";
@@ -1394,21 +1465,21 @@
 											) {
 												message.append(
 													"<li>" +
-														ursL10n.user_under_approval +
-														"</li>"
+													ursL10n.user_under_approval +
+													"</li>"
 												);
 											} else if (
 												response.data
 													.form_login_option ==
-													"email_confirmation" ||
+												"email_confirmation" ||
 												response.data
 													.form_login_option ==
-													"admin_approval_after_email_confirmation"
+												"admin_approval_after_email_confirmation"
 											) {
 												message.append(
 													"<li>" +
-														ursL10n.user_email_pending +
-														"</li>"
+													ursL10n.user_email_pending +
+													"</li>"
 												);
 											} else if (
 												response.data
@@ -1417,19 +1488,19 @@
 											) {
 												message.append(
 													"<li>" +
-														response.data.message +
-														"</li>"
+													response.data.message +
+													"</li>"
 												);
 											} else {
 												message.append(
 													"<li>" +
-														(typeof response.data
+													(typeof response.data
 															.message ===
-															"undefined")
+														"undefined")
 														? ursL10n.user_successfully_saved
 														: response.data
-																.message +
-																"</li>"
+															.message +
+														"</li>"
 												);
 											}
 
@@ -1440,9 +1511,9 @@
 											) {
 												message.append(
 													"<li>" +
-														response.data
-															.auto_password_generation_success_message +
-														"</li>"
+													response.data
+														.auto_password_generation_success_message +
+													"</li>"
 												);
 											}
 											$(".ur-input-count").text("0");
@@ -1477,16 +1548,16 @@
 											if (
 												typeof response.data
 													.form_login_option !==
-													"undefined" &&
+												"undefined" &&
 												response.data
 													.form_login_option ===
-													"sms_verification"
+												"sms_verification"
 											) {
 												window.setTimeout(function () {
 													if (
 														typeof response.data
 															.redirect_url !==
-															"undefined" &&
+														"undefined" &&
 														response.data
 															.redirect_url
 													) {
@@ -1498,7 +1569,7 @@
 
 											if (
 												"undefined" !==
-													typeof redirect_url &&
+												typeof redirect_url &&
 												redirect_url !== ""
 											) {
 												$(document).trigger(
@@ -1514,7 +1585,7 @@
 												if (
 													typeof response.data
 														.auto_login !==
-														"undefined" &&
+													"undefined" &&
 													response.data.auto_login
 												) {
 													$(document).trigger(
@@ -1526,7 +1597,7 @@
 																typeof response
 																	.data
 																	.redirect_url !==
-																	"undefined" &&
+																"undefined" &&
 																response.data
 																	.redirect_url
 															) {
@@ -1657,10 +1728,10 @@
 																		if (
 																			$this.find(
 																				".ur-repeater-row[data-repeater-field-name='" +
-																					repeater_field_name +
-																					"'][data-repeater-row='" +
-																					repeater_row_id +
-																					"'] "
+																				repeater_field_name +
+																				"'][data-repeater-row='" +
+																				repeater_row_id +
+																				"'] "
 																			)
 																				.length >
 																			0
@@ -1669,20 +1740,20 @@
 																				$this
 																					.find(
 																						".ur-repeater-row[data-repeater-field-name='" +
-																							repeater_field_name +
-																							"'][data-repeater-row='" +
-																							repeater_row_id +
-																							"'] "
+																						repeater_field_name +
+																						"'][data-repeater-row='" +
+																						repeater_row_id +
+																						"'] "
 																					)
 																					.find(
 																						".ur-field-item"
 																					)
 																					.find(
 																						"input[id='" +
-																							index +
-																							"'], textarea[id='" +
-																							index +
-																							"']"
+																						index +
+																						"'], textarea[id='" +
+																						index +
+																						"']"
 																					);
 																		} else {
 																			wrapper =
@@ -1695,10 +1766,10 @@
 																					)
 																					.find(
 																						"input[id='" +
-																							index +
-																							"'], textarea[id='" +
-																							index +
-																							"']"
+																						index +
+																						"'], textarea[id='" +
+																						index +
+																						"']"
 																					);
 																		}
 
@@ -1731,8 +1802,8 @@
 														} else {
 															message.append(
 																"<li>" +
-																	message_value +
-																	"</li>"
+																message_value +
+																"</li>"
 															);
 														}
 													}
@@ -1740,8 +1811,8 @@
 											} else {
 												message.append(
 													"<li>" +
-														response.data.message +
-														"</li>"
+													response.data.message +
+													"</li>"
 												);
 											}
 										}
@@ -1797,10 +1868,10 @@
 														.find(".ur-field-item")
 														.find(
 															"input[id='" +
-																index +
-																"'], textarea[id='" +
-																index +
-																"']"
+															index +
+															"'], textarea[id='" +
+															index +
+															"']"
 														);
 
 													wrapper
@@ -1857,19 +1928,6 @@
 									display: "none"
 								});
 							}
-						}).fail(function () {
-							form.show_message(
-								"<p>" +
-									user_registration_params.ajax_form_submit_error +
-									"</p>",
-								"error",
-								$this,
-								"1"
-							);
-							$this
-								.find(".ur-submit-button")
-								.prop("disabled", false);
-							return;
 						});
 					},
 					/**
@@ -1893,7 +1951,7 @@
 								// Validator messages.
 								$.extend($.validator.messages, {
 									required:
-										user_registration_params.message_required_fields,
+									user_registration_params.message_required_fields,
 									url: user_registration_params.message_url_fields,
 									email: user_registration_params.message_email_fields,
 									number: user_registration_params.message_number_fields
@@ -1936,8 +1994,8 @@
 									wrapper
 										.find(
 											"#" +
-												profile.attr("name") +
-												"-error"
+											profile.attr("name") +
+											"-error"
 										)
 										.remove();
 									wrapper
@@ -2009,7 +2067,7 @@
 								var data = {
 									action: "user_registration_update_profile_details",
 									security:
-										user_registration_params.user_registration_profile_details_save,
+									user_registration_params.user_registration_profile_details_save,
 									form_data: form_data
 								};
 
@@ -2054,7 +2112,7 @@
 
 											if (
 												typeof response.success !==
-													"undefined" &&
+												"undefined" &&
 												response.success === true
 											) {
 												type = "message";
@@ -2180,7 +2238,7 @@
 																			) ===
 																			-1
 																				? "user_registration_" +
-																				  index
+																				index
 																				: index;
 																	}
 
@@ -2212,20 +2270,20 @@
 																				wrapper
 																					.find(
 																						".ur-repeater-row[data-repeater-field-name='" +
-																							repeater_field_name +
-																							"'][data-repeater-row='" +
-																							repeater_row_id +
-																							"'] "
+																						repeater_field_name +
+																						"'][data-repeater-row='" +
+																						repeater_row_id +
+																						"'] "
 																					)
 																					.find(
 																						".ur-field-item"
 																					)
 																					.find(
 																						"input[id='" +
-																							index +
-																							"'], textarea[id='" +
-																							index +
-																							"']"
+																						index +
+																						"'], textarea[id='" +
+																						index +
+																						"']"
 																					);
 																		} else {
 																			wrapper =
@@ -2235,10 +2293,10 @@
 																					)
 																					.find(
 																						"input[id='" +
-																							index +
-																							"'], textarea[id='" +
-																							index +
-																							"']"
+																						index +
+																						"'], textarea[id='" +
+																						index +
+																						"']"
 																					);
 																		}
 
@@ -2256,8 +2314,8 @@
 														} else {
 															message.append(
 																"<li>" +
-																	message_value +
-																	"</li>"
+																message_value +
+																"</li>"
 															);
 														}
 													}
@@ -2265,8 +2323,8 @@
 											} else {
 												message.append(
 													"<li>" +
-														response.data.message +
-														"</li>"
+													response.data.message +
+													"</li>"
 												);
 												if (
 													undefined !==
@@ -2281,9 +2339,9 @@
 															'<ul class=""/>'
 														).append(
 															"<li>" +
-																response.data
-																	.userEmailUpdateMessage +
-																"</li>"
+															response.data
+																.userEmailUpdateMessage +
+															"</li>"
 														),
 														"info user-email-change-update-notice",
 														$this,
@@ -2354,8 +2412,8 @@
 								}).fail(function () {
 									form.show_message(
 										"<p>" +
-											user_registration_params.ajax_form_submit_error +
-											"</p>",
+										user_registration_params.ajax_form_submit_error +
+										"</p>",
 										"error",
 										$this,
 										"1"
@@ -2402,7 +2460,7 @@
 				// Displays the toast message.
 				user_registration_frontend_utils.show_success_message(urm_toast_success_message);
 
-				$('.user-registration-membership__close_notice').on('click', function() {
+				$('.user-registration-membership__close_notice').on('click', function () {
 					$('.user-registration-membership-notice__container').hide();
 				});
 
@@ -2423,9 +2481,9 @@
 								"form.user-registration-EditProfileForm"
 							).ur_form_submission();
 						}
-						if(user_registration_params.ajax_submission_on_edit_profile) {
+						if (user_registration_params.ajax_submission_on_edit_profile) {
 							$(this).submit();
-						}else {
+						} else {
 							$(this).closest('form')[0].submit();
 						}
 					});
@@ -2458,7 +2516,7 @@
 							} else {
 								var date_selector = $(
 									".woocommerce-MyAccount-content #" +
-										field_id
+									field_id
 								)
 									.attr("type", "text")
 									.val(formated_date);
@@ -2649,10 +2707,10 @@
 						) {
 							$select.append(
 								"<option class='ur-remove' selected='selected' value='" +
-									option_value +
-									"'>" +
-									option_html +
-									"</option>"
+								option_value +
+								"'>" +
+								option_html +
+								"</option>"
 							);
 						}
 						$(this).on("click", function () {
@@ -2660,6 +2718,31 @@
 						});
 					}
 				});
+			}
+		});
+
+
+	};
+	var update_nonce = function (all_forms_ids) {
+		$.ajax({
+			url: user_registration_params.ajax_url,
+			data: {
+				action: 'user_registration_get_recent_nonce',
+				form_ids: all_forms_ids,
+				nonce_for: 'registration'
+			},
+			type: "POST",
+			async: true,
+			complete: function (ajax_response) {
+				var response = JSON.parse(ajax_response.responseText);
+				if (response.success) {
+					$.each(response.data, function (index, item) {
+						console.log(index, item);
+						$('#user-registration-form-' + index)
+							.find('#ur_frontend_form_nonce')
+							.val(item);
+					});
+				}
 			}
 		});
 	};
@@ -2743,6 +2826,15 @@
 			}
 		});
 	});
+	var all_forms_ids = '';
+	/**
+	 * Update nonce on page load everytime
+	 */
+	$('form.register').each(function () {
+		all_forms_ids += $(this).data('form-id') + ',';
+
+	});
+	update_nonce(all_forms_ids);
 	user_registration_form_init();
 
 	/**
@@ -2763,10 +2855,10 @@
 	 *
 	 * @since 4.2.1
 	 */
-	window.addEventListener('load', function() {
-		window.addEventListener('elementor/popup/show', function() {
+	window.addEventListener('load', function () {
+		window.addEventListener('elementor/popup/show', function () {
 			var forms = document.querySelectorAll('.elementor-popup-modal form.register:not(.elementor)');
-			forms.forEach(function(form) {
+			forms.forEach(function (form) {
 				user_registration_form_init();
 				form.classList.add('elementor');  // Add class to prevent reinitialization
 			});
@@ -2931,7 +3023,7 @@ function customPasswordChecks(password) {
 }
 
 //Shows the content restriction message if botiga theme is used.
-jQuery(document).ready(function($) {
+jQuery(document).ready(function ($) {
 	var urcrContentRestrictMsg = $(document).find('.urcr-restrict-msg');
 	if (urcrContentRestrictMsg.length > 0) {
 		urcrContentRestrictMsg.first().css('display', 'block');
@@ -2939,15 +3031,15 @@ jQuery(document).ready(function($) {
 });
 
 /**
- * Check if hello elementor theme is active or not teo resolve flatpickr design issue.
+ * Check if hello elementor theme is active or not to resolve flatpickr design issue.
  *
  */
-jQuery(document).ready(function($) {
+jQuery(document).ready(function ($) {
 
-	//Check the hello elemtor theme is active or not through its stylesheet.
-	$isHelloElementorActive = $('link#hello-elementor-css[href*="themes/hello-elementor"]').length > 0;
+	//Check the hello elementor theme is active or not through its stylesheet.
+	var $isHelloElementorActive = $('link#hello-elementor-css[href*="themes/hello-elementor"]').length > 0;
 
-	if(!$isHelloElementorActive) {
+	if (!$isHelloElementorActive) {
 		return;
 	}
 

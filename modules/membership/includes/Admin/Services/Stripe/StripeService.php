@@ -216,10 +216,13 @@ class StripeService {
 		$logger->notice( '-------------------------------------------- Stripe Payment Confirmation started for ' . $member_id . ' --------------------------------------------', array( 'source' => 'ur-membership-stripe' ) );
 
 		if ( 'failed' === $payment_status ) {
-			if ( ! $is_upgrading ) {
+			$is_renewing = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
+			if ( ! $is_upgrading && ! $is_renewing ) {
 				wp_delete_user( absint( $member_id ) );
 				$this->members_orders_repository->delete_member_order( $member_id );
-
+			}
+			if( $is_renewing ) {
+				update_user_meta( $member_id, 'urm_is_member_renewing', false );
 			}
 			$error_msg = __( 'Stripe Payment failed.', 'user-registration' );
 			$error_msg = $data['payment_result']['error']['message'] ?? $error_msg;
@@ -393,6 +396,13 @@ class StripeService {
 				$subscription_details["cancel_at"] = ( new \DateTime( "+ $value $duration" ) )->getTimestamp();
 				if ( $is_renewing ) {
 					$next_billing_date                 = new \DateTime( $member_subscription['next_billing_date'] );
+
+					//reset next billing date to today if it is in the past.
+					$today = new \DateTime( 'today' );
+					if( $next_billing_date < $today ) {
+						$next_billing_date = $today;
+					}
+
 					$next_billing_date                 = $next_billing_date->modify( "+ $value $duration" )->getTimestamp();
 					$subscription_details["cancel_at"] = $next_billing_date;
 				}

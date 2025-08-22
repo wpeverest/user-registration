@@ -427,7 +427,7 @@ if ( ! function_exists( 'ur_membership_install_required_pages' ) ) {
 		WPEverest\URMembership\Admin\Database\Database::create_tables();
 		update_option( 'ur_membership_default_membership_field_name', $membership_field_name );
 		$membership_id       = UR_Install::create_default_membership();
-//		$membership_group_id = UR_Install::create_default_membership_group( array( array( 'ID' => "$membership_id" ) ) );
+//		$membership_group_id =  ::create_default_membership_group( array( array( 'ID' => "$membership_id" ) ) );
 
 		$pages                = apply_filters( 'user_registration_create_pages', array() );
 		$default_form_page_id = 0;

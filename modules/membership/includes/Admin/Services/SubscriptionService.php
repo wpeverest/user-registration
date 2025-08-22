@@ -651,6 +651,12 @@ class SubscriptionService {
 		$subscription_value    = $membership_metas['subscription']['value'];
 		$subscription_duration = $membership_metas['subscription']['duration'];
 		$next_billing_date     = new \DateTime( $member_subscription['next_billing_date'] );
+
+		$today = new \DateTime( 'today' );
+		if( $next_billing_date < $today ) {
+			$next_billing_date = $today;
+		}
+
 		$next_billing_date     = $next_billing_date->modify( "+ $subscription_value $subscription_duration" )->format( 'Y-m-d 00:00:00' );
 
 		$this->members_subscription_repository->update( $member_subscription['ID'], array(

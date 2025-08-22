@@ -345,4 +345,10 @@ jQuery(function ($) {
 	$("input.flatpickr-input").each(function () {
 		$(this).val($(this).attr("value"));
 	});
+	$(".user-registration-myaccount-notice-box .close").on(
+		"click",
+		function () {
+			$(this).parent().css("display", "none");
+		}
+	);
 });
