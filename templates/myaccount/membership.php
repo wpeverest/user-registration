@@ -62,8 +62,9 @@ if ( "subscription" == $membership['post_content']['type'] ) {
 		<div class="membership-data">
 
 			<?php
-			$status = 'inactive';
-			if ( isset( $membership['status'] ) ) {
+
+			if ( isset( $membership['status'] ) && ! empty( $membership ) ) {
+				$status = 'inactive';
 				$status = ( '' != $membership['status'] ) ? $membership['status'] : $status;
 				if ( 'inactive' !== $status && 'free' !== $membership['post_content']['type'] && 'paid' !== $membership['post_content']['type'] ) {
 					$expiry_date = new DateTime( $membership['expiry_date'] );
@@ -73,71 +74,79 @@ if ( "subscription" == $membership['post_content']['type'] ) {
 				}
 			}
 			?>
-			<span id="ur-membership-status"
-				  class="btn-<?php echo $status ?>"><?php echo esc_html__( ucfirst( $status ) ); ?></span>
+			<?php if ( ! empty( $status ) ): ?>
+				<span id="ur-membership-status"
+					  class="btn-<?php echo $status ?>">
+					<?php echo esc_html__( ucfirst( $status ) ); ?>
+				</span>
+			<?php
+			else:
+				echo __( 'N/A', 'user-registration' );
+			endif;
+			?>
 
 		</div>
 	</div>
 	<?php
-	if ( $membership['status'] === 'trial' ):
-		?>
-		<div class="membership-row">
-			<div class="membership-label">
+	if ( !empty( $membership ) && $membership['status'] === 'trial' ):
+	?>
+	<div class="membership-row">
+		<div class="membership-label">
 				<span style="font-weight: 500">
 				<?php echo esc_html__( 'Trial Start Date', 'user-registration' ) . ':'; ?>
 					</span>
-			</div>
-			<div class="membership-data">
+		</div>
+		<div class="membership-data">
 				<span id="ur-membership-type">
 				<?php
 				echo ! empty( $membership['trial_start_date'] ) ? date( 'Y-m-d', strtotime( $membership['trial_start_date'] ) ) : __( 'N/A', 'user-registration' ) ?>
 			</span>
-			</div>
 		</div>
-		<div class="membership-row">
-			<div class="membership-label">
+	</div>
+	<div class="membership-row">
+		<div class="membership-label">
 				<span style="font-weight: 500">
 				<?php echo esc_html__( 'Trial End Date', 'user-registration' ) . ':'; ?>
 					</span>
-			</div>
-			<div class="membership-data">
+		</div>
+		<div class="membership-data">
 				<span id="ur-membership-type">
 				<?php
 				echo ! empty( $membership['trial_end_date'] ) ? date( 'Y-m-d', strtotime( $membership['trial_end_date'] ) ) : __( 'N/A', 'user-registration' ) ?>
 			</span>
-			</div>
 		</div>
+	</div>
 	<?php
 	else:
-		?>
-		<div class="membership-row">
-			<div class="membership-label">
+	?>
+	<div class="membership-row">
+		<div class="membership-label">
 				<span style="font-weight: 500">
 				<?php echo esc_html__( 'Start Date', 'user-registration' ) . ':'; ?>
 					</span>
-			</div>
-			<div class="membership-data">
+		</div>
+		<div class="membership-data">
 				<span id="ur-membership-type">
 				<?php
 				echo ! empty( $membership['start_date'] ) ? date( 'Y-m-d', strtotime( $membership['start_date'] ) ) : __( 'N/A', 'user-registration' ) ?>
 			</span>
-			</div>
 		</div>
-		<div class="membership-row">
+	</div>
+	<div class="membership-row">
 
-			<div class="membership-label">
+		<div class="membership-label">
 				<span style="font-weight: 500">
 				<?php echo esc_html__( 'Next Billing Date', 'user-registration' ) . ':'; ?>
 					</span>
-			</div>
-			<div class="membership-data">
+		</div>
+		<div class="membership-data">
 				<span id="ur-membership-type">
 				<?php
 				echo ! empty( $membership['next_billing_date'] ) && strtotime( $membership['next_billing_date'] ) > 0 ? date( 'Y-m-d', strtotime( $membership['next_billing_date'] ) ) : __( 'N/A', 'user-registration' ) ?>
 			</span>
-			</div>
-
 		</div>
+
+	</div>
 
 	<?php
 	endif;
@@ -161,14 +170,14 @@ if ( "subscription" == $membership['post_content']['type'] ) {
 	<div class="membership-row-btn-container">
 		<div class="btn-div">
 			<?php
-			if ( ! $is_upgrading ):
-				?>
+			if ( !$is_upgrading && !empty( $membership ) ):
+			?>
 
-				<button type="button" class="membership-tab-btn change-membership-button"
-						data-id="<?php echo ( isset( $membership['post_id'] ) && ! empty( $membership['post_id'] ) ) ? esc_attr( $membership['post_id'] ) : ''; ?>"
-				>
-					<?php echo __( "Change Plan", "user-registration" ); ?>
-				</button>
+			<button type="button" class="membership-tab-btn change-membership-button"
+					data-id="<?php echo ( isset( $membership['post_id'] ) && ! empty( $membership['post_id'] ) ) ? esc_attr( $membership['post_id'] ) : ''; ?>"
+			>
+				<?php echo __( "Change Plan", "user-registration" ); ?>
+			</button>
 			<?php
 			endif;
 			?>
@@ -223,6 +232,14 @@ if ( "subscription" == $membership['post_content']['type'] ) {
 								  stroke-linejoin="round"></path>
 							<path d="M9 10H9.00875" stroke="#475BB2" stroke-width="1.5" stroke-linecap="round"
 								  stroke-linejoin="round"></path>
+							<path
+								d="M9 20.5C13.1421 20.5 16.5 17.1421 16.5 13C16.5 8.85786 13.1421 5.5 9 5.5C4.85786 5.5 1.5 8.85786 1.5 13C1.5 17.1421 4.85786 20.5 9 20.5Z"
+								stroke="#475BB2" stroke-width="1.5" stroke-linecap="round"
+								stroke-linejoin="round"></path>
+							<path d="M9 13V16" stroke="#475BB2" stroke-width="1.5" stroke-linecap="round"
+								  stroke-linejoin="round"></path>
+							<path d="M9 10H9.00875" stroke="#475BB2" stroke-width="1.5" stroke-linecap="round"
+								  stroke-linejoin="round"></path>
 						</g>
 						<defs>
 							<clipPath id="clip0_4801_13369">
@@ -232,9 +249,9 @@ if ( "subscription" == $membership['post_content']['type'] ) {
 					</svg>
 					<?php
 					if ( $is_upgrading ) {
-						echo $bank_data['notice_1'];
+						echo isset( $bank_data['notice_1'] ) ? $bank_data['notice_1'] : '';
 					} else if ( $is_renewing ) {
-						echo $bank_data['notice_2'];
+						echo isset( $bank_data['notice_2'] ) ? $bank_data['notice_2'] : '';
 					}
 					?>
 				</span>

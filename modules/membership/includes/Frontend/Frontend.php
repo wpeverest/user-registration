@@ -105,7 +105,9 @@ class Frontend {
 		$members_subscription_repository = new MembersSubscriptionRepository();
 		$orders_repository               = new OrdersRepository();
 		$membership                      = $membership_repositories->get_member_membership_by_id( $user_id );
-		$membership['post_content']      = json_decode( $membership['post_content'], true );
+		if( ! empty( $membership['post_content'] ) ) {
+			$membership['post_content'] = json_decode( $membership['post_content'], true );
+		}
 		$membership_service              = new MembershipService();
 		$membership_details              = $membership_service->get_membership_details( $membership['post_id'] );
 		$active_gateways                 = array();

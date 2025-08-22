@@ -233,6 +233,94 @@ if ( ! function_exists( 'ur_payment_integration_get_currencies' ) ) {
 				'decimal_separator'   => '.',
 				'decimals'            => 2,
 			),
+			'INR' => array(
+				'name'                => esc_html__( 'Indian Rupees', 'user-registration' ),
+				'symbol'              => '&#8377;',
+				'symbol_pos'          => 'left',
+				'thousands_separator' => ',',
+				'decimal_separator'   => '.',
+				'decimals'            => 2,
+			),
+			'JPY' => array(
+				'name'                => esc_html__( 'Japanese Yen', 'user-registration' ),
+				'symbol'              => '&yen;',
+				'symbol_pos'          => 'left',
+				'thousands_separator' => ',',
+				'decimal_separator'   => '.',
+				'decimals'            => 0,
+			),
+			'BGN' => array(
+				'name'                => esc_html__( 'Bulgarian Lev', 'user-registration' ),
+				'symbol'              => 'лв',
+				'symbol_pos'          => 'right',
+				'thousands_separator' => ' ',
+				'decimal_separator'   => '.',
+				'decimals'            => 2,
+			),
+			'NGN' => array(
+				'name'                => esc_html__( 'Nigerian Naira', 'user-registration' ),
+				'symbol'              => '&#8358;',
+				'symbol_pos'          => 'left',
+				'thousands_separator' => ',',
+				'decimal_separator'   => '.',
+				'decimals'            => 2,
+			),
+			'KWD' => array(
+				'name'                => esc_html__( 'Kuwaiti Dinar', 'user-registration' ),
+				'symbol'              => 'د.ك',
+				'symbol_pos'          => 'right',
+				'thousands_separator' => ',',
+				'decimal_separator'   => '.',
+				'decimals'            => 3,
+			),
+			'BAM' => array(
+				'name'                => esc_html__( 'Bosnian Convertible Mark', 'user-registration' ),
+				'symbol'              => 'KM',
+				'symbol_pos'          => 'right',
+				'thousands_separator' => '.',
+				'decimal_separator'   => ',',
+				'decimals'            => 2,
+			),
+			'UGX' => array(
+				'name'                => esc_html__( 'Ugandan Shilling', 'user-registration' ),
+				'symbol'              => 'USh',
+				'symbol_pos'          => 'left',
+				'thousands_separator' => ',',
+				'decimal_separator'   => '.',
+				'decimals'            => 0,
+			),
+			'KES' => array(
+				'name'                => esc_html__( 'Kenyan Shilling', 'user-registration' ),
+				'symbol'              => 'KSh',
+				'symbol_pos'          => 'left',
+				'thousands_separator' => ',',
+				'decimal_separator'   => '.',
+				'decimals'            => 2,
+			),
+			'GEL' => array(
+				'name'                => esc_html__( 'Georgian Lari', 'user-registration' ),
+				'symbol'              => '₾',
+				'symbol_pos'          => 'right',
+				'thousands_separator' => ',',
+				'decimal_separator'   => '.',
+				'decimals'            => 2,
+			),
+			'CNY' => array(
+				'name'                => esc_html__( 'Chinese Yuan', 'user-registration' ),
+				'symbol'              => '&yen;',
+				'symbol_pos'          => 'left',
+				'thousands_separator' => ',',
+				'decimal_separator'   => '.',
+				'decimals'            => 2,
+			),
+			'TRY' => array(
+				'name'                => esc_html__( 'Turkish Lira', 'user-registration' ),
+				'symbol'              => '&#8378;',
+				'symbol_pos'          => 'left',
+				'thousands_separator' => '.',
+				'decimal_separator'   => ',',
+				'decimals'            => 2,
+			),
 		);
 
 		return apply_filters( 'user_registration_payments_currencies', $currencies );
@@ -339,7 +427,7 @@ if ( ! function_exists( 'ur_membership_install_required_pages' ) ) {
 		WPEverest\URMembership\Admin\Database\Database::create_tables();
 		update_option( 'ur_membership_default_membership_field_name', $membership_field_name );
 		$membership_id       = UR_Install::create_default_membership();
-//		$membership_group_id = UR_Install::create_default_membership_group( array( array( 'ID' => "$membership_id" ) ) );
+//		$membership_group_id =  ::create_default_membership_group( array( array( 'ID' => "$membership_id" ) ) );
 
 		$pages                = apply_filters( 'user_registration_create_pages', array() );
 		$default_form_page_id = 0;

@@ -29,6 +29,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+// Add custom CSS for error messages
+?>
+<?php
+
 $frontend       = UR_Frontend::instance();
 $form_template  = ur_get_form_setting_by_key( $form_id, 'user_registration_form_template', 'Default' );
 $custom_class   = ur_get_form_setting_by_key( $form_id, 'user_registration_form_custom_class', '' );
@@ -381,7 +385,57 @@ wp_enqueue_style( 'ur-frontend-small-screen' );
 				 * @param int $form_id Form ID.
 				 */
 				do_action( 'user_registration_form_registration_end', $form_id );
+				// Display form submission errors at the top of the form
+				$errors = apply_filters( 'user_registration_post_registration_errors', array() );
+
+				if ( ! empty( $errors ) && is_array( $errors ) ) {
+					echo '<div class="ur-message user-registration-error" id="ur-submit-message-node">';
+					echo '<svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 35 35" fill="none">';
+					echo '    <g clip-path="url(#clip0_8269_857)">';
+					echo '        <path d="M10.4979 24.6391C14.4408 28.5063 20.7721 28.445 24.6394 24.5022C28.5066 20.5593 28.4453 14.2279 24.5025 10.3607C20.5596 6.49343 14.2283 6.55472 10.361 10.4976C6.49374 14.4404 6.55503 20.7718 10.4979 24.6391Z" stroke="#F25656" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>';
+					echo '        <path d="M20.3008 14.6445L14.699 20.3559" stroke="#F25656" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>';
+					echo '        <path d="M14.6445 14.6992L20.3559 20.301" stroke="#F25656" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>';
+					echo '    </g>';
+					echo '    <defs>';
+					echo '        <clipPath id="clip0_8269_857">';
+					echo '            <rect width="24" height="24" fill="white" transform="translate(17.3359 0.530273) rotate(44.4454)"></rect>';
+					echo '        </clipPath>';
+					echo '    </defs>';
+					echo '</svg>';
+					echo '<ul class="ur-error-list">';
+
+					// Process different types of errors
+					foreach ( $errors as $error ) {
+						if ( is_string( $error ) ) {
+							echo '<li>' . esc_html( $error ) . '</li>';
+						} elseif ( is_array( $error ) ) {
+							if ( isset( $error['message'] ) ) {
+								echo '<li>' . esc_html( $error['message'] ) . '</li>';
+							} elseif ( isset( $error['individual'] ) ) {
+								// Field-specific error
+								foreach ( $error as $field_name => $field_error ) {
+									if ( $field_name !== 'individual' && is_string( $field_error ) ) {
+										echo '<li>' . esc_html( $field_error ) . '</li>';
+									}
+								}
+							}
+						}
+					}
+
+					echo '</ul>';
+					echo '</div>';
+				} else {
+					// Check for successful submission
+					$success_message = apply_filters( 'user_registration_post_success_message', '' );
+					if ( ! empty( $success_message ) ) {
+						echo '<div class="ur-message user-registration-message" id="ur-submit-message-node">';
+						echo '<ul class="">' . esc_html( $success_message ) . '</ul>';
+						echo '</div>';
+					}
+				}
+
 				?>
+
 			</form>
 			<?php
 		}
@@ -389,6 +443,7 @@ wp_enqueue_style( 'ur-frontend-small-screen' );
 
 		<div style="clear:both"></div>
 	</div>
+
 <?php
 
 /**
