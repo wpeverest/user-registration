@@ -1738,6 +1738,25 @@ jQuery(function ($) {
 		target_hidden_input.val(input_value);
 		target_pattern_input.val(input_value);
 	}
+	$(".ur_setup_wizard").on("click", function(event) {
+		event.preventDefault();
+		Swal.fire({
+			title: 'Re-run Setup Wizard?',
+			text: 'You can revisit your initial setup and update your registration configuration as needed.',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonText: 'Yes, Re-run Wizard',
+			cancelButtonText: 'Cancel',
+			customClass: {
+				confirmButton: 'button-confirm',
+				cancelButton: 'button-cancel'
+			}
+		}).then( function(result) {
+			if (result.isConfirmed) {
+				window.location.href = $(event.target).attr('href');
+			}
+		});
+	});
 });
 
 (function ($, user_registration_admin_data) {
