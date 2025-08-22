@@ -227,6 +227,7 @@ class SubscriptionService {
 		if ( ! empty( $order['coupon'] ) && 'bank' !== $order['payment_method'] && isset( $membership_metas ) && ( 'paid' === $membership_metas['type'] || ( 'subscription' === $membership_metas['type'] && 'off' === $order['trial_status'] ) ) ) {
 			$coupon_discount = isset( $order['coupon_discount'] ) ? (float) $order['coupon_discount'] : 0;
 			$discount_amount = ( isset( $order['coupon_discount_type'] ) && $order['coupon_discount_type'] === 'fixed' ) ? $coupon_discount : $order['total_amount'] * $coupon_discount / 100;
+			$total = $order['total_amount'] - $discount_amount;
 		}
 		$billing_cycle = ( "subscription" === $membership_metas['type'] ) ? ( 'day' === $membership_metas['subscription']['duration'] ) ? esc_html( 'Daily', 'user-registration' ) : ( esc_html( ucfirst( $membership_metas['subscription']['duration'] . 'ly' ) ) ) : 'N/A';
 
