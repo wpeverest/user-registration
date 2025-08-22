@@ -134,7 +134,8 @@ class SubscriptionService {
 				$mollie_service = new MollieService();
 
 				return $mollie_service->cancel_subscription( $order, $subscription );
-
+			case 'bank':
+				return array( 'status' => true );
 			default:
 				$logger->notice( 'Default cancellation Reached', array( 'source' => 'urm-cancellation-log' ) );
 
@@ -597,7 +598,7 @@ class SubscriptionService {
 		);
 		$this->update_membership_renewal_metas( $member_id );
 
-		$orders_data = $order_service->prepare_orders_data( $members_data, $member_id, $member_subscription, [], true ); // prepare data for orders table.
+		$orders_data = $order_service->prepare_orders_data( $members_data, $member_id, $member_subscription, [], $is_renewal ); // prepare data for orders table.
 
 		$order = $this->orders_repository->create( $orders_data );
 		ur_get_logger()->notice( __( 'Order created for ' . $username . ' Order ID: ' . $order['ID'], 'user-registration-membership' ), array( 'source' => 'urm-renew-subscription' ) );

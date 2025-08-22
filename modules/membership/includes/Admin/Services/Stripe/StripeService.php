@@ -396,7 +396,7 @@ class StripeService {
 				$subscription_details["cancel_at"] = ( new \DateTime( "+ $value $duration" ) )->getTimestamp();
 				if ( $is_renewing ) {
 					$next_billing_date                 = new \DateTime( $member_subscription['next_billing_date'] );
-					
+
 					//reset next billing date to today if it is in the past.
 					$today = new \DateTime( 'today' );
 					if( $next_billing_date < $today ) {

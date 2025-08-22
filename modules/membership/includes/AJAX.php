@@ -64,6 +64,7 @@ class AJAX {
 			'register_member'              => true,
 			'validate_coupon'              => true,
 			'cancel_subscription'          => false,
+			'reactivate_membership'		   => false,
 			'renew_membership'             => false,
 			'cancel_upcoming_subscription' => false,
 			'fetch_upgradable_memberships' => false,
@@ -866,6 +867,51 @@ class AJAX {
 
 
 	}
+	/**
+	 * Reactivate membership.
+	 */
+	public static function reactivate_membership() {
+		$security = isset( $_POST['security'] ) ? sanitize_text_field( wp_unslash( $_POST['security'] ) ) : '';
+		if ( '' === $security || ! wp_verify_nonce( $security, 'ur_members_frontend' ) ) {
+			wp_send_json_error( 'Nonce verification failed' );
+
+			return;
+		}
+
+		if ( ! isset( $_POST['subscription_id'] ) ) {
+			wp_send_json_error( __( 'Wrong request.', 'user-registration' ) );
+		}
+		$subscription_id = absint( $_POST['subscription_id'] );
+
+		$subscription_repository = new SubscriptionRepository();
+		$user_subscription       = $subscription_repository->retrieve( $subscription_id );
+
+		$user_id = ! empty( $user_subscription['user_id'] ) ? $user_subscription['user_id'] : '';
+
+		if ( ! current_user_can( 'edit_user', $user_id ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'You are not allowed to edit this user.', 'user-registration' ),
+				)
+			);
+		}
+
+		$reactivation_status = $subscription_repository->reactivate_subscription( $subscription_id );
+		if( $reactivation_status[ 'status' ] ) {
+			wp_send_json_success(
+				array(
+					'message' => __( 'Membership reactivated successfully.', 'user-registration' ),
+				)
+			);
+		} else {
+			$message = ! empty( $reactivation_status[ 'message' ] ) ? $reactivation_status[ 'message' ] : __( 'Failed to reactivate membership.', 'user-registration' );
+			wp_send_json_error(
+				array(
+					'message' => $message
+				)
+				);
+		}
+	}
 
 	/**
 	 * get_group_memberships
@@ -1205,4 +1251,3 @@ class AJAX {
 		);
 	}
 }
-

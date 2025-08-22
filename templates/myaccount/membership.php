@@ -170,14 +170,32 @@ if ( "subscription" == $membership['post_content']['type'] ) {
 	<div class="membership-row-btn-container">
 		<div class="btn-div">
 			<?php
-			if ( !$is_upgrading && !empty( $membership ) ):
+			if ( ! $is_upgrading && !empty( $membership ) ):
+				?>
+				<button type="button" class="membership-tab-btn change-membership-button"
+						data-id="<?php echo ( isset( $membership['post_id'] ) && ! empty( $membership['post_id'] ) ) ? esc_attr( $membership['post_id'] ) : ''; ?>"
+				>
+					<?php echo __( "Change Plan", "user-registration" ); ?>
+				</button>
+				<?php if( 'canceled' === $membership[ 'status' ] && $date_to_renew > date( 'Y-m-d 00:00:00' ) ) : ?>
+					<button type="button" class="membership-tab-btn reactivate-membership-button"
+						data-id="<?php echo ( isset( $membership['subscription_id'] ) && ! empty( $membership['subscription_id'] ) ) ? esc_attr( $membership['subscription_id'] ) : ''; ?>"
+					>
+						<?php echo __( "Reactivate Membership", "user-registration" ); ?>
+					</button>
+				<?php endif; ?>
+			<?php
+			endif;
 			?>
+			<?php
 
-			<button type="button" class="membership-tab-btn change-membership-button"
-					data-id="<?php echo ( isset( $membership['post_id'] ) && ! empty( $membership['post_id'] ) ) ? esc_attr( $membership['post_id'] ) : ''; ?>"
-			>
-				<?php echo __( "Change Plan", "user-registration" ); ?>
-			</button>
+			if ( $can_renew && $date_to_renew <= date( 'Y-m-d 00:00:00' ) ):
+				?>
+				<button type="button" class="membership-tab-btn renew-membership-button"
+						data-pg-gateways= <?php echo isset( $membership['active_gateways'] ) ? implode( ',', array_keys( $membership['active_gateways'] ) ) : "" ?>
+						data-id="<?php echo ( isset( $membership['post_id'] ) && ! empty( $membership['post_id'] ) ) ? esc_attr( $membership['post_id'] ) : ''; ?>">
+					<?php echo __( "Renew Membership", "user-registration" ); ?>
+				</button>
 			<?php
 			endif;
 			?>

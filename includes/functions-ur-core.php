@@ -6268,7 +6268,7 @@ if ( ! function_exists( 'ur_check_is_inactive' ) ) {
 			return;
 		}
 
-		if ( in_array( $membership['status'], array( 'pending', 'canceled', 'inactive' ) ) ) {
+		if ( in_array( $membership['status'], array( 'pending', 'inactive' ) ) ) {
 			wp_logout();
 		}
 
