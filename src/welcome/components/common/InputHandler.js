@@ -331,22 +331,16 @@ function InputHandler({
 							handleInputChange(setting.type, setting.id, e)
 						}
 						defaultChecked={setting.default === "yes"}
-						{...(settings[settings.id] === "yes" && {
+						{...(settings[setting.id] === "yes" && {
 							isChecked: true
 						})}
 						sx={{
 							".chakra-switch__track": {
-							width: "80px",
-							height: "40px",
+								width: "40px",
+							},
 
-							},
-							".chakra-switch__thumb": {
-							width: "36px",
-							height: "36px",
-							transition: "transform 0.25s",
-							},
 							"&[data-checked] .chakra-switch__thumb": {
-							transform: "translateX(calc(80px - 36px))",
+								transform: "translateX(calc(2rem - 0.5rem))",
 							},
 						}}
 					/>
@@ -416,6 +410,15 @@ function InputHandler({
 						defaultValue={defaultSelectedOption}
 						isClearable={false}
 						chakraStyles={{
+							indicatorSeparator: (provided) => ({
+								...provided,
+								display: "none",
+							}),
+							dropdownIndicator: (provided) => ({
+								...provided,
+								background: "transparent",
+								border: "none",
+							}),
 							valueContainer: (provided) => ({
 								...provided,
 								paddingInlineStart: "0.5rem"
