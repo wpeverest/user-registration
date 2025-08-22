@@ -92,7 +92,7 @@ class UR_Settings_Membership_Cancellation_User_Email {
 							array(
 								'title'    => __( 'Email Content', 'user-registration' ),
 								'desc'     => __( 'Customize the content of the membership cancellation email to admin.', 'user-registration' ),
-								'id'       => 'user_registration_membership_cancellation_user_email_message',
+								'id'       => 'user_registration_membership_cancellation_user_email',
 								'type'     => 'tinymce',
 								'default'  => $this->user_registration_get_membership_cancellation_user_email(),
 								'css'      => '',

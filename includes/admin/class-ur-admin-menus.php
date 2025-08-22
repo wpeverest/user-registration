@@ -30,6 +30,10 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			add_action( 'admin_menu', array( $this, 'add_registration_menu' ), 8 );
 			add_action( 'admin_menu', array( $this, 'status_menu' ), 75 );
 
+			if( is_plugin_active( 'user-registration-pro/user-registration.php' ) && empty( get_option('user-registration_license_key', '' ) ) ) {
+				add_action( 'admin_menu', array( $this, 'activate_license_menu' ), 100 );
+			}
+
 			/**
 			 * Filter to show the Addons Page
 			 *
@@ -39,7 +43,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				add_action( 'admin_menu', array( $this, 'addons_menu' ), 80 );
 			}
 
-			if ( ! ur_get_license_plan() ) {
+			if ( ! is_plugin_active( 'user-registration-pro/user-registration.php' ) && ! ur_get_license_plan() ) {
 				add_action( 'admin_menu', array( $this, 'user_registration_upgrade_to_pro_menu' ), 81 );
 			}
 
@@ -659,6 +663,38 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			wp_safe_redirect( esc_url_raw( admin_url( 'admin.php?page=user-registration-dashboard#features' ) ) );
 			exit;
 		}
+		/**
+		 * Add license menu item.
+		 */
+		public function activate_license_menu() {
+			add_submenu_page(
+				'user-registration',
+				__( 'Activate License', 'user-registration' ),
+				sprintf(
+					'<span style="color: #FF8C39; display: flex;">
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" style="fill: currentColor; vertical-align: middle;">
+							<circle cx="6" cy="12" r="4" stroke="currentColor" stroke-width="2"/>
+							<circle cx="6" cy="12" r="1.5" stroke="currentColor" stroke-width="1"/>
+							<line x1="10" y1="12" x2="20" y2="12" stroke="currentColor" stroke-width="2"/>
+							<line x1="17" y1="12" x2="17" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+							<line x1="19" y1="12" x2="19" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+						</svg>
+						<span style="margin-left: 5px;">%s</span>
+					</span>',
+					esc_html__( 'Activate License', 'user-registration' )
+				),
+				'manage_options',
+				'user-registration-activate-license',
+				array( $this, 'redirect_to_license_tab' ),
+			);
+		}
+		/**
+		 * License page redirection.
+		 */
+		public function redirect_to_license_tab() {
+			wp_safe_redirect( esc_url_raw( admin_url( 'admin.php?page=user-registration-settings&tab=license' ) ) );
+			exit;
+		}
 
 		/**
 		 * Validate screen options on update.
@@ -683,14 +719,14 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 			if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page'] ) { //phpcs:ignore WordPress.Security.NonceVerification
-				wp_enqueue_script( 'user-registration-settings', UR()->plugin_url() . '/assets/js/admin/settings' . $suffix . '.js', array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-sortable', 'iris', 'tooltipster' ), UR_VERSION, true );
-				wp_enqueue_script( 'user-registration-login-settings', UR()->plugin_url() . '/assets/js/admin/login-settings' . $suffix . '.js', array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-sortable', 'iris', 'tooltipster' ), UR_VERSION, true );
+				wp_enqueue_script( 'user-registration-login-settings', UR()->plugin_url() . '/assets/js/admin/login-settings' . $suffix . '.js', array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-sortable', 'iris', 'tooltipster', 'jquery-ui-tabs' ), UR_VERSION, true );
 				wp_enqueue_style( 'user-registration-css', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR_VERSION );
+				$login_settings =  array_merge(get_login_form_settings()['sections']['login_options_settings']['settings'] , get_login_field_settings()['sections']['login_options_settings']['settings']);
 
 				$ur_login_form_params = array(
 					'ajax_url'               => admin_url( 'admin-ajax.php' ),
 					'ur_login_settings_save' => wp_create_nonce( 'ur_login_settings_save_nonce' ),
-					'login_settings'         => get_login_options_settings(),
+					'login_settings'         => $login_settings,
 					'is_login_settings_page' => isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page'] ? true : false,
 					'i18n_admin'             => array(
 						'i18n_settings_successfully_saved' => _x( 'Settings successfully saved.', 'user registration admin', 'user-registration' ),
@@ -712,7 +748,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						'user_registration_my_account_selection_validator_nonce' => wp_create_nonce( 'user_registration_my_account_selection_validator' ),
 					)
 				);
-				$login_form_settings = get_login_options_settings();
+				$login_option_settings = get_login_field_settings();
+				$login_form_settings = get_login_form_settings();
 				include_once __DIR__ . '/views/html-login-page-forms.php';
 			} else {
 				$registration_table_list->display_page();
@@ -893,7 +930,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						</label>
 					</span>
 					<span class="add-to-menu">
-						<input type="submit" class="button-secondary submit-add-to-menu right"
+						<input type="submit" class="button button-secondary submit-add-to-menu right"
 							value="<?php esc_attr_e( 'Add to menu', 'user-registration' ); ?>" name="add-post-type-menu-item"
 							id="submit-posttype-user-registration-endpoints">
 						<span class="spinner"></span>

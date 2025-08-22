@@ -271,10 +271,10 @@ class UR_Email_Confirmation {
 						$allow_automatic_user_login = apply_filters( 'user_registration_allow_automatic_user_login_email_confirmation', true );
 
 						// Sets the toast container and its value in the cookie.
-						$toast_success_message = esc_html__('User Registered successfully','user-registration');
+						$toast_success_message = esc_html__('Your email has been successfully verified.','user-registration');
 						$toast_success_message = apply_filters('user_registration_approval_confirmation_message', $toast_success_message);
 						$toast_content = '<div class="user-registration-membership-notice__container">
-									<div class="user-registration-membership-notice__red">
+									<div class="ur-toaster user-registration-membership-notice__red">
 										<span class="user-registration-membership-notice__message"></span>
 										<span class="user-registration-membership__close_notice">&times;</span>
 									</div>

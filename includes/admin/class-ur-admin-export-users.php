@@ -81,6 +81,7 @@ class UR_Admin_Export_Users {
 		$users = get_users(
 			array(
 				'ur_form_id' => $form_id,
+				'number'     => 1,
 			)
 		);
 

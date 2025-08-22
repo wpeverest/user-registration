@@ -1,5 +1,6 @@
 @import 'utility/mixins';
 @import './../../variables/variables';
+@import './../../components/button';
 
 #payment-detail-modal {
 	h2 {
@@ -384,7 +385,7 @@
 							}
 
 							&#action {
-								width: 160px;
+								width: 180px;
 							}
 						}
 					}
@@ -592,10 +593,63 @@
 
 							&:has(.ur-field[data-field-key="textarea"]) {
 								align-items: unset;
+
+								.wp-editor-wrap {
+									.wp-media-buttons {
+										display: flex;
+										gap: 12px;
+										margin-bottom: 12px;
+
+										.button {
+											display: flex;
+											align-items: center;
+											padding: 0 12px 0 10px;
+											gap: 4px;
+											margin-right: 0;
+
+											span {
+												display: flex;
+												align-items: center;
+												justify-content: center;
+												padding-top: 1px;
+												margin: 0;
+
+												&.dashicons {
+													&::before {
+														line-height: 18px;
+													}
+												}
+											}
+										}
+
+										#ur-smart-tags-selector {
+											margin-left: auto;
+										}
+									}
+
+									.wp-editor-container {
+										.mce-top-part {
+											&::before {
+												box-shadow: none;
+											}
+										}
+
+										.mce-container-body {
+											iframe {
+												height: 200px !important;
+											}
+										}
+
+										// .mce-toolbar-grp {
+										// 	border-bottom: 0;
+										// }
+									}
+								}
 							}
 
 							.ur-label {
 								margin-bottom: 0;
+								// margin-bottom: 300px;
 
 								label {
 									margin-bottom: 0;
@@ -674,6 +728,7 @@
 															padding: 0 !important;
 															font-size: 16px;
 															line-height: 24px;
+															cursor: pointer;
 														}
 
 														input[type="radio"]:checked::before {
@@ -753,7 +808,7 @@
 					#ur-membership-upgrade-action:checked {
 						background: $primary_color;
 						border-color: $primary_color;
-					
+
 					}
 					#paid-plan-container {
 						display: flex;
@@ -1074,6 +1129,18 @@
 
 		.submit {
 			@include form-footer-button;
+
+			.button-secondary {
+				a {
+					color: #374151;
+				}
+
+				&:hover {
+					a {
+						color: $white;
+					}
+				}
+			}
 		}
 	}
 }

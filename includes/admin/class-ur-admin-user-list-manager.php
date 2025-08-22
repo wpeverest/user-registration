@@ -29,7 +29,7 @@ class UR_Admin_User_List_Manager {
 		add_action( 'load-users.php', array( $this, 'trigger_query_actions' ) );
 		add_action( 'admin_notices', array( $this, 'user_registration_display_admin_notices' ), 99 );
 		add_action( 'admin_notices', array( $this, 'user_registration_pending_users_notices' ) );
-
+		add_action( 'admin_notices', array( $this, 'user_registration_non_urm_users_notices' ) );
 		// Functions about users listing.
 		add_action( 'restrict_manage_users', array( $this, 'add_status_filter' ) );
 		add_action( 'admin_footer-users.php', array( $this, 'add_bulk_actions' ) );
@@ -224,7 +224,34 @@ class UR_Admin_User_List_Manager {
 			echo '<div id="user-approvation-result" class="notice notice-success is-dismissible"><p><strong>' . esc_html__( 'User Registration:', 'user-registration' ) . '</strong> ' . esc_html( count( $users ) ) . ' <a href="' . esc_url( $admin_url ) . '">' . ( ( count( $users ) === 1 ) ? esc_html__( 'User', 'user-registration' ) : esc_html__( 'Users', 'user-registration' ) ) . '</a> ' . esc_html__( 'pending approval.', 'user-registration' ) . '</p></div>';
 		}
 	}
+	/**
+	 * Display a notice to admin notifying the users registered via non URM forms.
+	 */
+	public function user_registration_non_urm_users_notices() {
+		$users = get_users( array(
+			'fields'     => 'ID',
+			'meta_query' => array(
+				array(
+					'key'     => 'ur_form_id',
+					'compare' => 'NOT EXISTS',
+				),
+			),
+		) );
 
+		$current_screen = get_current_screen();
+		$ur_pages = ur_get_screen_ids();
+		$ur_pages[] = 'users';
+
+		$existing_non_urm_users = count( $users );
+
+		if( $existing_non_urm_users >= 5 && in_array( $current_screen->id, $ur_pages ) ) {
+			echo '<div class="notice notice-info is-dismissible">';
+			echo '<p><strong>User Registration:</strong> Your site has <span class="highlight">' . $existing_non_urm_users . ' users</span> registered before this plugin.';
+			echo 'Want them to enjoy the new profile features too? Use the ';
+			echo '<a class="addon-link" href="https://wpuserregistration.com/features/profile-connect/?utm_source=admin-notices&utm_medium=profile-connect-addon-link&utm_campaign=' . UR()->utm_campaign . '" rel="noreferrer noopener" target="_blank">Profile Connect addon</a> to link these existing users to your new registration form.';
+			echo '</p></div>';
+		}
+	}
 	/**
 	 * Deprecates old plugin missing notice.
 	 *

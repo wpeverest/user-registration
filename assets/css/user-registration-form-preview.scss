@@ -332,9 +332,9 @@ body {
 							margin: 0;
 							font-weight: $medium;
 
-							&:hover {
-								color: $white;
-							}
+							// &:hover {
+							// 	color: $white;
+							// }
 						}
 
 						.user-registration-save-and-continue-button {
@@ -350,8 +350,9 @@ body {
 							}
 						}
 					}
+
 					&:not(.ur-frontend-form-preview) {
-						.ur-form-row{
+						.ur-form-row {
 							gap: $spacing_24px;
 							margin-bottom: 28px;
 
@@ -380,25 +381,33 @@ body {
 							}
 						}
 
-						button[type=submit]{
+						button[type=submit] {
 							padding: 10px 16px 8px;
 							border-radius: 4px;
-							background: #475bb2;
-							color: #fff;
+							background: $primary_color;
+							color: $white;
 							font-size: 14px;
 							font-weight: $medium;
+
+							&:hover {
+								background: #38488e;
+								border-color: #38488e;
+							}
 						}
+
 						.ur-button-container{
 							display: block;
 							margin-top: 36px;
 						}
-						&.ur-small-screen-preview{
-							.ur-form-row{
+
+						&.ur-small-screen-preview {
+							.ur-form-row {
 								margin-bottom: 0;
-								.ur-form-grid{
+								.ur-form-grid {
 									margin-bottom: 28px;
 								}
 							}
+
 							.ur-button-container {
 								margin-top: 8px;
 							}
@@ -455,6 +464,7 @@ body {
 						opacity: 0;
 						height: 22px;
 						width: 40px;
+						cursor: pointer;
 
 						&:checked + .slider {
 							background-color: #475bb2;

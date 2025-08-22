@@ -486,11 +486,11 @@ label {
   justify-content: end;
   padding: 18px 20px;
   gap: 10px;
-  margin-top: 20px;
+  margin-top: 10px;
   border-radius: 0 0 5px 5px;
 }
 .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions button {
-  width: 40%;
+  width: 30%;
   color: #383838;
   font-size: 14px;
   font-weight: 400;
@@ -527,7 +527,7 @@ label {
 
 .membership-upgrade-container {
   display: flex;
-  gap: 20px;
+  gap: 10px;
   flex-direction: column;
 }
 .membership-upgrade-container .ur-upgrade-label {

@@ -209,6 +209,10 @@ textarea.ur-input-border-red {
 			padding: $spacing_40px $spacing_30px;
 		}
 
+		@media screen and (max-width: 600px) {
+			padding: $spacing_40px $spacing_30px;
+		}
+
 		.ur-lost-password-content-container {
 			display: flex;
 			flex-direction: column;
@@ -278,6 +282,8 @@ textarea.ur-input-border-red {
 	}
 
 	.register {
+		text-align: center;
+
 		#node_recaptcha_register {
 			padding: 0 10px;
 		}
@@ -696,7 +702,7 @@ textarea.ur-input-border-red {
 					}
 
 					textarea {
-						height: 100px;						
+						height: 100px;
 					}
 
 					.hide_show_password {
@@ -1437,11 +1443,11 @@ span.ur-shortcode-form-embed-dot {
 	border: 1px solid $primary_color;
 	color: $white;
 
-	&:hover {
-		background: #38488e;
-		border-color: #38488e;
-		color: $white;
-	}
+	// &:hover {
+	// 	background: #38488e;
+	// 	border-color: #38488e;
+	// 	color: $white;
+	// }
 
 	.ur-spinner {
 		width: 16px;
@@ -2166,7 +2172,6 @@ body {
 
 								> div {
 									display: block;
-									margin-top: 32px;
 									float: unset !important;
 									flex-direction: row-reverse;
 
@@ -2586,6 +2591,7 @@ body {
 
 									form {
 										.ur-login-form-setting-block {
+											padding: 32px 12px 12px;
 											&:first-child {
 												h2 {
 													&.ur-toggle-heading {
@@ -2629,6 +2635,7 @@ body {
 	}
 }
 
+
 body.user-registration-page {
 	.elementor-widget-container {
 		.user-registration:not(.user-registration-MyAccount) {
@@ -2637,7 +2644,6 @@ body.user-registration-page {
 		}
 	}
 }
-
 .et-db {
 	#et-boc {
 		.et-l {
@@ -2763,4 +2769,100 @@ body.user-registration-page {
 			}
 		}
 	}
+}
+
+#ur-field-all-settings {
+
+	.user-registration-login-form-global-settings:not(.ur-toggle-setting) {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.ur-toggle-setting {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.user-registration-login-form-global-settings{
+
+		.user-registration-login-form-toggle-option {
+			display: flex;
+		}
+
+		label {
+			font-size: 14px;
+			flex: 0 0 40%;
+			color: #383838;
+		}
+
+		&--field {
+			width: 100%;
+		}
+
+		.user-registration-help-tip {
+			top: 3px;
+		}
+
+		.description {
+			width: 60%;
+			margin-left: auto;
+		}
+
+		&.ur-form-settings-section {
+			border-top: 1px solid #e1e1e1;
+			padding-top: 20px;
+
+			h4 {
+				color: #131313;
+				font-weight: 600;
+				margin: 0;
+			}
+		}
+	}
+}
+
+.user-registration-login-settings-form {
+	.ur-form-row{
+		.ur-form-grid {
+			label {
+				margin-top: 0;
+				margin-bottom: 0;
+			}
+		}
+	}
+}
+
+@keyframes toaster {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(100%);
+  }
+  10% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  90% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(100%);
+  }
+}
+
+.ur-toaster {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1ea71b;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  display: inline-flex;
+  white-space: nowrap;
+  z-index: 9999;
+  animation: toaster 5s ease-in-out forwards;
 }

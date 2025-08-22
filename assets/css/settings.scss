@@ -167,7 +167,7 @@ body {
 			}
 
 			&--top {
-				padding: 0 $spacing_16px;
+				padding: 0 $spacing_12px;
 
 				&-logo {
 					text-align: center;
@@ -820,7 +820,7 @@ body {
 			border-radius: $border_radius_5;
 			padding: $spacing_10px;
 		}
-		
+
 		// Success Message CSS
 		.notice {
 			max-width: 680px;
@@ -1039,6 +1039,44 @@ body {
 				&-wrapper {
 					display: flex;
 					justify-content: space-between;
+				}
+
+				.user_registration_smart_tags_used {
+					display: inline-flex;
+					align-items: center;
+					gap: 6px;
+					padding: 4px 10px;
+					min-width: 90px;
+					border: 1px solid transparent;
+					border-radius: 6px;
+					text-decoration: none;
+					transition: all 0.2s ease;
+					color: #383838;
+
+					span:first-child {
+						text-decoration: underline;
+						font-weight: 500;
+						opacity: 0.8;
+						transition: color 0.2s ease, opacity 0.2s ease;
+					}
+
+					&:focus, &:hover {
+						background-color: transparent;
+						color: #222222;
+						box-shadow: none;
+						outline: none;
+
+						span:first-child {
+							color: $primary_color;
+							opacity: 1;
+						}
+
+						.dashicons {
+							color: $primary_color;
+							opacity: 1;
+							transform: translateY(-1px);
+						}
+					}
 				}
 
 				// Integration Settings
@@ -1928,4 +1966,8 @@ body {
 	#codes-filter {
 		margin-top: 16px;
 	}
+}
+
+.install-urm-pro-title {
+  font-size: 1.25rem !important;
 }

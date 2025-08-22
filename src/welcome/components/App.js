@@ -205,6 +205,10 @@ function App() {
 						});
 
 						registrationPageUrl =
+							"undefined" !==
+								typeof res.page_details[
+									membershipRegistrationKey[0]
+								] &&
 							res.page_details[membershipRegistrationKey[0]][
 								"page_url"
 							];
@@ -429,15 +433,41 @@ function App() {
 						<div className="user-registration-setup-wizard__footer--right">
 							{steps[steps.length - 1].key === activeStep.key ? (
 								<Button
-									colorScheme="blue"
-									backgroundColor="#475BB2 !important"
-									color="#FAFAFA !important"
+									className="button-primary"
 									onClick={() => {
 										setDisabledLink(true);
 										handleSaveSettings(
 											rightFooterButtonLink +
 												"&end-setup-wizard=1"
 										);
+									}}
+									sx={{
+										bg: "#475BB2",
+										borderColor: "#475BB2",
+										color: "#fff",
+										borderWidth: "1px",
+										_hover: {
+											bg: "#4c62cc",
+											borderColor: "#4354a6",
+											color: "#fff",
+										},
+										_focus: {
+											boxShadow: "0 0 0 1px #fff, 0 0 0 3px #475BB2",
+											bg: "#4c62cc",
+											borderColor: "#4354a6",
+											color: "#fff",
+										},
+										_active: {
+											bg: "#4351a3",
+											borderColor: "#4351a3",
+											color: "#fff",
+										},
+										"&.active, &:active, &:focus": {
+											bg: "#475BB2",
+											borderColor: "#3b4791",
+											boxShadow: "inset 0 2px 5px -3px #222a4a",
+											color: "#fff",
+										},
 									}}
 									disabled={disabledLink}
 								>
@@ -470,19 +500,43 @@ function App() {
 										</Button>
 									)} */}
 									<Button
-										colorScheme="blue"
-										backgroundColor="#475BB2 !important"
-										color="#FAFAFA !important"
-										disabled={
-											steps[steps.length - 1].key ===
-											activeStep.key
-										}
+										className="button-primary"
+										disabled={steps[steps.length - 1].key === activeStep.key}
 										onClick={() => {
 											handleSaveSettings("");
 										}}
-									>
+										sx={{
+											bg: "#475BB2",
+											borderColor: "#475BB2",
+											color: "#fff",
+											borderWidth: "1px",
+											_hover: {
+												bg: "#4c62cc",
+												borderColor: "#4354a6",
+												color: "#fff",
+											},
+											_focus: {
+												boxShadow: "0 0 0 1px #fff, 0 0 0 3px #475BB2",
+												bg: "#4c62cc",
+												borderColor: "#4354a6",
+												color: "#fff",
+											},
+											_active: {
+												bg: "#4351a3",
+												borderColor: "#4351a3",
+												color: "#fff",
+											},
+											"&.active, &:active, &:focus": {
+												bg: "#475BB2",
+												borderColor: "#3b4791",
+												boxShadow: "inset 0 2px 5px -3px #222a4a",
+												color: "#fff",
+											},
+										}}
+										>
 										{__("Next", "user-registration")}
 									</Button>
+
 								</React.Fragment>
 							)}
 						</div>

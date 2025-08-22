@@ -39,13 +39,13 @@
                         width: 28px;
                         height: 28px;
                     }
-                    
+
                     .user-registration-hamburger-menu {
                         display: flex;
                         align-items: center;
 
                         @media screen and (min-width: 1200px) {
-                            display: none;                            
+                            display: none;
                         }
 
                         &--logo {
@@ -310,7 +310,7 @@
                                     bottom: 0;
                                     left: 0;
                                     opacity: 0;
-                                    transition: all .3s ease-in-out; 
+                                    transition: all .3s ease-in-out;
                                 }
 
                                 &:hover,

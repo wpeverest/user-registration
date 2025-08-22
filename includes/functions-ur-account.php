@@ -85,6 +85,36 @@ function ur_lostpassword_url( $default_url = '' ) {
 add_filter( 'lostpassword_url', 'ur_lostpassword_url', 20, 1 );
 
 /**
+ * Returns the URL to the reset password endpoint.
+ *
+ * @param  string $default_url Default reset password URL.
+ *
+ * @return string
+ */
+function ur_resetpassword_url( $default_url = '' ) {
+
+	// Don't redirect to the user registration endpoint on global network admin resets.
+	if ( is_multisite() && isset( $_GET['redirect_to'] ) && false !== strpos( wp_unslash( $_GET['redirect_to'] ), network_admin_url() ) ) { // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		return $default_url;
+	}
+
+	// Don't change default URL if admin side reset form is being used.
+	if ( 'wp-login.php' === $GLOBALS['pagenow'] ) {
+		return $default_url;
+	}
+
+	// Get reset password page from plugin option.
+	$reset_password_page = get_option( 'user_registration_reset_password_page_id', false );
+
+	if ( $reset_password_page && ! empty( get_post( $reset_password_page ) ) ) {
+		return get_permalink( $reset_password_page );
+	} else {
+		return ur_lostpassword_url();
+	}
+}
+add_filter( 'retrieve_password_url', 'ur_resetpassword_url', 20, 1 );
+
+/**
  * Get My Account menu items.
  *
  * @return array
@@ -108,9 +138,9 @@ function ur_get_account_menu_items() {
 
 	$profile = user_registration_form_data( $user_id, $form_id );
 
-	if ( count( $profile ) < 1 ) {
-		unset( $items['edit-profile'] );
-	}
+	// if ( count( $profile ) < 1 ) {
+	// 	unset( $items['edit-profile'] );
+	// }
 
 	// Remove missing endpoints.
 	foreach ( $endpoints as $endpoint_id => $endpoint ) {
@@ -291,7 +321,6 @@ if ( ! function_exists( 'ur_get_user_login_option' ) ) {
 			$login_option = get_option( 'user_registration_general_setting_login_options', 'default' );
 			$login_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', $login_option );
 		}
-
 		return $login_option;
 	}
 }

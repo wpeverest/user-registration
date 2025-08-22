@@ -86,16 +86,18 @@ $return_url = admin_url( 'admin.php?page=user-registration-membership&action=lis
 										  data-tip="<?php echo esc_attr__( "Only active groups will be visible in the frontend." ) ?>"></span>
 								</label>
 							</div>
-							<div class="user-registration-switch ur-ml-auto" style="width: 100%">
-								<input
-									data-key-name="Membership Status"
-									id="ur-membership-group-status" type="checkbox"
-									class="user-registration-switch__control hide-show-check enabled urmg-input"
-									<?php echo isset( $membership_content ) && $membership_content['status'] == 'true' ? 'checked' : ''; ?>
-									name="ur_membership_status"
-									style="width: 100%; text-align: left">
+							<div class="ur-toggle-section m1-auto" style="width:100%">
+								<span class="user-registration-toggle-form">
+									<input
+										data-key-name="Membership Status"
+										id="ur-membership-group-status" type="checkbox"
+										class="user-registration-switch__control hide-show-check enabled urmg-input"
+										<?php echo isset( $membership_content ) && $membership_content['status'] == 'true' ? 'checked' : ''; ?>
+										name="ur_membership_status"
+										style="width: 100%; text-align: left">
+									<span class="slider round"></span>
+								</span>
 							</div>
-
 						</div>
 						<!--						role-->
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">

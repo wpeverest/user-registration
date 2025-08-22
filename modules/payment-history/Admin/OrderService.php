@@ -2,6 +2,8 @@
 
 namespace WPEverest\URMembership\Payment\Admin;
 
+use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
+use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
 use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
 use WPEverest\URMembership\Admin\Repositories\SubscriptionRepository;
 use WPEverest\URMembership\Admin\Services\SubscriptionService;
@@ -84,8 +86,8 @@ class OrderService {
 	public function create_view_template( $order_id, $user_id ) {
 		if ( $order_id ) {
 			$order_detail = $this->orders_repository->get_order_detail( $order_id );
-			if( !empty($order_detail['plan_details'])) {
-				$order_detail['plan_details'] = json_decode($order_detail['plan_details'], true);
+			if ( ! empty( $order_detail['plan_details'] ) ) {
+				$order_detail['plan_details'] = json_decode( $order_detail['plan_details'], true );
 			}
 			if ( ! empty( $order_detail['coupon'] ) ) {
 				$order_detail['coupon_discount']      = get_user_meta( $order_detail['user_id'], 'ur_coupon_discount', true );
@@ -103,6 +105,7 @@ class OrderService {
 				'message' => __( 'Order detail not found', 'user-registration' ),
 			);
 		}
+
 
 		include __DIR__ . '/../Views/payment-details.php';
 		$html = ob_get_clean();
@@ -197,32 +200,42 @@ class OrderService {
 			$order_id = $order['order_id'];
 			$user_id  = $order['user_id'];
 			$this->orders_repository->wpdb()->query( 'START TRANSACTION' ); // Start the transaction.
-
+			$subscription_service        = new SubscriptionService();
 			$approve_order = $this->orders_repository->update( $order_id, array( 'status' => 'completed' ) );
-
 			if ( $approve_order ) {
 				$subscription_data = array( 'status' => 'active' );
 				$is_upgrading      = ur_string_to_bool( get_user_meta( $user_id, 'urm_is_upgrading', true ) );
+				$is_renewing       = ur_string_to_bool( get_user_meta( $user_id, 'urm_is_member_renewing', true ) );
+
 				if ( $is_upgrading ) {
-					$subscription_service        = new SubscriptionService();
 					$next_subscription_data      = json_decode( get_user_meta( $user_id, 'urm_next_subscription_data', true ), true );
 					$subscription_data           = $subscription_service->prepare_upgrade_subscription_data( $next_subscription_data['membership'], $next_subscription_data['member_id'], $next_subscription_data );
 					$subscription_data['status'] = 'active';
 				}
+				$approve_order = $this->orders_repository->get_order_detail($order_id);
 				if ( "on" === $approve_order['trial_status'] ) {
 					$subscription_data['status'] = 'trial';
 				}
-				$subscription_activated = $this->subscription_repository->update( $subscription_id, $subscription_data );
-
-				if ( $subscription_activated ) {
-					$this->orders_repository->wpdb()->query( 'COMMIT' );
-					$this->response['message'] = __( 'Order has been approved successfully.', 'user-registration' );
-					delete_user_meta( $user_id, 'urm_is_upgrading' );
-					delete_user_meta( $user_id, 'urm_next_subscription_data' );
-					delete_user_meta( $user_id, 'urm_is_upgrading_to' );
-
-					return $this->response;
+				if($is_renewing) {
+					$members_subscription_repo      = new MembersSubscriptionRepository();
+					$membership_repository          = new MembershipRepository();
+					$member_subscription            = $members_subscription_repo->get_member_subscription( $user_id );
+					$membership                     = $membership_repository->get_single_membership_by_ID( $member_subscription['item_id'] );
+					$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
+					$membership_metas['post_title'] = $membership['post_title'];
+					$subscription_service->update_subscription_data_for_renewal( $member_subscription, $membership_metas );
+					$subscription_data['start_date'] = date('Y-m-d 00:00:00');
 				}
+
+				$this->subscription_repository->update( $subscription_id, $subscription_data );
+
+				$this->orders_repository->wpdb()->query( 'COMMIT' );
+				$this->response['message'] = __( 'Order has been approved successfully.', 'user-registration' );
+				delete_user_meta( $user_id, 'urm_is_upgrading' );
+				delete_user_meta( $user_id, 'urm_next_subscription_data' );
+				delete_user_meta( $user_id, 'urm_is_upgrading_to' );
+				return $this->response;
+
 			}
 			$this->response['status']  = false;
 			$this->response['message'] = __( 'Something went wrong while updating payment status', 'user-registration' );

@@ -363,7 +363,7 @@ jQuery(function ($) {
 
 		var fields_panel = $(".ur-selected-inputs");
 		var form_settings_section = $(".ur-registered-inputs nav").find(
-			"#ur-tab-field-settings"
+			"#ur-tab-field-settings , #ur-tab-login-form-settings"
 		);
 		var form_settings = form_settings_section.find("form");
 
@@ -730,7 +730,6 @@ jQuery(function ($) {
 
 					// Add active class on clicked tab.
 					$(this).addClass("active");
-
 					// Hide other settings and show respective id's settings.
 					fields_panel
 						.find("form #ur-field-all-settings > div")
@@ -783,9 +782,17 @@ jQuery(function ($) {
 			) {
 				$("#user_registration_lost_password_page_id")
 					.closest(".user-registration-login-form-global-settings")
-					.show();
+					.show()
+					.css("display", "flex");
+				$("#user_registration_label_lost_your_password")
+					.closest(".user-registration-login-form-global-settings")
+					.show()
+					.css("display", "flex");
 			} else {
 				$("#user_registration_lost_password_page_id")
+					.closest(".user-registration-login-form-global-settings")
+					.hide();
+				$("#user_registration_label_lost_your_password")
 					.closest(".user-registration-login-form-global-settings")
 					.hide();
 			}
@@ -820,6 +827,7 @@ jQuery(function ($) {
 		'.ur-tab-lists li[aria-controls="ur-tab-field-settings"]',
 		function () {
 			// Empty fields panels.
+			$(".ur-builder-wrapper-content").hide();
 			$(".ur-builder-wrapper-content").hide();
 			$(".ur-builder-wrapper-footer").hide();
 			// Show only the form settings in fields panel.
@@ -1079,11 +1087,13 @@ jQuery(function ($) {
 					strength_info = "";
 					break;
 			}
-			minimum_password_strength_wrapper_field.append(
-				"<span class='description' style='margin-bottom: 20px'>" +
-					strength_info +
-					"</span>"
-			);
+			minimum_password_strength_wrapper_field
+				.find(".ur-settings-field")
+				.append(
+					"<span class='description' style='margin-bottom: 20px'>" +
+						strength_info +
+						"</span>"
+				);
 		}
 	});
 
@@ -1132,11 +1142,16 @@ jQuery(function ($) {
 	});
 
 	$(document).ready(function () {
+		check_email_confirmation_disabled();
 		hide_show_redirection_options();
 
 		$("#user_registration_form_setting_redirect_after_registration").on(
 			"change",
 			hide_show_redirection_options
+		);
+		$("#user_registration_form_setting_login_options").on(
+			"change",
+			check_email_confirmation_disabled
 		);
 	});
 
@@ -1160,6 +1175,25 @@ jQuery(function ($) {
 		} else {
 			title.hide();
 			description.hide();
+		}
+	};
+
+	var check_email_confirmation_disabled = function () {
+		var email_confirmation_disabled =
+			user_registration_form_builder_data.email_confirmation_disabled;
+		if (email_confirmation_disabled === "yes") {
+			var login_options = $(
+				"#user_registration_form_setting_login_options"
+			).find(":selected");
+
+			var form_row = login_options.closest(".form-row");
+			form_row.find("#ur-rar-url-notice").remove();
+			if (
+				login_options.length == 1 &&
+				login_options.val() == "email_confirmation"
+			) {
+				show_email_confirmation_disabled_notice(form_row);
+			}
 		}
 	};
 
@@ -1221,6 +1255,13 @@ jQuery(function ($) {
 		var notice =
 			' <div id="ur-rar-url-notice" style="padding:10px;  border: 1px solid #c3c4c7; border-left-color: #ffa900; border-left-width: 4px; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04)">' +
 			user_registration_form_builder_data.i18n_default_redirection_notice_for_membership +
+			"</div>";
+		form_row.append(notice);
+	};
+	var show_email_confirmation_disabled_notice = function (form_row) {
+		var notice =
+			' <div id="ur-rar-url-notice" style="padding:10px;  border: 1px solid #c3c4c7; border-left-color: #ffa900; border-left-width: 4px; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04)">' +
+			user_registration_form_builder_data.i18n_email_confirmation_disabled_notice +
 			"</div>";
 		form_row.append(notice);
 	};
@@ -1301,15 +1342,11 @@ jQuery(function ($) {
 		$("#user_registration_form_setting_login_options").val() ===
 		"sms_verification"
 	) {
-		$("#user_registration_form_setting_default_phone_field")
-			.parent()
-			.show();
+		$("#user_registration_form_setting_default_phone_field_field").show();
 
 		$("#user_registration_form_setting_sms_verification_msg_field").show();
 	} else {
-		$("#user_registration_form_setting_default_phone_field")
-			.parent()
-			.hide();
+		$("#user_registration_form_setting_default_phone_field_field").hide();
 		$("#user_registration_form_setting_sms_verification_msg_field").hide();
 	}
 
@@ -1318,16 +1355,16 @@ jQuery(function ($) {
 		"change",
 		function () {
 			if ($(this).val() === "sms_verification") {
-				$("#user_registration_form_setting_default_phone_field")
-					.parent()
-					.show();
+				$(
+					"#user_registration_form_setting_default_phone_field_field"
+				).show();
 				$(
 					"#user_registration_form_setting_sms_verification_msg_field"
 				).show();
 			} else {
-				$("#user_registration_form_setting_default_phone_field")
-					.parent()
-					.hide();
+				$(
+					"#user_registration_form_setting_default_phone_field_field"
+				).hide();
 				$(
 					"#user_registration_form_setting_sms_verification_msg_field"
 				).hide();
@@ -1845,6 +1882,26 @@ jQuery(function ($) {
 
 		$(window).on("resize", function () {
 			initHamburgerMenu();
+		});
+	});
+
+	$(".ur_setup_wizard").on("click", function (event) {
+		event.preventDefault();
+		Swal.fire({
+			title: "Re-run Setup Wizard?",
+			text: "You can revisit your initial setup and update your registration configuration as needed.",
+			icon: "warning",
+			showCancelButton: true,
+			confirmButtonText: "Yes, Re-run Wizard",
+			cancelButtonText: "Cancel",
+			customClass: {
+				confirmButton: "button-confirm",
+				cancelButton: "button-cancel"
+			}
+		}).then(function (result) {
+			if (result.isConfirmed) {
+				window.location.href = $(event.target).attr("href");
+			}
 		});
 	});
 });

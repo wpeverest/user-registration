@@ -517,3 +517,21 @@ if ( ! function_exists( 'urm_get_thank_you_page' ) ) {
 		return $thank_you_page;
 	}
 }
+if ( ! function_exists( 'urm_get_date_at_percent_interval' ) ) {
+	function urm_get_date_at_percent_interval( $startDateStr, $endDateStr, $percent ) {
+
+		$startDate = new \DateTime( $startDateStr );
+		$endDate   = new \DateTime( $endDateStr );
+		if ( $percent < 0 || $percent > 100 ) {
+			throw new InvalidArgumentException( "Percent must be between 0 and 100." );
+		}
+
+		$durationSeconds = $endDate->getTimestamp() - $startDate->getTimestamp();
+		$offsetSeconds = $durationSeconds * ( $percent / 100 );
+		$targetTimestamp = $startDate->getTimestamp() + (int) $offsetSeconds;
+		$targetDate = new \DateTime();
+		$targetDate->setTimestamp( $targetTimestamp );
+
+		return $targetDate->format( "Y-m-d 00:00:00" );
+	}
+}

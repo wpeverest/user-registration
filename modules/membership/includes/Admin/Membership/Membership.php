@@ -50,7 +50,19 @@ class Membership {
 		add_action( 'in_admin_header', array( __CLASS__, 'hide_unrelated_notices' ) );
 		add_filter( 'wp_editor_settings', array( $this, 'remove_media_buttons' ) );
 		add_filter( 'user_registration_login_options', array( $this, 'add_payment_login_option' ) );
+		add_action( 'admin_head', array( $this, 'fix_menu_highlighting' ) );
+	}
 
+	/**
+	 * Fix menu highlighting for frontend listing edit pages.
+	 */
+	public function fix_menu_highlighting() {
+		global $submenu_file, $parent_file;
+
+		if ( isset( $_GET['page'] ) && 'user-registration-members' === $_GET['page'] ) {
+			$parent_file  = 'user-registration';
+			$submenu_file = 'user-registration-membership';
+		}
 	}
 
 	/**
@@ -135,13 +147,13 @@ class Membership {
 
 		switch ( $action ) {
 			case 'trash':
-				$this->bulk_trash( $delete_list );
+//				$this->bulk_trash( $delete_list );
 				break;
 			case 'untrash':
-				$this->bulk_untrash( $membership_list );
+//				$this->bulk_untrash( $membership_list );
 				break;
 			case 'delete':
-				$this->bulk_trash( $delete_list, true, $delete_membership );
+//				$this->bulk_trash( $delete_list, true, $delete_membership );
 				break;
 			default:
 				break;
@@ -469,7 +481,7 @@ class Membership {
 	public function remove_media_buttons( $settings ) {
 		//return tinymce as default
 		add_filter( 'wp_default_editor', function () {
-			return 'tinymce';
+				return 'tinymce';
 		} );
 		if ( ( isset( $_GET['page'] ) && 'user-registration-settings' === $_GET['page'] ) && ( isset( $_GET["tab"] ) && "payment" === $_GET["tab"] ) ) {
 			$settings['media_buttons'] = false;
@@ -492,9 +504,10 @@ class Membership {
 			'i18n_valid_trial_period_field_validation'     => _x( 'Trial period must be less than subscription period.', 'user registration membership', 'user-registration' ),
 			'i18n_error'                                   => _x( 'Error', 'user registration membership', 'user-registration' ),
 			'i18n_save'                                    => _x( 'Save', 'user registration membership', 'user-registration' ),
-			'i18n_prompt_title'                            => __( 'Delete Membership', 'user-registration' ),
+			'i18n_prompt_title'                            => __( 'Delete Membership Plan', 'user-registration' ),
 			'i18n_prompt_bulk_subtitle'                    => __( 'Are you sure you want to delete these memberships permanently?', 'user-registration' ),
 			'i18n_prompt_single_subtitle'                  => __( 'Are you sure you want to delete this membership permanently?', 'user-registration' ),
+			'i18n_prompt_ok'                               => __( 'Ok', 'user-registration' ),
 			'i18n_prompt_delete'                           => __( 'Delete', 'user-registration' ),
 			'i18n_prompt_cancel'                           => __( 'Cancel', 'user-registration' ),
 			'i18n_prompt_no_membership_selected'           => __( 'Please select at least one membership.', 'user-registration' ),

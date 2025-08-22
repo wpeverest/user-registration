@@ -86,8 +86,28 @@ class MembersRepository extends BaseRepository implements MembersInterface {
 
 	public function get_all_members( $args ) {
 		global $wpdb;
+
+		$membership_id = isset( $args['membership_id'] ) ? intval( $args['membership_id'] ) : null;
+		$search = !empty( $args['search'] ) ? sanitize_text_field( $args['search'] ) : '';
+		$include = !empty( $args['include'] ) && is_array( $args['include'] ) ? array_map( 'intval', $args['include'] ) : array();
+
+		$allowed_orderby = array(
+			'user_registered',
+			'user_login',
+			'user_email',
+			'post_title',
+			'expiry_date',
+			'status',
+			'ID',
+			'subscription_id'
+		);
+		$order_by = !empty( $args['orderby'] ) && in_array( $args['orderby'], $allowed_orderby ) ? $args['orderby'] : 'user_registered';
+
+		// Only allow ASC or DESC for order
+		$order = ( !empty( $args['order'] ) && strtoupper( $args['order'] ) === 'ASC' ) ? 'ASC' : 'DESC';
+
 		$sql = "
-				SELECT wpu.ID,
+			SELECT wpu.ID,
 			       wums.ID AS subscription_id,
 			       wpp.post_title,
 			       wpu.user_login,
@@ -96,34 +116,44 @@ class MembersRepository extends BaseRepository implements MembersInterface {
 			       wpu.user_registered,
 			       wums.expiry_date,
 		           wumo_latest.payment_method
-				FROM $this->table wpu
-		        JOIN $this->subscription_table wums ON wpu.ID = wums.user_id
-				JOIN (
-					    SELECT user_id, MAX(created_at) AS latest_order_date
-					    FROM  $this->orders_table
-					    GROUP BY user_id
-					) latest_orders ON wpu.ID = latest_orders.user_id
-				JOIN $this->orders_table wumo_latest ON wumo_latest.user_id = latest_orders.user_id AND wumo_latest.created_at = latest_orders.latest_order_date
-		        JOIN $this->posts_table wpp ON wums.item_id = wpp.ID
-				WHERE wpp.post_status = 'publish'
-				AND 1 = 1
+			FROM $this->table wpu
+	        JOIN $this->subscription_table wums ON wpu.ID = wums.user_id
+			JOIN (
+				    SELECT user_id, MAX(created_at) AS latest_order_date
+				    FROM  $this->orders_table
+				    GROUP BY user_id
+				) latest_orders ON wpu.ID = latest_orders.user_id
+			JOIN $this->orders_table wumo_latest ON wumo_latest.user_id = latest_orders.user_id AND wumo_latest.created_at = latest_orders.latest_order_date
+	        JOIN $this->posts_table wpp ON wums.item_id = wpp.ID
+			WHERE wpp.post_status = 'publish'
+			AND 1 = 1
 		";
 
-		if ( isset( $args['membership_id'] ) ) {
-			$sql .= sprintf( " AND wpp.ID = '%d'", $args['membership_id'] );
+		// Use $wpdb->prepare for dynamic values
+		$prepare_args = array();
+
+		if ( $membership_id ) {
+			$sql .= " AND wpp.ID = %d";
+			$prepare_args[] = $membership_id;
 		}
-		if ( !empty($args['search']) ) {
-			$sql .= sprintf( " AND (wpu.display_name LIKE '%%%s%%' OR wpu.user_email LIKE '%%%s%%')", $args['search'], $args['search'] );
+		if ( !empty( $search ) ) {
+			$sql .= " AND (wpu.display_name LIKE %s OR wpu.user_email LIKE %s)";
+			$like = '%' . $wpdb->esc_like( $search ) . '%';
+			$prepare_args[] = $like;
+			$prepare_args[] = $like;
 		}
-		if ( !empty($args['include']) ) {
-			$sql .= " AND wpu.ID IN " . "(".implode("," , $args['include']) . ")";
+		if ( !empty( $include ) ) {
+			$in_ids = implode( ',', $include );
+			$sql .= " AND wpu.ID IN ($in_ids)";
+			// $include is already sanitized to integers
 		}
 
-		$order_by = !empty($args['orderby']) ? $args['orderby'] : 'user_registered';
-		$order = !empty($args['order']) ? $args['order'] : 'DESC';
+		$sql .= " ORDER BY $order_by $order";
 
-		$sql .= sprintf( ' ORDER BY %s %s', $order_by, $order );
-
+		// Prepare only if there are arguments to bind
+		if ( !empty( $prepare_args ) ) {
+			$sql = $wpdb->prepare( $sql, $prepare_args );
+		}
 
 		$result = $this->wpdb()->get_results( $sql, ARRAY_A );
 		return ! $result ? array() : $result;
