@@ -47,7 +47,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		public function get_sections() {
 			$sections = array(
 				''                  => __( 'General Options', 'user-registration' ),
-				'login-options'     => __( 'Login Options', 'user-registration' ),
 				'frontend-messages' => __( 'Form Messages', 'user-registration' ),
 			);
 

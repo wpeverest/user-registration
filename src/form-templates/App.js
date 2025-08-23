@@ -97,18 +97,18 @@ const App = () => {
 					>
 						<HStack gap="24px">
 							<HStack gap="16px">
-								<Text
+								<Heading
 									fontSize={{
-										base: "12px",
-										md: "14px",
-										lg: "16px"
+										base: "16px",
+										md: "20px",
+										lg: "22px"
 									}}
-									fontWeight="500"
+									fontWeight="600"
 									textAlign={{ base: "center", md: "left" }}
-									color="#383838"
+									color="#222222"
 								>
 									{__("Add New Form", "user-registration")}
-								</Text>
+								</Heading>
 							</HStack>
 							<Button
 								style={{

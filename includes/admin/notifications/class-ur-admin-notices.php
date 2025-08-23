@@ -867,7 +867,7 @@ class UR_Admin_Notices {
 		if ( ! $onboarding_completed ) {
 			$notice  = '<div id="message" class="updated user-registration-message ur-connect">';
 			$notice .= '<p>' . wp_kses_post( 'It appears that the setup wizard was skipped. To ensure the User Registration Plugin is properly configured, please proceed with the setup wizard.', 'user-registration' ) . '</p>';
-			$notice .= '<p class="submit">' . wp_kses_post( $onboarding_complete_text ) . '</p>';
+			$notice .= '<div class="submit">' . wp_kses_post( $onboarding_complete_text ) . '</div>';
 			$notice .= '</div>';
 
 			echo wp_kses_post( $notice );

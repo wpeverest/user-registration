@@ -588,6 +588,19 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					),
 					77
 				);
+
+				add_submenu_page(
+					'user-registration',
+					__( 'Setup Wizard', 'user-registration' ),
+					'↳ ' . __( 'Setup Wizard', 'user-registration' ),
+					'manage_user_registration',
+					'user-registration-welcome&tab=setup-wizard',
+					array(
+						$this,
+						'status_page',
+					),
+					78
+				);
 			}
 		}
 

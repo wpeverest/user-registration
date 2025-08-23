@@ -8099,9 +8099,6 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 							' . esc_attr( implode( ' ', $custom_attributes ) ) . ' ' . wp_kses_post( $description ) . '/>';
 					$settings .= '</div>';
 					$settings .= '</div>';
-
-										error_log( print_r( $settings, true ) );
-
 					break;
 				case 'nonce':
 					$settings .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="'.esc_attr( $value['field-key'] ).'">';
