@@ -2585,6 +2585,7 @@ body {
 		display: flex;
 		gap: 5px;
 		align-items: center;
+		width: 100%;
 
 		input[type="checkbox"] {
 			width: 30px !important;
@@ -3553,6 +3554,11 @@ a.button.ur-smart-tags-list-button {
 					max-width: 100%;
 					margin-bottom: $spacing_24px;
 
+					&.ur-enhanced-select, &.ur-input-field {
+						display: flex;
+						align-items: baseline;
+					}
+
 					&#user_registration_form_setting_minimum_password_strength_field {
 						margin-bottom: 0;
 					}
@@ -3564,11 +3570,12 @@ a.button.ur-smart-tags-list-button {
 						display: flex;
 						align-items: center;
 						gap: $spacing_4px;
+						flex: 0 0 40%;
 
 						&.checkbox {
 							font-size: 14px;
 							line-height: 150%;
-							font-weight: $regular;
+							font-weight: $medium;
 							margin-bottom: 0;
 						}
 
@@ -3579,6 +3586,13 @@ a.button.ur-smart-tags-list-button {
 								color: $grey-100;
 							}
 						}
+					}
+
+					.ur-settings-field {
+						display: flex;
+						flex-direction: column;
+						gap: $spacing_4px;
+						width: 100%;
 					}
 
 					.ur-radio-group-list {
@@ -3658,6 +3672,16 @@ a.button.ur-smart-tags-list-button {
 									}
 								}
 							}
+						}
+					}
+
+					&.ur-form-settings-section {
+						border-top: 1px solid #e1e1e1;
+						padding-top: 20px;
+
+						h4 {
+							font-weight: 600;
+							color: #131313;
 						}
 					}
 				}

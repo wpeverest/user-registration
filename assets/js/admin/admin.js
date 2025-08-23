@@ -1123,9 +1123,9 @@ jQuery(function ($) {
 			if (enable_custom_password) {
 				custom_password_params.show();
 			}
-			minimum_password_strength_wrapper_field.show("slow");
+			minimum_password_strength_wrapper_field.show();
 		} else {
-			minimum_password_strength_wrapper_field.hide("slow");
+			minimum_password_strength_wrapper_field.hide();
 			custom_password_params.hide();
 		}
 	});
