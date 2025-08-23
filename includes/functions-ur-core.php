@@ -7668,7 +7668,7 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'type'     => 'single_select_page',
 								'default'  => '',
 								'class'    => 'ur-enhanced-select-nostd',
-								'css'      => 'min-width:350px;',
+								'css'      => '',
 								'desc_tip' => true,
 								'field-key'=> 'lost-password'
 							),
@@ -7929,35 +7929,6 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 								'default'  => 'no',
 							),
 							array(
-								'title'    => __( 'Enable Remember Me', 'user-registration' ),
-								'desc'     => '',
-								'id'       => 'user_registration_login_options_remember_me',
-								'type'     => 'toggle',
-								'desc_tip' => __( 'Check to enable/disable Remember Me.', 'user-registration' ),
-								'css'      => '',
-								'default'  => 'yes',
-							),
-
-							array(
-								'title'    => __( 'Enable Lost Password', 'user-registration' ),
-								'desc'     => '',
-								'id'       => 'user_registration_login_options_lost_password',
-								'type'     => 'toggle',
-								'desc_tip' => __( 'Check to enable/disable lost password.', 'user-registration' ),
-								'css'      => '',
-								'default'  => 'yes',
-							),
-							array(
-								'title'    => __( 'Lost Password Page', 'user-registration' ),
-								'desc'     => sprintf( __( 'Select the page which contains your login form: [%s]', 'user-registration' ), apply_filters( 'user_registration_lost_password_shortcode_tag', 'user_registration_lost_password' ) ), //phpcs:ignore
-								'id'       => 'user_registration_lost_password_page_id',
-								'type'     => 'single_select_page',
-								'default'  => '',
-								'class'    => 'ur-enhanced-select-nostd',
-								'css'      => 'min-width:350px;',
-								'desc_tip' => true,
-							),
-							array(
 								'title'    => __( 'Hide Field Labels', 'user-registration' ),
 								'id'       => 'user_registration_login_options_hide_labels',
 								'type'     => 'toggle',
@@ -7983,25 +7954,6 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 								'default'  => 'default',
 								'options'  => $ur_enabled_captchas,
 							),
-							array(
-								'title'    => __( 'Registration URL', 'user-registration' ),
-								'desc'     => __( 'This option lets you display the registration page URL in the login form.', 'user-registration' ),
-								'id'       => 'user_registration_general_setting_registration_url_options',
-								'type'     => 'text',
-								'desc_tip' => true,
-								'css'      => '',
-							),
-
-							array(
-								'title'    => __( 'Registration URL Label', 'user-registration' ),
-								'desc'     => __( 'This option lets you enter the label to registration url in login form.', 'user-registration' ),
-								'id'       => 'user_registration_general_setting_registration_label',
-								'type'     => 'text',
-								'desc_tip' => true,
-								'css'      => '',
-								'default'  => __( 'Not a member yet? Register now.', 'user-registration' ),
-							),
-
 							array(
 								'title'      => __( 'Disable Default WordPress Login Screen', 'user-registration' ),
 								'desc'       => '',
@@ -8147,6 +8099,9 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 							' . esc_attr( implode( ' ', $custom_attributes ) ) . ' ' . wp_kses_post( $description ) . '/>';
 					$settings .= '</div>';
 					$settings .= '</div>';
+
+										error_log( print_r( $settings, true ) );
+
 					break;
 				case 'nonce':
 					$settings .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="'.esc_attr( $value['field-key'] ).'">';

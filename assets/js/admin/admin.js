@@ -783,11 +783,11 @@ jQuery(function ($) {
 				$("#user_registration_lost_password_page_id")
 					.closest(".user-registration-login-form-global-settings")
 					.show()
-					.css("display", "flex");
+					.css("display", "block");
 				$("#user_registration_label_lost_your_password")
 					.closest(".user-registration-login-form-global-settings")
 					.show()
-					.css("display", "flex");
+					.css("display", "block");
 			} else {
 				$("#user_registration_lost_password_page_id")
 					.closest(".user-registration-login-form-global-settings")

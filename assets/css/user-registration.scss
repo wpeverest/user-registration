@@ -2498,7 +2498,6 @@ body {
 					.ur-registered-inputs {
 						.ui-widget-content {
 							.ur-tab-contents {
-								padding: 24px;
 								background: #ffffff;
 
 								.ur-login-view-doc {
@@ -2584,8 +2583,6 @@ body {
 
 						&.ur-login-form-settings {
 							.ur-tab-contents {
-								padding: 16px 16px 0 16px;
-
 								.ur-tab-content {
 									padding: 0;
 
@@ -2603,7 +2600,6 @@ body {
 											.ur-toggle-content {
 												margin-top: $spacing_24px;
 												padding-bottom: $spacing_28px;
-												border-bottom: $border_width solid $border_color;
 												display: flex;
 												flex-direction: column;
 												gap: 28px;
@@ -2617,6 +2613,10 @@ body {
 									display: flex;
 									flex-direction: column;
 									gap: 24px;
+
+									h2 {
+										margin: 0 0 $spacing-16px 0;
+									}
 								}
 							}
 						}

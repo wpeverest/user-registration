@@ -101,7 +101,7 @@ if ( ! class_exists( 'UR_Settings_Membership ' ) ) :
 									'type'     => 'single_select_page',
 									'default'  => '',
 									'class'    => 'ur-enhanced-select-nostd',
-									'css'      => 'min-width:350px;',
+									'css'      => '',
 									'desc_tip' => true,
 								),
 								array(
@@ -112,7 +112,7 @@ if ( ! class_exists( 'UR_Settings_Membership ' ) ) :
 									'type'     => 'single_select_page',
 									'default'  => '',
 									'class'    => 'ur-enhanced-select-nostd',
-									'css'      => 'min-width:350px;',
+									'css'      => '',
 									'desc_tip' => true,
 								),
 								array(
@@ -122,7 +122,7 @@ if ( ! class_exists( 'UR_Settings_Membership ' ) ) :
 									'type'     => 'select',
 									'default'  => 'automatic',
 									'class'    => 'ur-enhanced-select',
-									'css'      => 'min-width:350px;',
+									'css'      => '',
 									'options'  => array(
 										'automatic' => __('Renew Automatically', 'user-registration'),
 										'manual' => __('Renew Manually', 'user-registration')

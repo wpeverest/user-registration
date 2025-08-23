@@ -62,7 +62,7 @@ const Dashboard = () => {
 							"user-registration"
 						)}
 					</Heading>
-					<AspectRatio ratio={16 / 9}>
+					<AspectRatio ratio={16 / 9} mt={5}>
 						<iframe
 							src="https://www.youtube.com/embed/ZOXVbfBTNPQ?si=82Q2iOOE2iUF7M02&autoplay=1&mute=1&rel=0"
 							title="YouTube video player"
@@ -77,7 +77,7 @@ const Dashboard = () => {
 					</AspectRatio>
 					<ButtonGroup mt="5" spacing="6" gap="12px">
 						<Button
-							className="button-primary"
+							className="button button-primary"
 							as={Link}
 							backgroundColor="#475bb2"
 							fontSize="14px"
@@ -89,16 +89,13 @@ const Dashboard = () => {
 							px="6"
 							href={newFormURL}
 						>
-							<Text
-							  sx={{
-								lineHeight: "2.5rem",
-							  }}
-							>
-								{__("Create a Registration Form", "user-registration")}
-							</Text>
+							{__(
+								"Create a Registration Form",
+								"user-registration"
+							)}
 						</Button>
 						<Button
-							className="button-secondary"
+							className="button button-secondary"
 							as={Link}
 							variant="outline"
 							borderColor="#475bb2"
@@ -110,13 +107,7 @@ const Dashboard = () => {
 							textDecor="none !important"
 							isExternal
 						>
-							<Text
-							  sx={{
-								lineHeight: "2.5rem",
-							  }}
-							>
-							  {__("View all forms", "user-registration")}
-							</Text>
+							{__("View all forms", "user-registration")}
 						</Button>
 					</ButtonGroup>
 				</Box>

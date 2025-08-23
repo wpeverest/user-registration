@@ -731,6 +731,7 @@ class UR_Admin_Notices {
 			'user-registration-email-templates',
 			'user-registration-mailchimp',
 			'user-registration-dashboard',
+			'user-registration-login-forms'
 		);
 
 		/**

@@ -298,7 +298,7 @@
 			$("#user_registration_label_remember_me")
 				.closest(".user-registration-login-form-global-settings")
 				.show()
-				.css("display", "flex");
+				.css("display", "block");
 		} else {
 			$("#user_registration_label_remember_me")
 				.closest(".user-registration-login-form-global-settings")
