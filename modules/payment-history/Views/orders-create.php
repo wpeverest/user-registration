@@ -135,7 +135,7 @@ $return_url = admin_url( 'admin.php?page=member-payment-history' );
 										required>
 										<option value=""><?php esc_html_e( 'Select Payment Method', 'user-registration' ); ?></option>
 										<?php foreach( $payment_methods as $payment_method): ?>
-											<option value="<?php echo $payment_method ?>"><?php echo ucfirst($payment_method) ?></option>
+											<option value="<?php echo lcfirst( $payment_method ); ?>"><?php echo ucfirst($payment_method) ?></option>
 										<?php endforeach; ?>
 									</select>
 								</div>
