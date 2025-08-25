@@ -282,8 +282,6 @@ textarea.ur-input-border-red {
 	}
 
 	.register {
-		text-align: center;
-
 		#node_recaptcha_register {
 			padding: 0 10px;
 		}
@@ -319,6 +317,10 @@ textarea.ur-input-border-red {
 		.ur-form-grid {
 			flex: 1;
 			padding: 0 10px;
+
+			@media screen and (max-width: 600px) {
+				width: 100%;
+			}
 
 			&:nth-child(1n + 2) {
 				border-left: 0 none;
@@ -1532,16 +1534,21 @@ span.ur-shortcode-form-embed-dot {
 }
 
 .user-registration.ur-frontend-form {
-	background: #fff;
-	border-radius: 8px;
+	background: $white;
+	border-radius: $border_radius_8;
 	box-shadow:
 		0px 4px 16px 0px rgba(17, 17, 26, 0.05),
 		0px 8px 32px 0px rgba(17, 17, 26, 0.05);
-	padding: 60px;
+	padding: $spacing_60px;
+
+	@media screen and (max-width: 600px) {
+		padding: $spacing_40px $spacing_30px;
+	}
 
 	input {
-		border-radius: 4px;
+		border-radius: $border_radius_4;
 	}
+
 	#user_email {
 		&::before {
 			content: "\f348";
@@ -2414,9 +2421,9 @@ body {
 
 			&.ur-frontend-form {
 				max-width: 100%;
-				padding: 0;
-				background: transparent;
-				box-shadow: none;
+				// padding: 0;
+				// background: transparent;
+				// box-shadow: none;
 			}
 		}
 	}
