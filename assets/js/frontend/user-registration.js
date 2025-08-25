@@ -2737,7 +2737,6 @@
 				var response = JSON.parse(ajax_response.responseText);
 				if (response.success) {
 					$.each(response.data, function (index, item) {
-						console.log(index, item);
 						$('#user-registration-form-' + index)
 							.find('#ur_frontend_form_nonce')
 							.val(item);
