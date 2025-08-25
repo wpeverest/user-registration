@@ -172,12 +172,16 @@ if ( "subscription" == $membership['post_content']['type'] ) {
 			<?php
 			if ( ! $is_upgrading && !empty( $membership ) ):
 				?>
+			<?php if ( 'canceled' !== $membership['status'] ): ?>
 				<button type="button" class="membership-tab-btn change-membership-button"
 						data-id="<?php echo ( isset( $membership['post_id'] ) && ! empty( $membership['post_id'] ) ) ? esc_attr( $membership['post_id'] ) : ''; ?>"
 				>
 					<?php echo __( "Change Plan", "user-registration" ); ?>
 				</button>
-				<?php if( 'canceled' === $membership[ 'status' ] && $date_to_renew > date( 'Y-m-d 00:00:00' ) ) : ?>
+			<?php endif; ?>
+				<?php
+				$membership_type = isset( $membership['post_content'] ) && ! empty( $membership['post_content'] ) ? esc_html( ucfirst( wp_unslash( $membership['post_content']['type'] ) ) ) : 'NA';
+				if( 'canceled' === $membership[ 'status' ] && ( $membership_type !== 'subscription' || $date_to_renew > date( 'Y-m-d 00:00:00' ) ) ) : ?>
 					<button type="button" class="membership-tab-btn reactivate-membership-button"
 						data-id="<?php echo ( isset( $membership['subscription_id'] ) && ! empty( $membership['subscription_id'] ) ) ? esc_attr( $membership['subscription_id'] ) : ''; ?>"
 					>
