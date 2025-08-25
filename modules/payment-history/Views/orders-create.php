@@ -70,13 +70,8 @@ $return_url = admin_url( 'admin.php?page=member-payment-history' );
 								</label>
 							</div>
 							<div class="ur-text-muted ur-membership-plan-name ur-admin-template" style="width: 100%">
-								<?php echo esc_html__( 'Select a member to view their membership plan.', 'user-registration' ); ?>"
-								<style>
-									.ur-text-muted {
-										width: 100%;
-										color: #383838;
-									}
-								</style>
+								<?php echo esc_html__( 'Select a member to view their membership plan.', 'user-registration' ); ?>
+
 							</div>
 							<select
 								data-key-name="<?php echo esc_html__( 'Membership Plan', 'user-registration' ); ?>"

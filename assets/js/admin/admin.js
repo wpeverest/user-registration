@@ -1256,14 +1256,14 @@ jQuery(function ($) {
 			' <div id="ur-rar-url-notice" style="padding:10px;  border: 1px solid #c3c4c7; border-left-color: #ffa900; border-left-width: 4px; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04)">' +
 			user_registration_form_builder_data.i18n_default_redirection_notice_for_membership +
 			"</div>";
-		form_row.append(notice);
+		form_row.find(".ur-settings-field").append(notice);
 	};
 	var show_email_confirmation_disabled_notice = function (form_row) {
 		var notice =
 			' <div id="ur-rar-url-notice" style="padding:10px;  border: 1px solid #c3c4c7; border-left-color: #ffa900; border-left-width: 4px; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04)">' +
 			user_registration_form_builder_data.i18n_email_confirmation_disabled_notice +
 			"</div>";
-		form_row.append(notice);
+		form_row.find(".ur-settings-field").append(notice);
 	};
 	/**
 	 * Prevent negative input for Waiting Period Before Redirection setting.
