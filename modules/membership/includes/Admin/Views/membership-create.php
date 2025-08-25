@@ -364,7 +364,7 @@ $is_editing = ! empty( $_GET['post_id'] );
 										</div>
 										<!--								trial section-->
 										<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3"
-											 style="gap:30px">
+											 style="gap:20px">
 											<div class="ur-label" style="width: 30%">
 												<label class="ur-membership-trial-status"
 													   for="ur-membership-trial-status"><?php esc_html_e( 'Trial Period', 'user - registration' ); ?></label>

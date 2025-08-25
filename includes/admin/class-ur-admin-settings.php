@@ -253,6 +253,7 @@ class UR_Admin_Settings {
 			'user_registration_settings_params',
 			array(
 				'ajax_url'                                                     => admin_url( 'admin-ajax.php' ),
+				'assets_url'												   => UR_ASSETS_URL,
 				'ur_license_nonce'											   => wp_create_nonce( '_ur_license_nonce' ),
 				'user_registration_search_global_settings_nonce'               => wp_create_nonce( 'user_registration_search_global_settings' ),
 				'user_registration_captcha_test_nonce'                         => wp_create_nonce( 'user_registration_captcha_test_nonce' ),

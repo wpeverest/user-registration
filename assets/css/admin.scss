@@ -4726,7 +4726,7 @@ body.user-registration {
 					display: flex;
 					align-items: center;
 					justify-content: center;
-					top: 50%;
+					top: 35%;
 					right: $spacing_12px;
 					transform: translateY(-50%);
 
@@ -7261,4 +7261,8 @@ $border-top-color_1: #ff4f55;
   justify-content: center;
   z-index: 9999;
   animation: toaster 5s ease-in-out forwards;
+}
+
+.swal2-success-circular-line-left {
+	background: transparent !important;
 }
