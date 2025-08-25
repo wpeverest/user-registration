@@ -11,7 +11,7 @@
 ?>
 <!--								payment gateway container-->
 <div id="payment-gateway-container"
-	 class="ur-mt-3 <?php echo isset( $membership_details['type'] ) && $membership_details['type'] !== 'free' ? '' : 'ur-d-none'; ?>">
+	 class="ur-payment-gateway-wrapper <?php echo isset( $membership_details['type'] ) && $membership_details['type'] !== 'free' ? '' : 'ur-d-none'; ?>">
 	<div class="user-registration-card">
 		<div class="user-registration-card__header">
 			<h3><?php echo __( "Payment Gateways", "user-registration" ) ?></h3>
