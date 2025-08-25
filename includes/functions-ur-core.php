@@ -4517,18 +4517,6 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 		$users_can_register = apply_filters( 'ur_register_setting_override', get_option( 'users_can_register' ) );
 
 		if ( ! is_user_logged_in() ) {
-			if ( ! $users_can_register ) {
-				$logger->error( __( 'Only administrators can add new users.', 'user-registration' ), array( 'source' => 'form-submission' ) );
-				wp_send_json_error(
-					array(
-						/**
-						 * Filter to modify register pre form message.
-						 * Default value is the 'Only administrators can add new users'.
-						 */
-						'message' => apply_filters( 'ur_register_pre_form_message', __( 'Only administrators can add new users.', 'user-registration' ) ),
-					)
-				);
-			}
 		} else {
 			/**
 			 * Filter to modify user capability.

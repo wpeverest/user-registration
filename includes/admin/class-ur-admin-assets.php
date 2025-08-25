@@ -156,6 +156,7 @@ class UR_Admin_Assets {
 					'sweetalert2',
 					'tooltipster',
 					'user-registration-scroll-ui-js',
+					'flatpickr',
 				),
 				UR_VERSION,
 				false
