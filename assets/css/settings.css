@@ -1866,3 +1866,27 @@
 .install-urm-pro-title {
   font-size: 1.25rem !important;
 }
+
+.ur-install-urm-pro {
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid #ebebeb;
+  margin-bottom: 20px;
+}
+
+.ur-install-urm-pro-p-tag {
+  margin-bottom: 24px;
+  padding: 10px 12px 10px 16px;
+  background: rgba(71, 91, 178, 0.04);
+  border: 1px solid #475bb2;
+  font-weight: 400;
+  color: #383838;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 22px;
+  font-style: normal;
+}
+
+.user-registration-swal2-modal--install-urm-pro .swal2-content {
+  margin-bottom: 24px;
+}

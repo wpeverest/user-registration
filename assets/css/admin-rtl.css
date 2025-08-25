@@ -2090,6 +2090,7 @@
   padding-bottom: 16px;
   width: 100%;
   margin-bottom: 0;
+  justify-content: center;
 }
 .user-registration .swal2-container .swal2-popup .swal2-header .swal2-title .dashicons,
 .user-registration-page .swal2-container .swal2-popup .swal2-header .swal2-title .dashicons {
@@ -12189,7 +12190,7 @@ body.user-registration #wpbody-content #screen-meta-links {
   display: flex;
   align-items: center;
   justify-content: center;
-  top: 50%;
+  top: 35%;
   left: 12px;
   transform: translateY(-50%);
 }
@@ -14143,4 +14144,8 @@ body.user-registration #log-viewer pre {
   justify-content: center;
   z-index: 9999;
   animation: toaster 5s ease-in-out forwards;
+}
+
+.swal2-success-circular-line-left {
+  background: transparent !important;
 }

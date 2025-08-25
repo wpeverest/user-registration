@@ -808,6 +808,7 @@
   padding-bottom: 16px;
   width: 100%;
   margin-bottom: 0;
+  justify-content: center;
 }
 .user-registration .swal2-container .swal2-popup .swal2-header .swal2-title .dashicons,
 .user-registration-page .swal2-container .swal2-popup .swal2-header .swal2-title .dashicons {
