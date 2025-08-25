@@ -937,12 +937,12 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 						)
 					),
 				),
-				UR_PRO_ACTIVE ? array(
+				array(
 					'users' => array(
 						'page_slug' => 'user-registration-users',
 						'label'     => esc_html__( 'Users', 'user-registration' ),
 					)
-				) : array(),
+				),
 				ur_check_module_activation('membership') ? array(
 					'membership' => array(
 						'page_slug' => 'user-registration-membership',

@@ -6453,10 +6453,7 @@ body.user-registration {
 			padding: 0;
 		}
 
-		.submit {
-			display: flex;
-			padding: 5px;
-		}
+
 	}
 
 	#log-viewer {
@@ -6840,18 +6837,18 @@ body.user-registration {
 		}
 
 		.notice {
-			position: absolute;
-			margin: 0;
-			border-radius: $border_radius_3;
-			background: #15b34b;
-			padding: $spacing_12px $spacing-16px $spacing_12px $spacing_20px;
-			border: 0;
-			display: flex;
-			align-items: center;
-			gap: $spacing_10px;
+			position: fixed;
+			bottom: 20px;
 			left: 50%;
 			transform: translateX(-50%);
-			top: $spacing_36px;
+			background: #1ea71b;
+			color: #fff;
+			padding: 10px 20px;
+			border-radius: 5px;
+			display: inline-flex;
+			white-space: nowrap;
+			z-index: 9999;
+			animation: toaster 5s ease-in-out forwards;
 
 			p {
 				margin: 0;
@@ -7235,6 +7232,7 @@ $border-top-color_1: #ff4f55;
 		width: 100%;
 	}
 }
+
 @keyframes toaster {
   0% {
     transform: translateX(100%);
@@ -7256,7 +7254,6 @@ $border-top-color_1: #ff4f55;
 
 .ur-toaster {
   position: fixed;
-  top: 20px;
   left: 50%;
   transform: translateX(-50%);
   display: inline-flex;
