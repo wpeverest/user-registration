@@ -405,11 +405,11 @@
 				// payment gateway validations
 
 				// check if atleast one pg is enabled
-				var available_pgs = $('#payment-gateway-container .user-registration-switch'),
+				var available_pgs = $('#payment-gateway-container .user-registration-switch__control'),
 					is_one_selected = false;
 
 				available_pgs.each(function (index, item) {
-					if ($(item).find('input').is(':checked')) {
+					if ($(item).is(':checked')) {
 						is_one_selected = true;
 					}
 				});

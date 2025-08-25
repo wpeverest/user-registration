@@ -85,8 +85,7 @@ do_action( 'user_registration_before_customer_login_form' );
  * @return function.
  */
 
-// Check for session error message (PRG pattern)
-if ( ! session_id() ) {
+if ( ! session_id() && ! headers_sent() ) {
 	session_start();
 }
 if ( isset( $_SESSION['ur_login_error'] ) ) {

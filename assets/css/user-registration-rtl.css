@@ -1192,9 +1192,6 @@ textarea.ur-input-border-red {
   border: none;
   padding: 0;
 }
-.ur-frontend-form .register {
-  text-align: center;
-}
 .ur-frontend-form .register #node_recaptcha_register {
   padding: 0 10px;
 }
@@ -1225,6 +1222,11 @@ textarea.ur-input-border-red {
 .ur-frontend-form .ur-form-row .ur-form-grid {
   flex: 1;
   padding: 0 10px;
+}
+@media screen and (max-width: 600px) {
+  .ur-frontend-form .ur-form-row .ur-form-grid {
+    width: 100%;
+  }
 }
 .ur-frontend-form .ur-form-row .ur-form-grid:nth-child(1n+2) {
   border-right: 0 none;
@@ -2216,10 +2218,15 @@ span.ur-shortcode-form-embed-dot {
 }
 
 .user-registration.ur-frontend-form {
-  background: #fff;
+  background: #ffffff;
   border-radius: 8px;
   box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
   padding: 60px;
+}
+@media screen and (max-width: 600px) {
+  .user-registration.ur-frontend-form {
+    padding: 40px 30px;
+  }
 }
 .user-registration.ur-frontend-form input {
   border-radius: 4px;
@@ -3057,9 +3064,6 @@ body.user-registration-page #user-registration.ur-frontend-form,
 body.user-registration-page .user-registration.ur-frontend-form, body.user-registration-membership_page_user-registration-login-forms #user-registration.ur-frontend-form,
 body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form {
   max-width: 100%;
-  padding: 0;
-  background: transparent;
-  box-shadow: none;
 }
 body.woocommerce-checkout .user-registration.urwc-form {
   all: unset;
@@ -3104,7 +3108,6 @@ body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-gri
   border: none;
 }
 .user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-tab-contents {
-  padding: 24px;
   background: #ffffff;
 }
 .user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-tab-contents .ur-login-view-doc a {
@@ -3172,9 +3175,6 @@ body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-gri
   background: #edeff7;
   border: none;
 }
-.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents {
-  padding: 16px 16px 0 16px;
-}
 .user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content {
   padding: 0;
 }
@@ -3187,7 +3187,6 @@ body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-gri
 .user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content form .ur-login-form-setting-block .ur-toggle-content {
   margin-top: 24px;
   padding-bottom: 28px;
-  border-bottom: 1px solid #e1e1e1;
   display: flex;
   flex-direction: column;
   gap: 28px;
@@ -3196,6 +3195,9 @@ body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-gri
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
+.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings #ur-login-form-setting .ur-login-form-setting-block h2 {
+  margin: 0 0 16px 0;
 }
 .user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .user-registration-login-settings-form {
   border-radius: 4px;
