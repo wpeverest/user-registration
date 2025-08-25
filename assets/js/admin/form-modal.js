@@ -33,13 +33,14 @@
 					if (section) {
 						var selector = section.replace(/^ur_settings_/, 'user_registration_');
 						var editor = typeof tinymce !== "undefined" ? tinymce.get(selector) : null;
-						if (editor) {
-							var content = user_registration_email_settings[section].replace(/\n\n/g, '<br>');
+						if (editor && !editor.isHidden()) {
+							var content = user_registration_email_settings[section].replace(/\n\n/g, '<br>').replace(/\t/g, '');
 							editor.setContent(content);
 						} else {
 							var $textarea = $("textarea#" + selector);
 							if ($textarea.length) {
-								$textarea.val(user_registration_email_settings[section]);
+								var content = user_registration_email_settings[section].replace(/\t/g, '');
+								$textarea.val(content);
 							}
 						}
 					}
