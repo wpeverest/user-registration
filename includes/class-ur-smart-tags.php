@@ -671,7 +671,7 @@ class UR_Smart_Tags {
 						}
 						$template_file   = locate_template( 'payment-successful-email.php' );
 						if ( ! $template_file ) {
-							$template_file = UR()->plugin_url() . '/modules/membership/includes/Templates/Emails/payment-successful-email.php';
+							$template_file = UR()->plugin_path() . '/modules/membership/includes/Templates/Emails/payment-successful-email.php';
 						}
 						ob_start();
 						require $template_file;

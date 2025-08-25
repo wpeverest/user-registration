@@ -49,7 +49,7 @@ class StripeService {
 
 		if ( count( $product_exists ) > 0 ) { // product already exists, don't create new
 			$product = array_values( $product_exists );
-			$product = $product_exists[0];
+			$product = $product[0];
 		} else {
 			$product = \Stripe\Product::create(
 				array(
