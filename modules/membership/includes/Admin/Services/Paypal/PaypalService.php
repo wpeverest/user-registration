@@ -56,14 +56,14 @@ class PaypalService {
 		$membership_amount            = number_format( $membership_metas['amount'] );
 		$is_automatic                 = "automatic" === get_option( 'user_registration_renewal_behaviour', 'automatic' );
 		$discount_amount              = 0;
-
+		$is_renewing                    = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
 
 		if ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
 			$coupon_details  = ur_get_coupon_details( $data['coupon'] );
 			$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $membership_amount * $coupon_details['coupon_discount'] / 100;
 		}
 
-		if ( 'subscription' === ( $data['type'] ) && $is_automatic ) {
+		if ( ('subscription' === ( $data['type'] ) && !$is_renewing) || ($is_automatic &&  $is_renewing)) {
 			$transaction = '_xclick-subscriptions';
 		} else {
 			$transaction = '_xclick';
@@ -110,7 +110,7 @@ class PaypalService {
 			'item_name'     => $item_name,
 			'email'         => sanitize_email( $member_email ),
 		);
-		if ( '_xclick-subscriptions' === $transaction && $is_automatic ) {
+		if ( '_xclick-subscriptions' === $transaction) {
 			$paypal_args['t3']          = ! empty( $data ['subscription'] ) ? strtoupper( substr( $data['subscription']['duration'], 0, 1 ) ) : '';
 			$paypal_args['p3']          = ! empty( $data ['subscription']['value'] ) ? $data ['subscription']['value'] : 1;
 			$paypal_args['a3']          = floatval( user_registration_sanitize_amount( $membership_amount ) );
