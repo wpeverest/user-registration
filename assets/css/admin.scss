@@ -2608,7 +2608,7 @@ body {
 			width: 12px;
 		}
 	}
-	
+
 
 	.user-registration-toggle-form {
 		position: relative;
@@ -5522,6 +5522,7 @@ body.user-registration {
 						font-weight: 400;
 						line-height: 23px;
 						overflow-wrap: break-word;
+						word-break: break-all;
 
 						.payment-status-btn {
 							display: block;

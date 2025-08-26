@@ -340,6 +340,7 @@ const TemplateList = ({ selectedCategory, templates }) => {
 				color="#26262E"
 				borderBottom="1px solid #CDD0D8"
 				paddingBottom="20px"
+				mb="20px !important"
 			>
 				{selectedCategory.toUpperCase()}
 			</Heading>
