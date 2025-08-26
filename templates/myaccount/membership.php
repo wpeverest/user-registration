@@ -193,7 +193,7 @@ if ( "subscription" == $membership['post_content']['type'] ) {
 			?>
 			<?php
 
-			if ( $can_renew && $date_to_renew <= date( 'Y-m-d 00:00:00' ) ):
+			if ( $can_renew && $date_to_renew <= date( 'Y-m-d 00:00:00' ) && 'canceled' !== $membership[ 'status' ] ):
 				?>
 				<button type="button" class="membership-tab-btn renew-membership-button"
 						data-pg-gateways= <?php echo isset( $membership['active_gateways'] ) ? implode( ',', array_keys( $membership['active_gateways'] ) ) : "" ?>
