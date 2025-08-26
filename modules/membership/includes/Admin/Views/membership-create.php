@@ -526,7 +526,7 @@ $is_editing = ! empty( $_GET['post_id'] );
 															style="margin: 0"
 															<?php echo ( ( isset( $membership_details['upgrade_settings']['upgrade_type'] ) && $membership_details['upgrade_settings']['upgrade_type'] == 'full' ) ) ? 'checked' : ( ! $is_editing ? 'checked' : '' ); ?>
 															required>
-														<label class="ur-p-2" for="ur-membership-upgrade-type-full">
+														<label class="ur-membership-upgrade-type-full--label" for="ur-membership-upgrade-type-full">
 															<b
 																class="user-registration-image-label "><?php esc_html_e( 'Full Amount Upgrade', 'user-registration' ); ?>
 															</b>
@@ -550,7 +550,7 @@ $is_editing = ! empty( $_GET['post_id'] );
 															<?php echo ( ( isset( $membership_details['upgrade_settings']['upgrade_type'] ) && $membership_details['upgrade_settings']['upgrade_type'] == 'pro-rata' ) ) ? 'checked' : ""; ?>
 															<?php echo ! UR_PRO_ACTIVE ? 'disabled' : '' ?>
 															required>
-														<label class="ur-p-2" for="ur-membership-upgrade-type-pro-rata">
+														<label class="ur-membership-upgrade-type-full--label" for="ur-membership-upgrade-type-pro-rata">
 															<b
 																class="user-registration-image-label "><?php esc_html_e( 'Proration Upgrade', 'user-registration' ); ?>
 															</b>
