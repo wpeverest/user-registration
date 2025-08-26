@@ -579,12 +579,14 @@ class StripeService {
 			return $response;
 		}
 
-		$subscription = \Stripe\Subscription::retrieve( $subscription['subscription_id'] );
-		$deleted_sub = \Stripe\Subscription::update(
-			$subscription['subscription_id'],
-			[ 'cancel_at_period_end' => true ],
-		);
-		if ( '' !== $deleted_sub['canceled_at'] ) {
+			$stripe_subscription = \Stripe\Subscription::retrieve( $subscription['subscription_id'] );
+			if( $stripe_subscription ) {
+				$deleted_sub = \Stripe\Subscription::update(
+					$subscription['subscription_id'],
+					[ 'cancel_at_period_end' => true ],
+				);
+			}
+		if ( isset( $deleted_sub[ 'canceled_at' ] ) && '' !== $deleted_sub['canceled_at'] ) {
 			$response['status'] = true;
 		}
 		ur_get_logger()->notice( '----------------- Stripe cancellation response for subscription id ' . $subscription['subscription_id'] . ' -----------------', array( 'source' => 'urm-cancellation-log' ) );
