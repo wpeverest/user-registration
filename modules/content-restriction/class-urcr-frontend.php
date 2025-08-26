@@ -965,6 +965,7 @@ class URCR_Frontend {
 			$members_subscription    = new \WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository();
 			$subscription            = $members_subscription->get_member_subscription( wp_get_current_user()->ID );
 			$current_user_membership = ( ! empty( $subscription ) ) ? $subscription['item_id'] : array();
+			$subscription_status = ( ! empty( $subscription[ 'status' ] ) ) && 'canceled' == $subscription['status'];
 		}
 		$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
 
@@ -986,7 +987,7 @@ class URCR_Frontend {
 						$template = $this->urcr_restrict_contents_template( $template, $post );
 					}
 				} elseif ( '3' === get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
-					if ( is_array( $allowed_memberships ) && in_array( $current_user_membership, $allowed_memberships ) ) {
+					if ( is_array( $allowed_memberships ) && in_array( $current_user_membership, $allowed_memberships ) && $subscription_status ) {
 						return $template;
 					}
 					$template = $this->urcr_restrict_contents_template( $template, $post );

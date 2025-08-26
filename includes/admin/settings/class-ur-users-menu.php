@@ -860,6 +860,7 @@ if (! class_exists('User_Registration_Users_Menu')) {
 			?>
 			<div class="user-registration-user-body">
 				<div class="user-registration-user-form-details">
+					<?php if( ! empty( $form_data_array ) ): ?>
 					<?php
 					foreach ($form_data_array as $index => $row_data) {
 						$row_id = $index;
@@ -1045,6 +1046,14 @@ if (! class_exists('User_Registration_Users_Menu')) {
 						do_action('user_registration_single_user_view_row_data', $row_id, $row_data, $form_id, $user_id);
 					}
 					?>
+					<?php
+					else:
+					$image_url = esc_url(plugin_dir_url(UR_PLUGIN_FILE) . 'assets/images/empty-table.png');
+					?>
+					<div class="empty-list-table-container">
+						<img src="<?php echo $image_url; ?>" alt="" />
+					</div>
+					<?php endif; ?>
 				</div>
 				<?php do_action('user_registration_single_user_details_content', $user_id, $form_id); ?>
 			</div>
