@@ -706,9 +706,6 @@
 						);
 					},
 					complete: function () {
-						if (selected_pg !== "stripe") {
-							ur_membership_frontend_utils.remove_spinner(btn);
-						}
 						ur_membership_frontend_utils.toggleSaveButtons(
 							false,
 							btn
@@ -2127,11 +2124,13 @@
 							).data("urm-pg-type"),
 							error_notice = $("#upgrade-membership-notice"),
 							btn = $(".swal2-confirm");
+
 						//append spinner
 						if (btn.find("span.urm-spinner").length > 0) {
 							return false;
 						}
 						ur_membership_frontend_utils.append_spinner(btn);
+						btn.attr("disabled", true);
 
 						//validation before request start
 						selected_pg =
