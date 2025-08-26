@@ -533,7 +533,7 @@ class PaypalService {
 				'message' => $message,
 			);
 		}
-		$url .= sprintf( 'v1/billing/subscriptions/%s/cancel', $subscription['subscription_id'] );
+		$url .= sprintf( 'v1/billing/subscriptions/%s/suspend', $subscription['subscription_id'] );
 
 		$bearerToken = $login_request['access_token']; // Replace with your actual Bearer token
 
@@ -542,10 +542,15 @@ class PaypalService {
 			'Accept: application/json',
 			'Authorization: Bearer ' . $bearerToken,
 		);
+		$data = json_encode( array(
+			'reason' => 'User initiated cancellation',
+		) );
+
 		$ch      = curl_init();
 		curl_setopt( $ch, CURLOPT_URL, $url );
 		curl_setopt( $ch, CURLOPT_POST, true );
 		curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers );
+		curl_setopt( $ch, CURLOPT_POSTFIELDS, $data );
 		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 
 		$response = curl_exec( $ch );
@@ -558,7 +563,6 @@ class PaypalService {
 		}
 		curl_close( $ch );
 		ur_get_logger()->notice( 'Paypal Response Status Code: ' . $status_code, array( 'source' => 'ur-membership-paypal' ) );
-
 		if ( 204 === $status_code ) {
 			$message = esc_html__( 'Subscription successfully canceled from paypal.', 'user-registration' );
 			ur_get_logger()->notice( $message, array( 'source' => 'ur-membership-paypal' ) );
@@ -588,7 +592,6 @@ class PaypalService {
 		$url           = ( 'production' === $paypal_options['mode'] ) ? 'https://api-m.paypal.com/' : 'https://api-m.sandbox.paypal.com/';
 
 		$login_request = self::login_paypal( $url, $client_id, $client_secret );
-
 		if( 200 !== $login_request[ 'status_code' ] ) {
 			$message = esc_html__( 'Invalid response from paypal, check Client ID or Secret.', 'user-registration' );
 			ur_get_logger()->notice( $message, array( 'source' => 'ur-membership-paypal' ) );

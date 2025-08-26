@@ -896,7 +896,7 @@ class AJAX {
 			);
 		}
 
-		$reactivation_status = $subscription_repository->reactivate_subscription( $subscription_id );
+		$reactivation_status = $subscription_repository->reactivate_subscription_by_id( $subscription_id );
 		if( $reactivation_status[ 'status' ] ) {
 			wp_send_json_success(
 				array(
