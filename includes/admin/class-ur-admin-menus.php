@@ -734,7 +734,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page'] ) { //phpcs:ignore WordPress.Security.NonceVerification
 				wp_enqueue_script( 'user-registration-login-settings', UR()->plugin_url() . '/assets/js/admin/login-settings' . $suffix . '.js', array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-sortable', 'iris', 'tooltipster', 'jquery-ui-tabs' ), UR_VERSION, true );
 				wp_enqueue_style( 'user-registration-css', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR_VERSION );
-				$login_settings =  array_merge(get_login_form_settings()['sections']['login_options_settings']['settings'] , get_login_field_settings()['sections']['login_options_settings']['settings']);
+				$login_settings =  array_merge(get_login_form_settings()['sections']['login_options_settings']['settings'] , get_login_field_settings()['sections']['login_options_settings']['settings'], get_login_form_settings()['sections']['login_options_settings_advanced']['settings']);
 
 				$ur_login_form_params = array(
 					'ajax_url'               => admin_url( 'admin-ajax.php' ),
@@ -763,6 +763,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				);
 				$login_option_settings = get_login_field_settings();
 				$login_form_settings = get_login_form_settings();
+
 				include_once __DIR__ . '/views/html-login-page-forms.php';
 			} else {
 				$registration_table_list->display_page();

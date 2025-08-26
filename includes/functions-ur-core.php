@@ -7865,13 +7865,14 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 								'desc_tip' => true,
 								'css'      => '',
 								'default'  => __( 'Please enter your details to access your account.', 'user-registration' ),
-							),
-							array(
-								'type'     => 'section',
-								'title'    => __( 'Advanced', 'user-registration' ),
-								'id'       => 'user_registration_form_setting_general_advanced',
-								'class'	=> array( 'ur-form-settings-section')
-							),
+							)
+						),
+					),
+					'login_options_settings_advanced' => array(
+						'title'    => __( 'Advanced', 'user-registration' ),
+						'type'     => 'card',
+						'desc'     => '',
+						'settings' => array(
 							array(
 								'title'    => __( 'Enable Ajax Login', 'user-registration' ),
 								'desc'     => '',
