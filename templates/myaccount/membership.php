@@ -204,18 +204,6 @@ if ( "subscription" == $membership['post_content']['type'] ) {
 			endif;
 			?>
 			<?php
-
-			if ( $can_renew && $date_to_renew <= date( 'Y-m-d 00:00:00' ) ):
-				?>
-				<button type="button" class="membership-tab-btn renew-membership-button"
-						data-pg-gateways= <?php echo isset( $membership['active_gateways'] ) ? implode( ',', array_keys( $membership['active_gateways'] ) ) : "" ?>
-						data-id="<?php echo ( isset( $membership['post_id'] ) && ! empty( $membership['post_id'] ) ) ? esc_attr( $membership['post_id'] ) : ''; ?>">
-					<?php echo __( "Renew Membership", "user-registration" ); ?>
-				</button>
-			<?php
-			endif;
-			?>
-			<?php
 			if ( 'canceled' !== $membership['status'] ):
 				?>
 				<button type="button" class="membership-tab-btn cancel-membership-button"

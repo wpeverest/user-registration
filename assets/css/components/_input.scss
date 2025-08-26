@@ -60,6 +60,11 @@
             }
         }
 
+        &[type="checkbox"],
+        &[type="radio"] {
+            z-index: 0;
+        }
+
         &[type="search"] {
             padding-right: $spacing_32px;
         }

@@ -1402,7 +1402,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'input_class'       => array(),
 				'custom_attributes' => array(),
 				'tip'               => __( 'Add custom CSS classes for styling the submit button. Separate multiple classes with spaces.', 'user-registration' ),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_submit_label', __( 'Submit', 'user-registration' ) ),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_submit_class', __( 'submit', 'user-registration' ) ),
 				'default_value'     => __( 'Submit', 'user-registration' ),
 				'product'           => 'user-registration/user-registration.php',
 			),

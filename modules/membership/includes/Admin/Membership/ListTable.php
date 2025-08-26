@@ -107,7 +107,18 @@ class ListTable extends \UR_List_Table {
 
 		return array();
 	}
-
+	/**
+	 * @param $membership
+	 *
+	 * @return string
+	 */
+	public function column_title( $membership ) {
+		$post_title = '';
+		if(!empty($membership)) {
+			$post_title = $membership->post_title;
+		}
+		return $post_title;
+	}
 	/**
 	 * @param $membership
 	 *

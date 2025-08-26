@@ -201,17 +201,15 @@ if ('vertical' === $layout) {
 								<?php
 							} else {
 								wp_nonce_field( 'save_profile_details' );
-								?>
-								<input type="submit" class="user-registration-Button button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" value="
-								<?php
-								esc_attr_e(
 								/**
 								 * Filter to modify the profile update button text.
 								 *
 								 * @param string text content for button.
 								 * @return string button text.
 								 */
-									apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) ) );//PHPCS:ignore ?>"
+								$submit = apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) );
+								?>
+								<input type="submit" class="user-registration-Button button button-primary<?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" value="<?php esc_attr_e( $submit) //PHPCS:ignore ?>"
 								/>
 								<input type="hidden" name="action" value="save_profile_details" />
 								<?php

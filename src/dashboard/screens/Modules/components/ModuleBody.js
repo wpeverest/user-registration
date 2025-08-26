@@ -139,7 +139,7 @@ const ModuleBody = ({
 					</ModalContent>
 				</Modal>
 			)}
-			<Container maxWidth="2000px !important">
+			<Container maxWidth="2000px !important" padding={0}>
 				{isEmpty(filteredAddons) ? (
 					<AddonSkeleton />
 				) : (

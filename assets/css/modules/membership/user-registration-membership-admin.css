@@ -776,13 +776,18 @@
   border-color: #475bb2;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-upgrade-types {
-  max-width: 230px;
+  width: max-content;
+  max-width: 100%;
   margin-bottom: 0;
   border-radius: 4px;
-  border: 1px solid #E9E9E9;
-  background: #FFF;
-  padding: 12px 30px;
+  border: 1px solid #e1e1e1;
+  background: #ffffff;
+  padding: 16px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+  gap: 12px;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-upgrade-types .ur-membership-upgrade-type-title {
   gap: 8px;
@@ -792,6 +797,29 @@
   padding: 0 !important;
   font-size: 16px;
   line-height: 24px;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-upgrade-types .ur-membership-upgrade-type-full--label {
+  padding: 0;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-upgrade-types .ur-membership-type-title {
+  gap: 8px;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-upgrade-types .ur-membership-type-title input[type=radio],
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-upgrade-types .ur-membership-type-title .ur-membership-upgrade-type-full--label {
+  cursor: pointer;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-upgrade-types .ur-membership-type-title input[type=radio]:checked::before {
+  background: #475bb2;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-upgrade-types:has(input[type=radio]:checked) {
+  border-color: #475bb2;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-upgrade-types:has(input:disabled) {
+  cursor: not-allowed;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-upgrade-types:has(input:disabled) .ur-membership-type-title input[type=radio],
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-upgrade-types:has(input:disabled) .ur-membership-type-title .ur-membership-upgrade-type-full--label {
+  cursor: not-allowed;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .user-registration-card__body .ur-membership-selection-container .ur-label {
   margin-bottom: 0;
@@ -916,7 +944,7 @@
   flex: 1;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #payment-gateway-container {
-  margin-top: 28px !important;
+  margin-top: 60px;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #payment-gateway-container .user-registration-card {
   border-radius: 7px;
@@ -967,6 +995,14 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #payment-gateway-container .user-registration-card__body .user-registration-payment__items .payment-option-body a {
+  font-weight: 500;
+  color: #475bb2;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #payment-gateway-container .user-registration-card__body .user-registration-payment__items .payment-option-body a:focus {
+  outline: none;
+  box-shadow: none;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #payment-gateway-container .user-registration-card__body .user-registration-payment__items .payment-option-body .ur-membership-input-container {
   padding: 0 !important;
@@ -1200,12 +1236,10 @@
   background-repeat: no-repeat;
   background-position: center;
   background-size: 100%;
-  position: absolute;
+  display: block;
   border-radius: 2px;
-  width: 16px;
-  height: 16px;
-  top: 8px;
-  right: 8px;
+  width: 18px;
+  height: 18px;
 }
 
 .urmg-loader {

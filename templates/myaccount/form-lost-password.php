@@ -120,23 +120,19 @@ if ( 'bordered' === $form_template ) {
 				 * Fires the rendering of user registration lost password form.
 				 */
 				do_action( 'user_registration_lostpassword_form' );
+
+				/**
+				 * Filter to modify the lost password button text.
+				 *
+				 * @param string text for lost password button.
+				 * @return string text for lost password button.
+				 */
+				$reset_button = apply_filters( 'user_registration_lost_password_button_text', __( 'Reset password', 'user-registration' ) );
 				?>
 
 				<p class="user-registration-form-row form-row">
 					<input type="hidden" name="ur_reset_password" value="true" />
-					<input type="submit" class="user-registration-Button button ur-reset-password-btn" value="
-					<?php
-					echo esc_html(
-						/**
-						 * Filter to modify the lost password button text.
-						 *
-						 * @param string text for lost password button.
-						 * @return string text for lost password button.
-						 */
-						apply_filters( 'user_registration_lost_password_button_text', __( 'Reset password', 'user-registration' ) )
-					);
-					?>
-						" />
+					<input type="submit" class="user-registration-Button button button-primary ur-reset-password-btn" value="<?php echo esc_attr( $reset_button ); ?> "/>
 				</p>
 
 				<?php wp_nonce_field( 'lost_password' ); ?>

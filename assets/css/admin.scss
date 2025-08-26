@@ -2581,34 +2581,34 @@ body {
 }
 
 .ur-toggle-section {
-	&.ur-form-builder-toggle {
-		display: flex;
-		gap: 5px;
-		align-items: center;
-		width: 100%;
+	display: flex;
+	gap: 5px;
+	align-items: center;
+	// width: 100%;
 
-		input[type="checkbox"] {
-			width: 30px !important;
-			height: 16px !important;
+	input[type="checkbox"] {
+		// width: 30px !important;
+		// height: 16px !important;
 
-			&:focus {
-				outline: none;
-				box-shadow: none;
-			}
-		}
-
-		.slider {
-			width: 30px !important;
-			height: 16px !important;
-			border-radius: 99px;
-			padding: $spacing_8px;
-
-			&::before {
-				height: 12px !important;
-				width: 12px !important;
-			}
+		&:focus {
+			outline: none;
+			box-shadow: none;
 		}
 	}
+
+	.slider {
+		width: 30px;
+		height: 16px;
+		border-radius: 99px;
+		padding: $spacing_8px;
+		box-sizing: border-box;
+
+		&::before {
+			height: 12px;
+			width: 12px;
+		}
+	}
+
 
 	.user-registration-toggle-form {
 		position: relative;
@@ -4711,6 +4711,10 @@ body.user-registration {
 			width: 275px;
 			position: relative;
 
+			> p {
+				display: none;
+			}
+
 			#user-registration-users-search-input {
 				width: 100%;
 			}
@@ -4963,6 +4967,27 @@ body.user-registration {
 		input[type="checkbox"]:not(.urcr-enable-access-rule) {
 			border-radius: $border_radius_2;
 			border-color: $grey-200;
+		}
+
+		&.users {
+			tr {
+				th {
+					&.column {
+						&-username {
+							width: 160px;
+						}
+
+						&-fullname {
+							width: 120px;
+						}
+
+						&-role,
+						&-user_status {
+							width: 100px;
+						}
+					}
+				}
+			}
 		}
 	}
 }
@@ -5497,6 +5522,7 @@ body.user-registration {
 						font-weight: 400;
 						line-height: 23px;
 						overflow-wrap: break-word;
+						word-break: break-all;
 
 						.payment-status-btn {
 							display: block;
@@ -7261,4 +7287,8 @@ $border-top-color_1: #ff4f55;
   justify-content: center;
   z-index: 9999;
   animation: toaster 5s ease-in-out forwards;
+}
+
+.swal2-success-circular-line-left {
+	background: transparent !important;
 }

@@ -14,7 +14,7 @@
         position: sticky;
         position: -webkit-sticky;
         top: $spacing_32px;
-        z-index: 1;
+        z-index: 9999;
 
         @media screen and (max-width: 1199px) {
             position: unset;

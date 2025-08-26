@@ -2606,7 +2606,8 @@ body {
 
 									form {
 										.ur-login-form-setting-block {
-											padding: 32px 12px 12px;
+											padding: $spacing_20px $spacing_12px $spacing_12px;
+
 											&:first-child {
 												h2 {
 													&.ur-toggle-heading {
@@ -2620,7 +2621,7 @@ body {
 												padding-bottom: $spacing_28px;
 												display: flex;
 												flex-direction: column;
-												gap: 28px;
+												gap: $spacing_28px;
 											}
 										}
 									}

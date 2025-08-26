@@ -153,7 +153,7 @@ class Membership {
 //				$this->bulk_untrash( $membership_list );
 				break;
 			case 'delete':
-//				$this->bulk_trash( $delete_list, true, $delete_membership );
+				$this->bulk_trash( $delete_list, true, $delete_membership );
 				break;
 			default:
 				break;
@@ -182,9 +182,23 @@ class Membership {
 
 		$type   = ! EMPTY_TRASH_DAYS || $delete ? 'deleted' : 'trashed';
 		$qty    = count( $membership_lists );
-		$status = isset( $_GET['status'] ) ? '&status=' . sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '';
-
-		wp_safe_redirect( esc_url( admin_url( 'admin.php?page=user-registration-membership' . ( ! $is_membership ? '&action=list_groups' : '' ) . $status . '&' . $type . '=' . $qty ) ) );
+		$status = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '';
+		
+		$redirect_args = array(
+			'page' => 'user-registration-membership',
+		);
+		
+		if ( ! $is_membership ) {
+			$redirect_args['action'] = 'list_groups';
+		}
+		
+		if ( $status ) {
+			$redirect_args['status'] = $status;
+		}
+		
+		$redirect_args[ $type ] = $qty;
+		
+		wp_safe_redirect( add_query_arg( $redirect_args, admin_url( 'admin.php' ) ) );
 		exit();
 	}
 
