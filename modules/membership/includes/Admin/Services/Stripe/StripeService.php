@@ -573,7 +573,7 @@ class StripeService {
 			'status' => false,
 		);
 
-		if ( ! isset( $subscription['subscription_id'] ) ) {
+		if ( empty( $subscription['subscription_id'] ) ) {
 			ur_get_logger()->notice( 'Stripe subscription_id not found.', array( 'source' => 'urm-cancellation-log' ) );
 
 			return $response;
