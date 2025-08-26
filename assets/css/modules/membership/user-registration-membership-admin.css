@@ -918,7 +918,7 @@
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #paid-plan-container .ur-membership-subscription-field-container .trial-container--wrapper {
   max-width: 650px;
-  background: #ffffff;
+  background: #f4f4f4;
   margin-left: 0 !important;
   padding: 20px !important;
   border-radius: 4px;
