@@ -19,6 +19,28 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+/**
+ * Filter to modify the notice content before rendering of user registration login form.
+ *
+ * @param function Print notice function.
+ *
+ * @return function.
+ */
+
+// Check for error message stored in URL parameter and transient
+if ( isset( $_GET['urm_error'] ) ) {
+	$error_key = sanitize_text_field( $_GET['urm_error'] );
+	$error_message = get_transient( $error_key );
+
+	if ( $error_message ) {
+		ur_add_notice( $error_message, 'error' );
+		delete_transient( $error_key );
+	} else {
+		ur_add_notice( 'Error message expired or not found', 'error' );
+	}
+} else {
+	ur_add_notice( apply_filters( 'user_registration_post_login_errors', '' ), 'error' );
+}
 $form_template  = get_option( 'user_registration_login_options_form_template', 'default' );
 $template_class = '';
 
@@ -77,27 +99,6 @@ if ( ur_is_passwordless_login_enabled() ) {
 do_action( 'user_registration_before_customer_login_form' );
 
 
-/**
- * Filter to modify the notice content before rendering of user registration login form.
- *
- * @param function Print notice function.
- *
- * @return function.
- */
-
-// Check for error message stored in cookie and transient
-if ( isset( $_COOKIE['ur_login_error_key'] ) ) {
-	$error_key = sanitize_text_field( $_COOKIE['ur_login_error_key'] );
-	$error_message = get_transient( $error_key );
-
-	if ( $error_message ) {
-		ur_add_notice( $error_message, 'error' );
-		delete_transient( $error_key );
-	}
-	setcookie( 'ur_login_error_key', '', time() - 3600, '/', '', is_ssl(), true );
-} else {
-	ur_add_notice( apply_filters( 'user_registration_post_login_errors', '' ), 'error' );
-}
 
 if ( ! $is_passwordless_enabled || $is_passwordless_login_default_login_area_enabled ) {
 	ur_add_notice( apply_filters( 'user_registration_passwordless_login_notice', '' ), 'success' );

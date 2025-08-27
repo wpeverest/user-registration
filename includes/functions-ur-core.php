@@ -4367,22 +4367,19 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 
 				$error_message = apply_filters( 'login_errors', $message );
 				$error_key = 'ur_login_error_' . uniqid();
-				setcookie( 'ur_login_error_key', $error_key, time() + 30, '/', '', is_ssl(), true ); // 1 minutes
-
-
-				set_transient( $error_key, $error_message, 30 );
-
+				set_transient( $error_key, $error_message, 300 ); // 5 minutes
+				
 				/**
 				 * Triggered when a user fails to log in during the user registration process.
 				 */
 				do_action( 'user_registration_login_failed' );
 
-				// Redirect to prevent form resubmission
-				if( !empty( $_POST['resubmitted'] ) ) {
-					$redirect_url = wp_get_raw_referer() ? wp_get_raw_referer() : ur_get_my_account_url();
-					wp_redirect( $redirect_url );
-					exit;
-				}
+				
+				$redirect_url = wp_get_raw_referer() ? wp_get_raw_referer() : ur_get_my_account_url();
+				$redirect_url = add_query_arg( 'urm_error', $error_key, $redirect_url );
+				wp_redirect( $redirect_url );
+				exit;
+				
 			}
 		}
 	}
