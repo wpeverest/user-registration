@@ -1140,8 +1140,8 @@ class URCR_Frontend {
 		}
 
 		// Display restriction message instead of post content.
-		$post->post_content = $this->message();
-
+		$restricted_message = get_post_meta( $post->ID, 'urcr_meta_content', true );
+		$post->post_content = ! empty( $restricted_message ) ? wp_kses_post( $restricted_message ) : $this->message();
 		// Add filter for elementor content.
 		add_filter( 'elementor/frontend/the_content', array( $this, 'elementor_restrict' ) );
 
