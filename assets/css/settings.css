@@ -1779,7 +1779,7 @@
 .user-registration-settings-container .user-registration-options-container .ur-export-users-page .nav-tab-inside .postbox .inside {
   margin: 0;
   padding: 0;
-  text-align: left;
+  text-align: right;
 }
 .user-registration-settings-container .user-registration-options-container .ur-export-users-page .nav-tab-inside .postbox .inside p {
   margin: 0;
@@ -1816,10 +1816,19 @@
 .user-registration-settings-container .user-registration-options-container .ur-export-users-page #selected-export-user-form::hover {
   background-color: #475BB2;
 }
+.user-registration-settings-container .user-registration-options-container #urm-invite-codes-list-table .select2.select2-container {
+  width: 15% !important;
+}
 .user-registration-settings-container .user-registration-options-container #urm-popup-table, .user-registration-settings-container .user-registration-options-container #urm-invite-codes-list-table {
   background-color: #ffffff;
   border: 1px solid #EDF2F7;
-  border-radius: 4px;
+  border-radius: 7px;
+  padding: 20px 20px 22px;
+}
+.user-registration-settings-container .user-registration-options-container #urm-popup-table #user-registration-pro-search-input,
+.user-registration-settings-container .user-registration-options-container #urm-popup-table #user-registration-invite-codes-search-input, .user-registration-settings-container .user-registration-options-container #urm-invite-codes-list-table #user-registration-pro-search-input,
+.user-registration-settings-container .user-registration-options-container #urm-invite-codes-list-table #user-registration-invite-codes-search-input {
+  width: 60%;
 }
 .user-registration-settings-container .user-registration-options-container #urm-popup-table #popups-list, .user-registration-settings-container .user-registration-options-container #urm-invite-codes-list-table #popups-list {
   margin-top: 16px;

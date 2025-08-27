@@ -2806,10 +2806,6 @@
   border-bottom: 1px solid #e1e1e1;
   margin-bottom: 24px;
   height: 60px;
-  position: sticky;
-  position: -webkit-sticky;
-  top: 32px;
-  z-index: 9999;
 }
 @media screen and (max-width: 1199px) {
   .user-registration .ur-admin-page-topnav,
@@ -13374,7 +13370,7 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
   min-height: 36px;
   font-size: 13px;
   line-height: 20px;
-  width: 280px;
+  width: -webkit-fill-available;
   padding: 0 12px;
   border: 1px solid #e1e1e1;
   color: #383838;
@@ -14204,4 +14200,12 @@ body.user-registration #log-viewer pre {
 
 .toplevel_page_user-registration.wp-has-submenu {
   background: transparent;
+}
+
+.tablenav-pages .button.tablenav-pages-navspan, .tablenav-pages .button.first-page, .tablenav-pages .button.prev-page, .tablenav-pages .button.last-page, .tablenav-pages .button.next-page {
+  min-width: 30px !important;
+}
+.tablenav-pages #current-page-selector {
+  min-height: 32px;
+  width: 40px;
 }

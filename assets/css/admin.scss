@@ -6242,7 +6242,7 @@ body {
 		min-height: 36px;
 		font-size: 13px;
 		line-height: 20px;
-		width: 280px;
+		width: -webkit-fill-available;
 		padding: 0 12px;
 		border: $border_width solid $border_color;
 		color: #383838;
@@ -7286,5 +7286,23 @@ $border-top-color_1: #ff4f55;
 
 	&.wp-has-submenu {
 		background: transparent;
+	}
+}
+
+
+.tablenav-pages {
+	.button {
+		&.tablenav-pages-navspan,
+		&.first-page,
+		&.prev-page,
+		&.last-page,
+		&.next-page {
+			min-width: 30px !important;
+		}
+	}
+
+	#current-page-selector {
+		min-height: 32px;
+		width: 40px;
 	}
 }

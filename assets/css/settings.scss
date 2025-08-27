@@ -1782,7 +1782,7 @@ body {
 					.inside {
 						margin: 0;
 						padding: 0;
-						text-align: left;
+						text-align: right;
 
 						p {
 							margin: 0;
@@ -1834,13 +1834,25 @@ body {
 			}
 		}
 
+		#urm-invite-codes-list-table {
+			.select2.select2-container {
+				width: 15% !important;
+			}
+		}
 		#urm-popup-table, #urm-invite-codes-list-table {
 			background-color: #ffffff;
 			border: 1px solid #EDF2F7;
-			border-radius: $border_radius_4;
+			border-radius: $border_radius_7;
+			padding: 20px 20px 22px;
+
+			#user-registration-pro-search-input,
+			#user-registration-invite-codes-search-input {
+				width: 60%;
+			}
 
 			#popups-list {
 				margin-top: 16px;
+
 
 				.ur-list-table-wrapper {
 					width: 100%;

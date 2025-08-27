@@ -555,10 +555,6 @@
   border-bottom: 1px solid #e1e1e1;
   margin-bottom: 24px;
   height: 60px;
-  position: sticky;
-  position: -webkit-sticky;
-  top: 32px;
-  z-index: 9999;
 }
 @media screen and (max-width: 1199px) {
   .user-registration .ur-admin-page-topnav,
