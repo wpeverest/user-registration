@@ -285,6 +285,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * Tweak - Display membership plan in profile detail for frontend listing.
 * Dev - Properly track plugin settings data.
 * Dev - Filter to hide my account page selection notice.
+* Fix - Ajax and Nonce related issues.
 * Fix - Translation issue in membership.
 * Fix - Form Templates responsive issue.
 * Fix - Design issue all fields smart tag.

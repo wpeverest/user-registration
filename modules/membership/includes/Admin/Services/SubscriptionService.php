@@ -142,7 +142,23 @@ class SubscriptionService {
 				return apply_filters( 'user_registration_membership_cancel_subscription', array( 'status' => false ), $order, $subscription );
 		}
 	}
-
+	public function reactivate_subscription( $order, $subscription ) {
+		$logger = ur_get_logger();
+		$response = array( 'status' => false );
+		switch ( $order['payment_method'] ) {
+			case 'paypal';
+				$paypal_service = new PaypalService();
+				$logger->notice( 'Paypal reactivation Reached', array( 'source' => 'urm-reactivation-log' ) );
+				return $paypal_service->reactivate_subscription( $subscription[ 'subscription_id' ] );
+				break;
+			case 'stripe':
+				$stripe_service = new StripeService();
+				return $stripe_service->reactivate_subscription( $subscription[ 'subscription_id' ]  );
+				break;
+			default:
+				return apply_filters( 'urm_reactivate_membership_subscription', $response, $order, $subscription );
+		}
+	}
 	public function daily_membership_renewal_check() {
 		$days_before_value = get_option( 'user_registration_membership_renewal_reminder_days_before', 1 );
 

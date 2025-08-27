@@ -573,19 +573,67 @@ class StripeService {
 			'status' => false,
 		);
 
-		if ( ! isset( $subscription['subscription_id'] ) ) {
+		if ( empty( $subscription['subscription_id'] ) ) {
 			ur_get_logger()->notice( 'Stripe subscription_id not found.', array( 'source' => 'urm-cancellation-log' ) );
 
 			return $response;
 		}
 
-		$subscription = \Stripe\Subscription::retrieve( $subscription['subscription_id'] );
-		$deleted_sub  = $subscription->cancel();
-		if ( '' !== $deleted_sub['canceled_at'] ) {
+			$stripe_subscription = \Stripe\Subscription::retrieve( $subscription['subscription_id'] );
+			if( $stripe_subscription ) {
+				$deleted_sub = \Stripe\Subscription::update(
+					$subscription['subscription_id'],
+					[ 'cancel_at_period_end' => true ],
+				);
+			}
+		if ( isset( $deleted_sub[ 'canceled_at' ] ) && '' !== $deleted_sub['canceled_at'] ) {
 			$response['status'] = true;
 		}
 		ur_get_logger()->notice( '----------------- Stripe cancellation response for subscription id ' . $subscription['subscription_id'] . ' -----------------', array( 'source' => 'urm-cancellation-log' ) );
 		ur_get_logger()->notice( print_r( $deleted_sub, true ), array( 'source' => 'urm-cancellation-log' ) );
+
+		return $response;
+	}
+	/**
+	 * Reactivates stripe subscription if it has been soft cancelled.
+	 *
+	 * @param $subscription_id Stripe's Subscription Id.
+	 *
+	 * @return $response array Response with status flag and message.
+	 */
+	public function reactivate_subscription( $subscription_id ) {
+		$response = array(
+			'status' => false,
+		);
+		$subscription = \Stripe\Subscription::retrieve( $subscription_id );
+		if( isset( $subscription->id ) ) {
+			if( 'active' === $subscription->status ) {
+				return array(
+					'status' => true,
+					'message' => __( 'Subscription reactivated successfully.', 'user-registration' ),
+				);
+			}
+			elseif( 'canceled' !== $subscription->status && true === $subscription->cancel_at_period_end ) {
+				$subscription = \Stripe\Subscription::update(
+					$subscription_id,
+					[ 'cancel_at_period_end' => false, ]
+				);
+				return array(
+					'status' => true,
+					'message' => __( 'Subscription reactivated successfully.', 'user-registration' ),
+				);
+			}
+			else {
+				ur_get_logger()->info( sprintf( 'Subscription %s with status %s is not reactivable in stripe end.', $subscription->status , $subscription_id ),  );
+			}
+		} else {
+			ur_get_logger()->info( sprintf( 'Subscription %s not found in stripe end.', $subscription_id ), 'ur-membership-stripe' );
+			wp_send_json_error(
+				array(
+					'message' => __( 'Error reactivating the stripe subscription.', 'user-registration' ),
+				)
+			);
+		}
 
 		return $response;
 	}

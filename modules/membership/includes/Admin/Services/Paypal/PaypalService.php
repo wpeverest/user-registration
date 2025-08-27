@@ -533,7 +533,7 @@ class PaypalService {
 				'message' => $message,
 			);
 		}
-		$url .= sprintf( 'v1/billing/subscriptions/%s/cancel', $subscription['subscription_id'] );
+		$url .= sprintf( 'v1/billing/subscriptions/%s/suspend', $subscription['subscription_id'] );
 
 		$bearerToken = $login_request['access_token']; // Replace with your actual Bearer token
 
@@ -542,10 +542,82 @@ class PaypalService {
 			'Accept: application/json',
 			'Authorization: Bearer ' . $bearerToken,
 		);
+		$data = json_encode( array(
+			'reason' => 'User initiated cancellation',
+		) );
+
 		$ch      = curl_init();
 		curl_setopt( $ch, CURLOPT_URL, $url );
 		curl_setopt( $ch, CURLOPT_POST, true );
 		curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers );
+		curl_setopt( $ch, CURLOPT_POSTFIELDS, $data );
+		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+
+		$response = curl_exec( $ch );
+		$result   = json_decode( $response );
+
+		$status_code = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
+
+		if ( curl_errno( $ch ) ) {
+			ur_get_logger()->notice( curl_error( $ch ), array( 'source' => 'ur-membership-paypal' ) );
+		}
+		curl_close( $ch );
+		ur_get_logger()->notice( 'Paypal Response Status Code: ' . $status_code, array( 'source' => 'ur-membership-paypal' ) );
+		if ( 204 === $status_code ) {
+			$message = esc_html__( 'Subscription successfully canceled from paypal.', 'user-registration' );
+			ur_get_logger()->notice( $message, array( 'source' => 'ur-membership-paypal' ) );
+
+			return array(
+				'status' => true,
+			);
+		}
+		$message = esc_html__( 'Subscription cancellation failed from Paypal.', 'user-registration' );
+		ur_get_logger()->notice( $response, array( 'source' => 'ur-membership-paypal' ) );
+
+		return array(
+			'status'  => false,
+			'message' => $message,
+		);
+	}
+	/**
+	 * Reactivates already cancelled subscription.
+	 * @param $subscription_id Subscription Id.
+	 */
+	public function reactivate_subscription( $subscription_id ) {
+		$paypal_options['mode']          = get_option( 'user_registration_global_paypal_mode', 'test' );
+		$paypal_options['client_id']     = get_option( 'user_registration_global_paypal_client_id', '' );
+		$paypal_options['client_secret'] = get_option( 'user_registration_global_paypal_client_secret', '' );
+		$client_id     = $paypal_options['client_id'];
+		$client_secret = $paypal_options['client_secret'];
+		$url           = ( 'production' === $paypal_options['mode'] ) ? 'https://api-m.paypal.com/' : 'https://api-m.sandbox.paypal.com/';
+
+		$login_request = self::login_paypal( $url, $client_id, $client_secret );
+		if( 200 !== $login_request[ 'status_code' ] ) {
+			$message = esc_html__( 'Invalid response from paypal, check Client ID or Secret.', 'user-registration' );
+			ur_get_logger()->notice( $message, array( 'source' => 'ur-membership-paypal' ) );
+
+			return array(
+				'status'  => false,
+				'message' => $message,
+			);
+		}
+		$url .= sprintf( 'v1/billing/subscriptions/%s/activate', $subscription_id );
+
+		$bearerToken = $login_request['access_token'];
+
+		$headers = array(
+			'Content-Type: application/json',
+			'Accept: application/json',
+			'Authorization: Bearer ' . $bearerToken,
+		);
+		$data = json_encode( array(
+			'reason' => 'User initiated reactivation'
+		) );
+		$ch      = curl_init();
+		curl_setopt( $ch, CURLOPT_URL, $url );
+		curl_setopt( $ch, CURLOPT_POST, true );
+		curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers );
+		curl_setopt( $ch, CURLOPT_POSTFIELDS, $data );
 		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 
 		$response = curl_exec( $ch );
@@ -560,15 +632,15 @@ class PaypalService {
 		ur_get_logger()->notice( 'Paypal Response Status Code: ' . $status_code, array( 'source' => 'ur-membership-paypal' ) );
 
 		if ( 204 === $status_code ) {
-			$message = esc_html__( 'Subscription successfully canceled from paypal.', 'user-registration' );
+			$message = esc_html__( 'Subscription successfully reactivated from paypal.', 'user-registration' );
 			ur_get_logger()->notice( $message, array( 'source' => 'ur-membership-paypal' ) );
 
 			return array(
 				'status' => true,
 			);
 		}
-		$message = esc_html__( 'Subscription cancellation failed from Paypal.', 'user-registration' );
-		ur_get_logger()->notice( $response, array( 'source' => 'ur-membership-paypal' ) );
+		$message = esc_html__( 'Subscription reactivation failed from Paypal.', 'user-registration' );
+		ur_get_logger()->notice( $message, array( 'source' => 'ur-membership-paypal' ) );
 
 		return array(
 			'status'  => false,
