@@ -4362,11 +4362,13 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 					);
 				}
 
-				// Store error message in session for PRG pattern
-				if ( ! session_id() ) {
-					session_start();
-				}
-				$_SESSION['ur_login_error'] = apply_filters( 'login_errors', $message );
+
+				$error_message = apply_filters( 'login_errors', $message );
+				$error_key = 'ur_login_error_' . uniqid();
+				setcookie( 'ur_login_error_key', $error_key, time() + 30, '/', '', is_ssl(), true ); // 1 minutes
+
+
+				set_transient( $error_key, $error_message, 30 );
 
 				/**
 				 * Triggered when a user fails to log in during the user registration process.
@@ -4374,9 +4376,11 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				do_action( 'user_registration_login_failed' );
 
 				// Redirect to prevent form resubmission
-				$redirect_url = wp_get_raw_referer() ? wp_get_raw_referer() : ur_get_my_account_url();
-				wp_redirect( $redirect_url );
-				exit;
+				if( !empty( $_POST['resubmitted'] ) ) {
+					$redirect_url = wp_get_raw_referer() ? wp_get_raw_referer() : ur_get_my_account_url();
+					wp_redirect( $redirect_url );
+					exit;
+				}
 			}
 		}
 	}

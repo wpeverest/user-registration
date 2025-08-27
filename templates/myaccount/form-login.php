@@ -85,14 +85,18 @@ do_action( 'user_registration_before_customer_login_form' );
  * @return function.
  */
 
-if ( ! session_id() && ! headers_sent() ) {
-	session_start();
-}
-if ( isset( $_SESSION['ur_login_error'] ) ) {
-	ur_add_notice( $_SESSION['ur_login_error'], 'error' );
-	unset( $_SESSION['ur_login_error'] );
+// Check for error message stored in cookie and transient
+if ( isset( $_COOKIE['ur_login_error_key'] ) ) {
+	$error_key = sanitize_text_field( $_COOKIE['ur_login_error_key'] );
+	$error_message = get_transient( $error_key );
+
+	if ( $error_message ) {
+		ur_add_notice( $error_message, 'error' );
+		delete_transient( $error_key );
+	}
+	setcookie( 'ur_login_error_key', '', time() - 3600, '/', '', is_ssl(), true );
 } else {
-ur_add_notice( apply_filters( 'user_registration_post_login_errors', '' ), 'error' );
+	ur_add_notice( apply_filters( 'user_registration_post_login_errors', '' ), 'error' );
 }
 
 if ( ! $is_passwordless_enabled || $is_passwordless_login_default_login_area_enabled ) {
