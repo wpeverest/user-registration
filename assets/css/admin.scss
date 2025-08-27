@@ -349,7 +349,6 @@ body {
 	 **/
 .user-registration-membership_page_add-new-registration,
 .toplevel_page_user-registration {
-	background: #f4f4f4;
 
 	#wpfooter {
 		display: none; //Hide WP footer on form builder page
@@ -7291,4 +7290,11 @@ $border-top-color_1: #ff4f55;
 
 .swal2-success-circular-line-left {
 	background: transparent !important;
+}
+
+.toplevel_page_user-registration {
+
+	&.wp-has-submenu {
+		background: transparent;
+	}
 }
