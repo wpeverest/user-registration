@@ -257,7 +257,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 21. User Account Page –  Vertical Layout
 
 == Changelog ==
-= 4.4.0    - 27/08/2025 =
+= 4.4.0    - 28/08/2025 =
 * Security - Updated sql prepare for members list table query.
 * Refactor - Remove anyone can register dependency.
 * Refactor - Remove logout confirmation toggle setting.

@@ -2400,7 +2400,7 @@ body .user-registration-error > svg {
   display: none;
 }
 body.user-registration-page .user-registration.ur-frontend-form:has(.ur-grid-2), body.user-registration-page .user-registration.ur-frontend-form:has(.ur-grid-3), body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form:has(.ur-grid-2), body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form:has(.ur-grid-3) {
-  max-width: 100%;
+  max-width: 1200px;
 }
 body.user-registration-page .user-registration.ur-frontend-form form .ur-button-container, body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form form .ur-button-container {
   width: max-content;
