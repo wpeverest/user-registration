@@ -202,7 +202,7 @@ jQuery(function ($) {
 		handle_user_logout: function () {
 			$(document).on(
 				"click",
-				".ur-logout, .urcma-user-logout",
+				".ur-logout, .urcma-users-logout",
 				function (e) {
 					e.preventDefault();
 					e.stopPropagation();
