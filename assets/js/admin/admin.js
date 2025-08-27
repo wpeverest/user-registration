@@ -1190,7 +1190,10 @@ jQuery(function ($) {
 			form_row.find("#ur-rar-url-notice").remove();
 			if (
 				login_options.length == 1 &&
-				login_options.val() == "email_confirmation"
+				(
+					login_options.val() == "email_confirmation"
+					|| login_options.val() == "admin_approval_after_email_confirmation"
+				)
 			) {
 				show_email_confirmation_disabled_notice(form_row);
 			}
