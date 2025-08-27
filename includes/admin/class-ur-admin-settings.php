@@ -138,7 +138,9 @@ class UR_Admin_Settings {
 		$flag = apply_filters( 'user_registration_settings_prevent_default_login', $_REQUEST );
 
 		if ( $flag && is_bool( $flag ) ) {
-			self::add_message( esc_html__( 'Your settings have been saved.', 'user-registration' ) );
+			if( $current_tab !== 'license' ) {
+				self::add_message( esc_html__( 'Your settings have been saved.', 'user-registration' ) );
+			}
 
 			/**
 			 * Action to save current tab settings

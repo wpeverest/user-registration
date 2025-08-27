@@ -50,7 +50,6 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 		 */
 		public function get_sections() {
 			$sections = array(
-				'' => __( 'License', 'user-registration' ),
 			);
 
 			/**
