@@ -164,7 +164,7 @@ if (! class_exists('User_Registration_Users_Menu')) {
 
 				wp_register_style('ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), '1.0.0');
 				wp_enqueue_style('ur-snackbar');
-				wp_register_style('user-registration', UR()->plugin_url() . '/assets/css/user-registration.css', array(), '1.0.0');
+				wp_register_style('user-registration', UR()->plugin_url() . '/assets/css/user-registration.css', array('flatpickr'), '1.0.0');
 				wp_enqueue_style('user-registration');
 			}
 

@@ -166,6 +166,55 @@
   border-color: #475bb2;
   color: #ffffff;
 }
+.user-registration .button-tertiary,
+.user-registration .page-title-action-tertiary,
+.user-registration-page .button-tertiary,
+.user-registration-page .page-title-action-tertiary,
+.ur-multi-device-form-preview .button-tertiary,
+.ur-multi-device-form-preview .page-title-action-tertiary,
+.user-registration-welcome .button-tertiary,
+.user-registration-welcome .page-title-action-tertiary {
+  background: #eceef7;
+  border-color: #eceef7;
+}
+.user-registration .button-tertiary::before,
+.user-registration .page-title-action-tertiary::before,
+.user-registration-page .button-tertiary::before,
+.user-registration-page .page-title-action-tertiary::before,
+.ur-multi-device-form-preview .button-tertiary::before,
+.ur-multi-device-form-preview .page-title-action-tertiary::before,
+.user-registration-welcome .button-tertiary::before,
+.user-registration-welcome .page-title-action-tertiary::before {
+  font-family: dashicons;
+  font-size: 16px;
+  vertical-align: middle;
+  margin-right: 8px;
+  padding: 0 8px 0 0;
+  border-right: 1px solid #475bb2;
+  transition: all 0.3s ease-in-out;
+}
+.user-registration .button-tertiary:hover,
+.user-registration .page-title-action-tertiary:hover,
+.user-registration-page .button-tertiary:hover,
+.user-registration-page .page-title-action-tertiary:hover,
+.ur-multi-device-form-preview .button-tertiary:hover,
+.ur-multi-device-form-preview .page-title-action-tertiary:hover,
+.user-registration-welcome .button-tertiary:hover,
+.user-registration-welcome .page-title-action-tertiary:hover {
+  background: #475bb2;
+  border-color: #475bb2;
+  color: #ffffff;
+}
+.user-registration .button-tertiary:hover::before,
+.user-registration .page-title-action-tertiary:hover::before,
+.user-registration-page .button-tertiary:hover::before,
+.user-registration-page .page-title-action-tertiary:hover::before,
+.ur-multi-device-form-preview .button-tertiary:hover::before,
+.ur-multi-device-form-preview .page-title-action-tertiary:hover::before,
+.user-registration-welcome .button-tertiary:hover::before,
+.user-registration-welcome .page-title-action-tertiary:hover::before {
+  border-right-color: #ffffff;
+}
 
 .wp-core-ui .button.button-large, .wp-core-ui .button-group.button-large .button {
   min-height: 36px;

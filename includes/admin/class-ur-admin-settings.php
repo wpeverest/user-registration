@@ -57,7 +57,10 @@ class UR_Admin_Settings {
 			$settings[] = include 'settings/class-ur-settings-email.php';
 			$settings[] = include 'settings/class-ur-settings-import-export.php';
 			$settings[] = include 'settings/class-ur-settings-misc.php';
-			$settings[] = include 'settings/class-ur-settings-integration.php';
+
+			if( UR_PRO_ACTIVE ) {
+				$settings[] = include 'settings/class-ur-settings-integration.php';
+			}
 
 			$modules = array();
 

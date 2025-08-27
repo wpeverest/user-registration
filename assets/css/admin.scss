@@ -1820,22 +1820,8 @@ body {
 			margin-top: 10px;
 
 			.button {
-				display: block;
-				width: auto;
-				height: 32px;
-				text-align: center;
+				width: max-content;
 				font-family: inherit;
-
-				&::before {
-					width: 16px;
-					height: 16px;
-					font-size: 16px;
-					margin-right: 10px;
-					font-family: dashicons;
-					vertical-align: middle;
-					padding: 1px 10px 1px 0;
-					border-right: 1px solid transparentize($white, 0.7);
-				}
 			}
 		}
 
@@ -6256,7 +6242,7 @@ body {
 		min-height: 36px;
 		font-size: 13px;
 		line-height: 20px;
-		width: 280px;
+		width: -webkit-fill-available;
 		padding: 0 12px;
 		border: $border_width solid $border_color;
 		color: #383838;
@@ -7300,5 +7286,23 @@ $border-top-color_1: #ff4f55;
 
 	&.wp-has-submenu {
 		background: transparent;
+	}
+}
+
+
+.tablenav-pages {
+	.button {
+		&.tablenav-pages-navspan,
+		&.first-page,
+		&.prev-page,
+		&.last-page,
+		&.next-page {
+			min-width: 30px !important;
+		}
+	}
+
+	#current-page-selector {
+		min-height: 32px;
+		width: 40px;
 	}
 }

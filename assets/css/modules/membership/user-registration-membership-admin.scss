@@ -753,8 +753,8 @@
 											}
 
 											.ur-membership-upgrade-types {
-												width: max-content;
-												max-width: 100%;
+												width: 100%;
+												max-width: 220px;
 												margin-bottom: 0;
 												border-radius: $border_radius_4;
 												border: $border_width solid $border-color;
@@ -763,7 +763,6 @@
 												cursor: pointer;
 												display: flex;
 												align-items: center;
-												flex-direction: row-reverse;
 												gap: $spacing_12px;
 
 												.ur-membership-upgrade-type {
@@ -1226,7 +1225,8 @@
 		background-repeat: no-repeat;
 		background-position: center;
 		background-size: 100%;
-		display: block;
+		position: absolute;
+		right: $spacing_12px;
 		border-radius: $border_radius_2;
 		width: 18px;
 		height: 18px;
