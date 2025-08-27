@@ -388,7 +388,7 @@ class UR_Emailer {
 			$message = self::parse_smart_tags( $message, $values, $name_value );
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
-			if( ur_option_checked( 'user_registration_enable_email_confirmation' ) ) {
+			if( ur_option_checked( 'user_registration_enable_email_confirmation', true ) ) {
 				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), $attachment, $template_id );
 			}
 		} elseif ( 0 === intval( $status ) || ( '1' === $email_status && isset( $user_status ) && ! ur_string_to_bool( $user_status ) ) ) {
