@@ -358,6 +358,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 
 			if ( ! empty( $form_settings ) ) {
 				foreach ( $form_settings as $setting ) {
+					if( isset( $setting[ 'id' ] ) && isset( $setting[ 'product' ] ) ) {
 					$setting_id             = $setting['id'];
 					$product                = $setting['product'];
 					$value = get_post_meta( $form_id, $setting_id, true );
