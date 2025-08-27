@@ -1732,7 +1732,10 @@ body {
 	&.user-registration-membership_page_user-registration-login-forms {
 		.user-registration {
 			&.ur-frontend-form {
-				max-width: 100%;
+				&:has(.ur-grid-2),
+				&:has(.ur-grid-3) {
+					max-width: 100%;
+				}
 
 				form {
 					.ur-button-container {
@@ -2429,15 +2432,9 @@ body {
 					}
 				}
 			}
-
-			&.ur-frontend-form {
-				max-width: 100%;
-				// padding: 0;
-				// background: transparent;
-				// box-shadow: none;
-			}
 		}
 	}
+	
 	&.woocommerce-checkout {
 		.user-registration.urwc-form {
 			all: unset;

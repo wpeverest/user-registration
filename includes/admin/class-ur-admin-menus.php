@@ -1161,7 +1161,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 
 			}
 			echo '<div class="ur-row-buttons" data-total-rows="' . esc_attr( $last_id ) . '">';
-				echo '<button type="button" class="button button-primary dashicons dashicons-plus-alt ur-add-new-row">' . esc_html__( 'Add New', 'user-registration' ) . '</button>';
+				echo '<button type="button" class="button button-tertiary dashicons dashicons-plus-alt ur-add-new-row">' . esc_html__( 'Add New', 'user-registration' ) . '</button>';
 				do_action( 'user_registration_form_builder_row_buttons' );
 				echo '</div>';
 				echo '</div>';
