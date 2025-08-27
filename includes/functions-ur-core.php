@@ -3138,7 +3138,9 @@ if ( ! function_exists( 'ur_install_extensions' ) ) {
 				if ( is_plugin_inactive( $install_status['file'] ) ) {
 					if( $install_status['file'] === 'user-registration-pro/user-registration.php' ) {
 						$status['plugin'] = 'user-registration-pro/user-registration.php';
-						setcookie('urm_license_status', 'pro_activated', time() + 300, '/', '', false, false);
+						if( ! is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
+							setcookie('urm_license_status', 'pro_activated', time() + 300, '/', '', false, false);
+						}
 						activate_plugin( $install_status['file'] );
 					}
 					$status['activateUrl'] =
