@@ -2272,7 +2272,6 @@ body {
 									align-items: center;
 									justify-content: space-between;
 									gap: 12px;
-									flex-wrap: wrap;
 									flex-direction: row;
 									margin-top: -4px;
 									float: unset;
@@ -2434,7 +2433,7 @@ body {
 			}
 		}
 	}
-	
+
 	&.woocommerce-checkout {
 		.user-registration.urwc-form {
 			all: unset;
