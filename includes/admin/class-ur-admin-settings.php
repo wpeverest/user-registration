@@ -286,7 +286,7 @@ class UR_Admin_Settings {
 					'continue_to_dashboard_text' => esc_html__( 'Continue to dashboard', 'user-registration' ),
 
 					'upgrade_plan'      => esc_html__( 'Upgrade Plan', 'user-registration' ),
-					'upgrade_link'      => esc_url( 'https://wpuserregistration.com/pricing/?utm_source=integration-settings&utm_medium=premium-addon-popup&utm_campaign=' . urlencode( UR()->utm_campaign ) ),
+					'upgrade_link'      => esc_url( 'https://wpuserregistration.com/upgrade/?utm_source=integration-settings&utm_medium=premium-addon-popup&utm_campaign=' . urlencode( UR()->utm_campaign ) ),
 				),
 				'is_advanced_field_active' => is_plugin_active( 'user-registration-advanced-fields/user-registration-advanced-fields.php' ),
 			)

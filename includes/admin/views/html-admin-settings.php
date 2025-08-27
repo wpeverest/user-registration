@@ -264,7 +264,7 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 											<path fill-rule="evenodd" clip-rule="evenodd" d="M17.1055 22.666L19.0896 39.3327H42.8991L44.8833 22.666L30.9944 34.1243L17.1055 22.666ZM42.9037 40.9155H19.0942V44.8838H42.9037V40.9155Z" fill="white"/>
 										</svg>';
 						$content .= '<p>' . esc_html__( 'Get More Features with Pro', 'user-registration' ) . '</p>';
-						$content .= '<a rel="noreferrer noopener" target="_blank" href="https://wpuserregistration.com/pricing/?utm_source=settings-sidebar-right&amp;utm_medium=premium-benefits-card&amp;utm_campaign=lite-version">Upgrade to Pro</a>';
+						$content .= '<a rel="noreferrer noopener" target="_blank" href="https://wpuserregistration.com/upgrade/?utm_source=settings-sidebar-right&amp;utm_medium=premium-benefits-card&amp;utm_campaign=lite-version">Upgrade to Pro</a>';
 						$content .= '</div>';
 						$content .= '</div>';
 						echo $content; // phpcs:ignore

@@ -137,7 +137,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 				wp_redirect( remove_query_arg( array( 'deactivated_license', $this->plugin_slug . '_deactivate_license' ), add_query_arg( 'activated_license', $this->plugin_slug ) ) );
 				exit;
 			}
-		}	
+		}
 		if ( isset( $_GET['_wpnonce'] ) ) {
 			if ( ! wp_verify_nonce( $_GET['_wpnonce'], '_ur_license_nonce' ) ) {
 				return;
@@ -532,7 +532,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 		} else {
 			$content .= sprintf( '<p class="extra-pad"><strong>%1$s</strong>, %2$s</p>', __( 'If you already have an active license key.', 'user-registration' ), __( 'please activate the key.', 'user-registration' ) );
 			$content .= sprintf( '<p class="extra-pad"><strong>%1$s</strong>, %2$s</p>', __( 'If you do not have active premium license of User Registration', 'user-registration' ), __( 'please purchase premium license. Going forward active premium license will be vital for smooth running of premium addons of User Registration that you are currently using.', 'user-registration' ) );
-			$link    .= '<li><a class="button button-primary" href="' . esc_url_raw( 'https://wpuserregistration.com/pricing/?utm_source=user-dashboard&utm_medium=notice-3.0.0&utm_campaign=user-registration-pro-3.0.0' ) . '" rel="noreferrer noopener" target="_blank"><span class="dashicons dashicons-external"></span>' . __( 'Purchase Premium License', 'user-registration' ) . '</a></li>';
+			$link    .= '<li><a class="button button-primary" href="' . esc_url_raw( 'https://wpuserregistration.com/upgrade/?utm_source=user-dashboard&utm_medium=notice-3.0.0&utm_campaign=user-registration-pro-3.0.0' ) . '" rel="noreferrer noopener" target="_blank"><span class="dashicons dashicons-external"></span>' . __( 'Purchase Premium License', 'user-registration' ) . '</a></li>';
 			$link    .= '<li><a class="button button-secondary" href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=license' ) ) . '" rel="noreferrer noopener" target="_blank"><span class="dashicons dashicons-external"></span>' . __( 'Activate License Key', 'user-registration' ) . '</a></li>';
 		}
 

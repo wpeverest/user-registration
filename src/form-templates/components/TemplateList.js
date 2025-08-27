@@ -675,7 +675,7 @@ const TemplateList = ({ selectedCategory, templates }) => {
 							{__("OK", "user-registration")}
 						</Button>
 						<a
-							href="https://wpuserregistration.com/pricing/?utm_source=form-template&utm_medium=premium-form-templates-popup&utm_campaign=lite-version"
+							href="https://wpuserregistration.com/upgrade/?utm_source=form-template&utm_medium=premium-form-templates-popup&utm_campaign=lite-version"
 							target="_blank"
 							rel="noopener noreferrer"
 							style={{
