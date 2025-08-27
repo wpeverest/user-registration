@@ -240,7 +240,6 @@ jQuery(function ($) {
 		"click",
 		function (e) {
 			e.preventDefault();
-			user_registration_profile_picture_upload.remove_avatar($(this));
 
 			$(this)
 				.closest(".user-registration-profile-header")

@@ -144,7 +144,7 @@ if ( 'vertical' === $layout ) {
 										);
 										?>
 											</strong></p>
-										<p class="ur-profile-image-updated-message" style="display:none;"><strong> <?php echo esc_html( 'You\'ve uploaded a profile image. You can change or remove it below.', 'user-registration' ); ?></strong></p>
+										<p class="ur-profile-image-updated-message" style="display:none;"><strong> <?php echo esc_html( 'You\'ve uploaded a profile image. You can change it below.', 'user-registration' ); ?></strong></p>
 										<div class="button-group">
 											<?php
 
