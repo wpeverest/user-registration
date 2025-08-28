@@ -50,7 +50,6 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 		 */
 		public function get_sections() {
 			$sections = array(
-				'' => __( 'License', 'user-registration' ),
 			);
 
 			/**
@@ -106,7 +105,7 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 			if( is_plugin_active( 'user-registration/user-registration.php' ) ) {
 				$img = UR()->plugin_url() . '/assets/images/rocket.gif';
 				$license_message = false !== ur_get_license_plan() ? '' : '<br>No license is required. Enjoy!';
-				$settings['sections']['license_options_settings']['before_desc'] = __( 'You\'re currently using the free version of User Registration & Membership.' . $license_message. '<br><br>To unlock advanced features and extended functionality, consider <a target="_blank" href="' . esc_url( 'https://wpuserregistration.com/pricing/?utm_source=ur-license-setting&utm_medium=upgrade-link&utm_campaign=' . UR()->utm_campaign ) . '">Upgrading to Pro.</a>', 'user-registration' );
+				$settings['sections']['license_options_settings']['before_desc'] = __( 'You\'re currently using the free version of User Registration & Membership.' . $license_message. '<br><br>To unlock advanced features and extended functionality, consider <a target="_blank" href="' . esc_url( 'https://wpuserregistration.com/upgrade/?utm_source=ur-license-setting&utm_medium=upgrade-link&utm_campaign=' . UR()->utm_campaign ) . '">Upgrading to Pro.</a>', 'user-registration' );
 				$settings['sections']['license_options_settings']['desc'] = wp_kses_post( __('<img style="width:20px;height:20px;" src="' . $img . '" /> <span>Already purchased a license? Enter your license key below to activate PRO features.</span>', 'user-registration' ) );
 			}
 

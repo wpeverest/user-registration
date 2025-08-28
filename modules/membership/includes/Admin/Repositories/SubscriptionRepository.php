@@ -91,7 +91,7 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 
 			if ( $cancel_sub['status'] ) {
 
-				$this->update( $subscription_id, array( 'status' => 'canceled', 'subscription_id' => '' ) );
+				$this->update( $subscription_id, array( 'status' => 'canceled', ) );
 				if ( $send_email ) {
 					$subscription_service->send_cancel_emails( $subscription_id );
 				}
@@ -107,9 +107,9 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 		}
 
 	}
-	public function reactivate_subscription( $subscription_id, $send_email = true ) {
+	public function reactivate_subscription_by_id( $subscription_id, $send_email = true ) {
 		$subscription = $this->retrieve( $subscription_id );
-		
+
 		if( 'active' === $subscription[ 'status' ] ) {
 			return array(
 				'status' => false,
@@ -118,6 +118,10 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 		}
 
 		if( 'expired' !== $subscription[ 'status' ] ) {
+			$order = $this->orders_repository->get_order_by_subscription( $subscription_id );
+
+			$subscription_service = new SubscriptionService();
+			$subscription_service->reactivate_subscription( $order, $subscription );
 			$result = $this->update(
 				$subscription_id,
 				array(

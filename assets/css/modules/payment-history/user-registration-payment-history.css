@@ -98,3 +98,7 @@ body.user-registration #user-registration-pro-filters-row .search-box {
 body.user-registration #ur-membership-payment-history-form .tablenav .bulkactions .select2-container {
   width: 220px !important;
 }
+body.user-registration #ur-membership-order-create-form {
+  width: 100%;
+  max-width: 100%;
+}

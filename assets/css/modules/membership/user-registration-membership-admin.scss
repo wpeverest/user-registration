@@ -753,18 +753,22 @@
 											}
 
 											.ur-membership-upgrade-types {
-												max-width: 230px;
+												width: 100%;
+												max-width: 220px;
 												margin-bottom: 0;
-												border-radius: 4px;
-												border: 1px solid #E9E9E9;
-												background: #FFF;
-												padding: 12px 30px;
+												border-radius: $border_radius_4;
+												border: $border_width solid $border-color;
+												background: $white;
+												padding: $spacing_16px;
 												cursor: pointer;
+												display: flex;
+												align-items: center;
+												gap: $spacing_12px;
 
 												.ur-membership-upgrade-type {
 													&-title {
-														gap: 8px;
-														margin-bottom: 12px;
+														gap: $spacing_8px;
+														margin-bottom: $spacing_12px;
 
 														label {
 															padding: 0 !important;
@@ -773,6 +777,41 @@
 														}
 													}
 
+													&-full {
+														&--label {
+															padding: 0;
+														}
+													}
+												}
+
+												.ur-membership-type-title {
+													gap: $spacing_8px;
+
+													input[type="radio"],
+													.ur-membership-upgrade-type-full--label {
+														cursor: pointer;
+													}
+
+													input[type="radio"] {
+														&:checked::before {
+															background: $primary_color;
+														}
+													}
+												}
+
+												&:has(input[type="radio"]:checked) {
+													border-color: $primary_color;
+												}
+
+												&:has(input:disabled) {
+													cursor: not-allowed;
+
+													.ur-membership-type-title {
+														input[type="radio"],
+														.ur-membership-upgrade-type-full--label {
+															cursor: not-allowed;
+														}
+													}
 												}
 											}
 										}
@@ -869,7 +908,7 @@
 
 								&--wrapper {
 									max-width: 650px;
-									background: #ffffff;
+									background: #f4f4f4;
 									margin-left: 0 !important;
 									padding: $spacing_20px !important;
 									border-radius: $border_radius_4;
@@ -904,7 +943,7 @@
 					}
 
 					#payment-gateway-container {
-						margin-top: $spacing_28px !important;
+						margin-top: 60px;
 
 						.user-registration-card {
 							border-radius: $border_radius_7;
@@ -940,11 +979,21 @@
 									}
 
 									.payment-option-body {
-										border-top: $border_width solid $border_color;
+										border-top: $border_width solid $border-color;
 										margin-top: $spacing_14px;
 										display: flex;
 										flex-direction: column;
 										gap: $spacing_10px;
+
+										a {
+											font-weight: $medium;
+											color: $primary_color;
+
+											&:focus {
+												outline: none;
+												box-shadow: none;
+											}
+										}
 
 										.ur-membership-input-container {
 											padding: 0 !important;
@@ -1177,11 +1226,10 @@
 		background-position: center;
 		background-size: 100%;
 		position: absolute;
-		border-radius: 2px;
-		width: 16px;
-		height: 16px;
-		top: 8px;
-		right: 8px;
+		right: $spacing_12px;
+		border-radius: $border_radius_2;
+		width: 18px;
+		height: 18px;
 	}
 }
 

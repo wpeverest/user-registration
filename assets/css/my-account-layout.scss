@@ -607,8 +607,24 @@
 							}
 						}
 
-						&.cancel-membership-button:hover, &.change-membership-button:hover, &.renew-membership-button:hover, &.reactivate-membership-button:hover {
-							background: #80808021;
+						&.cancel-membership-button:hover {
+							background: red;
+							color: white;
+						}
+
+						&.change-membership-button:hover {
+							background: $primary_color;
+							color: white;
+						}
+
+						&.renew-membership-button:hover {
+							background: #00ab02;
+							color: white;
+						}
+
+						&.reactivate-membership-button:hover {
+							background: #0067ab;
+							color: white;
 						}
 
 						&.cancel-membership-button:focus, &.change-membership-button:focus, &.renew-membership-button:focus, &.reactivate-membership-button:focus {
@@ -1361,7 +1377,7 @@ body {
 
   p {
     color: #444;
-    font-size: 13px;
+    font-size: 15px;
     line-height: 1.5;
 
 	&.pro-tip,

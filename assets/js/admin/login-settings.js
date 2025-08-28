@@ -19,7 +19,7 @@
 			});
 			$(document).on(
 				"click",
-				'ul.ur-tab-lists li[aria-controls="ur-tab-field-options"]',
+				'.user-registration-login-form-container ul.ur-tab-lists li[aria-controls="ur-tab-field-options"]',
 				function () {
 					$("form#ur-field-settings").hide();
 					$(".ur-login-form-wrapper").show();
@@ -27,7 +27,7 @@
 			);
 			$(document).on(
 				"click",
-				'ul.ur-tab-lists li[aria-controls="ur-tab-login-form-settings"]',
+				'.user-registration-login-form-container ul.ur-tab-lists li[aria-controls="ur-tab-login-form-settings"]',
 				function () {
 					$(".ur-login-form-wrapper").hide();
 					$("form#ur-field-settings").show();
@@ -298,7 +298,7 @@
 			$("#user_registration_label_remember_me")
 				.closest(".user-registration-login-form-global-settings")
 				.show()
-				.css("display", "flex");
+				.css("display", "block");
 		} else {
 			$("#user_registration_label_remember_me")
 				.closest(".user-registration-login-form-global-settings")

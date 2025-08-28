@@ -62,7 +62,6 @@ class ListTable extends \UR_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'              => '<input type="checkbox" />',
 			'title'           => __( 'Membership Name', 'user-registration' ),
 			'membership_price' => __( 'Membership Price', 'user-registration' ),
 			'membership_type' => __( 'Membership Plan Type', 'user-registration' ),
@@ -108,7 +107,18 @@ class ListTable extends \UR_List_Table {
 
 		return array();
 	}
-
+	/**
+	 * @param $membership
+	 *
+	 * @return string
+	 */
+	public function column_title( $membership ) {
+		$post_title = '';
+		if(!empty($membership)) {
+			$post_title = $membership->post_title;
+		}
+		return $post_title;
+	}
 	/**
 	 * @param $membership
 	 *
@@ -208,6 +218,7 @@ class ListTable extends \UR_List_Table {
 		$actions .= '<span class="delete">';
 		$actions .= '<a
 						class="delete-membership"
+						data-membership-id="'. esc_attr( $membership->ID ) . '"
 						aria-label="' . esc_attr__( 'Delete this item', 'user-registration' ) . '"
 						href="' . esc_url( $delete_link ) . '"
 					>' . esc_html__( 'Delete', 'user-registration' ) . '</a>';

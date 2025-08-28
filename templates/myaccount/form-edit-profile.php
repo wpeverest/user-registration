@@ -144,7 +144,7 @@ if ( 'vertical' === $layout ) {
 										);
 										?>
 											</strong></p>
-										<p class="ur-profile-image-updated-message" style="display:none;"><strong> <?php echo esc_html( 'You\'ve uploaded a profile image. You can change or remove it below.', 'user-registration' ); ?></strong></p>
+										<p class="ur-profile-image-updated-message" style="display:none;"><strong> <?php echo esc_html( 'You\'ve uploaded a profile image. You can change it below.', 'user-registration' ); ?></strong></p>
 										<div class="button-group">
 											<?php
 
@@ -247,33 +247,23 @@ if ( 'vertical' === $layout ) {
 						?>
 						<p>
 							<?php
+							/**
+							 * Filter to modify the profile update button text.
+							 *
+							 * @param string Text content to be modified.
+							 * @return string button text.
+							 */
+							$submit_btn_text = apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) );
 							if ( ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
 								?>
 								<button type="submit" class="user-registration-submit-Button btn button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" ><span></span>
-									<?php
-									esc_html_e(
-									/**
-									 * Filter to modify the profile update button text.
-									 *
-									 * @param string Text content to be modified.
-									 * @return string button text.
-									 */
-									apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) ) ); //PHPCS:ignore?></button>
+									<?php echo esc_html( $submit_btn_text); ?>
+								</button>
 								<?php
 							} else {
 								wp_nonce_field( 'save_profile_details' );
 								?>
-								<input type="submit" class="user-registration-Button button button-primary <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" value="
-								<?php
-								esc_attr_e(
-								/**
-								 * Filter to modify the profile update button text.
-								 *
-								 * @param string text content for button.
-								 * @return string button text.
-								 */
-									apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) ) );//PHPCS:ignore ?>"
-								/>
+								<input type="submit" class="user-registration-Button button button-primary <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" value="<?php echo esc_attr( $submit_btn_text); ?>"/>
 								<?php
 								echo apply_filters( 'user_registration_edit_profile_extra_data_div', '', $form_id ); // phpcs:ignore.
 								?>

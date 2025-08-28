@@ -11,10 +11,6 @@
         border-bottom: $border_width solid $border_color;
         margin-bottom: $spacing_24px;
         height: 60px;
-        position: sticky;
-        position: -webkit-sticky;
-        top: $spacing_32px;
-        z-index: 1;
 
         @media screen and (max-width: 1199px) {
             position: unset;

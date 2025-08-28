@@ -57,7 +57,10 @@ class UR_Admin_Settings {
 			$settings[] = include 'settings/class-ur-settings-email.php';
 			$settings[] = include 'settings/class-ur-settings-import-export.php';
 			$settings[] = include 'settings/class-ur-settings-misc.php';
-			$settings[] = include 'settings/class-ur-settings-integration.php';
+
+			if( UR_PRO_ACTIVE ) {
+				$settings[] = include 'settings/class-ur-settings-integration.php';
+			}
 
 			$modules = array();
 
@@ -135,7 +138,9 @@ class UR_Admin_Settings {
 		$flag = apply_filters( 'user_registration_settings_prevent_default_login', $_REQUEST );
 
 		if ( $flag && is_bool( $flag ) ) {
-			self::add_message( esc_html__( 'Your settings have been saved.', 'user-registration' ) );
+			if( $current_tab !== 'license' ) {
+				self::add_message( esc_html__( 'Your settings have been saved.', 'user-registration' ) );
+			}
 
 			/**
 			 * Action to save current tab settings
@@ -253,6 +258,7 @@ class UR_Admin_Settings {
 			'user_registration_settings_params',
 			array(
 				'ajax_url'                                                     => admin_url( 'admin-ajax.php' ),
+				'assets_url'												   => UR_ASSETS_URL,
 				'ur_license_nonce'											   => wp_create_nonce( '_ur_license_nonce' ),
 				'user_registration_search_global_settings_nonce'               => wp_create_nonce( 'user_registration_search_global_settings' ),
 				'user_registration_captcha_test_nonce'                         => wp_create_nonce( 'user_registration_captcha_test_nonce' ),
@@ -282,7 +288,7 @@ class UR_Admin_Settings {
 					'continue_to_dashboard_text' => esc_html__( 'Continue to dashboard', 'user-registration' ),
 
 					'upgrade_plan'      => esc_html__( 'Upgrade Plan', 'user-registration' ),
-					'upgrade_link'      => esc_url( 'https://wpuserregistration.com/pricing/?utm_source=integration-settings&utm_medium=premium-addon-popup&utm_campaign=' . urlencode( UR()->utm_campaign ) ),
+					'upgrade_link'      => esc_url( 'https://wpuserregistration.com/upgrade/?utm_source=integration-settings&utm_medium=premium-addon-popup&utm_campaign=' . urlencode( UR()->utm_campaign ) ),
 				),
 				'is_advanced_field_active' => is_plugin_active( 'user-registration-advanced-fields/user-registration-advanced-fields.php' ),
 			)

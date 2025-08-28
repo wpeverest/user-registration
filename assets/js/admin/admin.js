@@ -783,11 +783,11 @@ jQuery(function ($) {
 				$("#user_registration_lost_password_page_id")
 					.closest(".user-registration-login-form-global-settings")
 					.show()
-					.css("display", "flex");
+					.css("display", "block");
 				$("#user_registration_label_lost_your_password")
 					.closest(".user-registration-login-form-global-settings")
 					.show()
-					.css("display", "flex");
+					.css("display", "block");
 			} else {
 				$("#user_registration_lost_password_page_id")
 					.closest(".user-registration-login-form-global-settings")
@@ -1123,9 +1123,9 @@ jQuery(function ($) {
 			if (enable_custom_password) {
 				custom_password_params.show();
 			}
-			minimum_password_strength_wrapper_field.show("slow");
+			minimum_password_strength_wrapper_field.show();
 		} else {
-			minimum_password_strength_wrapper_field.hide("slow");
+			minimum_password_strength_wrapper_field.hide();
 			custom_password_params.hide();
 		}
 	});
@@ -1190,7 +1190,9 @@ jQuery(function ($) {
 			form_row.find("#ur-rar-url-notice").remove();
 			if (
 				login_options.length == 1 &&
-				login_options.val() == "email_confirmation"
+				(login_options.val() == "email_confirmation" ||
+					login_options.val() ==
+						"admin_approval_after_email_confirmation")
 			) {
 				show_email_confirmation_disabled_notice(form_row);
 			}
@@ -1256,7 +1258,14 @@ jQuery(function ($) {
 			' <div id="ur-rar-url-notice" style="padding:10px;  border: 1px solid #c3c4c7; border-left-color: #ffa900; border-left-width: 4px; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04)">' +
 			user_registration_form_builder_data.i18n_default_redirection_notice_for_membership +
 			"</div>";
-		form_row.append(notice);
+		form_row.find(".ur-settings-field").append(notice);
+	};
+	var show_email_confirmation_disabled_notice = function (form_row) {
+		var notice =
+			' <div id="ur-rar-url-notice" style="padding:10px;  border: 1px solid #c3c4c7; border-left-color: #ffa900; border-left-width: 4px; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04)">' +
+			user_registration_form_builder_data.i18n_email_confirmation_disabled_notice +
+			"</div>";
+		form_row.find(".ur-settings-field").append(notice);
 	};
 	var show_email_confirmation_disabled_notice = function (form_row) {
 		var notice =

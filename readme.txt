@@ -4,7 +4,7 @@ Tags: user registration, membership, user profile, registration form, login form
 Requires at least: 5.5
 Requires PHP: 7.2
 Tested up to: 6.8.2
-Stable tag: 4.3.0
+Stable tag: 4.4.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -257,6 +257,59 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 21. User Account Page –  Vertical Layout
 
 == Changelog ==
+= 4.4.0    - 28/08/2025 =
+* Security - Updated sql prepare for members list table query.
+* Refactor - Remove anyone can register dependency.
+* Refactor - Remove logout confirmation toggle setting.
+* Feature  - User Listing in Admin Side.
+* Feature  - Manually add payment record.
+* Feature  - Manual Payment renewal for membership.
+* Feature  - Reactivate Membership functionality for membership cancelled users.
+* Feature  - My account profile edit page for users not registered via URM forms.
+* Enhance  - Activate License settings.
+* Enhance  - Login form builder re-design.
+* Enhance  - Registration form settings design.
+* Enhance  - Improve profile picture upload UX.
+* Enhance  - Better email delivery failure detection.
+* Enhance  - Option to re-run setup wizard from Tools.
+* Enhance  - Option to restore default email templates.
+* Enhance  - Unified header across all URM admin pages.
+* Enhance  - Reset Password Page created on first install.
+* Enhance  - Email verification confirmation success toast display.
+* Enhance  - Prevent deleting membership plan while users are assigned.
+* Enhance  - Add more default currencies and validation for payment gateway compatibility.
+* Tweak    - Classname consistency for all buttons.
+* Tweak    - Update the label from Frontend Messages to Form Messages.
+* Tweak    - Improve smart tags link label and design in email settings.
+* Tweak    - Display membership plan in profile detail for frontend listing.
+* Dev      - Properly track plugin settings data.
+* Dev      - Filter to hide my account page selection notice.
+* Fix      - Ajax and Nonce related issues.
+* Fix      - Translation issue in membership.
+* Fix      - Form Templates responsive issue.
+* Fix      - Design issue all fields smart tag.
+* Fix      - Field Label translation in Polylang.
+* Fix      - Design glitch in membership settings.
+* Fix      - Prevent login form resubmission on reload.
+* Fix      - Override global setting retain in page reload.
+* Fix      - Errors for deleted membership in membership tab.
+* Fix      - WooCommerce required fields validation not working.
+* Fix      - Email notification to user on admin profile update.
+* Fix      - Array index not found issue in coupon for membership.
+* Fix      - 502 bad gateway issue while exporting large user base.
+* Fix      - Theme style not overriding the plugin design styles.
+* Fix      - Undefined error message displayed while creating member.
+* Fix      - Partial restriction not working on section of Elementor.
+* Fix      - Confusion around email confirmation email being always active.
+* Fix      - Inconsistent gaping in registration form fields advanced options.
+* Fix      - Payment invoice smart tag issue while membership module deactivated.
+* Fix      - Fatal error when editing user from default admin user edit dashboard.
+* Fix      - Membership field is locked even when payment methods are not enabled.
+* Fix      - Validation for hidden fields in field visibility throwing issue on profile update.
+* Fix      - Fatal error while sending payment successful email when membership module deactivated.
+* Fix      - All forms smart tag not working for admin approval link email after email confirmation.
+* Fix      - Override content restriction message not displayed when content is restricted for individual pages.
+
 = 4.3.0    - 17/07/2025 =
 * Security - Cross Site Scripting Vulnerability with urcr_restrict shortcode
 * Feature  - Membership upgrade.

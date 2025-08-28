@@ -1376,32 +1376,34 @@
 	) {
 		ur_remove_cookie("urm_license_status");
 		var urmProInstallHtml =
-			'<div style="display: flex; align-items: center; width: 60%;margin: 20px auto; position: relative;">' +
-			'<img src="/wp-content/plugins/user-registration/assets/images/logo.png" alt="URM Logo" width="50" style="margin: 0 20px;" />' +
-			'<img src="/wp-content/plugins/user-registration/assets/images/connect.gif" alt="Connect gif" >' +
-			'<img src="https://upload.wikimedia.org/wikipedia/commons/9/98/WordPress_blue_logo.svg" ' +
+			'<div style="display: flex; align-items: center; width: 60%;margin: 0px auto; position: relative;">' +
+			'<img src="' +
+			user_registration_settings_params.assets_url +
+			'/images/logo.png" alt="URM Logo" width="50" style="margin: 0 20px;" />' +
+			'<img src="' +
+			user_registration_settings_params.assets_url +
+			'/images/connect.gif" alt="Connect gif" >' +
+			'<img src="' +
+			user_registration_settings_params.assets_url +
+			'/images/wordpress.png" ' +
 			'alt="WordPress Logo" width="50" style="margin: 0 10px 0 30px;" />' +
 			"</div>" +
-			'<p style="margin-bottom: 20px;font-size:0.9rem;">' +
+			'<p style="margin-bottom: 20px;font-size:13px;text-align:center;">' +
 			user_registration_settings_params.i18n.license_activated_text +
 			"</p>" +
-			'<form method="post">' +
+			'<form method="post" class="ur-install-urm-pro">' +
 			'<input type="hidden" name="download_user_registration_pro" value="1" />' +
 			'<input type="hidden" name="ur_license_nonce" value="' +
 			user_registration_settings_params.ur_license_nonce +
 			'" />' +
-			'<button id="install-urm-pro-btn" class="swal2-confirm button-primary" style="margin-bottom: 20px;">' +
+			'<button id="install-urm-pro-btn" class="swal2-confirm button button-primary" style="margin-bottom: 20px;">' +
 			user_registration_settings_params.i18n.pro_install_popup_button +
 			"</button>" +
 			"</form>" +
-			'<div class="user-registration-settings-container">' +
-			'<div class="user-registration-options-container">' +
-			'<p class="ur-p-tag" style="font-size:0.9rem;">' +
+			'<p class="ur-install-urm-pro-p-tag" style="font-size:13px;text-align:center;">' +
 			user_registration_settings_params.i18n
 				.will_install_and_activate_pro_text +
-			"</p>" +
-			"</div>" +
-			"</div>";
+			"</p>";
 		Swal.fire({
 			title: user_registration_settings_params.i18n
 				.pro_install_popup_title,
@@ -1409,9 +1411,8 @@
 			showConfirmButton: false,
 			showCloseButton: false,
 			allowOutsideClick: false,
-			customClass: {
-				title: "install-urm-pro-title"
-			},
+			customClass:
+				"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-swal2-modal--install-urm-pro",
 			width: 600,
 			didOpen: function () {
 				$("#install-urm-pro-btn").on("click", function () {

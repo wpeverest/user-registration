@@ -142,7 +142,23 @@ class SubscriptionService {
 				return apply_filters( 'user_registration_membership_cancel_subscription', array( 'status' => false ), $order, $subscription );
 		}
 	}
-
+	public function reactivate_subscription( $order, $subscription ) {
+		$logger = ur_get_logger();
+		$response = array( 'status' => false );
+		switch ( $order['payment_method'] ) {
+			case 'paypal';
+				$paypal_service = new PaypalService();
+				$logger->notice( 'Paypal reactivation Reached', array( 'source' => 'urm-reactivation-log' ) );
+				return $paypal_service->reactivate_subscription( $subscription[ 'subscription_id' ] );
+				break;
+			case 'stripe':
+				$stripe_service = new StripeService();
+				return $stripe_service->reactivate_subscription( $subscription[ 'subscription_id' ]  );
+				break;
+			default:
+				return apply_filters( 'urm_reactivate_membership_subscription', $response, $order, $subscription );
+		}
+	}
 	public function daily_membership_renewal_check() {
 		$days_before_value = get_option( 'user_registration_membership_renewal_reminder_days_before', 1 );
 
@@ -239,8 +255,8 @@ class SubscriptionService {
 			'membership_plan_type'              => esc_html( ucwords( $membership_metas['type'] ) ),
 			'membership_plan_payment_method'    => esc_html( ucwords( isset( $data['order']['payment_method'] ) ? $data['order']['payment_method'] : $data['payment_method'] ) ),
 			'membership_plan_trial_status'      => esc_html( ucwords( $order['trial_status'] ) ),
-			'membership_plan_trial_start_date'  => esc_html( date( 'Y, F d', strtotime( $subscription['trial_start_date'] ) ) ),
-			'membership_plan_trial_end_date'    => esc_html( date( 'Y, F d', strtotime( $subscription['trial_end_date'] ) ) ),
+			'membership_plan_trial_start_date'  => esc_html( date( 'Y, F d', strtotime( !empty($subscription['trial_start_date']) ? $subscription['trial_start_date']: '' ) ) ),
+			'membership_plan_trial_end_date'    => esc_html( date( 'Y, F d', strtotime( !empty($subscription['trial_end_date']) ? $subscription['trial_end_date'] : '' ) ) ),
 			'membership_plan_next_billing_date' => esc_html( date( 'Y, F d', strtotime( $subscription['next_billing_date'] ) ) ),
 			'membership_plan_expiry_date'       => esc_html( date( 'Y, F d', strtotime( $subscription['expiry_date'] ) ) ),
 			'membership_plan_status'            => esc_html( ucwords( $subscription['status'] ) ),
@@ -598,8 +614,7 @@ class SubscriptionService {
 		);
 		$this->update_membership_renewal_metas( $member_id );
 
-		$orders_data = $order_service->prepare_orders_data( $members_data, $member_id, $member_subscription, [], $is_renewal ); // prepare data for orders table.
-
+		$orders_data = $order_service->prepare_orders_data( $members_data, $member_id, $member_subscription, [], true ); // prepare data for orders table.
 		$order = $this->orders_repository->create( $orders_data );
 		ur_get_logger()->notice( __( 'Order created for ' . $username . ' Order ID: ' . $order['ID'], 'user-registration-membership' ), array( 'source' => 'urm-renew-subscription' ) );
 		$payment_service = new PaymentService( $selected_pg, $membership['ID'], $user->data->user_email );

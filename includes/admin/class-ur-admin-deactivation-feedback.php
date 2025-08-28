@@ -86,7 +86,7 @@ if ( ! class_exists( 'UR_Admin_Deactivation_Feedback', false ) ) :
 					'title'             => sprintf( '%s <a href="%s" rel="noreferrer noopener" target="_blank">here</a>', esc_html__( 'I didn\'t find the feature I was looking for. Kindly request it ', 'user-registration' ), esc_url_raw( 'https://user-registration.feedbear.com/roadmap' ) ),
 				),
 				'complex_to_use'         => array(
-					'title'             => sprintf( '%s <a href="%s" rel="noreferrer noopener" target="_blank">documentation</a> or reach out to our <a href="%s" rel="noreferrer noopener" target="_blank">support team</a>', esc_html__( 'I found the plugin complex to use. Find guidance in the', 'user-registration' ), esc_url_raw( 'https://docs.wpuserregistration.com/docs-category/registration-and-login-form/' ), esc_url_raw( 'https://wpuserregistration.com/support/' ) ),
+					'title'             => sprintf( '%s Reach out to our <a href="%s" rel="noreferrer noopener" target="_blank">support team</a>', esc_html__( 'I found the plugin complex to use. ', 'user-registration' ), esc_url_raw( 'https://wpuserregistration.com/support/' ) ),
 					'input_placeholder' => esc_html__( 'If possible, please elaborate on this', 'user-registration' ),
 				),
 				'found_a_better_plugin'  => array(

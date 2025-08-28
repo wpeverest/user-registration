@@ -164,7 +164,7 @@ if (! class_exists('User_Registration_Users_Menu')) {
 
 				wp_register_style('ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), '1.0.0');
 				wp_enqueue_style('ur-snackbar');
-				wp_register_style('user-registration', UR()->plugin_url() . '/assets/css/user-registration.css', array(), '1.0.0');
+				wp_register_style('user-registration', UR()->plugin_url() . '/assets/css/user-registration.css', array('flatpickr'), '1.0.0');
 				wp_enqueue_style('user-registration');
 			}
 
@@ -371,80 +371,52 @@ if (! class_exists('User_Registration_Users_Menu')) {
 
 			$list_table->prepare_items();
 		?>
-			<div class="ur-admin-page-topnav" id="ur-lists-page-topnav">
-				<div class="ur-page-title__wrapper">
-					<div class="ur-page-title__wrapper-logo">
-						<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
-							<path
-								d="M29.2401 2.25439C27.1109 3.50683 25.107 5.13503 23.3536 6.88846C21.6002 8.64188 19.972 10.6458 18.7195 12.6497C19.5962 14.4031 20.3477 16.1566 20.9739 18.0352C22.1011 15.6556 23.4788 13.5264 25.2323 11.6477V18.4109C25.2323 22.544 22.4769 26.1761 18.4691 27.3033H18.2185C17.9681 24.047 17.2166 20.9158 16.0894 17.91C14.4612 13.7769 11.9563 10.0196 8.69995 6.88846C6.94652 5.13503 4.94263 3.63208 2.81347 2.25439L2.3125 2.00388V18.2857C2.3125 24.9237 7.07177 30.6849 13.7097 31.8121H13.835C15.3379 32.0626 16.8409 32.0626 18.2185 31.8121H18.3438C24.9818 30.6849 29.7411 24.9237 29.7411 18.2857V2.00388L29.2401 2.25439ZM6.82128 18.2857V11.6477C10.7039 16.0313 13.0835 21.4168 13.5845 27.1781C9.57669 26.0509 6.82128 22.4188 6.82128 18.2857ZM15.9642 0C14.0855 0 12.5825 1.50291 12.5825 3.38158C12.5825 5.26025 14.0855 6.7632 15.9642 6.7632C17.8428 6.7632 19.3457 5.26025 19.3457 3.38158C19.3457 1.50291 17.8428 0 15.9642 0Z"
-								fill="#475BB2" />
-						</svg>
-					</div>
-					<div class="ur-page-title__wrapper-menu">
-						<h2 class="ur-page-title">
-							<?php esc_html_e('All Users', 'user-registration'); ?>
-						</h2>
-					</div>
+			<hr class="wp-header-end">
+			<?php echo user_registration_plugin_main_header(); ?>
+			<div id="user-registration-list-table-page" class="user-registration-users-page">
+				<div class="user-registration-list-table-heading" bis_skin_checked="1">
+					<h1>
+						<?php echo esc_html__( 'All Users', 'user-registration' ); ?>
+					</h1>
 				</div>
-				<div class="ur-page-actions">
-					<button id="ur-lists-page-settings-button" class="ur-button-primary"
-						title="<?php esc_html_e('Screen Options', 'user-registration'); ?>">
-						<?php esc_html_e('Screen Options', 'user-registration'); ?>
-						<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
-							<path
-								d="M6 8.75C5.85 8.75 5.75 8.7 5.65 8.6L1.15 4.1C0.95 3.9 0.95 3.6 1.15 3.4C1.35 3.2 1.65 3.2 1.85 3.4L6 7.55L10.15 3.4C10.35 3.2 10.65 3.2 10.85 3.4C11.05 3.6 11.05 3.9 10.85 4.1L6.35 8.6C6.25 8.7 6.15 8.75 6 8.75Z"
-								fill="#383838" />
-						</svg>
-					</button>
-					<a href="<?php echo esc_url_raw(admin_url('admin.php?page=user-registration-settings&tab=import_export')); ?>"
-						title="<?php esc_html_e('Export Users', 'user-registration'); ?>" rel="noreferrer noopener"
-						target="_blank">
-						<button class="button ur-button-primary">Export</button>
-					</a>
-				</div>
-			</div>
-			<span class="wp-header-end"></span>
-			<div class="user-registration-list-table-container">
-				<div id="user-registration-list-table-page" class="user-registration-users-page">
-					<div id="user-registration-list-filters-row">
-						<?php
-						$list_table->display_filters();
-						?>
-						<form method="get" id="user-registration-list-search-form">
-							<input type="hidden" name="page" value="user-registration-users" />
-
-							<?php
-							$list_table->display_search_box();
-
-							if (! empty($_REQUEST['role'])) {
-							?>
-								<input type="hidden" name="role" value="<?php echo esc_attr($_REQUEST['role']); ?>" />
-							<?php } ?>
-						</form>
-					</div>
-					<hr>
-					<form method="get" id="user-registration-users-action-form"
-						class="user-registration-list-table-action-form">
+				<div id="user-registration-list-filters-row">
+					<?php
+					$list_table->display_filters();
+					?>
+					<form method="get" id="user-registration-list-search-form">
 						<input type="hidden" name="page" value="user-registration-users" />
 
-						<?php if (! empty($_REQUEST['role'])) { ?>
+						<?php
+						$list_table->display_search_box();
+
+						if (! empty($_REQUEST['role'])) {
+						?>
 							<input type="hidden" name="role" value="<?php echo esc_attr($_REQUEST['role']); ?>" />
 						<?php } ?>
-
-						<?php $list_table->display(); ?>
 					</form>
-					<?php
-					if (isset($_GET['form_filter'])) {
-						$form_id = (int) sanitize_text_field(wp_unslash($_GET['form_filter']));
-
-						printf(
-							"<input type='hidden' id='user-registration-users-form-id' value='%d'>",
-							esc_attr($form_id)
-						);
-					}
-					?>
-					<div class="clear"></div>
 				</div>
+				<hr>
+				<form method="get" id="user-registration-users-action-form"
+					class="user-registration-list-table-action-form">
+					<input type="hidden" name="page" value="user-registration-users" />
+
+					<?php if (! empty($_REQUEST['role'])) { ?>
+						<input type="hidden" name="role" value="<?php echo esc_attr($_REQUEST['role']); ?>" />
+					<?php } ?>
+
+					<?php $list_table->display(); ?>
+				</form>
+				<?php
+				if (isset($_GET['form_filter'])) {
+					$form_id = (int) sanitize_text_field(wp_unslash($_GET['form_filter']));
+
+					printf(
+						"<input type='hidden' id='user-registration-users-form-id' value='%d'>",
+						esc_attr($form_id)
+					);
+				}
+				?>
+				<div class="clear"></div>
 			</div>
 		<?php
 		}
@@ -479,20 +451,19 @@ if (! class_exists('User_Registration_Users_Menu')) {
 			$form_field_data_array = user_registration_profile_details_form_fields($form_id);
 			$user_data_to_show     = user_registration_profile_details_form_field_datas($form_id, $user_data, $form_field_data_array);
 			$show_profile_picture  = get_option('user_registration_disable_profile_picture', true);
+			$back_url = admin_url( 'admin.php?page=user-registration-users');
 		?>
 			<div class="ur-admin-page-topnav" id="ur-lists-page-topnav">
 				<div class="ur-page-title__wrapper">
-					<div class="ur-page-title__wrapper-logo">
-						<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
-							<path
-								d="M29.2401 2.25439C27.1109 3.50683 25.107 5.13503 23.3536 6.88846C21.6002 8.64188 19.972 10.6458 18.7195 12.6497C19.5962 14.4031 20.3477 16.1566 20.9739 18.0352C22.1011 15.6556 23.4788 13.5264 25.2323 11.6477V18.4109C25.2323 22.544 22.4769 26.1761 18.4691 27.3033H18.2185C17.9681 24.047 17.2166 20.9158 16.0894 17.91C14.4612 13.7769 11.9563 10.0196 8.69995 6.88846C6.94652 5.13503 4.94263 3.63208 2.81347 2.25439L2.3125 2.00388V18.2857C2.3125 24.9237 7.07177 30.6849 13.7097 31.8121H13.835C15.3379 32.0626 16.8409 32.0626 18.2185 31.8121H18.3438C24.9818 30.6849 29.7411 24.9237 29.7411 18.2857V2.00388L29.2401 2.25439ZM6.82128 18.2857V11.6477C10.7039 16.0313 13.0835 21.4168 13.5845 27.1781C9.57669 26.0509 6.82128 22.4188 6.82128 18.2857ZM15.9642 0C14.0855 0 12.5825 1.50291 12.5825 3.38158C12.5825 5.26025 14.0855 6.7632 15.9642 6.7632C17.8428 6.7632 19.3457 5.26025 19.3457 3.38158C19.3457 1.50291 17.8428 0 15.9642 0Z"
-								fill="#475BB2" />
-						</svg>
-					</div>
-					<div class="ur-page-title__wrapper-menu">
-						<h2 class="ur-page-title">
-							<?php esc_html_e('User Details', 'user-registration'); ?>
-						</h2>
+					<div class="ur-page-title__wrapper--left">
+						<a class="ur-text-muted ur-border-right ur-d-flex ur-mr-2 ur-pl-2 ur-pr-2" href="<?php echo esc_attr( $back_url ); ?>">
+							<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+						</a>
+						<div class="ur-page-title__wrapper--left-menu">
+							<div class="ur-page-title__wrapper--left-menu__items">
+								<p><?php esc_html_e('User Details', 'user-registration'); ?></p>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -889,6 +860,7 @@ if (! class_exists('User_Registration_Users_Menu')) {
 			?>
 			<div class="user-registration-user-body">
 				<div class="user-registration-user-form-details">
+					<?php if( ! empty( $form_data_array ) ): ?>
 					<?php
 					foreach ($form_data_array as $index => $row_data) {
 						$row_id = $index;
@@ -1074,6 +1046,14 @@ if (! class_exists('User_Registration_Users_Menu')) {
 						do_action('user_registration_single_user_view_row_data', $row_id, $row_data, $form_id, $user_id);
 					}
 					?>
+					<?php
+					else:
+					$image_url = esc_url(plugin_dir_url(UR_PLUGIN_FILE) . 'assets/images/empty-table.png');
+					?>
+					<div class="empty-list-table-container">
+						<img src="<?php echo $image_url; ?>" alt="" />
+					</div>
+					<?php endif; ?>
 				</div>
 				<?php do_action('user_registration_single_user_details_content', $user_id, $form_id); ?>
 			</div>

@@ -182,7 +182,7 @@ class UR_Preview {
 			array(
 				'ajax_url'           => admin_url( 'admin-ajax.php' ),
 				'form_preview_nonce' => wp_create_nonce( 'ur_form_preview_nonce' ),
-				'pro_upgrade_link'   => esc_url( 'https://wpuserregistration.com/pricing/?utm_source=form-preview&utm_medium=sidebar-upgrade-button&utm_campaign=' . UR()->utm_campaign ),
+				'pro_upgrade_link'   => esc_url( 'https://wpuserregistration.com/upgrade/?utm_source=form-preview&utm_medium=sidebar-upgrade-button&utm_campaign=' . UR()->utm_campaign ),
 			)
 		);
 

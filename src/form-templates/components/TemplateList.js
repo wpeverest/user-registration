@@ -340,6 +340,7 @@ const TemplateList = ({ selectedCategory, templates }) => {
 				color="#26262E"
 				borderBottom="1px solid #CDD0D8"
 				paddingBottom="20px"
+				mb="20px !important"
 			>
 				{selectedCategory.toUpperCase()}
 			</Heading>
@@ -674,7 +675,7 @@ const TemplateList = ({ selectedCategory, templates }) => {
 							{__("OK", "user-registration")}
 						</Button>
 						<a
-							href="https://wpuserregistration.com/pricing/?utm_source=form-template&utm_medium=premium-form-templates-popup&utm_campaign=lite-version"
+							href="https://wpuserregistration.com/upgrade/?utm_source=form-template&utm_medium=premium-form-templates-popup&utm_campaign=lite-version"
 							target="_blank"
 							rel="noopener noreferrer"
 							style={{

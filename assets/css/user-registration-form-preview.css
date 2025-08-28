@@ -172,6 +172,55 @@
   border-color: #475bb2;
   color: #ffffff;
 }
+.user-registration .button-tertiary,
+.user-registration .page-title-action-tertiary,
+.user-registration-page .button-tertiary,
+.user-registration-page .page-title-action-tertiary,
+.ur-multi-device-form-preview .button-tertiary,
+.ur-multi-device-form-preview .page-title-action-tertiary,
+.user-registration-welcome .button-tertiary,
+.user-registration-welcome .page-title-action-tertiary {
+  background: #eceef7;
+  border-color: #eceef7;
+}
+.user-registration .button-tertiary::before,
+.user-registration .page-title-action-tertiary::before,
+.user-registration-page .button-tertiary::before,
+.user-registration-page .page-title-action-tertiary::before,
+.ur-multi-device-form-preview .button-tertiary::before,
+.ur-multi-device-form-preview .page-title-action-tertiary::before,
+.user-registration-welcome .button-tertiary::before,
+.user-registration-welcome .page-title-action-tertiary::before {
+  font-family: dashicons;
+  font-size: 16px;
+  vertical-align: middle;
+  margin-right: 8px;
+  padding: 0 8px 0 0;
+  border-right: 1px solid #475bb2;
+  transition: all 0.3s ease-in-out;
+}
+.user-registration .button-tertiary:hover,
+.user-registration .page-title-action-tertiary:hover,
+.user-registration-page .button-tertiary:hover,
+.user-registration-page .page-title-action-tertiary:hover,
+.ur-multi-device-form-preview .button-tertiary:hover,
+.ur-multi-device-form-preview .page-title-action-tertiary:hover,
+.user-registration-welcome .button-tertiary:hover,
+.user-registration-welcome .page-title-action-tertiary:hover {
+  background: #475bb2;
+  border-color: #475bb2;
+  color: #ffffff;
+}
+.user-registration .button-tertiary:hover::before,
+.user-registration .page-title-action-tertiary:hover::before,
+.user-registration-page .button-tertiary:hover::before,
+.user-registration-page .page-title-action-tertiary:hover::before,
+.ur-multi-device-form-preview .button-tertiary:hover::before,
+.ur-multi-device-form-preview .page-title-action-tertiary:hover::before,
+.user-registration-welcome .button-tertiary:hover::before,
+.user-registration-welcome .page-title-action-tertiary:hover::before {
+  border-right-color: #ffffff;
+}
 
 .wp-core-ui .button.button-large, .wp-core-ui .button-group.button-large .button {
   min-height: 36px;
@@ -479,6 +528,13 @@
   color: rgb(182.4993283582, 186.8632089552, 206.5006716418);
   background: rgb(240.4392835821, 241.3522713704, 245.4607164179);
 }
+.user-registration input[type=checkbox], .user-registration input[type=radio],
+.user-registration-page input[type=checkbox],
+.user-registration-page input[type=radio],
+.ur-multi-device-form-preview input[type=checkbox],
+.ur-multi-device-form-preview input[type=radio] {
+  z-index: 0;
+}
 .user-registration input[type=search],
 .user-registration-page input[type=search],
 .ur-multi-device-form-preview input[type=search] {
@@ -499,10 +555,6 @@
   border-bottom: 1px solid #e1e1e1;
   margin-bottom: 24px;
   height: 60px;
-  position: sticky;
-  position: -webkit-sticky;
-  top: 32px;
-  z-index: 1;
 }
 @media screen and (max-width: 1199px) {
   .user-registration .ur-admin-page-topnav,
@@ -1511,8 +1563,6 @@ body.ur-multi-device-form-preview #nav-menu-header .major-publishing-actions .pu
   cursor: pointer;
   inset: 0;
   background-color: #dfe1ea;
-  width: 30px;
-  height: 16px;
   padding: 8px;
   transition: 0.4s;
 }

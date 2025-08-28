@@ -164,8 +164,7 @@
 }
 
 #toplevel_page_user-registration ul li.is-sub-menu a {
-  font-size: 90%;
-  margin-right: 8px;
+  font-size: 13px;
 }
 
 #toplevel_page_user-registration ul li:not(.is-sub-menu) a[href="admin.php?page=user-registration"],

@@ -588,6 +588,19 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					),
 					77
 				);
+
+				add_submenu_page(
+					'user-registration',
+					__( 'Setup Wizard', 'user-registration' ),
+					'↳ ' . __( 'Setup Wizard', 'user-registration' ),
+					'manage_user_registration',
+					'user-registration-welcome&tab=setup-wizard',
+					array(
+						$this,
+						'status_page',
+					),
+					78
+				);
 			}
 		}
 
@@ -638,7 +651,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					esc_html__( 'Upgrade to Pro', 'user-registration' )
 				),
 				'manage_options',
-				esc_url_raw( 'https://wpuserregistration.com/pricing/?utm_source=ur-submenu&utm_medium=upgrade-link&utm_campaign=' . UR()->utm_campaign )
+				esc_url_raw( 'https://wpuserregistration.com/upgrade/?utm_source=ur-submenu&utm_medium=upgrade-link&utm_campaign=' . UR()->utm_campaign )
 			);
 		}
 
@@ -721,7 +734,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page'] ) { //phpcs:ignore WordPress.Security.NonceVerification
 				wp_enqueue_script( 'user-registration-login-settings', UR()->plugin_url() . '/assets/js/admin/login-settings' . $suffix . '.js', array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-sortable', 'iris', 'tooltipster', 'jquery-ui-tabs' ), UR_VERSION, true );
 				wp_enqueue_style( 'user-registration-css', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR_VERSION );
-				$login_settings =  array_merge(get_login_form_settings()['sections']['login_options_settings']['settings'] , get_login_field_settings()['sections']['login_options_settings']['settings']);
+				$login_settings =  array_merge(get_login_form_settings()['sections']['login_options_settings']['settings'] , get_login_field_settings()['sections']['login_options_settings']['settings'], get_login_form_settings()['sections']['login_options_settings_advanced']['settings']);
 
 				$ur_login_form_params = array(
 					'ajax_url'               => admin_url( 'admin-ajax.php' ),
@@ -803,7 +816,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					 *
 					 * @param string Upgrade URL
 					 */
-					'upgrade_url'                  => apply_filters( 'user_registration_upgrade_url', 'https://wpuserregistration.com/pricing/?utm_source=form-template&utm_medium=button&utm_campaign=' . UR()->utm_campaign ),
+					'upgrade_url'                  => apply_filters( 'user_registration_upgrade_url', 'https://wpuserregistration.com/upgrade/?utm_source=form-template&utm_medium=button&utm_campaign=' . UR()->utm_campaign ),
 					'upgrade_button'               => esc_html__( 'Upgrade Plan', 'user-registration' ),
 					'upgrade_message'              => esc_html__( 'This template requires premium addons. Please upgrade to the Premium plan to unlock all these awesome Templates.', 'user-registration' ),
 					'upgrade_title'                => esc_html__( 'is a Premium Template', 'user-registration' ),
@@ -1147,7 +1160,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 
 			}
 			echo '<div class="ur-row-buttons" data-total-rows="' . esc_attr( $last_id ) . '">';
-				echo '<button type="button" class="button button-primary dashicons dashicons-plus-alt ur-add-new-row">' . esc_html__( 'Add New', 'user-registration' ) . '</button>';
+				echo '<button type="button" class="button button-tertiary dashicons dashicons-plus-alt ur-add-new-row">' . esc_html__( 'Add New', 'user-registration' ) . '</button>';
 				do_action( 'user_registration_form_builder_row_buttons' );
 				echo '</div>';
 				echo '</div>';

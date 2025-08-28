@@ -706,9 +706,6 @@
 						);
 					},
 					complete: function () {
-						if (selected_pg !== "stripe") {
-							ur_membership_frontend_utils.remove_spinner(btn);
-						}
 						ur_membership_frontend_utils.toggleSaveButtons(
 							false,
 							btn
@@ -2132,6 +2129,7 @@
 							return false;
 						}
 						ur_membership_frontend_utils.append_spinner(btn);
+						btn.attr("disabled", true);
 
 						//validation before request start
 						selected_pg =

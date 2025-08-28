@@ -321,23 +321,6 @@ function App() {
 				}
 			}
 		});
-
-		if (newSettingsRef.user_registration_end_setup_wizard) {
-			apiFetch({
-				path:
-					restURL +
-					"user-registration/v1/getting-started/save-allow-usage-data",
-				method: "POST",
-				headers: {
-					"X-WP-Nonce": urRestApiNonce
-				},
-				data: { settings: allowUsageData }
-			}).then((res) => {
-				if (res.success) {
-					setAllowTracking(true);
-				}
-			});
-		}
 	};
 
 	const { title, page_url } = membershipDetails || {},

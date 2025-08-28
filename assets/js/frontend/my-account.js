@@ -107,13 +107,11 @@ jQuery(function ($) {
 					$this
 						.closest(".user-registration-profile-header")
 						.find(".ur-new-profile-image-message")
-						.attr("style", "display: none")
-					;
+						.attr("style", "display: none");
 					$this
 						.closest(".user-registration-profile-header")
 						.find(".ur-profile-image-updated-message")
-						.attr("style", "display: block")
-					;
+						.attr("style", "display: block");
 				}
 			});
 		},
@@ -202,7 +200,7 @@ jQuery(function ($) {
 		handle_user_logout: function () {
 			$(document).on(
 				"click",
-				".ur-logout, .urcma-user-logout",
+				".ur-logout, .urcma-users-logout",
 				function (e) {
 					e.preventDefault();
 					e.stopPropagation();
@@ -240,22 +238,19 @@ jQuery(function ($) {
 		"click",
 		function (e) {
 			e.preventDefault();
-			user_registration_profile_picture_upload.remove_avatar($(this));
 
 			$(this)
 				.closest(".user-registration-profile-header")
 				.find(".ur-new-profile-image-message")
-				.attr("style", "display: block")
-			;
+				.attr("style", "display: block");
 			$(this)
 				.closest(".user-registration-profile-header")
 				.find(".ur-profile-image-updated-message")
-				.attr("style", "display: none")
-			;
+				.attr("style", "display: none");
 			$(this)
-				.closest('.user-registration-profile-header')
-				.find('.user_registration_profile_picture_upload')
-				.trigger('click');
+				.closest(".user-registration-profile-header")
+				.find(".user_registration_profile_picture_upload")
+				.trigger("click");
 		}
 	);
 

@@ -320,6 +320,10 @@ textarea.ur-input-border-red {
 			flex: 1;
 			padding: 0 10px;
 
+			@media screen and (max-width: 600px) {
+				width: 100%;
+			}
+
 			&:nth-child(1n + 2) {
 				border-left: 0 none;
 			}
@@ -1374,6 +1378,17 @@ span.ur-shortcode-form-embed-dot {
 	}
 
 }
+
+#user-registration-pro-single-user-view {
+	.user-registration-user-form-details {
+		.empty-list-table-container {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 50px;
+		}
+	}
+}
 //Individual oxygen widgets styles.
 .oxygen-add-section-accordion-contents[ng-if*="user-registration"] {
 	.oxygen-add-section-element {
@@ -1532,16 +1547,21 @@ span.ur-shortcode-form-embed-dot {
 }
 
 .user-registration.ur-frontend-form {
-	background: #fff;
-	border-radius: 8px;
+	background: $white;
+	border-radius: $border_radius_8;
 	box-shadow:
 		0px 4px 16px 0px rgba(17, 17, 26, 0.05),
 		0px 8px 32px 0px rgba(17, 17, 26, 0.05);
-	padding: 60px;
+	padding: $spacing_60px;
+
+	@media screen and (max-width: 600px) {
+		padding: $spacing_40px $spacing_30px;
+	}
 
 	input {
-		border-radius: 4px;
+		border-radius: $border_radius_4;
 	}
+
 	#user_email {
 		&::before {
 			content: "\f348";
@@ -1714,7 +1734,10 @@ body {
 	&.user-registration-membership_page_user-registration-login-forms {
 		.user-registration {
 			&.ur-frontend-form {
-				max-width: 100%;
+				&:has(.ur-grid-2),
+				&:has(.ur-grid-3) {
+					max-width: 1200px;
+				}
 
 				form {
 					.ur-button-container {
@@ -2251,7 +2274,6 @@ body {
 									align-items: center;
 									justify-content: space-between;
 									gap: 12px;
-									flex-wrap: wrap;
 									flex-direction: row;
 									margin-top: -4px;
 									float: unset;
@@ -2420,6 +2442,7 @@ body {
 			}
 		}
 	}
+
 	&.woocommerce-checkout {
 		.user-registration.urwc-form {
 			all: unset;
@@ -2498,7 +2521,6 @@ body {
 					.ur-registered-inputs {
 						.ui-widget-content {
 							.ur-tab-contents {
-								padding: 24px;
 								background: #ffffff;
 
 								.ur-login-view-doc {
@@ -2584,14 +2606,13 @@ body {
 
 						&.ur-login-form-settings {
 							.ur-tab-contents {
-								padding: 16px 16px 0 16px;
-
 								.ur-tab-content {
 									padding: 0;
 
 									form {
 										.ur-login-form-setting-block {
-											padding: 32px 12px 12px;
+											padding: $spacing_20px $spacing_12px $spacing_12px;
+
 											&:first-child {
 												h2 {
 													&.ur-toggle-heading {
@@ -2603,10 +2624,9 @@ body {
 											.ur-toggle-content {
 												margin-top: $spacing_24px;
 												padding-bottom: $spacing_28px;
-												border-bottom: $border_width solid $border_color;
 												display: flex;
 												flex-direction: column;
-												gap: 28px;
+												gap: $spacing_28px;
 											}
 										}
 									}
@@ -2617,6 +2637,10 @@ body {
 									display: flex;
 									flex-direction: column;
 									gap: 24px;
+
+									h2 {
+										margin: 0 0 $spacing-16px 0;
+									}
 								}
 							}
 						}

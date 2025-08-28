@@ -47,7 +47,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		public function get_sections() {
 			$sections = array(
 				''                  => __( 'General Options', 'user-registration' ),
-				'login-options'     => __( 'Login Options', 'user-registration' ),
 				'frontend-messages' => __( 'Form Messages', 'user-registration' ),
 			);
 
@@ -121,7 +120,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'type'     => 'single_select_page',
 									'default'  => '',
 									'class'    => 'ur-enhanced-select-nostd',
-									'css'      => 'min-width:350px;',
+									'css'      => '',
 									'desc_tip' => true,
 								),
 								array(

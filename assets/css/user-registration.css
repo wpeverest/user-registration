@@ -546,6 +546,55 @@
   border-color: #475bb2;
   color: #ffffff;
 }
+.user-registration .button-tertiary,
+.user-registration .page-title-action-tertiary,
+.user-registration-page .button-tertiary,
+.user-registration-page .page-title-action-tertiary,
+.ur-multi-device-form-preview .button-tertiary,
+.ur-multi-device-form-preview .page-title-action-tertiary,
+.user-registration-welcome .button-tertiary,
+.user-registration-welcome .page-title-action-tertiary {
+  background: #eceef7;
+  border-color: #eceef7;
+}
+.user-registration .button-tertiary::before,
+.user-registration .page-title-action-tertiary::before,
+.user-registration-page .button-tertiary::before,
+.user-registration-page .page-title-action-tertiary::before,
+.ur-multi-device-form-preview .button-tertiary::before,
+.ur-multi-device-form-preview .page-title-action-tertiary::before,
+.user-registration-welcome .button-tertiary::before,
+.user-registration-welcome .page-title-action-tertiary::before {
+  font-family: dashicons;
+  font-size: 16px;
+  vertical-align: middle;
+  margin-right: 8px;
+  padding: 0 8px 0 0;
+  border-right: 1px solid #475bb2;
+  transition: all 0.3s ease-in-out;
+}
+.user-registration .button-tertiary:hover,
+.user-registration .page-title-action-tertiary:hover,
+.user-registration-page .button-tertiary:hover,
+.user-registration-page .page-title-action-tertiary:hover,
+.ur-multi-device-form-preview .button-tertiary:hover,
+.ur-multi-device-form-preview .page-title-action-tertiary:hover,
+.user-registration-welcome .button-tertiary:hover,
+.user-registration-welcome .page-title-action-tertiary:hover {
+  background: #475bb2;
+  border-color: #475bb2;
+  color: #ffffff;
+}
+.user-registration .button-tertiary:hover::before,
+.user-registration .page-title-action-tertiary:hover::before,
+.user-registration-page .button-tertiary:hover::before,
+.user-registration-page .page-title-action-tertiary:hover::before,
+.ur-multi-device-form-preview .button-tertiary:hover::before,
+.ur-multi-device-form-preview .page-title-action-tertiary:hover::before,
+.user-registration-welcome .button-tertiary:hover::before,
+.user-registration-welcome .page-title-action-tertiary:hover::before {
+  border-right-color: #ffffff;
+}
 
 .wp-core-ui .button.button-large, .wp-core-ui .button-group.button-large .button {
   min-height: 36px;
@@ -808,6 +857,7 @@
   padding-bottom: 16px;
   width: 100%;
   margin-bottom: 0;
+  justify-content: center;
 }
 .user-registration .swal2-container .swal2-popup .swal2-header .swal2-title .dashicons,
 .user-registration-page .swal2-container .swal2-popup .swal2-header .swal2-title .dashicons {
@@ -1225,6 +1275,11 @@ textarea.ur-input-border-red {
 .ur-frontend-form .ur-form-row .ur-form-grid {
   flex: 1;
   padding: 0 10px;
+}
+@media screen and (max-width: 600px) {
+  .ur-frontend-form .ur-form-row .ur-form-grid {
+    width: 100%;
+  }
 }
 .ur-frontend-form .ur-form-row .ur-form-grid:nth-child(1n+2) {
   border-left: 0 none;
@@ -2074,6 +2129,13 @@ span.ur-shortcode-form-embed-dot {
   padding: 50px;
 }
 
+#user-registration-pro-single-user-view .user-registration-user-form-details .empty-list-table-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 50px;
+}
+
 .oxygen-add-section-accordion-contents[ng-if*=user-registration] .oxygen-add-section-element {
   min-height: 100px !important;
   line-height: 15px;
@@ -2216,10 +2278,15 @@ span.ur-shortcode-form-embed-dot {
 }
 
 .user-registration.ur-frontend-form {
-  background: #fff;
+  background: #ffffff;
   border-radius: 8px;
   box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
   padding: 60px;
+}
+@media screen and (max-width: 600px) {
+  .user-registration.ur-frontend-form {
+    padding: 40px 30px;
+  }
 }
 .user-registration.ur-frontend-form input {
   border-radius: 4px;
@@ -2335,8 +2402,8 @@ body.user-registration-page .user-registration-message > ul, body.ur-multi-devic
 body .user-registration-error > svg {
   display: none;
 }
-body.user-registration-page .user-registration.ur-frontend-form, body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form {
-  max-width: 100%;
+body.user-registration-page .user-registration.ur-frontend-form:has(.ur-grid-2), body.user-registration-page .user-registration.ur-frontend-form:has(.ur-grid-3), body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form:has(.ur-grid-2), body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form:has(.ur-grid-3) {
+  max-width: 1200px;
 }
 body.user-registration-page .user-registration.ur-frontend-form form .ur-button-container, body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form form .ur-button-container {
   width: max-content;
@@ -2890,7 +2957,6 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  flex-wrap: wrap;
   flex-direction: row;
   margin-top: -4px;
   float: unset;
@@ -3104,7 +3170,6 @@ body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-gri
   border: none;
 }
 .user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-tab-contents {
-  padding: 24px;
   background: #ffffff;
 }
 .user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs .ui-widget-content .ur-tab-contents .ur-login-view-doc a {
@@ -3172,14 +3237,11 @@ body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-gri
   background: #edeff7;
   border: none;
 }
-.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents {
-  padding: 16px 16px 0 16px;
-}
 .user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content {
   padding: 0;
 }
 .user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content form .ur-login-form-setting-block {
-  padding: 32px 12px 12px;
+  padding: 20px 12px 12px;
 }
 .user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content form .ur-login-form-setting-block:first-child h2.ur-toggle-heading {
   margin-top: 0;
@@ -3187,7 +3249,6 @@ body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-gri
 .user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings .ur-tab-contents .ur-tab-content form .ur-login-form-setting-block .ur-toggle-content {
   margin-top: 24px;
   padding-bottom: 28px;
-  border-bottom: 1px solid #e1e1e1;
   display: flex;
   flex-direction: column;
   gap: 28px;
@@ -3196,6 +3257,9 @@ body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-gri
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
+.user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .ur-form-subcontainer .ur-registered-inputs.ur-login-form-settings #ur-login-form-setting .ur-login-form-setting-block h2 {
+  margin: 0 0 16px 0;
 }
 .user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .user-registration-login-settings-form {
   border-radius: 4px;

@@ -5,41 +5,49 @@ jQuery(function ($) {
 	}
 	var l10n = urUsersl10n,
 		available_field = [],
-		required_fields =
-			l10n.form_required_fields;
+		required_fields = l10n.form_required_fields;
 	var UREditUsers = {
 		init: function () {
 			UREditUsers.initUIBindings();
 			//load password toggle if password field is available
-			if ($('#user-registration-edit-user-body  #user_registration_user_pass').length > 0) {
+			if (
+				$(
+					"#user-registration-edit-user-body  #user_registration_user_pass"
+				).length > 0
+			) {
 				this.hide_password_input();
 			}
 			//add mask to all input mask classes
-			$(".ur-masked-input").inputmask("mask") || $(".ur-masked-input").inputmask();
-
+			$(".ur-masked-input").inputmask("mask") ||
+				$(".ur-masked-input").inputmask();
 		},
 		/**
 		 * Load password toggle in password input
 		 *
 		 */
-		hide_password_input: function() {
-			$('#user_registration_user_pass_field input').hide();
-			var change_password_btn = '<button type="button" class="button btn-primary set-new-pass-btn">' +
+		hide_password_input: function () {
+			$("#user_registration_user_pass_field input").hide();
+			var change_password_btn =
+				'<button type="button" class="button btn-primary set-new-pass-btn">' +
 				l10n.edit_user_set_new_password +
-				'</button>';
-			$('#user-registration-edit-user-body  .field-user_pass .input-wrapper').append(change_password_btn);
+				"</button>";
+			$(
+				"#user-registration-edit-user-body  .field-user_pass .input-wrapper"
+			).append(change_password_btn);
 		},
 		/**
 		 * toggle user password input visibility
 		 */
-		toggle_password_input_visibility: function() {
-			$('#user_registration_user_pass_field input').val("").show();
-			$('.set-new-pass-btn').hide();
-			var hide_show_password = '<div class="hide-show-password">' +
+		toggle_password_input_visibility: function () {
+			$("#user_registration_user_pass_field input").val("").show();
+			$(".set-new-pass-btn").hide();
+			var hide_show_password =
+				'<div class="hide-show-password">' +
 				'<span class="dashicons dashicons-visibility hide-show-btn"></span>' +
-				'</div>';
-			$('#user_registration_user_pass_field .password-input-group').append(hide_show_password);
-
+				"</div>";
+			$(
+				"#user_registration_user_pass_field .password-input-group"
+			).append(hide_show_password);
 		},
 
 		/**
@@ -49,14 +57,14 @@ jQuery(function ($) {
 		 */
 		show_success_message: function (message) {
 			if (snackbar && message) {
-				if($.isArray(message)) {
+				if ($.isArray(message)) {
 					// Loop through each error in the message array
 					message.forEach(function (errorObj) {
 						Object.keys(errorObj).forEach(function (key) {
 							// Only show error if it's not a boolean (e.g., skip 'individual')
-							if (typeof errorObj[key] === 'string') {
+							if (typeof errorObj[key] === "string") {
 								snackbar.add({
-									type: 'success',
+									type: "success",
 									message: errorObj[key],
 									duration: 5,
 									icon: "exclamation"
@@ -64,10 +72,9 @@ jQuery(function ($) {
 							}
 						});
 					});
-				}
-				else{
+				} else {
 					snackbar.add({
-						type: 'success',
+						type: "success",
 						message: message,
 						duration: 5,
 						icon: "exclamation"
@@ -85,24 +92,23 @@ jQuery(function ($) {
 		 */
 		show_failure_message: function (message) {
 			if (snackbar && message) {
-				if($.isArray(message)) {
+				if ($.isArray(message)) {
 					// Loop through each error in the message array
 					message.forEach(function (errorObj) {
 						Object.keys(errorObj).forEach(function (key) {
 							// Only show error if it's not a boolean (e.g., skip 'individual')
-							if (typeof errorObj[key] === 'string') {
+							if (typeof errorObj[key] === "string") {
 								snackbar.add({
-									type: 'failure',
+									type: "failure",
 									message: errorObj[key],
 									duration: 6
 								});
 							}
 						});
 					});
-				}
-				else{
+				} else {
 					snackbar.add({
-						type: 'failure',
+						type: "failure",
 						message: message,
 						duration: 6
 					});
@@ -112,7 +118,6 @@ jQuery(function ($) {
 			return false;
 		},
 
-
 		/**
 		 * Bind UI changes.
 		 */
@@ -120,7 +125,7 @@ jQuery(function ($) {
 			/**
 			 * Save changes for edit profile.
 			 */
-			$('.save_user_details').on("click", function (event) {
+			$(".save_user_details").on("click", function (event) {
 				var $this = $(this);
 
 				UREditUsers.edit_profile_event($this);
@@ -133,16 +138,16 @@ jQuery(function ($) {
 			$(document).on("click", ".hide-show-btn", function (e) {
 				e.preventDefault();
 				e.stopPropagation();
-				var passInput = $('#user_registration_user_pass');
-				$(this).toggleClass('dashicons-visibility dashicons-hidden');
-				passInput.prop('type', function (i, type) {
-					return type === 'password' ? 'text' : 'password';
+				var passInput = $("#user_registration_user_pass");
+				$(this).toggleClass("dashicons-visibility dashicons-hidden");
+				passInput.prop("type", function (i, type) {
+					return type === "password" ? "text" : "password";
 				});
-			})
+			});
 
-			$(document).on("click",".set-new-pass-btn", function() {
+			$(document).on("click", ".set-new-pass-btn", function () {
 				UREditUsers.toggle_password_input_visibility();
-			})
+			});
 		},
 		/*
 		 * Retrieves fieldwise data from a given field.
@@ -159,28 +164,20 @@ jQuery(function ($) {
 					? field.attr("name")
 					: "null";
 			var phone_id = [];
-			if (
-				field.attr("name") !== undefined &&
-				field.attr("name") !== ""
-			) {
+			if (field.attr("name") !== undefined && field.attr("name") !== "") {
 				formwise_data.field_name = field.attr("name");
-				formwise_data.field_name =
-					formwise_data.field_name.replace("[]", "");
+				formwise_data.field_name = formwise_data.field_name.replace(
+					"[]",
+					""
+				);
 
-				if (
-					$(field).closest(".ur-repeater-row").length > 0
-				) {
-					if (
-						$(field).closest(".field-multi_select2")
-							.length > 0
-					) {
+				if ($(field).closest(".ur-repeater-row").length > 0) {
+					if ($(field).closest(".field-multi_select2").length > 0) {
 						formwise_data.field_name =
 							formwise_data.field_name.slice(0, -2);
 					}
 
-					if (
-						$(field).closest(".field-file").length > 0
-					) {
+					if ($(field).closest(".field-file").length > 0) {
 						formwise_data.field_name = $(field)
 							.closest(".field-file")
 							.attr("data-ref-id");
@@ -190,32 +187,24 @@ jQuery(function ($) {
 				formwise_data.field_name = "";
 			}
 
-			$(".field-phone, .field-billing_phone").each(
-				function () {
-					var phone_field_id = $(this)
+			$(".field-phone, .field-billing_phone").each(function () {
+				var phone_field_id = $(this).find(".form-row").attr("id");
+				// Check if smart phone field is enabled.
+				if (
+					$(this)
 						.find(".form-row")
-						.attr("id");
-					// Check if smart phone field is enabled.
-					if (
-						$(this)
-							.find(".form-row")
-							.find("#" + phone_field_id)
-							.hasClass("ur-smart-phone-field")
-					) {
-						phone_id.push(
-							$(this).find(".form-row").attr("id")
-						);
-					}
+						.find("#" + phone_field_id)
+						.hasClass("ur-smart-phone-field")
+				) {
+					phone_id.push($(this).find(".form-row").attr("id"));
 				}
-			);
+			});
 			var field_type =
 				"undefined" !== field.attr("type")
 					? field.attr("type")
 					: "null";
 
-			var textarea_type = field
-				.get(0)
-				.className.split(" ")[0];
+			var textarea_type = field.get(0).className.split(" ")[0];
 
 			formwise_data.value = "";
 
@@ -225,37 +214,28 @@ jQuery(function ($) {
 					switch (field_type) {
 						case "checkbox":
 							if (
-								!field.closest(
-									".field-privacy_policy"
-								).length > 0
+								!field.closest(".field-privacy_policy").length >
+								0
 							) {
 								if (field.prop("checked")) {
 									checked_value.push(field.val());
 									formwise_data.value =
-										JSON.stringify(
-											checked_value
-										);
+										JSON.stringify(checked_value);
 								} else {
 									formwise_data.value = "";
 								}
 							} else {
-								formwise_data.value = field.prop(
-									"checked"
-								)
+								formwise_data.value = field.prop("checked")
 									? field.val()
 									: "";
 
 								formwise_data.field_name = field
-									.closest(
-										".field-privacy_policy"
-									)
+									.closest(".field-privacy_policy")
 									.data("ref-id");
 							}
 							break;
 						case "radio":
-							formwise_data.value = field.prop(
-								"checked"
-							)
+							formwise_data.value = field.prop("checked")
 								? field.val()
 								: "";
 							formwise_data.field_name = field
@@ -288,25 +268,24 @@ jQuery(function ($) {
 				default:
 			}
 
-			$(document).trigger(
-				"user_registration_frontend_form_data_render",
-				[field, formwise_data]
-			);
+			$(document).trigger("user_registration_frontend_form_data_render", [
+				field,
+				formwise_data
+			]);
 			formwise_data.field_type =
 				"undefined" !== field.eq(0).attr("type")
 					? field.eq(0).attr("type")
 					: "null";
 			var data_field_type = field.attr("data-field-type");
 
-			if(data_field_type === "hidden") {
+			if (data_field_type === "hidden") {
 				formwise_data.field_type = field_type;
 			}
 			if (field.attr("data-label") !== undefined) {
 				formwise_data.label = field.attr("data-label");
 			} else if (
 				field.prev().length &&
-				field.prev().get(0).tagName.toLowerCase() ===
-				"label"
+				field.prev().get(0).tagName.toLowerCase() === "label"
 			) {
 				formwise_data.label = field.prev().text();
 			} else {
@@ -333,8 +312,7 @@ jQuery(function ($) {
 		get_form_data: function (form_id) {
 			var $this = $("form.user-registration-EditProfileForm");
 			if (
-				form_id ===
-				$this.closest(".ur-frontend-form").attr("id") ||
+				form_id === $this.closest(".ur-frontend-form").attr("id") ||
 				$(".ur-frontend-form")
 					.find("form.edit-profile")
 					.hasClass("user-registration-EditProfileForm")
@@ -363,8 +341,7 @@ jQuery(function ($) {
 								".user-registration-EditProfileForm"
 							).length > 0
 						) {
-							fieldName =
-								"user_registration_" + fieldName;
+							fieldName = "user_registration_" + fieldName;
 						}
 
 						if (!repeater_field_data[fieldName]) {
@@ -388,14 +365,9 @@ jQuery(function ($) {
 							};
 						}
 
-						if (
-							!repeater_field_data[fieldName][
-								"value"
-								][rowName]
-						) {
-							repeater_field_data[fieldName]["value"][
-								rowName
-								] = [];
+						if (!repeater_field_data[fieldName]["value"][rowName]) {
+							repeater_field_data[fieldName]["value"][rowName] =
+								[];
 						}
 					});
 
@@ -412,16 +384,14 @@ jQuery(function ($) {
 						.data("repeater-field-name");
 					var data_field_type = $(this).attr("data-field-type");
 
-					if(data_field_type === "hidden") {
-						field_type = 'hidden';
+					if (data_field_type === "hidden") {
+						field_type = "hidden";
 					}
 					if (
-						$(this).closest(
-							".user-registration-EditProfileForm"
-						).length > 0
+						$(this).closest(".user-registration-EditProfileForm")
+							.length > 0
 					) {
-						fieldName =
-							"user_registration_" + fieldName;
+						fieldName = "user_registration_" + fieldName;
 					}
 
 					var rowName =
@@ -432,65 +402,47 @@ jQuery(function ($) {
 
 					if (
 						(single_field.length < 2 ||
-							single_field.closest(".ur-repeater-row")
-								.length > 0) &&
-						$.inArray(
-							field_type,
-							selection_fields_array
-						) < 0
+							single_field.closest(".ur-repeater-row").length >
+								0) &&
+						$.inArray(field_type, selection_fields_array) < 0
 					) {
-						var single_data =
-							this_instance.get_fieldwise_data(
-								$(this)
-							);
+						var single_data = this_instance.get_fieldwise_data(
+							$(this)
+						);
 
 						var invite_code =
-							document.querySelector(
-								".field-invite_code"
-							);
+							document.querySelector(".field-invite_code");
 
-						if (
-							"invite_code" === single_data.field_name
-						) {
-							if (
-								"none" !== invite_code.style.display
-							) {
+						if ("invite_code" === single_data.field_name) {
+							if ("none" !== invite_code.style.display) {
 								form_data.push(single_data);
 							}
 						} else {
 							if (
-								$(this).closest(".ur-repeater-row")
-									.length > 0
+								$(this).closest(".ur-repeater-row").length > 0
 							) {
 								if (
 									$(this)
 										.closest(".form-row")
 										.find(
 											"*[name='" +
-											$(this).attr(
-												"name"
-											) +
-											"']"
+												$(this).attr("name") +
+												"']"
 										).length < 2 ||
-									"range" ===
-									$(this).attr("type") ||
-									$(this).hasClass(
-										"ur-smart-phone-field"
-									)
+									"range" === $(this).attr("type") ||
+									$(this).hasClass("ur-smart-phone-field")
 								) {
-									repeater_field_data[fieldName][
-										"value"
-										][rowName].push(single_data);
+									repeater_field_data[fieldName]["value"][
+										rowName
+									].push(single_data);
 								} else {
 									if (
 										multi_value_field.indexOf(
-											single_data.field_name +
-											"[]"
+											single_data.field_name + "[]"
 										) === -1
 									) {
 										multi_value_field.push(
-											single_data.field_name +
-											"[]"
+											single_data.field_name + "[]"
 										);
 									}
 								}
@@ -499,12 +451,7 @@ jQuery(function ($) {
 							}
 						}
 					} else {
-						if (
-							$.inArray(
-								field_name,
-								multi_value_field
-							) < 0
-						) {
+						if ($.inArray(field_name, multi_value_field) < 0) {
 							multi_value_field.push(field_name);
 						}
 					}
@@ -516,13 +463,9 @@ jQuery(function ($) {
 					multi_start++
 				) {
 					var field = UREditUsers.separate_form_handler(
-						'[name="' +
-						multi_value_field[multi_start] +
-						'"]'
+						'[name="' + multi_value_field[multi_start] + '"]'
 					);
-					var node_type = field
-						.get(0)
-						.tagName.toLowerCase();
+					var node_type = field.get(0).tagName.toLowerCase();
 
 					var field_type =
 						"undefined" !== field.eq(0).attr("type")
@@ -537,23 +480,19 @@ jQuery(function ($) {
 
 						var this_field_value = "";
 
-						switch (
-							this_field.get(0).tagName.toLowerCase()
-							) {
+						switch (this_field.get(0).tagName.toLowerCase()) {
 							case "input":
 								switch (field_type) {
 									case "checkbox":
 									case "radio":
-										this_field_value =
-											this_field.prop(
-												"checked"
-											)
-												? this_field.val()
-												: "";
+										this_field_value = this_field.prop(
+											"checked"
+										)
+											? this_field.val()
+											: "";
 										break;
 									default:
-										this_field_value =
-											this_field.val();
+										this_field_value = this_field.val();
 								}
 								break;
 							case "select":
@@ -567,36 +506,30 @@ jQuery(function ($) {
 
 						if (this_field_value !== "") {
 							if (
-								this_field.closest(
-									".ur-repeater-row"
-								).length > 0
+								this_field.closest(".ur-repeater-row").length >
+								0
 							) {
 								if (
-									this_field.closest(
-										".field-radio"
-									).length > 0
+									this_field.closest(".field-radio").length >
+									0
 								) {
 									repeater_field_value[
 										this_field.attr("data-id")
-										] = this_field_value;
+									] = this_field_value;
 								} else {
 									if (
 										"undefined" ===
 										typeof repeater_field_value[
-											this_field.attr(
-												"data-id"
-											)
-											]
+											this_field.attr("data-id")
+										]
 									) {
 										repeater_field_value[
-											this_field.attr(
-												"data-id"
-											)
-											] = new Array();
+											this_field.attr("data-id")
+										] = new Array();
 									}
 									repeater_field_value[
 										this_field.attr("data-id")
-										].push(this_field_value);
+									].push(this_field_value);
 								}
 							} else {
 								field_value.push(this_field_value);
@@ -605,10 +538,7 @@ jQuery(function ($) {
 					});
 
 					if (field_type == "checkbox") {
-						if (
-							"" !==
-							l10n.is_payment_compatible
-						) {
+						if ("" !== l10n.is_payment_compatible) {
 							if (
 								field.eq(0).attr("data-field") ==
 								"multiple_choice"
@@ -618,9 +548,7 @@ jQuery(function ($) {
 									[field_value, field]
 								);
 								field_value = field
-									.closest(
-										".field-multiple_choice"
-									)
+									.closest(".field-multiple_choice")
 									.data("payment-value");
 
 								var field_value_json =
@@ -636,13 +564,8 @@ jQuery(function ($) {
 							) {
 								var multi_choice = field_value;
 								var field_value_json = 0;
-								for (
-									var i = 0;
-									i < multi_choice.length;
-									i++
-								) {
-									field_value_json +=
-										multi_choice[i] << 0;
+								for (var i = 0; i < multi_choice.length; i++) {
+									field_value_json += multi_choice[i] << 0;
 								}
 							} else {
 								var field_value_json =
@@ -650,10 +573,7 @@ jQuery(function ($) {
 							}
 						}
 					} else if (field_type == "radio") {
-						if (
-							"" !==
-							urUsersl10n.is_payment_compatible
-						) {
+						if ("" !== urUsersl10n.is_payment_compatible) {
 							if (
 								field.eq(0).attr("data-field") ==
 								"subscription_plan"
@@ -663,32 +583,23 @@ jQuery(function ($) {
 									[field_value, field]
 								);
 								selectedSubscriptionPlan = field
-									.closest(
-										".field-subscription_plan"
-									)
+									.closest(".field-subscription_plan")
 									.find(
 										'input[name="subscription_plan[]"]:checked'
 									);
 
-								if (
-									selectedSubscriptionPlan.length >
-									0
-								) {
+								if (selectedSubscriptionPlan.length > 0) {
 									// Get the data attribute value
 									var dataValue =
-										selectedSubscriptionPlan.data(
-											"value"
-										);
-									var field_value_json =
-										JSON.stringify(
-											dataValue +
+										selectedSubscriptionPlan.data("value");
+									var field_value_json = JSON.stringify(
+										dataValue +
 											":" +
 											selectedSubscriptionPlan.val()
-										);
+									);
 								}
 							} else {
-								var field_value_json =
-									field_value[0];
+								var field_value_json = field_value[0];
 							}
 						} else {
 							var field_value_json = field_value[0];
@@ -697,10 +608,11 @@ jQuery(function ($) {
 						var field_value_json = field.val();
 					}
 
-					var single_form_field_name =
-						multi_value_field[multi_start];
-					single_form_field_name =
-						single_form_field_name.replace("[]", "");
+					var single_form_field_name = multi_value_field[multi_start];
+					single_form_field_name = single_form_field_name.replace(
+						"[]",
+						""
+					);
 					var field_data = {
 						value: field_value_json,
 						field_type: field_type,
@@ -708,99 +620,61 @@ jQuery(function ($) {
 						field_name: single_form_field_name
 					};
 
-					if (
-						Object.keys(repeater_field_value).length > 0
-					) {
+					if (Object.keys(repeater_field_value).length > 0) {
 						var field_detail = new Array();
 
-						$.each(
-							repeater_field_value,
-							function (key, value) {
-								key =
+						$.each(repeater_field_value, function (key, value) {
+							key =
+								$("[name='" + key + "']").length < 1 &&
+								key.indexOf("[]") === -1
+									? key + "[]"
+									: key;
+							var row_id = $('[name="' + key + '"]')
+								.closest(".ur-repeater-row")
+								.data("repeater-row");
+							var repeater_value = Object.assign({}, field_data);
+
+							repeater_value.value =
+								"string" === typeof value
+									? value
+									: JSON.stringify(value);
+
+							repeater_value.field_name =
+								single_form_field_name.slice(0, -2);
+
+							var current_repeater_field_name =
+								"undefined" ===
+								typeof repeater_field_data[
 									$("[name='" + key + "']")
-										.length < 1 &&
-									key.indexOf("[]") === -1
-										? key + "[]"
-										: key;
-								var row_id = $(
-									'[name="' + key + '"]'
-								)
-									.closest(".ur-repeater-row")
-									.data("repeater-row");
-								var repeater_value = Object.assign(
-									{},
-									field_data
-								);
-
-								repeater_value.value =
-									"string" === typeof value
-										? value
-										: JSON.stringify(value);
-
-								repeater_value.field_name =
-									single_form_field_name.slice(
-										0,
-										-2
-									);
-
-								var current_repeater_field_name =
-									"undefined" ===
-									typeof repeater_field_data[
-										$("[name='" + key + "']")
-											.closest(
-												".ur-repeater-row"
-											)
-											.data(
-												"repeater-field-name"
-											)
-										]
-										? "user_registration_" +
-										$("[name='" + key + "']")
-											.closest(
-												".ur-repeater-row"
-											)
-											.data(
-												"repeater-field-name"
-											)
-										: $("[name='" + key + "']")
-											.closest(
-												".ur-repeater-row"
-											)
-											.data(
-												"repeater-field-name"
-											);
-								repeater_field_data[
-									current_repeater_field_name
-									]["value"]["row_" + row_id].push(
-									repeater_value
-								);
-							}
-						);
+										.closest(".ur-repeater-row")
+										.data("repeater-field-name")
+								]
+									? "user_registration_" +
+									  $("[name='" + key + "']")
+											.closest(".ur-repeater-row")
+											.data("repeater-field-name")
+									: $("[name='" + key + "']")
+											.closest(".ur-repeater-row")
+											.data("repeater-field-name");
+							repeater_field_data[current_repeater_field_name][
+								"value"
+							]["row_" + row_id].push(repeater_value);
+						});
 					} else {
 						form_data.push(field_data);
 					}
 				}
 
-				Object.keys(repeater_field_data).forEach(
-					function (field_key) {
-						if (
-							$("input[name='" + field_key + "'")
-								.length > 0
-						) {
-							$("input[name='" + field_key + "'").val(
-								JSON.stringify(
-									repeater_field_data[field_key]
-								)
-							);
-						}
+				Object.keys(repeater_field_data).forEach(function (field_key) {
+					if ($("input[name='" + field_key + "'").length > 0) {
+						$("input[name='" + field_key + "'").val(
+							JSON.stringify(repeater_field_data[field_key])
+						);
 					}
-				);
+				});
 
 				if (Object.keys(repeater_field_data).length > 0) {
-					$.merge(
-						form_data,
-						Object.values(repeater_field_data)
-					);
+					$.merge(form_data, Object.values(repeater_field_data));
 				}
 				$(document).trigger(
 					"user_registration_frontend_form_data_filter",
@@ -847,8 +721,9 @@ jQuery(function ($) {
 		 * @return {void}
 		 */
 		edit_profile_event: function (button) {
-			$("form.user-registration-EditProfileForm")
-				.on("submit", function (event) {
+			$("form.user-registration-EditProfileForm").on(
+				"submit",
+				function (event) {
 					event.preventDefault();
 					event.stopImmediatePropagation();
 
@@ -856,8 +731,7 @@ jQuery(function ($) {
 
 					// Validator messages.
 					$.extend($.validator.messages, {
-						required:
-						l10n.message_required_fields,
+						required: l10n.message_required_fields,
 						url: l10n.message_url_fields,
 						email: l10n.message_email_fields,
 						number: l10n.message_number_fields
@@ -872,17 +746,17 @@ jQuery(function ($) {
 					var form_data;
 					var form_nonce = "0";
 
-					form_data = UREditUsers.get_form_data($(".user-registration-EditProfileForm ").data("form-id"));
+					form_data = UREditUsers.get_form_data(
+						$(".user-registration-EditProfileForm ").data("form-id")
+					);
 
 					try {
 						// Handle profile picture
-						var profile_picture_url =
-							$("#profile_pic_url").val();
+						var profile_picture_url = $("#profile_pic_url").val();
 
 						form_data.push({
 							value: profile_picture_url,
-							field_name:
-								"user_registration_profile_pic_url"
+							field_name: "user_registration_profile_pic_url"
 						});
 
 						form_data = JSON.stringify(form_data);
@@ -892,10 +766,9 @@ jQuery(function ($) {
 
 					var data = {
 						action: "user_registration_update_profile_details",
-						security:
-						l10n.user_registration_edit_user_nonce,
+						security: l10n.user_registration_edit_user_nonce,
 						form_data: form_data,
-						user_id: $this.data('user-id'),
+						user_id: $this.data("user-id"),
 						is_admin_user: true
 					};
 
@@ -935,23 +808,16 @@ jQuery(function ($) {
 									ajax_response.responseText
 								);
 								if (
-									typeof response.success !==
-									"undefined" &&
+									typeof response.success !== "undefined" &&
 									response.success === true
 								) {
 									type = "success";
 								}
 								var individual_field_message = false;
-								if (
-									typeof response.data.message ===
-									"object"
-								) {
+								if (typeof response.data.message === "object") {
 									$.each(
 										response.data.message,
-										function (
-											index,
-											message_value
-										) {
+										function (index, message_value) {
 											if (
 												message_value.hasOwnProperty(
 													"individual"
@@ -960,43 +826,28 @@ jQuery(function ($) {
 												var $field_id = [];
 												$.each(
 													$this
-														.find(
-															".ur-form-row"
-														)
-														.find(
-															".ur-field-item"
-														)
+														.find(".ur-form-row")
+														.find(".ur-field-item")
 														.find(
 															".ur-edit-profile-field"
 														),
-													function (
-														index
-													) {
-														var $this =
-															$(this);
+													function (index) {
+														var $this = $(this);
 														var $id =
-															$this.attr(
-																"id"
-															);
-														$field_id.push(
-															$id
-														);
+															$this.attr("id");
+														$field_id.push($id);
 													}
 												);
 
 												$.each(
 													message_value,
-													function (
-														index,
-														value
-													) {
+													function (index, value) {
 														index =
 															index.indexOf(
 																"user_registration_"
-															) ===
-															-1
+															) === -1
 																? "user_registration_" +
-																index
+																  index
 																: index;
 
 														if (
@@ -1018,19 +869,17 @@ jQuery(function ($) {
 																	".ur-form-row"
 																);
 
-
-															wrapper =
-																wrapper
-																	.find(
-																		".ur-field-item"
-																	)
-																	.find(
-																		"input[id='" +
+															wrapper = wrapper
+																.find(
+																	".ur-field-item"
+																)
+																.find(
+																	"input[id='" +
 																		index +
 																		"'], textarea[id='" +
 																		index +
 																		"']"
-																	);
+																);
 															wrapper
 																.closest(
 																	".form-row"
@@ -1045,41 +894,36 @@ jQuery(function ($) {
 											} else {
 												message.append(
 													"<li>" +
-													message_value +
-													"</li>"
+														message_value +
+														"</li>"
 												);
 											}
 										}
 									);
 								} else {
 									message.append(
-										"<li>" +
-										response.data.message +
-										"</li>"
+										"<li>" + response.data.message + "</li>"
 									);
 									if (
 										undefined !==
-										response.data
-											.userEmailPendingMessage
+										response.data.userEmailPendingMessage
 									) {
 										$(
 											".user-registration-info.user-email-change-update-notice"
 										).remove();
-										UREditUsers.show_success_message(response.data.userEmailUpdateMessage)
+										UREditUsers.show_success_message(
+											response.data.userEmailUpdateMessage
+										);
 
 										if (
 											$(
 												"input#user_registration_user_email"
-											).next(
-												"div.email-updated"
-											).length
+											).next("div.email-updated").length
 										) {
 											$(
 												"input#user_registration_user_email"
 											)
-												.next(
-													"div.email-updated"
-												)
+												.next("div.email-updated")
 												.remove();
 										}
 										$(
@@ -1092,25 +936,23 @@ jQuery(function ($) {
 										);
 										$(
 											"input#user_registration_user_email"
-										).val(
-											response.data
-												.oldUserEmail
-										);
+										).val(response.data.oldUserEmail);
 									}
 								}
 							} catch (e) {
-								message.append(
-									"<li>" + e.message + "</li>"
-								);
+								message.append("<li>" + e.message + "</li>");
 							}
 
 							if (!individual_field_message) {
-								if (type === 'error') {
-									UREditUsers.show_failure_message(response.data.message)
+								if (type === "error") {
+									UREditUsers.show_failure_message(
+										response.data.message
+									);
 								} else {
-									UREditUsers.show_success_message(response.data.message)
+									UREditUsers.show_success_message(
+										response.data.message
+									);
 								}
-
 							}
 							// Add trigger to handle functionalities that may be needed after edit-profile ajax submission submissions.
 							$(document).trigger(
@@ -1125,20 +967,19 @@ jQuery(function ($) {
 							);
 						}
 					}).fail(function () {
-						UREditUsers.show_failure_message(l10n.ajax_form_submit_error)
+						UREditUsers.show_failure_message(
+							l10n.ajax_form_submit_error
+						);
 						button.prop("disabled", false);
 						return;
 					});
-				});
+				}
+			);
 		}
 	};
 
 	$(document).ready(function () {
-		if (
-			$(
-				"#user-registration-edit-user-body"
-			).length
-		) {
+		if ($("#user-registration-edit-user-body").length) {
 			UREditUsers.init();
 		}
 	});

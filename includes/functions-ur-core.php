@@ -1382,20 +1382,6 @@ function ur_admin_form_settings_fields( $form_id ) {
 			),
 			array(
 				'type'              => 'text',
-				'label'             => __( 'Submit Button Class', 'user-registration' ),
-				'description'       => '',
-				'required'          => false,
-				'id'                => 'user_registration_form_setting_form_submit_class',
-				'class'             => array( 'ur-enhanced-select' ),
-				'input_class'       => array(),
-				'custom_attributes' => array(),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_submit_class', '' ),
-				'default_value'     => '',
-				'tip'               => __( 'Enter CSS class names for the Submit Button. Multiple class names should be separated with spaces.', 'user-registration' ),
-				'product'           => 'user-registration/user-registration.php',
-			),
-			array(
-				'type'              => 'text',
 				'label'             => __( 'Submit Button Text', 'user-registration' ),
 				'description'       => '',
 				'required'          => false,
@@ -1416,7 +1402,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'input_class'       => array(),
 				'custom_attributes' => array(),
 				'tip'               => __( 'Add custom CSS classes for styling the submit button. Separate multiple classes with spaces.', 'user-registration' ),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_submit_label', __( 'Submit', 'user-registration' ) ),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_submit_class', __( 'submit', 'user-registration' ) ),
 				'default_value'     => __( 'Submit', 'user-registration' ),
 				'product'           => 'user-registration/user-registration.php',
 			),
@@ -1467,27 +1453,6 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_configured_captcha_type', '1' ),
 				'default_value'     => '1',
 				'tip'               => __( 'Select the type of Captcha you want in this form.', 'user-registration' ),
-				'product'           => 'user-registration/user-registration.php',
-			),
-			array(
-				'type'              => 'select',
-				'label'             => __( 'Form Template', 'user-registration' ),
-				'description'       => '',
-				'required'          => false,
-				'id'                => 'user_registration_form_template',
-				'class'             => array( 'ur-enhanced-select' ),
-				'input_class'       => array(),
-				'options'           => array(
-					'Default'      => __( 'Default', 'user-registration' ),
-					'Bordered'     => __( 'Bordered', 'user-registration' ),
-					'Flat'         => __( 'Flat', 'user-registration' ),
-					'Rounded'      => __( 'Rounded', 'user-registration' ),
-					'Rounded Edge' => __( 'Rounded Edge', 'user-registration' ),
-				),
-				'custom_attributes' => array(),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_template', ucwords( str_replace( '_', ' ', get_option( 'user_registration_form_template', 'default' ) ) ) ),
-				'default_value'     => ucwords( str_replace( '_', ' ', get_option( 'user_registration_form_template', 'default' ) ) ),
-				'tip'               => __( 'Choose form template to use.', 'user-registration' ),
 				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
@@ -3173,7 +3138,9 @@ if ( ! function_exists( 'ur_install_extensions' ) ) {
 				if ( is_plugin_inactive( $install_status['file'] ) ) {
 					if( $install_status['file'] === 'user-registration-pro/user-registration.php' ) {
 						$status['plugin'] = 'user-registration-pro/user-registration.php';
-						setcookie('urm_license_status', 'pro_activated', time() + 300, '/', '', false, false);
+						if( ! is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
+							setcookie('urm_license_status', 'pro_activated', time() + 300, '/', '', false, false);
+						}
 						activate_plugin( $install_status['file'] );
 					}
 					$status['activateUrl'] =
@@ -4036,7 +4003,7 @@ if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
 
 					/* translators: %s: License Plan Name. */
 					$tooltip_html = sprintf( __( 'You have been subscribed to %s plan. Please upgrade to higher plans to use this feature.', 'user-registration' ), ucfirst( $license_plan ) );
-					$button       = '<a rel="noreferrer noopener" target="_blank" href="https://wpuserregistration.com/pricing/?utm_source=settings-sidebar-right&utm_medium=premium-addon-tooltip&utm_campaign=' . UR()->utm_campaign . '">' . esc_html__( 'Upgrade Plan', 'user-registration' ) . '</a>';
+					$button       = '<a rel="noreferrer noopener" target="_blank" href="https://wpuserregistration.com/upgrade/?utm_source=settings-sidebar-right&utm_medium=premium-addon-tooltip&utm_campaign=' . UR()->utm_campaign . '">' . esc_html__( 'Upgrade Plan', 'user-registration' ) . '</a>';
 					array_push( $tabs_to_display, $tab );
 				} else {
 					$plugin_name = $detail['name'];
@@ -4066,7 +4033,7 @@ if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
 				}
 
 				$tooltip_html = __( 'You are currently using the free version of our plugin. Please upgrade to premium version to use this feature.', 'user-registration' );
-				$button       = '<a rel="noreferrer noopener" target="_blank" href="https://wpuserregistration.com/pricing/?utm_source=settings-sidebar-right&utm_medium=premium-addon-tooltip&utm_campaign=' . UR()->utm_campaign . '">' . esc_html__( 'Upgrade to Pro', 'user-registration' ) . '</a>';
+				$button       = '<a rel="noreferrer noopener" target="_blank" href="https://wpuserregistration.com/upgrade/?utm_source=settings-sidebar-right&utm_medium=premium-addon-tooltip&utm_campaign=' . UR()->utm_campaign . '">' . esc_html__( 'Upgrade to Pro', 'user-registration' ) . '</a>';
 				array_push( $tabs_to_display, $tab );
 			}
 
@@ -4397,21 +4364,22 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 					);
 				}
 
-				// Store error message in session for PRG pattern
-				if ( ! session_id() ) {
-					session_start();
-				}
-				$_SESSION['ur_login_error'] = apply_filters( 'login_errors', $message );
+
+				$error_message = apply_filters( 'login_errors', $message );
+				$error_key = 'ur_login_error_' . uniqid();
+				set_transient( $error_key, $error_message, 300 ); // 5 minutes
 
 				/**
 				 * Triggered when a user fails to log in during the user registration process.
 				 */
 				do_action( 'user_registration_login_failed' );
 
-				// Redirect to prevent form resubmission
+
 				$redirect_url = wp_get_raw_referer() ? wp_get_raw_referer() : ur_get_my_account_url();
+				$redirect_url = add_query_arg( 'urm_error', $error_key, $redirect_url );
 				wp_redirect( $redirect_url );
 				exit;
+
 			}
 		}
 	}
@@ -4551,20 +4519,7 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 		 */
 		$users_can_register = apply_filters( 'ur_register_setting_override', get_option( 'users_can_register' ) );
 
-		if ( ! is_user_logged_in() ) {
-			if ( ! $users_can_register ) {
-				$logger->error( __( 'Only administrators can add new users.', 'user-registration' ), array( 'source' => 'form-submission' ) );
-				wp_send_json_error(
-					array(
-						/**
-						 * Filter to modify register pre form message.
-						 * Default value is the 'Only administrators can add new users'.
-						 */
-						'message' => apply_filters( 'ur_register_pre_form_message', __( 'Only administrators can add new users.', 'user-registration' ) ),
-					)
-				);
-			}
-		} else {
+		if ( is_user_logged_in() ) {
 			/**
 			 * Filter to modify user capability.
 			 * Default value is 'create_users'.
@@ -7668,7 +7623,7 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'type'     => 'single_select_page',
 								'default'  => '',
 								'class'    => 'ur-enhanced-select-nostd',
-								'css'      => 'min-width:350px;',
+								'css'      => '',
 								'desc_tip' => true,
 								'field-key'=> 'lost-password'
 							),
@@ -7912,13 +7867,14 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 								'desc_tip' => true,
 								'css'      => '',
 								'default'  => __( 'Please enter your details to access your account.', 'user-registration' ),
-							),
-							array(
-								'type'     => 'section',
-								'title'    => __( 'Advanced', 'user-registration' ),
-								'id'       => 'user_registration_form_setting_general_advanced',
-								'class'	=> array( 'ur-form-settings-section')
-							),
+							)
+						),
+					),
+					'login_options_settings_advanced' => array(
+						'title'    => __( 'Advanced', 'user-registration' ),
+						'type'     => 'card',
+						'desc'     => '',
+						'settings' => array(
 							array(
 								'title'    => __( 'Enable Ajax Login', 'user-registration' ),
 								'desc'     => '',
@@ -7927,35 +7883,6 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 								'desc_tip' => __( 'Check to enable Ajax login i.e login without page reload on submission.', 'user-registration' ),
 								'css'      => '',
 								'default'  => 'no',
-							),
-							array(
-								'title'    => __( 'Enable Remember Me', 'user-registration' ),
-								'desc'     => '',
-								'id'       => 'user_registration_login_options_remember_me',
-								'type'     => 'toggle',
-								'desc_tip' => __( 'Check to enable/disable Remember Me.', 'user-registration' ),
-								'css'      => '',
-								'default'  => 'yes',
-							),
-
-							array(
-								'title'    => __( 'Enable Lost Password', 'user-registration' ),
-								'desc'     => '',
-								'id'       => 'user_registration_login_options_lost_password',
-								'type'     => 'toggle',
-								'desc_tip' => __( 'Check to enable/disable lost password.', 'user-registration' ),
-								'css'      => '',
-								'default'  => 'yes',
-							),
-							array(
-								'title'    => __( 'Lost Password Page', 'user-registration' ),
-								'desc'     => sprintf( __( 'Select the page which contains your login form: [%s]', 'user-registration' ), apply_filters( 'user_registration_lost_password_shortcode_tag', 'user_registration_lost_password' ) ), //phpcs:ignore
-								'id'       => 'user_registration_lost_password_page_id',
-								'type'     => 'single_select_page',
-								'default'  => '',
-								'class'    => 'ur-enhanced-select-nostd',
-								'css'      => 'min-width:350px;',
-								'desc_tip' => true,
 							),
 							array(
 								'title'    => __( 'Hide Field Labels', 'user-registration' ),
@@ -7983,25 +7910,6 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 								'default'  => 'default',
 								'options'  => $ur_enabled_captchas,
 							),
-							array(
-								'title'    => __( 'Registration URL', 'user-registration' ),
-								'desc'     => __( 'This option lets you display the registration page URL in the login form.', 'user-registration' ),
-								'id'       => 'user_registration_general_setting_registration_url_options',
-								'type'     => 'text',
-								'desc_tip' => true,
-								'css'      => '',
-							),
-
-							array(
-								'title'    => __( 'Registration URL Label', 'user-registration' ),
-								'desc'     => __( 'This option lets you enter the label to registration url in login form.', 'user-registration' ),
-								'id'       => 'user_registration_general_setting_registration_label',
-								'type'     => 'text',
-								'desc_tip' => true,
-								'css'      => '',
-								'default'  => __( 'Not a member yet? Register now.', 'user-registration' ),
-							),
-
 							array(
 								'title'      => __( 'Disable Default WordPress Login Screen', 'user-registration' ),
 								'desc'       => '',
