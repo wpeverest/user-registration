@@ -449,8 +449,8 @@ if ( ! class_exists( 'User_Registration_Users_ListTable' ) ) {
 								wp_create_nonce( 'bulk-users' ),
 								__( 'Disable', 'user-registration' ),
 							);
-						}
 					}
+				}
 				}
 
 				/**
@@ -1028,13 +1028,10 @@ if ( ! class_exists( 'User_Registration_Users_ListTable' ) ) {
 				)";
 
 				$query->query_where .= " OR EXISTS (
-					SELECT 1
-					FROM {$wpdb->prefix}usermeta um1
-					WHERE um1.user_id = {$wpdb->users}.ID
-					AND (
-						(um1.meta_key = 'first_name' AND um1.meta_value LIKE '{$search_like}')
-						OR (um1.meta_key = 'last_name' AND um1.meta_value LIKE '{$search_like}')
-					)
+					SELECT *
+					FROM {$wpdb->usermeta} um
+					WHERE um.user_id = {$wpdb->users}.ID
+					AND um.meta_value LIKE '{$search_like}'
 				)";
 			}
 
