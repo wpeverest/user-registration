@@ -2202,6 +2202,12 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 				$field .= '</div>';
 
 				break;
+
+			case 'html':
+				$content = isset( $args['html_content'] ) ? $args['html_content'] : '';
+
+				$field .= $content;
+				break;
 		}
 
 
