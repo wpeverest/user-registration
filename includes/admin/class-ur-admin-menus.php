@@ -944,7 +944,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						</label>
 					</span>
 					<span class="add-to-menu">
-						<input type="submit" class="button button-secondary submit-add-to-menu right"
+						<input type="submit" class="button-secondary submit-add-to-menu right"
 							value="<?php esc_attr_e( 'Add to menu', 'user-registration' ); ?>" name="add-post-type-menu-item"
 							id="submit-posttype-user-registration-endpoints">
 						<span class="spinner"></span>

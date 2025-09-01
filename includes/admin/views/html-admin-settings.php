@@ -162,7 +162,7 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 							 */
 							$user_registration_setting_save_label = apply_filters( 'user_registration_setting_save_label', esc_attr__( 'Save Changes', 'user-registration' ) );
 							?>
-							<input name="save" class="<?php echo implode( ' ', apply_filters( 'user_registration_setting_save_button_classes', array( 'button', 'button-primary' ) ) ) ?>" type="submit" value="<?php echo esc_attr( $user_registration_setting_save_label ); ?>" />
+							<input name="save" class="<?php echo implode( ' ', apply_filters( 'user_registration_setting_save_button_classes', array( 'button-primary' ) ) ) ?>" type="submit" value="<?php echo esc_attr( $user_registration_setting_save_label ); ?>" />
 						<?php endif; ?>
 						<input type="hidden" name="subtab" id="last_tab" />
 						<?php wp_nonce_field( 'user-registration-settings' ); ?>

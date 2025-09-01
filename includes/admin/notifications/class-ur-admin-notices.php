@@ -326,28 +326,28 @@ class UR_Admin_Notices {
 								'title'  => __( "Sure, I'd love to!", 'user-registration' ),
 								'icon'   => 'dashicons-external',
 								'link'   => 'https://wordpress.org/support/plugin/user-registration/reviews/#postform',
-								'class'  => 'button button-primary',
+								'class'  => 'button-primary',
 								'target' => '_blank',
 							),
 							array(
 								'title'  => __( 'I already did!', 'user-registration' ),
 								'icon'   => 'dashicons-smiley',
 								'link'   => '#',
-								'class'  => 'button button-secondary notice-dismiss notice-dismiss-permanently',
+								'class'  => 'button-secondary notice-dismiss notice-dismiss-permanently',
 								'target' => '',
 							),
 							array(
 								'title'  => __( 'Maybe later', 'user-registration' ),
 								'icon'   => 'dashicons-dismiss',
 								'link'   => '#',
-								'class'  => 'button button-secondary notice-dismiss notice-dismiss-temporarily',
+								'class'  => 'button-secondary notice-dismiss notice-dismiss-temporarily',
 								'target' => '',
 							),
 							array(
 								'title'  => __( 'I have a query', 'user-registration' ),
 								'icon'   => 'dashicons-testimonial',
 								'link'   => 'https://wpuserregistration.com/support',
-								'class'  => 'button button-secondary notice-have-query',
+								'class'  => 'button-secondary notice-have-query',
 								'target' => '_blank',
 							),
 						),
@@ -386,28 +386,28 @@ class UR_Admin_Notices {
 								'title'  => __( "Sure, I'd love to!", 'user-registration' ),
 								'icon'   => 'dashicons-external',
 								'link'   => 'https://wordpress.org/support/plugin/user-registration/reviews/#postform',
-								'class'  => 'button button-primary',
+								'class'  => 'button-primary',
 								'target' => '_blank',
 							),
 							array(
 								'title'  => __( 'I already did!', 'user-registration' ),
 								'icon'   => 'dashicons-smiley',
 								'link'   => '#',
-								'class'  => 'button button-secondary notice-dismiss notice-dismiss-permanently',
+								'class'  => 'button-secondary notice-dismiss notice-dismiss-permanently',
 								'target' => '',
 							),
 							array(
 								'title'  => __( 'Maybe later', 'user-registration' ),
 								'icon'   => 'dashicons-dismiss',
 								'link'   => '#',
-								'class'  => 'button button-secondary notice-dismiss notice-dismiss-temporarily',
+								'class'  => 'button-secondary notice-dismiss notice-dismiss-temporarily',
 								'target' => '',
 							),
 							array(
 								'title'  => __( 'I have a query', 'user-registration' ),
 								'icon'   => 'dashicons-testimonial',
 								'link'   => 'https://wpuserregistration.com/support',
-								'class'  => 'button button-secondary notice-have-query',
+								'class'  => 'button-secondary notice-have-query',
 								'target' => '_blank',
 							),
 						),
@@ -449,28 +449,28 @@ class UR_Admin_Notices {
 								'title'  => __( "Sure, I'd love to!", 'user-registration' ),
 								'icon'   => 'dashicons-external',
 								'link'   => 'https://forms.office.com/pages/responsepage.aspx?id=c04iBAejyEWvNQDb6GzDCILyv8m6NoBDvJVtRTCcOvBUNk5OSTA4OEs1SlRPTlhFSFZXRFA0UFEwRCQlQCN0PWcu',
-								'class'  => 'button button-primary',
+								'class'  => 'button-primary',
 								'target' => '_blank',
 							),
 							array(
 								'title'  => __( 'I already did!', 'user-registration' ),
 								'icon'   => 'dashicons-smiley',
 								'link'   => '#',
-								'class'  => 'button button-secondary notice-dismiss notice-dismiss-permanently',
+								'class'  => 'button-secondary notice-dismiss notice-dismiss-permanently',
 								'target' => '',
 							),
 							array(
 								'title'  => __( 'Maybe later', 'user-registration' ),
 								'icon'   => 'dashicons-dismiss',
 								'link'   => '#',
-								'class'  => 'button button-secondary notice-dismiss notice-dismiss-temporarily',
+								'class'  => 'button-secondary notice-dismiss notice-dismiss-temporarily',
 								'target' => '',
 							),
 							array(
 								'title'  => __( 'I have a query', 'user-registration' ),
 								'icon'   => 'dashicons-testimonial',
 								'link'   => 'https://wpuserregistration.com/support',
-								'class'  => 'button button-secondary notice-have-query',
+								'class'  => 'button-secondary notice-have-query',
 								'target' => '_blank',
 							),
 						),
@@ -506,14 +506,14 @@ class UR_Admin_Notices {
 								'title'  => __( 'Allow', 'user-registration' ),
 								'icon'   => 'dashicons-smiley',
 								'link'   => 'https://forms.office.com/pages/responsepage.aspx?id=c04iBAejyEWvNQDb6GzDCILyv8m6NoBDvJVtRTCcOvBUNk5OSTA4OEs1SlRPTlhFSFZXRFA0UFEwRCQlQCN0PWcu',
-								'class'  => 'button button-primary ur-allow-usage',
+								'class'  => 'button-primary ur-allow-usage',
 								'target' => '_blank',
 							),
 							array(
 								'title'  => __( 'No, Thanks', 'user-registration' ),
 								'icon'   => 'dashicons-dismiss',
 								'link'   => '#',
-								'class'  => 'button button-secondary notice-dismiss notice-dismiss-permanently ur-deny-usage',
+								'class'  => 'button-secondary notice-dismiss notice-dismiss-permanently ur-deny-usage',
 								'target' => '',
 							),
 						),
@@ -854,8 +854,8 @@ class UR_Admin_Notices {
 
 			if ( $onboard_skipped ) {
 				/* translators: % s: continue wizard URL */
-				$onboarding_complete_text  = sprintf( __( '<a href="%s" class="button button-primary" style="margin-right: 5px;">Continue Setup Wizard</a>', 'user-registration' ), esc_url( admin_url( '/admin.php?page=user-registration-welcome&tab=setup-wizard' ) ) );
-				$onboarding_complete_text .= sprintf( __( '<a class="button button-secondary skip" href="%s">Skip setup</a>', 'user-registration' ), esc_url( wp_nonce_url( add_query_arg( 'ur-hide-notice', 'continue_setup_wizard' ), 'user_registration_hide_notices_nonce', '_ur_notice_nonce' ) ) );
+				$onboarding_complete_text  = sprintf( __( '<a href="%s" class="button-primary" style="margin-right: 5px;">Continue Setup Wizard</a>', 'user-registration' ), esc_url( admin_url( '/admin.php?page=user-registration-welcome&tab=setup-wizard' ) ) );
+				$onboarding_complete_text .= sprintf( __( '<a class="button-secondary skip" href="%s">Skip setup</a>', 'user-registration' ), esc_url( wp_nonce_url( add_query_arg( 'ur-hide-notice', 'continue_setup_wizard' ), 'user_registration_hide_notices_nonce', '_ur_notice_nonce' ) ) );
 				$onboarding_completed      = false;
 			} else {
 				$onboarding_completed = true;
