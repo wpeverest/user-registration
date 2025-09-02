@@ -2395,7 +2395,6 @@ function ur_string_translation( $form_id, $field_id, $variable ) {
 		if ( function_exists( 'icl_register_string' ) ) {
 			icl_register_string( $context, $name, $variable );
 			if ( function_exists( 'icl_t' ) ) {
-				ur_get_logger()->debug(print_r('icl_t', true));
 				$variable = icl_t( $context, $name, $variable );
 			}
 
