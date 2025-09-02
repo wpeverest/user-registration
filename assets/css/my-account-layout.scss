@@ -68,6 +68,14 @@
 			text-align: center;
 
 			.user-registration-profile-header {
+				.button-group {
+					.button.user_registration_profile_picture_upload {
+						background: #edeff7;
+						color: $primary_color;
+						border: $border_width solid #edeff7 !important;
+					}
+				}
+
 				.user-registration-img-container {
 					margin: 0 auto;
 					margin-bottom: 15px;
@@ -92,6 +100,10 @@
 				h2 {
 					text-align: center;
 				}
+			}
+
+			.user-registration-profile-fields {
+
 			}
 		}
 	}
@@ -158,6 +170,12 @@
 						float: right;
 						margin-top: $spacing_24px;
 						margin-bottom: 0;
+
+						.user-registration-Button.button-primary {
+							border-radius: $border_radius_4;
+							box-shadow: none;
+							border: $border_width solid $primary_color;
+						}
 					}
 				}
 			}
@@ -924,6 +942,17 @@
 										float: unset;
 										margin-top: $spacing_32px;
 										text-align: right;
+
+										.user-registration-Button.button {
+											background: $primary_color;
+											border: $border_width solid $primary_color;
+											border-radius: $border_radius_4;
+
+											&:hover {
+												background: #38488e;
+												border-color: #38488e;
+											}
+										}
 									}
 								}
 							}

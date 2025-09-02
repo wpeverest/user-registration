@@ -310,13 +310,11 @@
 				.swal2-title {
 					display: flex !important;
 					align-items: center;
-					flex-direction: row;
 					gap: $spacing_12px;
 					border-bottom: $border_width solid #e1e1e1;
 					padding-bottom: $spacing_16px;
 					width: 100%;
 					margin-bottom: 0;
-					justify-content: center;
 
 					.dashicons {
 						font-size: 18px;

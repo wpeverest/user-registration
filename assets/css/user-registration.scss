@@ -273,6 +273,21 @@ textarea.ur-input-border-red {
 		input[name="rememberme"]#rememberme {
 			vertical-align: middle;
 		}
+
+		&.ur-edit-profile {
+			.ur-form-row.edit-user-save-btn-container {
+				.btn-primary {
+					min-height: 34px;
+					background: $primary_color;
+					border: 1px solid $primary_color;
+					color: $white;
+					border-radius: $border_radius_4;
+					font-size: 14px;
+					line-height: 24px;
+					padding: 0 $spacing_12px;
+				}
+			}
+		}
 	}
 
 	&.login-registration {
