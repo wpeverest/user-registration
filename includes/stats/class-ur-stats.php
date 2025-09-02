@@ -602,7 +602,6 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		 * @param string $slug Slug.
 		 *
 		 * @since 4.0
-		 *
 		 */
 		public function on_module_activate( $slug ) {
 			$our_modules  = $this->get_modules();
