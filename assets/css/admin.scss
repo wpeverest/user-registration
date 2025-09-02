@@ -43,6 +43,14 @@ body {
 	&.user-registration-page {
 		font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 	}
+
+	.wp-responsive-open {
+		#wpbody {
+			@media screen and (max-width: 782px) {
+				right: -14.6em;
+			}
+		}
+	}
 }
 
 .toplevel_page_user-registration,
@@ -70,9 +78,12 @@ body {
 }
 
 .user-registration-membership_page_user-registration-dashboard {
-
 	#wpcontent {
 		margin-left: 140px;
+
+		@media screen and (max-width: 960px) {
+			margin-left: 0;
+		}
 
 		#wpbody-content {
 			float: none;
@@ -4311,11 +4322,19 @@ body.user-registration {
 	align-items: center;
 	background: $grey-0;
 	padding: 0px $spacing_24px;
-	border-bottom: $border_width solid #e1e1e1;
+	border-bottom: $border_width solid $border-color;
 	margin-bottom: 25px;
 
 	&.ur-dashboard-page-topnav {
-		margin-left: 20px;
+		margin-left: $spacing_20px;
+
+		@media screen and (max-width: 960px) {
+			margin-left: $spacing_36px;
+		}
+
+		@media screen and (max-width: 782px) {
+			margin-left: 0;
+		}
 	}
 
 	.ur-page-title__wrapper {
