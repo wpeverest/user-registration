@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the User Registration & Membership plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration & Membership 4.4.0\n"
+"Project-Id-Version: User Registration & Membership 4.4.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-registration\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-08-27T12:53:40+00:00\n"
+"POT-Creation-Date: 2025-09-02T10:19:32+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: user-registration\n"
@@ -130,7 +130,7 @@ msgstr ""
 
 #: includes/3rd-party/DiviBuilder/Modules/LoginForm.php:56
 #: includes/3rd-party/DiviBuilder/Modules/MyAccount.php:56
-#: includes/functions-ur-core.php:1519
+#: includes/functions-ur-core.php:1552
 #: includes/functions-ur-core.php:7127
 #: includes/functions-ur-core.php:7152
 #: src/blocks/blocks/login-form/Edit.js:40
@@ -774,9 +774,9 @@ msgstr ""
 #: includes/functions-ur-core.php:5190
 #: modules/membership/includes/Admin.php:297
 #: modules/membership/includes/Admin.php:347
-#: modules/membership/includes/Admin/Members/Members.php:234
-#: modules/membership/includes/Admin/Membership/ListTable.php:249
-#: modules/membership/includes/Admin/MembershipGroups/MembershipGroupsListTable.php:197
+#: modules/membership/includes/Admin/Members/Members.php:232
+#: modules/membership/includes/Admin/Membership/ListTable.php:247
+#: modules/membership/includes/Admin/MembershipGroups/MembershipGroupsListTable.php:195
 #: modules/payment-history/Orders.php:280
 msgid "Add New"
 msgstr ""
@@ -1322,7 +1322,7 @@ msgid "User Status"
 msgstr ""
 
 #: includes/admin/class-ur-admin-export-users.php:175
-#: modules/membership/includes/Admin/Members/Members.php:286
+#: modules/membership/includes/Admin/Members/Members.php:283
 msgid "User Registered"
 msgstr ""
 
@@ -2012,7 +2012,7 @@ msgstr ""
 #: includes/admin/functions-ur-admin.php:949
 #: modules/membership/includes/Admin.php:294
 #: modules/membership/includes/Admin/Forms/class-ur-form-field-membership.php:49
-#: modules/membership/includes/Admin/Members/Members.php:284
+#: modules/membership/includes/Admin/Members/Members.php:281
 #: modules/membership/includes/Admin/Membership/Membership.php:290
 #: modules/membership/includes/Admin/Membership/Membership.php:291
 #: modules/membership/includes/Admin/Settings/class-ur-settings-membership.php:34
@@ -2127,7 +2127,7 @@ msgstr ""
 
 #: includes/admin/notifications/class-ur-admin-notices.php:377
 msgid ""
-"<strong>What benefit would you have?</strong> <br>\r\n"
+"<strong>What benefit would you have?</strong> <br>\n"
 "\t\t\t\t\t\t\t\tBasically, it would encourage us to release updates regularly with new features & bug fixes so that you can keep on using the plugin without any issues and also to provide free support like we have been doing. <span class=\"dashicons dashicons-smiley smile-icon\"></span><br>"
 msgstr ""
 
@@ -2137,13 +2137,13 @@ msgstr ""
 
 #: includes/admin/notifications/class-ur-admin-notices.php:435
 msgid ""
-"<strong>Hey there!</strong> <br>\r\n"
+"<strong>Hey there!</strong> <br>\n"
 "\t\t\t\t\t\t\t\t\tWe would be grateful if you could spare a moment and help us fill this survey. This survey will take approximately 4 minutes to complete."
 msgstr ""
 
 #: includes/admin/notifications/class-ur-admin-notices.php:440
 msgid ""
-"<strong>What benefit would you have?</strong> <br>\r\n"
+"<strong>What benefit would you have?</strong> <br>\n"
 "\t\t\t\t\t\t\t\t\tWe will take your feedback from the survey and use that information to make the plugin better. As a result, you will have a better plugin as you wanted. <span class=\"dashicons dashicons-smiley smile-icon\"></span><br>"
 msgstr ""
 
@@ -2171,11 +2171,11 @@ msgstr ""
 
 #. translators: % s: continue wizard URL
 #: includes/admin/notifications/class-ur-admin-notices.php:857
-msgid "<a href=\"%s\" class=\"button button-primary\" style=\"margin-right: 5px;\">Continue Setup Wizard</a>"
+msgid "<a href=\"%s\" class=\"button-primary\" style=\"margin-right: 5px;\">Continue Setup Wizard</a>"
 msgstr ""
 
 #: includes/admin/notifications/class-ur-admin-notices.php:858
-msgid "<a class=\"button button-secondary skip\" href=\"%s\">Skip setup</a>"
+msgid "<a class=\"button-secondary skip\" href=\"%s\">Skip setup</a>"
 msgstr ""
 
 #: includes/admin/notifications/views/html-notice-custom.php:17
@@ -2497,7 +2497,7 @@ msgstr ""
 #: includes/class-ur-smart-tags.php:59
 #: includes/class-ur-smart-tags.php:754
 #: includes/functions-ur-core.php:1619
-#: modules/membership/includes/Admin/Members/Members.php:283
+#: modules/membership/includes/Admin/Members/Members.php:280
 #: modules/membership/includes/Admin/Views/member-create.php:89
 #: modules/membership/includes/Admin/Views/member-create.php:97
 #: modules/membership/includes/Templates/membership-registration-form.php:63
@@ -3147,7 +3147,7 @@ msgstr ""
 #: includes/form/class-ur-form-field-user-login.php:44
 #: includes/form/class-ur-form-field-user-login.php:49
 #: includes/functions-ur-core.php:1618
-#: modules/membership/includes/Admin/Members/Members.php:282
+#: modules/membership/includes/Admin/Members/Members.php:279
 #: modules/membership/includes/Admin/Views/member-create.php:68
 #: modules/membership/includes/Admin/Views/member-create.php:77
 #: modules/membership/includes/Templates/membership-registration-form.php:48
@@ -3172,7 +3172,7 @@ msgid "Registered On"
 msgstr ""
 
 #: includes/admin/settings/class-ur-users-menu.php:1174
-#: modules/membership/includes/Admin/Members/Members.php:290
+#: modules/membership/includes/Admin/Members/Members.php:287
 msgid "Actions"
 msgstr ""
 
@@ -3399,11 +3399,11 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:141
 msgid ""
-"Hi Admin, <br/>\r\n"
-"\r\n"
-"\t\t\t\t\tA new user {{username}} - {{email}} has successfully registered to your site <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\r\n"
-"\t\t\t\t\t{{membership_plan_details}} <br/>\r\n"
-"\t\t\t\t\tYou can review their details and manage their role from the '<b>Users</b>' section in your WordPress dashboard.<br/><br />\r\n"
+"Hi Admin, <br/>\n"
+"\n"
+"\t\t\t\t\tA new user {{username}} - {{email}} has successfully registered to your site <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\n"
+"\t\t\t\t\t{{membership_plan_details}} <br/>\n"
+"\t\t\t\t\tYou can review their details and manage their role from the '<b>Users</b>' section in your WordPress dashboard.<br/><br />\n"
 "\t\t\t\t\tThank You!"
 msgstr ""
 
@@ -3450,15 +3450,15 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-approval-link-email.php:140
 msgid ""
-"Hi Admin, <br/>\r\n"
-"\r\n"
-"\t\t\t\t\tA new user {{username}} - {{email}} has successfully registered to your site <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\r\n"
-"\r\n"
-"\t\t\t\t\tPlease review their details and assigned role in the '<b>Users</b>' menu of your WordPress dashboard.  <br/>\r\n"
-"\r\n"
-"\t\t\t\t\t[Approve User: {{approval_link}}] - Link <br>\r\n"
-"\t\t\t\t\t[Deny User: {{denial_link}}] - Link <br>\r\n"
-"\r\n"
+"Hi Admin, <br/>\n"
+"\n"
+"\t\t\t\t\tA new user {{username}} - {{email}} has successfully registered to your site <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\n"
+"\n"
+"\t\t\t\t\tPlease review their details and assigned role in the '<b>Users</b>' menu of your WordPress dashboard.  <br/>\n"
+"\n"
+"\t\t\t\t\t[Approve User: {{approval_link}}] - Link <br>\n"
+"\t\t\t\t\t[Deny User: {{denial_link}}] - Link <br>\n"
+"\n"
 "\t\t\t\t\tThank You!"
 msgstr ""
 
@@ -3484,12 +3484,12 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:138
 msgid ""
-"Hi {{username}}, <br/>\r\n"
-"\r\n"
-"\t\t\t\t\t\tThank you for registering on <a href=\"{{home_url}}\">{{blog_info}}</a>!. <br/>\r\n"
-"\r\n"
-"\t\t\t\t\t\tYour registration is currently awaiting approval from the site admin. You will receive a notification once your account has been approved. <br/>\r\n"
-"\r\n"
+"Hi {{username}}, <br/>\n"
+"\n"
+"\t\t\t\t\t\tThank you for registering on <a href=\"{{home_url}}\">{{blog_info}}</a>!. <br/>\n"
+"\n"
+"\t\t\t\t\t\tYour registration is currently awaiting approval from the site admin. You will receive a notification once your account has been approved. <br/>\n"
+"\n"
 "\t\t\t\t\t\tThank You!"
 msgstr ""
 
@@ -3515,11 +3515,11 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-confirm-email-address-change-email.php:123
 msgid ""
-"Hi {{display_name}},<br/><br/>\r\n"
-"\t\t\t\t\t\t\tYou recently requested to change the email address associated with your account to {{updated_new_user_email}} .<br/><br/>\r\n"
-"\t\t\t\t\t\t\tTo confirm this change, please click on the following link: {{email_change_confirmation_link}}<br/><br/>\r\n"
-"\t\t\t\t\t\t\tThis link will remain active for 24 hours. If you did not request this change, please ignore this email or contact us for assistance.<br/><br/>\r\n"
-"\t\t\t\t\t\t\tBest regards,<br/>\r\n"
+"Hi {{display_name}},<br/><br/>\n"
+"\t\t\t\t\t\t\tYou recently requested to change the email address associated with your account to {{updated_new_user_email}} .<br/><br/>\n"
+"\t\t\t\t\t\t\tTo confirm this change, please click on the following link: {{email_change_confirmation_link}}<br/><br/>\n"
+"\t\t\t\t\t\t\tThis link will remain active for 24 hours. If you did not request this change, please ignore this email or contact us for assistance.<br/><br/>\n"
+"\t\t\t\t\t\t\tBest regards,<br/>\n"
 "\t\t\t\t \t\t\t{{blog_info}}"
 msgstr ""
 
@@ -3541,11 +3541,11 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:132
 msgid ""
-"Hi {{username}}, <br/>\r\n"
-"\t\t\t\t\t\tThank you for registering on <a href=\"{{home_url}}\">{{blog_info}}</a>!\r\n"
-"\t\t\t\t\t\tPlease click on the link below to confirm your registration: <br/>\r\n"
-"\t\t\t\t\t\tClick here to confirm your registration: <a href=\"{{home_url}}/{{ur_login}}?ur_token={{email_token}}\">Click Here</a><br/>\r\n"
-"\r\n"
+"Hi {{username}}, <br/>\n"
+"\t\t\t\t\t\tThank you for registering on <a href=\"{{home_url}}\">{{blog_info}}</a>!\n"
+"\t\t\t\t\t\tPlease click on the link below to confirm your registration: <br/>\n"
+"\t\t\t\t\t\tClick here to confirm your registration: <a href=\"{{home_url}}/{{ur_login}}?ur_token={{email_token}}\">Click Here</a><br/>\n"
+"\n"
 "\t\t\t\t\t\tThank You!"
 msgstr ""
 
@@ -3572,9 +3572,9 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-payment-success-admin-email.php:134
 msgid ""
-"Hi Admin, </br>\r\n"
-"\t\t\t\t\t\tYou have successfully received a payment from {{username}}. <br>\r\n"
-"\t\t\t\t\t\t<a href=\"{{home_url}}/wp-admin/user-edit.php?user_id={{user_id}}\">Click Here to view payment details</a> .\r\n"
+"Hi Admin, </br>\n"
+"\t\t\t\t\t\tYou have successfully received a payment from {{username}}. <br>\n"
+"\t\t\t\t\t\t<a href=\"{{home_url}}/wp-admin/user-edit.php?user_id={{user_id}}\">Click Here to view payment details</a> .\n"
 "\t\t\t\t\t\tThank You!"
 msgstr ""
 
@@ -3596,9 +3596,9 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-payment-success-email.php:124
 msgid ""
-"Hi {{username}}, <br>\r\n"
-"\t\t\t\t\t\tCongratulations! Your payment for registration on <a href=\"{{home_url}}\">{{blog_info}}</a> has been successfully completed. <br>\r\n"
-"\t\t\t\t\t\tYou can view your payment invoice here: {{payment_invoice}}<br>\r\n"
+"Hi {{username}}, <br>\n"
+"\t\t\t\t\t\tCongratulations! Your payment for registration on <a href=\"{{home_url}}\">{{blog_info}}</a> has been successfully completed. <br>\n"
+"\t\t\t\t\t\tYou can view your payment invoice here: {{payment_invoice}}<br>\n"
 "\t\t\t\t\t\tThank You!"
 msgstr ""
 
@@ -3622,12 +3622,12 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:149
 msgid ""
-"\r\n"
-"\t\t\t\t\t\tHi Admin,<br/>\r\n"
-"\t\t\t\t\t\tA user has updated their profile information for the following account:<br/>\r\n"
-"\t\t\t\t\t\tSiteName: {{blog_info}} <br/>\r\n"
-"\t\t\t\t\t\tUsername: {{username}} <br/>\r\n"
-"\t\t\t\t\t\t{{all_fields}}<br/>\r\n"
+"\n"
+"\t\t\t\t\t\tHi Admin,<br/>\n"
+"\t\t\t\t\t\tA user has updated their profile information for the following account:<br/>\n"
+"\t\t\t\t\t\tSiteName: {{blog_info}} <br/>\n"
+"\t\t\t\t\t\tUsername: {{username}} <br/>\n"
+"\t\t\t\t\t\t{{all_fields}}<br/>\n"
 "\t\t\t\t\t\tThank You!"
 msgstr ""
 
@@ -3649,9 +3649,9 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-profile-details-updated-email.php:138
 msgid ""
-"Hi {{username}},<br/>\r\n"
-"\t\t\t\t\tYour profile details have been successfully updated on {{blog_info}}.<br/>\r\n"
-"\t\t\t\t\t{{all_fields}}<br/>\r\n"
+"Hi {{username}},<br/>\n"
+"\t\t\t\t\tYour profile details have been successfully updated on {{blog_info}}.<br/>\n"
+"\t\t\t\t\t{{all_fields}}<br/>\n"
 "\t\t\t\t\tThank You!"
 msgstr ""
 
@@ -3677,11 +3677,11 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:139
 msgid ""
-"Hi {{username}}, <br/>\r\n"
-"We regret to inform you that your registration on <a href=\"{{home_url}}\">{{blog_info}}</a> has been denied. <br />\r\n"
-"\r\n"
-"We apologize for any inconvenience caused. <br/>\r\n"
-"\r\n"
+"Hi {{username}}, <br/>\n"
+"We regret to inform you that your registration on <a href=\"{{home_url}}\">{{blog_info}}</a> has been denied. <br />\n"
+"\n"
+"We apologize for any inconvenience caused. <br/>\n"
+"\n"
 "Thank you for your understanding."
 msgstr ""
 
@@ -3707,12 +3707,12 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:141
 msgid ""
-"Hi {{username}}, <br/>\r\n"
-"\r\n"
-"Your registration on <a href=\"{{home_url}}\">{{blog_info}}</a> is now marked as pending. <br/>\r\n"
-"\r\n"
-"We apologize for the inconvenience. You will be notified once your registration has been approved. <br/>\r\n"
-"\r\n"
+"Hi {{username}}, <br/>\n"
+"\n"
+"Your registration on <a href=\"{{home_url}}\">{{blog_info}}</a> is now marked as pending. <br/>\n"
+"\n"
+"We apologize for the inconvenience. You will be notified once your registration has been approved. <br/>\n"
+"\n"
 "Thank you for your patience!"
 msgstr ""
 
@@ -3738,14 +3738,14 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-reset-password-email.php:138
 msgid ""
-"Hi {{username}},<br/>\r\n"
-"\t\t\t\t\t\tWe received a request to reset the password for your account on {{blog_info}}.<br/>\r\n"
-"\r\n"
-"\t\t\t\t\t\tIf this was a mistake, simply ignore this email, and no changes will be made to your account. <br/>\r\n"
-"\r\n"
-"\t\t\t\t\t\tTo reset your password, please click the link below: <br/>\r\n"
-"\t\t\t\t\t\t<a href=\"{{home_url}}/{{ur_reset_pass_slug}}?action=rp&key={{key}}&login={{username}}\" rel=\"noreferrer noopener\" target=\"_blank\">Click Here: </a><br/>\r\n"
-"\r\n"
+"Hi {{username}},<br/>\n"
+"\t\t\t\t\t\tWe received a request to reset the password for your account on {{blog_info}}.<br/>\n"
+"\n"
+"\t\t\t\t\t\tIf this was a mistake, simply ignore this email, and no changes will be made to your account. <br/>\n"
+"\n"
+"\t\t\t\t\t\tTo reset your password, please click the link below: <br/>\n"
+"\t\t\t\t\t\t<a href=\"{{home_url}}/{{ur_reset_pass_slug}}?action=rp&key={{key}}&login={{username}}\" rel=\"noreferrer noopener\" target=\"_blank\">Click Here: </a><br/>\n"
+"\n"
 "\t\t\t\t\t\tThank You!"
 msgstr ""
 
@@ -3769,13 +3769,13 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:139
 msgid ""
-"Hi {{username}}, <br/>\r\n"
-"\t\t\t\t\t\tCongratulations! You have successfully completed your registration on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\r\n"
-"\r\n"
-"\t\t\t\t\t\t{{membership_plan_details}}\r\n"
-"\r\n"
-"\t\t\t\t\t\tPlease visit '<b>My Account</b>' page to edit your account details and create your user profile. <br/>\r\n"
-"\r\n"
+"Hi {{username}}, <br/>\n"
+"\t\t\t\t\t\tCongratulations! You have successfully completed your registration on <a href=\"{{home_url}}\">{{blog_info}}</a>. <br/>\n"
+"\n"
+"\t\t\t\t\t\t{{membership_plan_details}}\n"
+"\n"
+"\t\t\t\t\t\tPlease visit '<b>My Account</b>' page to edit your account details and create your user profile. <br/>\n"
+"\n"
 "\t\t\t\t\t\tThank You!"
 msgstr ""
 
@@ -3809,7 +3809,7 @@ msgid "Error"
 msgstr ""
 
 #: includes/admin/views/html-admin-page-builder-setup.php:20
-#: src/dashboard/screens/Dashboard/Dashboard.js:176
+#: src/dashboard/screens/Dashboard/Dashboard.js:174
 msgid "Getting Started"
 msgstr ""
 
@@ -4303,7 +4303,7 @@ msgid "If you want to create a My Account page, you need to create a new page an
 msgstr ""
 
 #: includes/admin/views/html-login-page-forms-new.php:116
-#: src/dashboard/screens/Dashboard/Dashboard.js:191
+#: src/dashboard/screens/Dashboard/Dashboard.js:189
 msgid "View Documentation"
 msgstr ""
 
@@ -7747,55 +7747,55 @@ msgid "Add custom CSS classes for styling the entire form. Separate multiple cla
 msgstr ""
 
 #: includes/functions-ur-core.php:1474
-msgid "Redirect After Registration"
-msgstr ""
-
-#: includes/functions-ur-core.php:1490
-msgid "No Redirection"
-msgstr ""
-
-#: includes/functions-ur-core.php:1491
-msgid "Internal Page"
-msgstr ""
-
-#: includes/functions-ur-core.php:1492
-msgid "External URL"
-msgstr ""
-
-#: includes/functions-ur-core.php:1493
-msgid "Previous Page"
-msgstr ""
-
-#: includes/functions-ur-core.php:1497
-msgid "Decide where users go after completing registration."
-msgstr ""
-
-#: includes/functions-ur-core.php:1504
-msgid "Redirect to Page"
-msgstr ""
-
-#: includes/functions-ur-core.php:1512
-msgid "Pick the page users will see after signing up."
-msgstr ""
-
-#: includes/functions-ur-core.php:1524
-msgid "Set the URL of the page users should be sent to after signing up."
-msgstr ""
-
-#: includes/functions-ur-core.php:1532
-msgid "Delay Before Redirect ( Seconds )"
-msgstr ""
-
-#: includes/functions-ur-core.php:1541
-msgid "How many seconds to wait before sending the user to another page."
-msgstr ""
-
-#: includes/functions-ur-core.php:1547
 msgid "Enable Spam Protection (Akismet)"
 msgstr ""
 
-#: includes/functions-ur-core.php:1553
+#: includes/functions-ur-core.php:1480
 msgid "Stop spam sign-ups using the Akismet plugin."
+msgstr ""
+
+#: includes/functions-ur-core.php:1492
+msgid "Redirect After Registration"
+msgstr ""
+
+#: includes/functions-ur-core.php:1508
+msgid "No Redirection"
+msgstr ""
+
+#: includes/functions-ur-core.php:1509
+msgid "Internal Page"
+msgstr ""
+
+#: includes/functions-ur-core.php:1510
+msgid "External URL"
+msgstr ""
+
+#: includes/functions-ur-core.php:1511
+msgid "Previous Page"
+msgstr ""
+
+#: includes/functions-ur-core.php:1515
+msgid "Decide where users go after completing registration."
+msgstr ""
+
+#: includes/functions-ur-core.php:1522
+msgid "Delay Before Redirect ( Seconds )"
+msgstr ""
+
+#: includes/functions-ur-core.php:1531
+msgid "How many seconds to wait before sending the user to another page."
+msgstr ""
+
+#: includes/functions-ur-core.php:1537
+msgid "Redirect to Page"
+msgstr ""
+
+#: includes/functions-ur-core.php:1545
+msgid "Pick the page users will see after signing up."
+msgstr ""
+
+#: includes/functions-ur-core.php:1557
+msgid "Set the URL of the page users should be sent to after signing up."
 msgstr ""
 
 #: includes/functions-ur-core.php:1593
@@ -9464,7 +9464,7 @@ msgstr ""
 msgid "All Members"
 msgstr ""
 
-#: modules/membership/includes/Admin/Members/Members.php:285
+#: modules/membership/includes/Admin/Members/Members.php:282
 msgid "Subscription Status"
 msgstr ""
 
@@ -10078,7 +10078,7 @@ msgstr ""
 
 #: modules/membership/includes/Admin/Views/membership-create.php:165
 msgid ""
-"This is a free membership. This is free of cost and doesn't\r\n"
+"This is a free membership. This is free of cost and doesn't\n"
 "\t\t\t\t\t\t\t\t\t\t\t\t\t\trequire any fees."
 msgstr ""
 
@@ -10479,10 +10479,10 @@ msgstr ""
 
 #: modules/membership/includes/Emails/Admin/UR_Settings_Membership_Cancellation_Admin_Email.php:117
 msgid ""
-"\r\n"
-"\t\t\t\t\tHi Admin, <br>\r\n"
-"\t\t\t\t\tThe user {{username}} has cancelled their membership on {{blog_info}}. <br>\r\n"
-"\r\n"
+"\n"
+"\t\t\t\t\tHi Admin, <br>\n"
+"\t\t\t\t\tThe user {{username}} has cancelled their membership on {{blog_info}}. <br>\n"
+"\n"
 "\t\t\t\t\tThank you!"
 msgstr ""
 
@@ -10501,12 +10501,12 @@ msgstr ""
 
 #: modules/membership/includes/Emails/User/UR_Settings_Membership_Cancellation_User_Email.php:117
 msgid ""
-"\r\n"
-"\t\t\t\t\tHi {{username}}, <br>\r\n"
-"\t\t\t\t\tWe're sorry to see you go. Your request to cancel the {{membership_plan_name}} membership has been successfully processed. <br>\r\n"
-"\t\t\t\t\tIf you change your mind in the future, we'll be here to welcome you back.<br>\r\n"
-"\t\t\t\t\tThank you for being a part of {{blog_info}}.<br><br>\r\n"
-"\r\n"
+"\n"
+"\t\t\t\t\tHi {{username}}, <br>\n"
+"\t\t\t\t\tWe're sorry to see you go. Your request to cancel the {{membership_plan_name}} membership has been successfully processed. <br>\n"
+"\t\t\t\t\tIf you change your mind in the future, we'll be here to welcome you back.<br>\n"
+"\t\t\t\t\tThank you for being a part of {{blog_info}}.<br><br>\n"
+"\n"
 "\t\t\t\t\tGoodbye and take care!"
 msgstr ""
 
@@ -10536,15 +10536,15 @@ msgstr ""
 
 #: modules/membership/includes/Emails/User/UR_Settings_Membership_Ended_User_Email.php:117
 msgid ""
-"\r\n"
-"\t\t\t\t\tHi {{username}}, <br>\r\n"
-"\t\t\t\t\tYour membership expired on {{membership_end_date}}, and access to your member benefits has ended.<br>\r\n"
-"\t\t\t\t\tTo continue enjoying everything {{site_name}} offers, you’ll need to re-purchase the membership.<br>\r\n"
-"\t\t\t\t\tOtherwise, you can manually renew in just a few clicks.<br>\r\n"
-"\t\t\t\t\tIt only takes a minute to rejoin<br>\r\n"
-"\t\t\t\t\t{{membership_renewal_link}}<br>\r\n"
-"\t\t\t\t\tWe’d love to have you back! <br>\r\n"
-"\t\t\t\t\tBest regards, <br>\r\n"
+"\n"
+"\t\t\t\t\tHi {{username}}, <br>\n"
+"\t\t\t\t\tYour membership expired on {{membership_end_date}}, and access to your member benefits has ended.<br>\n"
+"\t\t\t\t\tTo continue enjoying everything {{site_name}} offers, you’ll need to re-purchase the membership.<br>\n"
+"\t\t\t\t\tOtherwise, you can manually renew in just a few clicks.<br>\n"
+"\t\t\t\t\tIt only takes a minute to rejoin<br>\n"
+"\t\t\t\t\t{{membership_renewal_link}}<br>\n"
+"\t\t\t\t\tWe’d love to have you back! <br>\n"
+"\t\t\t\t\tBest regards, <br>\n"
 "\t\t\t\t\t{{blog_info}}"
 msgstr ""
 
@@ -10600,14 +10600,14 @@ msgstr ""
 
 #: modules/membership/includes/Emails/User/UR_Settings_Membership_Expiring_Soon_User_Email.php:148
 msgid ""
-"\r\n"
-"\t\t\t\t\tHi {{username}}, <br>\r\n"
-"\t\t\t\t\tJust a reminder — your membership is set to expire on {{membership_end_date}}. <br>\r\n"
-"\t\t\t\t\tTo avoid any interruption in access to your member benefits, please make sure to renew before the expiration date. <br>\r\n"
-"\t\t\t\t\tOtherwise, you can manually renew in just a few clicks.<br>\r\n"
-"\t\t\t\t\t({renewal_link})<br>\r\n"
-"\t\t\t\t\tStay connected and keep enjoying everything your membership offers!<br>\r\n"
-"\t\t\t\t\tBest regards, <br>\r\n"
+"\n"
+"\t\t\t\t\tHi {{username}}, <br>\n"
+"\t\t\t\t\tJust a reminder — your membership is set to expire on {{membership_end_date}}. <br>\n"
+"\t\t\t\t\tTo avoid any interruption in access to your member benefits, please make sure to renew before the expiration date. <br>\n"
+"\t\t\t\t\tOtherwise, you can manually renew in just a few clicks.<br>\n"
+"\t\t\t\t\t({renewal_link})<br>\n"
+"\t\t\t\t\tStay connected and keep enjoying everything your membership offers!<br>\n"
+"\t\t\t\t\tBest regards, <br>\n"
 "\t\t\t\t\t{{blog_info}}"
 msgstr ""
 
@@ -10630,13 +10630,13 @@ msgstr ""
 
 #: modules/membership/includes/Emails/User/UR_Settings_Membership_Renewal_Reminder_User_Email.php:148
 msgid ""
-"\r\n"
-"\t\t\t\t\tHi {{username}}, <br><br>\r\n"
-"\t\t\t\t\tThis is a friendly reminder that your {{membership_plan_name}} membership on {{blog_info}} is due for renewal soon. <br>\r\n"
-"\t\t\t\t\tDon't worry – your membership will be automatically renewed, and the payment will be processed shortly. <br>\r\n"
-"\t\t\t\t\tIf you need to update your payment details or have any questions, feel free to reach out to us.<br>\r\n"
-"\t\t\t\t\tThank you for being a valued member!<br><br>\r\n"
-"\t\t\t\t\tBest regards,<br>\r\n"
+"\n"
+"\t\t\t\t\tHi {{username}}, <br><br>\n"
+"\t\t\t\t\tThis is a friendly reminder that your {{membership_plan_name}} membership on {{blog_info}} is due for renewal soon. <br>\n"
+"\t\t\t\t\tDon't worry – your membership will be automatically renewed, and the payment will be processed shortly. <br>\n"
+"\t\t\t\t\tIf you need to update your payment details or have any questions, feel free to reach out to us.<br>\n"
+"\t\t\t\t\tThank you for being a valued member!<br><br>\n"
+"\t\t\t\t\tBest regards,<br>\n"
 "\t\t\t\t\t{{blog_info}}"
 msgstr ""
 
@@ -11608,81 +11608,81 @@ msgstr ""
 msgid "Welcome to User Registration & Membership!"
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:92
+#: src/dashboard/screens/Dashboard/Dashboard.js:91
 msgid "Create a Registration Form"
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:110
+#: src/dashboard/screens/Dashboard/Dashboard.js:108
 msgid "View all forms"
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:144
+#: src/dashboard/screens/Dashboard/Dashboard.js:142
 msgid "User Registration & Membership Community"
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:151
+#: src/dashboard/screens/Dashboard/Dashboard.js:149
 #: src/dashboard/screens/Help/Help.js:250
 msgid "Join our exclusive group and connect with fellow members. Ask questions, contribute to discussions, and share feedback!"
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:162
+#: src/dashboard/screens/Dashboard/Dashboard.js:160
 msgid "Join our Facebook Group"
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:180
+#: src/dashboard/screens/Dashboard/Dashboard.js:178
 msgid "Check our documentation for detailed information on User Registration features and how to use them."
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:205
+#: src/dashboard/screens/Dashboard/Dashboard.js:203
 #: src/dashboard/screens/Help/Help.js:162
 msgid "Support"
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:209
+#: src/dashboard/screens/Dashboard/Dashboard.js:207
 msgid "Submit a ticket for encountered issues and get help from our support team instantly."
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:220
+#: src/dashboard/screens/Dashboard/Dashboard.js:218
 msgid "Create a Ticket"
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:234
+#: src/dashboard/screens/Dashboard/Dashboard.js:232
 #: src/dashboard/screens/Help/Help.js:398
 msgid "Feature Request"
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:238
+#: src/dashboard/screens/Dashboard/Dashboard.js:236
 #: src/dashboard/screens/Help/Help.js:402
 msgid "Don’t find a feature you’re looking for? Suggest any features you think would enhance our product."
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:249
+#: src/dashboard/screens/Dashboard/Dashboard.js:247
 #: src/dashboard/screens/Help/Help.js:413
 msgid "Request a Feature"
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:263
-#: src/dashboard/screens/Dashboard/Dashboard.js:278
+#: src/dashboard/screens/Dashboard/Dashboard.js:261
+#: src/dashboard/screens/Dashboard/Dashboard.js:276
 #: src/dashboard/screens/Help/Help.js:427
 #: src/dashboard/screens/Help/Help.js:442
 msgid "Submit a Review"
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:267
+#: src/dashboard/screens/Dashboard/Dashboard.js:265
 #: src/dashboard/screens/Help/Help.js:431
 msgid "Please take a moment to give us a review. We appreciate honest feedback that’ll help us improve our plugin."
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:292
+#: src/dashboard/screens/Dashboard/Dashboard.js:290
 #: src/dashboard/screens/Help/Help.js:369
 msgid "Video Tutorials"
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:296
+#: src/dashboard/screens/Dashboard/Dashboard.js:294
 msgid "Watch our step-by-step video tutorials that’ll help you get the best out of User Registration’s features."
 msgstr ""
 
-#: src/dashboard/screens/Dashboard/Dashboard.js:307
+#: src/dashboard/screens/Dashboard/Dashboard.js:305
 #: src/dashboard/screens/Help/Help.js:384
 msgid "Watch Videos"
 msgstr ""

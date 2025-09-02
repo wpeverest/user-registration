@@ -1,3 +1,9 @@
+= 4.4.1    - 02/09/2025 =
+* Fix      - Button style issue from v4.4.0 impacting other plugins.
+* Fix      - Admin menu not visible in mobile devices.
+* Fix      - Input field width in other admin pages.
+* Fix      - Role based redirection selection not working on form settings.
+
 = 4.4.0    - 28/08/2025 =
 * Security - Updated sql prepare for members list table query.
 * Refactor - Remove anyone can register dependency.
