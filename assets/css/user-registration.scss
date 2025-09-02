@@ -599,6 +599,24 @@ textarea.ur-input-border-red {
 		}
 	}
 
+	button,
+	input[type="submit"],
+	button[type="submit"] {
+		padding: 10px 20px;
+		line-height: 24px;
+		text-align: center;
+		word-break: break-word;
+		white-space: normal;
+		border: none;
+		cursor: pointer;
+		transition: 0.35s all ease-out;
+		border-radius: 4px;
+	}
+
+	input[type="submit"] {
+		float: right;
+	}
+
 	.ur-button-container {
 		display: flex;
 		margin-top: 10px;
@@ -1456,11 +1474,11 @@ span.ur-shortcode-form-embed-dot {
 	border: 1px solid $primary_color;
 	color: $white;
 
-	// &:hover {
-	// 	background: #38488e;
-	// 	border-color: #38488e;
-	// 	color: $white;
-	// }
+	&:hover {
+		background: #38488e;
+		border-color: #38488e;
+		color: $white;
+	}
 
 	.ur-spinner {
 		width: 16px;
@@ -2152,6 +2170,24 @@ body {
 					gap: $spacing_4px;
 					margin-top: 32px;
 					padding: 0 10px;
+
+					.ur-submit-button {
+						width: max-content;
+						border: 0;
+						padding: 10px 24px;
+						color: #ffffff;
+						font-size: 15px;
+						font-weight: $medium;
+						line-height: 24px;
+						letter-spacing: 0.15px;
+						border: $border_width solid $primary_color;
+						margin-right: 0;
+						background: $primary_color;
+
+						&:hover {
+							border-color: #38488e;
+						}
+					}
 
 					.user-registration-save-and-continue-button {
 						margin-left: 0;

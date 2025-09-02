@@ -432,8 +432,20 @@
   line-height: 32px;
 }
 .user-registration #user-registration-list-table-page .user-registration-list-table-heading .ur-button-primary {
-  background: #475bb2;
+  border-radius: 3px;
+  border-color: #475BB2;
+  background: #475BB2;
   color: #ffffff;
+  padding: 8px 20px 8px 16px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  transition: all 0.3s;
+}
+.user-registration #user-registration-list-table-page .user-registration-list-table-heading .ur-button-primary:hover {
+  background: #38488e;
+  border-color: #38488e;
 }
 .user-registration #user-registration-list-table-page #user-registration-list-filters-row form {
   gap: 16px;
@@ -447,12 +459,49 @@
 .user-registration #user-registration-list-table-page #user-registration-list-filters-row form > div select {
   width: 200px;
 }
-.user-registration #user-registration-list-table-page #user-registration-list-filters-row form .button-secondary {
-  color: #475bb2;
-  border: 1px solid #475bb2;
-  background: #F0F0F1;
+.user-registration #user-registration-list-table-page #user-registration-list-filters-row form > div input[type=search] {
+  height: 38px;
+  border-color: #BABABA;
+  color: #383838;
+  padding: 8px 12px;
+  font-size: 14px;
+  line-height: 24px;
+  border-radius: 4px;
+  width: 100%;
+  padding: 10px 40px 10px 14px;
+}
+.user-registration #user-registration-list-table-page #user-registration-list-filters-row form > div input[type=search]::placeholder {
+  color: #999999;
+}
+.user-registration #user-registration-list-table-page #user-registration-list-filters-row form > div input[type=search]:focus {
+  box-shadow: none;
+  outline: none;
+  border-color: #475BB2;
+}
+.user-registration #user-registration-list-table-page #user-registration-list-filters-row form > div input[type=search]::placeholder {
+  color: #999;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+}
+.user-registration #user-registration-list-table-page #user-registration-list-filters-row form > div input[type=search]:focus {
+  box-shadow: none;
+  outline: none;
+  border-color: #475BB2;
+}
+.user-registration #user-registration-list-table-page #user-registration-list-filters-row form > div #search-submit {
+  top: 50% !important;
+  transform: translateY(-50%);
+  right: 14px !important;
+}
+.user-registration #user-registration-list-table-page #user-registration-list-filters-row form button[type=submit] {
+  padding: 8px 14px;
+  font-size: 14px;
+  line-height: 20px;
+  color: #475BB2;
+  border-color: #475BB2;
+  background: #F6F7F7;
   font-weight: 500;
-  height: 36px;
 }
 .user-registration #user-registration-list-table-page #user-registration-users-action-form .wp-list-table thead tr td {
   width: 40px;
@@ -1094,6 +1143,31 @@
   border-top: 1px solid #e1e1e1;
   margin-top: 28px;
 }
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card .submit .button-secondary {
+  border-radius: 4px;
+  box-shadow: none;
+  padding: 8px 16px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  border: 0;
+  background: transparent;
+  border: 1px solid #bababa;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card .submit .button-secondary a {
+  color: #6B6B6B;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card .submit .button-primary {
+  border-radius: 4px;
+  box-shadow: none;
+  padding: 8px 16px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  border: 0;
+}
 
 .ur-membership-tab-contents-wrapper {
   max-width: 100%;
@@ -1234,11 +1308,30 @@
   border-top: 1px solid #e1e1e1;
   margin-top: 28px;
 }
-#ur-membership-create-form .user-registration-card .submit .button-secondary a {
-  color: #374151;
-}
-#ur-membership-create-form .user-registration-card .submit .button-secondary:hover a {
+#ur-membership-create-form .user-registration-card .submit .button-secondary {
+  border-radius: 4px;
+  box-shadow: none;
+  padding: 8px 16px;
   color: #ffffff;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  border: 0;
+  background: transparent;
+  border: 1px solid #bababa;
+}
+#ur-membership-create-form .user-registration-card .submit .button-secondary a {
+  color: #6B6B6B;
+}
+#ur-membership-create-form .user-registration-card .submit .button-primary {
+  border-radius: 4px;
+  box-shadow: none;
+  padding: 8px 16px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  border: 0;
 }
 
 .user-registration-switch {

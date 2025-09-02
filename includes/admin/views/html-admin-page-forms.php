@@ -55,7 +55,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 							<?php
 							if ( isset( $preview_link ) ) {
 								?>
-								<a href="<?php echo esc_url( ( $preview_link ) ); ?>" rel="noreferrer noopener" target="_blank" class="button button-large" title="<?php esc_attr_e( 'Preview Form', 'user-registration' ); ?>"><?php esc_html_e( 'Preview', 'user-registration' ); ?></a>
+								<a href="<?php echo esc_url( ( $preview_link ) ); ?>" rel="noreferrer noopener" target="_blank" class="button button-secondary button-large" title="<?php esc_attr_e( 'Preview Form', 'user-registration' ); ?>"><?php esc_html_e( 'Preview', 'user-registration' ); ?></a>
 							<?php } ?>
 				<button name="embed_form" data-form_id="<?php echo esc_html( isset( $_GET['edit-registration'] ) ? absint( sanitize_text_field( wp_unslash( $_GET['edit-registration'] ) ) ) : 0 ); ?>" class="button  button-large ur-embed-form-button" type="button" value="<?php esc_attr_e( 'Embed', 'user-registration' ); ?>"><?php esc_html_e( 'Embed', 'user-registration' ); ?></button>
 							<button type="button" name="save_form" id="save_form_footer" class="button button-primary button-large menu-form ur_save_form_action_button"> <?php echo esc_html( $save_label ); ?> </button>

@@ -268,8 +268,21 @@
 			}
 
 			.ur-button-primary {
-				background: $primary_color;
-				color: $white;
+				border-radius: 3px;
+				border-color: #475BB2;
+				background: #475BB2;
+				color: #ffffff;
+				padding: 8px 20px 8px 16px;
+				color: #ffffff;
+				font-size: 14px;
+				font-weight: 400;
+				line-height: 24px;
+				transition: all .3s;
+
+				&:hover {
+					background: #38488e;
+					border-color: #38488e;
+				}
 			}
 		}
 
@@ -287,14 +300,41 @@
 					select {
 						width: 200px;
 					}
+
+					input[type="search"] {
+						@include form-field-style;
+						width: 100%;
+						padding: 10px 40px 10px 14px;
+
+						&::placeholder {
+							color: #999;
+							font-size: 14px;
+							font-weight: 400;
+							line-height: 24px;
+						}
+
+						&:focus {
+							box-shadow: none;
+							outline: none;
+							border-color: #475BB2;
+						}
+					}
+
+					#search-submit {
+						top: 50% !important;
+						transform: translateY(-50%);
+						right: 14px !important;
+					}
 				}
 
-				.button-secondary {
-					color: $primary_color;
-					border: $border_width solid $primary_color;
-					background: #F0F0F1;
-					font-weight: $medium;
-					height: 36px;
+				button[type="submit"] {
+					padding: 8px 14px;
+					font-size: 14px;
+					line-height: 20px;
+					color: #475BB2;
+					border-color: #475BB2;
+					background: #F6F7F7;
+					font-weight: 500;
 				}
 			}
 		}
@@ -1178,18 +1218,6 @@
 
 		.submit {
 			@include form-footer-button;
-
-			.button-secondary {
-				a {
-					color: #374151;
-				}
-
-				&:hover {
-					a {
-						color: $white;
-					}
-				}
-			}
 		}
 	}
 }

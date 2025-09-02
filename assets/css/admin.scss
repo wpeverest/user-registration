@@ -211,8 +211,8 @@ body {
 				}
 
 				.ur-key-character {
-					width: 15px;
-					padding: 5px 10px;
+					width: 30px;
+					padding: 5px;
 					text-align: center;
 				}
 			}
@@ -455,11 +455,12 @@ body {
 		#copy-shortcode {
 			margin-left: -5px;
 			border-radius: 0 4px 4px 0;
-			background: #f4f4f4;
-			border-color: $border_color;
+			background: $blue-50 !important;
+			border-color: $grey-50 !important;
 
 			svg {
 				fill: $white;
+				margin-bottom: 5px;
 				vertical-align: middle;
 			}
 		}
@@ -1831,8 +1832,22 @@ body {
 			margin-top: 10px;
 
 			.button {
-				width: max-content;
+				display: block;
+				width: auto;
+				height: 32px;
+				text-align: center;
 				font-family: inherit;
+
+				&::before {
+					width: 16px;
+					height: 16px;
+					font-size: 16px;
+					margin-right: 10px;
+					font-family: dashicons;
+					vertical-align: middle;
+					padding: 1px 10px 1px 0;
+					border-right: 1px solid transparentize($white, 0.7);
+				}
 			}
 		}
 
@@ -3283,8 +3298,84 @@ a.button.ur-smart-tags-list-button {
 				text-align: right;
 				float: right;
 
+				.button-secondary {
+					background: $blue-50;
+					border-color: $blue-50;
+					box-shadow: 0 1px 0 $blue-50;
+					font-size: 14px;
+					color: $grey-400;
+					border-radius: $border_radius_3;
+
+					&:has(span) {
+						width: 33px;
+						height: 33px;
+					}
+
+					// .dashicons-editor-expand,
+					// .dashicons-editor-contract {
+					// 	&::before {
+					// 		color: $grey-400;
+					// 	}
+					// }
+
+					.ur-fs-open-label,
+					.ur-fs-close-label {
+						&::before {
+							content: "";
+							background-repeat: no-repeat;
+							background-position: center;
+							background-size: 100%;
+							display: block;
+							top: -1px;
+							left: 1px;
+							position: relative;
+							width: 19px;
+							height: 19px;
+						}
+					}
+
+					.ur-fs-open-label {
+						&::before {
+							background-image: url("../images/icons/maximize.svg");
+						}
+					}
+
+					.ur-fs-close-label {
+						&::before {
+							background-image: url("../images/icons/minimize.svg");
+						}
+					}
+				}
+
 				.button-primary {
-					margin-bottom: 0;
+					background: $primary_color;
+					font-size: 14px;
+
+					&:hover {
+						background: $primary_dark;
+						border-color: $primary_dark;
+					}
+
+					&.ur-copy-shortcode {
+						width: 33px;
+						height: 33px;
+						padding-left: 0;
+						padding-right: 0;
+						background: $primary_color;
+						border-color: $primary_color;
+						box-shadow: none;
+
+						&:hover {
+							background: $primary_dark;
+							border-color: $primary_dark;
+						}
+
+						svg {
+							width: 18px;
+							height: 18px;
+							margin-bottom: 3px;
+						}
+					}
 				}
 			}
 			.login-forms-shortcode-action {
@@ -3313,6 +3404,117 @@ a.button.ur-smart-tags-list-button {
 					fill: $white;
 					margin-bottom: 5px;
 					vertical-align: middle;
+				}
+			}
+		}
+	}
+}
+
+.user-registration-membership_page_add-new-registration,
+.toplevel_page_user-registration {
+	background-color: #FAFAFA;
+
+	#nav-menu-header {
+		padding-right: $spacing_30px;
+
+		.ur-form-title {
+			font-weight: $semi_bold;
+			font-size: 16px;
+			line-height: 150%;
+			color: #414141;
+			padding-left: $spacing_18px;
+			padding-right: $spacing_8px;
+		}
+
+		.ur-editing-tag {
+			padding: $spacing_4px $spacing_10px;
+			background: $blue-50;
+			border-radius: $border_radius_50;
+			font-style: italic;
+			font-weight: $regular;
+			font-size: 12px;
+			line-height: 150%;
+			color: $grey-400;
+		}
+
+		.publishing-action {
+			.button-secondary {
+				background: $blue-50;
+				border-color: $blue-50;
+				box-shadow: 0 1px 0 $blue-50;
+				font-size: 14px;
+				color: $grey-400;
+				border-radius: $border_radius_3;
+
+				&:has(span) {
+					width: 33px;
+					height: 33px;
+				}
+
+				// .dashicons-editor-expand,
+				// .dashicons-editor-contract {
+				// 	&::before {
+				// 		color: $grey-400;
+				// 	}
+				// }
+
+				.ur-fs-open-label,
+				.ur-fs-close-label {
+					&::before {
+						content: "";
+						background-repeat: no-repeat;
+						background-position: center;
+						background-size: 100%;
+						display: block;
+						top: -1px;
+						left: 1px;
+						position: relative;
+						width: 19px;
+						height: 19px;
+					}
+				}
+
+				.ur-fs-open-label {
+					&::before {
+						background-image: url("../images/icons/maximize.svg");
+					}
+				}
+
+				.ur-fs-close-label {
+					&::before {
+						background-image: url("../images/icons/minimize.svg");
+					}
+				}
+			}
+
+			.button-primary {
+				background: $primary_color;
+				font-size: 14px;
+
+				&:hover {
+					background: $primary_dark;
+					border-color: $primary_dark;
+				}
+
+				&.ur-copy-shortcode {
+					width: 36px;
+					height: 36px;
+					padding-left: 0;
+					padding-right: 0;
+					background: $primary_color;
+					border-color: $primary_color;
+					box-shadow: none;
+
+					&:hover {
+						background: $primary_dark;
+						border-color: $primary_dark;
+					}
+
+					svg {
+						width: 18px;
+						height: 18px;
+						margin-bottom: 3px;
+					}
 				}
 			}
 		}
@@ -4628,6 +4830,23 @@ body.user-registration {
 					cursor: pointer;
 					transition: all 0.3s ease-in-out;
 
+					&[type="submit"] {
+						padding: $spacing_6px $spacing_14px;
+						border-radius: $border_radius_3;
+						border: $border_width solid $primary_color;
+						background: $primary_color;
+						color: $grey-0;
+						font-size: 14px;
+						font-weight: $regular;
+						line-height: 150%;
+						letter-spacing: 0.3px;
+
+						&:hover {
+							background: darken($primary_color, 10%);
+							border-color: darken($primary_color, 10%);
+						}
+					}
+
 					&[type="reset"],
 					&[type="button"] {
 						border-radius: $border_radius_3;
@@ -5278,7 +5497,6 @@ body.user-registration {
 			margin-bottom: 24px;
 
 			.ur-page-title__wrapper {
-				width: 100%;
 
 				h1 {
 					margin: 0;
@@ -5733,6 +5951,15 @@ body {
 			}
 		}
 	}
+}
+
+.ur-embed-form-button {
+	background: #edeff7 !important;
+	border-color: #edeff7 !important;
+	box-shadow: 0 1px 0 #edeff7 !important;
+	font-size: 14px !important;
+	color: #383838 !important;
+	border-radius: 3px !important;
 }
 
 .embed-form-swl-container {

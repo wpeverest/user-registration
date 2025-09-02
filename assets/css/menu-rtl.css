@@ -1,1 +1,186 @@
-.ur_plugin_upgrade_notice{display:flex;font-weight:400;color:#000;padding:1em 0;margin:9px 0;border-top:2px solid #dba617}.ur_plugin_upgrade_notice::before{color:#d54d21;content:"\f348";display:inline-block;font:400 18px/1 dashicons;speak:none;margin:0 -2px 0 8px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;vertical-align:top;margin-top:10px}.ur_plugin_upgrade_notice p::before{content:none}.ur_plugin_upgrade_notice+p{display:none}.user-registration-updater-licensed td,.user-registration-updater-licensed th{box-shadow:none!important}.user-registration-deactivation-notice td,.user-registration-deactivation-notice th{box-shadow:none!important}.user-registration-updater-license-key{border:0;font-size:13px;font-weight:400;padding:6px 12px;margin:5px 40px 15px 20px;background-color:rgba(0,0,0,.03);line-height:27px}.user-registration-updater-license-key input{margin:0 4px;vertical-align:middle}.user-registration-updater-license-key::before{color:#32373c;content:"\f160";margin:0 -2px 0 8px;display:inline-block;font:400 20px/27px dashicons;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;vertical-align:middle}.wp-list-table.users .ur-user-notification td{padding:0;text-align:center}.wp-list-table.users .ur-user-notification td a{display:none;padding:10px;box-shadow:none;background:rgb(232.4819277108,235.0120481928,246.0180722892);border:1px solid rgb(159.5662650602,170.2891566265,216.9337349398)}.user-registration-progress{display:flex;height:1rem;overflow:hidden;font-size:.75rem;margin:1rem 0;background-color:rgb(240.4392835821,241.3522713704,245.4607164179);border-radius:.25rem}.user-registration-progress .user-registration-progress-bar{display:flex;flex-direction:column;justify-content:center;color:#fff;text-align:center;white-space:nowrap;background-color:#475bb2;transition:width .6s ease}#toplevel_page_user-registration ul li a[href*=user-registration-addons]{color:#9ef01a!important}#toplevel_page_user-registration ul li a[href*=ur-upgrade-to-pro]{color:#ff8c39!important}#toplevel_page_user-registration ul li.is-sub-menu a{font-size:13px}#toplevel_page_user-registration ul li:not(.is-sub-menu) a[href="admin.php?page=user-registration"],#toplevel_page_user-registration ul li:not(.is-sub-menu) a[href="admin.php?page=user-registration-membership"],#toplevel_page_user-registration ul li:not(.is-sub-menu) a[href="admin.php?page=user-registration-settings"]{border-top:1px solid hsla(0,0%,100%,.2);margin-top:5px;padding-top:8px}#adminmenu .wp-not-current-submenu .wp-submenu{border-right-width:0}@media screen and (min-width:783px){#adminmenumain #adminmenuback{z-index:999}}
+/**
+ * menu.scss
+ * Styles applied to dashboard menu items added via UserRegistration.
+ * Adds icons to top level menu items, etc.
+ */
+/**
+ * Imports
+ */
+/**
+ * Variables
+ */
+/**
+ * Grid breakpoints
+ *
+ * Define the minimum dimensions at which your layout will change,
+ * adapting to different screen sizes, for use in media queries.
+ **/
+/**
+ * Grid containers
+ *
+ * Define the maximum width of `.ur-container` for different screen sizes.
+ * scss-docs-start container-max-widths
+ **/
+/** Minimum breakpoint width. Null for the smallest (first) breakpoint.
+ *
+ *	>> breakpoint-min(sm, (xs: 0, sm: 576px, md: 768px, lg: 992px, xl: 1200px))
+ *	576px
+ **/
+/**
+ * Variables
+ */
+/**
+ * Grid breakpoints
+ *
+ * Define the minimum dimensions at which your layout will change,
+ * adapting to different screen sizes, for use in media queries.
+ **/
+/**
+ * Grid containers
+ *
+ * Define the maximum width of `.ur-container` for different screen sizes.
+ * scss-docs-start container-max-widths
+ **/
+/**
+ * Media of at least the minimum breakpoint width. No query for the smallest breakpoint.
+ * Makes the @content apply to the given breakpoint and wider.
+ **/
+/**
+ * Grid system
+ *
+ * Generate semantic grid columns with these mixins.
+ **/
+/**
+ * _mixins.scss
+ * User Registration Mixins
+ */
+/**
+ * Styling begins
+ */
+.ur_plugin_upgrade_notice {
+  display: flex;
+  font-weight: normal;
+  color: #000000;
+  padding: 1em 0em;
+  margin: 9px 0;
+  border-top: 2px solid #dba617;
+}
+.ur_plugin_upgrade_notice::before {
+  color: #d54d21;
+  content: "\f348";
+  display: inline-block;
+  font: 400 18px/1 dashicons;
+  speak: none;
+  margin: 0 -2px 0 8px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  vertical-align: top;
+  margin-top: 10px;
+}
+.ur_plugin_upgrade_notice p::before {
+  content: none;
+}
+
+.ur_plugin_upgrade_notice + p {
+  display: none;
+}
+
+/**
+ * Plugin Updater.
+ */
+.user-registration-updater-licensed th, .user-registration-updater-licensed td {
+  box-shadow: none !important;
+}
+
+.user-registration-deactivation-notice th, .user-registration-deactivation-notice td {
+  box-shadow: none !important;
+}
+
+.user-registration-updater-license-key {
+  border: 0;
+  font-size: 13px;
+  font-weight: 400;
+  padding: 6px 12px;
+  margin: 5px 40px 15px 20px;
+  background-color: rgba(0, 0, 0, 0.03);
+  line-height: 27px;
+}
+.user-registration-updater-license-key input {
+  margin: 0 4px;
+  vertical-align: middle;
+}
+.user-registration-updater-license-key::before {
+  color: #32373c;
+  content: "\f160";
+  margin: 0 -2px 0 8px;
+  display: inline-block;
+  font: 400 20px/27px dashicons;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  vertical-align: middle;
+}
+
+.wp-list-table.users .ur-user-notification td {
+  padding: 0;
+  text-align: center;
+}
+.wp-list-table.users .ur-user-notification td a {
+  display: none;
+  padding: 10px;
+  box-shadow: none;
+  background: rgb(232.4819277108, 235.0120481928, 246.0180722892);
+  border: 1px solid rgb(159.5662650602, 170.2891566265, 216.9337349398);
+}
+
+/**
+ * Progressbar styles
+ **/
+.user-registration-progress {
+  display: flex;
+  height: 1rem;
+  overflow: hidden;
+  font-size: 0.75rem;
+  margin: 1rem 0;
+  background-color: rgb(240.4392835821, 241.3522713704, 245.4607164179);
+  border-radius: 0.25rem;
+}
+.user-registration-progress .user-registration-progress-bar {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #ffffff;
+  text-align: center;
+  white-space: nowrap;
+  background-color: #475bb2;
+  transition: width 0.6s ease;
+}
+
+#toplevel_page_user-registration ul li a[href*=user-registration-addons] {
+  color: #9EF01A !important;
+}
+
+#toplevel_page_user-registration ul li a[href*=ur-upgrade-to-pro] {
+  color: #FF8C39 !important;
+}
+
+#toplevel_page_user-registration ul li.is-sub-menu a {
+  font-size: 13px;
+}
+
+#toplevel_page_user-registration ul li:not(.is-sub-menu) a[href="admin.php?page=user-registration"],
+#toplevel_page_user-registration ul li:not(.is-sub-menu) a[href="admin.php?page=user-registration-membership"],
+#toplevel_page_user-registration ul li:not(.is-sub-menu) a[href="admin.php?page=user-registration-settings"] {
+  border-top: 1px solid hsla(0, 0%, 100%, 0.2);
+  margin-top: 5px;
+  padding-top: 8px;
+}
+
+#adminmenu .wp-not-current-submenu .wp-submenu {
+  border-right-width: 0px;
+}
+
+@media screen and (min-width: 783px) {
+  #adminmenumain #adminmenuback {
+    z-index: 999;
+  }
+}
