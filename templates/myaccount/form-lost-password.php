@@ -132,7 +132,7 @@ if ( 'bordered' === $form_template ) {
 
 				<p class="user-registration-form-row form-row">
 					<input type="hidden" name="ur_reset_password" value="true" />
-					<input type="submit" class="user-registration-Button button button-primary ur-reset-password-btn" value="<?php echo esc_attr( $reset_button ); ?> "/>
+					<input type="submit" class="user-registration-Button button ur-reset-password-btn" value="<?php echo esc_attr( $reset_button ); ?> "/>
 				</p>
 
 				<?php wp_nonce_field( 'lost_password' ); ?>

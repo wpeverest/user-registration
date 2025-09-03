@@ -77,7 +77,6 @@ const Dashboard = () => {
 					</AspectRatio>
 					<ButtonGroup mt="5" spacing="6" gap="12px">
 						<Button
-							className="button button-primary"
 							as={Link}
 							backgroundColor="#475bb2"
 							fontSize="14px"
@@ -101,7 +100,6 @@ const Dashboard = () => {
 							</Text>
 						</Button>
 						<Button
-							className="button button-secondary"
 							as={Link}
 							variant="outline"
 							borderColor="#475bb2"

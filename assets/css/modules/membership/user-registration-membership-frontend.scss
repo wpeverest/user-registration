@@ -52,22 +52,25 @@ html {
 		}
 
 		.ur-membership-container {
-			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+			// display: grid;
+			// grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+			display: flex;
 			gap: 30px;
 			margin: 0;
 			justify-items: center;
-			align-items: center;
+			// align-items: center;			
 
 			.membership-block {
 				display: flex;
 				flex-direction: column;
 				padding: 32px;
 				gap: 12px;
-				width: 100%;
+				// width: 100%;
+				width: 33.3333%;
 				background: #F9F9F9;
 				border-radius: 8px;
 				text-align: center;
+				box-sizing: border-box;
 				transition: all .3s ease-in-out;
 
 				&:hover {
@@ -133,6 +136,12 @@ html {
 							}
 						}
 					}
+				}
+			}
+
+			.ur_membership_frontend_input_container.radio {
+				.membership-block {
+					width: 100%;
 				}
 			}
 		}
@@ -310,7 +319,6 @@ html {
 
 .membership-body {
 	padding: 20px;
-	max-height: 130px;
 }
 
 .membership-footer {

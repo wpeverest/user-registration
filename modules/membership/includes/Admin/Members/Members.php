@@ -229,10 +229,7 @@ if ( ! class_exists( 'Members' ) ) {
 							<?php esc_html_e( 'All Members', 'user-registration' ); ?>
 						</h1>
 					</div>
-					<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $this->page . '&action=add_new_member' ) ); ?>"
-					   id="user-registration-members-add-btn" class="button button-primary ur-button-primary">
-						+ <?php esc_html_e( 'Add New', 'user-registration' ); ?>
-					</a>
+					<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $this->page . '&action=add_new_member' ) ); ?>" id="user-registration-members-add-btn" class="page-title-action"><?php esc_html_e( 'Add New', 'user-registration' ); ?></a>
 				</div>
 				<div id="user-registration-list-filters-row" style="align-items: center;">
 					<div class="ur-membership-filter-container" style="display: flex;align-items: center; gap: 10px">

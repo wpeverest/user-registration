@@ -92,7 +92,7 @@ ur_print_notices(); ?>
 
 				<p class="user-registration-form-row form-row">
 					<input type="hidden" name="ur_reset_password" value="true" />
-					<input type="submit" class="user-registration-Button button button-primary" value="<?php esc_attr_e( 'Save', 'user-registration' ); ?>" />
+					<input type="submit" class="user-registration-Button button" value="<?php esc_attr_e( 'Save', 'user-registration' ); ?>" />
 				</p>
 
 				<?php wp_nonce_field( 'reset_password' ); ?>

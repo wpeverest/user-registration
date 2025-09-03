@@ -62,35 +62,35 @@
     border-top: $border_width solid $border_color;
     margin-top: $spacing_28px;
 
-    // .button {
-    //     &-secondary {
-    //         border-radius: 4px;
-    //         box-shadow: none;
-    //         padding: 8px 16px;
-    //         color: #ffffff;
-    //         font-size: 14px;
-    //         font-weight: 400;
-    //         line-height: 24px;
-    //         border: 0;
-    //         background: transparent;
-    //         border: 1px solid #bababa;
+    .button {
+        &-secondary {
+            border-radius: 4px;
+            box-shadow: none;
+            padding: 8px 16px;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 24px;
+            border: 0;
+            background: transparent;
+            border: 1px solid #bababa;
 
-    //         a {
-    //             color: #6B6B6B;
-    //         }
-    //     }
+            a {
+                color: #6B6B6B;
+            }
+        }
 
-    //     // &-primary {
-    //     //     border-radius: 4px;
-    //     //     box-shadow: none;
-    //     //     padding: 8px 16px;
-    //     //     color: #ffffff;
-    //     //     font-size: 14px;
-    //     //     font-weight: 400;
-    //     //     line-height: 24px;
-    //     //     border: 0;
-    //     // }
-    // }
+        &-primary {
+            border-radius: 4px;
+            box-shadow: none;
+            padding: 8px 16px;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 24px;
+            border: 0;
+        }
+    }
 }
 
 // Back Button CSS

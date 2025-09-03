@@ -34,22 +34,21 @@ html {
   line-height: 25px;
 }
 .user-registration-page .ur-membership-list-container .ur-membership-container, .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container, #pg-container .ur-membership-list-container .ur-membership-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  display: flex;
   gap: 30px;
   margin: 0;
   justify-items: center;
-  align-items: center;
 }
 .user-registration-page .ur-membership-list-container .ur-membership-container .membership-block, .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block, #pg-container .ur-membership-list-container .ur-membership-container .membership-block {
   display: flex;
   flex-direction: column;
   padding: 32px;
   gap: 12px;
-  width: 100%;
+  width: 33.3333%;
   background: #F9F9F9;
   border-radius: 8px;
   text-align: center;
+  box-sizing: border-box;
   transition: all 0.3s ease-in-out;
 }
 .user-registration-page .ur-membership-list-container .ur-membership-container .membership-block:hover, .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block:hover, #pg-container .ur-membership-list-container .ur-membership-container .membership-block:hover {
@@ -102,6 +101,9 @@ html {
 }
 .user-registration-page .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-signup-button:hover, .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-signup-button:hover, #pg-container .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-signup-button:hover {
   background: #38488e;
+}
+.user-registration-page .ur-membership-list-container .ur-membership-container .ur_membership_frontend_input_container.radio .membership-block, .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .ur_membership_frontend_input_container.radio .membership-block, #pg-container .ur-membership-list-container .ur-membership-container .ur_membership_frontend_input_container.radio .membership-block {
+  width: 100%;
 }
 .user-registration-page .ur_membership_registration_container, .ur-multi-device-form-preview .ur_membership_registration_container, #pg-container .ur_membership_registration_container {
   margin: 0 auto;
@@ -241,7 +243,6 @@ html {
 
 .membership-body {
   padding: 20px;
-  max-height: 130px;
 }
 
 .membership-footer {

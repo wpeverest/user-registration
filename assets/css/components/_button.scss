@@ -1,109 +1,190 @@
 .user-registration,
-.user-registration-page,
-.ur-multi-device-form-preview,
-.user-registration-welcome {
-	.button,
-	.page-title-action {
-		min-width: unset !important;
-		align-content: center;
-		min-height: 36px;
-		border: $border_width solid $primary_color;
-		padding: 0px $spacing_12px;
-		font-size: 14px;
-		line-height: 20px;
-		border-radius: $border_radius_4;
-		transition: all .3s ease-in-out;
-		background: #F6F7F7;
-		color: $primary_color;
-		font-weight: $medium;
-		text-decoration: none;
-		box-sizing: border-box;
+.ur-form-container {
+	button,
+	.button {
+		transition: all 0.25s ease 0s;
+		box-shadow: 0 1px 3px transparentize($color_gray_three, 0.85);
 
-		&:disabled {
-			color: #a7aaad !important;
-			border-color: #ebebeb !important;
-			background: #f6f7f7 !important;
-			cursor: not-allowed;
+		+ button,
+		+ .button {
+			margin-left: 6px;
 		}
 
-		&:focus {
-			outline: none;
-			box-shadow: none;
-			border-color: transparent;
-		}
+		&.button-icon {
+			width: 32px;
+			padding: 0;
+			text-align: center;
 
-		&.ur-copy-shortcode {
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			padding: 0 !important;
+			.dashicons {
+				line-height: 0.9;
+				vertical-align: middle;
+			}
 
 			svg {
-				width: 18px;
-				height: 18px;
-				margin-bottom: 0;
+				display: block;
+				margin: 0 auto;
 			}
 		}
 
-		&-primary {
+		&.button-icon-round {
+			border-radius: 50%;
+		}
+
+		&.is-active {
 			background: $primary_color;
-			border-color: $primary_color;
 			color: $white;
+			border-color: $primary_color;
 
 			&:hover,
-			&:focus,
-			&:active {
-				background: $primary_dark;
-				border-color: $primary_dark;
-			}
-		}
-
-		&-secondary,
-		&.ur-embed-form-button {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			border: $border_width solid #d1d5db;
-			background: transparent;
-			color: #374151;
-			font-weight: $regular;
-
-			&:hover {
+			&:active,
+			&:focus {
 				background: $primary_color;
-				border-color: $primary_color;
 				color: $white;
+				border-color: $primary_color;
 			}
 		}
 
-		&-tertiary {
-			background: #eceef7;
-			border-color: #eceef7;
-
-			&::before {
-				font-family: dashicons;
-				font-size: 16px;
-				vertical-align: middle;
-				margin-right: $spacing_8px;
-				padding: 0 $spacing_8px 0 0;
-				border-right: $border_width solid $primary_color;
-				transition: all .3s ease-in-out;
-			}
-
-			&:hover {
-				background: $primary_color;
-				border-color: $primary_color;
-				color: $white;
-
-				&::before {
-					border-right-color: $white;
-				}
-			}
+		.ur-spinner {
+			width: 16px;
+			height: 16px;
+			margin-left: 6px;
+			margin-bottom: 2px;
+			display: inline-block;
+			vertical-align: middle;
 		}
+	}
+
+	.button-primary {
+		background: $primary_color;
+		border-color: $primary_color;
+		box-shadow: 0 1px 0 $primary_color;
+		text-shadow: none;
+
+		&:hover,
+		&:active,
+		&:focus {
+			background: $primary_dark;
+			border-color: $primary_dark;
+			box-shadow: 0 1px 0 $primary_dark;
+		}
+
+		&:disabled {
+			color: lighten($primary_color, 30%) !important;
+			background: lighten($primary_color, 10%) !important;
+			border-color: lighten($primary_color, 10%) !important;
+		}
+	}
+
+	.button-secondary {
+		color: $gray_base;
+		background: $color_gray_four;
+		border-color: $color_gray_four;
+		box-shadow: 0 1px 0 $color_gray_four;
+
+		&:hover,
+		&:active,
+		&:focus {
+			color: $gray_base;
+			background: $color_gray_three;
+			border-color: $color_gray_three;
+		}
+	}
+
+	.button-tertiary {
+		background: $white;
+		color: $gray_base;
+		border: 1px solid $border-color;
+
+		&:hover,
+		&:active,
+		&:focus {
+			background: $color_gray_five;
+			border-color: $border-color;
+		}
+	}
+
+	.button-danger {
+		color: $white;
+		background: $red;
+		border-color: $red;
+		box-shadow: 0 1px 0 $red;
+
+		&:hover,
+		&:active,
+		&:focus {
+			color: $white;
+			background: adjust-color($red, $saturation: -15%, $lightness: -8% );
+			border-color: adjust-color($red, $saturation: -15%, $lightness: -8% );
+			box-shadow: 0 1px 0 adjust-color($red, $saturation: -15%, $lightness: -8% );
+		}
+	}
+
+	// .publishing-action {
+	// 	button,
+	// 	input[type='button'],
+	// 	input[type='submit'],
+	// 	.button {
+	// 		margin-right: 5px;
+	// 	}
+	// }
+}
+
+.user-registration-button-group {
+	position: relative;
+	display: inline-flex;
+	vertical-align: middle;
+
+	> button,
+	.button {
+		&:not(:first-child) {
+			margin-left: -1px;
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
+		}
+	}
+
+	> button,
+	.button {
+		&:not(:last-child) {
+			border-top-right-radius: 0;
+			border-bottom-right-radius: 0;
+		}
+	}
+
+	button,
+	.button {
+		margin-right: 0 !important;
 	}
 }
 
-.wp-core-ui .button.button-large, .wp-core-ui .button-group.button-large .button {
-	min-height: 36px;
+.ur-registered-item.ui-draggable-dragging {
+	padding: 10px 10px;
 	line-height: 20px;
-	padding: 0 $spacing_12px;
+	background: $primary_color;
+	color: $white;
+	text-align: center;
+	margin-bottom: 7px;
+	word-break: break-word;
+	white-space: normal;
+	width: 200px !important;
+	z-index: 9;
+
+	span {
+		font-size: 14px;
+		line-height: 20px;
+		width: auto;
+		height: auto;
+		margin-right: 3px;
+
+	}
+}
+
+.select2-container {
+	.ur-select-all-countries-button {
+		margin: 6px 3px 4px 6px;
+	}
+
+	.ur-unselect-all-countries-button {
+		margin: 6px 3px 4px;
+	}
 }

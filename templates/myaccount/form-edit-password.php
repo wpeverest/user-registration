@@ -146,7 +146,7 @@ if ( 'vertical' === $layout ) {
 
 					<p>
 						<?php wp_nonce_field( 'save_change_password' ); ?>
-						<input type="submit" class="user-registration-Button button button-primary" name="save_change_password" value="<?php esc_attr_e( 'Save changes', 'user-registration' ); ?>" />
+						<input type="submit" class="user-registration-Button button" name="save_change_password" value="<?php esc_attr_e( 'Save changes', 'user-registration' ); ?>" />
 						<input type="hidden" name="action" value="save_change_password" />
 					</p>
 

@@ -302,7 +302,7 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 				</select>
 			</div>
 			<button type="submit" id="user-registration-users-filter-btn"
-					class="button button-secondary">
+					class="button ur-button-primary">
 				<?php esc_html_e( 'Filter', 'user-registration' ); ?>
 			</button>
 			<?php

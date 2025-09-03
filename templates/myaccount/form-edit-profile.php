@@ -263,7 +263,7 @@ if ( 'vertical' === $layout ) {
 							} else {
 								wp_nonce_field( 'save_profile_details' );
 								?>
-								<input type="submit" class="user-registration-Button button button-primary <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" value="<?php echo esc_attr( $submit_btn_text); ?>"/>
+								<input type="submit" class="user-registration-Button button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" value="<?php echo esc_attr( $submit_btn_text); ?>"/>
 								<?php
 								echo apply_filters( 'user_registration_edit_profile_extra_data_div', '', $form_id ); // phpcs:ignore.
 								?>

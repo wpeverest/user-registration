@@ -332,9 +332,9 @@ body {
 							margin: 0;
 							font-weight: $medium;
 
-							// &:hover {
-							// 	color: $white;
-							// }
+							&:hover {
+								color: $white;
+							}
 						}
 
 						.user-registration-save-and-continue-button {

@@ -474,7 +474,7 @@ class OrdersListTable extends \UR_List_Table {
 			</select>
 		</div>
 		<button type="submit" name="ur_users_filter" id="user-registration-users-filter-btn"
-				class="button">
+				class="button ur-button-primary">
 			<?php esc_html_e( 'Filter', 'user-registration' ); ?>
 		</button>
 		<?php

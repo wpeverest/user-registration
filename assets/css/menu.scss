@@ -162,6 +162,8 @@
 
 #adminmenumain {
 	#adminmenuback {
-		z-index: 999;
+		@media screen and (min-width: 783px) {
+			z-index: 999;
+		}
 	}
 }
