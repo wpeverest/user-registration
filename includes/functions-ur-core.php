@@ -4519,8 +4519,7 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 		 */
 		$users_can_register = apply_filters( 'ur_register_setting_override', get_option( 'users_can_register' ) );
 
-		if ( ! is_user_logged_in() ) {
-		} else {
+		if ( is_user_logged_in() ) {
 			/**
 			 * Filter to modify user capability.
 			 * Default value is 'create_users'.

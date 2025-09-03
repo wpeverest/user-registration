@@ -25,15 +25,7 @@
 						$(".ur-selected-inputs")
 							.find("form#ur-field-settings")
 							.hide();
-						//Show field panels
-						$(".ur-builder-wrapper-content").show();
-						$(".ur-builder-wrapper-footer").show();
-						if ($(".ur-selected-item.ur-item-active").length == 0) {
-							//Selecting first ur selected item
-							URFormBuilder.handle_selected_item(
-								$(".ur-selected-item:first")
-							);
-						}
+
 					}
 				);
 				// Handle the field settings when a field is selected in the form builder.

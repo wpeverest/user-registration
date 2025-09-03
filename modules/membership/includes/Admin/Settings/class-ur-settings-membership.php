@@ -129,6 +129,20 @@ if ( ! class_exists( 'UR_Settings_Membership ' ) ) :
 									),
 									'desc_tip' => true,
 								),
+								array(
+									'title'    => __( 'Renewal Behaviour', 'user-registration' ),
+									'desc'     => __( 'Choose how membership subscriptions are renewed, automatically through the payment provider or manually by the user', 'user-registration' ),
+									'id'       => 'user_registration_renewal_behaviour',
+									'type'     => 'select',
+									'default'  => 'automatic',
+									'class'    => 'ur-enhanced-select',
+									'css'      => 'min-width:350px;',
+									'options'  => array(
+										'automatic' => __('Renew Automatically', 'user-registration'),
+										'manual' => __('Renew Manually', 'user-registration')
+									),
+									'desc_tip' => true,
+								),
 							),
 						),
 					),

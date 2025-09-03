@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - master
+      - UR-2242-add-more-default-currencies
     workflow_dispatch:
 jobs:
   sync:

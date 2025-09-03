@@ -88,10 +88,16 @@ const Dashboard = () => {
 							px="6"
 							href={newFormURL}
 						>
-							{__(
-								"Create a Registration Form",
-								"user-registration"
-							)}
+							<Text
+								sx={{
+									lineHeight: "2.5rem"
+								}}
+							>
+								{__(
+									"Create a Registration Form",
+									"user-registration"
+								)}
+							</Text>
 						</Button>
 						<Button
 							as={Link}
@@ -105,7 +111,13 @@ const Dashboard = () => {
 							textDecor="none !important"
 							isExternal
 						>
-							{__("View all forms", "user-registration")}
+							<Text
+								sx={{
+									lineHeight: "2.5rem"
+								}}
+							>
+								{__("View all forms", "user-registration")}
+							</Text>
 						</Button>
 					</ButtonGroup>
 				</Box>

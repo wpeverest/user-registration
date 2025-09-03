@@ -1411,7 +1411,6 @@
 			showConfirmButton: false,
 			showCloseButton: false,
 			allowOutsideClick: false,
-
 			customClass:
 				"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-swal2-modal--install-urm-pro",
 			width: 600,

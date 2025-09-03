@@ -177,7 +177,8 @@ class PaypalService {
 			ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
 		}
 
-		$is_order_updated = $this->members_orders_repository->update( $member_order['ID'], array( 'status' => 'completed' ) );
+//		$is_order_updated = $this->members_orders_repository->update( $member_order['ID'], array( 'status' => 'completed' ) );
+		$is_order_updated = true;
 
 		if ( $is_order_updated && ( 'paid' === $member_order['order_type'] || 'subscription' === $member_order['order_type'] ) ) {
 			$member_subscription = $this->members_subscription_repository->get_member_subscription( $member_id );

@@ -763,7 +763,6 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				);
 				$login_option_settings = get_login_field_settings();
 				$login_form_settings = get_login_form_settings();
-
 				include_once __DIR__ . '/views/html-login-page-forms.php';
 			} else {
 				$registration_table_list->display_page();
