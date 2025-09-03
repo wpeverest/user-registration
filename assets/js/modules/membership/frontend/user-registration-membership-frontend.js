@@ -1607,6 +1607,8 @@
 							lone_pg.trigger("change");
 						}
 						ur_membership_ajax_utils.calculate_total($(this));
+					} else {
+						stripe_container.addClass("urm-d-none");
 					}
 				}
 			);
