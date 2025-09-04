@@ -7950,6 +7950,106 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 								'default'     => '',
 								'placeholder' => 'Default message from WordPress',
 							),
+							array(
+								'title'      => __( 'Enable Custom Redirect', 'user-registration' ),
+								'desc'       => '',
+								'id'         => 'user_registration_login_options_enable_custom_redirect',
+								'type'       => 'toggle',
+								'desc_tip'   => __( 'Custom redirection settings after login or logout.', 'user-registration' ),
+								'css'        => '',
+								'default'    => 'no',
+							),
+							array(
+								'type'              => 'select',
+								'title'             => __( 'Redirect After Login', 'user-registration' ),
+								'desc_tip'              => __( 'Select the option in which users are redirected to after login', 'user-registration' ),
+								'required'          => false,
+								'id'                => 'user_registration_login_options_redirect_after_login',
+								'class'             => 'ur-enhanced-select',
+								'input_class'       => array(),
+								/**
+								 * Filters the redirection options after user login.
+								 *
+								 * @param array $redirection_options An associative array where keys represent
+								 *                                   the option values, and values represent the labels
+								 *                                   for the redirection options.
+								 */
+								'options'           => apply_filters(
+									'user_registration_redirect_after_registration_options',
+									array(
+										'no-redirection' => __( 'No Redirection', 'user-registration' ),
+										'internal-page'  => __( 'Internal Page', 'user-registration' ),
+										'external-url'   => __( 'External URL', 'user-registration' ),
+										'previous-page'  => __( 'Previous Page', 'user-registration' ),
+									)
+								),
+								'default'           => get_option( 'user_registration_login_options_redirect_after_login', 'no-redirection' ),
+								'tip'               => __( 'Decide where users go after completing login.', 'user-registration' ),
+								'default_value'     => 'no-redirection',
+								'custom_attributes' => array(),
+								'product'           => 'user-registration/user-registration.php',
+							),
+							array(
+								'title'    => __( 'Redirect Page', 'user-registration' ),
+								'id'       => 'user_registration_login_options_after_login_redirect_page',
+								'type'     => 'single_select_page',
+								'class'    => 'ur-enhanced-select-nostd',
+								'css'      => '',
+								'default'  => '',
+				),
+							array(
+								'title'    => __( 'External URL', 'user-registration' ),
+								'id'       => 'user_registration_login_options_after_login_redirect_external_url',
+								'type'     => 'text',
+								'css'      => '',
+								'default'  => '',
+							),
+							array(
+								'type'              => 'select',
+								'title'             => __( 'Redirect After Logout', 'user-registration' ),
+								'desc_tip'              => __( 'Select the option in which users are redirected to after logout', 'user-registration' ),
+								'required'          => false,
+								'id'                => 'user_registration_login_options_redirect_after_logout',
+								'class'             => 'ur-enhanced-select',
+								'input_class'       => array(),
+								/**
+								 * Filters the redirection options after user logout.
+								 *
+								 * @param array $redirection_options An associative array where keys represent
+								 *                                   the option values, and values represent the labels
+								 *                                   for the redirection options.
+								 */
+								'options'           => apply_filters(
+									'user_registration_redirect_after_registration_options',
+									array(
+										'no-redirection' => __( 'No Redirection', 'user-registration' ),
+										'internal-page'  => __( 'Internal Page', 'user-registration' ),
+										'external-url'   => __( 'External URL', 'user-registration' ),
+										'previous-page'  => __( 'Previous Page', 'user-registration' ),
+									)
+								),
+								'default'           => get_option( 'user_registration_login_options_redirect_after_logout', 'no-redirection' ),
+								'tip'               => __( 'Decide where users go after completing logout.', 'user-registration' ),
+								'default_value'     => 'no-redirection',
+								'custom_attributes' => array(),
+								'product'           => 'user-registration/user-registration.php',
+							),
+							array(
+								'title'    => __( 'Redirect Page', 'user-registration' ),
+								'id'       => 'user_registration_login_options_after_logout_redirect_page',
+								'type'     => 'single_select_page',
+								'class'    => 'ur-enhanced-select-nostd',
+								'css'      => '',
+								'default'  => '',
+				),
+							array(
+								'title'    => __( 'External URL', 'user-registration' ),
+								'id'       => 'user_registration_login_options_after_logout_redirect_external_url',
+								'type'     => 'text',
+								'css'      => '',
+								'default'  => '',
+							),
+
 						),
 					),
 				),
