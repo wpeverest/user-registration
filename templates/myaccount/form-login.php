@@ -70,6 +70,9 @@ $placeholders = array(
 );
 $hide_labels  = ur_option_checked( 'user_registration_login_options_hide_labels', false );
 
+$hide_username_label = ur_option_checked( 'user_registration_hide_label_username_or_email', $hide_labels );
+$hide_password_label = ur_option_checked( 'user_registration_hide_label_password', $hide_labels );
+
 $enable_ajax = ur_option_checked( 'ur_login_ajax_submission', false );
 
 $enable_field_icon = ur_option_checked( 'user_registration_pro_general_setting_login_form', false );
@@ -170,7 +173,8 @@ if( isset($_GET['page']) && 'user-registration-login-forms' === $_GET['page'] ) 
 					class="<?php echo esc_attr( $admin_class ); ?> user-registration-form-row user-registration-form-row--wide form-row form-row-wide"
 					data-field="username">
 					<?php
-					if ( ! $hide_labels || $is_login_settings ) {
+
+					if ( ! $hide_username_label || $is_login_settings ) {
 						printf( '<label for="username">%s <span class="required">*</span></label>', esc_html( $labels['username'] ) );
 					}
 					?>
@@ -194,7 +198,7 @@ if( isset($_GET['page']) && 'user-registration-login-forms' === $_GET['page'] ) 
 						class="<?php echo esc_attr( $admin_class ); ?> user-registration-form-row user-registration-form-row--wide form-row form-row-wide<?php echo ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) ? ' hide_show_password' : ''; ?>"
 						data-field="password">
 						<?php
-						if ( ! $hide_labels || $is_login_settings ) {
+						if ( ! $hide_password_label || $is_login_settings ) {
 							printf( '<label for="password">%s <span class="required">*</span></label>', esc_html( $labels['password'] ) );
 						}
 						?>

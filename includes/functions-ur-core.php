@@ -7648,6 +7648,15 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'field-key'=> 'registration-setting'
 							),
 							array(
+								'title'    => __( 'Hide Label', 'user-registration' ),
+								'desc'     => '',
+								'id'       => 'user_registration_hide_label_username_or_email',
+								'type'     => 'toggle',
+								'css'      => '',
+								'default'  => false,
+								'field-key'=> 'username'
+							),
+							array(
 								'title'    => __( 'Label', 'user-registration' ),
 								'desc'     => '',
 								'id'       => 'user_registration_label_username_or_email',
@@ -7658,13 +7667,53 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'field-key'=> 'username'
 							),
 							array(
-								'title'    => __( 'Label', 'user-registration' ),
+								'title'    => __( 'Placeholder', 'user-registration' ),
 								'desc'     => '',
-								'id'       => 'user_registration_label_password',
+								'id'       => 'user_registration_placeholder_username_or_email',
 								'type'     => 'text',
 								'desc_tip' => true,
 								'css'      => '',
-								'default'  => __( 'Password', 'user-registration' ),
+								'default'  => '',
+								'field-key'=> 'username'
+							),
+							array(
+								'title'       => __( 'Invalid Username Message', 'user-registration' ),
+								'desc'        => '',
+								'id'          => 'user_registration_message_invalid_username',
+								'type'        => 'text',
+								'desc_tip'    => true,
+								'css'         => '',
+								'default'     => __( 'Invalid username or email.', 'user-registration' ),
+								'placeholder' => 'Default message from WordPress',
+								'field-key'   => 'username'
+							),
+							array(
+								'title'    => __( 'Invalid Email Message', 'user-registration' ),
+								'desc'     => '',
+								'id'       => 'user_registration_message_unknown_email',
+								'type'     => 'text',
+								'desc_tip' => true,
+								'css'      => '',
+								'default'  => 'A user could not be found with this email address.',
+								'field-key'=> 'username'
+							),
+							array(
+								'title'    => __( 'Required Message', 'user-registration' ),
+								'desc'     => '',
+								'id'       => 'user_registration_message_username_required',
+								'type'     => 'text',
+								'desc_tip' => true,
+								'css'      => '',
+								'default'  => esc_html__( 'Username is required.', 'user-registration' ),
+								'field-key'=> 'username'
+							),
+							array(
+								'title'    => __( 'Hide Label', 'user-registration' ),
+								'desc'     => '',
+								'id'       => 'user_registration_hide_label_password',
+								'type'     => 'toggle',
+								'css'      => '',
+								'default'  => false,
 								'field-key'=> 'password'
 							),
 							array(
@@ -7698,14 +7747,14 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'field-key'=> 'lost-password'
 							),
 							array(
-								'title'    => __( 'Placeholder', 'user-registration' ),
+								'title'    => __( 'Label', 'user-registration' ),
 								'desc'     => '',
-								'id'       => 'user_registration_placeholder_username_or_email',
+								'id'       => 'user_registration_label_password',
 								'type'     => 'text',
 								'desc_tip' => true,
 								'css'      => '',
-								'default'  => '',
-								'field-key'=> 'username'
+								'default'  => __( 'Password', 'user-registration' ),
+								'field-key'=> 'password'
 							),
 							array(
 								'title'    => __( 'Placeholder', 'user-registration' ),
@@ -7716,16 +7765,6 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'css'      => '',
 								'default'  => '',
 								'field-key'=> 'password'
-							),
-							array(
-								'title'    => __( 'Required Message', 'user-registration' ),
-								'desc'     => '',
-								'id'       => 'user_registration_message_username_required',
-								'type'     => 'text',
-								'desc_tip' => true,
-								'css'      => '',
-								'default'  => esc_html__( 'Username is required.', 'user-registration' ),
-								'field-key'=> 'username'
 							),
 							array(
 								'title'       => __( 'Required Message', 'user-registration' ),
@@ -7749,27 +7788,6 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'placeholder' => 'Default message from WordPress',
 								'field-key'   => 'password'
 							),
-							array(
-								'title'       => __( 'Invalid Username Message', 'user-registration' ),
-								'desc'        => '',
-								'id'          => 'user_registration_message_invalid_username',
-								'type'        => 'text',
-								'desc_tip'    => true,
-								'css'         => '',
-								'default'     => __( 'Invalid username or email.', 'user-registration' ),
-								'placeholder' => 'Default message from WordPress',
-								'field-key'   => 'username'
-							),
-							array(
-								'title'    => __( 'Invalid Email Message', 'user-registration' ),
-								'desc'     => '',
-								'id'       => 'user_registration_message_unknown_email',
-								'type'     => 'text',
-								'desc_tip' => true,
-								'css'      => '',
-								'default'  => 'A user could not be found with this email address.',
-								'field-key'=> 'username'
-							)
 						),
 					)
 				),
@@ -7884,14 +7902,14 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 								'css'      => '',
 								'default'  => 'no',
 							),
-							array(
-								'title'    => __( 'Hide Field Labels', 'user-registration' ),
-								'id'       => 'user_registration_login_options_hide_labels',
-								'type'     => 'toggle',
-								'desc_tip' => __( 'Hide input labels for a cleaner, minimal login form.', 'user-registration' ),
-								'css'      => '',
-								'default'  => 'no',
-							),
+//							array(
+//								'title'    => __( 'Hide Field Labels', 'user-registration' ),
+//								'id'       => 'user_registration_login_options_hide_labels',
+//								'type'     => 'toggle',
+//								'desc_tip' => __( 'Hide input labels for a cleaner, minimal login form.', 'user-registration' ),
+//								'css'      => '',
+//								'default'  => 'no',
+//							),
 							array(
 								'title'    => __( 'Enable Captcha', 'user-registration' ),
 								'id'       => 'user_registration_login_options_enable_recaptcha',
@@ -8673,7 +8691,9 @@ if ( ! function_exists( 'ur_setting_keys' ) ) {
                 array( 'user_registration_captcha_setting_recaptcha_version', 'v2' ),
                 array( 'user_registration_login_options_configured_captcha_type', 'v2' ),
                 array( 'user_registration_general_setting_uninstall_option', false ),
-                array( 'user_registration_allow_usage_tracking', false )
+                array( 'user_registration_allow_usage_tracking', false ),
+                array( 'user_registration_hide_label_password', false ),
+                array( 'user_registration_hide_label_username_or_email', false ),
 			),
 			'user-registration-pro/user-registration.php' => array(
 				array( 'user_registration_pro_general_setting_delete_account', 'disable' ),

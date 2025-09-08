@@ -34,8 +34,12 @@
 				}
 			);
 			$('.clickable-login-fields[data-field="username"]').trigger(
-				"click"
+				'click'
 			);
+
+			$('input[name^="user_registration_hide_label_"]')
+				.on('change', function () { LoginBuilderSettings.hide_show_field_label($(this)); })
+				.each(function () { LoginBuilderSettings.hide_show_field_label($(this)); });
 		},
 		init_form_builder: function () {
 			$(".ur-tabs .ur-tab-lists").on("click", "a.nav-tab", function () {
@@ -60,6 +64,20 @@
 					$(this).removeClass("ur-d-none");
 				}
 			});
+		},
+		hide_show_field_label: function (selected_item) {
+			var id = (selected_item.attr('id') || '').replace('user_registration_hide_label_', '');
+			var fieldMap = { password: 'password' };
+			var field_name = fieldMap[id] || 'username';
+			$('#ur-frontend-form')
+				.find('[data-field="' + field_name + '"] label')
+				.show();
+			if(selected_item.is(':checked')) {
+				$('#ur-frontend-form')
+					.find('[data-field="' + field_name + '"] label')
+					.hide();
+			}
+
 		}
 	};
 	LoginBuilderSettings.init();
@@ -316,18 +334,18 @@
 		});
 	}
 
-	function hide_show_labels() {
-		var value = $("#user_registration_login_options_hide_labels").is(
-				":checked"
-			),
-			form = $(".ur-login-form-wrapper").find(".ur-frontend-form.login");
-
-		if (!value) {
-			form.find(".user-registration-form-row label").show();
-		} else {
-			form.find(".user-registration-form-row label").hide();
-		}
-	}
+	// function hide_show_labels() {
+	// 	var value = $("#user_registration_login_options_hide_labels").is(
+	// 			":checked"
+	// 		),
+	// 		form = $(".ur-login-form-wrapper").find(".ur-frontend-form.login");
+	//
+	// 	if (!value) {
+	// 		form.find(".user-registration-form-row label").show();
+	// 	} else {
+	// 		form.find(".user-registration-form-row label").hide();
+	// 	}
+	// }
 
 	function handleRecaptchaLoginSettings() {
 		var login_captcha_enabled = $(
@@ -515,14 +533,14 @@
 		);
 		hide_show_lost_password();
 
-		$(document).on(
-			"change",
-			"#user_registration_login_options_hide_labels",
-			function (e) {
-				hide_show_labels();
-			}
-		);
-		hide_show_labels();
+		// $(document).on(
+		// 	"change",
+		// 	"#user_registration_login_options_hide_labels",
+		// 	function (e) {
+		// 		hide_show_labels();
+		// 	}
+		// );
+		// hide_show_labels();
 
 		$("#user_registration_general_setting_registration_label").on(
 			"keyup",
@@ -636,7 +654,6 @@
 				$redirect = $(
 					"#user_registration_login_options_login_redirect_url"
 				);
-			console.log($check.is(":checked"));
 
 			if (!$check.is(":checked")) {
 				$url.val("")
