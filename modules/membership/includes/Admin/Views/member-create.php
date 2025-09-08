@@ -48,6 +48,8 @@ $status_class       = ! empty( $member_subscription ) ? "user-registration-badge
 										id="ur-input-type-membership-first-name" name="ur_membership_first_name"
 										style="width: 100%"
 										value="<?php echo ! empty( $member->first_name ) ? esc_attr( $member->first_name ) : '' ?>"
+											<?php echo (!empty($_GET['action']) && "view" === $_GET["action"]) ? "disabled" :"" ?>
+
 									>
 								</div>
 							</div>
@@ -67,6 +69,8 @@ $status_class       = ! empty( $member_subscription ) ? "user-registration-badge
 										   id="ur-input-type-membership-last-name" name="ur_membership_last_name"
 										   style="width: 100%"
 										   value="<?php echo ! empty( $member->last_name ) ? esc_attr( $member->last_name ) : '' ?>"
+										   	<?php echo (!empty($_GET['action']) && "view" === $_GET["action"]) ? "disabled" :"" ?>
+
 									>
 								</div>
 							</div>
@@ -88,6 +92,8 @@ $status_class       = ! empty( $member_subscription ) ? "user-registration-badge
 										   id="ur-input-type-membership-username" name="ur_membership_username"
 										   style="width: 100%"
 										   value="<?php echo ! empty( $member->user_login ) ? esc_attr( $member->user_login ) : '' ?>"
+										   	<?php echo !empty($_GET['action']) && "view" === $_GET["action"] ? "disabled" :"" ?>
+
 										   required>
 								</div>
 							</div>
@@ -109,6 +115,8 @@ $status_class       = ! empty( $member_subscription ) ? "user-registration-badge
 										   id="ur-input-type-membership-email" name="ur_membership_email"
 										   style="width: 100%"
 										   value="<?php echo ! empty( $member->user_email ) ? esc_attr( $member->user_email ) : '' ?>"
+										   	<?php echo (!empty($_GET['action']) && "view" === $_GET["action"]) ? "disabled" :"" ?>
+
 										   required>
 								</div>
 							</div>
@@ -132,6 +140,8 @@ $status_class       = ! empty( $member_subscription ) ? "user-registration-badge
 											class="ur-membership-members-input"
 											type="password"
 											id="ur-input-type-membership-password" name="ur_membership_password"
+												<?php echo (!empty($_GET['action']) && "view" === $_GET["action"]) ? "disabled" :"" ?>
+
 											style="width: 100%"
 											required>
 									</div>
@@ -154,6 +164,8 @@ $status_class       = ! empty( $member_subscription ) ? "user-registration-badge
 											   id="ur-input-type-membership-confirm-password"
 											   name="ur_membership_confirm_password"
 											   style="width: 100%"
+											   	<?php echo (!empty($_GET['action']) && "view" === $_GET["action"]) ? "disabled" :"" ?>
+
 											   required>
 									</div>
 								</div>
@@ -174,7 +186,9 @@ $status_class       = ! empty( $member_subscription ) ? "user-registration-badge
 									<select
 										data-key-name="<?php echo esc_html__( 'Role', 'user-registration' ); ?>"
 										id="ur-input-type-membership-member-role"
-										class="user-membership-enhanced-select2 ur-membership-members-input ur-enhanced-select">
+										class="user-membership-enhanced-select2 ur-membership-members-input ur-enhanced-select"
+										<?php echo (!empty($_GET['action']) && "view" === $_GET["action"]) ? "disabled" :"" ?>
+									>
 										<?php
 										foreach ( $roles as $k => $role ) :
 											?>
@@ -209,6 +223,7 @@ $status_class       = ! empty( $member_subscription ) ? "user-registration-badge
 									name="ur-membership-select"
 									id="ur-membership-select"
 									style="width: 100%"
+									<?php echo (!empty($_GET['action']) && "view" === $_GET["action"]) ? "disabled" :"" ?>
 								>
 									<?php
 
@@ -229,6 +244,7 @@ $status_class       = ! empty( $member_subscription ) ? "user-registration-badge
 									<?php echo esc_html__( 'Start Date', 'user-registration' ); ?>
 								</label>
 								<input
+									<?php echo (!empty($_GET['action']) && "view" === $_GET["action"]) ? "disabled" :"" ?>
 									class="ur-membership-members-input"
 									data-key-name="<?php echo esc_html__( 'start_date', 'user-registration' ); ?>"
 									id="ur-membership-start-date" type="date" style="width: 100%"
@@ -278,9 +294,11 @@ $status_class       = ! empty( $member_subscription ) ? "user-registration-badge
 				</div>
 			</div>
 			<?php
-			$save_btn_class  = 'ur-member-save-btn';
-			$create_btn_text = isset( $_GET['member_id'] ) ? esc_html__( 'Update Member', 'user-registration' ) : esc_html__( 'Create Member', 'user-registration' );
-			require __DIR__ . '/./Partials/footer-actions.php'
+			if ( ! empty( $_GET['action'] ) && "view" !== $_GET['action'] ):
+				$save_btn_class  = 'ur-member-save-btn';
+				$create_btn_text = isset( $_GET['member_id'] ) ? esc_html__( 'Update Member', 'user-registration' ) : esc_html__( 'Create Member', 'user-registration' );
+				require __DIR__ . '/./Partials/footer-actions.php';
+			endif;
 			?>
 		</div>
 	</form>

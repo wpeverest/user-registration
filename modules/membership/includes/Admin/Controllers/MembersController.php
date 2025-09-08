@@ -196,11 +196,11 @@ class MembersController {
 				$this->members->update($member->ID, $members_data);
 				$member_subscription_repository = new MembersSubscriptionRepository();
 				$members_current_subscription = $member_subscription_repository->get_member_subscription($member->ID);
+				$subscription_service = new SubscriptionService();
 
 				if ( !empty($members_current_subscription) && $members_current_subscription['item_id'] !== $members_data['membership_data']['membership']  ) {
-					$subscription_service = new SubscriptionService();
+					$members_data['membership_data']['start_date'] = date('Y-m-d');
 					$subscription_data    = $subscription_service->prepare_subscription_data( $members_data, $member );
-
 					$subscription         = $this->subscriptions->update($members_current_subscription['ID'], $subscription_data );
 					$order_service        = new OrderService();
 					$orders_data          = $order_service->prepare_orders_data( $members_data, $member->ID, $subscription ); // prepare data for orders table.
@@ -226,6 +226,10 @@ class MembersController {
 
 						return apply_filters( 'urm_create_member_admin_after_member_created', $data, $member, $subscription, $order );
 					}
+				}
+				else if(!empty($members_current_subscription) && $members_current_subscription['item_id'] === $members_data['membership_data']['membership'] ){
+					$subscription_data    = $subscription_service->prepare_subscription_data( $members_data, $member );
+					$subscription         = $this->subscriptions->update($members_current_subscription['ID'], $subscription_data );
 				}
 			} catch ( Exception $e ) {
 				// Rollback the transaction if any operation fails.

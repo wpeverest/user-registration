@@ -205,10 +205,8 @@ if ( ! class_exists( 'Members' ) ) {
 					$this->render_members_create_page( $menu_items );
 					break;
 				case 'edit':
-					$this->render_members_edit_page( $menu_items );
-					break;
 				case 'view':
-					$this->render_members_view_page( $menu_items );
+					$this->render_members_edit_page( $menu_items );
 					break;
 				default:
 					$this->render_members_list_page( $menu_items );
@@ -320,7 +318,8 @@ if ( ! class_exists( 'Members' ) ) {
 		public function render_members_view_page( $menu_items ) {
 			$members_list_table = new MembersListTable();
 			$roles              = $members_list_table->get_roles();
-			$memberships        = $members_list_table->get_all_memberships();
+			$membership_service = new MembershipService();
+			$memberships        = $membership_service->list_active_memberships();
 			include __DIR__ . '/../Views/member-create.php';
 		}
 
