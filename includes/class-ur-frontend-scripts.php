@@ -1,4 +1,4 @@
-<?php
+\<?php
 /**
  * UserRegistration fronted scripts
  *
@@ -250,7 +250,7 @@ class UR_Frontend_Scripts {
 			'ur-jquery-validate'         => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/jquery.validate' . $suffix . '.js' ),
 				'deps'    => array( 'jquery' ),
-				'version' => '1.19.5',
+				'version' => '1.20.0',
 			),
 			'user-registration'          => array(
 				'src'     => self::get_asset_url( 'assets/js/frontend/user-registration' . $suffix . '.js' ),
