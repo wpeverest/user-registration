@@ -882,6 +882,11 @@ class StripeService {
 				'success' => true,
 				'price'   => $price,
 			);
+		} catch ( \Stripe\Exception\ApiErrorException $ex ) {
+			return array(
+				'success' => false,
+				'message' => $ex->getMessage(),
+			);
 		} catch ( Exception $ex ) {
 			return array(
 				'success' => false,
