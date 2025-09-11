@@ -371,6 +371,12 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 		$new_mem                 = array();
 		$active_payment_gateways = array();
 		foreach ( $memberships as $k => $membership ) {
+			if ( isset( $currencies[ $currency ]['symbol_pos'] ) && 'right' === $currencies[ $currency ]['symbol_pos'] ) {
+				$membership_cur_amount = round( $membership['meta_value']['amount'] ) . $symbol;
+			} else {
+				$membership_cur_amount = $symbol . round( $membership['meta_value']['amount'] );
+			}
+
 			$new_mem[ $k ] = array(
 				'ID'                => $membership['ID'],
 				'title'             => $membership['post_title'],
@@ -379,7 +385,7 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 				'amount'            => $membership['meta_value']['amount'] ?? 0,
 				'currency_symbol'   => $symbol,
 				'calculated_amount' => 'free' === $membership['meta_value']['type'] ? 0 : round( $membership['meta_value']['amount'] ),
-				'period'            => 'free' === $membership['meta_value']['type'] ? __( 'Free', 'user-registration' ) : ( 'subscription' === $membership['meta_value']['type'] ? $symbol . $membership['meta_value']['amount'] . ' / ' . number_format( $membership['meta_value']['subscription']['value'] ) . ' ' . ucfirst( $membership['meta_value']['subscription']['duration'] ) . ( $membership['meta_value']['subscription']['value'] > 1 ? '(s)' : '' ) : $symbol . round( $membership['meta_value']['amount'] ) ),
+				'period' => 'free' === $membership['meta_value']['type'] ? __( 'Free', 'user-registration' ) : ( 'subscription' === $membership['meta_value']['type'] ? $membership_cur_amount . ' / ' . number_format( $membership['meta_value']['subscription']['value'] ) . ' ' . ucfirst( $membership['meta_value']['subscription']['duration'] ) . ( $membership['meta_value']['subscription']['value'] > 1 ? '(s)' : '' ) : $membership_cur_amount ),
 			);
 			if ( isset( $membership['meta_value']['payment_gateways'] ) ) {
 				foreach ( $membership['meta_value']['payment_gateways'] as $key => $gateways ) {
