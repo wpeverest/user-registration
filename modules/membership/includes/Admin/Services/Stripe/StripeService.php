@@ -859,6 +859,11 @@ class StripeService {
 				'success' => true,
 				'product' => $product,
 			);
+		} catch ( \Stripe\Exception\ApiErrorException $ex ) {
+			return array(
+				'success' => false,
+				'message' => $ex->getMessage(),
+			);
 		} catch ( Exception $ex ) {
 			return array(
 				'success' => false,
