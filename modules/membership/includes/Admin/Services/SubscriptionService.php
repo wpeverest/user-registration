@@ -48,7 +48,7 @@ class SubscriptionService {
 		if ( $current_user->ID != 0 || 'free' == $membership_meta['type'] ) {
 			$status = 'active';
 		}
-		$billing_cycle = ( "subscription" === $membership_meta['type'] ) ? $membership_meta['subscription']['duration'] :  '';
+		$billing_cycle = ( "subscription" === $membership_meta['type'] ) ? $membership_meta['subscription']['duration'] : '';
 
 		$subscription_data = array(
 			'user_id'           => $member->ID,
@@ -134,16 +134,33 @@ class SubscriptionService {
 				$mollie_service = new MollieService();
 
 				return $mollie_service->cancel_subscription( $order, $subscription );
-
+			case 'bank':
+				return array( 'status' => true );
 			default:
 				$logger->notice( 'Default cancellation Reached', array( 'source' => 'urm-cancellation-log' ) );
 
 				return apply_filters( 'user_registration_membership_cancel_subscription', array( 'status' => false ), $order, $subscription );
 		}
 	}
-
+	public function reactivate_subscription( $order, $subscription ) {
+		$logger = ur_get_logger();
+		$response = array( 'status' => false );
+		switch ( $order['payment_method'] ) {
+			case 'paypal';
+				$paypal_service = new PaypalService();
+				$logger->notice( 'Paypal reactivation Reached', array( 'source' => 'urm-reactivation-log' ) );
+				return $paypal_service->reactivate_subscription( $subscription[ 'subscription_id' ] );
+				break;
+			case 'stripe':
+				$stripe_service = new StripeService();
+				return $stripe_service->reactivate_subscription( $subscription[ 'subscription_id' ]  );
+				break;
+			default:
+				return apply_filters( 'urm_reactivate_membership_subscription', $response, $order, $subscription );
+		}
+	}
 	public function daily_membership_renewal_check() {
-		$days_before_value = get_option( 'user_registration_membership_renewal_reminder_days_before', 7 );
+		$days_before_value = get_option( 'user_registration_membership_renewal_reminder_days_before', 1 );
 
 		if ( $days_before_value <= 0 ) {
 			return;
@@ -161,7 +178,7 @@ class SubscriptionService {
 		$email_service = new EmailService();
 		foreach ( $subscriptions as $subscription ) {
 			$user_id      = $subscription['member_id'];
-			$checked_date = get_user_meta( $user_id, 'urm_billing_reminder_sent_for_date', true );
+			$checked_date = get_user_meta( $user_id, 'urm_billing_reminder_sent_for_date', true );;
 			if ( $checked_date === $subscription['next_billing_date'] ) {
 				continue;
 			}
@@ -223,23 +240,27 @@ class SubscriptionService {
 		$member_order                   = $this->members_orders_repository->get_member_orders( $data['member_id'] );
 		$order                          = $this->orders_repository->get_order_detail( $member_order['ID'] );
 		$total                          = $order['total_amount'];
+		$membership_tab_url             = esc_url( ur_get_my_account_url() . "ur-membership" );
 
-		if ( ! empty( $order['coupon'] ) && "bank" !== $order['payment_method'] && isset( $membership_metas ) && ( "paid" === $membership_metas['type'] || ( "subscription" === $membership_metas['type'] && "off" === $order['trial_status'] ) ) ) {
-			$discount_amount = ( $order['coupon_discount_type'] === 'fixed' ) ? $order['coupon_discount'] : $order['total_amount'] * $order['coupon_discount'] / 100;
-			$total           = $order['total_amount'] - $discount_amount;
+		if ( ! empty( $order['coupon'] ) && 'bank' !== $order['payment_method'] && isset( $membership_metas ) && ( 'paid' === $membership_metas['type'] || ( 'subscription' === $membership_metas['type'] && 'off' === $order['trial_status'] ) ) ) {
+			$coupon_discount = isset( $order['coupon_discount'] ) ? (float) $order['coupon_discount'] : 0;
+			$discount_amount = ( isset( $order['coupon_discount_type'] ) && $order['coupon_discount_type'] === 'fixed' ) ? $coupon_discount : $order['total_amount'] * $coupon_discount / 100;
+			$total = $order['total_amount'] - $discount_amount;
 		}
 		$billing_cycle = ( "subscription" === $membership_metas['type'] ) ? ( 'day' === $membership_metas['subscription']['duration'] ) ? esc_html( 'Daily', 'user-registration' ) : ( esc_html( ucfirst( $membership_metas['subscription']['duration'] . 'ly' ) ) ) : 'N/A';
 
 		return array(
+			'username'                          => esc_html( ucwords( isset( $data['username'] ) ? $data['username'] : '' ) ),
 			'membership_plan_name'              => esc_html( ucwords( $membership_metas['post_title'] ) ),
 			'membership_plan_type'              => esc_html( ucwords( $membership_metas['type'] ) ),
 			'membership_plan_payment_method'    => esc_html( ucwords( isset( $data['order']['payment_method'] ) ? $data['order']['payment_method'] : $data['payment_method'] ) ),
 			'membership_plan_trial_status'      => esc_html( ucwords( $order['trial_status'] ) ),
-			'membership_plan_trial_start_date'  => esc_html( $subscription['trial_start_date'] ),
-			'membership_plan_trial_end_date'    => esc_html( $subscription['trial_end_date'] ),
-			'membership_plan_next_billing_date' => esc_html( $subscription['next_billing_date'] ),
+			'membership_plan_trial_start_date'  => esc_html( date( 'Y, F d', strtotime( !empty($subscription['trial_start_date']) ? $subscription['trial_start_date']: '' ) ) ),
+			'membership_plan_trial_end_date'    => esc_html( date( 'Y, F d', strtotime( !empty($subscription['trial_end_date']) ? $subscription['trial_end_date'] : '' ) ) ),
+			'membership_plan_next_billing_date' => esc_html( date( 'Y, F d', strtotime( $subscription['next_billing_date'] ) ) ),
+			'membership_plan_expiry_date'       => esc_html( date( 'Y, F d', strtotime( $subscription['expiry_date'] ) ) ),
 			'membership_plan_status'            => esc_html( ucwords( $subscription['status'] ) ),
-			'membership_plan_payment_date'      => esc_html( $order['created_at'] ),
+			'membership_plan_payment_date'      => esc_html( date( 'Y, F d', strtotime( $order['created_at'] ) ) ),
 			'membership_plan_billing_cycle'     => esc_html( ucwords( $billing_cycle ) ),
 			'membership_plan_payment_amount'    => $symbol . number_format( $membership_metas['amount'], 2 ),
 			'membership_plan_payment_status'    => esc_html( ucwords( $order['status'] ) ),
@@ -247,6 +268,7 @@ class SubscriptionService {
 			'membership_plan_coupon_discount'   => isset( $order['coupon_discount'] ) ? ( ( isset( $order['coupon_discount_type'] ) && $order['coupon_discount_type'] == 'percent' ) ? $order['coupon_discount'] . '%' : $symbol . $order['coupon_discount'] ) : '',
 			'membership_plan_coupon'            => esc_html( $order['coupon'] ?? '' ),
 			'membership_plan_total'             => $symbol . number_format( $total, 2 ),
+			'membership_renewal_link'           => "<a href=$membership_tab_url>" . __( 'Renew Now', 'user-registration' ) . "</a>"
 		);
 	}
 
@@ -329,9 +351,9 @@ class SubscriptionService {
 
 		ur_get_logger()->notice( __( 'Order created ' . $order['ID'], 'user-registration-membership' ), array( 'source' => 'urm-upgrade-subscription' ) );
 
-		$payment_service = new PaymentService( $payment_method, $data['selected_membership_id'], $user->data->user_email );
-		$ur_authorize_net_data = isset( $data[ 'ur_authorize_net' ] ) ? $data[ 'ur_authorize_net' ] : [];
-		$data            = array(
+		$payment_service       = new PaymentService( $payment_method, $data['selected_membership_id'], $user->data->user_email );
+		$ur_authorize_net_data = isset( $data['ur_authorize_net'] ) ? $data['ur_authorize_net'] : [];
+		$data                  = array(
 			'membership'        => $data['selected_membership_id'],
 			'subscription_id'   => $subscription['ID'],
 			'member_id'         => $user->ID,
@@ -341,7 +363,7 @@ class SubscriptionService {
 			'subscription_data' => $subscription,
 			'ur_authorize_net'  => $ur_authorize_net_data,
 		);
-		$data            = $data + $upgrade_details;
+		$data                  = $data + $upgrade_details;
 
 
 		$response = $payment_service->build_response( $data );
@@ -457,12 +479,12 @@ class SubscriptionService {
 		if ( 'subscription' == $membership_meta['type'] ) { // TODO: calculate with trial date
 			$expiry_date = self::get_expiry_date( date( 'Y-m-d' ), $membership_meta['subscription']['duration'], $remaining_subscription_value );
 		}
-		$billing_cycle = ( "subscription" === $membership_meta['type'] ) ? $membership_meta['subscription']['duration'] :  '';
+		$billing_cycle = ( "subscription" === $membership_meta['type'] ) ? $membership_meta['subscription']['duration'] : '';
 
 		$subscription_data = array(
 			'user_id'           => $member_id,
 			'item_id'           => $membership['ID'],
-			'start_date'        => date( 'Y-m-d' ),
+			'start_date'        => date( 'Y-m-d 00:00:00' ),
 			'expiry_date'       => $expiry_date,
 			'next_billing_date' => $expiry_date,
 			'billing_amount'    => $membership_meta['amount'] ?? 0,
@@ -562,7 +584,7 @@ class SubscriptionService {
 				$this->subscription_repository->update( $subscription_id, $subscription_data );
 				$last_order = $this->members_orders_repository->get_member_orders( $user->ID );
 				$this->orders_repository->delete_order_meta( array(
-					'order_id' => $last_order['ID'],
+						'order_id' => $last_order['ID'],
 					'meta_key' => 'delayed_until'
 				) );
 				delete_user_meta( $user->ID, 'urm_next_subscription_data' );
@@ -576,4 +598,147 @@ class SubscriptionService {
 
 	}
 
+	public function renew_membership( $user, $selected_pg ) {
+		$member_id                            = $user->ID;
+		$username                             = $user->user_login;
+		$member_subscription                  = $this->members_subscription_repository->get_member_subscription( $member_id );
+		$membership                           = $this->membership_repository->get_single_membership_by_ID( $member_subscription['item_id'] );
+		$membership_id                        = $membership['ID'];
+		$membership_details                   = wp_unslash( json_decode( $membership['meta_value'], true ) );
+		$membership_details['payment_method'] = $selected_pg;
+		$membership_details['post_title']     = $membership['post_title'];
+		$membership_details['membership']     = $membership_id;
+		$order_service                        = new OrderService();
+		$members_data                         = array(
+			'membership_data' => $membership_details,
+		);
+		$this->update_membership_renewal_metas( $member_id );
+
+		$orders_data = $order_service->prepare_orders_data( $members_data, $member_id, $member_subscription, [], true ); // prepare data for orders table.
+		$order = $this->orders_repository->create( $orders_data );
+		ur_get_logger()->notice( __( 'Order created for ' . $username . ' Order ID: ' . $order['ID'], 'user-registration-membership' ), array( 'source' => 'urm-renew-subscription' ) );
+		$payment_service = new PaymentService( $selected_pg, $membership['ID'], $user->data->user_email );
+		$data            = array(
+			'membership'        => $membership_id,
+			'subscription_id'   => $member_subscription['ID'],
+			'member_id'         => $member_id,
+			'email'             => $user->user_email,
+			'transaction_id'    => $orders_data['orders_data']['transaction_id'],
+			'upgrade'           => false,
+			'subscription_data' => $member_subscription,
+		);
+
+		$renew_response           = $payment_service->build_response( $data );
+		$renew_response["status"] = false;
+
+		if ( isset( $renew_response["payment_url"] ) || isset( $renew_response["data"] ) || "stripe" === $selected_pg ) {
+			$renew_response['status'] = true;
+
+		} else {
+			$this->orders_repository->delete( $order['ID'] );
+		}
+
+		return array(
+			'extra'    => array(
+				'member_id'                => $member_id,
+				'username'                 => $username,
+				'transaction_id'           => $orders_data['orders_data']['transaction_id'],
+				'updated_membership_title' => $membership['post_title']
+			),
+			'response' => $renew_response
+		);
+
+	}
+
+	/**
+	 * update_membership_renewal_metas
+	 *
+	 * @param $member_id
+	 *
+	 * @return void
+	 */
+	public function update_membership_renewal_metas( $member_id ) {
+		update_user_meta( $member_id, 'urm_is_member_renewing', true );
+	}
+
+	public function update_subscription_data_for_renewal( $member_subscription, $membership_metas ) {
+
+		$subscription_value    = $membership_metas['subscription']['value'];
+		$subscription_duration = $membership_metas['subscription']['duration'];
+		$next_billing_date     = new \DateTime( $member_subscription['next_billing_date'] );
+
+		$today = new \DateTime( 'today' );
+		if( $next_billing_date < $today ) {
+			$next_billing_date = $today;
+		}
+
+		$next_billing_date     = $next_billing_date->modify( "+ $subscription_value $subscription_duration" )->format( 'Y-m-d 00:00:00' );
+
+		$this->members_subscription_repository->update( $member_subscription['ID'], array(
+			'start_date'        => date( 'Y-m-d 00:00:00' ),
+			'next_billing_date' => $next_billing_date,
+			'expiry_date'       => $next_billing_date,
+		) );
+		update_user_meta( $member_subscription['user_id'], 'urm_last_renewed_on', date( 'Y-m-d 00:00:00' ) );
+		delete_user_meta( $member_subscription['user_id'], 'urm_is_member_renewing' );
+	}
+
+	/**
+	 * daily_membership_expiring_soon_check
+	 *
+	 * @return void
+	 */
+	public function daily_membership_expiring_soon_check() {
+		$days_before_value = get_option( 'user_registration_membership_expiring_soon_days_before', 1 );
+
+		if ( $days_before_value <= 0 ) {
+			return;
+		}
+		$period        = get_option( 'user_registration_membership_expiring_soon_period', 'weeks' );
+		$value_in_days = convert_to_days( $days_before_value, $period );
+		$date          = new \DateTime( 'today' );
+		$check_date    = $date->modify( "+$value_in_days day" )->format( 'Y-m-d H:i:s' );
+
+
+		$subscriptions = $this->members_subscription_repository->get_about_to_expire_subscriptions( $check_date );
+		if ( empty( $subscriptions ) ) {
+			return;
+		}
+		$email_service = new EmailService();
+		foreach ( $subscriptions as $subscription ) {
+
+			$user_id      = $subscription['member_id'];
+			$checked_date = get_user_meta( $user_id, 'urm_expiring_reminder_sent_for_date', true );
+
+			if ( $checked_date === $subscription['next_billing_date'] ) {
+				continue;
+			}
+			$email_service->send_email( $subscription, 'membership_expiring_soon' );
+			update_user_meta( $subscription['member_id'], 'urm_expiring_reminder_sent_for_date', $subscription['next_billing_date'] );
+		}
+	}
+
+	/**
+	 * daily_membership_expiring_soon_check
+	 *
+	 * @return void
+	 */
+	public function daily_membership_ended_check() {
+		$date          = new \DateTime( 'today' );
+		$check_date    = $date->modify( "-1 day" )->format( 'Y-m-d H:i:s' );
+		$subscriptions = $this->members_subscription_repository->get_expired_subscriptions( $check_date );
+		if ( empty( $subscriptions ) ) {
+			return;
+		}
+		$email_service = new EmailService();
+		foreach ( $subscriptions as $subscription ) {
+			$user_id      = $subscription['member_id'];
+			$checked_date = get_user_meta( $user_id, 'urm_expired_reminder_sent_for_date', true );
+			if ( $checked_date === $subscription['expiry_date'] ) {
+				continue;
+			}
+			$email_service->send_email( $subscription, 'membership_ended' );
+			update_user_meta( $subscription['member_id'], 'urm_expired_reminder_sent_for_date', $subscription['expiry_date'] );
+		}
+	}
 }

@@ -150,133 +150,141 @@
 				animation: none;
 			}
 		}
+	}
 
-		.swal2-header {
-			.swal2-icon {
+	.swal2-header {
+		.swal2-icon {
+			width: 56px;
+			height: 56px;
+			line-height: 56px;
+			margin: 0 auto 16px;
+			border-width: 2px;
+			border-radius: 50%;
+
+			.swal2-x-mark {
+				& [class^="swal2-x-mark-line"] {
+					height: 3px;
+					width: 28px;
+					top: 50%;
+					left: 0;
+					right: 0;
+					margin: 0 auto;
+
+					&[class$="left"] {
+						transform: translateY(-50%) rotate(45deg);
+					}
+
+					&[class$="right"] {
+						transform: translateY(-50%) rotate(-45deg);
+					}
+				}
+			}
+
+			&.swal2-success {
+				& [class^="swal2-success-line"] {
+					height: 3px;
+
+					&[class$="tip"] {
+						width: 16px;
+						top: 56%;
+						left: 10px;
+					}
+
+					&[class$="long"] {
+						top: 47%;
+						width: 32px;
+						right: 6px;
+					}
+				}
+
+				& [class^="swal2-success-circular-line"] {
+					height: 64px;
+					width: 32px;
+
+					&[class$="left"] {
+						top: -75px;
+						left: 27px;
+					}
+
+					&[class$="right"] {
+						top: -26px;
+						left: 82px;
+					}
+				}
+
+				.swal2-success-ring {
+					top: -3px;
+					left: -2px;
+					border-width: 2px;
+				}
+
+				.swal2-success-fix {
+					height: 64px;
+					left: 2px;
+					right: 0px;
+					margin: 0 auto;
+					top: -2px;
+					bottom: 0;
+					width: 6px;
+				}
+			}
+
+			&::before {
+				font-size: 40px;
+			}
+		}
+
+		.swal2-title {
+			color: $gray_base;
+			font-size: 16px;
+			line-height: 24px;
+			font-weight: $medium;
+			flex-wrap: wrap;
+			margin-bottom: 16px;
+
+			img {
+				width: 20px;
+				height: 20px;
+			}
+
+			.dashicons {
+				color: $red;
+				font-size: 28px;
 				width: 56px;
 				height: 56px;
 				line-height: 56px;
 				margin: 0 auto 16px;
-				border-width: 2px;
+				border: 2px solid $red;
 				border-radius: 50%;
-
-				.swal2-x-mark {
-					& [class^="swal2-x-mark-line"] {
-						height: 3px;
-						width: 28px;
-						top: 50%;
-						left: 0;
-						right: 0;
-						margin: 0 auto;
-
-						&[class$="left"] {
-							transform: translateY(-50%) rotate(45deg);
-						}
-
-						&[class$="right"] {
-							transform: translateY(-50%) rotate(-45deg);
-						}
-					}
-				}
-
-				&.swal2-success {
-					& [class^="swal2-success-line"] {
-						height: 3px;
-
-						&[class$="tip"] {
-							width: 16px;
-							top: 56%;
-							left: 10px;
-						}
-
-						&[class$="long"] {
-							top: 47%;
-							width: 32px;
-							right: 6px;
-						}
-					}
-
-					& [class^="swal2-success-circular-line"] {
-						height: 64px;
-						width: 32px;
-
-						&[class$="left"] {
-							top: -75px;
-							left: 27px;
-						}
-
-						&[class$="right"] {
-							top: -26px;
-							left: 82px;
-						}
-					}
-
-					.swal2-success-ring {
-						top: -3px;
-						left: -2px;
-						border-width: 2px;
-					}
-
-					.swal2-success-fix {
-						height: 64px;
-						left: 2px;
-						right: 0px;
-						margin: 0 auto;
-						top: -2px;
-						bottom: 0;
-						width: 6px;
-					}
-				}
-
-				&::before {
-					font-size: 40px;
-				}
-			}
-
-			.swal2-title {
-				color: $gray_base;
-				font-size: 24px;
-				flex-wrap: wrap;
-				margin-bottom: 16px;
-
-				.dashicons {
-					color: $red;
-					font-size: 28px;
-					width: 56px;
-					height: 56px;
-					line-height: 56px;
-					margin: 0 auto 16px;
-					border: 2px solid $red;
-					border-radius: 50%;
-				}
-			}
-		}
-
-		&__title {
-			line-height: 1.35;
-			display: block;
-		}
-
-		.swal2-content {
-			color: $color_gray_one;
-			font-size: 1em;
-			line-height: 1.5;
-		}
-
-		.swal2-actions {
-			button {
-				margin-top: 0;
-				margin-bottom: 0;
-			}
-		}
-
-		// Centered Style
-		&--centered {
-			.swal2-title {
-				flex-direction: column;
 			}
 		}
 	}
+
+	&__title {
+		line-height: 1.35;
+		display: block;
+	}
+
+	.swal2-content {
+		color: $color_gray_one;
+		font-size: 1em;
+		line-height: 1.5;
+	}
+
+	.swal2-actions {
+		button {
+			margin-top: 0;
+			margin-bottom: 0;
+		}
+	}
+
+	// Centered Style
+	&--centered {
+		.swal2-title {
+			flex-direction: column;
+		}
+	}
+// }
 }
 
 //Modal z-index fix
@@ -286,3 +294,136 @@
 	}
 }
 
+// Swal2 Popup CSS
+.user-registration,
+.user-registration-page {
+	.swal2-container {
+		.swal2-popup {
+			width: 400px;
+			border-radius: $spacing_10px;
+			padding: 0;
+			margin: auto;
+
+			.swal2-header {
+				padding: $spacing_20px;
+
+				.swal2-title {
+					display: flex !important;
+					align-items: center;
+					gap: $spacing_12px;
+					border-bottom: $border_width solid #e1e1e1;
+					padding-bottom: $spacing_16px;
+					width: 100%;
+					margin-bottom: 0;
+
+					.dashicons {
+						font-size: 18px;
+						width: 28px;
+						height: 28px;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						margin: 0;
+					}
+
+					.user-registration-swal2-modal__title {
+						font-size: 16px;
+						line-height: 24px;
+						font-weight: $medium;
+						color: $grey-500;
+					}
+				}
+			}
+
+			.swal2-content {
+				padding-left: $spacing_20px;
+				padding-right: $spacing_20px;
+				margin-top: 0;
+				text-align: left;
+				font-size: 14px;
+				line-height: 24px;
+				color: $grey-400;
+
+				.swal2-html-container {
+					> div {
+						border-radius: $spacing_8px;
+						overflow: hidden;
+					}
+
+					.action-buttons {
+						margin-left: -$spacing_20px;
+						margin-right: -$spacing_20px;
+						border-radius: 0 0 $border_radius_10 $border_radius_10;
+						padding: $spacing_16px;
+						text-align: right;
+						background: #F4F4F4;
+					}
+
+					p {
+						margin: 0;
+					}
+				}
+
+				.swal2-validation-message {
+					margin-left: 0;
+					margin-right: 0;
+					border-left: 3px solid #f27474;
+					justify-content: flex-start;
+					padding: $spacing_12px $spacing_6px $spacing_12px $spacing_6px;
+				}
+
+				.action-buttons {
+					padding: $spacing_18px $spacing_20px;
+
+					a {
+						background: #FF8C39;
+						border: #FF8C39;
+						text-decoration: none;
+						color: $white;
+					}
+				}
+			}
+
+			.swal2-actions {
+				padding: $spacing_18px $spacing_20px;
+				gap: $spacing_16px;
+				margin-top: $spacing_20px;
+				border-radius: 0 0 $border_radius_5 $border_radius_5;
+				background: #f4f4f4;
+				border-top: 0;
+				flex-direction: row-reverse;
+
+				.swal2-confirm,
+				.swal2-cancel {
+					min-height: 36px;
+					font-size: 14px;
+					line-height: 20px;
+					font-weight: $regular;
+					padding: 0 $spacing_12px;
+					width: 45%;
+				}
+
+				.swal2-confirm {
+					background: #ff4149;
+					border-color: #ff4149;
+				}
+
+				.swal2-cancel {
+					background: $white;
+					color: $grey-400;
+				}
+
+				button {
+					&:focus {
+						box-shadow: none;
+					}
+
+					&:focus-visible {
+						outline: none;
+					}
+				}
+
+			}
+		}
+	}
+}

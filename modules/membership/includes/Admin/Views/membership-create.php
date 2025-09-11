@@ -1,28 +1,26 @@
+<?php
+$return_url = admin_url( 'admin.php?page=user-registration-membership' );
+$is_editing = ! empty( $_GET['post_id'] );
+?>
+<div class="ur-admin-page-topnav" id="ur-lists-page-topnav">
+	<div class="ur-page-title__wrapper">
+		<div class="ur-page-title__wrapper--left">
+			<a class="ur-text-muted ur-border-right ur-d-flex ur-mr-2 ur-pl-2 ur-pr-2" href="<?php echo esc_attr( $return_url ); ?>">
+				<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+			</a>
+			<div class="ur-page-title__wrapper--left-menu">
+				<div class="ur-page-title__wrapper--left-menu__items">
+					<p><?php echo isset( $_GET['post_id'] ) ? esc_html_e( 'Edit Membership', 'user-registration' ) : esc_html_e( 'Create New Membership', 'user-registration' ); ?></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 <div class="ur-membership">
-	<?php
-	require __DIR__ . '/./Partials/header.php';
-	$return_url = admin_url( 'admin.php?page=user-registration-membership' );
-	$is_editing = ! empty( $_GET['post_id'] );
-
-	?>
 	<div
 		class="ur-membership-tab-contents-wrapper ur-registered-from ur-align-items-center ur-justify-content-center">
-		<form id="ur-membership-create-form" method="post" style="width: 80%">
+		<form id="ur-membership-create-form" method="post">
 			<div class="user-registration-card">
-				<div class="user-registration-card__header ur-d-flex ur-align-items-center">
-					<a class="ur-text-muted ur-d-flex"
-					   href="<?php echo $return_url; ?>">
-						<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
-							 fill="none"
-							 stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-							<line x1="19" y1="12" x2="5" y2="12"></line>
-							<polyline points="12 19 5 12 12 5"></polyline>
-						</svg>
-					</a>
-					<h3>
-						<?php echo isset( $_GET['post_id'] ) ? esc_html_e( 'Edit Membership', 'user-registration' ) : esc_html_e( 'Create New Membership', 'user-registration' ); ?>
-					</h3>
-				</div>
 				<div class="user-registration-card__body">
 					<div id="ur-membership-main-fields">
 						<!--					membership name-->
@@ -74,24 +72,23 @@
 						<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3"
 							 style="gap:20px; <?php echo $is_editing ? '' : 'display:none !important'; ?> ">
 							<div class="ur-label" style="width: 30%">
-								<label class="ur-membership-enable-status"
-									   for="ur-membership-status"><?php esc_html_e( 'Membership Status', 'user-registration' ); ?>
-									<span class="user-registration-help-tip tooltipstered"
-										  data-tip="<?php echo esc_attr__( "Active or Inactive state of a membership." ) ?>"></span>
-
+								<label for="ur-membership-status"><?php esc_html_e( 'Membership Status', 'user-registration' ); ?>
+									<span class="user-registration-help-tip tooltipstered" data-tip="<?php echo esc_attr__( "Active or Inactive state of a membership." ) ?>"></span>
 								</label>
 							</div>
-							<div class="user-registration-switch ur-ml-auto" style="width: 100%">
 
+							<div class="ur-toggle-section m1-auto" style="width: 100%">
+								<span class="user-registration-toggle-form">
 								<input
-									data-key-name="Membership Status"
-									id="ur-membership-status" type="checkbox"
-									class="user-registration-switch__control hide-show-check enabled"
-									<?php echo isset( $membership_content ) && $membership_content['status'] == 'true' ? 'checked' : ( $is_editing ? '' : 'checked' ); ?>
-									name="ur_membership_status"
-									style="width: 100%; text-align: left">
+										data-key-name="Membership Status"
+										id="ur-membership-status" type="checkbox"
+										class="user-registration-switch__control hide-show-check enabled"
+										<?php echo isset( $membership_content ) && $membership_content['status'] == 'true' ? 'checked' : ( $is_editing ? '' : 'checked' ); ?>
+										name="ur_membership_status"
+										style="width: 100%; text-align: left">
+								<span class="slider round"></span>
+								</span>
 							</div>
-
 						</div>
 
 						<!--						role-->
@@ -130,7 +127,7 @@
 					</div>
 					<!--					membership plan type and pricing section-->
 					<div id="ur-membership-plan-and-price-section" class="ur-p-2 ur-mt-2">
-						<div class="user-registration-card" style="background: #f8f8fa">
+						<div class="user-registration-card">
 							<!--							membership type and price header-->
 
 							<div class="user-registration-card__header ur-d-flex ur-align-items-center">
@@ -367,22 +364,25 @@
 										</div>
 										<!--								trial section-->
 										<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3"
-											 style="gap:30px">
+											 style="gap:20px">
 											<div class="ur-label" style="width: 30%">
 												<label class="ur-membership-trial-status"
 													   for="ur-membership-trial-status"><?php esc_html_e( 'Trial Period', 'user - registration' ); ?></label>
 											</div>
-											<div class="user-registration-switch ur-ml-auto" style="width: 100%">
-												<input
-													data-key-name="Trial Period"
-													id="ur-membership-trial-status"
-													type="checkbox"
-													class="user-registration-switch__control hide-show-check enabled"
-													name="ur_membership[trial]_status"
-													style="width: 100%;"
-													value="<?php echo isset( $membership_details['trial_status'] ) && $membership_details['trial_status'] == 'on' ? 'on' : 'off'; ?>"
-													<?php echo isset( $membership_details['trial_status'] ) && $membership_details['trial_status'] == 'on' ? 'checked' : ''; ?>
-												>
+											<div class="ur-toggle-section m1-auto" style="width: 100%">
+												<span class="user-registration-toggle-form">
+													<input
+														data-key-name="Trial Period"
+														id="ur-membership-trial-status"
+														type="checkbox"
+														class="user-registration-switch__control hide-show-check enabled"
+														name="ur_membership[trial]_status"
+														style="width: 100%;"
+														value="<?php echo isset( $membership_details['trial_status'] ) && $membership_details['trial_status'] == 'on' ? 'on' : 'off'; ?>"
+														<?php echo isset( $membership_details['trial_status'] ) && $membership_details['trial_status'] == 'on' ? 'checked' : ''; ?>
+													>
+													<span class="slider round"></span>
+												</span>
 											</div>
 										</div>
 										<div class="trial-container <?php echo isset( $membership_details['trial_status'] ) && $membership_details['trial_status'] == 'on' ? '' : 'ur-d-none'; ?>">
@@ -442,15 +442,17 @@
 											   for="ur-membership-upgrade-action"><?php esc_html_e( 'Upgrade Action', 'user-registration' ); ?>
 										</label>
 									</div>
-									<div class="user-registration-switch ur-ml-auto" style="width: 100%">
-
-										<input
-											data-key-name="Upgrade Action"
-											id="ur-membership-upgrade-action" type="checkbox"
-											class="user-registration-switch__control hide-show-check enabled"
-											<?php echo $is_upgrade_enabled ? 'checked' : ''; ?>
-											name="ur_membership_upgrade_action"
-											style="width: 100%; text-align: left">
+									<div class="ur-toggle-section m1-auto" style="width: 100%">
+										<span class="user-registration-toggle-form">
+											<input
+												data-key-name="Upgrade Action"
+												id="ur-membership-upgrade-action" type="checkbox"
+												class="user-registration-switch__control hide-show-check enabled"
+												<?php echo $is_upgrade_enabled ? 'checked' : ''; ?>
+												name="ur_membership_upgrade_action"
+												style="width: 100%; text-align: left">
+											<span class="slider round"></span>
+										</span>
 									</div>
 								</div>
 
@@ -524,7 +526,7 @@
 															style="margin: 0"
 															<?php echo ( ( isset( $membership_details['upgrade_settings']['upgrade_type'] ) && $membership_details['upgrade_settings']['upgrade_type'] == 'full' ) ) ? 'checked' : ( ! $is_editing ? 'checked' : '' ); ?>
 															required>
-														<label class="ur-p-2" for="ur-membership-upgrade-type-full">
+														<label class="ur-membership-upgrade-type-full--label" for="ur-membership-upgrade-type-full">
 															<b
 																class="user-registration-image-label "><?php esc_html_e( 'Full Amount Upgrade', 'user-registration' ); ?>
 															</b>
@@ -548,7 +550,7 @@
 															<?php echo ( ( isset( $membership_details['upgrade_settings']['upgrade_type'] ) && $membership_details['upgrade_settings']['upgrade_type'] == 'pro-rata' ) ) ? 'checked' : ""; ?>
 															<?php echo ! UR_PRO_ACTIVE ? 'disabled' : '' ?>
 															required>
-														<label class="ur-p-2" for="ur-membership-upgrade-type-pro-rata">
+														<label class="ur-membership-upgrade-type-full--label" for="ur-membership-upgrade-type-pro-rata">
 															<b
 																class="user-registration-image-label "><?php esc_html_e( 'Proration Upgrade', 'user-registration' ); ?>
 															</b>

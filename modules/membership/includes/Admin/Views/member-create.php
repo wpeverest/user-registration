@@ -1,28 +1,28 @@
 <?php
-require __DIR__ . '/./Partials/header.php';
 $return_url = admin_url( 'admin.php?page=user-registration-members' );
 
 ?>
+<div class="ur-admin-page-topnav" id="ur-lists-page-topnav">
+	<div class="ur-page-title__wrapper">
+		<div class="ur-page-title__wrapper--left">
+			<a class="ur-text-muted ur-border-right ur-d-flex ur-mr-2 ur-pl-2 ur-pr-2" href="<?php echo esc_attr( $return_url ); ?>">
+				<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+			</a>
+			<div class="ur-page-title__wrapper--left-menu">
+				<div class="ur-page-title__wrapper--left-menu__items">
+					<p>
+						<?php echo isset( $_GET['post_id'] ) ? esc_html_e( 'Edit Member', 'user-registration' ) : esc_html_e( 'Create New Member', 'user-registration' ); ?>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 <div class="ur-membership-tab-contents-wrapper ur-align-items-center ur-justify-content-center">
 	<form id="ur-membership-create-form" method="post">
 		<div class="user-registration-card">
 			<div id="ur-membership-form-container" class="ur-d-flex">
 				<div id="ur-member-form-left">
-					<div id="left-title" class=" ur-d-flex ur-align-items-center">
-						<a class="ur-text-muted ur-d-flex"
-						   href="<?php echo esc_attr( empty( $_SERVER['HTTP_REFERER'] ) ? '#' : $_SERVER['HTTP_REFERER'] ); ?>">
-							<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
-								 fill="none"
-								 stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-								<line x1="19" y1="12" x2="5" y2="12"></line>
-								<polyline points="12 19 5 12 12 5"></polyline>
-							</svg>
-						</a>
-						<h3>
-							<?php echo isset( $_GET['post_id'] ) ? esc_html_e( 'Edit Member', 'user-registration' ) : esc_html_e( 'Create New Member', 'user-registration' ); ?>
-						</h3>
-					</div>
-
 					<div id="left-body" class="">
 						<!--						first name-->
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
@@ -61,7 +61,7 @@ $return_url = admin_url( 'admin.php?page=user-registration-members' );
 								</div>
 							</div>
 						</div>
-						<!--						username-->
+						<!--username-->
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
 							<div class="ur-label" style="width: 30%">
 								<label
@@ -101,7 +101,7 @@ $return_url = admin_url( 'admin.php?page=user-registration-members' );
 								</div>
 							</div>
 						</div>
-						<!--						password-->
+						<!-- password -->
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
 							<div class="ur-label" style="width: 30%">
 								<label
@@ -169,27 +169,9 @@ $return_url = admin_url( 'admin.php?page=user-registration-members' );
 								</div>
 							</div>
 						</div>
-						<!--						status-->
-<!--						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px">-->
-<!--							<div class="ur-label" style="width: 30%">-->
-<!--								<label class="ur-membership-enable-status"-->
-<!--									   for="ur-membership-status">--><?php //esc_html_e( 'Member Status', 'user-registration' ); ?><!--</label>-->
-<!--							</div>-->
-<!--							<div class="user-registration-switch ur-ml-auto" style="width: 100%">-->
-<!---->
-<!--								<input-->
-<!--									data-key-name="--><?php //echo esc_html__( 'member_status', 'user-registration' ); ?><!--"-->
-<!--									id="ur-membership-status" type="checkbox"-->
-<!--									class="user-registration-switch__control hide-show-check enabled ur-membership-members-input"-->
-<!--									--><?php //echo esc_attr( isset( $membership_content ) && $membership_content['status'] == 'true' ? 'checked' : '' ); ?>
-<!--									name="ur_membership_status"-->
-<!--									style="width: 100%; text-align: left">-->
-<!--							</div>-->
-<!---->
-<!--						</div>-->
 					</div>
 				</div>
-				<div id="ur-member-form-right" class="ur-p-4">
+				<div id="ur-member-form-right">
 					<div class="right-title">
 						<h3 class="ur-mt-2">
 							<?php esc_html_e( 'Select Plan', 'user-registration' ); ?>

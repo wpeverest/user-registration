@@ -94,7 +94,7 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Updated_Email', false ) ) :
 									'id'       => 'user_registration_profile_details_updated_email_subject',
 									'type'     => 'text',
 									'default'  => __( 'Profile Updated Successfully on {{blog_info}}', 'user-registration' ),
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'desc_tip' => true,
 								),
 								array(
@@ -103,7 +103,7 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Updated_Email', false ) ) :
 									'id'       => 'user_registration_profile_details_Updated_email',
 									'type'     => 'tinymce',
 									'default'  => $this->ur_get_profile_details_updated_email(),
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'desc_tip' => true,
 								),
 							),

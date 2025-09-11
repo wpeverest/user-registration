@@ -405,11 +405,11 @@
 				// payment gateway validations
 
 				// check if atleast one pg is enabled
-				var available_pgs = $('#payment-gateway-container .user-registration-switch'),
+				var available_pgs = $('#payment-gateway-container .user-registration-switch__control'),
 					is_one_selected = false;
 
 				available_pgs.each(function (index, item) {
-					if ($(item).find('input').is(':checked')) {
+					if ($(item).is(':checked')) {
 						is_one_selected = true;
 					}
 				});
@@ -833,7 +833,15 @@
 	$('.delete-membership').on('click', function (e) {
 		e.preventDefault();
 		e.stopPropagation();
-		var $this = $(this);
+
+		var $this = $(this),
+			$membership_id = $this.data('membership-id'),
+			parent = $this.closest('.delete');
+		if (parent.find('span').hasClass('is-active')) {
+			return;
+		}
+		ur_membership_utils.append_spinner(parent);
+
 		Swal.fire({
 			title:
 				'<img src="' +
@@ -849,7 +857,47 @@
 			allowOutsideClick: false
 		}).then(function (result) {
 			if (result.isConfirmed) {
-				$(location).attr('href', $this.attr('href'));
+				ur_membership_request_utils.send_data(
+					{
+						action: 'user_registration_membership_delete_membership',
+						membership_id: $membership_id
+					},
+					{
+						success: function (response) {
+							if (response.success) {
+								ur_membership_utils.show_success_message(
+									response.data.message
+								);
+								ur_membership_request_utils.remove_deleted_memberships($this, false);
+							} else {
+								Swal.fire({
+									title:
+										'<img src="' +
+										ur_membership_data.delete_icon +
+										'" id="delete-user-icon">' +
+										ur_membership_data.labels.i18n_prompt_title,
+									html: response.data.message,
+									confirmButtonText: ur_membership_data.labels.i18n_prompt_ok,
+									allowOutsideClick: false
+								});
+							}
+						},
+						failure: function (xhr, statusText) {
+							ur_membership_utils.show_failure_message(
+								ur_membership_data.labels.network_error +
+								'(' +
+								statusText +
+								')'
+							);
+						},
+						complete: function () {
+							ur_membership_utils.remove_spinner($this.closest('.delete'));
+							// window.location.reload(); //Todo: Can be removed after fixing checkbox error and adding no content image if empty for all delete on ajax
+						}
+					}
+				);
+			} else {
+				ur_membership_utils.remove_spinner($this.closest('.delete'));
 			}
 		});
 	});

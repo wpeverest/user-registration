@@ -16,6 +16,7 @@ use WPEverest\URMembership\Admin\Controllers\MembersController;
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersOrderRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersRepository;
+use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
 use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
 use WPEverest\URMembership\Admin\Repositories\SubscriptionRepository;
 use WPEverest\URMembership\Admin\Services\CouponService;
@@ -26,6 +27,7 @@ use WPEverest\URMembership\Admin\Services\MembersService;
 use WPEverest\URMembership\Admin\Services\PaymentService;
 use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
 use WPEverest\URMembership\Admin\Services\SubscriptionService;
+use WPEverest\URMembership\Admin\Services\OrderService;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -52,6 +54,7 @@ class AJAX {
 			'create_membership'            => false,
 			'update_membership'            => false,
 			'delete_memberships'           => false,
+			'delete_membership'            => false,
 			'update_membership_status'     => false,
 			'create_member'                => false,
 			'update_member'                => false,
@@ -61,6 +64,8 @@ class AJAX {
 			'register_member'              => true,
 			'validate_coupon'              => true,
 			'cancel_subscription'          => false,
+			'reactivate_membership'		   => false,
+			'renew_membership'             => false,
 			'cancel_upcoming_subscription' => false,
 			'fetch_upgradable_memberships' => false,
 			'get_group_memberships'        => false,
@@ -122,8 +127,8 @@ class AJAX {
 				)
 			);
 		}
-		if( empty($data['payment_method']) ) {
-			wp_delete_user($member_id);
+		if ( empty( $data['payment_method'] ) ) {
+			wp_delete_user( $member_id );
 			wp_send_json_error(
 				array(
 					'message' => __( "Payment method is required.", "user-registration" ),
@@ -209,7 +214,7 @@ class AJAX {
 		$membership        = new MembershipService();
 		$data              = isset( $_POST['membership_data'] ) ? (array) json_decode( wp_unslash( $_POST['membership_data'] ), true ) : array();
 		$is_stripe_enabled = isset( $data['post_meta_data']['payment_gateways']['stripe'] ) && "on" === $data['post_meta_data']['payment_gateways']['stripe']["status"];
-		$data = $membership->prepare_membership_post_data( $data );
+		$data              = $membership->prepare_membership_post_data( $data );
 
 		if ( isset( $data['status'] ) && ! $data['status'] ) {
 			wp_send_json_error(
@@ -236,7 +241,7 @@ class AJAX {
 				$data["membership_id"]    = $new_membership_ID;
 				$stripe_price_and_product = $stripe_service->create_stripe_product_and_price( $data["post_data"], $meta_data, false );
 
-				if (  $stripe_price_and_product['success'] ) {
+				if ( $stripe_price_and_product['success'] ) {
 					$meta_data["payment_gateways"]["stripe"]["product_id"] = $stripe_price_and_product['price']->product;
 					$meta_data["payment_gateways"]["stripe"]["price_id"]   = $stripe_price_and_product['price']->id;
 					update_post_meta( $new_membership_ID, $data['post_meta_data']['ur_membership']['meta_key'], wp_json_encode( $meta_data ) );
@@ -329,7 +334,7 @@ class AJAX {
 					$data["membership_id"]    = $updated_ID;
 					$stripe_price_and_product = $stripe_service->create_stripe_product_and_price( $data["post_data"], $meta_data, $should_create_new_product );
 
-					if (  ur_string_to_bool($stripe_price_and_product['success']) ) {
+					if ( ur_string_to_bool( $stripe_price_and_product['success'] ) ) {
 						$meta_data["payment_gateways"]["stripe"]["product_id"] = $stripe_price_and_product['price']->product;
 						$meta_data["payment_gateways"]["stripe"]["price_id"]   = $stripe_price_and_product['price']->id;
 						update_post_meta( $updated_ID, $data['post_meta_data']['ur_membership']['meta_key'], wp_json_encode( $meta_data ) );
@@ -365,6 +370,49 @@ class AJAX {
 	 *
 	 * @return void
 	 */
+	public static function delete_membership() {
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Permission not allowed.', 'user-registration' ),
+				),
+				403
+			);
+		}
+
+		ur_membership_verify_nonce( 'ur_membership' );
+		if ( empty( $_POST['membership_id'] ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Field membership_id is required.', 'user-registration' ),
+				),
+				422
+			);
+		}
+		$membership_id = absint( $_POST['membership_id'] );
+
+		$membership_service = new MembershipService();
+		$deleted               = $membership_service->delete_membership( $membership_id );
+		if ( $deleted["status"] ) {
+			wp_send_json_success(
+				array(
+					'message' => esc_html__( 'Membership deleted successfully.', 'user-registration' ),
+				)
+			);
+		}
+		wp_send_json_error(
+			array(
+				'message' =>  $deleted["message"] ,
+			)
+		);
+	}
+
+	/**
+	 * Delete multiple Memberships
+	 *
+	 * @return void
+	 */
 	public static function delete_memberships() {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error(
@@ -383,8 +431,9 @@ class AJAX {
 				422
 			);
 		}
-		$membership_ids        = wp_unslash( $_POST['membership_ids'] );
-		$membership_ids        = implode( ",", json_decode( $membership_ids, true ) );
+		$membership_ids = wp_unslash( $_POST['membership_ids'] );
+		$membership_ids = implode( ",", json_decode( $membership_ids, true ) );
+
 		$membership_repository = new MembershipRepository();
 		$deleted               = $membership_repository->delete_multiple( $membership_ids );
 		if ( $deleted ) {
@@ -617,7 +666,8 @@ class AJAX {
 		$member_id       = absint( $_POST['member_id'] );
 		$is_user_created = get_user_meta( $member_id, 'urm_user_just_created' );
 		$is_upgrading    = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
-		if ( ! $is_user_created && ! $is_upgrading ) {
+		$is_renewing     = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
+		if ( ! $is_user_created && ! $is_upgrading && ! $is_renewing ) {
 			wp_send_json_error(
 				array(
 					'message' => __( 'Invalid Request.', 'user-registration' ),
@@ -631,25 +681,25 @@ class AJAX {
 				)
 			);
 		}
-		$stripe_service = new StripeService();
-		$payment_status = sanitize_text_field( $_POST['payment_status'] );
+		$stripe_service      = new StripeService();
+		$payment_status      = sanitize_text_field( $_POST['payment_status'] );
+		$is_renewing         = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
 
 		$update_stripe_order = $stripe_service->update_order( $_POST );
 
 		if ( $update_stripe_order['status'] ) {
+
 			if ( $is_upgrading ) {
 				$next_subscription     = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
 				$previous_subscription = get_user_meta( $member_id, 'urm_previous_subscription_data', true );
 				$is_delayed            = ! empty( $next_subscription['delayed_until'] );
 				if ( ! empty( $previous_subscription ) && ! $is_delayed ) {
-
 					$previous_subscription = json_decode( $previous_subscription, true );
 					$stripe_service        = new StripeService();
 					$stripe_service->cancel_subscription( array(), $previous_subscription );
 					delete_user_meta( $member_id, 'urm_next_subscription_data' );
 					delete_user_meta( $member_id, 'urm_previous_subscription_data' );
 					delete_user_meta( $member_id, 'urm_previous_order_data' );
-
 				}
 			}
 
@@ -670,14 +720,26 @@ class AJAX {
 			delete_user_meta( $member_id, 'urm_user_just_created' );
 			$response = array(
 				'message'      => $update_stripe_order["message"],
-				'is_upgrading' => ur_string_to_bool( $is_upgrading )
+				'is_upgrading' => ur_string_to_bool( $is_upgrading ),
+				'is_renewing'  => ur_string_to_bool( $is_renewing )
 			);
 			if ( $is_upgrading ) {
+				$response['message'] = __( "Membership upgraded successfully", "user-registration" );
 				delete_user_meta( $member_id, 'urm_is_upgrading' );
 				delete_user_meta( $member_id, 'urm_is_upgrading_to' );
 				update_user_meta( $member_id, 'urm_is_user_upgraded', 1 );
 			}
-
+			if ( $is_renewing ) {
+				$response['message']            = __( "Membership has been successfully renewed.", "user-registration" );
+				$subscription_service           = new SubscriptionService();
+				$members_subscription_repo      = new MembersSubscriptionRepository();
+				$membership_repository          = new MembershipRepository();
+				$member_subscription            = $members_subscription_repo->get_member_subscription( $member_id );
+				$membership                     = $membership_repository->get_single_membership_by_ID( $member_subscription['item_id'] );
+				$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
+				$membership_metas['post_title'] = $membership['post_title'];
+				$subscription_service->update_subscription_data_for_renewal( $member_subscription, $membership_metas );
+			}
 			wp_send_json_success(
 				$response
 			);
@@ -700,8 +762,9 @@ class AJAX {
 		$payment_method_id = isset( $_POST['payment_method_id'] ) ? sanitize_text_field( $_POST['payment_method_id'] ) : '';
 		$member_id         = absint( wp_unslash( $_POST['member_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 		$is_upgrading      = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
+		$is_renewing       = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
 		$is_user_created   = get_user_meta( $member_id, 'urm_user_just_created' );
-		if ( ! $is_user_created && ! $is_upgrading ) {
+		if ( ! $is_user_created && ! $is_upgrading && ! $is_renewing ) {
 			wp_send_json_error(
 				array(
 					'message' => __( 'Invalid Request.', 'user-registration' ),
@@ -804,6 +867,51 @@ class AJAX {
 
 
 	}
+	/**
+	 * Reactivate membership.
+	 */
+	public static function reactivate_membership() {
+		$security = isset( $_POST['security'] ) ? sanitize_text_field( wp_unslash( $_POST['security'] ) ) : '';
+		if ( '' === $security || ! wp_verify_nonce( $security, 'ur_members_frontend' ) ) {
+			wp_send_json_error( 'Nonce verification failed' );
+
+			return;
+		}
+
+		if ( ! isset( $_POST['subscription_id'] ) ) {
+			wp_send_json_error( __( 'Wrong request.', 'user-registration' ) );
+		}
+		$subscription_id = absint( $_POST['subscription_id'] );
+
+		$subscription_repository = new SubscriptionRepository();
+		$user_subscription       = $subscription_repository->retrieve( $subscription_id );
+
+		$user_id = ! empty( $user_subscription['user_id'] ) ? $user_subscription['user_id'] : '';
+
+		if ( ! current_user_can( 'edit_user', $user_id ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'You are not allowed to edit this user.', 'user-registration' ),
+				)
+			);
+		}
+
+		$reactivation_status = $subscription_repository->reactivate_subscription_by_id( $subscription_id );
+		if( $reactivation_status[ 'status' ] ) {
+			wp_send_json_success(
+				array(
+					'message' => __( 'Membership reactivated successfully.', 'user-registration' ),
+				)
+			);
+		} else {
+			$message = ! empty( $reactivation_status[ 'message' ] ) ? $reactivation_status[ 'message' ] : __( 'Failed to reactivate membership.', 'user-registration' );
+			wp_send_json_error(
+				array(
+					'message' => $message
+				)
+				);
+		}
+	}
 
 	/**
 	 * get_group_memberships
@@ -905,7 +1013,7 @@ class AJAX {
 			wp_send_json_error( __( 'Wrong request.', 'user-registration' ) );
 		}
 		if ( ! in_array( $_POST['type'], array(
-				'user_registration_member_registration_page_id',
+			'user_registration_member_registration_page_id',
 			'user_registration_thank_you_page_id'
 		) ) ) {
 			wp_send_json_error( __( 'Invalid post type', 'user-registration' ) );
@@ -1027,12 +1135,12 @@ class AJAX {
 			);
 		}
 		$ur_authorize_data = isset( $_POST['ur_authorize_data'] ) ? $_POST['ur_authorize_data'] : [];
-		$data = array(
+		$data              = array(
 			'current_subscription_id' => absint( $_POST['current_subscription_id'] ),
 			'selected_membership_id'  => absint( $_POST['selected_membership_id'] ),
 			'current_membership_id'   => absint( $_POST['current_membership_id'] ),
 			'selected_pg'             => sanitize_text_field( $_POST['selected_pg'] ),
-			'ur_authorize_net'       => $ur_authorize_data,
+			'ur_authorize_net'        => $ur_authorize_data,
 		);
 
 		$subscription_service = new SubscriptionService();
@@ -1107,5 +1215,39 @@ class AJAX {
 			)
 		);
 	}
-}
 
+	/**
+	 * renew_subscription
+	 *
+	 * @return void
+	 */
+	public static function renew_membership() {
+		ur_membership_verify_nonce( 'urm_renew_membership' );
+		$member_id = get_current_user_id();
+		$user      = get_userdata( $member_id );
+		ur_get_logger()->notice( __( 'Renew Membership Triggered for :' . $user->user_login ), array( 'source' => 'urm-renew-membership' ) );
+		$subscription_service = new SubscriptionService();
+		$selected_pg          = $_POST["selected_pg"];
+		$renew_membership     = $subscription_service->renew_membership( $user, $selected_pg );
+
+		$response = $renew_membership['response'];
+		if ( $response['status'] ) {
+			$message = __( "New Order created, initializing payment...", "user-registration-membership" );
+			wp_send_json_success(
+				array(
+					'pg_data'        => $response,
+					'member_id'      => $renew_membership['extra']['member_id'],
+					'username'       => $renew_membership['extra']['username'],
+					'transaction_id' => $renew_membership['extra']['transaction_id'],
+					'message'        => $message,
+					'is_renewing'    => true
+				)
+			);
+		}
+		wp_send_json_error(
+			array(
+				'message' => __( "Something went wrong while cancelling membership.", "user-registration" ),
+			)
+		);
+	}
+}

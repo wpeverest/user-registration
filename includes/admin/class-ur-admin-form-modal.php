@@ -69,6 +69,14 @@ if ( ! class_exists( 'UR_Admin_Form_Modal', false ) ) :
 				wp_kses_post( $icon ),
 				esc_html__( 'Add Registration Form', 'user-registration' )
 			);
+			if( isset( $_GET['page'] ) && 'user-registration-settings' === $_GET['page'] && isset( $_GET['tab'] ) && 'email' === $_GET['tab'] ) {
+				printf(
+					'<a href="#" class="button ur-reset-content-button" data-editor="%s" title="%s">%s</a>',
+					esc_attr( $editor_id ),
+					esc_attr__( 'Reset email content', 'user-registration' ),
+					esc_html__( 'Reset Content', 'user-registration' )
+				);
+			}
 
 			/**
 			 * Action Hook for Smart Tags List

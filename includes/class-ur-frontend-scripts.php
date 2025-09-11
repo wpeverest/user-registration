@@ -486,8 +486,8 @@ class UR_Frontend_Scripts {
 					),
 					'is_payment_compatible'             => true,
 					'ur_hold_data_before_redirection'   => apply_filters( 'user_registration_hold_form_data_before_redirection', false ),
-					'ajax_form_submit_error'            => esc_html__( 'Something went wrong while submitting form through AJAX request. Please contact site administrator.', 'user-registration' ),
-					'logout_popup_text'                 => esc_html__( 'Are you sure you want to logout? Once you logged out, you need to login again.', 'user-registration' ),
+					'ajax_form_submit_error'            => is_admin() ? esc_html__( 'Form submission failed. This may be caused by a server or security setting blocking the request, a plugin conflict, or an unexpected technical issue. Please try again or check your site configuration if the problem persists.', 'user-registration' ) : esc_html__( 'Something went wrong while submitting the form. Please try again. If the issue continues, contact the site administrator for help', 'user-registration' ),
+					'logout_popup_text'                 => esc_html__( 'Are you sure you want to logout?', 'user-registration' ),
 					'logout_popup_cancel_text'                 => esc_html__( 'Cancel', 'user-registration' ),
 					'user_registration_checkbox_validation_message' => apply_filters( 'user_registration_checkbox_validation_message', esc_html__( 'Please select no more than {0} options.', 'user-registration' ) ),
 				);

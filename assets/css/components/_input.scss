@@ -1,0 +1,72 @@
+.user-registration,
+.user-registration-page,
+.ur-multi-device-form-preview {
+    textarea {
+        width: 100%;
+        min-height: 80px;
+        padding: $spacing_8px $spacing_12px;
+        border: $border_width solid $border_color;
+        border-radius: $border_radius_4;
+        color: $grey-400;
+        font-size: 14px;
+        line-height: 24px;
+        font-weight: $regular;
+
+        &:focus {
+            outline: none;
+            box-shadow: none;
+            border-color: $primary_color;
+        }
+    }
+
+    input {
+        &[type="text"],
+        &[type="password"],
+        &[type="email"],
+        &[type="number"],
+        &[type="date"],
+        &[type="phone"],
+        &[type="tel"],
+        &[type="time"],
+        &[type="timepicker"],
+        &[type="url"],
+        &[type="search"] {
+            min-width: unset !important;
+            width: 100%;
+            padding: 0 $spacing_12px;
+            min-height: 38px;
+            border: $border_width solid $border_color;
+            border-radius: $border_radius_4;
+            font-size: 14px;
+            line-height: 24px;
+            color: #383838;
+            font-weight: $regular;
+            margin: 0;
+            box-shadow: none;
+
+            &::placeholder {
+                color: #bababa;
+            }
+
+            &:focus {
+                outline: none;
+                box-shadow: none;
+                border-color: $primary_color;
+            }
+
+            &:disabled {
+                color: $color_gray_three;
+                background: $color_gray_five;
+            }
+        }
+
+        &[type="checkbox"],
+        &[type="radio"] {
+            z-index: 0;
+        }
+
+        &[type="search"] {
+            padding-right: $spacing_32px;
+        }
+    }
+}

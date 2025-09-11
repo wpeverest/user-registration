@@ -45,12 +45,24 @@ class Membership {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 		add_filter( 'user_registration_screen_ids', array( $this, 'ur_membership_add_screen_id' ) );
-		add_action( 'admin_menu', array( $this, 'add_urm_menu' ), 70 );
+		add_action( 'admin_menu', array( $this, 'add_urm_menu' ), 15 );
 		add_action( 'admin_init', array( $this, 'actions' ) );
 		add_action( 'in_admin_header', array( __CLASS__, 'hide_unrelated_notices' ) );
 		add_filter( 'wp_editor_settings', array( $this, 'remove_media_buttons' ) );
 		add_filter( 'user_registration_login_options', array( $this, 'add_payment_login_option' ) );
+		add_action( 'admin_head', array( $this, 'fix_menu_highlighting' ) );
+	}
 
+	/**
+	 * Fix menu highlighting for frontend listing edit pages.
+	 */
+	public function fix_menu_highlighting() {
+		global $submenu_file, $parent_file;
+
+		if ( isset( $_GET['page'] ) && 'user-registration-members' === $_GET['page'] ) {
+			$parent_file  = 'user-registration';
+			$submenu_file = 'user-registration-membership';
+		}
 	}
 
 	/**
@@ -135,13 +147,13 @@ class Membership {
 
 		switch ( $action ) {
 			case 'trash':
-				$this->bulk_trash( $delete_list );
+//				$this->bulk_trash( $delete_list );
 				break;
 			case 'untrash':
-				$this->bulk_untrash( $membership_list );
+//				$this->bulk_untrash( $membership_list );
 				break;
 			case 'delete':
-				$this->bulk_trash( $delete_list, true, $delete_membership );
+//				$this->bulk_trash( $delete_list, true, $delete_membership );
 				break;
 			default:
 				break;
@@ -170,9 +182,23 @@ class Membership {
 
 		$type   = ! EMPTY_TRASH_DAYS || $delete ? 'deleted' : 'trashed';
 		$qty    = count( $membership_lists );
-		$status = isset( $_GET['status'] ) ? '&status=' . sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '';
-
-		wp_safe_redirect( esc_url( admin_url( 'admin.php?page=user-registration-membership' . ( ! $is_membership ? '&action=list_groups' : '' ) . $status . '&' . $type . '=' . $qty ) ) );
+		$status = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '';
+		
+		$redirect_args = array(
+			'page' => 'user-registration-membership',
+		);
+		
+		if ( ! $is_membership ) {
+			$redirect_args['action'] = 'list_groups';
+		}
+		
+		if ( $status ) {
+			$redirect_args['status'] = $status;
+		}
+		
+		$redirect_args[ $type ] = $qty;
+		
+		wp_safe_redirect( add_query_arg( $redirect_args, admin_url( 'admin.php' ) ) );
 		exit();
 	}
 
@@ -268,10 +294,49 @@ class Membership {
 			array(
 				$this,
 				'render_membership_page',
-			),
-			5
+			)
 		);
 		add_action( 'load-' . $rules_page, array( $this, 'membership_initialization' ) );
+
+		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], ['user-registration-membership', 'user-registration-membership-groups', 'user-registration-members'] ) ) {
+
+			add_submenu_page(
+				'user-registration',
+				__( 'All Plans', 'user-registration' ),
+				'↳ ' . __( 'All Plans', 'user-registration' ),
+				'edit_posts',
+				'user-registration-membership',
+				array(
+					$this,
+					'render_membership_page',
+				),
+				16
+			);
+
+			add_submenu_page(
+				'user-registration',
+				__( 'Membership Groups', 'user-registration' ),
+				'↳ ' . __( 'Groups', 'user-registration' ),
+				'manage_user_registration',
+				'user-registration-membership&action=list_groups',
+				array(
+					$this,
+					'render_membership_page',
+				),
+				17
+			);
+
+			$members = new Members();
+			add_submenu_page(
+				'user-registration',
+				__( 'Membership Members', 'user-registration' ),
+				'↳ ' . __( 'Members', 'user-registration' ),
+				'manage_user_registration',
+				'user-registration-members',
+				array( $members, 'render_members_page'),
+				18
+			);
+		}
 	}
 
 	/**
@@ -430,7 +495,7 @@ class Membership {
 	public function remove_media_buttons( $settings ) {
 		//return tinymce as default
 		add_filter( 'wp_default_editor', function () {
-			return 'tinymce';
+				return 'tinymce';
 		} );
 		if ( ( isset( $_GET['page'] ) && 'user-registration-settings' === $_GET['page'] ) && ( isset( $_GET["tab"] ) && "payment" === $_GET["tab"] ) ) {
 			$settings['media_buttons'] = false;
@@ -453,9 +518,10 @@ class Membership {
 			'i18n_valid_trial_period_field_validation'     => _x( 'Trial period must be less than subscription period.', 'user registration membership', 'user-registration' ),
 			'i18n_error'                                   => _x( 'Error', 'user registration membership', 'user-registration' ),
 			'i18n_save'                                    => _x( 'Save', 'user registration membership', 'user-registration' ),
-			'i18n_prompt_title'                            => __( 'Delete Membership', 'user-registration' ),
+			'i18n_prompt_title'                            => __( 'Delete Membership Plan', 'user-registration' ),
 			'i18n_prompt_bulk_subtitle'                    => __( 'Are you sure you want to delete these memberships permanently?', 'user-registration' ),
 			'i18n_prompt_single_subtitle'                  => __( 'Are you sure you want to delete this membership permanently?', 'user-registration' ),
+			'i18n_prompt_ok'                               => __( 'Ok', 'user-registration' ),
 			'i18n_prompt_delete'                           => __( 'Delete', 'user-registration' ),
 			'i18n_prompt_cancel'                           => __( 'Cancel', 'user-registration' ),
 			'i18n_prompt_no_membership_selected'           => __( 'Please select at least one membership.', 'user-registration' ),

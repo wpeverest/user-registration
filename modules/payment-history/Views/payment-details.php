@@ -76,7 +76,7 @@ foreach ( $fields as $key => $label ):
 				case 'status':
 					$status = $order_detail['status'];
 					echo '<span class="payment-status-btn ' . esc_attr( $status ) . '">' . esc_html( ucfirst( $status ) ) . '</span>';
-					if ( $status === 'pending' && $order_detail['payment_method'] === 'bank' ) {
+					if ( $status === 'pending' && lcfirst( $order_detail['payment_method'] )  === 'bank' ) {
 						echo ' <a href="javascript:void(0)" class="approve-payment" data-order-id="' . absint( $order_detail['order_id'] ) . '">' . esc_html__( 'Approve', 'user-registration' ) . '</a>';
 					}
 					break;
@@ -129,6 +129,7 @@ foreach ( $fields as $key => $label ):
 								($post_content['type'] === 'subscription' && $trial_status === 'off')
 							)
 						) {
+							$coupon_discount_type = isset( $order_detail[ 'coupon_discount_type' ] ) ? $order_detail[ 'coupon_discount_type' ] : '';
 							$discount_amount = ($coupon_discount_type === 'fixed')
 								? ($coupon_discount ?: 0)
 								: ($coupon_discount ? ($amount * $coupon_discount / 100) : 0);

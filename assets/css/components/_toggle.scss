@@ -1,0 +1,63 @@
+.user-registration,
+.user-registration-page,
+.ur-multi-device-form-preview {
+    .ur-toggle-section {
+        .ur-label[for="ur-type-toggle"] {
+            margin-bottom: 0;
+        }
+
+        .user-registration-toggle-form {
+            position: relative;
+            display: inline-block;
+            width: 32px;
+            height: 16px;
+
+            input[type="checkbox"] {
+                width: 32px;
+                height: 16px;
+                min-width: 100% !important;
+
+                &:focus {
+                    outline: none;
+                    box-shadow: none;
+                    border-color: transparent;
+                }
+
+                &:checked {
+                    + .slider {
+                        background: $primary_color;
+
+                        &::before {
+                            transform: translateX(14px);
+                        }
+                    }
+                }
+            }
+
+            .slider {
+                position: absolute;
+                cursor: pointer;
+                inset: 0;
+                background-color: #dfe1ea;
+                padding: $spacing_8px;
+                transition: .4s;
+
+                &.round {
+                    border-radius: 30px;
+                }
+
+                &::before {
+                    content: "";
+                    position: absolute;
+                    height: 12px;
+                    width: 12px;
+                    left: 2px;
+                    bottom: 2px;
+                    background-color: #fff;
+                    transition: .4s;
+                    border-radius: 50%;
+                }
+            }
+        }
+    }
+}

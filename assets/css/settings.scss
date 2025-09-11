@@ -1,5 +1,6 @@
 @import "variables/variables";
 @import "mixins/mixins";
+@import "components/button", "components/typography", "components/toggle";
 
 
 // User Registration Global Settings CSS
@@ -58,9 +59,9 @@ body {
 	}
 
 	.wrap {
-		margin: 0;
-		padding: $spacing_24px;
-		background: #FAFAFA;
+		&.user-registration {
+			margin: -$spacing_24px 0 0;
+		}
 
 		.user-registration-header {
 			margin: 0;
@@ -70,10 +71,10 @@ body {
 
 .user-registration-settings {
 	display: flex;
-    gap: $spacing_24px;
 	overflow-x: hidden;
-	border: 1px solid #EDF2F7;
+	border-bottom: $border_width solid $border_color;
 	border-radius: $border_radius_4;
+	margin-bottom: $spacing_12px;
 
 	@media screen and (max-width: 1180px) {
 		flex-direction: column;
@@ -81,10 +82,11 @@ body {
 
 	&-wrapper {
 		display: flex;
-		flex-direction: row;
-		background: $grey-0;
-		filter: drop-shadow(-4px 4px 20px rgba(89, 89, 89, 0.1));
 		flex: 1;
+
+		@media screen and (max-width: 1180px) {
+			border-bottom: $border_width solid $border_color;
+		}
 
 		.user-registration-header {
 			width: 100%;
@@ -94,9 +96,11 @@ body {
 			border-right: $border_width solid $border-color;
 
 			&.collapsed {
-				max-width: 70px;
+				max-width: 60px;
 
 				.user-registration-header--top {
+					padding: 0 $spacing_12px;
+
 					&-logo {
 						img {
 							width: 40px;
@@ -104,8 +108,6 @@ body {
 					}
 
 					.ur-search--top-settings {
-						padding-left: $spacing_15px;
-						padding-right: $spacing_15px;
 						cursor: pointer;
 
 						input {
@@ -120,6 +122,9 @@ body {
 
 						.user-registration-search-icon {
 							svg {
+								right: unset;
+								left: 50%;
+								transform: translate(-50%, -50%);
 								transition: all .3s ease-in-out;
 							}
 						}
@@ -147,6 +152,8 @@ body {
 				.user-registration-header--nav {
 					.ur-nav__link {
 						justify-content: center;
+						min-height: 50px;
+						padding: 0;
 
 						&-label {
 							display: none;
@@ -160,6 +167,8 @@ body {
 			}
 
 			&--top {
+				padding: 0 $spacing_12px;
+
 				&-logo {
 					text-align: center;
 					margin-bottom: $spacing_28px;
@@ -168,40 +177,6 @@ body {
 						border: $border_width solid $border-color;
 						width: 70px;
 						border-radius: 50%;
-					}
-				}
-
-				.ur-search--top-settings {
-					padding-left: $spacing_12px;
-					padding-right: $spacing_12px;
-					position: relative;
-					margin-bottom: $spacing_24px;
-
-					input {
-						width: 100%;
-						height: 38px;
-						padding: $spacing_8px $spacing_40px $spacing_8px $spacing_12px;
-						color: $grey-400;
-
-						&::placeholder {
-							color: $grey-100;
-							font-weight: $regular;
-						}
-
-						&.ui-autocomplete-loading {
-							background-position: 95% center;
-						}
-					}
-
-					.user-registration-search-icon {
-						position: absolute;
-						top: 11px;
-						right: $spacing_26px;
-
-						svg {
-							width: 18px;
-							height: 18px;
-						}
 					}
 				}
 
@@ -256,7 +231,7 @@ body {
 					font-weight: $regular;
 					line-height: 150%;
 					color: $grey-400;
-					padding: $spacing-16px $spacing_20px;
+					padding: $spacing_14px $spacing_20px;
 					background: transparent;
 					border: 0;
 					border-top: $border_width solid $border-color;
@@ -453,10 +428,17 @@ body {
 						flex-direction: row;
 						width: 100%;
 						align-items: center;
+						font-size: 15px;
+						font-weight: $medium;
 					}
 
 					.ur-nav-icon {
 						display: flex;
+
+						img {
+							width: 20px;
+							height: 20px;
+						}
 					}
 
 					&:hover {
@@ -473,7 +455,7 @@ body {
 
 					&:hover,
 					&.is-active {
-						background: #fafafc;
+						background: #f4f4f4;
 						border-radius: 0;
 						color: $primary_color;
 
@@ -485,7 +467,7 @@ body {
 					&.is-active {
 						&:not(#ur-settings-collapse)::after {
 							opacity: 1;
-							background: #fafafc;
+							background: #f4f4f4;
 						}
 					}
 
@@ -501,10 +483,11 @@ body {
 		display: flex;
 		gap: $spacing_32px;
 		flex-direction: column;
-		padding: $spacing_24px $spacing_8px $spacing_26px $spacing_8px;
+		padding: $spacing_24px 0 $spacing_26px 0;
 		transition: all .3s;
-		width: 320px;
+		width: 340px;
 		max-width: 100%;
+		border-left: $border_width solid $border_color;
 
 		@media screen and (max-width: 1180px) {
 			width: 100%;
@@ -514,23 +497,23 @@ body {
 			display: flex;
 			flex-direction: column;
 			gap: $spacing_20px;
+			padding: 0 $spacing_24px;
 
 			h2 {
-				color: #222222;
+				color: $grey-400;
 				font-size: 18px;
 				font-weight: $semi-bold;
 				line-height: 140%;
 				margin: 0;
 				padding-bottom: $spacing-16px;
 				margin-bottom: $spacing_20px;
-				border-bottom: $border_width solid #EEE8F7;
+				border-bottom: $border_width solid $border-color;
 			}
 
 			p {
 				margin: 0;
 				color: $grey-400;
-				font-size: 16px;
-				font-style: normal;
+				font-size: 15px;
 				font-weight: $regular;
 				line-height: 24px;
 			}
@@ -568,7 +551,7 @@ body {
 					&-item {
 						display: flex;
 						color: $grey-400;
-						font-size: 16px;
+						font-size: 15px;
 						font-weight: $regular;
 						line-height: 24px;
 						margin-bottom: 0;
@@ -685,17 +668,19 @@ body {
 					}
 
 					a {
+						min-height: 40px;
+						height: 40px;
 						text-decoration: none;
-						padding: $spacing_12px;
+						padding: 0 $spacing_12px;
 						background: $white;
-						border-radius: $border_radius_2;
 						color: #3F4D8A;
 						font-weight: $semi-bold;
 						transition: all .3s;
 						width: 100%;
 						text-align: center;
-						border-radius: 6px;
-						font-size: 16px;
+						border-radius: $border_radius_5;
+						font-size: 14px;
+						align-content: center;
 						line-height: 24px;
 
 						&:hover {
@@ -715,18 +700,17 @@ body {
 	flex-direction: column;
 	padding: $spacing_24px;
 	padding-top: 0;
-	background: #FAFAFC;
+	background: #f4f4f4;
 	margin-top: 0 !important;
 
 	.user-registration-options-header {
-		background: #fafafa;
 		padding-top: $spacing_24px;
 
 		&--top {
 			display: flex;
 			align-items: center;
 			padding-bottom: $spacing_24px;
-            border-bottom: $border_width solid #EBEBEB;
+            border-bottom: $border_width solid $border_color;
 
 			h3 {
 				margin: 0;
@@ -743,37 +727,36 @@ body {
 		}
 
 		&--bottom {
-			margin-top: $spacing_32px;
+			margin-top: $spacing_28px;
 
 			ul {
 				display: flex;
 				align-items: center;
-				gap: $spacing_32px;
-				border-bottom: $border_width solid #EBEBEB !important;
+				gap: $spacing_12px;
 				width: 100%;
 
 				li {
 					a {
-						font-weight: $regular;
-						font-size: 15px;
-						line-height: 140%;
-						color: $grey-600;
-						padding: 0;
+						font-weight: $medium;
+						font-size: 14px;
+						line-height: 18px;
+						color: $grey-400;
+						padding: 0 $spacing_4px;
 						position: relative;
 						padding-bottom: $spacing_16px;
-						transition: all .3s ease-in-out;
+						transition: all 0.3s ease-in-out;
 
-						&::before {
+						&::after {
 							content: "";
 							background: $primary_color;
 							position: absolute;
 							width: 100%;
-							height: 3px;
+							height: 2px;
 							border-radius: $border_radius_11;
 							bottom: 0;
 							left: 0;
 							opacity: 0;
-							transition: all .3s ease-in-out;
+							transition: all 0.3s ease-in-out;
 						}
 
 						&:focus {
@@ -781,15 +764,15 @@ body {
 							box-shadow: none;
 						}
 
-						&.current {
-							font-weight: $semi_bold;
+						&:hover,
+						&.current,
+						&.active {
+							color: $primary_color;
 						}
 
-						&:hover,
-						&.current {
-							color: $primary_color;
-
-							&::before {
+						&.current,
+						&.active {
+							&::after {
 								opacity: 1;
 							}
 						}
@@ -806,6 +789,10 @@ body {
 	}
 
 	.user-registration-options-container {
+		display: flex;
+		flex-direction: column;
+		gap: $spacing_24px;
+
 		p.ur-p-tag {
 			margin-bottom: $spacing_24px;
 			padding: $spacing_10px $spacing_12px $spacing_10px $spacing_16px;
@@ -821,13 +808,19 @@ body {
 			strong {
 				font-weight: $semi_bold;
 			}
+
+			a {
+				color: $primary_color;
+				font-weight: $medium;
+			}
 		}
 
 		.ur-searched-settings-focus {
-			border: 2px solid #475bb2;
-			border-radius: 5px;
-			padding: 10px;
+			border: 2px solid $primary_color;
+			border-radius: $border_radius_5;
+			padding: $spacing_10px;
 		}
+
 		// Success Message CSS
 		.notice {
 			max-width: 680px;
@@ -931,7 +924,7 @@ body {
 			margin: 0;
 			border-radius: $border_radius_4;
 			align-items: center;
-			border: $border_width solid #ced4da;
+			border: $border_width solid $border_color;
 
 			img {
 				width: 100%;
@@ -968,35 +961,50 @@ body {
 				transition: all .3s ease-in-out;
 			}
 		}
+
 		// General Settings
 		.user-registration-card {
-			padding: $spacing_16px $spacing_20px $spacing_22px;
+			padding: $spacing_20px $spacing_20px $spacing_22px;
 			background: $grey-0;
-			border: $border_width solid #EDF2F7 !important;
-			border-radius: $border_radius_4;
-			background-color: #ffffff;
+			border: $border_width solid $border_color !important;
+			border-radius: $border_radius_7;
+			background: $white;
 			margin-top: 0 !important;
-			margin-bottom: $spacing_28px;
-			max-width: 680px;
+			max-width: 100%;
 			position: relative;
-
-			@media (min-width: 1440px) {
-				max-width: 900px;
-			}
 
 			&:last-child {
 				margin-bottom: 0;
 			}
 
+			&.ur-captcha-settings,
+			&.ur-integration-settings {
+				&:has(.active) {
+					border-color: $primary_color;
+				}
+
+				.user-registration-card__header {
+					&:not(.active) {
+						border-bottom: 0 !important;
+					}
+				}
+			}
+
 			&:has(.integration-header-info) {
 				max-width: 100%;
 				padding: 0 $spacing_20px 0 $spacing_20px;
-				margin-bottom: $spacing_12px !important;
+				margin-bottom: 0 !important;
 
 				&.active {
 					@media (max-width: 767px) {
 						padding-bottom: $spacing_20px;
 					}
+				}
+			}
+
+			.integration-header-info {
+				&:not(.active) {
+					border-bottom: 0 !important;
 				}
 			}
 
@@ -1026,7 +1034,7 @@ body {
 				margin-bottom: $spacing_24px;
 				padding: 0 0 $spacing_16px;
 				position: relative;
-				border-bottom: $border_width solid #EBEBEB !important;
+				border-bottom: $border_width solid $border_color !important;
 
 				&-wrapper {
 					display: flex;
@@ -1034,10 +1042,41 @@ body {
 				}
 
 				.user_registration_smart_tags_used {
-					color: #475bb2;
-					border-color: #475bb2;
-					background-color: #f6f7f7;
-					padding: 0px 6px;
+					display: inline-flex;
+					align-items: center;
+					gap: 6px;
+					padding: 4px 10px;
+					min-width: 90px;
+					border: 1px solid transparent;
+					border-radius: 6px;
+					text-decoration: none;
+					transition: all 0.2s ease;
+					color: #383838;
+
+					span:first-child {
+						text-decoration: underline;
+						font-weight: 500;
+						opacity: 0.8;
+						transition: color 0.2s ease, opacity 0.2s ease;
+					}
+
+					&:focus, &:hover {
+						background-color: transparent;
+						color: #222222;
+						box-shadow: none;
+						outline: none;
+
+						span:first-child {
+							color: $primary_color;
+							opacity: 1;
+						}
+
+						.dashicons {
+							color: $primary_color;
+							opacity: 1;
+							transform: translateY(-1px);
+						}
+					}
 				}
 
 				// Integration Settings
@@ -1048,11 +1087,12 @@ body {
 					cursor: pointer;
 
 					&.active {
-						border-bottom: $border_width solid #dee0e9;
+						border-bottom: $border_width solid $border_color;
 						padding-bottom: $spacing_18px;
 
 						.integration-action {
 							border-color: $primary_color;
+
 							svg {
 								stroke: $primary_color;
 								transform: rotate(-180deg);
@@ -1066,12 +1106,6 @@ body {
 					gap: 8px;
 
 					a {
-						display: flex;
-						padding: 6px;
-						background: transparent;
-						border-radius: 3px;
-						transition: all .3s ease-in-out;
-
 						svg {
 							width: 16px;
 							height: 16px;
@@ -1420,6 +1454,10 @@ body {
 											background-image: url('../images/settings-icons/information.svg') !important;
 										}
 									}
+
+									.ur-toggle-section {
+										justify-content: center;
+									}
 								}
 							}
 						}
@@ -1429,12 +1467,24 @@ body {
 				.user-registration-global-settings {
 					display: flex;
 					justify-content: space-between;
-					align-items: baseline;
+					align-items: center;
 					margin-bottom: $spacing_28px;
+
+					&:has(.description),
+					&:has(.error),
+					&:has(textarea) {
+						align-items: baseline;
+					}
+
+					&:has(.ur-radio-group-list),
+					&:has(.wp-editor-wrap) {
+						align-items: flex-start;
+					}
 
 					@media (max-width: 1199px) {
 						flex-direction: column;
 						gap: $spacing_10px;
+						align-items: flex-start;
 					}
 
 					&.urcr_content_restriction_enable {
@@ -1452,13 +1502,6 @@ body {
 						padding: $spacing_8px $spacing_10px;
 					}
 
-					input[type="text"],
-					input[type="email"],
-					select {
-						height: 38px;
-						border-color: $border-color;
-					}
-
 					&:last-child {
 						margin-bottom: 0;
 					}
@@ -1466,8 +1509,7 @@ body {
 					label {
 						position: relative;
 						vertical-align: top;
-						text-align: left;
-						line-height: 1.3;
+						line-height: 24px;
 						font-weight: $medium;
 						color: $grey-400;
 						font-size: 14px;
@@ -1519,16 +1561,6 @@ body {
 							width: 100%;
 						}
 
-						input[type='text'],
-						input[type='number'] {
-							width: 100%;
-							min-width: 100% !important;
-							height: 38px;
-							&::placeholder {
-								color: $grey-100;
-							}
-						}
-
 						textarea,
 						select {
 							min-width: 100% !important;
@@ -1538,146 +1570,41 @@ body {
 							width: 10%;
 						}
 
-						select {
-							width: 100%;
-							height: 38px;
-							padding: $spacing_4px $spacing_10px;
-							border: $border_width solid $border-color;
-							border-radius: $border_radius_5;
+						.error {
+							box-shadow: none;
+							padding: 0 !important;
+							color: #f34c4c;
+							font-size: 13px;
+							font-weight: $regular;
+							line-height: 20px;
+							display: flex;
+							align-items: center;
+							gap: 8px;
+							margin: 0;
+							border: 0;
 
-							&:focus,
-							&:focus-visible {
-								border-width: $border_width;
-								border-color: $primary_color;
-								box-shadow: none;
-							}
-
-							&:hover {
-								color: $grey-400;
+							&::before {
+								content: "";
+								background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23F34C4C' viewBox='0 0 24 24'%3E%3Cpath d='M20.182 12a8.182 8.182 0 1 0-16.364 0 8.182 8.182 0 0 0 16.364 0ZM22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10Z'/%3E%3Cpath d='M11.091 12V8.363a.91.91 0 1 1 1.818 0V12a.91.91 0 1 1-1.818 0Zm.917 2.727.092.005a.91.91 0 0 1 0 1.809l-.092.004H12a.91.91 0 1 1 0-1.818h.008Z'/%3E%3C/svg%3E");
+								background-repeat: no-repeat;
+								background-size: 100%;
+								background-position: center;
+								width: 18px;
+								height: 18px;
+								position: relative;
+								top: 1px;
 							}
 						}
 
-						span.select2-container {
-							width: 100% !important;
-
-							// @media (max-width: 1199px) {
-							// 	width: 100% !important;
-							// }
-
-							&--open {
+						&:has(.error) {
+							.select2-container--focus {
 								.select2-selection {
-									&__arrow {
-										height: 30px;
-										b {
-											width: 12px;
-											border-color: transparent transparent #888 transparent;
-											border-width: 0 6px 7px 6px;
-											margin-top: -2px;
-											margin-left: -8px;
-										}
-									}
-
-									&--multiple {
-										&:before {
-											content: "";
-											position: absolute;
-											right: 7px;
-											top: 42%;
-											border-bottom: 7px solid #888;
-											border-left: 6px solid transparent;
-											border-right: 6px solid transparent;
-											border-top: 0px;
-										}
-									}
-								}
-
-							}
-						}
-
-						.select2-selection {
-							padding-left: 0;
-							padding-right: 0;
-
-							ul {
-								flex-wrap: wrap;
-							}
-
-							&__choice {
-								background: $grey-50;
-								border-radius: $border_radius_5;
-								border: 0;
-								flex-direction: row-reverse;
-								gap: $spacing_6px;
-								padding: $spacing_4px $spacing_10px;
-								font-weight: $regular;
-								font-size: 14px;
-								line-height: 150%;
-								color: $grey-400;
-								margin: $spacing_4px;
-								margin-right: 0;
-
-								&__remove {
-									font-size: 18px;
-									font-weight: $regular;
-									color: $grey-400;
-
-									&:hover {
-										color: #f11d1d;
-									}
+									border-color: #f34c4c !important;
 								}
 							}
 
-							&--multiple {
-								.select2-selection__rendered {
-									padding-left: 0;
-									padding-right: 0;
-								}
-
-								&:before {
-									content: "";
-									position: absolute;
-									right: 7px;
-									top: 42%;
-									border-top: 7px solid #888;
-									border-left: 6px solid transparent;
-									border-right: 6px solid transparent;
-								}
-							}
-
-							&--single {
-								height: 38px;
-								border: 1px solid #e1e1e1;
-
-								.select2-selection__rendered {
-									line-height: 36px;
-									padding-left: $spacing_10px;
-									padding-right: $spacing_30px;
-
-									.select2-selection__clear {
-										font-size: 18px;
-										font-weight: $regular;
-										color: $grey-400;
-
-										&:hover {
-											color: $primary_color;
-										}
-									}
-								}
-
-								.select2-selection__arrow {
-									height: 30px;
-									right: $spacing_8px;
-								}
-							}
-
-							&__arrow {
-								b {
-									width: 12px;
-									border-color: #888 transparent transparent transparent;
-									border-width: 7px 6px 0 6px;
-									margin-top: -2px;
-									margin-left: -8px;
-								}
+							.select2-selection__rendered {
+								border: 0 !important;
 							}
 						}
 
@@ -1692,7 +1619,8 @@ body {
 						.ur-radio-group-list {
 							display: flex;
 							flex-wrap: wrap;
-							gap: $spacing-16px;
+							gap: $spacing_16px;
+							margin: 0;
 
 							&--item {
 								max-width: 120px;
@@ -1703,6 +1631,7 @@ body {
 								padding: $spacing_6px;
 								align-items: center;
 								display: flex;
+								margin-bottom: 0;
 
 								&.active {
 									label{
@@ -1730,20 +1659,32 @@ body {
 						.button, .ur-button {
 							width: fit-content;
 							text-align: center;
+
+							&.user_registration-deactivate-license-key {
+								background: #f25656 !important;
+							}
 						}
 
 						.user_registration_send_email_test {
-							color: #475bb2;
-							border-color: #475bb2;
+							color: $primary_color;
+							border-color: $primary_color;
 						}
 
 						#select-smart-tags {
-							color: #475bb2;
-							border-color: #475bb2;
+							color: $primary_color;
+							border-color: $primary_color;
 							height: 30px;
 							text-align: center;
 							line-height: 18px;
 							width: 30%;
+						}
+
+						.wp-editor-wrap {
+							.wp-editor-container {
+								iframe {
+									height: 200px !important;
+								}
+							}
 						}
 					}
 
@@ -1819,10 +1760,9 @@ body {
 			.nav-tab-inside {
 				.postbox {
 					width: 100%;
-					max-width: 680px;
-					padding: $spacing_16px $spacing_20px $spacing_22px;
-					border: $border_width solid #EDF2F7;
-					border-radius: $border_radius_4;
+					padding: $spacing_20px $spacing_20px $spacing_22px;
+					border: $border_width solid $border_color;
+					border-radius: $border_radius_7;
 					margin-bottom: $spacing_28px;
 					background: #ffffff;
 					box-shadow: none;
@@ -1835,16 +1775,18 @@ body {
 						font-weight: $semi-bold;
 						font-size: 16px;
 						line-height: 150%;
-						color: $grey-500;
+						color: $grey-400;
 						margin: 0;
 						padding-bottom: $spacing_16px;
 						margin-bottom: $spacing_16px;
-						border-color: $grey-50;
+						border-color: $border_color;
+						cursor: unset;
 					}
 
 					.inside {
 						margin: 0;
 						padding: 0;
+						text-align: left;
 
 						p {
 							margin: 0;
@@ -1853,6 +1795,7 @@ body {
 							font-size: 14px;
 							line-height: 150%;
 							color: $grey-400;
+							text-align: left;
 
 							.forms-list {
 								height: 38px;
@@ -1895,13 +1838,25 @@ body {
 			}
 		}
 
+		#urm-invite-codes-list-table {
+			.select2.select2-container {
+				width: 15% !important;
+			}
+		}
 		#urm-popup-table, #urm-invite-codes-list-table {
 			background-color: #ffffff;
 			border: 1px solid #EDF2F7;
-			border-radius: $border_radius_4;
+			border-radius: $border_radius_7;
+			padding: 20px 20px 22px;
+
+			#user-registration-pro-search-input,
+			#user-registration-invite-codes-search-input {
+				width: 60%;
+			}
 
 			#popups-list {
 				margin-top: 16px;
+
 
 				.ur-list-table-wrapper {
 					width: 100%;
@@ -1959,30 +1914,10 @@ body {
 	}
 }
 
-.user-registration {
-	.select2-container {
-		.selection {
-			.select2-selection--single {
-				border: 1px solid #e1e1e1;
-				height: 38px;
-
-				.select2-selection__arrow {
-					top: $spacing_4px;
-
-					b {
-						margin-top: -2px;
-						margin-left: -8px;
-					}
-				}
-			}
-		}
-	}
-}
-
 .select2-results {
 	.select2-results__option {
 		&--highlighted[data-selected] {
-			background: #475bb2;
+			background: $primary_color;
 		}
 
 		.wrap {
@@ -2001,28 +1936,6 @@ body {
 	color: rgba(57, 57, 57, 0.35);
 }
 
-.user-registration {
-	select {
-		background-image:
-			linear-gradient(45deg, transparent 50%, gray 50%),
-			linear-gradient(135deg, gray 50%, transparent 50%);
-		background-position:
-			calc(100% - 15px) calc(1em + 2px),
-			calc(100% - 10px) calc(1em + 2px),
-			calc(100% - 2.5em) 0.5em;
-		background-size:
-			5px 5px,
-			5px 5px,
-			1px 1.5em;
-		background-repeat: no-repeat;
-
-		&:focus {
-			outline: none;
-			box-shadow: none;
-			border: $border_width solid $primary_color !important;
-		}
-	}
-}
 
 // Radio Image Setting
 .user-registration-global-settings.radio-image {
@@ -2066,12 +1979,37 @@ body {
 		margin-left: 5px;
 	}
 
-	.select2-container {
-		width: 10% !important;
-		margin-right: 5px;
-	}
-
 	#codes-filter {
 		margin-top: 16px;
+	}
+}
+
+.install-urm-pro-title {
+  font-size: 1.25rem !important;
+}
+
+.ur-install-urm-pro {
+	display: flex;
+	justify-content: center;
+	border-bottom: 1px solid #ebebeb;
+    margin-bottom: 20px;
+}
+
+.ur-install-urm-pro-p-tag {
+	margin-bottom: 24px;
+    padding: 10px 12px 10px 16px;
+    background: rgba(71, 91, 178, .04);
+    border: 1px solid #475bb2;
+    font-weight: 400;
+    color: #383838;
+    border-radius: 4px;
+    font-size: 14px;
+    line-height: 22px;
+    font-style: normal;
+}
+
+.user-registration-swal2-modal--install-urm-pro {
+	.swal2-content {
+		margin-bottom: 24px;
 	}
 }

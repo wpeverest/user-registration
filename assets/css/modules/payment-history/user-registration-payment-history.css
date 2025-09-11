@@ -69,22 +69,10 @@
   padding: 3px 5px;
 }
 
-.payment-status-btn.pending {
-  border: 1px solid #f0a64f;
+.payment-status-btn.refunded {
+  border: 1px solid #6C8CA1;
   border-radius: 3px;
-  background: #fff4f4;
-}
-
-.payment-status-btn.completed {
-  border: 1px solid #a0e39a;
-  border-radius: 3px;
-  background: #f5fff4;
-}
-
-.payment-status-btn.failed {
-  border: 1px solid #fab9b9;
-  border-radius: 3px;
-  background: #fff4f4;
+  background-color: #f4f4ff;
 }
 
 .no-items td {
@@ -100,10 +88,17 @@
   max-width: 400px;
 }
 
-.ur-membership-filter-container .select2-container .select2-selection--single {
-  border: 1px solid #e1e1e1;
-  height: 38px !important;
-  font-size: 14px;
-  width: 200px;
-  padding: 2px 6px;
+.ur-membership-filter-container .select2-selection__rendered {
+  width: 120px;
+}
+
+body.user-registration #user-registration-pro-filters-row .search-box {
+  width: 275px;
+}
+body.user-registration #ur-membership-payment-history-form .tablenav .bulkactions .select2-container {
+  width: 220px !important;
+}
+body.user-registration #ur-membership-order-create-form {
+  width: 100%;
+  max-width: 100%;
 }

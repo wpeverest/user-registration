@@ -260,19 +260,9 @@ const Modules = () => {
 	];
 
 	return (
-		<Box
-			top="var(--wp-admin--admin-bar--height, 0)"
-			zIndex={1}
-			my="4"
-			mx="6"
-		>
-			<Container maxW="container.xl">
-				<Stack
-					direction="row"
-					minH="70px"
-					justify="space-between"
-					px="6"
-				>
+		<Box top="var(--wp-admin--admin-bar--height, 0)" zIndex={1}>
+			<Container maxW="100%" p={"0 0 0 20px"}>
+				<Stack direction="row" minH="70px" justify="space-between">
 					<Stack direction="row" align="center" gap="5">
 						<Select
 							options={sortOptions}
@@ -489,7 +479,7 @@ const Modules = () => {
 					</Stack>
 				</Stack>
 			</Container>
-			<Container maxW="container.xl">
+			<Container maxW="100%" p={"0 0 0 20px"}>
 				{state.isSearching ? (
 					<AddonSkeleton />
 				) : state.noItemFound && state.searchItem ? (
@@ -500,6 +490,7 @@ const Modules = () => {
 						padding="100px"
 						gap="10px"
 						alignItems="center"
+						p={0}
 					>
 						<PageNotFound color="gray.300" />
 						<Text fontSize="20px" fontWeight="600">
@@ -516,7 +507,7 @@ const Modules = () => {
 					<Box>
 						<Tabs index={tabIndex}>
 							<TabPanels>
-								<TabPanel>
+								<TabPanel padding={"1rem 0 0 0"}>
 									<ModuleBody
 										isPerformingBulkAction={
 											state.isPerformingBulkAction
@@ -537,7 +528,7 @@ const Modules = () => {
 										}
 									/>
 								</TabPanel>
-								<TabPanel>
+								<TabPanel padding={"1rem 0 0 0"}>
 									<ModuleBody
 										isPerformingBulkAction={
 											state.isPerformingBulkAction
@@ -558,7 +549,7 @@ const Modules = () => {
 										}
 									/>
 								</TabPanel>
-								<TabPanel>
+								<TabPanel padding={"1rem 0 0 0"}>
 									<ModuleBody
 										isPerformingBulkAction={
 											state.isPerformingBulkAction

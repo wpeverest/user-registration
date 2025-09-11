@@ -2,6 +2,7 @@
 
 namespace WPEverest\URMembership\Admin\Repositories;
 
+use DateTime;
 use WPEverest\URMembership\Admin\Interfaces\MembersInterface;
 use WPEverest\URMembership\Admin\Interfaces\MembersOrderInterface;
 use WPEverest\URMembership\TableList;
@@ -70,6 +71,29 @@ class MembersOrderRepository extends BaseRepository implements MembersOrderInter
 		}
 
 		return $deleted !== false && $deleted > 0;
+	}
+
+	public function create_member_order( $order_data ) {
+		$data = array(
+			'user_id' => absint( $order_data[ 'ur_member_id' ] ),
+			'item_id' => absint( $order_data[ 'ur_membership_plan' ] ),
+			'total_amount'  => floatval( $order_data[ 'ur_membership_amount' ] ),
+			'status'  => sanitize_text_field( $order_data[ 'ur_transaction_status' ] ),
+			'payment_method' => 'manual',
+			'created_by' => get_current_user_id(),
+			'created_at' => date( 'Y-m-d H:i:s', strtotime( $order_data[ 'ur_payment_date' ] ) ),
+		);
+
+		$inserted = $this->wpdb()->insert(
+			$this->table,
+			$data,
+			array('%d', '%d', '%f', '%s', '%s', '%d', '%s'),
+		);
+		if( $inserted ) {
+			$order_id = $this->wpdb()->insert_id;
+			return $order_id;
+		}
+		return false;
 	}
 
 }

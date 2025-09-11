@@ -1,0 +1,49 @@
+.user-registration,
+.user-registration-page {
+    .user-registration-badge,
+    .payment-status-btn,
+    #ur-membership-status {
+        font-size: 13px;
+        line-height: 18px;
+        border-radius: 30px;
+        padding: 4px 12px;
+
+        &--success-subtle {
+            color: #3aa530;
+            background: #def8db;
+        }
+
+        &.completed,
+        &.btn-active {
+            color: #3aa530;
+            background: #def8db;
+        }
+
+        &.pending,
+        &.btn-pending {
+            color: #ee9936;
+            background: #fff3e7;
+        }
+
+        &.failed,
+        &.btn-canceled {
+            color: #f25656;
+            background: #ffe8e8;
+        }
+
+        &.btn-inactive {
+            background: #e7e7e7;
+            color: #383838;
+        }
+
+        &.btn-trial {
+            color: #ff8300;
+            background: #fff0e0;
+        }
+
+        &.btn-expired {
+            background: #e7e7e7;
+            color: #a1a1a1;
+        }
+    }
+}

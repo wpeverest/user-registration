@@ -42,7 +42,10 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 			 *
 			 * @since 4.0
 			 */
-			add_action( 'user_registration_feature_track_data_for_tg_user_tracking', array( $this, 'on_module_activate' ) ); // Hook on module activation ( Our UR module activation ).
+			add_action( 'user_registration_feature_track_data_for_tg_user_tracking', array(
+				$this,
+				'on_module_activate'
+			) ); // Hook on module activation ( Our UR module activation ).
 		}
 
 		/**
@@ -123,7 +126,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 
 			$base_product = $this->get_base_product();
 
-			$active_plugins   = get_option( 'active_plugins', array() );
+			$active_plugins = get_option( 'active_plugins', array() );
 
 			$base_product_name = $is_premium ? 'User Registration Pro' : 'User Registration';
 
@@ -170,14 +173,14 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 			 *
 			 * @since 4.0
 			 */
-			 $enabled_features = get_option( 'user_registration_enabled_features', array() );
+			$enabled_features = get_option( 'user_registration_enabled_features', array() );
 
-			 $addons_list_moved_into_module = array(
-                'user-registration-payments',
-                'user-registration-content-restriction',
-                'user-registration-frontend-listing',
-                'user-registration-membership',
-             );
+			$addons_list_moved_into_module = array(
+				'user-registration-payments',
+				'user-registration-content-restriction',
+				'user-registration-frontend-listing',
+				'user-registration-membership',
+			);
 
 			if ( ! empty( $enabled_features ) ) {
 				$our_modules     = $this->get_modules();
@@ -185,7 +188,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 				foreach ( $enabled_features as $slug ) {
 					if ( isset( $modules_by_slug[ $slug ] ) ) {
 						$module                       = $modules_by_slug[ $slug ];
-						$product_slug 				  = in_array( $slug, $addons_list_moved_into_module ) ? $slug . '/' . $slug . '.php' : $slug;
+						$product_slug                 = in_array( $slug, $addons_list_moved_into_module ) ? $slug . '/' . $slug . '.php' : $slug;
 						$addons_data[ $product_slug ] = array(
 							'product_name'    => $module['name'],
 							'product_version' => UR()->version,
@@ -263,8 +266,8 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		/**
 		 * Run the process once when user gives consent.
 		 *
-		 * @param int   $old_value Old Value.
-		 * @param int   $value Value.
+		 * @param int $old_value Old Value.
+		 * @param int $value Value.
 		 * @param mixed $option Options.
 		 *
 		 * @return mixed
@@ -305,8 +308,8 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		/**
 		 * Get api stats url.
 		 *
-		 * @since 4.3.0
 		 * @return string
+		 * @since 4.3.0
 		 */
 		private function get_stats_api_url() {
 			$url = '';
@@ -320,6 +323,57 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 			}
 
 			return $url;
+		}
+
+		/**
+		 * Get Form Settings.
+		 *
+		 * @return array
+		 */
+		public function get_form_settings() {
+			$form_settings = array();
+			$forms         = ur_get_all_user_registration_form();
+
+			if ( ! empty( $forms ) ) {
+				foreach ( $forms as $form_id => $form ) {
+					$form_specific_settings    = $this->get_form_specific_settings( $form_id );
+					$form_settings[ $form_id ] = $form_specific_settings;
+				}
+			}
+
+			return $form_settings;
+		}
+
+		/**
+		 * Get Form Specific Settings.
+		 *'form_settings' =>
+		);
+		 * @param int $form_id Form ID.
+		 *
+		 * @return array
+		 */
+		private function get_form_specific_settings( $form_id ) {
+
+			$form_settings = ur_admin_form_settings_fields( $form_id );
+
+			if ( ! empty( $form_settings ) ) {
+				foreach ( $form_settings as $setting ) {
+
+					$setting_id             = $setting['id'];
+					$product                = ! empty( $setting['product'] ) ? $setting['product'] : '';
+					$value                  = get_post_meta( $form_id, $setting_id, true );
+					$settings_value         = empty( $value ) ? 'NOT_SET' : get_post_meta( $form_id, $setting_id, true );
+					$default_value          = ! empty( $setting['default_value'] ) ? $setting['default_value'] : '';
+					$settings_default_value = is_bool( $default_value ) ? ur_bool_to_string( $default_value ) : $default_value;
+
+					$settings[ $product ][ $setting_id ] = array(
+						'settings_value' => $settings_value,
+						'default_value'  => $settings_default_value
+					);
+				}
+			}
+
+			return $settings;
 		}
 
 		/**
@@ -356,6 +410,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 			$data['timezone']             = $this->get_timezone_offset();
 			$data['base_product']         = $this->get_base_product();
 			$data['global_settings']      = $this->get_global_settings();
+			$data['form_settings']        = $this->get_form_settings();
 
 			$this->send_request( apply_filters( 'user_registration_tg_tracking_remote_url', $stats_api_url ), $data );
 		}
@@ -406,7 +461,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		 * Send Request to API.
 		 *
 		 * @param string $url URL.
-		 * @param array  $data Data.
+		 * @param array $data Data.
 		 */
 		public function send_request( $url, $data ) {
 			$headers = array(
@@ -435,31 +490,55 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		 */
 		private function setting_keys() {
 			return array(
-				'user-registration/user-registration.php' => array(
+				'user-registration/user-registration.php'                                                     => array(
+					// General Settings
 					array( 'user_registration_general_setting_disabled_user_roles', '["subscriber"]' ),
-					array( 'user_registration_login_option_hide_show_password', false ),
 					array( 'user_registration_myaccount_page_id', '', true ),
 					array( 'user_registration_my_account_layout', 'horizontal' ),
+					array( 'user_registration_general_setting_registration_url_options', '', true ),
+					array(
+						'user_registration_general_setting_registration_label',
+						__( 'Not a member yet? Register now.', 'user-registration' )
+					),
+					array( 'user_registration_general_setting_uninstall_option', false ),
+					array( 'user_registration_allow_usage_tracking', false ),
+
+					// Login Settings
+					array( 'user_registration_login_option_hide_show_password', false ),
 					array( 'user_registration_ajax_form_submission_on_edit_profile', false ),
 					array( 'user_registration_disable_profile_picture', false ),
-					array( 'user_registration_disable_logout_confirmation', false ),
+					array( 'user_registration_disable_logout_confirmation', true ),
 					array( 'user_registration_login_options_form_template', 'default' ),
 					array( 'user_registration_general_setting_login_options_with', 'default' ),
 					array( 'user_registration_login_title', false ),
+					array( 'user_registration_general_setting_login_form_title', __( 'Welcome', 'user-registration' ) ),
+					array( 'user_registration_general_setting_login_form_desc', '' ),
 					array( 'ur_login_ajax_submission', false ),
 					array( 'user_registration_login_options_remember_me', true ),
 					array( 'user_registration_login_options_lost_password', true ),
 					array( 'user_registration_login_options_hide_labels', false ),
 					array( 'user_registration_login_options_enable_recaptcha', false ),
-					array( 'user_registration_general_setting_registration_url_options', '', true ),
 					array( 'user_registration_login_options_prevent_core_login', false ),
 					array( 'user_registration_login_options_login_redirect_url', '', true ),
-					array( 'user_registration_captcha_setting_recaptcha_version', 'v2' ),
 					array( 'user_registration_login_options_configured_captcha_type', 'v2' ),
-					array( 'user_registration_general_setting_uninstall_option', false ),
-					array( 'user_registration_allow_usage_tracking', false ) //phpcs:ignore
+
+					// Captcha Settings
+					array( 'user_registration_captcha_setting_recaptcha_version', 'v2' ),
+					array( 'user_registration_captcha_setting_recaptcha_site_key', '' ),
+					array( 'user_registration_captcha_setting_recaptcha_site_secret', '' ),
+					array( 'user_registration_captcha_setting_recaptcha_site_key_v3', '' ),
+					array( 'user_registration_captcha_setting_recaptcha_site_secret_v3', '' ),
+					array( 'user_registration_captcha_setting_recaptcha_site_key_hcaptcha', '' ),
+					array( 'user_registration_captcha_setting_recaptcha_site_secret_hcaptcha', '' ),
+					array( 'user_registration_captcha_setting_recaptcha_site_key_cloudflare', '' ),
+					array( 'user_registration_captcha_setting_recaptcha_site_secret_cloudflare', '' ),
+					array( 'user_registration_captcha_setting_invisible_recaptcha_v2', false ),
+					array( 'user_registration_captcha_setting_recaptcha_cloudflare_theme', 'light' ),
+
+					// Email Settings
+					array( 'user_registration_email_setting_disable_email', false ),
 				),
-				'user-registration-pro/user-registration.php' => array(
+				'user-registration-pro/user-registration.php'                                                 => array(
 					array( 'user_registration_pro_general_setting_delete_account', 'disable' ),
 					array( 'user_registration_pro_general_setting_login_form', false ),
 					array( 'user_registration_pro_general_setting_prevent_active_login', false ),
@@ -472,11 +551,11 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					array( 'user_registration_content_restriction_enable', true ),
 					array( 'user_registration_content_restriction_allow_to_roles', '["administrator"]' ) //phpcs:ignore
 				),
-				'user-registration-file-upload/user-registration-file-upload.php' => array(
+				'user-registration-file-upload/user-registration-file-upload.php'                             => array(
 					array( 'user_registration_file_upload_setting_valid_file_type', '["pdf"]' ),
 					array( 'user_registration_file_upload_setting_max_file_size', '1024' ) //phpcs:ignore
 				),
-				'user-registration-pdf-submission/user-registration-pdf-submission.php' => array(
+				'user-registration-pdf-submission/user-registration-pdf-submission.php'                       => array(
 					array( 'user_registration_pdf_template', 'default' ),
 					array( 'user_registration_pdf_logo_image', '', true ),
 					array( 'user_registration_pdf_setting_header', '' ),
@@ -494,7 +573,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					array( 'user_registration_pdf_print_user_default_fields', false ),
 					array( 'user_registration_pdf_hide_empty_fields', false ) //phpcs:ignore
 				),
-				'user-registration-social-connect/user-registration-social-connect.php' => array(
+				'user-registration-social-connect/user-registration-social-connect.php'                       => array(
 					array( 'user_registration_social_setting_enable_facebook_connect', '' ),
 					array( 'user_registration_social_setting_enable_twitter_connect', '' ),
 					array( 'user_registration_social_setting_enable_google_connect', '' ),
@@ -520,9 +599,10 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		/**
 		 * Track module installation data.
 		 *
+		 * @param string $slug Slug.
+		 *
 		 * @since 4.0
 		 *
-		 * @param  string $slug Slug.
 		 */
 		public function on_module_activate( $slug ) {
 			$our_modules  = $this->get_modules();

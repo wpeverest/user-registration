@@ -19,7 +19,7 @@ class UR_Smart_Tags {
 		add_filter( 'user_registration_process_smart_tags', array( $this, 'process' ), 10, 3 );
 		add_filter( 'ur_smart_tags_list_in_general', array( $this, 'select_smart_tags_in_general' ), 10, 1 );
 		add_filter( 'ur_pattern_validation_list_in_advanced_settings', array(
-			$this,
+				$this,
 			'select_pattern_validation'
 		), 10, 1 );
 	}
@@ -31,8 +31,8 @@ class UR_Smart_Tags {
 	 */
 	public static function smart_tags_list() {
 		if ( isset( $_GET['page'] ) && $_GET['page'] === 'yith_wpv_panel' &&
-		     isset( $_GET['tab'] ) && $_GET['tab'] === 'vendors' &&
-		     isset( $_GET['sub_tab'] ) && $_GET['sub_tab'] === 'vendors-list' ) {
+			isset( $_GET['tab'] ) && $_GET['tab'] === 'vendors' &&
+			isset( $_GET['sub_tab'] ) && $_GET['sub_tab'] === 'vendors-list' ) {
 			$smart_tags = array();
 		} else {
 			$smart_tags = array_merge( self::ur_unauthenticated_parsable_smart_tags_list(), self::ur_authenticated_parsable_smart_tags_list() );
@@ -551,7 +551,7 @@ class UR_Smart_Tags {
 						$content            = str_replace( '{{' . $tag . '}}', wp_kses_post( $edit_password_link ), $content );
 						break;
 					case 'sign_out_link':
-						$logout_confirmation = ur_option_checked( 'user_registration_disable_logout_confirmation', false );
+						$logout_confirmation = ur_option_checked( 'user_registration_disable_logout_confirmation', true );
 						$sign_out_link       = '<a href="' . esc_url( ur_logout_url( ur_get_page_permalink( 'myaccount' ) ) ) . '" ' . ( ! $logout_confirmation ? 'class="ur-logout"' : '' ) . '>' . esc_html__( 'Sign out', 'user-registration' ) . '</a>';
 						$content             = str_replace( '{{' . $tag . '}}', wp_kses_post( $sign_out_link ), $content );
 						break;
@@ -617,8 +617,14 @@ class UR_Smart_Tags {
 					case 'membership_plan_next_billing_date':
 						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_next_billing_date'] ) ? $values['membership_plan_next_billing_date'] : '', $content );
 						break;
+					case 'membership_plan_expiry_date':
+						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_expiry_date'] ) ? $values['membership_plan_expiry_date'] : '', $content );
+						break;
 					case 'membership_plan_status':
 						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_status'] ) ? $values['membership_plan_status'] : '', $content );
+						break;
+					case 'membership_renewal_link':
+						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_renewal_link'] ) ? $values['membership_renewal_link'] : '', $content );
 						break;
 					case 'membership_plan_details':
 						$new_content = '';
@@ -665,7 +671,7 @@ class UR_Smart_Tags {
 						}
 						$template_file   = locate_template( 'payment-successful-email.php' );
 						if ( ! $template_file ) {
-							$template_file = UR_MEMBERSHIP_DIR . 'includes/Templates/Emails/payment-successful-email.php';
+							$template_file = UR()->plugin_path() . '/modules/membership/includes/Templates/Emails/payment-successful-email.php';
 						}
 						ob_start();
 						require $template_file;

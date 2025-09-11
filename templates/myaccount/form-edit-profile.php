@@ -131,7 +131,7 @@ if ( 'vertical' === $layout ) {
 									<p class="user-registration-tips"><?php echo esc_html__( 'Max size: ', 'user-registration' ) . esc_attr( size_format( $max_upload_size ) ); ?></p>
 									</div>
 									<header>
-										<p><strong>
+										<p class="ur-new-profile-image-message"><strong>
 										<?php
 										echo esc_html(
 											/**
@@ -144,6 +144,7 @@ if ( 'vertical' === $layout ) {
 										);
 										?>
 											</strong></p>
+										<p class="ur-profile-image-updated-message" style="display:none;"><strong> <?php echo esc_html( 'You\'ve uploaded a profile image. You can change it below.', 'user-registration' ); ?></strong></p>
 										<div class="button-group">
 											<?php
 
@@ -172,7 +173,7 @@ if ( 'vertical' === $layout ) {
 												?>
 												<input type="hidden" name="profile-pic-url" id="profile_pic_url" value="<?php echo esc_attr( $profile_picture_url ); ?>" />
 												<input type="hidden" name="profile-default-image" value="<?php echo esc_url( $gravatar_image ); ?>" />
-												<button class="button profile-pic-remove" data-attachment-id="<?php echo esc_attr( get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true ) ); ?>" style="<?php echo esc_attr( ( $gravatar_image === $image ) ? 'display:none;' : '' ); ?>"><?php echo esc_html__( 'Remove', 'user-registration' ); ?></php></button>
+												<button class="button profile-pic-remove" data-attachment-id="<?php echo esc_attr( get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true ) ); ?>" style="<?php echo esc_attr( ( $gravatar_image === $image ) ? 'display:none;' : '' ); ?>"><?php echo esc_html__( 'Change', 'user-registration' ); ?></php></button>
 
 												<button type="button" class="button user_registration_profile_picture_upload hide-if-no-js" style="<?php echo esc_attr( ( $gravatar_image !== $image ) ? 'display:none;' : '' ); ?>" ><?php echo esc_html__( 'Upload Picture', 'user-registration' ); ?></button>
 												<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg,image/gif,image/png" style="display:none" />
@@ -246,33 +247,23 @@ if ( 'vertical' === $layout ) {
 						?>
 						<p>
 							<?php
+							/**
+							 * Filter to modify the profile update button text.
+							 *
+							 * @param string Text content to be modified.
+							 * @return string button text.
+							 */
+							$submit_btn_text = apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) );
 							if ( ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
 								?>
 								<button type="submit" class="user-registration-submit-Button btn button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" ><span></span>
-									<?php
-									esc_html_e(
-									/**
-									 * Filter to modify the profile update button text.
-									 *
-									 * @param string Text content to be modified.
-									 * @return string button text.
-									 */
-									apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) ) ); //PHPCS:ignore?></button>
+									<?php echo esc_html( $submit_btn_text); ?>
+								</button>
 								<?php
 							} else {
 								wp_nonce_field( 'save_profile_details' );
 								?>
-								<input type="submit" class="user-registration-Button button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" value="
-								<?php
-								esc_attr_e(
-								/**
-								 * Filter to modify the profile update button text.
-								 *
-								 * @param string text content for button.
-								 * @return string button text.
-								 */
-									apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) ) );//PHPCS:ignore ?>"
-								/>
+								<input type="submit" class="user-registration-Button button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" value="<?php echo esc_attr( $submit_btn_text); ?>"/>
 								<?php
 								echo apply_filters( 'user_registration_edit_profile_extra_data_div', '', $form_id ); // phpcs:ignore.
 								?>

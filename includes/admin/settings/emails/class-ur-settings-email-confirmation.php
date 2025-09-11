@@ -87,7 +87,7 @@ if ( ! class_exists( 'UR_Settings_Email_Confirmation', false ) ) :
 									'id'       => 'user_registration_email_confirmation_subject',
 									'type'     => 'text',
 									'default'  => __( 'Email Address Confirmation – Verify Your Registration on {{blog_info}}', 'user-registration' ),
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'desc_tip' => true,
 								),
 
@@ -97,7 +97,7 @@ if ( ! class_exists( 'UR_Settings_Email_Confirmation', false ) ) :
 									'id'       => 'user_registration_email_confirmation',
 									'type'     => 'tinymce',
 									'default'  => $this->ur_get_email_confirmation(),
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'desc_tip' => true,
 								),
 							),

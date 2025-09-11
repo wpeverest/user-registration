@@ -56,7 +56,7 @@ class UR_Admin_Dashboard {
 				'licensePlan'          => ur_get_license_plan(),
 				'licenseActivationURL' => esc_url_raw( admin_url( '/admin.php?page=user-registration-settings&tab=license' ) ),
 				'utmCampaign'          => UR()->utm_campaign,
-				'upgradeURL'           => esc_url_raw( 'https://wpuserregistration.com/pricing/?utm_campaign=' . UR()->utm_campaign ),
+				'upgradeURL'           => esc_url_raw( 'https://wpuserregistration.com/upgrade/?utm_campaign=' . UR()->utm_campaign ),
 				'plugins'              => array_reduce(
 					$allowed_plugin_slugs,
 					function ( $acc, $curr ) use ( $installed_plugin_slugs ) {
@@ -102,6 +102,8 @@ class UR_Admin_Dashboard {
 	public static function dashboard_page_body() {
 		?>
 			<body class="user-registration-dashboard notranslate" translate="no">
+				<hr class="wp-header-end">
+				<?php echo user_registration_plugin_main_header(); ?>
 				<div id="user-registration-dashboard"></div>
 			</body>
 		<?php

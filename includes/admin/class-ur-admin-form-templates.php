@@ -87,6 +87,8 @@ class UR_Admin_Form_Templates {
 	 * Load the template view.
 	 */
 	public static function load_template_view() {
+		echo '<hr class="wp-header-end">';
+		echo user_registration_plugin_main_header();
 		echo "<div id='user-registration-form-templates'></div>";
 		wp_register_script( 'ur-templates', UR()->plugin_url() . '/chunks/form_templates.js', array( 'wp-element', 'react', 'react-dom', 'wp-api-fetch', 'wp-i18n', 'wp-blocks' ), UR()->version, true );
 		wp_localize_script(

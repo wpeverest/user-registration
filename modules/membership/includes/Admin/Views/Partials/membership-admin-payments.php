@@ -11,7 +11,7 @@
 ?>
 <!--								payment gateway container-->
 <div id="payment-gateway-container"
-	 class="ur-mt-3 <?php echo isset( $membership_details['type'] ) && $membership_details['type'] !== 'free' ? '' : 'ur-d-none'; ?>">
+	 class="ur-payment-gateway-wrapper <?php echo isset( $membership_details['type'] ) && $membership_details['type'] !== 'free' ? '' : 'ur-d-none'; ?>">
 	<div class="user-registration-card">
 		<div class="user-registration-card__header">
 			<h3><?php echo __( "Payment Gateways", "user-registration" ) ?></h3>
@@ -68,24 +68,23 @@ function render_paypal_settings( $membership_details ) {
 	);
 	$is_incomplete          = empty( $global_paypal_settings['paypal_email'] );
 	?>
-	<div id="paypal-section"
-		 class="ur-p-2 "
-		 style="background: #f8f8fa; border-radius:5px"
-	>
+	<div id="paypal-section" class="user-registration-payment__items">
 		<div
 			id="ur-membership-paypal-toggle-container"
 			class="ur-d-flex ur-justify-content-between ur-payment-option-header"
 		>
 			<h2><?php echo __( 'Paypal', 'user-registration' ); ?></h2>
-			<div class="user-registration-switch">
-
-				<input
-					data-key-name="Payment Gateway"
-					id="ur-membership-pg-paypal" type="checkbox"
-					class="user-registration-switch__control hide-show-check enabled pg-switch"
-					<?php echo isset( $membership_details['payment_gateways']['paypal'] ) && $membership_details['payment_gateways']['paypal']['status'] == 'on' && !$is_incomplete ? 'checked' : ''; ?>
-					name="ur_membership_pg_paypal_status"
-				>
+			<div class="ur-toggle-section m1-auto">
+				<span class="user-registration-toggle-form">
+					<input
+						data-key-name="Payment Gateway"
+						id="ur-membership-pg-paypal" type="checkbox"
+						class="user-registration-switch__control hide-show-check enabled pg-switch"
+						<?php echo isset( $membership_details['payment_gateways']['paypal'] ) && $membership_details['payment_gateways']['paypal']['status'] == 'on' && !$is_incomplete ? 'checked' : ''; ?>
+						name="ur_membership_pg_paypal_status"
+					>
+				<span class="slider round"></span>
+				</span>
 			</div>
 		</div>
 		<div class="payment-option-body"
@@ -95,8 +94,7 @@ function render_paypal_settings( $membership_details ) {
 			$message      = esc_html__( 'Your Paypal settings is incomplete, please complete your setup from the link below to continue (No need to refresh this page)' );
 			$settings_url = get_admin_url() . 'admin.php?page=user-registration-settings&tab=payment&method=paypal';
 			?>
-			<div id="settings-section" class="ur-p-2 "
-				 style="background: #f8f8fa; border-radius:5px; ">
+			<div id="settings-section" class="user-registration-payment__settings">
 				<p><?php echo "$message"; ?></p>
 				<a href="<?php echo esc_url( $settings_url ); ?>"
 				   target="_blank">
@@ -296,9 +294,7 @@ function render_bank_settings( $membership_details ) {
 	$global_bank_details = get_option( 'user_registration_global_bank_details', '' );
 
 	?>
-	<div id="bank-section"
-		 class="ur-p-2 "
-		 style="background: #f8f8fa; border-radius:5px">
+	<div id="bank-section" class="user-registration-payment__items">
 		<?php
 		$bank_details = $membership_details['payment_gateways']['bank'] ?? '';
 		?>
@@ -306,22 +302,17 @@ function render_bank_settings( $membership_details ) {
 			id="ur-membership-bank-toggle-container"
 			class="ur-d-flex ur-justify-content-between ur-payment-option-header">
 			<h2><?php echo __( 'Bank Transfer', 'user-registration' ); ?></h2>
-			<div class="user-registration-switch">
-				<input
-					data-key-name="Payment Gateway"
-					id="ur-membership-pg-bank" type="checkbox"
-					class="user-registration-switch__control hide-show-check ur-payment-option-header enabled pg-switch"
-					<?php echo isset( $bank_details['status'] ) && $bank_details['status'] == 'on' && !empty( $global_bank_details ) ? 'checked' : ''; ?>
-					name="ur_membership_pg_bank_status"
-				>
-				<!--				<svg class="ur-pg-arrow-->
-				<!--																--><?php //echo isset( $bank_details['status'] ) && $bank_details['status'] == 'on' ? 'expand' : ''; ?>
-				<!--																" xmlns="http://www.w3.org/2000/svg" fill="none"-->
-				<!--					 viewBox="0 0 24 24">-->
-				<!--					<path stroke="#383838" stroke-linecap="round"-->
-				<!--						  stroke-linejoin="round" stroke-width="2"-->
-				<!--						  d="m9 18 6-6-6-6"></path>-->
-				<!--				</svg>-->
+			<div class="ur-toggle-section m1-auto">
+				<span class="user-registration-toggle-form">
+					<input
+						data-key-name="Payment Gateway"
+						id="ur-membership-pg-bank" type="checkbox"
+						class="user-registration-switch__control hide-show-check ur-payment-option-header enabled pg-switch"
+						<?php echo isset( $bank_details['status'] ) && $bank_details['status'] == 'on' && !empty( $global_bank_details ) ? 'checked' : ''; ?>
+						name="ur_membership_pg_bank_status"
+					>
+				<span class="slider round"></span>
+				</span>
 			</div>
 		</div>
 		<div class="payment-option-body"
@@ -373,29 +364,22 @@ function render_stripe_settings( $membership_details ) {
 	$stripe_details   = $membership_details['payment_gateways']['stripe'] ?? array();
 
 	?>
-	<div id="stripe-section"
-		 class="ur-p-2 "
-		 style="background: #f8f8fa; border-radius:5px">
+	<div id="stripe-section" class="user-registration-payment__items">
 		<div
 			id="ur-membership-stripe-toggle-container"
 			class="ur-d-flex ur-justify-content-between ur-payment-option-header">
 			<h2><?php echo __( 'Stripe', 'user-registration' ); ?></h2>
-			<div class="user-registration-switch">
-				<input
-					data-key-name="Payment Gateway"
-					id="ur-membership-pg-stripe" type="checkbox"
-					class="user-registration-switch__control hide-show-check ur-payment-option-header enabled pg-switch"
-					<?php echo isset( $stripe_details['status'] ) && $stripe_details['status'] == 'on' && !$setup_incomplete ? 'checked' : ''; ?>
-					name="ur_membership_pg_bank_status"
-				>
-				<!--				<svg class="ur-pg-arrow-->
-				<!--																--><?php //echo isset( $stripe_details['status'] ) && $stripe_details['status'] == 'on' ? 'expand' : ''; ?>
-				<!--																" xmlns="http://www.w3.org/2000/svg" fill="none"-->
-				<!--					 viewBox="0 0 24 24">-->
-				<!--					<path stroke="#383838" stroke-linecap="round"-->
-				<!--						  stroke-linejoin="round" stroke-width="2"-->
-				<!--						  d="m9 18 6-6-6-6"></path>-->
-				<!--				</svg>-->
+			<div class="ur-toggle-section m1-auto">
+				<span class="user-registration-toggle-form">
+					<input
+						data-key-name="Payment Gateway"
+						id="ur-membership-pg-stripe" type="checkbox"
+						class="user-registration-switch__control hide-show-check ur-payment-option-header enabled pg-switch"
+						<?php echo isset( $stripe_details['status'] ) && $stripe_details['status'] == 'on' && !$setup_incomplete ? 'checked' : ''; ?>
+						name="ur_membership_pg_bank_status"
+					>
+				<span class="slider round"></span>
+				</span>
 			</div>
 		</div>
 		<div class="payment-option-body"

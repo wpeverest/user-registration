@@ -4,7 +4,6 @@
 		var snackbar = new UR_Snackbar();
 	}
 
-
 	// Allowed Screens
 	$("select#user_registration_allowed_screens")
 		.on("change", function () {
@@ -49,7 +48,7 @@
 				$(this)
 					.parent()
 					.find(".colorpickpreview")
-					.css({backgroundColor: ui.color.toString()});
+					.css({ backgroundColor: ui.color.toString() });
 			},
 			hide: true,
 			border: true
@@ -236,15 +235,15 @@
 				data: {
 					action: "user_registration_captcha_test",
 					security:
-					user_registration_settings_params.user_registration_captcha_test_nonce,
+						user_registration_settings_params.user_registration_captcha_test_nonce,
 					captcha_type: captcha_type,
 					invisible_recaptcha: invisible_recaptcha
 				},
 				beforeSend: function () {
 					var spinner = $(
 						"#user_registration_captcha_setting_" +
-						captcha_type +
-						"_captcha_test .spinner"
+							captcha_type +
+							"_captcha_test .spinner"
 					);
 					spinner.show();
 					setTimeout(function () {
@@ -254,8 +253,8 @@
 				success: function (response) {
 					var ur_recaptcha_node = $(
 							'.ur-captcha-test-container[data-captcha-type="' +
-							captcha_type +
-							'"] .ur-captcha-node'
+								captcha_type +
+								'"] .ur-captcha-node'
 						),
 						ur_recaptcha_code = response.data.ur_recaptcha_code;
 
@@ -351,12 +350,12 @@
 									try {
 										turnstile.render(
 											"#" +
-											ur_recaptcha_node
-												.find(".cf-turnstile")
-												.attr("id"),
+												ur_recaptcha_node
+													.find(".cf-turnstile")
+													.attr("id"),
 											{
 												sitekey:
-												ur_recaptcha_code.site_key,
+													ur_recaptcha_code.site_key,
 												theme: ur_recaptcha_code.theme_mode,
 												style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"
 											}
@@ -393,18 +392,18 @@
 		if (notice.length) {
 			var notice_container = $(
 				'.ur-captcha-test-container[data-captcha-type="' +
-				captcha_type +
-				'"]'
+					captcha_type +
+					'"]'
 			).find(".ur-captcha-notice");
 			var notice_icon = $(
 				'.ur-captcha-test-container[data-captcha-type="' +
-				captcha_type +
-				'"]'
+					captcha_type +
+					'"]'
 			).find(".ur-captcha-notice--icon");
 			var notice_text = $(
 				'.ur-captcha-test-container[data-captcha-type="' +
-				captcha_type +
-				'"]'
+					captcha_type +
+					'"]'
 			).find(".ur-captcha-notice--text");
 
 			if (notice_text.length) {
@@ -428,8 +427,8 @@
 
 		var spinner = $(
 			"#user_registration_captcha_setting_" +
-			captcha_type +
-			"_captcha_test .spinner"
+				captcha_type +
+				"_captcha_test .spinner"
 		);
 		spinner.hide();
 	}
@@ -462,8 +461,8 @@
 					)
 					.append(
 						'<div class="error inline" style="padding:10px;">' +
-						ur_login_form_params.user_registration_membership_redirect_default_page_message +
-						"</div>"
+							ur_login_form_params.user_registration_membership_redirect_default_page_message +
+							"</div>"
 					);
 			} else {
 				$(wpbody_class)
@@ -493,8 +492,8 @@
 				.closest(".user-registration-login-form-global-settings--field")
 				.append(
 					'<div class="error inline" style="padding:10px;">' +
-					ur_login_form_params.user_registration_membership_redirect_default_page_message +
-					"</div>"
+						ur_login_form_params.user_registration_membership_redirect_default_page_message +
+						"</div>"
 				);
 
 			$redirect.prop("required", true);
@@ -692,7 +691,7 @@
 			data = {
 				action: "user_registration_my_account_selection_validator",
 				security:
-				user_registration_settings_params.user_registration_my_account_selection_validator_nonce
+					user_registration_settings_params.user_registration_my_account_selection_validator_nonce
 			};
 
 		data.user_registration_selected_my_account_page = $this.val();
@@ -717,8 +716,8 @@
 						.closest(".user-registration-global-settings--field")
 						.append(
 							"<div id='message' class='error inline' style='padding:10px;'>" +
-							response.responseJSON.data.message +
-							"</div>"
+								response.responseJSON.data.message +
+								"</div>"
 						);
 					$this.css("border", "1px solid red");
 					$this
@@ -751,7 +750,7 @@
 			data = {
 				action: "user_registration_lost_password_selection_validator",
 				security:
-				ur_login_form_params.user_registration_lost_password_selection_validator_nonce
+					ur_login_form_params.user_registration_lost_password_selection_validator_nonce
 			};
 
 		data.user_registration_selected_lost_password_page = $this.val();
@@ -783,8 +782,8 @@
 							)
 							.append(
 								"<div id='message' class='error inline' style='padding:10px;'>" +
-								response.responseJSON.data.message +
-								"</div>"
+									response.responseJSON.data.message +
+									"</div>"
 							);
 					}
 					$this.css("border", "1px solid red");
@@ -989,7 +988,7 @@
 			heightAuto: false,
 			width: "575px",
 			confirmButtonText:
-			user_registration_settings_params.i18n.upgrade_plan
+				user_registration_settings_params.i18n.upgrade_plan
 		}).then(function (result) {
 			if (result.isConfirmed) {
 				window.open(
@@ -1140,7 +1139,7 @@
 	function show_success_message(message) {
 		if (snackbar) {
 			snackbar.add({
-				type: 'success',
+				type: "success",
 				message: message,
 				duration: 5
 			});
@@ -1157,7 +1156,7 @@
 	function show_failure_message(message) {
 		if (snackbar) {
 			snackbar.add({
-				type: 'failure',
+				type: "failure",
 				message: message,
 				duration: 6,
 				dismissible: true
@@ -1167,26 +1166,32 @@
 		return false;
 	}
 
-	function update_payment_section_settings(setting_id, section_data, $this, settings_container) {
-
+	function update_payment_section_settings(
+		setting_id,
+		section_data,
+		$this,
+		settings_container
+	) {
 		$.ajax({
 			url: user_registration_settings_params.ajax_url,
 			data: {
 				action: "user_registration_save_payment_settings",
-				security: user_registration_settings_params.user_registration_membership_payment_settings_nonce,
+				security:
+					user_registration_settings_params.user_registration_membership_payment_settings_nonce,
 				setting_id: setting_id,
 				section_data: JSON.stringify(section_data)
 			},
 			type: "POST",
 			complete: function (response) {
-				$this.find('.ur-spinner').remove();
+				$this.find(".ur-spinner").remove();
 				if (response.responseJSON.success) {
 					show_success_message(response.responseJSON.data.message);
-					settings_container.find('.integration-status').addClass('ur-integration-account-connected');
+					settings_container
+						.find(".integration-status")
+						.addClass("ur-integration-account-connected");
 				} else {
 					show_failure_message(response.responseJSON.data.message);
 				}
-
 			}
 		});
 	}
@@ -1615,10 +1620,6 @@
 			type = $this.attr("id"),
 			val = $(this).val();
 		// $this.prop("disabled", true);
-		$this
-			.closest(".user-registration-global-settings--field")
-			.find("#select2-" + type + "-container")
-			.css("border", "1px solid #e1e1e1");
 
 		$this
 			.closest(".user-registration-global-settings--field")
@@ -1639,7 +1640,7 @@
 				type: type,
 				value: val,
 				security:
-				user_registration_settings_params.user_registration_membership_pages_selection_validator_nonce
+					user_registration_settings_params.user_registration_membership_pages_selection_validator_nonce
 			},
 			type: "POST",
 			complete: function (response) {
@@ -1648,13 +1649,9 @@
 						.closest(".user-registration-global-settings--field")
 						.append(
 							"<div id='message' class='error inline' style='padding:10px;'>" +
-							response.responseJSON.message +
-							"</div>"
+								response.responseJSON.message +
+								"</div>"
 						);
-					$this
-						.closest(".user-registration-global-settings--field")
-						.find("#select2-" + type + "-container")
-						.css("border", "1px solid red");
 
 					$this
 						.closest("form")
@@ -1687,36 +1684,213 @@
 		});
 	});
 
-	$('.payment-settings-btn').on('click', function () {
+	$(".payment-settings-btn").on("click", function () {
 		var $this = $(this),
-			setting_id = $this.data('id'),
-			settings_container = $this.closest('#' + setting_id);
+			setting_id = $this.data("id"),
+			settings_container = $this.closest("#" + setting_id);
 
-		if ($this.find('.ur-spinner').length > 0) {
+		if ($this.find(".ur-spinner").length > 0) {
 			return;
 		}
 		$this.append("<span class='ur-spinner'></span>");
 
 		var section_data = {};
 
-		settings_container.find('input, select, textarea').each(function (key, item) {
-			var $item = $(item);
-			var name = $item.attr('name');
-			if (!name) return;
+		settings_container
+			.find("input, select, textarea")
+			.each(function (key, item) {
+				var $item = $(item);
+				var name = $item.attr("name");
+				if (!name) return;
 
-			var value;
-			if ($item.attr('type') === 'checkbox') {
-				value = $item.is(":checked");
-			} else if ($item.is('textarea') && typeof tinymce !== 'undefined' && tinymce.get(name)) {
-				value = tinymce.get(name).getContent();
-			} else {
-				value = $item.val();
-			}
-			section_data[name] = value;
-		});
+				var value;
+				if ($item.attr("type") === "checkbox") {
+					value = $item.is(":checked");
+				} else if (
+					$item.is("textarea") &&
+					typeof tinymce !== "undefined" &&
+					tinymce.get(name)
+				) {
+					value = tinymce.get(name).getContent();
+				} else {
+					value = $item.val();
+				}
+				section_data[name] = value;
+			});
 
-		update_payment_section_settings(setting_id, section_data, $this, settings_container);
+		update_payment_section_settings(
+			setting_id,
+			section_data,
+			$this,
+			settings_container
+		);
 	});
+	$("#user_registration_payment_currency").on("change", function () {
+		var $this = $(this);
+		var currency = $this.val();
+		$this
+			.closest(".user-registration-global-settings--field")
+			.find(".error.inline")
+			.remove();
+		$this
+			.closest(".user-registration-global-settings")
+			.append('<div class="ur-spinner is-active"></div>');
+
+		$.ajax({
+			url: user_registration_settings_params.ajax_url,
+			data: {
+				action: "user_registration_validate_payment_currency",
+				security:
+					user_registration_settings_params.user_registration_membership_validate_payment_currency_nonce,
+				currency: currency
+			},
+			type: "POST",
+			complete: function (response) {
+				if (response.responseJSON.success === false) {
+					$this
+						.closest(".user-registration-global-settings")
+						.find(".warning")
+						.remove();
+					$this
+						.closest(".user-registration-global-settings--field")
+						.append(
+							"<div id='message' class='warning inline' style='padding:10px;'>" +
+								response.responseJSON.data.message +
+								"</div>"
+						);
+				} else {
+					$this
+						.closest(".user-registration-global-settings")
+						.find(".warning")
+						.remove();
+				}
+				$this.prop("disabled", false);
+				$this
+					.closest(".user-registration-global-settings")
+					.find(".ur-spinner")
+					.remove();
+			}
+		});
+	});
+	$("#user_registration_payment_currency").trigger("change");
+	var searchParams = new URLSearchParams(window.location.search);
+
+	var license_activation_status = ur_get_cookie("urm_license_status");
+	if (
+		searchParams.get("activated_license") == "user-registration" &&
+		license_activation_status === "license_activated"
+	) {
+		ur_remove_cookie("urm_license_status");
+		var urmProInstallHtml =
+			'<div style="display: flex; align-items: center; width: 60%;margin: 0px auto; position: relative;">' +
+			'<img src="' +
+			user_registration_settings_params.assets_url +
+			'/images/logo.png" alt="URM Logo" width="50" style="margin: 0 20px;" />' +
+			'<img src="' +
+			user_registration_settings_params.assets_url +
+			'/images/connect.gif" alt="Connect gif" >' +
+			'<img src="' +
+			user_registration_settings_params.assets_url +
+			'/images/wordpress.png" ' +
+			'alt="WordPress Logo" width="50" style="margin: 0 10px 0 30px;" />' +
+			"</div>" +
+			'<p style="margin-bottom: 20px;font-size:13px;text-align:center;">' +
+			user_registration_settings_params.i18n.license_activated_text +
+			"</p>" +
+			'<form method="post" class="ur-install-urm-pro">' +
+			'<input type="hidden" name="download_user_registration_pro" value="1" />' +
+			'<input type="hidden" name="ur_license_nonce" value="' +
+			user_registration_settings_params.ur_license_nonce +
+			'" />' +
+			'<button id="install-urm-pro-btn" class="swal2-confirm button button-primary" style="margin-bottom: 20px;">' +
+			user_registration_settings_params.i18n.pro_install_popup_button +
+			"</button>" +
+			"</form>" +
+			'<p class="ur-install-urm-pro-p-tag" style="font-size:13px;text-align:center;">' +
+			user_registration_settings_params.i18n
+				.will_install_and_activate_pro_text +
+			"</p>";
+		Swal.fire({
+			title: user_registration_settings_params.i18n
+				.pro_install_popup_title,
+			html: urmProInstallHtml,
+			showConfirmButton: false,
+			showCloseButton: false,
+			allowOutsideClick: false,
+			customClass:
+				"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-swal2-modal--install-urm-pro",
+			width: 600,
+			didOpen: function () {
+				$("#install-urm-pro-btn").on("click", function () {
+					$(this)
+						.prop("disabled", true)
+						.text(
+							user_registration_settings_params.i18n
+								.installing_plugin_text
+						)
+						.prepend(
+							'<div class="ur-spinner is-active" style="margin-right: 8px;"></div>'
+						);
+					$(this).closest("form").submit();
+				});
+			}
+		});
+	}
+	if (
+		searchParams.get("activated_license") == "user-registration" &&
+		license_activation_status === "pro_activated"
+	) {
+		ur_remove_cookie("urm_license_status");
+		$successModalHtml =
+			'<p style="margin: 10px 0 20px;">' +
+			user_registration_settings_params.i18n.pro_activated_success_text +
+			"</p>" +
+			'<button id="dashboard-redirect-btn" style="' +
+			"background: transparent;" +
+			"border: 1px solid #475bb2;" +
+			"color: #475bb2;" +
+			"padding: 8px 16px;" +
+			"margin-bottom: 16px;" +
+			"border-radius: 6px;" +
+			"font-size: 14px;" +
+			"cursor: pointer;" +
+			'">' +
+			user_registration_settings_params.i18n.continue_to_dashboard_text +
+			"</button>";
+		Swal.fire({
+			icon: "success",
+			title: user_registration_settings_params.i18n
+				.pro_activated_success_title,
+			html: $successModalHtml,
+			showConfirmButton: false,
+			showCloseButton: true,
+			customClass:
+				"user-registration-swal2-modal user-registration user-registration-swal2-modal--center user-registration-info swal2-show",
+			width: 400,
+			didOpen: function () {
+				$("#dashboard-redirect-btn").on("click", function () {
+					window.location.href =
+						"/wp-admin/admin.php?page=user-registration-dashboard";
+				});
+			}
+		});
+	}
+
+	var searchParams = new URLSearchParams(window.location.search);
+	if (
+		searchParams.has("method") &&
+		searchParams.get("method") !== "" &&
+		$(".user-registration-settings-container").find(
+			"#" + searchParams.get("method")
+		).length > 0
+	) {
+		var container = $(".user-registration-settings-container").find(
+			"#" + searchParams.get("method")
+		);
+		setTimeout(function () {
+			container.find(".integration-header-info").trigger("click");
+		}, 400);
+	}
 	$('.captcha-save-btn').on('click', function () {
 		var $this = $(this),
 			setting_id = $this.data('id'),
@@ -1747,44 +1921,25 @@
 
 		update_captcha_section_settings(setting_id, section_data, $this, settings_container);
 	});
-	var searchParams = new URLSearchParams(window.location.search);
-	if (searchParams.has('method') && searchParams.get('method') !== "" && $('.user-registration-settings-container').find('#' + searchParams.get('method')).length > 0) {
-		var container = $('.user-registration-settings-container').find('#' + searchParams.get('method'));
-		setTimeout(function () {
-			container.find('.integration-header-info').trigger('click')
-		}, 400);
+
+	/**
+	 * Retrieves the cookie values set.
+	 */
+	function ur_get_cookie(cookie_key) {
+		var matches = document.cookie.match(
+			new RegExp(
+				"(?:^|; )" +
+					cookie_key.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
+					"=([^;]*)"
+			)
+		);
+		return matches ? decodeURIComponent(matches[1]) : undefined;
 	}
 
-	// // Auto-run captcha test on page load for captcha settings
-	// if (searchParams.has('page') && searchParams.get('page') === 'user-registration-settings' &&
-	// 	searchParams.has('tab') && searchParams.get('tab') === 'captcha') {
-	//
-	//
-	// 	setTimeout(function() {
-	// 		var captchaTypes = ['v2', 'v3', 'hCaptcha', 'cloudflare'];
-	//
-	// 		captchaTypes.forEach(function(captchaType) {
-	// 			var ur_recaptcha_node = $('.ur-captcha-test-container[data-captcha-type="' + captchaType + '"] .ur-captcha-node');
-	//
-	// 			if (ur_recaptcha_node.length > 0) {
-	// 				var siteKeyInputName;
-	// 				if (captchaType === 'v2') {
-	// 					siteKeyInputName = 'user_registration_captcha_setting_recaptcha_site_key';
-	// 				} else {
-	// 					siteKeyInputName = 'user_registration_captcha_setting_recaptcha_site_key_' + captchaType;
-	// 				}
-	// 				var siteKeyInput = $('input[name="' + siteKeyInputName + '"]');
-	// 				if (siteKeyInput.length > 0 && siteKeyInput.val() && siteKeyInput.val().trim() !== '') {
-	// 					var ur_recaptcha_code = {
-	// 						site_key: siteKeyInput.val().trim(),
-	// 						is_invisible: false,
-	// 						theme_mode: 'light'
-	// 					};
-	//
-	// 					enable_test_captcha(captchaType, ur_recaptcha_node, ur_recaptcha_code);
-	// 				}
-	// 			}
-	// 		});
-	// 	}, 1000);
-	// }
+	/**
+	 * Deletes the cookie values.
+	 */
+	function ur_remove_cookie(cookie_key) {
+		document.cookie = cookie_key + "=; Max-Age=-99999999; path=/";
+	}
 })(jQuery);

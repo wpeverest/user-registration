@@ -67,7 +67,7 @@ if ( ! class_exists( 'UR_Payment_Setting' ) ) :
 								'default'  => 'USD',
 								'type'     => 'select',
 								'class'    => 'ur-enhanced-select',
-								'css'      => 'min-width: 350px;',
+								'css'      => '',
 								'desc_tip' => true,
 								'options'  => $currencies_list,
 							),
@@ -94,12 +94,12 @@ if ( ! class_exists( 'UR_Payment_Setting' ) ) :
 
 			$settings = $this->get_settings( $current_section );
 
-			$saved_currency = get_option( 'user_registration_payment_currency', 'USD' );
+			// $saved_currency = get_option( 'user_registration_payment_currency', 'USD' );
 
-			if ( ! in_array( $saved_currency, paypal_supported_currencies_list() ) ) {
-				$currency_url = 'https://developer.paypal.com/docs/reports/reference/paypal-supported-currencies/';
-				echo '<div id="ur-currency-error" class="notice notice-warning is-dismissible"><p><strong>' . esc_html__( 'CURRENCY_NOT_SUPPORTED Currency Code :', 'user-registration' ) . '</strong> ' . esc_html( $saved_currency ) . esc_html__( ' is not currently supported by Paypal. Please Refer', 'user-registration' ) . ' <a href="' . esc_url( $currency_url ) . '" rel="noreferrer noopener" target="_blank">' . esc_html__( 'Paypal supported currencies', 'user-registration' ) . '</a></p></div>';
-			}
+			// if ( ! in_array( $saved_currency, paypal_supported_currencies_list() ) ) {
+			// 	$currency_url = 'https://developer.paypal.com/docs/reports/reference/paypal-supported-currencies/';
+			// 	echo '<div id="ur-currency-error" class="notice notice-warning is-dismissible"><p><strong>' . esc_html__( 'CURRENCY_NOT_SUPPORTED Currency Code :', 'user-registration' ) . '</strong> ' . esc_html( $saved_currency ) . esc_html__( ' is not currently supported by Paypal. Please Refer', 'user-registration' ) . ' <a href="' . esc_url( $currency_url ) . '" rel="noreferrer noopener" target="_blank">' . esc_html__( 'Paypal supported currencies', 'user-registration' ) . '</a></p></div>';
+			// }
 
 			UR_Admin_Settings::output_fields( $settings );
 			$GLOBALS['hide_save_button'] = true;

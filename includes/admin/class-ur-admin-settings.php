@@ -57,7 +57,10 @@ class UR_Admin_Settings {
 			$settings[] = include 'settings/class-ur-settings-email.php';
 			$settings[] = include 'settings/class-ur-settings-import-export.php';
 			$settings[] = include 'settings/class-ur-settings-misc.php';
-			$settings[] = include 'settings/class-ur-settings-integration.php';
+
+			if( UR_PRO_ACTIVE ) {
+				$settings[] = include 'settings/class-ur-settings-integration.php';
+			}
 
 			$modules = array();
 
@@ -100,9 +103,9 @@ class UR_Admin_Settings {
 				include_once ABSPATH . 'wp-admin/includes/plugin.php';
 			}
 
-			if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
+			// if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
 				$settings[] = include 'settings/class-ur-settings-license.php';
-			}
+			// }
 
 			/**
 			 * Filter to retrieve settings pages
@@ -135,7 +138,9 @@ class UR_Admin_Settings {
 		$flag = apply_filters( 'user_registration_settings_prevent_default_login', $_REQUEST );
 
 		if ( $flag && is_bool( $flag ) ) {
-			self::add_message( esc_html__( 'Your settings have been saved.', 'user-registration' ) );
+			if( $current_tab !== 'license' ) {
+				self::add_message( esc_html__( 'Your settings have been saved.', 'user-registration' ) );
+			}
 
 			/**
 			 * Action to save current tab settings
@@ -253,12 +258,15 @@ class UR_Admin_Settings {
 			'user_registration_settings_params',
 			array(
 				'ajax_url'                                                     => admin_url( 'admin-ajax.php' ),
+				'assets_url'												   => UR_ASSETS_URL,
+				'ur_license_nonce'											   => wp_create_nonce( '_ur_license_nonce' ),
 				'user_registration_search_global_settings_nonce'               => wp_create_nonce( 'user_registration_search_global_settings' ),
 				'user_registration_captcha_test_nonce'                         => wp_create_nonce( 'user_registration_captcha_test_nonce' ),
 				'user_registration_my_account_selection_validator_nonce'       => wp_create_nonce( 'user_registration_my_account_selection_validator' ),
 				'user_registration_lost_password_selection_validator_nonce'    => wp_create_nonce( 'user_registration_lost_password_selection_validator' ),
 				'user_registration_membership_pages_selection_validator_nonce' => wp_create_nonce( 'user_registration_validate_page_none' ),
 				'user_registration_membership_payment_settings_nonce'          => wp_create_nonce( 'user_registration_validate_payment_settings_none' ),
+				'user_registration_membership_validate_payment_currency_nonce' => wp_create_nonce( 'user_registration_validate_payment_currency' ),
 				'user_registration_membership_captcha_settings_nonce'          => wp_create_nonce( 'user_registration_validate_captcha_settings_nonce' ),
 				'i18n_nav_warning'                                             => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
 				'i18n'                                                         => array(
@@ -270,11 +278,20 @@ class UR_Admin_Settings {
 						'We apologize, but %title% is not available with the free version. To access this fantastic features, please consider upgrading to the %plan%.',
 						'user-registration'
 					),
-					'upgrade_plan'      => esc_html__( 'Upgrade Plan', 'user-registration' ),
-					'upgrade_link'      => esc_url( 'https://wpuserregistration.com/pricing/?utm_source=integration-settings&utm_medium=premium-addon-popup&utm_campaign=' . urlencode( UR()->utm_campaign ) ),
-				),
-				'is_advanced_field_active'                                     => is_plugin_active( 'user-registration-advanced-fields/user-registration-advanced-fields.php' ),
 
+					'license_activated_text' => esc_html__( 'You\'ve activated your license, great! To get all the Pro Features, we just need to install the URM Pro plugin on your website. Don\'t worry, it\'s quick and safe!', 'user-registration' ),
+					'pro_install_popup_button' => esc_html__( 'Install URM Pro Now', 'user-registration' ),
+					'pro_install_popup_title' => esc_html__( 'Install URM Pro to Unlock All Features', 'user-registration' ),
+					'will_install_and_activate_pro_text' => esc_html__( 'This will automatically install and activate the URM Pro Plugin for you.', 'user-registration' ),
+					'installing_plugin_text' => esc_html__( 'Installing Plugin', 'user-registration' ),
+					'pro_activated_success_title' => esc_html__( 'Success!', 'user-registration' ),
+					'pro_activated_success_text' => esc_html__( 'URM Pro has been successfully installed and activated. You now have access to all premium features!', 'user-registration' ),
+					'continue_to_dashboard_text' => esc_html__( 'Continue to dashboard', 'user-registration' ),
+
+					'upgrade_plan'      => esc_html__( 'Upgrade Plan', 'user-registration' ),
+					'upgrade_link'      => esc_url( 'https://wpuserregistration.com/upgrade/?utm_source=integration-settings&utm_medium=premium-addon-popup&utm_campaign=' . urlencode( UR()->utm_campaign ) ),
+				),
+				'is_advanced_field_active' => is_plugin_active( 'user-registration-advanced-fields/user-registration-advanced-fields.php' ),
 			)
 		);
 
@@ -355,7 +372,7 @@ class UR_Admin_Settings {
 						$option_value = null;
 					}
 				} else {
-					$option_value = get_option( $option_name, null );
+					$option_value = get_option( $option_name, $default );
 				}
 			}
 
@@ -433,7 +450,7 @@ class UR_Admin_Settings {
 							$settings .= '</h3>';
 
 							if ( ! empty( $section['button'] ) ) {
-								$settings .= '<a href="' . ( isset( $section['button']['button_link'] ) ? $section['button']['button_link'] : '#' ) . '" class="button button user_registration_smart_tags_used" style="min-width:90px;" target="_blank">' . ( isset( $section['button']['button_text'] ) ? $section['button']['button_text'] : '' ) . '</a>';
+								$settings .= '<a href="' . ( isset( $section['button']['button_link'] ) ? $section['button']['button_link'] : '#' ) . '" class="user_registration_smart_tags_used" style="min-width:90px;" target="_blank">' . '<span style="text-decoration: underline;">' . ( isset( $section['button']['button_text'] ) ? $section['button']['button_text'] : '' ) . '</span>' . '<span class="dashicons dashicons-external"></span>' . '</a>';
 							}
 							$settings .= '</div>';
 						}
@@ -443,6 +460,10 @@ class UR_Admin_Settings {
 						}
 
 						$settings .= '</div>';
+
+						if( ! empty( $section['before_desc'] ) ) {
+							$settings .= '<p style="font-size: 14px;">' . wptexturize( wp_kses_post( $section['before_desc'] ) ) . '</p>';
+						}
 
 						if ( ! empty( $section['desc'] ) ) {
 							$settings .= '<p class="ur-p-tag">' . wptexturize( wp_kses_post( $section['desc'] ) ) . '</p>';

@@ -54,6 +54,22 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 				'email_notification_setting'
 			), 10, 2 );
 			$this->initialize_email_classes();
+
+			$email_content_default_values = [];
+			foreach( $this->emails as $key => $email) {
+				$method_name = 'ur_get_' . $email->id;
+				//for membership, the naming convention is different.
+				if( ! method_exists( $email, $method_name ) ) {
+					$method_name = 'user_registration_get_' . $email->id;
+				}
+				$key = strtolower( $key );
+				$email_content_default_values[ $key ] = method_exists($email, $method_name) ? $email->$method_name() : '';
+			}
+			wp_localize_script(
+				'user-registration-settings',
+				'user_registration_email_settings',
+				$email_content_default_values,
+			);
 		}
 
 		/**
@@ -223,7 +239,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 //							'desc'     => __( 'Email notifications sent from user registration to the admin are listed below. Click on an email to configure it.', 'user-registration' ),
 							'button'   => array (
 								'button_link' => 'https://docs.wpuserregistration.com/docs/smart-tags/',
-								'button_text' => __( 'Smart Tags Used', 'user-registration' ),
+								'button_text' => __( 'Smart Tags Reference', 'user-registration' ),
 							),
 							'settings' => array(
 								array(
@@ -261,7 +277,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 //							'desc'     => __( 'Email notifications sent from user registration to the admin are listed below. Click on an email to configure it.', 'user-registration' ),
 							'button'   => array (
 								'button_link' => 'https://docs.wpuserregistration.com/docs/smart-tags/',
-								'button_text' => __( 'Smart Tags Used', 'user-registration' ),
+								'button_text' => __( 'Smart Tags Reference', 'user-registration' ),
 							),
 							'settings' => array(
 								array(
@@ -362,7 +378,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 				$settings .= ur_help_tip( $email->description );
 				$settings .= '</td>';
 				$settings .= '<td class="ur-email-settings-table">';
-				$label    = ( ( 'email_confirmation' === $email->id ) || ( 'passwordless_login_email' === $email->id ) ) ? esc_html__( 'Always Active', 'user-registration' ) : '<div class="ur-toggle-section"><span class="user-registration-toggle-form user-registration-email-status-toggle" ><input type="checkbox" name="email_status" id="' . esc_attr( $email->id ) . '"' . ( $status ? "checked='checked'" : '' ) . '"/><span class="slider round"></span></span></div>';
+				$label    = '<div class="ur-toggle-section"><span class="user-registration-toggle-form user-registration-email-status-toggle" ><input type="checkbox" name="email_status" id="' . esc_attr( $email->id ) . '"' . ( $status ? "checked='checked'" : '' ) . '"/><span class="slider round"></span></span></div>';
 				$settings .= '<label class="ur-email-status" style="' . ( $status ? 'color:green;font-weight:500;' : 'color:red;font-weight:500;' ) . '">';
 				$settings .= $label;
 				$settings .= '</label>';
