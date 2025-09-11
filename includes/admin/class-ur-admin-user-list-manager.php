@@ -228,21 +228,12 @@ class UR_Admin_User_List_Manager {
 	 * Display a notice to admin notifying the users registered via non URM forms.
 	 */
 	public function user_registration_non_urm_users_notices() {
-		$users = get_users( array(
-			'fields'     => 'ID',
-			'meta_query' => array(
-				array(
-					'key'     => 'ur_form_id',
-					'compare' => 'NOT EXISTS',
-				),
-			),
-		) );
-
+		$users = get_transient( 'urm_users_not_from_urm_forms' );
 		$current_screen = get_current_screen();
 		$ur_pages = ur_get_screen_ids();
 		$ur_pages[] = 'users';
 
-		$existing_non_urm_users = count( $users );
+		$existing_non_urm_users = $users ? $users : 0;
 
 		if( $existing_non_urm_users >= 5 && in_array( $current_screen->id, $ur_pages ) ) {
 			echo '<div class="notice notice-info is-dismissible">';
