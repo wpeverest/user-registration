@@ -1031,7 +1031,10 @@ if ( ! class_exists( 'User_Registration_Users_ListTable' ) ) {
 					SELECT *
 					FROM {$wpdb->usermeta} um
 					WHERE um.user_id = {$wpdb->users}.ID
-					AND um.meta_value LIKE '{$search_like}'
+					AND (
+						(um.meta_key IN ('first_name','last_name') AND um.meta_value LIKE '{$search_like}')
+						OR (um.meta_key LIKE 'user_registration\_%' AND um.meta_value LIKE '{$search_like}')
+					)
 				)";
 			}
 
