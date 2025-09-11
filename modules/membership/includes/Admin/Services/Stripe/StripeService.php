@@ -892,11 +892,6 @@ class StripeService {
 				'success' => false,
 				'message' => $ex->getMessage(),
 			);
-		} catch ( Exception $ex ) {
-			return array(
-				'success' => false,
-				'message' => $ex->getMessage(),
-			);
 		}
 	}
 
