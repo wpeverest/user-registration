@@ -974,15 +974,15 @@ function request_recaptcha_token() {
 			if (grecaptchaObj && grecaptchaObj.ready && grecaptchaObj.execute) {
 				grecaptchaObj.ready(function () {
 					grecaptchaObj
-					.execute(ur_recaptcha_code.site_key, {
-						action: "register",
-					})
-					.then(function (token) {
-						jQuery("form.register")
-							.find("#g-recaptcha-response")
-							.text(token);
-					});
-			});
+						.execute(ur_recaptcha_code.site_key, {
+							action: "register",
+						})
+						.then(function (token) {
+							jQuery("form.register")
+								.find("#g-recaptcha-response")
+								.text(token);
+						});
+				});
 			}
 		}
 	}
@@ -998,15 +998,15 @@ function request_recaptcha_token() {
 			if (grecaptchaObj && grecaptchaObj.ready && grecaptchaObj.execute) {
 				grecaptchaObj.ready(function () {
 					grecaptchaObj
-					.execute(ur_recaptcha_code.site_key, {
-						action: "login",
-					})
-					.then(function (token) {
-						jQuery("form.login")
-							.find("#g-recaptcha-response")
-							.text(token);
-					});
-			});
+						.execute(ur_recaptcha_code.site_key, {
+							action: "login",
+						})
+						.then(function (token) {
+							jQuery("form.login")
+								.find("#g-recaptcha-response")
+								.text(token);
+						});
+				});
 			}
 		}
 	}
@@ -1022,15 +1022,16 @@ function request_recaptcha_token() {
 			if (grecaptchaObj && grecaptchaObj.ready && grecaptchaObj.execute) {
 				grecaptchaObj.ready(function () {
 					grecaptchaObj
-					.execute(ur_recaptcha_code.site_key, {
-						action: "lost_password",
-					})
-					.then(function (token) {
-						jQuery("form.ur_lost_reset_password")
-							.find("#g-recaptcha-response")
-							.text(token);
-					});
-			});
+						.execute(ur_recaptcha_code.site_key, {
+							action: "lost_password",
+						})
+						.then(function (token) {
+							jQuery("form.ur_lost_reset_password")
+								.find("#g-recaptcha-response")
+								.text(token);
+						});
+				});
+			}
 		}
 	}
 }
