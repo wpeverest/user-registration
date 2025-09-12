@@ -53,8 +53,8 @@ if ( ! class_exists( 'UR_Settings_Captcha' ) ) :
 			update_option( 'user_registration_captcha_setting_recaptcha_version', $setting_id );
 		}
 
-		// Mark captcha as connected after successful save
-		update_option( 'user_registration_captcha_setting_' . $setting_id . '_connection_status', true );
+		// Mark captcha as enabled/connected after successful save
+		update_option( 'user_registration_captcha_setting_recaptcha_enable_' . $setting_id, true );
 	}
 
 		/**
@@ -253,7 +253,7 @@ if ( ! class_exists( 'UR_Settings_Captcha' ) ) :
 					'title'         => 'reCAPTCHA v2',
 					'type'          => 'accordian',
 					'id'            => 'v2',
-					'is_connected'  => get_option( 'user_registration_captcha_setting_v2_connection_status', false ),
+					'is_connected'  => get_option( 'user_registration_captcha_setting_recaptcha_enable_v2', false ),
 					'settings'      => array(
 //						array(
 //							'title'    => __( 'Enable reCAPTCHA v2', 'user-registration' ),
@@ -343,7 +343,7 @@ if ( ! class_exists( 'UR_Settings_Captcha' ) ) :
 					'type'          => 'accordian',
 					'settings_type' => 'captcha',
 					'id'            => 'v3',
-					'is_connected'  => get_option( 'user_registration_captcha_setting_v3_connection_status', false ),
+					'is_connected'  => get_option( 'user_registration_captcha_setting_recaptcha_enable_v3', false ),
 					'settings'      => array(
 //						array(
 //							'title'    => __( 'Enable reCAPTCHA v3', 'user-registration' ),
@@ -413,7 +413,7 @@ if ( ! class_exists( 'UR_Settings_Captcha' ) ) :
 					'type'          => 'accordian',
 					'settings_type' => 'captcha',
 					'id'            => 'hCaptcha',
-					'is_connected'  => get_option( 'user_registration_captcha_setting_hCaptcha_connection_status', false ),
+					'is_connected'  => get_option( 'user_registration_captcha_setting_recaptcha_enable_hCaptcha', false ),
 					'settings'      => array(
 //						array(
 //							'title'    => __( 'Enable hCaptcha', 'user-registration' ),
@@ -470,7 +470,7 @@ if ( ! class_exists( 'UR_Settings_Captcha' ) ) :
 					'type'          => 'accordian',
 					'settings_type' => 'captcha',
 					'id'            => 'cloudflare',
-					'is_connected'  => get_option( 'user_registration_captcha_setting_cloudflare_connection_status', false ),
+					'is_connected'  => get_option( 'user_registration_captcha_setting_recaptcha_enable_cloudflare', false ),
 					'settings'      => array(
 //						array(
 //							'title'    => __( 'Enable Cloudflare Turnstile', 'user-registration' ),
