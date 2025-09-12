@@ -154,12 +154,16 @@
 
 	.swal2-header {
 		.swal2-icon {
-			width: 56px;
-			height: 56px;
+			width: 28px;
+			height: 28px;
 			line-height: 56px;
-			margin: 0 auto 16px;
+			margin: 0 auto;
 			border-width: 2px;
 			border-radius: 50%;
+
+			&-content {
+				font-size: 20px;
+			}
 
 			.swal2-x-mark {
 				& [class^="swal2-x-mark-line"] {
@@ -307,6 +311,12 @@
 			.swal2-header {
 				padding: $spacing_20px;
 
+				gap: $spacing_12px;
+				border-bottom: $border_width solid $border-color;
+				margin-bottom: $spacing_20px;
+				padding-bottom: $spacing_16px;
+				flex-direction: row;
+
 				.swal2-title {
 					display: flex !important;
 					align-items: center;
@@ -315,6 +325,10 @@
 					padding-bottom: $spacing_16px;
 					width: 100%;
 					margin-bottom: 0;
+
+					flex: 1;
+					border-bottom: 0;
+					padding-bottom: 0;
 
 					.dashicons {
 						font-size: 18px;
@@ -348,6 +362,11 @@
 					> div {
 						border-radius: $spacing_8px;
 						overflow: hidden;
+
+						&.ur-embed-new-page-container,
+						&.ur-embed-select-existing-page-container {
+							justify-content: flex-start;
+						}
 					}
 
 					.action-buttons {
@@ -404,8 +423,8 @@
 				}
 
 				.swal2-confirm {
-					background: #ff4149;
-					border-color: #ff4149;
+					background: $primary_color;
+					border-color: $primary_color;
 				}
 
 				.swal2-cancel {
@@ -424,6 +443,15 @@
 				}
 
 			}
+		}
+	}
+}
+
+.user-registration-trashed {
+	.swal2-actions {
+		.swal2-confirm {
+			background: #ff4149;
+			border-color: #ff4149;
 		}
 	}
 }
