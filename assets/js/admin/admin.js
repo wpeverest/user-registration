@@ -44,6 +44,7 @@ jQuery(function ($) {
 		} else {
 			$(".ur-fields-not-found").show();
 		}
+		$(this).closest(".ur-tab-contents").scrollTop(0);
 	});
 
 	//Bind UI Actions for locked fields
