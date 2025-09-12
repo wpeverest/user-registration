@@ -454,7 +454,7 @@ class UR_Admin {
 			return $response;
 		}
 
-		if( get_transient( 'urm_users_not_from_urm_forms' ) ) {
+		if( false === get_transient( 'urm_users_not_from_urm_forms' ) ) {
 			// Get users not registered via URM forms.
 			$urm_users_not_from_urm_forms = count( get_users( array(
 				'fields'     => 'ID',
