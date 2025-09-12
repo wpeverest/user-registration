@@ -255,17 +255,6 @@ if ( ! class_exists( 'UR_Settings_Captcha' ) ) :
 					'id'            => 'v2',
 					'is_connected'  => get_option( 'user_registration_captcha_setting_recaptcha_enable_v2', false ),
 					'settings'      => array(
-//						array(
-//							'title'    => __( 'Enable reCAPTCHA v2', 'user-registration' ),
-//							/* translators: %1$s - hCaptcha docs url */
-//							'desc'     => __( 'Enable v2 for the site.', 'user-registration' ), //phpcs:ignore
-//							'id'       => 'user_registration_captcha_setting_recaptcha_enable_v2',
-//							'default'  => '',
-//							'type'     => 'toggle',
-//							'class'    => 'ur-captcha-enable',
-//							'css'      => 'min-width: 350px;',
-//							'desc_tip' => true,
-//						),
 						array(
 							'title'    => __( 'Site Key (reCAPTCHA v2)', 'user-registration' ),
 							/* translators: %1$s - Google reCAPTCHA docs url */
@@ -273,7 +262,6 @@ if ( ! class_exists( 'UR_Settings_Captcha' ) ) :
 							'id'       => 'user_registration_captcha_setting_recaptcha_site_key',
 							'default'  => '',
 							'type'     => 'text',
-							// 'is_visible' => 'v2' === $recaptcha_type && 'no' === $invisible,
 							'class'    => '',
 							'css'      => 'min-width: 350px;',
 							'desc_tip' => true,
@@ -345,17 +333,6 @@ if ( ! class_exists( 'UR_Settings_Captcha' ) ) :
 					'id'            => 'v3',
 					'is_connected'  => get_option( 'user_registration_captcha_setting_recaptcha_enable_v3', false ),
 					'settings'      => array(
-//						array(
-//							'title'    => __( 'Enable reCAPTCHA v3', 'user-registration' ),
-//							/* translators: %1$s - recaptchav3 docs url */
-//							'desc'     => __( 'Enable reCAPTCHA v3 for the site.', 'user-registration' ), //phpcs:ignore
-//							'id'       => 'user_registration_captcha_setting_recaptcha_enable_v3',
-//							'default'  => '',
-//							'type'     => 'toggle',
-//							'class'    => 'ur-captcha-enable',
-//							'css'      => 'min-width: 350px;',
-//							'desc_tip' => true,
-//						),
 						array(
 							'title'    => __( 'Site Key (reCAPTCHA v3)', 'user-registration' ),
 							/* translators: %1$s - Google reCAPTCHA docs url */
@@ -415,17 +392,6 @@ if ( ! class_exists( 'UR_Settings_Captcha' ) ) :
 					'id'            => 'hCaptcha',
 					'is_connected'  => get_option( 'user_registration_captcha_setting_recaptcha_enable_hCaptcha', false ),
 					'settings'      => array(
-//						array(
-//							'title'    => __( 'Enable hCaptcha', 'user-registration' ),
-//							/* translators: %1$s - hCaptcha docs url */
-//							'desc'     => __( 'Enable hCaptcha for the site.', 'user-registration' ), //phpcs:ignore
-//							'id'       => 'user_registration_captcha_setting_recaptcha_enable_hcaptcha',
-//							'default'  => '',
-//							'type'     => 'toggle',
-//							'class'    => 'ur-captcha-enable',
-//							'css'      => 'min-width: 350px;',
-//							'desc_tip' => true,
-//						),
 						array(
 							'title'    => __( 'Site Key (hCaptcha)', 'user-registration' ),
 							/* translators: %1$s - hCaptcha docs url */
@@ -472,18 +438,6 @@ if ( ! class_exists( 'UR_Settings_Captcha' ) ) :
 					'id'            => 'cloudflare',
 					'is_connected'  => get_option( 'user_registration_captcha_setting_recaptcha_enable_cloudflare', false ),
 					'settings'      => array(
-//						array(
-//							'title'    => __( 'Enable Cloudflare Turnstile', 'user-registration' ),
-//							/* translators: %1$s - hCaptcha docs url */
-//							'desc'     => __( 'Enable Cloudflare Turnstile for the site.', 'user-registration' ),
-//							//phpcs:ignore
-//							'id'       => 'user_registration_captcha_setting_recaptcha_enable_cloudflare',
-//							'default'  => '',
-//							'type'     => 'toggle',
-//							'class'    => 'ur-captcha-enable',
-//							'css'      => 'min-width: 350px;',
-//							'desc_tip' => true,
-//						),
 						array(
 							'title'    => __( 'Site Key (Cloudflare Turnstile)', 'user-registration' ),
 							/* translators: %1$s - Cloudflare Turnstile docs url */
