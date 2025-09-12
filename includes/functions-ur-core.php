@@ -1972,9 +1972,12 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false, $form_id =
 	}
 
 	if ( $recaptcha_enabled ) {
-
-	wp_enqueue_script( 'ur-recaptcha' );
-	wp_enqueue_script( $enqueue_script );
+		// Don't enqueue scripts for test_captcha context (admin settings)
+		// Admin settings will handle script loading via JavaScript
+		if ( 'test_captcha' !== $context ) {
+			wp_enqueue_script( 'ur-recaptcha' );
+			wp_enqueue_script( $enqueue_script );
+		}
 
 	$ur_recaptcha_code = array(
 		'site_key'          => $recaptcha_site_key,
@@ -1983,7 +1986,7 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false, $form_id =
 		'is_invisible'      => $invisible_recaptcha,
 		'theme_mode'        => $theme_mod,
 	);
-	$ur_recaptcha_slug = "ur_" . $recaptcha_type . "_recaptcha_code";
+	$ur_recaptcha_slug = "ur_" . strtolower($recaptcha_type) . "_recaptcha_code";
 	if ( $recaptcha_type === "v2" ) {
 		$ur_recaptcha_slug = "ur_recaptcha_code";
 	}

@@ -1228,302 +1228,287 @@
 					}
 				} else {
 					$this.find('.ur-spinner').remove();
-					show_failure_message(response.responseJSON.data.message);
+					show_failure_message(response.data.message);
 				}
 
 			}
 		});
 	}
 
+	// Initialize widget tracking arrays for each captcha type
+	if (typeof window.ur_captcha_widgets === 'undefined') {
+		window.ur_captcha_widgets = {
+			recaptcha: [],
+			hcaptcha: [],
+			turnstile: []
+		};
+	}
+
+	// Extend the existing onloadURCallback to handle admin settings widgets
+	var originalOnloadURCallback = window.onloadURCallback;
+	window.onloadURCallback = function() {
+		// Call the original callback first
+		if (typeof originalOnloadURCallback === 'function') {
+			originalOnloadURCallback();
+		}
+
+		// Only render captchas if there are elements to render (not on page load)
+		var captchaElements = document.querySelectorAll(".g-recaptcha[data-captcha-type='v2'], .g-recaptcha-hcaptcha, .cf-turnstile");
+		if (captchaElements.length === 0) {
+			return;
+		}
+
+		// Add a small delay to ensure scripts are fully loaded
+		setTimeout(function() {
+			renderAdminCaptchas();
+		}, 100);
+	};
+
+	// Function to render admin captchas with proper error handling
+	function renderAdminCaptchas() {
+		// Handle admin settings widgets
+		Array.prototype.forEach.call(document.querySelectorAll(".g-recaptcha[data-captcha-type='v2']"), function (el) {
+			if (typeof grecaptcha !== 'undefined' && grecaptcha.ready && !el.hasAttribute('data-rendered')) {
+				var siteKey = el.getAttribute('data-site-key');
+				if (siteKey && siteKey.trim() !== '') {
+					// Use grecaptcha.ready to ensure it's fully loaded
+					grecaptcha.ready(function() {
+						if (typeof grecaptcha.render === 'function') {
+							try {
+								var widgetId = grecaptcha.render(el, {
+									sitekey: siteKey,
+									theme: "light",
+									style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"
+								});
+								el.setAttribute('data-rendered', 'true');
+								if (typeof window.ur_captcha_widgets !== 'undefined') {
+									window.ur_captcha_widgets.recaptcha.push(widgetId);
+								}
+							} catch (error) {
+								setTimeout(function() {
+									if (!el.hasAttribute('data-rendered')) {
+										renderAdminCaptchas();
+									}
+								}, 500);
+							}
+						} else {
+							// grecaptcha.render is not available, retry after delay
+							setTimeout(function() {
+								if (!el.hasAttribute('data-rendered')) {
+									renderAdminCaptchas();
+								}
+							}, 500);
+						}
+					});
+				}
+			} else if (typeof grecaptcha === 'undefined' || !grecaptcha.ready) {
+				// reCAPTCHA not loaded yet, retry after delay
+				setTimeout(function() {
+					if (!el.hasAttribute('data-rendered')) {
+						renderAdminCaptchas();
+					}
+				}, 500);
+			}
+		});
+
+		Array.prototype.forEach.call(document.querySelectorAll(".g-recaptcha-hcaptcha"), function (el) {
+			if (typeof hcaptcha !== 'undefined' && !el.hasAttribute('data-rendered')) {
+				var siteKey = el.getAttribute('data-site-key');
+				if (siteKey && siteKey.trim() !== '') {
+					var widgetId = hcaptcha.render(el, {
+						sitekey: siteKey,
+						theme: "light",
+						style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"
+					});
+					el.setAttribute('data-rendered', 'true');
+					if (typeof window.ur_captcha_widgets !== 'undefined') {
+						window.ur_captcha_widgets.hcaptcha.push(widgetId);
+					}
+				}
+			}
+		});
+
+		Array.prototype.forEach.call(document.querySelectorAll(".cf-turnstile"), function (el) {
+			if (typeof turnstile !== 'undefined' && !el.hasAttribute('data-rendered')) {
+				var siteKey = el.getAttribute('data-site-key');
+				if (siteKey && siteKey.trim() !== '') {
+					var widgetId = turnstile.render(el, {
+						sitekey: siteKey,
+						theme: el.getAttribute('data-theme') || "light",
+						style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"
+					});
+					el.setAttribute('data-rendered', 'true');
+					if (typeof window.ur_captcha_widgets !== 'undefined') {
+						window.ur_captcha_widgets.turnstile.push(widgetId);
+					}
+				}
+			}
+		});
+	};
+
 	function enable_test_captcha(setting_id, urm_recaptcha_node, captcha_config) {
+		// Clear any existing captcha scripts to prevent conflicts
+		var clearExistingCaptchaScripts = function() {
+			// Remove existing captcha scripts
+			var scriptsToRemove = [
+				'script[src*="google.com/recaptcha/api.js"]',
+				'script[src*="hcaptcha.com/1/api.js"]',
+				'script[src*="challenges.cloudflare.com/turnstile/v0/api.js"]'
+			];
+
+			scriptsToRemove.forEach(function(selector) {
+				var scripts = document.querySelectorAll(selector);
+				scripts.forEach(function(script) {
+					script.remove();
+				});
+			});
+
+			// Clear global variables to prevent conflicts
+			// hCaptcha and reCAPTCHA both use grecaptcha, so we need to clear it
+			if (typeof window.grecaptcha !== 'undefined') {
+				delete window.grecaptcha;
+			}
+			if (typeof window.hcaptcha !== 'undefined') {
+				delete window.hcaptcha;
+			}
+			if (typeof window.turnstile !== 'undefined') {
+				delete window.turnstile;
+			}
+		};
+
 		// Clear all existing captcha widgets first
 		var clearAllCaptchaWidgets = function() {
-			// Remove all existing captcha widgets
 			urm_recaptcha_node.find('.g-recaptcha, .g-recaptcha-hcaptcha, .cf-turnstile').remove();
 
-			// Reset any existing captcha services
-			if (typeof grecaptcha !== 'undefined' && grecaptcha.reset) {
-				try {
-					grecaptcha.reset();
-				} catch (e) {
-					// Ignore reset errors
+			urm_recaptcha_node.find('[data-rendered]').removeAttr('data-rendered');
+
+			if (typeof window.ur_captcha_widgets !== 'undefined') {
+				// Reset reCAPTCHA widgets
+				if (window.ur_captcha_widgets.recaptcha && window.ur_captcha_widgets.recaptcha.length > 0) {
+					window.ur_captcha_widgets.recaptcha.forEach(function(widgetId) {
+						if (typeof grecaptcha !== 'undefined' && grecaptcha.reset) {
+							try {
+								grecaptcha.reset(widgetId);
+							} catch (e) {
+								// Ignore reset errors
+							}
+						}
+					});
+					window.ur_captcha_widgets.recaptcha = [];
 				}
-			}
-			if (typeof hcaptcha !== 'undefined' && hcaptcha.reset) {
-				try {
-					hcaptcha.reset();
-				} catch (e) {
-					// Ignore reset errors
+
+				// Reset hCaptcha widgets
+				if (window.ur_captcha_widgets.hcaptcha && window.ur_captcha_widgets.hcaptcha.length > 0) {
+					window.ur_captcha_widgets.hcaptcha.forEach(function(widgetId) {
+						if (typeof hcaptcha !== 'undefined' && hcaptcha.reset) {
+							try {
+								hcaptcha.reset(widgetId);
+							} catch (e) {
+								// Ignore reset errors
+							}
+						}
+					});
+					window.ur_captcha_widgets.hcaptcha = [];
 				}
-			}
-			if (typeof turnstile !== 'undefined' && turnstile.reset) {
-				try {
-					turnstile.reset();
-				} catch (e) {
-					// Ignore reset errors
+
+				// Reset Turnstile widgets
+				if (window.ur_captcha_widgets.turnstile && window.ur_captcha_widgets.turnstile.length > 0) {
+					window.ur_captcha_widgets.turnstile.forEach(function(widgetId) {
+						if (typeof turnstile !== 'undefined' && turnstile.reset) {
+							try {
+								turnstile.reset(widgetId);
+							} catch (e) {
+								// Ignore reset errors
+							}
+						}
+					});
+					window.ur_captcha_widgets.turnstile = [];
 				}
 			}
 		};
 
-		// Ensure captcha scripts are loaded before proceeding
+		// Check if captcha script is loaded and execute callback
 		var loadCaptchaScript = function(captchaType, callback) {
-			var scriptHandle = '';
-			var scriptUrl = '';
 			var globalVarName = '';
 
 			if (captchaType === 'hCaptcha') {
-				scriptHandle = 'ur-recaptcha-hcaptcha';
-				scriptUrl = 'https://hcaptcha.com/1/api.js?onload=onloadURCallback&render=explicit';
 				globalVarName = 'hcaptcha';
 			} else if (captchaType === 'cloudflare') {
-				scriptHandle = 'ur-recaptcha-cloudflare';
-				scriptUrl = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadURCallback';
 				globalVarName = 'turnstile';
-			} else {
-				scriptHandle = 'ur-google-recaptcha';
-				scriptUrl = 'https://www.google.com/recaptcha/api.js?onload=onloadURCallback&render=explicit';
+			} else if (captchaType === 'v2') {
+				globalVarName = 'grecaptcha';
+			} else if (captchaType === 'v3') {
 				globalVarName = 'grecaptcha';
 			}
 
-			// Check if script is already loaded
 			if (typeof window[globalVarName] !== 'undefined') {
 				callback();
 				return;
 			}
 
-			// Load script dynamically
-			var script = document.createElement('script');
-			script.src = scriptUrl;
-			script.onload = function() {
-				// Wait a bit for the script to initialize
-				setTimeout(callback, 100);
+			var checkLoaded = function(attempts) {
+				attempts = attempts || 0;
+				if (typeof window[globalVarName] !== 'undefined') {
+					callback();
+				} else if (attempts < 30) { // Wait up to 3 seconds
+					setTimeout(function() {
+						checkLoaded(attempts + 1);
+					}, 100);
+				} else {
+					var scriptUrl = '';
+					if (captchaType === 'hCaptcha') {
+						scriptUrl = 'https://hcaptcha.com/1/api.js?onload=onloadURHcaptchaCallback&render=explicit';
+					} else if (captchaType === 'cloudflare') {
+						scriptUrl = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadURTurnstileCallback';
+					} else if (captchaType === 'v2') {
+						scriptUrl = 'https://www.google.com/recaptcha/api.js?onload=onloadURRecaptchaCallback&render=explicit';
+					} else if (captchaType === 'v3') {
+						scriptUrl = 'https://www.google.com/recaptcha/api.js?render=explicit';
+					}
+
+					var script = document.createElement('script');
+					script.src = scriptUrl;
+					script.onload = function() {
+						setTimeout(callback, 100);
+					};
+					script.onerror = function() {
+						callback();
+					};
+					document.head.appendChild(script);
+				}
 			};
-			document.head.appendChild(script);
+			checkLoaded();
 		};
+
+		clearExistingCaptchaScripts();
+
+		clearAllCaptchaWidgets();
+
+		var widget_class = '';
+		var captcha_type = setting_id;
 
 		switch (setting_id) {
 			case "v2":
-				console.log(grecaptcha)
-				// Check the actual captcha type from the configuration
-				var captcha_type = setting_id
-				var widget_selector = ".g-recaptcha";
-				var captcha_service = grecaptcha;
-
-				if (captcha_type === "hCaptcha") {
-					widget_selector = ".g-recaptcha-hcaptcha";
-					captcha_service = hcaptcha;
-				} else if (captcha_type === "cloudflare") {
-					widget_selector = ".cf-turnstile";
-					captcha_service = turnstile;
-				}
-
-				// Clear all existing captcha widgets first
-				clearAllCaptchaWidgets();
-
-				// Load the appropriate captcha script first
-				loadCaptchaScript(captcha_type, function() {
-					// Ensure the captcha service is available
-					if (typeof captcha_service === 'undefined') {
-						display_captcha_test_status(
-							'Captcha service not available',
-							"error",
-							setting_id
-						);
-						return;
-					}
-
-					// Create a fresh widget for the current captcha type
-					var widget_id = 'captcha_widget_' + Date.now();
-					var new_widget = $('<div class="' + widget_selector.substring(1) + '"></div>').attr('id', widget_id);
-					urm_recaptcha_node.append(new_widget);
-
-					var captcha_widget;
-					if (captcha_type === "hCaptcha") {
-						captcha_widget = hcaptcha.render(
-							widget_id || urm_recaptcha_node.find(widget_selector).attr("id"),
-							{
-								sitekey: captcha_config.site_key,
-								theme: "light",
-								style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"
-							}
-						);
-					} else if (captcha_type === "cloudflare") {
-						captcha_widget = turnstile.render(
-							"#" + (widget_id || urm_recaptcha_node.find(widget_selector).attr("id")),
-							{
-								sitekey: captcha_config.site_key,
-								theme: captcha_config.theme_mode || "light",
-								style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"
-							}
-						);
-					} else {
-						// Default to Google reCAPTCHA v2
-						captcha_widget = grecaptcha.render(
-							widget_id || urm_recaptcha_node.find(widget_selector).attr("id"),
-							{
-								sitekey: captcha_config.site_key,
-								theme: "light",
-								style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"
-							}
-						);
-					}
-
-					if (
-						false !==
-						captcha_config.is_invisible
-					) {
-						if (captcha_type === "hCaptcha") {
-							hcaptcha
-								.execute(captcha_widget)
-								.then(function (token) {
-									if (null !== token) {
-										display_captcha_test_status(
-											user_registration_settings_params
-												.i18n
-												.captcha_failed,
-											"error",
-											setting_id
-										);
-										return;
-									} else {
-										display_captcha_test_status(
-											user_registration_settings_params
-												.i18n
-												.captcha_success,
-											"success",
-											setting_id
-										);
-									}
-								});
-						} else if (captcha_type === "cloudflare") {
-							turnstile
-								.execute(captcha_widget)
-								.then(function (token) {
-									if (null !== token) {
-										display_captcha_test_status(
-											user_registration_settings_params
-												.i18n
-												.captcha_failed,
-											"error",
-											setting_id
-										);
-										return;
-									} else {
-										display_captcha_test_status(
-											user_registration_settings_params
-												.i18n
-												.captcha_success,
-											"success",
-											setting_id
-										);
-									}
-								});
-						} else {
-							grecaptcha
-								.execute(captcha_widget)
-								.then(function (token) {
-									if (null !== token) {
-										display_captcha_test_status(
-											user_registration_settings_params
-												.i18n
-												.captcha_failed,
-											"error",
-											setting_id
-										);
-										return;
-									} else {
-										display_captcha_test_status(
-											user_registration_settings_params
-												.i18n
-												.captcha_success,
-											"success",
-											setting_id
-										);
-									}
-								});
-						}
-					}
-				});
+				widget_class = 'g-recaptcha';
+				captcha_type = 'v2';
 				break;
-
 			case "hCaptcha":
-				// Clear all existing captcha widgets first
-				clearAllCaptchaWidgets();
-
-
-				// Load hCaptcha script first
-				loadCaptchaScript('hCaptcha', function() {
-					// Ensure hCaptcha is available
-					if (typeof hcaptcha === 'undefined') {
-						display_captcha_test_status(
-							'hCaptcha service not available',
-							"error",
-							setting_id
-						);
-						return;
-					}
-
-					// Create a fresh hCaptcha widget
-					var widget_id = 'hcaptcha_widget_' + Date.now();
-					var new_widget = $('<div class="g-recaptcha-hcaptcha"></div>').attr('id', widget_id);
-					urm_recaptcha_node.append(new_widget);
-
-					var hcaptcha_widget = hcaptcha.render(
-						widget_id || urm_recaptcha_node.find(".g-recaptcha-hcaptcha").attr("id"),
-						{
-							sitekey: captcha_config.site_key,
-							theme: "light",
-							style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"
-						}
-					);
-
-					if (
-						false !==
-						captcha_config.is_invisible
-					) {
-						hcaptcha
-							.execute(hcaptcha_widget)
-							.then(function (token) {
-								if (null !== token) {
-									display_captcha_test_status(
-										user_registration_settings_params
-											.i18n
-											.captcha_failed,
-										"error",
-										setting_id
-									);
-									return;
-								} else {
-									display_captcha_test_status(
-										user_registration_settings_params
-											.i18n
-											.captcha_success,
-										"success",
-										setting_id
-									);
-								}
-							});
-					}
-				});
+				widget_class = 'g-recaptcha-hcaptcha';
+				captcha_type = 'hCaptcha';
 				break;
-
+			case "cloudflare":
+				widget_class = 'cf-turnstile';
+				captcha_type = 'cloudflare';
+				break;
 			case "v3":
 				urm_recaptcha_node.empty();
-
 				if (typeof grecaptcha !== 'undefined' && grecaptcha.ready) {
 					grecaptcha.ready(function() {
 						try {
-							grecaptcha
-								.execute(
-									captcha_config.site_key,
-									{
-										action: "click"
-									}
-								)
+							grecaptcha.execute(captcha_config.site_key, { action: "click" })
 								.then(function (d) {
 									display_captcha_test_status(
-										user_registration_settings_params
-											.i18n.captcha_success,
+										user_registration_settings_params.i18n.captcha_success,
 										"success",
 										setting_id
 									);
@@ -1544,68 +1529,66 @@
 						}
 					});
 				} else {
-					display_captcha_test_status(
-						'grecaptcha not loaded',
-						"error",
-						setting_id
-					);
-				}
-				break;
-
-			case "hCaptcha":
-
-				var existing_hcaptcha_widget = urm_recaptcha_node.find(".g-recaptcha-hcaptcha");
-				var hcaptcha_widget_id = null;
-				if (existing_hcaptcha_widget.length > 0) {
-					hcaptcha_widget_id = existing_hcaptcha_widget.attr("id");
-					if (hcaptcha_widget_id && typeof hcaptcha !== 'undefined' && hcaptcha.reset) {
-						try {
-							hcaptcha.reset(hcaptcha_widget_id);
-						} catch (e) {
-							var new_hcaptcha_widget_id = hcaptcha_widget_id + '_' + Date.now();
-							var new_hcaptcha_widget = $('<div class="g-recaptcha-hcaptcha"></div>').attr('id', new_hcaptcha_widget_id);
-							existing_hcaptcha_widget.replaceWith(new_hcaptcha_widget);
-							hcaptcha_widget_id = new_hcaptcha_widget_id;
+					// Load reCAPTCHA v3 script directly (v3 needs site key in URL)
+					var v3ScriptUrl = 'https://www.google.com/recaptcha/api.js?render=' + captcha_config.site_key;
+					var script = document.createElement('script');
+					script.src = v3ScriptUrl;
+					script.onload = function() {
+						if (typeof grecaptcha !== 'undefined' && grecaptcha.ready) {
+							grecaptcha.ready(function() {
+								try {
+									grecaptcha.execute(captcha_config.site_key, { action: "click" })
+										.then(function (d) {
+											display_captcha_test_status(
+												user_registration_settings_params.i18n.captcha_success,
+												"success",
+												setting_id
+											);
+										})
+										.catch(function(err) {
+											display_captcha_test_status(
+												err.message || 'Invalid site key',
+												"error",
+												setting_id
+											);
+										});
+								} catch (err) {
+									display_captcha_test_status(
+										err.message || 'Invalid site key',
+										"error",
+										setting_id
+									);
+								}
+							});
+						} else {
+							display_captcha_test_status('grecaptcha not loaded', "error", setting_id);
 						}
-					}
+					};
+					script.onerror = function() {
+						display_captcha_test_status('Failed to load reCAPTCHA v3 script', "error", setting_id);
+					};
+					document.head.appendChild(script);
 				}
-
-				google_recaptcha_login = hcaptcha.render(
-					hcaptcha_widget_id || urm_recaptcha_node.find(".g-recaptcha-hcaptcha").attr("id"),
-					{
-						sitekey: captcha_config.site_key,
-						theme: "light",
-						"error-callback": function (e) {
-						},
-						style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"
-					}
-				);
-				break;
-
-			case "cloudflare":
-				urm_recaptcha_node.empty();
-				var turnstile_widget_id = 'cf-turnstile_' + Date.now();
-				var new_turnstile_widget = $('<div class="cf-turnstile"></div>').attr('id', turnstile_widget_id);
-				urm_recaptcha_node.append(new_turnstile_widget);
-
-				try {
-					turnstile.render(
-						"#" + turnstile_widget_id,
-						{
-							sitekey: captcha_config.site_key,
-							theme: captcha_config.theme_mode,
-							style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"
-						}
-					);
-				} catch (err) {
-					display_captcha_test_status(
-						err.message,
-						"error",
-						setting_id
-					);
-				}
-				break;
+				return;
 		}
+
+		loadCaptchaScript(captcha_type, function() {
+			var widget_id = captcha_type + '_widget_' + Date.now();
+			var new_widget = $('<div class="' + widget_class + '"></div>')
+				.attr('id', widget_id)
+				.attr('data-site-key', captcha_config.site_key)
+				.attr('data-captcha-type', captcha_type);
+
+			if (captcha_type === 'cloudflare') {
+				new_widget.attr('data-theme', captcha_config.theme_mode || 'light');
+			}
+
+			urm_recaptcha_node.append(new_widget);
+
+			if (typeof window.onloadURCallback === 'function') {
+				window.onloadURCallback();
+			}
+		});
 	}
 
 

@@ -278,7 +278,7 @@ class UR_Frontend_Scripts {
 				'version' => UR_VERSION,
 			),
 			'ur-google-recaptcha'        => array(
-				'src'     => 'https://www.google.com/recaptcha/api.js?onload=onloadURCallback&render=explicit',
+				'src'     => 'https://www.google.com/recaptcha/api.js?onload=onloadURRecaptchaCallback&render=explicit',
 				'deps'    => array(),
 				'version' => '2.0.0',
 			),
@@ -293,7 +293,7 @@ class UR_Frontend_Scripts {
 				'version' => UR_VERSION,
 			),
 			'ur-recaptcha-cloudflare'    => array(
-				'src'     => 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadURCallback',
+				'src'     => 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadURTurnstileCallback',
 				'deps'    => array(),
 				'version' => '',
 			),

@@ -511,7 +511,7 @@ class UR_Admin_Assets {
 
 		wp_register_script(
 			'ur-google-recaptcha',
-			'https://www.google.com/recaptcha/api.js?onload=onloadURCallback&render=explicit',
+			'https://www.google.com/recaptcha/api.js?onload=onloadURRecaptchaCallback&render=explicit', 
 			array(),
 			'2.0.0'
 		);
@@ -527,14 +527,14 @@ class UR_Admin_Assets {
 
 		wp_register_script(
 			'ur-recaptcha-hcaptcha',
-			'https://hcaptcha.com/1/api.js?onload=onloadURCallback&render=explicit',
+			'https://hcaptcha.com/1/api.js?onload=onloadURHcaptchaCallback&render=explicit',
 			array(),
 			UR_VERSION
 		);
 
 		wp_register_script(
 			'ur-recaptcha-cloudflare',
-			'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadURCallback',
+			'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadURTurnstileCallback',
 			array(),
 			UR_VERSION
 		);
