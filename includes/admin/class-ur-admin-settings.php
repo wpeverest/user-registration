@@ -203,8 +203,12 @@ class UR_Admin_Settings {
 	 *
 	 * @param string $text Text.
 	 */
-	public static function add_error( $text ) {
-		self::$errors[] = $text;
+	public static function add_error( $text, $type = '' ) {
+		if( ! empty( $type ) ) {
+			self::$errors[ $type ] = $text;
+		} else {
+			self::$errors[] = $text;
+		}
 	}
 
 	/**
@@ -214,12 +218,12 @@ class UR_Admin_Settings {
 	 */
 	public static function show_messages() {
 		if ( count( self::$errors ) > 0 ) {
-			foreach ( self::$errors as $error ) {
-				echo '<div id="message" class="error inline"><p><strong>' . esc_html( $error ) . '</strong></p></div>';
+			foreach ( self::$errors as $key => $error ) {
+				echo '<div id="message" class="error inline"><p><strong>' . wp_kses_post( $error ) . '</strong></p></div>';
 			}
 		} elseif ( count( self::$messages ) > 0 ) {
 			foreach ( self::$messages as $message ) {
-				echo '<div id="message" class="updated inline"><p><strong>' . esc_html( $message ) . '</strong></p></div>';
+				echo '<div id="message" class="updated inline"><p><strong>' . wp_kses_post( $message ) . '</strong></p></div>';
 			}
 		}
 	}
@@ -409,7 +413,6 @@ class UR_Admin_Settings {
 				$settings .= '</a>';
 			}
 			$settings .= '</h3>';
-
 			if ( ! empty( $options['desc'] ) ) {
 				$settings .= '<p class="ur-p-tag">' . wptexturize( wp_kses_post( $options['desc'] ) ) . '</p>';
 			}
