@@ -953,9 +953,19 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					'default'    => esc_attr( $args['default'] ),
 					'class'      => esc_attr( $args['class'] ),
 					'quicktags'  => array( 'buttons' => 'em,strong,link' ),
+					'media_buttons' => false,
 					'tinymce'    => array(
-						'theme_advanced_buttons1' => 'bold,italic,strikethrough,separator,bullist,numlist,separator,blockquote,separator,justifyleft,justifycenter,justifyright,separator,link,unlink,separator,undo,redo,separator',
-						'theme_advanced_buttons2' => '',
+					'theme' => 'modern',
+						'skin' => 'lightgray',
+						'toolbar1' => 'undo,redo,formatselect,fontselect,fontsizeselect,bold,italic,forecolor,alignleft,aligncenter,alignright,alignjustify,bullist,numlist,outdent,indent,removeformat',
+						'content_css' => 'default',
+						'branding' => false,
+						'resize' => true,
+						'statusbar' => false,
+						'menubar' => false,
+						'menu' => false,
+						'elementpath' => true,
+						'plugins' => 'wordpress,wpautoresize,wplink,wpdialogs,wptextpattern,wpview,colorpicker,textcolor,hr,charmap,link,fullscreen,lists',
 					),
 					'editor_css' => '<style>#wp-excerpt-editor-container .wp-editor-area{height:175px; width:100%;}</style>',
 				);
@@ -2183,7 +2193,13 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 					'default'    => esc_attr( $args['default'] ),
 					'class'      => esc_attr( $args['class'] ),
 					'quicktags'  => array( 'buttons' => 'em,strong,link' ),
+					'show-ur-registration-form-button' => false, // Hide Add Registration button
+					'show-smart-tags-button' => true, // Show Smart Tags button for form settings
 					'tinymce'    => array(
+						'toolbar1' => 'undo,redo,formatselect,bold,italic,forecolor,alignleft,aligncenter,alignright,alignjustify,bullist,numlist,outdent,indent,removeformat,help',
+						'toolbar2' => '',
+						'toolbar3' => '',
+						'toolbar4' => '',
 						'theme_advanced_buttons1' => 'bold,italic,strikethrough,separator,bullist,numlist,separator,blockquote,separator,justifyleft,justifycenter,justifyright,separator,link,unlink,separator,undo,redo,separator',
 						'theme_advanced_buttons2' => '',
 					),

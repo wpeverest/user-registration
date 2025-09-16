@@ -132,6 +132,7 @@ if ( ! class_exists( 'URCR_Settings_File ' ) ) :
 									'type'     => 'tinymce',
 									'default'  => 'This content is restricted!',
 									'css'      => '',
+									'show-smart-tags-button' => false,
 									'desc_tip' => true,
 								),
 							),

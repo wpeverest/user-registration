@@ -8265,6 +8265,7 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 						'default'    => esc_attr( $value['default'] ),
 						'class'      => esc_attr( $value['class'] ),
 						'quicktags'  => array( 'buttons' => 'em,strong,link' ),
+						'show-ur-registration-form-button' => false, // Hide Add Registration button for login form settings
 						'tinymce'    => array(
 							'theme_advanced_buttons1' => 'bold,italic,strikethrough,separator,bullist,numlist,separator,blockquote,separator,justifyleft,justifycenter,justifyright,separator,link,unlink,separator,undo,redo,separator',
 							'theme_advanced_buttons2' => '',
