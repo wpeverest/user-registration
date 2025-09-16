@@ -1636,6 +1636,179 @@ span.ur-shortcode-form-embed-dot {
 
 // Login Form Design ReVamped CSS
 body {
+	&[class*="user-registration-"],&[class^="ur-"] {
+		/* Minimal WordPress Editor Styles */
+		.wp-editor-container {
+			border-radius: 8px !important;
+			overflow: hidden !important;
+		}
+
+		.wp-editor-wrap {
+			.wp-editor-tabs {
+				.wp-switch-editor:hover {
+					background: #e8e8e8!important;
+					color: black!important;
+				}
+			}
+
+			.mce-toolbar {
+				background: white !important;
+				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+				margin-bottom: 0 !important;
+				padding: 6px 8px !important;
+				&-grp > div {
+					padding: 0;
+				}
+				.mce-btn {
+					background: transparent !important;
+					border: none !important;
+					border-radius: 5px !important;
+					margin: 1px !important;
+					transition: background-color 0.15s ease !important;
+
+					&:hover {
+						background: #e8e8e8 !important;
+						box-shadow: none !important;
+					}
+
+					&.mce-active {
+						background: #d0d0d0 !important;
+					}
+
+					button {
+						color: #333 !important;
+						font-size: 13px !important;
+						padding: 4px 6px !important;
+						font-weight: normal !important;
+						box-shadow: none !important;
+						background: transparent!important;
+					}
+
+					&:hover button {
+						color: #000 !important;
+						background: #e8e8e8 !important;
+					}
+
+					&.mce-active button {
+						color: #000 !important;
+						font-weight: 500 !important;
+					}
+				}
+
+				.mce-separator {
+					background: #d0d0d0 !important;
+					margin: 2px 4px !important;
+					width: 1px !important;
+				}
+			}
+
+			.mce-edit-area {
+				border-top: none !important;
+				border-radius: 0 0 6px 6px !important;
+				background: #ffffff !important;
+			}
+
+			.mce-statusbar {
+				background: #fafafa !important;
+				border-top: 1px solid #e0e0e0 !important;
+				border-radius: 0 0 6px 6px !important;
+				color: #666 !important;
+				font-size: 11px !important;
+				padding: 4px 8px !important;
+			}
+
+			.mce-menubar {
+				background: #ffffff !important;
+				border: 1px solid #e0e0e0 !important;
+				border-bottom: none !important;
+				border-radius: 6px 6px 0 0 !important;
+				padding: 2px 6px !important;
+
+				.mce-menubtn {
+					background: transparent !important;
+					border: none !important;
+					border-radius: 2px !important;
+					margin: 1px !important;
+					padding: 2px 6px !important;
+					transition: background-color 0.15s ease !important;
+
+					&:hover {
+						background: #f0f0f0 !important;
+					}
+
+					button {
+						color: #333 !important;
+						font-size: 12px !important;
+					}
+				}
+			}
+
+			/* Dropdown Menus */
+			.mce-menu {
+				background: white !important;
+				border: 1px solid #d0d0d0 !important;
+				border-radius: 6px !important;
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+
+				.mce-menu-item {
+					padding: 6px 10px !important;
+					border-radius: 2px !important;
+					margin: 1px !important;
+
+					&:hover {
+						background: #f5f5f5 !important;
+					}
+
+					&.mce-selected {
+						background: #e0e0e0 !important;
+						color: #000 !important;
+					}
+				}
+			}
+
+			/* Color Picker */
+			.mce-colorbutton .mce-preview {
+				border-radius: 4px !important;
+				border: 1px solid #d0d0d0 !important;
+				left: 6px !important;
+			}
+
+			/* Font Size Dropdown */
+			.mce-fontsize .mce-txt {
+				min-width: 50px !important;
+			}
+
+			/* Style Dropdown */
+			.mce-styleselect .mce-txt {
+				min-width: 100px !important;
+			}
+
+			/* Fullscreen Mode */
+			&.mce-fullscreen {
+				.mce-toolbar {
+					background: #ffffff !important;
+					border-bottom: 1px solid #e0e0e0 !important;
+					box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+				}
+			}
+
+			/* Responsive Design */
+			@media (max-width: 768px) {
+				.mce-toolbar {
+					flex-wrap: wrap !important;
+				}
+
+				.mce-toolbar .mce-btn {
+					margin: 1px !important;
+				}
+
+				.mce-toolbar .mce-btn button {
+					padding: 3px 5px !important;
+					font-size: 11px !important;
+				}
+			}
+		}
+	}
 	&.user-registration-page {
 		.ur-frontend-form {
 			.ur-form-row {
@@ -2909,197 +3082,36 @@ body.user-registration-page {
 }
 
 @keyframes toaster {
-  0% {
-    opacity: 0;
-    transform: translateX(-50%) translateY(100%);
-  }
-  10% {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-  90% {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-  100% {
-    opacity: 0;
-    transform: translateX(-50%) translateY(100%);
-  }
+	0% {
+		opacity: 0;
+		transform: translateX(-50%) translateY(100%);
+	}
+	10% {
+		opacity: 1;
+		transform: translateX(-50%) translateY(0);
+	}
+	90% {
+		opacity: 1;
+		transform: translateX(-50%) translateY(0);
+	}
+	100% {
+		opacity: 0;
+		transform: translateX(-50%) translateY(100%);
+	}
 }
 
 .ur-toaster {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #1ea71b;
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 5px;
-  display: inline-flex;
-  white-space: nowrap;
-  z-index: 9999;
-  animation: toaster 5s ease-in-out forwards;
+	position: fixed;
+	bottom: 20px;
+	left: 50%;
+	transform: translateX(-50%);
+	background: #1ea71b;
+	color: #fff;
+	padding: 10px 20px;
+	border-radius: 5px;
+	display: inline-flex;
+	white-space: nowrap;
+	z-index: 9999;
+	animation: toaster 5s ease-in-out forwards;
 }
 
-/* Minimal WordPress Editor Styles */
-.wp-editor-container {
-	border-radius: 8px !important;
-	overflow: hidden !important;
-}
-
-.wp-editor-wrap {
-	.mce-toolbar {
-		background: white !important;
-		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
-		margin-bottom: 0 !important;
-		padding: 6px 8px !important;
-		&-grp > div {
-			padding: 0;
-		}
-		.mce-btn {
-			background: transparent !important;
-			border: none !important;
-			border-radius: 5px !important;
-			margin: 1px !important;
-			transition: background-color 0.15s ease !important;
-
-			&:hover {
-				background: #e8e8e8 !important;
-				box-shadow: none !important;
-			}
-
-			&.mce-active {
-				background: #d0d0d0 !important;
-			}
-
-			button {
-				color: #333 !important;
-				font-size: 13px !important;
-				padding: 4px 6px !important;
-				font-weight: normal !important;
-			}
-
-			&:hover button {
-				color: #000 !important;
-			}
-
-			&.mce-active button {
-				color: #000 !important;
-				font-weight: 500 !important;
-			}
-		}
-
-		.mce-separator {
-			background: #d0d0d0 !important;
-			margin: 2px 4px !important;
-			width: 1px !important;
-		}
-	}
-
-	.mce-edit-area {
-		border-top: none !important;
-		border-radius: 0 0 6px 6px !important;
-		background: #ffffff !important;
-	}
-
-	.mce-statusbar {
-		background: #fafafa !important;
-		border-top: 1px solid #e0e0e0 !important;
-		border-radius: 0 0 6px 6px !important;
-		color: #666 !important;
-		font-size: 11px !important;
-		padding: 4px 8px !important;
-	}
-
-	.mce-menubar {
-		background: #ffffff !important;
-		border: 1px solid #e0e0e0 !important;
-		border-bottom: none !important;
-		border-radius: 6px 6px 0 0 !important;
-		padding: 2px 6px !important;
-
-		.mce-menubtn {
-			background: transparent !important;
-			border: none !important;
-			border-radius: 2px !important;
-			margin: 1px !important;
-			padding: 2px 6px !important;
-			transition: background-color 0.15s ease !important;
-
-			&:hover {
-				background: #f0f0f0 !important;
-			}
-
-			button {
-				color: #333 !important;
-				font-size: 12px !important;
-			}
-		}
-	}
-
-	/* Dropdown Menus */
-	.mce-menu {
-		background: white !important;
-		border: 1px solid #d0d0d0 !important;
-		border-radius: 6px !important;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
-
-		.mce-menu-item {
-			padding: 6px 10px !important;
-			border-radius: 2px !important;
-			margin: 1px !important;
-
-			&:hover {
-				background: #f5f5f5 !important;
-			}
-
-			&.mce-selected {
-				background: #e0e0e0 !important;
-				color: #000 !important;
-			}
-		}
-	}
-
-	/* Color Picker */
-	.mce-colorbutton .mce-preview {
-		border-radius: 4px !important;
-		border: 1px solid #d0d0d0 !important;
-		left: 6px !important;
-	}
-
-	/* Font Size Dropdown */
-	.mce-fontsize .mce-txt {
-		min-width: 50px !important;
-	}
-
-	/* Style Dropdown */
-	.mce-styleselect .mce-txt {
-		min-width: 100px !important;
-	}
-
-	/* Fullscreen Mode */
-	&.mce-fullscreen {
-		.mce-toolbar {
-			background: #ffffff !important;
-			border-bottom: 1px solid #e0e0e0 !important;
-			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
-		}
-	}
-
-	/* Responsive Design */
-	@media (max-width: 768px) {
-		.mce-toolbar {
-			flex-wrap: wrap !important;
-		}
-
-		.mce-toolbar .mce-btn {
-			margin: 1px !important;
-		}
-
-		.mce-toolbar .mce-btn button {
-			padding: 3px 5px !important;
-			font-size: 11px !important;
-		}
-	}
-}

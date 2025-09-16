@@ -945,34 +945,30 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$field .= '<input ' . $input_type . ' data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" class="input-hidden input-text ur-frontend-field ur-edit-profile-field' . esc_attr( $custom_class ) . '" id="' . esc_attr( $args['id'] ) . '"value="' . esc_attr( $hidden_value ) . '" data-field-type="hidden"/>';
 				$field .= ( $is_edit ) ? '</span>' : '';
 				break;
-				case 'tinymce':
+			case 'tinymce':
 				$editor_settings = array(
-					'name'       => esc_attr( $args['id'] ),
-					'id'         => esc_attr( $args['id'] ),
-					'style'      => esc_attr( $args['css'] ),
-					'default'    => esc_attr( $args['default'] ),
-					'class'      => esc_attr( $args['class'] ),
-					'quicktags'  => array( 'buttons' => 'em,strong,link' ),
+					'name'          => esc_attr( $args['id'] ),
+					'id'            => esc_attr( $args['id'] ),
+					'style'         => esc_attr( $args['css'] ),
+					'default'       => esc_attr( $args['default'] ),
+					'class'         => esc_attr( $args['class'] ),
+					'quicktags'     => array( 'buttons' => 'em,strong,link' ),
 					'media_buttons' => false,
-					'tinymce'    => array(
-					'theme' => 'modern',
-						'skin' => 'lightgray',
-						'toolbar1' => 'undo,redo,formatselect,fontselect,fontsizeselect,bold,italic,forecolor,alignleft,aligncenter,alignright,alignjustify,bullist,numlist,outdent,indent,removeformat',
-						'content_css' => 'default',
-						'branding' => false,
-						'resize' => true,
-						'statusbar' => false,
-						'menubar' => false,
-						'menu' => false,
-						'elementpath' => true,
-						'plugins' => 'wordpress,wpautoresize,wplink,wpdialogs,wptextpattern,wpview,colorpicker,textcolor,hr,charmap,link,fullscreen,lists',
+					'tinymce'       => array(
+						'statusbar'               => false,
+						'toolbar1'                => 'undo,redo,formatselect,fontselect,fontsizeselect,bold,italic,forecolor,alignleft,aligncenter,alignright,alignjustify,bullist,numlist,outdent,indent,removeformat',
+						'toolbar2'                => '',
+						'toolbar3'                => '',
+						'toolbar4'                => '',
+						'theme_advanced_buttons2' => '',
+						'plugins'                 => 'wordpress,wpautoresize,wplink,wpdialogs,wptextpattern,wpview,colorpicker,textcolor,hr,charmap,link,fullscreen,lists',
 					),
-					'editor_css' => '<style>#wp-excerpt-editor-container .wp-editor-area{height:175px; width:100%;}</style>',
+					'editor_css'    => '<style>#wp-excerpt-editor-container .wp-editor-area{height:175px; width:100%;}</style>',
 				);
 
 				$value = ! empty( $value ) ? $value : $default_value;
 
-				$field .= '<div class="user-registration-tinymce-field '.$args['id'].'">';
+				$field .= '<div class="user-registration-tinymce-field ' . $args['id'] . '">';
 
 				// Output buffer for tinymce editor.
 				ob_start();
@@ -2193,15 +2189,14 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 					'default'    => esc_attr( $args['default'] ),
 					'class'      => esc_attr( $args['class'] ),
 					'quicktags'  => array( 'buttons' => 'em,strong,link' ),
-					'show-ur-registration-form-button' => false, // Hide Add Registration button
-					'show-smart-tags-button' => true, // Show Smart Tags button for form settings
 					'tinymce'    => array(
-						'toolbar1' => 'undo,redo,formatselect,bold,italic,forecolor,alignleft,aligncenter,alignright,alignjustify,bullist,numlist,outdent,indent,removeformat,help',
+						'statusbar' => false,
+						'toolbar1' => 'undo,redo,formatselect,fontselect,fontsizeselect,bold,italic,forecolor,alignleft,aligncenter,alignright,alignjustify,bullist,numlist,outdent,indent,removeformat',
 						'toolbar2' => '',
 						'toolbar3' => '',
 						'toolbar4' => '',
-						'theme_advanced_buttons1' => 'bold,italic,strikethrough,separator,bullist,numlist,separator,blockquote,separator,justifyleft,justifycenter,justifyright,separator,link,unlink,separator,undo,redo,separator',
 						'theme_advanced_buttons2' => '',
+						'plugins' => 'wordpress,wpautoresize,wplink,wpdialogs,wptextpattern,wpview,colorpicker,textcolor,hr,charmap,link,fullscreen,lists',
 					),
 					'editor_css' => '<style>#wp-excerpt-editor-container .wp-editor-area{height:175px; width:100%;}</style>',
 				);
