@@ -202,7 +202,9 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * Display plugin license view.
 	 */
 	private function plugin_license_view() {
-		add_filter( 'plugin_action_links_' . $this->plugin_name, array( $this, 'plugin_action_links' ) );
+		if( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
+			add_filter( 'plugin_action_links_' . $this->plugin_name, array( $this, 'plugin_action_links' ) );
+		}
 		add_action( 'admin_notices', array( $this, 'user_registration_error_notices' ) );
 	}
 
