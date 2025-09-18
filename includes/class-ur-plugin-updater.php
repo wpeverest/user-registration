@@ -157,7 +157,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	private function activate_license_request() {
 		$license_key = sanitize_text_field( $_POST[ $this->plugin_slug . '_license_key' ] ); // phpcs:ignore
 
-		if ( $this->activate_license( $license_key ) ) {
+		if ( ! empty( $license_key ) && $this->activate_license( $license_key ) ) {
 			if( ! is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
 				setcookie('urm_license_status', 'license_activated', time() + 300, '/', '', false, false);
 			}

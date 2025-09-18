@@ -1440,6 +1440,7 @@ class UR_AJAX {
 	 * @global WP_Filesystem_Base $wp_filesystem Subclass
 	 */
 	public static function install_extension() {
+
 		check_ajax_referer( 'updates' );
 
 		if ( empty( $_POST['slug'] ) ) {
