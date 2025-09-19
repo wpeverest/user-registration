@@ -53,8 +53,9 @@ abstract class UR_Field_Settings {
 
 		if ( isset( $this->field_data->advance_setting->$key ) ) {
 			return $this->field_data->advance_setting->$key;
+		} elseif( isset( $this->field_data->general_setting->$key ) ) {
+			return $this->field_data->general_setting->$key;
 		}
-
 		return '';
 	}
 

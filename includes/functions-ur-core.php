@@ -907,15 +907,6 @@ function ur_get_general_settings( $id ) {
 			'required'    => true,
 			'tip'         => __( 'Enter text for the form field description.', 'user-registration' ),
 		),
-		'field_name'  => array(
-			'setting_id'  => 'field-name',
-			'type'        => 'text',
-			'label'       => __( 'Field Name', 'user-registration' ),
-			'name'        => 'ur_general_setting[field_name]',
-			'placeholder' => __( 'Field Name', 'user-registration' ),
-			'required'    => true,
-			'tip'         => __( 'Unique key for the field.', 'user-registration' ),
-		),
 
 		'placeholder' => array(
 			'setting_id'  => 'placeholder',

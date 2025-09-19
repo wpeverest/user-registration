@@ -84,12 +84,8 @@ abstract class UR_Form_Field {
 		if ( isset( $this->admin_data->advance_setting->$key ) ) {
 			return $this->admin_data->advance_setting->$key;
 		}
-
-		if ( isset( $this->field_defaults[ 'default_' . $key ] ) ) {
-			return $this->field_defaults[ 'default_' . $key ];
-		}
-
-		return '';
+		//fallback to general setting data if advance setting not found.
+		return $this->get_general_setting_data( $key );
 	}
 
 	/**
