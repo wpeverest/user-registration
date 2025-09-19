@@ -596,7 +596,11 @@
 					discount_amount !== undefined && discount_amount !== ""
 						? urm_calculated_total - discount_amount
 						: urm_calculated_total;
-			total_input.val(urmf_data.currency_symbol + total);
+			if( 'left' === urmf_data.curreny_pos ) {
+				total_input.val(urmf_data.currency_symbol + total);
+			} else {
+				total_input.val( total + urmf_data.currency_symbol );
+			}
 		},
 		upgrade_membership: function (
 			current_plan,
