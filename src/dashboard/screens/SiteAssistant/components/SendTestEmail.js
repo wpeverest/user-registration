@@ -1,0 +1,156 @@
+import {
+	Button,
+	Collapse,
+	HStack,
+	Heading,
+	Icon,
+	IconButton,
+	Stack,
+	Text,
+	Input,
+	FormControl,
+	FormLabel,
+	useToast,
+} from '@chakra-ui/react';
+import { __ } from '@wordpress/i18n';
+import React, { useState } from 'react';
+import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
+
+const SendTestEmail = ({ isOpen, onToggle, onEmailSent }) => {
+	const adminEmail = window._UR_DASHBOARD_?.adminEmail || 'test@example.com';
+	const [email, setEmail] = useState(adminEmail);
+	const [isLoading, setIsLoading] = useState(false);
+	const toast = useToast();
+
+	const handleSendTestEmail = async () => {
+		if (!email || !email.includes('@')) {
+			toast({
+				title: __('Invalid Email', 'user-registration'),
+				description: __('Please enter a valid email address.', 'user-registration'),
+				status: 'error',
+				duration: 3000,
+				isClosable: true,
+			});
+			return;
+		}
+
+		setIsLoading(true);
+
+		try {
+			const adminURL = window._UR_DASHBOARD_?.adminURL || window.location.origin + '/wp-admin';
+			const response = await fetch(`${adminURL}/admin-ajax.php`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+				},
+				body: new URLSearchParams({
+					action: 'user_registration_send_test_email',
+					email: email,
+					nonce: window._UR_DASHBOARD_?.testEmailNonce || '',
+				}),
+			});
+
+			const result = await response.json();
+
+			if (result.success) {
+				toast({
+					title: __('Test Email Sent', 'user-registration'),
+					description: result.data?.message || __('Test email has been sent successfully.', 'user-registration'),
+					status: 'success',
+					duration: 3000,
+					isClosable: true,
+				});
+				// Notify parent component to hide this section
+				if (onEmailSent) {
+					onEmailSent();
+				}
+			} else {
+				throw new Error(result.data || 'Failed to send test email');
+			}
+		} catch (error) {
+			toast({
+				title: __('Error', 'user-registration'),
+				description: error.message || __('Failed to send test email. Please try again.', 'user-registration'),
+				status: 'error',
+				duration: 3000,
+				isClosable: true,
+			});
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	return (
+		<Stack
+			p="6"
+			gap="5"
+			bgColor="white"
+			borderRadius="base"
+			border="1px"
+			borderColor="gray.100"
+		>
+			<HStack justify={'space-between'}>
+				<Heading as="h3" size="md" fontWeight="semibold">
+					{__('Send Test Email', 'user-registration')}
+				</Heading>
+				<IconButton
+					aria-label={'sendTestEmail'}
+					icon={
+						<Icon
+							as={isOpen ? BiChevronUp : BiChevronDown}
+							fontSize="2xl"
+							fill={isOpen ? 'primary.500' : 'black'}
+						/>
+					}
+					cursor={'pointer'}
+					fontSize={'xl'}
+					onClick={onToggle}
+					size="sm"
+					boxShadow="none"
+					borderRadius="base"
+					variant={isOpen ? 'solid' : 'link'}
+					border="none"
+				/>
+			</HStack>
+			<Collapse in={isOpen}>
+				<Stack gap={5}>
+					<Text fontWeight={'light'} fontSize={'md'}>
+						{__(
+							'Make sure emails are being sent to your users during registration. Test by sending a sample email to yourself.',
+							'user-registration',
+						)}
+					</Text>
+					<FormControl>
+						<FormLabel fontSize="sm" fontWeight="medium">
+							{__('Email Address (To send test email to)', 'user-registration')}
+						</FormLabel>
+						<Input
+							type="email"
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
+							placeholder={adminEmail}
+							borderColor="gray.300"
+							_focus={{
+								borderColor: 'primary.500',
+								boxShadow: '0 0 0 1px var(--chakra-colors-primary-500)',
+							}}
+						/>
+					</FormControl>
+					<Button
+						colorScheme={'primary'}
+						rounded="base"
+						width={'fit-content'}
+						fontSize="sm"
+						onClick={handleSendTestEmail}
+						isLoading={isLoading}
+						loadingText={__('Sending...', 'user-registration')}
+					>
+						{__('Send Test Email', 'user-registration')}
+					</Button>
+				</Stack>
+			</Collapse>
+		</Stack>
+	);
+};
+
+export default SendTestEmail;

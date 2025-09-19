@@ -25,7 +25,7 @@ import UsefulPlugins from "./components/UsefulPlugins";
 const Dashboard = () => {
 	/* global _UR_DASHBOARD_ */
 	const { newFormURL, allFormsURL, utmCampaign } =
-		typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
+	typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 
 	const helpURL =
 			"https://docs.wpuserregistration.com/?utm_source=dashboard-dashboard&utm_medium=sidebar-link&utm_campaign=" +

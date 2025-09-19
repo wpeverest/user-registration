@@ -23,12 +23,12 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 */
 		public function __construct() {
 
-			// Add menus.
-			add_action( 'admin_menu', array( $this, 'dashboard_menu' ), 2 );
-			add_action( 'admin_menu', array( $this, 'admin_menu' ), 1 );
-			add_action( 'admin_menu', array( $this, 'settings_menu' ), 20 );
-			add_action( 'admin_menu', array( $this, 'add_registration_menu' ), 8 );
-			add_action( 'admin_menu', array( $this, 'status_menu' ), 75 );
+		// Add menus.
+		add_action( 'admin_menu', array( $this, 'admin_menu' ), 1 );
+		add_action( 'admin_menu', array( $this, 'dashboard_menu' ), 3 );
+		add_action( 'admin_menu', array( $this, 'settings_menu' ), 20 );
+		add_action( 'admin_menu', array( $this, 'add_registration_menu' ), 8 );
+		add_action( 'admin_menu', array( $this, 'status_menu' ), 75 );
 
 			if( is_plugin_active( 'user-registration-pro/user-registration.php' ) && empty( get_option('user-registration_license_key', '' ) ) ) {
 				add_action( 'admin_menu', array( $this, 'activate_license_menu' ), 100 );
@@ -604,23 +604,41 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			}
 		}
 
-		/**
-		 * Add dashboard sub menu.
-		 */
-		public function dashboard_menu() {
-			add_submenu_page(
-				'user-registration',
-				__( 'User Registration Dashboard', 'user-registration' ),
-				__( 'Dashboard', 'user-registration' ),
-				'manage_user_registration',
-				'user-registration-dashboard',
-				array(
-					$this,
-					'dashboard_page',
-				),
-				-1
-			);
+	/**
+	 * Add dashboard sub menu.
+	 */
+	public function dashboard_menu() {
+		add_submenu_page(
+			'user-registration',
+			__( 'User Registration Dashboard', 'user-registration' ),
+			__( 'Site Assistant', 'user-registration' ),
+			'manage_user_registration',
+			'user-registration-dashboard',
+			array(
+				$this,
+				'dashboard_page',
+			),
+			-1
+		);
+
+		$should_show = ur_should_show_site_assistant_menu();
+		if ( ! $should_show ) {
+			add_action( 'admin_head', function () {
+				echo '<style>
+						#toplevel_page_user-registration .wp-submenu li a[href*="user-registration-dashboard"] {
+							display: none !important;
+						}
+						#toplevel_page_user-registration .wp-submenu li:has(a[href*="user-registration-dashboard"]) {
+							display: none !important;
+						}
+   					</style>';
+			});
+		} else {
+			add_action( 'admin_body_class', function( $classes ) {
+				return $classes . ' dashboard-visible';
+			});
 		}
+	}
 
 		/**
 		 * Add new registration menu items.

@@ -101,6 +101,7 @@ function ur_get_screen_ids() {
 	$screen_ids   = array(
 		'toplevel_page_user-registration',
 		$ur_screen_id . '_page_user-registration-dashboard',
+		$ur_screen_id . '_page_user-registration-site-assistant',
 		$ur_screen_id . '_page_user-registration-analytics',
 		$ur_screen_id . '_page_add-new-registration',
 		$ur_screen_id . '_page_user-registration-users',
@@ -908,13 +909,16 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 		$all_forms = ur_get_all_user_registration_form();
 		$postfix = count($all_forms ) > 1 ? 'Forms' : 'Form';
 
+		// Only include Site Assistant if there are unhandled options
+		$site_assistant_item = ur_should_show_site_assistant_menu() ? array(
+			'dashboard' => array(
+				'page_slug' => 'user-registration-dashboard',
+				'label'     => esc_html__( 'Site Assistant', 'user-registration' ),
+			),
+		) : array();
+
 		$menu_items = apply_filters( 'user_registration_plugin_main_header_items', array_merge(
-				array(
-					'dashboard' => array(
-						'page_slug' => 'user-registration-dashboard',
-						'label'     => esc_html__( 'Dashboard', 'user-registration' ),
-					),
-				),
+				$site_assistant_item,
 				UR_PRO_ACTIVE ? array(
 					'analytics' => array(
 						'page_slug' => 'user-registration-analytics',
@@ -998,7 +1002,7 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 
 		ob_start();
 		?>
-		<div class="ur-admin-page-topnav <?php echo isset( $_GET['page'] ) && 'user-registration-dashboard' === $_GET['page'] ? 'ur-dashboard-page-topnav' : '' ?>" id="ur-lists-page-topnav">
+		<div class="ur-admin-page-topnav <?php echo isset( $_GET['page'] ) && ( 'user-registration-dashboard' === $_GET['page'] || 'user-registration-site-assistant' === $_GET['page'] ) ? 'ur-dashboard-page-topnav' : '' ?>" id="ur-lists-page-topnav">
 			<div class="ur-page-title__wrapper">
 				<div class="ur-page-title__wrapper--left">
 					<div class="ur-page-title__wrapper--left-logo">

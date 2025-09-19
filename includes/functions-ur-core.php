@@ -3350,6 +3350,102 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ur_generate_required_pages' ) ) {
+	/**
+	 * Generate required pages based on missing page options.
+	 *
+	 * @param string $missing_pages JSON string of missing page options.
+	 * @return array|WP_Error Array of created pages or WP_Error on failure.
+	 */
+	function ur_generate_required_pages( $missing_pages ) {
+		// Include admin functions for ur_create_page
+		include_once untrailingslashit( plugin_dir_path( UR_PLUGIN_FILE ) ) . '/includes/admin/functions-ur-admin.php';
+
+		$missing_pages_array = json_decode( $missing_pages, true );
+
+		if ( ! is_array( $missing_pages_array ) ) {
+			return new WP_Error( 'invalid_pages', __( 'Invalid pages data provided.', 'user-registration' ) );
+		}
+
+		// Check if membership module is activated
+		$is_membership_activated = ur_check_module_activation( 'membership' );
+
+		// Define page configurations
+		$page_configs = array(
+			'user_registration_login_page_id' => array(
+				'name' => 'login',
+				'title' => __( 'Login', 'user-registration' ),
+				'content' => '[user_registration_login]',
+				'requires_membership' => false,
+			),
+			'user_registration_lost_password_page_id' => array(
+				'name' => 'lost-password',
+				'title' => __( 'Lost Password', 'user-registration' ),
+				'content' => '[user_registration_reset_password_form]',
+				'requires_membership' => false,
+			),
+			'user_registration_member_registration_page_id' => array(
+				'name' => 'membership-registration',
+				'title' => __( 'Membership Registration', 'user-registration' ),
+				'content' => '[user_registration_form id="' . get_option( 'user_registration_default_form_page_id', 0 ) . '"]',
+				'requires_membership' => true,
+			),
+			'user_registration_thank_you_page_id' => array(
+				'name' => 'membership-thankyou',
+				'title' => __( 'Membership Thank You', 'user-registration' ),
+				'content' => '[user_registration_membership_thank_you]',
+				'requires_membership' => true,
+			),
+			'user_registration_myaccount_page_id' => array(
+				'name' => 'my-account',
+				'title' => __( 'My Account', 'user-registration' ),
+				'content' => '[user_registration_my_account]',
+				'requires_membership' => false,
+			),
+			'user_registration_membership_pricing_page_id' => array(
+				'name' => 'membership-pricing',
+				'title' => __( 'Membership Pricing', 'user-registration' ),
+				'content' => '[user_registration_groups]',
+				'requires_membership' => true,
+			),
+		);
+
+		$created_pages = array();
+
+		foreach ( $missing_pages_array as $page_option ) {
+			if ( ! isset( $page_configs[ $page_option ] ) ) {
+				continue;
+			}
+
+			$config = $page_configs[ $page_option ];
+
+			// Skip membership pages if membership module is not activated
+			if ( $config['requires_membership'] && ! $is_membership_activated ) {
+				continue;
+			}
+
+			// Create the page
+			$page_id = ur_create_page(
+				$config['name'],
+				$page_option,
+				$config['title'],
+				$config['content']
+			);
+
+			if ( $page_id ) {
+				$created_pages[] = array(
+					'option' => $page_option,
+					'page_id' => $page_id,
+					'title' => $config['title'],
+					'url' => get_permalink( $page_id )
+				);
+			}
+		}
+
+		return $created_pages;
+	}
+}
+
 if ( ! function_exists( 'ur_format_field_values_using_field_key' ) ) {
 	function ur_format_field_values_using_field_key( $field_key, $field_value ) {
 
@@ -8950,4 +9046,153 @@ if ( ! function_exists( 'user_registration_profile_details_form_field_datas' ) )
 
 		return $user_data_to_show;
 	}
+}
+
+if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
+	/**
+	 * Get site assistant data with all options status.
+	 *
+	 * @return array
+	 */
+	function ur_get_site_assistant_data() {
+		// Check for required pages
+		$required_pages = array(
+			'user_registration_login_page_id'               => 'Login Page',
+			'user_registration_lost_password_page_id'       => 'Lost Password Page',
+			'user_registration_member_registration_page_id' => 'Membership Registration Page',
+			'user_registration_thank_you_page_id'           => 'Membership Thank You Page',
+			'user_registration_myaccount_page_id'           => 'My Account Page',
+			'user_registration_membership_pricing_page_id'  => 'Membership Pricing Page',
+		);
+
+		// Check if membership module is activated
+		$is_membership_activated = ur_check_module_activation( 'membership' );
+
+		$missing_pages_data = array();
+
+		foreach ( $required_pages as $option_name => $page_name ) {
+			$page_id = get_option( $option_name, 0 );
+			if ( ! $page_id || ! get_post( $page_id ) ) {
+				// Only include membership pages if membership module is activated
+				$is_membership_page = in_array( $option_name, array(
+					'user_registration_member_registration_page_id',
+					'user_registration_thank_you_page_id',
+					'user_registration_membership_pricing_page_id'
+				), true );
+
+				if ( ! $is_membership_page || $is_membership_activated ) {
+					$missing_pages_data[] = array(
+						'name'   => $page_name,
+						'option' => $option_name,
+					);
+				}
+			}
+		}
+
+		// Get payment setup handled status
+		$payment_setup_handled = ur_get_payment_setup_handled_status();
+
+		// Get payment connection statuses
+		$payment_connections = ur_get_payment_connection_statuses();
+
+		$site_assistant_data = array(
+			'has_default_form'        => ! empty( get_post( get_option( 'user_registration_default_form_page_id', '' ) ) ),
+			'missing_pages'           => $missing_pages_data,
+			'test_email_sent'         => get_option( 'user_registration_successful_test_mail', false ),
+			'wordpress_login_handled' => ( get_option( 'user_registration_login_options_prevent_core_login', false ) == true ) || ( get_option( 'user_registration_default_wordpress_login_skipped', false ) == true ),
+			'spam_protection_handled' => ur_string_to_bool( get_option( 'user_registration_captcha_setting_v2_connection_status', false ) ) || ur_string_to_bool( get_option( 'user_registration_spam_protection_skipped', false ) ),
+			'payment_setup_handled'   => $payment_setup_handled,
+			'payment_connections'     => $payment_connections,
+		);
+
+		return apply_filters( 'ur_site_assistant_data', $site_assistant_data );
+	}
+}
+
+if ( ! function_exists( 'ur_get_payment_setup_handled_status' ) ) {
+	/**
+	 * Get payment setup handled status.
+	 * Returns true if ALL payment methods are connected or if payment setup is skipped.
+	 *
+	 * @return bool
+	 */
+	function ur_get_payment_setup_handled_status() {
+		$payment_connections = ur_get_payment_connection_statuses();
+
+		// Check if ALL payment methods are connected
+		$all_payments_connected = true;
+		foreach ( $payment_connections as $connection ) {
+			if ( ! $connection['is_connected'] ) {
+				$all_payments_connected = false;
+				break;
+			}
+		}
+
+		// Check if payment setup is skipped
+		$is_skipped = get_option( 'user_registration_payment_setup_skipped', false );
+
+		return $all_payments_connected || $is_skipped;
+	}
+}
+
+if ( ! function_exists( 'ur_get_payment_connection_statuses' ) ) {
+	/**
+	 * Get payment connection statuses for available modules.
+	 *
+	 * @return array
+	 */
+	function ur_get_payment_connection_statuses() {
+		$connections = array();
+
+		// Check Stripe connection (available in free version)
+		if ( ur_check_module_activation( 'stripe' ) || ur_check_module_activation( 'membership' ) ) {
+			$connections['stripe'] = array(
+				'name'         => 'Stripe',
+				'is_connected' => ur_string_to_bool( get_option( 'urm_stripe_connection_status', false ) ),
+				'settings_url' => admin_url( '/admin.php?page=user-registration-settings&tab=payment&method=stripe' ),
+			);
+		}
+
+		// Check PayPal connection (available in free version)
+		if ( ur_check_module_activation( 'payments' ) || ur_check_module_activation( 'membership' ) ) {
+			$connections['paypal'] = array(
+				'name'         => 'PayPal',
+				'is_connected' => ur_string_to_bool( get_option( 'urm_paypal_connection_status', false ) ),
+				'settings_url' => admin_url( '/admin.php?page=user-registration-settings&tab=payment&method=paypal' ),
+			);
+		}
+
+		// Check Bank connection (membership only)
+		if ( ur_check_module_activation( 'membership' ) ) {
+			$connections['bank'] = array(
+				'name'         => 'Bank Payment',
+				'is_connected' => ur_string_to_bool( get_option( 'urm_bank_connection_status', false ) ),
+				'settings_url' => admin_url( '/admin.php?page=user-registration-settings&tab=payment&method=bank' ),
+			);
+		}
+
+		return apply_filters( 'ur_site_assistant_payment_connections', $connections );
+	}
+}
+
+if ( ! function_exists( 'ur_should_show_site_assistant_menu' ) ) {
+	/**
+	 * Check if site assistant menu should be shown.
+	 * Returns false if all options are handled and set.
+	 *
+	 * @return bool
+	 */
+	function ur_should_show_site_assistant_menu() {
+		$site_assistant_data = ur_get_site_assistant_data();
+
+		return (
+			! $site_assistant_data['has_default_form']
+			|| ! empty( $site_assistant_data['missing_pages'] )
+			|| ! $site_assistant_data['test_email_sent']
+			|| ! $site_assistant_data['wordpress_login_handled']
+			|| ! $site_assistant_data['spam_protection_handled']
+			|| ! $site_assistant_data['payment_setup_handled']
+		);
+	}
+
 }
