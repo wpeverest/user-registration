@@ -1,4 +1,3 @@
-export { default as Dashboard } from "./Dashboard/Dashboard";
 export { default as SiteAssistant } from "./SiteAssistant/SiteAssistant";
 export { default as Modules } from "./Modules/Modules";
 export { default as FreeVsPro } from "./FreeVsPro/FreeVsPro";

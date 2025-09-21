@@ -90,7 +90,7 @@ class UR_AJAX {
 			'validate_payment_currency'			=> false,
 			'create_default_form'				=> false,
 			'generate_required_pages'			=> false,
-			'handle_default_wordpress_login'		=> false,
+			'handle_default_wordpress_login'	=> false,
 			'skip_site_assistant_section'		=> false,
 		);
 
