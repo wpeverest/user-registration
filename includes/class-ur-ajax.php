@@ -64,6 +64,7 @@ class UR_AJAX {
 			'rated'                             => false,
 			'dashboard_widget'                  => false,
 			'dismiss_notice'                    => false,
+			'dismiss_notice_per_user'           => false,
 			'import_form_action'                => false,
 			'template_licence_check'            => false,
 			'captcha_setup_check'               => false,
@@ -1279,7 +1280,33 @@ class UR_AJAX {
 			}
 		}
 	}
+	/**
+	 * Dismiss user registration notice per user.
+	 */
+	public static function dismiss_notice_per_user() {
+		$notice_id = isset( $_POST['notice_id'] ) ? wp_unslash( sanitize_key( $_POST['notice_id'] ) ) : '';   // phpcs:ignore WordPress.Security.NonceVerification
+		$notice_type = isset( $_POST['notice_type'] ) ? wp_unslash( sanitize_key( $_POST['notice_type'] ) ) : '';   // phpcs:ignore WordPress.Security.NonceVerification
+		check_admin_referer( $notice_type  . '-nonce', 'security' );
 
+		$user_id = get_current_user_id();
+		$urm_dismissed_notices = get_user_meta( $user_id, 'urm_dismissed_notices', true );
+		//if not an array, make it an array.
+		if( ! is_array( $urm_dismissed_notices ) ) {
+			$urm_dismissed_notices = array();
+		}
+
+		switch( $notice_id ) {
+			case 'non_urm_users_notice':
+				[ 'dismiss_count' => $dismiss_count, 'last_dismissed_at' => $last_dismissed_at ] = isset( $urm_dismissed_notices['non_urm_users_notice'] ) ? $urm_dismissed_notices['non_urm_users_notice'] : array( 'dismiss_count' => 0 );
+				$urm_dismissed_notices[ 'non_urm_users_notice' ] = array( 'dismiss_count' => $dismiss_count + 1, 'last_dismissed_at' => current_time( 'timestamp' ) );
+				break;
+			default:
+				break;
+		}
+		update_user_meta( $user_id, 'urm_dismissed_notices', $urm_dismissed_notices );
+
+		wp_send_json_success();
+	}
 	/**
 	 * Remove profile picture ajax method.
 	 */
