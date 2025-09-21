@@ -47,7 +47,7 @@ const PaymentSetup = ({ isOpen, onToggle, onSkipped }) => {
 		setIsSkipping(true);
 		try {
 			const adminURL = window._UR_DASHBOARD_?.adminURL || window.location.origin + '/wp-admin';
-			const response = await fetch(`${adminURL}/admin-ajax.php`, {
+			const response = await fetch(`${adminURL}admin-ajax.php`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/x-www-form-urlencoded',
