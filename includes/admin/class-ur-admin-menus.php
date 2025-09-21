@@ -23,12 +23,12 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 */
 		public function __construct() {
 
-			// Add menus.
-			add_action( 'admin_menu', array( $this, 'admin_menu' ), 1 );
-			add_action( 'admin_menu', array( $this, 'dashboard_menu' ), 3 );
-			add_action( 'admin_menu', array( $this, 'settings_menu' ), 20 );
-			add_action( 'admin_menu', array( $this, 'add_registration_menu' ), 8 );
-			add_action( 'admin_menu', array( $this, 'status_menu' ), 75 );
+		// Add menus.
+		add_action( 'admin_menu', array( $this, 'admin_menu' ), 1 );
+		add_action( 'admin_menu', array( $this, 'settings_menu' ), 20 );
+		add_action( 'admin_menu', array( $this, 'add_registration_menu' ), 8 );
+		add_action( 'admin_menu', array( $this, 'status_menu' ), 75 );
+		add_action( 'admin_menu', array( $this, 'dashboard_menu' ), 3 );
 
 			if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) && empty( get_option( 'user-registration_license_key', '' ) ) ) {
 				add_action( 'admin_menu', array( $this, 'activate_license_menu' ), 100 );
@@ -59,6 +59,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				'add_upgradable_other_fields'
 			) ); // Adds fields in the `Extra Fields` section.
 			add_action( 'user_registration_extra_fields', array( $this, 'add_upgradable_extra_fields' ) );
+
 		}
 
 		/**
@@ -489,10 +490,15 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 */
 		public function admin_menu() {
 
-			$registration_page = add_menu_page( 'User Registration', 'User Registration & Membership', 'manage_user_registration', 'user-registration', array(
-				$this,
-				'registration_page'
-			), $this->get_icon_svg(), '55.8' );
+			$registration_page = add_menu_page( 'User Registration',
+				'User Registration & Membership',
+				'manage_user_registration',
+				'user-registration',
+				array(
+					$this,
+					'registration_page'
+				),
+				$this->get_icon_svg(), '55.8' );
 
 			add_action( 'load-' . $registration_page, array( $this, 'registration_page_init' ) );
 			add_submenu_page(
@@ -631,18 +637,18 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 * Add dashboard sub menu.
 		 */
 		public function dashboard_menu() {
-			add_submenu_page(
-				'user-registration',
-				__( 'User Registration Dashboard', 'user-registration' ),
-				__( 'Site Assistant', 'user-registration' ),
-				'manage_user_registration',
-				'user-registration-dashboard',
-				array(
-					$this,
-					'dashboard_page',
-				),
-				- 1
-			);
+		add_submenu_page(
+			'user-registration',
+			__( 'User Registration Dashboard', 'user-registration' ),
+			__( 'Site Assistant', 'user-registration' ),
+			'manage_user_registration',
+			'user-registration-dashboard',
+			array(
+				$this,
+				'dashboard_page',
+			),
+			-1
+		);
 
 			$should_show = ur_should_show_site_assistant_menu();
 			if ( ! $should_show ) {

@@ -198,26 +198,26 @@ const SiteAssistant = () => {
 				}}
 			>
 				{allCompleted && (
-					<Box 
-						p="4" 
+					<Box
+						p="4"
 						bgColor="transparent"
 						borderRadius="base"
 						border="1px"
 						borderColor="gray.100"
 						textAlign="center"
 					>
-						<Heading 
-							as="h3" 
-							fontSize="md" 
-							fontWeight="semibold" 
+						<Heading
+							as="h3"
+							fontSize="md"
+							fontWeight="semibold"
 							color="green.600"
 							mb="1"
 						>
 							{__("Setup Complete!", "user-registration")}
 						</Heading>
-						
-						<Text 
-							fontSize="xs" 
+
+						<Text
+							fontSize="xs"
 							color="gray.600"
 						>
 							{__(
