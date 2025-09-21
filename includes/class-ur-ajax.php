@@ -1297,8 +1297,9 @@ class UR_AJAX {
 
 		switch( $notice_id ) {
 			case 'non_urm_users_notice':
-				[ 'dismiss_count' => $dismiss_count, 'last_dismissed_at' => $last_dismissed_at ] = isset( $urm_dismissed_notices['non_urm_users_notice'] ) ? $urm_dismissed_notices['non_urm_users_notice'] : array( 'dismiss_count' => 0 );
-				$urm_dismissed_notices[ 'non_urm_users_notice' ] = array( 'dismiss_count' => $dismiss_count + 1, 'last_dismissed_at' => current_time( 'timestamp' ) );
+				[ 'dismiss_count' => $dismiss_count, 'last_dismissed_at' => $last_dismissed_at ] = isset( $urm_dismissed_notices[ 'non_urm_users_notice' ] ) ? $urm_dismissed_notices[ 'non_urm_users_notice' ] : array( 'dismiss_count' => 0, current_time( 'timestamp' ) - 3 * DAY_IN_SECONDS );
+				$dismiss_count = current_time( 'timestamp' ) - $last_dismissed_at  <= 48 * HOUR_IN_SECONDS ? $dismiss_count + 1 : $dismiss_count;
+				$urm_dismissed_notices[ 'non_urm_users_notice' ] = array( 'dismiss_count' => $dismiss_count, 'last_dismissed_at' => current_time( 'timestamp' ) );
 				break;
 			default:
 				break;
