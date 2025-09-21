@@ -14,7 +14,7 @@ const Categories = ({
 	onCategoryChange
 }) => {
 	return (
-		<Box  p="4">
+		<Box p="4" borderBottom="1px solid" borderColor="gray.200">
 			<HStack spacing="8" align="center" justifyContent="center">
 				{categories.map((category, index) => (
 					<Box
@@ -28,16 +28,20 @@ const Categories = ({
 					>
 						<Text
 							fontSize="sm"
-							fontWeight="500"
+							fontWeight="600"
 							color={selectedCategory === category.value ? "#4263EB" : "#4A5568"}
 							transition="color 0.2s"
+							sx={{
+								color: selectedCategory === category.value ? "#4263EB !important" : "#4A5568 !important",
+								fontWeight: selectedCategory === category.value ? "600 !important" : "500 !important"
+							}}
 						>
 							{category.label}
 						</Text>
 						{selectedCategory === category.value && (
 							<Box
 								position="absolute"
-								bottom="-4px"
+								bottom="-17px"
 								left="0"
 								right="0"
 								height="2px"
@@ -48,12 +52,6 @@ const Categories = ({
 					</Box>
 				))}
 			</HStack>
-			<Box
-				mt="4"
-				height="1px"
-				bg="gray.200"
-				width="100%"
-			/>
 		</Box>
 	);
 };

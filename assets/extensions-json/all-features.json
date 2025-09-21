@@ -11,7 +11,7 @@
       "plan" : [
         "free"
       ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=user-registration-invite-codes",
+      "setting_url": "admin.php?page=user-registration-settings&tab=user-registration-membership",
       "demo_video_url": "3T6AILWb7OI",
       "released_date": "01/08/2024"
     },

@@ -197,17 +197,12 @@ const AddonCard = ({ addon, showToast }) => {
 				</HStack>
 				<HStack spacing="2">
 					{moduleEnabled ? (
-						<>
-							{!isActive && (
-								<Icon as={FaLock} color="gray.400" boxSize="3" />
-							)}
-							<Switch
-								isChecked={isActive}
-								onChange={handleToggle}
-								colorScheme="green"
-								isDisabled={isLoading}
-							/>
-						</>
+						<Switch
+							isChecked={isActive}
+							onChange={handleToggle}
+							colorScheme="green"
+							isDisabled={isLoading}
+						/>
 					) : (
 						<Button
 							size="sm"

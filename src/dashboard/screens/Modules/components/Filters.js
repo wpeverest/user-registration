@@ -30,125 +30,23 @@ const Filters = ({
 	onSearchChange,
 	onReset
 }) => {
+
 	return (
 		<Stack direction="row" justify="space-between" align="center" mb="4">
 			<HStack spacing="3">
 				<Select
-					key="sort-select"
-					options={sortOptions}
-					value={selectedSortValue}
-					placeholder="All"
-					isSearchable={false}
-					isClearable={false}
-					onChange={onSortChange}
-					chakraStyles={{
-						control: (base) => ({
-							...base,
-							backgroundColor: "white",
-							borderColor: "#DFDFE0",
-							width: "140px",
-							minHeight: "36px",
-							cursor: "pointer",
-							borderRadius: "6px",
-							fontSize: "14px"
-						}),
-						valueContainer: (base) => ({
-							...base,
-							cursor: "pointer"
-						}),
-						input: (base) => ({
-							...base,
-							cursor: "pointer"
-						}),
-						placeholder: (base) => ({
-							...base,
-							color: "#9CA3AF",
-							fontSize: "14px"
-						}),
-						singleValue: (base) => ({
-							...base,
-							color: "#374151",
-							fontSize: "14px"
-						}),
-						indicatorSeparator: () => ({
-							display: "none"
-						}),
-						dropdownIndicator: (base) => ({
-							...base,
-							color: "#6B7280",
-							backgroundColor: "white",
-							width: "20px",
-							height: "20px",
-							cursor: "pointer"
-						}),
-						menu: (base) => ({
-							...base,
-							zIndex: 9999
-						})
-					}}
-				/>
-				<Select
-					key="status-select"
-					options={statusOptions}
-					value={selectedStatusValue}
-					placeholder="All Status"
-					isSearchable={false}
-					isClearable={false}
-					onChange={onStatusChange}
-					chakraStyles={{
-						control: (base) => ({
-							...base,
-							backgroundColor: "white",
-							borderColor: "#DFDFE0",
-							width: "140px",
-							minHeight: "36px",
-							cursor: "pointer",
-							borderRadius: "6px",
-							fontSize: "14px"
-						}),
-						valueContainer: (base) => ({
-							...base,
-							cursor: "pointer"
-						}),
-						input: (base) => ({
-							...base,
-							cursor: "pointer"
-						}),
-						placeholder: (base) => ({
-							...base,
-							color: "#9CA3AF",
-							fontSize: "14px"
-						}),
-						singleValue: (base) => ({
-							...base,
-							color: "#374151",
-							fontSize: "14px"
-						}),
-						indicatorSeparator: () => ({
-							display: "none"
-						}),
-						dropdownIndicator: (base) => ({
-							...base,
-							color: "#6B7280",
-							backgroundColor: "white",
-							width: "20px",
-							height: "20px",
-							cursor: "pointer"
-						}),
-						menu: (base) => ({
-							...base,
-							zIndex: 9999
-						})
-					}}
-				/>
-				<Select
-					key="plan-select"
+					instanceId="plan-select"
 					options={planOptions}
 					value={selectedPlanValue}
 					placeholder="All Plans"
 					isSearchable={false}
 					isClearable={false}
 					onChange={onPlanChange}
+					menuPortalTarget={document.body}
+					menuPosition="fixed"
+					menuShouldBlockScroll={false}
+					onMenuOpen={() => {}}
+					onMenuClose={() => {}}
 					chakraStyles={{
 						control: (base) => ({
 							...base,
@@ -158,15 +56,18 @@ const Filters = ({
 							minHeight: "36px",
 							cursor: "pointer",
 							borderRadius: "6px",
-							fontSize: "14px"
+							fontSize: "14px",
+							pointerEvents: "auto"
 						}),
 						valueContainer: (base) => ({
 							...base,
-							cursor: "pointer"
+							cursor: "pointer",
+							pointerEvents: "auto"
 						}),
 						input: (base) => ({
 							...base,
-							cursor: "pointer"
+							cursor: "pointer",
+							pointerEvents: "auto"
 						}),
 						placeholder: (base) => ({
 							...base,
@@ -195,6 +96,131 @@ const Filters = ({
 						})
 					}}
 				/>
+				<Select
+					instanceId="sort-select"
+					options={sortOptions}
+					value={selectedSortValue}
+					placeholder="All"
+					isSearchable={false}
+					isClearable={false}
+					onChange={onSortChange}
+					menuPortalTarget={document.body}
+					menuPosition="fixed"
+					menuShouldBlockScroll={false}
+					onMenuOpen={() => {}}
+					onMenuClose={() => {}}
+					chakraStyles={{
+						control: (base) => ({
+							...base,
+							backgroundColor: "white",
+							borderColor: "#DFDFE0",
+							width: "140px",
+							minHeight: "36px",
+							cursor: "pointer",
+							borderRadius: "6px",
+							fontSize: "14px",
+							pointerEvents: "auto"
+						}),
+						valueContainer: (base) => ({
+							...base,
+							cursor: "pointer",
+							pointerEvents: "auto"
+						}),
+						input: (base) => ({
+							...base,
+							cursor: "pointer",
+							pointerEvents: "auto"
+						}),
+						placeholder: (base) => ({
+							...base,
+							color: "#9CA3AF",
+							fontSize: "14px"
+						}),
+						singleValue: (base) => ({
+							...base,
+							color: "#374151",
+							fontSize: "14px"
+						}),
+						indicatorSeparator: () => ({
+							display: "none"
+						}),
+						dropdownIndicator: (base) => ({
+							...base,
+							color: "#6B7280",
+							backgroundColor: "white",
+							width: "20px",
+							height: "20px",
+							cursor: "pointer"
+						}),
+						menu: (base) => ({
+							...base,
+							zIndex: 9999
+						})
+					}}
+				/>
+				<Select
+					instanceId="status-select"
+					options={statusOptions}
+					value={selectedStatusValue}
+					placeholder="All Status"
+					isSearchable={false}
+					isClearable={false}
+					onChange={onStatusChange}
+					menuPortalTarget={document.body}
+					menuPosition="fixed"
+					menuShouldBlockScroll={false}
+					onMenuOpen={() => {}}
+					onMenuClose={() => {}}
+					chakraStyles={{
+						control: (base) => ({
+							...base,
+							backgroundColor: "white",
+							borderColor: "#DFDFE0",
+							width: "140px",
+							minHeight: "36px",
+							cursor: "pointer",
+							borderRadius: "6px",
+							fontSize: "14px",
+							pointerEvents: "auto"
+						}),
+						valueContainer: (base) => ({
+							...base,
+							cursor: "pointer",
+							pointerEvents: "auto"
+						}),
+						input: (base) => ({
+							...base,
+							cursor: "pointer",
+							pointerEvents: "auto"
+						}),
+						placeholder: (base) => ({
+							...base,
+							color: "#9CA3AF",
+							fontSize: "14px"
+						}),
+						singleValue: (base) => ({
+							...base,
+							color: "#374151",
+							fontSize: "14px"
+						}),
+						indicatorSeparator: () => ({
+							display: "none"
+						}),
+						dropdownIndicator: (base) => ({
+							...base,
+							color: "#6B7280",
+							backgroundColor: "white",
+							width: "20px",
+							height: "20px",
+							cursor: "pointer"
+						}),
+						menu: (base) => ({
+							...base,
+							zIndex: 9999
+						})
+					}}
+				/>
+
 			</HStack>
 			<HStack spacing="3">
 				<Tooltip label="Reset all filters" placement="top">
