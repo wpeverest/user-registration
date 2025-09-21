@@ -101,7 +101,6 @@ function ur_get_screen_ids() {
 	$screen_ids   = array(
 		'toplevel_page_user-registration',
 		$ur_screen_id . '_page_user-registration-dashboard',
-		$ur_screen_id . '_page_user-registration-site-assistant',
 		$ur_screen_id . '_page_user-registration-analytics',
 		$ur_screen_id . '_page_add-new-registration',
 		$ur_screen_id . '_page_user-registration-users',
@@ -1002,7 +1001,7 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 
 		ob_start();
 		?>
-		<div class="ur-admin-page-topnav <?php echo isset( $_GET['page'] ) && ( 'user-registration-dashboard' === $_GET['page'] || 'user-registration-site-assistant' === $_GET['page'] ) ? 'ur-dashboard-page-topnav' : '' ?>" id="ur-lists-page-topnav">
+		<div class="ur-admin-page-topnav <?php echo isset( $_GET['page'] ) && ( 'user-registration-dashboard' === $_GET['page']  ) ? 'ur-dashboard-page-topnav' : '' ?>" id="ur-lists-page-topnav">
 			<div class="ur-page-title__wrapper">
 				<div class="ur-page-title__wrapper--left">
 					<div class="ur-page-title__wrapper--left-logo">
