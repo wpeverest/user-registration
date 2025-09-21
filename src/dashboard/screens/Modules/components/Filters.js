@@ -89,10 +89,6 @@ const Filters = ({
 							width: "20px",
 							height: "20px",
 							cursor: "pointer"
-						}),
-						menu: (base) => ({
-							...base,
-							zIndex: 9999
 						})
 					}}
 				/>
@@ -151,10 +147,6 @@ const Filters = ({
 							width: "20px",
 							height: "20px",
 							cursor: "pointer"
-						}),
-						menu: (base) => ({
-							...base,
-							zIndex: 9999
 						})
 					}}
 				/>
@@ -213,10 +205,6 @@ const Filters = ({
 							width: "20px",
 							height: "20px",
 							cursor: "pointer"
-						}),
-						menu: (base) => ({
-							...base,
-							zIndex: 9999
 						})
 					}}
 				/>
