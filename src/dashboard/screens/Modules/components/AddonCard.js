@@ -13,7 +13,9 @@ import {
 	Link,
 	Text,
 	Icon,
-	Button
+	Button,
+	Spinner,
+	Flex
 } from "@chakra-ui/react";
 import { FaCog, FaPlay, FaLock } from "react-icons/fa";
 import { activateModule, deactivateModule } from "./modules-api";
@@ -43,7 +45,6 @@ const AddonCard = ({ addon, showToast }) => {
 	}, [addon.plan]);
 
 	const handleUpgradePlan = () => {
-		/* global _UR_DASHBOARD_ */
 		const { upgradeURL } = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 		if (upgradeURL) {
 			const plan_upgrade_url = upgradeURL + "&utm_source=dashboard-all-feature&utm_medium=dashboard-upgrade-plan";
@@ -115,6 +116,27 @@ const AddonCard = ({ addon, showToast }) => {
 			display="flex"
 			flexDirection="column"
 		>
+			{/* Loading Overlay */}
+			{isLoading && (
+				<Flex
+					position="absolute"
+					top="0"
+					left="0"
+					right="0"
+					bottom="0"
+					bg="rgba(255, 255, 255, 0.8)"
+					borderRadius="xl"
+					alignItems="center"
+					justifyContent="center"
+					zIndex="10"
+				>
+					<Spinner
+						size="lg"
+						color="gray.500"
+						thickness="3px"
+					/>
+				</Flex>
+			)}
 			{/* Main Content Layout */}
 			<HStack align="start" spacing="4" flex="1" mb="6">
 				{/* Left Side - Icon */}

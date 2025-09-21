@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 import { debounce } from "lodash";
+import { FaArrowUp } from "react-icons/fa";
 
 import { PageNotFound } from "../../components/Icon/Icon";
 import {
@@ -506,7 +507,7 @@ const Modules = () => {
 					right="6"
 					zIndex="1000"
 					aria-label="Scroll to top"
-					icon="↑"
+					icon={<FaArrowUp />}
 					size="md"
 					variant="outline"
 					bg="white"
