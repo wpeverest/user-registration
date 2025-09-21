@@ -1393,7 +1393,7 @@ jQuery(function ($) {
 				$(".ur-selected-item").each(function () {
 					var old_field_name = $(this)
 						.find(".ur-general-setting-block")
-						.find('input[data-field="field_name"]')
+						.find('input[data-advance-field="field_name"]')
 						.attr("value");
 
 					if (field_name === old_field_name) {

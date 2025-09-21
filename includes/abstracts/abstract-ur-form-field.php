@@ -253,16 +253,16 @@ abstract class UR_Form_Field {
 			$form_data['custom_attributes']['data-locale'] = $date_localization;
 		}
 
-		$form_data['custom_attributes']['data-label'] = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_label', $data['general_setting']->label );
+		$form_data['custom_attributes']['data-label'] = ur_string_translation( $form_id, 'user_registration_' . $data['advance_setting']->field_name . '_label', $data['general_setting']->label );
 
 		if ( isset( $form_data['label'] ) ) {
-			$form_data['label'] = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_label', $form_data['label'] );
+			$form_data['label'] = ur_string_translation( $form_id, 'user_registration_' . $data['advance_setting']->field_name . '_label', $form_data['label'] );
 		}
 		if ( isset( $form_data['placeholder'] ) ) {
-			$form_data['placeholder'] = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_placeholder', $form_data['placeholder'] );
+			$form_data['placeholder'] = ur_string_translation( $form_id, 'user_registration_' . $data['advance_setting']->field_name . '_placeholder', $form_data['placeholder'] );
 		}
 		if ( isset( $form_data['description'] ) ) {
-			$form_data['description'] = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_description', $form_data['description'] );
+			$form_data['description'] = ur_string_translation( $form_id, 'user_registration_' . $data['advance_setting']->field_name . '_description', $form_data['description'] );
 		}
 
 		// Filter only selected countries for `Country` fields.
@@ -514,8 +514,10 @@ abstract class UR_Form_Field {
 
 		$form_data = isset( $form_data_array['form_data'] ) ? $form_data_array['form_data'] : $form_data;
 
-		if ( isset( $data['general_setting']->field_name ) ) {
-			user_registration_form_field( $data['general_setting']->field_name, $form_data );
+		$field_name = isset( $data['advance_setting']->field_name ) ? $data['advance_setting']->field_name : ( isset( $data['general_setting']->field_name ) ? $data['general_setting']->field_name : '' );
+
+		if ( ! empty( $field_name ) ) {
+			user_registration_form_field( $field_name, $form_data );
 		}
 	}
 

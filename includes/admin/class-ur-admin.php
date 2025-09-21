@@ -40,7 +40,40 @@ class UR_Admin {
 		add_action( 'user_registration_after_form_settings', array( $this, 'render_integration_section' ) );
 		add_action( 'user_registration_after_form_settings', array( $this, 'render_integration_List_section' ) );
 		add_action( 'init', array( $this, 'init_users_menu' ) );
+
+		$all_registered_fields = ur_get_registered_form_fields();
+		if ( is_array( $all_registered_fields ) && ! empty( $all_registered_fields ) ) {
+			foreach ( $all_registered_fields as $registered_field ) {
+				add_filter( $registered_field . '_custom_advance_settings', array( $this, 'add_field_name_options' ), 10, 3 );
+			}
+		}
 	}
+
+	/**
+	 * Add field name in advanced settings.
+	 *
+	 * @param array $setting Advanced Setting array.
+	 * @param int   $field_id Field Id.
+	 * @param string $default_class Default class for the setting.
+	 * @return array.
+	 */
+	public function add_field_name_options( $setting, $field_id, $default_class ) {
+		$custom_options = array(
+			'field_name'  => array(
+				'setting_id'  => 'field-name',
+				'type'        => 'text',
+				'label'       => __( 'Field Name', 'user-registration' ),
+				'class'       => $default_class . ' ur-settings-field-name',
+				'name'        => 'ur_advanced_setting[field_name]',
+				'placeholder' => __( 'Field Name', 'user-registration' ),
+				'required'    => true,
+				'tip'         => __( 'Unique key for the field.', 'user-registration' ),
+			),
+		);
+		$setting = $custom_options + $setting;
+		return $setting;
+	}
+
 	/**
 	 * Initialize Users Menu.
 	 *
