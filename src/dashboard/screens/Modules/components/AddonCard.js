@@ -15,7 +15,8 @@ import {
 	Icon,
 	Button,
 	Spinner,
-	Flex
+	Flex,
+	Tooltip
 } from "@chakra-ui/react";
 import { FaCog, FaPlay, FaLock } from "react-icons/fa";
 import { activateModule, deactivateModule } from "./modules-api";
@@ -103,7 +104,7 @@ const AddonCard = ({ addon, showToast }) => {
 
 	return (
 		<Box
-			bg="white"
+			bg="#fafbfd"
 			borderRadius="xl"
 			border="1px solid"
 			borderColor="gray.200"
@@ -174,9 +175,28 @@ const AddonCard = ({ addon, showToast }) => {
 					</HStack>
 
 					{/* Description */}
-					<Text fontSize="sm" color="gray.600" lineHeight="1.5" flex="1">
-						{addon.excerpt}
-					</Text>
+					<Tooltip 
+						label={addon.excerpt} 
+						placement="top" 
+						hasArrow
+						isDisabled={addon.excerpt.length <= 120}
+						backgroundColor="white"
+						color="gray.600"
+						borderRadius="sm"
+						p="5"
+						cursor="default"
+					>
+						<Text 
+							fontSize="sm" 
+							color="gray.600" 
+							lineHeight="1.5" 
+							flex="1"
+							noOfLines={2}
+							cursor={"text"}
+						>
+							{addon.excerpt}
+						</Text>
+					</Tooltip>
 				</VStack>
 			</HStack>
 
