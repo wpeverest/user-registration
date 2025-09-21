@@ -683,6 +683,19 @@ class UR_Smart_Tags {
 						$new_content = ob_get_clean();
 						$content     = str_replace( '{{' . $tag . '}}', $new_content, $content );
 						break;
+
+					case 'first_name':
+						$username   = isset( $values['username'] ) ? $values['username'] : '';
+						$user       = get_user_by( 'login', $username );
+						$user_id    = isset( $user->ID ) ? $user->ID : 0;
+						$first_name = get_user_meta( $user_id, 'first_name', true );
+						$content    = str_replace( '{{' . $other_tag . '}}', $first_name, $content );
+						break;
+
+					case 'membership_end_date':
+						$membership_end_date = isset( $values['membership_plan_expiry_date'] ) ? $values['membership_plan_expiry_date'] : '';
+						$content             = str_replace( '{{' . $tag . '}}', $membership_end_date, $content );
+						break;
 				}
 			}
 		}
