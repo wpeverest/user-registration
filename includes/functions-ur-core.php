@@ -896,7 +896,7 @@ function ur_get_general_settings( $id ) {
 			'name'        => 'ur_general_setting[label]',
 			'placeholder' => __( 'Label', 'user-registration' ),
 			'required'    => true,
-			'tip'         => __( 'Enter text for the form field label. This is recommended and can be hidden in the Advanced Settings.', 'user-registration' ),
+			'tip'         => __( 'Text shown as the field\’s title. You can hide it using the hide label settings below if you prefer a clean layout.', 'user-registration' ),
 		),
 		'description' => array(
 			'setting_id'  => 'description',
@@ -905,7 +905,7 @@ function ur_get_general_settings( $id ) {
 			'name'        => 'ur_general_setting[description]',
 			'placeholder' => __( 'Description', 'user-registration' ),
 			'required'    => true,
-			'tip'         => __( 'Enter text for the form field description.', 'user-registration' ),
+			'tip'         => __( 'Optional helper text that appears under the label to guide users.', 'user-registration' ),
 		),
 
 		'placeholder' => array(
@@ -915,7 +915,7 @@ function ur_get_general_settings( $id ) {
 			'name'        => 'ur_general_setting[placeholder]',
 			'placeholder' => __( 'Placeholder', 'user-registration' ),
 			'required'    => true,
-			'tip'         => __( 'Enter placeholder for the field.', 'user-registration' ),
+			'tip'         => __( 'Text shown inside the field until the user enters a value.', 'user-registration' ),
 		),
 		'required'    => array(
 			'setting_id'  => 'required',
@@ -925,7 +925,7 @@ function ur_get_general_settings( $id ) {
 			'placeholder' => '',
 			'required'    => true,
 			'default'     => 'false',
-			'tip'         => __( 'Check this option to mark the field required. A form will not submit unless all required fields are provided.', 'user-registration' ),
+			'tip'         => __( 'Make this field required, so the form can’t be submitted without it.', 'user-registration' ),
 		),
 		'hide_label'  => array(
 			'setting_id'  => 'hide-label',
@@ -935,7 +935,7 @@ function ur_get_general_settings( $id ) {
 			'placeholder' => '',
 			'required'    => true,
 			'default'     => 'false',
-			'tip'         => __( 'Check this option to hide the label of this field.', 'user-registration' ),
+			'tip'         => __( 'Hide the title of the field, keeping your form cleaner and simpler.', 'user-registration' ),
 		),
 	);
 	/**

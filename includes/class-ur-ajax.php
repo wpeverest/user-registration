@@ -880,6 +880,17 @@ class UR_AJAX {
 			$form_id       = sanitize_text_field( $_POST['data']['form_id'] ); //phpcs:ignore
 			$form_row_data = sanitize_text_field( $_POST['data']['row_data'] );
 
+			//For backward compatibility, store field_name in general settings as well.
+			if( is_array( $post_data ) ) {
+				foreach( $post_data as $post_datum ) {
+					foreach( $post_datum as $field ) {
+						if( isset( $field[0]->general_setting ) && $field[0]->general_setting instanceof stdClass && isset( $field[0]->advance_setting->field_name ) ) {
+							$field[0]->general_setting->field_name = $field[0]->advance_setting->field_name;
+						}
+					}
+				}
+			}
+
 			$post_data = array(
 				'post_type'      => 'user_registration',
 				'post_title'     => sanitize_text_field( $form_name ),
