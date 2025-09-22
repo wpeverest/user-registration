@@ -725,40 +725,6 @@
       "demo_video_url": ""
     },
     {
-      "title": "SMS Integration",
-      "slug": "user-registration-sms-integration",
-      "name": "User Registration SMS Integration",
-      "image": "extensions-json/sections/icons/sms_integration.png",
-      "excerpt": "Let users verify their account via SMS code sent to their phone number.",
-      "category": "Security",
-      "link": "https://docs.wpuserregistration.com/docs/user-registration-sms-integration/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
-      "plan": [
-        "plus",
-        "professional",
-        "themegrill agency"
-      ],
-      "released_date": "01/01/2024",
-      "setting_url": "admin.php?page=user-registration-settings&tab=sms-integration",
-      "demo_video_url": ""
-    },
-    {
-      "title": "Coupons",
-      "slug": "user-registration-coupons",
-      "name": "User Registration Coupons",
-      "image": "extensions-json/sections/icons/coupons.png",
-      "excerpt": "Offer personalized discounts and boost engagement.",
-      "category": "E-Commerce",
-      "link": "https://docs.wpuserregistration.com/docs/user-registration-coupons/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
-      "plan": [
-        "plus",
-        "professional",
-        "themegrill agency"
-      ],
-      "released_date": "01/01/2024",
-      "setting_url": "admin.php?page=user-registration-settings&tab=coupons",
-      "demo_video_url": ""
-    },
-    {
       "title": "Payment History",
       "slug": "user-registration-payment-history",
       "name": "User Registration Payment History",

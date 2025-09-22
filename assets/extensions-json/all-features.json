@@ -122,7 +122,7 @@
       "title": "SMS Integration",
       "slug" : "user-registration-sms-integration",
       "name" : "User Registration - SMS Integration",
-      "image": "extensions-json/sections/icons/Kit.png",
+      "image": "extensions-json/sections/icons/sms_integration.png",
       "excerpt": "Let users verify their account via SMS code sent to their phone number.",
       "category": "Security",
       "link": "https://docs.wpuserregistration.com/docs/sms-integration/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",

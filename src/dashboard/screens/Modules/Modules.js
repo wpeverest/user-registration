@@ -23,8 +23,6 @@ import {
 import AddonSkeleton from "../../skeleton/AddonsSkeleton/AddonsSkeleton";
 import { useStateValue } from "../../../context/StateProvider";
 import { actionTypes } from "../../../context/dashboardContext";
-import { useUpgradeModal } from "./hooks/useUpgradeModal";
-import { useLicenseActivation } from "./hooks/useLicenseActivation";
 
 // Import new components
 import Filters from "./components/Filters";
@@ -77,7 +75,7 @@ const Modules = () => {
 			'Membership': 'Membership',
 			'Smart Fields': 'Smart Fields',
 			'User Management': 'User Management',
-			'E-Commerce': 'Payments',
+			'E-Commerce': 'E-Commerce',
 			'Design': 'Design',
 			'Integrations': 'Integrations',
 			'Security': 'Security',
@@ -333,7 +331,7 @@ const Modules = () => {
 		const val = e.target.value;
 		setState((prev) => ({ ...prev, searchItem: val }));
 		searchItemRef.current = val;
-		
+
 		// Only search if at least 3 characters are typed
 		if (val.length >= 3) {
 			debounceSearch(val);
