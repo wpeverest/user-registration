@@ -26,6 +26,16 @@ const AddonCard = ({ addon, showToast }) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [moduleEnabled, setModuleEnabled] = useState(false);
 
+	// Get assets URL from global variable
+	const getImageUrl = (imagePath) => {
+		/* global _UR_DASHBOARD_ */
+		const { assetsURL } = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
+		if (imagePath && assetsURL) {
+			return assetsURL + imagePath;
+		}
+		return imagePath;
+	};
+
 	// Check if module is enabled based on plan requirements
 	useEffect(() => {
 		/* global _UR_DASHBOARD_ */
@@ -96,11 +106,6 @@ const AddonCard = ({ addon, showToast }) => {
 		return "gray";
 	};
 
-	// Placeholder icon - will be updated later
-	const getPlaceholderIcon = (title) => {
-		// Simple placeholder based on title
-		return "🔧"; // Default placeholder
-	};
 
 	return (
 		<Box
@@ -142,18 +147,44 @@ const AddonCard = ({ addon, showToast }) => {
 			<HStack align="start" spacing="4" flex="1" mb="6">
 				{/* Left Side - Icon */}
 				<Box
-					w="12"
-					h="12"
+					w="10"
+					h="10"
 					bg="white"
-					borderRadius="lg"
+					borderRadius="full"
 					display="flex"
 					alignItems="center"
 					justifyContent="center"
-					fontSize="2xl"
 					boxShadow="sm"
 					flexShrink={0}
+					overflow="hidden"
 				>
-					{getPlaceholderIcon(addon.title)}
+					{addon.image ? (
+						<img
+							src={getImageUrl(addon.image)}
+							alt={addon.title}
+							style={{
+								width: "100%",
+								height: "100%",
+								objectFit: "contain",
+								borderRadius: "50%"
+							}}
+							onError={(e) => {
+								// Fallback to placeholder if image fails to load
+								e.target.style.display = "none";
+								e.target.nextSibling.style.display = "flex";
+							}}
+						/>
+					) : null}
+					<Box
+						display={addon.image ? "none" : "flex"}
+						alignItems="center"
+						justifyContent="center"
+						fontSize="2xl"
+						width="100%"
+						height="100%"
+					>
+						🔧
+					</Box>
 				</Box>
 
 				{/* Right Side - Title, Description, and Plan Badge */}
