@@ -16,15 +16,24 @@ import {
 	Button,
 	Spinner,
 	Flex,
-	Tooltip
+	Tooltip,
+	Modal,
+	ModalOverlay,
+	ModalContent,
+	ModalHeader,
+	ModalCloseButton,
+	useDisclosure
 } from "@chakra-ui/react";
 import { FaCog, FaPlay, FaLock } from "react-icons/fa";
+import YouTubePlayer from "react-player/youtube";
 import { activateModule, deactivateModule } from "./modules-api";
 
 const AddonCard = ({ addon, showToast }) => {
 	const [isActive, setIsActive] = useState(addon.status === "active");
 	const [isLoading, setIsLoading] = useState(false);
 	const [moduleEnabled, setModuleEnabled] = useState(false);
+	const [videoLoading, setVideoLoading] = useState(false);
+	const { isOpen: isVideoOpen, onOpen: onVideoOpen, onClose: onVideoClose } = useDisclosure();
 
 	// Get assets URL from global variable
 	const getImageUrl = (imagePath) => {
@@ -61,6 +70,11 @@ const AddonCard = ({ addon, showToast }) => {
 			const plan_upgrade_url = upgradeURL + "&utm_source=dashboard-all-feature&utm_medium=dashboard-upgrade-plan";
 			window.open(plan_upgrade_url, "_blank");
 		}
+	};
+
+	const handleVideoPlay = () => {
+		setVideoLoading(true);
+		onVideoOpen();
 	};
 
 	const handleToggle = async () => {
@@ -263,7 +277,7 @@ const AddonCard = ({ addon, showToast }) => {
 								icon={<Icon as={FaPlay} />}
 								aria-label="Video Tutorial"
 								variant="ghost"
-								onClick={() => window.open(`https://www.youtube.com/watch?v=${addon.demo_video_url}`, "_blank")}
+								onClick={handleVideoPlay}
 							/>
 						</>
 					)}
@@ -296,6 +310,43 @@ const AddonCard = ({ addon, showToast }) => {
 					)}
 				</HStack>
 			</HStack>
+
+			{/* YouTube Video Modal */}
+			{isVideoOpen && addon.demo_video_url && (
+				<Modal
+					isOpen={isVideoOpen}
+					onClose={onVideoClose}
+					size="3xl"
+				>
+					<ModalOverlay />
+					<ModalContent px={4} pb={4}>
+						<ModalHeader textAlign="center">
+							{addon.title}
+						</ModalHeader>
+						<ModalCloseButton />
+						<Box position="relative">
+							<YouTubePlayer
+								url={`https://www.youtube.com/embed/${addon.demo_video_url}`}
+								playing={true}
+								width="100%"
+								controls
+								onReady={() => setVideoLoading(false)}
+								onBufferEnd={() => setVideoLoading(false)}
+							/>
+							{videoLoading && (
+								<Box
+									position="absolute"
+									top="50%"
+									left="50%"
+									transform="translate(-50%, -50%)"
+								>
+									<Spinner size="lg" />
+								</Box>
+							)}
+						</Box>
+					</ModalContent>
+				</Modal>
+			)}
 		</Box>
 	);
 };
