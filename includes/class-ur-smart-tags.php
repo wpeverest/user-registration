@@ -685,7 +685,7 @@ class UR_Smart_Tags {
 						break;
 
 					case 'first_name':
-						$username   = isset( $values['username'] ) ? $values['username'] : '';
+						$username   = $values['username'] ?? $values['membership_tags']['username'] ?? null;
 						$user       = get_user_by( 'login', $username );
 						$user_id    = isset( $user->ID ) ? $user->ID : 0;
 						$first_name = get_user_meta( $user_id, 'first_name', true );
