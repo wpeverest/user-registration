@@ -20,23 +20,24 @@ if (! defined('ABSPATH')) {
 	exit;
 }
 
-$user = wp_get_current_user();
-$user_id = get_current_user_id();
+$user           = wp_get_current_user();
+$user_id        = get_current_user_id();
+$endpoint_label = isset( $args['endpoint_label'] ) ? $args['endpoint_label'] : '';
 
 $layout = get_option('user_registration_my_account_layout', 'horizontal');
 
 if ('vertical' === $layout) {
-?>
+	?>
 	<div class="user-registration-MyAccount-content__header">
 		<h1><?php echo wp_kses_post($endpoint_label); ?></h1>
 	</div>
-<?php
+	<?php
 }
 ?>
 <div class="user-registration-MyAccount-content__body">
 	<div class="ur-frontend-form login ur-edit-profile" id="ur-frontend-form">
 	<?php if ( current_user_can( 'manage_options' ) ): ?>
-			  <div class="user-registration-myaccount-notice-box">
+				<div class="user-registration-myaccount-notice-box">
 				<div class="user-registration-myaccount-notice-box--title">
 					<div class="user-registration-myaccount-notice-box--title-icon">
 						<span class="dashicons dashicons-info-outline notice-icon"></span>
@@ -60,7 +61,7 @@ if ('vertical' === $layout) {
 					);
 					$user_query = new WP_User_Query( $user_args );
 					$existing_non_urm_user = $user_query->get_total();
-				?>
+					?>
 				<?php if ( $existing_non_urm_user >= 5 ): ?>
 					<p class="existing-users">
 					<strong>Existing users:</strong> Your site has <span class="highlight"><?php echo $existing_non_urm_user; ?> users</span> registered before this plugin.
@@ -93,7 +94,7 @@ if ('vertical' === $layout) {
 						<?php
 						$is_profile_pic_on_form    = ! ur_option_checked( 'user_registration_disable_profile_picture', false );
 						if ( $is_profile_pic_on_form ) {
-						?>
+							?>
 						<div class="user-registration-profile-header">
 							<div class="user-registration-img-container" style="width:100%">
 								<?php
