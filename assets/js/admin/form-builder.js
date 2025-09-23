@@ -3029,10 +3029,9 @@
 										// Get field name.
 										var fieldName = $template
 											.find(
-												'.ur-advanced-setting.ur-advanced-setting-field-name input[name="ur_advanced_setting[field_name]"]'
+												'.ur-advance-setting.ur-settings-field-name input[name=' + fieldKey + '_advance_setting[field_name]"]'
 											)
 											.val();
-
 										// Get label text from label tag, excluding any span tags
 										var label = $template
 											.find(".ur-label label")
@@ -3051,7 +3050,6 @@
 												'_advance_setting[field_visibility]"]'
 											)
 											.val();
-
 										$(document.body).trigger(
 											"ur_new_field_created",
 											[
@@ -3775,7 +3773,7 @@
 										var fieldName = $ele
 											.closest(".ur-selected-item")
 											.find(
-												'input[name="ur_advanced_setting[field_name]"]'
+												'input[name="' + fieldKey + '_advance_setting[field_name]"]'
 											)
 											.val();
 

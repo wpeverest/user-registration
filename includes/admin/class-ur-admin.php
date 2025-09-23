@@ -64,7 +64,7 @@ class UR_Admin {
 				'type'        => 'text',
 				'label'       => __( 'Field Name', 'user-registration' ),
 				'class'       => $default_class . ' ur-settings-field-name',
-				'name'        => 'ur_advanced_setting[field_name]',
+				'name'        => $field_id . '[field_name]',
 				'placeholder' => __( 'Field Name', 'user-registration' ),
 				'required'    => true,
 				'tip'         => __( 'Unique key for the field.', 'user-registration' ),
