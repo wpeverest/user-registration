@@ -342,7 +342,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	public function activate_license( $license_key ) {
 		try {
 			if ( empty( $license_key ) ) {
-				throw new Exception( 'Please enter your license key' );
+				throw new Exception( 'Please enter your license key.' );
 			}
 
 			$activate_results = json_decode(
