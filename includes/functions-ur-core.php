@@ -3384,6 +3384,12 @@ if ( ! function_exists( 'ur_generate_required_pages' ) ) {
 				'content' => '[user_registration_reset_password_form]',
 				'requires_membership' => false,
 			),
+			'user_registration_reset_password_page_id' => array(
+				'name' => 'reset-password',
+				'title' => __( 'Reset Password', 'user-registration' ),
+				'content' => '[user_registration_reset_password_form]',
+				'requires_membership' => false,
+			),
 			'user_registration_member_registration_page_id' => array(
 				'name' => 'membership-registration',
 				'title' => __( 'Membership Registration', 'user-registration' ),
@@ -9059,6 +9065,7 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 		$required_pages = array(
 			'user_registration_login_page_id'               => 'Login Page',
 			'user_registration_lost_password_page_id'       => 'Lost Password Page',
+			'user_registration_reset_password_page_id'      => 'Reset Password Page',
 			'user_registration_member_registration_page_id' => 'Membership Registration Page',
 			'user_registration_thank_you_page_id'           => 'Membership Thank You Page',
 			'user_registration_myaccount_page_id'           => 'My Account Page',

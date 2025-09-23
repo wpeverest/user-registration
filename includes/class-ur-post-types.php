@@ -142,6 +142,7 @@ class UR_Post_Types {
 			$page_options = array(
 				'user_registration_login_page_id',
 				'user_registration_lost_password_page_id',
+				'user_registration_reset_password_page_id',
 				'user_registration_member_registration_page_id',
 				'user_registration_thank_you_page_id',
 				'user_registration_myaccount_page_id',
