@@ -262,7 +262,6 @@ if ( ! class_exists( 'Members' ) ) {
 			$members_list_table = new MembersListTable();
 			$roles              = $members_list_table->get_roles();
 			$memberships        = $members_list_table->get_all_memberships();
-			include __DIR__ . '/../Views/member-create.php';
 		}
 
 		/**

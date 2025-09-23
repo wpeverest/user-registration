@@ -290,9 +290,3 @@ if ( "subscription" == $membership['post_content']['type'] ) {
 		<span class="close_notice">&times;</span>
 	</div>
 </div>
-
-
-
-
-
-

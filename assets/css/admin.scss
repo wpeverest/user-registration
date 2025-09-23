@@ -4785,6 +4785,10 @@ body.user-registration {
 		padding-bottom: $spacing_24px;
 		margin-bottom: $spacing_24px;
 
+		&:has(.subsubsub) {
+			flex-direction: row-reverse;
+		}
+
 		ul.subsubsub {
 			font-size: 15px;
 			margin-top: 0;

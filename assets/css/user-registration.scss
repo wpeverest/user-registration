@@ -2900,35 +2900,35 @@ body.user-registration-page {
 }
 
 @keyframes toaster {
-  0% {
-    opacity: 0;
-    transform: translateX(-50%) translateY(100%);
-  }
-  10% {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-  90% {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-  100% {
-    opacity: 0;
-    transform: translateX(-50%) translateY(100%);
-  }
+	0% {
+		opacity: 0;
+		transform: translateX(-50%) translateY(100%);
+	}
+	10% {
+		opacity: 1;
+		transform: translateX(-50%) translateY(0);
+	}
+	90% {
+		opacity: 1;
+		transform: translateX(-50%) translateY(0);
+	}
+	100% {
+		opacity: 0;
+		transform: translateX(-50%) translateY(100%);
+	}
 }
 
 .ur-toaster {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #1ea71b;
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 5px;
-  display: inline-flex;
-  white-space: nowrap;
-  z-index: 9999;
-  animation: toaster 5s ease-in-out forwards;
+	position: fixed;
+	bottom: 20px;
+	left: 50%;
+	transform: translateX(-50%);
+	background: #1ea71b;
+	color: #fff;
+	padding: 10px 20px;
+	border-radius: 5px;
+	display: inline-flex;
+	white-space: nowrap;
+	z-index: 9999;
+	animation: toaster 5s ease-in-out forwards;
 }

@@ -2124,7 +2124,6 @@
 							).data("urm-pg-type"),
 							error_notice = $("#upgrade-membership-notice"),
 							btn = $(".swal2-confirm");
-
 						//append spinner
 						if (btn.find("span.urm-spinner").length > 0) {
 							return false;

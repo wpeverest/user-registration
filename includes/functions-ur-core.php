@@ -4132,7 +4132,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				$secret_key      = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_cloudflare' );
 			}
 
-			if ( ur_is_ajax_login_enabled() && !empty( $_POST['resubmitted'] ) ) {
+			if ( ur_is_ajax_login_enabled() ) {
 				$recaptcha_value = $captcha_response;
 			}
 
@@ -4233,8 +4233,12 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 
 					if ( isset( $user->user_login ) ) {
 						$login_data['user_login'] = $user->user_login;
-					} elseif ( empty( $messages['unknown_email'] ) ) {
-						$messages['unknown_email'] = esc_html__( 'A user could not be found with this email address.', 'user-registration' );
+					} elseif ( empty( $user ) ) {
+
+						if ( empty( $messages['unknown_email'] ) ) {
+							$messages['unknown_email'] = esc_html__( 'A user could not be found with this email address.', 'user-registration' );
+						}
+
 						throw new Exception( '<strong>' . esc_html__( 'ERROR: ', 'user-registration' ) . '</strong>' . $messages['unknown_email'] );
 					}
 				}
@@ -4254,7 +4258,13 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 			// To check the specific login.
 			if ( 'email' === get_option( 'user_registration_general_setting_login_options_with', array() ) ) {
 				$user_data                = get_user_by( 'email', $username );
-				$login_data['user_login'] = isset( $user_data->user_email ) ? $user_data->user_email : '1#45$$&*@ur.com'; //provided invalid email to show invalid email error instead of empty username which will show empty_username error regardless of the login option
+				if ( empty( $user_data ) ) {
+					if( empty( $messages['unknown_email'] ) ) {
+						$messages['unknown_email'] = esc_html__( 'A user could not be found with this email address.', 'user-registration' );
+					}
+
+					throw new Exception( '<strong>' . esc_html__( 'ERROR: ', 'user-registration' ) . '</strong>' . $messages['unknown_email'] );
+				}
 			} elseif ( 'username' === get_option( 'user_registration_general_setting_login_options_with', array() ) ) {
 				$user_data                = get_user_by( 'login', $username );
 				$login_data['user_login'] = isset( $user_data->user_login ) ? $user_data->user_login : ! is_email( $username );
@@ -4519,8 +4529,7 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 		 */
 		$users_can_register = apply_filters( 'ur_register_setting_override', get_option( 'users_can_register' ) );
 
-		if ( ! is_user_logged_in() ) {
-		} else {
+		if ( is_user_logged_in() ) {
 			/**
 			 * Filter to modify user capability.
 			 * Default value is 'create_users'.

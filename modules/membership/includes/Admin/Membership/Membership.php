@@ -153,7 +153,7 @@ class Membership {
 //				$this->bulk_untrash( $membership_list );
 				break;
 			case 'delete':
-				$this->bulk_trash( $delete_list, true, $delete_membership );
+//				$this->bulk_trash( $delete_list, true, $delete_membership );
 				break;
 			default:
 				break;

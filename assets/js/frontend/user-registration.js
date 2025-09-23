@@ -2879,6 +2879,29 @@
 			}
 		});
 	};
+	var update_nonce = function (all_forms_ids) {
+		$.ajax({
+			url: user_registration_params.ajax_url,
+			data: {
+				action: "user_registration_get_recent_nonce",
+				form_ids: all_forms_ids,
+				nonce_for: "registration"
+			},
+			type: "POST",
+			async: true,
+			complete: function (ajax_response) {
+				var response = JSON.parse(ajax_response.responseText);
+				if (response.success) {
+					$.each(response.data, function (index, item) {
+						console.log(index, item);
+						$("#user-registration-form-" + index)
+							.find("#ur_frontend_form_nonce")
+							.val(item);
+					});
+				}
+			}
+		});
+	};
 
 	function user_registration_count() {
 		$("textarea").each(function () {
