@@ -6528,29 +6528,11 @@ if ( ! function_exists( 'ur_current_url' ) ) {
 	}
 }
 
-add_action(
-	'admin_head',
-	function () {
-		$js = <<<JS
-		let isSidebarEnabled = localStorage.getItem( 'isSidebarEnabled' );
-		isSidebarEnabled = 'false' === isSidebarEnabled ? false : true;
-
-		document.cookie =
-		"isSidebarEnabled=" + isSidebarEnabled + "; path=/;";
-		const interval = setInterval( () => {
-			if ( document.body ) {
-				clearInterval(interval);
-				if (isSidebarEnabled) {
-					document.body.classList.add( 'ur-settings-sidebar-show' );
-				} else {
-					document.body.classList.add( 'ur-settings-sidebar-hidden' );
-				}
-			}
-		}, 1 );
-		JS;
-		wp_print_inline_script_tag( $js );
-	}
-);
+add_filter( 'body_class', function( $classes ) {
+	$is_settings_sidebar_enabled = isset( $_COOKIE['isSidebarEnabled'] ) ? ur_string_to_bool( sanitize_text_field( wp_unslash( $_COOKIE['isSidebarEnabled'] ) ) ) : true;
+	$body_class = !$is_settings_sidebar_enabled ? 'ur-settings-sidebar-hidden': 'ur-settings-sidebar-show';
+	return array_merge( $classes, array ( $body_class ) );
+});
 
 if ( ! function_exists( 'ur_quick_settings_tab_content' ) ) {
 
