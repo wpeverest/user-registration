@@ -4132,7 +4132,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				$secret_key      = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_cloudflare' );
 			}
 
-			if ( ur_is_ajax_login_enabled() && !empty( $_POST['resubmitted'] ) ) {
+			if ( ur_is_ajax_login_enabled() ) {
 				$recaptcha_value = $captcha_response;
 			}
 
