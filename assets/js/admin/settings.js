@@ -1039,6 +1039,8 @@
 				$("body")
 					.removeClass("ur-settings-sidebar-hidden")
 					.addClass("ur-settings-sidebar-show");
+				$(".user-registration-settings-sidebar-container")
+					.removeClass("ur-d-none");
 				$(node)
 					.closest(".user-registration-options-header--top__right")
 					.find(".user-registration-toggle-text")
