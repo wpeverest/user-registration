@@ -366,6 +366,10 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 
 			case 'textarea':
+				if ( ! isset( $args['icon'] ) && empty( $args['icon'] ) ) {
+					$args['input_class'][] = 'without_icon';
+				}
+
 				$field .= '<textarea style="margin-bottom:0px;" data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" class="input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" ' . ( empty( $args['custom_attributes']['rows'] ) ? ' rows="2"' : '' ) . ( empty( $args['custom_attributes']['cols'] ) ? ' cols="5"' : '' ) . implode( ' ', $custom_attributes ) . '>' . esc_textarea( $value ) . '</textarea>';
 				$field .= '<div style="text-align: right; font-size:14px; color:#737373; margin-top:0px;"> <div class="ur-input-count" data-count-type="' . ( isset( $args['max-words'] ) ? 'words' : 'characters' ) . '" style="display: inline-block; margin-right: 1px;">0</div>&nbsp;';
 				$field .= '<div style="display: inline-block;">' . ( isset( $args['max-words'] ) ? '/' . $args['max-words'] . ' ' . __( 'words', 'user-registration' ) : ( isset( $args['max-characters'] ) ? '/' . $args['max-characters'] . ' ' . __( 'characters', 'user-registration' ) : ' ' . __( 'characters', 'user-registration' ) ) );
@@ -469,7 +473,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				} else {
 					$field = '<label class="ur-label checkbox" ' . implode( ' ', $custom_attributes ) . '>
 							<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . $value . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . ( '' !== $current_row ? '_' . $current_row : '' ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( $value, 1, false ) . ' /> '
-					         . $args['label'] . $required . $tooltip_html . '</label>';
+							. $args['label'] . $required . $tooltip_html . '</label>';
 				}
 				break;
 			case 'toggle':
@@ -737,7 +741,11 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				if ( ur_string_to_bool( $date_slot_booking ) ) {
 
 					$custom_attributes[] = 'data-enable-date-slot-booking="' . $date_slot_booking . '"';
-					$class               .= ' date-slot-booking';
+					$class              .= ' date-slot-booking';
+				}
+
+				if ( ! isset( $args['icon'] ) && empty( $args['icon'] ) ) {
+					$class .= ' without_icon';
 				}
 
 				$actual_value = $value;
@@ -885,15 +893,15 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						}
 
 						$field .= wp_kses(
-							          trim( $option_label ),
-							          array(
-								          'a'    => array(
-									          'href'  => array(),
-									          'title' => array(),
-								          ),
-								          'span' => array(),
-							          )
-						          ) . '</label></li>';
+							trim( $option_label ),
+							array(
+								'a'    => array(
+									'href'  => array(),
+									'title' => array(),
+								),
+								'span' => array(),
+							)
+						) . '</label></li>';
 					}
 					$field .= '</ul>';
 				} else {
@@ -907,19 +915,30 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 							$checked = checked( $value, trim( $option_index ), false );
 						}
 
-						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( trim( $option_index ) ) . '"  name="' . esc_attr( $key ) . ( '' !== $current_row ? '_' . $current_row : '' ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" ' . implode( ' ', $custom_attributes ) . ' / ' . $checked . ' /> ';
+						$field .= sprintf(
+							'<input data-rules="%s" data-id="%s" type="radio" class="input-radio %s" value="%s" name="%s" id="%s" %s %s /> ',
+							esc_attr( $rules ),
+							esc_attr( $key ),
+							esc_attr( implode( ' ', $args['input_class'] ) ),
+							esc_attr( trim( $option_index ) ),
+							esc_attr( $key . ( $current_row !== '' ? "_{$current_row}" : '' ) ),
+							esc_attr( "{$args['id']}_{$option_text}" ),
+							implode( ' ', $custom_attributes ),
+							$checked
+						);
+
 						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" class="radio">';
 
 						$field .= wp_kses(
-							          trim( $option_text ),
-							          array(
-								          'a'    => array(
-									          'href'  => array(),
-									          'title' => array(),
-								          ),
-								          'span' => array(),
-							          )
-						          ) . '</label></li>';
+							trim( $option_text ),
+							array(
+								'a'    => array(
+									'href'  => array(),
+									'title' => array(),
+								),
+								'span' => array(),
+							)
+						) . '</label></li>';
 					}
 					$field .= '</ul>';
 				}
@@ -990,15 +1009,15 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			$field_html = '';
 			if ( $args['label'] && 'checkbox' != $args['type'] && 'toggle' != $args['type'] && 'hidden' !== $args['type'] ) {
 				$field_html .= '<label for="' . esc_attr( $label_id ) . '" class="ur-label">' . wp_kses(
-						$args['label'],
-						array(
-							'a'    => array(
-								'href'  => array(),
-								'title' => array(),
-							),
-							'span' => array(),
-						)
-					) . $required . $tooltip_html . '</label>';
+					$args['label'],
+					array(
+						'a'    => array(
+							'href'  => array(),
+							'title' => array(),
+						),
+						'span' => array(),
+					)
+				) . $required . $tooltip_html . '</label>';
 			}
 
 			$field_html      .= $field;
@@ -2136,15 +2155,15 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 						}
 
 						$field .= wp_kses(
-							          trim( $option_label ),
-							          array(
-								          'a'    => array(
-									          'href'  => array(),
-									          'title' => array(),
-								          ),
-								          'span' => array(),
-							          )
-						          ) . '</label></li>';
+							trim( $option_label ),
+							array(
+								'a'    => array(
+									'href'  => array(),
+									'title' => array(),
+								),
+								'span' => array(),
+							)
+						) . '</label></li>';
 					}
 					$field .= '</ul>';
 				} else {
@@ -2162,15 +2181,15 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" class="radio">';
 
 						$field .= wp_kses(
-							          trim( $option_text ),
-							          array(
-								          'a'    => array(
-									          'href'  => array(),
-									          'title' => array(),
-								          ),
-								          'span' => array(),
-							          )
-						          ) . '</label></li>';
+							trim( $option_text ),
+							array(
+								'a'    => array(
+									'href'  => array(),
+									'title' => array(),
+								),
+								'span' => array(),
+							)
+						) . '</label></li>';
 					}
 					$field .= '</ul>';
 				}
@@ -2227,15 +2246,15 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 			$field_html = '';
 			if ( $args['label'] && 'checkbox' != $args['type'] && 'toggle' != $args['type'] && 'hidden' !== $args['type'] ) {
 				$field_html .= '<label for="' . esc_attr( $label_id ) . '" class="ur-label">' . wp_kses(
-						$args['label'],
-						array(
-							'a'    => array(
-								'href'  => array(),
-								'title' => array(),
-							),
-							'span' => array(),
-						)
-					) . $required . $tooltip_html . '</label>';
+					$args['label'],
+					array(
+						'a'    => array(
+							'href'  => array(),
+							'title' => array(),
+						),
+						'span' => array(),
+					)
+				) . $required . $tooltip_html . '</label>';
 			}
 
 			$field_html      .= $field;

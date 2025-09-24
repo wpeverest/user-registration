@@ -114,6 +114,7 @@ function ur_get_screen_ids() {
 		$ur_screen_id . '_page_user-registration-content-restriction',
 		$ur_screen_id . '_page_user-registration-coupons',
 		$ur_screen_id . '_page_member-payment-history',
+		$ur_screen_id . '_page_user-registration-users',
 		'profile',
 		'user-edit',
 	);
