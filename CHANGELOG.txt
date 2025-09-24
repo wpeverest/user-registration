@@ -1,3 +1,39 @@
+= 4.4.3    - 07/10/2025 =
+* Security - Updated jQuery validator version to v1.20.0.
+* Feature  - Site Assistant menu introduction.
+* Refactor - Input field HTML for better translation and readability.
+* Enhance  - Support for custom login and logout redirection settings within login form builder.
+* Enhance  - Notice to install the pro version manually after entering a valid license key.
+* Enhance  - Persistent dismissal of Non-URM users admin notice in UR pages.
+* Enhance  - Individual hide label settings for login builder.
+* Enhance  - Change membership plan in members page by admin.
+* Enhance  - Separate saving mechanism for each recaptcha.
+* Enhance  - Search filter in users table search.
+* Enhance  - Sticky search bar in form fields.
+* Enhance  - All Addons Page UI enhancement.
+* Enhance  - Update tinymce design.
+* Tweak    – Reposition license-related error notices to display below the license header.
+* Tweak    – Rearrange field_name field options setting from General to Advance setting.
+* Tweak    – Allow users to opt out after entering a license key in the free version.
+* Tweak    – Remove activate/deactivate license in plugin action links.
+* Tweak    – Update tooltips and labels for field options settings.
+* Fix      - Registration successful email sent in before admin approval in membership form.
+* Fix      - Manage user_registration capability not working for users tab in custom role.
+* Fix      - Content restriction applied to members whose membership is not active.
+* Fix      - Alignment issue in gutenberg editor for membership registration block.
+* Fix      - Inner page content restriction message overriding global message.
+* Fix      - Added backend validation for pg gateways in membership.
+* Fix      - Spacing for textarea and date field in my account page.
+* Fix      - WooCommerce value not populating on URM users page.
+* Fix      - Margin bottom fix for change membership dialog box.
+* Fix      - Pdf form submission invalid image on empty src.
+* Fix      - Reflect updated plan type in change plan.
+* Fix      - Currency position not working in payment.
+* Fix      - Login Form block user state not working.
+* Fix      - Price ID not found in stripe.
+* Dev      - Allow default gateway selection in membership registration.
+* Dev      - Hook to modify the disable logout confirmation option.
+
 = 4.4.2    - 23/09/2025 =
 * Tweak    - User Registration body class added on whole site restriction template.
 * Tweak    - Added translations for custom password strength hint.
