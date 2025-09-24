@@ -70,7 +70,7 @@ class UR_Frontend {
 				$form_data = json_decode( wp_unslash( $_POST['form_data'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 			foreach ( $form_data as $data ) {
-				if ( 'user_registration_profile_pic_url' === $data->field_name ) {
+				if ( isset( $data->field_name ) && 'user_registration_profile_pic_url' === $data->field_name ) {
 					if ( ! is_array( $data->value ) && ! ur_is_valid_url( $data->value ) ) {
 						$valid_form_data['profile_pic_url']        = new stdClass();
 						$valid_form_data['profile_pic_url']->value = isset( $data->value ) ? $data->value : '';
