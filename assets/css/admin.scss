@@ -7612,3 +7612,32 @@ body.user-registration-page {
 		}
 	}
 }
+
+.user-registration {
+	.user-registration-settings {
+		.user-registration-settings-container {
+			.urm_license_setting_notice.urm_install_pro_notice {
+				border: 1px solid $primary_color;
+				border-left-width: 4px;
+				border-radius: 2px;
+				padding: 12px 16px;
+				margin-bottom: 32px;
+
+				.install_pro_version_button {
+					font-weight: 500;
+					background: $primary_color;
+					color: $white;
+				}
+
+				.install_pro_version_button:hover {
+					border-color: $primary_color;
+				}
+
+				.notice-icon {
+					color: $primary_color;
+					margin-right: 8px;
+				}
+			}
+		}
+	}
+}

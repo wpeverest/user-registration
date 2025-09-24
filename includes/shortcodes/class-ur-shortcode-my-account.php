@@ -333,8 +333,10 @@ class UR_Shortcode_My_Account {
 	 * Lost password page handling.
 	 */
 	public static function lost_password() {
-		nocache_headers();
-		header( 'Expires: Wed, 11 Jan 1984 05:00:00 GMT' );
+		if ( ! headers_sent() ) {
+			nocache_headers();
+			header( 'Expires: Wed, 11 Jan 1984 05:00:00 GMT' );
+		}
 		/**
 		 * After sending the reset link, don't show the form again.
 		 */
