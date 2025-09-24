@@ -51,7 +51,7 @@ class UR_Setting_Email extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => '',
 				'placeholder' => __( 'Custom Class', 'user-registration' ),
-				'tip'         => __( 'Class name to embed in this field.', 'user-registration' ),
+				'tip'         => __( 'Add a CSS class for custom styling.', 'user-registration' ),
 			),
 		);
 
