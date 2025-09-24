@@ -297,7 +297,17 @@ abstract class UR_Meta_Boxes {
 				'textarea_rows' => 5,
 				'media_buttons' => true,  // Show media upload button
 				'teeny'         => false, // Use full TinyMCE editor
-				'quicktags'     => true,  // Enable QuickTags
+				'quicktags'     => false,  // Enable QuickTags
+				'show-smart-tags-button' => false,
+				'tinymce'    => array(
+					'skin' => 'lightgray',
+					'toolbar1' => 'undo,redo,formatselect,fontselect,fontsizeselect,bold,italic,forecolor,alignleft,aligncenter,alignright,alignjustify,bullist,numlist,outdent,indent,removeformat',
+					'statusbar' => false,
+					'toolbar2' => '',
+					'toolbar3' => '',
+					'toolbar4' => '',
+					'plugins' => 'wordpress,wpautoresize,wplink,wpdialogs,wptextpattern,wpview,colorpicker,textcolor,hr,charmap,link,fullscreen,lists',
+				)
 			);
 			wp_editor( $field['value'], $field['id'], $editor_settings );
 		} else {

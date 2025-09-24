@@ -36,6 +36,10 @@ class UR_Block_Login_Form extends UR_Block_Abstract {
 			$parameters['logout_redirect'] = $attr['logoutUrl'];
 		}
 
+		if ( ! empty( $attr['userState'] ) ) {
+			$parameters['userState'] = $attr['userState'];
+		}
+
 		return UR_Shortcodes::login(
 			$parameters
 		);

@@ -228,28 +228,53 @@ class UR_Admin_User_List_Manager {
 	 * Display a notice to admin notifying the users registered via non URM forms.
 	 */
 	public function user_registration_non_urm_users_notices() {
-		$users = get_users( array(
-			'fields'     => 'ID',
-			'meta_query' => array(
-				array(
-					'key'     => 'ur_form_id',
-					'compare' => 'NOT EXISTS',
-				),
-			),
-		) );
 
+		$current_user_id = get_current_user_id();
+
+		$urm_dismissed_notices = get_user_meta( $current_user_id, 'urm_dismissed_notices', true );
+
+		if( is_array( $urm_dismissed_notices ) && isset( $urm_dismissed_notices[ 'non_urm_users_notice' ] ) ) {
+			$closed_count = isset( $urm_dismissed_notices[ 'non_urm_users_notice' ][ 'dismiss_count' ] ) ?: 0;
+			$last_closed = isset( $urm_dismissed_notices[ 'non_urm_users_notice' ][ 'last_dismissed_at' ] ) ?: 0;
+			// if it was closed twice in a row, don't show again.
+			if( $closed_count >= 2 ) {
+				return;
+			}
+			//Don't show if it has been closed recently(within past 24 hours).
+			if( $last_closed && ( time() - $last_closed ) < DAY_IN_SECONDS ) {
+				return;
+			}
+		}
+		$users = get_transient( 'urm_users_not_from_urm_forms' );
 		$current_screen = get_current_screen();
 		$ur_pages = ur_get_screen_ids();
-		$ur_pages[] = 'users';
+		array_push( $ur_pages, 'users' );
 
-		$existing_non_urm_users = count( $users );
-
+		$existing_non_urm_users = $users ? $users : 0;
 		if( $existing_non_urm_users >= 5 && in_array( $current_screen->id, $ur_pages ) ) {
-			echo '<div class="notice notice-info is-dismissible">';
-			echo '<p><strong>User Registration:</strong> Your site has <span class="highlight">' . $existing_non_urm_users . ' users</span> registered before this plugin.';
-			echo 'Want them to enjoy the new profile features too? Use the ';
-			echo '<a class="addon-link" href="https://wpuserregistration.com/features/profile-connect/?utm_source=admin-notices&utm_medium=profile-connect-addon-link&utm_campaign=' . UR()->utm_campaign . '" rel="noreferrer noopener" target="_blank">Profile Connect addon</a> to link these existing users to your new registration form.';
-			echo '</p></div>';
+			$utm_url = esc_url(
+            	'https://wpuserregistration.com/features/profile-connect/?utm_source=admin-notices&utm_medium=profile-connect-addon-link&utm_campaign=' . UR()->utm_campaign
+        	);
+
+        ?>
+			<div class="notice notice-info is-dismissible urm-per-user-notice urm-non-urm-users-notice" data-notice-id="non_urm_users_notice" data-notice-type="urm-admin-notice">
+				<p>
+					<strong><?php esc_html_e( 'User Registration:', 'user-registration' ); ?></strong>
+					<?php
+					printf(
+						/* translators: %s: number of existing users */
+						esc_html__( 'Your site has %s users registered before this plugin.', 'user-registration' ),
+						'<span class="highlight">' . intval( $existing_non_urm_users ) . '</span>'
+					);
+					?>
+					<?php esc_html_e( 'Want them to enjoy the new profile features too? Use the', 'user-registration' ); ?>
+					<a class="addon-link" href="<?php echo $utm_url; ?>" rel="noreferrer noopener" target="_blank">
+						<?php esc_html_e( 'Profile Connect addon', 'user-registration' ); ?>
+					</a>
+					<?php esc_html_e( 'to link these existing users to your new registration form.', 'user-registration' ); ?>
+				</p>
+			</div>
+        <?php
 		}
 	}
 	/**

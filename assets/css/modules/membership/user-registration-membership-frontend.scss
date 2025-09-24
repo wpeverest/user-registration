@@ -58,7 +58,7 @@ html {
 			gap: 30px;
 			margin: 0;
 			justify-items: center;
-			// align-items: center;			
+			// align-items: center;
 
 			.membership-block {
 				display: flex;
@@ -88,7 +88,7 @@ html {
 							font-weight: 600;
 							line-height: 36px;
 							padding-top: 0;
-						}						
+						}
 					}
 
 					&-body {
@@ -252,7 +252,7 @@ html {
 				margin-right: 0;
 			}
 		}
-	}			
+	}
 
 	// Thankyou Page CSS
 	.thank-you-page-container {
@@ -639,7 +639,11 @@ label {
 	display: flex;
 	gap: 10px;
 	flex-direction: column;
-
+	.ur_membership_registration_container{
+		.ur_membership_frontend_input_container {
+				margin-bottom: 0;
+			}
+	}
 	.ur-upgrade-label {
 		font-weight: 700;
 	}

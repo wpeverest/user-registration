@@ -14,7 +14,7 @@ if ( $whole_site_access_restricted ) {
 				</title>
 				<?php wp_head(); ?>
 			</head>
-			<body>
+			<body class="user-registration-page">
 				<?php
 				$message = apply_filters( 'user_registration_process_smart_tags', $message );
 				if ( function_exists( 'apply_shortcodes' ) ) {

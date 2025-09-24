@@ -1,6 +1,9 @@
 jQuery(function ($) {
 
 	$( document.body ).ready( function( e ) {
+		// Update anchor href for li with class toplevel_page_user-registration
+		$('li.toplevel_page_user-registration > a').attr('href', 'admin.php?page=user-registration');
+
 		$('.ur-today-users, .ur-last-week-users, .ur-last-month-users, .ur-total-users').html('').html('<i>'+ur_widget_params.loading+'</i>' );
 		$('#ur-dashboard-widget-forms').html('').append('<option>'+ur_widget_params.loading+'</option');
 
@@ -41,4 +44,5 @@ jQuery(function ($) {
 			});
 		});
 	});
+
 });

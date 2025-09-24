@@ -172,7 +172,7 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 			<?php
 			if ( ! $is_pro_active || ! $quick_setup_completed ) {
 				?>
-				<div class="user-registration-settings-sidebar-container" id="user-registration-settings-sidebar">
+				<div class="user-registration-settings-sidebar-container  <?php echo esc_attr( !$is_settings_sidebar_enabled ? 'ur-d-none' : '' ); ?> " id="user-registration-settings-sidebar">
 					<?php
 					if ( ! $quick_setup_completed ) {
 						?>

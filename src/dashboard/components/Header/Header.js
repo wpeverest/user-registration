@@ -77,7 +77,7 @@ const Header = () => {
 								<Logo h="10" w="10" />
 							</Link>
 							<IntersectObserver routes={ROUTES}>
-								{ROUTES.map(({ route, label }) => (
+								{ROUTES.map(({ route, label, hidden }) => (
 									<Link
 										data-target={route}
 										key={route}
@@ -99,7 +99,7 @@ const Header = () => {
 											borderColor: "#475bb2",
 											marginBottom: "-2px"
 										}}
-										display="inline-flex"
+										display={hidden ? "none" : "inline-flex"}
 										alignItems="center"
 										px="2"
 										h="full"

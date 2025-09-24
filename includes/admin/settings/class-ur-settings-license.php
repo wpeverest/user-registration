@@ -103,10 +103,17 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 
 			//only show the content on free version.
 			if( is_plugin_active( 'user-registration/user-registration.php' ) ) {
-				$img = UR()->plugin_url() . '/assets/images/rocket.gif';
-				$license_message = false !== ur_get_license_plan() ? '' : '<br>No license is required. Enjoy!';
-				$settings['sections']['license_options_settings']['before_desc'] = __( 'You\'re currently using the free version of User Registration & Membership.' . $license_message. '<br><br>To unlock advanced features and extended functionality, consider <a target="_blank" href="' . esc_url( 'https://wpuserregistration.com/upgrade/?utm_source=ur-license-setting&utm_medium=upgrade-link&utm_campaign=' . UR()->utm_campaign ) . '">Upgrading to Pro.</a>', 'user-registration' );
-				$settings['sections']['license_options_settings']['desc'] = wp_kses_post( __('<img style="width:20px;height:20px;" src="' . $img . '" /> <span>Already purchased a license? Enter your license key below to activate PRO features.</span>', 'user-registration' ) );
+				if ( get_option( 'user-registration_license_key' ) ) {
+					$settings['sections']['license_options_settings']['desc'] = '';
+					$settings['sections']['license_options_settings']['before_desc'] = wp_kses_post( '<div class="urm_license_setting_notice urm_install_pro_notice"><h3><span class="dashicons dashicons-info-outline notice-icon"></span>' . __('Complete Your Pro Setup', 'user-registration' ) . '</h3><p>' . __('Your license is activated, but User Registration & Membership pro plugin needs to be installed to unlock all features. This is a one-time setup that takes less than a minute.', 'user-registration' ) . '</p><button class="button install_pro_version_button">' . __( 'Install Pro Version', 'user-registration' ) . '</button></div>');
+				} else {
+					$img                                                             = UR()->plugin_url() . '/assets/images/rocket.gif';
+					$license_message                                                 = false !== ur_get_license_plan() ? '' : '<br>No license is required. Enjoy!';
+					$settings['sections']['license_options_settings']['before_desc'] = __( 'You\'re currently using the free version of User Registration & Membership.' . $license_message . '<br><br>To unlock advanced features and extended functionality, consider <a target="_blank" href="' . esc_url( 'https://wpuserregistration.com/upgrade/?utm_source=ur-license-setting&utm_medium=upgrade-link&utm_campaign=' . UR()->utm_campaign ) . '">Upgrading to Pro.</a>',
+						'user-registration' );
+					$settings['sections']['license_options_settings']['desc']        = wp_kses_post( __( '<img style="width:20px;height:20px;" src="' . $img . '" /> <span>Already purchased a license? Enter your license key below to activate PRO features.</span>',
+						'user-registration' ) );
+				}
 			}
 
 			// Replace license input box and display deactivate license button when license is activated.
@@ -133,9 +140,10 @@ if ( ! class_exists( 'UR_Settings_License' ) ) :
 					),
 				);
 
-				/* translators: %1$s - WPeverest My Account url */
-				$settings['sections']['license_options_settings']['desc'] = sprintf( __( 'Your license has been activated. Enjoy using <strong>User Registration</strong>. Please go to %1$sMy Account Page%2$s for more details ', 'user-registration' ), '<a href="https://wpeverest.com/login/" rel="noreferrer noopener" target="_blank">', '</a>' );
-
+				if( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
+					/* translators: %1$s - WPeverest My Account url */
+					$settings['sections']['license_options_settings']['desc'] = sprintf( __( 'Your license has been activated. Enjoy using <strong>User Registration</strong>. Please go to %1$sMy Account Page%2$s for more details ', 'user-registration' ), '<a href="https://wpeverest.com/login/" rel="noreferrer noopener" target="_blank">', '</a>' );
+				}
 				// Hide save changes button from settings when license is activated.
 				$GLOBALS['hide_save_button'] = true;
 

@@ -53,7 +53,6 @@ $is_editing = ! empty( $_GET['post_id'] );
 								<?php
 								if ( isset( $membership->post_content ) && ! empty( $membership->post_content ) ) {
 									$membership_content = json_decode( wp_unslash( $membership->post_content ), true );
-
 								}
 								?>
 								<?php
@@ -63,6 +62,24 @@ $is_editing = ! empty( $_GET['post_id'] );
 									array(
 										'textarea_name' => 'Membership Description',
 										'textarea_rows' => 50,
+										'media_buttons' => false,
+										'quicktags' => false,
+										'teeny' => true,
+										'show-ur-registration-form-button' => false, // Hide Add Registration button
+										'show-smart-tags-button' => true, // Show Smart Tags button
+										'tinymce' => array(
+											'theme' => 'modern',
+											'skin' => 'lightgray',
+											'toolbar1' => 'undo,redo,formatselect,fontselect,fontsizeselect,bold,italic,forecolor,alignleft,aligncenter,alignright,alignjustify,bullist,numlist,outdent,indent,removeformat',
+											'content_css' => 'default',
+											'branding' => false,
+											'resize' => true,
+											'statusbar' => false,
+											'menubar' => false,
+											'menu' => false,
+											'elementpath' => true,
+											'plugins' => 'wordpress,wpautoresize,wplink,wpdialogs,wptextpattern,wpview,colorpicker,textcolor,hr,charmap,link,fullscreen,lists',
+										),
 									)
 								);
 								?>

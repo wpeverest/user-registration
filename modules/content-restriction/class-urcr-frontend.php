@@ -965,7 +965,7 @@ class URCR_Frontend {
 			$members_subscription    = new \WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository();
 			$subscription            = $members_subscription->get_member_subscription( wp_get_current_user()->ID );
 			$current_user_membership = ( ! empty( $subscription ) ) ? $subscription['item_id'] : array();
-			$subscription_status = ( ! empty( $subscription[ 'status' ] ) ) && 'canceled' == $subscription['status'];
+			$is_user_membership_active = ( ! empty( $subscription[ 'status' ] ) ) && 'active' == $subscription['status'];
 		}
 		$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
 
@@ -987,7 +987,7 @@ class URCR_Frontend {
 						$template = $this->urcr_restrict_contents_template( $template, $post );
 					}
 				} elseif ( '3' === get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
-					if ( is_array( $allowed_memberships ) && in_array( $current_user_membership, $allowed_memberships ) && $subscription_status ) {
+					if ( is_array( $allowed_memberships ) && in_array( $current_user_membership, $allowed_memberships ) && $is_user_membership_active ) {
 						return $template;
 					}
 					$template = $this->urcr_restrict_contents_template( $template, $post );
@@ -1009,7 +1009,7 @@ class URCR_Frontend {
 					$template = $this->urcr_restrict_contents_template( $template, $post );
 				}
 			} elseif ( $get_meta_data_allow_to === '3' ) {
-				if ( is_array( $allowed_memberships ) && in_array( $current_user_membership, $allowed_memberships ) ) {
+				if ( is_array( $allowed_memberships ) && in_array( $current_user_membership, $allowed_memberships ) && $is_user_membership_active ) {
 					return $template;
 				}
 				return $this->urcr_restrict_contents_template( $template, $post );
@@ -1054,6 +1054,7 @@ class URCR_Frontend {
 			$subscription              = $members_subscription->get_member_subscription( wp_get_current_user()->ID );
 			$current_user_membership   = ( ! empty( $subscription ) ) ? $subscription['item_id'] : array();
 			$get_meta_data_memberships = get_post_meta( $post_id, 'urcr_meta_memberships', $single = true );
+			$is_user_membership_active = ! empty( $subscription[ 'status' ] ) && 'active' === $subscription[ 'status' ];
 		}
 
 		$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
@@ -1077,7 +1078,7 @@ class URCR_Frontend {
 					}
 					return $post;
 				} elseif ( '3' === get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
-					if ( is_array( $allowed_memberships ) && in_array( $current_user_membership, $allowed_memberships ) ) {
+					if ( is_array( $allowed_memberships ) && in_array( $current_user_membership, $allowed_memberships ) && $is_user_membership_active ) {
 						return;
 					}
 					$this->urcr_restrict_contents();
@@ -1102,7 +1103,7 @@ class URCR_Frontend {
 
 				return $post;
 			} elseif ( $get_meta_data_allow_to === '3' ) {
-				if ( is_array( $get_meta_data_memberships ) && in_array( $current_user_membership, $get_meta_data_memberships ) ) {
+				if ( is_array( $get_meta_data_memberships ) && in_array( $current_user_membership, $get_meta_data_memberships ) && $is_user_membership_active ) {
 					return $post;
 				}
 				$this->urcr_restrict_contents();
@@ -1140,8 +1141,10 @@ class URCR_Frontend {
 		}
 
 		// Display restriction message instead of post content.
-		$restricted_message = get_post_meta( $post->ID, 'urcr_meta_content', true );
-		$post->post_content = ! empty( $restricted_message ) ? wp_kses_post( $restricted_message ) : $this->message();
+		$restricted_message      = get_post_meta( $post->ID, 'urcr_meta_content', true );
+		$override_global_message = get_post_meta( $post->ID, 'urcr_meta_override_global_settings', true );
+		$post->post_content      = ! empty( $restricted_message ) && $override_global_message ? wp_kses_post( $restricted_message ) : $this->message();
+
 		// Add filter for elementor content.
 		add_filter( 'elementor/frontend/the_content', array( $this, 'elementor_restrict' ) );
 

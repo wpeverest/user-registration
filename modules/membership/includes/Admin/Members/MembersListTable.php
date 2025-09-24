@@ -134,16 +134,15 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 				$edit_link = add_query_arg(
 					array(
 						'action'   => 'edit',
-						'user_id'  => $user_id,
-						'_wpnonce' => wp_create_nonce( 'bulk-users' ),
+						'member_id'  => $user_id
 					),
-					admin_url( 'admin.php?page=user-registration-users&view_user&action=edit' ),
+					admin_url( 'admin.php?page=user-registration-members' ),
 				);
 
 				// Add a link to the user's author archive, if not empty.
 				$actions['view'] = sprintf(
 					'<a href="%s" target="_blank">%s</a>',
-					esc_url( admin_url( 'admin.php?page=user-registration-users&view_user&user_id=' . $user_id ) ),
+					esc_url( admin_url( 'admin.php?page=user-registration-members&action=view&member_id=' . $user_id ) ),
 					__( 'View' )
 				);
 

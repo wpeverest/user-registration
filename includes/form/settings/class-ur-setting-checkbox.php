@@ -47,10 +47,10 @@ class UR_Setting_Checkbox extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => '',
 				'placeholder' => __( 'Custom Class', 'user-registration' ),
-				'tip'         => __( 'Class name to embed in this field.', 'user-registration' ),
+				'tip'         => __( 'Add a CSS class for custom styling.', 'user-registration' ),
 			),
 			'choice_limit' => array(
-				'label'       => __( 'Choice Limit', 'user-registration' ),
+				'label'       => __( 'Maximum Number of Choices', 'user-registration' ),
 				'data-id'     => $this->field_id . '_choice_limit',
 				'name'        => $this->field_id . '[choice_limit]',
 				'class'       => $this->default_class . ' ur-settings-min',
@@ -58,10 +58,10 @@ class UR_Setting_Checkbox extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => '',
 				'placeholder' => __( 'Choice Limit', 'user-registration' ),
-				'tip'         => __( 'Enter maximum number choices that can be selected.', 'user-registration' ),
+				'tip'         => __( 'Set the maximum number of options that can be selected by the user.', 'user-registration' ),
 			),
 			'select_all'   => array(
-				'label'       => __( 'Select All ', 'user-registration' ),
+				'label'       => __( 'Enable \'Select All\' Option', 'user-registration' ),
 				'data-id'     => $this->field_id . '_select_all',
 				'name'        => $this->field_id . '[select_all]',
 				'class'       => $this->default_class . ' ur-settings-select',
@@ -69,7 +69,7 @@ class UR_Setting_Checkbox extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => 'false',
 				'placeholder' => '',
-				'tip'         => __( 'Enable this option to select all the options', 'user-registration' ),
+				'tip'         => __( 'Check this option to allow users to select all available choices at once.', 'user-registration' ),
 			),
 		);
 

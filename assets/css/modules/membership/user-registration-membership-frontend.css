@@ -531,6 +531,9 @@ label {
   gap: 10px;
   flex-direction: column;
 }
+.membership-upgrade-container .ur_membership_registration_container .ur_membership_frontend_input_container {
+  margin-bottom: 0;
+}
 .membership-upgrade-container .ur-upgrade-label {
   font-weight: 700;
 }

@@ -13,7 +13,8 @@ import {
 	Products,
 	Settings,
 	Modules,
-	FreeVsPro
+	FreeVsPro,
+	SiteAssistant
 } from "../screens";
 
 const Router = () => {
@@ -23,13 +24,13 @@ const Router = () => {
 
 	return (
 		<Routes>
-			<Route path="/" element={<Dashboard />} />
+			<Route path="/" element={<SiteAssistant />} />
 			<Route path="/settings" element={<Settings to={settingsURL} />} />
 			<Route path="/features" element={<Modules />} />
+			<Route path="/products" element={<Products />} />
 			{!isPro && <Route path="/free-vs-pro" element={<FreeVsPro />} />}
 			<Route path="/help" element={<Help />} />
-			<Route path="*" element={<Dashboard />} />
-			<Route path="/products" element={<Products />} />
+			<Route path="*" element={<SiteAssistant />} />
 		</Routes>
 	);
 };

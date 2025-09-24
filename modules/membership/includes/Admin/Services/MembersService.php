@@ -24,10 +24,10 @@ class MembersService {
 	 *
 	 * @return array|bool[]
 	 */
-	public function validate_user_data( $data ) {
+	public function validate_user_data( $data , $is_edit = false) {
 
 		// validate membership_start date
-		if ( $data['start_date'] < date( 'Y-m-d' ) ) {
+		if ( $data['start_date'] < date( 'Y-m-d' ) && !$is_edit) {
 			return array(
 				'status'  => false,
 				'key'     => 'start_date',

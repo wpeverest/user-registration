@@ -2,7 +2,10 @@
  *  External Dependencies
  */
 import {
+	AspectRatio,
+	Box,
 	Button,
+	ButtonGroup,
 	Grid,
 	Heading,
 	HStack,
@@ -26,7 +29,7 @@ import SmartTagsLists from "./Lists/SmartTagsLists/SmartTagsLists";
 
 const Help = () => {
 	/* global _UR_DASHBOARD_ */
-	const { utmCampaign } =
+	const { newFormURL, allFormsURL, utmCampaign } =
 		typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 
 	const [isListViewerOpen, setIsListViewerOpen] = useState(false);
@@ -65,13 +68,125 @@ const Help = () => {
 						/>
 					)
 				) : (
-					<Grid
-						gridTemplateColumns={{
-							sm: "1fr",
-							md: "1fr 1fr"
-						}}
-						gridGap="5"
-					>
+					<>
+						{/* Welcome Section and Video Section - Side by Side */}
+						<Grid
+							gridTemplateColumns={{
+								sm: "1fr",
+								md: "1fr 1fr"
+							}}
+							gridGap="5"
+							mb="5"
+						>
+							{/* Welcome Section - Left */}
+							<Box
+								p="6"
+								borderRadius="base"
+								border="1px"
+								borderColor="gray.100"
+								bgColor="white"
+								display="flex"
+								flexDirection="column"
+								justifyContent="space-between"
+								minH="300px"
+							>
+								<Box display="flex" flexDirection="column" gap="6">
+									<Heading
+										as="h3"
+										fontSize="2xl"
+										fontWeight="semibold"
+										color="gray.800"
+									>
+										{__(
+											"Welcome to User Registration & Membership!",
+											"user-registration"
+										)}
+									</Heading>
+									<Text fontSize="md" color="gray.600" lineHeight="1.5">
+										{__(
+											"Create powerful registration forms and manage your members with our comprehensive toolkit.",
+											"user-registration"
+										)}
+									</Text>
+								</Box>
+								<HStack spacing="4" gap="12px" mt="auto" pt="6">
+									<Button
+										as={Link}
+										backgroundColor="#475bb2"
+										fontSize="14px"
+										fontWeight="normal"
+										borderRadius="base"
+										color="white"
+										textDecor="none"
+										py="3"
+										px="6"
+										href={newFormURL}
+										_hover={{
+											backgroundColor: "#3a4a9a",
+											color: "white",
+											textDecor: "none"
+										}}
+									>
+										{__(
+											"Create a Registration Form",
+											"user-registration"
+										)}
+									</Button>
+									<Button
+										as={Link}
+										variant="outline"
+										borderColor="#475bb2"
+										color="#475bb2"
+										borderRadius="base"
+										fontSize="14px"
+										fontWeight="normal"
+										href={allFormsURL}
+										textDecor="none"
+										isExternal
+										_hover={{
+											backgroundColor: "#475bb2",
+											color: "white",
+											borderColor: "#475bb2",
+											textDecor: "none"
+										}}
+									>
+										{__("View all forms", "user-registration")}
+									</Button>
+								</HStack>
+							</Box>
+
+							{/* Video Section - Right */}
+							<Box
+								p="6"
+								borderRadius="base"
+								border="1px"
+								borderColor="gray.100"
+								bgColor="white"
+							>
+								<AspectRatio ratio={16 / 9}>
+									<iframe
+										src="https://www.youtube.com/embed/ZOXVbfBTNPQ?si=82Q2iOOE2iUF7M02&autoplay=1&mute=1&rel=0"
+										title="Best WordPress User Registration & Membership"
+										style={{
+											borderRadius: "11px",
+											border: "none",
+											overflow: "hidden"
+										}}
+										allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+										allowFullScreen
+									></iframe>
+								</AspectRatio>
+							</Box>
+						</Grid>
+
+						{/* Shortcodes and Smart Tags Section */}
+						<Grid
+							gridTemplateColumns={{
+								sm: "1fr",
+								md: "1fr 1fr"
+							}}
+							gridGap="5"
+						>
 						<Stack
 							px="6"
 							py="8"
@@ -220,7 +335,8 @@ const Help = () => {
 								{__("View Now", "user-registration")}
 							</Button>
 						</Stack>
-					</Grid>
+						</Grid>
+					</>
 				)}
 				<Stack marginTop="25px">
 					<Heading as="h3" fontSize="lg" fontWeight="semibold">

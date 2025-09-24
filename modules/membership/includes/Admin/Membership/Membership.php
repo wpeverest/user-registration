@@ -48,7 +48,6 @@ class Membership {
 		add_action( 'admin_menu', array( $this, 'add_urm_menu' ), 15 );
 		add_action( 'admin_init', array( $this, 'actions' ) );
 		add_action( 'in_admin_header', array( __CLASS__, 'hide_unrelated_notices' ) );
-		add_filter( 'wp_editor_settings', array( $this, 'remove_media_buttons' ) );
 		add_filter( 'user_registration_login_options', array( $this, 'add_payment_login_option' ) );
 		add_action( 'admin_head', array( $this, 'fix_menu_highlighting' ) );
 	}
@@ -183,21 +182,21 @@ class Membership {
 		$type   = ! EMPTY_TRASH_DAYS || $delete ? 'deleted' : 'trashed';
 		$qty    = count( $membership_lists );
 		$status = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '';
-		
+
 		$redirect_args = array(
 			'page' => 'user-registration-membership',
 		);
-		
+
 		if ( ! $is_membership ) {
 			$redirect_args['action'] = 'list_groups';
 		}
-		
+
 		if ( $status ) {
 			$redirect_args['status'] = $status;
 		}
-		
+
 		$redirect_args[ $type ] = $qty;
-		
+
 		wp_safe_redirect( add_query_arg( $redirect_args, admin_url( 'admin.php' ) ) );
 		exit();
 	}
@@ -486,23 +485,7 @@ class Membership {
 			)
 		);
 	}
-
-	/**
-	 * @param $settings
-	 *
-	 * @return mixed
-	 */
-	public function remove_media_buttons( $settings ) {
-		//return tinymce as default
-		add_filter( 'wp_default_editor', function () {
-				return 'tinymce';
-		} );
-		if ( ( isset( $_GET['page'] ) && 'user-registration-settings' === $_GET['page'] ) && ( isset( $_GET["tab"] ) && "payment" === $_GET["tab"] ) ) {
-			$settings['media_buttons'] = false;
-		}
-
-		return $settings;
-	}
+	
 
 	/**
 	 * Get i18 Labels

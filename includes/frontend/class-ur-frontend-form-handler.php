@@ -268,7 +268,8 @@ class UR_Frontend_Form_Handler {
 		foreach ( $post_content_array as $row_index => $row ) {
 			foreach ( $row as $grid_index => $grid ) {
 				foreach ( $grid as $field_index => $field ) {
-					if ( isset( $field->general_setting->field_name ) && 'confirm_user_pass' != $field->general_setting->field_name ) {
+					$field_name = isset( $field->advance_setting->field_name ) ? $field->advance_setting->field_name : ( isset ( $field->general_setting->field_name ) ? $field->general_setting->field_name : '' );
+					if ( 'confirm_user_pass' != $field_name ) {
 						array_push( $form_field_data_array, $field );
 					}
 				}

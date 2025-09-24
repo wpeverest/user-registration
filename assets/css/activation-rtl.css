@@ -1,1 +1,64 @@
-.user-registration-message{overflow:hidden;position:relative;border-right-color:#2ea2cc!important}.user-registration-message.error{border-right-color:#ff4f55!important}.user-registration-message.error p{max-width:1000px}.user-registration-message a.button-primary,.user-registration-message a.button-secondary{text-decoration:none!important}.user-registration-message a.user-registration-message-close{position:absolute;top:0;left:0;padding:10px 21px 10px 15px;font-size:13px;line-height:1.23076923;text-decoration:none}.user-registration-message a.user-registration-message-close:before{position:absolute;top:8px;right:0;-webkit-transition:all .1s ease-in-out;transition:all .1s ease-in-out}.user-registration-message .submit{display:flex;padding:5px}.wpb-content-layouts .icon-wpb-vc_user_registration{background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTI3LjU4IDRhMjcuOSAyNy45IDAgMCAwLTUuMTcgNCAyNyAyNyAwIDAgMC00LjA5IDUuMDggMzMuMDYgMzMuMDYgMCAwIDEgMiA0LjY1QTIzLjc4IDIzLjc4IDAgMCAxIDI0IDEyLjE1VjE4YTggOCAwIDAgMS01Ljg5IDcuNzJsLS4yMS4wNWEyNyAyNyAwIDAgMC0xLjktOC4xNkEyNy45IDI3LjkgMCAwIDAgOS41OSA4YTI3LjkgMjcuOSAwIDAgMC01LjE3LTRMNCAzLjc3VjE4YTEyIDEyIDAgMCAwIDkuOTMgMTEuODJoLjE0YTExLjcyIDExLjcyIDAgMCAwIDMuODYgMGguMTRBMTIgMTIgMCAwIDAgMjggMThWMy43N3pNOCAxOHYtNS44NWEyMy44NiAyMy44NiAwIDAgMSA1Ljg5IDEzLjU3QTggOCAwIDAgMSA4IDE4em04LTE2YTMgMyAwIDEgMCAzIDMgMyAzIDAgMCAwLTMtM3oiLz48L3N2Zz4=)!important}
+/**
+ * activation.scss
+ * Styles applied to elements displayed on activation
+ */
+/**
+ * Imports
+ */
+/**
+ * Variables
+ */
+/**
+ * Grid breakpoints
+ *
+ * Define the minimum dimensions at which your layout will change,
+ * adapting to different screen sizes, for use in media queries.
+ **/
+/**
+ * Grid containers
+ *
+ * Define the maximum width of `.ur-container` for different screen sizes.
+ * scss-docs-start container-max-widths
+ **/
+/**
+ * Styling begins
+ */
+.user-registration-message {
+  overflow: hidden;
+  position: relative;
+  border-right-color: #2ea2cc !important;
+}
+.user-registration-message.error {
+  border-right-color: #ff4f55 !important;
+}
+.user-registration-message.error p {
+  max-width: 1000px;
+}
+.user-registration-message a.button-primary,
+.user-registration-message a.button-secondary {
+  text-decoration: none !important;
+}
+.user-registration-message a.user-registration-message-close {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 10px 21px 10px 15px;
+  font-size: 13px;
+  line-height: 1.23076923;
+  text-decoration: none;
+}
+.user-registration-message a.user-registration-message-close:before {
+  position: absolute;
+  top: 8px;
+  right: 0;
+  -webkit-transition: all 0.1s ease-in-out;
+  transition: all 0.1s ease-in-out;
+}
+.user-registration-message .submit {
+  display: flex;
+  padding: 5px;
+}
+
+.wpb-content-layouts .icon-wpb-vc_user_registration {
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTI3LjU4IDRhMjcuOSAyNy45IDAgMCAwLTUuMTcgNCAyNyAyNyAwIDAgMC00LjA5IDUuMDggMzMuMDYgMzMuMDYgMCAwIDEgMiA0LjY1QTIzLjc4IDIzLjc4IDAgMCAxIDI0IDEyLjE1VjE4YTggOCAwIDAgMS01Ljg5IDcuNzJsLS4yMS4wNWEyNyAyNyAwIDAgMC0xLjktOC4xNkEyNy45IDI3LjkgMCAwIDAgOS41OSA4YTI3LjkgMjcuOSAwIDAgMC01LjE3LTRMNCAzLjc3VjE4YTEyIDEyIDAgMCAwIDkuOTMgMTEuODJoLjE0YTExLjcyIDExLjcyIDAgMCAwIDMuODYgMGguMTRBMTIgMTIgMCAwIDAgMjggMThWMy43N3pNOCAxOHYtNS44NWEyMy44NiAyMy44NiAwIDAgMSA1Ljg5IDEzLjU3QTggOCAwIDAgMSA4IDE4em04LTE2YTMgMyAwIDEgMCAzIDMgMyAzIDAgMCAwLTMtM3oiLz48L3N2Zz4=") !important;
+}

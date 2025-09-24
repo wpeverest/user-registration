@@ -83,6 +83,11 @@ class UR_Cron {
 		if ( UR_PRO_ACTIVE && ! wp_next_scheduled( 'urm_run_delayed_subscription' ) ) {
 			wp_schedule_event( time(), 'daily', 'urm_run_delayed_subscription' );
 		}
+		if ( UR_PRO_ACTIVE && ! wp_next_scheduled( 'urm_daily_membership_expiration_check' ) ) {
+			wp_schedule_event( time(), 'daily', 'urm_daily_membership_expiration_check' );
+
+		}
+
 	}
 
 }

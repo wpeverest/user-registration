@@ -53,10 +53,10 @@ class UR_Setting_Country extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => '',
 				'placeholder' => __( 'Custom Class', 'user-registration' ),
-				'tip'         => __( 'Class name to embed in this field.', 'user-registration' ),
+				'tip'         => __( 'Add a CSS class for custom styling.', 'user-registration' ),
 			),
 			'selected_countries' => array(
-				'label'    => __( 'Selected Countries', 'user-registration' ),
+				'label'    => __( 'Choose Available Countries', 'user-registration' ),
 				'data-id'  => $this->field_id . '_selected_countries',
 				'name'     => $this->field_id . '[selected_countries][]',
 				'class'    => $this->default_class . ' ur-settings-selected-countries',
@@ -65,7 +65,7 @@ class UR_Setting_Country extends UR_Field_Settings {
 				'multiple' => true,
 				'required' => true,
 				'options'  => UR_Form_Field_Country::get_instance()->get_country(),
-				'tip'      => __( 'Select countries to give as options.', 'user-registration' ),
+				'tip'      => __( 'Select the countries that will be available as options in the dropdown.', 'user-registration' ),
 			),
 			'default_value'      => array(
 				'label'    => __( 'Default Value', 'user-registration' ),

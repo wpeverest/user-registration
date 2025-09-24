@@ -23,6 +23,7 @@ class Crons {
 			add_action( 'urm_daily_membership_renewal_check', array( $this, 'membership_renewal_check' ), 10, 1 );
 			add_action( 'urm_daily_membership_expiring_soon_check', array( $this, 'membership_expiring_soon_check' ), 10, 1 );
 			add_action( 'urm_daily_membership_ended_check', array( $this, 'membership_ended_check' ), 10, 1 );
+			add_action( 'urm_daily_membership_expiration_check', array( $this, 'membership_expiration_check' ), 10, 1 );
 		}
 	}
 
@@ -72,5 +73,16 @@ class Crons {
 
 		$subscription_service = new SubscriptionService();
 		$subscription_service->daily_membership_ended_check();
+	}
+
+	/**
+	 * membership_expiration_check
+	 * Check for memberships that have passed their expiry date and mark them as expired
+	 *
+	 * @return void
+	 */
+	public function membership_expiration_check() {
+		$subscription_service = new SubscriptionService();
+		$subscription_service->daily_membership_expiration_check();
 	}
 }

@@ -953,7 +953,7 @@
 				);
 				$.each(
 					$(
-						'.ur-input-grids .ur-general-setting-block input[data-field="field_name"]'
+						'.ur-input-grids .ur-advance-setting-block input[data-advance-field="field_name"]'
 					),
 					function () {
 						var $field = $(this);
@@ -962,9 +962,9 @@
 						try {
 							var field_value = $field.val();
 							var length = $(
-								".ur-input-grids .ur-general-setting-block"
+								".ur-input-grids .ur-advance-setting-block"
 							).find(
-								'input[data-field="field_name"][value="' +
+								'input[data-advance-field="field_name"][value="' +
 								field_value +
 								'"]'
 							).length;
@@ -1803,7 +1803,7 @@
 
 							var fields = [];
 							$(this)
-								.find("input[data-field='field_name']")
+								.find("input[data-advance-field='field_name']")
 								.each(function () {
 									fields.push($(this).val());
 								});
@@ -3009,7 +3009,7 @@
 
 										var populated_item = template
 											.closest(".ur-selected-item ")
-											.find("[data-field='field_name']")
+											.find("[data-advance-field='field_name']")
 											.val();
 										URFormBuilder.manage_conditional_field_options(
 											populated_item
@@ -3029,10 +3029,9 @@
 										// Get field name.
 										var fieldName = $template
 											.find(
-												'.ur-general-setting.ur-general-setting-field-name input[name="ur_general_setting[field_name]"]'
+												'.ur-advance-setting.ur-settings-field-name input[name=' + fieldKey + '_advance_setting[field_name]"]'
 											)
 											.val();
-
 										// Get label text from label tag, excluding any span tags
 										var label = $template
 											.find(".ur-label label")
@@ -3051,7 +3050,6 @@
 												'_advance_setting[field_visibility]"]'
 											)
 											.val();
-
 										$(document.body).trigger(
 											"ur_new_field_created",
 											[
@@ -3243,7 +3241,7 @@
 														".ur-selected-item"
 													)
 													.find(
-														'.ur-general-setting-field-name input[data-field="field_name"]'
+														'input[data-advance-field="field_name"]'
 													)
 													.val();
 												var fieldLabel = $(this)
@@ -3403,7 +3401,7 @@
 																	var field_name =
 																		$(this)
 																			.find(
-																				"[data-field='field_name']"
+																				"[data-advance-field='field_name']"
 																			)
 																			.val();
 
@@ -3758,7 +3756,7 @@
 										var removed_item = $(this)
 											.closest(".ur-selected-item ")
 											.find(
-												"[data-field='field_name']"
+												"[data-advance-field='field_name']"
 											)
 											.val(),
 											ele = $this,
@@ -3775,7 +3773,7 @@
 										var fieldName = $ele
 											.closest(".ur-selected-item")
 											.find(
-												'.ur-general-setting.ur-general-setting-field-name input[name="ur_general_setting[field_name]"]'
+												'input[name="' + fieldKey + '_advance_setting[field_name]"]'
 											)
 											.val();
 
@@ -3941,7 +3939,7 @@
 											.closest(".ur-selected-item ")
 											.clone();
 										var label_node = clone.find(
-											'input[data-field="field_name"]'
+											'input[data-advance-field="field_name"]'
 										);
 										var regex = /\d+/g;
 										var matches = label_node
@@ -3956,7 +3954,7 @@
 											.replace(find_string, "");
 										clone
 											.find(
-												'input[data-field="field_name"]'
+												'input[data-advance-field="field_name"]'
 											)
 											.attr(
 												"value",
@@ -3968,7 +3966,7 @@
 											.append(clone);
 
 										var populated_item = clone
-											.find("[data-field='field_name']")
+											.find("[data-advance-field='field_name']")
 											.val();
 										URFormBuilder.manage_conditional_field_options(
 											populated_item
@@ -4031,7 +4029,7 @@
 						}
 
 						var field_name = $(this)
-							.find("[data-field='field_name']")
+							.find("[data-advance-field='field_name']")
 							.val();
 						if (typeof field_name !== "undefined") {
 							var select_value_for_user_role =
@@ -4434,8 +4432,8 @@
 								);
 
 								var old_field_name = wrapper
-									.find(".ur-general-setting-block")
-									.find('input[data-field="field_name"]')
+									.find(".ur-advance-setting-block")
+									.find('input[data-advance-field="field_name"]')
 									.attr("value");
 
 								// Change Field Name of field in Form Setting Default Phone field for SMS Verification.
@@ -4998,10 +4996,10 @@
 									),
 									selector_field_name = $(this)
 										.closest("#ur-setting-form")
-										.find("[data-field='field_name']")
+										.find("[data-advance-field='field_name']")
 										.val(),
 									active_field_name = wrapper
-										.find("[data-field='field_name']")
+										.find("[data-advance-field='field_name']")
 										.val();
 								wrapper
 									.find(".ur-advance-setting-block")
@@ -5056,10 +5054,10 @@
 									),
 									selector_field_name = $(this)
 										.closest("#ur-setting-form")
-										.find("[data-field='field_name']")
+										.find("[data-advance-field='field_name']")
 										.val(),
 									active_field_name = wrapper
-										.find("[data-field='field_name']")
+										.find("[data-advance-field='field_name']")
 										.val();
 								wrapper
 									.find(".ur-advance-setting-block")
@@ -5114,10 +5112,10 @@
 									),
 									selector_field_name = $(this)
 										.closest("#ur-setting-form")
-										.find("[data-field='field_name']")
+										.find("[data-advance-field='field_name']")
 										.val(),
 									active_field_name = wrapper
-										.find("[data-field='field_name']")
+										.find("[data-advance-field='field_name']")
 										.val();
 								wrapper
 									.find(".ur-advance-setting-block")
@@ -5424,7 +5422,7 @@
 				var field_name = $(
 					".ur-selected-item.ur-item-active .ur-general-setting"
 				)
-					.find("[data-field='field_name']")
+					.find("[data-advance-field='field_name']")
 					.val();
 				// Change label of field in conditional logic options
 				$(
