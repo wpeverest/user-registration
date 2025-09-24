@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - UR-3069-all-addons-page-improvement
+      - master
     workflow_dispatch:
 jobs:
   sync:
