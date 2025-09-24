@@ -115,7 +115,7 @@
 		 * validate membership form before submit
 		 * @returns {boolean}
 		 */
-		validate_membership_form: function () {
+		validate_members_form: function () {
 			var form_inputs = $('#ur-membership-create-form').find('input'),
 				email_pattern = new RegExp('^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}$'),
 				today = new Date().toISOString().split('T')[0],
@@ -146,7 +146,7 @@
 					return false;
 				}
 
-				if (name === 'start_date') {
+				if (name === 'start_date' &&  ur_member_data.member_id === '') {
 					if (value < today) {
 						no_errors = false;
 						ur_membership_members_utils.show_failure_message(ur_member_data.labels.i18n_field_subscription_start_date_validation);
@@ -168,7 +168,7 @@
 			ur_membership_members_utils.toggleSaveButtons(true);
 			ur_membership_members_utils.append_spinner($this);
 
-			if (this.validate_membership_form()) {
+			if (this.validate_members_form()) {
 				var prepare_members_data = this.prepare_members_data();
 
 				this.send_data(
@@ -217,7 +217,50 @@
 		 * @param $this
 		 */
 		update_member: function ($this) {
+			ur_membership_members_utils.toggleSaveButtons(true);
+			ur_membership_members_utils.append_spinner($this);
+			if(this.validate_members_form()) {
+				var prepare_members_data = this.prepare_members_data();
 
+				this.send_data(
+					{
+						action: 'user_registration_membership_edit_member',
+						members_data: JSON.stringify(prepare_members_data),
+						_wpnonce: ur_member_data.edit_members_nonce
+					},
+					{
+						success: function (response) {
+							if (response.success) {
+								ur_member_data.member_id = response.data.member_id;
+								$('.ur-member-save-btn').hide();
+								ur_membership_members_utils.show_success_message(
+									response.data.message
+								);
+								window.location.reload();
+							} else {
+								ur_membership_members_utils.show_failure_message(
+									response.data.message
+								);
+							}
+						},
+						failure: function (xhr, statusText) {
+							ur_membership_members_utils.show_failure_message(
+								ur_member_data.labels.network_error +
+								'(' +
+								statusText +
+								')'
+							);
+						},
+						complete: function () {
+							ur_membership_members_utils.remove_spinner($this);
+							ur_membership_members_utils.toggleSaveButtons(false);
+						}
+					}
+				);
+			} else {
+				ur_membership_members_utils.remove_spinner($this);
+				ur_membership_members_utils.toggleSaveButtons(false);
+			}
 		},
 
 		update_membership_status: function ($this) {
@@ -354,6 +397,7 @@
 		e.preventDefault();
 		e.stopPropagation();
 		var $this = $(this);
+
 		if (ur_member_data.member_id && ur_member_data.member_id !== '') {
 			ur_member_ajax_utils.update_member($this);
 		} else {

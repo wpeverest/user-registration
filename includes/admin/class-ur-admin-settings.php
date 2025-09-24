@@ -203,8 +203,12 @@ class UR_Admin_Settings {
 	 *
 	 * @param string $text Text.
 	 */
-	public static function add_error( $text ) {
-		self::$errors[] = $text;
+	public static function add_error( $text, $type = '' ) {
+		if( ! empty( $type ) ) {
+			self::$errors[ $type ] = $text;
+		} else {
+			self::$errors[] = $text;
+		}
 	}
 
 	/**
@@ -214,12 +218,12 @@ class UR_Admin_Settings {
 	 */
 	public static function show_messages() {
 		if ( count( self::$errors ) > 0 ) {
-			foreach ( self::$errors as $error ) {
-				echo '<div id="message" class="error inline"><p><strong>' . esc_html( $error ) . '</strong></p></div>';
+			foreach ( self::$errors as $key => $error ) {
+				echo '<div id="message" class="error inline"><p><strong>' . wp_kses_post( $error ) . '</strong></p></div>';
 			}
 		} elseif ( count( self::$messages ) > 0 ) {
 			foreach ( self::$messages as $message ) {
-				echo '<div id="message" class="updated inline"><p><strong>' . esc_html( $message ) . '</strong></p></div>';
+				echo '<div id="message" class="updated inline"><p><strong>' . wp_kses_post( $message ) . '</strong></p></div>';
 			}
 		}
 	}
@@ -260,6 +264,7 @@ class UR_Admin_Settings {
 				'ajax_url'                                                     => admin_url( 'admin-ajax.php' ),
 				'assets_url'												   => UR_ASSETS_URL,
 				'ur_license_nonce'											   => wp_create_nonce( '_ur_license_nonce' ),
+				'ur_updater_nonce'                                             => wp_create_nonce( 'updates' ),
 				'user_registration_search_global_settings_nonce'               => wp_create_nonce( 'user_registration_search_global_settings' ),
 				'user_registration_captcha_test_nonce'                         => wp_create_nonce( 'user_registration_captcha_test_nonce' ),
 				'user_registration_my_account_selection_validator_nonce'       => wp_create_nonce( 'user_registration_my_account_selection_validator' ),
@@ -279,9 +284,9 @@ class UR_Admin_Settings {
 					),
 
 					'license_activated_text' => esc_html__( 'You\'ve activated your license, great! To get all the Pro Features, we just need to install the URM Pro plugin on your website. Don\'t worry, it\'s quick and safe!', 'user-registration' ),
-					'pro_install_popup_button' => esc_html__( 'Install URM Pro Now', 'user-registration' ),
-					'pro_install_popup_title' => esc_html__( 'Install URM Pro to Unlock All Features', 'user-registration' ),
-					'will_install_and_activate_pro_text' => esc_html__( 'This will automatically install and activate the URM Pro Plugin for you.', 'user-registration' ),
+					'pro_install_popup_button' => esc_html__( 'Install Pro Now', 'user-registration' ),
+					'pro_install_popup_title' => esc_html__( 'Install User Registration & Membership Pro to Unlock All Features', 'user-registration' ),
+					'will_install_and_activate_pro_text' => esc_html__( 'This will automatically install and activate the User Registration & Membership Pro Plugin for you.', 'user-registration' ),
 					'installing_plugin_text' => esc_html__( 'Installing Plugin', 'user-registration' ),
 					'pro_activated_success_title' => esc_html__( 'Success!', 'user-registration' ),
 					'pro_activated_success_text' => esc_html__( 'URM Pro has been successfully installed and activated. You now have access to all premium features!', 'user-registration' ),
@@ -409,7 +414,6 @@ class UR_Admin_Settings {
 				$settings .= '</a>';
 			}
 			$settings .= '</h3>';
-
 			if ( ! empty( $options['desc'] ) ) {
 				$settings .= '<p class="ur-p-tag">' . wptexturize( wp_kses_post( $options['desc'] ) ) . '</p>';
 			}

@@ -280,11 +280,14 @@ function ur_get_endpoint_url( $endpoint, $value = '', $permalink = '' ) {
 		$url = add_query_arg( $endpoint, $value, $permalink );
 	}
 
+	$urm_disable_logout_confirmation = apply_filters( 'user_registration_disable_logout_confirmation_status', ur_option_checked( 'user_registration_disable_logout_confirmation', false ) );
+
 	if (
 		get_option( 'user_registration_logout_endpoint', 'user-logout' ) === $endpoint &&
-		ur_option_checked( 'user_registration_disable_logout_confirmation', false ) ) {
+		$urm_disable_logout_confirmation ) {
 		$url = wp_nonce_url( $url, 'user-logout' );
 	}
+
 	/**
 	 * Filters the endpoint URL in User Registration.
 	 *
@@ -330,8 +333,8 @@ function ur_nav_menu_items( $items ) {
 	$customer_logout = get_option( 'user_registration_logout_endpoint', 'user-logout' );
 
 	foreach ( $items as $item ) {
-
-		if ( 0 === strpos( $item->post_name, 'logout' ) && ! empty( $customer_logout ) && ur_option_checked( 'user_registration_disable_logout_confirmation', true ) ) {
+		$urm_disable_logout_confirmation = apply_filters( 'user_registration_disable_logout_confirmation_status', ur_option_checked( 'user_registration_disable_logout_confirmation', false ) );
+		if ( 0 === strpos( $item->post_name, 'logout' ) && ! empty( $customer_logout ) && $urm_disable_logout_confirmation ) {
 			$item->url = wp_nonce_url( $item->url, 'user-logout' );
 		}
 	}

@@ -738,5 +738,76 @@
 				);
 			}
 		);
+
+		$(document).ready(function () {
+			$("#user_registration_login_options_enable_custom_redirect").trigger("change");
+		});
+		$(document).on("change", "#user_registration_login_options_enable_custom_redirect", function () {
+			var $redirect_after_login = $("#user_registration_login_options_redirect_after_login");
+			var $redirect_after_logout = $("#user_registration_login_options_redirect_after_logout");
+			if ($(this).is(":checked")) {
+				$redirect_after_login.closest(".user-registration-login-form-global-settings").show();
+				$redirect_after_logout.closest(".user-registration-login-form-global-settings").show();
+			} else {
+				$redirect_after_login.closest(".user-registration-login-form-global-settings").hide();
+				$redirect_after_logout.closest(".user-registration-login-form-global-settings").hide();
+			}
+			$redirect_after_login.trigger('change');
+			$redirect_after_logout.trigger('change');
+		});
+		$(document).on("change", "#user_registration_login_options_redirect_after_login", function () {
+			var redirect_after_login_option = $("#user_registration_login_options_enable_custom_redirect").is(":checked") ? $(this).val() : "hidden";
+			var $external_url = $("#user_registration_login_options_after_login_redirect_external_url").closest(".user-registration-login-form-global-settings");
+			var $internal_page = $("#user_registration_login_options_after_login_redirect_page").closest(".user-registration-login-form-global-settings");
+			switch (redirect_after_login_option) {
+				case 'no-redirection':
+					$external_url.hide();
+					$internal_page.hide();
+					break;
+				case 'internal-page':
+					$external_url.hide();
+					$internal_page.show();
+					break;
+				case 'external-url':
+					$external_url.show();
+					$internal_page.hide();
+					break;
+				case 'previous-page':
+					$external_url.hide();
+					$internal_page.hide();
+					break;
+				default:
+					$external_url.hide();
+					$internal_page.hide();
+					break;
+			}
+		});
+		$(document).on("change", "#user_registration_login_options_redirect_after_logout", function () {
+			var redirect_after_logout_option = $("#user_registration_login_options_enable_custom_redirect").is(":checked") ? $(this).val() : "hidden";
+			var $external_url = $("#user_registration_login_options_after_logout_redirect_external_url").closest(".user-registration-login-form-global-settings");
+			var $internal_page = $("#user_registration_login_options_after_logout_redirect_page").closest(".user-registration-login-form-global-settings");
+			switch (redirect_after_logout_option) {
+				case 'no-redirection':
+					$external_url.hide();
+					$internal_page.hide();
+					break;
+				case 'internal-page':
+					$external_url.hide();
+					$internal_page.show();
+					break;
+				case 'external-url':
+					$external_url.show();
+					$internal_page.hide();
+					break;
+				case 'previous-page':
+					$external_url.hide();
+					$internal_page.hide();
+					break;
+				default:
+					$external_url.hide();
+					$internal_page.hide();
+					break;
+			}
+		});
 	}
 })(jQuery);

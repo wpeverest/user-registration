@@ -741,4 +741,67 @@ class SubscriptionService {
 			update_user_meta( $subscription['member_id'], 'urm_expired_reminder_sent_for_date', $subscription['expiry_date'] );
 		}
 	}
+
+	/**
+	 * daily_membership_expiration_check
+	 * Check for memberships that have passed their expiry date and mark them as expired
+	 *
+	 * @return void
+	 */
+	public function daily_membership_expiration_check() {
+		$date          = new \DateTime( 'today' );
+		$check_date    = $date->format( 'Y-m-d H:i:s' );
+		$subscriptions = $this->members_subscription_repository->get_subscriptions_to_expire( $check_date );
+		
+		if ( empty( $subscriptions ) ) {
+			ur_get_logger()->notice( __( 'No memberships found to expire for date: ' . $check_date, 'user-registration' ), array( 'source' => 'urm-membership-expiration' ) );
+			return;
+		}
+
+		$expired_count = 0;
+		$expired_users = array();
+
+		foreach ( $subscriptions as $subscription ) {
+			$subscription_id = $subscription['subscription_id'];
+			$user_id = $subscription['member_id'];
+			
+			// Update subscription status to expired
+			$update_result = $this->members_subscription_repository->update( $subscription_id, array( 'status' => 'expired' ) );
+			
+			if ( $update_result ) {
+				$expired_count++;
+				$expired_users[] = $subscription['username'];
+				
+				// Log the expiration
+				ur_get_logger()->notice( 
+					sprintf( 
+						__( 'Membership expired for user %s (ID: %d) - Subscription ID: %d', 'user-registration' ), 
+						$subscription['username'], 
+						$user_id, 
+						$subscription_id 
+					), 
+					array( 'source' => 'urm-membership-expiration' ) 
+				);
+			} else {
+				ur_get_logger()->error( 
+					sprintf( 
+						__( 'Failed to expire membership for user %s (ID: %d) - Subscription ID: %d', 'user-registration' ), 
+						$subscription['username'], 
+						$user_id, 
+						$subscription_id 
+					), 
+					array( 'source' => 'urm-membership-expiration' ) 
+				);
+			}
+		}
+
+		ur_get_logger()->notice( 
+			sprintf( 
+				__( 'Membership expiration check completed. %d memberships expired for users: %s', 'user-registration' ), 
+				$expired_count, 
+				implode( ', ', $expired_users ) 
+			), 
+			array( 'source' => 'urm-membership-expiration' ) 
+		);
+	}
 }
