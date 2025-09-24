@@ -987,6 +987,8 @@ if (! class_exists('User_Registration_Users_Menu')) {
 											} else {
 												$value = esc_html($default_value);
 											}
+										} elseif (metadata_exists('user', $user_id, $field_name)) {
+											$value = get_user_meta($user_id, $field_name, true);
 										} else {
 											$value = '';
 										}
