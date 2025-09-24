@@ -4,7 +4,7 @@ Tags: user registration, membership, user profile, registration form, login form
 Requires at least: 5.5
 Requires PHP: 7.2
 Tested up to: 6.8.2
-Stable tag: 4.4.1
+Stable tag: 4.4.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -257,6 +257,18 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 21. User Account Page –  Vertical Layout
 
 == Changelog ==
+
+= 4.4.2    - 23/09/2025 =
+* Tweak    - User Registration body class added on whole site restriction template.
+* Tweak    - Added translations for custom password strength hint.
+* Fix      - Error message not handled properly when username provided in email only login forms.
+* Fix      - Form field labels not translatable in my account profile detail page.
+* Fix      - Smart tag user_id not working when membership is active.
+* Fix      - Undefined variable on edit profile for non URM users.
+* Fix      - Header already sent warning on lost password page.
+* Fix      - Captcha not working on ajax login.
+* Fix      - Login Form Start Action execution.
+
 = 4.4.1    - 02/09/2025 =
 * Fix      - Button style issue from v4.4.0 impacting other plugins.
 * Fix      - Admin menu not visible in mobile devices.
