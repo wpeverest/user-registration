@@ -2395,7 +2395,6 @@ function ur_string_translation( $form_id, $field_id, $variable ) {
 		if ( function_exists( 'icl_register_string' ) ) {
 			icl_register_string( $context, $name, $variable );
 			if ( function_exists( 'icl_t' ) ) {
-				ur_get_logger()->debug(print_r('icl_t', true));
 				$variable = icl_t( $context, $name, $variable );
 			}
 
@@ -8668,7 +8667,7 @@ if ( ! function_exists( 'ur_setting_keys' ) ) {
                 array( 'user_registration_my_account_layout', 'horizontal' ),
                 array( 'user_registration_ajax_form_submission_on_edit_profile', false ),
                 array( 'user_registration_disable_profile_picture', false ),
-                array( 'user_registration_disable_logout_confirmation', true ),
+                array( 'user_registration_disable_logout_confirmation', apply_filters('user_registration_disable_logout_confirmation_status', true) ),
                 array( 'user_registration_login_options_form_template', 'default' ),
                 array( 'user_registration_general_setting_login_options_with', 'default' ),
                 array( 'user_registration_login_title', false ),
