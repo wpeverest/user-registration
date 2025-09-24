@@ -454,6 +454,20 @@ class UR_Admin {
 			return $response;
 		}
 
+		if( false === get_transient( 'urm_users_not_from_urm_forms' ) ) {
+			// Get users not registered via URM forms.
+			$urm_users_not_from_urm_forms = count( get_users( array(
+				'fields'     => 'ID',
+				'meta_query' => array(
+					array(
+						'key'     => 'ur_form_id',
+						'compare' => 'NOT EXISTS',
+					),
+				),
+			) ) );
+			set_transient( 'urm_users_not_from_urm_forms', $urm_users_not_from_urm_forms, apply_filters( 'urm_non_urm_user_transient_expiration',MINUTE_IN_SECONDS * 5 ) );
+		}
+
 		$read_time = get_option( 'user_registration_users_listing_viewed' );
 		if ( ! $read_time ) {
 			$now = current_time( 'mysql' );
