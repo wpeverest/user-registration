@@ -330,6 +330,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			}
 			include_once UR_ABSPATH . 'includes/class-ur-cron.php';
 			include_once UR_ABSPATH . 'includes/stats/class-ur-stats.php';
+			include_once UR_ABSPATH . 'includes/class-ur-captcha-conflict-manager.php';
 
 			$this->query = new UR_Query();
 		}
@@ -359,6 +360,11 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 */
 		public function objects() {
 			$this->form = new UR_Form_Handler();
+
+			// Initialize captcha conflict manager only on frontend
+			if ( $this->is_request( 'frontend' ) ) {
+				new UR_Captcha_Conflict_Manager();
+			}
 		}
 
 		/**
