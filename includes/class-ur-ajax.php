@@ -64,6 +64,7 @@ class UR_AJAX {
 			'rated'                             => false,
 			'dashboard_widget'                  => false,
 			'dismiss_notice'                    => false,
+			'dismiss_notice_per_user'           => false,
 			'import_form_action'                => false,
 			'template_licence_check'            => false,
 			'captcha_setup_check'               => false,
@@ -881,6 +882,17 @@ class UR_AJAX {
 			$form_id       = sanitize_text_field( $_POST['data']['form_id'] ); //phpcs:ignore
 			$form_row_data = sanitize_text_field( $_POST['data']['row_data'] );
 
+			//For backward compatibility, store field_name in general settings as well.
+			if( is_array( $post_data ) ) {
+				foreach( $post_data as $post_datum ) {
+					foreach( $post_datum as $field ) {
+						if( isset( $field[0]->general_setting ) && $field[0]->general_setting instanceof stdClass && isset( $field[0]->advance_setting->field_name ) ) {
+							$field[0]->general_setting->field_name = $field[0]->advance_setting->field_name;
+						}
+					}
+				}
+			}
+
 			$post_data = array(
 				'post_type'      => 'user_registration',
 				'post_title'     => sanitize_text_field( $form_name ),
@@ -1280,7 +1292,34 @@ class UR_AJAX {
 			}
 		}
 	}
+	/**
+	 * Dismiss user registration notice per user.
+	 */
+	public static function dismiss_notice_per_user() {
+		$notice_id = isset( $_POST['notice_id'] ) ? wp_unslash( sanitize_key( $_POST['notice_id'] ) ) : '';   // phpcs:ignore WordPress.Security.NonceVerification
+		$notice_type = isset( $_POST['notice_type'] ) ? wp_unslash( sanitize_key( $_POST['notice_type'] ) ) : '';   // phpcs:ignore WordPress.Security.NonceVerification
+		check_admin_referer( $notice_type  . '-nonce', 'security' );
 
+		$user_id = get_current_user_id();
+		$urm_dismissed_notices = get_user_meta( $user_id, 'urm_dismissed_notices', true );
+		//if not an array, make it an array.
+		if( ! is_array( $urm_dismissed_notices ) ) {
+			$urm_dismissed_notices = array();
+		}
+
+		switch( $notice_id ) {
+			case 'non_urm_users_notice':
+				[ 'dismiss_count' => $dismiss_count, 'last_dismissed_at' => $last_dismissed_at ] = isset( $urm_dismissed_notices[ 'non_urm_users_notice' ] ) ? $urm_dismissed_notices[ 'non_urm_users_notice' ] : array( 'dismiss_count' => 0, current_time( 'timestamp' ) - 3 * DAY_IN_SECONDS );
+				$dismiss_count = current_time( 'timestamp' ) - $last_dismissed_at  <= 48 * HOUR_IN_SECONDS ? $dismiss_count + 1 : $dismiss_count;
+				$urm_dismissed_notices[ 'non_urm_users_notice' ] = array( 'dismiss_count' => $dismiss_count, 'last_dismissed_at' => current_time( 'timestamp' ) );
+				break;
+			default:
+				break;
+		}
+		update_user_meta( $user_id, 'urm_dismissed_notices', $urm_dismissed_notices );
+
+		wp_send_json_success();
+	}
 	/**
 	 * Remove profile picture ajax method.
 	 */
@@ -1441,6 +1480,7 @@ class UR_AJAX {
 	 * @global WP_Filesystem_Base $wp_filesystem Subclass
 	 */
 	public static function install_extension() {
+
 		check_ajax_referer( 'updates' );
 
 		if ( empty( $_POST['slug'] ) ) {

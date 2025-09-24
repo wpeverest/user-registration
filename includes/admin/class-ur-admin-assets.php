@@ -282,6 +282,7 @@ class UR_Admin_Assets {
 				'allow-usage_nonce' => wp_create_nonce( 'allow-usage-nonce' ),
 				'survey_nonce'      => wp_create_nonce( 'survey-nonce' ),
 				'promotional_nonce' => wp_create_nonce( 'promotional-nonce' ),
+				'urm-admin-notice_nonce' => wp_create_nonce( 'urm-admin-notice-nonce' ),
 			)
 		);
 

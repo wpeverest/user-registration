@@ -896,7 +896,7 @@ function ur_get_general_settings( $id ) {
 			'name'        => 'ur_general_setting[label]',
 			'placeholder' => __( 'Label', 'user-registration' ),
 			'required'    => true,
-			'tip'         => __( 'Enter text for the form field label. This is recommended and can be hidden in the Advanced Settings.', 'user-registration' ),
+			'tip'         => __( 'Text shown as the field\’s title. You can hide it using the hide label settings below if you prefer a clean layout.', 'user-registration' ),
 		),
 		'description' => array(
 			'setting_id'  => 'description',
@@ -905,16 +905,7 @@ function ur_get_general_settings( $id ) {
 			'name'        => 'ur_general_setting[description]',
 			'placeholder' => __( 'Description', 'user-registration' ),
 			'required'    => true,
-			'tip'         => __( 'Enter text for the form field description.', 'user-registration' ),
-		),
-		'field_name'  => array(
-			'setting_id'  => 'field-name',
-			'type'        => 'text',
-			'label'       => __( 'Field Name', 'user-registration' ),
-			'name'        => 'ur_general_setting[field_name]',
-			'placeholder' => __( 'Field Name', 'user-registration' ),
-			'required'    => true,
-			'tip'         => __( 'Unique key for the field.', 'user-registration' ),
+			'tip'         => __( 'Optional helper text that appears under the label to guide users.', 'user-registration' ),
 		),
 
 		'placeholder' => array(
@@ -924,7 +915,7 @@ function ur_get_general_settings( $id ) {
 			'name'        => 'ur_general_setting[placeholder]',
 			'placeholder' => __( 'Placeholder', 'user-registration' ),
 			'required'    => true,
-			'tip'         => __( 'Enter placeholder for the field.', 'user-registration' ),
+			'tip'         => __( 'Text shown inside the field until the user enters a value.', 'user-registration' ),
 		),
 		'required'    => array(
 			'setting_id'  => 'required',
@@ -934,7 +925,7 @@ function ur_get_general_settings( $id ) {
 			'placeholder' => '',
 			'required'    => true,
 			'default'     => 'false',
-			'tip'         => __( 'Check this option to mark the field required. A form will not submit unless all required fields are provided.', 'user-registration' ),
+			'tip'         => __( 'Make this field required, so the form can’t be submitted without it.', 'user-registration' ),
 		),
 		'hide_label'  => array(
 			'setting_id'  => 'hide-label',
@@ -944,7 +935,7 @@ function ur_get_general_settings( $id ) {
 			'placeholder' => '',
 			'required'    => true,
 			'default'     => 'false',
-			'tip'         => __( 'Check this option to hide the label of this field.', 'user-registration' ),
+			'tip'         => __( 'Hide the title of the field, keeping your form cleaner and simpler.', 'user-registration' ),
 		),
 	);
 	/**
@@ -2396,7 +2387,6 @@ function ur_string_translation( $form_id, $field_id, $variable ) {
 		if ( function_exists( 'icl_register_string' ) ) {
 			icl_register_string( $context, $name, $variable );
 			if ( function_exists( 'icl_t' ) ) {
-				ur_get_logger()->debug(print_r('icl_t', true));
 				$variable = icl_t( $context, $name, $variable );
 			}
 
@@ -4133,7 +4123,6 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				$secret_key      = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_cloudflare' );
 			}
 
-
 			if ( ur_is_ajax_login_enabled() ) {
 				$recaptcha_value = $captcha_response;
 			}
@@ -4235,8 +4224,12 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 
 					if ( isset( $user->user_login ) ) {
 						$login_data['user_login'] = $user->user_login;
-					} elseif ( empty( $messages['unknown_email'] ) ) {
-						$messages['unknown_email'] = esc_html__( 'A user could not be found with this email address.', 'user-registration' );
+					} elseif ( empty( $user ) ) {
+
+						if ( empty( $messages['unknown_email'] ) ) {
+							$messages['unknown_email'] = esc_html__( 'A user could not be found with this email address.', 'user-registration' );
+						}
+
 						throw new Exception( '<strong>' . esc_html__( 'ERROR: ', 'user-registration' ) . '</strong>' . $messages['unknown_email'] );
 					}
 				}
@@ -4256,7 +4249,13 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 			// To check the specific login.
 			if ( 'email' === get_option( 'user_registration_general_setting_login_options_with', array() ) ) {
 				$user_data                = get_user_by( 'email', $username );
-				$login_data['user_login'] = isset( $user_data->user_email ) ? $user_data->user_email : '1#45$$&*@ur.com'; //provided invalid email to show invalid email error instead of empty username which will show empty_username error regardless of the login option
+				if ( empty( $user_data ) ) {
+					if( empty( $messages['unknown_email'] ) ) {
+						$messages['unknown_email'] = esc_html__( 'A user could not be found with this email address.', 'user-registration' );
+					}
+
+					throw new Exception( '<strong>' . esc_html__( 'ERROR: ', 'user-registration' ) . '</strong>' . $messages['unknown_email'] );
+				}
 			} elseif ( 'username' === get_option( 'user_registration_general_setting_login_options_with', array() ) ) {
 				$user_data                = get_user_by( 'login', $username );
 				$login_data['user_login'] = isset( $user_data->user_login ) ? $user_data->user_login : ! is_email( $username );
@@ -6530,29 +6529,11 @@ if ( ! function_exists( 'ur_current_url' ) ) {
 	}
 }
 
-add_action(
-	'admin_head',
-	function () {
-		$js = <<<JS
-		let isSidebarEnabled = localStorage.getItem( 'isSidebarEnabled' );
-		isSidebarEnabled = 'false' === isSidebarEnabled ? false : true;
-
-		document.cookie =
-		"isSidebarEnabled=" + isSidebarEnabled + "; path=/;";
-		const interval = setInterval( () => {
-			if ( document.body ) {
-				clearInterval(interval);
-				if (isSidebarEnabled) {
-					document.body.classList.add( 'ur-settings-sidebar-show' );
-				} else {
-					document.body.classList.add( 'ur-settings-sidebar-hidden' );
-				}
-			}
-		}, 1 );
-		JS;
-		wp_print_inline_script_tag( $js );
-	}
-);
+add_filter( 'body_class', function( $classes ) {
+	$is_settings_sidebar_enabled = isset( $_COOKIE['isSidebarEnabled'] ) ? ur_string_to_bool( sanitize_text_field( wp_unslash( $_COOKIE['isSidebarEnabled'] ) ) ) : true;
+	$body_class = !$is_settings_sidebar_enabled ? 'ur-settings-sidebar-hidden': 'ur-settings-sidebar-show';
+	return array_merge( $classes, array ( $body_class ) );
+});
 
 if ( ! function_exists( 'ur_quick_settings_tab_content' ) ) {
 
@@ -8660,7 +8641,7 @@ if ( ! function_exists( 'ur_setting_keys' ) ) {
                 array( 'user_registration_my_account_layout', 'horizontal' ),
                 array( 'user_registration_ajax_form_submission_on_edit_profile', false ),
                 array( 'user_registration_disable_profile_picture', false ),
-                array( 'user_registration_disable_logout_confirmation', true ),
+                array( 'user_registration_disable_logout_confirmation', apply_filters('user_registration_disable_logout_confirmation_status', true) ),
                 array( 'user_registration_login_options_form_template', 'default' ),
                 array( 'user_registration_general_setting_login_options_with', 'default' ),
                 array( 'user_registration_login_title', false ),

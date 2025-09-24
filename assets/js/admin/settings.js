@@ -1032,6 +1032,8 @@
 				$("body")
 					.removeClass("ur-settings-sidebar-hidden")
 					.addClass("ur-settings-sidebar-show");
+				$(".user-registration-settings-sidebar-container")
+					.removeClass("ur-d-none");
 				$(node)
 					.closest(".user-registration-options-header--top__right")
 					.find(".user-registration-toggle-text")
@@ -1756,6 +1758,42 @@
 		});
 	});
 	$("#user_registration_payment_currency").trigger("change");
+
+
+	$(document).on( 'click',".urm_license_setting_notice .install_pro_version_button", function() {
+		$(this)
+			.prop("disabled", true)
+			.text(
+				user_registration_settings_params.i18n
+					.installing_plugin_text
+			)
+			.prepend(
+				'<div class="ur-spinner is-active" style="margin-right: 8px;"></div>'
+			);
+		var data = {
+			action: 'user_registration_install_extension',
+			slug: 'user-registration-pro',
+			_ajax_nonce: user_registration_settings_params.ur_updater_nonce,
+		};
+		$.ajax({
+			type: 'POST',
+			url: user_registration_settings_params.ajax_url,
+			data: data,
+			success: function(response) {
+				if (response.success) {
+					window.location.reload();
+				} else {
+					$(".install_pro_version_button").prop("disabled", false);
+					$(".install_pro_version_button").find(".ur-spinner").remove();
+				}
+			},
+			error: function(response) {
+				$(".install_pro_version_button").prop("disabled", false);
+				$(".install_pro_version_button").find(".ur-spinner").remove();
+			}
+		});
+	});
+
 	var searchParams = new URLSearchParams(window.location.search);
 
 	var license_activation_status = ur_get_cookie("urm_license_status");
@@ -1798,11 +1836,11 @@
 				.pro_install_popup_title,
 			html: urmProInstallHtml,
 			showConfirmButton: false,
-			showCloseButton: false,
+			showCloseButton: true,
 			allowOutsideClick: false,
 			customClass:
 				"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-swal2-modal--install-urm-pro",
-			width: 600,
+			width: 640,
 			didOpen: function () {
 				$("#install-urm-pro-btn").on("click", function () {
 					$(this)
