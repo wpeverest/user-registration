@@ -915,7 +915,18 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 							$checked = checked( $value, trim( $option_index ), false );
 						}
 
-						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="radio" class="input-radio ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" value="' . esc_attr( trim( $option_index ) ) . '"  name="' . esc_attr( $key ) . ( '' !== $current_row ? '_' . $current_row : '' ) . '" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" ' . implode( ' ', $custom_attributes ) . ' / ' . $checked . ' /> ';
+						$field .= sprintf(
+							'<input data-rules="%s" data-id="%s" type="radio" class="input-radio %s" value="%s" name="%s" id="%s" %s %s /> ',
+							esc_attr( $rules ),
+							esc_attr( $key ),
+							esc_attr( implode( ' ', $args['input_class'] ) ),
+							esc_attr( trim( $option_index ) ),
+							esc_attr( $key . ( $current_row !== '' ? "_{$current_row}" : '' ) ),
+							esc_attr( "{$args['id']}_{$option_text}" ),
+							implode( ' ', $custom_attributes ),
+							$checked
+						);
+
 						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" class="radio">';
 
 						$field .= wp_kses(
