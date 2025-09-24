@@ -394,7 +394,7 @@ if ( ! class_exists( 'User_Registration_Users_ListTable' ) ) {
 			}
 
 			// Check if the user for this row is editable.
-			if ( current_user_can( 'list_users' ) ) {
+			if ( current_user_can( 'list_users' ) || current_user_can( 'manage_user_registration' ) ) {
 				// Set up the user editing link.
 				$edit_link       = add_query_arg(
 					array(
