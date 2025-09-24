@@ -896,7 +896,7 @@ function ur_get_general_settings( $id ) {
 			'name'        => 'ur_general_setting[label]',
 			'placeholder' => __( 'Label', 'user-registration' ),
 			'required'    => true,
-			'tip'         => __( 'Enter text for the form field label. This is recommended and can be hidden in the Advanced Settings.', 'user-registration' ),
+			'tip'         => __( 'Text shown as the field\’s title. You can hide it using the hide label settings below if you prefer a clean layout.', 'user-registration' ),
 		),
 		'description' => array(
 			'setting_id'  => 'description',
@@ -905,16 +905,7 @@ function ur_get_general_settings( $id ) {
 			'name'        => 'ur_general_setting[description]',
 			'placeholder' => __( 'Description', 'user-registration' ),
 			'required'    => true,
-			'tip'         => __( 'Enter text for the form field description.', 'user-registration' ),
-		),
-		'field_name'  => array(
-			'setting_id'  => 'field-name',
-			'type'        => 'text',
-			'label'       => __( 'Field Name', 'user-registration' ),
-			'name'        => 'ur_general_setting[field_name]',
-			'placeholder' => __( 'Field Name', 'user-registration' ),
-			'required'    => true,
-			'tip'         => __( 'Unique key for the field.', 'user-registration' ),
+			'tip'         => __( 'Optional helper text that appears under the label to guide users.', 'user-registration' ),
 		),
 
 		'placeholder' => array(
@@ -924,7 +915,7 @@ function ur_get_general_settings( $id ) {
 			'name'        => 'ur_general_setting[placeholder]',
 			'placeholder' => __( 'Placeholder', 'user-registration' ),
 			'required'    => true,
-			'tip'         => __( 'Enter placeholder for the field.', 'user-registration' ),
+			'tip'         => __( 'Text shown inside the field until the user enters a value.', 'user-registration' ),
 		),
 		'required'    => array(
 			'setting_id'  => 'required',
@@ -934,7 +925,7 @@ function ur_get_general_settings( $id ) {
 			'placeholder' => '',
 			'required'    => true,
 			'default'     => 'false',
-			'tip'         => __( 'Check this option to mark the field required. A form will not submit unless all required fields are provided.', 'user-registration' ),
+			'tip'         => __( 'Make this field required, so the form can’t be submitted without it.', 'user-registration' ),
 		),
 		'hide_label'  => array(
 			'setting_id'  => 'hide-label',
@@ -944,7 +935,7 @@ function ur_get_general_settings( $id ) {
 			'placeholder' => '',
 			'required'    => true,
 			'default'     => 'false',
-			'tip'         => __( 'Check this option to hide the label of this field.', 'user-registration' ),
+			'tip'         => __( 'Hide the title of the field, keeping your form cleaner and simpler.', 'user-registration' ),
 		),
 	);
 	/**
@@ -2395,7 +2386,6 @@ function ur_string_translation( $form_id, $field_id, $variable ) {
 		if ( function_exists( 'icl_register_string' ) ) {
 			icl_register_string( $context, $name, $variable );
 			if ( function_exists( 'icl_t' ) ) {
-				ur_get_logger()->debug(print_r('icl_t', true));
 				$variable = icl_t( $context, $name, $variable );
 			}
 
@@ -4234,7 +4224,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				$secret_key      = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_cloudflare' );
 			}
 
-			if ( ur_is_ajax_login_enabled() && !empty( $_POST['resubmitted'] ) ) {
+			if ( ur_is_ajax_login_enabled() ) {
 				$recaptcha_value = $captcha_response;
 			}
 
@@ -4335,8 +4325,12 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 
 					if ( isset( $user->user_login ) ) {
 						$login_data['user_login'] = $user->user_login;
-					} elseif ( empty( $messages['unknown_email'] ) ) {
-						$messages['unknown_email'] = esc_html__( 'A user could not be found with this email address.', 'user-registration' );
+					} elseif ( empty( $user ) ) {
+
+						if ( empty( $messages['unknown_email'] ) ) {
+							$messages['unknown_email'] = esc_html__( 'A user could not be found with this email address.', 'user-registration' );
+						}
+
 						throw new Exception( '<strong>' . esc_html__( 'ERROR: ', 'user-registration' ) . '</strong>' . $messages['unknown_email'] );
 					}
 				}
@@ -4356,7 +4350,13 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 			// To check the specific login.
 			if ( 'email' === get_option( 'user_registration_general_setting_login_options_with', array() ) ) {
 				$user_data                = get_user_by( 'email', $username );
-				$login_data['user_login'] = isset( $user_data->user_email ) ? $user_data->user_email : '1#45$$&*@ur.com'; //provided invalid email to show invalid email error instead of empty username which will show empty_username error regardless of the login option
+				if ( empty( $user_data ) ) {
+					if( empty( $messages['unknown_email'] ) ) {
+						$messages['unknown_email'] = esc_html__( 'A user could not be found with this email address.', 'user-registration' );
+					}
+
+					throw new Exception( '<strong>' . esc_html__( 'ERROR: ', 'user-registration' ) . '</strong>' . $messages['unknown_email'] );
+				}
 			} elseif ( 'username' === get_option( 'user_registration_general_setting_login_options_with', array() ) ) {
 				$user_data                = get_user_by( 'login', $username );
 				$login_data['user_login'] = isset( $user_data->user_login ) ? $user_data->user_login : ! is_email( $username );
@@ -6630,29 +6630,11 @@ if ( ! function_exists( 'ur_current_url' ) ) {
 	}
 }
 
-add_action(
-	'admin_head',
-	function () {
-		$js = <<<JS
-		let isSidebarEnabled = localStorage.getItem( 'isSidebarEnabled' );
-		isSidebarEnabled = 'false' === isSidebarEnabled ? false : true;
-
-		document.cookie =
-		"isSidebarEnabled=" + isSidebarEnabled + "; path=/;";
-		const interval = setInterval( () => {
-			if ( document.body ) {
-				clearInterval(interval);
-				if (isSidebarEnabled) {
-					document.body.classList.add( 'ur-settings-sidebar-show' );
-				} else {
-					document.body.classList.add( 'ur-settings-sidebar-hidden' );
-				}
-			}
-		}, 1 );
-		JS;
-		wp_print_inline_script_tag( $js );
-	}
-);
+add_filter( 'body_class', function( $classes ) {
+	$is_settings_sidebar_enabled = isset( $_COOKIE['isSidebarEnabled'] ) ? ur_string_to_bool( sanitize_text_field( wp_unslash( $_COOKIE['isSidebarEnabled'] ) ) ) : true;
+	$body_class = !$is_settings_sidebar_enabled ? 'ur-settings-sidebar-hidden': 'ur-settings-sidebar-show';
+	return array_merge( $classes, array ( $body_class ) );
+});
 
 if ( ! function_exists( 'ur_quick_settings_tab_content' ) ) {
 
@@ -7750,6 +7732,15 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'field-key'=> 'registration-setting'
 							),
 							array(
+								'title'    => __( 'Hide Label', 'user-registration' ),
+								'desc'     => '',
+								'id'       => 'user_registration_hide_label_username_or_email',
+								'type'     => 'toggle',
+								'css'      => '',
+								'default'  => false,
+								'field-key'=> 'username'
+							),
+							array(
 								'title'    => __( 'Label', 'user-registration' ),
 								'desc'     => '',
 								'id'       => 'user_registration_label_username_or_email',
@@ -7760,13 +7751,53 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'field-key'=> 'username'
 							),
 							array(
-								'title'    => __( 'Label', 'user-registration' ),
+								'title'    => __( 'Placeholder', 'user-registration' ),
 								'desc'     => '',
-								'id'       => 'user_registration_label_password',
+								'id'       => 'user_registration_placeholder_username_or_email',
 								'type'     => 'text',
 								'desc_tip' => true,
 								'css'      => '',
-								'default'  => __( 'Password', 'user-registration' ),
+								'default'  => '',
+								'field-key'=> 'username'
+							),
+							array(
+								'title'       => __( 'Invalid Username Message', 'user-registration' ),
+								'desc'        => '',
+								'id'          => 'user_registration_message_invalid_username',
+								'type'        => 'text',
+								'desc_tip'    => true,
+								'css'         => '',
+								'default'     => __( 'Invalid username or email.', 'user-registration' ),
+								'placeholder' => 'Default message from WordPress',
+								'field-key'   => 'username'
+							),
+							array(
+								'title'    => __( 'Invalid Email Message', 'user-registration' ),
+								'desc'     => '',
+								'id'       => 'user_registration_message_unknown_email',
+								'type'     => 'text',
+								'desc_tip' => true,
+								'css'      => '',
+								'default'  => 'A user could not be found with this email address.',
+								'field-key'=> 'username'
+							),
+							array(
+								'title'    => __( 'Required Message', 'user-registration' ),
+								'desc'     => '',
+								'id'       => 'user_registration_message_username_required',
+								'type'     => 'text',
+								'desc_tip' => true,
+								'css'      => '',
+								'default'  => esc_html__( 'Username is required.', 'user-registration' ),
+								'field-key'=> 'username'
+							),
+							array(
+								'title'    => __( 'Hide Label', 'user-registration' ),
+								'desc'     => '',
+								'id'       => 'user_registration_hide_label_password',
+								'type'     => 'toggle',
+								'css'      => '',
+								'default'  => false,
 								'field-key'=> 'password'
 							),
 							array(
@@ -7800,14 +7831,14 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'field-key'=> 'lost-password'
 							),
 							array(
-								'title'    => __( 'Placeholder', 'user-registration' ),
+								'title'    => __( 'Label', 'user-registration' ),
 								'desc'     => '',
-								'id'       => 'user_registration_placeholder_username_or_email',
+								'id'       => 'user_registration_label_password',
 								'type'     => 'text',
 								'desc_tip' => true,
 								'css'      => '',
-								'default'  => '',
-								'field-key'=> 'username'
+								'default'  => __( 'Password', 'user-registration' ),
+								'field-key'=> 'password'
 							),
 							array(
 								'title'    => __( 'Placeholder', 'user-registration' ),
@@ -7818,16 +7849,6 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'css'      => '',
 								'default'  => '',
 								'field-key'=> 'password'
-							),
-							array(
-								'title'    => __( 'Required Message', 'user-registration' ),
-								'desc'     => '',
-								'id'       => 'user_registration_message_username_required',
-								'type'     => 'text',
-								'desc_tip' => true,
-								'css'      => '',
-								'default'  => esc_html__( 'Username is required.', 'user-registration' ),
-								'field-key'=> 'username'
 							),
 							array(
 								'title'       => __( 'Required Message', 'user-registration' ),
@@ -7851,27 +7872,6 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'placeholder' => 'Default message from WordPress',
 								'field-key'   => 'password'
 							),
-							array(
-								'title'       => __( 'Invalid Username Message', 'user-registration' ),
-								'desc'        => '',
-								'id'          => 'user_registration_message_invalid_username',
-								'type'        => 'text',
-								'desc_tip'    => true,
-								'css'         => '',
-								'default'     => __( 'Invalid username or email.', 'user-registration' ),
-								'placeholder' => 'Default message from WordPress',
-								'field-key'   => 'username'
-							),
-							array(
-								'title'    => __( 'Invalid Email Message', 'user-registration' ),
-								'desc'     => '',
-								'id'       => 'user_registration_message_unknown_email',
-								'type'     => 'text',
-								'desc_tip' => true,
-								'css'      => '',
-								'default'  => 'A user could not be found with this email address.',
-								'field-key'=> 'username'
-							)
 						),
 					)
 				),
@@ -7986,14 +7986,14 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 								'css'      => '',
 								'default'  => 'no',
 							),
-							array(
-								'title'    => __( 'Hide Field Labels', 'user-registration' ),
-								'id'       => 'user_registration_login_options_hide_labels',
-								'type'     => 'toggle',
-								'desc_tip' => __( 'Hide input labels for a cleaner, minimal login form.', 'user-registration' ),
-								'css'      => '',
-								'default'  => 'no',
-							),
+//							array(
+//								'title'    => __( 'Hide Field Labels', 'user-registration' ),
+//								'id'       => 'user_registration_login_options_hide_labels',
+//								'type'     => 'toggle',
+//								'desc_tip' => __( 'Hide input labels for a cleaner, minimal login form.', 'user-registration' ),
+//								'css'      => '',
+//								'default'  => 'no',
+//							),
 							array(
 								'title'    => __( 'Enable Captcha', 'user-registration' ),
 								'id'       => 'user_registration_login_options_enable_recaptcha',
@@ -8052,6 +8052,106 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 								'default'     => '',
 								'placeholder' => 'Default message from WordPress',
 							),
+							array(
+								'title'      => __( 'Enable Custom Redirect', 'user-registration' ),
+								'desc'       => '',
+								'id'         => 'user_registration_login_options_enable_custom_redirect',
+								'type'       => 'toggle',
+								'desc_tip'   => __( 'Custom redirection settings after login or logout.', 'user-registration' ),
+								'css'        => '',
+								'default'    => 'no',
+							),
+							array(
+								'type'              => 'select',
+								'title'             => __( 'Redirect After Login', 'user-registration' ),
+								'desc_tip'              => __( 'Select the option in which users are redirected to after login', 'user-registration' ),
+								'required'          => false,
+								'id'                => 'user_registration_login_options_redirect_after_login',
+								'class'             => 'ur-enhanced-select',
+								'input_class'       => array(),
+								/**
+								 * Filters the redirection options after user login.
+								 *
+								 * @param array $redirection_options An associative array where keys represent
+								 *                                   the option values, and values represent the labels
+								 *                                   for the redirection options.
+								 */
+								'options'           => apply_filters(
+									'user_registration_redirect_after_registration_options',
+									array(
+										'no-redirection' => __( 'No Redirection', 'user-registration' ),
+										'internal-page'  => __( 'Internal Page', 'user-registration' ),
+										'external-url'   => __( 'External URL', 'user-registration' ),
+										'previous-page'  => __( 'Previous Page', 'user-registration' ),
+									)
+								),
+								'default'           => get_option( 'user_registration_login_options_redirect_after_login', 'no-redirection' ),
+								'tip'               => __( 'Decide where users go after completing login.', 'user-registration' ),
+								'default_value'     => 'no-redirection',
+								'custom_attributes' => array(),
+								'product'           => 'user-registration/user-registration.php',
+							),
+							array(
+								'title'    => __( 'Redirect Page', 'user-registration' ),
+								'id'       => 'user_registration_login_options_after_login_redirect_page',
+								'type'     => 'single_select_page',
+								'class'    => 'ur-enhanced-select-nostd',
+								'css'      => '',
+								'default'  => '',
+				),
+							array(
+								'title'    => __( 'External URL', 'user-registration' ),
+								'id'       => 'user_registration_login_options_after_login_redirect_external_url',
+								'type'     => 'text',
+								'css'      => '',
+								'default'  => '',
+							),
+							array(
+								'type'              => 'select',
+								'title'             => __( 'Redirect After Logout', 'user-registration' ),
+								'desc_tip'              => __( 'Select the option in which users are redirected to after logout', 'user-registration' ),
+								'required'          => false,
+								'id'                => 'user_registration_login_options_redirect_after_logout',
+								'class'             => 'ur-enhanced-select',
+								'input_class'       => array(),
+								/**
+								 * Filters the redirection options after user logout.
+								 *
+								 * @param array $redirection_options An associative array where keys represent
+								 *                                   the option values, and values represent the labels
+								 *                                   for the redirection options.
+								 */
+								'options'           => apply_filters(
+									'user_registration_redirect_after_registration_options',
+									array(
+										'no-redirection' => __( 'No Redirection', 'user-registration' ),
+										'internal-page'  => __( 'Internal Page', 'user-registration' ),
+										'external-url'   => __( 'External URL', 'user-registration' ),
+										'previous-page'  => __( 'Previous Page', 'user-registration' ),
+									)
+								),
+								'default'           => get_option( 'user_registration_login_options_redirect_after_logout', 'no-redirection' ),
+								'tip'               => __( 'Decide where users go after completing logout.', 'user-registration' ),
+								'default_value'     => 'no-redirection',
+								'custom_attributes' => array(),
+								'product'           => 'user-registration/user-registration.php',
+							),
+							array(
+								'title'    => __( 'Redirect Page', 'user-registration' ),
+								'id'       => 'user_registration_login_options_after_logout_redirect_page',
+								'type'     => 'single_select_page',
+								'class'    => 'ur-enhanced-select-nostd',
+								'css'      => '',
+								'default'  => '',
+				),
+							array(
+								'title'    => __( 'External URL', 'user-registration' ),
+								'id'       => 'user_registration_login_options_after_logout_redirect_external_url',
+								'type'     => 'text',
+								'css'      => '',
+								'default'  => '',
+							),
+
 						),
 					),
 				),
@@ -8367,6 +8467,7 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 						'default'    => esc_attr( $value['default'] ),
 						'class'      => esc_attr( $value['class'] ),
 						'quicktags'  => array( 'buttons' => 'em,strong,link' ),
+						'show-ur-registration-form-button' => false, // Hide Add Registration button for login form settings
 						'tinymce'    => array(
 							'theme_advanced_buttons1' => 'bold,italic,strikethrough,separator,bullist,numlist,separator,blockquote,separator,justifyleft,justifycenter,justifyright,separator,link,unlink,separator,undo,redo,separator',
 							'theme_advanced_buttons2' => '',
@@ -8760,7 +8861,7 @@ if ( ! function_exists( 'ur_setting_keys' ) ) {
                 array( 'user_registration_my_account_layout', 'horizontal' ),
                 array( 'user_registration_ajax_form_submission_on_edit_profile', false ),
                 array( 'user_registration_disable_profile_picture', false ),
-                array( 'user_registration_disable_logout_confirmation', true ),
+                array( 'user_registration_disable_logout_confirmation', apply_filters('user_registration_disable_logout_confirmation_status', true) ),
                 array( 'user_registration_login_options_form_template', 'default' ),
                 array( 'user_registration_general_setting_login_options_with', 'default' ),
                 array( 'user_registration_login_title', false ),
@@ -8775,7 +8876,9 @@ if ( ! function_exists( 'ur_setting_keys' ) ) {
                 array( 'user_registration_captcha_setting_recaptcha_version', 'v2' ),
                 array( 'user_registration_login_options_configured_captcha_type', 'v2' ),
                 array( 'user_registration_general_setting_uninstall_option', false ),
-                array( 'user_registration_allow_usage_tracking', false )
+                array( 'user_registration_allow_usage_tracking', false ),
+                array( 'user_registration_hide_label_password', false ),
+                array( 'user_registration_hide_label_username_or_email', false ),
 			),
 			'user-registration-pro/user-registration.php' => array(
 				array( 'user_registration_pro_general_setting_delete_account', 'disable' ),

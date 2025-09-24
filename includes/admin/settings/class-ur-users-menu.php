@@ -349,7 +349,7 @@ if (! class_exists('User_Registration_Users_Menu')) {
 		public function render_users_page()
 		{
 
-			if (! current_user_can('list_users')) {
+			if ( ! current_user_can( 'list_users' ) && ! current_user_can( 'manage_user_registration' ) ) {
 				wp_die(
 					'<h1>' . __('You need a higher level of permission.') . '</h1>' .
 						'<p>' . __('Sorry, you are not allowed to list users.') . '</p>',
@@ -987,6 +987,8 @@ if (! class_exists('User_Registration_Users_Menu')) {
 											} else {
 												$value = esc_html($default_value);
 											}
+										} elseif (metadata_exists('user', $user_id, $field_name)) {
+											$value = get_user_meta($user_id, $field_name, true);
 										} else {
 											$value = '';
 										}
