@@ -81,6 +81,7 @@ class URCR_Shortcodes {
 				$subscription         = $members_subscription->get_member_subscription( wp_get_current_user()->ID );
 
 				$current_user_membership = ( ! empty( $subscription ) ) ? $subscription['item_id'] : array();
+				$is_user_membership_active = ! empty( $subscription[ 'status' ] ) && 'active' === $subscription[ 'status' ];
 			}
 
 			if ( empty( $roles ) ) {
@@ -101,7 +102,7 @@ class URCR_Shortcodes {
 							return do_shortcode( $content );
 						}
 					} elseif ( '3' === get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
-						if ( is_array( $allowed_memberships ) && in_array( $current_user_membership, $allowed_memberships ) ) {
+						if ( is_array( $allowed_memberships ) && in_array( $current_user_membership, $allowed_memberships ) && $is_user_membership_active ) {
 							return do_shortcode( $content );
 						}
 					}
@@ -128,7 +129,7 @@ class URCR_Shortcodes {
 							break;
 						case '3':
 							if ( ! empty( $get_meta_data_memberships ) ) {
-								if ( is_array( $get_meta_data_memberships ) && in_array( $current_user_membership, $get_meta_data_memberships ) ) {
+								if ( is_array( $get_meta_data_memberships ) && in_array( $current_user_membership, $get_meta_data_memberships ) && $is_user_membership_active ) {
 									return do_shortcode( $content );
 								}
 							}
@@ -175,7 +176,7 @@ class URCR_Shortcodes {
 						break;
 
 					case 'memberships':
-						if (!empty($memberships_roles) && in_array($current_user_membership, $memberships_roles, true)) {
+						if (!empty($memberships_roles) && in_array($current_user_membership, $memberships_roles, true) && $is_user_membership_active) {
 							$matched = true;
 						}
 						break;

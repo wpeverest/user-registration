@@ -118,7 +118,6 @@ class Database {
 		);
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-
 		foreach ( $sqls as $sql ) {
 			$wpdb->query( $sql );
 		}

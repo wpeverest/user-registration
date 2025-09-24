@@ -43,7 +43,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 			 * @since 4.0
 			 */
 			add_action( 'user_registration_feature_track_data_for_tg_user_tracking', array(
-				$this,
+					$this,
 				'on_module_activate'
 			) ); // Hook on module activation ( Our UR module activation ).
 		}
@@ -507,7 +507,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					array( 'user_registration_login_option_hide_show_password', false ),
 					array( 'user_registration_ajax_form_submission_on_edit_profile', false ),
 					array( 'user_registration_disable_profile_picture', false ),
-					array( 'user_registration_disable_logout_confirmation', true ),
+					array( 'user_registration_disable_logout_confirmation', apply_filters( 'user_registration_disable_logout_confirmation_status', true ) ),
 					array( 'user_registration_login_options_form_template', 'default' ),
 					array( 'user_registration_general_setting_login_options_with', 'default' ),
 					array( 'user_registration_login_title', false ),
@@ -602,7 +602,6 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		 * @param string $slug Slug.
 		 *
 		 * @since 4.0
-		 *
 		 */
 		public function on_module_activate( $slug ) {
 			$our_modules  = $this->get_modules();

@@ -126,9 +126,13 @@ class EmailService
 		$subject     = \UR_Emailer::parse_smart_tags( $subject, $values );
 		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
 
-		$headers = \UR_Emailer::ur_get_header();
+		$headers      = \UR_Emailer::ur_get_header();
+		$login_option = ur_get_user_login_option( $user_id );
+		$email_status = get_user_meta( $user_id, 'ur_confirm_email', true );
 
-		return \UR_Emailer::user_registration_process_and_send_email( sanitize_email( $data['email'] ), $subject, $message, $headers, array(), $template_id );
+		if ( ( ( 'default' === $login_option || 'auto_login' === $login_option || ur_string_to_bool( $email_status ) ) && ur_string_to_bool( get_option( 'user_registration_enable_successfully_registered_email', true ) ) ) ) {
+			return \UR_Emailer::user_registration_process_and_send_email( sanitize_email( $data['email'] ), $subject, $message, $headers, array(), $template_id );
+		}
 	}
 
 	/**
@@ -236,15 +240,15 @@ class EmailService
 //		$currency         = get_option( 'user_registration_payment_currency', 'USD' );
 //		$currencies       = ur_payment_integration_get_currencies();
 //		$symbol           = $currencies[ $currency ]['symbol'];
-//
+	//
 //		$total = $order['total_amount'];
-//
+	//
 //		if ( isset( $order['coupon'] ) && ! empty( $order['coupon'] ) && "bank" !== $order['payment_method'] && isset( $membership_metas ) && ( "paid" === $membership_metas['type'] || ( "subscription" === $membership_metas['type'] && "off" === $order['trial_status'] ) ) ) {
 //			$discount_amount = ( $order['coupon_discount_type'] === 'fixed' ) ? $order['coupon_discount'] : $order['total_amount'] * $order['coupon_discount'] / 100;
 //			$total           = $order['total_amount'] - $discount_amount;
 //		}
 //		$billing_cycle = ( "subscription" === $membership_metas['type'] ) ? ( 'day' === $membership_metas['subscription']['duration'] ) ? esc_html( 'Daily', 'user-registration' ) : ( esc_html( ucfirst( $membership_metas['subscription']['duration'] . 'ly' ) ) ) : 'N/A';
-//
+	//
 //		$invoice_details = array(
 //			'membership_name'   => esc_html( $membership_metas['post_title'] ),
 //			'trial_status'      => esc_html( $order['trial_status'] ),
@@ -259,19 +263,19 @@ class EmailService
 //			'coupon'            => esc_html( $order['coupon'] ?? '' ),
 //			'total'             => $symbol . number_format( $total, 2 ),
 //		);
-//
+	//
 //		$template_file = locate_template( 'payment-successful-email.php' );
-//
+	//
 //		if ( ! $template_file ) {
 //			$template_file = UR_MEMBERSHIP_DIR . 'includes/Templates/Emails/payment-successful-email.php';
 //		}
 //		ob_start();
 //		require $template_file;
-//
+	//
 //		$message = ob_get_clean();
 //		$message = apply_filters( 'ur_membership_payment_successful_email_custom_template', $message, $subject );
 //		$headers = \UR_Emailer::ur_get_header();
-//
+	//
 //		return wp_mail( $user->user_email, $subject, $message, $headers );
 //	}
 
@@ -283,7 +287,10 @@ class EmailService
 	 * @return bool|mixed|void
 	 */
 	public function send_payment_approval_email( $data ) {
-
+		// Keeping for backward compatibility need to be removed on future releases.
+		if ( ! ur_string_to_bool( get_option( 'user_registration_enable_payment_approval_email', true ) ) || ! $this->validate_email_fields( $data ) ) {
+			return;
+		}
 		$subject        = __( 'Payment Approved!', 'user-registration' );
 		$currency       = get_option( 'user_registration_payment_currency', 'USD' );
 		$currencies     = ur_payment_integration_get_currencies();

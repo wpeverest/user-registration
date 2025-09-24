@@ -55,8 +55,8 @@
  * User Registration Mixins
  */
 /**
- * Styling begins
- */
+  * Styling begins
+  */
 .ur_plugin_upgrade_notice {
   display: flex;
   font-weight: normal;
@@ -86,13 +86,15 @@
 }
 
 /**
- * Plugin Updater.
- */
-.user-registration-updater-licensed th, .user-registration-updater-licensed td {
+  * Plugin Updater.
+  */
+.user-registration-updater-licensed th,
+.user-registration-updater-licensed td {
   box-shadow: none !important;
 }
 
-.user-registration-deactivation-notice th, .user-registration-deactivation-notice td {
+.user-registration-deactivation-notice th,
+.user-registration-deactivation-notice td {
   box-shadow: none !important;
 }
 
@@ -133,8 +135,8 @@
 }
 
 /**
- * Progressbar styles
- **/
+  * Progressbar styles
+  **/
 .user-registration-progress {
   display: flex;
   height: 1rem;
@@ -156,18 +158,22 @@
 }
 
 #toplevel_page_user-registration ul li a[href*=user-registration-addons] {
-  color: #9EF01A !important;
+  color: #9ef01a !important;
 }
 
 #toplevel_page_user-registration ul li a[href*=ur-upgrade-to-pro] {
-  color: #FF8C39 !important;
+  color: #ff8c39 !important;
 }
 
 #toplevel_page_user-registration ul li.is-sub-menu a {
   font-size: 13px;
 }
 
-#toplevel_page_user-registration ul li:not(.is-sub-menu) a[href="admin.php?page=user-registration"],
+body.dashboard-visible #toplevel_page_user-registration ul li:not(.is-sub-menu) a[href="admin.php?page=user-registration"] {
+  border-top: 1px solid hsla(0, 0%, 100%, 0.2) !important;
+  margin-top: 5px !important;
+  padding-top: 8px !important;
+}
 #toplevel_page_user-registration ul li:not(.is-sub-menu) a[href="admin.php?page=user-registration-membership"],
 #toplevel_page_user-registration ul li:not(.is-sub-menu) a[href="admin.php?page=user-registration-settings"] {
   border-top: 1px solid hsla(0, 0%, 100%, 0.2);

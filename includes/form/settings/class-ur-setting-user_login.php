@@ -50,7 +50,7 @@ class UR_Setting_User_Login extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => '',
 				'placeholder' => __( 'Custom Class', 'user-registration' ),
-				'tip'         => __( 'Class name to embed in this field.', 'user-registration' ),
+				'tip'         => __( 'Add a CSS class for custom styling.', 'user-registration' ),
 			),
 			'username_length'    => array(
 				'label'       => __( 'Limit Username Length', 'user-registration' ),
@@ -61,10 +61,10 @@ class UR_Setting_User_Login extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => $this->field_id . '_username_length',
 				'placeholder' => __( 'Maximum Value', 'user-registration' ),
-				'tip'         => __( 'Enter maximum number of length of username.', 'user-registration' ),
+				'tip'         => __( 'Enter maximum number of characters allowed in the username.', 'user-registration' ),
 			),
 			'username_character' => array(
-				'label'       => __( 'Allow Special Character', 'user-registration' ),
+				'label'       => __( 'Allow Special Characters', 'user-registration' ),
 				'data-id'     => $this->field_id . '_username_character',
 				'name'        => $this->field_id . '[username_character]',
 				'class'       => $this->default_class . ' ur-settings-character',
@@ -72,7 +72,7 @@ class UR_Setting_User_Login extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => 'yes',
 				'placeholder' => '',
-				'tip'         => __( 'Check this option to allow Special Character in Username', 'user-registration' ),
+				'tip'         => __( 'Check this option if you want to allow special characters (like @, #, $, etc.) in the username.', 'user-registration' ),
 			),
 		);
 

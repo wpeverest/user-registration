@@ -653,12 +653,15 @@
   animation: none;
 }
 .swal2-container .swal2-header .swal2-icon {
-  width: 56px;
-  height: 56px;
+  width: 28px;
+  height: 28px;
   line-height: 56px;
-  margin: 0 auto 16px;
+  margin: 0 auto;
   border-width: 2px;
   border-radius: 50%;
+}
+.swal2-container .swal2-header .swal2-icon-content {
+  font-size: 20px;
 }
 .swal2-container .swal2-header .swal2-icon .swal2-x-mark [class^=swal2-x-mark-line] {
   height: 3px;
@@ -769,6 +772,11 @@
 .user-registration .swal2-container .swal2-popup .swal2-header,
 .user-registration-page .swal2-container .swal2-popup .swal2-header {
   padding: 20px;
+  gap: 12px;
+  border-bottom: 1px solid #e1e1e1;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  flex-direction: row;
 }
 .user-registration .swal2-container .swal2-popup .swal2-header .swal2-title,
 .user-registration-page .swal2-container .swal2-popup .swal2-header .swal2-title {
@@ -779,6 +787,9 @@
   padding-bottom: 16px;
   width: 100%;
   margin-bottom: 0;
+  flex: 1;
+  border-bottom: 0;
+  padding-bottom: 0;
 }
 .user-registration .swal2-container .swal2-popup .swal2-header .swal2-title .dashicons,
 .user-registration-page .swal2-container .swal2-popup .swal2-header .swal2-title .dashicons {
@@ -811,6 +822,11 @@
 .user-registration-page .swal2-container .swal2-popup .swal2-content .swal2-html-container > div {
   border-radius: 8px;
   overflow: hidden;
+}
+.user-registration .swal2-container .swal2-popup .swal2-content .swal2-html-container > div.ur-embed-new-page-container, .user-registration .swal2-container .swal2-popup .swal2-content .swal2-html-container > div.ur-embed-select-existing-page-container,
+.user-registration-page .swal2-container .swal2-popup .swal2-content .swal2-html-container > div.ur-embed-new-page-container,
+.user-registration-page .swal2-container .swal2-popup .swal2-content .swal2-html-container > div.ur-embed-select-existing-page-container {
+  justify-content: flex-start;
 }
 .user-registration .swal2-container .swal2-popup .swal2-content .swal2-html-container .action-buttons,
 .user-registration-page .swal2-container .swal2-popup .swal2-content .swal2-html-container .action-buttons {
@@ -867,8 +883,8 @@
 }
 .user-registration .swal2-container .swal2-popup .swal2-actions .swal2-confirm,
 .user-registration-page .swal2-container .swal2-popup .swal2-actions .swal2-confirm {
-  background: #ff4149;
-  border-color: #ff4149;
+  background: #475bb2;
+  border-color: #475bb2;
 }
 .user-registration .swal2-container .swal2-popup .swal2-actions .swal2-cancel,
 .user-registration-page .swal2-container .swal2-popup .swal2-actions .swal2-cancel {
@@ -882,6 +898,11 @@
 .user-registration .swal2-container .swal2-popup .swal2-actions button:focus-visible,
 .user-registration-page .swal2-container .swal2-popup .swal2-actions button:focus-visible {
   outline: none;
+}
+
+.user-registration-trashed .swal2-actions .swal2-confirm {
+  background: #ff4149;
+  border-color: #ff4149;
 }
 
 /**

@@ -49,6 +49,25 @@ class MembersRepository extends BaseRepository implements MembersInterface {
 	}
 
 	/**
+	 * update
+	 *
+	 * @param $data
+	 *
+	 * @return false|\WP_User
+	 */
+	public function update( $id, $data ) {
+		$updated_user_id = wp_update_user( $data['user_data'] );
+		if ( $updated_user_id ) {
+			$user = new \WP_User( $updated_user_id );
+			if(!empty($data['role'])) {
+				$user->set_role( $data['role'] );
+			}
+			return $user;
+		}
+
+		return false;
+	}
+	/**
 	 * Get Member by their membership id.
 	 *
 	 * @param $id

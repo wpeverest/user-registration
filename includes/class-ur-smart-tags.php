@@ -556,7 +556,7 @@ class UR_Smart_Tags {
 						$content            = str_replace( '{{' . $tag . '}}', wp_kses_post( $edit_password_link ), $content );
 						break;
 					case 'sign_out_link':
-						$logout_confirmation = ur_option_checked( 'user_registration_disable_logout_confirmation', true );
+						$logout_confirmation = apply_filters( 'user_registration_disable_logout_confirmation_status', ur_option_checked( 'user_registration_disable_logout_confirmation', true ) );
 						$sign_out_link       = '<a href="' . esc_url( ur_logout_url( ur_get_page_permalink( 'myaccount' ) ) ) . '" ' . ( ! $logout_confirmation ? 'class="ur-logout"' : '' ) . '>' . esc_html__( 'Sign out', 'user-registration' ) . '</a>';
 						$content             = str_replace( '{{' . $tag . '}}', wp_kses_post( $sign_out_link ), $content );
 						break;

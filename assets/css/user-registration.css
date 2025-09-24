@@ -714,12 +714,15 @@
   animation: none;
 }
 .swal2-container .swal2-header .swal2-icon {
-  width: 56px;
-  height: 56px;
+  width: 28px;
+  height: 28px;
   line-height: 56px;
-  margin: 0 auto 16px;
+  margin: 0 auto;
   border-width: 2px;
   border-radius: 50%;
+}
+.swal2-container .swal2-header .swal2-icon-content {
+  font-size: 20px;
 }
 .swal2-container .swal2-header .swal2-icon .swal2-x-mark [class^=swal2-x-mark-line] {
   height: 3px;
@@ -830,6 +833,11 @@
 .user-registration .swal2-container .swal2-popup .swal2-header,
 .user-registration-page .swal2-container .swal2-popup .swal2-header {
   padding: 20px;
+  gap: 12px;
+  border-bottom: 1px solid #e1e1e1;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  flex-direction: row;
 }
 .user-registration .swal2-container .swal2-popup .swal2-header .swal2-title,
 .user-registration-page .swal2-container .swal2-popup .swal2-header .swal2-title {
@@ -840,6 +848,9 @@
   padding-bottom: 16px;
   width: 100%;
   margin-bottom: 0;
+  flex: 1;
+  border-bottom: 0;
+  padding-bottom: 0;
 }
 .user-registration .swal2-container .swal2-popup .swal2-header .swal2-title .dashicons,
 .user-registration-page .swal2-container .swal2-popup .swal2-header .swal2-title .dashicons {
@@ -872,6 +883,11 @@
 .user-registration-page .swal2-container .swal2-popup .swal2-content .swal2-html-container > div {
   border-radius: 8px;
   overflow: hidden;
+}
+.user-registration .swal2-container .swal2-popup .swal2-content .swal2-html-container > div.ur-embed-new-page-container, .user-registration .swal2-container .swal2-popup .swal2-content .swal2-html-container > div.ur-embed-select-existing-page-container,
+.user-registration-page .swal2-container .swal2-popup .swal2-content .swal2-html-container > div.ur-embed-new-page-container,
+.user-registration-page .swal2-container .swal2-popup .swal2-content .swal2-html-container > div.ur-embed-select-existing-page-container {
+  justify-content: flex-start;
 }
 .user-registration .swal2-container .swal2-popup .swal2-content .swal2-html-container .action-buttons,
 .user-registration-page .swal2-container .swal2-popup .swal2-content .swal2-html-container .action-buttons {
@@ -928,8 +944,8 @@
 }
 .user-registration .swal2-container .swal2-popup .swal2-actions .swal2-confirm,
 .user-registration-page .swal2-container .swal2-popup .swal2-actions .swal2-confirm {
-  background: #ff4149;
-  border-color: #ff4149;
+  background: #475bb2;
+  border-color: #475bb2;
 }
 .user-registration .swal2-container .swal2-popup .swal2-actions .swal2-cancel,
 .user-registration-page .swal2-container .swal2-popup .swal2-actions .swal2-cancel {
@@ -943,6 +959,11 @@
 .user-registration .swal2-container .swal2-popup .swal2-actions button:focus-visible,
 .user-registration-page .swal2-container .swal2-popup .swal2-actions button:focus-visible {
   outline: none;
+}
+
+.user-registration-trashed .swal2-actions .swal2-confirm {
+  background: #ff4149;
+  border-color: #ff4149;
 }
 
 .lds-dual-ring {
@@ -1233,6 +1254,9 @@ textarea.ur-input-border-red {
   margin: 0;
   border: none;
   padding: 0;
+}
+.ur-frontend-form .register {
+  text-align: center;
 }
 .ur-frontend-form .register #node_recaptcha_register {
   padding: 0 10px;
@@ -2333,6 +2357,150 @@ span.ur-shortcode-form-embed-dot {
   width: 100%;
 }
 
+body[class*=user-registration-], body[class^=ur-] {
+  /* Minimal WordPress Editor Styles */
+}
+body[class*=user-registration-] .wp-editor-container, body[class^=ur-] .wp-editor-container {
+  border-radius: 8px !important;
+  overflow: hidden !important;
+}
+body[class*=user-registration-] .wp-editor-wrap, body[class^=ur-] .wp-editor-wrap {
+  /* Dropdown Menus */
+  /* Color Picker */
+  /* Font Size Dropdown */
+  /* Style Dropdown */
+  /* Fullscreen Mode */
+  /* Responsive Design */
+}
+body[class*=user-registration-] .wp-editor-wrap .wp-editor-tabs .wp-switch-editor:hover, body[class^=ur-] .wp-editor-wrap .wp-editor-tabs .wp-switch-editor:hover {
+  background: #e8e8e8 !important;
+  color: black !important;
+}
+body[class*=user-registration-] .wp-editor-wrap .mce-toolbar, body[class^=ur-] .wp-editor-wrap .mce-toolbar {
+  background: white !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+  margin-bottom: 0 !important;
+  padding: 6px 8px !important;
+}
+body[class*=user-registration-] .wp-editor-wrap .mce-toolbar-grp > div, body[class^=ur-] .wp-editor-wrap .mce-toolbar-grp > div {
+  padding: 0;
+}
+body[class*=user-registration-] .wp-editor-wrap .mce-toolbar .mce-btn, body[class^=ur-] .wp-editor-wrap .mce-toolbar .mce-btn {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 5px !important;
+  margin: 1px !important;
+  transition: background-color 0.15s ease !important;
+}
+body[class*=user-registration-] .wp-editor-wrap .mce-toolbar .mce-btn:hover, body[class^=ur-] .wp-editor-wrap .mce-toolbar .mce-btn:hover {
+  background: #e8e8e8 !important;
+  box-shadow: none !important;
+}
+body[class*=user-registration-] .wp-editor-wrap .mce-toolbar .mce-btn.mce-active, body[class^=ur-] .wp-editor-wrap .mce-toolbar .mce-btn.mce-active {
+  background: #d0d0d0 !important;
+}
+body[class*=user-registration-] .wp-editor-wrap .mce-toolbar .mce-btn button, body[class^=ur-] .wp-editor-wrap .mce-toolbar .mce-btn button {
+  color: #333 !important;
+  font-size: 13px !important;
+  padding: 4px 6px !important;
+  font-weight: normal !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+body[class*=user-registration-] .wp-editor-wrap .mce-toolbar .mce-btn:hover button, body[class^=ur-] .wp-editor-wrap .mce-toolbar .mce-btn:hover button {
+  color: #000 !important;
+  background: #e8e8e8 !important;
+}
+body[class*=user-registration-] .wp-editor-wrap .mce-toolbar .mce-btn.mce-active button, body[class^=ur-] .wp-editor-wrap .mce-toolbar .mce-btn.mce-active button {
+  color: #000 !important;
+  font-weight: 500 !important;
+}
+body[class*=user-registration-] .wp-editor-wrap .mce-toolbar .mce-separator, body[class^=ur-] .wp-editor-wrap .mce-toolbar .mce-separator {
+  background: #d0d0d0 !important;
+  margin: 2px 4px !important;
+  width: 1px !important;
+}
+body[class*=user-registration-] .wp-editor-wrap .mce-edit-area, body[class^=ur-] .wp-editor-wrap .mce-edit-area {
+  border-top: none !important;
+  border-radius: 0 0 6px 6px !important;
+  background: #ffffff !important;
+}
+body[class*=user-registration-] .wp-editor-wrap .mce-statusbar, body[class^=ur-] .wp-editor-wrap .mce-statusbar {
+  background: #fafafa !important;
+  border-top: 1px solid #e0e0e0 !important;
+  border-radius: 0 0 6px 6px !important;
+  color: #666 !important;
+  font-size: 11px !important;
+  padding: 4px 8px !important;
+}
+body[class*=user-registration-] .wp-editor-wrap .mce-menubar, body[class^=ur-] .wp-editor-wrap .mce-menubar {
+  background: #ffffff !important;
+  border: 1px solid #e0e0e0 !important;
+  border-bottom: none !important;
+  border-radius: 6px 6px 0 0 !important;
+  padding: 2px 6px !important;
+}
+body[class*=user-registration-] .wp-editor-wrap .mce-menubar .mce-menubtn, body[class^=ur-] .wp-editor-wrap .mce-menubar .mce-menubtn {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 2px !important;
+  margin: 1px !important;
+  padding: 2px 6px !important;
+  transition: background-color 0.15s ease !important;
+}
+body[class*=user-registration-] .wp-editor-wrap .mce-menubar .mce-menubtn:hover, body[class^=ur-] .wp-editor-wrap .mce-menubar .mce-menubtn:hover {
+  background: #f0f0f0 !important;
+}
+body[class*=user-registration-] .wp-editor-wrap .mce-menubar .mce-menubtn button, body[class^=ur-] .wp-editor-wrap .mce-menubar .mce-menubtn button {
+  color: #333 !important;
+  font-size: 12px !important;
+}
+body[class*=user-registration-] .wp-editor-wrap .mce-menu, body[class^=ur-] .wp-editor-wrap .mce-menu {
+  background: white !important;
+  border: 1px solid #d0d0d0 !important;
+  border-radius: 6px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+body[class*=user-registration-] .wp-editor-wrap .mce-menu .mce-menu-item, body[class^=ur-] .wp-editor-wrap .mce-menu .mce-menu-item {
+  padding: 6px 10px !important;
+  border-radius: 2px !important;
+  margin: 1px !important;
+}
+body[class*=user-registration-] .wp-editor-wrap .mce-menu .mce-menu-item:hover, body[class^=ur-] .wp-editor-wrap .mce-menu .mce-menu-item:hover {
+  background: #f5f5f5 !important;
+}
+body[class*=user-registration-] .wp-editor-wrap .mce-menu .mce-menu-item.mce-selected, body[class^=ur-] .wp-editor-wrap .mce-menu .mce-menu-item.mce-selected {
+  background: #e0e0e0 !important;
+  color: #000 !important;
+}
+body[class*=user-registration-] .wp-editor-wrap .mce-colorbutton .mce-preview, body[class^=ur-] .wp-editor-wrap .mce-colorbutton .mce-preview {
+  border-radius: 4px !important;
+  border: 1px solid #d0d0d0 !important;
+  left: 6px !important;
+}
+body[class*=user-registration-] .wp-editor-wrap .mce-fontsize .mce-txt, body[class^=ur-] .wp-editor-wrap .mce-fontsize .mce-txt {
+  min-width: 50px !important;
+}
+body[class*=user-registration-] .wp-editor-wrap .mce-styleselect .mce-txt, body[class^=ur-] .wp-editor-wrap .mce-styleselect .mce-txt {
+  min-width: 100px !important;
+}
+body[class*=user-registration-] .wp-editor-wrap.mce-fullscreen .mce-toolbar, body[class^=ur-] .wp-editor-wrap.mce-fullscreen .mce-toolbar {
+  background: #ffffff !important;
+  border-bottom: 1px solid #e0e0e0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+@media (max-width: 768px) {
+  body[class*=user-registration-] .wp-editor-wrap .mce-toolbar, body[class^=ur-] .wp-editor-wrap .mce-toolbar {
+    flex-wrap: wrap !important;
+  }
+  body[class*=user-registration-] .wp-editor-wrap .mce-toolbar .mce-btn, body[class^=ur-] .wp-editor-wrap .mce-toolbar .mce-btn {
+    margin: 1px !important;
+  }
+  body[class*=user-registration-] .wp-editor-wrap .mce-toolbar .mce-btn button, body[class^=ur-] .wp-editor-wrap .mce-toolbar .mce-btn button {
+    padding: 3px 5px !important;
+    font-size: 11px !important;
+  }
+}
 body.user-registration-page .ur-frontend-form .ur-form-row .ur-form-grid .field-membership #ur-membership-registration {
   max-width: 100%;
 }
@@ -2514,7 +2682,6 @@ body.user-registration-page #user-registration:not(.user-registration-MyAccount)
 body.user-registration-page .user-registration:not(.user-registration-MyAccount), body.user-registration-membership_page_user-registration-login-forms #user-registration:not(.user-registration-MyAccount),
 body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) {
   max-width: 520px;
-  margin: 30px auto;
   border-radius: 4px;
   background: transparent;
   border: 0;
@@ -3149,6 +3316,14 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
   padding: 0;
   box-shadow: none;
   margin-bottom: 0;
+}
+body.user-registration-page #user-registration.ur-frontend-form,
+body.user-registration-page .user-registration.ur-frontend-form, body.user-registration-membership_page_user-registration-login-forms #user-registration.ur-frontend-form,
+body.user-registration-membership_page_user-registration-login-forms .user-registration.ur-frontend-form {
+  max-width: 100%;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
 }
 body.woocommerce-checkout .user-registration.urwc-form {
   all: unset;
