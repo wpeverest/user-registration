@@ -650,7 +650,7 @@ class StripeService {
 
 	public function handle_succeeded_invoice( $event, $subscription_id ) {
 		$logger = ur_get_logger();
-		$logger->notice( 'triggered succeeded invoice webhook.', array( 'source' => 'user-registration-membership-stripe' ) );
+		$logger->notice( 'triggered succeeded invoice webhook for '. $subscription_id, array( 'source' => 'user-registration-membership-stripe' ) );
 
 		if ( null === $subscription_id ) {
 			$logger->error( 'Subscription ID is null', array( 'source' => 'user-registration-membership-stripe' ) );
@@ -660,7 +660,7 @@ class StripeService {
 
 		$current_subscription = $this->members_subscription_repository->get_membership_by_subscription_id( $subscription_id, true );
 
-		if ( null === $current_subscription ) {
+		if ( empty($current_subscription) ) {
 			$logger->error( 'Subscription not found for subscription id ' . $subscription_id, array( 'source' => 'user-registration-membership-stripe' ) );
 
 			return;
@@ -717,7 +717,7 @@ class StripeService {
 			$subscription_service = new SubscriptionService();
 			$subscription_service->update_subscription_data_for_renewal( $current_subscription, $membership_metas );
 		}
-		$logger->notice( 'Subscription updated with new billing date', array( 'source' => 'user-registration-membership-stripe' ) );
+		$logger->notice( 'Subscription updated with new billing date for '. $subscription_id, array( 'source' => 'user-registration-membership-stripe' ) );
 	}
 
 	public function validate_setup() {
