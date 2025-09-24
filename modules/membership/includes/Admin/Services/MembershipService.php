@@ -101,7 +101,6 @@ class MembershipService {
 		} catch ( Exception $e ) {
 			// Rollback the transaction if any operation fails.
 			$this->members->wpdb()->query( 'ROLLBACK' );
-
 			$data = array(
 				'message' => $e->getMessage(),
 				'status'  => false,

@@ -11,7 +11,6 @@
  */
 
 namespace WPEverest\URMembership;
-
 use WPEverest\URMembership\Admin\Controllers\MembersController;
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersOrderRepository;
@@ -152,7 +151,6 @@ class AJAX {
 			$data             = array_merge( $data, $ur_authorize_net );
 			$pg_data          = $payment_service->build_response( $data );
 		}
-
 		if ( $response['status'] ) {
 			$form_response = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
 
