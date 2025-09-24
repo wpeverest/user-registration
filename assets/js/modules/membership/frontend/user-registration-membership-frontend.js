@@ -596,7 +596,11 @@
 					discount_amount !== undefined && discount_amount !== ""
 						? urm_calculated_total - discount_amount
 						: urm_calculated_total;
-			total_input.val(urmf_data.currency_symbol + total);
+			if( 'left' === urmf_data.curreny_pos ) {
+				total_input.val(urmf_data.currency_symbol + total);
+			} else {
+				total_input.val( total + urmf_data.currency_symbol );
+			}
 		},
 		upgrade_membership: function (
 			current_plan,
@@ -1551,7 +1555,9 @@
 						stripe_error_container = $("#stripe-errors"),
 						upgrade_error_container = $(
 							"#upgrade-membership-notice"
-						);
+						),
+						urm_default_pg = $(this).data("urm-default-pg");
+
 
 					var authorize_container = $(".authorize-net-container");
 					var authorize_error_container = $("#authorize-errors");
@@ -1560,11 +1566,18 @@
 
 					stripe_error_container.remove();
 					upgrade_error_container.text("");
-					$('input[name="urm_payment_method"]').prop(
-						"checked",
-						false
-					);
-					stripe_container.addClass("urm-d-none");
+
+					//Selects Stripe as default and display stripe form if it is in the available gateways Needs to be updated for translation.
+					if ( urm_default_pg && urm_default_pg.toLowerCase() === 'stripe' ) {
+						$(this).closest('#ur-membership-registration').find('#ur-membership-stripe').prop('checked', true).trigger('change');
+						stripe_settings.init();
+					} else {
+						$('input[name="urm_payment_method"]').prop(
+							"checked",
+							false
+						);
+						stripe_container.addClass("urm-d-none");
+					}
 					authorize_container.addClass("urm-d-none");
 					urm_hidden_pg_containers.addClass("urm-d-none");
 
@@ -1598,6 +1611,8 @@
 							lone_pg.trigger("change");
 						}
 						ur_membership_ajax_utils.calculate_total($(this));
+					} else {
+						stripe_container.addClass("urm-d-none");
 					}
 				}
 			);

@@ -488,7 +488,7 @@ class UR_Frontend_Scripts {
 					'ur_hold_data_before_redirection'   => apply_filters( 'user_registration_hold_form_data_before_redirection', false ),
 					'ajax_form_submit_error'            => is_admin() ? esc_html__( 'Form submission failed. This may be caused by a server or security setting blocking the request, a plugin conflict, or an unexpected technical issue. Please try again or check your site configuration if the problem persists.', 'user-registration' ) : esc_html__( 'Something went wrong while submitting the form. Please try again. If the issue continues, contact the site administrator for help', 'user-registration' ),
 					'logout_popup_text'                 => esc_html__( 'Are you sure you want to logout?', 'user-registration' ),
-					'logout_popup_cancel_text'                 => esc_html__( 'Cancel', 'user-registration' ),
+					'logout_popup_cancel_text'          => esc_html__( 'Cancel', 'user-registration' ),
 					'user_registration_checkbox_validation_message' => apply_filters( 'user_registration_checkbox_validation_message', esc_html__( 'Please select no more than {0} options.', 'user-registration' ) ),
 				);
 				break;
@@ -553,6 +553,7 @@ class UR_Frontend_Scripts {
 		if ( ! $enable_strong_password ) {
 			return '';
 		}
+
 		$custom_params = array(
 			'minimum_uppercase'     => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_uppercase' ),
 			'minimum_digits'        => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_minimum_digits' ),
@@ -561,26 +562,57 @@ class UR_Frontend_Scripts {
 			'no_rep_chars'          => ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_no_repeat_chars' ) ),
 			'max_rep_chars'         => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_max_char_repeat_length' ),
 		);
-		$add_prefix    = true;
-		$hint          = 'The password must have minimum length of ' . $custom_params['minimum_pass_length'] . ' characters';
+
+		$add_prefix = true;
+
+		/* translators: %d: Minimum password length. */
+		$hint = sprintf(
+			__( 'The password must have minimum length of %d characters', 'user-registration' ),
+			$custom_params['minimum_pass_length']
+		);
+
 		if ( $custom_params['minimum_uppercase'] > 0 ) {
-			$hint      .= ' and contain at-least ' . $custom_params['minimum_uppercase'] . ' uppercase ';
+			/* translators: %d: Minimum number of uppercase letters required. */
+			$hint      .= ' ' . sprintf(
+				__( 'and contain at least %d uppercase letters', 'user-registration' ),
+				$custom_params['minimum_uppercase']
+			);
 			$add_prefix = false;
 		}
+
 		if ( $custom_params['minimum_digits'] > 0 ) {
-			$hint      .= ( $add_prefix ? ' and contain at-least ' : '' ) . $custom_params['minimum_digits'] . ' number ';
+			/* translators: %d: Minimum number of digits required. */
+			$hint      .= ' ' . sprintf(
+				$add_prefix
+				? __( 'and contain at least %d number', 'user-registration' )
+				: __( 'and contain at least %d number', 'user-registration' ),
+				$custom_params['minimum_digits']
+			);
 			$add_prefix = false;
 		}
+
 		if ( $custom_params['minimum_special_chars'] > 0 ) {
-			$hint      .= ( $add_prefix ? ' and contain at-least ' : '' ) . $custom_params['minimum_special_chars'] . ' special characters ';
+			/* translators: %d: Minimum number of special characters required. */
+			$hint      .= ' ' . sprintf(
+				$add_prefix
+				? __( 'and contain at least %d special character', 'user-registration' )
+				: __( 'and contain at least %d special characters', 'user-registration' ),
+				$custom_params['minimum_special_chars']
+			);
 			$add_prefix = false;
 		}
 
 		if ( $custom_params['no_rep_chars'] ) {
-			$hint .= ' and should only have ' . $custom_params['max_rep_chars'] . ' repetitive letters at max';
+			/* translators: %d: Maximum allowed consecutive repeated characters. */
+			$hint .= ' ' . sprintf(
+				__( 'and should only have %d repetitive letters at max', 'user-registration' ),
+				$custom_params['max_rep_chars']
+			);
 		}
-		$hint                 .= '.';
-		$custom_params['hint'] = esc_html__( $hint, 'user-registration' );
+
+		$hint .= '.';
+
+		$custom_params['hint'] = esc_html( $hint );
 
 		return $custom_params;
 	}

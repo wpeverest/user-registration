@@ -372,9 +372,27 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 		$active_payment_gateways = array();
 
 		foreach ( $memberships as $k => $membership ) {
+
 			$membership_id = ! empty( $membership['ID'] ) ? $membership['ID'] : '';
 			$membership_meta_value = !empty($membership['meta_value']) ? $membership['meta_value'] : '';
 			$membership_type = (!empty($membership_meta_value) && !empty($membership_meta_value['type'])) ? $membership_meta_value['type'] : '';
+
+			if ( isset( $currencies[ $currency ]['symbol_pos'] ) && 'right' === $currencies[ $currency ]['symbol_pos'] ) {
+				$membership_cur_amount = round( $membership['meta_value']['amount'] ) . $symbol;
+			} else {
+				$membership_cur_amount = $symbol . round( $membership['meta_value']['amount'] );
+			}
+
+			$duration_key = strtolower( $membership['meta_value']['subscription']['duration'] );
+
+			$duration_labels = array(
+				'day'   => __( 'Day (s)', 'user-registration' ),
+				'week'  => __( 'Week (s)', 'user-registration' ),
+				'month' => __( 'Month (s)', 'user-registration' ),
+				'year'  => __( 'Year (s)', 'user-registration' ),
+			);
+			$duration_label  = $duration_labels[ $duration_key ] ?? ucfirst( $duration_key );
+
 			$new_mem[ $k ] = array(
 				'ID'                => $membership_id,
 				'title'             => ! empty( $membership['post_title'] ) ? $membership['post_title'] : '',
@@ -383,7 +401,7 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 				'amount'            => !empty($membership_meta_value) ? $membership['meta_value']['amount'] : 0,
 				'currency_symbol'   => $symbol,
 				'calculated_amount' => 'free' === $membership_type ? 0 : (!empty($membership_meta_value) ? round( $membership_meta_value['amount'] ) : 0),
-				'period'            => 'free' === $membership_type ? __( 'Free', 'user-registration' ) : ( (!empty($membership_meta_value) && 'subscription' === $membership_meta_value['type']) ? $symbol . $membership['meta_value']['amount'] . ' / ' . number_format( $membership['meta_value']['subscription']['value'] ) . ' ' . ucfirst( $membership['meta_value']['subscription']['duration'] ) . ( $membership['meta_value']['subscription']['value'] > 1 ? '(s)' : '' ) : $symbol . (!empty($membership_meta_value) ? round( $membership['meta_value']['amount'] ) : 0) ),
+				'period'            => 'free' === $membership_type ? __( 'Free', 'user-registration' ) : ( (!empty($membership_meta_value) && 'subscription' === $membership_meta_value['type']) ? $membership_cur_amount . ' / ' . number_format( $membership['meta_value']['subscription']['value'] ) . ' ' . ucfirst( $duration_label ) . ( $membership['meta_value']['subscription']['value'] > 1 ? '(s)' : '' ) : $membership_cur_amount ),
 			);
 			if ( isset( $membership['meta_value']['payment_gateways'] ) ) {
 				foreach ( $membership['meta_value']['payment_gateways'] as $key => $gateways ) {
@@ -414,9 +432,9 @@ if ( ! function_exists( 'get_membership_menus' ) ) {
 				'label'  => __( 'Memberships', 'user-registration' ),
 				'url'    => admin_url( 'admin.php?page=user-registration-membership' ),
 				'active' => isset( $_GET['page'] ) &&
-				            $_GET['page'] === 'user-registration-membership' &&
+							$_GET['page'] === 'user-registration-membership' &&
 				            ( isset( $_GET['action'] ) ? ! in_array( $_GET['action'], array(
-					            'list_groups',
+									'list_groups',
 					            'add_groups'
 				            ) ) : true ),
 			),
@@ -424,8 +442,8 @@ if ( ! function_exists( 'get_membership_menus' ) ) {
 				'label'  => __( 'Membership Groups', 'user-registration' ),
 				'url'    => admin_url( 'admin.php?page=user-registration-membership&action=list_groups' ),
 				'active' => isset( $_GET['page'], $_GET['action'] ) &&
-				            $_GET['page'] === 'user-registration-membership' &&
-				            in_array( $_GET['action'], array( 'list_groups', 'add_groups' ) ),
+							$_GET['page'] === 'user-registration-membership' &&
+							in_array( $_GET['action'], array( 'list_groups', 'add_groups' ) ),
 			),
 			'members'           => array(
 				'label'  => __( 'Members', 'user-registration' ),

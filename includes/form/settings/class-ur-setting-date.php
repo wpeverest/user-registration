@@ -48,7 +48,7 @@ class UR_Setting_Date extends UR_Field_Settings {
 				'required'    => false,
 				'default'     => '',
 				'placeholder' => __( 'Custom Class', 'user-registration' ),
-				'tip'         => __( 'Class name to embed in this field.', 'user-registration' ),
+				'tip'         => __( 'Add a CSS class for custom styling.', 'user-registration' ),
 			),
 
 			'date_format'       => array(
@@ -71,34 +71,34 @@ class UR_Setting_Date extends UR_Field_Settings {
 			'enable_min_max'    => array(
 				'type'     => 'toggle',
 				'data-id'  => $this->field_id . '_enable_min_max',
-				'label'    => __( 'Enable Min-Max Date', 'user-registration' ),
+				'label'    => __( 'Enable Minimum and Maximum Date', 'user-registration' ),
 				'name'     => $this->field_id . '[enable_min_max]',
 				'class'    => $this->default_class . ' ur-settings-enable-min-max',
 				'default'  => 'false',
 				'required' => false,
-				'tip'      => __( 'Enable min/max date.', 'user-registration' ),
+				'tip'      => __( 'Turn this on to set minimum and maximum dates for this field.', 'user-registration' ),
 			),
 
 			'min_date'          => array(
-				'label'    => __( 'Min Date', 'user-registration' ),
+				'label'    => __( 'Minimum Date', 'user-registration' ),
 				'data-id'  => $this->field_id . '_min_date',
 				'name'     => $this->field_id . '[min_date]',
 				'class'    => $this->default_class . ' ur-settings-min-date',
 				'type'     => 'text',
 				'required' => false,
 				'default'  => '',
-				'tip'      => __( 'Enter min date.', 'user-registration' ),
+				'tip'      => __( 'Users won’t be able to pick a date before this limit.', 'user-registration' ),
 			),
 
 			'max_date'          => array(
-				'label'    => __( 'Max Date', 'user-registration' ),
+				'label'    => __( 'Maximum Date', 'user-registration' ),
 				'data-id'  => $this->field_id . '_max_date',
 				'name'     => $this->field_id . '[max_date]',
 				'class'    => $this->default_class . ' ur-settings-max-date',
 				'type'     => 'text',
 				'required' => false,
 				'default'  => '',
-				'tip'      => __( 'Enter max date.', 'user-registration' ),
+				'tip'      => __( 'Users won’t be able to pick a date beyond this limit.', 'user-registration' ),
 			),
 
 			'set_current_date'  => array(
@@ -109,7 +109,7 @@ class UR_Setting_Date extends UR_Field_Settings {
 				'class'    => $this->default_class . ' ur-settings-set-current-date',
 				'default'  => 'false',
 				'required' => false,
-				'tip'      => __( 'Set current as default.', 'user-registration' ),
+				'tip'      => __( 'Set current date as the default value for this field.', 'user-registration' ),
 			),
 
 			'enable_date_range' => array(
@@ -120,13 +120,13 @@ class UR_Setting_Date extends UR_Field_Settings {
 				'class'    => $this->default_class . ' ur-settings-enable-date-range',
 				'default'  => 'false',
 				'required' => false,
-				'tip'      => __( 'Enable date range feature.', 'user-registration' ),
+				'tip'      => __( 'Turn this on to allow users to select a range of dates.', 'user-registration' ),
 			),
 
 			'date_localization' => array(
 				'type'     => 'select',
 				'data-id'  => $this->field_id . '_date_localization',
-				'label'    => __( 'Date Localization', 'user-registration' ),
+				'label'    => __( 'Date Format Localization', 'user-registration' ),
 				'name'     => $this->field_id . '[date_localization]',
 				'class'    => $this->default_class . ' ur-settings-date_localization',
 				'default'  => 'en',
@@ -192,6 +192,7 @@ class UR_Setting_Date extends UR_Field_Settings {
 					'zh'    => 'Mandarin',
 					'zh_tw' => 'MandarinTraditional',
 				),
+				'tip'      => __( 'Choose how dates are displayed based on the user’s location or language.', 'user-registration' ),
 			),
 		);
 			/**
