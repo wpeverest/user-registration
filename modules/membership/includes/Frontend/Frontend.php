@@ -228,6 +228,7 @@ class Frontend {
 				'login_url'                        => wp_login_url(),
 				'labels'                           => $this->get_i18_labels(),
 				'currency_symbol'                  => $symbol,
+				'curreny_pos'                      => isset( $currencies[ $currency ]['symbol_pos'] ) ? $currencies[ $currency ]['symbol_pos'] : 'left',
 				'membership_registration_page_url' => $redirect_page_url,
 				'thank_you_page_url'               => $thank_you_page,
 				'stripe_publishable_key'           => $stripe_settings['publishable_key'],
