@@ -57,7 +57,7 @@ class AJAX {
 			'delete_membership'            => false,
 			'update_membership_status'     => false,
 			'create_member'                => false,
-			'update_member'                => false,
+			'edit_member'                  => false,
 			'delete_members'               => false,
 			'confirm_payment'              => true,
 			'create_stripe_subscription'   => true,
@@ -637,6 +637,44 @@ class AJAX {
 			);
 		} else {
 			$message = isset( $response['message'] ) ? $response['message'] : esc_html__( 'Sorry! There was an unexpected error while saving the members data . ', 'user-registration' );
+			wp_send_json_error(
+				array(
+					'message' => $message,
+				)
+			);
+		}
+
+	}
+
+	/**
+	 * Create edit member from backend.
+	 *
+	 * @return void
+	 */
+	public static function edit_member() {
+
+		if ( ! current_user_can( 'edit_users' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Sorry, You do not have permission to create users', 'user-registration' ),
+				)
+			);
+		}
+		ur_membership_verify_nonce( 'ur_edit_members' );
+		$data               = isset( $_POST['members_data'] ) ? (array) json_decode( wp_unslash( $_POST['members_data'] ), true ) : array();
+		$members_controller = new MembersController( new MembersRepository(), new OrdersRepository(), new SubscriptionRepository() );
+
+		$response = $members_controller->update_members_admin( $data );
+
+		if ( $response['status'] ) {
+			wp_send_json_success(
+				array(
+					'member_id' => $response['member_id'],
+					'message'   => esc_html__( 'Member has been successfully updated. ', 'user-registration' ),
+				)
+			);
+		} else {
+			$message = isset( $response['message'] ) ? $response['message'] : esc_html__( 'Sorry! There was an unexpected error while updating the members data. ', 'user-registration' );
 			wp_send_json_error(
 				array(
 					'message' => $message,
