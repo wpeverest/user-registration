@@ -49,7 +49,8 @@ const Modules = () => {
 		selectedSort: "default",
 		selectedStatus: "all",
 		selectedPlan: "all",
-		isLoading: false
+		isLoading: false,
+		highlightedCategories: [] // Categories that contain search results
 	});
 	const [tabIndex, setTabIndex] = useState(0);
 	const [IsStateUpdated, setIsStateUpdated] = useState(false);
@@ -266,12 +267,22 @@ const Modules = () => {
 			mod.title.toLowerCase().includes(searchValue)
 		);
 
+		// Determine which categories contain search results
+		let highlightedCategories = [];
+		if (searchValue && searchValue.length >= 3) {
+			// When searching, find categories that contain matching modules
+			// Exclude "All" category from highlights as it's not a real category
+			const categoriesWithResults = [...new Set(filtered.map(mod => mod.category).filter(Boolean))];
+			highlightedCategories = categoriesWithResults;
+		}
+
 		setState((prev) => ({
 			...prev,
 			modules: filtered,
-				noItemFound: filtered.length === 0,
-				isLoading: false
-			}));
+			noItemFound: filtered.length === 0,
+			isLoading: false,
+			highlightedCategories: highlightedCategories
+		}));
 		};
 
 		if (showLoading) {
@@ -323,7 +334,7 @@ const Modules = () => {
 	const debounceSearch = useCallback(
 		debounce((val) => {
 			const lowerVal = val.toLowerCase();
-			filterModules(state.originalModules, state.selectedCategory, false); // No loading for search
+			filterModules(state.originalModules, "All", false); // Search across all categories
 		}, 300) // Reduced debounce time for better responsiveness
 	);
 
@@ -336,7 +347,8 @@ const Modules = () => {
 		if (val.length >= 3) {
 			debounceSearch(val);
 		} else if (val.length === 0) {
-			// If search is cleared, show all modules
+			// If search is cleared, show all modules in the current category and clear highlights
+			setState(prev => ({ ...prev, highlightedCategories: [] }));
 			filterModules(state.originalModules, state.selectedCategory, false, state.selectedStatus, state.selectedPlan);
 		}
 	};
@@ -412,10 +424,12 @@ const Modules = () => {
 	const handleResetFilters = () => {
 		setState(prev => ({
 			...prev,
+			selectedCategory: "All",
 			selectedSort: "default",
 			selectedStatus: "all",
 			selectedPlan: "all",
-			searchItem: ""
+			searchItem: "",
+			highlightedCategories: []
 		}));
 		// Clear search input
 		searchItemRef.current = "";
@@ -461,6 +475,7 @@ const Modules = () => {
 					<Categories
 						categories={categories}
 						selectedCategory={state.selectedCategory}
+						highlightedCategories={state.highlightedCategories}
 						onCategoryChange={(displayValue, internalValue) => {
 							setState(prev => ({ ...prev, selectedCategory: displayValue }));
 							filterModules(state.originalModules, internalValue, true); // Show loading for category changes
