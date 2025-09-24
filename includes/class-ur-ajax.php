@@ -89,10 +89,11 @@ class UR_AJAX {
 			'save_payment_settings'             => false,
 			'disable_user'						=> false,
 			'validate_payment_currency'			=> false,
+			'save_captcha_settings'             => false,
 			'create_default_form'				=> false,
 			'generate_required_pages'			=> false,
 			'handle_default_wordpress_login'	=> false,
-			'skip_site_assistant_section'		=> false,
+			'skip_site_assistant_section'		=> false
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -1971,19 +1972,58 @@ class UR_AJAX {
 
 		$validate_before_save = apply_filters( 'urm_validate_' . $setting_id . '_payment_section_before_update', $form_data );
 
-		if ( isset($validate_before_save['status']) && ! $validate_before_save['status'] ) {
+		if ( isset( $validate_before_save['status'] ) && ! $validate_before_save['status'] ) {
 			wp_send_json_error(
 				array(
 					'message' => __( $validate_before_save['message'], "user_registration" )
 				)
 			);
 		}
-		update_option('urm_'.$setting_id.'_connection_status', true);
+		update_option( 'urm_' . $setting_id . '_connection_status', true );
 
 		do_action( 'urm_save_' . $setting_id . '_payment_section', $form_data );
 		$message = "payment-settings" === $setting_id ? "Settings has been saved successfully" : sprintf( __( "Payment Setting for %s has been saved successfully.", 'user-registration' ), $setting_id );
 		wp_send_json_success( array(
 				'message' => $message
+			)
+		);
+	}
+
+	public static function save_captcha_settings() {
+		check_ajax_referer( 'user_registration_validate_captcha_settings_nonce', 'security' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to edit captcha settings.', 'user-registration' ) ) );
+			wp_die( - 1 );
+		}
+		if ( empty( $_POST['section_data'] ) || empty( $_POST['setting_id'] ) ) {
+			wp_send_json_error( array( 'message' => __( 'Insufficient Data', 'user-registration' ) ) );
+		}
+
+		include_once UR_ABSPATH . 'includes/admin/settings/class-ur-settings-page.php';
+		include_once UR_ABSPATH . 'includes/admin/settings/class-ur-settings-captcha.php';
+
+
+		$setting_id = sanitize_text_field( $_POST['setting_id'] );
+		$form_data  = json_decode( wp_unslash( $_POST['section_data'] ), true );
+
+
+		$captcha_settings     = new UR_Settings_Captcha();
+		$validate_before_save = $captcha_settings->validate_captcha_settings( $setting_id, $form_data );
+
+		if ( isset( $validate_before_save['status'] ) && ! $validate_before_save['status'] ) {
+			wp_send_json_error(
+				array(
+					'message' => __( $validate_before_save['message'], "user_registration" )
+				)
+			);
+		}
+		do_action( 'urm_save_captcha_settings', $form_data, $setting_id );
+		$message = sprintf( __( "Captcha Setting for %s has been saved successfully.", 'user-registration' ), $setting_id );
+
+		wp_send_json_success( array(
+				'message' => $message,
+				'ur_recaptcha_code' => $validate_before_save['ur_recaptcha_code']
 			)
 		);
 	}
