@@ -44,6 +44,7 @@ jQuery(function ($) {
 		} else {
 			$(".ur-fields-not-found").show();
 		}
+		$(this).closest(".ur-tab-contents").scrollTop(0);
 	});
 
 	//Bind UI Actions for locked fields
@@ -2111,4 +2112,7 @@ jQuery(function ($) {
 	$(".ur-admin-page-topnav").on("click", ".ur-nav-link", function () {
 		setTimeout(updateActive, 0);
 	});
+	$('li.toplevel_page_user-registration > a').attr('href', 'admin.php?page=user-registration');
+
 });
+

@@ -966,22 +966,28 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				break;
 			case 'tinymce':
 				$editor_settings = array(
-					'name'       => esc_attr( $args['id'] ),
-					'id'         => esc_attr( $args['id'] ),
-					'style'      => esc_attr( $args['css'] ),
-					'default'    => esc_attr( $args['default'] ),
-					'class'      => esc_attr( $args['class'] ),
-					'quicktags'  => array( 'buttons' => 'em,strong,link' ),
-					'tinymce'    => array(
-						'theme_advanced_buttons1' => 'bold,italic,strikethrough,separator,bullist,numlist,separator,blockquote,separator,justifyleft,justifycenter,justifyright,separator,link,unlink,separator,undo,redo,separator',
+					'name'          => esc_attr( $args['id'] ),
+					'id'            => esc_attr( $args['id'] ),
+					'style'         => esc_attr( $args['css'] ),
+					'default'       => esc_attr( $args['default'] ),
+					'class'         => esc_attr( $args['class'] ),
+					'quicktags'     => array( 'buttons' => 'em,strong,link' ),
+					'media_buttons' => false,
+					'tinymce'       => array(
+						'statusbar'               => false,
+						'toolbar1'                => 'undo,redo,formatselect,fontselect,fontsizeselect,bold,italic,forecolor,alignleft,aligncenter,alignright,alignjustify,bullist,numlist,outdent,indent,removeformat',
+						'toolbar2'                => '',
+						'toolbar3'                => '',
+						'toolbar4'                => '',
 						'theme_advanced_buttons2' => '',
+						'plugins'                 => 'wordpress,wpautoresize,wplink,wpdialogs,wptextpattern,wpview,colorpicker,textcolor,hr,charmap,link,fullscreen,lists',
 					),
-					'editor_css' => '<style>#wp-excerpt-editor-container .wp-editor-area{height:175px; width:100%;}</style>',
+					'editor_css'    => '<style>#wp-excerpt-editor-container .wp-editor-area{height:175px; width:100%;}</style>',
 				);
 
 				$value = ! empty( $value ) ? $value : $default_value;
 
-				$field .= '<div class="user-registration-tinymce-field '.$args['id'].'">';
+				$field .= '<div class="user-registration-tinymce-field ' . $args['id'] . '">';
 
 				// Output buffer for tinymce editor.
 				ob_start();
@@ -2203,8 +2209,13 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 					'class'      => esc_attr( $args['class'] ),
 					'quicktags'  => array( 'buttons' => 'em,strong,link' ),
 					'tinymce'    => array(
-						'theme_advanced_buttons1' => 'bold,italic,strikethrough,separator,bullist,numlist,separator,blockquote,separator,justifyleft,justifycenter,justifyright,separator,link,unlink,separator,undo,redo,separator',
+						'statusbar' => false,
+						'toolbar1' => 'undo,redo,formatselect,fontselect,fontsizeselect,bold,italic,forecolor,alignleft,aligncenter,alignright,alignjustify,bullist,numlist,outdent,indent,removeformat',
+						'toolbar2' => '',
+						'toolbar3' => '',
+						'toolbar4' => '',
 						'theme_advanced_buttons2' => '',
+						'plugins' => 'wordpress,wpautoresize,wplink,wpdialogs,wptextpattern,wpview,colorpicker,textcolor,hr,charmap,link,fullscreen,lists',
 					),
 					'editor_css' => '<style>#wp-excerpt-editor-container .wp-editor-area{height:175px; width:100%;}</style>',
 				);

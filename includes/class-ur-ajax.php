@@ -89,7 +89,11 @@ class UR_AJAX {
 			'save_payment_settings'             => false,
 			'disable_user'						=> false,
 			'validate_payment_currency'			=> false,
-			'save_captcha_settings'             => false
+			'save_captcha_settings'             => false,
+			'create_default_form'				=> false,
+			'generate_required_pages'			=> false,
+			'handle_default_wordpress_login'	=> false,
+			'skip_site_assistant_section'		=> false
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -651,6 +655,7 @@ class UR_AJAX {
 		$status = wp_mail( $email, $subject, $message, $header );
 
 		if ( $status ) {
+			update_option('user_registration_successful_test_mail', true);
 			wp_send_json_success( array( 'message' => __( 'Test email was sent successfully! Please check your inbox to make sure it is delivered.', 'user-registration' ) ) );
 		}
 		{
@@ -2117,6 +2122,173 @@ class UR_AJAX {
 				'message' => __( 'Currency is valid.', 'user-registration' ),
 			)
 		);
+	}
+
+	/**
+	 * Handle create default form ajax request.
+	 *
+	 * @since 4.4.1
+	 */
+	public static function create_default_form() {
+		check_ajax_referer( 'wp_rest', 'security' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to create forms.', 'user-registration' ) ) );
+		}
+
+		// Check if membership module is activated
+		$enabled_features = get_option( 'user_registration_enabled_features', array() );
+		$is_membership_activated = in_array( 'user-registration-membership', $enabled_features, true );
+
+		$hasposts = get_posts( array( 'post_type' => 'user_registration' ) );
+		$default_form = get_option( 'user_registration_default_form_page_id', 0 );
+		$form_data = get_post( $default_form );
+		// Check if default form already exists
+		if ( $default_form &&  !empty($form_data)) {
+			wp_send_json_error( array( 'message' => __( 'Default form ('.esc_html($form_data->post_title).') already exists.', 'user-registration' ) ) );
+		}
+
+		$post_content = '';
+		$membership_field_name = 'membership_field_' . ur_get_random_number();
+
+		if ( $is_membership_activated ) {
+			// Create membership form
+			$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]],[[{"field_key":"membership","general_setting":{"label":"Membership Field","description":"","field_name":"' . $membership_field_name . '","placeholder":"","required":"false","hide_label":"false","membership_listing_option":"all"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-membership-field"}]]]';
+		} else {
+			// Create normal registration form
+			$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]]]';
+		}
+
+		// Insert default form
+		$default_post_id = wp_insert_post(
+			array(
+				'post_type'      => 'user_registration',
+				'post_title'     => $is_membership_activated ? __( 'Default Membership Registration Form', 'user-registration' ) : __( 'Default form', 'user-registration' ),
+				'post_content'   => $post_content,
+				'post_status'    => 'publish',
+				'comment_status' => 'closed',
+				'ping_status'    => 'closed',
+			)
+		);
+
+		if ( is_wp_error( $default_post_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Failed to create default form.', 'user-registration' ) ) );
+		}
+
+		// Update option with the new form ID
+		update_option( 'user_registration_default_form_page_id', $default_post_id );
+
+		// If membership is activated, also update membership field name
+		if ( $is_membership_activated ) {
+			update_option( 'ur_membership_default_membership_field_name', $membership_field_name );
+		}
+
+		wp_send_json_success( array(
+			'message' => __( 'Default form created successfully.', 'user-registration' ),
+			'form_id' => $default_post_id,
+			'form_url' => admin_url( 'admin.php?page=add-new-registration&edit-registration=' . $default_post_id ),
+			'is_membership' => $is_membership_activated
+		) );
+	}
+
+	/**
+	 * Handle generate required pages ajax request.
+	 *
+	 * @since 4.4.1
+	 */
+	public static function generate_required_pages() {
+		check_ajax_referer( 'wp_rest', 'security' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to create pages.', 'user-registration' ) ) );
+		}
+
+		$missing_pages = isset( $_POST['missing_pages'] ) ? sanitize_text_field( wp_unslash( $_POST['missing_pages'] ) ) : '';
+
+		if ( empty( $missing_pages ) ) {
+			wp_send_json_error( array( 'message' => __( 'No pages specified to create.', 'user-registration' ) ) );
+		}
+
+		$result = ur_generate_required_pages( $missing_pages );
+
+		if ( is_wp_error( $result ) ) {
+			wp_send_json_error( array( 'message' => $result->get_error_message() ) );
+		}
+
+		wp_send_json_success( array(
+			'message' => __( 'Required pages created successfully.', 'user-registration' ),
+			'created_pages' => $result
+		) );
+	}
+
+	/**
+	 * Handle default WordPress login settings.
+	 *
+	 * @since 4.0
+	 */
+	public static function handle_default_wordpress_login() {
+		check_ajax_referer( 'wp_rest', 'security' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to modify login settings.', 'user-registration' ) ) );
+		}
+
+		$action = isset( $_POST['action_type'] ) ? sanitize_text_field( wp_unslash( $_POST['action_type'] ) ) : '';
+
+		if ( 'disable' === $action ) {
+			// Disable default WordPress login
+			update_option( 'user_registration_login_options_prevent_core_login', true );
+			wp_send_json_success( array(
+				'message' => __( 'Default WordPress login has been disabled successfully.', 'user-registration' )
+			) );
+		} else {
+			wp_send_json_error( array( 'message' => __( 'Invalid action specified.', 'user-registration' ) ) );
+		}
+	}
+
+	/**
+	 * Skip site assistant section.
+	 *
+	 * @since 4.0
+	 */
+	public static function skip_site_assistant_section() {
+		check_ajax_referer( 'wp_rest', 'security' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to skip sections.', 'user-registration' ) ) );
+		}
+
+		$section = isset( $_POST['section'] ) ? sanitize_text_field( wp_unslash( $_POST['section'] ) ) : '';
+
+		switch ( $section ) {
+			case 'default_wordpress_login':
+				// Mark default WordPress login as skipped
+				update_option( 'user_registration_default_wordpress_login_skipped', true );
+				wp_send_json_success( array(
+					'message' => __( 'Default WordPress login setting has been skipped.', 'user-registration' )
+				) );
+				break;
+
+			case 'spam_protection':
+				// Mark spam protection as skipped
+				update_option( 'user_registration_spam_protection_skipped', true );
+				wp_send_json_success( array(
+					'message' => __( 'Spam protection setting has been skipped.', 'user-registration' )
+				) );
+				break;
+
+			case 'payment_setup':
+				// Mark payment setup as skipped
+				update_option( 'user_registration_payment_setup_skipped', true );
+				wp_send_json_success( array(
+					'message' => __( 'Payment setup has been skipped.', 'user-registration' )
+				) );
+				break;
+
+			default:
+				wp_send_json_error( array( 'message' => __( 'Invalid section specified.', 'user-registration' ) ) );
+				break;
+		}
 	}
 }
 

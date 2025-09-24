@@ -101,7 +101,6 @@ class MembershipService {
 		} catch ( Exception $e ) {
 			// Rollback the transaction if any operation fails.
 			$this->members->wpdb()->query( 'ROLLBACK' );
-
 			$data = array(
 				'message' => $e->getMessage(),
 				'status'  => false,
@@ -155,6 +154,15 @@ class MembershipService {
 	) {
 		$membership_id = ! empty( $data['post_data']['ID'] ) ? absint( $data['post_data']['ID'] ) : '';
 		$validate_data = $this->validate_membership_data( $data );
+
+		foreach ($data['post_meta_data']['payment_gateways'] as $pg => $pg_data) {
+			if("on" == $pg_data['status']) {
+				$validate_pg = $this->validate_payment_gateway( array($pg, $data['post_meta_data']['type']));
+				if(!$validate_pg['status']) {
+					$validate_data = $validate_pg;
+				}
+			}
+		}
 
 		if ( ! $validate_data['status'] ) {
 			return $validate_data;
@@ -422,7 +430,6 @@ class MembershipService {
 		$response = array(
 			'status' => 'true'
 		);
-
 		switch ( $data[0] ) {
 			case 'paypal';
 				$paypal_service = new PaypalService();

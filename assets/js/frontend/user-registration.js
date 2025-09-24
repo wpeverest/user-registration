@@ -1598,9 +1598,10 @@
 														"</li>"
 												);
 											} else if (
-												response.data
-													.form_login_option ==
-												"payment"
+												response.data.form_login_option == "payment" &&
+												typeof response.data
+														.message !==
+													"undefined"
 											) {
 												message.append(
 													"<li>" +
@@ -2870,7 +2871,6 @@
 				var response = JSON.parse(ajax_response.responseText);
 				if (response.success) {
 					$.each(response.data, function (index, item) {
-						console.log(index, item);
 						$("#user-registration-form-" + index)
 							.find("#ur_frontend_form_nonce")
 							.val(item);
@@ -2893,7 +2893,6 @@
 				var response = JSON.parse(ajax_response.responseText);
 				if (response.success) {
 					$.each(response.data, function (index, item) {
-						console.log(index, item);
 						$("#user-registration-form-" + index)
 							.find("#ur_frontend_form_nonce")
 							.val(item);

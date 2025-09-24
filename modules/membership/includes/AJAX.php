@@ -11,7 +11,6 @@
  */
 
 namespace WPEverest\URMembership;
-
 use WPEverest\URMembership\Admin\Controllers\MembersController;
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersOrderRepository;
@@ -57,7 +56,7 @@ class AJAX {
 			'delete_membership'            => false,
 			'update_membership_status'     => false,
 			'create_member'                => false,
-			'update_member'                => false,
+			'edit_member'                  => false,
 			'delete_members'               => false,
 			'confirm_payment'              => true,
 			'create_stripe_subscription'   => true,
@@ -152,7 +151,6 @@ class AJAX {
 			$data             = array_merge( $data, $ur_authorize_net );
 			$pg_data          = $payment_service->build_response( $data );
 		}
-
 		if ( $response['status'] ) {
 			$form_response = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
 
@@ -316,11 +314,7 @@ class AJAX {
 			}
 
 			$meta_data = json_decode( $data["post_meta_data"]['ur_membership']["meta_value"], true );
-			if ( ! empty( $meta_data['upgrade_settings'] ) && ! empty( $old_membership_data['upgrade_settings'] ) && $meta_data['upgrade_settings']['upgrade_path'] !== $old_membership_data['upgrade_settings']['upgrade_path'] ) {
-				$transient_key          = 'urm_upgradable_memberships_for_' . $updated_ID;
-				$upgradable_memberships = $membership->get_upgradable_membership( $updated_ID );
-				set_transient( $transient_key, $upgradable_memberships, 5 * MINUTE_IN_SECONDS );
-			}
+
 
 			if ( $is_stripe_enabled && 'free' !== $meta_data['type'] ) {
 				$stripe_service       = new StripeService();
@@ -637,6 +631,44 @@ class AJAX {
 			);
 		} else {
 			$message = isset( $response['message'] ) ? $response['message'] : esc_html__( 'Sorry! There was an unexpected error while saving the members data . ', 'user-registration' );
+			wp_send_json_error(
+				array(
+					'message' => $message,
+				)
+			);
+		}
+
+	}
+
+	/**
+	 * Create edit member from backend.
+	 *
+	 * @return void
+	 */
+	public static function edit_member() {
+
+		if ( ! current_user_can( 'edit_users' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Sorry, You do not have permission to create users', 'user-registration' ),
+				)
+			);
+		}
+		ur_membership_verify_nonce( 'ur_edit_members' );
+		$data               = isset( $_POST['members_data'] ) ? (array) json_decode( wp_unslash( $_POST['members_data'] ), true ) : array();
+		$members_controller = new MembersController( new MembersRepository(), new OrdersRepository(), new SubscriptionRepository() );
+
+		$response = $members_controller->update_members_admin( $data );
+
+		if ( $response['status'] ) {
+			wp_send_json_success(
+				array(
+					'member_id' => $response['member_id'],
+					'message'   => esc_html__( 'Member has been successfully updated. ', 'user-registration' ),
+				)
+			);
+		} else {
+			$message = isset( $response['message'] ) ? $response['message'] : esc_html__( 'Sorry! There was an unexpected error while updating the members data. ', 'user-registration' );
 			wp_send_json_error(
 				array(
 					'message' => $message,
@@ -1118,12 +1150,7 @@ class AJAX {
 				);
 			}
 		}
-		$transient_key = 'urm_upgradable_memberships_for_' . $membership_id;
-		$cached_data   = get_transient( $transient_key );
 
-		if ( false !== $cached_data ) {
-			wp_send_json_success( $cached_data );
-		}
 
 		$membership_service     = new MembershipService();
 		$upgradable_memberships = $membership_service->get_upgradable_membership( $membership_id );
@@ -1136,7 +1163,6 @@ class AJAX {
 				404
 			);
 		}
-		set_transient( $transient_key, $upgradable_memberships, 5 * MINUTE_IN_SECONDS );
 		wp_send_json_success(
 			$upgradable_memberships
 		);

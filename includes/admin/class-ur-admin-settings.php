@@ -828,10 +828,19 @@ class UR_Admin_Settings {
 										'style'      => esc_attr( $value['css'] ),
 										'default'    => esc_attr( $value['default'] ),
 										'class'      => esc_attr( $value['class'] ),
-										'quicktags'  => array( 'buttons' => 'em,strong,link' ),
+										'quicktags' => false,
+										'teeny' => true,
+										'show-ur-registration-form-button' => isset( $value['show-ur-registration-form-button'] ) ? $value['show-ur-registration-form-button'] : true,
+										'show-smart-tags-button' => isset( $value['show-smart-tags-button'] ) ? $value['show-smart-tags-button'] : true,
+										'show-reset-content-button' => isset( $value['show-reset-content-button'] ) ? $value['show-reset-content-button'] : true,
 										'tinymce'    => array(
-											'theme_advanced_buttons1' => 'bold,italic,strikethrough,separator,bullist,numlist,separator,blockquote,separator,justifyleft,justifycenter,justifyright,separator,link,unlink,separator,undo,redo,separator',
-											'theme_advanced_buttons2' => '',
+											'skin' => 'lightgray',
+											'toolbar1' => 'undo,redo,formatselect,fontselect,fontsizeselect,bold,italic,forecolor,alignleft,aligncenter,alignright,alignjustify,bullist,numlist,outdent,indent,removeformat',
+											'statusbar' => false,
+											'toolbar2' => '',
+											'toolbar3' => '',
+											'toolbar4' => '',
+											'plugins' => 'wordpress,wpautoresize,wplink,wpdialogs,wptextpattern,wpview,colorpicker,textcolor,hr,charmap,link,fullscreen,lists',
 										),
 										'editor_css' => '<style>#wp-excerpt-editor-container .wp-editor-area{height:175px; width:100%;}</style>',
 									);
@@ -878,7 +887,7 @@ class UR_Admin_Settings {
 
 									$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_attr( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 									$settings .= '<div class="user-registration-global-settings--field">';
-									$settings .= '<img src="' . esc_attr( $option_value ) . '" alt="' . esc_attr__( 'Header Logo', 'user-registration' ) . '" class="ur-image-uploader" height="auto" width="20%">';
+									$settings .= '<img src="' . esc_attr( $option_value ) . '" alt="' . esc_attr__( 'Header Logo', 'user-registration' ) . '" class="ur-image-uploader" height="auto" width="20%" '.( empty( $option_value ) ? 'style="display:none"' : '' ).'">';
 									$settings .= '<button type="button" class="ur-image-uploader ur-button button-secondary" ' . ( empty( $option_value ) ? '' : 'style = "display:none"' ) . '>' . esc_html__( 'Upload Image', 'user-registration' ) . '</button>';
 									$settings .= '<button type="button" class="ur-image-remover ur-button button-secondary" ' . ( ! empty( $option_value ) ? '' : 'style = "display:none"' ) . '>' . esc_html__( 'Remove Image', 'user-registration' ) . '</button>';
 
