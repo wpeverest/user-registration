@@ -7786,3 +7786,11 @@ body.user-registration-page {
 		}
 	}
 }
+.ur-sticky-wrapper {
+	top: 0;
+	background: white;
+	padding-bottom: 1px;
+	padding-top: 4px;
+	position: sticky;
+	z-index: 50;
+}

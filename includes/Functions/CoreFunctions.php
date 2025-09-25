@@ -376,11 +376,11 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 			$membership_id = ! empty( $membership['ID'] ) ? $membership['ID'] : '';
 			$membership_meta_value = !empty($membership['meta_value']) ? $membership['meta_value'] : '';
 			$membership_type = (!empty($membership_meta_value) && !empty($membership_meta_value['type'])) ? $membership_meta_value['type'] : '';
-
+			$amount = !empty($membership['meta_value']['amount']) ? $membership['meta_value']['amount'] : 0;
 			if ( isset( $currencies[ $currency ]['symbol_pos'] ) && 'right' === $currencies[ $currency ]['symbol_pos'] ) {
-				$membership_cur_amount = round( $membership['meta_value']['amount'] ) . $symbol;
+				$membership_cur_amount = round( $amount ) . $symbol;
 			} else {
-				$membership_cur_amount = $symbol . round( $membership['meta_value']['amount'] );
+				$membership_cur_amount = $symbol . round( $amount );
 			}
 			$duration_label = '';
 			if(!empty($membership['meta_value']['subscription']['duration']) ) {
