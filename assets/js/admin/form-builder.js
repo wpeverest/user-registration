@@ -3006,6 +3006,18 @@
 											container.remove();
 										}
 										builder.manage_draggable_users_fields();
+										var $template = $(template);
+
+										// Get fieldKey from data-field-key attribute.
+										var fieldKey = $template
+											.find(".ur-field")
+											.data("field-key");
+
+										var fieldName = fieldKey.replace(/\s+/g, "_").toLowerCase() + "_" + Date.now().toString();
+										console.log($template);
+										$template
+										.find("[data-advance-field=field_name]")
+											.val(fieldName);
 
 										var populated_item = template
 											.closest(".ur-selected-item ")
@@ -3019,19 +3031,6 @@
 											'.ur-input-type-select2 .ur-field[data-field-key="select2"] select, .ur-input-type-multi-select2 .ur-field[data-field-key="multi_select2"] select'
 										).selectWoo();
 
-										var $template = $(template);
-
-										// Get fieldKey from data-field-key attribute.
-										var fieldKey = $template
-											.find(".ur-field")
-											.data("field-key");
-
-										// Get field name.
-										var fieldName = $template
-											.find(
-												'.ur-advance-setting.ur-settings-field-name input[name=' + fieldKey + '_advance_setting[field_name]"]'
-											)
-											.val();
 										// Get label text from label tag, excluding any span tags
 										var label = $template
 											.find(".ur-label label")
