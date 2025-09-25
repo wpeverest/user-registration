@@ -27,7 +27,7 @@ const SpamProtection = ({ isOpen, onToggle, onSkipped }) => {
 
 	const handleOtherSpamFeatures = () => {
 		const settingsURL = window._UR_DASHBOARD_?.settingsURL || `${window.location.origin}/wp-admin/admin.php?page=user-registration-settings`;
-		window.open(`${settingsURL}&tab=security`, '_blank');
+		window.open(`${settingsURL}&tab=captcha`, '_blank');
 	};
 
 	const handleSkip = async () => {
