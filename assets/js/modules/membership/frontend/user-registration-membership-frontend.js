@@ -1567,10 +1567,13 @@
 					stripe_error_container.remove();
 					upgrade_error_container.text("");
 
-					//Selects Stripe as default and display stripe form if it is in the available gateways Needs to be updated for translation.
-					if ( urm_default_pg && urm_default_pg.toLowerCase() === 'stripe' ) {
-						$(this).closest('#ur-membership-registration').find('#ur-membership-stripe').prop('checked', true).trigger('change');
-						stripe_settings.init();
+					//Selects a default payment gateway. Needs to be updated for translation.
+					if ( urm_default_pg && urm_default_pg.toLowerCase() === urm_default_pg ) {
+						$(this).closest('#ur-membership-registration').find('#ur-membership-'+urm_default_pg).prop('checked', true).trigger('change');
+
+						if(urm_default_pg.toLowerCase() === 'stripe'){
+							stripe_settings.init();
+						}
 					} else {
 						$('input[name="urm_payment_method"]').prop(
 							"checked",
