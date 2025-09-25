@@ -875,7 +875,7 @@ class UR_Admin_Settings {
 										}
 									}
 
-									$settings .= ( isset( $value['desc'] ) && isset( $value['desc_tip'] ) && true !== $value['desc_tip'] ) ? '<p class="description" >' . wp_kses_post( $value['desc'] ) . '</p>' : '';
+									$settings .= ( !empty( $value['desc'] ) && isset( $value['desc_tip'] ) && true !== $value['desc_tip'] ) ? '<p class="description" >' . wp_kses_post( $value['desc'] ) . '</p>' : '';
 									$settings .= '</div>';
 									$settings .= '</div>';
 									break;
