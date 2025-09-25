@@ -297,7 +297,6 @@ textarea.ur-input-border-red {
 	}
 
 	.register {
-		text-align: center;
 
 		#node_recaptcha_register {
 			padding: 0 10px;
@@ -2656,13 +2655,6 @@ body {
 						}
 					}
 				}
-			}
-
-			&.ur-frontend-form {
-				max-width: 100%;
-				padding: 0;
-				background: transparent;
-				box-shadow: none;
 			}
 		}
 	}
