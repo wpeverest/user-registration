@@ -382,17 +382,17 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 			} else {
 				$membership_cur_amount = $symbol . round( $membership['meta_value']['amount'] );
 			}
-
-			$duration_key = strtolower( $membership['meta_value']['subscription']['duration'] );
-
-			$duration_labels = array(
-				'day'   => __( 'Day (s)', 'user-registration' ),
-				'week'  => __( 'Week (s)', 'user-registration' ),
-				'month' => __( 'Month (s)', 'user-registration' ),
-				'year'  => __( 'Year (s)', 'user-registration' ),
-			);
-			$duration_label  = $duration_labels[ $duration_key ] ?? ucfirst( $duration_key );
-
+			$duration_label = '';
+			if(!empty($membership['meta_value']['subscription']['duration']) ) {
+				$duration_key = strtolower( $membership['meta_value']['subscription']['duration'] );
+				$duration_labels = array(
+					'day'   => __( 'Day (s)', 'user-registration' ),
+					'week'  => __( 'Week (s)', 'user-registration' ),
+					'month' => __( 'Month (s)', 'user-registration' ),
+					'year'  => __( 'Year (s)', 'user-registration' ),
+				);
+				$duration_label  = $duration_labels[ $duration_key ] ?? ucfirst( $duration_key );
+			}
 			$new_mem[ $k ] = array(
 				'ID'                => $membership_id,
 				'title'             => ! empty( $membership['post_title'] ) ? $membership['post_title'] : '',
