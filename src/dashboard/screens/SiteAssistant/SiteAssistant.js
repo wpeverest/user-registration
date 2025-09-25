@@ -179,7 +179,7 @@ const SiteAssistant = () => {
 					color="gray.800"
 					mt={0}
 				>
-					{__("Welcome to User Registration", "user-registration")}
+					{__("Welcome to User Registration & Membership", "user-registration")}
 				</Heading>
 				<Text fontSize={"md"} fontWeight={"light"}>
 					{__(

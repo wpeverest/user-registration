@@ -270,8 +270,16 @@ do_action( 'user_registration_login_form_start' );
 							if ( ( $lost_password_enabled && $is_passwordless_enabled && ! $is_passwordless_login_default_login_area_enabled ) || $is_login_settings ) {
 								?>
 								<div data-field="lost-password"
+<<<<<<< Updated upstream
 									class="user-registration-LostPassword lost_password <?php echo esc_attr( $admin_class ); ?>">
 									<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php echo esc_html( $labels['lost_your_password'] ); ?></a>
+=======
+									 class="user-registration-LostPassword lost_password <?php echo esc_attr( $admin_class ); ?>">
+									<label
+										class="user-registration-form__label user-registration-form__label-for-checkbox inline">
+										<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php echo esc_html( $labels['lost_your_password'] ); ?></a>
+									</label>
+>>>>>>> Stashed changes
 								</div>
 								<?php
 							}
