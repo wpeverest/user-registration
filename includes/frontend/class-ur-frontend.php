@@ -225,7 +225,7 @@ class UR_Frontend {
 		if ( 'external-url' === $redirect_option ) {
 			$external_url = get_option( 'user_registration_login_options_after_logout_redirect_external_url', '' );
 			if ( ! empty( $external_url ) && ur_is_valid_url( $external_url ) ) {
-				$redirect = esc_url_raw( $external_url );
+				$redirect = $redirect . '?redirect_to_on_logout=' . $external_url;
 			} else {
 				ur_get_logger()->info( sprintf( 'Invalid external URL %s set for after logout redirection.', $external_url ), array( 'source' => 'user-registration' ) );
 			}

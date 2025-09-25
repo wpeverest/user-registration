@@ -21,8 +21,7 @@ add_action( 'template_redirect', 'ur_template_redirect' );
  */
 function ur_template_redirect() {
 	global $wp;
-
-	if ( isset( $wp->query_vars['user-logout'] ) && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'user-logout' ) ) { //PHPCS:ignore;
+	if ( isset( $wp->query_vars['name'] ) && 'user-logout' === $wp->query_vars[ 'name' ] && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'user-logout' ) ) { //PHPCS:ignore;
 		// Logout.
 		$redirect_url = str_replace( '/user-logout', '', $wp->request );
 		/**
@@ -38,7 +37,6 @@ function ur_template_redirect() {
 			exit;
 		}
 		$redirect_url = apply_filters( 'user_registration_redirect_after_logout', $redirect_url );
-		wp_logout();
 		wp_safe_redirect( ur_get_page_permalink( $redirect_url ) );
 		exit;
 
