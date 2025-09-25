@@ -96,16 +96,7 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 				'tip'         => __( "Choose an existing membership group from the dropdown, or create a new one <a href='?page=user-registration-membership&action=add_groups'>here</a>.", 'user-registration' ),
 				'options'     => array( 0 => 'Select a Membership Group.' ) + $membership_group_service->get_membership_groups(),
 			),
-			'field_name'  => array(
-				'setting_id'  => 'field-name',
-				'type'        => 'text',
-				'label'       => __( 'Field Name', 'user-registration' ),
-				'class'       => 'ur-advance-setting ur-settings-field-name',
-				'name'        => $id . '[field_name]',
-				'placeholder' => __( 'Field Name', 'user-registration' ),
-				'required'    => true,
-				'tip'         => __( 'Unique key for the field.', 'user-registration' ),
-			),
+
 		);
 
 		$settings = $settings + $membership_settings;

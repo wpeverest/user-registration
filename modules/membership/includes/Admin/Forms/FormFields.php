@@ -97,6 +97,10 @@ class FormFields {
 			if ( ! class_exists( $classname ) ) {
 				include_once __DIR__ . '/class-ur-form-field-' . $field . '.php';
 			}
+			//load class for advance settings section.
+			if( file_exists( __DIR__ . '/Settings/class-ur-setting-membership.php' ) ) {
+				include_once __DIR__ . '/Settings/class-ur-setting-membership.php';
+			}
 		}
 	}
 
