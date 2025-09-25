@@ -128,12 +128,13 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 			if ( ! wp_verify_nonce( $_POST['ur_license_nonce'], '_ur_license_nonce' ) ) {
 				return;
 			}
-			$this->activate_license_request();
-			if ( ! empty( $_POST['download_user_registration_pro'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+
+			if( false !== get_option( 'user-registration_license_key', false ) && ! empty( $_POST[ 'download_user_registration_pro' ] ) ) {
 				$this->install_extension();
 				wp_redirect( remove_query_arg( array( 'deactivated_license', $this->plugin_slug . '_deactivate_license' ), add_query_arg( 'activated_license', $this->plugin_slug ) ) );
 				exit;
 			}
+			$this->activate_license_request();
 		}
 		if ( isset( $_GET['_wpnonce'] ) ) {
 			if ( ! wp_verify_nonce( $_GET['_wpnonce'], '_ur_license_nonce' ) ) {
