@@ -65,7 +65,7 @@ const SendTestEmail = ({ isOpen, onToggle, onEmailSent }) => {
 					onEmailSent();
 				}
 			} else {
-				throw new Error(result.data || 'Failed to send test email');
+				throw new Error(result.data.message ||  __('Test email has was unsuccessfully.', 'user-registration'));
 			}
 		} catch (error) {
 			toast({
