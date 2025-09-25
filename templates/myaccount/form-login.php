@@ -36,7 +36,8 @@ if ( isset( $_GET['urm_error'] ) ) {
 		ur_add_notice( $error_message, 'error' );
 		delete_transient( $error_key );
 	} else {
-		ur_add_notice( 'Error message expired or not found', 'error' );
+		$urm_error_not_found_message = esc_html__( 'Error message expired or not found', 'user-registration' );
+		ur_add_notice( $urm_error_not_found_message, 'error' );
 	}
 } else {
 	ur_add_notice( apply_filters( 'user_registration_post_login_errors', '' ), 'error' );
