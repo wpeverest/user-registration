@@ -334,6 +334,15 @@ function InputHandler({
 						{...(settings[settings.id] === "yes" && {
 							isChecked: true
 						})}
+						sx={{
+							".chakra-switch__track": {
+								width: "40px",
+							},
+
+							"&[data-checked] .chakra-switch__thumb": {
+								transform: "translateX(calc(2rem - 0.5rem))",
+							},
+						}}
 					/>
 				);
 			case "select":
@@ -351,6 +360,33 @@ function InputHandler({
 						}
 						defaultValue={renderOptions()[renderOptions().default]}
 						variant="outline"
+						chakraStyles={{
+							indicatorSeparator: (provided) => ({
+								...provided,
+								display: "none",
+							}),
+
+							dropdownIndicator: (provided) => ({
+								...provided,
+								background: "transparent",
+								border: "none",
+							}),
+							valueContainer: (provided) => ({
+								...provided,
+								paddingInlineStart: "0.5rem"
+							}),
+							option: (provided, state) => ({
+								...provided,
+								backgroundColor: state.isSelected
+									? "#2B77D2"
+									: state.isFocused
+									? "#EAF3FC"
+									: "white",
+								color: state.isSelected ? "white" : "#383838",
+								fontWeight: "400",
+								cursor: "pointer",
+							}),
+						}}
 					/>
 				);
 			case "multiselect":
@@ -372,6 +408,33 @@ function InputHandler({
 							handleInputChange(setting.type, setting.id, e)
 						}
 						defaultValue={defaultSelectedOption}
+						isClearable={false}
+						chakraStyles={{
+							indicatorSeparator: (provided) => ({
+								...provided,
+								display: "none",
+							}),
+							dropdownIndicator: (provided) => ({
+								...provided,
+								background: "transparent",
+								border: "none",
+							}),
+							valueContainer: (provided) => ({
+								...provided,
+								paddingInlineStart: "0.5rem"
+							}),
+							option: (provided, state) => ({
+								...provided,
+								backgroundColor: state.isSelected
+									? "#2B77D2"
+									: state.isFocused
+									? "#EAF3FC"
+									: "white",
+								color: state.isSelected ? "white" : "#383838",
+								fontWeight: "400",
+								cursor: "pointer",
+							}),
+						}}
 					/>
 				);
 
