@@ -804,6 +804,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					),
 					'user_registration_lost_password_selection_validator_nonce'  => wp_create_nonce( 'user_registration_lost_password_selection_validator' ),
 					'user_registration_membership_redirect_default_page_message' => esc_html__( 'Please select a page for redirection', 'user-registration' ),
+					'email_confirmation_disabled' => ur_string_to_bool( get_option( 'user_registration_enable_email_confirmation', true ) ) ? 'no' : 'yes',
 				);
 				wp_localize_script(
 					'user-registration-login-settings',
