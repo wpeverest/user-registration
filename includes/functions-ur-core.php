@@ -8651,6 +8651,14 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 					}
 					break;
 				// Default: run an action.
+				case 'html':
+					$settings .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="'.esc_attr( $value['field-key'] ).'">';
+					$settings .= '<label for=' . esc_attr( $value[ 'id' ] ) . '>' . esc_html( $value[ 'title' ] ) . '</label>';
+					$settings .= '<div class="user-registration-login-form-global-settings--field">';
+					$settings .= $value['html_content'];
+					$settings .= '</div>';
+					$settings .= '</div>';
+					break;
 				default:
 					/**
 					 * Filter to retrieve default admin field for output
