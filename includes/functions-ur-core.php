@@ -937,6 +937,15 @@ function ur_get_general_settings( $id ) {
 			'default'     => 'false',
 			'tip'         => __( 'Hide the title of the field, keeping your form cleaner and simpler.', 'user-registration' ),
 		),
+		'field_name'  => array(
+			'setting_id'  => 'field-name',
+			'type'        => 'text',
+			'label'       => __( 'Field Name', 'user-registration' ),
+			'name'        => 'ur_general_setting[field_name]',
+			'placeholder' => __( 'Field Name', 'user-registration' ),
+			'required'    => true,
+			'tip'         => __( 'Unique key for the field.', 'user-registration' ),
+		),
 	);
 	/**
 	 * Filters the list of form field types to exclude placeholders.
