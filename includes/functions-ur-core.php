@@ -8177,7 +8177,24 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 
 	function render_login_option_settings( $section ) {
 		$settings = '';
-		foreach ( $section['settings'] as $key => $value ) {
+		$section_settings = $section[ 'settings' ];
+		$repositionable_settings = array_filter( $section_settings, function( $setting ) {
+			return isset( $setting[ 'item_position' ] );
+		});
+		$section_settings = array_filter( $section_settings, function( $setting ) {
+			return ! isset( $setting[ 'item_position' ] );
+		});
+		foreach( $repositionable_settings as $setting ) {
+			[ $position, $setting_id ] = $setting[ 'item_position' ];
+			$offset = array_search( $setting_id, array_column( $section_settings, 'id' ) );
+			if( 'before' === $position ) {
+				array_splice( $section_settings, $offset, 0, array( $setting ) );
+			}
+			if( 'after' === $position ) {
+				array_splice( $section_settings, $offset + 1, 0, array( $setting ) );
+			}
+		}
+		foreach ( $section_settings as $key => $value ) {
 
 			if ( ! isset( $value['type'] ) ) {
 				continue;
