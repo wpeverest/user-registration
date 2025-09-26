@@ -7800,10 +7800,9 @@ body.user-registration-page {
 .ur-sticky-wrapper {
 	top: 0;
 	background: white;
-	padding-bottom: 1px;
-	padding-top: 4px;
 	position: sticky;
-	z-index: 50;
+	z-index: 1;
+	box-shadow: 0 19px 20px 20px rgb(0 0 0 / 6%)
 }
 .user-registration {
 	.user-registration-settings {
