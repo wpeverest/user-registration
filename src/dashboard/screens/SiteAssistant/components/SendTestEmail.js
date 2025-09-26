@@ -13,7 +13,7 @@ import {
 	useToast,
 } from '@chakra-ui/react';
 import { __ } from '@wordpress/i18n';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
 
 const SendTestEmail = ({ isOpen, onToggle, onEmailSent }) => {
@@ -21,6 +21,26 @@ const SendTestEmail = ({ isOpen, onToggle, onEmailSent }) => {
 	const [email, setEmail] = useState(adminEmail);
 	const [isLoading, setIsLoading] = useState(false);
 	const toast = useToast();
+
+	// Add CSS styles for toast anchor links
+	useEffect(() => {
+		const styleId = 'ur-toast-anchor-styles';
+		if (!document.getElementById(styleId)) {
+			const style = document.createElement('style');
+			style.id = styleId;
+			style.textContent = `
+				.ur-toast-error-content a {
+					color: white !important;
+					text-decoration: underline !important;
+				}
+				.ur-toast-error-content a:hover {
+					color: #ffd700 !important;
+					text-decoration: underline !important;
+				}
+			`;
+			document.head.appendChild(style);
+		}
+	}, []);
 
 	const handleSendTestEmail = async () => {
 		if (!email || !email.includes('@')) {
@@ -68,9 +88,18 @@ const SendTestEmail = ({ isOpen, onToggle, onEmailSent }) => {
 				throw new Error(result.data.message ||  __('Test email has was unsuccessfully.', 'user-registration'));
 			}
 		} catch (error) {
+			// Check if error message contains HTML
+			const errorMessage = error.message || __('Failed to send test email. Please try again.', 'user-registration');
+			const hasHtml = /<[^>]*>/g.test(errorMessage);
+			
 			toast({
 				title: __('Error', 'user-registration'),
-				description: error.message || __('Failed to send test email. Please try again.', 'user-registration'),
+				description: hasHtml ? (
+					<div 
+						dangerouslySetInnerHTML={{ __html: errorMessage }}
+						className="ur-toast-error-content"
+					/>
+				) : errorMessage,
 				status: 'error',
 				duration: 3000,
 				isClosable: true,

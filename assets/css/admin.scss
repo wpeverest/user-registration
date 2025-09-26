@@ -4666,8 +4666,11 @@ a.button.ur-smart-tags-list-button {
 					.search-icon {
 						position: absolute;
 						left: 12px;
-						top: 33;
+						top: 14px;
 						color: #999;
+					}
+					input {
+						padding : 0 29px;
 					}
 				}
 			}
