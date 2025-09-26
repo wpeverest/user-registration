@@ -21,8 +21,10 @@ add_action( 'template_redirect', 'ur_template_redirect' );
  */
 function ur_template_redirect() {
 	global $wp;
-
-	if (((isset( $wp->query_vars['user-logout'] ) && ! empty( $_REQUEST['_wpnonce'] )) || (isset( $wp->query_vars['user-logout'] ) && ! empty( $_REQUEST['_wpnonce'] )))&& wp_verify_nonce( $_REQUEST['_wpnonce'], 'user-logout' ) ) { //PHPCS:ignore;
+	if ( isset( $wp->query_vars['user-logout'] )
+		|| ( isset( $wp->query_vars['name'] ) && 'user-logout' === $wp->query_vars['name'] )
+		   && ! empty( $_REQUEST['_wpnonce'] )
+		   && wp_verify_nonce( $_REQUEST['_wpnonce'], 'user-logout' ) ) { //PHPCS:ignore;
 		// Logout.
 		$redirect_url = str_replace( '/user-logout', '', $wp->request );
 		/**
@@ -38,6 +40,7 @@ function ur_template_redirect() {
 			exit;
 		}
 		$redirect_url = apply_filters( 'user_registration_redirect_after_logout', $redirect_url );
+		wp_logout();
 		wp_safe_redirect( ur_get_page_permalink( $redirect_url ) );
 		exit;
 
@@ -49,7 +52,7 @@ function ur_template_redirect() {
 		 */
 		$redirect_url = apply_filters( 'user_registration_redirect_after_logout', esc_url_raw( ur_get_page_permalink( 'user-logout' ) ) );
 		// Redirect to the correct logout endpoint.
-		wp_safe_redirect( urldecode ( $redirect_url ) );
+		wp_safe_redirect( urldecode( $redirect_url ) );
 		exit;
 	}
 }
@@ -141,7 +144,7 @@ if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
  * @return array
  */
 function ur_body_class( $classes ) {
-	$classes   = (array) $classes;
+	$classes = (array) $classes;
 
 	$classes[] = 'user-registration-page';
 	if ( is_ur_account_page() ) {
@@ -152,6 +155,7 @@ function ur_body_class( $classes ) {
 			$classes[] = 'user-registration-' . sanitize_html_class( $key );
 		}
 	}
+
 	return array_unique( $classes );
 }
 
@@ -575,22 +579,22 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			case 'url':
 			case 'file':
 			case 'timepicker':
-				$extra_params_key   = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
-				$extra_params       = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
-				$current_time       = isset( $args['current_time'] ) ? $args['current_time'] : '';
-				$time_interval      = isset( $args['time_interval'] ) ? $args['time_interval'] : '';
-				$time_format        = isset( $args['time_format'] ) ? $args['time_format'] : '';
-				$time_range         = isset( $args['time_range'] ) ? $args['time_range'] : '';
-				$time_min           = isset( $args['time_min'] ) ? $args['time_min'] : '';
-				$time_max           = isset( $args['time_max'] ) ? $args['time_max'] : '';
-				$username_length    = isset( $args['username_length'] ) ? $args['username_length'] : '';
-				$username_character = isset( $args['username_character'] ) ? $args['username_character'] : '';
-				$time_slot_booking  = isset( $args['enable_time_slot_booking'] ) ? $args['enable_time_slot_booking'] : '';
-				$target_date_field  = isset( $args['target_date_field'] ) ? isset( $args['target_date_field'] ) : '';
+				$extra_params_key    = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
+				$extra_params        = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
+				$current_time        = isset( $args['current_time'] ) ? $args['current_time'] : '';
+				$time_interval       = isset( $args['time_interval'] ) ? $args['time_interval'] : '';
+				$time_format         = isset( $args['time_format'] ) ? $args['time_format'] : '';
+				$time_range          = isset( $args['time_range'] ) ? $args['time_range'] : '';
+				$time_min            = isset( $args['time_min'] ) ? $args['time_min'] : '';
+				$time_max            = isset( $args['time_max'] ) ? $args['time_max'] : '';
+				$username_length     = isset( $args['username_length'] ) ? $args['username_length'] : '';
+				$username_character  = isset( $args['username_character'] ) ? $args['username_character'] : '';
+				$time_slot_booking   = isset( $args['enable_time_slot_booking'] ) ? $args['enable_time_slot_booking'] : '';
+				$target_date_field   = isset( $args['target_date_field'] ) ? isset( $args['target_date_field'] ) : '';
 				$enable_calculations = $args['enable_calculations'] ?? '';
 				$calculation_formula = $args['calculation_formula'] ?? '';
-				$decimal_places = $args['decimal_places'] ?? '';
-				$attr               = '';
+				$decimal_places      = $args['decimal_places'] ?? '';
+				$attr                = '';
 
 				if ( '' !== $username_length ) {
 					$attr .= 'data-username-length="' . $username_length . '"';
@@ -624,7 +628,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$attr .= 'data-current-time="' . $current_time . '"';
 				}
 				if ( '' !== $enable_calculations && $enable_calculations ) {
-					$attr .= 'readonly data-decimal-places="' . esc_attr($decimal_places) . '" data-calculation-formula="' . esc_attr($calculation_formula) . '"';
+					$attr .= 'readonly data-decimal-places="' . esc_attr( $decimal_places ) . '" data-calculation-formula="' . esc_attr( $calculation_formula ) . '"';
 				}
 				if ( ur_string_to_bool( $time_slot_booking ) ) {
 					$target_date_field = isset( $args['target_date_field'] ) ? $args['target_date_field'] : '';
@@ -740,7 +744,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				if ( ur_string_to_bool( $date_slot_booking ) ) {
 
 					$custom_attributes[] = 'data-enable-date-slot-booking="' . $date_slot_booking . '"';
-					$class              .= ' date-slot-booking';
+					$class               .= ' date-slot-booking';
 				}
 
 				if ( ! isset( $args['icon'] ) && empty( $args['icon'] ) ) {
@@ -963,7 +967,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$field .= '<input ' . $input_type . ' data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" class="input-hidden input-text ur-frontend-field ur-edit-profile-field' . esc_attr( $custom_class ) . '" id="' . esc_attr( $args['id'] ) . '"value="' . esc_attr( $hidden_value ) . '" data-field-type="hidden"/>';
 				$field .= ( $is_edit ) ? '</span>' : '';
 				break;
-				case 'tinymce':
+			case 'tinymce':
 				$editor_settings = array(
 					'name'          => esc_attr( $args['id'] ),
 					'id'            => esc_attr( $args['id'] ),
@@ -1675,9 +1679,9 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 			$cl_html = sprintf( 'data-conditional-logic-enabled="1" data-conditional-logic-map="%s"', esc_attr( $cl_map ) );
 		}
 
-		$field           = '';
+		$field = '';
 
-		if( 'section' === $args['type'] ) {
+		if ( 'section' === $args['type'] ) {
 			$field = '<div class="ur-form-settings-section--field">';
 			$field .= '<h4>' . esc_html( $args['title'] ) . '</h4>';
 			$field .= '</div>';
@@ -1746,7 +1750,7 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 				break;
 
 			case 'label':
-				$field = '<div class="' . esc_attr($args['id']) . '">';
+				$field = '<div class="' . esc_attr( $args['id'] ) . '">';
 				$field .= '<span class="description">' . $args['description'] . '</span>';
 				$field .= '</div>';
 				break;
@@ -1805,22 +1809,22 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 			case 'url':
 			case 'file':
 			case 'timepicker':
-				$extra_params_key   = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
-				$extra_params       = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
-				$current_time       = isset( $args['current_time'] ) ? $args['current_time'] : '';
-				$time_interval      = isset( $args['time_interval'] ) ? $args['time_interval'] : '';
-				$time_format        = isset( $args['time_format'] ) ? $args['time_format'] : '';
-				$time_range         = isset( $args['time_range'] ) ? $args['time_range'] : '';
-				$time_min           = isset( $args['time_min'] ) ? $args['time_min'] : '';
-				$time_max           = isset( $args['time_max'] ) ? $args['time_max'] : '';
-				$username_length    = isset( $args['username_length'] ) ? $args['username_length'] : '';
-				$username_character = isset( $args['username_character'] ) ? $args['username_character'] : '';
-				$time_slot_booking  = isset( $args['enable_time_slot_booking'] ) ? $args['enable_time_slot_booking'] : '';
-				$target_date_field  = isset( $args['target_date_field'] ) ? isset( $args['target_date_field'] ) : '';
+				$extra_params_key    = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
+				$extra_params        = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
+				$current_time        = isset( $args['current_time'] ) ? $args['current_time'] : '';
+				$time_interval       = isset( $args['time_interval'] ) ? $args['time_interval'] : '';
+				$time_format         = isset( $args['time_format'] ) ? $args['time_format'] : '';
+				$time_range          = isset( $args['time_range'] ) ? $args['time_range'] : '';
+				$time_min            = isset( $args['time_min'] ) ? $args['time_min'] : '';
+				$time_max            = isset( $args['time_max'] ) ? $args['time_max'] : '';
+				$username_length     = isset( $args['username_length'] ) ? $args['username_length'] : '';
+				$username_character  = isset( $args['username_character'] ) ? $args['username_character'] : '';
+				$time_slot_booking   = isset( $args['enable_time_slot_booking'] ) ? $args['enable_time_slot_booking'] : '';
+				$target_date_field   = isset( $args['target_date_field'] ) ? isset( $args['target_date_field'] ) : '';
 				$enable_calculations = $args['enable_calculations'] ?? '';
 				$calculation_formula = $args['calculation_formula'] ?? '';
-				$decimal_places = $args['decimal_places'] ?? '';
-				$attr               = '';
+				$decimal_places      = $args['decimal_places'] ?? '';
+				$attr                = '';
 
 				$field .= '<div class="ur-settings-field">';
 
@@ -1856,7 +1860,7 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 					$attr .= 'data-current-time="' . $current_time . '"';
 				}
 				if ( '' !== $enable_calculations && $enable_calculations ) {
-					$attr .= 'readonly data-decimal-places="' . esc_attr($decimal_places) . '" data-calculation-formula="' . esc_attr($calculation_formula) . '"';
+					$attr .= 'readonly data-decimal-places="' . esc_attr( $decimal_places ) . '" data-calculation-formula="' . esc_attr( $calculation_formula ) . '"';
 				}
 				if ( ur_string_to_bool( $time_slot_booking ) ) {
 					$target_date_field = isset( $args['target_date_field'] ) ? $args['target_date_field'] : '';
@@ -2044,7 +2048,7 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 
 				$value           = ! empty( $value ) ? $value : $default_value;
 				$options         = $field .= '';
-				$field 			.= '<div class="ur-settings-field">';
+				$field           .= '<div class="ur-settings-field">';
 				$backtrace       = debug_backtrace();
 				$parent_function = isset( $backtrace[1] ) ? $backtrace[1]['function'] : '';
 				$args['options'] = ( $parent_function === 'frontend_includes' ) ? apply_filters( 'override_options_for_select_field', $args['options'], $args['id'] ) : $args['options'];
@@ -2082,7 +2086,7 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 
 			case 'multiselect':
 				$options = $field .= '';
-				$field .= '<div class="ur-settings-field">';
+				$field   .= '<div class="ur-settings-field">';
 
 				if ( is_serialized( $value ) ) {
 					$default_value = unserialize( $value, array( 'allowed_classes' => false ) ); //phpcs:ignore;
@@ -2208,20 +2212,20 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 					'class'      => esc_attr( $args['class'] ),
 					'quicktags'  => array( 'buttons' => 'em,strong,link' ),
 					'tinymce'    => array(
-						'statusbar' => false,
-						'toolbar1' => 'undo,redo,formatselect,fontselect,fontsizeselect,bold,italic,forecolor,alignleft,aligncenter,alignright,alignjustify,bullist,numlist,outdent,indent,removeformat',
-						'toolbar2' => '',
-						'toolbar3' => '',
-						'toolbar4' => '',
+						'statusbar'               => false,
+						'toolbar1'                => 'undo,redo,formatselect,fontselect,fontsizeselect,bold,italic,forecolor,alignleft,aligncenter,alignright,alignjustify,bullist,numlist,outdent,indent,removeformat',
+						'toolbar2'                => '',
+						'toolbar3'                => '',
+						'toolbar4'                => '',
 						'theme_advanced_buttons2' => '',
-						'plugins' => 'wordpress,wpautoresize,wplink,wpdialogs,wptextpattern,wpview,colorpicker,textcolor,hr,charmap,link,fullscreen,lists',
+						'plugins'                 => 'wordpress,wpautoresize,wplink,wpdialogs,wptextpattern,wpview,colorpicker,textcolor,hr,charmap,link,fullscreen,lists',
 					),
 					'editor_css' => '<style>#wp-excerpt-editor-container .wp-editor-area{height:175px; width:100%;}</style>',
 				);
 
 				$value = ! empty( $value ) ? $value : $default_value;
 
-				$field .= '<div class="user-registration-tinymce-field '.$args['id'].'">';
+				$field .= '<div class="user-registration-tinymce-field ' . $args['id'] . '">';
 
 				// Output buffer for tinymce editor.
 				ob_start();

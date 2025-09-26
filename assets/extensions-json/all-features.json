@@ -11,7 +11,7 @@
       "plan" : [
         "free"
       ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=user-registration-membership",
+      "setting_url": "admin.php?page=user-registration-settings&tab=membership",
       "demo_video_url": "3T6AILWb7OI",
       "released_date": "01/08/2024"
     },
@@ -27,7 +27,7 @@
       "plan" : [
         "free"
       ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=payment-history",
+      "setting_url": "",
       "demo_video_url": "DuWX7i7eYsY",
       "activation_requirements": [ "membership", "pro" , "stripe" , "authorize-net" , "payments" ]
     },
