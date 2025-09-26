@@ -188,8 +188,12 @@ class UR_Frontend {
 		return $attributes;
 	}
 	public function login_redirect( $redirect, $user ) {
-		$redirect_option = get_option( 'user_registration_login_options_redirect_after_login', 'no-redirection' );
+		if( ! ur_string_to_bool( get_option( 'user_registration_login_options_enable_custom_redirect', false ) ) ) {
+			return $redirect;
+		}
 
+		$redirect_option = get_option( 'user_registration_login_options_redirect_after_login', 'no-redirection' );
+		
 		if ( 'no-redirection' === $redirect_option ) {
 			return $redirect;
 		}
@@ -216,6 +220,9 @@ class UR_Frontend {
 		return apply_filters( 'user_registration_login_redirect_url', $redirect, $user, $redirect_option );
 	}
 	public function logout_redirect( $redirect ) {
+		if( ! ur_string_to_bool( get_option( 'user_registration_login_options_enable_custom_redirect', false ) ) ) {
+			return $redirect;
+		}
 		$redirect_option = get_option( 'user_registration_login_options_redirect_after_logout', 'no-redirection' );
 
 		if ( 'no-redirection' === $redirect_option ) {
