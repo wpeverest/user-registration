@@ -1781,7 +1781,7 @@
 			data: data,
 			success: function(response) {
 				if (response.success) {
-					window.location.reload();
+					window.location.href = window.location.href + '&download_user_registration_pro=1';
 				} else {
 					$(".install_pro_version_button").prop("disabled", false);
 					$(".install_pro_version_button").find(".ur-spinner").remove();
