@@ -1574,6 +1574,10 @@
 						if(urm_default_pg.toLowerCase() === 'stripe'){
 							stripe_settings.init();
 						}
+
+						if(urm_default_pg.toLowerCase() !== 'authorize'){
+							authorize_container.addClass("urm-d-none");
+						}
 					} else {
 						$('input[name="urm_payment_method"]').prop(
 							"checked",
@@ -1581,7 +1585,7 @@
 						);
 						stripe_container.addClass("urm-d-none");
 					}
-					authorize_container.addClass("urm-d-none");
+
 					urm_hidden_pg_containers.addClass("urm-d-none");
 
 					$(".urm_apply_coupon").show();
