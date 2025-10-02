@@ -271,7 +271,7 @@ do_action( 'user_registration_login_form_start' );
 								?>
 								<div data-field="lost-password"
 									class="user-registration-LostPassword lost_password <?php echo esc_attr( $admin_class ); ?>">
-									<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php echo esc_html( $labels['lost_your_password'] ); ?></a>
+										<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php echo esc_html( $labels['lost_your_password'] ); ?></a>
 								</div>
 								<?php
 							}
@@ -321,7 +321,7 @@ do_action( 'user_registration_login_form_start' );
 
 						if ( ! empty( $label ) ) {
 							?>
-							<a href="<?php echo esc_url( $url_options ); ?>"> <?php echo stripslashes( esc_html( get_option( 'user_registration_general_setting_registration_label' ) ) ); ?>
+							<a href="<?php echo esc_url( $url_options ); ?>"> <?php echo stripslashes( esc_html( __( $label, 'user-registration' ) ) ); ?>
 							</a>
 							<?php
 						} else {
