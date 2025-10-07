@@ -337,6 +337,23 @@ class AJAX {
 							);
 						}
 					}
+
+					if ( isset( $old_membership_data['type'] ) && isset( $meta_data['type'] ) && ( $old_membership_data['type'] !== $meta_data['type'] ) ) {
+						$check_stripe_price = $stripe_service->check_price_exists_in_stripe( $meta_data['payment_gateways']['stripe']['price_id'] );
+						if ( isset( $check_stripe_price['success'] ) && true === $check_stripe_price['success'] ) {
+							$stripe_existing_product_price = $stripe_service->create_stripe_price_for_existing_product( $meta_data['payment_gateways']['stripe']['product_id'], $meta_data );
+							if ( isset( $stripe_existing_product_price['success'] ) && ur_string_to_bool( $stripe_existing_product_price['success'] ) ) {
+								$meta_data['payment_gateways']['stripe']['price_id'] = $stripe_existing_product_price['price']->id;
+								update_post_meta( $updated_ID, $data['post_meta_data']['ur_membership']['meta_key'], wp_json_encode( $meta_data ) );
+							} else {
+								wp_send_json_error(
+									array(
+										'message' => $stripe_price_and_product['message'],
+									)
+								);
+							}
+						}
+					}
 				} else {
 					$stripe_price_and_product = $stripe_service->create_stripe_product_and_price( $data['post_data'], $meta_data, false );
 					if ( ur_string_to_bool( $stripe_price_and_product['success'] ) ) {
@@ -353,7 +370,14 @@ class AJAX {
 				}
 
 				// check if any significant value has been changed  , trial not included since trial value change does not affect the type of product and price in stripe, instead handled during subscription
-				$should_create_new_product = ( $old_membership_data['amount'] !== $meta_data['amount'] || ( isset( $old_membership_data['subscription'] ) && $old_membership_data['subscription']['value'] !== $meta_data['subscription']['value'] ) || ( isset( $old_membership_data['subscription'] ) && $old_membership_data['subscription']['duration'] !== $meta_data['subscription']['duration'] ) );
+				$old_subscription = isset( $old_membership_data['subscription'] ) ? $old_membership_data['subscription'] : array();
+				$new_subscription = isset( $meta_data['subscription'] ) ? $meta_data['subscription'] : array();
+
+				$should_create_new_product = (
+					( isset( $old_membership_data['amount'] ) && $old_membership_data['amount'] !== $meta_data['amount'] ) ||
+					( isset( $old_subscription['value'] ) && isset( $new_subscription['value'] ) && $old_subscription['value'] !== $new_subscription['value'] ) ||
+					( isset( $old_subscription['duration'] ) && isset( $new_subscription['duration'] ) && $old_subscription['duration'] !== $new_subscription['duration'] )
+				);
 
 				$meta_data = json_decode( $data['post_meta_data']['ur_membership']['meta_value'], true );
 

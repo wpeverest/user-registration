@@ -201,10 +201,13 @@ class MembersController {
 				if ( !empty($members_current_subscription) && $members_current_subscription['item_id'] !== $members_data['membership_data']['membership']  ) {
 					$members_data['membership_data']['start_date'] = date('Y-m-d');
 					$subscription_data    = $subscription_service->prepare_subscription_data( $members_data, $member );
-					$subscription         = $this->subscriptions->update($members_current_subscription['ID'], $subscription_data );
+					$is_subscription_updated         = $this->subscriptions->update($members_current_subscription['ID'], $subscription_data );
+
 					$order_service        = new OrderService();
-					$orders_data          = $order_service->prepare_orders_data( $members_data, $member->ID, $subscription ); // prepare data for orders table.
+					$orders_data          = $order_service->prepare_orders_data( $members_data, $member->ID, array('ID' => $members_current_subscription['ID']) ); // prepare data for orders table.
+
 					$order                = $this->orders->create( $orders_data );
+
 					$email_service        = new EmailService();
 					$data                 = array_merge(
 						$data,
@@ -216,7 +219,7 @@ class MembersController {
 					$data                 = apply_filters( 'urm_create_member_admin_before_sending_email', $data );
 					$email_service->send_email( $data, 'user_register_backend_user' );
 
-					if ( $subscription ) {
+					if ( $is_subscription_updated &&  $order) {
 						$this->members->wpdb()->query( 'COMMIT' );
 
 						$data = array(
@@ -224,7 +227,7 @@ class MembersController {
 							'status'    => true,
 						);
 
-						return apply_filters( 'urm_create_member_admin_after_member_created', $data, $member, $subscription, $order );
+						return apply_filters( 'urm_create_member_admin_after_member_created', $data, $member, $subscription_data, $order );
 					}
 				}
 				else if(!empty($members_current_subscription) && $members_current_subscription['item_id'] === $members_data['membership_data']['membership'] ){

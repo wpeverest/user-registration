@@ -390,7 +390,7 @@ class OrdersListTable extends \UR_List_Table {
 				</svg>
 			</button>
 		</div>
-		<div style="display: flex; gap: 10px">
+		<div class="module" style="display: flex; gap: 10px">
 			<select name="payment_for" id="user-registration-pro-payment-type-filters" class="ur-enhanced-select">
 				<option
 					value="" selected><?php echo esc_html__( 'Select Module', 'user-registration' ); ?></option>
@@ -458,7 +458,7 @@ class OrdersListTable extends \UR_List_Table {
 				?>
 			</select>
 		</div>
-		<div class="" id="user-registration-pro-members-filters" style="display: flex; gap: 10px">
+		<div class="payment-status" id="user-registration-pro-members-filters" style="display: flex; gap: 10px">
 			<select name="status" id="user_registration_pro_users_form_filter" class="ur-enhanced-select">
 				<option
 					value=""><?php echo esc_html__( 'All Status', 'user-registration' ); ?></option>

@@ -95,6 +95,12 @@
 body.user-registration #user-registration-pro-filters-row .search-box {
   width: 275px;
 }
+body.user-registration #user-registration-pro-filters-row .payment-status {
+  width: 200px;
+}
+body.user-registration #user-registration-pro-filters-row .module {
+  width: 200px;
+}
 body.user-registration #ur-membership-payment-history-form .tablenav .bulkactions .select2-container {
   width: 220px !important;
 }

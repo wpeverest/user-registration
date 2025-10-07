@@ -170,16 +170,18 @@ const SiteAssistant = () => {
 	]);
 
 	return (
-		<Container maxW="100%" py={5}>
+		<Container maxW="100%" py={1}>
 			<Stack align={"flex-start"} gap={4} mb={8}>
 				<Heading
 					as="h3"
-					fontSize="2xl"
-					fontWeight="bold"
+					fontSize="3xl"
 					color="gray.800"
 					mt={0}
+					css={{
+						fontWeight: 'bold !important'
+					}}
 				>
-					{__("Welcome to User Registration", "user-registration")}
+					{__("Welcome to User Registration & Membership", "user-registration")}
 				</Heading>
 				<Text fontSize={"md"} fontWeight={"light"}>
 					{__(

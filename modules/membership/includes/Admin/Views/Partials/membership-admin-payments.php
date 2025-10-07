@@ -334,7 +334,6 @@ function render_bank_settings( $membership_details ) {
 					<?php echo esc_html__( 'Bank Transfer Settings', 'user-registration' ); ?>
 				</a>
 			</div>
-			?>
 		</div>
 	</div>
 	<?php

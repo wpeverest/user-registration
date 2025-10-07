@@ -937,6 +937,15 @@ function ur_get_general_settings( $id ) {
 			'default'     => 'false',
 			'tip'         => __( 'Hide the title of the field, keeping your form cleaner and simpler.', 'user-registration' ),
 		),
+		'field_name'  => array(
+			'setting_id'  => 'field-name',
+			'type'        => 'text',
+			'label'       => __( 'Field Name', 'user-registration' ),
+			'name'        => 'ur_general_setting[field_name]',
+			'placeholder' => __( 'Field Name', 'user-registration' ),
+			'required'    => true,
+			'tip'         => __( 'Unique key for the field.', 'user-registration' ),
+		),
 	);
 	/**
 	 * Filters the list of form field types to exclude placeholders.
@@ -8168,7 +8177,24 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 
 	function render_login_option_settings( $section ) {
 		$settings = '';
-		foreach ( $section['settings'] as $key => $value ) {
+		$section_settings = $section[ 'settings' ];
+		$repositionable_settings = array_filter( $section_settings, function( $setting ) {
+			return isset( $setting[ 'item_position' ] );
+		});
+		$section_settings = array_filter( $section_settings, function( $setting ) {
+			return ! isset( $setting[ 'item_position' ] );
+		});
+		foreach( $repositionable_settings as $setting ) {
+			[ $position, $setting_id ] = $setting[ 'item_position' ];
+			$offset = array_search( $setting_id, array_column( $section_settings, 'id' ) );
+			if( 'before' === $position ) {
+				array_splice( $section_settings, $offset, 0, array( $setting ) );
+			}
+			if( 'after' === $position ) {
+				array_splice( $section_settings, $offset + 1, 0, array( $setting ) );
+			}
+		}
+		foreach ( $section_settings as $key => $value ) {
 
 			if ( ! isset( $value['type'] ) ) {
 				continue;
@@ -8642,6 +8668,14 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 					}
 					break;
 				// Default: run an action.
+				case 'html':
+					$settings .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="'.esc_attr( $value['field-key'] ).'">';
+					$settings .= '<label for=' . esc_attr( $value[ 'id' ] ) . '>' . esc_html( $value[ 'title' ] ) . '</label>';
+					$settings .= '<div class="user-registration-login-form-global-settings--field">';
+					$settings .= $value['html_content'];
+					$settings .= '</div>';
+					$settings .= '</div>';
+					break;
 				default:
 					/**
 					 * Filter to retrieve default admin field for output
