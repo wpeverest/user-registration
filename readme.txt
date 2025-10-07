@@ -3,7 +3,7 @@ Contributors: WPEverest
 Tags: user registration, membership, user profile, registration form, login form,
 Requires at least: 5.5
 Requires PHP: 7.2
-Tested up to: 6.8.2
+Tested up to: 6.8.3
 Stable tag: 4.4.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html

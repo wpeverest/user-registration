@@ -658,7 +658,7 @@ class UR_AJAX {
 			update_option('user_registration_successful_test_mail', true);
 			wp_send_json_success( array( 'message' => __( 'Test email was sent successfully! Please check your inbox to make sure it is delivered.', 'user-registration' ) ) );
 		}
-		{
+		else {
 			$error_message = apply_filters( 'user_registration_email_send_failed_message', '' );
 			wp_send_json_error( array( 'message' => sprintf( __( 'Test email was unsuccessful!. %s', 'user-registration' ), $error_message ) ) );
 		}
@@ -887,16 +887,6 @@ class UR_AJAX {
 			$form_id       = sanitize_text_field( $_POST['data']['form_id'] ); //phpcs:ignore
 			$form_row_data = sanitize_text_field( $_POST['data']['row_data'] );
 
-			//For backward compatibility, store field_name in general settings as well.
-			if( is_array( $post_data ) ) {
-				foreach( $post_data as $post_datum ) {
-					foreach( $post_datum as $field ) {
-						if( isset( $field[0]->general_setting ) && $field[0]->general_setting instanceof stdClass && isset( $field[0]->advance_setting->field_name ) ) {
-							$field[0]->general_setting->field_name = $field[0]->advance_setting->field_name;
-						}
-					}
-				}
-			}
 
 			$post_data = array(
 				'post_type'      => 'user_registration',

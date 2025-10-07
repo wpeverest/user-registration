@@ -1034,6 +1034,7 @@ if ( ! class_exists( 'User_Registration_Users_ListTable' ) ) {
 					AND (
 						(um.meta_key IN ('first_name','last_name') AND um.meta_value LIKE '{$search_like}')
 						OR (um.meta_key LIKE 'user_registration\_%' AND um.meta_value LIKE '{$search_like}')
+						OR (um.meta_key LIKE 'display_name\_%' AND um.meta_value LIKE '{$search_like}')
 					)
 				)";
 			}
