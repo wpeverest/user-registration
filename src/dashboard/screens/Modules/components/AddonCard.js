@@ -123,13 +123,13 @@ const AddonCard = ({ addon, showToast }) => {
 
 	return (
 		<Box
-			bg="#fafbfd"
-			borderRadius="xl"
+			bg="white"
+			borderRadius="lg"
 			border="1px solid"
 			borderColor="gray.200"
 			p="6"
 			boxShadow="sm"
-			_hover={{ boxShadow: "lg" }}
+			_hover={{ boxShadow: "md" }}
 			transition="all 0.2s"
 			position="relative"
 			height="100%"
@@ -205,15 +205,35 @@ const AddonCard = ({ addon, showToast }) => {
 				<VStack align="start" spacing="3" flex="1">
 					{/* Title and Plan Badge */}
 					<HStack justify="space-between" w="full" align="start">
-						<Heading size="md" color="gray.800" fontWeight="600">
+						<Heading size="sm" color="gray.800" fontWeight="600" fontSize="16px">
 							{addon.title}
 						</Heading>
 						<Badge
-							colorScheme={getPlanBadgeColor(addon.plan)}
-							fontSize="xs"
+							fontSize="10px"
 							px="2"
 							py="1"
-							borderRadius="sm"
+							borderRadius="base"
+							bg={
+								getPlanBadge(addon.plan) === "Free" ? "transparent" :
+								getPlanBadge(addon.plan) === "Personal" ? "#F0FDF4" :
+								getPlanBadge(addon.plan) === "Plus" ? "#f0f3fa" :
+								getPlanBadge(addon.plan) === "Professional" ? "#EFF6FF" :
+								"#EFF6FF"
+							}
+							border={
+								getPlanBadge(addon.plan) === "Free" ? "1px solid #D1D5DB" :
+								getPlanBadge(addon.plan) === "Personal" ? "1px solid #16A34A" :
+								getPlanBadge(addon.plan) === "Plus" ? "1px solid #92a2e4" :
+								getPlanBadge(addon.plan) === "Professional" ? "1px solid #BFDBFE" :
+								"1px solid #BFDBFE"
+							}
+							color={
+								getPlanBadge(addon.plan) === "Free" ? "#4B5563" :
+								getPlanBadge(addon.plan) === "Personal" ? "#16A34A" :
+								getPlanBadge(addon.plan) === "Plus" ? "#92a2e4" :
+								getPlanBadge(addon.plan) === "Professional" ? "#3B82F6" :
+								"#3B82F6"
+							}
 						>
 							{getPlanBadge(addon.plan)}
 						</Badge>
@@ -226,19 +246,23 @@ const AddonCard = ({ addon, showToast }) => {
 						hasArrow
 						isDisabled={addon.excerpt.length <= 120}
 						backgroundColor="white"
-						color="gray.600"
+						color={"gray.500"}
 						borderRadius="sm"
 						p="5"
 						cursor="default"
 					>
-						<Text 
-							fontSize="sm" 
-							color="gray.600" 
-							lineHeight="1.5" 
-							flex="1"
-							noOfLines={2}
-							cursor={"text"}
-						>
+					<Text 
+						fontSize="13px !important" 
+						color="gray.500 !important" 
+						lineHeight="1.5" 
+						flex="1"
+						noOfLines={2}
+						cursor={"text"}
+						sx={{ 
+							color: "gray.500 !important",
+							fontSize: "13px !important"
+						}}
+					>
 							{addon.excerpt}
 						</Text>
 					</Tooltip>
@@ -250,8 +274,8 @@ const AddonCard = ({ addon, showToast }) => {
 				<HStack spacing="3">
 					<Link
 						href={addon.link}
-						fontSize="sm"
-						color="gray.500"
+						fontSize="13px"
+						color="#6B7280"
 						textDecoration="underline"
 						isExternal
 					>
@@ -287,21 +311,25 @@ const AddonCard = ({ addon, showToast }) => {
 						<Switch
 							isChecked={isActive}
 							onChange={handleToggle}
-							colorScheme="green"
 							isDisabled={isLoading}
+							sx={{
+								"& .chakra-switch__track[data-checked]": {
+									bg: "#475bb2"
+								}
+							}}
 						/>
 					) : (
 						<Button
 							size="sm"
-							variant="outline"
-							colorScheme="gray"
+							variant="solid"
 							fontSize="xs"
 							fontWeight="normal"
-							borderColor="gray.300"
-							color="gray.600"
+							bg="#475bb2"
+							color="white"
+							borderColor="#475bb2"
 							_hover={{
-								bg: "gray.50",
-								borderColor: "gray.400"
+								bg: "#3a4a8f",
+								borderColor: "#3a4a8f"
 							}}
 							onClick={handleUpgradePlan}
 						>
@@ -317,6 +345,7 @@ const AddonCard = ({ addon, showToast }) => {
 					isOpen={isVideoOpen}
 					onClose={onVideoClose}
 					size="3xl"
+					isCentered
 				>
 					<ModalOverlay />
 					<ModalContent px={4} pb={4}>
