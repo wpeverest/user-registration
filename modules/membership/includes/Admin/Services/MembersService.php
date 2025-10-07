@@ -31,7 +31,7 @@ class MembersService {
 			return array(
 				'status'  => false,
 				'key'     => 'start_date',
-				'message' => __( 'Password does not match.', 'user-registration' ),
+				'message' => __( 'Please select a start date that is today or later', 'user-registration' ),
 			);
 		}
 		// validate coupon if applied
