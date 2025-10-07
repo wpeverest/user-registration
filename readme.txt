@@ -3,7 +3,7 @@ Contributors: WPEverest
 Tags: user registration, membership, user profile, registration form, login form,
 Requires at least: 5.5
 Requires PHP: 7.2
-Tested up to: 6.8.2
+Tested up to: 6.8.3
 Stable tag: 4.4.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -266,6 +266,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * Enhance  - Persistent dismissal of Non-URM users admin notice in UR pages.
 * Enhance  - Individual hide label settings for login builder.
 * Enhance  - Change membership plan in members page by admin.
+* Enhance  - Separate saving mechanism for each recaptcha.
 * Enhance  - Search filter in users table search.
 * Enhance  - Sticky search bar in form fields.
 * Enhance  - All Addons Page UI enhancement.

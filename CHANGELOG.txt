@@ -7,6 +7,7 @@
 * Enhance  - Persistent dismissal of Non-URM users admin notice in UR pages.
 * Enhance  - Individual hide label settings for login builder.
 * Enhance  - Change membership plan in members page by admin.
+* Enhance  - Separate saving mechanism for each recaptcha.
 * Enhance  - Search filter in users table search.
 * Enhance  - Sticky search bar in form fields.
 * Enhance  - All Addons Page UI enhancement.

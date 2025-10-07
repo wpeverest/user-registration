@@ -4666,8 +4666,11 @@ a.button.ur-smart-tags-list-button {
 					.search-icon {
 						position: absolute;
 						left: 12px;
-						top: 33;
+						top: 14px;
 						color: #999;
+					}
+					input {
+						padding : 0 29px;
 					}
 				}
 			}
@@ -4877,6 +4880,9 @@ body.user-registration {
 		#menu-management-liquid {
 			margin-left: 0;
 			min-width: 100%;
+		}
+		.select2.select2-container {
+			width: 100%!important;
 		}
 	}
 }
@@ -5540,6 +5546,11 @@ body.user-registration {
 										.ur-field {
 											justify-content: flex-start !important;
 											gap: 16px !important;
+										}
+									}
+									&.ur-input-type-multi-select2 {
+										  .select2-search__field {
+											display: none;
 										}
 									}
 
@@ -7781,6 +7792,41 @@ body.user-registration-page {
     				float: none;
 					border-radius: 50%;
 					line-height: .71428571;
+				}
+			}
+		}
+	}
+}
+.ur-sticky-wrapper {
+	top: 0;
+	background: white;
+	position: sticky;
+	z-index: 1;
+	box-shadow: 0 19px 20px 20px rgb(0 0 0 / 6%)
+}
+.user-registration {
+	.user-registration-settings {
+		.user-registration-settings-container {
+			.urm_license_setting_notice.urm_install_pro_notice {
+				border: 1px solid $primary_color;
+				border-left-width: 4px;
+				border-radius: 2px;
+				padding: 12px 16px;
+				margin-bottom: 32px;
+
+				.install_pro_version_button {
+					font-weight: 500;
+					background: $primary_color;
+					color: $white;
+				}
+
+				.install_pro_version_button:hover {
+					border-color: $primary_color;
+				}
+
+				.notice-icon {
+					color: $primary_color;
+					margin-right: 8px;
 				}
 			}
 		}

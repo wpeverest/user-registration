@@ -149,11 +149,6 @@ class UR_Shortcode_My_Account {
 			// Start output buffer since the html may need discarding for BW compatibility.
 			ob_start();
 
-			if ( isset( $wp->query_vars['user-logout'] ) ) {
-				/* translators: %s - Link to logout */
-				ur_add_notice( sprintf( __( 'Are you sure you want to log out?&nbsp;<a href="%s">Confirm and log out</a>', 'user-registration' ), ur_logout_url() ) );
-			}
-
 			/**
 			 * Action to handel before rendering User Registration my account page shortcode.
 			 */

@@ -197,7 +197,6 @@ textarea.ur-input-border-red {
 .ur-frontend-form {
 	border: 1px solid $border_color;
 	padding: 20px;
-	box-sizing: border-box;
 
 	&.login {
 		border: none;
@@ -297,7 +296,6 @@ textarea.ur-input-border-red {
 	}
 
 	.register {
-		text-align: center;
 
 		#node_recaptcha_register {
 			padding: 0 10px;
@@ -2656,13 +2654,6 @@ body {
 						}
 					}
 				}
-			}
-
-			&.ur-frontend-form {
-				max-width: 100%;
-				padding: 0;
-				background: transparent;
-				box-shadow: none;
 			}
 		}
 	}

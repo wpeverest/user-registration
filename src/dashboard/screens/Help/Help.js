@@ -16,16 +16,25 @@ import {
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 import React, { useState, useEffect } from "react";
+import { BiBulb } from "react-icons/bi";
 
 /**
  *  Internal Dependencies
  */
 import * as Icon from "../../components/Icon/Icon";
+import * as URIcon from "../../components/Icon/Icon";
 import facebook from "../../images/facebook.webp";
 import x from "../../images/x.webp";
 import youtube from "../../images/youtube.webp";
 import ShortcodesLists from "./Lists/ShortcodesLists/ShortcodesLists";
 import SmartTagsLists from "./Lists/SmartTagsLists/SmartTagsLists";
+
+const PRIMARY_COLOR = "#475bb2";
+const docURL = "https://docs.wpuserregistration.com/";
+const facebookGroup = "https://www.facebook.com/groups/userregistration";
+const featureRequestURL = "https://wpuserregistration.com/feature-requests/";
+const submitReviewUrl = "https://wordpress.org/support/plugin/user-registration/reviews/?rate=5#new-post";
+const ticketUrl = "https://wpuserregistration.com/support/";
 
 const Help = () => {
 	/* global _UR_DASHBOARD_ */
@@ -69,30 +78,28 @@ const Help = () => {
 					)
 				) : (
 					<>
-						{/* Welcome Section and Video Section - Side by Side */}
-						<Grid
-							gridTemplateColumns={{
-								sm: "1fr",
-								md: "1fr 1fr"
-							}}
-							gridGap="5"
+						{/* Welcome Section and Video Section - Combined in Single Container */}
+						<Box
+							p="6"
+							borderRadius="base"
+							border="1px"
+							borderColor="gray.100"
+							bgColor="white"
+							boxShadow="sm"
 							mb="5"
 						>
-							{/* Welcome Section - Left */}
-							<Box
-								p="6"
-								borderRadius="base"
-								border="1px"
-								borderColor="gray.100"
-								bgColor="white"
-								display="flex"
-								flexDirection="column"
-								justifyContent="space-between"
-								minH="300px"
+							<Grid
+								gridTemplateColumns={{
+									sm: "1fr",
+									md: "1fr 1fr"
+								}}
+								gridGap="8"
+								h="100%"
 							>
-								<Box display="flex" flexDirection="column" gap="6">
+								{/* Welcome Section - Left */}
+								<Stack gap="4" justify="center">
 									<Heading
-										as="h3"
+										as="h2"
 										fontSize="2xl"
 										fontWeight="semibold"
 										color="gray.800"
@@ -108,76 +115,61 @@ const Help = () => {
 											"user-registration"
 										)}
 									</Text>
-								</Box>
-								<HStack spacing="4" gap="12px" mt="auto" pt="6">
-									<Button
-										as={Link}
-										backgroundColor="#475bb2"
-										fontSize="14px"
-										fontWeight="normal"
-										borderRadius="base"
-										color="white"
-										textDecor="none"
-										py="3"
-										px="6"
-										href={newFormURL}
-										_hover={{
-											backgroundColor: "#3a4a9a",
-											color: "white",
-											textDecor: "none"
-										}}
-									>
-										{__(
-											"Create a Registration Form",
-											"user-registration"
-										)}
-									</Button>
-									<Button
-										as={Link}
-										variant="outline"
-										borderColor="#475bb2"
-										color="#475bb2"
-										borderRadius="base"
-										fontSize="14px"
-										fontWeight="normal"
-										href={allFormsURL}
-										textDecor="none"
-										isExternal
-										_hover={{
-											backgroundColor: "#475bb2",
-											color: "white",
-											borderColor: "#475bb2",
-											textDecor: "none"
-										}}
-									>
-										{__("View all forms", "user-registration")}
-									</Button>
-								</HStack>
-							</Box>
+									<Stack gap="3" direction={{ sm: "column", md: "row" }}>
+										<Button
+											as={Link}
+											bgColor="#475bb2"
+											color="white"
+											size="md"
+											borderRadius="base"
+											fontSize="14px"
+											fontWeight="normal"
+											href={newFormURL}
+											isExternal
+											textDecor="none !important"
+											_hover={{
+												bgColor: "#3a4a9a",
+												color: "white",
+												textDecor: "none !important"
+											}}
+										>
+											{__("Create a Registration Form", "user-registration")}
+										</Button>
+										<Button
+											as={Link}
+											variant="outline"
+											color="#475bb2"
+											borderColor="#475bb2"
+											borderRadius="base"
+											fontSize="14px"
+											fontWeight="normal"
+											href={allFormsURL}
+											isExternal
+											textDecor="none !important"
+										>
+											{__("View all forms", "user-registration")}
+										</Button>
+									</Stack>
+								</Stack>
 
-							{/* Video Section - Right */}
-							<Box
-								p="6"
-								borderRadius="base"
-								border="1px"
-								borderColor="gray.100"
-								bgColor="white"
-							>
-								<AspectRatio ratio={16 / 9}>
-									<iframe
-										src="https://www.youtube.com/embed/ZOXVbfBTNPQ?si=82Q2iOOE2iUF7M02&autoplay=1&mute=1&rel=0"
-										title="Best WordPress User Registration & Membership"
-										style={{
-											borderRadius: "11px",
-											border: "none",
-											overflow: "hidden"
-										}}
-										allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-										allowFullScreen
-									></iframe>
-								</AspectRatio>
-							</Box>
-						</Grid>
+								{/* Video Section - Right */}
+								<Box>
+									<AspectRatio ratio={16 / 9}>
+										<iframe
+											src="https://www.youtube.com/embed/ZOXVbfBTNPQ?si=82Q2iOOE2iUF7M02&autoplay=1&mute=1&rel=0"
+											title="Best WordPress User Registration & Membership"
+											style={{
+												borderRadius: "11px",
+												border: "none",
+												overflow: "hidden"
+											}}
+											allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+											allowFullScreen
+										></iframe>
+									</AspectRatio>
+								</Box>
+							</Grid>
+						</Box>
 
 						{/* Shortcodes and Smart Tags Section */}
 						<Grid
@@ -261,80 +253,6 @@ const Help = () => {
 								{__("View Tags", "user-registration")}
 							</Button>
 						</Stack>
-						<Stack
-							px="6"
-							py="8"
-							align="center"
-							gap="3"
-							bgColor="white"
-							borderRadius="base"
-							border="1px"
-							borderColor="gray.100"
-							textAlign="center"
-						>
-							<Icon.Support w="8" h="8" fill="#475bb2" />
-							<Heading as="h3" size="sm" fontWeight="semibold">
-								{__("Support", "user-registration")}
-							</Heading>
-							<Text fontSize="13px" color="gray.700">
-								{__(
-									"If you have any issues or questions, our team is on standby to help you instantly.",
-									"user-registration"
-								)}
-							</Text>
-							<Button
-								mt="10"
-								as={Link}
-								variant="outline"
-								color="#475bb2"
-								borderColor="#475bb2"
-								borderRadius="base"
-								fontSize="14px"
-								fontWeight="normal"
-								href={supportURL}
-								isExternal
-								textDecor="none !important"
-							>
-								{__("Contact Support", "user-registration")}
-							</Button>
-						</Stack>
-						<Stack
-							px="6"
-							py="8"
-							align="center"
-							gap="3"
-							bgColor="white"
-							borderRadius="base"
-							border="1px"
-							borderColor="gray.100"
-							textAlign="center"
-						>
-							<Icon.DocsLines w="8" h="8" fill="#475bb2" />
-							<Heading as="h3" size="sm" fontWeight="semibold">
-								{__("Need Some Help?", "user-registration")}
-							</Heading>
-							<Text fontSize="13px" color="gray.700">
-								{__(
-									"Check our documentation for detailed information on User Registration & Membership features and how to use them.",
-									"user-registration"
-								)}
-							</Text>
-							<Button
-								mt="10"
-								as={Link}
-								color="#475bb2"
-								borderColor="#475bb2"
-								borderRadius="base"
-								fontSize="14px"
-								fontWeight="normal"
-								textDecor="none !important"
-								href={helpURL}
-								isExternal
-								variant="outline"
-							>
-								{__("View Now", "user-registration")}
-							</Button>
-						</Stack>
 						</Grid>
 					</>
 				)}
@@ -344,135 +262,158 @@ const Help = () => {
 					</Heading>
 				</Stack>
 				<Grid
-					gridTemplateColumns="1fr 1fr"
-					p="4"
-					bgColor="white"
-					border="1px"
-					borderColor="gray.100"
-					borderRadius="base"
-					gridGap="7"
+					gridTemplateColumns="repeat(3, 1fr)"
+					gap="6"
+					marginTop="20px"
 				>
-					<Image src={facebook} w="full" />
-					<Stack gap="2" justify="center">
-						<Heading
-							as="h3"
-							fontSize="xl"
-							fontWeight="normal"
-							color="gray.700"
+					{/* Facebook Community Card */}
+					<Stack
+						bgColor="white"
+						borderRadius="base"
+						border="1px"
+						borderColor="gray.100"
+						overflow="hidden"
+						boxShadow="sm"
+						h="100%"
+					>
+						<Box
+							p="6"
+							textAlign="center"
+							position="relative"
 						>
-							{__("Facebook Community", "user-registration")}
-						</Heading>
-						<Text fontSize="13px" color="gray.700">
-							{__(
-								"Join our exclusive group and connect with fellow members. Ask questions, contribute to discussions, and share feedback!",
-								"user-registration"
-							)}
-						</Text>
-						<Button
-							as={Link}
-							colorScheme="primary"
-							borderRadius="base"
-							fontSize="14px"
-							fontWeight="normal"
-							alignSelf="start"
-							mt="5"
-							color="white !important"
-							isExternal
-							href="https://www.facebook.com/groups/userregistration"
-							textDecor="none !important"
-						>
-							{__("Join Group", "user-registration")}
-						</Button>
+							<Image src={facebook} />
+						</Box>
+						<Stack p="6" gap="3" flex="1" justify="space-between">
+							<Stack gap="3">
+								<Heading as="h3" size="sm" fontWeight="semibold" color="gray.800">
+									{__("Facebook Community", "user-registration")}
+								</Heading>
+								<Text fontSize="13px" color="gray.700">
+									{__(
+										"Join our exclusive group and connect with fellow members. Ask questions, contribute to discussions, and share feedback!",
+										"user-registration"
+									)}
+								</Text>
+							</Stack>
+							<Button
+								as={Link}
+								bgColor="#1877F2"
+								color="white"
+								borderRadius="base"
+								fontSize="14px"
+								fontWeight="normal"
+								_hover={{ bgColor: "#166FE5" }}
+								isExternal
+								href="https://www.facebook.com/groups/userregistration"
+								textDecor="none !important"
+								alignSelf="flex-start"
+								mt="auto"
+							>
+								{__("Join Group", "user-registration")}
+							</Button>
+						</Stack>
 					</Stack>
-				</Grid>
-				<Grid
-					gridTemplateColumns="1fr 1fr"
-					p="4"
-					bgColor="white"
-					border="1px"
-					borderColor="gray.100"
-					borderRadius="base"
-					gridGap="7"
-				>
-					<Image src={x} />
-					<Stack gap="2" justify="center">
-						<Heading
-							as="h3"
-							fontSize="xl"
-							fontWeight="normal"
-							color="gray.700"
+
+					{/* X (Twitter) Card */}
+					<Stack
+						bgColor="white"
+						borderRadius="base"
+						border="1px"
+						borderColor="gray.100"
+						overflow="hidden"
+						boxShadow="sm"
+						h="100%"
+					>
+						<Box
+							p="6"
+							textAlign="center"
+							position="relative"
 						>
-							{__("X ( Twitter )", "user-registration")}
-						</Heading>
-						<Text fontSize="13px" color="gray.700">
-							{__(
-								"Follow us on X to get the latest news and updates about User Registration & Membership.",
-								"user-registration"
-							)}
-						</Text>
-						<Button
-							as={Link}
-							borderRadius="base"
-							fontSize="14px"
-							fontWeight="normal"
-							alignSelf="start"
-							mt="5"
-							color="white !important"
-							bgColor="black !important"
-							isExternal
-							href="https://twitter.com/user_register"
-							textDecor="none !important"
-						>
-							{__("Follow", "user-registration")}
-						</Button>
+							<Image src={x} />
+						</Box>
+						<Stack p="6" gap="3" flex="1" justify="space-between">
+							<Stack gap="3">
+								<Heading as="h3" size="sm" fontWeight="semibold" color="gray.800">
+									{__("X ( Twitter )", "user-registration")}
+								</Heading>
+								<Text fontSize="13px" color="gray.700">
+									{__(
+										"Follow us on X to get the latest news and updates about User Registration & Membership.",
+										"user-registration"
+									)}
+								</Text>
+							</Stack>
+							<Button
+								as={Link}
+								bgColor="black"
+								color="white"
+								borderRadius="base"
+								fontSize="14px"
+								fontWeight="normal"
+								_hover={{ bgColor: "#333" }}
+								isExternal
+								href="https://twitter.com/user_register"
+								textDecor="none !important"
+								alignSelf="flex-start"
+								mt="auto"
+							>
+								{__("Follow", "user-registration")}
+							</Button>
+						</Stack>
 					</Stack>
-				</Grid>
-				<Grid
-					gridTemplateColumns="1fr 1fr"
-					p="4"
-					bgColor="white"
-					border="1px"
-					borderColor="gray.100"
-					borderRadius="base"
-					gridGap="7"
-				>
-					<Image src={youtube} />
-					<Stack gap="2" justify="center">
-						<Heading
-							as="h3"
-							fontSize="xl"
-							fontWeight="normal"
-							color="gray.700"
+
+					{/* YouTube Card */}
+					<Stack
+						bgColor="white"
+						borderRadius="base"
+						border="1px"
+						borderColor="gray.100"
+						overflow="hidden"
+						boxShadow="sm"
+						h="100%"
+					>
+						<Box
+							p="6"
+							textAlign="center"
+							position="relative"
 						>
-							{__("YouTube", "user-registration")}
-						</Heading>
-						<Text fontSize="13px" color="gray.700">
-							{__(
-								"Subscribe to our YouTube channel, where we guide you on using User Registration & Membership features and add-ons.",
-								"user-registration"
-							)}
-						</Text>
-						<Button
-							as={Link}
-							colorScheme="red"
-							borderRadius="base"
-							fontSize="14px"
-							fontWeight="normal"
-							alignSelf="start"
-							mt="5"
-							color="white !important"
-							isExternal
-							href="https://www.youtube.com/@UserRegistration"
-							textDecor="none !important"
-						>
-							{__("Subscribe", "user-registration")}
-						</Button>
+							<Image src={youtube} />
+						</Box>
+						<Stack p="6" gap="3" flex="1" justify="space-between">
+							<Stack gap="3">
+								<Heading as="h3" size="sm" fontWeight="semibold" color="gray.800">
+									{__("YouTube", "user-registration")}
+								</Heading>
+								<Text fontSize="13px" color="gray.700">
+									{__(
+										"Subscribe to our YouTube channel, where we guide you on using User Registration & Membership features and add-ons.",
+										"user-registration"
+									)}
+								</Text>
+							</Stack>
+							<Button
+								as={Link}
+								bgColor="#FF0000"
+								color="white"
+								borderRadius="base"
+								fontSize="14px"
+								fontWeight="normal"
+								_hover={{ bgColor: "#CC0000" }}
+								isExternal
+								href="https://www.youtube.com/@UserRegistration"
+								textDecor="none !important"
+								alignSelf="flex-start"
+								mt="auto"
+							>
+								{__("Subscribe", "user-registration")}
+							</Button>
+						</Stack>
 					</Stack>
 				</Grid>
 			</Stack>
 			<Stack gap="5">
 				<Stack
-					p="4"
+					p="6"
 					gap="3"
 					bgColor="white"
 					borderRadius="base"
@@ -480,28 +421,31 @@ const Help = () => {
 					borderColor="gray.100"
 				>
 					<HStack gap="2">
-						<Icon.Video w="5" h="5" fill="#475bb2" />
+						<URIcon.Team w="5" h="5" fill={PRIMARY_COLOR} />
 						<Heading as="h3" size="sm" fontWeight="semibold">
-							{__("Video Tutorials", "user-registration")}
+							{__(
+								"User Registration Community",
+								"user-registration"
+							)}
 						</Heading>
 					</HStack>
 					<Text fontSize="13px" color="gray.700">
 						{__(
-							"Watch our step-by-step video tutorials that’ll help you get the best out of User Registration & Membership features.",
+							"Join our exclusive group and connect with fellow User Registration members. Ask questions, contribute to discussions, and share feedback!",
 							"user-registration"
 						)}
 					</Text>
 					<Link
-						isExternal
-						color="#475bb2 !important"
+						color="var(--chakra-colors-primary-500) !important"
 						textDecor="underline"
-						href="https://www.youtube.com/@UserRegistration"
+						href={facebookGroup}
+						isExternal
 					>
-						{__("Watch Videos", "user-registration")}
+						{__("Join our Facebook Group", "user-registration")}
 					</Link>
 				</Stack>
 				<Stack
-					p="4"
+					p="6"
 					gap="3"
 					bgColor="white"
 					borderRadius="base"
@@ -509,28 +453,94 @@ const Help = () => {
 					borderColor="gray.100"
 				>
 					<HStack gap="2">
-						<Icon.Bulb w="5" h="5" fill="#475bb2" />
+						<URIcon.DocsLines
+							w="5"
+							h="5"
+							fill={PRIMARY_COLOR}
+						/>
+						<Heading as="h3" size="sm" fontWeight="semibold">
+							{__("Getting Started", "user-registration")}
+						</Heading>
+					</HStack>
+					<Text fontSize="13px" color="gray.700">
+						{__(
+							"Check our documentation for detailed information on User Registration features and how to use them.",
+							"user-registration"
+						)}
+					</Text>
+					<Link
+						color="var(--chakra-colors-primary-500) !important"
+						textDecor="underline"
+						href={docURL}
+						isExternal
+					>
+						{__("View Documentation", "user-registration")}
+					</Link>
+				</Stack>
+				<Stack
+					p="6"
+					gap="3"
+					bgColor="white"
+					borderRadius="base"
+					border="1px"
+					borderColor="gray.100"
+				>
+					<HStack gap="2">
+						<URIcon.Headphones
+							w="5"
+							h="5"
+							fill={PRIMARY_COLOR}
+						/>
+						<Heading as="h3" size="sm" fontWeight="semibold">
+							{__("Support", "user-registration")}
+						</Heading>
+					</HStack>
+					<Text fontSize="13px" color="gray.700">
+						{__(
+							"Submit a ticket for encountered issues and get help from our support team instantly.",
+							"user-registration"
+						)}
+					</Text>
+					<Link
+						color="var(--chakra-colors-primary-500) !important"
+						textDecor="underline"
+						href={ticketUrl}
+						isExternal
+					>
+						{__("Create a Ticket", "user-registration")}
+					</Link>
+				</Stack>
+				<Stack
+					p="6"
+					gap="3"
+					bgColor="white"
+					borderRadius="base"
+					border="1px"
+					borderColor="gray.100"
+				>
+					<HStack gap="2">
+						<BiBulb size={20} color={PRIMARY_COLOR} />
 						<Heading as="h3" size="sm" fontWeight="semibold">
 							{__("Feature Request", "user-registration")}
 						</Heading>
 					</HStack>
 					<Text fontSize="13px" color="gray.700">
 						{__(
-							"Don’t find a feature you’re looking for? Suggest any features you think would enhance our product.",
+							"Don't find a feature you're looking for? Suggest any features you think would enhance our product.",
 							"user-registration"
 						)}
 					</Text>
 					<Link
-						href={featureRequestURL}
-						color="#475bb2 !important"
+						color="var(--chakra-colors-primary-500) !important"
 						textDecor="underline"
+						href={featureRequestURL}
 						isExternal
 					>
 						{__("Request a Feature", "user-registration")}
 					</Link>
 				</Stack>
 				<Stack
-					p="4"
+					p="6"
 					gap="3"
 					bgColor="white"
 					borderRadius="base"
@@ -538,24 +548,53 @@ const Help = () => {
 					borderColor="gray.100"
 				>
 					<HStack gap="2">
-						<Icon.Star w="5" h="5" fill="#475bb2" />
+						<URIcon.Star w="5" h="5" fill={PRIMARY_COLOR} />
 						<Heading as="h3" size="sm" fontWeight="semibold">
 							{__("Submit a Review", "user-registration")}
 						</Heading>
 					</HStack>
 					<Text fontSize="13px" color="gray.700">
 						{__(
-							"Please take a moment to give us a review. We appreciate honest feedback that’ll help us improve our plugin.",
+							"Please take a moment to give us a review. We appreciate honest feedback that'll help us improve our plugin.",
 							"user-registration"
 						)}
 					</Text>
 					<Link
-						href="https://wordpress.org/support/plugin/user-registration/reviews/?rate=5#new-post"
-						color="#475bb2 !important"
+						color="var(--chakra-colors-primary-500) !important"
 						textDecor="underline"
+						href={submitReviewUrl}
 						isExternal
 					>
 						{__("Submit a Review", "user-registration")}
+					</Link>
+				</Stack>
+				<Stack
+					p="6"
+					gap="3"
+					bgColor="white"
+					borderRadius="base"
+					border="1px"
+					borderColor="gray.100"
+				>
+					<HStack gap="2">
+						<URIcon.Video w="5" h="5" fill={PRIMARY_COLOR} />
+						<Heading as="h3" size="sm" fontWeight="semibold">
+							{__("Video Tutorials", "user-registration")}
+						</Heading>
+					</HStack>
+					<Text fontSize="13px" color="gray.700">
+						{__(
+							"Watch our step-by-step video tutorials that'll help you get the best out of User Registration's features.",
+							"user-registration"
+						)}
+					</Text>
+					<Link
+						color="var(--chakra-colors-primary-500) !important"
+						textDecor="underline"
+						isExternal
+						href="https://www.youtube.com/@UserRegistration"
+					>
+						{__("Watch Videos", "user-registration")}
 					</Link>
 				</Stack>
 			</Stack>

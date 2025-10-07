@@ -71,7 +71,8 @@ const CardsGrid = ({
 	}
 
 	// Single category view - show with same styling as "All" view
-	const categoryName = modules.length > 0 ? (modules[0].category || 'Uncategorized') : 'Uncategorized';
+	// Use the selected category name instead of defaulting to 'Uncategorized'
+	const categoryName = selectedCategory !== "All" ? selectedCategory : (modules.length > 0 ? (modules[0].category || 'Uncategorized') : 'Uncategorized');
 
 	return (
 		<Box>
@@ -86,15 +87,34 @@ const CardsGrid = ({
 				</HStack>
 				<Divider mb="6" borderColor="gray.200" />
 
-				<SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing="6">
-					{modules.map((addon) => (
-						<AddonCard
-							key={addon.slug}
-							addon={addon}
-							showToast={showToast}
-						/>
-					))}
-				</SimpleGrid>
+				{modules.length > 0 ? (
+					<SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing="6">
+						{modules.map((addon) => (
+							<AddonCard
+								key={addon.slug}
+								addon={addon}
+								showToast={showToast}
+							/>
+						))}
+					</SimpleGrid>
+				) : (
+					<Box
+						display="flex"
+						justifyContent="center"
+						flexDirection="column"
+						padding="60px"
+						gap="10px"
+						alignItems="center"
+						textAlign="center"
+					>
+						<Text fontSize="18px" fontWeight="600" color="gray.600">
+							No addons found
+						</Text>
+						<Text fontSize="14px" color="gray.500">
+							No addons are available in the {categoryName} category.
+						</Text>
+					</Box>
+				)}
 			</Box>
 		</Box>
 	);

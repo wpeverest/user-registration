@@ -129,6 +129,8 @@
 		$.each(settings, function (index, setting) {
 			if (setting.type === "toggle") {
 				var value = $("#" + setting.option).is(":checked");
+			} else if (setting.type === "html") {
+				var value = $("#" + setting.option + " :input").serializeArray();
 			} else {
 				var value = $("#" + setting.option).val();
 			}
