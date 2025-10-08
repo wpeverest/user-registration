@@ -1,3 +1,9 @@
+= 4.4.4    - 08/10/2025 =
+* Tweak    - Design changes on Site Assistant.
+* Fix      - Log mail send error even if logging is disabled.
+* Fix      - Error while trying to add new block in page editor.
+* Fix 	   - Addons Icons not loaded properly in All Addons page.
+
 = 4.4.3    - 07/10/2025 =
 * Security - Updated jQuery validator version to v1.20.0.
 * Feature  - Site Assistant menu introduction.
