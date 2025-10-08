@@ -32,7 +32,7 @@ class CouponService {
 	public function set_coupon_response( $status, $code, $message, array $data = array() ) {
 		return array(
 			'status'  => $status,
-			'message' => esc_html__( $message, 'user-registration_membership' ),
+			'message' => esc_html__( $message, 'user-registration' ),
 			'data'    => wp_json_encode( $data ),
 			'code'    => $code,
 		);
