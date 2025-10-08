@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the User Registration & Membership plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration & Membership 4.4.3\n"
+"Project-Id-Version: User Registration & Membership 4.4.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-registration\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-10-07T09:02:58+00:00\n"
+"POT-Creation-Date: 2025-10-08T07:19:49+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: user-registration\n"
@@ -101,7 +101,6 @@ msgstr ""
 #: modules/membership/includes/Emails/User/UR_Settings_Membership_Expiring_Soon_User_Email.php:102
 #: modules/membership/includes/Emails/User/UR_Settings_Membership_Renewal_Reminder_User_Email.php:102
 #: src/form-templates/components/TemplateList.js:499
-#: chunks/form_templates.js:97222
 msgid "Preview"
 msgstr ""
 
@@ -535,9 +534,6 @@ msgstr ""
 #: src/form-templates/App.js:23
 #: src/form-templates/App.js:58
 #: src/form-templates/App.js:64
-#: chunks/form_templates.js:95947
-#: chunks/form_templates.js:95982
-#: chunks/form_templates.js:95988
 msgid "All"
 msgstr ""
 
@@ -564,7 +560,6 @@ msgstr ""
 #: includes/admin/class-ur-admin-assets.php:234
 #: includes/admin/class-ur-admin-menus.php:867
 #: src/form-templates/components/PluginStatus.js:106
-#: chunks/form_templates.js:96338
 msgid "Install & Activate"
 msgstr ""
 
@@ -577,7 +572,6 @@ msgstr ""
 #: includes/admin/class-ur-admin-assets.php:660
 #: includes/admin/class-ur-admin-menus.php:869
 #: src/form-templates/components/TemplateList.js:675
-#: chunks/form_templates.js:97398
 msgid "OK"
 msgstr ""
 
@@ -588,7 +582,6 @@ msgstr ""
 #: includes/class-ur-ajax.php:1729
 #: includes/functions-ur-core.php:4108
 #: src/form-templates/components/TemplateList.js:692
-#: chunks/form_templates.js:97415
 msgid "Upgrade Plan"
 msgstr ""
 
@@ -606,8 +599,6 @@ msgstr ""
 #: includes/admin/class-ur-admin-menus.php:880
 #: src/form-templates/components/PluginStatus.js:103
 #: src/form-templates/components/PluginStatus.js:112
-#: chunks/form_templates.js:96335
-#: chunks/form_templates.js:96344
 msgid "Continue"
 msgstr ""
 
@@ -619,7 +610,6 @@ msgstr ""
 #: includes/admin/class-ur-admin-assets.php:249
 #: includes/admin/class-ur-admin-menus.php:882
 #: src/form-templates/components/TemplateList.js:714
-#: chunks/form_templates.js:97437
 msgid "Uplift your form experience to the next level."
 msgstr ""
 
@@ -1454,9 +1444,6 @@ msgstr ""
 #: src/form-templates/components/Main.js:31
 #: src/form-templates/components/Main.js:53
 #: src/form-templates/components/Main.js:68
-#: chunks/form_templates.js:96130
-#: chunks/form_templates.js:96152
-#: chunks/form_templates.js:96167
 msgid "All Forms"
 msgstr ""
 
@@ -1482,7 +1469,7 @@ msgstr ""
 #: modules/membership/includes/Admin/Views/Partials/membership-admin-payments.php:101
 #: modules/membership/includes/Admin/Views/Partials/membership-admin-payments.php:332
 #: modules/membership/includes/Admin/Views/Partials/membership-admin-payments.php:384
-#: user-registration.php:452
+#: user-registration.php:451
 #: src/blocks/blocks/content-restriction-enhanced/Edit.js:92
 #: src/dashboard/Constants/index.js:30
 #: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:187
@@ -1966,7 +1953,6 @@ msgstr ""
 #: includes/admin/class-ur-admin-welcome.php:149
 #: includes/admin/views/html-admin-page-form-templates.php:106
 #: src/form-templates/components/TemplateList.js:473
-#: chunks/form_templates.js:97196
 msgid "Get Started"
 msgstr ""
 
@@ -3847,15 +3833,6 @@ msgstr ""
 #: src/form-templates/components/TemplateList.js:229
 #: src/form-templates/components/TemplateList.js:245
 #: src/form-templates/components/TemplateList.js:287
-#: chunks/form_templates.js:96278
-#: chunks/form_templates.js:96292
-#: chunks/form_templates.js:96306
-#: chunks/form_templates.js:96418
-#: chunks/form_templates.js:96436
-#: chunks/form_templates.js:96903
-#: chunks/form_templates.js:96952
-#: chunks/form_templates.js:96968
-#: chunks/form_templates.js:97010
 msgid "Error"
 msgstr ""
 
@@ -3907,13 +3884,11 @@ msgstr ""
 
 #: includes/admin/views/html-admin-page-form-templates.php:33
 #: src/form-templates/App.js:110
-#: chunks/form_templates.js:96034
 msgid "Add New Form"
 msgstr ""
 
 #: includes/admin/views/html-admin-page-form-templates.php:42
 #: src/form-templates/App.js:132
-#: chunks/form_templates.js:96056
 msgid "Refresh Templates"
 msgstr ""
 
@@ -3927,16 +3902,12 @@ msgstr ""
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:354
 #: src/form-templates/App.js:24
 #: src/form-templates/App.js:65
-#: chunks/form_templates.js:95948
-#: chunks/form_templates.js:95989
 msgid "Free"
 msgstr ""
 
 #: includes/admin/views/html-admin-page-form-templates.php:53
 #: src/form-templates/App.js:25
 #: src/form-templates/App.js:66
-#: chunks/form_templates.js:95949
-#: chunks/form_templates.js:95990
 msgid "Premium"
 msgstr ""
 
@@ -5144,7 +5115,7 @@ msgid "The provided handler <code>%1$s</code> does not implement UR_Log_Handler_
 msgstr ""
 
 #. translators: %s - Log Level
-#: includes/class-ur-logger.php:156
+#: includes/class-ur-logger.php:160
 msgid "UR_Logger::log was called with an invalid level \"%s\"."
 msgstr ""
 
@@ -11635,27 +11606,27 @@ msgstr ""
 msgid "%1$s in %2$s on line %3$s"
 msgstr ""
 
-#: user-registration.php:452
+#: user-registration.php:451
 msgid "View User Registration & Membership settings"
 msgstr ""
 
-#: user-registration.php:468
+#: user-registration.php:467
 msgid "View User Registration & Membership documentation"
 msgstr ""
 
-#: user-registration.php:468
+#: user-registration.php:467
 msgid "Docs"
 msgstr ""
 
-#: user-registration.php:469
+#: user-registration.php:468
 msgid "Visit free customer support"
 msgstr ""
 
-#: user-registration.php:469
+#: user-registration.php:468
 msgid "Free support"
 msgstr ""
 
-#: user-registration.php:644
+#: user-registration.php:643
 msgid "As <strong>User Registration & Membership Pro</strong> is active, <strong>User Registration Free</strong> is now not needed."
 msgstr ""
 
@@ -12024,8 +11995,6 @@ msgstr ""
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:357
 #: src/form-templates/components/TemplateList.js:423
 #: src/form-templates/components/TemplateList.js:440
-#: chunks/form_templates.js:97146
-#: chunks/form_templates.js:97163
 msgid "Pro"
 msgstr ""
 
@@ -12549,7 +12518,6 @@ msgstr ""
 #: src/dashboard/screens/SiteAssistant/components/DefaultFormMissing.js:41
 #: src/dashboard/screens/SiteAssistant/components/RequiredPagesMissing.js:46
 #: src/form-templates/components/PluginStatus.js:169
-#: chunks/form_templates.js:96401
 msgid "Success"
 msgstr ""
 
@@ -12749,11 +12717,11 @@ msgstr ""
 msgid "here"
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:187
+#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:190
 msgid "Let's get your user registration system set up and ready to go!"
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:218
+#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:221
 msgid "Setup Complete!"
 msgstr ""
 
@@ -12762,137 +12730,110 @@ msgid "Redirecting to All forms..."
 msgstr ""
 
 #: src/form-templates/App.js:149
-#: chunks/form_templates.js:96073
 msgid "Select a Template"
 msgstr ""
 
 #: src/form-templates/App.js:158
-#: chunks/form_templates.js:96082
 msgid "To get started quickly, you can pick from our ready-made templates, begin with a blank form, or design your own."
 msgstr ""
 
 #: src/form-templates/components/Main.js:25
-#: chunks/form_templates.js:96124
 msgid "Unexpected response format."
 msgstr ""
 
 #: src/form-templates/components/PluginStatus.js:47
-#: chunks/form_templates.js:96279
 msgid "Invalid response format."
 msgstr ""
 
 #: src/form-templates/components/PluginStatus.js:61
-#: chunks/form_templates.js:96293
 msgid "HTTP request failed."
 msgstr ""
 
 #: src/form-templates/components/PluginStatus.js:75
-#: chunks/form_templates.js:96307
 msgid "Unable to check plugin status."
 msgstr ""
 
 #: src/form-templates/components/PluginStatus.js:109
-#: chunks/form_templates.js:96341
 msgid "Activate and Continue"
 msgstr ""
 
 #: src/form-templates/components/PluginStatus.js:165
-#: chunks/form_templates.js:96397
 msgid "Plugin activated successfully."
 msgstr ""
 
 #: src/form-templates/components/PluginStatus.js:180
-#: chunks/form_templates.js:96412
 msgid "Failed to activate plugin: %s."
 msgstr ""
 
 #: src/form-templates/components/PluginStatus.js:198
-#: chunks/form_templates.js:96430
 msgid "Unable to activate %s."
 msgstr ""
 
 #: src/form-templates/components/Sidebar.js:62
-#: chunks/form_templates.js:96587
 msgid "Search Templates"
 msgstr ""
 
 #: src/form-templates/components/Sidebar.js:158
-#: chunks/form_templates.js:96683
 msgid "Can't Find The Form Template You Need?"
 msgstr ""
 
 #: src/form-templates/components/Sidebar.js:183
-#: chunks/form_templates.js:96708
 msgid "Request Template"
 msgstr ""
 
 #: src/form-templates/components/TemplateList.js:181
-#: chunks/form_templates.js:96904
 msgid "An error occurred while checking the plugin status. Please try again."
 msgstr ""
 
 #: src/form-templates/components/TemplateList.js:197
-#: chunks/form_templates.js:96920
 msgid "Form name required"
 msgstr ""
 
 #: src/form-templates/components/TemplateList.js:198
-#: chunks/form_templates.js:96921
 msgid "Please provide a name for your form."
 msgstr ""
 
 #: src/form-templates/components/TemplateList.js:232
-#: chunks/form_templates.js:96955
 msgid "Failed to create form template."
 msgstr ""
 
 #: src/form-templates/components/TemplateList.js:246
-#: chunks/form_templates.js:96969
 msgid "An error occurred while creating the form template."
 msgstr ""
 
 #: src/form-templates/components/TemplateList.js:288
-#: chunks/form_templates.js:97011
 msgid "An error occurred while updating favorites."
 msgstr ""
 
 #: src/form-templates/components/TemplateList.js:581
-#: chunks/form_templates.js:97304
 msgid "Not Found"
 msgstr ""
 
 #: src/form-templates/components/TemplateList.js:591
-#: chunks/form_templates.js:97314
 msgid "No Templates Found"
 msgstr ""
 
 #: src/form-templates/components/TemplateList.js:599
-#: chunks/form_templates.js:97322
 msgid "Sorry, we didn't find any templates that match your criteria"
 msgstr ""
 
 #: src/form-templates/components/TemplateList.js:631
-#: chunks/form_templates.js:97354
 msgid "%s Requires License Upgrade"
 msgstr ""
 
 #: src/form-templates/components/TemplateList.js:638
-#: chunks/form_templates.js:97361
 msgid "%s is a Premium Template"
 msgstr ""
 
 #: src/form-templates/components/TemplateList.js:659
-#: chunks/form_templates.js:97382
 msgid "This template requires plus and above plan. Please upgrade to the Plus and above to unlock all these awesome templates."
 msgstr ""
 
 #: src/form-templates/components/TemplateList.js:663
-#: chunks/form_templates.js:97386
 msgid "This template requires premium addons. Please upgrade to the Premium to unlock all these awesome templates."
 msgstr ""
 
 #: src/form-templates/components/TemplateList.js:727
-#: chunks/form_templates.js:97450
 msgid "Give it a name"
 msgstr ""
 
@@ -13013,241 +12954,201 @@ msgstr ""
 msgid "Best for sites offering premium content, subscriptions, or exclusive member access with multiple membership levels."
 msgstr ""
 
-#: chunks/content-restriction-enhanced/block.json
 #: src/blocks/blocks/content-restriction-enhanced/block.json
 msgctxt "block title"
 msgid "Content Restriction"
 msgstr ""
 
-#: chunks/content-restriction-enhanced/block.json
 #: src/blocks/blocks/content-restriction-enhanced/block.json
 msgctxt "block description"
 msgid "The block restricts the content."
 msgstr ""
 
-#: chunks/content-restriction-enhanced/block.json
 #: src/blocks/blocks/content-restriction-enhanced/block.json
 msgctxt "block keyword"
 msgid "user registration content restriction"
 msgstr ""
 
-#: chunks/content-restriction-enhanced/block.json
 #: src/blocks/blocks/content-restriction-enhanced/block.json
 msgctxt "block keyword"
 msgid "content restriction"
 msgstr ""
 
-#: chunks/edit-password/block.json
 #: src/blocks/blocks/edit-password/block.json
 msgctxt "block title"
 msgid "Edit Password"
 msgstr ""
 
-#: chunks/edit-password/block.json
 #: src/blocks/blocks/edit-password/block.json
 msgctxt "block description"
 msgid "The block give the edit password interface."
 msgstr ""
 
-#: chunks/edit-password/block.json
 #: src/blocks/blocks/edit-password/block.json
 msgctxt "block keyword"
 msgid "user registration edit password"
 msgstr ""
 
-#: chunks/edit-password/block.json
 #: src/blocks/blocks/edit-password/block.json
 msgctxt "block keyword"
 msgid "edit password"
 msgstr ""
 
-#: chunks/edit-profile/block.json
 #: src/blocks/blocks/edit-profile/block.json
 msgctxt "block title"
 msgid "Edit Profile"
 msgstr ""
 
-#: chunks/edit-profile/block.json
 #: src/blocks/blocks/edit-profile/block.json
 msgctxt "block description"
 msgid "The block give edit profile interface."
 msgstr ""
 
-#: chunks/edit-profile/block.json
 #: src/blocks/blocks/edit-profile/block.json
 msgctxt "block keyword"
 msgid "user registration edit profile"
 msgstr ""
 
-#: chunks/edit-profile/block.json
 #: src/blocks/blocks/edit-profile/block.json
 msgctxt "block keyword"
 msgid "edit profile"
 msgstr ""
 
-#: chunks/login-form/block.json
 #: src/blocks/blocks/login-form/block.json
 msgctxt "block title"
 msgid "Login Form"
 msgstr ""
 
-#: chunks/login-form/block.json
 #: src/blocks/blocks/login-form/block.json
 msgctxt "block description"
 msgid "The block give the login form for registered users."
 msgstr ""
 
-#: chunks/login-form/block.json
 #: src/blocks/blocks/login-form/block.json
 msgctxt "block keyword"
 msgid "user registration login form"
 msgstr ""
 
-#: chunks/login-form/block.json
 #: src/blocks/blocks/login-form/block.json
 msgctxt "block keyword"
 msgid "login form"
 msgstr ""
 
-#: chunks/login-logout-menu/block.json
 #: src/blocks/blocks/login-logout-menu/block.json
 msgctxt "block title"
 msgid "URM Login | Logout"
 msgstr ""
 
-#: chunks/login-logout-menu/block.json
 #: src/blocks/blocks/login-logout-menu/block.json
 msgctxt "block description"
 msgid "A block that provides links for login and logout."
 msgstr ""
 
-#: chunks/login-logout-menu/block.json
 #: src/blocks/blocks/login-logout-menu/block.json
 msgctxt "block keyword"
 msgid "login"
 msgstr ""
 
-#: chunks/login-logout-menu/block.json
 #: src/blocks/blocks/login-logout-menu/block.json
 msgctxt "block keyword"
 msgid "logout"
 msgstr ""
 
-#: chunks/login-logout-menu/block.json
 #: src/blocks/blocks/login-logout-menu/block.json
 msgctxt "block keyword"
 msgid "authentication"
 msgstr ""
 
-#: chunks/login-logout-menu/block.json
 #: src/blocks/blocks/login-logout-menu/block.json
 msgctxt "block keyword"
 msgid "user"
 msgstr ""
 
-#: chunks/membership-listing/block.json
 #: src/blocks/blocks/membership-listing/block.json
 msgctxt "block title"
 msgid "Membership Listing"
 msgstr ""
 
-#: chunks/membership-listing/block.json
 #: src/blocks/blocks/membership-listing/block.json
 msgctxt "block description"
 msgid "This block provides block for membership listing."
 msgstr ""
 
-#: chunks/membership-listing/block.json
 #: src/blocks/blocks/membership-listing/block.json
 msgctxt "block keyword"
 msgid "user registration membership listing"
 msgstr ""
 
-#: chunks/membership-listing/block.json
 #: src/blocks/blocks/membership-listing/block.json
 msgctxt "block keyword"
 msgid "urm membership listing"
 msgstr ""
 
-#: chunks/membership-listing/block.json
 #: src/blocks/blocks/membership-listing/block.json
 msgctxt "block keyword"
 msgid "membership listing"
 msgstr ""
 
-#: chunks/myaccount/block.json
 #: src/blocks/blocks/myaccount/block.json
 msgctxt "block title"
 msgid "Myaccount"
 msgstr ""
 
-#: chunks/myaccount/block.json
 #: src/blocks/blocks/myaccount/block.json
 msgctxt "block description"
 msgid "The block give the myaccount form for registered users."
 msgstr ""
 
-#: chunks/myaccount/block.json
 #: src/blocks/blocks/myaccount/block.json
 msgctxt "block keyword"
 msgid "user registration myaccount"
 msgstr ""
 
-#: chunks/myaccount/block.json
 #: src/blocks/blocks/myaccount/block.json
 msgctxt "block keyword"
 msgid "myaccount"
 msgstr ""
 
-#: chunks/registration-form/block.json
 #: src/blocks/blocks/registration-form/block.json
 msgctxt "block title"
 msgid "Registration Form"
 msgstr ""
 
-#: chunks/registration-form/block.json
 #: src/blocks/blocks/registration-form/block.json
 msgctxt "block description"
 msgid "The block lets the user choose the required user registration directly."
 msgstr ""
 
-#: chunks/registration-form/block.json
 #: src/blocks/blocks/registration-form/block.json
 msgctxt "block keyword"
 msgid "user registration form"
 msgstr ""
 
-#: chunks/registration-form/block.json
 #: src/blocks/blocks/registration-form/block.json
 msgctxt "block keyword"
 msgid "registration form"
 msgstr ""
 
-#: chunks/thank-you/block.json
 #: src/blocks/blocks/thank-you/block.json
 msgctxt "block title"
 msgid "Thank You"
 msgstr ""
 
-#: chunks/thank-you/block.json
 #: src/blocks/blocks/thank-you/block.json
 msgctxt "block description"
 msgid "This provides block for a thank you page."
 msgstr ""
 
-#: chunks/thank-you/block.json
 #: src/blocks/blocks/thank-you/block.json
 msgctxt "block keyword"
 msgid "user registration thank you"
 msgstr ""
 
-#: chunks/thank-you/block.json
 #: src/blocks/blocks/thank-you/block.json
 msgctxt "block keyword"
 msgid "urm thank you"
 msgstr ""
 
-#: chunks/thank-you/block.json
 #: src/blocks/blocks/thank-you/block.json
 msgctxt "block keyword"
 msgid "thank you"
