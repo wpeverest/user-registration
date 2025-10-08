@@ -324,7 +324,7 @@ class UR_Preview {
 		}
 
 		if ( ! class_exists( $class_name ) ) {
-			echo '<h3>' . esc_html_e( 'Something went wrong. Please verify if the email you want to preview exists or addon it is associated with is activated.', 'user-registration' ) . '</h3>';
+			echo '<h3>' . esc_html__( 'Something went wrong. Please verify if the email you want to preview exists or addon it is associated with is activated.', 'user-registration' ) . '</h3>';
 		} else {
 			$class_instance = new $class_name();
 
