@@ -147,7 +147,11 @@ class UR_Logger implements UR_Logger_Interface {
 	 */
 	public function log( $level, $message, $context = array() ) {
 
-		if ( isset( $context['source'])  && $context['source'] !== 'fatal-errors' && ! ur_option_checked( 'user_registration_enable_log', false ) )  {
+		if (
+		isset( $context['source'] )
+		&& ! in_array( $context['source'], array( 'fatal-errors', 'ur_mail_logs' ), true )
+		&& ! ur_option_checked( 'user_registration_enable_log', false )
+		) {
 			return false;
 		}
 
