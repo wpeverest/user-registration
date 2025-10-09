@@ -7,6 +7,7 @@ use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
 use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
 use WPEverest\URMembership\Admin\Repositories\SubscriptionRepository;
 use WPEverest\URMembership\Admin\Services\SubscriptionService;
+use WPEverest\URMembership\Admin\Services\PaymentGatewayLogging;
 
 class OrderService {
 	protected $response, $is_membership_active, $orders_repository, $subscription_repository;
@@ -199,6 +200,21 @@ class OrderService {
 		try {
 			$order_id = $order['order_id'];
 			$user_id  = $order['user_id'];
+			
+			// Get membership type for logging
+			$membership_repository = new MembershipRepository();
+			$membership = $membership_repository->get_single_membership_by_ID( $order['post_id'] );
+			$membership_metas = wp_unslash( json_decode( $membership['meta_value'], true ) );
+			$membership_type = $membership_metas['type'] ?? 'unknown';
+			
+			PaymentGatewayLogging::log_general( 'bank', 'Admin approving bank payment order', 'notice', array(
+				'event_type' => 'admin_approval_initiated',
+				'order_id' => $order_id,
+				'member_id' => $user_id,
+				'amount' => $order['total_amount'] ?? 'unknown',
+				'membership_type' => $membership_type
+			) );
+			
 			$this->orders_repository->wpdb()->query( 'START TRANSACTION' ); // Start the transaction.
 			$subscription_service        = new SubscriptionService();
 			$approve_order = $this->orders_repository->update( $order_id, array( 'status' => 'completed' ) );
@@ -229,6 +245,37 @@ class OrderService {
 
 				$this->subscription_repository->update( $subscription_id, $subscription_data );
 
+				PaymentGatewayLogging::log_general( 'bank', 'Bank payment order approved - Status changed to completed', 'notice', array(
+					'event_type' => 'status_change',
+					'old_status' => 'pending',
+					'new_status' => 'completed',
+					'order_id' => $order_id,
+					'member_id' => $user_id,
+					'membership_type' => $membership_type,
+					'is_upgrade' => $is_upgrading,
+					'is_renewal' => $is_renewing
+				) );
+				
+				PaymentGatewayLogging::log_general( 'bank', 'Subscription status changed to ' . $subscription_data['status'], 'notice', array(
+					'event_type' => 'status_change',
+					'old_status' => 'pending',
+					'new_status' => $subscription_data['status'],
+					'subscription_id' => $subscription_id,
+					'member_id' => $user_id,
+					'membership_type' => $membership_type,
+					'is_upgrade' => $is_upgrading,
+					'is_renewal' => $is_renewing
+				) );
+				
+				PaymentGatewayLogging::log_transaction_success( 'bank', 'Bank payment approved and completed successfully', array(
+					'event_type' => 'admin_approval_completed',
+					'order_id' => $order_id,
+					'subscription_id' => $subscription_id,
+					'member_id' => $user_id,
+					'final_status' => $subscription_data['status'],
+					'membership_type' => $membership_type
+				) );
+
 				$this->orders_repository->wpdb()->query( 'COMMIT' );
 				$this->response['message'] = __( 'Order has been approved successfully.', 'user-registration' );
 				delete_user_meta( $user_id, 'urm_is_upgrading' );
@@ -237,11 +284,23 @@ class OrderService {
 				return $this->response;
 
 			}
+			PaymentGatewayLogging::log_error( 'bank', 'Failed to approve bank payment order', array(
+				'error_code' => 'APPROVAL_UPDATE_FAILED',
+				'order_id' => $order_id,
+				'member_id' => $user_id
+			) );
+			
 			$this->response['status']  = false;
 			$this->response['message'] = __( 'Something went wrong while updating payment status', 'user-registration' );
 
 			return $this->response;
 		} catch ( \Exception $e ) {
+			PaymentGatewayLogging::log_error( 'bank', 'Bank payment approval failed with exception', array(
+				'error_code' => 'APPROVAL_EXCEPTION',
+				'error_message' => $e->getMessage(),
+				'order_id' => $order_id ?? 'unknown',
+				'member_id' => $user_id ?? 'unknown'
+			) );
 
 			// Rollback the transaction if any operation fails.
 			$this->orders_repository->wpdb()->query( 'ROLLBACK' );

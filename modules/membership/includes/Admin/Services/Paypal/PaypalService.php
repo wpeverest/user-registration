@@ -13,6 +13,7 @@ use WPEverest\URMembership\Admin\Services\EmailService;
 use WPEverest\URMembership\Admin\Services\MembersService;
 use WPEverest\URMembership\Admin\Services\OrderService;
 use WPEverest\URMembership\Admin\Services\SubscriptionService;
+use WPEverest\URMembership\Admin\Services\PaymentGatewayLogging;
 
 class PaypalService {
 	/**
@@ -53,6 +54,16 @@ class PaypalService {
 		$redirect                     = ( 'production' === $paypal_options['mode'] ) ? 'https://www.paypal.com/cgi-bin/webscr/?' : 'https://www.sandbox.paypal.com/cgi-bin/webscr/?';
 		$membership_data              = $this->membership_repository->get_single_membership_by_ID( $membership );
 		$membership_metas             = wp_unslash( json_decode( $membership_data['meta_value'], true ) );
+		$membership_type              = $membership_metas['type'] ?? 'unknown'; // free, paid, or subscription
+
+		PaymentGatewayLogging::log_transaction_start( 'paypal', 'Building PayPal payment URL', array(
+			'member_id' => $member_id,
+			'membership_id' => $membership,
+			'member_email' => $member_email,
+			'subscription_id' => $subscription_id,
+			'is_upgrading' => $is_upgrading,
+			'membership_type' => $membership_type
+		) );
 		$membership_amount            = number_format( $membership_metas['amount'] );
 		$is_automatic                 = "automatic" === get_option( 'user_registration_renewal_behaviour', 'automatic' );
 		$discount_amount              = 0;
@@ -148,8 +159,21 @@ class PaypalService {
 		}
 
 		$redirect .= http_build_query( $paypal_args );
+		$final_url = str_replace( ' & amp;', ' & ', $redirect );
 
-		return str_replace( ' & amp;', ' & ', $redirect );
+		PaymentGatewayLogging::log_transaction_success( 'paypal', 'PayPal payment URL built successfully', array(
+			'final_amount' => $final_amount,
+			'transaction_type' => $transaction,
+			'item_name' => $item_name,
+			'currency' => get_option( 'user_registration_payment_currency', 'USD' ),
+			'member_id' => $member_id,
+			'membership_id' => $membership,
+			'subscription_id' => $subscription_id,
+			'payment_mode' => $paypal_options['mode'],
+			'membership_type' => $membership_type
+		) );
+
+		return $final_url;
 	}
 
 	/**
@@ -162,7 +186,6 @@ class PaypalService {
 	 */
 	public function handle_paypal_redirect_response( $params, $payer_id ) {
 		parse_str( $params, $url_params );
-		$logger = ur_get_logger();
 
 		$membership_id                  = $url_params['membership'];
 		$member_id                      = $url_params['member_id'];
@@ -170,6 +193,15 @@ class PaypalService {
 		$membership                     = $this->membership_repository->get_single_membership_by_ID( $membership_id );
 		$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
 		$membership_metas['post_title'] = $membership['post_title'];
+		$membership_type                = $membership_metas['type'] ?? 'unknown'; // free, paid, or subscription
+		
+		PaymentGatewayLogging::log_webhook_received( 'paypal', 'PayPal redirect callback received - User returned from PayPal', array(
+			'webhook_type' => 'redirect_callback',
+			'payer_id' => $payer_id,
+			'membership_id' => $membership_id,
+			'member_id' => $member_id,
+			'membership_type' => $membership_type
+		) );
 		$member_subscription            = $this->members_subscription_repository->get_member_subscription( $member_id );
 		$is_renewing                    = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
 
@@ -187,7 +219,22 @@ class PaypalService {
 				'status'     => $status,
 				'start_date' => date( 'Y-m-d 00:00:00' )
 			) );
-			$logger->notice( 'Return to merchant log' . $member_subscription['ID'], array( 'source' => 'ur-membership-paypal' ) );
+			PaymentGatewayLogging::log_transaction_success( 'paypal', 'Subscription activated successfully from redirect callback', array(
+				'subscription_id' => $member_subscription['ID'],
+				'member_id' => $member_id,
+				'status' => $status,
+				'order_type' => $member_order['order_type'],
+				'trial_status' => $member_order['trial_status'],
+				'payer_id' => $payer_id
+			) );
+			
+			PaymentGatewayLogging::log_general( 'paypal', 'Subscription status changed to ' . $status, 'notice', array(
+				'event_type' => 'status_change',
+				'old_status' => $member_subscription['status'] ?? 'unknown',
+				'new_status' => $status,
+				'subscription_id' => $member_subscription['ID'],
+				'member_id' => $member_id
+			) );
 		}
 
 		if ( $is_renewing ) {
@@ -211,10 +258,25 @@ class PaypalService {
 		$mail_send = $email_service->send_email( $email_data, 'payment_successful' );
 
 		if ( ! $mail_send ) {
-			$logger->notice( 'Email not sent for member: ' . $member_id . 'and subscription: ' . $member_subscription['ID'], array( 'source' => 'ur-membership-paypal' ) );
+			PaymentGatewayLogging::log_transaction_failure( 'paypal', 'Email notification failed', array(
+				'member_id' => $member_id,
+				'subscription_id' => $member_subscription['ID']
+			) );
+		} else {
+			PaymentGatewayLogging::log_transaction_success( 'paypal', 'Email notification sent successfully', array(
+				'member_id' => $member_id,
+				'subscription_id' => $member_subscription['ID']
+			) );
 		}
 		$is_upgrading = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
 		if ( $is_upgrading ) {
+			PaymentGatewayLogging::log_general( 'paypal', 'Processing membership upgrade', 'notice', array(
+				'event_type' => 'upgrade_initiated',
+				'member_id' => $member_id,
+				'subscription_id' => $member_subscription['ID'],
+				'membership_type' => $membership_type
+			) );
+			
 			$this->handle_upgrade_for_paypal( $member_id, $member_subscription['ID'] );
 		}
 
@@ -240,11 +302,41 @@ class PaypalService {
 		$get_user_old_order        = json_decode( get_user_meta( $member_id, 'urm_previous_order_data', true ), true );
 		$new_subscription_data     = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
 		$subscription_service      = new SubscriptionService();
+		
+		PaymentGatewayLogging::log_general( 'paypal', 'Handling PayPal membership upgrade', 'notice', array(
+			'event_type' => 'upgrade_processing',
+			'member_id' => $member_id,
+			'old_subscription_id' => $get_user_old_subscription['ID'] ?? 'unknown',
+			'new_subscription_id' => $subscription_id,
+			'has_delayed_start' => ! empty( $new_subscription_data['delayed_until'] )
+		) );
+		
 		if ( ! empty( $new_subscription_data ) ) {
 			if ( empty( $new_subscription_data['delayed_until'] ) ) {
+				PaymentGatewayLogging::log_general( 'paypal', 'Cancelling previous PayPal subscription', 'notice', array(
+					'event_type' => 'upgrade_cancel_previous',
+					'member_id' => $member_id,
+					'old_subscription_id' => $get_user_old_subscription['subscription_id'] ?? 'unknown'
+				) );
+				
 				$cancel_subscription = $this->cancel_subscription( $get_user_old_order, $get_user_old_subscription );
-				$message             = ! empty( $cancel_subscription['message'] ) ? $cancel_subscription['message'] : __( 'Paypal subscription cancellation failed', 'user-registration' );
-				ur_get_logger()->notice( $message, array( 'source' => 'ur-membership-paypal' ) );
+				
+				if ( ! empty( $cancel_subscription['status'] ) && $cancel_subscription['status'] ) {
+					PaymentGatewayLogging::log_general( 'paypal', 'Previous subscription cancelled successfully', 'notice', array(
+						'event_type' => 'upgrade_cancel_success',
+						'member_id' => $member_id,
+						'old_subscription_id' => $get_user_old_subscription['subscription_id'] ?? 'unknown'
+					) );
+				} else {
+					$message = ! empty( $cancel_subscription['message'] ) ? $cancel_subscription['message'] : __( 'Paypal subscription cancellation failed', 'user-registration' );
+					PaymentGatewayLogging::log_error( 'paypal', 'Previous subscription cancellation failed', array(
+						'error_code' => 'UPGRADE_CANCEL_FAILED',
+						'error_message' => $message,
+						'member_id' => $member_id,
+						'old_subscription_id' => $get_user_old_subscription['subscription_id'] ?? 'unknown'
+					) );
+				}
+				
 				delete_user_meta( $member_id, 'urm_previous_order_data' );
 				delete_user_meta( $member_id, 'urm_previous_subscription_data' );
 				delete_user_meta( $member_id, 'urm_next_subscription_data' );
@@ -252,11 +344,24 @@ class PaypalService {
 			$subscription_data           = $subscription_service->prepare_upgrade_subscription_data( $new_subscription_data['membership'], $new_subscription_data['member_id'], $new_subscription_data );
 			$subscription_data['status'] = 'active';
 			$this->subscription_repository->update( $subscription_id, $subscription_data );
+			
+			PaymentGatewayLogging::log_general( 'paypal', 'New subscription activated after upgrade', 'success', array(
+				'event_type' => 'upgrade_new_activated',
+				'member_id' => $member_id,
+				'new_subscription_id' => $subscription_id,
+				'new_membership_id' => $new_subscription_data['membership'] ?? 'unknown'
+			) );
 		}
 
 		delete_user_meta( $member_id, 'urm_is_upgrading' );
 		delete_user_meta( $member_id, 'urm_is_upgrading_to' );
 		update_user_meta( $member_id, 'urm_is_user_upgraded', 1 );
+		
+		PaymentGatewayLogging::log_transaction_success( 'paypal', 'Membership upgrade completed successfully', array(
+			'event_type' => 'upgrade_completed',
+			'member_id' => $member_id,
+			'new_subscription_id' => $subscription_id
+		) );
 		ur_membership_redirect_now( ur_get_my_account_url() . '/ur-membership', array(
 			'is_upgraded' => 'true',
 			'message'     => __( 'Membership Upgraded successfully', 'user-registration' )
@@ -275,15 +380,31 @@ class PaypalService {
 
 		// Check if $post_data_array has been populated.
 		if ( ! is_array( $data ) || empty( $data ) ) {
+			PaymentGatewayLogging::log_error( 'paypal', 'Empty or invalid IPN data received', array(
+				'error_code' => 'EMPTY_IPN_DATA',
+				'raw_data' => $data
+			) );
 			return;
 		}
-		$logger = ur_get_logger();
-		$logger->notice( 'Paypal IPN Payload: ' . wp_json_encode( $data ), array( 'source' => 'ur-membership-paypal' ) );
+
+		PaymentGatewayLogging::log_webhook_received( 'paypal', 'PayPal IPN callback received', array(
+			'webhook_type' => $data['txn_type'] ?? 'unknown',
+			'txn_id' => $data['txn_id'] ?? 'N/A',
+			'payment_status' => $data['payment_status'] ?? 'N/A',
+			'payer_email' => $data['payer_email'] ?? 'N/A',
+			'mc_gross' => $data['mc_gross'] ?? 'N/A',
+			'mc_currency' => $data['mc_currency'] ?? 'N/A',
+			'custom' => $data['custom'] ?? 'N/A',
+			'raw_data' => json_encode( $data )
+		) );
 
 		$txn_type = $data['txn_type'];
 		if ( ! isset( $data['custom'] ) ) {
-			$logger->notice( esc_html__( 'Custom param not found for subscription.', 'user-registration' ), array( 'source' => 'ur-membership-paypal' ) );
-
+			PaymentGatewayLogging::log_error( 'paypal', 'Custom parameter not found in IPN data', array(
+				'error_code' => 'MISSING_CUSTOM_PARAM',
+				'txn_id' => $data['txn_id'] ?? 'N/A',
+				'txn_type' => $txn_type
+			) );
 			return;
 		}
 
@@ -294,6 +415,7 @@ class PaypalService {
 		$latest_order     = $this->members_orders_repository->get_member_orders( $member_id );
 		$membership       = $this->membership_repository->get_single_membership_by_ID( $membership_id );
 		$membership_metas = wp_unslash( json_decode( $membership['meta_value'], true ) );
+		$membership_type  = $membership_metas['type'] ?? 'unknown'; // free, paid, or subscription
 		$paypal_options   = $membership_metas['payment_gateways']['paypal'];
 
 		$paypal_options['mode']       = get_option( 'user_registration_global_paypal_mode', $paypal_options['mode'] );
@@ -318,41 +440,112 @@ class PaypalService {
 		);
 
 		if ( ! $this->validate_ipn( $payment_mode ) ) {
-			$logger->notice( esc_html__( 'Invalid response from paypal IPN for txn: ', 'user-registration' ) . $data['txn_id'], array( 'source' => 'ur-membership-paypal' ) );
-
+			PaymentGatewayLogging::log_error( 'paypal', 'IPN validation failed - Invalid response from PayPal', array(
+				'error_code' => 'IPN_VALIDATION_FAILED',
+				'txn_id' => $data['txn_id'] ?? 'N/A',
+				'txn_type' => $txn_type,
+				'payment_mode' => $payment_mode,
+				'member_id' => $member_id,
+				'membership_id' => $membership_id
+			) );
 			return;
 		}
+		
+		PaymentGatewayLogging::log_payment_validation( 'paypal', 'IPN validation successful', array(
+			'validation_result' => 'valid',
+			'validation_method' => 'paypal_ipn',
+			'txn_id' => $data['txn_id'] ?? 'N/A',
+			'member_id' => $member_id,
+			'membership_id' => $membership_id,
+			'membership_type' => $membership_type
+		) );
+		
 		if ( empty( $subscription ) ) {
-			$logger->notice( 'Subscription Not Found for Subscription ID:' . $subscription_id, array( 'source' => 'ur-membership-paypal' ) );
-
+			PaymentGatewayLogging::log_error( 'paypal', 'Subscription not found in database', array(
+				'error_code' => 'SUBSCRIPTION_NOT_FOUND',
+				'subscription_id' => $subscription_id,
+				'member_id' => $member_id,
+				'txn_id' => $data['txn_id'] ?? 'N/A'
+			) );
 			return;
 		}
 		if ( 'subscr_cancel' === $txn_type ) { // handle cancel ipn.
-			$logger->notice( 'Cancellation request for Subscription ID:' . $subscription_id . 'from Paypal received.', array( 'source' => 'ur-membership-paypal' ) );
+			PaymentGatewayLogging::log_subscription_cancellation( 'paypal', 'Subscription cancellation IPN received from PayPal', array(
+				'subscription_id' => $subscription_id,
+				'member_id' => $member_id,
+				'cancellation_reason' => 'paypal_ipn',
+				'txn_id' => $data['txn_id'] ?? 'N/A',
+				'subscr_id' => $data['subscr_id'] ?? 'N/A'
+			) );
 			// updating the status to cancel it for sure
-			$this->members_subscription_repository->update(
+			$is_updated = $this->members_subscription_repository->update(
 				$subscription_id,
 				array(
 					'status' => 'canceled',
 				)
 			);
+			
+			if ( $is_updated ) {
+				PaymentGatewayLogging::log_general( 'paypal', 'Subscription status changed to canceled', 'notice', array(
+					'event_type' => 'status_change',
+					'old_status' => $subscription['status'] ?? 'unknown',
+					'new_status' => 'canceled',
+					'subscription_id' => $subscription_id,
+					'member_id' => $member_id
+				) );
+			}
 
 			return;
 		}
 		// return if first ipn received, change the status of order and subscription to complete and active respectively.
 		if ( 'subscr_signup' === $txn_type || 'web_accept' === $txn_type ) {
 
+		PaymentGatewayLogging::log_webhook_processed( 'paypal', 'Processing subscription signup/payment IPN', array(
+			'webhook_type' => $txn_type,
+			'processing_result' => 'started',
+			'member_id' => $member_id,
+			'subscription_id' => $subscription_id,
+			'order_id' => $latest_order['ID'],
+			'txn_id' => $data['txn_id'] ?? 'N/A',
+			'membership_type' => $membership_type
+		) );
+
 			$this->members_orders_repository->update( $latest_order['ID'], array( 'status' => 'completed' ) );
+			
+			PaymentGatewayLogging::log_general( 'paypal', 'Order status changed to completed', 'success', array(
+				'event_type' => 'status_change',
+				'old_status' => $latest_order['status'] ?? 'unknown',
+				'new_status' => 'completed',
+				'order_id' => $latest_order['ID'],
+				'member_id' => $member_id,
+				'amount' => $data['mc_gross'] ?? $amount
+			) );
 
 			if ( 'paid' === $membership_metas['type'] ) {
 				$this->members_subscription_repository->update( $subscription_id, array(
 					'status'     => 'active',
 					'start_date' => date( 'Y-m-d 00:00:00' )
 				) );
+				
+				PaymentGatewayLogging::log_general( 'paypal', 'Subscription status changed to active', 'success', array(
+					'event_type' => 'status_change',
+					'old_status' => $subscription['status'] ?? 'unknown',
+					'new_status' => 'active',
+					'subscription_id' => $subscription_id,
+					'member_id' => $member_id,
+					'membership_type' => 'paid'
+				) );
 			} else {
 				$this->members_subscription_repository->update( $subscription_id, array(
 					'subscription_id' => sanitize_text_field( $data['subscr_id'] ),
 					'start_date'      => date( 'Y-m-d 00:00:00' )
+				) );
+				
+				PaymentGatewayLogging::log_general( 'paypal', 'Subscription updated with PayPal subscription ID', 'info', array(
+					'event_type' => 'subscription_update',
+					'subscription_id' => $subscription_id,
+					'paypal_subscr_id' => $data['subscr_id'] ?? 'N/A',
+					'member_id' => $member_id
 				) );
 			}
 			$order_detail = $this->orders_repository->get_order_detail( $latest_order['ID'] );
@@ -364,7 +557,10 @@ class PaypalService {
 			$email_data ['order'] = $order_detail;
 			$email_service->send_email( $email_data, 'payment_successful' );
 
-			$logger->notice( 'Subscriber Signup IPN successful for paid membership member ID: ' . $member_id, array( 'source' => 'ur-membership-paypal' ) );
+			PaymentGatewayLogging::log_transaction_success( 'paypal', 'Subscriber signup IPN successful', array(
+				'member_id' => $member_id,
+				'subscription_id' => $subscription_id
+			) );
 
 			return;
 		}
@@ -377,7 +573,10 @@ class PaypalService {
 				'status'     => 'active',
 				'start_date' => date( 'Y-m-d 00:00:00' )
 			) );
-			$logger->notice( 'Subscriber First IPN Successful for member: ' . $member_id, array( 'source' => 'ur-membership-paypal' ) );
+			PaymentGatewayLogging::log_transaction_success( 'paypal', 'Subscriber first IPN successful', array(
+				'member_id' => $member_id,
+				'subscription_id' => $subscription_id
+			) );
 
 			return;
 		}
@@ -392,7 +591,10 @@ class PaypalService {
 		}
 
 		if ( ! empty( $error ) ) {
-			$logger->notice( $error . ' for Subscription ID:' . $subscription_id, array( 'source' => 'ur-membership-paypal' ) );
+			PaymentGatewayLogging::log_transaction_failure( 'paypal', $error, array(
+				'subscription_id' => $subscription_id,
+				'member_id' => $member_id
+			) );
 			$this->members_orders_repository->update( $latest_order['ID'], array( 'status' => 'failed' ) );
 
 			return;
@@ -417,7 +619,10 @@ class PaypalService {
 			$order_data['orders_data']['subscription_id'] = $subscription_id;
 
 			$order_id = $order_repository->create( $order_data );
-			$logger->notice( "New order ID $order_id created: " . json_encode( $order_data ), array( 'source' => 'ur-membership-paypal' ) );
+			PaymentGatewayLogging::log_transaction_success( 'paypal', 'New order created', array(
+				'order_id' => $order_id,
+				'member_id' => $member_id
+			) );
 
 			if ( $order_id ) {
 				// update subscription
@@ -441,7 +646,10 @@ class PaypalService {
 			// Verify further if eot is ever received for time specified subscriptions
 		}
 		if ( 'completed' === $payment_status ) {
-			$logger->notice( 'Successfully completed the payment. Payment ID:' . $subscription_id, array( 'source' => 'ur-membership-paypal' ) );
+			PaymentGatewayLogging::log_transaction_success( 'paypal', 'Payment completed successfully', array(
+				'subscription_id' => $subscription_id,
+				'member_id' => $member_id
+			) );
 			$this->members_orders_repository->update(
 				$latest_order['ID'],
 				array(
@@ -452,6 +660,13 @@ class PaypalService {
 		}
 		$is_upgrading = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
 		if ( $is_upgrading ) {
+			PaymentGatewayLogging::log_general( 'paypal', 'Processing membership upgrade for recurring payment', 'notice', array(
+				'event_type' => 'upgrade_initiated',
+				'member_id' => $member_id,
+				'subscription_id' => $subscription_id,
+				'payment_type' => 'recurring'
+			) );
+			
 			$this->handle_upgrade_for_paypal( $member_id, $subscription_id );
 		}
 		$is_renewing = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
@@ -517,7 +732,7 @@ class PaypalService {
 		$login_request = self::login_paypal( $url, $client_id, $client_secret );
 		if ( 200 !== $login_request['status_code'] ) {
 			$message = esc_html__( 'Invalid response from paypal, check Client ID or Secret.', 'user-registration' );
-			ur_get_logger()->notice( $message, array( 'source' => 'ur-membership-paypal' ) );
+			PaymentGatewayLogging::log_transaction_failure( 'paypal', $message );
 
 			return array(
 				'status'  => false,
@@ -527,7 +742,7 @@ class PaypalService {
 
 		if ( empty( $subscription['subscription_id'] ) ) {
 			$message = esc_html__( 'Paypal Subscription ID not present, please contact your administrator.', 'user-registration' );
-			ur_get_logger()->notice( $message, array( 'source' => 'ur-membership-paypal' ) );
+			PaymentGatewayLogging::log_transaction_failure( 'paypal', $message );
 
 			return array(
 				'status'  => false,
@@ -560,20 +775,25 @@ class PaypalService {
 		$status_code = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
 
 		if ( curl_errno( $ch ) ) {
-			ur_get_logger()->notice( curl_error( $ch ), array( 'source' => 'ur-membership-paypal' ) );
+			PaymentGatewayLogging::log_transaction_failure( 'paypal', 'cURL error: ' . curl_error( $ch ) );
 		}
 		curl_close( $ch );
-		ur_get_logger()->notice( 'Paypal Response Status Code: ' . $status_code, array( 'source' => 'ur-membership-paypal' ) );
+		
+		PaymentGatewayLogging::log_api_response( 'paypal', 'PayPal cancellation API response', array(
+			'status_code' => $status_code,
+			'response' => $response
+		) );
+		
 		if ( 204 === $status_code ) {
 			$message = esc_html__( 'Subscription successfully canceled from paypal.', 'user-registration' );
-			ur_get_logger()->notice( $message, array( 'source' => 'ur-membership-paypal' ) );
+			PaymentGatewayLogging::log_subscription_cancellation( 'paypal', $message );
 
 			return array(
 				'status' => true,
 			);
 		}
 		$message = esc_html__( 'Subscription cancellation failed from Paypal.', 'user-registration' );
-		ur_get_logger()->notice( $response, array( 'source' => 'ur-membership-paypal' ) );
+		PaymentGatewayLogging::log_transaction_failure( 'paypal', $message, array( 'response' => $response ) );
 
 		return array(
 			'status'  => false,
@@ -595,7 +815,7 @@ class PaypalService {
 		$login_request = self::login_paypal( $url, $client_id, $client_secret );
 		if( 200 !== $login_request[ 'status_code' ] ) {
 			$message = esc_html__( 'Invalid response from paypal, check Client ID or Secret.', 'user-registration' );
-			ur_get_logger()->notice( $message, array( 'source' => 'ur-membership-paypal' ) );
+			PaymentGatewayLogging::log_transaction_failure( 'paypal', $message );
 
 			return array(
 				'status'  => false,
@@ -627,21 +847,25 @@ class PaypalService {
 		$status_code = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
 
 		if ( curl_errno( $ch ) ) {
-			ur_get_logger()->notice( curl_error( $ch ), array( 'source' => 'ur-membership-paypal' ) );
+			PaymentGatewayLogging::log_transaction_failure( 'paypal', 'cURL error: ' . curl_error( $ch ) );
 		}
 		curl_close( $ch );
-		ur_get_logger()->notice( 'Paypal Response Status Code: ' . $status_code, array( 'source' => 'ur-membership-paypal' ) );
+		
+		PaymentGatewayLogging::log_api_response( 'paypal', 'PayPal reactivation API response', array(
+			'status_code' => $status_code,
+			'response' => $response
+		) );
 
 		if ( 204 === $status_code ) {
 			$message = esc_html__( 'Subscription successfully reactivated from paypal.', 'user-registration' );
-			ur_get_logger()->notice( $message, array( 'source' => 'ur-membership-paypal' ) );
+			PaymentGatewayLogging::log_subscription_reactivation( 'paypal', $message );
 
 			return array(
 				'status' => true,
 			);
 		}
 		$message = esc_html__( 'Subscription reactivation failed from Paypal.', 'user-registration' );
-		ur_get_logger()->notice( $message, array( 'source' => 'ur-membership-paypal' ) );
+		PaymentGatewayLogging::log_transaction_failure( 'paypal', $message );
 
 		return array(
 			'status'  => false,
@@ -657,8 +881,7 @@ class PaypalService {
 	 * @return bool
 	 */
 	public function validate_ipn( $payment_mode ) {
-		$logger = ur_get_logger();
-		$logger->notice( 'Checking IPN response is valid' );
+		PaymentGatewayLogging::log_general( 'paypal', 'Checking IPN response validity', 'info' );
 		// Get received values from post data.
 		$validate_ipn        = wp_unslash( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$validate_ipn['cmd'] = '_notify-validate';
@@ -675,21 +898,22 @@ class PaypalService {
 		$remote_post_url = ( ! empty( $payment_mode ) && 'production' === $payment_mode ) ? 'https://ipnpb.paypal.com/cgi-bin/webscr' : 'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr';
 		// Post back to get a response.
 		$response = wp_safe_remote_post( $remote_post_url, $params );
-		$logger   = ur_get_logger();
-		$logger->notice( 'IPN Response: ' . print_r( $response, true ) );
+		
+		PaymentGatewayLogging::log_api_response( 'paypal', 'IPN validation response received', array(
+			'status_code' => $response['response']['code'] ?? 0,
+			'response_body' => $response['body'] ?? ''
+		) );
+		
 		// Check to see if the request was valid.
 		if ( ! is_wp_error( $response ) && $response['response']['code'] >= 200 && $response['response']['code'] < 300 && strstr( $response['body'], 'VERIFIED' ) ) {
-			$logger = ur_get_logger();
-			$logger->notice( 'Received valid response from PayPal IPN' );
-
+			PaymentGatewayLogging::log_general( 'paypal', 'Received valid response from PayPal IPN', 'info' );
 			return true;
 		}
-		$logger = ur_get_logger();
-		$logger->notice( 'Received invalid response from PayPal IPN' );
-		if ( is_wp_error( $response ) ) {
-			$logger = ur_get_logger();
-			$logger->notice( 'Error response: ' . $response->get_error_message() );
-		}
+		
+		PaymentGatewayLogging::log_transaction_failure( 'paypal', 'Received invalid response from PayPal IPN', array(
+			'status_code' => $response['response']['code'] ?? 0,
+			'error' => is_wp_error( $response ) ? $response->get_error_message() : 'Invalid response'
+		) );
 
 		return false;
 	}
