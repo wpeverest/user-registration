@@ -1,3 +1,8 @@
+= 4.4.5    - 09/10/2025 =
+* Fix      - Duplicate renewal setting.
+* Fix      - Reset Password smart tag slug.
+* Fix      - Dynamic duration for membership field.
+
 = 4.4.4    - 08/10/2025 =
 * Tweak    - Design changes on Site Assistant.
 * Fix      - Log mail send error even if logging is disabled.
