@@ -565,10 +565,15 @@ class UR_Smart_Tags {
 						$content                 = str_replace( '{{' . $tag . '}}', wp_kses_post( $passwordless_login_link ), $content );
 						break;
 					case 'ur_reset_pass_slug':
+						$reset_password_page = get_option( 'user_registration_reset_password_page_id', false );
 						$lost_password_page = get_option( 'user_registration_lost_password_page_id', false );
 						$reset_pass_slug    = '';
-
-						if ( $lost_password_page ) {
+						if( $reset_password_page ) {
+							$reset_password_url = get_permalink( $reset_password_page );
+							$ur_reset_pass      = ( get_home_url() !== $reset_password_url ) ? $reset_password_url : wp_lostpassword_url();
+							$reset_pass_slug   = str_replace( get_home_url() . '/', '', $ur_reset_pass );
+						}
+						else if ( $lost_password_page ) {
 							$lost_password_url = get_permalink( $lost_password_page );
 							$ur_lost_pass      = ( get_home_url() !== $lost_password_url ) ? $lost_password_url : wp_login_url();
 							$reset_pass_slug   = str_replace( get_home_url() . '/', '', $ur_lost_pass );

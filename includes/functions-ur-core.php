@@ -7722,6 +7722,17 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'field-key'=> 'lost-password'
 							),
 							array(
+								'title'    => __( 'Reset Password Page', 'user-registration' ),
+								'desc'     => __( 'Select the page where your password reset form is placed.', 'user-registration' ),
+								'id'       => 'user_registration_reset_password_page_id',
+								'type'     => 'single_select_page',
+								'default'  => '',
+								'class'    => 'ur-enhanced-select-nostd',
+								'css'      => '',
+								'desc_tip' => true,
+								'field-key'=> 'lost-password'
+							),
+							array(
 								'title'    => __( 'Registration URL', 'user-registration' ),
 								'desc'     => __( 'Set the URL of the registration page users should be sent to.', 'user-registration' ),
 								'id'       => 'user_registration_general_setting_registration_url_options',
