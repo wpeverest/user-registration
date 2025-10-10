@@ -437,7 +437,7 @@ class StripeService {
 
 				$this->sendEmail( $member_order['ID'], $member_subscription, $membership_metas, $member_id, $response );
 				$response['subscription'] = $subscription;
-				$response['message']      = __( 'New member has been successfully created with successful stripe subscription.' );
+				$response['message']      = __( 'New member has been successfully created with successful stripe subscription.', 'user-registration' );
 				$response['status']       = true;
 			}
 			$logger->notice( '-------------------------------------------- Stripe Subscription process ended for ' . $member_id . ' --------------------------------------------', array( 'source' => 'ur-membership-stripe' ) );
@@ -506,7 +506,7 @@ class StripeService {
 		$mail_send = $email_service->send_email( $email_data, 'payment_successful' );
 
 		if ( ! $mail_send ) {
-			$logger->notice( __( 'Payment Mail could not be sent after successful stripe payment ', '"user-registration' ), array( 'source' => 'ur-membership-stripe' ) );
+			$logger->notice( __( 'Payment Mail could not be sent after successful stripe payment ', 'user-registration' ), array( 'source' => 'ur-membership-stripe' ) );
 		}
 
 		return array(
