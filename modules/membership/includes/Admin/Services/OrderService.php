@@ -42,7 +42,11 @@ class OrderService {
 		}
 		$creator = $is_admin ? 'admin' : 'member';
 		$type = $is_renewal ? 'Renewal' : (!empty($upgrade_details) ? 'Upgrade' : '');
-		$note = sprintf(__('%s created order for %s of %s', 'user-registration'), $creator , $type , $membership['post_title']);
+		if ( ! empty( $type ) ) {
+			$note = sprintf(__('%s created order for %s of %s', 'user-registration'), $creator , $type , $membership['post_title']);
+		} else {
+			$note = sprintf(__('%s created an order for %s', 'user-registration'), $creator, $membership['post_title'] );
+		}
 
 		$orders_data = array(
 			'item_id'         => absint( $data['membership_data']['membership'] ),
