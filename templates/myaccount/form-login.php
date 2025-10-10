@@ -267,7 +267,10 @@ if( isset($_GET['page']) && 'user-registration-login-forms' === $_GET['page'] ) 
 								?>
 								<div data-field="lost-password"
 									 class="user-registration-LostPassword lost_password <?php echo esc_attr( $admin_class ); ?>">
-									<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php echo esc_html( $labels['lost_your_password'] ); ?></a>
+									<label
+										class="user-registration-form__label user-registration-form__label-for-checkbox inline">
+										<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php echo esc_html( $labels['lost_your_password'] ); ?></a>
+									</label>
 								</div>
 								<?php
 							}

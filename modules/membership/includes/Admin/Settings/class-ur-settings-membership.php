@@ -128,7 +128,7 @@ if ( ! class_exists( 'UR_Settings_Membership ' ) ) :
 										'manual' => __('Renew Manually', 'user-registration')
 									),
 									'desc_tip' => true,
-								),
+								)
 							),
 						),
 					),

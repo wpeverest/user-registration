@@ -107,13 +107,11 @@ jQuery(function ($) {
 					$this
 						.closest(".user-registration-profile-header")
 						.find(".ur-new-profile-image-message")
-						.attr("style", "display: none")
-					;
+						.attr("style", "display: none");
 					$this
 						.closest(".user-registration-profile-header")
 						.find(".ur-profile-image-updated-message")
-						.attr("style", "display: block")
-					;
+						.attr("style", "display: block");
 				}
 			});
 		},
@@ -244,17 +242,15 @@ jQuery(function ($) {
 			$(this)
 				.closest(".user-registration-profile-header")
 				.find(".ur-new-profile-image-message")
-				.attr("style", "display: block")
-			;
+				.attr("style", "display: block");
 			$(this)
 				.closest(".user-registration-profile-header")
 				.find(".ur-profile-image-updated-message")
-				.attr("style", "display: none")
-			;
+				.attr("style", "display: none");
 			$(this)
-				.closest('.user-registration-profile-header')
-				.find('.user_registration_profile_picture_upload')
-				.trigger('click');
+				.closest(".user-registration-profile-header")
+				.find(".user_registration_profile_picture_upload")
+				.trigger("click");
 		}
 	);
 

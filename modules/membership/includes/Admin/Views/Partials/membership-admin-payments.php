@@ -334,20 +334,6 @@ function render_bank_settings( $membership_details ) {
 					<?php echo esc_html__( 'Bank Transfer Settings', 'user-registration' ); ?>
 				</a>
 			</div>
-			<?php
-			if ( false ):
-				?>
-				<?php
-				wp_editor(
-					$bank_details['content'] ?? '<p>Please transfer the amount to the following bank detail.</p><p>Bank Name: XYZ</p><p>Bank Acc.No: ##############</p>',
-					'bank_transfer_field',
-					array(
-						'textarea_name' => 'bank_transfer_field',
-						'textarea_rows' => 50,
-					)
-				);
-			endif;
-			?>
 		</div>
 	</div>
 	<?php

@@ -36,4 +36,19 @@ jQuery(function ($) {
 				});
 			});
 	});
+	$(".urm-per-user-notice").each(function () {
+		var notice_id = $(this).data('notice-id'),
+			notice_type = $(this).data('notice-type');
+
+		$(document)
+			.on('click', '.urm-per-user-notice .notice-dismiss', function(e) {
+				e.preventDefault();
+				$.post(ur_notice_params.ajax_url, {
+					action: 'user_registration_dismiss_notice_per_user',
+					notice_id: notice_id,
+					notice_type: notice_type,
+					security: ur_notice_params[notice_type + '_nonce'],
+				});
+			});
+	});
 });

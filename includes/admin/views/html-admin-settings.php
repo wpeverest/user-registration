@@ -162,7 +162,7 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 							 */
 							$user_registration_setting_save_label = apply_filters( 'user_registration_setting_save_label', esc_attr__( 'Save Changes', 'user-registration' ) );
 							?>
-							<input name="save" class="<?php echo implode( ' ', apply_filters( 'user_registration_setting_save_button_classes', array( 'button', 'button-primary' ) ) ) ?>" type="submit" value="<?php echo esc_attr( $user_registration_setting_save_label ); ?>" />
+							<input name="save" class="<?php echo implode( ' ', apply_filters( 'user_registration_setting_save_button_classes', array( 'button-primary' ) ) ) ?>" type="submit" value="<?php echo esc_attr( $user_registration_setting_save_label ); ?>" />
 						<?php endif; ?>
 						<input type="hidden" name="subtab" id="last_tab" />
 						<?php wp_nonce_field( 'user-registration-settings' ); ?>
@@ -172,7 +172,7 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 			<?php
 			if ( ! $is_pro_active || ! $quick_setup_completed ) {
 				?>
-				<div class="user-registration-settings-sidebar-container" id="user-registration-settings-sidebar">
+				<div class="user-registration-settings-sidebar-container  <?php echo esc_attr( !$is_settings_sidebar_enabled ? 'ur-d-none' : '' ); ?> " id="user-registration-settings-sidebar">
 					<?php
 					if ( ! $quick_setup_completed ) {
 						?>

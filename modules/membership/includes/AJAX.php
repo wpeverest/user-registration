@@ -11,7 +11,6 @@
  */
 
 namespace WPEverest\URMembership;
-
 use WPEverest\URMembership\Admin\Controllers\MembersController;
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersOrderRepository;
@@ -57,7 +56,7 @@ class AJAX {
 			'delete_membership'            => false,
 			'update_membership_status'     => false,
 			'create_member'                => false,
-			'update_member'                => false,
+			'edit_member'                  => false,
 			'delete_members'               => false,
 			'confirm_payment'              => true,
 			'create_stripe_subscription'   => true,
@@ -152,7 +151,6 @@ class AJAX {
 			$data             = array_merge( $data, $ur_authorize_net );
 			$pg_data          = $payment_service->build_response( $data );
 		}
-
 		if ( $response['status'] ) {
 			$form_response = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
 
@@ -316,27 +314,51 @@ class AJAX {
 			}
 
 			$meta_data = json_decode( $data["post_meta_data"]['ur_membership']["meta_value"], true );
-			if ( ! empty( $meta_data['upgrade_settings'] ) && ! empty( $old_membership_data['upgrade_settings'] ) && $meta_data['upgrade_settings']['upgrade_path'] !== $old_membership_data['upgrade_settings']['upgrade_path'] ) {
-				$transient_key          = 'urm_upgradable_memberships_for_' . $updated_ID;
-				$upgradable_memberships = $membership->get_upgradable_membership( $updated_ID );
-				set_transient( $transient_key, $upgradable_memberships, 5 * MINUTE_IN_SECONDS );
-			}
 
-			if ( $is_stripe_enabled && "free" !== $meta_data["type"] ) {
 
-				//check if any significant value has been changed  , trial not included since trial value change does not affect the type of product and price in stripe, instead handled during subscription
-				$should_create_new_product = ( $old_membership_data['amount'] !== $meta_data['amount'] || ( isset( $old_membership_data["subscription"] ) && $old_membership_data["subscription"]["value"] !== $meta_data["subscription"]["value"] ) || ( isset( $old_membership_data["subscription"] ) && $old_membership_data["subscription"]["duration"] !== $meta_data["subscription"]["duration"] ) );
+			if ( $is_stripe_enabled && 'free' !== $meta_data['type'] ) {
+				$stripe_service       = new StripeService();
+				$check_stripe_product = $stripe_service->check_exists_product_in_stripe( $meta_data['payment_gateways']['stripe']['product_id'] );
 
-				$meta_data = json_decode( $data["post_meta_data"]['ur_membership']["meta_value"], true );
+				if ( isset( $check_stripe_product['success'] ) && true === $check_stripe_product['success'] ) {
+					$check_stripe_price = $stripe_service->check_price_exists_in_stripe( $meta_data['payment_gateways']['stripe']['price_id'] );
 
-				if ( $should_create_new_product || empty( $meta_data["payment_gateways"]["stripe"]["product_id"] ) ) {
-					$stripe_service           = new StripeService();
-					$data["membership_id"]    = $updated_ID;
-					$stripe_price_and_product = $stripe_service->create_stripe_product_and_price( $data["post_data"], $meta_data, $should_create_new_product );
+					if ( isset( $check_stripe_price['success'] ) && true !== $check_stripe_price['success'] ) {
+						$stripe_existing_product_price = $stripe_service->create_stripe_price_for_existing_product( $meta_data['payment_gateways']['stripe']['product_id'], $meta_data );
 
+						if ( isset( $stripe_existing_product_price['success'] ) && ur_string_to_bool( $stripe_existing_product_price['success'] ) ) {
+							$meta_data['payment_gateways']['stripe']['price_id'] = $stripe_existing_product_price['price']->id;
+							update_post_meta( $updated_ID, $data['post_meta_data']['ur_membership']['meta_key'], wp_json_encode( $meta_data ) );
+						} else {
+							wp_send_json_error(
+								array(
+									'message' => $stripe_price_and_product['message'],
+								)
+							);
+						}
+					}
+
+					if ( isset( $old_membership_data['type'] ) && isset( $meta_data['type'] ) && ( $old_membership_data['type'] !== $meta_data['type'] ) ) {
+						$check_stripe_price = $stripe_service->check_price_exists_in_stripe( $meta_data['payment_gateways']['stripe']['price_id'] );
+						if ( isset( $check_stripe_price['success'] ) && true === $check_stripe_price['success'] ) {
+							$stripe_existing_product_price = $stripe_service->create_stripe_price_for_existing_product( $meta_data['payment_gateways']['stripe']['product_id'], $meta_data );
+							if ( isset( $stripe_existing_product_price['success'] ) && ur_string_to_bool( $stripe_existing_product_price['success'] ) ) {
+								$meta_data['payment_gateways']['stripe']['price_id'] = $stripe_existing_product_price['price']->id;
+								update_post_meta( $updated_ID, $data['post_meta_data']['ur_membership']['meta_key'], wp_json_encode( $meta_data ) );
+							} else {
+								wp_send_json_error(
+									array(
+										'message' => $stripe_price_and_product['message'],
+									)
+								);
+							}
+						}
+					}
+				} else {
+					$stripe_price_and_product = $stripe_service->create_stripe_product_and_price( $data['post_data'], $meta_data, false );
 					if ( ur_string_to_bool( $stripe_price_and_product['success'] ) ) {
-						$meta_data["payment_gateways"]["stripe"]["product_id"] = $stripe_price_and_product['price']->product;
-						$meta_data["payment_gateways"]["stripe"]["price_id"]   = $stripe_price_and_product['price']->id;
+						$meta_data['payment_gateways']['stripe']['product_id'] = $stripe_price_and_product['price']->product;
+						$meta_data['payment_gateways']['stripe']['price_id']   = $stripe_price_and_product['price']->id;
 						update_post_meta( $updated_ID, $data['post_meta_data']['ur_membership']['meta_key'], wp_json_encode( $meta_data ) );
 					} else {
 						wp_send_json_error(
@@ -347,6 +369,34 @@ class AJAX {
 					}
 				}
 
+				// check if any significant value has been changed  , trial not included since trial value change does not affect the type of product and price in stripe, instead handled during subscription
+				$old_subscription = isset( $old_membership_data['subscription'] ) ? $old_membership_data['subscription'] : array();
+				$new_subscription = isset( $meta_data['subscription'] ) ? $meta_data['subscription'] : array();
+
+				$should_create_new_product = (
+					( isset( $old_membership_data['amount'] ) && $old_membership_data['amount'] !== $meta_data['amount'] ) ||
+					( isset( $old_subscription['value'] ) && isset( $new_subscription['value'] ) && $old_subscription['value'] !== $new_subscription['value'] ) ||
+					( isset( $old_subscription['duration'] ) && isset( $new_subscription['duration'] ) && $old_subscription['duration'] !== $new_subscription['duration'] )
+				);
+
+				$meta_data = json_decode( $data['post_meta_data']['ur_membership']['meta_value'], true );
+
+				if ( $should_create_new_product || empty( $meta_data['payment_gateways']['stripe']['product_id'] ) ) {
+					$data['membership_id']    = $updated_ID;
+					$stripe_price_and_product = $stripe_service->create_stripe_product_and_price( $data['post_data'], $meta_data, $should_create_new_product );
+
+					if ( ur_string_to_bool( $stripe_price_and_product['success'] ) ) {
+						$meta_data['payment_gateways']['stripe']['product_id'] = $stripe_price_and_product['price']->product;
+						$meta_data['payment_gateways']['stripe']['price_id']   = $stripe_price_and_product['price']->id;
+						update_post_meta( $updated_ID, $data['post_meta_data']['ur_membership']['meta_key'], wp_json_encode( $meta_data ) );
+					} else {
+						wp_send_json_error(
+							array(
+								'message' => $stripe_price_and_product['message'],
+							)
+						);
+					}
+				}
 			}
 			$response = array(
 				'membership_id' => $updated_ID,
@@ -362,7 +412,6 @@ class AJAX {
 				)
 			);
 		}
-
 	}
 
 	/**
@@ -606,6 +655,44 @@ class AJAX {
 			);
 		} else {
 			$message = isset( $response['message'] ) ? $response['message'] : esc_html__( 'Sorry! There was an unexpected error while saving the members data . ', 'user-registration' );
+			wp_send_json_error(
+				array(
+					'message' => $message,
+				)
+			);
+		}
+
+	}
+
+	/**
+	 * Create edit member from backend.
+	 *
+	 * @return void
+	 */
+	public static function edit_member() {
+
+		if ( ! current_user_can( 'edit_users' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Sorry, You do not have permission to create users', 'user-registration' ),
+				)
+			);
+		}
+		ur_membership_verify_nonce( 'ur_edit_members' );
+		$data               = isset( $_POST['members_data'] ) ? (array) json_decode( wp_unslash( $_POST['members_data'] ), true ) : array();
+		$members_controller = new MembersController( new MembersRepository(), new OrdersRepository(), new SubscriptionRepository() );
+
+		$response = $members_controller->update_members_admin( $data );
+
+		if ( $response['status'] ) {
+			wp_send_json_success(
+				array(
+					'member_id' => $response['member_id'],
+					'message'   => esc_html__( 'Member has been successfully updated. ', 'user-registration' ),
+				)
+			);
+		} else {
+			$message = isset( $response['message'] ) ? $response['message'] : esc_html__( 'Sorry! There was an unexpected error while updating the members data. ', 'user-registration' );
 			wp_send_json_error(
 				array(
 					'message' => $message,
@@ -909,7 +996,7 @@ class AJAX {
 				array(
 					'message' => $message
 				)
-				);
+			);
 		}
 	}
 
@@ -1013,7 +1100,7 @@ class AJAX {
 			wp_send_json_error( __( 'Wrong request.', 'user-registration' ) );
 		}
 		if ( ! in_array( $_POST['type'], array(
-			'user_registration_member_registration_page_id',
+				'user_registration_member_registration_page_id',
 			'user_registration_thank_you_page_id'
 		) ) ) {
 			wp_send_json_error( __( 'Invalid post type', 'user-registration' ) );
@@ -1087,12 +1174,7 @@ class AJAX {
 				);
 			}
 		}
-		$transient_key = 'urm_upgradable_memberships_for_' . $membership_id;
-		$cached_data   = get_transient( $transient_key );
 
-		if ( false !== $cached_data ) {
-			wp_send_json_success( $cached_data );
-		}
 
 		$membership_service     = new MembershipService();
 		$upgradable_memberships = $membership_service->get_upgradable_membership( $membership_id );
@@ -1105,7 +1187,6 @@ class AJAX {
 				404
 			);
 		}
-		set_transient( $transient_key, $upgradable_memberships, 5 * MINUTE_IN_SECONDS );
 		wp_send_json_success(
 			$upgradable_memberships
 		);

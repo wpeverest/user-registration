@@ -8,8 +8,8 @@ module.exports = (env, argv) => {
 		entry: {
 			welcome: "./src/welcome/index.js",
 			dashboard: "./src/dashboard/index.js",
-			formblock: "./assets/js/admin/gutenberg/form-block.js",
 			blocks: "./src/blocks/index.js",
+			formblock: "./assets/js/admin/gutenberg/form-block.js",
 			form_templates: "./src/form-templates/index.js",
 			"divi-builder": "./src/widgets/divi-builder/index.js"
 		},

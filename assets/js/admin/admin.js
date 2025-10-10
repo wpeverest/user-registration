@@ -44,6 +44,7 @@ jQuery(function ($) {
 		} else {
 			$(".ur-fields-not-found").show();
 		}
+		$(this).closest(".ur-tab-contents").scrollTop(0);
 	});
 
 	//Bind UI Actions for locked fields
@@ -784,6 +785,9 @@ jQuery(function ($) {
 					.closest(".user-registration-login-form-global-settings")
 					.show()
 					.css("display", "block");
+				$("#user_registration_reset_password_page_id")
+					.closest('.user-registration-login-form-global-settings')
+					.css("display", "block");
 				$("#user_registration_label_lost_your_password")
 					.closest(".user-registration-login-form-global-settings")
 					.show()
@@ -791,6 +795,9 @@ jQuery(function ($) {
 			} else {
 				$("#user_registration_lost_password_page_id")
 					.closest(".user-registration-login-form-global-settings")
+					.hide();
+				$("#user_registration_reset_password_page_id")
+					.closest('.user-registration-login-form-global-settings')
 					.hide();
 				$("#user_registration_label_lost_your_password")
 					.closest(".user-registration-login-form-global-settings")
@@ -1180,7 +1187,8 @@ jQuery(function ($) {
 
 	var check_email_confirmation_disabled = function () {
 		var email_confirmation_disabled =
-			user_registration_form_builder_data.email_confirmation_disabled;
+			(typeof ur_login_form_params !== 'undefined' && ur_login_form_params.email_confirmation_disabled) ||
+			(typeof user_registration_form_builder_data !== 'undefined' && user_registration_form_builder_data.email_confirmation_disabled);
 		if (email_confirmation_disabled === "yes") {
 			var login_options = $(
 				"#user_registration_form_setting_login_options"
@@ -1190,10 +1198,9 @@ jQuery(function ($) {
 			form_row.find("#ur-rar-url-notice").remove();
 			if (
 				login_options.length == 1 &&
-				(
-					login_options.val() == "email_confirmation"
-					|| login_options.val() == "admin_approval_after_email_confirmation"
-				)
+				(login_options.val() == "email_confirmation" ||
+					login_options.val() ==
+						"admin_approval_after_email_confirmation")
 			) {
 				show_email_confirmation_disabled_notice(form_row);
 			}
@@ -1267,6 +1274,13 @@ jQuery(function ($) {
 			user_registration_form_builder_data.i18n_email_confirmation_disabled_notice +
 			"</div>";
 		form_row.find(".ur-settings-field").append(notice);
+	};
+	var show_email_confirmation_disabled_notice = function (form_row) {
+		var notice =
+			' <div id="ur-rar-url-notice" style="padding:10px;  border: 1px solid #c3c4c7; border-left-color: #ffa900; border-left-width: 4px; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04)">' +
+			user_registration_form_builder_data.i18n_email_confirmation_disabled_notice +
+			"</div>";
+		form_row.append(notice);
 	};
 	/**
 	 * Prevent negative input for Waiting Period Before Redirection setting.
@@ -2105,4 +2119,7 @@ jQuery(function ($) {
 	$(".ur-admin-page-topnav").on("click", ".ur-nav-link", function () {
 		setTimeout(updateActive, 0);
 	});
+	$('li.toplevel_page_user-registration > a').attr('href', 'admin.php?page=user-registration');
+
 });
+

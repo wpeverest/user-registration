@@ -57,7 +57,6 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * @var array of strings
 	 */
 	private $errors = array();
-
 	/**
 	 * Plugin Api Key.
 	 *
@@ -87,7 +86,6 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 
 		add_filter( 'block_local_requests', '__return_false' );
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
-
 		// Include required files.
 		include_once __DIR__ . '/admin/updater/class-ur-plugin-updater-api.php';
 	}
@@ -126,17 +124,18 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 			return false;
 		}
 
+		if( false !== get_option( 'user-registration_license_key', false ) && ! empty( $_REQUEST[ 'download_user_registration_pro' ] ) ) {
+			$this->install_extension();
+			wp_redirect( remove_query_arg( array( 'deactivated_license', $this->plugin_slug . '_deactivate_license' ), add_query_arg( 'activated_license', $this->plugin_slug ) ) );
+			exit;
+		}
+
 		if ( isset( $_POST['ur_license_nonce'] ) ) {
 			if ( ! wp_verify_nonce( $_POST['ur_license_nonce'], '_ur_license_nonce' ) ) {
 				return;
 			}
-			if ( ! empty( $_POST[ $this->plugin_slug . '_license_key' ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-				$this->activate_license_request();
-			} elseif ( ! empty( $_POST['download_user_registration_pro'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-				$this->install_extension();
-				wp_redirect( remove_query_arg( array( 'deactivated_license', $this->plugin_slug . '_deactivate_license' ), add_query_arg( 'activated_license', $this->plugin_slug ) ) );
-				exit;
-			}
+
+			$this->activate_license_request();
 		}
 		if ( isset( $_GET['_wpnonce'] ) ) {
 			if ( ! wp_verify_nonce( $_GET['_wpnonce'], '_ur_license_nonce' ) ) {
@@ -202,7 +201,9 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * Display plugin license view.
 	 */
 	private function plugin_license_view() {
-		add_filter( 'plugin_action_links_' . $this->plugin_name, array( $this, 'plugin_action_links' ) );
+		if( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
+			add_filter( 'plugin_action_links_' . $this->plugin_name, array( $this, 'plugin_action_links' ) );
+		}
 		add_action( 'admin_notices', array( $this, 'user_registration_error_notices' ) );
 	}
 
@@ -269,14 +270,19 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	public function user_registration_error_notices() {
 		if ( ! empty( $this->errors ) ) {
 			foreach ( $this->errors as $key => $error ) {
-				include __DIR__ . '/admin/notifications/views/html-notice-error.php';
-				if ( 'invalid_key' !== $key && did_action( 'all_admin_notices' ) ) {
+				if ( $key === 'activation_error' ) {
+					UR_Admin_Settings::add_error( $error, $key );
 					unset( $this->errors[ $key ] );
+				}
+				else {
+					include __DIR__ . '/admin/notifications/views/html-notice-error.php';
+					if ( 'invalid_key' !== $key && did_action( 'all_admin_notices' ) ) {
+						unset( $this->errors[ $key ] );
+					}
 				}
 			}
 		}
 	}
-
 	/**
 	 * Ran on plugin-activation.
 	 */
@@ -337,9 +343,8 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 */
 	public function activate_license( $license_key ) {
 		try {
-
 			if ( empty( $license_key ) ) {
-				throw new Exception( 'Please enter your license key' );
+				throw new Exception( 'Please enter your license key.' );
 			}
 
 			$activate_results = json_decode(

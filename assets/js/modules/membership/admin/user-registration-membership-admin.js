@@ -619,7 +619,7 @@
 
 		validate_payment_gateway: function ($this) {
 
-			var switch_container = $this.closest('.user-registration-switch'),
+			var switch_container = $this.closest('.ur-toggle-section '),
 				pg = $this.attr('id').split('ur-membership-pg-')[1],
 				membership_type = $('input:radio[name=ur_membership_type]:checked').val();
 			ur_membership_utils.prepend_spinner(switch_container);

@@ -394,7 +394,7 @@ if ( ! class_exists( 'User_Registration_Users_ListTable' ) ) {
 			}
 
 			// Check if the user for this row is editable.
-			if ( current_user_can( 'list_users' ) ) {
+			if ( current_user_can( 'list_users' ) || current_user_can( 'manage_user_registration' ) ) {
 				// Set up the user editing link.
 				$edit_link       = add_query_arg(
 					array(
@@ -449,8 +449,8 @@ if ( ! class_exists( 'User_Registration_Users_ListTable' ) ) {
 								wp_create_nonce( 'bulk-users' ),
 								__( 'Disable', 'user-registration' ),
 							);
-						}
 					}
+				}
 				}
 
 				/**
@@ -1028,12 +1028,13 @@ if ( ! class_exists( 'User_Registration_Users_ListTable' ) ) {
 				)";
 
 				$query->query_where .= " OR EXISTS (
-					SELECT 1
-					FROM {$wpdb->prefix}usermeta um1
-					WHERE um1.user_id = {$wpdb->users}.ID
+					SELECT *
+					FROM {$wpdb->usermeta} um
+					WHERE um.user_id = {$wpdb->users}.ID
 					AND (
-						(um1.meta_key = 'first_name' AND um1.meta_value LIKE '{$search_like}')
-						OR (um1.meta_key = 'last_name' AND um1.meta_value LIKE '{$search_like}')
+						(um.meta_key IN ('first_name','last_name') AND um.meta_value LIKE '{$search_like}')
+						OR (um.meta_key LIKE 'user_registration\_%' AND um.meta_value LIKE '{$search_like}')
+						OR (um.meta_key LIKE 'display_name\_%' AND um.meta_value LIKE '{$search_like}')
 					)
 				)";
 			}

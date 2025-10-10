@@ -25,15 +25,7 @@
 						$(".ur-selected-inputs")
 							.find("form#ur-field-settings")
 							.hide();
-						//Show field panels
-						$(".ur-builder-wrapper-content").show();
-						$(".ur-builder-wrapper-footer").show();
-						if ($(".ur-selected-item.ur-item-active").length == 0) {
-							//Selecting first ur selected item
-							URFormBuilder.handle_selected_item(
-								$(".ur-selected-item:first")
-							);
-						}
+
 					}
 				);
 				// Handle the field settings when a field is selected in the form builder.
@@ -970,7 +962,7 @@
 						try {
 							var field_value = $field.val();
 							var length = $(
-								".ur-input-grids .ur-general-setting-block"
+								".ur-input-grids .ur-advance-setting-block"
 							).find(
 								'input[data-field="field_name"][value="' +
 								field_value +
@@ -3014,6 +3006,7 @@
 											container.remove();
 										}
 										builder.manage_draggable_users_fields();
+										
 
 										var populated_item = template
 											.closest(".ur-selected-item ")
@@ -3027,7 +3020,7 @@
 											'.ur-input-type-select2 .ur-field[data-field-key="select2"] select, .ur-input-type-multi-select2 .ur-field[data-field-key="multi_select2"] select'
 										).selectWoo();
 
-										var $template = $(template);
+																				var $template = $(template);
 
 										// Get fieldKey from data-field-key attribute.
 										var fieldKey = $template
@@ -3059,7 +3052,6 @@
 												'_advance_setting[field_visibility]"]'
 											)
 											.val();
-
 										$(document.body).trigger(
 											"ur_new_field_created",
 											[
@@ -3251,7 +3243,7 @@
 														".ur-selected-item"
 													)
 													.find(
-														'.ur-general-setting-field-name input[data-field="field_name"]'
+														'input[data-field="field_name"]'
 													)
 													.val();
 												var fieldLabel = $(this)
@@ -3783,7 +3775,7 @@
 										var fieldName = $ele
 											.closest(".ur-selected-item")
 											.find(
-												'.ur-general-setting.ur-general-setting-field-name input[name="ur_general_setting[field_name]"]'
+												'input[name="' + fieldKey + '_advance_setting[field_name]"]'
 											)
 											.val();
 
@@ -4442,7 +4434,7 @@
 								);
 
 								var old_field_name = wrapper
-									.find(".ur-general-setting-block")
+									.find(".ur-advance-setting-block")
 									.find('input[data-field="field_name"]')
 									.attr("value");
 
