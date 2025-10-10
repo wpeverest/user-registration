@@ -4241,7 +4241,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				'pending_approval' => get_option( 'user_registration_message_pending_approval', null ),
 				'denied_access'    => get_option( 'user_registration_message_denied_account', null ),
 				'user_disabled'    => esc_html__( 'Sorry! You are disabled.Please Contact Your Administrator.', 'user-registration' ),
-				'incorrect_password' => get_option( 'user_registration_message_incorrect_password', esc_html__( 'The password you entered for the email address %email% is incorrect.', 'user-registration' ) ),
+				'incorrect_password' => get_option( 'user_registration_message_incorrect_password', esc_html__( 'The password you entered for the %label% %email% is incorrect.', 'user-registration' ) ),
 			);
 
 			$post = $_POST; // phpcs:ignore.
@@ -4451,7 +4451,17 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 					$user->errors['denied_access'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['denied_access'] );
 				}
 				if ( ! empty( $user->errors['incorrect_password'] ) && ! empty( $messages['incorrect_password'] ) ) {
-					$user->errors['incorrect_password'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), str_replace( "%email%", $login_data['user_login'], $messages['incorrect_password'] ) );
+					// Replace the label placeholder with username or email address based on the entered value.
+					if ( is_email( $login_data['user_login'] ) ) {
+						$label = esc_html__( 'email address', 'user-registration' );
+					} else {
+						$label = esc_html__( 'username', 'user-registration' );
+					}
+
+					$messages['incorrect_password'] = str_replace( '%label%', $label, $messages['incorrect_password'] );
+					$messages['incorrect_password'] = str_replace( "%email%", $login_data['user_login'], $messages['incorrect_password'] );
+
+					$user->errors['incorrect_password'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['incorrect_password'] );
 				}
 
 				$message = $user->get_error_message();
