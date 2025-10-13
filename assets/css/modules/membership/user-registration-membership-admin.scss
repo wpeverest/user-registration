@@ -1234,12 +1234,15 @@
 									position: absolute;
 									top: 0;
 									left: 0;
-									display: flex							;
+									display: flex;
 									justify-content: center;
 									align-items: center;
-									background: #65656547;
+									background: rgba(248, 248, 250, 0.85);
+									backdrop-filter: blur(2px);
 									height: 100%;
 									width: 100%;
+									z-index: 10;
+									border-radius: 7px;
 								}
 							}
 						}
