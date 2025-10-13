@@ -109,7 +109,7 @@ class Frontend {
 			$membership['post_content'] = json_decode( $membership['post_content'], true );
 		}
 		$membership_service              = new MembershipService();
-		$membership_details              = $membership_service->get_membership_details( $membership['post_id'] );
+		$membership_details = ( is_array( $membership ) && ! empty( $membership['post_id'] ) ) ? $membership_service->get_membership_details( $membership['post_id'] ) : array();
 		$active_gateways                 = array();
 
 		if ( ! empty( $membership_details['payment_gateways'] ) ) {
