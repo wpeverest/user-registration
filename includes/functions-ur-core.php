@@ -9,6 +9,7 @@
  */
 
 use WPEverest\URMembership\Admin\Repositories\MembersOrderRepository;
+use WPEverest\URMembership\Admin\Services\MembershipService;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -3606,10 +3607,10 @@ if ( ! function_exists( 'ur_find_reset_password_in_page' ) ) {
 
 		$matched = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(*) FROM {$post_table} 
-				WHERE ID = %d 
+				"SELECT COUNT(*) FROM {$post_table}
+				WHERE ID = %d
 				AND (
-					post_content LIKE '%[user_registration_reset_password_form%' 
+					post_content LIKE '%[user_registration_reset_password_form%'
 					OR post_content LIKE '%<!-- wp:user-registration/reset_password_form%'
 				)",
 				$reset_password_page_id
@@ -3619,10 +3620,10 @@ if ( ! function_exists( 'ur_find_reset_password_in_page' ) ) {
 		if ( $matched <= 0 ) {
 			$matched = $wpdb->get_var(
 				$wpdb->prepare(
-					"SELECT COUNT(*) FROM {$post_meta_table} 
-					WHERE post_id = %d 
+					"SELECT COUNT(*) FROM {$post_meta_table}
+					WHERE post_id = %d
 					AND (
-						meta_value LIKE '%[user_registration_reset_password_form%' 
+						meta_value LIKE '%[user_registration_reset_password_form%'
 						OR meta_value LIKE '%<!-- wp:user-registration/reset_password_form%'
 					)",
 					$reset_password_page_id
@@ -9404,4 +9405,20 @@ if ( ! function_exists( 'ur_should_show_site_assistant_menu' ) ) {
 		);
 	}
 
+}
+
+
+if( ! function_exists( 'ur_get_membership_details') ){
+	/**
+	 * Get membership details.
+	 *
+	 * @since xx.xx.xx
+	 *
+	 * @return array
+	 */	function ur_get_membership_details() {
+		$membership_service = new MembershipService();
+		$memberships        = $membership_service->list_active_memberships();
+
+		return $memberships;
+	}
 }
