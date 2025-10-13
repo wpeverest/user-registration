@@ -693,7 +693,7 @@ class UR_Smart_Tags {
 						break;
 
 					case 'membership_end_date':
-						$membership_end_date = ( isset( $values['membership_tags'] ) && isset( $values['membership_plan_expiry_date'] ) ) ? $values['membership_plan_expiry_date'] : '';
+						$membership_end_date = ( isset( $values['membership_tags'] ) && isset( $values['membership_tags']['membership_plan_expiry_date'] ) ) ? $values['membership_tags']['membership_plan_expiry_date'] : '';
 						$content             = str_replace( '{{' . $tag . '}}', $membership_end_date, $content );
 						break;
 				}
