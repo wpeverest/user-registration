@@ -1175,6 +1175,7 @@
 						}
 
 						&#plan-detail-container {
+							position: relative;
 							.form-row {
 								display: flex;
 								align-items: flex-end;
@@ -1225,6 +1226,20 @@
 											color: #a1a1a1;
 										}
 									}
+								}
+							}
+
+							.urm-membership-plan-spinner-container{
+								&.is_loading{
+									position: absolute;
+									top: 0;
+									left: 0;
+									display: flex							;
+									justify-content: center;
+									align-items: center;
+									background: #65656547;
+									height: 100%;
+									width: 100%;
 								}
 							}
 						}
@@ -1395,4 +1410,3 @@
 		}
 	}
 }
-
