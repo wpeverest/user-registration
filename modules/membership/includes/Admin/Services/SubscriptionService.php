@@ -117,14 +117,13 @@ class SubscriptionService {
 	public function cancel_subscription( $order, $subscription ) {
 		$logger = ur_get_logger();
 		switch ( $order['payment_method'] ) {
-			case 'paypal';
+			case 'paypal':
 				$paypal_service = new PaypalService();
 				$logger->notice( 'Paypal cancellation Reached', array( 'source' => 'urm-cancellation-log' ) );
 
 				return $paypal_service->cancel_subscription( $order, $subscription );
 
-			case 'stripe';
-
+			case 'stripe':
 				$stripe_service = new StripeService();
 				$logger->notice( 'Stripe cancellation Reached', array( 'source' => 'urm-cancellation-log' ) );
 
@@ -146,7 +145,7 @@ class SubscriptionService {
 		$logger = ur_get_logger();
 		$response = array( 'status' => false );
 		switch ( $order['payment_method'] ) {
-			case 'paypal';
+			case 'paypal':
 				$paypal_service = new PaypalService();
 				$logger->notice( 'Paypal reactivation Reached', array( 'source' => 'urm-reactivation-log' ) );
 				return $paypal_service->reactivate_subscription( $subscription[ 'subscription_id' ] );
@@ -178,7 +177,7 @@ class SubscriptionService {
 		$email_service = new EmailService();
 		foreach ( $subscriptions as $subscription ) {
 			$user_id      = $subscription['member_id'];
-			$checked_date = get_user_meta( $user_id, 'urm_billing_reminder_sent_for_date', true );;
+			$checked_date = get_user_meta( $user_id, 'urm_billing_reminder_sent_for_date', true );
 			if ( $checked_date === $subscription['next_billing_date'] ) {
 				continue;
 			}
@@ -257,8 +256,8 @@ class SubscriptionService {
 			'membership_plan_trial_status'      => esc_html( ucwords( $order['trial_status'] ) ),
 			'membership_plan_trial_start_date'  => esc_html( date( 'Y, F d', strtotime( !empty($subscription['trial_start_date']) ? $subscription['trial_start_date']: '' ) ) ),
 			'membership_plan_trial_end_date'    => esc_html( date( 'Y, F d', strtotime( !empty($subscription['trial_end_date']) ? $subscription['trial_end_date'] : '' ) ) ),
-			'membership_plan_next_billing_date' => esc_html( date( 'Y, F d', strtotime( $subscription['next_billing_date'] ) ) ),
-			'membership_plan_expiry_date'       => esc_html( date( 'Y, F d', strtotime( $subscription['expiry_date'] ) ) ),
+			'membership_plan_next_billing_date' => ! empty( $subscription['next_billing_date'] ) ? esc_html( date_i18n( get_option( 'date_format' ), strtotime( $subscription['next_billing_date'] ) ) ) : '',
+			'membership_plan_expiry_date'       => ! empty( $subscription['expiry_date'] ) ? esc_html( date_i18n( get_option( 'date_format' ), strtotime( $subscription['expiry_date'] ) ) ) : '',
 			'membership_plan_status'            => esc_html( ucwords( $subscription['status'] ) ),
 			'membership_plan_payment_date'      => esc_html( date( 'Y, F d', strtotime( $order['created_at'] ) ) ),
 			'membership_plan_billing_cycle'     => esc_html( ucwords( $billing_cycle ) ),
@@ -675,9 +674,9 @@ class SubscriptionService {
 		$next_billing_date     = $next_billing_date->modify( "+ $subscription_value $subscription_duration" )->format( 'Y-m-d 00:00:00' );
 
 		$this->members_subscription_repository->update( $member_subscription['ID'], array(
-			'start_date'        => date( 'Y-m-d 00:00:00' ),
-			'next_billing_date' => $next_billing_date,
-			'expiry_date'       => $next_billing_date,
+				'start_date'        => date( 'Y-m-d 00:00:00' ),
+				'next_billing_date' => $next_billing_date,
+				'expiry_date'       => $next_billing_date,
 		) );
 		update_user_meta( $member_subscription['user_id'], 'urm_last_renewed_on', date( 'Y-m-d 00:00:00' ) );
 		delete_user_meta( $member_subscription['user_id'], 'urm_is_member_renewing' );
