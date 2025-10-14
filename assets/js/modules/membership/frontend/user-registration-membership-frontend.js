@@ -1147,7 +1147,7 @@
 
 			var card = elements.create("card", {
 				style: style,
-				hidePostalCode: data.urm_hide_stripe_card_postal_code == '1' ? true : false,
+				hidePostalCode: urmf_data.urm_hide_stripe_card_postal_code == '1' ? true : false,
 			});
 			var idealBank = elements.create("idealBank", { style: style });
 
