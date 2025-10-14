@@ -11,17 +11,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 ?>
 <?php if ( $logs ) : ?>
-	<div id="log-viewer-select" style="
-	padding: 10px 0 8px;
-	line-height: 28px;">
+	<div id="log-viewer-select">
 		<div class="alignleft">
-			<h2 style="padding:8px;">
+			<h2>
 				<?php echo esc_html( $viewed_log ); ?>
 				<?php if ( 1 < count( $logs ) ) : ?>
 				<a class="button page-title-action page-title-action-all" style="border-color: #F25656; background: #F25656; color: #ffffff; font-size: 14px; line-height: 20px; padding: 8px 14px; font-weight: 500;" href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'handle_all' => sanitize_title( 'delete-all-logs' ) ), admin_url( 'admin.php?page=user-registration-status&tab=logs' ) ), 'remove_all_logs' ) ); ?>" class="button"><?php esc_html_e( 'Delete all logs', 'user-registration' ); ?></a>
 				<?php endif; ?>
 				<?php if ( ! empty( $viewed_log ) ) : ?>
-					<a class="button page-title-action" style="border-color:#475BB2; color: #475BB2; font-size: 14px; line-height: 20px; padding: 8px 14px; font-weight: 500;" href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'handle' => sanitize_title( $viewed_log ) ), admin_url( 'admin.php?page=user-registration-status&tab=logs' ) ), 'remove_log' ) ); ?>" class="button"><?php esc_html_e( 'Delete log', 'user-registration' ); ?></a>
+					<a class="button page-title-action" href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'handle' => sanitize_title( $viewed_log ) ), admin_url( 'admin.php?page=user-registration-status&tab=logs' ) ), 'remove_log' ) ); ?>" class="button"><?php esc_html_e( 'Delete log', 'user-registration' ); ?></a>
 				<?php endif; ?>
 			</h2>
 		</div>
@@ -41,10 +39,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</div>
 		<div class="clear"></div>
 	</div>
-	<div id="log-viewer" style="    background: #fff;
-	border: 1px solid #e5e5e5;
-	box-shadow: 0 1px 1px rgba(0,0,0,.04);
-	padding: 5px 20px;">
+	<div id="log-viewer">
 		<pre><?php echo esc_html( file_get_contents( UR_LOG_DIR . $viewed_log ) ); ?></pre>
 	</div>
 <?php else : ?>

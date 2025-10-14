@@ -1,0 +1,150 @@
+.user-registration,
+.user-registration-page,
+.ur-multi-device-form-preview {
+    select {
+        min-height: 38px;
+        width: 100%;
+        min-width: auto !important;
+        max-width: unset;
+        padding: 0 $spacing_12px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background: transparent;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23737373' viewBox='0 0 24 24'%3E%3Cpath d='M19.561 7.403a1.468 1.468 0 0 1 2.02 0 1.339 1.339 0 0 1 0 1.944l-8.57 8.25a1.468 1.468 0 0 1-2.021 0l-8.572-8.25a1.339 1.339 0 0 1 0-1.944 1.468 1.468 0 0 1 2.02 0L12 14.68l7.561-7.278Z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 14px 14px;
+        cursor: pointer;
+        color: $grey-400;
+        margin: 0;
+        border: $border_width solid $border_color;
+        border-radius: $border_radius_4;
+		background-color: $white;
+
+        &:hover {
+            color: $grey-400;
+        }
+
+        &:focus {
+            outline: none;
+            box-shadow: none;
+            border-color: $primary_color;
+        }
+
+        &#bulk-action-selector-top,
+        &#bulk-action-selector-bottom {
+            width: 220px;
+        }
+    }
+
+    .select2 {
+        &-container {
+            &--open,
+            &--focus {
+                .select2-selection {
+                    border-color: $primary_color !important;
+                }
+            }
+
+            &--default {
+                .select2-selection {
+                    &--single,
+                    &--multiple {
+                        min-height: 38px;
+                        padding: 0;
+                        border: $border_width solid $border-color;
+
+                        .select2-selection__rendered {
+                            padding: 0 $spacing_32px 0 $spacing_12px;
+                            display: block;
+                            font-size: 14px;
+                            line-height: 36px;
+
+                            .select2-selection__clear {
+                                font-size: 16px;
+                                top: -1px;
+                            }
+                        }
+
+                        .select2-selection__arrow {
+                            top: 50%;
+                            right: 6px;
+                            transform: translateY(-50%);
+                            height: unset;
+                            position: absolute;
+                            width: 20px;
+
+                            b {
+                                all: unset;
+                                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23737373' viewBox='0 0 24 24'%3E%3Cpath d='M19.561 7.403a1.468 1.468 0 0 1 2.02 0 1.339 1.339 0 0 1 0 1.944l-8.57 8.25a1.468 1.468 0 0 1-2.021 0l-8.572-8.25a1.339 1.339 0 0 1 0-1.944 1.468 1.468 0 0 1 2.02 0L12 14.68l7.561-7.278Z'/%3E%3C/svg%3E");
+                                background-repeat: no-repeat;
+                                background-position: center;
+                                background-size: 100%;
+                                width: 14px;
+                                height: 14px;
+                                display: block;
+                            }
+                        }
+                    }
+
+                    &--multiple {
+                        min-height: 38px;
+
+                        .select2-selection__choice {
+                            display: flex;
+                            align-items: center;
+                            gap: $spacing_4px;
+                            padding: 0 8px;
+                            margin: $spacing_4px $spacing_4px $spacing_4px 0;
+                            max-height: 30px;
+                            background: #f4f4f4;
+                            border-color: #e1e1e1;
+                            font-size: 14px;
+                            line-height: 28px;
+                            color: #383838;
+
+                            &:nth-child(1) {
+                                margin-left: -8px;
+                            }
+
+                            &__remove {
+                                color: #999;
+                                cursor: pointer;
+                                display: inline-block;
+                                font-weight: 700;
+                                margin-right: 2px;
+                                line-height: 16px;
+                            }
+                        }
+
+                        .select2-search {
+                            margin-bottom: 0;
+
+                            &__field {
+                                margin: 0;
+                                width: 100% !important;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .select2-dropdown {
+                position: relative;
+                padding-top: $spacing_4px;
+
+                > .button {
+                    &.ur-select-all-countries-button {
+                        float: right;
+                        margin-left: $spacing_4px;
+                        margin-right: $spacing_4px;
+                    }
+
+                    &.ur-unselect-all-countries-button {
+                        margin-left: auto;
+                    }
+                }
+            }
+        }
+    }
+}

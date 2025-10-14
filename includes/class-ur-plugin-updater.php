@@ -57,7 +57,6 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * @var array of strings
 	 */
 	private $errors = array();
-
 	/**
 	 * Plugin Api Key.
 	 *
@@ -87,7 +86,6 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 
 		add_filter( 'block_local_requests', '__return_false' );
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
-
 		// Include required files.
 		include_once __DIR__ . '/admin/updater/class-ur-plugin-updater-api.php';
 	}
@@ -103,13 +101,12 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 		$this->api_key     = get_option( $this->plugin_slug . '_license_key' );
 		$this->plugin_data = get_plugin_data( $this->plugin_file );
 
+		$this->plugin_requests();
 		// Check if pro is activated to display license notices.
 		if ( ( file_exists( WP_PLUGIN_DIR . '/user-registration-pro/user-registration.php' ) && is_plugin_active( 'user-registration-pro/user-registration.php' ) ) && current_user_can( 'update_plugins' ) ) {
-
-			$this->plugin_requests();
 			add_action( 'in_admin_header', array( $this, 'user_registration_upgrade_to_pro_notice' ) );
-			$this->plugin_license_view();
 		}
+		$this->plugin_license_view();
 
 		$message = get_option( 'user_registration_failed_installing_extensions_message', '' );
 
@@ -127,17 +124,18 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 			return false;
 		}
 
+		if( false !== get_option( 'user-registration_license_key', false ) && ! empty( $_REQUEST[ 'download_user_registration_pro' ] ) ) {
+			$this->install_extension();
+			wp_redirect( remove_query_arg( array( 'deactivated_license', $this->plugin_slug . '_deactivate_license' ), add_query_arg( 'activated_license', $this->plugin_slug ) ) );
+			exit;
+		}
+
 		if ( isset( $_POST['ur_license_nonce'] ) ) {
 			if ( ! wp_verify_nonce( $_POST['ur_license_nonce'], '_ur_license_nonce' ) ) {
 				return;
 			}
-			if ( ! empty( $_POST[ $this->plugin_slug . '_license_key' ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-				$this->activate_license_request();
-			} elseif ( ! empty( $_POST['download_user_registration_pro'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-				$this->install_extension();
-				wp_redirect( remove_query_arg( array( 'deactivated_license', $this->plugin_slug . '_deactivate_license' ), add_query_arg( 'activated_license', $this->plugin_slug ) ) );
-				exit;
-			}
+
+			$this->activate_license_request();
 		}
 		if ( isset( $_GET['_wpnonce'] ) ) {
 			if ( ! wp_verify_nonce( $_GET['_wpnonce'], '_ur_license_nonce' ) ) {
@@ -162,7 +160,9 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 		$license_key = sanitize_text_field( $_POST[ $this->plugin_slug . '_license_key' ] ); // phpcs:ignore
 
 		if ( $this->activate_license( $license_key ) ) {
-			$this->install_extension();
+			if( ! is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
+				setcookie('urm_license_status', 'license_activated', time() + 300, '/', '', false, false);
+			}
 			wp_redirect( remove_query_arg( array( 'deactivated_license', $this->plugin_slug . '_deactivate_license' ), add_query_arg( 'activated_license', $this->plugin_slug ) ) );
 			exit;
 		} else {
@@ -176,7 +176,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 */
 	public function install_extension() {
 
-		$status = ur_install_extensions( 'User Registration PRO', 'user-registration-pro' );
+		$status = ur_install_extensions( 'User Registration &amp; Membership (Pro)', 'user-registration-pro' );
 
 		if ( $status['success'] ) {
 			add_action( 'admin_notices', array( $this, 'user_registration_extension_download_success_notice' ) );
@@ -201,7 +201,9 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * Display plugin license view.
 	 */
 	private function plugin_license_view() {
-		add_filter( 'plugin_action_links_' . $this->plugin_name, array( $this, 'plugin_action_links' ) );
+		if( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
+			add_filter( 'plugin_action_links_' . $this->plugin_name, array( $this, 'plugin_action_links' ) );
+		}
 		add_action( 'admin_notices', array( $this, 'user_registration_error_notices' ) );
 	}
 
@@ -268,14 +270,19 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	public function user_registration_error_notices() {
 		if ( ! empty( $this->errors ) ) {
 			foreach ( $this->errors as $key => $error ) {
-				include __DIR__ . '/admin/notifications/views/html-notice-error.php';
-				if ( 'invalid_key' !== $key && did_action( 'all_admin_notices' ) ) {
+				if ( $key === 'activation_error' ) {
+					UR_Admin_Settings::add_error( $error, $key );
 					unset( $this->errors[ $key ] );
+				}
+				else {
+					include __DIR__ . '/admin/notifications/views/html-notice-error.php';
+					if ( 'invalid_key' !== $key && did_action( 'all_admin_notices' ) ) {
+						unset( $this->errors[ $key ] );
+					}
 				}
 			}
 		}
 	}
-
 	/**
 	 * Ran on plugin-activation.
 	 */
@@ -336,9 +343,8 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 */
 	public function activate_license( $license_key ) {
 		try {
-
 			if ( empty( $license_key ) ) {
-				throw new Exception( 'Please enter your license key' );
+				throw new Exception( 'Please enter your license key.' );
 			}
 
 			$activate_results = json_decode(
@@ -430,7 +436,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 				throw new Exception( 'Connection failed to the License Key API server - possible server issue.' );
 			}
 		} catch ( Exception $e ) {
-			$this->add_error( $e->getMessage() );
+			$this->add_error( $e->getMessage(), 'activation_error' );
 			return false;
 		}
 	}
@@ -531,7 +537,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 		} else {
 			$content .= sprintf( '<p class="extra-pad"><strong>%1$s</strong>, %2$s</p>', __( 'If you already have an active license key.', 'user-registration' ), __( 'please activate the key.', 'user-registration' ) );
 			$content .= sprintf( '<p class="extra-pad"><strong>%1$s</strong>, %2$s</p>', __( 'If you do not have active premium license of User Registration', 'user-registration' ), __( 'please purchase premium license. Going forward active premium license will be vital for smooth running of premium addons of User Registration that you are currently using.', 'user-registration' ) );
-			$link    .= '<li><a class="button button-primary" href="' . esc_url_raw( 'https://wpuserregistration.com/pricing/?utm_source=user-dashboard&utm_medium=notice-3.0.0&utm_campaign=user-registration-pro-3.0.0' ) . '" rel="noreferrer noopener" target="_blank"><span class="dashicons dashicons-external"></span>' . __( 'Purchase Premium License', 'user-registration' ) . '</a></li>';
+			$link    .= '<li><a class="button button-primary" href="' . esc_url_raw( 'https://wpuserregistration.com/upgrade/?utm_source=user-dashboard&utm_medium=notice-3.0.0&utm_campaign=user-registration-pro-3.0.0' ) . '" rel="noreferrer noopener" target="_blank"><span class="dashicons dashicons-external"></span>' . __( 'Purchase Premium License', 'user-registration' ) . '</a></li>';
 			$link    .= '<li><a class="button button-secondary" href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=license' ) ) . '" rel="noreferrer noopener" target="_blank"><span class="dashicons dashicons-external"></span>' . __( 'Activate License Key', 'user-registration' ) . '</a></li>';
 		}
 

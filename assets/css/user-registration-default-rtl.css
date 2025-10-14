@@ -652,15 +652,18 @@
 .swal2-container .user-registration-swal2-modal .swal2-animate-success-icon [class^=swal2-success-line], .swal2-container .user-registration-swal2-modal .swal2-animate-success-icon [class^=swal2-success-circular-line] {
   animation: none;
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-icon {
-  width: 56px;
-  height: 56px;
+.swal2-container .swal2-header .swal2-icon {
+  width: 28px;
+  height: 28px;
   line-height: 56px;
-  margin: 0 auto 16px;
+  margin: 0 auto;
   border-width: 2px;
   border-radius: 50%;
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-icon .swal2-x-mark [class^=swal2-x-mark-line] {
+.swal2-container .swal2-header .swal2-icon-content {
+  font-size: 20px;
+}
+.swal2-container .swal2-header .swal2-icon .swal2-x-mark [class^=swal2-x-mark-line] {
   height: 3px;
   width: 28px;
   top: 50%;
@@ -668,43 +671,43 @@
   left: 0;
   margin: 0 auto;
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-icon .swal2-x-mark [class^=swal2-x-mark-line][class$=left] {
+.swal2-container .swal2-header .swal2-icon .swal2-x-mark [class^=swal2-x-mark-line][class$=left] {
   transform: translateY(-50%) rotate(-45deg);
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-icon .swal2-x-mark [class^=swal2-x-mark-line][class$=right] {
+.swal2-container .swal2-header .swal2-icon .swal2-x-mark [class^=swal2-x-mark-line][class$=right] {
   transform: translateY(-50%) rotate(45deg);
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-icon.swal2-success [class^=swal2-success-line] {
+.swal2-container .swal2-header .swal2-icon.swal2-success [class^=swal2-success-line] {
   height: 3px;
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-icon.swal2-success [class^=swal2-success-line][class$=tip] {
+.swal2-container .swal2-header .swal2-icon.swal2-success [class^=swal2-success-line][class$=tip] {
   width: 16px;
   top: 56%;
   right: 10px;
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-icon.swal2-success [class^=swal2-success-line][class$=long] {
+.swal2-container .swal2-header .swal2-icon.swal2-success [class^=swal2-success-line][class$=long] {
   top: 47%;
   width: 32px;
   left: 6px;
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-icon.swal2-success [class^=swal2-success-circular-line] {
+.swal2-container .swal2-header .swal2-icon.swal2-success [class^=swal2-success-circular-line] {
   height: 64px;
   width: 32px;
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-icon.swal2-success [class^=swal2-success-circular-line][class$=left] {
+.swal2-container .swal2-header .swal2-icon.swal2-success [class^=swal2-success-circular-line][class$=left] {
   top: -75px;
   right: 27px;
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-icon.swal2-success [class^=swal2-success-circular-line][class$=right] {
+.swal2-container .swal2-header .swal2-icon.swal2-success [class^=swal2-success-circular-line][class$=right] {
   top: -26px;
   right: 82px;
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-icon.swal2-success .swal2-success-ring {
+.swal2-container .swal2-header .swal2-icon.swal2-success .swal2-success-ring {
   top: -3px;
   right: -2px;
   border-width: 2px;
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-icon.swal2-success .swal2-success-fix {
+.swal2-container .swal2-header .swal2-icon.swal2-success .swal2-success-fix {
   height: 64px;
   right: 2px;
   left: 0px;
@@ -713,16 +716,22 @@
   bottom: 0;
   width: 6px;
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-icon::before {
+.swal2-container .swal2-header .swal2-icon::before {
   font-size: 40px;
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-title {
+.swal2-container .swal2-header .swal2-title {
   color: #2d3559;
-  font-size: 24px;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
   flex-wrap: wrap;
   margin-bottom: 16px;
 }
-.swal2-container .user-registration-swal2-modal .swal2-header .swal2-title .dashicons {
+.swal2-container .swal2-header .swal2-title img {
+  width: 20px;
+  height: 20px;
+}
+.swal2-container .swal2-header .swal2-title .dashicons {
   color: #ff4f55;
   font-size: 28px;
   width: 56px;
@@ -732,25 +741,168 @@
   border: 2px solid #ff4f55;
   border-radius: 50%;
 }
-.swal2-container .user-registration-swal2-modal__title {
+.swal2-container__title {
   line-height: 1.35;
   display: block;
 }
-.swal2-container .user-registration-swal2-modal .swal2-content {
+.swal2-container .swal2-content {
   color: rgb(76.288238806, 84.0379701493, 118.911761194);
   font-size: 1em;
   line-height: 1.5;
 }
-.swal2-container .user-registration-swal2-modal .swal2-actions button {
+.swal2-container .swal2-actions button {
   margin-top: 0;
   margin-bottom: 0;
 }
-.swal2-container .user-registration-swal2-modal--centered .swal2-title {
+.swal2-container--centered .swal2-title {
   flex-direction: column;
 }
 
 .user-registration-modal-open .wp-block-cover {
   z-index: 99;
+}
+
+.user-registration .swal2-container .swal2-popup,
+.user-registration-page .swal2-container .swal2-popup {
+  width: 400px;
+  border-radius: 10px;
+  padding: 0;
+  margin: auto;
+}
+.user-registration .swal2-container .swal2-popup .swal2-header,
+.user-registration-page .swal2-container .swal2-popup .swal2-header {
+  padding: 20px;
+  gap: 12px;
+  border-bottom: 1px solid #e1e1e1;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  flex-direction: row;
+}
+.user-registration .swal2-container .swal2-popup .swal2-header .swal2-title,
+.user-registration-page .swal2-container .swal2-popup .swal2-header .swal2-title {
+  display: flex !important;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid #e1e1e1;
+  padding-bottom: 16px;
+  width: 100%;
+  margin-bottom: 0;
+  flex: 1;
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+.user-registration .swal2-container .swal2-popup .swal2-header .swal2-title .dashicons,
+.user-registration-page .swal2-container .swal2-popup .swal2-header .swal2-title .dashicons {
+  font-size: 18px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+.user-registration .swal2-container .swal2-popup .swal2-header .swal2-title .user-registration-swal2-modal__title,
+.user-registration-page .swal2-container .swal2-popup .swal2-header .swal2-title .user-registration-swal2-modal__title {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+  color: #222222;
+}
+.user-registration .swal2-container .swal2-popup .swal2-content,
+.user-registration-page .swal2-container .swal2-popup .swal2-content {
+  padding-right: 20px;
+  padding-left: 20px;
+  margin-top: 0;
+  text-align: right;
+  font-size: 14px;
+  line-height: 24px;
+  color: #383838;
+}
+.user-registration .swal2-container .swal2-popup .swal2-content .swal2-html-container > div,
+.user-registration-page .swal2-container .swal2-popup .swal2-content .swal2-html-container > div {
+  border-radius: 8px;
+  overflow: hidden;
+}
+.user-registration .swal2-container .swal2-popup .swal2-content .swal2-html-container > div.ur-embed-new-page-container, .user-registration .swal2-container .swal2-popup .swal2-content .swal2-html-container > div.ur-embed-select-existing-page-container,
+.user-registration-page .swal2-container .swal2-popup .swal2-content .swal2-html-container > div.ur-embed-new-page-container,
+.user-registration-page .swal2-container .swal2-popup .swal2-content .swal2-html-container > div.ur-embed-select-existing-page-container {
+  justify-content: flex-start;
+}
+.user-registration .swal2-container .swal2-popup .swal2-content .swal2-html-container .action-buttons,
+.user-registration-page .swal2-container .swal2-popup .swal2-content .swal2-html-container .action-buttons {
+  margin-right: -20px;
+  margin-left: -20px;
+  border-radius: 0 0 10px 10px;
+  padding: 16px;
+  text-align: left;
+  background: #F4F4F4;
+}
+.user-registration .swal2-container .swal2-popup .swal2-content .swal2-html-container p,
+.user-registration-page .swal2-container .swal2-popup .swal2-content .swal2-html-container p {
+  margin: 0;
+}
+.user-registration .swal2-container .swal2-popup .swal2-content .swal2-validation-message,
+.user-registration-page .swal2-container .swal2-popup .swal2-content .swal2-validation-message {
+  margin-right: 0;
+  margin-left: 0;
+  border-right: 3px solid #f27474;
+  justify-content: flex-start;
+  padding: 12px 6px 12px 6px;
+}
+.user-registration .swal2-container .swal2-popup .swal2-content .action-buttons,
+.user-registration-page .swal2-container .swal2-popup .swal2-content .action-buttons {
+  padding: 18px 20px;
+}
+.user-registration .swal2-container .swal2-popup .swal2-content .action-buttons a,
+.user-registration-page .swal2-container .swal2-popup .swal2-content .action-buttons a {
+  background: #FF8C39;
+  border: #FF8C39;
+  text-decoration: none;
+  color: #ffffff;
+}
+.user-registration .swal2-container .swal2-popup .swal2-actions,
+.user-registration-page .swal2-container .swal2-popup .swal2-actions {
+  padding: 18px 20px;
+  gap: 16px;
+  margin-top: 20px;
+  border-radius: 0 0 5px 5px;
+  background: #f4f4f4;
+  border-top: 0;
+  flex-direction: row-reverse;
+}
+.user-registration .swal2-container .swal2-popup .swal2-actions .swal2-confirm,
+.user-registration .swal2-container .swal2-popup .swal2-actions .swal2-cancel,
+.user-registration-page .swal2-container .swal2-popup .swal2-actions .swal2-confirm,
+.user-registration-page .swal2-container .swal2-popup .swal2-actions .swal2-cancel {
+  min-height: 36px;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  padding: 0 12px;
+  width: 45%;
+}
+.user-registration .swal2-container .swal2-popup .swal2-actions .swal2-confirm,
+.user-registration-page .swal2-container .swal2-popup .swal2-actions .swal2-confirm {
+  background: #475bb2;
+  border-color: #475bb2;
+}
+.user-registration .swal2-container .swal2-popup .swal2-actions .swal2-cancel,
+.user-registration-page .swal2-container .swal2-popup .swal2-actions .swal2-cancel {
+  background: #ffffff;
+  color: #383838;
+}
+.user-registration .swal2-container .swal2-popup .swal2-actions button:focus,
+.user-registration-page .swal2-container .swal2-popup .swal2-actions button:focus {
+  box-shadow: none;
+}
+.user-registration .swal2-container .swal2-popup .swal2-actions button:focus-visible,
+.user-registration-page .swal2-container .swal2-popup .swal2-actions button:focus-visible {
+  outline: none;
+}
+
+.user-registration-trashed .swal2-actions .swal2-confirm {
+  background: #ff4149;
+  border-color: #ff4149;
 }
 
 /**
@@ -792,11 +944,6 @@
   border-top: 3px solid #475bb2;
   list-style: none outside;
   *zoom: 1;
-  width: auto;
-  word-wrap: break-word;
-  line-height: 1.25;
-  text-transform: none;
-  font-size: 14px;
 }
 .user-registration-message::before, .user-registration-message::after,
 .user-registration-error::before,
@@ -813,6 +960,16 @@
 .user-registration-coupon-error::after,
 .user-registration-info::after {
   clear: both;
+}
+.user-registration-message,
+.user-registration-error,
+.user-registration-coupon-error,
+.user-registration-info {
+  width: auto;
+  word-wrap: break-word;
+  line-height: 1.25;
+  text-transform: none;
+  font-size: 14px;
 }
 .user-registration-message::before,
 .user-registration-error::before,
@@ -1057,22 +1214,6 @@ input.ur-input-border-red, textarea.ur-input-border-red {
 .ur-frontend-form .ur-form-row .ur-form-grid .hide_show_password .password-input-group .password_preview.dashicons.dashicons-hidden:hover {
   opacity: 1;
 }
-.ur-frontend-form .ur-form-row .select2-container .select2-selection--multiple {
-  border: 1px solid rgb(240.4392835821, 241.3522713704, 245.4607164179);
-}
-.ur-frontend-form .ur-form-row .select2-container .select2-selection--multiple .select2-selection__rendered {
-  display: block;
-}
-.ur-frontend-form .ur-form-row .select2-container .select2-selection--multiple .select2-selection__rendered li:last-child {
-  margin-right: 0;
-}
-.ur-frontend-form .ur-form-row .select2-container .select2-selection--multiple .select2-selection__choice {
-  margin: 5px;
-}
-.ur-frontend-form .ur-form-row .select2-container .select2-selection--multiple .select2-search--inline input[type=text] {
-  margin: 5px;
-  height: inherit;
-}
 .ur-frontend-form button,
 .ur-frontend-form input[type=submit],
 .ur-frontend-form button[type=submit] {
@@ -1117,7 +1258,7 @@ input.ur-input-border-red, textarea.ur-input-border-red {
 .ur-frontend-form.ur-frontend-form--bordered form .ur-form-row .ur-form-grid textarea,
 .ur-frontend-form.ur-frontend-form--bordered form .ur-form-row .ur-form-grid select {
   border: none;
-  border-bottom: 1px solid rgb(192.1952686567, 195.8151709634, 212.1047313433);
+  border-bottom: 1px solid rgb(205.5, 205.5, 205.5);
   outline: none;
   transition: all 0.35s;
   padding: 10px 15px;
@@ -1208,7 +1349,7 @@ input.ur-input-border-red, textarea.ur-input-border-red {
 .ur-frontend-form.ur-frontend-form--rounded form .ur-form-row .ur-form-grid input[type=number],
 .ur-frontend-form.ur-frontend-form--rounded form .ur-form-row .ur-form-grid textarea,
 .ur-frontend-form.ur-frontend-form--rounded form .ur-form-row .ur-form-grid select {
-  border: 1px solid rgb(192.1952686567, 195.8151709634, 212.1047313433);
+  border: 1px solid rgb(205.5, 205.5, 205.5);
   border-radius: 25px;
   outline: none;
   transition: all 0.35s;

@@ -30,7 +30,7 @@ class URCR_Admin {
 			/**
 			 * Register admin menus.
 			 */
-			add_action( 'admin_menu', array( $this, 'add_urcr_menus' ), 70 );
+			add_action( 'admin_menu', array( $this, 'add_urcr_menus' ), 30 );
 		}
 
 		/**

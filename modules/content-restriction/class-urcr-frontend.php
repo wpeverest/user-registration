@@ -38,6 +38,21 @@ class URCR_Frontend {
 
 		add_action( 'elementor/frontend/before_render', array( $this, 'urcr_elementor_before_section_render' ) );
 		add_action( 'elementor/frontend/after_render', array( $this, 'urcr_elementor_after_section_render' ) );
+
+
+		if ( shortcode_exists( 'urcr_restrict' ) ) {
+			$this->disable_elementor_element_cache();
+		}
+	}
+
+	/**
+	 * Disable Elementor element caching to ensure dynamic content works
+	 */
+	public function disable_elementor_element_cache() {
+		update_option( 'elementor_element_cache_ttl', 'disable' );
+		if ( class_exists( '\Elementor\Plugin' ) && method_exists( '\Elementor\Plugin::$instance->files_manager', 'clear_cache' ) ) {
+			\Elementor\Plugin::$instance->files_manager->clear_cache();
+		}
 	}
 	/**
 	 * Perform content restriction task.
@@ -950,6 +965,7 @@ class URCR_Frontend {
 			$members_subscription    = new \WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository();
 			$subscription            = $members_subscription->get_member_subscription( wp_get_current_user()->ID );
 			$current_user_membership = ( ! empty( $subscription ) ) ? $subscription['item_id'] : array();
+			$is_user_membership_active = ( ! empty( $subscription[ 'status' ] ) ) && 'active' == $subscription['status'];
 		}
 		$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
 
@@ -971,7 +987,7 @@ class URCR_Frontend {
 						$template = $this->urcr_restrict_contents_template( $template, $post );
 					}
 				} elseif ( '3' === get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
-					if ( is_array( $allowed_memberships ) && in_array( $current_user_membership, $allowed_memberships ) ) {
+					if ( is_array( $allowed_memberships ) && in_array( $current_user_membership, $allowed_memberships ) && $is_user_membership_active ) {
 						return $template;
 					}
 					$template = $this->urcr_restrict_contents_template( $template, $post );
@@ -993,7 +1009,7 @@ class URCR_Frontend {
 					$template = $this->urcr_restrict_contents_template( $template, $post );
 				}
 			} elseif ( $get_meta_data_allow_to === '3' ) {
-				if ( is_array( $allowed_memberships ) && in_array( $current_user_membership, $allowed_memberships ) ) {
+				if ( is_array( $allowed_memberships ) && in_array( $current_user_membership, $allowed_memberships ) && $is_user_membership_active ) {
 					return $template;
 				}
 				return $this->urcr_restrict_contents_template( $template, $post );
@@ -1034,16 +1050,16 @@ class URCR_Frontend {
 		$is_membership_active = ur_check_module_activation( 'membership' );
 
 		if ( $is_membership_active ) {
-			$members_subscription    = new \WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository();
-			$subscription            = $members_subscription->get_member_subscription( wp_get_current_user()->ID );
-			$current_user_membership = ( ! empty( $subscription ) ) ? $subscription['item_id'] : array();
+			$members_subscription      = new \WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository();
+			$subscription              = $members_subscription->get_member_subscription( wp_get_current_user()->ID );
+			$current_user_membership   = ( ! empty( $subscription ) ) ? $subscription['item_id'] : array();
 			$get_meta_data_memberships = get_post_meta( $post_id, 'urcr_meta_memberships', $single = true );
+			$is_user_membership_active = ! empty( $subscription[ 'status' ] ) && 'active' === $subscription[ 'status' ];
 		}
 
 		$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
 
 		if ( ur_string_to_bool( $get_meta_data_checkbox ) || $whole_site_access_restricted ) {
-
 			if ( ! ur_string_to_bool( $override_global_settings ) ) {
 				if ( '0' == get_option( 'user_registration_content_restriction_allow_access_to', '0' ) ) {
 
@@ -1062,7 +1078,7 @@ class URCR_Frontend {
 					}
 					return $post;
 				} elseif ( '3' === get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
-					if ( is_array( $allowed_memberships ) && in_array( $current_user_membership, $allowed_memberships ) ) {
+					if ( is_array( $allowed_memberships ) && in_array( $current_user_membership, $allowed_memberships ) && $is_user_membership_active ) {
 						return;
 					}
 					$this->urcr_restrict_contents();
@@ -1087,7 +1103,7 @@ class URCR_Frontend {
 
 				return $post;
 			} elseif ( $get_meta_data_allow_to === '3' ) {
-				if ( is_array( $get_meta_data_memberships ) && in_array( $current_user_membership, $get_meta_data_memberships ) ) {
+				if ( is_array( $get_meta_data_memberships ) && in_array( $current_user_membership, $get_meta_data_memberships ) && $is_user_membership_active ) {
 					return $post;
 				}
 				$this->urcr_restrict_contents();
@@ -1125,7 +1141,9 @@ class URCR_Frontend {
 		}
 
 		// Display restriction message instead of post content.
-		$post->post_content = $this->message();
+		$restricted_message      = get_post_meta( $post->ID, 'urcr_meta_content', true );
+		$override_global_message = get_post_meta( $post->ID, 'urcr_meta_override_global_settings', true );
+		$post->post_content      = ! empty( $restricted_message ) && $override_global_message ? wp_kses_post( $restricted_message ) : $this->message();
 
 		// Add filter for elementor content.
 		add_filter( 'elementor/frontend/the_content', array( $this, 'elementor_restrict' ) );

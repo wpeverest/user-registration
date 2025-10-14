@@ -137,12 +137,6 @@
 	}
 }
 
-// .user-registration-message {
-// 	border-top-color: #8fae1b;
-// 	background: rgba(#8fae1b, 0.1);
-// 	color: darken(#8fae1b, 15%);
-// }
-
 .user-registration-info {
 	color: #1e85be;
 	border-top-color: #1e85be;
@@ -201,17 +195,22 @@ textarea.ur-input-border-red {
 }
 
 .ur-frontend-form {
-	//margin-bottom: 30px;
 	border: 1px solid $border_color;
 	padding: 20px;
-	box-sizing: border-box;
 
 	&.login {
 		border: none;
 		padding: 60px;
 		border-radius: 8px;
 		background: #fff;
-		// box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+
+		@media screen and (max-width: 600px) {
+			padding: $spacing_40px $spacing_30px;
+		}
+
+		@media screen and (max-width: 600px) {
+			padding: $spacing_40px $spacing_30px;
+		}
 
 		.ur-lost-password-content-container {
 			display: flex;
@@ -273,6 +272,21 @@ textarea.ur-input-border-red {
 		input[name="rememberme"]#rememberme {
 			vertical-align: middle;
 		}
+
+		&.ur-edit-profile {
+			.ur-form-row.edit-user-save-btn-container {
+				.btn-primary {
+					min-height: 34px;
+					background: $primary_color;
+					border: 1px solid $primary_color;
+					color: $white;
+					border-radius: $border_radius_4;
+					font-size: 14px;
+					line-height: 24px;
+					padding: 0 $spacing_12px;
+				}
+			}
+		}
 	}
 
 	&.login-registration {
@@ -282,6 +296,7 @@ textarea.ur-input-border-red {
 	}
 
 	.register {
+
 		#node_recaptcha_register {
 			padding: 0 10px;
 		}
@@ -289,6 +304,12 @@ textarea.ur-input-border-red {
 
 	#ur-recaptcha-node {
 		margin-top: 10px;
+
+		@media screen and (max-width: 460px) {
+			position: relative;
+			left: -$spacing_30px;
+			transform: scale(0.8);
+		}
 	}
 
 	* {
@@ -311,6 +332,10 @@ textarea.ur-input-border-red {
 		.ur-form-grid {
 			flex: 1;
 			padding: 0 10px;
+
+			@media screen and (max-width: 600px) {
+				width: 100%;
+			}
 
 			&:nth-child(1n + 2) {
 				border-left: 0 none;
@@ -385,7 +410,7 @@ textarea.ur-input-border-red {
 							input {
 								&[type="checkbox"],
 								&[type="radio"] {
-									margin-top: 2px;
+									margin-top: 0px;
 								}
 							}
 
@@ -403,10 +428,49 @@ textarea.ur-input-border-red {
 				.form-row {
 					display: block;
 				}
+
+				.stripe-container {
+					.stripe-card-indicator {
+						font-size: 14px;
+						line-height: 20px;
+						font-weight: $medium;
+						background: #ebedf7;
+						color: $primary_color;
+						border-radius: $border_radius_4 $border_radius_4 0 0;
+						pointer-events: none;
+						padding: $spacing_8px $spacing_16px;
+					}
+
+					.stripe-input-container {
+						border: 0;
+
+						.StripeElement {
+							min-height: 38px;
+							height: 38px;
+							padding: 0 $spacing_12px;
+							border-radius: 0 $border_radius_4 $border_radius_4 $border_radius_4;
+
+							&--focus {
+								border-color: $primary_color;
+								border-radius: $border_radius_4;
+							}
+
+							.__PrivateStripeElement {
+								height: 38px;
+
+								iframe {
+									top: $spacing_12px;
+								}
+							}
+						}
+					}
+				}
 			}
+
 			input {
 				border-style: solid;
 			}
+
 			input[type="text"],
 			input[type="email"],
 			input[type="url"],
@@ -448,7 +512,6 @@ textarea.ur-input-border-red {
 				}
 				.__PrivateStripeElement {
 					iframe {
-						// height: 20px !important;
 						position: absolute;
 						top: 50%;
 						transform: translateY(-50%);
@@ -506,7 +569,7 @@ textarea.ur-input-border-red {
 				}
 
 				&.ur-label {
-					font-weight: bold;
+					font-weight: $semi_bold;
 				}
 			}
 
@@ -515,6 +578,10 @@ textarea.ur-input-border-red {
 				height: 100px;
 				resize: none;
 				padding: 5px 20px;
+
+				&:focus {
+					border-color: $primary_color !important;
+				}
 			}
 
 			.hide_show_password {
@@ -541,33 +608,6 @@ textarea.ur-input-border-red {
 								}
 							}
 						}
-					}
-				}
-			}
-		}
-
-		.select2-container {
-			.select2-selection--multiple {
-				border: 1px solid $color_gray_five;
-
-				.select2-selection__rendered {
-					display: block;
-
-					li {
-						&:last-child {
-							margin-left: 0;
-						}
-					}
-				}
-
-				.select2-selection__choice {
-					margin: 5px;
-				}
-
-				.select2-search--inline {
-					input[type="text"] {
-						margin: 5px;
-						height: inherit;
 					}
 				}
 			}
@@ -619,7 +659,7 @@ textarea.ur-input-border-red {
 		}
 	}
 
-	&.ur-frontend-form--bordered {
+	&.ur-frontend-form--default {
 		form {
 			.ur-form-row {
 				.ur-form-grid {
@@ -631,14 +671,14 @@ textarea.ur-input-border-red {
 					input[type="number"],
 					textarea,
 					select {
-						border: none;
-						border-bottom: 1px solid $border_color_input;
+						border: 1px solid $border_color;
 						outline: none;
 						transition: all 0.35s;
 						padding: 10px 15px;
-						background: $input_background_color;
+						background: $white;
 						color: $label_color;
 						height: 45px;
+						border-radius: $border_radius_4;
 					}
 
 					legend,
@@ -658,34 +698,66 @@ textarea.ur-input-border-red {
 					}
 
 					.user-registration-Button {
-						// background: $primary_color;
 						border: 0;
 						border-radius: 4px;
 					}
 				}
 			}
+		}
+	}
 
-			// input[type="submit"],
-			// button[type="submit"],
-			// button.user-registration-multi-part-nav-prev,
-			// button.user-registration-multi-part-nav-next {
-			// 	// background: $input_background_color;
-			// 	// border: 1px solid $border_color;
-			// 	// color: $label_color;
-			// 	border-radius: 0;
+	&.ur-frontend-form--bordered {
+		box-shadow: none !important;
+		border: 0 !important;
 
-			// 	// &:hover {
-			// 	// 	background: $primary_color;
-			// 	// 	color: $white;
-			// 	// 	border-color: $primary_color;
-			// 	// }
-			// }
+		form {
+			.ur-form-row {
+				.ur-form-grid {
+					input[type="text"],
+					input[type="email"],
+					input[type="url"],
+					input[type="password"],
+					input[type="date"],
+					input[type="number"],
+					textarea,
+					select {
+						border: 1px solid $border_color;
+						outline: none;
+						transition: all 0.35s;
+						padding: 0 12px;
+						background: $input_background_color;
+						color: $label_color;
+						height: 38px;
+					}
+
+					legend,
+					label {
+						margin-left: 5px;
+						color: $label_color;
+					}
+
+					textarea {
+						height: 100px;
+					}
+
+					.hide_show_password {
+						input[type="password"] {
+							padding-right: 50px;
+						}
+					}
+
+					.user-registration-Button {
+						border: 0;
+						border-radius: 4px;
+					}
+				}
+			}
 		}
 	}
 
 	&.ur-frontend-form--flat {
-		background: $color_sortable_background;
 		border: none transparent;
+		box-shadow: none !important;
 
 		form {
 			.ur-form-row {
@@ -703,13 +775,12 @@ textarea.ur-input-border-red {
 					input[type="number"],
 					textarea,
 					select {
-						border: none;
 						outline: none;
-						padding: 10px 15px;
+						padding: 0 12px;
 						background: $white;
 						color: $label_color;
 						margin-bottom: 10px;
-						height: 45px;
+						height: 38px;
 
 						&:focus {
 							box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.05);
@@ -751,14 +822,14 @@ textarea.ur-input-border-red {
 					input[type="number"],
 					textarea,
 					select {
-						border: 1px solid $rounded-color;
+						border: $border_width solid $border_color;
 						border-radius: 25px !important;
 						outline: none;
 						transition: all 0.35s;
-						padding: 10px 15px;
+						padding: 0 12px;
 						background: $white;
 						color: $label_color;
-						height: 45px;
+						height: 38px;
 					}
 
 					button[type="button"] {
@@ -801,6 +872,8 @@ textarea.ur-input-border-red {
 		}
 
 		&.ur-frontend-form--rounded-edge {
+			border-radius: 30px !important;
+
 			form {
 				.ur-form-row {
 					.ur-form-grid {
@@ -813,6 +886,7 @@ textarea.ur-input-border-red {
 						textarea,
 						select {
 							border-radius: 2px;
+							border-color: $border_color;
 						}
 
 						.hide_show_password {
@@ -1335,6 +1409,17 @@ span.ur-shortcode-form-embed-dot {
 	}
 
 }
+
+#user-registration-pro-single-user-view {
+	.user-registration-user-form-details {
+		.empty-list-table-container {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 50px;
+		}
+	}
+}
 //Individual oxygen widgets styles.
 .oxygen-add-section-accordion-contents[ng-if*="user-registration"] {
 	.oxygen-add-section-element {
@@ -1382,12 +1467,6 @@ span.ur-shortcode-form-embed-dot {
 	background: 4px solid #fde8e8;
 	border-top: none;
 
-	// &::before {
-	// 	// content: '';
-	// 	content: none;
-	// 	display: "";
-	// }
-
 	svg {
 		margin-right: 10px;
 	}
@@ -1405,10 +1484,10 @@ span.ur-shortcode-form-embed-dot {
 .user-registration-Button,
 .ur-submit-button {
 	width: 100%;
-	background: #475bb2;
-	border-radius: 4px;
-	border: 1px solid #475bb2;
-	color: #ffffff;
+	background: $primary_color;
+	border-radius: $border_radius_4;
+	border: 1px solid $primary_color;
+	color: $white;
 
 	&:hover {
 		background: #38488e;
@@ -1419,12 +1498,12 @@ span.ur-shortcode-form-embed-dot {
 	.ur-spinner {
 		width: 16px;
 		height: 16px;
-		margin-left: 6px;
-		margin-bottom: 2px;
+		margin-left: $spacing_6px;
+		margin-bottom: $spacing_2px;
 		display: inline-block;
 		vertical-align: middle;
 		@include loader();
-		margin-top: 5px;
+		margin-top: $spacing_5px;
 		float: right;
 	}
 }
@@ -1495,26 +1574,25 @@ span.ur-shortcode-form-embed-dot {
 		border: none !important; //Overriding global error border.
 		background: transparent !important; //Overriding global error background.
 		margin-left: unset !important; //Overriding global error margin.
-
-		// &::before {
-		// 	// content: "\f534" ;
-		// 	color : #FF0000 ;
-
-		// }
 	}
 }
 
 .user-registration.ur-frontend-form {
-	background: #fff;
-	border-radius: 8px;
+	background: $white;
+	border-radius: $border_radius_8;
 	box-shadow:
 		0px 4px 16px 0px rgba(17, 17, 26, 0.05),
 		0px 8px 32px 0px rgba(17, 17, 26, 0.05);
-	padding: 60px;
+	padding: $spacing_60px;
+
+	@media screen and (max-width: 600px) {
+		padding: $spacing_40px $spacing_30px;
+	}
 
 	input {
-		border-radius: 4px;
+		border-radius: $border_radius_4;
 	}
+
 	#user_email {
 		&::before {
 			content: "\f348";
@@ -1553,137 +1631,182 @@ span.ur-shortcode-form-embed-dot {
 	}
 }
 
-// --------------login form design css fixes------------------------------------
 
-.user-registration-membership_page_user-registration-login-forms {
-	#wpcontent {
-		.ur-admin-page-topnav {
-			margin-bottom: 0;
+// Login Form Design ReVamped CSS
+body {
+	&[class*="user-registration-"],&[class^="ur-"] {
+		/* Minimal WordPress Editor Styles */
+		.wp-editor-container {
+			border-radius: 8px !important;
+			overflow: hidden !important;
 		}
-		.user-registration-login-form-container {
-			.user-registration__wrap {
-				&.wrap {
-					margin: 0 auto;
-				}
-				.ur-form-subcontainer {
-					.menu-edit {
-						border: none;
-					}
-					.ur-registered-inputs {
-						.ui-widget-content {
-							.ur-tab-contents {
-								padding: 24px;
-								background-color: #fafafa;
-								.ur-login-view-doc {
-									border-radius: 3px;
-									cursor: pointer;
-									text-decoration: none;
-									text-align: center;
-									vertical-align: middle;
-									white-space: nowrap;
-									box-shadow: none;
-									font-size: 14px;
-									font-weight: 600;
-									letter-spacing: 0px;
-									padding: 10px 24px;
-									border: none;
-									background-color: #475bb2;
-									color: #ffffff;
-									display: block;
-									margin: 24px auto 0;
-									a {
-										color: #fff;
-									}
-									&:disabled {
-										cursor: default;
-										opacity: 0.5;
-										&:hover {
-											background-color: #475bb2;
-										}
-									}
-								}
-							}
-							.ur-heading {
-								margin-top: 0;
-								padding-bottom: 16px;
-								border-bottom: 1px solid #e9e9e9;
-								text-transform: uppercase;
-								font-size: 16px;
-								font-weight: 500;
-							}
-							.ur-login-content {
-								p {
-									font-size: 16px;
-									margin: 20px auto;
-								}
-							}
-						}
 
-						&.ur-login-form-settings {
-							.ur-tab-contents {
-								padding: 16px 16px 0 16px;
-								.ur-tab-content {
-									padding: 0;
-									form {
-										.ur-login-form-setting-block {
-											&:first-child {
-												h2 {
-													&.ur-toggle-heading {
-														margin-top: 0;
-													}
-												}
-											}
-											.ur-toggle-content {
-												margin-top: 24px;
-												display: flex;
-												flex-direction: column;
-												gap: 28px;
-												.user-registration-login-form-global-settings {
-													display: flex;
-													flex-direction: column;
-													gap: 12px;
-													label {
-														font-weight: 600;
-														gap: 6px;
-														margin-bottom: 0;
-														.user-registration-help-tip {
-															font-size: 20px;
-														}
-													}
-													select {
-														height: 38px;
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-							#ur-login-form-setting {
-								.ur-login-form-setting-block {
-									display: flex;
-									flex-direction: column;
-									gap: 24px;
-								}
-							}
-						}
+		.wp-editor-wrap {
+			.wp-editor-tabs {
+				.wp-switch-editor:hover {
+					background: #e8e8e8!important;
+					color: black!important;
+				}
+			}
+
+			.mce-toolbar {
+				background: white !important;
+				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+				margin-bottom: 0 !important;
+				padding: 6px 8px !important;
+				&-grp > div {
+					padding: 0;
+				}
+				.mce-btn {
+					background: transparent !important;
+					border: none !important;
+					border-radius: 5px !important;
+					margin: 1px !important;
+					transition: background-color 0.15s ease !important;
+
+					&:hover {
+						background: #e8e8e8 !important;
+						box-shadow: none !important;
 					}
-					#post-body {
-						.ur-builder-wrapper {
-							.ur-selected-inputs {
-								background: transparent;
-								padding: 24px;
-							}
-						}
+
+					&.mce-active {
+						background: #d0d0d0 !important;
 					}
+
+					button {
+						color: #333 !important;
+						font-size: 13px !important;
+						padding: 4px 6px !important;
+						font-weight: normal !important;
+						box-shadow: none !important;
+						background: transparent!important;
+					}
+
+					&:hover button {
+						color: #000 !important;
+						background: #e8e8e8 !important;
+					}
+
+					&.mce-active button {
+						color: #000 !important;
+						font-weight: 500 !important;
+					}
+				}
+
+				.mce-separator {
+					background: #d0d0d0 !important;
+					margin: 2px 4px !important;
+					width: 1px !important;
+				}
+			}
+
+			.mce-edit-area {
+				border-top: none !important;
+				border-radius: 0 0 6px 6px !important;
+				background: #ffffff !important;
+			}
+
+			.mce-statusbar {
+				background: #fafafa !important;
+				border-top: 1px solid #e0e0e0 !important;
+				border-radius: 0 0 6px 6px !important;
+				color: #666 !important;
+				font-size: 11px !important;
+				padding: 4px 8px !important;
+			}
+
+			.mce-menubar {
+				background: #ffffff !important;
+				border: 1px solid #e0e0e0 !important;
+				border-bottom: none !important;
+				border-radius: 6px 6px 0 0 !important;
+				padding: 2px 6px !important;
+
+				.mce-menubtn {
+					background: transparent !important;
+					border: none !important;
+					border-radius: 2px !important;
+					margin: 1px !important;
+					padding: 2px 6px !important;
+					transition: background-color 0.15s ease !important;
+
+					&:hover {
+						background: #f0f0f0 !important;
+					}
+
+					button {
+						color: #333 !important;
+						font-size: 12px !important;
+					}
+				}
+			}
+
+			/* Dropdown Menus */
+			.mce-menu {
+				background: white !important;
+				border: 1px solid #d0d0d0 !important;
+				border-radius: 6px !important;
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+
+				.mce-menu-item {
+					padding: 6px 10px !important;
+					border-radius: 2px !important;
+					margin: 1px !important;
+
+					&:hover {
+						background: #f5f5f5 !important;
+					}
+
+					&.mce-selected {
+						background: #e0e0e0 !important;
+						color: #000 !important;
+					}
+				}
+			}
+
+			/* Color Picker */
+			.mce-colorbutton .mce-preview {
+				border-radius: 4px !important;
+				border: 1px solid #d0d0d0 !important;
+				left: 6px !important;
+			}
+
+			/* Font Size Dropdown */
+			.mce-fontsize .mce-txt {
+				min-width: 50px !important;
+			}
+
+			/* Style Dropdown */
+			.mce-styleselect .mce-txt {
+				min-width: 100px !important;
+			}
+
+			/* Fullscreen Mode */
+			&.mce-fullscreen {
+				.mce-toolbar {
+					background: #ffffff !important;
+					border-bottom: 1px solid #e0e0e0 !important;
+					box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+				}
+			}
+
+			/* Responsive Design */
+			@media (max-width: 768px) {
+				.mce-toolbar {
+					flex-wrap: wrap !important;
+				}
+
+				.mce-toolbar .mce-btn {
+					margin: 1px !important;
+				}
+
+				.mce-toolbar .mce-btn button {
+					padding: 3px 5px !important;
+					font-size: 11px !important;
 				}
 			}
 		}
 	}
-}
-
-// Login Form Design ReVamped CSS
-body {
 	&.user-registration-page {
 		.ur-frontend-form {
 			.ur-form-row {
@@ -1731,13 +1854,9 @@ body {
 			}
 
 			li {
-				// color: #222222;
 				color: inherit;
-				// font-size: 14px;
 				font-size: inherit;
-				// font-weight: 400;
 				font-weight: inherit;
-				// line-height: 21px;
 				line-height: inherit;
 				letter-spacing: 0.15px;
 
@@ -1819,7 +1938,10 @@ body {
 	&.user-registration-membership_page_user-registration-login-forms {
 		.user-registration {
 			&.ur-frontend-form {
-				max-width: 100%;
+				&:has(.ur-grid-2),
+				&:has(.ur-grid-3) {
+					max-width: 1200px;
+				}
 
 				form {
 					.ur-button-container {
@@ -1830,7 +1952,6 @@ body {
 				&--bordered {
 					&:not(.login) {
 						box-shadow: none;
-						border: 1px solid #e9e9e9;
 
 						form {
 							.ur-form-row {
@@ -1855,7 +1976,6 @@ body {
 				&--flat {
 					&:not(.login) {
 						box-shadow: none;
-						border: 1px solid #e9e9e9;
 						border-radius: 0;
 
 						form {
@@ -1876,7 +1996,7 @@ body {
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
 											background: $white;
-											border-color: #e9e9e9;
+											border: 1px solid #e1e1e1;
 											box-shadow: none;
 											border-radius: 0 !important;
 										}
@@ -1905,6 +2025,8 @@ body {
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
 											box-shadow: none;
+											border: 1px solid #e1e1e1;
+											background: transparent;
 										}
 									}
 								}
@@ -1945,29 +2067,19 @@ body {
 
 			&:not(.user-registration-MyAccount) {
 				max-width: 520px;
-				// margin: 0px auto;
-				border-radius: 4px;
-				background: #ffffff;
-				// box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+				// margin: $spacing_30px auto;
+				border-radius: $border_radius_4;
+				background: transparent;
 				border: 0;
-
-				@media screen and (max-width: 575px) {
-					padding: 40px 30px;
-				}
-
-				&:has(.ur-grid-2),
-				&:has(.ur-grid-3) {
-					max-width: 940px;
-				}
 
 				&:has(.ur-frontend-form--bordered) {
 					box-shadow: none;
-					border: 1px solid #e9e9e9;
+					border: $border_width solid $border_color;
 				}
 
 				&:has(.ur-frontend-form--flat) {
 					box-shadow: none;
-					border: 1px solid #e9e9e9;
+					border: $border_width solid $border_color;
 					border-radius: 0;
 
 					.user-registration-form-login {
@@ -2000,10 +2112,8 @@ body {
 
 				.ur-frontend-form {
 					&.login {
-						// max-width: 520px;
 						margin: 0px auto;
 						box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05), 0px 8px 32px 0px rgba(17, 17, 26, 0.05);
-						// padding: 60px 50px;
 
 						.user-registration-error {
 							display: block;
@@ -2048,7 +2158,7 @@ body {
 					}
 
 					&--flat {
-						background: transparent;
+						background: $white;
 
 						.user-registration-form-login {
 							.ur-form-row {
@@ -2088,6 +2198,7 @@ body {
 							.ur-form-grid {
 								.ur-submit-button {
 									margin-right: 0;
+									color: $white;
 								}
 							}
 						}
@@ -2133,10 +2244,6 @@ body {
 							position: unset;
 							align-items: center;
 							margin-bottom: 24px !important;
-							// color: #F25656 !important;
-							// font-size: 14px !important;
-							// font-weight: 400 !important;
-							// line-height: 24px !important;
 							letter-spacing: 0.18px;
 
 							&::before {
@@ -2183,12 +2290,7 @@ body {
 						}
 
 						.user-registration-form-row {
-							margin-bottom: 12px;
-
-							// label {
-							// 	margin-top: 0;
-							// 	margin-bottom: 12px;
-							// }
+							margin-bottom: $spacing_12px;
 						}
 
 						.ur-input-with-icon {
@@ -2209,7 +2311,7 @@ body {
 								padding: 0 14px 0 36px;
 
 								&:focus {
-									border-color: #027abb;
+									border-color: $primary_color;
 								}
 							}
 						}
@@ -2230,7 +2332,6 @@ body {
 								input {
 									margin-bottom: 0;
 									border-radius: 4px;
-									border: 1px solid #e9e9e9;
 									min-height: 38px;
 									max-height: 38px;
 									font-size: 14px;
@@ -2239,7 +2340,7 @@ body {
 									color: #383838;
 
 									&:focus {
-										border-color: #027abb;
+										border-color: $primary_color;
 									}
 
 									&::placeholder {
@@ -2303,44 +2404,19 @@ body {
 								}
 
 								.user-registration-form-row {
-									margin-bottom: 24px;
-
-									label {
-										// margin-top: 0;
-										// margin-bottom: 12px;
-										// color: #222;
-										// font-size: 15px;
-										// font-weight: 500;
-										// line-height: 19px;
-									}
+									margin-bottom: $spacing_24px;
 
 									.input-wrapper {
 										display: block;
 
 										input {
-											// margin-bottom: 0;
-											// border-radius: 4px;
-											// border: 1px solid #e9e9e9;
 											min-height: 38px;
-											// font-size: 14px;
-											// line-height: 20px;
-											// padding: 0 14px;
-											// color: #383838;
-
-											&:focus {
-												// border-color: #027abb;
-											}
-
-											&::placeholder {
-												// color: #858585;
-											}
 										}
 									}
 								}
 
 								> div {
 									display: block;
-									margin-top: 32px;
 									float: unset !important;
 									flex-direction: row-reverse;
 
@@ -2420,14 +2496,19 @@ body {
 									align-items: center;
 									justify-content: space-between;
 									gap: 12px;
-									flex-wrap: wrap;
 									flex-direction: row;
 									margin-top: -4px;
 									float: unset;
 
 									label {
-										// margin: 0;
 										width: auto;
+										display: flex;
+										align-items: center;
+										gap: $spacing_8px;
+
+										input[type="checkbox"] {
+											margin: 0;
+										}
 									}
 
 									.user-registration-LostPassword {
@@ -2576,6 +2657,7 @@ body {
 			}
 		}
 	}
+
 	&.woocommerce-checkout {
 		.user-registration.urwc-form {
 			all: unset;
@@ -2639,49 +2721,60 @@ body {
 		.ur-admin-page-topnav {
 			margin-bottom: 0;
 		}
+
 		.user-registration-login-form-container {
 			.user-registration__wrap {
 				&.wrap {
 					margin: 0 auto;
 				}
+
 				.ur-form-subcontainer {
 					.menu-edit {
 						border: none;
 					}
+
 					.ur-registered-inputs {
 						.ui-widget-content {
 							.ur-tab-contents {
-								padding: 24px;
-								background-color: #ffffff;
+								background: #ffffff;
+
 								.ur-login-view-doc {
-									border-radius: 3px;
-									cursor: pointer;
-									text-decoration: none;
-									text-align: center;
-									vertical-align: middle;
-									white-space: nowrap;
-									box-shadow: none;
-									font-size: 14px;
-									font-weight: 600;
-									letter-spacing: 0px;
-									padding: 10px 24px;
-									border: none;
-									background-color: #475bb2;
-									color: #ffffff;
-									display: block;
-									margin: 24px auto 0;
 									a {
-										color: #fff;
+										border-radius: $border_radius_4;
+										cursor: pointer;
+										text-decoration: none;
+										text-align: center;
+										vertical-align: middle;
+										white-space: nowrap;
+										box-shadow: none;
+										font-size: 14px;
+										font-weight: $medium;
+										letter-spacing: 0px;
+										padding: $spacing_10px $spacing_24px;
+										border: none;
+										background: #edeff7;
+										color: $primary_color;
+										display: block;
+										margin: $spacing_32px 0 0;
+										transition: all .3s ease-in-out;
+
+										&:hover {
+											background: $primary_color;
+											color: $white;
+										}
 									}
+
 									&:disabled {
 										cursor: default;
 										opacity: 0.5;
+
 										&:hover {
 											background-color: #475bb2;
 										}
 									}
 								}
 							}
+
 							.ur-heading {
 								margin-top: 0;
 								padding-bottom: 16px;
@@ -2689,11 +2782,18 @@ body {
 								text-transform: uppercase;
 								font-size: 16px;
 							}
+
 							.ur-login-content {
 								p {
-									font-size: 16px;
-									margin: 20px auto;
+									font-size: 15px;
+									line-height: 26px;
+									margin: $spacing_12px 0;
+
+									&:nth-child(3) {
+										margin-top: $spacing_24px;
+									}
 								}
+
 								.login-forms-shortcode-action {
 									display: flex;
 									padding: 6px 6px 6px 12px;
@@ -2703,10 +2803,12 @@ body {
 									background: #fff;
 									border: 1px solid #edeff7;
 									border-radius: 4px;
+
 									input {
 										background: transparent;
 										border: none;
 									}
+
 									.ur-copy-shortcode {
 										line-height: unset;
 										padding: 6px;
@@ -2719,11 +2821,13 @@ body {
 
 						&.ur-login-form-settings {
 							.ur-tab-contents {
-								padding: 16px 16px 0 16px;
 								.ur-tab-content {
 									padding: 0;
+
 									form {
 										.ur-login-form-setting-block {
+											padding: $spacing_20px $spacing_12px $spacing_12px;
+
 											&:first-child {
 												h2 {
 													&.ur-toggle-heading {
@@ -2731,27 +2835,13 @@ body {
 													}
 												}
 											}
+
 											.ur-toggle-content {
-												margin-top: 24px;
+												margin-top: $spacing_24px;
+												padding-bottom: $spacing_28px;
 												display: flex;
 												flex-direction: column;
-												gap: 28px;
-												.user-registration-login-form-global-settings {
-													display: flex;
-													flex-direction: column;
-													gap: 12px;
-													label {
-														font-weight: 600;
-														gap: 6px;
-														margin-bottom: 0;
-														.user-registration-help-tip {
-															font-size: 20px;
-														}
-													}
-													select {
-														height: 38px;
-													}
-												}
+												gap: $spacing_28px;
 											}
 										}
 									}
@@ -2762,15 +2852,11 @@ body {
 									display: flex;
 									flex-direction: column;
 									gap: 24px;
+
+									h2 {
+										margin: 0 0 $spacing-16px 0;
+									}
 								}
-							}
-						}
-					}
-					#post-body {
-						.ur-builder-wrapper {
-							.ur-selected-inputs {
-								background: transparent;
-								padding: 24px;
 							}
 						}
 					}
@@ -2778,10 +2864,6 @@ body {
 
 				.user-registration-login-settings-form {
 					border-radius: $border_radius_4;
-
-					&#ur-frontend-form {
-						border: 1px solid #EDF2F7;
-					}
 
 					a {
 						pointer-events: none;
@@ -2792,6 +2874,7 @@ body {
 	}
 }
 
+
 body.user-registration-page {
 	.elementor-widget-container {
 		.user-registration:not(.user-registration-MyAccount) {
@@ -2800,7 +2883,6 @@ body.user-registration-page {
 		}
 	}
 }
-
 .et-db {
 	#et-boc {
 		.et-l {
@@ -2927,6 +3009,103 @@ body.user-registration-page {
 		}
 	}
 }
+
+#ur-field-all-settings {
+
+	.user-registration-login-form-global-settings:not(.ur-toggle-setting) {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.ur-toggle-setting {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.user-registration-login-form-global-settings{
+
+		.user-registration-login-form-toggle-option {
+			display: flex;
+		}
+
+		label {
+			font-size: 14px;
+			flex: 0 0 40%;
+			color: #383838;
+		}
+
+		&--field {
+			width: 100%;
+		}
+
+		.user-registration-help-tip {
+			top: 3px;
+		}
+
+		.description {
+			width: 60%;
+			margin-left: auto;
+		}
+
+		&.ur-form-settings-section {
+			border-top: 1px solid #e1e1e1;
+			padding-top: 20px;
+
+			h4 {
+				color: #131313;
+				font-weight: 600;
+				margin: 0;
+			}
+		}
+	}
+}
+
+.user-registration-login-settings-form {
+	.ur-form-row{
+		.ur-form-grid {
+			label {
+				margin-top: 0;
+				margin-bottom: 0;
+			}
+		}
+	}
+}
+
+@keyframes toaster {
+	0% {
+		opacity: 0;
+		transform: translateX(-50%) translateY(100%);
+	}
+	10% {
+		opacity: 1;
+		transform: translateX(-50%) translateY(0);
+	}
+	90% {
+		opacity: 1;
+		transform: translateX(-50%) translateY(0);
+	}
+	100% {
+		opacity: 0;
+		transform: translateX(-50%) translateY(100%);
+	}
+}
+
+.ur-toaster {
+	position: fixed;
+	bottom: 20px;
+	left: 50%;
+	transform: translateX(-50%);
+	background: #1ea71b;
+	color: #fff;
+	padding: 10px 20px;
+	border-radius: 5px;
+	display: inline-flex;
+	white-space: nowrap;
+	z-index: 9999;
+	animation: toaster 5s ease-in-out forwards;
+}
+
 .user-registration.ur-frontend-form form.register .d-none {
   display: none;
 }

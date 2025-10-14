@@ -1,5 +1,6 @@
 @import 'utility/mixins';
 @import './../../variables/variables';
+@import './../../components/button';
 
 #payment-detail-modal {
 	h2 {
@@ -139,13 +140,13 @@
 @keyframes bounceAnimation {
 	0% {
 		transform: translateX(-5px);
-	  }
-	  50% {
+	}
+	50% {
 		transform: translateX(5px);
-	  }
-	  100% {
+	}
+	100% {
 		transform: translateX(-5px);
-	  }
+	}
 }
 
 .field-amount {
@@ -250,19 +251,19 @@
 	}
 
 	#user-registration-list-table-page {
-		margin: 32px auto;
-		padding: 28px 32px;
+		margin: $spacing_24px;
+		padding: $spacing_24px $spacing_28px;
 		box-sizing: border-box;
 
 		.user-registration-list-table-heading {
 			margin-top: 0;
-			margin-bottom: 24px;
+			margin-bottom: $spacing_24px;
 
 			h1 {
 				margin: 0;
-				color: #222222;
+				color: $grey-500;
 				font-size: 22px;
-				font-weight: 600;
+				font-weight: $semi_bold;
 				line-height: 32px;
 			}
 
@@ -286,25 +287,18 @@
 		}
 
 		#user-registration-list-filters-row {
-			padding-bottom: 28px;
-
 			form {
-				height: 38px;
-				gap: 16px;
+				gap: $spacing_16px;
+
+				> p {
+					display: none;
+				}
 
 				> div {
 					position: relative;
 
 					select {
 						width: 200px;
-						border-color: #BABABA;
-						color: #383838;
-
-						&:focus {
-							box-shadow: none;
-							outline: none;
-							border-color: #475BB2;
-						}
 					}
 
 					input[type="search"] {
@@ -346,10 +340,6 @@
 		}
 
 		#user-registration-users-action-form {
-			.tablenav {
-				@include bulk-action;
-			}
-
 			.wp-list-table {
 				thead {
 					tr {
@@ -408,46 +398,9 @@
 
 		#membership-list {
 			.tablenav {
-				@include bulk-action;
-
 				&-pages {
 					margin-top: 5px;
 					margin-bottom: 0;
-				}
-
-				.actions {
-					&.bulkactions {
-						padding: 0;
-						display: flex;
-						align-items: center;
-						gap: 10px;
-
-						select {
-							height: 38px;
-							width: 220px;
-							padding: 0 12px;
-							border-radius: 4px;
-							border: 1px solid #BABABA;
-							margin-right: 0;
-
-							&:focus {
-								box-shadow: none;
-								outline: none;
-								border-color: #475BB2;
-							}
-						}
-
-						input[type="submit"] {
-							margin: 0;
-							padding: 8px 14px;
-							font-size: 14px;
-							line-height: 20px;
-							font-weight: 500;
-							color: #475BB2;
-							border-color: #475BB2;
-							background: #F6F7F7;
-						}
-					}
 				}
 			}
 
@@ -472,7 +425,7 @@
 							}
 
 							&#action {
-								width: 160px;
+								width: 180px;
 							}
 						}
 					}
@@ -563,6 +516,11 @@
 
 				tfoot {
 					tr {
+						td,
+						th {
+							border-top: $border_width solid $border_color;
+						}
+
 						th {
 							font-size: 14px;
 							font-weight: 600;
@@ -629,24 +587,22 @@
 			background-color: unset;
 
 			#ur-membership-create-form {
-				max-width: 1280px;
-				width: 100% !important;
-				padding: 0 30px;
+				max-width: 100%;
+				width: 100%;
 			}
 
 			.user-registration-card {
-				border: 0;
-				padding: 28px;
-				border: 1px solid #EDF2F7;
-				border-radius: $border_radius_4;
-				background-color: #ffffff;
+				padding: $spacing_24px $spacing_28px;
+				border: $border_width solid $border_color;
+				border-radius: $border_radius_13;
+				background: $white;
 
 				&__header {
 					padding: 0;
-					gap: 18px;
-					padding-bottom: 20px;
-					border-bottom: 1px solid #E9E9E9;
-					margin-bottom: 28px;
+					gap: $spacing_18px;
+					padding-bottom: $spacing_20px;
+					border-bottom: $border_width solid $border_color;
+					margin-bottom: $spacing_28px;
 
 					a {
 						@include back-button;
@@ -677,10 +633,63 @@
 
 							&:has(.ur-field[data-field-key="textarea"]) {
 								align-items: unset;
+
+								.wp-editor-wrap {
+									.wp-media-buttons {
+										display: flex;
+										gap: 12px;
+										margin-bottom: 12px;
+
+										.button {
+											display: flex;
+											align-items: center;
+											padding: 0 12px 0 10px;
+											gap: 4px;
+											margin-right: 0;
+
+											span {
+												display: flex;
+												align-items: center;
+												justify-content: center;
+												padding-top: 1px;
+												margin: 0;
+
+												&.dashicons {
+													&::before {
+														line-height: 18px;
+													}
+												}
+											}
+										}
+
+										#ur-smart-tags-selector {
+											margin-left: auto;
+										}
+									}
+
+									.wp-editor-container {
+										.mce-top-part {
+											&::before {
+												box-shadow: none;
+											}
+										}
+
+										.mce-container-body {
+											iframe {
+												height: 200px !important;
+											}
+										}
+
+										// .mce-toolbar-grp {
+										// 	border-bottom: 0;
+										// }
+									}
+								}
 							}
 
 							.ur-label {
 								margin-bottom: 0;
+								// margin-bottom: 300px;
 
 								label {
 									margin-bottom: 0;
@@ -691,14 +700,22 @@
 								}
 							}
 
-							.ur-admin-template {
-								.ur-field {
-									input {
-										height: 38px;
-										padding: 8px 12px 8px 12px;
-										font-size: 14px;
-										line-height: 24px;
-										color: #383838;
+							.ur-field {
+								.wp-editor-wrap {
+									.wp-editor-container {
+										.mce-container {
+											border-bottom: 0;
+										}
+
+										.mce-container-body {
+											iframe {
+												height: 200px !important;
+											}
+										}
+
+										textarea {
+											border: 0;
+										}
 									}
 								}
 							}
@@ -714,10 +731,6 @@
 						padding: 0 !important;
 
 						.user-registration-card {
-							padding: 24px;
-							border: 1px solid #EDF2F7;
-							border-radius: $border_radius_4;
-							background-color: #ffffff;
 
 							&__body {
 								.ur-membership-selection-container {
@@ -728,7 +741,7 @@
 											margin-bottom: 0 !important;
 											font-size: 15px;
 											line-height: 21px;
-											color: #383838;
+											color: $grey-400;
 										}
 									}
 
@@ -755,6 +768,11 @@
 															padding: 0 !important;
 															font-size: 16px;
 															line-height: 24px;
+															cursor: pointer;
+														}
+
+														input[type="radio"]:checked::before {
+															background: $primary_color;
 														}
 													}
 
@@ -768,20 +786,29 @@
 														}
 													}
 												}
+
+												&:has(input[type="radio"]:checked) {
+													border-color: $primary_color;
+												}
 											}
+
 											.ur-membership-upgrade-types {
-												max-width: 230px;
+												width: 100%;
+												max-width: 220px;
 												margin-bottom: 0;
-												border-radius: 4px;
-												border: 1px solid #E9E9E9;
-												background: #FFF;
-												padding: 12px 30px;
+												border-radius: $border_radius_4;
+												border: $border_width solid $border-color;
+												background: $white;
+												padding: $spacing_16px;
 												cursor: pointer;
+												display: flex;
+												align-items: center;
+												gap: $spacing_12px;
 
 												.ur-membership-upgrade-type {
 													&-title {
-														gap: 8px;
-														margin-bottom: 12px;
+														gap: $spacing_8px;
+														margin-bottom: $spacing_12px;
 
 														label {
 															padding: 0 !important;
@@ -790,15 +817,48 @@
 														}
 													}
 
+													&-full {
+														&--label {
+															padding: 0;
+														}
+													}
+												}
+
+												.ur-membership-type-title {
+													gap: $spacing_8px;
+
+													input[type="radio"],
+													.ur-membership-upgrade-type-full--label {
+														cursor: pointer;
+													}
+
+													input[type="radio"] {
+														&:checked::before {
+															background: $primary_color;
+														}
+													}
+												}
+
+												&:has(input[type="radio"]:checked) {
+													border-color: $primary_color;
+												}
+
+												&:has(input:disabled) {
+													cursor: not-allowed;
+
+													.ur-membership-type-title {
+														input[type="radio"],
+														.ur-membership-upgrade-type-full--label {
+															cursor: not-allowed;
+														}
+													}
 												}
 											}
 										}
 									}
 
 									.ur-label {
-										width: 100% !important;
-										max-width: 260px;
-										margin-bottom: 0!important;
+										margin-bottom: 0;
 									}
 
 									.ur-input-type-membership-upgrade-path {
@@ -810,19 +870,30 @@
 											}
 										}
 									}
+									.user-registration-switch {
+										@include form-toggle;
+									}
 								}
 							}
 						}
+
+						> .user-registration-card {
+							padding: 0;
+							border: 0;
+							margin-top: 80px;
+						}
 					}
+
 					#ur-membership-upgrade-action:checked {
-						background: #475BB2;
-						border-color: #475BB2;
+						background: $primary_color;
+						border-color: $primary_color;
+
 					}
 					#paid-plan-container {
 						display: flex;
 						flex-direction: column;
-						gap: 24px;
-						margin-top: 24px;
+						gap: $spacing_24px;
+						margin-top: $spacing_24px;
 
 						.ur-membership-selection-container {
 							align-items: center;
@@ -840,10 +911,7 @@
 								}
 
 								input[type="number"] {
-									height: 38px;
-									font-size: 14px;
-									line-height: 24px;
-									padding-left: 24px !important;
+									padding-left: $spacing_24px !important;
 								}
 							}
 						}
@@ -851,31 +919,12 @@
 						.ur-membership-subscription-field-container {
 							.ur-membership-selection-container {
 								.ur-field {
-									gap: 12px;
-
-									input[type="number"] {
-										width: 100px;
-										padding-left: 12px !important;
-										padding-right: 8px;
-									}
-
-									select {
-										width: 100%;
-										height: 38px;
-										padding: 0 12px;
-										margin: 0 !important;
-
-										&:focus {
-											box-shadow: none;
-											outline: none;
-											border-color: #475BB2;
-										}
-									}
+									gap: $spacing_12px;
 								}
 							}
 
 							.ur-membership-input-container {
-								margin-top: 24px !important;
+								margin-top: $spacing_24px !important;
 								padding: 0 !important;
 
 								.ur-label {
@@ -885,7 +934,7 @@
 										margin-bottom: 0;
 										font-size: 15px;
 										line-height: 21px;
-										color: #383838;
+										color: $grey-400;
 									}
 								}
 
@@ -895,14 +944,14 @@
 							}
 
 							.trial-container {
-								margin-top: 16px;
+								margin-top: $spacing_16px;
 
 								&--wrapper {
 									max-width: 650px;
-									background: #ffffff;
+									background: #f4f4f4;
 									margin-left: 0 !important;
-									padding: 20px !important;
-									border-radius: 4px;
+									padding: $spacing_20px !important;
+									border-radius: $border_radius_4;
 
 									.ur-label {
 										margin-bottom: 0;
@@ -912,13 +961,13 @@
 											margin-bottom: 0;
 											font-size: 15px;
 											line-height: 21px;
-											color: #383838;
+											color: $grey-400;
 										}
 									}
 
 									.ur-field {
 										flex: 1;
-										gap: 12px;
+										gap: $spacing_12px;
 
 										input[type="number"] {
 											width: 100px;
@@ -926,12 +975,6 @@
 
 										select {
 											flex: 1;
-
-											&:focus {
-												box-shadow: none;
-												outline: none;
-												border-color: #475BB2;
-											}
 										}
 									}
 								}
@@ -940,12 +983,10 @@
 					}
 
 					#payment-gateway-container {
-						margin-top: 28px !important;
+						margin-top: 60px;
 
 						.user-registration-card {
-							border: 1px solid #EDF2F7;
-							border-radius: $border_radius_4;
-							background-color: #ffffff;
+							border-radius: $border_radius_7;
 
 							&__header {
 								h3 {
@@ -955,21 +996,22 @@
 							}
 
 							&__body {
-								> div {
-									border-radius: 5px;
-									padding: 16px 20px !important;
-									transition: all .3s;
+								.user-registration-payment__items {
+									border: $border_width solid $border_color;
+									border-radius: $border_radius_5;
+									padding: $spacing_16px $spacing_20px;
+									transition: all .3s ease-in-out;
 									cursor: pointer;
 
 									&:hover {
-										background: #f1f1f1 !important;
+										background: #f6f6f6;
 									}
 
 									h2 {
 										margin: 0;
 										font-size: 15px;
 										line-height: 25px;
-										color: #383838;
+										color: $grey-400;
 									}
 
 									.user-registration-switch {
@@ -977,11 +1019,21 @@
 									}
 
 									.payment-option-body {
-										border-top: 1px solid #E1E1E1;
-										margin-top: 14px;
+										border-top: $border_width solid $border-color;
+										margin-top: $spacing_14px;
 										display: flex;
 										flex-direction: column;
-										gap: 10px;
+										gap: $spacing_10px;
+
+										a {
+											font-weight: $medium;
+											color: $primary_color;
+
+											&:focus {
+												outline: none;
+												box-shadow: none;
+											}
+										}
 
 										.ur-membership-input-container {
 											padding: 0 !important;
@@ -994,7 +1046,7 @@
 													margin-bottom: 0;
 													font-size: 14px;
 													line-height: 20px;
-													color: #383838;
+													color: $grey-400;
 												}
 											}
 										}
@@ -1009,15 +1061,18 @@
 													margin-bottom: 0;
 													font-size: 14px;
 													line-height: 20px;
-													color: #383838;
+													color: $grey-400;
 												}
+											}
+											.user-registration-switch {
+												@include form-toggle;
 											}
 										}
 									}
 								}
 
 								.payment-option-body {
-									margin-top: 20px;
+									margin-top: $spacing_20px;
 								}
 							}
 						}
@@ -1037,32 +1092,36 @@
 }
 
 .ur-membership-tab-contents-wrapper {
-	max-width: 1280px;
-	margin: 32px auto;
+	max-width: 100%;
+	margin: $spacing_24px;
 	display: block;
 	padding: 0;
+
+	#ur-membership-create-form {
+		.user-registration-card {
+			padding: $spacing_24px $spacing_28px;
+			border: $border_width solid $border_color;
+			background: $white;
+			border-radius: $border_radius_13;
+		}
+	}
 }
 
 #ur-membership-create-form {
 	.user-registration-card {
-		padding: 28px;
-		border: 1px solid #EDF2F7;
-		border-radius: $border_radius_4;
-		background-color: #ffffff;
-
 		#ur-membership-form-container {
-			gap: 32px;
-			padding-bottom: 32px;
+			gap: $spacing_32px;
+			padding-bottom: $spacing_32px;
 
 			#ur-member-form {
 				&-left {
 					width: 70%;
 
 					#left-title {
-						padding-bottom: 20px;
-						margin-bottom: 28px;
-						border-bottom: 1px solid #E9E9E9;
-						gap: 18px;
+						padding-bottom: $spacing_20px;
+						margin-bottom: $spacing_28px;
+						border-bottom: $border_width solid $border-color;
+						gap: $spacing_18px;
 
 						a {
 							@include back-button;
@@ -1076,7 +1135,7 @@
 					#left-body {
 						display: flex;
 						flex-direction: column;
-						gap: 24px;
+						gap: $spacing_24px;
 
 						.ur-membership-input-container {
 							padding: 0 !important;
@@ -1093,23 +1152,6 @@
 								}
 							}
 
-							.ur-admin-template {
-								.ur-field {
-									input {
-										height: 38px;
-										border-color: #E9E9E9;
-									}
-
-									select {
-										height: 38px;
-										border-radius: 4px;
-										border: 1px solid #E9E9E9;
-										max-width: 100%;
-										width: 100%;
-									}
-								}
-							}
-
 							.user-registration-switch {
 								@include form-toggle;
 							}
@@ -1119,44 +1161,116 @@
 
 				&-right {
 					width: 30%;
-					border-radius: 5px;
-					height: fit-content;
-					background: #F8F8FA;
-					border: 1px solid #EDEFF7;
-					padding: 24px !important;
+					gap: $spacing_32px;
+					display: flex;
+					flex-direction: column;
+					.right-container {
+						border-radius: $border_radius_7;
+						height: fit-content;
+						padding: $spacing_20px $spacing_24px;
+						border: $border_width solid $border-color;
 
-					.right-title {
-						padding-bottom: 16px;
-						margin-bottom: 24px;
-						border-bottom: 1px solid #E1E1E1;
-
-						h3 {
-							margin: 0 !important;
-							color: #222222;
-							font-size: 20px;
-							font-weight: 600;
-							line-height: 30px;
+						&#select-plan-container {
+							background: #F8F8FA;
 						}
-					}
 
-					.right-body {
-						gap: 24px;
+						&#plan-detail-container {
+							.form-row {
+								display: flex;
+								align-items: flex-end;
+								justify-content: space-around;
+								width: 100%;
 
-						.form-row {
-							margin-top: 0 !important;
+								.ur-label {
+									flex: 1;
+									margin: 0;
+								}
+								span {
+									flex: 1;
+									&.user-registration-badge {
+										font-size: 13px;
+										line-height: 18px;
+										border-radius: 30px;
+										padding: 4px 12px;
+									}
+									&.user-registration-badge {
+										&--active {
+											color: #3aa530;
+											background: #def8db;
+										}
 
-							label {
-								color: #383838;
-								font-size: 15px;
-								font-weight: 500;
-								line-height: 21px;
+										&--pending {
+											color: #ee9936;
+											background: #fff3e7;
+										}
+
+										&--failed,
+										&--canceled {
+											color: #f25656;
+											background: #ffe8e8;
+										}
+
+										&--inactive {
+											background: #e7e7e7;
+											color: #383838;
+										}
+
+										&--trial {
+											color: #ff8300;
+											background: #fff0e0;
+										}
+
+										&--expired {
+											background: #e7e7e7;
+											color: #a1a1a1;
+										}
+									}
+								}
 							}
+						}
+						.right-title {
+							padding-bottom: $spacing_16px;
+							margin-bottom: $spacing_24px;
+							border-bottom: $border_width solid $border-color;
 
-							.ur-membership-members-input {
-								height: 38px;
-								border-radius: 4px;
-								border: 1px solid #E9E9E9;
-								background: #fff;
+							h3 {
+								margin: 0 !important;
+								color: $grey-400;
+								font-size: 20px;
+								font-weight: $semi_bold;
+								line-height: 30px;
+							}
+						}
+
+						.right-body {
+							gap: $spacing_24px;
+
+							.form-row {
+								margin-top: 0 !important;
+
+								label {
+									color: $grey-400;
+									font-size: 15px;
+									font-weight: $medium;
+									line-height: 21px;
+								}
+
+								input {
+									&[type="date"] {
+										background: 0 0;
+										background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23737373' viewBox='0 0 24 24'%3E%3Cpath d='M7.5 6.545V2.91c0-.502.403-.909.9-.909s.9.407.9.91v3.635c0 .503-.403.91-.9.91a.905.905 0 0 1-.9-.91Zm7.2 0V2.91c0-.502.403-.909.9-.909s.9.407.9.91v3.635c0 .503-.403.91-.9.91a.905.905 0 0 1-.9-.91Z'/%3E%3Cpath d='M19.2 6.545a.905.905 0 0 0-.9-.909H5.7c-.497 0-.9.407-.9.91v12.727c0 .502.403.909.9.909h12.6c.497 0 .9-.407.9-.91V6.546ZM21 19.273C21 20.779 19.791 22 18.3 22H5.7C4.209 22 3 20.779 3 19.273V6.545C3 5.04 4.209 3.818 5.7 3.818h12.6c1.491 0 2.7 1.221 2.7 2.727v12.728Z'/%3E%3Cpath d='M20.1 9.273c.497 0 .9.407.9.909s-.403.909-.9.909H3.9a.905.905 0 0 1-.9-.91c0-.501.403-.908.9-.908h16.2Z'/%3E%3C/svg%3E");
+										background-size: 18px 18px;
+										background-position: right 12px center;
+										background-repeat: no-repeat;
+										background-color: $white;
+
+										&::-webkit-calendar-picker-indicator {
+											appearance: none;
+											opacity: 0;
+											-webkit-appearance: none;
+										}
+									}
+								}
 							}
 						}
 					}
@@ -1202,11 +1316,10 @@
 		background-position: center;
 		background-size: 100%;
 		position: absolute;
-		border-radius: 2px;
-		width: 16px;
-		height: 16px;
-		top: 8px;
-		right: 8px;
+		right: $spacing_12px;
+		border-radius: $border_radius_2;
+		width: 18px;
+		height: 18px;
 	}
 }
 
@@ -1282,3 +1395,4 @@
 		}
 	}
 }
+

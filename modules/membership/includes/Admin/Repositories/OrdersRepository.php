@@ -9,7 +9,7 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 	/**
 	 * @var string
 	 */
-	protected $table, $posts_table, $users_table, $subscriptions_table, $orders_meta_table;
+	protected $table, $posts_table, $post_meta_table, $users_table, $subscriptions_table, $orders_meta_table;
 
 	/**
 	 * Constructor of this class
@@ -17,6 +17,7 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 	public function __construct() {
 		$this->table               = TableList::orders_table();
 		$this->posts_table         = TableList::posts_table();
+		$this->post_meta_table         = TableList::posts_meta_table();
 		$this->users_table         = TableList::users_table();
 		$this->subscriptions_table = TableList::subscriptions_table();
 		$this->orders_meta_table   = TableList::order_meta_table();
@@ -108,6 +109,7 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 					wpu.ID as user_id,
 					urmo.subscription_id as subscription_id,
 					urmo.transaction_id,
+					wpm.meta_value as plan_details,
 					wpu.user_nicename,
 					wpu.display_name,
 					wpu.user_email,
@@ -130,14 +132,29 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 					urmo.created_at
 				FROM $this->table urmo
 					JOIN $this->posts_table wpp ON urmo.item_id = wpp.ID
+					JOIN $this->post_meta_table wpm ON wpp.ID = wpm.post_id
 					JOIN $this->users_table wpu ON urmo.user_id = wpu.ID
 					JOIN $this->subscriptions_table urms ON urmo.subscription_id = urms.ID
-				WHERE urmo.ID = %d
+				WHERE wpm.meta_key = 'ur_membership'
+				AND urmo.ID = %d
 		",
 				$order_id
 			),
 			ARRAY_A
 		);
+
+		$orders_meta_table = TableList::order_meta_table();
+		$payment_date = $this->wpdb()->get_var(
+			$this->wpdb()->prepare(
+				"SELECT meta_value FROM {$orders_meta_table} WHERE meta_key=%s AND order_id=%d LIMIT 1",
+				'payment_date',
+				$order_id
+			)
+		);
+
+		if( ! empty( $payment_date ) ) {
+			$result[ 'created_at' ] = $payment_date;
+		}
 
 		return ! $result ? array() : $result;
 	}

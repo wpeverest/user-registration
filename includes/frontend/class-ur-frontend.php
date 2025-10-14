@@ -36,6 +36,8 @@ class UR_Frontend {
 		add_action( 'login_init', array( $this, 'prevent_core_login_page' ) );
 		add_filter( 'user_registration_my_account_shortcode', array( $this, 'user_registration_my_account_layout' ) );
 		add_filter( 'user_registration_before_save_profile_details', array( $this, 'user_registration_before_save_profile_details' ), 10, 3 );
+		add_filter( 'user_registration_login_redirect', array( $this, 'login_redirect' ), 10, 2 );
+		add_filter( 'user_registration_redirect_after_logout', array( $this, 'logout_redirect' ), 10, 1 );
 	}
 
 	/**
@@ -70,7 +72,7 @@ class UR_Frontend {
 				$form_data = json_decode( wp_unslash( $_POST['form_data'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 			foreach ( $form_data as $data ) {
-				if ( 'user_registration_profile_pic_url' === $data->field_name ) {
+				if ( isset( $data->field_name ) && 'user_registration_profile_pic_url' === $data->field_name ) {
 					if ( ! is_array( $data->value ) && ! ur_is_valid_url( $data->value ) ) {
 						$valid_form_data['profile_pic_url']        = new stdClass();
 						$valid_form_data['profile_pic_url']->value = isset( $data->value ) ? $data->value : '';
@@ -153,7 +155,6 @@ class UR_Frontend {
 	 */
 	public function user_registration_frontend_form( $field_object, $form_id ) {
 		$class_name = ur_load_form_field_class( $field_object->field_key );
-
 		if ( class_exists( $class_name ) ) {
 			$instance                   = $class_name::get_instance();
 			$setting['general_setting'] = $field_object->general_setting;
@@ -186,7 +187,69 @@ class UR_Frontend {
 		}
 		return $attributes;
 	}
+	public function login_redirect( $redirect, $user ) {
+		if( ! ur_string_to_bool( get_option( 'user_registration_login_options_enable_custom_redirect', false ) ) ) {
+			return $redirect;
+		}
 
+		$redirect_option = get_option( 'user_registration_login_options_redirect_after_login', 'no-redirection' );
+		
+		if ( 'no-redirection' === $redirect_option ) {
+			return $redirect;
+		}
+
+		if ( 'external-url' === $redirect_option ) {
+			$external_url = get_option( 'user_registration_login_options_after_login_redirect_external_url', '' );
+			if ( ! empty( $external_url ) && ur_is_valid_url( $external_url ) ) {
+				$redirect = esc_url_raw( $external_url );
+			} else {
+				ur_get_logger()->info( sprintf( 'Invalid external URL %s set for after login redirection.', $external_url ), array( 'source' => 'user-registration' ) );
+			}
+		} elseif ( 'internal-page' === $redirect_option ) {
+			$page_id = get_option( 'user_registration_login_options_after_login_redirect_page', 0 );
+			if ( 0 !== absint( $page_id ) ) {
+				$redirect = get_permalink( $page_id );
+			} else {
+				ur_get_logger()->info( sprintf( 'Invalid page ID %s set for after login redirection.', $page_id ), array( 'source' => 'user-registration' ) );
+			}
+		} elseif ( 'previous-page' === $redirect_option ) {
+			if ( wp_get_referer() ) {
+				$redirect = wp_get_referer();
+			}
+		}
+		return apply_filters( 'user_registration_login_redirect_url', $redirect, $user, $redirect_option );
+	}
+	public function logout_redirect( $redirect ) {
+		if( ! ur_string_to_bool( get_option( 'user_registration_login_options_enable_custom_redirect', false ) ) ) {
+			return $redirect;
+		}
+		$redirect_option = get_option( 'user_registration_login_options_redirect_after_logout', 'no-redirection' );
+
+		if ( 'no-redirection' === $redirect_option ) {
+			return $redirect;
+		}
+
+		if ( 'external-url' === $redirect_option ) {
+			$external_url = get_option( 'user_registration_login_options_after_logout_redirect_external_url', '' );
+			if ( ! empty( $external_url ) && ur_is_valid_url( $external_url ) ) {
+				$redirect = $redirect . '?redirect_to_on_logout=' . $external_url;
+			} else {
+				ur_get_logger()->info( sprintf( 'Invalid external URL %s set for after logout redirection.', $external_url ), array( 'source' => 'user-registration' ) );
+			}
+		} elseif ( 'internal-page' === $redirect_option ) {
+			$page_id = get_option( 'user_registration_login_options_after_logout_redirect_page', 0 );
+			if ( 0 !== absint( $page_id ) ) {
+				$redirect = get_permalink( $page_id );
+			} else {
+				ur_get_logger()->info( sprintf( 'Invalid page ID %s set for after logout redirection.', $page_id ), array( 'source' => 'user-registration' ) );
+			}
+		} elseif ( 'previous-page' === $redirect_option ) {
+			if ( wp_get_referer() ) {
+				$redirect = wp_get_referer();
+			}
+		}
+		return apply_filters( 'user_registration_logout_redirect_url', $redirect, $redirect_option );
+	}
 	/**
 	 * Prevents Core Login page.
 	 *

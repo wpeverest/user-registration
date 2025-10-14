@@ -46,6 +46,295 @@
  * _mixins.scss
  * User Registration Mixins
  */
+.user-registration button,
+.user-registration .button,
+.ur-form-container button,
+.ur-form-container .button {
+  transition: all 0.25s ease 0s;
+  box-shadow: 0 1px 3px rgba(182.4993283582, 186.8632089552, 206.5006716418, 0.15);
+}
+.user-registration button + button,
+.user-registration button + .button,
+.user-registration .button + button,
+.user-registration .button + .button,
+.ur-form-container button + button,
+.ur-form-container button + .button,
+.ur-form-container .button + button,
+.ur-form-container .button + .button {
+  margin-left: 6px;
+}
+.user-registration button.button-icon,
+.user-registration .button.button-icon,
+.ur-form-container button.button-icon,
+.ur-form-container .button.button-icon {
+  width: 32px;
+  padding: 0;
+  text-align: center;
+}
+.user-registration button.button-icon .dashicons,
+.user-registration .button.button-icon .dashicons,
+.ur-form-container button.button-icon .dashicons,
+.ur-form-container .button.button-icon .dashicons {
+  line-height: 0.9;
+  vertical-align: middle;
+}
+.user-registration button.button-icon svg,
+.user-registration .button.button-icon svg,
+.ur-form-container button.button-icon svg,
+.ur-form-container .button.button-icon svg {
+  display: block;
+  margin: 0 auto;
+}
+.user-registration button.button-icon-round,
+.user-registration .button.button-icon-round,
+.ur-form-container button.button-icon-round,
+.ur-form-container .button.button-icon-round {
+  border-radius: 50%;
+}
+.user-registration button.is-active,
+.user-registration .button.is-active,
+.ur-form-container button.is-active,
+.ur-form-container .button.is-active {
+  background: #475bb2;
+  color: #ffffff;
+  border-color: #475bb2;
+}
+.user-registration button.is-active:hover, .user-registration button.is-active:active, .user-registration button.is-active:focus,
+.user-registration .button.is-active:hover,
+.user-registration .button.is-active:active,
+.user-registration .button.is-active:focus,
+.ur-form-container button.is-active:hover,
+.ur-form-container button.is-active:active,
+.ur-form-container button.is-active:focus,
+.ur-form-container .button.is-active:hover,
+.ur-form-container .button.is-active:active,
+.ur-form-container .button.is-active:focus {
+  background: #475bb2;
+  color: #ffffff;
+  border-color: #475bb2;
+}
+.user-registration button .ur-spinner,
+.user-registration .button .ur-spinner,
+.ur-form-container button .ur-spinner,
+.ur-form-container .button .ur-spinner {
+  width: 16px;
+  height: 16px;
+  margin-left: 6px;
+  margin-bottom: 2px;
+  display: inline-block;
+  vertical-align: middle;
+}
+.user-registration .button-primary,
+.ur-form-container .button-primary {
+  background: #475bb2;
+  border-color: #475bb2;
+  box-shadow: 0 1px 0 #475bb2;
+  text-shadow: none;
+}
+.user-registration .button-primary:hover, .user-registration .button-primary:active, .user-registration .button-primary:focus,
+.ur-form-container .button-primary:hover,
+.ur-form-container .button-primary:active,
+.ur-form-container .button-primary:focus {
+  background: rgb(56.4578313253, 72.3614457831, 141.5421686747);
+  border-color: rgb(56.4578313253, 72.3614457831, 141.5421686747);
+  box-shadow: 0 1px 0 rgb(56.4578313253, 72.3614457831, 141.5421686747);
+}
+.user-registration .button-primary:disabled,
+.ur-form-container .button-primary:disabled {
+  color: rgb(177.7951807229, 186.4698795181, 224.2048192771) !important;
+  background: rgb(104.8795180723, 121.7469879518, 195.1204819277) !important;
+  border-color: rgb(104.8795180723, 121.7469879518, 195.1204819277) !important;
+}
+.user-registration .button-secondary,
+.ur-form-container .button-secondary {
+  color: #2d3559;
+  background: rgb(222.4984029851, 224.3717109905, 232.8015970149);
+  border-color: rgb(222.4984029851, 224.3717109905, 232.8015970149);
+  box-shadow: 0 1px 0 rgb(222.4984029851, 224.3717109905, 232.8015970149);
+}
+.user-registration .button-secondary:hover, .user-registration .button-secondary:active, .user-registration .button-secondary:focus,
+.ur-form-container .button-secondary:hover,
+.ur-form-container .button-secondary:active,
+.ur-form-container .button-secondary:focus {
+  color: #2d3559;
+  background: rgb(182.4993283582, 186.8632089552, 206.5006716418);
+  border-color: rgb(182.4993283582, 186.8632089552, 206.5006716418);
+}
+.user-registration .button-tertiary,
+.ur-form-container .button-tertiary {
+  background: #ffffff;
+  color: #2d3559;
+  border: 1px solid #e1e1e1;
+}
+.user-registration .button-tertiary:hover, .user-registration .button-tertiary:active, .user-registration .button-tertiary:focus,
+.ur-form-container .button-tertiary:hover,
+.ur-form-container .button-tertiary:active,
+.ur-form-container .button-tertiary:focus {
+  background: rgb(240.4392835821, 241.3522713704, 245.4607164179);
+  border-color: #e1e1e1;
+}
+.user-registration .button-danger,
+.ur-form-container .button-danger {
+  color: #ffffff;
+  background: #ff4f55;
+  border-color: #ff4f55;
+  box-shadow: 0 1px 0 #ff4f55;
+}
+.user-registration .button-danger:hover, .user-registration .button-danger:active, .user-registration .button-danger:focus,
+.ur-form-container .button-danger:hover,
+.ur-form-container .button-danger:active,
+.ur-form-container .button-danger:focus {
+  color: #ffffff;
+  background: rgb(238.74, 54.46, 60.7422727273);
+  border-color: rgb(238.74, 54.46, 60.7422727273);
+  box-shadow: 0 1px 0 rgb(238.74, 54.46, 60.7422727273);
+}
+
+.user-registration-button-group {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+}
+.user-registration-button-group > button:not(:first-child),
+.user-registration-button-group .button:not(:first-child) {
+  margin-left: -1px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.user-registration-button-group > button:not(:last-child),
+.user-registration-button-group .button:not(:last-child) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.user-registration-button-group button,
+.user-registration-button-group .button {
+  margin-right: 0 !important;
+}
+
+.ur-registered-item.ui-draggable-dragging {
+  padding: 10px 10px;
+  line-height: 20px;
+  background: #475bb2;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 7px;
+  word-break: break-word;
+  white-space: normal;
+  width: 200px !important;
+  z-index: 9;
+}
+.ur-registered-item.ui-draggable-dragging span {
+  font-size: 14px;
+  line-height: 20px;
+  width: auto;
+  height: auto;
+  margin-right: 3px;
+}
+
+.select2-container .ur-select-all-countries-button {
+  margin: 6px 3px 4px 6px;
+}
+.select2-container .ur-unselect-all-countries-button {
+  margin: 6px 3px 4px;
+}
+
+.user-registration a,
+.user-registration-page a,
+.ur-multi-device-form-preview a {
+  text-decoration: none;
+}
+.user-registration h1, .user-registration h2, .user-registration h3, .user-registration h4, .user-registration h5, .user-registration h6,
+.user-registration-page h1,
+.user-registration-page h2,
+.user-registration-page h3,
+.user-registration-page h4,
+.user-registration-page h5,
+.user-registration-page h6,
+.ur-multi-device-form-preview h1,
+.ur-multi-device-form-preview h2,
+.ur-multi-device-form-preview h3,
+.ur-multi-device-form-preview h4,
+.ur-multi-device-form-preview h5,
+.ur-multi-device-form-preview h6 {
+  color: #383838;
+  margin: 0;
+  font-weight: 600;
+}
+.user-registration p,
+.user-registration-page p,
+.ur-multi-device-form-preview p {
+  font-size: 14px;
+  line-height: 24px;
+  color: #383838;
+  font-weight: 400;
+}
+
+.user-registration .ur-toggle-section .ur-label[for=ur-type-toggle],
+.user-registration-page .ur-toggle-section .ur-label[for=ur-type-toggle],
+.ur-multi-device-form-preview .ur-toggle-section .ur-label[for=ur-type-toggle] {
+  margin-bottom: 0;
+}
+.user-registration .ur-toggle-section .user-registration-toggle-form,
+.user-registration-page .ur-toggle-section .user-registration-toggle-form,
+.ur-multi-device-form-preview .ur-toggle-section .user-registration-toggle-form {
+  position: relative;
+  display: inline-block;
+  width: 32px;
+  height: 16px;
+}
+.user-registration .ur-toggle-section .user-registration-toggle-form input[type=checkbox],
+.user-registration-page .ur-toggle-section .user-registration-toggle-form input[type=checkbox],
+.ur-multi-device-form-preview .ur-toggle-section .user-registration-toggle-form input[type=checkbox] {
+  width: 32px;
+  height: 16px;
+  min-width: 100% !important;
+}
+.user-registration .ur-toggle-section .user-registration-toggle-form input[type=checkbox]:focus,
+.user-registration-page .ur-toggle-section .user-registration-toggle-form input[type=checkbox]:focus,
+.ur-multi-device-form-preview .ur-toggle-section .user-registration-toggle-form input[type=checkbox]:focus {
+  outline: none;
+  box-shadow: none;
+  border-color: transparent;
+}
+.user-registration .ur-toggle-section .user-registration-toggle-form input[type=checkbox]:checked + .slider,
+.user-registration-page .ur-toggle-section .user-registration-toggle-form input[type=checkbox]:checked + .slider,
+.ur-multi-device-form-preview .ur-toggle-section .user-registration-toggle-form input[type=checkbox]:checked + .slider {
+  background: #475bb2;
+}
+.user-registration .ur-toggle-section .user-registration-toggle-form input[type=checkbox]:checked + .slider::before,
+.user-registration-page .ur-toggle-section .user-registration-toggle-form input[type=checkbox]:checked + .slider::before,
+.ur-multi-device-form-preview .ur-toggle-section .user-registration-toggle-form input[type=checkbox]:checked + .slider::before {
+  transform: translateX(14px);
+}
+.user-registration .ur-toggle-section .user-registration-toggle-form .slider,
+.user-registration-page .ur-toggle-section .user-registration-toggle-form .slider,
+.ur-multi-device-form-preview .ur-toggle-section .user-registration-toggle-form .slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: #dfe1ea;
+  padding: 8px;
+  transition: 0.4s;
+}
+.user-registration .ur-toggle-section .user-registration-toggle-form .slider.round,
+.user-registration-page .ur-toggle-section .user-registration-toggle-form .slider.round,
+.ur-multi-device-form-preview .ur-toggle-section .user-registration-toggle-form .slider.round {
+  border-radius: 30px;
+}
+.user-registration .ur-toggle-section .user-registration-toggle-form .slider::before,
+.user-registration-page .ur-toggle-section .user-registration-toggle-form .slider::before,
+.ur-multi-device-form-preview .ur-toggle-section .user-registration-toggle-form .slider::before {
+  content: "";
+  position: absolute;
+  height: 12px;
+  width: 12px;
+  left: 2px;
+  bottom: 2px;
+  background-color: #fff;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -88,10 +377,8 @@
     padding-left: 0 !important;
   }
 }
-#wpcontent .wrap {
-  margin: 0;
-  padding: 24px;
-  background: #FAFAFA;
+#wpcontent .wrap.user-registration {
+  margin: -24px 0 0;
 }
 #wpcontent .wrap .user-registration-header {
   margin: 0;
@@ -99,10 +386,10 @@
 
 .user-registration-settings {
   display: flex;
-  gap: 24px;
   overflow-x: hidden;
-  border: 1px solid #EDF2F7;
+  border-bottom: 1px solid #e1e1e1;
   border-radius: 4px;
+  margin-bottom: 12px;
 }
 @media screen and (max-width: 1180px) {
   .user-registration-settings {
@@ -111,10 +398,12 @@
 }
 .user-registration-settings-wrapper {
   display: flex;
-  flex-direction: row;
-  background: #ffffff;
-  filter: drop-shadow(-4px 4px 20px rgba(89, 89, 89, 0.1));
   flex: 1;
+}
+@media screen and (max-width: 1180px) {
+  .user-registration-settings-wrapper {
+    border-bottom: 1px solid #e1e1e1;
+  }
 }
 .user-registration-settings-wrapper .user-registration-header {
   width: 100%;
@@ -124,14 +413,15 @@
   border-right: 1px solid #e1e1e1;
 }
 .user-registration-settings-wrapper .user-registration-header.collapsed {
-  max-width: 70px;
+  max-width: 60px;
+}
+.user-registration-settings-wrapper .user-registration-header.collapsed .user-registration-header--top {
+  padding: 0 12px;
 }
 .user-registration-settings-wrapper .user-registration-header.collapsed .user-registration-header--top-logo img {
   width: 40px;
 }
 .user-registration-settings-wrapper .user-registration-header.collapsed .user-registration-header--top .ur-search--top-settings {
-  padding-left: 15px;
-  padding-right: 15px;
   cursor: pointer;
 }
 .user-registration-settings-wrapper .user-registration-header.collapsed .user-registration-header--top .ur-search--top-settings input {
@@ -143,6 +433,9 @@
   font-size: 0;
 }
 .user-registration-settings-wrapper .user-registration-header.collapsed .user-registration-header--top .ur-search--top-settings .user-registration-search-icon svg {
+  right: unset;
+  left: 50%;
+  transform: translate(-50%, -50%);
   transition: all 0.3s ease-in-out;
 }
 .user-registration-settings-wrapper .user-registration-header.collapsed .user-registration-header--top .ur-search--top-settings:hover input {
@@ -159,12 +452,17 @@
 }
 .user-registration-settings-wrapper .user-registration-header.collapsed .user-registration-header--nav .ur-nav__link {
   justify-content: center;
+  min-height: 50px;
+  padding: 0;
 }
 .user-registration-settings-wrapper .user-registration-header.collapsed .user-registration-header--nav .ur-nav__link-label {
   display: none;
 }
 .user-registration-settings-wrapper .user-registration-header.collapsed .user-registration-header--nav .ur-nav-icon {
   transform: rotate(180deg);
+}
+.user-registration-settings-wrapper .user-registration-header--top {
+  padding: 0 12px;
 }
 .user-registration-settings-wrapper .user-registration-header--top-logo {
   text-align: center;
@@ -174,34 +472,6 @@
   border: 1px solid #e1e1e1;
   width: 70px;
   border-radius: 50%;
-}
-.user-registration-settings-wrapper .user-registration-header--top .ur-search--top-settings {
-  padding-left: 12px;
-  padding-right: 12px;
-  position: relative;
-  margin-bottom: 24px;
-}
-.user-registration-settings-wrapper .user-registration-header--top .ur-search--top-settings input {
-  width: 100%;
-  height: 38px;
-  padding: 8px 40px 8px 12px;
-  color: #383838;
-}
-.user-registration-settings-wrapper .user-registration-header--top .ur-search--top-settings input::placeholder {
-  color: #bababa;
-  font-weight: 400;
-}
-.user-registration-settings-wrapper .user-registration-header--top .ur-search--top-settings input.ui-autocomplete-loading {
-  background-position: 95% center;
-}
-.user-registration-settings-wrapper .user-registration-header--top .ur-search--top-settings .user-registration-search-icon {
-  position: absolute;
-  top: 11px;
-  right: 26px;
-}
-.user-registration-settings-wrapper .user-registration-header--top .ur-search--top-settings .user-registration-search-icon svg {
-  width: 18px;
-  height: 18px;
 }
 .user-registration-settings-wrapper .user-registration-header--top .ur-search--top-toggle {
   display: flex;
@@ -245,7 +515,7 @@
   font-weight: 400;
   line-height: 150%;
   color: #383838;
-  padding: 16px 20px;
+  padding: 14px 20px;
   background: transparent;
   border: 0;
   border-top: 1px solid #e1e1e1;
@@ -394,9 +664,15 @@
   flex-direction: row;
   width: 100%;
   align-items: center;
+  font-size: 15px;
+  font-weight: 500;
 }
 .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link .ur-nav-icon {
   display: flex;
+}
+.user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link .ur-nav-icon img {
+  width: 20px;
+  height: 20px;
 }
 .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link:hover .ur-nav-icon img {
   filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(324deg) brightness(96%) contrast(104%);
@@ -405,7 +681,7 @@
   color: #222;
 }
 .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link:hover, .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link.is-active {
-  background: #fafafc;
+  background: #f4f4f4;
   border-radius: 0;
   color: #475bb2;
 }
@@ -414,7 +690,7 @@
 }
 .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link.is-active:not(#ur-settings-collapse)::after {
   opacity: 1;
-  background: #fafafc;
+  background: #f4f4f4;
 }
 .user-registration-settings-wrapper .user-registration-header .ur-nav-tab-wrapper .ur-nav__link:last-child {
   border-bottom: 1px solid #e1e1e1;
@@ -423,10 +699,11 @@
   display: flex;
   gap: 32px;
   flex-direction: column;
-  padding: 24px 8px 26px 8px;
+  padding: 24px 0 26px 0;
   transition: all 0.3s;
-  width: 320px;
+  width: 340px;
   max-width: 100%;
+  border-left: 1px solid #e1e1e1;
 }
 @media screen and (max-width: 1180px) {
   .user-registration-settings-sidebar-container {
@@ -437,22 +714,22 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  padding: 0 24px;
 }
 .user-registration-settings-sidebar-container .user-registration-settings-sidebar h2 {
-  color: #222222;
+  color: #383838;
   font-size: 18px;
   font-weight: 600;
   line-height: 140%;
   margin: 0;
   padding-bottom: 16px;
   margin-bottom: 20px;
-  border-bottom: 1px solid #EEE8F7;
+  border-bottom: 1px solid #e1e1e1;
 }
 .user-registration-settings-sidebar-container .user-registration-settings-sidebar p {
   margin: 0;
   color: #383838;
-  font-size: 16px;
-  font-style: normal;
+  font-size: 15px;
   font-weight: 400;
   line-height: 24px;
 }
@@ -484,7 +761,7 @@
 .user-registration-settings-sidebar-container .user-registration-settings-sidebar__body--list-item {
   display: flex;
   color: #383838;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 400;
   line-height: 24px;
   margin-bottom: 0;
@@ -589,17 +866,19 @@
   bottom: -4px;
 }
 .user-registration-settings-sidebar-container .user-registration-settings-sidebar__footer--card a {
+  min-height: 40px;
+  height: 40px;
   text-decoration: none;
-  padding: 12px;
+  padding: 0 12px;
   background: #ffffff;
-  border-radius: 2px;
   color: #3F4D8A;
   font-weight: 600;
   transition: all 0.3s;
   width: 100%;
   text-align: center;
-  border-radius: 6px;
-  font-size: 16px;
+  border-radius: 5px;
+  font-size: 14px;
+  align-content: center;
   line-height: 24px;
 }
 .user-registration-settings-sidebar-container .user-registration-settings-sidebar__footer--card a:hover {
@@ -613,18 +892,17 @@
   flex-direction: column;
   padding: 24px;
   padding-top: 0;
-  background: #FAFAFC;
+  background: #f4f4f4;
   margin-top: 0 !important;
 }
 .user-registration-settings-container .user-registration-options-header {
-  background: #fafafa;
   padding-top: 24px;
 }
 .user-registration-settings-container .user-registration-options-header--top {
   display: flex;
   align-items: center;
   padding-bottom: 24px;
-  border-bottom: 1px solid #EBEBEB;
+  border-bottom: 1px solid #e1e1e1;
 }
 .user-registration-settings-container .user-registration-options-header--top h3 {
   margin: 0;
@@ -638,31 +916,30 @@
   margin-top: 0;
 }
 .user-registration-settings-container .user-registration-options-header--bottom {
-  margin-top: 32px;
+  margin-top: 28px;
 }
 .user-registration-settings-container .user-registration-options-header--bottom ul {
   display: flex;
   align-items: center;
-  gap: 32px;
-  border-bottom: 1px solid #EBEBEB !important;
+  gap: 12px;
   width: 100%;
 }
 .user-registration-settings-container .user-registration-options-header--bottom ul li a {
-  font-weight: 400;
-  font-size: 15px;
-  line-height: 140%;
-  color: #1f1f1f;
-  padding: 0;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  color: #383838;
+  padding: 0 4px;
   position: relative;
   padding-bottom: 16px;
   transition: all 0.3s ease-in-out;
 }
-.user-registration-settings-container .user-registration-options-header--bottom ul li a::before {
+.user-registration-settings-container .user-registration-options-header--bottom ul li a::after {
   content: "";
   background: #475bb2;
   position: absolute;
   width: 100%;
-  height: 3px;
+  height: 2px;
   border-radius: 11px;
   bottom: 0;
   left: 0;
@@ -673,17 +950,19 @@
   outline: none;
   box-shadow: none;
 }
-.user-registration-settings-container .user-registration-options-header--bottom ul li a.current {
-  font-weight: 600;
-}
-.user-registration-settings-container .user-registration-options-header--bottom ul li a:hover, .user-registration-settings-container .user-registration-options-header--bottom ul li a.current {
+.user-registration-settings-container .user-registration-options-header--bottom ul li a:hover, .user-registration-settings-container .user-registration-options-header--bottom ul li a.current, .user-registration-settings-container .user-registration-options-header--bottom ul li a.active {
   color: #475bb2;
 }
-.user-registration-settings-container .user-registration-options-header--bottom ul li a:hover::before, .user-registration-settings-container .user-registration-options-header--bottom ul li a.current::before {
+.user-registration-settings-container .user-registration-options-header--bottom ul li a.current::after, .user-registration-settings-container .user-registration-options-header--bottom ul li a.active::after {
   opacity: 1;
 }
 .user-registration-settings-container .user-registration-options-header--bottom .ur-scroll-ui__scroll-nav {
   padding-bottom: 28px;
+}
+.user-registration-settings-container .user-registration-options-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 .user-registration-settings-container .user-registration-options-container p.ur-p-tag {
   margin-bottom: 24px;
@@ -699,6 +978,10 @@
 }
 .user-registration-settings-container .user-registration-options-container p.ur-p-tag strong {
   font-weight: 600;
+}
+.user-registration-settings-container .user-registration-options-container p.ur-p-tag a {
+  color: #475bb2;
+  font-weight: 500;
 }
 .user-registration-settings-container .user-registration-options-container .ur-searched-settings-focus {
   border: 2px solid #475bb2;
@@ -794,7 +1077,7 @@
   margin: 0;
   border-radius: 4px;
   align-items: center;
-  border: 1px solid #ced4da;
+  border: 1px solid #e1e1e1;
 }
 .user-registration-settings-container .user-registration-options-container .logo img {
   width: 100%;
@@ -825,33 +1108,36 @@
   transition: all 0.3s ease-in-out;
 }
 .user-registration-settings-container .user-registration-options-container .user-registration-card {
-  padding: 16px 20px 22px;
+  padding: 20px 20px 22px;
   background: #ffffff;
-  border: 1px solid #EDF2F7 !important;
-  border-radius: 4px;
-  background-color: #ffffff;
+  border: 1px solid #e1e1e1 !important;
+  border-radius: 7px;
+  background: #ffffff;
   margin-top: 0 !important;
-  margin-bottom: 28px;
-  max-width: 680px;
+  max-width: 100%;
   position: relative;
-}
-@media (min-width: 1440px) {
-  .user-registration-settings-container .user-registration-options-container .user-registration-card {
-    max-width: 900px;
-  }
 }
 .user-registration-settings-container .user-registration-options-container .user-registration-card:last-child {
   margin-bottom: 0;
 }
+.user-registration-settings-container .user-registration-options-container .user-registration-card.ur-captcha-settings:has(.active), .user-registration-settings-container .user-registration-options-container .user-registration-card.ur-integration-settings:has(.active) {
+  border-color: #475bb2;
+}
+.user-registration-settings-container .user-registration-options-container .user-registration-card.ur-captcha-settings .user-registration-card__header:not(.active), .user-registration-settings-container .user-registration-options-container .user-registration-card.ur-integration-settings .user-registration-card__header:not(.active) {
+  border-bottom: 0 !important;
+}
 .user-registration-settings-container .user-registration-options-container .user-registration-card:has(.integration-header-info) {
   max-width: 100%;
   padding: 0 20px 0 20px;
-  margin-bottom: 12px !important;
+  margin-bottom: 0 !important;
 }
 @media (max-width: 767px) {
   .user-registration-settings-container .user-registration-options-container .user-registration-card:has(.integration-header-info).active {
     padding-bottom: 20px;
   }
+}
+.user-registration-settings-container .user-registration-options-container .user-registration-card .integration-header-info:not(.active) {
+  border-bottom: 0 !important;
 }
 @media (max-width: 767px) {
   .user-registration-settings-container .user-registration-options-container .user-registration-card:has(.active) {
@@ -876,17 +1162,44 @@
   margin-bottom: 24px;
   padding: 0 0 16px;
   position: relative;
-  border-bottom: 1px solid #EBEBEB !important;
+  border-bottom: 1px solid #e1e1e1 !important;
 }
 .user-registration-settings-container .user-registration-options-container .user-registration-card__header-wrapper {
   display: flex;
   justify-content: space-between;
 }
 .user-registration-settings-container .user-registration-options-container .user-registration-card__header .user_registration_smart_tags_used {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  min-width: 90px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  color: #383838;
+}
+.user-registration-settings-container .user-registration-options-container .user-registration-card__header .user_registration_smart_tags_used span:first-child {
+  text-decoration: underline;
+  font-weight: 500;
+  opacity: 0.8;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+.user-registration-settings-container .user-registration-options-container .user-registration-card__header .user_registration_smart_tags_used:focus, .user-registration-settings-container .user-registration-options-container .user-registration-card__header .user_registration_smart_tags_used:hover {
+  background-color: transparent;
+  color: #222222;
+  box-shadow: none;
+  outline: none;
+}
+.user-registration-settings-container .user-registration-options-container .user-registration-card__header .user_registration_smart_tags_used:focus span:first-child, .user-registration-settings-container .user-registration-options-container .user-registration-card__header .user_registration_smart_tags_used:hover span:first-child {
   color: #475bb2;
-  border-color: #475bb2;
-  background-color: #f6f7f7;
-  padding: 0px 6px;
+  opacity: 1;
+}
+.user-registration-settings-container .user-registration-options-container .user-registration-card__header .user_registration_smart_tags_used:focus .dashicons, .user-registration-settings-container .user-registration-options-container .user-registration-card__header .user_registration_smart_tags_used:hover .dashicons {
+  color: #475bb2;
+  opacity: 1;
+  transform: translateY(-1px);
 }
 .user-registration-settings-container .user-registration-options-container .user-registration-card__header.integration-header-info {
   padding: 16px 0 !important;
@@ -895,7 +1208,7 @@
   cursor: pointer;
 }
 .user-registration-settings-container .user-registration-options-container .user-registration-card__header.integration-header-info.active {
-  border-bottom: 1px solid #dee0e9;
+  border-bottom: 1px solid #e1e1e1;
   padding-bottom: 18px;
 }
 .user-registration-settings-container .user-registration-options-container .user-registration-card__header.integration-header-info.active .integration-action {
@@ -909,13 +1222,6 @@
   display: flex;
   align-items: center;
   gap: 8px;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__header-wrapper a {
-  display: flex;
-  padding: 6px;
-  background: transparent;
-  border-radius: 3px;
-  transition: all 0.3s ease-in-out;
 }
 .user-registration-settings-container .user-registration-options-container .user-registration-card__header-wrapper a svg {
   width: 16px;
@@ -1202,16 +1508,26 @@
   content: "";
   background-image: url("../images/settings-icons/information.svg") !important;
 }
+.user-registration-settings-container .user-registration-options-container .user-registration-card__body table.ur_emails tbody tr .ur-email-settings-table .ur-toggle-section {
+  justify-content: center;
+}
 .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
   margin-bottom: 28px;
+}
+.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings:has(.description), .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings:has(.error), .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings:has(textarea) {
+  align-items: baseline;
+}
+.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings:has(.ur-radio-group-list), .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings:has(.wp-editor-wrap) {
+  align-items: flex-start;
 }
 @media (max-width: 1199px) {
   .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings {
     flex-direction: column;
     gap: 10px;
+    align-items: flex-start;
   }
 }
 .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings.urcr_content_restriction_enable {
@@ -1226,20 +1542,13 @@
   border-color: #e1e1e1;
   padding: 8px 10px;
 }
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings input[type=text],
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings input[type=email],
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings select {
-  height: 38px;
-  border-color: #e1e1e1;
-}
 .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings:last-child {
   margin-bottom: 0;
 }
 .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings label {
   position: relative;
   vertical-align: top;
-  text-align: left;
-  line-height: 1.3;
+  line-height: 24px;
   font-weight: 500;
   color: #383838;
   font-size: 14px;
@@ -1285,16 +1594,6 @@
     width: 100%;
   }
 }
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field input[type=text],
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field input[type=number] {
-  width: 100%;
-  min-width: 100% !important;
-  height: 38px;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field input[type=text]::placeholder,
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field input[type=number]::placeholder {
-  color: #bababa;
-}
 .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field textarea,
 .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field select {
   min-width: 100% !important;
@@ -1302,113 +1601,35 @@
 .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .user_registration_send_email_test {
   width: 10%;
 }
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field select {
-  width: 100%;
-  height: 38px;
-  padding: 4px 10px;
-  border: 1px solid #e1e1e1;
-  border-radius: 5px;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field select:focus, .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field select:focus-visible {
-  border-width: 1px;
-  border-color: #475bb2;
+.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .error {
   box-shadow: none;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field select:hover {
-  color: #383838;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field span.select2-container {
-  width: 100% !important;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field span.select2-container--open .select2-selection__arrow {
-  height: 30px;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field span.select2-container--open .select2-selection__arrow b {
-  width: 12px;
-  border-color: transparent transparent #888 transparent;
-  border-width: 0 6px 7px 6px;
-  margin-top: -2px;
-  margin-left: -8px;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field span.select2-container--open .select2-selection--multiple:before {
-  content: "";
-  position: absolute;
-  right: 7px;
-  top: 42%;
-  border-bottom: 7px solid #888;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 0px;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection {
-  padding-left: 0;
-  padding-right: 0;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection ul {
-  flex-wrap: wrap;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection__choice {
-  background: #e9e9e9;
-  border-radius: 5px;
+  padding: 0 !important;
+  color: #f34c4c;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
   border: 0;
-  flex-direction: row-reverse;
-  gap: 6px;
-  padding: 4px 10px;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 150%;
-  color: #383838;
-  margin: 4px;
-  margin-right: 0;
 }
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection__choice__remove {
-  font-size: 18px;
-  font-weight: 400;
-  color: #383838;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection__choice__remove:hover {
-  color: #f11d1d;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection--multiple .select2-selection__rendered {
-  padding-left: 0;
-  padding-right: 0;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection--multiple:before {
+.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .error::before {
   content: "";
-  position: absolute;
-  right: 7px;
-  top: 42%;
-  border-top: 7px solid #888;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23F34C4C' viewBox='0 0 24 24'%3E%3Cpath d='M20.182 12a8.182 8.182 0 1 0-16.364 0 8.182 8.182 0 0 0 16.364 0ZM22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10Z'/%3E%3Cpath d='M11.091 12V8.363a.91.91 0 1 1 1.818 0V12a.91.91 0 1 1-1.818 0Zm.917 2.727.092.005a.91.91 0 0 1 0 1.809l-.092.004H12a.91.91 0 1 1 0-1.818h.008Z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position: center;
+  width: 18px;
+  height: 18px;
+  position: relative;
+  top: 1px;
 }
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection--single {
-  height: 38px;
-  border: 1px solid #e1e1e1;
+.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field:has(.error) .select2-container--focus .select2-selection {
+  border-color: #f34c4c !important;
 }
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection--single .select2-selection__rendered {
-  line-height: 36px;
-  padding-left: 10px;
-  padding-right: 30px;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection--single .select2-selection__rendered .select2-selection__clear {
-  font-size: 18px;
-  font-weight: 400;
-  color: #383838;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection--single .select2-selection__rendered .select2-selection__clear:hover {
-  color: #475bb2;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection--single .select2-selection__arrow {
-  height: 30px;
-  right: 8px;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .select2-selection__arrow b {
-  width: 12px;
-  border-color: #888 transparent transparent transparent;
-  border-width: 7px 6px 0 6px;
-  margin-top: -2px;
-  margin-left: -8px;
+.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field:has(.error) .select2-selection__rendered {
+  border: 0 !important;
 }
 .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .ur-toggle-section .user-registration-toggle-form input[type=checkbox] {
   min-width: 100% !important;
@@ -1417,6 +1638,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
+  margin: 0;
 }
 .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .ur-radio-group-list--item {
   max-width: 120px;
@@ -1427,13 +1649,14 @@
   padding: 6px;
   align-items: center;
   display: flex;
-}
-.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .ur-radio-group-list--item.active {
-  border-color: #475BB2;
+  margin-bottom: 0;
 }
 .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .ur-radio-group-list--item.active label {
   color: #475BB2;
   opacity: 1;
+}
+.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .ur-radio-group-list--item.active {
+  border-color: #475BB2;
 }
 .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .ur-radio-group-list--item label {
   font-size: 12px;
@@ -1448,6 +1671,9 @@
   width: fit-content;
   text-align: center;
 }
+.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .button.user_registration-deactivate-license-key, .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .ur-button.user_registration-deactivate-license-key {
+  background: #f25656 !important;
+}
 .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .user_registration_send_email_test {
   color: #475bb2;
   border-color: #475bb2;
@@ -1459,6 +1685,9 @@
   text-align: center;
   line-height: 18px;
   width: 30%;
+}
+.user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings--field .wp-editor-wrap .wp-editor-container iframe {
+  height: 200px !important;
 }
 .user-registration-settings-container .user-registration-options-container .user-registration-card__body .user-registration-global-settings .ur-captcha-test-button {
   flex: 0 0 38%;
@@ -1513,10 +1742,9 @@
 }
 .user-registration-settings-container .user-registration-options-container .ur-export-users-page .nav-tab-inside .postbox {
   width: 100%;
-  max-width: 680px;
-  padding: 16px 20px 22px;
-  border: 1px solid #EDF2F7;
-  border-radius: 4px;
+  padding: 20px 20px 22px;
+  border: 1px solid #e1e1e1;
+  border-radius: 7px;
   margin-bottom: 28px;
   background: #ffffff;
   box-shadow: none;
@@ -1528,15 +1756,17 @@
   font-weight: 600;
   font-size: 16px;
   line-height: 150%;
-  color: #222222;
+  color: #383838;
   margin: 0;
   padding-bottom: 16px;
   margin-bottom: 16px;
-  border-color: #e9e9e9;
+  border-color: #e1e1e1;
+  cursor: unset;
 }
 .user-registration-settings-container .user-registration-options-container .ur-export-users-page .nav-tab-inside .postbox .inside {
   margin: 0;
   padding: 0;
+  text-align: left;
 }
 .user-registration-settings-container .user-registration-options-container .ur-export-users-page .nav-tab-inside .postbox .inside p {
   margin: 0;
@@ -1545,6 +1775,7 @@
   font-size: 14px;
   line-height: 150%;
   color: #383838;
+  text-align: left;
 }
 .user-registration-settings-container .user-registration-options-container .ur-export-users-page .nav-tab-inside .postbox .inside p .forms-list {
   height: 38px;
@@ -1572,10 +1803,19 @@
 .user-registration-settings-container .user-registration-options-container .ur-export-users-page #selected-export-user-form::hover {
   background-color: #475BB2;
 }
+.user-registration-settings-container .user-registration-options-container #urm-invite-codes-list-table .select2.select2-container {
+  width: 15% !important;
+}
 .user-registration-settings-container .user-registration-options-container #urm-popup-table, .user-registration-settings-container .user-registration-options-container #urm-invite-codes-list-table {
   background-color: #ffffff;
   border: 1px solid #EDF2F7;
-  border-radius: 4px;
+  border-radius: 7px;
+  padding: 20px 20px 22px;
+}
+.user-registration-settings-container .user-registration-options-container #urm-popup-table #user-registration-pro-search-input,
+.user-registration-settings-container .user-registration-options-container #urm-popup-table #user-registration-invite-codes-search-input, .user-registration-settings-container .user-registration-options-container #urm-invite-codes-list-table #user-registration-pro-search-input,
+.user-registration-settings-container .user-registration-options-container #urm-invite-codes-list-table #user-registration-invite-codes-search-input {
+  width: 60%;
 }
 .user-registration-settings-container .user-registration-options-container #urm-popup-table #popups-list, .user-registration-settings-container .user-registration-options-container #urm-invite-codes-list-table #popups-list {
   margin-top: 16px;
@@ -1614,18 +1854,6 @@
   background: #0073aa;
 }
 
-.user-registration .select2-container .selection .select2-selection--single {
-  border: 1px solid #e1e1e1;
-  height: 38px;
-}
-.user-registration .select2-container .selection .select2-selection--single .select2-selection__arrow {
-  top: 4px;
-}
-.user-registration .select2-container .selection .select2-selection--single .select2-selection__arrow b {
-  margin-top: -2px;
-  margin-left: -8px;
-}
-
 .select2-results .select2-results__option--highlighted[data-selected] {
   background: #475bb2;
 }
@@ -1640,18 +1868,6 @@
 .flatpickr-day.flatpickr-disabled,
 .flatpickr-day.flatpickr-disabled:hover {
   color: rgba(57, 57, 57, 0.35);
-}
-
-.user-registration select {
-  background-image: linear-gradient(45deg, transparent 50%, gray 50%), linear-gradient(135deg, gray 50%, transparent 50%);
-  background-position: calc(100% - 15px) calc(1em + 2px), calc(100% - 10px) calc(1em + 2px), calc(100% - 2.5em) 0.5em;
-  background-size: 5px 5px, 5px 5px, 1px 1.5em;
-  background-repeat: no-repeat;
-}
-.user-registration select:focus {
-  outline: none;
-  box-shadow: none;
-  border: 1px solid #475bb2 !important;
 }
 
 .user-registration-global-settings.radio-image ul {
@@ -1688,10 +1904,34 @@
   height: 38px;
   margin-left: 5px;
 }
-#urm-invite-codes-list-table .select2-container {
-  width: 10% !important;
-  margin-right: 5px;
-}
 #urm-invite-codes-list-table #codes-filter {
   margin-top: 16px;
+}
+
+.install-urm-pro-title {
+  font-size: 1.25rem !important;
+}
+
+.ur-install-urm-pro {
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid #ebebeb;
+  margin-bottom: 20px;
+}
+
+.ur-install-urm-pro-p-tag {
+  margin-bottom: 24px;
+  padding: 10px 12px 10px 16px;
+  background: rgba(71, 91, 178, 0.04);
+  border: 1px solid #475bb2;
+  font-weight: 400;
+  color: #383838;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 22px;
+  font-style: normal;
+}
+
+.user-registration-swal2-modal--install-urm-pro .swal2-content {
+  margin-bottom: 24px;
 }

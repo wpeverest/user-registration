@@ -340,11 +340,15 @@ const TemplateList = ({ selectedCategory, templates }) => {
 				color="#26262E"
 				borderBottom="1px solid #CDD0D8"
 				paddingBottom="20px"
+				mb="20px !important"
 			>
 				{selectedCategory.toUpperCase()}
 			</Heading>
 			{templates?.length ? (
-				<SimpleGrid columns={{ base: 4, "2xl": 5 }} spacing={6}>
+				<SimpleGrid
+					columns={{ base: 1, md: 2, lg: 2, xl: 3, "2xl": 4 }}
+					spacing={6}
+				>
 					{templates.map((template) => (
 						<Box
 							key={template.slug}
@@ -671,7 +675,7 @@ const TemplateList = ({ selectedCategory, templates }) => {
 							{__("OK", "user-registration")}
 						</Button>
 						<a
-							href="https://wpuserregistration.com/pricing/?utm_source=form-template&utm_medium=premium-form-templates-popup&utm_campaign=lite-version"
+							href="https://wpuserregistration.com/upgrade/?utm_source=form-template&utm_medium=premium-form-templates-popup&utm_campaign=lite-version"
 							target="_blank"
 							rel="noopener noreferrer"
 							style={{

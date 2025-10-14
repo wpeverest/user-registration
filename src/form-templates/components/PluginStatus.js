@@ -29,20 +29,37 @@ const PluginStatus = ({ requiredPlugins, onActivateAndContinue }) => {
 	useEffect(() => {
 		const fetchPluginStatus = async () => {
 			try {
-				const response = await fetch(restURL + 'user-registration/v1/plugin/status',{
+				const response = await fetch(restURL + 'user-registration/v1/plugin/status', {
 					method: "GET",
 					headers: {
 						"X-WP-Nonce": security
 					}
 				});
+
 				if (response.ok) {
-					setPluginStatuses(response.plugin_status);
-					updateButtonLabel(response.plugin_status);
+					var data = await response.json();
+					if (data.success) {
+						setPluginStatuses(data.plugin_status);
+						updateButtonLabel(data.plugin_status);
+					} else {
+						toast({
+							title: __("Error", "user-registration"),
+							description: __(
+								"Invalid response format.",
+								"user-registration"
+							),
+							status: "error",
+							position: "bottom-right",
+							duration: 5000,
+							isClosable: true,
+							variant: "subtle"
+						});
+					}
 				} else {
 					toast({
 						title: __("Error", "user-registration"),
 						description: __(
-							"Invalid response format.",
+							"HTTP request failed.",
 							"user-registration"
 						),
 						status: "error",
@@ -69,7 +86,7 @@ const PluginStatus = ({ requiredPlugins, onActivateAndContinue }) => {
 		};
 
 		fetchPluginStatus();
-	}, [toast, requiredPlugins, pluginStatuses]);
+	}, [toast, requiredPlugins]);
 
 	const updateButtonLabel = (statuses) => {
 		const allActive = requiredPlugins.every(

@@ -47,8 +47,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		public function get_sections() {
 			$sections = array(
 				''                  => __( 'General Options', 'user-registration' ),
-				'login-options'     => __( 'Login Options', 'user-registration' ),
-				'frontend-messages' => __( 'Frontend Messages', 'user-registration' ),
+				'frontend-messages' => __( 'Form Messages', 'user-registration' ),
 			);
 
 			/**
@@ -93,8 +92,8 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'id'       => 'user_registration_general_setting_disabled_user_roles',
 									'default'  => array( 'subscriber' ),
 									'type'     => 'multiselect',
-									'class'    => 'ur-enhanced-select',
-									'css'      => 'min-width: 350px;',
+									'class'    => 'ur-enhanced-select ur-enhanced-select-nostd',
+									'css'      => '',
 									'desc_tip' => true,
 									'options'  => $all_roles_except_admin,
 								),
@@ -104,7 +103,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'id'       => 'user_registration_login_option_hide_show_password',
 									'type'     => 'toggle',
 									'desc_tip' => true,
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'default'  => 'no',
 								),
 							),
@@ -121,7 +120,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'type'     => 'single_select_page',
 									'default'  => '',
 									'class'    => 'ur-enhanced-select-nostd',
-									'css'      => 'min-width:350px;',
+									'css'      => '',
 									'desc_tip' => true,
 								),
 								array(
@@ -130,7 +129,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'id'                 => 'user_registration_my_account_layout',
 									'default'            => 'horizontal',
 									'type'               => 'radio-group',
-									'css'                => 'min-width: 350px;',
+									'css'                => '',
 									'desc_tip'           => true,
 									'options'            => array(
 										'horizontal' => __( 'Horizontal', 'user-registration' ),
@@ -147,7 +146,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'id'       => 'user_registration_ajax_form_submission_on_edit_profile',
 									'type'     => 'toggle',
 									'desc_tip' => true,
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'default'  => 'no',
 								),
 								array(
@@ -156,7 +155,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'id'       => 'user_registration_disable_profile_picture',
 									'type'     => 'toggle',
 									'desc_tip' => true,
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'default'  => 'no',
 								),
 								array(
@@ -165,17 +164,8 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'id'       => 'user_registration_sync_profile_picture',
 									'type'     => 'toggle',
 									'desc_tip' => true,
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'default'  => '',
-								),
-								array(
-									'title'    => __( 'Disable Logout Confirmation', 'user-registration' ),
-									'desc'     => __( 'Check to disable logout confirmation.', 'user-registration' ),
-									'id'       => 'user_registration_disable_logout_confirmation',
-									'type'     => 'toggle',
-									'desc_tip' => true,
-									'css'      => 'min-width: 350px;',
-									'default'  => 'no',
 								),
 							),
 						),
@@ -295,7 +285,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'id'       => 'user_registration_form_submission_error_message_required_fields',
 									'type'     => 'text',
 									'desc_tip' => true,
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'default'  => __( 'This field is required.', 'user-registration' ),
 								),
 								array(
@@ -304,7 +294,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'id'       => 'user_registration_form_submission_error_message_disallow_username_character',
 									'type'     => 'text',
 									'desc_tip' => true,
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'default'  => __( 'Please enter the valid username', 'user-registration' ),
 								),
 								array(
@@ -313,7 +303,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'id'       => 'user_registration_form_submission_error_message_email',
 									'type'     => 'text',
 									'desc_tip' => true,
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'default'  => __( 'Please enter a valid email address.', 'user-registration' ),
 								),
 
@@ -323,7 +313,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'id'       => 'user_registration_form_submission_error_message_website_URL',
 									'type'     => 'text',
 									'desc_tip' => true,
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'default'  => __( 'Please enter a valid URL.', 'user-registration' ),
 								),
 
@@ -333,7 +323,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'id'       => 'user_registration_form_submission_error_message_number',
 									'type'     => 'text',
 									'desc_tip' => true,
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'default'  => __( 'Please enter a valid number.', 'user-registration' ),
 								),
 
@@ -343,7 +333,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'id'       => 'user_registration_form_submission_error_message_confirm_email',
 									'type'     => 'text',
 									'desc_tip' => true,
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'default'  => __( 'Email and confirm email not matched.', 'user-registration' ),
 								),
 
@@ -353,7 +343,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'id'       => 'user_registration_form_submission_error_message_confirm_password',
 									'type'     => 'text',
 									'desc_tip' => true,
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'default'  => __( 'Password and confirm password not matched.', 'user-registration' ),
 								),
 
@@ -363,7 +353,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'id'       => 'user_registration_form_submission_error_message_recaptcha',
 									'type'     => 'text',
 									'desc_tip' => true,
-									'css'      => 'min-width: 350px;',
+									'css'      => '',
 									'default'  => __( 'Captcha code error, please try again.', 'user-registration' ),
 								),
 							),

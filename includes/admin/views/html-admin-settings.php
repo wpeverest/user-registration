@@ -24,6 +24,9 @@ $is_settings_sidebar_enabled = isset( $_COOKIE['isSidebarEnabled'] ) ? ur_string
 
 $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php' );
 ?>
+
+<hr class="wp-header-end">
+<?php echo user_registration_plugin_main_header(); ?>
 <div class="wrap user-registration">
 	<form method="<?php echo esc_attr( $user_registration_settings_form_method_tab ); ?>" id="mainform" action="" enctype="multipart/form-data">
 		<h1 class="screen-reader-text"><?php echo isset( $tabs[ $current_tab ] ) ? esc_html( $tabs[ $current_tab ] ) : ''; ?></h1>
@@ -32,9 +35,9 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 
 				<header class="user-registration-header <?php echo $collapse_by_default ? 'collapsed' : ''; ?>">
 					<div class="user-registration-header--top">
-						<div class="user-registration-header--top-logo">
+						<!-- <div class="user-registration-header--top-logo">
 							<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/onboard-icons/logo.png' ); ?>" alt="">
-						</div>
+						</div> -->
 						<div class="ur-search-input ur-search--top-settings">
 							<input id="ur-search-settings" class="ur-type-text" type="text" placeholder="<?php esc_html_e( 'Search Settings...', 'user-registration' ); ?>" fdprocessedid="8fe27c">
 							<div class="user-registration-search-icon">
@@ -159,7 +162,7 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 							 */
 							$user_registration_setting_save_label = apply_filters( 'user_registration_setting_save_label', esc_attr__( 'Save Changes', 'user-registration' ) );
 							?>
-							<input name="save" class="button-primary" type="submit" value="<?php echo esc_attr( $user_registration_setting_save_label ); ?>" />
+							<input name="save" class="<?php echo implode( ' ', apply_filters( 'user_registration_setting_save_button_classes', array( 'button-primary' ) ) ) ?>" type="submit" value="<?php echo esc_attr( $user_registration_setting_save_label ); ?>" />
 						<?php endif; ?>
 						<input type="hidden" name="subtab" id="last_tab" />
 						<?php wp_nonce_field( 'user-registration-settings' ); ?>
@@ -169,7 +172,7 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 			<?php
 			if ( ! $is_pro_active || ! $quick_setup_completed ) {
 				?>
-				<div class="user-registration-settings-sidebar-container" id="user-registration-settings-sidebar">
+				<div class="user-registration-settings-sidebar-container  <?php echo esc_attr( !$is_settings_sidebar_enabled ? 'ur-d-none' : '' ); ?> " id="user-registration-settings-sidebar">
 					<?php
 					if ( ! $quick_setup_completed ) {
 						?>
@@ -261,7 +264,7 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 											<path fill-rule="evenodd" clip-rule="evenodd" d="M17.1055 22.666L19.0896 39.3327H42.8991L44.8833 22.666L30.9944 34.1243L17.1055 22.666ZM42.9037 40.9155H19.0942V44.8838H42.9037V40.9155Z" fill="white"/>
 										</svg>';
 						$content .= '<p>' . esc_html__( 'Get More Features with Pro', 'user-registration' ) . '</p>';
-						$content .= '<a rel="noreferrer noopener" target="_blank" href="https://wpuserregistration.com/pricing/?utm_source=settings-sidebar-right&amp;utm_medium=premium-benefits-card&amp;utm_campaign=lite-version">Upgrade to Pro</a>';
+						$content .= '<a rel="noreferrer noopener" target="_blank" href="https://wpuserregistration.com/upgrade/?utm_source=settings-sidebar-right&amp;utm_medium=premium-benefits-card&amp;utm_campaign=lite-version">Upgrade to Pro</a>';
 						$content .= '</div>';
 						$content .= '</div>';
 						echo $content; // phpcs:ignore

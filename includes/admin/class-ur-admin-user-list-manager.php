@@ -29,7 +29,7 @@ class UR_Admin_User_List_Manager {
 		add_action( 'load-users.php', array( $this, 'trigger_query_actions' ) );
 		add_action( 'admin_notices', array( $this, 'user_registration_display_admin_notices' ), 99 );
 		add_action( 'admin_notices', array( $this, 'user_registration_pending_users_notices' ) );
-
+		add_action( 'admin_notices', array( $this, 'user_registration_non_urm_users_notices' ) );
 		// Functions about users listing.
 		add_action( 'restrict_manage_users', array( $this, 'add_status_filter' ) );
 		add_action( 'admin_footer-users.php', array( $this, 'add_bulk_actions' ) );
@@ -224,7 +224,59 @@ class UR_Admin_User_List_Manager {
 			echo '<div id="user-approvation-result" class="notice notice-success is-dismissible"><p><strong>' . esc_html__( 'User Registration:', 'user-registration' ) . '</strong> ' . esc_html( count( $users ) ) . ' <a href="' . esc_url( $admin_url ) . '">' . ( ( count( $users ) === 1 ) ? esc_html__( 'User', 'user-registration' ) : esc_html__( 'Users', 'user-registration' ) ) . '</a> ' . esc_html__( 'pending approval.', 'user-registration' ) . '</p></div>';
 		}
 	}
+	/**
+	 * Display a notice to admin notifying the users registered via non URM forms.
+	 */
+	public function user_registration_non_urm_users_notices() {
 
+		$current_user_id = get_current_user_id();
+
+		$urm_dismissed_notices = get_user_meta( $current_user_id, 'urm_dismissed_notices', true );
+
+		if( is_array( $urm_dismissed_notices ) && isset( $urm_dismissed_notices[ 'non_urm_users_notice' ] ) ) {
+			$closed_count = isset( $urm_dismissed_notices[ 'non_urm_users_notice' ][ 'dismiss_count' ] ) ?: 0;
+			$last_closed = isset( $urm_dismissed_notices[ 'non_urm_users_notice' ][ 'last_dismissed_at' ] ) ?: 0;
+			// if it was closed twice in a row, don't show again.
+			if( $closed_count >= 2 ) {
+				return;
+			}
+			//Don't show if it has been closed recently(within past 24 hours).
+			if( $last_closed && ( time() - $last_closed ) < DAY_IN_SECONDS ) {
+				return;
+			}
+		}
+		$users = get_transient( 'urm_users_not_from_urm_forms' );
+		$current_screen = get_current_screen();
+		$ur_pages = ur_get_screen_ids();
+		array_push( $ur_pages, 'users' );
+
+		$existing_non_urm_users = $users ? $users : 0;
+		if( $existing_non_urm_users >= 5 && in_array( $current_screen->id, $ur_pages ) ) {
+			$utm_url = esc_url(
+            	'https://wpuserregistration.com/features/profile-connect/?utm_source=admin-notices&utm_medium=profile-connect-addon-link&utm_campaign=' . UR()->utm_campaign
+        	);
+
+        ?>
+			<div class="notice notice-info is-dismissible urm-per-user-notice urm-non-urm-users-notice" data-notice-id="non_urm_users_notice" data-notice-type="urm-admin-notice">
+				<p>
+					<strong><?php esc_html_e( 'User Registration:', 'user-registration' ); ?></strong>
+					<?php
+					printf(
+						/* translators: %s: number of existing users */
+						esc_html__( 'Your site has %s users registered before this plugin.', 'user-registration' ),
+						'<span class="highlight">' . intval( $existing_non_urm_users ) . '</span>'
+					);
+					?>
+					<?php esc_html_e( 'Want them to enjoy the new profile features too? Use the', 'user-registration' ); ?>
+					<a class="addon-link" href="<?php echo $utm_url; ?>" rel="noreferrer noopener" target="_blank">
+						<?php esc_html_e( 'Profile Connect addon', 'user-registration' ); ?>
+					</a>
+					<?php esc_html_e( 'to link these existing users to your new registration form.', 'user-registration' ); ?>
+				</p>
+			</div>
+        <?php
+		}
+	}
 	/**
 	 * Deprecates old plugin missing notice.
 	 *

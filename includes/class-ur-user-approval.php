@@ -196,7 +196,7 @@ class UR_User_Approval {
 			$members_order_repository = new \WPEverest\URMembership\Admin\Repositories\MembersOrderRepository();
 			$last_order               = $members_order_repository->get_member_orders( $user->ID );
 			if ( ! empty( $membership ) ) {
-				$check_membership = $this->check_user_membership( $membership, $user, $last_order );
+				$check_membership = $this->check_user_membership( $membership, $user, $last_order, $login_option );
 
 				if ( $check_membership instanceof WP_Error ) {
 					return $check_membership;
@@ -384,18 +384,14 @@ class UR_User_Approval {
 		return $user;
 	}
 
-	public function check_user_membership( $membership, $user, $last_order ) {
+	public function check_user_membership( $membership, $user, $last_order , $login_option) {
 		switch ( $membership['status'] ) {
 			case 'pending':
-				if ( ( $last_order['payment_method'] === "paypal" || $last_order['payment_method'] === "mollie" ) && $last_order["status"] === "pending" ) {
+
+				if ( ( $last_order['payment_method'] === "paypal" || $last_order['payment_method'] === "mollie" ) && $last_order["status"] === "pending" && 'payment' === $login_option ) {
 					break;
 				}
 				$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your subscription is not active. Please contact administrator.', 'user-registration' );
-
-				return new WP_Error( 'denied_access', $message );
-				break;
-			case 'canceled':
-				$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your subscription has been cancelled. Please contact administrator.', 'user-registration' );
 
 				return new WP_Error( 'denied_access', $message );
 				break;

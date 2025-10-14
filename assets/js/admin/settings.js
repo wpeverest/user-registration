@@ -4,7 +4,6 @@
 		var snackbar = new UR_Snackbar();
 	}
 
-
 	// Allowed Screens
 	$("select#user_registration_allowed_screens")
 		.on("change", function () {
@@ -49,7 +48,7 @@
 				$(this)
 					.parent()
 					.find(".colorpickpreview")
-					.css({backgroundColor: ui.color.toString()});
+					.css({ backgroundColor: ui.color.toString() });
 			},
 			hide: true,
 			border: true
@@ -236,15 +235,15 @@
 				data: {
 					action: "user_registration_captcha_test",
 					security:
-					user_registration_settings_params.user_registration_captcha_test_nonce,
+						user_registration_settings_params.user_registration_captcha_test_nonce,
 					captcha_type: captcha_type,
 					invisible_recaptcha: invisible_recaptcha
 				},
 				beforeSend: function () {
 					var spinner = $(
 						"#user_registration_captcha_setting_" +
-						captcha_type +
-						"_captcha_test .spinner"
+							captcha_type +
+							"_captcha_test .spinner"
 					);
 					spinner.show();
 					setTimeout(function () {
@@ -254,8 +253,8 @@
 				success: function (response) {
 					var ur_recaptcha_node = $(
 							'.ur-captcha-test-container[data-captcha-type="' +
-							captcha_type +
-							'"] .ur-captcha-node'
+								captcha_type +
+								'"] .ur-captcha-node'
 						),
 						ur_recaptcha_code = response.data.ur_recaptcha_code;
 
@@ -333,8 +332,6 @@
 									break;
 
 								case "hCaptcha":
-									console.log(hcaptcha);
-
 									google_recaptcha_login = hcaptcha.render(
 										ur_recaptcha_node
 											.find(".g-recaptcha-hcaptcha")
@@ -343,7 +340,6 @@
 											sitekey: ur_recaptcha_code.site_key,
 											theme: "light",
 											"error-callback": function (e) {
-												console.log(e);
 											},
 											style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"
 										}
@@ -354,20 +350,16 @@
 									try {
 										turnstile.render(
 											"#" +
-											ur_recaptcha_node
-												.find(".cf-turnstile")
-												.attr("id"),
+												ur_recaptcha_node
+													.find(".cf-turnstile")
+													.attr("id"),
 											{
 												sitekey:
-												ur_recaptcha_code.site_key,
+													ur_recaptcha_code.site_key,
 												theme: ur_recaptcha_code.theme_mode,
 												style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"
 											}
 										);
-
-										ur_recaptcha_node
-											.find("iframe")
-											.css("display", "block");
 									} catch (err) {
 										display_captcha_test_status(
 											err.message,
@@ -382,7 +374,6 @@
 
 					if (!response.success) {
 						var msg = response.data;
-						console.log(msg);
 						display_captcha_test_status(msg, "error", captcha_type);
 						return;
 					}
@@ -397,21 +388,22 @@
 	 * @param {string} type Notice type.
 	 */
 	function display_captcha_test_status(notice, type, captcha_type) {
+
 		if (notice.length) {
 			var notice_container = $(
 				'.ur-captcha-test-container[data-captcha-type="' +
-				captcha_type +
-				'"]'
+					captcha_type +
+					'"]'
 			).find(".ur-captcha-notice");
 			var notice_icon = $(
 				'.ur-captcha-test-container[data-captcha-type="' +
-				captcha_type +
-				'"]'
+					captcha_type +
+					'"]'
 			).find(".ur-captcha-notice--icon");
 			var notice_text = $(
 				'.ur-captcha-test-container[data-captcha-type="' +
-				captcha_type +
-				'"]'
+					captcha_type +
+					'"]'
 			).find(".ur-captcha-notice--text");
 
 			if (notice_text.length) {
@@ -435,8 +427,8 @@
 
 		var spinner = $(
 			"#user_registration_captcha_setting_" +
-			captcha_type +
-			"_captcha_test .spinner"
+				captcha_type +
+				"_captcha_test .spinner"
 		);
 		spinner.hide();
 	}
@@ -469,8 +461,8 @@
 					)
 					.append(
 						'<div class="error inline" style="padding:10px;">' +
-						ur_login_form_params.user_registration_membership_redirect_default_page_message +
-						"</div>"
+							ur_login_form_params.user_registration_membership_redirect_default_page_message +
+							"</div>"
 					);
 			} else {
 				$(wpbody_class)
@@ -500,8 +492,8 @@
 				.closest(".user-registration-login-form-global-settings--field")
 				.append(
 					'<div class="error inline" style="padding:10px;">' +
-					ur_login_form_params.user_registration_membership_redirect_default_page_message +
-					"</div>"
+						ur_login_form_params.user_registration_membership_redirect_default_page_message +
+						"</div>"
 				);
 
 			$redirect.prop("required", true);
@@ -699,7 +691,7 @@
 			data = {
 				action: "user_registration_my_account_selection_validator",
 				security:
-				user_registration_settings_params.user_registration_my_account_selection_validator_nonce
+					user_registration_settings_params.user_registration_my_account_selection_validator_nonce
 			};
 
 		data.user_registration_selected_my_account_page = $this.val();
@@ -724,8 +716,8 @@
 						.closest(".user-registration-global-settings--field")
 						.append(
 							"<div id='message' class='error inline' style='padding:10px;'>" +
-							response.responseJSON.data.message +
-							"</div>"
+								response.responseJSON.data.message +
+								"</div>"
 						);
 					$this.css("border", "1px solid red");
 					$this
@@ -758,7 +750,7 @@
 			data = {
 				action: "user_registration_lost_password_selection_validator",
 				security:
-				ur_login_form_params.user_registration_lost_password_selection_validator_nonce
+					ur_login_form_params.user_registration_lost_password_selection_validator_nonce
 			};
 
 		data.user_registration_selected_lost_password_page = $this.val();
@@ -790,8 +782,8 @@
 							)
 							.append(
 								"<div id='message' class='error inline' style='padding:10px;'>" +
-								response.responseJSON.data.message +
-								"</div>"
+									response.responseJSON.data.message +
+									"</div>"
 							);
 					}
 					$this.css("border", "1px solid red");
@@ -996,7 +988,7 @@
 			heightAuto: false,
 			width: "575px",
 			confirmButtonText:
-			user_registration_settings_params.i18n.upgrade_plan
+				user_registration_settings_params.i18n.upgrade_plan
 		}).then(function (result) {
 			if (result.isConfirmed) {
 				window.open(
@@ -1040,6 +1032,8 @@
 				$("body")
 					.removeClass("ur-settings-sidebar-hidden")
 					.addClass("ur-settings-sidebar-show");
+				$(".user-registration-settings-sidebar-container")
+					.removeClass("ur-d-none");
 				$(node)
 					.closest(".user-registration-options-header--top__right")
 					.find(".user-registration-toggle-text")
@@ -1147,7 +1141,7 @@
 	function show_success_message(message) {
 		if (snackbar) {
 			snackbar.add({
-				type: 'success',
+				type: "success",
 				message: message,
 				duration: 5
 			});
@@ -1164,38 +1158,441 @@
 	function show_failure_message(message) {
 		if (snackbar) {
 			snackbar.add({
-				type: 'failure',
+				type: "failure",
 				message: message,
-				duration: 6
+				duration: 6,
+				dismissible: true
 			});
 			return true;
 		}
 		return false;
 	}
 
-	function update_payment_section_settings(setting_id, section_data, $this, settings_container) {
-
+	function update_payment_section_settings(
+		setting_id,
+		section_data,
+		$this,
+		settings_container
+	) {
 		$.ajax({
 			url: user_registration_settings_params.ajax_url,
 			data: {
 				action: "user_registration_save_payment_settings",
-				security: user_registration_settings_params.user_registration_membership_payment_settings_nonce,
+				security:
+					user_registration_settings_params.user_registration_membership_payment_settings_nonce,
 				setting_id: setting_id,
 				section_data: JSON.stringify(section_data)
 			},
 			type: "POST",
 			complete: function (response) {
-				$this.find('.ur-spinner').remove();
+				$this.find(".ur-spinner").remove();
 				if (response.responseJSON.success) {
 					show_success_message(response.responseJSON.data.message);
-					settings_container.find('.integration-status').addClass('ur-integration-account-connected');
+					settings_container
+						.find(".integration-status")
+						.addClass("ur-integration-account-connected");
 				} else {
 					show_failure_message(response.responseJSON.data.message);
+				}
+			}
+		});
+	}
+
+	function update_captcha_section_settings(setting_id, section_data, $this, settings_container) {
+		$.ajax({
+			url: user_registration_settings_params.ajax_url,
+			data: {
+				action: "user_registration_save_captcha_settings",
+				security: user_registration_settings_params.user_registration_membership_captcha_settings_nonce,
+				setting_id: setting_id,
+				section_data: JSON.stringify(section_data)
+			},
+			type: "POST",
+			success: function (response) {
+				if (response.success) {
+					$this.find('.ur-spinner').remove();
+					show_success_message(response.data.message);
+					settings_container.find('.integration-status').addClass('ur-integration-account-connected');
+					var urm_recaptcha_node = $(
+							'.ur-captcha-test-container[data-captcha-type="' +
+							setting_id +
+							'"] .ur-captcha-node'
+						),
+						captcha_config = response.data.ur_recaptcha_code;
+
+					if (
+						"undefined" !== typeof captcha_config &&
+						captcha_config.site_key.length
+					) {
+						if (urm_recaptcha_node.length !== 0) {
+							enable_test_captcha(setting_id, urm_recaptcha_node, captcha_config);
+						}
+					}
+				} else {
+					$this.find('.ur-spinner').remove();
+					show_failure_message(response.data.message);
 				}
 
 			}
 		});
 	}
+
+	// Initialize widget tracking arrays for each captcha type
+	if (typeof window.ur_captcha_widgets === 'undefined') {
+		window.ur_captcha_widgets = {
+			recaptcha: [],
+			hcaptcha: [],
+			turnstile: []
+		};
+	}
+
+	// Extend the existing onloadURCallback to handle admin settings widgets
+	var originalOnloadURCallback = window.onloadURCallback;
+	window.onloadURCallback = function() {
+		// Call the original callback first
+		if (typeof originalOnloadURCallback === 'function') {
+			originalOnloadURCallback();
+		}
+
+		// Only render captchas if there are elements to render (not on page load)
+		var captchaElements = document.querySelectorAll(".g-recaptcha[data-captcha-type='v2'], .g-recaptcha-hcaptcha, .cf-turnstile");
+		if (captchaElements.length === 0) {
+			return;
+		}
+
+		// Add a small delay to ensure scripts are fully loaded
+		setTimeout(function() {
+			renderAdminCaptchas();
+		}, 100);
+	};
+
+	// Function to render admin captchas with proper error handling
+	function renderAdminCaptchas() {
+		// Handle admin settings widgets
+		Array.prototype.forEach.call(document.querySelectorAll(".g-recaptcha[data-captcha-type='v2']"), function (el) {
+			if (typeof grecaptcha !== 'undefined' && grecaptcha.ready && !el.hasAttribute('data-rendered')) {
+				var siteKey = el.getAttribute('data-site-key');
+				if (siteKey && siteKey.trim() !== '') {
+					// Use grecaptcha.ready to ensure it's fully loaded
+					grecaptcha.ready(function() {
+						if (typeof grecaptcha.render === 'function') {
+							try {
+								var widgetId = grecaptcha.render(el, {
+									sitekey: siteKey,
+									theme: "light",
+									style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"
+								});
+								el.setAttribute('data-rendered', 'true');
+								if (typeof window.ur_captcha_widgets !== 'undefined') {
+									window.ur_captcha_widgets.recaptcha.push(widgetId);
+								}
+							} catch (error) {
+								setTimeout(function() {
+									if (!el.hasAttribute('data-rendered')) {
+										renderAdminCaptchas();
+									}
+								}, 500);
+							}
+						} else {
+							// grecaptcha.render is not available, retry after delay
+							setTimeout(function() {
+								if (!el.hasAttribute('data-rendered')) {
+									renderAdminCaptchas();
+								}
+							}, 500);
+						}
+					});
+				}
+			} else if (typeof grecaptcha === 'undefined' || !grecaptcha.ready) {
+				// reCAPTCHA not loaded yet, retry after delay
+				setTimeout(function() {
+					if (!el.hasAttribute('data-rendered')) {
+						renderAdminCaptchas();
+					}
+				}, 500);
+			}
+		});
+
+		Array.prototype.forEach.call(document.querySelectorAll(".g-recaptcha-hcaptcha"), function (el) {
+			if (typeof hcaptcha !== 'undefined' && !el.hasAttribute('data-rendered')) {
+				var siteKey = el.getAttribute('data-site-key');
+				if (siteKey && siteKey.trim() !== '') {
+					var widgetId = hcaptcha.render(el, {
+						sitekey: siteKey,
+						theme: "light",
+						style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"
+					});
+					el.setAttribute('data-rendered', 'true');
+					if (typeof window.ur_captcha_widgets !== 'undefined') {
+						window.ur_captcha_widgets.hcaptcha.push(widgetId);
+					}
+				}
+			}
+		});
+
+		Array.prototype.forEach.call(document.querySelectorAll(".cf-turnstile"), function (el) {
+			if (typeof turnstile !== 'undefined' && !el.hasAttribute('data-rendered')) {
+				var siteKey = el.getAttribute('data-site-key');
+				if (siteKey && siteKey.trim() !== '') {
+					var widgetId = turnstile.render(el, {
+						sitekey: siteKey,
+						theme: el.getAttribute('data-theme') || "light",
+						style: "transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"
+					});
+					el.setAttribute('data-rendered', 'true');
+					if (typeof window.ur_captcha_widgets !== 'undefined') {
+						window.ur_captcha_widgets.turnstile.push(widgetId);
+					}
+				}
+			}
+		});
+	};
+
+	function enable_test_captcha(setting_id, urm_recaptcha_node, captcha_config) {
+		// Clear any existing captcha scripts to prevent conflicts
+		var clearExistingCaptchaScripts = function() {
+			// Remove existing captcha scripts
+			var scriptsToRemove = [
+				'script[src*="google.com/recaptcha/api.js"]',
+				'script[src*="hcaptcha.com/1/api.js"]',
+				'script[src*="challenges.cloudflare.com/turnstile/v0/api.js"]'
+			];
+
+			scriptsToRemove.forEach(function(selector) {
+				var scripts = document.querySelectorAll(selector);
+				scripts.forEach(function(script) {
+					script.remove();
+				});
+			});
+
+			// Clear global variables to prevent conflicts
+			// hCaptcha and reCAPTCHA both use grecaptcha, so we need to clear it
+			if (typeof window.grecaptcha !== 'undefined') {
+				delete window.grecaptcha;
+			}
+			if (typeof window.hcaptcha !== 'undefined') {
+				delete window.hcaptcha;
+			}
+			if (typeof window.turnstile !== 'undefined') {
+				delete window.turnstile;
+			}
+		};
+
+		// Clear all existing captcha widgets first
+		var clearAllCaptchaWidgets = function() {
+			urm_recaptcha_node.find('.g-recaptcha, .g-recaptcha-hcaptcha, .cf-turnstile').remove();
+
+			urm_recaptcha_node.find('[data-rendered]').removeAttr('data-rendered');
+
+			if (typeof window.ur_captcha_widgets !== 'undefined') {
+				// Reset reCAPTCHA widgets
+				if (window.ur_captcha_widgets.recaptcha && window.ur_captcha_widgets.recaptcha.length > 0) {
+					window.ur_captcha_widgets.recaptcha.forEach(function(widgetId) {
+						if (typeof grecaptcha !== 'undefined' && grecaptcha.reset) {
+							try {
+								grecaptcha.reset(widgetId);
+							} catch (e) {
+								// Ignore reset errors
+							}
+						}
+					});
+					window.ur_captcha_widgets.recaptcha = [];
+				}
+
+				// Reset hCaptcha widgets
+				if (window.ur_captcha_widgets.hcaptcha && window.ur_captcha_widgets.hcaptcha.length > 0) {
+					window.ur_captcha_widgets.hcaptcha.forEach(function(widgetId) {
+						if (typeof hcaptcha !== 'undefined' && hcaptcha.reset) {
+							try {
+								hcaptcha.reset(widgetId);
+							} catch (e) {
+								// Ignore reset errors
+							}
+						}
+					});
+					window.ur_captcha_widgets.hcaptcha = [];
+				}
+
+				// Reset Turnstile widgets
+				if (window.ur_captcha_widgets.turnstile && window.ur_captcha_widgets.turnstile.length > 0) {
+					window.ur_captcha_widgets.turnstile.forEach(function(widgetId) {
+						if (typeof turnstile !== 'undefined' && turnstile.reset) {
+							try {
+								turnstile.reset(widgetId);
+							} catch (e) {
+								// Ignore reset errors
+							}
+						}
+					});
+					window.ur_captcha_widgets.turnstile = [];
+				}
+			}
+		};
+
+		// Check if captcha script is loaded and execute callback
+		var loadCaptchaScript = function(captchaType, callback) {
+			var globalVarName = '';
+
+			if (captchaType === 'hCaptcha') {
+				globalVarName = 'hcaptcha';
+			} else if (captchaType === 'cloudflare') {
+				globalVarName = 'turnstile';
+			} else if (captchaType === 'v2') {
+				globalVarName = 'grecaptcha';
+			} else if (captchaType === 'v3') {
+				globalVarName = 'grecaptcha';
+			}
+
+			if (typeof window[globalVarName] !== 'undefined') {
+				callback();
+				return;
+			}
+
+			var checkLoaded = function(attempts) {
+				attempts = attempts || 0;
+				if (typeof window[globalVarName] !== 'undefined') {
+					callback();
+				} else if (attempts < 30) { // Wait up to 3 seconds
+					setTimeout(function() {
+						checkLoaded(attempts + 1);
+					}, 100);
+				} else {
+					var scriptUrl = '';
+					if (captchaType === 'hCaptcha') {
+						scriptUrl = 'https://hcaptcha.com/1/api.js?onload=onloadURHcaptchaCallback&render=explicit';
+					} else if (captchaType === 'cloudflare') {
+						scriptUrl = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadURTurnstileCallback';
+					} else if (captchaType === 'v2') {
+						scriptUrl = 'https://www.google.com/recaptcha/api.js?onload=onloadURRecaptchaCallback&render=explicit';
+					} else if (captchaType === 'v3') {
+						scriptUrl = 'https://www.google.com/recaptcha/api.js?render=explicit';
+					}
+
+					var script = document.createElement('script');
+					script.src = scriptUrl;
+					script.onload = function() {
+						setTimeout(callback, 100);
+					};
+					script.onerror = function() {
+						callback();
+					};
+					document.head.appendChild(script);
+				}
+			};
+			checkLoaded();
+		};
+
+		clearExistingCaptchaScripts();
+
+		clearAllCaptchaWidgets();
+
+		var widget_class = '';
+		var captcha_type = setting_id;
+
+		switch (setting_id) {
+			case "v2":
+				widget_class = 'g-recaptcha';
+				captcha_type = 'v2';
+				break;
+			case "hCaptcha":
+				widget_class = 'g-recaptcha-hcaptcha';
+				captcha_type = 'hCaptcha';
+				break;
+			case "cloudflare":
+				widget_class = 'cf-turnstile';
+				captcha_type = 'cloudflare';
+				break;
+			case "v3":
+				urm_recaptcha_node.empty();
+				if (typeof grecaptcha !== 'undefined' && grecaptcha.ready) {
+					grecaptcha.ready(function() {
+						try {
+							grecaptcha.execute(captcha_config.site_key, { action: "click" })
+								.then(function (d) {
+									display_captcha_test_status(
+										user_registration_settings_params.i18n.captcha_success,
+										"success",
+										setting_id
+									);
+								})
+								.catch(function(err) {
+									display_captcha_test_status(
+										err.message || 'Invalid site key',
+										"error",
+										setting_id
+									);
+								});
+						} catch (err) {
+							display_captcha_test_status(
+								err.message || 'Invalid site key',
+								"error",
+								setting_id
+							);
+						}
+					});
+				} else {
+					// Load reCAPTCHA v3 script directly (v3 needs site key in URL)
+					var v3ScriptUrl = 'https://www.google.com/recaptcha/api.js?render=' + captcha_config.site_key;
+					var script = document.createElement('script');
+					script.src = v3ScriptUrl;
+					script.onload = function() {
+						if (typeof grecaptcha !== 'undefined' && grecaptcha.ready) {
+							grecaptcha.ready(function() {
+								try {
+									grecaptcha.execute(captcha_config.site_key, { action: "click" })
+										.then(function (d) {
+											display_captcha_test_status(
+												user_registration_settings_params.i18n.captcha_success,
+												"success",
+												setting_id
+											);
+										})
+										.catch(function(err) {
+											display_captcha_test_status(
+												err.message || 'Invalid site key',
+												"error",
+												setting_id
+											);
+										});
+								} catch (err) {
+									display_captcha_test_status(
+										err.message || 'Invalid site key',
+										"error",
+										setting_id
+									);
+								}
+							});
+						} else {
+							display_captcha_test_status('grecaptcha not loaded', "error", setting_id);
+						}
+					};
+					script.onerror = function() {
+						display_captcha_test_status('Failed to load reCAPTCHA v3 script', "error", setting_id);
+					};
+					document.head.appendChild(script);
+				}
+				return;
+		}
+
+		loadCaptchaScript(captcha_type, function() {
+			var widget_id = captcha_type + '_widget_' + Date.now();
+			var new_widget = $('<div class="' + widget_class + '"></div>')
+				.attr('id', widget_id)
+				.attr('data-site-key', captcha_config.site_key)
+				.attr('data-captcha-type', captcha_type);
+
+			if (captcha_type === 'cloudflare') {
+				new_widget.attr('data-theme', captcha_config.theme_mode || 'light');
+			}
+
+			urm_recaptcha_node.append(new_widget);
+
+			if (typeof window.onloadURCallback === 'function') {
+				window.onloadURCallback();
+			}
+		});
+	}
+
 
 	$(document)
 		.find(".wp-list-table")
@@ -1208,10 +1605,6 @@
 			type = $this.attr("id"),
 			val = $(this).val();
 		// $this.prop("disabled", true);
-		$this
-			.closest(".user-registration-global-settings--field")
-			.find("#select2-" + type + "-container")
-			.css("border", "1px solid #e1e1e1");
 
 		$this
 			.closest(".user-registration-global-settings--field")
@@ -1232,7 +1625,7 @@
 				type: type,
 				value: val,
 				security:
-				user_registration_settings_params.user_registration_membership_pages_selection_validator_nonce
+					user_registration_settings_params.user_registration_membership_pages_selection_validator_nonce
 			},
 			type: "POST",
 			complete: function (response) {
@@ -1241,13 +1634,9 @@
 						.closest(".user-registration-global-settings--field")
 						.append(
 							"<div id='message' class='error inline' style='padding:10px;'>" +
-							response.responseJSON.message +
-							"</div>"
+								response.responseJSON.message +
+								"</div>"
 						);
-					$this
-						.closest(".user-registration-global-settings--field")
-						.find("#select2-" + type + "-container")
-						.css("border", "1px solid red");
 
 					$this
 						.closest("form")
@@ -1280,7 +1669,250 @@
 		});
 	});
 
-	$('.payment-settings-btn').on('click', function () {
+	$(".payment-settings-btn").on("click", function () {
+		var $this = $(this),
+			setting_id = $this.data("id"),
+			settings_container = $this.closest("#" + setting_id);
+
+		if ($this.find(".ur-spinner").length > 0) {
+			return;
+		}
+		$this.append("<span class='ur-spinner'></span>");
+
+		var section_data = {};
+
+		settings_container
+			.find("input, select, textarea")
+			.each(function (key, item) {
+				var $item = $(item);
+				var name = $item.attr("name");
+				if (!name) return;
+
+				var value;
+				if ($item.attr("type") === "checkbox") {
+					value = $item.is(":checked");
+				} else if (
+					$item.is("textarea") &&
+					typeof tinymce !== "undefined" &&
+					tinymce.get(name)
+				) {
+					value = tinymce.get(name).getContent();
+				} else {
+					value = $item.val();
+				}
+				section_data[name] = value;
+			});
+
+		update_payment_section_settings(
+			setting_id,
+			section_data,
+			$this,
+			settings_container
+		);
+	});
+	$("#user_registration_payment_currency").on("change", function () {
+		var $this = $(this);
+		var currency = $this.val();
+		$this
+			.closest(".user-registration-global-settings--field")
+			.find(".error.inline")
+			.remove();
+		$this
+			.closest(".user-registration-global-settings")
+			.append('<div class="ur-spinner is-active"></div>');
+
+		$.ajax({
+			url: user_registration_settings_params.ajax_url,
+			data: {
+				action: "user_registration_validate_payment_currency",
+				security:
+					user_registration_settings_params.user_registration_membership_validate_payment_currency_nonce,
+				currency: currency
+			},
+			type: "POST",
+			complete: function (response) {
+				if (response.responseJSON.success === false) {
+					$this
+						.closest(".user-registration-global-settings")
+						.find(".warning")
+						.remove();
+					$this
+						.closest(".user-registration-global-settings--field")
+						.append(
+							"<div id='message' class='warning inline' style='padding:10px;'>" +
+								response.responseJSON.data.message +
+								"</div>"
+						);
+				} else {
+					$this
+						.closest(".user-registration-global-settings")
+						.find(".warning")
+						.remove();
+				}
+				$this.prop("disabled", false);
+				$this
+					.closest(".user-registration-global-settings")
+					.find(".ur-spinner")
+					.remove();
+			}
+		});
+	});
+	$("#user_registration_payment_currency").trigger("change");
+
+
+	$(document).on( 'click',".urm_license_setting_notice .install_pro_version_button", function() {
+		$(this)
+			.prop("disabled", true)
+			.text(
+				user_registration_settings_params.i18n
+					.installing_plugin_text
+			)
+			.prepend(
+				'<div class="ur-spinner is-active" style="margin-right: 8px;"></div>'
+			);
+		var data = {
+			action: 'user_registration_install_extension',
+			slug: 'user-registration-pro',
+			_ajax_nonce: user_registration_settings_params.ur_updater_nonce,
+		};
+		$.ajax({
+			type: 'POST',
+			url: user_registration_settings_params.ajax_url,
+			data: data,
+			success: function(response) {
+				if (response.success) {
+					window.location.href = window.location.href + '&download_user_registration_pro=1';
+				} else {
+					$(".install_pro_version_button").prop("disabled", false);
+					$(".install_pro_version_button").find(".ur-spinner").remove();
+				}
+			},
+			error: function(response) {
+				$(".install_pro_version_button").prop("disabled", false);
+				$(".install_pro_version_button").find(".ur-spinner").remove();
+			}
+		});
+	});
+
+	var searchParams = new URLSearchParams(window.location.search);
+
+	var license_activation_status = ur_get_cookie("urm_license_status");
+	if (
+		searchParams.get("activated_license") == "user-registration" &&
+		license_activation_status === "license_activated"
+	) {
+		ur_remove_cookie("urm_license_status");
+		var urmProInstallHtml =
+			'<div style="display: flex; align-items: center; width: 60%;margin: 0px auto; position: relative;">' +
+			'<img src="' +
+			user_registration_settings_params.assets_url +
+			'/images/logo.png" alt="URM Logo" width="50" style="margin: 0 20px;" />' +
+			'<img src="' +
+			user_registration_settings_params.assets_url +
+			'/images/connect.gif" alt="Connect gif" >' +
+			'<img src="' +
+			user_registration_settings_params.assets_url +
+			'/images/wordpress.png" ' +
+			'alt="WordPress Logo" width="50" style="margin: 0 10px 0 30px;" />' +
+			"</div>" +
+			'<p style="margin-bottom: 20px;font-size:13px;text-align:center;">' +
+			user_registration_settings_params.i18n.license_activated_text +
+			"</p>" +
+			'<form method="post" class="ur-install-urm-pro">' +
+			'<input type="hidden" name="download_user_registration_pro" value="1" />' +
+			'<input type="hidden" name="ur_license_nonce" value="' +
+			user_registration_settings_params.ur_license_nonce +
+			'" />' +
+			'<button id="install-urm-pro-btn" class="swal2-confirm button button-primary" style="margin-bottom: 20px;">' +
+			user_registration_settings_params.i18n.pro_install_popup_button +
+			"</button>" +
+			"</form>" +
+			'<p class="ur-install-urm-pro-p-tag" style="font-size:13px;text-align:center;">' +
+			user_registration_settings_params.i18n
+				.will_install_and_activate_pro_text +
+			"</p>";
+		Swal.fire({
+			title: user_registration_settings_params.i18n
+				.pro_install_popup_title,
+			html: urmProInstallHtml,
+			showConfirmButton: false,
+			showCloseButton: true,
+			allowOutsideClick: false,
+			customClass:
+				"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-swal2-modal--install-urm-pro",
+			width: 640,
+			didOpen: function () {
+				$("#install-urm-pro-btn").on("click", function () {
+					$(this)
+						.prop("disabled", true)
+						.text(
+							user_registration_settings_params.i18n
+								.installing_plugin_text
+						)
+						.prepend(
+							'<div class="ur-spinner is-active" style="margin-right: 8px;"></div>'
+						);
+					$(this).closest("form").submit();
+				});
+			}
+		});
+	}
+	if (
+		searchParams.get("activated_license") == "user-registration" &&
+		license_activation_status === "pro_activated"
+	) {
+		ur_remove_cookie("urm_license_status");
+		$successModalHtml =
+			'<p style="margin: 10px 0 20px;">' +
+			user_registration_settings_params.i18n.pro_activated_success_text +
+			"</p>" +
+			'<button id="dashboard-redirect-btn" style="' +
+			"background: transparent;" +
+			"border: 1px solid #475bb2;" +
+			"color: #475bb2;" +
+			"padding: 8px 16px;" +
+			"margin-bottom: 16px;" +
+			"border-radius: 6px;" +
+			"font-size: 14px;" +
+			"cursor: pointer;" +
+			'">' +
+			user_registration_settings_params.i18n.continue_to_dashboard_text +
+			"</button>";
+		Swal.fire({
+			icon: "success",
+			title: user_registration_settings_params.i18n
+				.pro_activated_success_title,
+			html: $successModalHtml,
+			showConfirmButton: false,
+			showCloseButton: true,
+			customClass:
+				"user-registration-swal2-modal user-registration user-registration-swal2-modal--center user-registration-info swal2-show",
+			width: 400,
+			didOpen: function () {
+				$("#dashboard-redirect-btn").on("click", function () {
+					window.location.href =
+						"/wp-admin/admin.php?page=user-registration-dashboard";
+				});
+			}
+		});
+	}
+
+	var searchParams = new URLSearchParams(window.location.search);
+	if (
+		searchParams.has("method") &&
+		searchParams.get("method") !== "" &&
+		$(".user-registration-settings-container").find(
+			"#" + searchParams.get("method")
+		).length > 0
+	) {
+		var container = $(".user-registration-settings-container").find(
+			"#" + searchParams.get("method")
+		);
+		setTimeout(function () {
+			container.find(".integration-header-info").trigger("click");
+		}, 400);
+	}
+	$('.captcha-save-btn').on('click', function () {
 		var $this = $(this),
 			setting_id = $this.data('id'),
 			settings_container = $this.closest('#' + setting_id);
@@ -1308,6 +1940,27 @@
 			section_data[name] = value;
 		});
 
-		update_payment_section_settings(setting_id, section_data, $this, settings_container);
+		update_captcha_section_settings(setting_id, section_data, $this, settings_container);
 	});
+
+	/**
+	 * Retrieves the cookie values set.
+	 */
+	function ur_get_cookie(cookie_key) {
+		var matches = document.cookie.match(
+			new RegExp(
+				"(?:^|; )" +
+					cookie_key.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
+					"=([^;]*)"
+			)
+		);
+		return matches ? decodeURIComponent(matches[1]) : undefined;
+	}
+
+	/**
+	 * Deletes the cookie values.
+	 */
+	function ur_remove_cookie(cookie_key) {
+		document.cookie = cookie_key + "=; Max-Age=-99999999; path=/";
+	}
 })(jQuery);

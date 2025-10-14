@@ -311,6 +311,20 @@ class OrdersListTable extends \UR_List_Table {
 					';
 	}
 
+	public function column_created_at( $item ) {
+		global $wpdb;
+		$orders_meta_table = TableList::order_meta_table();
+		$payment_date = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT meta_value FROM {$orders_meta_table} WHERE meta_key=%s AND order_id=%d LIMIT 1",
+				'payment_date',
+				$item[ 'order_id' ]
+			)
+		);
+		$payment_date = ! empty( $payment_date ) ? $payment_date : $item[ 'created_at' ];
+		return (new \DateTime( $payment_date ) )->format( 'F j, Y' );
+	}
+
 	/**
 	 * Render the list table page, including header, notices, status filters and table.
 	 */
@@ -376,7 +390,7 @@ class OrdersListTable extends \UR_List_Table {
 				</svg>
 			</button>
 		</div>
-		<div style="display: flex; gap: 10px">
+		<div class="module" style="display: flex; gap: 10px">
 			<select name="payment_for" id="user-registration-pro-payment-type-filters" class="ur-enhanced-select">
 				<option
 					value="" selected><?php echo esc_html__( 'Select Module', 'user-registration' ); ?></option>
@@ -444,7 +458,7 @@ class OrdersListTable extends \UR_List_Table {
 				?>
 			</select>
 		</div>
-		<div class="" id="user-registration-pro-members-filters" style="display: flex; gap: 10px">
+		<div class="payment-status" id="user-registration-pro-members-filters" style="display: flex; gap: 10px">
 			<select name="status" id="user_registration_pro_users_form_filter" class="ur-enhanced-select">
 				<option
 					value=""><?php echo esc_html__( 'All Status', 'user-registration' ); ?></option>

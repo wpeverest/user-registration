@@ -53,24 +53,24 @@ class PaypalService {
 		$redirect                     = ( 'production' === $paypal_options['mode'] ) ? 'https://www.paypal.com/cgi-bin/webscr/?' : 'https://www.sandbox.paypal.com/cgi-bin/webscr/?';
 		$membership_data              = $this->membership_repository->get_single_membership_by_ID( $membership );
 		$membership_metas             = wp_unslash( json_decode( $membership_data['meta_value'], true ) );
-		$membership_amount            = number_format( $is_upgrading ? $data['amount'] : $membership_metas['amount'] );
-
-		$discount_amount = 0;
-
+		$membership_amount            = number_format( $membership_metas['amount'] );
+		$is_automatic                 = "automatic" === get_option( 'user_registration_renewal_behaviour', 'automatic' );
+		$discount_amount              = 0;
+		$is_renewing                    = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
 
 		if ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
 			$coupon_details  = ur_get_coupon_details( $data['coupon'] );
 			$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $membership_amount * $coupon_details['coupon_discount'] / 100;
 		}
 
-		if ( 'subscription' === ( $data['type'] ) ) {
+		if ( ('subscription' === ( $data['type'] ) && !$is_renewing) || ($is_automatic &&  $is_renewing)) {
 			$transaction = '_xclick-subscriptions';
 		} else {
 			$transaction = '_xclick';
 		}
-		$query_args = 'membership=' . absint( $membership ) . '&member_id=' . absint( $member_id ) . '&hash=' . wp_hash( $membership . ',' . $member_id );
-		$return_url = $paypal_options['return_url'] ?? wp_login_url();
-		$return_url = esc_url_raw(
+		$query_args   = 'membership=' . absint( $membership ) . '&member_id=' . absint( $member_id ) . '&hash=' . wp_hash( $membership . ',' . $member_id );
+		$return_url   = $paypal_options['return_url'] ?? wp_login_url();
+		$return_url   = esc_url_raw(
 			add_query_arg(
 				array(
 					'ur-membership-return' => base64_encode( $query_args ),
@@ -78,6 +78,16 @@ class PaypalService {
 				apply_filters( 'user_registration_paypal_return_url', $return_url, array() )
 			)
 		);
+		$final_amount = floatval( user_registration_sanitize_amount( $membership_amount ) - $discount_amount );
+
+		// Build item name with pricing information
+		$item_name = $membership_data['post_title'];
+		if ( ! empty( $data['subscription'] ) ) {
+			$subscription_value    = $data['subscription']['value'];
+			$subscription_duration = $data['subscription']['duration'];
+			$currency_symbol       = get_option( 'user_registration_payment_currency', 'USD' ) === 'USD' ? '$' : get_option( 'user_registration_payment_currency', 'USD' );
+			$item_name             .= ' - ' . $currency_symbol . $final_amount . ' for ' . $subscription_value . ' ' . $subscription_duration;
+		}
 
 		$paypal_args = array(
 			'business'      => sanitize_email( $paypal_options['email'] ),
@@ -97,11 +107,10 @@ class PaypalService {
 			'no_note'       => '1',
 			'no_shipping'   => '1',
 			'shipping'      => '0',
-			'item_name'     => $membership_data['post_title'],
+			'item_name'     => $item_name,
 			'email'         => sanitize_email( $member_email ),
 		);
-
-		if ( '_xclick-subscriptions' === $transaction ) {
+		if ( '_xclick-subscriptions' === $transaction) {
 			$paypal_args['t3']          = ! empty( $data ['subscription'] ) ? strtoupper( substr( $data['subscription']['duration'], 0, 1 ) ) : '';
 			$paypal_args['p3']          = ! empty( $data ['subscription']['value'] ) ? $data ['subscription']['value'] : 1;
 			$paypal_args['a3']          = floatval( user_registration_sanitize_amount( $membership_amount ) );
@@ -126,8 +135,8 @@ class PaypalService {
 			}
 
 
-			if ( ! empty( $coupon_details ) || ( $is_upgrading && ! empty( $new_subscription_data ) && ! empty( $new_subscription_data['delayed_until'] ) ) ) {
-				$amount = $is_upgrading ? '0' : ( user_registration_sanitize_amount( $membership_amount ) - $discount_amount );
+			if ( ! empty( $coupon_details ) || ( $is_upgrading && ! empty( $new_subscription_data ) && ! empty( $new_subscription_data['delayed_until'] ) ) || ( $is_upgrading && $data["amount"] < $membership_amount ) ) {
+				$amount = $is_upgrading ? user_registration_sanitize_amount( $data['amount'] ) : ( user_registration_sanitize_amount( $membership_amount ) - $discount_amount );
 
 				$paypal_args['t2'] = ! empty( $data ['subscription'] ) ? strtoupper( substr( $data['subscription']['duration'], 0, 1 ) ) : '';
 				$paypal_args['p2'] = ! empty( $data ['subscription']['value'] ) ? $data ['subscription']['value'] : 1;
@@ -135,7 +144,7 @@ class PaypalService {
 			}
 
 		} else {
-			$paypal_args['amount'] = floatval( user_registration_sanitize_amount( $membership_amount ) - $discount_amount );
+			$paypal_args['amount'] = $final_amount;
 		}
 
 		$redirect .= http_build_query( $paypal_args );
@@ -162,25 +171,34 @@ class PaypalService {
 		$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
 		$membership_metas['post_title'] = $membership['post_title'];
 		$member_subscription            = $this->members_subscription_repository->get_member_subscription( $member_id );
+		$is_renewing                    = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
 
 		if ( 'completed' === $member_order['status'] ) {
 			ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
 		}
 
-		$is_order_updated = $this->members_orders_repository->update( $member_order['ID'], array( 'status' => 'completed' ) );
+//		$is_order_updated = $this->members_orders_repository->update( $member_order['ID'], array( 'status' => 'completed' ) );
+		$is_order_updated = true;
 
 		if ( $is_order_updated && ( 'paid' === $member_order['order_type'] || 'subscription' === $member_order['order_type'] ) ) {
 			$member_subscription = $this->members_subscription_repository->get_member_subscription( $member_id );
 			$status              = "on" === $member_order['trial_status'] ? 'trial' : 'active';
-			$this->members_subscription_repository->update( $member_subscription['ID'], array( 'status' => $status ) );
+			$this->members_subscription_repository->update( $member_subscription['ID'], array(
+				'status'     => $status,
+				'start_date' => date( 'Y-m-d 00:00:00' )
+			) );
 			$logger->notice( 'Return to merchant log' . $member_subscription['ID'], array( 'source' => 'ur-membership-paypal' ) );
+		}
+
+		if ( $is_renewing ) {
+			$subscription_service = new SubscriptionService();
+			$subscription_service->update_subscription_data_for_renewal( $member_subscription, $membership_metas );
 		}
 		$email_service = new EmailService();
 		$order_detail  = $this->orders_repository->get_order_detail( $member_order['ID'] );
 		if ( ! empty( $order_detail['coupon'] ) ) {
 			$order_detail['coupon_discount']      = get_user_meta( $order_detail['user_id'], 'ur_coupon_discount', true );
 			$order_detail['coupon_discount_type'] = get_user_meta( $order_detail['user_id'], 'ur_coupon_discount_type', true );
-
 		}
 		$email_data = array(
 			'subscription'     => $member_subscription,
@@ -197,7 +215,7 @@ class PaypalService {
 		}
 		$is_upgrading = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
 		if ( $is_upgrading ) {
-			$this->handle_upgrade_for_paypal( $member_id );
+			$this->handle_upgrade_for_paypal( $member_id, $member_subscription['ID'] );
 		}
 
 		$login_option = ur_get_user_login_option( $member_id );
@@ -217,12 +235,11 @@ class PaypalService {
 	 *
 	 * @return void
 	 */
-	public function handle_upgrade_for_paypal( $member_id ) {
-
+	public function handle_upgrade_for_paypal( $member_id, $subscription_id ) {
 		$get_user_old_subscription = json_decode( get_user_meta( $member_id, 'urm_previous_subscription_data', true ), true );
 		$get_user_old_order        = json_decode( get_user_meta( $member_id, 'urm_previous_order_data', true ), true );
 		$new_subscription_data     = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
-
+		$subscription_service      = new SubscriptionService();
 		if ( ! empty( $new_subscription_data ) ) {
 			if ( empty( $new_subscription_data['delayed_until'] ) ) {
 				$cancel_subscription = $this->cancel_subscription( $get_user_old_order, $get_user_old_subscription );
@@ -232,7 +249,11 @@ class PaypalService {
 				delete_user_meta( $member_id, 'urm_previous_subscription_data' );
 				delete_user_meta( $member_id, 'urm_next_subscription_data' );
 			}
+			$subscription_data           = $subscription_service->prepare_upgrade_subscription_data( $new_subscription_data['membership'], $new_subscription_data['member_id'], $new_subscription_data );
+			$subscription_data['status'] = 'active';
+			$this->subscription_repository->update( $subscription_id, $subscription_data );
 		}
+
 		delete_user_meta( $member_id, 'urm_is_upgrading' );
 		delete_user_meta( $member_id, 'urm_is_upgrading_to' );
 		update_user_meta( $member_id, 'urm_is_user_upgraded', 1 );
@@ -324,9 +345,15 @@ class PaypalService {
 			$this->members_orders_repository->update( $latest_order['ID'], array( 'status' => 'completed' ) );
 
 			if ( 'paid' === $membership_metas['type'] ) {
-				$this->members_subscription_repository->update( $subscription_id, array( 'status' => 'active' ) );
+				$this->members_subscription_repository->update( $subscription_id, array(
+					'status'     => 'active',
+					'start_date' => date( 'Y-m-d 00:00:00' )
+				) );
 			} else {
-				$this->members_subscription_repository->update( $subscription_id, array( 'subscription_id' => sanitize_text_field( $data['subscr_id'] ) ) );
+				$this->members_subscription_repository->update( $subscription_id, array(
+					'subscription_id' => sanitize_text_field( $data['subscr_id'] ),
+					'start_date'      => date( 'Y-m-d 00:00:00' )
+				) );
 			}
 			$order_detail = $this->orders_repository->get_order_detail( $latest_order['ID'] );
 			if ( ! empty( $order_detail['coupon'] ) ) {
@@ -346,7 +373,10 @@ class PaypalService {
 		$payment_date = $payment_date->setTimezone( new \DateTimeZone( 'UTC' ) )->format( 'Y-m-d' );
 		// handle first ipn of the day appart from the signup ipn.
 		if ( 'subscr_payment' === $txn_type && $payment_date == date( 'Y-m-d' ) ) {
-			$this->members_subscription_repository->update( $subscription_id, array( 'status' => 'active' ) );
+			$this->members_subscription_repository->update( $subscription_id, array(
+				'status'     => 'active',
+				'start_date' => date( 'Y-m-d 00:00:00' )
+			) );
 			$logger->notice( 'Subscriber First IPN Successful for member: ' . $member_id, array( 'source' => 'ur-membership-paypal' ) );
 
 			return;
@@ -400,6 +430,7 @@ class PaypalService {
 				$this->members_subscription_repository->update(
 					$subscription_id,
 					array(
+						'start_date'        => date( 'Y-m-d 00:00:00' ),
 						'status'            => 'active',
 						'next_billing_date' => $next_billing_date,
 						'subscription_id'   => sanitize_text_field( $data['subscr_id'] ),
@@ -421,7 +452,13 @@ class PaypalService {
 		}
 		$is_upgrading = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
 		if ( $is_upgrading ) {
-			$this->handle_upgrade_for_paypal( $member_id );
+			$this->handle_upgrade_for_paypal( $member_id, $subscription_id );
+		}
+		$is_renewing = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
+
+		if ( $is_renewing ) {
+			$subscription_service = new SubscriptionService();
+			$subscription_service->update_subscription_data_for_renewal( $subscription, $membership_metas );
 		}
 	}
 
@@ -497,7 +534,7 @@ class PaypalService {
 				'message' => $message,
 			);
 		}
-		$url .= sprintf( 'v1/billing/subscriptions/%s/cancel', $subscription['subscription_id'] );
+		$url .= sprintf( 'v1/billing/subscriptions/%s/suspend', $subscription['subscription_id'] );
 
 		$bearerToken = $login_request['access_token']; // Replace with your actual Bearer token
 
@@ -506,10 +543,82 @@ class PaypalService {
 			'Accept: application/json',
 			'Authorization: Bearer ' . $bearerToken,
 		);
+		$data = json_encode( array(
+			'reason' => 'User initiated cancellation',
+		) );
+
 		$ch      = curl_init();
 		curl_setopt( $ch, CURLOPT_URL, $url );
 		curl_setopt( $ch, CURLOPT_POST, true );
 		curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers );
+		curl_setopt( $ch, CURLOPT_POSTFIELDS, $data );
+		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+
+		$response = curl_exec( $ch );
+		$result   = json_decode( $response );
+
+		$status_code = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
+
+		if ( curl_errno( $ch ) ) {
+			ur_get_logger()->notice( curl_error( $ch ), array( 'source' => 'ur-membership-paypal' ) );
+		}
+		curl_close( $ch );
+		ur_get_logger()->notice( 'Paypal Response Status Code: ' . $status_code, array( 'source' => 'ur-membership-paypal' ) );
+		if ( 204 === $status_code ) {
+			$message = esc_html__( 'Subscription successfully canceled from paypal.', 'user-registration' );
+			ur_get_logger()->notice( $message, array( 'source' => 'ur-membership-paypal' ) );
+
+			return array(
+				'status' => true,
+			);
+		}
+		$message = esc_html__( 'Subscription cancellation failed from Paypal.', 'user-registration' );
+		ur_get_logger()->notice( $response, array( 'source' => 'ur-membership-paypal' ) );
+
+		return array(
+			'status'  => false,
+			'message' => $message,
+		);
+	}
+	/**
+	 * Reactivates already cancelled subscription.
+	 * @param $subscription_id Subscription Id.
+	 */
+	public function reactivate_subscription( $subscription_id ) {
+		$paypal_options['mode']          = get_option( 'user_registration_global_paypal_mode', 'test' );
+		$paypal_options['client_id']     = get_option( 'user_registration_global_paypal_client_id', '' );
+		$paypal_options['client_secret'] = get_option( 'user_registration_global_paypal_client_secret', '' );
+		$client_id     = $paypal_options['client_id'];
+		$client_secret = $paypal_options['client_secret'];
+		$url           = ( 'production' === $paypal_options['mode'] ) ? 'https://api-m.paypal.com/' : 'https://api-m.sandbox.paypal.com/';
+
+		$login_request = self::login_paypal( $url, $client_id, $client_secret );
+		if( 200 !== $login_request[ 'status_code' ] ) {
+			$message = esc_html__( 'Invalid response from paypal, check Client ID or Secret.', 'user-registration' );
+			ur_get_logger()->notice( $message, array( 'source' => 'ur-membership-paypal' ) );
+
+			return array(
+				'status'  => false,
+				'message' => $message,
+			);
+		}
+		$url .= sprintf( 'v1/billing/subscriptions/%s/activate', $subscription_id );
+
+		$bearerToken = $login_request['access_token'];
+
+		$headers = array(
+			'Content-Type: application/json',
+			'Accept: application/json',
+			'Authorization: Bearer ' . $bearerToken,
+		);
+		$data = json_encode( array(
+			'reason' => 'User initiated reactivation'
+		) );
+		$ch      = curl_init();
+		curl_setopt( $ch, CURLOPT_URL, $url );
+		curl_setopt( $ch, CURLOPT_POST, true );
+		curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers );
+		curl_setopt( $ch, CURLOPT_POSTFIELDS, $data );
 		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 
 		$response = curl_exec( $ch );
@@ -524,15 +633,15 @@ class PaypalService {
 		ur_get_logger()->notice( 'Paypal Response Status Code: ' . $status_code, array( 'source' => 'ur-membership-paypal' ) );
 
 		if ( 204 === $status_code ) {
-			$message = esc_html__( 'Subscription successfully canceled from paypal.', 'user-registration' );
+			$message = esc_html__( 'Subscription successfully reactivated from paypal.', 'user-registration' );
 			ur_get_logger()->notice( $message, array( 'source' => 'ur-membership-paypal' ) );
 
 			return array(
 				'status' => true,
 			);
 		}
-		$message = esc_html__( 'Subscription cancellation failed from Paypal.', 'user-registration' );
-		ur_get_logger()->notice( $response, array( 'source' => 'ur-membership-paypal' ) );
+		$message = esc_html__( 'Subscription reactivation failed from Paypal.', 'user-registration' );
+		ur_get_logger()->notice( $message, array( 'source' => 'ur-membership-paypal' ) );
 
 		return array(
 			'status'  => false,

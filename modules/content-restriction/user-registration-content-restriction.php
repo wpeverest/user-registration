@@ -61,19 +61,19 @@ class User_Registration_Content_Restriction {
 			include_once __DIR__ . '/admin/class-urcr-admin-meta-boxes.php';
 		}
 
-//		if ( UR_PRO_ACTIVE ) {
-//			include_once UR_ABSPATH . 'includes/pro/addons/content-restriction/functions-urcr-core.php';
-//			include_once UR_ABSPATH . 'includes/pro/addons/content-restriction/class-urcr-ajax.php';
-//		}
+		if ( UR_PRO_ACTIVE ) {
+			include_once UR_ABSPATH . 'includes/pro/addons/content-restriction/functions-urcr-core.php';
+			include_once UR_ABSPATH . 'includes/pro/addons/content-restriction/class-urcr-ajax.php';
+		}
 
 		include_once __DIR__ . '/class-urcr-post-types.php';
 		include_once __DIR__ . '/class-urcr-shortcodes.php';
 
 		if ( $this->is_request( 'admin' ) ) {
 
-//			if ( UR_PRO_ACTIVE ) {
-//				include_once UR_ABSPATH . 'includes/pro/addons/content-restriction/admin/class-urcr-admin-assets.php';
-//			}
+			if ( UR_PRO_ACTIVE ) {
+				include_once UR_ABSPATH . 'includes/pro/addons/content-restriction/admin/class-urcr-admin-assets.php';
+			}
 
 			include_once __DIR__ . '/admin/class-urcr-admin.php';
 		}

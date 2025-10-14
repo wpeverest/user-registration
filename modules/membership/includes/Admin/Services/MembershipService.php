@@ -101,7 +101,6 @@ class MembershipService {
 		} catch ( Exception $e ) {
 			// Rollback the transaction if any operation fails.
 			$this->members->wpdb()->query( 'ROLLBACK' );
-
 			$data = array(
 				'message' => $e->getMessage(),
 				'status'  => false,
@@ -155,6 +154,16 @@ class MembershipService {
 	) {
 		$membership_id = ! empty( $data['post_data']['ID'] ) ? absint( $data['post_data']['ID'] ) : '';
 		$validate_data = $this->validate_membership_data( $data );
+		if( !empty($data['post_meta_data']['payment_gateways']) ) {
+			foreach ($data['post_meta_data']['payment_gateways'] as $pg => $pg_data) {
+				if("on" == $pg_data['status']) {
+					$validate_pg = $this->validate_payment_gateway( array($pg, $data['post_meta_data']['type']));
+					if(!$validate_pg['status']) {
+						$validate_data = $validate_pg;
+					}
+				}
+			}
+		}
 
 		if ( ! $validate_data['status'] ) {
 			return $validate_data;
@@ -183,7 +192,7 @@ class MembershipService {
 				),
 				'ur_membership_description' => array(
 					'meta_key'   => 'ur_membership_description',
-					'meta_value' => $data['post_data']['description'],
+					'meta_value' => wp_kses_post( $data['post_data']['description'] ),
 				)
 			),
 
@@ -308,21 +317,12 @@ class MembershipService {
 		 * This hook should be used by new payment gateway integrations add-on to validate the membership data.
 		 *
 		 * @param array $result Membership validation result data
+		 * @param array $data Membership data.
 		 *
 		 * @since 4.2.3
 		 *
 		 */
-		return apply_filters( 'user_registration_membership_validate_membership_data', $result );
-		/**
-		 * Filters the membership data validation result
-		 *
-		 * This hook should be used by new payment gateway integrations add-on to validate the membership data.
-		 *
-		 * @since 4.2.3
-		 *
-		 * @param array $result Membership validation result data
-		 */
-		return apply_filters( 'user_registration_membership_validate_membership_data', $result );
+		return apply_filters( 'user_registration_membership_validate_membership_data', $result, $data );
 	}
 
 	/**
@@ -348,7 +348,7 @@ class MembershipService {
 		$post     = get_post( $post_id );
 		if ( empty( $post ) ) {
 			$response['status']  = false;
-			$response['message'] = __( 'Invalid post' );
+			$response['message'] =  __( 'No page selected.', 'user-registration' );
 
 			return $response; //return since the post does not exist;
 		}
@@ -431,7 +431,6 @@ class MembershipService {
 		$response = array(
 			'status' => 'true'
 		);
-
 		switch ( $data[0] ) {
 			case 'paypal';
 				$paypal_service = new PaypalService();
@@ -472,5 +471,36 @@ class MembershipService {
 		}
 
 		return array();
+	}
+
+	public function delete_membership( $membership_id ) {
+		$response                  = array(
+			'status' => true,
+		);
+		$valid_membership_statuses = apply_filters( "urm_valid_membership_statuses", array(
+				__( "active", "user-registration" ),
+				__( "pending", "user-registration" ),
+				__( "trial", "user-registration" )
+			)
+		);
+		$active_members            = $this->membership_repository->check_deletable_membership( $membership_id, $valid_membership_statuses );
+		if ( $active_members['total'] > 0 ) {
+			$html = "<p>" . __( "You cannot delete a membership plan if it has active users assigned to it with any of the following statuses:", "user-registration" ) . "</p>";
+			$html .= "<ul>";
+			foreach ( $valid_membership_statuses as $status ) {
+				$html .= "<li>" . ucfirst($status). "</li>";
+			}
+			$html .= "</ul >";
+			$html .= "<p >" . __( "To proceed, update all memberships to Expired or Cancelled, or assign users to a different plan . Once no active users remain, the plan can be deleted", "user-registration" ) . "</p > ";
+
+			$response = array(
+				'status'  => false,
+				'message' => $html
+			);
+		} else {
+			$this->membership_repository->delete( $membership_id );
+		}
+
+		return $response;
 	}
 }

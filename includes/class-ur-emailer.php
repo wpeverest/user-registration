@@ -218,7 +218,7 @@ class UR_Emailer {
 		$username     = $user_data->user_login;
 		$single_field = array();
 
-		if ( ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
+		if ( ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) || current_user_can( 'manage_options' ) ) {
 
 			if ( isset( $_POST['form_data'] ) ) { //PHPCS:ignore
 				$form_data = json_decode( stripslashes( $_POST['form_data'] ) ); //PHPCS:ignore
@@ -388,8 +388,9 @@ class UR_Emailer {
 			$message = self::parse_smart_tags( $message, $values, $name_value );
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
-			self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), $attachment, $template_id );
-
+			if( ur_option_checked( 'user_registration_enable_email_confirmation', true ) ) {
+				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), $attachment, $template_id );
+			}
 		} elseif ( 0 === intval( $status ) || ( '1' === $email_status && isset( $user_status ) && ! ur_string_to_bool( $user_status ) ) ) {
 			$subject                   = get_option( 'user_registration_awaiting_admin_approval_email_subject', __( 'Thank you for registration on {{blog_info}}', 'user-registration' ) );
 			$settings                  = new UR_Settings_Awaiting_Admin_Approval_Email();

@@ -65,7 +65,7 @@ const Header = () => {
 				borderBottom="1px solid #E9E9E9"
 				width="100%"
 			>
-				<Container maxW="container.xl">
+				<Container maxW="100%">
 					<Stack
 						direction="row"
 						minH="70px"
@@ -77,7 +77,7 @@ const Header = () => {
 								<Logo h="10" w="10" />
 							</Link>
 							<IntersectObserver routes={ROUTES}>
-								{ROUTES.map(({ route, label }) => (
+								{ROUTES.map(({ route, label, hidden }) => (
 									<Link
 										data-target={route}
 										key={route}
@@ -99,7 +99,7 @@ const Header = () => {
 											borderColor: "#475bb2",
 											marginBottom: "-2px"
 										}}
-										display="inline-flex"
+										display={hidden ? "none" : "inline-flex"}
 										alignItems="center"
 										px="2"
 										h="full"
@@ -123,6 +123,24 @@ const Header = () => {
 							spacing="12px"
 							borderColor="#475bb2"
 						>
+							{!isPro && (
+								<Link
+									color="475bb2"
+									fontSize="12px"
+									height="18px"
+									w="85px"
+									href={
+										upgradeURL +
+										"&utm_source=dashboard-header&utm_medium=top-menu-link"
+									}
+									isExternal
+								>
+									{__("Upgrade To Pro", "user-registration")}
+								</Link>
+							)}
+							<Center height="18px">
+								<Divider orientation="vertical" />
+							</Center>
 							<Tooltip
 								label={sprintf(
 									__(
@@ -142,24 +160,6 @@ const Header = () => {
 									{"v" + version}
 								</Tag>
 							</Tooltip>
-							<Center height="18px">
-								<Divider orientation="vertical" />
-							</Center>
-							{!isPro && (
-								<Link
-									color="475bb2"
-									fontSize="12px"
-									height="18px"
-									w="85px"
-									href={
-										upgradeURL +
-										"&utm_source=dashboard-header&utm_medium=top-menu-link"
-									}
-									isExternal
-								>
-									{__("Upgrade To Pro", "user-registration")}
-								</Link>
-							)}
 							<Button
 								onClick={onOpen}
 								variant="unstyled"
