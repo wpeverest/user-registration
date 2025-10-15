@@ -836,6 +836,7 @@ function ur_get_registered_form_fields() {
 			'checkbox',
 			'privacy_policy',
 			'radio',
+			'address',
 		)
 	);
 }
@@ -2747,6 +2748,11 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 				$data_html .= '<tr><td>' . $label . ' : </td><td><img class="profile-preview" alt="Signature" width="50px" height="50px" src="' . ( is_numeric( $value ) ? esc_url( wp_get_attachment_url( $value ) ) : esc_url( $value ) ) . '" /></td></tr>';
 		} else {
 			$data_html .= '<tr><td>' . $label . ' : </td><td>' . $value . '</td></tr>';
+		}
+		if( isset( $form_data->field_type ) && 'address' === $form_data->field_type ) {
+			$name_value[ $field_name ] = json_encode( $value );
+		} else {
+			$name_value[ $field_name ] = $value;
 		}
 		if( isset( $form_data->field_type ) && 'address' === $form_data->field_type ) {
 			$name_value[ $field_name ] = json_encode( $value );
@@ -5630,6 +5636,7 @@ if ( ! function_exists( 'user_registration_validate_form_field_data' ) ) {
 
 			if ( ! empty( $validations ) ) {
 				if ( in_array( 'required', $validations, true ) || ! empty( $single_field_value ) ) {
+					$single_field_value = $single_field_value instanceof stdClass ? (array) $single_field_value : $single_field_value;
 					foreach ( $validations as $validation ) {
 						$result = UR_Form_Validation::$validation( $single_field_value );
 

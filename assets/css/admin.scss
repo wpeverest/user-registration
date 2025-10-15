@@ -2118,7 +2118,32 @@ body {
 			display: none;
 		}
 	}
-
+	.ur-advance-setting-group {
+		border: 1px solid #f0f0f0;
+		padding: 0.25rem;
+		position: relative;
+		display: flex;
+		align-items: center;
+		margin-bottom: 1rem;
+		&.row {
+			align-items: end;
+		}
+		&.column {
+			flex-direction: column;
+		}
+		.ur-legend {
+			font-weight: 100;
+			font-size: 0.9rem;
+			position: absolute;
+			top: -10px;
+			left: 10px;
+			color: #333;
+			background-color: white;
+		}
+		label {
+			font-size: 0.75rem !important;
+		}
+	}
 	.ur-advance-setting-block {
 		margin-top: 0;
 	}

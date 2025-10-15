@@ -267,6 +267,42 @@
 					}
 				});
 
+				// Hide sublabels from ur field in case of multiple fields field.
+				$(document).on('change', '#ur-setting-form [data-field=hide_sublabels]', function() {
+					if ($(this).is(':checked')) {
+						$('.ur-input-grids').find('.ur-item-active .ur-field').find('label').addClass('ur-d-none');
+					} else {
+						$('.ur-input-grids').find('.ur-item-active .ur-field').find('label').removeClass('ur-d-none');
+					}
+				});
+				
+				// update placeholder for each sub fields.
+				var sourceInput = '.ur-advance-setting-group [data-advance-field$="placeholder"]';
+				$(document).on('input', sourceInput, function () {
+					var targetInput = '.ur-' + $(this).data('advance-field').replace(/_placeholder$/, '').replace(/_/g, '-') + ' input';
+					var inputValue = $(this).val();
+					$(targetInput).attr('placeholder', inputValue);
+				});
+
+
+				// show/hide sub fields.
+				$('.ur-advance-setting-group input[type="checkbox"]').each(function() {
+					var forClass = $(this).is(':checked');
+					if($(this).is(":checked")) {
+						$('.ur-input-grids .ur-item-active').find('.' + forClass).addClass('ur-d-none');
+					} else {
+						$('.ur-input-grids .ur-item-active').find('.' + forClass).removeClass('ur-d-none');
+					}
+				});
+				$(document).on('change', '.ur-advance-setting-group input[type="checkbox"]', function() {
+					var forClass = $(this).data('id');
+					if($(this).is(":checked")) {
+						$('.ur-input-grids .ur-item-active').find('.' + forClass).addClass('ur-d-none');
+					} else {
+						$('.ur-input-grids .ur-item-active').find('.' + forClass).removeClass('ur-d-none');
+					}
+				});
+
 				// update placeholder for each sub fields.
 				let sourceInput = '.ur-advance-setting-group [data-advance-field$="placeholder"]';
 				$(document).on('input', sourceInput, function () {
