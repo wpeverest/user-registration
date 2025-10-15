@@ -156,13 +156,13 @@ html {
 .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus, #pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus {
   border-color: #475bb2;
 }
-.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red:empty, .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue:empty, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red:empty, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue:empty, #pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red:empty, #pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue:empty {
-  padding: 0;
-}
 .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red, .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue, #pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red, #pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue {
   padding: 10px 12px;
   font-size: 14px;
   line-height: 22px;
+}
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red:empty, .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue:empty, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red:empty, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue:empty, #pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red:empty, #pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue:empty {
+  padding: 0;
 }
 .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red, .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red, #pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red {
   background: #fdd9d9;
@@ -344,13 +344,20 @@ html {
   transform: rotate(26deg);
 }
 
-.notice-container .notice_red:empty, .notice-container .notice_blue:empty {
-  padding: 0;
+.notice-container {
+  position: fixed;
+  top: 50px;
+  right: -700px;
+  z-index: 9999;
+  transition: right 0.5s ease;
 }
 .notice-container .notice_red, .notice-container .notice_blue {
   padding: 10px 12px;
   font-size: 14px;
   line-height: 22px;
+}
+.notice-container .notice_red:empty, .notice-container .notice_blue:empty {
+  padding: 0;
 }
 .notice-container .notice_red {
   background: #fdd9d9;
@@ -364,13 +371,6 @@ html {
   border-left: 3px solid #007bff;
   background: #e2e2fd;
   word-wrap: break-word;
-}
-.notice-container {
-  position: fixed;
-  top: 50px;
-  right: -700px;
-  z-index: 9999;
-  transition: right 0.5s ease;
 }
 
 .close_notice {

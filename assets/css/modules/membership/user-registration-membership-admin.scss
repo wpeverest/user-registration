@@ -631,6 +631,11 @@
 							align-items: center;
 							margin-top: 0 !important;
 
+							@media screen and (max-width: 992px) {
+								flex-direction: column;
+								align-items: flex-start;
+							}
+
 							&:has(.ur-field[data-field-key="textarea"]) {
 								align-items: unset;
 
@@ -689,7 +694,10 @@
 
 							.ur-label {
 								margin-bottom: 0;
-								// margin-bottom: 300px;
+
+								@media screen and (max-width: 992px) {
+									width: 100% !important;
+								}
 
 								label {
 									margin-bottom: 0;
@@ -716,6 +724,12 @@
 										textarea {
 											border: 0;
 										}
+									}
+								}
+
+								.select2 {
+									&-container {
+										width: 100% !important;
 									}
 								}
 							}
@@ -751,7 +765,7 @@
 											flex-wrap: wrap;
 
 											.ur-membership-types {
-												max-width: 230px;
+												max-width: 250px;
 												margin-bottom: 0;
 												border-radius: 4px;
 												border: 1px solid #E9E9E9;
@@ -761,18 +775,37 @@
 
 												.ur-membership-type {
 													&-title {
-														gap: 8px;
-														margin-bottom: 12px;
+														gap: $spacing_8px;
+														margin-bottom: $spacing_12px;
 
 														label {
 															padding: 0 !important;
 															font-size: 16px;
 															line-height: 24px;
 															cursor: pointer;
+														}													
+
+														input[type="radio"] {
+															&:checked::before {
+																background: $primary_color;
+															}
 														}
 
-														input[type="radio"]:checked::before {
-															background: $primary_color;
+														@media screen and (max-width: 782px) {
+															input[type="radio"] {
+																width: 1rem;
+																height: 1rem;
+
+																&::before {
+																	width: 0.5rem;
+																	height: 0.5rem;
+																	margin: 0.1875rem;
+																}
+
+																&:checked::before {
+																	background: $primary_color;
+																}
+															}															
 														}
 													}
 
