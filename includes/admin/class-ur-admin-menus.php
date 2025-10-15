@@ -78,6 +78,16 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'name'        => __( 'User Registration - File Upload', 'user-registration' ),
 				),
 				array(
+					'id'       => 'user_registration_address',
+					'slug'     => 'address',
+					'label'    => 'Address',
+					'video_id' => 'CF_o-xrMXZM',
+					'plan'     => 'Personal Plan',
+					'icon'     => 'ur-icon ur-icon-flag',
+					'name'     => __( 'User Registration Pro', 'user-registration' ),
+					'field_class' => 'UR_Form_Field_Address',
+				),
+				array(
 					'id'          => 'user_registration_invite_code',
 					'label'       => 'Invitation Code',
 					'icon'        => 'ur-icon ur-icon-invite-codes',
