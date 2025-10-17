@@ -5,8 +5,8 @@ $currency   = get_user_meta( $user_id, 'ur_payment_currency', true );
 $currency   = ! empty( $currency ) ? $currency : 'USD';
 $symbol     = $currencies[ $currency ]['symbol'] ?? '$';
 $trial_status = isset($invoice_details['membership_plan_trial_status']) ? $invoice_details['membership_plan_trial_status'] : 'off';
-$trial_amount = $trial_status === 'On' ? $symbol."0.00" : $invoice_details['membership_plan_trial_amount'];
-$total_amount = $trial_status === 'On' ? $symbol."0.00" : $invoice_details['membership_plan_total'];
+$trial_amount = $trial_status === 'On' ? (isset( $invoice_details['membership_plan_trial_amount'] ) ? $invoice_details['membership_plan_trial_amount'] : 'N/A' ) : $symbol."0.00";
+$total_amount = $trial_status === 'On' ? ( isset( $invoice_details['membership_plan_total'] ) ? $invoice_details[ 'membership_plan_total' ] : "N/A" ) : $symbol."0.00" ;
 if ( $invoice_details['is_membership'] ) :
 
 	// Define label–key pairs for membership rows
