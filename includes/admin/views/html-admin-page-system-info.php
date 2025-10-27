@@ -382,14 +382,14 @@ if ( ! class_exists( 'WP_Debug_Data' ) ) {
 		</tr>
 		<?php
 		$plugin_pages = array(
-			'user_registration_login_page_id'          => __( 'Login Page', 'user-registration' ),
-			'user_registration_lost_password_page_id'  => __( 'Lost Password Page', 'user-registration' ),
+			'user_registration_login_page_id' => __( 'Login Page', 'user-registration' ),
+			'user_registration_lost_password_page_id' => __( 'Lost Password Page', 'user-registration' ),
 			'user_registration_reset_password_page_id' => __( 'Reset Password Page', 'user-registration' ),
-			'user_registration_myaccount_page_id'      => __( 'My Account Page', 'user-registration' )
+			'user_registration_myaccount_page_id' => __( 'My Account Page', 'user-registration' )
 		);
 		if ( ur_check_module_activation( 'membership' ) ) {
 			$plugin_pages['user_registration_member_registration_page_id'] = __( 'Membership Registration Page', 'user-registration' );
-			$plugin_pages['user_registration_myaccount_page_id']           = __( 'Thank You Page', 'user-registration' );
+			$plugin_pages['user_registration_thank_you_page_id'] = __( 'Thank You Page', 'user-registration' );
 		}
 
 		foreach ( $plugin_pages as $option => $label ) {
@@ -402,7 +402,7 @@ if ( ! class_exists( 'WP_Debug_Data' ) ) {
 				if ( $login_page_info['login_page_id_set'] ) {
 					// Check user_registration_login_page_id first
 					$page_id = get_option( 'user_registration_login_page_id' );
-					$page    = get_post( $page_id );
+					$page = get_post( $page_id );
 					if ( $page && $page->post_status === 'publish' ) {
 						echo '<td><a href="' . esc_url( get_permalink( $page_id ) ) . '" target="_blank" class="ur-page-link">' . esc_html( $page->post_title ) . '</a> <small class="ur-page-id">(ID: ' . $page_id . ')</small> - <span class="ur-status-live">' . esc_html__( 'Live', 'user-registration' ) . '</span></td>';
 					} else {
@@ -424,8 +424,8 @@ if ( ! class_exists( 'WP_Debug_Data' ) ) {
 				} elseif ( $login_page_info['has_login_pages'] ) {
 					// Show pages with login functionality
 					$login_pages = $login_page_info['login_pages_with_functionality'];
-					$first_page  = $login_pages[0];
-					$page_id     = $first_page->ID;
+					$first_page = $login_pages[0];
+					$page_id = $first_page->ID;
 
 					if ( $first_page->post_status === 'publish' ) {
 						echo '<td><a href="' . esc_url( get_permalink( $page_id ) ) . '" target="_blank" class="ur-page-link">' . esc_html( $first_page->post_title ) . '</a> <small class="ur-page-id">(ID: ' . $page_id . ')</small> - <span class="ur-status-live">' . esc_html__( 'Live', 'user-registration' ) . '</span> <small class="ur-source-auto">[Auto-detected]</small></td>';
