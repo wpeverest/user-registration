@@ -254,7 +254,7 @@ class SubscriptionService {
 		$expiry_date       = 'subscription' === $membership_metas['type'] && !empty( $subscription['expiry_date'] ) ? date( 'Y, F d', strtotime( $subscription['expiry_date'] ) ) : 'N/A';
  		$trial_start_date  = 'subscription' === $membership_metas['type'] && 'on' === $order[ 'trial_status' ] && !empty( $subscription['trial_start_date'] ) ? date( 'Y, F d', strtotime( $subscription['trial_start_date'] ) ) : 'N/A' ;
 		$trial_end_date    = 'subscription' === $membership_metas['type'] && 'on' === $order[ 'trial_status' ] && !empty( $subscription['trial_end_date'] ) ? date( 'Y, F d', strtotime( $subscription['trial_end_date'] ) ) : 'N/A';
-		$membership_type = ucwords( $membership_metas['type'] ) == 'Paid' ? 'One-Time Payment' : ucwords( $membership_metas['type'] );
+		$membership_type = ucwords( $membership_metas['type'] ) == 'Paid' ? __( 'One-Time Payment', 'user-registration' ) : ucwords( $membership_metas['type'] );
 
 		return array(
 			'username'                          => esc_html( ucwords( isset( $data['username'] ) ? $data['username'] : '' ) ),
