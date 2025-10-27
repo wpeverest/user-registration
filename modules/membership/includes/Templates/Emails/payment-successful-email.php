@@ -14,9 +14,9 @@ if ( $invoice_details['is_membership'] ) :
 	$membership_fields = [
 		__( 'Membership Name', 'user-registration' )      => ucwords( $invoice_details['membership_plan_name'] ),
 		__( 'Trial Status', 'user-registration' )         => ucfirst($trial_status),
-		__( 'Trial Start Date', 'user-registration' )     => empty( $invoice_details['membership_plan_trial_start_date'] ) ? __( 'N/A', 'user-registration' ) : date_i18n( get_option( 'date_format' ), strtotime( $invoice_details['membership_plan_trial_start_date'] ) ),
-		__( 'Trial End Date', 'user-registration' )       => empty( $invoice_details['membership_plan_trial_end_date'] ) ? __( 'N/A', 'user-registration' ) : date_i18n( get_option( 'date_format' ), strtotime( $invoice_details['membership_plan_trial_end_date'] ) ),
-		__( 'Next Billing Date', 'user-registration' )    => empty( $invoice_details['membership_plan_next_billing_date'] ) ? __( 'N/A', 'user-registration' ) : date_i18n( get_option( 'date_format' ), strtotime( $invoice_details['membership_plan_next_billing_date'] ) ),
+		__( 'Trial Start Date', 'user-registration' )     => !empty( $invoice_details['membership_plan_trial_start_date'] )  && 'N/A' !== $invoice_details[ 'membership_plan_trial_start_date' ]  ? date_i18n( get_option( 'date_format' ), strtotime( $invoice_details['membership_plan_trial_start_date'] ) ) : __( 'N/A', 'user-registration' ),
+		__( 'Trial End Date', 'user-registration' )       => !empty( $invoice_details['membership_plan_trial_end_date'] )    && 'N/A' !== $invoice_details[ 'membership_plan_trial_end_date' ]    ? date_i18n( get_option( 'date_format' ), strtotime( $invoice_details['membership_plan_trial_end_date'] ) ) : __( 'N/A', 'user-registration' ),
+		__( 'Next Billing Date', 'user-registration' )    => !empty( $invoice_details['membership_plan_next_billing_date'] ) && 'N/A' !== $invoice_details[ 'membership_plan_next_billing_date' ] ? date_i18n( get_option( 'date_format' ), strtotime( $invoice_details['membership_plan_next_billing_date'] ) ) : __( 'N/A', 'user-registration' ),
 		__( 'Payment Date', 'user-registration' )         => date_i18n( get_option( 'date_format' ), strtotime( $invoice_details['membership_plan_payment_date'] ) ),
 		__( 'Billing Cycle', 'user-registration' )        => $invoice_details['membership_plan_billing_cycle'],
 		__( 'Payment Method', 'user-registration' )       => $invoice_details['membership_plan_payment_method'],

@@ -619,6 +619,8 @@ class UR_Smart_Tags {
 					case 'membership_plan_payment_status':
 					case 'membership_plan_billing_cycle':
 					case 'membership_plan_trial_period':
+					case 'membership_plan_trial_start_date':
+					case 'membership_plan_trial_end_date':
 					case 'membership_plan_next_billing_date':
 					case 'membership_plan_expiry_date':
 					case 'membership_plan_status':

@@ -247,8 +247,13 @@ class SubscriptionService {
 			$discount_amount = ( isset( $order['coupon_discount_type'] ) && $order['coupon_discount_type'] === 'fixed' ) ? $coupon_discount : $order['total_amount'] * $coupon_discount / 100;
 			$total = $order['total_amount'] - $discount_amount;
 		}
-		$billing_cycle = ( "subscription" === $membership_metas['type'] ) ? ( 'day' === $membership_metas['subscription']['duration'] ) ? esc_html( 'Daily', 'user-registration' ) : ( esc_html( ucfirst( $membership_metas['subscription']['duration'] . 'ly' ) ) ) : 'N/A';
+		$billing_cycle = ( "subscription" === $membership_metas['type'] ) ? ( ( 'day' === $membership_metas['subscription']['duration'] ) ? esc_html( 'Daily', 'user-registration' ) : ( esc_html( ucfirst( $membership_metas['subscription']['duration'] . 'ly' ) ) ) ) : ( 'paid' ===  $membership_metas[ 'type' ] ? 'One-Time Payment' :  'N/A' );
 		$trial_period = ( 'subscription' === $membership_metas['type'] && 'on' === $order['trial_status'] ) ? ( $membership_metas['trial_data']['value'] . ' ' . $membership_metas['trial_data']['duration'] . ( $membership_metas['trial_data']['value'] > 1 ? 's' : '' ) ) :  'N/A';
+		
+		$next_billing_date = 'subscription' === $membership_metas['type'] && !empty( $subscription['next_billing_date'] ) ? date( 'Y, F d', strtotime( $subscription['next_billing_date'] ) ) : 'N/A';
+		$expiry_date       = 'subscription' === $membership_metas['type'] && !empty( $subscription['expiry_date'] ) ? date( 'Y, F d', strtotime( $subscription['expiry_date'] ) ) : 'N/A';
+ 		$trial_start_date  = 'subscription' === $membership_metas['type'] && 'on' === $order[ 'trial_status' ] && !empty( $subscription['trial_start_date'] ) ? date( 'Y, F d', strtotime( $subscription['trial_start_date'] ) ) : 'N/A' ;
+		$trial_end_date    = 'subscription' === $membership_metas['type'] && 'on' === $order[ 'trial_status' ] && !empty( $subscription['trial_end_date'] ) ? date( 'Y, F d', strtotime( $subscription['trial_end_date'] ) ) : 'N/A';
 
 		return array(
 			'username'                          => esc_html( ucwords( isset( $data['username'] ) ? $data['username'] : '' ) ),
@@ -256,11 +261,11 @@ class SubscriptionService {
 			'membership_plan_type'              => esc_html( ucwords( $membership_metas['type'] ) ),
 			'membership_plan_payment_method'    => esc_html( ucwords( isset( $data['order']['payment_method'] ) ? $data['order']['payment_method'] : $data['payment_method'] ) ),
 			'membership_plan_trial_status'      => esc_html( ucwords( $order['trial_status'] ) ),
-			'membership_plan_trial_start_date'  => esc_html( !empty( $subscription['trial_start_date'] ) ? date( 'Y, F d', strtotime( $subscription['trial_start_date'] ) ) : 'N/A' ),
-			'membership_plan_trial_end_date'    => esc_html( !empty( $subscription['trial_end_date'] ) ? date( 'Y, F d', strtotime( $subscription['trial_end_date'] ) ) : 'N/A' ),
+			'membership_plan_trial_start_date'  => esc_html( $trial_start_date ),
+			'membership_plan_trial_end_date'    => esc_html( $trial_end_date ),
 			'membership_plan_trial_period'      => esc_html( $trial_period ),
-			'membership_plan_next_billing_date' => esc_html( !empty( $subscription['next_billing_date'] ) ? date( 'Y, F d', strtotime( $subscription['next_billing_date'] ) ) : 'N/A' ),
-			'membership_plan_expiry_date'       => esc_html( !empty( $subscription['expiry_date'] ) ? date( 'Y, F d', strtotime( $subscription['expiry_date'] ) ) : 'N/A' ),
+			'membership_plan_next_billing_date' => esc_html( $next_billing_date ),
+			'membership_plan_expiry_date'       => esc_html( $expiry_date ),
 			'membership_plan_status'            => esc_html( ucwords( $subscription['status'] ) ),
 			'membership_plan_payment_date'      => esc_html( date( 'Y, F d', strtotime( $order['created_at'] ) ) ),
 			'membership_plan_billing_cycle'     => esc_html( ucwords( $billing_cycle ) ),
