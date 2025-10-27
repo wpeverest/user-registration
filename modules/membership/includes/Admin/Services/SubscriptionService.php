@@ -247,18 +247,19 @@ class SubscriptionService {
 			$discount_amount = ( isset( $order['coupon_discount_type'] ) && $order['coupon_discount_type'] === 'fixed' ) ? $coupon_discount : $order['total_amount'] * $coupon_discount / 100;
 			$total = $order['total_amount'] - $discount_amount;
 		}
-		$billing_cycle = ( "subscription" === $membership_metas['type'] ) ? ( ( 'day' === $membership_metas['subscription']['duration'] ) ? esc_html( 'Daily', 'user-registration' ) : ( esc_html( ucfirst( $membership_metas['subscription']['duration'] . 'ly' ) ) ) ) : ( 'paid' ===  $membership_metas[ 'type' ] ? 'One-Time Payment' :  'N/A' );
+		$billing_cycle = ( "subscription" === $membership_metas['type'] ) ? ( ( 'day' === $membership_metas['subscription']['duration'] ) ? esc_html( 'Daily', 'user-registration' ) : ( esc_html( ucfirst( $membership_metas['subscription']['duration'] . 'ly' ) ) ) ) : 'N/A';
 		$trial_period = ( 'subscription' === $membership_metas['type'] && 'on' === $order['trial_status'] ) ? ( $membership_metas['trial_data']['value'] . ' ' . $membership_metas['trial_data']['duration'] . ( $membership_metas['trial_data']['value'] > 1 ? 's' : '' ) ) :  'N/A';
 		
 		$next_billing_date = 'subscription' === $membership_metas['type'] && !empty( $subscription['next_billing_date'] ) ? date( 'Y, F d', strtotime( $subscription['next_billing_date'] ) ) : 'N/A';
 		$expiry_date       = 'subscription' === $membership_metas['type'] && !empty( $subscription['expiry_date'] ) ? date( 'Y, F d', strtotime( $subscription['expiry_date'] ) ) : 'N/A';
  		$trial_start_date  = 'subscription' === $membership_metas['type'] && 'on' === $order[ 'trial_status' ] && !empty( $subscription['trial_start_date'] ) ? date( 'Y, F d', strtotime( $subscription['trial_start_date'] ) ) : 'N/A' ;
 		$trial_end_date    = 'subscription' === $membership_metas['type'] && 'on' === $order[ 'trial_status' ] && !empty( $subscription['trial_end_date'] ) ? date( 'Y, F d', strtotime( $subscription['trial_end_date'] ) ) : 'N/A';
+		$membership_type = ucwords( $membership_metas['type'] ) == 'Paid' ? 'One-Time Payment' : ucwords( $membership_metas['type'] );
 
 		return array(
 			'username'                          => esc_html( ucwords( isset( $data['username'] ) ? $data['username'] : '' ) ),
 			'membership_plan_name'              => esc_html( ucwords( $membership_metas['post_title'] ) ),
-			'membership_plan_type'              => esc_html( ucwords( $membership_metas['type'] ) ),
+			'membership_plan_type'              => esc_html( $membership_type ),
 			'membership_plan_payment_method'    => esc_html( ucwords( isset( $data['order']['payment_method'] ) ? $data['order']['payment_method'] : $data['payment_method'] ) ),
 			'membership_plan_trial_status'      => esc_html( ucwords( $order['trial_status'] ) ),
 			'membership_plan_trial_start_date'  => esc_html( $trial_start_date ),
