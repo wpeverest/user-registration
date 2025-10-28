@@ -3606,10 +3606,10 @@ if ( ! function_exists( 'ur_find_reset_password_in_page' ) ) {
 
 		$matched = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(*) FROM {$post_table} 
-				WHERE ID = %d 
+				"SELECT COUNT(*) FROM {$post_table}
+				WHERE ID = %d
 				AND (
-					post_content LIKE '%[user_registration_reset_password_form%' 
+					post_content LIKE '%[user_registration_reset_password_form%'
 					OR post_content LIKE '%<!-- wp:user-registration/reset_password_form%'
 				)",
 				$reset_password_page_id
@@ -3619,10 +3619,10 @@ if ( ! function_exists( 'ur_find_reset_password_in_page' ) ) {
 		if ( $matched <= 0 ) {
 			$matched = $wpdb->get_var(
 				$wpdb->prepare(
-					"SELECT COUNT(*) FROM {$post_meta_table} 
-					WHERE post_id = %d 
+					"SELECT COUNT(*) FROM {$post_meta_table}
+					WHERE post_id = %d
 					AND (
-						meta_value LIKE '%[user_registration_reset_password_form%' 
+						meta_value LIKE '%[user_registration_reset_password_form%'
 						OR meta_value LIKE '%<!-- wp:user-registration/reset_password_form%'
 					)",
 					$reset_password_page_id
@@ -6946,7 +6946,7 @@ if ( ! function_exists( 'ur_email_send_failed_notice' ) ) {
 				'title'                 => __( 'User Registration Email Send Error', 'user-registration' ),
 				'message_content'       => wp_kses_post(
 					sprintf(
-						'<p>%s</p><p style="border-left: 2px solid #72aee6; background: #F0FFFF; padding: 10px;">%s</p><br/>',
+						'<p>%s</p><p class="ur-email-send-failed-log">%s</p>',
 						__( 'The last emails sent from User Registration Plugin was not delivered to the user. ', 'user-registration' ),
 						$error_message
 					)
@@ -6962,7 +6962,7 @@ if ( ! function_exists( 'ur_email_send_failed_notice' ) ) {
 					array(
 						'title'  => __( 'Visit Documentation', 'user-registration' ),
 						'icon'   => 'dashicons-media-document',
-						'link'   => 'https://docs.wpuserregistration.com/docs/emails-are-not-being-delivered/',
+						'link'   => 'https://docs.wpuserregistration.com/docs/why-are-emails-not-being-delivered/',
 						'class'  => 'button-secondary notice-have-query',
 						'target' => '_blank',
 					),
@@ -7055,7 +7055,7 @@ if ( ! function_exists( 'ur_spam_users_detected' ) ) {
 				'title'                 => __( 'Unusual User Registrations Detected', 'user-registration' ),
 				'message_content'       => wp_kses_post(
 					sprintf(
-						'<p>%s</p><p>%s</p><br/>',
+						'<p>%s</p><p>%s</p>',
 						__( 'A significant number of users have registered on your site from sources other than the User Registration plugin\'s form.', 'user-registration' ),
 						__( 'These registrations may be suspicious. Please review and disable any other methods that allow user registrations if they are not intended. Additionally, consider enabling spam protection measures in the User Registration plugin to safeguard your site.', 'user-registration' ),
 					)
