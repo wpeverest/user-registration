@@ -123,7 +123,7 @@ class StripeService {
 		$user_email = $response_data['email'];
 		$member_id  = $response_data['member_id'];
 		$membership_type = $payment_data['type'] ?? 'unknown';
-		
+
 		PaymentGatewayLogging::log_transaction_start( 'stripe', 'Processing Stripe payment', array(
 			'member_id' => $member_id,
 			'amount' => $amount,
@@ -131,7 +131,7 @@ class StripeService {
 			'membership_type' => $membership_type,
 			'email' => $user_email
 		) );
-		
+
 		$response   = array(
 			'type' => $payment_data['type'],
 		);
@@ -186,19 +186,19 @@ class StripeService {
 				'email' => $user_email,
 				'member_id' => $member_id
 			) );
-			
+
 			$customer                  = \Stripe\Customer::create(
 				array(
 					'email' => $user_email,
 				)
 			);
 			$response['stripe_cus_id'] = $customer->id;
-			
+
 			PaymentGatewayLogging::log_api_response( 'stripe', 'Stripe customer created successfully', array(
 				'customer_id' => $customer->id,
 				'member_id' => $member_id
 			) );
-			
+
 			if ( ! empty( $customer ) ) {
 				update_user_meta( $member_id, 'ur_payment_customer', $customer->id );
 			}
@@ -209,7 +209,7 @@ class StripeService {
 					'currency' => $currency,
 					'customer_id' => $customer->id
 				) );
-				
+
 				$intent                    = \Stripe\PaymentIntent::create(
 					array(
 						'amount'               => $amount,
@@ -219,7 +219,7 @@ class StripeService {
 					)
 				);
 				$response['client_secret'] = $intent->client_secret;
-				
+
 				PaymentGatewayLogging::log_transaction_success( 'stripe', 'Payment intent created successfully', array(
 					'payment_intent_id' => $intent->id,
 					'amount' => $amount / 100,
@@ -236,7 +236,7 @@ class StripeService {
 				'error_message' => $e->getMessage(),
 				'member_id' => $member_id
 			) );
-			
+
 			if ( empty( $payment_data['upgrade'] ) ) {
 				wp_delete_user( absint( $member_id ) );
 			}
@@ -279,7 +279,7 @@ class StripeService {
 
 			return $response;
 		}
-		
+
 		$membership = $this->membership_repository->get_single_membership_by_ID( $latest_order['item_id'] );
 		$membership_metas = wp_unslash( json_decode( $membership['meta_value'], true ) );
 		$membership_type = $membership_metas['type'] ?? 'unknown';
@@ -288,7 +288,7 @@ class StripeService {
 			$is_renewing = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
 			$error_msg = __( 'Stripe Payment failed.', 'user-registration' );
 			$error_msg = $data['payment_result']['error']['message'] ?? $error_msg;
-			
+
 			PaymentGatewayLogging::log_transaction_failure( 'stripe', 'Stripe payment failed', array(
 				'error_code' => 'PAYMENT_FAILED',
 				'error_message' => $error_msg,
@@ -296,7 +296,7 @@ class StripeService {
 				'transaction_id' => $transaction_id,
 				'membership_type' => $membership_type
 			) );
-			
+
 			if ( ! $is_upgrading && ! $is_renewing ) {
 				wp_delete_user( absint( $member_id ) );
 				$this->members_orders_repository->delete_member_order( $member_id );
@@ -333,7 +333,7 @@ class StripeService {
 
 			if ( $is_order_updated && 'paid' === $member_order['order_type'] ) {
 				$this->members_subscription_repository->update( $member_subscription['ID'], array( 'status' => 'active', 'start_date' => date('Y-m-d 00:00:00') ) );
-				
+
 				if ( $is_upgrading ) {
 					PaymentGatewayLogging::log_general( 'stripe', 'Upgrade payment completed - Order status changed to completed', 'success', array(
 						'event_type' => 'upgrade_payment_completed',
@@ -355,7 +355,7 @@ class StripeService {
 						'membership_type' => $membership_type
 					) );
 				}
-				
+
 				PaymentGatewayLogging::log_general( 'stripe', 'Subscription status changed to active', 'success', array(
 					'event_type' => $is_upgrading ? 'upgrade_subscription_activated' : 'status_change',
 					'old_status' => $member_subscription['status'] ?? 'unknown',
@@ -395,7 +395,7 @@ class StripeService {
 		$response = array(
 			'status' => false,
 		);
-		
+
 		if ( empty( $member_subscription ) ) {
 			PaymentGatewayLogging::log_error( 'stripe', 'Subscription not found for member', array(
 				'error_code' => 'SUBSCRIPTION_NOT_FOUND',
@@ -413,7 +413,7 @@ class StripeService {
 				'member_id' => $member_id,
 				'membership_type' => $membership_type
 			) );
-			
+
 			$response['status']  = false;
 			$response['message'] = __( 'Stripe subscription failed, price or product not found', 'user-registration' );
 
@@ -512,7 +512,7 @@ class StripeService {
 				$next_subscription = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
 				if ( ! empty( $next_subscription['delayed_until'] ) ) {
 					$subscription_details['trial_end'] = strtotime( $next_subscription['delayed_until'] );
-					
+
 					PaymentGatewayLogging::log_general( 'stripe', 'Upgrade scheduled with delayed start', 'notice', array(
 						'event_type' => 'upgrade_delayed_start',
 						'member_id' => $member_id,
@@ -525,7 +525,7 @@ class StripeService {
 					$membership_metas['trial_status'] === 'on'
 				) {
 					$subscription_details['trial_end'] = strtotime( $previous_subscription['trial_end_date'] );
-					
+
 					PaymentGatewayLogging::log_general( 'stripe', 'Upgrade preserving trial period', 'notice', array(
 						'event_type' => 'upgrade_trial_preserved',
 						'member_id' => $member_id,
@@ -533,7 +533,7 @@ class StripeService {
 					) );
 				}
 			}
-			
+
 			if ( ( ! $is_automatic && ! $is_upgrading ) || $is_renewing ) {
 				$value    = $membership_metas['subscription']['value'];
 				$duration = $membership_metas['subscription']['duration'];
@@ -660,7 +660,7 @@ class StripeService {
 	public function sendEmail( int $ID, $member_subscription, array $membership_metas, int $member_id, array $response, $is_upgrading = false ): array {
 		$email_service = new EmailService();
 		$order_detail  = $this->orders_repository->get_order_detail( $ID );
-		
+
 		if ( ! empty( $order_detail['coupon'] ) ) {
 			$order_detail['coupon_discount']      = get_user_meta( $order_detail['user_id'], 'ur_coupon_discount', true );
 			$order_detail['coupon_discount_type'] = get_user_meta( $order_detail['user_id'], 'ur_coupon_discount_type', true );
@@ -772,7 +772,7 @@ class StripeService {
 		}
 		if ( isset( $deleted_sub[ 'canceled_at' ] ) && '' !== $deleted_sub['canceled_at'] ) {
 			$response['status'] = true;
-			
+
 			PaymentGatewayLogging::log_general( 'stripe', 'Subscription cancelled successfully', 'notice', array(
 				'event_type' => 'cancellation_success',
 				'subscription_id' => $subscription['subscription_id'],
@@ -931,7 +931,7 @@ class StripeService {
 			$subscription_service = new SubscriptionService();
 			$subscription_service->update_subscription_data_for_renewal( $current_subscription, $membership_metas );
 		}
-		
+
 		PaymentGatewayLogging::log_webhook_processed( 'stripe', 'Subscription renewed successfully', array(
 			'subscription_id' => $subscription_id,
 			'new_billing_date' => $next_billing_date,
@@ -1159,7 +1159,6 @@ class StripeService {
 				'error_code' => 'PRICE_CREATION_FAILED',
 				'error_message' => $e->getMessage()
 			) );
-			
 			return array(
 				'success' => false,
 				'message' => $e->getMessage(),
