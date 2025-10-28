@@ -38,8 +38,12 @@
 			);
 
 			$('input[name^="user_registration_hide_label_"]')
-				.on('change', function () { LoginBuilderSettings.hide_show_field_label($(this)); })
-				.each(function () { LoginBuilderSettings.hide_show_field_label($(this)); });
+				.on('change', function () {
+					LoginBuilderSettings.hide_show_field_label($(this));
+				})
+				.each(function () {
+					LoginBuilderSettings.hide_show_field_label($(this));
+				});
 		},
 		init_form_builder: function () {
 			$(".ur-tabs .ur-tab-lists").on("click", "a.nav-tab", function () {
@@ -67,12 +71,12 @@
 		},
 		hide_show_field_label: function (selected_item) {
 			var id = (selected_item.attr('id') || '').replace('user_registration_hide_label_', '');
-			var fieldMap = { password: 'password' };
+			var fieldMap = {password: 'password'};
 			var field_name = fieldMap[id] || 'username';
 			$('#ur-frontend-form')
 				.find('[data-field="' + field_name + '"] label')
 				.show();
-			if(selected_item.is(':checked')) {
+			if (selected_item.is(':checked')) {
 				$('#ur-frontend-form')
 					.find('[data-field="' + field_name + '"] label')
 					.hide();
@@ -90,7 +94,7 @@
 				if (event.ctrlKey || event.metaKey) {
 					if (
 						"s" ===
-							String.fromCharCode(event.which).toLowerCase() ||
+						String.fromCharCode(event.which).toLowerCase() ||
 						83 === event.which
 					) {
 						event.preventDefault();
@@ -118,7 +122,49 @@
 		$(".ur-submit-button.ur-disabled-btn").on("click", function (e) {
 			e.preventDefault();
 		});
+		$(".user-registration-login-form-global-settings #user_registration_lost_password_page_id , .user-registration-login-form-global-settings #user_registration_reset_password_page_id")
+			.on("change", function () {
+				urm_validate_login_page_settings($(this));
+			});
 	});
+
+	function urm_validate_login_page_settings($this) {
+		var field_container = $this.closest('.user-registration-login-form-global-settings--field'),
+			main_container = field_container.closest('.user-registration-login-form-global-settings'),
+			page_id = $this.val(),
+			type = $this.attr('id'),
+			data = {
+				action: "user_registration_login_settings_page_validation",
+				security: ur_login_form_params.ur_login_settings_save,
+				page_id: page_id,
+				type: type
+			},
+			spinner = '<span class="ur-spinner is-active"></span>'
+
+		if (field_container.length === 0 || field_container.find('.ur-spinner').length > 0 || page_id === undefined || type === undefined) {
+			return;
+		}
+		main_container.find('.error.inline').remove();
+		$.ajax({
+			url: ur_login_form_params.ajax_url,
+			data: data,
+			type: "POST",
+			beforeSend: function () {
+				field_container.append(spinner);
+			},
+			success: function (response) {
+				if(!response.success) {
+					var error_message = response.data.message;
+					main_container.append('<span class="error inline">'+error_message+'</span>');
+				}
+			},
+			complete: function (response) {
+				field_container
+					.find(".ur-spinner")
+					.remove();
+			}
+		});
+	}
 
 	function ur_save_login_form_settings() {
 		var settings = get_login_form_settings(
@@ -194,7 +240,7 @@
 			$message_container = $(".ur-form-container").find(
 				".ur-builder-message-container"
 			);
-			$message_container.css({ top: $admin_bar.height() + "px" });
+			$message_container.css({top: $admin_bar.height() + "px"});
 		}
 
 		if ("success" === type) {
@@ -312,7 +358,7 @@
 			form = $(".ur-login-form-wrapper").find(".ur-frontend-form.login");
 		form.find("#rememberme")
 			.parent("label")
-			.css({ opacity: value ? 1 : 0.5 });
+			.css({opacity: value ? 1 : 0.5});
 
 		if (value) {
 			$("#user_registration_label_remember_me")
@@ -681,8 +727,8 @@
 						)
 						.append(
 							'<div class="error inline" style="padding:10px;">' +
-								ur_login_form_params.user_registration_membership_redirect_default_page_message +
-								"</div>"
+							ur_login_form_params.user_registration_membership_redirect_default_page_message +
+							"</div>"
 						);
 				} else {
 					$(wpbody_class)
@@ -714,8 +760,8 @@
 					)
 					.append(
 						'<div class="error inline" style="padding:10px;">' +
-							ur_login_form_params.user_registration_membership_redirect_default_page_message +
-							"</div>"
+						ur_login_form_params.user_registration_membership_redirect_default_page_message +
+						"</div>"
 					);
 
 				$redirect.prop("required", true);
