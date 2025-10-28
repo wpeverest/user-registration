@@ -77,9 +77,10 @@ const App = () => {
 	return (
 		<ChakraProvider>
 			<Box
-				border={"1px solid #EDF2F7"}
-				borderRadius={"4px"}
+				border={"1px solid #e1e1e1"}
+				borderRadius={"13px"}
 				backgroundColor="white"
+				padding="24px 28px"
 			>
 				<Box
 					padding="0px 20px 50px"
@@ -91,20 +92,22 @@ const App = () => {
 						align="center"
 						bg="white"
 						direction={{ base: "column", md: "row" }}
-						borderBottom="1px solid #CDD0D8"
+						borderBottom="1px solid #e1e1e1"
 						padding="20px 10px"
 						boxShadow="none"
 					>
 						<HStack gap="24px">
 							<HStack gap="16px">
 								<Heading
+									textAlign={{ base: "center", md: "left" }}
+									lineHeight="32px"
+									fontWeight="600"
+									margin="0"
 									fontSize={{
 										base: "16px",
-										md: "20px",
+										md: "22px",
 										lg: "22px"
 									}}
-									fontWeight="600"
-									textAlign={{ base: "center", md: "left" }}
 									color="#222222"
 								>
 									{__("Add New Form", "user-registration")}
@@ -112,21 +115,29 @@ const App = () => {
 							</HStack>
 							<Button
 								style={{
-									borderColor: "#475bb2",
-									color: "#475bb2"
+									border: "1px solid #475bb2",
+									borderRadius: "4px",
+									transition: "all .3s ease-in-out"
 								}}
+								color="#475bb2"
+								backgroundColor="#f6f7f7"
+								fontWeight="500"
+								minHeight="36px"
+								padding="0 12px"
+								alignContent="center"
+								fontSize="14px"
+								lineHeight="20px"
 								variant="outline"
 								onClick={handleRefreshTemplates}
+								textDecoration={"none"}
+								boxSizing="border-box"
 								width={{ base: "full", md: "auto" }}
 								className="chakra-link "
 								display={{ base: "none", md: "inline-flex" }} // Hide button on small screens
-								padding="8px 12px"
 								gap="4px"
-								fontWeight="500"
-								fontSize="16px"
 								_hover={{
 									backgroundColor: "#475BB2",
-									color: "white !important"
+									color: "white"
 								}}
 							>
 								{__("Refresh Templates", "user-registration")}
