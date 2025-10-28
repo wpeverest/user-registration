@@ -122,7 +122,7 @@
 		$(".ur-submit-button.ur-disabled-btn").on("click", function (e) {
 			e.preventDefault();
 		});
-		$(".user-registration-login-form-global-settings #user_registration_lost_password_page_id , .user-registration-login-form-global-settings #user_registration_reset_password_page_id")
+		$(".user-registration-login-form-global-settings #user_registration_lost_password_page_id , .user-registration-login-form-global-settings #user_registration_reset_password_page_id , .user-registration-login-form-global-settings #user_registration_login_options_login_redirect_url")
 			.on("change", function () {
 				urm_validate_login_page_settings($(this));
 			});
@@ -143,6 +143,9 @@
 
 		if (field_container.length === 0 || field_container.find('.ur-spinner').length > 0 || page_id === undefined || type === undefined) {
 			return;
+		}
+		if(type === "user_registration_login_options_login_redirect_url") {
+			main_container = main_container.find('span.select2');
 		}
 		main_container.find('.error.inline').remove();
 		$.ajax({

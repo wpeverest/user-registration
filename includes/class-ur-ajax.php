@@ -2344,33 +2344,51 @@ class UR_AJAX {
 
 		if ( ! in_array( $type, array(
 			'user_registration_lost_password_page_id',
-			'user_registration_reset_password_page_id'
+			'user_registration_reset_password_page_id',
+			'user_registration_login_options_login_redirect_url'
 		) ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid page type', 'user-registration' ) ) );
 		}
 
 		$page_id = isset( $_POST['page_id'] ) ? absint( wp_unslash( $_POST['page_id'] ) ) : 0;
 
-		if ( ! $page_id || ! is_numeric( $page_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid page ID', 'user-registration' ) ) );
-		}
 
+		$default_message = 'Invalid page type';
 		switch ( $type ) {
 			case 'user_registration_lost_password_page_id':
+				if( empty( $page_id ) ) {
+					wp_send_json_error(
+						array(
+							'message' => esc_html__(
+								'Please select a valid lost password page that contains the lost password shortcode [user_registration_lost_password]',
+								'user-registration'
+							),
+						)
+					);
+				}
 				$is_page_lost_password_page = ur_find_lost_password_in_page( $page_id );
 				if ( ! $is_page_lost_password_page ) {
 					wp_send_json_error(
 						array(
 							'message' => esc_html__(
-								'The selected page does not contain the required password reset shortcode [user_registration_lost_password]',
+								'The selected page does not contain the required lost password shortcode [user_registration_lost_password]',
 								'user-registration'
 							),
 						)
 					);
 				}
 				break;
-
 			case 'user_registration_reset_password_page_id':
+				if( empty( $page_id ) ) {
+					wp_send_json_error(
+						array(
+							'message' => esc_html__(
+								'Please select a valid reset password page that contains the reset password shortcode [user_registration_reset_password_form]',
+								'user-registration'
+							),
+						)
+					);
+				}
 				$is_page_reset_password_page = ur_find_reset_password_in_page( $page_id );
 				if ( ! $is_page_reset_password_page ) {
 					wp_send_json_error(
@@ -2383,9 +2401,32 @@ class UR_AJAX {
 					);
 				}
 				break;
-
+			case 'user_registration_login_options_login_redirect_url':
+				if( empty( $page_id ) ) {
+					wp_send_json_error(
+						array(
+							'message' => esc_html__(
+								'Please select a valid MyAccount or Login page that contains the Login or MyAccount shortcode/block [user_registration_my_account]/[user_registration_login].',
+								'user-registration'
+							),
+						)
+					);
+				}
+				$is_login_page_id = ur_find_my_account_in_page( $page_id );
+				if ( ! $is_login_page_id ) {
+					wp_send_json_error(
+						array(
+							'message' => esc_html__(
+								'The selected page does not contain the required Login or My Account shortcode/block [user_registration_my_account]/[user_registration_login]',
+								'user-registration'
+							),
+						)
+					);
+				}
+				break;
 			default:
-				wp_send_json_error( array( 'message' => __( 'Invalid page type', 'user-registration' ) ) );
+
+				wp_send_json_error( array( 'message' => __( $default_message, 'user-registration' ) ) );
 				break;
 		}
 
