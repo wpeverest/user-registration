@@ -36,7 +36,8 @@ if ( isset( $_GET['urm_error'] ) ) {
 		ur_add_notice( $error_message, 'error' );
 		delete_transient( $error_key );
 	} else {
-		ur_add_notice( 'Error message expired or not found', 'error' );
+		$urm_error_expired_message = __( 'Error message expired or not found', 'user-registration' );
+		ur_add_notice( $urm_error_expired_message, 'error' );
 	}
 } else {
 	ur_add_notice( apply_filters( 'user_registration_post_login_errors', '' ), 'error' );
@@ -176,8 +177,8 @@ if( isset($_GET['page']) && 'user-registration-login-forms' === $_GET['page'] ) 
 					?>
 					<span class="input-wrapper">
 						<input placeholder="<?php echo esc_attr( $placeholders['username'] ); ?>" type="text"
-							   class="user-registration-Input user-registration-Input--text input-text" name="username"
-							   id="username"
+								class="user-registration-Input user-registration-Input--text input-text" name="username"
+								id="username"
 							   value="<?php echo ( ! empty( $_POST['username'] ) ) ? esc_attr( wp_unslash( sanitize_text_field( $_POST['username'] ) ) ) : ''; // phpcs:ignore ?>"
 							   style="<?php echo ( $enable_field_icon || $is_login_settings && is_plugin_active( 'user-registration-pro/user-registration.php' ) ) ? "padding-left: 32px !important" : '' ?>"
 							   <?php echo $is_login_settings ? "disabled" : '' ?>
@@ -210,13 +211,13 @@ if( isset($_GET['page']) && 'user-registration-login-forms' === $_GET['page'] ) 
 
 						<?php
 						if ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) {
-						?>
+							?>
 						<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden"
-						   title="<?php echo esc_attr__( 'Show password', 'user-registration' ); ?>"></a>
+							title="<?php echo esc_attr__( 'Show password', 'user-registration' ); ?>"></a>
 						</span>
 							<?php
-							}
-							?>
+						}
+						?>
 							<?php if ( $enable_field_icon || $is_login_settings && is_plugin_active( 'user-registration-pro/user-registration.php' ) ) { ?>
 								<span class="ur-icon ur-icon-password"></span>
 							<?php } ?>
@@ -266,7 +267,7 @@ if( isset($_GET['page']) && 'user-registration-login-forms' === $_GET['page'] ) 
 							if ( ( $lost_password_enabled && $is_passwordless_enabled && ! $is_passwordless_login_default_login_area_enabled ) || $is_login_settings ) {
 								?>
 								<div data-field="lost-password"
-									 class="user-registration-LostPassword lost_password <?php echo esc_attr( $admin_class ); ?>">
+									class="user-registration-LostPassword lost_password <?php echo esc_attr( $admin_class ); ?>">
 									<label
 										class="user-registration-form__label user-registration-form__label-for-checkbox inline">
 										<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php echo esc_html( $labels['lost_your_password'] ); ?></a>
@@ -302,7 +303,7 @@ if( isset($_GET['page']) && 'user-registration-login-forms' === $_GET['page'] ) 
 					<?php } ?>
 				</div>
 				<input type="hidden" name="redirect"
-					   value="<?php echo isset( $redirect ) ? esc_attr( $redirect ) : esc_attr( the_permalink() ); ?>"/>
+						value="<?php echo isset( $redirect ) ? esc_attr( $redirect ) : esc_attr( the_permalink() ); ?>"/>
 
 				<?php
 				$users_can_register = ur_option_checked( 'users_can_register', true );
