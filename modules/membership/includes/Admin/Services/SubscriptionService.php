@@ -261,12 +261,12 @@ class SubscriptionService {
 			'membership_plan_status'            => esc_html( ucwords( $subscription['status'] ) ),
 			'membership_plan_payment_date'      => esc_html( date( 'Y, F d', strtotime( $order['created_at'] ) ) ),
 			'membership_plan_billing_cycle'     => esc_html( ucwords( $billing_cycle ) ),
-			'membership_plan_payment_amount'    => $symbol . number_format( $membership_metas['amount'], 2 ),
+			'membership_plan_payment_amount'    => (!empty($currencies[ $currency ]['symbol_pos']) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( $membership_metas['amount'], 2 ) : number_format( $membership_metas['amount'], 2 ) . $symbol,
 			'membership_plan_payment_status'    => esc_html( ucwords( $order['status'] ) ),
-			'membership_plan_trial_amount'      => $symbol . number_format( ( 'on' === $order['trial_status'] ) ? $order['total_amount'] : 0, 2 ),
+			'membership_plan_trial_amount'      => (!empty($currencies[ $currency ]['symbol_pos']) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( ( 'on' === $order['trial_status'] ) ? $order['total_amount'] : 0, 2 ) : number_format( ( 'on' === $order['trial_status'] ) ? $order['total_amount'] : 0, 2 ) . $symbol,
 			'membership_plan_coupon_discount'   => isset( $order['coupon_discount'] ) ? ( ( isset( $order['coupon_discount_type'] ) && $order['coupon_discount_type'] == 'percent' ) ? $order['coupon_discount'] . '%' : $symbol . $order['coupon_discount'] ) : '',
 			'membership_plan_coupon'            => esc_html( $order['coupon'] ?? '' ),
-			'membership_plan_total'             => $symbol . number_format( $total, 2 ),
+			'membership_plan_total'             => (!empty($currencies[ $currency ]['symbol_pos']) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ?  $symbol . number_format( $total, 2 ) : number_format( $total, 2 ) . $symbol,
 			'membership_renewal_link'           => "<a href=$membership_tab_url>" . __( 'Renew Now', 'user-registration' ) . "</a>"
 		);
 	}
