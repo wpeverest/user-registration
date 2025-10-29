@@ -82,31 +82,26 @@ const App = () => {
 				backgroundColor="white"
 				padding="24px 28px"
 			>
-				<Box
-					padding="0px 20px 50px"
-					gap="24px"
-					display="flex"
-					flexDirection="column"
-				>
+				<Box gap="24px" display="flex" flexDirection="column">
 					<HStack
 						align="center"
 						bg="white"
 						direction={{ base: "column", md: "row" }}
 						borderBottom="1px solid #e1e1e1"
-						padding="20px 10px"
+						padding="0 0 10px"
 						boxShadow="none"
 					>
 						<HStack gap="24px">
 							<HStack gap="16px">
 								<Heading
 									textAlign={{ base: "center", md: "left" }}
-									lineHeight="32px"
+									lineHeight="30px"
 									fontWeight="600"
 									margin="0"
 									fontSize={{
 										base: "16px",
-										md: "22px",
-										lg: "22px"
+										md: "18px",
+										lg: "20px"
 									}}
 									color="#222222"
 								>
@@ -122,7 +117,7 @@ const App = () => {
 								color="#475bb2"
 								backgroundColor="#f6f7f7"
 								fontWeight="500"
-								minHeight="36px"
+								height="34px"
 								padding="0 12px"
 								alignContent="center"
 								fontSize="14px"
@@ -146,16 +141,16 @@ const App = () => {
 						<TabFilters onTabChange={handleTabChange} />
 					</HStack>
 					{/* Main Content Area */}
-					<Box bg="white" p="0px 8px" rounded="md" gap="24px">
-						<VStack align="start" gap="8px">
+					<Box bg="white" p="0" rounded="md" gap="24px">
+						<VStack align="start" gap="4px">
 							<Heading
 								as="h2"
-								fontSize="20px"
-								lineHeight="28px"
+								fontSize="16px"
+								lineHeight="26px"
 								m={0}
 								color="#26262E"
 								fontWeight="500"
-								letterSpacing="0.5px"
+								fontFamily={"inherit"}
 							>
 								{__("Select a Template", "user-registration")}
 							</Heading>
