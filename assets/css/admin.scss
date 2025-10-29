@@ -4363,33 +4363,57 @@ a.button.ur-smart-tags-list-button {
 									}
 
 									.clickable-login-fields {
+										position: relative;
 										padding: 15px;
-										border-radius: 5px;
-										margin: 0 0 10px 0;
-										line-height: 21px;
+										margin: 0 0 10px;
 										border: 1px solid transparent;
+										border-radius: 5px;
+										line-height: 21px;
+										cursor: pointer;
+										transition: all 0.2s ease;
 
+										input,
 										label {
-											line-height: 21px;
+											cursor: pointer;
+											line-height: inherit;
 										}
 
-										&[data-field="username"],
-										&[data-field="password"] {
-											label {
-												margin-bottom: 10px;
-											}
+										&[data-field="username"] label,
+										&[data-field="password"] label {
+											display: block;
+											margin-bottom: 10px;
 										}
 
 										&.active {
-											border: 1px solid #475bb2;
 											background-color: #f8f8fa;
-											&:hover {
-												border: 1px solid #475bb2;
-											}
+											border-color: #475bb2;
 										}
+
 										&:hover {
 											background-color: #f8f8fa;
 											border: 1px dashed #475bb2;
+
+											&::before {
+												content: "\270E";
+												position: absolute;
+												top: 0;
+												right: 0;
+												display: flex;
+												align-items: center;
+												justify-content: center;
+												width: 32px;
+												height: 32px;
+												background: #676f8a;
+												color: white;
+												border-radius: 0 0 7px 0;
+												font-size: 16px;
+												transform: scaleX(-1);
+
+											}
+										}
+
+										&.active:hover {
+											border-style: solid;
 										}
 									}
 								}
