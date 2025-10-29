@@ -41,7 +41,16 @@
 body {
 	&.user-registration,
 	&.user-registration-page {
-		font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+		#wpbody-content {
+			.ur-admin-page-topnav,
+			.memberships,
+			div[class*="user-registration-"],
+			div[id*="user-registration-"],
+			table th, table td,
+			h1, h2, h3, h4, h5, h6, p, small, label {
+				font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+			}
+		}
 	}
 
 	.wp-responsive-open {
