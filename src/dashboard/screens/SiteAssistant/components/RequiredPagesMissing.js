@@ -8,58 +8,72 @@ import {
 	Stack,
 	Text,
 	Box,
-	useToast,
-} from '@chakra-ui/react';
-import { __ } from '@wordpress/i18n';
-import React, { useState } from 'react';
-import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
+	useToast
+} from "@chakra-ui/react";
+import { __ } from "@wordpress/i18n";
+import React, { useState } from "react";
+import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 
-const RequiredPagesMissing = ({ isOpen, onToggle, missingPagesData = [] }) => {
+const RequiredPagesMissing = ({
+	isOpen,
+	onToggle,
+	missingPagesData = [],
+	numbering
+}) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const toast = useToast();
 
 	// Extract display names and option names from the consolidated data
-	const missingPages = missingPagesData.map(page => page.name);
-	const missingPageOptions = missingPagesData.map(page => page.option);
+	const missingPages = missingPagesData.map((page) => page.name);
+	const missingPageOptions = missingPagesData.map((page) => page.option);
 
 	const handleGeneratePages = async () => {
 		setIsLoading(true);
 
 		try {
-			const adminURL = window._UR_DASHBOARD_?.adminURL || window.location.origin + '/wp-admin';
+			const adminURL =
+				window._UR_DASHBOARD_?.adminURL ||
+				window.location.origin + "/wp-admin";
 			const response = await fetch(`${adminURL}admin-ajax.php`, {
-				method: 'POST',
+				method: "POST",
 				headers: {
-					'Content-Type': 'application/x-www-form-urlencoded',
+					"Content-Type": "application/x-www-form-urlencoded"
 				},
 				body: new URLSearchParams({
-					action: 'user_registration_generate_required_pages',
-					security: window._UR_DASHBOARD_?.urRestApiNonce || '',
-					missing_pages: JSON.stringify(missingPageOptions),
-				}),
+					action: "user_registration_generate_required_pages",
+					security: window._UR_DASHBOARD_?.urRestApiNonce || "",
+					missing_pages: JSON.stringify(missingPageOptions)
+				})
 			});
 
 			const result = await response.json();
 
 			if (result.success) {
 				toast({
-					title: __('Success', 'user-registration'),
+					title: __("Success", "user-registration"),
 					description: result.data.message,
-					status: 'success',
+					status: "success",
 					duration: 3000,
-					isClosable: true,
+					isClosable: true
 				});
 				window.location.reload();
 			} else {
-				throw new Error(result.data?.message || 'Failed to generate pages');
+				throw new Error(
+					result.data?.message || "Failed to generate pages"
+				);
 			}
 		} catch (error) {
 			toast({
-				title: __('Error', 'user-registration'),
-				description: error.message || __('Failed to generate pages. Please try again.', 'user-registration'),
-				status: 'error',
+				title: __("Error", "user-registration"),
+				description:
+					error.message ||
+					__(
+						"Failed to generate pages. Please try again.",
+						"user-registration"
+					),
+				status: "error",
 				duration: 3000,
-				isClosable: true,
+				isClosable: true
 			});
 		} finally {
 			setIsLoading(false);
@@ -75,35 +89,44 @@ const RequiredPagesMissing = ({ isOpen, onToggle, missingPagesData = [] }) => {
 			border="1px"
 			borderColor="gray.100"
 		>
-			<HStack justify={'space-between'}>
+			<HStack
+				justify={"space-between"}
+				onClick={onToggle}
+				borderBottom={isOpen && "1px solid #dcdcde"}
+				paddingBottom={isOpen && 5}
+				_hover={{
+					cursor: "pointer"
+				}}
+			>
 				<Heading as="h3" size="md" fontWeight="semibold">
-					{__('Required Pages Missing', 'user-registration')}
+					{numbering +
+						") " +
+						__("Required Pages Missing", "user-registration")}
 				</Heading>
 				<IconButton
-					aria-label={'requiredPages'}
+					aria-label={"requiredPages"}
 					icon={
 						<Icon
 							as={isOpen ? BiChevronUp : BiChevronDown}
 							fontSize="2xl"
-							fill={isOpen ? 'primary.500' : 'black'}
+							fill={isOpen ? "primary.500" : "black"}
 						/>
 					}
-					cursor={'pointer'}
-					fontSize={'xl'}
-					onClick={onToggle}
+					cursor={"pointer"}
+					fontSize={"xl"}
 					size="sm"
 					boxShadow="none"
 					borderRadius="base"
-					variant={isOpen ? 'solid' : 'link'}
+					variant={isOpen ? "solid" : "link"}
 					border="none"
 				/>
 			</HStack>
 			<Collapse in={isOpen}>
 				<Stack gap={5}>
-					<Text fontWeight={'light'} fontSize={'md'}>
+					<Text fontWeight={"light"} fontSize={"md"}>
 						{__(
-							'Some essential pages are missing. These pages are needed to make your website work correctly. The following pages need to be created:',
-							'user-registration',
+							"Some essential pages are missing. These pages are needed to make your website work correctly. The following pages need to be created:",
+							"user-registration"
 						)}
 					</Text>
 					<Box
@@ -114,19 +137,19 @@ const RequiredPagesMissing = ({ isOpen, onToggle, missingPagesData = [] }) => {
 						borderColor="blue.200"
 					>
 						<Text fontSize="sm" color="blue.800">
-							{missingPages.join(', ')}
+							{missingPages.join(", ")}
 						</Text>
 					</Box>
 					<Button
-						colorScheme={'primary'}
+						colorScheme={"primary"}
 						rounded="base"
-						width={'fit-content'}
+						width={"fit-content"}
 						fontSize="sm"
 						onClick={handleGeneratePages}
 						isLoading={isLoading}
-						loadingText={__('Generating...', 'user-registration')}
+						loadingText={__("Generating...", "user-registration")}
 					>
-						{__('Generate Pages', 'user-registration')}
+						{__("Generate Pages", "user-registration")}
 					</Button>
 				</Stack>
 			</Collapse>

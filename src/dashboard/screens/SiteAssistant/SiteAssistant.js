@@ -208,6 +208,8 @@ const SiteAssistant = () => {
 		allCompleted
 	]);
 
+	let config_number = 0;
+
 	return (
 		<Container maxW="100%" py={1} marginLeft={"10px"}>
 			<Stack align={"flex-start"} gap={4} mb={8}>
@@ -275,6 +277,7 @@ const SiteAssistant = () => {
 							<DefaultFormMissing
 								isOpen={open.defaultForm}
 								onToggle={() => toggleOpen("defaultForm")}
+								numbering={++config_number}
 							/>
 						)}
 
@@ -284,6 +287,7 @@ const SiteAssistant = () => {
 								isOpen={open.requiredPages}
 								onToggle={() => toggleOpen("requiredPages")}
 								missingPagesData={missingPagesData}
+								numbering={++config_number}
 							/>
 						)}
 
@@ -293,6 +297,7 @@ const SiteAssistant = () => {
 								isOpen={open.paymentSetup}
 								onToggle={() => toggleOpen("paymentSetup")}
 								onSkipped={handlePaymentSetupHandled}
+								numbering={++config_number}
 							/>
 						)}
 
@@ -302,6 +307,7 @@ const SiteAssistant = () => {
 								isOpen={open.sendTestEmail}
 								onToggle={() => toggleOpen("sendTestEmail")}
 								onEmailSent={handleTestEmailSent}
+								numbering={++config_number}
 							/>
 						)}
 
@@ -313,6 +319,7 @@ const SiteAssistant = () => {
 									toggleOpen("defaultWordPressLogin")
 								}
 								onHandled={handleWordPressLoginHandled}
+								numbering={++config_number}
 							/>
 						)}
 
@@ -322,6 +329,7 @@ const SiteAssistant = () => {
 								isOpen={open.spamProtection}
 								onToggle={() => toggleOpen("spamProtection")}
 								onSkipped={handleSpamProtectionHandled}
+								numbering={++config_number}
 							/>
 						)}
 					</Stack>
