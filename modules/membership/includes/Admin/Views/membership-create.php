@@ -90,7 +90,7 @@ $is_editing = ! empty( $_GET['post_id'] );
 							 style="gap:20px; <?php echo $is_editing ? '' : 'display:none !important'; ?> ">
 							<div class="ur-label" style="width: 30%">
 								<label for="ur-membership-status"><?php esc_html_e( 'Membership Status', 'user-registration' ); ?>
-									<span class="user-registration-help-tip tooltipstered" data-tip="<?php echo esc_attr__( "Active or Inactive state of a membership." ) ?>"></span>
+									<span class="user-registration-help-tip tooltipstered" data-tip="<?php echo esc_attr__( "Active or Inactive state of a membership.", 'user-registration' ) ?>"></span>
 								</label>
 							</div>
 
@@ -258,7 +258,7 @@ $is_editing = ! empty( $_GET['post_id'] );
 											 style="gap:20px;">
 											<div class="ur-label" style="width: 30%">
 												<label
-													for="ur-membership-cancel-sub-immediately"><?php esc_html_e( 'Cancel Membership', 'user - registration' ); ?></label>
+													for="ur-membership-cancel-sub-immediately"><?php esc_html_e( 'Cancel Membership', 'user-registration' ); ?></label>
 											</div>
 											<div class="ur-input-type-select ur-admin-template" style="width: 100%">
 												<div class="ur-field ur-d-flex ur-align-items-center" style="gap: 10px">
@@ -384,7 +384,7 @@ $is_editing = ! empty( $_GET['post_id'] );
 											 style="gap:20px">
 											<div class="ur-label" style="width: 30%">
 												<label class="ur-membership-trial-status"
-													   for="ur-membership-trial-status"><?php esc_html_e( 'Trial Period', 'user - registration' ); ?></label>
+													   for="ur-membership-trial-status"><?php esc_html_e( 'Trial Period', 'user-registration' ); ?></label>
 											</div>
 											<div class="ur-toggle-section m1-auto" style="width: 100%">
 												<span class="user-registration-toggle-form">
@@ -407,7 +407,7 @@ $is_editing = ! empty( $_GET['post_id'] );
 												class="trial-container--wrapper ur-d-flex ur-p-3 ur-ml-2 ur-align-items-center">
 												<div class="ur-label">
 													<label class="ur-membership-trial-status"
-														   for="ur-membership-trial-duration"><?php esc_html_e( 'Trial Period Duration', 'user - registration' ); ?>
+														   for="ur-membership-trial-duration"><?php esc_html_e( 'Trial Period Duration', 'user-registration' ); ?>
 														<span style="color:red">*</span>
 													</label>
 												</div>
