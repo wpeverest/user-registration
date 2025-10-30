@@ -108,7 +108,7 @@
 	<div id="urm-membership-list" class="ur_membership_frontend_input_container radio">
 
 		<label
-			class="ur-label ur_membership_input_label required"><?php echo esc_html__( esc_html( $attributes['label'] ), 'user-registration' ); ?>
+			class="ur-label ur_membership_input_label required"><?php echo esc_html( $attributes['label'] ); ?>
 			<abbr class="required" title="required">*</abbr>
 		</label>
 		<?php
@@ -124,8 +124,8 @@
 							id="ur-membership-select-membership-<?php echo esc_attr( $membership['ID'] ); ?>"
 							type="radio"
 							name="urm_membership"
-							data-name=<?php echo esc_html__( esc_html( $attributes['field_name'] ), 'user-registration' ); ?>
-							data-label=<?php echo esc_html__( esc_html( $attributes['type'] ), 'user-registration' ); ?>
+							data-name=<?php echo esc_attr( $attributes['field_name'] ); ?>
+							data-label=<?php echo esc_attr( $attributes['type'] ); ?>
 							required="required"
 							value="<?php echo esc_attr( $membership['ID'] ); ?>"
 							data-urm-pg='<?php echo esc_attr( ( $membership['active_payment_gateways'] ?? '' ) ); ?>'
