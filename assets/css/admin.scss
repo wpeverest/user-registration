@@ -4394,22 +4394,29 @@ a.button.ur-smart-tags-list-button {
 											border: 1px dashed #475bb2;
 
 											&::before {
-												content: "\270E";
+												content: "";
 												position: absolute;
-												top: 0;
-												right: 0;
+												width: 24px;
+												height: 20px;
 												display: flex;
 												align-items: center;
 												justify-content: center;
-												width: 32px;
-												height: 32px;
+												border-radius: 0 0 0 $border_radius_7;
 												background: #676f8a;
-												color: white;
-												border-radius: 0 0 7px 0;
-												font-size: 16px;
+												top: 0;
+												right: 0;
+											}
+
+											&::after {
+												content: "\270E";
+												position: absolute;
+												top: -1px;
+												right: 5px;
+												color: $white;
+												font-size: 13px;
 												transform: scaleX(-1);
 
-											}
+											}											
 										}
 
 										&.active:hover {
