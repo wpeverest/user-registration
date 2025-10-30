@@ -3606,10 +3606,10 @@ if ( ! function_exists( 'ur_find_reset_password_in_page' ) ) {
 
 		$matched = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(*) FROM {$post_table} 
-				WHERE ID = %d 
+				"SELECT COUNT(*) FROM {$post_table}
+				WHERE ID = %d
 				AND (
-					post_content LIKE '%[user_registration_reset_password_form%' 
+					post_content LIKE '%[user_registration_reset_password_form%'
 					OR post_content LIKE '%<!-- wp:user-registration/reset_password_form%'
 				)",
 				$reset_password_page_id
@@ -3619,10 +3619,10 @@ if ( ! function_exists( 'ur_find_reset_password_in_page' ) ) {
 		if ( $matched <= 0 ) {
 			$matched = $wpdb->get_var(
 				$wpdb->prepare(
-					"SELECT COUNT(*) FROM {$post_meta_table} 
-					WHERE post_id = %d 
+					"SELECT COUNT(*) FROM {$post_meta_table}
+					WHERE post_id = %d
 					AND (
-						meta_value LIKE '%[user_registration_reset_password_form%' 
+						meta_value LIKE '%[user_registration_reset_password_form%'
 						OR meta_value LIKE '%<!-- wp:user-registration/reset_password_form%'
 					)",
 					$reset_password_page_id
@@ -7549,43 +7549,6 @@ add_action(
 	10,
 	1
 );
-
-
-add_action( 'user_registration_init', 'ur_captcha_settings_migration_script' );
-
-if ( ! function_exists( 'ur_captcha_settings_migration_script' ) ) {
-
-	/**
-	 * Update Captcha Settings for all forms and global settings.
-	 *
-	 * @since 3.3.4.
-	 */
-	function ur_captcha_settings_migration_script() {
-
-		if ( ! get_option( 'ur_captcha_settings_migrated', false ) ) {
-
-			$all_forms              = ur_get_all_user_registration_form();
-			$enabled_recaptcha_type = get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' );
-
-			foreach ( $all_forms as $key => $value ) {
-
-				$form_id = $key;
-
-				$form_captcha_enabled = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_recaptcha_support', false );
-				if ( $form_captcha_enabled ) {
-					update_post_meta( $form_id, 'user_registration_form_setting_configured_captcha_type', $enabled_recaptcha_type );
-				}
-			}
-
-			if ( get_option( 'user_registration_login_options_enable_recaptcha', false ) ) {
-				update_option( 'user_registration_login_options_configured_captcha_type', $enabled_recaptcha_type );
-			}
-			update_option( 'user_registration_captcha_setting_recaptcha_enable_' . $enabled_recaptcha_type, true );
-
-			update_option( 'ur_captcha_settings_migrated', true );
-		}
-	}
-}
 
 // Hook the end setup wizard to admin_init
 add_action(
