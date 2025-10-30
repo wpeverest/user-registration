@@ -2542,19 +2542,23 @@ body {
 									flex-direction: column;
 									position: relative;
 									margin-bottom: 0;
+									margin-top: 20px;
 
 									&.user-registration-social-connect-networks__position_bottom {
 										&::before {
-											 content: attr(data-or);
+											content: attr(data-or);
 											font-size: 14px;
 											line-height: 24px;
 											background: #ffffff;
-											padding: 0 10px;
+											// padding: 0 10px;
 											display: block;
+											z-index: 1;
+											position: relative;
 											color: #333;
 											letter-spacing: 0.15px;
-											position: relative;
-											z-index: 1;
+											left: 50%;
+											transform: translateX(-50%);
+											width: 20px;
 											text-align: center;
 										}
 
@@ -2577,21 +2581,27 @@ body {
 											position: absolute;
 											width: 100%;
 											height: 1px;
+											bottom: 12px;
 											left: 50%;
+											transform: translateX(-50%);
+											background: #d9d9d9;
 											z-index: 0;
 										}
 
 										&::after {
-											 content: attr(data-or);
+											content: attr(data-or);
 											font-size: 14px;
 											line-height: 24px;
 											background: #ffffff;
-											padding: 0 10px;
+											// padding: 0 10px;
 											display: block;
+											z-index: 1;
+											position: relative;
 											color: #333;
 											letter-spacing: 0.15px;
-											position: relative;
-											z-index: 1;
+											left: 50%;
+											transform: translateX(-50%);
+											width: 20px;
 											text-align: center;
 										}
 
@@ -2603,6 +2613,7 @@ body {
 										align-items: center;
 										gap: 20px;
 										width: 100%;
+										margin: 20px 0;
 
 										.ursc-login-media {
 											margin: 0;
