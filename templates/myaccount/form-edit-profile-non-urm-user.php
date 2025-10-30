@@ -83,14 +83,19 @@ if ('vertical' === $layout) {
 						?>
 						<h2>
 						<?php
-						esc_html_e(
-							/**
-							 * Filter to modify the profile detail title.
-							 *
-							 * @param string Profile detail title content.
-							 * @return string modified profile detail title.
-							 */
-							apply_filters( 'user_registation_profile_detail_title', __( 'Profile Detail', 'user-registration' ) ) ); //PHPCS:ignore ?></h2>
+							$urm_my_account_layout = get_option( 'user_registration_my_account_layout', 'horizontal' );
+
+							if('horizontal' === $urm_my_account_layout) {
+								esc_html_e(
+									/**
+									 * Filter to modify the profile detail title.
+									 *
+									 * @param string Profile detail title content.
+									 * @return string modified profile detail title.
+									 */
+									apply_filters( 'user_registation_profile_detail_title', __( 'Profile Detail', 'user-registration' ) ) ); //PHPCS:ignore
+							}
+						?></h2>
 						<?php
 						$is_profile_pic_on_form    = ! ur_option_checked( 'user_registration_disable_profile_picture', false );
 						if ( $is_profile_pic_on_form ) {
