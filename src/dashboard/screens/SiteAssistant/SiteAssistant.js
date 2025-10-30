@@ -159,6 +159,45 @@ const SiteAssistant = () => {
 					"admin.php?page=user-registration";
 			}, 2000);
 		}
+
+		const site_config_array = [
+			hasDefaultForm,
+			missingPagesData.length === 0,
+			testEmailSent,
+			wordPressLoginHandled,
+			spamProtectionHandled,
+			paymentSetupHandled
+		];
+
+		const site_config_count =
+			site_config_array.length - site_config_array.filter(Boolean).length;
+		const $ur_menu = document.querySelector(
+			"#toplevel_page_user-registration"
+		);
+
+		if ($ur_menu) {
+			const countElement = $ur_menu.querySelector(
+				".wp-submenu .ur-site-config-count"
+			);
+
+			if (site_config_count > 0) {
+				if (countElement) {
+					countElement.textContent = site_config_count;
+				} else {
+					const newCount = document.createElement("span");
+					newCount.classList.add("ur-site-config-count");
+					newCount.textContent = site_config_count;
+					const submenu = $ur_menu.querySelector(".wp-submenu");
+					submenu?.appendChild(newCount);
+				}
+			} else {
+				countElement?.remove();
+			}
+
+			if (window.wp?.heartbeat) {
+				window.wp.heartbeat.interval("standard");
+			}
+		}
 	}, [
 		hasDefaultForm,
 		missingPagesData.length,

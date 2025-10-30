@@ -3606,10 +3606,10 @@ if ( ! function_exists( 'ur_find_reset_password_in_page' ) ) {
 
 		$matched = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(*) FROM {$post_table} 
-				WHERE ID = %d 
+				"SELECT COUNT(*) FROM {$post_table}
+				WHERE ID = %d
 				AND (
-					post_content LIKE '%[user_registration_reset_password_form%' 
+					post_content LIKE '%[user_registration_reset_password_form%'
 					OR post_content LIKE '%<!-- wp:user-registration/reset_password_form%'
 				)",
 				$reset_password_page_id
@@ -3619,10 +3619,10 @@ if ( ! function_exists( 'ur_find_reset_password_in_page' ) ) {
 		if ( $matched <= 0 ) {
 			$matched = $wpdb->get_var(
 				$wpdb->prepare(
-					"SELECT COUNT(*) FROM {$post_meta_table} 
-					WHERE post_id = %d 
+					"SELECT COUNT(*) FROM {$post_meta_table}
+					WHERE post_id = %d
 					AND (
-						meta_value LIKE '%[user_registration_reset_password_form%' 
+						meta_value LIKE '%[user_registration_reset_password_form%'
 						OR meta_value LIKE '%<!-- wp:user-registration/reset_password_form%'
 					)",
 					$reset_password_page_id
@@ -9402,6 +9402,31 @@ if ( ! function_exists( 'ur_should_show_site_assistant_menu' ) ) {
 			|| ! $site_assistant_data['spam_protection_handled']
 			|| ! $site_assistant_data['payment_setup_handled']
 		);
+	}
+
+}
+
+if ( ! function_exists( 'ur_site_assistant_config_count' ) ) {
+	/**
+	 * Check if site assistant menu should be shown.
+	 * Returns false if all options are handled and set.
+	 *
+	 * @return bool
+	 */
+	function ur_site_assistant_config_count() {
+		$site_assistant_data = ur_get_site_assistant_data();
+
+		$checks = [
+			! $site_assistant_data['has_default_form'],
+			! empty( $site_assistant_data['missing_pages'] ),
+			! $site_assistant_data['test_email_sent'],
+			! $site_assistant_data['wordpress_login_handled'],
+			! $site_assistant_data['spam_protection_handled'],
+			! $site_assistant_data['payment_setup_handled'],
+		];
+
+		$count = count( array_filter( $checks ) );
+		return $count;
 	}
 
 }
