@@ -2016,7 +2016,7 @@ class UR_AJAX {
 		if ( isset( $validate_before_save['status'] ) && ! $validate_before_save['status'] ) {
 			wp_send_json_error(
 				array(
-					'message' => __( $validate_before_save['message'], "user_registration" )
+					'message' => __( $validate_before_save['message'], "user-registration" )
 				)
 			);
 		}
@@ -2055,7 +2055,7 @@ class UR_AJAX {
 		if ( isset( $validate_before_save['status'] ) && ! $validate_before_save['status'] ) {
 			wp_send_json_error(
 				array(
-					'message' => __( $validate_before_save['message'], "user_registration" )
+					'message' => __( $validate_before_save['message'], "user-registration" )
 				)
 			);
 		}
