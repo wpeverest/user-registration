@@ -124,7 +124,12 @@ const PaymentSetup = ({ isOpen, onToggle, onSkipped, numbering }) => {
 					cursor: "pointer"
 				}}
 			>
-				<Heading as="h3" size="md" fontWeight="semibold">
+				<Heading
+					as="h3"
+					fontSize="xl"
+					fontWeight="semibold"
+					lineHeight={"1.2"}
+				>
 					{numbering +
 						") " +
 						__("Payment Setup", "user-registration")}
@@ -149,7 +154,7 @@ const PaymentSetup = ({ isOpen, onToggle, onSkipped, numbering }) => {
 			</HStack>
 			<Collapse in={isOpen}>
 				<Stack gap={5}>
-					<Text fontWeight={"light"} fontSize={"md"}>
+					<Text fontWeight={"light"} fontSize={"md !important"}>
 						{__(
 							"Configure payment methods to start selling your memberships. You can set up multiple payment options for your members.",
 							"user-registration"

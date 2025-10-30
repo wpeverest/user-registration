@@ -13,7 +13,8 @@ import {
 	FormControl,
 	FormLabel,
 	Link,
-	useToast
+	useToast,
+	VStack
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 import React, { useState } from "react";
@@ -181,7 +182,12 @@ const DefaultWordPressLogin = ({ isOpen, onToggle, onHandled, numbering }) => {
 					cursor: "pointer"
 				}}
 			>
-				<Heading as="h3" size="md" fontWeight="semibold">
+				<Heading
+					as="h3"
+					fontSize="xl"
+					fontWeight="semibold"
+					lineHeight={"1.2"}
+				>
 					{numbering +
 						") " +
 						__(
@@ -225,13 +231,17 @@ const DefaultWordPressLogin = ({ isOpen, onToggle, onHandled, numbering }) => {
 							/>
 							<Text
 								fontWeight="bold"
-								fontSize="sm"
+								fontSize="md !important"
 								color="orange.800"
 							>
 								{__("Recommended", "user-registration")}
 							</Text>
 						</Flex>
-						<Text fontSize="sm" color="orange.700" mt={2}>
+						<Text
+							fontSize="md !important"
+							color="orange.700"
+							mt={2}
+						>
 							{__(
 								"WordPress default login is still active. This can lead to spam registrations on your site. Disable it to keep your site safe.",
 								"user-registration"
@@ -243,7 +253,7 @@ const DefaultWordPressLogin = ({ isOpen, onToggle, onHandled, numbering }) => {
 						<Flex justify="space-between" align="center">
 							<Box>
 								<FormLabel
-									fontSize="sm"
+									fontSize={"md !important"}
 									fontWeight="medium"
 									mb={1}
 								>
@@ -252,7 +262,7 @@ const DefaultWordPressLogin = ({ isOpen, onToggle, onHandled, numbering }) => {
 										"user-registration"
 									)}
 								</FormLabel>
-								<Text fontSize="xs" color="gray.600">
+								<Text fontSize="sm" color="gray.600">
 									{__(
 										"Prevents access to wp-login.php",
 										"user-registration"
@@ -269,7 +279,7 @@ const DefaultWordPressLogin = ({ isOpen, onToggle, onHandled, numbering }) => {
 						</Flex>
 					</FormControl>
 
-					<HStack spacing={3}>
+					<VStack spacing={3} alignItems={"flex-start"}>
 						<Button
 							colorScheme={"primary"}
 							rounded="base"
@@ -298,7 +308,7 @@ const DefaultWordPressLogin = ({ isOpen, onToggle, onHandled, numbering }) => {
 										"user-registration"
 								  )}
 						</Link>
-					</HStack>
+					</VStack>
 				</Stack>
 			</Collapse>
 		</Stack>

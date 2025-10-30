@@ -47,10 +47,7 @@ const DefaultFormMissing = ({ isOpen, onToggle, numbering }) => {
 					isClosable: true
 				});
 
-				// Open the created form in a new tab
-				if (result.data.form_url) {
-					window.open(result.data.form_url, "_blank");
-				}
+				window.location.reload();
 			} else {
 				throw new Error(
 					result.data?.message || "Failed to create default form"
@@ -91,7 +88,12 @@ const DefaultFormMissing = ({ isOpen, onToggle, numbering }) => {
 					cursor: "pointer"
 				}}
 			>
-				<Heading as="h3" size="md" fontWeight="semibold">
+				<Heading
+					as="h3"
+					fontSize="xl"
+					fontWeight="semibold"
+					lineHeight={"1.2"}
+				>
 					{numbering +
 						") " +
 						__("Default Form Missing", "user-registration")}
@@ -117,7 +119,7 @@ const DefaultFormMissing = ({ isOpen, onToggle, numbering }) => {
 
 			<Collapse in={isOpen}>
 				<Stack gap={5}>
-					<Text fontWeight={"light"} fontSize={"md"}>
+					<Text fontWeight={"light"} fontSize={"md !important"}>
 						{__(
 							"To start using User Registration & Membership, you first need to create a registration form.",
 							"user-registration"

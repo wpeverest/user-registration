@@ -113,7 +113,12 @@ const SpamProtection = ({ isOpen, onToggle, onSkipped, numbering }) => {
 					cursor: "pointer"
 				}}
 			>
-				<Heading as="h3" size="md" fontWeight="semibold">
+				<Heading
+					as="h3"
+					fontSize="xl"
+					fontWeight="semibold"
+					lineHeight={"1.2"}
+				>
 					{numbering +
 						") " +
 						__("Spam Protection", "user-registration")}
@@ -138,7 +143,7 @@ const SpamProtection = ({ isOpen, onToggle, onSkipped, numbering }) => {
 			</HStack>
 			<Collapse in={isOpen}>
 				<Stack gap={5}>
-					<Text fontWeight={"light"} fontSize={"md"}>
+					<Text fontWeight={"light"} fontSize={"md !important"}>
 						{__(
 							"Set up protection against spam registrations. We recommend enabling reCaptcha v2.",
 							"user-registration"
@@ -154,7 +159,7 @@ const SpamProtection = ({ isOpen, onToggle, onSkipped, numbering }) => {
 					>
 						<Box>
 							<Text
-								fontSize="sm"
+								fontSize={"md !important"}
 								fontWeight="bold"
 								mb={1}
 								className="ur-recaptcha-bold"
@@ -167,7 +172,7 @@ const SpamProtection = ({ isOpen, onToggle, onSkipped, numbering }) => {
 							>
 								{__("reCaptcha v2", "user-registration")}
 							</Text>
-							<Text fontSize="xs" color="gray.600">
+							<Text fontSize="sm" color="gray.600">
 								{__(
 									"Enable Google reCaptcha protection",
 									"user-registration"
@@ -185,7 +190,7 @@ const SpamProtection = ({ isOpen, onToggle, onSkipped, numbering }) => {
 						</Link>
 					</Flex>
 
-					<Text fontSize="sm" color="gray.600">
+					<Text fontSize={"md !important"} color="gray.600">
 						{__(
 							"You can also set up other spam protection features from ",
 							"user-registration"

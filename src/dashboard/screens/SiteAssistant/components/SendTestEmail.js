@@ -150,7 +150,12 @@ const SendTestEmail = ({ isOpen, onToggle, onEmailSent, numbering }) => {
 					cursor: "pointer"
 				}}
 			>
-				<Heading as="h3" size="md" fontWeight="semibold">
+				<Heading
+					as="h3"
+					fontSize="xl"
+					fontWeight="semibold"
+					lineHeight={"1.2"}
+				>
 					{numbering +
 						") " +
 						__("Send Test Email", "user-registration")}
@@ -175,14 +180,17 @@ const SendTestEmail = ({ isOpen, onToggle, onEmailSent, numbering }) => {
 			</HStack>
 			<Collapse in={isOpen}>
 				<Stack gap={5}>
-					<Text fontWeight={"light"} fontSize={"md"}>
+					<Text fontWeight={"light"} fontSize={"md !important"}>
 						{__(
 							"Make sure emails are being sent to your users during registration. Test by sending a sample email to yourself.",
 							"user-registration"
 						)}
 					</Text>
 					<FormControl>
-						<FormLabel fontSize="sm" fontWeight="medium">
+						<FormLabel
+							fontSize={"md !important"}
+							fontWeight="medium"
+						>
 							{__(
 								"Email Address (To send test email to)",
 								"user-registration"
@@ -194,6 +202,7 @@ const SendTestEmail = ({ isOpen, onToggle, onEmailSent, numbering }) => {
 							onChange={(e) => setEmail(e.target.value)}
 							placeholder={adminEmail}
 							borderColor="gray.300"
+							fontSize={"md !important"}
 							_focus={{
 								borderColor: "primary.500",
 								boxShadow:

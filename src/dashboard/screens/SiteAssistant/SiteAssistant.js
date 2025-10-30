@@ -34,17 +34,13 @@ const ticketUrl =
 
 const SiteAssistant = () => {
 	const [open, setOpen] = useState({
-		defaultForm: true,
-		requiredPages: true,
-		paymentSetup: true,
+		defaultForm: false,
+		requiredPages: false,
+		paymentSetup: false,
 		sendTestEmail: true,
-		defaultWordPressLogin: true,
-		spamProtection: true
+		defaultWordPressLogin: false,
+		spamProtection: false
 	});
-
-	const toggleOpen = useCallback((id) => {
-		setOpen((prev) => ({ ...prev, [id]: !prev[id] }));
-	}, []);
 
 	// Check if default form exists
 	const hasDefaultForm =
@@ -138,6 +134,38 @@ const SiteAssistant = () => {
 		setPaymentSetupHandled(true);
 	}, []);
 
+	const toggleOpen = useCallback((id) => {
+		if (typeof id === "undefined") {
+			const site_config_array = [
+				hasDefaultForm,
+				missingPagesData.length === 0,
+				testEmailSent,
+				wordPressLoginHandled,
+				spamProtectionHandled,
+				paymentSetupHandled
+			];
+
+			const openKeys = Object.keys(open);
+
+			const firstFalseIndex = site_config_array.findIndex(
+				(item) => item === false
+			);
+
+			const firstFalseKey =
+				firstFalseIndex !== -1 ? openKeys[firstFalseIndex] : null;
+			id = firstFalseKey;
+		}
+
+		setOpen((prev) => {
+			const newState = Object.keys(prev).reduce((acc, key) => {
+				acc[key] = key === id ? !prev[id] : false;
+				return acc;
+			}, {});
+
+			return newState;
+		});
+	}, []);
+
 	// Check if all components are completed and redirect if so
 	useEffect(() => {
 		// Check if all components are handled
@@ -198,6 +226,8 @@ const SiteAssistant = () => {
 				window.wp.heartbeat.interval("standard");
 			}
 		}
+
+		toggleOpen();
 	}, [
 		hasDefaultForm,
 		missingPagesData.length,
@@ -215,7 +245,7 @@ const SiteAssistant = () => {
 			<Stack align={"flex-start"} gap={4} mb={8}>
 				<Heading
 					as="h3"
-					fontSize="3xl"
+					fontSize="2xl"
 					color="gray.800"
 					mt={0}
 					css={{
@@ -227,7 +257,7 @@ const SiteAssistant = () => {
 						"user-registration"
 					)}
 				</Heading>
-				<Text fontSize={"md"} fontWeight={"light"}>
+				<Text fontSize="md !important" fontWeight={"light"}>
 					{__(
 						"Let's get your user registration system set up and ready to go!",
 						"user-registration"
