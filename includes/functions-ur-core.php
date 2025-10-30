@@ -3591,6 +3591,59 @@ if ( ! function_exists( 'ur_find_lost_password_in_page' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ur_find_reset_password_in_page' ) ) {
+	/**
+	 * Finds the "Reset Password" form shortcode.
+	 *
+	 * @param int $reset_password_page_id The page ID to check for the reset password form.
+	 *
+	 * @return bool Whether the page contains the reset password form.
+	 */
+	function ur_find_reset_password_in_page( $reset_password_page_id ) {
+		global $wpdb;
+		$post_table      = $wpdb->prefix . 'posts';
+		$post_meta_table = $wpdb->prefix . 'postmeta';
+
+		$matched = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COUNT(*) FROM {$post_table} 
+				WHERE ID = %d 
+				AND (
+					post_content LIKE '%[user_registration_reset_password_form%' 
+					OR post_content LIKE '%<!-- wp:user-registration/reset_password_form%'
+				)",
+				$reset_password_page_id
+			) // phpcs:ignore
+		);
+
+		if ( $matched <= 0 ) {
+			$matched = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(*) FROM {$post_meta_table} 
+					WHERE post_id = %d 
+					AND (
+						meta_value LIKE '%[user_registration_reset_password_form%' 
+						OR meta_value LIKE '%<!-- wp:user-registration/reset_password_form%'
+					)",
+					$reset_password_page_id
+				) // phpcs:ignore
+			);
+		}
+
+		/**
+		 * Filters whether the reset password form was found in this page.
+		 *
+		 * @param bool $matched Whether the "Reset Password" form was found in the page.
+		 * @param int  $reset_password_page_id The ID of the associated reset password page.
+		 */
+		$matched = apply_filters( 'user_registration_find_reset_password_in_page', $matched, $reset_password_page_id );
+
+		return $matched;
+	}
+
+
+}
+
 if ( ! function_exists( 'ur_get_license_plan' ) ) {
 
 	/**
@@ -7714,6 +7767,17 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'title'    => __( 'Lost Password Page', 'user-registration' ),
 								'desc'     => __( 'Select the page where your password reset form is placed.', 'user-registration' ),
 								'id'       => 'user_registration_lost_password_page_id',
+								'type'     => 'single_select_page',
+								'default'  => '',
+								'class'    => 'ur-enhanced-select-nostd',
+								'css'      => '',
+								'desc_tip' => true,
+								'field-key'=> 'lost-password'
+							),
+							array(
+								'title'    => __( 'Reset Password Page', 'user-registration' ),
+								'desc'     => __( 'Select the page where your password reset form is placed.', 'user-registration' ),
+								'id'       => 'user_registration_reset_password_page_id',
 								'type'     => 'single_select_page',
 								'default'  => '',
 								'class'    => 'ur-enhanced-select-nostd',

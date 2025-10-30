@@ -1003,6 +1003,57 @@ class UR_AJAX {
 			}
 		}
 
+		//check for valid lost password and reset password page.
+		if ( ur_string_to_bool( $output['user_registration_login_options_lost_password'] ) ) {
+
+			if ( ! empty( $output['user_registration_lost_password_page_id'] ) && ( is_numeric( $output['user_registration_lost_password_page_id'] ) )  ) {
+				$is_page_lost_password_page = ur_find_lost_password_in_page( sanitize_text_field( wp_unslash( $output['user_registration_lost_password_page_id'] ) ) );
+				if ( ! $is_page_lost_password_page ) {
+					wp_send_json_error(
+						array(
+							'message' => esc_html__(
+								'The selected page is not a User Registration & Membership Lost Password page.',
+								'user-registration'
+							),
+						)
+					);
+				}
+			} else {
+				wp_send_json_error(
+					array(
+						'message' => esc_html__(
+							'Please select a valid lost password page.',
+							'user-registration'
+						),
+					)
+				);
+			}
+
+			if ( ! empty( $output['user_registration_reset_password_page_id'] ) && ( is_numeric( $output['user_registration_reset_password_page_id'] ) )  ) {
+				$is_page_reset_password_page = ur_find_reset_password_in_page( sanitize_text_field( wp_unslash( $output['user_registration_reset_password_page_id'] ) ) );
+				if ( ! $is_page_reset_password_page ) {
+					wp_send_json_error(
+						array(
+							'message' => esc_html__(
+								'The selected page is not a User Registration & Membership Reset Password page.',
+								'user-registration'
+							),
+						)
+					);
+				}
+			} else {
+				wp_send_json_error(
+					array(
+						'message' => esc_html__(
+							'Please select a valid reset password page.',
+							'user-registration'
+						),
+					)
+				);
+			}
+		}
+
+
 		foreach ( $output as $key => $settings ) {
 			update_option( $key, $settings );
 		}
