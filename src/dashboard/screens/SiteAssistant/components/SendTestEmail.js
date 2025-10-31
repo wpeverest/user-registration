@@ -152,7 +152,7 @@ const SendTestEmail = ({ isOpen, onToggle, onEmailSent, numbering }) => {
 			>
 				<Heading
 					as="h3"
-					fontSize="xl"
+					fontSize="18px"
 					fontWeight="semibold"
 					lineHeight={"1.2"}
 				>
@@ -180,7 +180,7 @@ const SendTestEmail = ({ isOpen, onToggle, onEmailSent, numbering }) => {
 			</HStack>
 			<Collapse in={isOpen}>
 				<Stack gap={5}>
-					<Text fontWeight={"light"} fontSize={"md !important"}>
+					<Text fontWeight={"light"} fontSize={"15px !important"}>
 						{__(
 							"Make sure emails are being sent to your users during registration. Test by sending a sample email to yourself.",
 							"user-registration"
@@ -188,7 +188,7 @@ const SendTestEmail = ({ isOpen, onToggle, onEmailSent, numbering }) => {
 					</Text>
 					<FormControl>
 						<FormLabel
-							fontSize={"md !important"}
+							fontSize={"15px !important"}
 							fontWeight="medium"
 						>
 							{__(
@@ -202,7 +202,7 @@ const SendTestEmail = ({ isOpen, onToggle, onEmailSent, numbering }) => {
 							onChange={(e) => setEmail(e.target.value)}
 							placeholder={adminEmail}
 							borderColor="gray.300"
-							fontSize={"md !important"}
+							fontSize={"15px !important"}
 							_focus={{
 								borderColor: "primary.500",
 								boxShadow:
@@ -214,7 +214,7 @@ const SendTestEmail = ({ isOpen, onToggle, onEmailSent, numbering }) => {
 						colorScheme={"primary"}
 						rounded="base"
 						width={"fit-content"}
-						fontSize="sm"
+						fontSize="14px"
 						onClick={handleSendTestEmail}
 						isLoading={isLoading}
 						loadingText={__("Sending...", "user-registration")}

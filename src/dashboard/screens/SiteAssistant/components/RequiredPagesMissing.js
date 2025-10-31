@@ -100,7 +100,7 @@ const RequiredPagesMissing = ({
 			>
 				<Heading
 					as="h3"
-					fontSize="xl"
+					fontSize="18px"
 					fontWeight="semibold"
 					lineHeight={"1.2"}
 				>
@@ -128,7 +128,7 @@ const RequiredPagesMissing = ({
 			</HStack>
 			<Collapse in={isOpen}>
 				<Stack gap={5}>
-					<Text fontWeight={"light"} fontSize={"md !important"}>
+					<Text fontWeight={"light"} fontSize={"15px !important"}>
 						{__(
 							"Some essential pages are missing. These pages are needed to make your website work correctly. The following pages need to be created:",
 							"user-registration"
@@ -141,7 +141,7 @@ const RequiredPagesMissing = ({
 						border="1px"
 						borderColor="blue.200"
 					>
-						<Text fontSize={"md !important"} color="blue.800">
+						<Text fontSize={"15px !important"} color="blue.800">
 							{missingPages.join(", ")}
 						</Text>
 					</Box>
@@ -149,7 +149,7 @@ const RequiredPagesMissing = ({
 						colorScheme={"primary"}
 						rounded="base"
 						width={"fit-content"}
-						fontSize="sm"
+						fontSize="14px"
 						onClick={handleGeneratePages}
 						isLoading={isLoading}
 						loadingText={__("Generating...", "user-registration")}

@@ -184,7 +184,7 @@ const DefaultWordPressLogin = ({ isOpen, onToggle, onHandled, numbering }) => {
 			>
 				<Heading
 					as="h3"
-					fontSize="xl"
+					fontSize="18px"
 					fontWeight="semibold"
 					lineHeight={"1.2"}
 				>
@@ -231,14 +231,14 @@ const DefaultWordPressLogin = ({ isOpen, onToggle, onHandled, numbering }) => {
 							/>
 							<Text
 								fontWeight="bold"
-								fontSize="md !important"
+								fontSize="15px !important"
 								color="orange.800"
 							>
 								{__("Recommended", "user-registration")}
 							</Text>
 						</Flex>
 						<Text
-							fontSize="md !important"
+							fontSize="15px !important"
 							color="orange.700"
 							mt={2}
 						>
@@ -253,7 +253,7 @@ const DefaultWordPressLogin = ({ isOpen, onToggle, onHandled, numbering }) => {
 						<Flex justify="space-between" align="center">
 							<Box>
 								<FormLabel
-									fontSize={"md !important"}
+									fontSize={"15px !important"}
 									fontWeight="medium"
 									mb={1}
 								>
@@ -262,7 +262,7 @@ const DefaultWordPressLogin = ({ isOpen, onToggle, onHandled, numbering }) => {
 										"user-registration"
 									)}
 								</FormLabel>
-								<Text fontSize="sm" color="gray.600">
+								<Text color="gray.600">
 									{__(
 										"Prevents access to wp-login.php",
 										"user-registration"
@@ -286,7 +286,7 @@ const DefaultWordPressLogin = ({ isOpen, onToggle, onHandled, numbering }) => {
 						<Button
 							colorScheme={"primary"}
 							rounded="base"
-							fontSize="sm"
+							fontSize="14px"
 							onClick={handleSave}
 							isLoading={isSaving}
 							loadingText={__("Saving...", "user-registration")}
@@ -297,7 +297,7 @@ const DefaultWordPressLogin = ({ isOpen, onToggle, onHandled, numbering }) => {
 						</Button>
 						<Link
 							color="gray.500"
-							fontSize="sm"
+							fontSize="14px"
 							textDecoration="underline"
 							onClick={handleSkip}
 							cursor="pointer"

@@ -257,7 +257,7 @@ const SiteAssistant = () => {
 						"user-registration"
 					)}
 				</Heading>
-				<Text fontSize="md !important" fontWeight={"light"}>
+				<Text fontSize="18px !important" fontWeight={"light"}>
 					{__(
 						"Let's get your user registration system set up and ready to go!",
 						"user-registration"

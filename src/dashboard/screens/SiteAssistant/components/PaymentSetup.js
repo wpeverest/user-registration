@@ -133,7 +133,7 @@ const PaymentSetup = ({ isOpen, onToggle, onSkipped, numbering }) => {
 			>
 				<Heading
 					as="h3"
-					fontSize="xl"
+					fontSize="18px"
 					fontWeight="semibold"
 					lineHeight={"1.2"}
 				>
@@ -161,7 +161,7 @@ const PaymentSetup = ({ isOpen, onToggle, onSkipped, numbering }) => {
 			</HStack>
 			<Collapse in={isOpen}>
 				<Stack gap={5}>
-					<Text fontWeight={"light"} fontSize={"md !important"}>
+					<Text fontWeight={"light"} fontSize={"15px !important"}>
 						{__(
 							"Configure payment methods to start selling your memberships. You can set up multiple payment options for your members.",
 							"user-registration"
@@ -208,7 +208,7 @@ const PaymentSetup = ({ isOpen, onToggle, onSkipped, numbering }) => {
 												>
 													<Text
 														fontWeight="medium"
-														fontSize="sm"
+														fontSize="16px !important"
 													>
 														{connection.name}
 													</Text>
@@ -219,7 +219,7 @@ const PaymentSetup = ({ isOpen, onToggle, onSkipped, numbering }) => {
 															px={2}
 															py={0.5}
 															borderRadius="md"
-															fontSize="xs"
+															fontSize="14px"
 															fontWeight="normal"
 															color="green.600"
 															bg="green.50"
@@ -234,7 +234,7 @@ const PaymentSetup = ({ isOpen, onToggle, onSkipped, numbering }) => {
 											</HStack>
 											<Link
 												color="primary.500"
-												fontSize="sm"
+												fontSize="14px"
 												textDecoration="underline"
 												onClick={() =>
 													handleSettingsClick(
@@ -266,7 +266,7 @@ const PaymentSetup = ({ isOpen, onToggle, onSkipped, numbering }) => {
 								justifyContent="space-between"
 								alignItems={"flex-end"}
 							>
-								<Text fontSize={"md"} color="gray.600">
+								<Text fontSize={"14px"} color="gray.600">
 									{__(
 										"Additional payment setup can be configured from ",
 										"user-registration"
@@ -286,7 +286,7 @@ const PaymentSetup = ({ isOpen, onToggle, onSkipped, numbering }) => {
 								</Text>
 								<Link
 									color="gray.500"
-									fontSize="sm"
+									fontSize="14px"
 									textDecoration="underline"
 									onClick={handleSkip}
 									cursor="pointer"

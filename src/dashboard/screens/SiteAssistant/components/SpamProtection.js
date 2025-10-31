@@ -115,7 +115,7 @@ const SpamProtection = ({ isOpen, onToggle, onSkipped, numbering }) => {
 			>
 				<Heading
 					as="h3"
-					fontSize="xl"
+					fontSize="18px"
 					fontWeight="semibold"
 					lineHeight={"1.2"}
 				>
@@ -143,7 +143,7 @@ const SpamProtection = ({ isOpen, onToggle, onSkipped, numbering }) => {
 			</HStack>
 			<Collapse in={isOpen}>
 				<Stack gap={5}>
-					<Text fontWeight={"light"} fontSize={"md !important"}>
+					<Text fontWeight={"light"} fontSize={"15px !important"}>
 						{__(
 							"Set up protection against spam registrations. We recommend enabling reCaptcha v2.",
 							"user-registration"
@@ -159,7 +159,7 @@ const SpamProtection = ({ isOpen, onToggle, onSkipped, numbering }) => {
 					>
 						<Box>
 							<Text
-								fontSize={"md !important"}
+								fontSize={"15px !important"}
 								fontWeight="bold"
 								mb={1}
 								className="ur-recaptcha-bold"
@@ -172,7 +172,7 @@ const SpamProtection = ({ isOpen, onToggle, onSkipped, numbering }) => {
 							>
 								{__("reCaptcha v2", "user-registration")}
 							</Text>
-							<Text fontSize="sm" color="gray.600">
+							<Text color="gray.600">
 								{__(
 									"Enable Google reCaptcha protection",
 									"user-registration"
@@ -181,7 +181,6 @@ const SpamProtection = ({ isOpen, onToggle, onSkipped, numbering }) => {
 						</Box>
 						<Link
 							color="primary.500"
-							fontSize="sm"
 							textDecoration="underline"
 							onClick={handleConfigureRecaptcha}
 							cursor="pointer"
@@ -193,7 +192,7 @@ const SpamProtection = ({ isOpen, onToggle, onSkipped, numbering }) => {
 						justifyContent="space-between"
 						alignItems={"flex-end"}
 					>
-						<Text fontSize={"md !important"} color="gray.600">
+						<Text color="gray.600">
 							{__(
 								"You can also set up other spam protection features from ",
 								"user-registration"
@@ -211,7 +210,6 @@ const SpamProtection = ({ isOpen, onToggle, onSkipped, numbering }) => {
 
 						<Link
 							color="gray.500"
-							fontSize="sm"
 							textDecoration="underline"
 							onClick={handleSkip}
 							cursor="pointer"

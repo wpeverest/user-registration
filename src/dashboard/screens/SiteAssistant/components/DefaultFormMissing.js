@@ -90,7 +90,7 @@ const DefaultFormMissing = ({ isOpen, onToggle, numbering }) => {
 			>
 				<Heading
 					as="h3"
-					fontSize="xl"
+					fontSize="18px"
 					fontWeight="semibold"
 					lineHeight={"1.2"}
 				>
@@ -119,7 +119,7 @@ const DefaultFormMissing = ({ isOpen, onToggle, numbering }) => {
 
 			<Collapse in={isOpen}>
 				<Stack gap={5}>
-					<Text fontWeight={"light"} fontSize={"md !important"}>
+					<Text fontWeight={"light"} fontSize={"15px !important"}>
 						{__(
 							"To start using User Registration & Membership, you first need to create a registration form.",
 							"user-registration"
@@ -133,7 +133,7 @@ const DefaultFormMissing = ({ isOpen, onToggle, numbering }) => {
 						onClick={handleCreateDefaultForm}
 						py={5}
 						size={"sm"}
-						fontSize="sm"
+						fontSize="14px"
 						isLoading={isLoading}
 						loadingText={__("Creating...", "user-registration")}
 					>
