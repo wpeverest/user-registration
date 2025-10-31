@@ -172,7 +172,7 @@ const SpamProtection = ({ isOpen, onToggle, onSkipped, numbering }) => {
 							>
 								{__("reCaptcha v2", "user-registration")}
 							</Text>
-							<Text color="gray.600">
+							<Text fontSize="14px" color="gray.600">
 								{__(
 									"Enable Google reCaptcha protection",
 									"user-registration"
@@ -192,7 +192,7 @@ const SpamProtection = ({ isOpen, onToggle, onSkipped, numbering }) => {
 						justifyContent="space-between"
 						alignItems={"flex-end"}
 					>
-						<Text color="gray.600">
+						<Text color="gray.600" fontSize="14px">
 							{__(
 								"You can also set up other spam protection features from ",
 								"user-registration"
@@ -209,6 +209,7 @@ const SpamProtection = ({ isOpen, onToggle, onSkipped, numbering }) => {
 						</Text>
 
 						<Link
+							fontSize="14px"
 							color="gray.500"
 							textDecoration="underline"
 							onClick={handleSkip}

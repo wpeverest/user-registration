@@ -689,10 +689,10 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'admin_head',
 					function () {
 						echo '<style>
-						#toplevel_page_user-registration .wp-submenu li a[href*="user-registration-dashboard"] {
+						#toplevel_page_user-registration .wp-submenu li a[href="admin.php?page=user-registration-dashboard"] {
 							display: none !important;
 						}
-						#toplevel_page_user-registration .wp-submenu li:has(a[href*="user-registration-dashboard"]) {
+						#toplevel_page_user-registration .wp-submenu li:has(a[href="admin.php?page=user-registration-dashboard"]) {
 							display: none !important;
 						}
    					</style>';
