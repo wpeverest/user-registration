@@ -279,7 +279,10 @@ const DefaultWordPressLogin = ({ isOpen, onToggle, onHandled, numbering }) => {
 						</Flex>
 					</FormControl>
 
-					<VStack spacing={3} alignItems={"flex-start"}>
+					<HStack
+						justifyContent="space-between"
+						alignItems={"flex-end"}
+					>
 						<Button
 							colorScheme={"primary"}
 							rounded="base"
@@ -293,7 +296,7 @@ const DefaultWordPressLogin = ({ isOpen, onToggle, onHandled, numbering }) => {
 							{__("Save", "user-registration")}
 						</Button>
 						<Link
-							color="primary.500"
+							color="gray.500"
 							fontSize="sm"
 							textDecoration="underline"
 							onClick={handleSkip}
@@ -303,12 +306,9 @@ const DefaultWordPressLogin = ({ isOpen, onToggle, onHandled, numbering }) => {
 						>
 							{isSkipping
 								? __("Skipping...", "user-registration")
-								: __(
-										"I acknowledge and skip",
-										"user-registration"
-								  )}
+								: __("Skip Setup", "user-registration")}
 						</Link>
-					</VStack>
+					</HStack>
 				</Stack>
 			</Collapse>
 		</Stack>

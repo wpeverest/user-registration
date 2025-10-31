@@ -106,6 +106,13 @@ const PaymentSetup = ({ isOpen, onToggle, onSkipped, numbering }) => {
 		}
 	};
 
+	const handleOtherPaymentFeatures = () => {
+		const settingsURL =
+			window._UR_DASHBOARD_?.settingsURL ||
+			`${window.location.origin}/wp-admin/admin.php?page=user-registration-settings`;
+		window.open(`${settingsURL}&tab=payment`, "_blank");
+	};
+
 	return (
 		<Stack
 			p="6"
@@ -255,23 +262,43 @@ const PaymentSetup = ({ isOpen, onToggle, onSkipped, numbering }) => {
 					{hasPaymentGateways &&
 						hasConnectedPayment &&
 						!allPaymentsConnected && (
-							<Link
-								color="primary.500"
-								fontSize="sm"
-								textDecoration="underline"
-								onClick={handleSkip}
-								cursor="pointer"
-								width="fit-content"
-								opacity={isSkipping ? 0.6 : 1}
-								pointerEvents={isSkipping ? "none" : "auto"}
+							<HStack
+								justifyContent="space-between"
+								alignItems={"flex-end"}
 							>
-								{isSkipping
-									? __("Skipping...", "user-registration")
-									: __(
-											"I acknowledge and skip",
+								<Text fontSize={"md"} color="gray.600">
+									{__(
+										"Additional payment setup can be configured from ",
+										"user-registration"
+									)}
+									<Link
+										color="primary.500"
+										textDecoration="underline"
+										onClick={handleOtherPaymentFeatures}
+										cursor="pointer"
+									>
+										{__(
+											"Payment > Settings",
 											"user-registration"
-									  )}
-							</Link>
+										)}
+									</Link>
+									.
+								</Text>
+								<Link
+									color="gray.500"
+									fontSize="sm"
+									textDecoration="underline"
+									onClick={handleSkip}
+									cursor="pointer"
+									width="fit-content"
+									opacity={isSkipping ? 0.6 : 1}
+									pointerEvents={isSkipping ? "none" : "auto"}
+								>
+									{isSkipping
+										? __("Skipping...", "user-registration")
+										: __("Skip Setup", "user-registration")}
+								</Link>
+							</HStack>
 						)}
 				</Stack>
 			</Collapse>

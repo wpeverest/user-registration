@@ -189,37 +189,41 @@ const SpamProtection = ({ isOpen, onToggle, onSkipped, numbering }) => {
 							{__("Configure Settings", "user-registration")}
 						</Link>
 					</Flex>
-
-					<Text fontSize={"md !important"} color="gray.600">
-						{__(
-							"You can also set up other spam protection features from ",
-							"user-registration"
-						)}
-						<Link
-							color="primary.500"
-							textDecoration="underline"
-							onClick={handleOtherSpamFeatures}
-							cursor="pointer"
-						>
-							{__("here", "user-registration")}
-						</Link>
-						.
-					</Text>
-
-					<Link
-						color="primary.500"
-						fontSize="sm"
-						textDecoration="underline"
-						onClick={handleSkip}
-						cursor="pointer"
-						width="fit-content"
-						opacity={isSkipping ? 0.6 : 1}
-						pointerEvents={isSkipping ? "none" : "auto"}
+					<HStack
+						justifyContent="space-between"
+						alignItems={"flex-end"}
 					>
-						{isSkipping
-							? __("Skipping...", "user-registration")
-							: __("I acknowledge and skip", "user-registration")}
-					</Link>
+						<Text fontSize={"md !important"} color="gray.600">
+							{__(
+								"You can also set up other spam protection features from ",
+								"user-registration"
+							)}
+							<Link
+								color="primary.500"
+								textDecoration="underline"
+								onClick={handleOtherSpamFeatures}
+								cursor="pointer"
+							>
+								{__("here", "user-registration")}
+							</Link>
+							.
+						</Text>
+
+						<Link
+							color="gray.500"
+							fontSize="sm"
+							textDecoration="underline"
+							onClick={handleSkip}
+							cursor="pointer"
+							width="fit-content"
+							opacity={isSkipping ? 0.6 : 1}
+							pointerEvents={isSkipping ? "none" : "auto"}
+						>
+							{isSkipping
+								? __("Skipping...", "user-registration")
+								: __("Skip Setup", "user-registration")}
+						</Link>
+					</HStack>
 				</Stack>
 			</Collapse>
 		</Stack>
