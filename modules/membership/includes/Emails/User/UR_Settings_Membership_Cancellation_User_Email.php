@@ -119,9 +119,9 @@ class UR_Settings_Membership_Cancellation_User_Email {
 			sprintf(
 				__(
 					'
-					Hi {{username}}, <br>
-					We\'re sorry to see you go. Your request to cancel the {{membership_plan_name}} membership has been successfully processed. <br>
-					If you change your mind in the future, we\'ll be here to welcome you back.<br>
+					Hi {{username}}, <br><br>
+					We\'re sorry to see you go. Your request to cancel the {{membership_plan_name}} membership has been successfully processed. <br><br>
+					If you change your mind in the future, we\'ll be here to welcome you back.<br><br>
 					Thank you for being a part of {{blog_info}}.<br><br>
 
 					Goodbye and take care!',

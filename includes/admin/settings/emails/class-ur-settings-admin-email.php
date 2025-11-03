@@ -142,8 +142,7 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 
 			$general_msg = sprintf(
 				__(
-					'Hi Admin, <br/>
-
+					'Hi Admin, <br/><br/>
 					A new user {{username}} - {{email}} has successfully registered to your site <a href="{{home_url}}">{{blog_info}}</a>. <br/>
 					{{membership_plan_details}} <br/>
 					You can review their details and manage their role from the \'<b>Users</b>\' section in your WordPress dashboard.<br/><br />
