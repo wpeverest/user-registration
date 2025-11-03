@@ -3106,3 +3106,6 @@ body.user-registration-page {
 	animation: toaster 5s ease-in-out forwards;
 }
 
+.user-registration.ur-frontend-form form.register .d-none {
+  display: none;
+}

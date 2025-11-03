@@ -716,6 +716,7 @@ class UR_Form_Validation extends UR_Validation {
 			'signature',
 			'membership',
 			'subscription_plan',
+			'address',
 		);
 
 		$form_skippable_fields = array_filter(

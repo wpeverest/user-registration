@@ -89,7 +89,18 @@ abstract class UR_Field_Settings
 
 		foreach ($fields as $field_key => $field) {
 
-			$tooltip_html = ! empty($field['tip']) ? ur_help_tip($field['tip'], false, 'ur-portal-tooltip') : '';
+			$tooltip_html = ! empty( $field['tip'] ) ? ur_help_tip( $field['tip'], false, 'ur-portal-tooltip' ) : '';
+
+			if( "row" === $field[ 'type' ] ) {
+				$this->fields_html .= '<div class="ur-advance-setting-group ur-d-flex" style="gap: 0.5rem;"> ';
+				$this->fields_html .= '<div class="ur-legend">' . $field['label'] . $tooltip_html .  '</div>';
+				$fields_html = $this->fields_html;
+				$this->render_html( $field['items'] );
+				$this->fields_html = $fields_html . $this->fields_html;
+				$this->fields_html .= '</div>';
+				continue;
+			}
+
 			$smart_tags   = '';
 			if ('default_value' === $field_key) {
 				/**

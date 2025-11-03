@@ -955,7 +955,36 @@ if (! class_exists('User_Registration_Users_Menu')) {
 									} elseif('membership' === $field_key){
 										$membership_id = get_user_meta($user->ID, 'user_registration_' . $field_name, true);
 										$value = get_the_title($membership_id);
-									} else {
+									} elseif( 'address' === $field_key ) {
+										$address = (array)$user_metadata_details;
+										$address_parts = [];
+										if ( is_array( $address ) ) {
+											if ( ! empty( $address['address_line_1'] ) ) {
+												$address_parts[] = $address['address_line_1'];
+											}
+											if ( ! empty( $address['address_line_2'] ) ) {
+												$address_parts[] = $address['address_line_2'];
+											}
+											if ( ! empty( $address['city'] ) ) {
+												$address_parts[] = $address['city'];
+											}
+											if ( ! empty( $address['state'] ) ) {
+												$address_parts[] = $address['state'];
+											}
+											if ( ! empty( $address['zip_code'] ) ) {
+												$address_parts[] = $address['zip_code'];
+											}
+											if ( ! empty( $address['country'] ) ) {
+												$country_class = ur_load_form_field_class( 'country' );
+												$countries     = $country_class::get_instance()->get_country();
+												$country_name  = isset( $countries[ $address['country'] ] ) ? $countries[ $address['country'] ] : $address['country'];
+												$address_parts[] = $country_name;
+											}
+											$value = implode( ', ', $address_parts );
+										} else {
+											$value = '';
+										}
+									 } else {
 										$value = get_user_meta($user->ID, 'user_registration_' . $field_name, true);
 
 										// For Woocommerce fields.
