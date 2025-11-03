@@ -57,7 +57,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 								?>
 								<a href="<?php echo esc_url( ( $preview_link ) ); ?>" rel="noreferrer noopener" target="_blank" class="button button-secondary button-large" title="<?php esc_attr_e( 'Preview Form', 'user-registration' ); ?>"><?php esc_html_e( 'Preview', 'user-registration' ); ?></a>
 							<?php } ?>
-				<button name="embed_form" data-form_id="<?php echo esc_html( isset( $_GET['edit-registration'] ) ? absint( sanitize_text_field( wp_unslash( $_GET['edit-registration'] ) ) ) : 0 ); ?>" class="button  button-large ur-embed-form-button" type="button" value="<?php esc_attr_e( 'Embed', 'user-registration' ); ?>"><?php esc_html_e( 'Embed', 'user-registration' ); ?></button>
+				<button name="embed_form" data-form_id="<?php echo esc_html( isset( $_GET['edit-registration'] ) ? absint( sanitize_text_field( wp_unslash( $_GET['edit-registration'] ) ) ) : 0 ); ?>" class="button button-large ur-embed-form-button" type="button" value="<?php esc_attr_e( 'Embed', 'user-registration' ); ?>"><?php esc_html_e( 'Embed', 'user-registration' ); ?></button>
 							<button type="button" name="save_form" id="save_form_footer" class="button button-primary button-large menu-form ur_save_form_action_button"> <?php echo esc_html( $save_label ); ?> </button>
 						</div><!-- END .publishing-action -->
 					</div><!-- END .major-publishing-actions -->
@@ -169,7 +169,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 								</div>
 							<?php } ?>
 							<div class="ur-builder-wrapper-footer">
-								<a href='#' class="ur-button-quick-links" title="Quick Links"><span>?</span></a>
+								<a href='#' class="ur-button-quick-links" title="Quick Links">
+									<!-- <span>?</span> -->
+									 <svg xmlns="http://www.w3.org/2000/svg" fill="#000" viewBox="0 0 24 24">
+										<path d="M20.182 12a8.182 8.182 0 1 0-16.364 0 8.182 8.182 0 0 0 16.364 0ZM22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10Z"/>
+										<path d="M10.085 7.043a3.636 3.636 0 0 1 5.479 3.14l-.012.254c-.116 1.25-1.066 2.087-1.757 2.547a7.302 7.302 0 0 1-1.533.77c-.013.005-.023.01-.031.012l-.01.004h-.003l-.002.002a.91.91 0 0 1-.578-1.725h.002l.013-.005.067-.025a5.504 5.504 0 0 0 1.066-.546c.627-.418.96-.862.96-1.289v-.002a1.818 1.818 0 0 0-3.534-.606.91.91 0 0 1-1.715-.603 3.637 3.637 0 0 1 1.588-1.928Zm1.924 8.593a.91.91 0 1 1 0 1.819H12a.91.91 0 1 1 0-1.819h.009Z"/>
+									</svg>
+								</a>
 								<div class="ur-quick-links-content" hidden>
 									<div class="ur-quick-links-content__header">
 										<div class="ur-quick-links-content__header-text">
@@ -177,20 +183,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 											<p class="ur-quick-links-content__subtitle"><?php esc_html_e( 'Choose an option below', 'user-registration' ); ?></p>
 										</div>
 										<button class="ur-quick-links-content__close-btn">
-											<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
-												<g>
-													<path d="M18.36 19.78L12 13.41l-6.36 6.37-1.42-1.42L10.59 12 4.22 5.64l1.42-1.42L12 10.59l6.36-6.36 1.41 1.41L13.41 12l6.36 6.36z"/>
-												</g>
+											<svg xmlns="http://www.w3.org/2000/svg" fill="#000" viewBox="0 0 24 24">
+												<path d="M19.561 2.418a1.428 1.428 0 1 1 2.02 2.02L4.44 21.583a1.428 1.428 0 1 1-2.02-2.02L19.56 2.418Z"/>
+												<path d="M2.418 2.418a1.428 1.428 0 0 1 2.02 0l17.144 17.143a1.428 1.428 0 1 1-2.02 2.02L2.418 4.44a1.428 1.428 0 0 1 0-2.02Z"/>
 											</svg>
 										</button>
 									</div>
 									<div class="ur-quick-links-content__body">
 										<div class="ur-quick-links-content__item">
 											<div class="ur-quick-links-content__item-icon">
-												<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
-													<g>
-														<path d="M18.36 19.78L12 13.41l-6.36 6.37-1.42-1.42L10.59 12 4.22 5.64l1.42-1.42L12 10.59l6.36-6.36 1.41 1.41L13.41 12l6.36 6.36z"/>
-													</g>
+												<svg xmlns="http://www.w3.org/2000/svg" fill="#000" viewBox="0 0 24 24">
+													<path d="M14 7a1 1 0 1 1 0 2h-4a1 1 0 0 1 0-2h4Zm-3 14v-9a1 1 0 1 1 2 0v9a1 1 0 1 1-2 0Z"/>
+													<path d="M11 8V3a1 1 0 1 1 2 0v5a1 1 0 1 1-2 0Zm10 7a1 1 0 1 1 0 2h-4a1 1 0 1 1 0-2h4Zm-3-3V3a1 1 0 1 1 2 0v9a1 1 0 1 1-2 0Z"/>
+													<path d="M18 21v-5a1 1 0 1 1 2 0v5a1 1 0 1 1-2 0ZM7 13a1 1 0 1 1 0 2H3a1 1 0 1 1 0-2h4Zm-3-3V3a1 1 0 0 1 2 0v7a1 1 0 1 1-2 0Z"/>
+													<path d="M4 21v-7a1 1 0 1 1 2 0v7a1 1 0 1 1-2 0Z"/>
 												</svg>
 											</div>
 											<div class="ur-quick-links-content__item-content">
@@ -203,10 +209,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 										</div>
 										<a href="https://wpuserregistration.com/support" rel="noreferrer noopener" target='_blank' class="ur-quick-links-content__item" role="link">
 											<div class="ur-quick-links-content__item-icon">
-												<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
-													<g>
-														<path d="M18.36 19.78L12 13.41l-6.36 6.37-1.42-1.42L10.59 12 4.22 5.64l1.42-1.42L12 10.59l6.36-6.36 1.41 1.41L13.41 12l6.36 6.36z"/>
-													</g>
+												<svg xmlns="http://www.w3.org/2000/svg" fill="#000" viewBox="0 0 24 24">
+													<path d="M6.187 3.863a10 10 0 1 1 1.631 17.22.908.908 0 0 0-.462-.042l-3.05.892-.021.006a1.82 1.82 0 0 1-2.248-2.123l.026-.098.948-2.929a.907.907 0 0 0-.043-.499A10 10 0 0 1 6.187 3.863Zm6.463-.02a8.182 8.182 0 0 0-8.17 11.38l.15.329.025.06c.2.506.246 1.06.129 1.591a.916.916 0 0 1-.023.084l-.937 2.892L6.9 19.28a2.727 2.727 0 0 1 1.396.044l.181.062.061.026a8.182 8.182 0 1 0 4.113-15.57Z"/>
+													<path d="M8.372 11.09a.91.91 0 1 1 0 1.819h-.009a.91.91 0 1 1 0-1.819h.01Zm3.636 0a.91.91 0 1 1 0 1.819H12a.91.91 0 1 1 0-1.819h.008Zm3.637 0a.91.91 0 1 1 0 1.819h-.01a.91.91 0 0 1 0-1.819h.01Z"/>
 												</svg>
 											</div>
 											<div class="ur-quick-links-content__item-content">
@@ -218,10 +223,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 										</a>
 										<a href="https://docs.wpuserregistration.com/docs/how-to-show-login-form/" rel="noreferrer noopener" target='_blank' class="ur-quick-links-content__item" role="link">
 											<div class="ur-quick-links-content__item-icon">
-												<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
-													<g>
-														<path d="M18.36 19.78L12 13.41l-6.36 6.37-1.42-1.42L10.59 12 4.22 5.64l1.42-1.42L12 10.59l6.36-6.36 1.41 1.41L13.41 12l6.36 6.36z"/>
-													</g>
+												<svg xmlns="http://www.w3.org/2000/svg" fill="#000" viewBox="0 0 24 24">
+													<path d="M10.2 15.636a1.81 1.81 0 0 1 1.8-1.818c.994 0 1.8.814 1.8 1.818a1.81 1.81 0 0 1-1.8 1.819 1.81 1.81 0 0 1-1.8-1.819Z"/>
+													<path d="M19.2 12a.905.905 0 0 0-.9-.91H5.7c-.497 0-.9.408-.9.91v7.273c0 .502.403.909.9.909h12.6c.497 0 .9-.407.9-.91V12Zm1.8 7.273C21 20.779 19.791 22 18.3 22H5.7C4.209 22 3 20.779 3 19.273V12c0-1.506 1.209-2.727 2.7-2.727h12.6c1.491 0 2.7 1.22 2.7 2.727v7.273Z"/>
+													<path d="M15.6 10.182V7.455c0-.965-.38-1.89-1.055-2.571A3.581 3.581 0 0 0 12 3.818a3.58 3.58 0 0 0-2.545 1.066A3.655 3.655 0 0 0 8.4 7.454v2.728a.905.905 0 0 1-.9.909.905.905 0 0 1-.9-.91V7.456c0-1.447.57-2.834 1.582-3.857A5.372 5.372 0 0 1 12 2c1.432 0 2.805.575 3.818 1.598A5.482 5.482 0 0 1 17.4 7.455v2.727a.905.905 0 0 1-.9.909.905.905 0 0 1-.9-.91Z"/>
 												</svg>
 											</div>
 											<div class="ur-quick-links-content__item-content">
@@ -233,10 +238,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 										</a>
 										<a href="https://docs.wpuserregistration.com" rel="noreferrer noopener" target='_blank' class="ur-quick-links-content__item" role="link">
 											<div class="ur-quick-links-content__item-icon">
-												<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
-													<g>
-														<path d="M18.36 19.78L12 13.41l-6.36 6.37-1.42-1.42L10.59 12 4.22 5.64l1.42-1.42L12 10.59l6.36-6.36 1.41 1.41L13.41 12l6.36 6.36z"/>
-													</g>
+												<svg xmlns="http://www.w3.org/2000/svg" fill="#000" viewBox="0 0 24 24">
+													<path d="M7.111 3.818c-.354 0-.693.144-.943.4a1.38 1.38 0 0 0-.39.964v10.761c.413-.2.867-.307 1.333-.307h11.111V3.818H7.112Zm-1.333 15c0 .362.14.709.39.964.25.256.59.4.943.4h11.111v-2.727H7.112c-.355 0-.694.143-.944.399a1.38 1.38 0 0 0-.39.964ZM20 20.182c0 .482-.187.944-.52 1.285a1.758 1.758 0 0 1-1.258.533H7.112a3.076 3.076 0 0 1-2.2-.932A3.218 3.218 0 0 1 4 18.818V5.182c0-.844.328-1.653.911-2.25A3.076 3.076 0 0 1 7.111 2h11.111c.472 0 .924.192 1.257.533.334.34.521.803.521 1.285v16.364Z"/>
+													<path d="M15.556 10.182a.9.9 0 0 1 .888.909.9.9 0 0 1-.888.909H8.444a.9.9 0 0 1-.888-.91.9.9 0 0 1 .888-.908h7.112Zm-1.778-3.637a.9.9 0 0 1 .889.91.9.9 0 0 1-.89.909H8.445a.9.9 0 0 1-.888-.91.9.9 0 0 1 .888-.909h5.334Z"/>
 												</svg>
 											</div>
 											<div class="ur-quick-links-content__item-content">
