@@ -2061,11 +2061,11 @@ body {
 		}
 
 		.ur-button-quick-links {
-			width: 48px;
-			height: 48px;
+			width: 52px;
+			height: 52px;
 			position: fixed;
 			cursor: pointer;
-			color: $color_gray-one;
+			color: $white;
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -2073,28 +2073,127 @@ body {
 			bottom: 16px;
 			background: $white;
 			border: 1px solid $border_color;
-			border-radius: 24px;
+			border-radius: 50%;
 			box-shadow: 0px 2px 10px transparentize($gray_base, 0.9);
 			z-index: 1;
+			background-color: #475bb2;
 
 			span {
 				font-size: 20px;
 				font-weight: $semi_bold;
 				margin: 0 auto;
+				width: 30px;
+				height: 30px;
+				border-radius: 50%;
+				padding: 5px 8px;
+				border: 1px solid white;
 			}
 		}
 
 		.ur-quick-links-content {
 			position: fixed;
 			background: $white;
-			padding: 12px 16px;
 			border-radius: 4px;
 			bottom: 58px;
 			right: 30px;
 			z-index: 2;
-			width: 225px;
+			width: 320px;
 			border: 1px solid $border_color;
 			box-shadow: 2px 4px 12px transparentize($gray_base, 0.9);
+
+			&__header {
+				display: flex;
+				padding: 12px 16px;
+				background-color: #eef2ff;
+				justify-content: space-between;
+			}
+
+			&__footer {
+				padding: 10px 0;
+				background-color: #f9fafb;
+				text-align: center;
+			}
+
+			&__body {
+				padding: 8px;
+			}
+
+			&__item {
+				display: flex;
+				align-items: stretch;
+				gap: 20px;
+				padding: 12px;
+				border-radius: 8px;
+				transition: background 0.2s;
+				color: inherit;
+				outline: none;
+
+				&:focus {
+					outline: none;
+					box-shadow: none;
+				}
+
+				&:hover {
+					background-color: #f9fafb;
+				}
+
+				&-icon {
+					flex-shrink: 0;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					width: 36px;
+					height: 36px;
+					border-radius: 8px;
+					background: #eff6ff;
+				}
+
+				&-main {
+					display: flex;
+					flex-direction: column;
+					justify-content: space-between;
+					flex: 1;
+				}
+
+				&-content {
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+				}
+
+				&-title {
+					font-size: 14px;
+					font-weight: 600;
+					color: #1f2937;
+				}
+
+				&-desc {
+					font-size: 12px;
+					color: #6b7280;
+				}
+
+				&-badge {
+					font-size: 12px;
+					padding: 1px 5px;
+					background: #f3f4f6;
+					border-radius: 4px;
+					color: #4b5563;
+				}
+			}
+
+			h4 {
+				font-size: 14px;
+			}
+
+			p {
+				font-size: 12px;
+				margin: 2px 0 0;
+			}
+
+			button {
+				border: none;
+				background: unset;
+			}
 
 			li {
 				margin-bottom: 8px;

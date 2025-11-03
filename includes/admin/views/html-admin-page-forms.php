@@ -170,12 +170,91 @@ if ( ! defined( 'ABSPATH' ) ) {
 							<?php } ?>
 							<div class="ur-builder-wrapper-footer">
 								<a href='#' class="ur-button-quick-links" title="Quick Links"><span>?</span></a>
-								<ul class="ur-quick-links-content" hidden>
-									<li><a href="#" id="ur-keyboard-shortcut-link"><?php echo esc_html__( 'Keyboard Shortcuts', 'user-registration' ); ?></a></li>
-									<li><a href="https://wpuserregistration.com/support" rel="noreferrer noopener" target='_blank'><?php echo esc_html__( 'Get Support', 'user-registration' ); ?></a></li>
-									<li><a href="https://docs.wpuserregistration.com/docs/how-to-show-login-form/" rel="noreferrer noopener" target='_blank'><?php echo esc_html__( 'Create Login Form', 'user-registration' ); ?></a></li>
-									<li><a href="https://docs.wpuserregistration.com/" rel="noreferrer noopener" target='_blank'><?php echo esc_html__( 'Documentation', 'user-registration' ); ?></a></li>
-								</ul>
+								<div class="ur-quick-links-content" hidden>
+									<div class="ur-quick-links-content__header">
+										<div class="ur-quick-links-content__header-text">
+											<h4 class="ur-quick-links-content__title"><?php esc_html_e( 'How can we help?', 'user-registration' ); ?></h4>
+											<p class="ur-quick-links-content__subtitle"><?php esc_html_e( 'Choose an option below', 'user-registration' ); ?></p>
+										</div>
+										<button class="ur-quick-links-content__close-btn">
+											<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+												<g>
+													<path d="M18.36 19.78L12 13.41l-6.36 6.37-1.42-1.42L10.59 12 4.22 5.64l1.42-1.42L12 10.59l6.36-6.36 1.41 1.41L13.41 12l6.36 6.36z"/>
+												</g>
+											</svg>
+										</button>
+									</div>
+									<div class="ur-quick-links-content__body">
+										<div class="ur-quick-links-content__item">
+											<div class="ur-quick-links-content__item-icon">
+												<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+													<g>
+														<path d="M18.36 19.78L12 13.41l-6.36 6.37-1.42-1.42L10.59 12 4.22 5.64l1.42-1.42L12 10.59l6.36-6.36 1.41 1.41L13.41 12l6.36 6.36z"/>
+													</g>
+												</svg>
+											</div>
+											<div class="ur-quick-links-content__item-content">
+												<div class="ur-quick-links-content__item-main">
+													<h4 class="ur-quick-links-content__item-title"><?php esc_html_e( 'Keyboard Shortcuts', 'user-registration' ); ?></h4>
+													<p class="ur-quick-links-content__item-desc"><?php esc_html_e( 'Quick navigation keys', 'user-registration' ); ?></p>
+												</div>
+												<span class="ur-quick-links-content__item-badge" id="ur-keyboard-shortcut-link">?</span>
+											</div>
+										</div>
+										<a href="https://wpuserregistration.com/support" rel="noreferrer noopener" target='_blank' class="ur-quick-links-content__item" role="link">
+											<div class="ur-quick-links-content__item-icon">
+												<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+													<g>
+														<path d="M18.36 19.78L12 13.41l-6.36 6.37-1.42-1.42L10.59 12 4.22 5.64l1.42-1.42L12 10.59l6.36-6.36 1.41 1.41L13.41 12l6.36 6.36z"/>
+													</g>
+												</svg>
+											</div>
+											<div class="ur-quick-links-content__item-content">
+												<div class="ur-quick-links-content__item-main">
+													<h4 class="ur-quick-links-content__item-title"><?php esc_html_e( 'Get Support', 'user-registration' ); ?></h4>
+													<p class="ur-quick-links-content__item-desc"><?php esc_html_e( 'Chat with our team', 'user-registration' ); ?></p>
+												</div>
+											</div>
+										</a>
+										<a href="https://docs.wpuserregistration.com/docs/how-to-show-login-form/" rel="noreferrer noopener" target='_blank' class="ur-quick-links-content__item" role="link">
+											<div class="ur-quick-links-content__item-icon">
+												<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+													<g>
+														<path d="M18.36 19.78L12 13.41l-6.36 6.37-1.42-1.42L10.59 12 4.22 5.64l1.42-1.42L12 10.59l6.36-6.36 1.41 1.41L13.41 12l6.36 6.36z"/>
+													</g>
+												</svg>
+											</div>
+											<div class="ur-quick-links-content__item-content">
+												<div class="ur-quick-links-content__item-main">
+													<h4 class="ur-quick-links-content__item-title"><?php esc_html_e( 'Create Login Form', 'user-registration' ); ?></h4>
+													<p class="ur-quick-links-content__item-desc"><?php esc_html_e( 'Step-by-step guide', 'user-registration' ); ?></p>
+												</div>
+											</div>
+										</a>
+										<a href="https://docs.wpuserregistration.com" rel="noreferrer noopener" target='_blank' class="ur-quick-links-content__item" role="link">
+											<div class="ur-quick-links-content__item-icon">
+												<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+													<g>
+														<path d="M18.36 19.78L12 13.41l-6.36 6.37-1.42-1.42L10.59 12 4.22 5.64l1.42-1.42L12 10.59l6.36-6.36 1.41 1.41L13.41 12l6.36 6.36z"/>
+													</g>
+												</svg>
+											</div>
+											<div class="ur-quick-links-content__item-content">
+												<div class="ur-quick-links-content__item-main">
+													<h4 class="ur-quick-links-content__item-title"><?php esc_html_e( 'Documentation', 'user-registration' ); ?></h4>
+													<p class="ur-quick-links-content__item-desc"><?php esc_html_e( 'Full documentation', 'user-registration' ); ?></p>
+												</div>
+											</div>
+										</a>
+									</div>
+									<div class="ur-quick-links-content__footer">
+										<div class="ur-quick-links-footer-text">
+											<span><?php esc_html_e( 'Press', 'user-registration' ); ?></span>
+											<span class="ur-quick-links-content__item-badge">?</span>
+											<span><?php esc_html_e( 'for shortcuts', 'user-registration' ); ?></span>
+										</div>
+									</div>
+								</div>
 								<?php
 								/**
 								 * Filter to add form builder wrapper for footer.
