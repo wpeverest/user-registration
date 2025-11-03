@@ -2082,6 +2082,17 @@ body {
 				height: 28px;
 				fill: $white;
 			}
+
+			.user-registration-help-tip {
+				width: 28px;
+				height: 28px;
+				position: absolute;
+				opacity: 0;
+				
+				&::after {
+					content: none;
+				}
+			}
 		}
 
 		.ur-quick-links-content {
@@ -2226,7 +2237,7 @@ body {
 
 				&-title {
 					font-size: 14px;
-					font-weight: 600;
+					font-weight: $medium;
 					color: #1f2937;
 					transition: all .3s;
 				}

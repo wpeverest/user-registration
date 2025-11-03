@@ -168,14 +168,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 									</div>
 								</div>
 							<?php } ?>
-							<div class="ur-builder-wrapper-footer">
-								<a href='#' class="ur-button-quick-links"><span class="user-registration-help-tip" data-tip="Need Help ?">
+							<div class="ur-builder-wrapper-footer">								
+								<a href='#' class="ur-button-quick-links">
+									<span class="user-registration-help-tip" data-tip="Need Help ?"></span>
 									<svg xmlns="http://www.w3.org/2000/svg" fill="#000" viewBox="0 0 24 24">
 										<path d="M20.182 12a8.182 8.182 0 1 0-16.364 0 8.182 8.182 0 0 0 16.364 0ZM22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10Z"/>
 										<path d="M10.085 7.043a3.636 3.636 0 0 1 5.479 3.14l-.012.254c-.116 1.25-1.066 2.087-1.757 2.547a7.302 7.302 0 0 1-1.533.77c-.013.005-.023.01-.031.012l-.01.004h-.003l-.002.002a.91.91 0 0 1-.578-1.725h.002l.013-.005.067-.025a5.504 5.504 0 0 0 1.066-.546c.627-.418.96-.862.96-1.289v-.002a1.818 1.818 0 0 0-3.534-.606.91.91 0 0 1-1.715-.603 3.637 3.637 0 0 1 1.588-1.928Zm1.924 8.593a.91.91 0 1 1 0 1.819H12a.91.91 0 1 1 0-1.819h.009Z"/>
 									</svg>
-								</span>									 
 								</a>
+								
 								<div class="ur-quick-links-content" hidden>
 									<div class="ur-quick-links-content__header">
 										<div class="ur-quick-links-content__header-text">
