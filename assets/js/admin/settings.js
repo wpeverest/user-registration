@@ -1213,6 +1213,8 @@
 					$this.find('.ur-spinner').remove();
 					show_success_message(response.data.message);
 					settings_container.find('.integration-status').addClass('ur-integration-account-connected');
+					// Show reset button after successful save
+					settings_container.find('.reset-captcha-keys').removeClass('ur-d-none');
 					var urm_recaptcha_node = $(
 							'.ur-captcha-test-container[data-captcha-type="' +
 							setting_id +
@@ -1921,9 +1923,40 @@
 			return;
 		}
 		$this.append("<span class='ur-spinner'></span>");
+		var section_data = urm_get_captcha_section_data(settings_container);
 
+		update_captcha_section_settings(setting_id, section_data, $this, settings_container);
+	});
+	$('.reset-captcha-keys').on('click', function () {
+		var $this = $(this);
+		Swal.fire({
+			title:
+				'<img src="' +
+				user_registration_settings_params.reset_keys_icon +
+				'">' +
+			user_registration_settings_params.i18n.captcha_reset_title,
+			html: '<p id="html_1">' +
+				user_registration_settings_params.i18n.captcha_reset_prompt +
+				'</p>',
+			showCancelButton: true,
+			confirmButtonText: user_registration_settings_params.i18n.i18n_prompt_reset,
+			cancelButtonText: user_registration_settings_params.i18n.i18n_prompt_cancel,
+			allowOutsideClick: false,
+			preConfirm: function () {
+				var btn = $('.swal2-confirm');
+				if (btn.find('.ur-spinner').length > 0) {
+					return;
+				}
+				btn.append('<span class="ur-spinner"></span>');
+				reset_captcha_keys($this, btn);
+				return false;
+			}
+		})
+
+	});
+
+	function urm_get_captcha_section_data(settings_container) {
 		var section_data = {};
-
 		settings_container.find('input, select, textarea').each(function (key, item) {
 			var $item = $(item);
 			var name = $item.attr('name');
@@ -1939,9 +1972,42 @@
 			}
 			section_data[name] = value;
 		});
+		return section_data;
+	}
 
-		update_captcha_section_settings(setting_id, section_data, $this, settings_container);
-	});
+	function reset_captcha_keys($this, btn) {
+		var setting_id = $this.data('id'),
+			settings_container = $this.closest('#' + setting_id);
+		$.ajax({
+			url: user_registration_settings_params.ajax_url,
+			data: {
+				action: "user_registration_reset_captcha_keys",
+				security: user_registration_settings_params.user_registration_membership_captcha_settings_nonce,
+				setting_id: setting_id
+			},
+			type: "POST",
+			success: function (response) {
+				if (response.success) {
+					show_success_message(response.data.message || user_registration_settings_params.i18n.captcha_keys_reset_success);
+					settings_container.find('.integration-status').removeClass('ur-integration-account-connected');
+					settings_container.find('input[type="text"]').val('');
+					// Hide reset button after successful reset
+					$this.addClass('ur-d-none');
+				} else {
+					show_failure_message(response.data.message || user_registration_settings_params.i18n.captcha_keys_reset_error);
+				}
+			},
+			error: function (xhr, status, error) {
+				var errorMessage = error || user_registration_settings_params.i18n.captcha_keys_reset_error;
+				show_failure_message(errorMessage);
+				reject({data: {message: errorMessage}});
+			},
+			complete: function (response) {
+				btn.find('.ur-spinner').remove();
+				Swal.close();
+			}
+		});
+	}
 
 	/**
 	 * Retrieves the cookie values set.

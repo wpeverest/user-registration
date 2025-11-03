@@ -90,6 +90,7 @@ class UR_AJAX {
 			'disable_user'						=> false,
 			'validate_payment_currency'			=> false,
 			'save_captcha_settings'             => false,
+			'reset_captcha_keys'                 => false,
 			'create_default_form'				=> false,
 			'generate_required_pages'			=> false,
 			'handle_default_wordpress_login'	=> false,
@@ -2065,6 +2066,95 @@ class UR_AJAX {
 		wp_send_json_success( array(
 				'message' => $message,
 				'ur_recaptcha_code' => $validate_before_save['ur_recaptcha_code']
+			)
+		);
+	}
+
+	/**
+	 * Reset captcha keys for a specific captcha type.
+	 *
+	 * @return void
+	 */
+	public static function reset_captcha_keys() {
+		check_ajax_referer( 'user_registration_validate_captcha_settings_nonce', 'security' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to reset captcha keys.', 'user-registration' ) ) );
+		}
+
+		$setting_id = isset( $_POST['setting_id'] ) ? sanitize_text_field( wp_unslash( $_POST['setting_id'] ) ) : '';
+
+		if ( empty( $setting_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Setting ID is required.', 'user-registration' ) ) );
+		}
+
+		// Define option keys to reset for each captcha type
+		$reset_keys = array();
+
+		switch ( $setting_id ) {
+			case 'v2':
+				$reset_keys = array(
+					'user_registration_captcha_setting_recaptcha_site_key',
+					'user_registration_captcha_setting_recaptcha_site_secret',
+					'user_registration_captcha_setting_recaptcha_invisible_site_key',
+					'user_registration_captcha_setting_recaptcha_invisible_site_secret',
+					'user_registration_captcha_setting_invisible_recaptcha_v2',
+					'user_registration_captcha_setting_recaptcha_enable_v2',
+				);
+				break;
+
+			case 'v3':
+				$reset_keys = array(
+					'user_registration_captcha_setting_recaptcha_site_key_v3',
+					'user_registration_captcha_setting_recaptcha_site_secret_v3',
+					'user_registration_captcha_setting_recaptcha_threshold_score_v3',
+					'user_registration_captcha_setting_recaptcha_enable_v3',
+				);
+				break;
+
+			case 'hCaptcha':
+				$reset_keys = array(
+					'user_registration_captcha_setting_recaptcha_site_key_hcaptcha',
+					'user_registration_captcha_setting_recaptcha_site_secret_hcaptcha',
+					'user_registration_captcha_setting_recaptcha_enable_hCaptcha',
+				);
+				break;
+
+			case 'cloudflare':
+				$reset_keys = array(
+					'user_registration_captcha_setting_recaptcha_site_key_cloudflare',
+					'user_registration_captcha_setting_recaptcha_site_secret_cloudflare',
+					'user_registration_captcha_setting_recaptcha_cloudflare_theme',
+					'user_registration_captcha_setting_recaptcha_enable_cloudflare',
+				);
+				break;
+
+			default:
+				wp_send_json_error( array( 'message' => __( 'Invalid captcha type.', 'user-registration' ) ) );
+				return;
+		}
+
+		// Reset all keys for the specified captcha type
+		foreach ( $reset_keys as $key ) {
+			delete_option( $key );
+		}
+
+		// If all captcha types are disabled, reset the global captcha version option
+		$all_captcha_types = array( 'v2', 'v3', 'hCaptcha', 'cloudflare' );
+		$has_active_captcha = false;
+		foreach ( $all_captcha_types as $type ) {
+			if ( get_option( 'user_registration_captcha_setting_recaptcha_enable_' . $type, false ) ) {
+				$has_active_captcha = true;
+				break;
+			}
+		}
+		if ( ! $has_active_captcha ) {
+			delete_option( 'user_registration_captcha_setting_recaptcha_version' );
+		}
+
+		wp_send_json_success(
+			array(
+				'message' => sprintf( __( 'Captcha keys for %s have been reset successfully.', 'user-registration' ), $setting_id ),
 			)
 		);
 	}

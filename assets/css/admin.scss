@@ -7840,3 +7840,29 @@ body.user-registration-page {
 		}
 	}
 }
+.reset-captcha-keys {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	color: #6b7280;
+	font-size: 13px;
+	font-weight: 500;
+	cursor: pointer;
+	text-decoration: none;
+	transition: color 0.2s;
+	margin-bottom: 20px;
+	&:hover {
+		color: #ef4444;
+	}
+	&:focus {
+		box-shadow: none;
+		color: #6b7280;
+		&:hover {
+			color: #ef4444;
+		}
+	}
+	svg {
+		width: 16px;
+		height: 16px;
+	}
+}

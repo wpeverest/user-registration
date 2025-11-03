@@ -318,10 +318,10 @@ if ( ! class_exists( 'UR_Settings_Captcha' ) ) :
 							'captcha_type' => 'v2',
 						),
 						array(
-							'title' => __( 'Save', 'user-registration' ),
-							'id'    => 'user_registration_payment_save_settings',
-							'type'  => 'button',
-							'class' => 'captcha-save-btn'
+							'title'             => __( 'Save', 'user-registration' ),
+							'id'                => 'user_registration_captcha_save_settings',
+							'type'              => 'button',
+							'class'             => 'captcha-save-btn',
 						),
 					),
 					'settings_type' => 'captcha',
@@ -378,10 +378,10 @@ if ( ! class_exists( 'UR_Settings_Captcha' ) ) :
 							'captcha_type' => 'v3',
 						),
 						array(
-							'title' => __( 'Save', 'user-registration' ),
-							'id'    => 'user_registration_payment_save_settings',
-							'type'  => 'button',
-							'class' => 'captcha-save-btn'
+							'title'             => __( 'Save', 'user-registration' ),
+							'id'                => 'user_registration_captcha_save_settings',
+							'type'              => 'button',
+							'class'             => 'captcha-save-btn',
 						),
 					),
 				),
@@ -424,10 +424,10 @@ if ( ! class_exists( 'UR_Settings_Captcha' ) ) :
 							'captcha_type' => 'hCaptcha',
 						),
 						array(
-							'title' => __( 'Save', 'user-registration' ),
-							'id'    => 'user_registration_payment_save_settings',
-							'type'  => 'button',
-							'class' => 'captcha-save-btn'
+							'title'             => __( 'Save', 'user-registration' ),
+							'id'                => 'user_registration_captcha_save_settings',
+							'type'              => 'button',
+							'class'             => 'captcha-save-btn',
 						),
 					),
 				),
@@ -486,10 +486,10 @@ if ( ! class_exists( 'UR_Settings_Captcha' ) ) :
 							'captcha_type' => 'cloudflare',
 						),
 						array(
-							'title' => __( 'Save', 'user-registration' ),
-							'id'    => 'user_registration_payment_save_settings',
-							'type'  => 'button',
-							'class' => 'captcha-save-btn'
+							'title'             => __( 'Save', 'user-registration' ),
+							'id'                => 'user_registration_captcha_save_settings',
+							'type'              => 'button',
+							'class'             => 'captcha-save-btn',
 						),
 					),
 				)
@@ -566,7 +566,7 @@ if ( ! class_exists( 'UR_Settings_Captcha' ) ) :
 			} else {
 				$site_key_field   = $config['site_key_field'];
 				$secret_key_field = $config['secret_key_field'];
-				$theme_mode       = isset($config['theme_mode']) && isset( $form_data[$config['theme_mode']] ) ? $form_data[$config['theme_mode']] : $theme_mode;
+				$theme_mode       = isset( $config['theme_mode'] ) && isset( $form_data[ $config['theme_mode'] ] ) ? $form_data[ $config['theme_mode'] ] : $theme_mode;
 			}
 
 			if ( empty( $form_data[ $site_key_field ] ) ) {
