@@ -2079,14 +2079,18 @@ body {
 			background-color: #475bb2;
 
 			span {
-				font-size: 20px;
-				font-weight: $semi_bold;
-				margin: 0 auto;
+				font-size: 18px;
 				width: 30px;
 				height: 30px;
 				border-radius: 50%;
-				padding: 5px 8px;
+				padding: 4px 7px;
 				border: 1px solid white;
+
+				&::after {
+					content: "?";
+					background: unset !important;
+					color: white;
+				}
 			}
 		}
 

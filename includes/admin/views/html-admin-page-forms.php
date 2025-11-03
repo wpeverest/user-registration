@@ -169,7 +169,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 								</div>
 							<?php } ?>
 							<div class="ur-builder-wrapper-footer">
-								<a href='#' class="ur-button-quick-links" title="Quick Links"><span>?</span></a>
+								<a href='#' class="ur-button-quick-links"><span class="user-registration-help-tip" data-tip="Need Help ?"></span></a>
 								<div class="ur-quick-links-content" hidden>
 									<div class="ur-quick-links-content__header">
 										<div class="ur-quick-links-content__header-text">
