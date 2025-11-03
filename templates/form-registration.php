@@ -128,8 +128,8 @@ wp_enqueue_style( 'ur-frontend-small-screen' );
 			<?php
 			$is_title_description_enabled = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_enable_form_title_description', false ) );
 			if ( $is_title_description_enabled ) {
-				$registration_title_label       = ur_get_single_post_meta( $form_id, 'user_registration_form_title' );
-				$registration_title_description = ur_get_single_post_meta( $form_id, 'user_registration_form_description' );
+				$registration_title_label       = esc_html__(ur_get_single_post_meta( $form_id, 'user_registration_form_title' ), 'user-registration');
+				$registration_title_description = esc_html__(ur_get_single_post_meta( $form_id, 'user_registration_form_description' ), 'user-registration');
 				/* translators: %s - registration Title. */
 				echo wp_kses_post( sprintf( __( '<span class="user-registration-registration-title"> %s </span> </br>', 'user-registration' ), $registration_title_label ) );
 				echo wp_kses_post( sprintf( __( '<p class="user-registration-registration-description"> %s </p>', 'user-registration' ), $registration_title_description ) );

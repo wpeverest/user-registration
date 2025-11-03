@@ -133,7 +133,8 @@ if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page']
 						 */
 						apply_filters(
 							'ur_login_title',
-							get_option( 'user_registration_general_setting_login_form_title', __( 'Welcome', 'user-registration' ) )
+							esc_html__(get_option( 'user_registration_general_setting_login_form_title', __( 'Welcome', 'user-registration' ) ), 'user-registration')
+
 						);
 					$login_title_description =
 						/**
@@ -145,9 +146,9 @@ if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page']
 						 */
 						apply_filters(
 							'ur_login_title_description',
-							get_option(
+							esc_html__(get_option(
 								'user_registration_general_setting_login_form_desc',
-								__( 'Please enter your details to access your account.', 'user-registration' )
+								__( 'Please enter your details to access your account.', 'user-registration' ), 'user-registration')
 							)
 						);
 					?>
