@@ -181,7 +181,7 @@ class AJAX {
 		// Log order and subscription creation
 		if ( $response['status'] && class_exists( 'WPEverest\URMembership\Admin\Services\PaymentGatewayLogging' ) ) {
 			// For free and bank, status is 'active' immediately. For others, it's 'pending'
-			$initial_status = ( 'free' === $payment_gateway || 'bank' === $payment_gateway ) ? 'active' : 'pending';
+			$initial_status = ( 'free' === $payment_gateway  ) ? 'active' : 'pending';
 
 			\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_general(
 				$payment_gateway,
@@ -199,7 +199,7 @@ class AJAX {
 			);
 
 			// Log activation for free and bank immediately
-			if ( 'free' === $payment_gateway || 'bank' === $payment_gateway ) {
+			if ( 'free' === $payment_gateway ) {
 				\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_transaction_success(
 					$payment_gateway,
 					'Subscription activated successfully',
@@ -1481,7 +1481,7 @@ class AJAX {
 		$user      = get_userdata( $member_id );
 		$subscription_service = new SubscriptionService();
 		$selected_pg          = sanitize_text_field( $_POST["selected_pg"] );
-		
+
 		// Get membership type for logging
 		$members_subscription_repo = new MembersSubscriptionRepository();
 		$membership_repository     = new MembershipRepository();
