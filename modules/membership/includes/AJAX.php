@@ -152,7 +152,8 @@ class AJAX {
 				'notice',
 				array(
 					'timestamp' => current_time( 'mysql' ),
-					'membership_type' => $membership_type
+					'membership_type' => $membership_type,
+					'username' => $member->user_login
 				)
 			);
 
@@ -1007,6 +1008,55 @@ class AJAX {
 			);
 		}
 
+		// Get user and order data for logging
+		$user = get_userdata( $user_id );
+		$orders_repository = new OrdersRepository();
+		$order = $orders_repository->get_order_by_subscription( $subscription_id );
+		$payment_gateway = ! empty( $order['payment_method'] ) ? $order['payment_method'] : 'unknown';
+
+		// Get membership type for logging
+		$membership_repository = new MembershipRepository();
+		$membership_type = 'unknown';
+		if ( ! empty( $user_subscription['item_id'] ) ) {
+			$membership = $membership_repository->get_single_membership_by_ID( $user_subscription['item_id'] );
+			if ( ! empty( $membership ) && ! empty( $membership['meta_value'] ) ) {
+				$membership_metas = json_decode( $membership['meta_value'], true );
+				$membership_type = $membership_metas['type'] ?? 'unknown';
+			}
+		}
+
+		// Log session start with divider
+		if ( class_exists( 'WPEverest\URMembership\Admin\Services\PaymentGatewayLogging' ) ) {
+			// Add session divider
+			\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_general(
+				$payment_gateway,
+				'========== CANCELLATION PAYMENT SESSION ==========',
+				'notice',
+				array(
+					'timestamp' => current_time( 'mysql' ),
+					'membership_type' => $membership_type,
+					'username' => $user ? $user->user_login : 'unknown'
+				)
+			);
+
+			// Log cancellation initiation
+			\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_general(
+				$payment_gateway,
+				'Membership cancellation initiated',
+				'info',
+				array(
+					'event_type' => 'cancellation_started',
+					'member_id' => $user_id,
+					'username' => $user ? $user->user_login : 'unknown',
+					'email' => $user ? $user->user_email : 'unknown',
+					'subscription_id' => $subscription_id,
+					'membership_id' => $user_subscription['item_id'] ?? 'N/A',
+					'payment_method' => $payment_gateway,
+					'membership_type' => $membership_type
+				)
+			);
+		}
+
 		$cancel_status = $subscription_repository->cancel_subscription_by_id( $subscription_id );
 
 		if ( $cancel_status['status'] ) {
@@ -1317,6 +1367,7 @@ class AJAX {
 		if ( $response['status'] ) {
 			$selected_pg = $data['selected_pg'];
 			$member_id   = $upgrade_membership_response['extra']['member_id'];
+			$member      = get_userdata( $member_id );
 
 			// Get membership type for logging
 			$membership_repository = new MembershipRepository();
@@ -1324,14 +1375,36 @@ class AJAX {
 			$membership_metas = json_decode( $new_membership['meta_value'], true );
 			$membership_type = $membership_metas['type'] ?? 'unknown';
 
-			PaymentGatewayLogging::log_general( $selected_pg, 'Membership upgrade initiated', 'notice', array(
-				'event_type' => 'upgrade_started',
-				'member_id' => $member_id,
-				'payment_method' => $selected_pg,
-				'old_membership_id' => $data['current_membership_id'],
-				'new_membership_id' => $data['selected_membership_id'],
-				'membership_type' => $membership_type
-			) );
+			// Log session start with divider
+			if ( class_exists( 'WPEverest\URMembership\Admin\Services\PaymentGatewayLogging' ) ) {
+				// Add session divider
+				\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_general(
+					$selected_pg,
+					'========== UPGRADE PAYMENT SESSION ==========',
+					'notice',
+					array(
+						'timestamp' => current_time( 'mysql' ),
+						'membership_type' => $membership_type,
+						'username' => $member ? $member->user_login : 'unknown'
+					)
+				);
+
+				// Log upgrade initiation
+				\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_general(
+					$selected_pg,
+					'Membership upgrade initiated',
+					'info',
+					array(
+						'event_type' => 'upgrade_started',
+						'member_id' => $member_id,
+						'username' => $member ? $member->user_login : 'unknown',
+						'payment_method' => $selected_pg,
+						'old_membership_id' => $data['current_membership_id'],
+						'new_membership_id' => $data['selected_membership_id'],
+						'membership_type' => $membership_type
+					)
+				);
+			}
 
 			if ( $selected_pg !== 'free' ) {
 				update_user_meta( $member_id, 'urm_is_upgrading', true );
@@ -1406,9 +1479,53 @@ class AJAX {
 		ur_membership_verify_nonce( 'urm_renew_membership' );
 		$member_id = get_current_user_id();
 		$user      = get_userdata( $member_id );
-		ur_get_logger()->notice( __( 'Renew Membership Triggered for :' . $user->user_login ), array( 'source' => 'urm-renew-membership' ) );
 		$subscription_service = new SubscriptionService();
-		$selected_pg          = $_POST["selected_pg"];
+		$selected_pg          = sanitize_text_field( $_POST["selected_pg"] );
+		
+		// Get membership type for logging
+		$members_subscription_repo = new MembersSubscriptionRepository();
+		$membership_repository     = new MembershipRepository();
+		$member_subscription       = $members_subscription_repo->get_member_subscription( $member_id );
+		$membership_type           = 'unknown';
+		if ( ! empty( $member_subscription ) && ! empty( $member_subscription['item_id'] ) ) {
+			$membership                = $membership_repository->get_single_membership_by_ID( $member_subscription['item_id'] );
+			if ( ! empty( $membership ) && ! empty( $membership['meta_value'] ) ) {
+				$membership_metas          = json_decode( $membership['meta_value'], true );
+				$membership_type           = $membership_metas['type'] ?? 'unknown';
+			}
+		}
+
+		// Log session start with divider
+		if ( class_exists( 'WPEverest\URMembership\Admin\Services\PaymentGatewayLogging' ) ) {
+			// Add session divider
+			\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_general(
+				$selected_pg,
+				'========== RENEWAL PAYMENT SESSION ==========',
+				'notice',
+				array(
+					'timestamp' => current_time( 'mysql' ),
+					'membership_type' => $membership_type,
+					'username' => $user->user_login
+				)
+			);
+
+			// Log renewal initiation
+			\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_general(
+				$selected_pg,
+				'Membership renewal initiated',
+				'info',
+				array(
+					'event_type' => 'renewal_started',
+					'member_id' => $member_id,
+					'username' => $user->user_login,
+					'email' => $user->user_email,
+					'membership_id' => $member_subscription['item_id'] ?? 'N/A',
+					'payment_method' => $selected_pg,
+					'membership_type' => $membership_type
+				)
+			);
+		}
+
 		$renew_membership     = $subscription_service->renew_membership( $user, $selected_pg );
 
 		$response = $renew_membership['response'];

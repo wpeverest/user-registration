@@ -115,18 +115,15 @@ class SubscriptionService {
 	 * @return array|bool[]|void
 	 */
 	public function cancel_subscription( $order, $subscription ) {
-		$logger = ur_get_logger();
 		switch ( $order['payment_method'] ) {
 			case 'paypal';
 				$paypal_service = new PaypalService();
-				$logger->notice( 'Paypal cancellation Reached', array( 'source' => 'urm-cancellation-log' ) );
 
 				return $paypal_service->cancel_subscription( $order, $subscription );
 
 			case 'stripe';
 
 				$stripe_service = new StripeService();
-				$logger->notice( 'Stripe cancellation Reached', array( 'source' => 'urm-cancellation-log' ) );
 
 				return $stripe_service->cancel_subscription( $order, $subscription );
 
@@ -137,7 +134,6 @@ class SubscriptionService {
 			case 'bank':
 				return array( 'status' => true );
 			default:
-				$logger->notice( 'Default cancellation Reached', array( 'source' => 'urm-cancellation-log' ) );
 
 				return apply_filters( 'user_registration_membership_cancel_subscription', array( 'status' => false ), $order, $subscription );
 		}
@@ -598,7 +594,6 @@ class SubscriptionService {
 
 		$orders_data = $order_service->prepare_orders_data( $members_data, $member_id, $member_subscription, [], true ); // prepare data for orders table.
 		$order = $this->orders_repository->create( $orders_data );
-		ur_get_logger()->notice( __( 'Order created for ' . $username . ' Order ID: ' . $order['ID'], 'user-registration-membership' ), array( 'source' => 'urm-renew-subscription' ) );
 		$payment_service = new PaymentService( $selected_pg, $membership['ID'], $user->data->user_email );
 		$data            = array(
 			'membership'        => $membership_id,
