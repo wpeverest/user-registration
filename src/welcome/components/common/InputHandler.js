@@ -351,6 +351,16 @@ function InputHandler({
 						}
 						defaultValue={renderOptions()[renderOptions().default]}
 						variant="outline"
+						borderRadius="4px"
+						chakraStyles={{
+							dropdownIndicator: (provided) => ({
+								...provided,
+								background: "transparent"
+							}),
+							indicatorSeparator: () => ({
+								display: "none"
+							})
+						}}
 					/>
 				);
 			case "multiselect":
@@ -372,6 +382,24 @@ function InputHandler({
 							handleInputChange(setting.type, setting.id, e)
 						}
 						defaultValue={defaultSelectedOption}
+						borderRadius="4px"
+						chakraStyles={{
+							dropdownIndicator: (provided) => ({
+								...provided,
+								background: "transparent",
+								paddingLeft: 0
+							}),
+							indicatorSeparator: () => ({
+								display: "none"
+							}),
+							clearIndicator: (provided) => ({
+								...provided,
+								svg: {
+									width: "0.85em",
+									height: "0.85em"
+								}
+							})
+						}}
 					/>
 				);
 
