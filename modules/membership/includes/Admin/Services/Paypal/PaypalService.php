@@ -322,7 +322,7 @@ class PaypalService {
 				$cancel_subscription = $this->cancel_subscription( $get_user_old_order, $get_user_old_subscription );
 				
 				if ( ! empty( $cancel_subscription['status'] ) && $cancel_subscription['status'] ) {
-					PaymentGatewayLogging::log_general( 'paypal', 'Previous subscription cancelled successfully', 'notice', array(
+					PaymentGatewayLogging::log_general( 'paypal', 'Previous subscription cancelled successfully', 'success', array(
 						'event_type' => 'upgrade_cancel_success',
 						'member_id' => $member_id,
 						'old_subscription_id' => $get_user_old_subscription['subscription_id'] ?? 'unknown'
@@ -786,7 +786,11 @@ class PaypalService {
 		
 		if ( 204 === $status_code ) {
 			$message = esc_html__( 'Subscription successfully canceled from paypal.', 'user-registration' );
-			PaymentGatewayLogging::log_subscription_cancellation( 'paypal', $message );
+			PaymentGatewayLogging::log_general( 'paypal', $message, 'success', array(
+				'event_type' => 'cancellation_success',
+				'subscription_id' => $subscription['subscription_id'] ?? 'unknown',
+				'status_code' => $status_code
+			) );
 
 			return array(
 				'status' => true,

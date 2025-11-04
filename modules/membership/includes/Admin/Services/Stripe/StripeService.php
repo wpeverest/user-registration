@@ -773,7 +773,7 @@ class StripeService {
 		if ( isset( $deleted_sub[ 'canceled_at' ] ) && '' !== $deleted_sub['canceled_at'] ) {
 			$response['status'] = true;
 
-			PaymentGatewayLogging::log_general( 'stripe', 'Subscription cancelled successfully', 'notice', array(
+			PaymentGatewayLogging::log_general( 'stripe', 'Subscription cancelled successfully', 'success', array(
 				'event_type' => 'cancellation_success',
 				'subscription_id' => $subscription['subscription_id'],
 				'canceled_at' => date( 'Y-m-d H:i:s', $deleted_sub['canceled_at'] ),
