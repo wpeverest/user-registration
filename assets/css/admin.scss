@@ -2088,7 +2088,7 @@ body {
 				height: 28px;
 				position: absolute;
 				opacity: 0;
-				
+
 				&::after {
 					content: none;
 				}
@@ -2194,18 +2194,16 @@ body {
 					box-shadow: none;
 				}
 
-				&:not(:first-child) {
-					&:hover {
-						background: #f9fafb;
-						
-						.ur-quick-links-content__item-content {
-							.ur-quick-links-content__item-title {
-								color: $primary_color;
-							}
-						}					
+
+				&:hover {
+					background: #f9fafb;
+
+					.ur-quick-links-content__item-content {
+						.ur-quick-links-content__item-title {
+							color: $primary_color;
+						}
 					}
 				}
-				
 
 				&-icon {
 					display: flex;
