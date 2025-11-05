@@ -1018,6 +1018,12 @@ class UR_Admin_Settings {
 									$field_css             = '';
 									$btn_css               = ! empty( $value['class'] ) ? $value['class'] : '';
 									$is_connected          = isset( $section['is_connected'] ) ? $section['is_connected'] : false;
+									$is_captcha            = in_array( $section['id'], array(
+										'v2',
+										'v3',
+										'hCaptcha',
+										'cloudflare'
+									) );
 									$show_reset_key_button = ( $is_connected && in_array( $section['id'], array(
 											'v2',
 											'v3',
@@ -1034,7 +1040,8 @@ class UR_Admin_Settings {
 										"v2",
 										"v3",
 										"hCaptcha",
-										"cloudflare"
+										"cloudflare",
+										"captcha-settings"
 									) ) ) {
 										$css       = 'ur-flex-row-reverse';
 										$field_css = 'ur-align-items-end';
@@ -1050,17 +1057,17 @@ class UR_Admin_Settings {
 											data-id="' . esc_attr( $section['id'] ) . '"
 											/>' . $value['title'] . '</button>';
 									$settings .= '</div>';
-
-									$settings .= '<a
+									if( $is_captcha ) {
+										$settings .= '<a
 										href="#"
-										class="reset-captcha-keys '. ($show_reset_key_button ? '' : 'ur-d-none').'"
+										class="reset-captcha-keys ' . ( $show_reset_key_button ? '' : 'ur-d-none' ) . '"
 										data-id="' . esc_attr( $section['id'] ) . '"
 										/>
 										<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
 			                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
 			                            </svg>
 										' . __( 'Reset Keys', 'user-registration' ) . '</a>';
-
+									}
 									$settings .= '</div>';
 									break;
 								// Default: run an action.

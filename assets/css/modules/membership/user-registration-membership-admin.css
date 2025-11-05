@@ -467,8 +467,6 @@
   font-size: 14px;
   line-height: 24px;
   border-radius: 4px;
-  width: 100%;
-  padding: 10px 40px 10px 14px;
 }
 .user-registration #user-registration-list-table-page #user-registration-list-filters-row form > div input[type=search]::placeholder {
   color: #999999;
@@ -477,6 +475,10 @@
   box-shadow: none;
   outline: none;
   border-color: #475BB2;
+}
+.user-registration #user-registration-list-table-page #user-registration-list-filters-row form > div input[type=search] {
+  width: 100%;
+  padding: 10px 40px 10px 14px;
 }
 .user-registration #user-registration-list-table-page #user-registration-list-filters-row form > div input[type=search]::placeholder {
   color: #999;

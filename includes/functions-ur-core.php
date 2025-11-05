@@ -1120,13 +1120,11 @@ function ur_admin_form_settings_fields( $form_id ) {
 	$ur_enabled_captchas = array(
 		'' => __( 'Select Enabled Captcha', 'user-registration' ),
 	);
-
 	foreach ( $ur_captchas as $key => $value ) {
 		if ( get_option( 'user_registration_captcha_setting_recaptcha_enable_' . $key, false ) ) {
 			$ur_enabled_captchas[ $key ] = $value;
 		}
 	}
-
 	$arguments = array(
 		'form_id'      => $form_id,
 		'setting_data' => array(
@@ -3606,10 +3604,10 @@ if ( ! function_exists( 'ur_find_reset_password_in_page' ) ) {
 
 		$matched = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(*) FROM {$post_table} 
-				WHERE ID = %d 
+				"SELECT COUNT(*) FROM {$post_table}
+				WHERE ID = %d
 				AND (
-					post_content LIKE '%[user_registration_reset_password_form%' 
+					post_content LIKE '%[user_registration_reset_password_form%'
 					OR post_content LIKE '%<!-- wp:user-registration/reset_password_form%'
 				)",
 				$reset_password_page_id
@@ -3619,10 +3617,10 @@ if ( ! function_exists( 'ur_find_reset_password_in_page' ) ) {
 		if ( $matched <= 0 ) {
 			$matched = $wpdb->get_var(
 				$wpdb->prepare(
-					"SELECT COUNT(*) FROM {$post_meta_table} 
-					WHERE post_id = %d 
+					"SELECT COUNT(*) FROM {$post_meta_table}
+					WHERE post_id = %d
 					AND (
-						meta_value LIKE '%[user_registration_reset_password_form%' 
+						meta_value LIKE '%[user_registration_reset_password_form%'
 						OR meta_value LIKE '%<!-- wp:user-registration/reset_password_form%'
 					)",
 					$reset_password_page_id

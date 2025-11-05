@@ -3006,7 +3006,7 @@
 											container.remove();
 										}
 										builder.manage_draggable_users_fields();
-										
+
 
 										var populated_item = template
 											.closest(".ur-selected-item ")
@@ -7365,5 +7365,11 @@
 				$this.val(inputValue);
 			}
 		);
+		$(document).on("click", "#user_registration_form_setting_enable_recaptcha_support", function(el) {
+			if(user_registration_form_builder_data.no_captcha_set) {
+				el.preventDefault();
+				URFormBuilder.show_message(user_registration_form_builder_data.i18n_captcha_not_set_error)
+			}
+		})
 	});
 })(jQuery, window.user_registration_form_builder_data);
