@@ -1313,18 +1313,7 @@
 		}
 		$this.append("<span class='ur-spinner'></span>");
 		var section_data = urm_get_captcha_section_data(settings_container);
-
-		// Validate captcha keys before saving
-		validate_captcha_keys_before_save(setting_id, section_data)
-			.then(function() {
-				// Validation successful, proceed with save
-				update_captcha_section_settings(setting_id, section_data, $this, settings_container);
-			})
-			.catch(function(error) {
-				// Validation failed, show error and remove spinner
-				$this.find('.ur-spinner').remove();
-				show_failure_message(error.message || 'Invalid captcha keys. Please check your site key and try again.');
-			});
+		update_captcha_section_settings(setting_id, section_data, $this, settings_container);
 	});
 	$('.reset-captcha-keys').on('click', function () {
 		var $this = $(this);
@@ -1374,248 +1363,6 @@
 		return section_data;
 	}
 
-	/**
-	 * Validate captcha keys by attempting to load/initialize the captcha
-	 * Returns a promise that resolves if valid, rejects if invalid
-	 */
-	function validate_captcha_keys_before_save(setting_id, section_data) {
-		return new Promise(function(resolve, reject) {
-			// Get site key based on captcha type
-			var site_key = '';
-			var is_invisible = false;
-			
-			if (setting_id === 'v2') {
-				// Check if invisible recaptcha is enabled
-				is_invisible = section_data['user_registration_captcha_setting_invisible_recaptcha_v2'] === true || 
-							   section_data['user_registration_captcha_setting_invisible_recaptcha_v2'] === '1';
-				
-				if (is_invisible) {
-					site_key = section_data['user_registration_captcha_setting_recaptcha_invisible_site_key'] || '';
-				} else {
-					site_key = section_data['user_registration_captcha_setting_recaptcha_site_key'] || '';
-				}
-			} else if (setting_id === 'v3') {
-				site_key = section_data['user_registration_captcha_setting_recaptcha_site_key_v3'] || '';
-			} else if (setting_id === 'hCaptcha') {
-				site_key = section_data['user_registration_captcha_setting_recaptcha_site_key_hcaptcha'] || '';
-			} else if (setting_id === 'cloudflare') {
-				site_key = section_data['user_registration_captcha_setting_recaptcha_site_key_cloudflare'] || '';
-			}
-			
-			// If no site key provided, skip validation (will be handled by server-side validation)
-			if (!site_key || site_key.trim() === '') {
-				resolve();
-				return;
-			}
-			
-			// Validate based on captcha type
-			if (setting_id === 'v3') {
-				// For v3, test if the script can load and execute
-				var v3ScriptUrl = 'https://www.google.com/recaptcha/api.js?render=' + site_key;
-				var script = document.createElement('script');
-				var validationTimeout = setTimeout(function() {
-					reject(new Error('Captcha validation timeout. Please check if the site key is correct.'));
-				}, 10000); // 10 second timeout
-				
-				script.src = v3ScriptUrl;
-				script.onload = function() {
-					if (typeof grecaptcha !== 'undefined' && grecaptcha.ready) {
-						grecaptcha.ready(function() {
-							try {
-								grecaptcha.execute(site_key, { action: "validate" })
-									.then(function(token) {
-										clearTimeout(validationTimeout);
-										script.remove();
-										resolve();
-									})
-									.catch(function(err) {
-										clearTimeout(validationTimeout);
-										script.remove();
-										reject(new Error('Invalid site key: ' + (err.message || 'Unable to validate captcha')));
-									});
-							} catch (err) {
-								clearTimeout(validationTimeout);
-								script.remove();
-								reject(new Error('Invalid site key: ' + (err.message || 'Unable to validate captcha')));
-							}
-						});
-					} else {
-						clearTimeout(validationTimeout);
-						script.remove();
-						reject(new Error('Failed to load reCAPTCHA v3 library'));
-					}
-				};
-				script.onerror = function() {
-					clearTimeout(validationTimeout);
-					reject(new Error('Failed to load reCAPTCHA v3 script. Please check if the site key is correct.'));
-				};
-				document.head.appendChild(script);
-			} else {
-				// For v2, hCaptcha, and Cloudflare, test if widget can be rendered
-				var validationTimeout = setTimeout(function() {
-					reject(new Error('Captcha validation timeout. Please check if the site key is correct.'));
-				}, 10000); // 10 second timeout
-				
-				// Create a temporary container for validation
-				var tempContainer = $('<div style="position: absolute; left: -9999px;"></div>');
-				$('body').append(tempContainer);
-				
-				var widgetId = 'validation_' + setting_id + '_' + Date.now();
-				var widgetClass = '';
-				var scriptUrl = '';
-				var callbackName = '';
-				var globalVarName = '';
-				
-				if (setting_id === 'v2') {
-					widgetClass = 'g-recaptcha';
-					scriptUrl = 'https://www.google.com/recaptcha/api.js?onload=onloadURValidationCallback&render=explicit';
-					callbackName = 'onloadURValidationCallback';
-					globalVarName = 'grecaptcha';
-				} else if (setting_id === 'hCaptcha') {
-					widgetClass = 'g-recaptcha-hcaptcha';
-					scriptUrl = 'https://hcaptcha.com/1/api.js?onload=onloadURValidationCallback&render=explicit';
-					callbackName = 'onloadURValidationCallback';
-					globalVarName = 'hcaptcha';
-				} else if (setting_id === 'cloudflare') {
-					widgetClass = 'cf-turnstile';
-					scriptUrl = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadURValidationCallback';
-					callbackName = 'onloadURValidationCallback';
-					globalVarName = 'turnstile';
-				}
-				
-				var widgetDiv = $('<div class="' + widgetClass + '" id="' + widgetId + '" data-site-key="' + site_key + '"></div>');
-				tempContainer.append(widgetDiv);
-				
-				// Create callback function
-				window[callbackName] = function() {
-					setTimeout(function() {
-						try {
-							if (typeof window[globalVarName] !== 'undefined') {
-								var widgetIdNum = null;
-								
-								var renderOptions = {
-									'sitekey': site_key
-								};
-								
-								// Add error callback for all types
-								renderOptions['error-callback'] = function() {
-									clearTimeout(validationTimeout);
-									tempContainer.remove();
-									delete window[callbackName];
-									var errorMsg = 'Invalid site key or unable to render captcha widget';
-									if (setting_id === 'hCaptcha') {
-										errorMsg = 'Invalid site key or unable to render hCaptcha widget';
-									} else if (setting_id === 'cloudflare') {
-										errorMsg = 'Invalid site key or unable to render Cloudflare Turnstile widget';
-									}
-									reject(new Error(errorMsg));
-								};
-								
-								if (setting_id === 'v2') {
-									if (window[globalVarName].render) {
-										try {
-											widgetIdNum = window[globalVarName].render(widgetId, renderOptions);
-										} catch (err) {
-											clearTimeout(validationTimeout);
-											tempContainer.remove();
-											delete window[callbackName];
-											reject(new Error('Invalid site key: ' + (err.message || 'Unable to render captcha widget')));
-											return;
-										}
-									}
-								} else if (setting_id === 'hCaptcha') {
-									if (window[globalVarName].render) {
-										try {
-											widgetIdNum = window[globalVarName].render(widgetId, renderOptions);
-										} catch (err) {
-											clearTimeout(validationTimeout);
-											tempContainer.remove();
-											delete window[callbackName];
-											reject(new Error('Invalid site key: ' + (err.message || 'Unable to render hCaptcha widget')));
-											return;
-										}
-									}
-								} else if (setting_id === 'cloudflare') {
-									if (window[globalVarName].render) {
-										try {
-											widgetIdNum = window[globalVarName].render(widgetId, renderOptions);
-										} catch (err) {
-											clearTimeout(validationTimeout);
-											tempContainer.remove();
-											delete window[callbackName];
-											reject(new Error('Invalid site key: ' + (err.message || 'Unable to render Cloudflare Turnstile widget')));
-											return;
-										}
-									}
-								}
-								
-								if (widgetIdNum === null || widgetIdNum === undefined) {
-									clearTimeout(validationTimeout);
-									tempContainer.remove();
-									delete window[callbackName];
-									reject(new Error('Unable to render captcha widget'));
-									return;
-								}
-								
-								// Check if widget element is populated (indicating successful render)
-								var checkWidgetRendered = function(attempts) {
-									attempts = attempts || 0;
-									var widgetElement = document.getElementById(widgetId);
-									
-									if (widgetElement && widgetElement.innerHTML && widgetElement.innerHTML.trim() !== '') {
-										// Widget rendered successfully
-										clearTimeout(validationTimeout);
-										setTimeout(function() {
-											tempContainer.remove();
-											delete window[callbackName];
-											resolve();
-										}, 100);
-									} else if (attempts < 50) { // Wait up to 5 seconds
-										setTimeout(function() {
-											checkWidgetRendered(attempts + 1);
-										}, 100);
-									} else {
-										// Timeout waiting for widget to render
-										clearTimeout(validationTimeout);
-										tempContainer.remove();
-										delete window[callbackName];
-										reject(new Error('Captcha widget failed to render. Please check if the site key is correct.'));
-									}
-								};
-								
-								// Start checking if widget rendered
-								setTimeout(function() {
-									checkWidgetRendered();
-								}, 500);
-							} else {
-								clearTimeout(validationTimeout);
-								tempContainer.remove();
-								delete window[callbackName];
-								reject(new Error('Captcha library not loaded'));
-							}
-						} catch (err) {
-							clearTimeout(validationTimeout);
-							tempContainer.remove();
-							delete window[callbackName];
-							reject(new Error('Invalid site key: ' + (err.message || 'Unable to validate captcha')));
-						}
-					}, 100);
-				};
-				
-				// Load the script
-				var script = document.createElement('script');
-				script.src = scriptUrl;
-				script.onerror = function() {
-					clearTimeout(validationTimeout);
-					tempContainer.remove();
-					delete window[callbackName];
-					reject(new Error('Failed to load captcha script. Please check if the site key is correct.'));
-				};
-				document.head.appendChild(script);
-			}
-		});
-	}
-
 	function reset_captcha_keys($this, btn) {
 		var setting_id = $this.data('id'),
 			settings_container = $this.closest('#' + setting_id);
@@ -1632,20 +1379,20 @@
 					show_success_message(response.data.message || user_registration_settings_params.i18n.captcha_keys_reset_success);
 					settings_container.find('.integration-status').removeClass('ur-integration-account-connected');
 					settings_container.find('input[type="text"]').val('');
-					
+
 					// Remove captcha node after successful reset
 					var urm_recaptcha_node = $(
 						'.ur-captcha-test-container[data-captcha-type="' +
 						setting_id +
 						'"] .ur-captcha-node'
 					);
-					
+
 					if (urm_recaptcha_node.length !== 0) {
 						// Remove captcha widgets
 						urm_recaptcha_node.find('.g-recaptcha, .g-recaptcha-hcaptcha, .cf-turnstile').remove();
 						urm_recaptcha_node.find('[data-rendered]').removeAttr('data-rendered');
 					}
-					
+
 					// Hide reset button after successful reset
 					$this.addClass('ur-d-none');
 				} else {

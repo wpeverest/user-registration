@@ -7365,11 +7365,19 @@
 				$this.val(inputValue);
 			}
 		);
-		$(document).on("click", "#user_registration_form_setting_enable_recaptcha_support", function(el) {
-			if(user_registration_form_builder_data.no_captcha_set) {
-				el.preventDefault();
-				URFormBuilder.show_message(user_registration_form_builder_data.i18n_captcha_not_set_error)
+
+		$(document).on("change", "#user_registration_form_setting_enable_recaptcha_support", function(e) {
+			var $this = $(this);
+			if(user_registration_form_builder_data.no_captcha_set && $this.is(':checked')) {
+				// Immediately uncheck the checkbox
+				$this.prop('checked', false);
+				// Hide the dropdown since checkbox is unchecked
+				$("#user_registration_form_setting_configured_captcha_type_field").hide();
+				// Show error message using existing function
+				URFormBuilder.show_message(user_registration_form_builder_data.i18n_captcha_not_set_error, 'error');
+				e.stopImmediatePropagation();
+				return false;
 			}
-		})
+		});
 	});
 })(jQuery, window.user_registration_form_builder_data);

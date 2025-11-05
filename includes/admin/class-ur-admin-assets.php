@@ -371,7 +371,7 @@ class UR_Admin_Assets {
 				'i18n_shortcut_key_title'                  => esc_html__( 'Keyboard Shortcut Keys', 'user-registration' ),
 				'i18n_publish_form_button_text'            => esc_html__( 'Publish form', 'user-registration' ),
 				'i18n_update_form_button_text'             => esc_html__( 'Update form', 'user-registration' ),
-				'i18n_captcha_not_set_error'                     => $captcha_not_set_error,
+				'i18n_captcha_not_set_error'               => $captcha_not_set_error,
 				'i18n_shortcut_keys'                       => array(
 					'Ctrl+S' => esc_html__( 'Save Builder', 'user-registration' ),
 					'Ctrl+W' => esc_html__( 'Close Builder', 'user-registration' ),
