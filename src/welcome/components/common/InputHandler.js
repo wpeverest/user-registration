@@ -334,6 +334,20 @@ function InputHandler({
 						{...(settings[settings.id] === "yes" && {
 							isChecked: true
 						})}
+						sx={{
+							".chakra-switch__track": {
+								width: "30px",
+								height: "16px",
+								borderRadius: "30px",
+								_checked: {
+									background: "#475bb2"
+								}
+							},
+							".chakra-switch__thumb": {
+								width: "16px",
+								height: "16px"
+							}
+						}}
 					/>
 				);
 			case "select":
@@ -353,12 +367,36 @@ function InputHandler({
 						variant="outline"
 						borderRadius="4px"
 						chakraStyles={{
+							indicatorSeparator: (provided) => ({
+								...provided,
+								display: "none"
+							}),
 							dropdownIndicator: (provided) => ({
 								...provided,
-								background: "transparent"
+								background: "transparent",
+								border: "1px solid #e1e1e1",
+								paddingInlineStart: "0.75rem",
+								paddingInlineEnd: "0.75rem",
+								svg: {
+									width: "1.10em",
+									height: "1.10em"
+								}
 							}),
-							indicatorSeparator: () => ({
-								display: "none"
+							valueContainer: (provided) => ({
+								...provided,
+								paddingInlineStart: "0.75rem",
+								paddingInlineEnd: "0.75rem"
+							}),
+							option: (provided, state) => ({
+								...provided,
+								backgroundColor: state.isFocused
+									? "#475bb2"
+									: state.isSelected
+									? "#ddd"
+									: "white",
+								color: state.isFocused ? "white" : "#383838",
+								fontWeight: "400",
+								cursor: "pointer"
 							})
 						}}
 					/>
@@ -387,10 +425,20 @@ function InputHandler({
 							dropdownIndicator: (provided) => ({
 								...provided,
 								background: "transparent",
-								paddingLeft: 0
+								paddingLeft: 0,
+								border: "none",
+								svg: {
+									width: "1.10em",
+									height: "1.10em"
+								}
 							}),
-							indicatorSeparator: () => ({
+							indicatorSeparator: () => (provided) => ({
+								...provided,
 								display: "none"
+							}),
+							valueContainer: (provided) => ({
+								...provided,
+								paddingInlineStart: "0.5rem"
 							}),
 							clearIndicator: (provided) => ({
 								...provided,
@@ -398,6 +446,32 @@ function InputHandler({
 									width: "0.85em",
 									height: "0.85em"
 								}
+							}),
+							option: (provided, state) => ({
+								...provided,
+								backgroundColor: state.isSelected
+									? "#ddd"
+									: state.isFocused
+									? "#475bb2"
+									: "white",
+								color: state.isFocused ? "white" : "#383838",
+								fontWeight: "400",
+								cursor: "pointer"
+							}),
+							multiValue: (provided) => ({
+								...provided,
+								backgroundColor: "#f4f4f4",
+								border: "1px solid #e1e1e1",
+								borderRadius: "4px",
+								padding: "0px 8px",
+								margin: "2px 4px",
+								height: "30px"
+							}),
+							multiValueLabel: (provided) => ({
+								...provided,
+								fontSize: "14px",
+								padding: "0 4px",
+								color: "#383838"
 							})
 						}}
 					/>
