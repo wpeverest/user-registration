@@ -41,15 +41,6 @@ do_action_deprecated( 'user_registration_before_edit_profile_form', array(), '3.
  */
 do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id );
 
-$layout = get_option( 'user_registration_my_account_layout', 'horizontal' );
-
-if ( 'vertical' === $layout ) {
-	?>
-	<div class="user-registration-MyAccount-content__header">
-		<h1><?php echo wp_kses_post( $endpoint_label ); ?></h1>
-	</div>
-	<?php
-}
 ?>
 <div class="user-registration-MyAccount-content__body">
 	<div class="ur-frontend-form login ur-edit-profile" id="ur-frontend-form">

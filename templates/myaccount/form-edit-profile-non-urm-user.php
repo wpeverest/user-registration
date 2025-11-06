@@ -24,15 +24,6 @@ $user           = wp_get_current_user();
 $user_id        = get_current_user_id();
 $endpoint_label = isset( $args['endpoint_label'] ) ? $args['endpoint_label'] : '';
 
-$layout = get_option('user_registration_my_account_layout', 'horizontal');
-
-if ('vertical' === $layout) {
-	?>
-	<div class="user-registration-MyAccount-content__header">
-		<h1><?php echo wp_kses_post($endpoint_label); ?></h1>
-	</div>
-	<?php
-}
 ?>
 <div class="user-registration-MyAccount-content__body">
 	<div class="ur-frontend-form login ur-edit-profile" id="ur-frontend-form">
