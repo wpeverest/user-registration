@@ -6431,6 +6431,29 @@ if ( ! function_exists( 'ur_check_is_inactive' ) ) {
 
 	}
 }
+
+add_action( 'init', 'ur_backwards_compatibility_urm_enable_no_conflict' );
+
+if ( ! function_exists( 'ur_backwards_compatibility_urm_enable_no_conflict' ) ) {
+	/**
+	 * Backwards compatibility: Set urm_enable_no_conflict option if not set or set to false.
+	 */
+	function ur_backwards_compatibility_urm_enable_no_conflict() {
+		$migration_completed = get_option( 'urm_enable_no_conflict_migration_completed', false );
+
+		if ( $migration_completed ) {
+			return;
+		}
+
+		$option_value = get_option( 'urm_enable_no_conflict', null );
+		if ( null === $option_value  ) {
+			update_option( 'urm_enable_no_conflict', false );
+		}
+
+		update_option( 'urm_enable_no_conflict_migration_completed', true );
+	}
+}
+
 if ( ! function_exists( 'ur_check_is_auto_enable_user' ) ) {
 
 	/**
