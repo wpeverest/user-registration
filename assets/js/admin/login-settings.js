@@ -202,11 +202,7 @@
 		}
 	}
 
-	/**
-	 * Find the first error element and scroll to it smoothly.
-	 * Automatically switches to the correct tab and section if needed.
-	 * @returns {jQuery} The first error element found, or null if none exists.
-	 */
+
 	function focus_on_first_error() {
 		var error_selector = ".user-registration-login-form-global-settings .error.inline, form#ur-field-settings .user-registration-login-form-global-settings .error.inline";
 		var $first_error = $(error_selector).first();
@@ -265,8 +261,6 @@
 
 	/**
 	 * Map server-side error messages to field IDs.
-	 * @param {string} error_message The error message from server.
-	 * @returns {string|null} The field ID associated with the error, or null if not found.
 	 */
 	function get_field_id_from_error_message(error_message) {
 		if (!error_message) {
