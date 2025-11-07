@@ -937,6 +937,7 @@
 					type = membership.type || "",
 					period = membership.period || "",
 					calculated_amount = membership.calculated_amount || "",
+					amount = membership.amount || "",
 					active_pg = membership.active_payment_gateways || "{}";
 
 				options_html +=
