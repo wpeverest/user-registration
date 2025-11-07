@@ -14731,3 +14731,30 @@ body.user-registration-page #profile-page #your-profile #application-passwords-s
   color: #475bb2;
   margin-right: 8px;
 }
+
+.reset-captcha-keys {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s;
+  margin-bottom: 20px;
+}
+.reset-captcha-keys:hover {
+  color: #ef4444;
+}
+.reset-captcha-keys:focus {
+  box-shadow: none;
+  color: #6b7280;
+}
+.reset-captcha-keys:focus:hover {
+  color: #ef4444;
+}
+.reset-captcha-keys svg {
+  width: 16px;
+  height: 16px;
+}

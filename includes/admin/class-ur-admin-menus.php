@@ -835,8 +835,21 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					true
 				);
 				wp_enqueue_style( 'user-registration-css', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR_VERSION );
-				$login_settings = array_merge( get_login_form_settings()['sections']['login_options_settings']['settings'], get_login_field_settings()['sections']['login_options_settings']['settings'], get_login_form_settings()['sections']['login_options_settings_advanced']['settings'] );
-
+				$login_settings      = array_merge( get_login_form_settings()['sections']['login_options_settings']['settings'], get_login_field_settings()['sections']['login_options_settings']['settings'], get_login_form_settings()['sections']['login_options_settings_advanced']['settings'] );
+				$ur_enabled_captchas = array();
+				$ur_captchas         = ur_get_captcha_integrations();
+				foreach ( $ur_captchas as $key => $value ) {
+					if ( get_option( 'user_registration_captcha_setting_recaptcha_enable_' . $key, false ) ) {
+						$ur_enabled_captchas[ $key ] = $value;
+					}
+				}
+				$no_captcha_set        = ( count( $ur_enabled_captchas ) < 1 );
+				$captcha_not_set_error = sprintf(
+				/* translators: %s - Integration tab url */
+					'%s <a href="%s" class="ur-captcha-error" rel="noreferrer noopener" target="_blank">here</a> to add them and save your form.',
+					esc_html__( 'Seems like you are trying to enable the captcha feature, but the captcha keys are empty. Please click', 'user-registration' ),
+					esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=captcha' ) )
+				);
 				$ur_login_form_params = array(
 					'ajax_url'                    => admin_url( 'admin-ajax.php' ),
 					'ur_login_settings_save'      => wp_create_nonce( 'ur_login_settings_save_nonce' ),
@@ -846,12 +859,14 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						'i18n_settings_successfully_saved' => _x( 'Settings successfully saved.', 'user registration admin', 'user-registration' ),
 						'i18n_success'                     => _x( 'Success', 'user registration admin', 'user-registration' ),
 						'i18n_error'                       => _x( 'Error', 'user registration admin', 'user-registration' ),
+						'i18n_captcha_not_set_error'       => $captcha_not_set_error,
 						'i18n_please_fix_validation_errors' => _x( 'Please fix the errors before saving.', 'user registration admin', 'user-registration' ),
 						'i18n_error_occurred_while_saving' => _x( 'An error occurred while saving.', 'user registration admin', 'user-registration' ),
 					),
 					'user_registration_lost_password_selection_validator_nonce' => wp_create_nonce( 'user_registration_lost_password_selection_validator' ),
 					'user_registration_membership_redirect_default_page_message' => esc_html__( 'Please select a page for redirection', 'user-registration' ),
 					'email_confirmation_disabled' => ur_string_to_bool( get_option( 'user_registration_enable_email_confirmation', true ) ) ? 'no' : 'yes',
+					'no_captcha_set'              => $no_captcha_set,
 				);
 				wp_localize_script(
 					'user-registration-login-settings',

@@ -1121,13 +1121,11 @@ function ur_admin_form_settings_fields( $form_id ) {
 	$ur_enabled_captchas = array(
 		'' => __( 'Select Enabled Captcha', 'user-registration' ),
 	);
-
 	foreach ( $ur_captchas as $key => $value ) {
 		if ( get_option( 'user_registration_captcha_setting_recaptcha_enable_' . $key, false ) ) {
 			$ur_enabled_captchas[ $key ] = $value;
 		}
 	}
-
 	$arguments = array(
 		'form_id'      => $form_id,
 		'setting_data' => array(
@@ -6446,6 +6444,29 @@ if ( ! function_exists( 'ur_check_is_inactive' ) ) {
 
 	}
 }
+
+add_action( 'init', 'ur_backwards_compatibility_urm_enable_no_conflict' );
+
+if ( ! function_exists( 'ur_backwards_compatibility_urm_enable_no_conflict' ) ) {
+	/**
+	 * Backwards compatibility: Set urm_enable_no_conflict option if not set or set to false.
+	 */
+	function ur_backwards_compatibility_urm_enable_no_conflict() {
+		$migration_completed = get_option( 'urm_enable_no_conflict_migration_completed', false );
+
+		if ( $migration_completed ) {
+			return;
+		}
+
+		$option_value = get_option( 'urm_enable_no_conflict', null );
+		if ( null === $option_value  ) {
+			update_option( 'urm_enable_no_conflict', false );
+		}
+
+		update_option( 'urm_enable_no_conflict_migration_completed', true );
+	}
+}
+
 if ( ! function_exists( 'ur_check_is_auto_enable_user' ) ) {
 
 	/**
