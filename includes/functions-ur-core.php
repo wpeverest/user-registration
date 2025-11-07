@@ -7805,7 +7805,7 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'type'     => 'text',
 								'desc_tip' => true,
 								'css'      => '',
-								'default'  => get_permalink(get_option( 'user_registration_default_form_page_id' )),
+								'default'  => get_permalink(get_option( 'user_registration_registration_page_id' )),
 								'field-key'=> 'registration-setting'
 							),
 							array(
