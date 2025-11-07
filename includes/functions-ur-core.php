@@ -3606,10 +3606,10 @@ if ( ! function_exists( 'ur_find_reset_password_in_page' ) ) {
 
 		$matched = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(*) FROM {$post_table} 
-				WHERE ID = %d 
+				"SELECT COUNT(*) FROM {$post_table}
+				WHERE ID = %d
 				AND (
-					post_content LIKE '%[user_registration_reset_password_form%' 
+					post_content LIKE '%[user_registration_reset_password_form%'
 					OR post_content LIKE '%<!-- wp:user-registration/reset_password_form%'
 				)",
 				$reset_password_page_id
@@ -3619,10 +3619,10 @@ if ( ! function_exists( 'ur_find_reset_password_in_page' ) ) {
 		if ( $matched <= 0 ) {
 			$matched = $wpdb->get_var(
 				$wpdb->prepare(
-					"SELECT COUNT(*) FROM {$post_meta_table} 
-					WHERE post_id = %d 
+					"SELECT COUNT(*) FROM {$post_meta_table}
+					WHERE post_id = %d
 					AND (
-						meta_value LIKE '%[user_registration_reset_password_form%' 
+						meta_value LIKE '%[user_registration_reset_password_form%'
 						OR meta_value LIKE '%<!-- wp:user-registration/reset_password_form%'
 					)",
 					$reset_password_page_id
@@ -4241,7 +4241,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				'pending_approval' => get_option( 'user_registration_message_pending_approval', null ),
 				'denied_access'    => get_option( 'user_registration_message_denied_account', null ),
 				'user_disabled'    => esc_html__( 'Sorry! You are disabled.Please Contact Your Administrator.', 'user-registration' ),
-				'incorrect_password' => get_option( 'user_registration_message_incorrect_password', esc_html__( 'The password you entered for the email address %email% is incorrect.', 'user-registration' ) ),
+				'incorrect_password' => get_option( 'user_registration_message_incorrect_password', esc_html__( 'The password you entered for the %label% %email% is incorrect.', 'user-registration' ) ),
 			);
 
 			$post = $_POST; // phpcs:ignore.
@@ -4451,7 +4451,17 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 					$user->errors['denied_access'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['denied_access'] );
 				}
 				if ( ! empty( $user->errors['incorrect_password'] ) && ! empty( $messages['incorrect_password'] ) ) {
-					$user->errors['incorrect_password'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), str_replace( "%email%", $login_data['user_login'], $messages['incorrect_password'] ) );
+					// Replace the label placeholder with username or email address based on the entered value.
+					if ( is_email( $login_data['user_login'] ) ) {
+						$label = esc_html__( 'email address', 'user-registration' );
+					} else {
+						$label = esc_html__( 'username', 'user-registration' );
+					}
+
+					$messages['incorrect_password'] = str_replace( '%label%', $label, $messages['incorrect_password'] );
+					$messages['incorrect_password'] = str_replace( "%email%", $login_data['user_login'], $messages['incorrect_password'] );
+
+					$user->errors['incorrect_password'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['incorrect_password'] );
 				}
 
 				$message = $user->get_error_message();
@@ -7942,7 +7952,7 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'type'        => 'text',
 								'desc_tip'    => true,
 								'css'         => '',
-								'default'     => esc_html__( 'The password you entered for the email address %email% is incorrect.', 'user-registration' ),
+								'default'     => esc_html__( 'The password you entered for the %label% %email% is incorrect.', 'user-registration' ),
 								'placeholder' => 'Default message from WordPress',
 								'field-key'   => 'password'
 							),
