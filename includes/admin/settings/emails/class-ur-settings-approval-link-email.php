@@ -141,14 +141,14 @@ if ( ! class_exists( 'UR_Settings_Approval_Link_Email', false ) ) :
 		public function ur_get_approval_link_email() {
 			$approval_msg = sprintf(
 				__(
-					'Hi Admin, <br/>
+					'Hi Admin, <br/><br/>
 
-					A new user {{username}} - {{email}} has successfully registered to your site <a href="{{home_url}}">{{blog_info}}</a>. <br/>
+					A new user {{username}} - {{email}} has successfully registered to your site {{blog_info}}. <br/><br/>
 
-					Please review their details and assigned role in the \'<b>Users</b>\' menu of your WordPress dashboard.  <br/>
+					Please review their details and assigned role in the \'<b>Users</b>\' menu of your WordPress dashboard.  <br/><br/>
 
-					[Approve User: {{approval_link}}] - Link <br>
-					[Deny User: {{denial_link}}] - Link <br>
+					[Approve User: {{approval_link}}] - Link <br/>
+					[Deny User: {{denial_link}}] - Link <br/><br/>
 
 					Thank You!',
 					'user-registration'

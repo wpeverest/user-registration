@@ -125,9 +125,11 @@ if ( ! class_exists( 'UR_Settings_Payment_Success_Email', false ) ) :
 				'user_registration_payment_email_message',
 				sprintf(
 					__(
-						'Hi {{username}}, <br>
-						Congratulations! Your payment for registration on <a href="{{home_url}}">{{blog_info}}</a> has been successfully completed. <br>
-						You can view your payment invoice here: {{payment_invoice}}<br>
+						'Hi {{username}}, <br/><br/>
+						Congratulations! Your payment for registration on {{blog_info}} has been successfully completed. <br/><br/>
+						
+						You can view your payment invoice here:<br/><br/>
+						{{payment_invoice}}<br/><br/>
 						Thank You!',
 						'user-registration'
 					)

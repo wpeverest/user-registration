@@ -139,11 +139,11 @@ if ( ! class_exists( 'UR_Settings_Awaiting_Admin_Approval_Email', false ) ) :
 				'user_registration_get_awaiting_admin_approval_email',
 				sprintf(
 					__(
-						'Hi {{username}}, <br/>
+						'Hi {{username}}, <br/><br/>
 
-						Thank you for registering on <a href="{{home_url}}">{{blog_info}}</a>!. <br/>
+						Thank you for registering on <a href="{{home_url}}">{{blog_info}}</a>!. <br/><br/>
 
-						Your registration is currently awaiting approval from the site admin. You will receive a notification once your account has been approved. <br/>
+						Your registration is currently awaiting approval from the site admin. You will receive a notification once your account has been approved. <br/><br/>
 
 						Thank You!',
 						'user-registration'
