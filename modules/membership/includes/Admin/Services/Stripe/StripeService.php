@@ -118,6 +118,7 @@ class StripeService {
 		$amount     = $payment_data['amount'];
 		$user_email = $response_data['email'];
 		$member_id  = $response_data['member_id'];
+		$username   = ! empty( $response_data['username'] ) ? $response_data['username'] : '';
 		$response   = array(
 			'type' => $payment_data['type'],
 		);
@@ -160,6 +161,7 @@ class StripeService {
 			$customer                  = \Stripe\Customer::create(
 				array(
 					'email' => $user_email,
+					'name'  => $username,
 				)
 			);
 			$response['stripe_cus_id'] = $customer->id;
