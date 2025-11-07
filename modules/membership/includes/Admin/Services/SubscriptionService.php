@@ -116,17 +116,14 @@ class SubscriptionService {
 	 * @return array|bool[]|void
 	 */
 	public function cancel_subscription( $order, $subscription ) {
-		$logger = ur_get_logger();
 		switch ( $order['payment_method'] ) {
 			case 'paypal':
 				$paypal_service = new PaypalService();
-				$logger->notice( 'Paypal cancellation Reached', array( 'source' => 'urm-cancellation-log' ) );
 
 				return $paypal_service->cancel_subscription( $order, $subscription );
 
 			case 'stripe':
 				$stripe_service = new StripeService();
-				$logger->notice( 'Stripe cancellation Reached', array( 'source' => 'urm-cancellation-log' ) );
 
 				return $stripe_service->cancel_subscription( $order, $subscription );
 
@@ -137,7 +134,6 @@ class SubscriptionService {
 			case 'bank':
 				return array( 'status' => true );
 			default:
-				$logger->notice( 'Default cancellation Reached', array( 'source' => 'urm-cancellation-log' ) );
 
 				return apply_filters( 'user_registration_membership_cancel_subscription', array( 'status' => false ), $order, $subscription );
 		}
@@ -283,9 +279,6 @@ class SubscriptionService {
 	 * @return array The response from the payment gateway.
 	 */
 	public function upgrade_membership( $data ) {
-
-		ur_get_logger()->notice( __( 'Subscription upgrade initiated', 'user-registration' ), array( 'source' => 'urm-upgrade-subscription' ) );
-
 		$order_service = new OrderService();
 
 		$current_subscription_id                   = $data['current_subscription_id'];
@@ -305,15 +298,10 @@ class SubscriptionService {
 		$upgrade_details = $this->calculate_membership_upgrade_cost( $current_membership_details, $selected_membership_details, $subscription );
 
 		if ( isset( $upgrade_details['status'] ) && ! $upgrade_details['status'] ) {
-			ur_get_logger()->notice( __( 'Calculation Failed', 'user-registration-membership' ), array( 'source' => 'urm-upgrade-subscription' ) );
-
 			return array(
 				'response' => $upgrade_details
 			);
 		}
-
-		ur_get_logger()->notice( __( 'Calculation finished', 'user-registration-membership' ), array( 'source' => 'urm-upgrade-subscription' ) );
-		ur_get_logger()->notice( print_r( $upgrade_details, true ), array( 'source' => 'urm-upgrade-subscription' ) );
 
 
 		$members_data = array(
@@ -332,16 +320,9 @@ class SubscriptionService {
 
 		if ( isset( $data['upgrade'] ) && $data["upgrade"] && "subscription" === $current_membership_details['type'] && "bank" !== $payment_method && "off" === $selected_membership_details['trial_status'] && ! isset( $upgrade_details['delayed_until'] ) ) {
 
-			ur_get_logger()->notice( __( 'Cancelling previous subscription.', 'user-registration-membership' ), array( 'source' => 'urm-upgrade-subscription' ) );
-
 			$cancel_subscription = $this->subscription_repository->cancel_subscription_by_id( $current_subscription_id, false );
 
-			ur_get_logger()->notice( print_r( $cancel_subscription, true ), array( 'source' => 'urm-upgrade-subscription' ) );
-
 			if ( ! $cancel_subscription['status'] ) {
-
-				ur_get_logger()->notice( __( 'Cancelling subscription failed', 'user-registration-membership' ), array( 'source' => 'urm-upgrade-subscription' ) );
-
 				$response["status"] = false;
 
 				return $response;
@@ -357,9 +338,6 @@ class SubscriptionService {
 		$orders_data = $order_service->prepare_orders_data( $members_data, $user->ID, $subscription, $upgrade_details ); // prepare data for orders table.
 
 		$order = $this->orders_repository->create( $orders_data );
-
-
-		ur_get_logger()->notice( __( 'Order created ' . $order['ID'], 'user-registration-membership' ), array( 'source' => 'urm-upgrade-subscription' ) );
 
 		$payment_service       = new PaymentService( $payment_method, $data['selected_membership_id'], $user->data->user_email );
 		$ur_authorize_net_data = isset( $data['ur_authorize_net'] ) ? $data['ur_authorize_net'] : [];
@@ -626,7 +604,6 @@ class SubscriptionService {
 
 		$orders_data = $order_service->prepare_orders_data( $members_data, $member_id, $member_subscription, [], true ); // prepare data for orders table.
 		$order = $this->orders_repository->create( $orders_data );
-		ur_get_logger()->notice( __( 'Order created for ' . $username . ' Order ID: ' . $order['ID'], 'user-registration-membership' ), array( 'source' => 'urm-renew-subscription' ) );
 		$payment_service = new PaymentService( $selected_pg, $membership['ID'], $user->data->user_email );
 		$data            = array(
 			'membership'        => $membership_id,
