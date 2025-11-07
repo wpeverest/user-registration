@@ -20,6 +20,7 @@
 	width: 100%;
 	@include flexbox();
 	justify-content: center;
+
 	&::after {
 		content: " ";
 		display: block;
@@ -32,10 +33,12 @@
 		animation: lds-dual-ring 1.2s linear infinite;
 	}
 }
+
 @keyframes lds-dual-ring {
 	0% {
 		transform: rotate(0deg);
 	}
+
 	100% {
 		transform: rotate(360deg);
 	}
@@ -62,6 +65,7 @@
 		max-width: 100% !important;
 	}
 }
+
 /**
 * Utility classes
 */
@@ -85,6 +89,7 @@
 .timepicker-start {
 	margin-right: 1rem;
 }
+
 /**
 * Main User Registration styles
 */
@@ -142,7 +147,7 @@
 	border-top-color: #1e85be;
 }
 
-.user-registration-error{
+.user-registration-error {
 	border-top-color: $red;
 	background: rgba($red, 0.1);
 	color: darken($red, 15%);
@@ -151,6 +156,7 @@
 		content: "\f534";
 	}
 }
+
 .user-registration-coupon-error {
 	border-top-color: $red;
 	background: rgba($red, 0.1);
@@ -189,6 +195,7 @@ input.ur-input-border-green:not([type="range"]),
 textarea.ur-input-border-green {
 	border-color: #1ea71b !important;
 }
+
 input.ur-input-border-red,
 textarea.ur-input-border-red {
 	border-color: $red !important;
@@ -227,6 +234,7 @@ textarea.ur-input-border-red {
 				margin: auto;
 				margin-top: 20px;
 			}
+
 			.ur-lost-password-message {
 				font-size: 14px;
 				letter-spacing: 0.15px;
@@ -234,6 +242,7 @@ textarea.ur-input-border-red {
 				margin-bottom: 0;
 			}
 		}
+
 		.ur-input-with-icon {
 			position: relative;
 			display: flex;
@@ -244,17 +253,21 @@ textarea.ur-input-border-red {
 				left: 10px;
 				top: 50%;
 			}
+
 			input {
 				padding-left: 40px;
 			}
 		}
+
 		.required {
 			margin-left: 5px;
 		}
+
 		#user_login {
 			border-radius: 4px;
 			border: 1px solid #e9e9e9;
 		}
+
 		.ur-reset-password-btn {
 			border: 1px solid #475bb2;
 			background: #475bb2;
@@ -408,6 +421,7 @@ textarea.ur-input-border-red {
 							}
 
 							input {
+
 								&[type="checkbox"],
 								&[type="radio"] {
 									margin-top: 0px;
@@ -510,6 +524,7 @@ textarea.ur-input-border-red {
 				&.StripeElement--invalid {
 					border: 1px solid #ff4f55;
 				}
+
 				.__PrivateStripeElement {
 					iframe {
 						position: absolute;
@@ -551,8 +566,7 @@ textarea.ur-input-border-red {
 
 			select {
 				-webkit-appearance: none;
-				background: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E")
-				no-repeat right 5px top 55%;
+				background: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E") no-repeat right 5px top 55%;
 			}
 
 			legend,
@@ -611,6 +625,7 @@ textarea.ur-input-border-red {
 					}
 				}
 			}
+			
 		}
 	}
 
@@ -663,6 +678,7 @@ textarea.ur-input-border-red {
 		form {
 			.ur-form-row {
 				.ur-form-grid {
+
 					input[type="text"],
 					input[type="email"],
 					input[type="url"],
@@ -713,6 +729,7 @@ textarea.ur-input-border-red {
 		form {
 			.ur-form-row {
 				.ur-form-grid {
+
 					input[type="text"],
 					input[type="email"],
 					input[type="url"],
@@ -762,6 +779,7 @@ textarea.ur-input-border-red {
 		form {
 			.ur-form-row {
 				.ur-form-grid {
+
 					.ur-field-item,
 					.form-row {
 						margin-bottom: 0;
@@ -814,6 +832,7 @@ textarea.ur-input-border-red {
 		form {
 			.ur-form-row {
 				.ur-form-grid {
+
 					input[type="text"],
 					input[type="email"],
 					input[type="url"],
@@ -877,6 +896,7 @@ textarea.ur-input-border-red {
 			form {
 				.ur-form-row {
 					.ur-form-grid {
+
 						input[type="text"],
 						input[type="email"],
 						input[type="url"],
@@ -913,6 +933,7 @@ textarea.ur-input-border-red {
 
 	#ur-submit-message-node {
 		margin: 20px 0 0 0;
+
 		//Revamp design for message and error
 		&.user-registration-error {
 			position: unset;
@@ -1030,6 +1051,7 @@ textarea.ur-input-border-red {
 			}
 
 			header {
+
 				p,
 				.button-group {
 					margin-bottom: 10px;
@@ -1127,6 +1149,7 @@ textarea.ur-input-border-red {
 }
 
 .edit-post-visual-editor {
+
 	.ur-gutenberg-form-selector-wrap,
 	.user-registration-gutenberg-form-selector-wrap {
 		h2 {
@@ -1184,9 +1207,11 @@ textarea.ur-input-border-red {
 	.flatpickr-input {
 		padding-left: 32px !important;
 	}
+
 	.without_icon {
 		padding-left: 10px !important;
 	}
+
 	span.input-wrapper {
 		position: relative;
 
@@ -1199,16 +1224,19 @@ textarea.ur-input-border-red {
 		}
 	}
 }
+
 /* For shortcode embed */
 
 @keyframes user-registration-heartbeat {
 	0% {
 		box-shadow: 0 0 0 0 rgba(71, 91, 178, 0.6);
 	}
+
 	100% {
 		box-shadow: 0 0 0 10px rgba(223, 119, 57, 0);
 	}
 }
+
 span.ur-shortcode-form-embed-dot {
 	display: inline-block;
 	width: 12px;
@@ -1220,6 +1248,7 @@ span.ur-shortcode-form-embed-dot {
 	animation: user-registration-heartbeat 1.5s infinite !important;
 	margin: 3px 10px;
 }
+
 .wp-editor-tools span.ur-shortcode-form-embed-dot {
 	margin-top: 9px;
 }
@@ -1236,9 +1265,11 @@ span.ur-shortcode-form-embed-dot {
 	.tooltipster-box {
 		margin-bottom: 18px;
 	}
+
 	.tooltipster-arrow {
 		bottom: 8px;
 	}
+
 	.tooltipster-arrow-background {
 		top: 0;
 	}
@@ -1248,6 +1279,7 @@ span.ur-shortcode-form-embed-dot {
 	.tooltipster-box {
 		margin-left: 18px;
 	}
+
 	.tooltipster-arrow {
 		left: 8px;
 	}
@@ -1263,13 +1295,16 @@ span.ur-shortcode-form-embed-dot {
 		-webkit-box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.25);
 		-moz-box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.25);
 	}
+
 	.tooltipster-box .tooltipster-content {
 		color: #444444;
 		padding: 16px 20px 18px;
 		text-align: center;
+
 		div *:first-child {
 			margin-top: 0 !important;
 		}
+
 		h3 {
 			font-size: 16px;
 			letter-spacing: 0px;
@@ -1277,6 +1312,7 @@ span.ur-shortcode-form-embed-dot {
 			margin: 0;
 			color: #23282c;
 		}
+
 		p {
 			font-size: 14px;
 			letter-spacing: 0px;
@@ -1284,9 +1320,11 @@ span.ur-shortcode-form-embed-dot {
 			margin: 10px 0 0;
 			color: #444444;
 		}
+
 		a {
 			color: #1d7bac;
 		}
+
 		.ur-shortcod-form-embed-theme-done-btn {
 			border-radius: 3px;
 			cursor: pointer;
@@ -1308,25 +1346,30 @@ span.ur-shortcode-form-embed-dot {
 			&:disabled {
 				cursor: default;
 				opacity: 0.5;
+
 				&:hover {
 					background-color: #475bb2;
 				}
 			}
 		}
 	}
+
 	.tooltipster-arrow-border {
 		border: none;
 	}
+
 	.tooltipster-top {
 		.tooltipster-arrow-background {
 			border-top-color: white;
 		}
 	}
+
 	.tooltipster-right {
 		.tooltipster-arrow-background {
 			border-right-color: white;
 		}
 	}
+
 	.tooltipster-bottom {
 		.tooltipster-arrow-background {
 			border-bottom-color: white;
@@ -1336,23 +1379,27 @@ span.ur-shortcode-form-embed-dot {
 
 .block-editor-page {
 	.edit-post-layout {
-		.components-notice-list > div {
+		.components-notice-list>div {
 			padding-left: 50px;
 		}
 	}
+
 	.ur-shortcode-form-embed-dot {
 		position: absolute;
 		top: 75px;
 		left: 20px;
 		z-index: 9999;
 	}
+
 	.ur-shortcode-form-embed-theme {
 		width: 260px !important;
 		z-index: 99980 !important;
 		margin-top: 5px;
+
 		.tooltipster-box {
 			margin-top: 10px;
 		}
+
 		.ur-shortcode-form-embed-theme-tooltips-red-arrow {
 			position: absolute;
 			display: block;
@@ -1369,13 +1416,15 @@ span.ur-shortcode-form-embed-dot {
 
 .block-editor-page.is-fullscreen-mode {
 	.edit-post-layout {
-		.components-notice-list > div {
+		.components-notice-list>div {
 			padding-left: 125px;
 		}
 	}
+
 	.ur-shortcode-form-embed-dot {
 		left: 75px;
 	}
+
 	.ur-shortcode-form-embed-theme {
 		.ur-shortcode-form-embed-theme-tooltips-red-arrow {
 			left: 105px;
@@ -1390,10 +1439,12 @@ span.ur-shortcode-form-embed-dot {
 
 	.user-registration-content-restriction-block-note {
 		display: flex;
+
 		.dashicons-lock {
 			font-size: 25px;
 			margin: 1px 5px 0px 0px;
 		}
+
 		.user-registration-content-restriction-block-note-text {
 			margin: 0px;
 		}
@@ -1420,6 +1471,7 @@ span.ur-shortcode-form-embed-dot {
 		}
 	}
 }
+
 //Individual oxygen widgets styles.
 .oxygen-add-section-accordion-contents[ng-if*="user-registration"] {
 	.oxygen-add-section-element {
@@ -1480,6 +1532,7 @@ span.ur-shortcode-form-embed-dot {
 		color: #475bb2;
 	}
 }
+
 // Spinner moved inside login and register button.
 .user-registration-Button,
 .ur-submit-button {
@@ -1507,6 +1560,7 @@ span.ur-shortcode-form-embed-dot {
 		float: right;
 	}
 }
+
 // Login - Registration  shortcode design.
 .ur-login-registration-nav {
 	width: 100%;
@@ -1533,6 +1587,7 @@ span.ur-shortcode-form-embed-dot {
 				0px 4px 16px 0px rgba(17, 17, 26, 0.05),
 				0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 			clip-path: inset(0px -1px -1px -1px);
+
 			&:first-child {
 				border-radius: 8px 0px 0 0;
 				border-top: 1px solid #f1f1f1;
@@ -1558,11 +1613,13 @@ span.ur-shortcode-form-embed-dot {
 		display: none;
 	}
 }
+
 // Revamp error design for registration and login form
 .ur-field-item {
 	input {
 		border-radius: 4px !important;
 	}
+
 	.user-registration-error {
 		width: 100%;
 		position: unset;
@@ -1604,8 +1661,10 @@ span.ur-shortcode-form-embed-dot {
 		}
 	}
 }
+
 .ur-icon-user {
 	margin-right: 0.875rem;
+
 	&::before {
 		content: "\f465";
 		display: inline-block;
@@ -1613,6 +1672,7 @@ span.ur-shortcode-form-embed-dot {
 		font-family: "Dashicons";
 	}
 }
+
 .ur-registration-icon {
 	position: relative;
 	top: 50%;
@@ -1634,7 +1694,10 @@ span.ur-shortcode-form-embed-dot {
 
 // Login Form Design ReVamped CSS
 body {
-	&[class*="user-registration-"],&[class^="ur-"] {
+
+	&[class*="user-registration-"],
+	&[class^="ur-"] {
+
 		/* Minimal WordPress Editor Styles */
 		.wp-editor-container {
 			border-radius: 8px !important;
@@ -1644,8 +1707,8 @@ body {
 		.wp-editor-wrap {
 			.wp-editor-tabs {
 				.wp-switch-editor:hover {
-					background: #e8e8e8!important;
-					color: black!important;
+					background: #e8e8e8 !important;
+					color: black !important;
 				}
 			}
 
@@ -1654,9 +1717,11 @@ body {
 				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
 				margin-bottom: 0 !important;
 				padding: 6px 8px !important;
-				&-grp > div {
+
+				&-grp>div {
 					padding: 0;
 				}
+
 				.mce-btn {
 					background: transparent !important;
 					border: none !important;
@@ -1679,7 +1744,7 @@ body {
 						padding: 4px 6px !important;
 						font-weight: normal !important;
 						box-shadow: none !important;
-						background: transparent!important;
+						background: transparent !important;
 					}
 
 					&:hover button {
@@ -1807,6 +1872,7 @@ body {
 			}
 		}
 	}
+
 	&.user-registration-page {
 		.ur-frontend-form {
 			.ur-form-row {
@@ -1920,7 +1986,7 @@ body {
 				display: block;
 			}
 
-			> ul {
+			>ul {
 				padding-left: 0;
 				margin: 0;
 				list-style: none;
@@ -1929,7 +1995,7 @@ body {
 	}
 
 	.user-registration-error {
-		> svg {
+		>svg {
 			display: none;
 		}
 	}
@@ -1938,6 +2004,7 @@ body {
 	&.user-registration-membership_page_user-registration-login-forms {
 		.user-registration {
 			&.ur-frontend-form {
+
 				&:has(.ur-grid-2),
 				&:has(.ur-grid-3) {
 					max-width: 1200px;
@@ -1956,9 +2023,11 @@ body {
 						form {
 							.ur-form-row {
 								.ur-form-grid {
+
 									input,
 									textarea,
 									select {
+
 										&:not([type="radio"]),
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
@@ -1992,6 +2061,7 @@ body {
 									input,
 									textarea,
 									select {
+
 										&:not([type="radio"]),
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
@@ -2018,9 +2088,11 @@ body {
 						form {
 							.ur-form-row {
 								.ur-form-grid {
+
 									input,
 									textarea,
 									select {
+
 										&:not([type="radio"]),
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
@@ -2042,9 +2114,11 @@ body {
 						form {
 							.ur-form-row {
 								.ur-form-grid {
+
 									input,
 									textarea,
 									select {
+
 										&:not([type="radio"]),
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
@@ -2085,9 +2159,11 @@ body {
 					.user-registration-form-login {
 						.ur-form-row {
 							.ur-form-grid {
+
 								input,
 								textarea,
 								select {
+
 									&:not([type="radio"]),
 									&:not([type="checkbox"]),
 									&:not([type="file"]) {
@@ -2126,7 +2202,7 @@ body {
 
 							&::before {
 								font-weight: 500;
-								color: rgb(255,2.5,11.1079545455);
+								color: rgb(255, 2.5, 11.1079545455);
 							}
 
 							strong {
@@ -2415,7 +2491,7 @@ body {
 									}
 								}
 
-								> div {
+								>div {
 									display: block;
 									float: unset !important;
 									flex-direction: row-reverse;
@@ -2442,9 +2518,11 @@ body {
 										font-size: 15px;
 										line-height: 25px;
 										background: $primary_color;
+
 										&.ur-disabled-btn {
 											cursor: not-allowed;
 										}
+
 										&:disabled {
 											pointer-events: none;
 											border-color: #f6f7f7 !important;
@@ -2457,9 +2535,7 @@ body {
 										}
 									}
 
-									&:has(
-											.user-registration-passwordless-login
-										) {
+									&:has(.user-registration-passwordless-login) {
 										display: flex;
 										flex-direction: column-reverse;
 										gap: 16px !important;
@@ -2620,6 +2696,7 @@ body {
 										}
 
 										&.ursc_theme {
+
 											&_2,
 											&_3 {
 												.ursc-login-media {
@@ -2707,6 +2784,7 @@ body {
 					margin: 0 -10px;
 
 					.ur-field-item {
+
 						ul,
 						ol {
 							padding-left: 4px;
@@ -2714,6 +2792,7 @@ body {
 
 						.input-wrapper {
 							input {
+
 								&:not([type="checkbox"]),
 								&:not([type="radio"]) {
 									min-height: 50px;
@@ -2887,6 +2966,7 @@ body {
 									}
 								}
 							}
+
 							#ur-login-form-setting {
 								.ur-login-form-setting-block {
 									display: flex;
@@ -2923,12 +3003,13 @@ body.user-registration-page {
 		}
 	}
 }
+
 .et-db {
 	#et-boc {
 		.et-l {
 			.et-fb-modules-list {
 				ul {
-					> li {
+					>li {
 						position: relative;
 
 						// Registration Form Icon
@@ -3063,7 +3144,7 @@ body.user-registration-page {
 		flex-direction: column;
 	}
 
-	.user-registration-login-form-global-settings{
+	.user-registration-login-form-global-settings {
 
 		.user-registration-login-form-toggle-option {
 			display: flex;
@@ -3102,7 +3183,7 @@ body.user-registration-page {
 }
 
 .user-registration-login-settings-form {
-	.ur-form-row{
+	.ur-form-row {
 		.ur-form-grid {
 			label {
 				margin-top: 0;
@@ -3198,14 +3279,17 @@ body.user-registration-page {
 		opacity: 0;
 		transform: translateX(-50%) translateY(100%);
 	}
+
 	10% {
 		opacity: 1;
 		transform: translateX(-50%) translateY(0);
 	}
+
 	90% {
 		opacity: 1;
 		transform: translateX(-50%) translateY(0);
 	}
+
 	100% {
 		opacity: 0;
 		transform: translateX(-50%) translateY(100%);
@@ -3227,3 +3311,22 @@ body.user-registration-page {
 	animation: toaster 5s ease-in-out forwards;
 }
 
+.ur-frontend-form .user-registration-EditAccountForm.edit-password {
+	.ur-form-row .ur-form-grid {
+		fieldset {
+			border: 0;
+			padding: 0;
+			margin: 0;
+		}
+		p > input.user-registration-Button.button {
+			background: $primary_color;
+			border: $border_width $primary_color;
+			border-radius: $border_radius_4;
+			border-style: inherit;
+			&:hover {
+				background: #38488e;
+				border-color: #38488e;
+			}
+		}
+	}
+}

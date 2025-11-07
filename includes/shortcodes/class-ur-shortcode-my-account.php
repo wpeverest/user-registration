@@ -306,14 +306,24 @@ class UR_Shortcode_My_Account {
 		$form_id                   = ur_get_form_id_by_userid( $user_id );
 		$enable_strong_password    = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' ) );
 		$minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
+		$form_data_array = ($form_id) ? UR()->form->get_form($form_id, array('content_only' => true)) : array();
 
+		do_action( 'user_registration_enqueue_scripts', $form_data_array, $form_id );
 		wp_enqueue_script( 'ur-form-validator' );
-
 		if ( $enable_strong_password ) {
 			wp_dequeue_script( 'wc-password-strength-meter' );
 			wp_enqueue_script( 'ur-password-strength-meter' );
+			wp_localize_script(
+				'ur-password-strength-meter',
+				'ur_frontend_params_with_form_id',
+				array(
+					'custom_password_params' => UR_Frontend_Scripts::get_custom_password_params( $form_id ),
+				)
+			);
 		}
-
+		if ( function_exists('ur_print_notices') ) {
+			ur_print_notices();
+		}
 		ur_get_template(
 			'myaccount/form-edit-password.php',
 			array(

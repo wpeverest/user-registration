@@ -78,7 +78,7 @@ do_action( 'user_registration_before_change_password_form' );
 						<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide hide_show_password">
 							<label for="password_current"><?php esc_html_e( 'Current password', 'user-registration' ); ?></label>
 							<span class="password-input-group">
-							<input type="password" class="user-registration-Input user-registration-Input--password input-text" name="password_current" id="password_current" />
+							<input type="password" class="user-registration-Input user-registration-Input--password input-text" name="password_current" id="password_current" required />
 									<?php
 									if ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) {
 										echo '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="' . esc_attr__( 'Show Password', 'user-registration' ) . '"></a>';
@@ -90,7 +90,7 @@ do_action( 'user_registration_before_change_password_form' );
 						<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide hide_show_password">
 							<label for="password_1"><?php esc_html_e( 'New password', 'user-registration' ); ?></label>
 							<span class="password-input-group">
-							<input type="password" class="user-registration-Input user-registration-Input--password input-text" name="password_1" id="password_1" />
+							<input type="password" class="user-registration-Input user-registration-Input--password input-text" name="password_1" id="password_1" required />
 							<?php
 							if ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) {
 								echo '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="' . esc_attr__( 'Show Password', 'user-registration' ) . '"></a>';
@@ -101,7 +101,7 @@ do_action( 'user_registration_before_change_password_form' );
 						<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide hide_show_password">
 							<label for="password_2"><?php esc_html_e( 'Confirm new password', 'user-registration' ); ?></label>
 							<span class="password-input-group">
-							<input type="password" class="user-registration-Input user-registration-Input--password input-text" name="password_2" id="password_2" />
+							<input type="password" class="user-registration-Input user-registration-Input--password input-text" name="password_2" id="password_2" required />
 							<?php
 							if ( ur_option_checked( 'user_registration_login_option_hide_show_password' ) ) {
 								echo '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="' . esc_attr__( 'Show Password', 'user-registration' ) . '"></a>';
