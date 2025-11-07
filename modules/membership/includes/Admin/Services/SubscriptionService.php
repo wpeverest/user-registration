@@ -761,7 +761,13 @@ class SubscriptionService {
 		$subscriptions = $this->members_subscription_repository->get_subscriptions_to_expire( $check_date );
 
 		if ( empty( $subscriptions ) ) {
-			ur_get_logger()->notice( __( 'No memberships found to expire for date: ' . $check_date, 'user-registration' ), array( 'source' => 'urm-membership-expiration' ) );
+			ur_get_logger()->notice(
+				sprintf(
+					__( 'No memberships found to expire for date: %s', 'user-registration' ),
+					$check_date
+				),
+				array( 'source' => 'urm-membership-expiration' )
+			);
 			return;
 		}
 
