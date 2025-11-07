@@ -23,12 +23,12 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 */
 		public function __construct() {
 
-		// Add menus.
-		add_action( 'admin_menu', array( $this, 'admin_menu' ), 1 );
-		add_action( 'admin_menu', array( $this, 'settings_menu' ), 20 );
-		add_action( 'admin_menu', array( $this, 'add_registration_menu' ), 8 );
-		add_action( 'admin_menu', array( $this, 'status_menu' ), 75 );
-		add_action( 'admin_menu', array( $this, 'dashboard_menu' ), 3 );
+			// Add menus.
+			add_action( 'admin_menu', array( $this, 'admin_menu' ), 1 );
+			add_action( 'admin_menu', array( $this, 'settings_menu' ), 20 );
+			add_action( 'admin_menu', array( $this, 'add_registration_menu' ), 8 );
+			add_action( 'admin_menu', array( $this, 'status_menu' ), 75 );
+			add_action( 'admin_menu', array( $this, 'dashboard_menu' ), 3 );
 
 			if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) && empty( get_option( 'user-registration_license_key', '' ) ) ) {
 				add_action( 'admin_menu', array( $this, 'activate_license_menu' ), 100 );
@@ -54,12 +54,14 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			add_action( 'admin_head-nav-menus.php', array( $this, 'add_nav_menu_meta_boxes' ) );
 
 			// Add all available upgradable fields.
-			add_action( 'ur_after_other_form_fields_printed', array(
-				$this,
-				'add_upgradable_other_fields'
-			) ); // Adds fields in the `Extra Fields` section.
+			add_action(
+				'ur_after_other_form_fields_printed',
+				array(
+					$this,
+					'add_upgradable_other_fields',
+				)
+			); // Adds fields in the `Extra Fields` section.
 			add_action( 'user_registration_extra_fields', array( $this, 'add_upgradable_extra_fields' ) );
-
 		}
 
 		/**
@@ -364,7 +366,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'slug'                => array( 'payments', 'stripe' ),
 					'name'                => array(
 						__( 'User Registration Payments', 'user-registration' ),
-						__( 'User Registration Stripe', 'user-registration' )
+						__( 'User Registration Stripe', 'user-registration' ),
 					),
 					'fields'              => array(
 						array(
@@ -412,7 +414,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					$fields_count = count( $fields );
 
 					// Set the same plan for all the section's fields.
-					for ( $i = 0; $i < $fields_count; $i ++ ) {
+					for ( $i = 0; $i < $fields_count; $i++ ) {
 						$fields[ $i ]['plan'] = $plan;
 						$fields[ $i ]['slug'] = $slug;
 						$fields[ $i ]['name'] = $name;
@@ -490,15 +492,18 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 */
 		public function admin_menu() {
 
-			$registration_page = add_menu_page( 'User Registration',
+			$registration_page = add_menu_page(
+				'User Registration',
 				'User Registration & Membership',
 				'manage_user_registration',
 				'user-registration',
 				array(
 					$this,
-					'registration_page'
+					'registration_page',
 				),
-				$this->get_icon_svg(), '55.8' );
+				$this->get_icon_svg(),
+				'55.8'
+			);
 
 			add_action( 'load-' . $registration_page, array( $this, 'registration_page_init' ) );
 			add_submenu_page(
@@ -514,21 +519,40 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				5
 			);
 
-			if ( isset( $_GET['page'] ) && in_array( $_GET['page'], [
+			if ( isset( $_GET['page'] ) && in_array(
+				$_GET['page'],
+				array(
 					'user-registration',
-					'user-registration-login-forms'
-				] ) ) {
+					'user-registration-login-forms',
+				)
+			) ) {
 				$all_forms = ur_get_all_user_registration_form();
 				$postfix   = count( $all_forms ) > 1 ? 'Forms' : 'Form';
 
-				add_submenu_page( 'user-registration', __( 'Registration Forms', 'user-registration' ), '↳ ' . sprintf( __( 'Registration %s', 'user-registration' ), $postfix ), 'manage_user_registration', 'user-registration', array(
-					$this,
-					'registration_page'
-				), 6 );
-				add_submenu_page( 'user-registration', __( 'Login Form', 'user-registration' ), '↳ ' . __( 'Login Form', 'user-registration' ), 'manage_user_registration', 'user-registration-login-forms', array(
-					$this,
-					'registration_page'
-				), 7 );
+				add_submenu_page(
+					'user-registration',
+					__( 'Registration Forms', 'user-registration' ),
+					'↳ ' . sprintf( __( 'Registration %s', 'user-registration' ), $postfix ),
+					'manage_user_registration',
+					'user-registration',
+					array(
+						$this,
+						'registration_page',
+					),
+					6
+				);
+				add_submenu_page(
+					'user-registration',
+					__( 'Login Form', 'user-registration' ),
+					'↳ ' . __( 'Login Form', 'user-registration' ),
+					'manage_user_registration',
+					'user-registration-login-forms',
+					array(
+						$this,
+						'registration_page',
+					),
+					7
+				);
 			}
 		}
 
@@ -586,11 +610,14 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				)
 			);
 
-			if ( isset( $_GET['page'] ) && in_array( $_GET['page'], [
+			if ( isset( $_GET['page'] ) && in_array(
+				$_GET['page'],
+				array(
 					'user-registration-status',
 					'user-registration-status&tab=logs',
-					'user-registration-status&tab=system_info'
-				] ) ) {
+					'user-registration-status&tab=system_info',
+				)
+			) ) {
 
 				add_submenu_page(
 					'user-registration',
@@ -637,35 +664,47 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 		 * Add dashboard sub menu.
 		 */
 		public function dashboard_menu() {
-		add_submenu_page(
-			'user-registration',
-			__( 'User Registration Dashboard', 'user-registration' ),
-			__( 'Site Assistant', 'user-registration' ),
-			'manage_user_registration',
-			'user-registration-dashboard',
-			array(
-				$this,
-				'dashboard_page',
-			),
-			-1
-		);
+			$config_remaining_count = ur_site_assistant_config_count();
+
+			add_submenu_page(
+				'user-registration',
+				__( 'User Registration Dashboard', 'user-registration' ),
+				sprintf(
+					'%1$s <span class ="ur-site-config-count">%2$s</span>',
+					__( 'Site Assistant', 'user-registration' ),
+					$config_remaining_count
+				),
+				'manage_user_registration',
+				'user-registration-dashboard',
+				array(
+					$this,
+					'dashboard_page',
+				),
+				-1
+			);
 
 			$should_show = ur_should_show_site_assistant_menu();
 			if ( ! $should_show ) {
-				add_action( 'admin_head', function () {
-					echo '<style>
-						#toplevel_page_user-registration .wp-submenu li a[href*="user-registration-dashboard"] {
+				add_action(
+					'admin_head',
+					function () {
+						echo '<style>
+						#toplevel_page_user-registration .wp-submenu li a[href="admin.php?page=user-registration-dashboard"] {
 							display: none !important;
 						}
-						#toplevel_page_user-registration .wp-submenu li:has(a[href*="user-registration-dashboard"]) {
+						#toplevel_page_user-registration .wp-submenu li:has(a[href="admin.php?page=user-registration-dashboard"]) {
 							display: none !important;
 						}
    					</style>';
-				} );
+					}
+				);
 			} else {
-				add_action( 'admin_body_class', function ( $classes ) {
-					return $classes . ' dashboard-visible';
-				} );
+				add_action(
+					'admin_body_class',
+					function ( $classes ) {
+						return $classes . ' dashboard-visible';
+					}
+				);
 			}
 		}
 
@@ -781,30 +820,53 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 			if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page'] ) { //phpcs:ignore WordPress.Security.NonceVerification
-				wp_enqueue_script( 'user-registration-login-settings', UR()->plugin_url() . '/assets/js/admin/login-settings' . $suffix . '.js', array(
-					'jquery',
-					'jquery-ui-datepicker',
-					'jquery-ui-sortable',
-					'iris',
-					'tooltipster',
-					'jquery-ui-tabs'
-				), UR_VERSION, true );
+				wp_enqueue_script(
+					'user-registration-login-settings',
+					UR()->plugin_url() . '/assets/js/admin/login-settings' . $suffix . '.js',
+					array(
+						'jquery',
+						'jquery-ui-datepicker',
+						'jquery-ui-sortable',
+						'iris',
+						'tooltipster',
+						'jquery-ui-tabs',
+					),
+					UR_VERSION,
+					true
+				);
 				wp_enqueue_style( 'user-registration-css', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR_VERSION );
-				$login_settings = array_merge( get_login_form_settings()['sections']['login_options_settings']['settings'], get_login_field_settings()['sections']['login_options_settings']['settings'], get_login_form_settings()['sections']['login_options_settings_advanced']['settings'] );
-
+				$login_settings      = array_merge( get_login_form_settings()['sections']['login_options_settings']['settings'], get_login_field_settings()['sections']['login_options_settings']['settings'], get_login_form_settings()['sections']['login_options_settings_advanced']['settings'] );
+				$ur_enabled_captchas = array();
+				$ur_captchas         = ur_get_captcha_integrations();
+				foreach ( $ur_captchas as $key => $value ) {
+					if ( get_option( 'user_registration_captcha_setting_recaptcha_enable_' . $key, false ) ) {
+						$ur_enabled_captchas[ $key ] = $value;
+					}
+				}
+				$no_captcha_set        = ( count( $ur_enabled_captchas ) < 1 );
+				$captcha_not_set_error = sprintf(
+				/* translators: %s - Integration tab url */
+					'%s <a href="%s" class="ur-captcha-error" rel="noreferrer noopener" target="_blank">here</a> to add them and save your form.',
+					esc_html__( 'Seems like you are trying to enable the captcha feature, but the captcha keys are empty. Please click', 'user-registration' ),
+					esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=captcha' ) )
+				);
 				$ur_login_form_params = array(
-					'ajax_url'                                                   => admin_url( 'admin-ajax.php' ),
-					'ur_login_settings_save'                                     => wp_create_nonce( 'ur_login_settings_save_nonce' ),
-					'login_settings'                                             => $login_settings,
-					'is_login_settings_page'                                     => isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page'] ? true : false,
-					'i18n_admin'                                                 => array(
+					'ajax_url'                    => admin_url( 'admin-ajax.php' ),
+					'ur_login_settings_save'      => wp_create_nonce( 'ur_login_settings_save_nonce' ),
+					'login_settings'              => $login_settings,
+					'is_login_settings_page'      => isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page'] ? true : false,
+					'i18n_admin'                  => array(
 						'i18n_settings_successfully_saved' => _x( 'Settings successfully saved.', 'user registration admin', 'user-registration' ),
 						'i18n_success'                     => _x( 'Success', 'user registration admin', 'user-registration' ),
 						'i18n_error'                       => _x( 'Error', 'user registration admin', 'user-registration' ),
+						'i18n_captcha_not_set_error'       => $captcha_not_set_error,
+						'i18n_please_fix_validation_errors' => _x( 'Please fix the errors before saving.', 'user registration admin', 'user-registration' ),
+						'i18n_error_occurred_while_saving' => _x( 'An error occurred while saving.', 'user registration admin', 'user-registration' ),
 					),
-					'user_registration_lost_password_selection_validator_nonce'  => wp_create_nonce( 'user_registration_lost_password_selection_validator' ),
+					'user_registration_lost_password_selection_validator_nonce' => wp_create_nonce( 'user_registration_lost_password_selection_validator' ),
 					'user_registration_membership_redirect_default_page_message' => esc_html__( 'Please select a page for redirection', 'user-registration' ),
 					'email_confirmation_disabled' => ur_string_to_bool( get_option( 'user_registration_enable_email_confirmation', true ) ) ? 'no' : 'yes',
+					'no_captcha_set'              => $no_captcha_set,
 				);
 				wp_localize_script(
 					'user-registration-login-settings',
@@ -972,22 +1034,22 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 							<li>
 								<label class="menu-item-title">
 									<input type="checkbox" class="menu-item-checkbox"
-										   name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-object-id]"
-										   value="<?php echo esc_attr( $i ); ?>"/> <?php echo esc_html( $value ); ?>
+											name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-object-id]"
+											value="<?php echo esc_attr( $i ); ?>"/> <?php echo esc_html( $value ); ?>
 								</label>
 								<input type="hidden" class="menu-item-type"
-									   name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-type]" value="custom"/>
+										name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-type]" value="custom"/>
 								<input type="hidden" class="menu-item-title"
-									   name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-title]"
-									   value="<?php echo esc_html( $value ); ?>"/>
+										name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-title]"
+										value="<?php echo esc_html( $value ); ?>"/>
 								<input type="hidden" class="menu-item-url"
-									   name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-url]"
-									   value="<?php echo esc_url( ur_get_account_endpoint_url( $key ) ); ?>"/>
+										name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-url]"
+										value="<?php echo esc_url( ur_get_account_endpoint_url( $key ) ); ?>"/>
 								<input type="hidden" class="menu-item-classes"
-									   name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-classes]"/>
+										name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-classes]"/>
 							</li>
 							<?php
-							-- $i;
+							--$i;
 						endforeach;
 						?>
 					</ul>
@@ -1001,9 +1063,9 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					</span>
 					<span class="add-to-menu">
 						<input type="submit" class="button-secondary submit-add-to-menu right"
-							   value="<?php esc_attr_e( 'Add to menu', 'user-registration' ); ?>"
-							   name="add-post-type-menu-item"
-							   id="submit-posttype-user-registration-endpoints">
+								value="<?php esc_attr_e( 'Add to menu', 'user-registration' ); ?>"
+								name="add-post-type-menu-item"
+								id="submit-posttype-user-registration-endpoints">
 						<span class="spinner"></span>
 					</span>
 				</p>
@@ -1071,10 +1133,10 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					$form_title = isset( $form_data->post_title ) ? trim( $form_data->post_title ) : __( 'Untitled', 'user-registration' );
 					?>
 					<input name="ur-form-name" id="ur-form-name" type="text"
-						   class="user-registration-editable-title__input ur-form-name regular-text menu-item-textbox"
-						   value="<?php echo esc_html( $form_title ); ?>" data-editing="false">
+							class="user-registration-editable-title__input ur-form-name regular-text menu-item-textbox"
+							value="<?php echo esc_html( $form_title ); ?>" data-editing="false">
 					<span id="ur-form-name-edit-button"
-						  class="user-registration-editable-title__icon ur-edit-form-name dashicons dashicons-edit"></span>
+							class="user-registration-editable-title__icon ur-edit-form-name dashicons dashicons-edit"></span>
 				</div>
 				<div class="ur-builder-header-right">
 					<?php
@@ -1181,7 +1243,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 
 				foreach ( $rows as $grid_lists ) {
 
-					++ $grid_id;
+					++$grid_id;
 
 					echo '<div ur-grid-id="' . esc_attr( $grid_id ) . '" class="ur-grid-list-item ui-sortable" style="width: 48%; min-height: 70px;">';
 

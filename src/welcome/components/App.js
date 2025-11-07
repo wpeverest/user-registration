@@ -404,7 +404,12 @@ function App() {
 									style={{
 										backgroundColor: "#FAFAFA",
 										color: "#6B6B6B",
-										border: "1px solid #999999"
+										border: "1px solid #999999",
+										borderRadius: "4px",
+										padding: "0 18px",
+										height: "44px",
+										fontSize: "16px",
+										lineHeight: "24px"
 									}}
 								>
 									{__("Back", "user-registration")}
@@ -427,30 +432,37 @@ function App() {
 									sx={{
 										bg: "#475BB2",
 										borderColor: "#475BB2",
+										borderRadius: "4px",
 										color: "#fff",
 										borderWidth: "1px",
+										padding: "0 18px",
+										height: "44px",
+										fontSize: "16px",
+										lineHeight: "24px",
 										_hover: {
 											bg: "#4c62cc",
 											borderColor: "#4354a6",
-											color: "#fff",
+											color: "#fff"
 										},
 										_focus: {
-											boxShadow: "0 0 0 1px #fff, 0 0 0 3px #475BB2",
+											boxShadow:
+												"0 0 0 1px #fff, 0 0 0 3px #475BB2",
 											bg: "#4c62cc",
 											borderColor: "#4354a6",
-											color: "#fff",
+											color: "#fff"
 										},
 										_active: {
 											bg: "#4351a3",
 											borderColor: "#4351a3",
-											color: "#fff",
+											color: "#fff"
 										},
 										"&.active, &:active, &:focus": {
 											bg: "#475BB2",
 											borderColor: "#3b4791",
-											boxShadow: "inset 0 2px 5px -3px #222a4a",
-											color: "#fff",
-										},
+											boxShadow:
+												"inset 0 2px 5px -3px #222a4a",
+											color: "#fff"
+										}
 									}}
 									disabled={disabledLink}
 								>
@@ -484,7 +496,10 @@ function App() {
 									)} */}
 									<Button
 										className="button-primary"
-										disabled={steps[steps.length - 1].key === activeStep.key}
+										disabled={
+											steps[steps.length - 1].key ===
+											activeStep.key
+										}
 										onClick={() => {
 											handleSaveSettings("");
 										}}
@@ -493,33 +508,39 @@ function App() {
 											borderColor: "#475BB2",
 											color: "#fff",
 											borderWidth: "1px",
+											borderRadius: "4px",
+											padding: "0 18px",
+											height: "44px",
+											fontSize: "16px",
+											lineHeight: "24px",
 											_hover: {
 												bg: "#4c62cc",
 												borderColor: "#4354a6",
-												color: "#fff",
+												color: "#fff"
 											},
 											_focus: {
-												boxShadow: "0 0 0 1px #fff, 0 0 0 3px #475BB2",
+												boxShadow:
+													"0 0 0 1px #fff, 0 0 0 3px #475BB2",
 												bg: "#4c62cc",
 												borderColor: "#4354a6",
-												color: "#fff",
+												color: "#fff"
 											},
 											_active: {
 												bg: "#4351a3",
 												borderColor: "#4351a3",
-												color: "#fff",
+												color: "#fff"
 											},
 											"&.active, &:active, &:focus": {
 												bg: "#475BB2",
 												borderColor: "#3b4791",
-												boxShadow: "inset 0 2px 5px -3px #222a4a",
-												color: "#fff",
-											},
+												boxShadow:
+													"inset 0 2px 5px -3px #222a4a",
+												color: "#fff"
+											}
 										}}
-										>
+									>
 										{__("Next", "user-registration")}
 									</Button>
-
 								</React.Fragment>
 							)}
 						</div>

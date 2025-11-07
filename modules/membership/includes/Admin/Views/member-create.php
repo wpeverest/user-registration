@@ -262,13 +262,13 @@ $status_class       = ! empty( $member_subscription ) ? "user-registration-badge
 									<label class="ur-label">
 										<?php echo esc_html__( 'Amount', 'user-registration' ); ?>
 									</label>
-									<span><?php echo ! empty( $membership_price_details['period'] ) ? $membership_price_details['period'] : 'N/A' ?></span>
+									<span  class="urm-membership-plan-amount"><?php echo ! empty( $membership_price_details['period'] ) ? $membership_price_details['period'] : 'N/A' ?></span>
 								</div>
 								<div class="form-row ur-mt-3">
 									<label class="ur-label">
 										<?php echo esc_html__( 'Expires On', 'user-registration' ); ?>
 									</label>
-									<span>
+									<span class="urm-membership-expiry-date">
 									<?php
 									echo ! empty( $member_subscription['expiry_date'] ) && strtotime( $member_subscription['expiry_date'] ) > 0 ? date( 'F d, Y', strtotime( $member_subscription['expiry_date'] ) ) : 'N/A';
 									?>
@@ -278,7 +278,7 @@ $status_class       = ! empty( $member_subscription ) ? "user-registration-badge
 									<label class="ur-label">
 										<?php echo esc_html__( 'Subscription Status', 'user-registration' ); ?>
 									</label>
-									<span>
+									<span class="urm-membership-subscription-status">
 										<span class="<?php echo $status_class ?>">
 										<?php
 										echo ! empty( $member_subscription['status'] ) ? ucfirst( $member_subscription['status'] ) : 'N/A';

@@ -17,7 +17,9 @@
 			});
 		},
 		handleRecaptchaFormSettings: function() {
-			var login_captcha_enabled = $("#user_registration_form_setting_enable_recaptcha_support").is(":checked");
+			var $checkbox = $("#user_registration_form_setting_enable_recaptcha_support");
+			var login_captcha_enabled = $checkbox.is(":checked");
+
 			if ( login_captcha_enabled ) {
 				$("#user_registration_form_setting_configured_captcha_type_field").show();
 			} else {
