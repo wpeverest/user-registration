@@ -36,7 +36,8 @@ if ( isset( $_GET['urm_error'] ) ) {
 		ur_add_notice( $error_message, 'error' );
 		delete_transient( $error_key );
 	} else {
-		ur_add_notice( 'Error message expired or not found', 'error' );
+		$urm_error_not_found_message = esc_html__( 'Error message expired or not found', 'user-registration' );
+		ur_add_notice( $urm_error_not_found_message, 'error' );
 	}
 } else {
 	ur_add_notice( apply_filters( 'user_registration_post_login_errors', '' ), 'error' );
@@ -69,9 +70,6 @@ $placeholders = array(
 	'password' => get_option( 'user_registration_placeholder_password', '' ),
 );
 $hide_labels  = ur_option_checked( 'user_registration_login_options_hide_labels', false );
-
-$hide_username_label = ur_option_checked( 'user_registration_hide_label_username_or_email', $hide_labels );
-$hide_password_label = ur_option_checked( 'user_registration_hide_label_password', $hide_labels );
 
 $enable_ajax = ur_option_checked( 'ur_login_ajax_submission', false );
 
@@ -113,11 +111,6 @@ $admin_class = '';
 if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page'] ) {
 	$admin_class = 'clickable-login-fields ';
 }
-
-/**
- * Action to fire at the start of rendering the login form.
- */
-do_action( 'user_registration_login_form_start' );
 ?>
 
 <div class="ur-frontend-form login <?php echo esc_attr( $template_class ); ?>" id="ur-frontend-form">
@@ -168,12 +161,17 @@ do_action( 'user_registration_login_form_start' );
 					echo '</div>';
 				}
 				?>
+				<?php
+				/**
+				 * Action to fire at the start of rendering the login form.
+				 */
+				do_action( 'user_registration_login_form_start' );
+				?>
 				<div
 					class="<?php echo esc_attr( $admin_class ); ?> user-registration-form-row user-registration-form-row--wide form-row form-row-wide"
 					data-field="username">
 					<?php
-
-					if ( ! $hide_username_label || $is_login_settings ) {
+					if ( ! $hide_labels || $is_login_settings ) {
 						printf( '<label for="username">%s <span class="required">*</span></label>', esc_html( $labels['username'] ) );
 					}
 					?>
@@ -197,7 +195,7 @@ do_action( 'user_registration_login_form_start' );
 						class="<?php echo esc_attr( $admin_class ); ?> user-registration-form-row user-registration-form-row--wide form-row form-row-wide<?php echo ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) ? ' hide_show_password' : ''; ?>"
 						data-field="password">
 						<?php
-						if ( ! $hide_password_label || $is_login_settings ) {
+						if ( ! $hide_labels || $is_login_settings ) {
 							printf( '<label for="password">%s <span class="required">*</span></label>', esc_html( $labels['password'] ) );
 						}
 						?>
@@ -271,7 +269,10 @@ do_action( 'user_registration_login_form_start' );
 								?>
 								<div data-field="lost-password"
 									class="user-registration-LostPassword lost_password <?php echo esc_attr( $admin_class ); ?>">
+									<label
+										class="user-registration-form__label user-registration-form__label-for-checkbox inline">
 										<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php echo esc_html( $labels['lost_your_password'] ); ?></a>
+									</label>
 								</div>
 								<?php
 							}
@@ -306,34 +307,32 @@ do_action( 'user_registration_login_form_start' );
 						value="<?php echo isset( $redirect ) ? esc_attr( $redirect ) : esc_attr( the_permalink() ); ?>"/>
 
 				<?php
-				$users_can_register = ur_option_checked( 'users_can_register', true );
 
-				if ( $users_can_register ) {
-					$url_options = get_option( 'user_registration_general_setting_registration_url_options', get_permalink( get_option( 'user_registration_default_form_page_id' ) ) );
+				$url_options = get_option( 'user_registration_general_setting_registration_url_options', get_permalink( get_option( 'user_registration_default_form_page_id' ) ) );
 
-					if ( ! empty( $url_options ) || $is_login_settings ) {
-						$url_pattern = "/^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}(\\.[a-zA-Z0-9()]{1,6})?\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$/";
-						if ( ! filter_var( $url_options, FILTER_VALIDATE_URL ) || ! preg_match( $url_pattern, $url_options ) ) {
-							$url_options = home_url( $url_options );
-						}
-						echo '<div class="user-registration-register register ' . esc_attr( $admin_class ) . '" data-field="registration-setting">';
-						$label = get_option( 'user_registration_general_setting_registration_label' );
-
-						if ( ! empty( $label ) ) {
-							?>
-							<a href="<?php echo esc_url( $url_options ); ?>"> <?php echo stripslashes( esc_html( __( $label, 'user-registration' ) ) ); ?>
-							</a>
-							<?php
-						} else {
-							update_option( 'user_registration_general_setting_registration_label', __( 'Not a member yet? Register now.', 'user-registration' ) );
-							?>
-							<a href="<?php echo esc_url( $url_options ); ?>"> <?php echo esc_html( get_option( 'user_registration_general_setting_registration_label' ) ); ?>
-							</a>
-							<?php
-						}
-						echo '</div>';
+				if ( ! empty( $url_options ) || $is_login_settings ) {
+					$url_pattern = "/^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}(\\.[a-zA-Z0-9()]{1,6})?\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$/";
+					if ( ! filter_var( $url_options, FILTER_VALIDATE_URL ) || ! preg_match( $url_pattern, $url_options ) ) {
+						$url_options = home_url( $url_options );
 					}
+					echo '<div class="user-registration-register register ' . esc_attr( $admin_class ) . '" data-field="registration-setting">';
+					$label = get_option( 'user_registration_general_setting_registration_label' );
+
+					if ( ! empty( $label ) ) {
+						?>
+							<a href="<?php echo esc_url( $url_options ); ?>"> <?php echo stripslashes( esc_html( $label ) ); ?>
+						</a>
+						<?php
+					} else {
+						update_option( 'user_registration_general_setting_registration_label', __( 'Not a member yet? Register now.', 'user-registration' ) );
+						?>
+						<a href="<?php echo esc_url( $url_options ); ?>"> <?php echo esc_html( get_option( 'user_registration_general_setting_registration_label' ) ); ?>
+						</a>
+						<?php
+					}
+					echo '</div>';
 				}
+
 				?>
 				<?php
 				/**

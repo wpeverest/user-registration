@@ -785,6 +785,9 @@ jQuery(function ($) {
 					.closest(".user-registration-login-form-global-settings")
 					.show()
 					.css("display", "block");
+				$("#user_registration_reset_password_page_id")
+					.closest('.user-registration-login-form-global-settings')
+					.css("display", "block");
 				$("#user_registration_label_lost_your_password")
 					.closest(".user-registration-login-form-global-settings")
 					.show()
@@ -792,6 +795,9 @@ jQuery(function ($) {
 			} else {
 				$("#user_registration_lost_password_page_id")
 					.closest(".user-registration-login-form-global-settings")
+					.hide();
+				$("#user_registration_reset_password_page_id")
+					.closest('.user-registration-login-form-global-settings')
 					.hide();
 				$("#user_registration_label_lost_your_password")
 					.closest(".user-registration-login-form-global-settings")
@@ -1181,7 +1187,8 @@ jQuery(function ($) {
 
 	var check_email_confirmation_disabled = function () {
 		var email_confirmation_disabled =
-			user_registration_form_builder_data.email_confirmation_disabled;
+			(typeof ur_login_form_params !== 'undefined' && ur_login_form_params.email_confirmation_disabled) ||
+			(typeof user_registration_form_builder_data !== 'undefined' && user_registration_form_builder_data.email_confirmation_disabled);
 		if (email_confirmation_disabled === "yes") {
 			var login_options = $(
 				"#user_registration_form_setting_login_options"
@@ -1394,7 +1401,7 @@ jQuery(function ($) {
 				$(".ur-selected-item").each(function () {
 					var old_field_name = $(this)
 						.find(".ur-general-setting-block")
-						.find('input[data-advance-field="field_name"]')
+						.find('input[data-field="field_name"]')
 						.attr("value");
 
 					if (field_name === old_field_name) {

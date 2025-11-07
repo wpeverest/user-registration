@@ -658,7 +658,7 @@ class UR_AJAX {
 			update_option('user_registration_successful_test_mail', true);
 			wp_send_json_success( array( 'message' => __( 'Test email was sent successfully! Please check your inbox to make sure it is delivered.', 'user-registration' ) ) );
 		}
-		{
+		else {
 			$error_message = apply_filters( 'user_registration_email_send_failed_message', '' );
 			wp_send_json_error( array( 'message' => sprintf( __( 'Test email was unsuccessful!. %s', 'user-registration' ), $error_message ) ) );
 		}
@@ -887,16 +887,6 @@ class UR_AJAX {
 			$form_id       = sanitize_text_field( $_POST['data']['form_id'] ); //phpcs:ignore
 			$form_row_data = sanitize_text_field( $_POST['data']['row_data'] );
 
-			//For backward compatibility, store field_name in general settings as well.
-			if( is_array( $post_data ) ) {
-				foreach( $post_data as $post_datum ) {
-					foreach( $post_datum as $field ) {
-						if( isset( $field[0]->general_setting ) && $field[0]->general_setting instanceof stdClass && isset( $field[0]->advance_setting->field_name ) ) {
-							$field[0]->general_setting->field_name = $field[0]->advance_setting->field_name;
-						}
-					}
-				}
-			}
 
 			$post_data = array(
 				'post_type'      => 'user_registration',
@@ -1012,6 +1002,57 @@ class UR_AJAX {
 				);
 			}
 		}
+
+		//check for valid lost password and reset password page.
+		if ( ur_string_to_bool( $output['user_registration_login_options_lost_password'] ) ) {
+
+			if ( ! empty( $output['user_registration_lost_password_page_id'] ) && ( is_numeric( $output['user_registration_lost_password_page_id'] ) )  ) {
+				$is_page_lost_password_page = ur_find_lost_password_in_page( sanitize_text_field( wp_unslash( $output['user_registration_lost_password_page_id'] ) ) );
+				if ( ! $is_page_lost_password_page ) {
+					wp_send_json_error(
+						array(
+							'message' => esc_html__(
+								'The selected page is not a User Registration & Membership Lost Password page.',
+								'user-registration'
+							),
+						)
+					);
+				}
+			} else {
+				wp_send_json_error(
+					array(
+						'message' => esc_html__(
+							'Please select a valid lost password page.',
+							'user-registration'
+						),
+					)
+				);
+			}
+
+			if ( ! empty( $output['user_registration_reset_password_page_id'] ) && ( is_numeric( $output['user_registration_reset_password_page_id'] ) )  ) {
+				$is_page_reset_password_page = ur_find_reset_password_in_page( sanitize_text_field( wp_unslash( $output['user_registration_reset_password_page_id'] ) ) );
+				if ( ! $is_page_reset_password_page ) {
+					wp_send_json_error(
+						array(
+							'message' => esc_html__(
+								'The selected page is not a User Registration & Membership Reset Password page.',
+								'user-registration'
+							),
+						)
+					);
+				}
+			} else {
+				wp_send_json_error(
+					array(
+						'message' => esc_html__(
+							'Please select a valid reset password page.',
+							'user-registration'
+						),
+					)
+				);
+			}
+		}
+
 
 		foreach ( $output as $key => $settings ) {
 			update_option( $key, $settings );

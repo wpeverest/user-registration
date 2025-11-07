@@ -200,7 +200,7 @@
 
 									var invite_code =
 										document.querySelector(
-											".field-invite_code"
+											"#invite_code"
 										);
 
 									if (

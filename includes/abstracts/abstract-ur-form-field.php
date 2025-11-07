@@ -219,7 +219,7 @@ abstract class UR_Form_Field {
 		if ( isset( $data['advance_setting']->custom_class ) ) {
 			array_push( $form_data['input_class'], $data['advance_setting']->custom_class );
 		}
-		$field_name = isset( $data['advance_setting']->field_name ) ? $data['advance_setting']->field_name : $data['general_setting']->field_name;
+		$field_name = isset( $data['advance_setting']->field_name ) ? $data['advance_setting']->field_name : ( isset( $data['general_setting']->field_name ) ? $data['general_setting']->field_name : '' );
 		if ( isset( $data['advance_setting']->date_format ) ) {
 			update_option( 'user_registration_' . $field_name . '_date_format', $data['advance_setting']->date_format );
 			$form_data['custom_attributes']['data-date-format'] = $data['advance_setting']->date_format;
@@ -252,7 +252,7 @@ abstract class UR_Form_Field {
 			}
 			$form_data['custom_attributes']['data-locale'] = $date_localization;
 		}
-		$field_name = isset( $data[ 'advance_setting' ]->field_name ) ? $data[ 'advance_setting' ]->field_name : $data[ 'general_setting' ]->field_name;
+		$field_name = isset( $data['advance_setting']->field_name ) ? $data['advance_setting']->field_name : ( isset( $data['general_setting']->field_name ) ? $data['general_setting']->field_name : '' );
 		$form_data['custom_attributes']['data-label'] = ur_string_translation( $form_id, 'user_registration_' . $field_name . '_label', $data['general_setting']->label );
 
 		if ( isset( $form_data['label'] ) ) {

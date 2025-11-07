@@ -937,6 +937,15 @@ function ur_get_general_settings( $id ) {
 			'default'     => 'false',
 			'tip'         => __( 'Hide the title of the field, keeping your form cleaner and simpler.', 'user-registration' ),
 		),
+		'field_name'  => array(
+			'setting_id'  => 'field-name',
+			'type'        => 'text',
+			'label'       => __( 'Field Name', 'user-registration' ),
+			'name'        => 'ur_general_setting[field_name]',
+			'placeholder' => __( 'Field Name', 'user-registration' ),
+			'required'    => true,
+			'tip'         => __( 'Unique key for the field.', 'user-registration' ),
+		),
 	);
 	/**
 	 * Filters the list of form field types to exclude placeholders.
@@ -3580,6 +3589,59 @@ if ( ! function_exists( 'ur_find_lost_password_in_page' ) ) {
 
 		return $matched;
 	}
+}
+
+if ( ! function_exists( 'ur_find_reset_password_in_page' ) ) {
+	/**
+	 * Finds the "Reset Password" form shortcode.
+	 *
+	 * @param int $reset_password_page_id The page ID to check for the reset password form.
+	 *
+	 * @return bool Whether the page contains the reset password form.
+	 */
+	function ur_find_reset_password_in_page( $reset_password_page_id ) {
+		global $wpdb;
+		$post_table      = $wpdb->prefix . 'posts';
+		$post_meta_table = $wpdb->prefix . 'postmeta';
+
+		$matched = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COUNT(*) FROM {$post_table} 
+				WHERE ID = %d 
+				AND (
+					post_content LIKE '%[user_registration_reset_password_form%' 
+					OR post_content LIKE '%<!-- wp:user-registration/reset_password_form%'
+				)",
+				$reset_password_page_id
+			) // phpcs:ignore
+		);
+
+		if ( $matched <= 0 ) {
+			$matched = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(*) FROM {$post_meta_table} 
+					WHERE post_id = %d 
+					AND (
+						meta_value LIKE '%[user_registration_reset_password_form%' 
+						OR meta_value LIKE '%<!-- wp:user-registration/reset_password_form%'
+					)",
+					$reset_password_page_id
+				) // phpcs:ignore
+			);
+		}
+
+		/**
+		 * Filters whether the reset password form was found in this page.
+		 *
+		 * @param bool $matched Whether the "Reset Password" form was found in the page.
+		 * @param int  $reset_password_page_id The ID of the associated reset password page.
+		 */
+		$matched = apply_filters( 'user_registration_find_reset_password_in_page', $matched, $reset_password_page_id );
+
+		return $matched;
+	}
+
+
 }
 
 if ( ! function_exists( 'ur_get_license_plan' ) ) {
@@ -7713,6 +7775,17 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'field-key'=> 'lost-password'
 							),
 							array(
+								'title'    => __( 'Reset Password Page', 'user-registration' ),
+								'desc'     => __( 'Select the page where your password reset form is placed.', 'user-registration' ),
+								'id'       => 'user_registration_reset_password_page_id',
+								'type'     => 'single_select_page',
+								'default'  => '',
+								'class'    => 'ur-enhanced-select-nostd',
+								'css'      => '',
+								'desc_tip' => true,
+								'field-key'=> 'lost-password'
+							),
+							array(
 								'title'    => __( 'Registration URL', 'user-registration' ),
 								'desc'     => __( 'Set the URL of the registration page users should be sent to.', 'user-registration' ),
 								'id'       => 'user_registration_general_setting_registration_url_options',
@@ -8168,7 +8241,24 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 
 	function render_login_option_settings( $section ) {
 		$settings = '';
-		foreach ( $section['settings'] as $key => $value ) {
+		$section_settings = $section[ 'settings' ];
+		$repositionable_settings = array_filter( $section_settings, function( $setting ) {
+			return isset( $setting[ 'item_position' ] );
+		});
+		$section_settings = array_filter( $section_settings, function( $setting ) {
+			return ! isset( $setting[ 'item_position' ] );
+		});
+		foreach( $repositionable_settings as $setting ) {
+			[ $position, $setting_id ] = $setting[ 'item_position' ];
+			$offset = array_search( $setting_id, array_column( $section_settings, 'id' ) );
+			if( 'before' === $position ) {
+				array_splice( $section_settings, $offset, 0, array( $setting ) );
+			}
+			if( 'after' === $position ) {
+				array_splice( $section_settings, $offset + 1, 0, array( $setting ) );
+			}
+		}
+		foreach ( $section_settings as $key => $value ) {
 
 			if ( ! isset( $value['type'] ) ) {
 				continue;
@@ -8642,6 +8732,14 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 					}
 					break;
 				// Default: run an action.
+				case 'html':
+					$settings .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="'.esc_attr( $value['field-key'] ).'">';
+					$settings .= '<label for=' . esc_attr( $value[ 'id' ] ) . '>' . esc_html( $value[ 'title' ] ) . '</label>';
+					$settings .= '<div class="user-registration-login-form-global-settings--field">';
+					$settings .= $value['html_content'];
+					$settings .= '</div>';
+					$settings .= '</div>';
+					break;
 				default:
 					/**
 					 * Filter to retrieve default admin field for output
