@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-10-31T04:26:38+00:00\n"
+"POT-Creation-Date: 2025-11-03T08:39:22+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: user-registration\n"
@@ -539,46 +539,46 @@ msgid "All"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:228
-#: includes/admin/class-ur-admin-menus.php:907
+#: includes/admin/class-ur-admin-menus.php:862
 msgid "Give it a name."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:229
-#: includes/admin/class-ur-admin-menus.php:908
+#: includes/admin/class-ur-admin-menus.php:863
 msgid "You must provide a Form name"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:230
-#: includes/admin/class-ur-admin-menus.php:909
+#: includes/admin/class-ur-admin-menus.php:864
 msgid "Activate Plugins"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:231
-#: includes/admin/class-ur-admin-menus.php:910
+#: includes/admin/class-ur-admin-menus.php:865
 msgid "Activating"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:232
-#: includes/admin/class-ur-admin-menus.php:912
+#: includes/admin/class-ur-admin-menus.php:867
 #: src/form-templates/components/PluginStatus.js:106
 msgid "Install & Activate"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:233
-#: includes/admin/class-ur-admin-menus.php:913
+#: includes/admin/class-ur-admin-menus.php:868
 msgid "Installing"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:234
 #: includes/admin/class-ur-admin-assets.php:658
-#: includes/admin/class-ur-admin-menus.php:914
+#: includes/admin/class-ur-admin-menus.php:869
 #: src/form-templates/components/TemplateList.js:675
 msgid "OK"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:242
 #: includes/admin/class-ur-admin-assets.php:667
-#: includes/admin/class-ur-admin-menus.php:922
+#: includes/admin/class-ur-admin-menus.php:877
 #: includes/admin/class-ur-admin-settings.php:296
 #: includes/class-ur-ajax.php:1780
 #: includes/functions-ur-core.php:4161
@@ -587,40 +587,40 @@ msgid "Upgrade Plan"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:243
-#: includes/admin/class-ur-admin-menus.php:923
+#: includes/admin/class-ur-admin-menus.php:878
 msgid "This template requires premium addons. Please upgrade to the Premium plan to unlock all these awesome Templates."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:244
-#: includes/admin/class-ur-admin-menus.php:924
+#: includes/admin/class-ur-admin-menus.php:879
 msgid "is a Premium Template"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:245
-#: includes/admin/class-ur-admin-menus.php:925
+#: includes/admin/class-ur-admin-menus.php:880
 #: src/form-templates/components/PluginStatus.js:103
 #: src/form-templates/components/PluginStatus.js:112
 msgid "Continue"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:246
-#: includes/admin/class-ur-admin-menus.php:926
+#: includes/admin/class-ur-admin-menus.php:881
 msgid "Untitled Form"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:247
-#: includes/admin/class-ur-admin-menus.php:927
+#: includes/admin/class-ur-admin-menus.php:882
 #: src/form-templates/components/TemplateList.js:714
 msgid "Uplift your form experience to the next level."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:248
-#: includes/admin/class-ur-admin-menus.php:928
+#: includes/admin/class-ur-admin-menus.php:883
 msgid "Download Failed. Please download and activate addon manually."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:249
-#: includes/admin/class-ur-admin-menus.php:929
+#: includes/admin/class-ur-admin-menus.php:884
 msgid "Installation Successful."
 msgstr ""
 
@@ -629,12 +629,12 @@ msgid "Addons have been Installed and Activated. You have to reload the page."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:251
-#: includes/admin/class-ur-admin-menus.php:931
+#: includes/admin/class-ur-admin-menus.php:886
 msgid "Save Changes and Reload"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:252
-#: includes/admin/class-ur-admin-menus.php:933
+#: includes/admin/class-ur-admin-menus.php:888
 msgid "Just Reload"
 msgstr ""
 
@@ -746,7 +746,7 @@ msgid "Publish form"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:360
-#: includes/admin/class-ur-admin-menus.php:883
+#: includes/admin/class-ur-admin-menus.php:838
 msgid "Update form"
 msgstr ""
 
@@ -772,9 +772,9 @@ msgid "Open Help"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:368
-#: includes/admin/class-ur-admin-menus.php:717
-#: includes/admin/class-ur-admin-menus.php:718
-#: includes/admin/class-ur-admin-menus.php:1266
+#: includes/admin/class-ur-admin-menus.php:678
+#: includes/admin/class-ur-admin-menus.php:679
+#: includes/admin/class-ur-admin-menus.php:1221
 #: includes/admin/class-ur-admin-registrations-table-list.php:179
 #: includes/functions-ur-core.php:5354
 #: modules/membership/includes/Admin.php:297
@@ -1020,13 +1020,13 @@ msgid "Form successfully saved."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:619
-#: includes/admin/class-ur-admin-menus.php:847
+#: includes/admin/class-ur-admin-menus.php:802
 msgctxt "user registration admin"
 msgid "Success"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:620
-#: includes/admin/class-ur-admin-menus.php:848
+#: includes/admin/class-ur-admin-menus.php:803
 msgctxt "user registration admin"
 msgid "Error"
 msgstr ""
@@ -1942,22 +1942,22 @@ msgstr ""
 msgid "User Registration - Setup Wizard"
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:144
-#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:255
+#: includes/admin/class-ur-admin-welcome.php:148
+#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:184
 msgid "Welcome to User Registration & Membership"
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:145
+#: includes/admin/class-ur-admin-welcome.php:149
 msgid "Easily create custom registration forms, manage member access, receive payments and streamline your WordPress user workflow — all without code."
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:149
+#: includes/admin/class-ur-admin-welcome.php:153
 #: includes/admin/views/html-admin-page-form-templates.php:106
 #: src/form-templates/components/TemplateList.js:473
 msgid "Get Started"
 msgstr ""
 
-#: includes/admin/class-ur-admin-welcome.php:158
+#: includes/admin/class-ur-admin-welcome.php:162
 msgid "Skip to Dashboard"
 msgstr ""
 
@@ -2325,7 +2325,7 @@ msgstr ""
 #: modules/paypal/class-ur-paypal-module.php:107
 #: modules/stripe/class-ur-stripe-module.php:92
 #: templates/myaccount/form-reset-password.php:95
-#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:296
+#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:223
 msgid "Save"
 msgstr ""
 
@@ -3822,13 +3822,13 @@ msgstr ""
 #: includes/admin/updater/class-ur-addon-updater.php:591
 #: modules/membership/includes/Admin/Members/Members.php:155
 #: modules/membership/includes/Frontend/Frontend.php:270
-#: src/dashboard/screens/SiteAssistant/components/DefaultFormMissing.js:58
-#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:90
-#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:151
-#: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:93
-#: src/dashboard/screens/SiteAssistant/components/RequiredPagesMissing.js:67
-#: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:117
-#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:82
+#: src/dashboard/screens/SiteAssistant/components/DefaultFormMissing.js:57
+#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:77
+#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:124
+#: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:78
+#: src/dashboard/screens/SiteAssistant/components/RequiredPagesMissing.js:58
+#: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:96
+#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:69
 #: src/form-templates/components/PluginStatus.js:46
 #: src/form-templates/components/PluginStatus.js:60
 #: src/form-templates/components/PluginStatus.js:74
@@ -3843,7 +3843,7 @@ msgstr ""
 
 #: includes/admin/views/html-admin-page-builder-setup.php:20
 #: src/dashboard/screens/Help/Help.js:462
-#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:415
+#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:338
 msgid "Getting Started"
 msgstr ""
 
@@ -4337,7 +4337,7 @@ msgstr ""
 
 #: includes/admin/views/html-login-page-forms-new.php:116
 #: src/dashboard/screens/Help/Help.js:477
-#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:430
+#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:353
 msgid "View Documentation"
 msgstr ""
 
@@ -8542,7 +8542,7 @@ msgid "Choose which Captcha type to show on the login form."
 msgstr ""
 
 #: includes/functions-ur-core.php:8090
-#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:260
+#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:198
 msgid "Disable Default WordPress Login Screen"
 msgstr ""
 
@@ -12090,79 +12090,79 @@ msgid "Subscribe"
 msgstr ""
 
 #: src/dashboard/screens/Help/Help.js:426
-#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:379
+#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:302
 msgid "User Registration Community"
 msgstr ""
 
 #: src/dashboard/screens/Help/Help.js:433
-#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:386
+#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:309
 msgid "Join our exclusive group and connect with fellow User Registration members. Ask questions, contribute to discussions, and share feedback!"
 msgstr ""
 
 #: src/dashboard/screens/Help/Help.js:444
-#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:397
+#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:320
 msgid "Join our Facebook Group"
 msgstr ""
 
 #: src/dashboard/screens/Help/Help.js:466
-#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:419
+#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:342
 msgid "Check our documentation for detailed information on User Registration features and how to use them."
 msgstr ""
 
 #: src/dashboard/screens/Help/Help.js:495
-#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:448
+#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:371
 msgid "Support"
 msgstr ""
 
 #: src/dashboard/screens/Help/Help.js:499
-#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:452
+#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:375
 msgid "Submit a ticket for encountered issues and get help from our support team instantly."
 msgstr ""
 
 #: src/dashboard/screens/Help/Help.js:510
-#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:463
+#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:386
 msgid "Create a Ticket"
 msgstr ""
 
 #: src/dashboard/screens/Help/Help.js:524
-#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:477
+#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:400
 msgid "Feature Request"
 msgstr ""
 
 #: src/dashboard/screens/Help/Help.js:528
-#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:481
+#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:404
 msgid "Don't find a feature you're looking for? Suggest any features you think would enhance our product."
 msgstr ""
 
 #: src/dashboard/screens/Help/Help.js:539
-#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:492
+#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:415
 msgid "Request a Feature"
 msgstr ""
 
 #: src/dashboard/screens/Help/Help.js:553
 #: src/dashboard/screens/Help/Help.js:568
-#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:506
-#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:521
+#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:429
+#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:444
 msgid "Submit a Review"
 msgstr ""
 
 #: src/dashboard/screens/Help/Help.js:557
-#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:510
+#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:433
 msgid "Please take a moment to give us a review. We appreciate honest feedback that'll help us improve our plugin."
 msgstr ""
 
 #: src/dashboard/screens/Help/Help.js:582
-#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:535
+#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:458
 msgid "Video Tutorials"
 msgstr ""
 
 #: src/dashboard/screens/Help/Help.js:586
-#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:539
+#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:462
 msgid "Watch our step-by-step video tutorials that'll help you get the best out of User Registration's features."
 msgstr ""
 
 #: src/dashboard/screens/Help/Help.js:597
-#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:550
+#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:473
 msgid "Watch Videos"
 msgstr ""
 
@@ -12526,144 +12526,136 @@ msgstr ""
 msgid "Themes"
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/DefaultFormMissing.js:43
-#: src/dashboard/screens/SiteAssistant/components/RequiredPagesMissing.js:53
+#: src/dashboard/screens/SiteAssistant/components/DefaultFormMissing.js:41
+#: src/dashboard/screens/SiteAssistant/components/RequiredPagesMissing.js:46
 #: src/form-templates/components/PluginStatus.js:169
 msgid "Success"
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/DefaultFormMissing.js:61
+#: src/dashboard/screens/SiteAssistant/components/DefaultFormMissing.js:58
 msgid "Failed to create default form. Please try again."
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/DefaultFormMissing.js:99
+#: src/dashboard/screens/SiteAssistant/components/DefaultFormMissing.js:79
 msgid "Default Form Missing"
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/DefaultFormMissing.js:123
+#: src/dashboard/screens/SiteAssistant/components/DefaultFormMissing.js:105
 msgid "To start using User Registration & Membership, you first need to create a registration form."
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/DefaultFormMissing.js:138
+#: src/dashboard/screens/SiteAssistant/components/DefaultFormMissing.js:120
 msgid "Creating..."
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/DefaultFormMissing.js:140
+#: src/dashboard/screens/SiteAssistant/components/DefaultFormMissing.js:122
 msgid "Create Default Form"
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:34
+#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:33
 msgid "Action Required"
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:35
+#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:34
 msgid "Please turn on the switch to disable WordPress login before saving."
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:68
+#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:62
 msgid "Settings Saved"
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:71
+#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:63
 msgid "WordPress login has been disabled successfully."
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:93
+#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:78
 msgid "Failed to save settings. Please try again."
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:129
-#: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:72
-#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:60
+#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:109
+#: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:64
+#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:54
 msgid "Skipped"
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:132
+#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:110
 msgid "WordPress login settings have been acknowledged and skipped."
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:154
-#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:85
+#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:125
+#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:70
 msgid "Failed to skip settings. Please try again."
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:193
+#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:146
 msgid "Default WordPress Login Enabled"
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:237
+#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:179
 msgid "Recommended"
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:245
+#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:183
 msgid "WordPress default login is still active. This can lead to spam registrations on your site. Disable it to keep your site safe."
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:266
+#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:201
 msgid "Prevents access to wp-login.php"
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:292
+#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:219
 msgid "Saving..."
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:308
-#: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:298
-#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:223
+#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:234
+#: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:207
+#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:180
 msgid "Skipping..."
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:309
-#: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:299
-#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:224
-msgid "Skip Setup"
+#: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:234
+#: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:207
+#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:180
+msgid "I acknowledge and skip"
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:75
+#: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:65
 msgid "Payment setup has been acknowledged and skipped."
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:96
+#: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:79
 msgid "Failed to skip payment setup. Please try again."
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:142
+#: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:100
 msgid "Payment Setup"
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:165
+#: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:124
 msgid "Configure payment methods to start selling your memberships. You can set up multiple payment options for your members."
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:227
+#: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:174
 msgid "Connected"
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:270
-msgid "Additional payment setup can be configured from "
-msgstr ""
-
-#: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:280
-msgid "Payment > Settings"
-msgstr ""
-
-#: src/dashboard/screens/SiteAssistant/components/RequiredPagesMissing.js:70
+#: src/dashboard/screens/SiteAssistant/components/RequiredPagesMissing.js:59
 msgid "Failed to generate pages. Please try again."
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/RequiredPagesMissing.js:109
+#: src/dashboard/screens/SiteAssistant/components/RequiredPagesMissing.js:80
 msgid "Required Pages Missing"
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/RequiredPagesMissing.js:132
+#: src/dashboard/screens/SiteAssistant/components/RequiredPagesMissing.js:104
 msgid "Some essential pages are missing. These pages are needed to make your website work correctly. The following pages need to be created:"
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/RequiredPagesMissing.js:155
+#: src/dashboard/screens/SiteAssistant/components/RequiredPagesMissing.js:127
 msgid "Generating..."
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/RequiredPagesMissing.js:157
+#: src/dashboard/screens/SiteAssistant/components/RequiredPagesMissing.js:129
 msgid "Generate Pages"
 msgstr ""
 
@@ -12671,80 +12663,80 @@ msgstr ""
 msgid "Invalid Email"
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:82
+#: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:77
 msgid "Test Email Sent"
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:85
+#: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:78
 msgid "Test email has been sent successfully."
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:100
+#: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:88
 msgid "Test email has was unsuccessfully."
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:110
+#: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:92
 msgid "Failed to send test email. Please try again."
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:161
-#: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:222
+#: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:123
+#: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:177
 msgid "Send Test Email"
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:184
+#: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:147
 msgid "Make sure emails are being sent to your users during registration. Test by sending a sample email to yourself."
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:194
+#: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:154
 msgid "Email Address (To send test email to)"
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:220
+#: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:175
 msgid "Sending..."
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:63
+#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:55
 msgid "Spam protection setting has been acknowledged and skipped."
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:124
+#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:91
 msgid "Spam Protection"
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:147
+#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:115
 msgid "Set up protection against spam registrations. We recommend enabling reCaptcha v2."
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:173
+#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:140
 msgid "reCaptcha v2"
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:176
+#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:143
 msgid "Enable Google reCaptcha protection"
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:189
+#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:153
 msgid "Configure Settings"
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:197
+#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:158
 msgid "You can also set up other spam protection features from "
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:207
+#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:165
 msgid "here"
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:261
+#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:190
 msgid "Let's get your user registration system set up and ready to go!"
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:292
+#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:221
 msgid "Setup Complete!"
 msgstr ""
 
-#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:296
+#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:225
 msgid "Redirecting to All forms..."
 msgstr ""
 

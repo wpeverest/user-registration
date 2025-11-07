@@ -130,7 +130,7 @@
 							value="<?php echo esc_attr( $membership['ID'] ); ?>"
 							data-urm-pg='<?php echo esc_attr( ( $membership['active_payment_gateways'] ?? '' ) ); ?>'
 							data-urm-pg-type="<?php echo esc_attr( $membership['type'] ); ?>"
-							data-urm-pg-calculated-amount="<?php echo esc_attr( $membership['calculated_amount'] ); ?>"
+							data-urm-pg-calculated-amount="<?php echo esc_attr( $membership['amount'] ); ?>"
 							data-urm-default-pg="<?php echo $urm_default_pg; ?>"
 						<?php echo isset( $_GET['membership_id'] ) && ! empty( $_GET['membership_id'] ) && $_GET['membership_id'] == $membership['ID'] ? 'checked' : ''; ?>
 					>
@@ -216,7 +216,7 @@
 							type="radio"
 							name="urm_payment_method"
 							required
-							value="<?php echo esc_attr( strtolower( $gateway ) ); ?>"
+							value="<?php echo esc_attr( strtolower( $g ) ); ?>"
 						<?php echo 0 === $g ? 'checked' : ''; ?>
 					>
 					<span class="ur-membership-duration">

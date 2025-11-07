@@ -421,4 +421,38 @@
 
 	});
 
+	$( '#ur-membership-select' ).on( 'change', function () {
+		var membershipId = $(this).val();
+		var $el = $( this );
+
+		if ( $el.hasClass( 'is_loading' ) ) {
+			return;
+		}
+
+		$el.addClass( 'is_loading' );
+		
+		var html = '<div class="urm-membership-plan-spinner-container is_loading"><span class="ur-spinner is-active" style="margin-left: 20px"></span></div>'
+		$( '#plan-detail-container' ).append( html )
+
+		var data = {
+			action: 'user_registration_membership_get_membership_details',
+			membership_id: membershipId,
+			security: ur_members_localized_data.ur_membership_edit_nonce
+		};
+
+		$.post( ur_members_localized_data.ajax_url, data, function(response) {
+			if(response.success) {
+				var membershipDetails = response.data;
+
+				$( document ).find( '.urm-membership-plan-amount' ).text( membershipDetails.membership_detail.amount );
+				$( document ).find( '.urm-membership-subscription-status > span' ).remove();
+				$( document ).find( '.urm-membership-subscription-status' ).append( '<span class="user-registration-badge user-registration-badge--pending">' + membershipDetails.membership_detail.subscription_status + '</span>' );
+				$( document ).find( '.urm-membership-expiry-date' ).text( membershipDetails.membership_detail.expiration_on );
+				$el.removeClass( 'is_loading' );
+				$(".urm-membership-plan-spinner-container").removeClass( 'is_loading' );
+				$(".urm-membership-plan-spinner-container").empty();
+			}
+		});
+	});
+
 })(jQuery, window.ur_members_localized_data);

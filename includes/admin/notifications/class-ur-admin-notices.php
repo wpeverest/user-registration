@@ -312,11 +312,11 @@ class UR_Admin_Notices {
 						'title'                 => __( 'Bravo! 💪 Well done.', 'user-registration' ),
 						'message_content'       => wp_kses_post(
 							sprintf(
-								"<p>%s</p><p>%s</p><p class='extra-pad'>%s</p><br/>",
+								"<p>%s</p><p>%s</p><p class='extra-pad'>%s</p>",
 								__( "Congratulations! 👏 You've registered 20 users using our User Registration plugin, way to go! 🎉", 'user-registration' ),
 								__( 'Please share your experience with us by leaving a review. Your feedback will help us improve and serve you better. ', 'user-registration' ),
 								__(
-									'Once again, thank you for choosing us! ❤️ <br>',
+									'Once again, thank you for choosing us! ❤️',
 									'user-registration'
 								)
 							)
@@ -376,7 +376,7 @@ class UR_Admin_Notices {
 								__( 'Hope you are having nice experience with <strong>User Registration</strong> plugin. Please provide this plugin a nice review.', 'user-registration' ),
 								__(
 									'<strong>What benefit would you have?</strong> <br>
-								Basically, it would encourage us to release updates regularly with new features & bug fixes so that you can keep on using the plugin without any issues and also to provide free support like we have been doing. <span class="dashicons dashicons-smiley smile-icon"></span><br>',
+								Basically, it would encourage us to release updates regularly with new features & bug fixes so that you can keep on using the plugin without any issues and also to provide free support like we have been doing. <span class="dashicons dashicons-smiley smile-icon"></span>',
 									'user-registration'
 								)
 							)
@@ -439,7 +439,7 @@ class UR_Admin_Notices {
 								),
 								__(
 									'<strong>What benefit would you have?</strong> <br>
-									We will take your feedback from the survey and use that information to make the plugin better. As a result, you will have a better plugin as you wanted. <span class="dashicons dashicons-smiley smile-icon"></span><br>',
+									We will take your feedback from the survey and use that information to make the plugin better. As a result, you will have a better plugin as you wanted. <span class="dashicons dashicons-smiley smile-icon"></span>',
 									'user-registration'
 								)
 							)
@@ -494,7 +494,7 @@ class UR_Admin_Notices {
 						'title'                 => __( 'Contribute to the enhancement', 'user-registration' ),
 						'message_content'       => wp_kses_post(
 							sprintf(
-								'<p>%s</p><br/>',
+								'<p>%s</p>',
 								__(
 									'Help us improve the plugin\'s features by sharing <a href="https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title" target="_blank">non-sensitive plugin data</a> with us.',
 									'user-registration'
@@ -731,7 +731,7 @@ class UR_Admin_Notices {
 			'user-registration-email-templates',
 			'user-registration-mailchimp',
 			'user-registration-dashboard',
-			'user-registration-login-forms'
+			'user-registration-login-forms',
 		);
 
 		/**

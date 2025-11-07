@@ -93,13 +93,17 @@ class UR_Admin_Welcome {
 						wp_print_head_scripts();
 						wp_print_scripts( 'ur-setup-wizard-script' );
 					?>
+
+					<link rel="preload" as="style" href="<?php echo esc_url( UR()->plugin_url() . '/assets/css/user-registration-setup-wizard.css' ); ?>">
+					<link rel="stylesheet" href="<?php echo esc_url( UR()->plugin_url() . '/assets/css/user-registration-setup-wizard.css' ); ?>">
+
 					<script>
 						// To play welcome video.
 						jQuery(document).on(
 							"click",
 							"#user-registration-welcome .welcome-video-play",
 							function (event) {
-							    event.preventDefault();
+								event.preventDefault();
 
 								jQuery(this).find(".user-registration-welcome-thumb, .user-registration-welcome-video__button").remove();
 
