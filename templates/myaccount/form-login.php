@@ -36,7 +36,8 @@ if ( isset( $_GET['urm_error'] ) ) {
 		ur_add_notice( $error_message, 'error' );
 		delete_transient( $error_key );
 	} else {
-		ur_add_notice( 'Error message expired or not found', 'error' );
+		$urm_error_not_found_message = esc_html__( 'Error message expired or not found', 'user-registration' );
+		ur_add_notice( $urm_error_not_found_message, 'error' );
 	}
 } else {
 	ur_add_notice( apply_filters( 'user_registration_post_login_errors', '' ), 'error' );
@@ -133,7 +134,8 @@ if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page']
 						 */
 						apply_filters(
 							'ur_login_title',
-							get_option( 'user_registration_general_setting_login_form_title', __( 'Welcome', 'user-registration' ) )
+							esc_html__(get_option( 'user_registration_general_setting_login_form_title', __( 'Welcome', 'user-registration' ) ), 'user-registration')
+
 						);
 					$login_title_description =
 						/**
@@ -145,9 +147,9 @@ if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page']
 						 */
 						apply_filters(
 							'ur_login_title_description',
-							get_option(
+							esc_html__(get_option(
 								'user_registration_general_setting_login_form_desc',
-								__( 'Please enter your details to access your account.', 'user-registration' )
+								__( 'Please enter your details to access your account.', 'user-registration' ), 'user-registration')
 							)
 						);
 					?>
@@ -253,7 +255,10 @@ if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page']
 										<input
 											class="user-registration-form__input user-registration-form__input-checkbox"
 											name="rememberme" type="checkbox" id="rememberme" value="forever"
-											<?php echo $is_login_settings ? 'disabled' : ''; ?>
+											<?php
+												echo $is_login_settings ? 'disabled' : '';
+												checked( apply_filters( 'user_registration_membership_login_form_remember_me_checked', false ), true );
+											?>
 										/>
 										<span><?php echo esc_html( $labels['remember_me'] ); ?></span>
 									</label>
@@ -319,7 +324,7 @@ if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page']
 
 					if ( ! empty( $label ) ) {
 						?>
-						<a href="<?php echo esc_url( $url_options ); ?>"> <?php echo stripslashes( esc_html( get_option( 'user_registration_general_setting_registration_label' ) ) ); ?>
+							<a href="<?php echo esc_url( $url_options ); ?>"> <?php echo stripslashes( esc_html( $label ) ); ?>
 						</a>
 						<?php
 					} else {

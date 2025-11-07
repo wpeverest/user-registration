@@ -10,23 +10,23 @@ import {
 	Input,
 	FormControl,
 	FormLabel,
-	useToast,
-} from '@chakra-ui/react';
-import { __ } from '@wordpress/i18n';
-import React, { useState, useEffect } from 'react';
-import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
+	useToast
+} from "@chakra-ui/react";
+import { __ } from "@wordpress/i18n";
+import React, { useState, useEffect } from "react";
+import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 
-const SendTestEmail = ({ isOpen, onToggle, onEmailSent }) => {
-	const adminEmail = window._UR_DASHBOARD_?.adminEmail || 'test@example.com';
+const SendTestEmail = ({ isOpen, onToggle, onEmailSent, numbering }) => {
+	const adminEmail = window._UR_DASHBOARD_?.adminEmail || "test@example.com";
 	const [email, setEmail] = useState(adminEmail);
 	const [isLoading, setIsLoading] = useState(false);
 	const toast = useToast();
 
 	// Add CSS styles for toast anchor links
 	useEffect(() => {
-		const styleId = 'ur-toast-anchor-styles';
+		const styleId = "ur-toast-anchor-styles";
 		if (!document.getElementById(styleId)) {
-			const style = document.createElement('style');
+			const style = document.createElement("style");
 			style.id = styleId;
 			style.textContent = `
 				.ur-toast-error-content a {
@@ -43,13 +43,16 @@ const SendTestEmail = ({ isOpen, onToggle, onEmailSent }) => {
 	}, []);
 
 	const handleSendTestEmail = async () => {
-		if (!email || !email.includes('@')) {
+		if (!email || !email.includes("@")) {
 			toast({
-				title: __('Invalid Email', 'user-registration'),
-				description: __('Please enter a valid email address.', 'user-registration'),
-				status: 'error',
+				title: __("Invalid Email", "user-registration"),
+				description: __(
+					"Please enter a valid email address.",
+					"user-registration"
+				),
+				status: "error",
 				duration: 3000,
-				isClosable: true,
+				isClosable: true
 			});
 			return;
 		}
@@ -57,52 +60,72 @@ const SendTestEmail = ({ isOpen, onToggle, onEmailSent }) => {
 		setIsLoading(true);
 
 		try {
-			const adminURL = window._UR_DASHBOARD_?.adminURL || window.location.origin + '/wp-admin';
+			const adminURL =
+				window._UR_DASHBOARD_?.adminURL ||
+				window.location.origin + "/wp-admin";
 			const response = await fetch(`${adminURL}admin-ajax.php`, {
-				method: 'POST',
+				method: "POST",
 				headers: {
-					'Content-Type': 'application/x-www-form-urlencoded',
+					"Content-Type": "application/x-www-form-urlencoded"
 				},
 				body: new URLSearchParams({
-					action: 'user_registration_send_test_email',
+					action: "user_registration_send_test_email",
 					email: email,
-					nonce: window._UR_DASHBOARD_?.testEmailNonce || '',
-				}),
+					nonce: window._UR_DASHBOARD_?.testEmailNonce || ""
+				})
 			});
 
 			const result = await response.json();
 
 			if (result.success) {
 				toast({
-					title: __('Test Email Sent', 'user-registration'),
-					description: result.data?.message || __('Test email has been sent successfully.', 'user-registration'),
-					status: 'success',
+					title: __("Test Email Sent", "user-registration"),
+					description:
+						result.data?.message ||
+						__(
+							"Test email has been sent successfully.",
+							"user-registration"
+						),
+					status: "success",
 					duration: 3000,
-					isClosable: true,
+					isClosable: true
 				});
 				// Notify parent component to hide this section
 				if (onEmailSent) {
 					onEmailSent();
 				}
 			} else {
-				throw new Error(result.data.message ||  __('Test email has was unsuccessfully.', 'user-registration'));
+				throw new Error(
+					result.data.message ||
+						__(
+							"Test email has was unsuccessfully.",
+							"user-registration"
+						)
+				);
 			}
 		} catch (error) {
 			// Check if error message contains HTML
-			const errorMessage = error.message || __('Failed to send test email. Please try again.', 'user-registration');
+			const errorMessage =
+				error.message ||
+				__(
+					"Failed to send test email. Please try again.",
+					"user-registration"
+				);
 			const hasHtml = /<[^>]*>/g.test(errorMessage);
-			
+
 			toast({
-				title: __('Error', 'user-registration'),
+				title: __("Error", "user-registration"),
 				description: hasHtml ? (
-					<div 
+					<div
 						dangerouslySetInnerHTML={{ __html: errorMessage }}
 						className="ur-toast-error-content"
 					/>
-				) : errorMessage,
-				status: 'error',
+				) : (
+					errorMessage
+				),
+				status: "error",
 				duration: 3000,
-				isClosable: true,
+				isClosable: true
 			});
 		} finally {
 			setIsLoading(false);
@@ -118,40 +141,60 @@ const SendTestEmail = ({ isOpen, onToggle, onEmailSent }) => {
 			border="1px"
 			borderColor="gray.100"
 		>
-			<HStack justify={'space-between'}>
-				<Heading as="h3" size="md" fontWeight="semibold">
-					{__('Send Test Email', 'user-registration')}
+			<HStack
+				justify={"space-between"}
+				onClick={onToggle}
+				borderBottom={isOpen && "1px solid #dcdcde"}
+				paddingBottom={isOpen && 5}
+				_hover={{
+					cursor: "pointer"
+				}}
+			>
+				<Heading
+					as="h3"
+					fontSize="18px"
+					fontWeight="semibold"
+					lineHeight={"1.2"}
+				>
+					{numbering +
+						") " +
+						__("Send Test Email", "user-registration")}
 				</Heading>
 				<IconButton
-					aria-label={'sendTestEmail'}
+					aria-label={"sendTestEmail"}
 					icon={
 						<Icon
 							as={isOpen ? BiChevronUp : BiChevronDown}
 							fontSize="2xl"
-							fill={isOpen ? 'primary.500' : 'black'}
+							fill={isOpen ? "primary.500" : "black"}
 						/>
 					}
-					cursor={'pointer'}
-					fontSize={'xl'}
-					onClick={onToggle}
+					cursor={"pointer"}
+					fontSize={"xl"}
 					size="sm"
 					boxShadow="none"
 					borderRadius="base"
-					variant={isOpen ? 'solid' : 'link'}
+					variant={isOpen ? "solid" : "link"}
 					border="none"
 				/>
 			</HStack>
 			<Collapse in={isOpen}>
 				<Stack gap={5}>
-					<Text fontWeight={'light'} fontSize={'md'}>
+					<Text fontWeight={"light"} fontSize={"15px !important"}>
 						{__(
-							'Make sure emails are being sent to your users during registration. Test by sending a sample email to yourself.',
-							'user-registration',
+							"Make sure emails are being sent to your users during registration. Test by sending a sample email to yourself.",
+							"user-registration"
 						)}
 					</Text>
 					<FormControl>
-						<FormLabel fontSize="sm" fontWeight="medium">
-							{__('Email Address (To send test email to)', 'user-registration')}
+						<FormLabel
+							fontSize={"15px !important"}
+							fontWeight="medium"
+						>
+							{__(
+								"Email Address (To send test email to)",
+								"user-registration"
+							)}
 						</FormLabel>
 						<Input
 							type="email"
@@ -159,22 +202,24 @@ const SendTestEmail = ({ isOpen, onToggle, onEmailSent }) => {
 							onChange={(e) => setEmail(e.target.value)}
 							placeholder={adminEmail}
 							borderColor="gray.300"
+							fontSize={"15px !important"}
 							_focus={{
-								borderColor: 'primary.500',
-								boxShadow: '0 0 0 1px var(--chakra-colors-primary-500)',
+								borderColor: "primary.500",
+								boxShadow:
+									"0 0 0 1px var(--chakra-colors-primary-500)"
 							}}
 						/>
 					</FormControl>
 					<Button
-						colorScheme={'primary'}
+						colorScheme={"primary"}
 						rounded="base"
-						width={'fit-content'}
-						fontSize="sm"
+						width={"fit-content"}
+						fontSize="14px"
 						onClick={handleSendTestEmail}
 						isLoading={isLoading}
-						loadingText={__('Sending...', 'user-registration')}
+						loadingText={__("Sending...", "user-registration")}
 					>
-						{__('Send Test Email', 'user-registration')}
+						{__("Send Test Email", "user-registration")}
 					</Button>
 				</Stack>
 			</Collapse>

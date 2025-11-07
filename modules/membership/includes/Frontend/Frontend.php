@@ -109,7 +109,7 @@ class Frontend {
 			$membership['post_content'] = json_decode( $membership['post_content'], true );
 		}
 		$membership_service              = new MembershipService();
-		$membership_details              = $membership_service->get_membership_details( $membership['post_id'] );
+		$membership_details = ( is_array( $membership ) && ! empty( $membership['post_id'] ) ) ? $membership_service->get_membership_details( $membership['post_id'] ) : array();
 		$active_gateways                 = array();
 
 		if ( ! empty( $membership_details['payment_gateways'] ) ) {
@@ -231,7 +231,8 @@ class Frontend {
 				'membership_registration_page_url' => $redirect_page_url,
 				'thank_you_page_url'               => $thank_you_page,
 				'stripe_publishable_key'           => $stripe_settings['publishable_key'],
-				'membership_gateways'              => get_option( 'ur_membership_payment_gateways', array() )
+				'membership_gateways'              => get_option( 'ur_membership_payment_gateways', array() ),
+				'urm_hide_stripe_card_postal_code' => apply_filters( 'user_registration_membership_disable_stripe_card_postal_code', false ),
 			)
 		);
 	}

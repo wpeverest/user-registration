@@ -1301,6 +1301,9 @@
 #ur-membership-create-form .user-registration-card #ur-membership-form-container #ur-member-form-right .right-container#select-plan-container {
   background: #F8F8FA;
 }
+#ur-membership-create-form .user-registration-card #ur-membership-form-container #ur-member-form-right .right-container#plan-detail-container {
+  position: relative;
+}
 #ur-membership-create-form .user-registration-card #ur-membership-form-container #ur-member-form-right .right-container#plan-detail-container .form-row {
   display: flex;
   align-items: flex-end;
@@ -1343,6 +1346,20 @@
 #ur-membership-create-form .user-registration-card #ur-membership-form-container #ur-member-form-right .right-container#plan-detail-container .form-row span.user-registration-badge--expired {
   background: #e7e7e7;
   color: #a1a1a1;
+}
+#ur-membership-create-form .user-registration-card #ur-membership-form-container #ur-member-form-right .right-container#plan-detail-container .urm-membership-plan-spinner-container.is_loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(248, 248, 250, 0.85);
+  backdrop-filter: blur(2px);
+  height: 100%;
+  width: 100%;
+  z-index: 10;
+  border-radius: 7px;
 }
 #ur-membership-create-form .user-registration-card #ur-membership-form-container #ur-member-form-right .right-container .right-title {
   padding-bottom: 16px;

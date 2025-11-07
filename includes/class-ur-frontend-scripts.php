@@ -490,6 +490,7 @@ class UR_Frontend_Scripts {
 					'logout_popup_text'                 => esc_html__( 'Are you sure you want to logout?', 'user-registration' ),
 					'logout_popup_cancel_text'          => esc_html__( 'Cancel', 'user-registration' ),
 					'user_registration_checkbox_validation_message' => apply_filters( 'user_registration_checkbox_validation_message', esc_html__( 'Please select no more than {0} options.', 'user-registration' ) ),
+					'user_registration_membership_renew_plan_button_text' => apply_filters( 'user_registration_membership_renew_plan_button_text', esc_html__( 'Change', 'user-registration' ) ),
 				);
 				break;
 

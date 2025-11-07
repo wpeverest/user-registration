@@ -30,6 +30,7 @@ abstract class UR_Log_Levels {
 	 *     'error': Error conditions.
 	 *     'warning': Warning conditions.
 	 *     'notice': Normal but significant condition.
+	 *     'success': Successful operation completion.
 	 *     'info': Informational messages.
 	 *     'debug': Debug-level messages.
 	 *
@@ -41,6 +42,7 @@ abstract class UR_Log_Levels {
 	const ERROR     = 'error';
 	const WARNING   = 'warning';
 	const NOTICE    = 'notice';
+	const SUCCESS   = 'success';
 	const INFO      = 'info';
 	const DEBUG     = 'debug';
 
@@ -56,6 +58,7 @@ abstract class UR_Log_Levels {
 		self::ERROR     => 500,
 		self::WARNING   => 400,
 		self::NOTICE    => 300,
+		self::SUCCESS   => 250,
 		self::INFO      => 200,
 		self::DEBUG     => 100,
 	);
@@ -74,6 +77,7 @@ abstract class UR_Log_Levels {
 		500 => self::ERROR,
 		400 => self::WARNING,
 		300 => self::NOTICE,
+		250 => self::SUCCESS,
 		200 => self::INFO,
 		100 => self::DEBUG,
 	);

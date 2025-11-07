@@ -1416,6 +1416,9 @@
 .user-registration input {
   border-color: #e1e1e1;
 }
+.user-registration .select2.select2-container {
+  width: 100% !important;
+}
 .user-registration .select2-results__option .wrap:before {
   content: "☐";
   width: 25px;
@@ -11995,28 +11998,56 @@ a.button.ur-smart-tags-list-button {
   margin-top: 32px;
 }
 #wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .clickable-login-fields {
+  position: relative;
   padding: 15px;
-  border-radius: 5px;
-  margin: 0 0 10px 0;
-  line-height: 21px;
+  margin: 0 0 10px;
   border: 1px solid transparent;
-}
-#wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .clickable-login-fields label {
+  border-radius: 5px;
   line-height: 21px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+#wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .clickable-login-fields input,
+#wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .clickable-login-fields label {
+  cursor: pointer;
+  line-height: inherit;
 }
 #wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .clickable-login-fields[data-field=username] label, #wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .clickable-login-fields[data-field=password] label {
+  display: block;
   margin-bottom: 10px;
 }
 #wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .clickable-login-fields.active {
-  border: 1px solid #475bb2;
   background-color: #f8f8fa;
-}
-#wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .clickable-login-fields.active:hover {
-  border: 1px solid #475bb2;
+  border-color: #475bb2;
 }
 #wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .clickable-login-fields:hover {
   background-color: #f8f8fa;
   border: 1px dashed #475bb2;
+}
+#wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .clickable-login-fields:hover::before {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0 0 0 7px;
+  background: #676f8a;
+  top: 0;
+  right: 0;
+}
+#wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .clickable-login-fields:hover::after {
+  content: "✎";
+  position: absolute;
+  top: -1px;
+  right: 5px;
+  color: #ffffff;
+  font-size: 13px;
+  transform: scaleX(-1);
+}
+#wpcontent .user-registration-login-form-container .user-registration__wrap #post-body .ur-registered-from .ur-builder-wrapper .ur-selected-inputs .ur-builder-wrapper-content .clickable-login-fields.active:hover {
+  border-style: solid;
 }
 
 @media (max-width: 960px) {
@@ -13893,6 +13924,42 @@ body.user-registration-membership_page_user-registration-login-forms .user-regis
   line-height: 23px;
   font-weight: 500;
   letter-spacing: 0.2px;
+}
+.user-registration-system-info-setting table .ur-page-link {
+  text-decoration: none;
+  color: #0073aa;
+}
+.user-registration-system-info-setting table .ur-page-link:hover {
+  text-decoration: underline;
+}
+.user-registration-system-info-setting table .ur-page-id {
+  color: #666;
+}
+.user-registration-system-info-setting table .ur-status-live {
+  color: #28a745;
+  font-size: 12px;
+  font-weight: 500;
+}
+.user-registration-system-info-setting table .ur-status-not-setup {
+  color: #e67e22;
+  font-size: 12px;
+  font-weight: 500;
+}
+.user-registration-system-info-setting table .ur-source-primary {
+  color: #28a745;
+  font-weight: 500;
+}
+.user-registration-system-info-setting table .ur-source-redirect {
+  color: #0073aa;
+  font-weight: 500;
+}
+.user-registration-system-info-setting table .ur-source-auto {
+  color: #fd7e14;
+  font-weight: 500;
+}
+.user-registration-system-info-setting table .ur-additional-pages {
+  color: #666;
+  font-style: italic;
 }
 
 .form-settings-tab.disabled[data-field-group=payments] {

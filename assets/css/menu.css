@@ -180,6 +180,21 @@ body.dashboard-visible #toplevel_page_user-registration ul li:not(.is-sub-menu) 
   margin-top: 5px;
   padding-top: 8px;
 }
+#toplevel_page_user-registration ul li .ur-site-config-count {
+  display: inline-block;
+  vertical-align: top;
+  box-sizing: border-box;
+  margin: 1px 0 -1px 2px;
+  padding: 0 5px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  background-color: #d63638;
+  color: #fff;
+  font-size: 11px;
+  line-height: 1.6;
+  text-align: center;
+}
 
 #adminmenu .wp-not-current-submenu .wp-submenu {
   border-left-width: 0px;
