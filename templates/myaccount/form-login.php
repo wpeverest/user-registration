@@ -320,7 +320,7 @@ if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page']
 
 					if ( ! empty( $label ) ) {
 						?>
-						<a href="<?php echo esc_url( $url_options ); ?>"> <?php echo stripslashes( esc_html( get_option( 'user_registration_general_setting_registration_label' ) ) ); ?>
+							<a href="<?php echo esc_url( $url_options ); ?>"> <?php echo stripslashes( esc_html( $label ) ); ?>
 						</a>
 						<?php
 					} else {
