@@ -255,7 +255,10 @@ if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page']
 										<input
 											class="user-registration-form__input user-registration-form__input-checkbox"
 											name="rememberme" type="checkbox" id="rememberme" value="forever"
-											<?php echo $is_login_settings ? 'disabled' : ''; ?>
+											<?php
+												echo $is_login_settings ? 'disabled' : '';
+												checked( apply_filters( 'user_registration_membership_login_form_remember_me_checked', false ), true );
+											?>
 										/>
 										<span><?php echo esc_html( $labels['remember_me'] ); ?></span>
 									</label>
