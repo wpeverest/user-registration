@@ -905,6 +905,26 @@
   border-color: #ff4149;
 }
 
+.jconfirm:has(.ur-shortcut-keyword) .jconfirm-cell {
+  padding-right: 35%;
+  padding-left: 35%;
+}
+.jconfirm:has(.ur-shortcut-keyword) .jconfirm-box {
+  border: 0 !important;
+  border-radius: 7px;
+}
+.jconfirm:has(.ur-shortcut-keyword) .jconfirm-box .jconfirm-title-c .jconfirm-icon-c .dashicons,
+.jconfirm:has(.ur-shortcut-keyword) .jconfirm-box .jconfirm-title-c .jconfirm-icon-c .dashicons::before {
+  width: auto;
+  height: auto;
+  font-size: 28px;
+}
+.jconfirm:has(.ur-shortcut-keyword) .jconfirm-box .jconfirm-content-pane .ur-shortcut-keyword .ur-shortcut-title {
+  font-size: 16px;
+  line-height: 24px;
+  color: #1f2937;
+}
+
 /**
 * Utility classes
 */
