@@ -65,15 +65,21 @@ const Sidebar = React.memo(
 						)}
 						value={searchTerm}
 						onChange={handleSearchChange}
+						minHeight={"38px"}
+						border={"1px solid #e1e1e1"}
+						fontSize="14px"
+						fontWeight="400"
+						lineHeight="24px"
+						color="#383838"
+						borderRadius="4px"
 						_focus={{
 							borderColor: "#475bb2",
 							outline: "none",
 							boxShadow: "none"
 						}}
-						fontSize="16px"
-						fontWeight="400"
-						borderRadius="8px"
-						borderColor="#B0B0B0 !important"
+						_placeholder={{
+							color: "#737373"
+						}}
 					/>
 				</InputGroup>
 

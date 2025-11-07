@@ -1894,6 +1894,14 @@ body {
 								display: block;
 							}
 						}
+
+						.ur-input-type-wysiwyg {
+							.ur-field {
+								textarea {
+									height: 200px;
+								}
+							}
+						}
 					}
 
 					> li.ur-item-dragged {
@@ -4363,33 +4371,64 @@ a.button.ur-smart-tags-list-button {
 									}
 
 									.clickable-login-fields {
+										position: relative;
 										padding: 15px;
-										border-radius: 5px;
-										margin: 0 0 10px 0;
-										line-height: 21px;
+										margin: 0 0 10px;
 										border: 1px solid transparent;
+										border-radius: 5px;
+										line-height: 21px;
+										cursor: pointer;
+										transition: all 0.2s ease;
 
+										input,
 										label {
-											line-height: 21px;
+											cursor: pointer;
+											line-height: inherit;
 										}
 
-										&[data-field="username"],
-										&[data-field="password"] {
-											label {
-												margin-bottom: 10px;
-											}
+										&[data-field="username"] label,
+										&[data-field="password"] label {
+											display: block;
+											margin-bottom: 10px;
 										}
 
 										&.active {
-											border: 1px solid #475bb2;
 											background-color: #f8f8fa;
-											&:hover {
-												border: 1px solid #475bb2;
-											}
+											border-color: #475bb2;
 										}
+
 										&:hover {
 											background-color: #f8f8fa;
 											border: 1px dashed #475bb2;
+
+											&::before {
+												content: "";
+												position: absolute;
+												width: 24px;
+												height: 20px;
+												display: flex;
+												align-items: center;
+												justify-content: center;
+												border-radius: 0 0 0 $border_radius_7;
+												background: #676f8a;
+												top: 0;
+												right: 0;
+											}
+
+											&::after {
+												content: "\270E";
+												position: absolute;
+												top: -1px;
+												right: 5px;
+												color: $white;
+												font-size: 13px;
+												transform: scaleX(-1);
+
+											}											
+										}
+
+										&.active:hover {
+											border-style: solid;
 										}
 									}
 								}
@@ -6851,6 +6890,52 @@ body {
 					letter-spacing: 0.2px;
 				}
 			}
+		}
+
+		// System Info Page Styles
+		.ur-page-link {
+			text-decoration: none;
+			color: #0073aa;
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+
+		.ur-page-id {
+			color: #666;
+		}
+
+		.ur-status-live {
+			color: #28a745;
+			font-size: 12px;
+			font-weight: 500;
+		}
+
+		.ur-status-not-setup {
+			color: #e67e22;
+			font-size: 12px;
+			font-weight: 500;
+		}
+
+		.ur-source-primary {
+			color: #28a745;
+			font-weight: 500;
+		}
+
+		.ur-source-redirect {
+			color: #0073aa;
+			font-weight: 500;
+		}
+
+		.ur-source-auto {
+			color: #fd7e14;
+			font-weight: 500;
+		}
+
+		.ur-additional-pages {
+			color: #666;
+			font-style: italic;
 		}
 	}
 }

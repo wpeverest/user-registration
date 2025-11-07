@@ -135,9 +135,9 @@ if ( ! class_exists( 'UR_Settings_Payment_Success_Admin_Email', false ) ) :
 				'user_registration_payment_admin_email_message',
 				sprintf(
 					__(
-						'Hi Admin, </br>
-						You have successfully received a payment from {{username}}. <br>
-						<a href="{{home_url}}/wp-admin/user-edit.php?user_id={{user_id}}">Click Here to view payment details</a> .
+						'Hi Admin, <br/><br/>
+						You have successfully received a payment from {{username}}. <br/><br/>
+						<a href="{{home_url}}/wp-admin/user-edit.php?user_id={{user_id}}">Click Here to view payment details</a> .<br/><br/>
 						Thank You!',
 						'user-registration'
 					)
