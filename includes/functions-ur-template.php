@@ -1065,8 +1065,6 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 	function user_registration_form_data( $user_id = 0, $form_id = 0 ) {
 
 		$all_meta_value     = get_user_meta( $user_id );
-		$user_details       = get_user_by( 'ID', $user_id );
-		$user_info          = (array) $user_details->data;
 		$allowed_user_roles = array( 'administrator' );
 		$current_user       = wp_get_current_user();
 		$is_admin           = count( array_intersect( $allowed_user_roles, (array) $current_user->roles ) ) > 0;
@@ -1196,6 +1194,9 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 						}
 
 						if ( empty( $extra_params['default'] ) ) {
+							$user_details       = get_user_by( 'ID', $user_id );
+							$user_info          = (array) $user_details->data;
+
 							$extra_params['default'] = isset( $user_info[ $field_name ] ) ? $user_info[ $field_name ] : '';
 						}
 						$user_profile_fields = ur_get_user_profile_field_only();
