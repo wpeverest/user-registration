@@ -6860,6 +6860,52 @@ body {
 				}
 			}
 		}
+
+		// System Info Page Styles
+		.ur-page-link {
+			text-decoration: none;
+			color: #0073aa;
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+
+		.ur-page-id {
+			color: #666;
+		}
+
+		.ur-status-live {
+			color: #28a745;
+			font-size: 12px;
+			font-weight: 500;
+		}
+
+		.ur-status-not-setup {
+			color: #e67e22;
+			font-size: 12px;
+			font-weight: 500;
+		}
+
+		.ur-source-primary {
+			color: #28a745;
+			font-weight: 500;
+		}
+
+		.ur-source-redirect {
+			color: #0073aa;
+			font-weight: 500;
+		}
+
+		.ur-source-auto {
+			color: #fd7e14;
+			font-weight: 500;
+		}
+
+		.ur-additional-pages {
+			color: #666;
+			font-style: italic;
+		}
 	}
 }
 .form-settings-tab.disabled[data-field-group="payments"]{

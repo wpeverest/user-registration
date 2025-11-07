@@ -9397,6 +9397,122 @@ if ( ! function_exists( 'ur_get_payment_connection_statuses' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ur_get_login_page_url' ) ) {
+	/**
+	 * Get the appropriate login page URL based on User Registration settings.
+	 * @return string|false The login page URL or false if none found
+	 */
+	function ur_get_login_page_url() {
+		// Step 1: Check user_registration_login_page_id option first
+		$login_page_id = get_option( 'user_registration_login_page_id' );
+		if ( ! empty( $login_page_id ) ) {
+			$page_url = get_permalink( $login_page_id );
+			if ( $page_url ) {
+				return $page_url;
+			}
+		}
+
+		// Step 2: Check user_registration_login_options_login_redirect_url option
+		$login_redirect_url = get_option( 'user_registration_login_options_login_redirect_url' );
+		if ( ! empty( $login_redirect_url ) ) {
+			// If it's a page ID, get the permalink
+			if ( is_numeric( $login_redirect_url ) ) {
+				$page_url = get_permalink( $login_redirect_url );
+				if ( $page_url ) {
+					return $page_url;
+				}
+			} else {
+				// If it's already a URL, validate and return it
+				if ( ur_is_valid_url( $login_redirect_url ) ) {
+					return esc_url_raw( $login_redirect_url );
+				}
+			}
+		}
+
+		// Step 3: Find all pages with login shortcode or block
+		$login_pages = ur_find_pages_with_login_functionality();
+		if ( ! empty( $login_pages ) ) {
+			// Return the first found login page URL
+			return get_permalink( $login_pages[0]->ID );
+		}
+
+		return false;
+	}
+}
+
+if ( ! function_exists( 'ur_find_pages_with_login_functionality' ) ) {
+	/**
+	 * Find all pages in the system that contain login shortcodes or blocks.
+	 *
+	 * @return array Array of WP_Post objects containing login functionality
+	 */
+	function ur_find_pages_with_login_functionality() {
+		global $wpdb;
+
+		$login_pages = array();
+
+		// Search for pages with login shortcodes and blocks
+		$patterns = array(
+			'%[user_registration_login]%',
+			'%<!-- wp:user-registration/login-form%'
+		);
+
+		// Build the SQL query
+		$pattern_conditions = array();
+		foreach ( $patterns as $pattern ) {
+			$pattern_conditions[] = "post_content LIKE " . $wpdb->prepare( '%s', $pattern );
+		}
+
+		$where_clause = implode( ' OR ', $pattern_conditions );
+
+		$query = "
+			SELECT DISTINCT p.*
+			FROM {$wpdb->posts} p
+			WHERE p.post_type = 'page'
+			AND p.post_status = 'publish'
+			AND ({$where_clause})
+			ORDER BY p.post_title ASC
+		";
+
+		$results = $wpdb->get_results( $query );
+
+		// Merge and deduplicate results
+		$all_results = array_merge( $results );
+		$unique_pages = array();
+
+		foreach ( $all_results as $page ) {
+			if ( ! isset( $unique_pages[ $page->ID ] ) ) {
+				$unique_pages[ $page->ID ] = $page;
+			}
+		}
+
+		return array_values( $unique_pages );
+	}
+}
+
+if ( ! function_exists( 'ur_get_login_page_info' ) ) {
+	/**
+	 * Get detailed information about login page options and available pages.
+	 *
+	 * @return array Array containing login page information
+	 */
+	function ur_get_login_page_info() {
+		$info = array(
+			'login_redirect_url' => get_option( 'user_registration_login_options_login_redirect_url' ),
+			'login_page_id' => get_option( 'user_registration_login_page_id' ),
+			'login_pages_with_functionality' => ur_find_pages_with_login_functionality(),
+			'recommended_login_page_url' => ur_get_login_page_url()
+		);
+
+		// Add additional context
+		$info['login_redirect_url_set'] = ! empty( $info['login_redirect_url'] );
+		$info['login_page_id_set'] = ! empty( $info['login_page_id'] );
+		$info['has_login_pages'] = ! empty( $info['login_pages_with_functionality'] );
+
+		return $info;
+	}
+}
+
 if ( ! function_exists( 'ur_should_show_site_assistant_menu' ) ) {
 	/**
 	 * Check if site assistant menu should be shown.
