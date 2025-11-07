@@ -11,6 +11,7 @@ use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
 use WPEverest\URMembership\Admin\Repositories\SubscriptionRepository;
 use WPEverest\URMembership\Admin\Services\Paypal\PaypalService;
 use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
+use WPEverest\URMembership\Admin\Services\MembersService;
 
 class SubscriptionService {
 
@@ -318,6 +319,16 @@ class SubscriptionService {
 		$members_data = array(
 			'membership_data' => $selected_membership_details,
 		);
+
+		$membership_details = ! empty( $data['selected_membership_id'] ) ? json_decode( get_post_meta( $data['selected_membership_id'], 'ur_membership', true ), true ) : array();
+
+		if ( ! empty( $membership_details ) ) {
+			$members_data['role'] = ! empty( $membership_details['role'] ) ? $membership_details['role'] : 'subscriber';
+		}
+
+		// Update user meta and membership role here.
+		$member_service = new MembersService();
+		$member_service->update_user_meta( $members_data, $user->ID );
 
 		if ( isset( $data['upgrade'] ) && $data["upgrade"] && "subscription" === $current_membership_details['type'] && "bank" !== $payment_method && "off" === $selected_membership_details['trial_status'] && ! isset( $upgrade_details['delayed_until'] ) ) {
 
