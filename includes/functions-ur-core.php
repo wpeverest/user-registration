@@ -4419,6 +4419,8 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 					}
 
 					throw new Exception( '<strong>' . esc_html__( 'ERROR: ', 'user-registration' ) . '</strong>' . $messages['unknown_email'] );
+				} else {
+					$login_data['user_login'] = $username;
 				}
 			} elseif ( 'username' === get_option( 'user_registration_general_setting_login_options_with', array() ) ) {
 				$user_data                = get_user_by( 'login', $username );
