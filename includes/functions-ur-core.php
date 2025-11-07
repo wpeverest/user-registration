@@ -9,6 +9,7 @@
  */
 
 use WPEverest\URMembership\Admin\Repositories\MembersOrderRepository;
+use WPEverest\URMembership\Admin\Services\MembershipService;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -9416,4 +9417,20 @@ if ( ! function_exists( 'ur_should_show_site_assistant_menu' ) ) {
 		);
 	}
 
+}
+
+
+if( ! function_exists( 'ur_get_membership_details') ){
+	/**
+	 * Get membership details.
+	 *
+	 * @since xx.xx.xx
+	 *
+	 * @return array
+	 */	function ur_get_membership_details() {
+		$membership_service = new MembershipService();
+		$memberships        = $membership_service->list_active_memberships();
+
+		return $memberships;
+	}
 }

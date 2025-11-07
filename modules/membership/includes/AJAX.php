@@ -73,6 +73,7 @@ class AJAX {
 			'verify_pages'                 => false,
 			'validate_pg'                  => false,
 			'upgrade_membership'           => false,
+			'get_membership_details'	   => false,
 		);
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
 			add_action( 'wp_ajax_user_registration_membership_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -1330,5 +1331,72 @@ class AJAX {
 				'message' => __( "Something went wrong while cancelling membership.", "user-registration" ),
 			)
 		);
+	}
+
+	/**
+	 * Get membership details for a given membership ID.
+	 *
+	 * @since xx.xx.xx
+	 */
+	public static function get_membership_details(){
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to view membership details.', 'user-registration' ) ) );
+		}
+
+		$membership_id = isset( $_POST['membership_id'] ) ? sanitize_text_field( wp_unslash( $_POST['membership_id'] ) ) : '';
+
+		if ( empty( $membership_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Membership ID is missing.', 'user-registration' ) ) );
+		}
+
+		$membership_details = ur_get_membership_details();
+
+		if ( is_wp_error( $membership_details ) ) {
+			wp_send_json_error( array( 'message' => __( 'Something went wrong.','user-registration' ) ) );
+		}
+
+		$membership_detail = array();
+		foreach ( $membership_details as $details ) {
+			if ( isset( $details['ID'] ) && $membership_id === $details['ID'] ) {
+				$date = explode( " ", $details['period'] );
+
+				$value  = isset( $date[2] ) && is_numeric( $date[2] ) ? (int) $date[2] : '';
+				$period = isset( $date[3] ) ? trim($date[3]) : '';
+
+				$list_of_period = array(
+					'Day'   => 'D',
+					'Days'  => 'D',
+					'Week'  => 'W',
+					'Weeks' => 'W',
+					'Month' => 'M',
+					'Months'=> 'M',
+					'Year'  => 'Y',
+					'Years' => 'Y'
+				);
+
+				$expiration_on = 'N/A';
+
+				if ( ! empty( $period ) && ! empty( $value ) && isset( $list_of_period[$period] ) ) {
+					$start_date = new \DateTime( date( 'Y-m-d' ) ?? '' );
+
+					$intervalSpec = 'P' . $value . $list_of_period[$period];
+
+					$interval = new \DateInterval( $intervalSpec );
+					$start_date->add( $interval );
+					$expiration_on = $start_date->format('F j, Y');
+				}
+
+				$membership_detail['amount']              = html_entity_decode( $details['period'] );
+				$membership_detail['subscription_status'] = __( 'Pending', 'user-registration' );
+				$membership_detail['expiration_on']       = $expiration_on;
+
+				break;
+			}
+
+		}
+
+		wp_send_json_success( array(
+			'membership_detail' => $membership_detail
+		) );
 	}
 }
