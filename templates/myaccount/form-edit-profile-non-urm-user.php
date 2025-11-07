@@ -24,15 +24,6 @@ $user           = wp_get_current_user();
 $user_id        = get_current_user_id();
 $endpoint_label = isset( $args['endpoint_label'] ) ? $args['endpoint_label'] : '';
 
-$layout = get_option('user_registration_my_account_layout', 'horizontal');
-
-if ('vertical' === $layout) {
-	?>
-	<div class="user-registration-MyAccount-content__header">
-		<h1><?php echo wp_kses_post($endpoint_label); ?></h1>
-	</div>
-	<?php
-}
 ?>
 <div class="user-registration-MyAccount-content__body">
 	<div class="ur-frontend-form login ur-edit-profile" id="ur-frontend-form">
@@ -83,14 +74,19 @@ if ('vertical' === $layout) {
 						?>
 						<h2>
 						<?php
-						esc_html_e(
-							/**
-							 * Filter to modify the profile detail title.
-							 *
-							 * @param string Profile detail title content.
-							 * @return string modified profile detail title.
-							 */
-							apply_filters( 'user_registation_profile_detail_title', __( 'Profile Detail', 'user-registration' ) ) ); //PHPCS:ignore ?></h2>
+							$urm_my_account_layout = get_option( 'user_registration_my_account_layout', 'horizontal' );
+
+							if('horizontal' === $urm_my_account_layout) {
+								esc_html_e(
+									/**
+									 * Filter to modify the profile detail title.
+									 *
+									 * @param string Profile detail title content.
+									 * @return string modified profile detail title.
+									 */
+									apply_filters( 'user_registation_profile_detail_title', __( 'Profile Detail', 'user-registration' ) ) ); //PHPCS:ignore
+							}
+						?></h2>
 						<?php
 						$is_profile_pic_on_form    = ! ur_option_checked( 'user_registration_disable_profile_picture', false );
 						if ( $is_profile_pic_on_form ) {
