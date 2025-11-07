@@ -553,7 +553,13 @@ class SubscriptionService {
 	public function run_daily_delayed_membership_subscriptions() {
 		$all_delayed_orders = $this->orders_repository->get_all_delayed_orders( date( 'Y-m-d 00:00:00' ) );
 
-		ur_get_logger()->notice( __( 'Scheduled Subscriptions job started for the date: (' . date( 'd F,Y' ) . ')', 'user-registration' ), array( 'source' => 'urm-membership-crons' ) );
+		ur_get_logger()->notice(
+			sprintf(
+				__( 'Scheduled Subscriptions job started for the date: (%s)', 'user-registration' ),
+				date( 'd F,Y' )
+			),
+			array( 'source' => 'urm-membership-crons' )
+		);
 
 		if ( empty( $all_delayed_orders ) ) {
 			ur_get_logger()->notice( __( 'No delayed orders found.', 'user-registration' ), array( 'source' => 'urm-membership-crons' ) );
@@ -589,7 +595,13 @@ class SubscriptionService {
 			}
 		}
 
-		ur_get_logger()->notice( __( 'Subscription updated for ' . implode( ',', $updated_subscription_for_users ), 'user-registration' ), array( 'source' => 'urm-membership-crons' ) );
+		ur_get_logger()->notice(
+			sprintf(
+				__( 'Subscription updated for %s', 'user-registration' ),
+				implode( ',', $updated_subscription_for_users )
+			),
+			array( 'source' => 'urm-membership-crons' )
+		);
 
 
 	}
