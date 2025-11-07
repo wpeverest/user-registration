@@ -24,14 +24,14 @@ class MembersService {
 	 *
 	 * @return array|bool[]
 	 */
-	public function validate_user_data( $data ) {
+	public function validate_user_data( $data , $is_edit = false) {
 
 		// validate membership_start date
-		if ( $data['start_date'] < date( 'Y-m-d' ) ) {
+		if ( $data['start_date'] < date( 'Y-m-d' ) && !$is_edit) {
 			return array(
 				'status'  => false,
 				'key'     => 'start_date',
-				'message' => __( 'Password does not match.', 'user-registration' ),
+				'message' => __( 'Please select a start date that is today or later', 'user-registration' ),
 			);
 		}
 		// validate coupon if applied

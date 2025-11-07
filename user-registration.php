@@ -3,7 +3,7 @@
  * Plugin Name: User Registration & Membership
  * Plugin URI: https://wpuserregistration.com/
  * Description: The most flexible User Registration and Membership plugin for WordPress.
- * Version: 4.4.1
+ * Version: 4.4.5
  * Author: WPEverest
  * Author URI: https://wpuserregistration.com
  * Text Domain: user-registration
@@ -35,7 +35,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '4.4.1';
+		public $version = '4.4.5';
 
 		/**
 		 * Session instance.
@@ -265,7 +265,6 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			include_once UR_ABSPATH . 'includes/menu-items/abstract-ur-nav-menu-item.php';
 			include_once UR_ABSPATH . 'includes/menu-items/class-ur-login-logout-nav-menu-item.php';
 
-
 			// Validation classes.
 			include_once UR_ABSPATH . 'includes/validation/class-ur-validation.php';
 			include_once UR_ABSPATH . 'includes/validation/class-ur-form-validation.php';
@@ -305,7 +304,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 				include_once UR_ABSPATH . 'includes/3rd-party/oxygen/class-ur-oxygen.php';
 			}
 			// Divi builder compatiblity.
-			if(class_exists('WPEverest\URM\DiviBuilder\Builder')) {
+			if ( class_exists( 'WPEverest\URM\DiviBuilder\Builder' ) ) {
 				WPEverest\URM\DiviBuilder\Builder::init();
 			}
 
@@ -330,6 +329,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			}
 			include_once UR_ABSPATH . 'includes/class-ur-cron.php';
 			include_once UR_ABSPATH . 'includes/stats/class-ur-stats.php';
+			include_once UR_ABSPATH . 'includes/class-ur-captcha-conflict-manager.php';
 
 			$this->query = new UR_Query();
 		}
@@ -359,6 +359,11 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 */
 		public function objects() {
 			$this->form = new UR_Form_Handler();
+
+			// Initialize captcha conflict manager only on frontend
+			if ( $this->is_request( 'frontend' ) ) {
+				new UR_Captcha_Conflict_Manager();
+			}
 		}
 
 		/**

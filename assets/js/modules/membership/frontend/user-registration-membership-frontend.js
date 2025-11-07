@@ -596,7 +596,11 @@
 					discount_amount !== undefined && discount_amount !== ""
 						? urm_calculated_total - discount_amount
 						: urm_calculated_total;
-			total_input.val(urmf_data.currency_symbol + total);
+			if( 'left' === urmf_data.curreny_pos ) {
+				total_input.val(urmf_data.currency_symbol + total);
+			} else {
+				total_input.val( total + urmf_data.currency_symbol );
+			}
 		},
 		upgrade_membership: function (
 			current_plan,
@@ -931,7 +935,7 @@
 				options_html +
 				"</div>" +
 				"</div>" +
-				'<div class="ur_membership_registration_container">' +
+				'<div class="ur_membership_registration_container urm-d-none">' +
 				'<div class="ur_membership_frontend_input_container urm_hidden_payment_container ur_payment_gateway_container urm-d-none">' +
 				'<span class="ur-upgrade-label ur-label required">Select Payment Gateway</span>' +
 				'<div id="payment-gateway-body" class="ur_membership_frontend_input_container">' +
@@ -947,7 +951,6 @@
 				"</div>" +
 				ur_membership_ajax_utils.authorize_net_container_html() +
 				"</div>" +
-				'<span id="upgrade-membership-notice"></span>' +
 				"</div>"
 			);
 		},
@@ -1537,6 +1540,7 @@
 				"change",
 				'input[name="urm_membership"]',
 				function () {
+					$('.ur_membership_registration_container').removeClass('urm-d-none');
 					// clear coupon total notice
 					$("#total-input-notice").text("");
 
@@ -1551,7 +1555,9 @@
 						stripe_error_container = $("#stripe-errors"),
 						upgrade_error_container = $(
 							"#upgrade-membership-notice"
-						);
+						),
+						urm_default_pg = $(this).data("urm-default-pg");
+
 
 					var authorize_container = $(".authorize-net-container");
 					var authorize_error_container = $("#authorize-errors");
@@ -1560,12 +1566,26 @@
 
 					stripe_error_container.remove();
 					upgrade_error_container.text("");
-					$('input[name="urm_payment_method"]').prop(
-						"checked",
-						false
-					);
-					stripe_container.addClass("urm-d-none");
-					authorize_container.addClass("urm-d-none");
+
+					//Selects a default payment gateway. Needs to be updated for translation.
+					if ( urm_default_pg && urm_default_pg.toLowerCase() === urm_default_pg ) {
+						$(this).closest('#ur-membership-registration').find('#ur-membership-'+urm_default_pg).prop('checked', true).trigger('change');
+
+						if(urm_default_pg.toLowerCase() === 'stripe'){
+							stripe_settings.init();
+						}
+
+						if(urm_default_pg.toLowerCase() !== 'authorize'){
+							authorize_container.addClass("urm-d-none");
+						}
+					} else {
+						$('input[name="urm_payment_method"]').prop(
+							"checked",
+							false
+						);
+						stripe_container.addClass("urm-d-none");
+					}
+
 					urm_hidden_pg_containers.addClass("urm-d-none");
 
 					$(".urm_apply_coupon").show();
@@ -1598,6 +1618,8 @@
 							lone_pg.trigger("change");
 						}
 						ur_membership_ajax_utils.calculate_total($(this));
+					} else {
+						stripe_container.addClass("urm-d-none");
 					}
 				}
 			);
@@ -1767,38 +1789,6 @@
 					ajaxFlag["status"] = flag;
 				}
 			);
-
-			//on toggle payment gatewaysw
-			//on toggle payment gatewaysw
-			$('input[name="urm_payment_method"]').on("change", function () {
-				var selected_method = $(this).val(),
-					stripe_container = $(".stripe-container"),
-					stripe_error_container = $("#stripe-errors");
-
-				var authorize_container = $(".authorize-net-container");
-				var authorize_error_container = $("#authorize-errors");
-
-				stripe_container.addClass("urm-d-none");
-				stripe_error_container.remove();
-
-				authorize_container.addClass("urm-d-none");
-				authorize_error_container.remove();
-
-				elements = {};
-				if (selected_method === "stripe") {
-					if (urmf_data.stripe_publishable_key.length == 0) {
-						ur_membership_frontend_utils.show_failure_message(
-							urmf_data.labels.i18n_incomplete_stripe_setup_error
-						);
-						return;
-					}
-					stripe_container.removeClass("urm-d-none");
-					stripe_settings.init();
-				}
-				if (selected_method === "authorize") {
-					authorize_container.removeClass("urm-d-none");
-				}
-			});
 
 			$(document).on(
 				"change",
@@ -1976,9 +1966,6 @@
 									var pg_type = $(
 											'input[name="urm_membership"]:checked'
 										).data("urm-pg-type"),
-										error_notice = $(
-											"#upgrade-membership-notice"
-										),
 										btn = $(".swal2-confirm");
 									//append spinner
 									if (
@@ -2122,7 +2109,6 @@
 						var pg_type = $(
 								'input[name="urm_membership"]:checked'
 							).data("urm-pg-type"),
-							error_notice = $("#upgrade-membership-notice"),
 							btn = $(".swal2-confirm");
 						//append spinner
 						if (btn.find("span.urm-spinner").length > 0) {

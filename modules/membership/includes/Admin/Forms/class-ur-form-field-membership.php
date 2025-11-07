@@ -76,10 +76,10 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 				'setting_id'  => 'membership_listing_option',
 				'name'        => 'membership_listing_option',
 				'type'        => 'select',
-				'label'       => __( 'Membership Listing Options', 'user-registration' ),
+				'label'       => __( 'Membership Display Options', 'user-registration' ),
 				'placeholder' => __( 'Select an option', 'user-registration' ),
 				'required'    => 1,
-				'tip'         => __( 'Select how you want to list memberships in the form.', 'user-registration' ),
+				'tip'         => __( 'Choose how you want the memberships to be listed in the form.', 'user-registration' ),
 				'default'     => 'all',
 				'options'     => array(
 					'all'   => 'Show all Memberships.',
@@ -90,12 +90,13 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 				'setting_id'  => 'membership_group',
 				'name'        => 'membership_group',
 				'type'        => 'select',
-				'label'       => __( 'Membership Group', 'user-registration' ),
+				'label'       => __( 'Select Membership Group', 'user-registration' ),
 				'placeholder' => __( 'Select any membership group.', 'user-registration' ),
 				'required'    => 1,
-				'tip'         => __( "Select a membership group from the dropdown or create a new one from <a href='?page=user-registration-membership&action=add_groups'>here</a>.", 'user-registration' ),
+				'tip'         => __( "Choose an existing membership group from the dropdown, or create a new one <a href='?page=user-registration-membership&action=add_groups'>here</a>.", 'user-registration' ),
 				'options'     => array( 0 => 'Select a Membership Group.' ) + $membership_group_service->get_membership_groups(),
 			),
+
 		);
 
 		$settings = $settings + $membership_settings;

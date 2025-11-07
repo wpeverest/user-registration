@@ -35,18 +35,9 @@ const Edit = (props) => {
 				<PanelBody
 					title={__("Login Form Settings", "user-registration")}
 				>
-					<TextControl
-						key="ur-gutenberg-login-form-redirect-url"
-						label={__("Redirect URL", "user-registration")}
-						value={redirectUrl}
-						onChange={setRedirectUrl}
-					/>
-					<TextControl
-						key="ur-gutenberg-login-form-logout-url"
-						label={__("Logout URL", "user-registration")}
-						value={logoutUrl}
-						onChange={setLogoutUrl}
-					/>
+					<p>
+						Want to configure where users will be redirected to after login or logout? Click <a target="_blank" href="/wp-admin/admin.php?page=user-registration-login-forms&tab=ur-tab-login-form-settings&tab-item=advanced-settings">here.</a>
+					</p>
 					<SelectControl
 						key="ur-gutenberg-login-user-login-state"
 						label={__("User State", "user-registration")}

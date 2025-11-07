@@ -203,7 +203,7 @@ wp_enqueue_style( 'ur-frontend-small-screen' );
 							foreach ( $grid_data as $grid_data_key => $single_item ) {
 
 								if ( isset( $single_item->field_key ) ) {
-									$field_id = $single_item->general_setting->field_name;
+									$field_id = isset( $single_item->advance_setting->field_name ) ? $single_item->advance_setting->field_name : ( isset( $single_item->general_setting->field_name ) ? $single_item->general_setting->field_name : '' );
 									$cl_props = '';
 
 									// If the conditional logic addon is installed.
@@ -236,7 +236,7 @@ wp_enqueue_style( 'ur-frontend-small-screen' );
 										apply_filters( 'user_registration_handle_form_fields', $grid_data, $form_id );
 
 										if ( isset( $single_item->field_key ) ) {
-											$field_id = $single_item->general_setting->field_name;
+											$field_id = isset( $single_item->advance_setting->field_name ) ? $single_item->advance_setting->field_name : ( isset( $single_item->general_setting->field_name ) ? $single_item->general_setting->field_name : '' );
 											$cl_props = '';
 
 											// If the conditional logic addon is installed.

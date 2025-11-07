@@ -40,7 +40,9 @@ class UR_Admin {
 		add_action( 'user_registration_after_form_settings', array( $this, 'render_integration_section' ) );
 		add_action( 'user_registration_after_form_settings', array( $this, 'render_integration_List_section' ) );
 		add_action( 'init', array( $this, 'init_users_menu' ) );
+
 	}
+
 	/**
 	 * Initialize Users Menu.
 	 *
@@ -452,6 +454,20 @@ class UR_Admin {
 
 		if ( empty( $data['user_registration_new_user_notice'] ) ) {
 			return $response;
+		}
+
+		if( false === get_transient( 'urm_users_not_from_urm_forms' ) ) {
+			// Get users not registered via URM forms.
+			$urm_users_not_from_urm_forms = count( get_users( array(
+				'fields'     => 'ID',
+				'meta_query' => array(
+					array(
+						'key'     => 'ur_form_id',
+						'compare' => 'NOT EXISTS',
+					),
+				),
+			) ) );
+			set_transient( 'urm_users_not_from_urm_forms', $urm_users_not_from_urm_forms, apply_filters( 'urm_non_urm_user_transient_expiration',MINUTE_IN_SECONDS * 5 ) );
 		}
 
 		$read_time = get_option( 'user_registration_users_listing_viewed' );

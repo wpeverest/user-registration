@@ -84,12 +84,8 @@ abstract class UR_Form_Field {
 		if ( isset( $this->admin_data->advance_setting->$key ) ) {
 			return $this->admin_data->advance_setting->$key;
 		}
-
-		if ( isset( $this->field_defaults[ 'default_' . $key ] ) ) {
-			return $this->field_defaults[ 'default_' . $key ];
-		}
-
-		return '';
+		//fallback to general setting data if advance setting not found.
+		return $this->get_general_setting_data( $key );
 	}
 
 	/**
@@ -223,9 +219,9 @@ abstract class UR_Form_Field {
 		if ( isset( $data['advance_setting']->custom_class ) ) {
 			array_push( $form_data['input_class'], $data['advance_setting']->custom_class );
 		}
-
+		$field_name = isset( $data['advance_setting']->field_name ) ? $data['advance_setting']->field_name : ( isset( $data['general_setting']->field_name ) ? $data['general_setting']->field_name : '' );
 		if ( isset( $data['advance_setting']->date_format ) ) {
-			update_option( 'user_registration_' . $data['general_setting']->field_name . '_date_format', $data['advance_setting']->date_format );
+			update_option( 'user_registration_' . $field_name . '_date_format', $data['advance_setting']->date_format );
 			$form_data['custom_attributes']['data-date-format'] = $data['advance_setting']->date_format;
 		}
 
@@ -256,17 +252,17 @@ abstract class UR_Form_Field {
 			}
 			$form_data['custom_attributes']['data-locale'] = $date_localization;
 		}
-
-		$form_data['custom_attributes']['data-label'] = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_label', $data['general_setting']->label );
+		$field_name = isset( $data['advance_setting']->field_name ) ? $data['advance_setting']->field_name : ( isset( $data['general_setting']->field_name ) ? $data['general_setting']->field_name : '' );
+		$form_data['custom_attributes']['data-label'] = ur_string_translation( $form_id, 'user_registration_' . $field_name . '_label', $data['general_setting']->label );
 
 		if ( isset( $form_data['label'] ) ) {
-			$form_data['label'] = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_label', $form_data['label'] );
+			$form_data['label'] = ur_string_translation( $form_id, 'user_registration_' . $field_name . '_label', $form_data['label'] );
 		}
 		if ( isset( $form_data['placeholder'] ) ) {
-			$form_data['placeholder'] = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_placeholder', $form_data['placeholder'] );
+			$form_data['placeholder'] = ur_string_translation( $form_id, 'user_registration_' . $field_name . '_placeholder', $form_data['placeholder'] );
 		}
 		if ( isset( $form_data['description'] ) ) {
-			$form_data['description'] = ur_string_translation( $form_id, 'user_registration_' . $data['general_setting']->field_name . '_description', $form_data['description'] );
+			$form_data['description'] = ur_string_translation( $form_id, 'user_registration_' . $field_name . '_description', $form_data['description'] );
 		}
 
 		// Filter only selected countries for `Country` fields.
@@ -518,8 +514,10 @@ abstract class UR_Form_Field {
 
 		$form_data = isset( $form_data_array['form_data'] ) ? $form_data_array['form_data'] : $form_data;
 
-		if ( isset( $data['general_setting']->field_name ) ) {
-			user_registration_form_field( $data['general_setting']->field_name, $form_data );
+		$field_name = isset( $data['advance_setting']->field_name ) ? $data['advance_setting']->field_name : ( isset( $data['general_setting']->field_name ) ? $data['general_setting']->field_name : '' );
+
+		if ( ! empty( $field_name ) ) {
+			user_registration_form_field( $field_name, $form_data );
 		}
 	}
 

@@ -203,8 +203,12 @@ class UR_Admin_Settings {
 	 *
 	 * @param string $text Text.
 	 */
-	public static function add_error( $text ) {
-		self::$errors[] = $text;
+	public static function add_error( $text, $type = '' ) {
+		if( ! empty( $type ) ) {
+			self::$errors[ $type ] = $text;
+		} else {
+			self::$errors[] = $text;
+		}
 	}
 
 	/**
@@ -214,12 +218,12 @@ class UR_Admin_Settings {
 	 */
 	public static function show_messages() {
 		if ( count( self::$errors ) > 0 ) {
-			foreach ( self::$errors as $error ) {
-				echo '<div id="message" class="error inline"><p><strong>' . esc_html( $error ) . '</strong></p></div>';
+			foreach ( self::$errors as $key => $error ) {
+				echo '<div id="message" class="error inline"><p><strong>' . wp_kses_post( $error ) . '</strong></p></div>';
 			}
 		} elseif ( count( self::$messages ) > 0 ) {
 			foreach ( self::$messages as $message ) {
-				echo '<div id="message" class="updated inline"><p><strong>' . esc_html( $message ) . '</strong></p></div>';
+				echo '<div id="message" class="updated inline"><p><strong>' . wp_kses_post( $message ) . '</strong></p></div>';
 			}
 		}
 	}
@@ -260,6 +264,7 @@ class UR_Admin_Settings {
 				'ajax_url'                                                     => admin_url( 'admin-ajax.php' ),
 				'assets_url'												   => UR_ASSETS_URL,
 				'ur_license_nonce'											   => wp_create_nonce( '_ur_license_nonce' ),
+				'ur_updater_nonce'                                             => wp_create_nonce( 'updates' ),
 				'user_registration_search_global_settings_nonce'               => wp_create_nonce( 'user_registration_search_global_settings' ),
 				'user_registration_captcha_test_nonce'                         => wp_create_nonce( 'user_registration_captcha_test_nonce' ),
 				'user_registration_my_account_selection_validator_nonce'       => wp_create_nonce( 'user_registration_my_account_selection_validator' ),
@@ -267,6 +272,7 @@ class UR_Admin_Settings {
 				'user_registration_membership_pages_selection_validator_nonce' => wp_create_nonce( 'user_registration_validate_page_none' ),
 				'user_registration_membership_payment_settings_nonce'          => wp_create_nonce( 'user_registration_validate_payment_settings_none' ),
 				'user_registration_membership_validate_payment_currency_nonce' => wp_create_nonce( 'user_registration_validate_payment_currency' ),
+				'user_registration_membership_captcha_settings_nonce'          => wp_create_nonce( 'user_registration_validate_captcha_settings_nonce' ),
 				'i18n_nav_warning'                                             => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
 				'i18n'                                                         => array(
 					'captcha_success'   => esc_html__( 'Captcha Test Successful !', 'user-registration' ),
@@ -279,9 +285,9 @@ class UR_Admin_Settings {
 					),
 
 					'license_activated_text' => esc_html__( 'You\'ve activated your license, great! To get all the Pro Features, we just need to install the URM Pro plugin on your website. Don\'t worry, it\'s quick and safe!', 'user-registration' ),
-					'pro_install_popup_button' => esc_html__( 'Install URM Pro Now', 'user-registration' ),
-					'pro_install_popup_title' => esc_html__( 'Install URM Pro to Unlock All Features', 'user-registration' ),
-					'will_install_and_activate_pro_text' => esc_html__( 'This will automatically install and activate the URM Pro Plugin for you.', 'user-registration' ),
+					'pro_install_popup_button' => esc_html__( 'Install Pro Now', 'user-registration' ),
+					'pro_install_popup_title' => esc_html__( 'Install User Registration & Membership Pro to Unlock All Features', 'user-registration' ),
+					'will_install_and_activate_pro_text' => esc_html__( 'This will automatically install and activate the User Registration & Membership Pro Plugin for you.', 'user-registration' ),
 					'installing_plugin_text' => esc_html__( 'Installing Plugin', 'user-registration' ),
 					'pro_activated_success_title' => esc_html__( 'Success!', 'user-registration' ),
 					'pro_activated_success_text' => esc_html__( 'URM Pro has been successfully installed and activated. You now have access to all premium features!', 'user-registration' ),
@@ -409,7 +415,6 @@ class UR_Admin_Settings {
 				$settings .= '</a>';
 			}
 			$settings .= '</h3>';
-
 			if ( ! empty( $options['desc'] ) ) {
 				$settings .= '<p class="ur-p-tag">' . wptexturize( wp_kses_post( $options['desc'] ) ) . '</p>';
 			}
@@ -823,10 +828,19 @@ class UR_Admin_Settings {
 										'style'      => esc_attr( $value['css'] ),
 										'default'    => esc_attr( $value['default'] ),
 										'class'      => esc_attr( $value['class'] ),
-										'quicktags'  => array( 'buttons' => 'em,strong,link' ),
+										'quicktags' => false,
+										'teeny' => true,
+										'show-ur-registration-form-button' => isset( $value['show-ur-registration-form-button'] ) ? $value['show-ur-registration-form-button'] : true,
+										'show-smart-tags-button' => isset( $value['show-smart-tags-button'] ) ? $value['show-smart-tags-button'] : true,
+										'show-reset-content-button' => isset( $value['show-reset-content-button'] ) ? $value['show-reset-content-button'] : true,
 										'tinymce'    => array(
-											'theme_advanced_buttons1' => 'bold,italic,strikethrough,separator,bullist,numlist,separator,blockquote,separator,justifyleft,justifycenter,justifyright,separator,link,unlink,separator,undo,redo,separator',
-											'theme_advanced_buttons2' => '',
+											'skin' => 'lightgray',
+											'toolbar1' => 'undo,redo,formatselect,fontselect,fontsizeselect,bold,italic,forecolor,alignleft,aligncenter,alignright,alignjustify,bullist,numlist,outdent,indent,removeformat',
+											'statusbar' => false,
+											'toolbar2' => '',
+											'toolbar3' => '',
+											'toolbar4' => '',
+											'plugins' => 'wordpress,wpautoresize,wplink,wpdialogs,wptextpattern,wpview,colorpicker,textcolor,hr,charmap,link,fullscreen,lists',
 										),
 										'editor_css' => '<style>#wp-excerpt-editor-container .wp-editor-area{height:175px; width:100%;}</style>',
 									);
@@ -861,7 +875,7 @@ class UR_Admin_Settings {
 										}
 									}
 
-									$settings .= ( isset( $value['desc'] ) && isset( $value['desc_tip'] ) && true !== $value['desc_tip'] ) ? '<p class="description" >' . wp_kses_post( $value['desc'] ) . '</p>' : '';
+									$settings .= ( !empty( $value['desc'] ) && isset( $value['desc_tip'] ) && true !== $value['desc_tip'] ) ? '<p class="description" >' . wp_kses_post( $value['desc'] ) . '</p>' : '';
 									$settings .= '</div>';
 									$settings .= '</div>';
 									break;
@@ -873,7 +887,7 @@ class UR_Admin_Settings {
 
 									$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_attr( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 									$settings .= '<div class="user-registration-global-settings--field">';
-									$settings .= '<img src="' . esc_attr( $option_value ) . '" alt="' . esc_attr__( 'Header Logo', 'user-registration' ) . '" class="ur-image-uploader" height="auto" width="20%">';
+									$settings .= '<img src="' . esc_attr( $option_value ) . '" alt="' . esc_attr__( 'Header Logo', 'user-registration' ) . '" class="ur-image-uploader" height="auto" width="20%" '.( empty( $option_value ) ? 'style="display:none"' : '' ).'">';
 									$settings .= '<button type="button" class="ur-image-uploader ur-button button-secondary" ' . ( empty( $option_value ) ? '' : 'style = "display:none"' ) . '>' . esc_html__( 'Upload Image', 'user-registration' ) . '</button>';
 									$settings .= '<button type="button" class="ur-image-remover ur-button button-secondary" ' . ( ! empty( $option_value ) ? '' : 'style = "display:none"' ) . '>' . esc_html__( 'Remove Image', 'user-registration' ) . '</button>';
 
@@ -1004,7 +1018,11 @@ class UR_Admin_Settings {
 										"bank",
 										"payment-settings",
 										"mollie",
-										"authorize-net"
+										"authorize-net",
+										"v2",
+										"v3",
+										"hCaptcha",
+										"cloudflare"
 									) ) ) {
 										$css       = 'ur-flex-row-reverse';
 										$field_css = 'ur-align-items-end';
@@ -1044,7 +1062,7 @@ class UR_Admin_Settings {
 					 * @param string $settings Settings.
 					 * @param mixed $options Section options.
 					 */
-					$settings = apply_filters( 'user_registration_admin_after_global_settings', $settings, $options );
+					$settings = apply_filters( 'user_registration_admin_after_global_settings', $settings, $options ,$section );
 
 					$settings .= ' </div> ';
 					$settings .= ' </div> ';

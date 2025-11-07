@@ -364,10 +364,10 @@ class StripeService {
 								$amount          = ( 'JPY' === $currency ) ? $discount_amount : $discount_amount * 100;
 
 								$coupon = \Stripe\Coupon::create( [
-									'amount_off' => $amount,
-									'currency'   => $currency,
-									'duration'   => 'once',
-									'name'       => 'UpgradeCoupon',
+										'amount_off' => $amount,
+										'currency'   => $currency,
+										'duration'   => 'once',
+										'name'       => 'UpgradeCoupon',
 								] );
 
 								$subscription_details['coupon'] = $coupon->id;
@@ -581,11 +581,11 @@ class StripeService {
 
 			$stripe_subscription = \Stripe\Subscription::retrieve( $subscription['subscription_id'] );
 			if( $stripe_subscription ) {
-				$deleted_sub = \Stripe\Subscription::update(
-					$subscription['subscription_id'],
+			$deleted_sub = \Stripe\Subscription::update(
+				$subscription['subscription_id'],
 					[ 'cancel_at_period_end' => true ],
-				);
-			}
+			);
+		}
 		if ( isset( $deleted_sub[ 'canceled_at' ] ) && '' !== $deleted_sub['canceled_at'] ) {
 			$response['status'] = true;
 		}
@@ -650,7 +650,7 @@ class StripeService {
 
 	public function handle_succeeded_invoice( $event, $subscription_id ) {
 		$logger = ur_get_logger();
-		$logger->notice( 'triggered succeeded invoice webhook.', array( 'source' => 'user-registration-membership-stripe' ) );
+		$logger->notice( 'triggered succeeded invoice webhook for '. $subscription_id, array( 'source' => 'user-registration-membership-stripe' ) );
 
 		if ( null === $subscription_id ) {
 			$logger->error( 'Subscription ID is null', array( 'source' => 'user-registration-membership-stripe' ) );
@@ -660,7 +660,7 @@ class StripeService {
 
 		$current_subscription = $this->members_subscription_repository->get_membership_by_subscription_id( $subscription_id, true );
 
-		if ( null === $current_subscription ) {
+		if ( empty($current_subscription) ) {
 			$logger->error( 'Subscription not found for subscription id ' . $subscription_id, array( 'source' => 'user-registration-membership-stripe' ) );
 
 			return;
@@ -717,7 +717,7 @@ class StripeService {
 			$subscription_service = new SubscriptionService();
 			$subscription_service->update_subscription_data_for_renewal( $current_subscription, $membership_metas );
 		}
-		$logger->notice( 'Subscription updated with new billing date', array( 'source' => 'user-registration-membership-stripe' ) );
+		$logger->notice( 'Subscription updated with new billing date for '. $subscription_id, array( 'source' => 'user-registration-membership-stripe' ) );
 	}
 
 	public function validate_setup() {
@@ -763,7 +763,7 @@ class StripeService {
 			$cancel_result = null;
 			if ( $cancel_subscription ) {
 				\Stripe\Subscription::update( $subscription_id, [
-					'cancel_at_period_end' => $cancel_at_end_period,
+						'cancel_at_period_end' => $cancel_at_end_period,
 				] );
 
 
@@ -789,7 +789,7 @@ class StripeService {
 		try {
 			// Full refund using payment intent
 			$refund = \Stripe\Refund::create( [
-				'payment_intent' => $payment_intent_id,
+					'payment_intent' => $payment_intent_id,
 			] );
 
 			return array(
@@ -842,5 +842,103 @@ class StripeService {
 		delete_user_meta( $member_id, 'urm_previous_subscription_data' );
 		delete_user_meta( $member_id, 'urm_is_upgrading' );
 		delete_user_meta( $member_id, 'urm_is_upgrading_to' );
+	}
+
+	/**
+	 * Checks if the product exists or not in stripe.
+	 *
+	 * @since 4.4.2
+	 *
+	 * @param  string $product_id
+	 */
+	public function check_exists_product_in_stripe( $product_id ) {
+		try {
+			$product = \Stripe\Product::retrieve( $product_id );
+
+			return array(
+				'success' => true,
+				'product' => $product,
+			);
+		} catch ( \Stripe\Exception\ApiErrorException $ex ) {
+			return array(
+				'success' => false,
+				'message' => $ex->getMessage(),
+			);
+		} catch ( Exception $ex ) {
+			return array(
+				'success' => false,
+				'message' => $ex->getMessage(),
+			);
+		}
+	}
+
+	/**
+	 * Checks if price id exists or not in stripe.
+	 *
+	 * @since 4.4.2
+	 *
+	 * @param  string $price_id
+	 */
+	public function check_price_exists_in_stripe( $price_id ) {
+		try {
+			$price = \Stripe\Price::retrieve( $price_id );
+
+			return array(
+				'success' => true,
+				'price'   => $price,
+			);
+		} catch ( \Stripe\Exception\ApiErrorException $ex ) {
+			return array(
+				'success' => false,
+				'message' => $ex->getMessage(),
+			);
+		}
+	}
+
+	/**
+	 * Creates price for existing product if price_id not found.
+	 *
+	 * @since 4.4.2
+	 *
+	 * @param  string $product_id
+	 * @param  array  $meta_data
+	 */
+	public function create_stripe_price_for_existing_product( $product_id, $meta_data ) {
+		$currency = get_option( 'user_registration_payment_currency', 'USD' );
+
+		try {
+			// Calculate amount in cents (or leave as-is for JPY)
+			$amount = ( 'JPY' === $currency ) ? abs( $meta_data['amount'] ) : abs( $meta_data['amount'] ) * 100;
+
+			// Prepare price data
+			$price_details = array(
+				'unit_amount' => $amount,
+				'currency'    => strtolower( $currency ),
+				'product'     => $product_id,
+			);
+
+			// Add recurring details if it's a subscription
+			if ( 'subscription' === $meta_data['type'] ) {
+				$price_details['recurring'] = array(
+					'interval'       => $meta_data['subscription']['duration'],
+					'interval_count' => $meta_data['subscription']['value'],
+				);
+			}
+
+			// Create new price in Stripe
+			$price = \Stripe\Price::create( $price_details );
+
+			return array(
+				'success' => true,
+				'price'   => $price,
+			);
+
+		} catch ( \Stripe\Exception\ApiErrorException $e ) {
+			ur_get_logger()->debug( 'Error creating price: ' . $e->getMessage(), array( 'source' => 'user-registration-membership-stripe' ) );
+			return array(
+				'success' => false,
+				'message' => $e->getMessage(),
+			);
+		}
 	}
 }

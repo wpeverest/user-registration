@@ -34,8 +34,12 @@
 				}
 			);
 			$('.clickable-login-fields[data-field="username"]').trigger(
-				"click"
+				'click'
 			);
+
+			$('input[name^="user_registration_hide_label_"]')
+				.on('change', function () { LoginBuilderSettings.hide_show_field_label($(this)); })
+				.each(function () { LoginBuilderSettings.hide_show_field_label($(this)); });
 		},
 		init_form_builder: function () {
 			$(".ur-tabs .ur-tab-lists").on("click", "a.nav-tab", function () {
@@ -60,6 +64,20 @@
 					$(this).removeClass("ur-d-none");
 				}
 			});
+		},
+		hide_show_field_label: function (selected_item) {
+			var id = (selected_item.attr('id') || '').replace('user_registration_hide_label_', '');
+			var fieldMap = { password: 'password' };
+			var field_name = fieldMap[id] || 'username';
+			$('#ur-frontend-form')
+				.find('[data-field="' + field_name + '"] label')
+				.show();
+			if(selected_item.is(':checked')) {
+				$('#ur-frontend-form')
+					.find('[data-field="' + field_name + '"] label')
+					.hide();
+			}
+
 		}
 	};
 	LoginBuilderSettings.init();
@@ -111,6 +129,8 @@
 		$.each(settings, function (index, setting) {
 			if (setting.type === "toggle") {
 				var value = $("#" + setting.option).is(":checked");
+			} else if (setting.type === "html") {
+				var value = $("#" + setting.option + " :input").serializeArray();
 			} else {
 				var value = $("#" + setting.option).val();
 			}
@@ -316,18 +336,18 @@
 		});
 	}
 
-	function hide_show_labels() {
-		var value = $("#user_registration_login_options_hide_labels").is(
-				":checked"
-			),
-			form = $(".ur-login-form-wrapper").find(".ur-frontend-form.login");
-
-		if (!value) {
-			form.find(".user-registration-form-row label").show();
-		} else {
-			form.find(".user-registration-form-row label").hide();
-		}
-	}
+	// function hide_show_labels() {
+	// 	var value = $("#user_registration_login_options_hide_labels").is(
+	// 			":checked"
+	// 		),
+	// 		form = $(".ur-login-form-wrapper").find(".ur-frontend-form.login");
+	//
+	// 	if (!value) {
+	// 		form.find(".user-registration-form-row label").show();
+	// 	} else {
+	// 		form.find(".user-registration-form-row label").hide();
+	// 	}
+	// }
 
 	function handleRecaptchaLoginSettings() {
 		var login_captcha_enabled = $(
@@ -515,14 +535,14 @@
 		);
 		hide_show_lost_password();
 
-		$(document).on(
-			"change",
-			"#user_registration_login_options_hide_labels",
-			function (e) {
-				hide_show_labels();
-			}
-		);
-		hide_show_labels();
+		// $(document).on(
+		// 	"change",
+		// 	"#user_registration_login_options_hide_labels",
+		// 	function (e) {
+		// 		hide_show_labels();
+		// 	}
+		// );
+		// hide_show_labels();
 
 		$("#user_registration_general_setting_registration_label").on(
 			"keyup",
@@ -636,7 +656,6 @@
 				$redirect = $(
 					"#user_registration_login_options_login_redirect_url"
 				);
-			console.log($check.is(":checked"));
 
 			if (!$check.is(":checked")) {
 				$url.val("")
@@ -721,5 +740,76 @@
 				);
 			}
 		);
+
+		$(document).ready(function () {
+			$("#user_registration_login_options_enable_custom_redirect").trigger("change");
+		});
+		$(document).on("change", "#user_registration_login_options_enable_custom_redirect", function () {
+			var $redirect_after_login = $("#user_registration_login_options_redirect_after_login");
+			var $redirect_after_logout = $("#user_registration_login_options_redirect_after_logout");
+			if ($(this).is(":checked")) {
+				$redirect_after_login.closest(".user-registration-login-form-global-settings").show();
+				$redirect_after_logout.closest(".user-registration-login-form-global-settings").show();
+			} else {
+				$redirect_after_login.closest(".user-registration-login-form-global-settings").hide();
+				$redirect_after_logout.closest(".user-registration-login-form-global-settings").hide();
+			}
+			$redirect_after_login.trigger('change');
+			$redirect_after_logout.trigger('change');
+		});
+		$(document).on("change", "#user_registration_login_options_redirect_after_login", function () {
+			var redirect_after_login_option = $("#user_registration_login_options_enable_custom_redirect").is(":checked") ? $(this).val() : "hidden";
+			var $external_url = $("#user_registration_login_options_after_login_redirect_external_url").closest(".user-registration-login-form-global-settings");
+			var $internal_page = $("#user_registration_login_options_after_login_redirect_page").closest(".user-registration-login-form-global-settings");
+			switch (redirect_after_login_option) {
+				case 'no-redirection':
+					$external_url.hide();
+					$internal_page.hide();
+					break;
+				case 'internal-page':
+					$external_url.hide();
+					$internal_page.show();
+					break;
+				case 'external-url':
+					$external_url.show();
+					$internal_page.hide();
+					break;
+				case 'previous-page':
+					$external_url.hide();
+					$internal_page.hide();
+					break;
+				default:
+					$external_url.hide();
+					$internal_page.hide();
+					break;
+			}
+		});
+		$(document).on("change", "#user_registration_login_options_redirect_after_logout", function () {
+			var redirect_after_logout_option = $("#user_registration_login_options_enable_custom_redirect").is(":checked") ? $(this).val() : "hidden";
+			var $external_url = $("#user_registration_login_options_after_logout_redirect_external_url").closest(".user-registration-login-form-global-settings");
+			var $internal_page = $("#user_registration_login_options_after_logout_redirect_page").closest(".user-registration-login-form-global-settings");
+			switch (redirect_after_logout_option) {
+				case 'no-redirection':
+					$external_url.hide();
+					$internal_page.hide();
+					break;
+				case 'internal-page':
+					$external_url.hide();
+					$internal_page.show();
+					break;
+				case 'external-url':
+					$external_url.show();
+					$internal_page.hide();
+					break;
+				case 'previous-page':
+					$external_url.hide();
+					$internal_page.hide();
+					break;
+				default:
+					$external_url.hide();
+					$internal_page.hide();
+					break;
+			}
+		});
 	}
 })(jQuery);
