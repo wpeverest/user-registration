@@ -1197,7 +1197,8 @@
 			};
 
 			var card = elements.create("card", {
-				style: style
+				style: style,
+				hidePostalCode: urmf_data.urm_hide_stripe_card_postal_code == '1' ? true : false,
 			});
 			var idealBank = elements.create("idealBank", {style: style});
 
@@ -2149,7 +2150,7 @@
 						"user-registration-upgrade-membership-swal2-container",
 					showConfirmButton: true,
 					showCancelButton: true,
-					confirmButtonText: "Change",
+					confirmButtonText: user_registration_params.user_registration_membership_renew_plan_button_text,
 					confirmButtonColor: "#475BB2",
 					didOpen: function () {
 						$(

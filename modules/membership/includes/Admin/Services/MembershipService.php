@@ -338,7 +338,7 @@ class MembershipService {
 		$membership_repository = new MembershipRepository();
 		$membership            = $membership_repository->get_single_membership_by_ID( $membership_id );
 
-		return wp_unslash( json_decode( $membership['meta_value'], true ) );
+		return ( is_array( $membership ) && ! empty( $membership['meta_value'] ) ) ? wp_unslash( json_decode( $membership['meta_value'], true ) ) : array();
 	}
 
 	public function verify_page_content( $type, $post_id ) {

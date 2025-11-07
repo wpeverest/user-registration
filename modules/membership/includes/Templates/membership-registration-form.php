@@ -216,7 +216,7 @@
 							type="radio"
 							name="urm_payment_method"
 							required
-							value="<?php echo esc_attr( strtolower( $gateway ) ); ?>"
+							value="<?php echo esc_attr( strtolower( $g ) ); ?>"
 						<?php echo 0 === $g ? 'checked' : ''; ?>
 					>
 					<span class="ur-membership-duration">
