@@ -9535,8 +9535,31 @@ if ( ! function_exists( 'ur_should_show_site_assistant_menu' ) ) {
 
 }
 
+if ( ! function_exists( 'ur_site_assistant_config_count' ) ) {
+	/**
+	 * Check if site assistant menu should be shown.
+	 * Returns false if all options are handled and set.
+	 *
+	 * @return bool
+	 */
+	function ur_site_assistant_config_count() {
+		$site_assistant_data = ur_get_site_assistant_data();
 
-if( ! function_exists( 'ur_get_membership_details') ){
+		$checks = [
+			! $site_assistant_data['has_default_form'],
+			! empty( $site_assistant_data['missing_pages'] ),
+			! $site_assistant_data['test_email_sent'],
+			! $site_assistant_data['wordpress_login_handled'],
+			! $site_assistant_data['spam_protection_handled'],
+			! $site_assistant_data['payment_setup_handled'],
+		];
+
+		$count = count( array_filter( $checks ) );
+		return $count;
+	}
+}
+
+if( ! function_exists( 'ur_get_membership_details') ) {
 	/**
 	 * Get membership details.
 	 *

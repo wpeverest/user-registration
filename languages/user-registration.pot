@@ -124,7 +124,8 @@ msgstr ""
 #: includes/3rd-party/elementor/widgets/class-ur-widgets-login.php:42
 #: includes/3rd-party/elementor/widgets/class-ur-widgets-login.php:119
 #: includes/3rd-party/oxygen/widgets/class-ur-oxygen-widget-login.php:33
-#: includes/admin/class-ur-admin-menus.php:528
+#: includes/admin/class-ur-admin-menus.php:546
+#: includes/admin/class-ur-admin-menus.php:547
 #: includes/admin/functions-ur-admin.php:940
 #: includes/admin/views/html-login-page-forms-new.php:24
 #: includes/admin/views/html-login-page-forms.php:30
@@ -1402,40 +1403,40 @@ msgstr ""
 msgid "Please select json file to import form data."
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:78
+#: includes/admin/class-ur-admin-menus.php:80
 #: includes/functions-ur-core.php:4106
 msgid "User Registration - File Upload"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:88
+#: includes/admin/class-ur-admin-menus.php:90
 msgid "User Registration Invite Codes"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:97
+#: includes/admin/class-ur-admin-menus.php:99
 msgid "User Registration LearnDash"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:107
-#: includes/admin/class-ur-admin-menus.php:367
+#: includes/admin/class-ur-admin-menus.php:109
+#: includes/admin/class-ur-admin-menus.php:369
 msgid "User Registration Stripe"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:134
+#: includes/admin/class-ur-admin-menus.php:136
 msgid "User Registration-Advanced Fields"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:209
-#: includes/admin/class-ur-admin-menus.php:296
+#: includes/admin/class-ur-admin-menus.php:211
+#: includes/admin/class-ur-admin-menus.php:298
 #: includes/functions-ur-core.php:4100
 msgid "User Registration - WooCommerce"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:366
+#: includes/admin/class-ur-admin-menus.php:368
 msgid "User Registration Payments"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:506
-#: includes/admin/class-ur-admin-menus.php:507
+#: includes/admin/class-ur-admin-menus.php:511
+#: includes/admin/class-ur-admin-menus.php:512
 #: includes/admin/class-ur-admin-user-list-manager.php:475
 #: includes/admin/functions-ur-admin.php:932
 #: includes/admin/settings/class-ur-users-list-table.php:821
@@ -1447,21 +1448,21 @@ msgstr ""
 msgid "All Forms"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:524
+#: includes/admin/class-ur-admin-menus.php:534
 #: includes/admin/views/html-login-page-forms-new.php:23
 msgid "Registration Forms"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:524
+#: includes/admin/class-ur-admin-menus.php:535
 #: includes/admin/functions-ur-admin.php:936
 msgid "Registration %s"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:562
+#: includes/admin/class-ur-admin-menus.php:586
 msgid "User Registration settings"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:563
+#: includes/admin/class-ur-admin-menus.php:587
 #: includes/admin/functions-ur-admin.php:974
 #: includes/functions-ur-core.php:5363
 #: includes/Functions/CoreFunctions.php:454
@@ -1472,135 +1473,135 @@ msgstr ""
 #: user-registration.php:451
 #: src/blocks/blocks/content-restriction-enhanced/Edit.js:92
 #: src/dashboard/Constants/index.js:30
-#: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:187
+#: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:249
 #: src/welcome/components/App.js:73
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:579
+#: includes/admin/class-ur-admin-menus.php:603
 msgid "User Registration Tools"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:580
+#: includes/admin/class-ur-admin-menus.php:604
 msgid "Tools"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:597
-#: includes/admin/class-ur-admin-menus.php:598
+#: includes/admin/class-ur-admin-menus.php:624
+#: includes/admin/class-ur-admin-menus.php:625
 #: includes/admin/views/html-admin-page-status.php:15
 msgid "Logs"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:610
-#: includes/admin/class-ur-admin-menus.php:611
+#: includes/admin/class-ur-admin-menus.php:637
+#: includes/admin/class-ur-admin-menus.php:638
 #: includes/admin/views/html-admin-page-status.php:16
 #: includes/admin/views/html-admin-page-system-info.php:30
 msgid "System Info"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:623
-#: includes/admin/class-ur-admin-menus.php:624
+#: includes/admin/class-ur-admin-menus.php:650
+#: includes/admin/class-ur-admin-menus.php:651
 #: includes/admin/views/html-admin-page-status.php:17
 msgid "Setup Wizard"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:642
+#: includes/admin/class-ur-admin-menus.php:671
 msgid "User Registration Dashboard"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:643
+#: includes/admin/class-ur-admin-menus.php:674
 #: includes/admin/functions-ur-admin.php:917
 #: src/dashboard/Constants/index.js:21
 msgid "Site Assistant"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:695
-#: includes/admin/class-ur-admin-menus.php:698
+#: includes/admin/class-ur-admin-menus.php:734
+#: includes/admin/class-ur-admin-menus.php:737
 #: includes/functions-ur-core.php:4191
 msgid "Upgrade to Pro"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:711
+#: includes/admin/class-ur-admin-menus.php:750
 msgid "User Registration extensions"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:712
+#: includes/admin/class-ur-admin-menus.php:751
 #: includes/admin/functions-ur-admin.php:980
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:276
 msgid "Addons"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:733
-#: includes/admin/class-ur-admin-menus.php:745
+#: includes/admin/class-ur-admin-menus.php:772
+#: includes/admin/class-ur-admin-menus.php:784
 #: includes/admin/settings/class-ur-settings-license.php:195
 #: includes/class-ur-ajax.php:1777
 #: includes/class-ur-plugin-updater.php:329
 msgid "Activate License"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:801
+#: includes/admin/class-ur-admin-menus.php:846
 msgctxt "user registration admin"
 msgid "Settings successfully saved."
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:806
+#: includes/admin/class-ur-admin-menus.php:851
 msgid "Please select a page for redirection"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:836
+#: includes/admin/class-ur-admin-menus.php:881
 msgid "Create Form"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:866
+#: includes/admin/class-ur-admin-menus.php:911
 msgid "Please wait until the plugin is being activated"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:885
+#: includes/admin/class-ur-admin-menus.php:930
 msgid "Addons have been installed and Activated. You have to reload the page."
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:887
+#: includes/admin/class-ur-admin-menus.php:932
 msgid "Save changes before activating the plugin"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:931
+#: includes/admin/class-ur-admin-menus.php:976
 msgid "URM Menus"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:955
+#: includes/admin/class-ur-admin-menus.php:1000
 #: includes/class-ur-query.php:78
 msgid "Lost password"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:999
+#: includes/admin/class-ur-admin-menus.php:1044
 #: includes/functions-ur-template.php:410
 #: includes/functions-ur-template.php:455
 msgid "Select All"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:1004
+#: includes/admin/class-ur-admin-menus.php:1049
 msgid "Add to menu"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:1059
+#: includes/admin/class-ur-admin-menus.php:1104
 msgid "Row data not found"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:1071
+#: includes/admin/class-ur-admin-menus.php:1116
 #: includes/admin/views/html-admin-page-forms.php:162
 #: modules/membership/includes/Admin/Membership/Membership.php:447
 msgid "Untitled"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:1135
+#: includes/admin/class-ur-admin-menus.php:1180
 msgid "Repeater Row"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:1209
+#: includes/admin/class-ur-admin-menus.php:1254
 msgid "Drag your first form item here."
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:1239
+#: includes/admin/class-ur-admin-menus.php:1284
 msgid "Empty form data"
 msgstr ""
 

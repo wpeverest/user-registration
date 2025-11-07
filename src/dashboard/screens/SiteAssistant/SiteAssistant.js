@@ -34,17 +34,13 @@ const ticketUrl =
 
 const SiteAssistant = () => {
 	const [open, setOpen] = useState({
-		defaultForm: true,
-		requiredPages: true,
-		paymentSetup: true,
+		defaultForm: false,
+		requiredPages: false,
+		paymentSetup: false,
 		sendTestEmail: true,
-		defaultWordPressLogin: true,
-		spamProtection: true
+		defaultWordPressLogin: false,
+		spamProtection: false
 	});
-
-	const toggleOpen = useCallback((id) => {
-		setOpen((prev) => ({ ...prev, [id]: !prev[id] }));
-	}, []);
 
 	// Check if default form exists
 	const hasDefaultForm =
@@ -138,6 +134,38 @@ const SiteAssistant = () => {
 		setPaymentSetupHandled(true);
 	}, []);
 
+	const toggleOpen = useCallback((id) => {
+		if (typeof id === "undefined") {
+			const site_config_array = [
+				hasDefaultForm,
+				missingPagesData.length === 0,
+				testEmailSent,
+				wordPressLoginHandled,
+				spamProtectionHandled,
+				paymentSetupHandled
+			];
+
+			const openKeys = Object.keys(open);
+
+			const firstFalseIndex = site_config_array.findIndex(
+				(item) => item === false
+			);
+
+			const firstFalseKey =
+				firstFalseIndex !== -1 ? openKeys[firstFalseIndex] : null;
+			id = firstFalseKey;
+		}
+
+		setOpen((prev) => {
+			const newState = Object.keys(prev).reduce((acc, key) => {
+				acc[key] = key === id ? !prev[id] : false;
+				return acc;
+			}, {});
+
+			return newState;
+		});
+	}, []);
+
 	// Check if all components are completed and redirect if so
 	useEffect(() => {
 		// Check if all components are handled
@@ -159,6 +187,47 @@ const SiteAssistant = () => {
 					"admin.php?page=user-registration";
 			}, 2000);
 		}
+
+		const site_config_array = [
+			hasDefaultForm,
+			missingPagesData.length === 0,
+			testEmailSent,
+			wordPressLoginHandled,
+			spamProtectionHandled,
+			paymentSetupHandled
+		];
+
+		const site_config_count =
+			site_config_array.length - site_config_array.filter(Boolean).length;
+		const $ur_menu = document.querySelector(
+			"#toplevel_page_user-registration"
+		);
+
+		if ($ur_menu) {
+			const countElement = $ur_menu.querySelector(
+				".wp-submenu .ur-site-config-count"
+			);
+
+			if (site_config_count > 0) {
+				if (countElement) {
+					countElement.textContent = site_config_count;
+				} else {
+					const newCount = document.createElement("span");
+					newCount.classList.add("ur-site-config-count");
+					newCount.textContent = site_config_count;
+					const submenu = $ur_menu.querySelector(".wp-submenu");
+					submenu?.appendChild(newCount);
+				}
+			} else {
+				countElement?.remove();
+			}
+
+			if (window.wp?.heartbeat) {
+				window.wp.heartbeat.interval("standard");
+			}
+		}
+
+		toggleOpen();
 	}, [
 		hasDefaultForm,
 		missingPagesData.length,
@@ -169,12 +238,14 @@ const SiteAssistant = () => {
 		allCompleted
 	]);
 
+	let config_number = 0;
+
 	return (
 		<Container maxW="100%" py={1} marginLeft={"10px"}>
 			<Stack align={"flex-start"} gap={4} mb={8}>
 				<Heading
 					as="h3"
-					fontSize="3xl"
+					fontSize="2xl"
 					color="gray.800"
 					mt={0}
 					css={{
@@ -186,7 +257,7 @@ const SiteAssistant = () => {
 						"user-registration"
 					)}
 				</Heading>
-				<Text fontSize={"md"} fontWeight={"light"}>
+				<Text fontSize="18px !important" fontWeight={"light"}>
 					{__(
 						"Let's get your user registration system set up and ready to go!",
 						"user-registration"
@@ -236,6 +307,7 @@ const SiteAssistant = () => {
 							<DefaultFormMissing
 								isOpen={open.defaultForm}
 								onToggle={() => toggleOpen("defaultForm")}
+								numbering={++config_number}
 							/>
 						)}
 
@@ -245,6 +317,7 @@ const SiteAssistant = () => {
 								isOpen={open.requiredPages}
 								onToggle={() => toggleOpen("requiredPages")}
 								missingPagesData={missingPagesData}
+								numbering={++config_number}
 							/>
 						)}
 
@@ -254,6 +327,7 @@ const SiteAssistant = () => {
 								isOpen={open.paymentSetup}
 								onToggle={() => toggleOpen("paymentSetup")}
 								onSkipped={handlePaymentSetupHandled}
+								numbering={++config_number}
 							/>
 						)}
 
@@ -263,6 +337,7 @@ const SiteAssistant = () => {
 								isOpen={open.sendTestEmail}
 								onToggle={() => toggleOpen("sendTestEmail")}
 								onEmailSent={handleTestEmailSent}
+								numbering={++config_number}
 							/>
 						)}
 
@@ -274,6 +349,7 @@ const SiteAssistant = () => {
 									toggleOpen("defaultWordPressLogin")
 								}
 								onHandled={handleWordPressLoginHandled}
+								numbering={++config_number}
 							/>
 						)}
 
@@ -283,6 +359,7 @@ const SiteAssistant = () => {
 								isOpen={open.spamProtection}
 								onToggle={() => toggleOpen("spamProtection")}
 								onSkipped={handleSpamProtectionHandled}
+								numbering={++config_number}
 							/>
 						)}
 					</Stack>
