@@ -139,9 +139,8 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Updated_Email', false ) ) :
 				'user_registration_profile_details_updated_email_message',
 				sprintf(
 					__(
-						'Hi {{username}},<br/>
-					Your profile details have been successfully updated on {{blog_info}}.<br/>
-					{{all_fields}}<br/>
+						'Hi {{username}},<br/><br/>
+					Your profile details have been successfully updated on {{blog_info}}.<br/><br/>
 					Thank You!',
 						'user-registration'
 					)

@@ -139,14 +139,11 @@ if ( ! class_exists( 'UR_Settings_Reset_Password_Email', false ) ) :
 				'user_registration_reset_password_email_message',
 				sprintf(
 					__(
-						'Hi {{username}},<br/>
-						We received a request to reset the password for your account on {{blog_info}}.<br/>
-
-						If this was a mistake, simply ignore this email, and no changes will be made to your account. <br/>
-
+						'Hi {{username}},<br/><br/>
+						We received a request to reset the password for your account on {{blog_info}}.<br/><br/>
+						If this was a mistake, simply ignore this email, and no changes will be made to your account. <br/><br/>
 						To reset your password, please click the link below: <br/>
-						<a href="{{home_url}}/{{ur_reset_pass_slug}}?action=rp&key={{key}}&login={{username}}" rel="noreferrer noopener" target="_blank">Click Here: </a><br/>
-
+						<a href="{{home_url}}/{{ur_reset_pass_slug}}?action=rp&key={{key}}&login={{username}}" rel="noreferrer noopener" target="_blank">Click Here: </a><br/><br/>
 						Thank You!',
 						'user-registration'
 					)

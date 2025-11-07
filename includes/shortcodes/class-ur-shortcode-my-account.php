@@ -494,6 +494,7 @@ class UR_Shortcode_My_Account {
 				$minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
 
 				if ( $enable_strong_password ) {
+					wp_enqueue_script( 'user-registration' );
 					wp_enqueue_script( 'ur-password-strength-meter' );
 					wp_dequeue_script( 'wc-password-strength-meter' );
 					wp_localize_script(

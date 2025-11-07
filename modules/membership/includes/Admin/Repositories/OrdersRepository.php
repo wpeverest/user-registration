@@ -160,15 +160,19 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 	}
 
 	public function get_order_metas( $order_id ) {
+		$ordermeta_table = $this->wpdb()->prefix . 'ur_membership_ordermeta';
+
 		$result = $this->wpdb()->get_row(
 			$this->wpdb()->prepare(
 				"
 				SELECT wpom.*
 				FROM $this->table urmo
-					 JOIN wp_ur_membership_ordermeta wpom ON urmo.ID = wpom.order_id
-				WHERE urmo.ID = %d and wpom.meta_key = 'delayed_until' and wpom.meta_value > NOW()
+				JOIN $ordermeta_table wpom ON urmo.ID = wpom.order_id
+				WHERE urmo.ID = %d
+				AND wpom.meta_key = 'delayed_until'
+				AND wpom.meta_value > NOW()
 				ORDER BY urmo.ID DESC
-		",
+				",
 				$order_id
 			),
 			ARRAY_A

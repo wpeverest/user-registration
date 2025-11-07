@@ -275,11 +275,15 @@ class UR_Admin_Settings {
 				'user_registration_membership_captcha_settings_nonce'          => wp_create_nonce( 'user_registration_validate_captcha_settings_nonce' ),
 				'i18n_nav_warning'                                             => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
 				'i18n'                                                         => array(
-					'captcha_success'   => esc_html__( 'Captcha Test Successful !', 'user-registration' ),
-					'captcha_failed'    => esc_html__( 'Some error occured. Please verify that the keys you entered are valid.', 'user-registration' ),
-					'unsaved_changes'   => esc_html__( 'You have some unsaved changes. Please save and try again.', 'user-registration' ),
-					'pro_feature_title' => esc_html__( 'is a Pro Feature', 'user-registration' ),
-					'upgrade_message'   => esc_html__(
+					'captcha_success'       => esc_html__( 'Captcha Test Successful !', 'user-registration' ),
+					'captcha_reset_title'   => esc_html__( 'Reset Keys', 'user-registration' ),
+					'i18n_prompt_reset'     => esc_html__( 'Reset', 'user-registration' ),
+					'i18n_prompt_cancel'    => esc_html__( 'Cancel', 'user-registration' ),
+					'captcha_failed'        => esc_html__( 'Some error occured. Please verify that the keys you entered are valid.', 'user-registration' ),
+					'captcha_reset_prompt'  => esc_html__( 'Are you sure you want to reset these keys? This action will clear both the Site Key and Secret Key permanently.', 'user-registration' ),
+					'unsaved_changes'       => esc_html__( 'You have some unsaved changes. Please save and try again.', 'user-registration' ),
+					'pro_feature_title'     => esc_html__( 'is a Pro Feature', 'user-registration' ),
+					'upgrade_message'       => esc_html__(
 						'We apologize, but %title% is not available with the free version. To access this fantastic features, please consider upgrading to the %plan%.',
 						'user-registration'
 					),
@@ -296,7 +300,8 @@ class UR_Admin_Settings {
 					'upgrade_plan'      => esc_html__( 'Upgrade Plan', 'user-registration' ),
 					'upgrade_link'      => esc_url( 'https://wpuserregistration.com/upgrade/?utm_source=integration-settings&utm_medium=premium-addon-popup&utm_campaign=' . urlencode( UR()->utm_campaign ) ),
 				),
-				'is_advanced_field_active' => is_plugin_active( 'user-registration-advanced-fields/user-registration-advanced-fields.php' ),
+				'is_advanced_field_active'                                     => is_plugin_active( 'user-registration-advanced-fields/user-registration-advanced-fields.php' ),
+				'reset_keys_icon'                                              => plugins_url( 'assets/images/users/reset-keys-red.svg', UR_PLUGIN_FILE )
 			)
 		);
 
@@ -875,7 +880,7 @@ class UR_Admin_Settings {
 										}
 									}
 
-									$settings .= ( !empty( $value['desc'] ) && isset( $value['desc_tip'] ) && true !== $value['desc_tip'] ) ? '<p class="description" >' . wp_kses_post( $value['desc'] ) . '</p>' : '';
+									$settings .= ( ! empty( $value['desc'] ) && isset( $value['desc_tip'] ) && true !== $value['desc_tip'] ) ? '<p class="description" >' . wp_kses_post( $value['desc'] ) . '</p>' : '';
 									$settings .= '</div>';
 									$settings .= '</div>';
 									break;
@@ -887,7 +892,7 @@ class UR_Admin_Settings {
 
 									$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_attr( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 									$settings .= '<div class="user-registration-global-settings--field">';
-									$settings .= '<img src="' . esc_attr( $option_value ) . '" alt="' . esc_attr__( 'Header Logo', 'user-registration' ) . '" class="ur-image-uploader" height="auto" width="20%" '.( empty( $option_value ) ? 'style="display:none"' : '' ).'">';
+									$settings .= '<img src="' . esc_attr( $option_value ) . '" alt="' . esc_attr__( 'Header Logo', 'user-registration' ) . '" class="ur-image-uploader" height="auto" width="20%" ' . ( empty( $option_value ) ? 'style="display:none"' : '' ) . '">';
 									$settings .= '<button type="button" class="ur-image-uploader ur-button button-secondary" ' . ( empty( $option_value ) ? '' : 'style = "display:none"' ) . '>' . esc_html__( 'Upload Image', 'user-registration' ) . '</button>';
 									$settings .= '<button type="button" class="ur-image-remover ur-button button-secondary" ' . ( ! empty( $option_value ) ? '' : 'style = "display:none"' ) . '>' . esc_html__( 'Remove Image', 'user-registration' ) . '</button>';
 
@@ -1009,9 +1014,22 @@ class UR_Admin_Settings {
 									}
 									break;
 								case 'button':
-									$css       = '';
-									$field_css = '';
-									$btn_css = !empty($value['class']) ? $value['class'] : '';
+									$css                   = '';
+									$field_css             = '';
+									$btn_css               = ! empty( $value['class'] ) ? $value['class'] : '';
+									$is_connected          = isset( $section['is_connected'] ) ? $section['is_connected'] : false;
+									$is_captcha            = in_array( $section['id'], array(
+										'v2',
+										'v3',
+										'hCaptcha',
+										'cloudflare'
+									) );
+									$show_reset_key_button = ( $is_connected && in_array( $section['id'], array(
+											'v2',
+											'v3',
+											'hCaptcha',
+											'cloudflare'
+										) ) );
 									if ( in_array( $section['id'], array(
 										"stripe",
 										"paypal",
@@ -1022,7 +1040,8 @@ class UR_Admin_Settings {
 										"v2",
 										"v3",
 										"hCaptcha",
-										"cloudflare"
+										"cloudflare",
+										"captcha-settings"
 									) ) ) {
 										$css       = 'ur-flex-row-reverse';
 										$field_css = 'ur-align-items-end';
@@ -1033,11 +1052,22 @@ class UR_Admin_Settings {
 									$settings .= '<button
 											id="' . esc_attr( $value['id'] ) . '"
 											type="button"
-											class="button button-primary '.esc_attr($btn_css).'"
+											class="button button-primary ' . esc_attr( $btn_css ) . '"
 											type="button"
 											data-id="' . esc_attr( $section['id'] ) . '"
 											/>' . $value['title'] . '</button>';
 									$settings .= '</div>';
+									if( $is_captcha ) {
+										$settings .= '<a
+										href="#"
+										class="reset-captcha-keys ' . ( $show_reset_key_button ? '' : 'ur-d-none' ) . '"
+										data-id="' . esc_attr( $section['id'] ) . '"
+										/>
+										<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+			                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+			                            </svg>
+										' . __( 'Reset Keys', 'user-registration' ) . '</a>';
+									}
 									$settings .= '</div>';
 									break;
 								// Default: run an action.
