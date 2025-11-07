@@ -82,7 +82,6 @@ class UR_AJAX {
 			'php_notice_dismiss'                => false,
 			'locate_form_action'                => false,
 			'form_preview_save'                 => false,
-			'captcha_test'                      => false,
 			'generate_row_settings'             => false,
 			'my_account_selection_validator'    => false,
 			'lost_password_selection_validator' => false,
@@ -90,10 +89,12 @@ class UR_AJAX {
 			'disable_user'						=> false,
 			'validate_payment_currency'			=> false,
 			'save_captcha_settings'             => false,
+			'reset_captcha_keys'                 => false,
 			'create_default_form'				=> false,
 			'generate_required_pages'			=> false,
 			'handle_default_wordpress_login'	=> false,
-			'skip_site_assistant_section'		=> false
+			'skip_site_assistant_section'		=> false,
+			'login_settings_page_validation'    => false
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -1012,7 +1013,7 @@ class UR_AJAX {
 					wp_send_json_error(
 						array(
 							'message' => esc_html__(
-								'The selected page is not a User Registration & Membership Lost Password page.',
+								'The selected page does not contain the required lost password shortcode [user_registration_lost_password]',
 								'user-registration'
 							),
 						)
@@ -1837,72 +1838,6 @@ class UR_AJAX {
 	}
 
 	/**
-	 * Handle Testing for Captcha Settings.
-	 *
-	 * @return bool
-	 */
-	public static function captcha_test() {
-
-		$security = isset( $_POST['security'] ) ? sanitize_text_field( wp_unslash( $_POST['security'] ) ) : '';
-		if ( '' === $security || ! wp_verify_nonce( $security, 'user_registration_captcha_test_nonce' ) ) {
-			wp_send_json_error( 'Nonce verification failed' );
-
-			return;
-		}
-
-		$captcha_type = isset( $_POST['captcha_type'] ) ? sanitize_text_field( wp_unslash( $_POST['captcha_type'] ) ) : '';
-		if ( ! get_option( 'user_registration_captcha_setting_recaptcha_enable_' . $captcha_type, false ) ) {
-			wp_send_json_error( 'Please Enable the Captcha first to test and Refresh the page.' );
-
-			return;
-		}
-
-		$ur_recaptcha_code = array();
-
-		$invisible_recaptcha = false;
-		if ( isset( $_POST['invisible_recaptcha'] ) ) {
-			$invisible_recaptcha = $_POST['invisible_recaptcha'];
-		}
-
-		if ( '' === $captcha_type ) {
-			wp_send_json_error( 'Captcha Test failed' );
-
-			return;
-		}
-
-		if ( 'v2' === $captcha_type && 'false' == $invisible_recaptcha ) {
-			$recaptcha_site_key    = get_option( 'user_registration_captcha_setting_recaptcha_site_key' );
-			$recaptcha_site_secret = get_option( 'user_registration_captcha_setting_recaptcha_site_secret' );
-		} elseif ( 'v2' === $captcha_type && 'false' != $invisible_recaptcha ) {
-			$recaptcha_site_key    = get_option( 'user_registration_captcha_setting_recaptcha_invisible_site_key' );
-			$recaptcha_site_secret = get_option( 'user_registration_captcha_setting_recaptcha_invisible_site_secret' );
-		} elseif ( 'v3' === $captcha_type ) {
-			$recaptcha_site_key    = get_option( 'user_registration_captcha_setting_recaptcha_site_key_v3' );
-			$recaptcha_site_secret = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_v3' );
-		} elseif ( 'hCaptcha' === $captcha_type ) {
-			$recaptcha_site_key    = get_option( 'user_registration_captcha_setting_recaptcha_site_key_hcaptcha' );
-			$recaptcha_site_secret = get_option( 'user_registration_captcha_setting_recaptcha_site_secret_hcaptcha' );
-		} elseif ( 'cloudflare' === $captcha_type ) {
-			$recaptcha_site_key = get_option( 'user_registration_captcha_setting_recaptcha_site_key_cloudflare' );
-			$theme_mod          = get_option( 'user_registration_captcha_setting_recaptcha_cloudflare_theme' );
-		}
-
-		$ur_recaptcha_code = array(
-			'site_key'     => sanitize_text_field( $recaptcha_site_key ),
-			'is_invisible' => $invisible_recaptcha,
-			'theme_mode'   => isset( $theme_mod ) ? $theme_mod : '',
-		);
-
-		wp_send_json_success(
-			array(
-				'success'           => true,
-				'captcha_type'      => $captcha_type,
-				'ur_recaptcha_code' => $ur_recaptcha_code,
-			)
-		);
-	}
-
-	/**
 	 * Handle Row settings generation.
 	 *
 	 * @return bool
@@ -1982,7 +1917,7 @@ class UR_AJAX {
 					wp_send_json_error(
 						array(
 							'message' => esc_html__(
-								'The selected page is not a User Registration & Membership Lost Password page.',
+								'The selected page does not contain the required lost password shortcode [user_registration_lost_password]',
 								'user-registration'
 							),
 						)
@@ -2060,11 +1995,100 @@ class UR_AJAX {
 			);
 		}
 		do_action( 'urm_save_captcha_settings', $form_data, $setting_id );
-		$message = sprintf( __( "Captcha Setting for %s has been saved successfully.", 'user-registration' ), $setting_id );
+		$message = ("captcha-settings" === $setting_id) ? __("Captcha settings saved successfully.") : sprintf( __( "Captcha Setting for %s has been saved successfully.", 'user-registration' ), $setting_id );
 
 		wp_send_json_success( array(
 				'message' => $message,
 				'ur_recaptcha_code' => $validate_before_save['ur_recaptcha_code']
+			)
+		);
+	}
+
+	/**
+	 * Reset captcha keys for a specific captcha type.
+	 *
+	 * @return void
+	 */
+	public static function reset_captcha_keys() {
+		check_ajax_referer( 'user_registration_validate_captcha_settings_nonce', 'security' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to reset captcha keys.', 'user-registration' ) ) );
+		}
+
+		$setting_id = isset( $_POST['setting_id'] ) ? sanitize_text_field( wp_unslash( $_POST['setting_id'] ) ) : '';
+
+		if ( empty( $setting_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Setting ID is required.', 'user-registration' ) ) );
+		}
+
+		// Define option keys to reset for each captcha type
+		$reset_keys = array();
+
+		switch ( $setting_id ) {
+			case 'v2':
+				$reset_keys = array(
+					'user_registration_captcha_setting_recaptcha_site_key',
+					'user_registration_captcha_setting_recaptcha_site_secret',
+					'user_registration_captcha_setting_recaptcha_invisible_site_key',
+					'user_registration_captcha_setting_recaptcha_invisible_site_secret',
+					'user_registration_captcha_setting_invisible_recaptcha_v2',
+					'user_registration_captcha_setting_recaptcha_enable_v2',
+				);
+				break;
+
+			case 'v3':
+				$reset_keys = array(
+					'user_registration_captcha_setting_recaptcha_site_key_v3',
+					'user_registration_captcha_setting_recaptcha_site_secret_v3',
+					'user_registration_captcha_setting_recaptcha_threshold_score_v3',
+					'user_registration_captcha_setting_recaptcha_enable_v3',
+				);
+				break;
+
+			case 'hCaptcha':
+				$reset_keys = array(
+					'user_registration_captcha_setting_recaptcha_site_key_hcaptcha',
+					'user_registration_captcha_setting_recaptcha_site_secret_hcaptcha',
+					'user_registration_captcha_setting_recaptcha_enable_hCaptcha',
+				);
+				break;
+
+			case 'cloudflare':
+				$reset_keys = array(
+					'user_registration_captcha_setting_recaptcha_site_key_cloudflare',
+					'user_registration_captcha_setting_recaptcha_site_secret_cloudflare',
+					'user_registration_captcha_setting_recaptcha_cloudflare_theme',
+					'user_registration_captcha_setting_recaptcha_enable_cloudflare',
+				);
+				break;
+
+			default:
+				wp_send_json_error( array( 'message' => __( 'Invalid captcha type.', 'user-registration' ) ) );
+				return;
+		}
+
+		// Reset all keys for the specified captcha type
+		foreach ( $reset_keys as $key ) {
+			delete_option( $key );
+		}
+
+		// If all captcha types are disabled, reset the global captcha version option
+		$all_captcha_types = array( 'v2', 'v3', 'hCaptcha', 'cloudflare' );
+		$has_active_captcha = false;
+		foreach ( $all_captcha_types as $type ) {
+			if ( get_option( 'user_registration_captcha_setting_recaptcha_enable_' . $type, false ) ) {
+				$has_active_captcha = true;
+				break;
+			}
+		}
+		if ( ! $has_active_captcha ) {
+			delete_option( 'user_registration_captcha_setting_recaptcha_version' );
+		}
+
+		wp_send_json_success(
+			array(
+				'message' => sprintf( __( 'Captcha keys for %s have been reset successfully.', 'user-registration' ), $setting_id ),
 			)
 		);
 	}
@@ -2330,6 +2354,110 @@ class UR_AJAX {
 				wp_send_json_error( array( 'message' => __( 'Invalid section specified.', 'user-registration' ) ) );
 				break;
 		}
+	}
+
+	public static function login_settings_page_validation(){
+		check_ajax_referer( 'ur_login_settings_save_nonce', 'security' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission.', 'user-registration' ) ) );
+		}
+
+		$type = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
+
+		if ( ! in_array( $type, array(
+			'user_registration_lost_password_page_id',
+			'user_registration_reset_password_page_id',
+			'user_registration_login_options_login_redirect_url'
+		) ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid page type', 'user-registration' ) ) );
+		}
+
+		$page_id = isset( $_POST['page_id'] ) ? absint( wp_unslash( $_POST['page_id'] ) ) : 0;
+
+
+		$default_message = 'Invalid page type';
+		switch ( $type ) {
+			case 'user_registration_lost_password_page_id':
+				if( empty( $page_id ) ) {
+					wp_send_json_error(
+						array(
+							'message' => esc_html__(
+								'Please select a valid lost password page that contains the lost password shortcode [user_registration_lost_password]',
+								'user-registration'
+							),
+						)
+					);
+				}
+				$is_page_lost_password_page = ur_find_lost_password_in_page( $page_id );
+				if ( ! $is_page_lost_password_page ) {
+					wp_send_json_error(
+						array(
+							'message' => esc_html__(
+								'The selected page does not contain the required lost password shortcode [user_registration_lost_password]',
+								'user-registration'
+							),
+						)
+					);
+				}
+				break;
+			case 'user_registration_reset_password_page_id':
+				if( empty( $page_id ) ) {
+					wp_send_json_error(
+						array(
+							'message' => esc_html__(
+								'Please select a valid reset password page that contains the reset password shortcode [user_registration_reset_password_form]',
+								'user-registration'
+							),
+						)
+					);
+				}
+				$is_page_reset_password_page = ur_find_reset_password_in_page( $page_id );
+				if ( ! $is_page_reset_password_page ) {
+					wp_send_json_error(
+						array(
+							'message' => esc_html__(
+								'The selected page does not contain the required password reset shortcode [user_registration_reset_password_form]',
+								'user-registration'
+							),
+						)
+					);
+				}
+				break;
+			case 'user_registration_login_options_login_redirect_url':
+				if( empty( $page_id ) ) {
+					wp_send_json_error(
+						array(
+							'message' => esc_html__(
+								'Please select a valid MyAccount or Login page that contains the Login or MyAccount shortcode/block [user_registration_my_account]/[user_registration_login].',
+								'user-registration'
+							),
+						)
+					);
+				}
+				$is_login_page_id = ur_find_my_account_in_page( $page_id );
+				if ( ! $is_login_page_id ) {
+					wp_send_json_error(
+						array(
+							'message' => esc_html__(
+								'The selected page does not contain the required Login or My Account shortcode/block [user_registration_my_account]/[user_registration_login]',
+								'user-registration'
+							),
+						)
+					);
+				}
+				break;
+			default:
+
+				wp_send_json_error( array( 'message' => __( $default_message, 'user-registration' ) ) );
+				break;
+		}
+
+		wp_send_json_success(
+			array(
+				'message' => __( 'Page validation successful.', 'user-registration' ),
+			)
+		);
 	}
 }
 

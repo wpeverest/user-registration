@@ -248,11 +248,8 @@ class UR_Smart_Tags {
 						break;
 
 					case 'user_roles':
-						if ( ! empty( $values['user_id'] ) ) {
-							$user_id    = $values['user_id'];
-							$user_roles = ur_get_user_roles( $user_id )[0];
-						} elseif ( is_user_logged_in() && empty( $values['user_id'] ) ) {
-							$user_id    = get_current_user_id();
+						if ( ! empty( $values['user_id'] ) || ! empty( $values[ 'member_id' ] ) || is_user_logged_in() ) {
+							$user_id    = $values['user_id'] ?? $values['member_id'] ?? get_current_user_id();
 							$user_roles = ur_get_user_roles( $user_id )[0];
 						} else {
 							$user_roles = '';
@@ -301,7 +298,11 @@ class UR_Smart_Tags {
 						break;
 
 					case 'all_fields':
-						$user_id         = (int) get_current_user_id();
+						if ( ! empty( $values[ 'user_id' ] ) || ! empty( $values[ 'member_id' ] )  ) {
+							$user_id = $values[ 'user_id' ] ?? $values[ 'member_id' ];
+						} else {
+							$user_id = (int) get_current_user_id();
+						}
 						$form_id         = ur_get_form_id_by_userid( $user_id );
 						$form_data       = user_registration_form_data( $user_id, $form_id );
 						$valid_form_data = array();
@@ -380,21 +381,27 @@ class UR_Smart_Tags {
 						break;
 
 					case 'form_id':
-						if ( is_user_logged_in() && empty( $values['form_id'] ) ) {
-							$user_id = get_current_user_id();
+						if( ! empty( $values[ 'form_id'] ) ) {
+							$form_id = $values['form_id'];
+						} elseif( !empty( $values['user_id'] ) || !empty( $values['member_id'] ) || is_user_logged_in() ) {
+							$user_id = $values['user_id'] ?? $values['member_id'] ?? get_current_user_id();
 							$form_id = ur_get_form_id_by_userid( $user_id );
 						} else {
-							$form_id = $values['form_id'];
+							$form_id = '';
 						}
-
 						$content = str_replace( '{{' . $other_tag . '}}', $form_id, $content );
 						break;
-
 					case 'form_name':
 						if ( isset( $values['form_id'] ) ) {
 							$form_name = ucfirst( get_the_title( $values['form_id'] ) );
-							$content   = str_replace( '{{' . $other_tag . '}}', $form_name, $content );
+						} elseif( !empty( 'user_id' ) || !empty( 'member_id' ) || is_user_logged_in() ) {
+							$user_id = $values['user_id'] ?? $values['member_id'] ?? get_current_user_id();
+							$form_id = ur_get_form_id_by_userid( $user_id );
+							$form_name = ucfirst( get_the_title( $form_id ) );
+						} else {
+							$form_name = '';
 						}
+						$content   = str_replace( '{{' . $other_tag . '}}', $form_name, $content );
 						break;
 
 					case 'user_ip_address':
@@ -520,7 +527,8 @@ class UR_Smart_Tags {
 					case 'display_name':
 						$user_id   = ! empty( $values['user_id'] ) ? $values['user_id'] : get_current_user_id();
 						$user_data = get_userdata( $user_id );
-						$content   = str_replace( '{{' . $tag . '}}', esc_html( $user_data->display_name ), $content );
+						$display_name = isset( $user_data->display_name ) ? $user_data->display_name : ''; 
+						$content   = str_replace( '{{' . $tag . '}}', esc_html( $display_name ), $content );
 						break;
 
 					case 'profile_pic_box':
@@ -541,7 +549,8 @@ class UR_Smart_Tags {
 						$last_name  = ucfirst( get_user_meta( get_current_user_id(), 'last_name', true ) );
 						$full_name  = $first_name . ' ' . $last_name;
 						if ( empty( $first_name ) && empty( $last_name ) ) {
-							$full_name = get_userdata( get_current_user_id() )->display_name;
+							$userdata = get_userdata( get_current_user_id() );
+							$full_name = isset( $userdata->display_name ) ? $userdata->display_name : '';
 						}
 						$content = str_replace( '{{' . $tag . '}}', esc_html( $full_name ), $content );
 						break;
@@ -604,53 +613,64 @@ class UR_Smart_Tags {
 						$content = str_replace( '{{' . $tag . '}}', isset( $values['otp_expiry_time'] ) ? $values['otp_expiry_time'] : '', $content );
 						break;
 					case 'membership_plan_name':
-						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_name'] ) ? $values['membership_plan_name'] : '', $content );
-						break;
 					case 'membership_plan_type':
-						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_type'] ) ? $values['membership_plan_type'] : '', $content );
-						break;
 					case 'membership_plan_payment_method':
-						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_payment_method'] ) ? $values['membership_plan_payment_method'] : '', $content );
-						break;
 					case 'membership_plan_payment_amount':
-						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_payment_amount'] ) ? $values['membership_plan_payment_amount'] : '', $content );
-						break;
 					case 'membership_plan_payment_status':
-						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_payment_status'] ) ? $values['membership_plan_payment_status'] : '', $content );
-						break;
 					case 'membership_plan_billing_cycle':
-						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_billing_cycle'] ) ? $values['membership_plan_billing_cycle'] : '', $content );
-						break;
 					case 'membership_plan_trial_period':
-						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_trial_period'] ) ? $values['membership_plan_trial_period'] : '', $content );
-						break;
+					case 'membership_plan_trial_start_date':
+					case 'membership_plan_trial_end_date':
 					case 'membership_plan_next_billing_date':
-						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_next_billing_date'] ) ? $values['membership_plan_next_billing_date'] : '', $content );
-						break;
 					case 'membership_plan_expiry_date':
-						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_expiry_date'] ) ? $values['membership_plan_expiry_date'] : '', $content );
-						break;
 					case 'membership_plan_status':
-						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_plan_status'] ) ? $values['membership_plan_status'] : '', $content );
-						break;
 					case 'membership_renewal_link':
-						$content = str_replace( '{{' . $tag . '}}', isset( $values['membership_renewal_link'] ) ? $values['membership_renewal_link'] : '', $content );
+						if ( isset( $values[ $other_tag ] ) ) {
+							$value = $values[ $other_tag ];
+						} elseif ( isset( $values[ 'membership_tags' ][ $other_tag ] ) ) {
+							$value = $values['membership_tags'][ $other_tag ];
+						} else {
+							$value = '';
+						}
+						$content = str_replace( '{{' . $tag . '}}', $value, $content );
 						break;
 					case 'membership_plan_details':
 						$new_content = '';
 						if ( ! empty( $values['membership_tags'] ) ) {
-							$membership_tags = $values['membership_tags'];
-							$details         = array(
+							$membership_tags                  = $values['membership_tags'];
+							$membership_plan_types            = array(
+								'Paid'         => __( 'Paid', 'user-registration' ),
+								'Free'         => __( 'Free', 'user-registration' ),
+								'Subscription' => __( 'Subscription', 'user-registration' ),
+							);
+							$membership_plan_payment_statuses = array(
+								'Completed' => __( 'Completed', 'user-registration' ),
+								'Failed'    => __( 'Failed', 'user-registration' ),
+								'Pending'   => __( 'Pending', 'user-registration' ),
+							);
+							$membership_plan_billing_cycles   = array(
+								'N/A'     => __( 'N/A', 'user-registration' ),
+								'Daily'   => __( 'Daily', 'user-registration' ),
+								'Weekly'  => __( 'Weekly', 'user-registration' ),
+								'Monthly' => __( 'Monthly', 'user-registration' ),
+								'Yearly'  => __( 'Yearly', 'user-registration' ),
+							);
+							$membership_plan_statuses         = array(
+								'Pending' => __( 'Pending', 'user-registration' ),
+								'Active'  => __( 'Active', 'user-registration' ),
+								'Expired' => __( 'Expired', 'user-registration' ),
+							);
+							$details                          = array(
 								'Plan Name'         => $membership_tags['membership_plan_name'] ?? '',
-								'Membership Type'   => $membership_tags['membership_plan_type'] ?? '',
+								'Membership Type'   => $membership_plan_types[ $membership_tags['membership_plan_type'] ] ?? '',
 								'Payment Details'   => array(
-									'Method' => $membership_tags['membership_plan_payment_method'] ?? '',
+									'Method' => $values['membership_tags']['membership_plan_payment_method'] ?? '',
 									'Amount' => $membership_tags['membership_plan_total'] ?? '',
-									'Status' => $membership_tags['membership_plan_payment_status'] ?? '',
+									'Status' => $membership_plan_payment_statuses[ $membership_tags['membership_plan_payment_status'] ] ?? '',
 								),
-								'Billing Cycle'     => $membership_tags['membership_plan_billing_cycle'] ?? '',
+								'Billing Cycle'     => $membership_plan_billing_cycles[ $membership_tags['membership_plan_billing_cycle'] ] ?? '',
 								'Next Billing Date' => $membership_tags['membership_plan_next_billing_date'] ?? '',
-								'Membership Status' => $membership_tags['membership_plan_status'] ?? '',
+								'Membership Status' => $membership_plan_statuses[ $membership_tags['membership_plan_status'] ] ?? '',
 							);
 
 							$new_content = '<ul>';
@@ -687,6 +707,19 @@ class UR_Smart_Tags {
 						require $template_file;
 						$new_content = ob_get_clean();
 						$content     = str_replace( '{{' . $tag . '}}', $new_content, $content );
+						break;
+
+					case 'first_name':
+						$username   = $values['username'] ?? $values['membership_tags']['username'] ?? null;
+						$user       = get_user_by( 'login', $username );
+						$user_id    = isset( $user->ID ) ? $user->ID : 0;
+						$first_name = get_user_meta( $user_id, 'first_name', true );
+						$content    = str_replace( '{{' . $other_tag . '}}', $first_name, $content );
+						break;
+
+					case 'membership_end_date':
+						$membership_end_date = ( isset( $values['membership_tags'] ) && isset( $values['membership_tags']['membership_plan_expiry_date'] ) ) ? $values['membership_tags']['membership_plan_expiry_date'] : '';
+						$content             = str_replace( '{{' . $tag . '}}', $membership_end_date, $content );
 						break;
 				}
 			}

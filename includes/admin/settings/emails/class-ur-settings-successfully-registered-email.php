@@ -140,12 +140,13 @@ if ( ! class_exists( 'UR_Settings_Successfully_Registered_Email', false ) ) :
 				'user_registration_get_successfully_registered_email',
 				sprintf(
 					__(
-						'Hi {{username}}, <br/>
-						Congratulations! You have successfully completed your registration on <a href="{{home_url}}">{{blog_info}}</a>. <br/>
+						'Hi {{username}}, <br/><br/>
+
+						Congratulations! You have successfully completed your registration on {{blog_info}}. <br/><br/>
 
 						{{membership_plan_details}}
 
-						Please visit \'<b>My Account</b>\' page to edit your account details and create your user profile. <br/>
+						Please visit \'My Account\' page to update your account details and create your user profile. <br/><br/>
 
 						Thank You!',
 						'user-registration'

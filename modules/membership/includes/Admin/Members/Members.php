@@ -140,6 +140,7 @@ if ( ! class_exists( 'Members' ) ) {
 					'labels'             => $this->get_i18_labels(),
 					'members_page_url'   => admin_url( 'admin.php?page=user-registration-members' ),
 					'delete_icon'        => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE ),
+					'ur_membership_edit_nonce' => wp_create_nonce( 'ur_membership_edit_nonce' ),
 				)
 			);
 		}

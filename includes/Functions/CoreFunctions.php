@@ -378,13 +378,13 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 			$membership_type = (!empty($membership_meta_value) && !empty($membership_meta_value['type'])) ? $membership_meta_value['type'] : '';
 			$amount = !empty($membership['meta_value']['amount']) ? $membership['meta_value']['amount'] : 0;
 			if ( isset( $currencies[ $currency ]['symbol_pos'] ) && 'right' === $currencies[ $currency ]['symbol_pos'] ) {
-                $membership_cur_amount = isset( $membership['meta_value']['amount'] ) ? round( $membership['meta_value']['amount'] ) . $symbol : '';
-            } else {
-                $membership_cur_amount = isset( $membership['meta_value']['amount'] ) ? $symbol . round( $membership['meta_value']['amount'] ) : '';
-            }
+				$membership_cur_amount = $amount . $symbol;
+			} else {
+				$membership_cur_amount = $symbol . $amount;
+			}
 			$duration_label = '';
 			if(!empty($membership['meta_value']['subscription']['duration']) ) {
-				$duration_key = isset($membership['meta_value']['subscription']['duration']) ? strtolower( $membership['meta_value']['subscription']['duration'] ) : '';
+				$duration_key = strtolower( $membership['meta_value']['subscription']['duration'] );
 				$duration_labels = array(
 					'day'   => __( 'Day', 'user-registration' ),
 					'week'  => __( 'Week', 'user-registration' ),

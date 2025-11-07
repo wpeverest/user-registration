@@ -326,6 +326,19 @@ class UR_Admin_Assets {
 			wp_enqueue_script( 'ur-copy' );
 
 			$form_id = isset( $_GET['edit-registration'] ) ? absint( $_GET['edit-registration'] ) : 0;//phpcs:ignore WordPress.Security.NonceVerification
+			$ur_enabled_captchas = array();
+			$ur_captchas         = ur_get_captcha_integrations();
+			foreach ( $ur_captchas as $key => $value ) {
+				if ( get_option( 'user_registration_captcha_setting_recaptcha_enable_' . $key, false ) ) {
+					$ur_enabled_captchas[ $key ] = $value;
+				}
+			}
+			$no_captcha_set = (count($ur_enabled_captchas) < 1);
+			$captcha_not_set_error = sprintf(
+			/* translators: %s - Integration tab url */
+				'%s <a href="%s" class="ur-captcha-error" rel="noreferrer noopener" target="_blank">here</a> to add them and save your form.',
+				esc_html__( 'Seems like you are trying to enable the captcha feature, but the captcha keys are empty. Please click', 'user-registration' ),
+				esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=captcha' ) )  );
 			$params  = array(
 				'required_form_html'                       => self::get_form_required_html(),
 				'ajax_url'                                 => admin_url( 'admin-ajax.php' ),
@@ -358,6 +371,7 @@ class UR_Admin_Assets {
 				'i18n_shortcut_key_title'                  => esc_html__( 'Keyboard Shortcut Keys', 'user-registration' ),
 				'i18n_publish_form_button_text'            => esc_html__( 'Publish form', 'user-registration' ),
 				'i18n_update_form_button_text'             => esc_html__( 'Update form', 'user-registration' ),
+				'i18n_captcha_not_set_error'               => $captcha_not_set_error,
 				'i18n_shortcut_keys'                       => array(
 					'Ctrl+S' => esc_html__( 'Save Builder', 'user-registration' ),
 					'Ctrl+W' => esc_html__( 'Close Builder', 'user-registration' ),
@@ -410,6 +424,7 @@ class UR_Admin_Assets {
 						'return_url'   => ur_get_single_post_meta( $form_id, 'user_registration_paypal_return_url', wp_login_url() ),
 					),
 				),
+				'no_captcha_set'                           => $no_captcha_set
 			);
 
 			wp_localize_script(
@@ -507,36 +522,6 @@ class UR_Admin_Assets {
 
 		wp_register_script( 'ur-live-user-notice', UR()->plugin_url() . '/assets/js/admin/live-user-notice' . $suffix . '.js', array( 'jquery', 'heartbeat' ), UR_VERSION, false );
 		wp_enqueue_script( 'ur-live-user-notice' );
-
-		wp_register_script(
-			'ur-google-recaptcha',
-			'https://www.google.com/recaptcha/api.js?onload=onloadURRecaptchaCallback&render=explicit',
-			array(),
-			'2.0.0'
-		);
-
-		$recaptcha_site_key_v3 = get_option( 'user_registration_captcha_setting_recaptcha_site_key_v3' );
-
-		wp_register_script(
-			'ur-google-recaptcha-v3',
-			'https://www.google.com/recaptcha/api.js?render=' . $recaptcha_site_key_v3,
-			array(),
-			'3.0.0'
-		);
-
-		wp_register_script(
-			'ur-recaptcha-hcaptcha',
-			'https://hcaptcha.com/1/api.js?onload=onloadURHcaptchaCallback&render=explicit',
-			array(),
-			UR_VERSION
-		);
-
-		wp_register_script(
-			'ur-recaptcha-cloudflare',
-			'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadURTurnstileCallback',
-			array(),
-			UR_VERSION
-		);
 
 		wp_register_script(
 			'ur-enhanced-select-custom',

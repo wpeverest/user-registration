@@ -37,15 +37,6 @@ ur_do_deprecated_action( 'user_registration_before_edit_account_form', array(), 
  */
 do_action( 'user_registration_before_change_password_form' );
 
-$layout = get_option( 'user_registration_my_account_layout', 'horizontal' );
-
-if ( 'vertical' === $layout ) {
-	?>
-	<div class="user-registration-MyAccount-content__header">
-		<h1><?php echo wp_kses_post( $endpoint_label ); ?></h1>
-	</div>
-	<?php
-}
 ?>
 <div class="user-registration-MyAccount-content__body">
 	<div class="ur-frontend-form login" id="ur-frontend-form">
