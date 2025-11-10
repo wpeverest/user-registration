@@ -96,16 +96,17 @@ class UR_Cache_Helper {
 	 * This handles cases like the lost-password form, etc.
 	 */
 	public static function maybe_disable_cache_for_dynamic_pages() {
+		global $wp_query;
 
 		// Detect UR routes that should never be cached.
-		$is_ur_dynamic_page = false;
+		$is_ur_lost_password_page = false;
+		$lost_pw_id               = get_option( 'user_registration_lost_password_page_id' );
 
-		// Lost password flow.
-		if ( isset( $_GET['show-reset-form'] ) || isset( $_GET['reset-link-sent'] ) ) {
-			$is_ur_dynamic_page = true;
+		if ( isset( $wp_query->post ) && (int) $wp_query->post->ID === (int) $lost_pw_id ) {
+			$is_ur_lost_password_page = true;
 		}
 
-		if ( ! $is_ur_dynamic_page ) {
+		if ( ! $is_ur_lost_password_page ) {
 			return;
 		}
 
