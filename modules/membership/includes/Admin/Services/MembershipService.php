@@ -236,7 +236,7 @@ class MembershipService {
 		}
 		$data['cancel_subscription'] = sanitize_text_field( ! empty( $data['cancel_subscription'] ) ? $data['cancel_subscription'] : '' );
 
-		$data['amount'] = absint( $data['amount'] ?? 0 );
+		$data['amount'] = $data['amount'] ?? 0;
 		if ( isset( $data['payment_gateways'] ) ) {
 			if ( isset( $data['payment_gateways']['paypal'] ) && 'on' === $data['payment_gateways']['paypal']['status'] ) {
 				$data['payment_gateways']['paypal']['status']     = sanitize_text_field( $data['payment_gateways']['paypal']['status'] );
@@ -338,7 +338,7 @@ class MembershipService {
 		$membership_repository = new MembershipRepository();
 		$membership            = $membership_repository->get_single_membership_by_ID( $membership_id );
 
-		return wp_unslash( json_decode( $membership['meta_value'], true ) );
+		return ( is_array( $membership ) && ! empty( $membership['meta_value'] ) ) ? wp_unslash( json_decode( $membership['meta_value'], true ) ) : array();
 	}
 
 	public function verify_page_content( $type, $post_id ) {

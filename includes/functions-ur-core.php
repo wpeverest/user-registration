@@ -9,6 +9,7 @@
  */
 
 use WPEverest\URMembership\Admin\Repositories\MembersOrderRepository;
+use WPEverest\URMembership\Admin\Services\MembershipService;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -1120,13 +1121,11 @@ function ur_admin_form_settings_fields( $form_id ) {
 	$ur_enabled_captchas = array(
 		'' => __( 'Select Enabled Captcha', 'user-registration' ),
 	);
-
 	foreach ( $ur_captchas as $key => $value ) {
 		if ( get_option( 'user_registration_captcha_setting_recaptcha_enable_' . $key, false ) ) {
 			$ur_enabled_captchas[ $key ] = $value;
 		}
 	}
-
 	$arguments = array(
 		'form_id'      => $form_id,
 		'setting_data' => array(
@@ -2881,7 +2880,7 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 	 * @return string
 	 */
 	function user_registration_pro_render_conditional_logic( $connection, $integration, $form_id ) {
-		$output = '<div class="form-row ur-form-settings-section">';
+		$output = '<div class="form-row ur-form-settings-section ur-form-settings-' . $integration . '-section">';
 		$output .= '<div class="ur-form-settings-section--field">';
 		$output .= '<h4>' . esc_html__( 'Conditional Logic', 'user-registration' ) . '</h4>';
 		$output .= '</div>';
@@ -2891,7 +2890,7 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 		if ( isset( $connection['enable_conditional_logic'] ) && ur_string_to_bool( $connection['enable_conditional_logic'] ) ) {
 			$checked = 'checked=checked';
 		}
-		$output .= '<div class="form-row ur-toggle-section ur-form-builder-toggle">';
+		$output .= '<div class="form-row ur-toggle-section ur-form-builder-toggle ur-form-builder-' . $integration . '-toggle">';
 		$output .= '<label class="ur-label checkbox">' . esc_html__( 'Use Conditional Logics', 'user-registration' ) . '</label>';
 		$output .= '<div class="ur-settings-field">';
 		$output .= '<span class="user-registration-toggle-form">';
@@ -3606,10 +3605,10 @@ if ( ! function_exists( 'ur_find_reset_password_in_page' ) ) {
 
 		$matched = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(*) FROM {$post_table} 
-				WHERE ID = %d 
+				"SELECT COUNT(*) FROM {$post_table}
+				WHERE ID = %d
 				AND (
-					post_content LIKE '%[user_registration_reset_password_form%' 
+					post_content LIKE '%[user_registration_reset_password_form%'
 					OR post_content LIKE '%<!-- wp:user-registration/reset_password_form%'
 				)",
 				$reset_password_page_id
@@ -3619,10 +3618,10 @@ if ( ! function_exists( 'ur_find_reset_password_in_page' ) ) {
 		if ( $matched <= 0 ) {
 			$matched = $wpdb->get_var(
 				$wpdb->prepare(
-					"SELECT COUNT(*) FROM {$post_meta_table} 
-					WHERE post_id = %d 
+					"SELECT COUNT(*) FROM {$post_meta_table}
+					WHERE post_id = %d
 					AND (
-						meta_value LIKE '%[user_registration_reset_password_form%' 
+						meta_value LIKE '%[user_registration_reset_password_form%'
 						OR meta_value LIKE '%<!-- wp:user-registration/reset_password_form%'
 					)",
 					$reset_password_page_id
@@ -4241,7 +4240,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				'pending_approval' => get_option( 'user_registration_message_pending_approval', null ),
 				'denied_access'    => get_option( 'user_registration_message_denied_account', null ),
 				'user_disabled'    => esc_html__( 'Sorry! You are disabled.Please Contact Your Administrator.', 'user-registration' ),
-				'incorrect_password' => get_option( 'user_registration_message_incorrect_password', esc_html__( 'The password you entered for the email address %email% is incorrect.', 'user-registration' ) ),
+				'incorrect_password' => get_option( 'user_registration_message_incorrect_password', esc_html__( 'The password you entered for the %label% %email% is incorrect.', 'user-registration' ) ),
 			);
 
 			$post = $_POST; // phpcs:ignore.
@@ -4419,6 +4418,8 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 					}
 
 					throw new Exception( '<strong>' . esc_html__( 'ERROR: ', 'user-registration' ) . '</strong>' . $messages['unknown_email'] );
+				} else {
+					$login_data['user_login'] = $username;
 				}
 			} elseif ( 'username' === get_option( 'user_registration_general_setting_login_options_with', array() ) ) {
 				$user_data                = get_user_by( 'login', $username );
@@ -4451,7 +4452,17 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 					$user->errors['denied_access'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['denied_access'] );
 				}
 				if ( ! empty( $user->errors['incorrect_password'] ) && ! empty( $messages['incorrect_password'] ) ) {
-					$user->errors['incorrect_password'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), str_replace( "%email%", $login_data['user_login'], $messages['incorrect_password'] ) );
+					// Replace the label placeholder with username or email address based on the entered value.
+					if ( is_email( $login_data['user_login'] ) ) {
+						$label = esc_html__( 'email address', 'user-registration' );
+					} else {
+						$label = esc_html__( 'username', 'user-registration' );
+					}
+
+					$messages['incorrect_password'] = str_replace( '%label%', $label, $messages['incorrect_password'] );
+					$messages['incorrect_password'] = str_replace( "%email%", $login_data['user_login'], $messages['incorrect_password'] );
+
+					$user->errors['incorrect_password'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['incorrect_password'] );
 				}
 
 				$message = $user->get_error_message();
@@ -6433,6 +6444,29 @@ if ( ! function_exists( 'ur_check_is_inactive' ) ) {
 
 	}
 }
+
+add_action( 'init', 'ur_backwards_compatibility_urm_enable_no_conflict' );
+
+if ( ! function_exists( 'ur_backwards_compatibility_urm_enable_no_conflict' ) ) {
+	/**
+	 * Backwards compatibility: Set urm_enable_no_conflict option if not set or set to false.
+	 */
+	function ur_backwards_compatibility_urm_enable_no_conflict() {
+		$migration_completed = get_option( 'urm_enable_no_conflict_migration_completed', false );
+
+		if ( $migration_completed ) {
+			return;
+		}
+
+		$option_value = get_option( 'urm_enable_no_conflict', null );
+		if ( null === $option_value  ) {
+			update_option( 'urm_enable_no_conflict', false );
+		}
+
+		update_option( 'urm_enable_no_conflict_migration_completed', true );
+	}
+}
+
 if ( ! function_exists( 'ur_check_is_auto_enable_user' ) ) {
 
 	/**
@@ -6946,7 +6980,7 @@ if ( ! function_exists( 'ur_email_send_failed_notice' ) ) {
 				'title'                 => __( 'User Registration Email Send Error', 'user-registration' ),
 				'message_content'       => wp_kses_post(
 					sprintf(
-						'<p>%s</p><p style="border-left: 2px solid #72aee6; background: #F0FFFF; padding: 10px;">%s</p><br/>',
+						'<p>%s</p><p class="ur-email-send-failed-log">%s</p>',
 						__( 'The last emails sent from User Registration Plugin was not delivered to the user. ', 'user-registration' ),
 						$error_message
 					)
@@ -6962,7 +6996,7 @@ if ( ! function_exists( 'ur_email_send_failed_notice' ) ) {
 					array(
 						'title'  => __( 'Visit Documentation', 'user-registration' ),
 						'icon'   => 'dashicons-media-document',
-						'link'   => 'https://docs.wpuserregistration.com/docs/emails-are-not-being-delivered/',
+						'link'   => 'https://docs.wpuserregistration.com/docs/why-are-emails-not-being-delivered/',
 						'class'  => 'button-secondary notice-have-query',
 						'target' => '_blank',
 					),
@@ -7055,7 +7089,7 @@ if ( ! function_exists( 'ur_spam_users_detected' ) ) {
 				'title'                 => __( 'Unusual User Registrations Detected', 'user-registration' ),
 				'message_content'       => wp_kses_post(
 					sprintf(
-						'<p>%s</p><p>%s</p><br/>',
+						'<p>%s</p><p>%s</p>',
 						__( 'A significant number of users have registered on your site from sources other than the User Registration plugin\'s form.', 'user-registration' ),
 						__( 'These registrations may be suspicious. Please review and disable any other methods that allow user registrations if they are not intended. Additionally, consider enabling spam protection measures in the User Registration plugin to safeguard your site.', 'user-registration' ),
 					)
@@ -7550,43 +7584,6 @@ add_action(
 	1
 );
 
-
-add_action( 'user_registration_init', 'ur_captcha_settings_migration_script' );
-
-if ( ! function_exists( 'ur_captcha_settings_migration_script' ) ) {
-
-	/**
-	 * Update Captcha Settings for all forms and global settings.
-	 *
-	 * @since 3.3.4.
-	 */
-	function ur_captcha_settings_migration_script() {
-
-		if ( ! get_option( 'ur_captcha_settings_migrated', false ) ) {
-
-			$all_forms              = ur_get_all_user_registration_form();
-			$enabled_recaptcha_type = get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' );
-
-			foreach ( $all_forms as $key => $value ) {
-
-				$form_id = $key;
-
-				$form_captcha_enabled = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_recaptcha_support', false );
-				if ( $form_captcha_enabled ) {
-					update_post_meta( $form_id, 'user_registration_form_setting_configured_captcha_type', $enabled_recaptcha_type );
-				}
-			}
-
-			if ( get_option( 'user_registration_login_options_enable_recaptcha', false ) ) {
-				update_option( 'user_registration_login_options_configured_captcha_type', $enabled_recaptcha_type );
-			}
-			update_option( 'user_registration_captcha_setting_recaptcha_enable_' . $enabled_recaptcha_type, true );
-
-			update_option( 'ur_captcha_settings_migrated', true );
-		}
-	}
-}
-
 // Hook the end setup wizard to admin_init
 add_action(
 	'admin_init',
@@ -7792,7 +7789,7 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'type'     => 'text',
 								'desc_tip' => true,
 								'css'      => '',
-								'default'  => get_permalink(get_option( 'user_registration_default_form_page_id' )),
+								'default'  => get_permalink(get_option( 'user_registration_registration_page_id' )),
 								'field-key'=> 'registration-setting'
 							),
 							array(
@@ -7942,7 +7939,7 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'type'        => 'text',
 								'desc_tip'    => true,
 								'css'         => '',
-								'default'     => esc_html__( 'The password you entered for the email address %email% is incorrect.', 'user-registration' ),
+								'default'     => esc_html__( 'The password you entered for the %label% %email% is incorrect.', 'user-registration' ),
 								'placeholder' => 'Default message from WordPress',
 								'field-key'   => 'password'
 							),
@@ -9384,6 +9381,122 @@ if ( ! function_exists( 'ur_get_payment_connection_statuses' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ur_get_login_page_url' ) ) {
+	/**
+	 * Get the appropriate login page URL based on User Registration settings.
+	 * @return string|false The login page URL or false if none found
+	 */
+	function ur_get_login_page_url() {
+		// Step 1: Check user_registration_login_page_id option first
+		$login_page_id = get_option( 'user_registration_login_page_id' );
+		if ( ! empty( $login_page_id ) ) {
+			$page_url = get_permalink( $login_page_id );
+			if ( $page_url ) {
+				return $page_url;
+			}
+		}
+
+		// Step 2: Check user_registration_login_options_login_redirect_url option
+		$login_redirect_url = get_option( 'user_registration_login_options_login_redirect_url' );
+		if ( ! empty( $login_redirect_url ) ) {
+			// If it's a page ID, get the permalink
+			if ( is_numeric( $login_redirect_url ) ) {
+				$page_url = get_permalink( $login_redirect_url );
+				if ( $page_url ) {
+					return $page_url;
+				}
+			} else {
+				// If it's already a URL, validate and return it
+				if ( ur_is_valid_url( $login_redirect_url ) ) {
+					return esc_url_raw( $login_redirect_url );
+				}
+			}
+		}
+
+		// Step 3: Find all pages with login shortcode or block
+		$login_pages = ur_find_pages_with_login_functionality();
+		if ( ! empty( $login_pages ) ) {
+			// Return the first found login page URL
+			return get_permalink( $login_pages[0]->ID );
+		}
+
+		return false;
+	}
+}
+
+if ( ! function_exists( 'ur_find_pages_with_login_functionality' ) ) {
+	/**
+	 * Find all pages in the system that contain login shortcodes or blocks.
+	 *
+	 * @return array Array of WP_Post objects containing login functionality
+	 */
+	function ur_find_pages_with_login_functionality() {
+		global $wpdb;
+
+		$login_pages = array();
+
+		// Search for pages with login shortcodes and blocks
+		$patterns = array(
+			'%[user_registration_login]%',
+			'%<!-- wp:user-registration/login-form%'
+		);
+
+		// Build the SQL query
+		$pattern_conditions = array();
+		foreach ( $patterns as $pattern ) {
+			$pattern_conditions[] = "post_content LIKE " . $wpdb->prepare( '%s', $pattern );
+		}
+
+		$where_clause = implode( ' OR ', $pattern_conditions );
+
+		$query = "
+			SELECT DISTINCT p.*
+			FROM {$wpdb->posts} p
+			WHERE p.post_type = 'page'
+			AND p.post_status = 'publish'
+			AND ({$where_clause})
+			ORDER BY p.post_title ASC
+		";
+
+		$results = $wpdb->get_results( $query );
+
+		// Merge and deduplicate results
+		$all_results = array_merge( $results );
+		$unique_pages = array();
+
+		foreach ( $all_results as $page ) {
+			if ( ! isset( $unique_pages[ $page->ID ] ) ) {
+				$unique_pages[ $page->ID ] = $page;
+			}
+		}
+
+		return array_values( $unique_pages );
+	}
+}
+
+if ( ! function_exists( 'ur_get_login_page_info' ) ) {
+	/**
+	 * Get detailed information about login page options and available pages.
+	 *
+	 * @return array Array containing login page information
+	 */
+	function ur_get_login_page_info() {
+		$info = array(
+			'login_redirect_url' => get_option( 'user_registration_login_options_login_redirect_url' ),
+			'login_page_id' => get_option( 'user_registration_login_page_id' ),
+			'login_pages_with_functionality' => ur_find_pages_with_login_functionality(),
+			'recommended_login_page_url' => ur_get_login_page_url()
+		);
+
+		// Add additional context
+		$info['login_redirect_url_set'] = ! empty( $info['login_redirect_url'] );
+		$info['login_page_id_set'] = ! empty( $info['login_page_id'] );
+		$info['has_login_pages'] = ! empty( $info['login_pages_with_functionality'] );
+
+		return $info;
+	}
+}
+
 if ( ! function_exists( 'ur_should_show_site_assistant_menu' ) ) {
 	/**
 	 * Check if site assistant menu should be shown.
@@ -9404,4 +9517,43 @@ if ( ! function_exists( 'ur_should_show_site_assistant_menu' ) ) {
 		);
 	}
 
+}
+
+if ( ! function_exists( 'ur_site_assistant_config_count' ) ) {
+	/**
+	 * Check if site assistant menu should be shown.
+	 * Returns false if all options are handled and set.
+	 *
+	 * @return bool
+	 */
+	function ur_site_assistant_config_count() {
+		$site_assistant_data = ur_get_site_assistant_data();
+
+		$checks = [
+			! $site_assistant_data['has_default_form'],
+			! empty( $site_assistant_data['missing_pages'] ),
+			! $site_assistant_data['test_email_sent'],
+			! $site_assistant_data['wordpress_login_handled'],
+			! $site_assistant_data['spam_protection_handled'],
+			! $site_assistant_data['payment_setup_handled'],
+		];
+
+		$count = count( array_filter( $checks ) );
+		return $count;
+	}
+}
+
+if( ! function_exists( 'ur_get_membership_details') ) {
+	/**
+	 * Get membership details.
+	 *
+	 * @since xx.xx.xx
+	 *
+	 * @return array
+	 */	function ur_get_membership_details() {
+		$membership_service = new MembershipService();
+		$memberships        = $membership_service->list_active_memberships();
+
+		return $memberships;
+	}
 }

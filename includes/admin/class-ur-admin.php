@@ -288,10 +288,26 @@ class UR_Admin {
 	 */
 	public function ur_add_post_state( $post_states, $post ) {
 
-		$my_account_page_id = (int) get_option( 'user_registration_myaccount_page_id' );
+		$urm_installable_pages = array(
+			'user_registration_login_page_id' => __( 'Login', 'user-registration' ),
+			'user_registration_lost_password_page_id' => __( 'Lost Password', 'user-registration' ),
+			'user_registration_reset_password_page_id' =>  __( 'Reset Password', 'user-registration' ),
+			'user_registration_member_registration_page_id' => __( 'Membership Registration', 'user-registration' ),
+			'user_registration_thank_you_page_id' => __( 'Membership Thank You', 'user-registration' ),
+			'user_registration_myaccount_page_id' => __( 'My Account', 'user-registration' ),
+			'user_registration_membership_pricing_page_id' => __( 'Membership Pricing', 'user-registration' ),
+		);
 
-		if ( $post->ID === $my_account_page_id ) {
-			$post_states[] = __( 'UR My Account Page', 'user-registration' );
+		foreach ( $urm_installable_pages as $option_name => $title ) {
+			$page_id = (int) get_option( $option_name );
+			if ( $post->ID === $page_id ) {
+				$post_states[] = sprintf(
+					/* translators: 1: Page Title */
+					__( 'URM %s Page', 'user-registration' ),
+					$title
+				);
+				break;
+			}
 		}
 
 		return $post_states;

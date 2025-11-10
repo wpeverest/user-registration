@@ -142,11 +142,11 @@ if ( ! class_exists( 'UR_Settings_Registration_Pending_Email', false ) ) :
 				'user_registration_get_registration_pending_email',
 				sprintf(
 					__(
-						'Hi {{username}}, <br/>
+						'Hi {{username}}, <br/><br/>
 
-Your registration on <a href="{{home_url}}">{{blog_info}}</a> is now marked as pending. <br/>
+Your registration on {{blog_info}} is now marked as pending. <br/><br/>
 
-We apologize for the inconvenience. You will be notified once your registration has been approved. <br/>
+We apologize for the inconvenience. You will be notified once your registration has been approved. <br/><br/>
 
 Thank you for your patience!',
 						'user-registration'

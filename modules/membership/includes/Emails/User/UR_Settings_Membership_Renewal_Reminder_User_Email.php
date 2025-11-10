@@ -151,9 +151,9 @@ class UR_Settings_Membership_Renewal_Reminder_User_Email {
 				__(
 					'
 					Hi {{username}}, <br><br>
-					This is a friendly reminder that your {{membership_plan_name}} membership on {{blog_info}} is due for renewal soon. <br>
-					Don\'t worry – your membership will be automatically renewed, and the payment will be processed shortly. <br>
-					If you need to update your payment details or have any questions, feel free to reach out to us.<br>
+					This is a friendly reminder that your {{membership_plan_name}} membership on {{blog_info}} is due for renewal soon. <br><br>
+					Don\'t worry – your membership will be automatically renewed, and the payment will be processed shortly. <br><br>
+					If you need to update your payment details or have any questions, feel free to reach out to us.<br><br>
 					Thank you for being a valued member!<br><br>
 					Best regards,<br>
 					{{blog_info}}',
