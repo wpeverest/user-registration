@@ -276,6 +276,21 @@ class UR_Logger implements UR_Logger_Interface {
 	}
 
 	/**
+	 * Adds a success level message.
+	 *
+	 * Successful operation completion.
+	 * Example: Payment processed successfully, upgrade completed.
+	 *
+	 * @see UR_Logger::log
+	 *
+	 * @param string $message Message.
+	 * @param array  $context Context.
+	 */
+	public function success( $message, $context = array() ) {
+		$this->log( UR_Log_Levels::SUCCESS, $message, $context );
+	}
+
+	/**
 	 * Adds a info level message.
 	 *
 	 * Interesting events.

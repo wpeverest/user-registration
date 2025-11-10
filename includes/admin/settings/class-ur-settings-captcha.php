@@ -37,25 +37,21 @@ if ( ! class_exists( 'UR_Settings_Captcha' ) ) :
 			add_action( 'user_registration_settings_' . $this->id, array( $this, 'output' ) );
 			add_action( 'user_registration_settings_save_' . $this->id, array( $this, 'save' ) );
 			add_action( 'urm_save_captcha_settings', array( $this, 'save_captcha_settings' ), 10, 2 );
-			add_filter( 'user_registration_admin_field_recaptcha_preview', array(
-				$this,
-				'output_captcha_preview'
-			), 10, 2 );
 		}
 
-	public function save_captcha_settings( $form_data, $setting_id ) {
-		foreach ( $form_data as $key => $value ) {
-			update_option( $key, sanitize_text_field( $value ) );
-		}
+		public function save_captcha_settings( $form_data, $setting_id ) {
+			foreach ( $form_data as $key => $value ) {
+				update_option( $key, sanitize_text_field( $value ) );
+			}
 
-		// Update the global captcha version to match the current setting
-		if ( in_array( $setting_id, array( 'v2', 'v3', 'hCaptcha', 'cloudflare' ) ) ) {
-			update_option( 'user_registration_captcha_setting_recaptcha_version', $setting_id );
-		}
+			// Update the global captcha version to match the current setting
+			if ( in_array( $setting_id, array( 'v2', 'v3', 'hCaptcha', 'cloudflare' ) ) ) {
+				update_option( 'user_registration_captcha_setting_recaptcha_version', $setting_id );
+			}
 
-		// Mark captcha as enabled/connected after successful save
-		update_option( 'user_registration_captcha_setting_recaptcha_enable_' . $setting_id, true );
-	}
+			// Mark captcha as enabled/connected after successful save
+			update_option( 'user_registration_captcha_setting_recaptcha_enable_' . $setting_id, true );
+		}
 
 		/**
 		 * Get settings
@@ -93,54 +89,6 @@ if ( ! class_exists( 'UR_Settings_Captcha' ) ) :
 		public function save() {
 			$settings = $this->get_settings();
 			UR_Admin_Settings::save_fields( $settings );
-		}
-
-		/**
-		 * Add html for Test Captcha button and captcha node.
-		 *
-		 * @param [string] $settings Captcha settings html.
-		 * @param [string] $value Value.
-		 *
-		 * @return string
-		 */
-		public function output_captcha_preview( $settings, $value ) {
-
-			$active_captcha = self::get_active_captcha( $value );
-
-			if ( ! $active_captcha ) {
-				return $settings;
-			}
-
-			$captcha_type = $value['captcha_type'];
-			$test_captcha = <<<HTML
-				<div class="user-registration-global-settings">
-					<label for="%s">%s</label>
-					<div class="ur-captcha-test">
-						<div class="ur-captcha-test-container" style="pointer-events:none!important;cursor:default!important;" data-captcha-type="%s">
-							<div class="ur-captcha-node">%s</div>
-							<div class="ur-captcha-notice">
-								<span class="ur-captcha-notice--icon"></span>
-								<span class="ur-captcha-notice--text">%s</span>
-							</div>
-						</div>
-					</div>
-				</div>
-			HTML;  //phpcs:ignore;
-
-			$captcha_node = ur_get_recaptcha_node( 'test_captcha', $captcha_type );
-
-			$test_captcha = sprintf(
-				$test_captcha,
-				$value['id'],
-				$value['title'],
-				$captcha_type,
-				$captcha_node,
-				$value['desc']
-			);
-
-			$settings .= $test_captcha;
-
-			return $settings;
 		}
 
 		/**
@@ -223,14 +171,14 @@ if ( ! class_exists( 'UR_Settings_Captcha' ) ) :
 						);
 					}
 					break;
-
-					/**
-					 * Filter to change the status of recaptcha.
-					 *
-					 * @param bool false Status for the recaptcha.
-					 */
-					return apply_filters( 'user_registration_active_recaptcha', false );
 			}
+
+			/**
+			 * Filter to change the status of recaptcha.
+			 *
+			 * @param bool false Status for the recaptcha.
+			 */
+			return apply_filters( 'user_registration_active_recaptcha', false );
 		}
 
 		/**
@@ -249,7 +197,32 @@ if ( ! class_exists( 'UR_Settings_Captcha' ) ) :
 			$captcha_global_settings = array();
 
 			$captcha_global_settings = array(
-				'v2'         => array(
+				'payment_settings' => array(
+					'id'          => 'captcha-settings',
+					'title'       => esc_html__( 'Captcha Settings', 'user-registration' ),
+					'type'        => 'card',
+					'desc'        => '',
+					'show_status' => false,
+					'show_logo'   => false,
+					'settings'    => array(
+						array(
+							'title'    => __( 'Force Captcha', 'user-registration' ),
+							'desc'     => __( 'Overrides other captchas and enforces URM Captcha on all forms for consistent spam protection.', 'user-registration' ),
+							'id'       => 'urm_enable_no_conflict',
+							'default'  => false,
+							'type'     => 'toggle',
+							'css'      => 'min-width: 350px;',
+							'desc_tip' => true
+						),
+						array(
+							'title' => __( 'Save', 'user-registration' ),
+							'id'    => 'user_registration_captcha_save_settings',
+							'type'  => 'button',
+							'class' => 'captcha-save-btn'
+						),
+					),
+				),
+				'v2'               => array(
 					'title'         => 'reCAPTCHA v2',
 					'type'          => 'accordian',
 					'id'            => 'v2',
@@ -311,22 +284,15 @@ if ( ! class_exists( 'UR_Settings_Captcha' ) ) :
 							'desc_tip' => true,
 						),
 						array(
-							'title'        => __( 'Preview', 'user-registration' ),
-							'id'           => 'user_registration_captcha_setting_v2_recaptcha_preview',
-							'type'         => 'recaptcha_preview',
-							'desc'         => __( 'This CAPTCHA is generated using the provided site and secret keys. If you see an error, please verify that your keys are correct.', 'user-registration' ),
-							'captcha_type' => 'v2',
-						),
-						array(
 							'title' => __( 'Save', 'user-registration' ),
-							'id'    => 'user_registration_payment_save_settings',
+							'id'    => 'user_registration_captcha_save_settings',
 							'type'  => 'button',
-							'class' => 'captcha-save-btn'
+							'class' => 'captcha-save-btn',
 						),
 					),
 					'settings_type' => 'captcha',
 				),
-				'v3'         => array(
+				'v3'               => array(
 					'title'         => 'reCAPTCHA v3',
 					'type'          => 'accordian',
 					'settings_type' => 'captcha',
@@ -371,21 +337,14 @@ if ( ! class_exists( 'UR_Settings_Captcha' ) ) :
 							'desc_tip'          => true,
 						),
 						array(
-							'title'        => __( 'Preview', 'user-registration' ),
-							'id'           => 'user_registration_captcha_setting_recaptcha_v3_preview',
-							'type'         => 'recaptcha_preview',
-							'desc'         => __( 'This CAPTCHA is generated using the provided site and secret keys. If you see an error, please verify that your keys are correct.', 'user-registration' ),
-							'captcha_type' => 'v3',
-						),
-						array(
 							'title' => __( 'Save', 'user-registration' ),
-							'id'    => 'user_registration_payment_save_settings',
+							'id'    => 'user_registration_captcha_save_settings',
 							'type'  => 'button',
-							'class' => 'captcha-save-btn'
+							'class' => 'captcha-save-btn',
 						),
 					),
 				),
-				'hCaptcha'   => array(
+				'hCaptcha'         => array(
 					'title'         => 'hCaptcha',
 					'type'          => 'accordian',
 					'settings_type' => 'captcha',
@@ -417,21 +376,14 @@ if ( ! class_exists( 'UR_Settings_Captcha' ) ) :
 							'desc_tip' => true,
 						),
 						array(
-							'title'        => __( 'Preview', 'user-registration' ),
-							'id'           => 'user_registration_captcha_setting_recaptcha_hcaptcha_preview',
-							'type'         => 'recaptcha_preview',
-							'desc'         => __( 'This CAPTCHA is generated using the provided site and secret keys. If you see an error, please verify that your keys are correct.', 'user-registration' ),
-							'captcha_type' => 'hCaptcha',
-						),
-						array(
 							'title' => __( 'Save', 'user-registration' ),
-							'id'    => 'user_registration_payment_save_settings',
+							'id'    => 'user_registration_captcha_save_settings',
 							'type'  => 'button',
-							'class' => 'captcha-save-btn'
+							'class' => 'captcha-save-btn',
 						),
 					),
 				),
-				'cloudflare' => array(
+				'cloudflare'       => array(
 					'title'         => 'Cloudflare Turnstile',
 					'type'          => 'accordian',
 					'settings_type' => 'captcha',
@@ -479,17 +431,10 @@ if ( ! class_exists( 'UR_Settings_Captcha' ) ) :
 							'desc_tip' => true,
 						),
 						array(
-							'title'        => __( 'Preview', 'user-registration' ),
-							'id'           => 'user_registration_captcha_setting_recaptcha_cloudflare_preview',
-							'type'         => 'recaptcha_preview',
-							'desc'         => __( 'This CAPTCHA is generated using the provided site and secret keys. If you see an error, please verify that your keys are correct.', 'user-registration' ),
-							'captcha_type' => 'cloudflare',
-						),
-						array(
 							'title' => __( 'Save', 'user-registration' ),
-							'id'    => 'user_registration_payment_save_settings',
+							'id'    => 'user_registration_captcha_save_settings',
 							'type'  => 'button',
-							'class' => 'captcha-save-btn'
+							'class' => 'captcha-save-btn',
 						),
 					),
 				)
@@ -540,7 +485,7 @@ if ( ! class_exists( 'UR_Settings_Captcha' ) ) :
 			if ( ! $validation['status'] ) {
 				$response['message'] = $validation['message'];
 			}
-			if ( !empty( $validation['ur_recaptcha_code'] ) ) {
+			if ( ! empty( $validation['ur_recaptcha_code'] ) ) {
 				$response['ur_recaptcha_code'] = $validation['ur_recaptcha_code'];
 			}
 
@@ -566,7 +511,7 @@ if ( ! class_exists( 'UR_Settings_Captcha' ) ) :
 			} else {
 				$site_key_field   = $config['site_key_field'];
 				$secret_key_field = $config['secret_key_field'];
-				$theme_mode       = isset($config['theme_mode']) && isset( $form_data[$config['theme_mode']] ) ? $form_data[$config['theme_mode']] : $theme_mode;
+				$theme_mode       = isset( $config['theme_mode'] ) && isset( $form_data[ $config['theme_mode'] ] ) ? $form_data[ $config['theme_mode'] ] : $theme_mode;
 			}
 
 			if ( empty( $form_data[ $site_key_field ] ) ) {

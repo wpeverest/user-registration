@@ -59,7 +59,6 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 			if ( $send_email ) {
 				$subscription_service->send_cancel_emails( $subscription_id );
 			}
-			ur_get_logger()->notice( 'Cancellation successful for free/paid membership.', array( 'source' => 'urm-cancellation-log' ) );
 
 			return array(
 				'status'  => true,
@@ -87,7 +86,6 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 			}
 
 			$cancel_sub = $subscription_service->cancel_subscription( $order, $subscription );
-			ur_get_logger()->notice( print_r( $cancel_sub, true ), array( 'source' => 'urm-cancellation-log' ) );
 
 			if ( $cancel_sub['status'] ) {
 
@@ -95,7 +93,6 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 				if ( $send_email ) {
 					$subscription_service->send_cancel_emails( $subscription_id );
 				}
-				ur_get_logger()->notice( 'Cancellation successful for subscription.', array( 'source' => 'urm-cancellation-log' ) );
 
 				return array(
 					'status'  => true,

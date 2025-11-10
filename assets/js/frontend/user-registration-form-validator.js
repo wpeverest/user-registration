@@ -267,7 +267,11 @@
 						);
 					},
 					errorPlacement: function (error, element) {
-						if (element.is("#password_2")) {
+						if (
+							  element.is("#password_current")
+							||element.is("#password_1")
+							||element.is("#password_2")
+						) {
 							element.parent().after(error);
 						} else if (
 							"radio" === element.attr("type") ||
