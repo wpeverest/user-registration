@@ -3664,6 +3664,14 @@ a.button.ur-smart-tags-list-button {
 						width: 33px;
 						height: 33px;
 					}
+					&#ur-view-live-button {
+						a {
+							color: #475bb2;
+						}
+						a::after {
+							background-image: url(../images/icons/external-link.svg);
+						}
+					}
 
 					// .dashicons-editor-expand,
 					// .dashicons-editor-contract {

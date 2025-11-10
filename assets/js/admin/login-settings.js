@@ -114,6 +114,183 @@
 				.addClass("current");
 		}
 
+        var URLoginFormBuilder = {
+            ur_embed_form: function ($this) {
+                // Use global form builder localization if available.
+                var fb = window.ur_login_form_params || {};
+
+                var data = {
+                    action: "user_registration_embed_page_list",
+                    security: fb.ur_embed_page_list || ""
+                };
+
+                $.ajax({
+                    url: fb.ajax_url,
+                    data: data,
+                    type: "POST",
+                    beforeSend: function () {
+                        var spinner =
+                            '<span class="ur-spinner is-active"></span>';
+                        $this.append(spinner);
+                        $(".ur-notices").remove();
+                    },
+                    success: function (response) {
+                        $this.find(".ur-spinner").remove();
+
+                        function showInitialAlert() {
+                            var modelContent =
+                                '<div class=""><p>' +
+                                ( fb.i18n_admin && fb.i18n_admin.i18n_embed_description ? fb.i18n_admin.i18n_embed_description : "" ) +
+                                "</p></div>";
+
+                            Swal.fire({
+                                icon: "info",
+                                title: fb.i18n_admin && fb.i18n_admin.i18n_embed_form_title ? fb.i18n_admin.i18n_embed_form_title : "",
+                                html: modelContent,
+                                showCancelButton: true,
+                                confirmButtonText:
+                                    fb.i18n_admin && fb.i18n_admin.i18n_embed_to_existing_page ? fb.i18n_admin.i18n_embed_to_existing_page : "Embed to existing page",
+                                cancelButtonText:
+                                    fb.i18n_admin && fb.i18n_admin.i18n_embed_to_new_page ? fb.i18n_admin.i18n_embed_to_new_page : "Embed to new page",
+                                showCloseButton: true,
+                                customClass:
+                                    "user-registration-swal2-modal  user-registration user-registration-swal2-modal--center user-registrationswal2-icon-content-info swal2-show"
+                            }).then(function (result) {
+                                var form_id = $this.attr("data-form_id");
+
+                                if (result.isConfirmed) {
+                                    showExistingPageSelection(response, form_id);
+                                } else if (
+                                    result.dismiss === Swal.DismissReason.cancel
+                                ) {
+                                    showCreateNewPageForm(form_id);
+                                }
+                            });
+                        }
+
+                        function showExistingPageSelection(response, form_id) {
+                            var select_start =
+                                '<div class="ur-embed-select-existing-page-container"><p>' +
+                                ( fb.i18n_admin && fb.i18n_admin.i18n_embed_existing_page_description ? fb.i18n_admin.i18n_embed_existing_page_description : "" ) +
+                                '</p><select style="width:100%; line-height:30px;" name="ur-embed-select-existing-page-name" id="ur-embed-select-existing-page-name">';
+                            var option =
+                                "<option disabled selected>Select Page</option>";
+                            (response.data || []).forEach(function (page) {
+                                option +=
+                                    '<option data-id="' +
+                                    page.ID +
+                                    '" value="' +
+                                    page.ID +
+                                    '">' +
+                                    page.post_title +
+                                    "</option>";
+                            });
+                            var select_end = "</select>";
+
+                            modelContent = select_start + option + select_end;
+                            Swal.fire({
+                                icon: "info",
+                                title: fb.i18n_admin && fb.i18n_admin.i18n_embed_form_title ? fb.i18n_admin.i18n_embed_form_title : "",
+                                html: modelContent,
+                                showCloseButton: true,
+                                showCancelButton: true,
+                                cancelButtonText:
+                                    fb.i18n_admin && fb.i18n_admin.i18n_embed_go_back_btn ? fb.i18n_admin.i18n_embed_go_back_btn : "Go Back",
+                                confirmButtonText:
+                                    fb.i18n_admin && fb.i18n_admin.i18n_embed_lets_go_btn ? fb.i18n_admin.i18n_embed_lets_go_btn : "Let's go",
+                                customClass:
+                                    "user-registration-swal2-modal  user-registration user-registration-swal2-modal--center swal2-show"
+                            }).then(function (result) {
+                                if (result.isDismissed) {
+                                    showInitialAlert();
+                                } else if (result.isConfirmed) {
+                                    var page_id = $(
+                                        "#ur-embed-select-existing-page-name"
+                                    ).val();
+
+                                    var data = {
+                                        action: "user_registration_embed_form_action",
+                                        security: fb.ur_embed_action || "",
+                                        page_id: page_id,
+										form_id: form_id,
+                                        is_login: 'yes',
+                                    };
+                                    $.ajax({
+                                        url: fb.ajax_url,
+                                        type: "POST",
+                                        data: data,
+                                        success: function (response) {
+                                            if (response.success) {
+                                                window.location = response.data;
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        }
+
+                        function showCreateNewPageForm(form_id) {
+                            var description =
+                                '<div class="ur-embed-new-page-container"><p>' +
+                                ( fb.i18n_admin && fb.i18n_admin.i18n_embed_new_page_description ? fb.i18n_admin.i18n_embed_new_page_description : "" ) +
+                                "</p>";
+                            var page_name =
+                                '<div style="width: 100%"><input style="width:100%" type="text" name="page_title" /></div>';
+
+                            modelContent = description + page_name;
+                            Swal.fire({
+                                icon: "info",
+                                title: fb.i18n_admin && fb.i18n_admin.i18n_embed_form_title ? fb.i18n_admin.i18n_embed_form_title : "",
+                                html: modelContent,
+                                showCancelButton: true,
+                                confirmButtonText:
+                                    fb.i18n_admin && fb.i18n_admin.i18n_embed_lets_go_btn ? fb.i18n_admin.i18n_embed_lets_go_btn : "Let's go",
+                                cancelButtonText:
+                                    fb.i18n_admin && fb.i18n_admin.i18n_embed_go_back_btn ? fb.i18n_admin.i18n_embed_go_back_btn : "Go Back",
+                                customClass:
+                                    "user-registration-swal2-modal  user-registration user-registration-swal2-modal--center swal2-show"
+                            }).then(function (result) {
+                                if (result.isDismissed) {
+                                    showInitialAlert();
+                                } else if (result.isConfirmed) {
+                                    var page_title = $(
+                                        "[name='page_title']"
+                                    ).val();
+
+                                    var data = {
+                                        action: "user_registration_embed_form_action",
+                                        security: fb.ur_embed_action || "",
+                                        page_title: page_title,
+										is_login: 'yes',
+										form_id: 10,
+                                    };
+                                    $.ajax({
+                                        url: fb.ajax_url,
+                                        type: "POST",
+                                        data: data,
+                                        success: function (response) {
+                                            if (response.success) {
+                                                window.location = response.data;
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        }
+
+                        showInitialAlert();
+                    }
+                });
+            }
+        };
+
+        $(".ur-embed-form-button").on("click", function () {
+            if ($(this).find(".ur-spinner").length > 0) {
+                return;
+            }
+            URLoginFormBuilder.ur_embed_form($(this));
+        });
+
 		// Save the form when Update Form button is clicked.
 		$(".ur_save_login_form_action_button").on("click", function () {
 			ur_save_login_form_settings();

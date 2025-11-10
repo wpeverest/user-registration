@@ -1161,3 +1161,21 @@ if ( ! function_exists( 'user_registration_plugin_responsive_main_header' ) ) {
 		return ob_get_clean();
 	}
 }
+if ( ! function_exists( 'user_registration_set_login_page' ) ) {
+	/**
+	 * Set Login Page on saving a page.
+	 *
+	 * @param int $post_id Post ID.
+	 */
+	function user_registration_set_login_page( $post_id ) {
+		if( ! class_exists( 'UR_Admin_Embed_Wizard' ) ) {
+			include_once __DIR__ . '/class-ur-admin-embed-wizard.php';
+		}
+		$data = UR_Admin_Embed_Wizard::get_meta();
+		if( isset( $data[ 'is_login' ] ) && ur_string_to_bool( $data[ 'is_login' ] ) ) {
+			update_option( 'user_registration_login_page_id', $post_id );
+		}
+		UR_Admin_Embed_Wizard::delete_meta();
+	}
+}
+add_action( 'save_post_page', 'user_registration_set_login_page' );

@@ -51,10 +51,15 @@ class UR_Admin_Embed_Wizard {
 
 		$form_id = ! empty( $meta['form_id'] ) ? $meta['form_id'] : 0;
 		$page_id = ! empty( $meta['embed_page'] ) ? $meta['embed_page'] : 0;
-
-		if ( ! empty( $page_id ) || empty( $form_id ) ) {
+		$is_login = ur_string_to_bool( ! empty( $meta['is_login'] ) ? $meta[ 'is_login'] : 'no' );
+		if ( ! empty( $page_id ) || ( empty( $form_id ) && ! $is_login ) ) {
 			return $post_content;
 		}
+
+		if( $is_login ) {
+			return '[user_registration_login]';
+		}
+
 		$pattern = '[user_registration_form id="%d"]';
 
 		return sprintf( $pattern, absint( $form_id ) );

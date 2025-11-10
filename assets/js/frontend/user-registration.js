@@ -3234,3 +3234,8 @@ jQuery(document).ready(function ($) {
 		}, 50);
 	});
 });
+jQuery(document).ready(function ($) {
+	$(".ur-submit-button.ur-disabled-btn").on("click", function (e) {
+		e.preventDefault();
+	});
+});

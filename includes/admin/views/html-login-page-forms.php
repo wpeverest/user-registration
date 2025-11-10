@@ -35,7 +35,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="ur-page-title__wrapper--right">
 			<div class="major-publishing-actions wp-clearfix">
 				<div class="publishing-action">
-					<button type="button" name="save_login_form" id="save_form_footer"
+					<?php if(!$login_page_id): ?>
+						<button  id="ur-view-live-button" class="button button-secondary button-large"><a title="<?php esc_attr_e( sprintf( 'View Live in %s page', $login_page_title ), 'user-registration' ); ?>" href="<?php echo esc_url( add_query_arg( 'ur_login_preview', 'true', $login_page_url) ); ?>" target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'View Live', 'user-registration' ); ?></a></button>
+					<?php else: ?>
+						<button name="create_login_page" data-form_id="<?php esc_attr_e( $login_page_id ) ?>" class="button button-large ur-embed-form-button ur-create-login-page-button" type="button" value="<?php esc_attr_e( 'Create Login Page', 'user-registration' ); ?>" title="<?php esc_attr_e( 'Create Login Page', 'user-registration' ); ?>">+ <?php esc_html_e( 'Create Login Page', 'user-registration' ); ?></button>
+					<?php endif; ?>
+						<button type="button" name="save_login_form" id="save_form_footer"
 							class="button button-primary button-large menu-form ur_save_login_form_action_button"> <?php echo __( 'Update Form', 'user-registration' ); ?> </button>
 				</div><!-- END .publishing-action -->
 			</div>
