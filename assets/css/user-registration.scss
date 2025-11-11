@@ -3238,6 +3238,9 @@ body.user-registration-page {
 			&--field {
 				display: flex;
 				align-items: center;
+				.select2-selection {
+					position: relative;
+				}
 			}
 			&:has(.error) {
 				.select2-selection {
