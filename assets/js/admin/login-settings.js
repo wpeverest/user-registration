@@ -293,10 +293,6 @@
 		var error_selector = ".user-registration-login-form-global-settings .error.inline, form#ur-field-settings .user-registration-login-form-global-settings .error.inline";
 		if ($(error_selector).length > 0) {
 			focus_on_first_error();
-			show_message(
-				ur_login_form_params.i18n_admin.i18n_error + "! " + ur_login_form_params.i18n_admin.i18n_please_fix_validation_errors,
-				"error"
-			);
 			return;
 		}
 
@@ -560,7 +556,7 @@
 	function handleRecaptchaLoginSettings() {
 		var $checkbox = $("#user_registration_login_options_enable_recaptcha");
 		var login_captcha_enabled = $checkbox.is(":checked");
-		
+
 		// Prevent checkbox from being checked if captcha is not set
 		if(ur_login_form_params.no_captcha_set && login_captcha_enabled) {
 			$checkbox.prop('checked', false);
@@ -571,7 +567,7 @@
 			show_message(ur_login_form_params.i18n_admin.i18n_captcha_not_set_error, 'error');
 			return;
 		}
-		
+
 		if (login_captcha_enabled) {
 			$("#user_registration_login_options_configured_captcha_type")
 				.closest(".user-registration-login-form-global-settings")
