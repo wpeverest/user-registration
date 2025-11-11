@@ -122,7 +122,7 @@ class Orders {
 		wp_register_style( 'payment-history-css', UR()->plugin_url() . '/assets/css/modules/payment-history/user-registration-payment-history.css', array(), UR_VERSION );
 		wp_register_style( 'ur-core-builder-style', UR()->plugin_url() . '/assets/css/admin.css', array(), UR_VERSION );
 		wp_enqueue_style( 'ur-core-builder-style' );
-		wp_register_style( 'ur-membership-admin-style', UR_MEMBERSHIP_CSS_ASSETS_URL . '/user-registration-membership-admin.css', array(), UR_MEMBERSHIP_VERSION );
+		wp_register_style( 'ur-membership-admin-style', UR()->plugin_url() . '/assets/css/modules/membership/user-registration-membership-admin.css', array(), UR_VERSION );
 		wp_enqueue_style( 'ur-membership-admin-style' );
 		if ( ! wp_style_is( 'ur-snackbar', 'reqistered' ) ) {
 			wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), '1.0.0' );
