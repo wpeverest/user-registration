@@ -314,7 +314,7 @@ if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page']
 
 				<?php
 
-				$url_options = get_option( 'user_registration_general_setting_registration_url_options', get_permalink( get_option( 'user_registration_default_form_page_id' ) ) );
+				$url_options = get_option( 'user_registration_general_setting_registration_url_options', get_permalink( get_option( 'user_registration_registration_page_id' ) ) );
 
 				if ( ! empty( $url_options ) || $is_login_settings ) {
 					$url_pattern = "/^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}(\\.[a-zA-Z0-9()]{1,6})?\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$/";
