@@ -677,6 +677,20 @@
 					element.step
 				);
 			};
+
+			$.validator.messages.minlength = function (params, element) {
+				return user_registration_params.message_min_length_fields.replace(
+					"%qty%",
+					params
+				);
+			};
+
+			$.validator.messages.maxlength = function (params, element) {
+				return user_registration_params.message_max_length_fields.replace(
+					"%qty%",
+					params
+				);
+			};
 		}
 	};
 
