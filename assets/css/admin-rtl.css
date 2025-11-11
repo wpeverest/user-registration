@@ -1317,9 +1317,9 @@
 .user-registration-editable-title .user-registration-editable-title__icon {
   background: #edeff7;
   color: #475bb2;
-  width: 32px;
-  height: 32px;
-  flex: 0 0 32px;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -1327,15 +1327,8 @@
   border-radius: 3px;
   margin-bottom: 0;
 }
-.user-registration-editable-title .user-registration-editable-title__icon::after {
-  content: "";
-  border-radius: 3px;
-  position: absolute;
-  right: 32px;
-  left: calc(100% - 32px);
-  height: 32px;
-  border-radius: 3px 0 0 3px;
-  transition: all 0.3s ease 0s;
+.user-registration-editable-title .user-registration-editable-title__icon::before {
+  font-size: 22px;
 }
 .user-registration-editable-title .user-registration-editable-title__input {
   color: #2d3559;
@@ -1346,7 +1339,7 @@
   height: 32px;
   padding: 4px 8px;
   pointer-events: none;
-  border: 1px solid transparent !important;
+  border: 1px solid transparent;
   border-radius: 4px 0 0 4px;
   z-index: 1;
 }
@@ -1358,11 +1351,6 @@
   color: #ffffff;
   background: #475bb2;
   border-radius: 0 3px 3px 0;
-}
-.user-registration-editable-title .user-registration-editable-title__input.is-editing + .user-registration-editable-title__icon::after {
-  top: 0;
-  left: 0;
-  border: 1px solid #475bb2;
 }
 .user-registration-editable-title .user-registration-editable-title__input:focus {
   box-shadow: none;
@@ -3487,7 +3475,7 @@
 .user-registration-page #nav-menu-header .ur-brand-logo,
 .ur-multi-device-form-preview .ur-admin-page-topnav .ur-brand-logo,
 .ur-multi-device-form-preview #nav-menu-header .ur-brand-logo {
-  padding: 0 0 0 24px !important;
+  padding: 0 0 0 20px !important;
   border-left: 1px solid #e1e1e1;
   height: 100%;
   display: flex;
@@ -8524,8 +8512,18 @@ body.ur-multi-device-form-preview #nav-menu-header .major-publishing-actions .pu
   background-size: cover;
 }
 
-body.user-registration, body.user-registration-page {
-  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+body.user-registration #wpbody-content .ur-admin-page-topnav,
+body.user-registration #wpbody-content .memberships,
+body.user-registration #wpbody-content div[class*=user-registration-],
+body.user-registration #wpbody-content div[id*=user-registration-],
+body.user-registration #wpbody-content table th, body.user-registration #wpbody-content table td,
+body.user-registration #wpbody-content h1, body.user-registration #wpbody-content h2, body.user-registration #wpbody-content h3, body.user-registration #wpbody-content h4, body.user-registration #wpbody-content h5, body.user-registration #wpbody-content h6, body.user-registration #wpbody-content p, body.user-registration #wpbody-content small, body.user-registration #wpbody-content label, body.user-registration-page #wpbody-content .ur-admin-page-topnav,
+body.user-registration-page #wpbody-content .memberships,
+body.user-registration-page #wpbody-content div[class*=user-registration-],
+body.user-registration-page #wpbody-content div[id*=user-registration-],
+body.user-registration-page #wpbody-content table th, body.user-registration-page #wpbody-content table td,
+body.user-registration-page #wpbody-content h1, body.user-registration-page #wpbody-content h2, body.user-registration-page #wpbody-content h3, body.user-registration-page #wpbody-content h4, body.user-registration-page #wpbody-content h5, body.user-registration-page #wpbody-content h6, body.user-registration-page #wpbody-content p, body.user-registration-page #wpbody-content small, body.user-registration-page #wpbody-content label {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 }
 @media screen and (max-width: 782px) {
   body .wp-responsive-open #wpbody {
@@ -9455,7 +9453,7 @@ body[class*=user-registration-] .wp-editor-wrap, body[class^=ur-] .wp-editor-wra
   font-size: 14px;
 }
 .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-contents .ur-tab-content#ur-tab-field-settings {
-  margin-top: -32px;
+  margin-top: 0;
   margin-right: -12px;
   margin-left: -12px;
 }
@@ -9610,7 +9608,13 @@ body[class*=user-registration-] .wp-editor-wrap, body[class^=ur-] .wp-editor-wra
   align-items: baseline;
 }
 .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-contents.ps--active-y .ur-tab-content {
-  padding: 32px 12px 12px;
+  padding: 0 12px 12px;
+}
+.ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-contents.ps--active-y .ur-tab-content #ur-setting-form {
+  padding-top: 20px;
+}
+.ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-contents.ps--active-y .ps__rail-y {
+  z-index: 1;
 }
 .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-content .ur-general-setting-block .ur-toggle-heading {
   margin-top: 0;
@@ -9717,7 +9721,7 @@ body[class*=user-registration-] .wp-editor-wrap, body[class^=ur-] .wp-editor-wra
   overflow-y: auto;
 }
 .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-content {
-  padding: 32px 12px 12px;
+  padding: 0 12px 12px;
 }
 .ur-registered-from .ur-registered-inputs .ur-tabs .ur-tab-content .ur-fields-not-found {
   text-align: center;
@@ -9875,11 +9879,11 @@ body[class*=user-registration-] .wp-editor-wrap, body[class^=ur-] .wp-editor-wra
   background: #475bb2;
 }
 .ur-registered-from .ur-selected-inputs .ur-single-row .ur-grids button:first-child {
-  border-radius: 0 0 7px 0;
+  border-radius: 0 0 4px 0;
   border-left: 1px solid rgba(255, 255, 255, 0.2);
 }
 .ur-registered-from .ur-selected-inputs .ur-single-row .ur-grids button:nth-child(2) {
-  border-radius: 7px 0 0 0;
+  border-radius: 4px 0 0 0;
   border-right: 1px solid #ffffff;
 }
 .ur-registered-from .ur-selected-inputs .ur-single-row .ur-grids .ur-toggle-grid-content {
@@ -9980,15 +9984,12 @@ body[class*=user-registration-] .wp-editor-wrap, body[class^=ur-] .wp-editor-wra
 .ur-registered-from .ur-selected-inputs .ur-single-row .ur-grid-lists .ur-grid-list-item .ur-selected-item .ur-action-buttons {
   display: none;
   position: absolute;
-  left: 10px;
-  width: 50px;
   text-align: center;
   padding: 0;
   font-size: 10px;
-  top: 10px;
   color: rgb(182.4993283582, 186.8632089552, 206.5006716418);
   top: 0;
-  left: -1px;
+  left: 0;
 }
 .ur-registered-from .ur-selected-inputs .ur-single-row .ur-grid-lists .ur-grid-list-item .ur-selected-item .ur-action-buttons span {
   cursor: pointer;
@@ -10001,9 +10002,10 @@ body[class*=user-registration-] .wp-editor-wrap, body[class^=ur-] .wp-editor-wra
 .ur-registered-from .ur-selected-inputs .ur-single-row .ur-grid-lists .ur-grid-list-item .ur-selected-item .ur-action-buttons span:first-child {
   background: #676f8a;
   padding: 4px;
-  width: 24px;
+  width: 28px;
   height: 24px;
-  border-radius: 0 0 7px 0;
+  flex: 0 0 28px;
+  border-radius: 0 0 3px 0;
 }
 .ur-registered-from .ur-selected-inputs .ur-single-row .ur-grid-lists .ur-grid-list-item .ur-selected-item .ur-action-buttons span:first-child::before {
   color: #ffffff;
@@ -10011,9 +10013,10 @@ body[class*=user-registration-] .wp-editor-wrap, body[class^=ur-] .wp-editor-wra
 .ur-registered-from .ur-selected-inputs .ur-single-row .ur-grid-lists .ur-grid-list-item .ur-selected-item .ur-action-buttons span:last-child {
   background: #676d8a;
   padding: 4px;
-  width: 24px;
+  width: 28px;
   height: 24px;
-  border-radius: 7px 0 0 0;
+  flex: 0 0 28px;
+  border-radius: 3px 0 0 0;
   border-right: 1px solid #ffffff;
 }
 .ur-registered-from .ur-selected-inputs .ur-single-row .ur-grid-lists .ur-grid-list-item .ur-selected-item .ur-action-buttons span:last-child:before {
@@ -10041,7 +10044,8 @@ body[class*=user-registration-] .wp-editor-wrap, body[class^=ur-] .wp-editor-wra
   display: none;
 }
 .ur-registered-from .ur-selected-inputs .ur-single-row .ur-grid-lists .ur-grid-list-item .ur-selected-item:hover .ur-action-buttons {
-  display: block;
+  display: flex;
+  align-items: center;
 }
 .ur-registered-from .ur-selected-inputs .ur-single-row .ur-grid-lists .ur-grid-list-item .ur-selected-item .ur-input-type-wysiwyg .ur-field textarea {
   height: 200px;
@@ -10994,7 +10998,7 @@ body .ur-p-tag {
   flex-wrap: wrap;
   align-items: center;
   padding: 0 16px;
-  background-color: white;
+  background-color: #ffffff;
   border-bottom: 1px solid #cdd0d8;
 }
 @media only screen and (max-width: 768px) {
@@ -11700,6 +11704,7 @@ a.button.ur-smart-tags-list-button {
   transition: all 0.3s ease-in-out;
   left: -22px;
   transform: translateY(-50%);
+  box-shadow: none;
 }
 .ur-registered-from .ur-registered-inputs button#ur-collapse svg {
   width: 12px;
@@ -11762,7 +11767,7 @@ a.button.ur-smart-tags-list-button {
   text-decoration: underline;
 }
 .ur-registered-from .ur-builder-wrapper .ur-builder-header {
-  padding-bottom: 16px;
+  padding-bottom: 20px;
   border-bottom: 1px solid #e1e1e1;
   margin-bottom: 32px;
 }
@@ -11776,6 +11781,14 @@ a.button.ur-smart-tags-list-button {
   color: #222222;
   padding: 4px 12px 4px 8px;
   margin: 0;
+  border: 1px solid transparent;
+  border-radius: 0;
+}
+.ur-registered-from .ur-builder-wrapper .ur-builder-header .user-registration-editable-title .user-registration-editable-title__input.is-editing {
+  font-size: 18px;
+  line-height: 28px;
+  border: 1px solid #475bb2;
+  border-radius: 4px 0 0 4px;
 }
 .ur-registered-from .ur-builder-wrapper .ur-builder-wrapper-content {
   background: #ffffff;
@@ -14866,10 +14879,19 @@ body.user-registration-page #profile-page #your-profile #application-passwords-s
 
 .ur-sticky-wrapper {
   top: 0;
-  background: white;
+  background: #ffffff;
   position: sticky;
+  position: -webkit-sticky;
   z-index: 1;
-  box-shadow: 0 19px 20px 20px rgba(0, 0, 0, 0.06);
+  padding: 20px 12px;
+  margin-right: -12px;
+  margin-left: -12px;
+  border-bottom: 1px solid #f1f1f1;
+  margin-bottom: 24px;
+}
+.ur-sticky-wrapper .ur-search-input {
+  background: #ffffff;
+  margin-bottom: 0;
 }
 
 .user-registration .user-registration-settings .user-registration-settings-container .urm_license_setting_notice.urm_install_pro_notice {

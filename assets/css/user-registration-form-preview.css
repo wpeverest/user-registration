@@ -1197,7 +1197,7 @@
 .user-registration-page #nav-menu-header .ur-brand-logo,
 .ur-multi-device-form-preview .ur-admin-page-topnav .ur-brand-logo,
 .ur-multi-device-form-preview #nav-menu-header .ur-brand-logo {
-  padding: 0 24px 0 0 !important;
+  padding: 0 20px 0 0 !important;
   border-right: 1px solid #e1e1e1;
   height: 100%;
   display: flex;

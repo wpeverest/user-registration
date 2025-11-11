@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - UR-3112-fix-stripe-coupon-and-decimal-pricing-for-membership
+      - v4.4.6
     workflow_dispatch:
 jobs:
   sync:

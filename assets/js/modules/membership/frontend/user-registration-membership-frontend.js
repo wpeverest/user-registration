@@ -646,6 +646,7 @@
 					discount_amount !== undefined && discount_amount !== ""
 						? urm_calculated_total - discount_amount
 						: urm_calculated_total;
+			total = parseFloat(total).toFixed(2);
 			if( 'left' === urmf_data.curreny_pos ) {
 				total_input.val(urmf_data.currency_symbol + total);
 			} else {
