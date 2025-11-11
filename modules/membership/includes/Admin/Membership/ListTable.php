@@ -145,7 +145,7 @@ class ListTable extends \UR_List_Table {
 		$membership_content = json_decode( $membership->post_content, true );
 		$enabled            = $membership_content['status'] == 'true';
 		$status_class       = $enabled ? 'user-registration-badge user-registration-badge--success-subtle' : 'user-registration-badge user-registration-badge--secondary-subtle';
-		$status_label       = $enabled ? esc_html__( 'Active', 'user-registration-content-restriction' ) : esc_html__( 'Inactive', 'user-registration-content-restriction' );
+		$status_label       = $enabled ? esc_html__( 'Active', 'user-registration' ) : esc_html__( 'Inactive', 'user-registration' );
 
 		return sprintf( '<span id="ur-membership-list-status-' . $membership->ID . '" class="%s">%s</span>', $status_class, $status_label );
 	}
