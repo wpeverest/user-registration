@@ -527,7 +527,7 @@ class UR_Smart_Tags {
 					case 'display_name':
 						$user_id   = ! empty( $values['user_id'] ) ? $values['user_id'] : get_current_user_id();
 						$user_data = get_userdata( $user_id );
-						$display_name = isset( $user_data->display_name ) ? $user_data->display_name : ''; 
+						$display_name = isset( $user_data->display_name ) ? $user_data->display_name : '';
 						$content   = str_replace( '{{' . $tag . '}}', esc_html( $display_name ), $content );
 						break;
 
@@ -639,9 +639,9 @@ class UR_Smart_Tags {
 						if ( ! empty( $values['membership_tags'] ) ) {
 							$membership_tags                  = $values['membership_tags'];
 							$membership_plan_types            = array(
-								'Paid'         => __( 'Paid', 'user-registration' ),
-								'Free'         => __( 'Free', 'user-registration' ),
-								'Subscription' => __( 'Subscription', 'user-registration' ),
+								'One-Time Payment'         => __( 'One-Time Payment', 'user-registration' ),
+								'Free'                     => __( 'Free', 'user-registration' ),
+								'Subscription'             => __( 'Subscription', 'user-registration' ),
 							);
 							$membership_plan_payment_statuses = array(
 								'Completed' => __( 'Completed', 'user-registration' ),
