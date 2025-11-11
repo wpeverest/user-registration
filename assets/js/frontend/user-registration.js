@@ -985,11 +985,12 @@
 													.val() != ""
 											) {
 												$this
-													.find("#user_pass_error")
+													.find("#user_pass-error")
 													.remove();
-
+													console.log("hello");
+													
 												var error_msg_dom =
-													'<label id="user_pass_error" class="user-registration-error" for="user_pass">' +
+													'<label id="user_pass-error" class="user-registration-error" for="user_pass">' +
 													ursL10n.password_strength_error +
 													".</label>";
 												$this
@@ -2767,12 +2768,12 @@
 							if (strength < minimum_password_strength) {
 								if ($this.val() !== "") {
 									wrapper
-										.find("#" + this_data_id + "_error")
+										.find("#" + this_data_id + "-error")
 										.remove();
 									var error_msg_dom =
 										'<label id="' +
 										this_data_id +
-										'_error" class="user-registration-error" for="' +
+										'-error" class="user-registration-error" for="' +
 										this_name +
 										'">' +
 										ursL10n.password_strength_error +

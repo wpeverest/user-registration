@@ -292,6 +292,7 @@ class UR_Admin {
 			'user_registration_login_page_id' => __( 'Login', 'user-registration' ),
 			'user_registration_lost_password_page_id' => __( 'Lost Password', 'user-registration' ),
 			'user_registration_reset_password_page_id' =>  __( 'Reset Password', 'user-registration' ),
+			'user_registration_default_form_page_id' => __( 'Normal Registration', 'user-registration' ),
 			'user_registration_member_registration_page_id' => __( 'Membership Registration', 'user-registration' ),
 			'user_registration_thank_you_page_id' => __( 'Membership Thank You', 'user-registration' ),
 			'user_registration_myaccount_page_id' => __( 'My Account', 'user-registration' ),
