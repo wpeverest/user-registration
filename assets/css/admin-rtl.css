@@ -11975,7 +11975,8 @@ a.button.ur-smart-tags-list-button {
 }
 .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .integration-lists-settings .user-registration-notice {
   margin: 0;
-  padding: 0;
+  padding: 10px;
+  font-weight: 500;
 }
 .ur-registered-from .ur-builder-wrapper #ur-field-settings #ur-field-all-settings .integration-lists-settings .user-registration-card {
   margin: 4px 0 16px !important;
