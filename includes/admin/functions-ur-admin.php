@@ -1178,4 +1178,4 @@ if ( ! function_exists( 'user_registration_set_login_page' ) ) {
 		UR_Admin_Embed_Wizard::delete_meta();
 	}
 }
-add_action( 'save_post_page', 'user_registration_set_login_page' );
+add_action( 'publish_page', 'user_registration_set_login_page' );
