@@ -3606,10 +3606,10 @@ if ( ! function_exists( 'ur_find_reset_password_in_page' ) ) {
 
 		$matched = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(*) FROM {$post_table} 
-				WHERE ID = %d 
+				"SELECT COUNT(*) FROM {$post_table}
+				WHERE ID = %d
 				AND (
-					post_content LIKE '%[user_registration_reset_password_form%' 
+					post_content LIKE '%[user_registration_reset_password_form%'
 					OR post_content LIKE '%<!-- wp:user-registration/reset_password_form%'
 				)",
 				$reset_password_page_id
@@ -3619,10 +3619,10 @@ if ( ! function_exists( 'ur_find_reset_password_in_page' ) ) {
 		if ( $matched <= 0 ) {
 			$matched = $wpdb->get_var(
 				$wpdb->prepare(
-					"SELECT COUNT(*) FROM {$post_meta_table} 
-					WHERE post_id = %d 
+					"SELECT COUNT(*) FROM {$post_meta_table}
+					WHERE post_id = %d
 					AND (
-						meta_value LIKE '%[user_registration_reset_password_form%' 
+						meta_value LIKE '%[user_registration_reset_password_form%'
 						OR meta_value LIKE '%<!-- wp:user-registration/reset_password_form%'
 					)",
 					$reset_password_page_id
@@ -7767,17 +7767,6 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'title'    => __( 'Lost Password Page', 'user-registration' ),
 								'desc'     => __( 'Select the page where your password reset form is placed.', 'user-registration' ),
 								'id'       => 'user_registration_lost_password_page_id',
-								'type'     => 'single_select_page',
-								'default'  => '',
-								'class'    => 'ur-enhanced-select-nostd',
-								'css'      => '',
-								'desc_tip' => true,
-								'field-key'=> 'lost-password'
-							),
-							array(
-								'title'    => __( 'Reset Password Page', 'user-registration' ),
-								'desc'     => __( 'Select the page where your password reset form is placed.', 'user-registration' ),
-								'id'       => 'user_registration_reset_password_page_id',
 								'type'     => 'single_select_page',
 								'default'  => '',
 								'class'    => 'ur-enhanced-select-nostd',
