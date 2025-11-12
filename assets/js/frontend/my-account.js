@@ -355,8 +355,8 @@ jQuery(function ($) {
 		}
 	);
 
-	document.querySelectorAll('.form-login-preview').forEach(container => {
-	['click', 'change', 'input', 'submit'].forEach(evt => {
+	document.querySelectorAll('.form-login-preview').forEach(function(container) {
+	['click', 'change', 'input', 'submit'].forEach(function(evt) {
 		container.addEventListener(
 			evt,
 			function(event) {
@@ -365,7 +365,7 @@ jQuery(function ($) {
 			},
 			true
 		);
-		container.querySelectorAll('input, select, textarea, button').forEach(el => {
+		container.querySelectorAll('input, select, textarea, button').forEach(function(el) {
 			el.disabled = true;
 			el.setAttribute('autocomplete', 'off');
 		});
