@@ -107,9 +107,10 @@ if ( ! $is_passwordless_enabled || $is_passwordless_login_default_login_area_ena
 apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() );
 
 $admin_class = '';
-
 if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page'] ) {
 	$admin_class = 'clickable-login-fields ';
+} elseif ( isset( $_GET['ur_login_preview'] ) ) {
+	$admin_class = 'form-login-preview';
 }
 ?>
 

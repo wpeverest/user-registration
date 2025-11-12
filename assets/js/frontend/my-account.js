@@ -346,4 +346,30 @@ jQuery(function ($) {
 			$(this).parent().css("display", "none");
 		}
 	);
+	$(".form-login-preview").on(
+		'click',
+		function() {
+			var $container = $(this);
+
+			$container.preventDefault();
+		}
+	);
+
+	document.querySelectorAll('.form-login-preview').forEach(container => {
+	['click', 'change', 'input', 'submit'].forEach(evt => {
+		container.addEventListener(
+			evt,
+			function(event) {
+				event.preventDefault();
+				event.stopImmediatePropagation();
+			},
+			true
+		);
+		container.querySelectorAll('input, select, textarea, button').forEach(el => {
+			el.disabled = true;
+			el.setAttribute('autocomplete', 'off');
+		});
+	});
+	});
+
 });
