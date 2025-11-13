@@ -549,7 +549,8 @@ body {
 	 * Form Builder Styles
 	 **/
 .user-registration-membership_page_add-new-registration,
-.toplevel_page_user-registration {
+.toplevel_page_user-registration,
+.user-registration-membership_page_user-registration-login-forms {
 
 	#wpfooter {
 		display: none; //Hide WP footer on form builder page
@@ -3692,6 +3693,14 @@ a.button.ur-smart-tags-list-button {
 						width: 33px;
 						height: 33px;
 					}
+					&#ur-view-live-button {
+						a {
+							color: #475bb2;
+						}
+						a::after {
+							background-image: url(../images/icons/external-link.svg);
+						}
+					}
 
 					// .dashicons-editor-expand,
 					// .dashicons-editor-contract {
@@ -3739,8 +3748,8 @@ a.button.ur-smart-tags-list-button {
 					}
 
 					&.ur-copy-shortcode {
-						width: 33px;
-						height: 33px;
+						width: 36px;
+						height: 36px;
 						padding-left: 0;
 						padding-right: 0;
 						background: $primary_color;
@@ -4325,7 +4334,8 @@ a.button.ur-smart-tags-list-button {
 
 					.user-registration-notice {
 						margin: 0;
-						padding: 0;
+						padding: 10px;
+						font-weight: 500;
 					}
 
 					.user-registration-card {

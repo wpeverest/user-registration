@@ -376,12 +376,9 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 			$membership_id         = ! empty( $membership['ID'] ) ? $membership['ID'] : '';
 			$membership_meta_value = ! empty( $membership['meta_value'] ) ? $membership['meta_value'] : '';
 			$membership_type       = ( ! empty( $membership_meta_value ) && ! empty( $membership_meta_value['type'] ) ) ? $membership_meta_value['type'] : '';
-			$amount                = ! empty( $membership['meta_value']['amount'] ) ? $membership['meta_value']['amount'] : 0;
-			if ( isset( $currencies[ $currency ]['symbol_pos'] ) && 'right' === $currencies[ $currency ]['symbol_pos'] ) {
-				$membership_cur_amount = isset( $membership['meta_value']['amount'] ) ? round( $membership['meta_value']['amount'] ) . $symbol : '';
-			} else {
-				$membership_cur_amount = isset( $membership['meta_value']['amount'] ) ? $symbol . round( $membership['meta_value']['amount'] ) : '';
-			}
+			$amount                = ! empty( $membership['meta_value']['amount'] ) ? number_format( (float) $membership['meta_value']['amount'], 2 ) : 0;
+			$symbol_pos            = isset( $currencies[ $currency ]['symbol_pos'] ) ? $currencies[ $currency ]['symbol_pos'] : 'left';
+			$membership_cur_amount = ! empty( $amount ) ? ( 'right' === $symbol_pos ? $amount . $symbol : $symbol . $amount ) : '';
 			$duration_label = '';
 			if ( ! empty( $membership['meta_value']['subscription']['duration'] ) ) {
 				$duration_key    = isset( $membership['meta_value']['subscription']['duration'] ) ? strtolower( $membership['meta_value']['subscription']['duration'] ) : '';

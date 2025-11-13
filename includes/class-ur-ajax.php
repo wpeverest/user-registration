@@ -1032,29 +1032,6 @@ class UR_AJAX {
 					)
 				);
 			}
-
-			if ( ! empty( $output['user_registration_reset_password_page_id'] ) && ( is_numeric( $output['user_registration_reset_password_page_id'] ) ) ) {
-				$is_page_reset_password_page = ur_find_reset_password_in_page( sanitize_text_field( wp_unslash( $output['user_registration_reset_password_page_id'] ) ) );
-				if ( ! $is_page_reset_password_page ) {
-					wp_send_json_error(
-						array(
-							'message' => esc_html__(
-								'The selected page is not a User Registration & Membership Reset Password page.',
-								'user-registration'
-							),
-						)
-					);
-				}
-			} else {
-				wp_send_json_error(
-					array(
-						'message' => esc_html__(
-							'Please select a valid reset password page.',
-							'user-registration'
-						),
-					)
-				);
-			}
 		}
 
 		foreach ( $output as $key => $settings ) {
@@ -1094,37 +1071,48 @@ class UR_AJAX {
 	 */
 	public static function embed_form_action() {
 		check_ajax_referer( 'ur_embed_action_nonce', 'security' );
-		$page_id = empty( $_POST['page_id'] ) ? 0 : sanitize_text_field( absint( $_POST['page_id'] ) );
-		$form_id = ! empty( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
+		$page_id  = empty( $_POST['page_id'] ) ? 0 : sanitize_text_field( absint( $_POST['page_id'] ) );
+		$form_id  = ! empty( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
+		$is_login = ! empty( $_POST['is_login'] ) ? sanitize_text_field( wp_unslash( $_POST['is_login'] ) ) : 'no';
+
 		if ( empty( $page_id ) ) {
-			$url             = add_query_arg( 'post_type', 'page', admin_url( 'post-new.php' ) );
-			$meta            = array(
+			$url              = add_query_arg( 'post_type', 'page', admin_url( 'post-new.php' ) );
+			$meta             = array(
 				'embed_page'       => 0,
 				'embed_page_title' => ! empty( $_POST['page_title'] ) ? sanitize_text_field( wp_unslash( $_POST['page_title'] ) ) : '',
 			);
-			$page_url        = add_query_arg(
+			$page_url         = add_query_arg(
 				array(
 					'form' => 'user_registration',
 				),
 				esc_url_raw( $url )
 			);
-			$meta['form_id'] = $form_id;
-			UR_Admin_Embed_Wizard::set_meta( $meta );
+			$meta['form_id']  = $form_id;
+			$meta['is_login'] = $is_login;
 
+			UR_Admin_Embed_Wizard::set_meta( $meta );
 			wp_send_json_success( $page_url );
 		} else {
 			UR_Admin_Embed_Wizard::delete_meta();
-			$url             = get_edit_post_link( $page_id, '' );
-			$post            = get_post( $page_id );
-			$pattern         = '[user_registration_form id="%d"]';
-			$shortcode       = sprintf( $pattern, absint( $form_id ) );
+			$url  = get_edit_post_link( $page_id, '' );
+			$post = get_post( $page_id );
+
+			if ( ur_string_to_bool( $is_login ) ) {
+				$shortcode = '[user_registration_login]';
+			} else {
+				$pattern   = '[user_registration_form id="%d"]';
+				$shortcode = sprintf( $pattern, absint( $form_id ) );
+			}
 			$updated_content = $post->post_content . "\n\n" . $shortcode;
-			wp_update_post(
+			$id              = wp_update_post(
 				array(
 					'ID'           => $page_id,
 					'post_content' => $updated_content,
 				)
 			);
+			if ( $is_login ) {
+				update_option( 'user_registration_login_page_id', $id );
+			}
 			wp_send_json_success( $url );
 		}
 	}

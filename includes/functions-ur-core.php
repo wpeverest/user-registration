@@ -2880,7 +2880,8 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 	 * @return string
 	 */
 	function user_registration_pro_render_conditional_logic( $connection, $integration, $form_id ) {
-		$output = '<div class="form-row ur-form-settings-section ur-form-settings-' . $integration . '-section">';
+		$output = '<div class="ur_conditional_logic_container">';
+		$output .= '<div class="form-row ur-form-settings-section ur-form-settings-' . $integration . '-section">';
 		$output .= '<div class="ur-form-settings-section--field">';
 		$output .= '<h4>' . esc_html__( 'Conditional Logic', 'user-registration' ) . '</h4>';
 		$output .= '</div>';
@@ -2948,6 +2949,7 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 			$value   = isset( $connection['conditional_logic_data']['conditional_value'] ) ? $connection['conditional_logic_data']['conditional_value'] : '';
 			$output .= '<input class="ur-conditional-input" type="text" name="ur-conditional-input" value="' . esc_attr( $value ) . '">';
 		}
+		$output .= '</div>';
 		$output .= '</div>';
 		$output .= '</div>';
 		return $output;
@@ -7772,17 +7774,6 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'field-key'=> 'lost-password'
 							),
 							array(
-								'title'    => __( 'Reset Password Page', 'user-registration' ),
-								'desc'     => __( 'Select the page where your password reset form is placed.', 'user-registration' ),
-								'id'       => 'user_registration_reset_password_page_id',
-								'type'     => 'single_select_page',
-								'default'  => '',
-								'class'    => 'ur-enhanced-select-nostd',
-								'css'      => '',
-								'desc_tip' => true,
-								'field-key'=> 'lost-password'
-							),
-							array(
 								'title'    => __( 'Registration URL', 'user-registration' ),
 								'desc'     => __( 'Set the URL of the registration page users should be sent to.', 'user-registration' ),
 								'id'       => 'user_registration_general_setting_registration_url_options',
@@ -9264,7 +9255,6 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 		$required_pages = array(
 			'user_registration_login_page_id'               => 'Login Page',
 			'user_registration_lost_password_page_id'       => 'Lost Password Page',
-			'user_registration_reset_password_page_id'      => 'Reset Password Page',
 			'user_registration_member_registration_page_id' => 'Membership Registration Page',
 			'user_registration_thank_you_page_id'           => 'Membership Thank You Page',
 			'user_registration_myaccount_page_id'           => 'My Account Page',

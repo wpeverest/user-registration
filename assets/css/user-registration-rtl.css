@@ -2319,10 +2319,10 @@ span.ur-shortcode-form-embed-dot {
   display: none;
 }
 
-.ur-field-item input {
+.ur-field-item input, .ur-form-grid input {
   border-radius: 4px !important;
 }
-.ur-field-item .user-registration-error {
+.ur-field-item .user-registration-error, .ur-form-grid .user-registration-error {
   width: 100%;
   position: unset;
   letter-spacing: 0.18px;
@@ -2716,7 +2716,6 @@ body.user-registration-page .user-registration:not(.user-registration-MyAccount)
 body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) {
   max-width: 520px;
   border-radius: 4px;
-  background: transparent;
   border: 0;
 }
 body.user-registration-page #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--bordered),
@@ -3690,6 +3689,9 @@ body.user-registration-page .elementor-widget-container .user-registration:not(.
 .user-registration-login-form-container .ur-builder-wrapper .user-registration-login-form-global-settings--field {
   display: flex;
   align-items: center;
+}
+.user-registration-login-form-container .ur-builder-wrapper .user-registration-login-form-global-settings--field .select2-selection {
+  position: relative;
 }
 .user-registration-login-form-container .ur-builder-wrapper .user-registration-login-form-global-settings:has(.error) .select2-selection {
   border-color: #f34c4c !important;

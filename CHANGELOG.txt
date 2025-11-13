@@ -1,10 +1,12 @@
 = 4.4.6    - 13/11/2025 =
 * Enhance  - Added required pages in system info.
 * Enhance  - Design consistency in Site Assistance.
+* Enhance  - Cache handling in reset password process.
 * Enhance  - Introduce edit icon on hover for login fields.
 * Enhance  - Helper icon content and design in form builder.
 * Enhance  - Inline error for page selection in login form settings.
 * Enhance  - Password strength validation in edit password shortcode.
+* Enhance  - Preview and Embed functionality added in Login Form Builder.
 * Enhance  - Added a reset button to reset captcha keys in global settings.
 * Enhance  - Added no conflict mode to force our plugin's captchas in pages.
 * Dev      - Conditional logic support on Salesforce.

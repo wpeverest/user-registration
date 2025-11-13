@@ -820,20 +820,15 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 			if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page'] ) { //phpcs:ignore WordPress.Security.NonceVerification
-				wp_enqueue_script(
-					'user-registration-login-settings',
-					UR()->plugin_url() . '/assets/js/admin/login-settings' . $suffix . '.js',
-					array(
-						'jquery',
-						'jquery-ui-datepicker',
-						'jquery-ui-sortable',
-						'iris',
-						'tooltipster',
-						'jquery-ui-tabs',
-					),
-					UR_VERSION,
-					true
-				);
+				wp_enqueue_script( 'user-registration-login-settings', UR()->plugin_url() . '/assets/js/admin/login-settings' . $suffix . '.js', array(
+					'jquery',
+					'jquery-ui-datepicker',
+					'jquery-ui-sortable',
+					'iris',
+					'tooltipster',
+					'jquery-ui-tabs',
+					'sweetalert2',
+				), UR_VERSION, true );
 				wp_enqueue_style( 'user-registration-css', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR_VERSION );
 				$login_settings      = array_merge( get_login_form_settings()['sections']['login_options_settings']['settings'], get_login_field_settings()['sections']['login_options_settings']['settings'], get_login_form_settings()['sections']['login_options_settings_advanced']['settings'] );
 				$ur_enabled_captchas = array();
@@ -851,22 +846,17 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=captcha' ) )
 				);
 				$ur_login_form_params = array(
-					'ajax_url'                    => admin_url( 'admin-ajax.php' ),
-					'ur_login_settings_save'      => wp_create_nonce( 'ur_login_settings_save_nonce' ),
-					'login_settings'              => $login_settings,
-					'is_login_settings_page'      => isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page'] ? true : false,
-					'i18n_admin'                  => array(
-						'i18n_settings_successfully_saved' => _x( 'Settings successfully saved.', 'user registration admin', 'user-registration' ),
-						'i18n_success'                     => _x( 'Success', 'user registration admin', 'user-registration' ),
-						'i18n_error'                       => _x( 'Error', 'user registration admin', 'user-registration' ),
-						'i18n_captcha_not_set_error'       => $captcha_not_set_error,
-						'i18n_please_fix_validation_errors' => _x( 'Please fix the errors before saving.', 'user registration admin', 'user-registration' ),
-						'i18n_error_occurred_while_saving' => _x( 'An error occurred while saving.', 'user registration admin', 'user-registration' ),
-					),
-					'user_registration_lost_password_selection_validator_nonce' => wp_create_nonce( 'user_registration_lost_password_selection_validator' ),
+					'ajax_url'                                                   => admin_url( 'admin-ajax.php' ),
+					'ur_login_settings_save'                                     => wp_create_nonce( 'ur_login_settings_save_nonce' ),
+					'login_settings'                                             => $login_settings,
+					'is_login_settings_page'                                     => isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page'] ? true : false,
+					'i18n_admin'                                                 => self::get_i18n_admin_data(),
+					'user_registration_lost_password_selection_validator_nonce'  => wp_create_nonce( 'user_registration_lost_password_selection_validator' ),
 					'user_registration_membership_redirect_default_page_message' => esc_html__( 'Please select a page for redirection', 'user-registration' ),
 					'email_confirmation_disabled' => ur_string_to_bool( get_option( 'user_registration_enable_email_confirmation', true ) ) ? 'no' : 'yes',
-					'no_captcha_set'              => $no_captcha_set,
+					'ur_embed_page_list' => wp_create_nonce( 'ur_embed_page_list_nonce' ),
+					'ur_embed_action'    => wp_create_nonce( 'ur_embed_action_nonce' ),
+
 				);
 				wp_localize_script(
 					'user-registration-login-settings',
@@ -882,11 +872,47 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				);
 				$login_option_settings = get_login_field_settings();
 				$login_form_settings   = get_login_form_settings();
+				$login_page_id = get_option( 'user_registration_login_page_id', 0 ); 
+				$login_page_url = $login_page_id ? get_permalink( $login_page_id ) : '';
+				$login_page_title = $login_page_id ? get_the_title( $login_page_id ) : '';
 				include_once __DIR__ . '/views/html-login-page-forms.php';
 			} else {
 				$registration_table_list->display_page();
 			}
 		}
+
+		/**
+		 * Localize admin data.
+		 *
+		 * @return array
+		 */
+		public static function get_i18n_admin_data() {
+			$max_upload_size_ini = wp_max_upload_size() / 1024;
+
+			$i18n = array(
+				'i18n_choice_delete'                          => esc_html__( 'Delete', 'user-registration' ),
+				'i18n_choice_cancel'                          => esc_html__( 'Cancel', 'user-registration' ),
+				'i18n_success'                                => _x( 'Success', 'user registration admin', 'user-registration' ),
+				'i18n_error'                                  => _x( 'Error', 'user registration admin', 'user-registration' ),
+				'i18n_msg_delete'                             => esc_html__( 'Confirm Deletion', 'user-registration' ),
+				'i18n_embed_form_title'                       => esc_html__( 'Embed in Page', 'user-registration' ),
+				'i18n_embed_description'                      => esc_html__( 'We can help embed your form with just a few clicks!', 'user-registration' ),
+				'i18n_embed_to_existing_page'                 => esc_html__( 'Select Existing Page', 'user-registration' ),
+				'i18n_embed_to_new_page'                      => esc_html__( 'Create New Page', 'user-registration' ),
+				'i18n_embed_existing_page_description'        => esc_html__( 'Select the page to embed your form in.', 'user-registration' ),
+				'i18n_embed_go_back_btn'                      => esc_html__( 'Go Back', 'user-registration' ),
+				'i18n_embed_lets_go_btn'                      => esc_html__( "Let's Go!", 'user-registration' ),
+				'i18n_embed_new_page_description'             => esc_html__( 'What would you like to call the new page?', 'user-registration' ),
+
+				'i18n_settings_successfully_saved' => _x( 'Settings successfully saved.', 'user registration admin', 'user-registration' ),
+				'i18n_success'                     => _x( 'Success', 'user registration admin', 'user-registration' ),
+				'i18n_error'                       => _x( 'Error', 'user registration admin', 'user-registration' ),
+
+			);
+
+			return $i18n;
+		}
+
 
 		/**
 		 * Init the add registration page.

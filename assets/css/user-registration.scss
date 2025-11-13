@@ -1615,7 +1615,7 @@ span.ur-shortcode-form-embed-dot {
 }
 
 // Revamp error design for registration and login form
-.ur-field-item {
+.ur-field-item, .ur-form-grid {
 	input {
 		border-radius: 4px !important;
 	}
@@ -2143,7 +2143,7 @@ body {
 				max-width: 520px;
 				// margin: $spacing_30px auto;
 				border-radius: $border_radius_4;
-				background: transparent;
+				// background: transparent;
 				border: 0;
 
 				&:has(.ur-frontend-form--bordered) {
@@ -3238,6 +3238,9 @@ body.user-registration-page {
 			&--field {
 				display: flex;
 				align-items: center;
+				.select2-selection {
+					position: relative;
+				}
 			}
 			&:has(.error) {
 				.select2-selection {

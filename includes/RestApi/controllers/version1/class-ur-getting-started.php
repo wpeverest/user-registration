@@ -155,7 +155,7 @@ class UR_Getting_Started {
 				$value = ur_string_to_bool( $value );
 			}
 
-			if ( 'user_registration_allow_email_updates' === $option && $value && ! UR_PRO_ACTIVE) {
+			if ( 'user_registration_allow_email_updates' === $option && $value && ! UR_PRO_ACTIVE ) {
 				$admin_email = get_option( 'new_admin_email', '' );
 				if ( isset( $settings_to_update['user_registration_updates_admin_email'] ) && ! empty( $settings_to_update['user_registration_updates_admin_email'] ) ) {
 					$admin_email = $settings_to_update['user_registration_updates_admin_email'];
@@ -216,10 +216,10 @@ class UR_Getting_Started {
 			'status_label'  => esc_html__( 'Disabled', 'user-registration' ),
 		);
 
-		$pages           = apply_filters( 'user_registration_create_pages', array() );
-		$default_post_id = 0;
+		$pages                = apply_filters( 'user_registration_create_pages', array() );
+		$default_post_id      = 0;
 		$default_form_page_id = 0;
-		$hasposts        = get_posts( 'post_type=user_registration' );
+		$hasposts             = get_posts( 'post_type=user_registration' );
 
 		$post_content          = '';
 		$membership_field_name = 'membership_field_' . ur_get_random_number();
@@ -248,7 +248,7 @@ class UR_Getting_Started {
 
 			update_option( 'user_registration_default_form_page_id', $default_post_id );
 			$default_form_page_id = $default_post_id;
-		} else if ( count( $hasposts ) > 0 &&  ! $default_form ) {
+		} elseif ( count( $hasposts ) > 0 && ! $default_form ) {
 			$page_exists = false;
 
 			if ( 'user_registration_normal_registration' === $request['registrationType'] ) {
@@ -257,7 +257,7 @@ class UR_Getting_Started {
 				$page_exists = get_page_by_path( 'default-membership-registration-form', OBJECT, 'user_registration' );
 			}
 
-			if( ! $page_exists ) {
+			if ( ! $page_exists ) {
 				$default_post_id = wp_insert_post(
 					array(
 						'post_type'      => 'user_registration',
@@ -298,7 +298,7 @@ class UR_Getting_Started {
 				array(
 					'user-registration-membership',
 					'user-registration-payment-history',
-					'user-registration-content-restriction'
+					'user-registration-content-restriction',
 				),
 			);
 			update_option( 'user_registration_enabled_features', $enabled_features );
@@ -314,10 +314,10 @@ class UR_Getting_Started {
 			update_option( 'ur_membership_default_membership_field_name', $membership_field_name );
 
 			$ur_memberships = get_posts( 'post_type=ur_membership' );
-			if( 0 === count( $ur_memberships ) ) {
+			if ( 0 === count( $ur_memberships ) ) {
 				UR_Install::create_default_membership();
 			}
-//			$membership_group_id = UR_Install::create_default_membership_group( array( array( 'ID' => "$membership_id" ) ) ); //removed currently since we decided not go forward with a required group.
+			// $membership_group_id = UR_Install::create_default_membership_group( array( array( 'ID' => "$membership_id" ) ) ); //removed currently since we decided not go forward with a required group.
 
 			if ( $default_form_page_id ) {
 				$pages['membership_registration'] = array(
@@ -345,11 +345,6 @@ class UR_Getting_Started {
 			'name'    => _x( 'lost-password', 'Page slug', 'user-registration' ),
 			'title'   => _x( 'Lost Password', 'Page title', 'user-registration' ),
 			'content' => '[user_registration_lost_password]',
-		);
-		$pages['reset_password'] = array(
-			'name'    => _x( 'reset-password', 'Page slug', 'user-registration' ),
-			'title'   => _x( 'Reset Password', 'Page title', 'user-registration' ),
-			'content' => '[user_registration_reset_password_form]',
 		);
 
 		if ( 'user_registration_membership_registration' === $request['registrationType'] ) {

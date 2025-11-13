@@ -838,7 +838,7 @@ class UR_Admin_Settings {
 										'style'      => esc_attr( $value['css'] ),
 										'default'    => esc_attr( $value['default'] ),
 										'class'      => esc_attr( $value['class'] ),
-										'quicktags'  => false,
+										'quicktags'  => true,
 										'teeny'      => true,
 										'show-ur-registration-form-button' => isset( $value['show-ur-registration-form-button'] ) ? $value['show-ur-registration-form-button'] : true,
 										'show-smart-tags-button' => isset( $value['show-smart-tags-button'] ) ? $value['show-smart-tags-button'] : true,

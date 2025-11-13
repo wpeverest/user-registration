@@ -15,7 +15,7 @@ if ( ! class_exists( 'UR_Admin_Deactivation_Feedback', false ) ) :
 	 */
 	class UR_Admin_Deactivation_Feedback {
 
-		const FEEDBACK_URL = 'https://stats.wpeverest.com/wp-json/tgreporting/v1/deactivation/';
+		const FEEDBACK_URL = 'https://api.themegrill.com/tracking/uninstall';
 
 		/**
 		 * Class constructor.
@@ -83,7 +83,7 @@ if ( ! class_exists( 'UR_Admin_Deactivation_Feedback', false ) ) :
 		public function feedback_html() {
 			$deactivate_reasons = array(
 				'feature_unavailable'    => array(
-					'title'             => sprintf( '%s <a href="%s" rel="noreferrer noopener" target="_blank">here</a>', esc_html__( 'I didn\'t find the feature I was looking for. Kindly request it ', 'user-registration' ), esc_url_raw( 'https://user-registration.feedbear.com/roadmap' ) ),
+					'title' => sprintf( '%s <a href="%s" rel="noreferrer noopener" target="_blank">here</a>', esc_html__( 'I didn\'t find the feature I was looking for. Kindly request it ', 'user-registration' ), esc_url_raw( 'https://user-registration.feedbear.com/roadmap' ) ),
 				),
 				'complex_to_use'         => array(
 					'title'             => sprintf( '%s Reach out to our <a href="%s" rel="noreferrer noopener" target="_blank">support team</a>', esc_html__( 'I found the plugin complex to use. ', 'user-registration' ), esc_url_raw( 'https://wpuserregistration.com/support/' ) ),
@@ -117,28 +117,32 @@ if ( ! class_exists( 'UR_Admin_Deactivation_Feedback', false ) ) :
 		 * @return void
 		 */
 		public function send() {
+			ur_get_logger()->debug('------------- TG SDK API log uninstall feedback -------------', array('source'=> 'urm-tg-sdk-logs'));
+
 			if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), '_ur_deactivate_feedback_nonce' ) ) {
 				wp_send_json_error();
 			}
 
-			$reason_text = '';
+			$reason_text = 'N/A';
 			$reason_slug = '';
 
 			if ( ! empty( $_POST['reason_slug'] ) ) {
 				$reason_slug = sanitize_text_field( wp_unslash( $_POST['reason_slug'] ) );
 			}
 
-			if ( ! empty( $_POST[ "reason_{$reason_slug}" ] ) ) {
-				$reason_text = sanitize_text_field( wp_unslash( $_POST[ "reason_{$reason_slug}" ] ) );
+			if ( ! empty( $_POST["reason_{$reason_slug}"] ) ) {
+				$reason_text = sanitize_text_field( wp_unslash( $_POST["reason_{$reason_slug}"] ) );
 			}
 
-			$deactivation_data = array(
-				'reason_slug'  => $reason_slug,
-				'reason_text'  => $reason_text,
-				'admin_email'  => get_bloginfo( 'admin_email' ),
-				'website_url'  => esc_url_raw( get_bloginfo( 'url' ) ),
-				'base_product' => is_plugin_active( 'user-registration-pro/user-registration.php' ) ? 'user-registration-pro/user-registration.php' : 'user-registration/user-registration.php',
-			);
+			$deactivation_data = json_encode( array(
+				'type'        => 'deactivate',
+				'slug'        => 'user-registration',
+				'version'     => UR()->version,
+				'comment'     => $reason_text,
+				'id'          => $reason_slug,
+				'active_time' => current_time( 'timestamp' ),
+				'url'         => esc_url_raw( get_bloginfo( 'url' ) ),
+			) );
 
 			$this->send_api_request( $deactivation_data );
 
@@ -148,14 +152,12 @@ if ( ! class_exists( 'UR_Admin_Deactivation_Feedback', false ) ) :
 		/**
 		 * Sends an API request with deactivation data.
 		 *
-		 * @param array $deactivation_data Deactivation Data.
+		 * @param string $deactivation_data Deactivation Data.
+		 *
 		 * @return string The response body from the API request.
 		 */
 		private function send_api_request( $deactivation_data ) {
-			$headers = array(
-				'user-agent' => 'UserRegistration/' . ur()->version . '; ' . get_bloginfo( 'url' ),
-			);
-
+			$headers  = array( 'Content-Type' => 'application/json', 'User-Agent' => 'ThemeGrillSDK' );
 			$response = wp_remote_post(
 				self::FEEDBACK_URL,
 				array(
@@ -165,9 +167,12 @@ if ( ! class_exists( 'UR_Admin_Deactivation_Feedback', false ) ) :
 					'httpversion' => '1.0',
 					'blocking'    => true,
 					'headers'     => $headers,
-					'body'        => array( 'deactivation_data' => $deactivation_data ),
+					'body'        => $deactivation_data,
 				)
 			);
+			ur_get_logger()->debug(json_decode( wp_remote_retrieve_body( $response ), true ), array('source'=> 'urm-tg-sdk-logs'));
+			ur_get_logger()->success('------------- TG SDK API log uninstall feedback response received -------------', array('source'=> 'urm-tg-sdk-logs'));
+
 			return wp_remote_retrieve_body( $response );
 		}
 

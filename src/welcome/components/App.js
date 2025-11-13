@@ -340,7 +340,7 @@ function App() {
 					<Header
 						steps={steps}
 						activeStep={activeStep}
-						siteURL={siteURL}
+						onBoardIconsURL={onBoardIconsURL}
 					/>
 					<div className="user-registration-setup-wizard__body">
 						{steps[steps.length - 1].key === activeStep.key ? (
