@@ -117,6 +117,8 @@ if ( ! class_exists( 'UR_Admin_Deactivation_Feedback', false ) ) :
 		 * @return void
 		 */
 		public function send() {
+			ur_get_logger()->debug('------------- TG SDK API log uninstall feedback -------------', array('source'=> 'urm-tg-sdk-logs'));
+
 			if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), '_ur_deactivate_feedback_nonce' ) ) {
 				wp_send_json_error();
 			}
@@ -168,6 +170,9 @@ if ( ! class_exists( 'UR_Admin_Deactivation_Feedback', false ) ) :
 					'body'        => $deactivation_data,
 				)
 			);
+			ur_get_logger()->debug(json_decode( wp_remote_retrieve_body( $response ), true ), array('source'=> 'urm-tg-sdk-logs'));
+			ur_get_logger()->success('------------- TG SDK API log uninstall feedback response received -------------', array('source'=> 'urm-tg-sdk-logs'));
+
 			return wp_remote_retrieve_body( $response );
 		}
 

@@ -437,6 +437,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		 */
 		public function call_api() {
 			global $wpdb;
+			ur_get_logger()->debug('------------- TG SDK API log tracking initiated -------------', array('source'=> 'urm-tg-sdk-logs'));
 
 			$stats_api_url = $this->get_stats_api_url();
 
@@ -462,6 +463,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 				'global_settings'  => $this->get_global_settings(),
 				'form_settings'    => $this->get_form_settings(),
 			);
+
 
 			$this->send_request( apply_filters( 'user_registration_tg_tracking_remote_url', $stats_api_url ), $data );
 		}
@@ -528,7 +530,8 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					'body'        => wp_json_encode( $data ),
 				)
 			);
-
+			ur_get_logger()->notice(json_decode( wp_remote_retrieve_body( $response ), true ), array('source'=> 'urm-tg-sdk-logs'));
+			ur_get_logger()->debug('------------- TG SDK API log uninstall feedback response received -------------', array('source'=> 'urm-tg-sdk-logs'));
 			return json_decode( wp_remote_retrieve_body( $response ), true );
 		}
 
