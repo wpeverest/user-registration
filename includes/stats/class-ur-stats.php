@@ -309,7 +309,6 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		 * @return void
 		 */
 		public function init_usage() {
-			$this->call_api();
 			if ( wp_doing_cron() ) {
 				add_action( 'user_registration_usage_stats_scheduled_events', array( $this, 'process' ) );
 			}
