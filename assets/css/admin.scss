@@ -549,7 +549,8 @@ body {
 	 * Form Builder Styles
 	 **/
 .user-registration-membership_page_add-new-registration,
-.toplevel_page_user-registration, .user-registration-membership_page_user-registration-login-forms {
+.toplevel_page_user-registration,
+.user-registration-membership_page_user-registration-login-forms {
 
 	#wpfooter {
 		display: none; //Hide WP footer on form builder page
@@ -3747,8 +3748,8 @@ a.button.ur-smart-tags-list-button {
 					}
 
 					&.ur-copy-shortcode {
-						width: 33px;
-						height: 33px;
+						width: 36px;
+						height: 36px;
 						padding-left: 0;
 						padding-right: 0;
 						background: $primary_color;
