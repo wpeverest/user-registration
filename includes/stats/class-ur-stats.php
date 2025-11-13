@@ -531,7 +531,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 				)
 			);
 			ur_get_logger()->notice(json_decode( wp_remote_retrieve_body( $response ), true ), array('source'=> 'urm-tg-sdk-logs'));
-			ur_get_logger()->debug('------------- TG SDK API log uninstall feedback response received -------------', array('source'=> 'urm-tg-sdk-logs'));
+			ur_get_logger()->debug('------------- TG SDK API log tracking response received -------------', array('source'=> 'urm-tg-sdk-logs'));
 			return json_decode( wp_remote_retrieve_body( $response ), true );
 		}
 
