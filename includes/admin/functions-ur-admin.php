@@ -1167,15 +1167,24 @@ if ( ! function_exists( 'user_registration_set_login_page' ) ) {
 	 *
 	 * @param int $post_id Post ID.
 	 */
-	function user_registration_set_login_page( $post_id ) {
-		if( ! class_exists( 'UR_Admin_Embed_Wizard' ) ) {
-			include_once __DIR__ . '/class-ur-admin-embed-wizard.php';
+	function user_registration_set_login_page( $post_id, $post ) {
+		$flag = get_option( 'ur_login_page_processed', false ); 
+	
+		if ( ! $flag && $post->post_status == 'publish' ) {
+			if( ! class_exists( 'UR_Admin_Embed_Wizard' ) ) {
+				include_once __DIR__ . '/class-ur-admin-embed-wizard.php';
+			}
+			ur_get_logger()->info(print_r("???JJJJJ???", true));
+			ur_get_logger()->info(get_current_user_id());
+			$data = UR_Admin_Embed_Wizard::get_meta();
+
+			if( isset( $data[ 'is_login' ] ) && ur_string_to_bool( $data[ 'is_login' ] ) ) {
+				update_option( 'user_registration_login_page_id', $post_id );
+				update_option( 'ur_login_page_processed', true );
+				UR_Admin_Embed_Wizard::delete_meta();
+			}
 		}
-		$data = UR_Admin_Embed_Wizard::get_meta();
-		if( isset( $data[ 'is_login' ] ) && ur_string_to_bool( $data[ 'is_login' ] ) ) {
-			update_option( 'user_registration_login_page_id', $post_id );
-		}
-		UR_Admin_Embed_Wizard::delete_meta();
 	}
 }
-add_action( 'publish_page', 'user_registration_set_login_page' );
+add_action( 'save_post_page', 'user_registration_set_login_page', 10, 2 );
+// add_action( 'rest_after_insert_page', 'user_registration_set_login_page', 10, 2 );

@@ -1112,6 +1112,7 @@ class UR_AJAX {
 			);
 			$meta['form_id'] = $form_id;
 			$meta['is_login'] = $is_login;
+			
 			UR_Admin_Embed_Wizard::set_meta( $meta );
 			wp_send_json_success( $page_url );
 		} else {
@@ -1132,7 +1133,9 @@ class UR_AJAX {
 					'post_content' => $updated_content,
 				)
 			);
-			update_option( 'user_registration_login_page_id', $id );
+			if( $is_login ) {
+				update_option( 'user_registration_login_page_id', $id );
+			}
 			wp_send_json_success( $url );
 		}
 	}

@@ -35,7 +35,9 @@ class UR_Admin_Embed_Wizard {
 	 */
 	public static function set_embed_page_title( $post_title, $post ) {
 		$meta = self::get_meta();
-		self::delete_meta();
+		if ( isset( $meta['is_login'] ) && ! ur_string_to_bool( $meta['is_login'] ) ) {
+			self::delete_meta();
+		}
 		return empty( $meta['embed_page_title'] ) ? $post_title : $meta['embed_page_title'];
 	}
 
@@ -97,7 +99,6 @@ class UR_Admin_Embed_Wizard {
 	 * @since 3.2.1.3
 	 */
 	public static function delete_meta() {
-
 		delete_user_meta( get_current_user_id(), 'user-registration_form_embed' );
 	}
 }
