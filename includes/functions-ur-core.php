@@ -3382,13 +3382,7 @@ if ( ! function_exists( 'ur_generate_required_pages' ) ) {
 			'user_registration_lost_password_page_id' => array(
 				'name' => 'lost-password',
 				'title' => __( 'Lost Password', 'user-registration' ),
-				'content' => '[user_registration_reset_password_form]',
-				'requires_membership' => false,
-			),
-			'user_registration_reset_password_page_id' => array(
-				'name' => 'reset-password',
-				'title' => __( 'Reset Password', 'user-registration' ),
-				'content' => '[user_registration_reset_password_form]',
+				'content' => '[user_registration_lost_password]',
 				'requires_membership' => false,
 			),
 			'user_registration_member_registration_page_id' => array(

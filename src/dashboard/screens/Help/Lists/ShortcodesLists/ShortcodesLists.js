@@ -335,13 +335,6 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 				"Displays a section for recovering a lost password.",
 				"user-registration"
 			)
-		},
-		{
-			id: "[user_registration_reset_password_form]",
-			description: __(
-				"Provides a section for users to reset their password after email verification.",
-				"user-registration"
-			)
 		}
 	];
 	const [isAccordionOpen, setIsAccordionOpen] = useState({});

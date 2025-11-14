@@ -2412,29 +2412,6 @@ class UR_AJAX {
 					);
 				}
 				break;
-			case 'user_registration_reset_password_page_id':
-				if ( empty( $page_id ) ) {
-					wp_send_json_error(
-						array(
-							'message' => esc_html__(
-								'Please select a valid reset password page that contains the reset password shortcode [user_registration_reset_password_form]',
-								'user-registration'
-							),
-						)
-					);
-				}
-				$is_page_reset_password_page = ur_find_reset_password_in_page( $page_id );
-				if ( ! $is_page_reset_password_page ) {
-					wp_send_json_error(
-						array(
-							'message' => esc_html__(
-								'The selected page does not contain the required password reset shortcode [user_registration_reset_password_form]',
-								'user-registration'
-							),
-						)
-					);
-				}
-				break;
 			case 'user_registration_login_options_login_redirect_url':
 				if ( empty( $page_id ) ) {
 					wp_send_json_error(
