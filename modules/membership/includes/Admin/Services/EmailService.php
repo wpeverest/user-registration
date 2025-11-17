@@ -330,8 +330,9 @@ class EmailService
 		$user     = get_userdata( $data['member_id'] );
 		$form_id  = ur_get_form_id_by_userid( $data['member_id'] );
 		$settings = new UR_Settings_Membership_Cancellation_User_Email();
-		$values   = array(
-			'membership_plan_name' => esc_html__( $data['membership_metas']['title'] )
+		$subscription_service = new SubscriptionService();
+		$values               = array(
+			'membership_tags' => $subscription_service->get_membership_plan_details( $data )
 		);
 		$message  = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_cancellation_admin_email_message', $settings->user_registration_get_membership_cancellation_user_email() ), $values, $form_id );;
 		$message     = apply_filters( 'ur_membership_membership_cancellation_email_custom_template', $message, $subject );
