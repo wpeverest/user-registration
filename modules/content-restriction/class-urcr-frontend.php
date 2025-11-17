@@ -1174,7 +1174,7 @@ class URCR_Frontend {
 
 		$message = apply_filters( 'user_registration_process_smart_tags', $message );
 
-		return '<span class="urcr-restrict-msg" style="display:none">' . $message . '</span>';
+		return '<span class="urcr-restrict-msg">' . $message . '</span>';
 	}
 
 	/**
