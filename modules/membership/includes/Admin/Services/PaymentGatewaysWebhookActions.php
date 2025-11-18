@@ -75,9 +75,28 @@ class PaymentGatewaysWebhookActions {
 	 */
 	public function handle_stripe_webhook( \WP_REST_Request $request ) {
 
-		$stripe_signature = $request->get_header( 'stripe-signature' );
+		$stripe_signature = $request->get_header( 'stripe_signature' );
 
 		$body             = $request->get_body();
+
+		$stripe_service = new StripeService();
+		$webhook_secret = apply_filters( 'user_registration_stripe_webhook_secret', get_option( 'user_registration_stripe_webhook_secret', false ) );
+		
+		if( ! empty( $webhook_secret ) ) {
+			try {
+				\Stripe\Webhook::constructEvent(
+					$body,
+					$stripe_signature,
+					$webhook_secret,
+				);
+			} catch( \Stripe\Exception\SignatureVerificationException $e) {
+				//signature verification failed.
+				return;
+			} catch( \Stripe\Exception\UnexpectedValueException $e) {
+				//webhook payload not valid.
+				return;
+			}
+		}
 
 		$event            = json_decode( $body, true );
 
@@ -87,7 +106,6 @@ class PaymentGatewaysWebhookActions {
 			return;
 		}
 
-		$stripe_service = new StripeService();
 		$stripe_service->handle_webhook( $event, $subscription_id );
 
 
