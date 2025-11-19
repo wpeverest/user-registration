@@ -22,7 +22,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		/**
 		 * Remote URl Constant.
 		 */
-		const REMOTE_URL = 'https://api.themegrill.com/tracking/log';
+		const REMOTE_URL = 'https://api.themegrill.com/';
 
 		const LAST_RUN_STAMP = 'user_registration_send_usage_last_run';
 
@@ -60,9 +60,9 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		 */
 		public function get_base_product() {
 			if ( $this->is_premium() ) {
-				return 'user-registration-pro/user-registration.php';
+				return 'user-registration-pro';
 			} else {
-				return 'user-registration/user-registration.php';
+				return 'user-registration';
 			}
 		}
 
@@ -171,53 +171,25 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		 * @return array
 		 */
 		public function get_plugin_lists() {
-
-			$is_premium = $this->is_premium();
-
-			$base_product = $this->get_base_product();
-
-			$active_plugins = get_option( 'active_plugins', array() );
-
+			$is_premium        = $this->is_premium();
+			$base_product      = $this->get_base_product();
 			$base_product_name = $is_premium ? 'User Registration Pro' : 'User Registration';
-
-			$product_meta = array();
-
-			$product_meta['total_form_count'] = $this->get_form_count();
-
-			$product_meta['total_user_count']     = $this->get_user_count();
-			$product_meta['form_wise_user_count'] = $this->get_form_wise_user();
-
-			$license_key = $this->get_base_product_license();
-
-			if ( $is_premium ) {
-				$product_meta['license_key'] = $license_key;
-			}
-
-			$addons_data = array(
-				$base_product => array(
-					'product_name'    => $base_product_name,
-					'product_version' => UR()->version,
-					'product_meta'    => $product_meta,
-					'product_type'    => 'plugin',
-					'product_slug'    => $base_product,
-					'is_premium'      => $is_premium,
+			$license_key       = $this->get_base_product_license();
+			$form_wise_users   = $this->get_form_wise_user();
+			$addons_data       = array(
+				array(
+					'product_name'          => $base_product_name,
+					'product_version'       => UR()->version,
+					'product_type'          => 'plugin',
+					'product_slug'          => $base_product,
+					'is_premium'            => $is_premium,
+					'license_key'           => $is_premium ? $license_key : '',
+					'total_form_count'      => $this->get_form_count(),
+					'total_user_count'      => $this->get_user_count(),
+					'membership_form_users' => $form_wise_users['membership_form_users'],
+					'normal_form_users'     => $form_wise_users['normal_form_users'],
 				),
 			);
-
-			foreach ( $active_plugins as $plugin ) {
-
-				$addon_file      = WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin;
-				$addon_file_data = get_plugin_data( $addon_file );
-				if ( $base_product !== $plugin ) {
-					$addons_data[ $plugin ] = array(
-						'product_name'    => isset( $addon_file_data['Name'] ) ? trim( $addon_file_data['Name'] ) : '',
-						'product_version' => isset( $addon_file_data['Version'] ) ? trim( $addon_file_data['Version'] ) : '',
-						'product_type'    => 'plugin',
-						'product_slug'    => $plugin,
-					);
-				}
-			}
-
 
 			/**
 			 * Format module data to track in TG Tracking.
@@ -236,11 +208,12 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 			if ( ! empty( $enabled_features ) ) {
 				$our_modules     = $this->get_modules();
 				$modules_by_slug = array_column( $our_modules, null, 'slug' );
+
 				foreach ( $enabled_features as $slug ) {
 					if ( isset( $modules_by_slug[ $slug ] ) ) {
-						$module                       = $modules_by_slug[ $slug ];
-						$product_slug                 = in_array( $slug, $addons_list_moved_into_module ) ? $slug . '/' . $slug . '.php' : $slug;
-						$addons_data[ $product_slug ] = array(
+						$module        = $modules_by_slug[ $slug ];
+						$product_slug  = in_array( $slug, $addons_list_moved_into_module ) ? $slug . '/' . $slug . '.php' : $slug;
+						$addons_data[] = array(
 							'product_name'    => $module['name'],
 							'product_version' => UR()->version,
 							'product_type'    => in_array( $slug, $addons_list_moved_into_module ) ? 'plugin' : 'module',
@@ -278,15 +251,12 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					}
 
 					if ( 'NOT_SET' !== $value || $send_all ) {
-						$setting_content = array(
-							'value' => $value //phpcs:ignore
+						$global_settings[] = array(
+							'type'          => 'global',
+							'setting_key'   => $setting_key,
+							'setting_value' => is_array( $value ) ? json_encode( $value ) : $value, //phpcs:ignore
+							'default_value' => $setting_default
 						);
-
-						if ( $send_default ) {
-							$setting_content['default'] = $setting_default;
-						}
-
-						$global_settings[ $product ][ $setting_key ] = $setting_content;
 					}
 				}
 			}
@@ -367,11 +337,9 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 			$url = '';
 			// Ingore for development mode.
 			if ( defined( 'UR_DEV' ) && UR_DEV ) {
-				if ( defined( 'TG_USERS_TRACKING_VERSION' ) ) {
-					$url = rest_url() . 'tracking/log';
-				}
+				$url = self::REMOTE_URL . 'dev/log';
 			} else {
-				$url = self::REMOTE_URL;
+				$url = self::REMOTE_URL . 'tracking/log';
 			}
 
 			return $url;
@@ -382,19 +350,19 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		 *
 		 * @return array
 		 */
-		public function get_form_settings() {
-			$form_settings = array();
-			$forms         = ur_get_all_user_registration_form();
+	public function get_form_settings() {
+		$form_settings = array();
+		$forms         = ur_get_all_user_registration_form();
 
-			if ( ! empty( $forms ) ) {
-				foreach ( $forms as $form_id => $form ) {
-					$form_specific_settings    = $this->get_form_specific_settings( $form_id );
-					$form_settings[ $form_id ] = $form_specific_settings;
-				}
+		if ( ! empty( $forms ) ) {
+			foreach ( $forms as $form_id => $form ) {
+				$form_specific_settings = $this->get_form_specific_settings( $form_id );
+				$form_settings          = array_merge( $form_settings, $form_specific_settings );
 			}
-
-			return $form_settings;
 		}
+
+		return $form_settings;
+	}
 
 		/**
 		 * Get Form Specific Settings.
@@ -405,30 +373,35 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		 *
 		 * @return array
 		 */
-		private function get_form_specific_settings( $form_id ) {
+	private function get_form_specific_settings( $form_id ) {
 
-			$form_settings = ur_admin_form_settings_fields( $form_id );
+		$form_settings = ur_admin_form_settings_fields( $form_id );
+		$settings      = array();
 
-			if ( ! empty( $form_settings ) ) {
-				foreach ( $form_settings as $setting ) {
+		if ( ! empty( $form_settings ) ) {
+			foreach ( $form_settings as $setting ) {
 
-					$setting_id = $setting['id'];
+				$setting_id = $setting['id'];
 
-					$product                = ! empty( $setting['product'] ) ? $setting['product'] : '';
-					$value                  = get_post_meta( $form_id, $setting_id, true );
-					$settings_value         = empty( $value ) ? 'NOT_SET' : get_post_meta( $form_id, $setting_id, true );
-					$default_value          = ! empty( $setting['default_value'] ) ? $setting['default_value'] : '';
-					$settings_default_value = is_bool( $default_value ) ? ur_bool_to_string( $default_value ) : $default_value;
+				$product = ! empty( $setting['product'] ) ? explode( '/', $setting['product'] )[0] : '';
 
-					$settings[ $product ][ $setting_id ] = array(
-						'settings_value' => strpos( "$settings_value", '<br>' ) > 0 ? preg_replace( '#<\s*br\s*/?\s*>#i', ' ', $settings_value ) : $settings_value,
-						'default_value'  => strpos( "$settings_default_value", '<br>' ) > 0 ? preg_replace( '#<\s*br\s*/?\s*>#i', ' ', $settings_default_value ) : $settings_default_value
-					);
-				}
+				$value                  = get_post_meta( $form_id, $setting_id, true );
+				$settings_value         = empty( $value ) ? 'NOT_SET' : get_post_meta( $form_id, $setting_id, true );
+				$default_value          = ! empty( $setting['default_value'] ) ? $setting['default_value'] : '';
+				$settings_default_value = is_bool( $default_value ) ? ur_bool_to_string( $default_value ) : $default_value;
+
+				$settings[] = array(
+					'type'          => 'form',
+					'setting_key'   => $setting_id,
+					'setting_value' => strpos( "$settings_value", '<br>' ) > 0 ? preg_replace( '#<\s*br\s*/?\s*>#i', ' ', $settings_value ) : $settings_value,
+					'default_value' => strpos( "$settings_default_value", '<br>' ) > 0 ? preg_replace( '#<\s*br\s*/?\s*>#i', ' ', $settings_default_value ) : $settings_default_value,
+					'form_id'       => $form_id
+				);
 			}
-
-			return $settings;
 		}
+
+		return $settings;
+	}
 
 		/**
 		 * Call API.
@@ -437,7 +410,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		 */
 		public function call_api() {
 			global $wpdb;
-			ur_get_logger()->debug('------------- TG SDK API log tracking initiated -------------', array('source'=> 'urm-tg-sdk-logs'));
+			ur_get_logger()->debug( '------------- TG SDK API log tracking initiated -------------', array( 'source' => 'urm-tg-sdk-logs' ) );
 
 			$stats_api_url = $this->get_stats_api_url();
 
@@ -446,25 +419,24 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 			}
 			$data         = $this->get_base_info();
 			$data['data'] = array(
-				'product_info'     => $this->get_plugin_lists(),
-				'admin_email'      => get_bloginfo( 'admin_email' ),
-				'website_url'      => get_bloginfo( 'url' ),
-				'php_version'      => phpversion(),
-				'mysql_version'    => $wpdb->db_version(),
-				'server_software'  => ( isset( $_SERVER['SERVER_SOFTWARE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ) : '' ),
-				'is_ssl'           => is_ssl(),
-				'is_multisite'     => is_multisite(),
-				'is_wp_com'        => defined( 'IS_WPCOM' ) && IS_WPCOM,
-				'is_wp_com_vip'    => ( defined( 'WPCOM_IS_VIP_ENV' ) && WPCOM_IS_VIP_ENV ) || ( function_exists( 'wpcom_is_vip' ) && wpcom_is_vip() ),
-				'is_wp_cache'      => defined( 'WP_CACHE' ) && WP_CACHE,
-				'multi_site_count' => $this->get_sites_total(),
-				'timezone'         => $this->get_timezone_offset(),
-				'base_product'     => $this->get_base_product(),
-				'global_settings'  => $this->get_global_settings(),
-				'form_settings'    => $this->get_form_settings(),
+				'registration_type' => get_option( 'urm_initial_registration_type', '' ),
+				'admin_email'       => get_bloginfo( 'admin_email' ),
+				'website_url'       => get_bloginfo( 'url' ),
+				'php_version'       => phpversion(),
+				'mysql_version'     => $wpdb->db_version(),
+				'server_software'   => ( isset( $_SERVER['SERVER_SOFTWARE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ) : '' ),
+				'is_ssl'            => is_ssl(),
+				'is_multisite'      => is_multisite(),
+				'is_wp_com'         => defined( 'IS_WPCOM' ) && IS_WPCOM,
+				'is_wp_com_vip'     => ( defined( 'WPCOM_IS_VIP_ENV' ) && WPCOM_IS_VIP_ENV ) || ( function_exists( 'wpcom_is_vip' ) && wpcom_is_vip() ),
+				'is_wp_cache'       => defined( 'WP_CACHE' ) && WP_CACHE,
+				'multi_site_count'  => $this->get_sites_total(),
+				'timezone'          => $this->get_timezone_offset(),
+				'base_product'      => $this->get_base_product(),
+				'product_info'      => $this->get_plugin_lists(),
+				'settings'          => array_merge($this->get_global_settings(), $this->get_form_settings() ),
 			);
-
-
+			error_log( print_r( json_encode($data), true ) );
 			$this->send_request( apply_filters( 'user_registration_tg_tracking_remote_url', $stats_api_url ), $data );
 		}
 
@@ -530,8 +502,9 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					'body'        => wp_json_encode( $data ),
 				)
 			);
-			ur_get_logger()->notice(json_decode( wp_remote_retrieve_body( $response ), true ), array('source'=> 'urm-tg-sdk-logs'));
-			ur_get_logger()->debug('------------- TG SDK API log tracking response received -------------', array('source'=> 'urm-tg-sdk-logs'));
+			ur_get_logger()->notice( print_r( json_decode( wp_remote_retrieve_body( $response ), true ), true ), array( 'source' => 'urm-tg-sdk-logs' ) );
+			ur_get_logger()->debug( '------------- TG SDK API log tracking response received -------------', array( 'source' => 'urm-tg-sdk-logs' ) );
+
 			return json_decode( wp_remote_retrieve_body( $response ), true );
 		}
 
@@ -542,7 +515,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		 */
 		private function setting_keys() {
 			return array(
-				'user-registration/user-registration.php'                                                     => array(
+				'user-registration'                           => array(
 					// General Settings
 					array( 'user_registration_general_setting_disabled_user_roles', '["subscriber"]' ),
 					array( 'user_registration_myaccount_page_id', '', true ),
@@ -593,7 +566,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					// Email Settings
 					array( 'user_registration_email_setting_disable_email', false ),
 				),
-				'user-registration-pro/user-registration.php'                                                 => array(
+				'user-registration-pro'                       => array(
 					array( 'user_registration_pro_general_setting_delete_account', 'disable' ),
 					array( 'user_registration_pro_general_setting_login_form', false ),
 					array( 'user_registration_pro_general_setting_prevent_active_login', false ),
@@ -606,11 +579,11 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					array( 'user_registration_content_restriction_enable', true ),
 					array( 'user_registration_content_restriction_allow_to_roles', '["administrator"]' ) //phpcs:ignore
 				),
-				'user-registration-file-upload/user-registration-file-upload.php'                             => array(
+				'user-registration-file-upload'               => array(
 					array( 'user_registration_file_upload_setting_valid_file_type', '["pdf"]' ),
 					array( 'user_registration_file_upload_setting_max_file_size', '1024' ) //phpcs:ignore
 				),
-				'user-registration-pdf-submission/user-registration-pdf-submission.php'                       => array(
+				'user-registration-pdf-submission'            => array(
 					array( 'user_registration_pdf_template', 'default' ),
 					array( 'user_registration_pdf_logo_image', '', true ),
 					array( 'user_registration_pdf_setting_header', '' ),
@@ -628,7 +601,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					array( 'user_registration_pdf_print_user_default_fields', false ),
 					array( 'user_registration_pdf_hide_empty_fields', false ) //phpcs:ignore
 				),
-				'user-registration-social-connect/user-registration-social-connect.php'                       => array(
+				'user-registration-social-connect'            => array(
 					array( 'user_registration_social_setting_enable_facebook_connect', '' ),
 					array( 'user_registration_social_setting_enable_twitter_connect', '' ),
 					array( 'user_registration_social_setting_enable_google_connect', '' ),
@@ -639,7 +612,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					array( 'user_registration_social_login_position', 'bottom' ),
 					array( 'user_registration_social_login_template', 'ursc_theme_4' ) //phpcs:ignore
 				),
-				'user-registration-two-factor-authentication/user-registration-two-factor-authentication.php' => array(
+				'user-registration-two-factor-authentication' => array(
 					array( 'user_registration_tfa_enable_disable', false ),
 					array( 'user_registration_tfa_roles', '["subscriber"]' ),
 					array( 'user_registration_tfa_otp_length', '6' ),
