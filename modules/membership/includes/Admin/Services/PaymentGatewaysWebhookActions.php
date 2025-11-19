@@ -32,7 +32,7 @@ class PaymentGatewaysWebhookActions {
 			register_rest_route( 'user-registration', '/stripe-webhook', [
 				'methods'  => 'POST',
 				'callback' => array( $this, 'handle_stripe_webhook', ),
-				'permission_callback' => '__return_true',
+				'permission_callback' => array( $this, 'verify_stripe_webhook_signature' ),
 			] );
 		} );
 	}
@@ -68,13 +68,8 @@ class PaymentGatewaysWebhookActions {
 		$this->paypal_service->handle_membership_paypal_ipn( $data );
 	}
 
-	/**
-	 * handle_stripe_webhook
-	 *
-	 * @return void
-	 */
-	public function handle_stripe_webhook( \WP_REST_Request $request ) {
-
+	public function verify_stripe_webhook_signature( \WP_REST_Request $request ) {
+		
 		$stripe_signature = $request->get_header( 'stripe_signature' );
 
 		$body             = $request->get_body();
@@ -91,12 +86,24 @@ class PaymentGatewaysWebhookActions {
 				);
 			} catch( \Stripe\Exception\SignatureVerificationException $e) {
 				//signature verification failed.
-				return;
+				return false;
 			} catch( \Stripe\Exception\UnexpectedValueException $e) {
 				//webhook payload not valid.
-				return;
+				return false;
 			}
 		}
+		return true;
+	}
+	/**
+	 * handle_stripe_webhook
+	 *
+	 * @return void
+	 */
+	public function handle_stripe_webhook( \WP_REST_Request $request ) {
+
+		$body             = $request->get_body();
+
+		$stripe_service = new StripeService();
 
 		$event            = json_decode( $body, true );
 
