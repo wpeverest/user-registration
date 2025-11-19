@@ -436,7 +436,6 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 				'product_info'      => $this->get_plugin_lists(),
 				'settings'          => array_merge($this->get_global_settings(), $this->get_form_settings() ),
 			);
-			error_log( print_r( json_encode($data), true ) );
 			$this->send_request( apply_filters( 'user_registration_tg_tracking_remote_url', $stats_api_url ), $data );
 		}
 
