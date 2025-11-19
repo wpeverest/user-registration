@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "35266d546f6a0a3b5aef3de57c1aef8c",
+    "content-hash": "25d840391da1fa16bfd9d10aa09cca2b",
     "packages": [
         {
             "name": "composer/installers",
@@ -207,6 +207,45 @@
                 "source": "https://github.com/stripe/stripe-php/tree/v15.10.0"
             },
             "time": "2024-09-18T18:38:30+00:00"
+        },
+        {
+            "name": "themegrill/themegrill-sdk",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/themegrill/themegrill-sdk.git",
+                "reference": "bdcd3b56256ce3126054d0dabb22fe8563b0becc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/themegrill/themegrill-sdk/zipball/bdcd3b56256ce3126054d0dabb22fe8563b0becc",
+                "reference": "bdcd3b56256ce3126054d0dabb22fe8563b0becc",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.24"
+            },
+            "require-dev": {
+                "yoast/phpunit-polyfills": "^4.0"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "themegrill",
+                    "email": "team@themegrill.com",
+                    "homepage": "https://themegrill.com"
+                }
+            ],
+            "description": "ThemeGrill SDK",
+            "support": {
+                "issues": "https://github.com/themegrill/themegrill-sdk/issues",
+                "source": "https://github.com/themegrill/themegrill-sdk/tree/v1.0.1"
+            },
+            "time": "2025-11-12T11:45:29+00:00"
         }
     ],
     "packages-dev": [
