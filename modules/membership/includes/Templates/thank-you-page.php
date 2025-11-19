@@ -3,13 +3,13 @@
 $bank_data        = ( isset( $_GET['info'] ) && ! empty( $_GET['info'] ) ) ? wp_kses_post_deep( $_GET['info'] ) : '';
 $transaction_id   = ( isset( $_GET['transaction_id'] ) && ! empty( $_GET['transaction_id'] ) ) ? wp_kses_post( $_GET['transaction_id'] ) : '';
 $username         = ( isset( $_GET['username'] ) && ! empty( $_GET['username'] ) ) ? wp_kses_post( $_GET['username'] ) : '';
-$header            = ! empty( $attributes['header'] ) ? $attributes['header'] : sprintf(
+$header            = ! empty( $attributes['header'] ) ? esc_html( $attributes['header'] ) : sprintf(
 	__( 'Thank You! Your registration was completed successfully.', 'user-registration' ),
 	esc_html( $username )
 );
-$footer           = ! empty( $attributes['footer'] ) ? $attributes['footer'] : "";
-$notice_message   = ! empty( $attributes['notice_message'] ) ? $attributes['notice_message'] : __("For paid memberships there might be a delay of few minutes for your subscription status to be updated by the payment gateways.", 'user-registration' );
-$transaction_info = ! empty( $attributes['transaction_info'] ) ? $attributes['transaction_info'] : __("Please use this transaction/order id for support regarding payments if needed.", 'user-registration' );
+$footer           = ! empty( $attributes['footer'] ) ? esc_html( $attributes['footer'] ) : "";
+$notice_message   = ! empty( $attributes['notice_message'] ) ? esc_html( $attributes['notice_message'] ) : __("For paid memberships there might be a delay of few minutes for your subscription status to be updated by the payment gateways.", 'user-registration' );
+$transaction_info = ! empty( $attributes['transaction_info'] ) ? esc_html( $attributes['transaction_info'] ) : __("Please use this transaction/order id for support regarding payments if needed.", 'user-registration' );
 $is_preview       = ! empty( $attributes['is_preview'] ) ? $attributes['is_preview'] : false;
 $show_notice_1    = isset( $attributes['show_notice_1'] ) ? $attributes['show_notice_1'] : true;
 $show_notice_2    = isset( $attributes['show_notice_2'] ) ? $attributes['show_notice_2'] : true;
