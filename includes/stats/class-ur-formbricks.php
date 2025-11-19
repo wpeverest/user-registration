@@ -22,7 +22,7 @@ if ( ! class_exists( 'UR_FORMBRICKS' ) ) {
 		/**
 		 * Environment ID for Formbricks.
 		 */
-		const ENVIRONMENT_ID = 'cmi4enbtg0l6zad01jm0ch5q2';
+		const ENVIRONMENT_ID = 'cmi4emqjs0j7mad01823vxb2e';
 
 		/**
 		 * Boot the formbricks service provider.
@@ -65,9 +65,43 @@ if ( ! class_exists( 'UR_FORMBRICKS' ) ) {
 
 			$page = isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-			if ( 'user-registration' === $page || 'user-registration-settings' === $page ) {
+			if ( $this->is_page_valid() ) {
 				do_action( 'themegrill_internal_page', 'user-registration', $page );
 			}
+		}
+
+		/**
+		 * Check page validity.
+		 *
+		 * @return boolean
+		 */
+		public function is_page_valid() {
+			if ( ! is_admin() ) {
+				return false;
+			}
+
+			$screen = get_current_screen();
+
+			if ( ! $screen ) {
+				return false;
+			}
+
+			$current_screen_id = $screen->id;
+
+			$urm_screen_list = $this->supported_screen_ids();
+
+			return in_array( $current_screen_id, $urm_screen_list, true );
+		}
+
+		/**
+		 * Supported page list.
+		 *
+		 * @return void
+		 */
+		public function supported_screen_ids() {
+			$all_screen_id = ur_get_screen_ids();
+
+			return array_diff( $all_screen_id, array( 'profile', 'user-edit' ) );
 		}
 
 		/**
