@@ -79,7 +79,9 @@ class PaypalService {
 		} else {
 			$transaction = '_xclick';
 		}
-		$query_args   = 'membership=' . absint( $membership ) . '&member_id=' . absint( $member_id ) . '&hash=' . wp_hash( $membership . ',' . $member_id );
+		$paypal_verification_token = wp_generate_uuid4();
+		update_user_meta( $member_id, '_paypal_verification_token', $paypal_verification_token ); 		
+		$query_args   = 'membership=' . absint( $membership ) . '&member_id=' . absint( $member_id ) . '&hash=' . wp_hash( $membership . ',' . $member_id . ',' . $paypal_verification_token );
 		$return_url   = $paypal_options['return_url'] ?? wp_login_url();
 		$return_url   = esc_url_raw(
 			add_query_arg(
@@ -189,6 +191,15 @@ class PaypalService {
 
 		$membership_id                  = $url_params['membership'];
 		$member_id                      = $url_params['member_id'];
+
+		$supplied_hash = $url_params['hash'];
+		$paypal_verification_token = get_user_meta( $member_id, '_paypal_verification_token', true );
+		$expected_hash = wp_hash( $membership_id . ',' . $member_id . ',' . $paypal_verification_token );
+
+		if( ! hash_equals( $supplied_hash, $expected_hash ) ) {
+			return;
+		}
+
 		$member_order                   = $this->members_orders_repository->get_member_orders( $member_id );
 		$membership                     = $this->membership_repository->get_single_membership_by_ID( $membership_id );
 		$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
