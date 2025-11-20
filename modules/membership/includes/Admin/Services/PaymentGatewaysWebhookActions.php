@@ -111,7 +111,7 @@ class PaymentGatewaysWebhookActions {
 		PaymentGatewayLogging::log_general(
 			'stripe',
 			'Webhook signature verification successful.',
-			'notice'
+			'success'
 		);
 		return true;
 	}
