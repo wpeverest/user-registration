@@ -80,7 +80,7 @@ class PaypalService {
 			$transaction = '_xclick';
 		}
 		$paypal_verification_token = wp_generate_uuid4();
-		update_user_meta( $member_id, '_paypal_verification_token', $paypal_verification_token ); 		
+		update_user_meta( $member_id, 'urm_paypal_verification_token', $paypal_verification_token ); 		
 		$query_args   = 'membership=' . absint( $membership ) . '&member_id=' . absint( $member_id ) . '&hash=' . wp_hash( $membership . ',' . $member_id . ',' . $paypal_verification_token );
 		$return_url   = $paypal_options['return_url'] ?? wp_login_url();
 		$return_url   = esc_url_raw(
@@ -193,7 +193,7 @@ class PaypalService {
 		$member_id                      = $url_params['member_id'];
 
 		$supplied_hash = $url_params['hash'];
-		$paypal_verification_token = get_user_meta( $member_id, '_paypal_verification_token', true );
+		$paypal_verification_token = get_user_meta( $member_id, 'urm_paypal_verification_token', true );
 		$expected_hash = wp_hash( $membership_id . ',' . $member_id . ',' . $paypal_verification_token );
 
 		if( ! hash_equals( $supplied_hash, $expected_hash ) ) {
