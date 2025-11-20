@@ -69,29 +69,50 @@ class PaymentGatewaysWebhookActions {
 	}
 
 	public function verify_stripe_webhook_signature( \WP_REST_Request $request ) {
-		
+
+		PaymentGatewayLogging::log_webhook_received(
+			'stripe',
+			'Stripe webhook received, starting signature verification.',
+			array(
+			)
+		);
+
 		$stripe_signature = $request->get_header( 'stripe_signature' );
 
 		$body             = $request->get_body();
 
-		$stripe_service = new StripeService();
+		new StripeService();
 		$webhook_secret = apply_filters( 'user_registration_stripe_webhook_secret', get_option( 'user_registration_stripe_webhook_secret', false ) );
 		
-		if( ! empty( $webhook_secret ) ) {
-			try {
-				\Stripe\Webhook::constructEvent(
-					$body,
-					$stripe_signature,
-					$webhook_secret,
-				);
-			} catch( \Stripe\Exception\SignatureVerificationException $e) {
-				//signature verification failed.
-				return false;
-			} catch( \Stripe\Exception\UnexpectedValueException $e) {
-				//webhook payload not valid.
-				return false;
-			}
+		if( empty( $webhook_secret ) ) {
+			PaymentGatewayLogging::log_general(
+				'stripe',
+				'Missing webhook secret, skipping verification.',
+				'notice'
+			);
+			return true;
 		}
+		try {
+			\Stripe\Webhook::constructEvent(
+				$body,
+				$stripe_signature,
+				$webhook_secret,
+			);
+		} catch( \Exception $e ) {
+			PaymentGatewayLogging::log_error(
+				'stripe',
+				'Stripe webhook verification failed.',
+				array(
+					'error_code' => 'SIGNATURE_VERIFICATION_FAILED',
+					'error_message' => $e->getMessage(),
+				)
+			);
+		}
+		PaymentGatewayLogging::log_general(
+			'stripe',
+			'Webhook signature verification successful.',
+			'notice'
+		);
 		return true;
 	}
 	/**
