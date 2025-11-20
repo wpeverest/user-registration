@@ -33,7 +33,7 @@ if ( 'block' === $type ):
 						<input type="hidden" name="membership_id" value="<?php echo esc_html( $membership['ID'] ); ?>">
 						<input type="hidden" name="redirection_url"
 							   value="<?php echo esc_url( $redirect_page_url ); ?>">
-						<input type="hidden" name="urm_uuid" value="<?php echo $uuid; ?>">
+						<input type="hidden" name="urm_uuid" value="<?php echo esc_attr( $uuid ); ?>">
 						<input type="hidden" name="thank_you_page_id" value="<?php echo $thank_you_page_id; ?>">
 						<span
 							class="membership-amount"><?php echo $symbol ?><?php echo esc_html( sprintf( '%.2f', $membership['amount'] ) ); ?></span>
@@ -50,9 +50,9 @@ if ( 'block' === $type ):
 <?php
 elseif ( 'list' === $type ):
 	?>
-	<form id="membership-selection-form-<?php echo $uuid; ?>" class="ur-membership-container" method="GET"
+	<form id="membership-selection-form-<?php echo esc_attr( $uuid ); ?>" class="ur-membership-container" method="GET"
 		  action="<?php echo $redirect_page_url; ?>">
-		<input type="hidden" name="urm_uuid" value="<?php echo $uuid; ?>">
+		<input type="hidden" name="urm_uuid" value="<?php echo esc_attr( $uuid ); ?>">
 		<input type="hidden" name="thank_you" value="<?php echo $thank_you_page_id; ?>">
 		<div class="ur_membership_frontend_input_container radio">
 			<?php
