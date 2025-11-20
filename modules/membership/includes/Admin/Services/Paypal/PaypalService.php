@@ -199,7 +199,7 @@ class PaypalService {
 		if( ! hash_equals( $supplied_hash, $expected_hash ) ) {
 			return;
 		}
-
+		delete_user_meta( $member_id, 'urm_paypal_verification_token' );
 		$member_order                   = $this->members_orders_repository->get_member_orders( $member_id );
 		$membership                     = $this->membership_repository->get_single_membership_by_ID( $membership_id );
 		$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
