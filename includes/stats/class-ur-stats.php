@@ -11,6 +11,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+require_once dirname( __FILE__ ) . '/class-ur-stats-helpers.php';
 
 if ( ! class_exists( 'UR_Stats' ) ) {
 
@@ -213,13 +214,20 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					if ( isset( $modules_by_slug[ $slug ] ) ) {
 						$module        = $modules_by_slug[ $slug ];
 						$product_slug  = in_array( $slug, $addons_list_moved_into_module ) ? $slug . '/' . $slug . '.php' : $slug;
-						$addons_data[] = array(
+						$addon_info = array(
 							'product_name'    => $module['name'],
 							'product_version' => UR()->version,
 							'product_type'    => in_array( $slug, $addons_list_moved_into_module ) ? 'plugin' : 'module',
 							'product_slug'    => $product_slug,
 							'is_premium'      => $is_premium
 						);
+
+						// Add content restriction stats if it's the content-restriction module
+						if ( class_exists( 'UR_Stats_Helpers' ) &&  $is_premium) {
+							$addon_info = UR_Stats_Helpers::maybe_add_content_restriction_stats( $addon_info, $slug );
+						}
+
+						$addons_data[] = $addon_info;
 					}
 				}
 			}
@@ -350,19 +358,19 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		 *
 		 * @return array
 		 */
-	public function get_form_settings() {
-		$form_settings = array();
-		$forms         = ur_get_all_user_registration_form();
+		public function get_form_settings() {
+			$form_settings = array();
+			$forms         = ur_get_all_user_registration_form();
 
-		if ( ! empty( $forms ) ) {
-			foreach ( $forms as $form_id => $form ) {
-				$form_specific_settings = $this->get_form_specific_settings( $form_id );
-				$form_settings          = array_merge( $form_settings, $form_specific_settings );
+			if ( ! empty( $forms ) ) {
+				foreach ( $forms as $form_id => $form ) {
+					$form_specific_settings = $this->get_form_specific_settings( $form_id );
+					$form_settings          = array_merge( $form_settings, $form_specific_settings );
+				}
 			}
-		}
 
-		return $form_settings;
-	}
+			return $form_settings;
+		}
 
 		/**
 		 * Get Form Specific Settings.
@@ -373,35 +381,35 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		 *
 		 * @return array
 		 */
-	private function get_form_specific_settings( $form_id ) {
+		private function get_form_specific_settings( $form_id ) {
 
-		$form_settings = ur_admin_form_settings_fields( $form_id );
-		$settings      = array();
+			$form_settings = ur_admin_form_settings_fields( $form_id );
+			$settings      = array();
 
-		if ( ! empty( $form_settings ) ) {
-			foreach ( $form_settings as $setting ) {
+			if ( ! empty( $form_settings ) ) {
+				foreach ( $form_settings as $setting ) {
 
-				$setting_id = $setting['id'];
+					$setting_id = $setting['id'];
 
-				$product = ! empty( $setting['product'] ) ? explode( '/', $setting['product'] )[0] : '';
+					$product = ! empty( $setting['product'] ) ? explode( '/', $setting['product'] )[0] : '';
 
-				$value                  = get_post_meta( $form_id, $setting_id, true );
-				$settings_value         = empty( $value ) ? 'NOT_SET' : get_post_meta( $form_id, $setting_id, true );
-				$default_value          = ! empty( $setting['default_value'] ) ? $setting['default_value'] : '';
-				$settings_default_value = is_bool( $default_value ) ? ur_bool_to_string( $default_value ) : $default_value;
+					$value                  = get_post_meta( $form_id, $setting_id, true );
+					$settings_value         = empty( $value ) ? 'NOT_SET' : get_post_meta( $form_id, $setting_id, true );
+					$default_value          = ! empty( $setting['default_value'] ) ? $setting['default_value'] : '';
+					$settings_default_value = is_bool( $default_value ) ? ur_bool_to_string( $default_value ) : $default_value;
 
-				$settings[] = array(
-					'type'          => 'form',
-					'setting_key'   => $setting_id,
-					'setting_value' => strpos( "$settings_value", '<br>' ) > 0 ? preg_replace( '#<\s*br\s*/?\s*>#i', ' ', $settings_value ) : $settings_value,
-					'default_value' => strpos( "$settings_default_value", '<br>' ) > 0 ? preg_replace( '#<\s*br\s*/?\s*>#i', ' ', $settings_default_value ) : $settings_default_value,
-					'form_id'       => $form_id
-				);
+					$settings[] = array(
+						'type'          => 'form',
+						'setting_key'   => $setting_id,
+						'setting_value' => strpos( "$settings_value", '<br>' ) > 0 ? preg_replace( '#<\s*br\s*/?\s*>#i', ' ', $settings_value ) : $settings_value,
+						'default_value' => strpos( "$settings_default_value", '<br>' ) > 0 ? preg_replace( '#<\s*br\s*/?\s*>#i', ' ', $settings_default_value ) : $settings_default_value,
+						'form_id'       => $form_id
+					);
+				}
 			}
-		}
 
-		return $settings;
-	}
+			return $settings;
+		}
 
 		/**
 		 * Call API.
