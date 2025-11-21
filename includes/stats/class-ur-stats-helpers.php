@@ -2,8 +2,7 @@
 /**
  * UR_Stats_Helpers Class for reusable stats calculation functions.
  *
- * @package User_Registration_Pro
- * @since  1.0.0
+ * @package User_Registration
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
