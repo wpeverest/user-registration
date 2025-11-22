@@ -306,14 +306,24 @@ class UR_Shortcode_My_Account {
 		$form_id                   = ur_get_form_id_by_userid( $user_id );
 		$enable_strong_password    = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' ) );
 		$minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
+		$form_data_array           = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
 
+		do_action( 'user_registration_enqueue_scripts', $form_data_array, $form_id );
 		wp_enqueue_script( 'ur-form-validator' );
-
 		if ( $enable_strong_password ) {
 			wp_dequeue_script( 'wc-password-strength-meter' );
 			wp_enqueue_script( 'ur-password-strength-meter' );
+			wp_localize_script(
+				'ur-password-strength-meter',
+				'ur_frontend_params_with_form_id',
+				array(
+					'custom_password_params' => UR_Frontend_Scripts::get_custom_password_params( $form_id ),
+				)
+			);
 		}
-
+		if ( function_exists( 'ur_print_notices' ) ) {
+			ur_print_notices();
+		}
 		ur_get_template(
 			'myaccount/form-edit-password.php',
 			array(
@@ -338,19 +348,22 @@ class UR_Shortcode_My_Account {
 		if ( ! empty( $_GET['reset-link-sent'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			return ur_get_template( 'myaccount/lost-password-confirmation.php' );
 
-
 		} elseif ( ! empty( $_GET['show-reset-form'] ) ) {
 			if ( isset( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ) && 0 < strpos( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ], ':' ) ) {
 				list( $rp_login, $rp_key ) = array_map( 'ur_clean', explode( ':', wp_unslash( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ), 2 ) );
-					$user = get_user_by( 'login', $rp_login );
-					$rp_login = $user ? $user->user_login : $rp_login;
+					$user                  = get_user_by( 'login', $rp_login );
+					$rp_login              = $user ? $user->user_login : $rp_login;
 
 				$user = self::check_password_reset_key( $rp_key, $rp_login );
 
 				if ( ! empty( $user ) ) {
-						$form_id = ur_get_form_id_by_userid( $user->ID );
-						$enable_strong_password = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' ) );
-					$minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
+						$form_id                   = ur_get_form_id_by_userid( $user->ID );
+						$enable_strong_password    = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' ) );
+						$minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
+						$form_data_array           = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
+
+						do_action( 'user_registration_enqueue_scripts', $form_data_array, $form_id );
+						wp_enqueue_script( 'ur-form-validator' );
 
 					if ( $enable_strong_password ) {
 						wp_enqueue_script( 'ur-password-strength-meter' );
@@ -366,8 +379,7 @@ class UR_Shortcode_My_Account {
 						)
 					);
 				}
-				}
-				else{
+			} else {
 				return '<p>Password reset link is invalid or expired.</p>';
 			}
 		}
@@ -483,16 +495,19 @@ class UR_Shortcode_My_Account {
 
 		if ( isset( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ) && 0 < strpos( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ], ':' ) ) {
 			list( $rp_login, $rp_key ) = array_map( 'ur_clean', explode( ':', wp_unslash( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ), 2 ) );
-            $user = get_user_by( 'login', $rp_login );
-            $rp_login = isset( $user->user_login ) ? $user->user_login : $rp_login;
+			$user                      = get_user_by( 'login', $rp_login );
+			$rp_login                  = isset( $user->user_login ) ? $user->user_login : $rp_login;
 
 			$user = self::check_password_reset_key( $rp_key, $rp_login );
 
 			if ( ! empty( $user ) ) {
-                $form_id = ur_get_form_id_by_userid( $user->ID );
-                $enable_strong_password = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' ) );
+				$form_id                   = ur_get_form_id_by_userid( $user->ID );
+				$enable_strong_password    = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password' ) );
 				$minimum_password_strength = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_minimum_password_strength' );
+				$form_data_array           = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
 
+				do_action( 'user_registration_enqueue_scripts', $form_data_array, $form_id );
+				wp_enqueue_script( 'ur-form-validator' );
 				if ( $enable_strong_password ) {
 					wp_enqueue_script( 'user-registration' );
 					wp_enqueue_script( 'ur-password-strength-meter' );
@@ -509,19 +524,19 @@ class UR_Shortcode_My_Account {
 				return ur_get_template(
 					'myaccount/form-reset-password.php',
 					array(
-                        'key' => $rp_key,
-                        'login' => $rp_login,
-                        'enable_strong_password' => $enable_strong_password,
+						'key'                       => $rp_key,
+						'login'                     => $rp_login,
+						'enable_strong_password'    => $enable_strong_password,
 						'minimum_password_strength' => $minimum_password_strength,
 					)
 				);
 			} else {
-                UR_Shortcode_My_Account::set_reset_password_cookie();
+				self::set_reset_password_cookie();
 				ur_clear_notices();
 			}
 		}
 		// If the user is in admin context, or user is trying to save the page.
-		if( is_admin() || ( defined('REST_REQUEST') && REST_REQUEST ) ) {
+		if ( is_admin() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
 			return '[user_registration_reset_password_form]';
 		}
 		wp_safe_redirect( ur_get_my_account_url() );
@@ -583,10 +598,12 @@ class UR_Shortcode_My_Account {
 		$rp_cookie = 'wp-resetpass-' . COOKIEHASH;
 		$rp_path   = isset( $_SERVER['REQUEST_URI'] ) ? current( explode( '?', wp_unslash( $_SERVER['REQUEST_URI'] ) ) ) : ''; // phpcs:ignore
 
-
 		$reset_password_page_id = get_option( 'user_registration_reset_password_page_id', false );
-		$reset_url = get_permalink( $reset_password_page_id );
-		$rp_path = wp_parse_url( $reset_url, PHP_URL_PATH );
+
+		if ( $reset_password_page_id ) {
+			$reset_url = get_permalink( $reset_password_page_id );
+			$rp_path   = wp_parse_url( $reset_url, PHP_URL_PATH );
+		}
 
 		if ( $value ) {
 			setcookie( $rp_cookie, $value, 0, $rp_path, COOKIE_DOMAIN, is_ssl(), true );

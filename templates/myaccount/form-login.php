@@ -107,9 +107,10 @@ if ( ! $is_passwordless_enabled || $is_passwordless_login_default_login_area_ena
 apply_filters( 'user_registration_login_form_before_notice', ur_print_notices() );
 
 $admin_class = '';
-
 if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page'] ) {
 	$admin_class = 'clickable-login-fields ';
+} elseif ( isset( $_GET['ur_login_preview'] ) ) {
+	$admin_class = 'form-login-preview';
 }
 ?>
 
@@ -134,8 +135,7 @@ if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page']
 						 */
 						apply_filters(
 							'ur_login_title',
-							esc_html__(get_option( 'user_registration_general_setting_login_form_title', __( 'Welcome', 'user-registration' ) ), 'user-registration')
-
+							esc_html__( get_option( 'user_registration_general_setting_login_form_title', __( 'Welcome', 'user-registration' ) ), 'user-registration' )
 						);
 					$login_title_description =
 						/**
@@ -147,9 +147,12 @@ if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page']
 						 */
 						apply_filters(
 							'ur_login_title_description',
-							esc_html__(get_option(
-								'user_registration_general_setting_login_form_desc',
-								__( 'Please enter your details to access your account.', 'user-registration' ), 'user-registration')
+							esc_html__(
+								get_option(
+									'user_registration_general_setting_login_form_desc',
+									__( 'Please enter your details to access your account.', 'user-registration' ),
+									'user-registration'
+								)
 							)
 						);
 					?>
@@ -312,7 +315,7 @@ if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page']
 
 				<?php
 
-				$url_options = get_option( 'user_registration_general_setting_registration_url_options', get_permalink( get_option( 'user_registration_default_form_page_id' ) ) );
+				$url_options = get_option( 'user_registration_general_setting_registration_url_options', get_permalink( get_option( 'user_registration_registration_page_id' ) ) );
 
 				if ( ! empty( $url_options ) || $is_login_settings ) {
 					$url_pattern = "/^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}(\\.[a-zA-Z0-9()]{1,6})?\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$/";

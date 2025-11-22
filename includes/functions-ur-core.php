@@ -2880,7 +2880,8 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 	 * @return string
 	 */
 	function user_registration_pro_render_conditional_logic( $connection, $integration, $form_id ) {
-		$output = '<div class="form-row ur-form-settings-section ur-form-settings-' . $integration . '-section">';
+		$output = '<div class="ur_conditional_logic_container">';
+		$output .= '<div class="form-row ur-form-settings-section ur-form-settings-' . $integration . '-section">';
 		$output .= '<div class="ur-form-settings-section--field">';
 		$output .= '<h4>' . esc_html__( 'Conditional Logic', 'user-registration' ) . '</h4>';
 		$output .= '</div>';
@@ -2948,6 +2949,7 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 			$value   = isset( $connection['conditional_logic_data']['conditional_value'] ) ? $connection['conditional_logic_data']['conditional_value'] : '';
 			$output .= '<input class="ur-conditional-input" type="text" name="ur-conditional-input" value="' . esc_attr( $value ) . '">';
 		}
+		$output .= '</div>';
 		$output .= '</div>';
 		$output .= '</div>';
 		return $output;
@@ -7584,43 +7586,6 @@ add_action(
 	1
 );
 
-
-add_action( 'user_registration_init', 'ur_captcha_settings_migration_script' );
-
-if ( ! function_exists( 'ur_captcha_settings_migration_script' ) ) {
-
-	/**
-	 * Update Captcha Settings for all forms and global settings.
-	 *
-	 * @since 3.3.4.
-	 */
-	function ur_captcha_settings_migration_script() {
-
-		if ( ! get_option( 'ur_captcha_settings_migrated', false ) ) {
-
-			$all_forms              = ur_get_all_user_registration_form();
-			$enabled_recaptcha_type = get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' );
-
-			foreach ( $all_forms as $key => $value ) {
-
-				$form_id = $key;
-
-				$form_captcha_enabled = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_recaptcha_support', false );
-				if ( $form_captcha_enabled ) {
-					update_post_meta( $form_id, 'user_registration_form_setting_configured_captcha_type', $enabled_recaptcha_type );
-				}
-			}
-
-			if ( get_option( 'user_registration_login_options_enable_recaptcha', false ) ) {
-				update_option( 'user_registration_login_options_configured_captcha_type', $enabled_recaptcha_type );
-			}
-			update_option( 'user_registration_captcha_setting_recaptcha_enable_' . $enabled_recaptcha_type, true );
-
-			update_option( 'ur_captcha_settings_migrated', true );
-		}
-	}
-}
-
 // Hook the end setup wizard to admin_init
 add_action(
 	'admin_init',
@@ -7801,17 +7766,6 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'title'    => __( 'Lost Password Page', 'user-registration' ),
 								'desc'     => __( 'Select the page where your password reset form is placed.', 'user-registration' ),
 								'id'       => 'user_registration_lost_password_page_id',
-								'type'     => 'single_select_page',
-								'default'  => '',
-								'class'    => 'ur-enhanced-select-nostd',
-								'css'      => '',
-								'desc_tip' => true,
-								'field-key'=> 'lost-password'
-							),
-							array(
-								'title'    => __( 'Reset Password Page', 'user-registration' ),
-								'desc'     => __( 'Select the page where your password reset form is placed.', 'user-registration' ),
-								'id'       => 'user_registration_reset_password_page_id',
 								'type'     => 'single_select_page',
 								'default'  => '',
 								'class'    => 'ur-enhanced-select-nostd',
@@ -9301,7 +9255,6 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 		$required_pages = array(
 			'user_registration_login_page_id'               => 'Login Page',
 			'user_registration_lost_password_page_id'       => 'Lost Password Page',
-			'user_registration_reset_password_page_id'      => 'Reset Password Page',
 			'user_registration_member_registration_page_id' => 'Membership Registration Page',
 			'user_registration_thank_you_page_id'           => 'Membership Thank You Page',
 			'user_registration_myaccount_page_id'           => 'My Account Page',

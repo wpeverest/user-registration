@@ -23,6 +23,7 @@ class UR_Cache_Helper {
 		add_action( 'user_registration_before_registration_form', array( __CLASS__, 'flush_w3tc_cache' ) );
 		add_action( 'user_registration_before_registration_form', array( __CLASS__, 'flush_wpsuper_cache' ) );
 		add_action( 'user_registration_before_registration_form', array( __CLASS__, 'flush_wprocket_cache' ) );
+		add_action( 'template_redirect', array( __CLASS__, 'maybe_disable_cache_for_dynamic_pages' ), 0 );
 	}
 
 	/**
@@ -86,6 +87,46 @@ class UR_Cache_Helper {
 				<p><?php echo wp_kses_post( sprintf( __( 'In order for <strong>database caching</strong> to work with User Registration you must add %1$s to the "Ignored Query Strings" option in <a href="%2$s">W3 Total Cache settings</a>.', 'user-registration' ), '<code>_ur_session_</code>', esc_url( admin_url( 'admin.php?page=w3tc_dbcache' ) ) ) ); ?></p>
 			</div>
 			<?php
+		}
+	}
+
+	/**
+	 * Prevent caching for dynamic User Registration pages.
+	 *
+	 * This handles cases like the lost-password form, etc.
+	 */
+	public static function maybe_disable_cache_for_dynamic_pages() {
+		global $wp_query;
+
+		// Detect UR routes that should never be cached.
+		$is_ur_lost_password_page = false;
+		$lost_pw_id               = get_option( 'user_registration_lost_password_page_id' );
+
+		if ( isset( $wp_query->post ) && (int) $wp_query->post->ID === (int) $lost_pw_id ) {
+			$is_ur_lost_password_page = true;
+		}
+
+		if ( ! $is_ur_lost_password_page ) {
+			return;
+		}
+
+		// Define constants for common cache plugins.
+		self::set_nocache_constants();
+
+		// Send strong HTTP headers so browsers, proxies, and CDNs won't cache.
+		if ( ! headers_sent() ) {
+			nocache_headers();
+
+			// Add no-store and vary headers for extra safety.
+			header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0, private' );
+			header( 'Pragma: no-cache' );
+			header( 'Expires: 0' );
+			header( 'Vary: Cookie, Authorization' );
+
+			// Some CDNs respect these additional headers.
+			header( 'Surrogate-Control: no-store' );
+			header( 'X-LiteSpeed-Cache-Control: no-cache' );
+			header( 'X-Accel-Expires: 0' );
 		}
 	}
 }

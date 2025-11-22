@@ -1193,9 +1193,9 @@ textarea.ur-input-border-red {
 }
 .ur-frontend-form.login {
   border: none;
-  padding: 60px;
+  padding: 60px 40px;
   border-radius: 8px;
-  background: #fff;
+  background: #ffffff;
 }
 @media screen and (max-width: 600px) {
   .ur-frontend-form.login {
@@ -1252,7 +1252,7 @@ textarea.ur-input-border-red {
   border: 1px solid #475bb2;
   background: #475bb2;
   width: 100%;
-  color: #fff;
+  color: #ffffff;
   letter-spacing: 0.15px;
   border: 0;
 }
@@ -2319,10 +2319,10 @@ span.ur-shortcode-form-embed-dot {
   display: none;
 }
 
-.ur-field-item input {
+.ur-field-item input, .ur-form-grid input {
   border-radius: 4px !important;
 }
-.ur-field-item .user-registration-error {
+.ur-field-item .user-registration-error, .ur-form-grid .user-registration-error {
   width: 100%;
   position: unset;
   letter-spacing: 0.18px;
@@ -2716,7 +2716,6 @@ body.user-registration-page .user-registration:not(.user-registration-MyAccount)
 body.user-registration-membership_page_user-registration-login-forms .user-registration:not(.user-registration-MyAccount) {
   max-width: 520px;
   border-radius: 4px;
-  background: transparent;
   border: 0;
 }
 body.user-registration-page #user-registration:not(.user-registration-MyAccount):has(.ur-frontend-form--bordered),
@@ -3520,7 +3519,7 @@ body.woocommerce-checkout .user-registration.urwc-form .ur-form-row .ur-form-gri
   margin: 0 0 16px 0;
 }
 .user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .user-registration-login-settings-form {
-  border-radius: 4px;
+  border-radius: 8px;
 }
 .user-registration-membership_page_user-registration-login-forms #wpcontent .user-registration-login-form-container .user-registration__wrap .user-registration-login-settings-form a {
   pointer-events: none;
@@ -3691,6 +3690,9 @@ body.user-registration-page .elementor-widget-container .user-registration:not(.
   display: flex;
   align-items: center;
 }
+.user-registration-login-form-container .ur-builder-wrapper .user-registration-login-form-global-settings--field .select2-selection {
+  position: relative;
+}
 .user-registration-login-form-container .ur-builder-wrapper .user-registration-login-form-global-settings:has(.error) .select2-selection {
   border-color: #f34c4c !important;
 }
@@ -3749,4 +3751,20 @@ body.user-registration-page .elementor-widget-container .user-registration:not(.
   white-space: nowrap;
   z-index: 9999;
   animation: toaster 5s ease-in-out forwards;
+}
+
+.ur-frontend-form .user-registration-EditAccountForm.edit-password .ur-form-row .ur-form-grid fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+.ur-frontend-form .user-registration-EditAccountForm.edit-password .ur-form-row .ur-form-grid p > input.user-registration-Button.button {
+  background: #475bb2;
+  border: 1px #475bb2;
+  border-radius: 4px;
+  border-style: inherit;
+}
+.ur-frontend-form .user-registration-EditAccountForm.edit-password .ur-form-row .ur-form-grid p > input.user-registration-Button.button:hover {
+  background: #38488e;
+  border-color: #38488e;
 }

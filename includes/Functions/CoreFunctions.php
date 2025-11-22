@@ -338,7 +338,7 @@ if ( ! function_exists( 'ur_membership_redirect_now' ) ) {
 	 * @return void
 	 */
 	function ur_membership_redirect_now( $url, $params ) {
-		$url               = $url . '?' . http_build_query( $params );
+		$url = $url . '?' . http_build_query( $params );
 		wp_redirect( $url );
 		exit;
 	}
@@ -373,18 +373,15 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 
 		foreach ( $memberships as $k => $membership ) {
 
-			$membership_id = ! empty( $membership['ID'] ) ? $membership['ID'] : '';
-			$membership_meta_value = !empty($membership['meta_value']) ? $membership['meta_value'] : '';
-			$membership_type = (!empty($membership_meta_value) && !empty($membership_meta_value['type'])) ? $membership_meta_value['type'] : '';
-			$amount = !empty($membership['meta_value']['amount']) ? $membership['meta_value']['amount'] : 0;
-			if ( isset( $currencies[ $currency ]['symbol_pos'] ) && 'right' === $currencies[ $currency ]['symbol_pos'] ) {
-				$membership_cur_amount = $amount . $symbol;
-			} else {
-				$membership_cur_amount = $symbol . $amount;
-			}
+			$membership_id         = ! empty( $membership['ID'] ) ? $membership['ID'] : '';
+			$membership_meta_value = ! empty( $membership['meta_value'] ) ? $membership['meta_value'] : '';
+			$membership_type       = ( ! empty( $membership_meta_value ) && ! empty( $membership_meta_value['type'] ) ) ? $membership_meta_value['type'] : '';
+			$amount                = ! empty( $membership['meta_value']['amount'] ) ? number_format( (float) $membership['meta_value']['amount'], 2 ) : 0;
+			$symbol_pos            = isset( $currencies[ $currency ]['symbol_pos'] ) ? $currencies[ $currency ]['symbol_pos'] : 'left';
+			$membership_cur_amount = ! empty( $amount ) ? ( 'right' === $symbol_pos ? $amount . $symbol : $symbol . $amount ) : '';
 			$duration_label = '';
-			if(!empty($membership['meta_value']['subscription']['duration']) ) {
-				$duration_key = strtolower( $membership['meta_value']['subscription']['duration'] );
+			if ( ! empty( $membership['meta_value']['subscription']['duration'] ) ) {
+				$duration_key    = isset( $membership['meta_value']['subscription']['duration'] ) ? strtolower( $membership['meta_value']['subscription']['duration'] ) : '';
 				$duration_labels = array(
 					'day'   => __( 'Day', 'user-registration' ),
 					'week'  => __( 'Week', 'user-registration' ),
@@ -398,10 +395,10 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 				'title'             => ! empty( $membership['post_title'] ) ? $membership['post_title'] : '',
 				'description'       => ! empty( $membership['post_content']['description'] ) ? $membership['post_content']['description'] : get_post_meta( $membership_id, 'ur_membership_description', true ),
 				'type'              => $membership_type,
-				'amount'            => !empty($membership_meta_value) ? $membership['meta_value']['amount'] : 0,
+				'amount'            => ! empty( $membership_meta_value ) ? $membership['meta_value']['amount'] : 0,
 				'currency_symbol'   => $symbol,
-				'calculated_amount' => 'free' === $membership_type ? 0 : (!empty($membership_meta_value) ? round( $membership_meta_value['amount'] ) : 0),
-				'period'            => 'free' === $membership_type ? __( 'Free', 'user-registration' ) : ( (!empty($membership_meta_value) && 'subscription' === $membership_meta_value['type']) ? $membership_cur_amount . ' / ' . number_format( $membership['meta_value']['subscription']['value'] ) . ' ' . ucfirst( $duration_label ) . ( $membership['meta_value']['subscription']['value'] > 1 ? 's' : '' ) : $membership_cur_amount ),
+				'calculated_amount' => 'free' === $membership_type ? 0 : ( ! empty( $membership_meta_value ) ? round( $membership_meta_value['amount'] ) : 0 ),
+				'period'            => 'free' === $membership_type ? __( 'Free', 'user-registration' ) : ( ( ! empty( $membership_meta_value ) && 'subscription' === $membership_meta_value['type'] ) ? $membership_cur_amount . ' / ' . number_format( $membership['meta_value']['subscription']['value'] ) . ' ' . ucfirst( $duration_label ) . ( $membership['meta_value']['subscription']['value'] > 1 ? 's' : '' ) : $membership_cur_amount ),
 			);
 			if ( isset( $membership['meta_value']['payment_gateways'] ) ) {
 				foreach ( $membership['meta_value']['payment_gateways'] as $key => $gateways ) {
@@ -433,10 +430,13 @@ if ( ! function_exists( 'get_membership_menus' ) ) {
 				'url'    => admin_url( 'admin.php?page=user-registration-membership' ),
 				'active' => isset( $_GET['page'] ) &&
 							$_GET['page'] === 'user-registration-membership' &&
-				            ( isset( $_GET['action'] ) ? ! in_array( $_GET['action'], array(
+							( isset( $_GET['action'] ) ? ! in_array(
+								$_GET['action'],
+								array(
 									'list_groups',
-					            'add_groups'
-				            ) ) : true ),
+									'add_groups',
+								)
+							) : true ),
 			),
 			'membership_groups' => array(
 				'label'  => __( 'Membership Groups', 'user-registration' ),
@@ -454,7 +454,7 @@ if ( ! function_exists( 'get_membership_menus' ) ) {
 				'label'  => __( 'Settings', 'user-registration' ),
 				'url'    => admin_url( 'admin.php?page=user-registration-settings&tab=membership' ),
 				'active' => false,
-			)
+			),
 		);
 	}
 }
@@ -545,15 +545,15 @@ if ( ! function_exists( 'urm_get_date_at_percent_interval' ) ) {
 		$startDate = new \DateTime( $startDateStr );
 		$endDate   = new \DateTime( $endDateStr );
 		if ( $percent < 0 || $percent > 100 ) {
-			throw new InvalidArgumentException( "Percent must be between 0 and 100." );
+			throw new InvalidArgumentException( 'Percent must be between 0 and 100.' );
 		}
 
 		$durationSeconds = $endDate->getTimestamp() - $startDate->getTimestamp();
-		$offsetSeconds = $durationSeconds * ( $percent / 100 );
+		$offsetSeconds   = $durationSeconds * ( $percent / 100 );
 		$targetTimestamp = $startDate->getTimestamp() + (int) $offsetSeconds;
-		$targetDate = new \DateTime();
+		$targetDate      = new \DateTime();
 		$targetDate->setTimestamp( $targetTimestamp );
 
-		return $targetDate->format( "Y-m-d 00:00:00" );
+		return $targetDate->format( 'Y-m-d 00:00:00' );
 	}
 }

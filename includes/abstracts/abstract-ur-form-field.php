@@ -84,7 +84,7 @@ abstract class UR_Form_Field {
 		if ( isset( $this->admin_data->advance_setting->$key ) ) {
 			return $this->admin_data->advance_setting->$key;
 		}
-		//fallback to general setting data if advance setting not found.
+		// fallback to general setting data if advance setting not found.
 		return $this->get_general_setting_data( $key );
 	}
 
@@ -252,7 +252,7 @@ abstract class UR_Form_Field {
 			}
 			$form_data['custom_attributes']['data-locale'] = $date_localization;
 		}
-		$field_name = isset( $data['advance_setting']->field_name ) ? $data['advance_setting']->field_name : ( isset( $data['general_setting']->field_name ) ? $data['general_setting']->field_name : '' );
+		$field_name                                   = isset( $data['advance_setting']->field_name ) ? $data['advance_setting']->field_name : ( isset( $data['general_setting']->field_name ) ? $data['general_setting']->field_name : '' );
 		$form_data['custom_attributes']['data-label'] = ur_string_translation( $form_id, 'user_registration_' . $field_name . '_label', $data['general_setting']->label );
 
 		if ( isset( $form_data['label'] ) ) {
@@ -873,20 +873,20 @@ abstract class UR_Form_Field {
 				case 'toggle':
 					$disabled = '';
 
-					// To make invite code required field non editable.
+					// Disable required field editing if invite code is linked to this form.
 					if ( 'required' === $setting_key && 'invite_code' === $strip_prefix ) {
 						$disabled = 'disabled';
 					}
 
-						$general_setting_wrapper .= '<div class="ur-toggle-section ur-form-builder-toggle" style="justify-content: space-between;">';
-						$general_setting_wrapper .= '<label class="ur-label checkbox" for="ur-type-' . $setting_value['type'] . '">' . $setting_value['label'] . $tooltip_html . '</label>';
-						$general_setting_wrapper .= '<span class="user-registration-toggle-form">';
-						$value                    = $this->get_general_setting_data( $setting_key ) === 1 && isset( $setting_value['default'] ) ? $setting_value['default'] : $this->get_general_setting_data( $setting_key );
-						$checked                  = ur_string_to_bool( $this->get_general_setting_data( $setting_key ) ) ? 'checked' : '';
-						$general_setting_wrapper .= '<input type="checkbox" data-field="' . esc_attr( $setting_key ) . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . esc_attr( $setting_value['name'] ) . '" ' . $checked . ' ' . $disabled . '>';
-						$general_setting_wrapper .= '<span class="slider round"></span>';
-						$general_setting_wrapper .= '</span>';
-						$general_setting_wrapper .= '</div>';
+					$general_setting_wrapper .= '<div class="ur-toggle-section ur-form-builder-toggle" style="justify-content: space-between;">';
+					$general_setting_wrapper .= '<label class="ur-label checkbox" for="ur-type-' . $setting_value['type'] . '">' . $setting_value['label'] . $tooltip_html . '</label>';
+					$general_setting_wrapper .= '<span class="user-registration-toggle-form">';
+					$value                    = $this->get_general_setting_data( $setting_key ) === 1 && isset( $setting_value['default'] ) ? $setting_value['default'] : $this->get_general_setting_data( $setting_key );
+					$checked                  = ur_string_to_bool( $this->get_general_setting_data( $setting_key ) ) ? 'checked' : '';
+					$general_setting_wrapper .= '<input type="checkbox" data-field="' . esc_attr( $setting_key ) . '" class="ur-general-setting-field ur-type-' . $setting_value['type'] . '"  name="' . esc_attr( $setting_value['name'] ) . '" ' . $checked . ' ' . $disabled . '>';
+					$general_setting_wrapper .= '<span class="slider round"></span>';
+					$general_setting_wrapper .= '</span>';
+					$general_setting_wrapper .= '</div>';
 					break;
 				case 'select':
 					if ( isset( $setting_value['options'] )

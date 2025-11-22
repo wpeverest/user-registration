@@ -258,7 +258,8 @@ class UR_Preview {
 	public static function login_form_preview_title( $title ) {
 		if ( in_the_loop() ) {
 			/* translators: %s - Form name. */
-			return sprintf( esc_html__( '%s &ndash; Preview', 'user-registration' ), sanitize_text_field( 'Login Form' ) );
+			// return sprintf( esc_html__( '%s &ndash; Preview', 'user-registration' ), sanitize_text_field( 'Login Form' ) );
+			return '';
 		}
 
 		return $title;

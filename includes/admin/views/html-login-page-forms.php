@@ -35,7 +35,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="ur-page-title__wrapper--right">
 			<div class="major-publishing-actions wp-clearfix">
 				<div class="publishing-action">
-					<button type="button" name="save_login_form" id="save_form_footer"
+					<?php if($login_page_id): ?>
+						<input type="text" onfocus="this.select();" readonly="readonly"
+						value='[user_registration_login]'
+						class="code" size="35">
+
+						<button id="copy-shortcode" class="button button-primary button-large ur-copy-shortcode " href="#" data-tip="<?php esc_attr_e( 'Copy Shortcode!', 'user-registration' ); ?>" data-copied="<?php esc_attr_e( 'Copied!', 'user-registration' ); ?>">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+						<path fill="#383838" fill-rule="evenodd" d="M3.116 3.116A1.25 1.25 0 0 1 4 2.75h9A1.25 1.25 0 0 1 14.25 4v1a.75.75 0 0 0 1.5 0V4A2.75 2.75 0 0 0 13 1.25H4A2.75 2.75 0 0 0 1.25 4v9A2.75 2.75 0 0 0 4 15.75h1a.75.75 0 0 0 0-1.5H4A1.25 1.25 0 0 1 2.75 13V4c0-.332.132-.65.366-.884ZM9.75 11c0-.69.56-1.25 1.25-1.25h9c.69 0 1.25.56 1.25 1.25v9c0 .69-.56 1.25-1.25 1.25h-9c-.69 0-1.25-.56-1.25-1.25v-9ZM11 8.25A2.75 2.75 0 0 0 8.25 11v9A2.75 2.75 0 0 0 11 22.75h9A2.75 2.75 0 0 0 22.75 20v-9A2.75 2.75 0 0 0 20 8.25h-9Z" clip-rule="evenodd"/>
+						</svg>
+						</button>
+
+						<button  id="ur-view-live-button" class="button button-secondary button-large"><a title="<?php esc_attr_e( sprintf( 'View Live in %s page', $login_page_title ), 'user-registration' ); ?>" href="<?php echo esc_url( add_query_arg( 'ur_login_preview', 'true', $login_page_url) ); ?>" target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'View Live', 'user-registration' ); ?></a></button>
+					<?php else: ?>
+						<button name="create_login_page" data-form_id="<?php esc_attr_e( $login_page_id ) ?>" class="button button-large ur-embed-form-button ur-create-login-page-button" type="button" value="<?php esc_attr_e( 'Create Login Page', 'user-registration' ); ?>" title="<?php esc_attr_e( 'Create Login Page', 'user-registration' ); ?>">+ <?php esc_html_e( 'Create Login Page', 'user-registration' ); ?></button>
+					<?php endif; ?>
+						<button type="button" name="save_login_form" id="save_form_footer"
 							class="button button-primary button-large menu-form ur_save_login_form_action_button"> <?php echo __( 'Update Form', 'user-registration' ); ?> </button>
 				</div><!-- END .publishing-action -->
 			</div>

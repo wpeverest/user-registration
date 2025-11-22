@@ -1,13 +1,12 @@
 import React from "react";
 
-const Header = ({ steps, activeStep, siteURL }) => {
+const Header = ({ steps, activeStep, onBoardIconsURL }) => {
+	console.log(onBoardIconsURL);
+
 	return (
 		<div className="user-registration-setup-wizard__header">
 			<div className="user-registration-setup-wizard__header--logo">
-				<img
-					src={`${siteURL}/wp-content/plugins/user-registration/assets/images/onboard-icons/logo.png`}
-					alt=""
-				/>
+				<img src={`${onBoardIconsURL}/logo.png`} alt="" />
 			</div>
 			<ul className="user-registration-setup-wizard__header--nav">
 				{steps.map((step, i) => {

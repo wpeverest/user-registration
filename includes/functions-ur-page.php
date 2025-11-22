@@ -16,7 +16,7 @@ add_filter( 'body_class', 'ur_body_class' );
 add_filter( 'admin_body_class', 'ur_admin_body_class' );
 
 // Hooks for my account section.
-add_action( 'user_registration_account_navigation', 'user_registration_account_navigation', 999 );
+add_action( 'user_registration_account_navigation', 'user_registration_account_navigation' );
 add_action( 'user_registration_account_content', 'user_registration_account_content' );
 add_action( 'user_registration_account_dashboard_endpoint', 'user_registration_account_dashboard' );
 add_action( 'user_registration_account_edit-profile_endpoint', 'user_registration_account_edit_profile' );
