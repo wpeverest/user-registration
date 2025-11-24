@@ -26,12 +26,10 @@ class URCR_Admin {
 		 */
 		add_action( 'in_admin_header', array( __CLASS__, 'hide_unrelated_notices' ) );
 
-		if ( UR_PRO_ACTIVE ) {
-			/**
-			 * Register admin menus.
-			 */
-			add_action( 'admin_menu', array( $this, 'add_urcr_menus' ), 30 );
-		}
+		/**
+		 * Register admin menus.
+		 */
+		add_action( 'admin_menu', array( $this, 'add_urcr_menus' ), 30 );
 
 		/**
 		 * Register a settings in the core settings list.
@@ -129,7 +127,7 @@ class URCR_Admin {
 				default:
 					global $content_access_rules_table_list;
 
-					require_once UR_ABSPATH . 'includes/pro/addons/content-restriction/admin/class-urcr-admin-content-access-rules-table-list.php';
+					require_once __DIR__ . '/class-urcr-admin-content-access-rules-table-list.php';
 					$content_access_rules_table_list = new URCR_Admin_Content_Access_Rules_Table_List();
 					$content_access_rules_table_list->process_actions();
 					break;
@@ -162,7 +160,7 @@ class URCR_Admin {
 	 * @since 4.0
 	 */
 	public function render_content_access_rules_creator() {
-		include UR_ABSPATH . 'includes/pro/addons/content-restriction/admin/content-access-rules-creator.php';
+		include __DIR__ . '/content-access-rules-creator.php';
 	}
 
 	/**

@@ -81,7 +81,7 @@ class URCR_Frontend {
 			$urcr_meta_override_global_settings = get_post_meta( $post_id, 'urcr_meta_override_global_settings', true );
 			$whole_site_access_restricted       = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
 
-			if ( UR_PRO_ACTIVE && ! ur_string_to_bool( $urcr_meta_override_global_settings ) ) {
+			if (  ! ur_string_to_bool( $urcr_meta_override_global_settings ) ) {
 				$template = $this->advanced_restriction_wc_with_access_rule( $template, $post );
 				return $template;
 			}
@@ -136,7 +136,7 @@ class URCR_Frontend {
 		$current_post_id                    = get_queried_object_id();
 		$urcr_meta_override_global_settings = get_post_meta( $current_post_id, 'urcr_meta_override_global_settings', true );
 
-		if ( UR_PRO_ACTIVE && ! ur_string_to_bool( $urcr_meta_override_global_settings ) ) {
+		if (  ! ur_string_to_bool( $urcr_meta_override_global_settings ) ) {
 
 			$access_rule_posts         = get_posts(
 				array(
@@ -239,7 +239,7 @@ class URCR_Frontend {
 			if ( null !== $post_id ) {
 				$urcr_meta_override_global_settings = get_post_meta( $post_id, 'urcr_meta_override_global_settings', true );
 
-				if ( UR_PRO_ACTIVE && ! ur_string_to_bool( $urcr_meta_override_global_settings ) ) {
+				if (  ! ur_string_to_bool( $urcr_meta_override_global_settings ) ) {
 					$template = $this->advanced_restriction_wc_with_access_rule( $template, $posts );
 					return $template;
 				}
@@ -276,7 +276,7 @@ class URCR_Frontend {
 
 			$urcr_meta_override_global_settings = get_post_meta( $blog_page->ID, 'urcr_meta_override_global_settings', true );
 
-			if ( UR_PRO_ACTIVE && ! ur_string_to_bool( $urcr_meta_override_global_settings ) ) {
+			if (  ! ur_string_to_bool( $urcr_meta_override_global_settings ) ) {
 				$template = $this->advanced_restriction_wc_with_access_rule( $template, $blog_page );
 				return $template;
 			}
@@ -293,7 +293,7 @@ class URCR_Frontend {
 					if ( in_array( $body_class, $body_classes, true ) ) {
 						$urcr_meta_override_global_settings = get_post_meta( $blog_page->ID, 'urcr_meta_override_global_settings', true );
 
-						if ( UR_PRO_ACTIVE && ! ur_string_to_bool( $urcr_meta_override_global_settings ) ) {
+						if (  ! ur_string_to_bool( $urcr_meta_override_global_settings ) ) {
 							$template = $this->advanced_restriction_wc_with_access_rule( $template, $blog_page );
 							return $template;
 						}
@@ -335,7 +335,7 @@ class URCR_Frontend {
 
 			$urcr_meta_override_global_settings = get_post_meta( $shop_page->ID, 'urcr_meta_override_global_settings', true );
 
-			if ( UR_PRO_ACTIVE && ! ur_string_to_bool( $urcr_meta_override_global_settings ) ) {
+			if (  ! ur_string_to_bool( $urcr_meta_override_global_settings ) ) {
 				$template = $this->advanced_restriction_wc_with_access_rule( $template, $shop_page );
 				return $template;
 			}
@@ -586,7 +586,7 @@ class URCR_Frontend {
 		if ( null !== $product_id ) {
 			$urcr_meta_override_global_settings = get_post_meta( $product_id, 'urcr_meta_override_global_settings', true );
 
-			if ( UR_PRO_ACTIVE && ! ur_string_to_bool( $urcr_meta_override_global_settings ) ) {
+			if (  ! ur_string_to_bool( $urcr_meta_override_global_settings ) ) {
 				$can_view = $this->wc_advanced_restriction_with_access_rule( $product_id );
 
 				return $can_view;
@@ -617,7 +617,7 @@ class URCR_Frontend {
 		if ( null !== $product_id ) {
 			$urcr_meta_override_global_settings = get_post_meta( $product_id, 'urcr_meta_override_global_settings', true );
 
-			if ( UR_PRO_ACTIVE && ! ur_string_to_bool( $urcr_meta_override_global_settings ) ) {
+			if (  ! ur_string_to_bool( $urcr_meta_override_global_settings ) ) {
 				$can_purchase = $this->wc_advanced_restriction_with_access_rule( $product_id );
 
 				return $can_purchase;
@@ -791,6 +791,7 @@ class URCR_Frontend {
 		global $post;
 
 		$content_restriction_enabled = ur_string_to_bool( get_option( 'user_registration_content_restriction_enable', true ) );
+
 		if ( ! $content_restriction_enabled ) {
 			return;
 		}
@@ -802,7 +803,7 @@ class URCR_Frontend {
 		}
 		$urcr_meta_override_global_settings = get_post_meta( $post_id, 'urcr_meta_override_global_settings', true );
 
-		if ( UR_PRO_ACTIVE && ! ur_string_to_bool( $urcr_meta_override_global_settings ) ) {
+		if ( ! ur_string_to_bool( $urcr_meta_override_global_settings ) ) {
 			$restriction_applied = $this->advanced_restriction_with_access_rules();
 		}
 
