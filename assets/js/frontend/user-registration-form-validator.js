@@ -220,6 +220,11 @@
 
 			$this_node.$user_registration.each(function () {
 				var $this = $(this);
+
+				if ( !$this.parent('div').hasClass('user-registration') ) {
+					return;
+				}
+
 				var validator_params = $this_node.custom_validation($this);
 				$this_node.custom_validation_messages();
 
